@@ -159,7 +159,25 @@ const message = {
 - **框架**: FastAPI
 - **存储**: 文件系统 / 对象存储
 
-### 节点推理服务
+### 节点推理服务（阶段一.3）✅
+
+**核心功能**：
+- ✅ ASR (Whisper) 引擎 - 语音识别，支持 GPU 加速
+- ✅ NMT (M2M100) 引擎 - 机器翻译，通过 HTTP 调用 Python 服务
+- ✅ TTS (Piper) 引擎 - 语音合成，通过 HTTP 调用 Piper TTS 服务
+- ✅ VAD (Silero VAD) 引擎 - 语音活动检测，支持自适应阈值调整
+- ✅ 推理服务核心 - 统一接口，模块化设计
+- ✅ 单元测试 - 20+ 个测试（10个本地模型测试全部通过）
+
+**技术栈**：
+- Rust + Tokio（异步运行时）
+- whisper-rs（ASR，支持 CUDA，本地模型调用）
+- ort 1.16.3（ONNX Runtime，VAD，本地模型调用）
+- HTTP 客户端（NMT、TTS，需要外部服务）
+
+**测试状态**：
+- 本地模型测试：✅ 10个测试全部通过（ASR: 3个，VAD: 7个）
+- 外部服务测试：⏸️ 需要启动 NMT 和 TTS 服务
 - **语言**: Rust
 - **推理引擎**: ONNX Runtime, Whisper-rs
 - **模型**: Whisper (ASR), M2M100 (NMT), Piper (TTS), Silero (VAD)
@@ -359,14 +377,17 @@ npm start
 - [开发计划](./docs/DEVELOPMENT_PLAN.md) - 详细的开发阶段和任务列表
 - [任务分发算法优化方案](./docs/DISPATCHER_OPTIMIZATION_PLAN.md) - 负载均衡和功能感知节点选择优化方案
 
+### 测试文档
+
+- [测试目录说明](./scheduler/tests/README.md) - 测试组织结构
+- [阶段一.1 测试报告](./scheduler/tests/stage1.1/TEST_REPORT.md) - 调度服务器核心功能测试报告（47个测试）
+- [阶段一.2 测试报告](./scheduler/tests/stage1.2/TEST_REPORT.md) - 客户端消息格式对齐测试报告（7个测试）
+- [阶段一.3 测试报告](./node-inference/tests/stage1.3/TEST_REPORT.md) - 节点推理服务测试报告（10个本地模型测试通过）
+- [本地模型测试说明](./node-inference/tests/LOCAL_MODEL_TESTING.md) - 本地模型测试指南（ASR、VAD）
+
 ### 脚本和工具文档
 
 - [脚本工具说明](./scripts/README.md) - 脚本工具使用说明
-
-### 测试
-
-- [测试目录说明](./scheduler/tests/README.md) - 测试组织结构
-- [阶段一.1 测试报告](./scheduler/tests/stage1.1/TEST_REPORT.md) - 单元测试结果报告
 
 ## 核心优势
 

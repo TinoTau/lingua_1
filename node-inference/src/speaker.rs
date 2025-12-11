@@ -1,6 +1,6 @@
 use anyhow::Result;
 use async_trait::async_trait;
-use crate::modules::{InferenceModule, ModuleState};
+use crate::modules::InferenceModule;
 
 /// 音色识别模块
 pub struct SpeakerIdentifier {
@@ -96,7 +96,7 @@ impl VoiceCloner {
         }
     }
 
-    pub async fn clone_voice(&self, text: &str, speaker_id: &str) -> Result<Vec<u8>> {
+    pub async fn clone_voice(&self, _text: &str, _speaker_id: &str) -> Result<Vec<u8>> {
         if !self.is_enabled() {
             return Err(anyhow::anyhow!("Voice cloning module is not enabled"));
         }

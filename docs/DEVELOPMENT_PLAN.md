@@ -47,11 +47,40 @@
   - [x] 消息格式验证测试
   - [x] 功能标志完整性测试
 
-### 1.3 节点推理服务
-- [ ] 实现 Whisper ASR 推理
-- [ ] 实现 M2M100 NMT 推理
-- [ ] 实现 Piper TTS 调用
-- [ ] 实现 Silero VAD 检测
+### 1.3 节点推理服务 ✅
+- [x] ASR 引擎实现（Whisper）
+  - [x] 模型加载（支持 GGML 格式）
+  - [x] 音频转录（PCM 16-bit 和 f32 格式）
+  - [x] 语言设置和自动检测
+  - [x] GPU 加速支持（whisper-rs with CUDA）
+- [x] NMT 引擎实现（M2M100）
+  - [x] HTTP 客户端（调用 Python M2M100 服务）
+  - [x] 多语言翻译支持
+  - [x] 自定义服务 URL 配置
+- [x] TTS 引擎实现（Piper TTS）
+  - [x] HTTP 客户端（调用 Piper TTS 服务）
+  - [x] 多语言语音合成
+  - [x] 自定义配置支持
+- [x] VAD 引擎实现（Silero VAD）
+  - [x] ONNX Runtime 模型加载（ort 1.16.3）
+  - [x] 语音活动检测（Level 2，用于节点端断句）
+  - [x] 自适应阈值调整（根据语速动态调整）
+  - [x] 边界检测逻辑（冷却期、最小话语时长）
+  - [x] 帧缓冲区管理
+  - [x] 状态重置功能
+  - [x] GPU 加速支持（ort with CUDA，待验证）
+- [x] 推理服务核心实现
+  - [x] `InferenceService` 统一接口
+  - [x] 模块化设计（可选模块支持）
+  - [x] 完整推理流程（ASR → NMT → TTS）
+- [x] **单元测试**
+  - [x] ASR 测试（3个测试，全部通过，支持本地模型调用）
+  - [x] NMT 测试（3个测试，需要外部服务）
+  - [x] TTS 测试（3个测试，需要外部服务）
+  - [x] VAD 测试（7个测试，全部通过，支持本地模型调用）
+  - [x] 集成测试（1个测试，需要所有模型和服务）
+  - [x] 测试报告（`node-inference/tests/stage1.3/TEST_REPORT.md`）
+  - [x] 本地模型测试说明（`node-inference/tests/LOCAL_MODEL_TESTING.md`）
 
 ## 阶段二：移动端和 Electron 客户端（3-4 周）
 

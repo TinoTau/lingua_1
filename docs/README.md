@@ -33,12 +33,19 @@
 
 ### 测试
 
-- 测试目录：`scheduler/tests/`
-- 阶段一.1 测试：`scheduler/tests/stage1.1/`（47个测试）
-- 阶段一.2 测试：`scheduler/tests/stage1.2/`（7个测试）
-- 测试报告：
-  - [阶段一.1 测试报告](./../scheduler/tests/stage1.1/TEST_REPORT.md)
-  - [阶段一.2 测试报告](./../scheduler/tests/stage1.2/TEST_REPORT.md)
+- **调度服务器测试**：
+  - 测试目录：`scheduler/tests/`
+  - 阶段一.1 测试：`scheduler/tests/stage1.1/`（47个测试，全部通过）
+  - 阶段一.2 测试：`scheduler/tests/stage1.2/`（7个测试，全部通过）
+  - 测试报告：
+    - [阶段一.1 测试报告](./../scheduler/tests/stage1.1/TEST_REPORT.md)
+    - [阶段一.2 测试报告](./../scheduler/tests/stage1.2/TEST_REPORT.md)
+- **节点推理服务测试**：
+  - 测试目录：`node-inference/tests/`
+  - 阶段一.3 测试：`node-inference/tests/`（20+个测试，10个本地模型测试全部通过）
+  - 测试报告：
+    - [阶段一.3 测试报告](./../node-inference/tests/stage1.3/TEST_REPORT.md)
+    - [本地模型测试说明](./../node-inference/tests/LOCAL_MODEL_TESTING.md)
 
 ### 参考文档
 

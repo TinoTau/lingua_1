@@ -106,8 +106,9 @@ impl SpeechRateController {
         // 2. 使用音频处理库调整播放速度
         // 3. 保持音调不变（可选）
 
-        let speed_ratio = target_rate / current_rate;
+        let _speed_ratio = target_rate / current_rate;
         // 简化实现：返回原始音频（实际需要音频处理）
+        // TODO: 使用 speed_ratio 调整音频速度
         Ok(audio_data.to_vec())
     }
 }
