@@ -521,38 +521,47 @@ wss://dispatcher.example.com/ws/node
 
 #### WebSocket 消息处理实现
 
-**文件**: `scheduler/src/websocket.rs`
+**文件**: `scheduler/src/websocket/`
 
-当前状态：只有框架，需要实现完整的消息解析和路由逻辑。
+当前状态：✅ 已实现完整的消息解析和路由逻辑。
 
-**需要实现**：
+**模块结构**:
+- `mod.rs`: 模块声明和公共辅助函数（发送消息、错误处理等）
+- `session_handler.rs`: 会话端 WebSocket 处理
+- `node_handler.rs`: 节点端 WebSocket 处理
+
+**已实现功能**：
 
 **会话端 (handle_session)**
-- [ ] 解析 `session_init` 消息
-- [ ] 处理配对码验证
-- [ ] 创建会话并返回 `session_init_ack`
-- [ ] 解析 `utterance` 消息
-- [ ] 创建 job 并分发给节点
-- [ ] 接收节点结果并转发给客户端
-- [ ] 处理 `client_heartbeat`
-- [ ] 处理 `session_close`
-- [ ] 错误处理和错误消息发送
+- [x] 解析 `session_init` 消息
+- [x] 处理配对码验证
+- [x] 创建会话并返回 `session_init_ack`
+- [x] 解析 `utterance` 消息
+- [x] 创建 job 并分发给节点
+- [x] 接收节点结果并转发给客户端
+- [x] 处理 `client_heartbeat`
+- [x] 处理 `session_close`
+- [x] 错误处理和错误消息发送
 
 **节点端 (handle_node)**
-- [ ] 解析 `node_register` 消息
-- [ ] 注册节点并返回 `node_register_ack`
-- [ ] 处理 `node_heartbeat` 消息
-- [ ] 发送 `job_assign` 给节点
-- [ ] 接收 `job_result` 并处理
-- [ ] 处理 `node_error` 消息
-- [ ] 支持 `node_control` 消息（预留）
+- [x] 解析 `node_register` 消息
+- [x] 注册节点并返回 `node_register_ack`
+- [x] 处理 `node_heartbeat` 消息
+- [x] 发送 `job_assign` 给节点
+- [x] 接收 `job_result` 并处理
+- [x] 处理 `node_error` 消息
+- [ ] 支持 `node_control` 消息（预留，待实现）
 
 #### 结果聚合和排序
 
-**需要实现**：
-- [ ] 维护每个会话的结果队列
-- [ ] 按 `utterance_index` 排序
-- [ ] 按顺序发送给客户端
+**文件**: `scheduler/src/result_queue.rs`
+
+当前状态：✅ 已实现。
+
+**已实现功能**：
+- [x] 维护每个会话的结果队列
+- [x] 按 `utterance_index` 排序
+- [x] 按顺序发送给客户端
 
 #### 移动端消息格式对齐
 
@@ -581,7 +590,7 @@ wss://dispatcher.example.com/ws/node
 
 #### 待修改的文件
 
-1. ⏳ `scheduler/src/websocket.rs` - 实现完整的消息处理逻辑
+1. ✅ `scheduler/src/websocket/` - 已实现完整的消息处理逻辑（拆分为模块化结构）
 2. ⏳ `mobile-app/src/hooks/useWebSocket.ts` - 对齐消息格式
 3. ⏳ `electron-node/main/src/agent/node-agent.ts` - 对齐消息格式
 
@@ -631,7 +640,7 @@ wss://dispatcher.example.com/ws/node
 
 ### 6.5 下一步行动
 
-1. **实现 WebSocket 消息处理** - 这是最关键的待完成功能
+1. ✅ **实现 WebSocket 消息处理** - 已完成（拆分为模块化结构：`websocket/session_handler.rs` 和 `websocket/node_handler.rs`）
 2. **对齐客户端消息格式** - 确保移动端和 Electron 节点发送的消息符合协议
-3. **实现结果聚合** - 确保翻译结果按顺序返回
+3. ✅ **实现结果聚合** - 已完成（`result_queue.rs` 模块）
 4. **测试端到端流程** - 验证整个消息流程

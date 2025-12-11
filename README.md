@@ -176,7 +176,10 @@ lingua_1/
 │   │   ├── node_registry.rs     # 节点注册表
 │   │   ├── pairing.rs           # 配对服务
 │   │   ├── model_hub.rs         # 模型库接口
-│   │   ├── websocket.rs         # WebSocket 处理
+│   │   ├── websocket/           # WebSocket 处理模块
+│   │   │   ├── mod.rs           # 模块声明和辅助函数
+│   │   │   ├── session_handler.rs  # 会话端处理
+│   │   │   └── node_handler.rs     # 节点端处理
 │   │   ├── messages.rs          # 消息协议定义
 │   │   └── config.rs            # 配置管理
 │   ├── Cargo.toml
@@ -351,7 +354,7 @@ npm start
   - 节点注册表 (Node Registry) - 支持功能感知选择
   - 配对服务 (Pairing Service)
   - 模型库接口 (Model Hub)
-  - WebSocket 处理框架
+  - WebSocket 处理模块（模块化设计：session_handler, node_handler）
 - ✅ **消息协议定义** (`messages.rs`)：
   - 完整的消息类型定义（SessionMessage, NodeMessage）
   - FeatureFlags、PipelineConfig、InstalledModel 等辅助类型
@@ -360,9 +363,10 @@ npm start
   - Session 结构支持 `tenant_id`、`client_version`、`platform`、`dialect`、`features`
   - Job 结构支持 `dialect`、`features`、`pipeline`、`audio_format`、`sample_rate`
   - Node 结构支持 `version`、`platform`、`hardware`、`features_supported`、`accept_public_jobs`
-- ✅ **WebSocket 消息处理实现**：
-  - 会话端消息处理（session_init, utterance, heartbeat, session_close）
-  - 节点端消息处理（node_register, node_heartbeat, job_result）
+- ✅ **WebSocket 消息处理实现**（模块化设计）：
+  - 会话端消息处理（`websocket/session_handler.rs`）- session_init, utterance, heartbeat, session_close
+  - 节点端消息处理（`websocket/node_handler.rs`）- node_register, node_heartbeat, job_result
+  - 公共辅助函数（`websocket/mod.rs`）- 消息发送、错误处理等
   - 连接管理（SessionConnectionManager, NodeConnectionManager）
   - 结果队列管理（ResultQueueManager）- 支持乱序结果排序
 - ✅ **单元测试**：
@@ -509,9 +513,10 @@ npm start
 - [x] 核心模块结构
 - [x] 消息协议定义
 - [x] 数据结构扩展（支持多租户、功能感知）
-- [x] **WebSocket 消息处理实现**（高优先级）
-  - [x] 会话端消息处理（session_init, utterance, heartbeat, session_close）
-  - [x] 节点端消息处理（node_register, node_heartbeat, job_result）
+- [x] **WebSocket 消息处理实现**（高优先级，模块化设计）
+  - [x] 会话端消息处理（`websocket/session_handler.rs`）- session_init, utterance, heartbeat, session_close
+  - [x] 节点端消息处理（`websocket/node_handler.rs`）- node_register, node_heartbeat, job_result
+  - [x] 公共辅助函数（`websocket/mod.rs`）- 消息发送、错误处理等
   - [x] 结果聚合和排序（按 utterance_index 顺序）
   - [x] WebSocket 连接管理（SessionConnectionManager, NodeConnectionManager）
 - [x] **单元测试**（阶段一.1）

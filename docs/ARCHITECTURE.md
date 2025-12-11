@@ -23,7 +23,10 @@
 - `node_registry.rs`: 节点注册表
 - `pairing.rs`: 配对服务
 - `model_hub.rs`: 模型库接口
-- `websocket.rs`: WebSocket 消息处理
+- `websocket/`: WebSocket 消息处理模块
+  - `mod.rs`: 模块声明和公共辅助函数
+  - `session_handler.rs`: 会话端 WebSocket 处理
+  - `node_handler.rs`: 节点端 WebSocket 处理
 - `connection_manager.rs`: WebSocket 连接管理
 - `result_queue.rs`: 结果队列管理
 - `app_state.rs`: 应用状态管理

@@ -1,0 +1,64 @@
+// WebSocket 处理模块
+// 包含会话端和节点端的 WebSocket 处理逻辑
+
+pub mod session_handler;
+pub mod node_handler;
+
+pub use session_handler::handle_session;
+pub use node_handler::handle_node;
+
+// 公共辅助函数
+use crate::messages::{SessionMessage, NodeMessage, ErrorCode};
+use axum::extract::ws::Message;
+use tokio::sync::mpsc;
+use tracing::error;
+use serde_json;
+
+// 辅助函数：发送会话消息
+pub(crate) async fn send_message(tx: &mpsc::UnboundedSender<Message>, message: &SessionMessage) -> Result<(), anyhow::Error> {
+    let json = serde_json::to_string(message)?;
+    tx.send(Message::Text(json))
+        .map_err(|e| anyhow::anyhow!("发送消息失败: {}", e))?;
+    Ok(())
+}
+
+// 辅助函数：发送节点消息
+pub(crate) async fn send_node_message(tx: &mpsc::UnboundedSender<Message>, message: &NodeMessage) -> Result<(), anyhow::Error> {
+    let json = serde_json::to_string(message)?;
+    tx.send(Message::Text(json))
+        .map_err(|e| anyhow::anyhow!("发送消息失败: {}", e))?;
+    Ok(())
+}
+
+// 辅助函数：发送错误消息
+pub(crate) async fn send_error(tx: &mpsc::UnboundedSender<Message>, code: ErrorCode, message: &str) {
+    let error_msg = SessionMessage::Error {
+        code: code.to_string(),
+        message: message.to_string(),
+        details: None,
+    };
+    if let Err(e) = send_message(tx, &error_msg).await {
+        error!("发送错误消息失败: {}", e);
+    }
+}
+
+// 创建 JobAssign 消息
+pub(crate) fn create_job_assign_message(job: &crate::dispatcher::Job) -> Option<NodeMessage> {
+    use base64::{Engine as _, engine::general_purpose};
+    let audio_base64 = general_purpose::STANDARD.encode(&job.audio_data);
+    
+    Some(NodeMessage::JobAssign {
+        job_id: job.job_id.clone(),
+        session_id: job.session_id.clone(),
+        utterance_index: job.utterance_index,
+        src_lang: job.src_lang.clone(),
+        tgt_lang: job.tgt_lang.clone(),
+        dialect: job.dialect.clone(),
+        features: job.features.clone(),
+        pipeline: job.pipeline.clone(),
+        audio: audio_base64,
+        audio_format: job.audio_format.clone(),
+        sample_rate: job.sample_rate,
+    })
+}
+
