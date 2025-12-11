@@ -360,3 +360,80 @@ async fn test_mark_node_offline() {
     assert!(!registry.is_node_available("node-4").await);
 }
 
+#[tokio::test]
+async fn test_select_node_least_connections() {
+    let registry = NodeRegistry::new();
+    
+    // 注册三个节点，都支持相同的语言对
+    registry.register_node(
+        Some("node-heavy".to_string()),
+        "Heavy Load Node".to_string(),
+        "1.0.0".to_string(),
+        "linux".to_string(),
+        create_test_hardware(),
+        create_test_models("zh", "en"),
+        FeatureFlags {
+            emotion_detection: None,
+            voice_style_detection: None,
+            speech_rate_detection: None,
+            speech_rate_control: None,
+            speaker_identification: None,
+            persona_adaptation: None,
+        },
+        true,
+    ).await;
+    
+    registry.register_node(
+        Some("node-medium".to_string()),
+        "Medium Load Node".to_string(),
+        "1.0.0".to_string(),
+        "linux".to_string(),
+        create_test_hardware(),
+        create_test_models("zh", "en"),
+        FeatureFlags {
+            emotion_detection: None,
+            voice_style_detection: None,
+            speech_rate_detection: None,
+            speech_rate_control: None,
+            speaker_identification: None,
+            persona_adaptation: None,
+        },
+        true,
+    ).await;
+    
+    registry.register_node(
+        Some("node-light".to_string()),
+        "Light Load Node".to_string(),
+        "1.0.0".to_string(),
+        "linux".to_string(),
+        create_test_hardware(),
+        create_test_models("zh", "en"),
+        FeatureFlags {
+            emotion_detection: None,
+            voice_style_detection: None,
+            speech_rate_detection: None,
+            speech_rate_control: None,
+            speaker_identification: None,
+            persona_adaptation: None,
+        },
+        true,
+    ).await;
+    
+    // 更新节点负载：heavy=3, medium=1, light=0
+    registry.update_node_heartbeat("node-heavy", 50.0, None, 60.0, None, 3).await;
+    registry.update_node_heartbeat("node-medium", 50.0, None, 60.0, None, 1).await;
+    registry.update_node_heartbeat("node-light", 50.0, None, 60.0, None, 0).await;
+    
+    // 应该选择负载最轻的节点（current_jobs=0）
+    let selected = registry.select_node_with_features("zh", "en", &None, true).await;
+    assert_eq!(selected, Some("node-light".to_string()));
+    
+    // 更新：heavy=2, medium=1, light=2
+    registry.update_node_heartbeat("node-heavy", 50.0, None, 60.0, None, 2).await;
+    registry.update_node_heartbeat("node-light", 50.0, None, 60.0, None, 2).await;
+    
+    // 应该选择负载最轻的节点（current_jobs=1）
+    let selected = registry.select_node_with_features("zh", "en", &None, true).await;
+    assert_eq!(selected, Some("node-medium".to_string()));
+}
+

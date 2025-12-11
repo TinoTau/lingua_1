@@ -25,6 +25,26 @@ pub struct SchedulerConfig {
     pub max_concurrent_jobs_per_node: usize,
     pub job_timeout_seconds: u64,
     pub heartbeat_interval_seconds: u64,
+    #[serde(default)]
+    pub load_balancer: LoadBalancerConfig,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LoadBalancerConfig {
+    #[serde(default = "default_load_balancer_strategy")]
+    pub strategy: String,
+}
+
+fn default_load_balancer_strategy() -> String {
+    "least_connections".to_string()
+}
+
+impl Default for LoadBalancerConfig {
+    fn default() -> Self {
+        Self {
+            strategy: default_load_balancer_strategy(),
+        }
+    }
 }
 
 impl Config {
@@ -57,6 +77,9 @@ impl Default for Config {
                 max_concurrent_jobs_per_node: 4,
                 job_timeout_seconds: 30,
                 heartbeat_interval_seconds: 15,
+                load_balancer: LoadBalancerConfig {
+                    strategy: "least_connections".to_string(),
+                },
             },
         }
     }

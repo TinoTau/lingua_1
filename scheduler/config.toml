@@ -11,3 +11,6 @@ max_concurrent_jobs_per_node = 4
 job_timeout_seconds = 30
 heartbeat_interval_seconds = 15
 
+[scheduler.load_balancer]
+strategy = "least_connections"
+

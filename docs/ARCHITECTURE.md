@@ -20,7 +20,7 @@
 **主要模块**:
 - `session.rs`: 会话管理
 - `dispatcher.rs`: 任务分发
-- `node_registry.rs`: 节点注册表
+- `node_registry.rs`: 节点注册表（支持功能感知选择和负载均衡）
 - `pairing.rs`: 配对服务
 - `model_hub.rs`: 模型库接口
 - `websocket/`: WebSocket 消息处理模块
@@ -30,12 +30,21 @@
 - `connection_manager.rs`: WebSocket 连接管理
 - `result_queue.rs`: 结果队列管理
 - `app_state.rs`: 应用状态管理
+- `config.rs`: 配置管理（包含负载均衡配置）
+
+**核心功能**:
+- **功能感知节点选择**: 根据任务需求的功能（emotion_detection, voice_style_detection, speech_rate_detection, speech_rate_control, speaker_identification, persona_adaptation）筛选节点
+- **负载均衡**: 实现最少连接数（Least Connections）策略，优先选择 `current_jobs` 最少的节点
+- **配置化负载均衡**: 通过 `[scheduler.load_balancer]` 配置段支持未来扩展更多策略
 
 **实现状态**:
 - ✅ 核心模块已实现
 - ✅ WebSocket 消息处理已实现（会话端和节点端）
 - ✅ 连接管理和结果队列已实现
-- ✅ 单元测试已完成（阶段一.1，46个测试全部通过）
+- ✅ 功能能力检查完善（所有 6 个功能位）
+- ✅ 最少连接数负载均衡策略已实现
+- ✅ 负载均衡配置支持已实现
+- ✅ 单元测试已完成（阶段一.1，47个测试全部通过）
 
 ### 2. Electron Node 客户端
 

@@ -139,7 +139,7 @@ impl NodeRegistry {
         let nodes = self.nodes.read().await;
         
         // 筛选可用的节点
-        let available_nodes: Vec<_> = nodes
+        let mut available_nodes: Vec<_> = nodes
             .values()
             .filter(|node| {
                 node.online
@@ -154,26 +154,51 @@ impl NodeRegistry {
             return None;
         }
 
-        // 使用第一个可用节点（TODO: 实现真正的负载均衡）
+        // 最少连接数策略：按 current_jobs 排序，选择任务数最少的节点
+        available_nodes.sort_by_key(|node| node.current_jobs);
         Some(available_nodes[0].node_id.clone())
     }
 
     fn node_supports_features(&self, node: &Node, required_features: &Option<FeatureFlags>) -> bool {
         if let Some(ref features) = required_features {
             // 检查节点是否支持所有必需的功能
+            // 只有当 required_features 中明确要求为 true 时，才检查节点是否支持
+            
+            // 情感检测
             if features.emotion_detection == Some(true) 
                 && node.features_supported.emotion_detection != Some(true) {
                 return false;
             }
+            
+            // 音色风格检测
             if features.voice_style_detection == Some(true)
                 && node.features_supported.voice_style_detection != Some(true) {
                 return false;
             }
+            
+            // 语速检测
             if features.speech_rate_detection == Some(true)
                 && node.features_supported.speech_rate_detection != Some(true) {
                 return false;
             }
-            // ... 其他功能检查
+            
+            // 语速控制
+            if features.speech_rate_control == Some(true)
+                && node.features_supported.speech_rate_control != Some(true) {
+                return false;
+            }
+            
+            // 说话人识别
+            if features.speaker_identification == Some(true)
+                && node.features_supported.speaker_identification != Some(true) {
+                return false;
+            }
+            
+            // 角色适应
+            if features.persona_adaptation == Some(true)
+                && node.features_supported.persona_adaptation != Some(true) {
+                return false;
+            }
         }
         true
     }

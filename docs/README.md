@@ -21,15 +21,21 @@
 
 - [GETTING_STARTED.md](./GETTING_STARTED.md) - 快速开始指南
 
+### 项目状态与开发计划
+
+- [PROJECT_STATUS.md](./PROJECT_STATUS.md) - 项目状态（已完成功能和待完成任务）
+- [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md) - 开发计划（详细的开发阶段和任务列表）
+- [DISPATCHER_OPTIMIZATION_PLAN.md](./DISPATCHER_OPTIMIZATION_PLAN.md) - 任务分发算法优化方案
+
+### 协议规范
+
+- [PROTOCOLS.md](./PROTOCOLS.md) - WebSocket 消息协议规范（包含实现状态）
+
 ### 测试
 
 - 测试目录：`scheduler/tests/`
 - 阶段一.1 测试：`scheduler/tests/stage1.1/`
 - 测试报告：`scheduler/tests/stage1.1/TEST_REPORT.md`
-
-### 协议规范
-
-- [PROTOCOLS.md](./PROTOCOLS.md) - WebSocket 消息协议规范（包含实现状态）
 
 ### 参考文档
 
@@ -52,6 +58,9 @@ docs/
 ├── MODULAR_FEATURES.md          # 模块化功能设计（包含快速参考）
 ├── PROTOCOLS.md                 # WebSocket 消息协议规范（包含实现状态）
 ├── PUBLIC_API.md                # 对外开放 API 设计与实现
+├── PROJECT_STATUS.md            # 项目状态（已完成功能和待完成任务）
+├── DEVELOPMENT_PLAN.md          # 开发计划（详细的开发阶段和任务列表）
+├── DISPATCHER_OPTIMIZATION_PLAN.md  # 任务分发算法优化方案
 └── v0.1版本项目架构与技术报告.md  # 参考文档
 ```
 
