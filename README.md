@@ -246,8 +246,12 @@ lingua_1/
 │       └── messages.ts          # 消息协议定义
 │
 ├── scripts/                      # 脚本工具
+│   ├── README.md                # 脚本工具说明
+│   ├── copy_models.ps1          # 复制模型文件（Windows）
+│   ├── copy_models.sh           # 复制模型文件（Linux/macOS）
 │   ├── start_scheduler.ps1      # 启动调度服务器
 │   ├── start_model_hub.ps1      # 启动模型库服务
+│   ├── start_api_gateway.ps1    # 启动 API Gateway
 │   └── start_all.ps1            # 一键启动所有服务
 │
 └── docs/                         # 文档
@@ -268,17 +272,7 @@ lingua_1/
 - **Python**: 3.10+ (用于模型库服务)
 - **CUDA**: 12.1+ (可选，用于 GPU 加速)
 
-### 1. 启动调度服务器
-
-```powershell
-cd scheduler
-cargo build --release
-cargo run --release
-```
-
-服务将在 `http://localhost:8080` 启动。
-
-### 2. 启动模型库服务
+### 1. 启动模型库服务
 
 ```powershell
 cd model-hub
@@ -291,7 +285,29 @@ python src/main.py
 
 服务将在 `http://localhost:5000` 启动。
 
-### 3. 启动 Electron Node 客户端
+### 2. 启动调度服务器
+
+```powershell
+cd scheduler
+cargo build --release
+cargo run --release
+```
+
+服务将在 `http://localhost:8080` 启动。
+
+### 3. 启动 API Gateway（可选）
+
+如果需要对外提供 API 服务：
+
+```powershell
+cd api-gateway
+cargo build --release
+cargo run --release
+```
+
+服务将在 `http://localhost:8081` 启动。
+
+### 4. 启动 Electron Node 客户端
 
 ```powershell
 cd electron-node
@@ -300,7 +316,7 @@ npm run build
 npm start
 ```
 
-### 4. 启动移动端客户端
+### 5. 启动移动端客户端
 
 ```powershell
 cd mobile-app
@@ -314,6 +330,10 @@ npm start
 .\scripts\start_all.ps1
 ```
 
+这将启动所有服务（模型库、调度服务器、API Gateway）。
+
+详细说明请参考 [快速开始指南](./docs/GETTING_STARTED.md)
+
 ## 项目状态
 
 ### ✅ 已完成
@@ -322,19 +342,39 @@ npm start
 - ✅ 完整的目录结构
 - ✅ 配置文件（.gitignore, README 等）
 - ✅ 启动脚本
+- ✅ 模型文件已复制到项目
 
 #### 2. 调度服务器 (Scheduler)
 - ✅ Rust 项目结构
 - ✅ 核心模块实现：
-  - 会话管理 (Session Manager)
+  - 会话管理 (Session Manager) - 支持多租户
   - 任务分发 (Job Dispatcher)
-  - 节点注册表 (Node Registry)
+  - 节点注册表 (Node Registry) - 支持功能感知选择
   - 配对服务 (Pairing Service)
   - 模型库接口 (Model Hub)
   - WebSocket 处理框架
+- ✅ **消息协议定义** (`messages.rs`)：
+  - 完整的消息类型定义（SessionMessage, NodeMessage）
+  - FeatureFlags、PipelineConfig、InstalledModel 等辅助类型
+  - 错误码枚举
+- ✅ **数据结构扩展**：
+  - Session 结构支持 `tenant_id`、`client_version`、`platform`、`dialect`、`features`
+  - Job 结构支持 `dialect`、`features`、`pipeline`、`audio_format`、`sample_rate`
+  - Node 结构支持 `version`、`platform`、`hardware`、`features_supported`、`accept_public_jobs`
 - ✅ 配置文件
 
-#### 3. Electron Node 客户端
+#### 3. API Gateway（对外 API 网关）
+- ✅ 项目结构创建
+- ✅ 核心模块实现：
+  - 租户管理 (`tenant.rs`)
+  - API Key 鉴权中间件 (`auth.rs`)
+  - 限流模块 (`rate_limit.rs`)
+  - REST API 处理 (`rest_api.rs`)
+  - WebSocket API 处理 (`ws_api.rs`)
+  - Scheduler 客户端 (`scheduler_client.rs`)
+- ✅ 配置文件
+
+#### 4. Electron Node 客户端
 - ✅ Electron 项目结构
 - ✅ 主进程实现：
   - Node Agent（WebSocket 连接）
@@ -346,18 +386,19 @@ npm start
   - 模型管理组件
 - ✅ IPC 通信机制
 
-#### 4. 移动端客户端
+#### 5. 移动端客户端
 - ✅ React Native + Expo 项目
 - ✅ VAD Hook 框架
 - ✅ WebSocket Hook 框架
 - ✅ 基础 UI 组件
 
-#### 5. 模型库服务
+#### 6. 模型库服务
 - ✅ Python FastAPI 服务
 - ✅ 模型元数据管理 API
 - ✅ RESTful 接口
+- ✅ 模型文件已复制
 
-#### 6. 节点推理服务
+#### 7. 节点推理服务
 - ✅ Rust 项目结构
 - ✅ 核心模块框架：
   - ASR 引擎接口
@@ -369,33 +410,55 @@ npm start
   - 音色识别/生成模块
   - 语速识别/控制模块
   - 动态启用/禁用机制
+- ✅ 模型文件已复制
 
-#### 7. 共享协议
-- ✅ 消息协议定义 (TypeScript)
+#### 8. 共享协议
+- ✅ 消息协议定义 (TypeScript) - 与 Rust 端保持一致
 
-#### 8. 文档
+#### 9. 文档
 - ✅ 架构文档
 - ✅ 快速开始指南
 - ✅ 模块化功能设计文档
+- ✅ 协议规范文档（包含实现状态）
+- ✅ 对外开放 API 设计与实现文档
 
 ### 🔨 进行中 / 待完成
 
 #### 1. 调度服务器
-- [ ] 完善 WebSocket 消息处理逻辑
+- [ ] **完善 WebSocket 消息处理逻辑**（高优先级）
+  - [ ] 解析 `session_init` 消息并创建会话
+  - [ ] 处理配对码验证
+  - [ ] 解析 `utterance` 消息并创建 job
+  - [ ] 接收节点结果并转发给客户端
+  - [ ] 处理心跳和会话关闭
 - [ ] 实现完整的任务分发算法
 - [ ] 实现节点负载均衡
-- [ ] 实现功能感知的节点选择
+- [ ] 实现结果聚合和排序（按 `utterance_index`）
 - [ ] 添加数据库支持（可选）
-- [ ] 实现结果聚合和排序
+- [ ] 实现租户限流器（可选）
 
-#### 2. Electron Node 客户端
+#### 2. API Gateway
+- [ ] 完善错误处理和日志
+- [ ] 编写单元测试和集成测试
+- [ ] 数据库集成（租户存储）
+- [ ] 监控和告警
+- [ ] 生产环境优化
+
+#### 3. Electron Node 客户端
+- [ ] **对齐消息格式**（高优先级）
+  - [ ] `register` 消息格式对齐协议规范
+  - [ ] `heartbeat` 消息格式对齐协议规范
+  - [ ] `job_result` 消息格式对齐协议规范
 - [ ] 集成节点推理服务（调用 Rust 库或 HTTP 服务）
 - [ ] 完善模型下载和安装逻辑
 - [ ] 实现系统资源监控
 - [ ] 实现功能模块管理 UI
 - [ ] 完善错误处理和重连机制
 
-#### 3. 移动端客户端
+#### 4. 移动端客户端
+- [ ] **对齐消息格式**（高优先级）
+  - [ ] `init_session` 消息补充字段：`client_version`, `platform`, `dialect`, `features`
+  - [ ] `utterance` 消息补充字段：`audio_format`, `sample_rate`, `dialect`, `features`
 - [ ] 实现完整的 VAD 检测（WebRTC VAD 或 Silero VAD）
 - [ ] 实现音频采集和处理
 - [ ] 完善 WebSocket 通信
@@ -403,7 +466,7 @@ npm start
 - [ ] 实现可选功能选择界面
 - [ ] 添加 UI 优化
 
-#### 4. 节点推理服务
+#### 5. 节点推理服务
 - [ ] 实现 Whisper ASR 推理
 - [ ] 实现 M2M100 NMT 推理
 - [ ] 实现 Piper TTS 调用
@@ -411,13 +474,19 @@ npm start
 - [ ] 完善可选模块的模型加载逻辑
 - [ ] 添加模型加载和缓存
 
-#### 5. 模型库服务
+#### 6. 模型库服务
 - [ ] 实现模型文件存储
 - [ ] 实现模型下载接口
 - [ ] 添加模型版本管理
 - [ ] 实现模型校验（SHA256）
 
-#### 6. 测试和优化
+#### 7. SDK 开发（可选）
+- [ ] JS Web SDK
+- [ ] Android SDK
+- [ ] iOS SDK
+- [ ] SDK 文档和示例
+
+#### 8. 测试和优化
 - [ ] 单元测试
 - [ ] 集成测试
 - [ ] 性能优化
@@ -426,38 +495,68 @@ npm start
 
 ## 开发计划
 
-### 阶段一：调度服务器基础（2-4 周）
+### 阶段一：核心功能实现（4-6 周）
+
+#### 1.1 调度服务器核心功能
 - [x] 项目框架搭建
 - [x] 核心模块结构
-- [ ] WebSocket 会话管理完善
+- [x] 消息协议定义
+- [x] 数据结构扩展（支持多租户、功能感知）
+- [ ] **WebSocket 消息处理实现**（高优先级）
+  - [ ] 会话端消息处理（session_init, utterance, heartbeat）
+  - [ ] 节点端消息处理（node_register, node_heartbeat, job_result）
+  - [ ] 结果聚合和排序
 - [ ] 任务分发算法实现
-- [ ] 功能感知节点选择
+- [ ] 功能感知节点选择完善
 
-### 阶段二：移动端采音模块（2-3 周）
+#### 1.2 客户端消息格式对齐
+- [ ] 移动端消息格式对齐协议规范
+- [ ] Electron Node 消息格式对齐协议规范
+
+#### 1.3 节点推理服务
+- [ ] 实现 Whisper ASR 推理
+- [ ] 实现 M2M100 NMT 推理
+- [ ] 实现 Piper TTS 调用
+- [ ] 实现 Silero VAD 检测
+
+### 阶段二：移动端和 Electron 客户端（3-4 周）
+
+#### 2.1 移动端客户端
 - [x] 项目框架搭建
+- [x] VAD Hook 框架
+- [x] WebSocket Hook 框架
+- [ ] 消息格式对齐
 - [ ] 麦克风采集
 - [ ] 轻量 VAD 实现
 - [ ] 手动截断按钮
 - [ ] WebSocket 通信完善
+- [ ] TTS 音频播放
 - [ ] 可选功能选择界面
+- [ ] UI 优化
 
-### 阶段三：Electron Node 客户端（4-6 周）
+#### 2.2 Electron Node 客户端
 - [x] Electron 项目初始化
 - [x] Node Agent 框架
 - [x] Model Manager 框架
 - [x] 推理服务接口框架
 - [x] UI 界面框架
-- [ ] 功能模块管理 UI
+- [ ] 消息格式对齐
 - [ ] 推理服务集成
 - [ ] 系统资源监控实现
+- [ ] 功能模块管理 UI
+- [ ] 模型下载和安装逻辑完善
 
-### 阶段四：模型库与方言模型分发（2-3 周）
+### 阶段三：模型库与模块化功能（3-4 周）
+
+#### 3.1 模型库服务
 - [x] Model Registry API 框架
+- [x] 模型文件已复制
 - [ ] Model Hub REST API 完善
 - [ ] 模型下载与安装实现
 - [ ] 模型版本管理
+- [ ] 模型校验（SHA256）
 
-### 阶段五：模块化功能实现（3-4 周）
+#### 3.2 模块化功能实现
 - [x] 模块化架构设计
 - [x] 模块管理器实现
 - [x] 可选模块框架
@@ -467,11 +566,29 @@ npm start
 - [ ] 语速控制实现
 - [ ] Electron UI 集成
 
-### 阶段六：联调与优化（2-3 周）
+### 阶段四：对外开放 API（2-3 周）
+
+#### 4.1 API Gateway 完善
+- [x] 项目框架搭建
+- [x] 核心模块实现（租户管理、鉴权、限流、REST/WebSocket API）
+- [x] Scheduler 扩展（tenant_id 支持）
+- [ ] 错误处理和日志完善
+- [ ] 单元测试和集成测试
+- [ ] 数据库集成（租户存储）
+
+#### 4.2 SDK 开发（可选）
+- [ ] JS Web SDK
+- [ ] Android SDK
+- [ ] iOS SDK
+- [ ] SDK 文档和示例
+
+### 阶段五：联调与优化（2-3 周）
 - [ ] 全链路联调
 - [ ] 性能优化
 - [ ] 稳定性测试
 - [ ] 模块化功能测试
+- [ ] API Gateway 生产环境优化
+- [ ] 监控和告警系统
 
 ## 相关文档
 
@@ -498,6 +615,8 @@ npm start
 4. **隐私保护**: 支持随机节点模式和指定节点模式
 5. **低延迟**: 轻量 VAD + 手动截断，减少延迟
 6. **可扩展性**: 易于添加新的可选功能模块
+7. **对外开放**: 支持第三方应用通过 REST/WebSocket API 接入
+8. **多租户**: 每个外部应用作为独立租户，支持 API Key 鉴权和限流
 
 ## 许可证
 
