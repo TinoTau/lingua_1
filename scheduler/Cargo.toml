@@ -52,4 +52,5 @@ futures-util = "0.3"
 
 [dev-dependencies]
 tokio-test = "0.4"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "rt", "time", "process", "fs", "test-util"] }
 

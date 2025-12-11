@@ -21,6 +21,12 @@
 
 - [GETTING_STARTED.md](./GETTING_STARTED.md) - 快速开始指南
 
+### 测试
+
+- 测试目录：`scheduler/tests/`
+- 阶段一.1 测试：`scheduler/tests/stage1.1/`
+- 测试报告：`scheduler/tests/stage1.1/TEST_REPORT.md`
+
 ### 协议规范
 
 - [PROTOCOLS.md](./PROTOCOLS.md) - WebSocket 消息协议规范（包含实现状态）

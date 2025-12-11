@@ -1,6 +1,5 @@
 use crate::config::ModelHubConfig;
 use serde::{Deserialize, Serialize};
-use std::path::PathBuf;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ModelMetadata {
@@ -33,6 +32,7 @@ pub enum ModelStatus {
     Deprecated,
 }
 
+#[derive(Clone)]
 pub struct ModelHub {
     config: ModelHubConfig,
     // TODO: 从数据库或文件加载模型元数据
@@ -48,12 +48,12 @@ impl ModelHub {
         })
     }
 
-    pub async fn list_models(&self, model_type: Option<ModelType>) -> Vec<ModelMetadata> {
+    pub async fn list_models(&self, _model_type: Option<ModelType>) -> Vec<ModelMetadata> {
         // TODO: 实现模型列表查询
         vec![]
     }
 
-    pub async fn get_model(&self, model_id: &str) -> Option<ModelMetadata> {
+    pub async fn get_model(&self, _model_id: &str) -> Option<ModelMetadata> {
         // TODO: 实现模型查询
         None
     }

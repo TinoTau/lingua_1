@@ -360,6 +360,14 @@ npm start
   - Session 结构支持 `tenant_id`、`client_version`、`platform`、`dialect`、`features`
   - Job 结构支持 `dialect`、`features`、`pipeline`、`audio_format`、`sample_rate`
   - Node 结构支持 `version`、`platform`、`hardware`、`features_supported`、`accept_public_jobs`
+- ✅ **WebSocket 消息处理实现**：
+  - 会话端消息处理（session_init, utterance, heartbeat, session_close）
+  - 节点端消息处理（node_register, node_heartbeat, job_result）
+  - 连接管理（SessionConnectionManager, NodeConnectionManager）
+  - 结果队列管理（ResultQueueManager）- 支持乱序结果排序
+- ✅ **单元测试**：
+  - 阶段一.1 完整单元测试（46个测试，全部通过）
+  - 覆盖所有核心模块（会话、任务分发、节点注册、配对、连接管理、结果队列）
 - ✅ 配置文件
 
 #### 3. API Gateway（对外 API 网关）
@@ -421,20 +429,20 @@ npm start
 - ✅ 协议规范文档（包含实现状态）
 - ✅ 对外开放 API 设计与实现文档
 
+#### 10. 测试
+- ✅ 阶段一.1 单元测试框架
+- ✅ 测试目录结构（按阶段编号组织）
+- ✅ 测试文档和报告
+
 ### 🔨 进行中 / 待完成
 
 #### 1. 调度服务器
-- [ ] **完善 WebSocket 消息处理逻辑**（高优先级）
-  - [ ] 解析 `session_init` 消息并创建会话
-  - [ ] 处理配对码验证
-  - [ ] 解析 `utterance` 消息并创建 job
-  - [ ] 接收节点结果并转发给客户端
-  - [ ] 处理心跳和会话关闭
-- [ ] 实现完整的任务分发算法
-- [ ] 实现节点负载均衡
-- [ ] 实现结果聚合和排序（按 `utterance_index`）
-- [ ] 添加数据库支持（可选）
+- [ ] 实现完整的任务分发算法（负载均衡优化）
+- [ ] 功能感知节点选择完善（更智能的节点匹配）
+- [ ] 添加数据库支持（可选，当前使用内存存储）
 - [ ] 实现租户限流器（可选）
+- [ ] 添加集成测试
+- [ ] 性能测试和优化
 
 #### 2. API Gateway
 - [ ] 完善错误处理和日志
@@ -486,7 +494,7 @@ npm start
 - [ ] SDK 文档和示例
 
 #### 8. 测试和优化
-- [ ] 单元测试
+- [x] 单元测试（阶段一.1 已完成，46个测试全部通过）
 - [ ] 集成测试
 - [ ] 性能优化
 - [ ] 错误处理完善
@@ -501,12 +509,21 @@ npm start
 - [x] 核心模块结构
 - [x] 消息协议定义
 - [x] 数据结构扩展（支持多租户、功能感知）
-- [ ] **WebSocket 消息处理实现**（高优先级）
-  - [ ] 会话端消息处理（session_init, utterance, heartbeat）
-  - [ ] 节点端消息处理（node_register, node_heartbeat, job_result）
-  - [ ] 结果聚合和排序
-- [ ] 任务分发算法实现
-- [ ] 功能感知节点选择完善
+- [x] **WebSocket 消息处理实现**（高优先级）
+  - [x] 会话端消息处理（session_init, utterance, heartbeat, session_close）
+  - [x] 节点端消息处理（node_register, node_heartbeat, job_result）
+  - [x] 结果聚合和排序（按 utterance_index 顺序）
+  - [x] WebSocket 连接管理（SessionConnectionManager, NodeConnectionManager）
+- [x] **单元测试**（阶段一.1）
+  - [x] 会话管理测试（7个测试）
+  - [x] 任务分发测试（6个测试）
+  - [x] 节点注册表测试（10个测试）
+  - [x] 配对服务测试（6个测试）
+  - [x] 连接管理测试（8个测试）
+  - [x] 结果队列测试（9个测试）
+  - [x] 测试报告和文档
+- [ ] 任务分发算法优化（负载均衡）
+- [ ] 功能感知节点选择完善（更智能匹配）
 
 #### 1.2 客户端消息格式对齐
 - [ ] 移动端消息格式对齐协议规范

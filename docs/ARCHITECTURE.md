@@ -23,7 +23,16 @@
 - `node_registry.rs`: 节点注册表
 - `pairing.rs`: 配对服务
 - `model_hub.rs`: 模型库接口
-- `websocket.rs`: WebSocket 处理
+- `websocket.rs`: WebSocket 消息处理
+- `connection_manager.rs`: WebSocket 连接管理
+- `result_queue.rs`: 结果队列管理
+- `app_state.rs`: 应用状态管理
+
+**实现状态**:
+- ✅ 核心模块已实现
+- ✅ WebSocket 消息处理已实现（会话端和节点端）
+- ✅ 连接管理和结果队列已实现
+- ✅ 单元测试已完成（阶段一.1，46个测试全部通过）
 
 ### 2. Electron Node 客户端
 
@@ -263,4 +272,35 @@
 - 支持模块化功能扩展（易于添加新的可选功能模块）
 - **支持对外开放 API**（通过 API Gateway）
 - **支持多租户**（每个外部应用作为独立租户）
+
+## 测试
+
+### 单元测试
+
+项目包含完整的单元测试框架，按开发阶段组织：
+
+- **测试目录**: `scheduler/tests/`
+- **阶段一.1 测试**: `scheduler/tests/stage1.1/`
+  - 46个单元测试，全部通过 ✅
+  - 覆盖所有核心模块
+  - 详细的测试报告和文档
+
+**测试覆盖的模块**:
+- ✅ 会话管理（7个测试）
+- ✅ 任务分发（6个测试）
+- ✅ 节点注册表（10个测试）
+- ✅ 配对服务（6个测试）
+- ✅ 连接管理（8个测试）
+- ✅ 结果队列（9个测试）
+
+**运行测试**:
+```bash
+cd scheduler
+cargo test --test stage1_1
+```
+
+**查看测试报告**:
+- 测试报告：`scheduler/tests/stage1.1/TEST_REPORT.md`
+- 测试说明：`scheduler/tests/stage1.1/README.md`
+- 测试目录说明：`scheduler/tests/README.md`
 
