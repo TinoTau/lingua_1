@@ -7,8 +7,7 @@
 ### 架构与设计
 
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - 系统架构详细说明
-- [MODULAR_FEATURES.md](./MODULAR_FEATURES.md) - 模块化功能详细设计
-- [MODULAR_FEATURES_SUMMARY.md](./MODULAR_FEATURES_SUMMARY.md) - 模块化功能快速参考
+- [MODULAR_FEATURES.md](./MODULAR_FEATURES.md) - 模块化功能设计（包含快速参考）
 
 ### 协议规范
 
@@ -44,8 +43,7 @@ docs/
 ├── README.md                    # 本文件
 ├── ARCHITECTURE.md              # 系统架构文档
 ├── GETTING_STARTED.md           # 快速开始指南
-├── MODULAR_FEATURES.md          # 模块化功能详细设计
-├── MODULAR_FEATURES_SUMMARY.md  # 模块化功能总结
+├── MODULAR_FEATURES.md          # 模块化功能设计（包含快速参考）
 ├── PROTOCOLS.md                 # WebSocket 消息协议规范（包含实现状态）
 ├── PUBLIC_API.md                # 对外开放 API 设计与实现
 └── v0.1版本项目架构与技术报告.md  # 参考文档

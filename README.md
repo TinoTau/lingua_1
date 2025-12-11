@@ -257,8 +257,7 @@ lingua_1/
 └── docs/                         # 文档
     ├── ARCHITECTURE.md          # 架构文档
     ├── GETTING_STARTED.md       # 快速开始指南
-    ├── MODULAR_FEATURES.md      # 模块化功能详细设计
-    ├── MODULAR_FEATURES_SUMMARY.md  # 模块化功能总结
+    ├── MODULAR_FEATURES.md      # 模块化功能设计（包含快速参考）
     ├── PROTOCOLS.md             # WebSocket 消息协议规范
     └── PUBLIC_API.md            # 对外开放 API 设计与实现
 ```
@@ -598,8 +597,7 @@ npm start
 - [技术架构报告](./docs/v0.1版本项目架构与技术报告.md) - 之前版本的技术架构参考
 - [架构文档](./docs/ARCHITECTURE.md) - 系统架构详细说明
 - [快速开始指南](./docs/GETTING_STARTED.md) - 快速上手指南
-- [模块化功能设计](./docs/MODULAR_FEATURES.md) - 模块化功能详细设计
-- [模块化功能总结](./docs/MODULAR_FEATURES_SUMMARY.md) - 模块化功能快速参考
+- [模块化功能设计](./docs/MODULAR_FEATURES.md) - 模块化功能设计（包含快速参考）
 - [协议规范](./docs/PROTOCOLS.md) - WebSocket 消息协议规范
 - [对外开放 API](./docs/PUBLIC_API.md) - 对外 API 设计与实现
 

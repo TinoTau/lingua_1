@@ -1,5 +1,62 @@
 # 模块化功能设计文档
 
+## 快速参考
+
+**是的，当前架构完全支持实时停用或切换可选功能模块，且不会影响其他功能。**
+
+### 核心特性
+
+✅ **模块独立性**: 每个模块可以独立启用/禁用，互不影响  
+✅ **运行时切换**: 无需重启服务即可切换模块状态  
+✅ **优雅降级**: 模块禁用时，系统仍能正常工作  
+✅ **按需加载**: 模块只在需要时加载模型，节省资源  
+✅ **客户端控制**: 客户端可以按需选择功能
+
+### 工作流程
+
+```
+客户端请求 → 指定需要的可选功能
+    ↓
+调度服务器 → 选择支持这些功能的节点
+    ↓
+节点处理 → 根据请求启用/禁用相应模块
+    ↓
+返回结果 → 包含可选功能的处理结果
+```
+
+### 使用示例
+
+#### 节点端启用/禁用模块
+
+```rust
+// 启用音色识别模块
+inference_service.enable_module("speaker_identification").await?;
+
+// 禁用语速控制模块
+inference_service.disable_module("speech_rate_control").await?;
+```
+
+#### 客户端请求指定功能
+
+```typescript
+const message = {
+    type: 'utterance',
+    session_id: 's-123',
+    utterance_index: 1,
+    src_lang: 'zh',
+    tgt_lang: 'en',
+    audio: base64Audio,
+    features: {
+        speaker_identification: true,  // 启用音色识别
+        voice_cloning: true,           // 启用音色生成
+        speech_rate_detection: true,   // 启用语速识别
+        speech_rate_control: false,    // 禁用语速控制
+    }
+};
+```
+
+---
+
 ## 概述
 
 本文档描述如何实现**实时停用或切换可选功能模块**，确保各模块之间互不影响。
@@ -10,6 +67,14 @@
 2. **运行时切换**: 支持不重启服务的情况下启用/禁用模块
 3. **优雅降级**: 模块禁用时，系统仍能正常工作
 4. **配置驱动**: 通过配置和运行时命令控制模块状态
+
+## 已实现的代码
+
+- ✅ 模块接口定义 (`node-inference/src/modules.rs`)
+- ✅ 音色识别和生成模块 (`node-inference/src/speaker.rs`)
+- ✅ 语速识别和控制模块 (`node-inference/src/speech_rate.rs`)
+- ✅ 推理服务集成 (`node-inference/src/main.rs`)
+- ✅ 模块管理器 (`node-inference/src/modules.rs`)
 
 ## 支持的可选功能模块
 
@@ -435,6 +500,21 @@ export function FeatureSelector({ onFeaturesChange }: Props) {
 3. **阶段三**: 实现高级可选模块（音色生成、语速控制）
 4. **阶段四**: 完善 UI 和配置管理
 5. **阶段五**: 测试和优化
+
+## 已实现的代码
+
+- ✅ 模块接口定义 (`node-inference/src/modules.rs`)
+- ✅ 音色识别和生成模块 (`node-inference/src/speaker.rs`)
+- ✅ 语速识别和控制模块 (`node-inference/src/speech_rate.rs`)
+- ✅ 推理服务集成 (`node-inference/src/main.rs`)
+- ✅ 模块管理器 (`node-inference/src/modules.rs`)
+
+## 下一步
+
+1. 完善模块的模型加载逻辑
+2. 实现 Electron 客户端的模块管理 UI
+3. 实现调度服务器的功能感知节点选择
+4. 添加模块状态监控和日志
 
 ## 总结
 
