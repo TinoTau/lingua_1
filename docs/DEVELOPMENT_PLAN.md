@@ -2,7 +2,10 @@
 
 ## 阶段一：核心功能实现（4-6 周）
 
-**当前进度**: 阶段一.1 基础功能已完成 ✅（47个单元测试全部通过），负载均衡优化已完成 ✅
+**当前进度**: 
+- 阶段一.1 基础功能已完成 ✅（47个单元测试全部通过）
+- 负载均衡优化已完成 ✅
+- 阶段一.2 客户端消息格式对齐已完成 ✅（7个单元测试全部通过）
 
 ### 1.1 调度服务器核心功能
 - [x] 项目框架搭建
@@ -32,9 +35,17 @@
 - [ ] 高级负载均衡策略（资源使用率、加权轮询、综合评分）
 - [ ] 功能匹配优先级排序和方言匹配
 
-### 1.2 客户端消息格式对齐
-- [ ] 移动端消息格式对齐协议规范
-- [ ] Electron Node 消息格式对齐协议规范
+### 1.2 客户端消息格式对齐 ✅
+- [x] 移动端消息格式对齐协议规范
+  - [x] session_init 消息格式对齐（client_version, platform, dialect, features）
+  - [x] utterance 消息格式对齐（audio_format, sample_rate, dialect, features）
+- [x] Electron Node 消息格式对齐协议规范
+  - [x] node_register 消息格式对齐（version, platform, hardware, installed_models, features_supported）
+  - [x] node_heartbeat 消息格式对齐（timestamp, resource_usage 结构）
+  - [x] job_result 消息格式对齐（完整的错误处理结构）
+- [x] 单元测试（7个测试，全部通过）
+  - [x] 消息格式验证测试
+  - [x] 功能标志完整性测试
 
 ### 1.3 节点推理服务
 - [ ] 实现 Whisper ASR 推理

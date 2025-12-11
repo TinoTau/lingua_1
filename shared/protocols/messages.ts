@@ -8,6 +8,9 @@ export interface FeatureFlags {
   emotion_detection?: boolean;
   voice_style_detection?: boolean;
   speech_rate_detection?: boolean;
+  speech_rate_control?: boolean;
+  speaker_identification?: boolean;
+  persona_adaptation?: boolean;
 }
 
 export interface ResourceUsage {

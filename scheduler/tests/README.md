@@ -16,7 +16,12 @@ tests/
 │   ├── result_queue_test.rs # 结果队列测试
 │   ├── README.md         # 测试说明文档
 │   └── TEST_REPORT.md    # 测试结果报告
-└── stage1_1.rs           # 阶段一.1 测试入口（文件名使用下划线）
+├── stage1.2/              # 阶段一.2（1.2 客户端消息格式对齐）测试
+│   ├── mod.rs            # 测试模块声明
+│   ├── message_format_test.rs # 消息格式验证测试
+│   └── TEST_REPORT.md    # 测试结果报告
+├── stage1_1.rs           # 阶段一.1 测试入口（文件名使用下划线）
+└── stage1_2.rs           # 阶段一.2 测试入口（文件名使用下划线）
 ```
 
 ## 运行测试
@@ -27,14 +32,20 @@ tests/
 # 运行阶段一.1的所有测试
 cargo test --test stage1_1
 
+# 运行阶段一.2的所有测试
+cargo test --test stage1_2
+
 # 运行特定测试模块
 cargo test --test stage1_1 session_test
+cargo test --test stage1_2 message_format_test
 
 # 运行特定测试
 cargo test --test stage1_1 test_create_session
+cargo test --test stage1_2 test_session_init_message_format
 
 # 显示详细输出
 cargo test --test stage1_1 -- --nocapture
+cargo test --test stage1_2 -- --nocapture
 ```
 
 ### 运行所有测试
@@ -42,6 +53,20 @@ cargo test --test stage1_1 -- --nocapture
 ```bash
 cargo test
 ```
+
+## 测试阶段说明
+
+### 阶段一.1：调度服务器核心功能
+
+**测试数量**: 47个测试  
+**测试内容**: 会话管理、任务分发、节点注册、配对服务、连接管理、结果队列  
+**测试报告**: [TEST_REPORT.md](./stage1.1/TEST_REPORT.md)
+
+### 阶段一.2：客户端消息格式对齐
+
+**测试数量**: 7个测试  
+**测试内容**: 消息格式验证（移动端和 Electron Node 客户端的消息格式对齐协议规范）  
+**测试报告**: [TEST_REPORT.md](./stage1.2/TEST_REPORT.md)
 
 ## 测试组织原则
 

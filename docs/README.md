@@ -34,8 +34,11 @@
 ### 测试
 
 - 测试目录：`scheduler/tests/`
-- 阶段一.1 测试：`scheduler/tests/stage1.1/`
-- 测试报告：`scheduler/tests/stage1.1/TEST_REPORT.md`
+- 阶段一.1 测试：`scheduler/tests/stage1.1/`（47个测试）
+- 阶段一.2 测试：`scheduler/tests/stage1.2/`（7个测试）
+- 测试报告：
+  - [阶段一.1 测试报告](./../scheduler/tests/stage1.1/TEST_REPORT.md)
+  - [阶段一.2 测试报告](./../scheduler/tests/stage1.2/TEST_REPORT.md)
 
 ### 参考文档
 
