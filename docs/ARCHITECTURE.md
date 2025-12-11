@@ -73,7 +73,34 @@
 - 提供模型列表查询 API
 - 提供模型下载 URL
 
-### 5. 节点推理服务
+### 5. API Gateway（对外 API 网关）
+
+**位置**: `api-gateway/`  
+**技术栈**: Rust + Tokio + Axum  
+**职责**:
+- 提供对外 REST API 和 WebSocket API
+- API Key 鉴权
+- 租户管理
+- 请求限流
+- 协议转换（外部 API ↔ 内部协议）
+
+**主要模块**:
+- `tenant.rs`: 租户管理
+- `auth.rs`: API Key 鉴权中间件
+- `rate_limit.rs`: 限流模块
+- `rest_api.rs`: REST API 处理
+- `ws_api.rs`: WebSocket API 处理
+- `scheduler_client.rs`: 与 Scheduler 通信
+
+**功能**:
+- REST API: `POST /v1/speech/translate` - 非实时翻译
+- WebSocket API: `/v1/stream` - 实时流式翻译
+- 多租户支持（每个外部应用作为一个租户）
+- 按租户的请求限流
+
+详细设计请参考 [对外开放 API 文档](./PUBLIC_API.md)
+
+### 6. 节点推理服务
 
 **位置**: `node-inference/`  
 **技术栈**: Rust + ONNX Runtime + Whisper  
@@ -136,11 +163,27 @@
 
 ## 网络架构
 
+### 内部架构
+
 ```
 移动端客户端 ←→ WebSocket ←→ 调度服务器 ←→ WebSocket ←→ Electron 节点
                                     ↓
                               模型库服务 (HTTP)
 ```
+
+### 对外 API 架构
+
+```
+外部应用 (Web/App/IM)
+    ↓ HTTPS/WSS
+[API Gateway] ← 鉴权、限流、协议转换
+    ↓ 内部 WebSocket
+[调度服务器] ←→ [节点]
+```
+
+- **内部连接**: 移动端和 Electron 节点直接连接调度服务器
+- **外部连接**: 第三方应用通过 API Gateway 接入
+- API Gateway 负责鉴权、限流和协议转换
 
 - 所有连接都是客户端主动连接服务器
 - 无需 NAT 穿透
@@ -152,14 +195,17 @@
 ### 开发环境
 
 - 调度服务器: `localhost:8080`
+- API Gateway: `localhost:8081` (可选)
 - 模型库服务: `localhost:5000`
 - TTS 服务: `localhost:5005` (可选，使用之前的 Piper TTS)
 
 ### 生产环境
 
-- 调度服务器需要公网 IP 和域名
+- **调度服务器**: 需要公网 IP 和域名（内部服务）
+- **API Gateway**: 需要公网 IP 和域名（对外服务）
 - 使用 HTTPS/WSS
 - 支持多实例部署（负载均衡）
+- API Gateway 可独立扩展
 
 ## 安全与隐私
 
@@ -215,4 +261,6 @@
 - 支持模型热更新
 - 支持多语言对和方言模型
 - 支持模块化功能扩展（易于添加新的可选功能模块）
+- **支持对外开放 API**（通过 API Gateway）
+- **支持多租户**（每个外部应用作为独立租户）
 

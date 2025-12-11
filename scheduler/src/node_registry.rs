@@ -1,3 +1,4 @@
+use crate::messages::{FeatureFlags, HardwareInfo, InstalledModel};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -8,11 +9,16 @@ use uuid::Uuid;
 pub struct Node {
     pub node_id: String,
     pub name: String,
+    pub version: String,
+    pub platform: String, // "windows" | "linux" | "macos"
+    pub hardware: HardwareInfo,
     pub online: bool,
     pub cpu_usage: f32,
     pub gpu_usage: Option<f32>,
     pub memory_usage: f32,
-    pub installed_models: Vec<String>,
+    pub installed_models: Vec<InstalledModel>,
+    pub features_supported: FeatureFlags,
+    pub accept_public_jobs: bool,
     pub current_jobs: usize,
     pub max_concurrent_jobs: usize,
     pub last_heartbeat: chrono::DateTime<chrono::Utc>,
@@ -30,23 +36,41 @@ impl NodeRegistry {
         }
     }
 
-    pub async fn register_node(&self, name: String) -> Node {
-        let node_id = format!("node-{}", Uuid::new_v4().to_string()[..8].to_uppercase());
+    pub async fn register_node(
+        &self,
+        node_id: Option<String>,
+        name: String,
+        version: String,
+        platform: String,
+        hardware: HardwareInfo,
+        installed_models: Vec<InstalledModel>,
+        features_supported: FeatureFlags,
+        accept_public_jobs: bool,
+    ) -> Node {
+        let node_id = node_id.unwrap_or_else(|| {
+            format!("node-{}", Uuid::new_v4().to_string()[..8].to_uppercase())
+        });
+        
         let node = Node {
             node_id: node_id.clone(),
             name,
+            version,
+            platform,
+            hardware,
             online: true,
             cpu_usage: 0.0,
             gpu_usage: None,
             memory_usage: 0.0,
-            installed_models: Vec::new(),
+            installed_models,
+            features_supported,
+            accept_public_jobs,
             current_jobs: 0,
             max_concurrent_jobs: 4,
             last_heartbeat: chrono::Utc::now(),
         };
 
         let mut nodes = self.nodes.write().await;
-        nodes.insert(node_id, node.clone());
+        nodes.insert(node_id.clone(), node.clone());
         node
     }
 
@@ -56,7 +80,7 @@ impl NodeRegistry {
         cpu_usage: f32,
         gpu_usage: Option<f32>,
         memory_usage: f32,
-        installed_models: Vec<String>,
+        installed_models: Option<Vec<InstalledModel>>,
         current_jobs: usize,
     ) -> bool {
         let mut nodes = self.nodes.write().await;
@@ -65,7 +89,9 @@ impl NodeRegistry {
             node.cpu_usage = cpu_usage;
             node.gpu_usage = gpu_usage;
             node.memory_usage = memory_usage;
-            node.installed_models = installed_models;
+            if let Some(models) = installed_models {
+                node.installed_models = models;
+            }
             node.current_jobs = current_jobs;
             node.last_heartbeat = chrono::Utc::now();
             true
@@ -84,15 +110,43 @@ impl NodeRegistry {
     }
 
     pub async fn select_random_node(&self, src_lang: &str, tgt_lang: &str) -> Option<String> {
+        // 使用功能感知选择（不要求特定功能）
+        self.select_node_with_features(src_lang, tgt_lang, &None, true).await
+    }
+
+    fn node_has_required_models(&self, node: &Node, src_lang: &str, tgt_lang: &str) -> bool {
+        // 检查节点是否安装了所需的模型
+        let has_asr = node.installed_models.iter().any(|m| m.kind == "asr");
+        let has_nmt = node.installed_models.iter().any(|m| {
+            m.kind == "nmt"
+                && m.src_lang.as_deref() == Some(src_lang)
+                && m.tgt_lang.as_deref() == Some(tgt_lang)
+        });
+        let has_tts = node.installed_models.iter().any(|m| {
+            m.kind == "tts" && m.tgt_lang.as_deref() == Some(tgt_lang)
+        });
+        
+        has_asr && has_nmt && has_tts
+    }
+
+    pub async fn select_node_with_features(
+        &self,
+        src_lang: &str,
+        tgt_lang: &str,
+        required_features: &Option<FeatureFlags>,
+        accept_public: bool,
+    ) -> Option<String> {
         let nodes = self.nodes.read().await;
         
-        // 筛选可用的节点（在线且未满载，且安装了所需的模型）
+        // 筛选可用的节点
         let available_nodes: Vec<_> = nodes
             .values()
             .filter(|node| {
                 node.online
                     && node.current_jobs < node.max_concurrent_jobs
+                    && (accept_public || !node.accept_public_jobs) // 如果 accept_public=false，只选择不接受公共任务的节点
                     && self.node_has_required_models(node, src_lang, tgt_lang)
+                    && self.node_supports_features(node, required_features)
             })
             .collect();
 
@@ -100,15 +154,28 @@ impl NodeRegistry {
             return None;
         }
 
-        // 简单随机选择（实际应该考虑负载均衡）
         // 使用第一个可用节点（TODO: 实现真正的负载均衡）
         Some(available_nodes[0].node_id.clone())
     }
 
-    fn node_has_required_models(&self, node: &Node, src_lang: &str, tgt_lang: &str) -> bool {
-        // 简化检查：节点需要安装 ASR、NMT、TTS 模型
-        // TODO: 更精确的模型匹配逻辑
-        !node.installed_models.is_empty()
+    fn node_supports_features(&self, node: &Node, required_features: &Option<FeatureFlags>) -> bool {
+        if let Some(ref features) = required_features {
+            // 检查节点是否支持所有必需的功能
+            if features.emotion_detection == Some(true) 
+                && node.features_supported.emotion_detection != Some(true) {
+                return false;
+            }
+            if features.voice_style_detection == Some(true)
+                && node.features_supported.voice_style_detection != Some(true) {
+                return false;
+            }
+            if features.speech_rate_detection == Some(true)
+                && node.features_supported.speech_rate_detection != Some(true) {
+                return false;
+            }
+            // ... 其他功能检查
+        }
+        true
     }
 
     pub async fn mark_node_offline(&self, node_id: &str) {

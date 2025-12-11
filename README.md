@@ -21,6 +21,8 @@
 - ✅ 调度服务器负责任务拆分、节点调度、结果聚合
 - ✅ **模块化功能设计**：支持实时启用/禁用可选功能模块
 - ✅ **可选功能模块**：音色识别、音色生成、语速识别、语速控制等
+- ✅ **对外开放 API**：支持第三方应用通过 REST/WebSocket API 接入
+- ✅ **多租户支持**：每个外部应用作为独立租户，支持 API Key 鉴权和限流
 
 ## 系统架构
 
@@ -34,9 +36,23 @@
 └───────────────────────────────▲────────────────────────────────────────┘
                                 │ wss://dispatcher.example.com/ws/session
                                 │
+┌───────────────────────── 外部应用（Web/App/IM） ────────────────────────┐
+│ - 通过 REST/WebSocket API 接入                                          │
+│ - API Key 鉴权                                                          │
+└───────────────────────────────▲────────────────────────────────────────┘
+                                │ https/wss://api.example.com
+                                │
+                                ▼
+┌──────────────────────────── API Gateway ───────────────────────────────┐
+│ - REST API: POST /v1/speech/translate                                  │
+│ - WebSocket API: /v1/stream                                            │
+│ - 鉴权、限流、协议转换                                                  │
+└───────────────────────────────▲────────────────────────────────────────┘
+                                │ 内部 WebSocket
+                                │
                                 ▼
 ┌──────────────────────────── 调度服务器 ────────────────────────────────┐
-│ ① Session Manager（会话管理）                                          │
+│ ① Session Manager（会话管理，支持多租户）                                │
 │ ② Job Dispatcher / Scheduler（任务分发与调度）                          │
 │ ③ Node Registry（节点注册表，支持功能感知选择）                          │
 │ ④ Pairing Service（6位安全码配对服务）                                  │
@@ -122,6 +138,11 @@ const message = {
 - **框架**: Axum (HTTP/WebSocket)
 - **数据库**: SQLite / PostgreSQL（可选）
 
+### API Gateway
+- **语言**: Rust + Tokio
+- **框架**: Axum (HTTP/WebSocket)
+- **功能**: 鉴权、限流、协议转换
+
 ### Electron Node 客户端
 - **框架**: Electron
 - **主进程**: Node.js + TypeScript
@@ -156,6 +177,7 @@ lingua_1/
 │   │   ├── pairing.rs           # 配对服务
 │   │   ├── model_hub.rs         # 模型库接口
 │   │   ├── websocket.rs         # WebSocket 处理
+│   │   ├── messages.rs          # 消息协议定义
 │   │   └── config.rs            # 配置管理
 │   ├── Cargo.toml
 │   └── config.toml
@@ -192,6 +214,20 @@ lingua_1/
 │   ├── requirements.txt
 │   └── config.yaml
 │
+├── api-gateway/                  # 对外 API 网关
+│   ├── src/
+│   │   ├── main.rs              # 主入口
+│   │   ├── tenant.rs            # 租户管理
+│   │   ├── auth.rs              # 鉴权中间件
+│   │   ├── rate_limit.rs        # 限流模块
+│   │   ├── rest_api.rs          # REST API 处理
+│   │   ├── ws_api.rs            # WebSocket API 处理
+│   │   ├── scheduler_client.rs  # Scheduler 客户端
+│   │   └── config.rs            # 配置管理
+│   ├── Cargo.toml
+│   ├── config.toml
+│   └── README.md
+│
 ├── node-inference/               # 节点推理服务
 │   ├── src/
 │   │   ├── main.rs              # 主入口
@@ -218,7 +254,9 @@ lingua_1/
     ├── ARCHITECTURE.md          # 架构文档
     ├── GETTING_STARTED.md       # 快速开始指南
     ├── MODULAR_FEATURES.md      # 模块化功能详细设计
-    └── MODULAR_FEATURES_SUMMARY.md  # 模块化功能总结
+    ├── MODULAR_FEATURES_SUMMARY.md  # 模块化功能总结
+    ├── PROTOCOLS.md             # WebSocket 消息协议规范
+    └── PUBLIC_API.md            # 对外开放 API 设计与实现
 ```
 
 ## 快速开始
@@ -437,13 +475,20 @@ npm start
 
 ## 相关文档
 
+### 核心文档
+
 - [系统设计文档](./distributed_speech_translation_design_electron.md) - 完整的系统设计方案
 - [技术架构报告](./docs/v0.1版本项目架构与技术报告.md) - 之前版本的技术架构参考
-- [项目状态报告](./docs/PROJECT_STATUS.md) - 详细的项目状态
 - [架构文档](./docs/ARCHITECTURE.md) - 系统架构详细说明
 - [快速开始指南](./docs/GETTING_STARTED.md) - 快速上手指南
 - [模块化功能设计](./docs/MODULAR_FEATURES.md) - 模块化功能详细设计
 - [模块化功能总结](./docs/MODULAR_FEATURES_SUMMARY.md) - 模块化功能快速参考
+- [协议规范](./docs/PROTOCOLS.md) - WebSocket 消息协议规范
+- [对外开放 API](./docs/PUBLIC_API.md) - 对外 API 设计与实现
+
+### 脚本和工具文档
+
+- [脚本工具说明](./scripts/README.md) - 脚本工具使用说明
 
 ## 核心优势
 

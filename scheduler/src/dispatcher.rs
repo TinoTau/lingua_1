@@ -1,4 +1,5 @@
 use crate::node_registry::NodeRegistry;
+use crate::messages::{FeatureFlags, PipelineConfig};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -11,7 +12,12 @@ pub struct Job {
     pub utterance_index: u64,
     pub src_lang: String,
     pub tgt_lang: String,
+    pub dialect: Option<String>,
+    pub features: Option<FeatureFlags>,
+    pub pipeline: PipelineConfig,
     pub audio_data: Vec<u8>,
+    pub audio_format: String,
+    pub sample_rate: u32,
     pub assigned_node_id: Option<String>,
     pub status: JobStatus,
     pub created_at: chrono::DateTime<chrono::Utc>,
@@ -46,7 +52,12 @@ impl JobDispatcher {
         utterance_index: u64,
         src_lang: String,
         tgt_lang: String,
+        dialect: Option<String>,
+        features: Option<FeatureFlags>,
+        pipeline: PipelineConfig,
         audio_data: Vec<u8>,
+        audio_format: String,
+        sample_rate: u32,
         preferred_node_id: Option<String>,
     ) -> Job {
         let job_id = format!("job-{}", Uuid::new_v4().to_string()[..8].to_uppercase());
@@ -56,12 +67,12 @@ impl JobDispatcher {
             if self.node_registry.is_node_available(&node_id).await {
                 Some(node_id)
             } else {
-                // 回退到随机选择
-                self.node_registry.select_random_node(&src_lang, &tgt_lang).await
+                // 回退到功能感知选择
+                self.node_registry.select_node_with_features(&src_lang, &tgt_lang, &features, true).await
             }
         } else {
-            // 随机选择节点
-            self.node_registry.select_random_node(&src_lang, &tgt_lang).await
+            // 功能感知选择节点
+            self.node_registry.select_node_with_features(&src_lang, &tgt_lang, &features, true).await
         };
 
         let job = Job {
@@ -70,7 +81,12 @@ impl JobDispatcher {
             utterance_index,
             src_lang,
             tgt_lang,
+            dialect,
+            features,
+            pipeline,
             audio_data,
+            audio_format,
+            sample_rate,
             assigned_node_id: assigned_node_id.clone(),
             status: if assigned_node_id.is_some() {
                 JobStatus::Assigned

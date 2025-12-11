@@ -47,7 +47,21 @@ cargo run --release
 
 服务将在 `http://localhost:8080` 启动。
 
-### 4. 启动 Electron Node 客户端
+### 4. 启动 API Gateway（可选）
+
+如果需要对外提供 API 服务：
+
+```powershell
+cd api-gateway
+cargo build --release
+cargo run --release
+```
+
+服务将在 `http://localhost:8081` 启动。
+
+**注意**: API Gateway 需要先启动调度服务器。
+
+### 5. 启动 Electron Node 客户端
 
 ```powershell
 cd electron-node
@@ -56,7 +70,7 @@ npm run build
 npm start
 ```
 
-### 5. 启动移动端客户端
+### 6. 启动移动端客户端
 
 ```powershell
 cd mobile-app
@@ -88,6 +102,23 @@ host = "0.0.0.0"
 [model_hub]
 base_url = "http://localhost:5000"
 storage_path = "./models"
+```
+
+### API Gateway 配置
+
+编辑 `api-gateway/config.toml`:
+
+```toml
+[server]
+port = 8081
+host = "0.0.0.0"
+
+[scheduler]
+url = "ws://localhost:8080/ws/session"
+
+[rate_limit]
+default_max_rps = 100
+default_max_sessions = 10
 ```
 
 ### Electron Node 客户端配置
@@ -166,11 +197,48 @@ const schedulerUrl = 'ws://your-scheduler-url:8080/ws/session';
 - 检查网络连接
 - 检查存储空间
 
+## 使用 API Gateway（对外 API）
+
+### 创建租户
+
+目前租户管理使用内存存储，生产环境建议使用数据库。
+
+### REST API 示例
+
+```bash
+curl -X POST http://localhost:8081/v1/speech/translate \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -F "audio=@audio.wav" \
+  -F "src_lang=zh" \
+  -F "tgt_lang=en"
+```
+
+### WebSocket API 示例
+
+```javascript
+const ws = new WebSocket('ws://localhost:8081/v1/stream', {
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY'
+  }
+});
+
+ws.onopen = () => {
+  ws.send(JSON.stringify({
+    type: 'start',
+    src_lang: 'zh',
+    tgt_lang: 'en'
+  }));
+};
+```
+
+详细 API 文档请参考 [对外开放 API 文档](./PUBLIC_API.md)
+
 ## 下一步
 
 - 查看 [架构文档](./ARCHITECTURE.md) 了解系统设计
 - 查看 [模块化功能设计](./MODULAR_FEATURES.md) 了解可选功能模块
 - 查看 [模块化功能总结](./MODULAR_FEATURES_SUMMARY.md) 快速了解模块化功能
-- 查看 [API 文档](./API.md) 了解接口规范（待完善）
+- 查看 [协议规范](./PROTOCOLS.md) 了解 WebSocket 消息协议
+- 查看 [对外开放 API 文档](./PUBLIC_API.md) 了解对外 API 设计
 - 参与开发，查看 [开发指南](./DEVELOPMENT.md)（待完善）
 

@@ -10,6 +10,7 @@ use tracing::{info, error};
 use tracing_subscriber;
 
 mod config;
+mod messages;
 mod session;
 mod dispatcher;
 mod node_registry;

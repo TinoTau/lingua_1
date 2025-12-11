@@ -1,5 +1,7 @@
-# 复制原项目的模型到新项目
+﻿# 复制原项目的模型到新项目
 # 用法: .\scripts\copy_models.ps1
+# 说明: 脚本会从原项目复制模型到 model-hub/models 和 node-inference/models
+# 注意: 默认源路径为 D:\Programs\github\lingua\core\engine\models，如需修改请编辑第 10 行
 
 $ErrorActionPreference = "Stop"
 
@@ -24,7 +26,7 @@ New-Item -ItemType Directory -Force -Path $modelHubPath | Out-Null
 
 # 复制所有模型
 Copy-Item -Path "$sourcePath\*" -Destination $modelHubPath -Recurse -Force
-Write-Host "✓ 已复制到 model-hub/models" -ForegroundColor Green
+Write-Host "已复制到 model-hub/models" -ForegroundColor Green
 
 # 2. 复制到 node-inference/models (节点本地模型库)
 Write-Host "`n[2/2] 复制到 node-inference/models (节点本地模型库)..." -ForegroundColor Cyan
@@ -33,7 +35,7 @@ New-Item -ItemType Directory -Force -Path $nodeInferencePath | Out-Null
 
 # 复制所有模型
 Copy-Item -Path "$sourcePath\*" -Destination $nodeInferencePath -Recurse -Force
-Write-Host "✓ 已复制到 node-inference/models" -ForegroundColor Green
+Write-Host "已复制到 node-inference/models" -ForegroundColor Green
 
 # 统计信息
 Write-Host "`n复制完成！" -ForegroundColor Green
@@ -47,4 +49,3 @@ $totalSizeGB = [math]::Round($totalSize / 1GB, 2)
 Write-Host "`n总大小: $totalSizeGB GB" -ForegroundColor Yellow
 
 Write-Host "`n注意: 模型文件已在 .gitignore 中排除，不会被提交到 Git" -ForegroundColor Yellow
-

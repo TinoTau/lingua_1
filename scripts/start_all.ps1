@@ -12,7 +12,15 @@ Start-Sleep -Seconds 3
 Write-Host "启动调度服务器..." -ForegroundColor Yellow
 Start-Process powershell -ArgumentList "-NoExit", "-File", "$PSScriptRoot\start_scheduler.ps1" -WindowStyle Minimized
 
+# 等待调度服务器启动
+Start-Sleep -Seconds 3
+
+# 启动 API Gateway（后台，可选）
+Write-Host "启动 API Gateway..." -ForegroundColor Yellow
+Start-Process powershell -ArgumentList "-NoExit", "-File", "$PSScriptRoot\start_api_gateway.ps1" -WindowStyle Minimized
+
 Write-Host "所有服务已启动" -ForegroundColor Green
-Write-Host "调度服务器: http://localhost:8080" -ForegroundColor Cyan
 Write-Host "模型库服务: http://localhost:5000" -ForegroundColor Cyan
+Write-Host "调度服务器: http://localhost:8080" -ForegroundColor Cyan
+Write-Host "API Gateway: http://localhost:8081" -ForegroundColor Cyan
 
