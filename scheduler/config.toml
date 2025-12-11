@@ -1,0 +1,13 @@
+[server]
+port = 8080
+host = "0.0.0.0"
+
+[model_hub]
+base_url = "http://localhost:5000"
+storage_path = "./models"
+
+[scheduler]
+max_concurrent_jobs_per_node = 4
+job_timeout_seconds = 30
+heartbeat_interval_seconds = 15
+

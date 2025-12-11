@@ -1,0 +1,78 @@
+.model-management {
+  padding: 20px;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.tabs button {
+  padding: 10px 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.tabs button.active {
+  color: #2196f3;
+  border-bottom-color: #2196f3;
+}
+
+.model-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.model-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.model-info h3 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.model-info p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.model-item button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #2196f3;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.model-item button:hover {
+  background-color: #1976d2;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 14px;
+}
+

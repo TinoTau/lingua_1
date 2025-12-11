@@ -1,0 +1,45 @@
+[package]
+name = "lingua-node-inference"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "inference-service"
+path = "src/main.rs"
+
+[dependencies]
+# 异步运行时
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "rt", "time", "process", "fs"] }
+async-trait = "0.1"
+
+# 序列化
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# ONNX Runtime（模型推理）
+ort = { version = "1.16.3", default-features = false, features = ["download-binaries"] }
+
+# Whisper ASR 支持（启用 CUDA GPU 加速）
+whisper-rs = { version = "0.15.1", features = ["cuda"] }
+
+# 音频处理
+hound = "3.5"  # WAV 文件读取
+ndarray = "0.15"
+
+# HTTP 客户端（用于调用 TTS 服务）
+reqwest = { version = "0.11", features = ["json"] }
+
+# Base64 编码
+base64 = { version = "0.21", features = ["alloc"] }
+
+# 错误处理
+anyhow = "1"
+thiserror = "1"
+
+# 日志
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# 异步 trait
+async-trait = "0.1"
+

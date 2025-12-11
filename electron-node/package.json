@@ -1,0 +1,45 @@
+{
+  "name": "lingua-electron-node",
+  "version": "0.1.0",
+  "description": "Lingua 分布式语音翻译系统 - Electron Node 客户端",
+  "main": "main/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:main\" \"npm run dev:renderer\"",
+    "dev:main": "tsc -w --project tsconfig.main.json",
+    "dev:renderer": "vite",
+    "build": "npm run build:main && npm run build:renderer",
+    "build:main": "tsc --project tsconfig.main.json",
+    "build:renderer": "vite build",
+    "start": "electron .",
+    "package": "electron-builder",
+    "package:win": "electron-builder --win",
+    "package:mac": "electron-builder --mac",
+    "package:linux": "electron-builder --linux"
+  },
+  "keywords": [
+    "electron",
+    "speech-translation",
+    "distributed-computing"
+  ],
+  "author": "Lingua Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "concurrently": "^8.0.0",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "ws": "^8.0.0",
+    "axios": "^1.0.0",
+    "systeminformation": "^5.0.0"
+  }
+}
+
