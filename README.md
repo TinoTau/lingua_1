@@ -143,11 +143,14 @@ const message = {
 - **框架**: Axum (HTTP/WebSocket)
 - **功能**: 鉴权、限流、协议转换
 
-### Electron Node 客户端
+### Electron Node 客户端（阶段 2.2）✅
 - **框架**: Electron
 - **主进程**: Node.js + TypeScript
 - **渲染进程**: React + TypeScript + Vite
-- **推理引擎**: ONNX Runtime / PyTorch / Whisper-rs
+- **推理引擎**: HTTP 服务方式调用 Rust node-inference
+- **功能**: 系统资源监控、功能模块管理、模型管理、流式 ASR 支持
+- **项目位置**: `electron-node/`
+- **测试报告**: [阶段 2.2 测试报告](./electron-node/tests/stage2.2/TEST_REPORT.md)
 
 ### Web 客户端（iOS 开发设备替代方案）✅
 - **框架**: TypeScript + Vite
@@ -427,6 +430,7 @@ npm start
 - [阶段一.3 测试报告](./node-inference/tests/stage1.3/TEST_REPORT.md) - 节点推理服务测试报告（10个本地模型测试通过）
 - [阶段 2.1.2 测试报告（调度服务器）](./scheduler/tests/stage2.1.2/TEST_REPORT.md) - ASR 字幕功能测试报告（12个测试全部通过）
 - [阶段 2.1.2 测试报告（节点推理服务）](./node-inference/tests/stage2.1.2/TEST_REPORT.md) - ASR 字幕功能测试报告（5个测试：2个通过 ✅，3个跳过 ⏸️，需要模型文件）
+- [阶段 2.2 测试报告（Electron Node 客户端）](./electron-node/tests/stage2.2/TEST_REPORT.md) - Electron Node 客户端功能测试报告（编译测试全部通过 ✅）
 - [本地模型测试说明](./node-inference/tests/LOCAL_MODEL_TESTING.md) - 本地模型测试指南（ASR、VAD）
 - [Web 客户端阶段 2.1 测试报告](./web-client/tests/stage2.1/TEST_REPORT.md) - Web 客户端核心功能测试报告（22个测试全部通过）
 

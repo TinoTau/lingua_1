@@ -84,6 +84,7 @@ export interface TranslationResultMessage {
 
 export interface AsrPartialMessage {
   type: 'asr_partial';
+  node_id: string; // 节点发送时需要包含 node_id
   session_id: string;
   utterance_index: number;
   job_id: string;

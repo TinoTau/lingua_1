@@ -11,6 +11,7 @@ pub mod speaker;
 pub mod speech_rate;
 pub mod language_detector;
 mod inference;
+pub mod http_server;
 
 // 重新导出主要类型
 pub use asr::{ASREngine, ASRPartialResult};

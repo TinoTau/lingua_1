@@ -1,6 +1,5 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
-import * as path from 'path';
 import { NodeAgent } from './agent/node-agent';
 import { ModelManager } from './model-manager/model-manager';
 import { InferenceService } from './inference/inference-service';
@@ -62,13 +61,75 @@ app.on('window-all-closed', () => {
 
 // IPC 处理
 ipcMain.handle('get-system-resources', async () => {
-  // TODO: 获取系统资源使用情况
-  return {
-    cpu: 0,
-    gpu: null,
-    memory: 0,
-  };
+  const si = require('systeminformation');
+  
+  try {
+    const [cpu, mem, gpuInfo] = await Promise.all([
+      si.currentLoad(),
+      si.mem(),
+      getGpuUsage(), // 自定义函数获取 GPU 使用率
+    ]);
+
+    return {
+      cpu: cpu.currentLoad || 0,
+      gpu: gpuInfo?.usage || null,
+      gpuMem: gpuInfo?.memory || null,
+      memory: (mem.used / mem.total) * 100,
+    };
+  } catch (error) {
+    console.error('获取系统资源失败:', error);
+    return {
+      cpu: 0,
+      gpu: null,
+      gpuMem: null,
+      memory: 0,
+    };
+  }
 });
+
+// 获取 GPU 使用率（使用 nvidia-ml-py）
+async function getGpuUsage(): Promise<{ usage: number; memory: number } | null> {
+  try {
+    // 尝试使用 nvidia-ml-py（需要 Python 环境）
+    const { spawn } = require('child_process');
+    const pythonScript = `
+import pynvml
+try:
+    pynvml.nvmlInit()
+    handle = pynvml.nvmlDeviceGetHandleByIndex(0)
+    util = pynvml.nvmlDeviceGetUtilizationRates(handle)
+    mem_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
+    print(f"{util.gpu},{mem_info.used / mem_info.total * 100}")
+    pynvml.nvmlShutdown()
+except:
+    print("ERROR")
+`;
+    
+    return new Promise((resolve) => {
+      const python = spawn('python', ['-c', pythonScript]);
+      let output = '';
+      
+      python.stdout.on('data', (data: Buffer) => {
+        output += data.toString();
+      });
+      
+      python.on('close', (code: number) => {
+        if (code === 0 && output.trim() !== 'ERROR') {
+          const [usage, memory] = output.trim().split(',').map(Number);
+          resolve({ usage, memory });
+        } else {
+          resolve(null);
+        }
+      });
+      
+      python.on('error', () => {
+        resolve(null);
+      });
+    });
+  } catch {
+    return null;
+  }
+}
 
 ipcMain.handle('get-installed-models', async () => {
   return modelManager?.getInstalledModels() || [];
@@ -92,5 +153,24 @@ ipcMain.handle('get-node-status', async () => {
 
 ipcMain.handle('generate-pairing-code', async () => {
   return nodeAgent?.generatePairingCode() || null;
+});
+
+ipcMain.handle('get-module-status', async () => {
+  return inferenceService?.getModuleStatus() || {};
+});
+
+ipcMain.handle('toggle-module', async (_, moduleName: string, enabled: boolean) => {
+  if (!inferenceService) return false;
+  try {
+    if (enabled) {
+      await inferenceService.enableModule(moduleName);
+    } else {
+      await inferenceService.disableModule(moduleName);
+    }
+    return true;
+  } catch (error) {
+    console.error('切换模块状态失败:', error);
+    return false;
+  }
 });
 

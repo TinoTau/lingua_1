@@ -2,6 +2,7 @@ import axios from 'axios';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as crypto from 'crypto';
+import * as os from 'os';
 
 export interface ModelMetadata {
   model_id: string;
@@ -31,9 +32,49 @@ export class ModelManager {
 
   constructor() {
     this.modelHubUrl = process.env.MODEL_HUB_URL || 'http://localhost:5000';
-    const userData = process.env.USER_DATA || (typeof app !== 'undefined' ? app.getPath('userData') : './user-data');
+    
+    // 优先使用非 C 盘路径
+    let userData: string;
+    if (process.env.USER_DATA) {
+      userData = process.env.USER_DATA;
+    } else if (typeof app !== 'undefined') {
+      const defaultUserData = app.getPath('userData');
+      // 如果默认路径在 C 盘，尝试使用其他盘
+      if (defaultUserData.startsWith('C:\\') || defaultUserData.startsWith('C:/')) {
+        // 尝试使用 D 盘或其他可用盘
+        const alternativePath = this.findAlternativePath();
+        userData = alternativePath || defaultUserData;
+      } else {
+        userData = defaultUserData;
+      }
+    } else {
+      userData = './user-data';
+    }
+    
     this.modelsDir = path.join(userData, 'models');
     this.loadInstalledModels();
+  }
+
+  private findAlternativePath(): string | null {
+    // 尝试查找非 C 盘的可用路径
+    // Windows: 尝试 D:, E:, F: 等
+    // 其他系统: 使用用户主目录
+    if (os.platform() === 'win32') {
+      const fs = require('fs');
+      const drives = ['D', 'E', 'F', 'G', 'H'];
+      for (const drive of drives) {
+        const testPath = `${drive}:\\LinguaNode`;
+        try {
+          if (!fs.existsSync(testPath)) {
+            fs.mkdirSync(testPath, { recursive: true });
+          }
+          return testPath;
+        } catch {
+          // 继续尝试下一个盘
+        }
+      }
+    }
+    return null;
   }
 
   private async loadInstalledModels(): Promise<void> {

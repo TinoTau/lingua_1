@@ -59,17 +59,38 @@
   - Scheduler 客户端 (`scheduler_client.rs`)
 - ✅ 配置文件
 
-### 4. Electron Node 客户端
+### 4. Electron Node 客户端（阶段 2.2）✅
 - ✅ Electron 项目结构
 - ✅ 主进程实现：
-  - Node Agent（WebSocket 连接）
-  - Model Manager（模型管理）
-  - Inference Service（推理服务接口）
+  - Node Agent（WebSocket 连接，支持流式 ASR）
+  - Model Manager（模型管理，支持非 C 盘路径）
+  - Inference Service（HTTP 服务方式调用推理服务）
 - ✅ 渲染进程实现：
   - React UI 框架
-  - 系统资源监控组件
+  - 系统资源监控组件（CPU、GPU、内存）
   - 模型管理组件
+  - 功能模块管理组件（启用/禁用，手动刷新）
 - ✅ IPC 通信机制
+- ✅ **HTTP 推理服务集成** ✅
+  - 同步推理请求支持
+  - 流式推理请求支持（WebSocket）
+  - ASR 部分结果回调
+- ✅ **系统资源监控** ✅
+  - CPU 和内存监控（systeminformation）
+  - GPU 监控（nvidia-ml-py Python 脚本）
+- ✅ **功能模块管理 UI** ✅
+  - 6 个可选功能模块管理
+  - 实时启用/禁用
+  - 手动刷新功能
+- ✅ **流式 ASR 支持** ✅
+  - 部分结果回调
+  - 转发到调度服务器
+- ✅ **消息格式对齐** ✅
+  - 所有消息已对齐协议规范
+  - 使用正确的 TypeScript 类型定义
+- ✅ **单元测试** ✅
+  - 编译测试全部通过
+  - [测试报告](./electron-node/tests/stage2.2/TEST_REPORT.md)
 
 ### 5. Web 客户端（iOS 开发设备替代方案）✅（阶段 2.1 核心功能已完成）
 - ✅ TypeScript + Vite 项目结构
@@ -236,15 +257,19 @@
 - [ ] 监控和告警
 - [ ] 生产环境优化
 
-### 3. Electron Node 客户端
-- [ ] **对齐消息格式**（高优先级）
-  - [ ] `register` 消息格式对齐协议规范
-  - [ ] `heartbeat` 消息格式对齐协议规范
-  - [ ] `job_result` 消息格式对齐协议规范
-- [ ] 集成节点推理服务（调用 Rust 库或 HTTP 服务）
-- [ ] 完善模型下载和安装逻辑
-- [ ] 实现系统资源监控
-- [ ] 实现功能模块管理 UI
+### 3. Electron Node 客户端（阶段 2.2）
+- [x] **推理服务集成** ✅（HTTP 服务方式）
+- [x] **系统资源监控实现** ✅（CPU、GPU、内存）
+- [x] **功能模块管理 UI** ✅（启用/禁用，手动刷新）
+- [x] **流式 ASR 支持** ✅（部分结果回调）
+- [x] **模型存储路径配置** ✅（非 C 盘）
+- [x] **单元测试** ✅（编译测试全部通过）
+- [x] **消息格式对齐** ✅（所有消息已对齐协议规范）
+  - [x] `node_register` 消息格式对齐协议规范
+  - [x] `node_heartbeat` 消息格式对齐协议规范
+  - [x] `job_result` 消息格式对齐协议规范
+  - [x] `asr_partial` 消息格式对齐协议规范（修复了协议定义中的 `node_id` 字段）
+- [ ] 完善模型下载和安装逻辑（进度显示、错误处理）
 - [ ] 完善错误处理和重连机制
 
 ### 4. 移动端客户端

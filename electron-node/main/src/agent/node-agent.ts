@@ -8,9 +8,10 @@ import type {
   NodeHeartbeatMessage, 
   JobAssignMessage, 
   JobResultMessage,
+  AsrPartialMessage,
   InstalledModel,
   FeatureFlags
-} from '../../../shared/protocols/messages';
+} from '../../../../shared/protocols/messages';
 
 export interface NodeStatus {
   online: boolean;
@@ -226,8 +227,26 @@ export class NodeAgent {
     const startTime = Date.now();
 
     try {
+      // 如果启用了流式 ASR，设置部分结果回调
+      const partialCallback = job.enable_streaming_asr ? (partial: { text: string; is_final: boolean; confidence: number }) => {
+        // 发送 ASR 部分结果到调度服务器
+        // 对齐协议规范：asr_partial 消息格式（从节点发送到调度服务器，需要包含 node_id）
+        if (this.ws && this.ws.readyState === WebSocket.OPEN && this.nodeId) {
+          const partialMessage: AsrPartialMessage = {
+            type: 'asr_partial',
+            node_id: this.nodeId,
+            session_id: job.session_id,
+            utterance_index: job.utterance_index,
+            job_id: job.job_id,
+            text: partial.text,
+            is_final: partial.is_final,
+          };
+          this.ws.send(JSON.stringify(partialMessage));
+        }
+      } : undefined;
+
       // 调用推理服务处理任务
-      const result = await this.inferenceService.processJob(job);
+      const result = await this.inferenceService.processJob(job, partialCallback);
 
       // 对齐协议规范：job_result 消息格式
       const response: JobResultMessage = {

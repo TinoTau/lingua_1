@@ -36,6 +36,12 @@ ndarray = "0.15"
 # HTTP 客户端（用于调用 TTS 服务，严格按照原项目版本）
 reqwest = { version = "0.11", features = ["json"] }
 
+# HTTP 服务器（用于 Electron 节点调用）
+axum = { version = "0.7", features = ["ws", "multipart", "json"] }
+tower = "0.4"
+tower-http = { version = "0.5", features = ["cors", "trace"] }
+futures-util = "0.3"
+
 # Base64 编码（严格按照原项目版本）
 base64 = { version = "0.21", features = ["alloc"] }
 

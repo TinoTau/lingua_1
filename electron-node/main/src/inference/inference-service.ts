@@ -1,6 +1,8 @@
+import axios, { AxiosInstance } from 'axios';
+import WebSocket from 'ws';
 import { ModelManager } from '../model-manager/model-manager';
-import type { JobAssignMessage } from '../../../shared/protocols/messages';
-import type { InstalledModel, FeatureFlags } from '../../../shared/protocols/messages';
+// 临时类型定义，实际应该从 shared/protocols/messages 导入
+import type { JobAssignMessage, InstalledModel, FeatureFlags } from '../../../../shared/protocols/messages';
 
 export interface JobResult {
   text_asr: string;
@@ -15,43 +17,158 @@ export interface JobResult {
   };
 }
 
+export interface PartialResultCallback {
+  (partial: { text: string; is_final: boolean; confidence: number }): void;
+}
+
 export class InferenceService {
   private modelManager: ModelManager;
   private currentJobs: Set<string> = new Set();
+  private httpClient: AxiosInstance;
+  private inferenceServiceUrl: string;
+  private wsClient: WebSocket | null = null;
 
   constructor(modelManager: ModelManager) {
     this.modelManager = modelManager;
+    this.inferenceServiceUrl = process.env.INFERENCE_SERVICE_URL || 'http://localhost:9000';
+    this.httpClient = axios.create({
+      baseURL: this.inferenceServiceUrl,
+      timeout: 300000, // 5 分钟超时（推理可能需要较长时间）
+    });
   }
 
-  async processJob(job: JobAssignMessage): Promise<JobResult> {
+  async processJob(job: JobAssignMessage, partialCallback?: PartialResultCallback): Promise<JobResult> {
     this.currentJobs.add(job.job_id);
 
     try {
-      // TODO: 实现实际的推理逻辑
-      // 1. 解码音频数据（从 base64）
-      // 2. 运行 ASR（语音识别）
-      // 3. 运行 NMT（机器翻译）
-      // 4. 运行 TTS（语音合成）
-      // 5. 处理可选功能模块（如果启用）
-      // 6. 返回结果
+      // 如果启用了流式 ASR，使用 WebSocket
+      if (job.enable_streaming_asr && partialCallback) {
+        return await this.processJobStreaming(job, partialCallback);
+      }
 
-      // 临时返回模拟结果
-      const result: JobResult = {
-        text_asr: '模拟识别文本',
-        text_translated: 'Mock translation text',
-        tts_audio: '', // base64 encoded audio
-        tts_format: job.audio_format || 'pcm16',
-        extra: job.features ? {
-          emotion: job.features.emotion_detection ? 'neutral' : null,
-          speech_rate: job.features.speech_rate_detection ? 1.0 : null,
-          voice_style: job.features.voice_style_detection ? 'neutral' : null,
+      // 否则使用 HTTP 同步请求
+      const request = {
+        job_id: job.job_id,
+        src_lang: job.src_lang,
+        tgt_lang: job.tgt_lang,
+        audio: job.audio,
+        audio_format: job.audio_format,
+        sample_rate: job.sample_rate,
+        features: job.features ? {
+          emotion_detection: job.features.emotion_detection || false,
+          voice_style_detection: job.features.voice_style_detection || false,
+          speech_rate_detection: job.features.speech_rate_detection || false,
+          speech_rate_control: job.features.speech_rate_control || false,
+          speaker_identification: job.features.speaker_identification || false,
+          persona_adaptation: job.features.persona_adaptation || false,
         } : undefined,
+        mode: job.mode,
+        lang_a: job.lang_a,
+        lang_b: job.lang_b,
+        auto_langs: job.auto_langs,
+        enable_streaming_asr: false,
       };
 
-      return result;
+      const response = await this.httpClient.post('/v1/inference', request);
+
+      if (!response.data.success) {
+        throw new Error(response.data.error?.message || '推理失败');
+      }
+
+      return {
+        text_asr: response.data.transcript || '',
+        text_translated: response.data.translation || '',
+        tts_audio: response.data.audio || '',
+        tts_format: response.data.audio_format || job.audio_format || 'pcm16',
+        extra: response.data.extra,
+      };
+    } catch (error) {
+      console.error('推理服务调用失败:', error);
+      throw error;
     } finally {
       this.currentJobs.delete(job.job_id);
     }
+  }
+
+  private async processJobStreaming(
+    job: JobAssignMessage,
+    partialCallback: PartialResultCallback
+  ): Promise<JobResult> {
+    return new Promise((resolve, reject) => {
+      const wsUrl = this.inferenceServiceUrl.replace('http://', 'ws://').replace('https://', 'wss://');
+      const ws = new WebSocket(`${wsUrl}/v1/inference/stream`);
+
+      let finalResult: JobResult | null = null;
+
+      ws.on('open', () => {
+        const request = {
+          job_id: job.job_id,
+          src_lang: job.src_lang,
+          tgt_lang: job.tgt_lang,
+          audio: job.audio,
+          audio_format: job.audio_format,
+          sample_rate: job.sample_rate,
+          features: job.features ? {
+            emotion_detection: job.features.emotion_detection || false,
+            voice_style_detection: job.features.voice_style_detection || false,
+            speech_rate_detection: job.features.speech_rate_detection || false,
+            speech_rate_control: job.features.speech_rate_control || false,
+            speaker_identification: job.features.speaker_identification || false,
+            persona_adaptation: job.features.persona_adaptation || false,
+          } : undefined,
+          mode: job.mode,
+          lang_a: job.lang_a,
+          lang_b: job.lang_b,
+          auto_langs: job.auto_langs,
+          enable_streaming_asr: true,
+          partial_update_interval_ms: job.partial_update_interval_ms || 1000,
+        };
+
+        ws.send(JSON.stringify(request));
+      });
+
+      ws.on('message', (data: WebSocket.Data) => {
+        try {
+          const message = JSON.parse(data.toString());
+
+          if (message.type === 'asr_partial') {
+            // 调用部分结果回调
+            partialCallback({
+              text: message.text,
+              is_final: message.is_final,
+              confidence: message.confidence || 0,
+            });
+          } else if (message.type === 'result') {
+            // 最终结果
+            finalResult = {
+              text_asr: message.transcript || '',
+              text_translated: message.translation || '',
+              tts_audio: message.audio || '',
+              tts_format: message.audio_format || job.audio_format || 'pcm16',
+              extra: message.extra,
+            };
+            ws.close();
+            resolve(finalResult);
+          } else if (message.type === 'error') {
+            ws.close();
+            reject(new Error(message.message || '推理失败'));
+          }
+        } catch (error) {
+          console.error('解析 WebSocket 消息失败:', error);
+        }
+      });
+
+      ws.on('error', (error: Error) => {
+        ws.close();
+        reject(error);
+      });
+
+      ws.on('close', () => {
+        if (!finalResult) {
+          reject(new Error('WebSocket 连接关闭，未收到结果'));
+        }
+      });
+    });
   }
 
   getCurrentJobCount(): number {
@@ -66,15 +183,13 @@ export class InferenceService {
     // 目前返回基本结构，实际应该从 ModelMetadata 中获取完整信息
     return installed.map(m => {
       // 从 model_id 推断模型类型（临时方案，实际应该从元数据获取）
-      let kind: 'asr' | 'nmt' | 'tts' | 'vad' | 'emotion' | 'other' = 'other';
+      let kind: 'asr' | 'nmt' | 'tts' | 'emotion' | 'other' = 'other';
       if (m.model_id.includes('asr') || m.model_id.includes('whisper')) {
         kind = 'asr';
       } else if (m.model_id.includes('nmt') || m.model_id.includes('m2m')) {
         kind = 'nmt';
       } else if (m.model_id.includes('tts') || m.model_id.includes('piper')) {
         kind = 'tts';
-      } else if (m.model_id.includes('vad') || m.model_id.includes('silero')) {
-        kind = 'vad';
       } else if (m.model_id.includes('emotion')) {
         kind = 'emotion';
       }
@@ -102,6 +217,31 @@ export class InferenceService {
       speaker_identification: false,
       persona_adaptation: false,
     };
+  }
+
+  async getModuleStatus(): Promise<Record<string, boolean>> {
+    // TODO: 从推理服务获取实际模块状态
+    // 当前返回默认状态，实际应该通过 HTTP 调用推理服务获取
+    return {
+      emotion_detection: false,
+      voice_style_detection: false,
+      speech_rate_detection: false,
+      speech_rate_control: false,
+      speaker_identification: false,
+      persona_adaptation: false,
+    };
+  }
+
+  async enableModule(moduleName: string): Promise<void> {
+    // TODO: 通过 HTTP 调用推理服务启用模块
+    // 当前仅记录日志，实际应该调用推理服务的 API
+    console.log(`启用模块: ${moduleName}`);
+  }
+
+  async disableModule(moduleName: string): Promise<void> {
+    // TODO: 通过 HTTP 调用推理服务禁用模块
+    // 当前仅记录日志，实际应该调用推理服务的 API
+    console.log(`禁用模块: ${moduleName}`);
   }
 }
 
