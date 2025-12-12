@@ -88,14 +88,31 @@
 - [x] 项目框架搭建
 - [x] VAD Hook 框架
 - [x] WebSocket Hook 框架
-- [ ] 消息格式对齐
-- [ ] 麦克风采集
-- [ ] 轻量 VAD 实现
+- [x] 消息格式对齐（阶段一.2 已完成）
+- [ ] **音频采集服务实现**（参考 `docs/IOS/IOS_AUDIO_VAD_PIPELINE.md`）
+  - [ ] 使用 expo-av 或 react-native-audio-recorder-player
+  - [ ] 配置采样率 16kHz、PCM 16-bit、单声道
+  - [ ] 实现 20ms 帧采集
+- [ ] **轻量 VAD 实现**（参考 iOS RMS 能量阈值算法）
+  - [ ] RMS 能量计算
+  - [ ] 静音阈值判定（-50dB）
+  - [ ] 连续静音过滤（>200ms）
+- [ ] **AudioChunk 打包器**
+  - [ ] 每 200-250ms 打包一次
+  - [ ] 包含 sequence、timestampMs、pcmData、droppedSilenceMs
+- [ ] **WebSocket 通信完善**
+  - [ ] 心跳机制（每 20-30 秒）
+  - [ ] 自动重连（指数退避）
+  - [ ] 错误恢复
+- [ ] **TTS 音频播放**（参考 `docs/IOS/IOS_CLIENT_DESIGN_AND_INTERFACES.md`）
+  - [ ] 使用 expo-av 播放 PCM16
+  - [ ] Base64 解码
+  - [ ] AEC 协作（避免回声）
 - [ ] 手动截断按钮
-- [ ] WebSocket 通信完善
-- [ ] TTS 音频播放
 - [ ] 可选功能选择界面
 - [ ] UI 优化
+- [ ] 多会话管理（可选，参考 `docs/IOS/IOS_MULTI_SESSION_DESIGN.md`）
+- [ ] 调试与监控（可选，参考 `docs/IOS/IOS_DEBUG_MONITORING.md`）
 
 ### 2.2 Electron Node 客户端
 - [x] Electron 项目初始化
@@ -153,7 +170,36 @@
 - [ ] API Gateway 生产环境优化
 - [ ] 监控和告警系统
 
+### 1.4 自动语种识别与双向模式 ✅（框架已完成）
+- [x] **LanguageDetector 模块框架**
+  - [x] 创建 `language_detector.rs` 模块
+  - [x] 定义 `LanguageDetector` 结构体和配置
+  - [x] 定义 `LanguageDetectionResult` 结果类型
+  - [ ] 实现实际的语言检测逻辑（使用 Whisper 语言检测）
+- [x] **扩展消息协议**
+  - [x] `InferenceRequest` 添加 `mode`、`lang_a`、`lang_b`、`auto_langs` 字段
+  - [x] `SessionInit` 消息扩展（调度服务器）
+  - [x] `Session` 结构扩展
+  - [x] `Job` 和 `JobAssign` 消息扩展
+  - [x] TypeScript 消息类型扩展
+  - [x] 新增 `LanguageDetected` 消息类型
+- [x] **推理流程修改**
+  - [x] `InferenceService` 集成语言检测逻辑
+  - [x] 支持 `src_lang="auto"` 自动检测
+  - [x] 实现双向模式翻译方向判断
+  - [ ] ASR 引擎共享 Whisper 上下文给 LanguageDetector
+- [ ] **客户端 UI 支持**
+  - [ ] 添加模式选择界面（one_way / two_way_auto）
+  - [ ] 添加语言对配置界面
+  - [ ] 可选显示语言检测结果
+- [ ] **测试和验证**
+  - [ ] 语言检测单元测试
+  - [ ] 双向模式集成测试
+  - [ ] 端到端测试
+- 详细设计请参考 [自动语种识别与双向模式设计](./AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md)
+
 ## 相关优化方案
 
 - [任务分发算法优化方案](./DISPATCHER_OPTIMIZATION_PLAN.md) - 负载均衡和功能感知节点选择的详细优化方案
+- [自动语种识别与双向模式设计](./AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md) - 自动语种识别功能的设计文档（包含可行性分析）
 

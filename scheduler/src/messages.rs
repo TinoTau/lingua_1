@@ -128,7 +128,7 @@ pub enum SessionMessage {
     SessionInit {
         client_version: String,
         platform: String, // "android" | "ios" | "web" | "api-gateway"
-        src_lang: String,
+        src_lang: String,  // 支持 "auto" | "zh" | "en" | "ja" | "ko"
         tgt_lang: String,
         #[serde(skip_serializing_if = "Option::is_none")]
         dialect: Option<String>,
@@ -138,6 +138,18 @@ pub enum SessionMessage {
         pairing_code: Option<String>,
         #[serde(skip_serializing_if = "Option::is_none")]
         tenant_id: Option<String>, // 租户 ID（用于多租户支持）
+        /// 翻译模式："one_way" | "two_way_auto"
+        #[serde(skip_serializing_if = "Option::is_none")]
+        mode: Option<String>,
+        /// 双向模式的语言 A（当 mode == "two_way_auto" 时使用）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        lang_a: Option<String>,
+        /// 双向模式的语言 B（当 mode == "two_way_auto" 时使用）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        lang_b: Option<String>,
+        /// 自动识别时限制的语言范围（可选）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        auto_langs: Option<Vec<String>>,
     },
     #[serde(rename = "session_init_ack")]
     SessionInitAck {
@@ -235,7 +247,7 @@ pub enum NodeMessage {
         job_id: String,
         session_id: String,
         utterance_index: u64,
-        src_lang: String,
+        src_lang: String,  // 支持 "auto" | "zh" | "en" | "ja" | "ko"
         tgt_lang: String,
         #[serde(skip_serializing_if = "Option::is_none")]
         dialect: Option<String>,
@@ -245,6 +257,18 @@ pub enum NodeMessage {
         audio: String, // base64
         audio_format: String,
         sample_rate: u32,
+        /// 翻译模式："one_way" | "two_way_auto"
+        #[serde(skip_serializing_if = "Option::is_none")]
+        mode: Option<String>,
+        /// 双向模式的语言 A（当 mode == "two_way_auto" 时使用）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        lang_a: Option<String>,
+        /// 双向模式的语言 B（当 mode == "two_way_auto" 时使用）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        lang_b: Option<String>,
+        /// 自动识别时限制的语言范围（可选）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        auto_langs: Option<Vec<String>>,
     },
     #[serde(rename = "job_result")]
     JobResult {

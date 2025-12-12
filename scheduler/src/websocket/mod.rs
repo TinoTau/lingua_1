@@ -59,6 +59,10 @@ pub(crate) fn create_job_assign_message(job: &crate::dispatcher::Job) -> Option<
         audio: audio_base64,
         audio_format: job.audio_format.clone(),
         sample_rate: job.sample_rate,
+        mode: job.mode.clone(),
+        lang_a: job.lang_a.clone(),
+        lang_b: job.lang_b.clone(),
+        auto_langs: job.auto_langs.clone(),
     })
 }
 

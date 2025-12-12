@@ -83,33 +83,41 @@ async fn handle_session_message(
     tx: &mpsc::UnboundedSender<Message>,
 ) -> Result<(), anyhow::Error> {
     match message {
-        SessionMessage::SessionInit {
-            client_version,
-            platform,
-            src_lang,
-            tgt_lang,
-            dialect,
-            features,
-            pairing_code,
-            tenant_id,
-        } => {
-            // 处理配对码
-            let paired_node_id = if let Some(code) = pairing_code {
-                state.pairing_service.validate_pairing_code(&code).await
-            } else {
-                None
-            };
-            
-            // 创建会话
-            let session = state.session_manager.create_session(
-                client_version,
-                platform,
-                src_lang,
-                tgt_lang,
-                dialect.clone(),
-                features.clone(),
-                tenant_id,
-            ).await;
+               SessionMessage::SessionInit {
+                   client_version,
+                   platform,
+                   src_lang,
+                   tgt_lang,
+                   dialect,
+                   features,
+                   pairing_code,
+                   tenant_id,
+                   mode,
+                   lang_a,
+                   lang_b,
+                   auto_langs,
+               } => {
+                   // 处理配对码
+                   let paired_node_id = if let Some(code) = pairing_code {
+                       state.pairing_service.validate_pairing_code(&code).await
+                   } else {
+                       None
+                   };
+
+                   // 创建会话
+                   let session = state.session_manager.create_session(
+                       client_version,
+                       platform,
+                       src_lang,
+                       tgt_lang,
+                       dialect.clone(),
+                       features.clone(),
+                       tenant_id,
+                       mode.clone(),
+                       lang_a.clone(),
+                       lang_b.clone(),
+                       auto_langs.clone(),
+                   ).await;
             
             // 如果配对成功，更新会话
             if let Some(ref node_id) = paired_node_id {

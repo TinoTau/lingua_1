@@ -161,12 +161,20 @@ const message = {
 
 ### 节点推理服务（阶段一.3）✅
 
+#### 核心功能
+
 **核心功能**：
 - ✅ ASR (Whisper) 引擎 - 语音识别，支持 GPU 加速
 - ✅ NMT (M2M100) 引擎 - 机器翻译，通过 HTTP 调用 Python 服务
 - ✅ TTS (Piper) 引擎 - 语音合成，通过 HTTP 调用 Piper TTS 服务
 - ✅ VAD (Silero VAD) 引擎 - 语音活动检测，支持自适应阈值调整
+- ✅ LanguageDetector 模块（框架已完成 ✅）- 自动语种识别（中英日韩）
 - ✅ 推理服务核心 - 统一接口，模块化设计
+- ✅ 自动语种识别与双向模式框架（阶段一.4）
+  - ✅ LanguageDetector 模块框架
+  - ✅ 消息协议扩展（支持 `src_lang="auto"`、双向模式）
+  - ✅ 推理流程集成语言检测逻辑
+  - ⏸️ 待完善：实际检测逻辑实现、测试
 - ✅ 单元测试 - 20+ 个测试（10个本地模型测试全部通过）
 
 **技术栈**：
@@ -370,6 +378,7 @@ npm start
 - [模块化功能设计](./docs/MODULAR_FEATURES.md) - 模块化功能设计（包含快速参考）
 - [协议规范](./docs/PROTOCOLS.md) - WebSocket 消息协议规范
 - [对外开放 API](./docs/PUBLIC_API.md) - 对外 API 设计与实现
+- [iOS 技术文档分析](./docs/MOBILE_APP_IOS_DOCS_ANALYSIS.md) - iOS 技术文档对移动端开发的参考价值分析
 
 ### 项目状态与开发计划
 

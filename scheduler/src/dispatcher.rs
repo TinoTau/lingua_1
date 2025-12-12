@@ -10,7 +10,7 @@ pub struct Job {
     pub job_id: String,
     pub session_id: String,
     pub utterance_index: u64,
-    pub src_lang: String,
+    pub src_lang: String,  // 支持 "auto" | "zh" | "en" | "ja" | "ko"
     pub tgt_lang: String,
     pub dialect: Option<String>,
     pub features: Option<FeatureFlags>,
@@ -21,6 +21,18 @@ pub struct Job {
     pub assigned_node_id: Option<String>,
     pub status: JobStatus,
     pub created_at: chrono::DateTime<chrono::Utc>,
+    /// 翻译模式："one_way" | "two_way_auto"
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub mode: Option<String>,
+    /// 双向模式的语言 A（当 mode == "two_way_auto" 时使用）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub lang_a: Option<String>,
+    /// 双向模式的语言 B（当 mode == "two_way_auto" 时使用）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub lang_b: Option<String>,
+    /// 自动识别时限制的语言范围（可选）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub auto_langs: Option<Vec<String>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -59,6 +71,10 @@ impl JobDispatcher {
         audio_format: String,
         sample_rate: u32,
         preferred_node_id: Option<String>,
+        mode: Option<String>,
+        lang_a: Option<String>,
+        lang_b: Option<String>,
+        auto_langs: Option<Vec<String>>,
     ) -> Job {
         let job_id = format!("job-{}", Uuid::new_v4().to_string()[..8].to_uppercase());
         
@@ -94,6 +110,10 @@ impl JobDispatcher {
                 JobStatus::Pending
             },
             created_at: chrono::Utc::now(),
+            mode,
+            lang_a,
+            lang_b,
+            auto_langs,
         };
 
         let mut jobs = self.jobs.write().await;

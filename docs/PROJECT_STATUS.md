@@ -149,6 +149,31 @@
   - ✅ job_result 消息格式对齐（完整的错误处理）
 - ✅ FeatureFlags 完整性（包含所有 6 个功能字段）
 
+### 12. 自动语种识别与双向模式（阶段一.4，框架已完成）
+- ✅ **LanguageDetector 模块框架**
+  - ✅ 创建 `node-inference/src/language_detector.rs` 模块
+  - ✅ 定义 `LanguageDetector` 结构体和配置
+  - ✅ 定义 `LanguageDetectionResult` 结果类型
+  - ✅ 框架占位实现（待完善实际检测逻辑）
+- ✅ **消息协议扩展**
+  - ✅ `InferenceRequest` 扩展（添加 `mode`、`lang_a`、`lang_b`、`auto_langs`）
+  - ✅ `SessionInit` 消息扩展（调度服务器）
+  - ✅ `Session` 结构扩展
+  - ✅ `Job` 和 `JobAssign` 消息扩展
+  - ✅ TypeScript 消息类型扩展（`shared/protocols/messages.ts`）
+  - ✅ 新增 `LanguageDetected` 消息类型
+- ✅ **推理流程修改**
+  - ✅ `InferenceService` 集成语言检测逻辑
+  - ✅ 支持 `src_lang="auto"` 自动检测流程
+  - ✅ 实现双向模式翻译方向判断逻辑
+  - ✅ 错误处理和回退机制
+- [ ] **待完善**
+  - [ ] 实现实际的语言检测逻辑（使用 Whisper 语言检测）
+  - [ ] ASR 引擎共享 Whisper 上下文给 LanguageDetector
+  - [ ] 客户端 UI 支持新配置选项
+  - [ ] 单元测试和集成测试
+- 详细设计请参考 [自动语种识别与双向模式设计](./AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md)
+
 ## 🔨 进行中 / 待完成
 
 ### 1. 调度服务器

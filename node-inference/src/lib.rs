@@ -9,6 +9,7 @@ pub mod vad;
 pub mod modules;
 pub mod speaker;
 pub mod speech_rate;
+pub mod language_detector;
 mod inference;
 
 // 重新导出主要类型

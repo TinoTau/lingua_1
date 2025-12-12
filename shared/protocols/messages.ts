@@ -105,6 +105,14 @@ export interface SessionCloseAckMessage {
   session_id: string;
 }
 
+/** 语言检测结果消息（可选，用于 UI 显示或调试） */
+export interface LanguageDetectedMessage {
+  type: 'language_detected';
+  session_id: string;
+  lang: string;
+  confidence: number;
+}
+
 export interface ErrorMessage {
   type: 'error';
   code: string;
@@ -151,7 +159,7 @@ export interface JobAssignMessage {
   job_id: string;
   session_id: string;
   utterance_index: number;
-  src_lang: string;
+  src_lang: string;  // 支持 "auto" | "zh" | "en" | "ja" | "ko"
   tgt_lang: string;
   dialect: string | null;
   features?: FeatureFlags;
@@ -163,6 +171,14 @@ export interface JobAssignMessage {
   audio: string; // base64
   audio_format: string;
   sample_rate: number;
+  /** 翻译模式："one_way" | "two_way_auto" */
+  mode?: 'one_way' | 'two_way_auto';
+  /** 双向模式的语言 A（当 mode == "two_way_auto" 时使用） */
+  lang_a?: string;
+  /** 双向模式的语言 B（当 mode == "two_way_auto" 时使用） */
+  lang_b?: string;
+  /** 自动识别时限制的语言范围（可选） */
+  auto_langs?: string[];
 }
 
 export interface JobResultMessage {
@@ -211,6 +227,7 @@ export type SessionSideIncomingMessage =
   | TranslationResultMessage
   | ServerHeartbeatMessage
   | SessionCloseAckMessage
+  | LanguageDetectedMessage
   | ErrorMessage;
 
 export type SessionSideOutgoingMessage =
@@ -240,6 +257,7 @@ export type AnyMessage =
   | ServerHeartbeatMessage
   | SessionCloseMessage
   | SessionCloseAckMessage
+  | LanguageDetectedMessage
   | ErrorMessage
   | NodeRegisterMessage
   | NodeRegisterAckMessage

@@ -11,7 +11,7 @@ pub struct Session {
     pub session_id: String,
     pub client_version: String,
     pub platform: String, // "android" | "ios" | "web" | "api-gateway"
-    pub src_lang: String,
+    pub src_lang: String,  // 支持 "auto" | "zh" | "en" | "ja" | "ko"
     pub tgt_lang: String,
     pub dialect: Option<String>,
     pub default_features: Option<FeatureFlags>,
@@ -19,6 +19,18 @@ pub struct Session {
     pub paired_node_id: Option<String>,
     pub utterance_index: u64,
     pub created_at: chrono::DateTime<chrono::Utc>,
+    /// 翻译模式："one_way" | "two_way_auto"
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub mode: Option<String>,
+    /// 双向模式的语言 A（当 mode == "two_way_auto" 时使用）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub lang_a: Option<String>,
+    /// 双向模式的语言 B（当 mode == "two_way_auto" 时使用）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub lang_b: Option<String>,
+    /// 自动识别时限制的语言范围（可选）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub auto_langs: Option<Vec<String>>,
 }
 
 #[derive(Clone)]
@@ -42,6 +54,10 @@ impl SessionManager {
         dialect: Option<String>,
         default_features: Option<FeatureFlags>,
         tenant_id: Option<String>,
+        mode: Option<String>,
+        lang_a: Option<String>,
+        lang_b: Option<String>,
+        auto_langs: Option<Vec<String>>,
     ) -> Session {
         let session_id = format!("s-{}", Uuid::new_v4().to_string()[..8].to_uppercase());
         let session = Session {
@@ -56,6 +72,10 @@ impl SessionManager {
             paired_node_id: None,
             utterance_index: 0,
             created_at: chrono::Utc::now(),
+            mode,
+            lang_a,
+            lang_b,
+            auto_langs,
         };
 
         let mut sessions = self.sessions.write().await;
