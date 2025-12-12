@@ -7,6 +7,7 @@ pub mod nmt;
 pub mod tts;
 pub mod vad;
 pub mod modules;
+pub mod pipeline;
 pub mod speaker;
 pub mod speech_rate;
 pub mod language_detector;
@@ -19,4 +20,6 @@ pub use nmt::NMTEngine;
 pub use tts::{TTSEngine, PiperHttpConfig};
 pub use vad::VADEngine;
 pub use inference::{InferenceRequest, InferenceResult, InferenceService, PartialResultCallback};
+pub use pipeline::PipelineContext;
+pub use modules::{ModuleManager, ModuleMetadata, ModelRequirement, MODULE_TABLE};
 

@@ -161,21 +161,24 @@ const schedulerUrl = 'ws://your-scheduler-url:8080/ws/session';
 4. （可选）选择需要的功能（音色识别、语速控制等）
 5. 等待翻译结果并播放
 
-### 4. 管理功能模块（可选）
+### 4. 管理模型（可选）
 
 在 Electron Node 客户端中：
 
-1. 打开"功能模块管理"界面
-2. 启用/禁用需要的可选功能模块
-3. 模块状态会实时更新，无需重启服务
+1. 打开"模型管理"界面
+2. 下载和安装需要的模型
+3. 节点端会根据任务需求自动启用相应模块（无需手动开关）
 
-支持的功能模块：
-- 音色识别 (Speaker Identification)
-- 音色生成 (Voice Cloning)
-- 语速识别 (Speech Rate Detection)
-- 语速控制 (Speech Rate Control)
-- 情感分析 (Emotion Detection)
-- 个性化适配 (Persona Adaptation)
+**重要说明**：
+- 节点端**不提供功能开关 UI**，功能选择由 Web/移动端用户决定
+- 节点端只负责模型下载/安装，根据任务请求动态启用模块
+- 支持的功能模块（需要先下载相应模型）：
+  - 音色识别 (Speaker Identification)
+  - 音色生成 (Voice Cloning)
+  - 语速识别 (Speech Rate Detection)
+  - 语速控制 (Speech Rate Control)
+  - 情感分析 (Emotion Detection)
+  - 个性化适配 (Persona Adaptation)
 
 ## 故障排除
 

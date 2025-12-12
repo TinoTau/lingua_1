@@ -3,7 +3,7 @@ import { Recorder } from './recorder';
 import { WebSocketClient } from './websocket_client';
 import { TtsPlayer } from './tts_player';
 import { AsrSubtitle } from './asr_subtitle';
-import { Config, DEFAULT_CONFIG, ServerMessage } from './types';
+import { Config, DEFAULT_CONFIG, ServerMessage, FeatureFlags } from './types';
 
 /**
  * 主应用类
@@ -158,9 +158,12 @@ class App {
 
   /**
    * 连接服务器
+   * @param srcLang 源语言
+   * @param tgtLang 目标语言
+   * @param features 可选功能标志（由用户选择）
    */
-  async connect(srcLang: string = 'zh', tgtLang: string = 'en'): Promise<void> {
-    await this.wsClient.connect(srcLang, tgtLang);
+  async connect(srcLang: string = 'zh', tgtLang: string = 'en', features?: FeatureFlags): Promise<void> {
+    await this.wsClient.connect(srcLang, tgtLang, features);
     await this.recorder.initialize();
   }
 
@@ -282,6 +285,36 @@ document.addEventListener('DOMContentLoaded', () => {
           </select>
         </label>
       </div>
+
+      <div style="margin: 20px 0; padding: 15px; background: #f9f9f9; border-radius: 8px;">
+        <div style="font-weight: bold; margin-bottom: 10px;">可选功能：</div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label style="display: flex; align-items: center; cursor: pointer;">
+            <input type="checkbox" id="feature-emotion" style="margin-right: 8px; cursor: pointer;">
+            <span>情感检测</span>
+          </label>
+          <label style="display: flex; align-items: center; cursor: pointer;">
+            <input type="checkbox" id="feature-voice-style" style="margin-right: 8px; cursor: pointer;">
+            <span>音色风格检测</span>
+          </label>
+          <label style="display: flex; align-items: center; cursor: pointer;">
+            <input type="checkbox" id="feature-speech-rate-detection" style="margin-right: 8px; cursor: pointer;">
+            <span>语速检测</span>
+          </label>
+          <label style="display: flex; align-items: center; cursor: pointer;">
+            <input type="checkbox" id="feature-speech-rate-control" style="margin-right: 8px; cursor: pointer;">
+            <span>语速控制</span>
+          </label>
+          <label style="display: flex; align-items: center; cursor: pointer;">
+            <input type="checkbox" id="feature-speaker-id" style="margin-right: 8px; cursor: pointer;">
+            <span>音色识别</span>
+          </label>
+          <label style="display: flex; align-items: center; cursor: pointer;">
+            <input type="checkbox" id="feature-persona" style="margin-right: 8px; cursor: pointer;">
+            <span>个性化适配</span>
+          </label>
+        </div>
+      </div>
     </div>
   `;
 
@@ -298,8 +331,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const srcLang = (document.getElementById('src-lang') as HTMLSelectElement).value;
     const tgtLang = (document.getElementById('tgt-lang') as HTMLSelectElement).value;
     
+    // 收集用户选择的功能（只包含选中的功能）
+    const features: FeatureFlags = {};
+    
+    const emotionCheckbox = (document.getElementById('feature-emotion') as HTMLInputElement);
+    const voiceStyleCheckbox = (document.getElementById('feature-voice-style') as HTMLInputElement);
+    const speechRateDetectionCheckbox = (document.getElementById('feature-speech-rate-detection') as HTMLInputElement);
+    const speechRateControlCheckbox = (document.getElementById('feature-speech-rate-control') as HTMLInputElement);
+    const speakerIdCheckbox = (document.getElementById('feature-speaker-id') as HTMLInputElement);
+    const personaCheckbox = (document.getElementById('feature-persona') as HTMLInputElement);
+    
+    if (emotionCheckbox.checked) {
+      features.emotion_detection = true;
+    }
+    if (voiceStyleCheckbox.checked) {
+      features.voice_style_detection = true;
+    }
+    if (speechRateDetectionCheckbox.checked) {
+      features.speech_rate_detection = true;
+    }
+    if (speechRateControlCheckbox.checked) {
+      features.speech_rate_control = true;
+    }
+    if (speakerIdCheckbox.checked) {
+      features.speaker_identification = true;
+    }
+    if (personaCheckbox.checked) {
+      features.persona_adaptation = true;
+    }
+    
+    // 如果没有任何功能被选中，传递 undefined（或空对象）
+    const featuresToSend = Object.keys(features).length > 0 ? features : undefined;
+    
     try {
-      await app.connect(srcLang, tgtLang);
+      await app.connect(srcLang, tgtLang, featuresToSend);
       statusText.textContent = '已连接';
       connectBtn.disabled = true;
       startBtn.disabled = false;

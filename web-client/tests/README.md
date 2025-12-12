@@ -7,11 +7,17 @@
 ```
 web-client/tests/
 ├── README.md              # 本文件
-└── stage2.1/              # 阶段 2.1：核心功能测试
-    ├── README.md          # 阶段 2.1 测试说明
+├── stage2.1/              # 阶段 2.1：核心功能测试
+│   ├── README.md          # 阶段 2.1 测试说明
+│   ├── mod.ts             # 模块导出
+│   ├── state_machine_test.ts
+│   ├── asr_subtitle_test.ts
+│   └── TEST_REPORT.md
+└── stage3.2/              # 阶段 3.2：功能选择功能测试
+    ├── README.md          # 阶段 3.2 测试说明
     ├── mod.ts             # 模块导出
-    ├── state_machine_test.ts
-    ├── asr_subtitle_test.ts
+    ├── feature_selection_test.ts
+    ├── websocket_client_feature_test.ts
     └── TEST_REPORT.md
 ```
 
@@ -44,6 +50,14 @@ npm run test:coverage
 - ⏸️ WebSocket 客户端模块测试（需要浏览器环境，暂不测试）
 
 详细说明请参考 [阶段 2.1 测试文档](./stage2.1/README.md)
+
+### 阶段 3.2：功能选择单元测试 ✅
+
+- ✅ FeatureFlags 类型和功能选择逻辑测试
+- ✅ WebSocket 客户端 features 参数传递测试
+- ✅ 功能选择与语言选择组合测试
+
+详细说明请参考 [阶段 3.2 测试文档](./stage3.2/README.md)
 
 ### 阶段 2：集成测试（待实现）
 

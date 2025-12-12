@@ -132,6 +132,8 @@ export interface ErrorMessage {
 
 // ===== 节点 ↔ 调度服务器 =====
 
+export type ModelStatus = 'ready' | 'downloading' | 'not_installed' | 'error';
+
 export interface NodeRegisterMessage {
   type: 'node_register';
   node_id?: string | null;
@@ -148,6 +150,8 @@ export interface NodeRegisterMessage {
   installed_models: InstalledModel[];
   features_supported: FeatureFlags;
   accept_public_jobs: boolean;
+  /** 节点模型能力图（capability_state） */
+  capability_state?: Record<string, ModelStatus>;
 }
 
 export interface NodeRegisterAckMessage {
@@ -162,6 +166,8 @@ export interface NodeHeartbeatMessage {
   timestamp: number;
   resource_usage: ResourceUsage;
   installed_models?: InstalledModel[];
+  /** 节点模型能力图（capability_state） */
+  capability_state?: Record<string, ModelStatus>;
 }
 
 export interface JobAssignMessage {

@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};  // Deserialize 在 InferenceRequest/Infere
 use std::path::PathBuf;
 
 use crate::modules::{FeatureSet, ModuleManager, InferenceModule};
+use crate::pipeline::PipelineContext;
 use crate::asr;
 use crate::nmt;
 use crate::tts;
@@ -105,42 +106,68 @@ impl InferenceService {
         })
     }
 
+    /// 启用模块（完整流程）
+    /// 
+    /// 按照 v2 技术说明书的要求：
+    /// 1. 使用 ModuleManager 进行依赖检查、冲突检查、模型检查
+    /// 2. 如果检查通过，加载模块模型
+    /// 3. 标记模块为已启用
     pub async fn enable_module(&self, module_name: &str) -> Result<()> {
-        // 注意：当前实现中，模块需要在初始化时创建
-        // 实际使用时，应该使用 Arc<Mutex<InferenceService>> 或类似设计
+        // 步骤 1: 使用 ModuleManager 进行所有检查（依赖、冲突、模型）
+        self.module_manager.enable_module(module_name).await?;
+        
+        // 步骤 2: 如果检查通过，加载模块模型
         match module_name {
             "speaker_identification" => {
                 if let Some(ref m) = self.speaker_identifier {
                     let mut module = m.write().await;
                     InferenceModule::enable(&mut *module).await?;
                 } else {
+                    // 模块未初始化，尝试创建（cold-load）
+                    // TODO: 实现模块的延迟初始化逻辑
                     return Err(anyhow::anyhow!("Module {} not initialized. Please initialize it first.", module_name));
                 }
-                self.module_manager.enable_module(module_name).await?;
             }
             "voice_cloning" => {
                 if let Some(ref m) = self.voice_cloner {
                     let mut module = m.write().await;
                     InferenceModule::enable(&mut *module).await?;
+                } else {
+                    return Err(anyhow::anyhow!("Module {} not initialized. Please initialize it first.", module_name));
                 }
-                self.module_manager.enable_module(module_name).await?;
             }
             "speech_rate_detection" => {
                 if let Some(ref m) = self.speech_rate_detector {
                     let mut module = m.write().await;
                     InferenceModule::enable(&mut *module).await?;
+                } else {
+                    return Err(anyhow::anyhow!("Module {} not initialized. Please initialize it first.", module_name));
                 }
-                self.module_manager.enable_module(module_name).await?;
             }
             "speech_rate_control" => {
                 if let Some(ref m) = self.speech_rate_controller {
                     let mut module = m.write().await;
                     InferenceModule::enable(&mut *module).await?;
+                } else {
+                    return Err(anyhow::anyhow!("Module {} not initialized. Please initialize it first.", module_name));
                 }
-                self.module_manager.enable_module(module_name).await?;
+            }
+            "emotion_detection" => {
+                // TODO: 实现情感检测模块
+                return Err(anyhow::anyhow!("Module {} not yet implemented.", module_name));
+            }
+            "persona_adaptation" => {
+                // TODO: 实现个性化适配模块
+                return Err(anyhow::anyhow!("Module {} not yet implemented.", module_name));
             }
             _ => return Err(anyhow::anyhow!("Unknown module: {}", module_name)),
         }
+        
+        // 步骤 3: 更新模块状态为 model_loaded
+        // 注意：ModuleManager 的 states 是私有的，我们需要通过其他方式更新
+        // 当前实现中，ModuleManager::enable_module 已经更新了状态
+        // 我们只需要确保模块的 model_loaded 标志正确设置
+        
         Ok(())
     }
 
@@ -182,6 +209,32 @@ impl InferenceService {
     /// * `request` - 推理请求
     /// * `partial_callback` - 部分结果回调（可选）
     pub async fn process(&self, request: InferenceRequest, partial_callback: Option<PartialResultCallback>) -> Result<InferenceResult> {
+        // 根据请求中的 features 自动启用所需模块（运行时动态启用）
+        if let Some(ref features) = request.features {
+            // 根据任务需求自动启用模块
+            if features.speaker_identification {
+                let _ = self.enable_module("speaker_identification").await;
+            }
+            if features.voice_cloning {
+                let _ = self.enable_module("voice_cloning").await;
+            }
+            if features.speech_rate_detection {
+                let _ = self.enable_module("speech_rate_detection").await;
+            }
+            if features.speech_rate_control {
+                let _ = self.enable_module("speech_rate_control").await;
+            }
+            // TODO: 当实现情感检测和个性化适配模块时，添加相应的启用逻辑
+            // if features.emotion_detection {
+            //     let _ = self.enable_module("emotion_detection").await;
+            // }
+            // if features.persona_adaptation {
+            //     let _ = self.enable_module("persona_adaptation").await;
+            // }
+        }
+        
+        // 使用 PipelineContext 统一管理数据流
+        let mut ctx = PipelineContext::from_audio(request.audio_data.clone());
         let features = request.features.as_ref();
         
         // 将 PCM 16-bit 转换为 f32（用于语言检测和 ASR）
@@ -295,79 +348,99 @@ impl InferenceService {
             // 一次性处理
             self.asr_engine.transcribe_f32(&audio_f32, &src_lang).await?
         };
+        
+        // 将 ASR 结果写入 PipelineContext
+        ctx.set_transcript(transcript.clone());
 
-        // 2. 可选：音色识别
-        #[allow(unused_variables)]  // audio_data 在可选模块中使用，如果模块未启用则未使用
-        let speaker_id = if features.map(|f| f.speaker_identification).unwrap_or(false) {
+        // 3. 可选模块处理（使用 PipelineContext）
+        // 3.1 音色识别
+        if features.map(|f| f.speaker_identification).unwrap_or(false) {
             if let Some(ref m) = self.speaker_identifier {
                 let module = m.read().await;
                 if InferenceModule::is_enabled(&*module) {
-                    module.identify(&request.audio_data).await.ok()
-                } else {
-                    None
+                    if let Ok(speaker_id) = module.identify(&request.audio_data).await {
+                        ctx.set_speaker_id(speaker_id);
+                    }
                 }
-            } else {
-                None
             }
-        } else {
-            None
-        };
+        }
 
-        // 3. 可选：语速识别
-        #[allow(unused_variables)]  // audio_data 在可选模块中使用，如果模块未启用则未使用
-        let speech_rate = if features.map(|f| f.speech_rate_detection).unwrap_or(false) {
+        // 3.2 语速识别
+        if features.map(|f| f.speech_rate_detection).unwrap_or(false) {
             // 估算音频时长（简化实现）
             let duration = request.audio_data.len() as f32 / 16000.0 / 2.0; // 假设 16kHz, 16bit
             if let Some(ref m) = self.speech_rate_detector {
                 let module = m.read().await;
                 if InferenceModule::is_enabled(&*module) {
-                    module.detect(&request.audio_data, duration).await.ok()
-                } else {
-                    None
+                    if let Ok(rate) = module.detect(&request.audio_data, duration).await {
+                        ctx.set_speech_rate(rate);
+                    }
                 }
-            } else {
-                None
             }
-        } else {
-            None
-        };
+        }
 
-        // 3. NMT: 机器翻译（必需，使用动态确定的翻译方向）
+        // 3.3 情感检测（需要 transcript）
+        if features.map(|f| f.emotion_detection).unwrap_or(false) {
+            // TODO: 实现情感检测模块
+            // 当前先跳过，待实现 emotion_detection 模块
+        }
+
+        // 3.4 个性化适配（需要 transcript）
+        if features.map(|f| f.persona_adaptation).unwrap_or(false) {
+            // TODO: 实现个性化适配模块
+            // 当前先跳过，待实现 persona_adaptation 模块
+        }
+
+        // 4. NMT: 机器翻译（必需，使用动态确定的翻译方向）
         let translation = self.nmt_engine.translate(&transcript, &src_lang, &tgt_lang).await?;
+        
+        // 将翻译结果写入 PipelineContext
+        ctx.set_translation(translation.clone());
 
         // 4. TTS: 语音合成（必需，使用目标语言）
-        let audio = self.tts_engine.synthesize(&translation, &tgt_lang).await?;
+        let mut audio = self.tts_engine.synthesize(&translation, &tgt_lang).await?;
 
-        // 6. 可选：语速控制
-        let mut final_audio = audio;
-        if features.map(|f| f.speech_rate_control).unwrap_or(false) && speech_rate.is_some() {
-            if let Some(ref controller) = self.speech_rate_controller {
-                let module = controller.read().await;
-                if InferenceModule::is_enabled(&*module) {
-                    // 假设目标语速为 1.0（正常速度）
-                    let target_rate = 1.0;
-                    final_audio = module.adjust_audio(&final_audio, target_rate, speech_rate.unwrap())?;
+        // 6. 可选：语速控制（需要语速识别结果）
+        if features.map(|f| f.speech_rate_control).unwrap_or(false) {
+            if let Some(rate) = ctx.speech_rate {
+                if let Some(ref controller) = self.speech_rate_controller {
+                    let module = controller.read().await;
+                    if InferenceModule::is_enabled(&*module) {
+                        // 假设目标语速为 1.0（正常速度）
+                        let target_rate = 1.0;
+                        if let Ok(adjusted) = module.adjust_audio(&audio, target_rate, rate) {
+                            audio = adjusted;
+                        }
+                    }
                 }
             }
         }
 
-        // 7. 可选：音色克隆
-        if features.map(|f| f.voice_cloning).unwrap_or(false) && speaker_id.is_some() {
-            if let Some(ref cloner) = self.voice_cloner {
-                let module = cloner.read().await;
-                if InferenceModule::is_enabled(&*module) {
-                    final_audio = module.clone_voice(&translation, &speaker_id.as_ref().unwrap()).await?;
+        // 7. 可选：音色克隆（需要音色识别结果）
+        if features.map(|f| f.voice_cloning).unwrap_or(false) {
+            if let Some(ref speaker_id) = ctx.speaker_id {
+                if let Some(ref cloner) = self.voice_cloner {
+                    let module = cloner.read().await;
+                    if InferenceModule::is_enabled(&*module) {
+                        if let Ok(cloned) = module.clone_voice(&translation, speaker_id).await {
+                            audio = cloned;
+                        }
+                    }
                 }
             }
         }
+        
+        // 将最终 TTS 音频写入 PipelineContext
+        ctx.set_tts_audio(audio.clone());
 
+        // 从 PipelineContext 构建 InferenceResult
         Ok(InferenceResult {
-            transcript,
-            translation,
-            audio: final_audio,
-            speaker_id,
-            speech_rate,
-            emotion: None, // TODO: 实现情感分析
+            transcript: ctx.transcript.unwrap_or_default(),
+            translation: ctx.translation.unwrap_or_default(),
+            audio,
+            speaker_id: ctx.speaker_id,
+            speech_rate: ctx.speech_rate,
+            emotion: ctx.emotion,
         })
     }
 }

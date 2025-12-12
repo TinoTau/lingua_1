@@ -87,6 +87,7 @@ async fn handle_node_message(
             installed_models,
             features_supported,
             accept_public_jobs,
+            capability_state,
         } => {
             // 注册节点
             let node = state.node_registry.register_node(
@@ -98,6 +99,7 @@ async fn handle_node_message(
                 installed_models,
                 features_supported,
                 accept_public_jobs,
+                capability_state,
             ).await;
             
             *node_id = Some(node.node_id.clone());
@@ -120,6 +122,7 @@ async fn handle_node_message(
             timestamp: _,
             resource_usage,
             installed_models,
+            capability_state,
         } => {
             // 更新节点心跳
             state.node_registry.update_node_heartbeat(
@@ -129,6 +132,7 @@ async fn handle_node_message(
                 resource_usage.mem_percent,
                 installed_models,
                 resource_usage.running_jobs,
+                capability_state,
             ).await;
         }
         

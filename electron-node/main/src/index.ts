@@ -187,22 +187,7 @@ ipcMain.handle('generate-pairing-code', async () => {
   return nodeAgent?.generatePairingCode() || null;
 });
 
-ipcMain.handle('get-module-status', async () => {
-  return inferenceService?.getModuleStatus() || {};
-});
-
-ipcMain.handle('toggle-module', async (_, moduleName: string, enabled: boolean) => {
-  if (!inferenceService) return false;
-  try {
-    if (enabled) {
-      await inferenceService.enableModule(moduleName);
-    } else {
-      await inferenceService.disableModule(moduleName);
-    }
-    return true;
-  } catch (error) {
-    console.error('切换模块状态失败:', error);
-    return false;
-  }
-});
+// 注意：模块管理 IPC 已移除
+// 模块现在根据任务请求中的 features 自动启用/禁用，不需要手动管理
+// 如果需要查看模块状态，可以通过模型管理界面查看已安装的模型
 

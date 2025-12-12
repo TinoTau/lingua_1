@@ -25,10 +25,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.removeAllListeners('models:error');
   },
   
-  // 节点和模块管理
+  // 节点管理
   getNodeStatus: () => ipcRenderer.invoke('get-node-status'),
   generatePairingCode: () => ipcRenderer.invoke('generate-pairing-code'),
-  getModuleStatus: () => ipcRenderer.invoke('get-module-status'),
-  toggleModule: (moduleName: string, enabled: boolean) => ipcRenderer.invoke('toggle-module', moduleName, enabled),
+  // 注意：模块管理 API 已移除
+  // 模块现在根据任务请求中的 features 自动启用/禁用，不需要手动管理
 });
 

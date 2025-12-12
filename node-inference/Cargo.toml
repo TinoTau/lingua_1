@@ -56,3 +56,6 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 # 时间处理（原项目未使用，但我们需要用于模块状态）
 chrono = { version = "0.4", features = ["serde"] }
 
+# 懒加载静态变量（用于 MODULE_TABLE）
+lazy_static = "1.4"
+

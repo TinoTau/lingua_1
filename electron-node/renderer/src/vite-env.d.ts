@@ -21,8 +21,8 @@ interface Window {
     // 节点和模块管理
     getNodeStatus: () => Promise<any>;
     generatePairingCode: () => Promise<string | null>;
-    getModuleStatus: () => Promise<any>;
-    toggleModule: (moduleName: string, enabled: boolean) => Promise<boolean>;
+    // 注意：模块管理 API 已移除
+    // 模块现在根据任务请求中的 features 自动启用/禁用
   };
 }
 

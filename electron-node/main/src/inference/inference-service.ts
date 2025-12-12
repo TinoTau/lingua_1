@@ -41,12 +41,16 @@ export class InferenceService {
     this.currentJobs.add(job.job_id);
 
     try {
+      // 根据任务请求中的 features 自动启用所需模块（运行时动态启用）
+      // 注意：模块启用由推理服务根据请求自动处理，不需要手动调用
+      
       // 如果启用了流式 ASR，使用 WebSocket
       if (job.enable_streaming_asr && partialCallback) {
         return await this.processJobStreaming(job, partialCallback);
       }
 
       // 否则使用 HTTP 同步请求
+      // 将任务中的 features 传递给推理服务，推理服务会根据 features 自动启用相应模块
       const request = {
         job_id: job.job_id,
         src_lang: job.src_lang,
@@ -231,29 +235,25 @@ export class InferenceService {
     };
   }
 
+  // 注意：以下方法已废弃，模块现在根据任务请求自动启用/禁用
+  // 保留这些方法是为了向后兼容，但不再通过 UI 手动调用
+  
   async getModuleStatus(): Promise<Record<string, boolean>> {
-    // TODO: 从推理服务获取实际模块状态
-    // 当前返回默认状态，实际应该通过 HTTP 调用推理服务获取
-    return {
-      emotion_detection: false,
-      voice_style_detection: false,
-      speech_rate_detection: false,
-      speech_rate_control: false,
-      speaker_identification: false,
-      persona_adaptation: false,
-    };
+    // 模块状态现在由推理服务根据任务请求动态管理
+    // 返回空对象，表示不提供手动管理功能
+    return {};
   }
 
   async enableModule(moduleName: string): Promise<void> {
-    // TODO: 通过 HTTP 调用推理服务启用模块
-    // 当前仅记录日志，实际应该调用推理服务的 API
-    console.log(`启用模块: ${moduleName}`);
+    // 已废弃：模块现在根据任务请求自动启用
+    // 不再支持手动启用模块
+    console.warn(`enableModule(${moduleName}) 已废弃：模块现在根据任务请求自动启用`);
   }
 
   async disableModule(moduleName: string): Promise<void> {
-    // TODO: 通过 HTTP 调用推理服务禁用模块
-    // 当前仅记录日志，实际应该调用推理服务的 API
-    console.log(`禁用模块: ${moduleName}`);
+    // 已废弃：模块现在根据任务请求自动启用/禁用
+    // 不再支持手动禁用模块
+    console.warn(`disableModule(${moduleName}) 已废弃：模块现在根据任务请求自动管理`);
   }
 }
 

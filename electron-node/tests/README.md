@@ -15,6 +15,9 @@ electron-node/tests/
     ├── TEST_REPORT.md     # 测试结果报告
     ├── model-manager.test.ts      # ModelManager 单元测试
     └── model-hub-api.test.ts      # 模型库服务 API 测试
+└── stage3.2/              # 阶段 3.2：模块化功能实现测试
+    ├── README.md          # 阶段 3.2 测试说明
+    └── TEST_REPORT.md     # 测试结果报告
 ```
 
 ## 测试阶段
@@ -43,6 +46,15 @@ electron-node/tests/
 - [ ] IPC 进度事件推送测试
 
 详细说明请参考 [阶段 3.1 测试文档](./stage3.1/README.md)
+
+### 阶段 3.2：模块化功能实现测试
+
+- [x] 模块管理器测试 ✅（8/8 通过，100%）
+- [x] 模块依赖解析器测试 ✅（10/10 通过，100%）
+- [x] capability_state 测试 ✅（4/4 通过，100%）
+- [x] 总体测试结果 ✅（22/22 通过，100%）
+
+详细说明请参考 [阶段 3.2 测试文档](./stage3.2/README.md)
 
 ## 注意事项
 

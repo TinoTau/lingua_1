@@ -20,8 +20,13 @@ tests/
 │   ├── mod.rs            # 测试模块声明
 │   ├── message_format_test.rs # 消息格式验证测试
 │   └── TEST_REPORT.md    # 测试结果报告
+├── stage3.2/              # 阶段 3.2（模块化功能实现）测试
+│   ├── mod.rs            # 测试模块声明
+│   ├── node_selection_test.rs # 节点选择测试
+│   └── TEST_REPORT.md    # 测试结果报告
 ├── stage1_1.rs           # 阶段一.1 测试入口（文件名使用下划线）
-└── stage1_2.rs           # 阶段一.2 测试入口（文件名使用下划线）
+├── stage1_2.rs           # 阶段一.2 测试入口（文件名使用下划线）
+└── stage3_2.rs           # 阶段 3.2 测试入口（文件名使用下划线）
 ```
 
 ## 运行测试
@@ -35,17 +40,23 @@ cargo test --test stage1_1
 # 运行阶段一.2的所有测试
 cargo test --test stage1_2
 
+# 运行阶段 3.2 的所有测试
+cargo test --test stage3_2
+
 # 运行特定测试模块
 cargo test --test stage1_1 session_test
 cargo test --test stage1_2 message_format_test
+cargo test --test stage3_2 node_selection_test
 
 # 运行特定测试
 cargo test --test stage1_1 test_create_session
 cargo test --test stage1_2 test_session_init_message_format
+cargo test --test stage3_2 test_select_node_with_models_ready
 
 # 显示详细输出
 cargo test --test stage1_1 -- --nocapture
 cargo test --test stage1_2 -- --nocapture
+cargo test --test stage3_2 -- --nocapture
 ```
 
 ### 运行所有测试
@@ -67,6 +78,12 @@ cargo test
 **测试数量**: 7个测试  
 **测试内容**: 消息格式验证（移动端和 Electron Node 客户端的消息格式对齐协议规范）  
 **测试报告**: [TEST_REPORT.md](./stage1.2/TEST_REPORT.md)
+
+### 阶段 3.2：模块化功能实现
+
+**测试数量**: 6个测试  
+**测试内容**: 基于 capability_state 的节点选择、模块依赖展开的节点选择、节点心跳更新  
+**测试报告**: [TEST_REPORT.md](./stage3.2/TEST_REPORT.md)
 
 ## 测试组织原则
 

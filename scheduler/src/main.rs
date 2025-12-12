@@ -21,6 +21,7 @@ mod connection_manager;
 mod result_queue;
 mod app_state;
 mod audio_buffer;
+mod module_resolver;
 
 use session::SessionManager;
 use dispatcher::JobDispatcher;

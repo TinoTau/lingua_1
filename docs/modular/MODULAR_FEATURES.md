@@ -15,30 +15,51 @@
 ### 工作流程
 
 ```
-客户端请求 → 指定需要的可选功能
+用户（Web/移动端）→ 选择需要的可选功能
+    ↓
+客户端请求 → 将用户选择的功能包含在请求中
     ↓
 调度服务器 → 选择支持这些功能的节点
     ↓
-节点处理 → 根据请求启用/禁用相应模块
+节点处理 → 根据请求动态启用/禁用相应模块（运行时）
     ↓
 返回结果 → 包含可选功能的处理结果
 ```
 
+**重要说明**：
+- **功能选择**：由 Web/移动端的**用户**决定，而不是节点端
+- **节点端职责**：下载模型、提供算力、根据任务需求动态启用模块
+- **节点端 UI**：仅提供模型管理（下载/安装），不提供功能开关
+
 ### 使用示例
 
-#### 节点端启用/禁用模块
+#### 节点端运行时模块管理（根据任务需求动态启用）
+
+节点端不需要手动启用/禁用模块，而是根据调度服务器下发的任务需求自动启用：
 
 ```rust
-// 启用音色识别模块
-inference_service.enable_module("speaker_identification").await?;
-
-// 禁用语速控制模块
-inference_service.disable_module("speech_rate_control").await?;
+// 节点端根据任务请求中的 features 动态启用模块
+// 这是运行时行为，不需要 UI 开关
+if request.features.speaker_identification {
+    // 自动启用音色识别模块（如果模型已安装）
+    inference_service.enable_module("speaker_identification").await?;
+}
 ```
 
-#### 客户端请求指定功能
+#### 客户端请求指定功能（由用户选择）
+
+**Web/移动端客户端**根据用户的选择，在请求中包含功能需求：
 
 ```typescript
+// Web/移动端：用户通过 UI 选择功能
+const userSelectedFeatures = {
+    speaker_identification: userWantsSpeakerId,  // 用户选择
+    speech_rate_detection: userWantsSpeechRate,  // 用户选择
+    emotion_detection: userWantsEmotion,         // 用户选择
+    // ... 其他功能
+};
+
+// 发送请求时包含用户选择的功能
 const message = {
     type: 'utterance',
     session_id: 's-123',
@@ -46,14 +67,11 @@ const message = {
     src_lang: 'zh',
     tgt_lang: 'en',
     audio: base64Audio,
-    features: {
-        speaker_identification: true,  // 启用音色识别
-        voice_cloning: true,           // 启用音色生成
-        speech_rate_detection: true,   // 启用语速识别
-        speech_rate_control: false,    // 禁用语速控制
-    }
+    features: userSelectedFeatures  // 用户选择的功能
 };
 ```
+
+**节点端**：根据请求中的 `features` 自动启用相应模块，无需用户干预。
 
 ---
 
@@ -360,42 +378,39 @@ impl InferenceService {
 
 ## Electron Node 客户端 UI
 
-### 模块管理界面
+### 模型管理界面（不提供功能开关）
+
+**重要**：Electron 节点端**不提供功能开关 UI**，只提供模型管理（下载/安装）。
+
+节点端根据任务请求中的 `features` 自动启用相应模块，无需用户干预。
 
 ```typescript
-// electron-node/renderer/src/components/ModuleManagement.tsx
-export function ModuleManagement() {
-    const [modules, setModules] = useState<Module[]>([]);
+// electron-node/renderer/src/components/ModelManagement.tsx
+// 只提供模型下载和管理，不提供功能开关
+export function ModelManagement() {
+    const [models, setModels] = useState<Model[]>([]);
     
-    const toggleModule = async (moduleName: string, enabled: boolean) => {
-        if (enabled) {
-            await window.electronAPI.enableModule(moduleName);
-        } else {
-            await window.electronAPI.disableModule(moduleName);
-        }
-        loadModules();
+    const downloadModel = async (modelId: string) => {
+        await window.electronAPI.downloadModel(modelId);
     };
     
     return (
-        <div className="module-management">
-            <h2>功能模块管理</h2>
-            {modules.map(module => (
-                <div key={module.name} className="module-item">
-                    <div className="module-info">
-                        <h3>{module.displayName}</h3>
-                        <p>{module.description}</p>
-                        <span className="module-status">
-                            {module.enabled ? '已启用' : '已禁用'}
+        <div className="model-management">
+            <h2>模型管理</h2>
+            {models.map(model => (
+                <div key={model.id} className="model-item">
+                    <div className="model-info">
+                        <h3>{model.name}</h3>
+                        <p>{model.description}</p>
+                        <span className="model-status">
+                            {model.installed ? '已安装' : '未安装'}
                         </span>
                     </div>
-                    <label className="switch">
-                        <input
-                            type="checkbox"
-                            checked={module.enabled}
-                            onChange={(e) => toggleModule(module.name, e.target.checked)}
-                        />
-                        <span className="slider"></span>
-                    </label>
+                    {!model.installed && (
+                        <button onClick={() => downloadModel(model.id)}>
+                            下载模型
+                        </button>
+                    )}
                 </div>
             ))}
         </div>
@@ -403,21 +418,22 @@ export function ModuleManagement() {
 }
 ```
 
-### IPC 接口
+### 运行时模块管理（无需 UI）
 
-```typescript
-// electron-node/main/src/index.ts
-ipcMain.handle('enable-module', async (_, moduleName: string) => {
-    return inferenceService.enableModule(moduleName).await;
-});
+节点端根据任务请求自动启用/禁用模块：
 
-ipcMain.handle('disable-module', async (_, moduleName: string) => {
-    return inferenceService.disableModule(moduleName).await;
-});
-
-ipcMain.handle('get-module-status', async () => {
-    return inferenceService.getModuleStatuses().await;
-});
+```rust
+// node-inference/src/inference.rs
+impl InferenceService {
+    pub async fn process(&self, request: InferenceRequest) -> Result<InferenceResult> {
+        // 根据请求中的 features 动态启用模块
+        if request.features.speaker_identification {
+            // 自动启用音色识别模块（如果模型已安装）
+            self.enable_module("speaker_identification").await?;
+        }
+        // ... 处理逻辑
+    }
+}
 ```
 
 ## 调度服务器支持
@@ -490,7 +506,7 @@ export function FeatureSelector({ onFeaturesChange }: Props) {
 1. **模块独立性**: 每个模块可以独立启用/禁用，互不影响
 2. **运行时切换**: 无需重启服务即可切换模块状态
 3. **资源优化**: 禁用模块不占用计算资源
-4. **灵活配置**: 客户端可以按需选择功能
+4. **灵活配置**: Web/移动端用户可以按需选择功能
 5. **优雅降级**: 模块不可用时，系统仍能正常工作
 
 ## 实施步骤
@@ -511,10 +527,11 @@ export function FeatureSelector({ onFeaturesChange }: Props) {
 
 ## 下一步
 
-1. 完善模块的模型加载逻辑
-2. 实现 Electron 客户端的模块管理 UI
-3. 实现调度服务器的功能感知节点选择
-4. 添加模块状态监控和日志
+1. ✅ 完善模块的模型加载逻辑（已完成）
+2. ✅ 实现调度服务器的功能感知节点选择（已完成）
+3. [ ] 实现 Web/移动端的功能选择 UI（由用户选择功能）
+4. [ ] 添加模块状态监控和日志
+5. [ ] 可选模块模型集成（待具体模型实现）
 
 ## 总结
 
@@ -523,6 +540,7 @@ export function FeatureSelector({ onFeaturesChange }: Props) {
 - ✅ 动态启用/禁用模块
 - ✅ 不影响核心功能
 - ✅ 不影响其他可选模块
-- ✅ 客户端按需选择功能
+- ✅ Web/移动端用户按需选择功能
+- ✅ 节点端根据任务需求动态启用模块
 - ✅ 节点按能力提供服务
 

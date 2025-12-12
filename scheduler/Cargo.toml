@@ -50,6 +50,9 @@ base64 = { version = "0.21", features = ["alloc"] }
 # Futures 工具
 futures-util = "0.3"
 
+# 懒加载静态变量（用于 MODULE_TABLE）
+lazy_static = "1.4"
+
 [dev-dependencies]
 tokio-test = "0.4"
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "rt", "time", "process", "fs", "test-util"] }

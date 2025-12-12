@@ -309,7 +309,10 @@ lingua_1/
 └── docs/                         # 文档
     ├── ARCHITECTURE.md          # 架构文档
     ├── GETTING_STARTED.md       # 快速开始指南
-    ├── MODULAR_FEATURES.md      # 模块化功能设计（包含快速参考）
+    ├── modular/                 # 模块化功能文档
+    │   ├── README.md            # 模块化功能文档索引
+    │   ├── LINGUA_完整技术说明书_v2.md  # 最终版本技术说明书
+    │   └── MODULAR_FEATURES.md  # 快速参考文档
     ├── PROTOCOLS.md             # WebSocket 消息协议规范
     └── PUBLIC_API.md            # 对外开放 API 设计与实现
 ```
@@ -410,7 +413,7 @@ npm start
 - [技术架构报告](./docs/v0.1版本项目架构与技术报告.md) - 之前版本的技术架构参考
 - [架构文档](./docs/ARCHITECTURE.md) - 系统架构详细说明
 - [快速开始指南](./docs/GETTING_STARTED.md) - 快速上手指南
-- [模块化功能设计](./docs/MODULAR_FEATURES.md) - 模块化功能设计（包含快速参考）
+- [模块化功能设计](./docs/modular/) - 模块化功能完整技术说明书和快速参考
 - [协议规范](./docs/PROTOCOLS.md) - WebSocket 消息协议规范
 - [对外开放 API](./docs/PUBLIC_API.md) - 对外 API 设计与实现
 - [iOS 技术文档分析](./docs/MOBILE_APP_IOS_DOCS_ANALYSIS.md) - iOS 技术文档对移动端开发的参考价值分析

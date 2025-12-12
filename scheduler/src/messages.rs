@@ -41,6 +41,25 @@ pub struct InstalledModel {
     pub enabled: Option<bool>,
 }
 
+/// 模型状态（用于 capability_state）
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum ModelStatus {
+    /// 模型已安装可用
+    Ready,
+    /// 正在下载
+    Downloading,
+    /// 未安装
+    NotInstalled,
+    /// 模型损坏 / 无法加载
+    Error,
+}
+
+/// 节点模型能力图（capability_state）
+/// 
+/// key: model_id, value: 模型状态
+pub type CapabilityState = std::collections::HashMap<String, ModelStatus>;
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HardwareInfo {
     pub cpu_cores: u32,
@@ -268,6 +287,10 @@ pub enum NodeMessage {
         installed_models: Vec<InstalledModel>,
         features_supported: FeatureFlags,
         accept_public_jobs: bool,
+        /// 节点模型能力图（capability_state）
+        /// key: model_id, value: 模型状态
+        #[serde(skip_serializing_if = "Option::is_none")]
+        capability_state: Option<CapabilityState>,
     },
     #[serde(rename = "node_register_ack")]
     NodeRegisterAck {
@@ -281,6 +304,10 @@ pub enum NodeMessage {
         resource_usage: ResourceUsage,
         #[serde(skip_serializing_if = "Option::is_none")]
         installed_models: Option<Vec<InstalledModel>>,
+        /// 节点模型能力图（capability_state）
+        /// key: model_id, value: 模型状态
+        #[serde(skip_serializing_if = "Option::is_none")]
+        capability_state: Option<CapabilityState>,
     },
     #[serde(rename = "job_assign")]
     JobAssign {

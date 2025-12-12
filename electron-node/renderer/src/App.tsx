@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SystemResources } from './components/SystemResources';
 import { ModelManagement } from './components/ModelManagement';
-import { ModuleManagement } from './components/ModuleManagement';
 import { NodeStatus } from './components/NodeStatus';
 import './App.css';
 
@@ -31,7 +30,6 @@ function App() {
       <main className="app-main">
         <div className="left-panel">
           <SystemResources resources={systemResources} />
-          <ModuleManagement />
         </div>
         <div className="right-panel">
           <ModelManagement />

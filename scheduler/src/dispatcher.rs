@@ -1,5 +1,6 @@
 use crate::node_registry::NodeRegistry;
 use crate::messages::{FeatureFlags, PipelineConfig};
+use crate::module_resolver::ModuleResolver;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -86,17 +87,32 @@ impl JobDispatcher {
     ) -> Job {
         let job_id = format!("job-{}", Uuid::new_v4().to_string()[..8].to_uppercase());
         
+        // 根据 v2 技术说明书，使用模块依赖展开算法选择节点
         let assigned_node_id = if let Some(node_id) = preferred_node_id {
             // 如果指定了节点，检查节点是否可用
             if self.node_registry.is_node_available(&node_id).await {
-                Some(node_id)
+                // 还需要检查节点是否具备所需的模型能力
+                if let Some(features) = &features {
+                    if let Ok(required_models) = self.get_required_models_for_features(Some(features), &src_lang, &tgt_lang) {
+                        if !self.node_registry.check_node_has_models_ready(&node_id, &required_models).await {
+                            // 节点不具备所需模型，回退到功能感知选择
+                            self.select_node_with_module_expansion(&src_lang, &tgt_lang, Some(features.clone()), true).await
+                        } else {
+                            Some(node_id)
+                        }
+                    } else {
+                        Some(node_id)
+                    }
+                } else {
+                    Some(node_id)
+                }
             } else {
                 // 回退到功能感知选择
-                self.node_registry.select_node_with_features(&src_lang, &tgt_lang, &features, true).await
+                self.select_node_with_module_expansion(&src_lang, &tgt_lang, features.clone(), true).await
             }
         } else {
-            // 功能感知选择节点
-            self.node_registry.select_node_with_features(&src_lang, &tgt_lang, &features, true).await
+            // 使用模块依赖展开算法选择节点
+            self.select_node_with_module_expansion(&src_lang, &tgt_lang, features.clone(), true).await
         };
 
         let job = Job {
@@ -144,6 +160,76 @@ impl JobDispatcher {
         } else {
             false
         }
+    }
+
+    /// 使用模块依赖展开算法选择节点
+    /// 
+    /// 按照 v2 技术说明书的步骤：
+    /// 1. 解析用户请求 features
+    /// 2. 递归展开依赖链
+    /// 3. 收集 required_models
+    /// 4. 过滤 capability_state == ready 的节点
+    /// 5. 负载均衡选节点
+    async fn select_node_with_module_expansion(
+        &self,
+        src_lang: &str,
+        tgt_lang: &str,
+        features: Option<FeatureFlags>,
+        accept_public: bool,
+    ) -> Option<String> {
+        // 步骤 1: 解析用户请求 features
+        let module_names = if let Some(ref features) = features {
+            ModuleResolver::parse_features_to_modules(features)
+        } else {
+            // 如果没有 features，只使用核心模块
+            vec!["asr".to_string(), "nmt".to_string(), "tts".to_string()]
+        };
+
+        // 步骤 2: 递归展开依赖链
+        let _expanded_modules = match ModuleResolver::expand_dependencies(&module_names) {
+            Ok(modules) => modules,
+            Err(e) => {
+                tracing::warn!("Failed to expand module dependencies: {}", e);
+                // 回退到原来的方法
+                return self.node_registry.select_node_with_features(src_lang, tgt_lang, &features, accept_public).await;
+            }
+        };
+
+        // 步骤 3: 收集 required_models
+        let required_models = match self.get_required_models_for_features(features.as_ref(), src_lang, tgt_lang) {
+            Ok(models) => models,
+            Err(e) => {
+                tracing::warn!("Failed to collect required models: {}", e);
+                // 回退到原来的方法
+                return self.node_registry.select_node_with_features(src_lang, tgt_lang, &features, accept_public).await;
+            }
+        };
+
+        // 步骤 4 & 5: 过滤 capability_state == ready 的节点，并负载均衡
+        self.node_registry.select_node_with_models(src_lang, tgt_lang, &required_models, accept_public).await
+    }
+
+    /// 获取功能所需的模型列表
+    fn get_required_models_for_features(
+        &self,
+        features: Option<&FeatureFlags>,
+        _src_lang: &str,
+        _tgt_lang: &str,
+    ) -> anyhow::Result<Vec<String>> {
+        let mut model_ids = Vec::new();
+
+        // 核心模块的模型（这里简化处理，实际应该从配置或请求中获取具体模型 ID）
+        // TODO: 从配置或请求中获取 ASR/NMT/TTS 的具体模型 ID
+        // 当前先跳过，只收集可选模块的模型
+
+        // 可选模块的模型
+        if let Some(features) = features {
+            let module_names = ModuleResolver::parse_features_to_modules(features);
+            let optional_models = ModuleResolver::collect_required_models(&module_names)?;
+            model_ids.extend(optional_models);
+        }
+
+        Ok(model_ids)
     }
 }
 

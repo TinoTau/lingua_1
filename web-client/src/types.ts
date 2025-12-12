@@ -6,6 +6,16 @@ export enum SessionState {
   PLAYING_TTS = 'playing_tts',
 }
 
+// 功能标志（可选模块开关）
+export interface FeatureFlags {
+  emotion_detection?: boolean;
+  voice_style_detection?: boolean;
+  speech_rate_detection?: boolean;
+  speech_rate_control?: boolean;
+  speaker_identification?: boolean;
+  persona_adaptation?: boolean;
+}
+
 // 配置参数
 export interface Config {
   silenceTimeoutMs: number; // 1000ms

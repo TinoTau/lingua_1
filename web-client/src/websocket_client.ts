@@ -1,4 +1,4 @@
-import { AudioChunkMessage, ServerMessage } from './types';
+import { AudioChunkMessage, ServerMessage, FeatureFlags } from './types';
 import { StateMachine, SessionState } from './state_machine';
 
 export type MessageCallback = (message: ServerMessage) => void;
@@ -29,8 +29,11 @@ export class WebSocketClient {
 
   /**
    * 连接 WebSocket
+   * @param srcLang 源语言
+   * @param tgtLang 目标语言
+   * @param features 可选功能标志（由用户选择）
    */
-  async connect(srcLang: string, tgtLang: string): Promise<void> {
+  async connect(srcLang: string, tgtLang: string, features?: FeatureFlags): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
         this.ws = new WebSocket(this.url);
@@ -46,7 +49,7 @@ export class WebSocketClient {
             src_lang: srcLang,
             tgt_lang: tgtLang,
             dialect: null,
-            features: {},
+            features: features || {},
             pairing_code: null,
           };
 
