@@ -13,7 +13,7 @@
 - ✅ 支持多语种与后续扩展的方言模型
 - ✅ 支持多会话并行，一个会话对应一条 WebSocket 连接
 - ✅ 支持多种产品形态：
-  - 会话设备：手机 App（Android / iOS）
+  - 会话设备：手机 App（Android / iOS）、**Web 客户端（iOS 开发设备替代方案）**
   - 调度服务器：云端服务端
   - 第三方客户端：PC 端 Electron Node 客户端
 - ✅ 支持用户贡献自己的 PC（CPU + GPU）作为算力节点
@@ -149,10 +149,18 @@ const message = {
 - **渲染进程**: React + TypeScript + Vite
 - **推理引擎**: ONNX Runtime / PyTorch / Whisper-rs
 
+### Web 客户端（iOS 开发设备替代方案）✅
+- **框架**: TypeScript + Vite
+- **语言**: TypeScript
+- **特性**: 半双工模式、Send 按钮、静音自动结束、ASR 字幕、Utterance Group
+- **项目位置**: `web-client/`
+- **文档**: [Web 客户端文档](./docs/webClient/README.md)
+
 ### 移动端客户端
 - **框架**: React Native + Expo
 - **语言**: TypeScript
 - **VAD**: WebRTC VAD / Silero VAD
+- **注意**: 由于没有 iOS 开发设备，已开发 Web 客户端作为替代方案
 
 ### 模型库服务
 - **语言**: Python
@@ -226,6 +234,18 @@ lingua_1/
 │   │   └── index.html
 │   ├── package.json
 │   └── vite.config.ts
+│
+├── web-client/                   # Web 客户端（iOS 开发设备替代方案）
+│   ├── src/
+│   │   ├── state_machine.ts     # 状态机
+│   │   ├── recorder.ts          # 录音模块
+│   │   ├── websocket_client.ts  # WebSocket 客户端
+│   │   ├── tts_player.ts        # TTS 播放
+│   │   ├── asr_subtitle.ts      # ASR 字幕
+│   │   └── main.ts              # 主应用
+│   ├── index.html
+│   ├── package.json
+│   └── README.md
 │
 ├── mobile-app/                   # 移动端客户端
 │   ├── src/
@@ -344,13 +364,25 @@ npm run build
 npm start
 ```
 
-### 5. 启动移动端客户端
+### 5. 启动 Web 客户端（iOS 开发设备替代方案）
+
+```powershell
+cd web-client
+npm install
+npm run dev
+```
+
+服务将在 `http://localhost:3000` 启动。
+
+### 6. 启动移动端客户端
 
 ```powershell
 cd mobile-app
 npm install
 npm start
 ```
+
+**注意**: 由于没有 iOS 开发设备，已开发 Web 客户端作为替代方案。
 
 ### 一键启动（Windows）
 
@@ -379,6 +411,7 @@ npm start
 - [协议规范](./docs/PROTOCOLS.md) - WebSocket 消息协议规范
 - [对外开放 API](./docs/PUBLIC_API.md) - 对外 API 设计与实现
 - [iOS 技术文档分析](./docs/MOBILE_APP_IOS_DOCS_ANALYSIS.md) - iOS 技术文档对移动端开发的参考价值分析
+- [Web 客户端文档](./docs/webClient/README.md) - Web 客户端文档索引（iOS 开发设备替代方案）
 
 ### 项目状态与开发计划
 
@@ -393,6 +426,7 @@ npm start
 - [阶段一.2 测试报告](./scheduler/tests/stage1.2/TEST_REPORT.md) - 客户端消息格式对齐测试报告（7个测试）
 - [阶段一.3 测试报告](./node-inference/tests/stage1.3/TEST_REPORT.md) - 节点推理服务测试报告（10个本地模型测试通过）
 - [本地模型测试说明](./node-inference/tests/LOCAL_MODEL_TESTING.md) - 本地模型测试指南（ASR、VAD）
+- [Web 客户端阶段 2.1 测试报告](./web-client/tests/stage2.1/TEST_REPORT.md) - Web 客户端核心功能测试报告（22个测试全部通过）
 
 ### 脚本和工具文档
 

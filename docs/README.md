@@ -47,13 +47,37 @@
   - 测试报告：
     - [阶段一.3 测试报告](./../node-inference/tests/stage1.3/TEST_REPORT.md)
     - [本地模型测试说明](./../node-inference/tests/LOCAL_MODEL_TESTING.md)
+- **Web 客户端测试**：
+  - 测试目录：`web-client/tests/`
+  - 阶段 2.1 测试：`web-client/tests/stage2.1/`（22个测试，全部通过）
+  - 测试报告：
+    - [阶段 2.1 测试报告](./../web-client/tests/stage2.1/TEST_REPORT.md)
 
 ### 参考文档
 
 - [v0.1版本项目架构与技术报告.md](./v0.1版本项目架构与技术报告.md) - 原项目技术架构参考
 - [iOS 技术文档分析](./MOBILE_APP_IOS_DOCS_ANALYSIS.md) - iOS 技术文档对移动端开发的参考价值分析
 
-### iOS 技术文档（原生 iOS 开发参考）
+### Web 客户端（iOS 开发设备替代方案）
+
+由于没有 iOS 开发设备，我们开发了 **Web 客户端作为替代方案**，采用半双工实时语音翻译设计：
+
+- [Web 客户端文档目录](./webClient/README.md) - Web 客户端文档索引
+- [Web 端实时语音翻译统一设计方案 v3](./webClient/Web_端实时语音翻译_统一设计方案_v3.md) - **主文档**，包含完整的设计方案、技术方案和功能需求
+- [Web 客户端方案可行性分析](./webClient/WEB_CLIENT_SCHEME_FEASIBILITY_ANALYSIS.md) - 可行性分析
+- [Web 客户端 v3 可行性评估](./WEB_CLIENT_V3_FEASIBILITY_ASSESSMENT.md) - v3 方案可行性评估
+
+**Web 客户端特点**：
+- ✅ 半双工模式（输入模式和输出模式自动切换）
+- ✅ Send 按钮主导节奏
+- ✅ 静音自动结束（固定参数）
+- ✅ ASR 实时字幕（需要后端支持）
+- ✅ Utterance Group 上下文拼接（需要后端支持）
+- ✅ 播放期间完全关麦，避免回声问题
+
+**项目位置**: `web-client/`
+
+### iOS 技术文档（原生 iOS 开发参考，未来考虑）
 
 `docs/IOS/` 目录包含 11 个详细的 iOS 原生开发文档，虽然当前项目使用 React Native，但这些文档提供了非常有价值的架构设计和实现思路：
 
@@ -69,7 +93,7 @@
 - [IOS_DEBUG_OVERLAY_IMPLEMENTATION.md](./IOS/IOS_DEBUG_OVERLAY_IMPLEMENTATION.md) - DebugOverlay 实现 ⭐⭐
 - [IOS_PERFORMANCE_TEST_PLAN.md](./IOS/IOS_PERFORMANCE_TEST_PLAN.md) - 性能测试计划 ⭐⭐
 
-**注意**: 这些文档主要针对原生 iOS (Swift) 开发，但架构设计和实现思路对 React Native 开发同样有很高的参考价值。详见 [iOS 技术文档分析](./MOBILE_APP_IOS_DOCS_ANALYSIS.md)。
+**注意**: 这些文档主要针对原生 iOS (Swift) 开发，但架构设计和实现思路对 React Native 开发同样有很高的参考价值。详见 [iOS 技术文档分析](./MOBILE_APP_IOS_DOCS_ANALYSIS.md)。**当前由于没有 iOS 开发设备，已开发 Web 客户端作为替代方案。**
 
 ## 文档维护原则
 

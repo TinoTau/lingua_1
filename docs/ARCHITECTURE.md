@@ -67,7 +67,34 @@
 - 模型管理（安装/卸载/更新）
 - 功能模块管理（启用/禁用可选功能）
 
-### 3. 移动端客户端
+### 3. Web 客户端（iOS 开发设备替代方案）✅
+
+**位置**: `web-client/`  
+**技术栈**: TypeScript + Vite  
+**职责**:
+- 采集用户语音（Web Audio API）
+- 半双工状态机管理
+- Send 按钮和静音自动结束
+- WebSocket 通信
+- TTS 流式播放
+- ASR 实时字幕显示
+
+**主要功能**:
+- ✅ 半双工模式（输入模式和输出模式自动切换）
+- ✅ Send 按钮主导节奏
+- ✅ 静音自动结束（1000ms 阈值 + 250ms 尾部缓冲）
+- ✅ 播放期间完全关麦，避免回声问题
+- ✅ ASR 实时字幕（需要后端支持 partial 结果）
+- ⏸️ Utterance Group 上下文拼接（需要后端支持）
+
+**项目状态**:
+- ✅ 阶段 1：核心功能已完成
+- ⏸️ 阶段 2：ASR 字幕（需要后端支持）
+- ⏸️ 阶段 3：Utterance Group（需要后端支持）
+
+**详细文档**: [Web 客户端文档](./webClient/README.md)
+
+### 4. 移动端客户端
 
 **位置**: `mobile-app/`  
 **技术栈**: React Native + TypeScript  
@@ -85,7 +112,9 @@
 - 配对码输入（可选）
 - 翻译结果显示
 
-### 4. 模型库服务 (Model Hub)
+**注意**: 由于没有 iOS 开发设备，已开发 Web 客户端作为替代方案。
+
+### 5. 模型库服务 (Model Hub)
 
 **位置**: `model-hub/`  
 **技术栈**: Python + FastAPI  
@@ -94,7 +123,7 @@
 - 提供模型列表查询 API
 - 提供模型下载 URL
 
-### 5. API Gateway（对外 API 网关）
+### 6. API Gateway（对外 API 网关）
 
 **位置**: `api-gateway/`  
 **技术栈**: Rust + Tokio + Axum  
@@ -121,7 +150,7 @@
 
 详细设计请参考 [对外开放 API 文档](./PUBLIC_API.md)
 
-### 6. 节点推理服务
+### 7. 节点推理服务
 
 **位置**: `node-inference/`  
 **技术栈**: Rust + ONNX Runtime + Whisper  

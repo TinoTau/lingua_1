@@ -82,9 +82,38 @@
   - [x] 测试报告（`node-inference/tests/stage1.3/TEST_REPORT.md`）
   - [x] 本地模型测试说明（`node-inference/tests/LOCAL_MODEL_TESTING.md`）
 
-## 阶段二：移动端和 Electron 客户端（3-4 周）
+## 阶段二：客户端开发（3-4 周）
 
-### 2.1 移动端客户端
+### 2.1 Web 客户端（iOS 开发设备替代方案）✅（阶段 1 核心功能已完成）
+
+**背景**: 由于没有 iOS 开发设备，开发了 Web 客户端作为替代方案，采用半双工实时语音翻译设计。
+
+- [x] **项目框架搭建**
+  - [x] TypeScript + Vite 项目结构
+  - [x] 模块化设计（state_machine, recorder, websocket_client, tts_player, asr_subtitle）
+- [x] **阶段 1：核心功能实现** ✅
+  - [x] 半双工状态机（4 个状态：INPUT_READY → INPUT_RECORDING → WAITING_RESULT → PLAYING_TTS）
+  - [x] Send 按钮和静音自动结束（1000ms 阈值 + 250ms 尾部缓冲）
+  - [x] 播放期间关麦逻辑（彻底关闭浏览器麦克风）
+  - [x] 基础 WebSocket 通信（音频上传和消息接收）
+  - [x] 完整 UI 界面
+- [x] **阶段 2.1：单元测试** ✅
+  - [x] 状态机模块测试（14 个测试，全部通过）
+  - [x] ASR 字幕模块测试（8 个测试，全部通过）
+  - [x] 测试报告（`web-client/tests/stage2.1/TEST_REPORT.md`）
+- [ ] **阶段 2：ASR 字幕**（需要后端支持）
+  - [ ] 扩展节点推理服务支持 partial 结果
+  - [ ] 扩展调度服务器转发 partial 结果
+  - [ ] 扩展 WebSocket 协议（asr_partial 消息）
+  - [ ] 前端实时字幕显示（已实现框架）
+- [ ] **阶段 3：Utterance Group**（需要后端支持）
+  - [ ] 扩展调度服务器支持 Group 管理
+  - [ ] 扩展节点推理服务支持上下文拼接
+  - [ ] 扩展 NMT 引擎支持上下文输入
+- 详细设计请参考 [Web 端实时语音翻译统一设计方案 v3](./webClient/Web_端实时语音翻译_统一设计方案_v3.md)
+- 项目位置：`web-client/`
+
+### 2.2 移动端客户端（React Native）
 - [x] 项目框架搭建
 - [x] VAD Hook 框架
 - [x] WebSocket Hook 框架
