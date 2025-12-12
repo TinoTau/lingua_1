@@ -197,6 +197,31 @@ async fn handle_node_message(
             }
         }
         
+        NodeMessage::AsrPartial {
+            job_id: _,
+            node_id: _nid,
+            session_id,
+            utterance_index,
+            text,
+            is_final,
+        } => {
+            // 转发 ASR 部分结果给客户端
+            let partial_msg = SessionMessage::AsrPartial {
+                session_id: session_id.clone(),
+                utterance_index,
+                job_id: String::new(), // 部分结果不需要 job_id
+                text,
+                is_final,
+            };
+            let partial_json = serde_json::to_string(&partial_msg)?;
+            if !state.session_connections.send(
+                &session_id,
+                Message::Text(partial_json)
+            ).await {
+                warn!("无法发送 ASR 部分结果到会话 {}", session_id);
+            }
+        }
+        
         NodeMessage::NodeError { node_id: nid, code, message, details: _ } => {
             error!("节点 {} 报告错误: {} - {}", nid, code, message);
             // 可以在这里处理节点错误，例如标记节点为离线

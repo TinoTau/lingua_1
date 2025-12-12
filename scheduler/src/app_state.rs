@@ -7,6 +7,7 @@ use crate::pairing::PairingService;
 use crate::model_hub::ModelHub;
 use crate::connection_manager::{SessionConnectionManager, NodeConnectionManager};
 use crate::result_queue::ResultQueueManager;
+use crate::audio_buffer::AudioBufferManager;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -18,5 +19,6 @@ pub struct AppState {
     pub session_connections: SessionConnectionManager,
     pub node_connections: NodeConnectionManager,
     pub result_queue: ResultQueueManager,
+    pub audio_buffer: AudioBufferManager,
 }
 

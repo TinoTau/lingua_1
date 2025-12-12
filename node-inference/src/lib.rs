@@ -13,9 +13,9 @@ pub mod language_detector;
 mod inference;
 
 // 重新导出主要类型
-pub use asr::ASREngine;
+pub use asr::{ASREngine, ASRPartialResult};
 pub use nmt::NMTEngine;
 pub use tts::{TTSEngine, PiperHttpConfig};
 pub use vad::VADEngine;
-pub use inference::{InferenceRequest, InferenceResult, InferenceService};
+pub use inference::{InferenceRequest, InferenceResult, InferenceService, PartialResultCallback};
 

@@ -96,6 +96,8 @@ async fn handle_session_message(
                    lang_a,
                    lang_b,
                    auto_langs,
+                   enable_streaming_asr: _,
+                   partial_update_interval_ms: _,
                } => {
                    // 处理配对码
                    let paired_node_id = if let Some(code) = pairing_code {
@@ -146,6 +148,89 @@ async fn handle_session_message(
             info!("会话 {} 已创建", session.session_id);
         }
         
+        SessionMessage::AudioChunk {
+            session_id: sess_id,
+            seq: _,
+            is_final,
+            payload,
+        } => {
+            // 验证会话
+            let session = state.session_manager.get_session(&sess_id).await
+                .ok_or_else(|| anyhow::anyhow!("会话不存在: {}", sess_id))?;
+            
+            // 获取当前 utterance_index
+            let utterance_index = session.utterance_index;
+            
+            // 如果有 payload，解码并累积音频块
+            if let Some(payload_str) = payload {
+                use base64::{Engine as _, engine::general_purpose};
+                if let Ok(audio_chunk) = general_purpose::STANDARD.decode(&payload_str) {
+                    state.audio_buffer.add_chunk(&sess_id, utterance_index, audio_chunk).await;
+                }
+            }
+            
+            // 如果是最终块，创建 job
+            if is_final {
+                // 获取累积的音频数据
+                if let Some(audio_data) = state.audio_buffer.take_combined(&sess_id, utterance_index).await {
+                    // 使用会话的默认配置
+                    let src_lang = session.src_lang.clone();
+                    let tgt_lang = session.tgt_lang.clone();
+                    let dialect = session.dialect.clone();
+                    let final_features = session.default_features.clone();
+                    
+                    // 创建 job（从 session 获取流式 ASR 配置，默认启用）
+                    let enable_streaming_asr = Some(true); // 默认启用流式 ASR
+                    let partial_update_interval_ms = Some(1000u64); // 默认 1 秒更新间隔
+                    
+                    let job = state.dispatcher.create_job(
+                        sess_id.clone(),
+                        utterance_index,
+                        src_lang.clone(),
+                        tgt_lang.clone(),
+                        dialect.clone(),
+                        final_features.clone(),
+                        crate::messages::PipelineConfig {
+                            use_asr: true,
+                            use_nmt: true,
+                            use_tts: true,
+                        },
+                        audio_data,
+                        "pcm16".to_string(), // Web 客户端使用 PCM16
+                        16000, // 16kHz
+                        session.paired_node_id.clone(),
+                        session.mode.clone(),
+                        session.lang_a.clone(),
+                        session.lang_b.clone(),
+                        session.auto_langs.clone(),
+                        enable_streaming_asr,
+                        partial_update_interval_ms,
+                    ).await;
+                    
+                    // 增加 utterance_index
+                    state.session_manager.update_session(&sess_id, crate::session::SessionUpdate::IncrementUtteranceIndex).await;
+                    
+                    info!("Job {} 已创建（来自 audio_chunk），分配给节点: {:?}", job.job_id, job.assigned_node_id);
+                    
+                    // 如果节点已分配，发送 job 给节点
+                    if let Some(ref node_id) = job.assigned_node_id {
+                        if let Some(job_assign_msg) = create_job_assign_message(&job) {
+                            if !state.node_connections.send(node_id, Message::Text(serde_json::to_string(&job_assign_msg)?)).await {
+                                warn!("无法发送 job 到节点 {}", node_id);
+                                // 标记 job 为失败
+                                state.dispatcher.update_job_status(&job.job_id, crate::dispatcher::JobStatus::Failed).await;
+                            }
+                        }
+                    } else {
+                        warn!("Job {} 没有可用的节点", job.job_id);
+                        send_error(tx, ErrorCode::NodeUnavailable, "没有可用的节点").await;
+                    }
+                } else {
+                    warn!("音频缓冲区为空，无法创建 job");
+                }
+            }
+        }
+        
         SessionMessage::Utterance {
             session_id: sess_id,
             utterance_index,
@@ -157,6 +242,12 @@ async fn handle_session_message(
             audio,
             audio_format,
             sample_rate,
+            mode: _,
+            lang_a: _,
+            lang_b: _,
+            auto_langs: _,
+            enable_streaming_asr: _,
+            partial_update_interval_ms: _,
         } => {
             // 验证会话
             let session = state.session_manager.get_session(&sess_id).await
@@ -170,7 +261,10 @@ async fn handle_session_message(
             // 使用会话的默认 features（如果请求中没有指定）
             let final_features = features.or(session.default_features.clone());
             
-            // 创建 job
+            // 创建 job（从 session 获取流式 ASR 配置，默认启用）
+            let enable_streaming_asr = Some(true); // 默认启用流式 ASR
+            let partial_update_interval_ms = Some(1000u64); // 默认 1 秒更新间隔
+            
             let job = state.dispatcher.create_job(
                 sess_id.clone(),
                 utterance_index,
@@ -187,6 +281,12 @@ async fn handle_session_message(
                 audio_format,
                 sample_rate,
                 session.paired_node_id.clone(),
+                session.mode.clone(),
+                session.lang_a.clone(),
+                session.lang_b.clone(),
+                session.auto_langs.clone(),
+                enable_streaming_asr,
+                partial_update_interval_ms,
             ).await;
             
             info!("Job {} 已创建，分配给节点: {:?}", job.job_id, job.assigned_node_id);

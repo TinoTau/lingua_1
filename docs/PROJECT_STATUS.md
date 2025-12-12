@@ -21,19 +21,26 @@
   - 完整的消息类型定义（SessionMessage, NodeMessage）
   - FeatureFlags、PipelineConfig、InstalledModel 等辅助类型
   - 错误码枚举
+  - ASR 字幕消息扩展（asr_partial 消息，支持部分结果和最终结果）
 - ✅ **数据结构扩展**：
   - Session 结构支持 `tenant_id`、`client_version`、`platform`、`dialect`、`features`
-  - Job 结构支持 `dialect`、`features`、`pipeline`、`audio_format`、`sample_rate`
+  - Job 结构支持 `dialect`、`features`、`pipeline`、`audio_format`、`sample_rate`、`enable_streaming_asr`、`partial_update_interval_ms`
   - Node 结构支持 `version`、`platform`、`hardware`、`features_supported`、`accept_public_jobs`
 - ✅ **WebSocket 消息处理实现**（模块化设计）：
-  - 会话端消息处理（`websocket/session_handler.rs`）- session_init, utterance, heartbeat, session_close
-  - 节点端消息处理（`websocket/node_handler.rs`）- node_register, node_heartbeat, job_result
+  - 会话端消息处理（`websocket/session_handler.rs`）- session_init, utterance, audio_chunk, heartbeat, session_close
+  - 节点端消息处理（`websocket/node_handler.rs`）- node_register, node_heartbeat, job_result, asr_partial
   - 公共辅助函数（`websocket/mod.rs`）- 消息发送、错误处理等
   - 连接管理（SessionConnectionManager, NodeConnectionManager）
   - 结果队列管理（ResultQueueManager）- 支持乱序结果排序
+- ✅ **ASR 字幕支持**（阶段 2.1.2）：
+  - 音频缓冲区管理器（`audio_buffer.rs`）- 流式音频块累积和管理
+  - asr_partial 消息转发 - 支持实时 ASR 部分结果转发
+  - audio_chunk 消息处理 - 支持 Web 客户端的流式音频上传
 - ✅ **单元测试**：
   - 阶段一.1 完整单元测试（47个测试，全部通过）
-  - 覆盖所有核心模块（会话、任务分发、节点注册、配对、连接管理、结果队列）
+  - 阶段一.2 消息格式对齐测试（7个测试，全部通过）
+  - 阶段 2.1.2 ASR 字幕功能测试（12个测试，全部通过）
+  - 覆盖所有核心模块（会话、任务分发、节点注册、配对、连接管理、结果队列、音频缓冲区）
   - 包含负载均衡策略测试
 - ✅ **负载均衡和功能检查优化**：
   - 完善功能能力检查（所有 6 个功能位）
@@ -76,10 +83,17 @@
   - ✅ 状态机模块测试（14 个测试，全部通过）
   - ✅ ASR 字幕模块测试（8 个测试，全部通过）
   - ✅ 测试报告（`web-client/tests/stage2.1/TEST_REPORT.md`）
-- [ ] **阶段 2.1.2：ASR 字幕**（需要后端支持）
-  - [ ] 扩展后端支持 partial 结果
-  - [ ] 扩展 WebSocket 协议
-  - [ ] 前端实时字幕显示（框架已实现）
+- ✅ **阶段 2.1.2：ASR 字幕** ✅
+  - ✅ 扩展节点推理服务支持 partial 结果（流式 ASR 输出）
+  - ✅ 扩展调度服务器转发 partial 结果（音频缓冲区管理器、消息转发）
+  - ✅ 扩展 WebSocket 协议（asr_partial 消息）
+  - ✅ 前端实时字幕显示（框架已实现）
+  - ✅ 单元测试：
+    - 调度服务器：12个测试全部通过 ✅
+    - 节点推理服务：5个测试（2个通过 ✅，3个跳过 ⏸️，需要模型文件）
+  - 测试报告：
+    - [调度服务器测试报告](./../scheduler/tests/stage2.1.2/TEST_REPORT.md)
+    - [节点推理服务测试报告](./../node-inference/tests/stage2.1.2/TEST_REPORT.md)
 - [ ] **阶段 2.1.3：Utterance Group**（需要后端支持）
   - [ ] 扩展调度服务器支持 Group 管理
   - [ ] 扩展节点推理服务支持上下文拼接
@@ -203,6 +217,10 @@
 - ✅ **功能能力检查完善** - 补齐所有 6 个功能位判断（emotion_detection, voice_style_detection, speech_rate_detection, speech_rate_control, speaker_identification, persona_adaptation）
 - ✅ **最少连接数负载均衡策略** - 实现基础的负载均衡，按 `current_jobs` 最小选择节点
 - ✅ **负载均衡配置入口** - 添加 `[scheduler.load_balancer]` 配置段，为未来扩展预留接口
+- ✅ **ASR 字幕支持**（阶段 2.1.2）
+  - ✅ 音频缓冲区管理器（流式音频块累积）
+  - ✅ asr_partial 消息转发
+  - ✅ 支持 audio_chunk 消息处理
 - [ ] 高级负载均衡策略（资源使用率、加权轮询、综合评分）
 - [ ] 功能匹配优先级排序（优先选择支持更多功能的节点）
 - [ ] 方言匹配和模型版本匹配
@@ -241,7 +259,11 @@
 - [ ] 添加 UI 优化
 
 ### 5. 节点推理服务
-- [ ] 实现 Whisper ASR 推理
+- ✅ **ASR 引擎流式输出**（阶段 2.1.2）
+  - ✅ 支持流式推理和部分结果输出
+  - ✅ 音频累积和缓冲区管理
+  - ✅ 部分结果回调机制
+- [ ] 实现 Whisper ASR 推理（完整实现）
 - [ ] 实现 M2M100 NMT 推理
 - [ ] 实现 Piper TTS 调用
 - [ ] 实现 Silero VAD 检测

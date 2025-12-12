@@ -12,6 +12,10 @@ use crate::vad;
 use crate::speaker;
 use crate::speech_rate;
 use crate::language_detector;
+use std::sync::Arc;
+
+/// 部分结果回调函数类型
+pub type PartialResultCallback = Arc<dyn Fn(asr::ASRPartialResult) + Send + Sync>;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InferenceRequest {
@@ -32,6 +36,12 @@ pub struct InferenceRequest {
     /// 自动识别时限制的语言范围（可选）
     #[serde(skip_serializing_if = "Option::is_none")]
     pub auto_langs: Option<Vec<String>>,
+    /// 是否启用流式 ASR（部分结果输出）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub enable_streaming_asr: Option<bool>,
+    /// 部分结果更新间隔（毫秒），仅在 enable_streaming_asr 为 true 时有效
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub partial_update_interval_ms: Option<u64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -166,7 +176,12 @@ impl InferenceService {
         Ok(())
     }
 
-    pub async fn process(&self, request: InferenceRequest) -> Result<InferenceResult> {
+    /// 处理推理请求（支持部分结果回调）
+    /// 
+    /// # Arguments
+    /// * `request` - 推理请求
+    /// * `partial_callback` - 部分结果回调（可选）
+    pub async fn process(&self, request: InferenceRequest, partial_callback: Option<PartialResultCallback>) -> Result<InferenceResult> {
         let features = request.features.as_ref();
         
         // 将 PCM 16-bit 转换为 f32（用于语言检测和 ASR）
@@ -234,7 +249,52 @@ impl InferenceService {
         }
         
         // 2. ASR: 语音识别（必需，使用检测到的语言）
-        let transcript = self.asr_engine.transcribe_f32(&audio_f32, &src_lang).await?;
+        // 如果启用了流式 ASR，使用流式处理；否则使用一次性处理
+        let transcript = if request.enable_streaming_asr.unwrap_or(false) {
+            // 启用流式 ASR
+            let interval_ms = request.partial_update_interval_ms.unwrap_or(1000);
+            self.asr_engine.enable_streaming(interval_ms).await;
+            
+            // 设置语言（需要在流式处理前设置）
+            // 注意：ASREngine 的 set_language 需要 &mut，但这里我们使用内部可变性
+            // 由于 ASREngine 内部使用 Arc，我们需要修改设计或使用其他方式
+            // 暂时在流式处理中，语言会在 get_partial_result 和 get_final_result 中使用 self.language
+            
+            // 将音频数据分块处理（模拟流式输入）
+            // 每块约 0.5 秒（8000 个样本 @ 16kHz）
+            let chunk_size = 8000;
+            let mut current_timestamp_ms = 0u64;
+            let sample_rate = 16000u32;
+            let chunk_duration_ms = (chunk_size * 1000) / sample_rate;
+            
+            // 清空缓冲区
+            self.asr_engine.clear_buffer().await;
+            
+            // 分块累积音频并定期获取部分结果
+            for chunk in audio_f32.chunks(chunk_size as usize) {
+                // 累积音频块
+                self.asr_engine.accumulate_audio(chunk).await;
+                
+                // 检查是否需要输出部分结果
+                if let Some(partial) = self.asr_engine.get_partial_result(current_timestamp_ms, &src_lang).await? {
+                    // 通过回调发送部分结果
+                    if let Some(ref callback) = partial_callback {
+                        callback(partial.clone());
+                    }
+                }
+                
+                current_timestamp_ms += chunk_duration_ms as u64;
+            }
+            
+            // 获取最终结果
+            let final_text = self.asr_engine.get_final_result(&src_lang).await?;
+            // 禁用流式模式
+            self.asr_engine.disable_streaming().await;
+            final_text
+        } else {
+            // 一次性处理
+            self.asr_engine.transcribe_f32(&audio_f32, &src_lang).await?
+        };
 
         // 2. 可选：音色识别
         #[allow(unused_variables)]  // audio_data 在可选模块中使用，如果模块未启用则未使用

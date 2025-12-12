@@ -33,6 +33,12 @@ pub struct Job {
     /// 自动识别时限制的语言范围（可选）
     #[serde(skip_serializing_if = "Option::is_none")]
     pub auto_langs: Option<Vec<String>>,
+    /// 是否启用流式 ASR（部分结果输出）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub enable_streaming_asr: Option<bool>,
+    /// 部分结果更新间隔（毫秒），仅在 enable_streaming_asr 为 true 时有效
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub partial_update_interval_ms: Option<u64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -75,6 +81,8 @@ impl JobDispatcher {
         lang_a: Option<String>,
         lang_b: Option<String>,
         auto_langs: Option<Vec<String>>,
+        enable_streaming_asr: Option<bool>,
+        partial_update_interval_ms: Option<u64>,
     ) -> Job {
         let job_id = format!("job-{}", Uuid::new_v4().to_string()[..8].to_uppercase());
         
@@ -114,6 +122,8 @@ impl JobDispatcher {
             lang_a,
             lang_b,
             auto_langs,
+            enable_streaming_asr,
+            partial_update_interval_ms,
         };
 
         let mut jobs = self.jobs.write().await;

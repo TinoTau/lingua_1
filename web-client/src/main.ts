@@ -130,11 +130,11 @@ class App {
   private onServerMessage(message: ServerMessage): void {
     switch (message.type) {
       case 'asr_partial':
-        this.asrSubtitle.updatePartial(message.text);
-        break;
-      
-      case 'asr_final':
-        this.asrSubtitle.updateFinal(message.text);
+        if (message.is_final) {
+          this.asrSubtitle.updateFinal(message.text);
+        } else {
+          this.asrSubtitle.updatePartial(message.text);
+        }
         break;
       
       case 'translation':

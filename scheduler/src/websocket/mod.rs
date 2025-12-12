@@ -63,6 +63,8 @@ pub(crate) fn create_job_assign_message(job: &crate::dispatcher::Job) -> Option<
         lang_a: job.lang_a.clone(),
         lang_b: job.lang_b.clone(),
         auto_langs: job.auto_langs.clone(),
+        enable_streaming_asr: job.enable_streaming_asr,
+        partial_update_interval_ms: job.partial_update_interval_ms,
     })
 }
 

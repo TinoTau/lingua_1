@@ -101,11 +101,15 @@
   - [x] 状态机模块测试（14 个测试，全部通过）
   - [x] ASR 字幕模块测试（8 个测试，全部通过）
   - [x] 测试报告（`web-client/tests/stage2.1/TEST_REPORT.md`）
-- [ ] **阶段 2.1.2：ASR 字幕**（需要后端支持）
-  - [ ] 扩展节点推理服务支持 partial 结果
-  - [ ] 扩展调度服务器转发 partial 结果
-  - [ ] 扩展 WebSocket 协议（asr_partial 消息）
-  - [ ] 前端实时字幕显示（已实现框架）
+- [x] **阶段 2.1.2：ASR 字幕** ✅
+  - [x] 扩展节点推理服务支持 partial 结果
+  - [x] 扩展调度服务器转发 partial 结果
+  - [x] 扩展 WebSocket 协议（asr_partial 消息）
+  - [x] 前端实时字幕显示（已实现框架）
+  - [x] 单元测试（调度服务器：12个测试全部通过 ✅，节点推理服务：5个测试（2个通过 ✅，3个跳过 ⏸️，需要模型文件））
+  - [x] 测试报告：
+    - [调度服务器测试报告](./../scheduler/tests/stage2.1.2/TEST_REPORT.md)
+    - [节点推理服务测试报告](./../node-inference/tests/stage2.1.2/TEST_REPORT.md)
 - [ ] **阶段 2.1.3：Utterance Group**（需要后端支持）
   - [ ] 扩展调度服务器支持 Group 管理
   - [ ] 扩展节点推理服务支持上下文拼接

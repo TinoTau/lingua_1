@@ -425,6 +425,8 @@ npm start
 - [阶段一.1 测试报告](./scheduler/tests/stage1.1/TEST_REPORT.md) - 调度服务器核心功能测试报告（47个测试）
 - [阶段一.2 测试报告](./scheduler/tests/stage1.2/TEST_REPORT.md) - 客户端消息格式对齐测试报告（7个测试）
 - [阶段一.3 测试报告](./node-inference/tests/stage1.3/TEST_REPORT.md) - 节点推理服务测试报告（10个本地模型测试通过）
+- [阶段 2.1.2 测试报告（调度服务器）](./scheduler/tests/stage2.1.2/TEST_REPORT.md) - ASR 字幕功能测试报告（12个测试全部通过）
+- [阶段 2.1.2 测试报告（节点推理服务）](./node-inference/tests/stage2.1.2/TEST_REPORT.md) - ASR 字幕功能测试报告（5个测试：2个通过 ✅，3个跳过 ⏸️，需要模型文件）
 - [本地模型测试说明](./node-inference/tests/LOCAL_MODEL_TESTING.md) - 本地模型测试指南（ASR、VAD）
 - [Web 客户端阶段 2.1 测试报告](./web-client/tests/stage2.1/TEST_REPORT.md) - Web 客户端核心功能测试报告（22个测试全部通过）
 

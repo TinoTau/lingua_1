@@ -82,6 +82,15 @@ export interface TranslationResultMessage {
   };
 }
 
+export interface AsrPartialMessage {
+  type: 'asr_partial';
+  session_id: string;
+  utterance_index: number;
+  job_id: string;
+  text: string;
+  is_final: boolean;
+}
+
 export interface ClientHeartbeatMessage {
   type: 'client_heartbeat';
   session_id: string;
@@ -179,6 +188,10 @@ export interface JobAssignMessage {
   lang_b?: string;
   /** 自动识别时限制的语言范围（可选） */
   auto_langs?: string[];
+  /** 是否启用流式 ASR（部分结果输出） */
+  enable_streaming_asr?: boolean;
+  /** 部分结果更新间隔（毫秒），仅在 enable_streaming_asr 为 true 时有效 */
+  partial_update_interval_ms?: number;
 }
 
 export interface JobResultMessage {
@@ -225,6 +238,7 @@ export interface NodeControlMessage {
 export type SessionSideIncomingMessage =
   | SessionInitAckMessage
   | TranslationResultMessage
+  | AsrPartialMessage
   | ServerHeartbeatMessage
   | SessionCloseAckMessage
   | LanguageDetectedMessage
@@ -253,6 +267,7 @@ export type AnyMessage =
   | SessionInitAckMessage
   | UtteranceMessage
   | TranslationResultMessage
+  | AsrPartialMessage
   | ClientHeartbeatMessage
   | ServerHeartbeatMessage
   | SessionCloseMessage

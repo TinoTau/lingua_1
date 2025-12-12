@@ -20,6 +20,7 @@ mod websocket;
 mod connection_manager;
 mod result_queue;
 mod app_state;
+mod audio_buffer;
 
 use session::SessionManager;
 use dispatcher::JobDispatcher;
@@ -32,6 +33,7 @@ use websocket::{handle_session, handle_node};
 use connection_manager::{SessionConnectionManager, NodeConnectionManager};
 use result_queue::ResultQueueManager;
 use app_state::AppState;
+use audio_buffer::AudioBufferManager;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -55,6 +57,7 @@ async fn main() -> Result<()> {
     let session_connections = SessionConnectionManager::new();
     let node_connections = NodeConnectionManager::new();
     let result_queue = ResultQueueManager::new();
+    let audio_buffer = AudioBufferManager::new();
 
     // 创建应用状态
     let app_state = AppState {
@@ -66,6 +69,7 @@ async fn main() -> Result<()> {
         session_connections,
         node_connections,
         result_queue,
+        audio_buffer,
     };
 
     // 构建路由

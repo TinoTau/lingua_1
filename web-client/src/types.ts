@@ -31,13 +31,15 @@ export interface AudioChunkMessage {
 
 export interface AsrPartialMessage {
   type: 'asr_partial';
+  session_id: string;
+  utterance_index: number;
+  job_id: string;
   text: string;
+  is_final: boolean;
 }
 
-export interface AsrFinalMessage {
-  type: 'asr_final';
-  text: string;
-}
+// AsrFinalMessage 已合并到 AsrPartialMessage（通过 is_final 字段区分）
+export type AsrFinalMessage = AsrPartialMessage;
 
 export interface TranslationMessage {
   type: 'translation';
@@ -50,9 +52,17 @@ export interface TtsAudioMessage {
   payload: string; // base64 encoded PCM16
 }
 
+// SessionInitAck 消息（用于确认会话创建）
+export interface SessionInitAckMessage {
+  type: 'session_init_ack';
+  session_id: string;
+  assigned_node_id: string | null;
+  message: string;
+}
+
 export type ServerMessage = 
+  | SessionInitAckMessage
   | AsrPartialMessage 
-  | AsrFinalMessage 
   | TranslationMessage 
   | TtsAudioMessage;
 

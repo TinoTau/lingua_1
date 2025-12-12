@@ -150,6 +150,12 @@ pub enum SessionMessage {
         /// 自动识别时限制的语言范围（可选）
         #[serde(skip_serializing_if = "Option::is_none")]
         auto_langs: Option<Vec<String>>,
+        /// 是否启用流式 ASR（部分结果输出）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        enable_streaming_asr: Option<bool>,
+        /// 部分结果更新间隔（毫秒），仅在 enable_streaming_asr 为 true 时有效
+        #[serde(skip_serializing_if = "Option::is_none")]
+        partial_update_interval_ms: Option<u64>,
     },
     #[serde(rename = "session_init_ack")]
     SessionInitAck {
@@ -172,6 +178,32 @@ pub enum SessionMessage {
         audio: String, // base64
         audio_format: String,
         sample_rate: u32,
+        /// 翻译模式："one_way" | "two_way_auto"
+        #[serde(skip_serializing_if = "Option::is_none")]
+        mode: Option<String>,
+        /// 双向模式的语言 A（当 mode == "two_way_auto" 时使用）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        lang_a: Option<String>,
+        /// 双向模式的语言 B（当 mode == "two_way_auto" 时使用）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        lang_b: Option<String>,
+        /// 自动识别时限制的语言范围（可选）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        auto_langs: Option<Vec<String>>,
+        /// 是否启用流式 ASR（部分结果输出）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        enable_streaming_asr: Option<bool>,
+        /// 部分结果更新间隔（毫秒），仅在 enable_streaming_asr 为 true 时有效
+        #[serde(skip_serializing_if = "Option::is_none")]
+        partial_update_interval_ms: Option<u64>,
+    },
+    #[serde(rename = "audio_chunk")]
+    AudioChunk {
+        session_id: String,
+        seq: u64,
+        is_final: bool,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        payload: Option<String>, // base64 encoded PCM16
     },
     #[serde(rename = "translation_result")]
     TranslationResult {
@@ -184,6 +216,14 @@ pub enum SessionMessage {
         tts_format: String,
         #[serde(skip_serializing_if = "Option::is_none")]
         extra: Option<ExtraResult>,
+    },
+    #[serde(rename = "asr_partial")]
+    AsrPartial {
+        session_id: String,
+        utterance_index: u64,
+        job_id: String,
+        text: String,
+        is_final: bool,
     },
     #[serde(rename = "client_heartbeat")]
     ClientHeartbeat {
@@ -269,6 +309,12 @@ pub enum NodeMessage {
         /// 自动识别时限制的语言范围（可选）
         #[serde(skip_serializing_if = "Option::is_none")]
         auto_langs: Option<Vec<String>>,
+        /// 是否启用流式 ASR（部分结果输出）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        enable_streaming_asr: Option<bool>,
+        /// 部分结果更新间隔（毫秒），仅在 enable_streaming_asr 为 true 时有效
+        #[serde(skip_serializing_if = "Option::is_none")]
+        partial_update_interval_ms: Option<u64>,
     },
     #[serde(rename = "job_result")]
     JobResult {
@@ -291,6 +337,15 @@ pub enum NodeMessage {
         processing_time_ms: Option<u64>,
         #[serde(skip_serializing_if = "Option::is_none")]
         error: Option<JobError>,
+    },
+    #[serde(rename = "asr_partial")]
+    AsrPartial {
+        job_id: String,
+        node_id: String,
+        session_id: String,
+        utterance_index: u64,
+        text: String,
+        is_final: bool,
     },
     #[serde(rename = "node_error")]
     NodeError {
