@@ -131,6 +131,8 @@ except:
   }
 }
 
+// ===== 模型管理 IPC 接口 =====
+
 ipcMain.handle('get-installed-models', async () => {
   return modelManager?.getInstalledModels() || [];
 });
@@ -139,13 +141,43 @@ ipcMain.handle('get-available-models', async () => {
   return modelManager?.getAvailableModels() || [];
 });
 
-ipcMain.handle('install-model', async (_, modelId: string) => {
-  return modelManager?.installModel(modelId) || false;
+ipcMain.handle('download-model', async (_, modelId: string, version?: string) => {
+  if (!modelManager) return false;
+  try {
+    await modelManager.downloadModel(modelId, version);
+    return true;
+  } catch (error) {
+    console.error('下载模型失败:', error);
+    return false;
+  }
 });
 
-ipcMain.handle('uninstall-model', async (_, modelId: string) => {
-  return modelManager?.uninstallModel(modelId) || false;
+ipcMain.handle('uninstall-model', async (_, modelId: string, version?: string) => {
+  return modelManager?.uninstallModel(modelId, version) || false;
 });
+
+ipcMain.handle('get-model-path', async (_, modelId: string, version?: string) => {
+  if (!modelManager) return null;
+  try {
+    return await modelManager.getModelPath(modelId, version);
+  } catch (error) {
+    console.error('获取模型路径失败:', error);
+    return null;
+  }
+});
+
+ipcMain.handle('get-model-ranking', async () => {
+  try {
+    const axios = require('axios');
+    const modelHubUrl = process.env.MODEL_HUB_URL || 'http://localhost:5000';
+    const response = await axios.get(`${modelHubUrl}/api/model-usage/ranking`);
+    return response.data || [];
+  } catch (error) {
+    console.error('获取模型排行失败:', error);
+    return [];
+  }
+});
+
 
 ipcMain.handle('get-node-status', async () => {
   return nodeAgent?.getStatus() || { online: false, nodeId: null };

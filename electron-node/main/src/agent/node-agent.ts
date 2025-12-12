@@ -12,6 +12,7 @@ import type {
   InstalledModel,
   FeatureFlags
 } from '../../../../shared/protocols/messages';
+import { ModelNotAvailableError } from '../model-manager/model-manager';
 
 export interface NodeStatus {
   online: boolean;
@@ -77,7 +78,7 @@ export class NodeAgent {
       const hardware = await this.getHardwareInfo();
       
       // 获取已安装的模型
-      const installedModels = this.inferenceService.getInstalledModels();
+      const installedModels = await this.inferenceService.getInstalledModels();
       
       // 获取支持的功能
       const featuresSupported = this.inferenceService.getFeaturesSupported();
@@ -138,7 +139,7 @@ export class NodeAgent {
       if (!this.ws || this.ws.readyState !== WebSocket.OPEN || !this.nodeId) return;
 
       const resources = await this.getSystemResources();
-      const installedModels = this.inferenceService.getInstalledModels();
+      const installedModels = await this.inferenceService.getInstalledModels();
 
       // 对齐协议规范：node_heartbeat 消息格式
       const message: NodeHeartbeatMessage = {
@@ -268,7 +269,33 @@ export class NodeAgent {
     } catch (error) {
       console.error('处理任务失败:', error);
       
-      // 对齐协议规范：job_result 错误响应格式
+      // 检查是否是 ModelNotAvailableError
+      if (error instanceof ModelNotAvailableError) {
+        // 发送 MODEL_NOT_AVAILABLE 错误给调度服务器
+        const errorResponse: JobResultMessage = {
+          type: 'job_result',
+          job_id: job.job_id,
+          node_id: this.nodeId,
+          session_id: job.session_id,
+          utterance_index: job.utterance_index,
+          success: false,
+          processing_time_ms: Date.now() - startTime,
+          error: {
+            code: 'MODEL_NOT_AVAILABLE',
+            message: `Model ${error.modelId}@${error.version} is not available: ${error.reason}`,
+            details: {
+              model_id: error.modelId,
+              version: error.version,
+              reason: error.reason,
+            },
+          },
+        };
+        
+        this.ws.send(JSON.stringify(errorResponse));
+        return;
+      }
+      
+      // 其他错误
       const errorResponse: JobResultMessage = {
         type: 'job_result',
         job_id: job.job_id,

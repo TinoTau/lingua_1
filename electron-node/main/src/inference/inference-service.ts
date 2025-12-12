@@ -175,33 +175,45 @@ export class InferenceService {
     return this.currentJobs.size;
   }
 
-  getInstalledModels(): InstalledModel[] {
+  async getInstalledModels(): Promise<InstalledModel[]> {
     // 从 ModelManager 获取已安装的模型，转换为协议格式
     const installed = this.modelManager.getInstalledModels();
     
-    // TODO: 需要从 ModelManager 获取完整的模型元数据（包括 kind, src_lang, tgt_lang, dialect）
-    // 目前返回基本结构，实际应该从 ModelMetadata 中获取完整信息
+    // 获取可用模型列表以获取完整元数据
+    const availableModels = await this.modelManager.getAvailableModels();
+    
     return installed.map(m => {
+      // 从可用模型列表中查找完整信息
+      const modelInfo = availableModels.find(am => am.id === m.modelId);
+      
       // 从 model_id 推断模型类型（临时方案，实际应该从元数据获取）
       let kind: 'asr' | 'nmt' | 'tts' | 'emotion' | 'other' = 'other';
-      if (m.model_id.includes('asr') || m.model_id.includes('whisper')) {
-        kind = 'asr';
-      } else if (m.model_id.includes('nmt') || m.model_id.includes('m2m')) {
-        kind = 'nmt';
-      } else if (m.model_id.includes('tts') || m.model_id.includes('piper')) {
-        kind = 'tts';
-      } else if (m.model_id.includes('emotion')) {
-        kind = 'emotion';
+      if (modelInfo) {
+        if (modelInfo.task === 'asr') kind = 'asr';
+        else if (modelInfo.task === 'nmt') kind = 'nmt';
+        else if (modelInfo.task === 'tts') kind = 'tts';
+        else if (modelInfo.task === 'emotion') kind = 'emotion';
+      } else {
+        // 回退到名称推断
+        if (m.modelId.includes('asr') || m.modelId.includes('whisper')) {
+          kind = 'asr';
+        } else if (m.modelId.includes('nmt') || m.modelId.includes('m2m')) {
+          kind = 'nmt';
+        } else if (m.modelId.includes('tts') || m.modelId.includes('piper')) {
+          kind = 'tts';
+        } else if (m.modelId.includes('emotion')) {
+          kind = 'emotion';
+        }
       }
 
       return {
-        model_id: m.model_id,
+        model_id: m.modelId,
         kind: kind,
-        src_lang: null, // TODO: 从元数据获取
-        tgt_lang: null, // TODO: 从元数据获取
+        src_lang: modelInfo?.languages?.[0] || null,
+        tgt_lang: modelInfo?.languages?.[1] || null,
         dialect: null, // TODO: 从元数据获取
         version: m.version || '1.0.0',
-        enabled: true, // TODO: 从配置获取
+        enabled: m.info.status === 'ready', // 只有 ready 状态才启用
       };
     });
   }

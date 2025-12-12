@@ -431,6 +431,7 @@ npm start
 - [阶段 2.1.2 测试报告（调度服务器）](./scheduler/tests/stage2.1.2/TEST_REPORT.md) - ASR 字幕功能测试报告（12个测试全部通过）
 - [阶段 2.1.2 测试报告（节点推理服务）](./node-inference/tests/stage2.1.2/TEST_REPORT.md) - ASR 字幕功能测试报告（5个测试：2个通过 ✅，3个跳过 ⏸️，需要模型文件）
 - [阶段 2.2 测试报告（Electron Node 客户端）](./electron-node/tests/stage2.2/TEST_REPORT.md) - Electron Node 客户端功能测试报告（编译测试全部通过 ✅）
+- [阶段 3.1 测试报告（模型管理功能）](./electron-node/tests/stage3.1/TEST_REPORT.md) - 模型管理功能测试报告（12/17 通过，ModelManager 核心功能 100% 通过 ✅）
 - [本地模型测试说明](./node-inference/tests/LOCAL_MODEL_TESTING.md) - 本地模型测试指南（ASR、VAD）
 - [Web 客户端阶段 2.1 测试报告](./web-client/tests/stage2.1/TEST_REPORT.md) - Web 客户端核心功能测试报告（22个测试全部通过）
 
