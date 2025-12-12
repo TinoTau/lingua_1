@@ -26,6 +26,7 @@
 | Web 客户端功能选择（阶段 3.2） | 17 | ✅ 17 | 0 | 100% |
 | 模块化功能（阶段 3.2） | 45 | ✅ 45 | 0 | 100% |
 | 模型管理（阶段 3.1） | 48 | ✅ 48 | 0 | 100%* |
+| 日志系统（阶段 4.1） | - | ✅ - | 0 | 100% |
 | **总计** | **225+** | **✅ 215+** | **0** | **100%** |
 
 *注：部分测试需要外部服务或模型文件，但核心功能测试全部通过
@@ -454,10 +455,46 @@
 - ✅ 模块化功能设计文档
 - ✅ 协议规范文档（包含实现状态）
 - ✅ 对外开放 API 设计与实现文档
+- ✅ 日志系统文档
 - ✅ 测试文档和报告
 - ✅ 本地模型测试说明文档
 
-#### API Gateway（对外 API 网关）✅
+#### 4.1 日志与可观测性系统 ✅
+
+**完成状态**: ✅ **100% 完成并测试**
+
+- ✅ **第一步：消息协议扩展**
+  - ✅ 在消息协议中添加 `trace_id` 字段
+  - ✅ 定义 `ui_event` 类型（UiEventType, UiEventStatus）
+  - ✅ 扩展 ErrorCode 枚举和用户提示映射
+  - ✅ 更新 Rust 和 TypeScript 类型定义
+- ✅ **第二步：trace_id 传播实现**
+  - ✅ Scheduler 生成和传播 `trace_id`
+  - ✅ Node 回传 `trace_id`
+  - ✅ 全链路结构化日志记录
+- ✅ **第三步：JSON 日志格式**
+  - ✅ Rust 端切换到 JSON formatter（Scheduler, Node Inference）
+  - ✅ Electron Node 集成 `pino` 日志库
+  - ✅ 支持环境变量控制输出格式（json/pretty）
+- ✅ **第四步：ui_event 推送**
+  - ✅ Scheduler 在关键事件点推送 `ui_event`
+  - ✅ 支持 DISPATCHED、ASR_PARTIAL、ASR_FINAL、NMT_DONE、ERROR 等事件
+- ✅ **第五步：模块日志开关**
+  - ✅ 实现配置文件加载（`observability.json`）
+  - ✅ 实现模块级日志过滤
+  - ✅ 支持环境变量和配置文件优先级
+- ✅ **测试结果**
+  - ✅ Scheduler: 所有测试通过 (72 passed, 0 failed)
+  - ✅ Node Inference: 所有测试通过 (12 passed, 12 ignored)
+  - ✅ Web Client: 所有测试通过 (39 passed, 0 failed)
+- 详细文档请参考：[日志系统文档](../logging/README.md)
+- 实现状态请参考：[日志系统实现状态](../logging/IMPLEMENTATION_STATUS.md)
+
+**联合调试影响**: ✅ **无影响** - 日志系统已完成，提供全链路追踪和可观测性支持
+
+---
+
+#### 4.2 API Gateway（对外 API 网关）✅
 - ✅ 项目结构创建
 - ✅ 核心模块实现：
   - 租户管理 (`tenant.rs`)
@@ -523,7 +560,7 @@
    - **影响**: 不影响核心功能（已有 Web 客户端替代）
    - 需要：对齐消息格式、实现完整的 VAD 检测、实现音频采集和处理、完善 WebSocket 通信、实现 TTS 音频播放、实现可选功能选择 UI
 
-7. **SDK 开发** ⏸️（可选）
+8. **SDK 开发** ⏸️（可选）
    - **状态**: 未开始
    - **影响**: 不影响核心功能
    - 包括：JS Web SDK、Android SDK、iOS SDK、SDK 文档和示例

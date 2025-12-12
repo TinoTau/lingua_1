@@ -314,13 +314,41 @@
   - [x] 模型管理 UI（已完成，仅提供模型下载/安装，不提供功能开关）
   - [x] 根据任务需求动态启用/禁用模块（运行时，无需 UI 开关）✅
 
-## 阶段四：对外开放 API（2-3 周）
+## 阶段四：日志与可观测性系统 ✅（1-2 周）
 
-### 4.1 API Gateway 完善
+### 4.1 日志系统实现 ✅
+- [x] **第一步：消息协议扩展** ✅
+  - [x] 在消息协议中添加 `trace_id` 字段
+  - [x] 定义 `ui_event` 类型（UiEventType, UiEventStatus）
+  - [x] 扩展 ErrorCode 枚举和用户提示映射
+  - [x] 更新 Rust 和 TypeScript 类型定义
+- [x] **第二步：trace_id 传播实现** ✅
+  - [x] Scheduler 生成和传播 `trace_id`
+  - [x] Node 回传 `trace_id`
+  - [x] 全链路结构化日志记录
+- [x] **第三步：JSON 日志格式** ✅
+  - [x] Rust 端切换到 JSON formatter（Scheduler, Node Inference）
+  - [x] Electron Node 集成 `pino` 日志库
+  - [x] 支持环境变量控制输出格式（json/pretty）
+- [x] **第四步：ui_event 推送** ✅
+  - [x] Scheduler 在关键事件点推送 `ui_event`
+  - [x] 支持 DISPATCHED、ASR_PARTIAL、ASR_FINAL、NMT_DONE、ERROR 等事件
+- [x] **第五步：模块日志开关** ✅
+  - [x] 实现配置文件加载（`observability.json`）
+  - [x] 实现模块级日志过滤
+  - [x] 支持环境变量和配置文件优先级
+- [x] **单元测试** ✅
+  - [x] 所有测试通过（Scheduler: 72 passed, Node Inference: 12 passed, Web Client: 39 passed）
+- 详细文档请参考：[日志系统文档](../logging/README.md)
+- 实现状态请参考：[日志系统实现状态](../logging/IMPLEMENTATION_STATUS.md)
+
+## 阶段五：对外开放 API（2-3 周）
+
+### 5.1 API Gateway 完善
 - [x] 项目框架搭建
 - [x] 核心模块实现（租户管理、鉴权、限流、REST/WebSocket API）
 - [x] Scheduler 扩展（tenant_id 支持）
-- [ ] 错误处理和日志完善
+- [x] 日志系统集成 ✅（已在阶段四完成）
 - [ ] 单元测试和集成测试
 - [ ] 数据库集成（租户存储）
 
@@ -330,7 +358,7 @@
 - [ ] iOS SDK
 - [ ] SDK 文档和示例
 
-## 阶段五：联调与优化（2-3 周）
+## 阶段六：联调与优化（2-3 周）
 
 **当前状态**: ✅ **核心功能已完成，可以进行联合调试**
 
