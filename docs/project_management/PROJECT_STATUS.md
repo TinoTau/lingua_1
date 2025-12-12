@@ -625,7 +625,6 @@
 ## 📚 相关文档
 
 - [开发计划](./DEVELOPMENT_PLAN.md)
-- [功能完成状态分析报告](./FUNCTION_COMPLETION_STATUS.md)（详细分析）
 - [架构文档](../ARCHITECTURE.md)
 - [快速开始指南](../GETTING_STARTED.md)
 - [模块化功能设计文档](../modular/LINGUA_完整技术说明书_v2.md)

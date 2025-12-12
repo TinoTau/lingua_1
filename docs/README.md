@@ -49,8 +49,7 @@ docs/
 ├── project_management/          # 项目管理文档
 │   ├── README.md
 │   ├── PROJECT_STATUS.md
-│   ├── DEVELOPMENT_PLAN.md
-│   └── FUNCTION_COMPLETION_STATUS.md
+│   └── DEVELOPMENT_PLAN.md
 │
 └── reference/                   # 参考文档
     ├── README.md
@@ -186,9 +185,8 @@ docs/
 **目录**: [`project_management/`](./project_management/)  
 **文档**: [项目管理文档目录](./project_management/README.md)
 
-- [项目状态](./project_management/PROJECT_STATUS.md) - 项目状态（已完成功能和待完成任务）
+- [项目状态](./project_management/PROJECT_STATUS.md) - 项目状态（已完成功能和待完成任务，包含联合调试就绪度评估）
 - [开发计划](./project_management/DEVELOPMENT_PLAN.md) - 开发计划（详细的开发阶段和任务列表）
-- [功能完成状态分析报告](./project_management/FUNCTION_COMPLETION_STATUS.md) - 功能完成状态分析报告（联合调试就绪度评估）
 
 ---
 
@@ -220,7 +218,6 @@ docs/
 ### 项目状态
 - [项目状态](./project_management/PROJECT_STATUS.md)
 - [开发计划](./project_management/DEVELOPMENT_PLAN.md)
-- [功能完成状态](./project_management/FUNCTION_COMPLETION_STATUS.md)
 
 ### 模块文档
 - [调度服务器](./scheduler/README.md)
