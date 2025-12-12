@@ -40,6 +40,7 @@ exports.NodeAgent = void 0;
 const ws_1 = __importDefault(require("ws"));
 const si = __importStar(require("systeminformation"));
 const os = __importStar(require("os"));
+const model_manager_1 = require("../model-manager/model-manager");
 class NodeAgent {
     constructor(inferenceService) {
         this.ws = null;
@@ -87,7 +88,7 @@ class NodeAgent {
             // 获取硬件信息
             const hardware = await this.getHardwareInfo();
             // 获取已安装的模型
-            const installedModels = this.inferenceService.getInstalledModels();
+            const installedModels = await this.inferenceService.getInstalledModels();
             // 获取支持的功能
             const featuresSupported = this.inferenceService.getFeaturesSupported();
             // 对齐协议规范：node_register 消息格式
@@ -140,7 +141,7 @@ class NodeAgent {
             if (!this.ws || this.ws.readyState !== ws_1.default.OPEN || !this.nodeId)
                 return;
             const resources = await this.getSystemResources();
-            const installedModels = this.inferenceService.getInstalledModels();
+            const installedModels = await this.inferenceService.getInstalledModels();
             // 对齐协议规范：node_heartbeat 消息格式
             const message = {
                 type: 'node_heartbeat',
@@ -217,6 +218,7 @@ class NodeAgent {
             // 如果启用了流式 ASR，设置部分结果回调
             const partialCallback = job.enable_streaming_asr ? (partial) => {
                 // 发送 ASR 部分结果到调度服务器
+                // 对齐协议规范：asr_partial 消息格式（从节点发送到调度服务器，需要包含 node_id）
                 if (this.ws && this.ws.readyState === ws_1.default.OPEN && this.nodeId) {
                     const partialMessage = {
                         type: 'asr_partial',
@@ -251,7 +253,31 @@ class NodeAgent {
         }
         catch (error) {
             console.error('处理任务失败:', error);
-            // 对齐协议规范：job_result 错误响应格式
+            // 检查是否是 ModelNotAvailableError
+            if (error instanceof model_manager_1.ModelNotAvailableError) {
+                // 发送 MODEL_NOT_AVAILABLE 错误给调度服务器
+                const errorResponse = {
+                    type: 'job_result',
+                    job_id: job.job_id,
+                    node_id: this.nodeId,
+                    session_id: job.session_id,
+                    utterance_index: job.utterance_index,
+                    success: false,
+                    processing_time_ms: Date.now() - startTime,
+                    error: {
+                        code: 'MODEL_NOT_AVAILABLE',
+                        message: `Model ${error.modelId}@${error.version} is not available: ${error.reason}`,
+                        details: {
+                            model_id: error.modelId,
+                            version: error.version,
+                            reason: error.reason,
+                        },
+                    },
+                };
+                this.ws.send(JSON.stringify(errorResponse));
+                return;
+            }
+            // 其他错误
             const errorResponse = {
                 type: 'job_result',
                 job_id: job.job_id,

@@ -1,4 +1,5 @@
 "use strict";
+// ===== ModelManager 主类 =====
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -36,27 +37,43 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ModelManager = void 0;
-const axios_1 = __importDefault(require("axios"));
+exports.ModelManager = exports.ModelNotAvailableError = void 0;
+const events_1 = require("events");
 const fs = __importStar(require("fs/promises"));
 const path = __importStar(require("path"));
-const crypto = __importStar(require("crypto"));
-const os = __importStar(require("os"));
-class ModelManager {
+const electron_1 = require("electron");
+const axios_1 = __importDefault(require("axios"));
+var errors_1 = require("./errors");
+Object.defineProperty(exports, "ModelNotAvailableError", { enumerable: true, get: function () { return errors_1.ModelNotAvailableError; } });
+// 导入模块
+const utils_1 = require("./utils");
+const registry_1 = require("./registry");
+const lock_manager_1 = require("./lock-manager");
+const downloader_1 = require("./downloader");
+const verifier_1 = require("./verifier");
+const installer_1 = require("./installer");
+/**
+ * ModelManager 类 - 模型管理器
+ */
+class ModelManager extends events_1.EventEmitter {
     constructor() {
-        this.installedModels = new Map();
+        super();
+        this.registry = {};
+        this.downloadTasks = new Map();
+        // 配置常量
+        this.MAX_CONCURRENT_FILES = 3;
+        this.MAX_RETRIES = 3;
+        this.TASK_LOCK_TIMEOUT = 30 * 60 * 1000; // 30 分钟
         this.modelHubUrl = process.env.MODEL_HUB_URL || 'http://localhost:5000';
         // 优先使用非 C 盘路径
         let userData;
         if (process.env.USER_DATA) {
             userData = process.env.USER_DATA;
         }
-        else if (typeof app !== 'undefined') {
-            const defaultUserData = app.getPath('userData');
-            // 如果默认路径在 C 盘，尝试使用其他盘
+        else if (electron_1.app) {
+            const defaultUserData = electron_1.app.getPath('userData');
             if (defaultUserData.startsWith('C:\\') || defaultUserData.startsWith('C:/')) {
-                // 尝试使用 D 盘或其他可用盘
-                const alternativePath = this.findAlternativePath();
+                const alternativePath = (0, utils_1.findAlternativePath)();
                 userData = alternativePath || defaultUserData;
             }
             else {
@@ -67,72 +84,37 @@ class ModelManager {
             userData = './user-data';
         }
         this.modelsDir = path.join(userData, 'models');
-        this.loadInstalledModels();
+        this.registryPath = path.join(this.modelsDir, 'registry.json');
+        this.tempDir = path.join(this.modelsDir, 'temp');
+        this.lockDir = path.join(this.modelsDir, 'in-progress-downloads');
+        // 初始化模块
+        this.registryManager = new registry_1.RegistryManager(this.registryPath);
+        this.lockManager = new lock_manager_1.LockManager(this.lockDir, this.TASK_LOCK_TIMEOUT);
+        this.downloader = new downloader_1.ModelDownloader(this.modelHubUrl, this.tempDir, this.MAX_CONCURRENT_FILES, this.MAX_RETRIES);
+        this.verifier = new verifier_1.ModelVerifier(this.modelHubUrl, this.modelsDir, this.tempDir);
+        this.installer = new installer_1.ModelInstaller(this.modelsDir, this.tempDir, this.registryManager);
+        this.initialize();
     }
-    findAlternativePath() {
-        // 尝试查找非 C 盘的可用路径
-        // Windows: 尝试 D:, E:, F: 等
-        // 其他系统: 使用用户主目录
-        if (os.platform() === 'win32') {
-            const fs = require('fs');
-            const drives = ['D', 'E', 'F', 'G', 'H'];
-            for (const drive of drives) {
-                const testPath = `${drive}:\\LinguaNode`;
-                try {
-                    if (!fs.existsSync(testPath)) {
-                        fs.mkdirSync(testPath, { recursive: true });
-                    }
-                    return testPath;
-                }
-                catch {
-                    // 继续尝试下一个盘
-                }
-            }
-        }
-        return null;
-    }
-    async loadInstalledModels() {
+    async initialize() {
         try {
+            // 创建必要的目录
             await fs.mkdir(this.modelsDir, { recursive: true });
-            const manifestPath = path.join(this.modelsDir, 'manifest.json');
-            if (await this.fileExists(manifestPath)) {
-                const content = await fs.readFile(manifestPath, 'utf-8');
-                const manifest = JSON.parse(content);
-                for (const [modelId, model] of Object.entries(manifest)) {
-                    this.installedModels.set(modelId, model);
-                }
-            }
+            await fs.mkdir(this.tempDir, { recursive: true });
+            await fs.mkdir(this.lockDir, { recursive: true });
+            // 加载 registry
+            this.registry = await this.registryManager.loadRegistry();
+            // 清理孤儿锁
+            await this.lockManager.cleanupOrphanLocks();
         }
         catch (error) {
-            console.error('加载已安装模型列表失败:', error);
+            console.error('初始化 ModelManager 失败:', error);
         }
     }
-    async saveInstalledModels() {
-        try {
-            const manifestPath = path.join(this.modelsDir, 'manifest.json');
-            const manifest = {};
-            for (const [modelId, model] of this.installedModels.entries()) {
-                manifest[modelId] = model;
-            }
-            await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2));
-        }
-        catch (error) {
-            console.error('保存已安装模型列表失败:', error);
-        }
-    }
-    async fileExists(filePath) {
-        try {
-            await fs.access(filePath);
-            return true;
-        }
-        catch {
-            return false;
-        }
-    }
+    // ===== 模型列表获取 =====
     async getAvailableModels() {
         try {
-            const response = await axios_1.default.get(`${this.modelHubUrl}/api/v1/models`);
-            return response.data.models || [];
+            const response = await axios_1.default.get(`${this.modelHubUrl}/api/models`);
+            return response.data;
         }
         catch (error) {
             console.error('获取可用模型列表失败:', error);
@@ -140,84 +122,179 @@ class ModelManager {
         }
     }
     getInstalledModels() {
-        return Array.from(this.installedModels.values());
+        const result = [];
+        for (const [modelId, versions] of Object.entries(this.registry)) {
+            for (const [version, info] of Object.entries(versions)) {
+                result.push({ modelId, version, info });
+            }
+        }
+        return result;
     }
-    async installModel(modelId) {
+    // ===== 模型路径获取 =====
+    async getModelPath(modelId, version) {
+        // 获取模型信息
+        const models = await this.getAvailableModels();
+        const model = models.find(m => m.id === modelId);
+        if (!model) {
+            const { ModelNotAvailableError } = require('./errors');
+            throw new ModelNotAvailableError(modelId, version || 'latest', 'not_installed');
+        }
+        // 确定版本
+        const targetVersion = version || model.default_version;
+        // 检查是否已安装
+        const installed = this.registry[modelId]?.[targetVersion];
+        if (!installed) {
+            const { ModelNotAvailableError } = require('./errors');
+            throw new ModelNotAvailableError(modelId, targetVersion, 'not_installed');
+        }
+        if (installed.status !== 'ready') {
+            const { ModelNotAvailableError } = require('./errors');
+            throw new ModelNotAvailableError(modelId, targetVersion, installed.status);
+        }
+        // 返回模型目录路径
+        return path.join(this.modelsDir, modelId, targetVersion);
+    }
+    // ===== 模型下载 =====
+    async downloadModel(modelId, version) {
+        // 获取模型信息
+        const models = await this.getAvailableModels();
+        const model = models.find(m => m.id === modelId);
+        if (!model) {
+            throw new Error(`模型不存在: ${modelId}`);
+        }
+        const targetVersion = version || model.default_version;
+        const versionInfo = model.versions.find(v => v.version === targetVersion);
+        if (!versionInfo) {
+            throw new Error(`版本不存在: ${modelId}@${targetVersion}`);
+        }
+        const taskKey = `${modelId}_${targetVersion}`;
+        // 检查是否已有下载任务
+        if (this.downloadTasks.has(taskKey)) {
+            return this.downloadTasks.get(taskKey);
+        }
+        // 尝试获取任务锁
+        const lockAcquired = await this.lockManager.acquireTaskLock(modelId, targetVersion);
+        if (!lockAcquired) {
+            throw new Error('模型正在下载中');
+        }
+        // 创建下载任务
+        const downloadTask = this.performDownload(modelId, targetVersion, versionInfo);
+        this.downloadTasks.set(taskKey, downloadTask);
         try {
-            // 获取模型元数据
-            const availableModels = await this.getAvailableModels();
-            const model = availableModels.find(m => m.model_id === modelId);
-            if (!model) {
-                console.error('模型不存在:', modelId);
-                return false;
-            }
-            // 检查是否已安装
-            if (this.installedModels.has(modelId)) {
-                console.log('模型已安装:', modelId);
-                return true;
-            }
-            // 下载模型
-            const modelPath = path.join(this.modelsDir, modelId);
-            await fs.mkdir(modelPath, { recursive: true });
-            console.log('开始下载模型:', modelId);
-            const response = await axios_1.default.get(model.download_url, {
-                responseType: 'arraybuffer',
-                onDownloadProgress: (progressEvent) => {
-                    const percent = (progressEvent.loaded / model.size_bytes) * 100;
-                    console.log(`下载进度: ${percent.toFixed(2)}%`);
-                },
+            await downloadTask;
+        }
+        finally {
+            this.downloadTasks.delete(taskKey);
+            await this.lockManager.releaseTaskLock(modelId, targetVersion);
+        }
+    }
+    async performDownload(modelId, version, versionInfo) {
+        try {
+            // 更新状态为 downloading
+            this.updateModelStatus(modelId, version, 'downloading');
+            this.emitProgress(modelId, version, 0, versionInfo.size_bytes, 'downloading', {
+                totalFiles: versionInfo.files.length,
+                downloadedFiles: 0,
             });
-            // 保存模型文件
-            const filePath = path.join(modelPath, 'model.bin');
-            await fs.writeFile(filePath, Buffer.from(response.data));
-            // 验证 SHA256
-            const hash = crypto.createHash('sha256');
-            hash.update(Buffer.from(response.data));
-            const calculatedHash = hash.digest('hex');
-            if (calculatedHash !== model.sha256) {
-                console.error('模型文件校验失败');
-                await fs.rm(modelPath, { recursive: true });
-                return false;
-            }
-            // 保存模型元数据
-            const installedModel = {
-                model_id: modelId,
-                installed_at: new Date(),
-                version: model.version,
-                path: modelPath,
-            };
-            this.installedModels.set(modelId, installedModel);
-            await this.saveInstalledModels();
-            console.log('模型安装成功:', modelId);
-            return true;
+            // 下载文件
+            await this.downloader.downloadModelFiles(modelId, version, versionInfo, (progress) => {
+                this.emit('progress', progress);
+            });
+            // 验证文件
+            this.updateModelStatus(modelId, version, 'verifying');
+            this.emitProgress(modelId, version, versionInfo.size_bytes, versionInfo.size_bytes, 'verifying', {
+                currentFile: '正在验证文件...',
+            });
+            await this.verifier.verifyFiles(modelId, version, versionInfo, (progress) => {
+                this.emit('progress', progress);
+            });
+            // 安装（移动文件到正式目录）
+            this.updateModelStatus(modelId, version, 'installing');
+            this.emitProgress(modelId, version, versionInfo.size_bytes, versionInfo.size_bytes, 'installing', {
+                currentFile: '正在安装模型...',
+            });
+            await this.installer.installFiles(modelId, version, versionInfo, this.registry);
+            // 完成
+            this.updateModelStatus(modelId, version, 'ready');
+            this.emitProgress(modelId, version, versionInfo.size_bytes, versionInfo.size_bytes, 'ready');
         }
         catch (error) {
-            console.error('安装模型失败:', error);
-            return false;
+            this.updateModelStatus(modelId, version, 'error');
+            this.emitError(modelId, version, error);
+            throw error;
         }
     }
-    async uninstallModel(modelId) {
+    updateModelStatus(modelId, version, status) {
+        if (!this.registry[modelId]) {
+            this.registry[modelId] = {};
+        }
+        if (!this.registry[modelId][version]) {
+            this.registry[modelId][version] = {
+                status,
+                installed_at: new Date().toISOString(),
+                size_bytes: 0,
+                checksum_sha256: '',
+            };
+        }
+        else {
+            this.registry[modelId][version].status = status;
+        }
+        // 异步保存，不阻塞
+        this.registryManager.saveRegistry(this.registry).catch(console.error);
+    }
+    emitProgress(modelId, version, downloadedBytes, totalBytes, state, extra) {
+        const progress = {
+            modelId,
+            version,
+            downloadedBytes,
+            totalBytes,
+            percent: totalBytes > 0 ? (downloadedBytes / totalBytes) * 100 : 0,
+            state,
+            ...extra,
+        };
+        this.emit('progress', progress);
+    }
+    emitError(modelId, version, error) {
+        const errorInfo = {
+            modelId,
+            version,
+            stage: (0, utils_1.getErrorStage)(error),
+            message: error instanceof Error ? error.message : String(error),
+            canRetry: (0, utils_1.isRetryableError)(error),
+        };
+        this.emit('error', errorInfo);
+    }
+    // ===== 模型卸载 =====
+    async uninstallModel(modelId, version) {
         try {
-            const installedModel = this.installedModels.get(modelId);
-            if (!installedModel) {
-                return false;
+            if (version) {
+                // 卸载指定版本
+                const versionDir = path.join(this.modelsDir, modelId, version);
+                if (await (0, utils_1.fileExists)(versionDir)) {
+                    await fs.rm(versionDir, { recursive: true });
+                }
+                if (this.registry[modelId]?.[version]) {
+                    delete this.registry[modelId][version];
+                    if (Object.keys(this.registry[modelId]).length === 0) {
+                        delete this.registry[modelId];
+                    }
+                }
             }
-            // 删除模型文件
-            await fs.rm(installedModel.path, { recursive: true });
-            // 从列表中移除
-            this.installedModels.delete(modelId);
-            await this.saveInstalledModels();
-            console.log('模型卸载成功:', modelId);
+            else {
+                // 卸载所有版本
+                const modelDir = path.join(this.modelsDir, modelId);
+                if (await (0, utils_1.fileExists)(modelDir)) {
+                    await fs.rm(modelDir, { recursive: true });
+                }
+                delete this.registry[modelId];
+            }
+            await this.registryManager.saveRegistry(this.registry);
             return true;
         }
         catch (error) {
             console.error('卸载模型失败:', error);
             return false;
         }
-    }
-    getModelPath(modelId) {
-        const installedModel = this.installedModels.get(modelId);
-        return installedModel?.path || null;
     }
 }
 exports.ModelManager = ModelManager;

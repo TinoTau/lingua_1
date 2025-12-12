@@ -8,7 +8,7 @@
 - **移动端（手机 App） ↔ 调度服务器** 的 WebSocket 消息格式；
 - **第三方节点（Electron Node 客户端） ↔ 调度服务器** 的 WebSocket 消息格式。
 
-> 说明：以下示例及接口命名与当前 `ARCHITECTURE.md`、`MODULAR_FEATURES.md` 中的设计保持一致，实际开发中可根据代码实现做微调与补充。
+> 说明：以下示例及接口命名与当前 `ARCHITECTURE.md`、`modular/MODULAR_FEATURES.md` 中的设计保持一致，实际开发中可根据代码实现做微调与补充。
 
 ---
 
@@ -64,7 +64,7 @@ wss://dispatcher.example.com/ws/session
   "src_lang": "zh",
   "tgt_lang": "en",
   "dialect": null,             // 可选，例如 "zh-sichuan"
-  "features": {                // 可选模块开关（参考 MODULAR_FEATURES.md）
+  "features": {                // 可选模块开关（参考 modular/MODULAR_FEATURES.md）
     "emotion_detection": false,
     "voice_style_detection": false,
     "speech_rate_detection": false

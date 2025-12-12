@@ -580,7 +580,7 @@ curl -X POST http://localhost:8081/v1/speech/translate \
 
 ### C. 相关文档
 
-- [系统架构文档](./ARCHITECTURE.md)
-- [协议规范](./PROTOCOLS.md)
-- [模块化功能设计](./MODULAR_FEATURES.md)
+- [系统架构文档](../ARCHITECTURE.md)
+- [协议规范](../PROTOCOLS.md)
+- [模块化功能设计](../modular/MODULAR_FEATURES.md)
 

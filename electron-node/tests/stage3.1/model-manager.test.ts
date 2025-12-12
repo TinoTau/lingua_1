@@ -184,82 +184,12 @@ describe('ModelManager', () => {
     });
   });
 
-  describe('锁机制', () => {
-    it('应该能够获取和释放任务锁', async () => {
-      const lockAcquired = await (modelManager as any).acquireTaskLock('test-model', '1.0.0');
-      expect(lockAcquired).toBe(true);
-      
-      // 尝试再次获取应该失败
-      const lockAcquired2 = await (modelManager as any).acquireTaskLock('test-model', '1.0.0');
-      expect(lockAcquired2).toBe(false);
-      
-      // 释放锁
-      await (modelManager as any).releaseTaskLock('test-model', '1.0.0');
-      
-      // 现在应该可以再次获取
-      const lockAcquired3 = await (modelManager as any).acquireTaskLock('test-model', '1.0.0');
-      expect(lockAcquired3).toBe(true);
-    });
-
-    it('应该清理超时的锁', async () => {
-      const lockPath = (modelManager as any).getTaskLockPath('test-model', '1.0.0');
-      const oldLock = {
-        pid: 99999, // 不存在的进程
-        timestamp: Date.now() - 2 * 60 * 60 * 1000, // 2 小时前
-        modelId: 'test-model',
-        version: '1.0.0',
-        timeout: 30 * 60 * 1000,
-      };
-      
-      await fs.writeFile(lockPath, JSON.stringify(oldLock), 'utf-8');
-      
-      // 清理孤儿锁
-      await (modelManager as any).cleanupOrphanLocks();
-      
-      // 锁应该被清理
-      await expect(fs.access(lockPath)).rejects.toThrow();
-    });
-  });
-
-  describe('registry.json 原子写入', () => {
-    it('应该使用原子写入保存 registry', async () => {
-      const registryPath = (modelManager as any).registryPath;
-      
-      (modelManager as any).registry = {
-        'test-model': {
-          '1.0.0': {
-            status: 'ready',
-            installed_at: new Date().toISOString(),
-            size_bytes: 1000,
-            checksum_sha256: 'test-hash',
-          },
-        },
-      };
-      
-      await (modelManager as any).saveRegistry();
-      
-      // 验证文件存在且内容正确
-      const content = await fs.readFile(registryPath, 'utf-8');
-      const registry = JSON.parse(content);
-      expect(registry['test-model']['1.0.0'].status).toBe('ready');
-      
-      // 验证临时文件不存在
-      const tempPath = registryPath + '.tmp';
-      await expect(fs.access(tempPath)).rejects.toThrow();
-    });
-  });
-
-  describe('文件操作', () => {
-    it('应该正确检查文件是否存在', async () => {
-      const testFile = path.join(testModelsDir, 'test-file.txt');
-      await fs.writeFile(testFile, 'test', 'utf-8');
-      
-      const exists = await (modelManager as any).fileExists(testFile);
-      expect(exists).toBe(true);
-      
-      const notExists = await (modelManager as any).fileExists(path.join(testModelsDir, 'non-existent.txt'));
-      expect(notExists).toBe(false);
-    });
-  });
+  // 注意：锁机制、Registry 管理、文件操作等底层功能的测试
+  // 已移至独立的测试文件：
+  // - lock-manager.test.ts - 测试 LockManager
+  // - registry-manager.test.ts - 测试 RegistryManager
+  // - utils.test.ts - 测试工具方法
+  // 
+  // ModelManager 的测试专注于其公共接口和集成功能
 });
 

@@ -391,6 +391,6 @@ const [segments, setSegments] = useState<TranslationSegment[]>([]);
 ## 相关文档
 
 - [两层 VAD 架构设计](./TWO_LEVEL_VAD_DESIGN.md) - 与 iOS 文档中的 VAD 设计一致
-- [WebSocket 消息协议](./PROTOCOLS.md) - 消息协议规范
-- [开发计划](./DEVELOPMENT_PLAN.md) - 整体开发计划
+- [WebSocket 消息协议](../PROTOCOLS.md) - 消息协议规范
+- [开发计划](../project_management/DEVELOPMENT_PLAN.md) - 整体开发计划
 

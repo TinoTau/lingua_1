@@ -234,7 +234,7 @@ ws.onopen = () => {
 };
 ```
 
-详细 API 文档请参考 [对外开放 API 文档](./PUBLIC_API.md)
+详细 API 文档请参考 [对外开放 API 文档](./api_gateway/PUBLIC_API.md)
 
 ## 运行测试
 
@@ -260,9 +260,9 @@ cat scheduler/tests/stage1.1/TEST_REPORT.md
 ## 下一步
 
 - 查看 [架构文档](./ARCHITECTURE.md) 了解系统设计
-- 查看 [模块化功能设计](./MODULAR_FEATURES.md) 了解可选功能模块（文档开头包含快速参考）
+- 查看 [模块化功能设计](./modular/MODULAR_FEATURES.md) 了解可选功能模块（文档开头包含快速参考）
 - 查看 [协议规范](./PROTOCOLS.md) 了解 WebSocket 消息协议
-- 查看 [对外开放 API 文档](./PUBLIC_API.md) 了解对外 API 设计
+- 查看 [对外开放 API 文档](./api_gateway/PUBLIC_API.md) 了解对外 API 设计
 - 运行测试验证功能：`cargo test --test stage1_1`
 - 查看测试报告了解测试覆盖情况
 - 参与开发，查看 [开发指南](./DEVELOPMENT.md)（待完善）

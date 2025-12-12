@@ -1,77 +1,142 @@
 # 文档库
 
-本目录包含项目的长期维护文档。
+本目录包含项目的长期维护文档，按模块分类组织。
 
-## 核心文档
+## 📁 文档目录结构
+
+```
+docs/
+├── README.md                    # 本文件
+├── ARCHITECTURE.md              # 系统架构文档（核心）
+├── PROTOCOLS.md                 # WebSocket 消息协议规范（核心）
+├── GETTING_STARTED.md           # 快速开始指南（核心）
+│
+├── scheduler/                   # 调度服务器文档
+│   ├── README.md
+│   └── DISPATCHER_OPTIMIZATION_PLAN.md
+│
+├── node_inference/              # 节点推理服务文档
+│   ├── README.md
+│   ├── AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md
+│   └── TWO_LEVEL_VAD_DESIGN.md
+│
+├── api_gateway/                 # API Gateway 文档
+│   ├── README.md
+│   └── PUBLIC_API.md
+│
+├── electron_node/               # Electron Node 客户端文档
+│   └── STAGE2.2_IMPLEMENTATION.md
+│
+├── webClient/                   # Web 客户端文档
+│   ├── README.md
+│   ├── Web_端实时语音翻译_统一设计方案_v3.md
+│   ├── WEB_CLIENT_SCHEME_FEASIBILITY_ANALYSIS.md
+│   ├── WEB_CLIENT_V3_FEASIBILITY_ASSESSMENT.md
+│   └── ...
+│
+├── modelManager/                # 模型管理文档
+│   ├── README.md
+│   └── 公司模型库与Electron客户端模型管理统一技术方案.md
+│
+├── modular/                     # 模块化功能文档
+│   ├── README.md
+│   ├── LINGUA_完整技术说明书_v2.md
+│   └── MODULAR_FEATURES.md
+│
+├── IOS/                         # iOS/移动端文档（参考）
+│   └── ...
+│
+├── project_management/          # 项目管理文档
+│   ├── README.md
+│   ├── PROJECT_STATUS.md
+│   ├── DEVELOPMENT_PLAN.md
+│   └── FUNCTION_COMPLETION_STATUS.md
+│
+└── reference/                   # 参考文档
+    ├── README.md
+    └── v0.1版本项目架构与技术报告.md
+```
+
+---
+
+## 📚 核心文档
 
 ### 架构与设计
 
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - 系统架构详细说明
-- [MODULAR_FEATURES.md](./MODULAR_FEATURES.md) - 模块化功能设计（包含快速参考）
-
-### 协议规范
-
 - [PROTOCOLS.md](./PROTOCOLS.md) - WebSocket 消息协议规范（包含实现状态）
-
-### 扩展设计
-
-- [PUBLIC_API.md](./PUBLIC_API.md) - 对外开放 API 设计与实现（完整文档）
-
-### 使用指南
-
 - [GETTING_STARTED.md](./GETTING_STARTED.md) - 快速开始指南
 
-### 项目状态与开发计划
+---
 
-- [PROJECT_STATUS.md](./PROJECT_STATUS.md) - 项目状态（已完成功能和待完成任务）
-- [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md) - 开发计划（详细的开发阶段和任务列表）
-- [DISPATCHER_OPTIMIZATION_PLAN.md](./DISPATCHER_OPTIMIZATION_PLAN.md) - 任务分发算法优化方案
-- [AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md](./AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md) - 自动语种识别与双向模式设计（包含可行性分析，框架已完成 ✅）
+## 🔧 模块文档
 
-### 协议规范
+### 调度服务器 (Scheduler)
 
-- [PROTOCOLS.md](./PROTOCOLS.md) - WebSocket 消息协议规范（包含实现状态）
+**目录**: [`scheduler/`](./scheduler/)  
+**文档**: [调度服务器文档目录](./scheduler/README.md)
 
-### 测试
+- [任务分发算法优化方案](./scheduler/DISPATCHER_OPTIMIZATION_PLAN.md) - 负载均衡和功能感知节点选择的详细优化方案
 
-- **调度服务器测试**：
-  - 测试目录：`scheduler/tests/`
-  - 阶段一.1 测试：`scheduler/tests/stage1.1/`（47个测试，全部通过）
-  - 阶段一.2 测试：`scheduler/tests/stage1.2/`（7个测试，全部通过）
-  - 阶段 2.1.2 测试：`scheduler/tests/stage2.1.2/`（12个测试，全部通过）
-  - 测试报告：
-    - [阶段一.1 测试报告](./../scheduler/tests/stage1.1/TEST_REPORT.md)
-    - [阶段一.2 测试报告](./../scheduler/tests/stage1.2/TEST_REPORT.md)
-    - [阶段 2.1.2 测试报告](./../scheduler/tests/stage2.1.2/TEST_REPORT.md)
-- **节点推理服务测试**：
-  - 测试目录：`node-inference/tests/`
-  - 阶段一.3 测试：`node-inference/tests/`（20+个测试，10个本地模型测试全部通过）
-  - 阶段 2.1.2 测试：`node-inference/tests/stage2.1.2/`（3个测试通过，4个需要模型的测试已实现框架）
-  - 测试报告：
-    - [阶段一.3 测试报告](./../node-inference/tests/stage1.3/TEST_REPORT.md)
-    - [阶段 2.1.2 测试报告](./../node-inference/tests/stage2.1.2/TEST_REPORT.md)
-    - [本地模型测试说明](./../node-inference/tests/LOCAL_MODEL_TESTING.md)
-- **Web 客户端测试**：
-  - 测试目录：`web-client/tests/`
-  - 阶段 2.1 测试：`web-client/tests/stage2.1/`（22个测试，全部通过）
-  - 测试报告：
-    - [阶段 2.1 测试报告](./../web-client/tests/stage2.1/TEST_REPORT.md)
+**测试报告**:
+- [阶段 1.1 测试报告](../scheduler/tests/stage1.1/TEST_REPORT.md) - 核心功能测试（47个测试，全部通过）
+- [阶段 1.2 测试报告](../scheduler/tests/stage1.2/TEST_REPORT.md) - 消息格式对齐测试（7个测试，全部通过）
+- [阶段 2.1.2 测试报告](../scheduler/tests/stage2.1.2/TEST_REPORT.md) - ASR 字幕功能测试（12个测试，全部通过）
+- [阶段 3.2 测试报告](../scheduler/tests/stage3.2/TEST_REPORT.md) - 节点选择测试（6个测试，全部通过）
 
-### 参考文档
+---
 
-- [v0.1版本项目架构与技术报告.md](./v0.1版本项目架构与技术报告.md) - 原项目技术架构参考
-- [iOS 技术文档分析](./MOBILE_APP_IOS_DOCS_ANALYSIS.md) - iOS 技术文档对移动端开发的参考价值分析
+### 节点推理服务 (Node Inference Service)
 
-### Web 客户端（iOS 开发设备替代方案）
+**目录**: [`node_inference/`](./node_inference/)  
+**文档**: [节点推理服务文档目录](./node_inference/README.md)
 
-由于没有 iOS 开发设备，我们开发了 **Web 客户端作为替代方案**，采用半双工实时语音翻译设计：
+- [自动语种识别与双向模式设计](./node_inference/AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md) - 自动语种识别功能的设计文档（框架已完成 ✅）
+- [两级 VAD 设计](./node_inference/TWO_LEVEL_VAD_DESIGN.md) - 两级 VAD 设计说明
 
-- [Web 客户端文档目录](./webClient/README.md) - Web 客户端文档索引
+**测试报告**:
+- [阶段 1.3 测试报告](../node-inference/tests/stage1.3/TEST_REPORT.md) - 核心功能测试（20+个测试，10个本地模型测试全部通过）
+- [阶段 1.4 测试报告](../node-inference/tests/stage1.4/TEST_REPORT.md) - 自动语种识别测试（7个测试，全部通过）
+- [阶段 2.1.2 测试报告](../node-inference/tests/stage2.1.2/TEST_REPORT.md) - ASR 字幕功能测试
+
+---
+
+### API Gateway
+
+**目录**: [`api_gateway/`](./api_gateway/)  
+**文档**: [API Gateway 文档目录](./api_gateway/README.md)
+
+- [对外开放 API 设计与实现](./api_gateway/PUBLIC_API.md) - 完整的 API 设计文档，包含 REST API 和 WebSocket API
+
+---
+
+### Electron Node 客户端
+
+**目录**: [`electron_node/`](./electron_node/)  
+**文档**: [Electron Node 客户端文档目录](./electron_node/STAGE2.2_IMPLEMENTATION.md)
+
+- [阶段 2.2 实现文档](./electron_node/STAGE2.2_IMPLEMENTATION.md) - Electron Node 客户端实现说明
+
+**测试报告**:
+- [阶段 2.2 测试报告](../electron-node/tests/stage2.2/TEST_REPORT.md) - 编译测试全部通过
+- [阶段 3.1 测试报告](../electron-node/tests/stage3.1/TEST_REPORT.md) - 模型管理功能测试（48个测试，全部通过）
+- [阶段 3.2 测试报告](../electron-node/tests/stage3.2/TEST_REPORT.md) - 模块化功能测试（22个测试，全部通过）
+
+---
+
+### Web 客户端
+
+**目录**: [`webClient/`](./webClient/)  
+**文档**: [Web 客户端文档目录](./webClient/README.md)
+
+由于没有 iOS 开发设备，我们开发了 **Web 客户端作为替代方案**，采用半双工实时语音翻译设计。
+
+**主要文档**:
 - [Web 端实时语音翻译统一设计方案 v3](./webClient/Web_端实时语音翻译_统一设计方案_v3.md) - **主文档**，包含完整的设计方案、技术方案和功能需求
 - [Web 客户端方案可行性分析](./webClient/WEB_CLIENT_SCHEME_FEASIBILITY_ANALYSIS.md) - 可行性分析
-- [Web 客户端 v3 可行性评估](./WEB_CLIENT_V3_FEASIBILITY_ASSESSMENT.md) - v3 方案可行性评估
+- [Web 客户端 v3 可行性评估](./webClient/WEB_CLIENT_V3_FEASIBILITY_ASSESSMENT.md) - v3 方案可行性评估
 
-**Web 客户端特点**：
+**Web 客户端特点**:
 - ✅ 半双工模式（输入模式和输出模式自动切换）
 - ✅ Send 按钮主导节奏
 - ✅ 静音自动结束（固定参数）
@@ -79,56 +144,89 @@
 - ✅ Utterance Group 上下文拼接（需要后端支持）
 - ✅ 播放期间完全关麦，避免回声问题
 
-**项目位置**: `web-client/`
+**测试报告**:
+- [阶段 2.1 测试报告](../web-client/tests/stage2.1/TEST_REPORT.md) - 核心功能测试（22个测试，全部通过）
+- [阶段 3.2 测试报告](../web-client/tests/stage3.2/TEST_REPORT.md) - 功能选择测试（17个测试，全部通过）
 
-### iOS 技术文档（原生 iOS 开发参考，未来考虑）
+---
 
-`docs/IOS/` 目录包含 11 个详细的 iOS 原生开发文档，虽然当前项目使用 React Native，但这些文档提供了非常有价值的架构设计和实现思路：
+### 模型管理
 
-- [IOS_AUDIO_VAD_PIPELINE.md](./IOS/IOS_AUDIO_VAD_PIPELINE.md) - iOS 音频采集与轻量 VAD 设计 ⭐⭐⭐⭐⭐
-- [IOS_CLIENT_DESIGN_AND_INTERFACES.md](./IOS/IOS_CLIENT_DESIGN_AND_INTERFACES.md) - iOS 客户端架构与核心接口 ⭐⭐⭐⭐⭐
-- [IOS_WEBSOCKET_REALTIME_DESIGN.md](./IOS/IOS_WEBSOCKET_REALTIME_DESIGN.md) - WebSocket 与实时通信设计 ⭐⭐⭐⭐
-- [IOS_IMPLEMENTATION_STEPS.md](./IOS/IOS_IMPLEMENTATION_STEPS.md) - 完整实施指南（7个阶段） ⭐⭐⭐⭐⭐
-- [IOS_END_TO_END_SEQUENCE.md](./IOS/IOS_END_TO_END_SEQUENCE.md) - 端到端序列图 ⭐⭐⭐⭐
-- [IOS_MULTI_SESSION_DESIGN.md](./IOS/IOS_MULTI_SESSION_DESIGN.md) - 多会话管理设计 ⭐⭐⭐
-- [IOS_UI_SKETCHES.md](./IOS/IOS_UI_SKETCHES.md) - UI 草图 ⭐⭐⭐
-- [IOS_DEBUG_MONITORING.md](./IOS/IOS_DEBUG_MONITORING.md) - 调试与监控系统设计 ⭐⭐⭐
-- [IOS_MULTI_SESSION_VIEWMODEL.md](./IOS/IOS_MULTI_SESSION_VIEWMODEL.md) - 多会话 ViewModel 代码草稿 ⭐⭐⭐
-- [IOS_DEBUG_OVERLAY_IMPLEMENTATION.md](./IOS/IOS_DEBUG_OVERLAY_IMPLEMENTATION.md) - DebugOverlay 实现 ⭐⭐
-- [IOS_PERFORMANCE_TEST_PLAN.md](./IOS/IOS_PERFORMANCE_TEST_PLAN.md) - 性能测试计划 ⭐⭐
+**目录**: [`modelManager/`](./modelManager/)  
+**文档**: [模型管理文档目录](./modelManager/README.md)
 
-**注意**: 这些文档主要针对原生 iOS (Swift) 开发，但架构设计和实现思路对 React Native 开发同样有很高的参考价值。详见 [iOS 技术文档分析](./MOBILE_APP_IOS_DOCS_ANALYSIS.md)。**当前由于没有 iOS 开发设备，已开发 Web 客户端作为替代方案。**
+- [公司模型库与Electron客户端模型管理统一技术方案](./modelManager/公司模型库与Electron客户端模型管理统一技术方案.md) - 模型管理技术方案
 
-## 文档维护原则
+---
 
-1. **长期文档**: 本目录仅存放需要长期维护的文档
-2. **临时文档**: 脚本使用说明、迁移指南等临时文档请放在 `scripts/` 目录
+### 模块化功能
+
+**目录**: [`modular/`](./modular/)  
+**文档**: [模块化功能文档目录](./modular/README.md)
+
+- [LINGUA 完整技术说明书 v2](./modular/LINGUA_完整技术说明书_v2.md) - 模块化功能完整技术说明书
+- [MODULAR_FEATURES.md](./modular/MODULAR_FEATURES.md) - 模块化功能设计（包含快速参考）
+
+**测试报告**:
+- [模块化功能测试报告](../electron-node/tests/stage3.2/TEST_REPORT.md) - 模块化功能测试（45个测试，全部通过）
+
+---
+
+### iOS/移动端（参考文档）
+
+**目录**: [`IOS/`](./IOS/)  
+**说明**: 这些文档主要针对原生 iOS (Swift) 开发，但架构设计和实现思路对 React Native 开发同样有很高的参考价值。
+
+**注意**: 当前由于没有 iOS 开发设备，已开发 Web 客户端作为替代方案。
+
+---
+
+## 📊 项目管理文档
+
+**目录**: [`project_management/`](./project_management/)  
+**文档**: [项目管理文档目录](./project_management/README.md)
+
+- [项目状态](./project_management/PROJECT_STATUS.md) - 项目状态（已完成功能和待完成任务）
+- [开发计划](./project_management/DEVELOPMENT_PLAN.md) - 开发计划（详细的开发阶段和任务列表）
+- [功能完成状态分析报告](./project_management/FUNCTION_COMPLETION_STATUS.md) - 功能完成状态分析报告（联合调试就绪度评估）
+
+---
+
+## 📖 参考文档
+
+**目录**: [`reference/`](./reference/)  
+**文档**: [参考文档目录](./reference/README.md)
+
+- [v0.1版本项目架构与技术报告](./reference/v0.1版本项目架构与技术报告.md) - 原项目技术架构参考
+
+---
+
+## 📝 文档维护原则
+
+1. **按模块分类**: 文档按功能模块组织在对应的子目录中
+2. **核心文档**: 系统架构、协议规范、快速开始等核心文档放在根目录
 3. **及时更新**: 文档应与代码保持同步，及时更新
-4. **清晰分类**: 按功能模块组织文档结构
+4. **清晰结构**: 每个模块目录都有 README.md 说明该模块的文档
 
-## 文档结构说明
+---
 
-```
-docs/
-├── README.md                    # 本文件
-├── ARCHITECTURE.md              # 系统架构文档
-├── GETTING_STARTED.md           # 快速开始指南
-├── MODULAR_FEATURES.md          # 模块化功能设计（包含快速参考）
-├── PROTOCOLS.md                 # WebSocket 消息协议规范（包含实现状态）
-├── PUBLIC_API.md                # 对外开放 API 设计与实现
-├── PROJECT_STATUS.md            # 项目状态（已完成功能和待完成任务）
-├── DEVELOPMENT_PLAN.md          # 开发计划（详细的开发阶段和任务列表）
-├── DISPATCHER_OPTIMIZATION_PLAN.md  # 任务分发算法优化方案
-└── v0.1版本项目架构与技术报告.md  # 参考文档
-```
+## 🔗 快速链接
 
-## 添加新文档
+### 核心文档
+- [系统架构](./ARCHITECTURE.md)
+- [协议规范](./PROTOCOLS.md)
+- [快速开始](./GETTING_STARTED.md)
 
-添加新文档时，请：
+### 项目状态
+- [项目状态](./project_management/PROJECT_STATUS.md)
+- [开发计划](./project_management/DEVELOPMENT_PLAN.md)
+- [功能完成状态](./project_management/FUNCTION_COMPLETION_STATUS.md)
 
-1. 确定文档类型（长期/临时）
-2. 长期文档放在 `docs/` 目录
-3. 临时文档放在 `scripts/` 或相应目录
-4. 更新本 README.md 的文档列表
-5. 在 README.md 中添加链接
-
+### 模块文档
+- [调度服务器](./scheduler/README.md)
+- [节点推理服务](./node_inference/README.md)
+- [API Gateway](./api_gateway/README.md)
+- [Electron Node 客户端](./electron_node/STAGE2.2_IMPLEMENTATION.md)
+- [Web 客户端](./webClient/README.md)
+- [模型管理](./modelManager/README.md)
+- [模块化功能](./modular/README.md)

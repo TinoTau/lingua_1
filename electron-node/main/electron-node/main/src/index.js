@@ -152,17 +152,50 @@ except:
         return null;
     }
 }
+// ===== 模型管理 IPC 接口 =====
 electron_1.ipcMain.handle('get-installed-models', async () => {
     return modelManager?.getInstalledModels() || [];
 });
 electron_1.ipcMain.handle('get-available-models', async () => {
     return modelManager?.getAvailableModels() || [];
 });
-electron_1.ipcMain.handle('install-model', async (_, modelId) => {
-    return modelManager?.installModel(modelId) || false;
+electron_1.ipcMain.handle('download-model', async (_, modelId, version) => {
+    if (!modelManager)
+        return false;
+    try {
+        await modelManager.downloadModel(modelId, version);
+        return true;
+    }
+    catch (error) {
+        console.error('下载模型失败:', error);
+        return false;
+    }
 });
-electron_1.ipcMain.handle('uninstall-model', async (_, modelId) => {
-    return modelManager?.uninstallModel(modelId) || false;
+electron_1.ipcMain.handle('uninstall-model', async (_, modelId, version) => {
+    return modelManager?.uninstallModel(modelId, version) || false;
+});
+electron_1.ipcMain.handle('get-model-path', async (_, modelId, version) => {
+    if (!modelManager)
+        return null;
+    try {
+        return await modelManager.getModelPath(modelId, version);
+    }
+    catch (error) {
+        console.error('获取模型路径失败:', error);
+        return null;
+    }
+});
+electron_1.ipcMain.handle('get-model-ranking', async () => {
+    try {
+        const axios = require('axios');
+        const modelHubUrl = process.env.MODEL_HUB_URL || 'http://localhost:5000';
+        const response = await axios.get(`${modelHubUrl}/api/model-usage/ranking`);
+        return response.data || [];
+    }
+    catch (error) {
+        console.error('获取模型排行失败:', error);
+        return [];
+    }
 });
 electron_1.ipcMain.handle('get-node-status', async () => {
     return nodeAgent?.getStatus() || { online: false, nodeId: null };
@@ -170,23 +203,6 @@ electron_1.ipcMain.handle('get-node-status', async () => {
 electron_1.ipcMain.handle('generate-pairing-code', async () => {
     return nodeAgent?.generatePairingCode() || null;
 });
-electron_1.ipcMain.handle('get-module-status', async () => {
-    return inferenceService?.getModuleStatus() || {};
-});
-electron_1.ipcMain.handle('toggle-module', async (_, moduleName, enabled) => {
-    if (!inferenceService)
-        return false;
-    try {
-        if (enabled) {
-            await inferenceService.enableModule(moduleName);
-        }
-        else {
-            await inferenceService.disableModule(moduleName);
-        }
-        return true;
-    }
-    catch (error) {
-        console.error('切换模块状态失败:', error);
-        return false;
-    }
-});
+// 注意：模块管理 IPC 已移除
+// 模块现在根据任务请求中的 features 自动启用/禁用，不需要手动管理
+// 如果需要查看模块状态，可以通过模型管理界面查看已安装的模型

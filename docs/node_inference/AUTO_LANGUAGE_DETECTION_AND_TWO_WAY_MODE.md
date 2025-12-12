@@ -722,6 +722,6 @@ detectedLang == en → en → zh
 
 ## 相关文档
 
-- [系统架构文档](./ARCHITECTURE.md) - 现有架构说明
-- [消息协议规范](./PROTOCOLS.md) - WebSocket 消息协议
-- [开发计划](./DEVELOPMENT_PLAN.md) - 整体开发计划
+- [系统架构文档](../ARCHITECTURE.md) - 现有架构说明
+- [消息协议规范](../PROTOCOLS.md) - WebSocket 消息协议
+- [开发计划](../project_management/DEVELOPMENT_PLAN.md) - 整体开发计划

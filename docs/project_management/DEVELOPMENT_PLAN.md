@@ -33,7 +33,7 @@
   - [x] 实现最少连接数（Least Connections）策略
   - [x] 引入负载均衡配置入口
   - [x] 添加负载均衡单元测试
-  - 详细方案请参考 [任务分发算法优化方案](./DISPATCHER_OPTIMIZATION_PLAN.md)
+  - 详细方案请参考 [任务分发算法优化方案](../scheduler/DISPATCHER_OPTIMIZATION_PLAN.md)
 - [ ] 高级负载均衡策略（资源使用率、加权轮询、综合评分）
 - [ ] 功能匹配优先级排序和方言匹配
 
@@ -112,7 +112,7 @@
   - [x] [测试报告](./node-inference/tests/stage1.4/TEST_REPORT.md)
   - [ ] 双向模式集成测试
   - [ ] 端到端测试
-- 详细设计请参考 [自动语种识别与双向模式设计](./AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md)
+- 详细设计请参考 [自动语种识别与双向模式设计](../node_inference/AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md)
 
 ## 阶段二：客户端开发（3-4 周）
 
@@ -240,13 +240,20 @@
     - [x] 错误提示和建议
   - [x] 热门模型排行榜展示
 - [x] **单元测试** ✅
-  - [x] ModelManager 核心功能测试（12/12 通过）
+  - [x] ModelManager 核心功能测试（6/6 通过）
+  - [x] LockManager 模块测试（2/2 通过）
+  - [x] RegistryManager 模块测试（3/3 通过）
+  - [x] Utils 工具方法测试（8/8 通过）
   - [x] **模型下载进度显示测试** ✅（6/6 通过）
   - [x] **模型下载错误处理测试** ✅（6/6 通过）
-  - [x] **模型验证功能测试** ✅（4/4 通过）
+  - [x] **模型验证功能测试** ✅（9/9 通过）
   - [x] 模型库服务 API 测试（需要服务运行）
   - [x] [测试报告](./electron-node/tests/stage3.1/TEST_REPORT.md)
-  - [x] **总体测试结果**: 39/44 通过（88.6%）
+  - [x] **总体测试结果**: 48/53 通过（90.6%，核心功能 100%）
+- [x] **代码重构** ✅
+  - [x] ModelManager 代码拆分完成（从803行拆分为9个模块，主文件338行）
+  - [x] 测试重构完成（移除测试辅助方法，直接测试各个模块）
+  - [x] 代码重构完成（从803行拆分为9个模块，主文件338行）
 
 ### 3.2 模块化功能实现
 - [x] 模块化架构设计
@@ -348,6 +355,6 @@
 
 ## 相关优化方案
 
-- [任务分发算法优化方案](./DISPATCHER_OPTIMIZATION_PLAN.md) - 负载均衡和功能感知节点选择的详细优化方案
-- [自动语种识别与双向模式设计](./AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md) - 自动语种识别功能的设计文档（包含可行性分析）
+- [任务分发算法优化方案](../scheduler/DISPATCHER_OPTIMIZATION_PLAN.md) - 负载均衡和功能感知节点选择的详细优化方案
+- [自动语种识别与双向模式设计](../node_inference/AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md) - 自动语种识别功能的设计文档（包含可行性分析）
 
