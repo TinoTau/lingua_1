@@ -39,6 +39,8 @@ pub struct HttpInferenceRequest {
     pub auto_langs: Option<Vec<String>>,
     pub enable_streaming_asr: Option<bool>,
     pub partial_update_interval_ms: Option<u64>,
+    /// 追踪 ID（用于全链路日志追踪）
+    pub trace_id: Option<String>,
 }
 
 /// 推理响应（HTTP 格式）
@@ -118,6 +120,7 @@ async fn handle_inference(
         auto_langs: request.auto_langs,
         enable_streaming_asr: Some(false), // HTTP 同步请求不支持流式
         partial_update_interval_ms: None,
+        trace_id: request.trace_id, // Added: propagate trace_id
     };
 
     // 调用推理服务
@@ -269,6 +272,7 @@ async fn handle_inference_stream(
                             auto_langs: request.auto_langs,
                             enable_streaming_asr: request.enable_streaming_asr.or(Some(false)),
                             partial_update_interval_ms: request.partial_update_interval_ms,
+                            trace_id: request.trace_id, // Added: propagate trace_id
                         };
 
                         // 调用推理服务

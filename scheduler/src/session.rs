@@ -19,6 +19,8 @@ pub struct Session {
     pub paired_node_id: Option<String>,
     pub utterance_index: u64,
     pub created_at: chrono::DateTime<chrono::Utc>,
+    /// 追踪 ID（用于全链路日志追踪）
+    pub trace_id: String,
     /// 翻译模式："one_way" | "two_way_auto"
     #[serde(skip_serializing_if = "Option::is_none")]
     pub mode: Option<String>,
@@ -58,8 +60,11 @@ impl SessionManager {
         lang_a: Option<String>,
         lang_b: Option<String>,
         auto_langs: Option<Vec<String>>,
+        trace_id: Option<String>,
     ) -> Session {
         let session_id = format!("s-{}", Uuid::new_v4().to_string()[..8].to_uppercase());
+        // 如果没有提供 trace_id，则生成一个新的 UUID v4
+        let trace_id = trace_id.unwrap_or_else(|| Uuid::new_v4().to_string());
         let session = Session {
             session_id: session_id.clone(),
             client_version,
@@ -72,6 +77,7 @@ impl SessionManager {
             paired_node_id: None,
             utterance_index: 0,
             created_at: chrono::Utc::now(),
+            trace_id,
             mode,
             lang_a,
             lang_b,

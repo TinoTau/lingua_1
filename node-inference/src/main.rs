@@ -6,11 +6,35 @@ use std::path::PathBuf;
 // 导入库模块
 use lingua_node_inference::{InferenceService, http_server};
 
+mod logging_config;
+
 #[tokio::main]
 async fn main() -> Result<()> {
-    tracing_subscriber::fmt()
-        .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
-        .init();
+    // 加载日志配置（支持模块级日志开关）
+    let logging_config = logging_config::LoggingConfig::load();
+    
+    // 构建日志过滤器（合并配置文件和环境变量）
+    let env_filter = logging_config.build_env_filter();
+    
+    // 初始化日志（JSON 格式）
+    // 使用环境变量 LOG_FORMAT 控制输出格式：json（默认）或 pretty
+    // 日志级别由配置文件（observability.json）或环境变量（RUST_LOG）控制
+    let log_format = std::env::var("LOG_FORMAT").unwrap_or_else(|_| "json".to_string());
+    
+    if log_format == "pretty" {
+        // Pretty 格式（用于开发调试）
+        tracing_subscriber::fmt()
+            .with_env_filter(env_filter)
+            .init();
+    } else {
+        // JSON 格式（用于生产环境）
+        tracing_subscriber::fmt()
+            .json()
+            .with_env_filter(env_filter)
+            .with_current_span(false)
+            .with_span_list(false)
+            .init();
+    }
 
     let models_dir = PathBuf::from(std::env::var("MODELS_DIR").unwrap_or_else(|_| "./models".to_string()));
     let service = InferenceService::new(models_dir)?;

@@ -24,6 +24,13 @@ fn test_session_init_message_format() {
         }),
         pairing_code: None,
         tenant_id: None,
+        mode: None,
+        lang_a: None,
+        lang_b: None,
+        auto_langs: None,
+        enable_streaming_asr: None,
+        partial_update_interval_ms: None,
+        trace_id: None,
     };
 
     // 验证所有必需字段都存在
@@ -37,6 +44,13 @@ fn test_session_init_message_format() {
             features,
             pairing_code,
             tenant_id: _,
+            mode: _,
+            lang_a: _,
+            lang_b: _,
+            auto_langs: _,
+            enable_streaming_asr: _,
+            partial_update_interval_ms: _,
+            trace_id: _,
         } => {
             assert_eq!(client_version, "1.0.0");
             assert_eq!(platform, "android");
@@ -71,6 +85,13 @@ fn test_utterance_message_format() {
         audio: "base64audio".to_string(),
         audio_format: "pcm16".to_string(),
         sample_rate: 16000,
+        mode: None,
+        lang_a: None,
+        lang_b: None,
+        auto_langs: None,
+        enable_streaming_asr: None,
+        partial_update_interval_ms: None,
+        trace_id: None,
     };
 
     // 验证所有必需字段都存在
@@ -86,6 +107,13 @@ fn test_utterance_message_format() {
             audio,
             audio_format,
             sample_rate,
+            mode: _,
+            lang_a: _,
+            lang_b: _,
+            auto_langs: _,
+            enable_streaming_asr: _,
+            partial_update_interval_ms: _,
+            trace_id: _,
         } => {
             assert_eq!(session_id, "sess-123");
             assert_eq!(utterance_index, 0);
@@ -132,6 +160,7 @@ fn test_node_register_message_format() {
             persona_adaptation: None,
         },
         accept_public_jobs: true,
+        capability_state: None,
     };
 
     // 验证所有必需字段都存在
@@ -144,6 +173,7 @@ fn test_node_register_message_format() {
             installed_models,
             features_supported,
             accept_public_jobs,
+            capability_state: _,
         } => {
             assert!(node_id.is_none());
             assert_eq!(version, "1.0.0");
@@ -174,6 +204,7 @@ fn test_node_heartbeat_message_format() {
             running_jobs: 2,
         },
         installed_models: None,
+        capability_state: None,
     };
 
     // 验证所有必需字段都存在
@@ -183,6 +214,7 @@ fn test_node_heartbeat_message_format() {
             timestamp,
             resource_usage,
             installed_models,
+            capability_state: _,
         } => {
             assert_eq!(node_id, "node-123");
             assert_eq!(timestamp, 1234567890);
@@ -216,6 +248,7 @@ fn test_job_result_message_format() {
         extra: None,
         processing_time_ms: Some(100),
         error: None,
+        trace_id: "trace-123".to_string(),
     };
 
     match success_message {
@@ -232,6 +265,7 @@ fn test_job_result_message_format() {
             extra,
             processing_time_ms,
             error,
+            trace_id: _,
         } => {
             assert_eq!(job_id, "job-123");
             assert_eq!(node_id, "node-123");
@@ -267,6 +301,7 @@ fn test_job_result_message_format() {
             message: "Model not found".to_string(),
             details: None,
         }),
+        trace_id: "trace-456".to_string(),
     };
 
     match error_message {
@@ -333,6 +368,13 @@ fn test_job_assign_message_format() {
         audio: "base64audio".to_string(),
         audio_format: "pcm16".to_string(),
         sample_rate: 16000,
+        mode: None,
+        lang_a: None,
+        lang_b: None,
+        auto_langs: None,
+        enable_streaming_asr: None,
+        partial_update_interval_ms: None,
+        trace_id: "trace-789".to_string(),
     };
 
     // 验证所有必需字段都存在
@@ -349,6 +391,13 @@ fn test_job_assign_message_format() {
             audio,
             audio_format,
             sample_rate,
+            mode: _,
+            lang_a: _,
+            lang_b: _,
+            auto_langs: _,
+            enable_streaming_asr: _,
+            partial_update_interval_ms: _,
+            trace_id: _,
         } => {
             assert_eq!(job_id, "job-123");
             assert_eq!(session_id, "sess-123");

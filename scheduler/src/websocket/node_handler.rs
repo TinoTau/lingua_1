@@ -1,13 +1,14 @@
 // 节点端 WebSocket 处理
 
 use crate::app_state::AppState;
-use crate::messages::{NodeMessage, SessionMessage};
+use crate::messages::{NodeMessage, SessionMessage, UiEventType, UiEventStatus, ErrorCode};
 use crate::websocket::send_node_message;
 use axum::extract::ws::{Message, WebSocket};
 use futures_util::{SinkExt, StreamExt};
 use tokio::sync::mpsc;
 use tracing::{info, error, warn, debug};
 use serde_json;
+use chrono;
 
 // 节点端 WebSocket 处理
 pub async fn handle_node(socket: WebSocket, state: AppState) {
@@ -149,6 +150,7 @@ async fn handle_node_message(
             extra,
             processing_time_ms: _,
             error: job_error,
+            trace_id,
         } => {
             // 更新 job 状态
             if success {
@@ -157,18 +159,71 @@ async fn handle_node_message(
                 state.dispatcher.update_job_status(&job_id, crate::dispatcher::JobStatus::Failed).await;
             }
             
+            // 获取 job 创建时间以计算 elapsed_ms
+            let job = state.dispatcher.get_job(&job_id).await;
+            let elapsed_ms = job.as_ref().map(|j| {
+                chrono::Utc::now().signed_duration_since(j.created_at).num_milliseconds() as u64
+            });
+            
             if success {
+                // 推送 ASR_FINAL 事件（ASR 完成）
+                if let Some(ref text_asr) = text_asr {
+                    if !text_asr.is_empty() {
+                        let ui_event = SessionMessage::UiEvent {
+                            trace_id: trace_id.clone(),
+                            session_id: session_id.clone(),
+                            job_id: job_id.clone(),
+                            utterance_index,
+                            event: UiEventType::AsrFinal,
+                            elapsed_ms,
+                            status: UiEventStatus::Ok,
+                            error_code: None,
+                            hint: None,
+                        };
+                        let ui_event_json = serde_json::to_string(&ui_event)?;
+                        state.session_connections.send(
+                            &session_id,
+                            Message::Text(ui_event_json)
+                        ).await;
+                    }
+                }
+                
+                // 推送 NMT_DONE 事件（翻译完成）
+                if let Some(ref text_translated) = text_translated {
+                    if !text_translated.is_empty() {
+                        let ui_event = SessionMessage::UiEvent {
+                            trace_id: trace_id.clone(),
+                            session_id: session_id.clone(),
+                            job_id: job_id.clone(),
+                            utterance_index,
+                            event: UiEventType::NmtDone,
+                            elapsed_ms,
+                            status: UiEventStatus::Ok,
+                            error_code: None,
+                            hint: None,
+                        };
+                        let ui_event_json = serde_json::to_string(&ui_event)?;
+                        state.session_connections.send(
+                            &session_id,
+                            Message::Text(ui_event_json)
+                        ).await;
+                    }
+                }
+                
                 // 创建翻译结果消息
                 let result = SessionMessage::TranslationResult {
                     session_id: session_id.clone(),
                     utterance_index,
-                    job_id,
-                    text_asr: text_asr.unwrap_or_default(),
-                    text_translated: text_translated.unwrap_or_default(),
-                    tts_audio: tts_audio.unwrap_or_default(),
-                    tts_format: tts_format.unwrap_or("pcm16".to_string()),
-                    extra,
+                    job_id: job_id.clone(),
+                    text_asr: text_asr.clone().unwrap_or_default(),
+                    text_translated: text_translated.clone().unwrap_or_default(),
+                    tts_audio: tts_audio.clone().unwrap_or_default(),
+                    tts_format: tts_format.clone().unwrap_or("pcm16".to_string()),
+                    extra: extra.clone(),
+                    trace_id: trace_id.clone(), // Added: propagate trace_id
                 };
+                
+                info!(trace_id = %trace_id, job_id = %job_id, session_id = %session_id, utterance_index = utterance_index, "收到 JobResult，添加到结果队列");
                 
                 // 添加到结果队列
                 state.result_queue.add_result(&session_id, utterance_index, result).await;
@@ -181,11 +236,44 @@ async fn handle_node_message(
                         &session_id,
                         Message::Text(result_json)
                     ).await {
-                        warn!("无法发送结果到会话 {}", session_id);
+                        warn!(trace_id = %trace_id, session_id = %session_id, "无法发送结果到会话");
                     }
                 }
             } else {
+                // 推送 ERROR 事件
+                let error_code = job_error.as_ref().and_then(|e| {
+                    // 尝试将错误码字符串转换为 ErrorCode 枚举
+                    match e.code.as_str() {
+                        "NO_AVAILABLE_NODE" => Some(ErrorCode::NoAvailableNode),
+                        "MODEL_NOT_AVAILABLE" => Some(ErrorCode::ModelNotAvailable),
+                        "WS_DISCONNECTED" => Some(ErrorCode::WsDisconnected),
+                        "NMT_TIMEOUT" => Some(ErrorCode::NmtTimeout),
+                        "TTS_TIMEOUT" => Some(ErrorCode::TtsTimeout),
+                        "MODEL_VERIFY_FAILED" => Some(ErrorCode::ModelVerifyFailed),
+                        "MODEL_CORRUPTED" => Some(ErrorCode::ModelCorrupted),
+                        _ => None,
+                    }
+                });
+                
+                let ui_event = SessionMessage::UiEvent {
+                    trace_id: trace_id.clone(),
+                    session_id: session_id.clone(),
+                    job_id: job_id.clone(),
+                    utterance_index,
+                    event: UiEventType::Error,
+                    elapsed_ms,
+                    status: UiEventStatus::Error,
+                    error_code: error_code.clone(),
+                    hint: error_code.as_ref().map(|code| crate::messages::get_error_hint(code).to_string()),
+                };
+                let ui_event_json = serde_json::to_string(&ui_event)?;
+                state.session_connections.send(
+                    &session_id,
+                    Message::Text(ui_event_json)
+                ).await;
+                
                 // 发送错误给客户端
+                error!(trace_id = %trace_id, job_id = %job_id, session_id = %session_id, "Job 处理失败");
                 if let Some(err) = job_error {
                     let error_msg = SessionMessage::Error {
                         code: err.code,
@@ -208,22 +296,43 @@ async fn handle_node_message(
             utterance_index,
             text,
             is_final,
+            trace_id,
         } => {
             // 转发 ASR 部分结果给客户端
             let partial_msg = SessionMessage::AsrPartial {
                 session_id: session_id.clone(),
                 utterance_index,
                 job_id: String::new(), // 部分结果不需要 job_id
-                text,
+                text: text.clone(),
                 is_final,
+                trace_id: trace_id.clone(),
             };
+            debug!(trace_id = %trace_id, session_id = %session_id, utterance_index = utterance_index, is_final = is_final, "转发 ASR 部分结果");
             let partial_json = serde_json::to_string(&partial_msg)?;
             if !state.session_connections.send(
                 &session_id,
                 Message::Text(partial_json)
             ).await {
-                warn!("无法发送 ASR 部分结果到会话 {}", session_id);
+                warn!(trace_id = %trace_id, session_id = %session_id, "无法发送 ASR 部分结果到会话");
             }
+            
+            // 推送 ASR_PARTIAL 事件
+            let ui_event = SessionMessage::UiEvent {
+                trace_id: trace_id.clone(),
+                session_id: session_id.clone(),
+                job_id: String::new(), // 部分结果不需要 job_id
+                utterance_index,
+                event: UiEventType::AsrPartial,
+                elapsed_ms: None, // 部分结果不计算耗时
+                status: UiEventStatus::Ok,
+                error_code: None,
+                hint: None,
+            };
+            let ui_event_json = serde_json::to_string(&ui_event)?;
+            state.session_connections.send(
+                &session_id,
+                Message::Text(ui_event_json)
+            ).await;
         }
         
         NodeMessage::NodeError { node_id: nid, code, message, details: _ } => {

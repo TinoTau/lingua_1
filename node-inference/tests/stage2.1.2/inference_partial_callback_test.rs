@@ -47,6 +47,7 @@ async fn test_inference_service_with_partial_callback() {
         auto_langs: None,
         enable_streaming_asr: Some(true),
         partial_update_interval_ms: Some(500), // 500ms 更新间隔
+        trace_id: Some("test-trace-1".to_string()),
     };
 
     // 注意：由于需要实际的模型和 WhisperContext，这个测试可能需要调整
@@ -69,6 +70,7 @@ fn test_inference_request_with_streaming_config() {
         auto_langs: None,
         enable_streaming_asr: Some(true),
         partial_update_interval_ms: Some(1000),
+        trace_id: Some("test-trace-2".to_string()),
     };
 
     assert_eq!(request.enable_streaming_asr, Some(true));
@@ -91,6 +93,7 @@ fn test_inference_request_without_streaming() {
         auto_langs: None,
         enable_streaming_asr: None,
         partial_update_interval_ms: None,
+        trace_id: Some("test-trace-3".to_string()),
     };
 
     assert_eq!(request.enable_streaming_asr, None);

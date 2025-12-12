@@ -26,6 +26,7 @@ import { LockManager } from './lock-manager';
 import { ModelDownloader } from './downloader';
 import { ModelVerifier } from './verifier';
 import { ModelInstaller } from './installer';
+import logger from '../logger';
 
 /**
  * ModelManager 类 - 模型管理器
@@ -104,7 +105,7 @@ export class ModelManager extends EventEmitter {
       // 清理孤儿锁
       await this.lockManager.cleanupOrphanLocks();
     } catch (error) {
-      console.error('初始化 ModelManager 失败:', error);
+      logger.error({ error }, '初始化 ModelManager 失败');
     }
   }
 
@@ -115,7 +116,7 @@ export class ModelManager extends EventEmitter {
       const response = await axios.get<ModelInfo[]>(`${this.modelHubUrl}/api/models`);
       return response.data;
     } catch (error) {
-      console.error('获取可用模型列表失败:', error);
+      logger.error({ error }, '获取可用模型列表失败');
       return [];
     }
   }
@@ -282,7 +283,9 @@ export class ModelManager extends EventEmitter {
     }
     
     // 异步保存，不阻塞
-    this.registryManager.saveRegistry(this.registry).catch(console.error);
+    this.registryManager.saveRegistry(this.registry).catch((error) => 
+      logger.error({ error }, '保存 registry 失败')
+    );
   }
 
   private emitProgress(
@@ -348,7 +351,7 @@ export class ModelManager extends EventEmitter {
       await this.registryManager.saveRegistry(this.registry);
       return true;
     } catch (error) {
-      console.error('卸载模型失败:', error);
+      logger.error({ error, modelId }, '卸载模型失败');
       return false;
     }
   }

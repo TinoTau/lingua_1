@@ -80,10 +80,17 @@ async fn test_inference_service_full_pipeline() {
         tgt_lang: "en".to_string(),
         audio_data: vec![0u8; 16000 * 2], // 1秒的静音（16kHz, 16-bit）
         features: None,
+        mode: None,
+        lang_a: None,
+        lang_b: None,
+        auto_langs: None,
+        enable_streaming_asr: None,
+        partial_update_interval_ms: None,
+        trace_id: Some("test-trace-1".to_string()),
     };
 
     // 运行推理（可能会失败，因为需要实际模型）
-    let result = service.process(request).await;
+    let result = service.process(request, None).await;
     match result {
         Ok(output) => {
             println!("✓ 完整推理流程成功");

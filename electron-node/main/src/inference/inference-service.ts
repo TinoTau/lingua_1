@@ -3,6 +3,7 @@ import WebSocket from 'ws';
 import { ModelManager } from '../model-manager/model-manager';
 // 临时类型定义，实际应该从 shared/protocols/messages 导入
 import type { JobAssignMessage, InstalledModel, FeatureFlags } from '../../../../shared/protocols/messages';
+import logger from '../logger';
 
 export interface JobResult {
   text_asr: string;
@@ -71,6 +72,7 @@ export class InferenceService {
         lang_b: job.lang_b,
         auto_langs: job.auto_langs,
         enable_streaming_asr: false,
+        trace_id: job.trace_id, // Added: propagate trace_id
       };
 
       const response = await this.httpClient.post('/v1/inference', request);
@@ -87,7 +89,7 @@ export class InferenceService {
         extra: response.data.extra,
       };
     } catch (error) {
-      console.error('推理服务调用失败:', error);
+      logger.error({ error, jobId: job.job_id, traceId: job.trace_id }, '推理服务调用失败');
       throw error;
     } finally {
       this.currentJobs.delete(job.job_id);
@@ -126,6 +128,7 @@ export class InferenceService {
           auto_langs: job.auto_langs,
           enable_streaming_asr: true,
           partial_update_interval_ms: job.partial_update_interval_ms || 1000,
+          trace_id: job.trace_id, // Added: propagate trace_id
         };
 
         ws.send(JSON.stringify(request));
@@ -158,7 +161,7 @@ export class InferenceService {
             reject(new Error(message.message || '推理失败'));
           }
         } catch (error) {
-          console.error('解析 WebSocket 消息失败:', error);
+          logger.error({ error }, '解析 WebSocket 消息失败');
         }
       });
 
@@ -247,13 +250,13 @@ export class InferenceService {
   async enableModule(moduleName: string): Promise<void> {
     // 已废弃：模块现在根据任务请求自动启用
     // 不再支持手动启用模块
-    console.warn(`enableModule(${moduleName}) 已废弃：模块现在根据任务请求自动启用`);
+    logger.warn({ moduleName }, 'enableModule 已废弃：模块现在根据任务请求自动启用');
   }
 
   async disableModule(moduleName: string): Promise<void> {
     // 已废弃：模块现在根据任务请求自动启用/禁用
     // 不再支持手动禁用模块
-    console.warn(`disableModule(${moduleName}) 已废弃：模块现在根据任务请求自动管理`);
+    logger.warn({ moduleName }, 'disableModule 已废弃：模块现在根据任务请求自动管理');
   }
 }
 

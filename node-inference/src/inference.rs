@@ -43,6 +43,9 @@ pub struct InferenceRequest {
     /// 部分结果更新间隔（毫秒），仅在 enable_streaming_asr 为 true 时有效
     #[serde(skip_serializing_if = "Option::is_none")]
     pub partial_update_interval_ms: Option<u64>,
+    /// 追踪 ID（用于全链路日志追踪）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub trace_id: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -211,6 +214,12 @@ impl InferenceService {
     /// * `request` - 推理请求
     /// * `partial_callback` - 部分结果回调（可选）
     pub async fn process(&self, request: InferenceRequest, partial_callback: Option<PartialResultCallback>) -> Result<InferenceResult> {
+        // 使用 trace_id 进行日志记录（如果提供）
+        let trace_id = request.trace_id.as_deref().unwrap_or("unknown");
+        use tracing::{info, warn, debug};
+        
+        debug!(trace_id = %trace_id, job_id = %request.job_id, "开始处理推理请求");
+        
         // 根据请求中的 features 自动启用所需模块（运行时动态启用）
         if let Some(ref features) = request.features {
             // 根据任务需求自动启用模块
@@ -253,11 +262,11 @@ impl InferenceService {
         
         // 1. 语言检测（如果 src_lang == "auto"）
         if src_lang == "auto" {
+            debug!(trace_id = %trace_id, "开始语言检测");
             if let Some(ref detector) = self.language_detector {
                 match detector.detect(&audio_f32, 16000).await {
                     Ok(detection) => {
-                        use tracing::info;
-                        info!("Language detected: {} (confidence: {:.2})", detection.lang, detection.confidence);
+                        info!(trace_id = %trace_id, lang = %detection.lang, confidence = %detection.confidence, "语言检测完成");
                         src_lang = detection.lang.clone();
                         
                         // 双向模式：根据检测结果选择翻译方向
@@ -281,8 +290,7 @@ impl InferenceService {
                         }
                     }
                     Err(e) => {
-                        use tracing::warn;
-                        warn!("Language detection failed: {}, using default language: {}", e, src_lang);
+                        warn!(trace_id = %trace_id, error = %e, default_lang = %src_lang, "语言检测失败，使用默认语言");
                         // 使用默认语言（如果配置了 auto_langs，使用第一个）
                         if let Some(ref auto_langs) = request.auto_langs {
                             if !auto_langs.is_empty() {
@@ -292,8 +300,7 @@ impl InferenceService {
                     }
                 }
             } else {
-                use tracing::warn;
-                warn!("Language detection requested but detector not available, using default language");
+                warn!(trace_id = %trace_id, "语言检测请求但检测器不可用，使用默认语言");
                 // 如果没有语言检测器，使用默认语言
                 if let Some(ref auto_langs) = request.auto_langs {
                     if !auto_langs.is_empty() {
@@ -304,6 +311,7 @@ impl InferenceService {
         }
         
         // 2. ASR: 语音识别（必需，使用检测到的语言）
+        debug!(trace_id = %trace_id, src_lang = %src_lang, "开始 ASR 语音识别");
         // 如果启用了流式 ASR，使用流式处理；否则使用一次性处理
         let transcript = if request.enable_streaming_asr.unwrap_or(false) {
             // 启用流式 ASR
@@ -353,6 +361,7 @@ impl InferenceService {
         
         // 将 ASR 结果写入 PipelineContext
         ctx.set_transcript(transcript.clone());
+        info!(trace_id = %trace_id, transcript_len = transcript.len(), "ASR 识别完成");
 
         // 3. 可选模块处理（使用 PipelineContext）
         // 3.1 音色识别
@@ -394,13 +403,17 @@ impl InferenceService {
         }
 
         // 4. NMT: 机器翻译（必需，使用动态确定的翻译方向）
+        debug!(trace_id = %trace_id, src_lang = %src_lang, tgt_lang = %tgt_lang, "开始机器翻译");
         let translation = self.nmt_engine.translate(&transcript, &src_lang, &tgt_lang).await?;
         
         // 将翻译结果写入 PipelineContext
         ctx.set_translation(translation.clone());
+        info!(trace_id = %trace_id, translation_len = translation.len(), "机器翻译完成");
 
-        // 4. TTS: 语音合成（必需，使用目标语言）
+        // 5. TTS: 语音合成（必需，使用目标语言）
+        debug!(trace_id = %trace_id, tgt_lang = %tgt_lang, "开始语音合成");
         let mut audio = self.tts_engine.synthesize(&translation, &tgt_lang).await?;
+        info!(trace_id = %trace_id, audio_len = audio.len(), "语音合成完成");
 
         // 6. 可选：语速控制（需要语速识别结果）
         if features.map(|f| f.speech_rate_control).unwrap_or(false) {
@@ -436,6 +449,7 @@ impl InferenceService {
         ctx.set_tts_audio(audio.clone());
 
         // 从 PipelineContext 构建 InferenceResult
+        info!(trace_id = %trace_id, job_id = %request.job_id, "推理请求处理完成");
         Ok(InferenceResult {
             transcript: ctx.transcript.unwrap_or_default(),
             translation: ctx.translation.unwrap_or_default(),

@@ -98,27 +98,25 @@ pub struct ExtraResult {
 // ===== 错误码 =====
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ErrorCode {
-    #[serde(rename = "INVALID_MESSAGE")]
     InvalidMessage,
-    #[serde(rename = "INTERNAL_ERROR")]
     InternalError,
-    #[serde(rename = "INVALID_SESSION")]
     InvalidSession,
-    #[serde(rename = "SESSION_CLOSED")]
     SessionClosed,
-    #[serde(rename = "NODE_UNAVAILABLE")]
     NodeUnavailable,
-    #[serde(rename = "NODE_OVERLOADED")]
     NodeOverloaded,
-    #[serde(rename = "MODEL_NOT_AVAILABLE")]
     ModelNotAvailable,
-    #[serde(rename = "MODEL_LOAD_FAILED")]
     ModelLoadFailed,
-    #[serde(rename = "UNSUPPORTED_FEATURE")]
     UnsupportedFeature,
-    #[serde(rename = "INVALID_PAIRING_CODE")]
     InvalidPairingCode,
+    // 日志系统相关错误码
+    NoAvailableNode,
+    WsDisconnected,
+    NmtTimeout,
+    TtsTimeout,
+    ModelVerifyFailed,
+    ModelCorrupted,
 }
 
 impl ToString for ErrorCode {
@@ -134,7 +132,27 @@ impl ToString for ErrorCode {
             ErrorCode::ModelLoadFailed => "MODEL_LOAD_FAILED".to_string(),
             ErrorCode::UnsupportedFeature => "UNSUPPORTED_FEATURE".to_string(),
             ErrorCode::InvalidPairingCode => "INVALID_PAIRING_CODE".to_string(),
+            ErrorCode::NoAvailableNode => "NO_AVAILABLE_NODE".to_string(),
+            ErrorCode::WsDisconnected => "WS_DISCONNECTED".to_string(),
+            ErrorCode::NmtTimeout => "NMT_TIMEOUT".to_string(),
+            ErrorCode::TtsTimeout => "TTS_TIMEOUT".to_string(),
+            ErrorCode::ModelVerifyFailed => "MODEL_VERIFY_FAILED".to_string(),
+            ErrorCode::ModelCorrupted => "MODEL_CORRUPTED".to_string(),
         }
+    }
+}
+
+/// 获取错误码对应的用户友好提示
+pub fn get_error_hint(code: &ErrorCode) -> &'static str {
+    match code {
+        ErrorCode::NoAvailableNode => "当前没有可用节点，请稍后再试。",
+        ErrorCode::ModelNotAvailable => "节点缺少必要模型，正在重新调度或等待模型准备完成。",
+        ErrorCode::WsDisconnected => "连接已断开，请刷新页面或重新连接。",
+        ErrorCode::NmtTimeout => "翻译超时，请尝试缩短句子后重试。",
+        ErrorCode::TtsTimeout => "语音合成超时，请稍后重试。",
+        ErrorCode::ModelVerifyFailed => "模型校验失败，请重新下载模型。",
+        ErrorCode::ModelCorrupted => "模型文件损坏，请重新下载模型。",
+        _ => "发生错误，请稍后重试。",
     }
 }
 
@@ -175,6 +193,9 @@ pub enum SessionMessage {
         /// 部分结果更新间隔（毫秒），仅在 enable_streaming_asr 为 true 时有效
         #[serde(skip_serializing_if = "Option::is_none")]
         partial_update_interval_ms: Option<u64>,
+        /// 追踪 ID（可选，客户端提供或由 Scheduler 生成）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        trace_id: Option<String>,
     },
     #[serde(rename = "session_init_ack")]
     SessionInitAck {
@@ -182,6 +203,8 @@ pub enum SessionMessage {
         #[serde(skip_serializing_if = "Option::is_none")]
         assigned_node_id: Option<String>,
         message: String,
+        /// 追踪 ID（Scheduler 生成并回传）
+        trace_id: String,
     },
     #[serde(rename = "utterance")]
     Utterance {
@@ -215,6 +238,9 @@ pub enum SessionMessage {
         /// 部分结果更新间隔（毫秒），仅在 enable_streaming_asr 为 true 时有效
         #[serde(skip_serializing_if = "Option::is_none")]
         partial_update_interval_ms: Option<u64>,
+        /// 追踪 ID（可选，客户端提供或从 Session 中获取）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        trace_id: Option<String>,
     },
     #[serde(rename = "audio_chunk")]
     AudioChunk {
@@ -235,6 +261,8 @@ pub enum SessionMessage {
         tts_format: String,
         #[serde(skip_serializing_if = "Option::is_none")]
         extra: Option<ExtraResult>,
+        /// 追踪 ID（必需，用于全链路追踪）
+        trace_id: String,
     },
     #[serde(rename = "asr_partial")]
     AsrPartial {
@@ -243,6 +271,8 @@ pub enum SessionMessage {
         job_id: String,
         text: String,
         is_final: bool,
+        /// 追踪 ID（必需，用于全链路追踪）
+        trace_id: String,
     },
     #[serde(rename = "client_heartbeat")]
     ClientHeartbeat {
@@ -269,6 +299,22 @@ pub enum SessionMessage {
         message: String,
         #[serde(skip_serializing_if = "Option::is_none")]
         details: Option<serde_json::Value>,
+    },
+    /// UI 事件消息（用于日志与可观测性）
+    #[serde(rename = "ui_event")]
+    UiEvent {
+        trace_id: String,
+        session_id: String,
+        job_id: String,
+        utterance_index: u64,
+        event: UiEventType,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        elapsed_ms: Option<u64>,
+        status: UiEventStatus,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        error_code: Option<ErrorCode>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        hint: Option<String>,
     },
 }
 
@@ -342,6 +388,8 @@ pub enum NodeMessage {
         /// 部分结果更新间隔（毫秒），仅在 enable_streaming_asr 为 true 时有效
         #[serde(skip_serializing_if = "Option::is_none")]
         partial_update_interval_ms: Option<u64>,
+        /// 追踪 ID（必需，用于全链路追踪）
+        trace_id: String,
     },
     #[serde(rename = "job_result")]
     JobResult {
@@ -364,6 +412,8 @@ pub enum NodeMessage {
         processing_time_ms: Option<u64>,
         #[serde(skip_serializing_if = "Option::is_none")]
         error: Option<JobError>,
+        /// 追踪 ID（必需，用于全链路追踪）
+        trace_id: String,
     },
     #[serde(rename = "asr_partial")]
     AsrPartial {
@@ -373,6 +423,8 @@ pub enum NodeMessage {
         utterance_index: u64,
         text: String,
         is_final: bool,
+        /// 追踪 ID（必需，用于全链路追踪）
+        trace_id: String,
     },
     #[serde(rename = "node_error")]
     NodeError {
@@ -396,5 +448,31 @@ pub struct JobError {
     pub message: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub details: Option<serde_json::Value>,
+}
+
+// ===== UI 事件类型（用于日志与可观测性） =====
+
+/// UI 事件类型
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum UiEventType {
+    InputStarted,
+    InputEnded,
+    AsrPartial,
+    AsrFinal,
+    Dispatched,
+    NodeAccepted,
+    NmtDone,
+    TtsPlayStarted,
+    TtsPlayEnded,
+    Error,
+}
+
+/// UI 事件状态
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "lowercase")]
+pub enum UiEventStatus {
+    Ok,
+    Error,
 }
 

@@ -131,7 +131,9 @@ export class LockManager {
         }
       }
     } catch (error) {
-      console.error('清理孤儿锁失败:', error);
+      // 使用动态导入避免循环依赖
+      const logger = (await import('../logger')).default;
+      logger.error({ error }, '清理孤儿锁失败');
     }
   }
 }

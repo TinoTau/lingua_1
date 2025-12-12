@@ -65,6 +65,38 @@ pub(crate) fn create_job_assign_message(job: &crate::dispatcher::Job) -> Option<
         auto_langs: job.auto_langs.clone(),
         enable_streaming_asr: job.enable_streaming_asr,
         partial_update_interval_ms: job.partial_update_interval_ms,
+        trace_id: job.trace_id.clone(),
     })
+}
+
+// 发送 UI 事件消息
+pub(crate) async fn send_ui_event(
+    tx: &mpsc::UnboundedSender<Message>,
+    trace_id: &str,
+    session_id: &str,
+    job_id: &str,
+    utterance_index: u64,
+    event: crate::messages::UiEventType,
+    elapsed_ms: Option<u64>,
+    status: crate::messages::UiEventStatus,
+    error_code: Option<crate::messages::ErrorCode>,
+) {
+    let hint = error_code.as_ref().map(|code| crate::messages::get_error_hint(code).to_string());
+    
+    let ui_event = SessionMessage::UiEvent {
+        trace_id: trace_id.to_string(),
+        session_id: session_id.to_string(),
+        job_id: job_id.to_string(),
+        utterance_index,
+        event,
+        elapsed_ms,
+        status,
+        error_code: error_code.clone(),
+        hint,
+    };
+    
+    if let Err(e) = send_message(tx, &ui_event).await {
+        error!("发送 UI 事件失败: {}", e);
+    }
 }
 

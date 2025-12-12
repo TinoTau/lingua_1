@@ -1,9 +1,9 @@
 // 会话端 WebSocket 处理
 
 use crate::app_state::AppState;
-use crate::messages::{SessionMessage, ErrorCode};
+use crate::messages::{SessionMessage, ErrorCode, UiEventType, UiEventStatus};
 use crate::session::SessionUpdate;
-use crate::websocket::{send_message, send_error, create_job_assign_message};
+use crate::websocket::{send_message, send_error, create_job_assign_message, send_ui_event};
 use axum::extract::ws::{Message, WebSocket};
 use futures_util::{SinkExt, StreamExt};
 use tokio::sync::mpsc;
@@ -98,6 +98,7 @@ async fn handle_session_message(
                    auto_langs,
                    enable_streaming_asr: _,
                    partial_update_interval_ms: _,
+                   trace_id,
                } => {
                    // 处理配对码
                    let paired_node_id = if let Some(code) = pairing_code {
@@ -106,7 +107,7 @@ async fn handle_session_message(
                        None
                    };
 
-                   // 创建会话
+                   // 创建会话（传递 trace_id）
                    let session = state.session_manager.create_session(
                        client_version,
                        platform,
@@ -119,6 +120,7 @@ async fn handle_session_message(
                        lang_a.clone(),
                        lang_b.clone(),
                        auto_langs.clone(),
+                       trace_id,
                    ).await;
             
             // 如果配对成功，更新会话
@@ -137,15 +139,16 @@ async fn handle_session_message(
             // 初始化结果队列
             state.result_queue.initialize_session(session.session_id.clone()).await;
             
-            // 发送确认消息
+            // 发送确认消息（包含 trace_id）
             let ack = SessionMessage::SessionInitAck {
                 session_id: session.session_id.clone(),
                 assigned_node_id: paired_node_id,
                 message: "session created".to_string(),
+                trace_id: session.trace_id.clone(),
             };
             
             send_message(tx, &ack).await?;
-            info!("会话 {} 已创建", session.session_id);
+            info!(trace_id = %session.trace_id, session_id = %session.session_id, "会话已创建");
         }
         
         SessionMessage::AudioChunk {
@@ -205,25 +208,63 @@ async fn handle_session_message(
                         session.auto_langs.clone(),
                         enable_streaming_asr,
                         partial_update_interval_ms,
+                        session.trace_id.clone(), // AudioChunk 使用 Session 的 trace_id
                     ).await;
                     
                     // 增加 utterance_index
                     state.session_manager.update_session(&sess_id, crate::session::SessionUpdate::IncrementUtteranceIndex).await;
                     
-                    info!("Job {} 已创建（来自 audio_chunk），分配给节点: {:?}", job.job_id, job.assigned_node_id);
+                    info!(trace_id = %job.trace_id, job_id = %job.job_id, node_id = ?job.assigned_node_id, "Job 已创建（来自 audio_chunk）");
                     
                     // 如果节点已分配，发送 job 给节点
                     if let Some(ref node_id) = job.assigned_node_id {
                         if let Some(job_assign_msg) = create_job_assign_message(&job) {
-                            if !state.node_connections.send(node_id, Message::Text(serde_json::to_string(&job_assign_msg)?)).await {
+                            if state.node_connections.send(node_id, Message::Text(serde_json::to_string(&job_assign_msg)?)).await {
+                                // 推送 DISPATCHED 事件
+                                send_ui_event(
+                                    tx,
+                                    &job.trace_id,
+                                    &sess_id,
+                                    &job.job_id,
+                                    utterance_index,
+                                    UiEventType::Dispatched,
+                                    None,
+                                    UiEventStatus::Ok,
+                                    None,
+                                ).await;
+                            } else {
                                 warn!("无法发送 job 到节点 {}", node_id);
                                 // 标记 job 为失败
                                 state.dispatcher.update_job_status(&job.job_id, crate::dispatcher::JobStatus::Failed).await;
+                                // 推送 ERROR 事件
+                                send_ui_event(
+                                    tx,
+                                    &job.trace_id,
+                                    &sess_id,
+                                    &job.job_id,
+                                    utterance_index,
+                                    UiEventType::Error,
+                                    None,
+                                    UiEventStatus::Error,
+                                    Some(ErrorCode::NodeUnavailable),
+                                ).await;
                             }
                         }
                     } else {
                         warn!("Job {} 没有可用的节点", job.job_id);
                         send_error(tx, ErrorCode::NodeUnavailable, "没有可用的节点").await;
+                        // 推送 ERROR 事件
+                        send_ui_event(
+                            tx,
+                            &job.trace_id,
+                            &sess_id,
+                            &job.job_id,
+                            utterance_index,
+                            UiEventType::Error,
+                            None,
+                            UiEventStatus::Error,
+                            Some(ErrorCode::NoAvailableNode),
+                        ).await;
                     }
                 } else {
                     warn!("音频缓冲区为空，无法创建 job");
@@ -248,10 +289,14 @@ async fn handle_session_message(
             auto_langs: _,
             enable_streaming_asr: _,
             partial_update_interval_ms: _,
+            trace_id: utterance_trace_id,
         } => {
             // 验证会话
             let session = state.session_manager.get_session(&sess_id).await
                 .ok_or_else(|| anyhow::anyhow!("会话不存在: {}", sess_id))?;
+            
+            // 使用 Utterance 中的 trace_id（如果提供），否则使用 Session 的 trace_id
+            let trace_id = utterance_trace_id.unwrap_or_else(|| session.trace_id.clone());
             
             // 解码音频
             use base64::{Engine as _, engine::general_purpose};
@@ -287,22 +332,60 @@ async fn handle_session_message(
                 session.auto_langs.clone(),
                 enable_streaming_asr,
                 partial_update_interval_ms,
+                trace_id.clone(), // Use trace_id from Utterance or Session
             ).await;
             
-            info!("Job {} 已创建，分配给节点: {:?}", job.job_id, job.assigned_node_id);
+            info!(trace_id = %trace_id, job_id = %job.job_id, node_id = ?job.assigned_node_id, "Job 已创建");
             
             // 如果节点已分配，发送 job 给节点
             if let Some(ref node_id) = job.assigned_node_id {
                 if let Some(job_assign_msg) = create_job_assign_message(&job) {
-                    if !state.node_connections.send(node_id, Message::Text(serde_json::to_string(&job_assign_msg)?)).await {
+                    if state.node_connections.send(node_id, Message::Text(serde_json::to_string(&job_assign_msg)?)).await {
+                        // 推送 DISPATCHED 事件
+                        send_ui_event(
+                            tx,
+                            &trace_id,
+                            &sess_id,
+                            &job.job_id,
+                            utterance_index,
+                            UiEventType::Dispatched,
+                            None,
+                            UiEventStatus::Ok,
+                            None,
+                        ).await;
+                    } else {
                         warn!("无法发送 job 到节点 {}", node_id);
                         // 标记 job 为失败
                         state.dispatcher.update_job_status(&job.job_id, crate::dispatcher::JobStatus::Failed).await;
+                        // 推送 ERROR 事件
+                        send_ui_event(
+                            tx,
+                            &trace_id,
+                            &sess_id,
+                            &job.job_id,
+                            utterance_index,
+                            UiEventType::Error,
+                            None,
+                            UiEventStatus::Error,
+                            Some(ErrorCode::NodeUnavailable),
+                        ).await;
                     }
                 }
             } else {
                 warn!("Job {} 没有可用的节点", job.job_id);
                 send_error(tx, ErrorCode::NodeUnavailable, "没有可用的节点").await;
+                // 推送 ERROR 事件
+                send_ui_event(
+                    tx,
+                    &trace_id,
+                    &sess_id,
+                    &job.job_id,
+                    utterance_index,
+                    UiEventType::Error,
+                    None,
+                    UiEventStatus::Error,
+                    Some(ErrorCode::NoAvailableNode),
+                ).await;
             }
         }
         

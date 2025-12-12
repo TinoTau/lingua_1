@@ -22,6 +22,8 @@ pub struct Job {
     pub assigned_node_id: Option<String>,
     pub status: JobStatus,
     pub created_at: chrono::DateTime<chrono::Utc>,
+    /// 追踪 ID（用于全链路日志追踪）
+    pub trace_id: String,
     /// 翻译模式："one_way" | "two_way_auto"
     #[serde(skip_serializing_if = "Option::is_none")]
     pub mode: Option<String>,
@@ -84,6 +86,7 @@ impl JobDispatcher {
         auto_langs: Option<Vec<String>>,
         enable_streaming_asr: Option<bool>,
         partial_update_interval_ms: Option<u64>,
+        trace_id: String,
     ) -> Job {
         let job_id = format!("job-{}", Uuid::new_v4().to_string()[..8].to_uppercase());
         
@@ -115,6 +118,9 @@ impl JobDispatcher {
             self.select_node_with_module_expansion(&src_lang, &tgt_lang, features.clone(), true).await
         };
 
+        use tracing::debug;
+        debug!(trace_id = %trace_id, job_id = %job_id, session_id = %session_id, utterance_index = utterance_index, node_id = ?assigned_node_id, "创建 Job");
+
         let job = Job {
             job_id: job_id.clone(),
             session_id,
@@ -134,6 +140,7 @@ impl JobDispatcher {
                 JobStatus::Pending
             },
             created_at: chrono::Utc::now(),
+            trace_id: trace_id.clone(),
             mode,
             lang_a,
             lang_b,

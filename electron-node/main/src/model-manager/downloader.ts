@@ -56,7 +56,14 @@ export class ModelDownloader extends EventEmitter {
         
         // 等待后重试（指数退避）
         const retryDelay = [1000, 2000, 5000][attempt];
-        console.log(`文件 ${fileInfo.path} 下载失败，${retryDelay}ms 后重试 (${attempt + 1}/${this.maxRetries})`);
+        // 使用动态导入避免循环依赖
+        const logger = (await import('../logger')).default;
+        logger.warn({ 
+          filePath: fileInfo.path, 
+          attempt: attempt + 1, 
+          maxRetries: this.maxRetries,
+          retryDelay 
+        }, '文件下载失败，将重试');
         await sleep(retryDelay);
       }
     }

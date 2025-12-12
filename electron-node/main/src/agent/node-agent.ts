@@ -13,6 +13,7 @@ import type {
   FeatureFlags
 } from '../../../../shared/protocols/messages';
 import { ModelNotAvailableError } from '../model-manager/model-manager';
+import logger from '../logger';
 
 export interface NodeStatus {
   online: boolean;
@@ -38,7 +39,7 @@ export class NodeAgent {
       this.ws = new WebSocket(this.schedulerUrl);
       
       this.ws.on('open', () => {
-        console.log('已连接到调度服务器');
+        logger.info({}, '已连接到调度服务器');
         this.registerNode();
         this.startHeartbeat();
       });
@@ -48,17 +49,17 @@ export class NodeAgent {
       });
 
       this.ws.on('error', (error) => {
-        console.error('WebSocket 错误:', error);
+        logger.error({ error }, 'WebSocket 错误');
       });
 
       this.ws.on('close', () => {
-        console.log('与调度服务器的连接已关闭');
+        logger.info({}, '与调度服务器的连接已关闭');
         this.stopHeartbeat();
         // 尝试重连
         setTimeout(() => this.start(), 5000);
       });
     } catch (error) {
-      console.error('启动 Node Agent 失败:', error);
+      logger.error({ error }, '启动 Node Agent 失败');
     }
   }
 
@@ -97,7 +98,7 @@ export class NodeAgent {
 
       this.ws.send(JSON.stringify(message));
     } catch (error) {
-      console.error('注册节点失败:', error);
+      logger.error({ error }, '注册节点失败');
     }
   }
 
@@ -126,7 +127,7 @@ export class NodeAgent {
         gpus: gpus.length > 0 ? gpus : undefined,
       };
     } catch (error) {
-      console.error('获取硬件信息失败:', error);
+      logger.error({ error }, '获取硬件信息失败');
       return {
         cpu_cores: os.cpus().length,
         memory_gb: Math.round(os.totalmem() / (1024 * 1024 * 1024)),
@@ -187,7 +188,7 @@ export class NodeAgent {
         memory: (mem.used / mem.total) * 100,
       };
     } catch (error) {
-      console.error('获取系统资源失败:', error);
+      logger.error({ error }, '获取系统资源失败');
       return { cpu: 0, gpu: null, gpuMem: null, memory: 0 };
     }
   }
@@ -200,7 +201,7 @@ export class NodeAgent {
         case 'node_register_ack': {
           const ack = message as NodeRegisterAckMessage;
           this.nodeId = ack.node_id;
-          console.log('节点注册成功:', this.nodeId);
+          logger.info({ nodeId: this.nodeId }, '节点注册成功');
           break;
         }
 
@@ -215,10 +216,10 @@ export class NodeAgent {
           break;
 
         default:
-          console.warn('未知消息类型:', message.type);
+          logger.warn({ messageType: message.type }, '未知消息类型');
       }
     } catch (error) {
-      console.error('处理消息失败:', error);
+      logger.error({ error }, '处理消息失败');
     }
   }
 
@@ -241,6 +242,7 @@ export class NodeAgent {
             job_id: job.job_id,
             text: partial.text,
             is_final: partial.is_final,
+            trace_id: job.trace_id, // Added: propagate trace_id
           };
           this.ws.send(JSON.stringify(partialMessage));
         }
@@ -263,11 +265,12 @@ export class NodeAgent {
         tts_format: result.tts_format || 'pcm16',
         extra: result.extra,
         processing_time_ms: Date.now() - startTime,
+        trace_id: job.trace_id, // Added: propagate trace_id
       };
 
       this.ws.send(JSON.stringify(response));
     } catch (error) {
-      console.error('处理任务失败:', error);
+      logger.error({ error, jobId: job.job_id, traceId: job.trace_id }, '处理任务失败');
       
       // 检查是否是 ModelNotAvailableError
       if (error instanceof ModelNotAvailableError) {
@@ -289,6 +292,7 @@ export class NodeAgent {
               reason: error.reason,
             },
           },
+          trace_id: job.trace_id, // Added: propagate trace_id
         };
         
         this.ws.send(JSON.stringify(errorResponse));
@@ -308,6 +312,7 @@ export class NodeAgent {
           code: 'PROCESSING_ERROR',
           message: error instanceof Error ? error.message : String(error),
         },
+        trace_id: job.trace_id, // Added: propagate trace_id
       };
 
       this.ws.send(JSON.stringify(errorResponse));

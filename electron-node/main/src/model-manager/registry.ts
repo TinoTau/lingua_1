@@ -22,7 +22,9 @@ export class RegistryManager {
         return {};
       }
     } catch (error) {
-      console.error('加载 registry 失败:', error);
+      // 使用动态导入避免循环依赖
+      const logger = (await import('../logger')).default;
+      logger.error({ error }, '加载 registry 失败');
       return {};
     }
   }
@@ -44,7 +46,9 @@ export class RegistryManager {
       // 原子重命名
       await fs.rename(tempPath, this.registryPath);
     } catch (error) {
-      console.error('保存 registry 失败:', error);
+      // 使用动态导入避免循环依赖
+      const logger = (await import('../logger')).default;
+      logger.error({ error }, '保存 registry 失败');
       throw error;
     }
   }

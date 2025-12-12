@@ -13,6 +13,7 @@ fn test_node_message_asr_partial_serialization() {
         utterance_index: 0,
         text: "Hello world".to_string(),
         is_final: false,
+        trace_id: "trace-123".to_string(),
     };
 
     // 序列化
@@ -37,6 +38,7 @@ fn test_node_message_asr_partial_serialization() {
             utterance_index,
             text,
             is_final,
+            trace_id: _,
         } => {
             assert_eq!(job_id, "job-123");
             assert_eq!(node_id, "node-456");
@@ -59,6 +61,7 @@ fn test_node_message_asr_partial_final() {
         utterance_index: 0,
         text: "Final result".to_string(),
         is_final: true,
+        trace_id: "trace-789".to_string(),
     };
 
     let json = serde_json::to_string(&message).expect("序列化失败");
@@ -82,6 +85,7 @@ fn test_session_message_asr_partial_serialization() {
         job_id: "job-123".to_string(),
         text: "Partial result".to_string(),
         is_final: false,
+        trace_id: "trace-456".to_string(),
     };
 
     // 序列化
@@ -104,6 +108,7 @@ fn test_session_message_asr_partial_serialization() {
             job_id,
             text,
             is_final,
+            trace_id: _,
         } => {
             assert_eq!(session_id, "session-789");
             assert_eq!(utterance_index, 1);
@@ -142,6 +147,7 @@ fn test_job_assign_with_streaming_asr() {
         auto_langs: None,
         enable_streaming_asr: Some(true),
         partial_update_interval_ms: Some(1000),
+        trace_id: "trace-789".to_string(),
     };
 
     // 序列化
@@ -158,6 +164,7 @@ fn test_job_assign_with_streaming_asr() {
         NodeMessage::JobAssign {
             enable_streaming_asr,
             partial_update_interval_ms,
+            trace_id: _,
             ..
         } => {
             assert_eq!(enable_streaming_asr, Some(true));
@@ -194,6 +201,7 @@ fn test_job_assign_without_streaming_asr() {
         auto_langs: None,
         enable_streaming_asr: None,
         partial_update_interval_ms: None,
+        trace_id: "trace-999".to_string(),
     };
 
     // 序列化

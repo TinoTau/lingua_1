@@ -42,6 +42,15 @@ export interface SessionInitMessage {
   dialect: string | null;
   features?: FeatureFlags;
   pairing_code?: string | null;
+  tenant_id?: string | null;
+  mode?: 'one_way' | 'two_way_auto';
+  lang_a?: string;
+  lang_b?: string;
+  auto_langs?: string[];
+  enable_streaming_asr?: boolean;
+  partial_update_interval_ms?: number;
+  /** 追踪 ID（可选，客户端提供或由 Scheduler 生成） */
+  trace_id?: string;
 }
 
 export interface SessionInitAckMessage {
@@ -49,6 +58,8 @@ export interface SessionInitAckMessage {
   session_id: string;
   assigned_node_id: string | null;
   message: string;
+  /** 追踪 ID（Scheduler 生成并回传） */
+  trace_id: string;
 }
 
 export interface UtteranceMessage {
@@ -63,6 +74,14 @@ export interface UtteranceMessage {
   audio: string; // base64
   audio_format: string; // e.g. 'pcm16', 'wav'
   sample_rate: number;
+  mode?: 'one_way' | 'two_way_auto';
+  lang_a?: string;
+  lang_b?: string;
+  auto_langs?: string[];
+  enable_streaming_asr?: boolean;
+  partial_update_interval_ms?: number;
+  /** 追踪 ID（可选，客户端提供或从 Session 中获取） */
+  trace_id?: string;
 }
 
 export interface TranslationResultMessage {
@@ -80,16 +99,20 @@ export interface TranslationResultMessage {
     voice_style?: string | null;
     [key: string]: unknown;
   };
+  /** 追踪 ID（必需，用于全链路追踪） */
+  trace_id: string;
 }
 
 export interface AsrPartialMessage {
   type: 'asr_partial';
-  node_id: string; // 节点发送时需要包含 node_id
+  node_id?: string; // 节点发送时需要包含 node_id（SessionMessage 中不需要）
   session_id: string;
   utterance_index: number;
   job_id: string;
   text: string;
   is_final: boolean;
+  /** 追踪 ID（必需，用于全链路追踪） */
+  trace_id: string;
 }
 
 export interface ClientHeartbeatMessage {
@@ -128,6 +151,57 @@ export interface ErrorMessage {
   code: string;
   message: string;
   details?: Record<string, unknown>;
+}
+
+// ===== UI 事件类型（用于日志与可观测性） =====
+
+/** UI 事件类型 */
+export type UiEventType =
+  | "INPUT_STARTED"
+  | "INPUT_ENDED"
+  | "ASR_PARTIAL"
+  | "ASR_FINAL"
+  | "DISPATCHED"
+  | "NODE_ACCEPTED"
+  | "NMT_DONE"
+  | "TTS_PLAY_STARTED"
+  | "TTS_PLAY_ENDED"
+  | "ERROR";
+
+/** UI 事件状态 */
+export type UiEventStatus = "ok" | "error";
+
+/** 错误码类型 */
+export type ErrorCode =
+  | "INVALID_MESSAGE"
+  | "INTERNAL_ERROR"
+  | "INVALID_SESSION"
+  | "SESSION_CLOSED"
+  | "NODE_UNAVAILABLE"
+  | "NODE_OVERLOADED"
+  | "MODEL_NOT_AVAILABLE"
+  | "MODEL_LOAD_FAILED"
+  | "UNSUPPORTED_FEATURE"
+  | "INVALID_PAIRING_CODE"
+  | "NO_AVAILABLE_NODE"
+  | "WS_DISCONNECTED"
+  | "NMT_TIMEOUT"
+  | "TTS_TIMEOUT"
+  | "MODEL_VERIFY_FAILED"
+  | "MODEL_CORRUPTED";
+
+/** UI 事件消息（用于日志与可观测性） */
+export interface UiEventMessage {
+  type: 'ui_event';
+  trace_id: string;
+  session_id: string;
+  job_id: string;
+  utterance_index: number;
+  event: UiEventType;
+  elapsed_ms?: number;
+  status: UiEventStatus;
+  error_code?: ErrorCode;
+  hint?: string;
 }
 
 // ===== 节点 ↔ 调度服务器 =====
@@ -199,6 +273,8 @@ export interface JobAssignMessage {
   enable_streaming_asr?: boolean;
   /** 部分结果更新间隔（毫秒），仅在 enable_streaming_asr 为 true 时有效 */
   partial_update_interval_ms?: number;
+  /** 追踪 ID（必需，用于全链路追踪） */
+  trace_id: string;
 }
 
 export interface JobResultMessage {
@@ -224,6 +300,8 @@ export interface JobResultMessage {
     message: string;
     details?: Record<string, unknown>;
   };
+  /** 追踪 ID（必需，用于全链路追踪） */
+  trace_id: string;
 }
 
 export interface NodeErrorMessage {
@@ -249,7 +327,8 @@ export type SessionSideIncomingMessage =
   | ServerHeartbeatMessage
   | SessionCloseAckMessage
   | LanguageDetectedMessage
-  | ErrorMessage;
+  | ErrorMessage
+  | UiEventMessage;
 
 export type SessionSideOutgoingMessage =
   | SessionInitMessage
@@ -281,6 +360,7 @@ export type AnyMessage =
   | SessionCloseAckMessage
   | LanguageDetectedMessage
   | ErrorMessage
+  | UiEventMessage
   | NodeRegisterMessage
   | NodeRegisterAckMessage
   | NodeHeartbeatMessage

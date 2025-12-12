@@ -146,7 +146,9 @@
   - [ ] 扩展调度服务器支持 Group 管理
   - [ ] 扩展节点推理服务支持上下文拼接
   - [ ] 扩展 NMT 引擎支持上下文输入
-- 详细设计请参考 [Web 端实时语音翻译统一设计方案 v3](./webClient/Web_端实时语音翻译_统一设计方案_v3.md)
+- 详细设计请参考：
+  - [Utterance Group 功能详细规范](./webClient/UTTERANCE_GROUP_SPECIFICATION.md) ⭐ **完整技术规范**
+  - [Web 端实时语音翻译统一设计方案 v3](./webClient/Web_端实时语音翻译_统一设计方案_v3.md) - 产品设计概述
 - 项目位置：`web-client/`
 
 ### 2.2 移动端客户端（React Native）

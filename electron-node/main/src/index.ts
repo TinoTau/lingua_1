@@ -3,6 +3,7 @@ import * as path from 'path';
 import { NodeAgent } from './agent/node-agent';
 import { ModelManager } from './model-manager/model-manager';
 import { InferenceService } from './inference/inference-service';
+import logger from './logger';
 
 let mainWindow: BrowserWindow | null = null;
 let nodeAgent: NodeAgent | null = null;
@@ -42,7 +43,7 @@ app.whenReady().then(() => {
   nodeAgent = new NodeAgent(inferenceService);
 
   // 启动 Node Agent
-  nodeAgent.start().catch(console.error);
+  nodeAgent.start().catch((error) => logger.error({ error }, '启动 Node Agent 失败'));
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -77,7 +78,7 @@ ipcMain.handle('get-system-resources', async () => {
       memory: (mem.used / mem.total) * 100,
     };
   } catch (error) {
-    console.error('获取系统资源失败:', error);
+    logger.error({ error }, '获取系统资源失败');
     return {
       cpu: 0,
       gpu: null,
@@ -147,7 +148,7 @@ ipcMain.handle('download-model', async (_, modelId: string, version?: string) =>
     await modelManager.downloadModel(modelId, version);
     return true;
   } catch (error) {
-    console.error('下载模型失败:', error);
+    logger.error({ error, modelId: args[0] }, '下载模型失败');
     return false;
   }
 });
@@ -161,7 +162,7 @@ ipcMain.handle('get-model-path', async (_, modelId: string, version?: string) =>
   try {
     return await modelManager.getModelPath(modelId, version);
   } catch (error) {
-    console.error('获取模型路径失败:', error);
+    logger.error({ error, modelId: args[0] }, '获取模型路径失败');
     return null;
   }
 });
@@ -173,7 +174,7 @@ ipcMain.handle('get-model-ranking', async () => {
     const response = await axios.get(`${modelHubUrl}/api/model-usage/ranking`);
     return response.data || [];
   } catch (error) {
-    console.error('获取模型排行失败:', error);
+    logger.error({ error }, '获取模型排行失败');
     return [];
   }
 });

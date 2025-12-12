@@ -71,6 +71,7 @@ async fn test_create_job() {
             persona_adaptation: None,
         },
         true,
+        None,
     ).await;
     
     let job = dispatcher.create_job(
@@ -89,6 +90,13 @@ async fn test_create_job() {
         "pcm16".to_string(),
         16000,
         None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        "trace-1".to_string(),
     ).await;
     
     assert!(job.job_id.starts_with("job-"));
@@ -124,6 +132,7 @@ async fn test_create_job_with_preferred_node() {
             persona_adaptation: None,
         },
         true,
+        None,
     ).await;
     
     let job = dispatcher.create_job(
@@ -142,6 +151,13 @@ async fn test_create_job_with_preferred_node() {
         "pcm16".to_string(),
         16000,
         Some("node-123".to_string()),
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        "trace-2".to_string(),
     ).await;
     
     assert_eq!(job.assigned_node_id, Some("node-123".to_string()));
@@ -170,6 +186,13 @@ async fn test_create_job_no_available_node() {
         "pcm16".to_string(),
         16000,
         None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        "trace-3".to_string(),
     ).await;
     
     // 应该没有分配节点
@@ -198,6 +221,7 @@ async fn test_get_job() {
             persona_adaptation: None,
         },
         true,
+        None,
     ).await;
     
     let job = dispatcher.create_job(
@@ -216,6 +240,13 @@ async fn test_get_job() {
         "pcm16".to_string(),
         16000,
         None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        "trace-4".to_string(),
     ).await;
     
     let retrieved = dispatcher.get_job(&job.job_id).await;
@@ -255,6 +286,7 @@ async fn test_update_job_status() {
             persona_adaptation: None,
         },
         true,
+        None,
     ).await;
     
     let job = dispatcher.create_job(
@@ -273,6 +305,13 @@ async fn test_update_job_status() {
         "pcm16".to_string(),
         16000,
         None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        "trace-5".to_string(),
     ).await;
     
     assert_eq!(job.status, lingua_scheduler::dispatcher::JobStatus::Assigned);

@@ -63,6 +63,7 @@ async fn test_register_node() {
             persona_adaptation: None,
         },
         true,
+        None,
     ).await;
     
     assert!(node.node_id.starts_with("node-"));
@@ -94,6 +95,7 @@ async fn test_register_node_with_id() {
             persona_adaptation: None,
         },
         false,
+        None,
     ).await;
     
     assert_eq!(node.node_id, "custom-node-123");
@@ -120,6 +122,7 @@ async fn test_is_node_available() {
             persona_adaptation: None,
         },
         true,
+        None,
     ).await;
     
     assert!(registry.is_node_available("node-1").await);
@@ -146,6 +149,7 @@ async fn test_is_node_available_when_overloaded() {
             persona_adaptation: None,
         },
         true,
+        None,
     ).await;
     
     // 更新节点，使其达到最大并发数
@@ -156,6 +160,7 @@ async fn test_is_node_available_when_overloaded() {
         60.0,
         None,
         4, // max_concurrent_jobs
+        None,
     ).await;
     
     assert!(!registry.is_node_available("node-2").await);
@@ -181,6 +186,7 @@ async fn test_update_node_heartbeat() {
             persona_adaptation: None,
         },
         true,
+        None,
     ).await;
     
     let success = registry.update_node_heartbeat(
@@ -190,6 +196,7 @@ async fn test_update_node_heartbeat() {
         65.0,
         None,
         2,
+        None,
     ).await;
     
     assert!(success);
@@ -209,6 +216,7 @@ async fn test_update_nonexistent_node_heartbeat() {
         60.0,
         None,
         0,
+        None,
     ).await;
     
     assert!(!success);
@@ -235,6 +243,7 @@ async fn test_select_node_with_features() {
             persona_adaptation: None,
         },
         true,
+        None,
     ).await;
     
     // 注册支持英文到中文的节点
@@ -254,6 +263,7 @@ async fn test_select_node_with_features() {
             persona_adaptation: None,
         },
         true,
+        None,
     ).await;
     
     // 选择中文到英文的节点
@@ -286,6 +296,7 @@ async fn test_select_node_with_required_features() {
             persona_adaptation: None,
         },
         true,
+        None,
     ).await;
     
     // 注册支持情感分析的节点
@@ -305,6 +316,7 @@ async fn test_select_node_with_required_features() {
             persona_adaptation: None,
         },
         true,
+        None,
     ).await;
     
     // 要求情感分析功能
@@ -351,6 +363,7 @@ async fn test_mark_node_offline() {
             persona_adaptation: None,
         },
         true,
+        None,
     ).await;
     
     assert!(registry.is_node_available("node-4").await);
@@ -381,6 +394,7 @@ async fn test_select_node_least_connections() {
             persona_adaptation: None,
         },
         true,
+        None,
     ).await;
     
     registry.register_node(
@@ -399,6 +413,7 @@ async fn test_select_node_least_connections() {
             persona_adaptation: None,
         },
         true,
+        None,
     ).await;
     
     registry.register_node(
@@ -417,20 +432,21 @@ async fn test_select_node_least_connections() {
             persona_adaptation: None,
         },
         true,
+        None,
     ).await;
     
     // 更新节点负载：heavy=3, medium=1, light=0
-    registry.update_node_heartbeat("node-heavy", 50.0, None, 60.0, None, 3).await;
-    registry.update_node_heartbeat("node-medium", 50.0, None, 60.0, None, 1).await;
-    registry.update_node_heartbeat("node-light", 50.0, None, 60.0, None, 0).await;
+    registry.update_node_heartbeat("node-heavy", 50.0, None, 60.0, None, 3, None).await;
+    registry.update_node_heartbeat("node-medium", 50.0, None, 60.0, None, 1, None).await;
+    registry.update_node_heartbeat("node-light", 50.0, None, 60.0, None, 0, None).await;
     
     // 应该选择负载最轻的节点（current_jobs=0）
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
     assert_eq!(selected, Some("node-light".to_string()));
     
     // 更新：heavy=2, medium=1, light=2
-    registry.update_node_heartbeat("node-heavy", 50.0, None, 60.0, None, 2).await;
-    registry.update_node_heartbeat("node-light", 50.0, None, 60.0, None, 2).await;
+    registry.update_node_heartbeat("node-heavy", 50.0, None, 60.0, None, 2, None).await;
+    registry.update_node_heartbeat("node-light", 50.0, None, 60.0, None, 2, None).await;
     
     // 应该选择负载最轻的节点（current_jobs=1）
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
