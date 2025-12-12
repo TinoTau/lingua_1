@@ -442,5 +442,13 @@ impl ASREngine {
 
         Ok(text)
     }
+    
+    /// 获取 Whisper 上下文（用于共享给 LanguageDetector）
+    /// 
+    /// # Returns
+    /// 返回 Whisper 上下文的 Arc 引用
+    pub fn get_whisper_ctx(&self) -> Arc<WhisperContext> {
+        self.ctx.clone()
+    }
 }
 

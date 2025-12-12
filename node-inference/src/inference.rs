@@ -86,9 +86,11 @@ impl InferenceService {
         let vad_engine = vad::VADEngine::new(models_dir.join("vad"))?;
 
         // 初始化语言检测器（复用 ASR 引擎的 Whisper 上下文）
-        // TODO: 从 ASR 引擎获取 Whisper 上下文（需要 ASR 引擎暴露 ctx）
-        // 当前先设为 None，待 ASR 引擎支持共享上下文后再启用
-        let language_detector: Option<language_detector::LanguageDetector> = None;
+        let whisper_ctx = asr_engine.get_whisper_ctx();
+        let language_detector = Some(language_detector::LanguageDetector::new(
+            whisper_ctx,
+            None,  // 使用默认配置
+        ));
 
         let module_manager = ModuleManager::new();
 

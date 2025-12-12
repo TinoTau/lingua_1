@@ -34,6 +34,19 @@
   - 完整推理流程（ASR → NMT → TTS）
   - 推理服务初始化
 
+- **stage1.3/**: 阶段一.3（节点推理服务）测试
+  - ASR、NMT、TTS、VAD 测试
+  - [测试报告](./stage1.3/TEST_REPORT.md)
+
+- **stage1.4/**: 阶段一.4（自动语种识别与双向模式）测试
+  - LanguageDetector 语言检测测试
+  - [测试报告](./stage1.4/TEST_REPORT.md)
+
+- **stage2.1.2/**: 阶段 2.1.2（ASR 字幕）测试
+  - ASR 流式推理测试
+  - 部分结果回调测试
+  - [测试报告](./stage2.1.2/TEST_REPORT.md)
+
 ## 运行测试
 
 ```bash
@@ -46,6 +59,10 @@ cargo test --test nmt_test
 cargo test --test tts_test
 cargo test --test vad_test
 cargo test --test integration_test
+
+# 运行阶段测试
+cargo test --test stage1_4  # 阶段 1.4（自动语种识别）
+cargo test --test stage2_1_2  # 阶段 2.1.2（ASR 字幕）
 
 # 运行特定测试
 cargo test test_vad_config_default
@@ -66,6 +83,8 @@ cargo test -- --ignored
 - ✅ TTS 引擎（语音合成、配置）
 - ✅ VAD 引擎（模型加载、语音检测、配置、状态管理）
 - ✅ 推理服务（完整流程）
+- ✅ LanguageDetector（语言检测、配置管理、错误处理）
+- ✅ ASR 流式推理（部分结果回调）
 
 ## 注意事项
 

@@ -252,12 +252,13 @@
   - ✅ job_result 消息格式对齐（完整的错误处理）
 - ✅ FeatureFlags 完整性（包含所有 6 个功能字段）
 
-### 13. 自动语种识别与双向模式（阶段一.4，框架已完成）
-- ✅ **LanguageDetector 模块框架**
+### 13. 自动语种识别与双向模式（阶段一.4，核心功能已完成）✅
+- ✅ **LanguageDetector 模块实现**
   - ✅ 创建 `node-inference/src/language_detector.rs` 模块
   - ✅ 定义 `LanguageDetector` 结构体和配置
   - ✅ 定义 `LanguageDetectionResult` 结果类型
-  - ✅ 框架占位实现（待完善实际检测逻辑）
+  - ✅ 实现实际的语言检测逻辑（使用 Whisper + 文本特征推断）✅
+  - ✅ 参考 `D:\Programs\github\lingua` 中的实现方式
 - ✅ **消息协议扩展**
   - ✅ `InferenceRequest` 扩展（添加 `mode`、`lang_a`、`lang_b`、`auto_langs`）
   - ✅ `SessionInit` 消息扩展（调度服务器）
@@ -269,12 +270,15 @@
   - ✅ `InferenceService` 集成语言检测逻辑
   - ✅ 支持 `src_lang="auto"` 自动检测流程
   - ✅ 实现双向模式翻译方向判断逻辑
+  - ✅ ASR 引擎共享 Whisper 上下文给 LanguageDetector ✅
   - ✅ 错误处理和回退机制
+- ✅ **单元测试** ✅
+  - ✅ 语言检测单元测试（7个测试，全部通过）✅
+  - ✅ [测试报告](./node-inference/tests/stage1.4/TEST_REPORT.md)
 - [ ] **待完善**
-  - [ ] 实现实际的语言检测逻辑（使用 Whisper 语言检测）
-  - [ ] ASR 引擎共享 Whisper 上下文给 LanguageDetector
   - [ ] 客户端 UI 支持新配置选项
-  - [ ] 单元测试和集成测试
+  - [ ] 双向模式集成测试
+  - [ ] 端到端测试
 - 详细设计请参考 [自动语种识别与双向模式设计](./AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md)
 
 ## 🔨 进行中 / 待完成

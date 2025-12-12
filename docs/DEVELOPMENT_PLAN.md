@@ -84,6 +84,36 @@
   - [x] 测试报告（`node-inference/tests/stage1.3/TEST_REPORT.md`）
   - [x] 本地模型测试说明（`node-inference/tests/LOCAL_MODEL_TESTING.md`）
 
+### 1.4 自动语种识别与双向模式 ✅（核心功能已完成）
+- [x] **LanguageDetector 模块实现** ✅
+  - [x] 创建 `language_detector.rs` 模块
+  - [x] 定义 `LanguageDetector` 结构体和配置
+  - [x] 定义 `LanguageDetectionResult` 结果类型
+  - [x] 实现实际的语言检测逻辑（使用 Whisper + 文本特征推断）✅
+  - [x] 参考 `D:\Programs\github\lingua` 中的实现方式
+- [x] **扩展消息协议** ✅
+  - [x] `InferenceRequest` 添加 `mode`、`lang_a`、`lang_b`、`auto_langs` 字段
+  - [x] `SessionInit` 消息扩展（调度服务器）
+  - [x] `Session` 结构扩展
+  - [x] `Job` 和 `JobAssign` 消息扩展
+  - [x] TypeScript 消息类型扩展
+  - [x] 新增 `LanguageDetected` 消息类型
+- [x] **推理流程修改** ✅
+  - [x] `InferenceService` 集成语言检测逻辑
+  - [x] 支持 `src_lang="auto"` 自动检测
+  - [x] 实现双向模式翻译方向判断
+  - [x] ASR 引擎共享 Whisper 上下文给 LanguageDetector ✅
+- [ ] **客户端 UI 支持**
+  - [ ] 添加模式选择界面（one_way / two_way_auto）
+  - [ ] 添加语言对配置界面
+  - [ ] 可选显示语言检测结果
+- [x] **单元测试** ✅
+  - [x] 语言检测单元测试（7个测试，全部通过）✅
+  - [x] [测试报告](./node-inference/tests/stage1.4/TEST_REPORT.md)
+  - [ ] 双向模式集成测试
+  - [ ] 端到端测试
+- 详细设计请参考 [自动语种识别与双向模式设计](./AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md)
+
 ## 阶段二：客户端开发（3-4 周）
 
 ### 2.1 Web 客户端（iOS 开发设备替代方案）✅（阶段 2.1 核心功能已完成）
@@ -298,34 +328,6 @@
 - [ ] 模块化功能测试
 - [ ] API Gateway 生产环境优化
 - [ ] 监控和告警系统
-
-### 1.4 自动语种识别与双向模式 ✅（框架已完成）
-- [x] **LanguageDetector 模块框架**
-  - [x] 创建 `language_detector.rs` 模块
-  - [x] 定义 `LanguageDetector` 结构体和配置
-  - [x] 定义 `LanguageDetectionResult` 结果类型
-  - [ ] 实现实际的语言检测逻辑（使用 Whisper 语言检测）
-- [x] **扩展消息协议**
-  - [x] `InferenceRequest` 添加 `mode`、`lang_a`、`lang_b`、`auto_langs` 字段
-  - [x] `SessionInit` 消息扩展（调度服务器）
-  - [x] `Session` 结构扩展
-  - [x] `Job` 和 `JobAssign` 消息扩展
-  - [x] TypeScript 消息类型扩展
-  - [x] 新增 `LanguageDetected` 消息类型
-- [x] **推理流程修改**
-  - [x] `InferenceService` 集成语言检测逻辑
-  - [x] 支持 `src_lang="auto"` 自动检测
-  - [x] 实现双向模式翻译方向判断
-  - [ ] ASR 引擎共享 Whisper 上下文给 LanguageDetector
-- [ ] **客户端 UI 支持**
-  - [ ] 添加模式选择界面（one_way / two_way_auto）
-  - [ ] 添加语言对配置界面
-  - [ ] 可选显示语言检测结果
-- [ ] **测试和验证**
-  - [ ] 语言检测单元测试
-  - [ ] 双向模式集成测试
-  - [ ] 端到端测试
-- 详细设计请参考 [自动语种识别与双向模式设计](./AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md)
 
 ## 相关优化方案
 
