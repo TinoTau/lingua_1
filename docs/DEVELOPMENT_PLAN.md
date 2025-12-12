@@ -84,14 +84,14 @@
 
 ## 阶段二：客户端开发（3-4 周）
 
-### 2.1 Web 客户端（iOS 开发设备替代方案）✅（阶段 1 核心功能已完成）
+### 2.1 Web 客户端（iOS 开发设备替代方案）✅（阶段 2.1 核心功能已完成）
 
 **背景**: 由于没有 iOS 开发设备，开发了 Web 客户端作为替代方案，采用半双工实时语音翻译设计。
 
 - [x] **项目框架搭建**
   - [x] TypeScript + Vite 项目结构
   - [x] 模块化设计（state_machine, recorder, websocket_client, tts_player, asr_subtitle）
-- [x] **阶段 1：核心功能实现** ✅
+- [x] **阶段 2.1：核心功能实现** ✅
   - [x] 半双工状态机（4 个状态：INPUT_READY → INPUT_RECORDING → WAITING_RESULT → PLAYING_TTS）
   - [x] Send 按钮和静音自动结束（1000ms 阈值 + 250ms 尾部缓冲）
   - [x] 播放期间关麦逻辑（彻底关闭浏览器麦克风）
