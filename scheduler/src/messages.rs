@@ -117,6 +117,7 @@ pub enum ErrorCode {
     TtsTimeout,
     ModelVerifyFailed,
     ModelCorrupted,
+    NoGpuAvailable,
 }
 
 impl ToString for ErrorCode {
@@ -136,8 +137,9 @@ impl ToString for ErrorCode {
             ErrorCode::WsDisconnected => "WS_DISCONNECTED".to_string(),
             ErrorCode::NmtTimeout => "NMT_TIMEOUT".to_string(),
             ErrorCode::TtsTimeout => "TTS_TIMEOUT".to_string(),
-            ErrorCode::ModelVerifyFailed => "MODEL_VERIFY_FAILED".to_string(),
-            ErrorCode::ModelCorrupted => "MODEL_CORRUPTED".to_string(),
+        ErrorCode::ModelVerifyFailed => "MODEL_VERIFY_FAILED".to_string(),
+        ErrorCode::ModelCorrupted => "MODEL_CORRUPTED".to_string(),
+        ErrorCode::NoGpuAvailable => "NO_GPU_AVAILABLE".to_string(),
         }
     }
 }
@@ -152,6 +154,7 @@ pub fn get_error_hint(code: &ErrorCode) -> &'static str {
         ErrorCode::TtsTimeout => "语音合成超时，请稍后重试。",
         ErrorCode::ModelVerifyFailed => "模型校验失败，请重新下载模型。",
         ErrorCode::ModelCorrupted => "模型文件损坏，请重新下载模型。",
+        ErrorCode::NoGpuAvailable => "节点没有 GPU，无法注册为算力提供方。",
         _ => "发生错误，请稍后重试。",
     }
 }
@@ -355,6 +358,13 @@ pub enum NodeMessage {
     NodeRegisterAck {
         node_id: String,
         message: String,
+    },
+    #[serde(rename = "error")]
+    Error {
+        code: String,
+        message: String,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        details: Option<serde_json::Value>,
     },
     #[serde(rename = "node_heartbeat")]
     NodeHeartbeat {

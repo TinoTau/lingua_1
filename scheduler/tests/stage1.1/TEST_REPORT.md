@@ -11,11 +11,11 @@
 
 ### 总体统计
 
-- **总测试数**: 46
-- **通过**: 46 ✅
+- **总测试数**: 54
+- **通过**: 54 ✅
 - **失败**: 0
 - **忽略**: 0
-- **测试执行时间**: ~1.01 秒
+- **测试执行时间**: ~1.02 秒
 
 ### 各模块测试统计
 
@@ -23,7 +23,7 @@
 |------|--------|------|------|------|
 | 会话管理 (Session) | 7 | 7 | 0 | ✅ |
 | 任务分发 (Dispatcher) | 6 | 6 | 0 | ✅ |
-| 节点注册表 (Node Registry) | 10 | 10 | 0 | ✅ |
+| 节点注册表 (Node Registry) | 17 | 17 | 0 | ✅ |
 | 配对服务 (Pairing) | 6 | 6 | 0 | ✅ |
 | 连接管理 (Connection Manager) | 8 | 8 | 0 | ✅ |
 | 结果队列 (Result Queue) | 9 | 9 | 0 | ✅ |
@@ -74,6 +74,7 @@
 | 测试名称 | 描述 | 状态 |
 |---------|------|------|
 | `test_register_node` | 测试注册节点，验证节点ID、硬件信息、模型列表等 | ✅ |
+| `test_register_node_no_gpu` | 测试注册没有 GPU 的节点应返回错误 | ✅ |
 | `test_register_node_with_id` | 测试使用指定ID注册节点 | ✅ |
 | `test_is_node_available` | 测试检查节点可用性 | ✅ |
 | `test_is_node_available_when_overloaded` | 测试节点过载时不可用 | ✅ |
@@ -83,13 +84,23 @@
 | `test_select_node_with_required_features` | 测试基于必需功能选择节点 | ✅ |
 | `test_select_node_no_match` | 测试无匹配节点时返回 None | ✅ |
 | `test_mark_node_offline` | 测试标记节点为离线 | ✅ |
+| `test_select_node_least_connections` | 测试最少连接数负载均衡策略 | ✅ |
+| `test_select_node_resource_threshold_cpu` | 测试 CPU 使用率阈值过滤 | ✅ |
+| `test_select_node_resource_threshold_gpu` | 测试 GPU 使用率阈值过滤 | ✅ |
+| `test_select_node_resource_threshold_memory` | 测试内存使用率阈值过滤 | ✅ |
+| `test_select_node_resource_threshold_all_resources` | 测试所有资源使用率阈值过滤 | ✅ |
+| `test_select_node_resource_threshold_no_available` | 测试所有节点资源超阈值时返回 None | ✅ |
+| `test_select_node_resource_threshold_custom_threshold` | 测试自定义资源使用率阈值 | ✅ |
 
 **覆盖功能**:
 - ✅ 节点注册（自动生成ID、指定ID）
+- ✅ **GPU 要求强制检查**（无 GPU 的节点无法注册）
 - ✅ 节点可用性检查（在线状态、负载检查）
 - ✅ 节点心跳更新（资源使用率、当前任务数）
 - ✅ 节点选择（语言对匹配、功能匹配）
 - ✅ 节点离线处理
+- ✅ 最少连接数负载均衡策略
+- ✅ 资源使用率阈值过滤（CPU/GPU/内存）
 
 ### 4. 配对服务测试 (pairing_test.rs)
 
@@ -217,5 +228,5 @@
 
 **报告生成时间**: 2025-12-12 00:52:26  
 **测试执行命令**: `cargo test --test stage1_1`  
-**测试结果**: ✅ 全部通过 (46/46)
+**测试结果**: ✅ 全部通过 (54/54)
 

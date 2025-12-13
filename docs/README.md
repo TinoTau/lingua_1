@@ -2,6 +2,22 @@
 
 本目录包含项目的长期维护文档，按模块分类组织。
 
+## 👤 用户功能说明
+
+**从用户角度来看，这个项目能做什么？**
+
+👉 **[用户功能说明](./USER_CAPABILITIES.md)** - 详细的功能介绍和使用说明
+
+**核心功能**:
+- ✅ 实时语音翻译（多语言支持）
+- ✅ 实时语音识别字幕
+- ✅ 自动语种识别
+- ✅ 上下文感知翻译（提高翻译质量）
+- ✅ 半双工交互（避免回声问题）
+- ✅ 功能模块选择（情感检测、音色识别等）
+
+---
+
 ## 📁 文档目录结构
 
 ```
@@ -63,6 +79,7 @@ docs/
 ### 架构与设计
 
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - 系统架构详细说明
+- [ARCHITECTURE_ANALYSIS.md](./ARCHITECTURE_ANALYSIS.md) - ⭐ **架构分析与性能瓶颈评估**（架构师视角）
 - [PROTOCOLS.md](./PROTOCOLS.md) - WebSocket 消息协议规范（包含实现状态）
 - [GETTING_STARTED.md](./GETTING_STARTED.md) - 快速开始指南
 

@@ -13,4 +13,7 @@ heartbeat_interval_seconds = 15
 
 [scheduler.load_balancer]
 strategy = "least_connections"
+# 资源使用率阈值（%），超过此值的节点将被跳过
+# 根据设计理念：调度服务器只负责跳过高负载节点，具体计算压力交给节点端
+resource_threshold = 25.0
 

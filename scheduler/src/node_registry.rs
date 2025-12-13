@@ -29,15 +29,34 @@ pub struct Node {
 #[derive(Clone)]
 pub struct NodeRegistry {
     nodes: Arc<RwLock<HashMap<String, Node>>>,
+    /// 资源使用率阈值（超过此值的节点将被跳过）
+    resource_threshold: f32,
 }
 
 impl NodeRegistry {
     pub fn new() -> Self {
         Self {
             nodes: Arc::new(RwLock::new(HashMap::new())),
+            resource_threshold: 25.0, // 默认 25%
         }
     }
 
+    pub fn with_resource_threshold(threshold: f32) -> Self {
+        Self {
+            nodes: Arc::new(RwLock::new(HashMap::new())),
+            resource_threshold: threshold,
+        }
+    }
+
+    /// 注册节点
+    /// 
+    /// # 要求
+    /// - 节点必须有 GPU（hardware.gpus 不能为空）
+    /// - GPU 是保证翻译效率的必要条件，没有 GPU 的节点无法注册为算力提供方
+    /// 
+    /// # 返回
+    /// - `Ok(Node)` - 注册成功
+    /// - `Err(String)` - 注册失败（没有 GPU）
     pub async fn register_node(
         &self,
         node_id: Option<String>,
@@ -49,7 +68,12 @@ impl NodeRegistry {
         features_supported: FeatureFlags,
         accept_public_jobs: bool,
         capability_state: Option<CapabilityState>,
-    ) -> Node {
+    ) -> Result<Node, String> {
+        // 检查节点是否有 GPU（必需）
+        if hardware.gpus.is_none() || hardware.gpus.as_ref().unwrap().is_empty() {
+            return Err("节点必须有 GPU 才能注册为算力提供方".to_string());
+        }
+        
         let node_id = node_id.unwrap_or_else(|| {
             format!("node-{}", Uuid::new_v4().to_string()[..8].to_uppercase())
         });
@@ -69,7 +93,7 @@ impl NodeRegistry {
             hardware,
             online: true,
             cpu_usage: 0.0,
-            gpu_usage: None,
+            gpu_usage: Some(0.0), // 初始化为 0.0，因为节点必须有 GPU
             memory_usage: 0.0,
             installed_models,
             features_supported,
@@ -82,9 +106,13 @@ impl NodeRegistry {
 
         let mut nodes = self.nodes.write().await;
         nodes.insert(node_id.clone(), node.clone());
-        node
+        Ok(node)
     }
 
+    /// 更新节点心跳
+    /// 
+    /// # 要求
+    /// - GPU 使用率必须提供（不能为 None），因为所有节点都必须有 GPU
     pub async fn update_node_heartbeat(
         &self,
         node_id: &str,
@@ -97,9 +125,12 @@ impl NodeRegistry {
     ) -> bool {
         let mut nodes = self.nodes.write().await;
         if let Some(node) = nodes.get_mut(node_id) {
+            // GPU 使用率必须提供（所有节点都必须有 GPU）
+            let gpu_usage = gpu_usage.unwrap_or(0.0);
+            
             node.online = true;
             node.cpu_usage = cpu_usage;
-            node.gpu_usage = gpu_usage;
+            node.gpu_usage = Some(gpu_usage);
             node.memory_usage = memory_usage;
             if let Some(models) = installed_models {
                 node.installed_models = models;
@@ -211,6 +242,7 @@ impl NodeRegistry {
                     && (accept_public || !node.accept_public_jobs) // 如果 accept_public=false，只选择不接受公共任务的节点
                     && self.node_has_required_models(node, src_lang, tgt_lang)
                     && self.node_supports_features(node, required_features)
+                    && self.is_node_resource_available(node) // 检查资源使用率是否低于阈值
             })
             .collect();
 
@@ -313,6 +345,7 @@ impl NodeRegistry {
                     && (accept_public || !node.accept_public_jobs)
                     && self.node_has_required_models(node, src_lang, tgt_lang)
                     && self.node_has_models_ready(node, required_model_ids)
+                    && self.is_node_resource_available(node) // 检查资源使用率是否低于阈值
             })
             .collect();
 
@@ -323,6 +356,37 @@ impl NodeRegistry {
         // 负载均衡：按 current_jobs 排序，选择任务数最少的节点
         available_nodes.sort_by_key(|node| node.current_jobs);
         Some(available_nodes[0].node_id.clone())
+    }
+
+    /// 检查节点资源使用率是否可用（低于阈值）
+    /// 
+    /// 根据设计理念：调度服务器只负责跳过高负载节点，具体计算压力交给节点端
+    /// 节点端通过心跳传递资源使用率，调度服务器只需简单过滤即可
+    /// 
+    /// # 要求
+    /// - GPU 使用率必须检查（所有节点都必须有 GPU）
+    fn is_node_resource_available(&self, node: &Node) -> bool {
+        // 检查 CPU 使用率
+        if node.cpu_usage > self.resource_threshold {
+            return false;
+        }
+        
+        // 检查 GPU 使用率（必需，所有节点都必须有 GPU）
+        if let Some(gpu_usage) = node.gpu_usage {
+            if gpu_usage > self.resource_threshold {
+                return false;
+            }
+        } else {
+            // 如果没有 GPU 使用率，节点不可用（不应该发生，因为注册时已检查）
+            return false;
+        }
+        
+        // 检查内存使用率
+        if node.memory_usage > self.resource_threshold {
+            return false;
+        }
+        
+        true
     }
 }
 

@@ -1,7 +1,7 @@
 # 任务分发算法优化与功能感知节点选择方案
 
-> **最后更新**: 2025-12-12  
-> **当前状态**: 基础功能已完成 ✅（功能检查完善 + 最少连接数负载均衡）
+> **最后更新**: 2025-01-XX  
+> **当前状态**: 基础功能已完成 ✅（功能检查完善 + 最少连接数负载均衡 + 资源使用率阈值过滤）
 
 ## 实现状态
 
@@ -22,15 +22,27 @@
 - ✅ 添加了负载均衡策略配置入口（`[scheduler.load_balancer]`）
 - ✅ 添加了单元测试验证负载均衡功能
 
+#### 3. 资源使用率阈值过滤 ✅
+- ✅ 实现了资源使用率阈值过滤机制
+- ✅ 节点端通过心跳传递资源使用率（CPU/GPU/内存）
+- ✅ 调度服务器配置资源使用率阈值（默认 25%）
+- ✅ 分发任务时自动跳过高负载节点（CPU/GPU/内存任一超过阈值）
+- ✅ **GPU 要求强制检查**（无 GPU 的节点无法注册为算力提供方）
+- ✅ 添加了资源使用率阈值过滤单元测试（6个测试，全部通过）
+- ✅ 添加了 GPU 要求检查单元测试（1个测试，全部通过）
+
 **实现位置**: 
 - `scheduler/src/node_registry.rs::select_node_with_features` - 最少连接数策略
 - `scheduler/src/node_registry.rs::node_supports_features` - 完整功能检查
-- `scheduler/src/config.rs` - 负载均衡配置结构
+- `scheduler/src/node_registry.rs::is_node_resource_available` - 资源使用率阈值过滤
+- `scheduler/src/config.rs` - 负载均衡配置结构（包含 resource_threshold）
 - `scheduler/config.toml` - 配置文件
 
 **测试验证**: 
 - ✅ 新增 `test_select_node_least_connections` 测试
-- ✅ 所有 47 个单元测试通过
+- ✅ 新增资源使用率阈值过滤测试（6个测试）
+- ✅ 新增 GPU 要求检查测试（1个测试）
+- ✅ 所有 54 个单元测试通过
 
 ### 🔨 待完成
 

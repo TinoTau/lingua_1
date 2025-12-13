@@ -75,7 +75,8 @@ async fn main() -> Result<()> {
 
     // 初始化各个模块
     let session_manager = SessionManager::new();
-    let node_registry = std::sync::Arc::new(NodeRegistry::new());
+    let resource_threshold = config.scheduler.load_balancer.resource_threshold;
+    let node_registry = std::sync::Arc::new(NodeRegistry::with_resource_threshold(resource_threshold));
     let dispatcher = JobDispatcher::new(node_registry.clone());
     let pairing_service = PairingService::new();
     let model_hub = ModelHub::new(&config.model_hub)?;

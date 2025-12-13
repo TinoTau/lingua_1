@@ -33,6 +33,13 @@ pub struct SchedulerConfig {
 pub struct LoadBalancerConfig {
     #[serde(default = "default_load_balancer_strategy")]
     pub strategy: String,
+    /// 资源使用率阈值（超过此值的节点将被跳过）
+    #[serde(default = "default_resource_threshold")]
+    pub resource_threshold: f32,
+}
+
+fn default_resource_threshold() -> f32 {
+    25.0 // 默认 25%
 }
 
 fn default_load_balancer_strategy() -> String {
@@ -43,6 +50,7 @@ impl Default for LoadBalancerConfig {
     fn default() -> Self {
         Self {
             strategy: default_load_balancer_strategy(),
+            resource_threshold: default_resource_threshold(),
         }
     }
 }
@@ -79,6 +87,7 @@ impl Default for Config {
                 heartbeat_interval_seconds: 15,
                 load_balancer: LoadBalancerConfig {
                     strategy: "least_connections".to_string(),
+                    resource_threshold: default_resource_threshold(),
                 },
             },
         }

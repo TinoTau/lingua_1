@@ -2,7 +2,7 @@
 
 use lingua_scheduler::dispatcher::JobDispatcher;
 use lingua_scheduler::node_registry::NodeRegistry;
-use lingua_scheduler::messages::{FeatureFlags, PipelineConfig, HardwareInfo, InstalledModel};
+use lingua_scheduler::messages::{FeatureFlags, PipelineConfig, HardwareInfo, GpuInfo, InstalledModel};
 use std::sync::Arc;
 
 fn create_test_node_registry() -> Arc<NodeRegistry> {
@@ -13,7 +13,12 @@ fn create_test_hardware() -> HardwareInfo {
     HardwareInfo {
         cpu_cores: 8,
         memory_gb: 16,
-        gpus: None,
+        gpus: Some(vec![
+            GpuInfo {
+                name: "Test GPU".to_string(),
+                memory_gb: 8,
+            }
+        ]),
     }
 }
 
@@ -72,7 +77,7 @@ async fn test_create_job() {
         },
         true,
         None,
-    ).await;
+    ).await.unwrap();
     
     let job = dispatcher.create_job(
         "session-1".to_string(),
@@ -133,7 +138,7 @@ async fn test_create_job_with_preferred_node() {
         },
         true,
         None,
-    ).await;
+    ).await.unwrap();
     
     let job = dispatcher.create_job(
         "session-2".to_string(),
@@ -222,7 +227,7 @@ async fn test_get_job() {
         },
         true,
         None,
-    ).await;
+    ).await.unwrap();
     
     let job = dispatcher.create_job(
         "session-4".to_string(),
@@ -287,7 +292,7 @@ async fn test_update_job_status() {
         },
         true,
         None,
-    ).await;
+    ).await.unwrap();
     
     let job = dispatcher.create_job(
         "session-5".to_string(),

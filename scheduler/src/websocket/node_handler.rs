@@ -90,8 +90,8 @@ async fn handle_node_message(
             accept_public_jobs,
             capability_state,
         } => {
-            // 注册节点
-            let node = state.node_registry.register_node(
+            // 注册节点（要求必须有 GPU）
+            match state.node_registry.register_node(
                 provided_node_id,
                 format!("Node-{}", uuid::Uuid::new_v4().to_string()[..8].to_uppercase()),
                 version,
@@ -101,21 +101,34 @@ async fn handle_node_message(
                 features_supported,
                 accept_public_jobs,
                 capability_state,
-            ).await;
-            
-            *node_id = Some(node.node_id.clone());
-            
-            // 注册连接
-            state.node_connections.register(node.node_id.clone(), tx.clone()).await;
-            
-            // 发送确认消息
-            let ack = NodeMessage::NodeRegisterAck {
-                node_id: node.node_id.clone(),
-                message: "registered".to_string(),
-            };
-            
-            send_node_message(tx, &ack).await?;
-            info!("节点 {} 已注册", node.node_id);
+            ).await {
+                Ok(node) => {
+                    *node_id = Some(node.node_id.clone());
+                    
+                    // 注册连接
+                    state.node_connections.register(node.node_id.clone(), tx.clone()).await;
+                    
+                    // 发送确认消息
+                    let ack = NodeMessage::NodeRegisterAck {
+                        node_id: node.node_id.clone(),
+                        message: "registered".to_string(),
+                    };
+                    
+                    send_node_message(tx, &ack).await?;
+                    info!("节点 {} 已注册", node.node_id);
+                }
+                Err(err) => {
+                    // 注册失败（没有 GPU），发送错误消息
+                    let error_msg = NodeMessage::Error {
+                        code: crate::messages::ErrorCode::NoGpuAvailable.to_string(),
+                        message: err.clone(),
+                        details: None,
+                    };
+                    send_node_message(tx, &error_msg).await?;
+                    warn!("节点注册失败（没有 GPU）: {}", err);
+                    return Ok(()); // 返回，不再继续处理
+                }
+            }
         }
         
         NodeMessage::NodeHeartbeat {

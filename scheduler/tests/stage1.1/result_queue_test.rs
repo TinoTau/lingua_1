@@ -13,7 +13,9 @@ fn create_test_result(session_id: &str, utterance_index: u64, text: &str) -> Ses
         tts_audio: "base64audio".to_string(),
         tts_format: "pcm16".to_string(),
         extra: None,
-        trace_id: format!("trace-{}", utterance_index), // Added: trace_id
+        trace_id: format!("trace-{}", utterance_index),
+        group_id: None, // Added for Utterance Group
+        part_index: None, // Added for Utterance Group
     }
 }
 
