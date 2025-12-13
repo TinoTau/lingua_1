@@ -136,6 +136,7 @@ fn test_node_register_message_format() {
     let message = NodeMessage::NodeRegister {
         node_id: None,
         version: "1.0.0".to_string(),
+        capability_schema_version: None,
         platform: "windows".to_string(),
         hardware: HardwareInfo {
             cpu_cores: 8,
@@ -159,6 +160,7 @@ fn test_node_register_message_format() {
             speaker_identification: None,
             persona_adaptation: None,
         },
+        advanced_features: None,
         accept_public_jobs: true,
         capability_state: None,
     };
@@ -168,10 +170,12 @@ fn test_node_register_message_format() {
         NodeMessage::NodeRegister {
             node_id,
             version,
+            capability_schema_version: _,
             platform,
             hardware,
             installed_models,
             features_supported,
+            advanced_features: _,
             accept_public_jobs,
             capability_state: _,
         } => {

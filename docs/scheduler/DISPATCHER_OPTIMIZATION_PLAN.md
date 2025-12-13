@@ -32,9 +32,9 @@
 - ✅ 添加了 GPU 要求检查单元测试（1个测试，全部通过）
 
 **实现位置**: 
-- `scheduler/src/node_registry.rs::select_node_with_features` - 最少连接数策略
-- `scheduler/src/node_registry.rs::node_supports_features` - 完整功能检查
-- `scheduler/src/node_registry.rs::is_node_resource_available` - 资源使用率阈值过滤
+- `scheduler/src/node_registry/mod.rs::select_node_with_features` - 最少连接数策略
+- `scheduler/src/node_registry/validation.rs::node_supports_features` - 完整功能检查
+- `scheduler/src/node_registry/validation.rs::is_node_resource_available` - 资源使用率阈值过滤
 - `scheduler/src/config.rs` - 负载均衡配置结构（包含 resource_threshold）
 - `scheduler/config.toml` - 配置文件
 
@@ -186,7 +186,7 @@ match_model_version = false  # 暂时关闭，待模型版本管理完善后启�
 
 ### 阶段 2：节点评分系统
 
-**文件**: `scheduler/src/node_registry.rs`
+**文件**: `scheduler/src/node_registry/mod.rs` (或相关子模块)
 
 **新增结构**:
 ```rust
@@ -274,7 +274,7 @@ impl NodeRegistry {
 
 ### 阶段 3：完善功能检查
 
-**文件**: `scheduler/src/node_registry.rs`
+**文件**: `scheduler/src/node_registry/mod.rs` (或相关子模块)
 
 **完善 `node_supports_features`**:
 ```rust
@@ -317,7 +317,7 @@ fn node_supports_features(
 
 ### 阶段 4：优化节点选择逻辑
 
-**文件**: `scheduler/src/node_registry.rs`
+**文件**: `scheduler/src/node_registry/mod.rs` (或相关子模块)
 
 **优化 `select_node_with_features`**:
 ```rust
@@ -370,7 +370,7 @@ pub async fn select_node_with_features(
 
 ### 阶段 5：方言和模型匹配
 
-**文件**: `scheduler/src/node_registry.rs`
+**文件**: `scheduler/src/node_registry/mod.rs` (或相关子模块)
 
 **增强 `node_has_required_models`**:
 ```rust

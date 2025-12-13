@@ -14,7 +14,7 @@
 
 #### 完成内容
 
-1. **Rust 消息定义扩展** (`scheduler/src/messages.rs`)
+1. **Rust 消息定义扩展** (`scheduler/src/messages/` - 已拆分为多个模块)
    - ✅ 在 `SessionInit` 中添加 `trace_id: Option<String>`
    - ✅ 在 `SessionInitAck` 中添加 `trace_id: String`
    - ✅ 在 `Utterance` 中添加 `trace_id: Option<String>`

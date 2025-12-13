@@ -112,6 +112,10 @@ async fn test_select_node_with_models_ready() {
         Some(cap_state_2),
     ).await;
     
+    // Set nodes to ready status
+    registry.set_node_status("node-1", NodeStatus::Ready).await;
+    registry.set_node_status("node-2", NodeStatus::Ready).await;
+    
     // 选择需要 emotion-xlm-r 模型的节点
     let required_models = vec!["emotion-xlm-r".to_string()];
     let selected = registry.select_node_with_models("zh", "en", &required_models, true).await;
@@ -190,6 +194,9 @@ async fn test_select_node_with_module_expansion() {
         Some(cap_state),
     ).await;
     
+    // Set node to ready status
+    registry.set_node_status("node-emotion", NodeStatus::Ready).await;
+    
     // 创建需要 emotion_detection 功能的 job
     let features = Some(FeatureFlags {
         emotion_detection: Some(true),
@@ -223,6 +230,7 @@ async fn test_select_node_with_module_expansion() {
         None,
         None,
         "trace-1".to_string(),
+        None,
     ).await;
     
     // 应该分配了节点（节点有 emotion-xlm-r 模型且状态为 ready）
@@ -294,6 +302,7 @@ async fn test_select_node_with_module_expansion_no_model() {
         None,
         None,
         "trace-2".to_string(),
+        None,
     ).await;
     
     // 应该没有分配节点（节点没有所需的模型）
@@ -329,6 +338,9 @@ async fn test_update_node_heartbeat_capability_state() {
         true,
         Some(initial_cap_state),
     ).await;
+    
+    // Set node to ready status
+    registry.set_node_status("node-1", NodeStatus::Ready).await;
     
     // 检查初始状态：通过尝试选择节点来验证（模型未就绪，应该选不到）
     let required_models = vec!["emotion-xlm-r".to_string()];
@@ -418,6 +430,10 @@ async fn test_select_node_with_multiple_required_models() {
         true,
         Some(cap_state_2),
     ).await;
+    
+    // Set nodes to ready status
+    registry.set_node_status("node-1", NodeStatus::Ready).await;
+    registry.set_node_status("node-2", NodeStatus::Ready).await;
     
     // 选择需要 emotion-xlm-r 和 speaker-id-ecapa 模型的节点
     let required_models = vec![

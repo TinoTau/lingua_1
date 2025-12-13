@@ -3,6 +3,8 @@
 
 pub mod session_handler;
 pub mod node_handler;
+pub mod job_creator;
+pub mod session_message_handler;
 
 pub use session_handler::handle_session;
 pub use node_handler::handle_node;

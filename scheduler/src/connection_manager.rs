@@ -42,6 +42,12 @@ impl SessionConnectionManager {
             false
         }
     }
+    
+    /// 获取会话的发送器（用于发送消息）
+    pub async fn get(&self, session_id: &str) -> Option<mpsc::UnboundedSender<Message>> {
+        let connections = self.connections.read().await;
+        connections.get(session_id).cloned()
+    }
 }
 
 // 节点连接管理器

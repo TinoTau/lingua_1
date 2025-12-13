@@ -20,13 +20,25 @@
 **主要模块**:
 - `session.rs`: 会话管理
 - `dispatcher.rs`: 任务分发
-- `node_registry.rs`: 节点注册表（支持功能感知选择和负载均衡）
+- `node_registry/`: 节点注册表模块（支持功能感知选择和负载均衡）
+  - `mod.rs`: 主模块和 NodeRegistry 实现
+  - `types.rs`: Node 结构定义
+  - `validation.rs`: 节点验证函数
 - `pairing.rs`: 配对服务
 - `model_hub.rs`: 模型库接口
 - `websocket/`: WebSocket 消息处理模块
   - `mod.rs`: 模块声明和公共辅助函数
-  - `session_handler.rs`: 会话端 WebSocket 处理
+  - `session_handler.rs`: 会话端 WebSocket 处理入口
+  - `session_message_handler.rs`: 会话消息处理逻辑
+  - `job_creator.rs`: 翻译任务创建逻辑
   - `node_handler.rs`: 节点端 WebSocket 处理
+- `messages/`: 消息协议定义模块
+  - `mod.rs`: 模块声明和重新导出
+  - `session.rs`: 会话消息类型
+  - `node.rs`: 节点消息类型
+  - `common.rs`: 公共类型（FeatureFlags, NodeStatus 等）
+  - `error.rs`: 错误码定义
+  - `ui_event.rs`: UI 事件类型
 - `connection_manager.rs`: WebSocket 连接管理
 - `result_queue.rs`: 结果队列管理
 - `app_state.rs`: 应用状态管理

@@ -1,4 +1,5 @@
-import { StateMachine, SessionState } from './state_machine';
+import { StateMachine } from './state_machine';
+import { SessionState } from './types';
 import { Config, DEFAULT_CONFIG } from './types';
 
 export type AudioFrameCallback = (audioData: Float32Array) => void;

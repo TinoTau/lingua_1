@@ -1,4 +1,4 @@
-import { StateMachine, SessionState } from './state_machine';
+import { StateMachine } from './state_machine';
 
 export type PlaybackFinishedCallback = () => void;
 

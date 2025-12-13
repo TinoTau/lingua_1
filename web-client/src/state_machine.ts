@@ -9,6 +9,7 @@ export type StateChangeCallback = (newState: SessionState, oldState: SessionStat
 export class StateMachine {
   private state: SessionState = SessionState.INPUT_READY;
   private callbacks: StateChangeCallback[] = [];
+  private isSessionActive: boolean = false; // 会话是否进行中
 
   constructor() {
     console.log('StateMachine initialized, initial state:', this.state);
@@ -89,17 +90,51 @@ export class StateMachine {
 
   /**
    * 播放完成，恢复输入模式
+   * 如果会话进行中，自动回到 INPUT_RECORDING（继续监听）
+   * 如果会话未开始，回到 INPUT_READY（需要再次点击开始）
    */
   finishPlaying(): void {
     if (this.state === SessionState.PLAYING_TTS) {
-      this.transitionTo(SessionState.INPUT_READY);
+      if (this.isSessionActive) {
+        // 会话进行中：自动回到 INPUT_RECORDING（继续监听）
+        this.transitionTo(SessionState.INPUT_RECORDING);
+      } else {
+        // 会话未开始：回到 INPUT_READY（需要再次点击开始）
+        this.transitionTo(SessionState.INPUT_READY);
+      }
     }
+  }
+
+  /**
+   * 开始整个会话（持续输入+输出模式）
+   */
+  startSession(): void {
+    if (this.state === SessionState.INPUT_READY) {
+      this.isSessionActive = true;
+      this.transitionTo(SessionState.INPUT_RECORDING);
+    }
+  }
+
+  /**
+   * 结束整个会话
+   */
+  endSession(): void {
+    this.isSessionActive = false;
+    this.transitionTo(SessionState.INPUT_READY);
+  }
+
+  /**
+   * 检查会话是否进行中
+   */
+  getIsSessionActive(): boolean {
+    return this.isSessionActive;
   }
 
   /**
    * 重置到初始状态
    */
   reset(): void {
+    this.isSessionActive = false;
     this.transitionTo(SessionState.INPUT_READY);
   }
 }

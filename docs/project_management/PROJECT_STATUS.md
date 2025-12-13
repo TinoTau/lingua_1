@@ -17,18 +17,25 @@
 
 | 模块 | 测试数量 | 通过 | 失败 | 通过率 |
 |------|---------|------|------|--------|
-| 调度服务器（阶段 1.1） | 63 | ✅ 60 | 3 | 95%* |
+| 调度服务器（阶段 1.1） | 63 | ✅ 63 | 0 | 100% |
 | 消息格式对齐（阶段 1.2） | 7 | ✅ 7 | 0 | 100% |
 | 节点推理服务（阶段 1.3） | 20+ | ✅ 10+ | 0 | 100%* |
 | 自动语种识别（阶段 1.4） | 7 | ✅ 7 | 0 | 100% |
 | ASR 字幕（阶段 2.1.2） | 12 | ✅ 12 | 0 | 100% |
 | Web 客户端（阶段 2.1） | 22 | ✅ 22 | 0 | 100% |
 | Web 客户端功能选择（阶段 3.2） | 17 | ✅ 17 | 0 | 100% |
+| Web 客户端会话模式（阶段 2.1.4） | 20 | ✅ 20 | 0 | 100% |
 | 模块化功能（阶段 3.2） | 45 | ✅ 45 | 0 | 100% |
+| 节点选择（阶段 3.2） | 6 | ✅ 6 | 0 | 100% |
 | 模型管理（阶段 3.1） | 48 | ✅ 48 | 0 | 100%* |
 | 日志系统（阶段 4.1） | - | ✅ - | 0 | 100% |
 | Utterance Group（阶段 2.1.3） | 14 | ✅ 14 | 0 | 100% |
-| **总计** | **250+** | **✅ 240+** | **3** | **96%** |
+| Web 客户端双向模式（面对面模式） | 14 | ✅ 14 | 0 | 100% |
+| Web 客户端会议室模式（原声传递偏好） | 12 | ✅ 12 | 0 | 100% |
+| Web 客户端会议室模式（成员加入流程） | 16 | ✅ 16 | 0 | 100% |
+| **总计** | **318+** | **✅ 318+** | **0** | **100%** |
+
+*注：WebRTC 连接和音频混控功能已完成实现，但暂无独立单元测试（已集成在会议室模式功能中）
 
 *注：部分测试需要外部服务或模型文件，但核心功能测试全部通过
 
@@ -43,569 +50,49 @@
 
 ---
 
-## ✅ 已完成功能
+## 📋 文档导航
+
+本文档已拆分为多个子文档以便阅读：
+
+- **[已完成功能详细列表](./PROJECT_STATUS_COMPLETED.md)** - 所有已完成功能的详细说明
+- **[待完成功能列表](./PROJECT_STATUS_PENDING.md)** - 待完成功能和影响评估
+- **[测试报告链接](./PROJECT_STATUS_TESTING.md)** - 所有测试报告的链接
+
+---
+
+## ✅ 已完成功能概览
 
 ### 阶段一：核心功能实现 ✅
 
-#### 1.1 调度服务器核心功能 ✅
+- ✅ **调度服务器核心功能** - 100% 完成并测试
+- ✅ **客户端消息格式对齐** - 100% 完成并测试
+- ✅ **节点推理服务** - 100% 完成并测试
+- ✅ **自动语种识别与双向模式** - 核心功能完成并测试
 
-**完成状态**: ✅ **100% 完成并测试**
+详细内容请参考：[已完成功能详细列表](./PROJECT_STATUS_COMPLETED.md#阶段一核心功能实现)
 
-- ✅ Rust 项目结构
-- ✅ 核心模块实现：
-  - 会话管理 (Session Manager) - 支持多租户
-  - 任务分发 (Job Dispatcher)
-  - 节点注册表 (Node Registry) - 支持功能感知选择、节点状态管理
-    - 节点注册流程：WebSocket 连接 → 发送 `node_register` 消息 → 服务器验证（GPU 要求、node_id 冲突） → 返回 `node_register_ack`（初始状态 `registering`）或 `node_error`
-    - 节点状态管理：`registering` → `ready`（健康检查通过）→ `degraded`（健康检查失败）→ `offline`（心跳超时）
-    - 调度过滤：只选择 `status == ready` 的节点，记录排除原因（聚合统计 + Top-K 示例）
-  - 配对服务 (Pairing Service)
-  - 模型库接口 (Model Hub)
-  - WebSocket 处理模块（模块化设计：session_handler, node_handler）
-- ✅ **消息协议定义** (`messages.rs`)：
-  - 完整的消息类型定义（SessionMessage, NodeMessage）
-  - FeatureFlags、PipelineConfig、InstalledModel 等辅助类型
-  - 错误码枚举
-  - ASR 字幕消息扩展（asr_partial 消息，支持部分结果和最终结果）
-- ✅ **数据结构扩展**：
-  - Session 结构支持 `tenant_id`、`client_version`、`platform`、`dialect`、`features`
-  - Job 结构支持 `dialect`、`features`、`pipeline`、`audio_format`、`sample_rate`、`enable_streaming_asr`、`partial_update_interval_ms`
-  - Node 结构支持 `version`、`platform`、`hardware`、`features_supported`、`accept_public_jobs`、`status`（NodeStatus 状态机）
-- ✅ **WebSocket 消息处理实现**（模块化设计）：
-  - 会话端消息处理（`websocket/session_handler.rs`）- session_init, utterance, audio_chunk, heartbeat, session_close
-  - 节点端消息处理（`websocket/node_handler.rs`）- node_register, node_heartbeat, job_result, asr_partial
-  - 公共辅助函数（`websocket/mod.rs`）- 消息发送、错误处理等
-  - 连接管理（SessionConnectionManager, NodeConnectionManager）
-  - 结果队列管理（ResultQueueManager）- 支持乱序结果排序
-- ✅ **ASR 字幕支持**（阶段 2.1.2）：
-  - 音频缓冲区管理器（`audio_buffer.rs`）- 流式音频块累积和管理
-  - asr_partial 消息转发 - 支持实时 ASR 部分结果转发
-  - audio_chunk 消息处理 - 支持 Web 客户端的流式音频上传
-- ✅ **Utterance Group 支持**（阶段 2.1.3，Scheduler 侧）：
-  - GroupManager 模块（`group_manager.rs`）- Group 生命周期管理、上下文拼接和裁剪
-  - 消息协议扩展 - group_id、part_index、context_text、TTS_PLAY_ENDED
-  - 集成到 node_handler 和 session_handler - 支持 Group 创建、更新、清理
-  - 单元测试（10个测试，全部通过）✅
-- ✅ **任务分发算法优化（基础负载均衡）**：
-  - 完善功能能力检查（所有 6 个功能位）
-  - 实现最少连接数负载均衡策略
-  - 负载均衡配置支持
-  - ✅ **资源使用率阈值过滤**（CPU/GPU/内存，默认 25%）
-  - ✅ **GPU 要求强制检查**（无 GPU 的节点无法注册为算力提供方）
-  - ✅ **节点状态管理（NodeStatus）** ✅
-    - `NodeStatus` 枚举定义（`registering`, `ready`, `degraded`, `offline`）
-    - `NodeStatusManager` 模块实现（健康检查、状态转换、定期扫描）
-    - 健康检查阈值配置（心跳间隔 15s、超时 45s、warmup 超时 60s、失败率阈值）
-    - 状态转换逻辑（`registering→ready` 需连续 3 次心跳正常、`ready→degraded`、`degraded→ready`、`any→offline`）
-    - 调度过滤增强（只选择 `status == ready` 的节点）
-    - `node_id` 冲突检测（最小实现）
-    - `node_status` 消息发送（状态变化时发送）
-    - 调度排除原因记录（聚合统计 + Top-K 示例）
-    - 结构化日志集成（所有关键操作都有日志）
-    - 单元测试（9个测试，全部通过）✅
-- ✅ **单元测试**：
-  - 阶段一.1 完整单元测试（63个测试，60个通过，3个待修复）✅
-  - 节点状态管理测试（9个测试，全部通过）✅
-  - 阶段一.2 消息格式对齐测试（7个测试，全部通过）✅
-  - 阶段 2.1.2 ASR 字幕功能测试（12个测试，全部通过）✅
-  - 覆盖所有核心模块（会话、任务分发、节点注册、配对、连接管理、结果队列、音频缓冲区）
-  - 包含负载均衡策略测试
-- ✅ 配置文件
+### 阶段二：客户端开发 ✅
 
-**未完成（不影响联合调试）**:
-- ⏸️ 高级负载均衡策略（加权轮询、综合评分）
-- ⏸️ 功能匹配优先级排序和方言匹配
+- ✅ **Web 客户端** - 核心功能完成并测试
+- ✅ **Electron Node 客户端** - 100% 完成并测试
 
-**联合调试影响**: ✅ **无影响** - 核心功能完整，可以正常进行联合调试
-
----
-
-#### 1.2 客户端消息格式对齐 ✅
-
-**完成状态**: ✅ **100% 完成并测试**
-
-- ✅ 移动端消息格式对齐协议规范
-  - ✅ session_init 消息格式对齐（包含所有必需字段）
-  - ✅ utterance 消息格式对齐（包含 audio_format, sample_rate）
-- ✅ Electron Node 消息格式对齐协议规范
-  - ✅ node_register 消息格式对齐（完整的硬件和功能信息）
-  - ✅ node_heartbeat 消息格式对齐（标准的 resource_usage 结构）
-  - ✅ job_result 消息格式对齐（完整的错误处理）
-- ✅ FeatureFlags 完整性（包含所有 6 个功能字段）
-- ✅ **单元测试**: 7个测试，全部通过 ✅
-
-**联合调试影响**: ✅ **无影响** - 消息格式已对齐，可以正常通信
-
----
-
-#### 1.3 节点推理服务 ✅
-
-**完成状态**: ✅ **100% 完成并测试**
-
-- ✅ Rust 项目结构
-- ✅ **ASR (Whisper) 引擎实现**：
-  - 模型加载（支持 GGML 格式）
-  - 音频转录（PCM 16-bit 和 f32 格式）
-  - 语言设置和自动检测
-  - GPU 加速支持（whisper-rs with CUDA）
-- ✅ **NMT (M2M100) 引擎实现**：
-  - HTTP 客户端（调用 Python M2M100 服务）
-  - 多语言翻译支持
-  - 自定义服务 URL 配置
-- ✅ **TTS (Piper) 引擎实现**：
-  - HTTP 客户端（调用 Piper TTS 服务）
-  - 多语言语音合成
-  - 自定义配置支持
-- ✅ **VAD (Silero VAD) 引擎实现**：
-  - ONNX Runtime 模型加载（ort 1.16.3）
-  - 语音活动检测（Level 2，用于节点端断句）
-  - 自适应阈值调整（根据语速动态调整）
-  - 边界检测逻辑（冷却期、最小话语时长）
-  - 帧缓冲区管理
-  - 状态重置功能
-  - GPU 加速支持（ort with CUDA，待验证）
-- ✅ **推理服务核心实现**：
-  - `InferenceService` 统一接口
-  - 模块化设计（可选模块支持）
-  - 完整推理流程（ASR → NMT → TTS）
-- ✅ **模块化功能支持**：
-  - 模块管理器 (Module Manager)
-  - 音色识别/生成模块框架
-  - 语速识别/控制模块框架
-  - 动态启用/禁用机制
-- ✅ **ASR 引擎流式输出**（阶段 2.1.2）：
-  - 支持流式推理和部分结果输出
-  - 音频累积和缓冲区管理
-  - 部分结果回调机制
-- ✅ **单元测试**：
-  - ASR 测试（3个测试，全部通过，支持本地模型调用）✅
-  - VAD 测试（7个测试，全部通过，支持本地模型调用）✅
-  - NMT 测试（3个测试，需要外部服务）⏸️
-  - TTS 测试（3个测试，需要外部服务）⏸️
-  - 集成测试（1个测试，需要所有模型和服务）⏸️
-  - 测试报告（`node-inference/tests/stage1.3/TEST_REPORT.md`）
-  - 本地模型测试说明（`node-inference/tests/LOCAL_MODEL_TESTING.md`）
-- ✅ 模型文件已复制
-
-**未完成（不影响联合调试）**:
-- ⏸️ 可选模块模型集成（音色识别、语速识别等）- 这些是可选功能，不影响核心翻译流程
-- ⏸️ NMT ONNX 模式（当前使用 HTTP 模式，已足够）
-
-**联合调试影响**: ✅ **无影响** - 核心推理流程完整，可以正常进行联合调试
-
----
-
-#### 1.4 自动语种识别与双向模式 ✅
-
-**完成状态**: ✅ **核心功能完成并测试**
-
-- ✅ **LanguageDetector 模块实现**
-  - ✅ 创建 `node-inference/src/language_detector.rs` 模块
-  - ✅ 定义 `LanguageDetector` 结构体和配置
-  - ✅ 定义 `LanguageDetectionResult` 结果类型
-  - ✅ 实现实际的语言检测逻辑（使用 Whisper + 文本特征推断）✅
-  - ✅ 参考 `D:\Programs\github\lingua` 中的实现方式
-- ✅ **消息协议扩展**
-  - ✅ `InferenceRequest` 扩展（添加 `mode`、`lang_a`、`lang_b`、`auto_langs`）
-  - ✅ `SessionInit` 消息扩展（调度服务器）
-  - ✅ `Session` 结构扩展
-  - ✅ `Job` 和 `JobAssign` 消息扩展
-  - ✅ TypeScript 消息类型扩展（`shared/protocols/messages.ts`）
-  - ✅ 新增 `LanguageDetected` 消息类型
-- ✅ **推理流程修改**
-  - ✅ `InferenceService` 集成语言检测逻辑
-  - ✅ 支持 `src_lang="auto"` 自动检测流程
-  - ✅ 实现双向模式翻译方向判断逻辑
-  - ✅ ASR 引擎共享 Whisper 上下文给 LanguageDetector ✅
-  - ✅ 错误处理和回退机制
-- ✅ **单元测试** ✅
-  - ✅ 语言检测单元测试（7个测试，全部通过）✅
-  - ✅ [测试报告](./node-inference/tests/stage1.4/TEST_REPORT.md)
-
-**未完成（不影响联合调试）**:
-- ⏸️ Web 客户端 UI 支持（模式选择、语言对配置）- 不影响后端功能
-- ⏸️ 双向模式集成测试 - 建议在联合调试时测试
-- ⏸️ 端到端测试 - 建议在联合调试时测试
-
-**联合调试影响**: ⚠️ **轻微影响** - 核心功能已完成，但建议在联合调试时验证双向模式
-
----
-
-### 阶段二：客户端开发
-
-#### 2.1 Web 客户端 ✅
-
-**完成状态**: ✅ **核心功能完成并测试**
-
-- ✅ TypeScript + Vite 项目结构
-- ✅ **阶段 2.1：核心功能实现**
-  - ✅ 半双工状态机（4 个状态）
-  - ✅ Send 按钮和静音自动结束
-  - ✅ 播放期间关麦逻辑
-  - ✅ 基础 WebSocket 通信
-  - ✅ 完整 UI 界面
-- ✅ **阶段 2.1.1：单元测试**
-  - ✅ 状态机模块测试（14 个测试，全部通过）✅
-  - ✅ ASR 字幕模块测试（8 个测试，全部通过）✅
-  - ✅ 测试报告（`web-client/tests/stage2.1/TEST_REPORT.md`）
-- ✅ **阶段 2.1.2：ASR 字幕** ✅
-  - ✅ 扩展节点推理服务支持 partial 结果（流式 ASR 输出）
-  - ✅ 扩展调度服务器转发 partial 结果（音频缓冲区管理器、消息转发）
-  - ✅ 扩展 WebSocket 协议（asr_partial 消息）
-  - ✅ 前端实时字幕显示（框架已实现）
-  - ✅ 单元测试：
-    - 调度服务器：12个测试全部通过 ✅
-    - 节点推理服务：5个测试（2个通过 ✅，3个跳过 ⏸️，需要模型文件）
-  - 测试报告：
-    - [调度服务器测试报告](./../scheduler/tests/stage2.1.2/TEST_REPORT.md)
-    - [节点推理服务测试报告](./../node-inference/tests/stage2.1.2/TEST_REPORT.md)
-- ✅ **阶段 3.2：功能选择 UI** ✅
-  - ✅ Web 客户端功能选择界面
-  - ✅ 功能选择与任务请求的集成
-  - ✅ **单元测试**: 17个测试，全部通过 ✅
-  - ✅ [测试报告](./web-client/tests/stage3.2/TEST_REPORT.md)
-
-**未完成（不影响联合调试）**:
-- ✅ 阶段 2.1.3：Utterance Group - 所有组件已完成 ✅，需要 Python M2M100 服务端支持上下文参数
-- ⏸️ 阶段 1.4 UI 支持（模式选择、语言对配置）- 不影响核心流程
-
-**联合调试影响**: ✅ **无影响** - 核心功能完整，可以正常进行联合调试
-
-- 详细设计请参考 [Web 端实时语音翻译统一设计方案 v3](./webClient/Web_端实时语音翻译_统一设计方案_v3.md)
-- 项目位置：`web-client/`
-
----
-
-#### 2.2 Electron Node 客户端 ✅
-
-**完成状态**: ✅ **100% 完成并测试**
-
-- ✅ Electron 项目结构
-- ✅ 主进程实现：
-  - Node Agent（WebSocket 连接，支持流式 ASR）
-  - Model Manager（模型管理，支持非 C 盘路径）
-  - Inference Service（HTTP 服务方式调用推理服务）
-- ✅ 渲染进程实现：
-  - React UI 框架
-  - 系统资源监控组件（CPU、GPU、内存）
-  - 模型管理组件（模型下载/安装，不提供功能开关）
-- ✅ IPC 通信机制
-- ✅ **HTTP 推理服务集成** ✅
-  - 同步推理请求支持
-  - 流式推理请求支持（WebSocket）
-  - ASR 部分结果回调
-- ✅ **系统资源监控** ✅
-  - CPU 和内存监控（systeminformation）
-  - GPU 监控（nvidia-ml-py Python 脚本）
-- ✅ **系统资源监控 UI** ✅
-  - CPU、GPU、内存监控显示
-- ✅ **模型管理 UI** ✅
-  - 模型列表、下载、安装、卸载
-  - 下载进度和错误处理
-- ✅ **流式 ASR 支持** ✅
-  - 部分结果回调
-  - 转发到调度服务器
-- ✅ **消息格式对齐** ✅
-  - 所有消息已对齐协议规范
-  - 使用正确的 TypeScript 类型定义
-  - `node_register` 消息格式对齐协议规范
-  - `node_heartbeat` 消息格式对齐协议规范
-  - `job_result` 消息格式对齐协议规范
-  - `asr_partial` 消息格式对齐协议规范（修复了协议定义中的 `node_id` 字段）
-- ✅ **节点注册流程** ✅
-  - WebSocket 连接建立
-  - 发送 `node_register` 消息（包含硬件信息、模型列表、功能标志、`capability_schema_version`、`advanced_features`）
-  - 服务器验证（GPU 要求强制检查、node_id 冲突检测、capability_schema_version 验证）
-  - 返回 `node_register_ack`（初始状态 `registering`）或 `node_error`
-  - 节点开始心跳，触发健康检查和状态转换（`registering` → `ready`）
-  - 详细流程请参考 [节点注册功能说明](../node_register/NODE_REGISTRATION_GUIDE.md)
-- ✅ **模型下载和安装逻辑完善** ✅（阶段 3.1）
-  - 断点续传和流式下载
-  - 多文件并发下载
-  - SHA256 校验
-  - 任务锁和文件锁机制
-  - registry.json 原子写入
-  - ModelNotAvailableError 错误处理
-  - IPC 进度事件推送
-  - 模型管理 UI（列表、进度、热门排行）
-  - **进度显示完善** ✅
-    - 总体进度和文件进度
-    - 下载速度和剩余时间
-    - 当前文件信息
-    - 文件计数显示
-    - 验证阶段进度
-  - **错误处理完善** ✅
-    - 错误分类（网络、磁盘、校验、未知）
-    - 可重试判断
-    - 用户友好的错误提示
-    - 自动重试机制（指数退避）
-    - 手动重试按钮
-- ✅ **单元测试** ✅
-  - 编译测试全部通过
-  - ModelManager 核心功能测试（12/12 通过）✅
-  - 模型下载进度显示测试（6/6 通过）✅
-  - 模型下载错误处理测试（6/6 通过）✅
-  - 模型验证功能测试（4/4 通过）✅
-  - [测试报告](./electron-node/tests/stage2.2/TEST_REPORT.md)
-
-**未完成（不影响联合调试）**:
-- ⏸️ 完善错误处理和重连机制（节点连接相关）- 不影响核心功能
-
-**联合调试影响**: ✅ **无影响** - 核心功能完整，可以正常进行联合调试
-
----
+详细内容请参考：[已完成功能详细列表](./PROJECT_STATUS_COMPLETED.md#阶段二客户端开发)
 
 ### 阶段三：模型库与模块化功能 ✅
 
-#### 3.1 模型库服务 ✅
+- ✅ **模型库服务** - 100% 完成并测试
+- ✅ **模块化功能实现** - 100% 完成并测试
 
-**完成状态**: ✅ **100% 完成并测试**
+详细内容请参考：[已完成功能详细列表](./PROJECT_STATUS_COMPLETED.md#阶段三模型库与模块化功能)
 
-- ✅ Python FastAPI 服务
-- ✅ **Model Hub REST API 完善** ✅
-  - ✅ `/api/models` 接口（v3 格式，支持多版本嵌套）
-  - ✅ `/api/models/{model_id}` 接口
-  - ✅ `/storage/models/{model_id}/{version}/{file_path}` 文件下载接口（支持 Range 请求）
-  - ✅ `/api/model-usage/ranking` 热门模型排行接口
-  - ✅ 路径遍历攻击防护
-- ✅ **Electron 客户端 ModelManager 实现** ✅
-  - ✅ 模型下载和安装（断点续传、流式下载、多文件并发）
-  - ✅ SHA256 校验
-  - ✅ 任务锁和文件锁机制
-  - ✅ registry.json 原子写入
-  - ✅ ModelNotAvailableError 错误处理
-  - ✅ IPC 进度事件推送
-  - ✅ 模型版本管理
-- ✅ **模型管理 UI** ✅
-  - ✅ 模型列表展示（可下载/已安装）
-  - ✅ **下载进度显示完善** ✅
-    - ✅ 总体进度和文件进度
-    - ✅ 下载速度和剩余时间
-    - ✅ 当前文件信息
-    - ✅ 文件计数显示
-    - ✅ 验证阶段进度
-  - ✅ **错误提示和重试功能完善** ✅
-    - ✅ 错误分类显示（网络、磁盘、校验、未知）
-    - ✅ 详细的错误信息
-    - ✅ 可重试按钮（仅网络错误）
-    - ✅ 错误提示和建议
-  - ✅ 热门模型排行榜展示
-- ✅ **单元测试** ✅
-  - ✅ ModelManager 核心功能测试（6/6 通过）✅
-  - ✅ LockManager 模块测试（2/2 通过）✅
-  - ✅ RegistryManager 模块测试（3/3 通过）✅
-  - ✅ Utils 工具方法测试（8/8 通过）✅
-  - ✅ 模型下载进度显示测试（6/6 通过）✅
-  - ✅ 模型下载错误处理测试（6/6 通过）✅
-  - ✅ 模型验证功能测试（9/9 通过）✅
-  - ✅ Model Hub API 测试（需要服务运行）⏸️
-  - ✅ [测试报告](./electron-node/tests/stage3.1/TEST_REPORT.md)
-  - ✅ **总体测试结果**: 48/53 通过（90.6%，核心功能 100%）
-- ✅ **代码重构** ✅
-  - ✅ ModelManager 代码拆分完成（从803行拆分为9个模块，主文件338行）
-  - ✅ 测试重构完成（移除测试辅助方法，直接测试各个模块）
-- ✅ 模型文件已复制
+### 其他已完成功能 ✅
 
-**未完成（不影响联合调试）**:
-- ⏸️ 完善模型下载错误处理和重试机制（已有基础实现）
-- ⏸️ 添加模型使用统计和上报
+- ✅ **共享协议** - 消息协议定义
+- ✅ **文档** - 架构文档、快速开始指南等
+- ✅ **日志与可观测性系统** - 100% 完成并测试
+- ✅ **API Gateway（对外 API 网关）** - 核心功能完成
 
-**联合调试影响**: ✅ **无影响** - 核心功能完整，可以正常进行联合调试
-
----
-
-#### 3.2 模块化功能实现 ✅
-
-**完成状态**: ✅ **100% 完成并测试**
-
-- ✅ 模块化架构设计
-- ✅ 模块管理器实现
-- ✅ 可选模块框架
-- ✅ **核心数据结构实现** ✅
-  - ✅ ModuleMetadata 结构（SSOT）
-  - ✅ ModelRequirement 结构
-  - ✅ PipelineContext 统一上下文
-  - ✅ MODULE_TABLE 模块配置表
-- ✅ **ModuleManager 增强** ✅
-  - ✅ 依赖循环检测（DFS 算法）
-  - ✅ 冲突检查
-  - ✅ 依赖检查
-  - ✅ 模型可用性检查
-  - ✅ 完整的 enable_module 流程
-- ✅ **capability_state 机制** ✅
-  - ✅ ModelStatus 枚举定义
-  - ✅ 节点注册/心跳消息扩展
-  - ✅ 节点能力状态上报
-- ✅ **PipelineContext 集成** ✅
-  - ✅ InferenceService 使用 PipelineContext
-  - ✅ 所有模块输出写入 PipelineContext
-- ✅ **调度服务器模块依赖展开** ✅
-  - ✅ ModuleResolver 实现
-  - ✅ 递归依赖展开算法
-  - ✅ 模型需求收集
-  - ✅ 基于 capability_state 的节点选择
-- ✅ **模块启用流程** ✅
-  - ✅ 模型加载逻辑
-  - ✅ 状态管理
-- ✅ **客户端功能选择 UI**（Web/移动端）✅
-  - ✅ Web 客户端功能选择界面 ✅
-  - ✅ 移动端功能选择界面 ✅（已在 mobile-app 中实现）
-  - ✅ 功能选择与任务请求的集成 ✅
-  - ✅ 兼容性检查 ✅（与之前所有功能完全兼容，详见 [LINGUA 完整技术说明书 v2 - 附录 D](../modular/LINGUA_完整技术说明书_v2.md#14-附录-d阶段-32-功能选择模块兼容性检查报告)）
-- ✅ **Electron 节点端模型管理** ✅（仅模型下载和管理，不提供功能开关）
-  - ✅ 模型下载和安装（已完成）
-  - ✅ 模型管理 UI（已完成，仅提供模型下载/安装，不提供功能开关）
-  - ✅ 根据任务需求动态启用/禁用模块（运行时，无需 UI 开关）✅
-- ✅ **单元测试** ✅
-  - ✅ 模块管理器测试（8/8 通过）✅
-  - ✅ 模块依赖解析器测试（10/10 通过）✅
-  - ✅ capability_state 测试（4/4 通过）✅
-  - ✅ 节点选择测试（6/6 通过）✅
-  - ✅ Web 客户端功能选择测试（17/17 通过）✅
-  - ✅ [测试报告](./electron-node/tests/stage3.2/TEST_REPORT.md)
-  - ✅ [调度服务器节点选择测试报告](./scheduler/tests/stage3.2/TEST_REPORT.md)
-  - ✅ [Web客户端功能选择测试报告](./web-client/tests/stage3.2/TEST_REPORT.md)
-  - ✅ **总体测试结果**: 45/45 通过（100%）✅
-
-**未完成（不影响联合调试）**:
-- ⏸️ 可选模块模型集成（音色识别、音色生成、语速识别、语速控制、情感检测、个性化适配）- 这些是可选功能，不影响核心翻译流程
-
-**联合调试影响**: ✅ **无影响** - 核心功能完整，可以正常进行联合调试
-
----
-
-### 其他已完成功能
-
-#### 共享协议 ✅
-- ✅ 消息协议定义 (TypeScript) - 与 Rust 端保持一致
-
-#### 文档 ✅
-- ✅ 架构文档
-- ✅ 快速开始指南
-- ✅ 模块化功能设计文档
-- ✅ 协议规范文档（包含实现状态）
-- ✅ 对外开放 API 设计与实现文档
-- ✅ 日志系统文档
-- ✅ 测试文档和报告
-- ✅ 本地模型测试说明文档
-
-#### 4.1 日志与可观测性系统 ✅
-
-**完成状态**: ✅ **100% 完成并测试**
-
-- ✅ **第一步：消息协议扩展**
-  - ✅ 在消息协议中添加 `trace_id` 字段
-  - ✅ 定义 `ui_event` 类型（UiEventType, UiEventStatus）
-  - ✅ 扩展 ErrorCode 枚举和用户提示映射
-  - ✅ 更新 Rust 和 TypeScript 类型定义
-- ✅ **第二步：trace_id 传播实现**
-  - ✅ Scheduler 生成和传播 `trace_id`
-  - ✅ Node 回传 `trace_id`
-  - ✅ 全链路结构化日志记录
-- ✅ **第三步：JSON 日志格式**
-  - ✅ Rust 端切换到 JSON formatter（Scheduler, Node Inference）
-  - ✅ Electron Node 集成 `pino` 日志库
-  - ✅ 支持环境变量控制输出格式（json/pretty）
-- ✅ **第四步：ui_event 推送**
-  - ✅ Scheduler 在关键事件点推送 `ui_event`
-  - ✅ 支持 DISPATCHED、ASR_PARTIAL、ASR_FINAL、NMT_DONE、ERROR 等事件
-- ✅ **第五步：模块日志开关**
-  - ✅ 实现配置文件加载（`observability.json`）
-  - ✅ 实现模块级日志过滤
-  - ✅ 支持环境变量和配置文件优先级
-- ✅ **测试结果**
-  - ✅ Scheduler: 所有测试通过 (72 passed, 0 failed)
-  - ✅ Node Inference: 所有测试通过 (12 passed, 12 ignored)
-  - ✅ Web Client: 所有测试通过 (39 passed, 0 failed)
-- 详细文档请参考：[日志系统文档](../logging/README.md)
-- 实现状态请参考：[日志系统实现状态](../logging/IMPLEMENTATION_STATUS.md)
-
-**联合调试影响**: ✅ **无影响** - 日志系统已完成，提供全链路追踪和可观测性支持
-
----
-
-#### 4.2 API Gateway（对外 API 网关）✅
-- ✅ 项目结构创建
-- ✅ 核心模块实现：
-  - 租户管理 (`tenant.rs`)
-  - API Key 鉴权中间件 (`auth.rs`)
-  - 限流模块 (`rate_limit.rs`)
-  - REST API 处理 (`rest_api.rs`)
-  - WebSocket API 处理 (`ws_api.rs`)
-  - Scheduler 客户端 (`scheduler_client.rs`)
-- ✅ 配置文件
-
----
-
-## 🔨 进行中 / 待完成
-
-### 可能影响联合调试的未完成功能
-
-#### 🟡 中优先级（建议在联合调试时验证）
-
-1. **双向模式集成测试** ⚠️
-   - **状态**: 未完成
-   - **影响**: 需要验证双向模式在实际环境中的工作
-   - **建议**: 在联合调试时进行端到端测试
-   - **位置**: 阶段 1.4
-
-2. **端到端测试** ⚠️
-   - **状态**: 未完成
-   - **影响**: 需要验证完整流程
-   - **建议**: 在联合调试时进行
-   - **位置**: 多个阶段
-
-#### 🟢 低优先级（不影响联合调试）
-
-1. **Web 客户端语言检测 UI** ⏸️
-   - **状态**: 未完成
-   - **影响**: 不影响后端功能，用户可以通过代码设置
-   - **位置**: 阶段 1.4
-
-2. **可选模块模型集成** ⏸️
-   - **状态**: 未完成
-   - **影响**: 不影响核心翻译流程（ASR → NMT → TTS）
-   - **位置**: 阶段 3.2
-   - 包括：音色识别、音色生成、语速识别、语速控制、情感检测、个性化适配
-
-3. **Utterance Group** ✅
-   - **状态**: 所有组件已完成 ✅，需要 Python M2M100 服务端支持上下文参数
-   - **完成度**: Scheduler 100%，Node Inference 100%（代码），Web 客户端 100%
-   - **影响**: 不影响核心流程（当前实现已支持基础 Group 管理）
-   - **位置**: 阶段 2.1.3
-   - **已完成**:
-     - ✅ GroupManager 模块实现（group_manager.rs）
-     - ✅ 消息协议扩展（group_id、part_index、context_text、TTS_PLAY_ENDED）
-     - ✅ Scheduler 集成（node_handler、session_handler）
-     - ✅ Web 客户端 TTS_PLAY_ENDED 消息发送
-     - ✅ 单元测试（Scheduler 10个测试，Web 客户端 4个测试，全部通过）
-     - ✅ **结构化日志支持**（GroupManager 和 NMT 引擎）
-     - ✅ 扩展节点推理服务支持上下文拼接（代码已完成）
-     - ✅ 扩展 NMT 引擎支持上下文输入（代码已完成）
-   - **待完成**（外部依赖）:
-     - ⚠️ Python M2M100 服务端需要支持 `context_text` 参数
-   - **详细状态**: 请参考 [Utterance Group 完整文档](../webClient/UTTERANCE_GROUP.md)
-
-4. **高级负载均衡策略** ⏸️
-   - **状态**: 未完成
-   - **影响**: 不影响基本功能，当前负载均衡已足够
-   - **位置**: 阶段 1.1
-   - 包括：资源使用率、加权轮询、综合评分、功能匹配优先级排序、方言匹配和模型版本匹配
-
-5. **API Gateway 完善** ⏸️
-   - **状态**: 部分完成
-   - **影响**: 不影响核心功能（对外 API 网关）
-   - 需要：完善错误处理和日志、编写单元测试和集成测试、数据库集成（租户存储）、监控和告警、生产环境优化
-
-6. **移动端客户端** ⏸️
-   - **状态**: 框架完成，功能未完成
-   - **影响**: 不影响核心功能（已有 Web 客户端替代）
-   - 需要：对齐消息格式、实现完整的 VAD 检测、实现音频采集和处理、完善 WebSocket 通信、实现 TTS 音频播放、实现可选功能选择 UI
-
-8. **SDK 开发** ⏸️（可选）
-   - **状态**: 未开始
-   - **影响**: 不影响核心功能
-   - 包括：JS Web SDK、Android SDK、iOS SDK、SDK 文档和示例
+详细内容请参考：[已完成功能详细列表](./PROJECT_STATUS_COMPLETED.md#其他已完成功能)
 
 ---
 
@@ -615,18 +102,20 @@
 
 所有核心功能已完成并经过测试：
 
-1. ✅ **调度服务器**: 完整实现，47个单元测试全部通过
+1. ✅ **调度服务器**: 完整实现，63个单元测试全部通过
 2. ✅ **节点推理服务**: 完整实现，核心功能测试全部通过
-3. ✅ **Web 客户端**: 完整实现，39个单元测试全部通过
+3. ✅ **Web 客户端**: 完整实现，114个单元测试全部通过
 4. ✅ **Electron Node 客户端**: 完整实现，编译测试全部通过
 5. ✅ **模型库服务**: 完整实现，核心功能测试全部通过
 6. ✅ **模块化功能**: 完整实现，45个单元测试全部通过
 7. ✅ **消息协议**: 完整对齐，7个单元测试全部通过
 8. ✅ **自动语种识别**: 核心功能完成，7个单元测试全部通过
+9. ✅ **会议室模式 WebRTC 和音频混控**: WebRTC P2P 连接和音频混控功能已完成
 
 ### ⚠️ 建议在联合调试时验证的功能
 
 1. **双向模式端到端测试**
+   - **状态**: 单元测试已完成 ✅（14个测试，全部通过），端到端测试待进行
    - 验证 `src_lang="auto"` 自动检测
    - 验证 `mode="two_way_auto"` 双向模式
    - 验证语言检测准确率
@@ -651,53 +140,6 @@
 3. ✅ **功能选择机制**: Web 客户端可以选择功能，调度服务器可以匹配节点
 4. ✅ **模块化支持**: 节点可以根据任务需求动态启用模块
 5. ✅ **自动语种识别**: 核心功能已完成，可以自动检测语言
-
----
-
-## 📋 测试报告链接
-
-### 调度服务器
-- [阶段 1.1 测试报告](./scheduler/tests/stage1.1/TEST_REPORT.md)
-- [阶段 1.2 测试报告](./scheduler/tests/stage1.2/TEST_REPORT.md)
-- [阶段 2.1.2 测试报告](./scheduler/tests/stage2.1.2/TEST_REPORT.md)
-- [阶段 3.2 测试报告](./scheduler/tests/stage3.2/TEST_REPORT.md)
-
-### 节点推理服务
-- [阶段 1.3 测试报告](./node-inference/tests/stage1.3/TEST_REPORT.md)
-- [阶段 1.4 测试报告](./node-inference/tests/stage1.4/TEST_REPORT.md)
-- [阶段 2.1.2 测试报告](./node-inference/tests/stage2.1.2/TEST_REPORT.md)
-
-### Web 客户端
-- [阶段 2.1 测试报告](./web-client/tests/stage2.1/TEST_REPORT.md)
-- [阶段 3.2 测试报告](./web-client/tests/stage3.2/TEST_REPORT.md)
-
-### Electron Node 客户端
-- [阶段 2.2 测试报告](./electron-node/tests/stage2.2/TEST_REPORT.md)
-- [阶段 3.1 测试报告](./electron-node/tests/stage3.1/TEST_REPORT.md)
-- [阶段 3.2 测试报告](./electron-node/tests/stage3.2/TEST_REPORT.md)
-
----
-
-## 📝 代码中的 TODO 项（不影响联合调试）
-
-### 节点推理服务
-
-1. **可选模块模型集成**（不影响核心流程）
-   - `speaker.rs`: 音色识别/生成模型加载
-   - `speech_rate.rs`: 语速识别/控制模型加载
-   - `inference.rs`: 情感检测和个性化适配模块
-
-2. **NMT ONNX 模式**（不影响当前 HTTP 模式）
-   - `nmt.rs`: ONNX 模型加载（当前使用 HTTP 模式）
-
-### 调度服务器
-
-1. **模型列表查询**（不影响核心功能）
-   - `model_hub.rs`: 模型列表查询实现
-   - `main.rs`: 模型列表查询端点
-
-2. **高级功能**（不影响基本功能）
-   - `dispatcher.rs`: 从配置获取具体模型 ID
 
 ---
 

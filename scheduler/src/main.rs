@@ -25,6 +25,7 @@ mod module_resolver;
 mod logging_config;
 mod group_manager;
 mod node_status_manager;
+mod room_manager;
 
 use session::SessionManager;
 use dispatcher::JobDispatcher;
@@ -40,6 +41,7 @@ use app_state::AppState;
 use audio_buffer::AudioBufferManager;
 use group_manager::{GroupManager, GroupConfig};
 use node_status_manager::NodeStatusManager;
+use room_manager::RoomManager;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -101,6 +103,9 @@ async fn main() -> Result<()> {
     // 启动定期扫描任务
     node_status_manager.start_periodic_scan();
 
+    // 初始化 RoomManager
+    let room_manager = RoomManager::new();
+
     // 创建应用状态
     let app_state = AppState {
         session_manager,
@@ -108,13 +113,42 @@ async fn main() -> Result<()> {
         node_registry,
         pairing_service,
         model_hub,
-        session_connections,
+        session_connections: session_connections.clone(),
         node_connections,
         result_queue,
         audio_buffer,
         group_manager,
         node_status_manager,
+        room_manager: room_manager.clone(),
     };
+    
+    // 启动房间过期清理任务（每1分钟扫描一次）
+    let app_state_for_cleanup = app_state.clone();
+    tokio::spawn(async move {
+        let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(60));
+        loop {
+            interval.tick().await;
+            let expired_rooms = app_state_for_cleanup.room_manager.cleanup_expired_rooms().await;
+            if !expired_rooms.is_empty() {
+                info!("清理了 {} 个过期房间", expired_rooms.len());
+                
+                // 向房间成员发送 room_expired 消息
+                for (room_code, members) in expired_rooms {
+                    let expired_msg = crate::messages::SessionMessage::RoomExpired {
+                        room_code: room_code.clone(),
+                        message: "30分钟无人发言，房间已过期".to_string(),
+                    };
+                    let expired_json = serde_json::to_string(&expired_msg).unwrap_or_default();
+                    
+                    for member in members {
+                        if let Some(member_tx) = app_state_for_cleanup.session_connections.get(&member.session_id).await {
+                            let _ = member_tx.send(axum::extract::ws::Message::Text(expired_json.clone()));
+                        }
+                    }
+                }
+            }
+        }
+    });
 
     // 构建路由
     let app = Router::new()

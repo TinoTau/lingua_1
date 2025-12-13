@@ -25,8 +25,8 @@
 - ✅ 状态转换逻辑实现（`NodeStatusManager` 模块）
 
 **相关文件**：
-- `scheduler/src/messages.rs` - `NodeStatus` 枚举定义
-- `scheduler/src/node_registry.rs` - `Node` 结构扩展
+- `scheduler/src/messages/common.rs` - `NodeStatus` 枚举定义
+- `scheduler/src/node_registry/types.rs` - `Node` 结构定义
 - `scheduler/src/node_status_manager.rs` - 状态管理核心逻辑
 
 ### 2. 健康检查机制 ✅
@@ -73,7 +73,7 @@
 - ✅ 排除原因类型：`StatusNotReady`, `NotInPublicPool`, `GpuUnavailable`, `ModelNotAvailable`, `CapacityExceeded`, `ResourceThresholdExceeded`
 
 **相关文件**：
-- `scheduler/src/node_registry.rs` - 调度过滤逻辑
+- `scheduler/src/node_registry/mod.rs` - 调度过滤逻辑
 - `scheduler/src/dispatcher.rs` - 任务分发集成
 
 ### 5. node_id 冲突检测 ✅
@@ -83,8 +83,8 @@
 - ✅ 错误消息：`"节点 ID 冲突，请清除本地 node_id 后重新注册"`
 
 **相关文件**：
-- `scheduler/src/node_registry.rs` - `register_node` 方法
-- `scheduler/src/messages.rs` - `ErrorCode::NodeIdConflict`
+- `scheduler/src/node_registry/mod.rs` - `register_node` 方法
+- `scheduler/src/messages/error.rs` - `ErrorCode::NodeIdConflict`
 
 ### 6. node_status 消息 ✅
 
@@ -107,7 +107,10 @@
 - ✅ `NodeStatus` 消息类型（用于发送状态更新）
 
 **相关文件**：
-- `scheduler/src/messages.rs` - 消息协议定义
+- `scheduler/src/messages/` - 消息协议定义（已拆分为多个模块）
+  - `session.rs` - 会话消息
+  - `node.rs` - 节点消息
+  - `common.rs` - 公共类型（包括 NodeStatus）
 
 ### 8. 结构化日志集成 ✅
 
@@ -120,7 +123,7 @@
 - ✅ 健康检查日志
 
 **相关文件**：
-- `scheduler/src/node_registry.rs` - 日志集成
+- `scheduler/src/node_registry/mod.rs` - 日志集成
 - `scheduler/src/node_status_manager.rs` - 日志集成
 
 ### 9. 单元测试 ✅

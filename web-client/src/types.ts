@@ -95,10 +95,100 @@ export interface TtsPlayEndedMessage {
   ts_end_ms: number;
 }
 
+// 房间相关消息类型（客户端发送）
+export interface RoomCreateMessage {
+  type: 'room_create';
+  client_ts: number;
+  display_name?: string;
+  preferred_lang?: string;
+}
+
+export interface RoomJoinMessage {
+  type: 'room_join';
+  room_code: string;
+  display_name?: string;
+  preferred_lang?: string;
+}
+
+export interface RoomLeaveMessage {
+  type: 'room_leave';
+  room_code: string;
+}
+
+export interface RoomRawVoicePreferenceMessage {
+  type: 'room_raw_voice_preference';
+  room_code: string;
+  target_session_id: string; // 目标成员的 session_id
+  receive_raw_voice: boolean; // 是否接收该成员的原声
+}
+
+// WebRTC 信令消息类型
+export interface WebRTCOfferMessage {
+  type: 'webrtc_offer';
+  room_code: string;
+  to: string; // 目标成员的 participant_id (session_id)
+  sdp: RTCSessionDescriptionInit;
+}
+
+export interface WebRTCAnswerMessage {
+  type: 'webrtc_answer';
+  room_code: string;
+  to: string; // 目标成员的 participant_id (session_id)
+  sdp: RTCSessionDescriptionInit;
+}
+
+export interface WebRTCIceMessage {
+  type: 'webrtc_ice';
+  room_code: string;
+  to: string; // 目标成员的 participant_id (session_id)
+  candidate: RTCIceCandidateInit;
+}
+
+// 房间相关消息类型（服务器发送）
+export interface RoomCreateAckMessage {
+  type: 'room_create_ack';
+  room_code: string;
+  room_id?: string;
+}
+
+export interface RoomMember {
+  participant_id: string;
+  session_id?: string; // 等同于 participant_id
+  display_name?: string;
+  preferred_lang?: string;
+  raw_voice_preferences?: Record<string, boolean>; // key: 其他成员的 session_id, value: 是否接收原声
+  joined_at?: number;
+}
+
+export interface RoomMembersMessage {
+  type: 'room_members';
+  room_code: string;
+  members: RoomMember[];
+}
+
+export interface RoomErrorMessage {
+  type: 'room_error';
+  code: 'ROOM_NOT_FOUND' | 'ROOM_FULL' | 'INVALID_ROOM_CODE' | 'ALREADY_IN_ROOM' | string;
+  message?: string;
+}
+
+export interface RoomExpiredMessage {
+  type: 'room_expired';
+  room_code: string;
+  message: string;
+}
+
 export type ServerMessage = 
   | SessionInitAckMessage
   | AsrPartialMessage 
   | TranslationMessage
   | TranslationResultMessage
-  | TtsAudioMessage;
+  | TtsAudioMessage
+  | RoomCreateAckMessage
+  | RoomMembersMessage
+  | RoomErrorMessage
+  | RoomExpiredMessage
+  | WebRTCOfferMessage
+  | WebRTCAnswerMessage
+  | WebRTCIceMessage;
 

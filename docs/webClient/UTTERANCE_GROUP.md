@@ -302,7 +302,7 @@ sequenceDiagram
 **实施文件**:
 - `web-client/src/types.ts` - 添加消息类型
 - `web-client/src/websocket_client.ts` - 添加 `sendTtsPlayEnded` 方法
-- `web-client/src/main.ts` - 集成 TTS_PLAY_ENDED 消息发送逻辑
+- `web-client/src/app.ts` - 集成 TTS_PLAY_ENDED 消息发送逻辑
 
 **测试**: ✅ 4/4 测试通过（`web-client/tests/stage2.1.3/utterance_group_test.ts`）
 

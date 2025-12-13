@@ -15,6 +15,7 @@ pub mod audio_buffer;
 pub mod module_resolver;
 pub mod group_manager;
 pub mod node_status_manager;
+pub mod room_manager;
 
 pub use app_state::AppState;
 pub use audio_buffer::AudioBufferManager;

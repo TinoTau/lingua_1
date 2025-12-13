@@ -305,18 +305,52 @@ async fn handle_node_message(
                 
                 info!(trace_id = %trace_id, job_id = %job_id, session_id = %session_id, utterance_index = utterance_index, "收到 JobResult，添加到结果队列");
                 
-                // 添加到结果队列
-                state.result_queue.add_result(&session_id, utterance_index, result).await;
+                // 获取 Job 信息
+                let job = state.dispatcher.get_job(&job_id).await;
+                
+                // 添加到结果队列（使用发送者的 session_id）
+                state.result_queue.add_result(&session_id, utterance_index, result.clone()).await;
                 
                 // 尝试发送就绪的结果
                 let ready_results = state.result_queue.get_ready_results(&session_id).await;
                 for result in ready_results {
                     let result_json = serde_json::to_string(&result)?;
-                    if !state.session_connections.send(
-                        &session_id,
-                        Message::Text(result_json)
-                    ).await {
-                        warn!(trace_id = %trace_id, session_id = %session_id, "无法发送结果到会话");
+                    
+                    // 检查 Job 是否有 target_session_ids（会议室模式）
+                    if let Some(ref job_info) = job {
+                        if let Some(target_session_ids) = &job_info.target_session_ids {
+                            // 会议室模式：将翻译结果发送给 Job 中指定的所有目标接收者
+                            // 更新房间最后说话时间
+                            if let Some(room_code) = state.room_manager.find_room_by_session(&session_id).await {
+                                state.room_manager.update_last_speaking_at(&room_code).await;
+                            }
+                            
+                            // 向所有目标接收者发送翻译结果
+                            for target_session_id in target_session_ids {
+                                if !state.session_connections.send(
+                                    target_session_id,
+                                    Message::Text(result_json.clone())
+                                ).await {
+                                    warn!(trace_id = %trace_id, session_id = %target_session_id, "无法发送结果到目标接收者");
+                                }
+                            }
+                        } else {
+                            // 单会话模式：只发送给发送者
+                            if !state.session_connections.send(
+                                &session_id,
+                                Message::Text(result_json)
+                            ).await {
+                                warn!(trace_id = %trace_id, session_id = %session_id, "无法发送结果到会话");
+                            }
+                        }
+                    } else {
+                        // Job 不存在，回退到单会话模式
+                        if !state.session_connections.send(
+                            &session_id,
+                            Message::Text(result_json)
+                        ).await {
+                            warn!(trace_id = %trace_id, session_id = %session_id, "无法发送结果到会话");
+                        }
                     }
                 }
             } else {

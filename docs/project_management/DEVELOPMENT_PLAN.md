@@ -3,7 +3,7 @@
 ## 阶段一：核心功能实现（4-6 周）
 
 **当前进度**: 
-- 阶段一.1 基础功能已完成 ✅（54个单元测试全部通过）
+- 阶段一.1 基础功能已完成 ✅（63个单元测试全部通过）
 - 负载均衡优化已完成 ✅
 - 阶段一.2 客户端消息格式对齐已完成 ✅（7个单元测试全部通过）
 - 阶段 2.2 Electron Node 客户端核心功能已完成 ✅（编译测试全部通过）
@@ -128,15 +128,18 @@
   - [x] 支持 `src_lang="auto"` 自动检测
   - [x] 实现双向模式翻译方向判断
   - [x] ASR 引擎共享 Whisper 上下文给 LanguageDetector ✅
-- [ ] **客户端 UI 支持**
-  - [ ] 添加模式选择界面（one_way / two_way_auto）
-  - [ ] 添加语言对配置界面
-  - [ ] 可选显示语言检测结果
+- [x] **客户端 UI 支持** ✅
+  - [x] 添加模式选择界面（one_way / two_way_auto）
+  - [x] 添加语言对配置界面（lang_a, lang_b）
+  - [x] 实现 connectTwoWay 方法
+  - [x] WebSocket 消息支持双向模式参数
+  - [ ] 可选显示语言检测结果（待实现）
 - [x] **单元测试** ✅
   - [x] 语言检测单元测试（7个测试，全部通过）✅
   - [x] [测试报告](./node-inference/tests/stage1.4/TEST_REPORT.md)
-  - [ ] 双向模式集成测试
-  - [ ] 端到端测试
+  - [x] 双向模式单元测试 ✅（14个测试，全部通过）
+  - [ ] 双向模式集成测试（建议在联合调试时进行）
+  - [ ] 端到端测试（建议在联合调试时进行）
 - 详细设计请参考 [自动语种识别与双向模式设计](../node_inference/AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md)
 
 ## 阶段二：客户端开发（3-4 周）
@@ -176,40 +179,75 @@
   - [x] 扩展 NMT 引擎支持上下文输入（代码已完成 ✅）
   - [x] Web 客户端 TTS_PLAY_ENDED 消息发送（已完成 ✅）
   - [x] Node 端 NMT 上下文支持（代码已完成 ✅，需要 Python M2M100 服务端支持）
+- [x] **阶段 2.1.4：会话模式改造** ✅
+  - [x] 状态机扩展：添加会话状态管理（`isSessionActive` 标志）
+  - [x] 修改 `finishPlaying()` 逻辑（会话进行中时自动回到 `INPUT_RECORDING`）
+  - [x] 主应用类重构：
+    - [x] 新增 `startSession()` 方法（开始整个会话，持续监听模式）
+    - [x] 新增 `endSession()` 方法（结束整个会话）
+    - [x] 新增 `sendCurrentUtterance()` 方法（发送当前话语，但继续监听）
+  - [x] UI 按钮更新：
+    - [x] 更新按钮标签（"开始录音" → "开始"，"结束本轮 (Send)" → "发送"）
+    - [x] 新增"结束"按钮
+    - [x] 优化按钮状态管理逻辑（统一通过状态监听管理）
+  - [x] 录音器管理优化：会话模式下播放完成后自动重新启动录音
+  - [x] **单元测试**: 34个测试，全部通过 ✅
+    - [x] 状态机会话模式测试（11个测试）
+    - [x] WebClient 会话模式集成测试（9个测试）
+    - [x] 双向模式（面对面模式）测试（14个测试）
+  - [x] **双向模式（面对面模式）** ✅
+    - [x] UI 支持：添加单向/双向模式选择
+    - [x] 语言配置：支持 lang_a 和 lang_b 配置
+    - [x] 连接逻辑：实现 connectTwoWay 方法
+    - [x] WebSocket 消息：支持双向模式参数（mode, lang_a, lang_b, auto_langs）
+    - [x] 后端支持：Scheduler 和 Node 已支持双向模式和自动语言检测
+    - [x] **单元测试**: 14个测试，全部通过 ✅
+      - [x] 连接逻辑测试（3个测试）
+      - [x] 语言配置测试（4个测试）
+      - [x] 功能标志传递测试（2个测试）
+      - [x] 消息格式验证测试（2个测试）
+      - [x] 模式对比测试（1个测试）
+      - [x] 边界情况测试（2个测试）
+  - [x] 测试报告：
+    - [会话模式测试报告](./../web-client/tests/session_mode/TEST_REPORT.md)
+    - [按钮控制机制分析报告](./../webRTC/BUTTON_CONTROL_MECHANISM_ANALYSIS.md)
+    - [面对面模式功能文档](./../webClient/FACE_TO_FACE_MODE.md)
+- [x] **会议室模式功能** ✅
+  - [x] 房间管理（创建、加入、退出）
+    - [x] 创建房间时自动添加创建者为第一个成员
+    - [x] 其他成员通过 6 位数房间码加入
+    - [x] 暂时不考虑邀请方式
+  - [x] 成员列表管理
+  - [x] 多语言翻译路由（为每个不同语言创建独立 Job）
+  - [x] 原声传递偏好设置
+  - [x] 原声传递偏好实时切换
+  - [x] WebRTC 信令转发（带偏好检查）
+  - [x] WebRTC 连接管理（建立、断开、同步）
+  - [x] 带宽优化（不接收原声时不建立连接）
+  - [x] **WebRTC P2P 连接实现** ✅
+    - [x] 本地音频流初始化（麦克风获取）
+    - [x] 远程音频流接收和处理
+    - [x] WebRTC offer/answer/ICE 信令处理
+    - [x] 连接生命周期管理
+  - [x] **音频混控实现** ✅
+    - [x] AudioMixer 类实现（双通道混控）
+    - [x] 原声通道（MediaStreamAudioSourceNode）
+    - [x] 翻译通道（AudioBufferSourceNode）
+    - [x] 音频淡入淡出效果（原声 300ms/200ms，翻译 200ms/300ms）
+    - [x] 混控输出到 MediaStreamAudioDestinationNode
+  - [x] **单元测试**: 28个测试，全部通过 ✅
+    - [x] 原声传递偏好实时切换测试（12个测试）
+    - [x] 会议室成员加入流程测试（16个测试）
+  - [x] 测试报告：
+    - [会议室模式测试报告](./../web-client/tests/room_mode/TEST_REPORT.md)
+    - [原声传递带宽优化策略](./../webRTC/RAW_VOICE_BANDWIDTH_OPTIMIZATION.md)
+    - [会议室成员加入流程](./../webRTC/ROOM_MEMBER_JOIN_FLOW.md)
+    - [WebRTC 音频混控实现文档](./../webRTC/WEBRTC_AUDIO_MIXER_IMPLEMENTATION.md) ⭐
 - 详细设计请参考：
   - [Utterance Group 功能完整文档](./webClient/UTTERANCE_GROUP.md) ⭐ **完整文档（规范 + 实施状态 + 可行性评估）**
   - [Web 端实时语音翻译统一设计方案 v3](./webClient/Web_端实时语音翻译_统一设计方案_v3.md) - 产品设计概述
+  - [按钮控制机制分析报告](./webRTC/BUTTON_CONTROL_MECHANISM_ANALYSIS.md) - 会话模式改造分析
 - 项目位置：`web-client/`
-
-### 2.2 移动端客户端（React Native）
-- [x] 项目框架搭建
-- [x] VAD Hook 框架
-- [x] WebSocket Hook 框架
-- [x] 消息格式对齐（阶段一.2 已完成）
-- [ ] **音频采集服务实现**（参考 `docs/IOS/IOS_AUDIO_VAD_PIPELINE.md`）
-  - [ ] 使用 expo-av 或 react-native-audio-recorder-player
-  - [ ] 配置采样率 16kHz、PCM 16-bit、单声道
-  - [ ] 实现 20ms 帧采集
-- [ ] **轻量 VAD 实现**（参考 iOS RMS 能量阈值算法）
-  - [ ] RMS 能量计算
-  - [ ] 静音阈值判定（-50dB）
-  - [ ] 连续静音过滤（>200ms）
-- [ ] **AudioChunk 打包器**
-  - [ ] 每 200-250ms 打包一次
-  - [ ] 包含 sequence、timestampMs、pcmData、droppedSilenceMs
-- [ ] **WebSocket 通信完善**
-  - [ ] 心跳机制（每 20-30 秒）
-  - [ ] 自动重连（指数退避）
-  - [ ] 错误恢复
-- [ ] **TTS 音频播放**（参考 `docs/IOS/IOS_CLIENT_DESIGN_AND_INTERFACES.md`）
-  - [ ] 使用 expo-av 播放 PCM16
-  - [ ] Base64 解码
-  - [ ] AEC 协作（避免回声）
-- [ ] 手动截断按钮
-- [ ] 可选功能选择界面
-- [ ] UI 优化
-- [ ] 多会话管理（可选，参考 `docs/IOS/IOS_MULTI_SESSION_DESIGN.md`）
-- [ ] 调试与监控（可选，参考 `docs/IOS/IOS_DEBUG_MONITORING.md`）
 
 ### 2.2 Electron Node 客户端
 - [x] Electron 项目初始化
@@ -334,9 +372,8 @@
   - [ ] 语速控制模型集成
   - [ ] 情感检测模型集成
   - [ ] 个性化适配模型集成
-- [x] **客户端功能选择 UI**（Web/移动端）✅
+  - [x] **客户端功能选择 UI**（Web 客户端）✅
   - [x] Web 客户端功能选择界面 ✅
-  - [x] 移动端功能选择界面 ✅（已在 mobile-app 中实现）
   - [x] 功能选择与任务请求的集成 ✅
   - [x] 兼容性检查 ✅（与之前所有功能完全兼容，详见 [LINGUA 完整技术说明书 v2 - 附录 D](../modular/LINGUA_完整技术说明书_v2.md#14-附录-d阶段-32-功能选择模块兼容性检查报告)）
 - [x] **Electron 节点端模型管理** ✅（仅模型下载和管理，不提供功能开关）

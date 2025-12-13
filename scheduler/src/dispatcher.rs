@@ -9,7 +9,7 @@ use uuid::Uuid;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Job {
     pub job_id: String,
-    pub session_id: String,
+    pub session_id: String, // 发送者的 session_id
     pub utterance_index: u64,
     pub src_lang: String,  // 支持 "auto" | "zh" | "en" | "ja" | "ko"
     pub tgt_lang: String,
@@ -42,6 +42,11 @@ pub struct Job {
     /// 部分结果更新间隔（毫秒），仅在 enable_streaming_asr 为 true 时有效
     #[serde(skip_serializing_if = "Option::is_none")]
     pub partial_update_interval_ms: Option<u64>,
+    /// 目标接收者 session_id 列表（会议室模式使用，用于多语言翻译）
+    /// 如果为 None，表示单会话模式，翻译结果发送给发送者
+    /// 如果为 Some，表示会议室模式，翻译结果发送给列表中的所有成员
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub target_session_ids: Option<Vec<String>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -87,6 +92,7 @@ impl JobDispatcher {
         enable_streaming_asr: Option<bool>,
         partial_update_interval_ms: Option<u64>,
         trace_id: String,
+        target_session_ids: Option<Vec<String>>, // 目标接收者 session_id 列表（会议室模式使用）
     ) -> Job {
         let job_id = format!("job-{}", Uuid::new_v4().to_string()[..8].to_uppercase());
         
@@ -147,6 +153,7 @@ impl JobDispatcher {
             auto_langs,
             enable_streaming_asr,
             partial_update_interval_ms,
+            target_session_ids,
         };
 
         let mut jobs = self.jobs.write().await;

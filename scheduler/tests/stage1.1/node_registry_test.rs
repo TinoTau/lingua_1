@@ -1,4 +1,4 @@
-// 节点注册表单元测�?
+﻿// 鑺傜偣娉ㄥ唽琛ㄥ崟鍏冩祴锟?
 
 use lingua_scheduler::node_registry::NodeRegistry;
 use lingua_scheduler::messages::{FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, NodeStatus};
@@ -77,7 +77,7 @@ async fn test_register_node() {
         },
         true,
         None,
-    ).await.unwrap(); // 必须�?GPU，所以应该成�?
+    ).await.unwrap(); // 蹇呴』锟?GPU锛屾墍浠ュ簲璇ユ垚锟?
     
     assert!(node.node_id.starts_with("node-"));
     assert_eq!(node.name, "Test Node");
@@ -93,7 +93,7 @@ async fn test_register_node() {
 async fn test_register_node_no_gpu() {
     let registry = NodeRegistry::new();
     
-    // 尝试注册没有 GPU 的节点，应该失败
+    // 灏濊瘯娉ㄥ唽娌℃湁 GPU 鐨勮妭鐐癸紝搴旇澶辫触
     let result = registry.register_node(
         Some("test-node-no-gpu".to_string()),
         "Test Node No GPU".to_string(),
@@ -113,7 +113,7 @@ async fn test_register_node_no_gpu() {
         None,
     ).await;
     
-    // 应该返回错误
+    // 搴旇杩斿洖閿欒
     assert!(result.is_err());
     assert!(result.unwrap_err().contains("GPU"));
 }
@@ -139,7 +139,7 @@ async fn test_register_node_with_id() {
         },
         false,
         None,
-    ).await.unwrap(); // 必须�?GPU，所以应该成�?
+    ).await.unwrap(); // 蹇呴』锟?GPU锛屾墍浠ュ簲璇ユ垚锟?
     
     assert_eq!(node.node_id, "custom-node-123");
     assert!(!node.accept_public_jobs);
@@ -195,7 +195,7 @@ async fn test_is_node_available_when_overloaded() {
         None,
     ).await.unwrap();
     
-    // 更新节点，使其达到最大并发数
+    // 鏇存柊鑺傜偣锛屼娇鍏惰揪鍒版渶澶у苟鍙戞暟
     registry.update_node_heartbeat(
         "node-2",
         50.0,
@@ -244,7 +244,7 @@ async fn test_update_node_heartbeat() {
     
     assert!(success);
     
-    // 验证节点状态已更新（通过可用性检查）
+    // 楠岃瘉鑺傜偣鐘舵€佸凡鏇存柊锛堥€氳繃鍙敤鎬ф鏌ワ級
     assert!(registry.is_node_available("node-3").await);
 }
 
@@ -269,7 +269,7 @@ async fn test_update_nonexistent_node_heartbeat() {
 async fn test_select_node_with_features() {
     let registry = NodeRegistry::new();
     
-    // 注册支持中文到英文的节点
+    // 娉ㄥ唽鏀寔涓枃鍒拌嫳鏂囩殑鑺傜偣
     registry.register_node(
         Some("node-zh-en".to_string()),
         "ZH-EN Node".to_string(),
@@ -289,7 +289,7 @@ async fn test_select_node_with_features() {
         None,
     ).await.unwrap();
     
-    // 注册支持英文到中文的节点
+    // 娉ㄥ唽鏀寔鑻辨枃鍒颁腑鏂囩殑鑺傜偣
     registry.register_node(
         Some("node-en-zh".to_string()),
         "EN-ZH Node".to_string(),
@@ -309,14 +309,14 @@ async fn test_select_node_with_features() {
         None,
     ).await;
     
-    // 选择中文到英文的节点
-    // 将节点状态设置为 ready（才能被选中）
+    // 閫夋嫨涓枃鍒拌嫳鏂囩殑鑺傜偣
+    // 灏嗚妭鐐圭姸鎬佽缃负 ready锛堟墠鑳借閫変腑锛?
     registry.set_node_status("node-zh-en", NodeStatus::Ready).await;
     
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
     assert_eq!(selected, Some("node-zh-en".to_string()));
     
-    // 选择英文到中文的节点
+    // 閫夋嫨鑻辨枃鍒颁腑鏂囩殑鑺傜偣
     registry.set_node_status("node-en-zh", NodeStatus::Ready).await;
     
     let selected = registry.select_node_with_features("en", "zh", &None, true).await;
@@ -327,7 +327,7 @@ async fn test_select_node_with_features() {
 async fn test_select_node_with_required_features() {
     let registry = NodeRegistry::new();
     
-    // 注册不支持情感分析的节点
+    // 娉ㄥ唽涓嶆敮鎸佹儏鎰熷垎鏋愮殑鑺傜偣
     registry.register_node(
         Some("node-no-emotion".to_string()),
         "No Emotion Node".to_string(),
@@ -347,7 +347,7 @@ async fn test_select_node_with_required_features() {
         None,
     ).await;
     
-    // 注册支持情感分析的节�?
+    // 娉ㄥ唽鏀寔鎯呮劅鍒嗘瀽鐨勮妭锟?
     registry.register_node(
         Some("node-with-emotion".to_string()),
         "Emotion Node".to_string(),
@@ -367,7 +367,7 @@ async fn test_select_node_with_required_features() {
         None,
     ).await;
     
-    // 要求情感分析功能
+    // 瑕佹眰鎯呮劅鍒嗘瀽鍔熻兘
     let required_features = Some(FeatureFlags {
         emotion_detection: Some(true),
         voice_style_detection: None,
@@ -377,7 +377,7 @@ async fn test_select_node_with_required_features() {
         persona_adaptation: None,
     });
     
-    // 将节点状态设置为 ready
+    // 灏嗚妭鐐圭姸鎬佽缃负 ready
     registry.set_node_status("node-with-emotion", NodeStatus::Ready).await;
     
     let selected = registry.select_node_with_features("zh", "en", &required_features, true).await;
@@ -388,7 +388,7 @@ async fn test_select_node_with_required_features() {
 async fn test_select_node_no_match() {
     let registry = NodeRegistry::new();
     
-    // 不注册任何节�?
+    // 涓嶆敞鍐屼换浣曡妭锟?
     
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
     assert_eq!(selected, None);
@@ -428,7 +428,7 @@ async fn test_mark_node_offline() {
 async fn test_select_node_least_connections() {
     let registry = NodeRegistry::new();
     
-    // 注册三个节点，都支持相同的语言�?
+    // 娉ㄥ唽涓変釜鑺傜偣锛岄兘鏀寔鐩稿悓鐨勮瑷€锟?
     registry.register_node(
         Some("node-heavy".to_string()),
         "Heavy Load Node".to_string(),
@@ -486,32 +486,37 @@ async fn test_select_node_least_connections() {
         None,
     ).await;
     
-    // 更新节点负载：heavy=3, medium=1, light=0
-    // 注意：资源使用率需要低于阈值（默认 25%），所以设置为 20%
+    // 灏嗘墍鏈夎妭鐐圭姸鎬佽缃负 ready
+    registry.set_node_status("node-heavy", NodeStatus::Ready).await;
+    registry.set_node_status("node-medium", NodeStatus::Ready).await;
+    registry.set_node_status("node-light", NodeStatus::Ready).await;
+    
+    // 鏇存柊鑺傜偣璐熻浇锛歨eavy=3, medium=1, light=0
+    // 娉ㄦ剰锛氳祫婧愪娇鐢ㄧ巼闇€瑕佷綆浜庨槇鍊硷紙榛樿 25%锛夛紝鎵€浠ヨ缃负 20%
     registry.update_node_heartbeat("node-heavy", 20.0, None, 20.0, None, 3, None).await;
     registry.update_node_heartbeat("node-medium", 20.0, None, 20.0, None, 1, None).await;
     registry.update_node_heartbeat("node-light", 20.0, None, 20.0, None, 0, None).await;
     
-    // 应该选择负载最轻的节点（current_jobs=0�?
+    // 搴旇閫夋嫨璐熻浇鏈€杞荤殑鑺傜偣锛坈urrent_jobs=0锟?
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
     assert_eq!(selected, Some("node-light".to_string()));
     
-    // 更新：heavy=2, medium=1, light=2
-    // 注意：资源使用率需要低于阈值（默认 25%），所以设置为 20%
+    // 鏇存柊锛歨eavy=2, medium=1, light=2
+    // 娉ㄦ剰锛氳祫婧愪娇鐢ㄧ巼闇€瑕佷綆浜庨槇鍊硷紙榛樿 25%锛夛紝鎵€浠ヨ缃负 20%
     registry.update_node_heartbeat("node-heavy", 20.0, None, 20.0, None, 2, None).await;
     registry.update_node_heartbeat("node-light", 20.0, None, 20.0, None, 2, None).await;
     
-    // 应该选择负载最轻的节点（current_jobs=1�?
+    // 搴旇閫夋嫨璐熻浇鏈€杞荤殑鑺傜偣锛坈urrent_jobs=1锟?
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
     assert_eq!(selected, Some("node-medium".to_string()));
 }
 
 #[tokio::test]
 async fn test_select_node_resource_threshold_cpu() {
-    // 创建带资源阈值的注册表（默认 25%�?
+    // 鍒涘缓甯﹁祫婧愰槇鍊肩殑娉ㄥ唽琛紙榛樿 25%锟?
     let registry = NodeRegistry::with_resource_threshold(25.0);
     
-    // 注册两个节点，都支持相同的语言�?
+    // 娉ㄥ唽涓や釜鑺傜偣锛岄兘鏀寔鐩稿悓鐨勮瑷€锟?
     registry.register_node(
         Some("node-low-cpu".to_string()),
         "Low CPU Node".to_string(),
@@ -550,25 +555,25 @@ async fn test_select_node_resource_threshold_cpu() {
         None,
     ).await;
     
-    // 更新节点资源使用率：low-cpu=20%, high-cpu=30%（超过阈值）
+    // 鏇存柊鑺傜偣璧勬簮浣跨敤鐜囷細low-cpu=20%, high-cpu=30%锛堣秴杩囬槇鍊硷級
     registry.update_node_heartbeat("node-low-cpu", 20.0, None, 15.0, None, 0, None).await;
     registry.update_node_heartbeat("node-high-cpu", 30.0, None, 15.0, None, 0, None).await;
     
-    // 将所有节点状态设置为 ready
+    // 灏嗘墍鏈夎妭鐐圭姸鎬佽缃负 ready
     registry.set_node_status("node-low-cpu", NodeStatus::Ready).await;
     registry.set_node_status("node-high-cpu", NodeStatus::Ready).await;
     
-    // 选择节点，应该只选择 CPU 使用率低于阈值的节点
+    // 閫夋嫨鑺傜偣锛屽簲璇ュ彧閫夋嫨 CPU 浣跨敤鐜囦綆浜庨槇鍊肩殑鑺傜偣
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
     assert_eq!(selected, Some("node-low-cpu".to_string()));
 }
 
 #[tokio::test]
 async fn test_select_node_resource_threshold_gpu() {
-    // 创建带资源阈值的注册表（默认 25%�?
+    // 鍒涘缓甯﹁祫婧愰槇鍊肩殑娉ㄥ唽琛紙榛樿 25%锟?
     let registry = NodeRegistry::with_resource_threshold(25.0);
     
-    // 注册两个节点，都支持相同的语言�?
+    // 娉ㄥ唽涓や釜鑺傜偣锛岄兘鏀寔鐩稿悓鐨勮瑷€锟?
     registry.register_node(
         Some("node-low-gpu".to_string()),
         "Low GPU Node".to_string(),
@@ -607,25 +612,25 @@ async fn test_select_node_resource_threshold_gpu() {
         None,
     ).await;
     
-    // 更新节点资源使用率：low-gpu GPU=20%, high-gpu GPU=30%（超过阈值）
+    // 鏇存柊鑺傜偣璧勬簮浣跨敤鐜囷細low-gpu GPU=20%, high-gpu GPU=30%锛堣秴杩囬槇鍊硷級
     registry.update_node_heartbeat("node-low-gpu", 15.0, Some(20.0), 15.0, None, 0, None).await;
     registry.update_node_heartbeat("node-high-gpu", 15.0, Some(30.0), 15.0, None, 0, None).await;
     
-    // 将所有节点状态设置为 ready
+    // 灏嗘墍鏈夎妭鐐圭姸鎬佽缃负 ready
     registry.set_node_status("node-low-gpu", NodeStatus::Ready).await;
     registry.set_node_status("node-high-gpu", NodeStatus::Ready).await;
     
-    // 选择节点，应该只选择 GPU 使用率低于阈值的节点
+    // 閫夋嫨鑺傜偣锛屽簲璇ュ彧閫夋嫨 GPU 浣跨敤鐜囦綆浜庨槇鍊肩殑鑺傜偣
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
     assert_eq!(selected, Some("node-low-gpu".to_string()));
 }
 
 #[tokio::test]
 async fn test_select_node_resource_threshold_memory() {
-    // 创建带资源阈值的注册表（默认 25%�?
+    // 鍒涘缓甯﹁祫婧愰槇鍊肩殑娉ㄥ唽琛紙榛樿 25%锟?
     let registry = NodeRegistry::with_resource_threshold(25.0);
     
-    // 注册两个节点，都支持相同的语言�?
+    // 娉ㄥ唽涓や釜鑺傜偣锛岄兘鏀寔鐩稿悓鐨勮瑷€锟?
     registry.register_node(
         Some("node-low-mem".to_string()),
         "Low Memory Node".to_string(),
@@ -664,25 +669,25 @@ async fn test_select_node_resource_threshold_memory() {
         None,
     ).await;
     
-    // 更新节点资源使用率：low-mem 内存=20%, high-mem 内存=30%（超过阈值）
+    // 鏇存柊鑺傜偣璧勬簮浣跨敤鐜囷細low-mem 鍐呭瓨=20%, high-mem 鍐呭瓨=30%锛堣秴杩囬槇鍊硷級
     registry.update_node_heartbeat("node-low-mem", 15.0, None, 20.0, None, 0, None).await;
     registry.update_node_heartbeat("node-high-mem", 15.0, None, 30.0, None, 0, None).await;
     
-    // 将所有节点状态设置为 ready
+    // 灏嗘墍鏈夎妭鐐圭姸鎬佽缃负 ready
     registry.set_node_status("node-low-mem", NodeStatus::Ready).await;
     registry.set_node_status("node-high-mem", NodeStatus::Ready).await;
     
-    // 选择节点，应该只选择内存使用率低于阈值的节点
+    // 閫夋嫨鑺傜偣锛屽簲璇ュ彧閫夋嫨鍐呭瓨浣跨敤鐜囦綆浜庨槇鍊肩殑鑺傜偣
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
     assert_eq!(selected, Some("node-low-mem".to_string()));
 }
 
 #[tokio::test]
 async fn test_select_node_resource_threshold_all_resources() {
-    // 创建带资源阈值的注册表（默认 25%�?
+    // 鍒涘缓甯﹁祫婧愰槇鍊肩殑娉ㄥ唽琛紙榛樿 25%锟?
     let registry = NodeRegistry::with_resource_threshold(25.0);
     
-    // 注册三个节点
+    // 娉ㄥ唽涓変釜鑺傜偣
     registry.register_node(
         Some("node-ok".to_string()),
         "OK Node".to_string(),
@@ -740,30 +745,30 @@ async fn test_select_node_resource_threshold_all_resources() {
         None,
     ).await;
     
-    // 更新节点资源使用�?
-    // node-ok: 所有资源都在阈值以�?
+    // 鏇存柊鑺傜偣璧勬簮浣跨敤锟?
+    // node-ok: 鎵€鏈夎祫婧愰兘鍦ㄩ槇鍊间互锟?
     registry.update_node_heartbeat("node-ok", 20.0, Some(20.0), 20.0, None, 0, None).await;
-    // node-high-cpu: CPU 超过阈�?
+    // node-high-cpu: CPU 瓒呰繃闃堬拷?
     registry.update_node_heartbeat("node-high-cpu", 30.0, Some(20.0), 20.0, None, 0, None).await;
-    // node-high-gpu: GPU 超过阈�?
+    // node-high-gpu: GPU 瓒呰繃闃堬拷?
     registry.update_node_heartbeat("node-high-gpu", 20.0, Some(30.0), 20.0, None, 0, None).await;
     
-    // 将所有节点状态设置为 ready
+    // 灏嗘墍鏈夎妭鐐圭姸鎬佽缃负 ready
     registry.set_node_status("node-ok", NodeStatus::Ready).await;
     registry.set_node_status("node-high-cpu", NodeStatus::Ready).await;
     registry.set_node_status("node-high-gpu", NodeStatus::Ready).await;
     
-    // 选择节点，应该只选择所有资源都在阈值以下的节点
+    // 閫夋嫨鑺傜偣锛屽簲璇ュ彧閫夋嫨鎵€鏈夎祫婧愰兘鍦ㄩ槇鍊间互涓嬬殑鑺傜偣
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
     assert_eq!(selected, Some("node-ok".to_string()));
 }
 
 #[tokio::test]
 async fn test_select_node_resource_threshold_no_available() {
-    // 创建带资源阈值的注册表（默认 25%�?
+    // 鍒涘缓甯﹁祫婧愰槇鍊肩殑娉ㄥ唽琛紙榛樿 25%锟?
     let registry = NodeRegistry::with_resource_threshold(25.0);
     
-    // 注册一个节点，但资源使用率超过阈�?
+    // 娉ㄥ唽涓€涓妭鐐癸紝浣嗚祫婧愪娇鐢ㄧ巼瓒呰繃闃堬拷?
     registry.register_node(
         Some("node-overloaded".to_string()),
         "Overloaded Node".to_string(),
@@ -783,20 +788,20 @@ async fn test_select_node_resource_threshold_no_available() {
         None,
     ).await;
     
-    // 更新节点资源使用率，所有资源都超过阈�?
+    // 鏇存柊鑺傜偣璧勬簮浣跨敤鐜囷紝鎵€鏈夎祫婧愰兘瓒呰繃闃堬拷?
     registry.update_node_heartbeat("node-overloaded", 30.0, Some(30.0), 30.0, None, 0, None).await;
     
-    // 选择节点，应该返�?None（没有可用节点）
+    // 閫夋嫨鑺傜偣锛屽簲璇ヨ繑锟?None锛堟病鏈夊彲鐢ㄨ妭鐐癸級
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
     assert_eq!(selected, None);
 }
 
 #[tokio::test]
 async fn test_select_node_resource_threshold_custom_threshold() {
-    // 创建带自定义资源阈值的注册表（50%�?
+    // 鍒涘缓甯﹁嚜瀹氫箟璧勬簮闃堝€肩殑娉ㄥ唽琛紙50%锟?
     let registry = NodeRegistry::with_resource_threshold(50.0);
     
-    // 注册两个节点
+    // 娉ㄥ唽涓や釜鑺傜偣
     registry.register_node(
         Some("node-40".to_string()),
         "40% Node".to_string(),
@@ -835,11 +840,15 @@ async fn test_select_node_resource_threshold_custom_threshold() {
         None,
     ).await;
     
-    // 更新节点资源使用�?
+    // Set all nodes to ready status
+    registry.set_node_status("node-40", NodeStatus::Ready).await;
+    registry.set_node_status("node-60", NodeStatus::Ready).await;
+
+    // 鏇存柊鑺傜偣璧勬簮浣跨敤锟?
     registry.update_node_heartbeat("node-40", 40.0, None, 40.0, None, 0, None).await;
     registry.update_node_heartbeat("node-60", 60.0, None, 60.0, None, 0, None).await;
     
-    // 选择节点，阈值是 50%，所�?node-40 可用，node-60 不可�?
+    // 閫夋嫨鑺傜偣锛岄槇鍊兼槸 50%锛屾墍锟?node-40 鍙敤锛宯ode-60 涓嶅彲锟?
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
     assert_eq!(selected, Some("node-40".to_string()));
 }

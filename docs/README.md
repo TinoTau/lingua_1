@@ -65,6 +65,10 @@ docs/
 │   ├── WEB_CLIENT_V3_FEASIBILITY_ASSESSMENT.md
 │   └── ...
 │
+├── webRTC/                      # WebRTC 原声通话方案
+│   ├── Web_RawVoice_Translation_Handover_Spec.md
+│   └── Web_RawVoice_Translation_Handover_Spec_FEASIBILITY.md
+│
 ├── modelManager/                # 模型管理文档
 │   ├── README.md
 │   └── 公司模型库与Electron客户端模型管理统一技术方案.md
@@ -152,6 +156,17 @@ docs/
 - [阶段 2.2 测试报告](../electron-node/tests/stage2.2/TEST_REPORT.md) - 编译测试全部通过
 - [阶段 3.1 测试报告](../electron-node/tests/stage3.1/TEST_REPORT.md) - 模型管理功能测试（48个测试，全部通过）
 - [阶段 3.2 测试报告](../electron-node/tests/stage3.2/TEST_REPORT.md) - 模块化功能测试（22个测试，全部通过）
+
+---
+
+### WebRTC 原声通话方案
+
+**目录**: [`webRTC/`](./webRTC/)  
+
+- [Web↔Web 原声通话 + 翻译接管方案 v1.1](./webRTC/Web_RawVoice_Translation_Handover_Spec_v1.1.md) - ⭐ **最新版本**（会议室模式）
+- [开发就绪性评估 v1.1](./webRTC/Web_RawVoice_Translation_Handover_Spec_v1.1_DEVELOPMENT_READINESS.md) - ⭐ **开发就绪性评估报告**（✅ 可以开始开发）
+- [Web↔Web 原声通话 + 翻译接管方案 v1.0](./webRTC/Web_RawVoice_Translation_Handover_Spec.md) - ⚠️ **历史版本**（双人 P2P，已被 v1.1 替代）
+- [可行性评估 v1.0](./webRTC/Web_RawVoice_Translation_Handover_Spec_FEASIBILITY.md) - ⚠️ **历史版本**（v1.0 版本可行性评估，已被 v1.1 替代）
 
 ---
 

@@ -262,14 +262,14 @@ impl NodeStatusManager {
             }
 
             // 检查 warmup 超时（registering → degraded）
+            // 使用节点的注册时间，而不是 health_check_history，因为健康检查失败时 history 会被移除
             if node.status == NodeStatus::Registering {
                 let warmup_timeout = chrono::Duration::seconds(self.config.warmup_timeout_seconds as i64);
-                if let Some(history) = self.health_check_history.read().await.get(&node_id) {
-                    if now.signed_duration_since(history.1) > warmup_timeout {
-                        self.transition_status(&node_id, NodeStatus::Registering, NodeStatus::Degraded, Some("warmup 超时".to_string())).await;
-                        let mut history = self.health_check_history.write().await;
-                        history.remove(&node_id);
-                    }
+                if now.signed_duration_since(node.registered_at) > warmup_timeout {
+                    self.transition_status(&node_id, NodeStatus::Registering, NodeStatus::Degraded, Some("warmup 超时".to_string())).await;
+                    // 清理 health_check_history（如果存在）
+                    let mut history = self.health_check_history.write().await;
+                    history.remove(&node_id);
                 }
             }
         }

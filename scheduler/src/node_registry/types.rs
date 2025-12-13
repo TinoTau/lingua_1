@@ -1,0 +1,41 @@
+// 节点注册表类型定义
+
+use crate::messages::{FeatureFlags, HardwareInfo, InstalledModel, CapabilityState, NodeStatus};
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Node {
+    pub node_id: String,
+    pub name: String,
+    pub version: String,
+    pub platform: String, // "windows" | "linux" | "macos"
+    pub hardware: HardwareInfo,
+    /// 节点生命周期状态（Scheduler 权威）
+    pub status: NodeStatus,
+    pub online: bool,
+    pub cpu_usage: f32,
+    pub gpu_usage: Option<f32>,
+    pub memory_usage: f32,
+    pub installed_models: Vec<InstalledModel>,
+    pub features_supported: FeatureFlags,
+    pub accept_public_jobs: bool,
+    /// 节点模型能力图（capability_state）
+    pub capability_state: CapabilityState,
+    pub current_jobs: usize,
+    pub max_concurrent_jobs: usize,
+    pub last_heartbeat: chrono::DateTime<chrono::Utc>,
+    /// 节点注册时间（用于 warmup 超时检查）
+    pub registered_at: chrono::DateTime<chrono::Utc>,
+}
+
+/// 调度过滤排除原因
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum DispatchExcludeReason {
+    StatusNotReady,
+    NotInPublicPool,
+    GpuUnavailable,
+    ModelNotAvailable,
+    CapacityExceeded,
+    ResourceThresholdExceeded,
+}
+

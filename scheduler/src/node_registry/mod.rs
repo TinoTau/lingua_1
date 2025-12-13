@@ -1,44 +1,17 @@
+// 节点注册表模块
+
+mod types;
+mod validation;
+
+pub use types::{Node, DispatchExcludeReason};
+
 use crate::messages::{FeatureFlags, HardwareInfo, InstalledModel, CapabilityState, ModelStatus, NodeStatus};
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use uuid::Uuid;
 use tracing::{info, warn, debug};
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Node {
-    pub node_id: String,
-    pub name: String,
-    pub version: String,
-    pub platform: String, // "windows" | "linux" | "macos"
-    pub hardware: HardwareInfo,
-    /// 节点生命周期状态（Scheduler 权威）
-    pub status: NodeStatus,
-    pub online: bool,
-    pub cpu_usage: f32,
-    pub gpu_usage: Option<f32>,
-    pub memory_usage: f32,
-    pub installed_models: Vec<InstalledModel>,
-    pub features_supported: FeatureFlags,
-    pub accept_public_jobs: bool,
-    /// 节点模型能力图（capability_state）
-    pub capability_state: CapabilityState,
-    pub current_jobs: usize,
-    pub max_concurrent_jobs: usize,
-    pub last_heartbeat: chrono::DateTime<chrono::Utc>,
-}
-
-/// 调度过滤排除原因
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub enum DispatchExcludeReason {
-    StatusNotReady,
-    NotInPublicPool,
-    GpuUnavailable,
-    ModelNotAvailable,
-    CapacityExceeded,
-    ResourceThresholdExceeded,
-}
+use validation::{node_has_required_models, node_has_models_ready, node_supports_features, is_node_resource_available};
 
 #[derive(Clone)]
 pub struct NodeRegistry {
@@ -160,6 +133,7 @@ impl NodeRegistry {
         let gpu_count = hardware.gpus.as_ref().map(|gpus| gpus.len()).unwrap_or(0);
         let model_count = installed_models.len();
         
+        let now = chrono::Utc::now();
         let node = Node {
             node_id: final_node_id.clone(),
             name: name.clone(),
@@ -177,7 +151,8 @@ impl NodeRegistry {
             capability_state,
             current_jobs: 0,
             max_concurrent_jobs: 4,
-            last_heartbeat: chrono::Utc::now(),
+            last_heartbeat: now,
+            registered_at: now, // 记录注册时间
         };
 
         nodes.insert(final_node_id.clone(), node.clone());
@@ -265,52 +240,6 @@ impl NodeRegistry {
         self.select_node_with_features(src_lang, tgt_lang, &None, true).await
     }
 
-    fn node_has_required_models(&self, node: &Node, src_lang: &str, tgt_lang: &str) -> bool {
-        // 检查节点是否安装了所需的模型（使用 capability_state）
-        // 优先使用 capability_state，如果没有则回退到 installed_models
-        
-        // 检查 ASR 模型（需要至少一个 ASR 模型为 ready）
-        let has_asr = node.capability_state.iter()
-            .any(|(model_id, status)| {
-                status == &ModelStatus::Ready && 
-                node.installed_models.iter()
-                    .any(|m| m.model_id == *model_id && m.kind == "asr")
-            }) || node.installed_models.iter().any(|m| m.kind == "asr");
-        
-        // 检查 NMT 模型
-        let has_nmt = node.capability_state.iter()
-            .any(|(model_id, status)| {
-                status == &ModelStatus::Ready &&
-                node.installed_models.iter()
-                    .any(|m| {
-                        m.model_id == *model_id &&
-                        m.kind == "nmt" &&
-                        m.src_lang.as_deref() == Some(src_lang) &&
-                        m.tgt_lang.as_deref() == Some(tgt_lang)
-                    })
-            }) || node.installed_models.iter().any(|m| {
-                m.kind == "nmt"
-                    && m.src_lang.as_deref() == Some(src_lang)
-                    && m.tgt_lang.as_deref() == Some(tgt_lang)
-            });
-        
-        // 检查 TTS 模型
-        let has_tts = node.capability_state.iter()
-            .any(|(model_id, status)| {
-                status == &ModelStatus::Ready &&
-                node.installed_models.iter()
-                    .any(|m| {
-                        m.model_id == *model_id &&
-                        m.kind == "tts" &&
-                        m.tgt_lang.as_deref() == Some(tgt_lang)
-                    })
-            }) || node.installed_models.iter().any(|m| {
-                m.kind == "tts" && m.tgt_lang.as_deref() == Some(tgt_lang)
-            });
-        
-        has_asr && has_nmt && has_tts
-    }
-
     /// 检查节点是否具备所需的模型（通过 capability_state）
     /// 
     /// # Arguments
@@ -321,12 +250,7 @@ impl NodeRegistry {
     /// * `true` - 所有所需模型的状态都是 `Ready`
     /// * `false` - 至少有一个模型不是 `Ready`
     pub fn node_has_models_ready(&self, node: &Node, required_model_ids: &[String]) -> bool {
-        required_model_ids.iter().all(|model_id| {
-            node.capability_state
-                .get(model_id)
-                .map(|status| status == &ModelStatus::Ready)
-                .unwrap_or(false)
-        })
+        node_has_models_ready(node, required_model_ids)
     }
 
     pub async fn select_node_with_features(
@@ -339,7 +263,7 @@ impl NodeRegistry {
         let nodes = self.nodes.read().await;
         
         // 筛选可用的节点（硬过滤：status == ready）
-        let mut available_nodes: Vec<_> = Vec::new();
+        let mut available_nodes: Vec<&Node> = Vec::new();
         
         for node in nodes.values() {
             // 记录排除原因（用于聚合统计）
@@ -363,12 +287,12 @@ impl NodeRegistry {
                 continue;
             }
             
-            if !self.node_has_required_models(node, src_lang, tgt_lang) {
+            if !node_has_required_models(node, src_lang, tgt_lang) {
                 self.record_exclude_reason(DispatchExcludeReason::ModelNotAvailable, node.node_id.clone()).await;
                 continue;
             }
             
-            if !self.node_supports_features(node, required_features) {
+            if !node_supports_features(node, required_features) {
                 self.record_exclude_reason(DispatchExcludeReason::ModelNotAvailable, node.node_id.clone()).await;
                 continue;
             }
@@ -378,7 +302,7 @@ impl NodeRegistry {
                 continue;
             }
             
-            if !self.is_node_resource_available(node) {
+            if !is_node_resource_available(node, self.resource_threshold) {
                 self.record_exclude_reason(DispatchExcludeReason::ResourceThresholdExceeded, node.node_id.clone()).await;
                 continue;
             }
@@ -396,50 +320,6 @@ impl NodeRegistry {
         Some(available_nodes[0].node_id.clone())
     }
 
-    fn node_supports_features(&self, node: &Node, required_features: &Option<FeatureFlags>) -> bool {
-        if let Some(ref features) = required_features {
-            // 检查节点是否支持所有必需的功能
-            // 只有当 required_features 中明确要求为 true 时，才检查节点是否支持
-            
-            // 情感检测
-            if features.emotion_detection == Some(true) 
-                && node.features_supported.emotion_detection != Some(true) {
-                return false;
-            }
-            
-            // 音色风格检测
-            if features.voice_style_detection == Some(true)
-                && node.features_supported.voice_style_detection != Some(true) {
-                return false;
-            }
-            
-            // 语速检测
-            if features.speech_rate_detection == Some(true)
-                && node.features_supported.speech_rate_detection != Some(true) {
-                return false;
-            }
-            
-            // 语速控制
-            if features.speech_rate_control == Some(true)
-                && node.features_supported.speech_rate_control != Some(true) {
-                return false;
-            }
-            
-            // 说话人识别
-            if features.speaker_identification == Some(true)
-                && node.features_supported.speaker_identification != Some(true) {
-                return false;
-            }
-            
-            // 角色适应
-            if features.persona_adaptation == Some(true)
-                && node.features_supported.persona_adaptation != Some(true) {
-                return false;
-            }
-        }
-        true
-    }
-
     pub async fn mark_node_offline(&self, node_id: &str) {
         let mut nodes = self.nodes.write().await;
         if let Some(node) = nodes.get_mut(node_id) {
@@ -451,7 +331,7 @@ impl NodeRegistry {
     pub async fn check_node_has_models_ready(&self, node_id: &str, required_model_ids: &[String]) -> bool {
         let nodes = self.nodes.read().await;
         if let Some(node) = nodes.get(node_id) {
-            self.node_has_models_ready(node, required_model_ids)
+            node_has_models_ready(node, required_model_ids)
         } else {
             false
         }
@@ -478,7 +358,7 @@ impl NodeRegistry {
         let nodes = self.nodes.read().await;
         
         // 筛选可用的节点（硬过滤：status == ready）
-        let mut available_nodes: Vec<_> = Vec::new();
+        let mut available_nodes: Vec<&Node> = Vec::new();
         
         for node in nodes.values() {
             // 记录排除原因（用于聚合统计）
@@ -502,12 +382,12 @@ impl NodeRegistry {
                 continue;
             }
             
-            if !self.node_has_required_models(node, src_lang, tgt_lang) {
+            if !node_has_required_models(node, src_lang, tgt_lang) {
                 self.record_exclude_reason(DispatchExcludeReason::ModelNotAvailable, node.node_id.clone()).await;
                 continue;
             }
             
-            if !self.node_has_models_ready(node, required_model_ids) {
+            if !node_has_models_ready(node, required_model_ids) {
                 self.record_exclude_reason(DispatchExcludeReason::ModelNotAvailable, node.node_id.clone()).await;
                 continue;
             }
@@ -517,7 +397,7 @@ impl NodeRegistry {
                 continue;
             }
             
-            if !self.is_node_resource_available(node) {
+            if !is_node_resource_available(node, self.resource_threshold) {
                 self.record_exclude_reason(DispatchExcludeReason::ResourceThresholdExceeded, node.node_id.clone()).await;
                 continue;
             }
@@ -555,37 +435,6 @@ impl NodeRegistry {
         );
         
         Some(selected_node_id)
-    }
-
-    /// 检查节点资源使用率是否可用（低于阈值）
-    /// 
-    /// 根据设计理念：调度服务器只负责跳过高负载节点，具体计算压力交给节点端
-    /// 节点端通过心跳传递资源使用率，调度服务器只需简单过滤即可
-    /// 
-    /// # 要求
-    /// - GPU 使用率必须检查（所有节点都必须有 GPU）
-    fn is_node_resource_available(&self, node: &Node) -> bool {
-        // 检查 CPU 使用率
-        if node.cpu_usage > self.resource_threshold {
-            return false;
-        }
-        
-        // 检查 GPU 使用率（必需，所有节点都必须有 GPU）
-        if let Some(gpu_usage) = node.gpu_usage {
-            if gpu_usage > self.resource_threshold {
-                return false;
-            }
-        } else {
-            // 如果没有 GPU 使用率，节点不可用（不应该发生，因为注册时已检查）
-            return false;
-        }
-        
-        // 检查内存使用率
-        if node.memory_usage > self.resource_threshold {
-            return false;
-        }
-        
-        true
     }
 }
 
