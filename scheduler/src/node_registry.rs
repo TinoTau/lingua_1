@@ -1,9 +1,10 @@
-use crate::messages::{FeatureFlags, HardwareInfo, InstalledModel, CapabilityState, ModelStatus};
+use crate::messages::{FeatureFlags, HardwareInfo, InstalledModel, CapabilityState, ModelStatus, NodeStatus};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use uuid::Uuid;
+use tracing::{info, warn, debug};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Node {
@@ -12,6 +13,8 @@ pub struct Node {
     pub version: String,
     pub platform: String, // "windows" | "linux" | "macos"
     pub hardware: HardwareInfo,
+    /// 节点生命周期状态（Scheduler 权威）
+    pub status: NodeStatus,
     pub online: bool,
     pub cpu_usage: f32,
     pub gpu_usage: Option<f32>,
@@ -26,11 +29,25 @@ pub struct Node {
     pub last_heartbeat: chrono::DateTime<chrono::Utc>,
 }
 
+/// 调度过滤排除原因
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum DispatchExcludeReason {
+    StatusNotReady,
+    NotInPublicPool,
+    GpuUnavailable,
+    ModelNotAvailable,
+    CapacityExceeded,
+    ResourceThresholdExceeded,
+}
+
 #[derive(Clone)]
 pub struct NodeRegistry {
-    nodes: Arc<RwLock<HashMap<String, Node>>>,
+    pub(crate) nodes: Arc<RwLock<HashMap<String, Node>>>,
     /// 资源使用率阈值（超过此值的节点将被跳过）
     resource_threshold: f32,
+    /// 调度排除原因统计（用于聚合统计）
+    /// key: 排除原因, value: (总次数, 示例节点 ID 列表（最多 Top-K）)
+    exclude_reason_stats: Arc<RwLock<HashMap<DispatchExcludeReason, (usize, Vec<String>)>>>,
 }
 
 impl NodeRegistry {
@@ -38,6 +55,7 @@ impl NodeRegistry {
         Self {
             nodes: Arc::new(RwLock::new(HashMap::new())),
             resource_threshold: 25.0, // 默认 25%
+            exclude_reason_stats: Arc::new(RwLock::new(HashMap::new())),
         }
     }
 
@@ -45,7 +63,39 @@ impl NodeRegistry {
         Self {
             nodes: Arc::new(RwLock::new(HashMap::new())),
             resource_threshold: threshold,
+            exclude_reason_stats: Arc::new(RwLock::new(HashMap::new())),
         }
+    }
+    
+    /// 记录调度排除原因（聚合统计 + Top-K 示例）
+    async fn record_exclude_reason(&self, reason: DispatchExcludeReason, node_id: String) {
+        let mut stats = self.exclude_reason_stats.write().await;
+        let entry = stats.entry(reason.clone()).or_insert_with(|| (0, Vec::new()));
+        entry.0 += 1;
+        
+        // Top-K 示例（最多保留 5 个节点 ID）
+        const TOP_K: usize = 5;
+        if entry.1.len() < TOP_K && !entry.1.contains(&node_id) {
+            entry.1.push(node_id.clone());
+        }
+        
+        debug!(
+            node_id = %node_id,
+            reason = ?reason,
+            total_count = entry.0,
+            "调度过滤：节点被排除"
+        );
+    }
+    
+    /// 获取调度排除原因统计（用于日志输出）
+    pub async fn get_exclude_reason_stats(&self) -> HashMap<DispatchExcludeReason, (usize, Vec<String>)> {
+        self.exclude_reason_stats.read().await.clone()
+    }
+    
+    /// 清除调度排除原因统计（定期调用，避免内存无限增长）
+    pub async fn clear_exclude_reason_stats(&self) {
+        let mut stats = self.exclude_reason_stats.write().await;
+        stats.clear();
     }
 
     /// 注册节点
@@ -71,12 +121,33 @@ impl NodeRegistry {
     ) -> Result<Node, String> {
         // 检查节点是否有 GPU（必需）
         if hardware.gpus.is_none() || hardware.gpus.as_ref().unwrap().is_empty() {
+            warn!(
+                name = %name,
+                version = %version,
+                platform = %platform,
+                "节点注册失败：没有 GPU"
+            );
             return Err("节点必须有 GPU 才能注册为算力提供方".to_string());
         }
         
-        let node_id = node_id.unwrap_or_else(|| {
+        let mut nodes = self.nodes.write().await;
+        
+        // node_id 冲突检测（最小实现）
+        let final_node_id = if let Some(provided_id) = node_id {
+            // 如果提供了 node_id，检查是否已存在
+            if nodes.contains_key(&provided_id) {
+                warn!(
+                    node_id = %provided_id,
+                    name = %name,
+                    "节点注册失败：node_id 冲突"
+                );
+                return Err("节点 ID 冲突，请清除本地 node_id 后重新注册".to_string());
+            }
+            provided_id
+        } else {
+            // 生成新的 node_id
             format!("node-{}", Uuid::new_v4().to_string()[..8].to_uppercase())
-        });
+        };
         
         // 如果没有提供 capability_state，从 installed_models 推断
         let capability_state = capability_state.unwrap_or_else(|| {
@@ -85,12 +156,17 @@ impl NodeRegistry {
                 .collect()
         });
 
+        // 保存用于日志的字段（在 move 之前）
+        let gpu_count = hardware.gpus.as_ref().map(|gpus| gpus.len()).unwrap_or(0);
+        let model_count = installed_models.len();
+        
         let node = Node {
-            node_id: node_id.clone(),
-            name,
-            version,
-            platform,
+            node_id: final_node_id.clone(),
+            name: name.clone(),
+            version: version.clone(),
+            platform: platform.clone(),
             hardware,
+            status: NodeStatus::Registering, // 初始状态为 registering
             online: true,
             cpu_usage: 0.0,
             gpu_usage: Some(0.0), // 初始化为 0.0，因为节点必须有 GPU
@@ -104,8 +180,20 @@ impl NodeRegistry {
             last_heartbeat: chrono::Utc::now(),
         };
 
-        let mut nodes = self.nodes.write().await;
-        nodes.insert(node_id.clone(), node.clone());
+        nodes.insert(final_node_id.clone(), node.clone());
+        
+        info!(
+            node_id = %final_node_id,
+            name = %name,
+            version = %version,
+            platform = %platform,
+            gpu_count = gpu_count,
+            model_count = model_count,
+            accept_public_jobs = node.accept_public_jobs,
+            status = ?NodeStatus::Registering,
+            "节点注册成功"
+        );
+        
         Ok(node)
     }
 
@@ -150,6 +238,23 @@ impl NodeRegistry {
         let nodes = self.nodes.read().await;
         if let Some(node) = nodes.get(node_id) {
             node.online && node.current_jobs < node.max_concurrent_jobs
+        } else {
+            false
+        }
+    }
+    
+    /// 获取节点状态（用于测试）
+    pub async fn get_node_status(&self, node_id: &str) -> Option<NodeStatus> {
+        let nodes = self.nodes.read().await;
+        nodes.get(node_id).map(|node| node.status.clone())
+    }
+    
+    /// 设置节点状态（用于测试）
+    pub async fn set_node_status(&self, node_id: &str, status: NodeStatus) -> bool {
+        let mut nodes = self.nodes.write().await;
+        if let Some(node) = nodes.get_mut(node_id) {
+            node.status = status;
+            true
         } else {
             false
         }
@@ -233,18 +338,54 @@ impl NodeRegistry {
     ) -> Option<String> {
         let nodes = self.nodes.read().await;
         
-        // 筛选可用的节点
-        let mut available_nodes: Vec<_> = nodes
-            .values()
-            .filter(|node| {
-                node.online
-                    && node.current_jobs < node.max_concurrent_jobs
-                    && (accept_public || !node.accept_public_jobs) // 如果 accept_public=false，只选择不接受公共任务的节点
-                    && self.node_has_required_models(node, src_lang, tgt_lang)
-                    && self.node_supports_features(node, required_features)
-                    && self.is_node_resource_available(node) // 检查资源使用率是否低于阈值
-            })
-            .collect();
+        // 筛选可用的节点（硬过滤：status == ready）
+        let mut available_nodes: Vec<_> = Vec::new();
+        
+        for node in nodes.values() {
+            // 记录排除原因（用于聚合统计）
+            if node.status != NodeStatus::Ready {
+                self.record_exclude_reason(DispatchExcludeReason::StatusNotReady, node.node_id.clone()).await;
+                continue;
+            }
+            
+            if !node.online {
+                continue;
+            }
+            
+            if !(accept_public || !node.accept_public_jobs) {
+                self.record_exclude_reason(DispatchExcludeReason::NotInPublicPool, node.node_id.clone()).await;
+                continue;
+            }
+            
+            // 检查 GPU 可用性
+            if node.hardware.gpus.is_none() || node.hardware.gpus.as_ref().unwrap().is_empty() {
+                self.record_exclude_reason(DispatchExcludeReason::GpuUnavailable, node.node_id.clone()).await;
+                continue;
+            }
+            
+            if !self.node_has_required_models(node, src_lang, tgt_lang) {
+                self.record_exclude_reason(DispatchExcludeReason::ModelNotAvailable, node.node_id.clone()).await;
+                continue;
+            }
+            
+            if !self.node_supports_features(node, required_features) {
+                self.record_exclude_reason(DispatchExcludeReason::ModelNotAvailable, node.node_id.clone()).await;
+                continue;
+            }
+            
+            if node.current_jobs >= node.max_concurrent_jobs {
+                self.record_exclude_reason(DispatchExcludeReason::CapacityExceeded, node.node_id.clone()).await;
+                continue;
+            }
+            
+            if !self.is_node_resource_available(node) {
+                self.record_exclude_reason(DispatchExcludeReason::ResourceThresholdExceeded, node.node_id.clone()).await;
+                continue;
+            }
+            
+            // 通过所有检查，加入候选列表
+            available_nodes.push(node);
+        }
 
         if available_nodes.is_empty() {
             return None;
@@ -336,26 +477,84 @@ impl NodeRegistry {
     ) -> Option<String> {
         let nodes = self.nodes.read().await;
         
-        // 筛选可用的节点
-        let mut available_nodes: Vec<_> = nodes
-            .values()
-            .filter(|node| {
-                node.online
-                    && node.current_jobs < node.max_concurrent_jobs
-                    && (accept_public || !node.accept_public_jobs)
-                    && self.node_has_required_models(node, src_lang, tgt_lang)
-                    && self.node_has_models_ready(node, required_model_ids)
-                    && self.is_node_resource_available(node) // 检查资源使用率是否低于阈值
-            })
-            .collect();
+        // 筛选可用的节点（硬过滤：status == ready）
+        let mut available_nodes: Vec<_> = Vec::new();
+        
+        for node in nodes.values() {
+            // 记录排除原因（用于聚合统计）
+            if node.status != NodeStatus::Ready {
+                self.record_exclude_reason(DispatchExcludeReason::StatusNotReady, node.node_id.clone()).await;
+                continue;
+            }
+            
+            if !node.online {
+                continue;
+            }
+            
+            if !(accept_public || !node.accept_public_jobs) {
+                self.record_exclude_reason(DispatchExcludeReason::NotInPublicPool, node.node_id.clone()).await;
+                continue;
+            }
+            
+            // 检查 GPU 可用性
+            if node.hardware.gpus.is_none() || node.hardware.gpus.as_ref().unwrap().is_empty() {
+                self.record_exclude_reason(DispatchExcludeReason::GpuUnavailable, node.node_id.clone()).await;
+                continue;
+            }
+            
+            if !self.node_has_required_models(node, src_lang, tgt_lang) {
+                self.record_exclude_reason(DispatchExcludeReason::ModelNotAvailable, node.node_id.clone()).await;
+                continue;
+            }
+            
+            if !self.node_has_models_ready(node, required_model_ids) {
+                self.record_exclude_reason(DispatchExcludeReason::ModelNotAvailable, node.node_id.clone()).await;
+                continue;
+            }
+            
+            if node.current_jobs >= node.max_concurrent_jobs {
+                self.record_exclude_reason(DispatchExcludeReason::CapacityExceeded, node.node_id.clone()).await;
+                continue;
+            }
+            
+            if !self.is_node_resource_available(node) {
+                self.record_exclude_reason(DispatchExcludeReason::ResourceThresholdExceeded, node.node_id.clone()).await;
+                continue;
+            }
+            
+            // 通过所有检查，加入候选列表
+            available_nodes.push(node);
+        }
 
         if available_nodes.is_empty() {
+            // 记录统计信息（用于日志输出）
+            let stats = self.get_exclude_reason_stats().await;
+            if !stats.is_empty() {
+                debug!(
+                    src_lang = %src_lang,
+                    tgt_lang = %tgt_lang,
+                    required_models = ?required_model_ids,
+                    exclude_stats = ?stats,
+                    "调度过滤：没有可用节点"
+                );
+            }
             return None;
         }
 
         // 负载均衡：按 current_jobs 排序，选择任务数最少的节点
         available_nodes.sort_by_key(|node| node.current_jobs);
-        Some(available_nodes[0].node_id.clone())
+        let selected_node_id = available_nodes[0].node_id.clone();
+        
+        debug!(
+            node_id = %selected_node_id,
+            src_lang = %src_lang,
+            tgt_lang = %tgt_lang,
+            required_models = ?required_model_ids,
+            candidate_count = available_nodes.len(),
+            "调度过滤：选择节点"
+        );
+        
+        Some(selected_node_id)
     }
 
     /// 检查节点资源使用率是否可用（低于阈值）

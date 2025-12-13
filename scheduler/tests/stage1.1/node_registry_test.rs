@@ -1,7 +1,7 @@
 // 节点注册表单元测�?
 
 use lingua_scheduler::node_registry::NodeRegistry;
-use lingua_scheduler::messages::{FeatureFlags, HardwareInfo, GpuInfo, InstalledModel};
+use lingua_scheduler::messages::{FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, NodeStatus};
 
 fn create_test_hardware() -> HardwareInfo {
     HardwareInfo {
@@ -310,10 +310,15 @@ async fn test_select_node_with_features() {
     ).await;
     
     // 选择中文到英文的节点
+    // 将节点状态设置为 ready（才能被选中）
+    registry.set_node_status("node-zh-en", NodeStatus::Ready).await;
+    
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
     assert_eq!(selected, Some("node-zh-en".to_string()));
     
     // 选择英文到中文的节点
+    registry.set_node_status("node-en-zh", NodeStatus::Ready).await;
+    
     let selected = registry.select_node_with_features("en", "zh", &None, true).await;
     assert_eq!(selected, Some("node-en-zh".to_string()));
 }
@@ -371,6 +376,9 @@ async fn test_select_node_with_required_features() {
         speaker_identification: None,
         persona_adaptation: None,
     });
+    
+    // 将节点状态设置为 ready
+    registry.set_node_status("node-with-emotion", NodeStatus::Ready).await;
     
     let selected = registry.select_node_with_features("zh", "en", &required_features, true).await;
     assert_eq!(selected, Some("node-with-emotion".to_string()));
@@ -546,6 +554,10 @@ async fn test_select_node_resource_threshold_cpu() {
     registry.update_node_heartbeat("node-low-cpu", 20.0, None, 15.0, None, 0, None).await;
     registry.update_node_heartbeat("node-high-cpu", 30.0, None, 15.0, None, 0, None).await;
     
+    // 将所有节点状态设置为 ready
+    registry.set_node_status("node-low-cpu", NodeStatus::Ready).await;
+    registry.set_node_status("node-high-cpu", NodeStatus::Ready).await;
+    
     // 选择节点，应该只选择 CPU 使用率低于阈值的节点
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
     assert_eq!(selected, Some("node-low-cpu".to_string()));
@@ -599,6 +611,10 @@ async fn test_select_node_resource_threshold_gpu() {
     registry.update_node_heartbeat("node-low-gpu", 15.0, Some(20.0), 15.0, None, 0, None).await;
     registry.update_node_heartbeat("node-high-gpu", 15.0, Some(30.0), 15.0, None, 0, None).await;
     
+    // 将所有节点状态设置为 ready
+    registry.set_node_status("node-low-gpu", NodeStatus::Ready).await;
+    registry.set_node_status("node-high-gpu", NodeStatus::Ready).await;
+    
     // 选择节点，应该只选择 GPU 使用率低于阈值的节点
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
     assert_eq!(selected, Some("node-low-gpu".to_string()));
@@ -651,6 +667,10 @@ async fn test_select_node_resource_threshold_memory() {
     // 更新节点资源使用率：low-mem 内存=20%, high-mem 内存=30%（超过阈值）
     registry.update_node_heartbeat("node-low-mem", 15.0, None, 20.0, None, 0, None).await;
     registry.update_node_heartbeat("node-high-mem", 15.0, None, 30.0, None, 0, None).await;
+    
+    // 将所有节点状态设置为 ready
+    registry.set_node_status("node-low-mem", NodeStatus::Ready).await;
+    registry.set_node_status("node-high-mem", NodeStatus::Ready).await;
     
     // 选择节点，应该只选择内存使用率低于阈值的节点
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
@@ -727,6 +747,11 @@ async fn test_select_node_resource_threshold_all_resources() {
     registry.update_node_heartbeat("node-high-cpu", 30.0, Some(20.0), 20.0, None, 0, None).await;
     // node-high-gpu: GPU 超过阈�?
     registry.update_node_heartbeat("node-high-gpu", 20.0, Some(30.0), 20.0, None, 0, None).await;
+    
+    // 将所有节点状态设置为 ready
+    registry.set_node_status("node-ok", NodeStatus::Ready).await;
+    registry.set_node_status("node-high-cpu", NodeStatus::Ready).await;
+    registry.set_node_status("node-high-gpu", NodeStatus::Ready).await;
     
     // 选择节点，应该只选择所有资源都在阈值以下的节点
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;

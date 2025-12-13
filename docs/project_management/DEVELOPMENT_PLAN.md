@@ -40,6 +40,24 @@
     - [x] 分发任务时自动跳过高负载节点（CPU/GPU/内存任一超过阈值）
     - [x] 添加资源使用率阈值过滤单元测试（6个测试）
     - [x] 添加 GPU 要求检查单元测试（1个测试）
+  - [x] **节点状态管理（NodeStatus）** ✅
+    - [x] `NodeStatus` 枚举定义（`registering`, `ready`, `degraded`, `offline`）
+    - [x] `NodeStatusManager` 模块实现（健康检查、状态转换、定期扫描）
+    - [x] 健康检查阈值配置（心跳间隔、超时、warmup 超时、失败率阈值）
+    - [x] 状态转换逻辑（`registering→ready`, `registering→degraded`, `ready→degraded`, `degraded→ready`, `any→offline`）
+    - [x] 调度过滤增强（只选择 `status == ready` 的节点）
+    - [x] `node_id` 冲突检测（最小实现）
+    - [x] `node_status` 消息发送（状态变化时发送）
+    - [x] 调度排除原因记录（聚合统计 + Top-K 示例）
+    - [x] 结构化日志集成（所有关键操作都有日志）
+    - [x] 单元测试（9个测试，全部通过）✅
+    - [x] **节点注册流程** ✅
+      - [x] WebSocket 连接建立
+      - [x] 发送 `node_register` 消息（包含硬件信息、模型列表、功能标志）
+      - [x] 服务器验证（GPU 要求强制检查、node_id 冲突检测）
+      - [x] 返回 `node_register_ack`（初始状态 `registering`）或 `node_error`
+      - [x] 节点开始心跳，触发健康检查和状态转换
+    - [ ] 阶段 3：`draining` 状态、`node_status` 扩展、更细日志（按优先级再排期）
   - 详细方案请参考 [任务分发算法优化方案](../scheduler/DISPATCHER_OPTIMIZATION_PLAN.md)
 - [ ] 高级负载均衡策略（加权轮询、综合评分）
 - [ ] 功能匹配优先级排序和方言匹配

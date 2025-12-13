@@ -83,13 +83,29 @@ async fn handle_node_message(
         NodeMessage::NodeRegister {
             node_id: provided_node_id,
             version,
+            capability_schema_version,
             platform,
             hardware,
             installed_models,
             features_supported,
+            advanced_features: _,
             accept_public_jobs,
             capability_state,
         } => {
+            // 验证 capability_schema_version（如果提供）
+            if let Some(ref schema_version) = capability_schema_version {
+                if schema_version != "1.0" {
+                    let error_msg = NodeMessage::Error {
+                        code: crate::messages::ErrorCode::InvalidCapabilitySchema.to_string(),
+                        message: format!("不支持的能力描述版本: {}", schema_version),
+                        details: None,
+                    };
+                    send_node_message(tx, &error_msg).await?;
+                    warn!("节点注册失败（不支持的能力描述版本）: {}", schema_version);
+                    return Ok(());
+                }
+            }
+            
             // 注册节点（要求必须有 GPU）
             match state.node_registry.register_node(
                 provided_node_id,
@@ -108,24 +124,36 @@ async fn handle_node_message(
                     // 注册连接
                     state.node_connections.register(node.node_id.clone(), tx.clone()).await;
                     
-                    // 发送确认消息
+                    // 发送确认消息（status 初始为 registering）
                     let ack = NodeMessage::NodeRegisterAck {
                         node_id: node.node_id.clone(),
                         message: "registered".to_string(),
+                        status: "registering".to_string(),
                     };
                     
                     send_node_message(tx, &ack).await?;
-                    info!("节点 {} 已注册", node.node_id);
+                    info!("节点 {} 已注册，状态: registering", node.node_id);
                 }
                 Err(err) => {
-                    // 注册失败（没有 GPU），发送错误消息
+                    // 注册失败，判断错误类型
+                    let (error_code, is_node_id_conflict) = if err.contains("ID 冲突") {
+                        (crate::messages::ErrorCode::NodeIdConflict, true)
+                    } else {
+                        (crate::messages::ErrorCode::NoGpuAvailable, false)
+                    };
+                    
                     let error_msg = NodeMessage::Error {
-                        code: crate::messages::ErrorCode::NoGpuAvailable.to_string(),
+                        code: error_code.to_string(),
                         message: err.clone(),
                         details: None,
                     };
                     send_node_message(tx, &error_msg).await?;
-                    warn!("节点注册失败（没有 GPU）: {}", err);
+                    
+                    if is_node_id_conflict {
+                        warn!("节点注册失败（node_id 冲突）: {}", err);
+                    } else {
+                        warn!("节点注册失败（没有 GPU）: {}", err);
+                    }
                     return Ok(()); // 返回，不再继续处理
                 }
             }
@@ -148,6 +176,9 @@ async fn handle_node_message(
                 resource_usage.running_jobs,
                 capability_state,
             ).await;
+            
+            // 触发状态检查（立即触发）
+            state.node_status_manager.on_heartbeat(&nid).await;
         }
         
         NodeMessage::JobResult {

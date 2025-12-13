@@ -17,7 +17,7 @@
 
 | 模块 | 测试数量 | 通过 | 失败 | 通过率 |
 |------|---------|------|------|--------|
-| 调度服务器（阶段 1.1） | 54 | ✅ 54 | 0 | 100% |
+| 调度服务器（阶段 1.1） | 63 | ✅ 60 | 3 | 95%* |
 | 消息格式对齐（阶段 1.2） | 7 | ✅ 7 | 0 | 100% |
 | 节点推理服务（阶段 1.3） | 20+ | ✅ 10+ | 0 | 100%* |
 | 自动语种识别（阶段 1.4） | 7 | ✅ 7 | 0 | 100% |
@@ -28,7 +28,7 @@
 | 模型管理（阶段 3.1） | 48 | ✅ 48 | 0 | 100%* |
 | 日志系统（阶段 4.1） | - | ✅ - | 0 | 100% |
 | Utterance Group（阶段 2.1.3） | 14 | ✅ 14 | 0 | 100% |
-| **总计** | **241+** | **✅ 231+** | **0** | **100%** |
+| **总计** | **250+** | **✅ 240+** | **3** | **96%** |
 
 *注：部分测试需要外部服务或模型文件，但核心功能测试全部通过
 
@@ -55,7 +55,10 @@
 - ✅ 核心模块实现：
   - 会话管理 (Session Manager) - 支持多租户
   - 任务分发 (Job Dispatcher)
-  - 节点注册表 (Node Registry) - 支持功能感知选择
+  - 节点注册表 (Node Registry) - 支持功能感知选择、节点状态管理
+    - 节点注册流程：WebSocket 连接 → 发送 `node_register` 消息 → 服务器验证（GPU 要求、node_id 冲突） → 返回 `node_register_ack`（初始状态 `registering`）或 `node_error`
+    - 节点状态管理：`registering` → `ready`（健康检查通过）→ `degraded`（健康检查失败）→ `offline`（心跳超时）
+    - 调度过滤：只选择 `status == ready` 的节点，记录排除原因（聚合统计 + Top-K 示例）
   - 配对服务 (Pairing Service)
   - 模型库接口 (Model Hub)
   - WebSocket 处理模块（模块化设计：session_handler, node_handler）
@@ -67,7 +70,7 @@
 - ✅ **数据结构扩展**：
   - Session 结构支持 `tenant_id`、`client_version`、`platform`、`dialect`、`features`
   - Job 结构支持 `dialect`、`features`、`pipeline`、`audio_format`、`sample_rate`、`enable_streaming_asr`、`partial_update_interval_ms`
-  - Node 结构支持 `version`、`platform`、`hardware`、`features_supported`、`accept_public_jobs`
+  - Node 结构支持 `version`、`platform`、`hardware`、`features_supported`、`accept_public_jobs`、`status`（NodeStatus 状态机）
 - ✅ **WebSocket 消息处理实现**（模块化设计）：
   - 会话端消息处理（`websocket/session_handler.rs`）- session_init, utterance, audio_chunk, heartbeat, session_close
   - 节点端消息处理（`websocket/node_handler.rs`）- node_register, node_heartbeat, job_result, asr_partial
@@ -89,8 +92,20 @@
   - 负载均衡配置支持
   - ✅ **资源使用率阈值过滤**（CPU/GPU/内存，默认 25%）
   - ✅ **GPU 要求强制检查**（无 GPU 的节点无法注册为算力提供方）
+  - ✅ **节点状态管理（NodeStatus）** ✅
+    - `NodeStatus` 枚举定义（`registering`, `ready`, `degraded`, `offline`）
+    - `NodeStatusManager` 模块实现（健康检查、状态转换、定期扫描）
+    - 健康检查阈值配置（心跳间隔 15s、超时 45s、warmup 超时 60s、失败率阈值）
+    - 状态转换逻辑（`registering→ready` 需连续 3 次心跳正常、`ready→degraded`、`degraded→ready`、`any→offline`）
+    - 调度过滤增强（只选择 `status == ready` 的节点）
+    - `node_id` 冲突检测（最小实现）
+    - `node_status` 消息发送（状态变化时发送）
+    - 调度排除原因记录（聚合统计 + Top-K 示例）
+    - 结构化日志集成（所有关键操作都有日志）
+    - 单元测试（9个测试，全部通过）✅
 - ✅ **单元测试**：
-  - 阶段一.1 完整单元测试（54个测试，全部通过）✅
+  - 阶段一.1 完整单元测试（63个测试，60个通过，3个待修复）✅
+  - 节点状态管理测试（9个测试，全部通过）✅
   - 阶段一.2 消息格式对齐测试（7个测试，全部通过）✅
   - 阶段 2.1.2 ASR 字幕功能测试（12个测试，全部通过）✅
   - 覆盖所有核心模块（会话、任务分发、节点注册、配对、连接管理、结果队列、音频缓冲区）
@@ -297,6 +312,13 @@
   - `node_heartbeat` 消息格式对齐协议规范
   - `job_result` 消息格式对齐协议规范
   - `asr_partial` 消息格式对齐协议规范（修复了协议定义中的 `node_id` 字段）
+- ✅ **节点注册流程** ✅
+  - WebSocket 连接建立
+  - 发送 `node_register` 消息（包含硬件信息、模型列表、功能标志、`capability_schema_version`、`advanced_features`）
+  - 服务器验证（GPU 要求强制检查、node_id 冲突检测、capability_schema_version 验证）
+  - 返回 `node_register_ack`（初始状态 `registering`）或 `node_error`
+  - 节点开始心跳，触发健康检查和状态转换（`registering` → `ready`）
+  - 详细流程请参考 [节点注册功能说明](../node_register/NODE_REGISTRATION_GUIDE.md)
 - ✅ **模型下载和安装逻辑完善** ✅（阶段 3.1）
   - 断点续传和流式下载
   - 多文件并发下载
@@ -687,3 +709,4 @@
 - [模块化功能设计文档](../modular/LINGUA_完整技术说明书_v2.md)
 - [自动语种识别与双向模式设计](../node_inference/AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md)
 - [任务分发算法优化方案](../scheduler/DISPATCHER_OPTIMIZATION_PLAN.md)
+- [节点注册功能文档](../node_register/README.md) - 节点注册功能说明、协议规范、实现状态等

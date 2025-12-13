@@ -26,3 +26,6 @@ mod connection_manager_test;
 #[path = "result_queue_test.rs"]
 mod result_queue_test;
 
+#[path = "node_status_test.rs"]
+mod node_status_test;
+

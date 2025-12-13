@@ -95,6 +95,31 @@ pub struct ExtraResult {
     pub voice_style: Option<String>,
 }
 
+// ===== NodeStatus 状态机 =====
+
+/// 节点生命周期状态（Scheduler 权威）
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum NodeStatus {
+    /// 已完成注册，但尚未参与调度（能力/模型仍可能在 warm-up）
+    Registering,
+    /// 已就绪，可被调度
+    Ready,
+    /// 能力下降（模型缺失、GPU 不可用、连续失败等）
+    Degraded,
+    /// 准备下线，不再接新任务，但允许完成在途任务
+    Draining,
+    /// 心跳丢失/主动下线/被移除
+    Offline,
+}
+
+impl NodeStatus {
+    /// 检查节点是否可以被调度
+    pub fn is_schedulable(&self) -> bool {
+        matches!(self, NodeStatus::Ready)
+    }
+}
+
 // ===== 错误码 =====
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -118,6 +143,8 @@ pub enum ErrorCode {
     ModelVerifyFailed,
     ModelCorrupted,
     NoGpuAvailable,
+    NodeIdConflict,
+    InvalidCapabilitySchema,
 }
 
 impl ToString for ErrorCode {
@@ -140,6 +167,8 @@ impl ToString for ErrorCode {
         ErrorCode::ModelVerifyFailed => "MODEL_VERIFY_FAILED".to_string(),
         ErrorCode::ModelCorrupted => "MODEL_CORRUPTED".to_string(),
         ErrorCode::NoGpuAvailable => "NO_GPU_AVAILABLE".to_string(),
+        ErrorCode::NodeIdConflict => "NODE_ID_CONFLICT".to_string(),
+        ErrorCode::InvalidCapabilitySchema => "INVALID_CAPABILITY_SCHEMA".to_string(),
         }
     }
 }
@@ -154,7 +183,9 @@ pub fn get_error_hint(code: &ErrorCode) -> &'static str {
         ErrorCode::TtsTimeout => "语音合成超时，请稍后重试。",
         ErrorCode::ModelVerifyFailed => "模型校验失败，请重新下载模型。",
         ErrorCode::ModelCorrupted => "模型文件损坏，请重新下载模型。",
-        ErrorCode::NoGpuAvailable => "节点没有 GPU，无法注册为算力提供方。",
+                ErrorCode::NoGpuAvailable => "节点没有 GPU，无法注册为算力提供方。",
+                ErrorCode::NodeIdConflict => "节点 ID 冲突，请清除本地 node_id 后重新注册。",
+                ErrorCode::InvalidCapabilitySchema => "不支持的能力描述版本，请更新节点客户端。",
         _ => "发生错误，请稍后重试。",
     }
 }
@@ -344,10 +375,17 @@ pub enum NodeMessage {
         #[serde(skip_serializing_if = "Option::is_none")]
         node_id: Option<String>,
         version: String,
+        /// 能力描述版本（可选，默认 "1.0"）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        capability_schema_version: Option<String>,
         platform: String, // "windows" | "linux" | "macos"
         hardware: HardwareInfo,
         installed_models: Vec<InstalledModel>,
+        /// 可选功能/插件能力（保留现有 FeatureFlags）
         features_supported: FeatureFlags,
+        /// 性能/调度相关高级能力（如 batched_inference、kv_cache）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        advanced_features: Option<Vec<String>>,
         accept_public_jobs: bool,
         /// 节点模型能力图（capability_state）
         /// key: model_id, value: 模型状态
@@ -358,6 +396,8 @@ pub enum NodeMessage {
     NodeRegisterAck {
         node_id: String,
         message: String,
+        /// 节点状态（初始恒为 registering）
+        status: String, // "registering" | "ready" | "degraded" | "draining" | "offline"
     },
     #[serde(rename = "error")]
     Error {

@@ -43,6 +43,12 @@ docs/
 ├── electron_node/               # Electron Node 客户端文档
 │   └── STAGE2.2_IMPLEMENTATION.md
 │
+├── node_register/               # 节点注册文档
+│   ├── README.md
+│   ├── NODE_REGISTRATION_GUIDE.md
+│   ├── NODE_REGISTRATION_PROTOCOL.md
+│   └── NODE_REGISTRATION_UI.md
+│
 ├── webClient/                   # Web 客户端文档
 │   ├── README.md
 │   ├── Web_端实时语音翻译_统一设计方案_v3.md
@@ -137,6 +143,17 @@ docs/
 - [阶段 2.2 测试报告](../electron-node/tests/stage2.2/TEST_REPORT.md) - 编译测试全部通过
 - [阶段 3.1 测试报告](../electron-node/tests/stage3.1/TEST_REPORT.md) - 模型管理功能测试（48个测试，全部通过）
 - [阶段 3.2 测试报告](../electron-node/tests/stage3.2/TEST_REPORT.md) - 模块化功能测试（22个测试，全部通过）
+
+---
+
+### 节点注册 (Node Registration)
+
+**目录**: [`node_register/`](./node_register/)  
+**文档**: [节点注册文档目录](./node_register/README.md)
+
+- [节点注册功能说明](./node_register/NODE_REGISTRATION_GUIDE.md) - ⭐ **完整的节点注册功能说明**（GPU 要求、注册流程、错误处理）
+- [节点注册协议规范](./node_register/NODE_REGISTRATION_PROTOCOL.md) - 节点注册的 WebSocket 消息协议详细说明
+- [节点注册 UI 设计](./node_register/NODE_REGISTRATION_UI.md) - 节点注册状态的 UI 显示和用户交互设计
 
 ---
 

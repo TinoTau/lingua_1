@@ -27,6 +27,82 @@ pub struct SchedulerConfig {
     pub heartbeat_interval_seconds: u64,
     #[serde(default)]
     pub load_balancer: LoadBalancerConfig,
+    #[serde(default)]
+    pub node_health: NodeHealthConfig,
+}
+
+/// 节点健康检查配置
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NodeHealthConfig {
+    /// 心跳间隔（秒）
+    #[serde(default = "default_heartbeat_interval")]
+    pub heartbeat_interval_seconds: u64,
+    /// 心跳超时（秒），超过此时间未收到心跳则判为 offline
+    #[serde(default = "default_heartbeat_timeout")]
+    pub heartbeat_timeout_seconds: u64,
+    /// registering → ready 需要连续正常心跳次数
+    #[serde(default = "default_health_check_count")]
+    pub health_check_count: usize,
+    /// warmup 超时（秒），超过此时间仍未 ready 则转 degraded
+    #[serde(default = "default_warmup_timeout")]
+    pub warmup_timeout_seconds: u64,
+    /// 失败率阈值：连续 N 次中失败 ≥ M 次，或连续失败 M 次
+    #[serde(default = "default_failure_threshold")]
+    pub failure_threshold: FailureThreshold,
+    /// 状态转换定期扫描间隔（秒）
+    #[serde(default = "default_status_scan_interval")]
+    pub status_scan_interval_seconds: u64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FailureThreshold {
+    /// 检查窗口大小（例如：5 次）
+    pub window_size: usize,
+    /// 失败次数阈值（例如：3 次）
+    pub failure_count: usize,
+    /// 连续失败次数阈值（例如：3 次）
+    pub consecutive_failure_count: usize,
+}
+
+fn default_heartbeat_interval() -> u64 {
+    15
+}
+
+fn default_heartbeat_timeout() -> u64 {
+    45
+}
+
+fn default_health_check_count() -> usize {
+    3
+}
+
+fn default_warmup_timeout() -> u64 {
+    60
+}
+
+fn default_failure_threshold() -> FailureThreshold {
+    FailureThreshold {
+        window_size: 5,
+        failure_count: 3,
+        consecutive_failure_count: 3,
+    }
+}
+
+fn default_status_scan_interval() -> u64 {
+    30
+}
+
+impl Default for NodeHealthConfig {
+    fn default() -> Self {
+        Self {
+            heartbeat_interval_seconds: default_heartbeat_interval(),
+            heartbeat_timeout_seconds: default_heartbeat_timeout(),
+            health_check_count: default_health_check_count(),
+            warmup_timeout_seconds: default_warmup_timeout(),
+            failure_threshold: default_failure_threshold(),
+            status_scan_interval_seconds: default_status_scan_interval(),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -89,6 +165,7 @@ impl Default for Config {
                     strategy: "least_connections".to_string(),
                     resource_threshold: default_resource_threshold(),
                 },
+                node_health: NodeHealthConfig::default(),
             },
         }
     }

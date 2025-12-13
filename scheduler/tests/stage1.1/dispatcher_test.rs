@@ -2,7 +2,7 @@
 
 use lingua_scheduler::dispatcher::JobDispatcher;
 use lingua_scheduler::node_registry::NodeRegistry;
-use lingua_scheduler::messages::{FeatureFlags, PipelineConfig, HardwareInfo, GpuInfo, InstalledModel};
+use lingua_scheduler::messages::{FeatureFlags, PipelineConfig, HardwareInfo, GpuInfo, InstalledModel, NodeStatus};
 use std::sync::Arc;
 
 fn create_test_node_registry() -> Arc<NodeRegistry> {
@@ -78,6 +78,9 @@ async fn test_create_job() {
         true,
         None,
     ).await.unwrap();
+    
+    // 将节点状态设置为 ready（才能被分配任务）
+    node_registry.set_node_status(&_node.node_id, NodeStatus::Ready).await;
     
     let job = dispatcher.create_job(
         "session-1".to_string(),
@@ -293,6 +296,9 @@ async fn test_update_job_status() {
         true,
         None,
     ).await.unwrap();
+    
+    // 将节点状态设置为 ready（才能被分配任务）
+    node_registry.set_node_status(&_node.node_id, NodeStatus::Ready).await;
     
     let job = dispatcher.create_job(
         "session-5".to_string(),

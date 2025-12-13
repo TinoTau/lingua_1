@@ -81,5 +81,11 @@ impl NodeConnectionManager {
             false
         }
     }
+    
+    /// 获取节点的发送器（用于发送消息）
+    pub async fn get_sender(&self, node_id: &str) -> Option<tokio::sync::mpsc::UnboundedSender<Message>> {
+        let connections = self.connections.read().await;
+        connections.get(node_id).cloned()
+    }
 }
 

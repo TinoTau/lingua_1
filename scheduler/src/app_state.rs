@@ -9,6 +9,7 @@ use crate::connection_manager::{SessionConnectionManager, NodeConnectionManager}
 use crate::result_queue::ResultQueueManager;
 use crate::audio_buffer::AudioBufferManager;
 use crate::group_manager::GroupManager;
+use crate::node_status_manager::NodeStatusManager;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -22,5 +23,6 @@ pub struct AppState {
     pub result_queue: ResultQueueManager,
     pub audio_buffer: AudioBufferManager,
     pub group_manager: GroupManager,
+    pub node_status_manager: NodeStatusManager,
 }
 

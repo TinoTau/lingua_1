@@ -24,6 +24,7 @@ mod audio_buffer;
 mod module_resolver;
 mod logging_config;
 mod group_manager;
+mod node_status_manager;
 
 use session::SessionManager;
 use dispatcher::JobDispatcher;
@@ -38,6 +39,7 @@ use result_queue::ResultQueueManager;
 use app_state::AppState;
 use audio_buffer::AudioBufferManager;
 use group_manager::{GroupManager, GroupConfig};
+use node_status_manager::NodeStatusManager;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -88,6 +90,16 @@ async fn main() -> Result<()> {
     // 初始化 GroupManager（使用默认配置）
     let group_config = GroupConfig::default();
     let group_manager = GroupManager::new(group_config);
+    
+    // 初始化 NodeStatusManager
+    let node_status_manager = NodeStatusManager::new(
+        node_registry.clone(),
+        std::sync::Arc::new(node_connections.clone()),
+        config.scheduler.node_health.clone(),
+    );
+    
+    // 启动定期扫描任务
+    node_status_manager.start_periodic_scan();
 
     // 创建应用状态
     let app_state = AppState {
@@ -101,6 +113,7 @@ async fn main() -> Result<()> {
         result_queue,
         audio_buffer,
         group_manager,
+        node_status_manager,
     };
 
     // 构建路由
