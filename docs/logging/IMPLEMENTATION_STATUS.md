@@ -355,6 +355,46 @@
 
 ---
 
+## ✅ 阶段 2.1.3：Utterance Group 功能日志支持（已完成）
+
+**状态**: ✅ **已完成**
+
+### 完成内容
+
+1. **GroupManager 模块日志** (`scheduler/src/group_manager.rs`)
+   - ✅ 添加 `tracing` 导入（`info`, `debug`, `warn`）
+   - ✅ `on_asr_final`: 记录 ASR Final 处理完成
+     - 包含字段：`trace_id`, `session_id`, `group_id`, `utterance_index`, `part_index`, `asr_text_len`, `context_len`, `parts_count`
+   - ✅ `on_nmt_done`: 记录 NMT 处理完成/失败
+     - 包含字段：`trace_id`, `group_id`, `part_index`, `translated_text_len` 或 `error_code`
+   - ✅ `on_tts_play_ended`: 记录 TTS 播放结束
+     - 包含字段：`group_id`, `session_id`, `old_tts_end_ms`, `new_tts_end_ms`
+   - ✅ `on_session_end`: 记录 Session 结束和 Group 清理
+     - 包含字段：`session_id`, `reason`, `active_group_id`, `removed_groups_count`
+   - ✅ `create_new_group`: 记录新 Group 创建
+     - 包含字段：`session_id`, `group_id`, `created_at_ms`
+   - ✅ `close_group`: 记录 Group 关闭
+     - 包含字段：`group_id`, `session_id`, `reason`, `parts_count`
+
+2. **NMT 引擎日志优化** (`node-inference/src/nmt.rs`)
+   - ✅ 优化日志格式，使用结构化字段
+   - ✅ 区分有/无上下文的日志记录
+   - ✅ 记录 `context_text` 长度信息
+
+3. **日志特点**
+   - ✅ 使用结构化日志（`tracing` 宏）
+   - ✅ 包含 `trace_id` 用于全链路追踪
+   - ✅ 包含 `group_id` 用于 Group 追踪
+   - ✅ 记录关键操作和状态变化
+   - ✅ 错误场景使用 `warn` 级别
+
+### 测试状态
+
+- ✅ 所有测试通过（10/10）
+- ✅ 编译通过
+
+---
+
 ## 下一步
 
 所有步骤已完成！日志系统 MVP 阶段已全部实现。

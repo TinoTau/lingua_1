@@ -17,6 +17,9 @@ class App {
   private asrSubtitle: AsrSubtitle;
   private config: Config;
   private audioBuffer: Float32Array[] = [];
+  // 当前 utterance 的 trace_id 和 group_id（用于 TTS_PLAY_ENDED）
+  private currentTraceId: string | null = null;
+  private currentGroupId: string | null = null;
 
   constructor(config: Partial<Config> = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
@@ -142,6 +145,19 @@ class App {
         console.log('Translation:', message.text);
         break;
       
+      case 'translation_result':
+        // 保存 trace_id 和 group_id，用于后续发送 TTS_PLAY_ENDED
+        this.currentTraceId = message.trace_id;
+        this.currentGroupId = message.group_id || null;
+        
+        // 处理 TTS 音频（如果存在）
+        if (message.tts_audio) {
+          // 将完整的 TTS 音频拆分成多个块发送给 TtsPlayer
+          // 这里简化处理，直接发送整个音频
+          this.ttsPlayer.addAudioChunk(message.tts_audio);
+        }
+        break;
+      
       case 'tts_audio':
         this.ttsPlayer.addAudioChunk(message.payload);
         break;
@@ -154,6 +170,15 @@ class App {
   private onPlaybackFinished(): void {
     // 状态机会自动切换到 INPUT_READY
     console.log('Playback finished');
+    
+    // 发送 TTS_PLAY_ENDED 消息（如果 trace_id 和 group_id 存在）
+    if (this.currentTraceId && this.currentGroupId) {
+      const tsEndMs = Date.now();
+      this.wsClient.sendTtsPlayEnded(this.currentTraceId, this.currentGroupId, tsEndMs);
+      console.log(`Sent TTS_PLAY_ENDED: trace_id=${this.currentTraceId}, group_id=${this.currentGroupId}, ts_end_ms=${tsEndMs}`);
+    } else {
+      console.warn('Cannot send TTS_PLAY_ENDED: missing trace_id or group_id');
+    }
   }
 
   /**
@@ -174,6 +199,9 @@ class App {
     if (this.stateMachine.getState() === SessionState.INPUT_READY) {
       this.audioBuffer = [];
       this.asrSubtitle.clear();
+      // 清空当前的 trace_id 和 group_id（新的 utterance）
+      this.currentTraceId = null;
+      this.currentGroupId = null;
       this.stateMachine.startRecording();
       await this.recorder.start();
     }

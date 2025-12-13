@@ -263,6 +263,12 @@ pub enum SessionMessage {
         extra: Option<ExtraResult>,
         /// 追踪 ID（必需，用于全链路追踪）
         trace_id: String,
+        /// Utterance Group ID（可选，用于上下文拼接）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        group_id: Option<String>,
+        /// Group Part Index（可选，用于标识 Group 内的 part）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        part_index: Option<u64>,
     },
     #[serde(rename = "asr_partial")]
     AsrPartial {
@@ -292,6 +298,13 @@ pub enum SessionMessage {
     #[serde(rename = "session_close_ack")]
     SessionCloseAck {
         session_id: String,
+    },
+    #[serde(rename = "tts_play_ended")]
+    TtsPlayEnded {
+        session_id: String,
+        trace_id: String,
+        group_id: String,
+        ts_end_ms: u64,
     },
     #[serde(rename = "error")]
     Error {
@@ -390,6 +403,15 @@ pub enum NodeMessage {
         partial_update_interval_ms: Option<u64>,
         /// 追踪 ID（必需，用于全链路追踪）
         trace_id: String,
+        /// Utterance Group ID（可选，用于上下文拼接）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        group_id: Option<String>,
+        /// Group Part Index（可选，用于标识 Group 内的 part）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        part_index: Option<u64>,
+        /// 上下文文本（可选，用于 NMT 上下文拼接）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        context_text: Option<String>,
     },
     #[serde(rename = "job_result")]
     JobResult {
@@ -414,6 +436,12 @@ pub enum NodeMessage {
         error: Option<JobError>,
         /// 追踪 ID（必需，用于全链路追踪）
         trace_id: String,
+        /// Utterance Group ID（可选，用于上下文拼接）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        group_id: Option<String>,
+        /// Group Part Index（可选，用于标识 Group 内的 part）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        part_index: Option<u64>,
     },
     #[serde(rename = "asr_partial")]
     AsrPartial {

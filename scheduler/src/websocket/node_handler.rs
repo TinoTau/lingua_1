@@ -151,6 +151,8 @@ async fn handle_node_message(
             processing_time_ms: _,
             error: job_error,
             trace_id,
+            group_id: _group_id,
+            part_index: _part_index,
         } => {
             // 更新 job 状态
             if success {
@@ -164,6 +166,38 @@ async fn handle_node_message(
             let elapsed_ms = job.as_ref().map(|j| {
                 chrono::Utc::now().signed_duration_since(j.created_at).num_milliseconds() as u64
             });
+            
+            // Utterance Group 处理：在收到 JobResult 时，如果有 ASR 结果，调用 GroupManager
+            let (group_id, part_index) = if let Some(ref text_asr) = text_asr {
+                if !text_asr.is_empty() {
+                    let now_ms = chrono::Utc::now().timestamp_millis() as u64;
+                    let (gid, _context, pidx) = state.group_manager.on_asr_final(
+                        &session_id,
+                        &trace_id,
+                        utterance_index,
+                        text_asr.clone(),
+                        now_ms,
+                    ).await;
+                    
+                    // 如果有翻译结果，更新 Group
+                    if let Some(ref text_translated) = text_translated {
+                        if !text_translated.is_empty() {
+                            state.group_manager.on_nmt_done(
+                                &gid,
+                                pidx,
+                                Some(text_translated.clone()),
+                                None,
+                            ).await;
+                        }
+                    }
+                    
+                    (Some(gid), Some(pidx))
+                } else {
+                    (None, None)
+                }
+            } else {
+                (None, None)
+            };
             
             if success {
                 // 推送 ASR_FINAL 事件（ASR 完成）
@@ -221,6 +255,8 @@ async fn handle_node_message(
                     tts_format: tts_format.clone().unwrap_or("pcm16".to_string()),
                     extra: extra.clone(),
                     trace_id: trace_id.clone(), // Added: propagate trace_id
+                    group_id: group_id.clone(), // Added: propagate group_id
+                    part_index, // Added: propagate part_index
                 };
                 
                 info!(trace_id = %trace_id, job_id = %job_id, session_id = %session_id, utterance_index = utterance_index, "收到 JobResult，添加到结果队列");

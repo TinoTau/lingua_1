@@ -249,6 +249,8 @@ fn test_job_result_message_format() {
         processing_time_ms: Some(100),
         error: None,
         trace_id: "trace-123".to_string(),
+        group_id: None,
+        part_index: None,
     };
 
     match success_message {
@@ -266,6 +268,8 @@ fn test_job_result_message_format() {
             processing_time_ms,
             error,
             trace_id: _,
+            group_id: _,
+            part_index: _,
         } => {
             assert_eq!(job_id, "job-123");
             assert_eq!(node_id, "node-123");
@@ -302,6 +306,8 @@ fn test_job_result_message_format() {
             details: None,
         }),
         trace_id: "trace-456".to_string(),
+        group_id: None,
+        part_index: None,
     };
 
     match error_message {
@@ -375,6 +381,9 @@ fn test_job_assign_message_format() {
         enable_streaming_asr: None,
         partial_update_interval_ms: None,
         trace_id: "trace-789".to_string(),
+        group_id: None,
+        part_index: None,
+        context_text: None,
     };
 
     // 验证所有必需字段都存在
@@ -398,6 +407,9 @@ fn test_job_assign_message_format() {
             enable_streaming_asr: _,
             partial_update_interval_ms: _,
             trace_id: _,
+            group_id: _,
+            part_index: _,
+            context_text: _,
         } => {
             assert_eq!(job_id, "job-123");
             assert_eq!(session_id, "sess-123");

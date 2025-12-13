@@ -41,6 +41,8 @@ pub struct HttpInferenceRequest {
     pub partial_update_interval_ms: Option<u64>,
     /// 追踪 ID（用于全链路日志追踪）
     pub trace_id: Option<String>,
+    /// 上下文文本（可选，用于 NMT 翻译质量提升）
+    pub context_text: Option<String>,
 }
 
 /// 推理响应（HTTP 格式）
@@ -121,6 +123,7 @@ async fn handle_inference(
         enable_streaming_asr: Some(false), // HTTP 同步请求不支持流式
         partial_update_interval_ms: None,
         trace_id: request.trace_id, // Added: propagate trace_id
+        context_text: request.context_text, // Added: propagate context_text
     };
 
     // 调用推理服务
@@ -273,6 +276,7 @@ async fn handle_inference_stream(
                             enable_streaming_asr: request.enable_streaming_asr.or(Some(false)),
                             partial_update_interval_ms: request.partial_update_interval_ms,
                             trace_id: request.trace_id, // Added: propagate trace_id
+                            context_text: request.context_text.clone(), // Added: propagate context_text
                         };
 
                         // 调用推理服务

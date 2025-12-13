@@ -16,6 +16,9 @@ struct NmtTranslateRequest {
     text: String,
     src_lang: String,
     tgt_lang: String,
+    /// 上下文文本（可选，用于提升翻译质量）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    context_text: Option<String>,
 }
 
 /// NMT 翻译响应
@@ -92,12 +95,19 @@ impl NMTEngine {
     /// * `text` - 源文本
     /// * `src_lang` - 源语言代码（如 "en", "zh"）
     /// * `tgt_lang` - 目标语言代码（如 "en", "zh"）
+    /// * `context_text` - 上下文文本（可选，用于提升翻译质量）
     /// 
     /// # Returns
     /// 返回翻译后的文本
-    pub async fn translate(&self, text: &str, src_lang: &str, tgt_lang: &str) -> Result<String> {
+    pub async fn translate(
+        &self,
+        text: &str,
+        src_lang: &str,
+        tgt_lang: &str,
+        context_text: Option<&str>,
+    ) -> Result<String> {
         if let (Some(ref url), Some(ref client)) = (&self.service_url, &self.http_client) {
-            self.translate_http(client, url, text, src_lang, tgt_lang).await
+            self.translate_http(client, url, text, src_lang, tgt_lang, context_text).await
         } else if let Some(ref _model_path) = self.model_path {
             // TODO: 实现 ONNX 推理
             Err(anyhow!("ONNX mode is not yet implemented"))
@@ -114,16 +124,34 @@ impl NMTEngine {
         text: &str,
         src_lang: &str,
         tgt_lang: &str,
+        context_text: Option<&str>,
     ) -> Result<String> {
         let url = format!("{}/v1/translate", base_url);
         
-        info!("Sending NMT translation request to {}: text='{}', src_lang='{}', tgt_lang='{}'", 
-            url, text, src_lang, tgt_lang);
+        if let Some(ref ctx) = context_text {
+            info!(
+                url = %url,
+                text_len = text.len(),
+                src_lang = %src_lang,
+                tgt_lang = %tgt_lang,
+                context_len = ctx.len(),
+                "发送 NMT 翻译请求（带上下文）"
+            );
+        } else {
+            info!(
+                url = %url,
+                text_len = text.len(),
+                src_lang = %src_lang,
+                tgt_lang = %tgt_lang,
+                "发送 NMT 翻译请求（无上下文）"
+            );
+        }
         
         let request = NmtTranslateRequest {
             text: text.to_string(),
             src_lang: src_lang.to_string(),
             tgt_lang: tgt_lang.to_string(),
+            context_text: context_text.map(|s| s.to_string()),
         };
 
         let response = client

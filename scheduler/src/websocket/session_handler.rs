@@ -218,7 +218,9 @@ async fn handle_session_message(
                     
                     // 如果节点已分配，发送 job 给节点
                     if let Some(ref node_id) = job.assigned_node_id {
-                        if let Some(job_assign_msg) = create_job_assign_message(&job) {
+                        // 注意：当前实现中，JobAssign 时还没有 ASR 结果，所以 group_id、part_index、context_text 为 None
+                        // 后续优化：可以在 ASR Final 后重新发送 NMT 请求（包含上下文）
+                        if let Some(job_assign_msg) = create_job_assign_message(&job, None, None, None) {
                             if state.node_connections.send(node_id, Message::Text(serde_json::to_string(&job_assign_msg)?)).await {
                                 // 推送 DISPATCHED 事件
                                 send_ui_event(
@@ -339,7 +341,9 @@ async fn handle_session_message(
             
             // 如果节点已分配，发送 job 给节点
             if let Some(ref node_id) = job.assigned_node_id {
-                if let Some(job_assign_msg) = create_job_assign_message(&job) {
+                // 注意：当前实现中，JobAssign 时还没有 ASR 结果，所以 group_id、part_index、context_text 为 None
+                // 后续优化：可以在 ASR Final 后重新发送 NMT 请求（包含上下文）
+                if let Some(job_assign_msg) = create_job_assign_message(&job, None, None, None) {
                     if state.node_connections.send(node_id, Message::Text(serde_json::to_string(&job_assign_msg)?)).await {
                         // 推送 DISPATCHED 事件
                         send_ui_event(
@@ -404,7 +408,21 @@ async fn handle_session_message(
             send_message(tx, &heartbeat).await?;
         }
         
-        SessionMessage::SessionClose { session_id: sess_id, reason: _ } => {
+        SessionMessage::TtsPlayEnded {
+            session_id: sess_id,
+            trace_id: _,
+            group_id,
+            ts_end_ms,
+        } => {
+            // 更新 Group 的 last_tts_end_at（Scheduler 权威时间）
+            state.group_manager.on_tts_play_ended(&group_id, ts_end_ms).await;
+            info!(session_id = %sess_id, group_id = %group_id, ts_end_ms = ts_end_ms, "TTS 播放结束，更新 Group last_tts_end_at");
+        }
+        
+        SessionMessage::SessionClose { session_id: sess_id, reason } => {
+            // 清理 Group（必须在清理会话之前）
+            state.group_manager.on_session_end(&sess_id, &reason).await;
+            
             // 清理会话
             state.session_connections.unregister(&sess_id).await;
             state.result_queue.remove_session(&sess_id).await;

@@ -142,12 +142,17 @@
   - [x] 测试报告：
     - [调度服务器测试报告](./../scheduler/tests/stage2.1.2/TEST_REPORT.md)
     - [节点推理服务测试报告](./../node-inference/tests/stage2.1.2/TEST_REPORT.md)
-- [ ] **阶段 2.1.3：Utterance Group**（需要后端支持）
-  - [ ] 扩展调度服务器支持 Group 管理
-  - [ ] 扩展节点推理服务支持上下文拼接
-  - [ ] 扩展 NMT 引擎支持上下文输入
+- [x] **阶段 2.1.3：Utterance Group**（所有组件已完成 ✅）
+  - [x] 扩展调度服务器支持 Group 管理（GroupManager 模块）
+  - [x] 扩展消息协议（group_id、part_index、context_text、TTS_PLAY_ENDED）
+  - [x] 集成 GroupManager 到 Scheduler（node_handler、session_handler）
+  - [x] 单元测试（Scheduler 10个测试，Web 客户端 4个测试，全部通过）✅
+  - [x] 扩展节点推理服务支持上下文拼接（代码已完成 ✅）
+  - [x] 扩展 NMT 引擎支持上下文输入（代码已完成 ✅）
+  - [x] Web 客户端 TTS_PLAY_ENDED 消息发送（已完成 ✅）
+  - [x] Node 端 NMT 上下文支持（代码已完成 ✅，需要 Python M2M100 服务端支持）
 - 详细设计请参考：
-  - [Utterance Group 功能详细规范](./webClient/UTTERANCE_GROUP_SPECIFICATION.md) ⭐ **完整技术规范**
+  - [Utterance Group 功能完整文档](./webClient/UTTERANCE_GROUP.md) ⭐ **完整文档（规范 + 实施状态 + 可行性评估）**
   - [Web 端实时语音翻译统一设计方案 v3](./webClient/Web_端实时语音翻译_统一设计方案_v3.md) - 产品设计概述
 - 项目位置：`web-client/`
 

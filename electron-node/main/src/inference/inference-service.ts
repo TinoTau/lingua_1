@@ -73,6 +73,7 @@ export class InferenceService {
         auto_langs: job.auto_langs,
         enable_streaming_asr: false,
         trace_id: job.trace_id, // Added: propagate trace_id
+        context_text: (job as any).context_text, // Added: propagate context_text (optional field)
       };
 
       const response = await this.httpClient.post('/v1/inference', request);

@@ -13,8 +13,10 @@ pub mod result_queue;
 pub mod app_state;
 pub mod audio_buffer;
 pub mod module_resolver;
+pub mod group_manager;
 
 pub use app_state::AppState;
 pub use audio_buffer::AudioBufferManager;
 pub use module_resolver::{ModuleResolver, MODULE_TABLE};
+pub use group_manager::{GroupManager, GroupConfig};
 

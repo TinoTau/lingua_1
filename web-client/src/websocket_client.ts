@@ -152,6 +152,26 @@ export class WebSocketClient {
   }
 
   /**
+   * 发送 TTS_PLAY_ENDED 消息
+   */
+  sendTtsPlayEnded(traceId: string, groupId: string, tsEndMs: number): void {
+    if (!this.ws || this.ws.readyState !== WebSocket.OPEN || !this.sessionId) {
+      console.warn('WebSocket not connected, cannot send TTS_PLAY_ENDED');
+      return;
+    }
+
+    const message = {
+      type: 'tts_play_ended',
+      session_id: this.sessionId,
+      trace_id: traceId,
+      group_id: groupId,
+      ts_end_ms: tsEndMs,
+    };
+
+    this.ws.send(JSON.stringify(message));
+  }
+
+  /**
    * 获取会话 ID
    */
   getSessionId(): string | null {

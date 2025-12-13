@@ -84,6 +84,22 @@
 
 详细状态请查看 [IMPLEMENTATION_STATUS.md](./IMPLEMENTATION_STATUS.md)
 
+### 功能模块日志支持
+
+#### ✅ Utterance Group 功能（阶段 2.1.3）
+
+**状态**: ✅ **已完成**
+
+**日志支持**:
+- ✅ **GroupManager 模块** (`scheduler/src/group_manager.rs`): 完整的结构化日志支持
+  - 记录 Group 创建、ASR Final 处理、NMT 完成、TTS 播放结束、Session 结束等关键操作
+  - 包含 `trace_id` 和 `group_id` 用于全链路追踪
+- ✅ **NMT 引擎** (`node-inference/src/nmt.rs`): 记录上下文使用情况
+  - 区分有/无上下文的翻译请求
+  - 记录 `context_text` 长度信息
+
+**详细说明**: 请参考 [Utterance Group 完整文档](../webClient/UTTERANCE_GROUP.md#15-日志系统支持)
+
 ### 配置文件示例
 
 项目根目录提供了 `observability.json.example` 作为配置文件示例，可以复制为 `observability.json` 并根据需要进行修改。

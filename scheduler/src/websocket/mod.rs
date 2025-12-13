@@ -43,11 +43,19 @@ pub(crate) async fn send_error(tx: &mpsc::UnboundedSender<Message>, code: ErrorC
 }
 
 // 创建 JobAssign 消息
-pub(crate) fn create_job_assign_message(job: &crate::dispatcher::Job) -> Option<NodeMessage> {
+pub(crate) fn create_job_assign_message(
+    job: &crate::dispatcher::Job,
+    group_id: Option<String>,
+    part_index: Option<u64>,
+    context_text: Option<String>,
+) -> Option<NodeMessage> {
     use base64::{Engine as _, engine::general_purpose};
     let audio_base64 = general_purpose::STANDARD.encode(&job.audio_data);
     
     Some(NodeMessage::JobAssign {
+        group_id,
+        part_index,
+        context_text,
         job_id: job.job_id.clone(),
         session_id: job.session_id.clone(),
         utterance_index: job.utterance_index,

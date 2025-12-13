@@ -23,6 +23,7 @@ mod app_state;
 mod audio_buffer;
 mod module_resolver;
 mod logging_config;
+mod group_manager;
 
 use session::SessionManager;
 use dispatcher::JobDispatcher;
@@ -36,6 +37,7 @@ use connection_manager::{SessionConnectionManager, NodeConnectionManager};
 use result_queue::ResultQueueManager;
 use app_state::AppState;
 use audio_buffer::AudioBufferManager;
+use group_manager::{GroupManager, GroupConfig};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -81,6 +83,10 @@ async fn main() -> Result<()> {
     let node_connections = NodeConnectionManager::new();
     let result_queue = ResultQueueManager::new();
     let audio_buffer = AudioBufferManager::new();
+    
+    // 初始化 GroupManager（使用默认配置）
+    let group_config = GroupConfig::default();
+    let group_manager = GroupManager::new(group_config);
 
     // 创建应用状态
     let app_state = AppState {
@@ -93,6 +99,7 @@ async fn main() -> Result<()> {
         node_connections,
         result_queue,
         audio_buffer,
+        group_manager,
     };
 
     // 构建路由

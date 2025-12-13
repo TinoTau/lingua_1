@@ -46,6 +46,9 @@ pub struct InferenceRequest {
     /// 追踪 ID（用于全链路日志追踪）
     #[serde(skip_serializing_if = "Option::is_none")]
     pub trace_id: Option<String>,
+    /// 上下文文本（可选，用于 NMT 翻译质量提升）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub context_text: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -404,7 +407,8 @@ impl InferenceService {
 
         // 4. NMT: 机器翻译（必需，使用动态确定的翻译方向）
         debug!(trace_id = %trace_id, src_lang = %src_lang, tgt_lang = %tgt_lang, "开始机器翻译");
-        let translation = self.nmt_engine.translate(&transcript, &src_lang, &tgt_lang).await?;
+        let context_text = request.context_text.as_deref();
+        let translation = self.nmt_engine.translate(&transcript, &src_lang, &tgt_lang, context_text).await?;
         
         // 将翻译结果写入 PipelineContext
         ctx.set_translation(translation.clone());

@@ -56,6 +56,22 @@ export interface TranslationMessage {
   text: string;
 }
 
+// TranslationResult 消息（来自 Scheduler）
+export interface TranslationResultMessage {
+  type: 'translation_result';
+  session_id: string;
+  utterance_index: number;
+  job_id: string;
+  text_asr: string;
+  text_translated: string;
+  tts_audio: string; // base64
+  tts_format: string;
+  extra?: any;
+  trace_id: string;
+  group_id?: string; // Utterance Group ID（可选）
+  part_index?: number; // Group Part Index（可选）
+}
+
 export interface TtsAudioMessage {
   type: 'tts_audio';
   seq: number;
@@ -70,9 +86,19 @@ export interface SessionInitAckMessage {
   message: string;
 }
 
+// 客户端发送的消息类型
+export interface TtsPlayEndedMessage {
+  type: 'tts_play_ended';
+  session_id: string;
+  trace_id: string;
+  group_id: string;
+  ts_end_ms: number;
+}
+
 export type ServerMessage = 
   | SessionInitAckMessage
   | AsrPartialMessage 
-  | TranslationMessage 
+  | TranslationMessage
+  | TranslationResultMessage
   | TtsAudioMessage;
 

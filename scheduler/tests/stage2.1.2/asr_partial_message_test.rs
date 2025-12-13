@@ -148,6 +148,9 @@ fn test_job_assign_with_streaming_asr() {
         enable_streaming_asr: Some(true),
         partial_update_interval_ms: Some(1000),
         trace_id: "trace-789".to_string(),
+        group_id: None,
+        part_index: None,
+        context_text: None,
     };
 
     // 序列化
@@ -202,6 +205,9 @@ fn test_job_assign_without_streaming_asr() {
         enable_streaming_asr: None,
         partial_update_interval_ms: None,
         trace_id: "trace-999".to_string(),
+        group_id: None,
+        part_index: None,
+        context_text: None,
     };
 
     // 序列化

@@ -27,7 +27,8 @@
 | 模块化功能（阶段 3.2） | 45 | ✅ 45 | 0 | 100% |
 | 模型管理（阶段 3.1） | 48 | ✅ 48 | 0 | 100%* |
 | 日志系统（阶段 4.1） | - | ✅ - | 0 | 100% |
-| **总计** | **225+** | **✅ 215+** | **0** | **100%** |
+| Utterance Group（阶段 2.1.3） | 14 | ✅ 14 | 0 | 100% |
+| **总计** | **235+** | **✅ 225+** | **0** | **100%** |
 
 *注：部分测试需要外部服务或模型文件，但核心功能测试全部通过
 
@@ -38,7 +39,7 @@
 ⚠️ **部分可选功能未完成**，但不影响核心翻译流程：
 - 可选模块模型集成（音色识别、语速识别等）
 - Web 客户端语言检测 UI
-- Utterance Group 功能
+- Utterance Group 功能（所有组件已完成 ✅，需要 Python M2M100 服务端支持上下文参数）
 
 ---
 
@@ -77,6 +78,11 @@
   - 音频缓冲区管理器（`audio_buffer.rs`）- 流式音频块累积和管理
   - asr_partial 消息转发 - 支持实时 ASR 部分结果转发
   - audio_chunk 消息处理 - 支持 Web 客户端的流式音频上传
+- ✅ **Utterance Group 支持**（阶段 2.1.3，Scheduler 侧）：
+  - GroupManager 模块（`group_manager.rs`）- Group 生命周期管理、上下文拼接和裁剪
+  - 消息协议扩展 - group_id、part_index、context_text、TTS_PLAY_ENDED
+  - 集成到 node_handler 和 session_handler - 支持 Group 创建、更新、清理
+  - 单元测试（10个测试，全部通过）✅
 - ✅ **任务分发算法优化（基础负载均衡）**：
   - 完善功能能力检查（所有 6 个功能位）
   - 实现最少连接数负载均衡策略
@@ -243,7 +249,7 @@
   - ✅ [测试报告](./web-client/tests/stage3.2/TEST_REPORT.md)
 
 **未完成（不影响联合调试）**:
-- ⏸️ 阶段 2.1.3：Utterance Group - 不影响核心流程
+- ✅ 阶段 2.1.3：Utterance Group - 所有组件已完成 ✅，需要 Python M2M100 服务端支持上下文参数
 - ⏸️ 阶段 1.4 UI 支持（模式选择、语言对配置）- 不影响核心流程
 
 **联合调试影响**: ✅ **无影响** - 核心功能完整，可以正常进行联合调试
@@ -538,11 +544,23 @@
    - **位置**: 阶段 3.2
    - 包括：音色识别、音色生成、语速识别、语速控制、情感检测、个性化适配
 
-3. **Utterance Group** ⏸️
-   - **状态**: 未完成
-   - **影响**: 不影响核心流程
+3. **Utterance Group** ✅
+   - **状态**: 所有组件已完成 ✅，需要 Python M2M100 服务端支持上下文参数
+   - **完成度**: Scheduler 100%，Node Inference 100%（代码），Web 客户端 100%
+   - **影响**: 不影响核心流程（当前实现已支持基础 Group 管理）
    - **位置**: 阶段 2.1.3
-   - 需要：扩展调度服务器支持 Group 管理、扩展节点推理服务支持上下文拼接、扩展 NMT 引擎支持上下文输入
+   - **已完成**:
+     - ✅ GroupManager 模块实现（group_manager.rs）
+     - ✅ 消息协议扩展（group_id、part_index、context_text、TTS_PLAY_ENDED）
+     - ✅ Scheduler 集成（node_handler、session_handler）
+     - ✅ Web 客户端 TTS_PLAY_ENDED 消息发送
+     - ✅ 单元测试（Scheduler 10个测试，Web 客户端 4个测试，全部通过）
+     - ✅ **结构化日志支持**（GroupManager 和 NMT 引擎）
+     - ✅ 扩展节点推理服务支持上下文拼接（代码已完成）
+     - ✅ 扩展 NMT 引擎支持上下文输入（代码已完成）
+   - **待完成**（外部依赖）:
+     - ⚠️ Python M2M100 服务端需要支持 `context_text` 参数
+   - **详细状态**: 请参考 [Utterance Group 完整文档](../webClient/UTTERANCE_GROUP.md)
 
 4. **高级负载均衡策略** ⏸️
    - **状态**: 未完成
