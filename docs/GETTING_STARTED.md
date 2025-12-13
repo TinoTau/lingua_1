@@ -37,7 +37,58 @@ python src/main.py
 
 服务将在 `http://localhost:5000` 启动。
 
-### 3. 启动调度服务器
+### 3. 启动核心翻译服务
+
+#### 3.1 启动 M2M100 NMT 服务
+
+```powershell
+cd services\nmt_m2m100
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+uvicorn nmt_service:app --host 127.0.0.1 --port 5008
+```
+
+或使用启动脚本：
+```powershell
+.\scripts\start_nmt_service.ps1
+```
+
+服务将在 `http://127.0.0.1:5008` 启动。
+
+#### 3.2 启动 Piper TTS 服务
+
+```powershell
+cd services\piper_tts
+pip install -r requirements.txt
+python piper_http_server.py --host 127.0.0.1 --port 5005
+```
+
+或使用启动脚本：
+```powershell
+.\scripts\start_tts_service.ps1
+```
+
+服务将在 `http://127.0.0.1:5005` 启动。
+
+#### 3.3 启动节点推理服务
+
+```powershell
+cd node-inference
+$env:MODELS_DIR = ".\models"
+$env:NMT_SERVICE_URL = "http://127.0.0.1:5008"
+$env:TTS_SERVICE_URL = "http://127.0.0.1:5005"
+cargo run --release --bin inference-service
+```
+
+或使用启动脚本：
+```powershell
+.\scripts\start_node_inference.ps1
+```
+
+服务将在 `http://127.0.0.1:9000` 启动。
+
+### 4. 启动调度服务器
 
 ```powershell
 cd scheduler
@@ -47,7 +98,7 @@ cargo run --release
 
 服务将在 `http://localhost:8080` 启动。
 
-### 4. 启动 API Gateway（可选）
+### 5. 启动 API Gateway（可选）
 
 如果需要对外提供 API 服务：
 
@@ -61,7 +112,7 @@ cargo run --release
 
 **注意**: API Gateway 需要先启动调度服务器。
 
-### 5. 启动 Electron Node 客户端
+### 6. 启动 Electron Node 客户端
 
 ```powershell
 cd electron-node
@@ -70,7 +121,7 @@ npm run build
 npm start
 ```
 
-### 6. 启动移动端客户端
+### 7. 启动移动端客户端
 
 ```powershell
 cd mobile-app

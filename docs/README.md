@@ -40,6 +40,10 @@ docs/
 │   ├── README.md
 │   └── DISPATCHER_OPTIMIZATION_PLAN.md
 │
+├── testing/                     # 测试文档
+│   ├── README.md
+│   └── END_TO_END_TESTING_GUIDE.md  # 端到端测试指南 ⭐
+│
 ├── node_inference/              # 节点推理服务文档
 │   ├── README.md
 │   ├── AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md
@@ -285,3 +289,6 @@ docs/
 - [Web 客户端](./webClient/README.md)
 - [模型管理](./modelManager/README.md)
 - [模块化功能](./modular/README.md)
+
+### 测试文档
+- [端到端测试指南](./testing/END_TO_END_TESTING_GUIDE.md) ⭐ **准备进行端到端测试时必读**
