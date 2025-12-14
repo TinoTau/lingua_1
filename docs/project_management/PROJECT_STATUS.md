@@ -3,6 +3,11 @@
 **最后更新**: 2025-01-XX  
 **联合调试就绪度**: ✅ **已就绪**（核心功能 100% 完成并测试）
 
+**重要更新**:
+- ✅ 新增文档：[Utterance Group 实现原理](../UTTERANCE_GROUP_IMPLEMENTATION.md)
+- ✅ 新增文档：[上下文缓冲功能对比](../CONTEXT_BUFFERING_COMPARISON.md)
+- ✅ 新增文档：[VAD 架构分析](../VAD_ARCHITECTURE_ANALYSIS.md)
+
 ---
 
 ## 📊 执行摘要
@@ -47,6 +52,7 @@
 - 可选模块模型集成（音色识别、语速识别等）
 - Web 客户端语言检测 UI
 - Utterance Group 功能（所有组件已完成 ✅，需要 Python M2M100 服务端支持上下文参数）
+- Silero VAD 上下文缓冲（已实现 ✅，但当前在 `inference.rs` 中未使用）
 
 ---
 
@@ -145,10 +151,18 @@
 
 ## 📚 相关文档
 
+### 核心文档
 - [开发计划](./DEVELOPMENT_PLAN.md)
 - [架构文档](../ARCHITECTURE.md)
 - [快速开始指南](../GETTING_STARTED.md)
+
+### 功能文档
 - [模块化功能设计文档](../modular/LINGUA_完整技术说明书_v2.md)
 - [自动语种识别与双向模式设计](../node_inference/AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md)
 - [任务分发算法优化方案](../scheduler/DISPATCHER_OPTIMIZATION_PLAN.md)
 - [节点注册功能文档](../node_register/README.md) - 节点注册功能说明、协议规范、实现状态等
+
+### 新增技术文档
+- [Utterance Group 实现原理](../UTTERANCE_GROUP_IMPLEMENTATION.md) - Utterance Group 的工作原理和节点端生效机制
+- [上下文缓冲功能对比](../CONTEXT_BUFFERING_COMPARISON.md) - Silero VAD 和 Utterance Group 上下文缓冲的对比分析
+- [VAD 架构分析](../VAD_ARCHITECTURE_ANALYSIS.md) - 两层 VAD 架构设计和上下文缓冲机制详解

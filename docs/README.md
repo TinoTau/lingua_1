@@ -44,6 +44,10 @@ docs/
 │   ├── README.md
 │   └── END_TO_END_TESTING_GUIDE.md  # 端到端测试指南 ⭐
 │
+├── UTTERANCE_GROUP_IMPLEMENTATION.md  # Utterance Group 实现原理 ⭐
+├── CONTEXT_BUFFERING_COMPARISON.md    # 上下文缓冲功能对比 ⭐
+├── VAD_ARCHITECTURE_ANALYSIS.md       # VAD 架构分析 ⭐
+│
 ├── node_inference/              # 节点推理服务文档
 │   ├── README.md
 │   ├── AUTO_LANGUAGE_DETECTION_AND_TWO_WAY_MODE.md
@@ -105,6 +109,12 @@ docs/
 - [ARCHITECTURE_ANALYSIS.md](./ARCHITECTURE_ANALYSIS.md) - ⭐ **架构分析与性能瓶颈评估**（架构师视角）
 - [PROTOCOLS.md](./PROTOCOLS.md) - WebSocket 消息协议规范（包含实现状态）
 - [GETTING_STARTED.md](./GETTING_STARTED.md) - 快速开始指南
+
+### 技术深度文档
+
+- [Utterance Group 实现原理](./UTTERANCE_GROUP_IMPLEMENTATION.md) - ⭐ **Utterance Group 的工作原理和节点端生效机制**
+- [上下文缓冲功能对比](./CONTEXT_BUFFERING_COMPARISON.md) - ⭐ **Silero VAD 和 Utterance Group 上下文缓冲的对比分析**
+- [VAD 架构分析](./VAD_ARCHITECTURE_ANALYSIS.md) - ⭐ **两层 VAD 架构设计和上下文缓冲机制详解**
 
 ---
 

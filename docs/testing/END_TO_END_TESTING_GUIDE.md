@@ -15,7 +15,12 @@
 5. [错误场景测试](#5-错误场景测试)
 6. [性能测试](#6-性能测试)
 7. [测试检查清单](#7-测试检查清单)
-8. [问题报告模板](#8-问题报告模板)
+8. [高级功能测试说明](#8-高级功能测试说明)
+9. [问题报告模板](#9-问题报告模板)
+10. [测试工具和脚本](#11-测试工具和脚本)
+11. [常见问题排查](#12-常见问题排查)
+12. [测试报告模板](#13-测试报告模板)
+13. [相关文档](#14-相关文档)
 
 ---
 
@@ -42,7 +47,8 @@
 - ASR 字幕显示
 
 **非核心功能**（可选测试）：
-- Utterance Group（需要 Python M2M100 服务端支持）
+- Utterance Group（所有组件已完成 ✅，需要 Python M2M100 服务端支持上下文参数）
+- Silero VAD 上下文缓冲（已实现 ✅，但当前在 `inference.rs` 中未使用）
 - 模块化功能（音色识别、语速控制等，需要模型支持）
 
 ### 1.3 测试架构
@@ -912,9 +918,81 @@ npm run dev
 
 ---
 
-## 8. 问题报告模板
+## 8. 高级功能测试说明
 
-### 8.1 问题报告格式
+### 8.1 Utterance Group 功能测试
+
+**状态**: ✅ 所有组件已完成，需要 Python M2M100 服务端支持上下文参数
+
+**测试目标**: 验证连续对话翻译的上下文一致性
+
+**测试场景**:
+1. **连续发言测试**:
+   - 在 2 秒内连续发言多次
+   - 验证 utterances 是否被组织到同一个 Group
+   - 验证翻译质量是否提升（特别是代词、省略句）
+
+2. **跨组切换测试**:
+   - 发言后等待超过 2 秒（或 TTS 播放结束）
+   - 再次发言，验证是否创建新 Group
+
+3. **上下文拼接测试**:
+   - 验证 `context_text` 格式正确
+   - 验证上下文长度限制（最多 8 个 parts，800 字符）
+
+**注意事项**:
+- ⚠️ 当前流程限制：ASR 和 NMT 在节点端顺序执行，首次 `JobAssign` 时 `context_text` 为 `None`
+- ⚠️ Python M2M100 服务端需要支持 `context_text` 参数（当前仅简单拼接）
+
+**相关文档**:
+- [Utterance Group 实现原理](../UTTERANCE_GROUP_IMPLEMENTATION.md)
+- [Utterance Group 完整文档](../webClient/UTTERANCE_GROUP.md)
+
+### 8.2 Silero VAD 上下文缓冲测试
+
+**状态**: ✅ 已实现，但当前在 `inference.rs` 中未使用
+
+**测试目标**: 验证节点端 VAD 的上下文缓冲机制
+
+**测试场景**:
+1. **RNN 隐藏状态测试**:
+   - 验证隐藏状态在帧之间正确传递
+   - 验证 `reset_state()` 功能正常
+
+2. **语速自适应测试**:
+   - 使用不同语速说话
+   - 验证静音阈值是否自适应调整（200ms - 800ms）
+
+3. **状态管理测试**:
+   - 验证 `silence_frame_count`、`last_speech_timestamp` 等状态正确更新
+   - 验证冷却期机制防止频繁边界检测
+
+**注意事项**:
+- ⚠️ 当前节点端 VAD 未集成到 `inference.rs` 处理流程中
+- ⚠️ 需要实现流式断句功能才能完全生效
+
+**相关文档**:
+- [VAD 架构分析](../VAD_ARCHITECTURE_ANALYSIS.md)
+- [上下文缓冲功能对比](../CONTEXT_BUFFERING_COMPARISON.md)
+
+### 8.3 上下文缓冲功能对比
+
+**重要说明**: Silero VAD 上下文缓冲和 Utterance Group 上下文缓冲**不重复**，而是**互补**的：
+
+| 维度 | Silero VAD | Utterance Group |
+|------|-----------|----------------|
+| **层次** | 音频级别 | 文本级别 |
+| **目标** | 提升 VAD 准确性 | 提升 NMT 质量 |
+| **作用阶段** | ASR 之前 | NMT 阶段 |
+
+**相关文档**:
+- [上下文缓冲功能对比](../CONTEXT_BUFFERING_COMPARISON.md)
+
+---
+
+## 9. 问题报告模板
+
+### 9.1 问题报告格式
 
 ```markdown
 ## 问题报告
@@ -956,9 +1034,9 @@ npm run dev
 
 ---
 
-## 9. 测试工具和脚本
+## 11. 测试工具和脚本
 
-### 9.1 日志查看工具
+### 11.1 日志查看工具
 
 **调度服务器日志**:
 ```powershell
@@ -972,7 +1050,7 @@ Get-Content scheduler/logs/scheduler.log -Tail 100 -Wait
 Get-Content node-inference/logs/inference.log -Tail 100 -Wait
 ```
 
-### 9.2 网络监控工具
+### 11.2 网络监控工具
 
 使用浏览器开发者工具监控 WebSocket 消息：
 1. 打开浏览器开发者工具 (F12)
@@ -980,7 +1058,7 @@ Get-Content node-inference/logs/inference.log -Tail 100 -Wait
 3. 过滤 "WS" (WebSocket)
 4. 查看消息内容
 
-### 9.3 性能监控工具
+### 11.3 性能监控工具
 
 使用浏览器 Performance API 测量延迟：
 ```javascript
@@ -1008,7 +1086,7 @@ console.log(performance.getEntriesByName('duration'));
 5. 查看浏览器控制台错误信息
 6. 查看调度服务器日志
 
-### 10.2 节点未注册
+### 12.2 节点未注册
 
 **问题**: Electron Node 客户端无法注册到调度服务器
 
@@ -1020,7 +1098,7 @@ console.log(performance.getEntriesByName('duration'));
 5. 查看 Electron Node 客户端日志
 6. 查看调度服务器日志
 
-### 10.3 翻译结果不正确
+### 12.3 翻译结果不正确
 
 **问题**: 翻译结果不准确或错误
 
@@ -1031,7 +1109,7 @@ console.log(performance.getEntriesByName('duration'));
 4. 检查音频质量
 5. 查看节点推理服务日志
 
-### 10.4 WebRTC 连接失败
+### 12.4 WebRTC 连接失败
 
 **问题**: 会议室模式下 WebRTC 连接失败
 
@@ -1044,7 +1122,7 @@ console.log(performance.getEntriesByName('duration'));
 
 ---
 
-## 11. 测试报告模板
+## 13. 测试报告模板
 
 ### 11.1 测试报告格式
 
@@ -1099,14 +1177,22 @@ console.log(performance.getEntriesByName('duration'));
 
 ---
 
-## 12. 相关文档
+## 14. 相关文档
 
+### 核心文档
 - [项目状态文档](../project_management/PROJECT_STATUS.md)
 - [快速开始指南](../GETTING_STARTED.md)
 - [架构文档](../ARCHITECTURE.md)
 - [协议规范](../PROTOCOLS.md)
+
+### 功能文档
 - [Web 客户端文档](../webClient/README.md)
 - [节点推理服务文档](../node_inference/README.md)
+
+### 技术深度文档
+- [Utterance Group 实现原理](../UTTERANCE_GROUP_IMPLEMENTATION.md)
+- [上下文缓冲功能对比](../CONTEXT_BUFFERING_COMPARISON.md)
+- [VAD 架构分析](../VAD_ARCHITECTURE_ANALYSIS.md)
 
 ---
 

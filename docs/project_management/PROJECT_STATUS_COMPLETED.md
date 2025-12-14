@@ -43,7 +43,7 @@
 - ✅ ASR (Whisper) 引擎实现
 - ✅ NMT (M2M100) 引擎实现
 - ✅ TTS (Piper) 引擎实现
-- ✅ VAD (Silero VAD) 引擎实现
+- ✅ VAD (Silero VAD) 引擎实现（包含完整的上下文缓冲机制）
 
 **单元测试**: 核心功能测试全部通过 ✅
 
@@ -173,6 +173,56 @@
 - ✅ ModelManager 代码拆分完成
 - ✅ Scheduler 代码拆分完成
 - ✅ Web Client 代码拆分完成
+
+---
+
+## 其他已完成功能 ✅
+
+### Utterance Group 功能 ✅
+
+**完成状态**: ✅ **所有组件已完成**（需要 Python M2M100 服务端支持上下文参数）
+
+**核心组件**:
+- ✅ Scheduler GroupManager - 100% 完成并测试（10个测试，全部通过）
+- ✅ Node Inference 上下文支持 - 100% 完成（代码支持接收和传递 `context_text`）
+- ✅ Web 客户端 TTS_PLAY_ENDED - 100% 完成并测试（4个测试，全部通过）
+
+**功能说明**:
+- 时间窗口判断（默认 2 秒）
+- 上下文拼接和裁剪（最多 8 个 parts，800 字符）
+- Group 生命周期管理
+- 结构化日志支持
+
+**相关文档**:
+- [Utterance Group 完整文档](../webClient/UTTERANCE_GROUP.md)
+- [Utterance Group 实现原理](../UTTERANCE_GROUP_IMPLEMENTATION.md)
+
+**注意事项**:
+- ⚠️ 当前流程限制：ASR 和 NMT 在节点端顺序执行，首次 `JobAssign` 时 `context_text` 为 `None`
+- ⚠️ Python M2M100 服务端需要支持 `context_text` 参数（当前仅简单拼接）
+
+### Silero VAD 上下文缓冲 ✅
+
+**完成状态**: ✅ **代码已实现**（但当前在 `inference.rs` 中未使用）
+
+**核心功能**:
+- ✅ RNN 隐藏状态（模型级上下文）
+- ✅ 语速历史（应用级上下文，自适应调整阈值）
+- ✅ 时间戳和计数（会话级上下文）
+- ✅ 状态重置机制
+
+**功能说明**:
+- 多层上下文缓冲机制（模型级、应用级、会话级）
+- 自适应阈值调整（根据语速动态调整 200ms - 800ms）
+- 冷却期机制（防止频繁边界检测）
+
+**相关文档**:
+- [VAD 架构分析](../VAD_ARCHITECTURE_ANALYSIS.md)
+- [上下文缓冲功能对比](../CONTEXT_BUFFERING_COMPARISON.md)
+
+**注意事项**:
+- ⚠️ 当前节点端 VAD 未集成到 `inference.rs` 处理流程中
+- ⚠️ 需要实现流式断句功能才能完全生效
 
 ---
 

@@ -44,7 +44,22 @@
    - **位置**: 阶段 2.1.3
    - **待完成**（外部依赖）:
      - ⚠️ Python M2M100 服务端需要支持 `context_text` 参数
-   - **详细状态**: 请参考 [Utterance Group 完整文档](../webClient/UTTERANCE_GROUP.md)
+     - ⚠️ 流程优化：实现两阶段 NMT 请求，让上下文在 NMT 前生成
+   - **详细状态**: 
+     - [Utterance Group 完整文档](../webClient/UTTERANCE_GROUP.md)
+     - [Utterance Group 实现原理](../UTTERANCE_GROUP_IMPLEMENTATION.md)
+
+4. **Silero VAD 上下文缓冲集成** ⚠️
+   - **状态**: 代码已实现 ✅，但未集成到处理流程
+   - **完成度**: VAD 引擎 100%，上下文缓冲机制 100%
+   - **影响**: 不影响核心流程（当前使用 Web 端 VAD）
+   - **位置**: 节点推理服务
+   - **待完成**:
+     - ⚠️ 在 `inference.rs` 中集成 VAD 进行流式断句
+     - ⚠️ 实现音频拼接和 VAD 断句流程
+   - **详细状态**: 
+     - [VAD 架构分析](../VAD_ARCHITECTURE_ANALYSIS.md)
+     - [上下文缓冲功能对比](../CONTEXT_BUFFERING_COMPARISON.md)
 
 4. **高级负载均衡策略** ⏸️
    - **状态**: 未完成
