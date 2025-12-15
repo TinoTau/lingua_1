@@ -22,7 +22,7 @@ port = 8081
 host = "0.0.0.0"
 
 [scheduler]
-url = "ws://localhost:8080/ws/session"
+url = "ws://localhost:5010/ws/session"
 ```
 
 ### 运行

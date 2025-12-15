@@ -110,7 +110,7 @@ npm run web
 
 ```typescript
 const { connect } = useSession({
-  schedulerUrl: 'ws://localhost:8080/ws/session', // 修改为实际地址
+  schedulerUrl: 'ws://localhost:5010/ws/session', // 修改为实际地址
   platform: 'ios',
   clientVersion: '1.0.0',
 });

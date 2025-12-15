@@ -57,10 +57,9 @@ async def load_model():
         else:
             print(f"[NMT Service] ⚠ WARNING: CUDA not available, using CPU")
         
-        # 尝试完全禁用网络验证（使用本地文件）
-        # 如果模型已完全下载到本地，可以使用 local_files_only=True
-        # 这样可以完全避免网络请求和 token 验证
-        try_local_only = os.getenv("HF_LOCAL_FILES_ONLY", "false").lower() == "true"
+        # 强制只使用本地文件 - 模型必须从模型库下载
+        # 不允许自动下载模型
+        try_local_only = os.getenv("HF_LOCAL_FILES_ONLY", "true").lower() == "true"
         
         # 检查是否有 HF_TOKEN 环境变量或配置文件
         hf_token = os.getenv("HF_TOKEN")
@@ -102,23 +101,23 @@ async def load_model():
         # 这可以防止使用缓存的过期 token
         os.environ["HF_HUB_DISABLE_IMPLICIT_TOKEN"] = "1"
         
-        # 如果 local_files_only 失败，尝试使用配置文件中的 token
+        # 如果 local_files_only 失败，说明模型不存在，必须从模型库下载
         try:
             tokenizer = M2M100Tokenizer.from_pretrained(MODEL_NAME, **extra)
         except Exception as e:
-            if try_local_only and ("401" in str(e) or "token" in str(e).lower()):
-                print(f"[NMT Service] local_files_only failed, trying with token from config file...")
-                # 回退到使用配置文件中的 token
-                if hf_token and hf_token.strip():
-                    extra = {
-                        "token": hf_token,
-                        "use_safetensors": True,
-                    }
-                    os.environ["HF_HUB_DISABLE_IMPLICIT_TOKEN"] = "0"  # 允许使用 token
-                    tokenizer = M2M100Tokenizer.from_pretrained(MODEL_NAME, **extra)
-                    print("[NMT Service] Successfully loaded with token from config file")
+            if try_local_only:
+                error_msg = str(e)
+                if "does not appear to have a file named" in error_msg or "Can't load" in error_msg:
+                    raise FileNotFoundError(
+                        f"Model not found locally: {MODEL_NAME}\n"
+                        "Please download models from the model hub first.\n"
+                        "Models should be downloaded through the model hub service, not automatically."
+                    )
                 else:
-                    raise
+                    raise RuntimeError(
+                        f"Failed to load model {MODEL_NAME}: {e}\n"
+                        "Please ensure the model is correctly downloaded from the model hub."
+                    )
             else:
                 raise
         
@@ -127,12 +126,30 @@ async def load_model():
         os.environ["TRANSFORMERS_NO_ADVISORY_WARNINGS"] = "1"
         
         # 加载模型，禁用所有优化选项
-        model = M2M100ForConditionalGeneration.from_pretrained(
-            MODEL_NAME, 
-            **extra,
-            low_cpu_mem_usage=False,  # 禁用低内存模式（这是关键！必须为 False）
-            torch_dtype=torch.float32,  # 明确指定数据类型
-        )
+        # 如果 local_files_only 失败，说明模型不存在，必须从模型库下载
+        try:
+            model = M2M100ForConditionalGeneration.from_pretrained(
+                MODEL_NAME, 
+                **extra,
+                low_cpu_mem_usage=False,  # 禁用低内存模式（这是关键！必须为 False）
+                torch_dtype=torch.float32,  # 明确指定数据类型
+            )
+        except Exception as e:
+            if try_local_only:
+                error_msg = str(e)
+                if "does not appear to have a file named" in error_msg or "Can't load" in error_msg:
+                    raise FileNotFoundError(
+                        f"Model not found locally: {MODEL_NAME}\n"
+                        "Please download models from the model hub first.\n"
+                        "Models should be downloaded through the model hub service, not automatically."
+                    )
+                else:
+                    raise RuntimeError(
+                        f"Failed to load model {MODEL_NAME}: {e}\n"
+                        "Please ensure the model is correctly downloaded from the model hub."
+                    )
+            else:
+                raise
         
         # 检查模型是否在 meta 设备上
         try:

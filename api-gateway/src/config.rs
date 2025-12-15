@@ -52,7 +52,7 @@ impl Default for Config {
                 host: "0.0.0.0".to_string(),
             },
             scheduler: SchedulerConfig {
-                url: "ws://localhost:8080/ws/session".to_string(),
+                url: "ws://localhost:5010/ws/session".to_string(),
             },
             rate_limit: RateLimitConfig {
                 default_max_rps: 100,

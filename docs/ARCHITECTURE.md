@@ -256,7 +256,7 @@
 
 ### 开发环境
 
-- 调度服务器: `localhost:8080`
+- 调度服务器: `localhost:5010`
 - API Gateway: `localhost:8081` (可选)
 - 模型库服务: `localhost:5000`
 - TTS 服务: `localhost:5005` (可选，使用之前的 Piper TTS)

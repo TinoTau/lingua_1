@@ -41,7 +41,7 @@ export class RealtimeClient {
 
   constructor(config: RealtimeClientConfig = {}) {
     this.config = {
-      schedulerUrl: config.schedulerUrl || 'ws://localhost:8080/ws/session',
+      schedulerUrl: config.schedulerUrl || 'ws://localhost:5010/ws/session',
       platform: config.platform || 'ios',
       clientVersion: config.clientVersion || '1.0.0',
       heartbeatIntervalMs: config.heartbeatIntervalMs || 25000,

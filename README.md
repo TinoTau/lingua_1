@@ -347,7 +347,7 @@ cargo build --release
 cargo run --release
 ```
 
-服务将在 `http://localhost:8080` 启动。
+服务将在 `http://localhost:5010` 启动。
 
 ### 3. 启动 API Gateway（可选）
 
@@ -378,7 +378,7 @@ npm install
 npm run dev
 ```
 
-服务将在 `http://localhost:3000` 启动。
+服务将在 `http://localhost:9001` 启动。
 
 ### 6. 启动移动端客户端
 

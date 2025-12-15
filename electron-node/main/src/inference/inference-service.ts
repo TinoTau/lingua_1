@@ -31,7 +31,7 @@ export class InferenceService {
 
   constructor(modelManager: ModelManager) {
     this.modelManager = modelManager;
-    this.inferenceServiceUrl = process.env.INFERENCE_SERVICE_URL || 'http://localhost:9000';
+    this.inferenceServiceUrl = process.env.INFERENCE_SERVICE_URL || 'http://localhost:5009';
     this.httpClient = axios.create({
       baseURL: this.inferenceServiceUrl,
       timeout: 300000, // 5 分钟超时（推理可能需要较长时间）
@@ -44,7 +44,7 @@ export class InferenceService {
     try {
       // 根据任务请求中的 features 自动启用所需模块（运行时动态启用）
       // 注意：模块启用由推理服务根据请求自动处理，不需要手动调用
-      
+
       // 如果启用了流式 ASR，使用 WebSocket
       if (job.enable_streaming_asr && partialCallback) {
         return await this.processJobStreaming(job, partialCallback);
@@ -186,14 +186,14 @@ export class InferenceService {
   async getInstalledModels(): Promise<InstalledModel[]> {
     // 从 ModelManager 获取已安装的模型，转换为协议格式
     const installed = this.modelManager.getInstalledModels();
-    
+
     // 获取可用模型列表以获取完整元数据
     const availableModels = await this.modelManager.getAvailableModels();
-    
+
     return installed.map(m => {
       // 从可用模型列表中查找完整信息
       const modelInfo = availableModels.find(am => am.id === m.modelId);
-      
+
       // 从 model_id 推断模型类型（临时方案，实际应该从元数据获取）
       let kind: 'asr' | 'nmt' | 'tts' | 'emotion' | 'other' = 'other';
       if (modelInfo) {
@@ -241,7 +241,7 @@ export class InferenceService {
 
   // 注意：以下方法已废弃，模块现在根据任务请求自动启用/禁用
   // 保留这些方法是为了向后兼容，但不再通过 UI 手动调用
-  
+
   async getModuleStatus(): Promise<Record<string, boolean>> {
     // 模块状态现在由推理服务根据任务请求动态管理
     // 返回空对象，表示不提供手动管理功能

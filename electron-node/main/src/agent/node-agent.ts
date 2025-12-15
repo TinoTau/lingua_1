@@ -2,11 +2,11 @@ import WebSocket from 'ws';
 import { InferenceService } from '../inference/inference-service';
 import * as si from 'systeminformation';
 import * as os from 'os';
-import type { 
-  NodeRegisterMessage, 
-  NodeRegisterAckMessage, 
-  NodeHeartbeatMessage, 
-  JobAssignMessage, 
+import type {
+  NodeRegisterMessage,
+  NodeRegisterAckMessage,
+  NodeHeartbeatMessage,
+  JobAssignMessage,
   JobResultMessage,
   AsrPartialMessage,
   InstalledModel,
@@ -30,14 +30,14 @@ export class NodeAgent {
   private inferenceService: InferenceService;
 
   constructor(inferenceService: InferenceService) {
-    this.schedulerUrl = process.env.SCHEDULER_URL || 'ws://localhost:8080/ws/node';
+    this.schedulerUrl = process.env.SCHEDULER_URL || 'ws://localhost:5010/ws/node';
     this.inferenceService = inferenceService;
   }
 
   async start(): Promise<void> {
     try {
       this.ws = new WebSocket(this.schedulerUrl);
-      
+
       this.ws.on('open', () => {
         logger.info({}, '已连接到调度服务器');
         this.registerNode();
@@ -77,10 +77,10 @@ export class NodeAgent {
     try {
       // 获取硬件信息
       const hardware = await this.getHardwareInfo();
-      
+
       // 获取已安装的模型
       const installedModels = await this.inferenceService.getInstalledModels();
-      
+
       // 获取支持的功能
       const featuresSupported = this.inferenceService.getFeaturesSupported();
 
@@ -117,10 +117,10 @@ export class NodeAgent {
     try {
       const mem = await si.mem();
       const cpu = await si.cpu();
-      
+
       // TODO: 获取 GPU 信息（需要额外库，如 nvidia-ml-py 或 systeminformation 的图形卡信息）
       const gpus: Array<{ name: string; memory_gb: number }> = [];
-      
+
       return {
         cpu_cores: cpu.cores || os.cpus().length,
         memory_gb: Math.round(mem.total / (1024 * 1024 * 1024)),
@@ -168,11 +168,11 @@ export class NodeAgent {
     }
   }
 
-  private async getSystemResources(): Promise<{ 
-    cpu: number; 
-    gpu: number | null; 
+  private async getSystemResources(): Promise<{
+    cpu: number;
+    gpu: number | null;
     gpuMem: number | null;
-    memory: number 
+    memory: number
   }> {
     try {
       const [cpu, mem] = await Promise.all([
@@ -271,7 +271,7 @@ export class NodeAgent {
       this.ws.send(JSON.stringify(response));
     } catch (error) {
       logger.error({ error, jobId: job.job_id, traceId: job.trace_id }, '处理任务失败');
-      
+
       // 检查是否是 ModelNotAvailableError
       if (error instanceof ModelNotAvailableError) {
         // 发送 MODEL_NOT_AVAILABLE 错误给调度服务器
@@ -294,11 +294,11 @@ export class NodeAgent {
           },
           trace_id: job.trace_id, // Added: propagate trace_id
         };
-        
+
         this.ws.send(JSON.stringify(errorResponse));
         return;
       }
-      
+
       // 其他错误
       const errorResponse: JobResultMessage = {
         type: 'job_result',

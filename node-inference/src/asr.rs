@@ -82,7 +82,7 @@ impl ASREngine {
         // 配置 Whisper 上下文参数
         // whisper-rs 的 CUDA 支持会在编译时通过 features = ["cuda"] 启用
         // 运行时如果检测到 CUDA 可用，会自动使用 GPU 加速
-        let mut params = WhisperContextParameters::default();
+        let params = WhisperContextParameters::default();
         // GPU 支持会在推理时自动检测和使用（如果可用）
         
         let ctx = WhisperContext::new_with_params(
@@ -116,7 +116,7 @@ impl ASREngine {
     /// 
     /// # Arguments
     /// * `language` - 语言代码（如 "en", "zh"），`None` 表示自动检测
-    pub async fn set_language_async(&self, language: Option<String>) {
+    pub async fn set_language_async(&self, _language: Option<String>) {
         // 由于 language 字段不是 Arc<Mutex<>>，我们需要使用其他方式
         // 暂时在流式处理中，语言会在 get_partial_result 和 get_final_result 中通过参数传递
         // 这里先保留接口，实际语言设置需要在创建 ASREngine 时或通过其他方式设置

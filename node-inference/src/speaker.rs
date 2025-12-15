@@ -43,7 +43,7 @@ impl SpeakerIdentifier {
         }
     }
 
-    pub async fn identify(&self, audio_data: &[u8]) -> Result<String> {
+    pub async fn identify(&self, _audio_data: &[u8]) -> Result<String> {
         if !self.is_enabled() {
             return Err(anyhow::anyhow!("Speaker identification module is not enabled"));
         }

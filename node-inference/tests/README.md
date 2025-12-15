@@ -94,7 +94,7 @@ cargo test -- --ignored
 
 2. **服务依赖**：NMT 和 TTS 测试需要外部服务运行
    - NMT: `http://127.0.0.1:5008/v1/translate` (Python M2M100 服务)
-   - TTS: `http://127.0.0.1:5005/tts` (Piper TTS 服务)
+   - TTS: `http://127.0.0.1:5006/tts` (Piper TTS 服务)
 
 3. **运行被忽略的测试**：使用 `cargo test -- --ignored` 运行需要模型和服务的测试
 

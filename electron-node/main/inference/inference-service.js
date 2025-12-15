@@ -11,7 +11,7 @@ class InferenceService {
         this.currentJobs = new Set();
         this.wsClient = null;
         this.modelManager = modelManager;
-        this.inferenceServiceUrl = process.env.INFERENCE_SERVICE_URL || 'http://localhost:9000';
+        this.inferenceServiceUrl = process.env.INFERENCE_SERVICE_URL || 'http://localhost:5009';
         this.httpClient = axios_1.default.create({
             baseURL: this.inferenceServiceUrl,
             timeout: 300000, // 5 分钟超时（推理可能需要较长时间）

@@ -246,12 +246,12 @@
 **环境变量配置**：
 ```powershell
 # Windows PowerShell
-$env:SCHEDULER_URL = "ws://localhost:8080/ws/node"
+$env:SCHEDULER_URL = "ws://localhost:5010/ws/node"
 ```
 
 ```bash
 # Linux/macOS
-export SCHEDULER_URL="ws://localhost:8080/ws/node"
+export SCHEDULER_URL="ws://localhost:5010/ws/node"
 ```
 
 ### 模型库地址

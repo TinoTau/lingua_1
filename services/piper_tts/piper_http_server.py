@@ -19,6 +19,11 @@ try:
     from fastapi import FastAPI, HTTPException
     from fastapi.responses import Response
     from pydantic import BaseModel
+    try:
+        from pydantic import ConfigDict
+        PYDANTIC_V2 = True
+    except ImportError:
+        PYDANTIC_V2 = False
     import uvicorn
 except ImportError:
     print("ERROR: FastAPI and uvicorn are required. Please install:")
@@ -39,11 +44,17 @@ class TtsRequest(BaseModel):
     voice: str
     language: Optional[str] = None
     
-    class Config:
-        # 确保正确处理 UTF-8 编码
-        json_encoders = {
-            str: lambda v: v.encode('utf-8').decode('utf-8') if isinstance(v, str) else v
-        }
+    # Pydantic V2 configuration (backward compatible)
+    if PYDANTIC_V2:
+        model_config = ConfigDict()
+        # Note: json_encoders is removed in Pydantic V2
+        # String encoding is handled automatically
+    else:
+        class Config:
+            # Pydantic V1 configuration
+            json_encoders = {
+                str: lambda v: v.encode('utf-8').decode('utf-8') if isinstance(v, str) else v
+            }
 
 
 app = FastAPI(title="Piper TTS HTTP Service")

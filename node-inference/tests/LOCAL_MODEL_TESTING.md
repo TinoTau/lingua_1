@@ -84,7 +84,7 @@ cargo test --test nmt_test -- --ignored
 
 **当前实现**:
 - 通过 HTTP 调用 Piper TTS 服务
-- 服务地址: `http://127.0.0.1:5005/tts`
+- 服务地址: `http://127.0.0.1:5006/tts`
 
 **未来改进**:
 - 可以考虑实现本地 ONNX 推理（如果模型支持）

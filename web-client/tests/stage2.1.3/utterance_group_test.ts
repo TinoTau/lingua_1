@@ -16,7 +16,7 @@ describe('Utterance Group - TTS_PLAY_ENDED 消息发送', () => {
   beforeEach(() => {
     // 重置状态
     sentMessages = [];
-    
+
     // 创建 mock WebSocket
     mockWebSocket = {
       readyState: 1, // WebSocket.OPEN
@@ -34,9 +34,9 @@ describe('Utterance Group - TTS_PLAY_ENDED 消息发送', () => {
     (global.WebSocket as any).CLOSED = 3;
 
     stateMachine = new StateMachine();
-    wsClient = new WebSocketClient(stateMachine, 'ws://localhost:8080/ws/session');
+    wsClient = new WebSocketClient(stateMachine, 'ws://localhost:5010/ws/session');
     ttsPlayer = new TtsPlayer(stateMachine);
-    
+
     // 重置 mock
     vi.clearAllMocks();
   });
@@ -46,7 +46,7 @@ describe('Utterance Group - TTS_PLAY_ENDED 消息发送', () => {
     const sendFn = vi.fn((msg: string) => {
       sentMessages.push(msg);
     });
-    
+
     // 定义 WebSocket.OPEN 常量（值为 1）
     const WS_OPEN = 1;
     const testMockWs: any = {
@@ -54,7 +54,7 @@ describe('Utterance Group - TTS_PLAY_ENDED 消息发送', () => {
       send: sendFn,
       close: vi.fn(),
     };
-    
+
     // 设置 session_id 和 ws
     (wsClient as any).sessionId = 'test_session_123';
     (wsClient as any).ws = testMockWs;

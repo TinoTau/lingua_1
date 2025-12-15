@@ -11,7 +11,7 @@
 
 **主要差异**:
 - ❌ 架构：单体 CoreEngine → 分布式 Scheduler + Node Inference
-- ❌ 服务端口：9000 → 8080 (Scheduler)
+- ❌ 服务端口：9000 → 5010 (Scheduler)
 - ❌ 部署方式：单一服务 → 多服务分布式部署
 - ❌ 功能范围：基础翻译 → 多节点调度、负载均衡、功能选择、会议室模式等
 
@@ -44,7 +44,7 @@
 **架构模式**: **分布式微服务架构**
 
 ```
-Web Client → Scheduler (Rust, Port 8080)
+Web Client → Scheduler (Rust, Port 5010)
               ├─ Session Management
               ├─ Job Dispatcher
               ├─ Node Registry
@@ -70,12 +70,12 @@ Web Client → Scheduler (Rust, Port 8080)
 
 | 服务 | v0.1.0 | 当前版本 | 变化 |
 |------|--------|---------|------|
-| **核心服务** | CoreEngine: 9000 | Scheduler: 8080 | ✅ 已更改 |
+| **核心服务** | CoreEngine: 9000 | Scheduler: 5010 | ✅ 已更改 |
 | **NMT 服务** | 5008 | 5008 | ✅ 未变化 |
 | **TTS 服务** | 5005 | 5005 | ✅ 未变化 |
 | **API Gateway** | ❌ 无 | 8081 | ✅ 新增 |
 | **Model Hub** | ❌ 无 | 8000 | ✅ 新增 |
-| **Node Inference** | ❌ 内置于 CoreEngine | 9000 | ✅ 分离 |
+| **Node Inference** | ❌ 内置于 CoreEngine | 5009 | ✅ 分离 |
 
 ---
 
@@ -87,7 +87,7 @@ Web Client → Scheduler (Rust, Port 8080)
 |------|---------------------|---------------------|
 | **技术栈** | Rust + Tokio | Rust + Tokio + Axum |
 | **职责** | 统一编排所有模块 | 调度、会话管理、节点注册 |
-| **端口** | 9000 | 8080 |
+| **端口** | 9000 | 5010 |
 | **架构** | 单体服务 | 微服务（仅调度） |
 
 ### 3.2 Node Inference Service
@@ -96,7 +96,7 @@ Web Client → Scheduler (Rust, Port 8080)
 |------|--------|---------|
 | **位置** | 内置于 CoreEngine | 独立服务 |
 | **技术栈** | 与 CoreEngine 共享 | Rust + ONNX Runtime + Whisper |
-| **端口** | 无（内部调用） | 9000 (HTTP) |
+| **端口** | 无（内部调用） | 5009 (HTTP) |
 | **职责** | 作为 CoreEngine 的一部分 | 独立推理服务，由 Node Client 调用 |
 
 ### 3.3 客户端
@@ -166,12 +166,12 @@ WSL2 (Ubuntu)
 
 ```
 Windows 主系统
-├─ Scheduler (Rust, Port 8080)
+├─ Scheduler (Rust, Port 5010)
 ├─ Model Hub (Python, Port 8000)
 ├─ API Gateway (Rust, Port 8081)
 ├─ NMT Service (Python, Port 5008)
 └─ Node Client (Electron)
-    └─ Node Inference Service (Rust, Port 9000)
+    └─ Node Inference Service (Rust, Port 5009)
 
 WSL2 (Ubuntu)
 └─ TTS Service (Piper HTTP, Port 5005)
@@ -250,7 +250,7 @@ url = "http://127.0.0.1:5005/tts"
 url = "http://127.0.0.1:6006"
 
 [engine]
-port = 9000
+port = 5009
 whisper_model_path = "models/asr/whisper-base"
 silero_vad_model_path = "models/vad/silero/silero_vad_official.onnx"
 ```

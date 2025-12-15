@@ -53,7 +53,7 @@
 ```bash
 cd node-inference
 export MODELS_DIR=./models
-export INFERENCE_SERVICE_PORT=9000
+export INFERENCE_SERVICE_PORT=5009
 cargo run --bin inference-service
 ```
 

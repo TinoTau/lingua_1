@@ -28,7 +28,7 @@ export const DEFAULT_CONFIG: Config = {
   silenceTimeoutMs: 1000,
   tailBufferMs: 250,
   groupTimeoutSec: 30,
-  schedulerUrl: 'ws://localhost:8080/ws/session',
+  schedulerUrl: 'ws://localhost:5010/ws/session',
 };
 
 // WebSocket 消息类型
@@ -178,9 +178,9 @@ export interface RoomExpiredMessage {
   message: string;
 }
 
-export type ServerMessage = 
+export type ServerMessage =
   | SessionInitAckMessage
-  | AsrPartialMessage 
+  | AsrPartialMessage
   | TranslationMessage
   | TranslationResultMessage
   | TtsAudioMessage

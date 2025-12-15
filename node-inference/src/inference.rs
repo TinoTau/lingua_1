@@ -85,11 +85,13 @@ pub struct InferenceService {
 
 impl InferenceService {
     pub fn new(models_dir: PathBuf) -> Result<Self> {
-        let asr_engine = asr::ASREngine::new(models_dir.join("asr"))?;
+        // ASR 模型在 whisper-base 子目录中
+        let asr_engine = asr::ASREngine::new(models_dir.join("asr").join("whisper-base"))?;
         // 使用 HTTP 客户端方式初始化 NMT（推荐）
         let nmt_engine = nmt::NMTEngine::new_with_http_client(None)?;
         let tts_engine = tts::TTSEngine::new(None)?;
-        let vad_engine = vad::VADEngine::new(models_dir.join("vad"))?;
+        // VAD 模型在 silero 子目录中
+        let vad_engine = vad::VADEngine::new(models_dir.join("vad").join("silero"))?;
 
         // 初始化语言检测器（复用 ASR 引擎的 Whisper 上下文）
         let whisper_ctx = asr_engine.get_whisper_ctx();

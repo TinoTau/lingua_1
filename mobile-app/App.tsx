@@ -36,7 +36,7 @@ export default function App() {
     isReconnecting,
     realtimeClient,
   } = useSession({
-    schedulerUrl: 'ws://localhost:8080/ws/session',
+    schedulerUrl: 'ws://localhost:5010/ws/session',
     platform: 'ios',
     clientVersion: '1.0.0',
   });

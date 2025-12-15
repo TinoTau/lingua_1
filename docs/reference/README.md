@@ -15,14 +15,14 @@
 ### v0.1.0 (Reference 文档描述)
 
 - **架构**: 单体 CoreEngine Service
-- **端口**: 9000
+- **端口**: 5009
 - **通信**: HTTP REST API
 - **特点**: 单一服务，内部 EventBus 协调
 
 ### 当前版本 (lingua_1)
 
 - **架构**: 分布式微服务架构（Scheduler + Node Inference + API Gateway）
-- **端口**: 8080 (Scheduler)
+- **端口**: 5010 (Scheduler)
 - **通信**: WebSocket + HTTP
 - **特点**: 多节点调度、负载均衡、功能选择、会议室模式
 

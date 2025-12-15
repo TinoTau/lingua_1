@@ -150,7 +150,7 @@ impl Default for Config {
     fn default() -> Self {
         Self {
             server: ServerConfig {
-                port: 8080,
+                port: 5010,
                 host: "0.0.0.0".to_string(),
             },
             model_hub: ModelHubConfig {

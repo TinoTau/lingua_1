@@ -10,7 +10,12 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::Mutex;
 use std::collections::VecDeque;
-use ort::{Environment, Session, SessionBuilder, Value};
+use ort::{
+    session::Session,
+    value::Tensor,
+    execution_providers::CUDAExecutionProvider,
+    Error as OrtError,
+};
 use ndarray::{Array1, Array2, Array3, CowArray, Ix2, Ix3};
 use tracing::info;
 
@@ -179,32 +184,33 @@ impl VADEngine {
 
         info!("Loading Silero VAD model from: {}", model_path.display());
 
-        // 初始化 ONNX Runtime 环境
-        let env = Arc::new(
-            Environment::builder()
-                .with_name("silero_vad")
-                .build()?
-        );
+        // 初始化 ONNX Runtime 环境（ort crate 2.0）
+        ort::init().commit()
+            .map_err(|e: OrtError| anyhow!("Failed to initialize ONNX Runtime: {}", e))?;
 
-        // 创建会话构建器，优先使用 CUDA（如果可用）
-        let mut session_builder = SessionBuilder::new(&env)?;
+        // 创建会话，优先使用 CUDA（如果可用）
+        // ort crate 2.0: 需要先读取文件到内存，然后使用 commit_from_memory
+        let model_data = std::fs::read(model_path)
+            .map_err(|e| anyhow!("Failed to read model file: {}", e))?;
         
-        // 尝试使用 CUDA 执行提供者（GPU 加速）
-        // 注意：ort 1.16.3 的 CUDA 支持需要通过 feature 启用
-        // 如果 CUDA 不可用，会自动回退到 CPU
-        // 由于 ort 1.16.3 可能不支持 CUDA feature，这里先注释掉
-        // 如果需要 GPU 加速，需要升级 ort 版本或使用其他方式
-        // #[cfg(feature = "cuda")]
-        // {
-        //     if let Err(e) = session_builder.with_execution_providers([ort::ExecutionProvider::CUDA(Default::default())]) {
-        //         info!("Silero VAD: CUDA not available, falling back to CPU: {}", e);
-        //     } else {
-        //         info!("Silero VAD: Using CUDA GPU acceleration");
-        //     }
-        // }
-        
-        let session = session_builder
-            .with_model_from_file(model_path)?;
+        let session = match Session::builder()
+            .map_err(|e: OrtError| anyhow!("Failed to create session builder: {}", e))?
+            .with_execution_providers([CUDAExecutionProvider::default().build()])
+            .map_err(|e: OrtError| anyhow!("Failed to set CUDA execution provider: {}", e))?
+            .commit_from_memory(&model_data) {
+            Ok(sess) => {
+                info!("Silero VAD: Using CUDA GPU acceleration");
+                sess
+            }
+            Err(e) => {
+                info!("Silero VAD: CUDA not available, falling back to CPU: {}", e);
+                // 如果 CUDA 失败，重新创建 session（不使用 CUDA）
+                Session::builder()
+                    .map_err(|e: OrtError| anyhow!("Failed to create session builder: {}", e))?
+                    .commit_from_memory(&model_data)
+                    .map_err(|e: OrtError| anyhow!("Failed to load model: {}", e))?
+            }
+        };
 
         info!("Silero VAD model loaded successfully");
 
@@ -312,50 +318,60 @@ impl VADEngine {
         let sr_owned = sr_dyn.to_owned();
         let sr_cow = CowArray::from(sr_owned);
 
-        // 创建 ONNX 输入（输入顺序：audio_input, state_input, sr_input）
-        use std::ptr;
-        let audio_input = {
-            let audio_val = Value::from_array(ptr::null_mut(), &cow_arr)
-                .map_err(|e| anyhow!("Failed to create audio input: {}", e))?;
-            unsafe { std::mem::transmute::<Value, Value<'static>>(audio_val) }
-        };
+        // 创建 ONNX 输入（ort crate 2.0: Tensor::from_array 需要 (Shape, Vec<T>) 或 (Shape, Box<[T]>)）
+        // 将 Array 转换为 (shape, Vec) 元组
+        let audio_owned = cow_arr.into_owned();
+        let audio_shape = audio_owned.shape().to_vec();
+        let audio_vec: Vec<f32> = audio_owned.into_iter().collect();
+        let audio_tensor = Tensor::from_array((audio_shape, audio_vec))
+            .map_err(|e| anyhow!("Failed to create audio input: {}", e))?;
+        
+        let state_owned = state_cow.into_owned();
+        let state_shape = state_owned.shape().to_vec();
+        let state_vec: Vec<f32> = state_owned.into_iter().collect();
+        let state_tensor = Tensor::from_array((state_shape, state_vec))
+            .map_err(|e| anyhow!("Failed to create state input: {}", e))?;
+        
+        let sr_owned = sr_cow.into_owned();
+        let sr_shape = sr_owned.shape().to_vec();
+        let sr_vec: Vec<i64> = sr_owned.into_iter().collect();
+        let sr_tensor = Tensor::from_array((sr_shape, sr_vec))
+            .map_err(|e| anyhow!("Failed to create sr input: {}", e))?;
 
-        let state_input = {
-            let state_val = Value::from_array(ptr::null_mut(), &state_cow)
-                .map_err(|e| anyhow!("Failed to create state input: {}", e))?;
-            unsafe { std::mem::transmute::<Value, Value<'static>>(state_val) }
-        };
-
-        let sr_input = {
-            let sr_val = Value::from_array(ptr::null_mut(), &sr_cow)
-                .map_err(|e| anyhow!("Failed to create sr input: {}", e))?;
-            unsafe { std::mem::transmute::<Value, Value<'static>>(sr_val) }
-        };
-
-        // 推理
-        let session_guard = self.session.lock()
+        // 推理（ort crate 2.0: 使用 ort::inputs! 宏）
+        let mut session_guard = self.session.lock()
             .map_err(|e| anyhow!("Failed to lock session: {}", e))?;
         
         let outputs = session_guard
-            .run(vec![audio_input, state_input, sr_input])
+            .run(ort::inputs![audio_tensor, state_tensor, sr_tensor])
             .map_err(|e| anyhow!("ONNX inference failed: {}", e))?;
 
-        // 提取输出
-        use ort::tensor::OrtOwnedTensor;
-        use ndarray::IxDyn;
-
-        let output_tensor: OrtOwnedTensor<f32, IxDyn> = outputs[0]
-            .try_extract()
+        // 提取输出（ort crate 2.0 API: try_extract_tensor 返回 (&Shape, &[T])）
+        // ort crate 2.0: outputs 可以通过索引访问，try_extract_tensor 返回 (&Shape, &[T])
+        let (output_shape, output_data): (&ort::tensor::Shape, &[f32]) = outputs[0]
+            .try_extract_tensor()
             .map_err(|e| anyhow!("Failed to extract output: {}", e))?;
+        
+        // Shape 实现了 Deref<[i64]>，可以直接转换为 Vec<usize>
+        let output_dims: Vec<usize> = output_shape.iter().map(|&d| d as usize).collect();
+        let output_array = ndarray::ArrayViewD::from_shape(
+            output_dims.as_slice(),
+            output_data
+        ).map_err(|e| anyhow!("Failed to create output array view: {}", e))?;
 
         // 更新隐藏状态
         if outputs.len() > 1 {
-            let state_tensor: OrtOwnedTensor<f32, IxDyn> = outputs[1]
-                .try_extract()
+            let (state_shape, state_data): (&ort::tensor::Shape, &[f32]) = outputs[1]
+                .try_extract_tensor()
                 .map_err(|e| anyhow!("Failed to extract state: {}", e))?;
             
-            let state_view = state_tensor.view();
-            let new_state_3d: Array3<f32> = state_view
+            let state_dims: Vec<usize> = state_shape.iter().map(|&d| d as usize).collect();
+            let state_array = ndarray::ArrayViewD::from_shape(
+                state_dims.as_slice(),
+                state_data
+            ).map_err(|e| anyhow!("Failed to create state array view: {}", e))?;
+            
+            let new_state_3d: Array3<f32> = state_array
                 .to_owned()
                 .into_dimensionality::<Ix3>()
                 .map_err(|e| anyhow!("Failed to reshape state: {}", e))?;
@@ -369,7 +385,7 @@ impl VADEngine {
         }
 
         // 提取输出值
-        let view = output_tensor.view();
+        let view = output_array;
         let shape = view.shape();
         
         let raw_output = if shape.len() == 2 {

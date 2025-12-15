@@ -41,7 +41,7 @@ impl SpeechRateDetector {
         }
     }
 
-    pub async fn detect(&self, audio_data: &[u8], duration_seconds: f32) -> Result<f32> {
+    pub async fn detect(&self, _audio_data: &[u8], duration_seconds: f32) -> Result<f32> {
         if !self.is_enabled() {
             return Err(anyhow::anyhow!("Speech rate detection module is not enabled"));
         }

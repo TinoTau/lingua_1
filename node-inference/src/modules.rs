@@ -288,8 +288,8 @@ pub struct ModuleMetadata {
     pub outputs: Vec<String>,
 }
 
-/// 模块配置表（MODULE_TABLE）
-/// 这是系统中模块定义的唯一可信源（SSOT）
+// 模块配置表（MODULE_TABLE）
+// 这是系统中模块定义的唯一可信源（SSOT）
 lazy_static! {
     pub static ref MODULE_TABLE: HashMap<&'static str, ModuleMetadata> = {
         let mut m = HashMap::new();

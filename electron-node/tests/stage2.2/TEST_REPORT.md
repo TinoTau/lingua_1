@@ -83,7 +83,7 @@ npm run build:renderer
 
 **测试步骤**:
 1. 启动推理服务：`cargo run --bin inference-service`
-2. 测试健康检查：`curl http://localhost:9000/health`
+2. 测试健康检查：`curl http://localhost:5009/health`
 
 **预期结果**: 返回 `OK` 状态码 200
 

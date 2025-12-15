@@ -196,7 +196,6 @@ async fn handle_inference_stream(
     use std::sync::Arc;
 
     let (mut sender, mut receiver) = socket.split();
-    let mut current_job_id: Option<String> = None;
 
     // 创建消息通道用于发送部分结果
     let (tx_msg, mut rx_msg) = tokio::sync::mpsc::unbounded_channel::<Message>();
@@ -242,7 +241,6 @@ async fn handle_inference_stream(
                 // 解析推理请求
                 match serde_json::from_str::<HttpInferenceRequest>(&text) {
                     Ok(request) => {
-                        current_job_id = Some(request.job_id.clone());
 
                         // 解码 base64 音频
                         use base64::{Engine as _, engine::general_purpose};

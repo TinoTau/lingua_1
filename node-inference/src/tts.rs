@@ -3,7 +3,7 @@
 //! 通过 HTTP 请求调用 WSL2 中运行的 Piper TTS 服务
 
 use anyhow::{Result, anyhow};
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use std::time::Duration;
 use reqwest::Client;
 use tracing::{info, error};
@@ -11,7 +11,7 @@ use tracing::{info, error};
 /// Piper HTTP 服务配置
 #[derive(Debug, Clone)]
 pub struct PiperHttpConfig {
-    /// HTTP 服务端点（例如：http://127.0.0.1:5005/tts）
+    /// HTTP 服务端点（例如：http://127.0.0.1:5006/tts）
     pub endpoint: String,
     /// 默认语音名称（例如：zh_CN-huayan-medium）
     pub default_voice: String,
@@ -22,7 +22,7 @@ pub struct PiperHttpConfig {
 impl Default for PiperHttpConfig {
     fn default() -> Self {
         Self {
-            endpoint: "http://127.0.0.1:5005/tts".to_string(),
+            endpoint: "http://127.0.0.1:5006/tts".to_string(),
             default_voice: "zh_CN-huayan-medium".to_string(),
             timeout_ms: 8000,
         }
@@ -57,7 +57,7 @@ impl TTSEngine {
             // 尝试从环境变量读取配置
             PiperHttpConfig {
                 endpoint: std::env::var("TTS_SERVICE_URL")
-                    .unwrap_or_else(|_| "http://127.0.0.1:5005/tts".to_string()),
+                    .unwrap_or_else(|_| "http://127.0.0.1:5006/tts".to_string()),
                 default_voice: std::env::var("TTS_DEFAULT_VOICE")
                     .unwrap_or_else(|_| "zh_CN-huayan-medium".to_string()),
                 timeout_ms: std::env::var("TTS_TIMEOUT_MS")

@@ -81,7 +81,7 @@ npm run preview
   silenceTimeoutMs: 1000,    // 静音超时（ms）
   tailBufferMs: 250,         // 尾部缓冲（ms）
   groupTimeoutSec: 30,       // Group 超时（秒）
-  schedulerUrl: 'ws://localhost:8080/ws/session'
+  schedulerUrl: 'ws://localhost:5010/ws/session'
 }
 ```
 

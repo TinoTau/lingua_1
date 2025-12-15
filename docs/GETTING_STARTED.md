@@ -86,7 +86,7 @@ cargo run --release --bin inference-service
 .\scripts\start_node_inference.ps1
 ```
 
-服务将在 `http://127.0.0.1:9000` 启动。
+服务将在 `http://127.0.0.1:5009` 启动。
 
 ### 4. 启动调度服务器
 
@@ -96,7 +96,7 @@ cargo build --release
 cargo run --release
 ```
 
-服务将在 `http://localhost:8080` 启动。
+服务将在 `http://localhost:5010` 启动。
 
 ### 5. 启动 API Gateway（可选）
 
@@ -147,7 +147,7 @@ npm start
 
 ```toml
 [server]
-port = 8080
+port = 5010
 host = "0.0.0.0"
 
 [model_hub]
@@ -165,7 +165,7 @@ port = 8081
 host = "0.0.0.0"
 
 [scheduler]
-url = "ws://localhost:8080/ws/session"
+url = "ws://localhost:5010/ws/session"
 
 [rate_limit]
 default_max_rps = 100
@@ -177,7 +177,7 @@ default_max_sessions = 10
 设置环境变量：
 
 ```powershell
-$env:SCHEDULER_URL = "ws://localhost:8080/ws/node"
+$env:SCHEDULER_URL = "ws://localhost:5010/ws/node"
 $env:MODEL_HUB_URL = "http://localhost:5000"
 ```
 
@@ -186,7 +186,7 @@ $env:MODEL_HUB_URL = "http://localhost:5000"
 在 `mobile-app/App.tsx` 中修改：
 
 ```typescript
-const schedulerUrl = 'ws://your-scheduler-url:8080/ws/session';
+const schedulerUrl = 'ws://your-scheduler-url:5010/ws/session';
 ```
 
 ## 使用流程
@@ -235,7 +235,7 @@ const schedulerUrl = 'ws://your-scheduler-url:8080/ws/session';
 
 ### 调度服务器无法启动
 
-- 检查端口 8080 是否被占用
+- 检查端口 5010 是否被占用
 - 检查 Rust 是否正确安装
 - 查看日志输出
 

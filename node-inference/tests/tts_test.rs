@@ -48,7 +48,7 @@ async fn test_tts_engine_synthesize_en() {
 async fn test_tts_engine_custom_config() {
     // 测试自定义配置
     let config = PiperHttpConfig {
-        endpoint: "http://127.0.0.1:5005/tts".to_string(),
+        endpoint: "http://127.0.0.1:5006/tts".to_string(),
         default_voice: "zh_CN-huayan-medium".to_string(),
         timeout_ms: 10000,
     };

@@ -24,7 +24,7 @@ export function useWebSocket() {
   const configRef = useRef<WebSocketConfig>({});
 
   const connect = useCallback(async (pairingCode?: string, config?: WebSocketConfig) => {
-    const schedulerUrl = process.env.SCHEDULER_URL || 'ws://localhost:8080/ws/session';
+    const schedulerUrl = process.env.SCHEDULER_URL || 'ws://localhost:5010/ws/session';
     const ws = new WebSocket(schedulerUrl);
 
     // 保存配置
@@ -53,7 +53,7 @@ export function useWebSocket() {
 
     ws.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      
+
       switch (message.type) {
         case 'session_init_ack': {
           const ack = message as SessionInitAckMessage;

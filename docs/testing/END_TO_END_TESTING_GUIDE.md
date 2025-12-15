@@ -108,7 +108,7 @@ cd lingua_1
 
 ```toml
 [server]
-port = 8080
+port = 5010
 host = "0.0.0.0"
 
 [model_hub]
@@ -127,7 +127,7 @@ resource_threshold = 0.25  # CPU/GPU/内存使用率阈值
 ```powershell
 # Windows PowerShell
 $env:MODELS_DIR = "D:\models"  # 模型文件目录
-$env:INFERENCE_SERVICE_PORT = "9000"
+$env:INFERENCE_SERVICE_PORT = "5009"
 $env:ASR_MODEL_PATH = "D:\models\whisper-large-v3"
 $env:NMT_SERVICE_URL = "http://localhost:8000"  # Python M2M100 服务
 $env:TTS_SERVICE_URL = "http://localhost:5001"  # Piper TTS 服务
@@ -139,9 +139,9 @@ $env:TTS_SERVICE_URL = "http://localhost:5001"  # Piper TTS 服务
 
 ```powershell
 # Windows PowerShell
-$env:SCHEDULER_URL = "ws://localhost:8080/ws/node"
+$env:SCHEDULER_URL = "ws://localhost:5010/ws/node"
 $env:MODEL_HUB_URL = "http://localhost:5000"
-$env:INFERENCE_SERVICE_URL = "http://localhost:9000"
+$env:INFERENCE_SERVICE_URL = "http://localhost:5009"
 ```
 
 #### 2.2.5 配置 Web 客户端
@@ -149,7 +149,7 @@ $env:INFERENCE_SERVICE_URL = "http://localhost:9000"
 编辑 `web-client/src/config.ts` (如果存在) 或直接在代码中设置：
 
 ```typescript
-const SCHEDULER_URL = 'ws://localhost:8080/ws/session';
+const SCHEDULER_URL = 'ws://localhost:5010/ws/session';
 ```
 
 ### 2.3 启动服务
@@ -177,7 +177,7 @@ cargo run --release
 
 **验证**: 
 - 检查日志输出，确认服务启动成功
-- 访问 `http://localhost:8080` 应返回服务信息（如果有健康检查端点）
+- 访问 `http://localhost:5010` 应返回服务信息（如果有健康检查端点）
 
 #### 2.3.3 启动节点推理服务
 
@@ -189,7 +189,7 @@ cargo run --release
 
 **验证**:
 - 检查日志输出，确认服务启动成功
-- 访问 `http://localhost:9000/health` 应返回健康状态
+- 访问 `http://localhost:5009/health` 应返回健康状态
 
 #### 2.3.4 启动 Electron Node 客户端
 
@@ -213,7 +213,7 @@ npm install
 npm run dev
 ```
 
-**验证**: 访问 `http://localhost:3000` 应显示 Web 客户端界面。
+**验证**: 访问 `http://localhost:9001` 应显示 Web 客户端界面。
 
 #### 2.3.6 一键启动（Windows）
 
@@ -259,7 +259,7 @@ npm run dev
 **测试步骤**:
 
 1. **打开 Web 客户端**
-   - 访问 `http://localhost:3000`
+   - 访问 `http://localhost:9001`
    - 确认界面正常显示
 
 2. **配置翻译参数**
@@ -473,7 +473,7 @@ npm run dev
 **测试步骤**:
 
 1. **打开 Web 客户端并配置双向模式**
-   - 访问 `http://localhost:3000`
+   - 访问 `http://localhost:9001`
    - 选择模式：双向模式
    - 配置语言对：中文 (zh) 和 英文 (en)
 
@@ -1080,7 +1080,7 @@ console.log(performance.getEntriesByName('duration'));
 
 **排查步骤**:
 1. 检查调度服务器是否运行
-2. 检查端口 8080 是否被占用
+2. 检查端口 5010 是否被占用
 3. 检查防火墙设置
 4. 检查 WebSocket URL 是否正确
 5. 查看浏览器控制台错误信息

@@ -92,7 +92,7 @@
 ### 外部服务（仅 NMT 和 TTS 需要）
 
 - **NMT**: `http://127.0.0.1:5008/v1/translate` (Python M2M100 服务)
-- **TTS**: `http://127.0.0.1:5005/tts` (Piper TTS 服务)
+- **TTS**: `http://127.0.0.1:5006/tts` (Piper TTS 服务)
 
 **注意**: ASR 和 VAD 可以直接使用本地模型，无需启动外部服务。
 
