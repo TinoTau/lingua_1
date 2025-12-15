@@ -24,6 +24,7 @@ pub struct NodeRegistry {
 }
 
 impl NodeRegistry {
+    #[allow(dead_code)]
     pub fn new() -> Self {
         Self {
             nodes: Arc::new(RwLock::new(HashMap::new())),
@@ -66,6 +67,7 @@ impl NodeRegistry {
     }
     
     /// 清除调度排除原因统计（定期调用，避免内存无限增长）
+    #[allow(dead_code)]
     pub async fn clear_exclude_reason_stats(&self) {
         let mut stats = self.exclude_reason_stats.write().await;
         stats.clear();
@@ -219,12 +221,14 @@ impl NodeRegistry {
     }
     
     /// 获取节点状态（用于测试）
+    #[allow(dead_code)]
     pub async fn get_node_status(&self, node_id: &str) -> Option<NodeStatus> {
         let nodes = self.nodes.read().await;
         nodes.get(node_id).map(|node| node.status.clone())
     }
     
     /// 设置节点状态（用于测试）
+    #[allow(dead_code)]
     pub async fn set_node_status(&self, node_id: &str, status: NodeStatus) -> bool {
         let mut nodes = self.nodes.write().await;
         if let Some(node) = nodes.get_mut(node_id) {
@@ -235,6 +239,7 @@ impl NodeRegistry {
         }
     }
 
+    #[allow(dead_code)]
     pub async fn select_random_node(&self, src_lang: &str, tgt_lang: &str) -> Option<String> {
         // 使用功能感知选择（不要求特定功能）
         self.select_node_with_features(src_lang, tgt_lang, &None, true).await
@@ -249,6 +254,7 @@ impl NodeRegistry {
     /// # Returns
     /// * `true` - 所有所需模型的状态都是 `Ready`
     /// * `false` - 至少有一个模型不是 `Ready`
+    #[allow(dead_code)]
     pub fn node_has_models_ready(&self, node: &Node, required_model_ids: &[String]) -> bool {
         node_has_models_ready(node, required_model_ids)
     }

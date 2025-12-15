@@ -15,17 +15,21 @@ pub type TraceId = String;
 pub struct GroupPart {
     pub part_index: u64,
     pub trace_id: TraceId,
+    #[allow(dead_code)]
     pub utterance_index: u64,
     pub asr_text: String,
     pub translated_text: Option<String>, // 允许为空（NMT 失败场景）
+    #[allow(dead_code)]
     pub created_at_ms: u64,
     pub error_code: Option<String>, // 可选：用于诊断
 }
 
 #[derive(Clone, Debug)]
 pub struct UtteranceGroup {
+    #[allow(dead_code)]
     pub group_id: GroupId,
     pub session_id: SessionId,
+    #[allow(dead_code)]
     pub created_at_ms: u64,
     pub last_tts_end_at_ms: u64,
     pub next_part_index: u64,

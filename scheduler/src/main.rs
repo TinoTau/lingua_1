@@ -51,23 +51,31 @@ async fn main() -> Result<()> {
     // 构建日志过滤器（合并配置文件和环境变量）
     let env_filter = logging_config.build_env_filter();
     
-    // 初始化日志（JSON 格式）
-    // 使用环境变量 LOG_FORMAT 控制输出格式：json（默认）或 pretty
+    // 初始化日志（简洁格式，只显示 message 内容）
+    // 使用环境变量 LOG_FORMAT 控制输出格式：simple（默认）或 json
     // 日志级别由配置文件（observability.json）或环境变量（RUST_LOG）控制
-    let log_format = std::env::var("LOG_FORMAT").unwrap_or_else(|_| "json".to_string());
+    let log_format = std::env::var("LOG_FORMAT").unwrap_or_else(|_| "simple".to_string());
     
-    if log_format == "pretty" {
-        // Pretty 格式（用于开发调试）
-        tracing_subscriber::fmt()
-            .with_env_filter(env_filter)
-            .init();
-    } else {
-        // JSON 格式（用于生产环境）
+    if log_format == "json" {
+        // JSON 格式（用于生产环境或日志收集系统）
         tracing_subscriber::fmt()
             .json()
             .with_env_filter(env_filter)
             .with_current_span(false)
             .with_span_list(false)
+            .init();
+    } else {
+        // 简洁格式（只显示 message 内容，默认）
+        tracing_subscriber::fmt()
+            .with_env_filter(env_filter)
+            .with_target(false)
+            .with_thread_ids(false)
+            .with_thread_names(false)
+            .with_file(false)
+            .with_line_number(false)
+            .with_level(false)
+            .without_time()
+            .compact()
             .init();
     }
 
@@ -75,7 +83,21 @@ async fn main() -> Result<()> {
 
     // 加载配置
     let config = Config::load()?;
-    info!("配置加载成功: {:?}", config);
+    info!("配置加载成功");
+    info!("  服务器: {}:{}", config.server.host, config.server.port);
+    info!("  模型中心: {} (存储路径: {})", config.model_hub.base_url, config.model_hub.storage_path.display());
+    info!("  调度器: 每节点最大并发任务={}, 任务超时={}秒, 心跳间隔={}秒", 
+        config.scheduler.max_concurrent_jobs_per_node,
+        config.scheduler.job_timeout_seconds,
+        config.scheduler.heartbeat_interval_seconds);
+    info!("  负载均衡: 策略={}, 资源阈值={}%", 
+        config.scheduler.load_balancer.strategy,
+        config.scheduler.load_balancer.resource_threshold);
+    info!("  节点健康: 心跳超时={}秒, 健康检查次数={}, 预热超时={}秒, 扫描间隔={}秒",
+        config.scheduler.node_health.heartbeat_timeout_seconds,
+        config.scheduler.node_health.health_check_count,
+        config.scheduler.node_health.warmup_timeout_seconds,
+        config.scheduler.node_health.status_scan_interval_seconds);
 
     // 初始化各个模块
     let session_manager = SessionManager::new();

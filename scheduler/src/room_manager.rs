@@ -28,9 +28,11 @@ pub struct Participant {
 /// 房间信息
 #[derive(Debug, Clone)]
 pub struct Room {
+    #[allow(dead_code)]
     pub room_code: String, // 6位数字房间码
     pub room_id: String, // 服务器内部唯一 ID
     pub participants: HashMap<String, Participant>, // key: session_id
+    #[allow(dead_code)]
     pub created_at: DateTime<Utc>,
     pub last_speaking_at: DateTime<Utc>, // 用于房间过期检测
 }
@@ -209,6 +211,7 @@ impl RoomManager {
     }
 
     /// 获取房间信息
+    #[allow(dead_code)]
     pub async fn get_room(&self, room_code: &str) -> Option<Room> {
         let rooms = self.rooms.read().await;
         rooms.get(room_code).cloned()
@@ -232,6 +235,7 @@ impl RoomManager {
     }
 
     /// 获取房间内所有目标语言的成员（用于翻译路由）
+    #[allow(dead_code)]
     pub async fn get_target_language_members(
         &self,
         room_code: &str,
@@ -390,6 +394,7 @@ impl RoomManager {
 pub enum RoomError {
     RoomNotFound,
     AlreadyInRoom,
+    #[allow(dead_code)]
     InvalidRoomCode,
 }
 

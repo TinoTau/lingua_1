@@ -18,6 +18,7 @@ pub struct AppState {
     pub dispatcher: JobDispatcher,
     pub node_registry: std::sync::Arc<NodeRegistry>,
     pub pairing_service: PairingService,
+    #[allow(dead_code)]
     pub model_hub: ModelHub,
     pub session_connections: SessionConnectionManager,
     pub node_connections: NodeConnectionManager,

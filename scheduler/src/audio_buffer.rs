@@ -33,6 +33,7 @@ impl AudioBuffer {
         combined
     }
 
+    #[allow(dead_code)]
     fn clear(&mut self) {
         self.chunks.clear();
         self.total_size = 0;
@@ -73,6 +74,7 @@ impl AudioBufferManager {
     }
 
     /// 清空指定会话的缓冲区
+    #[allow(dead_code)]
     pub async fn clear(&self, session_id: &str, utterance_index: u64) {
         let key = format!("{}:{}", session_id, utterance_index);
         let mut buffers = self.buffers.write().await;
@@ -80,6 +82,7 @@ impl AudioBufferManager {
     }
 
     /// 清空所有缓冲区（用于会话关闭时）
+    #[allow(dead_code)]
     pub async fn clear_all_for_session(&self, session_id: &str) {
         let mut buffers = self.buffers.write().await;
         buffers.retain(|key, _| !key.starts_with(&format!("{}:", session_id)));

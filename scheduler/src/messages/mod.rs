@@ -10,10 +10,12 @@ pub mod node;
 // 重新导出所有公共类型
 pub use common::{
     FeatureFlags, PipelineConfig, InstalledModel, ModelStatus, CapabilityState,
-    HardwareInfo, GpuInfo, ResourceUsage, ExtraResult, NodeStatus,
+    HardwareInfo, NodeStatus,
 };
 pub use error::{ErrorCode, get_error_hint};
 pub use ui_event::{UiEventType, UiEventStatus};
 pub use session::SessionMessage;
-pub use node::{NodeMessage, JobError};
+pub use node::NodeMessage;
+// 注意：GpuInfo, ResourceUsage, ExtraResult, JobError 在消息协议中使用，
+// 但调度服务器代码中未直接使用，因此不在此处导出
 

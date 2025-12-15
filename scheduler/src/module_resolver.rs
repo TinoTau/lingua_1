@@ -11,15 +11,16 @@ use anyhow::{Result, anyhow};
 /// 这里只包含调度服务器需要的字段
 #[derive(Debug, Clone)]
 pub struct ModuleMetadata {
+    #[allow(dead_code)]
     pub module_name: String,
     pub required_models: Vec<String>,  // 简化为模型 ID 列表
     pub dependencies: Vec<String>,     // 依赖的其他模块
 }
 
-/// 模块配置表（简化版）
-/// 
-/// 注意：完整的 MODULE_TABLE 在 node-inference 中
-/// 这里只包含调度服务器需要的模块信息
+// 模块配置表（简化版）
+// 
+// 注意：完整的 MODULE_TABLE 在 node-inference 中
+// 这里只包含调度服务器需要的模块信息
 lazy_static::lazy_static! {
     pub static ref MODULE_TABLE: HashMap<&'static str, ModuleMetadata> = {
         let mut m = HashMap::new();

@@ -15,6 +15,7 @@ pub struct PairingCode {
 #[derive(Clone)]
 pub struct PairingService {
     codes: Arc<RwLock<HashMap<String, PairingCode>>>,
+    #[allow(dead_code)]
     expiry_duration: Duration,
 }
 
@@ -26,6 +27,7 @@ impl PairingService {
         }
     }
 
+    #[allow(dead_code)]
     pub async fn generate_pairing_code(&self, node_id: String) -> String {
         // 生成 6 位数字码
         // 使用时间戳和节点ID生成（简化实现）
@@ -65,6 +67,7 @@ impl PairingService {
         }
     }
 
+    #[allow(dead_code)]
     pub async fn cleanup_expired_codes(&self) {
         let mut codes = self.codes.write().await;
         let now = Utc::now();
