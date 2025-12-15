@@ -28,8 +28,28 @@ else {
     Write-Host "GPU may not be available" -ForegroundColor Yellow
 }
 
-# Set Hugging Face token (for model validation only, not for downloading)
-$env:HF_TOKEN = "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"
+# Set Hugging Face token (read from config file)
+$hfTokenFile = Join-Path $nmtServicePath "hf_token.txt"
+if (Test-Path $hfTokenFile) {
+    try {
+        $hfToken = Get-Content $hfTokenFile -Raw -ErrorAction Stop | ForEach-Object { $_.Trim() }
+        if ($hfToken) {
+            $env:HF_TOKEN = $hfToken
+            Write-Host "Hugging Face token loaded from config file" -ForegroundColor Green
+        }
+        else {
+            Write-Host "Warning: hf_token.txt is empty, HF_TOKEN not set" -ForegroundColor Yellow
+        }
+    }
+    catch {
+        Write-Host "Warning: Failed to read hf_token.txt: $_" -ForegroundColor Yellow
+        Write-Host "HF_TOKEN will not be set" -ForegroundColor Yellow
+    }
+}
+else {
+    Write-Host "Warning: hf_token.txt not found at $hfTokenFile" -ForegroundColor Yellow
+    Write-Host "HF_TOKEN will not be set (models may require authentication)" -ForegroundColor Yellow
+}
 
 # Force local files only - models must be downloaded from model hub
 $env:HF_LOCAL_FILES_ONLY = "true"
@@ -66,6 +86,9 @@ Write-Host ""
 
 # Start service
 uvicorn nmt_service:app --host 127.0.0.1 --port 5008
+
+
+
 
 
 
