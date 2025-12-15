@@ -6,8 +6,14 @@ use axum::{
     Router,
 };
 use std::net::SocketAddr;
+use std::path::PathBuf;
 use tracing::info;
 use tracing_subscriber;
+use tracing_subscriber::filter::EnvFilter;
+use tracing_appender::{non_blocking, rolling};
+use tracing_subscriber::layer::SubscriberExt;
+use tracing_subscriber::util::SubscriberInitExt;
+use tracing_subscriber::Layer;
 
 mod config;
 mod messages;
@@ -51,33 +57,49 @@ async fn main() -> Result<()> {
     // 构建日志过滤器（合并配置文件和环境变量）
     let env_filter = logging_config.build_env_filter();
     
-    // 初始化日志（简洁格式，只显示 message 内容）
-    // 使用环境变量 LOG_FORMAT 控制输出格式：simple（默认）或 json
-    // 日志级别由配置文件（observability.json）或环境变量（RUST_LOG）控制
-    let log_format = std::env::var("LOG_FORMAT").unwrap_or_else(|_| "simple".to_string());
+    // 创建日志目录
+    let log_dir = PathBuf::from("logs");
+    std::fs::create_dir_all(&log_dir)?;
     
-    if log_format == "json" {
-        // JSON 格式（用于生产环境或日志收集系统）
-        tracing_subscriber::fmt()
-            .json()
-            .with_env_filter(env_filter)
-            .with_current_span(false)
-            .with_span_list(false)
-            .init();
-    } else {
-        // 简洁格式（只显示 message 内容，默认）
-        tracing_subscriber::fmt()
-            .with_env_filter(env_filter)
-            .with_target(false)
-            .with_thread_ids(false)
-            .with_thread_names(false)
-            .with_file(false)
-            .with_line_number(false)
-            .with_level(false)
-            .without_time()
-            .compact()
-            .init();
-    }
+    // 配置文件日志（所有级别的日志都写入文件）
+    let file_appender = rolling::daily(&log_dir, "scheduler.log");
+    let (non_blocking_appender, guard) = non_blocking(file_appender);
+    
+    // 文件日志格式（完整信息，使用完整的过滤器）
+    let file_layer = tracing_subscriber::fmt::layer()
+        .with_writer(non_blocking_appender)
+        .with_target(true)
+        .with_thread_ids(true)
+        .with_file(true)
+        .with_line_number(true)
+        .with_level(true)
+        .with_ansi(false)
+        .json()
+        .with_filter(env_filter.clone());
+    
+    // 终端日志格式（只显示错误，简洁格式）
+    let error_filter = EnvFilter::new("error");
+    let stderr_layer = tracing_subscriber::fmt::layer()
+        .with_writer(std::io::stderr)
+        .with_target(false)
+        .with_thread_ids(false)
+        .with_thread_names(false)
+        .with_file(false)
+        .with_line_number(false)
+        .with_level(true)
+        .without_time()
+        .compact()
+        .with_filter(error_filter);
+    
+    // 初始化日志系统（文件 + 终端错误）
+    tracing_subscriber::registry()
+        .with(file_layer)
+        .with(stderr_layer)
+        .init();
+    
+    // 保持 guard 不被释放（确保日志缓冲区被刷新）
+    // 使用 Box::leak 确保 guard 在程序运行期间一直存在
+    Box::leak(Box::new(guard));
 
     info!("启动 Lingua 调度服务器...");
 

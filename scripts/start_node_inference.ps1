@@ -113,9 +113,46 @@ else {
 
 # Set default environment variables if not set
 $env:MODELS_DIR = if ($env:MODELS_DIR) { $env:MODELS_DIR } else { Join-Path $projectRoot "node-inference\models" }
-$env:INFERENCE_SERVICE_PORT = if ($env:INFERENCE_SERVICE_PORT) { $env:INFERENCE_SERVICE_PORT } else { "5005" }
-$env:NMT_SERVICE_URL = if ($env:NMT_SERVICE_URL) { $env:NMT_SERVICE_URL } else { "http://127.0.0.1:5004" }
-$env:TTS_SERVICE_URL = if ($env:TTS_SERVICE_URL) { $env:TTS_SERVICE_URL } else { "http://127.0.0.1:5006" }
+
+# Read port configurations from other service startup scripts to ensure consistency
+# Note: Port 5005 was previously used by Piper TTS, but now Piper TTS uses port 5006
+# - NMT Service uses port 5008 (see start_nmt_service.ps1 line 82-88)
+# - TTS Service (Piper) uses port 5006 (see start_tts_service.ps1 line 99-110)
+# - Node Inference Service uses port 5009 (see README_STARTUP.md line 76 and node-inference/src/main.rs line 75)
+
+# Node Inference Service default port: 5009 (not 5005!)
+# If environment variable is set to 5005 (old/incorrect value), override it
+if ($env:INFERENCE_SERVICE_PORT -eq "5005") {
+    Write-Host "Warning: INFERENCE_SERVICE_PORT is set to 5005 (old/incorrect value)" -ForegroundColor Yellow
+    Write-Host "  Port 5005 was previously used by Piper TTS, but now Piper TTS uses port 5006" -ForegroundColor Gray
+    Write-Host "  Node Inference Service should use port 5009. Overriding to 5009..." -ForegroundColor Yellow
+    $env:INFERENCE_SERVICE_PORT = "5009"
+}
+elseif (-not $env:INFERENCE_SERVICE_PORT) {
+    $env:INFERENCE_SERVICE_PORT = "5009"
+}
+
+# NMT Service default port: 5008
+# If environment variable points to wrong port (e.g., 5004), override it
+if ($env:NMT_SERVICE_URL -match ":5004") {
+    Write-Host "Warning: NMT_SERVICE_URL points to port 5004 (YourTTS service port)" -ForegroundColor Yellow
+    Write-Host "  NMT Service should use port 5008. Overriding to 5008..." -ForegroundColor Yellow
+    $env:NMT_SERVICE_URL = "http://127.0.0.1:5008"
+}
+elseif (-not $env:NMT_SERVICE_URL) {
+    $env:NMT_SERVICE_URL = "http://127.0.0.1:5008"
+}
+
+# TTS Service (Piper) default port: 5006
+# If environment variable points to wrong port (e.g., 5005), override it
+if ($env:TTS_SERVICE_URL -match ":5005") {
+    Write-Host "Warning: TTS_SERVICE_URL points to port 5005 (old Piper TTS port)" -ForegroundColor Yellow
+    Write-Host "  Piper TTS now uses port 5006. Overriding to 5006..." -ForegroundColor Yellow
+    $env:TTS_SERVICE_URL = "http://127.0.0.1:5006"
+}
+elseif (-not $env:TTS_SERVICE_URL) {
+    $env:TTS_SERVICE_URL = "http://127.0.0.1:5006"
+}
 Write-Host "Environment Variables:" -ForegroundColor Yellow
 Write-Host "  MODELS_DIR: $env:MODELS_DIR" -ForegroundColor Gray
 Write-Host "  INFERENCE_SERVICE_PORT: $env:INFERENCE_SERVICE_PORT" -ForegroundColor Gray
@@ -216,6 +253,70 @@ if (-not $nmtReady -or -not $ttsReady) {
 
 Write-Host ""
 Write-Host "Starting Node Inference Service (port $env:INFERENCE_SERVICE_PORT)..." -ForegroundColor Green
+
+# Create logs directory
+$logDir = Join-Path $nodeInferencePath "logs"
+if (-not (Test-Path $logDir)) {
+    New-Item -ItemType Directory -Path $logDir -Force | Out-Null
+    Write-Host "Created logs directory: $logDir" -ForegroundColor Gray
+}
+
+Write-Host "Logs will be saved to: $logDir\node-inference.log" -ForegroundColor Gray
+Write-Host "Errors will be displayed in this terminal" -ForegroundColor Gray
+Write-Host ""
+
+# Check if port is already in use (before starting the service)
+$requestedPort = [int]$env:INFERENCE_SERVICE_PORT
+$portInUse = Get-NetTCPConnection -LocalPort $requestedPort -ErrorAction SilentlyContinue
+
+if ($portInUse) {
+    $processId = $portInUse.OwningProcess
+    $process = Get-Process -Id $processId -ErrorAction SilentlyContinue
+    if ($process) {
+        $processName = $process.ProcessName
+        $processPath = $process.Path
+        
+        # Only try to terminate if it's our inference service
+        if ($processName -match "inference-service" -or $processPath -match "inference-service|target\\release") {
+            Write-Host "Warning: Port $requestedPort is in use by inference service process $processId" -ForegroundColor Yellow
+            Write-Host "Attempting to terminate the process..." -ForegroundColor Yellow
+            try {
+                Stop-Process -Id $processId -Force -ErrorAction Stop
+                Start-Sleep -Seconds 2
+                $portStillInUse = Get-NetTCPConnection -LocalPort $requestedPort -ErrorAction SilentlyContinue
+                if ($portStillInUse) {
+                    Write-Host "Error: Port $requestedPort is still in use after terminating process" -ForegroundColor Red
+                    Write-Host "Please manually terminate the process or wait a few seconds and try again" -ForegroundColor Yellow
+                    exit 1
+                } else {
+                    Write-Host "Process terminated, port $requestedPort is now available" -ForegroundColor Green
+                }
+            } catch {
+                Write-Host "Error: Failed to terminate process: $_" -ForegroundColor Red
+                Write-Host "Please manually terminate the process using port $requestedPort" -ForegroundColor Yellow
+                Write-Host "  Process ID: $processId" -ForegroundColor Gray
+                Write-Host "  Process Name: $processName" -ForegroundColor Gray
+                exit 1
+            }
+        } else {
+            Write-Host "Error: Port $requestedPort is in use by process $processId ($processName)" -ForegroundColor Red
+            Write-Host "This port is required for the Node Inference Service" -ForegroundColor Yellow
+            Write-Host "Please stop the process using this port or change INFERENCE_SERVICE_PORT environment variable" -ForegroundColor Yellow
+            Write-Host "  Process ID: $processId" -ForegroundColor Gray
+            Write-Host "  Process Name: $processName" -ForegroundColor Gray
+            if ($processPath) {
+                Write-Host "  Process Path: $processPath" -ForegroundColor Gray
+            }
+            exit 1
+        }
+    } else {
+        Write-Host "Error: Port $requestedPort is in use, but cannot identify the process" -ForegroundColor Red
+        Write-Host "Please check what is using this port and stop it" -ForegroundColor Yellow
+        Write-Host "You can use: Get-NetTCPConnection -LocalPort $requestedPort | Select-Object OwningProcess" -ForegroundColor Gray
+        exit 1
+    }
+}
+
 Write-Host "Service URL: http://127.0.0.1:$env:INFERENCE_SERVICE_PORT" -ForegroundColor Cyan
 Write-Host "Health Check: http://127.0.0.1:$env:INFERENCE_SERVICE_PORT/health" -ForegroundColor Cyan
 Write-Host ""

@@ -277,6 +277,10 @@ model-hub/models/
 *.log
 logs/
 *.log.*
+# 服务日志目录（保留目录结构，但忽略日志文件）
+scheduler/logs/
+node-inference/logs/
+web-client/logs/
 
 # 临时文件
 tmp/
