@@ -17,6 +17,11 @@ if (-not (Test-Path $logDir)) {
     New-Item -ItemType Directory -Path $logDir -Force | Out-Null
     Write-Host "Created logs directory: $logDir" -ForegroundColor Gray
 }
+# Ensure log file exists
+$logFile = Join-Path $logDir "scheduler.log"
+if (-not (Test-Path $logFile)) {
+    New-Item -ItemType File -Path $logFile -Force | Out-Null
+}
 
 # Check if Rust is installed
 if (-not (Get-Command cargo -ErrorAction SilentlyContinue)) {

@@ -3,7 +3,9 @@
 use anyhow::Result;
 use std::path::PathBuf;
 use tracing_subscriber::filter::EnvFilter;
-use tracing_appender::{non_blocking, rolling};
+use tracing_subscriber::fmt::time::UtcTime;
+use tracing_appender::non_blocking;
+use file_rotate::{compression::Compression, suffix::{AppendTimestamp, FileLimit}, ContentLimit, FileRotate};
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 use tracing_subscriber::Layer;
@@ -24,13 +26,20 @@ async fn main() -> Result<()> {
     // 创建日志目录
     let log_dir = PathBuf::from("logs");
     std::fs::create_dir_all(&log_dir)?;
+    let log_path = log_dir.join("node-inference.log");
     
-    // 配置文件日志（所有级别的日志都写入文件）
-    let file_appender = rolling::daily(&log_dir, "node-inference.log");
-    let (non_blocking_appender, guard) = non_blocking(file_appender);
+    // 配置文件日志（所有级别，附带时间戳，按 5MB 轮转，保留最近 5 个）
+    let rotating_appender = FileRotate::new(
+        log_path,
+        AppendTimestamp::default(FileLimit::MaxFiles(5)),
+        ContentLimit::Bytes(5 * 1024 * 1024),
+        Compression::None,
+    );
+    let (non_blocking_appender, guard) = non_blocking(rotating_appender);
     
     // 文件日志格式（完整信息，使用完整的过滤器）
     let file_layer = tracing_subscriber::fmt::layer()
+        .with_timer(UtcTime::rfc_3339())
         .with_writer(non_blocking_appender)
         .with_target(true)
         .with_thread_ids(true)
@@ -41,8 +50,8 @@ async fn main() -> Result<()> {
         .json()
         .with_filter(env_filter.clone());
     
-    // 终端日志格式（只显示错误，简洁格式）
-    let error_filter = EnvFilter::new("error");
+    // 终端日志格式（显示 INFO 及以上级别，简洁格式）
+    let console_filter = EnvFilter::new("info");
     let stderr_layer = tracing_subscriber::fmt::layer()
         .with_writer(std::io::stderr)
         .with_target(false)
@@ -53,9 +62,9 @@ async fn main() -> Result<()> {
         .with_level(true)
         .without_time()
         .compact()
-        .with_filter(error_filter);
+        .with_filter(console_filter);
     
-    // 初始化日志系统（文件 + 终端错误）
+    // 初始化日志系统（文件 + 终端 INFO 及以上）
     tracing_subscriber::registry()
         .with(file_layer)
         .with(stderr_layer)

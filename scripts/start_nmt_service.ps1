@@ -55,6 +55,9 @@ else {
 $env:HF_LOCAL_FILES_ONLY = "true"
 Write-Host "Local files only mode enabled (models must be from model hub)" -ForegroundColor Green
 
+# Ensure Python stdout/stderr use UTF-8 to avoid GBK encoding errors
+$env:PYTHONIOENCODING = "utf-8"
+
 # Check virtual environment
 $venvPath = Join-Path $nmtServicePath "venv"
 if (-not (Test-Path "$venvPath\Scripts\Activate.ps1")) {
@@ -70,6 +73,13 @@ if (-not (Test-Path "$venvPath\Scripts\Activate.ps1")) {
 # Switch to service directory
 Set-Location $nmtServicePath
 
+# Create logs directory
+$logDir = Join-Path $nmtServicePath "logs"
+if (-not (Test-Path $logDir)) {
+    New-Item -ItemType Directory -Path $logDir -Force | Out-Null
+    Write-Host "Created logs directory: $logDir" -ForegroundColor Gray
+}
+
 # Activate virtual environment
 Write-Host "Activating virtual environment..." -ForegroundColor Yellow
 & "$venvPath\Scripts\Activate.ps1"
@@ -79,13 +89,71 @@ Write-Host "Checking CUDA availability..." -ForegroundColor Yellow
 $cudaCheck = python -c "import torch; print('CUDA available:', torch.cuda.is_available()); print('CUDA version:', torch.version.cuda if torch.cuda.is_available() else 'N/A'); print('GPU name:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'N/A')" 2>&1
 Write-Host $cudaCheck -ForegroundColor Cyan
 
+Write-Host ""
 Write-Host "Starting NMT Service (port 5008)..." -ForegroundColor Green
 Write-Host "Service URL: http://127.0.0.1:5008" -ForegroundColor Cyan
 Write-Host "Health Check: http://127.0.0.1:5008/health" -ForegroundColor Cyan
+Write-Host "Logs will be saved to: $logDir\nmt-service.log" -ForegroundColor Gray
+Write-Host "Errors will be displayed in this terminal" -ForegroundColor Gray
 Write-Host ""
 
-# Start service
-uvicorn nmt_service:app --host 127.0.0.1 --port 5008
+# Start service with logging
+$logFile = Join-Path $logDir "nmt-service.log"
+
+# Check if log file is locked by another process
+# If locked, create a new log file with timestamp
+$logFileLocked = $false
+if (Test-Path $logFile) {
+    try {
+        # Try to open the file for writing to check if it's locked
+        $fileStream = [System.IO.File]::Open($logFile, [System.IO.FileMode]::Append, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)
+        $fileStream.Close()
+        $fileStream.Dispose()
+    }
+    catch {
+        # File is locked by another process
+        $logFileLocked = $true
+        Write-Host "Warning: Log file is locked by another process, creating new log file with timestamp..." -ForegroundColor Yellow
+        $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+        $logFile = Join-Path $logDir "nmt-service_$timestamp.log"
+        Write-Host "Using log file: $logFile" -ForegroundColor Gray
+        Write-Host ""
+    }
+}
+
+# Start the service with logging
+# Use append mode if using the default log file, otherwise create new file
+$uvicornCmd = "uvicorn nmt_service:app --host 127.0.0.1 --port 5008"
+function Rotate-LogFile {
+    param([string]$Path, [int]$MaxBytes)
+    if (Test-Path $Path) {
+        $size = (Get-Item $Path).Length
+        if ($size -ge $MaxBytes) {
+            $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+            $newPath = "$Path.$timestamp"
+            Move-Item -Path $Path -Destination $newPath -Force
+        }
+    }
+}
+
+# 5MB 轮转
+Rotate-LogFile -Path $logFile -MaxBytes 5242880
+
+# 启动并为每行添加时间戳
+if ($logFileLocked) {
+    cmd /c "$uvicornCmd 2>&1" | ForEach-Object { "$(Get-Date -Format o) $_" } | Tee-Object -FilePath $logFile
+}
+else {
+    cmd /c "$uvicornCmd 2>&1" | ForEach-Object { "$(Get-Date -Format o) $_" } | Tee-Object -FilePath $logFile -Append
+}
+
+
+
+
+
+
+
+
 
 
 

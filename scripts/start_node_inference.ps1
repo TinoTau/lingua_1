@@ -260,6 +260,11 @@ if (-not (Test-Path $logDir)) {
     New-Item -ItemType Directory -Path $logDir -Force | Out-Null
     Write-Host "Created logs directory: $logDir" -ForegroundColor Gray
 }
+# Ensure log file exists
+$logFile = Join-Path $logDir "node-inference.log"
+if (-not (Test-Path $logFile)) {
+    New-Item -ItemType File -Path $logFile -Force | Out-Null
+}
 
 Write-Host "Logs will be saved to: $logDir\node-inference.log" -ForegroundColor Gray
 Write-Host "Errors will be displayed in this terminal" -ForegroundColor Gray

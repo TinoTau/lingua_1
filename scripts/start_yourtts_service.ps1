@@ -1,20 +1,20 @@
+<# Clean, single-copy startup script for YourTTS service #>
 # Start YourTTS Service
 Write-Host "Starting YourTTS Service..." -ForegroundColor Cyan
 
 $ErrorActionPreference = "Stop"
 
-# Get script directory
+# Paths
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $projectRoot = Split-Path -Parent $scriptDir
 $ttsServicePath = Join-Path $projectRoot "services\your_tts"
 
-# Set CUDA environment variables (if CUDA is installed)
+# CUDA (if installed)
 $cudaPaths = @(
     "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.4",
     "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1",
     "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
 )
-
 $cudaFound = $false
 foreach ($cudaPath in $cudaPaths) {
     if (Test-Path $cudaPath) {
@@ -45,20 +45,28 @@ if (-not (Test-Path "$venvPath\Scripts\Activate.ps1")) {
 # Switch to service directory
 Set-Location $ttsServicePath
 
+# Logs
+$logDir = Join-Path $ttsServicePath "logs"
+if (-not (Test-Path $logDir)) {
+    New-Item -ItemType Directory -Path $logDir -Force | Out-Null
+    Write-Host "Created logs directory: $logDir" -ForegroundColor Gray
+}
+$logFile = Join-Path $logDir "yourtts-service.log"
+
 # Activate virtual environment
 Write-Host "Activating virtual environment..." -ForegroundColor Yellow
 & "$venvPath\Scripts\Activate.ps1"
 
-# Get model directory
+# Force UTF-8
+$env:PYTHONIOENCODING = "utf-8"
+
+# Locate models
 $modelDir = $env:YOURTTS_MODEL_DIR
 if (-not $modelDir) {
-    # Try to find models in project directories (priority: node-inference)
     $possiblePaths = @(
-        (Join-Path $projectRoot "node-inference\models\tts\your_tts"),
         (Join-Path $projectRoot "model-hub\models\tts\your_tts")
+        (Join-Path $projectRoot "node-inference\models\tts\your_tts")
     )
-    
-    $modelDir = $null
     foreach ($path in $possiblePaths) {
         if (Test-Path $path) {
             $modelDir = $path
@@ -68,42 +76,50 @@ if (-not $modelDir) {
     }
 }
 
-# Determine GPU usage (always try to use GPU if CUDA is found)
+# GPU usage
 $useGpu = $cudaFound
 if ($useGpu) {
     Write-Host "GPU acceleration will be enabled" -ForegroundColor Green
-    
-    # Verify PyTorch CUDA support
-    Write-Host "Checking PyTorch CUDA support..." -ForegroundColor Yellow
-    $torchCheck = python -c "import torch; print('CUDA available:', torch.cuda.is_available())" 2>&1
-    if ($torchCheck -match "CUDA available: True") {
-        Write-Host "  ✓ PyTorch CUDA support available" -ForegroundColor Green
-    } else {
-        Write-Host "  ⚠ PyTorch CUDA support not available" -ForegroundColor Yellow
-        Write-Host "  Service will attempt to use GPU, but may fall back to CPU" -ForegroundColor Yellow
-    }
-} else {
+}
+else {
     Write-Host "Using CPU (GPU not available)" -ForegroundColor Yellow
 }
 
 Write-Host "Starting YourTTS Service (port 5004)..." -ForegroundColor Green
 Write-Host "Service URL: http://127.0.0.1:5004" -ForegroundColor Cyan
 Write-Host "Health Check: http://127.0.0.1:5004/health" -ForegroundColor Cyan
-if ($modelDir) {
-    Write-Host "Model Directory: $modelDir" -ForegroundColor Cyan
-}
+if ($modelDir) { Write-Host "Model Directory: $modelDir" -ForegroundColor Cyan }
 Write-Host "GPU: $useGpu" -ForegroundColor Cyan
+Write-Host "Logs will be saved to: $logDir\yourtts-service.log" -ForegroundColor Gray
+Write-Host "Errors will be displayed in this terminal" -ForegroundColor Gray
 Write-Host ""
 
 # Build command
 $cmdArgs = @("yourtts_service.py", "--host", "127.0.0.1", "--port", "5004")
-if ($useGpu) {
-    $cmdArgs += "--gpu"
-}
+if ($useGpu) { $cmdArgs += "--gpu" }
 if ($modelDir) {
     $cmdArgs += "--model-dir"
     $cmdArgs += $modelDir
 }
 
-# Start service
-python $cmdArgs
+# Log rotation 5MB
+function Set-LogRotation {
+    param([string]$Path, [int]$MaxBytes)
+    if (Test-Path $Path) {
+        $size = (Get-Item $Path).Length
+        if ($size -ge $MaxBytes) {
+            $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+            $newPath = "$Path.$timestamp"
+            Move-Item -Path $Path -Destination $newPath -Force
+        }
+    }
+}
+Set-LogRotation -Path $logFile -MaxBytes 5242880
+
+# Build command string for cmd /c
+$quotedArgs = $cmdArgs | ForEach-Object { '"{0}"' -f $_ }
+$pythonCmd = "python " + ($quotedArgs -join ' ')
+
+cmd /c "$pythonCmd 2>&1" |
+ForEach-Object { "$(Get-Date -Format o) $_" } |
+Tee-Object -FilePath $logFile -Append

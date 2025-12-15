@@ -51,8 +51,9 @@ thiserror = "1"
 
 # 日志（严格按照原项目版本）
 tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter", "json", "registry"] }
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json", "registry", "time"] }
 tracing-appender = "0.2"
+file-rotate = "0.7"
 
 # 时间处理（原项目未使用，但我们需要用于模块状态）
 chrono = { version = "0.4", features = ["serde"] }

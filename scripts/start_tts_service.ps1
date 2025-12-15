@@ -62,6 +62,9 @@ Set-Location $ttsServicePath
 Write-Host "Activating virtual environment..." -ForegroundColor Yellow
 & "$venvPath\Scripts\Activate.ps1"
 
+# Ensure Python stdout/stderr use UTF-8 to avoid GBK encoding errors
+$env:PYTHONIOENCODING = "utf-8"
+
 # Get model directory (from environment variable or use project models)
 $modelDir = $env:PIPER_MODEL_DIR
 if (-not $modelDir) {
@@ -96,15 +99,73 @@ if (-not $modelDir) {
     }
 }
 
+# Create logs directory
+$logDir = Join-Path $ttsServicePath "logs"
+if (-not (Test-Path $logDir)) {
+    New-Item -ItemType Directory -Path $logDir -Force | Out-Null
+    Write-Host "Created logs directory: $logDir" -ForegroundColor Gray
+}
+
+Write-Host ""
 Write-Host "Starting Piper TTS Service (port 5006)..." -ForegroundColor Green
 Write-Host "Service URL: http://127.0.0.1:5006" -ForegroundColor Cyan
 Write-Host "Health Check: http://127.0.0.1:5006/health" -ForegroundColor Cyan
 Write-Host "Model Directory: $modelDir" -ForegroundColor Cyan
 Write-Host "GPU Acceleration: $env:PIPER_USE_GPU" -ForegroundColor Cyan
+Write-Host "Logs will be saved to: $logDir\tts-service.log" -ForegroundColor Gray
+Write-Host "Errors will be displayed in this terminal" -ForegroundColor Gray
 Write-Host ""
 
 # Set environment variable
 $env:PIPER_MODEL_DIR = $modelDir
 
-# Start service
-python piper_http_server.py --host 127.0.0.1 --port 5006 --model-dir $modelDir
+# Start service with logging
+$logFile = Join-Path $logDir "tts-service.log"
+
+# Check if log file is locked by another process
+# If locked, create a new log file with timestamp
+$logFileLocked = $false
+if (Test-Path $logFile) {
+    try {
+        # Try to open the file for writing to check if it's locked
+        $fileStream = [System.IO.File]::Open($logFile, [System.IO.FileMode]::Append, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)
+        $fileStream.Close()
+        $fileStream.Dispose()
+    }
+    catch {
+        # File is locked by another process
+        $logFileLocked = $true
+        Write-Host "Warning: Log file is locked by another process, creating new log file with timestamp..." -ForegroundColor Yellow
+        $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+        $logFile = Join-Path $logDir "tts-service_$timestamp.log"
+        Write-Host "Using log file: $logFile" -ForegroundColor Gray
+        Write-Host ""
+    }
+}
+
+# Start the service with logging
+# Use append mode if using the default log file, otherwise create new file
+$pythonCmd = "python piper_http_server.py --host 127.0.0.1 --port 5006 --model-dir `"$modelDir`""
+
+function Rotate-LogFile {
+    param([string]$Path, [int]$MaxBytes)
+    if (Test-Path $Path) {
+        $size = (Get-Item $Path).Length
+        if ($size -ge $MaxBytes) {
+            $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+            $newPath = "$Path.$timestamp"
+            Move-Item -Path $Path -Destination $newPath -Force
+        }
+    }
+}
+
+# 5MB 轮转
+Rotate-LogFile -Path $logFile -MaxBytes 5242880
+
+# 启动并为每行添加时间戳
+if ($logFileLocked) {
+    cmd /c "$pythonCmd 2>&1" | ForEach-Object { "$(Get-Date -Format o) $_" } | Tee-Object -FilePath $logFile
+}
+else {
+    cmd /c "$pythonCmd 2>&1" | ForEach-Object { "$(Get-Date -Format o) $_" } | Tee-Object -FilePath $logFile -Append
+}

@@ -137,9 +137,25 @@ if (Test-Path $logFile) {
 
 # Start the dev server with logging
 # Use append mode if using the default log file, otherwise create new file
+function Rotate-LogFile {
+    param([string]$Path, [int]$MaxBytes)
+    if (Test-Path $Path) {
+        $size = (Get-Item $Path).Length
+        if ($size -ge $MaxBytes) {
+            $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+            $newPath = "$Path.$timestamp"
+            Move-Item -Path $Path -Destination $newPath -Force
+        }
+    }
+}
+
+# 5MB 轮转
+Rotate-LogFile -Path $logFile -MaxBytes 5242880
+
+# 启动并为每行添加时间戳
 if ($logFileLocked) {
-    npm run dev 2>&1 | Tee-Object -FilePath $logFile
+    npm run dev 2>&1 | ForEach-Object { "$(Get-Date -Format o) $_" } | Tee-Object -FilePath $logFile
 } else {
-    npm run dev 2>&1 | Tee-Object -FilePath $logFile -Append
+    npm run dev 2>&1 | ForEach-Object { "$(Get-Date -Format o) $_" } | Tee-Object -FilePath $logFile -Append
 }
 

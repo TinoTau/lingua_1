@@ -10,7 +10,9 @@ use std::path::PathBuf;
 use tracing::info;
 use tracing_subscriber;
 use tracing_subscriber::filter::EnvFilter;
-use tracing_appender::{non_blocking, rolling};
+use tracing_subscriber::fmt::time::UtcTime;
+use tracing_appender::non_blocking;
+use file_rotate::{compression::Compression, suffix::{AppendTimestamp, FileLimit}, ContentLimit, FileRotate};
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 use tracing_subscriber::Layer;
@@ -60,13 +62,20 @@ async fn main() -> Result<()> {
     // 创建日志目录
     let log_dir = PathBuf::from("logs");
     std::fs::create_dir_all(&log_dir)?;
+    let log_path = log_dir.join("scheduler.log");
     
-    // 配置文件日志（所有级别的日志都写入文件）
-    let file_appender = rolling::daily(&log_dir, "scheduler.log");
-    let (non_blocking_appender, guard) = non_blocking(file_appender);
+    // 配置文件日志（所有级别，附带时间戳，按 5MB 轮转，保留最近 5 个）
+    let rotating_appender = FileRotate::new(
+        log_path,
+        AppendTimestamp::default(FileLimit::MaxFiles(5)),
+        ContentLimit::Bytes(5 * 1024 * 1024),
+        Compression::None,
+    );
+    let (non_blocking_appender, guard) = non_blocking(rotating_appender);
     
     // 文件日志格式（完整信息，使用完整的过滤器）
     let file_layer = tracing_subscriber::fmt::layer()
+        .with_timer(UtcTime::rfc_3339())
         .with_writer(non_blocking_appender)
         .with_target(true)
         .with_thread_ids(true)
@@ -77,8 +86,8 @@ async fn main() -> Result<()> {
         .json()
         .with_filter(env_filter.clone());
     
-    // 终端日志格式（只显示错误，简洁格式）
-    let error_filter = EnvFilter::new("error");
+    // 终端日志格式（显示 INFO 及以上级别，简洁格式）
+    let console_filter = EnvFilter::new("info");
     let stderr_layer = tracing_subscriber::fmt::layer()
         .with_writer(std::io::stderr)
         .with_target(false)
@@ -89,9 +98,9 @@ async fn main() -> Result<()> {
         .with_level(true)
         .without_time()
         .compact()
-        .with_filter(error_filter);
+        .with_filter(console_filter);
     
-    // 初始化日志系统（文件 + 终端错误）
+    // 初始化日志系统（文件 + 终端 INFO 及以上）
     tracing_subscriber::registry()
         .with(file_layer)
         .with(stderr_layer)
@@ -102,11 +111,19 @@ async fn main() -> Result<()> {
     Box::leak(Box::new(guard));
 
     info!("启动 Lingua 调度服务器...");
-
+    
     // 加载配置
     let config = Config::load()?;
     info!("配置加载成功");
-    info!("  服务器: {}:{}", config.server.host, config.server.port);
+
+    // 明确记录服务监听地址和端口，方便排查
+    info!("  服务器监听地址: {}:{}", config.server.host, config.server.port);
+    let http_url = format!("http://{}:{}", config.server.host, config.server.port);
+    let session_ws_url = format!("ws://{}:{}/ws/session", config.server.host, config.server.port);
+    let node_ws_url = format!("ws://{}:{}/ws/node", config.server.host, config.server.port);
+    info!("  HTTP 服务 URL: {}", http_url);
+    info!("  会话 WebSocket: {}", session_ws_url);
+    info!("  节点 WebSocket: {}", node_ws_url);
     info!("  模型中心: {} (存储路径: {})", config.model_hub.base_url, config.model_hub.storage_path.display());
     info!("  调度器: 每节点最大并发任务={}, 任务超时={}秒, 心跳间隔={}秒", 
         config.scheduler.max_concurrent_jobs_per_node,
