@@ -32,58 +32,187 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const path = __importStar(require("path"));
 const node_agent_1 = require("./agent/node-agent");
 const model_manager_1 = require("./model-manager/model-manager");
 const inference_service_1 = require("./inference/inference-service");
+const rust_service_manager_1 = require("./rust-service-manager");
+const python_service_manager_1 = require("./python-service-manager");
+const node_config_1 = require("./node-config");
+const logger_1 = __importDefault(require("./logger"));
 let mainWindow = null;
 let nodeAgent = null;
 let modelManager = null;
 let inferenceService = null;
+let rustServiceManager = null;
+let pythonServiceManager = null;
 function createWindow() {
     mainWindow = new electron_1.BrowserWindow({
         width: 1200,
         height: 800,
         webPreferences: {
-            preload: path.join(__dirname, '../preload.js'),
+            preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: false,
             contextIsolation: true,
         },
     });
     // 开发环境加载 Vite 开发服务器，生产环境加载构建后的文件
-    if (process.env.NODE_ENV === 'development') {
-        mainWindow.loadURL('http://localhost:5173');
-        mainWindow.webContents.openDevTools();
+    // 判断开发环境：NODE_ENV=development 或 app.isPackaged=false
+    const isDev = process.env.NODE_ENV === 'development' || !electron_1.app.isPackaged;
+    if (isDev) {
+        // 开发模式：尝试连接 Vite dev server（默认 5173，如果被占用可能在其他端口）
+        const vitePort = process.env.VITE_PORT || '5173';
+        const viteUrl = `http://localhost:${vitePort}`;
+        logger_1.default.info({ viteUrl }, '开发模式：加载 Vite dev server');
+        if (mainWindow) {
+            mainWindow.loadURL(viteUrl).catch((error) => {
+                logger_1.default.error({ error, viteUrl }, '加载 Vite dev server 失败，尝试备用端口');
+                // 如果 5173 失败，尝试 5174（Vite 自动切换的端口）
+                if (mainWindow) {
+                    mainWindow.loadURL('http://localhost:5174').catch((err) => {
+                        logger_1.default.error({ error: err }, '加载 Vite dev server 失败');
+                    });
+                }
+            });
+            mainWindow.webContents.openDevTools();
+        }
     }
     else {
-        mainWindow.loadFile(path.join(__dirname, '../../renderer/dist/index.html'));
+        // 生产模式：加载打包后的文件
+        const distPath = path.join(__dirname, '../../renderer/dist/index.html');
+        logger_1.default.info({ distPath }, '生产模式：加载打包文件');
+        if (mainWindow) {
+            mainWindow.loadFile(distPath).catch((error) => {
+                logger_1.default.error({ error, distPath }, '加载打包文件失败');
+            });
+        }
     }
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
 }
-electron_1.app.whenReady().then(() => {
+electron_1.app.whenReady().then(async () => {
     createWindow();
-    // 初始化服务
-    modelManager = new model_manager_1.ModelManager();
-    inferenceService = new inference_service_1.InferenceService(modelManager);
-    nodeAgent = new node_agent_1.NodeAgent(inferenceService);
-    // 启动 Node Agent
-    nodeAgent.start().catch(console.error);
+    try {
+        // 初始化服务管理器
+        rustServiceManager = new rust_service_manager_1.RustServiceManager();
+        pythonServiceManager = new python_service_manager_1.PythonServiceManager();
+        // 初始化其他服务
+        modelManager = new model_manager_1.ModelManager();
+        inferenceService = new inference_service_1.InferenceService(modelManager);
+        nodeAgent = new node_agent_1.NodeAgent(inferenceService, modelManager);
+        // 根据用户上一次选择的功能自动启动对应服务
+        const config = (0, node_config_1.loadNodeConfig)();
+        const prefs = config.servicePreferences;
+        logger_1.default.info({ prefs }, '服务管理器已初始化，按上次选择自动启动服务');
+        // 按照偏好启动 Rust 推理服务（异步启动，不阻塞窗口显示）
+        if (prefs.rustEnabled) {
+            logger_1.default.info({}, '开始自动启动 Rust 推理服务...');
+            rustServiceManager.start().catch((error) => {
+                logger_1.default.error({ error }, '自动启动 Rust 推理服务失败');
+            });
+        }
+        // 按照偏好启动 Python 服务（异步启动，不阻塞窗口显示）
+        if (pythonServiceManager) {
+            const toStart = [];
+            if (prefs.nmtEnabled)
+                toStart.push('nmt');
+            if (prefs.ttsEnabled)
+                toStart.push('tts');
+            if (prefs.yourttsEnabled)
+                toStart.push('yourtts');
+            for (const name of toStart) {
+                logger_1.default.info({ serviceName: name }, '开始自动启动 Python 服务...');
+                pythonServiceManager.startService(name).catch((error) => {
+                    logger_1.default.error({ error, serviceName: name }, '自动启动 Python 服务失败');
+                });
+            }
+        }
+    }
+    catch (error) {
+        logger_1.default.error({ error }, '初始化服务失败');
+    }
     electron_1.app.on('activate', () => {
         if (electron_1.BrowserWindow.getAllWindows().length === 0) {
             createWindow();
         }
     });
 });
-electron_1.app.on('window-all-closed', () => {
+// 统一的清理函数
+async function cleanupServices() {
+    logger_1.default.info({}, '正在关闭所有服务...');
+    // 停止 Node Agent
+    if (nodeAgent) {
+        try {
+            nodeAgent.stop();
+        }
+        catch (error) {
+            logger_1.default.error({ error }, '停止 Node Agent 失败');
+        }
+    }
+    // 停止 Rust 服务
+    if (rustServiceManager) {
+        try {
+            await rustServiceManager.stop();
+        }
+        catch (error) {
+            logger_1.default.error({ error }, '停止 Rust 服务失败');
+        }
+    }
+    // 停止所有 Python 服务
+    if (pythonServiceManager) {
+        try {
+            await pythonServiceManager.stopAllServices();
+        }
+        catch (error) {
+            logger_1.default.error({ error }, '停止 Python 服务失败');
+        }
+    }
+}
+// 正常关闭窗口时清理服务
+electron_1.app.on('window-all-closed', async () => {
     if (process.platform !== 'darwin') {
-        // 清理资源
-        nodeAgent?.stop();
+        await cleanupServices();
         electron_1.app.quit();
     }
+});
+// 在应用退出前确保清理（处理 macOS 等平台）
+electron_1.app.on('before-quit', async (event) => {
+    // 如果服务还在运行，阻止默认退出行为，先清理服务
+    const rustRunning = rustServiceManager?.getStatus().running;
+    const pythonRunning = pythonServiceManager?.getAllServiceStatuses().some(s => s.running);
+    if (rustRunning || pythonRunning) {
+        event.preventDefault();
+        await cleanupServices();
+        electron_1.app.quit();
+    }
+});
+// 处理系统信号（SIGTERM, SIGINT）确保服务被清理
+process.on('SIGTERM', async () => {
+    logger_1.default.info({}, '收到 SIGTERM 信号，正在清理服务...');
+    await cleanupServices();
+    process.exit(0);
+});
+process.on('SIGINT', async () => {
+    logger_1.default.info({}, '收到 SIGINT 信号，正在清理服务...');
+    await cleanupServices();
+    process.exit(0);
+});
+// 处理未捕获的异常，确保服务被清理
+process.on('uncaughtException', async (error) => {
+    logger_1.default.error({ error }, '未捕获的异常，正在清理服务...');
+    await cleanupServices();
+    process.exit(1);
+});
+process.on('unhandledRejection', async (reason, promise) => {
+    logger_1.default.error({ reason, promise }, '未处理的 Promise 拒绝，正在清理服务...');
+    await cleanupServices();
+    process.exit(1);
 });
 // IPC 处理
 electron_1.ipcMain.handle('get-system-resources', async () => {
@@ -102,7 +231,7 @@ electron_1.ipcMain.handle('get-system-resources', async () => {
         };
     }
     catch (error) {
-        console.error('获取系统资源失败:', error);
+        logger_1.default.error({ error }, '获取系统资源失败');
         return {
             cpu: 0,
             gpu: null,
@@ -167,7 +296,7 @@ electron_1.ipcMain.handle('download-model', async (_, modelId, version) => {
         return true;
     }
     catch (error) {
-        console.error('下载模型失败:', error);
+        logger_1.default.error({ error, modelId }, '下载模型失败');
         return false;
     }
 });
@@ -181,7 +310,7 @@ electron_1.ipcMain.handle('get-model-path', async (_, modelId, version) => {
         return await modelManager.getModelPath(modelId, version);
     }
     catch (error) {
-        console.error('获取模型路径失败:', error);
+        logger_1.default.error({ error, modelId }, '获取模型路径失败');
         return null;
     }
 });
@@ -193,12 +322,158 @@ electron_1.ipcMain.handle('get-model-ranking', async () => {
         return response.data || [];
     }
     catch (error) {
-        console.error('获取模型排行失败:', error);
+        logger_1.default.error({ error }, '获取模型排行失败');
         return [];
     }
 });
 electron_1.ipcMain.handle('get-node-status', async () => {
     return nodeAgent?.getStatus() || { online: false, nodeId: null };
+});
+electron_1.ipcMain.handle('get-rust-service-status', async () => {
+    return rustServiceManager?.getStatus() || {
+        running: false,
+        starting: false,
+        pid: null,
+        port: null,
+        startedAt: null,
+        lastError: null,
+    };
+});
+// Python 服务管理 IPC 接口
+electron_1.ipcMain.handle('get-python-service-status', async (_, serviceName) => {
+    return pythonServiceManager?.getServiceStatus(serviceName) || {
+        name: serviceName,
+        running: false,
+        starting: false,
+        pid: null,
+        port: null,
+        startedAt: null,
+        lastError: null,
+    };
+});
+electron_1.ipcMain.handle('get-all-python-service-statuses', async () => {
+    return pythonServiceManager?.getAllServiceStatuses() || [];
+});
+electron_1.ipcMain.handle('start-python-service', async (_, serviceName) => {
+    if (!pythonServiceManager) {
+        throw new Error('Python 服务管理器未初始化');
+    }
+    try {
+        await pythonServiceManager.startService(serviceName);
+        return { success: true };
+    }
+    catch (error) {
+        logger_1.default.error({ error, serviceName }, '启动 Python 服务失败');
+        return { success: false, error: error instanceof Error ? error.message : String(error) };
+    }
+});
+electron_1.ipcMain.handle('stop-python-service', async (_, serviceName) => {
+    if (!pythonServiceManager) {
+        throw new Error('Python 服务管理器未初始化');
+    }
+    try {
+        await pythonServiceManager.stopService(serviceName);
+        return { success: true };
+    }
+    catch (error) {
+        logger_1.default.error({ error, serviceName }, '停止 Python 服务失败');
+        return { success: false, error: error instanceof Error ? error.message : String(error) };
+    }
+});
+// Rust 服务管理 IPC 接口
+electron_1.ipcMain.handle('start-rust-service', async () => {
+    if (!rustServiceManager) {
+        throw new Error('Rust 服务管理器未初始化');
+    }
+    try {
+        await rustServiceManager.start();
+        return { success: true };
+    }
+    catch (error) {
+        logger_1.default.error({ error }, '启动 Rust 服务失败');
+        return { success: false, error: error instanceof Error ? error.message : String(error) };
+    }
+});
+electron_1.ipcMain.handle('stop-rust-service', async () => {
+    if (!rustServiceManager) {
+        throw new Error('Rust 服务管理器未初始化');
+    }
+    try {
+        await rustServiceManager.stop();
+        return { success: true };
+    }
+    catch (error) {
+        logger_1.default.error({ error }, '停止 Rust 服务失败');
+        return { success: false, error: error instanceof Error ? error.message : String(error) };
+    }
+});
+// 根据已安装的模型自动启动所需服务
+electron_1.ipcMain.handle('auto-start-services-by-models', async () => {
+    if (!modelManager || !rustServiceManager || !pythonServiceManager) {
+        return { success: false, error: '服务管理器未初始化' };
+    }
+    try {
+        const installedModels = modelManager.getInstalledModels();
+        const servicesToStart = [];
+        // 检查是否需要启动各个服务
+        const hasNmtModel = installedModels.some(m => m.modelId.includes('nmt') || m.modelId.includes('m2m'));
+        const hasTtsModel = installedModels.some(m => m.modelId.includes('piper') || (m.modelId.includes('tts') && !m.modelId.includes('your')));
+        const hasYourttsModel = installedModels.some(m => m.modelId.includes('yourtts') || m.modelId.includes('your_tts'));
+        const hasAsrModel = installedModels.some(m => m.modelId.includes('asr') || m.modelId.includes('whisper'));
+        if (hasNmtModel)
+            servicesToStart.push('nmt');
+        if (hasTtsModel)
+            servicesToStart.push('tts');
+        if (hasYourttsModel)
+            servicesToStart.push('yourtts');
+        if (hasAsrModel)
+            servicesToStart.push('rust');
+        // 启动服务
+        const results = {};
+        for (const service of servicesToStart) {
+            try {
+                if (service === 'rust') {
+                    await rustServiceManager.start();
+                }
+                else {
+                    await pythonServiceManager.startService(service);
+                }
+                results[service] = true;
+            }
+            catch (error) {
+                logger_1.default.error({ error, service }, '自动启动服务失败');
+                results[service] = false;
+            }
+        }
+        return { success: true, results };
+    }
+    catch (error) {
+        logger_1.default.error({ error }, '根据模型自动启动服务失败');
+        return { success: false, error: error instanceof Error ? error.message : String(error) };
+    }
+});
+// 服务偏好设置（用于记住用户上一次选择的功能）
+electron_1.ipcMain.handle('get-service-preferences', async () => {
+    const config = (0, node_config_1.loadNodeConfig)();
+    return config.servicePreferences;
+});
+electron_1.ipcMain.handle('set-service-preferences', async (_, prefs) => {
+    try {
+        const config = (0, node_config_1.loadNodeConfig)();
+        config.servicePreferences = {
+            ...config.servicePreferences,
+            ...prefs,
+        };
+        (0, node_config_1.saveNodeConfig)(config);
+        return { success: true };
+    }
+    catch (error) {
+        logger_1.default.error({ error }, '保存服务偏好失败');
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : String(error),
+        };
+    }
 });
 electron_1.ipcMain.handle('generate-pairing-code', async () => {
     return nodeAgent?.generatePairingCode() || null;

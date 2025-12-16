@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.InferenceService = void 0;
 const axios_1 = __importDefault(require("axios"));
 const ws_1 = __importDefault(require("ws"));
+const logger_1 = __importDefault(require("../logger"));
 class InferenceService {
     constructor(modelManager) {
         this.currentJobs = new Set();
@@ -20,11 +21,14 @@ class InferenceService {
     async processJob(job, partialCallback) {
         this.currentJobs.add(job.job_id);
         try {
+            // 根据任务请求中的 features 自动启用所需模块（运行时动态启用）
+            // 注意：模块启用由推理服务根据请求自动处理，不需要手动调用
             // 如果启用了流式 ASR，使用 WebSocket
             if (job.enable_streaming_asr && partialCallback) {
                 return await this.processJobStreaming(job, partialCallback);
             }
             // 否则使用 HTTP 同步请求
+            // 将任务中的 features 传递给推理服务，推理服务会根据 features 自动启用相应模块
             const request = {
                 job_id: job.job_id,
                 src_lang: job.src_lang,
@@ -45,6 +49,8 @@ class InferenceService {
                 lang_b: job.lang_b,
                 auto_langs: job.auto_langs,
                 enable_streaming_asr: false,
+                trace_id: job.trace_id, // Added: propagate trace_id
+                context_text: job.context_text, // Added: propagate context_text (optional field)
             };
             const response = await this.httpClient.post('/v1/inference', request);
             if (!response.data.success) {
@@ -59,7 +65,7 @@ class InferenceService {
             };
         }
         catch (error) {
-            console.error('推理服务调用失败:', error);
+            logger_1.default.error({ error, jobId: job.job_id, traceId: job.trace_id }, '推理服务调用失败');
             throw error;
         }
         finally {
@@ -93,6 +99,7 @@ class InferenceService {
                     auto_langs: job.auto_langs,
                     enable_streaming_asr: true,
                     partial_update_interval_ms: job.partial_update_interval_ms || 1000,
+                    trace_id: job.trace_id, // Added: propagate trace_id
                 };
                 ws.send(JSON.stringify(request));
             });
@@ -125,7 +132,7 @@ class InferenceService {
                     }
                 }
                 catch (error) {
-                    console.error('解析 WebSocket 消息失败:', error);
+                    logger_1.default.error({ error }, '解析 WebSocket 消息失败');
                 }
             });
             ws.on('error', (error) => {
@@ -142,34 +149,49 @@ class InferenceService {
     getCurrentJobCount() {
         return this.currentJobs.size;
     }
-    getInstalledModels() {
+    async getInstalledModels() {
         // 从 ModelManager 获取已安装的模型，转换为协议格式
         const installed = this.modelManager.getInstalledModels();
-        // TODO: 需要从 ModelManager 获取完整的模型元数据（包括 kind, src_lang, tgt_lang, dialect）
-        // 目前返回基本结构，实际应该从 ModelMetadata 中获取完整信息
+        // 获取可用模型列表以获取完整元数据
+        const availableModels = await this.modelManager.getAvailableModels();
         return installed.map(m => {
+            // 从可用模型列表中查找完整信息
+            const modelInfo = availableModels.find(am => am.id === m.modelId);
             // 从 model_id 推断模型类型（临时方案，实际应该从元数据获取）
             let kind = 'other';
-            if (m.model_id.includes('asr') || m.model_id.includes('whisper')) {
-                kind = 'asr';
+            if (modelInfo) {
+                if (modelInfo.task === 'asr')
+                    kind = 'asr';
+                else if (modelInfo.task === 'nmt')
+                    kind = 'nmt';
+                else if (modelInfo.task === 'tts')
+                    kind = 'tts';
+                else if (modelInfo.task === 'emotion')
+                    kind = 'emotion';
             }
-            else if (m.model_id.includes('nmt') || m.model_id.includes('m2m')) {
-                kind = 'nmt';
-            }
-            else if (m.model_id.includes('tts') || m.model_id.includes('piper')) {
-                kind = 'tts';
-            }
-            else if (m.model_id.includes('emotion')) {
-                kind = 'emotion';
+            else {
+                // 回退到名称推断
+                if (m.modelId.includes('asr') || m.modelId.includes('whisper')) {
+                    kind = 'asr';
+                }
+                else if (m.modelId.includes('nmt') || m.modelId.includes('m2m')) {
+                    kind = 'nmt';
+                }
+                else if (m.modelId.includes('tts') || m.modelId.includes('piper')) {
+                    kind = 'tts';
+                }
+                else if (m.modelId.includes('emotion')) {
+                    kind = 'emotion';
+                }
             }
             return {
-                model_id: m.model_id,
+                model_id: m.modelId,
                 kind: kind,
-                src_lang: null, // TODO: 从元数据获取
-                tgt_lang: null, // TODO: 从元数据获取
+                src_lang: modelInfo?.languages?.[0] || null,
+                tgt_lang: modelInfo?.languages?.[1] || null,
                 dialect: null, // TODO: 从元数据获取
                 version: m.version || '1.0.0',
-                enabled: true, // TODO: 从配置获取
+                enabled: m.info.status === 'ready', // 只有 ready 状态才启用
             };
         });
     }
@@ -185,27 +207,22 @@ class InferenceService {
             persona_adaptation: false,
         };
     }
+    // 注意：以下方法已废弃，模块现在根据任务请求自动启用/禁用
+    // 保留这些方法是为了向后兼容，但不再通过 UI 手动调用
     async getModuleStatus() {
-        // TODO: 从推理服务获取实际模块状态
-        // 当前返回默认状态，实际应该通过 HTTP 调用推理服务获取
-        return {
-            emotion_detection: false,
-            voice_style_detection: false,
-            speech_rate_detection: false,
-            speech_rate_control: false,
-            speaker_identification: false,
-            persona_adaptation: false,
-        };
+        // 模块状态现在由推理服务根据任务请求动态管理
+        // 返回空对象，表示不提供手动管理功能
+        return {};
     }
     async enableModule(moduleName) {
-        // TODO: 通过 HTTP 调用推理服务启用模块
-        // 当前仅记录日志，实际应该调用推理服务的 API
-        console.log(`启用模块: ${moduleName}`);
+        // 已废弃：模块现在根据任务请求自动启用
+        // 不再支持手动启用模块
+        logger_1.default.warn({ moduleName }, 'enableModule 已废弃：模块现在根据任务请求自动启用');
     }
     async disableModule(moduleName) {
-        // TODO: 通过 HTTP 调用推理服务禁用模块
-        // 当前仅记录日志，实际应该调用推理服务的 API
-        console.log(`禁用模块: ${moduleName}`);
+        // 已废弃：模块现在根据任务请求自动启用/禁用
+        // 不再支持手动禁用模块
+        logger_1.default.warn({ moduleName }, 'disableModule 已废弃：模块现在根据任务请求自动管理');
     }
 }
 exports.InferenceService = InferenceService;

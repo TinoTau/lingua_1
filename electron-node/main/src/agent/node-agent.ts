@@ -10,7 +10,8 @@ import type {
   JobResultMessage,
   AsrPartialMessage,
   InstalledModel,
-  FeatureFlags
+  FeatureFlags,
+  ModelStatus
 } from '../../../../shared/protocols/messages';
 import { ModelNotAvailableError } from '../model-manager/model-manager';
 import logger from '../logger';
@@ -28,10 +29,13 @@ export class NodeAgent {
   private schedulerUrl: string;
   private heartbeatInterval: NodeJS.Timeout | null = null;
   private inferenceService: InferenceService;
+  private modelManager: any; // ModelManager 实例
 
-  constructor(inferenceService: InferenceService) {
+  constructor(inferenceService: InferenceService, modelManager?: any) {
     this.schedulerUrl = process.env.SCHEDULER_URL || 'ws://localhost:5010/ws/node';
     this.inferenceService = inferenceService;
+    // 通过参数传入或从 inferenceService 获取 modelManager
+    this.modelManager = modelManager || (inferenceService as any).modelManager;
   }
 
   async start(): Promise<void> {
@@ -58,6 +62,15 @@ export class NodeAgent {
         // 尝试重连
         setTimeout(() => this.start(), 5000);
       });
+
+      // 监听模型状态变化，实时更新 capability_state
+      if (this.modelManager && typeof this.modelManager.on === 'function') {
+        this.modelManager.on('capability-state-changed', () => {
+          // 状态变化时，在下次心跳时更新 capability_state
+          // 这里不立即发送，因为心跳会定期发送最新的状态
+          logger.debug({}, '模型状态已变化，将在下次心跳时更新 capability_state');
+        });
+      }
     } catch (error) {
       logger.error({ error }, '启动 Node Agent 失败');
     }
@@ -142,6 +155,9 @@ export class NodeAgent {
       const resources = await this.getSystemResources();
       const installedModels = await this.inferenceService.getInstalledModels();
 
+      // 获取 capability_state（节点模型能力图）
+      const capabilityState = await this.getCapabilityState();
+
       // 对齐协议规范：node_heartbeat 消息格式
       const message: NodeHeartbeatMessage = {
         type: 'node_heartbeat',
@@ -155,6 +171,7 @@ export class NodeAgent {
           running_jobs: this.inferenceService.getCurrentJobCount(),
         },
         installed_models: installedModels.length > 0 ? installedModels : undefined,
+        capability_state: capabilityState,
       };
 
       this.ws.send(JSON.stringify(message));
@@ -190,6 +207,25 @@ export class NodeAgent {
     } catch (error) {
       logger.error({ error }, '获取系统资源失败');
       return { cpu: 0, gpu: null, gpuMem: null, memory: 0 };
+    }
+  }
+
+  /**
+   * 获取节点当前的 capability_state（模型能力图）
+   * 来自 ModelManager.getCapabilityState()
+   */
+  private async getCapabilityState(): Promise<Record<string, ModelStatus>> {
+    if (!this.modelManager || typeof this.modelManager.getCapabilityState !== 'function') {
+      return {};
+    }
+
+    try {
+      const state = await this.modelManager.getCapabilityState();
+      // 确保始终返回一个对象
+      return state || {};
+    } catch (error) {
+      logger.error({ error }, '获取 capability_state 失败');
+      return {};
     }
   }
 

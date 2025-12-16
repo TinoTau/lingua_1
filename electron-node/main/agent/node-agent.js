@@ -1,22 +1,22 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
     if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-        desc = { enumerable: true, get: function () { return m[k]; } };
+      desc = { enumerable: true, get: function() { return m[k]; } };
     }
     Object.defineProperty(o, k2, desc);
-}) : (function (o, m, k, k2) {
+}) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 }));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function (o, v) {
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
     Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function (o, v) {
+}) : function(o, v) {
     o["default"] = v;
 });
 var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function (o) {
+    var ownKeys = function(o) {
         ownKeys = Object.getOwnPropertyNames || function (o) {
             var ar = [];
             for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
@@ -40,19 +40,23 @@ exports.NodeAgent = void 0;
 const ws_1 = __importDefault(require("ws"));
 const si = __importStar(require("systeminformation"));
 const os = __importStar(require("os"));
+const model_manager_1 = require("../model-manager/model-manager");
+const logger_1 = __importDefault(require("../logger"));
 class NodeAgent {
-    constructor(inferenceService) {
+    constructor(inferenceService, modelManager) {
         this.ws = null;
         this.nodeId = null;
         this.heartbeatInterval = null;
         this.schedulerUrl = process.env.SCHEDULER_URL || 'ws://localhost:5010/ws/node';
         this.inferenceService = inferenceService;
+        // 通过参数传入或从 inferenceService 获取 modelManager
+        this.modelManager = modelManager || inferenceService.modelManager;
     }
     async start() {
         try {
             this.ws = new ws_1.default(this.schedulerUrl);
             this.ws.on('open', () => {
-                console.log('已连接到调度服务器');
+                logger_1.default.info({}, '已连接到调度服务器');
                 this.registerNode();
                 this.startHeartbeat();
             });
@@ -60,17 +64,25 @@ class NodeAgent {
                 this.handleMessage(data.toString());
             });
             this.ws.on('error', (error) => {
-                console.error('WebSocket 错误:', error);
+                logger_1.default.error({ error }, 'WebSocket 错误');
             });
             this.ws.on('close', () => {
-                console.log('与调度服务器的连接已关闭');
+                logger_1.default.info({}, '与调度服务器的连接已关闭');
                 this.stopHeartbeat();
                 // 尝试重连
                 setTimeout(() => this.start(), 5000);
             });
+            // 监听模型状态变化，实时更新 capability_state
+            if (this.modelManager && typeof this.modelManager.on === 'function') {
+                this.modelManager.on('capability-state-changed', () => {
+                    // 状态变化时，在下次心跳时更新 capability_state
+                    // 这里不立即发送，因为心跳会定期发送最新的状态
+                    logger_1.default.debug({}, '模型状态已变化，将在下次心跳时更新 capability_state');
+                });
+            }
         }
         catch (error) {
-            console.error('启动 Node Agent 失败:', error);
+            logger_1.default.error({ error }, '启动 Node Agent 失败');
         }
     }
     stop() {
@@ -87,7 +99,7 @@ class NodeAgent {
             // 获取硬件信息
             const hardware = await this.getHardwareInfo();
             // 获取已安装的模型
-            const installedModels = this.inferenceService.getInstalledModels();
+            const installedModels = await this.inferenceService.getInstalledModels();
             // 获取支持的功能
             const featuresSupported = this.inferenceService.getFeaturesSupported();
             // 对齐协议规范：node_register 消息格式
@@ -104,7 +116,7 @@ class NodeAgent {
             this.ws.send(JSON.stringify(message));
         }
         catch (error) {
-            console.error('注册节点失败:', error);
+            logger_1.default.error({ error }, '注册节点失败');
         }
     }
     getPlatform() {
@@ -128,7 +140,7 @@ class NodeAgent {
             };
         }
         catch (error) {
-            console.error('获取硬件信息失败:', error);
+            logger_1.default.error({ error }, '获取硬件信息失败');
             return {
                 cpu_cores: os.cpus().length,
                 memory_gb: Math.round(os.totalmem() / (1024 * 1024 * 1024)),
@@ -140,7 +152,9 @@ class NodeAgent {
             if (!this.ws || this.ws.readyState !== ws_1.default.OPEN || !this.nodeId)
                 return;
             const resources = await this.getSystemResources();
-            const installedModels = this.inferenceService.getInstalledModels();
+            const installedModels = await this.inferenceService.getInstalledModels();
+            // 获取 capability_state（节点模型能力图）
+            const capabilityState = await this.getCapabilityState();
             // 对齐协议规范：node_heartbeat 消息格式
             const message = {
                 type: 'node_heartbeat',
@@ -154,6 +168,7 @@ class NodeAgent {
                     running_jobs: this.inferenceService.getCurrentJobCount(),
                 },
                 installed_models: installedModels.length > 0 ? installedModels : undefined,
+                capability_state: capabilityState,
             };
             this.ws.send(JSON.stringify(message));
         }, 15000); // 每15秒发送一次心跳
@@ -179,8 +194,26 @@ class NodeAgent {
             };
         }
         catch (error) {
-            console.error('获取系统资源失败:', error);
+            logger_1.default.error({ error }, '获取系统资源失败');
             return { cpu: 0, gpu: null, gpuMem: null, memory: 0 };
+        }
+    }
+    /**
+     * 获取节点当前的 capability_state（模型能力图）
+     * 来自 ModelManager.getCapabilityState()
+     */
+    async getCapabilityState() {
+        if (!this.modelManager || typeof this.modelManager.getCapabilityState !== 'function') {
+            return {};
+        }
+        try {
+            const state = await this.modelManager.getCapabilityState();
+            // 确保始终返回一个对象
+            return state || {};
+        }
+        catch (error) {
+            logger_1.default.error({ error }, '获取 capability_state 失败');
+            return {};
         }
     }
     async handleMessage(data) {
@@ -190,7 +223,7 @@ class NodeAgent {
                 case 'node_register_ack': {
                     const ack = message;
                     this.nodeId = ack.node_id;
-                    console.log('节点注册成功:', this.nodeId);
+                    logger_1.default.info({ nodeId: this.nodeId }, '节点注册成功');
                     break;
                 }
                 case 'job_assign': {
@@ -202,11 +235,11 @@ class NodeAgent {
                     // 配对码已生成，通过 IPC 通知渲染进程
                     break;
                 default:
-                    console.warn('未知消息类型:', message.type);
+                    logger_1.default.warn({ messageType: message.type }, '未知消息类型');
             }
         }
         catch (error) {
-            console.error('处理消息失败:', error);
+            logger_1.default.error({ error }, '处理消息失败');
         }
     }
     async handleJob(job) {
@@ -217,6 +250,7 @@ class NodeAgent {
             // 如果启用了流式 ASR，设置部分结果回调
             const partialCallback = job.enable_streaming_asr ? (partial) => {
                 // 发送 ASR 部分结果到调度服务器
+                // 对齐协议规范：asr_partial 消息格式（从节点发送到调度服务器，需要包含 node_id）
                 if (this.ws && this.ws.readyState === ws_1.default.OPEN && this.nodeId) {
                     const partialMessage = {
                         type: 'asr_partial',
@@ -226,6 +260,7 @@ class NodeAgent {
                         job_id: job.job_id,
                         text: partial.text,
                         is_final: partial.is_final,
+                        trace_id: job.trace_id, // Added: propagate trace_id
                     };
                     this.ws.send(JSON.stringify(partialMessage));
                 }
@@ -246,12 +281,38 @@ class NodeAgent {
                 tts_format: result.tts_format || 'pcm16',
                 extra: result.extra,
                 processing_time_ms: Date.now() - startTime,
+                trace_id: job.trace_id, // Added: propagate trace_id
             };
             this.ws.send(JSON.stringify(response));
         }
         catch (error) {
-            console.error('处理任务失败:', error);
-            // 对齐协议规范：job_result 错误响应格式
+            logger_1.default.error({ error, jobId: job.job_id, traceId: job.trace_id }, '处理任务失败');
+            // 检查是否是 ModelNotAvailableError
+            if (error instanceof model_manager_1.ModelNotAvailableError) {
+                // 发送 MODEL_NOT_AVAILABLE 错误给调度服务器
+                const errorResponse = {
+                    type: 'job_result',
+                    job_id: job.job_id,
+                    node_id: this.nodeId,
+                    session_id: job.session_id,
+                    utterance_index: job.utterance_index,
+                    success: false,
+                    processing_time_ms: Date.now() - startTime,
+                    error: {
+                        code: 'MODEL_NOT_AVAILABLE',
+                        message: `Model ${error.modelId}@${error.version} is not available: ${error.reason}`,
+                        details: {
+                            model_id: error.modelId,
+                            version: error.version,
+                            reason: error.reason,
+                        },
+                    },
+                    trace_id: job.trace_id, // Added: propagate trace_id
+                };
+                this.ws.send(JSON.stringify(errorResponse));
+                return;
+            }
+            // 其他错误
             const errorResponse = {
                 type: 'job_result',
                 job_id: job.job_id,
@@ -264,6 +325,7 @@ class NodeAgent {
                     code: 'PROCESSING_ERROR',
                     message: error instanceof Error ? error.message : String(error),
                 },
+                trace_id: job.trace_id, // Added: propagate trace_id
             };
             this.ws.send(JSON.stringify(errorResponse));
         }

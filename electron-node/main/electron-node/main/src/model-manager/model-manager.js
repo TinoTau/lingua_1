@@ -43,8 +43,9 @@ const fs = __importStar(require("fs/promises"));
 const path = __importStar(require("path"));
 const electron_1 = require("electron");
 const axios_1 = __importDefault(require("axios"));
-var errors_1 = require("./errors");
-Object.defineProperty(exports, "ModelNotAvailableError", { enumerable: true, get: function () { return errors_1.ModelNotAvailableError; } });
+const errors_1 = require("./errors");
+var errors_2 = require("./errors");
+Object.defineProperty(exports, "ModelNotAvailableError", { enumerable: true, get: function () { return errors_2.ModelNotAvailableError; } });
 // 导入模块
 const utils_1 = require("./utils");
 const registry_1 = require("./registry");
@@ -52,6 +53,7 @@ const lock_manager_1 = require("./lock-manager");
 const downloader_1 = require("./downloader");
 const verifier_1 = require("./verifier");
 const installer_1 = require("./installer");
+const logger_1 = __importDefault(require("../logger"));
 /**
  * ModelManager 类 - 模型管理器
  */
@@ -107,7 +109,7 @@ class ModelManager extends events_1.EventEmitter {
             await this.lockManager.cleanupOrphanLocks();
         }
         catch (error) {
-            console.error('初始化 ModelManager 失败:', error);
+            logger_1.default.error({ error }, '初始化 ModelManager 失败');
         }
     }
     // ===== 模型列表获取 =====
@@ -117,7 +119,7 @@ class ModelManager extends events_1.EventEmitter {
             return response.data;
         }
         catch (error) {
-            console.error('获取可用模型列表失败:', error);
+            logger_1.default.error({ error }, '获取可用模型列表失败');
             return [];
         }
     }
@@ -130,26 +132,83 @@ class ModelManager extends events_1.EventEmitter {
         }
         return result;
     }
+    /**
+     * 获取节点模型能力图（capability_state）
+     * 返回所有模型的状态映射：model_id -> ModelStatus
+     */
+    async getCapabilityState() {
+        const capabilityState = {};
+        try {
+            // 获取所有可用模型
+            const availableModels = await this.getAvailableModels();
+            // 遍历所有可用模型，检查其状态
+            for (const model of availableModels) {
+                const defaultVersion = model.default_version;
+                const installedVersion = this.registry[model.id]?.[defaultVersion];
+                if (!installedVersion) {
+                    // 模型未安装
+                    capabilityState[model.id] = 'not_installed';
+                }
+                else {
+                    // 将 InstalledModelVersion['status'] 映射到 ModelStatus
+                    const status = installedVersion.status;
+                    switch (status) {
+                        case 'ready':
+                            capabilityState[model.id] = 'ready';
+                            break;
+                        case 'downloading':
+                        case 'verifying':
+                        case 'installing':
+                            capabilityState[model.id] = 'downloading';
+                            break;
+                        case 'error':
+                            capabilityState[model.id] = 'error';
+                            break;
+                        default:
+                            capabilityState[model.id] = 'not_installed';
+                    }
+                }
+            }
+        }
+        catch (error) {
+            logger_1.default.error({ error }, '获取 capability_state 失败');
+        }
+        return capabilityState;
+    }
+    /**
+     * 将内部状态转换为 ModelStatus
+     */
+    mapToModelStatus(status) {
+        switch (status) {
+            case 'ready':
+                return 'ready';
+            case 'downloading':
+            case 'verifying':
+            case 'installing':
+                return 'downloading';
+            case 'error':
+                return 'error';
+            default:
+                return 'not_installed';
+        }
+    }
     // ===== 模型路径获取 =====
     async getModelPath(modelId, version) {
         // 获取模型信息
         const models = await this.getAvailableModels();
         const model = models.find(m => m.id === modelId);
         if (!model) {
-            const { ModelNotAvailableError } = require('./errors');
-            throw new ModelNotAvailableError(modelId, version || 'latest', 'not_installed');
+            throw new errors_1.ModelNotAvailableError(modelId, version || 'latest', 'not_installed');
         }
         // 确定版本
         const targetVersion = version || model.default_version;
         // 检查是否已安装
         const installed = this.registry[modelId]?.[targetVersion];
         if (!installed) {
-            const { ModelNotAvailableError } = require('./errors');
-            throw new ModelNotAvailableError(modelId, targetVersion, 'not_installed');
+            throw new errors_1.ModelNotAvailableError(modelId, targetVersion, 'not_installed');
         }
         if (installed.status !== 'ready') {
-            const { ModelNotAvailableError } = require('./errors');
-            throw new ModelNotAvailableError(modelId, targetVersion, installed.status);
+            throw new errors_1.ModelNotAvailableError(modelId, targetVersion, installed.status);
         }
         // 返回模型目录路径
         return path.join(this.modelsDir, modelId, targetVersion);
@@ -228,6 +287,7 @@ class ModelManager extends events_1.EventEmitter {
         if (!this.registry[modelId]) {
             this.registry[modelId] = {};
         }
+        const previousStatus = this.registry[modelId][version]?.status;
         if (!this.registry[modelId][version]) {
             this.registry[modelId][version] = {
                 status,
@@ -240,7 +300,11 @@ class ModelManager extends events_1.EventEmitter {
             this.registry[modelId][version].status = status;
         }
         // 异步保存，不阻塞
-        this.registryManager.saveRegistry(this.registry).catch(console.error);
+        this.registryManager.saveRegistry(this.registry).catch((error) => logger_1.default.error({ error }, '保存 registry 失败'));
+        // 如果状态发生变化，触发 capability_state 更新事件
+        if (previousStatus !== status) {
+            this.emit('capability-state-changed', { modelId, version, status });
+        }
     }
     emitProgress(modelId, version, downloadedBytes, totalBytes, state, extra) {
         const progress = {
@@ -292,7 +356,7 @@ class ModelManager extends events_1.EventEmitter {
             return true;
         }
         catch (error) {
-            console.error('卸载模型失败:', error);
+            logger_1.default.error({ error, modelId }, '卸载模型失败');
             return false;
         }
     }

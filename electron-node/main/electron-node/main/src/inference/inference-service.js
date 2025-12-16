@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.InferenceService = void 0;
 const axios_1 = __importDefault(require("axios"));
 const ws_1 = __importDefault(require("ws"));
+const logger_1 = __importDefault(require("../logger"));
 class InferenceService {
     constructor(modelManager) {
         this.currentJobs = new Set();
@@ -48,6 +49,8 @@ class InferenceService {
                 lang_b: job.lang_b,
                 auto_langs: job.auto_langs,
                 enable_streaming_asr: false,
+                trace_id: job.trace_id, // Added: propagate trace_id
+                context_text: job.context_text, // Added: propagate context_text (optional field)
             };
             const response = await this.httpClient.post('/v1/inference', request);
             if (!response.data.success) {
@@ -62,7 +65,7 @@ class InferenceService {
             };
         }
         catch (error) {
-            console.error('推理服务调用失败:', error);
+            logger_1.default.error({ error, jobId: job.job_id, traceId: job.trace_id }, '推理服务调用失败');
             throw error;
         }
         finally {
@@ -96,6 +99,7 @@ class InferenceService {
                     auto_langs: job.auto_langs,
                     enable_streaming_asr: true,
                     partial_update_interval_ms: job.partial_update_interval_ms || 1000,
+                    trace_id: job.trace_id, // Added: propagate trace_id
                 };
                 ws.send(JSON.stringify(request));
             });
@@ -128,7 +132,7 @@ class InferenceService {
                     }
                 }
                 catch (error) {
-                    console.error('解析 WebSocket 消息失败:', error);
+                    logger_1.default.error({ error }, '解析 WebSocket 消息失败');
                 }
             });
             ws.on('error', (error) => {
@@ -213,12 +217,12 @@ class InferenceService {
     async enableModule(moduleName) {
         // 已废弃：模块现在根据任务请求自动启用
         // 不再支持手动启用模块
-        console.warn(`enableModule(${moduleName}) 已废弃：模块现在根据任务请求自动启用`);
+        logger_1.default.warn({ moduleName }, 'enableModule 已废弃：模块现在根据任务请求自动启用');
     }
     async disableModule(moduleName) {
         // 已废弃：模块现在根据任务请求自动启用/禁用
         // 不再支持手动禁用模块
-        console.warn(`disableModule(${moduleName}) 已废弃：模块现在根据任务请求自动管理`);
+        logger_1.default.warn({ moduleName }, 'disableModule 已废弃：模块现在根据任务请求自动管理');
     }
 }
 exports.InferenceService = InferenceService;
