@@ -9,6 +9,8 @@ module.exports = {
   },
   moduleNameMapper: {
     '^electron$': '<rootDir>/../../__mocks__/electron.js',
+    '^../logger$': '<rootDir>/../../__mocks__/logger.ts',
+    '^../../main/src/logger$': '<rootDir>/../../__mocks__/logger.ts',
   },
   collectCoverageFrom: [
     '../../main/src/model-manager/**/*.ts',

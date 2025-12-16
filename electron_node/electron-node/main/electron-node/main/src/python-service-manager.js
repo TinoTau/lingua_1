@@ -42,14 +42,15 @@ const path = __importStar(require("path"));
 const fs = __importStar(require("fs"));
 const electron_1 = require("electron");
 const logger_1 = __importDefault(require("./logger"));
+const port_manager_1 = require("./utils/port-manager");
+const gpu_tracker_1 = require("./utils/gpu-tracker");
+const python_service_config_1 = require("./utils/python-service-config");
 class PythonServiceManager {
     constructor() {
         this.services = new Map();
         this.statuses = new Map();
         this.taskCounts = new Map(); // 任务计数
-        this.gpuUsageMs = new Map(); // GPU累计使用时长（毫秒）
-        this.gpuUsageStartTimes = new Map(); // GPU使用开始时间
-        this.gpuCheckIntervals = new Map(); // GPU检查定时器
+        this.gpuTrackers = new Map(); // GPU 跟踪器
         this.projectRoot = '';
         this.isDev = process.env.NODE_ENV === 'development' || !electron_1.app.isPackaged;
         if (this.isDev) {
@@ -102,149 +103,8 @@ class PythonServiceManager {
             this.projectRoot = path.dirname(process.execPath);
         }
     }
-    setupCudaEnvironment() {
-        const env = {};
-        const cudaPaths = [
-            'C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.4',
-            'C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.1',
-            'C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.8',
-        ];
-        for (const cudaPath of cudaPaths) {
-            if (fs.existsSync(cudaPath)) {
-                const cudaBin = path.join(cudaPath, 'bin');
-                const cudaLibnvvp = path.join(cudaPath, 'libnvvp');
-                const cudaNvcc = path.join(cudaBin, 'nvcc.exe');
-                env.CUDA_PATH = cudaPath;
-                env.CUDAToolkit_ROOT = cudaPath;
-                env.CUDA_ROOT = cudaPath;
-                env.CUDA_HOME = cudaPath;
-                env.CMAKE_CUDA_COMPILER = cudaNvcc;
-                const currentPath = process.env.PATH || '';
-                env.PATH = `${cudaBin};${cudaLibnvvp};${currentPath}`;
-                logger_1.default.info({ cudaPath }, 'CUDA 环境已配置');
-                break;
-            }
-        }
-        return env;
-    }
     getServiceConfig(serviceName) {
-        const baseEnv = {
-            ...process.env,
-            ...this.setupCudaEnvironment(),
-            PYTHONIOENCODING: 'utf-8',
-        };
-        switch (serviceName) {
-            case 'nmt': {
-                const servicePath = path.join(this.projectRoot, 'electron_node', 'services', 'nmt_m2m100');
-                const venvPath = path.join(servicePath, 'venv');
-                const venvScripts = path.join(venvPath, 'Scripts');
-                const logDir = path.join(servicePath, 'logs');
-                const logFile = path.join(logDir, 'nmt-service.log');
-                // 确保日志目录存在
-                if (!fs.existsSync(logDir)) {
-                    fs.mkdirSync(logDir, { recursive: true });
-                }
-                // 读取 Hugging Face token
-                const hfTokenFile = path.join(servicePath, 'hf_token.txt');
-                let hfToken = '';
-                if (fs.existsSync(hfTokenFile)) {
-                    try {
-                        hfToken = fs.readFileSync(hfTokenFile, 'utf-8').trim();
-                    }
-                    catch (error) {
-                        logger_1.default.warn({ error }, '读取 HF token 失败');
-                    }
-                }
-                // 配置虚拟环境环境变量
-                const currentPath = baseEnv.PATH || '';
-                const venvPathEnv = `${venvScripts};${currentPath}`;
-                return {
-                    name: 'NMT',
-                    port: 5008,
-                    servicePath,
-                    venvPath,
-                    scriptPath: path.join(servicePath, 'nmt_service.py'),
-                    workingDir: servicePath,
-                    logDir,
-                    logFile,
-                    env: {
-                        ...baseEnv,
-                        VIRTUAL_ENV: venvPath,
-                        PATH: venvPathEnv,
-                        HF_TOKEN: hfToken,
-                        HF_LOCAL_FILES_ONLY: 'true',
-                    },
-                };
-            }
-            case 'tts': {
-                const servicePath = path.join(this.projectRoot, 'electron_node', 'services', 'piper_tts');
-                const venvPath = path.join(servicePath, 'venv');
-                const venvScripts = path.join(venvPath, 'Scripts');
-                const logDir = path.join(servicePath, 'logs');
-                const logFile = path.join(logDir, 'tts-service.log');
-                if (!fs.existsSync(logDir)) {
-                    fs.mkdirSync(logDir, { recursive: true });
-                }
-                const modelDir = process.env.PIPER_MODEL_DIR
-                    || path.join(this.projectRoot, 'electron_node', 'services', 'node-inference', 'models', 'tts');
-                // 配置虚拟环境环境变量
-                const currentPath = baseEnv.PATH || '';
-                const venvPathEnv = `${venvScripts};${currentPath}`;
-                return {
-                    name: 'TTS (Piper)',
-                    port: 5006,
-                    servicePath,
-                    venvPath,
-                    scriptPath: path.join(servicePath, 'piper_http_server.py'),
-                    workingDir: servicePath,
-                    logDir,
-                    logFile,
-                    env: {
-                        ...baseEnv,
-                        VIRTUAL_ENV: venvPath,
-                        PATH: venvPathEnv,
-                        // CUDA_PATH 来自 setupCudaEnvironment，这里通过 any 访问避免类型冲突
-                        PIPER_USE_GPU: baseEnv.CUDA_PATH ? 'true' : 'false',
-                        PIPER_MODEL_DIR: modelDir,
-                    },
-                };
-            }
-            case 'yourtts': {
-                const servicePath = path.join(this.projectRoot, 'electron_node', 'services', 'your_tts');
-                const venvPath = path.join(servicePath, 'venv');
-                const venvScripts = path.join(venvPath, 'Scripts');
-                const logDir = path.join(servicePath, 'logs');
-                const logFile = path.join(logDir, 'yourtts-service.log');
-                if (!fs.existsSync(logDir)) {
-                    fs.mkdirSync(logDir, { recursive: true });
-                }
-                const modelDir = process.env.YOURTTS_MODEL_DIR
-                    || path.join(this.projectRoot, 'electron_node', 'services', 'node-inference', 'models', 'tts', 'your_tts');
-                // 配置虚拟环境环境变量
-                const currentPath = baseEnv.PATH || '';
-                const venvPathEnv = `${venvScripts};${currentPath}`;
-                return {
-                    name: 'YourTTS',
-                    port: 5004,
-                    servicePath,
-                    venvPath,
-                    scriptPath: path.join(servicePath, 'yourtts_service.py'),
-                    workingDir: servicePath,
-                    logDir,
-                    logFile,
-                    env: {
-                        ...baseEnv,
-                        VIRTUAL_ENV: venvPath,
-                        PATH: venvPathEnv,
-                        YOURTTS_MODEL_DIR: modelDir,
-                        // CUDA_PATH 来自 setupCudaEnvironment，这里通过 any 访问避免类型冲突
-                        YOURTTS_USE_GPU: baseEnv.CUDA_PATH ? 'true' : 'false',
-                    },
-                };
-            }
-            default:
-                return null;
-        }
+        return (0, python_service_config_1.getPythonServiceConfig)(serviceName, this.projectRoot);
     }
     async startService(serviceName) {
         if (this.services.has(serviceName)) {
@@ -295,102 +155,13 @@ class PythonServiceManager {
         }
         try {
             // 检查端口是否被占用，如果被占用则尝试清理
-            try {
-                const net = require('net');
-                const testServer = net.createServer();
-                await new Promise((resolve, reject) => {
-                    testServer.listen(config.port, '127.0.0.1', () => {
-                        testServer.close(() => resolve());
-                    });
-                    testServer.on('error', async (err) => {
-                        if (err.code === 'EADDRINUSE') {
-                            logger_1.default.warn({ serviceName, port: config.port }, `端口 ${config.port} 已被占用，尝试查找并清理占用该端口的进程...`);
-                            // 尝试查找并清理占用端口的进程（Windows）
-                            const nodeProcess = require('process');
-                            if (nodeProcess.platform === 'win32') {
-                                try {
-                                    const { exec } = require('child_process');
-                                    const { promisify } = require('util');
-                                    const execAsync = promisify(exec);
-                                    // 使用 netstat 查找占用端口的进程
-                                    const { stdout } = await execAsync(`netstat -ano | findstr :${config.port}`);
-                                    const lines = stdout.trim().split('\n');
-                                    for (const line of lines) {
-                                        const parts = line.trim().split(/\s+/);
-                                        if (parts.length >= 5 && parts[1].includes(`:${config.port}`)) {
-                                            const pid = parts[parts.length - 1];
-                                            if (pid && !isNaN(parseInt(pid))) {
-                                                logger_1.default.info({ serviceName, port: config.port, pid }, `发现占用端口的进程 PID: ${pid}，尝试终止...`);
-                                                try {
-                                                    await execAsync(`taskkill /PID ${pid} /F`);
-                                                    logger_1.default.info({ serviceName, port: config.port, pid }, '已终止占用端口的进程');
-                                                    // 等待端口释放
-                                                    await new Promise(resolve => setTimeout(resolve, 1000));
-                                                }
-                                                catch (killError) {
-                                                    logger_1.default.warn({ serviceName, port: config.port, pid, error: killError }, '终止进程失败，可能进程已不存在');
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                catch (cleanupError) {
-                                    logger_1.default.warn({ serviceName, port: config.port, error: cleanupError }, '清理占用端口的进程失败，等待端口自然释放...');
-                                    // 等待端口释放
-                                    await new Promise(resolve => setTimeout(resolve, 2000));
-                                }
-                            }
-                            else {
-                                // Linux/Mac: 使用 lsof 查找占用端口的进程
-                                try {
-                                    const { exec } = require('child_process');
-                                    const { promisify } = require('util');
-                                    const execAsync = promisify(exec);
-                                    const { stdout } = await execAsync(`lsof -ti:${config.port}`);
-                                    const pids = stdout.trim().split('\n').filter((pid) => pid);
-                                    for (const pid of pids) {
-                                        logger_1.default.info({ serviceName, port: config.port, pid }, `发现占用端口的进程 PID: ${pid}，尝试终止...`);
-                                        try {
-                                            const nodeProcess = require('process');
-                                            nodeProcess.kill(parseInt(pid), 'SIGTERM');
-                                            await new Promise(resolve => setTimeout(resolve, 1000));
-                                        }
-                                        catch (killError) {
-                                            logger_1.default.warn({ serviceName, port: config.port, pid, error: killError }, '终止进程失败');
-                                        }
-                                    }
-                                }
-                                catch (cleanupError) {
-                                    logger_1.default.warn({ serviceName, port: config.port, error: cleanupError }, '清理占用端口的进程失败，等待端口自然释放...');
-                                    await new Promise(resolve => setTimeout(resolve, 2000));
-                                }
-                            }
-                            // 再次尝试检查端口
-                            setTimeout(async () => {
-                                try {
-                                    const retryServer = net.createServer();
-                                    retryServer.listen(config.port, '127.0.0.1', () => {
-                                        retryServer.close(() => resolve());
-                                    });
-                                    retryServer.on('error', () => {
-                                        retryServer.close();
-                                        logger_1.default.warn({ serviceName, port: config.port }, '端口仍被占用，但继续启动（可能是端口释放延迟）');
-                                        resolve();
-                                    });
-                                }
-                                catch {
-                                    resolve();
-                                }
-                            }, 1000);
-                        }
-                        else {
-                            reject(err);
-                        }
-                    });
-                });
-            }
-            catch (portError) {
-                logger_1.default.warn({ serviceName, port: config.port, error: portError }, '端口检查失败，继续启动（可能是端口已被占用）');
+            const { checkPortAvailable } = require('./utils/port-manager');
+            const portAvailable = await checkPortAvailable(config.port);
+            if (!portAvailable) {
+                logger_1.default.warn({ serviceName, port: config.port }, `端口 ${config.port} 已被占用，尝试清理...`);
+                await (0, port_manager_1.cleanupPortProcesses)(config.port, serviceName);
+                // 等待端口释放
+                await new Promise(resolve => setTimeout(resolve, 1000));
             }
             // 构建启动命令
             let args = [];
@@ -574,7 +345,10 @@ class PythonServiceManager {
             // 初始化统计信息
             if (!this.taskCounts.has(serviceName)) {
                 this.taskCounts.set(serviceName, 0);
-                this.gpuUsageMs.set(serviceName, 0);
+            }
+            // 初始化 GPU 跟踪器
+            if (!this.gpuTrackers.has(serviceName)) {
+                this.gpuTrackers.set(serviceName, new gpu_tracker_1.GpuUsageTracker());
             }
             this.updateStatus(serviceName, {
                 running: true,
@@ -628,7 +402,7 @@ class PythonServiceManager {
                 this.services.delete(serviceName);
                 // 验证端口是否已释放
                 if (port) {
-                    await this.verifyPortReleased(serviceName, port);
+                    await (0, port_manager_1.verifyPortReleased)(port, serviceName);
                 }
                 resolve();
             });
@@ -655,94 +429,11 @@ class PythonServiceManager {
                     child.kill('SIGKILL');
                     // 即使强制终止，也验证端口是否释放
                     if (port) {
-                        await this.verifyPortReleased(serviceName, port);
+                        await (0, port_manager_1.verifyPortReleased)(port, serviceName);
                     }
                 }
             }, 5000);
         });
-    }
-    /**
-     * 验证端口是否已释放
-     */
-    async verifyPortReleased(serviceName, port) {
-        try {
-            const net = require('net');
-            const testServer = net.createServer();
-            await new Promise((resolve, reject) => {
-                const timeout = setTimeout(() => {
-                    testServer.close();
-                    logger_1.default.warn({ serviceName, port }, `端口 ${port} 释放验证超时（可能仍被占用）`);
-                    resolve();
-                }, 2000);
-                testServer.listen(port, '127.0.0.1', () => {
-                    clearTimeout(timeout);
-                    testServer.close(() => {
-                        logger_1.default.info({ serviceName, port }, `✅ 端口 ${port} 已成功释放`);
-                        resolve();
-                    });
-                });
-                testServer.on('error', (err) => {
-                    clearTimeout(timeout);
-                    if (err.code === 'EADDRINUSE') {
-                        logger_1.default.error({ serviceName, port, error: err }, `❌ 端口 ${port} 仍被占用，服务可能未正确关闭`);
-                        // 尝试查找占用端口的进程
-                        this.logPortOccupier(serviceName, port);
-                    }
-                    else {
-                        logger_1.default.warn({ serviceName, port, error: err }, `端口 ${port} 释放验证失败`);
-                    }
-                    resolve();
-                });
-            });
-        }
-        catch (error) {
-            logger_1.default.warn({ serviceName, port, error }, `端口 ${port} 释放验证异常`);
-        }
-    }
-    /**
-     * 记录占用端口的进程信息
-     */
-    async logPortOccupier(serviceName, port) {
-        try {
-            const nodeProcess = require('process');
-            if (nodeProcess.platform === 'win32') {
-                const { exec } = require('child_process');
-                const { promisify } = require('util');
-                const execAsync = promisify(exec);
-                try {
-                    const { stdout } = await execAsync(`netstat -ano | findstr :${port}`);
-                    const lines = stdout.trim().split('\n');
-                    for (const line of lines) {
-                        const parts = line.trim().split(/\s+/);
-                        if (parts.length >= 5 && parts[1].includes(`:${port}`)) {
-                            const pid = parts[parts.length - 1];
-                            logger_1.default.warn({ serviceName, port, pid }, `端口 ${port} 被进程 PID ${pid} 占用`);
-                        }
-                    }
-                }
-                catch (error) {
-                    logger_1.default.warn({ serviceName, port, error }, '无法查找占用端口的进程');
-                }
-            }
-            else {
-                const { exec } = require('child_process');
-                const { promisify } = require('util');
-                const execAsync = promisify(exec);
-                try {
-                    const { stdout } = await execAsync(`lsof -ti:${port}`);
-                    const pids = stdout.trim().split('\n').filter((pid) => pid);
-                    if (pids.length > 0) {
-                        logger_1.default.warn({ serviceName, port, pids }, `端口 ${port} 被进程 PID ${pids.join(', ')} 占用`);
-                    }
-                }
-                catch (error) {
-                    logger_1.default.warn({ serviceName, port, error }, '无法查找占用端口的进程');
-                }
-            }
-        }
-        catch (error) {
-            logger_1.default.warn({ serviceName, port, error }, '记录端口占用信息失败');
-        }
     }
     async stopAllServices() {
         const serviceNames = ['nmt', 'tts', 'yourtts'];
@@ -764,7 +455,7 @@ class PythonServiceManager {
             for (const port of allPorts) {
                 // 等待一小段时间让端口完全释放
                 await new Promise(resolve => setTimeout(resolve, 500));
-                await this.verifyPortReleased('all', port);
+                await (0, port_manager_1.verifyPortReleased)(port, 'all');
             }
         }
         logger_1.default.info({}, '所有 Python 服务已停止');
@@ -774,7 +465,8 @@ class PythonServiceManager {
         if (status) {
             // 更新统计信息
             status.taskCount = this.taskCounts.get(serviceName) || 0;
-            status.gpuUsageMs = this.gpuUsageMs.get(serviceName) || 0;
+            const tracker = this.gpuTrackers.get(serviceName);
+            status.gpuUsageMs = tracker ? tracker.getGpuUsageMs() : 0;
         }
         return status || null;
     }
@@ -782,7 +474,8 @@ class PythonServiceManager {
         return Array.from(this.statuses.values()).map(status => {
             // 更新统计信息
             status.taskCount = this.taskCounts.get(status.name) || 0;
-            status.gpuUsageMs = this.gpuUsageMs.get(status.name) || 0;
+            const tracker = this.gpuTrackers.get(status.name);
+            status.gpuUsageMs = tracker ? tracker.getGpuUsageMs() : 0;
             return status;
         });
     }
@@ -801,110 +494,27 @@ class PythonServiceManager {
      * 开始跟踪GPU使用时间
      */
     startGpuTracking(serviceName) {
-        if (this.gpuCheckIntervals.has(serviceName)) {
-            return; // 已经在跟踪
+        let tracker = this.gpuTrackers.get(serviceName);
+        if (!tracker) {
+            tracker = new gpu_tracker_1.GpuUsageTracker();
+            this.gpuTrackers.set(serviceName, tracker);
         }
-        const startTime = Date.now();
-        this.gpuUsageStartTimes.set(serviceName, startTime);
-        // 每500ms检查一次GPU使用率
-        const interval = setInterval(async () => {
-            try {
-                const gpuInfo = await this.getGpuUsage();
-                const now = Date.now();
-                if (gpuInfo && gpuInfo.usage > 0) {
-                    // GPU正在使用，累计时间
-                    const startTime = this.gpuUsageStartTimes.get(serviceName);
-                    if (startTime) {
-                        const elapsed = now - startTime;
-                        const current = this.gpuUsageMs.get(serviceName) || 0;
-                        this.gpuUsageMs.set(serviceName, current + elapsed);
-                        const status = this.statuses.get(serviceName);
-                        if (status) {
-                            status.gpuUsageMs = current + elapsed;
-                        }
-                    }
-                    this.gpuUsageStartTimes.set(serviceName, now); // 重置开始时间
-                }
-                else {
-                    // GPU未使用，重置开始时间
-                    this.gpuUsageStartTimes.set(serviceName, now);
-                }
-            }
-            catch (error) {
-                // 忽略错误，继续跟踪
-            }
-        }, 500);
-        this.gpuCheckIntervals.set(serviceName, interval);
+        tracker.startTracking();
     }
     /**
      * 停止跟踪GPU使用时间
      */
     stopGpuTracking(serviceName) {
-        const interval = this.gpuCheckIntervals.get(serviceName);
-        if (interval) {
-            clearInterval(interval);
-            this.gpuCheckIntervals.delete(serviceName);
-        }
-        // 累计最后一次使用时间
-        const startTime = this.gpuUsageStartTimes.get(serviceName);
-        if (startTime) {
-            const now = Date.now();
-            const elapsed = now - startTime;
-            const current = this.gpuUsageMs.get(serviceName) || 0;
-            this.gpuUsageMs.set(serviceName, current + elapsed);
-            const status = this.statuses.get(serviceName);
-            if (status) {
-                status.gpuUsageMs = current + elapsed;
-            }
-            this.gpuUsageStartTimes.delete(serviceName);
-        }
-    }
-    /**
-     * 获取GPU使用率
-     */
-    async getGpuUsage() {
-        try {
-            const { spawn } = require('child_process');
-            const pythonScript = `
-import pynvml
-try:
-    pynvml.nvmlInit()
-    handle = pynvml.nvmlDeviceGetHandleByIndex(0)
-    util = pynvml.nvmlDeviceGetUtilizationRates(handle)
-    mem_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
-    print(f"{util.gpu},{mem_info.used / mem_info.total * 100}")
-    pynvml.nvmlShutdown()
-except:
-    print("ERROR")
-`;
-            return new Promise((resolve) => {
-                const python = spawn('python', ['-c', pythonScript]);
-                let output = '';
-                python.stdout.on('data', (data) => {
-                    output += data.toString();
-                });
-                python.on('close', (code) => {
-                    if (code === 0 && output.trim() !== 'ERROR') {
-                        const [usage, memory] = output.trim().split(',').map(Number);
-                        resolve({ usage, memory });
-                    }
-                    else {
-                        resolve(null);
-                    }
-                });
-                python.on('error', () => {
-                    resolve(null);
-                });
-            });
-        }
-        catch {
-            return null;
+        const tracker = this.gpuTrackers.get(serviceName);
+        if (tracker) {
+            tracker.stopTracking();
         }
     }
     updateStatus(serviceName, status) {
         const current = this.statuses.get(serviceName);
         const taskCount = this.taskCounts.get(serviceName) || 0;
-        const gpuUsageMs = this.gpuUsageMs.get(serviceName) || 0;
+        const tracker = this.gpuTrackers.get(serviceName);
+        const gpuUsageMs = tracker ? tracker.getGpuUsageMs() : 0;
         // 合并状态，确保统计信息不被覆盖
         const mergedStatus = {
             name: serviceName,

@@ -87,6 +87,22 @@ app.whenReady().then(async () => {
       }
     });
     
+    // 设置任务开始/结束回调（用于GPU跟踪）
+    // 任务开始时启动GPU跟踪，任务结束时停止GPU跟踪
+    inferenceService.setOnTaskStartCallback(() => {
+      if (rustServiceManager) {
+        rustServiceManager.startGpuTracking();
+      }
+      // Python服务的GPU跟踪由各自的incrementTaskCount控制（因为不同服务可能不同时使用）
+    });
+    
+    inferenceService.setOnTaskEndCallback(() => {
+      if (rustServiceManager) {
+        rustServiceManager.stopGpuTracking();
+      }
+      // Python服务的GPU跟踪会在任务计数为0时停止（在显示时检查）
+    });
+    
     nodeAgent = new NodeAgent(inferenceService, modelManager);
 
     // 根据用户上一次选择的功能自动启动对应服务

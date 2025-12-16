@@ -11,6 +11,8 @@
   - `THIRD_PARTY_PLUGIN_SCENARIOS.md` - 第三方插件场景
   - `SERVICE_MIGRATION_ASSESSMENT.md` - 服务迁移评估
   - `PLUGIN_ARCHITECTURE_NECESSITY_ASSESSMENT.md` - 插件化架构必要性评估
+  - `SERVICE_MANAGER_REFACTORING.md` - 服务管理器代码重构文档
+  - `GPU_STATISTICS_TRACKING.md` - GPU 使用时间统计功能文档
 
 ### 节点推理服务 (Node Inference)
 - `node_inference/` - 节点推理服务文档

@@ -12,6 +12,8 @@ class InferenceService {
         this.currentJobs = new Set();
         this.wsClient = null;
         this.onTaskProcessedCallback = null;
+        this.onTaskStartCallback = null;
+        this.onTaskEndCallback = null;
         this.modelManager = modelManager;
         this.inferenceServiceUrl = process.env.INFERENCE_SERVICE_URL || 'http://localhost:5009';
         this.httpClient = axios_1.default.create({
@@ -22,8 +24,19 @@ class InferenceService {
     setOnTaskProcessedCallback(callback) {
         this.onTaskProcessedCallback = callback;
     }
+    setOnTaskStartCallback(callback) {
+        this.onTaskStartCallback = callback;
+    }
+    setOnTaskEndCallback(callback) {
+        this.onTaskEndCallback = callback;
+    }
     async processJob(job, partialCallback) {
+        const wasFirstJob = this.currentJobs.size === 0;
         this.currentJobs.add(job.job_id);
+        // 如果是第一个任务，通知任务开始（用于启动GPU跟踪）
+        if (wasFirstJob && this.onTaskStartCallback) {
+            this.onTaskStartCallback();
+        }
         try {
             // 根据任务请求中的 features 自动启用所需模块（运行时动态启用）
             // 注意：模块启用由推理服务根据请求自动处理，不需要手动调用
@@ -78,6 +91,10 @@ class InferenceService {
         }
         finally {
             this.currentJobs.delete(job.job_id);
+            // 如果没有任务了，通知任务结束（用于停止GPU跟踪）
+            if (this.currentJobs.size === 0 && this.onTaskEndCallback) {
+                this.onTaskEndCallback();
+            }
         }
     }
     async processJobStreaming(job, partialCallback) {

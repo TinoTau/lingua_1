@@ -42,6 +42,7 @@ const path = __importStar(require("path"));
 const fs = __importStar(require("fs"));
 const electron_1 = require("electron");
 const logger_1 = __importDefault(require("./logger"));
+const port_manager_1 = require("./utils/port-manager");
 class RustServiceManager {
     constructor() {
         this.process = null;
@@ -291,7 +292,7 @@ class RustServiceManager {
                 this.status.pid = null;
                 this.process = null;
                 // 验证端口是否已释放
-                await this.verifyPortReleased(port);
+                await (0, port_manager_1.verifyPortReleased)(port, 'rust');
                 resolve();
             });
             // 尝试优雅关闭
@@ -322,46 +323,10 @@ class RustServiceManager {
                     logger_1.default.warn({ pid, port }, `服务未在 5 秒内停止，强制终止 (端口: ${port}, PID: ${pid})`);
                     this.process.kill('SIGKILL');
                     // 即使强制终止，也验证端口是否释放
-                    await this.verifyPortReleased(port);
+                    await (0, port_manager_1.verifyPortReleased)(port, 'rust');
                 }
             }, 5000);
         });
-    }
-    /**
-     * 验证端口是否已释放
-     */
-    async verifyPortReleased(port) {
-        try {
-            const net = require('net');
-            const testServer = net.createServer();
-            await new Promise((resolve) => {
-                const timeout = setTimeout(() => {
-                    testServer.close();
-                    logger_1.default.warn({ port }, `端口 ${port} 释放验证超时（可能仍被占用）`);
-                    resolve();
-                }, 2000);
-                testServer.listen(port, '127.0.0.1', () => {
-                    clearTimeout(timeout);
-                    testServer.close(() => {
-                        logger_1.default.info({ port }, `✅ Rust 服务端口 ${port} 已成功释放`);
-                        resolve();
-                    });
-                });
-                testServer.on('error', (err) => {
-                    clearTimeout(timeout);
-                    if (err.code === 'EADDRINUSE') {
-                        logger_1.default.error({ port, error: err }, `❌ Rust 服务端口 ${port} 仍被占用，服务可能未正确关闭`);
-                    }
-                    else {
-                        logger_1.default.warn({ port, error: err }, `端口 ${port} 释放验证失败`);
-                    }
-                    resolve();
-                });
-            });
-        }
-        catch (error) {
-            logger_1.default.warn({ port, error }, `端口 ${port} 释放验证异常`);
-        }
     }
     getStatus() {
         // 更新统计信息
