@@ -1,0 +1,35 @@
+.node-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.node-status.connected {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.node-status.disconnected {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.status-text {
+  font-weight: 500;
+}
+
+.node-id {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
