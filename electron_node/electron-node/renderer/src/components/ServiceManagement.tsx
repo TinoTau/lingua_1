@@ -9,6 +9,8 @@ interface ServiceStatus {
   port: number | null;
   startedAt: Date | null;
   lastError: string | null;
+  taskCount: number; // 参与任务次数
+  gpuUsageMs: number; // GPU累计使用时长（毫秒）
 }
 
 interface RustServiceStatus {
@@ -18,6 +20,8 @@ interface RustServiceStatus {
   port: number | null;
   startedAt: Date | null;
   lastError: string | null;
+  taskCount: number; // 参与任务次数
+  gpuUsageMs: number; // GPU累计使用时长（毫秒）
 }
 
 export function ServiceManagement() {
@@ -130,23 +134,6 @@ export function ServiceManagement() {
     }
   };
 
-  const handleAutoStart = async () => {
-    setLoading(prev => ({ ...prev, autoStart: true }));
-    try {
-      const result = await window.electronAPI.autoStartServicesByModels();
-      if (!result.success) {
-        alert(`自动启动失败: ${result.error}`);
-      } else {
-        alert(`自动启动完成: ${JSON.stringify(result.results, null, 2)}`);
-      }
-    } catch (error) {
-      alert(`自动启动失败: ${error}`);
-    } finally {
-      setLoading(prev => ({ ...prev, autoStart: false }));
-      await updateStatuses();
-      await syncPreferencesFromStatus();
-    }
-  };
 
   const getServiceDisplayName = (name: string): string => {
     const map: Record<string, string> = {
@@ -168,6 +155,21 @@ export function ServiceManagement() {
     return map[name] || 0;
   };
 
+  const formatGpuUsageMs = (ms: number): string => {
+    if (ms < 1000) {
+      return `${ms}ms`;
+    } else if (ms < 60000) {
+      return `${(ms / 1000).toFixed(2)}s`;
+    } else if (ms < 3600000) {
+      return `${(ms / 60000).toFixed(2)}min`;
+    } else {
+      const hours = Math.floor(ms / 3600000);
+      const minutes = Math.floor((ms % 3600000) / 60000);
+      const seconds = Math.floor((ms % 60000) / 1000);
+      return `${hours}h ${minutes}min ${seconds}s`;
+    }
+  };
+
   // 根据当前运行状态推导服务偏好，并持久化到主进程
   const syncPreferencesFromStatus = async () => {
     try {
@@ -184,17 +186,26 @@ export function ServiceManagement() {
     }
   };
 
+  const handleToggleRust = async (checked: boolean) => {
+    if (checked) {
+      await handleStartRust();
+    } else {
+      await handleStopRust();
+    }
+  };
+
+  const handleTogglePython = async (serviceName: 'nmt' | 'tts' | 'yourtts', checked: boolean) => {
+    if (checked) {
+      await handleStartPython(serviceName);
+    } else {
+      await handleStopPython(serviceName);
+    }
+  };
+
   return (
     <div className="service-management">
       <div className="service-header">
         <h2>服务管理</h2>
-        <button
-          className="auto-start-button"
-          onClick={handleAutoStart}
-          disabled={loading.autoStart}
-        >
-          {loading.autoStart ? '启动中...' : '根据已安装模型自动启动'}
-        </button>
       </div>
 
       <div className="services-list">
@@ -215,21 +226,15 @@ export function ServiceManagement() {
             {rustStatus?.running && (
               <div className="service-details">
                 <div className="detail-row">
-                  <span className="detail-label">进程ID:</span>
-                  <span className="detail-value">{rustStatus.pid}</span>
+                  <span className="detail-label">任务次数:</span>
+                  <span className="detail-value">{rustStatus.taskCount || 0}</span>
                 </div>
                 <div className="detail-row">
-                  <span className="detail-label">端口:</span>
-                  <span className="detail-value">{rustStatus.port}</span>
+                  <span className="detail-label">GPU使用时长:</span>
+                  <span className="detail-value">
+                    {formatGpuUsageMs(rustStatus.gpuUsageMs || 0)}
+                  </span>
                 </div>
-                {rustStatus.startedAt && (
-                  <div className="detail-row">
-                    <span className="detail-label">启动时间:</span>
-                    <span className="detail-value">
-                      {new Date(rustStatus.startedAt).toLocaleTimeString('zh-CN')}
-                    </span>
-                  </div>
-                )}
               </div>
             )}
             {rustStatus?.lastError && (
@@ -240,23 +245,15 @@ export function ServiceManagement() {
             )}
           </div>
           <div className="service-actions">
-            {rustStatus?.running ? (
-              <button
-                onClick={handleStopRust}
-                disabled={loading.rust}
-                className="stop-button"
-              >
-                {loading.rust ? '停止中...' : '停止'}
-              </button>
-            ) : (
-              <button
-                onClick={handleStartRust}
+            <label className="service-switch">
+              <input
+                type="checkbox"
+                checked={rustStatus?.running || false}
+                onChange={(e) => handleToggleRust(e.target.checked)}
                 disabled={loading.rust || rustStatus?.starting}
-                className="start-button"
-              >
-                {loading.rust || rustStatus?.starting ? '启动中...' : '启动'}
-              </button>
-            )}
+              />
+              <span className="service-switch-slider"></span>
+            </label>
           </div>
         </div>
 
@@ -284,21 +281,15 @@ export function ServiceManagement() {
                 {isRunning && status && (
                   <div className="service-details">
                     <div className="detail-row">
-                      <span className="detail-label">进程ID:</span>
-                      <span className="detail-value">{status.pid}</span>
+                      <span className="detail-label">任务次数:</span>
+                      <span className="detail-value">{status.taskCount || 0}</span>
                     </div>
                     <div className="detail-row">
-                      <span className="detail-label">端口:</span>
-                      <span className="detail-value">{status.port}</span>
+                      <span className="detail-label">GPU使用时长:</span>
+                      <span className="detail-value">
+                        {formatGpuUsageMs(status.gpuUsageMs || 0)}
+                      </span>
                     </div>
-                    {status.startedAt && (
-                      <div className="detail-row">
-                        <span className="detail-label">启动时间:</span>
-                        <span className="detail-value">
-                          {new Date(status.startedAt).toLocaleTimeString('zh-CN')}
-                        </span>
-                      </div>
-                    )}
                   </div>
                 )}
                 {status?.lastError && (
@@ -309,23 +300,15 @@ export function ServiceManagement() {
                 )}
               </div>
               <div className="service-actions">
-                {isRunning ? (
-                  <button
-                    onClick={() => handleStopPython(serviceName as 'nmt' | 'tts' | 'yourtts')}
-                    disabled={isLoading}
-                    className="stop-button"
-                  >
-                    {isLoading ? '停止中...' : '停止'}
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => handleStartPython(serviceName as 'nmt' | 'tts' | 'yourtts')}
+                <label className="service-switch">
+                  <input
+                    type="checkbox"
+                    checked={isRunning}
+                    onChange={(e) => handleTogglePython(serviceName as 'nmt' | 'tts' | 'yourtts', e.target.checked)}
                     disabled={isLoading || isStarting}
-                    className="start-button"
-                  >
-                    {isLoading || isStarting ? '启动中...' : '启动'}
-                  </button>
-                )}
+                  />
+                  <span className="service-switch-slider"></span>
+                </label>
               </div>
             </div>
           );

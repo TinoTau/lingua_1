@@ -55,6 +55,9 @@ function createWindow() {
     mainWindow = new electron_1.BrowserWindow({
         width: 1200,
         height: 800,
+        minWidth: 800,
+        minHeight: 600,
+        resizable: true, // 允许窗口自由缩放
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: false,
@@ -105,6 +108,15 @@ electron_1.app.whenReady().then(async () => {
         // 初始化其他服务
         modelManager = new model_manager_1.ModelManager();
         inferenceService = new inference_service_1.InferenceService(modelManager);
+        // 设置任务记录回调
+        inferenceService.setOnTaskProcessedCallback((serviceName) => {
+            if (serviceName === 'rust' && rustServiceManager) {
+                rustServiceManager.incrementTaskCount();
+            }
+            else if (pythonServiceManager && (serviceName === 'nmt' || serviceName === 'tts' || serviceName === 'yourtts')) {
+                pythonServiceManager.incrementTaskCount(serviceName);
+            }
+        });
         nodeAgent = new node_agent_1.NodeAgent(inferenceService, modelManager);
         // 根据用户上一次选择的功能自动启动对应服务
         const config = (0, node_config_1.loadNodeConfig)();
@@ -145,34 +157,85 @@ electron_1.app.whenReady().then(async () => {
 });
 // 统一的清理函数
 async function cleanupServices() {
-    logger_1.default.info({}, '正在关闭所有服务...');
+    logger_1.default.info({}, '========================================');
+    logger_1.default.info({}, '开始清理所有服务...');
+    logger_1.default.info({}, '========================================');
+    // 记录当前运行的服务状态
+    const rustStatus = rustServiceManager?.getStatus();
+    const pythonStatuses = pythonServiceManager?.getAllServiceStatuses() || [];
+    const runningPythonServices = pythonStatuses.filter(s => s.running);
+    logger_1.default.info({
+        rustRunning: rustStatus?.running,
+        rustPort: rustStatus?.port,
+        rustPid: rustStatus?.pid,
+        pythonServices: runningPythonServices.map(s => ({
+            name: s.name,
+            port: s.port,
+            pid: s.pid,
+        })),
+    }, `当前运行的服务状态 - Rust: ${rustStatus?.running ? `端口 ${rustStatus.port}, PID ${rustStatus.pid}` : '未运行'}, Python: ${runningPythonServices.length} 个服务运行中`);
+    // 在清理服务前，保存当前服务状态到配置文件
+    // 这样即使窗口意外关闭，下次启动时也能恢复服务状态
+    try {
+        const rustEnabled = !!rustStatus?.running;
+        const nmtEnabled = !!pythonStatuses.find(s => s.name === 'nmt')?.running;
+        const ttsEnabled = !!pythonStatuses.find(s => s.name === 'tts')?.running;
+        const yourttsEnabled = !!pythonStatuses.find(s => s.name === 'yourtts')?.running;
+        const config = (0, node_config_1.loadNodeConfig)();
+        config.servicePreferences = {
+            rustEnabled,
+            nmtEnabled,
+            ttsEnabled,
+            yourttsEnabled,
+        };
+        (0, node_config_1.saveNodeConfig)(config);
+        logger_1.default.info({ servicePreferences: config.servicePreferences }, '已保存当前服务状态到配置文件');
+    }
+    catch (error) {
+        logger_1.default.error({ error }, '保存服务状态到配置文件失败');
+    }
     // 停止 Node Agent
     if (nodeAgent) {
         try {
+            logger_1.default.info({}, '正在停止 Node Agent...');
             nodeAgent.stop();
+            logger_1.default.info({}, '✅ Node Agent 已停止');
         }
         catch (error) {
-            logger_1.default.error({ error }, '停止 Node Agent 失败');
+            logger_1.default.error({ error }, '❌ 停止 Node Agent 失败');
         }
     }
     // 停止 Rust 服务
     if (rustServiceManager) {
         try {
-            await rustServiceManager.stop();
+            const status = rustServiceManager.getStatus();
+            if (status.running) {
+                logger_1.default.info({ port: status.port, pid: status.pid }, `正在停止 Rust 服务 (端口: ${status.port}, PID: ${status.pid})...`);
+                await rustServiceManager.stop();
+                logger_1.default.info({ port: status.port }, `✅ Rust 服务已停止 (端口: ${status.port})`);
+            }
+            else {
+                logger_1.default.info({}, 'Rust 服务未运行，无需停止');
+            }
         }
         catch (error) {
-            logger_1.default.error({ error }, '停止 Rust 服务失败');
+            logger_1.default.error({ error }, '❌ 停止 Rust 服务失败');
         }
     }
     // 停止所有 Python 服务
     if (pythonServiceManager) {
         try {
+            logger_1.default.info({ count: runningPythonServices.length }, `正在停止所有 Python 服务 (${runningPythonServices.length} 个)...`);
             await pythonServiceManager.stopAllServices();
+            logger_1.default.info({}, '✅ 所有 Python 服务已停止');
         }
         catch (error) {
-            logger_1.default.error({ error }, '停止 Python 服务失败');
+            logger_1.default.error({ error }, '❌ 停止 Python 服务失败');
         }
     }
+    logger_1.default.info({}, '========================================');
+    logger_1.default.info({}, '所有服务清理完成');
+    logger_1.default.info({}, '========================================');
 }
 // 正常关闭窗口时清理服务
 electron_1.app.on('window-all-closed', async () => {
@@ -218,20 +281,23 @@ process.on('unhandledRejection', async (reason, promise) => {
 electron_1.ipcMain.handle('get-system-resources', async () => {
     const si = require('systeminformation');
     try {
+        logger_1.default.debug({}, 'Starting to fetch system resources');
         const [cpu, mem, gpuInfo] = await Promise.all([
             si.currentLoad(),
             si.mem(),
             getGpuUsage(), // 自定义函数获取 GPU 使用率
         ]);
-        return {
+        const result = {
             cpu: cpu.currentLoad || 0,
-            gpu: gpuInfo?.usage || null,
-            gpuMem: gpuInfo?.memory || null,
+            gpu: gpuInfo?.usage ?? null,
+            gpuMem: gpuInfo?.memory ?? null,
             memory: (mem.used / mem.total) * 100,
         };
+        logger_1.default.info({ gpuInfo, result }, 'System resources fetched successfully');
+        return result;
     }
     catch (error) {
-        logger_1.default.error({ error }, '获取系统资源失败');
+        logger_1.default.error({ error }, 'Failed to fetch system resources');
         return {
             cpu: 0,
             gpu: null,
@@ -240,10 +306,99 @@ electron_1.ipcMain.handle('get-system-resources', async () => {
         };
     }
 });
-// 获取 GPU 使用率（使用 nvidia-ml-py）
+// 获取 GPU 使用率（多种方法尝试）
 async function getGpuUsage() {
+    logger_1.default.info({}, 'Starting to fetch GPU usage');
+    // 方法1: 尝试使用 nvidia-smi (Windows/Linux, 如果可用)
     try {
-        // 尝试使用 nvidia-ml-py（需要 Python 环境）
+        logger_1.default.info({}, 'Attempting to fetch GPU info via nvidia-smi');
+        const result = await getGpuUsageViaNvidiaSmi();
+        if (result) {
+            logger_1.default.info({ result }, 'Successfully fetched GPU info via nvidia-smi');
+            return result;
+        }
+        logger_1.default.warn({}, 'nvidia-smi method returned no result');
+    }
+    catch (error) {
+        logger_1.default.warn({ error }, 'nvidia-smi method failed, trying alternative');
+    }
+    // 方法2: 尝试使用 Python + pynvml
+    try {
+        logger_1.default.debug({}, 'Attempting to fetch GPU info via Python pynvml');
+        const result = await getGpuUsageViaPython();
+        if (result) {
+            logger_1.default.info({ result }, 'Successfully fetched GPU info via Python pynvml');
+            return result;
+        }
+        logger_1.default.debug({}, 'Python pynvml method returned no result');
+    }
+    catch (error) {
+        logger_1.default.warn({ error }, 'Python pynvml method failed');
+    }
+    logger_1.default.warn({}, 'All GPU info fetch methods failed, GPU info will not be displayed');
+    return null;
+}
+// 方法1: 使用 nvidia-smi 命令获取 GPU 信息
+async function getGpuUsageViaNvidiaSmi() {
+    return new Promise((resolve) => {
+        const { spawn } = require('child_process');
+        // nvidia-smi 命令：获取GPU利用率和内存使用率
+        const nvidiaSmi = spawn('nvidia-smi', [
+            '--query-gpu=utilization.gpu,memory.used,memory.total',
+            '--format=csv,noheader,nounits'
+        ]);
+        let output = '';
+        let errorOutput = '';
+        nvidiaSmi.stdout.on('data', (data) => {
+            output += data.toString();
+        });
+        nvidiaSmi.stderr.on('data', (data) => {
+            errorOutput += data.toString();
+        });
+        nvidiaSmi.on('close', (code) => {
+            if (code === 0 && output.trim()) {
+                try {
+                    // 输出格式: "utilization.gpu, memory.used, memory.total"
+                    const parts = output.trim().split(',');
+                    logger_1.default.info({ code, output: output.trim(), parts }, 'nvidia-smi command executed successfully, starting to parse output');
+                    if (parts.length >= 3) {
+                        const usage = parseFloat(parts[0].trim());
+                        const memUsed = parseFloat(parts[1].trim());
+                        const memTotal = parseFloat(parts[2].trim());
+                        const memPercent = (memUsed / memTotal) * 100;
+                        logger_1.default.info({ usage, memUsed, memTotal, memPercent }, 'Parsed GPU info');
+                        if (!isNaN(usage) && !isNaN(memPercent)) {
+                            logger_1.default.info({ usage, memory: memPercent }, 'nvidia-smi successfully returned GPU usage');
+                            resolve({ usage, memory: memPercent });
+                            return;
+                        }
+                        else {
+                            logger_1.default.warn({ usage, memPercent }, 'Parsed values are invalid (NaN)');
+                        }
+                    }
+                    else {
+                        logger_1.default.warn({ partsLength: parts.length, parts }, 'nvidia-smi output format incorrect, insufficient parts');
+                    }
+                }
+                catch (parseError) {
+                    logger_1.default.warn({ parseError, output }, 'Failed to parse nvidia-smi output');
+                }
+            }
+            else {
+                logger_1.default.warn({ code, output: output.trim(), errorOutput: errorOutput.trim() }, 'nvidia-smi command execution failed or output is empty');
+            }
+            resolve(null);
+        });
+        nvidiaSmi.on('error', (error) => {
+            // nvidia-smi 命令不存在或无法执行
+            logger_1.default.warn({ error: error.message }, 'nvidia-smi command execution error (command may not exist)');
+            resolve(null);
+        });
+    });
+}
+// 方法2: 使用 Python + pynvml 获取 GPU 信息
+async function getGpuUsageViaPython() {
+    return new Promise((resolve) => {
         const { spawn } = require('child_process');
         const pythonScript = `
 import pynvml
@@ -254,32 +409,51 @@ try:
     mem_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
     print(f"{util.gpu},{mem_info.used / mem_info.total * 100}")
     pynvml.nvmlShutdown()
-except:
+except Exception as e:
     print("ERROR")
 `;
-        return new Promise((resolve) => {
-            const python = spawn('python', ['-c', pythonScript]);
+        // 尝试 python3 或 python
+        const pythonCommands = ['python3', 'python'];
+        let currentIndex = 0;
+        const tryNextPython = () => {
+            if (currentIndex >= pythonCommands.length) {
+                resolve(null);
+                return;
+            }
+            const python = spawn(pythonCommands[currentIndex], ['-c', pythonScript]);
             let output = '';
+            let errorOutput = '';
             python.stdout.on('data', (data) => {
                 output += data.toString();
             });
+            python.stderr.on('data', (data) => {
+                errorOutput += data.toString();
+            });
             python.on('close', (code) => {
                 if (code === 0 && output.trim() !== 'ERROR') {
-                    const [usage, memory] = output.trim().split(',').map(Number);
-                    resolve({ usage, memory });
+                    try {
+                        const [usage, memory] = output.trim().split(',').map(Number);
+                        if (!isNaN(usage) && !isNaN(memory)) {
+                            resolve({ usage, memory });
+                            return;
+                        }
+                    }
+                    catch (parseError) {
+                        logger_1.default.warn({ parseError, output }, 'Failed to parse Python output');
+                    }
                 }
-                else {
-                    resolve(null);
-                }
+                // 当前命令失败，尝试下一个
+                currentIndex++;
+                tryNextPython();
             });
             python.on('error', () => {
-                resolve(null);
+                // 当前命令不存在，尝试下一个
+                currentIndex++;
+                tryNextPython();
             });
-        });
-    }
-    catch {
-        return null;
-    }
+        };
+        tryNextPython();
+    });
 }
 // ===== 模型管理 IPC 接口 =====
 electron_1.ipcMain.handle('get-installed-models', async () => {
@@ -337,6 +511,8 @@ electron_1.ipcMain.handle('get-rust-service-status', async () => {
         port: null,
         startedAt: null,
         lastError: null,
+        taskCount: 0,
+        gpuUsageMs: 0,
     };
 });
 // Python 服务管理 IPC 接口
@@ -349,6 +525,8 @@ electron_1.ipcMain.handle('get-python-service-status', async (_, serviceName) =>
         port: null,
         startedAt: null,
         lastError: null,
+        taskCount: 0,
+        gpuUsageMs: 0,
     };
 });
 electron_1.ipcMain.handle('get-all-python-service-statuses', async () => {

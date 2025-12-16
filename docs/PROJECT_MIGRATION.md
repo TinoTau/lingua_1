@@ -21,8 +21,11 @@ lingua_1/
 │
 ├── electron_node/             # Electron 节点客户端
 │   ├── electron-node/        # Electron 应用
-│   ├── node-inference/       # 节点推理服务（Rust）
-│   ├── services/             # Python 服务（NMT、TTS、YourTTS）
+│   ├── services/             # 所有节点端服务（统一目录）
+│   │   ├── node-inference/  # 节点推理服务（Rust）
+│   │   ├── nmt_m2m100/      # NMT 服务（Python）
+│   │   ├── piper_tts/       # TTS 服务（Python）
+│   │   └── your_tts/        # YourTTS 服务（Python）
 │   └── docs/                 # 节点客户端文档
 │
 ├── scripts/                   # 启动脚本
@@ -92,8 +95,11 @@ lingua_1/
 - ✅ 调度服务器: `central_server/scheduler/logs/`
 - ✅ API 网关: `central_server/api-gateway/logs/`
 - ✅ 模型库服务: `central_server/model-hub/logs/`
+- ✅ Electron 主进程: `electron_node/electron-node/logs/`
 - ✅ 节点推理服务: `electron_node/services/node-inference/logs/`
-- ✅ Python 服务: `electron_node/services/*/logs/`
+- ✅ Python NMT 服务: `electron_node/services/nmt_m2m100/logs/`
+- ✅ Python TTS 服务: `electron_node/services/piper_tts/logs/`
+- ✅ Python YourTTS 服务: `electron_node/services/your_tts/logs/`
 
 ### 配置文件路径调整
 

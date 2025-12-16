@@ -19,13 +19,16 @@
     "baseUrl": ".",
     "paths": {
       "*": [
-        "node_modules/*",
+        "node_modules/*"
+      ],
+      "@shared/*": [
         "../shared/*"
       ]
     }
   },
   "include": [
-    "main/src/**/*"
+    "main/src/**/*",
+    "../shared/**/*"
   ],
   "exclude": [
     "node_modules",

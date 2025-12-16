@@ -51,18 +51,35 @@ cargo run --release
 **技术栈**: Python + FastAPI
 
 **功能**:
-- 管理模型元数据
-- 提供模型列表查询 API
-- 提供模型下载 URL
+- ✅ 模型元数据管理（列表查询、详情查询、版本管理）
+- ✅ 模型文件下载（支持断点续传）
+- ✅ 模型统计（热门模型排行）
+- ✅ 路径安全（防止路径遍历攻击）
+- ✅ 文件校验（SHA256 校验和）
+
+**API 端点**:
+- `GET /api/models` - 获取模型列表
+- `GET /api/models/{model_id}` - 获取单个模型信息
+- `GET /storage/models/{model_id}/{version}/{file_path}` - 下载模型文件（支持 Range 请求）
+- `GET /api/model-usage/ranking` - 获取热门模型排行榜
 
 **启动**:
 ```bash
-cd model-hub
+# 使用启动脚本（推荐）
+.\scripts\start_model_hub.ps1
+
+# 手动启动
+cd central_server/model-hub
 python -m venv venv
 .\venv\Scripts\activate
 pip install -r requirements.txt
-python main.py
+python src/main.py
 ```
+
+**服务地址**: `http://localhost:5000`  
+**API 文档**: `http://localhost:5000/docs`
+
+详细文档请参考 `model-hub/README.md`。
 
 ## 测试
 

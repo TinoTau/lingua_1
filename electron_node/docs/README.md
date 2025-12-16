@@ -30,12 +30,18 @@
   - `MODULAR_FEATURES.md` - 模块化功能设计
   - `LINGUA_完整技术说明书_v2.md` - 完整技术说明书
 
+## 核心文档
+
+- **路径结构**: `PATH_STRUCTURE.md` - 详细的路径结构说明
+- **迁移文档**: `MIGRATION.md` - 从 expired/ 迁移到 electron_node/ 的详细说明
+
 ## 快速参考
 
 - **Electron 应用**: Electron + Node.js + TypeScript + React
-- **推理服务**: Rust + ONNX Runtime
-- **Python 服务**: Python (NMT、TTS、YourTTS)
+- **推理服务**: Rust + ONNX Runtime（位于 `services/node-inference/`）
+- **Python 服务**: Python (NMT、TTS、YourTTS)（位于 `services/`）
 - **项目位置**: `electron_node/`
+- **统一服务目录**: `electron_node/services/`
 
 ## 项目状态
 
@@ -43,6 +49,7 @@
 - **测试状态**: `../TEST_STATUS.md`
 - **测试执行报告**: `../TEST_EXECUTION_REPORT.md`
 - **迁移文档**: `MIGRATION.md`
+- **路径结构**: `PATH_STRUCTURE.md`
 
 ## 快速开始
 

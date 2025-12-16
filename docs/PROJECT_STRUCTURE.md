@@ -41,12 +41,22 @@ lingua_1/
 │
 ├── electron_node/             # Electron 节点客户端
 │   ├── electron-node/        # Electron 应用
-│   ├── services/             # Python 和 Rust 服务
+│   │   ├── main/src/        # 主进程源代码（TypeScript）
+│   │   ├── renderer/        # 渲染进程代码（React）
+│   │   ├── tests/           # 测试文件
+│   │   └── logs/            # Electron 主进程日志
+│   ├── services/             # 所有节点端服务（统一目录）
 │   │   ├── node-inference/  # 节点推理服务（Rust）
+│   │   │   ├── src/         # 源代码
+│   │   │   ├── tests/       # 测试文件
+│   │   │   ├── models/      # 模型文件
+│   │   │   └── logs/        # 日志文件
 │   │   ├── nmt_m2m100/      # NMT 服务（Python）
 │   │   ├── piper_tts/       # TTS 服务（Python）
 │   │   └── your_tts/        # YourTTS 服务（Python）
 │   ├── docs/                 # 节点客户端文档
+│   │   ├── PATH_STRUCTURE.md    # 路径结构文档
+│   │   └── MIGRATION.md         # 迁移文档
 │   ├── PROJECT_COMPLETENESS.md  # 项目完整性报告
 │   ├── TEST_STATUS.md           # 测试状态
 │   └── TEST_EXECUTION_REPORT.md # 测试执行报告

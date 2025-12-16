@@ -9,6 +9,7 @@ pub mod node;
 
 // 重新导出所有公共类型
 // 注意：GpuInfo, ResourceUsage, JobError 在测试中被使用，所以保留导出
+#[allow(unused_imports)]  // These are used in tests
 pub use common::{
     FeatureFlags, PipelineConfig, InstalledModel, ModelStatus, CapabilityState,
     HardwareInfo, NodeStatus, GpuInfo, ResourceUsage,
@@ -16,5 +17,6 @@ pub use common::{
 pub use error::{ErrorCode, get_error_hint};
 pub use ui_event::{UiEventType, UiEventStatus};
 pub use session::SessionMessage;
+#[allow(unused_imports)]  // Used in tests
 pub use node::{NodeMessage, JobError};
 

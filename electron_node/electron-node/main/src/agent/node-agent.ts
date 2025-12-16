@@ -12,7 +12,7 @@ import type {
   InstalledModel,
   FeatureFlags,
   ModelStatus
-} from '../../../../shared/protocols/messages';
+} from '@shared/protocols/messages';
 import { ModelNotAvailableError } from '../model-manager/model-manager';
 import logger from '../logger';
 

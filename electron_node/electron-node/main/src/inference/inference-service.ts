@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import WebSocket from 'ws';
 import { ModelManager } from '../model-manager/model-manager';
 // 临时类型定义，实际应该从 shared/protocols/messages 导入
-import type { JobAssignMessage, InstalledModel, FeatureFlags } from '../../../../shared/protocols/messages';
+import type { JobAssignMessage, InstalledModel, FeatureFlags } from '@shared/protocols/messages';
 import logger from '../logger';
 
 export interface JobResult {
@@ -28,6 +28,7 @@ export class InferenceService {
   private httpClient: AxiosInstance;
   private inferenceServiceUrl: string;
   private wsClient: WebSocket | null = null;
+  private onTaskProcessedCallback: ((serviceName: string) => void) | null = null;
 
   constructor(modelManager: ModelManager) {
     this.modelManager = modelManager;
@@ -36,6 +37,10 @@ export class InferenceService {
       baseURL: this.inferenceServiceUrl,
       timeout: 300000, // 5 分钟超时（推理可能需要较长时间）
     });
+  }
+
+  setOnTaskProcessedCallback(callback: (serviceName: string) => void): void {
+    this.onTaskProcessedCallback = callback;
   }
 
   async processJob(job: JobAssignMessage, partialCallback?: PartialResultCallback): Promise<JobResult> {
@@ -80,6 +85,11 @@ export class InferenceService {
 
       if (!response.data.success) {
         throw new Error(response.data.error?.message || '推理失败');
+      }
+
+      // 记录任务调用（Rust服务处理所有推理任务）
+      if (this.onTaskProcessedCallback) {
+        this.onTaskProcessedCallback('rust');
       }
 
       return {
@@ -155,6 +165,10 @@ export class InferenceService {
               tts_format: message.audio_format || job.audio_format || 'pcm16',
               extra: message.extra,
             };
+            // 记录任务调用（Rust服务处理所有推理任务）
+            if (this.onTaskProcessedCallback) {
+              this.onTaskProcessedCallback('rust');
+            }
             ws.close();
             resolve(finalResult);
           } else if (message.type === 'error') {

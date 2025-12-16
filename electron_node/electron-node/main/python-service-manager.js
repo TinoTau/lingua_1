@@ -46,9 +46,53 @@ class PythonServiceManager {
     constructor() {
         this.services = new Map();
         this.statuses = new Map();
+        this.projectRoot = '';
         this.isDev = process.env.NODE_ENV === 'development' || !electron_1.app.isPackaged;
         if (this.isDev) {
-            this.projectRoot = path.resolve(__dirname, '../../../..');
+            // 开发环境：项目根目录（例如 d:\Programs\github\lingua_1）
+            // 在 Electron 中：
+            // - process.cwd() 可能是 electron-node 目录或项目根目录
+            // - __dirname 是编译后的 JS 文件位置（electron-node/main）
+            // - 项目根目录需要包含 electron_node/services 目录
+            // 从多个可能的路径查找项目根目录
+            const cwd = process.cwd();
+            const candidates = [];
+            // 1. 从 cwd 向上查找（最多向上3级）
+            let currentPath = cwd;
+            for (let i = 0; i <= 3; i++) {
+                candidates.push(currentPath);
+                currentPath = path.resolve(currentPath, '..');
+            }
+            // 2. 从 __dirname 向上查找（最多向上3级）
+            currentPath = __dirname;
+            for (let i = 0; i <= 3; i++) {
+                candidates.push(currentPath);
+                currentPath = path.resolve(currentPath, '..');
+            }
+            // 去重并检查哪个路径包含 electron_node/services 目录
+            const uniqueCandidates = Array.from(new Set(candidates));
+            for (const candidate of uniqueCandidates) {
+                const servicesPath = path.join(candidate, 'electron_node', 'services');
+                if (fs.existsSync(servicesPath)) {
+                    this.projectRoot = candidate;
+                    logger_1.default.info({
+                        __dirname,
+                        cwd: process.cwd(),
+                        projectRoot: this.projectRoot,
+                    }, 'Python 服务管理器：找到项目根目录');
+                    break;
+                }
+            }
+            // 如果都没找到，抛出错误
+            if (!this.projectRoot) {
+                const error = `无法找到项目根目录。已检查的路径：${uniqueCandidates.join(', ')}`;
+                logger_1.default.error({
+                    __dirname,
+                    cwd: process.cwd(),
+                    candidates: uniqueCandidates,
+                }, error);
+                throw new Error(error);
+            }
         }
         else {
             this.projectRoot = path.dirname(process.execPath);
@@ -87,8 +131,9 @@ class PythonServiceManager {
         };
         switch (serviceName) {
             case 'nmt': {
-                const servicePath = path.join(this.projectRoot, 'services', 'nmt_m2m100');
+                const servicePath = path.join(this.projectRoot, 'electron_node', 'services', 'nmt_m2m100');
                 const venvPath = path.join(servicePath, 'venv');
+                const venvScripts = path.join(venvPath, 'Scripts');
                 const logDir = path.join(servicePath, 'logs');
                 const logFile = path.join(logDir, 'nmt-service.log');
                 // 确保日志目录存在
@@ -106,6 +151,9 @@ class PythonServiceManager {
                         logger_1.default.warn({ error }, '读取 HF token 失败');
                     }
                 }
+                // 配置虚拟环境环境变量
+                const currentPath = baseEnv.PATH || '';
+                const venvPathEnv = `${venvScripts};${currentPath}`;
                 return {
                     name: 'NMT',
                     port: 5008,
@@ -117,21 +165,27 @@ class PythonServiceManager {
                     logFile,
                     env: {
                         ...baseEnv,
+                        VIRTUAL_ENV: venvPath,
+                        PATH: venvPathEnv,
                         HF_TOKEN: hfToken,
                         HF_LOCAL_FILES_ONLY: 'true',
                     },
                 };
             }
             case 'tts': {
-                const servicePath = path.join(this.projectRoot, 'services', 'piper_tts');
+                const servicePath = path.join(this.projectRoot, 'electron_node', 'services', 'piper_tts');
                 const venvPath = path.join(servicePath, 'venv');
+                const venvScripts = path.join(venvPath, 'Scripts');
                 const logDir = path.join(servicePath, 'logs');
                 const logFile = path.join(logDir, 'tts-service.log');
                 if (!fs.existsSync(logDir)) {
                     fs.mkdirSync(logDir, { recursive: true });
                 }
                 const modelDir = process.env.PIPER_MODEL_DIR
-                    || path.join(this.projectRoot, 'node-inference', 'models', 'tts');
+                    || path.join(this.projectRoot, 'electron_node', 'services', 'node-inference', 'models', 'tts');
+                // 配置虚拟环境环境变量
+                const currentPath = baseEnv.PATH || '';
+                const venvPathEnv = `${venvScripts};${currentPath}`;
                 return {
                     name: 'TTS (Piper)',
                     port: 5006,
@@ -143,6 +197,8 @@ class PythonServiceManager {
                     logFile,
                     env: {
                         ...baseEnv,
+                        VIRTUAL_ENV: venvPath,
+                        PATH: venvPathEnv,
                         // CUDA_PATH 来自 setupCudaEnvironment，这里通过 any 访问避免类型冲突
                         PIPER_USE_GPU: baseEnv.CUDA_PATH ? 'true' : 'false',
                         PIPER_MODEL_DIR: modelDir,
@@ -150,15 +206,19 @@ class PythonServiceManager {
                 };
             }
             case 'yourtts': {
-                const servicePath = path.join(this.projectRoot, 'services', 'your_tts');
+                const servicePath = path.join(this.projectRoot, 'electron_node', 'services', 'your_tts');
                 const venvPath = path.join(servicePath, 'venv');
+                const venvScripts = path.join(venvPath, 'Scripts');
                 const logDir = path.join(servicePath, 'logs');
                 const logFile = path.join(logDir, 'yourtts-service.log');
                 if (!fs.existsSync(logDir)) {
                     fs.mkdirSync(logDir, { recursive: true });
                 }
                 const modelDir = process.env.YOURTTS_MODEL_DIR
-                    || path.join(this.projectRoot, 'node-inference', 'models', 'tts', 'your_tts');
+                    || path.join(this.projectRoot, 'electron_node', 'services', 'node-inference', 'models', 'tts', 'your_tts');
+                // 配置虚拟环境环境变量
+                const currentPath = baseEnv.PATH || '';
+                const venvPathEnv = `${venvScripts};${currentPath}`;
                 return {
                     name: 'YourTTS',
                     port: 5004,
@@ -170,6 +230,8 @@ class PythonServiceManager {
                     logFile,
                     env: {
                         ...baseEnv,
+                        VIRTUAL_ENV: venvPath,
+                        PATH: venvPathEnv,
                         YOURTTS_MODEL_DIR: modelDir,
                         // CUDA_PATH 来自 setupCudaEnvironment，这里通过 any 访问避免类型冲突
                         YOURTTS_USE_GPU: baseEnv.CUDA_PATH ? 'true' : 'false',
@@ -189,6 +251,15 @@ class PythonServiceManager {
         if (!config) {
             throw new Error(`未知服务: ${serviceName}`);
         }
+        // 设置启动中状态
+        this.updateStatus(serviceName, {
+            running: false,
+            starting: true,
+            pid: null,
+            port: config.port,
+            startedAt: null,
+            lastError: null,
+        });
         // 检查虚拟环境
         const pythonExe = path.join(config.venvPath, 'Scripts', 'python.exe');
         if (!fs.existsSync(pythonExe)) {
@@ -196,6 +267,7 @@ class PythonServiceManager {
             logger_1.default.error({ serviceName, venvPath: config.venvPath }, error);
             this.updateStatus(serviceName, {
                 running: false,
+                starting: false,
                 pid: null,
                 port: config.port,
                 startedAt: null,
@@ -209,6 +281,7 @@ class PythonServiceManager {
             logger_1.default.error({ serviceName, scriptPath: config.scriptPath }, error);
             this.updateStatus(serviceName, {
                 running: false,
+                starting: false,
                 pid: null,
                 port: config.port,
                 startedAt: null,
@@ -238,6 +311,7 @@ class PythonServiceManager {
                     config.scriptPath,
                     '--host', '127.0.0.1',
                     '--port', config.port.toString(),
+                    '--model-dir', config.env.YOURTTS_MODEL_DIR || '',
                 ];
             }
             // 启动进程
@@ -247,24 +321,84 @@ class PythonServiceManager {
                 stdio: ['ignore', 'pipe', 'pipe'], // 重定向输出到日志文件
                 detached: false,
             });
-            // 创建日志文件流
-            const logStream = fs.createWriteStream(config.logFile, { flags: 'a' });
-            // 处理输出
+            // 创建日志文件流（使用 UTF-8 编码）
+            const logStream = fs.createWriteStream(config.logFile, { 
+                flags: 'a',
+                encoding: 'utf8'
+            });
+            // 处理输出 - 按行分割并添加时间戳
+            let stdoutBuffer = '';
+            let stderrBuffer = '';
+            // 辅助函数：智能识别日志级别
+            const detectLogLevel = (line, isStderr) => {
+                const upperLine = line.toUpperCase();
+                // 检查是否包含明确的错误标记
+                if (upperLine.includes('[ERROR]') ||
+                    upperLine.includes('ERROR:') ||
+                    upperLine.includes('EXCEPTION:') ||
+                    upperLine.includes('TRACEBACK') ||
+                    (upperLine.includes('FAILED') && !upperLine.includes('WARNING'))) {
+                    return '[ERROR]';
+                }
+                // 检查是否包含警告标记
+                if (upperLine.includes('[WARN]') ||
+                    upperLine.includes('WARNING:') ||
+                    upperLine.includes('FUTUREWARNING') ||
+                    upperLine.includes('DEPRECATIONWARNING') ||
+                    upperLine.includes('USERWARNING')) {
+                    return '[WARN]';
+                }
+                // 检查是否包含信息标记
+                if (upperLine.includes('[INFO]') ||
+                    upperLine.includes('INFO:')) {
+                    return '[INFO]';
+                }
+                // 检查 Flask/服务器相关的正常信息
+                if (upperLine.includes('RUNNING ON') ||
+                    upperLine.includes('SERVING FLASK APP') ||
+                    upperLine.includes('DEBUG MODE:') ||
+                    upperLine.includes('PRESS CTRL+C') ||
+                    upperLine.includes('PRESS CTRL+C TO QUIT') ||
+                    upperLine.includes('THIS IS A DEVELOPMENT SERVER')) {
+                    return '[INFO]';
+                }
+                // 默认：stderr 作为警告，stdout 作为信息
+                return isStderr ? '[WARN]' : '[INFO]';
+            };
+            // 辅助函数：将缓冲区内容按行写入日志
+            const flushLogBuffer = (buffer, isStderr) => {
+                const lines = buffer.split(/\r?\n/);
+                // 保留最后一行（可能不完整）在缓冲区
+                const completeLines = lines.slice(0, -1);
+                const remainingLine = lines[lines.length - 1];
+                for (const line of completeLines) {
+                    if (line.trim()) { // 只记录非空行
+                        const timestamp = new Date().toISOString();
+                        const level = detectLogLevel(line, isStderr);
+                        const logLine = `${timestamp} ${level} ${line}\n`;
+                        logStream.write(logLine, 'utf8');
+                    }
+                }
+                return remainingLine;
+            };
             process.stdout?.on('data', (data) => {
-                const timestamp = new Date().toISOString();
-                const line = `${timestamp} ${data.toString()}`;
-                logStream.write(line);
+                // 确保输出使用 UTF-8 编码，移除可能导致乱码的字符（保留 \n 和 \r）
+                const text = data.toString('utf8').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]/g, '');
+                stdoutBuffer += text;
+                stdoutBuffer = flushLogBuffer(stdoutBuffer, false);
             });
             process.stderr?.on('data', (data) => {
-                const timestamp = new Date().toISOString();
-                const line = `${timestamp} ${data.toString()}`;
-                logStream.write(line);
+                // 确保输出使用 UTF-8 编码，移除可能导致乱码的字符（保留 \n 和 \r）
+                const text = data.toString('utf8').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]/g, '');
+                stderrBuffer += text;
+                stderrBuffer = flushLogBuffer(stderrBuffer, true);
             });
             process.on('error', (error) => {
                 logger_1.default.error({ error, serviceName }, 'Python 服务进程启动失败');
                 logStream.end();
                 this.updateStatus(serviceName, {
                     running: false,
+                    starting: false,
                     pid: null,
                     port: config.port,
                     startedAt: null,
@@ -273,10 +407,24 @@ class PythonServiceManager {
                 this.services.delete(serviceName);
             });
             process.on('exit', (code, signal) => {
+                // 刷新剩余的缓冲区内容
+                if (stdoutBuffer.trim()) {
+                    const timestamp = new Date().toISOString();
+                    const level = detectLogLevel(stdoutBuffer, false);
+                    const logLine = `${timestamp} ${level} ${stdoutBuffer}\n`;
+                    logStream.write(logLine, 'utf8');
+                }
+                if (stderrBuffer.trim()) {
+                    const timestamp = new Date().toISOString();
+                    const level = detectLogLevel(stderrBuffer, true);
+                    const logLine = `${timestamp} ${level} ${stderrBuffer}\n`;
+                    logStream.write(logLine, 'utf8');
+                }
                 logger_1.default.info({ code, signal, serviceName }, 'Python 服务进程已退出');
                 logStream.end();
                 this.updateStatus(serviceName, {
                     running: false,
+                    starting: false,
                     pid: null,
                     port: config.port,
                     startedAt: null,
@@ -289,6 +437,7 @@ class PythonServiceManager {
             await this.waitForServiceReady(config.port, 30000);
             this.updateStatus(serviceName, {
                 running: true,
+                starting: false,
                 pid: process.pid || null,
                 port: config.port,
                 startedAt: new Date(),
@@ -300,6 +449,7 @@ class PythonServiceManager {
             logger_1.default.error({ error, serviceName }, '启动 Python 服务失败');
             this.updateStatus(serviceName, {
                 running: false,
+                starting: false,
                 pid: null,
                 port: config.port,
                 startedAt: null,
@@ -320,6 +470,7 @@ class PythonServiceManager {
                 logger_1.default.info({ serviceName, pid }, 'Python 服务已停止');
                 this.updateStatus(serviceName, {
                     running: false,
+                    starting: false,
                     pid: null,
                     port: this.statuses.get(serviceName)?.port || null,
                     startedAt: null,
@@ -366,8 +517,16 @@ class PythonServiceManager {
         return Array.from(this.statuses.values());
     }
     updateStatus(serviceName, status) {
+        const current = this.statuses.get(serviceName);
         this.statuses.set(serviceName, {
             name: serviceName,
+            running: false,
+            starting: false,
+            pid: null,
+            port: null,
+            startedAt: null,
+            lastError: null,
+            ...current,
             ...status,
         });
     }

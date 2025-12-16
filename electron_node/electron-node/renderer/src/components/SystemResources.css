@@ -41,3 +41,30 @@
   font-size: 14px;
 }
 
+.model-management-button-container {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.model-management-button {
+  width: 100%;
+  padding: 12px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.model-management-button:hover {
+  background-color: #0056b3;
+}
+
+.model-management-button:active {
+  background-color: #004085;
+}
+

@@ -45,26 +45,41 @@ Electron Node 客户端组件已从 `expired/` 文件夹迁移到 `electron_node
 
 ## 路径调整
 
-### 启动脚本更新
+### 统一的服务目录结构
 
-所有启动脚本已更新为新的路径结构：
+所有节点端服务现在都位于 `electron_node/services/` 目录下：
 
-- **Electron 应用**: 通过 Electron 主进程启动
-- **节点推理服务**: 通过 Electron 主进程的 Rust 服务管理器启动
-- **Python 服务**: 通过 Electron 主进程的 Python 服务管理器启动
+- **Rust 推理服务**: `electron_node/services/node-inference/`
+- **Python NMT 服务**: `electron_node/services/nmt_m2m100/`
+- **Python TTS 服务**: `electron_node/services/piper_tts/`
+- **Python YourTTS 服务**: `electron_node/services/your_tts/`
 
-### 日志路径调整
+### 服务管理器路径解析
 
-所有服务的日志路径都调整为相对路径（相对于项目根目录或安装目录）：
+服务管理器已更新为仅支持新的目录结构：
 
-- **Electron 主进程**: `electron_node/electron-node/logs/`（相对路径）
-- **节点推理服务**: `electron_node/services/node-inference/logs/`（相对路径）
-- **Python 服务**: `electron_node/services/*/logs/`（相对路径）
+- **Rust 服务管理器**: 查找 `electron_node/services/node-inference/` 目录
+- **Python 服务管理器**: 查找 `electron_node/services/` 目录
 
-### 模型路径调整
+所有向后兼容代码已移除，确保代码简洁且路径一致。
+
+### 日志路径
+
+所有服务的日志路径都使用相对路径（相对于项目根目录）：
+
+- **Electron 主进程**: `electron_node/electron-node/logs/electron-main_*.log`
+- **Rust 推理服务**: `electron_node/services/node-inference/logs/node-inference.log`
+- **Python NMT 服务**: `electron_node/services/nmt_m2m100/logs/nmt-service_*.log`
+- **Python TTS 服务**: `electron_node/services/piper_tts/logs/tts-service_*.log`
+- **Python YourTTS 服务**: `electron_node/services/your_tts/logs/yourtts-service_*.log`
+
+### 模型路径
 
 - **模型文件**: `electron_node/services/node-inference/models/`（相对路径）
-- **用户数据**: 使用 Electron 的 `app.getPath('userData')` 或项目根目录
+- **TTS 模型**: `electron_node/services/node-inference/models/tts/`
+- **YourTTS 模型**: `electron_node/services/node-inference/models/tts/your_tts/`
+
+详细路径结构请参考：`PATH_STRUCTURE.md`
 
 ## 迁移验证
 

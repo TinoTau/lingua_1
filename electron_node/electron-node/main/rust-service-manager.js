@@ -47,18 +47,65 @@ class RustServiceManager {
         this.process = null;
         this.status = {
             running: false,
+            starting: false,
             pid: null,
             port: null,
             startedAt: null,
             lastError: null,
         };
+        this.servicePath = '';
+        this.logDir = '';
+        this.port = 5009;
+        this.projectRoot = '';
         // 判断开发/生产环境
         const isDev = process.env.NODE_ENV === 'development' || !electron_1.app.isPackaged;
         if (isDev) {
             // 开发环境：项目根目录（例如 d:\Programs\github\lingua_1）
-            this.projectRoot = path.resolve(__dirname, '../../../..');
-            // Rust 可执行文件路径：node-inference/target/release/inference-service.exe
-            this.servicePath = path.join(this.projectRoot, 'node-inference', 'target', 'release', 'inference-service.exe');
+            // 在 Electron 中：
+            // - process.cwd() 可能是 electron-node 目录或项目根目录
+            // - __dirname 是编译后的 JS 文件位置（electron-node/main）
+            // - 项目根目录需要包含 electron_node/services/node-inference 目录
+            // 从多个可能的路径查找项目根目录
+            const cwd = process.cwd();
+            const candidates = [];
+            // 1. 从 cwd 向上查找（最多向上3级）
+            let currentPath = cwd;
+            for (let i = 0; i <= 3; i++) {
+                candidates.push(currentPath);
+                currentPath = path.resolve(currentPath, '..');
+            }
+            // 2. 从 __dirname 向上查找（最多向上3级）
+            currentPath = __dirname;
+            for (let i = 0; i <= 3; i++) {
+                candidates.push(currentPath);
+                currentPath = path.resolve(currentPath, '..');
+            }
+            // 去重并检查哪个路径包含 electron_node/services/node-inference 目录
+            const uniqueCandidates = Array.from(new Set(candidates));
+            for (const candidate of uniqueCandidates) {
+                const nodeInferencePath = path.join(candidate, 'electron_node', 'services', 'node-inference');
+                if (fs.existsSync(nodeInferencePath)) {
+                    this.projectRoot = candidate;
+                    this.servicePath = path.join(this.projectRoot, 'electron_node', 'services', 'node-inference', 'target', 'release', 'inference-service.exe');
+                    logger_1.default.info({
+                        __dirname,
+                        cwd: process.cwd(),
+                        projectRoot: this.projectRoot,
+                        servicePath: this.servicePath,
+                    }, 'Rust 服务管理器：找到项目根目录');
+                    break;
+                }
+            }
+            // 如果都没找到，抛出错误
+            if (!this.projectRoot) {
+                const error = `无法找到项目根目录。已检查的路径：${uniqueCandidates.join(', ')}`;
+                logger_1.default.error({
+                    __dirname,
+                    cwd: process.cwd(),
+                    candidates: uniqueCandidates,
+                }, error);
+                throw new Error(error);
+            }
         }
         else {
             // 生产环境：以应用安装路径为根目录
@@ -66,10 +113,8 @@ class RustServiceManager {
             this.projectRoot = path.dirname(process.execPath);
             this.servicePath = path.join(this.projectRoot, 'inference-service.exe');
         }
-        // 日志目录：始终使用「根目录/node-inference/logs」
-        // 开发环境：<repo>/node-inference/logs
-        // 生产环境：<安装路径>/node-inference/logs
-        this.logDir = path.join(this.projectRoot, 'node-inference', 'logs');
+        // 日志目录：<repo>/electron_node/services/node-inference/logs
+        this.logDir = path.join(this.projectRoot, 'electron_node', 'services', 'node-inference', 'logs');
         if (!fs.existsSync(this.logDir)) {
             fs.mkdirSync(this.logDir, { recursive: true });
         }
@@ -81,20 +126,28 @@ class RustServiceManager {
             logger_1.default.warn({}, 'Rust 服务已在运行');
             return;
         }
+        if (this.status.starting) {
+            logger_1.default.warn({}, 'Rust 服务正在启动中，请稍候');
+            return;
+        }
         // 检查可执行文件是否存在
         if (!fs.existsSync(this.servicePath)) {
             const error = `Rust 服务可执行文件不存在: ${this.servicePath}`;
             logger_1.default.error({ servicePath: this.servicePath }, error);
             this.status.lastError = error;
+            this.status.starting = false;
             throw new Error(error);
         }
+        // 设置启动中状态
+        this.status.starting = true;
+        this.status.lastError = null;
         try {
             // 配置 CUDA 环境变量（如果 CUDA 已安装）
             const cudaEnv = this.setupCudaEnvironment();
             // 设置环境变量
-            // 注意：Rust 服务期望在 node-inference 目录下运行
-            const modelsDir = process.env.MODELS_DIR
-                || path.join(this.projectRoot, 'node-inference', 'models');
+            // Rust 服务期望在 electron_node/services/node-inference 目录下运行
+            const workingDir = path.join(this.projectRoot, 'electron_node', 'services', 'node-inference');
+            const modelsDir = process.env.MODELS_DIR || path.join(workingDir, 'models');
             const env = {
                 ...process.env,
                 ...cudaEnv,
@@ -103,8 +156,6 @@ class RustServiceManager {
                 LOG_FORMAT: process.env.LOG_FORMAT || 'json',
                 MODELS_DIR: modelsDir,
             };
-            // 设置工作目录：始终为「根目录/node-inference」
-            const workingDir = path.join(this.projectRoot, 'node-inference');
             if (!fs.existsSync(workingDir)) {
                 fs.mkdirSync(workingDir, { recursive: true });
             }
@@ -148,6 +199,7 @@ class RustServiceManager {
             this.process.on('exit', (code, signal) => {
                 logger_1.default.info({ code, signal }, 'Rust 服务进程已退出');
                 logStream.end();
+                this.status.starting = false;
                 this.status.running = false;
                 this.status.pid = null;
                 this.process = null;
@@ -157,8 +209,18 @@ class RustServiceManager {
                 }
             });
             // 等待服务启动（检查端口是否可用）
-            await this.waitForServiceReady();
+            // 先等待一小段时间，让服务有时间初始化（模型加载可能需要几秒）
+            logger_1.default.info({
+                servicePath: this.servicePath,
+                workingDir: workingDir,
+                port: this.port,
+                pid: this.process?.pid
+            }, 'Rust 服务进程已启动，等待服务就绪...');
+            // 给服务更多时间初始化（模型加载需要时间）
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            await this.waitForServiceReady(60000); // 增加到60秒超时
             this.status.running = true;
+            this.status.starting = false;
             this.status.pid = this.process.pid || null;
             this.status.port = this.port;
             this.status.startedAt = new Date();
@@ -172,6 +234,7 @@ class RustServiceManager {
         }
         catch (error) {
             logger_1.default.error({ error }, '启动 Rust 服务失败');
+            this.status.starting = false;
             this.status.lastError = error instanceof Error ? error.message : String(error);
             throw error;
         }
@@ -262,19 +325,57 @@ class RustServiceManager {
             const checkHealth = async () => {
                 try {
                     const axios = require('axios');
-                    const response = await axios.get(`http://localhost:${this.port}/health`, {
-                        timeout: 1000,
+                    // 使用 127.0.0.1 而不是 localhost，避免 IPv6/IPv4 解析问题
+                    const healthUrl = `http://127.0.0.1:${this.port}/health`;
+                    logger_1.default.debug({ healthUrl, port: this.port }, '发送健康检查请求...');
+                    const response = await axios.get(healthUrl, {
+                        timeout: 5000, // 增加到 5 秒，给服务更多时间响应
                     });
                     if (response.status === 200) {
+                        logger_1.default.info({ port: this.port, elapsed: Date.now() - startTime }, 'Rust 服务健康检查通过');
                         resolve();
                         return;
+                    }
+                    else {
+                        logger_1.default.warn({ port: this.port, status: response.status }, '健康检查返回非 200 状态码');
                     }
                 }
                 catch (error) {
                     // 服务还未就绪，继续等待
+                    const elapsed = Date.now() - startTime;
+                    const isTimeout = error?.code === 'ECONNABORTED' || error?.message?.includes('timeout');
+                    const isConnectionRefused = error?.code === 'ECONNREFUSED';
+                    // 每 5 秒记录一次等待信息，或者如果是连接错误则更频繁记录
+                    if (elapsed % 5000 < checkInterval || isConnectionRefused || isTimeout) {
+                        logger_1.default.info({
+                            port: this.port,
+                            elapsed,
+                            errorMessage: error?.message || String(error),
+                            errorCode: error?.code,
+                            errorType: isTimeout ? 'timeout' : isConnectionRefused ? 'connection_refused' : 'other',
+                            processRunning: this.process && !this.process.killed && this.process.exitCode === null,
+                            processPid: this.process?.pid,
+                            processExitCode: this.process?.exitCode
+                        }, '等待 Rust 服务就绪...');
+                    }
                 }
                 if (Date.now() - startTime > maxWaitMs) {
-                    reject(new Error(`服务在 ${maxWaitMs}ms 内未就绪`));
+                    // 检查进程是否还在运行
+                    const isProcessRunning = this.process && !this.process.killed && this.process.exitCode === null;
+                    const errorMsg = `服务在 ${maxWaitMs}ms 内未就绪（端口 ${this.port}）`;
+                    logger_1.default.error({
+                        port: this.port,
+                        maxWaitMs,
+                        elapsed: Date.now() - startTime,
+                        servicePath: this.servicePath,
+                        workingDir: path.join(this.projectRoot, 'electron_node', 'services', 'node-inference'),
+                        modelsDir: path.join(this.projectRoot, 'electron_node', 'services', 'node-inference', 'models'),
+                        processRunning: isProcessRunning,
+                        processPid: this.process?.pid,
+                        processExitCode: this.process?.exitCode,
+                        lastError: this.status.lastError
+                    }, errorMsg);
+                    reject(new Error(errorMsg));
                     return;
                 }
                 setTimeout(checkHealth, checkInterval);

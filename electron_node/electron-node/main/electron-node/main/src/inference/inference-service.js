@@ -11,12 +11,16 @@ class InferenceService {
     constructor(modelManager) {
         this.currentJobs = new Set();
         this.wsClient = null;
+        this.onTaskProcessedCallback = null;
         this.modelManager = modelManager;
         this.inferenceServiceUrl = process.env.INFERENCE_SERVICE_URL || 'http://localhost:5009';
         this.httpClient = axios_1.default.create({
             baseURL: this.inferenceServiceUrl,
             timeout: 300000, // 5 分钟超时（推理可能需要较长时间）
         });
+    }
+    setOnTaskProcessedCallback(callback) {
+        this.onTaskProcessedCallback = callback;
     }
     async processJob(job, partialCallback) {
         this.currentJobs.add(job.job_id);
@@ -55,6 +59,10 @@ class InferenceService {
             const response = await this.httpClient.post('/v1/inference', request);
             if (!response.data.success) {
                 throw new Error(response.data.error?.message || '推理失败');
+            }
+            // 记录任务调用（Rust服务处理所有推理任务）
+            if (this.onTaskProcessedCallback) {
+                this.onTaskProcessedCallback('rust');
             }
             return {
                 text_asr: response.data.transcript || '',
@@ -123,6 +131,10 @@ class InferenceService {
                             tts_format: message.audio_format || job.audio_format || 'pcm16',
                             extra: message.extra,
                         };
+                        // 记录任务调用（Rust服务处理所有推理任务）
+                        if (this.onTaskProcessedCallback) {
+                            this.onTaskProcessedCallback('rust');
+                        }
                         ws.close();
                         resolve(finalResult);
                     }

@@ -17,15 +17,20 @@ mod logging_config;
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    // 在日志系统初始化前，使用 stderr 输出错误信息
+    // 创建日志目录（在日志系统初始化前）
+    let log_dir = PathBuf::from("logs");
+    if let Err(e) = std::fs::create_dir_all(&log_dir) {
+        eprintln!("ERROR: Failed to create logs directory: {:?}, error: {}", log_dir, e);
+        return Err(anyhow::anyhow!("Failed to create logs directory: {}", e));
+    }
+    
     // 加载日志配置（支持模块级日志开关）
     let logging_config = logging_config::LoggingConfig::load();
     
     // 构建日志过滤器（合并配置文件和环境变量）
     let env_filter = logging_config.build_env_filter();
     
-    // 创建日志目录
-    let log_dir = PathBuf::from("logs");
-    std::fs::create_dir_all(&log_dir)?;
     let log_path = log_dir.join("node-inference.log");
     
     // 配置文件日志（所有级别，附带时间戳，按 5MB 轮转，保留最近 5 个）
@@ -75,7 +80,22 @@ async fn main() -> Result<()> {
     Box::leak(Box::new(guard));
 
     let models_dir = PathBuf::from(std::env::var("MODELS_DIR").unwrap_or_else(|_| "./models".to_string()));
-    let service = InferenceService::new(models_dir)?;
+    
+    // 检查模型目录是否存在
+    if !models_dir.exists() {
+        let error_msg = format!("ERROR: Models directory does not exist: {:?}", models_dir);
+        eprintln!("{}", error_msg);
+        tracing::error!("{}", error_msg);
+        return Err(anyhow::anyhow!(error_msg));
+    }
+    
+    tracing::info!("Loading models from: {:?}", models_dir);
+    let service = InferenceService::new(models_dir)
+        .map_err(|e| {
+            let error_msg = format!("Failed to initialize InferenceService: {}", e);
+            eprintln!("ERROR: {}", error_msg);
+            anyhow::anyhow!(error_msg)
+        })?;
 
     // 启动 HTTP 服务器
     let port = std::env::var("INFERENCE_SERVICE_PORT")
@@ -83,7 +103,13 @@ async fn main() -> Result<()> {
         .and_then(|p| p.parse().ok())
         .unwrap_or(5009);
 
-    http_server::start_server(service, port).await?;
+    tracing::info!("Starting HTTP server on port {}", port);
+    http_server::start_server(service, port).await
+        .map_err(|e| {
+            let error_msg = format!("Failed to start HTTP server: {}", e);
+            eprintln!("ERROR: {}", error_msg);
+            anyhow::anyhow!(error_msg)
+        })?;
 
     Ok(())
 }

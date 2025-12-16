@@ -83,8 +83,12 @@ pub async fn start_server(
     let addr = SocketAddr::from(([127, 0, 0, 1], port));
     info!("推理服务 HTTP 服务器启动在: {}", addr);
 
-    let listener = tokio::net::TcpListener::bind(addr).await?;
-    axum::serve(listener, app).await?;
+    let listener = tokio::net::TcpListener::bind(addr).await
+        .map_err(|e| anyhow::anyhow!("Failed to bind to {}: {}", addr, e))?;
+    
+    info!("HTTP 服务器已绑定端口，开始监听请求");
+    axum::serve(listener, app).await
+        .map_err(|e| anyhow::anyhow!("HTTP server error: {}", e))?;
 
     Ok(())
 }

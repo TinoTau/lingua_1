@@ -52,52 +52,66 @@ class RustServiceManager {
             port: null,
             startedAt: null,
             lastError: null,
+            taskCount: 0,
+            gpuUsageMs: 0,
         };
+        this.taskCount = 0; // 任务计数
+        this.gpuUsageStartTime = null; // GPU使用开始时间
+        this.gpuUsageMs = 0; // GPU累计使用时长（毫秒）
+        this.gpuCheckInterval = null; // GPU检查定时器
+        this.servicePath = '';
+        this.logDir = '';
+        this.port = 5009;
         this.projectRoot = '';
         // 判断开发/生产环境
         const isDev = process.env.NODE_ENV === 'development' || !electron_1.app.isPackaged;
         if (isDev) {
             // 开发环境：项目根目录（例如 d:\Programs\github\lingua_1）
-            // 参考 scripts/start_node_inference.ps1 的路径计算逻辑：
-            // $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path  (scripts 目录)
-            // $projectRoot = Split-Path -Parent $scriptDir  (项目根目录)
-            // 
             // 在 Electron 中：
-            // - process.cwd() 通常是 electron-node 目录（应用启动目录）
+            // - process.cwd() 可能是 electron-node 目录或项目根目录
             // - __dirname 是编译后的 JS 文件位置（electron-node/main）
-            // - 项目根目录是 electron-node 的父目录
-            // 方法1：从 process.cwd() 推断（最可靠，因为应用从 electron-node 目录启动）
+            // - 项目根目录需要包含 electron_node/services/node-inference 目录
+            // 从多个可能的路径查找项目根目录
             const cwd = process.cwd();
-            const possibleRootFromCwd = path.resolve(cwd, '..');
-            // 方法2：从 __dirname 推断（编译后是 electron-node/main）
-            const possibleRootFromDirname = path.resolve(__dirname, '../..');
-            // 检查哪个路径包含 node-inference 目录（这是项目根目录的标志）
-            const candidates = [possibleRootFromCwd, possibleRootFromDirname];
-            for (const candidate of candidates) {
-                const nodeInferencePath = path.join(candidate, 'node-inference');
+            const candidates = [];
+            // 1. 从 cwd 向上查找（最多向上3级）
+            let currentPath = cwd;
+            for (let i = 0; i <= 3; i++) {
+                candidates.push(currentPath);
+                currentPath = path.resolve(currentPath, '..');
+            }
+            // 2. 从 __dirname 向上查找（最多向上3级）
+            currentPath = __dirname;
+            for (let i = 0; i <= 3; i++) {
+                candidates.push(currentPath);
+                currentPath = path.resolve(currentPath, '..');
+            }
+            // 去重并检查哪个路径包含 electron_node/services/node-inference 目录
+            const uniqueCandidates = Array.from(new Set(candidates));
+            for (const candidate of uniqueCandidates) {
+                const nodeInferencePath = path.join(candidate, 'electron_node', 'services', 'node-inference');
                 if (fs.existsSync(nodeInferencePath)) {
                     this.projectRoot = candidate;
+                    this.servicePath = path.join(this.projectRoot, 'electron_node', 'services', 'node-inference', 'target', 'release', 'inference-service.exe');
                     logger_1.default.info({
                         __dirname,
                         cwd: process.cwd(),
                         projectRoot: this.projectRoot,
-                        servicePath: path.join(this.projectRoot, 'node-inference', 'target', 'release', 'inference-service.exe')
+                        servicePath: this.servicePath,
                     }, 'Rust 服务管理器：找到项目根目录');
                     break;
                 }
             }
-            // 如果都没找到，使用从 cwd 向上 1 级的方法（最可能正确）
+            // 如果都没找到，抛出错误
             if (!this.projectRoot) {
-                this.projectRoot = possibleRootFromCwd;
-                logger_1.default.warn({
+                const error = `无法找到项目根目录。已检查的路径：${uniqueCandidates.join(', ')}`;
+                logger_1.default.error({
                     __dirname,
                     cwd: process.cwd(),
-                    projectRoot: this.projectRoot,
-                    note: '使用默认方法（从 cwd 向上 1 级）'
-                }, 'Rust 服务管理器：使用默认项目根目录');
+                    candidates: uniqueCandidates,
+                }, error);
+                throw new Error(error);
             }
-            // Rust 可执行文件路径：node-inference/target/release/inference-service.exe
-            this.servicePath = path.join(this.projectRoot, 'node-inference', 'target', 'release', 'inference-service.exe');
         }
         else {
             // 生产环境：以应用安装路径为根目录
@@ -105,10 +119,8 @@ class RustServiceManager {
             this.projectRoot = path.dirname(process.execPath);
             this.servicePath = path.join(this.projectRoot, 'inference-service.exe');
         }
-        // 日志目录：始终使用「根目录/node-inference/logs」
-        // 开发环境：<repo>/node-inference/logs
-        // 生产环境：<安装路径>/node-inference/logs
-        this.logDir = path.join(this.projectRoot, 'node-inference', 'logs');
+        // 日志目录：<repo>/electron_node/services/node-inference/logs
+        this.logDir = path.join(this.projectRoot, 'electron_node', 'services', 'node-inference', 'logs');
         if (!fs.existsSync(this.logDir)) {
             fs.mkdirSync(this.logDir, { recursive: true });
         }
@@ -139,9 +151,9 @@ class RustServiceManager {
             // 配置 CUDA 环境变量（如果 CUDA 已安装）
             const cudaEnv = this.setupCudaEnvironment();
             // 设置环境变量
-            // 注意：Rust 服务期望在 node-inference 目录下运行
-            const modelsDir = process.env.MODELS_DIR
-                || path.join(this.projectRoot, 'node-inference', 'models');
+            // Rust 服务期望在 electron_node/services/node-inference 目录下运行
+            const workingDir = path.join(this.projectRoot, 'electron_node', 'services', 'node-inference');
+            const modelsDir = process.env.MODELS_DIR || path.join(workingDir, 'models');
             const env = {
                 ...process.env,
                 ...cudaEnv,
@@ -150,8 +162,6 @@ class RustServiceManager {
                 LOG_FORMAT: process.env.LOG_FORMAT || 'json',
                 MODELS_DIR: modelsDir,
             };
-            // 设置工作目录：始终为「根目录/node-inference」
-            const workingDir = path.join(this.projectRoot, 'node-inference');
             if (!fs.existsSync(workingDir)) {
                 fs.mkdirSync(workingDir, { recursive: true });
             }
@@ -186,14 +196,16 @@ class RustServiceManager {
                 logStream.write(line);
             });
             this.process.on('error', (error) => {
-                logger_1.default.error({ error }, 'Rust 服务进程启动失败');
+                const errorMsg = `Rust 服务进程启动失败: ${error.message}`;
+                logger_1.default.error({ error, servicePath: this.servicePath, workingDir }, errorMsg);
                 logStream.end();
-                this.status.lastError = error.message;
+                this.status.lastError = errorMsg;
                 this.status.running = false;
+                this.status.starting = false;
                 this.process = null;
             });
             this.process.on('exit', (code, signal) => {
-                logger_1.default.info({ code, signal }, 'Rust 服务进程已退出');
+                logger_1.default.info({ code, signal, pid: this.process?.pid }, 'Rust 服务进程已退出');
                 logStream.end();
                 this.status.starting = false;
                 this.status.running = false;
@@ -201,17 +213,36 @@ class RustServiceManager {
                 this.process = null;
                 // 如果非正常退出，记录错误
                 if (code !== 0 && code !== null) {
-                    this.status.lastError = `进程退出，退出码: ${code}`;
+                    const errorMsg = `进程退出，退出码: ${code}`;
+                    this.status.lastError = errorMsg;
+                    logger_1.default.error({
+                        code,
+                        signal,
+                        servicePath: this.servicePath,
+                        workingDir,
+                        modelsDir: path.join(workingDir, 'models')
+                    }, errorMsg);
                 }
             });
             // 等待服务启动（检查端口是否可用）
-            await this.waitForServiceReady();
+            // 先等待一小段时间，让服务有时间初始化（模型加载可能需要几秒）
+            logger_1.default.info({
+                servicePath: this.servicePath,
+                workingDir,
+                port: this.port,
+                pid: this.process?.pid
+            }, 'Rust 服务进程已启动，等待服务就绪...');
+            // 给服务更多时间初始化（模型加载需要时间）
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            await this.waitForServiceReady(60000); // 增加到60秒超时
             this.status.running = true;
             this.status.starting = false;
             this.status.pid = this.process.pid || null;
             this.status.port = this.port;
             this.status.startedAt = new Date();
             this.status.lastError = null;
+            // 开始GPU使用时间跟踪
+            this.startGpuTracking();
             logger_1.default.info({
                 pid: this.status.pid,
                 port: this.status.port,
@@ -220,28 +251,47 @@ class RustServiceManager {
             }, 'Rust 服务已启动');
         }
         catch (error) {
-            logger_1.default.error({ error }, '启动 Rust 服务失败');
+            const errorMsg = error instanceof Error ? error.message : String(error);
+            const errorStack = error instanceof Error ? error.stack : undefined;
+            logger_1.default.error({
+                errorMessage: errorMsg,
+                errorStack: errorStack,
+                errorType: error instanceof Error ? error.constructor.name : typeof error,
+                servicePath: this.servicePath,
+                projectRoot: this.projectRoot,
+                workingDir: path.join(this.projectRoot, 'electron_node', 'services', 'node-inference'),
+                modelsDir: path.join(this.projectRoot, 'electron_node', 'services', 'node-inference', 'models'),
+                port: this.port,
+                processPid: this.process?.pid,
+                processExitCode: this.process?.exitCode,
+                processKilled: this.process?.killed,
+                lastError: this.status.lastError
+            }, `启动 Rust 服务失败: ${errorMsg}`);
             this.status.starting = false;
-            this.status.lastError = error instanceof Error ? error.message : String(error);
+            this.status.lastError = errorMsg;
             throw error;
         }
     }
     async stop() {
         if (!this.process) {
+            logger_1.default.info({ port: this.port }, `Rust 服务未运行 (端口: ${this.port})，无需停止`);
             return;
         }
-        logger_1.default.info({ pid: this.process.pid }, '正在停止 Rust 服务...');
-        return new Promise((resolve) => {
+        const pid = this.process.pid;
+        const port = this.port;
+        logger_1.default.info({ pid, port }, `正在停止 Rust 服务 (端口: ${port}, PID: ${pid})...`);
+        return new Promise(async (resolve) => {
             if (!this.process) {
                 resolve();
                 return;
             }
-            const pid = this.process.pid;
-            this.process.once('exit', () => {
-                logger_1.default.info({ pid }, 'Rust 服务已停止');
+            this.process.once('exit', async () => {
+                logger_1.default.info({ pid, port }, `Rust 服务进程已退出 (端口: ${port}, PID: ${pid})`);
                 this.status.running = false;
                 this.status.pid = null;
                 this.process = null;
+                // 验证端口是否已释放
+                await this.verifyPortReleased(port);
                 resolve();
             });
             // 尝试优雅关闭
@@ -267,16 +317,155 @@ class RustServiceManager {
                 this.process.kill('SIGTERM');
             }
             // 超时强制终止
-            setTimeout(() => {
+            setTimeout(async () => {
                 if (this.process) {
-                    logger_1.default.warn({ pid }, '服务未在 5 秒内停止，强制终止');
+                    logger_1.default.warn({ pid, port }, `服务未在 5 秒内停止，强制终止 (端口: ${port}, PID: ${pid})`);
                     this.process.kill('SIGKILL');
+                    // 即使强制终止，也验证端口是否释放
+                    await this.verifyPortReleased(port);
                 }
             }, 5000);
         });
     }
+    /**
+     * 验证端口是否已释放
+     */
+    async verifyPortReleased(port) {
+        try {
+            const net = require('net');
+            const testServer = net.createServer();
+            await new Promise((resolve) => {
+                const timeout = setTimeout(() => {
+                    testServer.close();
+                    logger_1.default.warn({ port }, `端口 ${port} 释放验证超时（可能仍被占用）`);
+                    resolve();
+                }, 2000);
+                testServer.listen(port, '127.0.0.1', () => {
+                    clearTimeout(timeout);
+                    testServer.close(() => {
+                        logger_1.default.info({ port }, `✅ Rust 服务端口 ${port} 已成功释放`);
+                        resolve();
+                    });
+                });
+                testServer.on('error', (err) => {
+                    clearTimeout(timeout);
+                    if (err.code === 'EADDRINUSE') {
+                        logger_1.default.error({ port, error: err }, `❌ Rust 服务端口 ${port} 仍被占用，服务可能未正确关闭`);
+                    }
+                    else {
+                        logger_1.default.warn({ port, error: err }, `端口 ${port} 释放验证失败`);
+                    }
+                    resolve();
+                });
+            });
+        }
+        catch (error) {
+            logger_1.default.warn({ port, error }, `端口 ${port} 释放验证异常`);
+        }
+    }
     getStatus() {
+        // 更新统计信息
+        this.status.taskCount = this.taskCount;
+        this.status.gpuUsageMs = this.gpuUsageMs;
         return { ...this.status };
+    }
+    /**
+     * 增加任务计数
+     */
+    incrementTaskCount() {
+        this.taskCount++;
+        this.status.taskCount = this.taskCount;
+    }
+    /**
+     * 开始跟踪GPU使用时间
+     */
+    startGpuTracking() {
+        if (this.gpuCheckInterval) {
+            return; // 已经在跟踪
+        }
+        this.gpuUsageStartTime = Date.now();
+        // 每500ms检查一次GPU使用率
+        this.gpuCheckInterval = setInterval(async () => {
+            try {
+                const gpuInfo = await this.getGpuUsage();
+                const now = Date.now();
+                if (gpuInfo && gpuInfo.usage > 0) {
+                    // GPU正在使用，累计时间
+                    if (this.gpuUsageStartTime) {
+                        const elapsed = now - this.gpuUsageStartTime;
+                        this.gpuUsageMs += elapsed;
+                        this.status.gpuUsageMs = this.gpuUsageMs;
+                    }
+                    this.gpuUsageStartTime = now; // 重置开始时间
+                }
+                else {
+                    // GPU未使用，重置开始时间
+                    this.gpuUsageStartTime = now;
+                }
+            }
+            catch (error) {
+                // 忽略错误，继续跟踪
+            }
+        }, 500);
+    }
+    /**
+     * 停止跟踪GPU使用时间
+     */
+    stopGpuTracking() {
+        if (this.gpuCheckInterval) {
+            clearInterval(this.gpuCheckInterval);
+            this.gpuCheckInterval = null;
+        }
+        // 累计最后一次使用时间
+        if (this.gpuUsageStartTime) {
+            const now = Date.now();
+            const elapsed = now - this.gpuUsageStartTime;
+            this.gpuUsageMs += elapsed;
+            this.status.gpuUsageMs = this.gpuUsageMs;
+            this.gpuUsageStartTime = null;
+        }
+    }
+    /**
+     * 获取GPU使用率
+     */
+    async getGpuUsage() {
+        try {
+            const { spawn } = require('child_process');
+            const pythonScript = `
+import pynvml
+try:
+    pynvml.nvmlInit()
+    handle = pynvml.nvmlDeviceGetHandleByIndex(0)
+    util = pynvml.nvmlDeviceGetUtilizationRates(handle)
+    mem_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
+    print(f"{util.gpu},{mem_info.used / mem_info.total * 100}")
+    pynvml.nvmlShutdown()
+except:
+    print("ERROR")
+`;
+            return new Promise((resolve) => {
+                const python = spawn('python', ['-c', pythonScript]);
+                let output = '';
+                python.stdout.on('data', (data) => {
+                    output += data.toString();
+                });
+                python.on('close', (code) => {
+                    if (code === 0 && output.trim() !== 'ERROR') {
+                        const [usage, memory] = output.trim().split(',').map(Number);
+                        resolve({ usage, memory });
+                    }
+                    else {
+                        resolve(null);
+                    }
+                });
+                python.on('error', () => {
+                    resolve(null);
+                });
+            });
+        }
+        catch {
+            return null;
+        }
     }
     setupCudaEnvironment() {
         const env = {};
@@ -312,19 +501,57 @@ class RustServiceManager {
             const checkHealth = async () => {
                 try {
                     const axios = require('axios');
-                    const response = await axios.get(`http://localhost:${this.port}/health`, {
-                        timeout: 1000,
+                    // 使用 127.0.0.1 而不是 localhost，避免 IPv6/IPv4 解析问题
+                    const healthUrl = `http://127.0.0.1:${this.port}/health`;
+                    logger_1.default.debug({ healthUrl, port: this.port }, '发送健康检查请求...');
+                    const response = await axios.get(healthUrl, {
+                        timeout: 5000, // 增加到 5 秒，给服务更多时间响应
                     });
                     if (response.status === 200) {
+                        logger_1.default.info({ port: this.port, elapsed: Date.now() - startTime }, 'Rust 服务健康检查通过');
                         resolve();
                         return;
+                    }
+                    else {
+                        logger_1.default.warn({ port: this.port, status: response.status }, '健康检查返回非 200 状态码');
                     }
                 }
                 catch (error) {
                     // 服务还未就绪，继续等待
+                    const elapsed = Date.now() - startTime;
+                    const isTimeout = error?.code === 'ECONNABORTED' || error?.message?.includes('timeout');
+                    const isConnectionRefused = error?.code === 'ECONNREFUSED';
+                    // 每 5 秒记录一次等待信息，或者如果是连接错误则更频繁记录
+                    if (elapsed % 5000 < checkInterval || isConnectionRefused || isTimeout) {
+                        logger_1.default.info({
+                            port: this.port,
+                            elapsed,
+                            errorMessage: error?.message || String(error),
+                            errorCode: error?.code,
+                            errorType: isTimeout ? 'timeout' : isConnectionRefused ? 'connection_refused' : 'other',
+                            processRunning: this.process && !this.process.killed && this.process.exitCode === null,
+                            processPid: this.process?.pid,
+                            processExitCode: this.process?.exitCode
+                        }, '等待 Rust 服务就绪...');
+                    }
                 }
                 if (Date.now() - startTime > maxWaitMs) {
-                    reject(new Error(`服务在 ${maxWaitMs}ms 内未就绪`));
+                    // 检查进程是否还在运行
+                    const isProcessRunning = this.process && !this.process.killed && this.process.exitCode === null;
+                    const errorMsg = `服务在 ${maxWaitMs}ms 内未就绪（端口 ${this.port}）`;
+                    logger_1.default.error({
+                        port: this.port,
+                        maxWaitMs,
+                        elapsed: Date.now() - startTime,
+                        servicePath: this.servicePath,
+                        workingDir: path.join(this.projectRoot, 'electron_node', 'services', 'node-inference'),
+                        modelsDir: path.join(this.projectRoot, 'electron_node', 'services', 'node-inference', 'models'),
+                        processRunning: isProcessRunning,
+                        processPid: this.process?.pid,
+                        processExitCode: this.process?.exitCode,
+                        lastError: this.status.lastError
+                    }, errorMsg);
+                    reject(new Error(errorMsg));
                     return;
                 }
                 setTimeout(checkHealth, checkInterval);

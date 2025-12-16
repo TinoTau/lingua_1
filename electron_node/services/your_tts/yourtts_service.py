@@ -30,6 +30,12 @@ import os
 import argparse
 from pathlib import Path
 
+# 设置标准输出编码为 UTF-8，避免乱码
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+
 # 添加项目路径
 script_dir = Path(__file__).parent
 project_root = script_dir.parent.parent
@@ -48,6 +54,15 @@ app = Flask(__name__)
 tts_model = None
 device = None
 
+# Global exception handler for Flask
+@app.errorhandler(Exception)
+def handle_exception(e):
+    """Handle all unhandled exceptions"""
+    print(f"[ERROR] Unhandled exception in Flask app: {e}")
+    import traceback
+    traceback.print_exc()
+    return jsonify({"error": str(e)}), 500
+
 # Speaker 缓存：存储 speaker_id -> reference_audio 的映射
 # 格式：{speaker_id: {"reference_audio": np.ndarray, "sample_rate": int, "voice_embedding": np.ndarray}}
 speaker_cache = {}
@@ -57,40 +72,40 @@ import threading
 speaker_cache_lock = threading.Lock()
 
 def get_device(use_gpu=False):
-    """获取计算设备"""
+    """Get compute device"""
     if use_gpu:
         if torch.cuda.is_available():
             selected_device = "cuda"
-            print(f"✅ Using GPU: {torch.cuda.get_device_name(0)}")
+            print(f"[INFO] Using GPU: {torch.cuda.get_device_name(0)}")
             print(f"   CUDA version: {torch.version.cuda}")
             print(f"   PyTorch version: {torch.__version__}")
         else:
             selected_device = "cpu"
-            print("⚠️  GPU requested but not available, using CPU")
+            print("[WARN] GPU requested but not available, using CPU")
             print("   Check:")
             print("   1. NVIDIA drivers installed")
             print("   2. CUDA toolkit installed")
             print("   3. PyTorch with CUDA support installed")
     else:
         selected_device = "cpu"
-        print("ℹ️  Using CPU (GPU not requested)")
+        print("[INFO] Using CPU (GPU not requested)")
     return selected_device
 
 def check_and_install_tts():
-    """检查并安装 TTS 模块"""
+    """Check and install TTS module"""
     try:
         import TTS
         return True
     except ImportError:
-        print("⚠️  TTS module not found. Attempting to install...")
+        print("[WARN] TTS module not found. Attempting to install...")
         try:
             import subprocess
             import sys
             subprocess.check_call([sys.executable, "-m", "pip", "install", "TTS"])
-            print("✅ TTS module installed successfully")
+            print("[INFO] TTS module installed successfully")
             return True
         except Exception as e:
-            print(f"❌ Failed to install TTS module: {e}")
+            print(f"[ERROR] Failed to install TTS module: {e}")
             print("\nPlease install manually:")
             print("  pip install TTS")
             return False
@@ -106,8 +121,8 @@ def load_model(model_path, device="cpu"):
     try:
         from TTS.api import TTS
         
-        print(f"📁 Loading YourTTS model from: {model_path}")
-        print(f"🔧 Device: {device}")
+        print(f"[INFO] Loading YourTTS model from: {model_path}")
+        print(f"[INFO] Device: {device}")
         
         # 模型必须从模型库下载，不允许自动下载
         # 检查模型路径是否存在
@@ -158,32 +173,32 @@ def load_model(model_path, device="cpu"):
         # 方式1：尝试使用模型路径直接加载（推荐，直接使用 model-hub 中的模型）
         try:
             tts_model = TTS(model_path=model_path_str, progress_bar=False, gpu=(device == "cuda"))
-            print("✅ YourTTS model loaded via TTS API (using model path from model-hub)")
+            print("[INFO] YourTTS model loaded via TTS API (using model path from model-hub)")
         except Exception as e1:
-            # 方式2：如果方式1失败，使用 Synthesizer API 直接加载本地文件
-            # 这样可以确保不会触发自动下载，直接使用 model-hub 中的模型文件
-            print(f"⚠️  TTS API loading from path failed: {e1}")
-            print("⚠️  Trying to load using Synthesizer API with explicit file paths...")
-            print("⚠️  This method directly loads local files and will NOT trigger downloads")
+            # Method 2: If method 1 fails, use Synthesizer API to load local files directly
+            # This ensures no automatic downloads, directly using model files from model-hub
+            print(f"[WARN] TTS API loading from path failed: {e1}")
+            print("[WARN] Trying to load using Synthesizer API with explicit file paths...")
+            print("[WARN] This method directly loads local files and will NOT trigger downloads")
             
             try:
                 from TTS.utils.synthesizer import Synthesizer
                 
-                # Synthesizer API 的 tts_checkpoint 参数可能需要目录路径
-                # 根据错误信息，它可能在 checkpoint 路径后面追加 model.pth
-                # 所以传递目录路径，让它在目录中查找 model.pth
+                # Synthesizer API's tts_checkpoint parameter may need directory path
+                # According to error messages, it may append model.pth after checkpoint path
+                # So pass directory path, let it find model.pth in the directory
                 print(f"  Attempting to load with directory path: {model_path_str}")
                 tts_model = Synthesizer(
-                    tts_checkpoint=str(model_path_str),  # 使用目录路径，Synthesizer 会在里面找 model.pth
+                    tts_checkpoint=str(model_path_str),  # Use directory path, Synthesizer will find model.pth inside
                     tts_config_path=str(config_file),
                     use_cuda=(device == "cuda")
                 )
-                print("✅ YourTTS model loaded using Synthesizer API (direct file loading, no download)")
+                print("[INFO] YourTTS model loaded using Synthesizer API (direct file loading, no download)")
             except Exception as e2:
                 error_msg = str(e2)
-                # 如果遇到 transformers 版本问题
+                # If transformers version issue is encountered
                 if "BeamSearchScorer" in error_msg or "cannot import name" in error_msg:
-                    print("  ⚠️  transformers version compatibility issue detected")
+                    print("  [WARN] transformers version compatibility issue detected")
                     print("  TTS library requires transformers<=4.42.4 (current version may be too new)")
                     print("  Please downgrade transformers: pip install 'transformers>=4.21.0,<=4.42.4'")
                     raise RuntimeError(
@@ -203,29 +218,29 @@ def load_model(model_path, device="cpu"):
                         f"Please ensure all model files are correctly downloaded from the model hub."
                     )
         
-        # 移动到指定设备（如果 TTS API 没有自动处理）
+        # Move to specified device (if TTS API didn't handle it automatically)
         if hasattr(tts_model, 'to') and device == "cuda":
             try:
                 tts_model = tts_model.to(device)
-                print(f"✅ Model moved to {device}")
+                print(f"[INFO] Model moved to {device}")
             except Exception as e:
-                print(f"⚠️  Warning: Failed to move model to {device}: {e}")
+                print(f"[WARN] Warning: Failed to move model to {device}: {e}")
                 print("   Model may still work on CPU")
         
-        print(f"✅ YourTTS model loaded successfully")
+        print(f"[INFO] YourTTS model loaded successfully")
         print(f"   Device: {device}")
         print(f"   Supports zero-shot: Yes")
         
         return tts_model
     except Exception as e:
-        print(f"❌ Failed to load model: {e}")
+        print(f"[ERROR] Failed to load model: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
 
 @app.route('/health', methods=['GET'])
 def health():
-    """健康检查端点"""
+    """Health check endpoint"""
     with speaker_cache_lock:
         cache_size = len(speaker_cache)
     return jsonify({
@@ -233,7 +248,7 @@ def health():
         "model_loaded": tts_model is not None,
         "device": device,
         "cached_speakers": cache_size
-    })
+    }), 200
 
 @app.route('/register_speaker', methods=['POST'])
 def register_speaker():
@@ -278,7 +293,7 @@ def register_speaker():
             }
             cache_size = len(speaker_cache)
         
-        print(f"[YourTTS Service] ✅ Registered speaker '{speaker_id}' (reference_audio: {len(ref_audio_array)} samples @ {target_sample_rate} Hz, cache size: {cache_size})")
+        print(f"[YourTTS Service] [INFO] Registered speaker '{speaker_id}' (reference_audio: {len(ref_audio_array)} samples @ {target_sample_rate} Hz, cache size: {cache_size})")
         
         return jsonify({
             "status": "ok",
@@ -288,7 +303,7 @@ def register_speaker():
         })
     
     except Exception as e:
-        print(f"[YourTTS Service] ❌ Failed to register speaker: {e}")
+        print(f"[YourTTS Service] [ERROR] Failed to register speaker: {e}")
         import traceback
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
@@ -330,7 +345,7 @@ def synthesize():
                 if cached_entry:
                     cached_ref_audio = cached_entry["reference_audio"]
                     cached_sample_rate = cached_entry["sample_rate"]
-                    print(f"[YourTTS Service] ✅ Using cached reference_audio for speaker_id '{speaker_id}'")
+                    print(f"[YourTTS Service] [INFO] Using cached reference_audio for speaker_id '{speaker_id}'")
         
         use_cached = cached_ref_audio is not None
         ref_audio_to_use = cached_ref_audio if use_cached else reference_audio
@@ -434,9 +449,9 @@ if __name__ == '__main__':
         if not model_path.exists():
             model_path = project_root / "model-hub" / "models" / "tts" / "your_tts"
     
-    # 验证模型路径是否存在
+    # Verify model path exists
     if not model_path.exists():
-        print(f"❌ Error: Model path not found: {model_path}")
+        print(f"[ERROR] Model path not found: {model_path}")
         print("")
         print("Please download models from the model hub first:")
         print("  1. Start the model hub service: .\\scripts\\start_model_hub.ps1")
@@ -448,16 +463,16 @@ if __name__ == '__main__':
     # 获取设备（在模块级别，不需要 global 声明）
     device = get_device(args.gpu)
     
-    # 加载模型（load_model 函数内部会处理路径不存在的情况）
+    # Load model (load_model function handles path not found cases internally)
     try:
         load_model(model_path, device)
     except Exception as e:
-        print(f"\n❌ Failed to start service: {e}")
+        print(f"\n[ERROR] Failed to start service: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
     
-    print(f"\n🚀 Starting server on http://{args.host}:{args.port}")
+    print(f"\n[INFO] Starting server on http://{args.host}:{args.port}")
     print("   Endpoints:")
     print("     GET  /health          - Health check")
     print("     POST /synthesize      - Synthesize speech (zero-shot supported)")
@@ -466,4 +481,38 @@ if __name__ == '__main__':
     print("\n   Press Ctrl+C to stop")
     print("=" * 60)
     
-    app.run(host=args.host, port=args.port, debug=False)
+    # Check if port is available before starting
+    import socket
+    try:
+        test_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        test_socket.settimeout(1)
+        result = test_socket.connect_ex((args.host, args.port))
+        test_socket.close()
+        if result == 0:
+            print(f"[ERROR] Port {args.port} is already in use. Please stop the process using this port.")
+            sys.exit(1)
+    except Exception as e:
+        print(f"[WARN] Could not check port availability: {e}")
+    
+    try:
+        print(f"[INFO] Flask server starting...")
+        app.run(host=args.host, port=args.port, debug=False, use_reloader=False, threaded=True)
+    except OSError as e:
+        error_msg = str(e)
+        if "Address already in use" in error_msg or "address already in use" in error_msg.lower() or "EADDRINUSE" in error_msg:
+            print(f"[ERROR] Port {args.port} is already in use. Please stop the process using this port or use a different port.")
+            print(f"[ERROR] Error details: {e}")
+            sys.exit(1)
+        else:
+            print(f"[ERROR] Failed to start Flask server: {e}")
+            import traceback
+            traceback.print_exc()
+            sys.exit(1)
+    except KeyboardInterrupt:
+        print("\n[INFO] Server stopped by user")
+        sys.exit(0)
+    except Exception as e:
+        print(f"[ERROR] Unexpected error starting server: {e}")
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)

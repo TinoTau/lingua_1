@@ -16,7 +16,7 @@ import {
   ModelDownloadError,
 } from './types';
 import { ModelNotAvailableError } from './errors';
-import type { ModelStatus } from '../../../../shared/protocols/messages';
+import type { ModelStatus } from '@shared/protocols/messages';
 export { ModelFileInfo, ModelVersion, ModelInfo, InstalledModelVersion, Registry, ModelDownloadProgress, ModelDownloadError } from './types';
 export { ModelNotAvailableError } from './errors';
 

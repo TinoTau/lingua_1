@@ -2,14 +2,32 @@
 
 本目录包含项目相关的脚本工具和临时说明文档。
 
+## 三个产品启动脚本
+
+- **`start_webapp.ps1`** - 启动 Web 客户端
+- **`start_central_server.ps1`** - 启动中央服务器（调度服务器、API 网关、模型库服务）
+- **`start_electron_node.ps1`** - 启动 Electron 节点客户端
+
+详细使用说明请参考 **`README_PRODUCTS.md`**。
+
 ## 脚本文件
 
-### PowerShell 脚本（Windows）
+### 产品启动脚本
 
-- `copy_models.ps1` - 复制原项目的模型文件到新项目
+- `start_webapp.ps1` - 启动 Web 客户端
+- `start_central_server.ps1` - 启动中央服务器
+- `start_electron_node.ps1` - 启动 Electron 节点客户端
+
+### 服务启动脚本
+
 - `start_scheduler.ps1` - 启动调度服务器
-- `start_model_hub.ps1` - 启动模型库服务
 - `start_api_gateway.ps1` - 启动 API Gateway 服务
+- `start_model_hub.ps1` - 启动模型库服务
+- `start_nmt_service.ps1` - 启动 NMT 服务
+- `start_tts_service.ps1` - 启动 TTS 服务
+- `start_yourtts_service.ps1` - 启动 YourTTS 服务
+- `start_node_inference.ps1` - 启动节点推理服务
+- `start_web_client.ps1` - 启动 Web 客户端（旧版，已迁移到 start_webapp.ps1）
 - `start_all.ps1` - 一键启动所有服务
 
 ### Bash 脚本（Linux/macOS）
@@ -61,7 +79,25 @@ D:\Programs\github\lingua\core\engine\models\
 **问题：执行策略限制**
 - 解决方案：以管理员身份运行 PowerShell，执行 `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
 
-### 启动服务
+### 启动三个产品
+
+```powershell
+# 启动 Web 客户端
+.\scripts\start_webapp.ps1
+
+# 启动中央服务器（仅调度服务器）
+.\scripts\start_central_server.ps1
+
+# 启动中央服务器（所有服务）
+.\scripts\start_central_server.ps1 --all
+
+# 启动 Electron 节点客户端
+.\scripts\start_electron_node.ps1
+```
+
+详细使用说明请参考 `README_PRODUCTS.md`。
+
+### 启动服务（详细）
 
 ```powershell
 # 启动所有服务
@@ -72,6 +108,8 @@ D:\Programs\github\lingua\core\engine\models\
 .\scripts\start_model_hub.ps1
 .\scripts\start_api_gateway.ps1
 ```
+
+详细启动指南请参考 `README_STARTUP.md`。
 
 ## 注意事项
 

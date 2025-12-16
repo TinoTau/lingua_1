@@ -6,10 +6,23 @@ Electron 节点客户端是 Lingua 系统的算力提供方，利用个人PC的�
 
 ```
 electron_node/
-├── electron-node/      # Electron 应用
-├── node-inference/    # 节点推理服务（Rust）
-├── services/          # Python 服务（NMT、TTS、YourTTS）
-└── docs/              # 文档
+├── electron-node/          # Electron 应用
+│   ├── main/src/          # 主进程源代码（TypeScript）
+│   ├── renderer/          # 渲染进程代码（React）
+│   ├── tests/             # 测试文件
+│   └── logs/              # 日志文件
+│
+├── services/              # 所有节点端服务
+│   ├── node-inference/   # 节点推理服务（Rust）
+│   │   ├── src/          # 源代码
+│   │   ├── tests/        # 测试文件
+│   │   ├── models/       # 模型文件
+│   │   └── logs/         # 日志文件
+│   ├── nmt_m2m100/       # NMT 服务（Python）
+│   ├── piper_tts/        # TTS 服务（Python）
+│   └── your_tts/         # YourTTS 服务（Python）
+│
+└── docs/                  # 文档
 ```
 
 ## Electron 应用
@@ -43,7 +56,7 @@ npm start
 
 **构建**:
 ```bash
-cd node-inference
+cd services/node-inference
 cargo build --release
 ```
 
@@ -90,7 +103,7 @@ npm run test:stage3.1       # 运行阶段 3.1 测试（模型管理）
 ### 节点推理服务测试
 
 ```bash
-cd services/node-inference
+cd electron_node/services/node-inference
 cargo test                  # 运行所有测试
 cargo test --lib            # 运行库测试
 ```

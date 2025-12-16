@@ -7,9 +7,10 @@ interface SystemResourcesProps {
     gpu: number | null;
     memory: number;
   } | null;
+  onOpenModelManagement?: () => void;
 }
 
-export function SystemResources({ resources }: SystemResourcesProps) {
+export function SystemResources({ resources, onOpenModelManagement }: SystemResourcesProps) {
   if (!resources) {
     return <div>加载中...</div>;
   }
@@ -49,6 +50,17 @@ export function SystemResources({ resources }: SystemResourcesProps) {
         </div>
         <span>{resources.memory.toFixed(1)}%</span>
       </div>
+      
+      {onOpenModelManagement && (
+        <div className="model-management-button-container">
+          <button 
+            className="model-management-button"
+            onClick={onOpenModelManagement}
+          >
+            模型管理
+          </button>
+        </div>
+      )}
     </div>
   );
 }

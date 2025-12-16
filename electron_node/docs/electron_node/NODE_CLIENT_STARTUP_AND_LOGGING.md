@@ -62,13 +62,13 @@ npm run dev     # main: tsc -w, renderer: vite dev
   - `renderer/dist/**/*`（React 前端打包产物）
 - 额外打包的后端服务（相对当前仓库根目录）：
   - Rust 推理服务可执行文件：
-    - `../../node-inference/target/release/inference-service.exe` → `inference-service.exe`
+    - `../../electron_node/services/node-inference/target/release/inference-service.exe` → `inference-service.exe`
   - Python NMT 服务：
-    - `../../services/nmt_m2m100` → `services/nmt_m2m100`
+    - `../../electron_node/services/nmt_m2m100` → `services/nmt_m2m100`
   - Piper TTS 服务：
-    - `../../services/piper_tts` → `services/piper_tts`
+    - `../../electron_node/services/piper_tts` → `services/piper_tts`
   - YourTTS 服务：
-    - `../../services/your_tts` → `services/your_tts`
+    - `../../electron_node/services/your_tts` → `services/your_tts`
 
 ### 3.2 安装后的目录结构（示意）
 
@@ -114,25 +114,25 @@ C:\Program Files\Lingua Node Client\
 
 - 开发环境：
   - `projectRoot = <repo_root>` ≈ `d:\Programs\github\lingua_1`
-  - 可执行文件：`<projectRoot>/node-inference/target/release/inference-service.exe`
-  - 工作目录：`<projectRoot>/node-inference`
+  - 可执行文件：`<projectRoot>/electron_node/services/node-inference/target/release/inference-service.exe`
+  - 工作目录：`<projectRoot>/electron_node/services/node-inference`
 - 生产环境（安装后）：
   - `projectRoot = path.dirname(process.execPath)` ≈ 安装路径
   - 可执行文件：`<projectRoot>/inference-service.exe`
-  - 工作目录：`<projectRoot>/node-inference`
+  - 工作目录：`<projectRoot>/electron_node/services/node-inference`
 
-> 无论开发还是生产，**工作目录统一为 `<根目录>/node-inference`**。
+> 无论开发还是生产，**工作目录统一为 `<根目录>/electron_node/services/node-inference`**。
 
 #### 日志与模型目录
 
-- 日志目录：`<projectRoot>/node-inference/logs`
+- 日志目录：`<projectRoot>/electron_node/services/node-inference/logs`
   - 日志文件：`node-inference.log`（由 Rust 内部 `file-rotate` 控制 5MB 轮转）
 - 模型目录（环境变量 `MODELS_DIR` 未覆盖时）：
-  - `MODELS_DIR = <projectRoot>/node-inference/models`
+  - `MODELS_DIR = <projectRoot>/electron_node/services/node-inference/models`
 - 目录初始化：
-  - 如果 `node-inference/`、`logs/`、`models/` 不存在，会在启动时自动创建。
+  - 如果 `electron_node/services/node-inference/`、`logs/`、`models/` 不存在，会在启动时自动创建。
 
-### 4.3 Python NMT 服务（services/nmt_m2m100）
+### 4.3 Python NMT 服务（electron_node/services/nmt_m2m100）
 
 实现位置：`electron-node/main/src/python-service-manager.ts`
 
@@ -140,37 +140,41 @@ C:\Program Files\Lingua Node Client\
   - 开发：`projectRoot = <repo_root>`
   - 生产：`projectRoot = path.dirname(process.execPath)`
 - 服务目录：
-  - `<projectRoot>/services/nmt_m2m100`
+  - `<projectRoot>/electron_node/services/nmt_m2m100`
 - 日志目录与文件：
-  - 目录：`<projectRoot>/services/nmt_m2m100/logs`
-  - 文件：`nmt-service.log`
+  - 目录：`<projectRoot>/electron_node/services/nmt_m2m100/logs`
+  - 文件：`nmt-service_*.log`（带时间戳）
 - 启动方式：
   - 使用 venv 下的 `python.exe` + `uvicorn nmt_service:app`
   - `PYTHONIOENCODING = utf-8`
-  - `HF_TOKEN` 从 `services/nmt_m2m100/hf_token.txt` 读取
+  - `HF_TOKEN` 从 `electron_node/services/nmt_m2m100/hf_token.txt` 读取
   - `HF_LOCAL_FILES_ONLY = true`，不自动联网下载模型。
 
-### 4.4 Piper TTS 服务（services/piper_tts）
+### 4.4 Piper TTS 服务（electron_node/services/piper_tts）
 
 - 服务目录：
-  - `<projectRoot>/services/piper_tts`
+  - `<projectRoot>/electron_node/services/piper_tts`
 - 日志目录与文件：
-  - 目录：`<projectRoot>/services/piper_tts/logs`
-  - 文件：`tts-service.log`
+  - 目录：`<projectRoot>/electron_node/services/piper_tts/logs`
+  - 文件：`tts-service_*.log`（带时间戳）
 - 模型目录：
-  - 默认：`<projectRoot>/node-inference/models/tts`
+  - 默认：`<projectRoot>/electron_node/services/node-inference/models/tts`
   - 可通过环境变量 `PIPER_MODEL_DIR` 覆盖。
 
-### 4.5 YourTTS 服务（services/your_tts）
+### 4.5 YourTTS 服务（electron_node/services/your_tts）
 
 - 服务目录：
-  - `<projectRoot>/services/your_tts`
+  - `<projectRoot>/electron_node/services/your_tts`
 - 日志目录与文件：
-  - 目录：`<projectRoot>/services/your_tts/logs`
-  - 文件：`yourtts-service.log`
+  - 目录：`<projectRoot>/electron_node/services/your_tts/logs`
+  - 文件：`yourtts-service.log`（统一文件名，追加模式）
 - 模型目录：
-  - 默认：`<projectRoot>/node-inference/models/tts/your_tts`
-  - 可通过环境变量 `YOURTTS_MODEL_DIR` 覆盖。
+  - 默认：`<projectRoot>/electron_node/services/node-inference/models/tts/your_tts`
+  - 可通过环境变量 `YOURTTS_MODEL_DIR` 覆盖
+  - **注意**：启动时会通过 `--model-dir` 参数明确传递模型路径，确保服务能正确找到模型文件
+- 启动参数：
+  - 服务启动时会传递 `--model-dir` 参数，指向正确的模型目录
+  - 如果模型路径不存在，服务会退出并记录错误日志
 
 ## 5. 服务热插拔与自动启动
 
@@ -198,11 +202,33 @@ C:\Program Files\Lingua Node Client\
 - Electron 启动时：
   - 读取上次保存的 `ServicePreferences`
   - 按照偏好自动启动对应服务（Rust + 各 Python 服务）
+  - 服务启动时会显示"正在启动"过渡状态，然后变为"运行中"或"已停止"
 - 用户在 UI 中手动启动/停止服务后：
   - 当前运行状态会同步回 `ServicePreferences`
-  - 下次启动时会按新的偏好自动启动。
+  - 下次启动时会按新的偏好自动启动
 
-> 说明：**不做自动卸载/冷启动管理**，服务是否启动完全由用户选择 + 上次状态决定，符合“热插拔”的使用场景。
+### 5.3 配置持久化机制
+
+配置保存时机：
+
+1. **正常操作**：
+   - 用户在 UI 中启动/停止服务后，前端会自动调用 `syncPreferencesFromStatus()` 保存配置
+
+2. **窗口关闭/意外中断**：
+   - 在 `cleanupServices()` 函数中，会在清理服务前根据当前运行状态保存配置
+   - 覆盖以下场景：
+     - 正常关闭窗口（`window-all-closed`）
+     - 应用退出前（`before-quit`）
+     - 系统信号（`SIGTERM`、`SIGINT`）
+     - 未捕获异常（`uncaughtException`）
+     - 未处理的 Promise 拒绝（`unhandledRejection`）
+
+**配置恢复**：
+- 应用启动时，从配置文件读取上次保存的服务偏好
+- 根据配置自动启动对应的服务
+- 即使窗口意外关闭或崩溃，配置也能可靠保存和恢复
+
+> 说明：**不做自动卸载/冷启动管理**，服务是否启动完全由用户选择 + 上次状态决定，符合"热插拔"的使用场景。
 
 ## 6. 调度服务器与 Web 端日志（对比）
 
@@ -217,18 +243,50 @@ C:\Program Files\Lingua Node Client\
   - 日志目录：`<projectRoot>/web-client/logs`
   - 日志文件：`web-client.log`（带时间戳 + 5MB 轮转）
 
-## 7. 快速查找各类日志
+## 7. Python 服务日志格式
+
+### 7.1 日志格式说明
+
+所有 Python 服务（NMT、TTS、YourTTS）的日志都采用统一的格式：
+
+- **时间戳**：ISO 8601 格式（`YYYY-MM-DDTHH:mm:ss.sssZ`）
+- **日志级别**：`[INFO]`、`[WARN]`、`[ERROR]`
+- **内容**：按行分割，每行独立记录
+
+示例：
+```
+2025-12-16T14:30:16.497Z [INFO] ============================================================
+2025-12-16T14:30:16.497Z [INFO]   YourTTS HTTP Service (Zero-shot TTS)
+2025-12-16T14:30:16.497Z [INFO] ============================================================
+2025-12-16T14:30:16.497Z [INFO] Using CPU (GPU not requested)
+2025-12-16T14:30:16.511Z [WARN] FutureWarning: You are using `torch.load` with `weights_only=False`...
+2025-12-16T14:30:16.511Z [INFO] * Running on http://127.0.0.1:5004
+```
+
+### 7.2 智能日志级别识别
+
+日志系统会智能识别日志级别：
+
+- **错误 (ERROR)**：包含 `[ERROR]`、`ERROR:`、`EXCEPTION:`、`TRACEBACK` 或 `FAILED`（非警告）
+- **警告 (WARN)**：包含 `[WARN]`、`WARNING:`、`FutureWarning`、`DeprecationWarning`、`UserWarning`
+- **信息 (INFO)**：包含 `[INFO]`、`INFO:`，或 Flask 服务器相关正常信息（如 "Running on"、"Serving Flask app" 等）
+
+这样可以正确区分真正的错误、警告和正常信息，便于排查问题。
+
+## 8. 快速查找各类日志
 
 - Electron 主进程：
-  - 开发：`electron-node/logs/electron-main.log`
-  - 生产：`<安装路径>/logs/electron-main.log`
+  - 开发：`electron_node/electron-node/logs/electron-main_*.log`
+  - 生产：`<安装路径>/logs/electron-main_*.log`
 - 节点 Rust 推理服务：
-  - 开发：`node-inference/logs/node-inference.log`
-  - 生产：`<安装路径>/node-inference/logs/node-inference.log`
-- NMT 服务：`services/nmt_m2m100/logs/nmt-service.log`
-- Piper TTS：`services/piper_tts/logs/tts-service.log`
-- YourTTS：`services/your_tts/logs/yourtts-service.log`
-- 调度服务器：`scheduler/logs/scheduler.log`
-- Web 前端：`web-client/logs/web-client.log`
+  - 开发：`electron_node/services/node-inference/logs/node-inference.log`
+  - 生产：`<安装路径>/electron_node/services/node-inference/logs/node-inference.log`
+- NMT 服务：`electron_node/services/nmt_m2m100/logs/nmt-service.log`
+- Piper TTS：`electron_node/services/piper_tts/logs/tts-service.log`
+- YourTTS：`electron_node/services/your_tts/logs/yourtts-service.log`
+- 调度服务器：`central_server/scheduler/logs/scheduler.log`
+- Web 前端：`webapp/web-client/logs/web-client.log`
 
 通过以上约定，可以在任意机器上基于**安装路径 / 项目根目录**快速定位所有节点端相关的日志文件。
+
+详细路径结构请参考：`PATH_STRUCTURE.md`

@@ -3,9 +3,6 @@
 }
 
 .service-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 20px;
 }
 
@@ -13,26 +10,6 @@
   margin: 0;
   font-size: 20px;
   font-weight: 600;
-}
-
-.auto-start-button {
-  padding: 8px 16px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.auto-start-button:hover:not(:disabled) {
-  background-color: #45a049;
-}
-
-.auto-start-button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
 }
 
 .services-list {
@@ -133,40 +110,61 @@
 
 .service-actions {
   margin-left: 16px;
+  display: flex;
+  align-items: center;
 }
 
-.start-button,
-.stop-button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
+/* Bootstrap-style switch checkbox - 缩小至与状态pill一致 */
+.service-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.service-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.service-switch-slider {
+  position: absolute;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  min-width: 80px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.3s;
+  border-radius: 20px;
 }
 
-.start-button {
-  background-color: #4caf50;
-  color: white;
+.service-switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
 }
 
-.start-button:hover:not(:disabled) {
-  background-color: #45a049;
+.service-switch input:checked + .service-switch-slider {
+  background-color: #28a745; /* 绿色 */
 }
 
-.stop-button {
-  background-color: #f44336;
-  color: white;
+.service-switch input:focus + .service-switch-slider {
+  box-shadow: 0 0 1px #28a745;
 }
 
-.stop-button:hover:not(:disabled) {
-  background-color: #da190b;
+.service-switch input:checked + .service-switch-slider:before {
+  transform: translateX(20px);
 }
 
-.start-button:disabled,
-.stop-button:disabled {
-  background-color: #cccccc;
+.service-switch input:disabled + .service-switch-slider {
+  opacity: 0.6;
   cursor: not-allowed;
-  color: #666;
 }

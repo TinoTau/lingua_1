@@ -4,9 +4,36 @@
   margin: 0 auto;
 }
 
-.model-management h2 {
+.model-management-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   margin-bottom: 20px;
+}
+
+.model-management-header h2 {
+  margin: 0;
   color: #333;
+}
+
+.back-button {
+  padding: 8px 16px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.back-button:hover {
+  background-color: #5a6268;
+}
+
+.back-button:active {
+  background-color: #484f54;
 }
 
 .tabs {

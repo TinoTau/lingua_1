@@ -23,25 +23,25 @@ files:
 # 额外打包的后端服务（相对当前仓库根目录）
 extraFiles:
   # Rust 推理服务可执行文件
-  - from: "../../node-inference/target/release/inference-service.exe"
+  - from: "../../electron_node/services/node-inference/target/release/inference-service.exe"
     to: "inference-service.exe"
     filter:
       - "**/*"
 
   # Python NMT 服务（M2M100）
-  - from: "../../services/nmt_m2m100"
+  - from: "../../electron_node/services/nmt_m2m100"
     to: "services/nmt_m2m100"
     filter:
       - "**/*"
 
   # Piper TTS 服务
-  - from: "../../services/piper_tts"
+  - from: "../../electron_node/services/piper_tts"
     to: "services/piper_tts"
     filter:
       - "**/*"
 
   # YourTTS 服务
-  - from: "../../services/your_tts"
+  - from: "../../electron_node/services/your_tts"
     to: "services/your_tts"
     filter:
       - "**/*"

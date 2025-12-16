@@ -53,7 +53,11 @@ interface ModelRanking {
   rank: number;
 }
 
-export function ModelManagement() {
+interface ModelManagementProps {
+  onBack?: () => void;
+}
+
+export function ModelManagement({ onBack }: ModelManagementProps) {
   const [installedModels, setInstalledModels] = useState<InstalledModel[]>([]);
   const [availableModels, setAvailableModels] = useState<ModelInfo[]>([]);
   const [modelRanking, setModelRanking] = useState<ModelRanking[]>([]);
@@ -167,7 +171,14 @@ export function ModelManagement() {
 
   return (
     <div className="model-management">
-      <h2>模型管理</h2>
+      <div className="model-management-header">
+        {onBack && (
+          <button className="back-button" onClick={onBack}>
+            ← 返回
+          </button>
+        )}
+        <h2>模型管理</h2>
+      </div>
       
       <div className="tabs">
         <button
