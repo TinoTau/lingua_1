@@ -102,6 +102,9 @@ impl InferenceService {
 
         let module_manager = ModuleManager::new();
 
+        // 初始化可选模块（即使未启用，也创建实例以便后续启用）
+        let voice_cloner = Some(std::sync::Arc::new(tokio::sync::RwLock::new(speaker::VoiceCloner::new())));
+
         Ok(Self {
             asr_engine,
             nmt_engine,
@@ -109,7 +112,7 @@ impl InferenceService {
             vad_engine,
             language_detector,
             speaker_identifier: None,
-            voice_cloner: None,
+            voice_cloner,
             speech_rate_detector: None,
             speech_rate_controller: None,
             module_manager,
@@ -417,8 +420,45 @@ impl InferenceService {
         info!(trace_id = %trace_id, translation_len = translation.len(), "机器翻译完成");
 
         // 5. TTS: 语音合成（必需，使用目标语言）
+        // 根据 features.voice_cloning 选择使用 YourTTS 或 Piper TTS
         debug!(trace_id = %trace_id, tgt_lang = %tgt_lang, "开始语音合成");
-        let mut audio = self.tts_engine.synthesize(&translation, &tgt_lang).await?;
+        let use_voice_cloning = features.map(|f| f.voice_cloning).unwrap_or(false);
+        let mut audio = if use_voice_cloning {
+            // 如果启用音色克隆，尝试使用 YourTTS
+            if let Some(ref speaker_id) = ctx.speaker_id {
+                if let Some(ref cloner) = self.voice_cloner {
+                    let module = cloner.read().await;
+                    if InferenceModule::is_enabled(&*module) {
+                        match module.clone_voice(&translation, speaker_id, Some(&tgt_lang)).await {
+                            Ok(cloned_audio) => {
+                                info!(trace_id = %trace_id, speaker_id = %speaker_id, "使用 YourTTS 进行音色克隆");
+                                cloned_audio
+                            }
+                            Err(e) => {
+                                warn!(trace_id = %trace_id, error = %e, "YourTTS 音色克隆失败，降级到 Piper TTS");
+                                // 降级到 Piper TTS
+                                self.tts_engine.synthesize(&translation, &tgt_lang).await?
+                            }
+                        }
+                    } else {
+                        // 模块未启用，使用 Piper TTS
+                        warn!(trace_id = %trace_id, "Voice cloning module not enabled, using Piper TTS");
+                        self.tts_engine.synthesize(&translation, &tgt_lang).await?
+                    }
+                } else {
+                    // VoiceCloner 未初始化，使用 Piper TTS
+                    warn!(trace_id = %trace_id, "VoiceCloner not initialized, using Piper TTS");
+                    self.tts_engine.synthesize(&translation, &tgt_lang).await?
+                }
+            } else {
+                // 没有 speaker_id，使用 Piper TTS
+                warn!(trace_id = %trace_id, "No speaker_id available, using Piper TTS");
+                self.tts_engine.synthesize(&translation, &tgt_lang).await?
+            }
+        } else {
+            // 标准流程，使用 Piper TTS
+            self.tts_engine.synthesize(&translation, &tgt_lang).await?
+        };
         info!(trace_id = %trace_id, audio_len = audio.len(), "语音合成完成");
 
         // 6. 可选：语速控制（需要语速识别结果）
@@ -431,20 +471,6 @@ impl InferenceService {
                         let target_rate = 1.0;
                         if let Ok(adjusted) = module.adjust_audio(&audio, target_rate, rate) {
                             audio = adjusted;
-                        }
-                    }
-                }
-            }
-        }
-
-        // 7. 可选：音色克隆（需要音色识别结果）
-        if features.map(|f| f.voice_cloning).unwrap_or(false) {
-            if let Some(ref speaker_id) = ctx.speaker_id {
-                if let Some(ref cloner) = self.voice_cloner {
-                    let module = cloner.read().await;
-                    if InferenceModule::is_enabled(&*module) {
-                        if let Ok(cloned) = module.clone_voice(&translation, speaker_id).await {
-                            audio = cloned;
                         }
                     }
                 }

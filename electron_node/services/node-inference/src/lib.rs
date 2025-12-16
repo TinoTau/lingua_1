@@ -5,6 +5,7 @@
 pub mod asr;
 pub mod nmt;
 pub mod tts;
+pub mod yourtts;
 pub mod vad;
 pub mod modules;
 pub mod pipeline;
@@ -18,6 +19,7 @@ pub mod http_server;
 pub use asr::{ASREngine, ASRPartialResult};
 pub use nmt::NMTEngine;
 pub use tts::{TTSEngine, PiperHttpConfig};
+pub use yourtts::{YourTTSEngine, YourTTSHttpConfig};
 pub use vad::VADEngine;
 pub use inference::{InferenceRequest, InferenceResult, InferenceService, PartialResultCallback};
 pub use pipeline::PipelineContext;

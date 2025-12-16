@@ -56,6 +56,8 @@
 - **文档索引**: `../electron_node/docs/README.md`
 - **项目完整性**: `../electron_node/PROJECT_COMPLETENESS.md`
 - **测试状态**: `../electron_node/TEST_STATUS.md`
+- **服务热插拔验证**: `../electron_node/docs/SERVICE_HOT_PLUG_VERIFICATION.md`
+- **YourTTS 集成实现**: `../electron_node/docs/YOURTTS_INTEGRATION_IMPLEMENTATION.md`
 
 ## 项目结构
 

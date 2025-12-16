@@ -71,10 +71,20 @@
 节点推理服务 (5009)
     ├─ M2M100 NMT 服务 (5008)  ← 机器翻译
     ├─ Piper TTS 服务 (5006)   ← 语音合成（标准）
-    └─ YourTTS 服务 (5004)      ← 语音克隆（零样本）
+    └─ YourTTS 服务 (5004)      ← 语音克隆（零样本，可选）
 ```
 
 节点推理服务通过 HTTP 调用各个 Python 服务。
+
+### TTS 服务选择逻辑
+
+节点推理服务会根据任务请求中的 `features.voice_cloning` 自动选择 TTS 服务：
+
+- **标准流程**：使用 Piper TTS（端口 5006）
+- **音色克隆流程**：如果启用 `voice_cloning` 且有 `speaker_id`，使用 YourTTS（端口 5004）
+- **优雅降级**：如果 YourTTS 服务不可用，自动降级到 Piper TTS
+
+详细实现请参考：[YourTTS 集成实现文档](../docs/YOURTTS_INTEGRATION_IMPLEMENTATION.md)
 
 ## 注意事项
 

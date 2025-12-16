@@ -51,12 +51,14 @@ lingua_1/
 │   │   │   ├── tests/       # 测试文件
 │   │   │   ├── models/      # 模型文件
 │   │   │   └── logs/        # 日志文件
-│   │   ├── nmt_m2m100/      # NMT 服务（Python）
-│   │   ├── piper_tts/       # TTS 服务（Python）
-│   │   └── your_tts/        # YourTTS 服务（Python）
+│   │   ├── nmt_m2m100/      # NMT 服务（Python，端口 5008）
+│   │   ├── piper_tts/       # TTS 服务（Python，端口 5006）
+│   │   └── your_tts/        # YourTTS 服务（Python，端口 5004，可选）
 │   ├── docs/                 # 节点客户端文档
 │   │   ├── PATH_STRUCTURE.md    # 路径结构文档
-│   │   └── MIGRATION.md         # 迁移文档
+│   │   ├── MIGRATION.md         # 迁移文档
+│   │   ├── SERVICE_HOT_PLUG_VERIFICATION.md  # 服务热插拔验证报告
+│   │   └── YOURTTS_INTEGRATION_IMPLEMENTATION.md  # YourTTS 集成实现文档
 │   ├── PROJECT_COMPLETENESS.md  # 项目完整性报告
 │   ├── TEST_STATUS.md           # 测试状态
 │   └── TEST_EXECUTION_REPORT.md # 测试执行报告

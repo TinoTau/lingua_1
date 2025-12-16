@@ -34,14 +34,20 @@
 
 - **路径结构**: `PATH_STRUCTURE.md` - 详细的路径结构说明
 - **迁移文档**: `MIGRATION.md` - 从 expired/ 迁移到 electron_node/ 的详细说明
+- **服务热插拔验证**: `SERVICE_HOT_PLUG_VERIFICATION.md` - 服务热插拔与任务链验证报告
+- **YourTTS 集成实现**: `YOURTTS_INTEGRATION_IMPLEMENTATION.md` - YourTTS 服务集成实现文档
 
 ## 快速参考
 
 - **Electron 应用**: Electron + Node.js + TypeScript + React
 - **推理服务**: Rust + ONNX Runtime（位于 `services/node-inference/`）
 - **Python 服务**: Python (NMT、TTS、YourTTS)（位于 `services/`）
+  - **NMT 服务**: 端口 5008，机器翻译
+  - **Piper TTS 服务**: 端口 5006，标准语音合成
+  - **YourTTS 服务**: 端口 5004，零样本语音克隆（可选）
 - **项目位置**: `electron_node/`
 - **统一服务目录**: `electron_node/services/`
+- **服务热插拔**: 支持动态启动/停止服务，根据任务需求自动选择服务
 
 ## 项目状态
 

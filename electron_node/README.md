@@ -50,9 +50,15 @@ npm start
 **功能**:
 - ASR（语音识别）- Whisper
 - NMT（机器翻译）- M2M100
-- TTS（语音合成）- Piper TTS
+- TTS（语音合成）- Piper TTS / YourTTS（动态选择）
 - VAD（语音活动检测）- Silero VAD
-- 模块化功能（音色识别、语速控制等）
+- 模块化功能（音色识别、音色克隆、语速控制等）
+
+**TTS 服务选择**:
+- 根据任务请求中的 `features.voice_cloning` 自动选择：
+  - 标准流程 → Piper TTS（端口 5006）
+  - 音色克隆 → YourTTS（端口 5004）
+- 支持优雅降级：YourTTS 不可用时自动使用 Piper TTS
 
 **构建**:
 ```bash
@@ -63,9 +69,14 @@ cargo build --release
 ## Python 服务
 
 **服务列表**:
-- **NMT 服务** (services/nmt_m2m100/): 机器翻译服务
-- **TTS 服务** (services/piper_tts/): 语音合成服务
-- **YourTTS 服务** (services/your_tts/): 语音克隆服务
+- **NMT 服务** (services/nmt_m2m100/): 机器翻译服务（端口 5008）
+- **TTS 服务** (services/piper_tts/): 语音合成服务（端口 5006）
+- **YourTTS 服务** (services/your_tts/): 语音克隆服务（端口 5004，可选）
+
+**服务热插拔**:
+- ✅ 所有服务支持动态启动/停止
+- ✅ 服务状态自动保存和恢复
+- ✅ 根据任务需求自动选择服务（如 TTS 服务选择）
 
 **启动**:
 ```bash
