@@ -70,7 +70,11 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
   const [downloadErrors, setDownloadErrors] = useState<Map<string, ServiceError>>(new Map());
   const [loadingAvailable, setLoadingAvailable] = useState(false); // 只用于可下载服务的加载状态
   const [error, setError] = useState<string | null>(null);
-  
+
+  // 服务运行状态
+  const [rustStatus, setRustStatus] = useState<{ running: boolean } | null>(null);
+  const [pythonStatuses, setPythonStatuses] = useState<Array<{ name: string; running: boolean }>>([]);
+
   // 使用 ref 来防止并发请求，避免周期性阻塞
   const loadingRef = useRef(false);
   const loadingRankingRef = useRef(false);
@@ -93,7 +97,7 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
       console.error('Failed to initialize installed services:', err);
       setInstalledServices([]);
     });
-    
+
     // 然后异步加载可下载服务和排行（网络请求，可能较慢或失败）
     // 使用独立执行，避免一个请求失败影响另一个
     // 完全异步，不阻塞任何操作
@@ -101,7 +105,7 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
       console.error('Failed to load available services:', err);
       // 不设置错误状态，只记录日志，让用户至少能看到已安装的服务
     });
-    
+
     loadRanking().catch(err => {
       console.error('Failed to load service ranking:', err);
       // 不设置错误状态，只记录日志
@@ -139,17 +143,41 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
     };
   }, []);
 
+  // 定期更新服务运行状态
+  useEffect(() => {
+    const updateServiceStatuses = async () => {
+      try {
+        const [rust, python] = await Promise.all([
+          window.electronAPI.getRustServiceStatus(),
+          window.electronAPI.getAllPythonServiceStatuses(),
+        ]);
+        setRustStatus(rust);
+        setPythonStatuses(python);
+      } catch (error) {
+        console.error('获取服务状态失败:', error);
+      }
+    };
+
+    // 立即更新一次
+    updateServiceStatuses();
+
+    // 每2秒更新一次
+    const interval = setInterval(updateServiceStatuses, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const loadServices = async () => {
     // 如果正在加载，跳过本次请求，避免重复请求导致阻塞
     if (loadingRef.current) {
       console.debug('loadServices already in progress, skipping');
       return;
     }
-    
+
     // 只设置可下载服务的加载状态，不影响已安装服务的显示
     setLoadingAvailable(true);
     loadingRef.current = true;
-    
+
     try {
       // 检查 API 是否存在
       if (!window.electronAPI?.getAvailableServices) {
@@ -157,12 +185,12 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
         setAvailableServices([]);
         return;
       }
-      
+
       // 异步加载可下载的服务（网络请求，可能较慢或失败）
       // 不阻塞UI，让用户可以先看到已安装的服务并进行操作
       const available = await window.electronAPI.getAvailableServices();
       setAvailableServices(Array.isArray(available) ? available : []);
-      
+
       // 如果列表为空，清除之前的错误提示（可能是网络问题已解决）
       if (available.length > 0) {
         setError(null);
@@ -185,7 +213,7 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
       console.debug('loadRanking already in progress, skipping');
       return;
     }
-    
+
     loadingRankingRef.current = true;
     try {
       // 检查 API 是否存在
@@ -509,23 +537,45 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
           {installedServices.length === 0 ? (
             <div className="empty-state">暂无已安装的服务</div>
           ) : (
-            installedServices.map((service) => (
-              <div key={`${service.serviceId}_${service.version}`} className="model-item">
-                <div className="model-info">
-                  <h3>{service.serviceId}</h3>
-                  <p>版本: {service.version}</p>
-                  {service.platform && <p>平台: {service.platform}</p>}
-                  <p>状态: {service.info.status}</p>
-                  <p>大小: {formatBytes(service.info.size_bytes)}</p>
-                  <p>安装时间: {new Date(service.info.installed_at).toLocaleString()}</p>
+            installedServices.map((service) => {
+              // 根据服务ID判断服务类型并获取运行状态
+              const getServiceRunningStatus = (): boolean => {
+                if (service.serviceId === 'node-inference') {
+                  return rustStatus?.running || false;
+                } else if (service.serviceId === 'nmt-m2m100') {
+                  const status = pythonStatuses.find(s => s.name === 'nmt');
+                  return status?.running || false;
+                } else if (service.serviceId === 'piper-tts') {
+                  const status = pythonStatuses.find(s => s.name === 'tts');
+                  return status?.running || false;
+                } else if (service.serviceId === 'your-tts') {
+                  const status = pythonStatuses.find(s => s.name === 'yourtts');
+                  return status?.running || false;
+                }
+                return false;
+              };
+
+              const isRunning = getServiceRunningStatus();
+              const statusText = isRunning ? '运行中' : '已停止';
+
+              return (
+                <div key={`${service.serviceId}_${service.version}`} className="model-item">
+                  <div className="model-info">
+                    <h3>{service.serviceId}</h3>
+                    <p>版本: {service.version}</p>
+                    {service.platform && <p>平台: {service.platform}</p>}
+                    <p>状态: <span style={{ color: isRunning ? '#28a745' : '#6c757d', fontWeight: 500 }}>{statusText}</span></p>
+                    <p>大小: {formatBytes(service.info.size_bytes)}</p>
+                    <p>安装时间: {new Date(service.info.installed_at).toLocaleString()}</p>
+                  </div>
+                  <div className="model-actions">
+                    <button className="uninstall-button" onClick={() => handleUninstall(service.serviceId, service.version)}>
+                      卸载
+                    </button>
+                  </div>
                 </div>
-                <div className="model-actions">
-                  <button className="uninstall-button" onClick={() => handleUninstall(service.serviceId, service.version)}>
-                    卸载
-                  </button>
-                </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       )}
@@ -558,7 +608,7 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
                       <td>{item.service_id}</td>
                       <td>{item.node_count.toLocaleString()}</td>
                       <td>
-                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', justifyContent: 'center' }}>
                           {isInstalled ? (
                             <>
                               <span style={{ color: '#28a745', fontWeight: 500 }}>已安装</span>
