@@ -55,6 +55,11 @@ export class ServiceRuntimeManager {
     }
 
     // 2. 读取 service.json → 选择 platforms[platformId]
+    // 如果没有 service_json_path，说明是手动安装的服务，没有 service.json
+    if (!current.service_json_path) {
+      throw new Error(`Service ${serviceId} does not have service.json (manually installed). Cannot use service runtime manager.`);
+    }
+    
     const serviceJsonPath = current.service_json_path;
     const serviceJson: ServiceJson = await this.loadServiceJson(serviceJsonPath);
 

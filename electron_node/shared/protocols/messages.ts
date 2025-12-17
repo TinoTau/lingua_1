@@ -31,6 +31,12 @@ export interface InstalledModel {
   enabled?: boolean;
 }
 
+export interface InstalledService {
+  service_id: string;
+  version: string;
+  platform: string; // "windows-x64" | "linux-x64" | "darwin-x64" | etc.
+}
+
 // ===== 移动端 ↔ 调度服务器 =====
 
 export interface SessionInitMessage {
@@ -240,6 +246,8 @@ export interface NodeHeartbeatMessage {
   timestamp: number;
   resource_usage: ResourceUsage;
   installed_models?: InstalledModel[];
+  /** 节点已安装的服务包列表（可选） */
+  installed_services?: InstalledService[];
   /** 节点模型能力图（capability_state） */
   capability_state?: Record<string, ModelStatus>;
 }

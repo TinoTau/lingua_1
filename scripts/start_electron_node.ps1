@@ -153,12 +153,12 @@ try {
     Write-Host "Starting Electron application..." -ForegroundColor Green
     npm start 2>&1 | Tee-Object -FilePath $logFileWithTimestamp
     
-    # Clean up dev job if it exists
-    if ($isDev -and $devJob) {
+    # Clean up Vite dev server job if it exists
+    if ($isDev -and $viteJob) {
         Write-Host ""
-        Write-Host "Stopping Vite dev server and TypeScript compiler..." -ForegroundColor Yellow
-        Stop-Job -Id $devJob.Id -ErrorAction SilentlyContinue
-        Remove-Job -Id $devJob.Id -ErrorAction SilentlyContinue
+        Write-Host "Stopping Vite dev server..." -ForegroundColor Yellow
+        Stop-Job -Id $viteJob.Id -ErrorAction SilentlyContinue
+        Remove-Job -Id $viteJob.Id -ErrorAction SilentlyContinue
     }
 
 }

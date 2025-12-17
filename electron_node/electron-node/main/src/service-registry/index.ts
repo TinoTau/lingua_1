@@ -23,9 +23,10 @@ export class ServiceRegistryManager {
   private registry: ServiceRegistry;
 
   constructor(servicesDir: string) {
-    this.registryPath = path.join(servicesDir, 'registry');
-    this.installedPath = path.join(this.registryPath, 'installed.json');
-    this.currentPath = path.join(this.registryPath, 'current.json');
+    // 注册表文件直接放在 services 目录下，而不是 services/registry 子目录
+    this.registryPath = servicesDir;
+    this.installedPath = path.join(servicesDir, 'installed.json');
+    this.currentPath = path.join(servicesDir, 'current.json');
     this.registry = {
       installed: {},
       current: {},
@@ -44,6 +45,25 @@ export class ServiceRegistryManager {
       try {
         const installedData = await fs.readFile(this.installedPath, 'utf-8');
         this.registry.installed = JSON.parse(installedData);
+
+        // 替换路径占位符 {SERVICES_DIR} 为实际路径
+        // 将 Windows 路径中的反斜杠转换为正斜杠以匹配占位符格式
+        const servicesDirNormalized = this.registryPath.replace(/\\/g, '/');
+        logger.info({
+          registryPath: this.registryPath,
+          servicesDirNormalized,
+          hasPlaceholder: installedData.includes('{SERVICES_DIR}'),
+          installedCount: Object.keys(this.registry.installed).length
+        }, 'Loading installed.json and replacing path placeholders');
+        this.registry.installed = this.replacePathPlaceholders(this.registry.installed, servicesDirNormalized);
+
+        // 验证替换是否成功
+        const afterReplace = JSON.stringify(this.registry.installed);
+        if (afterReplace.includes('{SERVICES_DIR}')) {
+          logger.warn({}, 'Path placeholder replacement may have failed');
+        } else {
+          logger.info({}, 'Path placeholder replacement successful');
+        }
       } catch (error: any) {
         if (error.code !== 'ENOENT') {
           logger.error({ error, path: this.installedPath }, 'Failed to load installed.json');
@@ -55,6 +75,10 @@ export class ServiceRegistryManager {
       try {
         const currentData = await fs.readFile(this.currentPath, 'utf-8');
         this.registry.current = JSON.parse(currentData);
+
+        // 替换路径占位符
+        const servicesDirNormalized = this.registryPath.replace(/\\/g, '/');
+        this.registry.current = this.replacePathPlaceholders(this.registry.current, servicesDirNormalized);
       } catch (error: any) {
         if (error.code !== 'ENOENT') {
           logger.error({ error, path: this.currentPath }, 'Failed to load current.json');
@@ -72,6 +96,24 @@ export class ServiceRegistryManager {
       logger.error({ error }, 'Failed to load service registry');
       throw error;
     }
+  }
+
+  /**
+   * 递归替换对象中的路径占位符
+   */
+  private replacePathPlaceholders(obj: any, servicesDir: string): any {
+    if (typeof obj === 'string') {
+      return obj.replace(/{SERVICES_DIR}/g, servicesDir);
+    } else if (Array.isArray(obj)) {
+      return obj.map(item => this.replacePathPlaceholders(item, servicesDir));
+    } else if (obj && typeof obj === 'object') {
+      const result: any = {};
+      for (const [key, value] of Object.entries(obj)) {
+        result[key] = this.replacePathPlaceholders(value, servicesDir);
+      }
+      return result;
+    }
+    return obj;
   }
 
   /**
@@ -111,7 +153,8 @@ export class ServiceRegistryManager {
     version: string,
     platform: string,
     installPath: string,
-    serviceJsonPath: string
+    serviceJsonPath?: string,
+    sizeBytes?: number
   ): Promise<void> {
     if (!this.registry.installed[serviceId]) {
       this.registry.installed[serviceId] = {};
@@ -123,12 +166,13 @@ export class ServiceRegistryManager {
       platform,
       installed_at: new Date().toISOString(),
       service_id: serviceId,
-      service_json_path: serviceJsonPath,
+      service_json_path: serviceJsonPath, // 可选：只有通过服务包管理器安装的服务才有
       install_path: installPath,
+      size_bytes: sizeBytes, // 从 services_index.json 的 artifact.size_bytes 复制而来
     };
 
     await this.saveRegistry();
-    logger.info({ serviceId, version, platform }, 'Registered installed service version');
+    logger.info({ serviceId, version, platform, sizeBytes }, 'Registered installed service version');
   }
 
   /**
@@ -232,7 +276,7 @@ export class ServiceRegistryManager {
     }
 
     const installed = this.listInstalled(serviceId);
-    
+
     // 找出不是当前版本的已安装版本，选择最新的一个
     const previous = installed
       .filter(v => !(v.version === current.version && v.platform === current.platform))

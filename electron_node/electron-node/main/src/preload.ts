@@ -3,7 +3,28 @@ import { contextBridge, ipcRenderer } from 'electron';
 contextBridge.exposeInMainWorld('electronAPI', {
   getSystemResources: () => ipcRenderer.invoke('get-system-resources'),
 
-  // 模型管理接口
+  // 服务管理接口（已替换模型管理）
+  getInstalledServices: () => ipcRenderer.invoke('get-installed-services'),
+  getAvailableServices: () => ipcRenderer.invoke('get-available-services'),
+  downloadService: (serviceId: string, version?: string, platform?: string) => ipcRenderer.invoke('download-service', serviceId, version, platform),
+  uninstallService: (serviceId: string, version?: string) => ipcRenderer.invoke('uninstall-service', serviceId, version),
+  getServiceRanking: () => ipcRenderer.invoke('get-service-ranking'),
+
+  // 服务下载事件
+  onServiceProgress: (callback: (progress: any) => void) => {
+    ipcRenderer.on('services:progress', (_, progress) => callback(progress));
+  },
+  onServiceError: (callback: (error: any) => void) => {
+    ipcRenderer.on('services:error', (_, error) => callback(error));
+  },
+  removeServiceProgressListener: () => {
+    ipcRenderer.removeAllListeners('services:progress');
+  },
+  removeServiceErrorListener: () => {
+    ipcRenderer.removeAllListeners('services:error');
+  },
+
+  // 模型管理接口（保留以兼容旧代码，但已废弃）
   getInstalledModels: () => ipcRenderer.invoke('get-installed-models'),
   getAvailableModels: () => ipcRenderer.invoke('get-available-models'),
   downloadModel: (modelId: string, version?: string) => ipcRenderer.invoke('download-model', modelId, version),
@@ -11,7 +32,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getModelPath: (modelId: string, version?: string) => ipcRenderer.invoke('get-model-path', modelId, version),
   getModelRanking: () => ipcRenderer.invoke('get-model-ranking'),
 
-  // 模型下载事件
+  // 模型下载事件（保留以兼容旧代码，但已废弃）
   onModelProgress: (callback: (progress: any) => void) => {
     ipcRenderer.on('models:progress', (_, progress) => callback(progress));
   },

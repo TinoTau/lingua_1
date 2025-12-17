@@ -1,5 +1,6 @@
 import { app } from 'electron';
 import * as fs from 'fs';
+import * as fsPromises from 'fs/promises';
 import * as path from 'path';
 
 export interface ServicePreferences {
@@ -39,6 +40,7 @@ function getConfigPath(): string {
   return path.join(userData, 'electron-node-config.json');
 }
 
+// 同步版本（用于向后兼容，但尽量使用异步版本）
 export function loadNodeConfig(): NodeConfig {
   try {
     const configPath = getConfigPath();
@@ -46,6 +48,39 @@ export function loadNodeConfig(): NodeConfig {
       return { ...DEFAULT_CONFIG };
     }
     const raw = fs.readFileSync(configPath, 'utf-8');
+    const parsed = JSON.parse(raw);
+    // 简单合并，避免缺字段
+    return {
+      servicePreferences: {
+        ...DEFAULT_CONFIG.servicePreferences,
+        ...(parsed.servicePreferences || {}),
+      },
+      scheduler: {
+        ...DEFAULT_CONFIG.scheduler,
+        ...(parsed.scheduler || {}),
+      },
+      modelHub: {
+        ...DEFAULT_CONFIG.modelHub,
+        ...(parsed.modelHub || {}),
+      },
+    };
+  } catch (error) {
+    // 读取失败时使用默认配置
+    return { ...DEFAULT_CONFIG };
+  }
+}
+
+// 异步版本（推荐使用，不阻塞）
+export async function loadNodeConfigAsync(): Promise<NodeConfig> {
+  try {
+    const configPath = getConfigPath();
+    try {
+      await fsPromises.access(configPath);
+    } catch {
+      // 文件不存在，返回默认配置
+      return { ...DEFAULT_CONFIG };
+    }
+    const raw = await fsPromises.readFile(configPath, 'utf-8');
     const parsed = JSON.parse(raw);
     // 简单合并，避免缺字段
     return {

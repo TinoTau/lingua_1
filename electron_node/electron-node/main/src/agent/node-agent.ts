@@ -10,6 +10,7 @@ import type {
   JobResultMessage,
   AsrPartialMessage,
   InstalledModel,
+  InstalledService,
   FeatureFlags,
   ModelStatus
 } from '@shared/protocols/messages';
@@ -31,18 +32,20 @@ export class NodeAgent {
   private heartbeatInterval: NodeJS.Timeout | null = null;
   private inferenceService: InferenceService;
   private modelManager: any; // ModelManager 实例
+  private serviceRegistryManager: any; // ServiceRegistryManager 实例
 
-  constructor(inferenceService: InferenceService, modelManager?: any) {
+  constructor(inferenceService: InferenceService, modelManager?: any, serviceRegistryManager?: any) {
     // 优先从配置文件读取，其次从环境变量，最后使用默认值
     const config = loadNodeConfig();
-    this.schedulerUrl = 
-      config.scheduler?.url || 
-      process.env.SCHEDULER_URL || 
+    this.schedulerUrl =
+      config.scheduler?.url ||
+      process.env.SCHEDULER_URL ||
       'ws://127.0.0.1:5010/ws/node';
     this.inferenceService = inferenceService;
     // 通过参数传入或从 inferenceService 获取 modelManager
     this.modelManager = modelManager || (inferenceService as any).modelManager;
-    
+    this.serviceRegistryManager = serviceRegistryManager;
+
     logger.info({ schedulerUrl: this.schedulerUrl }, 'Scheduler server URL configured');
   }
 
@@ -52,7 +55,7 @@ export class NodeAgent {
       if (this.ws) {
         this.stop();
       }
-      
+
       this.ws = new WebSocket(this.schedulerUrl);
 
       this.ws.on('open', () => {
@@ -237,17 +240,22 @@ export class NodeAgent {
       const resources = await this.getSystemResources();
       const installedModels = await this.inferenceService.getInstalledModels();
 
+      // 获取已安装的服务包
+      const installedServices = await this.getInstalledServices();
+
       // 获取 capability_state（节点模型能力图）
       const capabilityState = await this.getCapabilityState();
-      
+
       // 记录 capability_state 信息
       const capabilityStateCount = Object.keys(capabilityState).length;
       const readyCount = Object.values(capabilityState).filter(s => s === 'ready').length;
-      logger.debug({ 
+      logger.info({
         capabilityStateCount,
         readyCount,
-        installedModelsCount: installedModels.length
-      }, 'Sending heartbeat with capability_state');
+        installedModelsCount: installedModels.length,
+        installedServicesCount: installedServices.length,
+        installedServices: installedServices.map(s => s.service_id)
+      }, 'Sending heartbeat with capability_state and installed_services');
 
       // 对齐协议规范：node_heartbeat 消息格式
       const message: NodeHeartbeatMessage = {
@@ -262,17 +270,53 @@ export class NodeAgent {
           running_jobs: this.inferenceService.getCurrentJobCount(),
         },
         installed_models: installedModels.length > 0 ? installedModels : undefined,
+        installed_services: installedServices.length > 0 ? installedServices : undefined,
         capability_state: capabilityState,
       };
 
       this.ws.send(JSON.stringify(message));
-      
+
       if (capabilityStateCount === 0) {
-        logger.warn({ 
+        logger.warn({
           modelHubUrl: this.modelManager ? 'configured' : 'not configured'
         }, 'Heartbeat sent with empty capability_state - this may cause health check failures');
       }
     }, 15000); // 每15秒发送一次心跳
+  }
+
+  /**
+   * 获取已安装的服务包列表
+   */
+  private async getInstalledServices(): Promise<InstalledService[]> {
+    if (!this.serviceRegistryManager) {
+      logger.warn({}, 'ServiceRegistryManager not available for heartbeat');
+      return [];
+    }
+
+    try {
+      // 确保注册表已加载
+      await this.serviceRegistryManager.loadRegistry();
+      const installed = this.serviceRegistryManager.listInstalled();
+
+      logger.debug({
+        installedCount: installed.length,
+        installed: installed.map((s: any) => ({
+          service_id: s.service_id,
+          version: s.version,
+          platform: s.platform
+        }))
+      }, 'Getting installed services for heartbeat');
+
+      // 转换为协议格式
+      return installed.map((service: any) => ({
+        service_id: service.service_id,
+        version: service.version,
+        platform: service.platform,
+      }));
+    } catch (error) {
+      logger.error({ error }, 'Failed to get installed services for heartbeat');
+      return [];
+    }
   }
 
   private stopHeartbeat(): void {
@@ -321,7 +365,7 @@ export class NodeAgent {
       const state = await this.modelManager.getCapabilityState();
       // 确保始终返回一个对象
       const result = state || {};
-      logger.debug({ 
+      logger.debug({
         capabilityStateCount: Object.keys(result).length,
         readyCount: Object.values(result).filter(s => s === 'ready').length
       }, 'Retrieved capability_state from ModelManager');

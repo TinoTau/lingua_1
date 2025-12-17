@@ -143,9 +143,10 @@ class ServicePackageManager {
         await this.validateService(stagingPath, serviceJson, platform);
         // 9. 原子切换：rename staging → versions/<version>/<platform>/
         const installPath = await this.atomicSwitch(stagingPath, serviceId, targetVersion, platform);
-        // 10. 更新 installed.json
+        // 10. 更新 installed.json（包含 size_bytes，从 variant.artifact.size_bytes 复制）
         const serviceJsonPath = path.join(installPath, 'service.json');
-        await this.registryManager.registerInstalled(serviceId, targetVersion, platform, installPath, serviceJsonPath);
+        await this.registryManager.registerInstalled(serviceId, targetVersion, platform, installPath, serviceJsonPath, variant.artifact.size_bytes // 从 services_index.json 的 artifact.size_bytes 复制
+        );
         // 11. 如配置要求自动激活：更新 current.json
         // 这里暂时自动激活（可以根据配置决定）
         await this.registryManager.setCurrent(serviceId, targetVersion, platform, serviceJsonPath, installPath);
@@ -413,7 +414,7 @@ class ServicePackageManager {
         }
         logger_1.default.info({ serviceId, previousVersion: previous.version, platform }, 'Rolling back service');
         // 更新 current.json
-        await this.registryManager.setCurrent(serviceId, previous.version, previous.platform, previous.service_json_path, previous.install_path);
+        await this.registryManager.setCurrent(serviceId, previous.version, previous.platform, previous.service_json_path || '', previous.install_path);
         logger_1.default.info({ serviceId, version: previous.version, platform }, 'Service rolled back');
     }
 }

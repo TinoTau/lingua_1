@@ -249,6 +249,7 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 500;
   transition: background 0.2s;
 }
 
@@ -257,6 +258,50 @@
 }
 
 .model-actions button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* 下载按钮样式（绿色） */
+.download-button {
+  padding: 8px 16px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.download-button:hover:not(:disabled) {
+  background: #218838;
+}
+
+.download-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* 卸载按钮样式（蓝色） */
+.uninstall-button {
+  padding: 8px 16px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.uninstall-button:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.uninstall-button:disabled {
   background: #ccc;
   cursor: not-allowed;
 }

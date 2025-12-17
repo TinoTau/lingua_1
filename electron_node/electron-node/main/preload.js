@@ -3,14 +3,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 electron_1.contextBridge.exposeInMainWorld('electronAPI', {
     getSystemResources: () => electron_1.ipcRenderer.invoke('get-system-resources'),
-    // 模型管理接口
+    // 服务管理接口（已替换模型管理）
+    getInstalledServices: () => electron_1.ipcRenderer.invoke('get-installed-services'),
+    getAvailableServices: () => electron_1.ipcRenderer.invoke('get-available-services'),
+    downloadService: (serviceId, version, platform) => electron_1.ipcRenderer.invoke('download-service', serviceId, version, platform),
+    uninstallService: (serviceId, version) => electron_1.ipcRenderer.invoke('uninstall-service', serviceId, version),
+    getServiceRanking: () => electron_1.ipcRenderer.invoke('get-service-ranking'),
+    // 服务下载事件
+    onServiceProgress: (callback) => {
+        electron_1.ipcRenderer.on('services:progress', (_, progress) => callback(progress));
+    },
+    onServiceError: (callback) => {
+        electron_1.ipcRenderer.on('services:error', (_, error) => callback(error));
+    },
+    removeServiceProgressListener: () => {
+        electron_1.ipcRenderer.removeAllListeners('services:progress');
+    },
+    removeServiceErrorListener: () => {
+        electron_1.ipcRenderer.removeAllListeners('services:error');
+    },
+    // 模型管理接口（保留以兼容旧代码，但已废弃）
     getInstalledModels: () => electron_1.ipcRenderer.invoke('get-installed-models'),
     getAvailableModels: () => electron_1.ipcRenderer.invoke('get-available-models'),
     downloadModel: (modelId, version) => electron_1.ipcRenderer.invoke('download-model', modelId, version),
     uninstallModel: (modelId, version) => electron_1.ipcRenderer.invoke('uninstall-model', modelId, version),
     getModelPath: (modelId, version) => electron_1.ipcRenderer.invoke('get-model-path', modelId, version),
     getModelRanking: () => electron_1.ipcRenderer.invoke('get-model-ranking'),
-    // 模型下载事件
+    // 模型下载事件（保留以兼容旧代码，但已废弃）
     onModelProgress: (callback) => {
         electron_1.ipcRenderer.on('models:progress', (_, progress) => callback(progress));
     },

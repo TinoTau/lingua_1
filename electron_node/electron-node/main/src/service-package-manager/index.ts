@@ -162,14 +162,15 @@ export class ServicePackageManager {
     // 9. 原子切换：rename staging → versions/<version>/<platform>/
     const installPath = await this.atomicSwitch(stagingPath, serviceId, targetVersion, platform);
 
-    // 10. 更新 installed.json
+    // 10. 更新 installed.json（包含 size_bytes，从 variant.artifact.size_bytes 复制）
     const serviceJsonPath = path.join(installPath, 'service.json');
     await this.registryManager.registerInstalled(
       serviceId,
       targetVersion,
       platform,
       installPath,
-      serviceJsonPath
+      serviceJsonPath,
+      variant.artifact.size_bytes // 从 services_index.json 的 artifact.size_bytes 复制
     );
 
     // 11. 如配置要求自动激活：更新 current.json
@@ -521,7 +522,7 @@ export class ServicePackageManager {
       serviceId,
       previous.version,
       previous.platform,
-      previous.service_json_path,
+      previous.service_json_path || '',
       previous.install_path
     );
 

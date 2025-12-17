@@ -34,9 +34,11 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loadNodeConfig = loadNodeConfig;
+exports.loadNodeConfigAsync = loadNodeConfigAsync;
 exports.saveNodeConfig = saveNodeConfig;
 const electron_1 = require("electron");
 const fs = __importStar(require("fs"));
+const fsPromises = __importStar(require("fs/promises"));
 const path = __importStar(require("path"));
 const DEFAULT_CONFIG = {
     servicePreferences: {
@@ -56,6 +58,7 @@ function getConfigPath() {
     const userData = electron_1.app.getPath('userData');
     return path.join(userData, 'electron-node-config.json');
 }
+// 同步版本（用于向后兼容，但尽量使用异步版本）
 function loadNodeConfig() {
     try {
         const configPath = getConfigPath();
@@ -63,6 +66,40 @@ function loadNodeConfig() {
             return { ...DEFAULT_CONFIG };
         }
         const raw = fs.readFileSync(configPath, 'utf-8');
+        const parsed = JSON.parse(raw);
+        // 简单合并，避免缺字段
+        return {
+            servicePreferences: {
+                ...DEFAULT_CONFIG.servicePreferences,
+                ...(parsed.servicePreferences || {}),
+            },
+            scheduler: {
+                ...DEFAULT_CONFIG.scheduler,
+                ...(parsed.scheduler || {}),
+            },
+            modelHub: {
+                ...DEFAULT_CONFIG.modelHub,
+                ...(parsed.modelHub || {}),
+            },
+        };
+    }
+    catch (error) {
+        // 读取失败时使用默认配置
+        return { ...DEFAULT_CONFIG };
+    }
+}
+// 异步版本（推荐使用，不阻塞）
+async function loadNodeConfigAsync() {
+    try {
+        const configPath = getConfigPath();
+        try {
+            await fsPromises.access(configPath);
+        }
+        catch {
+            // 文件不存在，返回默认配置
+            return { ...DEFAULT_CONFIG };
+        }
+        const raw = await fsPromises.readFile(configPath, 'utf-8');
         const parsed = JSON.parse(raw);
         // 简单合并，避免缺字段
         return {

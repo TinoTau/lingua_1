@@ -1,70 +1,28 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
-import * as path from 'path';
 import { NodeAgent } from './agent/node-agent';
 import { ModelManager } from './model-manager/model-manager';
 import { InferenceService } from './inference/inference-service';
 import { RustServiceManager } from './rust-service-manager';
 import { PythonServiceManager } from './python-service-manager';
-import { loadNodeConfig, saveNodeConfig, ServicePreferences } from './node-config';
+import { ServiceRegistryManager } from './service-registry';
+import { ServicePackageManager } from './service-package-manager';
+import { loadNodeConfig } from './node-config';
 import logger from './logger';
+import { createWindow, getMainWindow } from './window-manager';
+import { cleanupServices } from './service-cleanup';
+import { getGpuUsage } from './system-resources';
+import { registerModelHandlers } from './ipc-handlers/model-handlers';
+import { registerServiceHandlers } from './ipc-handlers/service-handlers';
+import { preloadServiceData } from './ipc-handlers/service-cache';
+import { registerRuntimeHandlers } from './ipc-handlers/runtime-handlers';
 
-let mainWindow: BrowserWindow | null = null;
 let nodeAgent: NodeAgent | null = null;
 let modelManager: ModelManager | null = null;
 let inferenceService: InferenceService | null = null;
 let rustServiceManager: RustServiceManager | null = null;
 let pythonServiceManager: PythonServiceManager | null = null;
-
-function createWindow() {
-  mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
-    minWidth: 800,
-    minHeight: 600,
-    resizable: true, // 允许窗口自由缩放
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: false,
-      contextIsolation: true,
-    },
-  });
-
-  // 开发环境加载 Vite 开发服务器，生产环境加载构建后的文件
-  // 判断开发环境：NODE_ENV=development 或 app.isPackaged=false
-  const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged;
-
-  if (isDev) {
-    // 开发模式：尝试连接 Vite dev server（默认 5173，如果被占用可能在其他端口）
-    const vitePort = process.env.VITE_PORT || '5173';
-    const viteUrl = `http://localhost:${vitePort}`;
-    logger.info({ viteUrl }, 'Development mode: Loading Vite dev server');
-    if (mainWindow) {
-      mainWindow.loadURL(viteUrl).catch((error) => {
-        logger.error({ error, viteUrl }, 'Failed to load Vite dev server, trying fallback port');
-        // 如果 5173 失败，尝试 5174（Vite 自动切换的端口）
-        if (mainWindow) {
-          mainWindow.loadURL('http://localhost:5174').catch((err) => {
-            logger.error({ error: err }, 'Failed to load Vite dev server');
-          });
-        }
-      });
-      mainWindow.webContents.openDevTools();
-    }
-  } else {
-    // 生产模式：加载打包后的文件
-    const distPath = path.join(__dirname, '../../renderer/dist/index.html');
-    logger.info({ distPath }, 'Production mode: Loading built files');
-    if (mainWindow) {
-      mainWindow.loadFile(distPath).catch((error) => {
-        logger.error({ error, distPath }, 'Failed to load built files');
-      });
-    }
-  }
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
-}
+let serviceRegistryManager: ServiceRegistryManager | null = null;
+let servicePackageManager: ServicePackageManager | null = null;
 
 app.whenReady().then(async () => {
   createWindow();
@@ -74,10 +32,82 @@ app.whenReady().then(async () => {
     rustServiceManager = new RustServiceManager();
     pythonServiceManager = new PythonServiceManager();
 
+    // 初始化服务注册表管理器
+    // 服务目录路径：优先使用环境变量或项目目录，否则使用 userData/services
+    let servicesDir: string;
+    if (process.env.SERVICES_DIR) {
+      // 从环境变量读取
+      servicesDir = process.env.SERVICES_DIR;
+    } else {
+      // 开发环境：尝试使用项目目录下的 services 文件夹
+      const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged;
+      if (isDev) {
+        // 尝试找到项目根目录下的 electron_node/services
+        // 从当前文件向上查找，直到找到包含 services/installed.json 的目录
+        const fs = require('fs');
+        const path = require('path');
+        let currentDir = __dirname;
+        let projectServicesDir: string | null = null;
+        // 最多向上查找 10 级
+        for (let i = 0; i < 10; i++) {
+          const testPath = path.join(currentDir, 'services', 'installed.json');
+          if (fs.existsSync(testPath)) {
+            projectServicesDir = path.join(currentDir, 'services');
+            break;
+          }
+          const parentDir = path.dirname(currentDir);
+          if (parentDir === currentDir) {
+            // 已经到达根目录
+            break;
+          }
+          currentDir = parentDir;
+        }
+        logger.info({
+          __dirname,
+          projectServicesDir,
+          found: projectServicesDir !== null
+        }, 'Checking project services directory');
+        if (projectServicesDir && fs.existsSync(projectServicesDir)) {
+          servicesDir = projectServicesDir;
+          logger.info({ servicesDir }, 'Using project services directory (development mode)');
+        } else {
+          // 回退到 userData/services
+          const userData = app.getPath('userData');
+          servicesDir = path.join(userData, 'services');
+        }
+      } else {
+        // 生产环境：使用 userData/services
+        const userData = app.getPath('userData');
+        const path = require('path');
+        servicesDir = path.join(userData, 'services');
+      }
+    }
+    logger.info({ servicesDir }, 'Initializing service registry manager');
+    serviceRegistryManager = new ServiceRegistryManager(servicesDir);
+    // 初始化服务包管理器
+    servicePackageManager = new ServicePackageManager(servicesDir);
+    // 加载注册表
+    try {
+      const registry = await serviceRegistryManager.loadRegistry();
+      logger.info({
+        servicesDir,
+        registryPath: (serviceRegistryManager as any).registryPath,
+        installedPath: (serviceRegistryManager as any).installedPath,
+        installedCount: Object.keys(registry.installed).length,
+        currentCount: Object.keys(registry.current).length
+      }, 'Service registry loaded successfully');
+    } catch (error: any) {
+      logger.warn({
+        error: error.message,
+        servicesDir,
+        registryPath: (serviceRegistryManager as any).registryPath
+      }, 'Failed to load service registry, will use empty registry');
+    }
+
     // 初始化其他服务
     modelManager = new ModelManager();
     inferenceService = new InferenceService(modelManager);
-    
+
     // 设置任务记录回调
     inferenceService.setOnTaskProcessedCallback((serviceName: string) => {
       if (serviceName === 'rust' && rustServiceManager) {
@@ -86,7 +116,7 @@ app.whenReady().then(async () => {
         pythonServiceManager.incrementTaskCount(serviceName);
       }
     });
-    
+
     // 设置任务开始/结束回调（用于GPU跟踪）
     // 任务开始时启动GPU跟踪，任务结束时停止GPU跟踪
     inferenceService.setOnTaskStartCallback(() => {
@@ -95,21 +125,29 @@ app.whenReady().then(async () => {
       }
       // Python服务的GPU跟踪由各自的incrementTaskCount控制（因为不同服务可能不同时使用）
     });
-    
+
     inferenceService.setOnTaskEndCallback(() => {
       if (rustServiceManager) {
         rustServiceManager.stopGpuTracking();
       }
       // Python服务的GPU跟踪会在任务计数为0时停止（在显示时检查）
     });
-    
-    nodeAgent = new NodeAgent(inferenceService, modelManager);
-    
+
+    nodeAgent = new NodeAgent(inferenceService, modelManager, serviceRegistryManager);
+
     // 启动 Node Agent（连接到调度服务器）
     logger.info({}, 'Starting Node Agent (connecting to scheduler server)...');
     nodeAgent.start().catch((error) => {
       logger.error({ error }, 'Failed to start Node Agent');
     });
+
+    // 预加载服务列表和排行（异步，不阻塞启动）
+    // 延迟2秒后开始预加载，给调度服务器一些时间启动
+    setTimeout(() => {
+      preloadServiceData().catch((error) => {
+        logger.warn({ error }, 'Failed to preload service data, will retry on demand');
+      });
+    }, 2000);
 
     // 根据用户上一次选择的功能自动启动对应服务
     const config = loadNodeConfig();
@@ -139,6 +177,43 @@ app.whenReady().then(async () => {
         });
       }
     }
+
+    // 注册所有 IPC 处理器
+    registerModelHandlers(modelManager);
+    registerServiceHandlers(serviceRegistryManager, servicePackageManager, rustServiceManager, pythonServiceManager);
+    registerRuntimeHandlers(nodeAgent, modelManager, rustServiceManager, pythonServiceManager);
+
+    // 注册系统资源 IPC 处理器
+    ipcMain.handle('get-system-resources', async () => {
+      const si = require('systeminformation');
+
+      try {
+        logger.debug({}, 'Starting to fetch system resources');
+        const [cpu, mem, gpuInfo] = await Promise.all([
+          si.currentLoad(),
+          si.mem(),
+          getGpuUsage(), // 自定义函数获取 GPU 使用率
+        ]);
+
+        const result = {
+          cpu: cpu.currentLoad || 0,
+          gpu: gpuInfo?.usage ?? null,
+          gpuMem: gpuInfo?.memory ?? null,
+          memory: (mem.used / mem.total) * 100,
+        };
+
+        logger.info({ gpuInfo, result }, 'System resources fetched successfully');
+        return result;
+      } catch (error) {
+        logger.error({ error }, 'Failed to fetch system resources');
+        return {
+          cpu: 0,
+          gpu: null,
+          gpuMem: null,
+          memory: 0,
+        };
+      }
+    });
   } catch (error) {
     logger.error({ error }, 'Failed to initialize services');
   }
@@ -150,111 +225,10 @@ app.whenReady().then(async () => {
   });
 });
 
-// 统一的清理函数
-async function cleanupServices(): Promise<void> {
-  logger.info({}, '========================================');
-  logger.info({}, 'Starting cleanup of all services...');
-  logger.info({}, '========================================');
-
-  // 记录当前运行的服务状态
-  const rustStatus = rustServiceManager?.getStatus();
-  const pythonStatuses = pythonServiceManager?.getAllServiceStatuses() || [];
-  const runningPythonServices = pythonStatuses.filter(s => s.running);
-
-  logger.info(
-    {
-      rustRunning: rustStatus?.running,
-      rustPort: rustStatus?.port,
-      rustPid: rustStatus?.pid,
-      pythonServices: runningPythonServices.map(s => ({
-        name: s.name,
-        port: s.port,
-        pid: s.pid,
-      })),
-    },
-    `Current service status - Rust: ${rustStatus?.running ? `port ${rustStatus.port}, PID ${rustStatus.pid}` : 'not running'}, Python: ${runningPythonServices.length} service(s) running`
-  );
-
-  // 在清理服务前，保存当前服务状态到配置文件
-  // 这样即使窗口意外关闭，下次启动时也能恢复服务状态
-  try {
-    const rustEnabled = !!rustStatus?.running;
-    const nmtEnabled = !!pythonStatuses.find(s => s.name === 'nmt')?.running;
-    const ttsEnabled = !!pythonStatuses.find(s => s.name === 'tts')?.running;
-    const yourttsEnabled = !!pythonStatuses.find(s => s.name === 'yourtts')?.running;
-
-    const config = loadNodeConfig();
-    config.servicePreferences = {
-      rustEnabled,
-      nmtEnabled,
-      ttsEnabled,
-      yourttsEnabled,
-    };
-    saveNodeConfig(config);
-    logger.info(
-      { servicePreferences: config.servicePreferences },
-      'Saved current service status to config file'
-    );
-  } catch (error) {
-    logger.error({ error }, 'Failed to save service status to config file');
-  }
-
-  // 停止 Node Agent
-  if (nodeAgent) {
-    try {
-      logger.info({}, 'Stopping Node Agent...');
-      nodeAgent.stop();
-      logger.info({}, 'Node Agent stopped');
-    } catch (error) {
-      logger.error({ error }, 'Failed to stop Node Agent');
-    }
-  }
-
-  // 停止 Rust 服务
-  if (rustServiceManager) {
-    try {
-      const status = rustServiceManager.getStatus();
-      if (status.running) {
-        logger.info(
-          { port: status.port, pid: status.pid },
-          `Stopping Rust service (port: ${status.port}, PID: ${status.pid})...`
-        );
-        await rustServiceManager.stop();
-        logger.info(
-          { port: status.port },
-          `Rust service stopped (port: ${status.port})`
-        );
-      } else {
-        logger.info({}, 'Rust service is not running, no need to stop');
-      }
-    } catch (error) {
-      logger.error({ error }, 'Failed to stop Rust service');
-    }
-  }
-
-  // 停止所有 Python 服务
-  if (pythonServiceManager) {
-    try {
-      logger.info(
-        { count: runningPythonServices.length },
-        `Stopping all Python services (${runningPythonServices.length} service(s))...`
-      );
-      await pythonServiceManager.stopAllServices();
-      logger.info({}, 'All Python services stopped');
-    } catch (error) {
-      logger.error({ error }, 'Failed to stop Python services');
-    }
-  }
-
-  logger.info({}, '========================================');
-  logger.info({}, 'All services cleanup completed');
-  logger.info({}, '========================================');
-}
-
 // 正常关闭窗口时清理服务
 app.on('window-all-closed', async () => {
   if (process.platform !== 'darwin') {
-    await cleanupServices();
+    await cleanupServices(nodeAgent, rustServiceManager, pythonServiceManager);
     app.quit();
   }
 });
@@ -267,496 +241,39 @@ app.on('before-quit', async (event) => {
 
   if (rustRunning || pythonRunning) {
     event.preventDefault();
-    await cleanupServices();
+    await cleanupServices(nodeAgent, rustServiceManager, pythonServiceManager);
     app.quit();
   }
 });
 
 // 处理系统信号（SIGTERM, SIGINT）确保服务被清理
-process.on('SIGTERM', async () => {
+// 注意：使用 (process as any) 因为 Electron 的 process 类型定义只包含 'loaded' 事件，
+// 但运行时实际支持 Node.js 的所有 process 事件（SIGTERM, SIGINT 等）
+(process as any).on('SIGTERM', async () => {
   logger.info({}, 'Received SIGTERM signal, cleaning up services...');
-  await cleanupServices();
+  await cleanupServices(nodeAgent, rustServiceManager, pythonServiceManager);
   process.exit(0);
 });
 
-process.on('SIGINT', async () => {
+(process as any).on('SIGINT', async () => {
   logger.info({}, 'Received SIGINT signal, cleaning up services...');
-  await cleanupServices();
+  await cleanupServices(nodeAgent, rustServiceManager, pythonServiceManager);
   process.exit(0);
 });
 
 // 处理未捕获的异常，确保服务被清理
-process.on('uncaughtException', async (error) => {
+(process as any).on('uncaughtException', async (error: Error) => {
   logger.error({ error }, 'Uncaught exception, cleaning up services...');
-  await cleanupServices();
+  await cleanupServices(nodeAgent, rustServiceManager, pythonServiceManager);
   process.exit(1);
 });
 
-process.on('unhandledRejection', async (reason, promise) => {
+(process as any).on('unhandledRejection', async (reason: any, promise: Promise<any>) => {
   logger.error({ reason, promise }, 'Unhandled promise rejection, cleaning up services...');
-  await cleanupServices();
+  await cleanupServices(nodeAgent, rustServiceManager, pythonServiceManager);
   process.exit(1);
-});
-
-// IPC 处理
-ipcMain.handle('get-system-resources', async () => {
-  const si = require('systeminformation');
-
-  try {
-    logger.debug({}, 'Starting to fetch system resources');
-    const [cpu, mem, gpuInfo] = await Promise.all([
-      si.currentLoad(),
-      si.mem(),
-      getGpuUsage(), // 自定义函数获取 GPU 使用率
-    ]);
-
-    const result = {
-      cpu: cpu.currentLoad || 0,
-      gpu: gpuInfo?.usage ?? null,
-      gpuMem: gpuInfo?.memory ?? null,
-      memory: (mem.used / mem.total) * 100,
-    };
-    
-    logger.info({ gpuInfo, result }, 'System resources fetched successfully');
-    return result;
-  } catch (error) {
-    logger.error({ error }, 'Failed to fetch system resources');
-    return {
-      cpu: 0,
-      gpu: null,
-      gpuMem: null,
-      memory: 0,
-    };
-  }
-});
-
-// 获取 GPU 使用率（多种方法尝试）
-async function getGpuUsage(): Promise<{ usage: number; memory: number } | null> {
-  logger.info({}, 'Starting to fetch GPU usage');
-
-  // 方法1: 尝试使用 nvidia-smi (Windows/Linux, 如果可用)
-  try {
-    logger.info({}, 'Attempting to fetch GPU info via nvidia-smi');
-    const result = await getGpuUsageViaNvidiaSmi();
-    if (result) {
-      logger.info({ result }, 'Successfully fetched GPU info via nvidia-smi');
-      return result;
-    }
-    logger.warn({}, 'nvidia-smi method returned no result');
-  } catch (error) {
-    logger.warn({ error }, 'nvidia-smi method failed, trying alternative');
-  }
-
-  // 方法2: 尝试使用 Python + pynvml
-  try {
-    logger.debug({}, 'Attempting to fetch GPU info via Python pynvml');
-    const result = await getGpuUsageViaPython();
-    if (result) {
-      logger.info({ result }, 'Successfully fetched GPU info via Python pynvml');
-      return result;
-    }
-    logger.debug({}, 'Python pynvml method returned no result');
-  } catch (error) {
-    logger.warn({ error }, 'Python pynvml method failed');
-  }
-
-  logger.warn({}, 'All GPU info fetch methods failed, GPU info will not be displayed');
-  return null;
-}
-
-// 方法1: 使用 nvidia-smi 命令获取 GPU 信息
-async function getGpuUsageViaNvidiaSmi(): Promise<{ usage: number; memory: number } | null> {
-  return new Promise((resolve) => {
-    const { spawn } = require('child_process');
-    // nvidia-smi 命令：获取GPU利用率和内存使用率
-    const nvidiaSmi = spawn('nvidia-smi', [
-      '--query-gpu=utilization.gpu,memory.used,memory.total',
-      '--format=csv,noheader,nounits'
-    ]);
-
-    let output = '';
-    let errorOutput = '';
-
-    nvidiaSmi.stdout.on('data', (data: Buffer) => {
-      output += data.toString();
-    });
-
-    nvidiaSmi.stderr.on('data', (data: Buffer) => {
-      errorOutput += data.toString();
-    });
-
-    nvidiaSmi.on('close', (code: number) => {
-      if (code === 0 && output.trim()) {
-        try {
-          // 输出格式: "utilization.gpu, memory.used, memory.total"
-          const parts = output.trim().split(',');
-          logger.info({ code, output: output.trim(), parts }, 'nvidia-smi command executed successfully, starting to parse output');
-          if (parts.length >= 3) {
-            const usage = parseFloat(parts[0].trim());
-            const memUsed = parseFloat(parts[1].trim());
-            const memTotal = parseFloat(parts[2].trim());
-            const memPercent = (memUsed / memTotal) * 100;
-
-            logger.info({ usage, memUsed, memTotal, memPercent }, 'Parsed GPU info');
-            if (!isNaN(usage) && !isNaN(memPercent)) {
-              logger.info({ usage, memory: memPercent }, 'nvidia-smi successfully returned GPU usage');
-              resolve({ usage, memory: memPercent });
-              return;
-            } else {
-              logger.warn({ usage, memPercent }, 'Parsed values are invalid (NaN)');
-            }
-          } else {
-            logger.warn({ partsLength: parts.length, parts }, 'nvidia-smi output format incorrect, insufficient parts');
-          }
-        } catch (parseError) {
-          logger.warn({ parseError, output }, 'Failed to parse nvidia-smi output');
-        }
-      } else {
-        logger.warn({ code, output: output.trim(), errorOutput: errorOutput.trim() }, 'nvidia-smi command execution failed or output is empty');
-      }
-      resolve(null);
-    });
-
-    nvidiaSmi.on('error', (error: Error) => {
-      // nvidia-smi 命令不存在或无法执行
-      logger.warn({ error: error.message }, 'nvidia-smi command execution error (command may not exist)');
-      resolve(null);
-    });
-  });
-}
-
-// 方法2: 使用 Python + pynvml 获取 GPU 信息
-async function getGpuUsageViaPython(): Promise<{ usage: number; memory: number } | null> {
-  return new Promise((resolve) => {
-    const { spawn } = require('child_process');
-    const pythonScript = `
-import pynvml
-try:
-    pynvml.nvmlInit()
-    handle = pynvml.nvmlDeviceGetHandleByIndex(0)
-    util = pynvml.nvmlDeviceGetUtilizationRates(handle)
-    mem_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
-    print(f"{util.gpu},{mem_info.used / mem_info.total * 100}")
-    pynvml.nvmlShutdown()
-except Exception as e:
-    print("ERROR")
-`;
-
-    // 尝试 python3 或 python
-    const pythonCommands = ['python3', 'python'];
-    let currentIndex = 0;
-
-    const tryNextPython = () => {
-      if (currentIndex >= pythonCommands.length) {
-        resolve(null);
-        return;
-      }
-
-      const python = spawn(pythonCommands[currentIndex], ['-c', pythonScript]);
-      let output = '';
-      let errorOutput = '';
-
-      python.stdout.on('data', (data: Buffer) => {
-        output += data.toString();
-      });
-
-      python.stderr.on('data', (data: Buffer) => {
-        errorOutput += data.toString();
-      });
-
-      python.on('close', (code: number) => {
-        if (code === 0 && output.trim() !== 'ERROR') {
-          try {
-            const [usage, memory] = output.trim().split(',').map(Number);
-            if (!isNaN(usage) && !isNaN(memory)) {
-              resolve({ usage, memory });
-              return;
-            }
-          } catch (parseError) {
-            logger.warn({ parseError, output }, 'Failed to parse Python output');
-          }
-        }
-        // 当前命令失败，尝试下一个
-        currentIndex++;
-        tryNextPython();
-      });
-
-      python.on('error', () => {
-        // 当前命令不存在，尝试下一个
-        currentIndex++;
-        tryNextPython();
-      });
-    };
-
-    tryNextPython();
-  });
-}
-
-// ===== 模型管理 IPC 接口 =====
-
-ipcMain.handle('get-installed-models', async () => {
-  const models = modelManager?.getInstalledModels() || [];
-  logger.debug({ modelCount: models.length }, 'IPC: get-installed-models returned');
-  return models;
-});
-
-ipcMain.handle('get-available-models', async () => {
-  try {
-    const models = await modelManager?.getAvailableModels() || [];
-    logger.debug({ modelCount: models.length }, 'IPC: get-available-models returned');
-    return models;
-  } catch (error: any) {
-    logger.error({ error: error.message }, 'IPC: get-available-models failed');
-    throw error; // 抛出错误，让 UI 能够捕获
-  }
-});
-
-ipcMain.handle('download-model', async (_, modelId: string, version?: string) => {
-  if (!modelManager) return false;
-  try {
-    await modelManager.downloadModel(modelId, version);
-    return true;
-  } catch (error) {
-    logger.error({ error, modelId }, 'Failed to download model');
-    return false;
-  }
-});
-
-ipcMain.handle('uninstall-model', async (_, modelId: string, version?: string) => {
-  return modelManager?.uninstallModel(modelId, version) || false;
-});
-
-ipcMain.handle('get-model-path', async (_, modelId: string, version?: string) => {
-  if (!modelManager) return null;
-  try {
-    return await modelManager.getModelPath(modelId, version);
-  } catch (error) {
-    logger.error({ error, modelId }, 'Failed to get model path');
-    return null;
-  }
-});
-
-ipcMain.handle('get-model-ranking', async () => {
-  try {
-    const axios = require('axios');
-    // 优先从配置文件读取，其次从环境变量，最后使用默认值
-    const config = loadNodeConfig();
-    const configUrl = config.modelHub?.url;
-    const envUrl = process.env.MODEL_HUB_URL;
-    
-    let urlToUse: string;
-    if (configUrl) {
-      urlToUse = configUrl;
-    } else if (envUrl) {
-      urlToUse = envUrl;
-    } else {
-      urlToUse = 'http://127.0.0.1:5000';
-    }
-    
-    // 如果 URL 包含 localhost，替换为 127.0.0.1 以避免 IPv6 解析问题
-    const modelHubUrl = urlToUse.replace(/localhost/g, '127.0.0.1');
-    const response = await axios.get(`${modelHubUrl}/api/model-usage/ranking`);
-    return response.data || [];
-  } catch (error) {
-    logger.error({ error }, 'Failed to get model ranking');
-    return [];
-  }
-});
-
-
-ipcMain.handle('get-node-status', async () => {
-  return nodeAgent?.getStatus() || { online: false, nodeId: null };
-});
-
-ipcMain.handle('reconnect-node', async () => {
-  if (nodeAgent) {
-    try {
-      // 先停止现有连接（如果存在）
-      nodeAgent.stop();
-      // 然后重新启动
-      await nodeAgent.start();
-      logger.info({}, 'Node reconnection initiated');
-      return { success: true };
-    } catch (error) {
-      logger.error({ error }, 'Failed to reconnect node');
-      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
-    }
-  }
-  return { success: false, error: 'Node agent not initialized' };
-});
-
-ipcMain.handle('get-rust-service-status', async () => {
-  return rustServiceManager?.getStatus() || {
-    running: false,
-    starting: false,
-    pid: null,
-    port: null,
-    startedAt: null,
-    lastError: null,
-    taskCount: 0,
-    gpuUsageMs: 0,
-  };
-});
-
-// Python 服务管理 IPC 接口
-ipcMain.handle('get-python-service-status', async (_, serviceName: 'nmt' | 'tts' | 'yourtts') => {
-  return pythonServiceManager?.getServiceStatus(serviceName) || {
-    name: serviceName,
-    running: false,
-    starting: false,
-    pid: null,
-    port: null,
-    startedAt: null,
-    lastError: null,
-    taskCount: 0,
-    gpuUsageMs: 0,
-  };
-});
-
-ipcMain.handle('get-all-python-service-statuses', async () => {
-  return pythonServiceManager?.getAllServiceStatuses() || [];
-});
-
-ipcMain.handle('start-python-service', async (_, serviceName: 'nmt' | 'tts' | 'yourtts') => {
-  if (!pythonServiceManager) {
-    throw new Error('Python service manager not initialized');
-  }
-  try {
-    await pythonServiceManager.startService(serviceName);
-    return { success: true };
-  } catch (error) {
-    logger.error({ error, serviceName }, 'Failed to start Python service');
-    return { success: false, error: error instanceof Error ? error.message : String(error) };
-  }
-});
-
-ipcMain.handle('stop-python-service', async (_, serviceName: 'nmt' | 'tts' | 'yourtts') => {
-  if (!pythonServiceManager) {
-    throw new Error('Python service manager not initialized');
-  }
-  try {
-    await pythonServiceManager.stopService(serviceName);
-    return { success: true };
-  } catch (error) {
-    logger.error({ error, serviceName }, 'Failed to stop Python service');
-    return { success: false, error: error instanceof Error ? error.message : String(error) };
-  }
-});
-
-// Rust 服务管理 IPC 接口
-ipcMain.handle('start-rust-service', async () => {
-  if (!rustServiceManager) {
-    throw new Error('Rust service manager not initialized');
-  }
-  try {
-    await rustServiceManager.start();
-    return { success: true };
-  } catch (error) {
-    logger.error({ error }, 'Failed to start Rust service');
-    return { success: false, error: error instanceof Error ? error.message : String(error) };
-  }
-});
-
-ipcMain.handle('stop-rust-service', async () => {
-  if (!rustServiceManager) {
-    throw new Error('Rust service manager not initialized');
-  }
-  try {
-    await rustServiceManager.stop();
-    return { success: true };
-  } catch (error) {
-    logger.error({ error }, 'Failed to stop Rust service');
-    return { success: false, error: error instanceof Error ? error.message : String(error) };
-  }
-});
-
-// 根据已安装的模型自动启动所需服务
-ipcMain.handle('auto-start-services-by-models', async () => {
-  if (!modelManager || !rustServiceManager || !pythonServiceManager) {
-    return { success: false, error: 'Service manager not initialized' };
-  }
-
-  try {
-    const installedModels = modelManager.getInstalledModels();
-    const servicesToStart: Array<'nmt' | 'tts' | 'yourtts' | 'rust'> = [];
-
-    // 检查是否需要启动各个服务
-    const hasNmtModel = installedModels.some(m =>
-      m.modelId.includes('nmt') || m.modelId.includes('m2m')
-    );
-    const hasTtsModel = installedModels.some(m =>
-      m.modelId.includes('piper') || (m.modelId.includes('tts') && !m.modelId.includes('your'))
-    );
-    const hasYourttsModel = installedModels.some(m =>
-      m.modelId.includes('yourtts') || m.modelId.includes('your_tts')
-    );
-    const hasAsrModel = installedModels.some(m =>
-      m.modelId.includes('asr') || m.modelId.includes('whisper')
-    );
-
-    if (hasNmtModel) servicesToStart.push('nmt');
-    if (hasTtsModel) servicesToStart.push('tts');
-    if (hasYourttsModel) servicesToStart.push('yourtts');
-    if (hasAsrModel) servicesToStart.push('rust');
-
-    // 启动服务
-    const results: Record<string, boolean> = {};
-    for (const service of servicesToStart) {
-      try {
-        if (service === 'rust') {
-          await rustServiceManager.start();
-        } else {
-          await pythonServiceManager.startService(service);
-        }
-        results[service] = true;
-      } catch (error) {
-        logger.error({ error, service }, 'Failed to auto-start service');
-        results[service] = false;
-      }
-    }
-
-    return { success: true, results };
-  } catch (error) {
-    logger.error({ error }, 'Failed to auto-start services based on models');
-    return { success: false, error: error instanceof Error ? error.message : String(error) };
-  }
-});
-
-// 服务偏好设置（用于记住用户上一次选择的功能）
-ipcMain.handle('get-service-preferences', async (): Promise<ServicePreferences> => {
-  const config = loadNodeConfig();
-  return config.servicePreferences;
-});
-
-ipcMain.handle(
-  'set-service-preferences',
-  async (
-    _,
-    prefs: ServicePreferences,
-  ): Promise<{ success: boolean; error?: string }> => {
-    try {
-      const config = loadNodeConfig();
-      config.servicePreferences = {
-        ...config.servicePreferences,
-        ...prefs,
-      };
-      saveNodeConfig(config);
-      return { success: true };
-    } catch (error) {
-      logger.error({ error }, 'Failed to save service preferences');
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : String(error),
-      };
-    }
-  },
-);
-
-ipcMain.handle('generate-pairing-code', async () => {
-  return nodeAgent?.generatePairingCode() || null;
 });
 
 // 注意：模块管理 IPC 已移除
 // 模块现在根据任务请求中的 features 自动启用/禁用，不需要手动管理
 // 如果需要查看模块状态，可以通过模型管理界面查看已安装的模型
-

@@ -1,22 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './ModelManagement.css';
 
-interface ModelInfo {
-  id: string;
+interface ServiceInfo {
+  service_id: string;
   name: string;
-  task: string;
-  languages: string[];
-  default_version: string;
-  versions: Array<{
+  latest_version: string;
+  variants: Array<{
     version: string;
-    size_bytes: number;
-    files: Array<{ path: string; size_bytes: number }>;
+    platform: string;
+    artifact: {
+      type: string;
+      url: string;
+      sha256: string;
+      size_bytes: number;
+    };
   }>;
 }
 
-interface InstalledModel {
-  modelId: string;
+interface InstalledService {
+  serviceId: string;
   version: string;
+  platform?: string;
   info: {
     status: 'ready' | 'downloading' | 'verifying' | 'installing' | 'error';
     installed_at: string;
@@ -24,8 +28,8 @@ interface InstalledModel {
   };
 }
 
-interface ModelProgress {
-  modelId: string;
+interface ServiceProgress {
+  serviceId: string;
   version: string;
   downloadedBytes: number;
   totalBytes: number;
@@ -39,17 +43,17 @@ interface ModelProgress {
   estimatedTimeRemaining?: number;
 }
 
-interface ModelError {
-  modelId: string;
+interface ServiceError {
+  serviceId: string;
   version: string;
   stage: 'network' | 'disk' | 'checksum' | 'unknown';
   message: string;
   canRetry: boolean;
 }
 
-interface ModelRanking {
-  model_id: string;
-  request_count: number;
+interface ServiceRanking {
+  service_id: string;
+  node_count: number;
   rank: number;
 }
 
@@ -58,128 +62,244 @@ interface ModelManagementProps {
 }
 
 export function ModelManagement({ onBack }: ModelManagementProps) {
-  const [installedModels, setInstalledModels] = useState<InstalledModel[]>([]);
-  const [availableModels, setAvailableModels] = useState<ModelInfo[]>([]);
-  const [modelRanking, setModelRanking] = useState<ModelRanking[]>([]);
+  const [installedServices, setInstalledServices] = useState<InstalledService[]>([]);
+  const [availableServices, setAvailableServices] = useState<ServiceInfo[]>([]);
+  const [serviceRanking, setServiceRanking] = useState<ServiceRanking[]>([]);
   const [activeTab, setActiveTab] = useState<'installed' | 'available' | 'ranking'>('available');
-  const [downloadProgress, setDownloadProgress] = useState<Map<string, ModelProgress>>(new Map());
-  const [downloadErrors, setDownloadErrors] = useState<Map<string, ModelError>>(new Map());
-  const [loading, setLoading] = useState(true);
+  const [downloadProgress, setDownloadProgress] = useState<Map<string, ServiceProgress>>(new Map());
+  const [downloadErrors, setDownloadErrors] = useState<Map<string, ServiceError>>(new Map());
+  const [loadingAvailable, setLoadingAvailable] = useState(false); // 只用于可下载服务的加载状态
   const [error, setError] = useState<string | null>(null);
+  
+  // 使用 ref 来防止并发请求，避免周期性阻塞
+  const loadingRef = useRef(false);
+  const loadingRankingRef = useRef(false);
 
   useEffect(() => {
-    loadModels();
-    loadRanking();
-    
-    // 注册进度和错误事件监听器
-    window.electronAPI.onModelProgress((progress: ModelProgress) => {
-      setDownloadProgress(prev => new Map(prev).set(`${progress.modelId}_${progress.version}`, progress));
+    // 所有初始化操作都是异步的，不阻塞 UI 渲染
+    // 先加载已安装的服务（本地数据，快速，不会堵塞）
+    // 使用 Promise 而不是 async/await，确保完全异步
+    Promise.resolve().then(async () => {
+      try {
+        if (window.electronAPI?.getInstalledServices) {
+          const installed = await window.electronAPI.getInstalledServices();
+          setInstalledServices(Array.isArray(installed) ? installed : []);
+        }
+      } catch (err) {
+        console.error('Failed to load installed services:', err);
+        setInstalledServices([]);
+      }
+    }).catch(err => {
+      console.error('Failed to initialize installed services:', err);
+      setInstalledServices([]);
     });
     
-    window.electronAPI.onModelError((error: ModelError) => {
-      setDownloadErrors(prev => new Map(prev).set(`${error.modelId}_${error.version}`, error));
+    // 然后异步加载可下载服务和排行（网络请求，可能较慢或失败）
+    // 使用独立执行，避免一个请求失败影响另一个
+    // 完全异步，不阻塞任何操作
+    loadServices().catch(err => {
+      console.error('Failed to load available services:', err);
+      // 不设置错误状态，只记录日志，让用户至少能看到已安装的服务
     });
     
+    loadRanking().catch(err => {
+      console.error('Failed to load service ranking:', err);
+      // 不设置错误状态，只记录日志
+    });
+
+    // 注册进度和错误事件监听器（如果 API 存在）
+    try {
+      if (window.electronAPI?.onServiceProgress) {
+        window.electronAPI.onServiceProgress((progress: ServiceProgress) => {
+          setDownloadProgress(prev => new Map(prev).set(`${progress.serviceId}_${progress.version}`, progress));
+        });
+      }
+
+      if (window.electronAPI?.onServiceError) {
+        window.electronAPI.onServiceError((error: ServiceError) => {
+          setDownloadErrors(prev => new Map(prev).set(`${error.serviceId}_${error.version}`, error));
+        });
+      }
+    } catch (err) {
+      console.warn('Failed to register service event listeners:', err);
+    }
+
     // 清理监听器
     return () => {
-      window.electronAPI.removeModelProgressListener();
-      window.electronAPI.removeModelErrorListener();
+      try {
+        if (window.electronAPI?.removeServiceProgressListener) {
+          window.electronAPI.removeServiceProgressListener();
+        }
+        if (window.electronAPI?.removeServiceErrorListener) {
+          window.electronAPI.removeServiceErrorListener();
+        }
+      } catch (err) {
+        console.warn('Failed to remove service event listeners:', err);
+      }
     };
   }, []);
 
-  const loadModels = async () => {
-    setLoading(true);
-    setError(null);
+  const loadServices = async () => {
+    // 如果正在加载，跳过本次请求，避免重复请求导致阻塞
+    if (loadingRef.current) {
+      console.debug('loadServices already in progress, skipping');
+      return;
+    }
+    
+    // 只设置可下载服务的加载状态，不影响已安装服务的显示
+    setLoadingAvailable(true);
+    loadingRef.current = true;
+    
     try {
-      const installed = await window.electronAPI.getInstalledModels();
-      const available = await window.electronAPI.getAvailableModels();
-      setInstalledModels(installed);
-      setAvailableModels(available);
+      // 检查 API 是否存在
+      if (!window.electronAPI?.getAvailableServices) {
+        console.warn('getAvailableServices API not available');
+        setAvailableServices([]);
+        return;
+      }
       
-      // 如果可用模型列表为空，可能是 Model Hub 连接失败
-      if (available.length === 0) {
-        setError('No models available. Please check if Model Hub is running at http://localhost:5000');
+      // 异步加载可下载的服务（网络请求，可能较慢或失败）
+      // 不阻塞UI，让用户可以先看到已安装的服务并进行操作
+      const available = await window.electronAPI.getAvailableServices();
+      setAvailableServices(Array.isArray(available) ? available : []);
+      
+      // 如果列表为空，清除之前的错误提示（可能是网络问题已解决）
+      if (available.length > 0) {
+        setError(null);
       }
     } catch (err: any) {
-      console.error('Failed to load models:', err);
-      setError(`Failed to load models: ${err.message || 'Unknown error'}`);
+      console.error('Failed to load available services:', err);
+      // 不设置错误状态，只设置空数组，让用户至少能看到已安装的服务
+      setAvailableServices([]);
+      // 只在列表为空时显示提示（避免重复提示）
+      // 注意：这里不设置全局错误，只在控制台记录，避免阻塞用户操作
     } finally {
-      setLoading(false);
+      setLoadingAvailable(false);
+      loadingRef.current = false;
     }
   };
 
   const loadRanking = async () => {
-    const ranking = await window.electronAPI.getModelRanking();
-    setModelRanking(ranking);
-  };
-
-  const handleDownload = async (modelId: string, version?: string) => {
-    try {
-      await window.electronAPI.downloadModel(modelId, version);
-      // 下载完成后重新加载列表
-      setTimeout(() => loadModels(), 1000);
-    } catch (error) {
-      console.error('下载模型失败:', error);
-    }
-  };
-
-  const handleUninstall = async (modelId: string, version?: string) => {
-    if (!confirm(`Are you sure you want to uninstall ${modelId}${version ? ` (version ${version})` : ''}? This will delete the model files and cannot be undone.`)) {
+    // 如果正在加载，跳过本次请求，避免重复请求导致阻塞
+    if (loadingRankingRef.current) {
+      console.debug('loadRanking already in progress, skipping');
       return;
     }
-    const success = await window.electronAPI.uninstallModel(modelId, version);
-    if (success) {
-      // 重新加载模型列表
-      await loadModels();
-      // 清除相关的下载进度和错误
-      if (version) {
-        const progressKey = `${modelId}_${version}`;
-        setDownloadProgress(prev => {
-          const newMap = new Map(prev);
-          newMap.delete(progressKey);
-          return newMap;
-        });
-        setDownloadErrors(prev => {
-          const newMap = new Map(prev);
-          newMap.delete(progressKey);
-          return newMap;
-        });
+    
+    loadingRankingRef.current = true;
+    try {
+      // 检查 API 是否存在
+      if (!window.electronAPI?.getServiceRanking) {
+        console.warn('getServiceRanking API not available');
+        setServiceRanking([]);
+        return;
       }
-    } else {
-      alert(`Failed to uninstall ${modelId}${version ? ` (version ${version})` : ''}. Please check the logs for details.`);
+
+      const ranking = await window.electronAPI.getServiceRanking();
+      // 确保返回的是数组
+      setServiceRanking(Array.isArray(ranking) ? ranking : []);
+    } catch (err: any) {
+      console.error('Failed to load service ranking:', err);
+      setServiceRanking([]);
+    } finally {
+      loadingRankingRef.current = false;
     }
   };
 
-  const handleRetry = async (modelId: string, version: string) => {
-    setDownloadErrors(prev => {
-      const newMap = new Map(prev);
-      newMap.delete(`${modelId}_${version}`);
-      return newMap;
+  const handleDownload = async (serviceId: string, version?: string, platform?: string) => {
+    // 异步执行，不阻塞 UI
+    Promise.resolve().then(async () => {
+      try {
+        await window.electronAPI.downloadService(serviceId, version, platform);
+        // 下载完成后只刷新已安装服务列表（本地数据，快速），不重新加载可下载服务（避免网络请求）
+        setTimeout(async () => {
+          try {
+            if (window.electronAPI?.getInstalledServices) {
+              const installed = await window.electronAPI.getInstalledServices();
+              setInstalledServices(Array.isArray(installed) ? installed : []);
+            }
+          } catch (err) {
+            console.error('Failed to refresh installed services:', err);
+          }
+        }, 1000);
+      } catch (error) {
+        console.error('下载服务失败:', error);
+      }
+    }).catch(error => {
+      console.error('下载服务失败:', error);
     });
-    await handleDownload(modelId, version);
   };
 
-  const getModelStatus = (modelId: string, version: string): string => {
-    const progressKey = `${modelId}_${version}`;
+  const handleUninstall = async (serviceId: string, version?: string) => {
+    if (!confirm(`确定要卸载 ${serviceId}${version ? ` (版本 ${version})` : ''} 吗？这将删除服务文件且无法撤销。`)) {
+      return;
+    }
+    // 异步执行卸载操作，不阻塞 UI
+    Promise.resolve().then(async () => {
+      const success = await window.electronAPI.uninstallService(serviceId, version);
+      if (success) {
+        // 只刷新已安装服务列表（本地数据，快速），不重新加载可下载服务（避免网络请求）
+        try {
+          if (window.electronAPI?.getInstalledServices) {
+            const installed = await window.electronAPI.getInstalledServices();
+            setInstalledServices(Array.isArray(installed) ? installed : []);
+          }
+        } catch (err) {
+          console.error('Failed to refresh installed services:', err);
+        }
+        // 清除相关的下载进度和错误
+        if (version) {
+          const progressKey = `${serviceId}_${version}`;
+          setDownloadProgress(prev => {
+            const newMap = new Map(prev);
+            newMap.delete(progressKey);
+            return newMap;
+          });
+          setDownloadErrors(prev => {
+            const newMap = new Map(prev);
+            newMap.delete(progressKey);
+            return newMap;
+          });
+        }
+      } else {
+        alert(`卸载 ${serviceId}${version ? ` (版本 ${version})` : ''} 失败。请查看日志了解详情。`);
+      }
+    }).catch(error => {
+      console.error('卸载服务失败:', error);
+      alert(`卸载 ${serviceId}${version ? ` (版本 ${version})` : ''} 失败。请查看日志了解详情。`);
+    });
+  };
+
+  const handleRetry = async (serviceId: string, version: string) => {
+    setDownloadErrors(prev => {
+      const newMap = new Map(prev);
+      newMap.delete(`${serviceId}_${version}`);
+      return newMap;
+    });
+    await handleDownload(serviceId, version);
+  };
+
+  const getServiceStatus = (serviceId: string, version: string): string => {
+    const progressKey = `${serviceId}_${version}`;
     const progress = downloadProgress.get(progressKey);
     const error = downloadErrors.get(progressKey);
-    
+
     if (error) {
       return `错误: ${error.message}`;
     }
-    
+
     if (progress) {
       return `${progress.state} - ${progress.percent.toFixed(1)}%`;
     }
-    
-    const installed = installedModels.find(
-      m => m.modelId === modelId && m.version === version
+
+    const installed = installedServices.find(
+      s => s.serviceId === serviceId && s.version === version
     );
-    
+
     if (installed) {
       return installed.info.status === 'ready' ? '已安装' : installed.info.status;
     }
-    
+
     return '未安装';
   };
 
@@ -213,70 +333,80 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
             ← 返回
           </button>
         )}
-        <h2>模型管理</h2>
+        <h2>服务管理</h2>
       </div>
-      
+
       <div className="tabs">
         <button
           className={activeTab === 'available' ? 'active' : ''}
           onClick={() => setActiveTab('available')}
         >
-          可下载模型
+          可下载服务
         </button>
         <button
           className={activeTab === 'installed' ? 'active' : ''}
           onClick={() => setActiveTab('installed')}
         >
-          已安装模型
+          已安装服务
         </button>
         <button
           className={activeTab === 'ranking' ? 'active' : ''}
           onClick={() => setActiveTab('ranking')}
         >
-          热门模型排行
+          热门服务排行
         </button>
       </div>
 
       {activeTab === 'available' && (
         <div className="model-list">
-          {loading ? (
-            <div className="empty-state">Loading...</div>
+          {loadingAvailable ? (
+            <div className="empty-state">
+              <div>加载中...</div>
+              <div className="hint-text">正在从调度服务器获取服务列表...</div>
+            </div>
           ) : error ? (
             <div className="empty-state error-state">
               <div className="error-icon">⚠️</div>
               <div className="error-message">{error}</div>
-              <button className="retry-button" onClick={loadModels}>
-                Retry
+              <button className="retry-button" onClick={loadServices}>
+                重试
               </button>
             </div>
-          ) : availableModels.length === 0 ? (
+          ) : availableServices.length === 0 ? (
             <div className="empty-state">
-              <div>No models available</div>
-              <div className="hint-text">Please check if Model Hub is running at http://localhost:5000</div>
-              <button className="retry-button" onClick={loadModels}>
-                Refresh
+              <div>没有可用的服务</div>
+              <div className="hint-text">请检查调度服务器是否运行在 http://localhost:5010</div>
+              <button className="retry-button" onClick={loadServices}>
+                刷新
               </button>
             </div>
           ) : (
-            availableModels.map((model) => {
-              const defaultVersion = model.versions.find(v => v.version === model.default_version) || model.versions[0];
-              const progressKey = `${model.id}_${defaultVersion?.version || ''}`;
+            availableServices.map((service) => {
+              // 获取当前平台的变体，如果没有则使用第一个
+              const currentPlatform = navigator.platform.includes('Win') ? 'windows-x64' :
+                navigator.platform.includes('Mac') ? 'darwin-x64' : 'linux-x64';
+              const platformVariant = service.variants.find(v => v.platform === currentPlatform) || service.variants[0];
+              const version = platformVariant?.version || service.latest_version;
+              const progressKey = `${service.service_id}_${version}`;
               const progress = downloadProgress.get(progressKey);
               const error = downloadErrors.get(progressKey);
-              const isInstalled = installedModels.some(
-                m => m.modelId === model.id && m.info.status === 'ready'
+              const isInstalled = installedServices.some(
+                s => s.serviceId === service.service_id && s.version === version && s.info.status === 'ready'
               );
-              
+
               return (
-                <div key={model.id} className="model-item">
+                <div key={service.service_id} className="model-item">
                   <div className="model-info">
-                    <h3>{model.name}</h3>
-                    <p>ID: {model.id}</p>
-                    <p>类型: {model.task.toUpperCase()}</p>
-                    <p>语言: {model.languages.join(', ')}</p>
-                    <p>默认版本: {model.default_version}</p>
-                    <p>大小: {defaultVersion ? formatBytes(defaultVersion.size_bytes) : 'N/A'}</p>
-                    
+                    <h3>{service.name || service.service_id}</h3>
+                    <p>服务ID: {service.service_id}</p>
+                    <p>最新版本: {service.latest_version}</p>
+                    {platformVariant && (
+                      <>
+                        <p>平台: {platformVariant.platform}</p>
+                        <p>大小: {formatBytes(platformVariant.artifact.size_bytes)}</p>
+                      </>
+                    )}
+
                     {progress && (
                       <div className="progress-container">
                         <div className="progress-header">
@@ -289,7 +419,7 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
                           {progress.currentFile && (
                             <span className="progress-file">
                               {progress.currentFile}
-                              {progress.currentFileProgress !== undefined && 
+                              {progress.currentFileProgress !== undefined &&
                                 ` (${progress.currentFileProgress.toFixed(1)}%)`}
                             </span>
                           )}
@@ -300,8 +430,8 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
                           )}
                         </div>
                         <div className="progress-bar">
-                          <div 
-                            className="progress-fill" 
+                          <div
+                            className="progress-fill"
                             style={{ width: `${progress.percent}%` }}
                           />
                         </div>
@@ -322,7 +452,7 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
                         </div>
                       </div>
                     )}
-                    
+
                     {error && (
                       <div className="error-message">
                         <div className="error-header">
@@ -337,9 +467,9 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
                         <p className="error-detail">{error.message}</p>
                         {error.canRetry && (
                           <div className="error-actions">
-                            <button 
+                            <button
                               className="retry-button"
-                              onClick={() => handleRetry(model.id, defaultVersion?.version || '')}
+                              onClick={() => handleRetry(service.service_id, version)}
                             >
                               重试下载
                             </button>
@@ -355,14 +485,14 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="model-actions">
                     {isInstalled ? (
-                      <button disabled>已安装</button>
+                      <button className="download-button" disabled>已安装</button>
                     ) : progress ? (
-                      <button disabled>下载中...</button>
+                      <button className="download-button" disabled>下载中...</button>
                     ) : (
-                      <button onClick={() => handleDownload(model.id)}>
+                      <button className="download-button" onClick={() => handleDownload(service.service_id, version, platformVariant?.platform)}>
                         下载
                       </button>
                     )}
@@ -376,20 +506,21 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
 
       {activeTab === 'installed' && (
         <div className="model-list">
-          {installedModels.length === 0 ? (
-            <div className="empty-state">暂无已安装的模型</div>
+          {installedServices.length === 0 ? (
+            <div className="empty-state">暂无已安装的服务</div>
           ) : (
-            installedModels.map((model) => (
-              <div key={`${model.modelId}_${model.version}`} className="model-item">
+            installedServices.map((service) => (
+              <div key={`${service.serviceId}_${service.version}`} className="model-item">
                 <div className="model-info">
-                  <h3>{model.modelId}</h3>
-                  <p>版本: {model.version}</p>
-                  <p>状态: {model.info.status}</p>
-                  <p>大小: {formatBytes(model.info.size_bytes)}</p>
-                  <p>安装时间: {new Date(model.info.installed_at).toLocaleString()}</p>
+                  <h3>{service.serviceId}</h3>
+                  <p>版本: {service.version}</p>
+                  {service.platform && <p>平台: {service.platform}</p>}
+                  <p>状态: {service.info.status}</p>
+                  <p>大小: {formatBytes(service.info.size_bytes)}</p>
+                  <p>安装时间: {new Date(service.info.installed_at).toLocaleString()}</p>
                 </div>
                 <div className="model-actions">
-                  <button onClick={() => handleUninstall(model.modelId, model.version)}>
+                  <button className="uninstall-button" onClick={() => handleUninstall(service.serviceId, service.version)}>
                     卸载
                   </button>
                 </div>
@@ -401,53 +532,45 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
 
       {activeTab === 'ranking' && (
         <div className="model-list">
-          <h3>热门模型排行（需求量）</h3>
-          {modelRanking.length === 0 ? (
+          <h3>热门服务排行（使用节点数）</h3>
+          {serviceRanking.length === 0 ? (
             <div className="empty-state">加载中...</div>
           ) : (
             <table className="ranking-table">
               <thead>
                 <tr>
                   <th>排名</th>
-                  <th>模型 ID</th>
-                  <th>请求次数</th>
+                  <th>服务 ID</th>
+                  <th>使用节点数</th>
                   <th>操作</th>
                 </tr>
               </thead>
               <tbody>
-                {modelRanking.map((item) => {
-                  const installedModel = installedModels.find(
-                    m => m.modelId === item.model_id && m.info.status === 'ready'
+                {serviceRanking.map((item) => {
+                  const installedService = installedServices.find(
+                    s => s.serviceId === item.service_id && s.info.status === 'ready'
                   );
-                  const isInstalled = !!installedModel;
-                  
+                  const isInstalled = !!installedService;
+
                   return (
-                    <tr key={item.model_id}>
+                    <tr key={item.service_id}>
                       <td>#{item.rank}</td>
-                      <td>{item.model_id}</td>
-                      <td>{item.request_count.toLocaleString()}</td>
+                      <td>{item.service_id}</td>
+                      <td>{item.node_count.toLocaleString()}</td>
                       <td>
                         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                           {isInstalled ? (
                             <>
-                              <span style={{ color: '#28a745', fontWeight: 500 }}>已下载</span>
-                              <button 
-                                onClick={() => handleUninstall(item.model_id, installedModel?.version)}
-                                style={{ 
-                                  padding: '4px 12px', 
-                                  fontSize: '12px',
-                                  background: '#dc3545',
-                                  color: 'white',
-                                  border: 'none',
-                                  borderRadius: '4px',
-                                  cursor: 'pointer'
-                                }}
+                              <span style={{ color: '#28a745', fontWeight: 500 }}>已安装</span>
+                              <button
+                                className="uninstall-button"
+                                onClick={() => handleUninstall(item.service_id, installedService?.version)}
                               >
                                 卸载
                               </button>
                             </>
                           ) : (
-                            <button onClick={() => handleDownload(item.model_id)}>
+                            <button className="download-button" onClick={() => handleDownload(item.service_id)}>
                               下载
                             </button>
                           )}

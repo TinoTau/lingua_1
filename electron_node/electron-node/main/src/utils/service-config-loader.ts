@@ -27,6 +27,12 @@ export async function loadServiceConfigFromJson(
       return null;
     }
 
+    // 如果没有 service_json_path，说明是手动安装的服务，没有 service.json
+    if (!current.service_json_path) {
+      logger.debug({ serviceId }, 'Service does not have service.json (manually installed), using fallback config');
+      return null;
+    }
+
     const serviceJsonPath = current.service_json_path;
     
     // 读取 service.json

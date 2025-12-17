@@ -47,9 +47,10 @@ const path = __importStar(require("path"));
 const logger_1 = __importDefault(require("../logger"));
 class ServiceRegistryManager {
     constructor(servicesDir) {
-        this.registryPath = path.join(servicesDir, 'registry');
-        this.installedPath = path.join(this.registryPath, 'installed.json');
-        this.currentPath = path.join(this.registryPath, 'current.json');
+        // 注册表文件直接放在 services 目录下，而不是 services/registry 子目录
+        this.registryPath = servicesDir;
+        this.installedPath = path.join(servicesDir, 'installed.json');
+        this.currentPath = path.join(servicesDir, 'current.json');
         this.registry = {
             installed: {},
             current: {},
@@ -66,6 +67,24 @@ class ServiceRegistryManager {
             try {
                 const installedData = await fs.readFile(this.installedPath, 'utf-8');
                 this.registry.installed = JSON.parse(installedData);
+                // 替换路径占位符 {SERVICES_DIR} 为实际路径
+                // 将 Windows 路径中的反斜杠转换为正斜杠以匹配占位符格式
+                const servicesDirNormalized = this.registryPath.replace(/\\/g, '/');
+                logger_1.default.info({
+                    registryPath: this.registryPath,
+                    servicesDirNormalized,
+                    hasPlaceholder: installedData.includes('{SERVICES_DIR}'),
+                    installedCount: Object.keys(this.registry.installed).length
+                }, 'Loading installed.json and replacing path placeholders');
+                this.registry.installed = this.replacePathPlaceholders(this.registry.installed, servicesDirNormalized);
+                // 验证替换是否成功
+                const afterReplace = JSON.stringify(this.registry.installed);
+                if (afterReplace.includes('{SERVICES_DIR}')) {
+                    logger_1.default.warn({}, 'Path placeholder replacement may have failed');
+                }
+                else {
+                    logger_1.default.info({}, 'Path placeholder replacement successful');
+                }
             }
             catch (error) {
                 if (error.code !== 'ENOENT') {
@@ -77,6 +96,9 @@ class ServiceRegistryManager {
             try {
                 const currentData = await fs.readFile(this.currentPath, 'utf-8');
                 this.registry.current = JSON.parse(currentData);
+                // 替换路径占位符
+                const servicesDirNormalized = this.registryPath.replace(/\\/g, '/');
+                this.registry.current = this.replacePathPlaceholders(this.registry.current, servicesDirNormalized);
             }
             catch (error) {
                 if (error.code !== 'ENOENT') {
@@ -94,6 +116,25 @@ class ServiceRegistryManager {
             logger_1.default.error({ error }, 'Failed to load service registry');
             throw error;
         }
+    }
+    /**
+     * 递归替换对象中的路径占位符
+     */
+    replacePathPlaceholders(obj, servicesDir) {
+        if (typeof obj === 'string') {
+            return obj.replace(/{SERVICES_DIR}/g, servicesDir);
+        }
+        else if (Array.isArray(obj)) {
+            return obj.map(item => this.replacePathPlaceholders(item, servicesDir));
+        }
+        else if (obj && typeof obj === 'object') {
+            const result = {};
+            for (const [key, value] of Object.entries(obj)) {
+                result[key] = this.replacePathPlaceholders(value, servicesDir);
+            }
+            return result;
+        }
+        return obj;
     }
     /**
      * 保存注册表
@@ -116,7 +157,7 @@ class ServiceRegistryManager {
     /**
      * 注册已安装的服务版本
      */
-    async registerInstalled(serviceId, version, platform, installPath, serviceJsonPath) {
+    async registerInstalled(serviceId, version, platform, installPath, serviceJsonPath, sizeBytes) {
         if (!this.registry.installed[serviceId]) {
             this.registry.installed[serviceId] = {};
         }
@@ -126,11 +167,12 @@ class ServiceRegistryManager {
             platform,
             installed_at: new Date().toISOString(),
             service_id: serviceId,
-            service_json_path: serviceJsonPath,
+            service_json_path: serviceJsonPath, // 可选：只有通过服务包管理器安装的服务才有
             install_path: installPath,
+            size_bytes: sizeBytes, // 从 services_index.json 的 artifact.size_bytes 复制而来
         };
         await this.saveRegistry();
-        logger_1.default.info({ serviceId, version, platform }, 'Registered installed service version');
+        logger_1.default.info({ serviceId, version, platform, sizeBytes }, 'Registered installed service version');
     }
     /**
      * 取消注册已安装的服务版本
