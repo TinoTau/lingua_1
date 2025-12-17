@@ -30,10 +30,12 @@ app.add_middleware(
 # 模型存储路径
 MODELS_DIR = Path(os.getenv("MODELS_DIR", "./models"))
 STORAGE_DIR = MODELS_DIR / "storage"
+SERVICES_STORAGE_DIR = MODELS_DIR / "services"
 METADATA_FILE = MODELS_DIR / "metadata.json"
 
 # 确保目录存在
 STORAGE_DIR.mkdir(parents=True, exist_ok=True)
+SERVICES_STORAGE_DIR.mkdir(parents=True, exist_ok=True)
 
 
 # ===== v3 API 数据模型 =====
@@ -64,6 +66,37 @@ class ModelRankingItem(BaseModel):
     model_id: str
     request_count: int
     rank: int
+
+
+# ===== 服务包 API 数据模型 =====
+
+class ServiceArtifact(BaseModel):
+    type: str  # "zip"
+    url: str
+    sha256: str
+    size_bytes: int
+    etag: Optional[str] = None
+
+
+class ServiceSignature(BaseModel):
+    alg: str  # "ed25519"
+    key_id: str
+    value_b64: str
+    signed_payload: Dict[str, str]  # service_id, version, platform, sha256
+
+
+class ServiceVariant(BaseModel):
+    version: str
+    platform: str  # windows-x64, linux-x64, etc.
+    artifact: ServiceArtifact
+    signature: Optional[ServiceSignature] = None
+
+
+class ServiceInfo(BaseModel):
+    service_id: str
+    name: str
+    latest_version: str
+    variants: List[ServiceVariant]
 
 
 # ===== 元数据加载和转换 =====
@@ -439,6 +472,217 @@ async def get_model_ranking():
         ModelRankingItem(model_id="whisper-large-v3-zh", request_count=15321, rank=2),
         ModelRankingItem(model_id="marian-en-ja", request_count=9876, rank=3),
     ]
+
+
+# ===== 服务包 API 端点 =====
+
+def scan_service_packages(platform_filter: Optional[str] = None) -> Dict[str, ServiceInfo]:
+    """扫描服务包目录，返回服务信息字典"""
+    services_dict: Dict[str, ServiceInfo] = {}
+    
+    if not SERVICES_STORAGE_DIR.exists():
+        return services_dict
+    
+    # 扫描 services/{service_id}/{version}/{platform}/service.zip
+    for service_dir in SERVICES_STORAGE_DIR.iterdir():
+        if not service_dir.is_dir():
+            continue
+        
+        service_id = service_dir.name
+        variants: List[ServiceVariant] = []
+        versions: List[str] = []
+        
+        # 扫描版本目录
+        for version_dir in service_dir.iterdir():
+            if not version_dir.is_dir():
+                continue
+            
+            version = version_dir.name
+            versions.append(version)
+            
+            # 扫描平台目录
+            for platform_dir in version_dir.iterdir():
+                if not platform_dir.is_dir():
+                    continue
+                
+                platform = platform_dir.name
+                
+                # 如果指定了平台过滤，跳过不匹配的平台
+                if platform_filter and platform != platform_filter:
+                    continue
+                
+                # 查找 service.zip
+                zip_file = platform_dir / "service.zip"
+                if not zip_file.exists() or not zip_file.is_file():
+                    continue
+                
+                # 计算 SHA256
+                file_size = zip_file.stat().st_size
+                with open(zip_file, 'rb') as f:
+                    file_hash = hashlib.sha256(f.read()).hexdigest()
+                
+                # 构建 artifact URL（相对路径）
+                artifact_url = f"/storage/services/{service_id}/{version}/{platform}/service.zip"
+                
+                variant = ServiceVariant(
+                    version=version,
+                    platform=platform,
+                    artifact=ServiceArtifact(
+                        type="zip",
+                        url=artifact_url,
+                        sha256=file_hash,
+                        size_bytes=file_size,
+                        etag=file_hash[:16]  # 使用前16位作为简单 ETag
+                    )
+                    # signature 可以从单独的签名文件加载，这里暂时为空
+                )
+                variants.append(variant)
+        
+        if variants:
+            # 确定最新版本
+            latest_version = max(versions, key=lambda v: v) if versions else ""
+            
+            services_dict[service_id] = ServiceInfo(
+                service_id=service_id,
+                name=service_id.replace('-', ' ').replace('_', ' ').title(),
+                latest_version=latest_version,
+                variants=variants
+            )
+    
+    return services_dict
+
+
+@app.get("/api/services")
+async def list_services(
+    platform: Optional[str] = None,
+    service_id: Optional[str] = None,
+    version: Optional[str] = None
+):
+    """列出服务（含多平台产物）"""
+    services_dict = scan_service_packages(platform_filter=platform)
+    
+    # 转换为列表
+    services_list = list(services_dict.values())
+    
+    # 过滤 service_id
+    if service_id:
+        services_list = [s for s in services_list if s.service_id == service_id]
+    
+    # 过滤 version
+    if version:
+        for service in services_list:
+            service.variants = [v for v in service.variants if v.version == version]
+        services_list = [s for s in services_list if s.variants]  # 移除没有匹配 variant 的服务
+    
+    return {"services": services_list}
+
+
+@app.get("/api/services/{service_id}/{version}/{platform}")
+async def get_service_variant(
+    service_id: str,
+    version: str,
+    platform: str
+):
+    """获取单个服务包变体的元数据"""
+    services_dict = scan_service_packages(platform_filter=platform)
+    
+    if service_id not in services_dict:
+        raise HTTPException(status_code=404, detail="Service not found")
+    
+    service = services_dict[service_id]
+    variant = next(
+        (v for v in service.variants if v.version == version and v.platform == platform),
+        None
+    )
+    
+    if not variant:
+        raise HTTPException(status_code=404, detail="Service variant not found")
+    
+    return variant
+
+
+@app.get("/storage/services/{service_id}/{version}/{platform}/service.zip")
+async def download_service_package(
+    service_id: str,
+    version: str,
+    platform: str,
+    request: Request
+):
+    """下载服务包（支持 Range 请求和 ETag）"""
+    # 构建完整路径
+    zip_path = SERVICES_STORAGE_DIR / service_id / version / platform / "service.zip"
+    
+    # 验证路径在允许的目录内
+    try:
+        zip_path.resolve().relative_to(SERVICES_STORAGE_DIR.resolve())
+    except ValueError:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    # 检查文件是否存在
+    if not zip_path.exists() or not zip_path.is_file():
+        raise HTTPException(status_code=404, detail="Service package not found")
+    
+    # 计算 ETag
+    with open(zip_path, 'rb') as f:
+        file_hash = hashlib.sha256(f.read()).hexdigest()
+    etag = f'"{file_hash[:16]}"'
+    
+    # 检查 If-None-Match（避免重复下载）
+    if_none_match = request.headers.get('if-none-match')
+    if if_none_match == etag:
+        return Response(status_code=304)  # Not Modified
+    
+    file_size = zip_path.stat().st_size
+    
+    # 支持 Range 请求（断点续传）
+    range_header = request.headers.get('range')
+    
+    if range_header:
+        # 解析 Range 头
+        range_match = range_header.replace('bytes=', '')
+        if '-' in range_match:
+            start_str, end_str = range_match.split('-', 1)
+            start = int(start_str) if start_str else 0
+            end = int(end_str) if end_str else None
+        else:
+            start = int(range_match)
+            end = None
+        
+        if end is None:
+            end = file_size - 1
+        
+        # 验证范围
+        if start < 0 or end >= file_size or start > end:
+            raise HTTPException(status_code=416, detail="Range Not Satisfiable")
+        
+        # 读取文件片段
+        with open(zip_path, 'rb') as f:
+            f.seek(start)
+            content = f.read(end - start + 1)
+        
+        headers = {
+            'Content-Range': f'bytes {start}-{end}/{file_size}',
+            'Accept-Ranges': 'bytes',
+            'Content-Length': str(len(content)),
+            'Content-Type': 'application/zip',
+            'ETag': etag
+        }
+        
+        return Response(
+            content=content,
+            status_code=206,
+            headers=headers
+        )
+    else:
+        # 完整文件下载
+        return FileResponse(
+            path=str(zip_path),
+            headers={
+                'Accept-Ranges': 'bytes',
+                'Content-Type': 'application/zip',
+                'ETag': etag
+            }
+        )
 
 
 if __name__ == "__main__":

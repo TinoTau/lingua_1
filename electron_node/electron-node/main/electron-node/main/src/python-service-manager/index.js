@@ -1,4 +1,37 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -10,6 +43,8 @@ const port_manager_1 = require("../utils/port-manager");
 const python_service_config_1 = require("../utils/python-service-config");
 const project_root_1 = require("./project-root");
 const service_process_1 = require("./service-process");
+const service_config_loader_1 = require("../utils/service-config-loader");
+const path = __importStar(require("path"));
 class PythonServiceManager {
     constructor() {
         this.services = new Map();
@@ -19,7 +54,61 @@ class PythonServiceManager {
         this.projectRoot = '';
         this.projectRoot = (0, project_root_1.findProjectRoot)();
     }
-    getServiceConfig(serviceName) {
+    /**
+     * 获取服务配置（优先从 service.json 读取，否则使用硬编码配置）
+     */
+    async getServiceConfig(serviceName) {
+        // 映射服务名称到 service_id
+        const serviceIdMap = {
+            nmt: 'nmt-m2m100',
+            tts: 'piper-tts',
+            yourtts: 'your-tts',
+        };
+        const serviceId = serviceIdMap[serviceName];
+        // 尝试从 service.json 加载配置
+        try {
+            // 获取服务目录（userData/services 或项目目录）
+            let servicesDir;
+            try {
+                // 尝试使用 electron app（如果可用）
+                const { app } = require('electron');
+                if (app && app.getPath) {
+                    const userData = app.getPath('userData');
+                    servicesDir = path.join(userData, 'services');
+                }
+                else {
+                    // 如果没有 app，使用项目目录下的 services
+                    servicesDir = path.join(this.projectRoot, 'electron_node', 'services');
+                }
+            }
+            catch {
+                // 如果 electron 不可用，使用项目目录
+                servicesDir = path.join(this.projectRoot, 'electron_node', 'services');
+            }
+            const serviceConfig = await (0, service_config_loader_1.loadServiceConfigFromJson)(serviceId, servicesDir);
+            if (serviceConfig) {
+                logger_1.default.info({ serviceName, serviceId }, 'Using service.json configuration');
+                // 转换为 PythonServiceConfig 格式
+                const converted = (0, service_config_loader_1.convertToPythonServiceConfig)(serviceId, serviceConfig.platformConfig, serviceConfig.installPath, this.projectRoot);
+                // 获取硬编码配置以补充缺失的字段（如 env、logDir 等）
+                const fallbackConfig = (0, python_service_config_1.getPythonServiceConfig)(serviceName, this.projectRoot);
+                if (fallbackConfig) {
+                    // 合并配置：使用 service.json 的配置，但保留硬编码配置的其他字段
+                    return {
+                        ...fallbackConfig,
+                        name: converted.name,
+                        port: converted.port,
+                        servicePath: converted.servicePath,
+                        scriptPath: converted.scriptPath,
+                        workingDir: converted.workingDir,
+                    };
+                }
+            }
+        }
+        catch (error) {
+            logger_1.default.debug({ error, serviceName }, 'Failed to load service.json, using fallback config');
+        }
+        // 回退到硬编码配置
         return (0, python_service_config_1.getPythonServiceConfig)(serviceName, this.projectRoot);
     }
     async startService(serviceName) {
@@ -27,7 +116,7 @@ class PythonServiceManager {
             logger_1.default.warn({ serviceName }, 'Service is already running');
             return;
         }
-        const config = this.getServiceConfig(serviceName);
+        const config = await this.getServiceConfig(serviceName);
         if (!config) {
             throw new Error(`Unknown service: ${serviceName}`);
         }

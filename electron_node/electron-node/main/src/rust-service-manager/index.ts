@@ -5,6 +5,8 @@ import { RustServiceStatus } from './types';
 import { findProjectPaths } from './project-root';
 import { startRustProcess, stopRustProcess } from './process-manager';
 import { waitForServiceReady } from './service-health';
+import { loadServiceConfigFromJson } from '../utils/service-config-loader';
+import * as path from 'path';
 
 export type { RustServiceStatus };
 export { RustServiceManager };
@@ -54,13 +56,41 @@ class RustServiceManager {
         this.status.lastError = null;
 
         try {
+            // 尝试从 service.json 读取配置
+            let servicePath = this.projectPaths.servicePath;
+            let port = this.port;
+            
+            try {
+                let servicesDir: string;
+                try {
+                    const { app } = require('electron');
+                    if (app && app.getPath) {
+                        const userData = app.getPath('userData');
+                        servicesDir = path.join(userData, 'services');
+                    } else {
+                        servicesDir = path.join(this.projectPaths.projectRoot, 'electron_node', 'services');
+                    }
+                } catch {
+                    servicesDir = path.join(this.projectPaths.projectRoot, 'electron_node', 'services');
+                }
+
+                const serviceConfig = await loadServiceConfigFromJson('node-inference', servicesDir);
+                if (serviceConfig) {
+                    logger.info({}, 'Using service.json configuration for Rust service');
+                    servicePath = serviceConfig.installPath;
+                    port = serviceConfig.platformConfig.default_port;
+                }
+            } catch (error) {
+                logger.debug({ error }, 'Failed to load service.json for Rust service, using fallback config');
+            }
+
             const logFile = require('path').join(this.projectPaths.logDir, 'node-inference.log');
 
             // 启动服务进程
             this.process = startRustProcess(
-                this.projectPaths.servicePath,
+                servicePath,
                 this.projectPaths.projectRoot,
-                this.port,
+                port,
                 logFile,
                 {
                     onProcessError: (error) => {
@@ -138,12 +168,18 @@ class RustServiceManager {
                 }
             );
 
+            // 使用实际使用的端口（可能从 service.json 读取）
+            const actualPort = port;
+            
             this.status.running = true;
             this.status.starting = false;
             this.status.pid = this.process.pid || null;
-            this.status.port = this.port;
+            this.status.port = actualPort;
             this.status.startedAt = new Date();
             this.status.lastError = null;
+            
+            // 更新内部端口变量
+            this.port = actualPort;
 
             // 注意：GPU跟踪不会在服务启动时开始，而是在第一个任务处理时才开始（在incrementTaskCount中）
             // 这样可以确保只有在有实际任务时才统计GPU使用时间

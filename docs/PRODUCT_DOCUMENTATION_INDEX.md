@@ -2,7 +2,7 @@
 
 本文档列出了最能说明当前产品形态、功能、进度的核心文档。
 
-**最后更新**: 2025-01-XX
+**最后更新**: 2025-12-17
 
 ---
 
@@ -146,6 +146,14 @@
 - **适用对象**: 开发者
 - **更新状态**: ✅ 最新
 
+#### 5.3 平台化服务包管理 API
+- **位置**: 
+  - `central_server/model-hub/docs/Platform_Ready_Model_Management_and_Node_Service_Package_Spec.md` - 完整规范
+  - `electron_node/electron-node/docs/PLATFORM_READY_IMPLEMENTATION_SUMMARY.md` - 实现总结
+- **内容**: 平台化服务包管理 API（支持多平台）、服务包安装和管理
+- **适用对象**: 开发者、架构师
+- **更新状态**: ✅ 最新（2025-12-17）
+
 ---
 
 ### 6. 测试文档
@@ -161,6 +169,12 @@
 - **内容**: 端到端测试步骤和验证方法
 - **适用对象**: 测试人员、开发者
 - **更新状态**: ✅ 最新
+
+#### 6.3 平台化服务包管理集成测试
+- **位置**: `electron_node/electron-node/tests/stage3.2/INTEGRATION_TEST_GUIDE.md`
+- **内容**: 平台化服务包管理系统集成测试步骤和验证方法
+- **适用对象**: 测试人员、开发者
+- **更新状态**: ✅ 最新（2025-12-17）
 
 ---
 

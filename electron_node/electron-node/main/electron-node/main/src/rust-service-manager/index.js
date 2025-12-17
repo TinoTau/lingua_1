@@ -1,4 +1,37 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -9,6 +42,8 @@ const gpu_tracker_1 = require("../utils/gpu-tracker");
 const project_root_1 = require("./project-root");
 const process_manager_1 = require("./process-manager");
 const service_health_1 = require("./service-health");
+const service_config_loader_1 = require("../utils/service-config-loader");
+const path = __importStar(require("path"));
 class RustServiceManager {
     constructor() {
         this.process = null;
@@ -46,9 +81,37 @@ class RustServiceManager {
         this.status.starting = true;
         this.status.lastError = null;
         try {
+            // 尝试从 service.json 读取配置
+            let servicePath = this.projectPaths.servicePath;
+            let port = this.port;
+            try {
+                let servicesDir;
+                try {
+                    const { app } = require('electron');
+                    if (app && app.getPath) {
+                        const userData = app.getPath('userData');
+                        servicesDir = path.join(userData, 'services');
+                    }
+                    else {
+                        servicesDir = path.join(this.projectPaths.projectRoot, 'electron_node', 'services');
+                    }
+                }
+                catch {
+                    servicesDir = path.join(this.projectPaths.projectRoot, 'electron_node', 'services');
+                }
+                const serviceConfig = await (0, service_config_loader_1.loadServiceConfigFromJson)('node-inference', servicesDir);
+                if (serviceConfig) {
+                    logger_1.default.info({}, 'Using service.json configuration for Rust service');
+                    servicePath = serviceConfig.installPath;
+                    port = serviceConfig.platformConfig.default_port;
+                }
+            }
+            catch (error) {
+                logger_1.default.debug({ error }, 'Failed to load service.json for Rust service, using fallback config');
+            }
             const logFile = require('path').join(this.projectPaths.logDir, 'node-inference.log');
             // 启动服务进程
-            this.process = (0, process_manager_1.startRustProcess)(this.projectPaths.servicePath, this.projectPaths.projectRoot, this.port, logFile, {
+            this.process = (0, process_manager_1.startRustProcess)(servicePath, this.projectPaths.projectRoot, port, logFile, {
                 onProcessError: (error) => {
                     this.status.lastError = error.message;
                     this.status.running = false;
@@ -93,12 +156,16 @@ class RustServiceManager {
                     exitCode: this.process?.exitCode,
                 };
             });
+            // 使用实际使用的端口（可能从 service.json 读取）
+            const actualPort = port;
             this.status.running = true;
             this.status.starting = false;
             this.status.pid = this.process.pid || null;
-            this.status.port = this.port;
+            this.status.port = actualPort;
             this.status.startedAt = new Date();
             this.status.lastError = null;
+            // 更新内部端口变量
+            this.port = actualPort;
             // 注意：GPU跟踪不会在服务启动时开始，而是在第一个任务处理时才开始（在incrementTaskCount中）
             // 这样可以确保只有在有实际任务时才统计GPU使用时间
             logger_1.default.info({

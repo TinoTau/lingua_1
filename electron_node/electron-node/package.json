@@ -17,7 +17,11 @@
     "package:linux": "electron-builder --linux",
     "test": "jest",
     "test:stage3.1": "jest --config tests/stage3.1/jest.config.js",
-    "test:stage3.1:watch": "jest --config tests/stage3.1/jest.config.js --watch"
+    "test:stage3.1:watch": "jest --config tests/stage3.1/jest.config.js --watch",
+    "test:stage3.2": "jest --config tests/stage3.2/jest.config.js",
+    "test:stage3.2:watch": "jest --config tests/stage3.2/jest.config.js --watch",
+    "test:integration": "npm run build:main && node tests/stage3.2/integration-test.js",
+    "test:integration:ps1": "powershell -ExecutionPolicy Bypass -File tests/stage3.2/run-integration-test.ps1"
   },
   "keywords": [
     "electron",
@@ -43,6 +47,7 @@
     "vite": "^5.0.0"
   },
   "dependencies": {
+    "adm-zip": "^0.5.10",
     "axios": "^1.0.0",
     "pino": "^8.17.0",
     "pino-pretty": "^10.3.0",
