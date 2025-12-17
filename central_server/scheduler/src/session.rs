@@ -115,6 +115,12 @@ impl SessionManager {
         let mut sessions = self.sessions.write().await;
         sessions.remove(session_id);
     }
+    
+    /// 获取所有会话（用于统计）
+    pub async fn list_all_sessions(&self) -> Vec<Session> {
+        let sessions = self.sessions.read().await;
+        sessions.values().cloned().collect()
+    }
 }
 
 #[derive(Debug)]

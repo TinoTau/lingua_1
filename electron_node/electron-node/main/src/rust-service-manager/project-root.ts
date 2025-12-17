@@ -72,7 +72,7 @@ export function findProjectPaths(): ProjectPaths {
           projectRoot,
           servicePath,
         },
-        'Rust 服务管理器：找到项目根目录'
+        'Rust service manager: Found project root directory'
       );
       return {
         projectRoot,
@@ -83,7 +83,7 @@ export function findProjectPaths(): ProjectPaths {
   }
 
   // 如果都没找到，抛出错误
-  const error = `无法找到项目根目录。已检查的路径：${uniqueCandidates.join(', ')}`;
+  const error = `Unable to find project root directory. Checked paths: ${uniqueCandidates.join(', ')}`;
   logger.error(
     {
       __dirname,

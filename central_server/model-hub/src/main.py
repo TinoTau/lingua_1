@@ -115,25 +115,46 @@ def convert_to_v3_format(metadata: Dict) -> List[ModelInfo]:
     return list(models_dict.values())
 
 
-def calculate_checksum_sha256(model_id: str, version: str) -> str:
+def calculate_checksum_sha256(model_id: str, version: str, model_dir: Path = None) -> str:
     """计算模型版本的 checksum.sha256"""
-    version_dir = STORAGE_DIR / model_id / version
+    # 如果提供了model_dir，使用它；否则使用标准storage目录结构
+    if model_dir:
+        version_dir = model_dir
+    else:
+        version_dir = STORAGE_DIR / model_id / version
+    
     checksum_file = version_dir / "checksum.sha256"
     
     if checksum_file.exists():
         return checksum_file.read_text(encoding='utf-8').strip()
     
+    # 确保目录存在
+    if not version_dir.exists():
+        return "{}"  # 返回空的JSON对象
+    
     # 如果没有 checksum 文件，计算所有文件的 SHA256
     checksums = {}
     for file_path in version_dir.glob("*"):
         if file_path.is_file() and file_path.name != "checksum.sha256":
-            with open(file_path, 'rb') as f:
-                file_hash = hashlib.sha256(f.read()).hexdigest()
-                checksums[file_path.name] = file_hash
+            try:
+                with open(file_path, 'rb') as f:
+                    file_hash = hashlib.sha256(f.read()).hexdigest()
+                    checksums[file_path.name] = file_hash
+            except Exception as e:
+                # 如果读取文件失败，跳过
+                print(f"Warning: Failed to calculate checksum for {file_path}: {e}")
+                continue
     
     # 生成 checksum 文件内容（JSON 格式）
     checksum_content = json.dumps(checksums, indent=2)
-    checksum_file.write_text(checksum_content, encoding='utf-8')
+    
+    # 确保目录存在后再写入
+    try:
+        checksum_file.parent.mkdir(parents=True, exist_ok=True)
+        checksum_file.write_text(checksum_content, encoding='utf-8')
+    except Exception as e:
+        print(f"Warning: Failed to write checksum file {checksum_file}: {e}")
+        # 返回计算的内容，即使无法写入文件
     
     return checksum_content
 
@@ -161,52 +182,160 @@ async def list_models():
     # 从文件系统扫描模型
     models_dict: Dict[str, ModelInfo] = {}
     
-    for model_dir in STORAGE_DIR.iterdir():
-        if not model_dir.is_dir():
-            continue
-        
-        model_id = model_dir.name
-        versions = []
-        
-        for version_dir in model_dir.iterdir():
-            if not version_dir.is_dir():
+    # 首先尝试从storage目录扫描（标准v3格式）
+    # 注意：即使storage目录有模型，我们也会继续扫描旧格式目录，以合并所有模型
+    if STORAGE_DIR.exists():
+        for model_dir in STORAGE_DIR.iterdir():
+            if not model_dir.is_dir():
                 continue
             
-            version = version_dir.name
-            files = []
-            total_size = 0
+            model_id = model_dir.name
+            versions = []
             
-            for file_path in version_dir.iterdir():
-                if file_path.is_file() and file_path.name != "checksum.sha256":
-                    file_size = file_path.stat().st_size
-                    files.append(ModelFileInfo(
-                        path=file_path.name,
-                        size_bytes=file_size
-                    ))
-                    total_size += file_size
-            
+            for version_dir in model_dir.iterdir():
+                if not version_dir.is_dir():
+                    continue
+                
+                version = version_dir.name
+                files = []
+                total_size = 0
+                
+                for file_path in version_dir.iterdir():
+                    if file_path.is_file() and file_path.name != "checksum.sha256":
+                        file_size = file_path.stat().st_size
+                        files.append(ModelFileInfo(
+                            path=file_path.name,
+                            size_bytes=file_size
+                        ))
+                        total_size += file_size
+                
             if files:
-                checksum = calculate_checksum_sha256(model_id, version)
+                checksum = calculate_checksum_sha256(model_id, version, version_dir)
                 versions.append(ModelVersion(
-                    version=version,
-                    size_bytes=total_size,
-                    files=files,
-                    checksum_sha256=checksum,
-                    updated_at=datetime.fromtimestamp(version_dir.stat().st_mtime).isoformat()
-                ))
-        
-        if versions:
-            # 确定默认版本（最新的版本）
-            default_version = max(versions, key=lambda v: v.version).version
+                        version=version,
+                        size_bytes=total_size,
+                        files=files,
+                        checksum_sha256=checksum,
+                        updated_at=datetime.fromtimestamp(version_dir.stat().st_mtime).isoformat()
+                    ))
             
-            models_dict[model_id] = ModelInfo(
-                id=model_id,
-                name=model_id.replace('-', ' ').title(),
-                task="asr",  # 默认，可以从 manifest.json 读取
-                languages=["zh", "en"],  # 默认，可以从 manifest.json 读取
-                default_version=default_version,
-                versions=versions
-            )
+            if versions:
+                # 确定默认版本（最新的版本）
+                default_version = max(versions, key=lambda v: v.version).version
+                
+                models_dict[model_id] = ModelInfo(
+                    id=model_id,
+                    name=model_id.replace('-', ' ').title(),
+                    task="asr",  # 默认，可以从 manifest.json 读取
+                    languages=["zh", "en"],  # 默认，可以从 manifest.json 读取
+                    default_version=default_version,
+                    versions=versions
+                )
+    
+    # 尝试从旧格式目录扫描（asr, nmt, tts等）
+    if MODELS_DIR.exists():
+        # 任务类型到目录名的映射
+        task_dirs = {
+            "asr": ["asr"],
+            "nmt": ["nmt"],
+            "tts": ["tts"],
+            "vad": ["vad"],
+            "emotion": ["emotion"],
+            "persona": ["persona"],
+            "speaker_embedding": ["speaker_embedding"]
+        }
+        
+        for task, dir_names in task_dirs.items():
+            for dir_name in dir_names:
+                task_dir = MODELS_DIR / dir_name
+                if not task_dir.exists():
+                    continue
+                
+                # 扫描该任务类型下的所有模型目录
+                for model_dir in task_dir.iterdir():
+                    if not model_dir.is_dir():
+                        continue
+                    
+                    model_id = f"{model_dir.name}"
+                    # 如果已经存在同名模型，跳过（优先使用storage目录的）
+                    if model_id in models_dict:
+                        continue
+                    
+                    # 检查是否有版本目录，如果没有，将整个目录作为一个版本
+                    version_dirs = [d for d in model_dir.iterdir() if d.is_dir()]
+                    
+                    # 检查根目录是否有文件（可能既有版本目录又有根目录文件）
+                    root_files = [f for f in model_dir.iterdir() if f.is_file() and f.name != "checksum.sha256"]
+                    
+                    versions = []
+                    
+                    if version_dirs:
+                        # 有版本目录结构，扫描版本目录
+                        for version_dir in version_dirs:
+                            version = version_dir.name
+                            files = []
+                            total_size = 0
+                            
+                            for file_path in version_dir.iterdir():
+                                if file_path.is_file() and file_path.name != "checksum.sha256":
+                                    file_size = file_path.stat().st_size
+                                    files.append(ModelFileInfo(
+                                        path=file_path.name,
+                                        size_bytes=file_size
+                                    ))
+                                    total_size += file_size
+                            
+                            if files:
+                                checksum = calculate_checksum_sha256(model_id, version, version_dir)
+                                versions.append(ModelVersion(
+                                    version=version,
+                                    size_bytes=total_size,
+                                    files=files,
+                                    checksum_sha256=checksum,
+                                    updated_at=datetime.fromtimestamp(version_dir.stat().st_mtime).isoformat()
+                                ))
+                    
+                    # 如果根目录有文件，也作为一个版本（1.0.0）
+                    if root_files:
+                        files = []
+                        total_size = 0
+                        
+                        for file_path in root_files:
+                            file_size = file_path.stat().st_size
+                            files.append(ModelFileInfo(
+                                path=file_path.name,
+                                size_bytes=file_size
+                            ))
+                            total_size += file_size
+                        
+                        if files:
+                            versions.append(ModelVersion(
+                                version="1.0.0",
+                                size_bytes=total_size,
+                                files=files,
+                                checksum_sha256=calculate_checksum_sha256(model_id, "1.0.0", model_dir),
+                                updated_at=datetime.fromtimestamp(model_dir.stat().st_mtime).isoformat()
+                            ))
+                    
+                    if versions:
+                        default_version = max(versions, key=lambda v: v.version).version
+                        
+                        # 从模型ID推断语言（简单规则）
+                        languages = ["zh", "en"]  # 默认
+                        if "zh" in model_id.lower() or "chinese" in model_id.lower():
+                            languages = ["zh"]
+                        if "en" in model_id.lower() or "english" in model_id.lower():
+                            if "zh" not in languages:
+                                languages = ["en"]
+                        
+                        models_dict[model_id] = ModelInfo(
+                            id=model_id,
+                            name=model_id.replace('-', ' ').replace('_', ' ').title(),
+                            task=task,
+                            languages=languages,
+                            default_version=default_version,
+                            versions=versions
+                        )
     
     return list(models_dict.values())
 

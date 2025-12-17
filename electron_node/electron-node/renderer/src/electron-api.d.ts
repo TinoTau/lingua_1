@@ -27,6 +27,7 @@ export interface ElectronAPI {
     connected: boolean;
     lastHeartbeat: Date | null;
   }>;
+  reconnectNode: () => Promise<{ success: boolean; error?: string }>;
   generatePairingCode: () => Promise<string | null>;
 
   // Rust 服务管理

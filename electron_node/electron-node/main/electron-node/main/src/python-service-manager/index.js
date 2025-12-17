@@ -24,7 +24,7 @@ class PythonServiceManager {
     }
     async startService(serviceName) {
         if (this.services.has(serviceName)) {
-            logger_1.default.warn({ serviceName }, '服务已在运行');
+            logger_1.default.warn({ serviceName }, 'Service is already running');
             return;
         }
         const config = this.getServiceConfig(serviceName);
@@ -87,10 +87,10 @@ class PythonServiceManager {
             });
             // 注意：GPU跟踪不会在服务启动时开始，而是在第一个任务处理时才开始（在incrementTaskCount中）
             // 这样可以确保只有在有实际任务时才统计GPU使用时间
-            logger_1.default.info({ serviceName, pid: process.pid, port: config.port }, 'Python 服务已启动');
+            logger_1.default.info({ serviceName, pid: process.pid, port: config.port }, 'Python service started');
         }
         catch (error) {
-            logger_1.default.error({ error, serviceName }, '启动 Python 服务失败');
+            logger_1.default.error({ error, serviceName }, 'Failed to start Python service');
             this.updateStatus(serviceName, {
                 running: false,
                 starting: false,
@@ -106,7 +106,7 @@ class PythonServiceManager {
         const child = this.services.get(serviceName);
         if (!child) {
             const status = this.statuses.get(serviceName);
-            logger_1.default.info({ serviceName, port: status?.port, running: status?.running }, '服务未在运行，无需停止');
+            logger_1.default.info({ serviceName, port: status?.port, running: status?.running }, 'Service is not running, no need to stop');
             return;
         }
         const status = this.statuses.get(serviceName);
@@ -142,21 +142,21 @@ class PythonServiceManager {
             return status?.running ? { name, port: status.port, pid: status.pid } : null;
         })
             .filter((s) => s !== null);
-        logger_1.default.info({ runningServices, total: runningServices.length }, `正在停止所有 Python 服务 (运行中的服务: ${runningServices.length})...`);
+        logger_1.default.info({ runningServices, total: runningServices.length }, `Stopping all Python services (${runningServices.length} service(s) running)...`);
         await Promise.all(serviceNames.map((name) => this.stopService(name).catch((err) => {
-            logger_1.default.error({ error: err, serviceName: name }, '停止服务失败');
+            logger_1.default.error({ error: err, serviceName: name }, 'Failed to stop service');
         })));
         // 验证所有端口是否已释放
         const allPorts = runningServices.map((s) => s?.port).filter((p) => p !== null);
         if (allPorts.length > 0) {
-            logger_1.default.info({ ports: allPorts }, `验证所有服务端口是否已释放: ${allPorts.join(', ')}`);
+            logger_1.default.info({ ports: allPorts }, `Verifying all service ports are released: ${allPorts.join(', ')}`);
             for (const port of allPorts) {
                 // 等待一小段时间让端口完全释放
                 await new Promise((resolve) => setTimeout(resolve, 500));
                 await (0, port_manager_1.verifyPortReleased)(port, 'all');
             }
         }
-        logger_1.default.info({}, '所有 Python 服务已停止');
+        logger_1.default.info({}, 'All Python services stopped');
     }
     getServiceStatus(serviceName) {
         const status = this.statuses.get(serviceName);
@@ -206,7 +206,7 @@ class PythonServiceManager {
         // 实际的GPU时间统计只在GPU实际使用时累计
         if (current === 0) {
             this.startGpuTracking(serviceName);
-            logger_1.default.info({ serviceName }, '第一个任务完成，启动GPU使用时间跟踪（将在后续任务执行期间统计）');
+            logger_1.default.info({ serviceName }, 'First task completed, starting GPU usage time tracking (will be counted during subsequent task execution)');
         }
         const status = this.statuses.get(serviceName);
         if (status) {

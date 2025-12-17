@@ -41,22 +41,29 @@ const ws_1 = __importDefault(require("ws"));
 const si = __importStar(require("systeminformation"));
 const os = __importStar(require("os"));
 const model_manager_1 = require("../model-manager/model-manager");
+const node_config_1 = require("../node-config");
 const logger_1 = __importDefault(require("../logger"));
 class NodeAgent {
     constructor(inferenceService, modelManager) {
         this.ws = null;
         this.nodeId = null;
         this.heartbeatInterval = null;
-        this.schedulerUrl = process.env.SCHEDULER_URL || 'ws://localhost:5010/ws/node';
+        // 优先从配置文件读取，其次从环境变量，最后使用默认值
+        const config = (0, node_config_1.loadNodeConfig)();
+        this.schedulerUrl =
+            config.scheduler?.url ||
+                process.env.SCHEDULER_URL ||
+                'ws://127.0.0.1:5010/ws/node';
         this.inferenceService = inferenceService;
         // 通过参数传入或从 inferenceService 获取 modelManager
         this.modelManager = modelManager || inferenceService.modelManager;
+        logger_1.default.info({ schedulerUrl: this.schedulerUrl }, 'Scheduler server URL configured');
     }
     async start() {
         try {
             this.ws = new ws_1.default(this.schedulerUrl);
             this.ws.on('open', () => {
-                logger_1.default.info({}, '已连接到调度服务器');
+                logger_1.default.info({}, 'Connected to scheduler server');
                 this.registerNode();
                 this.startHeartbeat();
             });
@@ -64,10 +71,10 @@ class NodeAgent {
                 this.handleMessage(data.toString());
             });
             this.ws.on('error', (error) => {
-                logger_1.default.error({ error }, 'WebSocket 错误');
+                logger_1.default.error({ error }, 'WebSocket error');
             });
             this.ws.on('close', () => {
-                logger_1.default.info({}, '与调度服务器的连接已关闭');
+                logger_1.default.info({}, 'Connection to scheduler server closed');
                 this.stopHeartbeat();
                 // 尝试重连
                 setTimeout(() => this.start(), 5000);
@@ -77,12 +84,12 @@ class NodeAgent {
                 this.modelManager.on('capability-state-changed', () => {
                     // 状态变化时，在下次心跳时更新 capability_state
                     // 这里不立即发送，因为心跳会定期发送最新的状态
-                    logger_1.default.debug({}, '模型状态已变化，将在下次心跳时更新 capability_state');
+                    logger_1.default.debug({}, 'Model state changed, will update capability_state on next heartbeat');
                 });
             }
         }
         catch (error) {
-            logger_1.default.error({ error }, '启动 Node Agent 失败');
+            logger_1.default.error({ error }, 'Failed to start Node Agent');
         }
     }
     stop() {
@@ -116,7 +123,7 @@ class NodeAgent {
             this.ws.send(JSON.stringify(message));
         }
         catch (error) {
-            logger_1.default.error({ error }, '注册节点失败');
+            logger_1.default.error({ error }, 'Failed to register node');
         }
     }
     getPlatform() {
@@ -131,8 +138,8 @@ class NodeAgent {
         try {
             const mem = await si.mem();
             const cpu = await si.cpu();
-            // TODO: 获取 GPU 信息（需要额外库，如 nvidia-ml-py 或 systeminformation 的图形卡信息）
-            const gpus = [];
+            // 获取 GPU 硬件信息（使用 nvidia-smi）
+            const gpus = await this.getGpuHardwareInfo();
             return {
                 cpu_cores: cpu.cores || os.cpus().length,
                 memory_gb: Math.round(mem.total / (1024 * 1024 * 1024)),
@@ -140,12 +147,75 @@ class NodeAgent {
             };
         }
         catch (error) {
-            logger_1.default.error({ error }, '获取硬件信息失败');
+            logger_1.default.error({ error }, 'Failed to get hardware info');
             return {
                 cpu_cores: os.cpus().length,
                 memory_gb: Math.round(os.totalmem() / (1024 * 1024 * 1024)),
             };
         }
+    }
+    /**
+     * 获取 GPU 硬件信息（名称和显存大小）
+     * 使用 nvidia-smi 命令获取
+     */
+    async getGpuHardwareInfo() {
+        return new Promise((resolve) => {
+            const { spawn } = require('child_process');
+            // nvidia-smi 命令：获取GPU名称和显存大小
+            const nvidiaSmi = spawn('nvidia-smi', [
+                '--query-gpu=name,memory.total',
+                '--format=csv,noheader,nounits'
+            ]);
+            let output = '';
+            let errorOutput = '';
+            nvidiaSmi.stdout.on('data', (data) => {
+                output += data.toString();
+            });
+            nvidiaSmi.stderr.on('data', (data) => {
+                errorOutput += data.toString();
+            });
+            nvidiaSmi.on('close', (code) => {
+                if (code === 0 && output.trim()) {
+                    try {
+                        const lines = output.trim().split('\n');
+                        const gpus = [];
+                        for (const line of lines) {
+                            // 格式: "GPU Name, Memory Total (MB)"
+                            const parts = line.split(',');
+                            if (parts.length >= 2) {
+                                const name = parts[0].trim();
+                                const memoryMb = parseFloat(parts[1].trim());
+                                const memoryGb = Math.round(memoryMb / 1024);
+                                if (!isNaN(memoryGb) && name) {
+                                    gpus.push({ name, memory_gb: memoryGb });
+                                }
+                            }
+                        }
+                        if (gpus.length > 0) {
+                            logger_1.default.info({ gpus }, 'Successfully fetched GPU hardware info');
+                            resolve(gpus);
+                        }
+                        else {
+                            logger_1.default.warn({ output }, 'Failed to parse GPU hardware info');
+                            resolve([]);
+                        }
+                    }
+                    catch (parseError) {
+                        logger_1.default.warn({ parseError, output }, 'Failed to parse nvidia-smi output');
+                        resolve([]);
+                    }
+                }
+                else {
+                    logger_1.default.warn({ code, errorOutput: errorOutput.trim() }, 'nvidia-smi command failed or no GPU found');
+                    resolve([]);
+                }
+            });
+            nvidiaSmi.on('error', (error) => {
+                // nvidia-smi 命令不存在或无法执行
+                logger_1.default.warn({ error: error.message }, 'nvidia-smi command not available');
+                resolve([]);
+            });
+        });
     }
     startHeartbeat() {
         this.heartbeatInterval = setInterval(async () => {
@@ -194,7 +264,7 @@ class NodeAgent {
             };
         }
         catch (error) {
-            logger_1.default.error({ error }, '获取系统资源失败');
+            logger_1.default.error({ error }, 'Failed to get system resources');
             return { cpu: 0, gpu: null, gpuMem: null, memory: 0 };
         }
     }
@@ -212,7 +282,7 @@ class NodeAgent {
             return state || {};
         }
         catch (error) {
-            logger_1.default.error({ error }, '获取 capability_state 失败');
+            logger_1.default.error({ error }, 'Failed to get capability_state');
             return {};
         }
     }
@@ -223,7 +293,7 @@ class NodeAgent {
                 case 'node_register_ack': {
                     const ack = message;
                     this.nodeId = ack.node_id;
-                    logger_1.default.info({ nodeId: this.nodeId }, '节点注册成功');
+                    logger_1.default.info({ nodeId: this.nodeId }, 'Node registered successfully');
                     break;
                 }
                 case 'job_assign': {
@@ -235,11 +305,11 @@ class NodeAgent {
                     // 配对码已生成，通过 IPC 通知渲染进程
                     break;
                 default:
-                    logger_1.default.warn({ messageType: message.type }, '未知消息类型');
+                    logger_1.default.warn({ messageType: message.type }, 'Unknown message type');
             }
         }
         catch (error) {
-            logger_1.default.error({ error }, '处理消息失败');
+            logger_1.default.error({ error }, 'Failed to handle message');
         }
     }
     async handleJob(job) {
@@ -286,7 +356,7 @@ class NodeAgent {
             this.ws.send(JSON.stringify(response));
         }
         catch (error) {
-            logger_1.default.error({ error, jobId: job.job_id, traceId: job.trace_id }, '处理任务失败');
+            logger_1.default.error({ error, jobId: job.job_id, traceId: job.trace_id }, 'Failed to process job');
             // 检查是否是 ModelNotAvailableError
             if (error instanceof model_manager_1.ModelNotAvailableError) {
                 // 发送 MODEL_NOT_AVAILABLE 错误给调度服务器

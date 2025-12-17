@@ -33,7 +33,7 @@ export function setupCudaEnvironment(): Record<string, string> {
       const currentPath = process.env.PATH || '';
       env.PATH = `${cudaBin};${cudaLibnvvp};${currentPath}`;
 
-      logger.info({ cudaPath }, 'CUDA 环境已配置');
+      logger.info({ cudaPath }, 'CUDA environment configured');
       break;
     }
   }

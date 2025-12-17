@@ -34,6 +34,7 @@ mod logging_config;
 mod group_manager;
 mod node_status_manager;
 mod room_manager;
+mod stats;
 
 use session::SessionManager;
 use dispatcher::JobDispatcher;
@@ -211,12 +212,17 @@ async fn main() -> Result<()> {
         }
     });
 
+    // 设置优雅关闭信号处理（需要在构建路由之前克隆）
+    let app_state_for_shutdown = app_state.clone();
+    
     // 构建路由
     let app = Router::new()
         .route("/ws/session", get(handle_session_ws))
         .route("/ws/node", get(handle_node_ws))
         .route("/health", get(health_check))
         .route("/api/v1/models", get(list_models))
+        .route("/api/v1/stats", get(get_stats))
+        .route("/dashboard", get(serve_dashboard))
         .with_state(app_state);
 
     // 启动服务器
@@ -224,8 +230,33 @@ async fn main() -> Result<()> {
     info!("调度服务器监听地址: {}", addr);
 
     let listener = tokio::net::TcpListener::bind(addr).await?;
-    axum::serve(listener, app).await?;
-
+    let shutdown_signal = async move {
+        tokio::signal::ctrl_c()
+            .await
+            .expect("无法安装 Ctrl+C 信号处理器");
+        info!("收到关闭信号，开始优雅关闭...");
+        
+        // 清理节点连接
+        let nodes = app_state_for_shutdown.node_registry.nodes.read().await;
+        if !nodes.is_empty() {
+            info!("清理 {} 个节点连接", nodes.len());
+            let node_ids: Vec<String> = nodes.keys().cloned().collect();
+            drop(nodes);
+            for node_id in node_ids {
+                app_state_for_shutdown.node_connections.unregister(&node_id).await;
+                app_state_for_shutdown.node_registry.mark_node_offline(&node_id).await;
+            }
+        }
+        
+        info!("资源清理完成，等待连接关闭...");
+    };
+    
+    // 使用优雅关闭启动服务器
+    axum::serve(listener, app)
+        .with_graceful_shutdown(shutdown_signal)
+        .await?;
+    
+    info!("调度服务器已优雅关闭");
     Ok(())
 }
 
@@ -258,5 +289,18 @@ async fn list_models(
     axum::Json(serde_json::json!({
         "models": []
     }))
+}
+
+// 统计API端点
+async fn get_stats(
+    axum::extract::State(state): axum::extract::State<AppState>,
+) -> axum::Json<stats::DashboardStats> {
+    let stats = stats::DashboardStats::collect(&state).await;
+    axum::Json(stats)
+}
+
+// 仪表盘页面
+async fn serve_dashboard() -> axum::response::Html<&'static str> {
+    axum::response::Html(include_str!("../dashboard.html"))
 }
 

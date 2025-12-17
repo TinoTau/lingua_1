@@ -31,7 +31,7 @@ class PythonServiceManager {
 
   async startService(serviceName: PythonServiceName): Promise<void> {
     if (this.services.has(serviceName)) {
-      logger.warn({ serviceName }, '服务已在运行');
+      logger.warn({ serviceName }, 'Service is already running');
       return;
     }
 
@@ -110,10 +110,10 @@ class PythonServiceManager {
 
       logger.info(
         { serviceName, pid: process.pid, port: config.port },
-        'Python 服务已启动'
+        'Python service started'
       );
     } catch (error) {
-      logger.error({ error, serviceName }, '启动 Python 服务失败');
+      logger.error({ error, serviceName }, 'Failed to start Python service');
       this.updateStatus(serviceName, {
         running: false,
         starting: false,
@@ -132,7 +132,7 @@ class PythonServiceManager {
       const status = this.statuses.get(serviceName);
       logger.info(
         { serviceName, port: status?.port, running: status?.running },
-        '服务未在运行，无需停止'
+        'Service is not running, no need to stop'
       );
       return;
     }
@@ -179,13 +179,13 @@ class PythonServiceManager {
 
     logger.info(
       { runningServices, total: runningServices.length },
-      `正在停止所有 Python 服务 (运行中的服务: ${runningServices.length})...`
+      `Stopping all Python services (${runningServices.length} service(s) running)...`
     );
 
     await Promise.all(
       serviceNames.map((name) =>
         this.stopService(name).catch((err) => {
-          logger.error({ error: err, serviceName: name }, '停止服务失败');
+          logger.error({ error: err, serviceName: name }, 'Failed to stop service');
         })
       )
     );
@@ -195,7 +195,7 @@ class PythonServiceManager {
     if (allPorts.length > 0) {
       logger.info(
         { ports: allPorts },
-        `验证所有服务端口是否已释放: ${allPorts.join(', ')}`
+        `Verifying all service ports are released: ${allPorts.join(', ')}`
       );
 
       for (const port of allPorts) {
@@ -205,7 +205,7 @@ class PythonServiceManager {
       }
     }
 
-    logger.info({}, '所有 Python 服务已停止');
+    logger.info({}, 'All Python services stopped');
   }
 
   getServiceStatus(serviceName: PythonServiceName): PythonServiceStatus | null {
@@ -259,7 +259,7 @@ class PythonServiceManager {
     // 实际的GPU时间统计只在GPU实际使用时累计
     if (current === 0) {
       this.startGpuTracking(serviceName);
-      logger.info({ serviceName }, '第一个任务完成，启动GPU使用时间跟踪（将在后续任务执行期间统计）');
+      logger.info({ serviceName }, 'First task completed, starting GPU usage time tracking (will be counted during subsequent task execution)');
     }
     
     const status = this.statuses.get(serviceName);

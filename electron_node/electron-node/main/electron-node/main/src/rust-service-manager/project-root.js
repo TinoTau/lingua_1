@@ -88,7 +88,7 @@ function findProjectPaths() {
                 cwd: process.cwd(),
                 projectRoot,
                 servicePath,
-            }, 'Rust 服务管理器：找到项目根目录');
+            }, 'Rust service manager: Found project root directory');
             return {
                 projectRoot,
                 servicePath,
@@ -97,7 +97,7 @@ function findProjectPaths() {
         }
     }
     // 如果都没找到，抛出错误
-    const error = `无法找到项目根目录。已检查的路径：${uniqueCandidates.join(', ')}`;
+    const error = `Unable to find project root directory. Checked paths: ${uniqueCandidates.join(', ')}`;
     logger_1.default.error({
         __dirname,
         cwd: process.cwd(),

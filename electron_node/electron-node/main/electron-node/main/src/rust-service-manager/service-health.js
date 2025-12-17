@@ -17,7 +17,7 @@ async function waitForServiceReady(port, maxWaitMs = 30000, processCheck) {
             if (processCheck) {
                 const processState = processCheck();
                 if (!processState.running) {
-                    const errorMsg = `服务进程已退出（PID: ${processState.pid}, 退出码: ${processState.exitCode}）`;
+                    const errorMsg = `Service process exited (PID: ${processState.pid}, exit code: ${processState.exitCode})`;
                     logger_1.default.error({ port, ...processState }, errorMsg);
                     reject(new Error(errorMsg));
                     return;
@@ -27,17 +27,17 @@ async function waitForServiceReady(port, maxWaitMs = 30000, processCheck) {
                 const axios = require('axios');
                 // 使用 127.0.0.1 而不是 localhost，避免 IPv6/IPv4 解析问题
                 const healthUrl = `http://127.0.0.1:${port}/health`;
-                logger_1.default.debug({ healthUrl, port }, '发送健康检查请求...');
+                logger_1.default.debug({ healthUrl, port }, 'Sending health check request...');
                 const response = await axios.get(healthUrl, {
                     timeout: 5000, // 增加到 5 秒，给服务更多时间响应
                 });
                 if (response.status === 200) {
-                    logger_1.default.info({ port, elapsed: Date.now() - startTime }, 'Rust 服务健康检查通过');
+                    logger_1.default.info({ port, elapsed: Date.now() - startTime }, 'Rust service health check passed');
                     resolve();
                     return;
                 }
                 else {
-                    logger_1.default.warn({ port, status: response.status }, '健康检查返回非 200 状态码');
+                    logger_1.default.warn({ port, status: response.status }, 'Health check returned non-200 status code');
                 }
             }
             catch (error) {
@@ -53,13 +53,13 @@ async function waitForServiceReady(port, maxWaitMs = 30000, processCheck) {
                         errorMessage: error?.message || String(error),
                         errorCode: error?.code,
                         errorType: isTimeout ? 'timeout' : isConnectionRefused ? 'connection_refused' : 'other',
-                    }, '等待 Rust 服务就绪...');
+                    }, 'Waiting for Rust service to be ready...');
                 }
             }
             if (Date.now() - startTime > maxWaitMs) {
                 // 检查进程是否还在运行
                 const processState = processCheck ? processCheck() : { running: true };
-                const errorMsg = `服务在 ${maxWaitMs}ms 内未就绪（端口 ${port}）`;
+                const errorMsg = `Service did not become ready within ${maxWaitMs}ms (port ${port})`;
                 logger_1.default.error({
                     port,
                     maxWaitMs,

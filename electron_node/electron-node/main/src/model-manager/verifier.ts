@@ -41,7 +41,7 @@ export class ModelVerifier {
       // 如果服务器没有 checksum 文件，使用版本信息中的
       // 使用动态导入避免循环依赖
       const logger = (await import('../logger')).default;
-      logger.warn({ error }, '无法下载 checksum 文件，将仅验证文件大小');
+      logger.warn({ error }, 'Unable to download checksum file, will only verify file size');
     }
     
     // 验证每个文件

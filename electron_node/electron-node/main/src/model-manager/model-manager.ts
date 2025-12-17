@@ -106,7 +106,7 @@ export class ModelManager extends EventEmitter {
       // 清理孤儿锁
       await this.lockManager.cleanupOrphanLocks();
     } catch (error) {
-      logger.error({ error }, '初始化 ModelManager 失败');
+      logger.error({ error }, 'Failed to initialize ModelManager');
     }
   }
 
@@ -117,7 +117,7 @@ export class ModelManager extends EventEmitter {
       const response = await axios.get<ModelInfo[]>(`${this.modelHubUrl}/api/models`);
       return response.data;
     } catch (error) {
-      logger.error({ error }, '获取可用模型列表失败');
+      logger.error({ error }, 'Failed to get available models list');
       return [];
     }
   }
@@ -174,7 +174,7 @@ export class ModelManager extends EventEmitter {
         }
       }
     } catch (error) {
-      logger.error({ error }, '获取 capability_state 失败');
+      logger.error({ error }, 'Failed to get capability_state');
     }
 
     return capabilityState;
@@ -351,7 +351,7 @@ export class ModelManager extends EventEmitter {
 
     // 异步保存，不阻塞
     this.registryManager.saveRegistry(this.registry).catch((error) =>
-      logger.error({ error }, '保存 registry 失败')
+      logger.error({ error }, 'Failed to save registry')
     );
 
     // 如果状态发生变化，触发 capability_state 更新事件
@@ -423,7 +423,7 @@ export class ModelManager extends EventEmitter {
       await this.registryManager.saveRegistry(this.registry);
       return true;
     } catch (error) {
-      logger.error({ error, modelId }, '卸载模型失败');
+      logger.error({ error, modelId }, 'Failed to uninstall model');
       return false;
     }
   }

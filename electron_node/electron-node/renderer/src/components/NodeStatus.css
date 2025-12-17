@@ -17,6 +17,14 @@
   color: #c62828;
 }
 
+.node-status.disconnected.clickable {
+  transition: background-color 0.2s;
+}
+
+.node-status.disconnected.clickable:hover {
+  background-color: #ffcdd2;
+}
+
 .status-indicator {
   width: 8px;
   height: 8px;

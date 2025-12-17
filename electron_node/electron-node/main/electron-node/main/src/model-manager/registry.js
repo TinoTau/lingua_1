@@ -60,7 +60,7 @@ class RegistryManager {
         catch (error) {
             // 使用动态导入避免循环依赖
             const logger = (await Promise.resolve().then(() => __importStar(require('../logger')))).default;
-            logger.error({ error }, '加载 registry 失败');
+            logger.error({ error }, 'Failed to load registry');
             return {};
         }
     }
@@ -82,7 +82,7 @@ class RegistryManager {
         catch (error) {
             // 使用动态导入避免循环依赖
             const logger = (await Promise.resolve().then(() => __importStar(require('../logger')))).default;
-            logger.error({ error }, '保存 registry 失败');
+            logger.error({ error }, 'Failed to save registry');
             throw error;
         }
     }

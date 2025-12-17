@@ -133,7 +133,7 @@ export class LockManager {
     } catch (error) {
       // 使用动态导入避免循环依赖
       const logger = (await import('../logger')).default;
-      logger.error({ error }, '清理孤儿锁失败');
+      logger.error({ error }, 'Failed to cleanup orphan locks');
     }
   }
 }

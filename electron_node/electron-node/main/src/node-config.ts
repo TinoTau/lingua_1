@@ -11,6 +11,9 @@ export interface ServicePreferences {
 
 export interface NodeConfig {
   servicePreferences: ServicePreferences;
+  scheduler?: {
+    url?: string;  // 调度服务器 WebSocket URL，例如: ws://scheduler.example.com:5010/ws/node
+  };
 }
 
 const DEFAULT_CONFIG: NodeConfig = {
@@ -19,6 +22,9 @@ const DEFAULT_CONFIG: NodeConfig = {
     nmtEnabled: true,       // 默认启用 NMT
     ttsEnabled: true,       // 默认启用 Piper TTS
     yourttsEnabled: false,  // 默认关闭 YourTTS（资源较重）
+  },
+  scheduler: {
+    url: 'ws://127.0.0.1:5010/ws/node',  // 默认本地地址，使用 127.0.0.1 避免 IPv6 解析问题
   },
 };
 
@@ -40,6 +46,10 @@ export function loadNodeConfig(): NodeConfig {
       servicePreferences: {
         ...DEFAULT_CONFIG.servicePreferences,
         ...(parsed.servicePreferences || {}),
+      },
+      scheduler: {
+        ...DEFAULT_CONFIG.scheduler,
+        ...(parsed.scheduler || {}),
       },
     };
   } catch (error) {

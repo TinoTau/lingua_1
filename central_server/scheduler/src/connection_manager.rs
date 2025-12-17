@@ -48,6 +48,12 @@ impl SessionConnectionManager {
         let connections = self.connections.read().await;
         connections.get(session_id).cloned()
     }
+    
+    /// 获取活跃连接数
+    pub async fn count(&self) -> usize {
+        let connections = self.connections.read().await;
+        connections.len()
+    }
 }
 
 // 节点连接管理器

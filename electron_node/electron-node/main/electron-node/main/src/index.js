@@ -71,14 +71,14 @@ function createWindow() {
         // 开发模式：尝试连接 Vite dev server（默认 5173，如果被占用可能在其他端口）
         const vitePort = process.env.VITE_PORT || '5173';
         const viteUrl = `http://localhost:${vitePort}`;
-        logger_1.default.info({ viteUrl }, '开发模式：加载 Vite dev server');
+        logger_1.default.info({ viteUrl }, 'Development mode: Loading Vite dev server');
         if (mainWindow) {
             mainWindow.loadURL(viteUrl).catch((error) => {
-                logger_1.default.error({ error, viteUrl }, '加载 Vite dev server 失败，尝试备用端口');
+                logger_1.default.error({ error, viteUrl }, 'Failed to load Vite dev server, trying fallback port');
                 // 如果 5173 失败，尝试 5174（Vite 自动切换的端口）
                 if (mainWindow) {
                     mainWindow.loadURL('http://localhost:5174').catch((err) => {
-                        logger_1.default.error({ error: err }, '加载 Vite dev server 失败');
+                        logger_1.default.error({ error: err }, 'Failed to load Vite dev server');
                     });
                 }
             });
@@ -88,10 +88,10 @@ function createWindow() {
     else {
         // 生产模式：加载打包后的文件
         const distPath = path.join(__dirname, '../../renderer/dist/index.html');
-        logger_1.default.info({ distPath }, '生产模式：加载打包文件');
+        logger_1.default.info({ distPath }, 'Production mode: Loading built files');
         if (mainWindow) {
             mainWindow.loadFile(distPath).catch((error) => {
-                logger_1.default.error({ error, distPath }, '加载打包文件失败');
+                logger_1.default.error({ error, distPath }, 'Failed to load built files');
             });
         }
     }
@@ -132,15 +132,20 @@ electron_1.app.whenReady().then(async () => {
             // Python服务的GPU跟踪会在任务计数为0时停止（在显示时检查）
         });
         nodeAgent = new node_agent_1.NodeAgent(inferenceService, modelManager);
+        // 启动 Node Agent（连接到调度服务器）
+        logger_1.default.info({}, 'Starting Node Agent (connecting to scheduler server)...');
+        nodeAgent.start().catch((error) => {
+            logger_1.default.error({ error }, 'Failed to start Node Agent');
+        });
         // 根据用户上一次选择的功能自动启动对应服务
         const config = (0, node_config_1.loadNodeConfig)();
         const prefs = config.servicePreferences;
-        logger_1.default.info({ prefs }, '服务管理器已初始化，按上次选择自动启动服务');
+        logger_1.default.info({ prefs }, 'Service manager initialized, auto-starting services based on previous selection');
         // 按照偏好启动 Rust 推理服务（异步启动，不阻塞窗口显示）
         if (prefs.rustEnabled) {
-            logger_1.default.info({}, '开始自动启动 Rust 推理服务...');
+            logger_1.default.info({}, 'Auto-starting Rust inference service...');
             rustServiceManager.start().catch((error) => {
-                logger_1.default.error({ error }, '自动启动 Rust 推理服务失败');
+                logger_1.default.error({ error }, 'Failed to auto-start Rust inference service');
             });
         }
         // 按照偏好启动 Python 服务（异步启动，不阻塞窗口显示）
@@ -153,15 +158,15 @@ electron_1.app.whenReady().then(async () => {
             if (prefs.yourttsEnabled)
                 toStart.push('yourtts');
             for (const name of toStart) {
-                logger_1.default.info({ serviceName: name }, '开始自动启动 Python 服务...');
+                logger_1.default.info({ serviceName: name }, 'Auto-starting Python service...');
                 pythonServiceManager.startService(name).catch((error) => {
-                    logger_1.default.error({ error, serviceName: name }, '自动启动 Python 服务失败');
+                    logger_1.default.error({ error, serviceName: name }, 'Failed to auto-start Python service');
                 });
             }
         }
     }
     catch (error) {
-        logger_1.default.error({ error }, '初始化服务失败');
+        logger_1.default.error({ error }, 'Failed to initialize services');
     }
     electron_1.app.on('activate', () => {
         if (electron_1.BrowserWindow.getAllWindows().length === 0) {
@@ -172,7 +177,7 @@ electron_1.app.whenReady().then(async () => {
 // 统一的清理函数
 async function cleanupServices() {
     logger_1.default.info({}, '========================================');
-    logger_1.default.info({}, '开始清理所有服务...');
+    logger_1.default.info({}, 'Starting cleanup of all services...');
     logger_1.default.info({}, '========================================');
     // 记录当前运行的服务状态
     const rustStatus = rustServiceManager?.getStatus();
@@ -187,7 +192,7 @@ async function cleanupServices() {
             port: s.port,
             pid: s.pid,
         })),
-    }, `当前运行的服务状态 - Rust: ${rustStatus?.running ? `端口 ${rustStatus.port}, PID ${rustStatus.pid}` : '未运行'}, Python: ${runningPythonServices.length} 个服务运行中`);
+    }, `Current service status - Rust: ${rustStatus?.running ? `port ${rustStatus.port}, PID ${rustStatus.pid}` : 'not running'}, Python: ${runningPythonServices.length} service(s) running`);
     // 在清理服务前，保存当前服务状态到配置文件
     // 这样即使窗口意外关闭，下次启动时也能恢复服务状态
     try {
@@ -203,20 +208,20 @@ async function cleanupServices() {
             yourttsEnabled,
         };
         (0, node_config_1.saveNodeConfig)(config);
-        logger_1.default.info({ servicePreferences: config.servicePreferences }, '已保存当前服务状态到配置文件');
+        logger_1.default.info({ servicePreferences: config.servicePreferences }, 'Saved current service status to config file');
     }
     catch (error) {
-        logger_1.default.error({ error }, '保存服务状态到配置文件失败');
+        logger_1.default.error({ error }, 'Failed to save service status to config file');
     }
     // 停止 Node Agent
     if (nodeAgent) {
         try {
-            logger_1.default.info({}, '正在停止 Node Agent...');
+            logger_1.default.info({}, 'Stopping Node Agent...');
             nodeAgent.stop();
-            logger_1.default.info({}, '✅ Node Agent 已停止');
+            logger_1.default.info({}, 'Node Agent stopped');
         }
         catch (error) {
-            logger_1.default.error({ error }, '❌ 停止 Node Agent 失败');
+            logger_1.default.error({ error }, 'Failed to stop Node Agent');
         }
     }
     // 停止 Rust 服务
@@ -224,31 +229,31 @@ async function cleanupServices() {
         try {
             const status = rustServiceManager.getStatus();
             if (status.running) {
-                logger_1.default.info({ port: status.port, pid: status.pid }, `正在停止 Rust 服务 (端口: ${status.port}, PID: ${status.pid})...`);
+                logger_1.default.info({ port: status.port, pid: status.pid }, `Stopping Rust service (port: ${status.port}, PID: ${status.pid})...`);
                 await rustServiceManager.stop();
-                logger_1.default.info({ port: status.port }, `✅ Rust 服务已停止 (端口: ${status.port})`);
+                logger_1.default.info({ port: status.port }, `Rust service stopped (port: ${status.port})`);
             }
             else {
-                logger_1.default.info({}, 'Rust 服务未运行，无需停止');
+                logger_1.default.info({}, 'Rust service is not running, no need to stop');
             }
         }
         catch (error) {
-            logger_1.default.error({ error }, '❌ 停止 Rust 服务失败');
+            logger_1.default.error({ error }, 'Failed to stop Rust service');
         }
     }
     // 停止所有 Python 服务
     if (pythonServiceManager) {
         try {
-            logger_1.default.info({ count: runningPythonServices.length }, `正在停止所有 Python 服务 (${runningPythonServices.length} 个)...`);
+            logger_1.default.info({ count: runningPythonServices.length }, `Stopping all Python services (${runningPythonServices.length} service(s))...`);
             await pythonServiceManager.stopAllServices();
-            logger_1.default.info({}, '✅ 所有 Python 服务已停止');
+            logger_1.default.info({}, 'All Python services stopped');
         }
         catch (error) {
-            logger_1.default.error({ error }, '❌ 停止 Python 服务失败');
+            logger_1.default.error({ error }, 'Failed to stop Python services');
         }
     }
     logger_1.default.info({}, '========================================');
-    logger_1.default.info({}, '所有服务清理完成');
+    logger_1.default.info({}, 'All services cleanup completed');
     logger_1.default.info({}, '========================================');
 }
 // 正常关闭窗口时清理服务
@@ -271,23 +276,23 @@ electron_1.app.on('before-quit', async (event) => {
 });
 // 处理系统信号（SIGTERM, SIGINT）确保服务被清理
 process.on('SIGTERM', async () => {
-    logger_1.default.info({}, '收到 SIGTERM 信号，正在清理服务...');
+    logger_1.default.info({}, 'Received SIGTERM signal, cleaning up services...');
     await cleanupServices();
     process.exit(0);
 });
 process.on('SIGINT', async () => {
-    logger_1.default.info({}, '收到 SIGINT 信号，正在清理服务...');
+    logger_1.default.info({}, 'Received SIGINT signal, cleaning up services...');
     await cleanupServices();
     process.exit(0);
 });
 // 处理未捕获的异常，确保服务被清理
 process.on('uncaughtException', async (error) => {
-    logger_1.default.error({ error }, '未捕获的异常，正在清理服务...');
+    logger_1.default.error({ error }, 'Uncaught exception, cleaning up services...');
     await cleanupServices();
     process.exit(1);
 });
 process.on('unhandledRejection', async (reason, promise) => {
-    logger_1.default.error({ reason, promise }, '未处理的 Promise 拒绝，正在清理服务...');
+    logger_1.default.error({ reason, promise }, 'Unhandled promise rejection, cleaning up services...');
     await cleanupServices();
     process.exit(1);
 });
@@ -484,7 +489,7 @@ electron_1.ipcMain.handle('download-model', async (_, modelId, version) => {
         return true;
     }
     catch (error) {
-        logger_1.default.error({ error, modelId }, '下载模型失败');
+        logger_1.default.error({ error, modelId }, 'Failed to download model');
         return false;
     }
 });
@@ -498,7 +503,7 @@ electron_1.ipcMain.handle('get-model-path', async (_, modelId, version) => {
         return await modelManager.getModelPath(modelId, version);
     }
     catch (error) {
-        logger_1.default.error({ error, modelId }, '获取模型路径失败');
+        logger_1.default.error({ error, modelId }, 'Failed to get model path');
         return null;
     }
 });
@@ -510,7 +515,7 @@ electron_1.ipcMain.handle('get-model-ranking', async () => {
         return response.data || [];
     }
     catch (error) {
-        logger_1.default.error({ error }, '获取模型排行失败');
+        logger_1.default.error({ error }, 'Failed to get model ranking');
         return [];
     }
 });
@@ -548,61 +553,61 @@ electron_1.ipcMain.handle('get-all-python-service-statuses', async () => {
 });
 electron_1.ipcMain.handle('start-python-service', async (_, serviceName) => {
     if (!pythonServiceManager) {
-        throw new Error('Python 服务管理器未初始化');
+        throw new Error('Python service manager not initialized');
     }
     try {
         await pythonServiceManager.startService(serviceName);
         return { success: true };
     }
     catch (error) {
-        logger_1.default.error({ error, serviceName }, '启动 Python 服务失败');
+        logger_1.default.error({ error, serviceName }, 'Failed to start Python service');
         return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
 });
 electron_1.ipcMain.handle('stop-python-service', async (_, serviceName) => {
     if (!pythonServiceManager) {
-        throw new Error('Python 服务管理器未初始化');
+        throw new Error('Python service manager not initialized');
     }
     try {
         await pythonServiceManager.stopService(serviceName);
         return { success: true };
     }
     catch (error) {
-        logger_1.default.error({ error, serviceName }, '停止 Python 服务失败');
+        logger_1.default.error({ error, serviceName }, 'Failed to stop Python service');
         return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
 });
 // Rust 服务管理 IPC 接口
 electron_1.ipcMain.handle('start-rust-service', async () => {
     if (!rustServiceManager) {
-        throw new Error('Rust 服务管理器未初始化');
+        throw new Error('Rust service manager not initialized');
     }
     try {
         await rustServiceManager.start();
         return { success: true };
     }
     catch (error) {
-        logger_1.default.error({ error }, '启动 Rust 服务失败');
+        logger_1.default.error({ error }, 'Failed to start Rust service');
         return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
 });
 electron_1.ipcMain.handle('stop-rust-service', async () => {
     if (!rustServiceManager) {
-        throw new Error('Rust 服务管理器未初始化');
+        throw new Error('Rust service manager not initialized');
     }
     try {
         await rustServiceManager.stop();
         return { success: true };
     }
     catch (error) {
-        logger_1.default.error({ error }, '停止 Rust 服务失败');
+        logger_1.default.error({ error }, 'Failed to stop Rust service');
         return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
 });
 // 根据已安装的模型自动启动所需服务
 electron_1.ipcMain.handle('auto-start-services-by-models', async () => {
     if (!modelManager || !rustServiceManager || !pythonServiceManager) {
-        return { success: false, error: '服务管理器未初始化' };
+        return { success: false, error: 'Service manager not initialized' };
     }
     try {
         const installedModels = modelManager.getInstalledModels();
@@ -633,14 +638,14 @@ electron_1.ipcMain.handle('auto-start-services-by-models', async () => {
                 results[service] = true;
             }
             catch (error) {
-                logger_1.default.error({ error, service }, '自动启动服务失败');
+                logger_1.default.error({ error, service }, 'Failed to auto-start service');
                 results[service] = false;
             }
         }
         return { success: true, results };
     }
     catch (error) {
-        logger_1.default.error({ error }, '根据模型自动启动服务失败');
+        logger_1.default.error({ error }, 'Failed to auto-start services based on models');
         return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
 });
@@ -660,7 +665,7 @@ electron_1.ipcMain.handle('set-service-preferences', async (_, prefs) => {
         return { success: true };
     }
     catch (error) {
-        logger_1.default.error({ error }, '保存服务偏好失败');
+        logger_1.default.error({ error }, 'Failed to save service preferences');
         return {
             success: false,
             error: error instanceof Error ? error.message : String(error),

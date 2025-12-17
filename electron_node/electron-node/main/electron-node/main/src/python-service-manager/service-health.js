@@ -32,7 +32,7 @@ async function waitForServiceReady(port, maxWaitMs = 30000, processCheck) {
                     validateStatus: (status) => status < 500, // 接受 2xx, 3xx, 4xx
                 });
                 if (response.status < 400) {
-                    logger_1.default.info({ port, elapsed: Date.now() - startTime }, '服务健康检查通过');
+                    logger_1.default.info({ port, elapsed: Date.now() - startTime }, 'Service health check passed');
                     resolve();
                     return;
                 }
@@ -47,7 +47,7 @@ async function waitForServiceReady(port, maxWaitMs = 30000, processCheck) {
                         errorCode: error?.code,
                         errorMessage: error?.message,
                         maxWaitMs,
-                    }, '等待服务就绪...');
+                    }, 'Waiting for service to be ready...');
                     lastLogTime = elapsed;
                 }
                 // 如果是连接错误（ECONNREFUSED），服务还未就绪，继续等待
@@ -57,14 +57,14 @@ async function waitForServiceReady(port, maxWaitMs = 30000, processCheck) {
                 }
                 else {
                     // 其他错误（如 404），可能服务已启动但端点不同，认为就绪
-                    logger_1.default.warn({ port, errorCode: error?.code, errorMessage: error?.message }, '健康检查返回非连接错误，认为服务已就绪');
+                    logger_1.default.warn({ port, errorCode: error?.code, errorMessage: error?.message }, 'Health check returned non-connection error, assuming service is ready');
                     resolve();
                     return;
                 }
             }
             if (Date.now() - startTime > maxWaitMs) {
                 // 超时后不拒绝，让服务继续运行（可能健康检查端点不同或服务启动较慢）
-                logger_1.default.warn({ port, maxWaitMs, elapsed: Date.now() - startTime }, '服务健康检查超时，但继续运行（服务可能已启动但响应较慢）');
+                logger_1.default.warn({ port, maxWaitMs, elapsed: Date.now() - startTime }, 'Service health check timeout, but continuing (service may have started but responding slowly)');
                 resolve();
                 return;
             }

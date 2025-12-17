@@ -40,12 +40,12 @@ class RustServiceManager {
 
     async start(): Promise<void> {
         if (this.process) {
-            logger.warn({}, 'Rust 服务已在运行');
+            logger.warn({}, 'Rust service is already running');
             return;
         }
 
         if (this.status.starting) {
-            logger.warn({}, 'Rust 服务正在启动中，请稍候');
+            logger.warn({}, 'Rust service is starting, please wait');
             return;
         }
 
@@ -77,7 +77,7 @@ class RustServiceManager {
 
                         // 如果非正常退出，记录错误
                         if (code !== 0 && code !== null) {
-                            const errorMsg = `进程退出，退出码: ${code}`;
+                            const errorMsg = `Process exited with code: ${code}`;
                             this.status.lastError = errorMsg;
                             logger.error(
                                 {
@@ -119,7 +119,7 @@ class RustServiceManager {
                     port: this.port,
                     pid: this.process?.pid,
                 },
-                'Rust 服务进程已启动，等待服务就绪...'
+                'Rust service process started, waiting for service to be ready...'
             );
 
             // 给服务更多时间初始化（模型加载需要时间）
@@ -155,7 +155,7 @@ class RustServiceManager {
                     servicePath: this.projectPaths.servicePath,
                     logDir: this.projectPaths.logDir,
                 },
-                'Rust 服务已启动'
+                'Rust service started'
             );
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : String(error);
@@ -186,7 +186,7 @@ class RustServiceManager {
                     processKilled: this.process?.killed,
                     lastError: this.status.lastError,
                 },
-                `启动 Rust 服务失败: ${errorMsg}`
+                `Failed to start Rust service: ${errorMsg}`
             );
             this.status.starting = false;
             this.status.lastError = errorMsg;

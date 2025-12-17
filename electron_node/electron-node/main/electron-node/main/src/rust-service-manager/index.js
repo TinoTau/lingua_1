@@ -35,11 +35,11 @@ class RustServiceManager {
     }
     async start() {
         if (this.process) {
-            logger_1.default.warn({}, 'Rust 服务已在运行');
+            logger_1.default.warn({}, 'Rust service is already running');
             return;
         }
         if (this.status.starting) {
-            logger_1.default.warn({}, 'Rust 服务正在启动中，请稍候');
+            logger_1.default.warn({}, 'Rust service is starting, please wait');
             return;
         }
         // 设置启动中状态
@@ -62,7 +62,7 @@ class RustServiceManager {
                     this.process = null;
                     // 如果非正常退出，记录错误
                     if (code !== 0 && code !== null) {
-                        const errorMsg = `进程退出，退出码: ${code}`;
+                        const errorMsg = `Process exited with code: ${code}`;
                         this.status.lastError = errorMsg;
                         logger_1.default.error({
                             code,
@@ -81,7 +81,7 @@ class RustServiceManager {
                 workingDir: require('path').join(this.projectPaths.projectRoot, 'electron_node', 'services', 'node-inference'),
                 port: this.port,
                 pid: this.process?.pid,
-            }, 'Rust 服务进程已启动，等待服务就绪...');
+            }, 'Rust service process started, waiting for service to be ready...');
             // 给服务更多时间初始化（模型加载需要时间）
             await new Promise((resolve) => setTimeout(resolve, 2000));
             await (0, service_health_1.waitForServiceReady)(this.port, 60000, // 增加到60秒超时
@@ -106,7 +106,7 @@ class RustServiceManager {
                 port: this.status.port,
                 servicePath: this.projectPaths.servicePath,
                 logDir: this.projectPaths.logDir,
-            }, 'Rust 服务已启动');
+            }, 'Rust service started');
         }
         catch (error) {
             const errorMsg = error instanceof Error ? error.message : String(error);
@@ -124,7 +124,7 @@ class RustServiceManager {
                 processExitCode: this.process?.exitCode,
                 processKilled: this.process?.killed,
                 lastError: this.status.lastError,
-            }, `启动 Rust 服务失败: ${errorMsg}`);
+            }, `Failed to start Rust service: ${errorMsg}`);
             this.status.starting = false;
             this.status.lastError = errorMsg;
             throw error;

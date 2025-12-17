@@ -60,7 +60,7 @@ async function findPortProcessWindows(port) {
         return pids;
     }
     catch (error) {
-        logger_1.default.warn({ port, error }, '查找占用端口的进程失败 (Windows)');
+        logger_1.default.warn({ port, error }, 'Failed to find process occupying port (Windows)');
         return [];
     }
 }
@@ -77,7 +77,7 @@ async function findPortProcessUnix(port) {
         return pids.map((pid) => parseInt(pid));
     }
     catch (error) {
-        logger_1.default.warn({ port, error }, '查找占用端口的进程失败 (Unix)');
+        logger_1.default.warn({ port, error }, 'Failed to find process occupying port (Unix)');
         return [];
     }
 }
@@ -105,7 +105,7 @@ async function killProcessWindows(pid) {
         return true;
     }
     catch (error) {
-        logger_1.default.warn({ pid, error }, '终止进程失败 (Windows)');
+        logger_1.default.warn({ pid, error }, 'Failed to kill process (Windows)');
         return false;
     }
 }
@@ -119,7 +119,7 @@ async function killProcessUnix(pid) {
         return true;
     }
     catch (error) {
-        logger_1.default.warn({ pid, error }, '终止进程失败 (Unix)');
+        logger_1.default.warn({ pid, error }, 'Failed to kill process (Unix)');
         return false;
     }
 }
@@ -143,16 +143,16 @@ async function cleanupPortProcesses(port, serviceName) {
     if (pids.length === 0) {
         return;
     }
-    logger_1.default.info({ serviceName, port, pids }, `发现占用端口 ${port} 的进程，尝试终止...`);
+    logger_1.default.info({ serviceName, port, pids }, `Found process occupying port ${port}, attempting to kill...`);
     for (const pid of pids) {
         const success = await killProcess(pid);
         if (success) {
-            logger_1.default.info({ serviceName, port, pid }, '已终止占用端口的进程');
+            logger_1.default.info({ serviceName, port, pid }, 'Killed process occupying port');
             // 等待端口释放
             await new Promise(resolve => setTimeout(resolve, 1000));
         }
         else {
-            logger_1.default.warn({ serviceName, port, pid }, '终止进程失败');
+            logger_1.default.warn({ serviceName, port, pid }, 'Failed to kill process');
         }
     }
 }
@@ -166,31 +166,31 @@ async function verifyPortReleased(port, serviceName, timeout = 2000) {
         return new Promise((resolve) => {
             const timeoutHandle = setTimeout(() => {
                 testServer.close();
-                logger_1.default.warn({ serviceName, port }, `端口 ${port} 释放验证超时（可能仍被占用）`);
+                logger_1.default.warn({ serviceName, port }, `Port ${port} release verification timeout (may still be occupied)`);
                 resolve(false);
             }, timeout);
             testServer.listen(port, '127.0.0.1', () => {
                 clearTimeout(timeoutHandle);
                 testServer.close(() => {
-                    logger_1.default.info({ serviceName, port }, `✅ 端口 ${port} 已成功释放`);
+                    logger_1.default.info({ serviceName, port }, `Port ${port} successfully released`);
                     resolve(true);
                 });
             });
             testServer.on('error', (err) => {
                 clearTimeout(timeoutHandle);
                 if (err.code === 'EADDRINUSE') {
-                    logger_1.default.error({ serviceName, port, error: err }, `❌ 端口 ${port} 仍被占用，服务可能未正确关闭`);
+                    logger_1.default.error({ serviceName, port, error: err }, `Port ${port} is still occupied, service may not have closed properly`);
                     resolve(false);
                 }
                 else {
-                    logger_1.default.warn({ serviceName, port, error: err }, `端口 ${port} 释放验证失败`);
+                    logger_1.default.warn({ serviceName, port, error: err }, `Port ${port} release verification failed`);
                     resolve(false);
                 }
             });
         });
     }
     catch (error) {
-        logger_1.default.warn({ serviceName, port, error }, `端口 ${port} 释放验证异常`);
+        logger_1.default.warn({ serviceName, port, error }, `Port ${port} release verification exception`);
         return false;
     }
 }
@@ -200,9 +200,9 @@ async function verifyPortReleased(port, serviceName, timeout = 2000) {
 async function logPortOccupier(port, serviceName) {
     const pids = await findPortProcess(port);
     if (pids.length > 0) {
-        logger_1.default.warn({ serviceName, port, pids }, `端口 ${port} 被进程 PID ${pids.join(', ')} 占用`);
+        logger_1.default.warn({ serviceName, port, pids }, `Port ${port} is occupied by process PID(s) ${pids.join(', ')}`);
     }
     else {
-        logger_1.default.warn({ serviceName, port }, '无法查找占用端口的进程');
+        logger_1.default.warn({ serviceName, port }, 'Unable to find process occupying port');
     }
 }

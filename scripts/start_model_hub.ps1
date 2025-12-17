@@ -84,16 +84,22 @@ try {
 
     Write-Host "Starting Model Hub service..." -ForegroundColor Yellow
     Write-Host "Logs will be saved to: $logFileWithTimestamp" -ForegroundColor Gray
-    Write-Host "Errors will be displayed in this terminal" -ForegroundColor Gray
+    Write-Host "All output (including INFO) will be logged to file" -ForegroundColor Gray
+    Write-Host "Output will also be displayed in this terminal" -ForegroundColor Gray
     Write-Host ""
 
     # Set environment variable
     $env:MODELS_DIR = $modelsDir
 
-    # Start service
-    # Note: uvicorn outputs INFO messages to stderr, which is normal
-    # Use *>&1 to redirect all streams, then pipe to Tee-Object
-    python src/main.py *>&1 | ForEach-Object { "$(Get-Date -Format 'o') $_" } | Tee-Object -FilePath $logFileWithTimestamp
+    # Start service with all output captured and logged
+    # uvicorn outputs INFO messages to stderr, which is normal
+    # Use *>&1 to redirect all streams (stdout and stderr) to stdout
+    # Then add timestamp and write to both file and terminal using Tee-Object
+    # This ensures all INFO, ERROR, and other messages are logged
+    python src/main.py *>&1 | ForEach-Object {
+        $timestampedLine = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff') $_"
+        $timestampedLine
+    } | Tee-Object -FilePath $logFileWithTimestamp
 
 }
 catch {

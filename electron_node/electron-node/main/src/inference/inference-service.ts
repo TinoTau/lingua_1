@@ -116,7 +116,7 @@ export class InferenceService {
         extra: response.data.extra,
       };
     } catch (error) {
-      logger.error({ error, jobId: job.job_id, traceId: job.trace_id }, '推理服务调用失败');
+      logger.error({ error, jobId: job.job_id, traceId: job.trace_id }, 'Inference service call failed');
       throw error;
     } finally {
       this.currentJobs.delete(job.job_id);
@@ -194,10 +194,10 @@ export class InferenceService {
             resolve(finalResult);
           } else if (message.type === 'error') {
             ws.close();
-            reject(new Error(message.message || '推理失败'));
+            reject(new Error(message.message || 'Inference failed'));
           }
         } catch (error) {
-          logger.error({ error }, '解析 WebSocket 消息失败');
+          logger.error({ error }, 'Failed to parse WebSocket message');
         }
       });
 
@@ -208,7 +208,7 @@ export class InferenceService {
 
       ws.on('close', () => {
         if (!finalResult) {
-          reject(new Error('WebSocket 连接关闭，未收到结果'));
+          reject(new Error('WebSocket connection closed, no result received'));
         }
       });
     });
@@ -286,13 +286,13 @@ export class InferenceService {
   async enableModule(moduleName: string): Promise<void> {
     // 已废弃：模块现在根据任务请求自动启用
     // 不再支持手动启用模块
-    logger.warn({ moduleName }, 'enableModule 已废弃：模块现在根据任务请求自动启用');
+    logger.warn({ moduleName }, 'enableModule is deprecated: modules are now automatically enabled based on task requests');
   }
 
   async disableModule(moduleName: string): Promise<void> {
     // 已废弃：模块现在根据任务请求自动启用/禁用
     // 不再支持手动禁用模块
-    logger.warn({ moduleName }, 'disableModule 已废弃：模块现在根据任务请求自动管理');
+    logger.warn({ moduleName }, 'disableModule is deprecated: modules are now automatically managed based on task requests');
   }
 }
 

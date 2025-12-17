@@ -22,7 +22,7 @@ export function startRustProcess(
 ): ChildProcess {
   // 检查可执行文件是否存在
   if (!fs.existsSync(servicePath)) {
-    const error = `Rust 服务可执行文件不存在: ${servicePath}`;
+    const error = `Rust service executable does not exist: ${servicePath}`;
     logger.error({ servicePath }, error);
     throw new Error(error);
   }
@@ -82,14 +82,14 @@ export function startRustProcess(
   });
 
   childProcess.on('error', (error: Error) => {
-    const errorMsg = `Rust 服务进程启动失败: ${error.message}`;
+    const errorMsg = `Failed to start Rust service process: ${error.message}`;
     logger.error({ error, servicePath, workingDir }, errorMsg);
     logStream.end();
     handlers.onProcessError(new Error(errorMsg));
   });
 
   childProcess.on('exit', (code: number | null, signal: string | null) => {
-    logger.info({ code, signal, pid: childProcess?.pid }, 'Rust 服务进程已退出');
+    logger.info({ code, signal, pid: childProcess?.pid }, 'Rust service process exited');
     logStream.end();
     handlers.onProcessExit(code, signal);
   });
@@ -105,13 +105,13 @@ export async function stopRustProcess(
   port: number
 ): Promise<void> {
   if (!childProcess) {
-    logger.info({ port }, `Rust 服务未运行 (端口: ${port})，无需停止`);
+    logger.info({ port }, `Rust service is not running (port: ${port}), no need to stop`);
     return;
   }
 
   const pid = childProcess.pid;
 
-  logger.info({ pid, port }, `正在停止 Rust 服务 (端口: ${port}, PID: ${pid})...`);
+  logger.info({ pid, port }, `Stopping Rust service (port: ${port}, PID: ${pid})...`);
 
   return new Promise(async (resolve) => {
     if (!childProcess) {
@@ -120,7 +120,7 @@ export async function stopRustProcess(
     }
 
     childProcess.once('exit', async () => {
-      logger.info({ pid, port }, `Rust 服务进程已退出 (端口: ${port}, PID: ${pid})`);
+      logger.info({ pid, port }, `Rust service process exited (port: ${port}, PID: ${pid})`);
 
       // 验证端口是否已释放
       await verifyPortReleased(port, 'rust');
@@ -139,7 +139,7 @@ export async function stopRustProcess(
           process.kill(pid, 'SIGTERM');
         }
       } catch (error) {
-        logger.error({ error, pid }, '停止进程失败，尝试强制终止');
+        logger.error({ error, pid }, 'Failed to stop process, attempting force kill');
         if (childProcess) {
           childProcess.kill('SIGKILL');
         }
@@ -151,7 +151,7 @@ export async function stopRustProcess(
     // 超时强制终止
     setTimeout(async () => {
       if (childProcess && childProcess.exitCode === null && !childProcess.killed) {
-        logger.warn({ pid, port }, `服务未在 5 秒内停止，强制终止 (端口: ${port}, PID: ${pid})`);
+        logger.warn({ pid, port }, `Service did not stop within 5 seconds, forcing termination (port: ${port}, PID: ${pid})`);
         childProcess.kill('SIGKILL');
 
         // 即使强制终止，也验证端口是否释放

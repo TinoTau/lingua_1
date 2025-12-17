@@ -109,7 +109,7 @@ class ModelManager extends events_1.EventEmitter {
             await this.lockManager.cleanupOrphanLocks();
         }
         catch (error) {
-            logger_1.default.error({ error }, '初始化 ModelManager 失败');
+            logger_1.default.error({ error }, 'Failed to initialize ModelManager');
         }
     }
     // ===== 模型列表获取 =====
@@ -119,7 +119,7 @@ class ModelManager extends events_1.EventEmitter {
             return response.data;
         }
         catch (error) {
-            logger_1.default.error({ error }, '获取可用模型列表失败');
+            logger_1.default.error({ error }, 'Failed to get available models list');
             return [];
         }
     }
@@ -171,7 +171,7 @@ class ModelManager extends events_1.EventEmitter {
             }
         }
         catch (error) {
-            logger_1.default.error({ error }, '获取 capability_state 失败');
+            logger_1.default.error({ error }, 'Failed to get capability_state');
         }
         return capabilityState;
     }
@@ -300,7 +300,7 @@ class ModelManager extends events_1.EventEmitter {
             this.registry[modelId][version].status = status;
         }
         // 异步保存，不阻塞
-        this.registryManager.saveRegistry(this.registry).catch((error) => logger_1.default.error({ error }, '保存 registry 失败'));
+        this.registryManager.saveRegistry(this.registry).catch((error) => logger_1.default.error({ error }, 'Failed to save registry'));
         // 如果状态发生变化，触发 capability_state 更新事件
         if (previousStatus !== status) {
             this.emit('capability-state-changed', { modelId, version, status });
@@ -356,7 +356,7 @@ class ModelManager extends events_1.EventEmitter {
             return true;
         }
         catch (error) {
-            logger_1.default.error({ error, modelId }, '卸载模型失败');
+            logger_1.default.error({ error, modelId }, 'Failed to uninstall model');
             return false;
         }
     }

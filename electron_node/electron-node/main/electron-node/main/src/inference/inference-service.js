@@ -86,7 +86,7 @@ class InferenceService {
             };
         }
         catch (error) {
-            logger_1.default.error({ error, jobId: job.job_id, traceId: job.trace_id }, '推理服务调用失败');
+            logger_1.default.error({ error, jobId: job.job_id, traceId: job.trace_id }, 'Inference service call failed');
             throw error;
         }
         finally {
@@ -157,11 +157,11 @@ class InferenceService {
                     }
                     else if (message.type === 'error') {
                         ws.close();
-                        reject(new Error(message.message || '推理失败'));
+                        reject(new Error(message.message || 'Inference failed'));
                     }
                 }
                 catch (error) {
-                    logger_1.default.error({ error }, '解析 WebSocket 消息失败');
+                    logger_1.default.error({ error }, 'Failed to parse WebSocket message');
                 }
             });
             ws.on('error', (error) => {
@@ -170,7 +170,7 @@ class InferenceService {
             });
             ws.on('close', () => {
                 if (!finalResult) {
-                    reject(new Error('WebSocket 连接关闭，未收到结果'));
+                    reject(new Error('WebSocket connection closed, no result received'));
                 }
             });
         });
@@ -246,12 +246,12 @@ class InferenceService {
     async enableModule(moduleName) {
         // 已废弃：模块现在根据任务请求自动启用
         // 不再支持手动启用模块
-        logger_1.default.warn({ moduleName }, 'enableModule 已废弃：模块现在根据任务请求自动启用');
+        logger_1.default.warn({ moduleName }, 'enableModule is deprecated: modules are now automatically enabled based on task requests');
     }
     async disableModule(moduleName) {
         // 已废弃：模块现在根据任务请求自动启用/禁用
         // 不再支持手动禁用模块
-        logger_1.default.warn({ moduleName }, 'disableModule 已废弃：模块现在根据任务请求自动管理');
+        logger_1.default.warn({ moduleName }, 'disableModule is deprecated: modules are now automatically managed based on task requests');
     }
 }
 exports.InferenceService = InferenceService;

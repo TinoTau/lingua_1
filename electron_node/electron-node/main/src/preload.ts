@@ -27,6 +27,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   // 节点管理
   getNodeStatus: () => ipcRenderer.invoke('get-node-status'),
+  reconnectNode: () => ipcRenderer.invoke('reconnect-node'),
   generatePairingCode: () => ipcRenderer.invoke('generate-pairing-code'),
 
   // Rust 服务管理

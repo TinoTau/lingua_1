@@ -64,7 +64,7 @@ function setupCudaEnvironment() {
             // 更新 PATH
             const currentPath = process.env.PATH || '';
             env.PATH = `${cudaBin};${cudaLibnvvp};${currentPath}`;
-            logger_1.default.info({ cudaPath }, 'CUDA 环境已配置');
+            logger_1.default.info({ cudaPath }, 'CUDA environment configured');
             break;
         }
     }

@@ -54,14 +54,14 @@ export async function startServiceProcess(
   // 检查虚拟环境
   const pythonExe = path.join(config.venvPath, 'Scripts', 'python.exe');
   if (!fs.existsSync(pythonExe)) {
-    const error = `虚拟环境不存在: ${config.venvPath}`;
+    const error = `Virtual environment does not exist: ${config.venvPath}`;
     logger.error({ serviceName, venvPath: config.venvPath }, error);
     throw new Error(error);
   }
 
   // 检查脚本文件
   if (!fs.existsSync(config.scriptPath)) {
-    const error = `服务脚本不存在: ${config.scriptPath}`;
+    const error = `Service script does not exist: ${config.scriptPath}`;
     logger.error({ serviceName, scriptPath: config.scriptPath }, error);
     throw new Error(error);
   }
@@ -73,7 +73,7 @@ export async function startServiceProcess(
   if (!portAvailable) {
     logger.warn(
       { serviceName, port: config.port },
-      `端口 ${config.port} 已被占用，尝试清理...`
+      `Port ${config.port} is already in use, attempting to cleanup...`
     );
     await cleanupPortProcesses(config.port, serviceName);
     // 等待端口释放
@@ -115,7 +115,7 @@ export async function startServiceProcess(
   });
 
   process.on('error', (error) => {
-    logger.error({ error, serviceName }, 'Python 服务进程启动失败');
+    logger.error({ error, serviceName }, 'Failed to start Python service process');
     logStream.end();
     handlers.onProcessError(error);
   });
@@ -135,7 +135,7 @@ export async function startServiceProcess(
       logStream.write(logLine, 'utf8');
     }
 
-    logger.info({ code, signal, serviceName }, 'Python 服务进程已退出');
+    logger.info({ code, signal, serviceName }, 'Python service process exited');
     if (code !== 0 && code !== null) {
       logger.error(
         {
@@ -155,7 +155,7 @@ export async function startServiceProcess(
     if (code === 1) {
       logger.warn(
         { serviceName, port: config.port, code, signal },
-        '服务进程在启动阶段退出（退出码 1），可能是端口被占用或初始化失败。如果随后启动成功，这可能是正常的（端口释放延迟）'
+        'Service process exited during startup (exit code 1), possibly due to port conflict or initialization failure. If startup succeeds subsequently, this may be normal (port release delay)'
       );
     }
 
@@ -177,14 +177,14 @@ export async function stopServiceProcess(
 
   logger.info(
     { serviceName, pid, port },
-    `正在停止 Python 服务 (端口: ${port}, PID: ${pid})...`
+    `Stopping Python service (port: ${port}, PID: ${pid})...`
   );
 
   return new Promise((resolve) => {
     child.once('exit', async (code, signal) => {
       logger.info(
         { serviceName, pid, port, code, signal },
-        `Python 服务进程已退出 (端口: ${port}, 退出码: ${code})`
+        `Python service process exited (port: ${port}, exit code: ${code})`
       );
 
       // 验证端口是否已释放
@@ -203,7 +203,7 @@ export async function stopServiceProcess(
           process.kill(pid, 'SIGTERM');
         }
       } catch (error) {
-        logger.error({ error, serviceName, pid }, '停止进程失败，尝试强制终止');
+        logger.error({ error, serviceName, pid }, 'Failed to stop process, attempting force kill');
         child.kill('SIGKILL');
       }
     } else {
@@ -214,7 +214,7 @@ export async function stopServiceProcess(
       if (child.exitCode === null && !child.killed) {
         logger.warn(
           { serviceName, pid, port },
-          `服务未在 5 秒内停止，强制终止 (端口: ${port}, PID: ${pid})`
+          `Service did not stop within 5 seconds, forcing termination (port: ${port}, PID: ${pid})`
         );
         child.kill('SIGKILL');
 
@@ -252,7 +252,7 @@ export async function waitForServiceReadyWithProcessCheck(
       () => {
         // 检查进程是否还在运行
         if (processExited || process.killed || process.exitCode !== null) {
-          throw new Error(`服务进程在启动过程中退出（退出码: ${process.exitCode}）`);
+          throw new Error(`Service process exited during startup (exit code: ${process.exitCode})`);
         }
       }
     );

@@ -9,7 +9,7 @@ path = "src/main.rs"
 
 [dependencies]
 # 异步运行时
-tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "rt", "time", "process", "fs"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "rt", "time", "process", "fs", "signal"] }
 async-trait = "0.1"
 
 # 序列化
@@ -48,6 +48,9 @@ config = "0.14"
 
 # Base64 编码
 base64 = { version = "0.21", features = ["alloc"] }
+
+# HTTP 客户端（用于调用Model Hub API）
+reqwest = { version = "0.11", features = ["json"] }
 
 # Futures 工具
 futures-util = "0.3"
