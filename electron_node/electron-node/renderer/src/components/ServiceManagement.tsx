@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './ServiceManagement.css';
 
 interface ServiceStatus {
@@ -28,19 +28,12 @@ export function ServiceManagement() {
   const [rustStatus, setRustStatus] = useState<RustServiceStatus | null>(null);
   const [pythonStatuses, setPythonStatuses] = useState<ServiceStatus[]>([]);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
-  const [prefs, setPrefs] = useState<{
-    rustEnabled: boolean;
-    nmtEnabled: boolean;
-    ttsEnabled: boolean;
-    yourttsEnabled: boolean;
-  } | null>(null);
 
   useEffect(() => {
     // 加载服务偏好和当前状态
     const init = async () => {
       try {
-        const p = await window.electronAPI.getServicePreferences();
-        setPrefs(p);
+        await window.electronAPI.getServicePreferences();
       } catch (e) {
         console.error('加载服务偏好失败:', e);
       }
@@ -145,16 +138,6 @@ export function ServiceManagement() {
     return map[name] || name;
   };
 
-  const getServicePort = (name: string): number => {
-    const map: Record<string, number> = {
-      nmt: 5008,
-      tts: 5006,
-      yourtts: 5004,
-      rust: 5009,
-    };
-    return map[name] || 0;
-  };
-
   const formatGpuUsageMs = (ms: number): string => {
     if (ms < 1000) {
       return `${ms}ms`;
@@ -179,7 +162,6 @@ export function ServiceManagement() {
       const yourttsEnabled = !!pythonStatuses.find(s => s.name === 'yourtts')?.running;
 
       const newPrefs = { rustEnabled, nmtEnabled, ttsEnabled, yourttsEnabled };
-      setPrefs(newPrefs);
       await window.electronAPI.setServicePreferences(newPrefs);
     } catch (error) {
       console.error('同步服务偏好失败:', error);
@@ -270,8 +252,8 @@ export function ServiceManagement() {
                 <div className="service-name-row">
                   <h3>{getServiceDisplayName(serviceName)}</h3>
                   <span className={`status-badge ${isRunning ? 'running' :
-                      isStarting ? 'starting' :
-                        'stopped'
+                    isStarting ? 'starting' :
+                      'stopped'
                     }`}>
                     {isRunning ? '运行中' :
                       isStarting ? '正在启动...' :

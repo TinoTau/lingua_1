@@ -2,23 +2,23 @@
   padding: 20px;
 }
 
-.service-header {
+.service-management .service-header {
   margin-bottom: 20px;
 }
 
-.service-header h2 {
+.service-management .service-header h2 {
   margin: 0;
   font-size: 20px;
   font-weight: 600;
 }
 
-.services-list {
+.service-management .services-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.service-item {
+.service-management .service-item {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -28,70 +28,72 @@
   background-color: #fafafa;
 }
 
-.service-info {
+.service-management .service-info {
   flex: 1;
 }
 
-.service-name-row {
+.service-management .service-name-row {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 8px;
 }
 
-.service-name-row h3 {
+.service-management .service-name-row h3 {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
 }
 
-.status-badge {
+.service-management .status-badge {
   padding: 4px 12px;
   border-radius: 12px;
   font-size: 12px;
   font-weight: 500;
 }
 
-.status-badge.running {
+.service-management .status-badge.running {
   background-color: #e8f5e9;
   color: #2e7d32;
 }
 
-.status-badge.starting {
+.service-management .status-badge.starting {
   background-color: #fff3e0;
   color: #e65100;
 }
 
-.status-badge.stopped {
+.service-management .status-badge.stopped {
   background-color: #ffebee;
   color: #c62828;
 }
 
-.service-details {
+.service-management .service-details {
   margin-top: 8px;
   padding-top: 8px;
   border-top: 1px solid #e0e0e0;
 }
 
-.detail-row {
+/* 使用更具体的选择器，避免被其他组件的样式覆盖 */
+.service-management .detail-row {
   display: flex;
   gap: 8px;
   margin-bottom: 4px;
   font-size: 13px;
 }
 
-.detail-label {
+.service-management .detail-label {
   font-weight: 500;
   color: #666;
   min-width: 80px;
 }
 
-.detail-value {
+.service-management .detail-value {
   color: #333;
   font-family: 'Courier New', monospace;
 }
 
-.error-message {
+/* 使用更具体的选择器，避免被其他组件的样式覆盖 */
+.service-management .error-message {
   margin-top: 8px;
   padding: 8px;
   background-color: #ffebee;
@@ -104,31 +106,31 @@
   gap: 6px;
 }
 
-.error-icon {
+.service-management .error-icon {
   font-size: 14px;
 }
 
-.service-actions {
+.service-management .service-actions {
   margin-left: 16px;
   display: flex;
   align-items: center;
 }
 
 /* Bootstrap-style switch checkbox - 缩小至与状态pill一致 */
-.service-switch {
+.service-management .service-switch {
   position: relative;
   display: inline-block;
   width: 40px;
   height: 20px;
 }
 
-.service-switch input {
+.service-management .service-switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-.service-switch-slider {
+.service-management .service-switch-slider {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -140,7 +142,7 @@
   border-radius: 20px;
 }
 
-.service-switch-slider:before {
+.service-management .service-switch-slider:before {
   position: absolute;
   content: "";
   height: 16px;
@@ -152,19 +154,20 @@
   border-radius: 50%;
 }
 
-.service-switch input:checked + .service-switch-slider {
-  background-color: #28a745; /* 绿色 */
+.service-management .service-switch input:checked+.service-switch-slider {
+  background-color: #28a745;
+  /* 绿色 */
 }
 
-.service-switch input:focus + .service-switch-slider {
+.service-management .service-switch input:focus+.service-switch-slider {
   box-shadow: 0 0 1px #28a745;
 }
 
-.service-switch input:checked + .service-switch-slider:before {
+.service-management .service-switch input:checked+.service-switch-slider:before {
   transform: translateX(20px);
 }
 
-.service-switch input:disabled + .service-switch-slider {
+.service-management .service-switch input:disabled+.service-switch-slider {
   opacity: 0.6;
   cursor: not-allowed;
 }

@@ -4,19 +4,19 @@
   margin: 0 auto;
 }
 
-.model-management-header {
+.model-management .model-management-header {
   display: flex;
   align-items: center;
   gap: 16px;
   margin-bottom: 20px;
 }
 
-.model-management-header h2 {
+.model-management .model-management-header h2 {
   margin: 0;
   color: #333;
 }
 
-.back-button {
+.model-management .back-button {
   padding: 8px 16px;
   background-color: #6c757d;
   color: white;
@@ -28,22 +28,22 @@
   transition: background-color 0.2s;
 }
 
-.back-button:hover {
+.model-management .back-button:hover {
   background-color: #5a6268;
 }
 
-.back-button:active {
+.model-management .back-button:active {
   background-color: #484f54;
 }
 
-.tabs {
+.model-management .tabs {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
   border-bottom: 2px solid #e0e0e0;
 }
 
-.tabs button {
+.model-management .tabs button {
   padding: 10px 20px;
   border: none;
   background: transparent;
@@ -55,23 +55,31 @@
   transition: all 0.2s;
 }
 
-.tabs button:hover {
+.model-management .tabs button:hover {
   color: #333;
 }
 
-.tabs button.active {
+.model-management .tabs button.active {
   color: #007bff;
   border-bottom-color: #007bff;
   font-weight: 600;
 }
 
-.model-list {
+.model-management .model-list {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.model-item {
+/* 确保表格在 flex 容器中能正确显示 */
+.model-management .model-list>.ranking-table {
+  display: table !important;
+  overflow: visible;
+  flex-shrink: 0;
+  min-height: 0;
+}
+
+.model-management .model-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -82,34 +90,34 @@
   transition: box-shadow 0.2s;
 }
 
-.model-item:hover {
+.model-management .model-item:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.model-info {
+.model-management .model-info {
   flex: 1;
 }
 
-.model-info h3 {
+.model-management .model-info h3 {
   margin: 0 0 10px 0;
   color: #333;
   font-size: 18px;
 }
 
-.model-info p {
+.model-management .model-info p {
   margin: 5px 0;
   color: #666;
   font-size: 14px;
 }
 
-.progress-container {
+.model-management .progress-container {
   margin-top: 10px;
   padding: 10px;
   background: #f5f5f5;
   border-radius: 4px;
 }
 
-.progress-header {
+.model-management .progress-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -117,12 +125,12 @@
   font-size: 12px;
 }
 
-.progress-state {
+.model-management .progress-state {
   font-weight: 600;
   color: #007bff;
 }
 
-.progress-file {
+.model-management .progress-file {
   color: #666;
   flex: 1;
   margin: 0 10px;
@@ -131,11 +139,11 @@
   white-space: nowrap;
 }
 
-.progress-files {
+.model-management .progress-files {
   color: #999;
 }
 
-.progress-bar {
+.model-management .progress-bar {
   width: 100%;
   height: 10px;
   background: #e0e0e0;
@@ -144,13 +152,13 @@
   margin-bottom: 8px;
 }
 
-.progress-fill {
+.model-management .progress-fill {
   height: 100%;
   background: linear-gradient(90deg, #007bff, #0056b3);
   transition: width 0.3s ease;
 }
 
-.progress-details {
+.model-management .progress-details {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -158,21 +166,21 @@
   color: #666;
 }
 
-.progress-text {
+.model-management .progress-text {
   font-weight: 500;
 }
 
-.progress-speed {
+.model-management .progress-speed {
   color: #28a745;
   margin-left: 10px;
 }
 
-.progress-time {
+.model-management .progress-time {
   color: #ffc107;
   margin-left: 10px;
 }
 
-.error-message {
+.model-management .error-message {
   margin-top: 10px;
   padding: 12px;
   background: #fff3cd;
@@ -181,42 +189,42 @@
   border-left: 4px solid #ff9800;
 }
 
-.error-header {
+.model-management .error-header {
   display: flex;
   align-items: center;
   margin-bottom: 8px;
 }
 
-.error-icon {
+.model-management .error-icon {
   font-size: 18px;
   margin-right: 8px;
 }
 
-.error-type {
+.model-management .error-type {
   font-weight: 600;
   color: #856404;
   font-size: 14px;
 }
 
-.error-detail {
+.model-management .error-detail {
   margin: 8px 0;
   color: #856404;
   font-size: 13px;
   line-height: 1.5;
 }
 
-.error-hint {
+.model-management .error-hint {
   margin: 8px 0 0 0;
   color: #856404;
   font-size: 12px;
   font-style: italic;
 }
 
-.error-actions {
+.model-management .error-actions {
   margin-top: 10px;
 }
 
-.retry-button {
+.model-management .retry-button {
   padding: 6px 16px;
   background: #ff9800;
   color: white;
@@ -228,20 +236,20 @@
   transition: background 0.2s;
 }
 
-.retry-button:hover {
+.model-management .retry-button:hover {
   background: #f57c00;
 }
 
-.retry-button:active {
+.model-management .retry-button:active {
   background: #e65100;
 }
 
-.model-actions {
+.model-management .model-actions {
   display: flex;
   gap: 10px;
 }
 
-.model-actions button {
+.model-management .model-actions button {
   padding: 10px 20px;
   background: #007bff;
   color: white;
@@ -253,17 +261,17 @@
   transition: background 0.2s;
 }
 
-.model-actions button:hover:not(:disabled) {
+.model-management .model-actions button:hover:not(:disabled) {
   background: #0056b3;
 }
 
-.model-actions button:disabled {
+.model-management .model-actions button:disabled {
   background: #ccc;
   cursor: not-allowed;
 }
 
 /* 下载按钮样式（绿色） */
-.download-button {
+.model-management .download-button {
   padding: 8px 16px;
   background: #28a745;
   color: white;
@@ -275,17 +283,17 @@
   transition: background 0.2s;
 }
 
-.download-button:hover:not(:disabled) {
+.model-management .download-button:hover:not(:disabled) {
   background: #218838;
 }
 
-.download-button:disabled {
+.model-management .download-button:disabled {
   background: #ccc;
   cursor: not-allowed;
 }
 
 /* 卸载按钮样式（蓝色） */
-.uninstall-button {
+.model-management .uninstall-button {
   padding: 8px 16px;
   background: #007bff;
   color: white;
@@ -297,23 +305,23 @@
   transition: background 0.2s;
 }
 
-.uninstall-button:hover:not(:disabled) {
+.model-management .uninstall-button:hover:not(:disabled) {
   background: #0056b3;
 }
 
-.uninstall-button:disabled {
+.model-management .uninstall-button:disabled {
   background: #ccc;
   cursor: not-allowed;
 }
 
-.empty-state {
+.model-management .empty-state {
   text-align: center;
   padding: 40px;
   color: #999;
   font-size: 16px;
 }
 
-.empty-state.error-state {
+.model-management .empty-state.error-state {
   padding: 30px;
   background: #fff3cd;
   border: 1px solid #ffc107;
@@ -321,64 +329,72 @@
   color: #856404;
 }
 
-.empty-state .error-icon {
+.model-management .empty-state .error-icon {
   font-size: 48px;
   margin-bottom: 16px;
 }
 
-.empty-state .error-message {
+.model-management .empty-state .error-message {
   margin: 16px 0;
   font-size: 16px;
   font-weight: 500;
 }
 
-.empty-state .hint-text {
+.model-management .empty-state .hint-text {
   margin-top: 8px;
   font-size: 14px;
   color: #666;
   font-style: italic;
 }
 
-.empty-state .retry-button {
+.model-management .empty-state .retry-button {
   margin-top: 16px;
 }
 
-.ranking-table {
+.model-management .ranking-table {
+  display: table !important;
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  background: #fff;
+  table-layout: auto;
+  flex-shrink: 0;
+  min-width: 0;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
-.ranking-table th,
-.ranking-table td {
+.model-management .ranking-table th,
+.model-management .ranking-table td {
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #e0e0e0;
+  background: #fff;
 }
 
-.ranking-table th {
+.model-management .ranking-table th {
   background: #f5f5f5;
   font-weight: 600;
   color: #333;
 }
 
-.ranking-table tr:hover {
+.model-management .ranking-table tr:hover {
   background: #f9f9f9;
 }
 
-.ranking-table td:first-child {
+.model-management .ranking-table td:first-child {
   font-weight: 600;
   color: #007bff;
 }
 
-.ranking-table th:nth-child(3),
-.ranking-table td:nth-child(3),
-.ranking-table th:nth-child(4),
-.ranking-table td:nth-child(4) {
+.model-management .ranking-table th:nth-child(3),
+.model-management .ranking-table td:nth-child(3),
+.model-management .ranking-table th:nth-child(4),
+.model-management .ranking-table td:nth-child(4) {
   text-align: center;
 }
 
-.ranking-table td:nth-child(4)>div {
+.model-management .ranking-table td:nth-child(4)>div {
   display: flex;
   justify-content: center;
   align-items: center;

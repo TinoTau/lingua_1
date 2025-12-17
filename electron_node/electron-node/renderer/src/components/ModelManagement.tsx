@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './ModelManagement.css';
 
 interface ServiceInfo {
@@ -307,29 +307,6 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
     await handleDownload(serviceId, version);
   };
 
-  const getServiceStatus = (serviceId: string, version: string): string => {
-    const progressKey = `${serviceId}_${version}`;
-    const progress = downloadProgress.get(progressKey);
-    const error = downloadErrors.get(progressKey);
-
-    if (error) {
-      return `错误: ${error.message}`;
-    }
-
-    if (progress) {
-      return `${progress.state} - ${progress.percent.toFixed(1)}%`;
-    }
-
-    const installed = installedServices.find(
-      s => s.serviceId === serviceId && s.version === version
-    );
-
-    if (installed) {
-      return installed.info.status === 'ready' ? '已安装' : installed.info.status;
-    }
-
-    return '未安装';
-  };
 
   const formatBytes = (bytes: number): string => {
     if (bytes === 0) return '0 B';

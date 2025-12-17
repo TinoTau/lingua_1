@@ -46,10 +46,13 @@ export interface ElectronAPI {
   // Rust 服务管理
   getRustServiceStatus: () => Promise<{
     running: boolean;
+    starting: boolean;
     pid: number | null;
     port: number | null;
     startedAt: Date | null;
     lastError: string | null;
+    taskCount: number;
+    gpuUsageMs: number;
   }>;
   startRustService: () => Promise<{ success: boolean; error?: string }>;
   stopRustService: () => Promise<{ success: boolean; error?: string }>;
@@ -58,18 +61,24 @@ export interface ElectronAPI {
   getPythonServiceStatus: (serviceName: 'nmt' | 'tts' | 'yourtts') => Promise<{
     name: string;
     running: boolean;
+    starting: boolean;
     pid: number | null;
     port: number | null;
     startedAt: Date | null;
     lastError: string | null;
+    taskCount: number;
+    gpuUsageMs: number;
   }>;
   getAllPythonServiceStatuses: () => Promise<Array<{
     name: string;
     running: boolean;
+    starting: boolean;
     pid: number | null;
     port: number | null;
     startedAt: Date | null;
     lastError: string | null;
+    taskCount: number;
+    gpuUsageMs: number;
   }>>;
   startPythonService: (serviceName: 'nmt' | 'tts' | 'yourtts') => Promise<{ success: boolean; error?: string }>;
   stopPythonService: (serviceName: 'nmt' | 'tts' | 'yourtts') => Promise<{ success: boolean; error?: string }>;
