@@ -32,6 +32,7 @@ MODELS_DIR = Path(os.getenv("MODELS_DIR", "./models"))
 STORAGE_DIR = MODELS_DIR / "storage"
 SERVICES_STORAGE_DIR = MODELS_DIR / "services"
 METADATA_FILE = MODELS_DIR / "metadata.json"
+SERVICES_INDEX_FILE = SERVICES_STORAGE_DIR / "services_index.json"
 
 # 确保目录存在
 STORAGE_DIR.mkdir(parents=True, exist_ok=True)
@@ -66,6 +67,21 @@ class ModelRankingItem(BaseModel):
     model_id: str
     request_count: int
     rank: int
+
+
+# ===== 服务包索引文件管理 =====
+
+def load_services_index() -> Optional[Dict]:
+    """加载服务包索引文件"""
+    if not SERVICES_INDEX_FILE.exists():
+        return None
+    
+    try:
+        with open(SERVICES_INDEX_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Warning: Failed to load services index: {e}")
+        return None
 
 
 # ===== 服务包 API 数据模型 =====
@@ -165,31 +181,9 @@ def calculate_checksum_sha256(model_id: str, version: str, model_dir: Path = Non
     if not version_dir.exists():
         return "{}"  # 返回空的JSON对象
     
-    # 如果没有 checksum 文件，计算所有文件的 SHA256
-    checksums = {}
-    for file_path in version_dir.glob("*"):
-        if file_path.is_file() and file_path.name != "checksum.sha256":
-            try:
-                with open(file_path, 'rb') as f:
-                    file_hash = hashlib.sha256(f.read()).hexdigest()
-                    checksums[file_path.name] = file_hash
-            except Exception as e:
-                # 如果读取文件失败，跳过
-                print(f"Warning: Failed to calculate checksum for {file_path}: {e}")
-                continue
-    
-    # 生成 checksum 文件内容（JSON 格式）
-    checksum_content = json.dumps(checksums, indent=2)
-    
-    # 确保目录存在后再写入
-    try:
-        checksum_file.parent.mkdir(parents=True, exist_ok=True)
-        checksum_file.write_text(checksum_content, encoding='utf-8')
-    except Exception as e:
-        print(f"Warning: Failed to write checksum file {checksum_file}: {e}")
-        # 返回计算的内容，即使无法写入文件
-    
-    return checksum_content
+    # 如果没有 checksum 文件，返回空 JSON（不计算，避免性能问题）
+    # 如果需要计算校验和，应该在后台异步进行，而不是在 API 请求时同步计算
+    return "{}"
 
 
 # ===== API 端点 =====
@@ -477,75 +471,46 @@ async def get_model_ranking():
 # ===== 服务包 API 端点 =====
 
 def scan_service_packages(platform_filter: Optional[str] = None) -> Dict[str, ServiceInfo]:
-    """扫描服务包目录，返回服务信息字典"""
+    """从索引文件读取服务包信息
+    
+    Args:
+        platform_filter: 平台过滤（如 'windows-x64'）
+    """
     services_dict: Dict[str, ServiceInfo] = {}
     
-    if not SERVICES_STORAGE_DIR.exists():
+    # 从索引文件加载
+    index_data = load_services_index()
+    if not index_data:
+        # 如果索引文件不存在，返回空字典
+        # 提示用户运行生成脚本
+        print("Warning: Services index file not found. Run generate_services_index.py to create it.")
         return services_dict
     
-    # 扫描 services/{service_id}/{version}/{platform}/service.zip
-    for service_dir in SERVICES_STORAGE_DIR.iterdir():
-        if not service_dir.is_dir():
-            continue
-        
-        service_id = service_dir.name
-        variants: List[ServiceVariant] = []
-        versions: List[str] = []
-        
-        # 扫描版本目录
-        for version_dir in service_dir.iterdir():
-            if not version_dir.is_dir():
+    # 从索引文件构建服务信息
+    for service_id, service_data in index_data.items():
+        variants = []
+        for v_data in service_data["variants"]:
+            # 应用平台过滤
+            if platform_filter and v_data["platform"] != platform_filter:
                 continue
             
-            version = version_dir.name
-            versions.append(version)
-            
-            # 扫描平台目录
-            for platform_dir in version_dir.iterdir():
-                if not platform_dir.is_dir():
-                    continue
-                
-                platform = platform_dir.name
-                
-                # 如果指定了平台过滤，跳过不匹配的平台
-                if platform_filter and platform != platform_filter:
-                    continue
-                
-                # 查找 service.zip
-                zip_file = platform_dir / "service.zip"
-                if not zip_file.exists() or not zip_file.is_file():
-                    continue
-                
-                # 计算 SHA256
-                file_size = zip_file.stat().st_size
-                with open(zip_file, 'rb') as f:
-                    file_hash = hashlib.sha256(f.read()).hexdigest()
-                
-                # 构建 artifact URL（相对路径）
-                artifact_url = f"/storage/services/{service_id}/{version}/{platform}/service.zip"
-                
-                variant = ServiceVariant(
-                    version=version,
-                    platform=platform,
-                    artifact=ServiceArtifact(
-                        type="zip",
-                        url=artifact_url,
-                        sha256=file_hash,
-                        size_bytes=file_size,
-                        etag=file_hash[:16]  # 使用前16位作为简单 ETag
-                    )
-                    # signature 可以从单独的签名文件加载，这里暂时为空
+            variants.append(ServiceVariant(
+                version=v_data["version"],
+                platform=v_data["platform"],
+                artifact=ServiceArtifact(
+                    type=v_data["artifact"]["type"],
+                    url=v_data["artifact"]["url"],
+                    sha256=v_data["artifact"]["sha256"],
+                    size_bytes=v_data["artifact"]["size_bytes"],
+                    etag=v_data["artifact"].get("etag")
                 )
-                variants.append(variant)
+            ))
         
-        if variants:
-            # 确定最新版本
-            latest_version = max(versions, key=lambda v: v) if versions else ""
-            
+        if variants or not platform_filter:
             services_dict[service_id] = ServiceInfo(
-                service_id=service_id,
-                name=service_id.replace('-', ' ').replace('_', ' ').title(),
-                latest_version=latest_version,
+                service_id=service_data["service_id"],
+                name=service_data["name"],
+                latest_version=service_data["latest_version"],
                 variants=variants
             )
     
@@ -558,7 +523,13 @@ async def list_services(
     service_id: Optional[str] = None,
     version: Optional[str] = None
 ):
-    """列出服务（含多平台产物）"""
+    """列出服务（含多平台产物）
+    
+    Args:
+        platform: 平台过滤（如 'windows-x64'）
+        service_id: 服务ID过滤
+        version: 版本过滤
+    """
     services_dict = scan_service_packages(platform_filter=platform)
     
     # 转换为列表

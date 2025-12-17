@@ -5,7 +5,7 @@ mod validation;
 
 pub use types::{Node, DispatchExcludeReason};
 
-use crate::messages::{FeatureFlags, HardwareInfo, InstalledModel, CapabilityState, ModelStatus, NodeStatus};
+use crate::messages::{FeatureFlags, HardwareInfo, InstalledModel, InstalledService, CapabilityState, ModelStatus, NodeStatus};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -148,6 +148,7 @@ impl NodeRegistry {
             gpu_usage: Some(0.0), // 初始化为 0.0，因为节点必须有 GPU
             memory_usage: 0.0,
             installed_models,
+            installed_services: Vec::new(), // 初始为空，从心跳中更新
             features_supported,
             accept_public_jobs,
             capability_state,
@@ -185,6 +186,7 @@ impl NodeRegistry {
         gpu_usage: Option<f32>,
         memory_usage: f32,
         installed_models: Option<Vec<InstalledModel>>,
+        installed_services: Option<Vec<InstalledService>>,
         current_jobs: usize,
         capability_state: Option<CapabilityState>,
     ) -> bool {
@@ -199,6 +201,9 @@ impl NodeRegistry {
             node.memory_usage = memory_usage;
             if let Some(models) = installed_models {
                 node.installed_models = models;
+            }
+            if let Some(services) = installed_services {
+                node.installed_services = services;
             }
             if let Some(cap_state) = capability_state {
                 node.capability_state = cap_state;

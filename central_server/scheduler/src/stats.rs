@@ -40,10 +40,14 @@ pub struct LanguageUsageStats {
 pub struct NodeStats {
     /// 当前连接的节点数
     pub connected_nodes: usize,
-    /// Model Hub中可用的模型列表
-    pub available_models: Vec<ModelInfo>,
     /// 每种模型有多少节点正在提供算力
     pub model_node_counts: HashMap<String, usize>,
+    /// Model Hub中可用的服务包列表
+    pub available_services: Vec<ServiceInfo>,
+    /// 服务包总数
+    pub total_services: usize,
+    /// 每个服务包有多少节点正在使用
+    pub service_node_counts: HashMap<String, usize>,
     /// 算力统计
     pub compute_power: ComputePowerStats,
 }
@@ -75,11 +79,27 @@ pub struct NodePowerDetail {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct ModelInfo {
-    pub model_id: String,
-    pub kind: String, // "asr" | "nmt" | "tts" | "vad" | "emotion" | "persona" | "other"
-    pub src_lang: Option<String>,
-    pub tgt_lang: Option<String>,
+pub struct ServiceInfo {
+    pub service_id: String,
+    pub name: String,
+    pub latest_version: String,
+    pub variants: Vec<ServiceVariant>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ServiceVariant {
+    pub version: String,
+    pub platform: String,
+    pub artifact: ServiceArtifact,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ServiceArtifact {
+    #[serde(rename = "type")]
+    pub artifact_type: String,
+    pub url: String,
+    pub sha256: String,
+    pub size_bytes: u64,
 }
 
 impl DashboardStats {
@@ -123,7 +143,7 @@ impl DashboardStats {
             let count = language_counts.entry(session.tgt_lang.clone()).or_insert(0);
             *count += 1;
             
-            let (src_count, tgt_count) = language_stats
+            let (_src_count, tgt_count) = language_stats
                 .entry(session.tgt_lang.clone())
                 .or_insert((0, 0));
             *tgt_count += 1;
@@ -215,26 +235,77 @@ impl DashboardStats {
             }
         }
         
-        // 从Model Hub获取可用模型列表（通过HTTP API）
-        let available_models = match Self::fetch_models_from_hub().await {
-            Ok(models) => {
-                tracing::debug!("成功获取 {} 个模型", models.len());
-                models
+        // 从Model Hub获取可用服务包列表（通过HTTP API）
+        let available_services = match Self::fetch_services_from_hub().await {
+            Ok(services) => {
+                tracing::debug!("成功获取 {} 个服务包", services.len());
+                services
             },
             Err(e) => {
-                tracing::warn!("获取Model Hub模型列表失败: {}", e);
-                tracing::warn!("请确保Model Hub服务正在运行 (http://localhost:5000)");
+                tracing::warn!("获取Model Hub服务包列表失败: {}", e);
+                tracing::warn!("请确保Model Hub服务正在运行 (http://127.0.0.1:5000)");
                 Vec::new()
             }
         };
+        let total_services = available_services.len();
+
+        // 统计每个服务包有多少节点在使用
+        // 优先从节点的 installed_services 获取，如果没有则从 installed_models 推断
+        let mut service_node_counts: HashMap<String, usize> = HashMap::new();
+        for node in nodes.values() {
+            if !node.online {
+                continue;
+            }
+            
+            // 优先使用节点直接报告的服务包信息
+            if !node.installed_services.is_empty() {
+                for service in &node.installed_services {
+                    *service_node_counts.entry(service.service_id.clone()).or_insert(0) += 1;
+                }
+            } else {
+                // 如果没有服务包信息，从节点的模型推断服务包（向后兼容）
+                let mut used_services = std::collections::HashSet::new();
+                
+                for model in &node.installed_models {
+                    if !model.enabled.unwrap_or(true) {
+                        continue;
+                    }
+                    
+                    // 根据模型类型推断服务包
+                    let model_id_lower = model.model_id.to_lowercase();
+                    if model_id_lower.contains("m2m100") || model_id_lower.contains("nmt") {
+                        used_services.insert("nmt-m2m100");
+                    } else if model_id_lower.contains("piper") || (model_id_lower.contains("tts") && !model_id_lower.contains("your")) {
+                        used_services.insert("piper-tts");
+                    } else if model_id_lower.contains("yourtts") || model_id_lower.contains("your_tts") {
+                        used_services.insert("your-tts");
+                    } else if model_id_lower.contains("whisper") || model_id_lower.contains("asr") {
+                        // ASR 模型可能来自 node-inference 服务包
+                        used_services.insert("node-inference");
+                    }
+                }
+                
+                // 如果节点有多个模型，可能使用了 node-inference 服务包（包含多个模型）
+                if node.installed_models.len() > 3 {
+                    used_services.insert("node-inference");
+                }
+                
+                // 统计服务包使用
+                for service_id in used_services {
+                    *service_node_counts.entry(service_id.to_string()).or_insert(0) += 1;
+                }
+            }
+        }
 
         // 计算算力统计
         let compute_power = Self::calculate_compute_power(&nodes);
 
         NodeStats {
             connected_nodes,
-            available_models,
             model_node_counts,
+            available_services,
+            total_services,
+            service_node_counts,
             compute_power,
         }
     }
@@ -305,62 +376,20 @@ impl DashboardStats {
         }
     }
 
-    /// 从模型ID解析类型和语言信息
-    fn parse_model_id(model_id: &str) -> (String, Option<String>, Option<String>) {
-        // 简单的解析逻辑，可以根据实际模型ID格式调整
-        let kind = if model_id.starts_with("whisper") {
-            "asr".to_string()
-        } else if model_id.contains("m2m100") || model_id.contains("nmt") {
-            "nmt".to_string()
-        } else if model_id.contains("tts") || model_id.contains("piper") || model_id.contains("yourtts") {
-            "tts".to_string()
-        } else if model_id.contains("vad") || model_id.contains("silero") {
-            "vad".to_string()
-        } else if model_id.contains("emotion") || model_id.contains("xlm-r") {
-            "emotion".to_string()
-        } else if model_id.contains("persona") || model_id.contains("embedding") {
-            "persona".to_string()
-        } else {
-            "other".to_string()
-        };
-
-        // 尝试从模型ID中提取语言信息
-        let src_lang = if model_id.contains("-zh-") || model_id.contains("-en-") {
-            if let Some(parts) = model_id.split('-').nth(1) {
-                Some(parts.to_string())
-            } else {
-                None
-            }
-        } else {
-            None
-        };
-
-        let tgt_lang = if model_id.contains("-zh-") || model_id.contains("-en-") {
-            if let Some(parts) = model_id.split('-').last() {
-                Some(parts.to_string())
-            } else {
-                None
-            }
-        } else {
-            None
-        };
-
-        (kind, src_lang, tgt_lang)
-    }
-
-    /// 从Model Hub HTTP API获取模型列表
-    async fn fetch_models_from_hub() -> Result<Vec<ModelInfo>, String> {
+    /// 从Model Hub HTTP API获取服务包列表
+    async fn fetch_services_from_hub() -> Result<Vec<ServiceInfo>, String> {
         use serde_json::Value;
         
-        // Model Hub默认地址
+        // Model Hub默认地址（使用 127.0.0.1 而不是 localhost，避免 IPv6 解析问题）
         let hub_url = std::env::var("MODEL_HUB_URL")
-            .unwrap_or_else(|_| "http://localhost:5000".to_string());
+            .unwrap_or_else(|_| "http://127.0.0.1:5000".to_string());
         
-        let api_url = format!("{}/api/models", hub_url);
-        tracing::debug!("从Model Hub获取模型列表: {}", api_url);
+        let api_url = format!("{}/api/services", hub_url);
+        tracing::debug!("从Model Hub获取服务包列表: {}", api_url);
         
         let client = reqwest::Client::builder()
-            .timeout(std::time::Duration::from_secs(5))
+            .timeout(std::time::Duration::from_secs(60))
+            .connect_timeout(std::time::Duration::from_secs(5))
             .build()
             .map_err(|e| format!("创建HTTP客户端失败: {}", e))?;
         
@@ -381,7 +410,7 @@ impl DashboardStats {
             return Err(err_msg);
         }
         
-        let models: Vec<Value> = response
+        let json: Value = response
             .json()
             .await
             .map_err(|e| {
@@ -390,81 +419,92 @@ impl DashboardStats {
                 err_msg
             })?;
         
-        tracing::debug!("从Model Hub获取到 {} 个模型", models.len());
+        // 解析响应：{"services": [...]}
+        let services_array = json["services"]
+            .as_array()
+            .ok_or_else(|| "响应中没有services字段或不是数组".to_string())?;
+        
+        tracing::debug!("从Model Hub获取到 {} 个服务包", services_array.len());
         
         let mut result = Vec::new();
-        for model in models {
-            let model_id = model["id"].as_str().unwrap_or("unknown").to_string();
-            let task = model["task"].as_str().unwrap_or("other").to_string();
-            let languages = model["languages"]
-                .as_array()
-                .map(|arr| {
-                    arr.iter()
-                        .filter_map(|v| v.as_str())
-                        .map(|s| s.to_string())
-                        .collect::<Vec<_>>()
-                })
-                .unwrap_or_default();
+        for service in services_array {
+            let service_id = service["service_id"]
+                .as_str()
+                .ok_or_else(|| "服务包缺少service_id字段".to_string())?
+                .to_string();
             
-            // 处理每个版本
-            if let Some(versions) = model["versions"].as_array() {
-                if versions.is_empty() {
-                    tracing::debug!("模型 {} 没有版本信息", model_id);
-                    continue;
-                }
+            let name = service["name"]
+                .as_str()
+                .unwrap_or(&service_id)
+                .to_string();
+            
+            let latest_version = service["latest_version"]
+                .as_str()
+                .unwrap_or("1.0.0")
+                .to_string();
+            
+            // 解析variants
+            let empty_vec: Vec<Value> = Vec::new();
+            let variants_array = service["variants"]
+                .as_array()
+                .unwrap_or(&empty_vec);
+            
+            let mut variants = Vec::new();
+            for variant in variants_array {
+                let version = variant["version"]
+                    .as_str()
+                    .unwrap_or("1.0.0")
+                    .to_string();
                 
-                for version in versions {
-                    let version_str = version["version"].as_str().unwrap_or("1.0.0").to_string();
-                    let full_model_id = format!("{}@{}", model_id, version_str);
-                    
-                    // 处理语言信息
-                    let (src_lang, tgt_lang) = if languages.is_empty() {
-                        // 没有语言信息
-                        (None, None)
-                    } else if languages.len() == 1 {
-                        // 单个语言：根据模型类型决定显示位置
-                        let lang = languages.first().unwrap().clone();
-                        if task == "tts" {
-                            // TTS模型：从文本到语音，语言作为目标语言（语音的语言）
-                            (None, Some(lang))
-                        } else if task == "asr" {
-                            // ASR模型：从语音到文本，语言作为源语言（语音的语言）
-                            (Some(lang), None)
-                        } else {
-                            // 其他类型：默认作为源语言
-                            (Some(lang), None)
-                        }
-                    } else {
-                        // 多个语言：使用组合格式，如 "zh/en/ja" 表示支持这些语言
-                        let lang_pair = languages.join("/");
-                        if task == "nmt" {
-                            // NMT模型：多语言表示支持这些语言之间的双向翻译
-                            (Some(lang_pair.clone()), Some(lang_pair))
-                        } else if task == "tts" {
-                            // TTS模型：多语言表示支持生成这些语言的语音
-                            (None, Some(lang_pair))
-                        } else if task == "asr" {
-                            // ASR模型：多语言表示支持识别这些语言的语音
-                            (Some(lang_pair), None)
-                        } else {
-                            // 其他类型：同时显示在源语言和目标语言
-                            (Some(lang_pair.clone()), Some(lang_pair))
-                        }
-                    };
-                    
-                    result.push(ModelInfo {
-                        model_id: full_model_id,
-                        kind: task.clone(),
-                        src_lang,
-                        tgt_lang,
-                    });
-                }
-            } else {
-                tracing::debug!("模型 {} 没有versions字段", model_id);
+                let platform = variant["platform"]
+                    .as_str()
+                    .unwrap_or("unknown")
+                    .to_string();
+                
+                let artifact_obj = variant["artifact"]
+                    .as_object()
+                    .ok_or_else(|| "variant缺少artifact字段".to_string())?;
+                
+                let artifact_type = artifact_obj["type"]
+                    .as_str()
+                    .unwrap_or("zip")
+                    .to_string();
+                
+                let url = artifact_obj["url"]
+                    .as_str()
+                    .unwrap_or("")
+                    .to_string();
+                
+                let sha256 = artifact_obj["sha256"]
+                    .as_str()
+                    .unwrap_or("")
+                    .to_string();
+                
+                let size_bytes = artifact_obj["size_bytes"]
+                    .as_u64()
+                    .unwrap_or(0);
+                
+                variants.push(ServiceVariant {
+                    version,
+                    platform,
+                    artifact: ServiceArtifact {
+                        artifact_type,
+                        url,
+                        sha256,
+                        size_bytes,
+                    },
+                });
             }
+            
+            result.push(ServiceInfo {
+                service_id,
+                name,
+                latest_version,
+                variants,
+            });
         }
         
-        tracing::info!("成功获取 {} 个模型版本", result.len());
+        tracing::info!("成功获取 {} 个服务包", result.len());
         Ok(result)
     }
 }

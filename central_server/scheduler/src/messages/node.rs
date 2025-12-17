@@ -1,7 +1,7 @@
 // 节点 ↔ 调度服务器消息
 
 use serde::{Deserialize, Serialize};
-use super::common::{FeatureFlags, PipelineConfig, InstalledModel, CapabilityState, ResourceUsage, ExtraResult, HardwareInfo};
+use super::common::{FeatureFlags, PipelineConfig, InstalledModel, InstalledService, CapabilityState, ResourceUsage, ExtraResult, HardwareInfo};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type")]
@@ -49,6 +49,9 @@ pub enum NodeMessage {
         resource_usage: ResourceUsage,
         #[serde(skip_serializing_if = "Option::is_none")]
         installed_models: Option<Vec<InstalledModel>>,
+        /// 节点已安装的服务包列表（可选）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        installed_services: Option<Vec<InstalledService>>,
         /// 节点模型能力图（capability_state）
         /// key: model_id, value: 模型状态
         #[serde(skip_serializing_if = "Option::is_none")]

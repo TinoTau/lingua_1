@@ -40,6 +40,14 @@ pub struct InstalledModel {
     pub enabled: Option<bool>,
 }
 
+/// 已安装的服务包信息
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct InstalledService {
+    pub service_id: String,
+    pub version: String,
+    pub platform: String, // "windows-x64" | "linux-x64" | etc.
+}
+
 /// 模型状态（用于 capability_state）
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]

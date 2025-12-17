@@ -220,7 +220,6 @@ async fn main() -> Result<()> {
         .route("/ws/session", get(handle_session_ws))
         .route("/ws/node", get(handle_node_ws))
         .route("/health", get(health_check))
-        .route("/api/v1/models", get(list_models))
         .route("/api/v1/stats", get(get_stats))
         .route("/dashboard", get(serve_dashboard))
         .route("/compute-power", get(serve_compute_power))
@@ -282,16 +281,6 @@ async fn handle_node_ws(
 // 健康检查
 async fn health_check() -> &'static str {
     "OK"
-}
-
-// 模型列表 API
-async fn list_models(
-    axum::extract::State(_state): axum::extract::State<AppState>,
-) -> axum::Json<serde_json::Value> {
-    // TODO: 实现模型列表查询
-    axum::Json(serde_json::json!({
-        "models": []
-    }))
 }
 
 // 统计API端点

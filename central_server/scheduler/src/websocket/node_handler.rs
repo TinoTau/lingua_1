@@ -164,6 +164,7 @@ async fn handle_node_message(
             timestamp: _,
             resource_usage,
             installed_models,
+            installed_services,
             capability_state,
         } => {
             // 更新节点心跳
@@ -173,6 +174,7 @@ async fn handle_node_message(
                 resource_usage.gpu_percent,
                 resource_usage.mem_percent,
                 installed_models,
+                installed_services,
                 resource_usage.running_jobs,
                 capability_state,
             ).await;

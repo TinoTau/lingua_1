@@ -1,5 +1,8 @@
 # 调度服务器数据统计仪表盘
 
+**最后更新**: 2025-12-17  
+**版本**: v2.0
+
 ## 功能概述
 
 调度服务器提供了一个Web仪表盘页面，用于实时查看系统统计数据，包括：
@@ -13,8 +16,9 @@
 ### 节点端统计
 
 1. **当前连接的节点数** - 显示当前在线的节点数量
-2. **可用模型列表** - 显示Model Hub中所有可用的模型
-3. **模型算力提供统计** - 显示每种模型有多少节点正在提供算力
+2. **可用服务包列表** - 显示Model Hub中所有可用的服务包
+3. **服务包模型热度** - 显示每个服务包有多少节点正在使用（从节点心跳获取）
+4. **模型算力提供统计** - 显示每种模型有多少节点正在提供算力
 
 ## 访问方式
 
@@ -57,17 +61,35 @@ GET /api/v1/stats
   },
   "nodes": {
     "connected_nodes": 5,
-    "available_models": [
-      {
-        "model_id": "whisper-base@1.0.0",
-        "kind": "asr",
-        "src_lang": "zh",
-        "tgt_lang": null
-      }
-    ],
     "model_node_counts": {
       "whisper-base@1.0.0": 3,
       "m2m100-zh-en@1.0.0": 2
+    },
+    "available_services": [
+      {
+        "service_id": "nmt-m2m100",
+        "name": "Nmt M2M100",
+        "latest_version": "1.0.0",
+        "variants": [
+          {
+            "version": "1.0.0",
+            "platform": "windows-x64",
+            "artifact": {
+              "type": "zip",
+              "url": "/storage/services/nmt-m2m100/1.0.0/windows-x64/service.zip",
+              "sha256": "d0c56cbfb7a3be60f078b938a6f98a26872b586ba1c49cf7a3247eb4c7877b38",
+              "size_bytes": 2259780642
+            }
+          }
+        ]
+      }
+    ],
+    "total_services": 4,
+    "service_node_counts": {
+      "nmt-m2m100": 3,
+      "piper-tts": 2,
+      "your-tts": 1,
+      "node-inference": 5
     }
   }
 }
@@ -92,7 +114,8 @@ GET /api/v1/stats
 ### 节点端数据
 
 - **连接节点数**: 从 `NodeRegistry` 中统计 `online == true` 的节点数
-- **可用模型列表**: 通过HTTP API从Model Hub服务获取（`http://localhost:5000/api/models`）
+- **可用服务包列表**: 通过HTTP API从Model Hub服务获取（`http://localhost:5000/api/services`）
+- **服务包模型热度**: 从节点的 `installed_services`（优先）或 `installed_models`（向后兼容）统计每个服务包的使用节点数
 - **模型节点统计**: 从节点的 `capability_state` 或 `installed_models` 统计每种模型的可用节点数
 
 ## 配置

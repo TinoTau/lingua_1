@@ -219,17 +219,17 @@
                     <div class="stat-label" style="margin-top: 10px; color: #667eea; font-weight: bold;">点击查看语言统计 →</div>
                 </div>
 
-                <div class="stat-card clickable-card" onclick="window.location.href='/models'">
+                <div class="stat-card">
                     <h2>🖥️ 节点连接数</h2>
                     <div class="stat-value" id="connectedNodes">0</div>
                     <div class="stat-label">当前在线的节点数</div>
-                    <div class="stat-label" style="margin-top: 10px; color: #667eea; font-weight: bold;">点击查看模型统计 →</div>
                 </div>
 
-                <div class="stat-card">
-                    <h2>📦 可用模型数</h2>
-                    <div class="stat-value" id="availableModels">0</div>
-                    <div class="stat-label">Model Hub中的模型总数</div>
+                <div class="stat-card clickable-card" onclick="window.location.href='/models'">
+                    <h2>🚀 可用服务包数</h2>
+                    <div class="stat-value" id="availableServices">0</div>
+                    <div class="stat-label">Model Hub中的服务包总数</div>
+                    <div class="stat-label" style="margin-top: 10px; color: #667eea; font-weight: bold;">点击查看服务包列表 →</div>
                 </div>
 
                 <div class="stat-card clickable-card" onclick="window.location.href='/compute-power'">
@@ -273,9 +273,9 @@
                 document.getElementById('error').style.display = 'none';
                 document.getElementById('content').style.display = 'block';
                 
-                // 检查是否有模型数据
-                if (data.nodes && data.nodes.available_models && data.nodes.available_models.length === 0) {
-                    console.warn('模型列表为空，请检查Model Hub服务是否运行');
+                // 检查是否有服务包数据
+                if (data.nodes && data.nodes.available_services && data.nodes.available_services.length === 0) {
+                    console.warn('服务包列表为空，请检查Model Hub服务是否运行');
                 }
                 
                 // 更新Web端统计
@@ -283,7 +283,13 @@
                 
                 // 更新节点统计
                 document.getElementById('connectedNodes').textContent = data.nodes.connected_nodes;
-                document.getElementById('availableModels').textContent = data.nodes.available_models.length;
+                
+                // 更新服务包统计
+                if (data.nodes.total_services !== undefined) {
+                    document.getElementById('availableServices').textContent = data.nodes.total_services;
+                } else {
+                    document.getElementById('availableServices').textContent = data.nodes.available_services ? data.nodes.available_services.length : 0;
+                }
                 
                 // 更新算力统计
                 if (data.nodes.compute_power) {

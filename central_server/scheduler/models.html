@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lingua 调度服务器 - 模型算力提供统计</title>
+    <title>Lingua 调度服务器 - 服务包列表</title>
     <style>
         * {
             margin: 0;
@@ -28,7 +29,7 @@
             border-radius: 12px;
             padding: 30px;
             margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
 
         .header h1 {
@@ -62,7 +63,7 @@
             border-radius: 12px;
             padding: 30px;
             margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
 
         .section h2 {
@@ -82,7 +83,8 @@
             border-collapse: collapse;
         }
 
-        th, td {
+        th,
+        td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #e0e0e0;
@@ -106,13 +108,40 @@
             font-weight: bold;
         }
 
-        .badge-asr { background: #e3f2fd; color: #1976d2; }
-        .badge-nmt { background: #fff3e0; color: #f57c00; }
-        .badge-tts { background: #f3e5f5; color: #7b1fa2; }
-        .badge-vad { background: #e8f5e9; color: #388e3c; }
-        .badge-emotion { background: #fce4ec; color: #c2185b; }
-        .badge-persona { background: #fff9c4; color: #f57f17; }
-        .badge-other { background: #eceff1; color: #455a64; }
+        .badge-asr {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-nmt {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .badge-tts {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .badge-vad {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .badge-emotion {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .badge-persona {
+            background: #fff9c4;
+            color: #f57f17;
+        }
+
+        .badge-other {
+            background: #eceff1;
+            color: #455a64;
+        }
 
         .loading {
             text-align: center;
@@ -129,7 +158,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .spinner {
@@ -143,11 +174,12 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
             <a href="/dashboard" class="back-button">← 返回仪表盘</a>
-            <h1>⚙️ 模型算力提供统计</h1>
+            <h1>🚀 服务包列表</h1>
             <div class="last-update">最后更新: <span id="lastUpdate">--</span></div>
         </div>
 
@@ -159,21 +191,23 @@
         <div id="error" class="error" style="display: none;"></div>
 
         <div id="content" style="display: none;">
-            <!-- 模型节点统计 -->
+            <!-- 服务包列表 -->
             <div class="section">
-                <h2>⚙️ 模型算力提供统计</h2>
+                <h2>🚀 可用服务包列表</h2>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th>模型ID</th>
-                                <th>类型</th>
-                                <th>源语言</th>
-                                <th>目标语言</th>
-                                <th>提供算力的节点数</th>
+                                <th>服务ID</th>
+                                <th>服务名称</th>
+                                <th>最新版本</th>
+                                <th>平台变体</th>
+                                <th>文件大小</th>
+                                <th>模型热度</th>
+                                <th>SHA256</th>
                             </tr>
                         </thead>
-                        <tbody id="modelNodeTable">
+                        <tbody id="servicesTable">
                             <!-- 动态填充 -->
                         </tbody>
                     </table>
@@ -184,7 +218,7 @@
 
     <script>
         const API_BASE = '/api/v1';
-        
+
         // 更新页面数据
         async function updateStats() {
             try {
@@ -192,25 +226,25 @@
                 if (!response.ok) {
                     throw new Error(`HTTP错误: ${response.status}`);
                 }
-                
+
                 const data = await response.json();
-                
+
                 // 隐藏加载提示
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('error').style.display = 'none';
                 document.getElementById('content').style.display = 'block';
-                
-                // 检查是否有模型数据
-                if (data.nodes && data.nodes.available_models && data.nodes.available_models.length === 0) {
-                    console.warn('模型列表为空，请检查Model Hub服务是否运行');
+
+                // 检查是否有服务包数据
+                if (data.nodes && data.nodes.available_services && data.nodes.available_services.length === 0) {
+                    console.warn('服务包列表为空，请检查Model Hub服务是否运行');
                 }
-                
-                // 更新模型节点统计
-                updateModelNodes(data.nodes.available_models, data.nodes.model_node_counts);
-                
+
+                // 更新服务包列表
+                updateServices(data.nodes.available_services, data.nodes.service_node_counts || {});
+
                 // 更新最后更新时间
                 document.getElementById('lastUpdate').textContent = new Date().toLocaleString('zh-CN');
-                
+
             } catch (error) {
                 console.error('获取统计数据失败:', error);
                 document.getElementById('loading').style.display = 'none';
@@ -218,59 +252,67 @@
                 document.getElementById('error').textContent = `错误: ${error.message}`;
             }
         }
-        
-        function updateModelNodes(models, nodeCounts) {
-            const tbody = document.getElementById('modelNodeTable');
+
+        function updateServices(services, serviceNodeCounts) {
+            const tbody = document.getElementById('servicesTable');
             tbody.innerHTML = '';
-            
-            if (models.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #666;">暂无数据</td></tr>';
+
+            if (!services || services.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #666;">暂无服务包数据</td></tr>';
                 return;
             }
-            
-            // 按节点数排序（降序）
-            const sortedModels = [...models].sort((a, b) => {
-                const countA = nodeCounts[a.model_id] || 0;
-                const countB = nodeCounts[b.model_id] || 0;
-                return countB - countA;
-            });
-            
-            sortedModels.forEach(model => {
-                const nodeCount = nodeCounts[model.model_id] || 0;
-                const badgeClass = `badge-${model.kind}`;
-                
-                // 处理语言显示
-                let srcLangDisplay = model.src_lang || '-';
-                let tgtLangDisplay = model.tgt_lang || '-';
-                
-                // 如果是双向翻译模型（src_lang和tgt_lang相同且包含"/"），表示支持双向互译
-                // 在源语言和目标语言列都显示相同的语言对，表示支持双向翻译
-                if (model.src_lang && model.tgt_lang && 
-                    model.src_lang === model.tgt_lang && 
-                    model.src_lang.includes('/')) {
-                    // 双向翻译：在源语言和目标语言都显示语言对，表示支持双向
-                    srcLangDisplay = model.src_lang + ' ↔';
-                    tgtLangDisplay = '↔ ' + model.tgt_lang;
+
+            // 格式化文件大小
+            function formatSize(bytes) {
+                if (bytes === 0) return '0 B';
+                const k = 1024;
+                const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+            }
+
+            services.forEach(service => {
+                // 获取该服务包的使用节点数
+                const nodeCount = serviceNodeCounts[service.service_id] || 0;
+
+                // 显示所有平台变体
+                const variants = service.variants || [];
+                if (variants.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${service.service_id}</td>
+                        <td>${service.name || service.service_id}</td>
+                        <td>${service.latest_version || '-'}</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td><strong>${nodeCount}</strong></td>
+                        <td>-</td>
+                    `;
+                    tbody.appendChild(row);
+                } else {
+                    variants.forEach((variant, index) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${index === 0 ? service.service_id : ''}</td>
+                            <td>${index === 0 ? (service.name || service.service_id) : ''}</td>
+                            <td>${variant.version}</td>
+                            <td><span class="badge badge-other">${variant.platform}</span></td>
+                            <td>${formatSize(variant.artifact.size_bytes)}</td>
+                            <td>${index === 0 ? `<strong>${nodeCount}</strong>` : ''}</td>
+                            <td style="font-family: monospace; font-size: 11px;">${variant.artifact.sha256.substring(0, 16)}...</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
                 }
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${model.model_id}</td>
-                    <td><span class="badge ${badgeClass}">${model.kind.toUpperCase()}</span></td>
-                    <td>${srcLangDisplay}</td>
-                    <td>${tgtLangDisplay}</td>
-                    <td><strong>${nodeCount}</strong></td>
-                `;
-                tbody.appendChild(row);
             });
         }
-        
+
         // 初始化：立即加载一次
         updateStats();
-        
+
         // 每5秒自动刷新
         setInterval(updateStats, 5000);
     </script>
 </body>
-</html>
 
+</html>
