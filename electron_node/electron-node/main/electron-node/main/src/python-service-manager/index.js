@@ -29,7 +29,7 @@ class PythonServiceManager {
         }
         const config = this.getServiceConfig(serviceName);
         if (!config) {
-            throw new Error(`未知服务: ${serviceName}`);
+            throw new Error(`Unknown service: ${serviceName}`);
         }
         // 设置启动中状态
         this.updateStatus(serviceName, {

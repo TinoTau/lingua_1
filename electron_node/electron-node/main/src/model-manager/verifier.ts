@@ -63,13 +63,13 @@ export class ModelVerifier {
       
       // 检查文件是否存在
       if (!(await fileExists(partPath))) {
-        throw new Error(`文件不存在: ${fileInfo.path}`);
+        throw new Error(`File not found: ${fileInfo.path}`);
       }
       
       // 验证文件大小
       const stats = await fs.stat(partPath);
       if (stats.size !== fileInfo.size_bytes) {
-        throw new Error(`文件大小不匹配: ${fileInfo.path} (期望: ${fileInfo.size_bytes}, 实际: ${stats.size})`);
+        throw new Error(`File size mismatch: ${fileInfo.path} (expected: ${fileInfo.size_bytes}, actual: ${stats.size})`);
       }
       
       // 如果 checksum 数据可用，验证 SHA256
@@ -78,7 +78,7 @@ export class ModelVerifier {
         const expectedHash = checksumData[fileInfo.path];
         
         if (fileHash !== expectedHash) {
-          throw new Error(`文件校验失败: ${fileInfo.path} (SHA256 不匹配)`);
+          throw new Error(`File checksum verification failed: ${fileInfo.path} (SHA256 mismatch)`);
         }
       }
     }

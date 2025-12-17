@@ -64,6 +64,8 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
   const [activeTab, setActiveTab] = useState<'installed' | 'available' | 'ranking'>('available');
   const [downloadProgress, setDownloadProgress] = useState<Map<string, ModelProgress>>(new Map());
   const [downloadErrors, setDownloadErrors] = useState<Map<string, ModelError>>(new Map());
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     loadModels();
@@ -86,10 +88,24 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
   }, []);
 
   const loadModels = async () => {
-    const installed = await window.electronAPI.getInstalledModels();
-    const available = await window.electronAPI.getAvailableModels();
-    setInstalledModels(installed);
-    setAvailableModels(available);
+    setLoading(true);
+    setError(null);
+    try {
+      const installed = await window.electronAPI.getInstalledModels();
+      const available = await window.electronAPI.getAvailableModels();
+      setInstalledModels(installed);
+      setAvailableModels(available);
+      
+      // 如果可用模型列表为空，可能是 Model Hub 连接失败
+      if (available.length === 0) {
+        setError('No models available. Please check if Model Hub is running at http://localhost:5000');
+      }
+    } catch (err: any) {
+      console.error('Failed to load models:', err);
+      setError(`Failed to load models: ${err.message || 'Unknown error'}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const loadRanking = async () => {
@@ -108,9 +124,29 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
   };
 
   const handleUninstall = async (modelId: string, version?: string) => {
+    if (!confirm(`Are you sure you want to uninstall ${modelId}${version ? ` (version ${version})` : ''}? This will delete the model files and cannot be undone.`)) {
+      return;
+    }
     const success = await window.electronAPI.uninstallModel(modelId, version);
     if (success) {
-      loadModels();
+      // 重新加载模型列表
+      await loadModels();
+      // 清除相关的下载进度和错误
+      if (version) {
+        const progressKey = `${modelId}_${version}`;
+        setDownloadProgress(prev => {
+          const newMap = new Map(prev);
+          newMap.delete(progressKey);
+          return newMap;
+        });
+        setDownloadErrors(prev => {
+          const newMap = new Map(prev);
+          newMap.delete(progressKey);
+          return newMap;
+        });
+      }
+    } else {
+      alert(`Failed to uninstall ${modelId}${version ? ` (version ${version})` : ''}. Please check the logs for details.`);
     }
   };
 
@@ -203,8 +239,24 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
 
       {activeTab === 'available' && (
         <div className="model-list">
-          {availableModels.length === 0 ? (
-            <div className="empty-state">加载中...</div>
+          {loading ? (
+            <div className="empty-state">Loading...</div>
+          ) : error ? (
+            <div className="empty-state error-state">
+              <div className="error-icon">⚠️</div>
+              <div className="error-message">{error}</div>
+              <button className="retry-button" onClick={loadModels}>
+                Retry
+              </button>
+            </div>
+          ) : availableModels.length === 0 ? (
+            <div className="empty-state">
+              <div>No models available</div>
+              <div className="hint-text">Please check if Model Hub is running at http://localhost:5000</div>
+              <button className="retry-button" onClick={loadModels}>
+                Refresh
+              </button>
+            </div>
           ) : (
             availableModels.map((model) => {
               const defaultVersion = model.versions.find(v => v.version === model.default_version) || model.versions[0];
@@ -364,9 +416,10 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
               </thead>
               <tbody>
                 {modelRanking.map((item) => {
-                  const isInstalled = installedModels.some(
+                  const installedModel = installedModels.find(
                     m => m.modelId === item.model_id && m.info.status === 'ready'
                   );
+                  const isInstalled = !!installedModel;
                   
                   return (
                     <tr key={item.model_id}>
@@ -374,13 +427,31 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
                       <td>{item.model_id}</td>
                       <td>{item.request_count.toLocaleString()}</td>
                       <td>
-                        {isInstalled ? (
-                          <span>已安装</span>
-                        ) : (
-                          <button onClick={() => handleDownload(item.model_id)}>
-                            下载
-                          </button>
-                        )}
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                          {isInstalled ? (
+                            <>
+                              <span style={{ color: '#28a745', fontWeight: 500 }}>已下载</span>
+                              <button 
+                                onClick={() => handleUninstall(item.model_id, installedModel?.version)}
+                                style={{ 
+                                  padding: '4px 12px', 
+                                  fontSize: '12px',
+                                  background: '#dc3545',
+                                  color: 'white',
+                                  border: 'none',
+                                  borderRadius: '4px',
+                                  cursor: 'pointer'
+                                }}
+                              >
+                                卸载
+                              </button>
+                            </>
+                          ) : (
+                            <button onClick={() => handleDownload(item.model_id)}>
+                              下载
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   );

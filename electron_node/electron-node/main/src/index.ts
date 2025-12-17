@@ -495,11 +495,20 @@ except Exception as e:
 // ===== 模型管理 IPC 接口 =====
 
 ipcMain.handle('get-installed-models', async () => {
-  return modelManager?.getInstalledModels() || [];
+  const models = modelManager?.getInstalledModels() || [];
+  logger.debug({ modelCount: models.length }, 'IPC: get-installed-models returned');
+  return models;
 });
 
 ipcMain.handle('get-available-models', async () => {
-  return modelManager?.getAvailableModels() || [];
+  try {
+    const models = await modelManager?.getAvailableModels() || [];
+    logger.debug({ modelCount: models.length }, 'IPC: get-available-models returned');
+    return models;
+  } catch (error: any) {
+    logger.error({ error: error.message }, 'IPC: get-available-models failed');
+    throw error; // 抛出错误，让 UI 能够捕获
+  }
 });
 
 ipcMain.handle('download-model', async (_, modelId: string, version?: string) => {
@@ -530,7 +539,22 @@ ipcMain.handle('get-model-path', async (_, modelId: string, version?: string) =>
 ipcMain.handle('get-model-ranking', async () => {
   try {
     const axios = require('axios');
-    const modelHubUrl = process.env.MODEL_HUB_URL || 'http://localhost:5000';
+    // 优先从配置文件读取，其次从环境变量，最后使用默认值
+    const config = loadNodeConfig();
+    const configUrl = config.modelHub?.url;
+    const envUrl = process.env.MODEL_HUB_URL;
+    
+    let urlToUse: string;
+    if (configUrl) {
+      urlToUse = configUrl;
+    } else if (envUrl) {
+      urlToUse = envUrl;
+    } else {
+      urlToUse = 'http://127.0.0.1:5000';
+    }
+    
+    // 如果 URL 包含 localhost，替换为 127.0.0.1 以避免 IPv6 解析问题
+    const modelHubUrl = urlToUse.replace(/localhost/g, '127.0.0.1');
     const response = await axios.get(`${modelHubUrl}/api/model-usage/ranking`);
     return response.data || [];
   } catch (error) {

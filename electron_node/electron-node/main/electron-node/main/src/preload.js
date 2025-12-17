@@ -25,6 +25,7 @@ electron_1.contextBridge.exposeInMainWorld('electronAPI', {
     },
     // 节点管理
     getNodeStatus: () => electron_1.ipcRenderer.invoke('get-node-status'),
+    reconnectNode: () => electron_1.ipcRenderer.invoke('reconnect-node'),
     generatePairingCode: () => electron_1.ipcRenderer.invoke('generate-pairing-code'),
     // Rust 服务管理
     getRustServiceStatus: () => electron_1.ipcRenderer.invoke('get-rust-service-status'),

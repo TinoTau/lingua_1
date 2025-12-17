@@ -223,6 +223,9 @@ async fn main() -> Result<()> {
         .route("/api/v1/models", get(list_models))
         .route("/api/v1/stats", get(get_stats))
         .route("/dashboard", get(serve_dashboard))
+        .route("/compute-power", get(serve_compute_power))
+        .route("/models", get(serve_models))
+        .route("/languages", get(serve_languages))
         .with_state(app_state);
 
     // 启动服务器
@@ -302,5 +305,20 @@ async fn get_stats(
 // 仪表盘页面
 async fn serve_dashboard() -> axum::response::Html<&'static str> {
     axum::response::Html(include_str!("../dashboard.html"))
+}
+
+// 算力页面
+async fn serve_compute_power() -> axum::response::Html<&'static str> {
+    axum::response::Html(include_str!("../compute-power.html"))
+}
+
+// 模型页面
+async fn serve_models() -> axum::response::Html<&'static str> {
+    axum::response::Html(include_str!("../models.html"))
+}
+
+// 语言页面
+async fn serve_languages() -> axum::response::Html<&'static str> {
+    axum::response::Html(include_str!("../languages.html"))
 }
 

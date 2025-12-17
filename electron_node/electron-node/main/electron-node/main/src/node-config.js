@@ -48,6 +48,9 @@ const DEFAULT_CONFIG = {
     scheduler: {
         url: 'ws://127.0.0.1:5010/ws/node', // 默认本地地址，使用 127.0.0.1 避免 IPv6 解析问题
     },
+    modelHub: {
+        url: 'http://127.0.0.1:5000', // 默认本地地址，使用 127.0.0.1 避免 IPv6 解析问题
+    },
 };
 function getConfigPath() {
     const userData = electron_1.app.getPath('userData');
@@ -70,6 +73,10 @@ function loadNodeConfig() {
             scheduler: {
                 ...DEFAULT_CONFIG.scheduler,
                 ...(parsed.scheduler || {}),
+            },
+            modelHub: {
+                ...DEFAULT_CONFIG.modelHub,
+                ...(parsed.modelHub || {}),
             },
         };
     }

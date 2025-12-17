@@ -187,8 +187,8 @@ pub(crate) async fn handle_session_message(
                                 }
                             }
                         } else {
-                            warn!("Job {} 没有可用的节点", job.job_id);
-                            send_error(tx, ErrorCode::NodeUnavailable, "没有可用的节点").await;
+                            warn!("Job {} has no available nodes", job.job_id);
+                            send_error(tx, ErrorCode::NodeUnavailable, "No available nodes").await;
                             // 推送 ERROR 事件
                             send_ui_event(
                                 tx,

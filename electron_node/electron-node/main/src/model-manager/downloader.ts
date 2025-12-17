@@ -63,7 +63,7 @@ export class ModelDownloader extends EventEmitter {
           attempt: attempt + 1, 
           maxRetries: this.maxRetries,
           retryDelay 
-        }, '文件下载失败，将重试');
+        }, 'File download failed, will retry');
         await sleep(retryDelay);
       }
     }

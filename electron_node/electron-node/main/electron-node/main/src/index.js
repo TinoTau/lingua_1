@@ -476,10 +476,20 @@ except Exception as e:
 }
 // ===== 模型管理 IPC 接口 =====
 electron_1.ipcMain.handle('get-installed-models', async () => {
-    return modelManager?.getInstalledModels() || [];
+    const models = modelManager?.getInstalledModels() || [];
+    logger_1.default.debug({ modelCount: models.length }, 'IPC: get-installed-models returned');
+    return models;
 });
 electron_1.ipcMain.handle('get-available-models', async () => {
-    return modelManager?.getAvailableModels() || [];
+    try {
+        const models = await modelManager?.getAvailableModels() || [];
+        logger_1.default.debug({ modelCount: models.length }, 'IPC: get-available-models returned');
+        return models;
+    }
+    catch (error) {
+        logger_1.default.error({ error: error.message }, 'IPC: get-available-models failed');
+        throw error; // 抛出错误，让 UI 能够捕获
+    }
 });
 electron_1.ipcMain.handle('download-model', async (_, modelId, version) => {
     if (!modelManager)
@@ -510,7 +520,22 @@ electron_1.ipcMain.handle('get-model-path', async (_, modelId, version) => {
 electron_1.ipcMain.handle('get-model-ranking', async () => {
     try {
         const axios = require('axios');
-        const modelHubUrl = process.env.MODEL_HUB_URL || 'http://localhost:5000';
+        // 优先从配置文件读取，其次从环境变量，最后使用默认值
+        const config = (0, node_config_1.loadNodeConfig)();
+        const configUrl = config.modelHub?.url;
+        const envUrl = process.env.MODEL_HUB_URL;
+        let urlToUse;
+        if (configUrl) {
+            urlToUse = configUrl;
+        }
+        else if (envUrl) {
+            urlToUse = envUrl;
+        }
+        else {
+            urlToUse = 'http://127.0.0.1:5000';
+        }
+        // 如果 URL 包含 localhost，替换为 127.0.0.1 以避免 IPv6 解析问题
+        const modelHubUrl = urlToUse.replace(/localhost/g, '127.0.0.1');
         const response = await axios.get(`${modelHubUrl}/api/model-usage/ranking`);
         return response.data || [];
     }
@@ -521,6 +546,23 @@ electron_1.ipcMain.handle('get-model-ranking', async () => {
 });
 electron_1.ipcMain.handle('get-node-status', async () => {
     return nodeAgent?.getStatus() || { online: false, nodeId: null };
+});
+electron_1.ipcMain.handle('reconnect-node', async () => {
+    if (nodeAgent) {
+        try {
+            // 先停止现有连接（如果存在）
+            nodeAgent.stop();
+            // 然后重新启动
+            await nodeAgent.start();
+            logger_1.default.info({}, 'Node reconnection initiated');
+            return { success: true };
+        }
+        catch (error) {
+            logger_1.default.error({ error }, 'Failed to reconnect node');
+            return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+        }
+    }
+    return { success: false, error: 'Node agent not initialized' };
 });
 electron_1.ipcMain.handle('get-rust-service-status', async () => {
     return rustServiceManager?.getStatus() || {

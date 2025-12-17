@@ -61,6 +61,10 @@
             transform: translateY(-5px);
         }
 
+        .clickable-card {
+            cursor: pointer;
+        }
+
         .stat-card h2 {
             color: #333;
             font-size: 18px;
@@ -208,16 +212,18 @@
         <div id="content" style="display: none;">
             <!-- Web端统计 -->
             <div class="stats-grid">
-                <div class="stat-card">
+                <div class="stat-card clickable-card" onclick="window.location.href='/languages'">
                     <h2>🌐 Web端活跃用户</h2>
                     <div class="stat-value" id="activeUsers">0</div>
                     <div class="stat-label">当前连接的WebSocket会话数</div>
+                    <div class="stat-label" style="margin-top: 10px; color: #667eea; font-weight: bold;">点击查看语言统计 →</div>
                 </div>
 
-                <div class="stat-card">
+                <div class="stat-card clickable-card" onclick="window.location.href='/models'">
                     <h2>🖥️ 节点连接数</h2>
                     <div class="stat-value" id="connectedNodes">0</div>
                     <div class="stat-label">当前在线的节点数</div>
+                    <div class="stat-label" style="margin-top: 10px; color: #667eea; font-weight: bold;">点击查看模型统计 →</div>
                 </div>
 
                 <div class="stat-card">
@@ -226,7 +232,7 @@
                     <div class="stat-label">Model Hub中的模型总数</div>
                 </div>
 
-                <div class="stat-card">
+                <div class="stat-card clickable-card" onclick="window.location.href='/compute-power'">
                     <h2>⚡ 总算力</h2>
                     <div style="display: flex; flex-direction: column; gap: 15px;">
                         <div>
@@ -242,78 +248,10 @@
                             <div class="stat-label" id="totalMemoryPowerUnit">内存: GB</div>
                         </div>
                     </div>
+                    <div class="stat-label" style="margin-top: 10px; color: #667eea; font-weight: bold;">点击查看详情 →</div>
                 </div>
             </div>
 
-            <!-- 热门语言 -->
-            <div class="section">
-                <h2>🔥 最热门的十种语言</h2>
-                <div class="language-list" id="topLanguages">
-                    <!-- 动态填充 -->
-                </div>
-            </div>
-
-            <!-- 语言使用统计 -->
-            <div class="section">
-                <h2>📈 每种语言的使用统计</h2>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>语言</th>
-                                <th>作为源语言</th>
-                                <th>作为目标语言</th>
-                                <th>总使用次数</th>
-                            </tr>
-                        </thead>
-                        <tbody id="languageUsageTable">
-                            <!-- 动态填充 -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 节点算力详情 -->
-            <div class="section">
-                <h2>⚡ 节点算力详情</h2>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>节点ID</th>
-                                <th>节点名称</th>
-                                <th>CPU算力</th>
-                                <th>GPU算力</th>
-                                <th>内存算力</th>
-                            </tr>
-                        </thead>
-                        <tbody id="computePowerTable">
-                            <!-- 动态填充 -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 模型节点统计 -->
-            <div class="section">
-                <h2>⚙️ 模型算力提供统计</h2>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>模型ID</th>
-                                <th>类型</th>
-                                <th>源语言</th>
-                                <th>目标语言</th>
-                                <th>提供算力的节点数</th>
-                            </tr>
-                        </thead>
-                        <tbody id="modelNodeTable">
-                            <!-- 动态填充 -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -368,20 +306,6 @@
                     document.getElementById('totalMemoryPowerUnit').textContent = '内存: ' + memoryFormatted.unit;
                 }
                 
-                // 更新热门语言
-                updateTopLanguages(data.web_clients.top_languages);
-                
-                // 更新语言使用统计
-                updateLanguageUsage(data.web_clients.language_usage);
-                
-                // 更新模型节点统计
-                updateModelNodes(data.nodes.available_models, data.nodes.model_node_counts);
-                
-                // 更新算力详情
-                if (data.nodes.compute_power) {
-                    updateComputePowerDetails(data.nodes.compute_power.node_power_details);
-                }
-                
                 // 更新最后更新时间
                 document.getElementById('lastUpdate').textContent = new Date().toLocaleString('zh-CN');
                 
@@ -393,49 +317,6 @@
             }
         }
         
-        function updateTopLanguages(languages) {
-            const container = document.getElementById('topLanguages');
-            container.innerHTML = '';
-            
-            if (languages.length === 0) {
-                container.innerHTML = '<p style="color: #666;">暂无数据</p>';
-                return;
-            }
-            
-            languages.forEach(lang => {
-                const item = document.createElement('div');
-                item.className = 'language-item';
-                item.innerHTML = `
-                    <div class="lang-name">${lang.language}</div>
-                    <div class="lang-count">使用次数: ${lang.count}</div>
-                `;
-                container.appendChild(item);
-            });
-        }
-        
-        function updateLanguageUsage(usage) {
-            const tbody = document.getElementById('languageUsageTable');
-            tbody.innerHTML = '';
-            
-            const languages = Object.keys(usage).sort();
-            
-            if (languages.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #666;">暂无数据</td></tr>';
-                return;
-            }
-            
-            languages.forEach(lang => {
-                const stats = usage[lang];
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><strong>${lang}</strong></td>
-                    <td>${stats.as_source}</td>
-                    <td>${stats.as_target}</td>
-                    <td><strong>${stats.total}</strong></td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
         
         // 格式化存储大小（自动选择单位：MB/GB/TB/PB）
         function formatStorage(mb) {
@@ -448,82 +329,6 @@
             } else {
                 return { value: (mb / (1024 * 1024 * 1024)).toFixed(2), unit: 'PB' };
             }
-        }
-        
-        function updateComputePowerDetails(nodePowerDetails) {
-            const tbody = document.getElementById('computePowerTable');
-            tbody.innerHTML = '';
-            
-            if (nodePowerDetails.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #666;">暂无数据</td></tr>';
-                return;
-            }
-            
-            // 按GPU算力排序（降序）
-            const sortedDetails = [...nodePowerDetails].sort((a, b) => b.gpu_power - a.gpu_power);
-            
-            sortedDetails.forEach(detail => {
-                // 格式化GPU算力（显存）
-                const gpuFormatted = formatStorage(detail.gpu_power * 1024); // 转换为MB
-                // 格式化内存算力（内存）
-                const memoryFormatted = formatStorage(detail.memory_power * 1024); // 转换为MB
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${detail.node_id}</td>
-                    <td>${detail.node_name}</td>
-                    <td>${Math.round(detail.cpu_power)} 颗（剩余核心）</td>
-                    <td>${gpuFormatted.value} ${gpuFormatted.unit}</td>
-                    <td>${memoryFormatted.value} ${memoryFormatted.unit}</td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-        
-        function updateModelNodes(models, nodeCounts) {
-            const tbody = document.getElementById('modelNodeTable');
-            tbody.innerHTML = '';
-            
-            if (models.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #666;">暂无数据</td></tr>';
-                return;
-            }
-            
-            // 按节点数排序（降序）
-            const sortedModels = [...models].sort((a, b) => {
-                const countA = nodeCounts[a.model_id] || 0;
-                const countB = nodeCounts[b.model_id] || 0;
-                return countB - countA;
-            });
-            
-            sortedModels.forEach(model => {
-                const nodeCount = nodeCounts[model.model_id] || 0;
-                const badgeClass = `badge-${model.kind}`;
-                
-                // 处理语言显示
-                let srcLangDisplay = model.src_lang || '-';
-                let tgtLangDisplay = model.tgt_lang || '-';
-                
-                // 如果是双向翻译模型（src_lang和tgt_lang相同且包含"/"），表示支持双向互译
-                // 在源语言和目标语言列都显示相同的语言对，表示支持双向翻译
-                if (model.src_lang && model.tgt_lang && 
-                    model.src_lang === model.tgt_lang && 
-                    model.src_lang.includes('/')) {
-                    // 双向翻译：在源语言和目标语言都显示语言对，表示支持双向
-                    srcLangDisplay = model.src_lang + ' ↔';
-                    tgtLangDisplay = '↔ ' + model.tgt_lang;
-                }
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${model.model_id}</td>
-                    <td><span class="badge ${badgeClass}">${model.kind.toUpperCase()}</span></td>
-                    <td>${srcLangDisplay}</td>
-                    <td>${tgtLangDisplay}</td>
-                    <td><strong>${nodeCount}</strong></td>
-                `;
-                tbody.appendChild(row);
-            });
         }
         
         // 初始化：立即加载一次

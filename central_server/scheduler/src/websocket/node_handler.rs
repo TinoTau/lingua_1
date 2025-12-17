@@ -12,7 +12,7 @@ use chrono;
 
 // 节点端 WebSocket 处理
 pub async fn handle_node(socket: WebSocket, state: AppState) {
-    info!("新的节点 WebSocket 连接");
+    info!("New node WebSocket connection");
     
     let (mut sender, mut receiver) = socket.split();
     
@@ -51,11 +51,11 @@ pub async fn handle_node(socket: WebSocket, state: AppState) {
                 }
             }
             Ok(Message::Close(_)) => {
-                info!("节点 WebSocket 连接关闭");
+                info!("Node WebSocket connection closed");
                 break;
             }
             Err(e) => {
-                error!("WebSocket 错误: {}", e);
+                error!("WebSocket error: {}", e);
                 break;
             }
             _ => {}
@@ -66,7 +66,7 @@ pub async fn handle_node(socket: WebSocket, state: AppState) {
     if let Some(ref nid) = node_id {
         state.node_connections.unregister(nid).await;
         state.node_registry.mark_node_offline(nid).await;
-        info!("节点 {} 已清理", nid);
+        info!("Node {} cleaned up", nid);
     }
     
     send_task.abort();
@@ -101,7 +101,7 @@ async fn handle_node_message(
                         details: None,
                     };
                     send_node_message(tx, &error_msg).await?;
-                    warn!("节点注册失败（不支持的能力描述版本）: {}", schema_version);
+                    warn!("Node registration failed (unsupported capability schema version): {}", schema_version);
                     return Ok(());
                 }
             }
@@ -132,7 +132,7 @@ async fn handle_node_message(
                     };
                     
                     send_node_message(tx, &ack).await?;
-                    info!("节点 {} 已注册，状态: registering", node.node_id);
+                    info!("Node {} registered, status: registering", node.node_id);
                 }
                 Err(err) => {
                     // 注册失败，判断错误类型
@@ -150,9 +150,9 @@ async fn handle_node_message(
                     send_node_message(tx, &error_msg).await?;
                     
                     if is_node_id_conflict {
-                        warn!("节点注册失败（node_id 冲突）: {}", err);
+                        warn!("Node registration failed (node_id conflict): {}", err);
                     } else {
-                        warn!("节点注册失败（没有 GPU）: {}", err);
+                        warn!("Node registration failed (no GPU): {}", err);
                     }
                     return Ok(()); // 返回，不再继续处理
                 }

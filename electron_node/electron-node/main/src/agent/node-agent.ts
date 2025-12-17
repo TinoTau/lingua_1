@@ -239,6 +239,15 @@ export class NodeAgent {
 
       // 获取 capability_state（节点模型能力图）
       const capabilityState = await this.getCapabilityState();
+      
+      // 记录 capability_state 信息
+      const capabilityStateCount = Object.keys(capabilityState).length;
+      const readyCount = Object.values(capabilityState).filter(s => s === 'ready').length;
+      logger.debug({ 
+        capabilityStateCount,
+        readyCount,
+        installedModelsCount: installedModels.length
+      }, 'Sending heartbeat with capability_state');
 
       // 对齐协议规范：node_heartbeat 消息格式
       const message: NodeHeartbeatMessage = {
@@ -257,6 +266,12 @@ export class NodeAgent {
       };
 
       this.ws.send(JSON.stringify(message));
+      
+      if (capabilityStateCount === 0) {
+        logger.warn({ 
+          modelHubUrl: this.modelManager ? 'configured' : 'not configured'
+        }, 'Heartbeat sent with empty capability_state - this may cause health check failures');
+      }
     }, 15000); // 每15秒发送一次心跳
   }
 
@@ -298,15 +313,21 @@ export class NodeAgent {
    */
   private async getCapabilityState(): Promise<Record<string, ModelStatus>> {
     if (!this.modelManager || typeof this.modelManager.getCapabilityState !== 'function') {
+      logger.warn('ModelManager not available or getCapabilityState method not found');
       return {};
     }
 
     try {
       const state = await this.modelManager.getCapabilityState();
       // 确保始终返回一个对象
-      return state || {};
+      const result = state || {};
+      logger.debug({ 
+        capabilityStateCount: Object.keys(result).length,
+        readyCount: Object.values(result).filter(s => s === 'ready').length
+      }, 'Retrieved capability_state from ModelManager');
+      return result;
     } catch (error) {
-      logger.error({ error }, 'Failed to get capability_state');
+      logger.error({ error }, 'Failed to get capability_state from ModelManager');
       return {};
     }
   }

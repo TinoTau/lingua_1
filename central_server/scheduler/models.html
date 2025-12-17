@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lingua 调度服务器 - 模型算力提供统计</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header .last-update {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #5568d3;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .badge-asr { background: #e3f2fd; color: #1976d2; }
+        .badge-nmt { background: #fff3e0; color: #f57c00; }
+        .badge-tts { background: #f3e5f5; color: #7b1fa2; }
+        .badge-vad { background: #e8f5e9; color: #388e3c; }
+        .badge-emotion { background: #fce4ec; color: #c2185b; }
+        .badge-persona { background: #fff9c4; color: #f57f17; }
+        .badge-other { background: #eceff1; color: #455a64; }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="/dashboard" class="back-button">← 返回仪表盘</a>
+            <h1>⚙️ 模型算力提供统计</h1>
+            <div class="last-update">最后更新: <span id="lastUpdate">--</span></div>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>加载中...</p>
+        </div>
+
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="content" style="display: none;">
+            <!-- 模型节点统计 -->
+            <div class="section">
+                <h2>⚙️ 模型算力提供统计</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>模型ID</th>
+                                <th>类型</th>
+                                <th>源语言</th>
+                                <th>目标语言</th>
+                                <th>提供算力的节点数</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modelNodeTable">
+                            <!-- 动态填充 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api/v1';
+        
+        // 更新页面数据
+        async function updateStats() {
+            try {
+                const response = await fetch(`${API_BASE}/stats`);
+                if (!response.ok) {
+                    throw new Error(`HTTP错误: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // 隐藏加载提示
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+                
+                // 检查是否有模型数据
+                if (data.nodes && data.nodes.available_models && data.nodes.available_models.length === 0) {
+                    console.warn('模型列表为空，请检查Model Hub服务是否运行');
+                }
+                
+                // 更新模型节点统计
+                updateModelNodes(data.nodes.available_models, data.nodes.model_node_counts);
+                
+                // 更新最后更新时间
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleString('zh-CN');
+                
+            } catch (error) {
+                console.error('获取统计数据失败:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error').textContent = `错误: ${error.message}`;
+            }
+        }
+        
+        function updateModelNodes(models, nodeCounts) {
+            const tbody = document.getElementById('modelNodeTable');
+            tbody.innerHTML = '';
+            
+            if (models.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #666;">暂无数据</td></tr>';
+                return;
+            }
+            
+            // 按节点数排序（降序）
+            const sortedModels = [...models].sort((a, b) => {
+                const countA = nodeCounts[a.model_id] || 0;
+                const countB = nodeCounts[b.model_id] || 0;
+                return countB - countA;
+            });
+            
+            sortedModels.forEach(model => {
+                const nodeCount = nodeCounts[model.model_id] || 0;
+                const badgeClass = `badge-${model.kind}`;
+                
+                // 处理语言显示
+                let srcLangDisplay = model.src_lang || '-';
+                let tgtLangDisplay = model.tgt_lang || '-';
+                
+                // 如果是双向翻译模型（src_lang和tgt_lang相同且包含"/"），表示支持双向互译
+                // 在源语言和目标语言列都显示相同的语言对，表示支持双向翻译
+                if (model.src_lang && model.tgt_lang && 
+                    model.src_lang === model.tgt_lang && 
+                    model.src_lang.includes('/')) {
+                    // 双向翻译：在源语言和目标语言都显示语言对，表示支持双向
+                    srcLangDisplay = model.src_lang + ' ↔';
+                    tgtLangDisplay = '↔ ' + model.tgt_lang;
+                }
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${model.model_id}</td>
+                    <td><span class="badge ${badgeClass}">${model.kind.toUpperCase()}</span></td>
+                    <td>${srcLangDisplay}</td>
+                    <td>${tgtLangDisplay}</td>
+                    <td><strong>${nodeCount}</strong></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // 初始化：立即加载一次
+        updateStats();
+        
+        // 每5秒自动刷新
+        setInterval(updateStats, 5000);
+    </script>
+</body>
+</html>
+

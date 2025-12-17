@@ -100,7 +100,7 @@ impl NodeRegistry {
                 name = %name,
                 version = %version,
                 platform = %platform,
-                "节点注册失败：没有 GPU"
+                "Node registration failed: No GPU"
             );
             return Err("节点必须有 GPU 才能注册为算力提供方".to_string());
         }
@@ -114,7 +114,7 @@ impl NodeRegistry {
                 warn!(
                     node_id = %provided_id,
                     name = %name,
-                    "节点注册失败：node_id 冲突"
+                    "Node registration failed: node_id conflict"
                 );
                 return Err("节点 ID 冲突，请清除本地 node_id 后重新注册".to_string());
             }
@@ -168,7 +168,7 @@ impl NodeRegistry {
             model_count = model_count,
             accept_public_jobs = node.accept_public_jobs,
             status = ?NodeStatus::Registering,
-            "节点注册成功"
+            "Node registered successfully"
         );
         
         Ok(node)

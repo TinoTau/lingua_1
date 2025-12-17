@@ -100,7 +100,7 @@ export class InferenceService {
       const response = await this.httpClient.post('/v1/inference', request);
 
       if (!response.data.success) {
-        throw new Error(response.data.error?.message || '推理失败');
+        throw new Error(response.data.error?.message || 'Inference failed');
       }
 
       // 记录任务调用（Rust服务处理所有推理任务）

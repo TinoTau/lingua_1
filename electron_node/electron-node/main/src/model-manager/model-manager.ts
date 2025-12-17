@@ -27,6 +27,7 @@ import { LockManager } from './lock-manager';
 import { ModelDownloader } from './downloader';
 import { ModelVerifier } from './verifier';
 import { ModelInstaller } from './installer';
+import { loadNodeConfig } from '../node-config';
 import logger from '../logger';
 
 /**
@@ -55,7 +56,23 @@ export class ModelManager extends EventEmitter {
 
   constructor() {
     super();
-    this.modelHubUrl = process.env.MODEL_HUB_URL || 'http://localhost:5000';
+    // 优先从配置文件读取，其次从环境变量，最后使用默认值
+    const config = loadNodeConfig();
+    const configUrl = config.modelHub?.url;
+    const envUrl = process.env.MODEL_HUB_URL;
+    
+    // 确定使用的 URL，优先级：配置文件 > 环境变量 > 默认值
+    let urlToUse: string;
+    if (configUrl) {
+      urlToUse = configUrl;
+    } else if (envUrl) {
+      urlToUse = envUrl;
+    } else {
+      urlToUse = 'http://127.0.0.1:5000';
+    }
+    
+    // 如果 URL 包含 localhost，替换为 127.0.0.1 以避免 IPv6 解析问题
+    this.modelHubUrl = urlToUse.replace(/localhost/g, '127.0.0.1');
 
     // 优先使用非 C 盘路径
     let userData: string;
@@ -94,6 +111,14 @@ export class ModelManager extends EventEmitter {
   }
 
   private async initialize(): Promise<void> {
+    // 记录使用的 Model Hub URL
+    const logger = (await import('../logger')).default;
+    const config = loadNodeConfig();
+    logger.info({ 
+      modelHubUrl: this.modelHubUrl,
+      source: config.modelHub?.url ? 'config' : process.env.MODEL_HUB_URL ? 'environment' : 'default'
+    }, 'Model Hub URL configured');
+    
     try {
       // 创建必要的目录
       await fs.mkdir(this.modelsDir, { recursive: true });
@@ -102,6 +127,10 @@ export class ModelManager extends EventEmitter {
 
       // 加载 registry
       this.registry = await this.registryManager.loadRegistry();
+      logger.info({ 
+        registrySize: Object.keys(this.registry).length,
+        totalVersions: Object.values(this.registry).reduce((sum, versions) => sum + Object.keys(versions).length, 0)
+      }, 'Registry loaded');
 
       // 清理孤儿锁
       await this.lockManager.cleanupOrphanLocks();
@@ -114,11 +143,31 @@ export class ModelManager extends EventEmitter {
 
   async getAvailableModels(): Promise<ModelInfo[]> {
     try {
-      const response = await axios.get<ModelInfo[]>(`${this.modelHubUrl}/api/models`);
+      logger.debug({ modelHubUrl: this.modelHubUrl }, 'Fetching available models from Model Hub');
+      const response = await axios.get<ModelInfo[]>(`${this.modelHubUrl}/api/models`, {
+        timeout: 10000, // 10秒超时
+      });
+      logger.info({ modelCount: response.data.length, modelHubUrl: this.modelHubUrl }, 'Successfully fetched available models from Model Hub');
       return response.data;
-    } catch (error) {
-      logger.error({ error }, 'Failed to get available models list');
-      return [];
+    } catch (error: any) {
+      const errorMessage = error.code === 'ECONNREFUSED' 
+        ? `Cannot connect to Model Hub at ${this.modelHubUrl}. Please ensure Model Hub is running.`
+        : error.code === 'ETIMEDOUT'
+        ? `Connection to Model Hub timed out. Please check your network connection.`
+        : error.response?.status === 404
+        ? `Model Hub endpoint not found. Please check if Model Hub is running at ${this.modelHubUrl}`
+        : error.message || 'Unknown error';
+      
+      logger.error({ 
+        error: error.message,
+        errorCode: error.code,
+        modelHubUrl: this.modelHubUrl,
+        status: error.response?.status,
+        statusText: error.response?.statusText
+      }, 'Failed to get available models list from Model Hub');
+      
+      // 抛出错误而不是返回空数组，让调用者知道出错了
+      throw new Error(errorMessage);
     }
   }
 
@@ -131,6 +180,11 @@ export class ModelManager extends EventEmitter {
       }
     }
 
+    logger.debug({ 
+      registrySize: Object.keys(this.registry).length,
+      installedModelCount: result.length 
+    }, 'getInstalledModels called');
+    
     return result;
   }
 
@@ -144,6 +198,7 @@ export class ModelManager extends EventEmitter {
     try {
       // 获取所有可用模型
       const availableModels = await this.getAvailableModels();
+      logger.debug({ modelCount: availableModels.length }, 'Building capability_state from available models');
 
       // 遍历所有可用模型，检查其状态
       for (const model of availableModels) {
@@ -173,6 +228,13 @@ export class ModelManager extends EventEmitter {
           }
         }
       }
+
+      const readyCount = Object.values(capabilityState).filter(s => s === 'ready').length;
+      logger.info({ 
+        totalModels: Object.keys(capabilityState).length,
+        readyModels: readyCount,
+        notInstalledModels: Object.values(capabilityState).filter(s => s === 'not_installed').length
+      }, 'Capability state built successfully');
     } catch (error) {
       logger.error({ error }, 'Failed to get capability_state');
     }
@@ -235,14 +297,14 @@ export class ModelManager extends EventEmitter {
     const model = models.find(m => m.id === modelId);
 
     if (!model) {
-      throw new Error(`模型不存在: ${modelId}`);
+      throw new Error(`Model not found: ${modelId}`);
     }
 
     const targetVersion = version || model.default_version;
     const versionInfo = model.versions.find(v => v.version === targetVersion);
 
     if (!versionInfo) {
-      throw new Error(`版本不存在: ${modelId}@${targetVersion}`);
+      throw new Error(`Version not found: ${modelId}@${targetVersion}`);
     }
 
     const taskKey = `${modelId}_${targetVersion}`;
@@ -255,7 +317,7 @@ export class ModelManager extends EventEmitter {
     // 尝试获取任务锁
     const lockAcquired = await this.lockManager.acquireTaskLock(modelId, targetVersion);
     if (!lockAcquired) {
-      throw new Error('模型正在下载中');
+      throw new Error('Model is currently being downloaded');
     }
 
     // 创建下载任务

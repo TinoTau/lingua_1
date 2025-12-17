@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lingua 调度服务器 - 节点算力详情</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header .last-update {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #5568d3;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="/dashboard" class="back-button">← 返回仪表盘</a>
+            <h1>⚡ 节点算力详情</h1>
+            <div class="last-update">最后更新: <span id="lastUpdate">--</span></div>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>加载中...</p>
+        </div>
+
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="content" style="display: none;">
+            <!-- 节点算力详情 -->
+            <div class="section">
+                <h2>⚡ 节点算力详情</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>节点ID</th>
+                                <th>节点名称</th>
+                                <th>CPU算力</th>
+                                <th>GPU算力</th>
+                                <th>内存算力</th>
+                            </tr>
+                        </thead>
+                        <tbody id="computePowerTable">
+                            <!-- 动态填充 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api/v1';
+        
+        // 更新页面数据
+        async function updateStats() {
+            try {
+                const response = await fetch(`${API_BASE}/stats`);
+                if (!response.ok) {
+                    throw new Error(`HTTP错误: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // 隐藏加载提示
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+                
+                // 更新算力详情
+                if (data.nodes.compute_power) {
+                    updateComputePowerDetails(data.nodes.compute_power.node_power_details);
+                }
+                
+                // 更新最后更新时间
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleString('zh-CN');
+                
+            } catch (error) {
+                console.error('获取统计数据失败:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error').textContent = `错误: ${error.message}`;
+            }
+        }
+        
+        // 格式化存储大小（自动选择单位：MB/GB/TB/PB）
+        function formatStorage(mb) {
+            if (mb < 1024) {
+                return { value: mb.toFixed(2), unit: 'MB' };
+            } else if (mb < 1024 * 1024) {
+                return { value: (mb / 1024).toFixed(2), unit: 'GB' };
+            } else if (mb < 1024 * 1024 * 1024) {
+                return { value: (mb / (1024 * 1024)).toFixed(2), unit: 'TB' };
+            } else {
+                return { value: (mb / (1024 * 1024 * 1024)).toFixed(2), unit: 'PB' };
+            }
+        }
+        
+        function updateComputePowerDetails(nodePowerDetails) {
+            const tbody = document.getElementById('computePowerTable');
+            tbody.innerHTML = '';
+            
+            if (nodePowerDetails.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #666;">暂无数据</td></tr>';
+                return;
+            }
+            
+            // 按GPU算力排序（降序）
+            const sortedDetails = [...nodePowerDetails].sort((a, b) => b.gpu_power - a.gpu_power);
+            
+            sortedDetails.forEach(detail => {
+                // 格式化GPU算力（显存）
+                const gpuFormatted = formatStorage(detail.gpu_power * 1024); // 转换为MB
+                // 格式化内存算力（内存）
+                const memoryFormatted = formatStorage(detail.memory_power * 1024); // 转换为MB
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${detail.node_id}</td>
+                    <td>${detail.node_name}</td>
+                    <td>${Math.round(detail.cpu_power)} 颗（剩余核心）</td>
+                    <td>${gpuFormatted.value} ${gpuFormatted.unit}</td>
+                    <td>${memoryFormatted.value} ${memoryFormatted.unit}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // 初始化：立即加载一次
+        updateStats();
+        
+        // 每5秒自动刷新
+        setInterval(updateStats, 5000);
+    </script>
+</body>
+</html>
+

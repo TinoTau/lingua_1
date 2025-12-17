@@ -61,7 +61,7 @@ impl NodeStatusManager {
                     
                     // 检查是否满足 registering → ready 条件
                     if entry.0 >= self.config.health_check_count {
-                        self.transition_status(node_id, NodeStatus::Registering, NodeStatus::Ready, Some("健康检查通过".to_string())).await;
+                        self.transition_status(node_id, NodeStatus::Registering, NodeStatus::Ready, Some("Health check passed".to_string())).await;
                         history.remove(node_id);
                     }
                 } else {
@@ -77,7 +77,7 @@ impl NodeStatusManager {
                     
                     // 检查是否满足 ready → degraded 条件
                     if self.should_degrade(node_id).await {
-                        self.transition_status(node_id, NodeStatus::Ready, NodeStatus::Degraded, Some("健康检查失败".to_string())).await;
+                        self.transition_status(node_id, NodeStatus::Ready, NodeStatus::Degraded, Some("Health check failed".to_string())).await;
                     }
                 } else {
                     // 健康检查通过，清除失败记录
@@ -88,7 +88,7 @@ impl NodeStatusManager {
             NodeStatus::Degraded => {
                 if health_ok {
                     // 恢复健康，转回 ready
-                    self.transition_status(node_id, NodeStatus::Degraded, NodeStatus::Ready, Some("健康恢复".to_string())).await;
+                    self.transition_status(node_id, NodeStatus::Degraded, NodeStatus::Ready, Some("Health recovered".to_string())).await;
                     let mut failure_history = self.failure_history.write().await;
                     failure_history.remove(node_id);
                 }
@@ -142,15 +142,22 @@ impl NodeStatusManager {
     async fn check_node_health(&self, node: &Node) -> bool {
         // 检查 GPU 可用性
         if node.hardware.gpus.is_none() || node.hardware.gpus.as_ref().unwrap().is_empty() {
+            warn!(node_id = %node.node_id, "Node health check failed: No GPU");
             return false;
         }
         
         // 检查 GPU 使用率是否异常（超过 100% 或为负值）
         if let Some(gpu_usage) = node.gpu_usage {
             if gpu_usage < 0.0 || gpu_usage > 100.0 {
+                warn!(
+                    node_id = %node.node_id,
+                    gpu_usage = gpu_usage,
+                    "Node health check failed: GPU usage out of range (must be 0-100%)"
+                );
                 return false;
             }
         } else {
+            warn!(node_id = %node.node_id, "Node health check failed: GPU usage is None");
             return false;
         }
         
@@ -172,7 +179,19 @@ impl NodeStatusManager {
         };
         
         if !models_ready {
-            debug!("节点 {} 模型未就绪", node.node_id);
+            warn!(
+                node_id = %node.node_id,
+                status = ?node.status,
+                installed_models_count = node.installed_models.len(),
+                capability_state_count = node.capability_state.len(),
+                "Node health check failed: Models not ready"
+            );
+            // 记录详细的模型状态
+            if !node.capability_state.is_empty() {
+                for (model_id, status) in &node.capability_state {
+                    debug!(node_id = %node.node_id, model_id = %model_id, status = ?status, "Model status");
+                }
+            }
             return false;
         }
         
@@ -203,7 +222,7 @@ impl NodeStatusManager {
                 from = ?old_status,
                 to = ?to,
                 reason = reason.as_deref(),
-                "节点状态转换"
+                "Node status transition"
             );
             
             // 发送 node_status 消息（最小版）

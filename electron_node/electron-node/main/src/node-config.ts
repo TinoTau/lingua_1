@@ -14,6 +14,9 @@ export interface NodeConfig {
   scheduler?: {
     url?: string;  // 调度服务器 WebSocket URL，例如: ws://scheduler.example.com:5010/ws/node
   };
+  modelHub?: {
+    url?: string;  // Model Hub HTTP URL，例如: http://model-hub.example.com:5000
+  };
 }
 
 const DEFAULT_CONFIG: NodeConfig = {
@@ -25,6 +28,9 @@ const DEFAULT_CONFIG: NodeConfig = {
   },
   scheduler: {
     url: 'ws://127.0.0.1:5010/ws/node',  // 默认本地地址，使用 127.0.0.1 避免 IPv6 解析问题
+  },
+  modelHub: {
+    url: 'http://127.0.0.1:5000',  // 默认本地地址，使用 127.0.0.1 避免 IPv6 解析问题
   },
 };
 
@@ -50,6 +56,10 @@ export function loadNodeConfig(): NodeConfig {
       scheduler: {
         ...DEFAULT_CONFIG.scheduler,
         ...(parsed.scheduler || {}),
+      },
+      modelHub: {
+        ...DEFAULT_CONFIG.modelHub,
+        ...(parsed.modelHub || {}),
       },
     };
   } catch (error) {

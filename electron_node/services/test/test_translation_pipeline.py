@@ -15,6 +15,7 @@ import sys
 from pathlib import Path
 from typing import Optional, Tuple
 import wave
+import urllib.request
 
 try:
     import websockets
@@ -23,48 +24,82 @@ except ImportError:
     print("pip install websockets")
     sys.exit(1)
 
+# 默认配置（可以直接修改这里）
+DEFAULT_SCHEDULER_URL = "ws://localhost:5010/ws/session"
+DEFAULT_SCHEDULER_HTTP = "http://localhost:5010"
+
 
 class TranslationTestClient:
-    def __init__(self, scheduler_url: str = "ws://localhost:5010/ws/session"):
+    def __init__(self, scheduler_url: str = DEFAULT_SCHEDULER_URL, scheduler_http: str = DEFAULT_SCHEDULER_HTTP):
         self.scheduler_url = scheduler_url
+        self.scheduler_http = scheduler_http
         self.session_id: Optional[str] = None
-
-    async def create_session(
-        self,
-        src_lang: str,
-        tgt_lang: str,
-        dialect: Optional[str] = None,
-        features: Optional[dict] = None,
-    ) -> str:
-        """创建会话"""
-        async with websockets.connect(self.scheduler_url) as ws:
-            # 发送 session_init 消息
-            init_msg = {
-                "type": "session_init",
-                "client_version": "1.0.0",
-                "platform": "test-client",
-                "src_lang": src_lang,
-                "tgt_lang": tgt_lang,
-            }
-            if dialect:
-                init_msg["dialect"] = dialect
-            if features:
-                init_msg["features"] = features
-
-            await ws.send(json.dumps(init_msg))
-            print(f"✓ 已发送 session_init: {src_lang} -> {tgt_lang}")
-
-            # 等待 session_init_ack
-            response = await ws.recv()
-            ack = json.loads(response)
-            if ack.get("type") == "session_init_ack":
-                self.session_id = ack["session_id"]
-                print(f"✓ 会话已创建: session_id={self.session_id}")
-                print(f"  分配的节点: {ack.get('assigned_node_id', '未分配')}")
-                print(f"  追踪ID: {ack.get('trace_id', '无')}")
-                return self.session_id
-            else:
-                raise Exception(f"意外的响应: {ack}")
+    
+    def check_node_status(self) -> dict:
+        """检查节点状态"""
+        try:
+            url = f"{self.scheduler_http}/api/v1/stats"
+            with urllib.request.urlopen(url, timeout=5) as response:
+                data = json.loads(response.read().decode())
+                return data
+        except Exception as e:
+            print(f"警告: 无法获取节点状态: {e}")
+            return {}
+    
+    def check_node_details(self, src_lang: str, tgt_lang: str) -> None:
+        """检查节点详细状态，诊断为什么节点不可用"""
+        try:
+            url = f"{self.scheduler_http}/api/v1/stats"
+            with urllib.request.urlopen(url, timeout=5) as response:
+                data = json.loads(response.read().decode())
+                nodes_info = data.get("nodes", {})
+                connected_nodes = nodes_info.get("connected_nodes", 0)
+                
+                if connected_nodes == 0:
+                    print("  ❌ 没有已连接的节点")
+                    return
+                
+                # 检查可用模型
+                available_models = nodes_info.get("available_models", [])
+                print(f"  ✓ 已连接节点数: {connected_nodes}")
+                print(f"  ✓ 可用模型数: {len(available_models)}")
+                
+                # 检查是否有所需的模型
+                required_models = {
+                    "asr": f"whisper-* (支持 {src_lang})",
+                    "nmt": f"m2m100-{src_lang}-{tgt_lang}@*",
+                    "tts": f"vits-* (支持 {tgt_lang})"
+                }
+                
+                print(f"\n  检查所需模型 ({src_lang} -> {tgt_lang}):")
+                has_asr = any("asr" in m.get("kind", "").lower() for m in available_models)
+                has_nmt = any("nmt" in m.get("kind", "").lower() and 
+                             (src_lang in m.get("model_id", "") and tgt_lang in m.get("model_id", "")) 
+                             for m in available_models)
+                has_tts = any("tts" in m.get("kind", "").lower() and 
+                             tgt_lang in m.get("model_id", "").lower() 
+                             for m in available_models)
+                
+                print(f"    ASR: {'✓' if has_asr else '✗'} {required_models['asr']}")
+                print(f"    NMT: {'✓' if has_nmt else '✗'} {required_models['nmt']}")
+                print(f"    TTS: {'✓' if has_tts else '✗'} {required_models['tts']}")
+                
+                if not (has_asr and has_nmt and has_tts):
+                    print(f"\n  ⚠️  警告: 缺少必需的模型，节点可能无法处理此翻译任务")
+                    print(f"  可用模型列表:")
+                    for model in available_models:
+                        model_id = model.get("model_id", "N/A")
+                        kind = model.get("kind", "N/A")
+                        src = model.get("src_lang", "")
+                        tgt = model.get("tgt_lang", "")
+                        print(f"    - {model_id} ({kind}) {src}->{tgt}")
+                
+                # 提示查看dashboard获取更详细信息
+                print(f"\n  💡 提示: 如果节点不可用，请访问调度服务器dashboard查看详细节点状态:")
+                print(f"     http://localhost:5010/dashboard")
+                print(f"     或查看节点端日志，确认节点是否已进入 Ready 状态")
+        except Exception as e:
+            print(f"  警告: 无法获取详细节点信息: {e}")
 
     def load_audio_file(self, audio_path: Path) -> Tuple[bytes, int, str]:
         """加载音频文件并返回 (音频数据, 采样率, 格式)"""
@@ -100,30 +135,53 @@ class TranslationTestClient:
             # 假设16kHz PCM16（默认值）
             return audio_data, 16000, "pcm16"
 
-    async def send_utterance(
+    async def run_test(
         self,
         audio_data: bytes,
         sample_rate: int,
         audio_format: str,
         src_lang: str,
         tgt_lang: str,
-        utterance_index: int = 0,
         dialect: Optional[str] = None,
         features: Optional[dict] = None,
     ) -> dict:
-        """发送音频数据并等待翻译结果"""
-        if not self.session_id:
-            raise Exception("会话未创建，请先调用 create_session")
-
+        """在同一个WebSocket连接上创建会话并发送音频"""
         async with websockets.connect(self.scheduler_url) as ws:
-            # 将音频数据编码为base64
-            audio_base64 = base64.b64encode(audio_data).decode("utf-8")
+            # 1. 创建会话
+            init_msg = {
+                "type": "session_init",
+                "client_version": "1.0.0",
+                "platform": "test-client",
+                "src_lang": src_lang,
+                "tgt_lang": tgt_lang,
+            }
+            if dialect:
+                init_msg["dialect"] = dialect
+            if features:
+                init_msg["features"] = features
 
-            # 发送 utterance 消息
+            await ws.send(json.dumps(init_msg))
+            print(f"✓ 已发送 session_init: {src_lang} -> {tgt_lang}")
+
+            # 等待 session_init_ack
+            response = await ws.recv()
+            ack = json.loads(response)
+            if ack.get("type") == "session_init_ack":
+                self.session_id = ack["session_id"]
+                print(f"✓ 会话已创建: session_id={self.session_id}")
+                print(f"  分配的节点: {ack.get('assigned_node_id', '未分配')}")
+                print(f"  追踪ID: {ack.get('trace_id', '无')}")
+            else:
+                raise Exception(f"意外的响应: {ack}")
+
+            print()
+
+            # 2. 发送 utterance
+            audio_base64 = base64.b64encode(audio_data).decode("utf-8")
             utterance_msg = {
                 "type": "utterance",
                 "session_id": self.session_id,
-                "utterance_index": utterance_index,
+                "utterance_index": 0,
                 "manual_cut": False,
                 "src_lang": src_lang,
                 "tgt_lang": tgt_lang,
@@ -137,10 +195,10 @@ class TranslationTestClient:
                 utterance_msg["features"] = features
 
             await ws.send(json.dumps(utterance_msg))
-            print(f"✓ 已发送 utterance (索引: {utterance_index})")
+            print(f"✓ 已发送 utterance (索引: 0)")
             print(f"  音频大小: {len(audio_data)} bytes ({len(audio_base64)} base64字符)")
 
-            # 等待翻译结果
+            # 3. 等待翻译结果
             print("\n等待翻译结果...")
             result_count = 0
             while True:
@@ -183,8 +241,34 @@ class TranslationTestClient:
                         return msg
 
                     elif msg_type == "error":
-                        print(f"\n✗ 收到错误: {msg}")
-                        raise Exception(f"服务器返回错误: {msg}")
+                        error_code = msg.get("code", "UNKNOWN")
+                        error_message = msg.get("message", "未知错误")
+                        error_details = msg.get("details")
+                        
+                        print(f"\n✗ 收到错误:")
+                        print(f"  错误代码: {error_code}")
+                        print(f"  错误消息: {error_message}")
+                        if error_details:
+                            print(f"  详细信息: {json.dumps(error_details, indent=2, ensure_ascii=False)}")
+                        
+                        # 提供诊断建议
+                        if error_code == "NODE_UNAVAILABLE":
+                            print(f"\n  诊断建议:")
+                            print(f"    1. 检查节点端是否已完全启动并进入 Ready 状态")
+                            print(f"       - 节点状态必须是 'Ready'，不能是 'Registering'")
+                            print(f"       - 查看节点端界面或日志确认状态")
+                            print(f"    2. 检查节点是否有所需的模型（ASR、NMT、TTS）")
+                            print(f"       - 模型状态必须是 'Ready'")
+                            print(f"    3. 检查节点资源使用情况（CPU、GPU、内存）")
+                            print(f"       - CPU使用率 < 25%")
+                            print(f"       - GPU使用率 < 25%")
+                            print(f"       - 内存使用率 < 75%")
+                            print(f"    4. 检查节点是否接受公共任务（accept_public_jobs）")
+                            print(f"    5. 查看调度服务器dashboard获取详细信息:")
+                            print(f"       http://localhost:5010/dashboard")
+                            print(f"    6. 查看调度服务器和节点端日志获取更多信息")
+                        
+                        raise Exception(f"服务器返回错误: {error_code} - {error_message}")
 
                     else:
                         print(f"  收到其他消息: {msg_type}")
@@ -219,8 +303,8 @@ async def main():
     parser.add_argument(
         "--scheduler-url",
         type=str,
-        default="ws://localhost:5010/ws/session",
-        help="调度服务器WebSocket地址（默认: ws://localhost:5010/ws/session）",
+        default=DEFAULT_SCHEDULER_URL,
+        help=f"调度服务器WebSocket地址（默认: {DEFAULT_SCHEDULER_URL}）",
     )
     parser.add_argument(
         "--dialect",
@@ -261,29 +345,25 @@ async def main():
 
     try:
         # 创建测试客户端
-        client = TranslationTestClient(args.scheduler_url)
+        scheduler_http = args.scheduler_url.replace("ws://", "http://").replace("/ws/session", "")
+        client = TranslationTestClient(args.scheduler_url, scheduler_http)
+        
+        # 检查节点状态
+        print("检查节点状态...")
+        client.check_node_details(args.src_lang, args.tgt_lang)
+        print()
 
         # 加载音频文件
         audio_data, sample_rate, audio_format = client.load_audio_file(audio_path)
         print()
 
-        # 创建会话
-        await client.create_session(
-            src_lang=args.src_lang,
-            tgt_lang=args.tgt_lang,
-            dialect=args.dialect,
-            features=features,
-        )
-        print()
-
-        # 发送音频并等待结果
-        result = await client.send_utterance(
+        # 在同一个连接上创建会话并发送音频
+        result = await client.run_test(
             audio_data=audio_data,
             sample_rate=sample_rate,
             audio_format=audio_format,
             src_lang=args.src_lang,
             tgt_lang=args.tgt_lang,
-            utterance_index=0,
             dialect=args.dialect,
             features=features,
         )
