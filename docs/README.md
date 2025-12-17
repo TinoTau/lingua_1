@@ -6,6 +6,8 @@
 
 ### 项目级文档
 
+- **系统架构**: `SYSTEM_ARCHITECTURE.md` - 系统架构文档（三层架构、三个客户端详解）⭐ **重要**
+- **项目结构**: `PROJECT_STRUCTURE.md` - 项目目录结构和路径说明
 - **项目迁移**: `PROJECT_MIGRATION.md` - 项目迁移和路径调整文档
 
 ### 日志和可观测性

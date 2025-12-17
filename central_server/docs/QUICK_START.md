@@ -21,7 +21,7 @@ pip install -r requirements.txt
 python src/main.py
 ```
 
-**默认端口**: 根据配置（通常在 8000 或 8080）
+**默认端口**: 5000
 
 ### 2. Scheduler (调度服务器)
 
@@ -96,10 +96,10 @@ curl -X POST http://localhost:8081/v1/speech/translate \
 
 ```bash
 # 健康检查
-curl http://localhost:8000/health
+curl http://localhost:5000/health
 
 # 获取模型列表
-curl http://localhost:8000/api/v1/models
+curl http://localhost:5000/api/models
 ```
 
 ## 配置说明

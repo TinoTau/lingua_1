@@ -12,12 +12,11 @@
 - ✅ 支持实时语音翻译（连续输入 + 连续输出）
 - ✅ 支持多语种与后续扩展的方言模型
 - ✅ 支持多会话并行，一个会话对应一条 WebSocket 连接
-- ✅ 支持多种产品形态：
-  - 会话设备：手机 App（Android / iOS）、**Web 客户端（iOS 开发设备替代方案）**
-  - 调度服务器：云端服务端
-  - 第三方客户端：PC 端 Electron Node 客户端
+- ✅ **三种客户端形态**：
+  - **Web端** (`webapp/web-client/`) - 浏览器端实时翻译客户端
+  - **公司端** (`central_server/`) - 公司内部服务器（调度服务器 + 模型库服务）
+  - **节点端** (`electron_node/`) - PC 端算力提供节点
 - ✅ 支持用户贡献自己的 PC（CPU + GPU）作为算力节点
-- ✅ 手机端采用 **"轻量 VAD + 手动截断按钮"** 的分句策略
 - ✅ 调度服务器负责任务拆分、节点调度、结果聚合
 - ✅ **模块化功能设计**：支持实时启用/禁用可选功能模块
 - ✅ **可选功能模块**：音色识别、音色生成、语速识别、语速控制等
@@ -28,21 +27,23 @@
 
 ```
 lingua_1/
-├── webapp/                    # Web 客户端
-│   ├── src/                  # 源代码
-│   ├── tests/                # 测试
-│   └── docs/                 # Web 客户端文档
+├── webapp/                    # Web端客户端
+│   ├── web-client/           # Web客户端项目
+│   └── docs/                 # Web客户端文档
 │
-├── central_server/            # 中央服务器
-│   ├── scheduler/            # 调度服务器
-│   ├── api-gateway/          # API 网关
-│   ├── model-hub/            # 模型库服务
-│   └── docs/                 # 中央服务器文档
+├── central_server/            # 公司端（服务器）
+│   ├── scheduler/            # 调度服务器（端口 5010）
+│   ├── model-hub/            # 模型库服务（端口 5000）
+│   ├── api-gateway/          # API网关（待开发）
+│   └── docs/                 # 公司端文档
 │
-├── electron_node/             # Electron 节点客户端
-│   ├── electron-node/        # Electron 应用
-│   ├── node-inference/       # 节点推理服务（Rust）
-│   ├── services/             # Python 服务（NMT、TTS、YourTTS）
+├── electron_node/             # 节点端客户端
+│   ├── electron-node/        # Electron应用
+│   ├── services/             # 推理服务
+│   │   ├── node-inference/  # 节点推理服务（Rust）
+│   │   ├── nmt_m2m100/      # NMT服务（Python）
+│   │   ├── piper_tts/       # TTS服务（Python）
+│   │   └── your_tts/        # YourTTS服务（Python）
 │   └── docs/                 # 节点客户端文档
 │
 ├── scripts/                   # 启动脚本
@@ -103,43 +104,69 @@ npm start
 ## 系统架构
 
 ```
-┌─────────────┐
-│  Web Client │ (webapp/)
-└──────┬──────┘
-       │ WebSocket
-       ▼
-┌─────────────────────────────────────┐
-│      Central Server                 │
-│  - Scheduler (调度服务器)            │
-│  - API Gateway (API 网关)           │
-│  - Model Hub (模型库)                │
-└──────┬──────────────────┬───────────┘
-       │                  │
-       │ WebSocket        │ WebSocket
-       ▼                  ▼
-┌─────────────┐    ┌─────────────┐
-│ Electron    │    │ Electron    │
-│ Node Client │    │ Node Client │
-│ (electron_  │    │ (electron_  │
-│  node/)     │    │  node/)     │
-└─────────────┘    └─────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                      客户端层                                │
+│  ┌──────────┐    ┌──────────┐    ┌──────────┐             │
+│  │  Web端   │    │  公司端  │    │  节点端  │             │
+│  │(webapp/) │    │(API接入) │    │(electron_│             │
+│  └────┬─────┘    └────┬─────┘    │  node/)  │             │
+│       │               │           └────┬─────┘             │
+└───────┼───────────────┼────────────────┼────────────────────┘
+        │               │                │
+        │ WebSocket     │ HTTP/内部协议  │ WebSocket
+        │ (直接连接)     │                │ (节点注册)
+        ▼               ▼                ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    服务层 (公司端服务器)                     │
+│  ┌──────────────┐              ┌──────────────┐            │
+│  │  Scheduler   │              │  Model Hub   │            │
+│  │ (调度服务器)  │              │ (模型库服务)  │            │
+│  │  端口: 5010  │              │  端口: 5000  │            │
+│  └──────┬───────┘              └──────┬───────┘            │
+│         │                              │                     │
+│         └──────────────┬───────────────┘                     │
+└───────────────────────────┬─────────────────────────────────┘
+                            │
+                            │ WebSocket (任务分发)
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    算力层 (Compute Nodes)                    │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
+│  │ Node Client  │  │ Node Client  │  │ Node Client  │    │
+│  │ (Electron)   │  │ (Electron)   │  │ (Electron)   │    │
+│  └──────────────┘  └──────────────┘  └──────────────┘    │
+└─────────────────────────────────────────────────────────────┘
 ```
+
+详细架构说明请参考：[系统架构文档](docs/SYSTEM_ARCHITECTURE.md)
 
 ## 技术栈
 
-### Web 客户端 (webapp/)
+### Web端 (webapp/web-client/)
 - **框架**: TypeScript + Vite
-- **功能**: 实时语音采集、WebSocket 通信、TTS 播放
+- **功能**: 实时语音采集、WebSocket 通信、TTS 播放、ASR 字幕
+- **连接**: 直接 WebSocket 连接到 Scheduler
 
-### 中央服务器 (central_server/)
-- **调度服务器**: Rust + Tokio + Axum
-- **API 网关**: Rust + Tokio + Axum
-- **模型库服务**: Python + FastAPI
+### 公司端 (central_server/)
+- **组成**: 调度服务器 (Scheduler) + 模型库服务 (Model Hub)
+- **技术栈**: 
+  - 调度服务器: Rust + Tokio + Axum (端口 5010)
+  - 模型库服务: Python + FastAPI (端口 5000)
+- **功能**: 
+  - 调度服务器: 会话管理、任务分发、节点调度
+  - 模型库服务: 模型管理、模型下载
+- **连接**: Web端和节点端连接到调度服务器
 
-### Electron 节点客户端 (electron_node/)
+### 节点端 (electron_node/)
 - **Electron 应用**: Electron + Node.js + TypeScript + React
 - **推理服务**: Rust + ONNX Runtime
 - **Python 服务**: Python (NMT、TTS、YourTTS)
+- **连接**: WebSocket 连接到 Scheduler (节点注册)
+
+### 中央服务器 (central_server/)
+- **调度服务器**: Rust + Tokio + Axum (端口 5010)
+- **API 网关**: Rust + Tokio + Axum (端口 8081)
+- **模型库服务**: Python + FastAPI (端口 5000)
 
 ## 文档
 
