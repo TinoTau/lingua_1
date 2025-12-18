@@ -52,6 +52,7 @@ pub(super) async fn handle_utterance(
         tgt_lang.clone(),
         dialect.clone(),
         final_features.clone(),
+        session.tenant_id.clone(),
         audio_data,
         audio_format,
         sample_rate,
@@ -87,11 +88,7 @@ pub(super) async fn handle_utterance(
 
             // 注意：当前实现中，JobAssign 时还没有 ASR 结果，所以 group_id、part_index、context_text 为 None
             if let Some(job_assign_msg) = create_job_assign_message(&job, None, None, None) {
-                if state
-                    .node_connections
-                    .send(node_id, Message::Text(serde_json::to_string(&job_assign_msg)?))
-                    .await
-                {
+                if crate::phase2::send_node_message_routed(state, node_id, job_assign_msg).await {
                     state.dispatcher.mark_job_dispatched(&job.job_id).await;
                     // 推送 DISPATCHED 事件
                     send_ui_event(
@@ -110,6 +107,13 @@ pub(super) async fn handle_utterance(
                     warn!("无法发送 job 到节点 {}", node_id);
                     // 发送失败：释放 reserved 并发槽（幂等）
                     state.node_registry.release_job_slot(node_id, &job.job_id).await;
+                    if let Some(rt) = state.phase2.as_ref() {
+                        rt.release_node_slot(node_id, &job.job_id).await;
+                        let _ = rt
+                            .job_fsm_to_finished(&job.job_id, job.dispatch_attempt_id.max(1), false)
+                            .await;
+                        let _ = rt.job_fsm_to_released(&job.job_id).await;
+                    }
                     // 标记 job 为失败
                     state
                         .dispatcher

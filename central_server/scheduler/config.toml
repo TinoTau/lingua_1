@@ -11,6 +11,87 @@ max_concurrent_jobs_per_node = 4
 job_timeout_seconds = 30
 heartbeat_interval_seconds = 15
 
+[scheduler.phase2]
+# Phase 2（决策版 + v1.1 补充）：Redis / 多实例基础能力
+# - instance presence（schedulers:presence:<instance_id>，TTL=2*heartbeat_interval_seconds）
+# - node/session owner（nodes:owner / sessions:owner，带 TTL）
+# - 跨实例投递（Redis Streams per-instance inbox；Job 指令/结果走 Streams，避免 Pub/Sub 丢消息）
+enabled = false
+# 留空或 "auto" 将在启动时生成：hostname + pid + 短 uuid
+instance_id = "auto"
+# owner key TTL（秒）
+owner_ttl_seconds = 45
+# Streams 读取 block（毫秒）
+stream_block_ms = 1000
+# Streams 每次拉取条数
+stream_count = 64
+# Streams consumer group（同组可实现 pending failover）
+stream_group = "scheduler"
+# inbox stream 最大长度（近似裁剪 MAXLEN ~）
+stream_maxlen = 10000
+
+# DLQ（将长期 pending/多次失败的消息移入 dlq stream）
+dlq_enabled = true
+dlq_maxlen = 10000
+dlq_max_deliveries = 10
+dlq_min_idle_ms = 60000
+dlq_scan_interval_ms = 5000
+dlq_scan_count = 100
+
+[scheduler.phase2.redis]
+# "single" | "cluster"
+mode = "single"
+# 单实例 Redis URL（mode=single）
+url = "redis://127.0.0.1:6379"
+# Redis Cluster 节点 URL（mode=cluster 时使用；可在单机启动多个 redis-server 端口组成 cluster）
+# cluster_urls = ["redis://127.0.0.1:7000", "redis://127.0.0.1:7001", "redis://127.0.0.1:7002"]
+# key 前缀（多环境隔离）
+key_prefix = "lingua"
+
+[scheduler.phase2.node_snapshot]
+# 是否启用“节点快照同步”（使任意 Scheduler 实例都拥有全量节点视图）
+enabled = true
+# 节点 presence TTL（秒）：redis key 过期即视为离线
+presence_ttl_seconds = 45
+# 后台刷新间隔（毫秒）：从 Redis 拉取全量节点快照并 upsert 到本地 NodeRegistry
+refresh_interval_ms = 2000
+# 从 nodes:all 清理“长期离线”的节点（秒）。0 表示不清理。
+remove_stale_after_seconds = 600
+
+[scheduler.phase3]
+# Phase 3：两级调度（Global 选 pool -> pool 内选 node）
+# 说明：
+# - pool_count 用于把节点分桶（node_id hash -> pool_id）
+# - 调度请求会优先落到一个首选 pool（request_id hash -> pool_id），若该 pool 无可用节点可 fallback 其他 pool
+# - 运维提示：修改 pool_count/hash_seed 会导致映射变化，建议只在可控窗口调整
+enabled = false
+mode = "two_level"
+pool_count = 16
+hash_seed = 0
+fallback_scan_all_pools = true
+
+# —— 强隔离（按能力分 pool）——
+# 如果配置了 [[scheduler.phase3.pools]]（非空），则启用“按能力分 pool”的强隔离模式：
+# - 节点：按 pools 顺序分配到“第一个匹配”的 pool（基于 installed_services 的硬匹配）
+# - 任务：在“可满足 required 服务”的 pools 中选 preferred，并按配置 fallback
+# - pool_match_scope：
+#   - "core_only"：只对 ASR/NMT/TTS 核心服务做 pool 级过滤（兼容性最好）
+#   - "all_required"：对 required_model_ids 全量做 pool 级过滤（更强隔离）
+pool_match_scope = "core_only"
+# strict_pool_eligibility=true 时：没有 eligible pool 直接返回 NO_AVAILABLE_NODE（强隔离）
+strict_pool_eligibility = false
+
+# 示例：一个“全核心链路” pool（节点必须安装以下服务包才会进入该 pool）
+# [[scheduler.phase3.pools]]
+# pool_id = 10
+# name = "core_all"
+# required_services = ["node-inference", "nmt-m2m100", "piper-tts"]
+
+# 示例：tenant 强绑定（当 routing_key=tenant_id 时生效）
+# [[scheduler.phase3.tenant_overrides]]
+# tenant_id = "tenant-A"
+# pool_id = 10
+
 [scheduler.load_balancer]
 strategy = "least_connections"
 # 资源使用率阈值（%），超过此值的节点将被跳过

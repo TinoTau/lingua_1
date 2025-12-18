@@ -5,5 +5,6 @@ mod message;
 mod util;
 
 pub use connection::handle_node;
+pub(crate) use message::handle_forwarded_node_message;
 
 

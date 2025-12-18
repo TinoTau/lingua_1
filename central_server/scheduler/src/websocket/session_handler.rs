@@ -65,6 +65,9 @@ pub async fn handle_session(socket: WebSocket, state: AppState) {
     
     // 清理
     if let Some(ref sess_id) = session_id {
+        if let Some(rt) = state.phase2.as_ref() {
+            rt.clear_session_owner(sess_id).await;
+        }
         state.session_connections.unregister(sess_id).await;
         state.result_queue.remove_session(sess_id).await;
         state.session_manager.remove_session(sess_id).await;

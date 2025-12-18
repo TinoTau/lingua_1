@@ -419,6 +419,34 @@ class NodeAgent {
             return;
         const startTime = Date.now();
         try {
+            // Phase 2：Job FSM 语义补齐 —— 节点显式确认接收并开始执行（job_ack）
+            // 兼容：Scheduler 未实现 job_ack 时会忽略该消息
+            if (this.ws && this.ws.readyState === ws_1.default.OPEN && this.nodeId) {
+                const ackMessage = {
+                    type: 'job_ack',
+                    job_id: job.job_id,
+                    attempt_id: job.attempt_id,
+                    node_id: this.nodeId,
+                    session_id: job.session_id,
+                    trace_id: job.trace_id,
+                };
+                this.ws.send(JSON.stringify(ackMessage));
+            }
+
+            // Phase 2：严格 RUNNING 语义（小改动）：在真正调用推理前发送 job_started
+            // 兼容：Scheduler 未实现 job_started 时会忽略该消息
+            if (this.ws && this.ws.readyState === ws_1.default.OPEN && this.nodeId) {
+                const startedMessage = {
+                    type: 'job_started',
+                    job_id: job.job_id,
+                    attempt_id: job.attempt_id,
+                    node_id: this.nodeId,
+                    session_id: job.session_id,
+                    trace_id: job.trace_id,
+                };
+                this.ws.send(JSON.stringify(startedMessage));
+            }
+
             // 如果启用了流式 ASR，设置部分结果回调
             const partialCallback = job.enable_streaming_asr ? (partial) => {
                 // 发送 ASR 部分结果到调度服务器

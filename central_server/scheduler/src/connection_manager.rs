@@ -54,6 +54,12 @@ impl SessionConnectionManager {
         let connections = self.connections.read().await;
         connections.len()
     }
+
+    /// Phase 2：用于 owner 续约，获取当前活跃 session_id 列表快照
+    pub async fn list_session_ids(&self) -> Vec<String> {
+        let connections = self.connections.read().await;
+        connections.keys().cloned().collect()
+    }
 }
 
 // 节点连接管理器
@@ -98,6 +104,12 @@ impl NodeConnectionManager {
     pub async fn get_sender(&self, node_id: &str) -> Option<tokio::sync::mpsc::UnboundedSender<Message>> {
         let connections = self.connections.read().await;
         connections.get(node_id).cloned()
+    }
+
+    /// Phase 2：用于 owner 续约，获取当前活跃 node_id 列表快照
+    pub async fn list_node_ids(&self) -> Vec<String> {
+        let connections = self.connections.read().await;
+        connections.keys().cloned().collect()
     }
 }
 

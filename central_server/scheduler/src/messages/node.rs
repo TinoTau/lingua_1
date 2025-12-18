@@ -118,6 +118,28 @@ pub enum NodeMessage {
         #[serde(skip_serializing_if = "Option::is_none")]
         reason: Option<String>,
     },
+    /// Node -> Scheduler：确认已接收并开始执行 job（Phase 2：用于 Job FSM 的 RUNNING 语义）
+    #[serde(rename = "job_ack")]
+    JobAck {
+        job_id: String,
+        /// 对应的下发 attempt 序号（用于 Scheduler 去重/竞态保护）
+        attempt_id: u32,
+        node_id: String,
+        session_id: String,
+        /// 追踪 ID（必需，用于全链路追踪）
+        trace_id: String,
+    },
+    /// Node -> Scheduler：确认 job 已真正开始执行（建议用于 Phase2 严格 RUNNING 语义）
+    #[serde(rename = "job_started")]
+    JobStarted {
+        job_id: String,
+        /// 对应的下发 attempt 序号（用于 Scheduler 去重/竞态保护）
+        attempt_id: u32,
+        node_id: String,
+        session_id: String,
+        /// 追踪 ID（必需，用于全链路追踪）
+        trace_id: String,
+    },
     #[serde(rename = "job_result")]
     JobResult {
         job_id: String,

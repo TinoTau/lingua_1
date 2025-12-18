@@ -96,6 +96,25 @@ lazy_static::lazy_static! {
     )
     .expect("metric");
 
+    // —— Phase3 two-level scheduling —— //
+    static ref PHASE3_POOL_SELECTED_TOTAL: IntCounterVec = IntCounterVec::new(
+        Opts::new(
+            "phase3_pool_selected_total",
+            "Phase3 two-level selected pool total (by pool, outcome, fallback)"
+        ),
+        &["pool", "outcome", "fallback"] // outcome=hit|miss, fallback=true|false
+    )
+    .expect("metric");
+
+    static ref PHASE3_POOL_ATTEMPT_TOTAL: IntCounterVec = IntCounterVec::new(
+        Opts::new(
+            "phase3_pool_attempt_total",
+            "Phase3 two-level pool attempt total (by pool, result, reason)"
+        ),
+        &["pool", "result", "reason"] // result=success|fail, reason=ok|no_nodes|offline|...
+    )
+    .expect("metric");
+
     // —— MODEL_NOT_AVAILABLE —— //
     static ref MODEL_NA_RECEIVED_TOTAL: IntCounter =
         IntCounter::with_opts(Opts::new("model_na_received_total", "MODEL_NOT_AVAILABLE received"))
@@ -155,6 +174,26 @@ lazy_static::lazy_static! {
         IntCounter::with_opts(Opts::new("model_na_other_marked_node_total", "MODEL_NOT_AVAILABLE other marked node bucket"))
             .expect("metric");
 
+    // —— Phase2 streams —— //
+    static ref PHASE2_REDIS_OP_TOTAL: IntCounterVec = IntCounterVec::new(
+        Opts::new(
+            "phase2_redis_op_total",
+            "Phase2 redis operations total by op and result"
+        ),
+        &["op", "result"]
+    )
+    .expect("metric");
+    static ref PHASE2_INBOX_PENDING: IntGauge = IntGauge::with_opts(Opts::new(
+        "phase2_inbox_pending",
+        "Phase2 inbox pending count (for this instance)"
+    ))
+    .expect("metric");
+    static ref PHASE2_DLQ_MOVED_TOTAL: IntCounter = IntCounter::with_opts(Opts::new(
+        "phase2_dlq_moved_total",
+        "Phase2 moved messages to DLQ total"
+    ))
+    .expect("metric");
+
     static ref SERVICE_KEYS: Mutex<HashSet<String>> = Mutex::new(HashSet::new());
     static ref REASON_KEYS: Mutex<HashSet<String>> = Mutex::new(HashSet::new());
     static ref RATE_LIMITED_NODE_KEYS: Mutex<HashSet<String>> = Mutex::new(HashSet::new());
@@ -176,6 +215,8 @@ pub fn init() {
     let _ = REGISTRY.register(Box::new(SLOW_PATH_TOTAL.clone()));
     let _ = REGISTRY.register(Box::new(WEB_TASK_FINALIZED_TOTAL.clone()));
     let _ = REGISTRY.register(Box::new(NO_AVAILABLE_NODE_TOTAL.clone()));
+    let _ = REGISTRY.register(Box::new(PHASE3_POOL_SELECTED_TOTAL.clone()));
+    let _ = REGISTRY.register(Box::new(PHASE3_POOL_ATTEMPT_TOTAL.clone()));
 
     let _ = REGISTRY.register(Box::new(MODEL_NA_RECEIVED_TOTAL.clone()));
     let _ = REGISTRY.register(Box::new(MODEL_NA_RATE_LIMITED_TOTAL.clone()));
@@ -188,6 +229,10 @@ pub fn init() {
     let _ = REGISTRY.register(Box::new(MODEL_NA_OTHER_REASON_TOTAL.clone()));
     let _ = REGISTRY.register(Box::new(MODEL_NA_OTHER_RATE_LIMITED_NODE_TOTAL.clone()));
     let _ = REGISTRY.register(Box::new(MODEL_NA_OTHER_MARKED_NODE_TOTAL.clone()));
+
+    let _ = REGISTRY.register(Box::new(PHASE2_REDIS_OP_TOTAL.clone()));
+    let _ = REGISTRY.register(Box::new(PHASE2_INBOX_PENDING.clone()));
+    let _ = REGISTRY.register(Box::new(PHASE2_DLQ_MOVED_TOTAL.clone()));
 }
 
 pub fn observe_stats_request_duration_seconds(secs: f64) {
@@ -216,6 +261,23 @@ pub fn on_web_task_finalized(reason: &'static str) {
 pub fn on_no_available_node(selector: &'static str, reason: &'static str) {
     NO_AVAILABLE_NODE_TOTAL
         .with_label_values(&[selector, reason])
+        .inc();
+}
+
+pub fn on_phase3_pool_selected(pool_id: u16, hit: bool, fallback: bool) {
+    let pool = pool_id.to_string();
+    let outcome = if hit { "hit" } else { "miss" };
+    let fb = if fallback { "true" } else { "false" };
+    PHASE3_POOL_SELECTED_TOTAL
+        .with_label_values(&[pool.as_str(), outcome, fb])
+        .inc();
+}
+
+pub fn on_phase3_pool_attempt(pool_id: u16, success: bool, reason: &'static str) {
+    let pool = pool_id.to_string();
+    let result = if success { "success" } else { "fail" };
+    PHASE3_POOL_ATTEMPT_TOTAL
+        .with_label_values(&[pool.as_str(), result, reason])
         .inc();
 }
 
@@ -264,6 +326,20 @@ pub fn on_model_na_received_detail(service_id: &str, reason: &str) {
         &MODEL_NA_OTHER_REASON_TOTAL,
         "reason",
     );
+}
+
+// ===== Phase2 helpers =====
+pub fn phase2_redis_op(op: &'static str, ok: bool) {
+    let result = if ok { "ok" } else { "err" };
+    PHASE2_REDIS_OP_TOTAL.with_label_values(&[op, result]).inc();
+}
+
+pub fn set_phase2_inbox_pending(v: i64) {
+    PHASE2_INBOX_PENDING.set(v);
+}
+
+pub fn on_phase2_dlq_moved() {
+    PHASE2_DLQ_MOVED_TOTAL.inc();
 }
 
 fn inc_bounded(

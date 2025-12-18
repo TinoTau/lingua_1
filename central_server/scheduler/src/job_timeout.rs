@@ -1,7 +1,6 @@
 use crate::app_state::AppState;
 use crate::config::JobTimeoutPolicyConfig;
 use crate::messages::{ErrorCode, SessionMessage, UiEventStatus, UiEventType, get_error_hint, NodeMessage};
-use axum::extract::ws::Message;
 use tracing::{warn, info};
 
 /// Phase 1：Job 超时管理（单机可跑 + 为后续集群留空间）
@@ -21,6 +20,7 @@ pub fn start_job_timeout_manager(
     let pending_timeout_ms = (policy.pending_timeout_seconds.max(1) as i64) * 1000;
     let scan_interval = std::time::Duration::from_millis(policy.scan_interval_ms.max(200));
     let ttl = std::time::Duration::from_secs(reserved_ttl_seconds.max(1));
+    let reserved_ttl_seconds = reserved_ttl_seconds.max(1);
 
     tokio::spawn(async move {
         let mut interval = tokio::time::interval(scan_interval);
@@ -49,6 +49,12 @@ pub fn start_job_timeout_manager(
                             "Job pending 超时，标记失败"
                         );
                         state.dispatcher.update_job_status(&job.job_id, crate::dispatcher::JobStatus::Failed).await;
+                        if let Some(rt) = state.phase2.as_ref() {
+                            let _ = rt
+                                .job_fsm_to_finished(&job.job_id, job.dispatch_attempt_id.max(1), false)
+                                .await;
+                            let _ = rt.job_fsm_to_released(&job.job_id).await;
+                        }
                         notify_job_timeout(&state, &job, Some(now_ms as u64)).await;
                     }
                     continue;
@@ -80,17 +86,27 @@ pub fn start_job_timeout_manager(
                         trace_id: Some(job.trace_id.clone()),
                         reason: Some("job_timeout".to_string()),
                     };
-                    let _ = state
-                        .node_connections
-                        .send(current_node_id, Message::Text(serde_json::to_string(&cancel_msg).unwrap_or_default()))
-                        .await;
+                    let _ = crate::phase2::send_node_message_routed(&state, current_node_id, cancel_msg).await;
                 }
 
                 // 释放旧节点 reserved（幂等）
                 state.node_registry.release_job_slot(current_node_id, &job.job_id).await;
+                if let Some(rt) = state.phase2.as_ref() {
+                    rt.release_node_slot(current_node_id, &job.job_id).await;
+                        let _ = rt
+                            .job_fsm_to_finished(&job.job_id, job.dispatch_attempt_id.max(1), false)
+                            .await;
+                        let _ = rt.job_fsm_to_released(&job.job_id).await;
+                }
 
                 if job.failover_attempts >= policy.failover_max_attempts {
                     state.dispatcher.update_job_status(&job.job_id, crate::dispatcher::JobStatus::Failed).await;
+                    if let Some(rt) = state.phase2.as_ref() {
+                        let _ = rt
+                            .job_fsm_to_finished(&job.job_id, job.dispatch_attempt_id.max(1), false)
+                            .await;
+                        let _ = rt.job_fsm_to_released(&job.job_id).await;
+                    }
                     notify_job_timeout(&state, &job, Some(now_ms as u64)).await;
                     continue;
                 }
@@ -139,12 +155,28 @@ pub fn start_job_timeout_manager(
                 };
 
                 // 预占位（reserve）
-                let reserved = state
-                    .node_registry
-                    .reserve_job_slot(&new_node_id, &job.job_id, ttl)
-                    .await;
+                let reserved = if let Some(rt) = state.phase2.as_ref() {
+                    let node = state.node_registry.get_node_snapshot(&new_node_id).await;
+                    let (running_jobs, max_jobs) = node
+                        .as_ref()
+                        .map(|n| (n.current_jobs, n.max_concurrent_jobs))
+                        .unwrap_or((0, 1));
+                    rt.reserve_node_slot(&new_node_id, &job.job_id, reserved_ttl_seconds, running_jobs, max_jobs)
+                        .await
+                } else {
+                    state
+                        .node_registry
+                        .reserve_job_slot(&new_node_id, &job.job_id, ttl)
+                        .await
+                };
                 if !reserved {
                     state.dispatcher.update_job_status(&job.job_id, crate::dispatcher::JobStatus::Failed).await;
+                    if let Some(rt) = state.phase2.as_ref() {
+                        let _ = rt
+                            .job_fsm_to_finished(&job.job_id, job.dispatch_attempt_id.max(1), false)
+                            .await;
+                        let _ = rt.job_fsm_to_released(&job.job_id).await;
+                    }
                     notify_job_timeout(&state, &job, Some(now_ms as u64)).await;
                     continue;
                 }
@@ -156,20 +188,23 @@ pub fn start_job_timeout_manager(
                     .await
                 {
                     state.node_registry.release_job_slot(&new_node_id, &job.job_id).await;
+                    if let Some(rt) = state.phase2.as_ref() {
+                        rt.release_node_slot(&new_node_id, &job.job_id).await;
+                    }
                     continue;
                 }
 
                 // 下发到新节点
                 let Some(updated_job) = state.dispatcher.get_job(&job.job_id).await else {
                     state.node_registry.release_job_slot(&new_node_id, &job.job_id).await;
+                    if let Some(rt) = state.phase2.as_ref() {
+                        rt.release_node_slot(&new_node_id, &job.job_id).await;
+                    }
                     continue;
                 };
 
                 if let Some(job_assign_msg) = crate::websocket::create_job_assign_message(&updated_job, None, None, None) {
-                    let ok = state
-                        .node_connections
-                        .send(&new_node_id, Message::Text(serde_json::to_string(&job_assign_msg).unwrap_or_default()))
-                        .await;
+                    let ok = crate::phase2::send_node_message_routed(&state, &new_node_id, job_assign_msg).await;
                     if ok {
                         state.dispatcher.mark_job_dispatched(&updated_job.job_id).await;
                         info!(
@@ -183,6 +218,9 @@ pub fn start_job_timeout_manager(
                     } else {
                         // 发送失败：释放 reserved 并发槽并标记失败（避免泄漏）
                         state.node_registry.release_job_slot(&new_node_id, &updated_job.job_id).await;
+                        if let Some(rt) = state.phase2.as_ref() {
+                            rt.release_node_slot(&new_node_id, &updated_job.job_id).await;
+                        }
                         state.dispatcher.update_job_status(&updated_job.job_id, crate::dispatcher::JobStatus::Failed).await;
                         notify_job_node_unavailable(&state, &updated_job, Some(now_ms as u64)).await;
                     }
@@ -210,9 +248,7 @@ async fn notify_job_timeout(state: &AppState, job: &crate::dispatcher::Job, now_
         error_code: Some(code),
         hint,
     };
-    if let Ok(json) = serde_json::to_string(&ui_event) {
-        let _ = state.session_connections.send(&job.session_id, Message::Text(json)).await;
-    }
+    let _ = crate::phase2::send_session_message_routed(state, &job.session_id, ui_event).await;
 }
 
 async fn notify_job_node_unavailable(state: &AppState, job: &crate::dispatcher::Job, now_ms_opt: Option<u64>) {
@@ -233,9 +269,7 @@ async fn notify_job_node_unavailable(state: &AppState, job: &crate::dispatcher::
         error_code: Some(code),
         hint,
     };
-    if let Ok(json) = serde_json::to_string(&ui_event) {
-        let _ = state.session_connections.send(&job.session_id, Message::Text(json)).await;
-    }
+    let _ = crate::phase2::send_session_message_routed(state, &job.session_id, ui_event).await;
 }
 
 

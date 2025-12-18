@@ -52,6 +52,309 @@ pub struct SchedulerConfig {
     /// Phase 1：核心服务包映射（用于 required_models/required_services 计算与选节点过滤）
     #[serde(default)]
     pub core_services: CoreServicesConfig,
+    /// Phase 2：Redis / 多实例相关配置（默认关闭，开启后按文档启用 instance presence + owner + Streams）
+    #[serde(default)]
+    pub phase2: Phase2Config,
+    /// Phase 3：两级调度 / Pool（默认关闭；开启后优先走“Global 选 pool -> pool 内选 node”的路径）
+    #[serde(default)]
+    pub phase3: Phase3Config,
+}
+
+/// Phase 3：两级调度（Two-level scheduling）
+/// 目标：在节点规模增大时，把“全量遍历选节点”收敛为“先选 pool，再在 pool 内选 node”，并提供可观测性与可运维性。
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Phase3Config {
+    /// 是否启用 Phase 3（默认 false）
+    #[serde(default)]
+    pub enabled: bool,
+    /// 模式：目前仅支持 "two_level"
+    #[serde(default = "default_phase3_mode")]
+    pub mode: String,
+    /// pool 数量（将 nodes 分桶；请求优先落到一个 pool，必要时 fallback）
+    #[serde(default = "default_phase3_pool_count")]
+    pub pool_count: u16,
+    /// hash seed（用于 pool 计算；改动会导致 pool 映射变化）
+    #[serde(default = "default_phase3_hash_seed")]
+    pub hash_seed: u64,
+    /// 当首选 pool 无可用节点时，是否遍历其他 pool 进行 fallback
+    #[serde(default = "default_phase3_fallback_scan_all_pools")]
+    pub fallback_scan_all_pools: bool,
+
+    /// Phase 3（强隔离）：按能力配置 pools（如果非空，则启用“按能力分 pool”的强隔离模式）
+    /// - Node 会被分配到“第一个匹配”的 pool（按 pools 顺序）
+    /// - Job 会在“可满足 required 服务”的 pools 集合中选择 preferred，并按配置 fallback
+    #[serde(default)]
+    pub pools: Vec<Phase3PoolConfig>,
+
+    /// tenant -> pool 显式绑定（强隔离/容量规划）
+    /// - 当 routing_key == tenant_id 时生效（目前 routing_key 优先 tenant_id，否则 session_id）
+    #[serde(default)]
+    pub tenant_overrides: Vec<Phase3TenantOverride>,
+
+    /// pool 资格匹配范围：
+    /// - "core_only"：只对 ASR/NMT/TTS 核心服务做 pool 级过滤（默认，兼容性最好）
+    /// - "all_required"：对 required_model_ids 全量做 pool 级过滤（更强隔离，需 pool.required_services 覆盖完整）
+    #[serde(default = "default_phase3_pool_match_scope")]
+    pub pool_match_scope: String,
+
+    /// 若为 true：当 pools 非空但没有任何 eligible pool 时，直接返回 NO_AVAILABLE_NODE（强隔离）
+    /// 若为 false：eligible 为空时回退到“遍历所有配置 pools”（兼容模式）
+    #[serde(default)]
+    pub strict_pool_eligibility: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Phase3PoolConfig {
+    pub pool_id: u16,
+    #[serde(default)]
+    pub name: String,
+    /// 该 pool “保证具备”的服务包（service_id 列表）
+    #[serde(default)]
+    pub required_services: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Phase3TenantOverride {
+    pub tenant_id: String,
+    pub pool_id: u16,
+}
+
+fn default_phase3_mode() -> String {
+    "two_level".to_string()
+}
+
+fn default_phase3_pool_count() -> u16 {
+    16
+}
+
+fn default_phase3_hash_seed() -> u64 {
+    0
+}
+
+fn default_phase3_fallback_scan_all_pools() -> bool {
+    true
+}
+
+fn default_phase3_pool_match_scope() -> String {
+    "core_only".to_string()
+}
+
+impl Default for Phase3Config {
+    fn default() -> Self {
+        Self {
+            enabled: false,
+            mode: default_phase3_mode(),
+            pool_count: default_phase3_pool_count(),
+            hash_seed: default_phase3_hash_seed(),
+            fallback_scan_all_pools: default_phase3_fallback_scan_all_pools(),
+            pools: vec![],
+            tenant_overrides: vec![],
+            pool_match_scope: default_phase3_pool_match_scope(),
+            strict_pool_eligibility: false,
+        }
+    }
+}
+
+/// Phase 2：Redis / 多实例基础能力（Instance 生命周期 + owner + Streams inbox）
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Phase2Config {
+    /// 是否开启 Phase 2（默认 false，避免影响 Phase 1 单实例运行）
+    #[serde(default)]
+    pub enabled: bool,
+    /// Scheduler 实例 ID：
+    /// - 留空或 "auto"：启动时自动生成（hostname + pid + 短 uuid）
+    /// - 显式指定：用于固定实例名（便于调试/观测）
+    #[serde(default = "default_phase2_instance_id")]
+    pub instance_id: String,
+    /// Redis 配置（支持单实例与 Cluster 形态）
+    #[serde(default)]
+    pub redis: Phase2RedisConfig,
+    /// owner 绑定 TTL（秒）：node/session owner key 的过期时间
+    /// 建议略大于连接心跳续约周期（由 Scheduler 周期性续约）
+    #[serde(default = "default_phase2_owner_ttl_seconds")]
+    pub owner_ttl_seconds: u64,
+    /// Streams 读取 block 时间（毫秒）
+    #[serde(default = "default_phase2_stream_block_ms")]
+    pub stream_block_ms: u64,
+    /// Streams 每次拉取条数
+    #[serde(default = "default_phase2_stream_count")]
+    pub stream_count: usize,
+    /// Streams consumer group 名称（同一个 stream 的同一 group 下多实例可实现 failover）
+    #[serde(default = "default_phase2_stream_group")]
+    pub stream_group: String,
+    /// Streams inbox 最大长度（近似裁剪 MAXLEN ~），防止 stream 无界增长
+    #[serde(default = "default_phase2_stream_maxlen")]
+    pub stream_maxlen: usize,
+    /// 是否启用 DLQ（将长期 pending/多次投递失败的消息移入 dlq stream）
+    #[serde(default)]
+    pub dlq_enabled: bool,
+    /// DLQ stream 最大长度（近似裁剪 MAXLEN ~）
+    #[serde(default = "default_phase2_dlq_maxlen")]
+    pub dlq_maxlen: usize,
+    /// pending 消息超过该投递次数后进入 DLQ
+    #[serde(default = "default_phase2_dlq_max_deliveries")]
+    pub dlq_max_deliveries: u64,
+    /// pending 消息 idle 超过该阈值（毫秒）才允许进入 DLQ（避免搬走正在处理的消息）
+    #[serde(default = "default_phase2_dlq_min_idle_ms")]
+    pub dlq_min_idle_ms: u64,
+    /// DLQ 扫描间隔（毫秒）
+    #[serde(default = "default_phase2_dlq_scan_interval_ms")]
+    pub dlq_scan_interval_ms: u64,
+    /// 每次 DLQ 扫描最多处理多少条 pending
+    #[serde(default = "default_phase2_dlq_scan_count")]
+    pub dlq_scan_count: usize,
+    /// Phase 2：节点快照同步（使任意 Scheduler 都拥有全量节点视图）
+    #[serde(default)]
+    pub node_snapshot: Phase2NodeSnapshotConfig,
+}
+
+fn default_phase2_instance_id() -> String {
+    "auto".to_string()
+}
+
+fn default_phase2_owner_ttl_seconds() -> u64 {
+    45
+}
+
+fn default_phase2_stream_block_ms() -> u64 {
+    1000
+}
+
+fn default_phase2_stream_count() -> usize {
+    64
+}
+
+fn default_phase2_stream_group() -> String {
+    "scheduler".to_string()
+}
+
+fn default_phase2_stream_maxlen() -> usize {
+    10_000
+}
+
+fn default_phase2_dlq_maxlen() -> usize {
+    10_000
+}
+
+fn default_phase2_dlq_max_deliveries() -> u64 {
+    10
+}
+
+fn default_phase2_dlq_min_idle_ms() -> u64 {
+    60_000
+}
+
+fn default_phase2_dlq_scan_interval_ms() -> u64 {
+    5000
+}
+
+fn default_phase2_dlq_scan_count() -> usize {
+    100
+}
+
+impl Default for Phase2Config {
+    fn default() -> Self {
+        Self {
+            enabled: false,
+            instance_id: default_phase2_instance_id(),
+            redis: Phase2RedisConfig::default(),
+            owner_ttl_seconds: default_phase2_owner_ttl_seconds(),
+            stream_block_ms: default_phase2_stream_block_ms(),
+            stream_count: default_phase2_stream_count(),
+            stream_group: default_phase2_stream_group(),
+            stream_maxlen: default_phase2_stream_maxlen(),
+            dlq_enabled: true,
+            dlq_maxlen: default_phase2_dlq_maxlen(),
+            dlq_max_deliveries: default_phase2_dlq_max_deliveries(),
+            dlq_min_idle_ms: default_phase2_dlq_min_idle_ms(),
+            dlq_scan_interval_ms: default_phase2_dlq_scan_interval_ms(),
+            dlq_scan_count: default_phase2_dlq_scan_count(),
+            node_snapshot: Phase2NodeSnapshotConfig::default(),
+        }
+    }
+}
+
+/// Phase 2：节点快照同步配置（Redis -> 本地 NodeRegistry）
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Phase2NodeSnapshotConfig {
+    /// 是否启用节点快照同步（默认 true；仅在 phase2.enabled=true 时生效）
+    #[serde(default = "default_phase2_node_snapshot_enabled")]
+    pub enabled: bool,
+    /// 节点 presence TTL（秒）：redis key 过期即视为离线（用于跨实例在线判断）
+    #[serde(default = "default_phase2_node_presence_ttl_seconds")]
+    pub presence_ttl_seconds: u64,
+    /// 后台刷新间隔（毫秒）：从 Redis 拉取全量节点快照并 upsert 到本地 NodeRegistry
+    #[serde(default = "default_phase2_node_refresh_interval_ms")]
+    pub refresh_interval_ms: u64,
+    /// 从 nodes:all 清理“长期离线”的节点（秒）。设为 0 表示不清理。
+    #[serde(default = "default_phase2_node_remove_stale_after_seconds")]
+    pub remove_stale_after_seconds: u64,
+}
+
+fn default_phase2_node_snapshot_enabled() -> bool {
+    true
+}
+
+fn default_phase2_node_presence_ttl_seconds() -> u64 {
+    45
+}
+
+fn default_phase2_node_refresh_interval_ms() -> u64 {
+    2000
+}
+
+fn default_phase2_node_remove_stale_after_seconds() -> u64 {
+    600
+}
+
+impl Default for Phase2NodeSnapshotConfig {
+    fn default() -> Self {
+        Self {
+            enabled: default_phase2_node_snapshot_enabled(),
+            presence_ttl_seconds: default_phase2_node_presence_ttl_seconds(),
+            refresh_interval_ms: default_phase2_node_refresh_interval_ms(),
+            remove_stale_after_seconds: default_phase2_node_remove_stale_after_seconds(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Phase2RedisConfig {
+    /// Redis 模式： "single" | "cluster"
+    #[serde(default = "default_phase2_redis_mode")]
+    pub mode: String,
+    /// 单实例 Redis URL（mode=single 时使用）
+    #[serde(default = "default_phase2_redis_url")]
+    pub url: String,
+    /// Cluster 节点 URL 列表（mode=cluster 时使用）
+    #[serde(default)]
+    pub cluster_urls: Vec<String>,
+    /// key 前缀（便于多环境隔离）
+    #[serde(default = "default_phase2_key_prefix")]
+    pub key_prefix: String,
+}
+
+fn default_phase2_redis_mode() -> String {
+    "single".to_string()
+}
+
+fn default_phase2_redis_url() -> String {
+    "redis://127.0.0.1:6379".to_string()
+}
+
+fn default_phase2_key_prefix() -> String {
+    "lingua".to_string()
+}
+
+impl Default for Phase2RedisConfig {
+    fn default() -> Self {
+        Self {
+            mode: default_phase2_redis_mode(),
+            url: default_phase2_redis_url(),
+            cluster_urls: Vec::new(),
+            key_prefix: default_phase2_key_prefix(),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -380,6 +683,8 @@ impl Default for Config {
                 web_task_segmentation: WebTaskSegmentationConfig::default(),
                 observability: ObservabilityConfig::default(),
                 core_services: CoreServicesConfig::default(),
+                phase2: Phase2Config::default(),
+                phase3: Phase3Config::default(),
             },
         }
     }

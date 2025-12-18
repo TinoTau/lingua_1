@@ -66,6 +66,11 @@ pub(super) async fn handle_session_init(
         .register(session.session_id.clone(), tx.clone())
         .await;
 
+    // Phase 2：写入 session owner（带 TTL；用于跨实例投递）
+    if let Some(rt) = state.phase2.as_ref() {
+        rt.set_session_owner(&session.session_id).await;
+    }
+
     // 初始化结果队列
     state
         .result_queue

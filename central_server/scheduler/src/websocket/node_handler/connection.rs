@@ -58,6 +58,12 @@ pub async fn handle_node(socket: WebSocket, state: AppState) {
 
     // 清理
     if let Some(ref nid) = node_id {
+        if let Some(rt) = state.phase2.as_ref() {
+            rt.clear_node_owner(nid).await;
+            rt.clear_node_presence(nid).await;
+        }
+        // Phase 3：从 pool index 中移除（node 断开后不再作为 pool 成员参与选择；重连/快照会重新加入）
+        state.node_registry.phase3_remove_node_from_pool_index(nid).await;
         state.node_connections.unregister(nid).await;
         state.node_registry.mark_node_offline(nid).await;
         info!("Node {} cleaned up", nid);

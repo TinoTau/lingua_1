@@ -18,6 +18,11 @@ impl NodeRegistry {
             exclude_reason_stats: Arc::new(RwLock::new(HashMap::new())),
             unavailable_services: Arc::new(RwLock::new(HashMap::new())),
             reserved_jobs: Arc::new(RwLock::new(HashMap::new())),
+            phase3: Arc::new(RwLock::new(crate::config::Phase3Config::default())),
+            phase3_pool_index: Arc::new(RwLock::new(HashMap::new())),
+            phase3_node_pool: Arc::new(RwLock::new(HashMap::new())),
+            core_services: Arc::new(RwLock::new(crate::config::CoreServicesConfig::default())),
+            phase3_core_cache: Arc::new(RwLock::new(super::phase3_core_cache::Phase3CoreCacheState::default())),
         }
     }
 
@@ -28,7 +33,54 @@ impl NodeRegistry {
             exclude_reason_stats: Arc::new(RwLock::new(HashMap::new())),
             unavailable_services: Arc::new(RwLock::new(HashMap::new())),
             reserved_jobs: Arc::new(RwLock::new(HashMap::new())),
+            phase3: Arc::new(RwLock::new(crate::config::Phase3Config::default())),
+            phase3_pool_index: Arc::new(RwLock::new(HashMap::new())),
+            phase3_node_pool: Arc::new(RwLock::new(HashMap::new())),
+            core_services: Arc::new(RwLock::new(crate::config::CoreServicesConfig::default())),
+            phase3_core_cache: Arc::new(RwLock::new(super::phase3_core_cache::Phase3CoreCacheState::default())),
         }
+    }
+
+    /// Phase 2：从 Redis 快照 upsert 节点（允许跨实例拥有“全量节点视图”）
+    pub async fn upsert_node_from_snapshot(&self, mut node: super::Node) {
+        // 快照节点默认视为在线（presence 已在 Redis 校验）
+        node.online = true;
+        let node_id = node.node_id.clone();
+
+        let t0 = Instant::now();
+        let mut nodes = self.nodes.write().await;
+        crate::observability::record_lock_wait("node_registry.nodes.write", t0.elapsed().as_millis() as u64);
+
+        let updated = if let Some(existing) = nodes.get_mut(&node.node_id) {
+            // status 合并：尽量保留“更活跃”的状态
+            let merged_status = if existing.status == NodeStatus::Ready || node.status == NodeStatus::Ready {
+                NodeStatus::Ready
+            } else if existing.status == NodeStatus::Degraded || node.status == NodeStatus::Degraded {
+                NodeStatus::Degraded
+            } else if existing.status == NodeStatus::Draining || node.status == NodeStatus::Draining {
+                NodeStatus::Draining
+            } else {
+                node.status.clone()
+            };
+
+            *existing = node;
+            existing.status = merged_status;
+            existing.clone()
+        } else {
+            nodes.insert(node.node_id.clone(), node.clone());
+            node
+        };
+        drop(nodes);
+
+        // Phase 3：更新 pool index（node_id -> pool）
+        self.phase3_upsert_node_to_pool_index(&node_id).await;
+        self.phase3_core_cache_upsert_node(updated).await;
+    }
+
+    /// Phase 2：获取节点快照（用于写入 Redis）
+    pub async fn get_node_snapshot(&self, node_id: &str) -> Option<super::Node> {
+        let nodes = self.nodes.read().await;
+        nodes.get(node_id).cloned()
     }
 
     /// 注册节点
@@ -40,6 +92,7 @@ impl NodeRegistry {
     /// # 返回
     /// - `Ok(Node)` - 注册成功
     /// - `Err(String)` - 注册失败（没有 GPU）
+    #[allow(dead_code)]
     pub async fn register_node(
         &self,
         node_id: Option<String>,
@@ -52,6 +105,37 @@ impl NodeRegistry {
         features_supported: FeatureFlags,
         accept_public_jobs: bool,
         capability_state: Option<CapabilityState>,
+    ) -> Result<super::Node, String> {
+        self.register_node_with_policy(
+            node_id,
+            name,
+            version,
+            platform,
+            hardware,
+            installed_models,
+            installed_services,
+            features_supported,
+            accept_public_jobs,
+            capability_state,
+            false,
+        )
+        .await
+    }
+
+    /// Phase 2：注册节点（允许覆盖已有 node_id，用于节点重连/跨实例快照同步后的注册）
+    pub async fn register_node_with_policy(
+        &self,
+        node_id: Option<String>,
+        name: String,
+        version: String,
+        platform: String,
+        hardware: HardwareInfo,
+        installed_models: Vec<InstalledModel>,
+        installed_services: Option<Vec<InstalledService>>,
+        features_supported: FeatureFlags,
+        accept_public_jobs: bool,
+        capability_state: Option<CapabilityState>,
+        allow_existing_id: bool,
     ) -> Result<super::Node, String> {
         // 检查节点是否有 GPU（必需）
         if hardware.gpus.is_none() || hardware.gpus.as_ref().unwrap().is_empty() {
@@ -72,12 +156,22 @@ impl NodeRegistry {
         let final_node_id = if let Some(provided_id) = node_id {
             // 如果提供了 node_id，检查是否已存在
             if nodes.contains_key(&provided_id) {
-                warn!(
-                    node_id = %provided_id,
-                    name = %name,
-                    "Node registration failed: node_id conflict"
-                );
-                return Err("节点 ID 冲突，请清除本地 node_id 后重新注册".to_string());
+                if allow_existing_id {
+                    // Phase 2：允许覆盖（通常意味着节点重连或本实例之前只同步了远端快照）
+                    warn!(
+                        node_id = %provided_id,
+                        name = %name,
+                        "Node registration: node_id exists, overwrite enabled (phase2)"
+                    );
+                    nodes.remove(&provided_id);
+                } else {
+                    warn!(
+                        node_id = %provided_id,
+                        name = %name,
+                        "Node registration failed: node_id conflict"
+                    );
+                    return Err("节点 ID 冲突，请清除本地 node_id 后重新注册".to_string());
+                }
             }
             provided_id
         } else {
@@ -117,6 +211,12 @@ impl NodeRegistry {
         };
 
         nodes.insert(final_node_id.clone(), node.clone());
+        drop(nodes);
+
+        // Phase 3：更新 pool index（node_id -> pool）
+        self.phase3_upsert_node_to_pool_index(&final_node_id).await;
+        // Phase 3：更新 pool 核心能力缓存（用于快速定位/跳过明显不满足的 pools）
+        self.phase3_core_cache_upsert_node(node.clone()).await;
 
         info!(
             node_id = %final_node_id,
@@ -148,10 +248,12 @@ impl NodeRegistry {
         current_jobs: usize,
         capability_state: Option<CapabilityState>,
     ) -> bool {
-        let t0 = Instant::now();
-        let mut nodes = self.nodes.write().await;
-        crate::observability::record_lock_wait("node_registry.nodes.write", t0.elapsed().as_millis() as u64);
-        if let Some(node) = nodes.get_mut(node_id) {
+        let mut updated: Option<super::Node> = None;
+        let ok = {
+            let t0 = Instant::now();
+            let mut nodes = self.nodes.write().await;
+            crate::observability::record_lock_wait("node_registry.nodes.write", t0.elapsed().as_millis() as u64);
+            if let Some(node) = nodes.get_mut(node_id) {
             // GPU 使用率必须提供（所有节点都必须有 GPU）
             let gpu_usage = gpu_usage.unwrap_or(0.0);
 
@@ -170,10 +272,18 @@ impl NodeRegistry {
             }
             node.current_jobs = current_jobs;
             node.last_heartbeat = chrono::Utc::now();
-            true
-        } else {
-            false
+            updated = Some(node.clone());
+                true
+            } else {
+                false
+            }
+        };
+        if let Some(n) = updated {
+            // Phase 3：installed_services/capability_state 可能变化，需更新 pool 归属
+            self.phase3_upsert_node_to_pool_index(node_id).await;
+            self.phase3_core_cache_upsert_node(n).await;
         }
+        ok
     }
 
     pub async fn is_node_available(&self, node_id: &str) -> bool {
@@ -195,19 +305,37 @@ impl NodeRegistry {
     /// 设置节点状态（用于测试）
     #[allow(dead_code)]
     pub async fn set_node_status(&self, node_id: &str, status: NodeStatus) -> bool {
-        let mut nodes = self.nodes.write().await;
-        if let Some(node) = nodes.get_mut(node_id) {
-            node.status = status;
-            true
-        } else {
-            false
+        let mut updated: Option<super::Node> = None;
+        let ok = {
+            let mut nodes = self.nodes.write().await;
+            if let Some(node) = nodes.get_mut(node_id) {
+                node.status = status;
+                updated = Some(node.clone());
+                true
+            } else {
+                false
+            }
+        };
+        if let Some(n) = updated {
+            self.phase3_core_cache_upsert_node(n).await;
         }
+        ok
     }
 
     pub async fn mark_node_offline(&self, node_id: &str) {
-        let mut nodes = self.nodes.write().await;
-        if let Some(node) = nodes.get_mut(node_id) {
-            node.online = false;
+        let mut updated: Option<super::Node> = None;
+        {
+            let mut nodes = self.nodes.write().await;
+            if let Some(node) = nodes.get_mut(node_id) {
+                node.online = false;
+                updated = Some(node.clone());
+            }
+        }
+        if let Some(n) = updated {
+            self.phase3_core_cache_upsert_node(n).await;
+        } else {
+            // 若节点不存在，确保缓存也不残留
+            self.phase3_core_cache_remove_node(node_id).await;
         }
     }
 

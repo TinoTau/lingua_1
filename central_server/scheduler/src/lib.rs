@@ -24,6 +24,8 @@ pub mod metrics;
 pub mod observability;
 pub mod prometheus_metrics;
 pub mod job_timeout;
+pub mod phase2;
+pub mod phase3;
 
 pub use app_state::AppState;
 pub use audio_buffer::AudioBufferManager;

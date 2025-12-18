@@ -23,6 +23,12 @@
 
 - `scheduler/README.md`
 - `scheduler/DISPATCHER_OPTIMIZATION_PLAN.md`
+- **Phase 2（多实例 + Redis）**
+  - 进度记录：`project/Scheduler_Phase2_开发进度记录_2025-12-19.md`
+  - 容量规划与 Redis 设计：`project/Scheduler_扩展与容量规划说明_含Redis设计.md`
+  - 实现总览（代码内文档）：`../scheduler/docs/phase2_implementation.md`
+  - Streams/DLQ 运维：`../scheduler/docs/phase2_streams_ops.md`
+  - Cluster 一键验收脚本：`../scheduler/scripts/phase2_cluster_acceptance.ps1`
 
 ### API Gateway（对外网关）
 

@@ -11,6 +11,7 @@ struct SelectionOutcome {
     node_id: Option<String>,
     selector: &'static str,
     breakdown: crate::node_registry::NoAvailableNodeBreakdown,
+    phase3_debug: Option<crate::node_registry::Phase3TwoLevelDebug>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -69,6 +70,9 @@ pub struct Job {
     /// 如果为 Some，表示会议室模式，翻译结果发送给列表中的所有成员
     #[serde(skip_serializing_if = "Option::is_none")]
     pub target_session_ids: Option<Vec<String>>,
+    /// Phase 3：租户 ID（用于两级调度 routing_key 与运维排障）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tenant_id: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -93,6 +97,8 @@ pub struct JobDispatcher {
     core_services: crate::config::CoreServicesConfig,
     /// session_id -> (last_dispatched_node_id, ts_ms)
     last_dispatched_node_by_session: Arc<RwLock<std::collections::HashMap<String, (String, i64)>>>,
+    /// Phase 2：Redis 运行时（request_id bind/lock + node reserved）
+    phase2: Option<Arc<crate::phase2::Phase2Runtime>>,
 }
 
 fn is_zero_u32(v: &u32) -> bool {
@@ -111,6 +117,7 @@ impl JobDispatcher {
             spread_window_ms: 30_000,
             core_services: crate::config::CoreServicesConfig::default(),
             last_dispatched_node_by_session: Arc::new(RwLock::new(std::collections::HashMap::new())),
+            phase2: None,
         }
     }
 
@@ -136,6 +143,10 @@ impl JobDispatcher {
         s
     }
 
+    pub fn set_phase2(&mut self, phase2: Option<Arc<crate::phase2::Phase2Runtime>>) {
+        self.phase2 = phase2;
+    }
+
     pub async fn create_job(
         &self,
         session_id: String,
@@ -156,12 +167,295 @@ impl JobDispatcher {
         enable_streaming_asr: Option<bool>,
         partial_update_interval_ms: Option<u64>,
         trace_id: String,
+        tenant_id: Option<String>,
         // Phase 1：任务级幂等 request_id（建议调用方传入稳定值）
         request_id: Option<String>,
         target_session_ids: Option<Vec<String>>, // 目标接收者 session_id 列表（会议室模式使用）
     ) -> Job {
         let request_id = request_id.unwrap_or_else(|| format!("req-{}", Uuid::new_v4().to_string()[..12].to_uppercase()));
         let now_ms = chrono::Utc::now().timestamp_millis();
+        // Phase 3：routing_key 优先 tenant_id，其次 session_id（保证同租户/同会话稳定落 pool；不影响 request_id 幂等）
+        let routing_key = tenant_id
+            .as_deref()
+            .filter(|s| !s.trim().is_empty())
+            .unwrap_or(session_id.as_str());
+
+        // Phase 2：跨实例幂等（优先使用 Redis request_id bind）
+        if let Some(rt) = self.phase2.clone() {
+            // 先做一次无锁读取（快速路径）
+            if let Some(b) = rt.get_request_binding(&request_id).await {
+                let job_id = b.job_id.clone();
+                if let Some(job) = self.get_job(&job_id).await {
+                    return job;
+                }
+                let assigned_node_id = b.node_id.clone();
+                let job = Job {
+                    job_id: job_id.clone(),
+                    request_id: request_id.clone(),
+                    dispatched_to_node: b.dispatched_to_node,
+                    dispatched_at_ms: None,
+                    failover_attempts: 0,
+                    dispatch_attempt_id: if assigned_node_id.is_some() { 1 } else { 0 },
+                    session_id: session_id.clone(),
+                    utterance_index,
+                    src_lang: src_lang.clone(),
+                    tgt_lang: tgt_lang.clone(),
+                    dialect: dialect.clone(),
+                    features: features.clone(),
+                    pipeline: pipeline.clone(),
+                    audio_data: audio_data.clone(),
+                    audio_format: audio_format.clone(),
+                    sample_rate,
+                    assigned_node_id: assigned_node_id.clone(),
+                    status: if assigned_node_id.is_some() { JobStatus::Assigned } else { JobStatus::Pending },
+                    created_at: chrono::Utc::now(),
+                    trace_id: trace_id.clone(),
+                    mode: mode.clone(),
+                    lang_a: lang_a.clone(),
+                    lang_b: lang_b.clone(),
+                    auto_langs: auto_langs.clone(),
+                    enable_streaming_asr,
+                    partial_update_interval_ms,
+                    target_session_ids: target_session_ids.clone(),
+                    tenant_id: tenant_id.clone(),
+                };
+                self.jobs.write().await.insert(job_id, job.clone());
+                return job;
+            }
+
+            // 加锁路径：避免同 request_id 并发创建/占用
+            let lock_owner = format!("{}:{}", rt.instance_id, Uuid::new_v4().to_string());
+            let deadline = tokio::time::Instant::now() + std::time::Duration::from_millis(1000);
+            let mut locked = false;
+            while tokio::time::Instant::now() < deadline {
+                if rt.acquire_request_lock(&request_id, &lock_owner, 1500).await {
+                    locked = true;
+                    break;
+                }
+                tokio::time::sleep(std::time::Duration::from_millis(50)).await;
+            }
+
+            if locked {
+                // lock 后复查
+                if let Some(b) = rt.get_request_binding(&request_id).await {
+                    rt.release_request_lock(&request_id, &lock_owner).await;
+                    let job_id = b.job_id.clone();
+                    if let Some(job) = self.get_job(&job_id).await {
+                        return job;
+                    }
+                    let assigned_node_id = b.node_id.clone();
+                    let job = Job {
+                        job_id: job_id.clone(),
+                        request_id: request_id.clone(),
+                        dispatched_to_node: b.dispatched_to_node,
+                        dispatched_at_ms: None,
+                        failover_attempts: 0,
+                        dispatch_attempt_id: if assigned_node_id.is_some() { 1 } else { 0 },
+                        session_id: session_id.clone(),
+                        utterance_index,
+                        src_lang: src_lang.clone(),
+                        tgt_lang: tgt_lang.clone(),
+                        dialect: dialect.clone(),
+                        features: features.clone(),
+                        pipeline: pipeline.clone(),
+                        audio_data: audio_data.clone(),
+                        audio_format: audio_format.clone(),
+                        sample_rate,
+                        assigned_node_id: assigned_node_id.clone(),
+                        status: if assigned_node_id.is_some() { JobStatus::Assigned } else { JobStatus::Pending },
+                        created_at: chrono::Utc::now(),
+                        trace_id: trace_id.clone(),
+                        mode: mode.clone(),
+                        lang_a: lang_a.clone(),
+                        lang_b: lang_b.clone(),
+                        auto_langs: auto_langs.clone(),
+                        enable_streaming_asr,
+                        partial_update_interval_ms,
+                        target_session_ids: target_session_ids.clone(),
+                        tenant_id: tenant_id.clone(),
+                    };
+                    self.jobs.write().await.insert(job_id, job.clone());
+                    return job;
+                }
+
+                // 还没有绑定：创建新 job_id，并走“本地选节点 -> Redis reserve -> 写 bind”
+                let job_id = format!("job-{}", Uuid::new_v4().to_string()[..8].to_uppercase());
+
+                // Prometheus：若最终 NO_AVAILABLE_NODE，则记录“按原因拆分”的一次计数
+                let mut no_available_node_metric: Option<(&'static str, &'static str)> = None;
+
+                // Phase 1：可选“打散”策略
+                let exclude_node_id = if self.spread_enabled {
+                    self.last_dispatched_node_by_session
+                        .read()
+                        .await
+                        .get(&session_id)
+                        .and_then(|(nid, ts)| {
+                            if now_ms - *ts <= self.spread_window_ms {
+                                Some(nid.clone())
+                            } else {
+                                None
+                            }
+                        })
+                } else {
+                    None
+                };
+
+                let mut assigned_node_id = if let Some(node_id) = preferred_node_id.clone() {
+                    if self.node_registry.is_node_available(&node_id).await {
+                        Some(node_id)
+                    } else {
+                        None
+                    }
+                } else {
+                    let excluded = exclude_node_id.as_deref();
+                    let first = self
+                        .select_node_with_module_expansion_with_breakdown(
+                            routing_key,
+                            &src_lang,
+                            &tgt_lang,
+                            features.clone(),
+                            &pipeline,
+                            true,
+                            excluded,
+                        )
+                        .await;
+                    if first.selector == "phase3" {
+                        if let Some(ref dbg) = first.phase3_debug {
+                            if dbg.fallback_used || dbg.selected_pool.is_none() {
+                                tracing::warn!(
+                                    trace_id = %trace_id,
+                                    request_id = %request_id,
+                                    pool_count = dbg.pool_count,
+                                    preferred_pool = dbg.preferred_pool,
+                                    selected_pool = ?dbg.selected_pool,
+                                    fallback_used = dbg.fallback_used,
+                                    attempts = ?dbg.attempts,
+                                    "Phase3 two-level scheduling used fallback or failed"
+                                );
+                            } else {
+                                tracing::debug!(
+                                    trace_id = %trace_id,
+                                    request_id = %request_id,
+                                    pool_count = dbg.pool_count,
+                                    preferred_pool = dbg.preferred_pool,
+                                    selected_pool = ?dbg.selected_pool,
+                                    attempts = ?dbg.attempts,
+                                    "Phase3 two-level scheduling decision"
+                                );
+                            }
+                        }
+                    }
+                    if first.node_id.is_some() {
+                        first.node_id
+                    } else {
+                        let second = self
+                            .select_node_with_module_expansion_with_breakdown(
+                                routing_key,
+                                &src_lang,
+                                &tgt_lang,
+                                features.clone(),
+                                &pipeline,
+                                true,
+                                None,
+                            )
+                            .await;
+                        if second.selector == "phase3" {
+                            if let Some(ref dbg) = second.phase3_debug {
+                                tracing::warn!(
+                                    trace_id = %trace_id,
+                                    request_id = %request_id,
+                                    pool_count = dbg.pool_count,
+                                    preferred_pool = dbg.preferred_pool,
+                                    selected_pool = ?dbg.selected_pool,
+                                    fallback_used = dbg.fallback_used,
+                                    attempts = ?dbg.attempts,
+                                    "Phase3 two-level scheduling second attempt"
+                                );
+                            }
+                        }
+                        if second.node_id.is_none() {
+                            no_available_node_metric =
+                                Some((second.selector, second.breakdown.best_reason_label()));
+                        }
+                        second.node_id
+                    }
+                };
+
+                // Phase 2：全局并发占用（Redis reserve）
+                if let Some(ref node_id) = assigned_node_id {
+                    let ttl_s = self.reserved_ttl_seconds.max(1);
+                    let node = self.node_registry.get_node_snapshot(node_id).await;
+                    let (running_jobs, max_jobs) = node
+                        .as_ref()
+                        .map(|n| (n.current_jobs, n.max_concurrent_jobs))
+                        .unwrap_or((0, 1));
+                    let ok = rt
+                        .reserve_node_slot(node_id, &job_id, ttl_s, running_jobs, max_jobs)
+                        .await;
+                    if !ok {
+                        assigned_node_id = None;
+                        no_available_node_metric = Some(("reserve", "reserve_denied"));
+                    }
+                }
+
+                // 写入 request_id bind（即使未分配到节点，也写入以避免短时间重复创建）
+                rt.set_request_binding(
+                    &request_id,
+                    &job_id,
+                    assigned_node_id.as_deref(),
+                    self.lease_seconds.max(1),
+                    false,
+                )
+                .await;
+
+                // Phase 2：初始化 Job FSM（CREATED）
+                let fsm_ttl = std::cmp::max(self.lease_seconds, self.reserved_ttl_seconds).saturating_add(300);
+                rt.job_fsm_init(&job_id, assigned_node_id.as_deref(), 1, fsm_ttl).await;
+                rt.release_request_lock(&request_id, &lock_owner).await;
+
+                if assigned_node_id.is_none() {
+                    if let Some((selector, reason)) = no_available_node_metric {
+                        crate::prometheus_metrics::on_no_available_node(selector, reason);
+                    } else {
+                        crate::prometheus_metrics::on_no_available_node("unknown", "unknown");
+                    }
+                }
+
+                let job = Job {
+                    job_id: job_id.clone(),
+                    request_id: request_id.clone(),
+                    dispatched_to_node: false,
+                    dispatched_at_ms: None,
+                    failover_attempts: 0,
+                    dispatch_attempt_id: if assigned_node_id.is_some() { 1 } else { 0 },
+                    session_id,
+                    utterance_index,
+                    src_lang,
+                    tgt_lang,
+                    dialect,
+                    features,
+                    pipeline,
+                    audio_data,
+                    audio_format,
+                    sample_rate,
+                    assigned_node_id: assigned_node_id.clone(),
+                    status: if assigned_node_id.is_some() { JobStatus::Assigned } else { JobStatus::Pending },
+                    created_at: chrono::Utc::now(),
+                    trace_id: trace_id.clone(),
+                    mode,
+                    lang_a,
+                    lang_b,
+                    auto_langs,
+                    enable_streaming_asr,
+                    partial_update_interval_ms,
+                    target_session_ids,
+                    tenant_id: tenant_id.clone(),
+                };
+                self.jobs.write().await.insert(job_id, job.clone());
+                return job;
+            }
+        }
 
         // 幂等：若 request_id 在 lease 内已生成过 job，则直接返回同一个 job（避免重复派发/重复占用并发槽）
         if let Some((existing_job_id, exp_ms)) = self.request_bindings.read().await.get(&request_id).cloned() {
@@ -207,6 +501,7 @@ impl JobDispatcher {
                             // 节点不具备所需模型，回退到功能感知选择
                             let o = self
                                 .select_node_with_module_expansion_with_breakdown(
+                                    routing_key,
                                     &src_lang,
                                     &tgt_lang,
                                     Some(features.clone()),
@@ -215,6 +510,20 @@ impl JobDispatcher {
                                     None,
                                 )
                                 .await;
+                            if o.selector == "phase3" {
+                                if let Some(ref dbg) = o.phase3_debug {
+                                    tracing::debug!(
+                                        trace_id = %trace_id,
+                                        request_id = %request_id,
+                                        pool_count = dbg.pool_count,
+                                        preferred_pool = dbg.preferred_pool,
+                                        selected_pool = ?dbg.selected_pool,
+                                        fallback_used = dbg.fallback_used,
+                                        attempts = ?dbg.attempts,
+                                        "Phase3 two-level scheduling fallback from preferred node"
+                                    );
+                                }
+                            }
                             if o.node_id.is_none() {
                                 no_available_node_metric =
                                     Some((o.selector, o.breakdown.best_reason_label()));
@@ -233,6 +542,7 @@ impl JobDispatcher {
                 // 回退到功能感知选择
                 let o = self
                     .select_node_with_module_expansion_with_breakdown(
+                        routing_key,
                         &src_lang,
                         &tgt_lang,
                         features.clone(),
@@ -241,6 +551,20 @@ impl JobDispatcher {
                         None,
                     )
                     .await;
+                if o.selector == "phase3" {
+                    if let Some(ref dbg) = o.phase3_debug {
+                        tracing::debug!(
+                            trace_id = %trace_id,
+                            request_id = %request_id,
+                            pool_count = dbg.pool_count,
+                            preferred_pool = dbg.preferred_pool,
+                            selected_pool = ?dbg.selected_pool,
+                            fallback_used = dbg.fallback_used,
+                            attempts = ?dbg.attempts,
+                            "Phase3 two-level scheduling fallback from unavailable preferred node"
+                        );
+                    }
+                }
                 if o.node_id.is_none() {
                     no_available_node_metric = Some((o.selector, o.breakdown.best_reason_label()));
                 }
@@ -252,6 +576,7 @@ impl JobDispatcher {
             let excluded = exclude_node_id.as_deref();
             let first = self
                 .select_node_with_module_expansion_with_breakdown(
+                    routing_key,
                     &src_lang,
                     &tgt_lang,
                     features.clone(),
@@ -260,11 +585,28 @@ impl JobDispatcher {
                     excluded,
                 )
                 .await;
+            if first.selector == "phase3" {
+                if let Some(ref dbg) = first.phase3_debug {
+                    if dbg.fallback_used || dbg.selected_pool.is_none() {
+                        tracing::warn!(
+                            trace_id = %trace_id,
+                            request_id = %request_id,
+                                pool_count = dbg.pool_count,
+                            preferred_pool = dbg.preferred_pool,
+                            selected_pool = ?dbg.selected_pool,
+                            fallback_used = dbg.fallback_used,
+                            attempts = ?dbg.attempts,
+                            "Phase3 two-level scheduling used fallback or failed"
+                        );
+                    }
+                }
+            }
             if first.node_id.is_some() {
                 first.node_id
             } else {
                 let second = self
                     .select_node_with_module_expansion_with_breakdown(
+                        routing_key,
                         &src_lang,
                         &tgt_lang,
                         features.clone(),
@@ -273,6 +615,20 @@ impl JobDispatcher {
                         None,
                     )
                     .await;
+                if second.selector == "phase3" {
+                    if let Some(ref dbg) = second.phase3_debug {
+                        tracing::warn!(
+                            trace_id = %trace_id,
+                            request_id = %request_id,
+                            pool_count = dbg.pool_count,
+                            preferred_pool = dbg.preferred_pool,
+                            selected_pool = ?dbg.selected_pool,
+                            fallback_used = dbg.fallback_used,
+                            attempts = ?dbg.attempts,
+                            "Phase3 two-level scheduling second attempt"
+                        );
+                    }
+                }
                 if second.node_id.is_none() {
                     // 仅记录最终失败的原因（第二次：不避开上一节点）
                     no_available_node_metric =
@@ -347,6 +703,7 @@ impl JobDispatcher {
             enable_streaming_asr,
             partial_update_interval_ms,
             target_session_ids,
+            tenant_id: tenant_id.clone(),
         };
 
         let mut jobs = self.jobs.write().await;
@@ -389,12 +746,23 @@ impl JobDispatcher {
             if matches!(job.status, JobStatus::Completed | JobStatus::Failed) {
                 return false;
             }
-            job.assigned_node_id = Some(new_node_id);
+            let request_id = job.request_id.clone();
+            let next_attempt = job.dispatch_attempt_id.saturating_add(1).max(1);
+            job.assigned_node_id = Some(new_node_id.clone());
             job.status = JobStatus::Assigned;
             job.dispatched_to_node = false;
             job.dispatched_at_ms = None;
             job.failover_attempts = job.failover_attempts.saturating_add(1);
-            job.dispatch_attempt_id = job.dispatch_attempt_id.saturating_add(1).max(1);
+            job.dispatch_attempt_id = next_attempt;
+            // Phase 2：更新 bind 的 node_id，并清理 dispatched 标记
+            if let Some(ref rt) = self.phase2 {
+                if !request_id.is_empty() {
+                    rt.update_request_binding_node(&request_id, &new_node_id).await;
+                }
+                // Phase 2：Job FSM reset -> CREATED（新 attempt）
+                let fsm_ttl = std::cmp::max(self.lease_seconds, self.reserved_ttl_seconds).saturating_add(300);
+                rt.job_fsm_reset_created(job_id, Some(&new_node_id), next_attempt, fsm_ttl).await;
+            }
             true
         } else {
             false
@@ -415,6 +783,7 @@ impl JobDispatcher {
     /// 5. 负载均衡选节点
     async fn select_node_with_module_expansion_with_breakdown(
         &self,
+        routing_key: &str,
         src_lang: &str,
         tgt_lang: &str,
         features: Option<FeatureFlags>,
@@ -450,6 +819,7 @@ impl JobDispatcher {
                     node_id,
                     selector: "features",
                     breakdown,
+                    phase3_debug: None,
                 };
             }
         };
@@ -476,25 +846,55 @@ impl JobDispatcher {
                     node_id,
                     selector: "features",
                     breakdown,
+                    phase3_debug: None,
                 };
             }
         };
 
         // 步骤 4 & 5: 过滤 capability_state == ready 的节点，并负载均衡
-        let (node_id, breakdown) = self
-            .node_registry
-            .select_node_with_models_excluding_with_breakdown(
-                src_lang,
-                tgt_lang,
-                &required_models,
-                accept_public,
-                exclude_node_id,
-            )
-            .await;
-        SelectionOutcome {
-            node_id,
-            selector: "models",
-            breakdown,
+        let p3 = self.node_registry.phase3_config().await;
+        if p3.enabled && p3.mode == "two_level" {
+            let (node_id, dbg, breakdown) = self
+                .node_registry
+                .select_node_with_models_two_level_excluding_with_breakdown(
+                    routing_key,
+                    src_lang,
+                    tgt_lang,
+                    &required_models,
+                    accept_public,
+                    exclude_node_id,
+                    Some(&self.core_services),
+                )
+                .await;
+            // Prometheus：记录 pool 命中/回退
+            if let Some(pid) = dbg.selected_pool {
+                crate::prometheus_metrics::on_phase3_pool_selected(pid, true, dbg.fallback_used);
+            } else {
+                crate::prometheus_metrics::on_phase3_pool_selected(dbg.preferred_pool, false, false);
+            }
+            SelectionOutcome {
+                node_id,
+                selector: "phase3",
+                breakdown,
+                phase3_debug: Some(dbg),
+            }
+        } else {
+            let (node_id, breakdown) = self
+                .node_registry
+                .select_node_with_models_excluding_with_breakdown(
+                    src_lang,
+                    tgt_lang,
+                    &required_models,
+                    accept_public,
+                    exclude_node_id,
+                )
+                .await;
+            SelectionOutcome {
+                node_id,
+                selector: "models",
+                breakdown,
+                phase3_debug: None,
+            }
         }
     }
 
@@ -534,6 +934,14 @@ impl JobDispatcher {
         if let Some(job) = jobs.get_mut(job_id) {
             job.dispatched_to_node = true;
             job.dispatched_at_ms = Some(chrono::Utc::now().timestamp_millis());
+            // Phase 2：同步更新 request_id bind 的 dispatched 标记，避免跨实例重复派发
+            if let Some(ref rt) = self.phase2 {
+                if !job.request_id.is_empty() {
+                    rt.mark_request_dispatched(&job.request_id).await;
+                }
+                // Phase 2：Job FSM -> DISPATCHED（幂等）
+                let _ = rt.job_fsm_to_dispatched(&job.job_id, job.dispatch_attempt_id.max(1)).await;
+            }
             if let Some(ref nid) = job.assigned_node_id {
                 let now_ms = chrono::Utc::now().timestamp_millis();
                 self.last_dispatched_node_by_session

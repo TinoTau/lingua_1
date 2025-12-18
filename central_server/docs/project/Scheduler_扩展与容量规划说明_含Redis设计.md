@@ -162,6 +162,31 @@ Scheduler 并非一开始就是瓶颈，但在以下任一条件出现时，风�
 - 调度流程：**快照读取 → 本地评分 → 原子提交（CAS/Lua）**
 - Dashboard 读取统计快照（来自统计聚合器或 Redis 的 snapshot keys）
 
+#### 5.3 当前落地状态（实现已完成）
+
+Phase 2 已在代码侧完成落地，并提供 Redis Cluster 自动化验收入口：
+
+- 实现总览：`central_server/scheduler/docs/phase2_implementation.md`
+- Streams/DLQ 运维：`central_server/scheduler/docs/phase2_streams_ops.md`
+- Cluster 一键验收脚本：`central_server/scheduler/scripts/phase2_cluster_acceptance.ps1`
+
+#### 5.4 上线前建议开发顺序（扩展改造的“收口路径”）
+
+在 Phase 2 主干已完成的前提下，建议按以下顺序推进“可上线”的扩展改造（比直接进入 Phase 3 更稳）：
+
+1. **真实链路自动化 E2E + 故障注入**
+   - 两个 Scheduler + 真实 node + 真实 session（node 连 A，session 连 B），验证 JobAssign/partial/result/timeout/failover 全链路
+   - 故障注入：kill 一个 scheduler、断 Redis、断 node/ws，验证恢复与重复执行是否受控
+2. **压测与长稳（soak）**
+   - 控制面调度请求压测：QPS/延迟/P95/P99 与“线性扩展”验证
+   - 心跳/快照/Streams 写入压测：Redis 写放大/slot 分布/热点 key 检查
+   - 长稳运行：观察 pending、DLQ、key 增长与资源泄漏风险
+3. **监控告警 + 运维 SOP**
+   - Prometheus/Grafana：pending、DLQ、reclaim、redis op 错误率等指标面板
+   - 告警阈值与处置手册（含 DLQ 分析/清理/回放建议）
+4. **再进入 Phase 3（分片/两级调度/多区域隔离）**
+   - 在已有监控与压测基线下推进 Phase 3，更容易量化收益与控制风险
+
 ---
 
 ### Phase 3（可选）：调度分片 / 两级调度
@@ -170,6 +195,32 @@ Scheduler 并非一开始就是瓶颈，但在以下任一条件出现时，风�
 
 - 方案 A：按 room_id / tenant_id 分片（consistent hashing）
 - 方案 B：两级调度（Global 选资源池，Pool 选具体节点）
+
+#### 方案 B 的“强隔离 + 长期演进”落地形态（推荐）
+
+为实现 **按能力做强隔离**、同时保持 **运维成本低 / 问题可快速定位 / 功能可验证**，建议将两级调度拆成两层概念：
+
+- **能力池（capability pools）**：用配置显式定义 pool（pool_id/name/required_services），节点按“已安装服务包 installed_services”匹配进入某个 pool  
+  - 若一个节点同时匹配多个 pool：使用 node_id + hash_seed 做稳定 hash 分配（避免所有节点都落到第一个 pool）
+- **租户隔离（tenant override）**：可将 tenant_id 显式绑定到某个 pool_id，实现强隔离（故障域/容量/灰度）
+- **资格匹配范围（pool_match_scope）**：
+  - `core_only`：只按 ASR/NMT/TTS 核心服务做 pool 级过滤（兼容性最好）
+  - `all_required`：按 required_model_ids 全量做 pool 级过滤（最强隔离；需要 pool.required_services 覆盖完整）
+- **严格模式（strict_pool_eligibility）**：当 pools 非空但没有 eligible pool 时直接失败（避免“隐式回退”破坏隔离）
+
+> 兼容性：若 `scheduler.phase3.pools` 为空，则继续沿用“hash 分桶（pool_count/hash_seed）”的旧模式。
+
+#### 运维与可观测（关键）
+
+- Prometheus：
+  - `phase3_pool_selected_total{pool,outcome,fallback}`：是否命中 pool，是否发生 fallback
+  - `phase3_pool_attempt_total{pool,result,reason}`：每次 pool 尝试的结果与原因（支持 `missing_core_*_installed/not_ready` 低基数细分）
+- Debug API：
+  - `GET /api/v1/phase3/pools`：查看每个 pool 的 total/online/ready，以及核心服务 installed/ready 覆盖与示例节点（用于快速定位）
+
+#### 配置示例（节选）
+
+参考：`central_server/scheduler/config.toml` 中的 `[scheduler.phase3]` 注释示例（pools / tenant_overrides / pool_match_scope / strict_pool_eligibility）。
 
 ---
 
@@ -229,6 +280,29 @@ Key 族示例：
 - `lingua:v1:locks:*`
 - `lingua:v1:events:*`
 - `lingua:v1:stats:*`
+
+#### 7.2.1 与当前实现对齐的 Key 约定（重要）
+
+当前实现中，Redis key 分为两类（均由 `scheduler.phase2.redis.key_prefix` 控制前缀）：
+
+- **基础链路 key（不带 v1）**：用于 owner/presence/streams（多实例路由与投递）
+  - `{prefix}:schedulers:presence:<instance_id>`
+  - `{prefix}:nodes:owner:{node:<node_id>}`
+  - `{prefix}:sessions:owner:{session:<session_id>}`
+  - `{prefix}:streams:{instance:<instance_id>}:inbox`
+  - `{prefix}:streams:{instance:<instance_id>}:dlq`
+
+- **v1 schema key（带 `:v1`）**：用于可演进的状态外置（snapshot/binding/reserved/job fsm）
+  - `{prefix}:v1:nodes:all`
+  - `{prefix}:v1:nodes:last_seen`
+  - `{prefix}:v1:nodes:presence:<node_id>`
+  - `{prefix}:v1:nodes:snapshot:<node_id>`
+  - `{prefix}:v1:requests:lock:<request_id>`
+  - `{prefix}:v1:requests:binding:<request_id>`
+  - `{prefix}:v1:nodes:{node:<node_id>}:reserved`
+  - `{prefix}:v1:jobs:{job:<job_id>}:fsm`
+
+> 注：`{...}` 为 Redis hash tag，用于 Redis Cluster 下把相关 key 固定到同一 slot，确保 Lua/原子操作可用。
 
 ---
 

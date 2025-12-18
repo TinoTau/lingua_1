@@ -51,6 +51,13 @@
 - **迁移文档**: `../central_server/docs/MIGRATION.md`
 - **文档索引**: `../central_server/docs/README.md`
 
+#### Scheduler Phase 2（多实例 + Redis Cluster）快速入口
+
+- **实现总览（代码内文档）**：`../central_server/scheduler/docs/phase2_implementation.md`
+- **Streams/DLQ 运维**：`../central_server/scheduler/docs/phase2_streams_ops.md`
+- **Cluster 一键验收脚本**：`../central_server/scheduler/scripts/phase2_cluster_acceptance.ps1`
+- **进度/决策文档**：`../central_server/docs/project/Scheduler_Phase2_开发进度记录_2025-12-19.md`
+
 ### Electron 节点客户端
 
 - **位置**: `../electron_node/docs/`

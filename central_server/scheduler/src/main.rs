@@ -43,6 +43,8 @@ mod metrics;
 mod observability;
 mod prometheus_metrics;
 mod job_timeout;
+mod phase2;
+mod phase3;
 
 use session::SessionManager;
 use dispatcher::JobDispatcher;
@@ -59,6 +61,7 @@ use audio_buffer::AudioBufferManager;
 use group_manager::{GroupManager, GroupConfig};
 use node_status_manager::NodeStatusManager;
 use room_manager::RoomManager;
+use phase2::Phase2Runtime;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -74,6 +77,18 @@ async fn main() -> Result<()> {
     let log_path = log_dir.join("scheduler.log");
     
     // 配置文件日志（所有级别，附带时间戳，按 5MB 轮转，保留最近 5 个）
+    // file-rotate 在不同平台的 new() 签名不同：
+    // - unix: 额外带一个 Option<u32>（文件权限 mode）
+    // - windows: 无该参数
+    #[cfg(unix)]
+    let rotating_appender = FileRotate::new(
+        log_path,
+        AppendTimestamp::default(FileLimit::MaxFiles(5)),
+        ContentLimit::Bytes(5 * 1024 * 1024),
+        Compression::None,
+        None,
+    );
+    #[cfg(not(unix))]
     let rotating_appender = FileRotate::new(
         log_path,
         AppendTimestamp::default(FileLimit::MaxFiles(5)),
@@ -163,7 +178,13 @@ async fn main() -> Result<()> {
     let session_manager = SessionManager::new();
     let resource_threshold = config.scheduler.load_balancer.resource_threshold;
     let node_registry = std::sync::Arc::new(NodeRegistry::with_resource_threshold(resource_threshold));
-    let dispatcher = JobDispatcher::new_with_phase1_config(
+    // Phase 1：核心服务包映射（用于 Phase3 pool 核心能力缓存/快速跳过）
+    node_registry
+        .set_core_services_config(config.scheduler.core_services.clone())
+        .await;
+    // Phase 3：两级调度配置（pool_count/hash_seed 等）
+    node_registry.set_phase3_config(config.scheduler.phase3.clone()).await;
+    let mut dispatcher = JobDispatcher::new_with_phase1_config(
         node_registry.clone(),
         config.scheduler.task_binding.clone(),
         config.scheduler.core_services.clone(),
@@ -199,6 +220,17 @@ async fn main() -> Result<()> {
     // 初始化 RoomManager
     let room_manager = RoomManager::new();
 
+    // Phase 2：Redis/多实例运行时（可选）
+    let phase2_runtime = Phase2Runtime::new(
+        config.scheduler.phase2.clone(),
+        config.scheduler.heartbeat_interval_seconds,
+    )
+    .await?
+    .map(std::sync::Arc::new);
+
+    // Phase 2：将 runtime 注入 dispatcher（用于 request_id bind/lock + node reserved）
+    dispatcher.set_phase2(phase2_runtime.clone());
+
     // 创建应用状态
     let app_state = AppState {
         session_manager,
@@ -209,6 +241,7 @@ async fn main() -> Result<()> {
         service_catalog,
         dashboard_snapshot,
         model_not_available_bus,
+        core_services: config.scheduler.core_services.clone(),
         web_task_segmentation: config.scheduler.web_task_segmentation.clone(),
         session_connections: session_connections.clone(),
         node_connections,
@@ -217,7 +250,15 @@ async fn main() -> Result<()> {
         group_manager,
         node_status_manager,
         room_manager: room_manager.clone(),
+        phase2: phase2_runtime.clone(),
     };
+
+    // Phase 2：启动后台任务（presence + owner 续约 + Streams inbox）
+    if let Some(rt) = phase2_runtime {
+        let rt_for_log = rt.clone();
+        rt.spawn_background_tasks(app_state.clone());
+        info!(instance_id = %rt_for_log.instance_id, key_prefix = %rt_for_log.key_prefix(), "Phase2 已启用");
+    }
 
     // Phase 1：Job 超时/重派管理（含 best-effort cancel）
     job_timeout::start_job_timeout_manager(
@@ -236,6 +277,7 @@ async fn main() -> Result<()> {
         model_na_rx,
         app_state.node_registry.clone(),
         config.scheduler.model_not_available.clone(),
+        app_state.phase2.clone(),
     );
     
     // 启动房间过期清理任务（每1分钟扫描一次）
@@ -275,6 +317,7 @@ async fn main() -> Result<()> {
         .route("/ws/node", get(handle_node_ws))
         .route("/health", get(health_check))
         .route("/api/v1/stats", get(get_stats))
+        .route("/api/v1/phase3/pools", get(get_phase3_pools))
         .route("/api/v1/metrics", get(get_metrics))
         .route("/metrics", get(get_prometheus_metrics))
         .route("/dashboard", get(serve_dashboard))
@@ -366,6 +409,90 @@ async fn get_metrics(
     axum::extract::State(state): axum::extract::State<AppState>,
 ) -> axum::Json<crate::metrics::MetricsSnapshot> {
     axum::Json(crate::metrics::collect(&state).await)
+}
+
+#[derive(serde::Serialize)]
+struct Phase3PoolsResponse {
+    config: crate::config::Phase3Config,
+    pools: Vec<Phase3PoolEntry>,
+}
+
+#[derive(serde::Serialize)]
+struct Phase3PoolEntry {
+    pool_id: u16,
+    #[serde(skip_serializing_if = "String::is_empty")]
+    pool_name: String,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pool_required_services: Vec<String>,
+    total_nodes: usize,
+    online_nodes: usize,
+    ready_nodes: usize,
+    core_services_installed: std::collections::HashMap<String, usize>,
+    core_services_ready: std::collections::HashMap<String, usize>,
+    sample_node_ids: Vec<String>,
+}
+
+async fn get_phase3_pools(
+    axum::extract::State(state): axum::extract::State<AppState>,
+) -> axum::Json<Phase3PoolsResponse> {
+    let cfg = state.node_registry.phase3_config().await;
+    let sizes: std::collections::HashMap<u16, usize> =
+        state.node_registry.phase3_pool_sizes().await.into_iter().collect();
+    let core_cache = state.node_registry.phase3_pool_core_cache_snapshot().await;
+
+    // pool 列表来源：
+    // - capability pools：使用 cfg.pools（可非连续 pool_id）
+    // - hash pools：使用 0..pool_count
+    let pool_defs: Vec<(u16, String, Vec<String>)> = if !cfg.pools.is_empty() {
+        cfg.pools
+            .iter()
+            .map(|p| (p.pool_id, p.name.clone(), p.required_services.clone()))
+            .collect()
+    } else {
+        let pool_count = cfg.pool_count.max(1);
+        (0..pool_count).map(|pid| (pid, "".to_string(), vec![])).collect()
+    };
+
+    let mut pools: Vec<Phase3PoolEntry> = Vec::with_capacity(pool_defs.len());
+    for (pid, name, reqs) in pool_defs {
+        let total_nodes = sizes.get(&pid).copied().unwrap_or(0);
+        let pc = core_cache
+            .get(&pid)
+            .cloned()
+            .unwrap_or_default();
+
+        // 只输出核心服务（低基数）
+        let mut core_services_installed: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+        let mut core_services_ready: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+        if !state.core_services.asr_service_id.is_empty() {
+            core_services_installed.insert(state.core_services.asr_service_id.clone(), pc.asr_installed);
+            core_services_ready.insert(state.core_services.asr_service_id.clone(), pc.asr_ready);
+        }
+        if !state.core_services.nmt_service_id.is_empty() {
+            core_services_installed.insert(state.core_services.nmt_service_id.clone(), pc.nmt_installed);
+            core_services_ready.insert(state.core_services.nmt_service_id.clone(), pc.nmt_ready);
+        }
+        if !state.core_services.tts_service_id.is_empty() {
+            core_services_installed.insert(state.core_services.tts_service_id.clone(), pc.tts_installed);
+            core_services_ready.insert(state.core_services.tts_service_id.clone(), pc.tts_ready);
+        }
+
+        let sample_node_ids = state.node_registry.phase3_pool_sample_node_ids(pid, 5).await;
+        pools.push(Phase3PoolEntry {
+            pool_id: pid,
+            pool_name: name,
+            pool_required_services: reqs,
+            total_nodes,
+            online_nodes: pc.online_nodes,
+            ready_nodes: pc.ready_nodes,
+            core_services_installed,
+            core_services_ready,
+            sample_node_ids,
+        });
+    }
+
+    pools.sort_by_key(|p| p.pool_id);
+    axum::Json(Phase3PoolsResponse { config: cfg, pools })
 }
 
 async fn get_prometheus_metrics(

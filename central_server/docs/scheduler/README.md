@@ -6,6 +6,15 @@
 
 - [任务分发算法优化方案](./DISPATCHER_OPTIMIZATION_PLAN.md) - 负载均衡和功能感知节点选择的详细优化方案
 
+### Phase 2（多实例 + Redis）
+
+- **实现总览（代码内文档）**：`../../scheduler/docs/phase2_implementation.md`
+- **Streams/DLQ 运维**：`../../scheduler/docs/phase2_streams_ops.md`
+- **Cluster 一键验收脚本**：`../../scheduler/scripts/phase2_cluster_acceptance.ps1`
+- **双实例手工 smoke test**：`../../scheduler/scripts/phase2_smoketest.ps1`
+- **项目侧进度记录**：`../project/Scheduler_Phase2_开发进度记录_2025-12-19.md`
+- **容量规划与 Redis 设计**：`../project/Scheduler_扩展与容量规划说明_含Redis设计.md`
+
 ## 相关文档
 
 - `../README.md` - central_server 总览与启动入口

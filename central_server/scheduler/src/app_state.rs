@@ -14,7 +14,8 @@ use crate::room_manager::RoomManager;
 use crate::service_catalog::ServiceCatalogCache;
 use crate::dashboard_snapshot::DashboardSnapshotCache;
 use crate::model_not_available::ModelNotAvailableBus;
-use crate::config::WebTaskSegmentationConfig;
+use crate::config::{CoreServicesConfig, WebTaskSegmentationConfig};
+use crate::phase2::Phase2Runtime;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -30,6 +31,8 @@ pub struct AppState {
     pub dashboard_snapshot: DashboardSnapshotCache,
     /// MODEL_NOT_AVAILABLE 事件总线（主路径只入队，后台做标记/去抖等处理）
     pub model_not_available_bus: ModelNotAvailableBus,
+    /// 核心服务包映射（Phase3 运维接口/排障需要）
+    pub core_services: CoreServicesConfig,
     /// Web AudioChunk 分段配置（>pause_ms 视为任务结束）
     pub web_task_segmentation: WebTaskSegmentationConfig,
     pub session_connections: SessionConnectionManager,
@@ -39,5 +42,7 @@ pub struct AppState {
     pub group_manager: GroupManager,
     pub node_status_manager: NodeStatusManager,
     pub room_manager: RoomManager,
+    /// Phase 2：Redis/多实例运行时（可选，默认 None）
+    pub phase2: Option<std::sync::Arc<Phase2Runtime>>,
 }
 

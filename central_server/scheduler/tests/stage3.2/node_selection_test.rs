@@ -7,6 +7,7 @@ use lingua_scheduler::messages::{
     CapabilityState, FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, InstalledService,
     ModelStatus, NodeStatus, PipelineConfig,
 };
+use lingua_scheduler::config::{Phase3Config, Phase3PoolConfig, Phase3TenantOverride, CoreServicesConfig};
 use std::collections::HashMap;
 use std::sync::Arc;
 
@@ -70,6 +71,166 @@ fn create_installed_services(service_ids: &[&str]) -> Vec<InstalledService> {
             platform: "linux-x64".to_string(),
         })
         .collect()
+}
+
+#[tokio::test]
+async fn test_phase3_capability_pools_tenant_override_and_hash() {
+    let registry = Arc::new(NodeRegistry::new());
+
+    // core services（与默认值一致，但这里显式传入便于测试可读性）
+    registry
+        .set_core_services_config(CoreServicesConfig::default())
+        .await;
+
+    // 两个“能力相同”的 pools：节点会按 node_id hash 分配到其中一个；tenant 可显式绑定
+    let mut p3 = Phase3Config::default();
+    p3.enabled = true;
+    p3.mode = "two_level".to_string();
+    p3.fallback_scan_all_pools = true;
+    p3.pool_match_scope = "core_only".to_string();
+    p3.strict_pool_eligibility = true;
+    p3.hash_seed = 0;
+    p3.pools = vec![
+        Phase3PoolConfig {
+            pool_id: 10,
+            name: "core-a".to_string(),
+            required_services: vec![
+                "node-inference".to_string(),
+                "nmt-m2m100".to_string(),
+                "piper-tts".to_string(),
+            ],
+        },
+        Phase3PoolConfig {
+            pool_id: 11,
+            name: "core-b".to_string(),
+            required_services: vec![
+                "node-inference".to_string(),
+                "nmt-m2m100".to_string(),
+                "piper-tts".to_string(),
+            ],
+        },
+    ];
+    p3.tenant_overrides = vec![Phase3TenantOverride {
+        tenant_id: "tenant-A".to_string(),
+        pool_id: 11,
+    }];
+
+    registry.set_phase3_config(p3.clone()).await;
+
+    // 找两个 node_id：一个会落到 pool 10，一个会落到 pool 11（保证测试稳定）
+    let mut node_for_10: Option<String> = None;
+    let mut node_for_11: Option<String> = None;
+    for i in 0..2000 {
+        let nid = format!("node-cap-{}", i);
+        let idx = lingua_scheduler::phase3::pick_index_for_key(2, p3.hash_seed, &nid);
+        if idx == 0 && node_for_10.is_none() {
+            node_for_10 = Some(nid.clone());
+        }
+        if idx == 1 && node_for_11.is_none() {
+            node_for_11 = Some(nid.clone());
+        }
+        if node_for_10.is_some() && node_for_11.is_some() {
+            break;
+        }
+    }
+    let node_for_10 = node_for_10.expect("failed to find node_id mapping to pool 10");
+    let node_for_11 = node_for_11.expect("failed to find node_id mapping to pool 11");
+
+    // 注册两个节点（都具备核心服务包）
+    let cap = create_capability_state_with_services(&["node-inference", "nmt-m2m100", "piper-tts"]);
+    let services = create_installed_services(&["node-inference", "nmt-m2m100", "piper-tts"]);
+
+    let _ = registry
+        .register_node(
+            Some(node_for_10.clone()),
+            "Node A".to_string(),
+            "1.0.0".to_string(),
+            "linux".to_string(),
+            create_test_hardware(),
+            create_test_models("zh", "en"),
+            Some(services.clone()),
+            FeatureFlags {
+                emotion_detection: None,
+                voice_style_detection: None,
+                speech_rate_detection: None,
+                speech_rate_control: None,
+                speaker_identification: None,
+                persona_adaptation: None,
+            },
+            true,
+            Some(cap.clone()),
+        )
+        .await
+        .unwrap();
+    let _ = registry
+        .register_node(
+            Some(node_for_11.clone()),
+            "Node B".to_string(),
+            "1.0.0".to_string(),
+            "linux".to_string(),
+            create_test_hardware(),
+            create_test_models("zh", "en"),
+            Some(services.clone()),
+            FeatureFlags {
+                emotion_detection: None,
+                voice_style_detection: None,
+                speech_rate_detection: None,
+                speech_rate_control: None,
+                speaker_identification: None,
+                persona_adaptation: None,
+            },
+            true,
+            Some(cap.clone()),
+        )
+        .await
+        .unwrap();
+
+    registry.set_node_status(&node_for_10, NodeStatus::Ready).await;
+    registry.set_node_status(&node_for_11, NodeStatus::Ready).await;
+
+    // 1) tenant override：应优先选择 pool 11
+    let required = vec![
+        "node-inference".to_string(),
+        "nmt-m2m100".to_string(),
+        "piper-tts".to_string(),
+    ];
+    let (nid, dbg, _bd) = registry
+        .select_node_with_models_two_level_excluding_with_breakdown(
+            "tenant-A",
+            "zh",
+            "en",
+            &required,
+            true,
+            None,
+            Some(&CoreServicesConfig::default()),
+        )
+        .await;
+    assert_eq!(dbg.preferred_pool, 11);
+    assert_eq!(dbg.selected_pool, Some(11));
+    assert_eq!(nid, Some(node_for_11.clone()));
+
+    // 2) 非 override：按 routing_key hash 在 eligible pools 内稳定选择 preferred
+    let rk = "tenant-B";
+    let expected_idx = lingua_scheduler::phase3::pick_index_for_key(2, p3.hash_seed, rk);
+    let expected_preferred = if expected_idx == 0 { 10 } else { 11 };
+    let (nid2, dbg2, _bd2) = registry
+        .select_node_with_models_two_level_excluding_with_breakdown(
+            rk,
+            "zh",
+            "en",
+            &required,
+            true,
+            None,
+            Some(&CoreServicesConfig::default()),
+        )
+        .await;
+    assert_eq!(dbg2.preferred_pool, expected_preferred);
+    assert_eq!(dbg2.selected_pool, Some(expected_preferred));
+    if expected_preferred == 10 {
+        assert_eq!(nid2, Some(node_for_10));
+    } else {
+        assert_eq!(nid2, Some(node_for_11));
+    }
 }
 
 #[tokio::test]
@@ -264,6 +425,7 @@ async fn test_select_node_with_module_expansion() {
         "trace-1".to_string(),
         None,
         None,
+        None,
     ).await;
     
     // 应该分配了节点（节点有 emotion-xlm-r 模型且状态为 ready）
@@ -336,6 +498,7 @@ async fn test_select_node_with_module_expansion_no_model() {
         None,
         None,
         "trace-2".to_string(),
+        None,
         None,
         None,
     ).await;

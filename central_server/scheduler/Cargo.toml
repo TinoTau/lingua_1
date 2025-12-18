@@ -64,6 +64,9 @@ rand = "0.8"
 # Prometheus 指标（方向B）
 prometheus = "0.13"
 
+# Phase 2：Redis（Cluster-ready + Streams）
+redis = { version = "0.25", features = ["tokio-comp", "cluster-async"] }
+
 [dev-dependencies]
 tokio-test = "0.4"
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "rt", "time", "process", "fs", "test-util"] }

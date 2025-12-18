@@ -7,6 +7,9 @@
 use std::collections::HashMap;
 use std::time::Duration;
 use tokio::sync::mpsc;
+use std::sync::Arc;
+
+use crate::phase2::Phase2Runtime;
 
 #[derive(Debug, Clone)]
 pub struct ModelNotAvailableEvent {
@@ -38,6 +41,7 @@ pub fn start_worker(
     mut rx: mpsc::UnboundedReceiver<ModelNotAvailableEvent>,
     node_registry: std::sync::Arc<crate::node_registry::NodeRegistry>,
     config: crate::config::ModelNotAvailableConfig,
+    phase2: Option<Arc<Phase2Runtime>>,
 ) {
     tokio::spawn(async move {
         // Phase 1：TTL（推荐 30–120s，支持配置）
@@ -46,6 +50,7 @@ pub fn start_worker(
         let node_rl_window = Duration::from_secs(config.node_ratelimit_window_seconds.clamp(1, 300));
         let node_rl_max = config.node_ratelimit_max.max(1);
 
+        // Phase 1 兼容：当 Phase2 未启用 Redis 时，继续使用进程内去抖/限流
         // 去抖表：key=(service_id@version) → expire_at_ms
         let mut debounce: HashMap<String, i64> = HashMap::new();
         // 节点级限流：node_id → (window_start_ms, count)
@@ -61,17 +66,33 @@ pub fn start_worker(
             let now_ms = chrono::Utc::now().timestamp_millis();
 
             // 节点级限流（防止单节点异常刷屏/风暴）
-            let (win_start, count) = node_rate.entry(ev.node_id.clone()).or_insert((now_ms, 0));
-            if now_ms.saturating_sub(*win_start) > node_rl_window.as_millis() as i64 {
-                *win_start = now_ms;
-                *count = 0;
+            // Phase 2：使用 Redis key，保证跨实例一致
+            if let Some(ref rt) = phase2 {
+                let allowed = rt
+                    .model_na_node_ratelimit_allow(
+                        &ev.node_id,
+                        node_rl_window.as_millis() as u64,
+                        node_rl_max,
+                    )
+                    .await;
+                if !allowed {
+                    crate::metrics::on_model_na_rate_limited();
+                    crate::metrics::on_model_na_rate_limited_detail(&ev.node_id);
+                    continue;
+                }
+            } else {
+                let (win_start, count) = node_rate.entry(ev.node_id.clone()).or_insert((now_ms, 0));
+                if now_ms.saturating_sub(*win_start) > node_rl_window.as_millis() as i64 {
+                    *win_start = now_ms;
+                    *count = 0;
+                }
+                if *count >= node_rl_max {
+                    crate::metrics::on_model_na_rate_limited();
+                    crate::metrics::on_model_na_rate_limited_detail(&ev.node_id);
+                    continue;
+                }
+                *count += 1;
             }
-            if *count >= node_rl_max {
-                crate::metrics::on_model_na_rate_limited();
-                crate::metrics::on_model_na_rate_limited_detail(&ev.node_id);
-                continue;
-            }
-            *count += 1;
 
             // 始终对该节点做“暂不可用标记”（这是我们 Phase 1 选择的快速纠偏策略）
             node_registry
@@ -92,15 +113,29 @@ pub fn start_worker(
                 ev.service_id,
                 ev.service_version.clone().unwrap_or_else(|| "any".to_string())
             );
-            debounce.retain(|_k, exp| *exp > now_ms);
-            let exp = debounce.get(&key).copied().unwrap_or(0);
-            if exp <= now_ms {
-                debounce.insert(key.clone(), now_ms + debounce_window.as_millis() as i64);
-                tracing::warn!(
-                    service_key = %key,
-                    ttl_seconds = ttl.as_secs(),
-                    "MODEL_NOT_AVAILABLE：已进入去抖窗口，后续同类事件将被合并日志（仍会继续标记节点暂不可用）"
-                );
+            if let Some(ref rt) = phase2 {
+                // Phase 2：Redis 去抖（SET NX PX window）
+                let first = rt
+                    .model_na_debounce_first_hit(&ev.service_id, ev.service_version.as_deref(), debounce_window.as_millis() as u64)
+                    .await;
+                if first {
+                    tracing::warn!(
+                        service_key = %key,
+                        ttl_seconds = ttl.as_secs(),
+                        "MODEL_NOT_AVAILABLE：已进入去抖窗口（Redis），后续同类事件将被合并日志（仍会继续标记节点暂不可用）"
+                    );
+                }
+            } else {
+                debounce.retain(|_k, exp| *exp > now_ms);
+                let exp = debounce.get(&key).copied().unwrap_or(0);
+                if exp <= now_ms {
+                    debounce.insert(key.clone(), now_ms + debounce_window.as_millis() as i64);
+                    tracing::warn!(
+                        service_key = %key,
+                        ttl_seconds = ttl.as_secs(),
+                        "MODEL_NOT_AVAILABLE：已进入去抖窗口，后续同类事件将被合并日志（仍会继续标记节点暂不可用）"
+                    );
+                }
             }
         }
     });

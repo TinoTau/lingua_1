@@ -13,6 +13,7 @@ pub(crate) async fn create_translation_jobs(
     default_tgt_lang: String, // 单会话模式使用的目标语言
     dialect: Option<String>,
     features: Option<FeatureFlags>,
+    tenant_id: Option<String>,
     audio_data: Vec<u8>,
     audio_format: String,
     sample_rate: u32,
@@ -56,6 +57,7 @@ pub(crate) async fn create_translation_jobs(
                 enable_streaming_asr,
                 partial_update_interval_ms,
                 trace_id.clone(),
+                tenant_id.clone(),
                 Some(request_id),
                 None, // 单会话模式
             ).await;
@@ -92,6 +94,7 @@ pub(crate) async fn create_translation_jobs(
                 enable_streaming_asr,
                 partial_update_interval_ms,
                 trace_id.clone(),
+                tenant_id.clone(),
                 Some(request_id),
                 Some(target_session_ids), // 指定目标接收者
             ).await;
@@ -126,6 +129,7 @@ pub(crate) async fn create_translation_jobs(
             enable_streaming_asr,
             partial_update_interval_ms,
             trace_id,
+            tenant_id,
             Some(request_id),
             None, // 单会话模式
         ).await;

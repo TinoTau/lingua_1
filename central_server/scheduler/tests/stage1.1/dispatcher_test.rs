@@ -136,6 +136,7 @@ async fn test_create_job() {
         "trace-1".to_string(),
         None,
         None,
+        None,
     ).await;
     
     assert!(job.job_id.starts_with("job-"));
@@ -207,6 +208,7 @@ async fn test_create_job_with_preferred_node() {
         "trace-2".to_string(),
         None,
         None,
+        None,
     ).await;
     
     assert_eq!(job.assigned_node_id, Some("node-123".to_string()));
@@ -242,6 +244,7 @@ async fn test_create_job_no_available_node() {
         None,
         None,
         "trace-3".to_string(),
+        None,
         None,
         None,
     ).await;
@@ -299,6 +302,7 @@ async fn test_get_job() {
         None,
         None,
         "trace-4".to_string(),
+        None,
         None,
         None,
     ).await;
@@ -374,6 +378,7 @@ async fn test_update_job_status() {
         None,
         None,
         "trace-5".to_string(),
+        None,
         None,
         None,
     ).await;
