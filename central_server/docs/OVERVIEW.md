@@ -1,4 +1,4 @@
-# 中央服务器
+# 中央服务器（概览）
 
 中央服务器包含调度服务器、API 网关和模型库服务。
 
@@ -46,6 +46,13 @@ cargo build --release
 cargo run --release
 ```
 
+**健康检查**: `GET /health`（无需鉴权）
+
+**API Key（开发/测试）**：
+
+- 推荐：启动前设置环境变量 `LINGUA_API_KEY`
+- 如果不设置：API Gateway 会自动生成一个随机 API Key，并在启动日志中打印出来（仅用于开发/测试）
+
 ## 模型库服务 (Model Hub)
 
 **技术栈**: Python + FastAPI
@@ -62,6 +69,8 @@ cargo run --release
 - `GET /api/models/{model_id}` - 获取单个模型信息
 - `GET /storage/models/{model_id}/{version}/{file_path}` - 下载模型文件（支持 Range 请求）
 - `GET /api/model-usage/ranking` - 获取热门模型排行榜
+- `GET /api/services` - 获取服务包列表（Scheduler 仪表盘统计会使用）
+- `GET /storage/services/{service_id}/{version}/{platform}/service.zip` - 下载服务包（支持 Range 请求）
 
 **启动**:
 ```bash
@@ -79,7 +88,7 @@ python src/main.py
 **服务地址**: `http://localhost:5000`  
 **API 文档**: `http://localhost:5000/docs`
 
-详细文档请参考 `model-hub/README.md`。
+详细文档请参考 `model_hub/README.md`。
 
 ## 测试
 
@@ -92,9 +101,9 @@ cargo test --test stage1_1   # 运行阶段 1.1 测试
 cargo test --test stage3_2   # 运行阶段 3.2 测试
 ```
 
-**测试策略**：在测试 central_server 时，默认节点已经启动了 GPU（在测试中模拟），但不需要真的启动 GPU 或节点端服务。详细说明请参考 `scheduler/TEST_STRATEGY.md`。
+**测试策略**：在测试 central_server 时，默认节点已经启动了 GPU（在测试中模拟），但不需要真的启动 GPU 或节点端服务。详细说明请参考 `testing/scheduler/TEST_STRATEGY.md`。
 
-详细测试指南请参考 `TEST_GUIDE.md`。
+详细测试指南请参考 `testing/TEST_GUIDE.md`。
 
 ### 测试覆盖
 
@@ -107,7 +116,7 @@ cargo test --test stage3_2   # 运行阶段 3.2 测试
 - ⚠️ API Gateway: 无单元测试（建议添加）
 - ⚠️ Model Hub: 无单元测试（建议添加）
 
-**注意**: 阶段 3.2 的测试已修复，`test_select_node_with_models_ready` 已通过。详细修复说明请参考 `scheduler/TEST_FIXES_COMPLETE.md`。
+**注意**: 阶段 3.2 的测试已修复，`test_select_node_with_models_ready` 已通过。详细修复说明请参考 `testing/scheduler/TEST_FIXES_COMPLETE.md`。
 
 ## 文档
 
@@ -115,7 +124,7 @@ cargo test --test stage3_2   # 运行阶段 3.2 测试
 
 ### 快速参考
 
-- **项目完整性**: `PROJECT_COMPLETENESS.md`
-- **测试指南**: `TEST_GUIDE.md`
-- **文档索引**: `docs/README.md`
-- **迁移文档**: `docs/MIGRATION.md` - 迁移内容和路径调整说明
+- **项目完整性**: `project/PROJECT_COMPLETENESS.md`
+- **测试指南**: `testing/TEST_GUIDE.md`
+- **文档索引**: `README.md`
+- **迁移文档**: `MIGRATION.md` - 迁移内容和路径调整说明

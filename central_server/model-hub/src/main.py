@@ -192,6 +192,10 @@ def calculate_checksum_sha256(model_id: str, version: str, model_dir: Path = Non
 async def root():
     return {"message": "Lingua Model Hub Service v3", "version": "3.0.0"}
 
+@app.get("/health")
+async def health():
+    return {"status": "OK"}
+
 
 @app.get("/api/models", response_model=List[ModelInfo])
 async def list_models():

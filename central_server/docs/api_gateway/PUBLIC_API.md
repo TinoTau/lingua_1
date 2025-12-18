@@ -49,5 +49,7 @@
 - [API 设计与架构](./PUBLIC_API_DESIGN.md)
 - [API 规范与使用](./PUBLIC_API_SPEC.md)
 - [实现状态与部署](./PUBLIC_API_STATUS.md)
-- [系统架构文档](../ARCHITECTURE.md)
-- [协议规范](../PROTOCOLS.md)
+- `OVERVIEW.md` - API Gateway 运行/配置说明
+- `../OVERVIEW.md` - central_server 总览与启动入口
+
+> 注：历史版本曾引用 `ARCHITECTURE.md` / `PROTOCOLS.md`，但这些文件并不在 `central_server/docs/` 中。

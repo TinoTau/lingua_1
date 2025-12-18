@@ -8,9 +8,9 @@
 
 ## 相关文档
 
-- [系统架构文档](../ARCHITECTURE.md) - API Gateway 架构说明
-- [协议规范文档](../PROTOCOLS.md) - WebSocket 消息协议规范
-- [项目状态](../project_management/PROJECT_STATUS.md) - API Gateway 实现状态
+- `OVERVIEW.md` - 运行方式、配置项与开发/测试说明
+- `../OVERVIEW.md` - central_server 总览与启动入口
+- `../README.md` - 文档索引
 
 ## 功能说明
 
@@ -26,7 +26,7 @@ API Gateway 提供以下功能：
 
 - ✅ 项目框架已创建
 - ✅ 核心模块已实现
-- ⏸️ 错误处理和日志完善（待完成）
+- ✅ `/health` 健康检查（无需鉴权）
 - ⏸️ 单元测试和集成测试（待完成）
 - ⏸️ 数据库集成（待完成）
 

@@ -53,6 +53,11 @@ cargo run --release
 
 **配置**: 编辑 `config.toml` 修改端口和调度服务器地址
 
+**API Key（开发/测试）**：
+
+- 推荐：启动前设置环境变量 `LINGUA_API_KEY`，API Gateway 启动时会创建一个默认租户并使用该 key
+- 如果不设置：API Gateway 会自动生成一个随机 key，并在启动日志里打印出来（仅用于开发/测试）
+
 ## 运行测试
 
 ### Scheduler 测试
@@ -64,7 +69,7 @@ cargo test --test stage1_1   # 运行阶段 1.1 测试
 cargo test --test stage3_2   # 运行阶段 3.2 测试
 ```
 
-详细测试指南请参考 `../TEST_GUIDE.md`。
+详细测试指南请参考 `testing/TEST_GUIDE.md`。
 
 ## 验证服务
 
@@ -91,6 +96,8 @@ curl -X POST http://localhost:8081/v1/speech/translate \
   -F "src_lang=zh" \
   -F "tgt_lang=en"
 ```
+
+> WebSocket API（`/v1/stream`）同样需要 `Authorization: Bearer ...`，否则会返回 401。
 
 ### 检查 Model Hub
 
@@ -190,6 +197,6 @@ pip install -r requirements.txt --upgrade
 
 ## 相关文档
 
-- **项目完整性**: `../PROJECT_COMPLETENESS.md`
-- **测试指南**: `../TEST_GUIDE.md`
+- **项目完整性**: `project/PROJECT_COMPLETENESS.md`
+- **测试指南**: `testing/TEST_GUIDE.md`
 - **文档索引**: `README.md`

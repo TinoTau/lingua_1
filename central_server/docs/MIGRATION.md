@@ -116,22 +116,22 @@ central_server/
 │   ├── scheduler/     # 调度服务器文档
 │   ├── api_gateway/   # API 网关文档
 │   ├── modelManager/  # 模型管理文档
+│   ├── project/       # 项目文档（完整性等）
+│   ├── testing/       # 测试文档与测试报告（含 scheduler 阶段测试报告）
 │   ├── QUICK_START.md # 快速开始指南
 │   └── README.md      # 文档索引
-├── PROJECT_COMPLETENESS.md  # 项目完整性报告
-├── TEST_GUIDE.md            # 测试指南
 └── README.md                # 主 README
 ```
 
 ## 测试策略
 
-在测试 central_server 时，默认节点已经启动了 GPU（在测试中模拟），但不需要真的启动 GPU 或节点端服务。详细说明请参考 `scheduler/TEST_STRATEGY.md`。
+在测试 central_server 时，默认节点已经启动了 GPU（在测试中模拟），但不需要真的启动 GPU 或节点端服务。详细说明请参考 `testing/scheduler/TEST_STRATEGY.md`。
 
 ## 相关文档
 
-- **项目完整性**: `../PROJECT_COMPLETENESS.md`
-- **测试指南**: `../TEST_GUIDE.md`
-- **测试状态**: `../TEST_STATUS.md`
+- **项目完整性**: `project/PROJECT_COMPLETENESS.md`
+- **测试指南**: `testing/TEST_GUIDE.md`
+- **测试状态**: `testing/TEST_STATUS.md`
 - **快速开始**: `QUICK_START.md`
 - **文档索引**: `README.md`
 

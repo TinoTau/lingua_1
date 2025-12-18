@@ -43,5 +43,5 @@ cargo test --test stage3_2 -- --nocapture
 
 ## 相关文档
 
-- `GPU_REQUIREMENT_EXPLANATION.md` - GPU 要求详细说明
-- `TEST_GUIDE.md` - 测试指南
+- `../../../scheduler/GPU_REQUIREMENT_EXPLANATION.md` - GPU 要求详细说明
+- `../../TEST_GUIDE.md` - 测试指南

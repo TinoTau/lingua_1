@@ -28,6 +28,8 @@ Model Hub 是 Lingua 系统的模型管理服务，提供以下功能：
 
 - `GET /` - 服务信息
   - 返回: `{"message": "Lingua Model Hub Service v3", "version": "3.0.0"}`
+- `GET /health` - 健康检查
+  - 返回: `{"status": "OK"}`
 
 ### 模型查询
 
@@ -39,6 +41,23 @@ Model Hub 是 Lingua 系统的模型管理服务，提供以下功能：
   - 参数: `model_id` - 模型 ID
   - 返回: `ModelInfo`
   - 说明: 返回指定模型的详细信息
+
+### 服务包（Service Package）分发
+
+> Scheduler 的仪表盘统计会调用 `/api/services` 获取“可用服务包列表”，用于展示节点端可安装/可用的服务包信息。
+
+- `GET /api/services` - 列出服务（含多平台产物）
+  - Query（可选）:
+    - `platform`: 平台过滤（如 `windows-x64`）
+    - `service_id`: 服务 ID 过滤
+    - `version`: 版本过滤
+  - 返回: `{"services": List[ServiceInfo]}`
+  - 数据来源: `{MODELS_DIR}/services/services_index.json`
+  - 生成方式: 运行 `scripts/generate_services_index.py` 生成/刷新索引文件
+
+- `GET /api/services/{service_id}/{version}/{platform}` - 获取单个服务包变体元数据
+
+- `GET /storage/services/{service_id}/{version}/{platform}/service.zip` - 下载服务包（支持 Range 请求与 ETag）
 
 ### 文件下载
 
@@ -106,6 +125,7 @@ Model Hub 是 Lingua 系统的模型管理服务，提供以下功能：
 - `MODELS_DIR` - 模型存储目录（默认: `./models`）
   - 模型文件存储在: `{MODELS_DIR}/storage/{model_id}/{version}/`
   - 元数据文件: `{MODELS_DIR}/metadata.json`
+  - 服务包索引文件: `{MODELS_DIR}/services/services_index.json`
 
 ### 目录结构
 
@@ -127,6 +147,7 @@ models/
 ### 使用启动脚本（推荐）
 
 ```powershell
+# 在仓库根目录运行：
 .\scripts\start_model_hub.ps1
 ```
 
@@ -174,7 +195,7 @@ uvicorn src.main:app --host 0.0.0.0 --port 5000 --reload
 - uvicorn
 - pydantic
 
-详细依赖列表请参考 `requirements.txt`。
+详细依赖列表请参考 `central_server/model-hub/requirements.txt`。
 
 ## 功能特性
 

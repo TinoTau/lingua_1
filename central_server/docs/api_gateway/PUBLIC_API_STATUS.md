@@ -24,6 +24,7 @@
    - 租户管理模块
    - API Key 鉴权
    - 限流机制
+   - `/health` 健康检查（无需鉴权）
    - REST API 端点
    - WebSocket API 端点
    - Scheduler 客户端
@@ -58,6 +59,15 @@
 3. **计费系统**: 集成计费和账单
 4. **监控面板**: 租户使用情况可视化
 5. **API 版本管理**: 支持多版本 API
+
+### 8.4 ⚠️ 当前实现的限制（与设计文档的差异）
+
+为保证本地开发可快速跑通，当前实现采用“启动时自动创建默认租户”的方式：
+
+- **没有对外的租户管理 API**（创建/禁用/配额管理等仍待补齐）
+- **API Key 来源**：
+  - 若设置 `LINGUA_API_KEY` 环境变量，则使用该值
+  - 若未设置，则启动时自动生成并打印到日志（仅用于开发/测试）
 
 ---
 
@@ -134,9 +144,8 @@ curl -X POST http://localhost:8081/v1/speech/translate \
 
 ### C. 相关文档
 
-- [系统架构文档](../ARCHITECTURE.md)
-- [协议规范](../PROTOCOLS.md)
-- [模块化功能设计](../modular/MODULAR_FEATURES.md)
+- `OVERVIEW.md`
+- `../OVERVIEW.md`
 
 ---
 

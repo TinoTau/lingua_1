@@ -28,6 +28,12 @@
 http://localhost:5010/dashboard
 ```
 
+Scheduler 还提供了几个内置页面（用于快速查看不同维度的数据）：
+
+- `http://localhost:5010/compute-power` - 算力统计页面
+- `http://localhost:5010/models` - 模型统计页面
+- `http://localhost:5010/languages` - 语言统计页面
+
 ## API端点
 
 ### 获取统计数据

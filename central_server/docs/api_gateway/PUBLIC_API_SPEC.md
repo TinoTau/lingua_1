@@ -26,14 +26,20 @@ src_lang=zh
 tgt_lang=en
 ```
 
+**表单字段**（multipart）：
+
+- `audio`（必填）：音频文件（二进制）
+- `src_lang`（可选，默认 `zh`）
+- `tgt_lang`（可选，默认 `en`）
+- `audio_format`（可选，默认 `pcm16`）
+- `sample_rate`（可选，默认 `16000`）
+
 **响应**:
 ```json
 {
-  "session_id": "sess-123456",
-  "text_asr": "今天天气不错。",
-  "text_translated": "The weather is nice today.",
-  "tts_audio": "base64-encoded-audio",
-  "tts_format": "pcm16"
+  "text": "The weather is nice today.",
+  "audio_tts": "base64-encoded-audio",
+  "duration_ms": 1234
 }
 ```
 
@@ -43,17 +49,21 @@ tgt_lang=en
 
 #### 5.2.1 连接
 
-**端点**: `wss://api.lingua.example.com/v1/stream`
+**端点**: `/v1/stream`
 
-**认证**: 通过 URL 参数或首条消息传递 API Key
+**认证**: 通过 HTTP Header 传递 API Key
+
+示例（本地开发）：
+
+- URL: `ws://localhost:8081/v1/stream`
+- Header: `Authorization: Bearer YOUR_API_KEY`
 
 #### 5.2.2 客户端 → 服务端
 
-**初始化**:
+**开始会话**:
 ```json
 {
-  "type": "init",
-  "api_key": "YOUR_API_KEY",
+  "type": "start",
   "src_lang": "zh",
   "tgt_lang": "en"
 }
@@ -63,7 +73,7 @@ tgt_lang=en
 ```json
 {
   "type": "audio",
-  "data": "base64-encoded-audio-chunk"
+  "chunk": "base64-encoded-audio-chunk"
 }
 ```
 
@@ -72,11 +82,9 @@ tgt_lang=en
 **翻译结果**:
 ```json
 {
-  "type": "result",
-  "text_asr": "今天天气不错。",
-  "text_translated": "The weather is nice today.",
-  "tts_audio": "base64-encoded-audio",
-  "tts_format": "pcm16"
+  "type": "final",
+  "text": "The weather is nice today.",
+  "audio": "base64-encoded-audio"
 }
 ```
 
@@ -86,7 +94,10 @@ tgt_lang=en
 
 ### 1. 获取 API Key
 
-联系管理员获取 API Key。
+开发/测试环境下：
+
+- 推荐：启动前设置环境变量 `LINGUA_API_KEY`
+- 如果不设置：API Gateway 启动时会自动生成一个随机 key 并打印到日志中（仅用于开发/测试）
 
 ### 2. 测试 REST API
 
@@ -101,11 +112,14 @@ curl -X POST http://localhost:8081/v1/speech/translate \
 ### 3. 测试 WebSocket API
 
 ```javascript
-const ws = new WebSocket('wss://api.lingua.example.com/v1/stream?api_key=YOUR_API_KEY');
+// 注意：浏览器原生 WebSocket 不支持自定义 Header；
+// 若需要在浏览器中使用，请在网关侧增加 query param 认证或走反向代理注入 Header。
+// Node.js 客户端可用 ws / websocket 库注入 Authorization Header。
+const ws = new WebSocket('ws://localhost:8081/v1/stream');
 
 ws.onopen = () => {
   ws.send(JSON.stringify({
-    type: 'init',
+    type: 'start',
     src_lang: 'zh',
     tgt_lang: 'en'
   }));

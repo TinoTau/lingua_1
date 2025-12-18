@@ -6,12 +6,10 @@ use axum::{
 };
 use serde_json::json;
 use crate::AppState;
-use crate::auth;
 
 pub fn create_rest_router() -> Router<AppState> {
     Router::new()
         .route("/v1/speech/translate", post(handle_translate))
-        .layer(axum::middleware::from_fn(auth::auth_middleware))
 }
 
 async fn handle_translate(

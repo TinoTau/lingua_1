@@ -31,9 +31,14 @@ url = "ws://localhost:5010/ws/session"
 cargo run
 ```
 
-### 创建租户
+### 租户与 API Key（开发/测试）
 
-目前租户管理使用内存存储，生产环境建议使用数据库。
+目前租户管理使用内存存储，且**没有对外的租户管理 API**（创建/禁用/配额管理等仍待补齐）。
+
+为保证本地可快速跑通，API Gateway 启动时会自动创建一个默认租户：
+
+- 如果你设置了环境变量 `LINGUA_API_KEY`，则使用该值作为 API Key
+- 否则会自动生成一个随机 API Key，并在启动日志中打印出来（仅用于开发/测试）
 
 ## API 使用示例
 
@@ -74,5 +79,5 @@ ws.onmessage = (event) => {
 
 ## 详细文档
 
-请参考 [PUBLIC_API.md](../docs/PUBLIC_API.md)
+请参考 `PUBLIC_API.md`
 

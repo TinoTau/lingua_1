@@ -49,9 +49,9 @@
 
 ## 文档更新
 
-- ✅ `PROJECT_COMPLETENESS.md` - 项目完整性报告
+- ✅ `../project/PROJECT_COMPLETENESS.md` - 项目完整性报告
 - ✅ `TEST_GUIDE.md` - 测试指南
 - ✅ `TEST_STATUS.md` - 测试状态
-- ✅ `docs/QUICK_START.md` - 快速开始指南
+- ✅ `../QUICK_START.md` - 快速开始指南
 - ✅ `scheduler/TEST_FIXES.md` - 测试修复说明
 - ✅ `scheduler/TEST_FAILURE_ANALYSIS.md` - 测试失败分析
