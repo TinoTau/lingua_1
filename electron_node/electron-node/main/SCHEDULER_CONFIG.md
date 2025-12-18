@@ -6,10 +6,12 @@
 
 ## 配置文件位置
 
-配置文件位于 Electron 的用户数据目录：
-- **Windows**: `%APPDATA%\electron-node\electron-node-config.json`
-- **macOS**: `~/Library/Application Support/electron-node/electron-node-config.json`
-- **Linux**: `~/.config/electron-node/electron-node-config.json`
+配置文件位于 Electron 的用户数据目录（`app.getPath('userData')`）：
+
+- **文件名**：`electron-node-config.json`
+- **实际路径**：`<userData>/electron-node-config.json`（由 Electron 决定，不建议硬编码到固定 OS 路径）
+
+仓库内提供了示例文件：`electron-node-config.example.json`。
 
 ## 配置格式
 
@@ -35,7 +37,7 @@
 
 1. **配置文件** (`scheduler.url`) - 推荐用于生产环境
 2. **环境变量** (`SCHEDULER_URL`) - 用于临时配置或开发环境
-3. **默认值** (`ws://localhost:5010/ws/node`) - 仅用于本地开发
+3. **默认值** (`ws://127.0.0.1:5010/ws/node`) - 仅用于本地开发（使用 127.0.0.1 避免 IPv6 解析问题）
 
 ## 配置示例
 
@@ -44,7 +46,7 @@
 ```json
 {
   "scheduler": {
-    "url": "ws://localhost:5010/ws/node"
+    "url": "ws://127.0.0.1:5010/ws/node"
   }
 }
 ```

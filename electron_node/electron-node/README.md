@@ -1,6 +1,8 @@
 # Lingua Electron Node 客户端
 
-这是 Lingua 分布式语音翻译系统的 Electron 节点客户端，集成了 Rust 推理服务。
+这是 Lingua 分布式语音翻译系统的 **Electron 节点客户端应用**（主进程 + 渲染进程）。
+
+更完整、与代码对齐的文档请看：`../docs/electron_node/README.md`。
 
 ## 功能特性
 
@@ -15,63 +17,40 @@
 
 ### 前置要求
 
-1. **构建 Rust 服务**：
-   ```powershell
-   cd node-inference
-   cargo build --release
-   ```
-
-2. **安装 Node.js 依赖**：
+1. **安装 Node.js 依赖**：
    ```powershell
    cd electron-node
    npm install
    ```
 
-3. **编译 TypeScript**：
-   ```powershell
-   npm run build
-   ```
-
 ### 启动应用
 
-```powershell
-npm start
-```
+当前代码在未打包时 `app.isPackaged=false`，主进程会按开发模式加载 Vite Dev Server，因此需要 **两个终端**：
 
-或者使用开发模式（自动重新编译）：
+终端 A（编译主进程 TS + 启动 Vite）：
 
 ```powershell
+cd electron-node
 npm run dev
 ```
 
+终端 B（启动 Electron）：
+
+```powershell
+cd electron-node
+npm start
+```
+
 ## 日志输出
-
-### Rust 服务日志
-
-Rust 服务的日志输出方式保持不变：
-
-- **日志文件**：`node-inference/logs/node-inference.log`（开发环境）或 `%APPDATA%/lingua-electron-node/node-inference/logs/node-inference.log`（生产环境）
-- **日志格式**：JSON 格式，包含 RFC3339 时间戳
-- **日志轮转**：文件达到 5MB 时自动轮转，保留最近 5 个文件，文件名包含时间戳（格式：`node-inference.log.yyyyMMddTHHmmss`）
-- **控制台输出**：INFO 级别及以上的日志会输出到控制台（简洁格式）
 
 ### Electron 应用日志
 
 Electron 应用的日志使用 `pino` 记录：
 
-- **开发环境**：Pretty 格式输出到控制台
-- **生产环境**：JSON 格式输出到控制台
+- **文件**：`<process.cwd()>/logs/electron-main.log`
+- **格式**：由 `LOG_FORMAT` 控制（`json` 默认；`pretty` 更适合开发）
 
 ## 打包应用
-
-### 构建 Rust 服务
-
-首先确保 Rust 服务已构建：
-
-```powershell
-cd node-inference
-cargo build --release
-```
 
 ### 打包 Electron 应用
 
@@ -81,9 +60,7 @@ npm run build
 npm run package:win
 ```
 
-打包后的应用会包含：
-- Electron 应用文件
-- Rust 可执行文件（`inference-service.exe`）在 `resources` 目录
+打包后的内容由 `electron-builder.yml` 决定（包含 `inference-service.exe` 以及部分 `services/` 相关文件）。
 
 ## 配置
 
@@ -92,15 +69,10 @@ npm run package:win
 可以通过环境变量配置服务：
 
 - `INFERENCE_SERVICE_PORT`：推理服务端口（默认：5009）
-- `SCHEDULER_URL`：调度服务器 WebSocket URL（默认：`ws://localhost:5010/ws/node`）
+- `SCHEDULER_URL`：调度服务器 WebSocket URL（默认：`ws://127.0.0.1:5010/ws/node`）
 - `RUST_LOG`：Rust 日志级别（默认：`info`）
 - `LOG_FORMAT`：日志格式（`json` 或 `pretty`，默认：`json`）
 - `MODELS_DIR`：模型目录路径
-
-### 日志目录
-
-- **开发环境**：`node-inference/logs/`
-- **生产环境**：`%APPDATA%/lingua-electron-node/node-inference/logs/`
 
 ## UI 界面
 
@@ -121,15 +93,15 @@ npm run package:win
 ### Rust 服务启动失败
 
 1. 检查可执行文件是否存在：
-   - 开发环境：`node-inference/target/release/inference-service.exe`
-   - 生产环境：`resources/inference-service.exe`
+   - 开发环境：`electron_node/services/node-inference/target/release/inference-service.exe`
+   - 生产环境：`<安装目录>/inference-service.exe`
 
 2. 检查端口是否被占用：
    - 默认端口：5009
    - 可以通过 `INFERENCE_SERVICE_PORT` 环境变量修改
 
 3. 查看日志文件：
-   - 检查 `node-inference/logs/node-inference.log` 中的错误信息
+   - 检查 `electron_node/services/node-inference/logs/node-inference.log` 中的错误信息（开发）
 
 ### 日志文件未生成
 
@@ -148,7 +120,5 @@ npm run package:win
 
 ## 相关文档
 
-- [功能对比分析](../../docs/electron_node/FEATURE_COMPARISON.md) - 对比产品说明文档与当前实现的功能
-- [capability_state 实现说明](../../docs/electron_node/CAPABILITY_STATE_IMPLEMENTATION.md) - capability_state 上报机制的详细实现说明
-- [模块热插拔实现分析](../../docs/electron_node/MODULE_HOT_PLUG_IMPLEMENTATION.md) - 节点端功能热插拔实现状态分析
-- [Stage 2.2 实现文档](../../docs/electron_node/STAGE2.2_IMPLEMENTATION.md) - Electron Node 客户端 Stage 2.2 实现文档
+- `../docs/electron_node/README.md`（主文档）
+- `docs/PLATFORM_READY_IMPLEMENTATION_SUMMARY.md`

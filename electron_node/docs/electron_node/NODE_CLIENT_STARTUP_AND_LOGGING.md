@@ -1,6 +1,12 @@
 # 节点端 Electron 客户端启动与日志说明
 
-本文档说明节点端最终形态（Electron 客户端）的启动流程、打包结构，以及各服务的日志路径。
+> ⚠️ 说明：本文档为阶段性梳理，内容较长且包含“按 service 逐个说明”的部分。
+> - **最新且与代码对齐的主文档**：`README.md`
+> - **路径口径**：`../PATH_STRUCTURE.md`
+>
+> 若本文与代码存在冲突，以主文档与实际代码为准。
+
+本文档说明节点端最终形态（Electron 客户端）的启动流程、打包结构，以及日志路径口径。
 
 ## 1. 节点端最终形态
 
@@ -12,36 +18,34 @@
 
 ## 2. 开发环境启动流程
 
-在项目根目录：`d:\Programs\github\lingua_1`。
+在仓库根目录（示例）：`d:\Programs\github\lingua_1`。
 
 ### 2.1 一次性准备
 
 ```powershell
-cd .\electron-node
+cd .\electron_node\electron-node
 npm install
-```
-
-如果是首次构建，或者 main/renderer 改动较大，建议先执行：
-
-```powershell
-npm run build   # 等价于 tsc + vite build
 ```
 
 ### 2.2 本地调试启动
 
-方式一：直接启动打包后的 main + renderer（更接近生产）
+当前代码在未打包时 `app.isPackaged=false`，主进程会按开发模式加载 Vite Dev Server，因此需要 **两个终端**：
+
+终端 A（编译主进程 TS + 启动 Vite）：
 
 ```powershell
-cd .\electron-node
-npm start       # 等价于 electron .
+cd .\electron_node\electron-node
+npm run dev
 ```
 
-方式二：开发模式（main 监听编译 + renderer Vite dev server）
+终端 B（启动 Electron）：
 
 ```powershell
-cd .\electron-node
-npm run dev     # main: tsc -w, renderer: vite dev
+cd .\electron_node\electron-node
+npm start
 ```
+
+> 如需“更接近生产（加载 `renderer/dist`）”的运行方式，请使用 `electron-builder` 打包后运行（打包后 `app.isPackaged=true`）。
 
 启动后：
 
@@ -276,8 +280,8 @@ C:\Program Files\Lingua Node Client\
 ## 8. 快速查找各类日志
 
 - Electron 主进程：
-  - 开发：`electron_node/electron-node/logs/electron-main_*.log`
-  - 生产：`<安装路径>/logs/electron-main_*.log`
+  - 开发：`electron_node/electron-node/logs/electron-main.log`
+  - 生产：`<安装路径>/logs/electron-main.log`
 - 节点 Rust 推理服务：
   - 开发：`electron_node/services/node-inference/logs/node-inference.log`
   - 生产：`<安装路径>/electron_node/services/node-inference/logs/node-inference.log`

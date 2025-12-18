@@ -67,11 +67,11 @@ Electron Node 客户端组件已从 `expired/` 文件夹迁移到 `electron_node
 
 所有服务的日志路径都使用相对路径（相对于项目根目录）：
 
-- **Electron 主进程**: `electron_node/electron-node/logs/electron-main_*.log`
+- **Electron 主进程**: `electron_node/electron-node/logs/electron-main.log`
 - **Rust 推理服务**: `electron_node/services/node-inference/logs/node-inference.log`
-- **Python NMT 服务**: `electron_node/services/nmt_m2m100/logs/nmt-service_*.log`
-- **Python TTS 服务**: `electron_node/services/piper_tts/logs/tts-service_*.log`
-- **Python YourTTS 服务**: `electron_node/services/your_tts/logs/yourtts-service_*.log`
+- **Python NMT 服务**: `electron_node/services/nmt_m2m100/logs/nmt-service.log`
+- **Python TTS 服务**: `electron_node/services/piper_tts/logs/tts-service.log`
+- **Python YourTTS 服务**: `electron_node/services/your_tts/logs/yourtts-service.log`
 
 ### 模型路径
 

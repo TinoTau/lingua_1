@@ -1,5 +1,7 @@
 # 平台化模型管理功能改造完成总结
 
+> 本文件是阶段性“实现总结”。当前 `electron-node` 的主文档入口请优先阅读：`../../docs/electron_node/README.md`。
+
 **完成日期**: 2025-12-17  
 **改造依据**: 
 - `Platform_Ready_Model_Management_and_Node_Service_Package_Spec.md`

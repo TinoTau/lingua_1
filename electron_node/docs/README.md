@@ -1,65 +1,41 @@
-# Electron 节点客户端文档
+# Electron 节点客户端文档索引（`electron_node/docs`）
 
-本文档目录包含 Electron 节点客户端的所有产品设计、说明和技术方案文档。
+这里集中存放 Electron 节点客户端相关文档。为避免“方案文档 / 阶段文档 / README”口径不一致，本索引将 **现行口径** 与 **历史/阶段性材料** 分开整理。
 
-## 文档列表
+## 从这里开始（现行口径）
 
-### Electron 应用
-- `electron_node/` - Electron 应用相关文档
-  - `ARCHITECTURE_RECOMMENDATION.md` - 架构推荐方案
-  - `NODE_CLIENT_STARTUP_AND_LOGGING.md` - 启动和日志文档
-  - `THIRD_PARTY_PLUGIN_SCENARIOS.md` - 第三方插件场景
-  - `SERVICE_MIGRATION_ASSESSMENT.md` - 服务迁移评估
-  - `PLUGIN_ARCHITECTURE_NECESSITY_ASSESSMENT.md` - 插件化架构必要性评估
-  - `SERVICE_MANAGER_REFACTORING.md` - 服务管理器代码重构文档
-  - `GPU_STATISTICS_TRACKING.md` - GPU 使用时间统计功能文档
+- **Electron Node 主文档（以代码为准）**：`electron_node/README.md`
+  - 入口在：`docs/electron_node/README.md`
+- **路径结构与目录口径**：`PATH_STRUCTURE.md`
 
-### 节点推理服务 (Node Inference)
-- `node_inference/` - 节点推理服务文档
-  - `README.md` - 推理服务文档
-  - `AUTO_LANGUAGE_DETECTION_*.md` - 自动语言检测相关文档
-  - `TWO_LEVEL_VAD_DESIGN.md` - 两级 VAD 设计
+> 本轮整理重点是 `electron-node`（Electron 应用本体）相关内容；每个 service 的细节文档请直接看 `../services/` 下对应目录（此处不展开）。
 
-### 节点注册 (Node Register)
-- `node_register/` - 节点注册相关文档
-  - `README.md` - 节点注册文档
-  - `NODE_REGISTRATION_*.md` - 节点注册协议和规范
-  - `NODE_STATUS_AND_TESTS_v1.md` - 节点状态和测试
+## Electron Node（Electron 应用）
 
-### 模块化功能 (Modular)
-- `modular/` - 模块化功能文档
-  - `README.md` - 模块化功能文档
-  - `MODULAR_FEATURES.md` - 模块化功能设计
-  - `LINGUA_完整技术说明书_v2.md` - 完整技术说明书
+- **主文档**：`electron_node/README.md`
+- **阶段性方案/评估（阅读时以代码与主文档为准）**：`electron_node/`
+  - `ARCHITECTURE_RECOMMENDATION.md`
+  - `NODE_CLIENT_STARTUP_AND_LOGGING.md`
+  - `SERVICE_MANAGER_REFACTORING.md`
+  - `GPU_STATISTICS_TRACKING.md`
+  - `SERVICE_MIGRATION_ASSESSMENT.md`
+  - `PLUGIN_ARCHITECTURE_NECESSITY_ASSESSMENT.md`
+  - `THIRD_PARTY_PLUGIN_SCENARIOS.md`
+  - 以及其它同目录文档
 
-## 核心文档
+## 核心参考（仍然有价值）
 
-- **路径结构**: `PATH_STRUCTURE.md` - 详细的路径结构说明
-- **迁移文档**: `MIGRATION.md` - 从 expired/ 迁移到 electron_node/ 的详细说明
-- **服务热插拔验证**: `SERVICE_HOT_PLUG_VERIFICATION.md` - 服务热插拔与任务链验证报告
-- **YourTTS 集成实现**: `YOURTTS_INTEGRATION_IMPLEMENTATION.md` - YourTTS 服务集成实现文档
+- **迁移文档**：`MIGRATION.md`
+- **服务热插拔验证**：`SERVICE_HOT_PLUG_VERIFICATION.md`
 
-## 快速参考
+## 模块化功能（历史/设计材料）
 
-- **Electron 应用**: Electron + Node.js + TypeScript + React
-- **推理服务**: Rust + ONNX Runtime（位于 `services/node-inference/`）
-- **Python 服务**: Python (NMT、TTS、YourTTS)（位于 `services/`）
-  - **NMT 服务**: 端口 5008，机器翻译
-  - **Piper TTS 服务**: 端口 5006，标准语音合成
-  - **YourTTS 服务**: 端口 5004，零样本语音克隆（可选）
-- **项目位置**: `electron_node/`
-- **统一服务目录**: `electron_node/services/`
-- **服务热插拔**: 支持动态启动/停止服务，根据任务需求自动选择服务
+- `modular/README.md`
+- `modular/MODULAR_FEATURES.md`
+- `modular/LINGUA_完整技术说明书_v2.md`
 
 ## 项目状态
 
-- **项目完整性**: `../PROJECT_COMPLETENESS.md`
-- **测试状态**: `../TEST_STATUS.md`
-- **测试执行报告**: `../TEST_EXECUTION_REPORT.md`
-- **迁移文档**: `MIGRATION.md`
-- **路径结构**: `PATH_STRUCTURE.md`
-
-## 快速开始
-
-- **主 README**: `../README.md`
-- **测试运行**: `../run_tests.ps1`
+- `../PROJECT_COMPLETENESS.md`
+- `../TEST_STATUS.md`
+- `../TEST_EXECUTION_REPORT.md`

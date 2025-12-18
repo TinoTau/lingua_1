@@ -2,7 +2,9 @@
 
 ## 项目结构
 
-Electron Node 客户端采用统一的目录结构，所有服务都位于 `electron_node/services/` 目录下。
+Electron Node 客户端采用统一的目录结构，Electron 应用位于 `electron_node/electron-node/`，节点端服务与服务注册表位于 `electron_node/services/`。
+
+> 注意：代码里同时存在“服务注册表目录（`servicesDir`）”与“服务管理器查找项目根目录”的两套解析逻辑，本文已按现代码进行统一说明。
 
 ## 目录结构
 
@@ -18,7 +20,7 @@ electron_node/
 │   ├── tests/                 # 测试文件
 │   └── logs/                  # Electron 主进程日志
 │
-├── services/                  # 所有节点端服务（统一目录）
+├── services/                  # 节点端服务目录 + 服务注册表（统一目录）
 │   ├── node-inference/       # 节点推理服务（Rust）
 │   │   ├── src/              # 源代码
 │   │   ├── tests/            # 测试文件
@@ -53,12 +55,26 @@ electron_node/
 
 ### 开发环境
 
-在开发环境中，服务管理器通过智能查找方式确定项目根目录：
+#### 1）服务注册表目录（Service Registry / Service Packages）
+
+主进程在 `electron_node/electron-node/main/src/index.ts` 初始化 `ServiceRegistryManager` 时，会确定一个 `servicesDir`：
+
+1. **优先使用环境变量**：`SERVICES_DIR`
+2. **开发模式**：从 `__dirname` 向上最多查找 10 级，找到第一个包含 `services/installed.json` 的目录，并使用该目录下的 `services/`
+3. **否则回退**：`app.getPath('userData')/services`
+
+这套逻辑决定了：
+- **开发时**通常会落到仓库里的 `electron_node/services/`
+- **生产（打包）时**默认会落到 `userData/services`（除非你设置了 `SERVICES_DIR`）
+
+#### 2）服务管理器的项目根目录（Project Root）
+
+在开发环境中，Rust/Python 服务管理器会通过智能查找方式确定项目根目录（见 `electron_node/electron-node/main/src/*-service-manager/project-root.ts`）：
 
 1. **从 `process.cwd()` 向上查找**：从当前工作目录开始，向上最多查找 3 级
 2. **从 `__dirname` 向上查找**：从编译后的 JS 文件位置（`electron-node/main`）开始，向上最多查找 3 级
 
-服务管理器会检查每个候选路径是否包含 `electron_node/services/` 或 `electron_node/services/node-inference` 目录，以确认项目根目录。
+服务管理器会检查每个候选路径是否包含 `electron_node/services/` 或 `electron_node/services/node-inference` 目录，以确认项目根目录（注意：这里检查的是 **仓库根目录下的 `electron_node/services`**）。
 
 **查找逻辑**：
 - 收集所有候选路径（从 `cwd` 和 `__dirname` 向上查找）
@@ -68,7 +84,7 @@ electron_node/
 
 ### 服务路径
 
-所有服务路径都基于项目根目录：
+所有“旧式”服务路径都基于项目根目录（即仓库根目录）：
 
 - **Rust 推理服务**:
   - 可执行文件: `<projectRoot>/electron_node/services/node-inference/target/release/inference-service.exe`
@@ -93,26 +109,31 @@ electron_node/
 
 ### 生产环境
 
-在生产环境中（打包后），所有路径都基于应用安装目录：
+在生产环境中（打包后），部分路径基于应用安装目录（`path.dirname(process.execPath)`），部分路径基于 `userData`：
 
-- 项目根目录: `path.dirname(process.execPath)`
-- 服务路径: 由 `electron-builder` 打包配置决定
+- **应用安装根目录**：`path.dirname(process.execPath)`
+- **服务包注册表目录**：默认 `userData/services`（可用 `SERVICES_DIR` 覆盖）
+- **打包携带的额外文件**：由 `electron_node/electron-node/electron-builder.yml` 的 `extraFiles` 决定（例如 `inference-service.exe` 与部分 `services/` 内容）
 
 ## 环境变量
 
 可以通过环境变量覆盖默认路径：
 
-- `MODELS_DIR`: 覆盖模型目录路径
-- `PIPER_MODEL_DIR`: 覆盖 Piper TTS 模型目录
-- `YOURTTS_MODEL_DIR`: 覆盖 YourTTS 模型目录
+- `SERVICES_DIR`: 覆盖服务注册表/安装目录（主进程使用）
+- `USER_DATA`: 覆盖模型下载使用的 userData 根目录（模型目录为 `USER_DATA/models`）
+- `MODEL_HUB_URL`: 覆盖 Model Hub URL
+- `SCHEDULER_URL`: 覆盖 Scheduler WebSocket URL
+- `MODELS_DIR`: 覆盖 Rust 推理进程使用的模型目录
 - `INFERENCE_SERVICE_PORT`: Rust 推理服务端口（默认 5009）
+- `PIPER_MODEL_DIR`: 覆盖 Piper 模型目录（Python 服务配置辅助逻辑使用）
+- `YOURTTS_MODEL_DIR`: 覆盖 YourTTS 模型目录（Python 服务配置辅助逻辑使用）
 
 ## 日志路径
 
 所有服务的日志都使用相对路径，存储在各自服务目录下的 `logs/` 文件夹：
 
-- Electron 主进程: `electron_node/electron-node/logs/electron-main_*.log`（带时间戳）
-- Rust 推理服务: `electron_node/services/node-inference/logs/node-inference.log`（5MB 自动轮转）
+- Electron 主进程: `electron_node/electron-node/logs/electron-main.log`（由 `process.cwd()` 决定）
+- Rust 推理服务: `electron_node/services/node-inference/logs/node-inference.log`（由主进程重定向写入，带时间戳前缀）
 - NMT 服务: `electron_node/services/nmt_m2m100/logs/nmt-service.log`（追加模式）
 - TTS 服务: `electron_node/services/piper_tts/logs/tts-service.log`（追加模式）
 - YourTTS 服务: `electron_node/services/your_tts/logs/yourtts-service.log`（追加模式）
@@ -139,4 +160,4 @@ electron_node/
 
 - **迁移文档**: `MIGRATION.md`
 - **项目完整性**: `../PROJECT_COMPLETENESS.md`
-- **启动和日志**: `electron_node/NODE_CLIENT_STARTUP_AND_LOGGING.md`
+- **Electron Node 主文档**: `electron_node/README.md`
