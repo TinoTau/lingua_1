@@ -152,6 +152,7 @@ fn test_node_register_message_format() {
             version: "1.0.0".to_string(),
             enabled: Some(true),
         }],
+        installed_services: None,
         features_supported: FeatureFlags {
             emotion_detection: Some(true),
             voice_style_detection: None,
@@ -174,6 +175,7 @@ fn test_node_register_message_format() {
             platform,
             hardware,
             installed_models,
+            installed_services: _,
             features_supported,
             advanced_features: _,
             accept_public_jobs,
@@ -208,6 +210,7 @@ fn test_node_heartbeat_message_format() {
             running_jobs: 2,
         },
         installed_models: None,
+        installed_services: None,
         capability_state: None,
     };
 
@@ -218,6 +221,7 @@ fn test_node_heartbeat_message_format() {
             timestamp,
             resource_usage,
             installed_models,
+            installed_services: _,
             capability_state: _,
         } => {
             assert_eq!(node_id, "node-123");
@@ -241,6 +245,7 @@ fn test_job_result_message_format() {
     // 成功的情况
     let success_message = NodeMessage::JobResult {
         job_id: "job-123".to_string(),
+        attempt_id: 1,
         node_id: "node-123".to_string(),
         session_id: "sess-123".to_string(),
         utterance_index: 0,
@@ -260,6 +265,7 @@ fn test_job_result_message_format() {
     match success_message {
         NodeMessage::JobResult {
             job_id,
+            attempt_id: _,
             node_id,
             session_id,
             utterance_index,
@@ -294,6 +300,7 @@ fn test_job_result_message_format() {
     // 失败的情况
     let error_message = NodeMessage::JobResult {
         job_id: "job-123".to_string(),
+        attempt_id: 1,
         node_id: "node-123".to_string(),
         session_id: "sess-123".to_string(),
         utterance_index: 0,
@@ -357,6 +364,7 @@ fn test_job_assign_message_format() {
     // 测试 job_assign 消息格式
     let message = NodeMessage::JobAssign {
         job_id: "job-123".to_string(),
+        attempt_id: 1,
         session_id: "sess-123".to_string(),
         utterance_index: 0,
         src_lang: "zh".to_string(),
@@ -394,6 +402,7 @@ fn test_job_assign_message_format() {
     match message {
         NodeMessage::JobAssign {
             job_id,
+            attempt_id: _,
             session_id,
             utterance_index,
             src_lang,

@@ -17,6 +17,9 @@ pub enum NodeMessage {
         platform: String, // "windows" | "linux" | "macos"
         hardware: HardwareInfo,
         installed_models: Vec<InstalledModel>,
+        /// 节点已安装的服务包列表（可选）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        installed_services: Option<Vec<InstalledService>>,
         /// 可选功能/插件能力（保留现有 FeatureFlags）
         features_supported: FeatureFlags,
         /// 性能/调度相关高级能力（如 batched_inference、kv_cache）
@@ -24,7 +27,7 @@ pub enum NodeMessage {
         advanced_features: Option<Vec<String>>,
         accept_public_jobs: bool,
         /// 节点模型能力图（capability_state）
-        /// key: model_id, value: 模型状态
+        /// Phase 1：key=service_id，value=服务包状态
         #[serde(skip_serializing_if = "Option::is_none")]
         capability_state: Option<CapabilityState>,
     },
@@ -53,13 +56,15 @@ pub enum NodeMessage {
         #[serde(skip_serializing_if = "Option::is_none")]
         installed_services: Option<Vec<InstalledService>>,
         /// 节点模型能力图（capability_state）
-        /// key: model_id, value: 模型状态
+        /// Phase 1：key=service_id，value=服务包状态
         #[serde(skip_serializing_if = "Option::is_none")]
         capability_state: Option<CapabilityState>,
     },
     #[serde(rename = "job_assign")]
     JobAssign {
         job_id: String,
+        /// 下发 attempt 序号（从 1 开始）
+        attempt_id: u32,
         session_id: String,
         utterance_index: u64,
         src_lang: String,  // 支持 "auto" | "zh" | "en" | "ja" | "ko"
@@ -102,9 +107,22 @@ pub enum NodeMessage {
         #[serde(skip_serializing_if = "Option::is_none")]
         context_text: Option<String>,
     },
+    /// Scheduler -> Node：取消一个正在处理/排队的 job（best-effort）
+    #[serde(rename = "job_cancel")]
+    JobCancel {
+        job_id: String,
+        /// 追踪 ID（可选，用于链路日志）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        trace_id: Option<String>,
+        /// 取消原因（可选，用于日志/诊断）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        reason: Option<String>,
+    },
     #[serde(rename = "job_result")]
     JobResult {
         job_id: String,
+        /// 对应的下发 attempt 序号（用于 Scheduler 去重/竞态保护）
+        attempt_id: u32,
         node_id: String,
         session_id: String,
         utterance_index: u64,

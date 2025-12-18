@@ -3,7 +3,9 @@
 use lingua_scheduler::node_registry::NodeRegistry;
 use lingua_scheduler::node_status_manager::NodeStatusManager;
 use lingua_scheduler::connection_manager::NodeConnectionManager;
-use lingua_scheduler::messages::{FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, NodeStatus, ModelStatus};
+use lingua_scheduler::messages::{
+    FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, InstalledService, ModelStatus, NodeStatus,
+};
 use lingua_scheduler::config::NodeHealthConfig;
 use std::sync::Arc;
 use std::collections::HashMap;
@@ -53,6 +55,26 @@ fn create_test_models() -> Vec<InstalledModel> {
     ]
 }
 
+fn create_core_installed_services() -> Vec<InstalledService> {
+    vec![
+        InstalledService {
+            service_id: "node-inference".to_string(),
+            version: "1.0.0".to_string(),
+            platform: "linux-x64".to_string(),
+        },
+        InstalledService {
+            service_id: "nmt-m2m100".to_string(),
+            version: "1.0.0".to_string(),
+            platform: "linux-x64".to_string(),
+        },
+        InstalledService {
+            service_id: "piper-tts".to_string(),
+            version: "1.0.0".to_string(),
+            platform: "linux-x64".to_string(),
+        },
+    ]
+}
+
 #[tokio::test]
 async fn test_node_initial_status_is_registering() {
     let registry = NodeRegistry::new();
@@ -64,6 +86,7 @@ async fn test_node_initial_status_is_registering() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models(),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -92,6 +115,7 @@ async fn test_node_id_conflict_detection() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models(),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -112,6 +136,7 @@ async fn test_node_id_conflict_detection() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models(),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -140,6 +165,7 @@ async fn test_select_node_filters_by_status() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models(),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -191,6 +217,7 @@ async fn test_node_status_manager_health_check() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models(),
+        Some(create_core_installed_services()),
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -202,9 +229,9 @@ async fn test_node_status_manager_health_check() {
         true,
         Some({
             let mut state = HashMap::new();
-            state.insert("asr-1".to_string(), ModelStatus::Ready);
-            state.insert("nmt-1".to_string(), ModelStatus::Ready);
-            state.insert("tts-1".to_string(), ModelStatus::Ready);
+            state.insert("node-inference".to_string(), ModelStatus::Ready);
+            state.insert("nmt-m2m100".to_string(), ModelStatus::Ready);
+            state.insert("piper-tts".to_string(), ModelStatus::Ready);
             state
         }),
     ).await.unwrap();
@@ -215,6 +242,7 @@ async fn test_node_status_manager_health_check() {
         10.0,
         Some(10.0),
         10.0,
+        None,
         None,
         0,
         None,
@@ -243,6 +271,7 @@ async fn test_node_status_manager_registering_to_ready() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models(),
+        Some(create_core_installed_services()),
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -254,9 +283,9 @@ async fn test_node_status_manager_registering_to_ready() {
         true,
         Some({
             let mut state = HashMap::new();
-            state.insert("asr-1".to_string(), ModelStatus::Ready);
-            state.insert("nmt-1".to_string(), ModelStatus::Ready);
-            state.insert("tts-1".to_string(), ModelStatus::Ready);
+            state.insert("node-inference".to_string(), ModelStatus::Ready);
+            state.insert("nmt-m2m100".to_string(), ModelStatus::Ready);
+            state.insert("piper-tts".to_string(), ModelStatus::Ready);
             state
         }),
     ).await.unwrap();
@@ -268,6 +297,7 @@ async fn test_node_status_manager_registering_to_ready() {
             10.0,
             Some(10.0),
             10.0,
+            None,
             None,
             0,
             None,
@@ -295,6 +325,7 @@ async fn test_node_status_manager_ready_to_degraded() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models(),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -306,9 +337,9 @@ async fn test_node_status_manager_ready_to_degraded() {
         true,
         Some({
             let mut state = HashMap::new();
-            state.insert("asr-1".to_string(), ModelStatus::Ready);
-            state.insert("nmt-1".to_string(), ModelStatus::Ready);
-            state.insert("tts-1".to_string(), ModelStatus::Ready);
+            state.insert("node-inference".to_string(), ModelStatus::Ready);
+            state.insert("nmt-m2m100".to_string(), ModelStatus::Ready);
+            state.insert("piper-tts".to_string(), ModelStatus::Ready);
             state
         }),
     ).await.unwrap();
@@ -325,13 +356,14 @@ async fn test_node_status_manager_ready_to_degraded() {
             Some(10.0),
             10.0,
             None,
+            None,
             0,
             Some({
                 let mut state = HashMap::new();
                 // 模型状态为 NotReady，导致健康检查失败
-                state.insert("asr-1".to_string(), ModelStatus::Error);
-                state.insert("nmt-1".to_string(), ModelStatus::Error);
-                state.insert("tts-1".to_string(), ModelStatus::Error);
+                state.insert("node-inference".to_string(), ModelStatus::Error);
+                state.insert("nmt-m2m100".to_string(), ModelStatus::Error);
+                state.insert("piper-tts".to_string(), ModelStatus::Error);
                 state
             }),
         ).await;
@@ -358,6 +390,7 @@ async fn test_node_status_manager_degraded_to_ready() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models(),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -369,9 +402,9 @@ async fn test_node_status_manager_degraded_to_ready() {
         true,
         Some({
             let mut state = HashMap::new();
-            state.insert("asr-1".to_string(), ModelStatus::Ready);
-            state.insert("nmt-1".to_string(), ModelStatus::Ready);
-            state.insert("tts-1".to_string(), ModelStatus::Ready);
+            state.insert("node-inference".to_string(), ModelStatus::Ready);
+            state.insert("nmt-m2m100".to_string(), ModelStatus::Ready);
+            state.insert("piper-tts".to_string(), ModelStatus::Ready);
             state
         }),
     ).await.unwrap();
@@ -386,12 +419,13 @@ async fn test_node_status_manager_degraded_to_ready() {
         Some(10.0),
         10.0,
         None,
+        None,
         0,
         Some({
             let mut state = HashMap::new();
-            state.insert("asr-1".to_string(), ModelStatus::Ready);
-            state.insert("nmt-1".to_string(), ModelStatus::Ready);
-            state.insert("tts-1".to_string(), ModelStatus::Ready);
+            state.insert("node-inference".to_string(), ModelStatus::Ready);
+            state.insert("nmt-m2m100".to_string(), ModelStatus::Ready);
+            state.insert("piper-tts".to_string(), ModelStatus::Ready);
             state
         }),
     ).await;
@@ -419,6 +453,7 @@ async fn test_node_status_manager_heartbeat_timeout() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models(),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -462,6 +497,7 @@ async fn test_node_status_manager_warmup_timeout() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models(),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -474,9 +510,9 @@ async fn test_node_status_manager_warmup_timeout() {
         Some({
             let mut state = HashMap::new();
             // 模型状态为 NotReady，导致健康检查失败
-            state.insert("asr-1".to_string(), ModelStatus::Error);
-            state.insert("nmt-1".to_string(), ModelStatus::Error);
-            state.insert("tts-1".to_string(), ModelStatus::Error);
+            state.insert("node-inference".to_string(), ModelStatus::Error);
+            state.insert("nmt-m2m100".to_string(), ModelStatus::Error);
+            state.insert("piper-tts".to_string(), ModelStatus::Error);
             state
         }),
     ).await.unwrap();
@@ -488,13 +524,14 @@ async fn test_node_status_manager_warmup_timeout() {
         Some(10.0),
         10.0,
         None,
+        None,
         0,
         Some({
             // 保持模型状态为 Error，导致健康检查失败
             let mut state = HashMap::new();
-            state.insert("asr-1".to_string(), ModelStatus::Error);
-            state.insert("nmt-1".to_string(), ModelStatus::Error);
-            state.insert("tts-1".to_string(), ModelStatus::Error);
+            state.insert("node-inference".to_string(), ModelStatus::Error);
+            state.insert("nmt-m2m100".to_string(), ModelStatus::Error);
+            state.insert("piper-tts".to_string(), ModelStatus::Error);
             state
         }),
     ).await;

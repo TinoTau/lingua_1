@@ -3,68 +3,24 @@
 use crate::messages::{FeatureFlags, ModelStatus};
 use super::types::Node;
 
-/// 检查节点是否具备所需的模型（ASR、NMT、TTS）
-pub fn node_has_required_models(node: &Node, src_lang: &str, tgt_lang: &str) -> bool {
-    // 检查节点是否安装了所需的模型（使用 capability_state）
-    // 优先使用 capability_state，如果没有则回退到 installed_models
-    
-    // 检查 ASR 模型（需要至少一个 ASR 模型为 ready）
-    let has_asr = node.capability_state.iter()
-        .any(|(model_id, status)| {
-            status == &ModelStatus::Ready && 
-            node.installed_models.iter()
-                .any(|m| m.model_id == *model_id && m.kind == "asr")
-        }) || node.installed_models.iter().any(|m| m.kind == "asr");
-    
-    // 检查 NMT 模型
-    let has_nmt = node.capability_state.iter()
-        .any(|(model_id, status)| {
-            status == &ModelStatus::Ready &&
-            node.installed_models.iter()
-                .any(|m| {
-                    m.model_id == *model_id &&
-                    m.kind == "nmt" &&
-                    m.src_lang.as_deref() == Some(src_lang) &&
-                    m.tgt_lang.as_deref() == Some(tgt_lang)
-                })
-        }) || node.installed_models.iter().any(|m| {
-            m.kind == "nmt"
-                && m.src_lang.as_deref() == Some(src_lang)
-                && m.tgt_lang.as_deref() == Some(tgt_lang)
-        });
-    
-    // 检查 TTS 模型
-    let has_tts = node.capability_state.iter()
-        .any(|(model_id, status)| {
-            status == &ModelStatus::Ready &&
-            node.installed_models.iter()
-                .any(|m| {
-                    m.model_id == *model_id &&
-                    m.kind == "tts" &&
-                    m.tgt_lang.as_deref() == Some(tgt_lang)
-                })
-        }) || node.installed_models.iter().any(|m| {
-            m.kind == "tts" && m.tgt_lang.as_deref() == Some(tgt_lang)
-        });
-    
-    has_asr && has_nmt && has_tts
+/// Phase 1：capability_state 语义统一为 service_id。
+/// required_ids 也被视为 service_id 列表（服务包 ID / 逻辑服务 ID）。
+pub fn node_has_required_services_ready(node: &Node, required_ids: &[String]) -> bool {
+    required_ids.iter().all(|service_id| {
+        node.capability_state
+            .get(service_id)
+            .map(|s| s == &ModelStatus::Ready)
+            .unwrap_or(false)
+    })
 }
 
-/// 检查节点是否具备所需的模型（通过 capability_state）
-/// 
-/// # Arguments
-/// * `node` - 节点
-/// * `required_model_ids` - 所需的模型 ID 列表
-/// 
-/// # Returns
-/// * `true` - 所有所需模型的状态都是 `Ready`
-/// * `false` - 至少有一个模型不是 `Ready`
-pub fn node_has_models_ready(node: &Node, required_model_ids: &[String]) -> bool {
-    required_model_ids.iter().all(|model_id| {
-        node.capability_state
-            .get(model_id)
-            .map(|status| status == &ModelStatus::Ready)
-            .unwrap_or(false)
+/// Phase 1：基于 installed_services 的硬过滤（service_id 存在即可）。
+pub fn node_has_installed_services(node: &Node, required_ids: &[String]) -> bool {
+    if required_ids.is_empty() {
+        return true;
+    }
+    required_ids.iter().all(|rid| {
+        node.installed_services.iter().any(|s| s.service_id == *rid)
     })
 }
 

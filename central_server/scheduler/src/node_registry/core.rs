@@ -1,0 +1,246 @@
+use super::NodeRegistry;
+use crate::messages::{
+    CapabilityState, FeatureFlags, HardwareInfo, InstalledModel, InstalledService, NodeStatus,
+};
+use std::collections::HashMap;
+use std::sync::Arc;
+use std::time::Instant;
+use tokio::sync::RwLock;
+use tracing::{info, warn};
+use uuid::Uuid;
+
+impl NodeRegistry {
+    #[allow(dead_code)]
+    pub fn new() -> Self {
+        Self {
+            nodes: Arc::new(RwLock::new(HashMap::new())),
+            resource_threshold: 25.0, // 默认 25%
+            exclude_reason_stats: Arc::new(RwLock::new(HashMap::new())),
+            unavailable_services: Arc::new(RwLock::new(HashMap::new())),
+            reserved_jobs: Arc::new(RwLock::new(HashMap::new())),
+        }
+    }
+
+    pub fn with_resource_threshold(threshold: f32) -> Self {
+        Self {
+            nodes: Arc::new(RwLock::new(HashMap::new())),
+            resource_threshold: threshold,
+            exclude_reason_stats: Arc::new(RwLock::new(HashMap::new())),
+            unavailable_services: Arc::new(RwLock::new(HashMap::new())),
+            reserved_jobs: Arc::new(RwLock::new(HashMap::new())),
+        }
+    }
+
+    /// 注册节点
+    ///
+    /// # 要求
+    /// - 节点必须有 GPU（hardware.gpus 不能为空）
+    /// - GPU 是保证翻译效率的必要条件，没有 GPU 的节点无法注册为算力提供方
+    ///
+    /// # 返回
+    /// - `Ok(Node)` - 注册成功
+    /// - `Err(String)` - 注册失败（没有 GPU）
+    pub async fn register_node(
+        &self,
+        node_id: Option<String>,
+        name: String,
+        version: String,
+        platform: String,
+        hardware: HardwareInfo,
+        installed_models: Vec<InstalledModel>,
+        installed_services: Option<Vec<InstalledService>>,
+        features_supported: FeatureFlags,
+        accept_public_jobs: bool,
+        capability_state: Option<CapabilityState>,
+    ) -> Result<super::Node, String> {
+        // 检查节点是否有 GPU（必需）
+        if hardware.gpus.is_none() || hardware.gpus.as_ref().unwrap().is_empty() {
+            warn!(
+                name = %name,
+                version = %version,
+                platform = %platform,
+                "Node registration failed: No GPU"
+            );
+            return Err("节点必须有 GPU 才能注册为算力提供方".to_string());
+        }
+
+        let t0 = Instant::now();
+        let mut nodes = self.nodes.write().await;
+        crate::observability::record_lock_wait("node_registry.nodes.write", t0.elapsed().as_millis() as u64);
+
+        // node_id 冲突检测（最小实现）
+        let final_node_id = if let Some(provided_id) = node_id {
+            // 如果提供了 node_id，检查是否已存在
+            if nodes.contains_key(&provided_id) {
+                warn!(
+                    node_id = %provided_id,
+                    name = %name,
+                    "Node registration failed: node_id conflict"
+                );
+                return Err("节点 ID 冲突，请清除本地 node_id 后重新注册".to_string());
+            }
+            provided_id
+        } else {
+            // 生成新的 node_id
+            format!("node-{}", Uuid::new_v4().to_string()[..8].to_uppercase())
+        };
+
+        // Phase 1：capability_state 语义统一为 service_id。
+        // 不再从 installed_models 推断（旧 model_id 痕迹清理），必须由节点端按服务包维度上报。
+        let capability_state = capability_state.unwrap_or_default();
+
+        // 保存用于日志的字段（在 move 之前）
+        let gpu_count = hardware.gpus.as_ref().map(|gpus| gpus.len()).unwrap_or(0);
+        let model_count = installed_models.len();
+
+        let now = chrono::Utc::now();
+        let node = super::Node {
+            node_id: final_node_id.clone(),
+            name: name.clone(),
+            version: version.clone(),
+            platform: platform.clone(),
+            hardware,
+            status: NodeStatus::Registering, // 初始状态为 registering
+            online: true,
+            cpu_usage: 0.0,
+            gpu_usage: Some(0.0), // 初始化为 0.0，因为节点必须有 GPU
+            memory_usage: 0.0,
+            installed_models,
+            installed_services: installed_services.unwrap_or_default(),
+            features_supported,
+            accept_public_jobs,
+            capability_state,
+            current_jobs: 0,
+            max_concurrent_jobs: 4,
+            last_heartbeat: now,
+            registered_at: now, // 记录注册时间
+        };
+
+        nodes.insert(final_node_id.clone(), node.clone());
+
+        info!(
+            node_id = %final_node_id,
+            name = %name,
+            version = %version,
+            platform = %platform,
+            gpu_count = gpu_count,
+            model_count = model_count,
+            accept_public_jobs = node.accept_public_jobs,
+            status = ?NodeStatus::Registering,
+            "Node registered successfully"
+        );
+
+        Ok(node)
+    }
+
+    /// 更新节点心跳
+    ///
+    /// # 要求
+    /// - GPU 使用率必须提供（不能为 None），因为所有节点都必须有 GPU
+    pub async fn update_node_heartbeat(
+        &self,
+        node_id: &str,
+        cpu_usage: f32,
+        gpu_usage: Option<f32>,
+        memory_usage: f32,
+        installed_models: Option<Vec<InstalledModel>>,
+        installed_services: Option<Vec<InstalledService>>,
+        current_jobs: usize,
+        capability_state: Option<CapabilityState>,
+    ) -> bool {
+        let t0 = Instant::now();
+        let mut nodes = self.nodes.write().await;
+        crate::observability::record_lock_wait("node_registry.nodes.write", t0.elapsed().as_millis() as u64);
+        if let Some(node) = nodes.get_mut(node_id) {
+            // GPU 使用率必须提供（所有节点都必须有 GPU）
+            let gpu_usage = gpu_usage.unwrap_or(0.0);
+
+            node.online = true;
+            node.cpu_usage = cpu_usage;
+            node.gpu_usage = Some(gpu_usage);
+            node.memory_usage = memory_usage;
+            if let Some(models) = installed_models {
+                node.installed_models = models;
+            }
+            if let Some(services) = installed_services {
+                node.installed_services = services;
+            }
+            if let Some(cap_state) = capability_state {
+                node.capability_state = cap_state;
+            }
+            node.current_jobs = current_jobs;
+            node.last_heartbeat = chrono::Utc::now();
+            true
+        } else {
+            false
+        }
+    }
+
+    pub async fn is_node_available(&self, node_id: &str) -> bool {
+        let nodes = self.nodes.read().await;
+        if let Some(node) = nodes.get(node_id) {
+            node.online && node.current_jobs < node.max_concurrent_jobs
+        } else {
+            false
+        }
+    }
+
+    /// 获取节点状态（用于测试）
+    #[allow(dead_code)]
+    pub async fn get_node_status(&self, node_id: &str) -> Option<NodeStatus> {
+        let nodes = self.nodes.read().await;
+        nodes.get(node_id).map(|node| node.status.clone())
+    }
+
+    /// 设置节点状态（用于测试）
+    #[allow(dead_code)]
+    pub async fn set_node_status(&self, node_id: &str, status: NodeStatus) -> bool {
+        let mut nodes = self.nodes.write().await;
+        if let Some(node) = nodes.get_mut(node_id) {
+            node.status = status;
+            true
+        } else {
+            false
+        }
+    }
+
+    pub async fn mark_node_offline(&self, node_id: &str) {
+        let mut nodes = self.nodes.write().await;
+        if let Some(node) = nodes.get_mut(node_id) {
+            node.online = false;
+        }
+    }
+
+    /// 检查指定节点是否具备所需的模型（异步版本）
+    pub async fn check_node_has_models_ready(&self, node_id: &str, required_model_ids: &[String]) -> bool {
+        let nodes = self.nodes.read().await;
+        if let Some(node) = nodes.get(node_id) {
+            super::validation::node_has_required_services_ready(node, required_model_ids)
+        } else {
+            false
+        }
+    }
+
+    /// 检查节点是否具备所需的模型（通过 capability_state）
+    #[allow(dead_code)]
+    pub fn node_has_models_ready(&self, node: &super::Node, required_model_ids: &[String]) -> bool {
+        // 兼容旧方法名：内部语义已切换为 “service_id readiness”
+        super::validation::node_has_required_services_ready(node, required_model_ids)
+    }
+
+    /// 测试辅助方法：获取节点信息（仅用于测试）
+    #[allow(dead_code)]
+    pub async fn get_node_for_test(&self, node_id: &str) -> Option<super::Node> {
+        let nodes = self.nodes.read().await;
+        nodes.get(node_id).cloned()
+    }
+
+    /// 测试辅助方法：列出所有节点 ID（仅用于测试）
+    #[allow(dead_code)]
+    pub async fn list_node_ids_for_test(&self) -> Vec<String> {
+        let nodes = self.nodes.read().await;
+        nodes.keys().cloned().collect()
+    }
+}
+
+

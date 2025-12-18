@@ -112,6 +112,17 @@ class NodeAgent {
             const hardware = await this.getHardwareInfo();
             // 获取已安装的模型
             const installedModels = await this.inferenceService.getInstalledModels();
+            // 获取已安装的服务包（Phase1 严格模式：Scheduler 会用 service_id 做核心链路过滤）
+            const installedServices = await this.getInstalledServices();
+            // 获取 capability_state（可选；为空时不要发送，避免覆盖 Scheduler 端的推断能力图）
+            const capabilityState = await this.getCapabilityState();
+            // Phase 1：把“服务包维度”的可用性也并入 capability_state（key=service_id）
+            // 这样 Scheduler 的 required(service_id) 可以直接通过 capability_state 判定 Ready
+            for (const s of installedServices) {
+                if (!capabilityState[s.service_id]) {
+                    capabilityState[s.service_id] = 'ready';
+                }
+            }
             // 获取支持的功能
             const featuresSupported = this.inferenceService.getFeaturesSupported();
             // 对齐协议规范：node_register 消息格式
@@ -122,8 +133,10 @@ class NodeAgent {
                 platform: this.getPlatform(),
                 hardware: hardware,
                 installed_models: installedModels,
+                installed_services: installedServices.length > 0 ? installedServices : undefined,
                 features_supported: featuresSupported,
                 accept_public_jobs: true, // TODO: 从配置读取
+                capability_state: Object.keys(capabilityState).length > 0 ? capabilityState : undefined,
             };
             this.ws.send(JSON.stringify(message));
         }
@@ -226,45 +239,61 @@ class NodeAgent {
         this.heartbeatInterval = setInterval(async () => {
             if (!this.ws || this.ws.readyState !== ws_1.default.OPEN || !this.nodeId)
                 return;
-            const resources = await this.getSystemResources();
-            const installedModels = await this.inferenceService.getInstalledModels();
-            // 获取已安装的服务包
-            const installedServices = await this.getInstalledServices();
-            // 获取 capability_state（节点模型能力图）
-            const capabilityState = await this.getCapabilityState();
-            // 记录 capability_state 信息
-            const capabilityStateCount = Object.keys(capabilityState).length;
-            const readyCount = Object.values(capabilityState).filter(s => s === 'ready').length;
-            logger_1.default.info({
-                capabilityStateCount,
-                readyCount,
-                installedModelsCount: installedModels.length,
-                installedServicesCount: installedServices.length,
-                installedServices: installedServices.map(s => s.service_id)
-            }, 'Sending heartbeat with capability_state and installed_services');
-            // 对齐协议规范：node_heartbeat 消息格式
-            const message = {
-                type: 'node_heartbeat',
-                node_id: this.nodeId,
-                timestamp: Date.now(),
-                resource_usage: {
-                    cpu_percent: resources.cpu,
-                    gpu_percent: resources.gpu || undefined,
-                    gpu_mem_percent: resources.gpuMem || undefined,
-                    mem_percent: resources.memory,
-                    running_jobs: this.inferenceService.getCurrentJobCount(),
-                },
-                installed_models: installedModels.length > 0 ? installedModels : undefined,
-                installed_services: installedServices.length > 0 ? installedServices : undefined,
-                capability_state: capabilityState,
-            };
-            this.ws.send(JSON.stringify(message));
-            if (capabilityStateCount === 0) {
-                logger_1.default.warn({
-                    modelHubUrl: this.modelManager ? 'configured' : 'not configured'
-                }, 'Heartbeat sent with empty capability_state - this may cause health check failures');
-            }
+            await this.sendHeartbeatOnce();
         }, 15000); // 每15秒发送一次心跳
+    }
+    /**
+     * 立即发送一次心跳（用于 node_register_ack 后立刻同步 installed_services/capability_state）
+     * 避免等待 15s interval 导致调度端短时间内认为“无可用节点/无服务包”。
+     */
+    async sendHeartbeatOnce() {
+        if (!this.ws || this.ws.readyState !== ws_1.default.OPEN || !this.nodeId)
+            return;
+        const resources = await this.getSystemResources();
+        const installedModels = await this.inferenceService.getInstalledModels();
+        // 获取已安装的服务包
+        const installedServices = await this.getInstalledServices();
+        // 获取 capability_state（节点模型能力图）
+        const capabilityState = await this.getCapabilityState();
+        // Phase 1：把服务包 service_id 合并进 capability_state（至少标记为 ready）
+        for (const s of installedServices) {
+            if (!capabilityState[s.service_id]) {
+                capabilityState[s.service_id] = 'ready';
+            }
+        }
+        // 记录 capability_state 信息
+        const capabilityStateCount = Object.keys(capabilityState).length;
+        const readyCount = Object.values(capabilityState).filter(s => s === 'ready').length;
+        logger_1.default.info({
+            capabilityStateCount,
+            readyCount,
+            installedModelsCount: installedModels.length,
+            installedServicesCount: installedServices.length,
+            installedServices: installedServices.map(s => s.service_id)
+        }, 'Sending heartbeat with capability_state and installed_services');
+        // 对齐协议规范：node_heartbeat 消息格式
+        const message = {
+            type: 'node_heartbeat',
+            node_id: this.nodeId,
+            timestamp: Date.now(),
+            resource_usage: {
+                cpu_percent: resources.cpu,
+                gpu_percent: resources.gpu || undefined,
+                gpu_mem_percent: resources.gpuMem || undefined,
+                mem_percent: resources.memory,
+                running_jobs: this.inferenceService.getCurrentJobCount(),
+            },
+            installed_models: installedModels.length > 0 ? installedModels : undefined,
+            installed_services: installedServices.length > 0 ? installedServices : undefined,
+            // 为空时不要发送，避免把 Scheduler 端已有的 capability_state 覆盖成空
+            capability_state: capabilityStateCount > 0 ? capabilityState : undefined,
+        };
+        this.ws.send(JSON.stringify(message));
+        if (capabilityStateCount === 0) {
+            logger_1.default.warn({
+                modelHubUrl: this.modelManager ? 'configured' : 'not configured'
+            }, 'Heartbeat sent with empty capability_state - this may cause health check failures');
+        }
     }
     /**
      * 获取已安装的服务包列表
@@ -355,11 +384,23 @@ class NodeAgent {
                     const ack = message;
                     this.nodeId = ack.node_id;
                     logger_1.default.info({ nodeId: this.nodeId }, 'Node registered successfully');
+                    // 立刻补发一次心跳，把 installed_services/capability_state 尽快同步到 Scheduler
+                    this.sendHeartbeatOnce().catch((error) => {
+                        logger_1.default.warn({ error }, 'Failed to send immediate heartbeat after node_register_ack');
+                    });
                     break;
                 }
                 case 'job_assign': {
                     const job = message;
                     await this.handleJob(job);
+                    break;
+                }
+                case 'job_cancel': {
+                    const cancel = message;
+                    const ok = typeof this.inferenceService.cancelJob === 'function'
+                        ? this.inferenceService.cancelJob(cancel.job_id)
+                        : false;
+                    logger_1.default.info({ jobId: cancel.job_id, traceId: cancel.trace_id, reason: cancel.reason, ok }, 'Received job_cancel from scheduler');
                     break;
                 }
                 case 'pairing_code':
@@ -402,6 +443,7 @@ class NodeAgent {
             const response = {
                 type: 'job_result',
                 job_id: job.job_id,
+                attempt_id: job.attempt_id,
                 node_id: this.nodeId,
                 session_id: job.session_id,
                 utterance_index: job.utterance_index,
@@ -424,6 +466,7 @@ class NodeAgent {
                 const errorResponse = {
                     type: 'job_result',
                     job_id: job.job_id,
+                    attempt_id: job.attempt_id,
                     node_id: this.nodeId,
                     session_id: job.session_id,
                     utterance_index: job.utterance_index,
@@ -435,6 +478,9 @@ class NodeAgent {
                         details: {
                             model_id: error.modelId,
                             version: error.version,
+                            // 兼容“模型=服务包”的命名：提供 service_id/service_version 作为别名字段
+                            service_id: error.modelId,
+                            service_version: error.version,
                             reason: error.reason,
                         },
                     },
@@ -447,6 +493,7 @@ class NodeAgent {
             const errorResponse = {
                 type: 'job_result',
                 job_id: job.job_id,
+                attempt_id: job.attempt_id,
                 node_id: this.nodeId,
                 session_id: job.session_id,
                 utterance_index: job.utterance_index,

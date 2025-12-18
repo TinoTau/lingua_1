@@ -1,6 +1,7 @@
 // 统计数据模块
 
 use crate::app_state::AppState;
+use crate::service_catalog::ServiceInfo;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -78,31 +79,31 @@ pub struct NodePowerDetail {
     pub memory_power: f64,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct ServiceInfo {
-    pub service_id: String,
-    pub name: String,
-    pub latest_version: String,
-    pub variants: Vec<ServiceVariant>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct ServiceVariant {
-    pub version: String,
-    pub platform: String,
-    pub artifact: ServiceArtifact,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct ServiceArtifact {
-    #[serde(rename = "type")]
-    pub artifact_type: String,
-    pub url: String,
-    pub sha256: String,
-    pub size_bytes: u64,
-}
-
 impl DashboardStats {
+    /// 空快照（用于冷启动/降级返回），保证字段结构稳定，避免前端解析失败。
+    pub fn empty() -> Self {
+        Self {
+            web_clients: WebClientStats {
+                active_users: 0,
+                top_languages: Vec::new(),
+                language_usage: HashMap::new(),
+            },
+            nodes: NodeStats {
+                connected_nodes: 0,
+                model_node_counts: HashMap::new(),
+                available_services: Vec::new(),
+                total_services: 0,
+                service_node_counts: HashMap::new(),
+                compute_power: ComputePowerStats {
+                    total_cpu_power: 0.0,
+                    total_gpu_power: 0.0,
+                    total_memory_power: 0.0,
+                    node_power_details: Vec::new(),
+                },
+            },
+        }
+    }
+
     pub async fn collect(state: &AppState) -> Self {
         // 收集Web端统计
         let web_clients = Self::collect_web_client_stats(state).await;
@@ -218,81 +219,30 @@ impl DashboardStats {
                 continue;
             }
             
-            // 从capability_state统计
+            // Phase 1：capability_state key 语义统一为 service_id
             if !node.capability_state.is_empty() {
-                for (model_id, status) in &node.capability_state {
+                for (service_id, status) in &node.capability_state {
                     if matches!(status, crate::messages::ModelStatus::Ready) {
-                        *model_node_counts.entry(model_id.clone()).or_insert(0) += 1;
-                    }
-                }
-            } else {
-                // 如果capability_state为空，从installed_models统计
-                for model in &node.installed_models {
-                    if model.enabled.unwrap_or(true) {
-                        *model_node_counts.entry(model.model_id.clone()).or_insert(0) += 1;
+                        *model_node_counts.entry(service_id.clone()).or_insert(0) += 1;
                     }
                 }
             }
         }
         
-        // 从Model Hub获取可用服务包列表（通过HTTP API）
-        let available_services = match Self::fetch_services_from_hub().await {
-            Ok(services) => {
-                tracing::debug!("成功获取 {} 个服务包", services.len());
-                services
-            },
-            Err(e) => {
-                tracing::warn!("获取Model Hub服务包列表失败: {}", e);
-                tracing::warn!("请确保Model Hub服务正在运行 (http://127.0.0.1:5000)");
-                Vec::new()
-            }
-        };
+        // 从 ServiceCatalogCache 获取可用服务包列表（无网络 IO）
+        let available_services = state.service_catalog.get_services().await;
         let total_services = available_services.len();
 
-        // 统计每个服务包有多少节点在使用
-        // 优先从节点的 installed_services 获取，如果没有则从 installed_models 推断
+        // 统计每个服务包有多少节点在使用（仅认 installed_services；不再从 installed_models 推断）
         let mut service_node_counts: HashMap<String, usize> = HashMap::new();
         for node in nodes.values() {
             if !node.online {
                 continue;
             }
             
-            // 优先使用节点直接报告的服务包信息
             if !node.installed_services.is_empty() {
                 for service in &node.installed_services {
                     *service_node_counts.entry(service.service_id.clone()).or_insert(0) += 1;
-                }
-            } else {
-                // 如果没有服务包信息，从节点的模型推断服务包（向后兼容）
-                let mut used_services = std::collections::HashSet::new();
-                
-                for model in &node.installed_models {
-                    if !model.enabled.unwrap_or(true) {
-                        continue;
-                    }
-                    
-                    // 根据模型类型推断服务包
-                    let model_id_lower = model.model_id.to_lowercase();
-                    if model_id_lower.contains("m2m100") || model_id_lower.contains("nmt") {
-                        used_services.insert("nmt-m2m100");
-                    } else if model_id_lower.contains("piper") || (model_id_lower.contains("tts") && !model_id_lower.contains("your")) {
-                        used_services.insert("piper-tts");
-                    } else if model_id_lower.contains("yourtts") || model_id_lower.contains("your_tts") {
-                        used_services.insert("your-tts");
-                    } else if model_id_lower.contains("whisper") || model_id_lower.contains("asr") {
-                        // ASR 模型可能来自 node-inference 服务包
-                        used_services.insert("node-inference");
-                    }
-                }
-                
-                // 如果节点有多个模型，可能使用了 node-inference 服务包（包含多个模型）
-                if node.installed_models.len() > 3 {
-                    used_services.insert("node-inference");
-                }
-                
-                // 统计服务包使用
-                for service_id in used_services {
-                    *service_node_counts.entry(service_id.to_string()).or_insert(0) += 1;
                 }
             }
         }
@@ -376,136 +326,5 @@ impl DashboardStats {
         }
     }
 
-    /// 从Model Hub HTTP API获取服务包列表
-    async fn fetch_services_from_hub() -> Result<Vec<ServiceInfo>, String> {
-        use serde_json::Value;
-        
-        // Model Hub默认地址（使用 127.0.0.1 而不是 localhost，避免 IPv6 解析问题）
-        let hub_url = std::env::var("MODEL_HUB_URL")
-            .unwrap_or_else(|_| "http://127.0.0.1:5000".to_string());
-        
-        let api_url = format!("{}/api/services", hub_url);
-        tracing::debug!("从Model Hub获取服务包列表: {}", api_url);
-        
-        let client = reqwest::Client::builder()
-            .timeout(std::time::Duration::from_secs(60))
-            .connect_timeout(std::time::Duration::from_secs(5))
-            .build()
-            .map_err(|e| format!("创建HTTP客户端失败: {}", e))?;
-        
-        let response = client
-            .get(&api_url)
-            .send()
-            .await
-            .map_err(|e| {
-                let err_msg = format!("请求Model Hub失败 ({}): {}", api_url, e);
-                tracing::warn!("{}", err_msg);
-                err_msg
-            })?;
-        
-        if !response.status().is_success() {
-            let status = response.status();
-            let err_msg = format!("Model Hub返回HTTP错误: {} (URL: {})", status, api_url);
-            tracing::warn!("{}", err_msg);
-            return Err(err_msg);
-        }
-        
-        let json: Value = response
-            .json()
-            .await
-            .map_err(|e| {
-                let err_msg = format!("解析Model Hub响应失败: {}", e);
-                tracing::warn!("{}", err_msg);
-                err_msg
-            })?;
-        
-        // 解析响应：{"services": [...]}
-        let services_array = json["services"]
-            .as_array()
-            .ok_or_else(|| "响应中没有services字段或不是数组".to_string())?;
-        
-        tracing::debug!("从Model Hub获取到 {} 个服务包", services_array.len());
-        
-        let mut result = Vec::new();
-        for service in services_array {
-            let service_id = service["service_id"]
-                .as_str()
-                .ok_or_else(|| "服务包缺少service_id字段".to_string())?
-                .to_string();
-            
-            let name = service["name"]
-                .as_str()
-                .unwrap_or(&service_id)
-                .to_string();
-            
-            let latest_version = service["latest_version"]
-                .as_str()
-                .unwrap_or("1.0.0")
-                .to_string();
-            
-            // 解析variants
-            let empty_vec: Vec<Value> = Vec::new();
-            let variants_array = service["variants"]
-                .as_array()
-                .unwrap_or(&empty_vec);
-            
-            let mut variants = Vec::new();
-            for variant in variants_array {
-                let version = variant["version"]
-                    .as_str()
-                    .unwrap_or("1.0.0")
-                    .to_string();
-                
-                let platform = variant["platform"]
-                    .as_str()
-                    .unwrap_or("unknown")
-                    .to_string();
-                
-                let artifact_obj = variant["artifact"]
-                    .as_object()
-                    .ok_or_else(|| "variant缺少artifact字段".to_string())?;
-                
-                let artifact_type = artifact_obj["type"]
-                    .as_str()
-                    .unwrap_or("zip")
-                    .to_string();
-                
-                let url = artifact_obj["url"]
-                    .as_str()
-                    .unwrap_or("")
-                    .to_string();
-                
-                let sha256 = artifact_obj["sha256"]
-                    .as_str()
-                    .unwrap_or("")
-                    .to_string();
-                
-                let size_bytes = artifact_obj["size_bytes"]
-                    .as_u64()
-                    .unwrap_or(0);
-                
-                variants.push(ServiceVariant {
-                    version,
-                    platform,
-                    artifact: ServiceArtifact {
-                        artifact_type,
-                        url,
-                        sha256,
-                        size_bytes,
-                    },
-                });
-            }
-            
-            result.push(ServiceInfo {
-                service_id,
-                name,
-                latest_version,
-                variants,
-            });
-        }
-        
-        tracing::info!("成功获取 {} 个服务包", result.len());
-        Ok(result)
-    }
 }
 

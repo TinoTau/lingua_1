@@ -61,6 +61,9 @@ lazy_static = "1.4"
 # 随机数生成（用于房间码生成）
 rand = "0.8"
 
+# Prometheus 指标（方向B）
+prometheus = "0.13"
+
 [dev-dependencies]
 tokio-test = "0.4"
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "rt", "time", "process", "fs", "test-util"] }

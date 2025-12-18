@@ -16,6 +16,14 @@ pub mod module_resolver;
 pub mod group_manager;
 pub mod node_status_manager;
 pub mod room_manager;
+pub mod stats;
+pub mod service_catalog;
+pub mod dashboard_snapshot;
+pub mod model_not_available;
+pub mod metrics;
+pub mod observability;
+pub mod prometheus_metrics;
+pub mod job_timeout;
 
 pub use app_state::AppState;
 pub use audio_buffer::AudioBufferManager;

@@ -62,9 +62,9 @@ pub enum ModelStatus {
     Error,
 }
 
-/// 节点模型能力图（capability_state）
+/// 节点服务能力图（capability_state）
 /// 
-/// key: model_id, value: 模型状态
+/// **Phase 1 规范：key 必须是 service_id（服务包 ID）**，value 为该服务包当前状态
 pub type CapabilityState = std::collections::HashMap<String, ModelStatus>;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

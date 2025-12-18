@@ -187,6 +187,7 @@ export type ErrorCode =
   | "WS_DISCONNECTED"
   | "NMT_TIMEOUT"
   | "TTS_TIMEOUT"
+  | "JOB_TIMEOUT"
   | "MODEL_VERIFY_FAILED"
   | "MODEL_CORRUPTED";
 
@@ -222,6 +223,8 @@ export interface NodeRegisterMessage {
     }>;
   };
   installed_models: InstalledModel[];
+  /** 节点已安装的服务包列表（可选） */
+  installed_services?: InstalledService[];
   features_supported: FeatureFlags;
   accept_public_jobs: boolean;
   /** 节点模型能力图（capability_state） */
@@ -240,6 +243,8 @@ export interface NodeHeartbeatMessage {
   timestamp: number;
   resource_usage: ResourceUsage;
   installed_models?: InstalledModel[];
+  /** 节点已安装的服务包列表（可选） */
+  installed_services?: InstalledService[];
   /** 节点模型能力图（capability_state） */
   capability_state?: Record<string, ModelStatus>;
 }
@@ -247,6 +252,8 @@ export interface NodeHeartbeatMessage {
 export interface JobAssignMessage {
   type: 'job_assign';
   job_id: string;
+  /** 下发 attempt 序号（从 1 开始），用于重派时结果去重 */
+  attempt_id: number;
   session_id: string;
   utterance_index: number;
   src_lang: string;  // 支持 "auto" | "zh" | "en" | "ja" | "ko"
@@ -277,9 +284,20 @@ export interface JobAssignMessage {
   trace_id: string;
 }
 
+export interface JobCancelMessage {
+  type: 'job_cancel';
+  job_id: string;
+  /** 追踪 ID（可选，用于链路日志） */
+  trace_id?: string;
+  /** 取消原因（可选，用于日志/诊断） */
+  reason?: string;
+}
+
 export interface JobResultMessage {
   type: 'job_result';
   job_id: string;
+  /** 对应的下发 attempt 序号（从 1 开始） */
+  attempt_id: number;
   node_id: string;
   session_id: string;
   utterance_index: number;
@@ -339,6 +357,7 @@ export type SessionSideOutgoingMessage =
 export type NodeSideIncomingMessage =
   | NodeRegisterAckMessage
   | JobAssignMessage
+  | JobCancelMessage
   | NodeControlMessage
   | ErrorMessage;
 
@@ -365,6 +384,7 @@ export type AnyMessage =
   | NodeRegisterAckMessage
   | NodeHeartbeatMessage
   | JobAssignMessage
+  | JobCancelMessage
   | JobResultMessage
   | NodeErrorMessage
   | NodeControlMessage;

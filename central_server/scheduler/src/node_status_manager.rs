@@ -161,35 +161,37 @@ impl NodeStatusManager {
             return false;
         }
         
-        // 检查必需模型是否 ready
-        // 对于 registering 状态，需要检查所有 installed_models 是否 ready
-        // 对于 ready/degraded 状态，需要检查 capability_state 中的模型状态
-        let models_ready = if node.status == NodeStatus::Registering {
-            // registering 状态：检查 installed_models 是否都有对应的 capability_state 且状态为 Ready
-            node.installed_models.iter().all(|m| {
+        // Phase 1：capability_state key 语义统一为 service_id
+        // - registering：要求节点已上报 installed_services，且这些 service_id 在 capability_state 中均为 Ready
+        // - ready/degraded：要求 capability_state 中至少存在一个 Ready（避免空状态误判健康）
+        let services_ready = if node.status == NodeStatus::Registering {
+            if node.installed_services.is_empty() {
+                warn!(node_id = %node.node_id, "Node health check failed: installed_services is empty (Phase1 strict)");
+                return false;
+            }
+            node.installed_services.iter().all(|svc| {
                 node.capability_state
-                    .get(&m.model_id)
+                    .get(&svc.service_id)
                     .map(|status| status == &ModelStatus::Ready)
                     .unwrap_or(false)
             })
         } else {
-            // ready/degraded 状态：检查 capability_state 中是否有模型状态为 Ready
-            !node.capability_state.is_empty() && 
-            node.capability_state.values().any(|status| status == &ModelStatus::Ready)
+            !node.capability_state.is_empty()
+                && node.capability_state.values().any(|status| status == &ModelStatus::Ready)
         };
         
-        if !models_ready {
+        if !services_ready {
             warn!(
                 node_id = %node.node_id,
                 status = ?node.status,
-                installed_models_count = node.installed_models.len(),
+                installed_services_count = node.installed_services.len(),
                 capability_state_count = node.capability_state.len(),
-                "Node health check failed: Models not ready"
+                "Node health check failed: Services not ready"
             );
-            // 记录详细的模型状态
+            // 记录详细的服务状态
             if !node.capability_state.is_empty() {
-                for (model_id, status) in &node.capability_state {
-                    debug!(node_id = %node.node_id, model_id = %model_id, status = ?status, "Model status");
+                for (service_id, status) in &node.capability_state {
+                    debug!(node_id = %node.node_id, service_id = %service_id, status = ?status, "Service status");
                 }
             }
             return false;

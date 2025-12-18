@@ -7,6 +7,7 @@ use axum::{
 };
 use std::net::SocketAddr;
 use std::path::PathBuf;
+use std::time::Duration;
 use tracing::info;
 use tracing_subscriber;
 use tracing_subscriber::filter::EnvFilter;
@@ -35,6 +36,13 @@ mod group_manager;
 mod node_status_manager;
 mod room_manager;
 mod stats;
+mod service_catalog;
+mod dashboard_snapshot;
+mod model_not_available;
+mod metrics;
+mod observability;
+mod prometheus_metrics;
+mod job_timeout;
 
 use session::SessionManager;
 use dispatcher::JobDispatcher;
@@ -117,6 +125,15 @@ async fn main() -> Result<()> {
     let config = Config::load()?;
     info!("配置加载成功");
 
+    // 方向A：设置观测阈值（锁等待/关键路径）
+    observability::set_thresholds(
+        config.scheduler.observability.lock_wait_warn_ms,
+        config.scheduler.observability.path_warn_ms,
+    );
+
+    // 方向B：初始化 Prometheus registry（/metrics）
+    prometheus_metrics::init();
+
     // 明确记录服务监听地址和端口，方便排查
     info!("  服务器监听地址: {}:{}", config.server.host, config.server.port);
     let http_url = format!("http://{}:{}", config.server.host, config.server.port);
@@ -126,9 +143,12 @@ async fn main() -> Result<()> {
     info!("  会话 WebSocket: {}", session_ws_url);
     info!("  节点 WebSocket: {}", node_ws_url);
     info!("  模型中心: {} (存储路径: {})", config.model_hub.base_url, config.model_hub.storage_path.display());
-    info!("  调度器: 每节点最大并发任务={}, 任务超时={}秒, 心跳间隔={}秒", 
+    info!(
+        "  调度器: 每节点最大并发任务={}, dispatched 超时={}秒, pending 超时={}秒, failover_max_attempts={}, 心跳间隔={}秒",
         config.scheduler.max_concurrent_jobs_per_node,
         config.scheduler.job_timeout_seconds,
+        config.scheduler.job_timeout.pending_timeout_seconds,
+        config.scheduler.job_timeout.failover_max_attempts,
         config.scheduler.heartbeat_interval_seconds);
     info!("  负载均衡: 策略={}, 资源阈值={}%", 
         config.scheduler.load_balancer.strategy,
@@ -143,9 +163,20 @@ async fn main() -> Result<()> {
     let session_manager = SessionManager::new();
     let resource_threshold = config.scheduler.load_balancer.resource_threshold;
     let node_registry = std::sync::Arc::new(NodeRegistry::with_resource_threshold(resource_threshold));
-    let dispatcher = JobDispatcher::new(node_registry.clone());
+    let dispatcher = JobDispatcher::new_with_phase1_config(
+        node_registry.clone(),
+        config.scheduler.task_binding.clone(),
+        config.scheduler.core_services.clone(),
+    );
     let pairing_service = PairingService::new();
     let model_hub = ModelHub::new(&config.model_hub)?;
+    // ServiceCatalog：优先走 ModelHub HTTP；若失败则可用本地 services_index.json 兜底（单机冷启动/离线）
+    let local_services_index = config.model_hub.storage_path.join("services_index.json");
+    let service_catalog = service_catalog::ServiceCatalogCache::new(config.model_hub.base_url.clone())
+        .with_local_services_index_path(local_services_index);
+    let dashboard_snapshot = dashboard_snapshot::DashboardSnapshotCache::new(Duration::from_secs(5));
+    let (model_na_tx, model_na_rx) = tokio::sync::mpsc::unbounded_channel();
+    let model_not_available_bus = model_not_available::ModelNotAvailableBus::new(model_na_tx);
     let session_connections = SessionConnectionManager::new();
     let node_connections = NodeConnectionManager::new();
     let result_queue = ResultQueueManager::new();
@@ -175,6 +206,10 @@ async fn main() -> Result<()> {
         node_registry,
         pairing_service,
         model_hub,
+        service_catalog,
+        dashboard_snapshot,
+        model_not_available_bus,
+        web_task_segmentation: config.scheduler.web_task_segmentation.clone(),
         session_connections: session_connections.clone(),
         node_connections,
         result_queue,
@@ -183,6 +218,25 @@ async fn main() -> Result<()> {
         node_status_manager,
         room_manager: room_manager.clone(),
     };
+
+    // Phase 1：Job 超时/重派管理（含 best-effort cancel）
+    job_timeout::start_job_timeout_manager(
+        app_state.clone(),
+        config.scheduler.job_timeout_seconds,
+        config.scheduler.job_timeout.clone(),
+        config.scheduler.task_binding.reserved_ttl_seconds,
+    );
+
+    // 启动后台缓存刷新：服务目录缓存 + Dashboard stats 快照缓存
+    app_state.service_catalog.start_background_refresh();
+    app_state.dashboard_snapshot.start_background_refresh(app_state.clone());
+
+    // 启动 MODEL_NOT_AVAILABLE 后台处理（主路径只入队）
+    model_not_available::start_worker(
+        model_na_rx,
+        app_state.node_registry.clone(),
+        config.scheduler.model_not_available.clone(),
+    );
     
     // 启动房间过期清理任务（每1分钟扫描一次）
     let app_state_for_cleanup = app_state.clone();
@@ -221,6 +275,8 @@ async fn main() -> Result<()> {
         .route("/ws/node", get(handle_node_ws))
         .route("/health", get(health_check))
         .route("/api/v1/stats", get(get_stats))
+        .route("/api/v1/metrics", get(get_metrics))
+        .route("/metrics", get(get_prometheus_metrics))
         .route("/dashboard", get(serve_dashboard))
         .route("/compute-power", get(serve_compute_power))
         .route("/models", get(serve_models))
@@ -286,9 +342,44 @@ async fn health_check() -> &'static str {
 // 统计API端点
 async fn get_stats(
     axum::extract::State(state): axum::extract::State<AppState>,
-) -> axum::Json<stats::DashboardStats> {
-    let stats = stats::DashboardStats::collect(&state).await;
-    axum::Json(stats)
+) -> impl axum::response::IntoResponse {
+    let t0 = std::time::Instant::now();
+    // v1.1 规范：请求路径不做现场生成；冷启动直接返回空快照，并触发一次后台刷新（SingleFlight + 频率限制）。
+    if state.dashboard_snapshot.last_updated_at_ms().await == 0 {
+        state.dashboard_snapshot.try_trigger_refresh_nonblocking(state.clone());
+    }
+
+    let json = state.dashboard_snapshot.get_json().await;
+    let updated_at = state.dashboard_snapshot.last_updated_at_ms().await;
+    let now_ms = chrono::Utc::now().timestamp_millis();
+    let is_stale = updated_at == 0 || (now_ms - updated_at) > 10_000; // 简单阈值：>10s 视为 stale（Phase 1 先用经验值）
+    crate::metrics::on_stats_response(is_stale);
+    crate::prometheus_metrics::observe_stats_request_duration_seconds(t0.elapsed().as_secs_f64());
+    (
+        axum::http::StatusCode::OK,
+        [(axum::http::header::CONTENT_TYPE, "application/json")],
+        json,
+    )
+}
+
+async fn get_metrics(
+    axum::extract::State(state): axum::extract::State<AppState>,
+) -> axum::Json<crate::metrics::MetricsSnapshot> {
+    axum::Json(crate::metrics::collect(&state).await)
+}
+
+async fn get_prometheus_metrics(
+    axum::extract::State(state): axum::extract::State<AppState>,
+) -> impl axum::response::IntoResponse {
+    let (body, content_type) = crate::prometheus_metrics::render_text(&state).await;
+    let hv = axum::http::HeaderValue::from_str(&content_type).unwrap_or_else(|_| {
+        axum::http::HeaderValue::from_static("text/plain; charset=utf-8")
+    });
+    (
+        axum::http::StatusCode::OK,
+        [(axum::http::header::CONTENT_TYPE, hv)],
+        body,
+    )
 }
 
 // 仪表盘页面

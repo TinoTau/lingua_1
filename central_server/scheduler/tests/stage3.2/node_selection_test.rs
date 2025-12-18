@@ -3,7 +3,10 @@
 
 use lingua_scheduler::dispatcher::JobDispatcher;
 use lingua_scheduler::node_registry::NodeRegistry;
-use lingua_scheduler::messages::{FeatureFlags, PipelineConfig, HardwareInfo, GpuInfo, InstalledModel, CapabilityState, ModelStatus, NodeStatus};
+use lingua_scheduler::messages::{
+    CapabilityState, FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, InstalledService,
+    ModelStatus, NodeStatus, PipelineConfig,
+};
 use std::collections::HashMap;
 use std::sync::Arc;
 
@@ -50,23 +53,32 @@ fn create_test_models(src_lang: &str, tgt_lang: &str) -> Vec<InstalledModel> {
     ]
 }
 
-fn create_capability_state_with_models(model_ids: &[&str]) -> CapabilityState {
+fn create_capability_state_with_services(service_ids: &[&str]) -> CapabilityState {
     let mut state = HashMap::new();
-    for model_id in model_ids {
-        state.insert(model_id.to_string(), ModelStatus::Ready);
+    for service_id in service_ids {
+        state.insert(service_id.to_string(), ModelStatus::Ready);
     }
     state
+}
+
+fn create_installed_services(service_ids: &[&str]) -> Vec<InstalledService> {
+    service_ids
+        .iter()
+        .map(|sid| InstalledService {
+            service_id: (*sid).to_string(),
+            version: "1.0.0".to_string(),
+            platform: "linux-x64".to_string(),
+        })
+        .collect()
 }
 
 #[tokio::test]
 async fn test_select_node_with_models_ready() {
     let registry = Arc::new(NodeRegistry::new());
     
-    // 注册节点1：有 emotion-xlm-r 模型且状态为 ready
-    let cap_state_1 = create_capability_state_with_models(&[
-        "whisper-large-v3-zh",
-        "m2m100-zh-en",
-        "piper-tts-en",
+    // Phase 1：capability_state 的 key 统一为 service_id
+    // 注册节点1：包含 emotion-xlm-r 服务且状态 ready
+    let cap_state_1 = create_capability_state_with_services(&[
         "emotion-xlm-r",
     ]);
     
@@ -77,6 +89,7 @@ async fn test_select_node_with_models_ready() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        Some(create_installed_services(&["emotion-xlm-r"])),
         FeatureFlags {
             emotion_detection: Some(true),
             voice_style_detection: None,
@@ -91,12 +104,8 @@ async fn test_select_node_with_models_ready() {
     
     assert!(result.is_ok(), "节点1注册失败: {:?}", result.err());
     
-    // 注册节点2：没有 emotion-xlm-r 模型
-    let cap_state_2 = create_capability_state_with_models(&[
-        "whisper-large-v3-zh",
-        "m2m100-zh-en",
-        "piper-tts-en",
-    ]);
+    // 注册节点2：不包含 emotion-xlm-r
+    let cap_state_2 = create_capability_state_with_services(&[]);
     
     let result = registry.register_node(
         Some("node-2".to_string()),
@@ -105,6 +114,7 @@ async fn test_select_node_with_models_ready() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        Some(create_installed_services(&[])),
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -137,7 +147,9 @@ async fn test_select_node_with_models_ready() {
         }
     }
     
-    let selected = registry.select_node_with_models("zh", "en", &required_models, true).await;
+    let (selected, _bd) = registry
+        .select_node_with_models_excluding_with_breakdown("zh", "en", &required_models, true, None)
+        .await;
     
     // 应该选择节点1（有模型且状态为 ready）
     assert_eq!(selected, Some("node-1".to_string()), "选择的节点: {:?}", selected);
@@ -147,11 +159,8 @@ async fn test_select_node_with_models_ready() {
 async fn test_select_node_with_models_not_ready() {
     let registry = Arc::new(NodeRegistry::new());
     
-    // 注册节点：有 emotion-xlm-r 模型但状态为 downloading
+    // 注册节点：有 emotion-xlm-r 服务但状态为 downloading
     let mut cap_state = HashMap::new();
-    cap_state.insert("whisper-large-v3-zh".to_string(), ModelStatus::Ready);
-    cap_state.insert("m2m100-zh-en".to_string(), ModelStatus::Ready);
-    cap_state.insert("piper-tts-en".to_string(), ModelStatus::Ready);
     cap_state.insert("emotion-xlm-r".to_string(), ModelStatus::Downloading); // 正在下载
     
     let _ = registry.register_node(
@@ -161,6 +170,7 @@ async fn test_select_node_with_models_not_ready() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        Some(create_installed_services(&["emotion-xlm-r"])),
         FeatureFlags {
             emotion_detection: Some(true),
             voice_style_detection: None,
@@ -175,7 +185,9 @@ async fn test_select_node_with_models_not_ready() {
     
     // 选择需要 emotion-xlm-r 模型的节点
     let required_models = vec!["emotion-xlm-r".to_string()];
-    let selected = registry.select_node_with_models("zh", "en", &required_models, true).await;
+    let (selected, _bd) = registry
+        .select_node_with_models_excluding_with_breakdown("zh", "en", &required_models, true, None)
+        .await;
     
     // 应该没有选择节点（模型未就绪）
     assert_eq!(selected, None);
@@ -186,11 +198,11 @@ async fn test_select_node_with_module_expansion() {
     let registry = Arc::new(NodeRegistry::new());
     let dispatcher = JobDispatcher::new(registry.clone());
     
-    // 注册节点：支持 emotion_detection 功能，且有 emotion-xlm-r 模型
-    let cap_state = create_capability_state_with_models(&[
-        "whisper-large-v3-zh",
-        "m2m100-zh-en",
-        "piper-tts-en",
+    // 注册节点：支持 emotion_detection 功能，且有 emotion-xlm-r 服务
+    let cap_state = create_capability_state_with_services(&[
+        "node-inference",
+        "nmt-m2m100",
+        "piper-tts",
         "emotion-xlm-r",
     ]);
     
@@ -201,6 +213,7 @@ async fn test_select_node_with_module_expansion() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        Some(create_installed_services(&["node-inference","nmt-m2m100","piper-tts","emotion-xlm-r"])),
         FeatureFlags {
             emotion_detection: Some(true),
             voice_style_detection: None,
@@ -250,6 +263,7 @@ async fn test_select_node_with_module_expansion() {
         None,
         "trace-1".to_string(),
         None,
+        None,
     ).await;
     
     // 应该分配了节点（节点有 emotion-xlm-r 模型且状态为 ready）
@@ -261,11 +275,11 @@ async fn test_select_node_with_module_expansion_no_model() {
     let registry = Arc::new(NodeRegistry::new());
     let dispatcher = JobDispatcher::new(registry.clone());
     
-    // 注册节点：支持 emotion_detection 功能，但没有 emotion-xlm-r 模型
-    let cap_state = create_capability_state_with_models(&[
-        "whisper-large-v3-zh",
-        "m2m100-zh-en",
-        "piper-tts-en",
+    // 注册节点：支持 emotion_detection 功能，但没有 emotion-xlm-r 服务
+    let cap_state = create_capability_state_with_services(&[
+        "node-inference",
+        "nmt-m2m100",
+        "piper-tts",
         // 没有 emotion-xlm-r
     ]);
     
@@ -276,6 +290,7 @@ async fn test_select_node_with_module_expansion_no_model() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        Some(create_installed_services(&["node-inference","nmt-m2m100","piper-tts"])),
         FeatureFlags {
             emotion_detection: Some(true), // 代码支持，但模型未安装
             voice_style_detection: None,
@@ -322,6 +337,7 @@ async fn test_select_node_with_module_expansion_no_model() {
         None,
         "trace-2".to_string(),
         None,
+        None,
     ).await;
     
     // 应该没有分配节点（节点没有所需的模型）
@@ -332,11 +348,8 @@ async fn test_select_node_with_module_expansion_no_model() {
 async fn test_update_node_heartbeat_capability_state() {
     let registry = NodeRegistry::new();
     
-    // 注册节点，初始时 emotion-xlm-r 模型状态为 downloading
+    // 注册节点，初始时 emotion-xlm-r 服务状态为 downloading
     let mut initial_cap_state = HashMap::new();
-    initial_cap_state.insert("whisper-large-v3-zh".to_string(), ModelStatus::Ready);
-    initial_cap_state.insert("m2m100-zh-en".to_string(), ModelStatus::Ready);
-    initial_cap_state.insert("piper-tts-en".to_string(), ModelStatus::Ready);
     initial_cap_state.insert("emotion-xlm-r".to_string(), ModelStatus::Downloading);
     
     let _node = registry.register_node(
@@ -346,6 +359,7 @@ async fn test_update_node_heartbeat_capability_state() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        Some(create_installed_services(&["emotion-xlm-r"])),
         FeatureFlags {
             emotion_detection: Some(true),
             voice_style_detection: None,
@@ -363,22 +377,22 @@ async fn test_update_node_heartbeat_capability_state() {
     
     // 检查初始状态：通过尝试选择节点来验证（模型未就绪，应该选不到）
     let required_models = vec!["emotion-xlm-r".to_string()];
-    let selected_before = registry.select_node_with_models("zh", "en", &required_models, true).await;
+    let (selected_before, _bd) = registry
+        .select_node_with_models_excluding_with_breakdown("zh", "en", &required_models, true, None)
+        .await;
     assert_eq!(selected_before, None); // 模型未就绪，应该选不到
     
-    // 更新心跳，模型状态变为 ready
+    // 更新心跳，服务状态变为 ready
     let mut updated_cap_state = HashMap::new();
-    updated_cap_state.insert("whisper-large-v3-zh".to_string(), ModelStatus::Ready);
-    updated_cap_state.insert("m2m100-zh-en".to_string(), ModelStatus::Ready);
-    updated_cap_state.insert("piper-tts-en".to_string(), ModelStatus::Ready);
     updated_cap_state.insert("emotion-xlm-r".to_string(), ModelStatus::Ready); // 现在 ready 了
     
     let success = registry.update_node_heartbeat(
         "node-1",
-        50.0,
+        10.0, // cpu_usage：低于阈值，避免因资源过滤导致选不到节点
         Some(0.0),  // gpu_usage
-        60.0,
+        10.0, // memory_usage：低于内存阈值
         None,  // installed_models
+        None,  // installed_services
         0,
         Some(updated_cap_state),
     ).await;
@@ -387,7 +401,9 @@ async fn test_update_node_heartbeat_capability_state() {
     
     // 检查更新后的状态：现在应该可以选择这个节点了
     let required_models = vec!["emotion-xlm-r".to_string()];
-    let selected = registry.select_node_with_models("zh", "en", &required_models, true).await;
+    let (selected, _bd) = registry
+        .select_node_with_models_excluding_with_breakdown("zh", "en", &required_models, true, None)
+        .await;
     assert_eq!(selected, Some("node-1".to_string()));
 }
 
@@ -395,11 +411,8 @@ async fn test_update_node_heartbeat_capability_state() {
 async fn test_select_node_with_multiple_required_models() {
     let registry = Arc::new(NodeRegistry::new());
     
-    // 注册节点1：只有 emotion-xlm-r 模型
-    let cap_state_1 = create_capability_state_with_models(&[
-        "whisper-large-v3-zh",
-        "m2m100-zh-en",
-        "piper-tts-en",
+    // 注册节点1：只有 emotion-xlm-r 服务
+    let cap_state_1 = create_capability_state_with_services(&[
         "emotion-xlm-r",
     ]);
     
@@ -410,6 +423,7 @@ async fn test_select_node_with_multiple_required_models() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        Some(create_installed_services(&["emotion-xlm-r"])),
         FeatureFlags {
             emotion_detection: Some(true),
             voice_style_detection: None,
@@ -422,11 +436,8 @@ async fn test_select_node_with_multiple_required_models() {
         Some(cap_state_1),
     ).await;
     
-    // 注册节点2：有 emotion-xlm-r 和 speaker-id-ecapa 模型
-    let cap_state_2 = create_capability_state_with_models(&[
-        "whisper-large-v3-zh",
-        "m2m100-zh-en",
-        "piper-tts-en",
+    // 注册节点2：有 emotion-xlm-r 和 speaker-id-ecapa 服务
+    let cap_state_2 = create_capability_state_with_services(&[
         "emotion-xlm-r",
         "speaker-id-ecapa",
     ]);
@@ -438,6 +449,7 @@ async fn test_select_node_with_multiple_required_models() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        Some(create_installed_services(&["emotion-xlm-r","speaker-id-ecapa"])),
         FeatureFlags {
             emotion_detection: Some(true),
             voice_style_detection: None,
@@ -459,14 +471,18 @@ async fn test_select_node_with_multiple_required_models() {
         "emotion-xlm-r".to_string(),
         "speaker-id-ecapa".to_string(),
     ];
-    let selected = registry.select_node_with_models("zh", "en", &required_models, true).await;
+    let (selected, _bd) = registry
+        .select_node_with_models_excluding_with_breakdown("zh", "en", &required_models, true, None)
+        .await;
     
     // 应该选择节点2（有所有所需的模型）
     assert_eq!(selected, Some("node-2".to_string()));
     
     // 如果只选择 emotion-xlm-r，两个节点都可以，应该选择负载更低的
     let required_models = vec!["emotion-xlm-r".to_string()];
-    let selected = registry.select_node_with_models("zh", "en", &required_models, true).await;
+    let (selected, _bd) = registry
+        .select_node_with_models_excluding_with_breakdown("zh", "en", &required_models, true, None)
+        .await;
     assert!(selected == Some("node-1".to_string()) || selected == Some("node-2".to_string()));
 }
 

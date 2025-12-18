@@ -231,6 +231,14 @@ class NodeAgent {
                     await this.handleJob(job);
                     break;
                 }
+                case 'job_cancel': {
+                    const cancel = message;
+                    const ok = typeof this.inferenceService.cancelJob === 'function'
+                        ? this.inferenceService.cancelJob(cancel.job_id)
+                        : false;
+                    logger_1.default.info({ jobId: cancel.job_id, traceId: cancel.trace_id, reason: cancel.reason, ok }, '收到 Scheduler job_cancel');
+                    break;
+                }
                 case 'pairing_code':
                     // 配对码已生成，通过 IPC 通知渲染进程
                     break;
@@ -271,6 +279,7 @@ class NodeAgent {
             const response = {
                 type: 'job_result',
                 job_id: job.job_id,
+                attempt_id: job.attempt_id,
                 node_id: this.nodeId,
                 session_id: job.session_id,
                 utterance_index: job.utterance_index,
@@ -293,6 +302,7 @@ class NodeAgent {
                 const errorResponse = {
                     type: 'job_result',
                     job_id: job.job_id,
+                    attempt_id: job.attempt_id,
                     node_id: this.nodeId,
                     session_id: job.session_id,
                     utterance_index: job.utterance_index,
@@ -304,6 +314,9 @@ class NodeAgent {
                         details: {
                             model_id: error.modelId,
                             version: error.version,
+                            // 兼容“模型=服务包”的命名：提供 service_id/service_version 作为别名字段
+                            service_id: error.modelId,
+                            service_version: error.version,
                             reason: error.reason,
                         },
                     },
@@ -316,6 +329,7 @@ class NodeAgent {
             const errorResponse = {
                 type: 'job_result',
                 job_id: job.job_id,
+                attempt_id: job.attempt_id,
                 node_id: this.nodeId,
                 session_id: job.session_id,
                 utterance_index: job.utterance_index,

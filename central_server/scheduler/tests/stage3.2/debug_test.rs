@@ -79,6 +79,7 @@ async fn debug_test_node_registration() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: Some(true),
             voice_style_detection: None,
@@ -131,7 +132,9 @@ async fn debug_test_node_registration() {
     println!("\n=== 选择节点 ===");
     let required_models = vec!["emotion-xlm-r".to_string()];
     println!("需要的模型: {:?}", required_models);
-    let selected = registry.select_node_with_models("zh", "en", &required_models, true).await;
+    let (selected, _bd) = registry
+        .select_node_with_models_excluding_with_breakdown("zh", "en", &required_models, true, None)
+        .await;
     println!("选择的节点: {:?}", selected);
     
     assert_eq!(selected, Some("node-1".to_string()));

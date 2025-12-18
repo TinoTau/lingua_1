@@ -127,6 +127,7 @@ fn test_job_assign_with_streaming_asr() {
 
     let message = NodeMessage::JobAssign {
         job_id: "job-123".to_string(),
+        attempt_id: 1,
         session_id: "session-789".to_string(),
         utterance_index: 0,
         src_lang: "zh".to_string(),
@@ -184,6 +185,7 @@ fn test_job_assign_without_streaming_asr() {
 
     let message = NodeMessage::JobAssign {
         job_id: "job-123".to_string(),
+        attempt_id: 1,
         session_id: "session-789".to_string(),
         utterance_index: 0,
         src_lang: "zh".to_string(),

@@ -198,6 +198,14 @@ class NodeAgent {
                     await this.handleJob(job);
                     break;
                 }
+                case 'job_cancel': {
+                    const cancel = message;
+                    const ok = typeof this.inferenceService.cancelJob === 'function'
+                        ? this.inferenceService.cancelJob(cancel.job_id)
+                        : false;
+                    console.log('收到 Scheduler job_cancel:', cancel.job_id, cancel.trace_id, cancel.reason, ok);
+                    break;
+                }
                 case 'pairing_code':
                     // 配对码已生成，通过 IPC 通知渲染进程
                     break;
@@ -236,6 +244,7 @@ class NodeAgent {
             const response = {
                 type: 'job_result',
                 job_id: job.job_id,
+                attempt_id: job.attempt_id,
                 node_id: this.nodeId,
                 session_id: job.session_id,
                 utterance_index: job.utterance_index,
@@ -255,6 +264,7 @@ class NodeAgent {
             const errorResponse = {
                 type: 'job_result',
                 job_id: job.job_id,
+                attempt_id: job.attempt_id,
                 node_id: this.nodeId,
                 session_id: job.session_id,
                 utterance_index: job.utterance_index,

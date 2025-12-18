@@ -44,13 +44,32 @@ impl AudioBuffer {
 #[derive(Clone)]
 pub struct AudioBufferManager {
     buffers: Arc<RwLock<HashMap<String, AudioBuffer>>>, // key: "{session_id}:{utterance_index}"
+    /// 记录每个 session 最近一次收到 audio_chunk 的时间（用于停顿自动切句）
+    last_chunk_at_ms: Arc<RwLock<HashMap<String, i64>>>,
 }
 
 impl AudioBufferManager {
     pub fn new() -> Self {
         Self {
             buffers: Arc::new(RwLock::new(HashMap::new())),
+            last_chunk_at_ms: Arc::new(RwLock::new(HashMap::new())),
         }
+    }
+
+    /// 记录收到音频块，并判断是否超过停顿阈值（毫秒）。
+    /// 返回 true 表示：本次与上次间隔 > pause_ms，应视为“新任务开始”（需要先结束上一任务）。
+    pub async fn record_chunk_and_check_pause(&self, session_id: &str, now_ms: i64, pause_ms: u64) -> bool {
+        let mut map = self.last_chunk_at_ms.write().await;
+        let exceeded = map
+            .get(session_id)
+            .map(|prev| now_ms.saturating_sub(*prev) > pause_ms as i64)
+            .unwrap_or(false);
+        map.insert(session_id.to_string(), now_ms);
+        exceeded
+    }
+
+    pub async fn get_last_chunk_at_ms(&self, session_id: &str) -> Option<i64> {
+        self.last_chunk_at_ms.read().await.get(session_id).copied()
     }
 
     /// 添加音频块
@@ -86,6 +105,8 @@ impl AudioBufferManager {
     pub async fn clear_all_for_session(&self, session_id: &str) {
         let mut buffers = self.buffers.write().await;
         buffers.retain(|key, _| !key.starts_with(&format!("{}:", session_id)));
+        let mut map = self.last_chunk_at_ms.write().await;
+        map.remove(session_id);
     }
 }
 

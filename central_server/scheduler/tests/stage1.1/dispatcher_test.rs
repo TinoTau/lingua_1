@@ -2,7 +2,10 @@
 
 use lingua_scheduler::dispatcher::JobDispatcher;
 use lingua_scheduler::node_registry::NodeRegistry;
-use lingua_scheduler::messages::{FeatureFlags, PipelineConfig, HardwareInfo, GpuInfo, InstalledModel, NodeStatus};
+use lingua_scheduler::messages::{
+    CapabilityState, FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, InstalledService,
+    ModelStatus, NodeStatus, PipelineConfig,
+};
 use std::sync::Arc;
 
 fn create_test_node_registry() -> Arc<NodeRegistry> {
@@ -54,12 +57,37 @@ fn create_test_models(src_lang: &str, tgt_lang: &str) -> Vec<InstalledModel> {
     ]
 }
 
+fn create_core_installed_services() -> Vec<InstalledService> {
+    vec![
+        InstalledService {
+            service_id: "node-inference".to_string(),
+            version: "1.0.0".to_string(),
+            platform: "linux-x64".to_string(),
+        },
+        InstalledService {
+            service_id: "nmt-m2m100".to_string(),
+            version: "1.0.0".to_string(),
+            platform: "linux-x64".to_string(),
+        },
+        InstalledService {
+            service_id: "piper-tts".to_string(),
+            version: "1.0.0".to_string(),
+            platform: "linux-x64".to_string(),
+        },
+    ]
+}
+
 #[tokio::test]
 async fn test_create_job() {
     let node_registry = create_test_node_registry();
     let dispatcher = JobDispatcher::new(node_registry.clone());
     
     // 先注册一个节点
+    let mut cap: CapabilityState = CapabilityState::new();
+    // Phase 1：严格模式下，核心 required ids 必须在 capability_state(Ready) 或 installed_services 出现
+    cap.insert("node-inference".to_string(), ModelStatus::Ready);
+    cap.insert("nmt-m2m100".to_string(), ModelStatus::Ready);
+    cap.insert("piper-tts".to_string(), ModelStatus::Ready);
     let _node = node_registry.register_node(
         None,
         "Test Node".to_string(),
@@ -67,6 +95,7 @@ async fn test_create_job() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        Some(create_core_installed_services()),
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -76,7 +105,7 @@ async fn test_create_job() {
             persona_adaptation: None,
         },
         true,
-        None,
+        Some(cap),
     ).await.unwrap();
     
     // 将节点状态设置为 ready（才能被分配任务）
@@ -106,6 +135,7 @@ async fn test_create_job() {
         None,
         "trace-1".to_string(),
         None,
+        None,
     ).await;
     
     assert!(job.job_id.starts_with("job-"));
@@ -125,6 +155,10 @@ async fn test_create_job_with_preferred_node() {
     let node_registry = create_test_node_registry();
     let dispatcher = JobDispatcher::new(node_registry.clone());
     
+    let mut cap: CapabilityState = CapabilityState::new();
+    cap.insert("node-inference".to_string(), ModelStatus::Ready);
+    cap.insert("nmt-m2m100".to_string(), ModelStatus::Ready);
+    cap.insert("piper-tts".to_string(), ModelStatus::Ready);
     let _node = node_registry.register_node(
         Some("node-123".to_string()),
         "Test Node".to_string(),
@@ -132,6 +166,7 @@ async fn test_create_job_with_preferred_node() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        Some(create_core_installed_services()),
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -141,8 +176,11 @@ async fn test_create_job_with_preferred_node() {
             persona_adaptation: None,
         },
         true,
-        None,
+        Some(cap),
     ).await.unwrap();
+    
+    // 需要设置为 ready，Phase 1 只允许对 ready 节点做并发占用（reserve）与派发
+    node_registry.set_node_status("node-123", NodeStatus::Ready).await;
     
     let job = dispatcher.create_job(
         "session-2".to_string(),
@@ -167,6 +205,7 @@ async fn test_create_job_with_preferred_node() {
         None,
         None,
         "trace-2".to_string(),
+        None,
         None,
     ).await;
     
@@ -204,6 +243,7 @@ async fn test_create_job_no_available_node() {
         None,
         "trace-3".to_string(),
         None,
+        None,
     ).await;
     
     // 应该没有分配节点
@@ -223,6 +263,7 @@ async fn test_get_job() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        Some(create_core_installed_services()),
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -259,6 +300,7 @@ async fn test_get_job() {
         None,
         "trace-4".to_string(),
         None,
+        None,
     ).await;
     
     let retrieved = dispatcher.get_job(&job.job_id).await;
@@ -282,6 +324,10 @@ async fn test_update_job_status() {
     let node_registry = create_test_node_registry();
     let dispatcher = JobDispatcher::new(node_registry.clone());
     
+    let mut cap: CapabilityState = CapabilityState::new();
+    cap.insert("node-inference".to_string(), ModelStatus::Ready);
+    cap.insert("nmt-m2m100".to_string(), ModelStatus::Ready);
+    cap.insert("piper-tts".to_string(), ModelStatus::Ready);
     let _node = node_registry.register_node(
         None,
         "Test Node".to_string(),
@@ -289,6 +335,7 @@ async fn test_update_job_status() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        Some(create_core_installed_services()),
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -298,7 +345,7 @@ async fn test_update_job_status() {
             persona_adaptation: None,
         },
         true,
-        None,
+        Some(cap),
     ).await.unwrap();
     
     // 将节点状态设置为 ready（才能被分配任务）
@@ -327,6 +374,7 @@ async fn test_update_job_status() {
         None,
         None,
         "trace-5".to_string(),
+        None,
         None,
     ).await;
     

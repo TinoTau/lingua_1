@@ -31,6 +31,9 @@ export class InferenceService {
   private onTaskProcessedCallback: ((serviceName: string) => void) | null = null;
   private onTaskStartCallback: (() => void) | null = null;
   private onTaskEndCallback: (() => void) | null = null;
+  // best-effort cancel 支持：HTTP AbortController / 流式 WebSocket close
+  private jobAbortControllers: Map<string, AbortController> = new Map();
+  private jobStreamSockets: Map<string, WebSocket> = new Map();
 
   constructor(modelManager: ModelManager) {
     this.modelManager = modelManager;
@@ -56,6 +59,8 @@ export class InferenceService {
   async processJob(job: JobAssignMessage, partialCallback?: PartialResultCallback): Promise<JobResult> {
     const wasFirstJob = this.currentJobs.size === 0;
     this.currentJobs.add(job.job_id);
+    const abortController = new AbortController();
+    this.jobAbortControllers.set(job.job_id, abortController);
     
     // 如果是第一个任务，通知任务开始（用于启动GPU跟踪）
     if (wasFirstJob && this.onTaskStartCallback) {
@@ -97,7 +102,9 @@ export class InferenceService {
         context_text: (job as any).context_text, // Added: propagate context_text (optional field)
       };
 
-      const response = await this.httpClient.post('/v1/inference', request);
+      const response = await this.httpClient.post('/v1/inference', request, {
+        signal: abortController.signal,
+      });
 
       if (!response.data.success) {
         throw new Error(response.data.error?.message || 'Inference failed');
@@ -120,6 +127,8 @@ export class InferenceService {
       throw error;
     } finally {
       this.currentJobs.delete(job.job_id);
+      this.jobAbortControllers.delete(job.job_id);
+      this.jobStreamSockets.delete(job.job_id);
       
       // 如果没有任务了，通知任务结束（用于停止GPU跟踪）
       if (this.currentJobs.size === 0 && this.onTaskEndCallback) {
@@ -135,6 +144,7 @@ export class InferenceService {
     return new Promise((resolve, reject) => {
       const wsUrl = this.inferenceServiceUrl.replace('http://', 'ws://').replace('https://', 'wss://');
       const ws = new WebSocket(`${wsUrl}/v1/inference/stream`);
+      this.jobStreamSockets.set(job.job_id, ws);
 
       let finalResult: JobResult | null = null;
 
@@ -207,11 +217,36 @@ export class InferenceService {
       });
 
       ws.on('close', () => {
+        this.jobStreamSockets.delete(job.job_id);
         if (!finalResult) {
           reject(new Error('WebSocket connection closed, no result received'));
         }
       });
     });
+  }
+
+  /**
+   * best-effort cancel：尝试中断 HTTP 请求或关闭流式 WebSocket
+   * 注意：取消不保证推理服务一定立刻停止（取决于下游实现）
+   */
+  cancelJob(jobId: string): boolean {
+    const controller = this.jobAbortControllers.get(jobId);
+    if (controller) {
+      controller.abort();
+      this.jobAbortControllers.delete(jobId);
+      return true;
+    }
+    const ws = this.jobStreamSockets.get(jobId);
+    if (ws) {
+      try {
+        ws.close();
+      } catch {
+        // ignore
+      }
+      this.jobStreamSockets.delete(jobId);
+      return true;
+    }
+    return false;
   }
 
   getCurrentJobCount(): number {

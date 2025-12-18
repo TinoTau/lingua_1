@@ -59,6 +59,7 @@ pub(crate) fn create_job_assign_message(
         part_index,
         context_text,
         job_id: job.job_id.clone(),
+        attempt_id: job.dispatch_attempt_id.max(1),
         session_id: job.session_id.clone(),
         utterance_index: job.utterance_index,
         src_lang: job.src_lang.clone(),

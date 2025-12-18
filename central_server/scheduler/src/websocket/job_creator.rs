@@ -32,6 +32,7 @@ pub(crate) async fn create_translation_jobs(
         
         if lang_groups.is_empty() {
             // 房间内没有其他成员，回退到单会话模式
+            let request_id = make_request_id(session_id, utterance_index, &default_tgt_lang, &trace_id);
             let job = state.dispatcher.create_job(
                 session_id.to_string(),
                 utterance_index,
@@ -55,6 +56,7 @@ pub(crate) async fn create_translation_jobs(
                 enable_streaming_asr,
                 partial_update_interval_ms,
                 trace_id.clone(),
+                Some(request_id),
                 None, // 单会话模式
             ).await;
             return Ok(vec![job]);
@@ -66,6 +68,7 @@ pub(crate) async fn create_translation_jobs(
             let target_session_ids: Vec<String> = members.iter().map(|m| m.session_id.clone()).collect();
             
             // 为每个目标语言创建独立的 Job
+            let request_id = make_request_id(session_id, utterance_index, &target_lang, &trace_id);
             let job = state.dispatcher.create_job(
                 session_id.to_string(),
                 utterance_index,
@@ -89,6 +92,7 @@ pub(crate) async fn create_translation_jobs(
                 enable_streaming_asr,
                 partial_update_interval_ms,
                 trace_id.clone(),
+                Some(request_id),
                 Some(target_session_ids), // 指定目标接收者
             ).await;
             
@@ -98,6 +102,7 @@ pub(crate) async fn create_translation_jobs(
         Ok(jobs)
     } else {
         // 单会话模式：只创建一个 Job
+        let request_id = make_request_id(session_id, utterance_index, &default_tgt_lang, &trace_id);
         let job = state.dispatcher.create_job(
             session_id.to_string(),
             utterance_index,
@@ -121,9 +126,16 @@ pub(crate) async fn create_translation_jobs(
             enable_streaming_asr,
             partial_update_interval_ms,
             trace_id,
+            Some(request_id),
             None, // 单会话模式
         ).await;
         Ok(vec![job])
     }
+}
+
+fn make_request_id(session_id: &str, utterance_index: u64, tgt_lang: &str, trace_id: &str) -> String {
+    // Phase 1：任务级绑定（会话打散）。request_id 的目标是“同一任务重试幂等”，不做会话级粘滞。
+    // 选择稳定字段组合：session_id + utterance_index + tgt_lang + trace_id
+    format!("{}:{}:{}:{}", session_id, utterance_index, tgt_lang, trace_id)
 }
 

@@ -67,6 +67,7 @@ async fn test_register_node() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -101,6 +102,7 @@ async fn test_register_node_no_gpu() {
         "linux".to_string(),
         create_test_hardware_no_gpu(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -129,6 +131,7 @@ async fn test_register_node_with_id() {
         "windows".to_string(),
         create_test_hardware(),
         create_test_models("en", "zh"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -156,6 +159,7 @@ async fn test_is_node_available() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -183,6 +187,7 @@ async fn test_is_node_available_when_overloaded() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -202,6 +207,7 @@ async fn test_is_node_available_when_overloaded() {
         None,
         60.0,
         None,
+        None,
         4, // max_concurrent_jobs
         None,
     ).await;
@@ -220,6 +226,7 @@ async fn test_update_node_heartbeat() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -237,6 +244,7 @@ async fn test_update_node_heartbeat() {
         75.0,
         Some(80.0),
         65.0,
+        None,
         None,
         2,
         None,
@@ -258,6 +266,7 @@ async fn test_update_nonexistent_node_heartbeat() {
         None,
         60.0,
         None,
+        None,
         0,
         None,
     ).await;
@@ -277,6 +286,7 @@ async fn test_select_node_with_features() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: Some(true),
             voice_style_detection: None,
@@ -297,6 +307,7 @@ async fn test_select_node_with_features() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("en", "zh"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -307,18 +318,23 @@ async fn test_select_node_with_features() {
         },
         true,
         None,
-    ).await;
+    ).await.unwrap();
     
     // 閫夋嫨涓枃鍒拌嫳鏂囩殑鑺傜偣
     // 灏嗚妭鐐圭姸鎬佽缃负 ready锛堟墠鑳借閫変腑锛?
     registry.set_node_status("node-zh-en", NodeStatus::Ready).await;
-    
+    registry.set_node_status("node-en-zh", NodeStatus::Ready).await;
+
+    // Phase 1：select_node_with_features 不再按语言过滤，验证“按负载选择最空闲节点”
+    registry.update_node_heartbeat("node-zh-en", 10.0, Some(0.0), 10.0, None, None, 0, None).await;
+    registry.update_node_heartbeat("node-en-zh", 10.0, Some(0.0), 10.0, None, None, 1, None).await;
+
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
     assert_eq!(selected, Some("node-zh-en".to_string()));
-    
-    // 閫夋嫨鑻辨枃鍒颁腑鏂囩殑鑺傜偣
-    registry.set_node_status("node-en-zh", NodeStatus::Ready).await;
-    
+
+    registry.update_node_heartbeat("node-zh-en", 10.0, Some(0.0), 10.0, None, None, 2, None).await;
+    registry.update_node_heartbeat("node-en-zh", 10.0, Some(0.0), 10.0, None, None, 0, None).await;
+
     let selected = registry.select_node_with_features("en", "zh", &None, true).await;
     assert_eq!(selected, Some("node-en-zh".to_string()));
 }
@@ -335,6 +351,7 @@ async fn test_select_node_with_required_features() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -345,7 +362,7 @@ async fn test_select_node_with_required_features() {
         },
         true,
         None,
-    ).await;
+    ).await.unwrap();
     
     // 娉ㄥ唽鏀寔鎯呮劅鍒嗘瀽鐨勮妭锟?
     registry.register_node(
@@ -355,6 +372,7 @@ async fn test_select_node_with_required_features() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: Some(true),
             voice_style_detection: None,
@@ -365,7 +383,7 @@ async fn test_select_node_with_required_features() {
         },
         true,
         None,
-    ).await;
+    ).await.unwrap();
     
     // 瑕佹眰鎯呮劅鍒嗘瀽鍔熻兘
     let required_features = Some(FeatureFlags {
@@ -405,6 +423,7 @@ async fn test_mark_node_offline() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -436,6 +455,7 @@ async fn test_select_node_least_connections() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -455,6 +475,7 @@ async fn test_select_node_least_connections() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -474,6 +495,7 @@ async fn test_select_node_least_connections() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -484,7 +506,7 @@ async fn test_select_node_least_connections() {
         },
         true,
         None,
-    ).await;
+    ).await.unwrap();
     
     // 灏嗘墍鏈夎妭鐐圭姸鎬佽缃负 ready
     registry.set_node_status("node-heavy", NodeStatus::Ready).await;
@@ -493,9 +515,9 @@ async fn test_select_node_least_connections() {
     
     // 鏇存柊鑺傜偣璐熻浇锛歨eavy=3, medium=1, light=0
     // 娉ㄦ剰锛氳祫婧愪娇鐢ㄧ巼闇€瑕佷綆浜庨槇鍊硷紙榛樿 25%锛夛紝鎵€浠ヨ缃负 20%
-    registry.update_node_heartbeat("node-heavy", 20.0, None, 20.0, None, 3, None).await;
-    registry.update_node_heartbeat("node-medium", 20.0, None, 20.0, None, 1, None).await;
-    registry.update_node_heartbeat("node-light", 20.0, None, 20.0, None, 0, None).await;
+    registry.update_node_heartbeat("node-heavy", 20.0, None, 20.0, None, None, 3, None).await;
+    registry.update_node_heartbeat("node-medium", 20.0, None, 20.0, None, None, 1, None).await;
+    registry.update_node_heartbeat("node-light", 20.0, None, 20.0, None, None, 0, None).await;
     
     // 搴旇閫夋嫨璐熻浇鏈€杞荤殑鑺傜偣锛坈urrent_jobs=0锟?
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
@@ -503,8 +525,8 @@ async fn test_select_node_least_connections() {
     
     // 鏇存柊锛歨eavy=2, medium=1, light=2
     // 娉ㄦ剰锛氳祫婧愪娇鐢ㄧ巼闇€瑕佷綆浜庨槇鍊硷紙榛樿 25%锛夛紝鎵€浠ヨ缃负 20%
-    registry.update_node_heartbeat("node-heavy", 20.0, None, 20.0, None, 2, None).await;
-    registry.update_node_heartbeat("node-light", 20.0, None, 20.0, None, 2, None).await;
+    registry.update_node_heartbeat("node-heavy", 20.0, None, 20.0, None, None, 2, None).await;
+    registry.update_node_heartbeat("node-light", 20.0, None, 20.0, None, None, 2, None).await;
     
     // 搴旇閫夋嫨璐熻浇鏈€杞荤殑鑺傜偣锛坈urrent_jobs=1锟?
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
@@ -524,6 +546,7 @@ async fn test_select_node_resource_threshold_cpu() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -534,7 +557,7 @@ async fn test_select_node_resource_threshold_cpu() {
         },
         true,
         None,
-    ).await;
+    ).await.unwrap();
     
     registry.register_node(
         Some("node-high-cpu".to_string()),
@@ -543,6 +566,7 @@ async fn test_select_node_resource_threshold_cpu() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -553,11 +577,11 @@ async fn test_select_node_resource_threshold_cpu() {
         },
         true,
         None,
-    ).await;
+    ).await.unwrap();
     
     // 鏇存柊鑺傜偣璧勬簮浣跨敤鐜囷細low-cpu=20%, high-cpu=30%锛堣秴杩囬槇鍊硷級
-    registry.update_node_heartbeat("node-low-cpu", 20.0, None, 15.0, None, 0, None).await;
-    registry.update_node_heartbeat("node-high-cpu", 30.0, None, 15.0, None, 0, None).await;
+    registry.update_node_heartbeat("node-low-cpu", 20.0, None, 15.0, None, None, 0, None).await;
+    registry.update_node_heartbeat("node-high-cpu", 30.0, None, 15.0, None, None, 0, None).await;
     
     // 灏嗘墍鏈夎妭鐐圭姸鎬佽缃负 ready
     registry.set_node_status("node-low-cpu", NodeStatus::Ready).await;
@@ -581,6 +605,7 @@ async fn test_select_node_resource_threshold_gpu() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -591,7 +616,7 @@ async fn test_select_node_resource_threshold_gpu() {
         },
         true,
         None,
-    ).await;
+    ).await.unwrap();
     
     registry.register_node(
         Some("node-high-gpu".to_string()),
@@ -600,6 +625,7 @@ async fn test_select_node_resource_threshold_gpu() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -610,11 +636,11 @@ async fn test_select_node_resource_threshold_gpu() {
         },
         true,
         None,
-    ).await;
+    ).await.unwrap();
     
     // 鏇存柊鑺傜偣璧勬簮浣跨敤鐜囷細low-gpu GPU=20%, high-gpu GPU=30%锛堣秴杩囬槇鍊硷級
-    registry.update_node_heartbeat("node-low-gpu", 15.0, Some(20.0), 15.0, None, 0, None).await;
-    registry.update_node_heartbeat("node-high-gpu", 15.0, Some(30.0), 15.0, None, 0, None).await;
+    registry.update_node_heartbeat("node-low-gpu", 15.0, Some(20.0), 15.0, None, None, 0, None).await;
+    registry.update_node_heartbeat("node-high-gpu", 15.0, Some(30.0), 15.0, None, None, 0, None).await;
     
     // 灏嗘墍鏈夎妭鐐圭姸鎬佽缃负 ready
     registry.set_node_status("node-low-gpu", NodeStatus::Ready).await;
@@ -638,6 +664,7 @@ async fn test_select_node_resource_threshold_memory() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -657,6 +684,7 @@ async fn test_select_node_resource_threshold_memory() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -667,11 +695,11 @@ async fn test_select_node_resource_threshold_memory() {
         },
         true,
         None,
-    ).await;
+    ).await.unwrap();
     
-    // 鏇存柊鑺傜偣璧勬簮浣跨敤鐜囷細low-mem 鍐呭瓨=20%, high-mem 鍐呭瓨=30%锛堣秴杩囬槇鍊硷級
-    registry.update_node_heartbeat("node-low-mem", 15.0, None, 20.0, None, 0, None).await;
-    registry.update_node_heartbeat("node-high-mem", 15.0, None, 30.0, None, 0, None).await;
+    // 更新节点资源使用率：low-mem 内存=20%，high-mem 内存=80%（超过内存阈值 75%）
+    registry.update_node_heartbeat("node-low-mem", 15.0, None, 20.0, None, None, 0, None).await;
+    registry.update_node_heartbeat("node-high-mem", 15.0, None, 80.0, None, None, 0, None).await;
     
     // 灏嗘墍鏈夎妭鐐圭姸鎬佽缃负 ready
     registry.set_node_status("node-low-mem", NodeStatus::Ready).await;
@@ -695,6 +723,7 @@ async fn test_select_node_resource_threshold_all_resources() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -705,7 +734,7 @@ async fn test_select_node_resource_threshold_all_resources() {
         },
         true,
         None,
-    ).await;
+    ).await.unwrap();
     
     registry.register_node(
         Some("node-high-cpu".to_string()),
@@ -714,6 +743,7 @@ async fn test_select_node_resource_threshold_all_resources() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -724,7 +754,7 @@ async fn test_select_node_resource_threshold_all_resources() {
         },
         true,
         None,
-    ).await;
+    ).await.unwrap();
     
     registry.register_node(
         Some("node-high-gpu".to_string()),
@@ -733,6 +763,7 @@ async fn test_select_node_resource_threshold_all_resources() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -743,15 +774,15 @@ async fn test_select_node_resource_threshold_all_resources() {
         },
         true,
         None,
-    ).await;
+    ).await.unwrap();
     
     // 鏇存柊鑺傜偣璧勬簮浣跨敤锟?
     // node-ok: 鎵€鏈夎祫婧愰兘鍦ㄩ槇鍊间互锟?
-    registry.update_node_heartbeat("node-ok", 20.0, Some(20.0), 20.0, None, 0, None).await;
+    registry.update_node_heartbeat("node-ok", 20.0, Some(20.0), 20.0, None, None, 0, None).await;
     // node-high-cpu: CPU 瓒呰繃闃堬拷?
-    registry.update_node_heartbeat("node-high-cpu", 30.0, Some(20.0), 20.0, None, 0, None).await;
+    registry.update_node_heartbeat("node-high-cpu", 30.0, Some(20.0), 20.0, None, None, 0, None).await;
     // node-high-gpu: GPU 瓒呰繃闃堬拷?
-    registry.update_node_heartbeat("node-high-gpu", 20.0, Some(30.0), 20.0, None, 0, None).await;
+    registry.update_node_heartbeat("node-high-gpu", 20.0, Some(30.0), 20.0, None, None, 0, None).await;
     
     // 灏嗘墍鏈夎妭鐐圭姸鎬佽缃负 ready
     registry.set_node_status("node-ok", NodeStatus::Ready).await;
@@ -776,6 +807,7 @@ async fn test_select_node_resource_threshold_no_available() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -786,10 +818,10 @@ async fn test_select_node_resource_threshold_no_available() {
         },
         true,
         None,
-    ).await;
+    ).await.unwrap();
     
     // 鏇存柊鑺傜偣璧勬簮浣跨敤鐜囷紝鎵€鏈夎祫婧愰兘瓒呰繃闃堬拷?
-    registry.update_node_heartbeat("node-overloaded", 30.0, Some(30.0), 30.0, None, 0, None).await;
+    registry.update_node_heartbeat("node-overloaded", 30.0, Some(30.0), 30.0, None, None, 0, None).await;
     
     // 閫夋嫨鑺傜偣锛屽簲璇ヨ繑锟?None锛堟病鏈夊彲鐢ㄨ妭鐐癸級
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
@@ -809,6 +841,7 @@ async fn test_select_node_resource_threshold_custom_threshold() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -828,6 +861,7 @@ async fn test_select_node_resource_threshold_custom_threshold() {
         "linux".to_string(),
         create_test_hardware(),
         create_test_models("zh", "en"),
+        None,
         FeatureFlags {
             emotion_detection: None,
             voice_style_detection: None,
@@ -838,15 +872,15 @@ async fn test_select_node_resource_threshold_custom_threshold() {
         },
         true,
         None,
-    ).await;
+    ).await.unwrap();
     
     // Set all nodes to ready status
     registry.set_node_status("node-40", NodeStatus::Ready).await;
     registry.set_node_status("node-60", NodeStatus::Ready).await;
 
     // 鏇存柊鑺傜偣璧勬簮浣跨敤锟?
-    registry.update_node_heartbeat("node-40", 40.0, None, 40.0, None, 0, None).await;
-    registry.update_node_heartbeat("node-60", 60.0, None, 60.0, None, 0, None).await;
+    registry.update_node_heartbeat("node-40", 40.0, None, 40.0, None, None, 0, None).await;
+    registry.update_node_heartbeat("node-60", 60.0, None, 60.0, None, None, 0, None).await;
     
     // 閫夋嫨鑺傜偣锛岄槇鍊兼槸 50%锛屾墍锟?node-40 鍙敤锛宯ode-60 涓嶅彲锟?
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
