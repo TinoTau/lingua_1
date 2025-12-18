@@ -1,22 +1,22 @@
-.model-management {
+.lmm-root {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.model-management .model-management-header {
+.lmm-root .lmm-header {
   display: flex;
   align-items: center;
   gap: 16px;
   margin-bottom: 20px;
 }
 
-.model-management .model-management-header h2 {
+.lmm-root .lmm-header h2 {
   margin: 0;
   color: #333;
 }
 
-.model-management .back-button {
+.lmm-root .lmm-back {
   padding: 8px 16px;
   background-color: #6c757d;
   color: white;
@@ -28,22 +28,22 @@
   transition: background-color 0.2s;
 }
 
-.model-management .back-button:hover {
+.lmm-root .lmm-back:hover {
   background-color: #5a6268;
 }
 
-.model-management .back-button:active {
+.lmm-root .lmm-back:active {
   background-color: #484f54;
 }
 
-.model-management .tabs {
+.lmm-root .lmm-tabs {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
   border-bottom: 2px solid #e0e0e0;
 }
 
-.model-management .tabs button {
+.lmm-root .lmm-tabs button {
   padding: 10px 20px;
   border: none;
   background: transparent;
@@ -55,31 +55,31 @@
   transition: all 0.2s;
 }
 
-.model-management .tabs button:hover {
+.lmm-root .lmm-tabs button:hover {
   color: #333;
 }
 
-.model-management .tabs button.active {
+.lmm-root .lmm-tabs button.is-active {
   color: #007bff;
   border-bottom-color: #007bff;
   font-weight: 600;
 }
 
-.model-management .model-list {
+.lmm-root .lmm-list {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
 /* 确保表格在 flex 容器中能正确显示 */
-.model-management .model-list>.ranking-table {
+.lmm-root .lmm-list>.lmm-ranking-table {
   display: table !important;
   overflow: visible;
   flex-shrink: 0;
   min-height: 0;
 }
 
-.model-management .model-item {
+.lmm-root .lmm-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -90,34 +90,34 @@
   transition: box-shadow 0.2s;
 }
 
-.model-management .model-item:hover {
+.lmm-root .lmm-item:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.model-management .model-info {
+.lmm-root .lmm-info {
   flex: 1;
 }
 
-.model-management .model-info h3 {
+.lmm-root .lmm-info h3 {
   margin: 0 0 10px 0;
   color: #333;
   font-size: 18px;
 }
 
-.model-management .model-info p {
+.lmm-root .lmm-info p {
   margin: 5px 0;
   color: #666;
   font-size: 14px;
 }
 
-.model-management .progress-container {
+.lmm-root .lmm-progress {
   margin-top: 10px;
   padding: 10px;
   background: #f5f5f5;
   border-radius: 4px;
 }
 
-.model-management .progress-header {
+.lmm-root .lmm-progress-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -125,12 +125,12 @@
   font-size: 12px;
 }
 
-.model-management .progress-state {
+.lmm-root .lmm-progress-state {
   font-weight: 600;
   color: #007bff;
 }
 
-.model-management .progress-file {
+.lmm-root .lmm-progress-file {
   color: #666;
   flex: 1;
   margin: 0 10px;
@@ -139,11 +139,11 @@
   white-space: nowrap;
 }
 
-.model-management .progress-files {
+.lmm-root .lmm-progress-files {
   color: #999;
 }
 
-.model-management .progress-bar {
+.lmm-root .lmm-progress-bar {
   width: 100%;
   height: 10px;
   background: #e0e0e0;
@@ -152,13 +152,13 @@
   margin-bottom: 8px;
 }
 
-.model-management .progress-fill {
+.lmm-root .lmm-progress-fill {
   height: 100%;
   background: linear-gradient(90deg, #007bff, #0056b3);
   transition: width 0.3s ease;
 }
 
-.model-management .progress-details {
+.lmm-root .lmm-progress-details {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -166,21 +166,21 @@
   color: #666;
 }
 
-.model-management .progress-text {
+.lmm-root .lmm-progress-text {
   font-weight: 500;
 }
 
-.model-management .progress-speed {
+.lmm-root .lmm-progress-speed {
   color: #28a745;
   margin-left: 10px;
 }
 
-.model-management .progress-time {
+.lmm-root .lmm-progress-time {
   color: #ffc107;
   margin-left: 10px;
 }
 
-.model-management .error-message {
+.lmm-root .lmm-error {
   margin-top: 10px;
   padding: 12px;
   background: #fff3cd;
@@ -189,42 +189,42 @@
   border-left: 4px solid #ff9800;
 }
 
-.model-management .error-header {
+.lmm-root .lmm-error-header {
   display: flex;
   align-items: center;
   margin-bottom: 8px;
 }
 
-.model-management .error-icon {
+.lmm-root .lmm-error-icon {
   font-size: 18px;
   margin-right: 8px;
 }
 
-.model-management .error-type {
+.lmm-root .lmm-error-type {
   font-weight: 600;
   color: #856404;
   font-size: 14px;
 }
 
-.model-management .error-detail {
+.lmm-root .lmm-error-detail {
   margin: 8px 0;
   color: #856404;
   font-size: 13px;
   line-height: 1.5;
 }
 
-.model-management .error-hint {
+.lmm-root .lmm-error-hint {
   margin: 8px 0 0 0;
   color: #856404;
   font-size: 12px;
   font-style: italic;
 }
 
-.model-management .error-actions {
+.lmm-root .lmm-error-actions {
   margin-top: 10px;
 }
 
-.model-management .retry-button {
+.lmm-root .lmm-retry {
   padding: 6px 16px;
   background: #ff9800;
   color: white;
@@ -236,20 +236,20 @@
   transition: background 0.2s;
 }
 
-.model-management .retry-button:hover {
+.lmm-root .lmm-retry:hover {
   background: #f57c00;
 }
 
-.model-management .retry-button:active {
+.lmm-root .lmm-retry:active {
   background: #e65100;
 }
 
-.model-management .model-actions {
+.lmm-root .lmm-actions {
   display: flex;
   gap: 10px;
 }
 
-.model-management .model-actions button {
+.lmm-root .lmm-actions button {
   padding: 10px 20px;
   background: #007bff;
   color: white;
@@ -261,17 +261,17 @@
   transition: background 0.2s;
 }
 
-.model-management .model-actions button:hover:not(:disabled) {
+.lmm-root .lmm-actions button:hover:not(:disabled) {
   background: #0056b3;
 }
 
-.model-management .model-actions button:disabled {
+.lmm-root .lmm-actions button:disabled {
   background: #ccc;
   cursor: not-allowed;
 }
 
 /* 下载按钮样式（绿色） */
-.model-management .download-button {
+.lmm-root .lmm-download {
   padding: 8px 16px;
   background: #28a745;
   color: white;
@@ -283,17 +283,17 @@
   transition: background 0.2s;
 }
 
-.model-management .download-button:hover:not(:disabled) {
+.lmm-root .lmm-download:hover:not(:disabled) {
   background: #218838;
 }
 
-.model-management .download-button:disabled {
+.lmm-root .lmm-download:disabled {
   background: #ccc;
   cursor: not-allowed;
 }
 
 /* 卸载按钮样式（蓝色） */
-.model-management .uninstall-button {
+.lmm-root .lmm-uninstall {
   padding: 8px 16px;
   background: #007bff;
   color: white;
@@ -305,23 +305,23 @@
   transition: background 0.2s;
 }
 
-.model-management .uninstall-button:hover:not(:disabled) {
+.lmm-root .lmm-uninstall:hover:not(:disabled) {
   background: #0056b3;
 }
 
-.model-management .uninstall-button:disabled {
+.lmm-root .lmm-uninstall:disabled {
   background: #ccc;
   cursor: not-allowed;
 }
 
-.model-management .empty-state {
+.lmm-root .lmm-empty {
   text-align: center;
   padding: 40px;
   color: #999;
   font-size: 16px;
 }
 
-.model-management .empty-state.error-state {
+.lmm-root .lmm-empty.is-error-state {
   padding: 30px;
   background: #fff3cd;
   border: 1px solid #ffc107;
@@ -329,29 +329,29 @@
   color: #856404;
 }
 
-.model-management .empty-state .error-icon {
+.lmm-root .lmm-empty .lmm-error-icon {
   font-size: 48px;
   margin-bottom: 16px;
 }
 
-.model-management .empty-state .error-message {
+.lmm-root .lmm-empty .lmm-error {
   margin: 16px 0;
   font-size: 16px;
   font-weight: 500;
 }
 
-.model-management .empty-state .hint-text {
+.lmm-root .lmm-empty .lmm-hint {
   margin-top: 8px;
   font-size: 14px;
   color: #666;
   font-style: italic;
 }
 
-.model-management .empty-state .retry-button {
+.lmm-root .lmm-empty .lmm-retry {
   margin-top: 16px;
 }
 
-.model-management .ranking-table {
+.lmm-root .lmm-ranking-table {
   display: table !important;
   width: 100%;
   border-collapse: collapse;
@@ -364,37 +364,37 @@
   opacity: 1 !important;
 }
 
-.model-management .ranking-table th,
-.model-management .ranking-table td {
+.lmm-root .lmm-ranking-table th,
+.lmm-root .lmm-ranking-table td {
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #e0e0e0;
   background: #fff;
 }
 
-.model-management .ranking-table th {
+.lmm-root .lmm-ranking-table th {
   background: #f5f5f5;
   font-weight: 600;
   color: #333;
 }
 
-.model-management .ranking-table tr:hover {
+.lmm-root .lmm-ranking-table tr:hover {
   background: #f9f9f9;
 }
 
-.model-management .ranking-table td:first-child {
+.lmm-root .lmm-ranking-table td:first-child {
   font-weight: 600;
   color: #007bff;
 }
 
-.model-management .ranking-table th:nth-child(3),
-.model-management .ranking-table td:nth-child(3),
-.model-management .ranking-table th:nth-child(4),
-.model-management .ranking-table td:nth-child(4) {
+.lmm-root .lmm-ranking-table th:nth-child(3),
+.lmm-root .lmm-ranking-table td:nth-child(3),
+.lmm-root .lmm-ranking-table th:nth-child(4),
+.lmm-root .lmm-ranking-table td:nth-child(4) {
   text-align: center;
 }
 
-.model-management .ranking-table td:nth-child(4)>div {
+.lmm-root .lmm-ranking-table td:nth-child(4)>div {
   display: flex;
   justify-content: center;
   align-items: center;

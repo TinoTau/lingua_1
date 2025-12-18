@@ -13,7 +13,7 @@ export function NodeStatus({ status }: NodeStatusProps) {
   const [isReconnecting, setIsReconnecting] = useState(false);
 
   if (!status) {
-    return <div className="node-status">加载中...</div>;
+    return <div className="lns-root">加载中...</div>;
   }
 
   const handleReconnect = async () => {
@@ -36,17 +36,17 @@ export function NodeStatus({ status }: NodeStatusProps) {
 
   return (
     <div 
-      className={`node-status ${status.connected ? 'connected' : 'disconnected'} ${!status.connected ? 'clickable' : ''}`}
+      className={`lns-root ${status.connected ? 'is-connected' : 'is-disconnected'} ${!status.connected ? 'is-clickable' : ''}`}
       onClick={handleReconnect}
       style={!status.connected ? { cursor: 'pointer' } : undefined}
       title={!status.connected ? '点击重连' : undefined}
     >
-      <span className="status-indicator"></span>
-      <span className="status-text">
+      <span className="lns-indicator"></span>
+      <span className="lns-text">
         {isReconnecting ? '重连中...' : (status.connected ? '已连接' : '未连接')}
       </span>
       {status.nodeId && (
-        <span className="node-id">节点ID: {status.nodeId}</span>
+        <span className="lns-node-id">节点ID: {status.nodeId}</span>
       )}
     </div>
   );

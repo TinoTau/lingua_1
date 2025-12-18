@@ -331,31 +331,31 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
   };
 
   return (
-    <div className="model-management">
-      <div className="model-management-header">
+    <div className="lmm-root">
+      <div className="lmm-header">
         {onBack && (
-          <button className="back-button" onClick={onBack}>
+          <button className="lmm-back" onClick={onBack}>
             ← 返回
           </button>
         )}
         <h2>服务管理</h2>
       </div>
 
-      <div className="tabs">
+      <div className="lmm-tabs">
         <button
-          className={activeTab === 'available' ? 'active' : ''}
+          className={activeTab === 'available' ? 'is-active' : ''}
           onClick={() => setActiveTab('available')}
         >
           可下载服务
         </button>
         <button
-          className={activeTab === 'installed' ? 'active' : ''}
+          className={activeTab === 'installed' ? 'is-active' : ''}
           onClick={() => setActiveTab('installed')}
         >
           已安装服务
         </button>
         <button
-          className={activeTab === 'ranking' ? 'active' : ''}
+          className={activeTab === 'ranking' ? 'is-active' : ''}
           onClick={() => setActiveTab('ranking')}
         >
           热门服务排行
@@ -363,25 +363,25 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
       </div>
 
       {activeTab === 'available' && (
-        <div className="model-list">
+        <div className="lmm-list">
           {loadingAvailable ? (
-            <div className="empty-state">
+            <div className="lmm-empty">
               <div>加载中...</div>
-              <div className="hint-text">正在从调度服务器获取服务列表...</div>
+              <div className="lmm-hint">正在从调度服务器获取服务列表...</div>
             </div>
           ) : error ? (
-            <div className="empty-state error-state">
-              <div className="error-icon">⚠️</div>
-              <div className="error-message">{error}</div>
-              <button className="retry-button" onClick={loadServices}>
+            <div className="lmm-empty is-error-state">
+              <div className="lmm-error-icon">⚠️</div>
+              <div className="lmm-error">{error}</div>
+              <button className="lmm-retry" onClick={loadServices}>
                 重试
               </button>
             </div>
           ) : availableServices.length === 0 ? (
-            <div className="empty-state">
+            <div className="lmm-empty">
               <div>没有可用的服务</div>
-              <div className="hint-text">请检查调度服务器是否运行在 http://localhost:5010</div>
-              <button className="retry-button" onClick={loadServices}>
+              <div className="lmm-hint">请检查调度服务器是否运行在 http://localhost:5010</div>
+              <button className="lmm-retry" onClick={loadServices}>
                 刷新
               </button>
             </div>
@@ -400,8 +400,8 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
               );
 
               return (
-                <div key={service.service_id} className="model-item">
-                  <div className="model-info">
+                <div key={service.service_id} className="lmm-item">
+                  <div className="lmm-info">
                     <h3>{service.name || service.service_id}</h3>
                     <p>服务ID: {service.service_id}</p>
                     <p>最新版本: {service.latest_version}</p>
@@ -413,44 +413,44 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
                     )}
 
                     {progress && (
-                      <div className="progress-container">
-                        <div className="progress-header">
-                          <span className="progress-state">
+                      <div className="lmm-progress">
+                        <div className="lmm-progress-header">
+                          <span className="lmm-progress-state">
                             {progress.state === 'downloading' && '下载中'}
                             {progress.state === 'verifying' && '验证中'}
                             {progress.state === 'installing' && '安装中'}
                             {progress.state === 'ready' && '已完成'}
                           </span>
                           {progress.currentFile && (
-                            <span className="progress-file">
+                            <span className="lmm-progress-file">
                               {progress.currentFile}
                               {progress.currentFileProgress !== undefined &&
                                 ` (${progress.currentFileProgress.toFixed(1)}%)`}
                             </span>
                           )}
                           {progress.downloadedFiles !== undefined && progress.totalFiles !== undefined && (
-                            <span className="progress-files">
+                            <span className="lmm-progress-files">
                               文件: {progress.downloadedFiles} / {progress.totalFiles}
                             </span>
                           )}
                         </div>
-                        <div className="progress-bar">
+                        <div className="lmm-progress-bar">
                           <div
-                            className="progress-fill"
+                            className="lmm-progress-fill"
                             style={{ width: `${progress.percent}%` }}
                           />
                         </div>
-                        <div className="progress-details">
-                          <span className="progress-text">
+                        <div className="lmm-progress-details">
+                          <span className="lmm-progress-text">
                             {progress.percent.toFixed(1)}% ({formatBytes(progress.downloadedBytes)} / {formatBytes(progress.totalBytes)})
                           </span>
                           {progress.downloadSpeed !== undefined && progress.downloadSpeed > 0 && (
-                            <span className="progress-speed">
+                            <span className="lmm-progress-speed">
                               速度: {formatBytes(progress.downloadSpeed)}/s
                             </span>
                           )}
                           {progress.estimatedTimeRemaining !== undefined && progress.estimatedTimeRemaining > 0 && (
-                            <span className="progress-time">
+                            <span className="lmm-progress-time">
                               剩余: {formatTime(progress.estimatedTimeRemaining)}
                             </span>
                           )}
@@ -459,21 +459,21 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
                     )}
 
                     {error && (
-                      <div className="error-message">
-                        <div className="error-header">
-                          <span className="error-icon">⚠️</span>
-                          <span className="error-type">
+                      <div className="lmm-error">
+                        <div className="lmm-error-header">
+                          <span className="lmm-error-icon">⚠️</span>
+                          <span className="lmm-error-type">
                             {error.stage === 'network' && '网络错误'}
                             {error.stage === 'disk' && '磁盘错误'}
                             {error.stage === 'checksum' && '校验错误'}
                             {error.stage === 'unknown' && '未知错误'}
                           </span>
                         </div>
-                        <p className="error-detail">{error.message}</p>
+                        <p className="lmm-error-detail">{error.message}</p>
                         {error.canRetry && (
-                          <div className="error-actions">
+                          <div className="lmm-error-actions">
                             <button
-                              className="retry-button"
+                              className="lmm-retry"
                               onClick={() => handleRetry(service.service_id, version)}
                             >
                               重试下载
@@ -481,7 +481,7 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
                           </div>
                         )}
                         {!error.canRetry && (
-                          <p className="error-hint">
+                          <p className="lmm-error-hint">
                             {error.stage === 'disk' && '请检查磁盘空间和权限'}
                             {error.stage === 'checksum' && '文件可能已损坏，请重新下载'}
                             {error.stage === 'network' && '请检查网络连接'}
@@ -491,13 +491,13 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
                     )}
                   </div>
 
-                  <div className="model-actions">
+                  <div className="lmm-actions">
                     {isInstalled ? (
-                      <button className="download-button" disabled>已安装</button>
+                      <button className="lmm-download" disabled>已安装</button>
                     ) : progress ? (
-                      <button className="download-button" disabled>下载中...</button>
+                      <button className="lmm-download" disabled>下载中...</button>
                     ) : (
-                      <button className="download-button" onClick={() => handleDownload(service.service_id, version, platformVariant?.platform)}>
+                      <button className="lmm-download" onClick={() => handleDownload(service.service_id, version, platformVariant?.platform)}>
                         下载
                       </button>
                     )}
@@ -510,9 +510,9 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
       )}
 
       {activeTab === 'installed' && (
-        <div className="model-list">
+        <div className="lmm-list">
           {installedServices.length === 0 ? (
-            <div className="empty-state">暂无已安装的服务</div>
+            <div className="lmm-empty">暂无已安装的服务</div>
           ) : (
             installedServices.map((service) => {
               // 根据服务ID判断服务类型并获取运行状态
@@ -536,8 +536,8 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
               const statusText = isRunning ? '运行中' : '已停止';
 
               return (
-                <div key={`${service.serviceId}_${service.version}`} className="model-item">
-                  <div className="model-info">
+                <div key={`${service.serviceId}_${service.version}`} className="lmm-item">
+                  <div className="lmm-info">
                     <h3>{service.serviceId}</h3>
                     <p>版本: {service.version}</p>
                     {service.platform && <p>平台: {service.platform}</p>}
@@ -545,8 +545,8 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
                     <p>大小: {formatBytes(service.info.size_bytes)}</p>
                     <p>安装时间: {new Date(service.info.installed_at).toLocaleString()}</p>
                   </div>
-                  <div className="model-actions">
-                    <button className="uninstall-button" onClick={() => handleUninstall(service.serviceId, service.version)}>
+                  <div className="lmm-actions">
+                    <button className="lmm-uninstall" onClick={() => handleUninstall(service.serviceId, service.version)}>
                       卸载
                     </button>
                   </div>
@@ -558,12 +558,12 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
       )}
 
       {activeTab === 'ranking' && (
-        <div className="model-list">
+        <div className="lmm-list">
           <h3>热门服务排行（使用节点数）</h3>
           {serviceRanking.length === 0 ? (
-            <div className="empty-state">加载中...</div>
+            <div className="lmm-empty">加载中...</div>
           ) : (
-            <table className="ranking-table">
+            <table className="lmm-ranking-table">
               <thead>
                 <tr>
                   <th>排名</th>
@@ -590,14 +590,14 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
                             <>
                               <span style={{ color: '#28a745', fontWeight: 500 }}>已安装</span>
                               <button
-                                className="uninstall-button"
+                                className="lmm-uninstall"
                                 onClick={() => handleUninstall(item.service_id, installedService?.version)}
                               >
                                 卸载
                               </button>
                             </>
                           ) : (
-                            <button className="download-button" onClick={() => handleDownload(item.service_id)}>
+                            <button className="lmm-download" onClick={() => handleDownload(item.service_id)}>
                               下载
                             </button>
                           )}

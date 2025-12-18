@@ -1,24 +1,24 @@
-.service-management {
+.lsm-root {
   padding: 20px;
 }
 
-.service-management .service-header {
+.lsm-root .lsm-header {
   margin-bottom: 20px;
 }
 
-.service-management .service-header h2 {
+.lsm-root .lsm-header h2 {
   margin: 0;
   font-size: 20px;
   font-weight: 600;
 }
 
-.service-management .services-list {
+.lsm-root .lsm-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.service-management .service-item {
+.lsm-root .lsm-item {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -28,72 +28,72 @@
   background-color: #fafafa;
 }
 
-.service-management .service-info {
+.lsm-root .lsm-info {
   flex: 1;
 }
 
-.service-management .service-name-row {
+.lsm-root .lsm-name-row {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 8px;
 }
 
-.service-management .service-name-row h3 {
+.lsm-root .lsm-name-row h3 {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
 }
 
-.service-management .status-badge {
+.lsm-root .lsm-badge {
   padding: 4px 12px;
   border-radius: 12px;
   font-size: 12px;
   font-weight: 500;
 }
 
-.service-management .status-badge.running {
+.lsm-root .lsm-badge.is-running {
   background-color: #e8f5e9;
   color: #2e7d32;
 }
 
-.service-management .status-badge.starting {
+.lsm-root .lsm-badge.is-starting {
   background-color: #fff3e0;
   color: #e65100;
 }
 
-.service-management .status-badge.stopped {
+.lsm-root .lsm-badge.is-stopped {
   background-color: #ffebee;
   color: #c62828;
 }
 
-.service-management .service-details {
+.lsm-root .lsm-details {
   margin-top: 8px;
   padding-top: 8px;
   border-top: 1px solid #e0e0e0;
 }
 
 /* 使用更具体的选择器，避免被其他组件的样式覆盖 */
-.service-management .detail-row {
+.lsm-root .lsm-detail-row {
   display: flex;
   gap: 8px;
   margin-bottom: 4px;
   font-size: 13px;
 }
 
-.service-management .detail-label {
+.lsm-root .lsm-detail-label {
   font-weight: 500;
   color: #666;
   min-width: 80px;
 }
 
-.service-management .detail-value {
+.lsm-root .lsm-detail-value {
   color: #333;
   font-family: 'Courier New', monospace;
 }
 
 /* 使用更具体的选择器，避免被其他组件的样式覆盖 */
-.service-management .error-message {
+.lsm-root .lsm-error {
   margin-top: 8px;
   padding: 8px;
   background-color: #ffebee;
@@ -106,31 +106,31 @@
   gap: 6px;
 }
 
-.service-management .error-icon {
+.lsm-root .lsm-error-icon {
   font-size: 14px;
 }
 
-.service-management .service-actions {
+.lsm-root .lsm-actions {
   margin-left: 16px;
   display: flex;
   align-items: center;
 }
 
 /* Bootstrap-style switch checkbox - 缩小至与状态pill一致 */
-.service-management .service-switch {
+.lsm-root .lsm-switch {
   position: relative;
   display: inline-block;
   width: 40px;
   height: 20px;
 }
 
-.service-management .service-switch input {
+.lsm-root .lsm-switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-.service-management .service-switch-slider {
+.lsm-root .lsm-switch-slider {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -142,7 +142,7 @@
   border-radius: 20px;
 }
 
-.service-management .service-switch-slider:before {
+.lsm-root .lsm-switch-slider:before {
   position: absolute;
   content: "";
   height: 16px;
@@ -154,20 +154,20 @@
   border-radius: 50%;
 }
 
-.service-management .service-switch input:checked+.service-switch-slider {
+.lsm-root .lsm-switch input:checked+.lsm-switch-slider {
   background-color: #28a745;
   /* 绿色 */
 }
 
-.service-management .service-switch input:focus+.service-switch-slider {
+.lsm-root .lsm-switch input:focus+.lsm-switch-slider {
   box-shadow: 0 0 1px #28a745;
 }
 
-.service-management .service-switch input:checked+.service-switch-slider:before {
+.lsm-root .lsm-switch input:checked+.lsm-switch-slider:before {
   transform: translateX(20px);
 }
 
-.service-management .service-switch input:disabled+.service-switch-slider {
+.lsm-root .lsm-switch input:disabled+.lsm-switch-slider {
   opacity: 0.6;
   cursor: not-allowed;
 }

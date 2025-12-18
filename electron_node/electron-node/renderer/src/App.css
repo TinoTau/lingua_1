@@ -1,4 +1,4 @@
-.app {
+.lap-root {
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -7,7 +7,7 @@
     sans-serif;
 }
 
-.app-header {
+.lap-root .lap-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -18,39 +18,39 @@
   gap: 16px;
 }
 
-.header-status {
+.lap-root .lap-header-status {
   display: flex;
   gap: 16px;
   align-items: center;
   flex-wrap: wrap;
 }
 
-.app-header h1 {
+.lap-root .lap-header h1 {
   margin: 0;
   font-size: 24px;
   font-weight: bold;
 }
 
-.app-main {
+.lap-root .lap-main {
   display: flex;
   flex: 1;
   overflow: hidden;
 }
 
-.left-panel {
+.lap-root .lap-left-panel {
   width: 300px;
   padding: 20px;
   border-right: 1px solid #ddd;
   overflow-y: auto;
 }
 
-.middle-panel {
+.lap-root .lap-middle-panel {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
 }
 
-.model-management-page {
+.lap-root .lap-model-management-page {
   flex: 1;
   padding: 20px;
   overflow-y: auto;

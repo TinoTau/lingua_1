@@ -33,29 +33,29 @@ function App() {
   };
 
   return (
-    <div className="app">
-      <header className="app-header">
+    <div className="lap-root">
+      <header className="lap-header">
         <h1>Lingua Node 客户端</h1>
-        <div className="header-status">
+        <div className="lap-header-status">
           <NodeStatus status={nodeStatus} />
         </div>
       </header>
 
-      <main className="app-main">
+      <main className="lap-main">
         {currentPage === 'main' ? (
           <>
-            <div className="left-panel">
+            <div className="lap-left-panel">
               <SystemResources 
                 resources={systemResources} 
                 onOpenModelManagement={handleOpenModelManagement}
               />
             </div>
-            <div className="middle-panel">
+            <div className="lap-middle-panel">
               <ServiceManagement />
             </div>
           </>
         ) : (
-          <div className="model-management-page">
+          <div className="lap-model-management-page">
             <ModelManagement onBack={handleBackToMain} />
           </div>
         )}

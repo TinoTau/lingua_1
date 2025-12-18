@@ -185,20 +185,20 @@ export function ServiceManagement() {
   };
 
   return (
-    <div className="service-management">
-      <div className="service-header">
+    <div className="lsm-root">
+      <div className="lsm-header">
         <h2>服务管理</h2>
       </div>
 
-      <div className="services-list">
+      <div className="lsm-list">
         {/* Rust 服务 */}
-        <div className="service-item">
-          <div className="service-info">
-            <div className="service-name-row">
+        <div className="lsm-item">
+          <div className="lsm-info">
+            <div className="lsm-name-row">
               <h3>节点推理服务 (Rust)</h3>
-              <span className={`status-badge ${rustStatus?.running ? 'running' :
-                rustStatus?.starting ? 'starting' :
-                  'stopped'
+              <span className={`lsm-badge ${rustStatus?.running ? 'is-running' :
+                rustStatus?.starting ? 'is-starting' :
+                  'is-stopped'
                 }`}>
                 {rustStatus?.running ? '运行中' :
                   rustStatus?.starting ? '正在启动...' :
@@ -206,35 +206,35 @@ export function ServiceManagement() {
               </span>
             </div>
             {rustStatus?.running && (
-              <div className="service-details">
-                <div className="detail-row">
-                  <span className="detail-label">任务次数:</span>
-                  <span className="detail-value">{rustStatus.taskCount || 0}</span>
+              <div className="lsm-details">
+                <div className="lsm-detail-row">
+                  <span className="lsm-detail-label">任务次数:</span>
+                  <span className="lsm-detail-value">{rustStatus.taskCount || 0}</span>
                 </div>
-                <div className="detail-row">
-                  <span className="detail-label">GPU使用时长:</span>
-                  <span className="detail-value">
+                <div className="lsm-detail-row">
+                  <span className="lsm-detail-label">GPU使用时长:</span>
+                  <span className="lsm-detail-value">
                     {formatGpuUsageMs(rustStatus.gpuUsageMs || 0)}
                   </span>
                 </div>
               </div>
             )}
             {rustStatus?.lastError && (
-              <div className="error-message">
-                <span className="error-icon">⚠️</span>
+              <div className="lsm-error">
+                <span className="lsm-error-icon">⚠️</span>
                 <span>{rustStatus.lastError}</span>
               </div>
             )}
           </div>
-          <div className="service-actions">
-            <label className="service-switch">
+          <div className="lsm-actions">
+            <label className="lsm-switch">
               <input
                 type="checkbox"
                 checked={rustStatus?.running || false}
                 onChange={(e) => handleToggleRust(e.target.checked)}
                 disabled={loading.rust || rustStatus?.starting}
               />
-              <span className="service-switch-slider"></span>
+              <span className="lsm-switch-slider"></span>
             </label>
           </div>
         </div>
@@ -247,13 +247,13 @@ export function ServiceManagement() {
           const isLoading = loading[serviceName] || false;
 
           return (
-            <div key={serviceName} className="service-item">
-              <div className="service-info">
-                <div className="service-name-row">
+            <div key={serviceName} className="lsm-item">
+              <div className="lsm-info">
+                <div className="lsm-name-row">
                   <h3>{getServiceDisplayName(serviceName)}</h3>
-                  <span className={`status-badge ${isRunning ? 'running' :
-                    isStarting ? 'starting' :
-                      'stopped'
+                  <span className={`lsm-badge ${isRunning ? 'is-running' :
+                    isStarting ? 'is-starting' :
+                      'is-stopped'
                     }`}>
                     {isRunning ? '运行中' :
                       isStarting ? '正在启动...' :
@@ -261,35 +261,35 @@ export function ServiceManagement() {
                   </span>
                 </div>
                 {isRunning && status && (
-                  <div className="service-details">
-                    <div className="detail-row">
-                      <span className="detail-label">任务次数:</span>
-                      <span className="detail-value">{status.taskCount || 0}</span>
+                  <div className="lsm-details">
+                    <div className="lsm-detail-row">
+                      <span className="lsm-detail-label">任务次数:</span>
+                      <span className="lsm-detail-value">{status.taskCount || 0}</span>
                     </div>
-                    <div className="detail-row">
-                      <span className="detail-label">GPU使用时长:</span>
-                      <span className="detail-value">
+                    <div className="lsm-detail-row">
+                      <span className="lsm-detail-label">GPU使用时长:</span>
+                      <span className="lsm-detail-value">
                         {formatGpuUsageMs(status.gpuUsageMs || 0)}
                       </span>
                     </div>
                   </div>
                 )}
                 {status?.lastError && (
-                  <div className="error-message">
-                    <span className="error-icon">⚠️</span>
+                  <div className="lsm-error">
+                    <span className="lsm-error-icon">⚠️</span>
                     <span>{status.lastError}</span>
                   </div>
                 )}
               </div>
-              <div className="service-actions">
-                <label className="service-switch">
+              <div className="lsm-actions">
+                <label className="lsm-switch">
                   <input
                     type="checkbox"
                     checked={isRunning}
                     onChange={(e) => handleTogglePython(serviceName as 'nmt' | 'tts' | 'yourtts', e.target.checked)}
                     disabled={isLoading || isStarting}
                   />
-                  <span className="service-switch-slider"></span>
+                  <span className="lsm-switch-slider"></span>
                 </label>
               </div>
             </div>

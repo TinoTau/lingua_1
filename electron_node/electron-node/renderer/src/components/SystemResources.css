@@ -1,27 +1,27 @@
-.system-resources {
+.lsr-root {
   padding: 20px;
 }
 
-.system-resources h2 {
+.lsr-root .lsr-title {
   margin-top: 0;
   margin-bottom: 20px;
   font-size: 18px;
   font-weight: bold;
 }
 
-.resource-item {
+.lsr-root .lsr-item {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 15px;
 }
 
-.resource-item label {
+.lsr-root .lsr-item .lsr-label {
   width: 60px;
   font-weight: 500;
 }
 
-.progress-bar {
+.lsr-root .lsr-progress {
   flex: 1;
   height: 20px;
   background-color: #e0e0e0;
@@ -29,25 +29,25 @@
   overflow: hidden;
 }
 
-.progress-fill {
+.lsr-root .lsr-progress-fill {
   height: 100%;
   background-color: #2196f3;
   transition: width 0.3s ease;
 }
 
-.resource-item span {
+.lsr-root .lsr-item .lsr-value {
   width: 50px;
   text-align: right;
   font-size: 14px;
 }
 
-.model-management-button-container {
+.lsr-root .lsr-model-btn-container {
   margin-top: 30px;
   padding-top: 20px;
   border-top: 1px solid #e0e0e0;
 }
 
-.model-management-button {
+.lsr-root .lsr-model-btn {
   width: 100%;
   padding: 12px 20px;
   background-color: #007bff;
@@ -60,11 +60,11 @@
   transition: background-color 0.2s;
 }
 
-.model-management-button:hover {
+.lsr-root .lsr-model-btn:hover {
   background-color: #0056b3;
 }
 
-.model-management-button:active {
+.lsr-root .lsr-model-btn:active {
   background-color: #004085;
 }
 
