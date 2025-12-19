@@ -111,6 +111,7 @@ impl GroupManager {
             group_id = %group_id,
             utterance_index = utterance_index,
             part_index = part_index,
+            asr_text = %asr_text,
             asr_text_len = asr_text.len(),
             context_len = context.len(),
             parts_count = group.parts.len(),

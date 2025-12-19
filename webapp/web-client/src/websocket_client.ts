@@ -184,6 +184,7 @@ export class WebSocketClient {
 
     const message: AudioChunkMessage = {
       type: 'audio_chunk',
+      session_id: this.sessionId,
       seq: this.sequence++,
       is_final: isFinal,
       payload: base64,
@@ -196,12 +197,13 @@ export class WebSocketClient {
    * 发送结束帧
    */
   sendFinal(): void {
-    if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+    if (!this.ws || this.ws.readyState !== WebSocket.OPEN || !this.sessionId) {
       return;
     }
 
     const message: AudioChunkMessage = {
       type: 'audio_chunk',
+      session_id: this.sessionId,
       seq: this.sequence++,
       is_final: true,
     };

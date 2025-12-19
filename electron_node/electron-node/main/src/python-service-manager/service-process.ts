@@ -7,6 +7,7 @@ import { PythonServiceConfig } from './types';
 import { PythonServiceName } from './types';
 import { createLogStream, flushLogBuffer, detectLogLevel } from './service-logging';
 import { waitForServiceReady } from './service-health';
+import { PythonServiceConfig as PythonServiceConfigType } from '../utils/python-service-config';
 
 export interface ServiceProcessHandlers {
   onProcessError: (error: Error) => void;
@@ -14,31 +15,102 @@ export interface ServiceProcessHandlers {
 }
 
 /**
+ * 检测 CUDA 是否可用（通过 Python 脚本）
+ */
+async function checkCudaAvailable(pythonExe: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    const checkScript = 'import torch; exit(0 if torch.cuda.is_available() else 1)';
+    const python = spawn(pythonExe, ['-c', checkScript], {
+      stdio: 'ignore',
+    });
+    
+    let resolved = false;
+    
+    const cleanup = () => {
+      if (!resolved) {
+        resolved = true;
+        python.kill();
+      }
+    };
+    
+    // 超时保护
+    const timeout = setTimeout(() => {
+      cleanup();
+      resolve(false);
+    }, 3000);
+    
+    python.on('close', (code: number | null) => {
+      if (!resolved) {
+        resolved = true;
+        clearTimeout(timeout);
+        resolve(code === 0);
+      }
+    });
+    
+    python.on('error', () => {
+      if (!resolved) {
+        resolved = true;
+        clearTimeout(timeout);
+        resolve(false);
+      }
+    });
+  });
+}
+
+/**
  * 构建服务启动参数
  */
-export function buildServiceArgs(
+export async function buildServiceArgs(
   serviceName: PythonServiceName,
-  config: PythonServiceConfig
-): string[] {
+  config: PythonServiceConfig,
+  pythonExe?: string
+): Promise<string[]> {
+  // 检测 CUDA 是否可用（如果提供了 pythonExe）
+  let cudaAvailable = false;
+  if (pythonExe) {
+    try {
+      cudaAvailable = await checkCudaAvailable(pythonExe);
+      if (cudaAvailable) {
+        logger.info({ serviceName }, 'CUDA detected, GPU acceleration will be enabled');
+      } else {
+        logger.info({ serviceName }, 'CUDA not available, using CPU');
+      }
+    } catch (error) {
+      logger.warn({ error, serviceName }, 'Failed to check CUDA availability, assuming CPU');
+    }
+  }
+
   if (serviceName === 'nmt') {
-    // NMT 服务使用 uvicorn
+    // NMT 服务使用 uvicorn，自动检测 GPU（在服务内部）
     return ['-m', 'uvicorn', 'nmt_service:app', '--host', '127.0.0.1', '--port', config.port.toString()];
   } else if (serviceName === 'tts') {
-    // Piper TTS 服务
-    return [
+    // Piper TTS 服务：通过环境变量启用 GPU
+    const args = [
       config.scriptPath,
       '--host', '127.0.0.1',
       '--port', config.port.toString(),
       '--model-dir', config.env.PIPER_MODEL_DIR || '',
     ];
+    // 环境变量会在 spawn 时设置（通过修改 config.env）
+    if (cudaAvailable && config.env) {
+      config.env.PIPER_USE_GPU = 'true';
+      logger.info({ serviceName }, 'Piper TTS: GPU enabled via PIPER_USE_GPU environment variable');
+    } else {
+      config.env.PIPER_USE_GPU = 'false';
+    }
+    return args;
   } else if (serviceName === 'yourtts') {
-    // YourTTS 服务
-    return [
+    // YourTTS 服务：通过 --gpu 参数启用 GPU
+    const args = [
       config.scriptPath,
       '--host', '127.0.0.1',
       '--port', config.port.toString(),
       '--model-dir', config.env.YOURTTS_MODEL_DIR || '',
     ];
+    if (cudaAvailable) {
+      args.push('--gpu');
+    }
+    return args;
   }
   return [];
 }
@@ -80,8 +152,8 @@ export async function startServiceProcess(
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
 
-  // 构建启动命令
-  const args = buildServiceArgs(serviceName, config);
+  // 构建启动命令（需要检测 CUDA）
+  const args = await buildServiceArgs(serviceName, config, pythonExe);
 
   // 启动进程
   const process = spawn(pythonExe, args, {

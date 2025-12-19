@@ -91,7 +91,14 @@ pub(super) async fn handle_session_init(
     };
 
     send_message(tx, &ack).await?;
-    info!(trace_id = %session.trace_id, session_id = %session.session_id, "Session created");
+    info!(
+        trace_id = %session.trace_id,
+        session_id = %session.session_id,
+        src_lang = %session.src_lang,
+        tgt_lang = %session.tgt_lang,
+        mode = ?session.mode,
+        "Session created"
+    );
     Ok(())
 }
 

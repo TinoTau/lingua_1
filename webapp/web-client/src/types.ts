@@ -34,6 +34,7 @@ export const DEFAULT_CONFIG: Config = {
 // WebSocket 消息类型
 export interface AudioChunkMessage {
   type: 'audio_chunk';
+  session_id: string; // 必需：会话 ID
   seq: number;
   is_final: boolean;
   payload?: string; // base64 encoded PCM16
@@ -84,6 +85,7 @@ export interface SessionInitAckMessage {
   session_id: string;
   assigned_node_id: string | null;
   message: string;
+  trace_id: string; // 追踪 ID（服务器生成并回传）
 }
 
 // 客户端发送的消息类型

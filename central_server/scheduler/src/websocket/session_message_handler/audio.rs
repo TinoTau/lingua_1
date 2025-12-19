@@ -29,6 +29,11 @@ pub(super) async fn handle_audio_chunk(
 
     // 获取当前 utterance_index
     let mut utterance_index = session.utterance_index;
+    tracing::debug!(
+        session_id = %sess_id,
+        current_utterance_index = utterance_index,
+        "Handling audio chunk"
+    );
 
     // Web 端分段规则：超过 pause_ms 视为一个任务结束（自动切句�?
     let now_ms = chrono::Utc::now().timestamp_millis();
@@ -38,6 +43,11 @@ pub(super) async fn handle_audio_chunk(
         .record_chunk_and_check_pause(&sess_id, now_ms, pause_ms)
         .await;
     if pause_exceeded {
+        tracing::info!(
+            session_id = %sess_id,
+            utterance_index = utterance_index,
+            "Pause exceeded, finalizing current utterance"
+        );
         // 自动结束上一句（如果上一句缓冲区有内容）
         let finalized = finalize_audio_utterance(
             state,
@@ -50,8 +60,21 @@ pub(super) async fn handle_audio_chunk(
         if finalized {
             // utterance_index 增加已在 finalize 中完成；刷新本地索引
             if let Some(updated) = state.session_manager.get_session(&sess_id).await {
+                let old_index = utterance_index;
                 utterance_index = updated.utterance_index;
+                tracing::info!(
+                    session_id = %sess_id,
+                    old_utterance_index = old_index,
+                    new_utterance_index = utterance_index,
+                    "Updated utterance_index after pause finalization"
+                );
             }
+        } else {
+            tracing::debug!(
+                session_id = %sess_id,
+                utterance_index = utterance_index,
+                "Pause finalization returned false (empty buffer)"
+            );
         }
     }
 
@@ -84,12 +107,33 @@ pub(super) async fn handle_audio_chunk(
             {
                 return;
             }
-            // 超时触发：将当前缓冲区视为一个任务结�?
+            // 超时触发：将当前缓冲区视为一个任务结?
+            // 但需要重新获取当前的 utterance_index，因为可能已经被其他操作更新
+            let current_session = state_for_timer.session_manager.get_session(&sess_id_for_timer).await;
+            let current_utterance_index = current_session
+                .map(|s| s.utterance_index)
+                .unwrap_or(utterance_index_for_timer);
+
+            if current_utterance_index != utterance_index_for_timer {
+                tracing::warn!(
+                    session_id = %sess_id_for_timer,
+                    old_utterance_index = utterance_index_for_timer,
+                    current_utterance_index = current_utterance_index,
+                    "Timeout task using outdated utterance_index, updating to current"
+                );
+            }
+
+            tracing::info!(
+                session_id = %sess_id_for_timer,
+                utterance_index = current_utterance_index,
+                "Timeout task triggered: finalizing audio utterance"
+            );
+
             let _ = finalize_audio_utterance(
                 &state_for_timer,
                 &tx_for_timer,
                 &sess_id_for_timer,
-                utterance_index_for_timer,
+                current_utterance_index,  // 修复：使用最新的 index
                 FinalizeReason::Pause,
             )
             .await;
@@ -98,7 +142,19 @@ pub(super) async fn handle_audio_chunk(
 
     // 如果是最终块，创�?job
     if is_final {
-        let _ = finalize_audio_utterance(state, tx, &sess_id, utterance_index, FinalizeReason::Send).await?;
+        tracing::info!(
+            session_id = %sess_id,
+            utterance_index = utterance_index,
+            "Received final chunk, finalizing audio utterance"
+        );
+        let finalized = finalize_audio_utterance(state, tx, &sess_id, utterance_index, FinalizeReason::Send).await?;
+        if !finalized {
+            tracing::warn!(
+                session_id = %sess_id,
+                utterance_index = utterance_index,
+                "Final chunk finalization returned false (empty buffer or already finalized)"
+            );
+        }
     }
 
     Ok(())
@@ -119,12 +175,33 @@ async fn finalize_audio_utterance(
     };
 
     // 获取累积的音频数�?
-    let Some(audio_data) = state.audio_buffer.take_combined(sess_id, utterance_index).await else {
+    let audio_data_opt = state.audio_buffer.take_combined(sess_id, utterance_index).await;
+    let Some(audio_data) = audio_data_opt else {
+        tracing::warn!(
+            session_id = %sess_id,
+            utterance_index = utterance_index,
+            reason = ?reason,
+            "No audio buffer found for utterance_index (may have been already finalized)"
+        );
         return Ok(false);
     };
     if audio_data.is_empty() {
+        tracing::warn!(
+            session_id = %sess_id,
+            utterance_index = utterance_index,
+            reason = ?reason,
+            "Audio buffer is empty"
+        );
         return Ok(false);
     }
+    
+    tracing::info!(
+        session_id = %sess_id,
+        utterance_index = utterance_index,
+        reason = ?reason,
+        audio_size_bytes = audio_data.len(),
+        "Finalizing audio utterance with audio data"
+    );
 
     // 使用会话的默认配�?
     let src_lang = session.src_lang.clone();
@@ -161,10 +238,17 @@ async fn finalize_audio_utterance(
     .await?;
 
     // 增加 utterance_index（任务结束）
+    let old_index = utterance_index;
     state
         .session_manager
         .update_session(sess_id, crate::core::session::SessionUpdate::IncrementUtteranceIndex)
         .await;
+    tracing::info!(
+        session_id = %sess_id,
+        old_utterance_index = old_index,
+        new_utterance_index = old_index + 1,
+        "Incremented utterance_index after finalizing audio"
+    );
 
     // 为每�?Job 发送到节点
     for job in jobs {

@@ -45,9 +45,18 @@ impl ResultQueueManager {
     }
 
     pub async fn get_ready_results(&self, session_id: &str) -> Vec<SessionMessage> {
+        use tracing::debug;
         let mut queues = self.queues.write().await;
         if let Some((expected_index, queue)) = queues.get_mut(session_id) {
             let mut ready = Vec::new();
+            
+            debug!(
+                session_id = %session_id,
+                expected_index = *expected_index,
+                queue_size = queue.len(),
+                queue_indices = ?queue.iter().map(|r| r.utterance_index).collect::<Vec<_>>(),
+                "Checking ready results"
+            );
             
             // 从队列开头取出连续的结果
             while let Some(first) = queue.first() {
@@ -56,9 +65,23 @@ impl ResultQueueManager {
                     ready.push(result.result);
                     *expected_index += 1;
                 } else {
+                    debug!(
+                        session_id = %session_id,
+                        expected_index = *expected_index,
+                        first_index = first.utterance_index,
+                        "Waiting for expected index, breaking"
+                    );
                     break;
                 }
             }
+            
+            debug!(
+                session_id = %session_id,
+                ready_count = ready.len(),
+                new_expected_index = *expected_index,
+                remaining_queue_size = queue.len(),
+                "Ready results extracted"
+            );
             
             ready
         } else {

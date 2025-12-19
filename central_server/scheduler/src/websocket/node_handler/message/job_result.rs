@@ -224,11 +224,15 @@ pub(super) async fn handle_job_result(
             part_index,
         };
 
+        let elapsed_ms_str = elapsed_ms.map(|ms| format!("{}ms", ms)).unwrap_or_else(|| "N/A".to_string());
         info!(
             trace_id = %trace_id,
             job_id = %job_id,
             session_id = %session_id,
             utterance_index = utterance_index,
+            elapsed_ms = %elapsed_ms_str,
+            text_asr = ?text_asr.as_ref().map(|s| s.as_str()),
+            text_translated = ?text_translated.as_ref().map(|s| s.as_str()),
             "Received JobResult, adding to result queue"
         );
 
@@ -240,6 +244,12 @@ pub(super) async fn handle_job_result(
 
         // Try to send ready results
         let ready_results = state.result_queue.get_ready_results(&session_id).await;
+        info!(
+            trace_id = %trace_id,
+            session_id = %session_id,
+            ready_results_count = ready_results.len(),
+            "Getting ready results from queue"
+        );
         for result in ready_results {
             // Check if Job is in target_session_ids (room mode)
             if let Some(ref job_info) = job {
@@ -260,14 +270,38 @@ pub(super) async fn handle_job_result(
                     }
                 } else {
                     // Single session mode: only send to sender
+                    info!(
+                        trace_id = %trace_id,
+                        session_id = %session_id,
+                        result_type = ?result,
+                        "Sending translation result to session (single mode)"
+                    );
                     if !crate::phase2::send_session_message_routed(state, &session_id, result.clone()).await {
                         warn!(trace_id = %trace_id, session_id = %session_id, "Failed to send result to session");
+                    } else {
+                        info!(
+                            trace_id = %trace_id,
+                            session_id = %session_id,
+                            "Successfully sent translation result to session"
+                        );
                     }
                 }
             } else {
                 // Job does not exist, fallback to single session mode
+                info!(
+                    trace_id = %trace_id,
+                    session_id = %session_id,
+                    result_type = ?result,
+                    "Sending translation result to session (fallback mode, job not found)"
+                );
                 if !crate::phase2::send_session_message_routed(state, &session_id, result.clone()).await {
                     warn!(trace_id = %trace_id, session_id = %session_id, "Failed to send result to session");
+                } else {
+                    info!(
+                        trace_id = %trace_id,
+                        session_id = %session_id,
+                        "Successfully sent translation result to session (fallback)"
+                    );
                 }
             }
         }
