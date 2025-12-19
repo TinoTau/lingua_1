@@ -1,5 +1,4 @@
-use crate::app_state::AppState;
-use crate::config::JobTimeoutPolicyConfig;
+use crate::core::{AppState, config::JobTimeoutPolicyConfig};
 use crate::messages::{ErrorCode, SessionMessage, UiEventStatus, UiEventType, get_error_hint, NodeMessage};
 use tracing::{warn, info};
 
@@ -30,7 +29,7 @@ pub fn start_job_timeout_manager(
 
             let jobs = state.dispatcher.list_jobs_snapshot().await;
             for job in jobs {
-                if matches!(job.status, crate::dispatcher::JobStatus::Completed | crate::dispatcher::JobStatus::Failed) {
+                if matches!(job.status, crate::core::dispatcher::JobStatus::Completed | crate::core::dispatcher::JobStatus::Failed) {
                     continue;
                 }
 
@@ -48,7 +47,7 @@ pub fn start_job_timeout_manager(
                             pending_timeout_seconds = policy.pending_timeout_seconds,
                             "Job pending 超时，标记失败"
                         );
-                        state.dispatcher.update_job_status(&job.job_id, crate::dispatcher::JobStatus::Failed).await;
+                        state.dispatcher.update_job_status(&job.job_id, crate::core::dispatcher::JobStatus::Failed).await;
                         if let Some(rt) = state.phase2.as_ref() {
                             let _ = rt
                                 .job_fsm_to_finished(&job.job_id, job.dispatch_attempt_id.max(1), false)
@@ -100,7 +99,7 @@ pub fn start_job_timeout_manager(
                 }
 
                 if job.failover_attempts >= policy.failover_max_attempts {
-                    state.dispatcher.update_job_status(&job.job_id, crate::dispatcher::JobStatus::Failed).await;
+                    state.dispatcher.update_job_status(&job.job_id, crate::core::dispatcher::JobStatus::Failed).await;
                     if let Some(rt) = state.phase2.as_ref() {
                         let _ = rt
                             .job_fsm_to_finished(&job.job_id, job.dispatch_attempt_id.max(1), false)
@@ -117,7 +116,7 @@ pub fn start_job_timeout_manager(
                     Ok(v) => v,
                     Err(e) => {
                         warn!(trace_id = %job.trace_id, job_id = %job.job_id, error = %e, "计算 required_services 失败，标记为失败");
-                        state.dispatcher.update_job_status(&job.job_id, crate::dispatcher::JobStatus::Failed).await;
+                        state.dispatcher.update_job_status(&job.job_id, crate::core::dispatcher::JobStatus::Failed).await;
                         notify_job_timeout(&state, &job, Some(now_ms as u64)).await;
                         continue;
                     }
@@ -149,7 +148,7 @@ pub fn start_job_timeout_manager(
 
                 let Some(new_node_id) = selected else {
                     // 当前无法找到可用节点：直接失败（避免进入“永远 pending 且不再派发”的状态）
-                    state.dispatcher.update_job_status(&job.job_id, crate::dispatcher::JobStatus::Failed).await;
+                    state.dispatcher.update_job_status(&job.job_id, crate::core::dispatcher::JobStatus::Failed).await;
                     notify_job_timeout(&state, &job, Some(now_ms as u64)).await;
                     continue;
                 };
@@ -170,7 +169,7 @@ pub fn start_job_timeout_manager(
                         .await
                 };
                 if !reserved {
-                    state.dispatcher.update_job_status(&job.job_id, crate::dispatcher::JobStatus::Failed).await;
+                    state.dispatcher.update_job_status(&job.job_id, crate::core::dispatcher::JobStatus::Failed).await;
                     if let Some(rt) = state.phase2.as_ref() {
                         let _ = rt
                             .job_fsm_to_finished(&job.job_id, job.dispatch_attempt_id.max(1), false)
@@ -221,7 +220,7 @@ pub fn start_job_timeout_manager(
                         if let Some(rt) = state.phase2.as_ref() {
                             rt.release_node_slot(&new_node_id, &updated_job.job_id).await;
                         }
-                        state.dispatcher.update_job_status(&updated_job.job_id, crate::dispatcher::JobStatus::Failed).await;
+                        state.dispatcher.update_job_status(&updated_job.job_id, crate::core::dispatcher::JobStatus::Failed).await;
                         notify_job_node_unavailable(&state, &updated_job, Some(now_ms as u64)).await;
                     }
                 }
@@ -230,7 +229,7 @@ pub fn start_job_timeout_manager(
     });
 }
 
-async fn notify_job_timeout(state: &AppState, job: &crate::dispatcher::Job, now_ms_opt: Option<u64>) {
+async fn notify_job_timeout(state: &AppState, job: &crate::core::dispatcher::Job, now_ms_opt: Option<u64>) {
     let elapsed_ms = now_ms_opt.map(|now_ms| {
         let created_at_ms = job.created_at.timestamp_millis().max(0) as u64;
         now_ms.saturating_sub(created_at_ms)
@@ -251,7 +250,7 @@ async fn notify_job_timeout(state: &AppState, job: &crate::dispatcher::Job, now_
     let _ = crate::phase2::send_session_message_routed(state, &job.session_id, ui_event).await;
 }
 
-async fn notify_job_node_unavailable(state: &AppState, job: &crate::dispatcher::Job, now_ms_opt: Option<u64>) {
+async fn notify_job_node_unavailable(state: &AppState, job: &crate::core::dispatcher::Job, now_ms_opt: Option<u64>) {
     let elapsed_ms = now_ms_opt.map(|now_ms| {
         let created_at_ms = job.created_at.timestamp_millis().max(0) as u64;
         now_ms.saturating_sub(created_at_ms)

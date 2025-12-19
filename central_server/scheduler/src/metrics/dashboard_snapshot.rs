@@ -4,8 +4,8 @@
 // - 单机：避免 /api/v1/stats 每次请求都遍历状态、做网络 IO
 // - 未来 cluster：把快照生成迁移到独立聚合器/Redis，不改 API handler
 
-use crate::app_state::AppState;
-use crate::stats::DashboardStats;
+use crate::core::AppState;
+use crate::metrics::stats::DashboardStats;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::time::Duration;

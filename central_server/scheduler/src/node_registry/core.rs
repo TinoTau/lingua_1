@@ -18,10 +18,10 @@ impl NodeRegistry {
             exclude_reason_stats: Arc::new(RwLock::new(HashMap::new())),
             unavailable_services: Arc::new(RwLock::new(HashMap::new())),
             reserved_jobs: Arc::new(RwLock::new(HashMap::new())),
-            phase3: Arc::new(RwLock::new(crate::config::Phase3Config::default())),
+            phase3: Arc::new(RwLock::new(crate::core::config::Phase3Config::default())),
             phase3_pool_index: Arc::new(RwLock::new(HashMap::new())),
             phase3_node_pool: Arc::new(RwLock::new(HashMap::new())),
-            core_services: Arc::new(RwLock::new(crate::config::CoreServicesConfig::default())),
+            core_services: Arc::new(RwLock::new(crate::core::config::CoreServicesConfig::default())),
             phase3_core_cache: Arc::new(RwLock::new(super::phase3_core_cache::Phase3CoreCacheState::default())),
         }
     }
@@ -33,10 +33,10 @@ impl NodeRegistry {
             exclude_reason_stats: Arc::new(RwLock::new(HashMap::new())),
             unavailable_services: Arc::new(RwLock::new(HashMap::new())),
             reserved_jobs: Arc::new(RwLock::new(HashMap::new())),
-            phase3: Arc::new(RwLock::new(crate::config::Phase3Config::default())),
+            phase3: Arc::new(RwLock::new(crate::core::config::Phase3Config::default())),
             phase3_pool_index: Arc::new(RwLock::new(HashMap::new())),
             phase3_node_pool: Arc::new(RwLock::new(HashMap::new())),
-            core_services: Arc::new(RwLock::new(crate::config::CoreServicesConfig::default())),
+            core_services: Arc::new(RwLock::new(crate::core::config::CoreServicesConfig::default())),
             phase3_core_cache: Arc::new(RwLock::new(super::phase3_core_cache::Phase3CoreCacheState::default())),
         }
     }
@@ -49,7 +49,7 @@ impl NodeRegistry {
 
         let t0 = Instant::now();
         let mut nodes = self.nodes.write().await;
-        crate::observability::record_lock_wait("node_registry.nodes.write", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.nodes.write", t0.elapsed().as_millis() as u64);
 
         let updated = if let Some(existing) = nodes.get_mut(&node.node_id) {
             // status 合并：尽量保留“更活跃”的状态
@@ -150,7 +150,7 @@ impl NodeRegistry {
 
         let t0 = Instant::now();
         let mut nodes = self.nodes.write().await;
-        crate::observability::record_lock_wait("node_registry.nodes.write", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.nodes.write", t0.elapsed().as_millis() as u64);
 
         // node_id 冲突检测（最小实现）
         let final_node_id = if let Some(provided_id) = node_id {
@@ -252,7 +252,7 @@ impl NodeRegistry {
         let ok = {
             let t0 = Instant::now();
             let mut nodes = self.nodes.write().await;
-            crate::observability::record_lock_wait("node_registry.nodes.write", t0.elapsed().as_millis() as u64);
+            crate::metrics::observability::record_lock_wait("node_registry.nodes.write", t0.elapsed().as_millis() as u64);
             if let Some(node) = nodes.get_mut(node_id) {
             // GPU 使用率必须提供（所有节点都必须有 GPU）
             let gpu_usage = gpu_usage.unwrap_or(0.0);

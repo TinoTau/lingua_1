@@ -1,4 +1,4 @@
-﻿    async fn phase2_cluster_acceptance_smoke() {
+    async fn phase2_cluster_acceptance_smoke() {
         // Cluster 自动化验收专用：
         // - 只在 LINGUA_TEST_REDIS_MODE=cluster 时跑（避免本地 single 环境变慢）
         // - 覆盖：presence/owner、Streams（含 DLQ + XCLAIM）、Lua（reservation/FSM）、request 幂等、snapshot 清理
@@ -17,7 +17,7 @@
             uuid::Uuid::new_v4().to_string().replace('-', "")
         );
 
-        let mut cfg = crate::config::Phase2Config::default();
+        let mut cfg = crate::core::config::Phase2Config::default();
         cfg.enabled = true;
         cfg.redis = redis_cfg.clone();
         cfg.redis.key_prefix = key_prefix;

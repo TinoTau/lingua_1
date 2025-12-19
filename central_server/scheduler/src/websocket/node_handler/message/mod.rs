@@ -1,4 +1,4 @@
-use crate::app_state::AppState;
+use crate::core::AppState;
 use crate::messages::NodeMessage;
 use axum::extract::ws::Message;
 use tokio::sync::mpsc;
@@ -8,16 +8,16 @@ mod job_result;
 mod misc;
 mod register;
 
-/// Phase 2：当 node 连接在 A、session 连接在 B 时，node->scheduler 的结果消息会到达 A。
-/// 但 session 的 result_queue / job 上下文在 B（session owner）上。
-/// 因此需要将这些 NodeMessage 转发到 session owner，让 owner 实例执行“最终业务处理”。
+/// Phase 2: When node connects to A and session connects to B, node->scheduler result messages arrive at A
+/// But session, result_queue / job context is on B (session owner)
+/// Therefore, forward these NodeMessage to session owner, let owner instance execute "final business processing"
 pub(crate) async fn handle_forwarded_node_message(state: &AppState, message: NodeMessage) {
     let (tx, _rx) = mpsc::unbounded_channel::<Message>();
     let mut node_id: Option<String> = None;
     let _ = handle_node_message(message, state, &mut node_id, &tx).await;
 }
 
-// 处理节点消息
+// Handle node messages
 pub(super) async fn handle_node_message(
     message: NodeMessage,
     state: &AppState,
@@ -178,5 +178,3 @@ pub(super) async fn handle_node_message(
         }
     }
 }
-
-

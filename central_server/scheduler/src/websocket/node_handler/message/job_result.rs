@@ -1,5 +1,5 @@
 use super::super::util::extract_service_from_details;
-use crate::app_state::AppState;
+use crate::core::AppState;
 use crate::messages::{ErrorCode, JobError, SessionMessage, UiEventStatus, UiEventType};
 use crate::messages::common::ExtraResult;
 use crate::model_not_available::ModelNotAvailableEvent;
@@ -25,19 +25,19 @@ pub(super) async fn handle_job_result(
     _group_id: Option<String>,
     _part_index: Option<u64>,
 ) {
-    // Phase 1：支持 failover 重派时，必须忽略“过期节点”的结果（避免竞态覆盖）
+    // Phase 1: Support failover retry, must ignore "stale node" results (avoid race condition)
     let job = state.dispatcher.get_job(&job_id).await;
     if let Some(ref j) = job {
         if matches!(
             j.status,
-            crate::dispatcher::JobStatus::Completed | crate::dispatcher::JobStatus::Failed
+            crate::core::dispatcher::JobStatus::Completed | crate::core::dispatcher::JobStatus::Failed
         ) {
             warn!(
                 trace_id = %trace_id,
                 job_id = %job_id,
                 node_id = %node_id,
                 current_node_id = ?j.assigned_node_id,
-                "收到已终态 Job 的结果，忽略"
+                "Received result for terminated Job, ignoring"
             );
             return;
         }
@@ -47,7 +47,7 @@ pub(super) async fn handle_job_result(
                 job_id = %job_id,
                 node_id = %node_id,
                 current_node_id = ?j.assigned_node_id,
-                "收到非当前节点的 JobResult（可能发生过 failover），忽略"
+                "Received JobResult from non-current node (possible failover), ignoring"
             );
             return;
         }
@@ -58,13 +58,13 @@ pub(super) async fn handle_job_result(
                 node_id = %node_id,
                 attempt_id = attempt_id,
                 current_attempt_id = j.dispatch_attempt_id,
-                "收到非当前 attempt 的 JobResult（可能发生过 cancel/重派），忽略"
+                "Received JobResult for non-current attempt (possible cancel/retry), ignoring"
             );
             return;
         }
     } else {
-        // Phase 2：跨实例（node 在 A，job/session 在 B）时，本地 dispatcher 可能没有该 job。
-        // 这种情况下将结果转发给 session owner，让 owner 实例完成结果队列与下游推送。
+        // Phase 2: Cross-instance (node on A, job/session on B), local dispatcher may not have job
+        // In this case, forward result to session owner, let owner instance complete result queue and downstream push
         if let Some(rt) = state.phase2.as_ref() {
             if let Some(owner) = rt.resolve_session_owner(&session_id).await {
                 if owner != rt.instance_id {
@@ -95,7 +95,7 @@ pub(super) async fn handle_job_result(
                         node_id = %node_id,
                         session_id = %session_id,
                         owner = %owner,
-                        "本地无 Job，已将 JobResult 转发给 session owner"
+                        "Local Job missing, forwarded JobResult to session owner"
                     );
                     return;
                 }
@@ -106,46 +106,46 @@ pub(super) async fn handle_job_result(
             trace_id = %trace_id,
             job_id = %job_id,
             node_id = %node_id,
-            "收到 JobResult，但 Job 不存在，忽略"
+            "Received JobResult but Job does not exist, ignoring"
         );
         return;
     }
 
-    // Phase 1：收到“有效结果”才释放 reserved 并发槽（幂等）
+    // Phase 1: Only release reserved when receiving "valid result" (idempotent)
     state.node_registry.release_job_slot(&node_id, &job_id).await;
-    // Phase 2：释放 Redis reservation（幂等）
+    // Phase 2: Release Redis reservation (idempotent)
     if let Some(rt) = state.phase2.as_ref() {
         rt.release_node_slot(&node_id, &job_id).await;
     }
 
-    // Phase 2：Job FSM -> FINISHED
+    // Phase 2: Job FSM -> FINISHED
     if let Some(rt) = state.phase2.as_ref() {
         let _ = rt.job_fsm_to_finished(&job_id, attempt_id, success).await;
-        // 释放后再标记 RELEASED（遵循 FSM：FINISHED -> RELEASED）
+        // Mark RELEASED after release (follow FSM: FINISHED -> RELEASED)
         let _ = rt.job_fsm_to_released(&job_id).await;
     }
 
-    // 更新 job 状态（只在 node_id == assigned_node_id 时）
+    // Update job status (only when node_id == assigned_node_id)
     if success {
         state
             .dispatcher
-            .update_job_status(&job_id, crate::dispatcher::JobStatus::Completed)
+            .update_job_status(&job_id, crate::core::dispatcher::JobStatus::Completed)
             .await;
     } else {
         state
             .dispatcher
-            .update_job_status(&job_id, crate::dispatcher::JobStatus::Failed)
+            .update_job_status(&job_id, crate::core::dispatcher::JobStatus::Failed)
             .await;
     }
 
-    // 计算 elapsed_ms
+    // Calculate elapsed_ms
     let elapsed_ms = job.as_ref().map(|j| {
         chrono::Utc::now()
             .signed_duration_since(j.created_at)
             .num_milliseconds() as u64
     });
 
-    // Utterance Group 处理：在收到 JobResult 时，如果有 ASR 结果，调用 GroupManager
+    // Utterance Group processing: when receiving JobResult, if ASR result exists, call GroupManager
     let (group_id, part_index) = if let Some(ref text_asr) = text_asr {
         if !text_asr.is_empty() {
             let now_ms = chrono::Utc::now().timestamp_millis() as u64;
@@ -154,7 +154,7 @@ pub(super) async fn handle_job_result(
                 .on_asr_final(&session_id, &trace_id, utterance_index, text_asr.clone(), now_ms)
                 .await;
 
-            // 如果有翻译结果，更新 Group
+            // If translation result exists, update Group
             if let Some(ref text_translated) = text_translated {
                 if !text_translated.is_empty() {
                     state
@@ -173,7 +173,7 @@ pub(super) async fn handle_job_result(
     };
 
     if success {
-        // 推送 ASR_FINAL 事件（ASR 完成）
+        // Send ASR_FINAL event (ASR completed)
         if let Some(ref text_asr) = text_asr {
             if !text_asr.is_empty() {
                 let ui_event = SessionMessage::UiEvent {
@@ -191,7 +191,7 @@ pub(super) async fn handle_job_result(
             }
         }
 
-        // 推送 NMT_DONE 事件（翻译完成）
+        // Send NMT_DONE event (translation completed)
         if let Some(ref text_translated) = text_translated {
             if !text_translated.is_empty() {
                 let ui_event = SessionMessage::UiEvent {
@@ -209,7 +209,7 @@ pub(super) async fn handle_job_result(
             }
         }
 
-        // 创建翻译结果消息
+        // Create translation result message
         let result = SessionMessage::TranslationResult {
             session_id: session_id.clone(),
             utterance_index,
@@ -229,22 +229,22 @@ pub(super) async fn handle_job_result(
             job_id = %job_id,
             session_id = %session_id,
             utterance_index = utterance_index,
-            "收到 JobResult，添加到结果队列"
+            "Received JobResult, adding to result queue"
         );
 
-        // 添加到结果队列（使用发送者的 session_id）
+        // Add to result queue (use sender's session_id)
         state
             .result_queue
             .add_result(&session_id, utterance_index, result.clone())
             .await;
 
-        // 尝试发送就绪的结果
+        // Try to send ready results
         let ready_results = state.result_queue.get_ready_results(&session_id).await;
         for result in ready_results {
-            // 检查 Job 是否有 target_session_ids（会议室模式）
+            // Check if Job is in target_session_ids (room mode)
             if let Some(ref job_info) = job {
                 if let Some(target_session_ids) = &job_info.target_session_ids {
-                    // 更新房间最后说话时间
+                    // Update room last speaking time
                     if let Some(room_code) = state.room_manager.find_room_by_session(&session_id).await {
                         state.room_manager.update_last_speaking_at(&room_code).await;
                     }
@@ -254,25 +254,25 @@ pub(super) async fn handle_job_result(
                             warn!(
                                 trace_id = %trace_id,
                                 session_id = %target_session_id,
-                                "无法发送结果到目标接收者"
+                                "Failed to send result to target session"
                             );
                         }
                     }
                 } else {
-                    // 单会话模式：只发送给发送者
+                    // Single session mode: only send to sender
                     if !crate::phase2::send_session_message_routed(state, &session_id, result.clone()).await {
-                        warn!(trace_id = %trace_id, session_id = %session_id, "无法发送结果到会话");
+                        warn!(trace_id = %trace_id, session_id = %session_id, "Failed to send result to session");
                     }
                 }
             } else {
-                // Job 不存在，回退到单会话模式
+                // Job does not exist, fallback to single session mode
                 if !crate::phase2::send_session_message_routed(state, &session_id, result.clone()).await {
-                    warn!(trace_id = %trace_id, session_id = %session_id, "无法发送结果到会话");
+                    warn!(trace_id = %trace_id, session_id = %session_id, "Failed to send result to session");
                 }
             }
         }
     } else {
-        // 推送 ERROR 事件
+        // Send ERROR event
         let error_code = job_error.as_ref().and_then(|e| match e.code.as_str() {
             "NO_AVAILABLE_NODE" => Some(ErrorCode::NoAvailableNode),
             "MODEL_NOT_AVAILABLE" => Some(ErrorCode::ModelNotAvailable),
@@ -284,7 +284,7 @@ pub(super) async fn handle_job_result(
             _ => None,
         });
 
-        // Phase 1：MODEL_NOT_AVAILABLE 主路径只入队，后台做“暂不可用标记”
+        // Phase 1: MODEL_NOT_AVAILABLE main path only enqueues, background does "temporarily unavailable marking"
         if job_error.as_ref().map(|e| e.code.as_str()) == Some("MODEL_NOT_AVAILABLE") {
             if let Some((service_id, service_version, reason)) = job_error
                 .as_ref()
@@ -315,12 +315,12 @@ pub(super) async fn handle_job_result(
         };
         let _ = crate::phase2::send_session_message_routed(state, &session_id, ui_event).await;
 
-        // 发送错误给客户端
+        // Send error to client
         error!(
             trace_id = %trace_id,
             job_id = %job_id,
             session_id = %session_id,
-            "Job 处理失败"
+            "Job processing failed"
         );
         if let Some(err) = job_error {
             let error_msg = SessionMessage::Error {
@@ -332,5 +332,3 @@ pub(super) async fn handle_job_result(
         }
     }
 }
-
-

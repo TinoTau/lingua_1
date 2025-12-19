@@ -18,7 +18,7 @@ impl NodeRegistry {
 
         let t0 = Instant::now();
         let mut guard = self.unavailable_services.write().await;
-        crate::observability::record_lock_wait("node_registry.unavailable_services.write", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.unavailable_services.write", t0.elapsed().as_millis() as u64);
         let entry = guard.entry(node_id.to_string()).or_insert_with(HashMap::new);
         entry.insert(
             service_id.to_string(),
@@ -50,7 +50,7 @@ impl NodeRegistry {
         let now_ms = chrono::Utc::now().timestamp_millis();
         let t0 = Instant::now();
         let mut guard = self.unavailable_services.write().await;
-        crate::observability::record_lock_wait("node_registry.unavailable_services.write", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.unavailable_services.write", t0.elapsed().as_millis() as u64);
         let Some(map) = guard.get_mut(node_id) else {
             return false;
         };

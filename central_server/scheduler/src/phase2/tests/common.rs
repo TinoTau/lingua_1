@@ -1,11 +1,11 @@
-﻿    use super::*;
+    use super::*;
     use crate::messages::{FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, InstalledService, NodeStatus, ModelStatus, ResourceUsage};
     use std::collections::HashMap;
     use base64::Engine as _;
     use futures_util::{SinkExt, StreamExt};
 
-    fn test_redis_config() -> crate::config::Phase2RedisConfig {
-        let mut cfg = crate::config::Phase2RedisConfig::default();
+    fn test_redis_config() -> crate::core::config::Phase2RedisConfig {
+        let mut cfg = crate::core::config::Phase2RedisConfig::default();
         let mode = std::env::var("LINGUA_TEST_REDIS_MODE").unwrap_or_else(|_| "single".to_string());
         if mode == "cluster" {
             cfg.mode = "cluster".to_string();
@@ -28,7 +28,7 @@
         cfg
     }
 
-    async fn can_connect_redis(cfg: &crate::config::Phase2RedisConfig) -> bool {
+    async fn can_connect_redis(cfg: &crate::core::config::Phase2RedisConfig) -> bool {
         match cfg.mode.as_str() {
             "cluster" => {
                 let urls = if cfg.cluster_urls.is_empty() {

@@ -8,7 +8,7 @@ impl NodeRegistry {
     pub(super) async fn record_exclude_reason(&self, reason: DispatchExcludeReason, node_id: String) {
         let t0 = Instant::now();
         let mut stats = self.exclude_reason_stats.write().await;
-        crate::observability::record_lock_wait("node_registry.exclude_reason_stats.write", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.exclude_reason_stats.write", t0.elapsed().as_millis() as u64);
         let entry = stats.entry(reason.clone()).or_insert_with(|| (0, Vec::new()));
         entry.0 += 1;
 
@@ -30,7 +30,7 @@ impl NodeRegistry {
     pub async fn get_exclude_reason_stats(&self) -> HashMap<DispatchExcludeReason, (usize, Vec<String>)> {
         let t0 = Instant::now();
         let guard = self.exclude_reason_stats.read().await;
-        crate::observability::record_lock_wait("node_registry.exclude_reason_stats.read", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.exclude_reason_stats.read", t0.elapsed().as_millis() as u64);
         guard.clone()
     }
 
@@ -39,7 +39,7 @@ impl NodeRegistry {
     pub async fn clear_exclude_reason_stats(&self) {
         let t0 = Instant::now();
         let mut stats = self.exclude_reason_stats.write().await;
-        crate::observability::record_lock_wait("node_registry.exclude_reason_stats.write", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.exclude_reason_stats.write", t0.elapsed().as_millis() as u64);
         stats.clear();
     }
 }

@@ -1,4 +1,4 @@
-﻿impl Phase2Runtime {
+impl Phase2Runtime {
     pub async fn enqueue_to_instance(&self, target_instance_id: &str, event: &InterInstanceEvent) -> bool {
         let stream = self.instance_inbox_stream_key(target_instance_id);
         let payload = match serde_json::to_string(event) {
@@ -13,7 +13,7 @@
             .xadd_payload_maxlen(&stream, &payload, self.cfg.stream_maxlen.max(100))
             .await
             .is_ok();
-        crate::prometheus_metrics::phase2_redis_op("xadd", ok);
+        crate::metrics::prometheus_metrics::phase2_redis_op("xadd", ok);
         ok
     }
 

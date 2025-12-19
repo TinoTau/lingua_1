@@ -1,4 +1,4 @@
-// 会话消息处理模块（拆分版）
+// Session message handler module (split version)
 
 mod audio;
 mod core;
@@ -6,13 +6,13 @@ mod room;
 mod utterance;
 mod webrtc;
 
-use crate::app_state::AppState;
+use crate::core::AppState;
 use crate::messages::SessionMessage;
 use axum::extract::ws::Message;
 use tokio::sync::mpsc;
 use tracing::warn;
 
-/// 处理会话消息
+/// Handle session messages
 pub(crate) async fn handle_session_message(
     message: SessionMessage,
     state: &AppState,
@@ -126,7 +126,7 @@ pub(crate) async fn handle_session_message(
             core::handle_session_close(state, tx, sess_id, reason).await?;
         }
 
-        // ===== 房间相关消息处理 =====
+        // ===== Room-related message handling =====
         SessionMessage::RoomCreate {
             client_ts: _,
             display_name,
@@ -164,7 +164,7 @@ pub(crate) async fn handle_session_message(
             .await?;
         }
 
-        // ===== WebRTC 信令消息处理 =====
+        // ===== WebRTC signaling message handling =====
         SessionMessage::WebRTCOffer { room_code, to, sdp } => {
             webrtc::handle_webrtc_offer(state, session_id, room_code, to, sdp).await?;
         }
@@ -182,11 +182,9 @@ pub(crate) async fn handle_session_message(
         }
 
         _ => {
-            warn!("收到未处理的会话消息类型");
+            warn!("Received unhandled session message type");
         }
     }
 
     Ok(())
 }
-
-

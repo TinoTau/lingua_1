@@ -1,6 +1,6 @@
-use crate::app_state::AppState;
+use crate::core::AppState;
 use crate::messages::{ErrorCode, SessionMessage};
-use crate::session::SessionUpdate;
+use crate::core::session::SessionUpdate;
 use crate::websocket::{send_error, send_message};
 use axum::extract::ws::Message;
 use tokio::sync::mpsc;
@@ -24,14 +24,14 @@ pub(super) async fn handle_session_init(
     auto_langs: Option<Vec<String>>,
     trace_id: Option<String>,
 ) -> Result<(), anyhow::Error> {
-    // 处理配对码
+    // Handle pairing code
     let paired_node_id = if let Some(code) = pairing_code {
         state.pairing_service.validate_pairing_code(&code).await
     } else {
         None
     };
 
-    // 创建会话（传递 trace_id）
+    // Create session (pass trace_id)
     let session = state
         .session_manager
         .create_session(
@@ -50,7 +50,7 @@ pub(super) async fn handle_session_init(
         )
         .await;
 
-    // 如果配对成功，更新会话
+    // If pairing successful, update session
     if let Some(ref node_id) = paired_node_id {
         state
             .session_manager
@@ -60,29 +60,29 @@ pub(super) async fn handle_session_init(
 
     *session_id = Some(session.session_id.clone());
 
-    // 注册连接
+    // Register connection
     state
         .session_connections
         .register(session.session_id.clone(), tx.clone())
         .await;
 
-    // Phase 2：写入 session owner（带 TTL；用于跨实例投递）
+    // Phase 2: Write session owner (with TTL; for cross-instance delivery)
     if let Some(rt) = state.phase2.as_ref() {
         rt.set_session_owner(&session.session_id).await;
-        // Schema compat：若是“配对节点”模式，补写 v1:sessions:bind（默认关闭）
+        // Schema compat: If "paired node" mode, write v1:sessions:bind (default off)
         if let Some(ref node_id) = paired_node_id {
             rt.schema_set_session_bind(&session.session_id, node_id, Some(&session.trace_id))
                 .await;
         }
     }
 
-    // 初始化结果队列
+    // Initialize result queue
     state
         .result_queue
         .initialize_session(session.session_id.clone())
         .await;
 
-    // 发送确认消息（包含 trace_id）
+    // Send acknowledgment message (include trace_id)
     let ack = SessionMessage::SessionInitAck {
         session_id: session.session_id.clone(),
         assigned_node_id: paired_node_id,
@@ -91,7 +91,7 @@ pub(super) async fn handle_session_init(
     };
 
     send_message(tx, &ack).await?;
-    info!(trace_id = %session.trace_id, session_id = %session.session_id, "会话已创建");
+    info!(trace_id = %session.trace_id, session_id = %session.session_id, "Session created");
     Ok(())
 }
 
@@ -100,13 +100,13 @@ pub(super) async fn handle_client_heartbeat(
     tx: &mpsc::UnboundedSender<Message>,
     sess_id: String,
 ) -> Result<(), anyhow::Error> {
-    // 验证会话存在
+    // Verify session exists
     if state.session_manager.get_session(&sess_id).await.is_none() {
-        send_error(tx, ErrorCode::InvalidSession, "会话不存在").await;
+        send_error(tx, ErrorCode::InvalidSession, "Session does not exist").await;
         return Ok(());
     }
 
-    // 发送服务器心跳响应
+    // Send server heartbeat response
     let heartbeat = SessionMessage::ServerHeartbeat {
         session_id: sess_id,
         timestamp: chrono::Utc::now().timestamp_millis(),
@@ -121,13 +121,13 @@ pub(super) async fn handle_tts_play_ended(
     group_id: String,
     ts_end_ms: u64,
 ) {
-    // 更新 Group 的 last_tts_end_at（Scheduler 权威时间）
+    // Update Group's last_tts_end_at (Scheduler authoritative time)
     state.group_manager.on_tts_play_ended(&group_id, ts_end_ms).await;
     info!(
         session_id = %sess_id,
         group_id = %group_id,
         ts_end_ms = ts_end_ms,
-        "TTS 播放结束，更新 Group last_tts_end_at"
+        "TTS playback ended, updated Group last_tts_end_at"
     );
 }
 
@@ -137,19 +137,19 @@ pub(super) async fn handle_session_close(
     sess_id: String,
     reason: String,
 ) -> Result<(), anyhow::Error> {
-    // 清理 Group（必须在清理会话之前）
+    // Cleanup Group (must be before session cleanup)
     state.group_manager.on_session_end(&sess_id, &reason).await;
 
-    // 如果会话在房间中，退出房间
+    // If session is in room, leave room
     if let Some(room_code) = state.room_manager.find_room_by_session(&sess_id).await {
         let _ = state.room_manager.leave_room(&room_code, &sess_id).await;
-        // 广播成员列表更新
+        // Broadcast member list update
         if let Some(members) = state.room_manager.get_room_members(&room_code).await {
             let members_msg = SessionMessage::RoomMembers {
                 room_code: room_code.clone(),
                 members: members.clone(),
             };
-            // 向房间内所有成员广播
+            // Broadcast to all members in room
             for member in members {
                 if member.session_id != sess_id {
                     if let Some(member_tx) = state.session_connections.get(&member.session_id).await {
@@ -160,22 +160,20 @@ pub(super) async fn handle_session_close(
         }
     }
 
-    // 清理会话
+    // Cleanup session
     state.session_connections.unregister(&sess_id).await;
     state.result_queue.remove_session(&sess_id).await;
     state.session_manager.remove_session(&sess_id).await;
-    // Schema compat：清理 v1:sessions:bind（默认关闭）
+    // Schema compat: Clear v1:sessions:bind (default off)
     if let Some(rt) = state.phase2.as_ref() {
         rt.schema_clear_session_bind(&sess_id).await;
     }
 
-    // 发送确认
+    // Send acknowledgment
     let ack = SessionMessage::SessionCloseAck {
         session_id: sess_id.clone(),
     };
     send_message(tx, &ack).await?;
-    info!("会话 {} 已关闭", sess_id);
+    info!("Session {} closed", sess_id);
     Ok(())
 }
-
-

@@ -1,6 +1,6 @@
 ﻿impl Phase2Runtime {
     pub async fn new(
-        cfg: crate::config::Phase2Config,
+        cfg: crate::core::config::Phase2Config,
         scheduler_heartbeat_interval_seconds: u64,
     ) -> anyhow::Result<Option<Self>> {
         if !cfg.enabled {

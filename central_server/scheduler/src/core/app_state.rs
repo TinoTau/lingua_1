@@ -1,20 +1,15 @@
 // 应用状态定义
 
-use crate::session::SessionManager;
-use crate::dispatcher::JobDispatcher;
+use super::{JobDispatcher, SessionManager};
 use crate::node_registry::NodeRegistry;
-use crate::pairing::PairingService;
-use crate::model_hub::ModelHub;
-use crate::connection_manager::{SessionConnectionManager, NodeConnectionManager};
-use crate::result_queue::ResultQueueManager;
-use crate::audio_buffer::AudioBufferManager;
-use crate::group_manager::GroupManager;
-use crate::node_status_manager::NodeStatusManager;
-use crate::room_manager::RoomManager;
-use crate::service_catalog::ServiceCatalogCache;
-use crate::dashboard_snapshot::DashboardSnapshotCache;
+use crate::services::{ModelHub, PairingService, ServiceCatalogCache};
+use crate::managers::{
+    AudioBufferManager, GroupManager, NodeStatusManager,
+    ResultQueueManager, RoomManager, SessionConnectionManager, NodeConnectionManager,
+};
+use crate::metrics::DashboardSnapshotCache;
 use crate::model_not_available::ModelNotAvailableBus;
-use crate::config::{CoreServicesConfig, WebTaskSegmentationConfig};
+use super::config::{CoreServicesConfig, WebTaskSegmentationConfig};
 use crate::phase2::Phase2Runtime;
 
 #[derive(Clone)]

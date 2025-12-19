@@ -1,4 +1,4 @@
-﻿//! Phase 2（决策版 v1.0 + 补充 v1.1）最小落地：
+//! Phase 2（决策版 v1.0 + 补充 v1.1）最小落地：
 //! - Scheduler instance_id + presence（TTL）
 //! - node/session owner（TTL）
 //! - 跨实例投递：Redis Streams inbox（consumer group + ack；pending 重试 best-effort）
@@ -7,7 +7,7 @@
 //! - 本模块刻意避免在 Lua 中做跨实体协调（遵循 Redis Cluster slot 约束边界）
 //! - key 命名使用 hash tag `{...}`，以便未来引入 Lua 原子更新时天然满足同 slot
 
-use crate::app_state::AppState;
+use crate::core::AppState;
 use crate::messages::{NodeMessage, SessionMessage};
 use crate::node_registry::Node as RegistryNode;
 use axum::extract::ws::Message as WsMessage;
@@ -79,7 +79,7 @@ pub struct JobFsmSnapshot {
 pub struct Phase2Runtime {
     pub instance_id: String,
     heartbeat_ttl_seconds: u64,
-    cfg: crate::config::Phase2Config,
+    cfg: crate::core::config::Phase2Config,
     redis: RedisHandle,
 }
 

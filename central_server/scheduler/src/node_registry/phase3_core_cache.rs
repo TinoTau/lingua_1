@@ -1,5 +1,5 @@
 use super::NodeRegistry;
-use crate::config::CoreServicesConfig;
+use crate::core::config::CoreServicesConfig;
 use crate::messages::NodeStatus;
 use std::collections::HashMap;
 use std::time::Instant;
@@ -106,7 +106,7 @@ impl NodeRegistry {
         if !p3.enabled || p3.mode != "two_level" {
             let t0 = Instant::now();
             let mut w = self.phase3_core_cache.write().await;
-            crate::observability::record_lock_wait("node_registry.phase3_core_cache.write", t0.elapsed().as_millis() as u64);
+            crate::metrics::observability::record_lock_wait("node_registry.phase3_core_cache.write", t0.elapsed().as_millis() as u64);
             *w = Phase3CoreCacheState::default();
             return;
         }
@@ -115,12 +115,12 @@ impl NodeRegistry {
         // 以 phase3_node_pool 为准：只统计“已分配到 pool 的节点”
         let t0 = Instant::now();
         let node_pool = self.phase3_node_pool.read().await;
-        crate::observability::record_lock_wait("node_registry.phase3_node_pool.read", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.phase3_node_pool.read", t0.elapsed().as_millis() as u64);
         let node_pool = node_pool.clone();
 
         let t0 = Instant::now();
         let nodes = self.nodes.read().await;
-        crate::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
 
         let mut st = Phase3CoreCacheState::default();
         for (nid, n) in nodes.iter() {
@@ -133,7 +133,7 @@ impl NodeRegistry {
 
         let t0 = Instant::now();
         let mut w = self.phase3_core_cache.write().await;
-        crate::observability::record_lock_wait("node_registry.phase3_core_cache.write", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.phase3_core_cache.write", t0.elapsed().as_millis() as u64);
         *w = st;
     }
 
@@ -152,7 +152,7 @@ impl NodeRegistry {
 
         let t0 = Instant::now();
         let mut w = self.phase3_core_cache.write().await;
-        crate::observability::record_lock_wait("node_registry.phase3_core_cache.write", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.phase3_core_cache.write", t0.elapsed().as_millis() as u64);
         if let Some(old) = w.nodes.remove(&node.node_id) {
             w.dec_pool(&old);
         }
@@ -163,7 +163,7 @@ impl NodeRegistry {
     pub(super) async fn phase3_core_cache_remove_node(&self, node_id: &str) {
         let t0 = Instant::now();
         let mut w = self.phase3_core_cache.write().await;
-        crate::observability::record_lock_wait("node_registry.phase3_core_cache.write", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.phase3_core_cache.write", t0.elapsed().as_millis() as u64);
         if let Some(old) = w.nodes.remove(node_id) {
             w.dec_pool(&old);
         }
@@ -172,7 +172,7 @@ impl NodeRegistry {
     pub async fn phase3_pool_core_cache_snapshot(&self) -> HashMap<u16, Phase3PoolCoreCache> {
         let t0 = Instant::now();
         let r = self.phase3_core_cache.read().await;
-        crate::observability::record_lock_wait("node_registry.phase3_core_cache.read", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.phase3_core_cache.read", t0.elapsed().as_millis() as u64);
         r.pools.clone()
     }
 }

@@ -1,6 +1,6 @@
 use crate::node_registry::NodeRegistry;
 use crate::messages::{FeatureFlags, PipelineConfig};
-use crate::module_resolver::ModuleResolver;
+use crate::utils::ModuleResolver;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -94,7 +94,7 @@ pub struct JobDispatcher {
     reserved_ttl_seconds: u64,
     spread_enabled: bool,
     spread_window_ms: i64,
-    core_services: crate::config::CoreServicesConfig,
+    core_services: crate::core::config::CoreServicesConfig,
     /// session_id -> (last_dispatched_node_id, ts_ms)
     last_dispatched_node_by_session: Arc<RwLock<std::collections::HashMap<String, (String, i64)>>>,
     /// Phase 2：Redis 运行时（request_id bind/lock + node reserved）
@@ -115,7 +115,7 @@ impl JobDispatcher {
             reserved_ttl_seconds: 90,
             spread_enabled: false,
             spread_window_ms: 30_000,
-            core_services: crate::config::CoreServicesConfig::default(),
+            core_services: crate::core::config::CoreServicesConfig::default(),
             last_dispatched_node_by_session: Arc::new(RwLock::new(std::collections::HashMap::new())),
             phase2: None,
         }
@@ -123,7 +123,7 @@ impl JobDispatcher {
 
     pub fn new_with_task_binding_config(
         node_registry: Arc<NodeRegistry>,
-        cfg: crate::config::TaskBindingConfig,
+        cfg: crate::core::config::TaskBindingConfig,
     ) -> Self {
         let mut s = Self::new(node_registry);
         s.lease_seconds = cfg.lease_seconds.max(1);
@@ -135,8 +135,8 @@ impl JobDispatcher {
 
     pub fn new_with_phase1_config(
         node_registry: Arc<NodeRegistry>,
-        task_binding: crate::config::TaskBindingConfig,
-        core_services: crate::config::CoreServicesConfig,
+        task_binding: crate::core::config::TaskBindingConfig,
+        core_services: crate::core::config::CoreServicesConfig,
     ) -> Self {
         let mut s = Self::new_with_task_binding_config(node_registry, task_binding);
         s.core_services = core_services;
@@ -416,9 +416,9 @@ impl JobDispatcher {
 
                 if assigned_node_id.is_none() {
                     if let Some((selector, reason)) = no_available_node_metric {
-                        crate::prometheus_metrics::on_no_available_node(selector, reason);
+                        crate::metrics::prometheus_metrics::on_no_available_node(selector, reason);
                     } else {
-                        crate::prometheus_metrics::on_no_available_node("unknown", "unknown");
+                        crate::metrics::prometheus_metrics::on_no_available_node("unknown", "unknown");
                     }
                 }
 
@@ -665,9 +665,9 @@ impl JobDispatcher {
 
         if assigned_node_id.is_none() {
             if let Some((selector, reason)) = no_available_node_metric {
-                crate::prometheus_metrics::on_no_available_node(selector, reason);
+                crate::metrics::prometheus_metrics::on_no_available_node(selector, reason);
             } else {
-                crate::prometheus_metrics::on_no_available_node("unknown", "unknown");
+                crate::metrics::prometheus_metrics::on_no_available_node("unknown", "unknown");
             }
         }
 
@@ -868,9 +868,9 @@ impl JobDispatcher {
                 .await;
             // Prometheus：记录 pool 命中/回退
             if let Some(pid) = dbg.selected_pool {
-                crate::prometheus_metrics::on_phase3_pool_selected(pid, true, dbg.fallback_used);
+                crate::metrics::prometheus_metrics::on_phase3_pool_selected(pid, true, dbg.fallback_used);
             } else {
-                crate::prometheus_metrics::on_phase3_pool_selected(dbg.preferred_pool, false, false);
+                crate::metrics::prometheus_metrics::on_phase3_pool_selected(dbg.preferred_pool, false, false);
             }
             SelectionOutcome {
                 node_id,

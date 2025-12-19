@@ -46,7 +46,7 @@ pub(crate) async fn send_error(tx: &mpsc::UnboundedSender<Message>, code: ErrorC
 
 // 创建 JobAssign 消息
 pub(crate) fn create_job_assign_message(
-    job: &crate::dispatcher::Job,
+    job: &crate::core::dispatcher::Job,
     group_id: Option<String>,
     part_index: Option<u64>,
     context_text: Option<String>,
@@ -110,4 +110,3 @@ pub(crate) async fn send_ui_event(
         error!("发送 UI 事件失败: {}", e);
     }
 }
-

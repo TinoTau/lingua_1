@@ -103,7 +103,7 @@ impl NodeRegistry {
         let reserved_counts = self.reserved_counts_snapshot().await;
         let t0 = Instant::now();
         let nodes = self.nodes.read().await;
-        crate::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
 
         let mut breakdown = NoAvailableNodeBreakdown::default();
         let mut available_nodes: Vec<&super::Node> = Vec::new();
@@ -174,7 +174,7 @@ impl NodeRegistry {
             std::cmp::max(node.current_jobs, reserved)
         });
         let selected = Some(available_nodes[0].node_id.clone());
-        crate::observability::record_path_latency(
+        crate::metrics::observability::record_path_latency(
             "node_registry.select_node_with_features",
             path_t0.elapsed().as_millis() as u64,
         );
@@ -193,7 +193,7 @@ impl NodeRegistry {
         let reserved_counts = self.reserved_counts_snapshot().await;
         let t0 = Instant::now();
         let nodes = self.nodes.read().await;
-        crate::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
 
         let mut breakdown = NoAvailableNodeBreakdown::default();
         let mut available_nodes: Vec<&super::Node> = Vec::new();
@@ -287,7 +287,7 @@ impl NodeRegistry {
             "调度过滤：选择节点"
         );
 
-        crate::observability::record_path_latency(
+        crate::metrics::observability::record_path_latency(
             "node_registry.select_node_with_models",
             path_t0.elapsed().as_millis() as u64,
         );
@@ -310,7 +310,7 @@ impl NodeRegistry {
         required_model_ids: &[String],
         accept_public: bool,
         exclude_node_id: Option<&str>,
-        core_services: Option<&crate::config::CoreServicesConfig>,
+        core_services: Option<&crate::core::config::CoreServicesConfig>,
     ) -> (Option<String>, Phase3TwoLevelDebug, NoAvailableNodeBreakdown) {
         let cfg = self.phase3.read().await.clone();
         let using_capability_pools = !cfg.pools.is_empty();
@@ -458,7 +458,7 @@ impl NodeRegistry {
         // 性能：预取 pool -> node_ids，避免在 pool_loop 内反复读 phase3_pool_index（降低锁竞争）
         let t0 = Instant::now();
         let idx = self.phase3_pool_index.read().await;
-        crate::observability::record_lock_wait("node_registry.phase3_pool_index.read", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.phase3_pool_index.read", t0.elapsed().as_millis() as u64);
         let mut pool_candidates: std::collections::HashMap<u16, Vec<String>> =
             std::collections::HashMap::with_capacity(pools.len());
         for pid in pools.iter().copied() {
@@ -475,7 +475,7 @@ impl NodeRegistry {
 
         let t0 = Instant::now();
         let nodes = self.nodes.read().await;
-        crate::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
 
         let mut preferred_breakdown = NoAvailableNodeBreakdown::default();
         let mut attempts: Vec<(u16, &'static str, usize)> = Vec::new();
@@ -510,7 +510,7 @@ impl NodeRegistry {
                         breakdown.offline = candidate_ids.len();
                         let reason = "offline";
                         attempts.push((pool_id, reason, candidate_ids.len()));
-                        crate::prometheus_metrics::on_phase3_pool_attempt(pool_id, false, reason);
+                        crate::metrics::prometheus_metrics::on_phase3_pool_attempt(pool_id, false, reason);
                         if idx == 0 {
                             preferred_breakdown = breakdown.clone();
                         }
@@ -521,7 +521,7 @@ impl NodeRegistry {
                         breakdown.status_not_ready = candidate_ids.len();
                         let reason = "status_not_ready";
                         attempts.push((pool_id, reason, candidate_ids.len()));
-                        crate::prometheus_metrics::on_phase3_pool_attempt(pool_id, false, reason);
+                        crate::metrics::prometheus_metrics::on_phase3_pool_attempt(pool_id, false, reason);
                         if idx == 0 {
                             preferred_breakdown = breakdown.clone();
                         }
@@ -535,7 +535,7 @@ impl NodeRegistry {
                             breakdown.model_not_available = candidate_ids.len();
                             let reason = "missing_core_asr_installed";
                             attempts.push((pool_id, reason, candidate_ids.len()));
-                            crate::prometheus_metrics::on_phase3_pool_attempt(pool_id, false, reason);
+                            crate::metrics::prometheus_metrics::on_phase3_pool_attempt(pool_id, false, reason);
                             if idx == 0 {
                                 preferred_breakdown = breakdown.clone();
                             }
@@ -546,7 +546,7 @@ impl NodeRegistry {
                             breakdown.model_not_available = candidate_ids.len();
                             let reason = "missing_core_asr_not_ready";
                             attempts.push((pool_id, reason, candidate_ids.len()));
-                            crate::prometheus_metrics::on_phase3_pool_attempt(pool_id, false, reason);
+                            crate::metrics::prometheus_metrics::on_phase3_pool_attempt(pool_id, false, reason);
                             if idx == 0 {
                                 preferred_breakdown = breakdown.clone();
                             }
@@ -559,7 +559,7 @@ impl NodeRegistry {
                             breakdown.model_not_available = candidate_ids.len();
                             let reason = "missing_core_nmt_installed";
                             attempts.push((pool_id, reason, candidate_ids.len()));
-                            crate::prometheus_metrics::on_phase3_pool_attempt(pool_id, false, reason);
+                            crate::metrics::prometheus_metrics::on_phase3_pool_attempt(pool_id, false, reason);
                             if idx == 0 {
                                 preferred_breakdown = breakdown.clone();
                             }
@@ -570,7 +570,7 @@ impl NodeRegistry {
                             breakdown.model_not_available = candidate_ids.len();
                             let reason = "missing_core_nmt_not_ready";
                             attempts.push((pool_id, reason, candidate_ids.len()));
-                            crate::prometheus_metrics::on_phase3_pool_attempt(pool_id, false, reason);
+                            crate::metrics::prometheus_metrics::on_phase3_pool_attempt(pool_id, false, reason);
                             if idx == 0 {
                                 preferred_breakdown = breakdown.clone();
                             }
@@ -583,7 +583,7 @@ impl NodeRegistry {
                             breakdown.model_not_available = candidate_ids.len();
                             let reason = "missing_core_tts_installed";
                             attempts.push((pool_id, reason, candidate_ids.len()));
-                            crate::prometheus_metrics::on_phase3_pool_attempt(pool_id, false, reason);
+                            crate::metrics::prometheus_metrics::on_phase3_pool_attempt(pool_id, false, reason);
                             if idx == 0 {
                                 preferred_breakdown = breakdown.clone();
                             }
@@ -594,7 +594,7 @@ impl NodeRegistry {
                             breakdown.model_not_available = candidate_ids.len();
                             let reason = "missing_core_tts_not_ready";
                             attempts.push((pool_id, reason, candidate_ids.len()));
-                            crate::prometheus_metrics::on_phase3_pool_attempt(pool_id, false, reason);
+                            crate::metrics::prometheus_metrics::on_phase3_pool_attempt(pool_id, false, reason);
                             if idx == 0 {
                                 preferred_breakdown = breakdown.clone();
                             }
@@ -692,7 +692,7 @@ impl NodeRegistry {
             let reason = if best.is_some() { "ok" } else { breakdown.best_reason_label() };
 
             attempts.push((pool_id, reason, candidate_ids.len()));
-            crate::prometheus_metrics::on_phase3_pool_attempt(pool_id, best.is_some(), reason);
+            crate::metrics::prometheus_metrics::on_phase3_pool_attempt(pool_id, best.is_some(), reason);
 
             if idx == 0 {
                 preferred_breakdown = breakdown.clone();

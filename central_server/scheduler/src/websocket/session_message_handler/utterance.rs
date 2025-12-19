@@ -1,4 +1,4 @@
-use crate::app_state::AppState;
+use crate::core::AppState;
 use crate::messages::{ErrorCode, UiEventStatus, UiEventType};
 use crate::websocket::{create_job_assign_message, send_error, send_ui_event};
 use crate::websocket::job_creator::create_translation_jobs;
@@ -25,25 +25,25 @@ pub(super) async fn handle_utterance(
         .session_manager
         .get_session(&sess_id)
         .await
-        .ok_or_else(|| anyhow::anyhow!("会话不存在: {}", sess_id))?;
+        .ok_or_else(|| anyhow::anyhow!("Session does not exist: {}", sess_id))?;
 
-    // 使用 Utterance 中的 trace_id（如果提供），否则使用 Session 的 trace_id
+    // 使用 Utterance 中的 trace_id（如果提供），否则使�?Session �?trace_id
     let trace_id = utterance_trace_id.unwrap_or_else(|| session.trace_id.clone());
 
     // 解码音频
     use base64::{engine::general_purpose, Engine as _};
     let audio_data = general_purpose::STANDARD
         .decode(&audio)
-        .map_err(|e| anyhow::anyhow!("音频解码失败: {}", e))?;
+        .map_err(|e| anyhow::anyhow!("Audio decode failed: {}", e))?;
 
-    // 使用会话的默认 features（如果请求中没有指定）
+    // 使用会话的默�?features（如果请求中没有指定�?
     let final_features = features.or(session.default_features.clone());
 
     // 创建 job（从 session 获取流式 ASR 配置，默认启用）
     let enable_streaming_asr = Some(true); // 默认启用流式 ASR
-    let partial_update_interval_ms = Some(1000u64); // 默认 1 秒更新间隔
+    let partial_update_interval_ms = Some(1000u64); // 默认 1 秒更新间�?
 
-    // 创建翻译任务（支持房间模式多语言）
+    // 创建翻译任务（支持房间模式多语言�?
     let jobs = create_translation_jobs(
         state,
         &sess_id,
@@ -67,30 +67,30 @@ pub(super) async fn handle_utterance(
     )
     .await?;
 
-    // 为每个 Job 发送到节点
+    // 为每�?Job 发送到节点
     for job in jobs {
         info!(
             trace_id = %trace_id,
             job_id = %job.job_id,
             node_id = ?job.assigned_node_id,
             tgt_lang = %job.tgt_lang,
-            "Job 已创建"
+            "Job created"
         );
 
-        // 如果节点已分配，发送 job 给节点
+        // If node is assigned, send job to node
         if let Some(ref node_id) = job.assigned_node_id {
-            // Phase 1：任务级幂等。若该 job 已成功下发过，则不重复派发
+            // Phase 1: Task-level idempotency. If job has been successfully dispatched, don't repeat dispatch
             if let Some(existing) = state.dispatcher.get_job(&job.job_id).await {
                 if existing.dispatched_to_node {
                     continue;
                 }
             }
 
-            // 注意：当前实现中，JobAssign 时还没有 ASR 结果，所以 group_id、part_index、context_text 为 None
+            // Note: In current implementation, JobAssign doesn't have ASR result yet, so group_id, part_index, context_text are None
             if let Some(job_assign_msg) = create_job_assign_message(&job, None, None, None) {
                 if crate::phase2::send_node_message_routed(state, node_id, job_assign_msg).await {
                     state.dispatcher.mark_job_dispatched(&job.job_id).await;
-                    // 推送 DISPATCHED 事件
+                    // Send DISPATCHED event
                     send_ui_event(
                         tx,
                         &trace_id,
@@ -104,8 +104,8 @@ pub(super) async fn handle_utterance(
                     )
                     .await;
                 } else {
-                    warn!("无法发送 job 到节点 {}", node_id);
-                    // 发送失败：释放 reserved 并发槽（幂等）
+                    warn!("Failed to send job to node {}", node_id);
+                    // 发送失败：释放 reserved 并发槽（幂等�?
                     state.node_registry.release_job_slot(node_id, &job.job_id).await;
                     if let Some(rt) = state.phase2.as_ref() {
                         rt.release_node_slot(node_id, &job.job_id).await;
@@ -114,12 +114,12 @@ pub(super) async fn handle_utterance(
                             .await;
                         let _ = rt.job_fsm_to_released(&job.job_id).await;
                     }
-                    // 标记 job 为失败
+                    // 标记 job 为失�?
                     state
                         .dispatcher
-                        .update_job_status(&job.job_id, crate::dispatcher::JobStatus::Failed)
+                        .update_job_status(&job.job_id, crate::core::dispatcher::JobStatus::Failed)
                         .await;
-                    // 推送 ERROR 事件
+                    // 推�?ERROR 事件
                     send_ui_event(
                         tx,
                         &trace_id,
@@ -135,9 +135,9 @@ pub(super) async fn handle_utterance(
                 }
             }
         } else {
-            warn!("Job {} 没有可用的节点", job.job_id);
-            send_error(tx, ErrorCode::NodeUnavailable, "没有可用的节点").await;
-            // 推送 ERROR 事件
+            warn!("Job {} has no available nodes", job.job_id);
+            send_error(tx, ErrorCode::NodeUnavailable, "No available nodes").await;
+            // Send ERROR event
             send_ui_event(
                 tx,
                 &trace_id,
@@ -155,5 +155,3 @@ pub(super) async fn handle_utterance(
 
     Ok(())
 }
-
-

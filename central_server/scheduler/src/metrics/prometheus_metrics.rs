@@ -3,7 +3,7 @@
 // - 指标命名遵循 Prometheus 习惯（snake_case + *_total / *_seconds）
 // - 对高基数字段做容量限制（避免 label 爆炸）
 
-use crate::app_state::AppState;
+use crate::core::AppState;
 use prometheus::{
     Encoder, Histogram, HistogramOpts, IntCounter, IntCounterVec, IntGauge, Opts, Registry,
     TextEncoder,

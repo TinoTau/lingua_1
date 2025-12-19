@@ -1,10 +1,10 @@
 // 翻译任务创建模块
 
-use crate::app_state::AppState;
+use crate::core::AppState;
 use crate::messages::FeatureFlags;
 
-/// 创建翻译任务（支持房间模式多语言）
-/// 如果是房间模式，为每个不同的 preferred_lang 创建独立的 Job
+/// 创建翻译任务（支持房间模式多语言�?
+/// 如果是房间模式，为每个不同的 preferred_lang 创建独立�?Job
 pub(crate) async fn create_translation_jobs(
     state: &AppState,
     session_id: &str,
@@ -25,10 +25,10 @@ pub(crate) async fn create_translation_jobs(
     enable_streaming_asr: Option<bool>,
     partial_update_interval_ms: Option<u64>,
     trace_id: String,
-) -> Result<Vec<crate::dispatcher::Job>, anyhow::Error> {
-    // 检查是否在房间中
+) -> Result<Vec<crate::core::dispatcher::Job>, anyhow::Error> {
+    // 检查是否在房间�?
     if let Some(room_code) = state.room_manager.find_room_by_session(session_id).await {
-        // 会议室模式：为每个不同的 preferred_lang 创建独立的 Job
+        // 会议室模式：为每个不同的 preferred_lang 创建独立�?Job
         let lang_groups = state.room_manager.get_distinct_target_languages(&room_code, session_id).await;
         
         if lang_groups.is_empty() {
@@ -59,7 +59,7 @@ pub(crate) async fn create_translation_jobs(
                 trace_id.clone(),
                 tenant_id.clone(),
                 Some(request_id),
-                None, // 单会话模式
+                None, // 单会话模�?
             ).await;
             return Ok(vec![job]);
         }
@@ -69,7 +69,7 @@ pub(crate) async fn create_translation_jobs(
         for (target_lang, members) in lang_groups {
             let target_session_ids: Vec<String> = members.iter().map(|m| m.session_id.clone()).collect();
             
-            // 为每个目标语言创建独立的 Job
+            // 为每个目标语言创建独立�?Job
             let request_id = make_request_id(session_id, utterance_index, &target_lang, &trace_id);
             let job = state.dispatcher.create_job(
                 session_id.to_string(),
@@ -96,7 +96,7 @@ pub(crate) async fn create_translation_jobs(
                 trace_id.clone(),
                 tenant_id.clone(),
                 Some(request_id),
-                Some(target_session_ids), // 指定目标接收者
+                Some(target_session_ids), // 指定目标接收�?
             ).await;
             
             jobs.push(job);
@@ -104,7 +104,7 @@ pub(crate) async fn create_translation_jobs(
         
         Ok(jobs)
     } else {
-        // 单会话模式：只创建一个 Job
+        // 单会话模式：只创建一�?Job
         let request_id = make_request_id(session_id, utterance_index, &default_tgt_lang, &trace_id);
         let job = state.dispatcher.create_job(
             session_id.to_string(),
@@ -131,14 +131,14 @@ pub(crate) async fn create_translation_jobs(
             trace_id,
             tenant_id,
             Some(request_id),
-            None, // 单会话模式
+            None, // 单会话模�?
         ).await;
         Ok(vec![job])
     }
 }
 
 fn make_request_id(session_id: &str, utterance_index: u64, tgt_lang: &str, trace_id: &str) -> String {
-    // Phase 1：任务级绑定（会话打散）。request_id 的目标是“同一任务重试幂等”，不做会话级粘滞。
+    // Phase 1：任务级绑定（会话打散）。request_id 的目标是“同一任务重试幂等”，不做会话级粘滞�?
     // 选择稳定字段组合：session_id + utterance_index + tgt_lang + trace_id
     format!("{}:{}:{}:{}", session_id, utterance_index, tgt_lang, trace_id)
 }

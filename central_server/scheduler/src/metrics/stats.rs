@@ -1,7 +1,7 @@
 // 统计数据模块
 
-use crate::app_state::AppState;
-use crate::service_catalog::ServiceInfo;
+use crate::core::AppState;
+use crate::services::service_catalog::ServiceInfo;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

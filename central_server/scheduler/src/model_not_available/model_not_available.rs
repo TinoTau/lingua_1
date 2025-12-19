@@ -40,7 +40,7 @@ impl ModelNotAvailableBus {
 pub fn start_worker(
     mut rx: mpsc::UnboundedReceiver<ModelNotAvailableEvent>,
     node_registry: std::sync::Arc<crate::node_registry::NodeRegistry>,
-    config: crate::config::ModelNotAvailableConfig,
+    config: crate::core::config::ModelNotAvailableConfig,
     phase2: Option<Arc<Phase2Runtime>>,
 ) {
     tokio::spawn(async move {

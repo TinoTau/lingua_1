@@ -1,4 +1,4 @@
-﻿    fn sample_node(node_id: &str) -> RegistryNode {
+    fn sample_node(node_id: &str) -> RegistryNode {
         let now = chrono::Utc::now();
         let mut capability_state: HashMap<String, ModelStatus> = HashMap::new();
         capability_state.insert("node-inference".to_string(), ModelStatus::Ready);
@@ -57,7 +57,7 @@
             return;
         }
 
-        let mut cfg = crate::config::Phase2Config::default();
+        let mut cfg = crate::core::config::Phase2Config::default();
         cfg.enabled = true;
         cfg.instance_id = "test-a".to_string();
         cfg.redis = redis_cfg.clone();

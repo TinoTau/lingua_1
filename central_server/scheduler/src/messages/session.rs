@@ -1,7 +1,7 @@
 // 移动端 ↔ 调度服务器消息
 
 use serde::{Deserialize, Serialize};
-use crate::room_manager;
+use crate::managers::room_manager;
 use super::common::{FeatureFlags, ExtraResult};
 use super::error::ErrorCode;
 use super::ui_event::{UiEventType, UiEventStatus};

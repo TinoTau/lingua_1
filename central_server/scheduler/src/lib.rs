@@ -1,34 +1,24 @@
 // 库入口，用于测试和外部使用
 
-pub mod config;
+pub mod core;
 pub mod messages;
-pub mod session;
-pub mod dispatcher;
 pub mod node_registry;
-pub mod pairing;
-pub mod model_hub;
 pub mod websocket;
-pub mod connection_manager;
-pub mod result_queue;
-pub mod app_state;
-pub mod audio_buffer;
-pub mod module_resolver;
-pub mod group_manager;
-pub mod node_status_manager;
-pub mod room_manager;
-pub mod stats;
-pub mod service_catalog;
-pub mod dashboard_snapshot;
-pub mod model_not_available;
+pub mod utils;
+pub mod managers;
+pub mod services;
 pub mod metrics;
-pub mod observability;
-pub mod prometheus_metrics;
-pub mod job_timeout;
+pub mod timeout;
+pub mod model_not_available;
 pub mod phase2;
 pub mod phase3;
 
-pub use app_state::AppState;
-pub use audio_buffer::AudioBufferManager;
-pub use module_resolver::{ModuleResolver, MODULE_TABLE};
-pub use group_manager::{GroupManager, GroupConfig};
+// Re-export commonly used types
+pub use core::{AppState, Config, JobDispatcher, SessionManager};
+pub use managers::{
+    AudioBufferManager, GroupManager, GroupConfig, NodeStatusManager,
+    ResultQueueManager, RoomManager, SessionConnectionManager, NodeConnectionManager,
+};
+pub use services::{ModelHub, PairingService, ServiceCatalogCache};
+pub use utils::ModuleResolver;
 

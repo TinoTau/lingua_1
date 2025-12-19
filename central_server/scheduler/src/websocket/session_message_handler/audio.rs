@@ -1,4 +1,4 @@
-use crate::app_state::AppState;
+use crate::core::AppState;
 use crate::messages::{ErrorCode, UiEventStatus, UiEventType};
 use crate::websocket::{create_job_assign_message, send_error, send_ui_event};
 use crate::websocket::job_creator::create_translation_jobs;
@@ -25,12 +25,12 @@ pub(super) async fn handle_audio_chunk(
         .session_manager
         .get_session(&sess_id)
         .await
-        .ok_or_else(|| anyhow::anyhow!("会话不存在: {}", sess_id))?;
+        .ok_or_else(|| anyhow::anyhow!("Session does not exist: {}", sess_id))?;
 
     // 获取当前 utterance_index
     let mut utterance_index = session.utterance_index;
 
-    // Web 端分段规则：超过 pause_ms 视为一个任务结束（自动切句）
+    // Web 端分段规则：超过 pause_ms 视为一个任务结束（自动切句�?
     let now_ms = chrono::Utc::now().timestamp_millis();
     let pause_ms = state.web_task_segmentation.pause_ms;
     let pause_exceeded = state
@@ -55,7 +55,7 @@ pub(super) async fn handle_audio_chunk(
         }
     }
 
-    // 如果有 payload，解码并累积音频块
+    // 如果�?payload，解码并累积音频�?
     if let Some(payload_str) = payload {
         use base64::{engine::general_purpose, Engine as _};
         if let Ok(audio_chunk) = general_purpose::STANDARD.decode(&payload_str) {
@@ -66,7 +66,7 @@ pub(super) async fn handle_audio_chunk(
         }
     }
 
-    // 自动切句（停顿）需要“无新 chunk 的超时触发”：每次收到 chunk 都安排一个延迟任务
+    // 自动切句（停顿）需要“无�?chunk 的超时触发”：每次收到 chunk 都安排一个延迟任�?
     if !is_final && pause_ms > 0 {
         let state_for_timer = state.clone();
         let tx_for_timer = tx.clone();
@@ -75,7 +75,7 @@ pub(super) async fn handle_audio_chunk(
         let last_ts = now_ms;
         tokio::spawn(async move {
             tokio::time::sleep(Duration::from_millis(pause_ms)).await;
-            // 若之后还有新 chunk 到来，则 last_chunk_at_ms 会更新，本次 timer 不触发
+            // 若之后还有新 chunk 到来，则 last_chunk_at_ms 会更新，本次 timer 不触�?
             if state_for_timer
                 .audio_buffer
                 .get_last_chunk_at_ms(&sess_id_for_timer)
@@ -84,7 +84,7 @@ pub(super) async fn handle_audio_chunk(
             {
                 return;
             }
-            // 超时触发：将当前缓冲区视为一个任务结束
+            // 超时触发：将当前缓冲区视为一个任务结�?
             let _ = finalize_audio_utterance(
                 &state_for_timer,
                 &tx_for_timer,
@@ -96,7 +96,7 @@ pub(super) async fn handle_audio_chunk(
         });
     }
 
-    // 如果是最终块，创建 job
+    // 如果是最终块，创�?job
     if is_final {
         let _ = finalize_audio_utterance(state, tx, &sess_id, utterance_index, FinalizeReason::Send).await?;
     }
@@ -104,8 +104,8 @@ pub(super) async fn handle_audio_chunk(
     Ok(())
 }
 
-/// 将指定 utterance_index 的音频缓冲区“封口”为一个任务（创建 job 并派发），并推进 session 的 utterance_index。
-/// 返回 true 表示本次确实产生了任务；false 表示缓冲区为空（不产生任务）。
+/// 将指�?utterance_index 的音频缓冲区“封口”为一个任务（创建 job 并派发），并推进 session �?utterance_index�?
+/// 返回 true 表示本次确实产生了任务；false 表示缓冲区为空（不产生任务）�?
 async fn finalize_audio_utterance(
     state: &AppState,
     tx: &mpsc::UnboundedSender<Message>,
@@ -118,7 +118,7 @@ async fn finalize_audio_utterance(
         None => return Ok(false),
     };
 
-    // 获取累积的音频数据
+    // 获取累积的音频数�?
     let Some(audio_data) = state.audio_buffer.take_combined(sess_id, utterance_index).await else {
         return Ok(false);
     };
@@ -126,7 +126,7 @@ async fn finalize_audio_utterance(
         return Ok(false);
     }
 
-    // 使用会话的默认配置
+    // 使用会话的默认配�?
     let src_lang = session.src_lang.clone();
     let tgt_lang = session.tgt_lang.clone();
     let dialect = session.dialect.clone();
@@ -136,7 +136,7 @@ async fn finalize_audio_utterance(
     let enable_streaming_asr = Some(true);
     let partial_update_interval_ms = Some(1000u64);
 
-    // 创建翻译任务（支持房间模式多语言）
+    // 创建翻译任务（支持房间模式多语言�?
     let jobs = create_translation_jobs(
         state,
         sess_id,
@@ -163,21 +163,21 @@ async fn finalize_audio_utterance(
     // 增加 utterance_index（任务结束）
     state
         .session_manager
-        .update_session(sess_id, crate::session::SessionUpdate::IncrementUtteranceIndex)
+        .update_session(sess_id, crate::core::session::SessionUpdate::IncrementUtteranceIndex)
         .await;
 
-    // 为每个 Job 发送到节点
+    // 为每�?Job 发送到节点
     for job in jobs {
         info!(
             trace_id = %job.trace_id,
             job_id = %job.job_id,
             node_id = ?job.assigned_node_id,
             tgt_lang = %job.tgt_lang,
-            "Job 已创建（来自 audio_chunk）"
+            "Job created (from audio_chunk)"
         );
 
         if let Some(ref node_id) = job.assigned_node_id {
-            // Phase 1：任务级幂等。若该 job 已成功下发过，则不重复派发
+            // Phase 1: Task-level idempotency. If job has been successfully dispatched, don't repeat dispatch
             if let Some(existing) = state.dispatcher.get_job(&job.job_id).await {
                 if existing.dispatched_to_node {
                     continue;
@@ -200,8 +200,8 @@ async fn finalize_audio_utterance(
                     )
                     .await;
                 } else {
-                    warn!("无法发送 job 到节点 {}", node_id);
-                    // 发送失败：释放 reserved 并发槽（幂等）
+                    warn!("Failed to send job to node {}", node_id);
+                    // 发送失败：释放 reserved 并发槽（幂等�?
                     state.node_registry.release_job_slot(node_id, &job.job_id).await;
                     if let Some(rt) = state.phase2.as_ref() {
                         rt.release_node_slot(node_id, &job.job_id).await;
@@ -210,10 +210,10 @@ async fn finalize_audio_utterance(
                             .await;
                         let _ = rt.job_fsm_to_released(&job.job_id).await;
                     }
-                    // 标记 job 为失败
+                    // 标记 job 为失�?
                     state
                         .dispatcher
-                        .update_job_status(&job.job_id, crate::dispatcher::JobStatus::Failed)
+                        .update_job_status(&job.job_id, crate::core::dispatcher::JobStatus::Failed)
                         .await;
                     send_ui_event(
                         tx,

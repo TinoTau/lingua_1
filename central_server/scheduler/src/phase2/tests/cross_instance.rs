@@ -1,4 +1,4 @@
-﻿    async fn phase2_cross_instance_delivery_e2e_minimal() {
+    async fn phase2_cross_instance_delivery_e2e_minimal() {
         // 目标：无需启动完整 scheduler server，仅验证 A -> Redis inbox -> B 读取并解析 payload 的链路。
         let redis_cfg = test_redis_config();
         if !can_connect_redis(&redis_cfg).await {
@@ -6,7 +6,7 @@
             return;
         }
 
-        let mut cfg = crate::config::Phase2Config::default();
+        let mut cfg = crate::core::config::Phase2Config::default();
         cfg.enabled = true;
         cfg.redis = redis_cfg.clone();
         cfg.redis.key_prefix = format!("lingua_test_{}", uuid::Uuid::new_v4().to_string().replace('-', ""));

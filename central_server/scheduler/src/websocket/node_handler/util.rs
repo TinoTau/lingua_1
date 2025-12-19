@@ -1,4 +1,4 @@
-/// 从 JobError.details 中提取 service_id / service_version（兼容旧字段 model_id / version）
+/// 锟?JobError.details 涓彁锟?service_id / service_version锛堝吋瀹规棫瀛楁 model_id / version锟?
 pub fn extract_service_from_details(
     details: &serde_json::Value,
 ) -> Option<(String, Option<String>, Option<String>)> {

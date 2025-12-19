@@ -1,5 +1,5 @@
-﻿impl RedisHandle {
-    async fn connect(cfg: &crate::config::Phase2RedisConfig) -> anyhow::Result<Self> {
+impl RedisHandle {
+    async fn connect(cfg: &crate::core::config::Phase2RedisConfig) -> anyhow::Result<Self> {
         let inner = match cfg.mode.as_str() {
             "cluster" => {
                 let urls = if cfg.cluster_urls.is_empty() {

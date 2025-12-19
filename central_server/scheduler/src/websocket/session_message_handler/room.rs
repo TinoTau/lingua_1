@@ -1,4 +1,4 @@
-use crate::app_state::AppState;
+use crate::core::AppState;
 use crate::messages::SessionMessage;
 use crate::websocket::send_message;
 use axum::extract::ws::Message;
@@ -6,7 +6,7 @@ use tokio::sync::mpsc;
 use tracing::{info, warn};
 
 fn require_session_id(session_id: &Option<String>) -> anyhow::Result<&String> {
-    session_id.as_ref().ok_or_else(|| anyhow::anyhow!("会话未初始化"))
+    session_id.as_ref().ok_or_else(|| anyhow::anyhow!("Session not initialized"))
 }
 
 pub(super) async fn handle_room_create(
@@ -26,29 +26,29 @@ pub(super) async fn handle_room_create(
 
     // 获取成员列表（包含创建者）
     if let Some(members) = state.room_manager.get_room_members(&room_code).await {
-        // 发送确认消息
+        // 发送确认消�?
         let ack = SessionMessage::RoomCreateAck {
             room_code: room_code.clone(),
             room_id: Some(room_id),
         };
         send_message(tx, &ack).await?;
 
-        // 发送成员列表给创建者
+        // 发送成员列表给创建�?
         let members_msg = SessionMessage::RoomMembers {
             room_code: room_code.clone(),
             members: members.clone(),
         };
         send_message(tx, &members_msg).await?;
 
-        info!(session_id = %sess_id, room_code = %room_code, "房间已创建，创建者已自动加入");
+        info!(session_id = %sess_id, room_code = %room_code, "Room created, creator automatically joined");
     } else {
-        // 这种情况不应该发生，但为了安全起见处理一下
+        // 这种情况不应该发生，但为了安全起见处理一�?
         let ack = SessionMessage::RoomCreateAck {
             room_code: room_code.clone(),
             room_id: Some(room_id),
         };
         send_message(tx, &ack).await?;
-        warn!(session_id = %sess_id, room_code = %room_code, "房间已创建，但无法获取成员列表");
+        warn!(session_id = %sess_id, room_code = %room_code, "Room created but failed to get member list");
     }
 
     Ok(())
@@ -70,16 +70,16 @@ pub(super) async fn handle_room_join(
         .await
     {
         Ok(()) => {
-            // 获取更新后的成员列表
+            // Get updated member list
             if let Some(members) = state.room_manager.get_room_members(&room_code).await {
-                // 向加入者发送成员列表
+                // Send member list to joiner
                 let members_msg = SessionMessage::RoomMembers {
                     room_code: room_code.clone(),
                     members: members.clone(),
                 };
                 send_message(tx, &members_msg).await?;
 
-                // 向房间内其他成员广播成员列表更新
+                // Broadcast member list update to other members in room
                 for member in members {
                     if member.session_id != *sess_id {
                         if let Some(member_tx) = state.session_connections.get(&member.session_id).await {
@@ -89,13 +89,13 @@ pub(super) async fn handle_room_join(
                 }
             }
 
-            info!(session_id = %sess_id, room_code = %room_code, "成员已加入房间");
+            info!(session_id = %sess_id, room_code = %room_code, "Member joined room");
         }
         Err(e) => {
             let error_code = match e {
-                crate::room_manager::RoomError::RoomNotFound => "ROOM_NOT_FOUND",
-                crate::room_manager::RoomError::AlreadyInRoom => "ALREADY_IN_ROOM",
-                crate::room_manager::RoomError::InvalidRoomCode => "INVALID_ROOM_CODE",
+                crate::managers::room_manager::RoomError::RoomNotFound => "ROOM_NOT_FOUND",
+                crate::managers::room_manager::RoomError::AlreadyInRoom => "ALREADY_IN_ROOM",
+                crate::managers::room_manager::RoomError::InvalidRoomCode => "INVALID_ROOM_CODE",
             };
             let error_msg = SessionMessage::RoomError {
                 code: error_code.to_string(),
@@ -119,13 +119,13 @@ pub(super) async fn handle_room_leave(
     match state.room_manager.leave_room(&room_code, sess_id).await {
         Ok(is_empty) => {
             if !is_empty {
-                // 房间未空，广播成员列表更新
+                // 房间未空，广播成员列表更�?
                 if let Some(members) = state.room_manager.get_room_members(&room_code).await {
                     let members_msg = SessionMessage::RoomMembers {
                         room_code: room_code.clone(),
                         members: members.clone(),
                     };
-                    // 向房间内所有成员广播
+                    // 向房间内所有成员广�?
                     for member in members {
                         if let Some(member_tx) = state.session_connections.get(&member.session_id).await {
                             let _ = send_message(&member_tx, &members_msg).await;
@@ -133,11 +133,11 @@ pub(super) async fn handle_room_leave(
                     }
                 }
             }
-            info!(room_code = %room_code, "成员已退出房间");
+            info!(room_code = %room_code, "Member left room");
         }
         Err(e) => {
             let error_code = match e {
-                crate::room_manager::RoomError::RoomNotFound => "ROOM_NOT_FOUND",
+                crate::managers::room_manager::RoomError::RoomNotFound => "ROOM_NOT_FOUND",
                 _ => "INTERNAL_ERROR",
             };
             let error_msg = SessionMessage::RoomError {
@@ -173,7 +173,7 @@ pub(super) async fn handle_room_raw_voice_preference(
                     room_code: room_code.clone(),
                     members: members.clone(),
                 };
-                // 向房间内所有成员广播
+                // 向房间内所有成员广�?
                 for member in members {
                     if let Some(member_tx) = state.session_connections.get(&member.session_id).await {
                         let _ = send_message(&member_tx, &members_msg).await;
@@ -185,12 +185,12 @@ pub(super) async fn handle_room_raw_voice_preference(
                 session_id = %sess_id,
                 target_session_id = %target_session_id,
                 receive_raw_voice = receive_raw_voice,
-                "原声传递偏好已更新"
+                "Raw voice preference updated"
             );
         }
         Err(e) => {
             let error_code = match e {
-                crate::room_manager::RoomError::RoomNotFound => "ROOM_NOT_FOUND",
+                crate::managers::room_manager::RoomError::RoomNotFound => "ROOM_NOT_FOUND",
                 _ => "INTERNAL_ERROR",
             };
             let error_msg = SessionMessage::RoomError {

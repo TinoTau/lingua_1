@@ -2,7 +2,7 @@
 // - 不引入 Prometheus 依赖
 // - 以 JSON 方式暴露 /api/v1/metrics，便于运行期调参/验收
 
-use crate::app_state::AppState;
+use crate::core::AppState;
 use serde::Serialize;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::collections::HashMap;
@@ -156,7 +156,7 @@ pub struct SlowPathByPath {
 
 pub async fn collect(state: &AppState) -> MetricsSnapshot {
     let service_meta = state.service_catalog.get_meta().await;
-    let (lock_wait_warn_ms, path_warn_ms) = crate::observability::thresholds();
+    let (lock_wait_warn_ms, path_warn_ms) = crate::metrics::observability::thresholds();
     let exclude_stats = state.node_registry.get_exclude_reason_stats().await;
 
     let by_service_top = top_k_from_map(&MODEL_NA_BY_SERVICE, 20);
@@ -303,12 +303,12 @@ pub fn on_stats_response(is_stale: bool) {
     if is_stale {
         Metrics::inc(&METRICS.stats_stale_total);
     }
-    crate::prometheus_metrics::on_stats_response(is_stale);
+    crate::metrics::prometheus_metrics::on_stats_response(is_stale);
 }
 
 pub fn on_model_na_received() {
     Metrics::inc(&METRICS.model_na_received_total);
-    crate::prometheus_metrics::on_model_na_received();
+    crate::metrics::prometheus_metrics::on_model_na_received();
 }
 
 pub fn on_model_na_rate_limited() {
@@ -327,7 +327,7 @@ pub fn on_model_na_received_detail(node_id: &str, service_id: &str, reason: Opti
     // reason（归一化）
     let r = normalize_reason(reason);
     bump_limited_map(&MODEL_NA_BY_REASON, &r, 200, &MODEL_NA_OTHER_REASON_TOTAL);
-    crate::prometheus_metrics::on_model_na_received_detail(service_id, &r);
+    crate::metrics::prometheus_metrics::on_model_na_received_detail(service_id, &r);
 
     // 目前“received”不按 node 拆分（node_id 基数可能很高）；需要的话再加
     let _ = node_id;
@@ -340,7 +340,7 @@ pub fn on_model_na_rate_limited_detail(node_id: &str) {
         100,
         &MODEL_NA_OTHER_RATE_LIMITED_NODE_TOTAL,
     );
-    crate::prometheus_metrics::on_model_na_rate_limited(node_id);
+    crate::metrics::prometheus_metrics::on_model_na_rate_limited(node_id);
 }
 
 pub fn on_model_na_marked_detail(node_id: &str) {
@@ -350,7 +350,7 @@ pub fn on_model_na_marked_detail(node_id: &str) {
         100,
         &MODEL_NA_OTHER_MARKED_NODE_TOTAL,
     );
-    crate::prometheus_metrics::on_model_na_marked(node_id);
+    crate::metrics::prometheus_metrics::on_model_na_marked(node_id);
 }
 
 fn bump_limited_map(
@@ -405,18 +405,18 @@ fn normalize_reason(reason: Option<&str>) -> String {
 pub fn on_web_task_finalized_by_send() {
     Metrics::inc(&METRICS.web_tasks_finalized_total);
     Metrics::inc(&METRICS.web_tasks_finalized_by_send_total);
-    crate::prometheus_metrics::on_web_task_finalized("send");
+    crate::metrics::prometheus_metrics::on_web_task_finalized("send");
 }
 
 pub fn on_web_task_finalized_by_pause() {
     Metrics::inc(&METRICS.web_tasks_finalized_total);
     Metrics::inc(&METRICS.web_tasks_finalized_by_pause_total);
-    crate::prometheus_metrics::on_web_task_finalized("pause");
+    crate::metrics::prometheus_metrics::on_web_task_finalized("pause");
 }
 
 pub fn on_slow_lock_wait(lock_name: &'static str) {
     Metrics::inc(&METRICS.slow_lock_wait_total);
-    crate::prometheus_metrics::on_slow_lock_wait(lock_name);
+    crate::metrics::prometheus_metrics::on_slow_lock_wait(lock_name);
     match lock_name {
         "node_registry.nodes.read" => Metrics::inc(&METRICS.slow_lock_node_registry_nodes_read_total),
         "node_registry.nodes.write" => Metrics::inc(&METRICS.slow_lock_node_registry_nodes_write_total),
@@ -438,7 +438,7 @@ pub fn on_slow_lock_wait(lock_name: &'static str) {
 
 pub fn on_slow_path(path_name: &'static str) {
     Metrics::inc(&METRICS.slow_path_total);
-    crate::prometheus_metrics::on_slow_path(path_name);
+    crate::metrics::prometheus_metrics::on_slow_path(path_name);
     match path_name {
         "node_registry.select_node_with_features" => {
             Metrics::inc(&METRICS.slow_path_node_registry_select_node_with_features_total)

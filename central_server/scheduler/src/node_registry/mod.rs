@@ -47,13 +47,13 @@ pub struct NodeRegistry {
     /// key2: job_id
     reserved_jobs: Arc<RwLock<HashMap<String, HashMap<String, ReservedJobEntry>>>>,
     /// Phase 3：两级调度配置（pool_count/hash_seed 等）
-    phase3: Arc<RwLock<crate::config::Phase3Config>>,
+    phase3: Arc<RwLock<crate::core::config::Phase3Config>>,
     /// Phase 3：pool -> node_id 集合（用于 pool 内选节点，避免全量遍历）
     phase3_pool_index: Arc<RwLock<HashMap<u16, HashSet<String>>>>,
     /// Phase 3：node_id -> pool_id（用于快速移除/迁移节点的 pool 归属）
     phase3_node_pool: Arc<RwLock<HashMap<String, u16>>>,
     /// 核心服务包配置（用于 Phase3 pool 核心能力缓存与快速定位）
-    core_services: Arc<RwLock<crate::config::CoreServicesConfig>>,
+    core_services: Arc<RwLock<crate::core::config::CoreServicesConfig>>,
     /// Phase 3：pool 核心能力缓存（online/ready + core services installed/ready 覆盖）
     phase3_core_cache: Arc<RwLock<phase3_core_cache::Phase3CoreCacheState>>,
 }

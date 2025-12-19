@@ -1,4 +1,4 @@
-use crate::app_state::AppState;
+use crate::core::AppState;
 use crate::messages::{CapabilityState, FeatureFlags, HardwareInfo, InstalledModel, InstalledService, NodeMessage, ResourceUsage};
 use crate::websocket::send_node_message;
 use axum::extract::ws::Message;
@@ -20,12 +20,12 @@ pub(super) async fn handle_node_register(
     accept_public_jobs: bool,
     capability_state: Option<CapabilityState>,
 ) -> Result<(), anyhow::Error> {
-    // 验证 capability_schema_version（如果提供）
+    // Validate capability_schema_version (if provided)
     if let Some(ref schema_version) = capability_schema_version {
         if schema_version != "1.0" {
             let error_msg = NodeMessage::Error {
                 code: crate::messages::ErrorCode::InvalidCapabilitySchema.to_string(),
-                message: format!("不支持的能力描述版本: {}", schema_version),
+                message: format!("Unsupported capability schema version: {}", schema_version),
                 details: None,
             };
             send_node_message(tx, &error_msg).await?;
@@ -37,7 +37,7 @@ pub(super) async fn handle_node_register(
         }
     }
 
-    // 注册节点（要求必须有 GPU）
+    // Register node (require GPU)
     match state
         .node_registry
         .register_node_with_policy(
@@ -51,7 +51,7 @@ pub(super) async fn handle_node_register(
             features_supported,
             accept_public_jobs,
             capability_state,
-            // Phase 2：允许覆盖已有 node_id（避免“远端快照已存在”导致注册失败）
+            // Phase 2: Allow overwriting existing node_id (avoid "remote snapshot exists" causing registration failure)
             state.phase2.is_some(),
         )
         .await
@@ -59,20 +59,20 @@ pub(super) async fn handle_node_register(
         Ok(node) => {
             *node_id = Some(node.node_id.clone());
 
-            // 注册连接
+            // Register connection
             state
                 .node_connections
                 .register(node.node_id.clone(), tx.clone())
                 .await;
 
-            // Phase 2：写入 node owner（带 TTL；用于跨实例投递）
+            // Phase 2: Write node owner (with TTL; for cross-instance delivery)
             if let Some(rt) = state.phase2.as_ref() {
                 rt.set_node_owner(&node.node_id).await;
-                // Phase 2：写入 node snapshot + presence（跨实例可见）
+                // Phase 2: Write node snapshot + presence (cross-instance visible)
                 rt.upsert_node_snapshot(&node).await;
             }
 
-            // 发送确认消息（status 初始为 registering）
+            // Send acknowledgment message (status initially registering)
             let ack = NodeMessage::NodeRegisterAck {
                 node_id: node.node_id.clone(),
                 message: "registered".to_string(),
@@ -83,8 +83,8 @@ pub(super) async fn handle_node_register(
             info!("Node {} registered, status: registering", node.node_id);
         }
         Err(err) => {
-            // 注册失败，判断错误类型
-            let (error_code, is_node_id_conflict) = if err.contains("ID 冲突") {
+            // Registration failed, determine error type
+            let (error_code, is_node_id_conflict) = if err.contains("ID conflict") {
                 (crate::messages::ErrorCode::NodeIdConflict, true)
             } else {
                 (crate::messages::ErrorCode::NoGpuAvailable, false)
@@ -117,7 +117,7 @@ pub(super) async fn handle_node_heartbeat(
     installed_services: Option<Vec<InstalledService>>,
     capability_state: Option<CapabilityState>,
 ) {
-    // 更新节点心跳
+    // Update node heartbeat
     state
         .node_registry
         .update_node_heartbeat(
@@ -132,10 +132,10 @@ pub(super) async fn handle_node_heartbeat(
         )
         .await;
 
-    // 触发状态检查（立即触发）
+    // Trigger status check (immediate trigger)
     state.node_status_manager.on_heartbeat(node_id).await;
 
-    // Phase 2：将心跳后的节点快照写入 Redis（跨实例可见）
+    // Phase 2: Write post-heartbeat node snapshot to Redis (cross-instance visible)
     if let Some(rt) = state.phase2.as_ref() {
         if rt.node_snapshot_enabled() {
             if let Some(node) = state.node_registry.get_node_snapshot(node_id).await {
@@ -146,5 +146,3 @@ pub(super) async fn handle_node_heartbeat(
         }
     }
 }
-
-

@@ -36,6 +36,7 @@ export class NodeAgent {
   private serviceRegistryManager: any; // ServiceRegistryManager 实例
   private rustServiceManager: any; // RustServiceManager 实例（用于检查 node-inference 运行状态）
   private pythonServiceManager: any; // PythonServiceManager 实例（用于检查 Python 服务运行状态）
+  private capabilityStateChangedHandler: (() => void) | null = null; // 保存监听器函数，用于清理
 
   constructor(
     inferenceService: InferenceService, 
@@ -91,12 +92,18 @@ export class NodeAgent {
       });
 
       // 监听模型状态变化，实时更新 capability_state
+      // 先移除旧的监听器（如果存在），避免重复添加
       if (this.modelManager && typeof this.modelManager.on === 'function') {
-        this.modelManager.on('capability-state-changed', () => {
+        if (this.capabilityStateChangedHandler) {
+          this.modelManager.off('capability-state-changed', this.capabilityStateChangedHandler);
+        }
+        // 创建新的监听器函数并保存
+        this.capabilityStateChangedHandler = () => {
           // 状态变化时，在下次心跳时更新 capability_state
           // 这里不立即发送，因为心跳会定期发送最新的状态
           logger.debug({}, 'Model state changed, will update capability_state on next heartbeat');
-        });
+        };
+        this.modelManager.on('capability-state-changed', this.capabilityStateChangedHandler);
       }
     } catch (error) {
       logger.error({ error }, 'Failed to start Node Agent');
@@ -108,6 +115,11 @@ export class NodeAgent {
     if (this.ws) {
       this.ws.close();
       this.ws = null;
+    }
+    // 移除 capability-state-changed 监听器，避免内存泄漏
+    if (this.modelManager && this.capabilityStateChangedHandler) {
+      this.modelManager.off('capability-state-changed', this.capabilityStateChangedHandler);
+      this.capabilityStateChangedHandler = null;
     }
   }
 

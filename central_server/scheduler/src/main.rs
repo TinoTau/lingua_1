@@ -20,55 +20,36 @@ use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 use tracing_subscriber::Layer;
 
-mod config;
+mod core;
 mod messages;
-mod session;
-mod dispatcher;
 mod node_registry;
-mod pairing;
-mod model_hub;
 mod websocket;
-mod connection_manager;
-mod result_queue;
-mod app_state;
-mod audio_buffer;
-mod module_resolver;
-mod logging_config;
-mod group_manager;
-mod node_status_manager;
-mod room_manager;
-mod stats;
-mod service_catalog;
-mod dashboard_snapshot;
-mod model_not_available;
+mod utils;
+mod managers;
+mod services;
 mod metrics;
-mod observability;
-mod prometheus_metrics;
-mod job_timeout;
+mod timeout;
+mod model_not_available;
 mod phase2;
 mod phase3;
 
-use session::SessionManager;
-use dispatcher::JobDispatcher;
+use core::{AppState, Config, JobDispatcher, SessionManager};
+use managers::{
+    AudioBufferManager, GroupManager, GroupConfig, NodeStatusManager,
+    ResultQueueManager, RoomManager, SessionConnectionManager, NodeConnectionManager,
+};
+use services::{ModelHub, PairingService, ServiceCatalogCache};
+use metrics::{DashboardSnapshotCache, collect};
+use timeout::start_job_timeout_manager;
+use model_not_available::start_worker;
 use node_registry::NodeRegistry;
-use pairing::PairingService;
-use model_hub::ModelHub;
-
-use config::Config;
 use websocket::{handle_session, handle_node};
-use connection_manager::{SessionConnectionManager, NodeConnectionManager};
-use result_queue::ResultQueueManager;
-use app_state::AppState;
-use audio_buffer::AudioBufferManager;
-use group_manager::{GroupManager, GroupConfig};
-use node_status_manager::NodeStatusManager;
-use room_manager::RoomManager;
 use phase2::Phase2Runtime;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     // 加载日志配置（支持模块级日志开关）
-    let logging_config = logging_config::LoggingConfig::load();
+    let logging_config = utils::LoggingConfig::load();
     
     // 构建日志过滤器（合并配置文件和环境变量）
     let env_filter = logging_config.build_env_filter();
@@ -143,13 +124,13 @@ async fn main() -> Result<()> {
     info!("配置加载成功");
 
     // 方向A：设置观测阈值（锁等待/关键路径）
-    observability::set_thresholds(
+    metrics::observability::set_thresholds(
         config.scheduler.observability.lock_wait_warn_ms,
         config.scheduler.observability.path_warn_ms,
     );
 
     // 方向B：初始化 Prometheus registry（/metrics）
-    prometheus_metrics::init();
+    metrics::prometheus_metrics::init();
 
     // 明确记录服务监听地址和端口，方便排查
     info!("  服务器监听地址: {}:{}", config.server.host, config.server.port);
@@ -195,9 +176,9 @@ async fn main() -> Result<()> {
     let model_hub = ModelHub::new(&config.model_hub)?;
     // ServiceCatalog：优先走 ModelHub HTTP；若失败则可用本地 services_index.json 兜底（单机冷启动/离线）
     let local_services_index = config.model_hub.storage_path.join("services_index.json");
-    let service_catalog = service_catalog::ServiceCatalogCache::new(config.model_hub.base_url.clone())
+    let service_catalog = ServiceCatalogCache::new(config.model_hub.base_url.clone())
         .with_local_services_index_path(local_services_index);
-    let dashboard_snapshot = dashboard_snapshot::DashboardSnapshotCache::new(Duration::from_secs(5));
+    let dashboard_snapshot = DashboardSnapshotCache::new(Duration::from_secs(5));
     let (model_na_tx, model_na_rx) = tokio::sync::mpsc::unbounded_channel();
     let model_not_available_bus = model_not_available::ModelNotAvailableBus::new(model_na_tx);
     let session_connections = SessionConnectionManager::new();
@@ -263,7 +244,7 @@ async fn main() -> Result<()> {
     }
 
     // Phase 1：Job 超时/重派管理（含 best-effort cancel）
-    job_timeout::start_job_timeout_manager(
+    start_job_timeout_manager(
         app_state.clone(),
         config.scheduler.job_timeout_seconds,
         config.scheduler.job_timeout.clone(),
@@ -275,7 +256,7 @@ async fn main() -> Result<()> {
     app_state.dashboard_snapshot.start_background_refresh(app_state.clone());
 
     // 启动 MODEL_NOT_AVAILABLE 后台处理（主路径只入队）
-    model_not_available::start_worker(
+    start_worker(
         model_na_rx,
         app_state.node_registry.clone(),
         config.scheduler.model_not_available.clone(),
@@ -399,8 +380,8 @@ async fn get_stats(
     let updated_at = state.dashboard_snapshot.last_updated_at_ms().await;
     let now_ms = chrono::Utc::now().timestamp_millis();
     let is_stale = updated_at == 0 || (now_ms - updated_at) > 10_000; // 简单阈值：>10s 视为 stale（Phase 1 先用经验值）
-    crate::metrics::on_stats_response(is_stale);
-    crate::prometheus_metrics::observe_stats_request_duration_seconds(t0.elapsed().as_secs_f64());
+    metrics::metrics::on_stats_response(is_stale);
+    metrics::prometheus_metrics::observe_stats_request_duration_seconds(t0.elapsed().as_secs_f64());
     (
         axum::http::StatusCode::OK,
         [(axum::http::header::CONTENT_TYPE, "application/json")],
@@ -410,13 +391,13 @@ async fn get_stats(
 
 async fn get_metrics(
     axum::extract::State(state): axum::extract::State<AppState>,
-) -> axum::Json<crate::metrics::MetricsSnapshot> {
-    axum::Json(crate::metrics::collect(&state).await)
+) -> axum::Json<metrics::metrics::MetricsSnapshot> {
+    axum::Json(collect(&state).await)
 }
 
 #[derive(serde::Serialize)]
 struct Phase3PoolsResponse {
-    config: crate::config::Phase3Config,
+    config: core::config::Phase3Config,
     pools: Vec<Phase3PoolEntry>,
 }
 
@@ -522,8 +503,8 @@ struct Phase3SimulateResponse {
     routing_key: String,
     required: Vec<String>,
     selected_node_id: Option<String>,
-    debug: crate::node_registry::Phase3TwoLevelDebug,
-    breakdown: crate::node_registry::NoAvailableNodeBreakdown,
+    debug: node_registry::Phase3TwoLevelDebug,
+    breakdown: node_registry::NoAvailableNodeBreakdown,
 }
 
 async fn get_phase3_simulate(
@@ -565,7 +546,7 @@ async fn get_phase3_simulate(
 async fn get_prometheus_metrics(
     axum::extract::State(state): axum::extract::State<AppState>,
 ) -> impl axum::response::IntoResponse {
-    let (body, content_type) = crate::prometheus_metrics::render_text(&state).await;
+    let (body, content_type) = metrics::prometheus_metrics::render_text(&state).await;
     let hv = axum::http::HeaderValue::from_str(&content_type).unwrap_or_else(|_| {
         axum::http::HeaderValue::from_static("text/plain; charset=utf-8")
     });

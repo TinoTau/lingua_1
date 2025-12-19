@@ -1,7 +1,7 @@
-use crate::config::NodeHealthConfig;
+use crate::core::config::NodeHealthConfig;
 use crate::messages::{NodeStatus, ModelStatus};
 use crate::node_registry::{Node, NodeRegistry};
-use crate::connection_manager::NodeConnectionManager;
+use super::NodeConnectionManager;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use tracing::{info, warn, debug};

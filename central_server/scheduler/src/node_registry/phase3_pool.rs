@@ -3,11 +3,11 @@ use std::collections::{HashMap, HashSet};
 use std::time::Instant;
 
 impl NodeRegistry {
-    pub async fn phase3_config(&self) -> crate::config::Phase3Config {
+    pub async fn phase3_config(&self) -> crate::core::config::Phase3Config {
         self.phase3.read().await.clone()
     }
 
-    pub async fn set_phase3_config(&self, cfg: crate::config::Phase3Config) {
+    pub async fn set_phase3_config(&self, cfg: crate::core::config::Phase3Config) {
         let mut w = self.phase3.write().await;
         *w = cfg;
         drop(w);
@@ -42,7 +42,7 @@ impl NodeRegistry {
         if cfg.enabled && cfg.mode == "two_level" {
             let t0 = Instant::now();
             let nodes = self.nodes.read().await;
-            crate::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
+            crate::metrics::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
             for nid in nodes.keys() {
                 let pid = if !cfg.pools.is_empty() {
                     nodes.get(nid).and_then(|n| determine_pool_for_node(&cfg, n))
@@ -57,12 +57,12 @@ impl NodeRegistry {
         }
         let t0 = Instant::now();
         let mut idx = self.phase3_pool_index.write().await;
-        crate::observability::record_lock_wait("node_registry.phase3_pool_index.write", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.phase3_pool_index.write", t0.elapsed().as_millis() as u64);
         *idx = new_idx;
         drop(idx);
         let t0 = Instant::now();
         let mut m = self.phase3_node_pool.write().await;
-        crate::observability::record_lock_wait("node_registry.phase3_node_pool.write", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.phase3_node_pool.write", t0.elapsed().as_millis() as u64);
         *m = new_node_pool;
     }
 
@@ -70,7 +70,7 @@ impl NodeRegistry {
     pub async fn phase3_pool_sizes(&self) -> Vec<(u16, usize)> {
         let t0 = Instant::now();
         let idx = self.phase3_pool_index.read().await;
-        crate::observability::record_lock_wait("node_registry.phase3_pool_index.read", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.phase3_pool_index.read", t0.elapsed().as_millis() as u64);
         let mut v: Vec<(u16, usize)> = idx.iter().map(|(k, set)| (*k, set.len())).collect();
         v.sort_by_key(|(k, _)| *k);
         v
@@ -82,7 +82,7 @@ impl NodeRegistry {
         // 先更新 node->pool 映射，拿到 old
         let t0 = Instant::now();
         let mut m = self.phase3_node_pool.write().await;
-        crate::observability::record_lock_wait("node_registry.phase3_node_pool.write", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.phase3_node_pool.write", t0.elapsed().as_millis() as u64);
         let old = m.remove(node_id);
         if let Some(pid) = desired {
             m.insert(node_id.to_string(), pid);
@@ -92,7 +92,7 @@ impl NodeRegistry {
         // 再更新 pool_index
         let t0 = Instant::now();
         let mut idx = self.phase3_pool_index.write().await;
-        crate::observability::record_lock_wait("node_registry.phase3_pool_index.write", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.phase3_pool_index.write", t0.elapsed().as_millis() as u64);
         if let Some(old_pid) = old {
             if let Some(set) = idx.get_mut(&old_pid) {
                 set.remove(node_id);
@@ -111,7 +111,7 @@ impl NodeRegistry {
     pub async fn phase3_node_pool_id(&self, node_id: &str) -> Option<u16> {
         let t0 = Instant::now();
         let m = self.phase3_node_pool.read().await;
-        crate::observability::record_lock_wait("node_registry.phase3_node_pool.read", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.phase3_node_pool.read", t0.elapsed().as_millis() as u64);
         m.get(node_id).copied()
     }
 
@@ -120,7 +120,7 @@ impl NodeRegistry {
         let lim = limit.max(1);
         let t0 = Instant::now();
         let idx = self.phase3_pool_index.read().await;
-        crate::observability::record_lock_wait("node_registry.phase3_pool_index.read", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.phase3_pool_index.read", t0.elapsed().as_millis() as u64);
         let mut v: Vec<String> = idx
             .get(&pool_id)
             .map(|s| s.iter().cloned().take(lim).collect())
@@ -131,7 +131,7 @@ impl NodeRegistry {
     }
 }
 
-fn determine_pool_for_node(cfg: &crate::config::Phase3Config, n: &super::Node) -> Option<u16> {
+fn determine_pool_for_node(cfg: &crate::core::config::Phase3Config, n: &super::Node) -> Option<u16> {
     if cfg.pools.is_empty() {
         return None;
     }

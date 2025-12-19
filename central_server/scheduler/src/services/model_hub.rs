@@ -1,4 +1,4 @@
-use crate::config::ModelHubConfig;
+use crate::core::config::ModelHubConfig;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

@@ -12,7 +12,7 @@ impl NodeRegistry {
         // 读取节点 max_concurrent_jobs 与 current_jobs（锁顺序：nodes -> reserved_jobs）
         let t0 = Instant::now();
         let nodes = self.nodes.read().await;
-        crate::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
         let Some(node) = nodes.get(node_id) else {
             return false;
         };
@@ -25,7 +25,7 @@ impl NodeRegistry {
 
         let t0 = Instant::now();
         let mut reserved = self.reserved_jobs.write().await;
-        crate::observability::record_lock_wait("node_registry.reserved_jobs.write", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.reserved_jobs.write", t0.elapsed().as_millis() as u64);
         let entry = reserved.entry(node_id.to_string()).or_insert_with(HashMap::new);
 
         // 惰性清理过期 reserved
@@ -46,7 +46,7 @@ impl NodeRegistry {
     pub async fn release_job_slot(&self, node_id: &str, job_id: &str) {
         let t0 = Instant::now();
         let mut reserved = self.reserved_jobs.write().await;
-        crate::observability::record_lock_wait("node_registry.reserved_jobs.write", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.reserved_jobs.write", t0.elapsed().as_millis() as u64);
         if let Some(map) = reserved.get_mut(node_id) {
             map.remove(job_id);
             if map.is_empty() {
@@ -59,7 +59,7 @@ impl NodeRegistry {
         let now_ms = chrono::Utc::now().timestamp_millis();
         let t0 = Instant::now();
         let mut reserved = self.reserved_jobs.write().await;
-        crate::observability::record_lock_wait("node_registry.reserved_jobs.write", t0.elapsed().as_millis() as u64);
+        crate::metrics::observability::record_lock_wait("node_registry.reserved_jobs.write", t0.elapsed().as_millis() as u64);
         let mut result = HashMap::new();
         reserved.retain(|_nid, map| {
             map.retain(|_jid, v| v.expire_at_ms > now_ms);

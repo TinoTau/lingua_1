@@ -1,4 +1,4 @@
-use crate::app_state::AppState;
+use crate::core::AppState;
 use crate::messages::{SessionMessage, UiEventStatus, UiEventType};
 use crate::phase2::InterInstanceEvent;
 use tracing::{debug, warn};
@@ -23,26 +23,26 @@ pub(super) async fn handle_job_ack(
     session_id: String,
     trace_id: String,
 ) {
-    // 校验 job 归属与 attempt（避免 failover 竞态）
+    // Validate job belongs to attempt (avoid failover race condition)
     let job = state.dispatcher.get_job(&job_id).await;
     if let Some(ref j) = job {
         if matches!(
             j.status,
-            crate::dispatcher::JobStatus::Completed | crate::dispatcher::JobStatus::Failed
+            crate::core::dispatcher::JobStatus::Completed | crate::core::dispatcher::JobStatus::Failed
         ) {
-            warn!(trace_id = %trace_id, job_id = %job_id, node_id = %node_id, "收到已终态 Job 的 JobAck，忽略");
+            warn!(trace_id = %trace_id, job_id = %job_id, node_id = %node_id, "Received JobAck for terminated Job, ignoring");
             return;
         }
         if j.assigned_node_id.as_deref() != Some(&node_id) {
-            warn!(trace_id = %trace_id, job_id = %job_id, node_id = %node_id, current_node_id = ?j.assigned_node_id, "收到非当前节点的 JobAck，忽略");
+            warn!(trace_id = %trace_id, job_id = %job_id, node_id = %node_id, current_node_id = ?j.assigned_node_id, "Received JobAck from non-current node, ignoring");
             return;
         }
         if j.dispatch_attempt_id != attempt_id {
-            warn!(trace_id = %trace_id, job_id = %job_id, node_id = %node_id, attempt_id = attempt_id, current_attempt_id = j.dispatch_attempt_id, "收到非当前 attempt 的 JobAck，忽略");
+            warn!(trace_id = %trace_id, job_id = %job_id, node_id = %node_id, attempt_id = attempt_id, current_attempt_id = j.dispatch_attempt_id, "Received JobAck for non-current attempt, ignoring");
             return;
         }
     } else {
-        // Phase 2：跨实例时转发给 session owner
+        // Phase 2: Cross-instance, forward to session owner
         let forwarded = crate::messages::NodeMessage::JobAck {
             job_id: job_id.clone(),
             attempt_id,
@@ -56,26 +56,26 @@ pub(super) async fn handle_job_ack(
                 job_id = %job_id,
                 node_id = %node_id,
                 session_id = %session_id,
-                "本地无 Job，已将 JobAck 转发给 session owner"
+                "Local Job missing, forwarded JobAck to session owner"
             );
         } else {
-            warn!(trace_id = %trace_id, job_id = %job_id, node_id = %node_id, "收到 JobAck，但 Job 不存在，忽略");
+            warn!(trace_id = %trace_id, job_id = %job_id, node_id = %node_id, "Received JobAck but Job does not exist, ignoring");
         }
         return;
     }
 
-    // 更新 job 状态为 Processing（可选，但更贴近 FSM）
+    // Update job status to Processing (optional, but closer to FSM)
     let _ = state
         .dispatcher
-        .update_job_status(&job_id, crate::dispatcher::JobStatus::Processing)
+        .update_job_status(&job_id, crate::core::dispatcher::JobStatus::Processing)
         .await;
 
-    // Phase 2：FSM -> ACCEPTED（幂等）
+    // Phase 2: FSM -> ACCEPTED (idempotent)
     if let Some(rt) = state.phase2.as_ref() {
         let _ = rt.job_fsm_to_accepted(&job_id, attempt_id).await;
     }
 
-    // 推送 NODE_ACCEPTED 事件（弱一致 UI 事件）
+    // Send NODE_ACCEPTED event (unified UI event)
     let ui_event = SessionMessage::UiEvent {
         trace_id: trace_id.clone(),
         session_id: session_id.clone(),
@@ -98,26 +98,26 @@ pub(super) async fn handle_job_started(
     session_id: String,
     trace_id: String,
 ) {
-    // 严格 RUNNING：只接受“当前节点 + 当前 attempt”的 started
+    // Strict RUNNING: only accept "current node + current attempt" started
     let job = state.dispatcher.get_job(&job_id).await;
     if let Some(ref j) = job {
         if matches!(
             j.status,
-            crate::dispatcher::JobStatus::Completed | crate::dispatcher::JobStatus::Failed
+            crate::core::dispatcher::JobStatus::Completed | crate::core::dispatcher::JobStatus::Failed
         ) {
-            warn!(trace_id = %trace_id, job_id = %job_id, node_id = %node_id, "收到已终态 Job 的 JobStarted，忽略");
+            warn!(trace_id = %trace_id, job_id = %job_id, node_id = %node_id, "Received JobStarted for terminated Job, ignoring");
             return;
         }
         if j.assigned_node_id.as_deref() != Some(&node_id) {
-            warn!(trace_id = %trace_id, job_id = %job_id, node_id = %node_id, current_node_id = ?j.assigned_node_id, "收到非当前节点的 JobStarted，忽略");
+            warn!(trace_id = %trace_id, job_id = %job_id, node_id = %node_id, current_node_id = ?j.assigned_node_id, "Received JobStarted from non-current node, ignoring");
             return;
         }
         if j.dispatch_attempt_id != attempt_id {
-            warn!(trace_id = %trace_id, job_id = %job_id, node_id = %node_id, attempt_id = attempt_id, current_attempt_id = j.dispatch_attempt_id, "收到非当前 attempt 的 JobStarted，忽略");
+            warn!(trace_id = %trace_id, job_id = %job_id, node_id = %node_id, attempt_id = attempt_id, current_attempt_id = j.dispatch_attempt_id, "Received JobStarted for non-current attempt, ignoring");
             return;
         }
     } else {
-        // Phase 2：跨实例时转发给 session owner
+        // Phase 2: Cross-instance, forward to session owner
         let forwarded = crate::messages::NodeMessage::JobStarted {
             job_id: job_id.clone(),
             attempt_id,
@@ -131,21 +131,21 @@ pub(super) async fn handle_job_started(
                 job_id = %job_id,
                 node_id = %node_id,
                 session_id = %session_id,
-                "本地无 Job，已将 JobStarted 转发给 session owner"
+                "Local Job missing, forwarded JobStarted to session owner"
             );
         } else {
-            warn!(trace_id = %trace_id, job_id = %job_id, node_id = %node_id, "收到 JobStarted，但 Job 不存在，忽略");
+            warn!(trace_id = %trace_id, job_id = %job_id, node_id = %node_id, "Received JobStarted but Job does not exist, ignoring");
         }
         return;
     }
 
-    // 更新 job 状态为 Processing（幂等）
+    // Update job status to Processing (idempotent)
     let _ = state
         .dispatcher
-        .update_job_status(&job_id, crate::dispatcher::JobStatus::Processing)
+        .update_job_status(&job_id, crate::core::dispatcher::JobStatus::Processing)
         .await;
 
-    // Phase 2：FSM -> RUNNING（严格）
+    // Phase 2: FSM -> RUNNING (strict)
     if let Some(rt) = state.phase2.as_ref() {
         let _ = rt.job_fsm_to_running(&job_id).await;
     }
@@ -161,7 +161,7 @@ pub(super) async fn handle_asr_partial(
     is_final: bool,
     trace_id: String,
 ) {
-    // Phase 2：如果本地没有 job，则将部分结果转发到 session owner（result_queue 在 owner 上）
+    // Phase 2: If local job missing, forward partial result to session owner (result_queue on owner)
     if state.phase2.is_some() && state.dispatcher.get_job(&job_id).await.is_none() {
         let forwarded = crate::messages::NodeMessage::AsrPartial {
             job_id: job_id.clone(),
@@ -178,13 +178,13 @@ pub(super) async fn handle_asr_partial(
                 job_id = %job_id,
                 node_id = %node_id,
                 session_id = %session_id,
-                "本地无 Job，已将 AsrPartial 转发给 session owner"
+                "Local Job missing, forwarded AsrPartial to session owner"
             );
             return;
         }
     }
 
-    // Phase 2：收到部分结果可视为 RUNNING（若 job_id 与当前分配节点不一致则忽略）
+    // Phase 2: Receiving partial result can be considered RUNNING (ignore if job_id doesn't match current assigned node)
     if let Some(ref j) = state.dispatcher.get_job(&job_id).await {
         if j.assigned_node_id.as_deref() == Some(&node_id) {
             if let Some(rt) = state.phase2.as_ref() {
@@ -193,20 +193,20 @@ pub(super) async fn handle_asr_partial(
         }
     }
 
-    // 转发 ASR 部分结果给客户端
+    // Forward ASR partial result to client
     let partial_msg = SessionMessage::AsrPartial {
         session_id: session_id.clone(),
         utterance_index,
-        job_id: String::new(), // 部分结果不需要 job_id
+        job_id: String::new(), // Partial result doesn't need job_id
         text: text.clone(),
         is_final,
         trace_id: trace_id.clone(),
     };
     if !crate::phase2::send_session_message_routed(state, &session_id, partial_msg).await {
-        warn!(trace_id = %trace_id, session_id = %session_id, "无法发送 ASR 部分结果到会话");
+        warn!(trace_id = %trace_id, session_id = %session_id, "Failed to send ASR partial result to session");
     }
 
-    // 推送 ASR_PARTIAL 事件
+    // Send ASR_PARTIAL event
     let ui_event = SessionMessage::UiEvent {
         trace_id: trace_id.clone(),
         session_id: session_id.clone(),
@@ -220,5 +220,3 @@ pub(super) async fn handle_asr_partial(
     };
     let _ = crate::phase2::send_session_message_routed(state, &session_id, ui_event).await;
 }
-
-

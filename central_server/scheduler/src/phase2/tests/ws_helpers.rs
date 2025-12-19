@@ -1,27 +1,18 @@
 ﻿    async fn build_test_state(
         instance_id: &str,
-        redis_cfg: crate::config::Phase2RedisConfig,
+        redis_cfg: crate::core::config::Phase2RedisConfig,
         key_prefix: String,
-    ) -> (crate::app_state::AppState, Arc<Phase2Runtime>) {
-        use crate::app_state::AppState;
-        use crate::audio_buffer::AudioBufferManager;
-        use crate::config::{CoreServicesConfig, ModelHubConfig, NodeHealthConfig, TaskBindingConfig, WebTaskSegmentationConfig};
-        use crate::connection_manager::{NodeConnectionManager, SessionConnectionManager};
-        use crate::dashboard_snapshot::DashboardSnapshotCache;
-        use crate::dispatcher::JobDispatcher;
-        use crate::group_manager::{GroupConfig, GroupManager};
-        use crate::model_hub::ModelHub;
+    ) -> (crate::core::AppState, Arc<Phase2Runtime>) {
+        use crate::core::{AppState, JobDispatcher, SessionManager};
+        use crate::core::config::{CoreServicesConfig, ModelHubConfig, NodeHealthConfig, TaskBindingConfig, WebTaskSegmentationConfig};
+        use crate::managers::{AudioBufferManager, GroupConfig, GroupManager, NodeStatusManager, ResultQueueManager, RoomManager, NodeConnectionManager, SessionConnectionManager};
+        use crate::metrics::DashboardSnapshotCache;
+        use crate::services::{ModelHub, PairingService, ServiceCatalogCache};
         use crate::model_not_available::ModelNotAvailableBus;
         use crate::node_registry::NodeRegistry;
-        use crate::node_status_manager::NodeStatusManager;
-        use crate::pairing::PairingService;
-        use crate::result_queue::ResultQueueManager;
-        use crate::room_manager::RoomManager;
-        use crate::service_catalog::ServiceCatalogCache;
-        use crate::session::SessionManager;
         use std::time::Duration;
 
-        let mut p2 = crate::config::Phase2Config::default();
+        let mut p2 = crate::core::config::Phase2Config::default();
         p2.enabled = true;
         p2.instance_id = instance_id.to_string();
         p2.redis = redis_cfg;
@@ -107,7 +98,7 @@
         (state, rt)
     }
 
-    async fn spawn_ws_server(state: crate::app_state::AppState) -> (std::net::SocketAddr, tokio::sync::oneshot::Sender<()>) {
+    async fn spawn_ws_server(state: crate::core::AppState) -> (std::net::SocketAddr, tokio::sync::oneshot::Sender<()>) {
         use axum::extract::State;
         use axum::extract::ws::WebSocketUpgrade;
         use axum::response::Response;
@@ -116,14 +107,14 @@
 
         async fn handle_session_ws(
             ws: WebSocketUpgrade,
-            State(state): State<crate::app_state::AppState>,
+            State(state): State<crate::core::AppState>,
         ) -> Response {
             ws.on_upgrade(move |socket| crate::websocket::handle_session(socket, state))
         }
 
         async fn handle_node_ws(
             ws: WebSocketUpgrade,
-            State(state): State<crate::app_state::AppState>,
+            State(state): State<crate::core::AppState>,
         ) -> Response {
             ws.on_upgrade(move |socket| crate::websocket::handle_node(socket, state))
         }

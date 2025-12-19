@@ -1,11 +1,11 @@
-﻿    async fn phase2_streams_enqueue_and_readgroup_smoke() {
+    async fn phase2_streams_enqueue_and_readgroup_smoke() {
         let redis_cfg = test_redis_config();
         if !can_connect_redis(&redis_cfg).await {
             eprintln!("skip: redis not available (mode={})", redis_cfg.mode);
             return;
         }
 
-        let mut cfg = crate::config::Phase2Config::default();
+        let mut cfg = crate::core::config::Phase2Config::default();
         cfg.enabled = true;
         cfg.instance_id = "test-a".to_string();
         cfg.redis = redis_cfg.clone();
