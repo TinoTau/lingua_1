@@ -37,7 +37,10 @@ export class InferenceService {
 
   constructor(modelManager: ModelManager) {
     this.modelManager = modelManager;
-    this.inferenceServiceUrl = process.env.INFERENCE_SERVICE_URL || 'http://localhost:5009';
+    let url = process.env.INFERENCE_SERVICE_URL || 'http://localhost:5009';
+    // 如果 URL 包含 localhost，替换为 127.0.0.1 以避免 IPv6 解析问题
+    url = url.replace(/localhost/g, '127.0.0.1');
+    this.inferenceServiceUrl = url;
     this.httpClient = axios.create({
       baseURL: this.inferenceServiceUrl,
       timeout: 300000, // 5 分钟超时（推理可能需要较长时间）

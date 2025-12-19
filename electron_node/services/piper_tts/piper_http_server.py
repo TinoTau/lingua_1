@@ -136,6 +136,19 @@ def find_model_path(voice: str, model_dir: str) -> Tuple[Optional[str], Optional
         model_dir_path / f"{voice}.onnx",
     ]
     
+    # 添加 VITS 模型支持（作为后备选项）
+    # 如果请求英文模型但找不到，尝试查找 vits_en 模型
+    if language_code == "en":
+        vits_model_path = model_dir_path / "vits_en" / "model.onnx"
+        if vits_model_path.exists():
+            possible_paths.append(vits_model_path)
+    
+    # 如果请求中文模型但找不到，尝试查找 vits-zh 模型
+    if language_code == "zh":
+        vits_zh_model_path = model_dir_path / "vits-zh-aishell3" / "model.onnx"
+        if vits_zh_model_path.exists():
+            possible_paths.append(vits_zh_model_path)
+    
     for model_path in possible_paths:
         if model_path and model_path.exists():
             config_path = model_path.with_suffix(".onnx.json")
