@@ -139,4 +139,3 @@ fn redis_value_to_hashmap(value: redis::Value) -> Option<std::collections::HashM
     Some(out)
 }
 
-/// Phase 2：发送 NodeMessage（本地直发；否则按 owner 投递到目标实例 Streams）

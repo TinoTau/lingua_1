@@ -92,4 +92,3 @@
         assert!(rt_b.redis.exists(&rt_b.node_presence_key("node-xyz")).await.unwrap());
     }
 
-    #[tokio::test]

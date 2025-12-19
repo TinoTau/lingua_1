@@ -247,4 +247,3 @@
         let _ = shutdown_b.send(());
     }
 
-    #[tokio::test]

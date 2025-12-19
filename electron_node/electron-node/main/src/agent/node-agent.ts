@@ -34,8 +34,16 @@ export class NodeAgent {
   private inferenceService: InferenceService;
   private modelManager: any; // ModelManager 实例
   private serviceRegistryManager: any; // ServiceRegistryManager 实例
+  private rustServiceManager: any; // RustServiceManager 实例（用于检查 node-inference 运行状态）
+  private pythonServiceManager: any; // PythonServiceManager 实例（用于检查 Python 服务运行状态）
 
-  constructor(inferenceService: InferenceService, modelManager?: any, serviceRegistryManager?: any) {
+  constructor(
+    inferenceService: InferenceService, 
+    modelManager?: any, 
+    serviceRegistryManager?: any,
+    rustServiceManager?: any,
+    pythonServiceManager?: any
+  ) {
     // 优先从配置文件读取，其次从环境变量，最后使用默认值
     const config = loadNodeConfig();
     this.schedulerUrl =
@@ -46,6 +54,8 @@ export class NodeAgent {
     // 通过参数传入或从 inferenceService 获取 modelManager
     this.modelManager = modelManager || (inferenceService as any).modelManager;
     this.serviceRegistryManager = serviceRegistryManager;
+    this.rustServiceManager = rustServiceManager;
+    this.pythonServiceManager = pythonServiceManager;
 
     logger.info({ schedulerUrl: this.schedulerUrl }, 'Scheduler server URL configured');
   }
@@ -111,16 +121,19 @@ export class NodeAgent {
       // 获取已安装的模型
       const installedModels = await this.inferenceService.getInstalledModels();
 
-      // 获取已安装的服务包（Phase1 严格模式：Scheduler 会用 service_id 做核心链路过滤）
-      const installedServices = await this.getInstalledServices();
-
-      // 获取 capability_state（可选；为空时不要发送，避免覆盖 Scheduler 端的推断能力图）
+      // 获取 capability_state（节点模型能力图）
       const capabilityState = await this.getCapabilityState();
-      // Phase 1：把“服务包维度”的可用性也并入 capability_state（key=service_id）
-      // 这样 Scheduler 的 required(service_id) 可以直接通过 capability_state 判定 Ready
-      for (const s of installedServices) {
-        if (!capabilityState[s.service_id]) {
-          capabilityState[s.service_id] = 'ready';
+      
+      // 只保留状态为 'ready' 的服务（只有正在使用的服务才应该传递给调度服务器）
+      // 已下载但未启用的服务不应计入热度统计
+      const installedServicesAll = await this.getInstalledServices();
+      const enabledServices: InstalledService[] = [];
+      
+      // 从 capability_state 中筛选出状态为 ready 的服务
+      for (const service of installedServicesAll) {
+        const status = capabilityState[service.service_id];
+        if (status === 'ready') {
+          enabledServices.push(service);
         }
       }
 
@@ -135,7 +148,9 @@ export class NodeAgent {
         platform: this.getPlatform(),
         hardware: hardware,
         installed_models: installedModels,
-        installed_services: installedServices.length > 0 ? installedServices : undefined,
+        // 只发送启用的服务（capability_state 中状态为 ready 的服务）
+        // 已下载但未启用的服务不应传递给调度服务器，避免影响热度统计
+        installed_services: enabledServices.length > 0 ? enabledServices : undefined,
         features_supported: featuresSupported,
         accept_public_jobs: true, // TODO: 从配置读取
         capability_state: Object.keys(capabilityState).length > 0 ? capabilityState : undefined,
@@ -267,15 +282,19 @@ export class NodeAgent {
     const resources = await this.getSystemResources();
     const installedModels = await this.inferenceService.getInstalledModels();
 
-    // 获取已安装的服务包
-    const installedServices = await this.getInstalledServices();
-
     // 获取 capability_state（节点模型能力图）
     const capabilityState = await this.getCapabilityState();
-    // Phase 1：把服务包 service_id 合并进 capability_state（至少标记为 ready）
-    for (const s of installedServices) {
-      if (!capabilityState[s.service_id]) {
-        capabilityState[s.service_id] = 'ready';
+    
+    // 只保留状态为 'ready' 的服务（只有正在使用的服务才应该传递给调度服务器）
+    // 已下载但未启用的服务不应计入热度统计
+    const enabledServices: InstalledService[] = [];
+    const installedServicesAll = await this.getInstalledServices();
+    
+    // 从 capability_state 中筛选出状态为 ready 的服务
+    for (const service of installedServicesAll) {
+      const status = capabilityState[service.service_id];
+      if (status === 'ready') {
+        enabledServices.push(service);
       }
     }
 
@@ -286,9 +305,13 @@ export class NodeAgent {
       capabilityStateCount,
       readyCount,
       installedModelsCount: installedModels.length,
-      installedServicesCount: installedServices.length,
-      installedServices: installedServices.map(s => s.service_id)
-    }, 'Sending heartbeat with capability_state and installed_services');
+      installedServicesCount: installedServicesAll.length,
+      enabledServicesCount: enabledServices.length,
+      enabledServices: enabledServices.map(s => s.service_id),
+      installedButNotEnabledServices: installedServicesAll
+        .filter(s => capabilityState[s.service_id] !== 'ready')
+        .map(s => s.service_id)
+    }, 'Sending heartbeat with capability_state and enabled services only');
 
     // 对齐协议规范：node_heartbeat 消息格式
     const message: NodeHeartbeatMessage = {
@@ -303,7 +326,9 @@ export class NodeAgent {
         running_jobs: this.inferenceService.getCurrentJobCount(),
       },
       installed_models: installedModels.length > 0 ? installedModels : undefined,
-      installed_services: installedServices.length > 0 ? installedServices : undefined,
+      // 只发送启用的服务（capability_state 中状态为 ready 的服务）
+      // 已下载但未启用的服务不应传递给调度服务器，避免影响热度统计
+      installed_services: enabledServices.length > 0 ? enabledServices : undefined,
       // 为空时不要发送，避免把 Scheduler 端已有的 capability_state 覆盖成空
       capability_state: capabilityStateCount > 0 ? capabilityState : undefined,
     };
@@ -385,26 +410,104 @@ export class NodeAgent {
   }
 
   /**
-   * 获取节点当前的 capability_state（模型能力图）
-   * 来自 ModelManager.getCapabilityState()
+   * 检查服务是否正在运行
+   * 根据 service_id 映射到对应的服务管理器并检查运行状态
+   */
+  private isServiceRunning(serviceId: string): boolean {
+    try {
+      // 服务 ID 到服务管理器的映射
+      if (serviceId === 'node-inference') {
+        // node-inference 通过 RustServiceManager 管理
+        if (this.rustServiceManager && typeof this.rustServiceManager.getStatus === 'function') {
+          const status = this.rustServiceManager.getStatus();
+          return status?.running === true;
+        }
+      } else if (serviceId === 'nmt-m2m100') {
+        // nmt-m2m100 通过 PythonServiceManager 管理（服务名是 'nmt'）
+        if (this.pythonServiceManager && typeof this.pythonServiceManager.getServiceStatus === 'function') {
+          const status = this.pythonServiceManager.getServiceStatus('nmt');
+          return status?.running === true;
+        }
+      } else if (serviceId === 'piper-tts') {
+        // piper-tts 通过 PythonServiceManager 管理（服务名是 'tts'）
+        if (this.pythonServiceManager && typeof this.pythonServiceManager.getServiceStatus === 'function') {
+          const status = this.pythonServiceManager.getServiceStatus('tts');
+          return status?.running === true;
+        }
+      } else if (serviceId === 'your-tts') {
+        // your-tts 通过 PythonServiceManager 管理（服务名是 'yourtts'）
+        if (this.pythonServiceManager && typeof this.pythonServiceManager.getServiceStatus === 'function') {
+          const status = this.pythonServiceManager.getServiceStatus('yourtts');
+          return status?.running === true;
+        }
+      }
+      
+      // 未知的服务 ID 或服务管理器不可用，返回 false
+      return false;
+    } catch (error) {
+      logger.error({ error, serviceId }, 'Failed to check service running status');
+      return false;
+    }
+  }
+
+  /**
+   * 获取节点当前的 capability_state（服务包能力图）
+   * Phase 1 规范：key 必须是 service_id（服务包 ID），value 为该服务包当前状态
+   * 
+   * 状态判断逻辑：
+   * - ready: 服务包已安装且正在运行（进程正在运行）
+   * - not_installed: 服务包未安装或已安装但未运行
+   * - error: 服务包安装失败或损坏（暂不支持，预留）
    */
   private async getCapabilityState(): Promise<Record<string, ModelStatus>> {
-    if (!this.modelManager || typeof this.modelManager.getCapabilityState !== 'function') {
-      logger.warn('ModelManager not available or getCapabilityState method not found');
-      return {};
-    }
+    const capabilityState: Record<string, ModelStatus> = {};
 
     try {
-      const state = await this.modelManager.getCapabilityState();
-      // 确保始终返回一个对象
-      const result = state || {};
+      if (!this.serviceRegistryManager) {
+        logger.warn('ServiceRegistryManager not available, returning empty capability_state');
+        return {};
+      }
+
+      // 确保注册表已加载
+      await this.serviceRegistryManager.loadRegistry();
+
+      // 获取所有已安装的服务包
+      const installedServices = this.serviceRegistryManager.listInstalled();
+      
+      // 获取所有 service_id（去重）
+      const serviceIds = new Set<string>();
+      installedServices.forEach((service: any) => {
+        serviceIds.add(service.service_id);
+      });
+
+      // 为每个 service_id 检查状态
+      for (const serviceId of serviceIds) {
+        // 检查服务是否正在运行
+        const isRunning = this.isServiceRunning(serviceId);
+        if (isRunning) {
+          // 服务包已安装且正在运行，状态为 ready
+          capabilityState[serviceId] = 'ready';
+        } else {
+          // 服务包已安装但未运行，状态为 not_installed
+          capabilityState[serviceId] = 'not_installed';
+        }
+      }
+
+      const readyCount = Object.values(capabilityState).filter(s => s === 'ready').length;
       logger.debug({
-        capabilityStateCount: Object.keys(result).length,
-        readyCount: Object.values(result).filter(s => s === 'ready').length
-      }, 'Retrieved capability_state from ModelManager');
-      return result;
+        capabilityStateCount: Object.keys(capabilityState).length,
+        readyCount,
+        readyServices: Object.entries(capabilityState)
+          .filter(([_, status]) => status === 'ready')
+          .map(([serviceId, _]) => serviceId),
+        notInstalledServices: Object.entries(capabilityState)
+          .filter(([_, status]) => status === 'not_installed')
+          .map(([serviceId, _]) => serviceId)
+      }, 'Built capability_state from service registry (service_id based)');
+
+      return capabilityState;
     } catch (error) {
-      logger.error({ error }, 'Failed to get capability_state from ModelManager');
+      logger.error({ error }, 'Failed to get capability_state from service registry');
       return {};
     }
   }

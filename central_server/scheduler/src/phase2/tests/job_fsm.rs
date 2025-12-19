@@ -38,4 +38,3 @@
         assert_eq!(s2.finished_ok, Some(true));
     }
 
-    #[tokio::test]

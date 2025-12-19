@@ -134,7 +134,7 @@ electron_1.app.whenReady().then(async () => {
             }
             // Python服务的GPU跟踪会在任务计数为0时停止（在显示时检查）
         });
-        nodeAgent = new node_agent_1.NodeAgent(inferenceService, modelManager, serviceRegistryManager);
+        nodeAgent = new node_agent_1.NodeAgent(inferenceService, modelManager, serviceRegistryManager, rustServiceManager, pythonServiceManager);
         // 启动 Node Agent（连接到调度服务器）
         logger_1.default.info({}, 'Starting Node Agent (connecting to scheduler server)...');
         nodeAgent.start().catch((error) => {

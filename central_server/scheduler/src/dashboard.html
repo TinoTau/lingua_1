@@ -221,9 +221,9 @@
                 </div>
 
                 <div class="stat-card">
-                    <h2>📦 可用模型数</h2>
-                    <div class="stat-value" id="availableModels">0</div>
-                    <div class="stat-label">Model Hub中的模型总数</div>
+                    <h2>📦 可用服务包数</h2>
+                    <div class="stat-value" id="availableServices">0</div>
+                    <div class="stat-label">Model Hub中的服务包总数</div>
                 </div>
 
                 <div class="stat-card">
@@ -261,21 +261,20 @@
                 </div>
             </div>
 
-            <!-- 模型节点统计 -->
+            <!-- 服务包节点统计 -->
             <div class="section">
-                <h2>⚙️ 模型算力提供统计</h2>
+                <h2>⚙️ 服务包算力提供统计</h2>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th>模型ID</th>
-                                <th>类型</th>
-                                <th>源语言</th>
-                                <th>目标语言</th>
+                                <th>服务包ID</th>
+                                <th>服务包名称</th>
+                                <th>最新版本</th>
                                 <th>提供算力的节点数</th>
                             </tr>
                         </thead>
-                        <tbody id="modelNodeTable">
+                        <tbody id="serviceNodeTable">
                             <!-- 动态填充 -->
                         </tbody>
                     </table>
@@ -307,7 +306,11 @@
                 
                 // 更新节点统计
                 document.getElementById('connectedNodes').textContent = data.nodes.connected_nodes;
-                document.getElementById('availableModels').textContent = data.nodes.available_models.length;
+                if (data.nodes.total_services !== undefined) {
+                    document.getElementById('availableServices').textContent = data.nodes.total_services;
+                } else {
+                    document.getElementById('availableServices').textContent = data.nodes.available_services ? data.nodes.available_services.length : 0;
+                }
                 
                 // 更新热门语言
                 updateTopLanguages(data.web_clients.top_languages);
@@ -315,8 +318,11 @@
                 // 更新语言使用统计
                 updateLanguageUsage(data.web_clients.language_usage);
                 
-                // 更新模型节点统计
-                updateModelNodes(data.nodes.available_models, data.nodes.model_node_counts);
+                // 更新服务包节点统计
+                console.log('Debug: available_services count:', data.nodes.available_services ? data.nodes.available_services.length : 0);
+                console.log('Debug: service_node_counts:', data.nodes.service_node_counts);
+                console.log('Debug: model_node_counts:', data.nodes.model_node_counts);
+                updateServiceNodes(data.nodes.available_services || [], data.nodes.service_node_counts || {});
                 
                 // 更新算力详情
                 if (data.nodes.compute_power) {
@@ -378,32 +384,37 @@
             });
         }
         
-        function updateModelNodes(models, nodeCounts) {
-            const tbody = document.getElementById('modelNodeTable');
+        function updateServiceNodes(services, nodeCounts) {
+            const tbody = document.getElementById('serviceNodeTable');
             tbody.innerHTML = '';
             
-            if (models.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #666;">暂无数据</td></tr>';
+            console.log('updateServiceNodes called with:', {
+                servicesCount: services.length,
+                nodeCountsKeys: Object.keys(nodeCounts),
+                nodeCounts: nodeCounts
+            });
+            
+            if (services.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #666;">暂无数据</td></tr>';
                 return;
             }
             
             // 按节点数排序（降序）
-            const sortedModels = [...models].sort((a, b) => {
-                const countA = nodeCounts[a.model_id] || 0;
-                const countB = nodeCounts[b.model_id] || 0;
+            const sortedServices = [...services].sort((a, b) => {
+                const countA = nodeCounts[a.service_id] || 0;
+                const countB = nodeCounts[b.service_id] || 0;
                 return countB - countA;
             });
             
-            sortedModels.forEach(model => {
-                const nodeCount = nodeCounts[model.model_id] || 0;
-                const badgeClass = `badge-${model.kind}`;
+            sortedServices.forEach(service => {
+                const nodeCount = nodeCounts[service.service_id] || 0;
+                console.log(`Service ${service.service_id}: nodeCount = ${nodeCount}`);
                 
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${model.model_id}</td>
-                    <td><span class="badge ${badgeClass}">${model.kind.toUpperCase()}</span></td>
-                    <td>${model.src_lang || '-'}</td>
-                    <td>${model.tgt_lang || '-'}</td>
+                    <td>${service.service_id}</td>
+                    <td>${service.name || '-'}</td>
+                    <td>${service.latest_version || '-'}</td>
                     <td><strong>${nodeCount}</strong></td>
                 `;
                 tbody.appendChild(row);

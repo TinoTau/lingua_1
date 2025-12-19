@@ -43,6 +43,4 @@
             });
         }
     }
-
-    /// Phase 2：写入 node presence + snapshot（跨实例可见）
 }

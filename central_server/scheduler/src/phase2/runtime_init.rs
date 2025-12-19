@@ -55,6 +55,12 @@
         format!("{}:sessions:owner:{{session:{}}}", self.key_prefix(), session_id)
     }
 
+    fn session_bind_key(&self, session_id: &str) -> String {
+        // v1 schema: lingua:v1:sessions:bind:{session:<id>}
+        // hash tag: {session:<id>}
+        format!("{}:v1:sessions:bind:{{session:{}}}", self.key_prefix(), session_id)
+    }
+
     fn instance_inbox_stream_key(&self, instance_id: &str) -> String {
         // hash tag: {instance:<id>}
         format!("{}:streams:{{instance:{}}}:inbox", self.key_prefix(), instance_id)
@@ -188,6 +194,28 @@
 
     pub async fn clear_session_owner(&self, session_id: &str) {
         let _ = self.redis.del(&self.session_owner_key(session_id)).await;
+    }
+
+    /// Schema compat: 写入 v1:sessions:bind（仅当 enabled 时）
+    pub async fn schema_set_session_bind(&self, session_id: &str, node_id: &str, trace_id: Option<&str>) {
+        if !self.cfg.schema_compat.enabled || !self.cfg.schema_compat.session_bind_enabled {
+            return;
+        }
+        let key = self.session_bind_key(session_id);
+        let now_ms = chrono::Utc::now().timestamp_millis();
+        let ttl = self.cfg.schema_compat.session_bind_ttl_seconds.max(1);
+        let trace_id_val = trace_id.unwrap_or("");
+        // 使用 Lua 脚本原子执行 HSET + EXPIRE
+        let _ = self.redis.execute_lua_hset_session_bind(&key, node_id, trace_id_val, &now_ms.to_string(), ttl).await;
+    }
+
+    /// Schema compat: 清理 v1:sessions:bind（仅当 enabled 时）
+    pub async fn schema_clear_session_bind(&self, session_id: &str) {
+        if !self.cfg.schema_compat.enabled || !self.cfg.schema_compat.session_bind_enabled {
+            return;
+        }
+        let key = self.session_bind_key(session_id);
+        let _ = self.redis.del(&key).await;
     }
 
 }

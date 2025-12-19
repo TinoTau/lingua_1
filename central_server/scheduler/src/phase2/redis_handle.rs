@@ -240,5 +240,33 @@ return 1
         let v: i64 = self.query(cmd).await?;
         Ok(v == 1)
     }
+
+    async fn execute_lua_hset_session_bind(
+        &self,
+        key: &str,
+        node_id: &str,
+        trace_id: &str,
+        updated_at: &str,
+        ttl: u64,
+    ) -> redis::RedisResult<u64> {
+        let script = r#"
+redis.call('HSET', KEYS[1], 'node_id', ARGV[1])
+if ARGV[2] ~= '' then
+  redis.call('HSET', KEYS[1], 'trace_id', ARGV[2])
+end
+redis.call('HSET', KEYS[1], 'updated_at', ARGV[3])
+redis.call('EXPIRE', KEYS[1], ARGV[4])
+return 1
+"#;
+        let mut cmd = redis::cmd("EVAL");
+        cmd.arg(script)
+            .arg(1)
+            .arg(key)
+            .arg(node_id)
+            .arg(trace_id)
+            .arg(updated_at)
+            .arg(ttl);
+        self.query(cmd).await
+    }
 }
 

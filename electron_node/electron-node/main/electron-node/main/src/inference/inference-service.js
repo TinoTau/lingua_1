@@ -74,7 +74,9 @@ class InferenceService {
                 trace_id: job.trace_id, // Added: propagate trace_id
                 context_text: job.context_text, // Added: propagate context_text (optional field)
             };
-            const response = await this.httpClient.post('/v1/inference', request, { signal: abortController.signal });
+            const response = await this.httpClient.post('/v1/inference', request, {
+                signal: abortController.signal,
+            });
             if (!response.data.success) {
                 throw new Error(response.data.error?.message || 'Inference failed');
             }
@@ -184,9 +186,10 @@ class InferenceService {
             });
         });
     }
-    getCurrentJobCount() {
-        return this.currentJobs.size;
-    }
+    /**
+     * best-effort cancel：尝试中断 HTTP 请求或关闭流式 WebSocket
+     * 注意：取消不保证推理服务一定立刻停止（取决于下游实现）
+     */
     cancelJob(jobId) {
         const controller = this.jobAbortControllers.get(jobId);
         if (controller) {
@@ -199,11 +202,16 @@ class InferenceService {
             try {
                 ws.close();
             }
-            catch { }
+            catch {
+                // ignore
+            }
             this.jobStreamSockets.delete(jobId);
             return true;
         }
         return false;
+    }
+    getCurrentJobCount() {
+        return this.currentJobs.size;
     }
     async getInstalledModels() {
         // 从 ModelManager 获取已安装的模型，转换为协议格式
