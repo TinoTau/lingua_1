@@ -7,7 +7,7 @@ exports.registerRuntimeHandlers = registerRuntimeHandlers;
 const electron_1 = require("electron");
 const node_config_1 = require("../node-config");
 const logger_1 = __importDefault(require("../logger"));
-function registerRuntimeHandlers(nodeAgent, modelManager, rustServiceManager, pythonServiceManager) {
+function registerRuntimeHandlers(nodeAgent, modelManager, rustServiceManager, pythonServiceManager, serviceRegistryManager) {
     electron_1.ipcMain.handle('get-node-status', async () => {
         return nodeAgent?.getStatus() || { online: false, nodeId: null };
     });
@@ -110,30 +110,42 @@ function registerRuntimeHandlers(nodeAgent, modelManager, rustServiceManager, py
             return { success: false, error: error instanceof Error ? error.message : String(error) };
         }
     });
-    // 根据已安装的模型自动启动所需服务
+    // 根据已安装的服务包自动启动所需服务
     electron_1.ipcMain.handle('auto-start-services-by-models', async () => {
-        if (!modelManager || !rustServiceManager || !pythonServiceManager) {
+        if (!serviceRegistryManager || !rustServiceManager || !pythonServiceManager) {
             return { success: false, error: 'Service manager not initialized' };
         }
         try {
-            const installedModels = modelManager.getInstalledModels();
+            // 确保注册表已加载
+            await serviceRegistryManager.loadRegistry();
+            const installedServices = serviceRegistryManager.listInstalled();
+            // 获取所有已安装的 service_id（去重）
+            const serviceIds = new Set();
+            installedServices.forEach((service) => {
+                serviceIds.add(service.service_id);
+            });
             const servicesToStart = [];
-            // 检查是否需要启动各个服务
-            const hasNmtModel = installedModels.some(m => m.modelId.includes('nmt') || m.modelId.includes('m2m'));
-            const hasTtsModel = installedModels.some(m => m.modelId.includes('piper') || (m.modelId.includes('tts') && !m.modelId.includes('your')));
-            const hasYourttsModel = installedModels.some(m => m.modelId.includes('yourtts') || m.modelId.includes('your_tts'));
-            const hasAsrModel = installedModels.some(m => m.modelId.includes('asr') || m.modelId.includes('whisper'));
-            if (hasNmtModel)
-                servicesToStart.push('nmt');
-            if (hasTtsModel)
-                servicesToStart.push('tts');
-            if (hasYourttsModel)
-                servicesToStart.push('yourtts');
-            if (hasAsrModel)
-                servicesToStart.push('rust');
+            // 根据 service_id 判断需要启动哪些服务
+            // service_id 到服务类型的映射
+            for (const serviceId of serviceIds) {
+                if (serviceId === 'node-inference') {
+                    servicesToStart.push('rust');
+                }
+                else if (serviceId === 'nmt-m2m100') {
+                    servicesToStart.push('nmt');
+                }
+                else if (serviceId === 'piper-tts') {
+                    servicesToStart.push('tts');
+                }
+                else if (serviceId === 'your-tts') {
+                    servicesToStart.push('yourtts');
+                }
+            }
+            // 去重
+            const uniqueServices = Array.from(new Set(servicesToStart));
             // 启动服务
             const results = {};
-            for (const service of servicesToStart) {
+            for (const service of uniqueServices) {
                 try {
                     if (service === 'rust') {
                         await rustServiceManager.start();
@@ -151,7 +163,7 @@ function registerRuntimeHandlers(nodeAgent, modelManager, rustServiceManager, py
             return { success: true, results };
         }
         catch (error) {
-            logger_1.default.error({ error }, 'Failed to auto-start services based on models');
+            logger_1.default.error({ error }, 'Failed to auto-start services based on installed services');
             return { success: false, error: error instanceof Error ? error.message : String(error) };
         }
     });

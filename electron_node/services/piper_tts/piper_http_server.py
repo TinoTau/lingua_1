@@ -38,6 +38,14 @@ except ImportError:
     PIPER_PYTHON_API_AVAILABLE = False
     print("WARNING: Piper Python API not available, will use command line tool (slower)")
 
+# 导入中文音素化器
+try:
+    from chinese_phonemizer import ChinesePhonemizer
+    CHINESE_PHONEMIZER_AVAILABLE = True
+except ImportError:
+    CHINESE_PHONEMIZER_AVAILABLE = False
+    print("WARNING: ChinesePhonemizer not available, Chinese TTS may not work correctly.")
+
 
 class TtsRequest(BaseModel):
     text: str
@@ -81,7 +89,11 @@ def find_piper_command() -> str:
     # 尝试在虚拟环境中查找
     venv_bin = os.environ.get("VIRTUAL_ENV")
     if venv_bin:
-        venv_piper = os.path.join(venv_bin, "bin", "piper")
+        # Windows 使用 Scripts/piper.exe，Linux/Mac 使用 bin/piper
+        if sys.platform == "win32":
+            venv_piper = os.path.join(venv_bin, "Scripts", "piper.exe")
+        else:
+            venv_piper = os.path.join(venv_bin, "bin", "piper")
         if os.path.exists(venv_piper):
             return venv_piper
     
@@ -124,6 +136,8 @@ def find_model_path(voice: str, model_dir: str) -> Tuple[Optional[str], Optional
         language_code = "en"
     
     possible_paths = [
+        # 优先：标准 Piper 中文模型（zh_CN-huayan-medium）
+        model_dir_path / "zh" / voice / f"{voice}.onnx" if language_code == "zh" else None,
         # 扁平结构：{model_dir}/{lang}/{voice}.onnx（最常见）
         model_dir_path / language_code / f"{voice}.onnx" if language_code else None,
         # 标准结构：{model_dir}/{lang}/{voice}/{voice}.onnx
@@ -139,15 +153,28 @@ def find_model_path(voice: str, model_dir: str) -> Tuple[Optional[str], Optional
     # 添加 VITS 模型支持（作为后备选项）
     # 如果请求英文模型但找不到，尝试查找 vits_en 模型
     if language_code == "en":
-        vits_model_path = model_dir_path / "vits_en" / "model.onnx"
-        if vits_model_path.exists():
-            possible_paths.append(vits_model_path)
+        # 尝试多个可能的文件名
+        vits_en_paths = [
+            model_dir_path / "vits_en" / "model.onnx",
+            model_dir_path / "vits_en" / "vits_en.onnx",
+        ]
+        for vits_model_path in vits_en_paths:
+            if vits_model_path.exists():
+                possible_paths.append(vits_model_path)
+                break
     
     # 如果请求中文模型但找不到，尝试查找 vits-zh 模型
     if language_code == "zh":
-        vits_zh_model_path = model_dir_path / "vits-zh-aishell3" / "model.onnx"
-        if vits_zh_model_path.exists():
-            possible_paths.append(vits_zh_model_path)
+        # 尝试多个可能的文件名
+        vits_zh_paths = [
+            model_dir_path / "vits-zh-aishell3" / "model.onnx",
+            model_dir_path / "vits-zh-aishell3" / "vits-aishell3.onnx",
+            model_dir_path / "vits-zh-aishell3" / "vits-aishell3.int8.onnx",
+        ]
+        for vits_zh_model_path in vits_zh_paths:
+            if vits_zh_model_path.exists():
+                possible_paths.append(vits_zh_model_path)
+                break
     
     for model_path in possible_paths:
         if model_path and model_path.exists():
@@ -271,10 +298,143 @@ async def synthesize_tts(request: TtsRequest):
             # 获取或加载模型（带缓存）
             voice = get_or_load_voice(model_path, config_path, use_gpu)
             
+            # 检查是否是中文 VITS 模型（使用拼音音素）
+            is_chinese_vits = False
+            lexicon_path = None
+            if config_path:
+                config_dir = Path(config_path).parent
+                # 检查是否是 vits-zh-aishell3 模型
+                if "vits-zh-aishell3" in str(model_path) or "vits-zh-aishell3" in str(config_dir):
+                    lexicon_path = config_dir / "lexicon.txt"
+                    if lexicon_path.exists():
+                        is_chinese_vits = True
+                        logger.info(f"Detected Chinese VITS model, using lexicon-based phonemization")
+            
             # 执行合成
             logger.info(f"Synthesizing text: {request.text} (length: {len(request.text)})")
-            audio_generator = voice.synthesize(request.text)
-            audio_chunks = list(audio_generator)
+            
+            # 如果是中文 VITS 模型，使用自定义音素化器直接处理音素
+            if is_chinese_vits and CHINESE_PHONEMIZER_AVAILABLE:
+                try:
+                    from chinese_phonemizer import ChinesePhonemizer
+                    from piper.config import SynthesisConfig
+                    from piper.voice import AudioChunk
+                    import numpy as np
+                    
+                    # 检查文本编码（避免日志编码问题）
+                    text_bytes = request.text.encode('utf-8')
+                    logger.info(f"Input text: length={len(request.text)}, utf-8 bytes={len(text_bytes)}, first_char_hex={text_bytes[:3].hex() if len(text_bytes) >= 3 else 'N/A'}")
+                    phonemizer = ChinesePhonemizer(str(lexicon_path))
+                    sentence_phonemes = phonemizer.phonemize(request.text)
+                    logger.info(f"Phonemized using lexicon: {len(sentence_phonemes)} sentences")
+                    for idx, sent in enumerate(sentence_phonemes):
+                        logger.info(f"  Sentence {idx}: {len(sent)} phonemes, first 10: {sent[:10] if sent else '[]'}")
+                    
+                    # 直接处理音素，不通过 synthesize() 方法
+                    audio_chunks = []
+                    syn_config = SynthesisConfig()  # 使用默认配置
+                    
+                    for idx, phonemes in enumerate(sentence_phonemes):
+                        logger.info(f"Processing sentence {idx}: {len(phonemes)} phonemes")
+                        if not phonemes:
+                            logger.warning(f"Empty phonemes list for sentence {idx}, skipping")
+                            continue
+                        
+                        logger.info(f"Processing phonemes: {phonemes[:10]}... (total: {len(phonemes)})")
+                        
+                        # 转换为音素ID（根据原项目文档，直接使用 phoneme_id_map，不添加 PAD）
+                        # 格式：sil + 声母 + 韵母 + sp + ... + eos
+                        # 示例：[0, 19, 81, 2, 14, 51, 2, ...]
+                        # 注意：不使用 voice.phonemes_to_ids()，因为它会在每个音素后添加 PAD
+                        phoneme_ids = []
+                        for phoneme in phonemes:
+                            if phoneme in voice.config.phoneme_id_map:
+                                # phoneme_id_map 的值是列表，可能包含多个 ID
+                                ids = voice.config.phoneme_id_map[phoneme]
+                                phoneme_ids.extend(ids)
+                            else:
+                                logger.warning(f"Phoneme '{phoneme}' not found in phoneme_id_map, skipping")
+                        logger.info(f"Converted to {len(phoneme_ids)} phoneme IDs: {phoneme_ids[:20]}...")
+                        
+                        if not phoneme_ids:
+                            logger.error(f"No phoneme IDs generated, skipping")
+                            continue
+                        
+                        # 生成音频（VITS 模型需要特殊处理）
+                        # 检查模型输入名称以确定是否为 VITS 模型
+                        session = voice.session
+                        input_names = [inp.name for inp in session.get_inputs()]
+                        is_vits_model = 'x' in input_names and 'x_length' in input_names
+                        
+                        if is_vits_model:
+                            # VITS 模型使用不同的输入格式
+                            logger.info("Using VITS model input format")
+                            phoneme_ids_array = np.expand_dims(np.array(phoneme_ids, dtype=np.int64), 0)
+                            phoneme_ids_lengths = np.array([phoneme_ids_array.shape[1]], dtype=np.int64)
+                            
+                            length_scale = syn_config.length_scale if syn_config.length_scale is not None else voice.config.length_scale
+                            noise_scale = syn_config.noise_scale if syn_config.noise_scale is not None else voice.config.noise_scale
+                            noise_w_scale = syn_config.noise_w_scale if syn_config.noise_w_scale is not None else voice.config.noise_w_scale
+                            
+                            # 确定 speaker_id（VITS 模型总是需要 sid）
+                            if voice.config.num_speakers > 1:
+                                speaker_id = syn_config.speaker_id if syn_config.speaker_id is not None else 0
+                            else:
+                                speaker_id = 0  # 单说话人模型也使用 0
+                            
+                            args = {
+                                "x": phoneme_ids_array,
+                                "x_length": phoneme_ids_lengths,
+                                "noise_scale": np.array([noise_scale], dtype=np.float32),
+                                "length_scale": np.array([length_scale], dtype=np.float32),
+                                "noise_scale_w": np.array([noise_w_scale], dtype=np.float32),
+                                "sid": np.array([speaker_id], dtype=np.int64),
+                            }
+                            
+                            # 直接调用 ONNX 模型
+                            audio = session.run(None, args)[0].squeeze()
+                            logger.info(f"Generated audio using VITS format: shape={audio.shape if hasattr(audio, 'shape') else 'N/A'}, length={len(audio) if hasattr(audio, '__len__') else 'N/A'}")
+                        else:
+                            # 标准 Piper 模型
+                            audio = voice.phoneme_ids_to_audio(phoneme_ids, syn_config)
+                            logger.info(f"Generated audio using standard format: shape={audio.shape if hasattr(audio, 'shape') else 'N/A'}, length={len(audio) if hasattr(audio, '__len__') else 'N/A'}")
+                        
+                        # 归一化音频
+                        if syn_config.normalize_audio:
+                            max_val = np.max(np.abs(audio))
+                            if max_val < 1e-8:
+                                audio = np.zeros_like(audio)
+                            else:
+                                audio = audio / max_val
+                        
+                        if syn_config.volume != 1.0:
+                            audio = audio * syn_config.volume
+                        
+                        audio = np.clip(audio, -1.0, 1.0).astype(np.float32)
+                        
+                        # 创建 AudioChunk
+                        chunk = AudioChunk(
+                            sample_rate=voice.config.sample_rate,
+                            sample_width=2,
+                            sample_channels=1,
+                            audio_float_array=audio,
+                        )
+                        audio_chunks.append(chunk)
+                    
+                    logger.info(f"Generated {len(audio_chunks)} audio chunks using custom phonemizer")
+                except Exception as e:
+                    logger.error(f"Custom Chinese phonemization failed: {e}", exc_info=True)
+                    import traceback
+                    error_details = traceback.format_exc()
+                    logger.error(f"Error details: {error_details}")
+                    # 回退到标准方法
+                    logger.warning("Falling back to standard synthesis method")
+                    audio_generator = voice.synthesize(request.text)
+                    audio_chunks = list(audio_generator)
+            else:
+                # 标准合成方法
+                audio_generator = voice.synthesize(request.text)
+                audio_chunks = list(audio_generator)
             
             # 合并音频数据
             audio_bytes = b''.join(
@@ -333,6 +493,10 @@ async def synthesize_tts(request: TtsRequest):
             )
         except Exception as e:
             logger.error(f"Python API synthesis failed: {e}", exc_info=True)
+            # 记录详细的错误信息
+            import traceback
+            error_details = traceback.format_exc()
+            logger.error(f"Python API error details: {error_details}")
             # 回退到命令行工具
             logger.warning("Falling back to command line tool")
     
@@ -383,9 +547,13 @@ async def synthesize_tts(request: TtsRequest):
             logger.error(f"stderr: {stderr}")
             if stdout:
                 logger.error(f"stdout: {stdout}")
+            error_msg = stderr if stderr else f"No error message (return code {process.returncode})"
+            if stdout:
+                error_msg += f" | stdout: {stdout[:500]}"  # 限制长度
+            logger.error(f"Full error message: {error_msg}")
             raise HTTPException(
                 status_code=500,
-                detail=f"Piper command failed (return code {process.returncode}): {stderr}"
+                detail=f"Piper command failed (return code {process.returncode}): {error_msg}"
             )
         
         if stderr:

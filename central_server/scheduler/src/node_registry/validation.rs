@@ -76,17 +76,22 @@ pub fn node_supports_features(node: &Node, required_features: &Option<FeatureFla
 /// 
 /// # 要求
 /// - GPU 使用率必须检查（所有节点都必须有 GPU）
-/// - CPU 和 GPU 使用率阈值：25%
+/// - CPU 使用率阈值：50%
+/// - GPU 使用率阈值：75%
 /// - 内存使用率阈值：75%（内存可以更高使用率）
-pub fn is_node_resource_available(node: &Node, resource_threshold: f32) -> bool {
-    // 检查 CPU 使用率（阈值：25%）
-    if node.cpu_usage > resource_threshold {
+pub fn is_node_resource_available(node: &Node, _resource_threshold: f32) -> bool {
+    // CPU 和 GPU 使用独立的阈值
+    const CPU_THRESHOLD: f32 = 50.0;
+    const GPU_THRESHOLD: f32 = 75.0;
+    
+    // 检查 CPU 使用率（阈值：50%）
+    if node.cpu_usage > CPU_THRESHOLD {
         return false;
     }
     
-    // 检查 GPU 使用率（所有节点都必须有 GPU，阈值：25%）
+    // 检查 GPU 使用率（所有节点都必须有 GPU，阈值：75%）
     if let Some(gpu_usage) = node.gpu_usage {
-        if gpu_usage > resource_threshold {
+        if gpu_usage > GPU_THRESHOLD {
             return false;
         }
     } else {

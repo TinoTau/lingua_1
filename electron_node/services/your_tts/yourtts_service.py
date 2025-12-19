@@ -444,9 +444,13 @@ if __name__ == '__main__':
     if args.model_dir:
         model_path = Path(args.model_dir)
     else:
-        # 默认使用项目中的模型路径（优先使用 node-inference，这是节点本地模型库）
-        model_path = project_root / "node-inference" / "models" / "tts" / "your_tts"
+        # 默认使用服务目录中的模型路径
+        model_path = script_dir / "models" / "your_tts"
         if not model_path.exists():
+            # 向后兼容：如果服务目录中没有，尝试旧路径
+            model_path = project_root / "node-inference" / "models" / "tts" / "your_tts"
+        if not model_path.exists():
+            # 最后尝试 model-hub
             model_path = project_root / "model-hub" / "models" / "tts" / "your_tts"
     
     # Verify model path exists

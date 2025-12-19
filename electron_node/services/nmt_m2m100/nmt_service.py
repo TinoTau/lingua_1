@@ -15,12 +15,14 @@ import os
 
 app = FastAPI(title="M2M100 NMT Service", version="1.0.0")
 
+# 模型名称（仅用于文档说明，实际从本地目录加载）
 MODEL_NAME = "facebook/m2m100_418M"
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # 全局模型和 tokenizer
 tokenizer: Optional[M2M100Tokenizer] = None
 model: Optional[M2M100ForConditionalGeneration] = None
+loaded_model_path: Optional[str] = None  # 实际加载的模型路径
 
 
 class TranslateRequest(BaseModel):
@@ -42,114 +44,143 @@ class TranslateResponse(BaseModel):
 @app.on_event("startup")
 async def load_model():
     """启动时加载模型"""
-    global tokenizer, model
+    global tokenizer, model, loaded_model_path
     try:
-        print(f"[NMT Service] Loading model: {MODEL_NAME}")
         print(f"[NMT Service] Device: {DEVICE}")
         
         # GPU 检查
         if torch.cuda.is_available():
-            print(f"[NMT Service] ✓ CUDA available: {torch.cuda.is_available()}")
-            print(f"[NMT Service] ✓ CUDA version: {torch.version.cuda}")
-            print(f"[NMT Service] ✓ GPU count: {torch.cuda.device_count()}")
-            print(f"[NMT Service] ✓ GPU name: {torch.cuda.get_device_name(0)}")
-            print(f"[NMT Service] ✓ GPU memory: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.2f} GB")
+            print(f"[NMT Service] [OK] CUDA available: {torch.cuda.is_available()}")
+            print(f"[NMT Service] [OK] CUDA version: {torch.version.cuda}")
+            print(f"[NMT Service] [OK] GPU count: {torch.cuda.device_count()}")
+            print(f"[NMT Service] [OK] GPU name: {torch.cuda.get_device_name(0)}")
+            print(f"[NMT Service] [OK] GPU memory: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.2f} GB")
         else:
-            print(f"[NMT Service] ⚠ WARNING: CUDA not available, using CPU")
+            print(f"[NMT Service] [WARN] CUDA not available, using CPU")
         
-        # 强制只使用本地文件 - 模型必须从模型库下载
-        # 不允许自动下载模型
-        try_local_only = os.getenv("HF_LOCAL_FILES_ONLY", "true").lower() == "true"
-        
-        # 检查是否有 HF_TOKEN 环境变量或配置文件
-        hf_token = os.getenv("HF_TOKEN")
-        
-        # 如果没有环境变量，尝试从配置文件读取
-        if not hf_token:
-            config_file = os.path.join(os.path.dirname(__file__), "hf_token.txt")
-            if os.path.exists(config_file):
-                try:
-                    with open(config_file, "r", encoding="utf-8") as f:
-                        hf_token = f.read().strip()
-                except Exception as e:
-                    print(f"[NMT Service] Warning: Failed to read token from config file: {e}")
-        
-        # 配置加载选项
-        extra = {}
-        
-        # 如果设置了 local_files_only，完全禁用网络验证
-        if try_local_only:
-            extra["local_files_only"] = True
-            # 禁用 safetensors 自动转换（避免网络请求）
-            extra["use_safetensors"] = False
-            print("[NMT Service] Using local files only (no network requests, no token needed)")
-            print("[NMT Service] Note: Disabled safetensors to avoid network requests")
-        else:
-            # 只有当 HF_TOKEN 非空且不是空字符串时才使用
-            if hf_token and hf_token.strip():
-                extra["token"] = hf_token
-                extra["use_safetensors"] = True
-                print("[NMT Service] Using HF_TOKEN from environment or config file")
-            else:
-                # 禁用隐式 token 使用（避免使用过期的缓存 token）
-                os.environ["HF_HUB_DISABLE_IMPLICIT_TOKEN"] = "1"
-                # 尝试不使用 safetensors，避免自动转换的网络请求
-                extra["use_safetensors"] = False
-                print("[NMT Service] No token provided, trying without safetensors")
-        
-        # 清除过期的 token 缓存（通过环境变量）
-        # 这可以防止使用缓存的过期 token
+        # 强制只使用本地文件 - 不允许从 HuggingFace 下载模型
+        # 公司在上架模型时会保证模型可用性
         os.environ["HF_HUB_DISABLE_IMPLICIT_TOKEN"] = "1"
+        os.environ["HF_LOCAL_FILES_ONLY"] = "1"
         
-        # 如果 local_files_only 失败，说明模型不存在，必须从模型库下载
-        try:
-            tokenizer = M2M100Tokenizer.from_pretrained(MODEL_NAME, **extra)
-        except Exception as e:
-            if try_local_only:
-                error_msg = str(e)
-                if "does not appear to have a file named" in error_msg or "Can't load" in error_msg:
-                    raise FileNotFoundError(
-                        f"Model not found locally: {MODEL_NAME}\n"
-                        "Please download models from the model hub first.\n"
-                        "Models should be downloaded through the model hub service, not automatically."
-                    )
-                else:
-                    raise RuntimeError(
-                        f"Failed to load model {MODEL_NAME}: {e}\n"
-                        "Please ensure the model is correctly downloaded from the model hub."
-                    )
+        # 从服务目录查找本地模型
+        service_dir = os.path.dirname(__file__)
+        models_dir = os.path.join(service_dir, "models")
+        
+        if not os.path.exists(models_dir):
+            raise FileNotFoundError(
+                f"Models directory not found: {models_dir}\n"
+                "Please ensure models are properly installed in the service directory."
+            )
+        
+        # 检查是否有本地模型目录（m2m100-en-zh 或 m2m100-zh-en）
+        local_model_path = None
+        en_zh_path = os.path.join(models_dir, "m2m100-en-zh")
+        zh_en_path = os.path.join(models_dir, "m2m100-zh-en")
+        
+        # 检查模型目录是否包含必要的文件
+        def check_model_complete(model_path):
+            """检查模型目录是否完整（包含 tokenizer 和 PyTorch 模型文件）"""
+            if not os.path.exists(model_path):
+                return False, "Directory does not exist"
+            if not os.path.exists(os.path.join(model_path, "tokenizer.json")):
+                return False, "Missing tokenizer.json"
+            
+            # 检查是否有 PyTorch 模型文件
+            pytorch_files = [
+                "pytorch_model.bin",
+                "model.safetensors",
+                "pytorch_model.bin.index.json",  # 分片模型
+            ]
+            has_pytorch_model = any(
+                os.path.exists(os.path.join(model_path, f)) for f in pytorch_files
+            )
+            if not has_pytorch_model:
+                # 检查是否有分片模型文件（pytorch_model-*.bin）
+                bin_files = [f for f in os.listdir(model_path) if f.startswith("pytorch_model-") and f.endswith(".bin")]
+                if not bin_files:
+                    return False, "Missing PyTorch model file (pytorch_model.bin or model.safetensors)"
+            return True, None
+        
+        # 优先使用 m2m100-en-zh（如果存在且完整）
+        if os.path.exists(en_zh_path):
+            is_complete, error_msg = check_model_complete(en_zh_path)
+            if is_complete:
+                local_model_path = en_zh_path
+                print(f"[NMT Service] Found local model directory: {local_model_path}")
             else:
-                raise
+                print(f"[NMT Service] Model directory {en_zh_path} is incomplete: {error_msg}")
+        elif os.path.exists(zh_en_path):
+            is_complete, error_msg = check_model_complete(zh_en_path)
+            if is_complete:
+                local_model_path = zh_en_path
+                print(f"[NMT Service] Found local model directory: {local_model_path}")
+            else:
+                print(f"[NMT Service] Model directory {zh_en_path} is incomplete: {error_msg}")
         
+        # 如果找不到完整的本地模型，直接报错
+        if not local_model_path:
+            error_details = []
+            if os.path.exists(en_zh_path):
+                _, error_msg = check_model_complete(en_zh_path)
+                error_details.append(f"m2m100-en-zh: {error_msg}")
+            if os.path.exists(zh_en_path):
+                _, error_msg = check_model_complete(zh_en_path)
+                error_details.append(f"m2m100-zh-en: {error_msg}")
+            
+            if error_details:
+                raise FileNotFoundError(
+                    f"Local model files are incomplete in {models_dir}\n"
+                    + "\n".join(f"  - {detail}" for detail in error_details) + "\n"
+                    "Required files: tokenizer.json, pytorch_model.bin (or model.safetensors)\n"
+                    "Please ensure models are properly installed. The service will not download models from HuggingFace."
+                )
+            else:
+                raise FileNotFoundError(
+                    f"Local model not found in {models_dir}\n"
+                    "Expected model directories: m2m100-en-zh or m2m100-zh-en\n"
+                    "Please ensure models are properly installed. The service will not download models from HuggingFace."
+                )
+        
+        # 配置加载选项 - 强制使用本地文件
+        extra = {
+            "local_files_only": True,
+            "use_safetensors": True,  # 优先使用 safetensors 格式（更安全且已下载）
+        }
+        
+        print(f"[NMT Service] Loading tokenizer from local path: {local_model_path}")
+        print("[NMT Service] Using local files only (no network requests)")
+        
+        # 保存实际使用的模型路径
+        loaded_model_path = local_model_path
+        
+        # 加载 tokenizer - 如果失败直接报错
+        try:
+            tokenizer = M2M100Tokenizer.from_pretrained(local_model_path, **extra)
+        except Exception as e:
+            raise RuntimeError(
+                f"Failed to load tokenizer from {local_model_path}: {e}\n"
+                "Please ensure the model files are complete and valid."
+            )
+        
+        # 加载 PyTorch 模型
+        print(f"[NMT Service] Loading PyTorch model from local path: {local_model_path}")
         # 禁用所有可能导致 meta tensor 的优化选项
         # 关键：low_cpu_mem_usage=False 必须设置，否则会使用 meta device
         os.environ["TRANSFORMERS_NO_ADVISORY_WARNINGS"] = "1"
         
-        # 加载模型，禁用所有优化选项
-        # 如果 local_files_only 失败，说明模型不存在，必须从模型库下载
         try:
             model = M2M100ForConditionalGeneration.from_pretrained(
-                MODEL_NAME, 
+                local_model_path, 
                 **extra,
                 low_cpu_mem_usage=False,  # 禁用低内存模式（这是关键！必须为 False）
                 torch_dtype=torch.float32,  # 明确指定数据类型
             )
         except Exception as e:
-            if try_local_only:
-                error_msg = str(e)
-                if "does not appear to have a file named" in error_msg or "Can't load" in error_msg:
-                    raise FileNotFoundError(
-                        f"Model not found locally: {MODEL_NAME}\n"
-                        "Please download models from the model hub first.\n"
-                        "Models should be downloaded through the model hub service, not automatically."
-                    )
-                else:
-                    raise RuntimeError(
-                        f"Failed to load model {MODEL_NAME}: {e}\n"
-                        "Please ensure the model is correctly downloaded from the model hub."
-                    )
-            else:
-                raise
+            raise RuntimeError(
+                f"Failed to load PyTorch model from {local_model_path}: {e}\n"
+                "Please ensure the model files are complete and valid."
+            )
         
         # 检查模型是否在 meta 设备上
         try:
@@ -175,7 +206,7 @@ async def health():
     """健康检查"""
     return {
         "status": "ok" if model is not None else "not_ready",
-        "model": MODEL_NAME if model is not None else None,
+        "model": loaded_model_path if model is not None else None,
         "device": str(DEVICE)
     }
 
@@ -275,7 +306,7 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
         return TranslateResponse(
             ok=True,
             text=out,
-            model=MODEL_NAME,
+            model=loaded_model_path or "local-m2m100",
             provider="local-m2m100",
             extra={
                 "elapsed_ms": int(total_elapsed),

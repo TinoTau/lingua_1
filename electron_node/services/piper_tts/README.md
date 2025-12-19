@@ -28,10 +28,32 @@ pip install -r requirements.txt
 Piper 模型需要单独下载。可以从 [Piper 官方模型库](https://huggingface.co/rhasspy/piper-voices) 下载。
 
 推荐模型：
-- 中文: `zh_CN-huayan-medium`
-- 英文: `en_US-lessac-medium`
+- **中文**: `zh_CN-huayan-medium` (已集成，推荐使用)
+- **英文**: `en_US-lessac-medium` 或 `vits_en` (VITS 模型)
 
-模型应放置在 `~/piper_models` 目录下，或通过环境变量 `PIPER_MODEL_DIR` 指定。
+#### 下载中文模型
+
+使用提供的下载脚本：
+
+```powershell
+cd electron_node/services/piper_tts
+python download_piper_chinese.py
+```
+
+模型将下载到 `models/zh/zh_CN-huayan-medium/` 目录。
+
+#### 模型路径
+
+模型应放置在以下位置之一：
+- 默认：`electron_node/services/piper_tts/models/`
+- 通过环境变量 `PIPER_MODEL_DIR` 指定
+- 服务启动时通过 `--model-dir` 参数指定
+
+#### 模型查找优先级
+
+服务会按以下顺序查找模型：
+1. 标准 Piper 模型：`{model_dir}/zh/{voice}/{voice}.onnx`
+2. VITS 模型（备选）：`{model_dir}/vits-zh-aishell3/vits-aishell3.onnx`
 
 ## 运行
 

@@ -182,7 +182,7 @@ class PythonServiceManager {
                     fs.mkdirSync(logDir, { recursive: true });
                 }
                 const modelDir = process.env.PIPER_MODEL_DIR
-                    || path.join(this.projectRoot, 'electron_node', 'services', 'node-inference', 'models', 'tts');
+                    || path.join(this.projectRoot, 'electron_node', 'services', 'piper_tts', 'models');
                 // 配置虚拟环境环境变量
                 const currentPath = baseEnv.PATH || '';
                 const venvPathEnv = `${venvScripts};${currentPath}`;
@@ -215,7 +215,7 @@ class PythonServiceManager {
                     fs.mkdirSync(logDir, { recursive: true });
                 }
                 const modelDir = process.env.YOURTTS_MODEL_DIR
-                    || path.join(this.projectRoot, 'electron_node', 'services', 'node-inference', 'models', 'tts', 'your_tts');
+                    || path.join(this.projectRoot, 'electron_node', 'services', 'your_tts', 'models', 'your_tts');
                 // 配置虚拟环境环境变量
                 const currentPath = baseEnv.PATH || '';
                 const venvPathEnv = `${venvScripts};${currentPath}`;

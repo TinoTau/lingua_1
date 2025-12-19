@@ -48,6 +48,7 @@ class NodeAgent {
         this.ws = null;
         this.nodeId = null;
         this.heartbeatInterval = null;
+        this.capabilityStateChangedHandler = null; // 保存监听器函数，用于清理
         // 优先从配置文件读取，其次从环境变量，最后使用默认值
         const config = (0, node_config_1.loadNodeConfig)();
         this.schedulerUrl =
@@ -87,12 +88,18 @@ class NodeAgent {
                 setTimeout(() => this.start(), 5000);
             });
             // 监听模型状态变化，实时更新 capability_state
+            // 先移除旧的监听器（如果存在），避免重复添加
             if (this.modelManager && typeof this.modelManager.on === 'function') {
-                this.modelManager.on('capability-state-changed', () => {
+                if (this.capabilityStateChangedHandler) {
+                    this.modelManager.off('capability-state-changed', this.capabilityStateChangedHandler);
+                }
+                // 创建新的监听器函数并保存
+                this.capabilityStateChangedHandler = () => {
                     // 状态变化时，在下次心跳时更新 capability_state
                     // 这里不立即发送，因为心跳会定期发送最新的状态
                     logger_1.default.debug({}, 'Model state changed, will update capability_state on next heartbeat');
-                });
+                };
+                this.modelManager.on('capability-state-changed', this.capabilityStateChangedHandler);
             }
         }
         catch (error) {
@@ -104,6 +111,11 @@ class NodeAgent {
         if (this.ws) {
             this.ws.close();
             this.ws = null;
+        }
+        // 移除 capability-state-changed 监听器，避免内存泄漏
+        if (this.modelManager && this.capabilityStateChangedHandler) {
+            this.modelManager.off('capability-state-changed', this.capabilityStateChangedHandler);
+            this.capabilityStateChangedHandler = null;
         }
     }
     async registerNode() {
@@ -551,6 +563,7 @@ class NodeAgent {
             // 检查是否是 ModelNotAvailableError
             if (error instanceof model_manager_1.ModelNotAvailableError) {
                 // 发送 MODEL_NOT_AVAILABLE 错误给调度服务器
+                // 注意：根据新架构，使用 service_id 而不是 model_id
                 const errorResponse = {
                     type: 'job_result',
                     job_id: job.job_id,
@@ -562,11 +575,8 @@ class NodeAgent {
                     processing_time_ms: Date.now() - startTime,
                     error: {
                         code: 'MODEL_NOT_AVAILABLE',
-                        message: `Model ${error.modelId}@${error.version} is not available: ${error.reason}`,
+                        message: `Service ${error.modelId}@${error.version} is not available: ${error.reason}`,
                         details: {
-                            model_id: error.modelId,
-                            version: error.version,
-                            // 兼容“模型=服务包”的命名：提供 service_id/service_version 作为别名字段
                             service_id: error.modelId,
                             service_version: error.version,
                             reason: error.reason,

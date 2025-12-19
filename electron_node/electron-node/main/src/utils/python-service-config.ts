@@ -59,6 +59,10 @@ export function getPythonServiceConfig(
       const currentPath = baseEnv.PATH || '';
       const venvPathEnv = `${venvScripts};${currentPath}`;
 
+      // 设置 HuggingFace 缓存目录到服务目录
+      const modelsDir = path.join(servicePath, 'models');
+      const hfCacheDir = path.join(modelsDir, '.cache', 'huggingface', 'hub');
+
       return {
         name: 'NMT',
         port: 5008,
@@ -74,6 +78,8 @@ export function getPythonServiceConfig(
           PATH: venvPathEnv,
           HF_TOKEN: hfToken,
           HF_LOCAL_FILES_ONLY: 'true',
+          // 设置 HuggingFace 缓存目录（如果服务目录中有模型）
+          ...(fs.existsSync(modelsDir) ? { HF_HOME: modelsDir } : {}),
         },
       };
     }
@@ -90,7 +96,7 @@ export function getPythonServiceConfig(
       }
 
       const modelDir = process.env.PIPER_MODEL_DIR
-        || path.join(projectRoot, 'electron_node', 'services', 'node-inference', 'models', 'tts');
+        || path.join(projectRoot, 'electron_node', 'services', 'piper_tts', 'models');
 
       // 配置虚拟环境环境变量
       const currentPath = baseEnv.PATH || '';
@@ -127,7 +133,7 @@ export function getPythonServiceConfig(
       }
 
       const modelDir = process.env.YOURTTS_MODEL_DIR
-        || path.join(projectRoot, 'electron_node', 'services', 'node-inference', 'models', 'tts', 'your_tts');
+        || path.join(projectRoot, 'electron_node', 'services', 'your_tts', 'models', 'your_tts');
 
       // 配置虚拟环境环境变量
       const currentPath = baseEnv.PATH || '';

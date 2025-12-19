@@ -231,9 +231,10 @@ class TranslationTestClient:
                         if msg.get("trace_id"):
                             print(f"  追踪ID: {msg.get('trace_id')}")
 
-                        # 保存TTS音频
+                        # 保存TTS音频（使用任务ID避免覆盖）
                         if tts_audio_b64:
-                            output_path = Path("output_translated_audio.pcm")
+                            job_id = msg.get('job_id', 'unknown')
+                            output_path = Path(f"output_translated_audio_{job_id}.pcm")
                             with open(output_path, "wb") as f:
                                 f.write(tts_audio_bytes)
                             print(f"  ✓ TTS音频已保存到: {output_path}")

@@ -269,12 +269,12 @@ impl DashboardStats {
     /// 计算所有节点的可用算力
     /// 
     /// 算力计算公式：
-    /// - CPU算力 = (25% - 当前CPU使用率) * CPU核心数 / 100
-    /// - GPU算力 = (25% - 当前GPU使用率) * GPU数量 * GPU显存(GB) / 100
+    /// - CPU算力 = (50% - 当前CPU使用率) * CPU核心数 / 100
+    /// - GPU算力 = (75% - 当前GPU使用率) * GPU数量 * GPU显存(GB) / 100
     /// - 内存算力 = (75% - 当前内存使用率) * 内存大小(GB) / 100
     fn calculate_compute_power(nodes: &tokio::sync::RwLockReadGuard<'_, std::collections::HashMap<String, crate::node_registry::Node>>) -> ComputePowerStats {
-        const CPU_THRESHOLD: f32 = 25.0;
-        const GPU_THRESHOLD: f32 = 25.0;
+        const CPU_THRESHOLD: f32 = 50.0;
+        const GPU_THRESHOLD: f32 = 75.0;
         const MEMORY_THRESHOLD: f32 = 75.0;
         
         let mut node_power_details = Vec::new();

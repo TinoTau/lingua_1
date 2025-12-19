@@ -218,6 +218,7 @@ class InferenceService {
     }
     async getInstalledModels() {
         // 从 ModelManager 获取已安装的模型，转换为协议格式
+        // 注意：返回的 InstalledModel 接口包含 model_id 字段，这是协议定义的一部分
         const installed = this.modelManager.getInstalledModels();
         // 获取可用模型列表以获取完整元数据
         const availableModels = await this.modelManager.getAvailableModels();

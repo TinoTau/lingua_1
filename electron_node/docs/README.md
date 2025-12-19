@@ -27,6 +27,7 @@
 
 - **迁移文档**：`MIGRATION.md`
 - **服务热插拔验证**：`SERVICE_HOT_PLUG_VERIFICATION.md`
+- **中文 TTS 问题修复总结**：`CHINESE_TTS_FIX_SUMMARY.md` - 记录中文 TTS 问题诊断和解决方案
 
 ## 模块化功能（历史/设计材料）
 
