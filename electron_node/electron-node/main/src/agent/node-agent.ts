@@ -609,6 +609,7 @@ export class NodeAgent {
       // 检查是否是 ModelNotAvailableError
       if (error instanceof ModelNotAvailableError) {
         // 发送 MODEL_NOT_AVAILABLE 错误给调度服务器
+        // 注意：根据新架构，使用 service_id 而不是 model_id
         const errorResponse: JobResultMessage = {
           type: 'job_result',
           job_id: job.job_id,
@@ -620,11 +621,8 @@ export class NodeAgent {
           processing_time_ms: Date.now() - startTime,
           error: {
             code: 'MODEL_NOT_AVAILABLE',
-            message: `Model ${error.modelId}@${error.version} is not available: ${error.reason}`,
+            message: `Service ${error.modelId}@${error.version} is not available: ${error.reason}`,
             details: {
-              model_id: error.modelId,
-              version: error.version,
-              // 兼容“模型=服务包”的命名：提供 service_id/service_version 作为别名字段
               service_id: error.modelId,
               service_version: error.version,
               reason: error.reason,

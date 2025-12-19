@@ -5,12 +5,14 @@ import type { NodeAgent } from '../agent/node-agent';
 import type { ModelManager } from '../model-manager/model-manager';
 import type { RustServiceManager } from '../rust-service-manager';
 import type { PythonServiceManager } from '../python-service-manager';
+import type { ServiceRegistryManager } from '../service-registry';
 
 export function registerRuntimeHandlers(
   nodeAgent: NodeAgent | null,
   modelManager: ModelManager | null,
   rustServiceManager: RustServiceManager | null,
-  pythonServiceManager: PythonServiceManager | null
+  pythonServiceManager: PythonServiceManager | null,
+  serviceRegistryManager: ServiceRegistryManager | null
 ): void {
   ipcMain.handle('get-node-status', async () => {
     return nodeAgent?.getStatus() || { online: false, nodeId: null };
@@ -118,38 +120,45 @@ export function registerRuntimeHandlers(
     }
   });
 
-  // 根据已安装的模型自动启动所需服务
+  // 根据已安装的服务包自动启动所需服务
   ipcMain.handle('auto-start-services-by-models', async () => {
-    if (!modelManager || !rustServiceManager || !pythonServiceManager) {
+    if (!serviceRegistryManager || !rustServiceManager || !pythonServiceManager) {
       return { success: false, error: 'Service manager not initialized' };
     }
 
     try {
-      const installedModels = modelManager.getInstalledModels();
+      // 确保注册表已加载
+      await serviceRegistryManager.loadRegistry();
+      const installedServices = serviceRegistryManager.listInstalled();
+      
+      // 获取所有已安装的 service_id（去重）
+      const serviceIds = new Set<string>();
+      installedServices.forEach((service) => {
+        serviceIds.add(service.service_id);
+      });
+
       const servicesToStart: Array<'nmt' | 'tts' | 'yourtts' | 'rust'> = [];
 
-      // 检查是否需要启动各个服务
-      const hasNmtModel = installedModels.some(m =>
-        m.modelId.includes('nmt') || m.modelId.includes('m2m')
-      );
-      const hasTtsModel = installedModels.some(m =>
-        m.modelId.includes('piper') || (m.modelId.includes('tts') && !m.modelId.includes('your'))
-      );
-      const hasYourttsModel = installedModels.some(m =>
-        m.modelId.includes('yourtts') || m.modelId.includes('your_tts')
-      );
-      const hasAsrModel = installedModels.some(m =>
-        m.modelId.includes('asr') || m.modelId.includes('whisper')
-      );
+      // 根据 service_id 判断需要启动哪些服务
+      // service_id 到服务类型的映射
+      for (const serviceId of serviceIds) {
+        if (serviceId === 'node-inference') {
+          servicesToStart.push('rust');
+        } else if (serviceId === 'nmt-m2m100') {
+          servicesToStart.push('nmt');
+        } else if (serviceId === 'piper-tts') {
+          servicesToStart.push('tts');
+        } else if (serviceId === 'your-tts') {
+          servicesToStart.push('yourtts');
+        }
+      }
 
-      if (hasNmtModel) servicesToStart.push('nmt');
-      if (hasTtsModel) servicesToStart.push('tts');
-      if (hasYourttsModel) servicesToStart.push('yourtts');
-      if (hasAsrModel) servicesToStart.push('rust');
+      // 去重
+      const uniqueServices = Array.from(new Set(servicesToStart));
 
       // 启动服务
       const results: Record<string, boolean> = {};
-      for (const service of servicesToStart) {
+      for (const service of uniqueServices) {
         try {
           if (service === 'rust') {
             await rustServiceManager.start();
@@ -165,7 +174,7 @@ export function registerRuntimeHandlers(
 
       return { success: true, results };
     } catch (error) {
-      logger.error({ error }, 'Failed to auto-start services based on models');
+      logger.error({ error }, 'Failed to auto-start services based on installed services');
       return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
   });
