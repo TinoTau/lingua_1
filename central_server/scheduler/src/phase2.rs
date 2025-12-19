@@ -94,11 +94,11 @@ enum RedisConn {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-struct SchedulerPresence {
-    started_at: i64,
-    hostname: String,
-    pid: u32,
-    version: String,
+pub struct SchedulerPresence {
+    pub started_at: i64,
+    pub hostname: String,
+    pub pid: u32,
+    pub version: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

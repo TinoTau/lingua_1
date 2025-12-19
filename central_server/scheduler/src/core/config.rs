@@ -270,7 +270,7 @@ fn default_phase2_dlq_scan_count() -> usize {
 impl Default for Phase2Config {
     fn default() -> Self {
         Self {
-            enabled: false,
+            enabled: true,  // 默认启用 Phase2
             instance_id: default_phase2_instance_id(),
             redis: Phase2RedisConfig::default(),
             owner_ttl_seconds: default_phase2_owner_ttl_seconds(),

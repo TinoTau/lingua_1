@@ -172,6 +172,21 @@
         }
     }
 
+    // 辅助方法：执行 Redis 查询（用于集群监控等场景）
+    pub async fn redis_query<T: redis::FromRedisValue>(&self, cmd: redis::Cmd) -> redis::RedisResult<T> {
+        self.redis.query(cmd).await
+    }
+
+    // 辅助方法：获取字符串值
+    pub async fn redis_get_string(&self, key: &str) -> redis::RedisResult<Option<String>> {
+        self.redis.get_string(key).await
+    }
+
+    // 获取 stream_group 配置
+    pub fn stream_group(&self) -> &str {
+        &self.cfg.stream_group
+    }
+
     pub async fn set_node_owner(&self, node_id: &str) {
         let key = self.node_owner_key(node_id);
         let _ = self

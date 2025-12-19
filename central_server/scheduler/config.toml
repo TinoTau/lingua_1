@@ -16,7 +16,7 @@ heartbeat_interval_seconds = 15
 # - instance presence（schedulers:presence:<instance_id>，TTL=2*heartbeat_interval_seconds）
 # - node/session owner（nodes:owner / sessions:owner，带 TTL）
 # - 跨实例投递（Redis Streams per-instance inbox；Job 指令/结果走 Streams，避免 Pub/Sub 丢消息）
-enabled = false
+enabled = true  # 默认启用 Phase2（多实例支持）
 # 留空或 "auto" 将在启动时生成：hostname + pid + 短 uuid
 instance_id = "auto"
 # owner key TTL（秒）

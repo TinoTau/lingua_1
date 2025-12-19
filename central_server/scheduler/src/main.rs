@@ -1,7 +1,7 @@
 use anyhow::Result;
 use axum::{
     extract::ws::WebSocketUpgrade,
-    response::Response,
+    response::{Response, IntoResponse},
     routing::get,
     Router,
 };
@@ -303,8 +303,10 @@ async fn main() -> Result<()> {
         .route("/api/v1/phase3/pools", get(get_phase3_pools))
         .route("/api/v1/phase3/simulate", get(get_phase3_simulate))
         .route("/api/v1/metrics", get(get_metrics))
+        .route("/api/v1/cluster", get(get_cluster_stats))
         .route("/metrics", get(get_prometheus_metrics))
         .route("/dashboard", get(serve_dashboard))
+        .route("/cluster", get(serve_cluster))
         .route("/compute-power", get(serve_compute_power))
         .route("/models", get(serve_models))
         .route("/languages", get(serve_languages))
@@ -393,6 +395,219 @@ async fn get_metrics(
     axum::extract::State(state): axum::extract::State<AppState>,
 ) -> axum::Json<metrics::metrics::MetricsSnapshot> {
     axum::Json(collect(&state).await)
+}
+
+// 集群监控 API 端点
+#[derive(serde::Serialize)]
+struct ClusterStatsResponse {
+    instances: Vec<InstanceInfo>,
+    total_instances: usize,
+    online_instances: usize,
+    total_nodes: usize,
+    total_sessions: usize,
+    total_pending: u64,
+    total_dlq: u64,
+    redis_key_prefix: String,
+}
+
+#[derive(serde::Serialize)]
+struct InstanceInfo {
+    instance_id: String,
+    hostname: String,
+    pid: u32,
+    version: String,
+    started_at_ms: i64,
+    uptime_seconds: i64,
+    is_online: bool,
+    inbox_length: u64,
+    inbox_pending: u64,
+    dlq_length: u64,
+    nodes_owned: usize,
+    sessions_owned: usize,
+}
+
+async fn get_cluster_stats(
+    axum::extract::State(state): axum::extract::State<AppState>,
+) -> axum::response::Response {
+    let phase2 = match &state.phase2 {
+        Some(rt) => rt,
+        None => {
+            tracing::warn!("Cluster stats API called but Phase2 is not enabled");
+            return (
+                axum::http::StatusCode::SERVICE_UNAVAILABLE,
+                [(axum::http::header::CONTENT_TYPE, "application/json")],
+                r#"{"error":"Phase2 not enabled","message":"Please enable Phase2 in config.toml: [scheduler.phase2] enabled = true"}"#,
+            )
+                .into_response();
+        }
+    };
+
+    let key_prefix = phase2.key_prefix();
+    let now_ms = chrono::Utc::now().timestamp_millis();
+
+    // 获取所有实例的 presence keys
+    let presence_pattern = format!("{}:schedulers:presence:*", key_prefix);
+    let mut cmd = redis::cmd("KEYS");
+    cmd.arg(&presence_pattern);
+    
+    let instance_keys: Vec<String> = match phase2.redis_query::<Vec<String>>(cmd).await {
+        Ok(keys) => {
+            tracing::debug!("Found {} instance keys from Redis", keys.len());
+            keys
+        },
+        Err(e) => {
+            tracing::error!("Failed to get instance keys from Redis: {} (pattern: {})", e, presence_pattern);
+            // 返回错误响应而不是空数组
+            return (
+                axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+                [(axum::http::header::CONTENT_TYPE, "application/json")],
+                format!(r#"{{"error":"Redis query failed","message":"Failed to query instance keys: {}"}}"#, e),
+            )
+                .into_response();
+        }
+    };
+
+    let total_instances_count = instance_keys.len();
+    let mut instances = Vec::new();
+    let mut total_pending = 0u64;
+    let mut total_dlq = 0u64;
+    let mut online_count = 0;
+
+    for key in instance_keys {
+        // 提取 instance_id
+        let instance_id = key
+            .strip_prefix(&format!("{}:schedulers:presence:", key_prefix))
+            .unwrap_or("")
+            .to_string();
+
+        // 读取 presence 信息
+        let presence_json: Option<String> = phase2.redis_get_string(&key).await.ok().flatten();
+
+        #[derive(serde::Deserialize)]
+        struct SchedulerPresence {
+            started_at: i64,
+            hostname: String,
+            pid: u32,
+            version: String,
+        }
+        
+        let presence: SchedulerPresence = match presence_json {
+            Some(json) => match serde_json::from_str(&json) {
+                Ok(p) => p,
+                Err(_) => continue,
+            },
+            None => continue,
+        };
+
+        let is_online = true; // key 存在说明在线
+        if is_online {
+            online_count += 1;
+        }
+
+        let uptime_seconds = (now_ms - presence.started_at) / 1000;
+
+        // 获取 inbox 信息
+        let inbox_key = format!("{}:streams:{{instance:{}}}:inbox", key_prefix, instance_id);
+        let mut xlen_cmd = redis::cmd("XLEN");
+        xlen_cmd.arg(&inbox_key);
+        let inbox_length: u64 = match phase2.redis_query::<u64>(xlen_cmd).await {
+            Ok(v) => v,
+            Err(_) => 0,
+        };
+
+        // 获取 pending 信息
+        let stream_group = phase2.stream_group();
+        let mut xpending_cmd = redis::cmd("XPENDING");
+        xpending_cmd.arg(&inbox_key).arg(stream_group);
+        let pending_summary: Option<Vec<redis::Value>> = match phase2.redis_query::<Vec<redis::Value>>(xpending_cmd).await {
+            Ok(v) => Some(v),
+            Err(_) => None,
+        };
+        let inbox_pending = pending_summary
+            .and_then(|v| v.first().and_then(|v| redis::from_redis_value::<u64>(v).ok()))
+            .unwrap_or(0);
+        total_pending += inbox_pending;
+
+        // 获取 DLQ 信息
+        let dlq_key = format!("{}:streams:{{instance:{}}}:dlq", key_prefix, instance_id);
+        let mut dlq_xlen_cmd = redis::cmd("XLEN");
+        dlq_xlen_cmd.arg(&dlq_key);
+        let dlq_length: u64 = match phase2.redis_query::<u64>(dlq_xlen_cmd).await {
+            Ok(v) => v,
+            Err(_) => 0,
+        };
+        total_dlq += dlq_length;
+
+        // 统计该实例拥有的 nodes 和 sessions（简化：只统计 owner keys）
+        // 注意：这里只做粗略统计，完整统计需要扫描所有 owner keys
+        let nodes_owned = 0; // TODO: 可以通过 SCAN 统计，但性能开销较大
+        let sessions_owned = 0;
+
+        instances.push(InstanceInfo {
+            instance_id: instance_id.clone(),
+            hostname: presence.hostname,
+            pid: presence.pid,
+            version: presence.version,
+            started_at_ms: presence.started_at,
+            uptime_seconds,
+            is_online,
+            inbox_length,
+            inbox_pending,
+            dlq_length,
+            nodes_owned,
+            sessions_owned,
+        });
+    }
+
+    // 获取全局节点数（从 nodes:all）
+    let nodes_all_key = format!("{}:v1:nodes:all", key_prefix);
+    let mut scard_cmd = redis::cmd("SCARD");
+    scard_cmd.arg(&nodes_all_key);
+    let total_nodes: u64 = match phase2.redis_query::<u64>(scard_cmd).await {
+        Ok(v) => {
+            tracing::debug!("Total nodes from Redis: {}", v);
+            v
+        },
+        Err(e) => {
+            tracing::warn!("Failed to get total nodes from Redis: {}", e);
+            0
+        },
+    };
+
+    // 获取会话数（简化：从本地状态获取，多实例需要从 Redis 聚合）
+    let total_sessions = state.session_manager.list_all_sessions().await.len();
+    tracing::debug!("Total sessions from local state: {}", total_sessions);
+
+    let response = ClusterStatsResponse {
+        instances,
+        total_instances: total_instances_count,
+        online_instances: online_count,
+        total_nodes: total_nodes as usize,
+        total_sessions,
+        total_pending,
+        total_dlq,
+        redis_key_prefix: key_prefix.to_string(),
+    };
+
+    tracing::info!(
+        "Cluster stats: {} instances ({} online), {} nodes, {} sessions, {} pending, {} dlq",
+        total_instances_count,
+        online_count,
+        total_nodes,
+        total_sessions,
+        total_pending,
+        total_dlq
+    );
+
+    (
+        axum::http::StatusCode::OK,
+        [(axum::http::header::CONTENT_TYPE, "application/json")],
+        serde_json::to_string(&response).unwrap_or_else(|e| {
+            tracing::error!("Failed to serialize cluster stats response: {}", e);
+            r#"{"error":"Serialization failed"}"#.to_string()
+        }),
+    )
+        .into_response()
 }
 
 #[derive(serde::Serialize)]
@@ -575,5 +790,10 @@ async fn serve_models() -> axum::response::Html<&'static str> {
 // 语言页面
 async fn serve_languages() -> axum::response::Html<&'static str> {
     axum::response::Html(include_str!("../languages.html"))
+}
+
+// 集群监控页面
+async fn serve_cluster() -> axum::response::Html<&'static str> {
+    axum::response::Html(include_str!("cluster.html"))
 }
 
