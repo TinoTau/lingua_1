@@ -211,7 +211,9 @@ marimo/_lsp/
 __marimo__/
 
 # Rust
-/target/
+# 匹配所有目录下的 target 目录（Rust 编译输出）
+target/
+**/target/
 **/*.rs.bk
 Cargo.lock
 
