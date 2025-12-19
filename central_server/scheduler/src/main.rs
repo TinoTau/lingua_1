@@ -5,6 +5,8 @@ use axum::{
     routing::get,
     Router,
 };
+use axum::extract::Query;
+use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::time::Duration;
@@ -318,6 +320,7 @@ async fn main() -> Result<()> {
         .route("/health", get(health_check))
         .route("/api/v1/stats", get(get_stats))
         .route("/api/v1/phase3/pools", get(get_phase3_pools))
+        .route("/api/v1/phase3/simulate", get(get_phase3_simulate))
         .route("/api/v1/metrics", get(get_metrics))
         .route("/metrics", get(get_prometheus_metrics))
         .route("/dashboard", get(serve_dashboard))
@@ -493,6 +496,70 @@ async fn get_phase3_pools(
 
     pools.sort_by_key(|p| p.pool_id);
     axum::Json(Phase3PoolsResponse { config: cfg, pools })
+}
+
+#[derive(Debug, Deserialize)]
+struct Phase3SimulateQuery {
+    /// 显式指定 routing_key（优先级最高）
+    routing_key: Option<String>,
+    /// 便捷：与线上语义保持一致（若 routing_key 为空，则优先 tenant_id，其次 session_id）
+    tenant_id: Option<String>,
+    session_id: Option<String>,
+    /// required service_id 列表（可重复传参）：?required=a&required=b
+    #[serde(default)]
+    required: Vec<String>,
+    /// 语言仅用于日志/兼容现有选择函数参数，不影响 required 过滤本身
+    src_lang: Option<String>,
+    tgt_lang: Option<String>,
+    /// 是否允许 public 节点（默认 true）
+    accept_public: Option<bool>,
+    /// 排除某个节点（可选）
+    exclude_node_id: Option<String>,
+}
+
+#[derive(Debug, Serialize)]
+struct Phase3SimulateResponse {
+    routing_key: String,
+    required: Vec<String>,
+    selected_node_id: Option<String>,
+    debug: crate::node_registry::Phase3TwoLevelDebug,
+    breakdown: crate::node_registry::NoAvailableNodeBreakdown,
+}
+
+async fn get_phase3_simulate(
+    axum::extract::State(state): axum::extract::State<AppState>,
+    Query(q): Query<Phase3SimulateQuery>,
+) -> axum::Json<Phase3SimulateResponse> {
+    let routing_key = q
+        .routing_key
+        .or(q.tenant_id)
+        .or(q.session_id)
+        .unwrap_or_else(|| "default".to_string());
+    let src_lang = q.src_lang.unwrap_or_else(|| "zh".to_string());
+    let tgt_lang = q.tgt_lang.unwrap_or_else(|| "en".to_string());
+    let accept_public = q.accept_public.unwrap_or(true);
+    let exclude = q.exclude_node_id.as_deref();
+
+    let (nid, dbg, bd) = state
+        .node_registry
+        .select_node_with_models_two_level_excluding_with_breakdown(
+            &routing_key,
+            &src_lang,
+            &tgt_lang,
+            &q.required,
+            accept_public,
+            exclude,
+            Some(&state.core_services),
+        )
+        .await;
+
+    axum::Json(Phase3SimulateResponse {
+        routing_key,
+        required: q.required,
+        selected_node_id: nid,
+        debug: dbg,
+        breakdown: bd,
+    })
 }
 
 async fn get_prometheus_metrics(

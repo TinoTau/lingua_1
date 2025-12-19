@@ -1,0 +1,44 @@
+groups:
+  - name: lingua_scheduler_phase2_phase3
+    rules:
+      - alert: LinguaSchedulerPhase2RedisErrorsHigh
+        expr: |
+          sum(rate(scheduler_phase2_redis_op_total{result="err"}[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Phase2 Redis errors rate is high"
+          description: "phase2_redis_op_total result=err > 1/s for 5m. Check Redis connectivity, MOVED, auth, timeouts."
+
+      - alert: LinguaSchedulerPhase2InboxPendingHigh
+        expr: |
+          scheduler_phase2_inbox_pending > 1000
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Phase2 inbox pending is high"
+          description: "phase2 inbox pending > 1000 for 10m. Possible consumer stuck or downstream failures."
+
+      - alert: LinguaSchedulerPhase2DLQIncreasing
+        expr: |
+          increase(scheduler_phase2_dlq_moved_total[10m]) > 0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Phase2 DLQ has new messages"
+          description: "DLQ moved messages increased in last 10m. Investigate payloads and reclaim settings."
+
+      - alert: LinguaSchedulerPhase3PoolSelectionMissHigh
+        expr: |
+          sum(rate(scheduler_phase3_pool_selected_total{outcome="miss"}[5m])) > 1
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Phase3 pool selection misses are frequent"
+          description: "Phase3 pool miss rate > 1/s for 10m. Check pool capacity/eligibility and core service readiness."
+
+

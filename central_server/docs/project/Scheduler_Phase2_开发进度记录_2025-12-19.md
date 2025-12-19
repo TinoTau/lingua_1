@@ -92,6 +92,19 @@ Phase 3 已在代码侧落地“方案 B：两级调度（Global 选 pool，pool
 - **可观测**：
   - `phase3_pool_selected_total`、`phase3_pool_attempt_total`
   - `/api/v1/phase3/pools` 运维接口用于快速定位 pool 缺口（installed vs ready）
+  - **调度 dry-run**：`GET /api/v1/phase3/simulate`（不跑真实 WS/音频也能验证 routing_key/required_services 的落点与 fallback 原因）
+
+### 2.1 Phase 3 能力池“精确匹配”（已落地，强隔离增强）
+
+为避免“能力更全的 pool”兜底“更小的任务集合”（例如 yourtts pool 被 core 任务抢占），新增：
+
+- **pool_match_mode**：`contains`（默认，兼容旧行为） | `exact`（集合精确匹配，忽略顺序、去重）
+- **节点归属更具体优先**：当一个节点同时匹配多个 pools 时，优先进入 `required_services` 更长（更具体）的 pool；同长度再稳定 hash 分配。
+
+推荐强隔离组合：
+- `pool_match_scope = "all_required"`
+- `pool_match_mode = "exact"`
+- `strict_pool_eligibility = true`
 
 ---
 
@@ -119,12 +132,18 @@ Phase 3 已在代码侧落地“方案 B：两级调度（Global 选 pool，pool
 
 ### 2.2 新增（核心）
 
-- `central_server/scheduler/src/phase2.rs`（Phase2Runtime + Streams inbox + routed send + Redis 去抖/限流 + 可选集成测试）
+- `central_server/scheduler/src/phase2.rs`（Phase2 模块入口：拆分后通过 `include!` 组合；对外 API 不变）
+- `central_server/scheduler/src/phase2/`（Phase2Runtime / RedisHandle / Streams / snapshot / tests 等拆分目录；**每个文件 < 500 行**）
 - `central_server/scheduler/scripts/phase2_smoketest.ps1`（双实例手工 smoke test 引导脚本）
 - `central_server/scheduler/scripts/phase2_cluster_acceptance.ps1`（Redis Cluster 自动化验收一键脚本）
 - `central_server/scheduler/scripts/redis_cluster/docker-compose.yml`（Redis Cluster（3 masters）+ tests runner）
 - `central_server/scheduler/docs/phase2_implementation.md`（Phase2 实现总览文档）
 - `central_server/scheduler/docs/phase2_streams_ops.md`（Streams/DLQ 运维排查文档）
+
+### 2.4 重要维护性改造（已完成）
+
+- **Phase2 单文件拆分**：将原 `src/phase2.rs`（超大文件）拆分为 `src/phase2/*.rs` 与 `src/phase2/tests/*.rs`，降低误改风险，便于定位与评审。
+- **验收标准**：`cargo test -q` 全量通过（含 Redis 可用时的 Phase2 测试自动跑；Redis 不可用会 skip，不影响整体）。
 
 ### 2.3 需要注意的“非核心”未跟踪文件（请在提交前处理）
 

@@ -38,6 +38,25 @@ dlq_min_idle_ms = 60000
 dlq_scan_interval_ms = 5000
 dlq_scan_count = 100
 
+[scheduler.phase2.schema_compat]
+# Phase2：Redis schema 对齐兼容层（默认关闭）
+# 用途：补写文档建议的 v1 keys（不会替换现有实现，只是额外写入，便于对齐/观察/迁移）
+enabled = false
+
+# 1) Dashboard 快照写入 Redis：{prefix}:v1:stats:snapshot（TTL）
+stats_snapshot_enabled = false
+stats_snapshot_ttl_seconds = 60
+stats_snapshot_interval_ms = 5000
+
+# 2) Node caps 扁平化 Hash：{prefix}:v1:nodes:caps:{node:<node_id>}
+node_caps_enabled = false
+# 0 表示不设置 TTL（由 presence 判断在线）；也可设置 600~1800 做诊断
+node_caps_ttl_seconds = 0
+
+# 3) Session -> Node bind（仅配对节点场景）：{prefix}:v1:sessions:bind:{session:<session_id>}
+session_bind_enabled = false
+session_bind_ttl_seconds = 3600
+
 [scheduler.phase2.redis]
 # "single" | "cluster"
 mode = "single"
@@ -78,6 +97,15 @@ fallback_scan_all_pools = true
 #   - "core_only"：只对 ASR/NMT/TTS 核心服务做 pool 级过滤（兼容性最好）
 #   - "all_required"：对 required_model_ids 全量做 pool 级过滤（更强隔离）
 pool_match_scope = "core_only"
+# - pool_match_mode：
+#   - "contains"：包含匹配（默认）：required ⊆ pool.required_services
+#   - "exact"：精确匹配：set(required) == set(pool.required_services)（忽略顺序、去重）
+pool_match_mode = "contains"
+#
+# 调度 dry-run（Phase3）：
+# - 目的：不跑真实音频/WS，也能快速验证 routing_key/required_services 会落到哪个 pool、为何 fallback
+# - 例子：
+#   GET /api/v1/phase3/simulate?routing_key=tenant-A&required=node-inference&required=nmt-m2m100&required=piper-tts
 # strict_pool_eligibility=true 时：没有 eligible pool 直接返回 NO_AVAILABLE_NODE（强隔离）
 strict_pool_eligibility = false
 

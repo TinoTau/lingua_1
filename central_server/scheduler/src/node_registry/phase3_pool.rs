@@ -135,10 +135,13 @@ fn determine_pool_for_node(cfg: &crate::config::Phase3Config, n: &super::Node) -
     if cfg.pools.is_empty() {
         return None;
     }
-    let mut matching: Vec<u16> = Vec::new();
+
+    // 收集所有匹配 pools（node.installed_services 覆盖 pool.required_services）
+    let mut matching: Vec<(u16, usize)> = Vec::new(); // (pool_id, specificity_len)
     for p in cfg.pools.iter() {
         if p.required_services.is_empty() {
-            matching.push(p.pool_id);
+            // 通配 pool：specificity=0；仅在没有更具体匹配时才会被选中
+            matching.push((p.pool_id, 0));
             continue;
         }
         let ok = p
@@ -146,18 +149,31 @@ fn determine_pool_for_node(cfg: &crate::config::Phase3Config, n: &super::Node) -
             .iter()
             .all(|rid| n.installed_services.iter().any(|s| s.service_id == *rid));
         if ok {
-            matching.push(p.pool_id);
+            matching.push((p.pool_id, p.required_services.len()));
         }
     }
     if matching.is_empty() {
         return None;
     }
     if matching.len() == 1 {
-        return Some(matching[0]);
+        return Some(matching[0].0);
     }
-    // 多个 pool 都匹配：用 node_id 做稳定 hash 分配（避免所有节点都落到第一个 pool）
-    let idx = crate::phase3::pick_index_for_key(matching.len(), cfg.hash_seed, &n.node_id);
-    Some(matching[idx])
+
+    // 多个 pool 都匹配：
+    // - 先选“更具体”的 pool（required_services 更长），避免“能力更全的节点”被分配到更通用的 pool（有利于强隔离）
+    // - 若 specificity 相同（例如两个能力相同的 pools），再用 node_id 稳定 hash 分配（避免热点倾斜）
+    let max_spec = matching.iter().map(|(_, s)| *s).max().unwrap_or(0);
+    let mut best: Vec<u16> = matching
+        .into_iter()
+        .filter(|(_, s)| *s == max_spec)
+        .map(|(pid, _)| pid)
+        .collect();
+    if best.len() == 1 {
+        return Some(best[0]);
+    }
+    best.sort();
+    let idx = crate::phase3::pick_index_for_key(best.len(), cfg.hash_seed, &n.node_id);
+    Some(best[idx])
 }
 
 

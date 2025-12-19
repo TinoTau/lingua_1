@@ -206,6 +206,10 @@ Phase 2 已在代码侧完成落地，并提供 Redis Cluster 自动化验收入
 - **资格匹配范围（pool_match_scope）**：
   - `core_only`：只按 ASR/NMT/TTS 核心服务做 pool 级过滤（兼容性最好）
   - `all_required`：按 required_model_ids 全量做 pool 级过滤（最强隔离；需要 pool.required_services 覆盖完整）
+- **匹配模式（pool_match_mode）**：
+  - `contains`（默认）：包含匹配，允许 “pool.required_services 是任务 required 的超集”
+  - `exact`：精确匹配，要求 `set(pool.required_services) == set(required)`（忽略顺序、去重）
+  - 目的：避免“能力更全的 pool”兜底“更小的任务集合”（例如 yourtts pool 被 core 任务抢占）
 - **严格模式（strict_pool_eligibility）**：当 pools 非空但没有 eligible pool 时直接失败（避免“隐式回退”破坏隔离）
 
 > 兼容性：若 `scheduler.phase3.pools` 为空，则继续沿用“hash 分桶（pool_count/hash_seed）”的旧模式。
@@ -217,10 +221,11 @@ Phase 2 已在代码侧完成落地，并提供 Redis Cluster 自动化验收入
   - `phase3_pool_attempt_total{pool,result,reason}`：每次 pool 尝试的结果与原因（支持 `missing_core_*_installed/not_ready` 低基数细分）
 - Debug API：
   - `GET /api/v1/phase3/pools`：查看每个 pool 的 total/online/ready，以及核心服务 installed/ready 覆盖与示例节点（用于快速定位）
+  - `GET /api/v1/phase3/simulate`：调度 dry-run（不跑真实 WS/音频也能验证 routing_key/required_services 的落点与 fallback 原因）
 
 #### 配置示例（节选）
 
-参考：`central_server/scheduler/config.toml` 中的 `[scheduler.phase3]` 注释示例（pools / tenant_overrides / pool_match_scope / strict_pool_eligibility）。
+参考：`central_server/scheduler/config.toml` 中的 `[scheduler.phase3]` 注释示例（pools / tenant_overrides / pool_match_scope / pool_match_mode / strict_pool_eligibility）。
 
 ---
 

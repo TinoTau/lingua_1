@@ -69,6 +69,11 @@ pub(super) async fn handle_session_init(
     // Phase 2：写入 session owner（带 TTL；用于跨实例投递）
     if let Some(rt) = state.phase2.as_ref() {
         rt.set_session_owner(&session.session_id).await;
+        // Schema compat：若是“配对节点”模式，补写 v1:sessions:bind（默认关闭）
+        if let Some(ref node_id) = paired_node_id {
+            rt.schema_set_session_bind(&session.session_id, node_id, Some(&session.trace_id))
+                .await;
+        }
     }
 
     // 初始化结果队列
@@ -159,6 +164,10 @@ pub(super) async fn handle_session_close(
     state.session_connections.unregister(&sess_id).await;
     state.result_queue.remove_session(&sess_id).await;
     state.session_manager.remove_session(&sess_id).await;
+    // Schema compat：清理 v1:sessions:bind（默认关闭）
+    if let Some(rt) = state.phase2.as_ref() {
+        rt.schema_clear_session_bind(&sess_id).await;
+    }
 
     // 发送确认
     let ack = SessionMessage::SessionCloseAck {

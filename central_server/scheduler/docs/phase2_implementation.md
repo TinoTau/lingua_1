@@ -30,6 +30,27 @@ Phase 2 的主目标是让 Scheduler 控制面支持 **横向扩展（多实例�
 
 ---
 
+## 代码结构（维护性：<500 行拆分）
+
+为降低误改风险、提升可读性，Phase2 已将原先的超大 `src/phase2.rs` 拆分为多个职责明确的文件（每个文件 < 500 行），对外模块路径与 API **保持不变**（仍通过 `crate::phase2::*` 使用）。
+
+- **入口文件**：`central_server/scheduler/src/phase2.rs`
+  - 仅保留类型定义与 `include!` 组合
+- **核心实现目录**：`central_server/scheduler/src/phase2/`
+  - `runtime_init.rs`：`Phase2Runtime` 基础初始化 / key 规划 / owner / presence 等
+  - `runtime_routing.rs`：跨实例投递入口（enqueue / routed send 的相关逻辑）
+  - `runtime_job_fsm.rs`：Job FSM（Redis + Lua）
+  - `runtime_background.rs`：后台任务启动（presence/owner 续约、inbox worker、snapshot refresher 等）
+  - `runtime_snapshot.rs`：Node snapshot 写入/刷新/清理
+  - `runtime_streams.rs`：Streams inbox worker / reclaim / DLQ
+  - `redis_handle.rs`：Redis 连接与命令封装
+  - `helpers.rs`：解析/工具函数（streams reply/pending 等）
+  - `routed_send.rs`：`send_node_message_routed` / `send_session_message_routed`
+- **测试目录**：`central_server/scheduler/src/phase2/tests/`
+  - 按 streams / snapshot / fsm / ws_e2e / cluster_acceptance 拆分
+
+---
+
 ## 配置（config.toml）
 Phase2 的配置入口为：
 - `scheduler.phase2`
@@ -152,7 +173,7 @@ Phase2 的测试已支持通过环境变量切换到 Redis Cluster：
 清理：
 - `docker compose -p lingua-scheduler-cluster-acceptance -f .\scripts\redis_cluster\docker-compose.yml down -v`
 
-关键测试（在 `src/phase2.rs`）：
+关键测试（入口仍在 `crate::phase2`，实现文件已拆分）：
 - `phase2_streams_enqueue_and_readgroup_smoke`
 - `phase2_node_snapshot_roundtrip_smoke`
 - `phase2_job_fsm_smoke`

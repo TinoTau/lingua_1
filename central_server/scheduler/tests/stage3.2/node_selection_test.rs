@@ -88,6 +88,7 @@ async fn test_phase3_capability_pools_tenant_override_and_hash() {
     p3.mode = "two_level".to_string();
     p3.fallback_scan_all_pools = true;
     p3.pool_match_scope = "core_only".to_string();
+    p3.pool_match_mode = "contains".to_string();
     p3.strict_pool_eligibility = true;
     p3.hash_seed = 0;
     p3.pools = vec![
@@ -231,6 +232,163 @@ async fn test_phase3_capability_pools_tenant_override_and_hash() {
     } else {
         assert_eq!(nid2, Some(node_for_11));
     }
+}
+
+#[tokio::test]
+async fn test_phase3_capability_pools_exact_match_and_specificity_assignment() {
+    let registry = Arc::new(NodeRegistry::new());
+    registry
+        .set_core_services_config(CoreServicesConfig::default())
+        .await;
+
+    // pool10：core（兜底）；pool12：core + optional（更具体）
+    // 期望：
+    // - node(core+optional) 归属 pool12（更具体优先）
+    // - job(core) 只匹配 pool10（exact）
+    // - job(core+optional) 只匹配 pool12（exact）
+    let mut p3 = Phase3Config::default();
+    p3.enabled = true;
+    p3.mode = "two_level".to_string();
+    p3.fallback_scan_all_pools = true;
+    p3.pool_match_scope = "all_required".to_string();
+    p3.pool_match_mode = "exact".to_string();
+    p3.strict_pool_eligibility = true;
+    p3.hash_seed = 0;
+    p3.pools = vec![
+        Phase3PoolConfig {
+            pool_id: 10,
+            name: "core".to_string(),
+            required_services: vec![
+                "node-inference".to_string(),
+                "nmt-m2m100".to_string(),
+                "piper-tts".to_string(),
+            ],
+        },
+        Phase3PoolConfig {
+            pool_id: 12,
+            name: "core+optional".to_string(),
+            required_services: vec![
+                "node-inference".to_string(),
+                "nmt-m2m100".to_string(),
+                "piper-tts".to_string(),
+                "speaker-id-ecapa".to_string(),
+                "yourtts".to_string(),
+            ],
+        },
+    ];
+    registry.set_phase3_config(p3).await;
+
+    // 注册 core 节点（应进入 pool10）
+    let cap_core = create_capability_state_with_services(&["node-inference", "nmt-m2m100", "piper-tts"]);
+    let services_core = create_installed_services(&["node-inference", "nmt-m2m100", "piper-tts"]);
+    let _ = registry
+        .register_node(
+            Some("node-core".to_string()),
+            "Core Node".to_string(),
+            "1.0.0".to_string(),
+            "linux".to_string(),
+            create_test_hardware(),
+            create_test_models("zh", "en"),
+            Some(services_core),
+            FeatureFlags {
+                emotion_detection: None,
+                voice_style_detection: None,
+                speech_rate_detection: None,
+                speech_rate_control: None,
+                speaker_identification: None,
+                persona_adaptation: None,
+            },
+            true,
+            Some(cap_core),
+        )
+        .await
+        .unwrap();
+    registry.set_node_status("node-core", NodeStatus::Ready).await;
+
+    // 注册 core+optional 节点（应进入 pool12：更具体优先）
+    let cap_opt = create_capability_state_with_services(&[
+        "node-inference",
+        "nmt-m2m100",
+        "piper-tts",
+        "speaker-id-ecapa",
+        "yourtts",
+    ]);
+    let services_opt = create_installed_services(&[
+        "node-inference",
+        "nmt-m2m100",
+        "piper-tts",
+        "speaker-id-ecapa",
+        "yourtts",
+    ]);
+    let _ = registry
+        .register_node(
+            Some("node-opt".to_string()),
+            "Opt Node".to_string(),
+            "1.0.0".to_string(),
+            "linux".to_string(),
+            create_test_hardware(),
+            create_test_models("zh", "en"),
+            Some(services_opt),
+            FeatureFlags {
+                emotion_detection: None,
+                voice_style_detection: None,
+                speech_rate_detection: None,
+                speech_rate_control: None,
+                speaker_identification: None,
+                persona_adaptation: None,
+            },
+            true,
+            Some(cap_opt),
+        )
+        .await
+        .unwrap();
+    registry.set_node_status("node-opt", NodeStatus::Ready).await;
+
+    // node-opt 应归属 pool12（更具体优先）
+    let pid_opt = registry.phase3_node_pool_id("node-opt").await;
+    assert_eq!(pid_opt, Some(12));
+
+    // 1) core job：应只匹配 pool10，选择 node-core
+    let required_core = vec![
+        "node-inference".to_string(),
+        "nmt-m2m100".to_string(),
+        "piper-tts".to_string(),
+    ];
+    let (nid1, dbg1, _bd1) = registry
+        .select_node_with_models_two_level_excluding_with_breakdown(
+            "tenant-core",
+            "zh",
+            "en",
+            &required_core,
+            true,
+            None,
+            Some(&CoreServicesConfig::default()),
+        )
+        .await;
+    assert_eq!(dbg1.selected_pool, Some(10));
+    assert_eq!(nid1, Some("node-core".to_string()));
+
+    // 2) core+optional job：应只匹配 pool12，选择 node-opt
+    let required_opt = vec![
+        "node-inference".to_string(),
+        "nmt-m2m100".to_string(),
+        "piper-tts".to_string(),
+        "speaker-id-ecapa".to_string(),
+        "yourtts".to_string(),
+    ];
+    let (nid2, dbg2, _bd2) = registry
+        .select_node_with_models_two_level_excluding_with_breakdown(
+            "tenant-opt",
+            "zh",
+            "en",
+            &required_opt,
+            true,
+            None,
+            Some(&CoreServicesConfig::default()),
+        )
+        .await;
+    assert_eq!(dbg2.selected_pool, Some(12));
+    assert_eq!(nid2, Some("node-opt".to_string()));
 }
 
 #[tokio::test]

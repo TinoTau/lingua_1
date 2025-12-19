@@ -1,5 +1,6 @@
 use super::{DispatchExcludeReason, NodeRegistry};
 use crate::messages::{FeatureFlags, NodeStatus};
+use serde::Serialize;
 use std::time::Instant;
 use tracing::debug;
 
@@ -8,7 +9,7 @@ use super::validation::{
     node_supports_features,
 };
 
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default, Clone, Serialize)]
 pub struct NoAvailableNodeBreakdown {
     pub total_nodes: usize,
     pub offline: usize,
@@ -44,7 +45,7 @@ impl NoAvailableNodeBreakdown {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct Phase3TwoLevelDebug {
     pub pool_count: u16,
     pub preferred_pool: u16,
@@ -314,6 +315,12 @@ impl NodeRegistry {
         let cfg = self.phase3.read().await.clone();
         let using_capability_pools = !cfg.pools.is_empty();
 
+        fn canonicalize_set(mut v: Vec<String>) -> Vec<String> {
+            v.sort();
+            v.dedup();
+            v
+        }
+
         // 选择“候选 pools”
         // - 兼容模式：cfg.pools 为空 -> 继续用 hash 分桶（0..pool_count）
         // - 强隔离：cfg.pools 非空 -> pool_id 来自配置（按能力分配节点）
@@ -343,6 +350,9 @@ impl NodeRegistry {
                     }
                 };
 
+                let match_mode = cfg.pool_match_mode.as_str();
+                let required_for_pool_set = canonicalize_set(required_for_pool.clone());
+
                 let all_pool_ids: Vec<u16> = cfg.pools.iter().map(|p| p.pool_id).collect();
                 let mut eligible: Vec<u16> = Vec::new();
                 for p in cfg.pools.iter() {
@@ -355,9 +365,15 @@ impl NodeRegistry {
                         eligible.push(p.pool_id);
                         continue;
                     }
-                    let ok = required_for_pool
-                        .iter()
-                        .all(|rid| p.required_services.iter().any(|x| x == rid));
+                    let ok = if match_mode == "exact" {
+                        // 精确匹配：按集合相等（忽略顺序、去重）
+                        canonicalize_set(p.required_services.clone()) == required_for_pool_set
+                    } else {
+                        // contains（默认）：包含匹配
+                        required_for_pool
+                            .iter()
+                            .all(|rid| p.required_services.iter().any(|x| x == rid))
+                    };
                     if ok {
                         eligible.push(p.pool_id);
                     }

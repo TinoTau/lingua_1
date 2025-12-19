@@ -97,6 +97,13 @@ pub struct Phase3Config {
     #[serde(default = "default_phase3_pool_match_scope")]
     pub pool_match_scope: String,
 
+    /// pool 匹配模式：
+    /// - "contains"：包含匹配（默认）：required ⊆ pool.required_services
+    /// - "exact"：精确匹配：set(required) == set(pool.required_services)
+    ///   - 运维语义：用于“强隔离”，避免更大/更全的 pool 兜底更小的任务集合
+    #[serde(default = "default_phase3_pool_match_mode")]
+    pub pool_match_mode: String,
+
     /// 若为 true：当 pools 非空但没有任何 eligible pool 时，直接返回 NO_AVAILABLE_NODE（强隔离）
     /// 若为 false：eligible 为空时回退到“遍历所有配置 pools”（兼容模式）
     #[serde(default)]
@@ -139,6 +146,10 @@ fn default_phase3_pool_match_scope() -> String {
     "core_only".to_string()
 }
 
+fn default_phase3_pool_match_mode() -> String {
+    "contains".to_string()
+}
+
 impl Default for Phase3Config {
     fn default() -> Self {
         Self {
@@ -150,6 +161,7 @@ impl Default for Phase3Config {
             pools: vec![],
             tenant_overrides: vec![],
             pool_match_scope: default_phase3_pool_match_scope(),
+            pool_match_mode: default_phase3_pool_match_mode(),
             strict_pool_eligibility: false,
         }
     }
@@ -206,6 +218,9 @@ pub struct Phase2Config {
     /// Phase 2：节点快照同步（使任意 Scheduler 都拥有全量节点视图）
     #[serde(default)]
     pub node_snapshot: Phase2NodeSnapshotConfig,
+    /// Phase 2：Redis schema 对齐兼容层（默认关闭；用于补写文档建议的 v1 keys）
+    #[serde(default)]
+    pub schema_compat: Phase2SchemaCompatConfig,
 }
 
 fn default_phase2_instance_id() -> String {
@@ -270,6 +285,63 @@ impl Default for Phase2Config {
             dlq_scan_interval_ms: default_phase2_dlq_scan_interval_ms(),
             dlq_scan_count: default_phase2_dlq_scan_count(),
             node_snapshot: Phase2NodeSnapshotConfig::default(),
+            schema_compat: Phase2SchemaCompatConfig::default(),
+        }
+    }
+}
+
+/// Phase2：Redis schema 对齐兼容层（按文档建议补写 v1 keys）
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Phase2SchemaCompatConfig {
+    /// 是否启用 schema_compat（总开关）
+    #[serde(default)]
+    pub enabled: bool,
+    /// 是否写入 `v1:stats:snapshot`（Dashboard 快照写入 Redis）
+    #[serde(default)]
+    pub stats_snapshot_enabled: bool,
+    /// stats snapshot TTL（秒）
+    #[serde(default = "default_phase2_stats_snapshot_ttl_seconds")]
+    pub stats_snapshot_ttl_seconds: u64,
+    /// stats snapshot 写入间隔（毫秒）
+    #[serde(default = "default_phase2_stats_snapshot_interval_ms")]
+    pub stats_snapshot_interval_ms: u64,
+    /// 是否写入 `v1:nodes:caps:{node:<id>}`（Hash，扁平化字段）
+    #[serde(default)]
+    pub node_caps_enabled: bool,
+    /// node caps TTL（秒；0 表示不设置 TTL）
+    #[serde(default)]
+    pub node_caps_ttl_seconds: u64,
+    /// 是否写入 `v1:sessions:bind:{session:<id>}`（Hash，仅对“配对节点”场景）
+    #[serde(default)]
+    pub session_bind_enabled: bool,
+    /// session bind TTL（秒）
+    #[serde(default = "default_phase2_session_bind_ttl_seconds")]
+    pub session_bind_ttl_seconds: u64,
+}
+
+fn default_phase2_stats_snapshot_ttl_seconds() -> u64 {
+    60
+}
+
+fn default_phase2_stats_snapshot_interval_ms() -> u64 {
+    5000
+}
+
+fn default_phase2_session_bind_ttl_seconds() -> u64 {
+    3600
+}
+
+impl Default for Phase2SchemaCompatConfig {
+    fn default() -> Self {
+        Self {
+            enabled: false,
+            stats_snapshot_enabled: false,
+            stats_snapshot_ttl_seconds: default_phase2_stats_snapshot_ttl_seconds(),
+            stats_snapshot_interval_ms: default_phase2_stats_snapshot_interval_ms(),
+            node_caps_enabled: false,
+            node_caps_ttl_seconds: 0,
+            session_bind_enabled: false,
+            session_bind_ttl_seconds: default_phase2_session_bind_ttl_seconds(),
         }
     }
 }
