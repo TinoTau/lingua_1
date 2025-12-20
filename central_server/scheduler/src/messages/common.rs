@@ -109,6 +109,23 @@ pub struct ServiceTimings {
     pub total_ms: Option<u64>,
 }
 
+/// 网络传输耗时信息（毫秒）
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NetworkTimings {
+    /// Web端到调度服务器的传输耗时（毫秒）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub web_to_scheduler_ms: Option<u64>,
+    /// 调度服务器到节点端的传输耗时（毫秒）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub scheduler_to_node_ms: Option<u64>,
+    /// 节点端返回结果到调度服务器的传输耗时（毫秒）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub node_to_scheduler_ms: Option<u64>,
+    /// 调度服务器返回结果到Web端的传输耗时（毫秒）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub scheduler_to_web_ms: Option<u64>,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ExtraResult {
     #[serde(skip_serializing_if = "Option::is_none")]

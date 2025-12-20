@@ -211,9 +211,13 @@ impl ASREngine {
                             let text = &segment_debug[text_start..text_start + end_idx];
                             let text_trimmed = text.trim();
                             // 在segment级别进行过滤，跳过带括号等无意义的文本
-                            if !text_trimmed.is_empty() && !crate::text_filter::is_meaningless_transcript(text_trimmed) {
-                                full_text.push_str(text_trimmed);
-                                full_text.push(' ');
+                            if !text_trimmed.is_empty() {
+                                if crate::text_filter::is_meaningless_transcript(text_trimmed) {
+                                    tracing::debug!("[ASR] Filtering segment at transcription level: \"{}\"", text_trimmed);
+                                } else {
+                                    full_text.push_str(text_trimmed);
+                                    full_text.push(' ');
+                                }
                             }
                         }
                     }
@@ -221,23 +225,27 @@ impl ASREngine {
             }
 
             let raw_text = full_text.trim().to_string();
-            // 对最终拼接的文本再次进行过滤（双重保险）
-            let filtered_text = if raw_text.is_empty() || crate::text_filter::is_meaningless_transcript(&raw_text) {
-                String::new()
-            } else {
-                raw_text
-            };
+            // 对最终拼接的文本使用 filter_asr_text 进行更严格的过滤（包括片段级别的过滤）
+            let filtered_text = crate::text_filter::filter_asr_text(&raw_text);
+            if raw_text != filtered_text {
+                tracing::info!("[ASR] Text filtered: \"{}\" -> \"{}\"", raw_text, filtered_text);
+            }
+            if !filtered_text.is_empty() && (filtered_text.contains('(') || filtered_text.contains('（') || filtered_text.contains('[') || filtered_text.contains('【')) {
+                tracing::warn!("[ASR] ⚠️ Filtered text still contains brackets: \"{}\"", filtered_text);
+            }
             Ok::<(String, Option<String>), anyhow::Error>((filtered_text, language))
         })
         .await
         .map_err(|e| anyhow!("Whisper inference task panicked: {}", e))??;
 
-        // 对最终结果也进行过滤
-        let filtered_text = if text.is_empty() || crate::text_filter::is_meaningless_transcript(&text) {
-            String::new()
-        } else {
-            text.trim().to_string()
-        };
+        // 对最终结果使用 filter_asr_text 进行更严格的过滤（包括片段级别的过滤）
+        let filtered_text = crate::text_filter::filter_asr_text(&text);
+        if text != filtered_text {
+            tracing::info!("[ASR] Final text filtered in transcribe_f32: \"{}\" -> \"{}\"", text, filtered_text);
+        }
+        if !filtered_text.is_empty() && (filtered_text.contains('(') || filtered_text.contains('（') || filtered_text.contains('[') || filtered_text.contains('【')) {
+            tracing::warn!("[ASR] ⚠️ Final text in transcribe_f32 still contains brackets: \"{}\"", filtered_text);
+        }
         Ok(filtered_text)
     }
 
@@ -358,9 +366,13 @@ impl ASREngine {
                             let text = &segment_debug[text_start..text_start + end_idx];
                             let text_trimmed = text.trim();
                             // 在segment级别进行过滤，跳过带括号等无意义的文本
-                            if !text_trimmed.is_empty() && !crate::text_filter::is_meaningless_transcript(text_trimmed) {
-                                full_text.push_str(text_trimmed);
-                                full_text.push(' ');
+                            if !text_trimmed.is_empty() {
+                                if crate::text_filter::is_meaningless_transcript(text_trimmed) {
+                                    tracing::debug!("[ASR] Filtering segment at transcription level: \"{}\"", text_trimmed);
+                                } else {
+                                    full_text.push_str(text_trimmed);
+                                    full_text.push(' ');
+                                }
                             }
                         }
                     }
@@ -368,23 +380,27 @@ impl ASREngine {
             }
 
             let raw_text = full_text.trim().to_string();
-            // 对最终拼接的文本再次进行过滤（双重保险）
-            let filtered_text = if raw_text.is_empty() || crate::text_filter::is_meaningless_transcript(&raw_text) {
-                String::new()
-            } else {
-                raw_text
-            };
+            // 对最终拼接的文本使用 filter_asr_text 进行更严格的过滤（包括片段级别的过滤）
+            let filtered_text = crate::text_filter::filter_asr_text(&raw_text);
+            if raw_text != filtered_text {
+                tracing::info!("[ASR] Text filtered: \"{}\" -> \"{}\"", raw_text, filtered_text);
+            }
+            if !filtered_text.is_empty() && (filtered_text.contains('(') || filtered_text.contains('（') || filtered_text.contains('[') || filtered_text.contains('【')) {
+                tracing::warn!("[ASR] ⚠️ Filtered text still contains brackets: \"{}\"", filtered_text);
+            }
             Ok::<(String, Option<String>), anyhow::Error>((filtered_text, language))
         })
         .await
         .map_err(|e| anyhow!("Whisper inference task panicked: {}", e))??;
 
-        // 对部分结果也进行过滤
-        let filtered_text = if text.is_empty() || crate::text_filter::is_meaningless_transcript(&text) {
-            String::new()
-        } else {
-            text.trim().to_string()
-        };
+        // 对部分结果使用 filter_asr_text 进行更严格的过滤（包括片段级别的过滤）
+        let filtered_text = crate::text_filter::filter_asr_text(&text);
+        if text != filtered_text {
+            tracing::info!("[ASR] Partial text filtered: \"{}\" -> \"{}\"", text, filtered_text);
+        }
+        if !filtered_text.is_empty() && (filtered_text.contains('(') || filtered_text.contains('（') || filtered_text.contains('[') || filtered_text.contains('【')) {
+            tracing::warn!("[ASR] ⚠️ Partial filtered text still contains brackets: \"{}\"", filtered_text);
+        }
         if filtered_text.is_empty() {
             Ok(None)
         } else {
@@ -455,9 +471,13 @@ impl ASREngine {
                             let text = &segment_debug[text_start..text_start + end_idx];
                             let text_trimmed = text.trim();
                             // 在segment级别进行过滤，跳过带括号等无意义的文本
-                            if !text_trimmed.is_empty() && !crate::text_filter::is_meaningless_transcript(text_trimmed) {
-                                full_text.push_str(text_trimmed);
-                                full_text.push(' ');
+                            if !text_trimmed.is_empty() {
+                                if crate::text_filter::is_meaningless_transcript(text_trimmed) {
+                                    tracing::debug!("[ASR] Filtering segment at transcription level: \"{}\"", text_trimmed);
+                                } else {
+                                    full_text.push_str(text_trimmed);
+                                    full_text.push(' ');
+                                }
                             }
                         }
                     }
@@ -465,23 +485,27 @@ impl ASREngine {
             }
 
             let raw_text = full_text.trim().to_string();
-            // 对最终拼接的文本再次进行过滤（双重保险）
-            let filtered_text = if raw_text.is_empty() || crate::text_filter::is_meaningless_transcript(&raw_text) {
-                String::new()
-            } else {
-                raw_text
-            };
+            // 对最终拼接的文本使用 filter_asr_text 进行更严格的过滤（包括片段级别的过滤）
+            let filtered_text = crate::text_filter::filter_asr_text(&raw_text);
+            if raw_text != filtered_text {
+                tracing::info!("[ASR] Text filtered: \"{}\" -> \"{}\"", raw_text, filtered_text);
+            }
+            if !filtered_text.is_empty() && (filtered_text.contains('(') || filtered_text.contains('（') || filtered_text.contains('[') || filtered_text.contains('【')) {
+                tracing::warn!("[ASR] ⚠️ Filtered text still contains brackets: \"{}\"", filtered_text);
+            }
             Ok::<(String, Option<String>), anyhow::Error>((filtered_text, language))
         })
         .await
         .map_err(|e| anyhow!("Whisper inference task panicked: {}", e))??;
 
-        // 对最终结果也进行过滤（三重保险，确保带括号的文本被过滤）
-        let filtered_text = if text.is_empty() || crate::text_filter::is_meaningless_transcript(&text) {
-            String::new()
-        } else {
-            text.trim().to_string()
-        };
+        // 对最终结果再次使用 filter_asr_text 进行过滤（确保带括号的文本被过滤）
+        let filtered_text = crate::text_filter::filter_asr_text(&text);
+        if text != filtered_text {
+            tracing::info!("[ASR] Final result text filtered: \"{}\" -> \"{}\"", text, filtered_text);
+        }
+        if !filtered_text.is_empty() && (filtered_text.contains('(') || filtered_text.contains('（') || filtered_text.contains('[') || filtered_text.contains('【')) {
+            tracing::warn!("[ASR] ⚠️ Final result filtered text still contains brackets: \"{}\"", filtered_text);
+        }
         Ok(filtered_text)
     }
     

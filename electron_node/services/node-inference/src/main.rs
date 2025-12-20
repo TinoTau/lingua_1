@@ -12,7 +12,6 @@ use tracing_subscriber::Layer;
 
 // 导入库模块
 use lingua_node_inference::{InferenceService, http_server};
-use lingua_node_inference::text_filter;
 
 mod logging_config;
 
@@ -82,6 +81,14 @@ async fn main() -> Result<()> {
     
     // 初始化 ASR 文本过滤配置
     lingua_node_inference::text_filter::init_config();
+    // 验证配置加载
+    let config = lingua_node_inference::text_filter::config::get_config();
+    tracing::info!(
+        filter_brackets = config.rules.filter_brackets,
+        bracket_chars_count = config.rules.bracket_chars.len(),
+        exact_matches_count = config.rules.exact_matches.len(),
+        "ASR 文本过滤配置已加载"
+    );
 
     let models_dir = PathBuf::from(std::env::var("MODELS_DIR").unwrap_or_else(|_| "./models".to_string()));
     

@@ -18,7 +18,11 @@ static CONFIG_INIT: OnceLock<()> = OnceLock::new();
 /// 初始化配置（在服务启动时调用）
 pub fn init_config() {
     CONFIG_INIT.get_or_init(|| {
-        let _ = config::init_config_from_file();
+        tracing::info!("[ASR Filter] Initializing config...");
+        let result = config::init_config_from_file();
+        if let Err(e) = result {
+            tracing::error!("[ASR Filter] Failed to initialize config: {}", e);
+        }
     });
 }
 
@@ -42,6 +46,16 @@ pub fn is_meaningless_transcript_with_context(text: &str, context: &str) -> bool
     let config = get_config();
     let rules = &config.rules;
     
+    // 调试：如果文本包含括号，记录配置状态
+    if text.contains('(') || text.contains('（') || text.contains('[') || text.contains('【') {
+        tracing::warn!(
+            "[ASR Filter Debug] 🔍 Checking text with brackets: \"{}\", filter_brackets={}, bracket_chars={:?}",
+            text,
+            rules.filter_brackets,
+            rules.bracket_chars
+        );
+    }
+    
     let text_trimmed = text.trim();
     
     // 1. 检查空文本
@@ -55,11 +69,18 @@ pub fn is_meaningless_transcript_with_context(text: &str, context: &str) -> bool
     }
     
     // 3. 检查括号（使用配置文件中的括号字符列表）
+    // 人类说话不可能出现括号，所以所有带括号的文本都应该被过滤
     if rules.filter_brackets {
         for bracket_char in &rules.bracket_chars {
             if text_trimmed.contains(bracket_char) {
+                tracing::warn!("[ASR Filter] ✅ Filtering text with bracket '{}': \"{}\" (filter_brackets={})", bracket_char, text_trimmed, rules.filter_brackets);
                 return true;
             }
+        }
+    } else {
+        // 如果括号过滤被禁用，记录警告
+        if text_trimmed.contains('(') || text_trimmed.contains('（') || text_trimmed.contains('[') || text_trimmed.contains('【') {
+            tracing::warn!("[ASR Filter] ⚠️ Text contains brackets but filter_brackets is disabled: \"{}\"", text_trimmed);
         }
     }
     
@@ -93,6 +114,7 @@ pub fn is_meaningless_transcript_with_context(text: &str, context: &str) -> bool
     // 5. 检查精确匹配
     for pattern in &rules.exact_matches {
         if text_trimmed.eq_ignore_ascii_case(pattern) {
+            tracing::info!("[ASR Filter] ✅ Filtering exact match: \"{}\" (pattern: \"{}\")", text_trimmed, pattern);
             return true;
         }
     }
@@ -179,6 +201,7 @@ pub fn is_meaningless_transcript(text: &str) -> bool {
 /// 过滤 ASR 文本中的无意义内容
 /// 
 /// 这个函数会检查文本是否为无意义内容，如果是则返回空字符串，否则返回原文本。
+/// 同时会检查文本中是否包含多个无意义片段（用引号或其他分隔符分隔）。
 /// 
 /// # Arguments
 /// * `text` - 原始 ASR 识别文本
@@ -186,10 +209,175 @@ pub fn is_meaningless_transcript(text: &str) -> bool {
 /// # Returns
 /// 返回过滤后的文本（如果被过滤则返回空字符串）
 pub fn filter_asr_text(text: &str) -> String {
-    if is_meaningless_transcript(text) {
+    let text_trimmed = text.trim();
+    
+    // 记录每次调用（用于调试）
+    if text_trimmed.contains('(') || text_trimmed.contains('（') || text_trimmed.contains('[') || text_trimmed.contains('【') {
+        tracing::warn!("[ASR Filter] 🔍 filter_asr_text called with bracketed text: \"{}\"", text_trimmed);
+    }
+    
+    // 1. 检查整个文本是否为无意义内容
+    if is_meaningless_transcript(text_trimmed) {
+        tracing::warn!("[ASR Filter] ✅ Filtering entire text as meaningless: \"{}\"", text_trimmed);
         return String::new();
     }
-    text.trim().to_string()
+    
+    // 2. 如果文本包含括号，尝试提取括号内的内容和括号外的内容
+    // 例如："(字幕:J Chong) 謝謝大家收看" 应该被过滤，因为包含括号
+    // 或者："謝謝大家收看 (字幕:J Chong)" 应该过滤掉括号部分
+    let config = get_config();
+    let rules = &config.rules;
+    
+    // 检查文本是否包含任何括号字符
+    let has_brackets = rules.bracket_chars.iter().any(|bc| text_trimmed.contains(bc));
+    
+    if has_brackets {
+        // 如果文本包含括号，尝试智能分割
+        // 使用正则表达式或简单的括号匹配来提取括号内的内容
+        let mut segments: Vec<String> = Vec::new();
+        let mut current_segment = String::new();
+        let mut in_brackets = false;
+        let mut bracket_depth = 0;
+        let mut bracket_start_char: Option<char> = None;
+        
+        // 定义括号对
+        let bracket_pairs: Vec<(char, char)> = vec![
+            ('(', ')'),
+            ('（', '）'),
+            ('[', ']'),
+            ('【', '】'),
+        ];
+        
+        for ch in text_trimmed.chars() {
+            // 检查是否是开括号
+            let is_open_bracket = bracket_pairs.iter().any(|(open, _)| *open == ch);
+            
+            if is_open_bracket && !in_brackets {
+                // 开始一个新的括号块
+                if !current_segment.trim().is_empty() {
+                    segments.push(current_segment.trim().to_string());
+                    current_segment.clear();
+                }
+                in_brackets = true;
+                bracket_depth = 1;
+                bracket_start_char = Some(ch);
+                current_segment.push(ch);
+            } else if in_brackets {
+                current_segment.push(ch);
+                // 检查是否是匹配的闭括号
+                let is_matching_close = if let Some(start_char) = bracket_start_char {
+                    bracket_pairs.iter().any(|(open, close)| *open == start_char && *close == ch)
+                } else {
+                    false
+                };
+                
+                if is_open_bracket && bracket_start_char == Some(ch) {
+                    bracket_depth += 1;
+                } else if is_matching_close {
+                    bracket_depth -= 1;
+                    if bracket_depth == 0 {
+                        // 括号块结束
+                        let bracket_content = current_segment.trim().to_string();
+                        // 检查括号内容是否为无意义
+                        // 注意：bracket_content 包含括号本身，如 "(空)"，需要检查括号内的内容
+                        let content_without_brackets = bracket_content
+                            .trim_start_matches(|c: char| c == '(' || c == '（' || c == '[' || c == '【')
+                            .trim_end_matches(|c: char| c == ')' || c == '）' || c == ']' || c == '】')
+                            .trim();
+                        
+                        if is_meaningless_transcript(&bracket_content) || is_meaningless_transcript(content_without_brackets) {
+                            tracing::info!("[ASR Filter] Filtering bracketed content: \"{}\" (content: \"{}\")", bracket_content, content_without_brackets);
+                        } else {
+                            // 如果括号内容有意义，保留它（虽然通常不应该发生）
+                            tracing::debug!("[ASR Filter] Keeping bracketed content (unexpected): \"{}\"", bracket_content);
+                            segments.push(bracket_content);
+                        }
+                        current_segment.clear();
+                        in_brackets = false;
+                        bracket_start_char = None;
+                    }
+                }
+            } else {
+                // 不在括号内，正常字符
+                current_segment.push(ch);
+            }
+        }
+        
+        // 添加最后一个片段（如果有）
+        if !current_segment.trim().is_empty() {
+            segments.push(current_segment.trim().to_string());
+        }
+        
+        // 过滤掉所有无意义的片段
+        let filtered_segments: Vec<String> = segments
+            .into_iter()
+            .filter(|seg| {
+                let seg_trimmed = seg.trim();
+                if seg_trimmed.is_empty() {
+                    false
+                } else {
+                    let is_meaningless = is_meaningless_transcript(seg_trimmed);
+                    if is_meaningless {
+                        tracing::info!("[ASR Filter] Filtering segment: \"{}\"", seg_trimmed);
+                    }
+                    !is_meaningless
+                }
+            })
+            .collect();
+        
+        // 如果所有片段都被过滤掉了，返回空字符串
+        if filtered_segments.is_empty() {
+            tracing::info!("[ASR Filter] All segments filtered, returning empty string for text: \"{}\"", text_trimmed);
+            return String::new();
+        }
+        
+        // 重新组合过滤后的文本
+        let filtered_text = filtered_segments.join(" ").trim().to_string();
+        
+        // 对最终结果再次检查
+        if is_meaningless_transcript(&filtered_text) {
+            return String::new();
+        }
+        
+        return filtered_text;
+    }
+    
+    // 3. 如果没有括号，检查文本中是否包含多个用引号分隔的无意义片段
+    // 例如："謝謝大家收看""(字幕:J Chong)""(空)"
+    let quote_segments: Vec<&str> = text_trimmed
+        .split('"')
+        .filter(|s| !s.trim().is_empty())
+        .collect();
+    
+    // 如果所有片段都是无意义的，则过滤整个文本
+    if !quote_segments.is_empty() && quote_segments.iter().all(|seg| is_meaningless_transcript(seg.trim())) {
+        tracing::debug!("[ASR Filter] Filtering text with all meaningless quote segments: \"{}\"", text_trimmed);
+        return String::new();
+    }
+    
+    // 4. 过滤掉文本中的无意义片段，保留有意义的片段
+    let mut filtered_segments = Vec::new();
+    for segment in quote_segments {
+        let segment_trimmed = segment.trim();
+        if !segment_trimmed.is_empty() && !is_meaningless_transcript(segment_trimmed) {
+            filtered_segments.push(segment_trimmed);
+        }
+    }
+    
+    // 如果过滤后没有有意义的片段，返回空字符串
+    if filtered_segments.is_empty() {
+        return String::new();
+    }
+    
+    // 5. 重新组合过滤后的文本
+    let filtered_text = filtered_segments.join(" ");
+    
+    // 6. 对最终结果再次检查
+    if is_meaningless_transcript(&filtered_text) {
+        return String::new();
+    }
+    
+    filtered_text.trim().to_string()
 }
 
 #[cfg(test)]
@@ -215,6 +403,19 @@ mod tests {
         assert!(is_meaningless_transcript("thank you for watching"));
         assert!(is_meaningless_transcript("Thanks for watching"));
         assert!(!is_meaningless_transcript("谢谢你的帮助"));
+    }
+
+    #[test]
+    fn test_filter_asr_text_with_brackets() {
+        init_config();
+        // 测试包含括号的文本应该被过滤
+        assert_eq!(filter_asr_text("(字幕:J Chong) 謝謝大家收看"), "");
+        assert_eq!(filter_asr_text("謝謝大家收看 (字幕:J Chong)"), "");
+        assert_eq!(filter_asr_text("(字幕:J Chong)"), "");
+        assert_eq!(filter_asr_text("謝謝大家收看"), "");
+        // 测试正常文本应该保留
+        assert_eq!(filter_asr_text("你好世界"), "你好世界");
+        assert_eq!(filter_asr_text("这是正常的文本"), "这是正常的文本");
     }
 
     #[test]

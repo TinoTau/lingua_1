@@ -64,6 +64,7 @@ pub(super) async fn handle_utterance(
         enable_streaming_asr,
         partial_update_interval_ms,
         trace_id.clone(), // Use trace_id from Utterance or Session
+        None, // Utterance 消息没有客户端时间戳
     )
     .await?;
 

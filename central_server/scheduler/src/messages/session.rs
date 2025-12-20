@@ -97,6 +97,9 @@ pub enum SessionMessage {
         is_final: bool,
         #[serde(skip_serializing_if = "Option::is_none")]
         payload: Option<String>, // base64 encoded PCM16
+        /// 客户端发送时间戳（毫秒，UTC时区）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        client_timestamp_ms: Option<i64>,
     },
     #[serde(rename = "translation_result")]
     TranslationResult {
@@ -120,6 +123,12 @@ pub enum SessionMessage {
         /// 各服务耗时信息（从节点返回的 extra.service_timings 中提取）
         #[serde(skip_serializing_if = "Option::is_none")]
         service_timings: Option<crate::messages::common::ServiceTimings>,
+        /// 网络传输耗时信息
+        #[serde(skip_serializing_if = "Option::is_none")]
+        network_timings: Option<crate::messages::common::NetworkTimings>,
+        /// 调度服务器发送结果到Web端的时间戳（毫秒，UTC时区）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        scheduler_sent_at_ms: Option<i64>,
     },
     #[serde(rename = "asr_partial")]
     AsrPartial {

@@ -20,6 +20,8 @@ export class App {
   private audioMixer: AudioMixer;
   private config: Config;
   private audioBuffer: Float32Array[] = [];
+  // 静音检测阈值（RMS 值，范围 0-1，默认 0.01）
+  private silenceThreshold: number = 0.01;
   // 当前 utterance 的 trace_id 和 group_id（用于 TTS_PLAY_ENDED）
   private currentTraceId: string | null = null;
   private currentGroupId: string | null = null;
@@ -153,10 +155,38 @@ export class App {
   }
 
   /**
+   * 检测音频块是否为静音
+   * @param audioData 音频数据（Float32Array）
+   * @returns 如果是静音返回 true，否则返回 false
+   */
+  private isSilence(audioData: Float32Array): boolean {
+    if (audioData.length === 0) {
+      return true;
+    }
+
+    // 计算 RMS (Root Mean Square) 值
+    let sumSquares = 0;
+    for (let i = 0; i < audioData.length; i++) {
+      const sample = audioData[i];
+      sumSquares += sample * sample;
+    }
+    const rms = Math.sqrt(sumSquares / audioData.length);
+
+    // 如果 RMS 值低于阈值，认为是静音
+    return rms < this.silenceThreshold;
+  }
+
+  /**
    * 音频帧处理
    */
   private onAudioFrame(audioData: Float32Array): void {
     if (this.stateMachine.getState() !== SessionState.INPUT_RECORDING) {
+      return;
+    }
+
+    // 检测当前帧是否为静音
+    if (this.isSilence(audioData)) {
+      // 静音帧不发送，直接丢弃
       return;
     }
 
@@ -167,7 +197,10 @@ export class App {
     // 这里简化处理，实际应该按时间间隔发送
     if (this.audioBuffer.length >= 10) { // 假设每 10ms 一帧，10 帧 = 100ms
       const chunk = this.concatAudioBuffers(this.audioBuffer.splice(0, 10));
-      this.wsClient.sendAudioChunk(chunk, false);
+      // 再次检测整个块是否为静音（防止累积的静音帧）
+      if (!this.isSilence(chunk)) {
+        this.wsClient.sendAudioChunk(chunk, false);
+      }
     }
   }
 
@@ -176,11 +209,14 @@ export class App {
    */
   private onSilenceDetected(): void {
     if (this.stateMachine.getState() === SessionState.INPUT_RECORDING) {
-      // 发送剩余的音频数据
+      // 发送剩余的音频数据（如果不是静音）
       if (this.audioBuffer.length > 0) {
         const chunk = this.concatAudioBuffers(this.audioBuffer);
         this.audioBuffer = [];
-        this.wsClient.sendAudioChunk(chunk, false);
+        // 只发送非静音数据
+        if (!this.isSilence(chunk)) {
+          this.wsClient.sendAudioChunk(chunk, false);
+        }
       }
       
       // 发送结束帧
@@ -220,17 +256,42 @@ export class App {
         console.log('译文 (NMT):', message.text_translated);
         if (message.service_timings) {
           const timings = message.service_timings;
-          console.log('处理时间:', {
+          console.log('服务耗时:', {
             ASR: timings.asr_ms ? `${timings.asr_ms}ms` : 'N/A',
             NMT: timings.nmt_ms ? `${timings.nmt_ms}ms` : 'N/A',
             TTS: timings.tts_ms ? `${timings.tts_ms}ms` : 'N/A',
             Total: timings.total_ms ? `${timings.total_ms}ms` : 'N/A'
           });
         }
+        if (message.network_timings) {
+          const network = message.network_timings;
+          const networkInfo: any = {};
+          if (network.web_to_scheduler_ms !== undefined) networkInfo['Web→调度'] = `${network.web_to_scheduler_ms}ms`;
+          if (network.scheduler_to_node_ms !== undefined) networkInfo['调度→节点'] = `${network.scheduler_to_node_ms}ms`;
+          if (network.node_to_scheduler_ms !== undefined) networkInfo['节点→调度'] = `${network.node_to_scheduler_ms}ms`;
+          if (message.scheduler_sent_at_ms) {
+            const nowMs = Date.now();
+            const schedulerToWebMs = nowMs - message.scheduler_sent_at_ms;
+            if (schedulerToWebMs >= 0) {
+              networkInfo['调度→Web'] = `${schedulerToWebMs}ms`;
+            }
+          } else if (network.scheduler_to_web_ms !== undefined) {
+            networkInfo['调度→Web'] = `${network.scheduler_to_web_ms}ms`;
+          }
+          if (Object.keys(networkInfo).length > 0) {
+            console.log('网络传输耗时:', networkInfo);
+          }
+        }
         console.log('===============');
         
         // 更新 UI 显示翻译结果
-        this.displayTranslationResult(message.text_asr, message.text_translated, message.service_timings);
+        this.displayTranslationResult(
+          message.text_asr,
+          message.text_translated,
+          message.service_timings,
+          message.network_timings,
+          message.scheduler_sent_at_ms
+        );
         
         // 处理 TTS 音频（如果存在）
         if (message.tts_audio) {
@@ -345,11 +406,15 @@ export class App {
    * @param originalText 原文（ASR）
    * @param translatedText 译文（NMT）
    * @param serviceTimings 服务耗时信息
+   * @param networkTimings 网络传输耗时信息
+   * @param schedulerSentAtMs 调度服务器发送结果到Web端的时间戳（毫秒，UTC时区）
    */
   private displayTranslationResult(
     originalText: string,
     translatedText: string,
-    serviceTimings?: { asr_ms?: number; nmt_ms?: number; tts_ms?: number; total_ms?: number }
+    serviceTimings?: { asr_ms?: number; nmt_ms?: number; tts_ms?: number; total_ms?: number },
+    networkTimings?: { web_to_scheduler_ms?: number; scheduler_to_node_ms?: number; node_to_scheduler_ms?: number; scheduler_to_web_ms?: number },
+    schedulerSentAtMs?: number
   ): void {
     // 查找或创建翻译结果显示容器
     let resultContainer = document.getElementById('translation-result-container');
@@ -383,30 +448,75 @@ export class App {
     // 更新原文显示
     const originalDiv = document.getElementById('translation-original');
     if (originalDiv) {
-      originalDiv.textContent = originalText || '(空)';
+      // 不要显示占位符，如果为空则显示空字符串或提示信息
+      if (!originalText || originalText.trim() === '') {
+        originalDiv.textContent = '';
+      } else {
+        originalDiv.textContent = originalText;
+      }
     }
     
     // 更新译文显示
     const translatedDiv = document.getElementById('translation-translated');
     if (translatedDiv) {
-      translatedDiv.textContent = translatedText || '(空)';
+      // 不要显示占位符，如果为空则显示空字符串或提示信息
+      if (!translatedText || translatedText.trim() === '') {
+        translatedDiv.textContent = '';
+      } else {
+        translatedDiv.textContent = translatedText;
+      }
     }
     
-    // 更新处理时间显示
+    // 更新处理时间显示（包括服务耗时和网络传输耗时）
     const timingsDiv = document.getElementById('translation-timings');
-    if (timingsDiv && serviceTimings) {
+    if (timingsDiv) {
       const parts: string[] = [];
-      if (serviceTimings.asr_ms) parts.push(`ASR: ${serviceTimings.asr_ms}ms`);
-      if (serviceTimings.nmt_ms) parts.push(`NMT: ${serviceTimings.nmt_ms}ms`);
-      if (serviceTimings.tts_ms) parts.push(`TTS: ${serviceTimings.tts_ms}ms`);
-      if (serviceTimings.total_ms) parts.push(`总计: ${serviceTimings.total_ms}ms`);
+      
+      // 服务耗时信息
+      if (serviceTimings) {
+        const serviceParts: string[] = [];
+        if (serviceTimings.asr_ms) serviceParts.push(`ASR: ${serviceTimings.asr_ms}ms`);
+        if (serviceTimings.nmt_ms) serviceParts.push(`NMT: ${serviceTimings.nmt_ms}ms`);
+        if (serviceTimings.tts_ms) serviceParts.push(`TTS: ${serviceTimings.tts_ms}ms`);
+        if (serviceTimings.total_ms) serviceParts.push(`总计: ${serviceTimings.total_ms}ms`);
+        if (serviceParts.length > 0) {
+          parts.push(`服务耗时: ${serviceParts.join(', ')}`);
+        }
+      }
+      
+      // 网络传输耗时信息
+      if (networkTimings) {
+        const networkParts: string[] = [];
+        if (networkTimings.web_to_scheduler_ms !== undefined) {
+          networkParts.push(`Web→调度: ${networkTimings.web_to_scheduler_ms}ms`);
+        }
+        if (networkTimings.scheduler_to_node_ms !== undefined) {
+          networkParts.push(`调度→节点: ${networkTimings.scheduler_to_node_ms}ms`);
+        }
+        if (networkTimings.node_to_scheduler_ms !== undefined) {
+          networkParts.push(`节点→调度: ${networkTimings.node_to_scheduler_ms}ms`);
+        }
+        // 计算调度服务器到Web端的传输耗时（如果时间戳存在）
+        if (schedulerSentAtMs) {
+          const nowMs = Date.now();
+          const schedulerToWebMs = nowMs - schedulerSentAtMs;
+          if (schedulerToWebMs >= 0) {
+            networkParts.push(`调度→Web: ${schedulerToWebMs}ms`);
+          }
+        } else if (networkTimings.scheduler_to_web_ms !== undefined) {
+          networkParts.push(`调度→Web: ${networkTimings.scheduler_to_web_ms}ms`);
+        }
+        if (networkParts.length > 0) {
+          parts.push(`网络传输: ${networkParts.join(', ')}`);
+        }
+      }
+      
       if (parts.length > 0) {
-        timingsDiv.textContent = `处理时间: ${parts.join(', ')}`;
+        timingsDiv.innerHTML = parts.map(p => `<div style="margin: 4px 0;">${p}</div>`).join('');
+        timingsDiv.style.cssText = 'margin-top: 10px; font-size: 12px; color: #666; line-height: 1.5;';
       } else {
         timingsDiv.textContent = '';
       }
-    } else if (timingsDiv) {
-      timingsDiv.textContent = '';
     }
   }
 
@@ -509,11 +619,14 @@ export class App {
    */
   sendCurrentUtterance(): void {
     if (this.stateMachine.getState() === SessionState.INPUT_RECORDING && this.isSessionActive) {
-      // 发送剩余的音频数据
+      // 发送剩余的音频数据（如果不是静音）
       if (this.audioBuffer.length > 0) {
         const chunk = this.concatAudioBuffers(this.audioBuffer);
         this.audioBuffer = []; // 清空缓冲区，准备下一句话
-        this.wsClient.sendAudioChunk(chunk, false);
+        // 只发送非静音数据
+        if (!this.isSilence(chunk)) {
+          this.wsClient.sendAudioChunk(chunk, false);
+        }
       }
       
       // 发送结束帧（标记当前 utterance 结束）

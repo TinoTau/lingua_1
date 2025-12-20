@@ -10,9 +10,11 @@ pub enum SessionEvent {
     AudioChunkReceived {
         chunk: Vec<u8>,
         is_final: bool,
-        timestamp_ms: i64,
+        timestamp_ms: i64, // 调度服务器接收时间戳
+        client_timestamp_ms: Option<i64>, // 客户端发送时间戳
     },
     /// 暂停时间超过阈值
+    #[allow(dead_code)]
     PauseExceeded {
         timestamp_ms: i64,
     },
@@ -26,8 +28,10 @@ pub enum SessionEvent {
     /// 关闭会话
     CloseSession,
     /// 取消所有计时器
+    #[allow(dead_code)]
     CancelTimers,
     /// 重置计时器
+    #[allow(dead_code)]
     ResetTimers,
 }
 

@@ -5,9 +5,10 @@ use crate::websocket::job_creator::create_translation_jobs;
 use crate::websocket::session_actor::SessionEvent;
 use axum::extract::ws::Message;
 use tokio::sync::mpsc;
-use tracing::{info, warn};
+use tracing::{debug, info, warn};
 
 #[derive(Debug, Clone, Copy)]
+#[allow(dead_code)]
 enum FinalizeReason {
     Send,
     Pause,
@@ -19,6 +20,7 @@ pub(super) async fn handle_audio_chunk(
     sess_id: String,
     is_final: bool,
     payload: Option<String>,
+    client_timestamp_ms: Option<i64>,
 ) -> Result<(), anyhow::Error> {
     // 验证会话
     let _session = state
@@ -47,15 +49,25 @@ pub(super) async fn handle_audio_chunk(
     let now_ms = chrono::Utc::now().timestamp_millis();
 
     // 发送音频块事件到 Actor
-    actor_handle.send(SessionEvent::AudioChunkReceived {
+    // 如果 channel 已关闭（session 已断开），优雅处理而不是报错
+    if let Err(_) = actor_handle.send(SessionEvent::AudioChunkReceived {
         chunk,
         is_final,
         timestamp_ms: now_ms,
-    })?;
+        client_timestamp_ms,
+    }) {
+        // Session Actor channel 已关闭，说明 session 已断开
+        // 这是正常情况，不需要报错
+        debug!(session_id = %sess_id, "Session Actor channel closed, session may have disconnected");
+        return Ok(());
+    }
 
     // 如果是 is_final，发送 IsFinalReceived 事件
     if is_final {
-        actor_handle.send(SessionEvent::IsFinalReceived)?;
+        if let Err(_) = actor_handle.send(SessionEvent::IsFinalReceived) {
+            debug!(session_id = %sess_id, "Session Actor channel closed while sending IsFinalReceived");
+            return Ok(());
+        }
     }
 
     Ok(())
@@ -129,6 +141,8 @@ async fn finalize_audio_utterance(
     let partial_update_interval_ms = Some(1000u64);
 
     // 创建翻译任务（支持房间模式多语言）
+    // 注意：对于 audio_chunk 消息，第一个音频块的客户端时间戳已经在 Session Actor 中记录
+    // 这里我们无法直接获取，所以传 None（Session Actor 会在 finalize 时使用记录的时间戳）
     let jobs = create_translation_jobs(
         state,
         sess_id,
@@ -149,6 +163,7 @@ async fn finalize_audio_utterance(
         enable_streaming_asr,
         partial_update_interval_ms,
         session.trace_id.clone(),
+        None, // audio_chunk 的客户端时间戳在 Session Actor 中处理
     )
     .await?;
 

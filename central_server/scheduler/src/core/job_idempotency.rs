@@ -17,8 +17,10 @@ pub enum JobType {
     /// 翻译任务（ASR + NMT + TTS）
     Translation,
     /// 仅 ASR
+    #[allow(dead_code)]
     AsrOnly,
     /// 仅翻译（ASR + NMT）
+    #[allow(dead_code)]
     TranslationOnly,
 }
 
@@ -81,6 +83,7 @@ impl JobIdempotencyManager {
         }
     }
 
+    #[allow(dead_code)]
     pub fn new_with_ttl(ttl_seconds: u64) -> Self {
         Self {
             mappings: Arc::new(RwLock::new(HashMap::new())),
@@ -109,6 +112,7 @@ impl JobIdempotencyManager {
     }
 
     /// 检查 job_key 是否已存在
+    #[allow(dead_code)]
     pub async fn exists(&self, job_key: &JobKey) -> bool {
         let now_ms = chrono::Utc::now().timestamp_millis();
         let mappings = self.mappings.read().await;
@@ -144,6 +148,7 @@ impl JobIdempotencyManager {
     }
 
     /// 手动清理过期项（用于定期清理任务）
+    #[allow(dead_code)]
     pub async fn cleanup(&self) {
         let now_ms = chrono::Utc::now().timestamp_millis();
         let mut mappings = self.mappings.write().await;

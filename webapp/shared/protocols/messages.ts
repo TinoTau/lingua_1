@@ -95,6 +95,17 @@ export interface ServiceTimings {
   total_ms?: number;
 }
 
+export interface NetworkTimings {
+  /** Web端到调度服务器的传输耗时（毫秒） */
+  web_to_scheduler_ms?: number;
+  /** 调度服务器到节点端的传输耗时（毫秒） */
+  scheduler_to_node_ms?: number;
+  /** 节点端返回结果到调度服务器的传输耗时（毫秒） */
+  node_to_scheduler_ms?: number;
+  /** 调度服务器返回结果到Web端的传输耗时（毫秒） */
+  scheduler_to_web_ms?: number;
+}
+
 export interface TranslationResultMessage {
   type: 'translation_result';
   session_id: string;
@@ -115,6 +126,10 @@ export interface TranslationResultMessage {
   trace_id: string;
   /** 各服务耗时信息（从节点返回的 extra.service_timings 中提取） */
   service_timings?: ServiceTimings;
+  /** 网络传输耗时信息 */
+  network_timings?: NetworkTimings;
+  /** 调度服务器发送结果到Web端的时间戳（毫秒，UTC时区） */
+  scheduler_sent_at_ms?: number;
 }
 
 export interface AsrPartialMessage {

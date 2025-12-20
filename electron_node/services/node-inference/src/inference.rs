@@ -368,8 +368,17 @@ impl InferenceService {
         };
         
         // 将 ASR 结果写入 PipelineContext
+        // 记录过滤前后的文本（用于调试）
+        if transcript.contains('(') || transcript.contains('（') || transcript.contains('[') || transcript.contains('【') {
+            tracing::warn!(
+                trace_id = %trace_id,
+                transcript = %transcript,
+                transcript_len = transcript.len(),
+                "⚠️ [ASR Filter Check] Transcript contains brackets before setting to context!"
+            );
+        }
         ctx.set_transcript(transcript.clone());
-        info!(trace_id = %trace_id, transcript_len = transcript.len(), "ASR 识别完成");
+        info!(trace_id = %trace_id, transcript_len = transcript.len(), transcript_preview = %transcript.chars().take(50).collect::<String>(), "ASR 识别完成");
 
         // 3. 可选模块处理（使用 PipelineContext）
         // 3.1 音色识别
@@ -411,6 +420,21 @@ impl InferenceService {
         }
 
         // 4. NMT: 机器翻译（必需，使用动态确定的翻译方向）
+        // 如果 ASR 结果为空，跳过翻译和 TTS，直接返回空结果
+        if transcript.trim().is_empty() {
+            warn!(trace_id = %trace_id, "ASR transcript is empty, skipping NMT and TTS");
+            // 返回空结果，不进行翻译和 TTS
+            let result = InferenceResult {
+                transcript: String::new(),
+                translation: String::new(),
+                audio: Vec::new(),
+                speaker_id: None,
+                speech_rate: None,
+                emotion: None,
+            };
+            return Ok(result);
+        }
+        
         debug!(trace_id = %trace_id, src_lang = %src_lang, tgt_lang = %tgt_lang, "开始机器翻译");
         let context_text = request.context_text.as_deref();
         let translation = self.nmt_engine.translate(&transcript, &src_lang, &tgt_lang, context_text).await?;

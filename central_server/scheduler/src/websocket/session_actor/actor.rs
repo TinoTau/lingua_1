@@ -22,6 +22,7 @@ impl SessionActorHandle {
     }
 
     /// 检查 Actor 是否仍然活跃
+    #[allow(dead_code)]
     pub fn is_closed(&self) -> bool {
         self.sender.is_closed()
     }
@@ -167,8 +168,8 @@ impl SessionActor {
     /// 处理事件
     async fn handle_event(&mut self, event: SessionEvent) -> Result<(), anyhow::Error> {
         match event {
-            SessionEvent::AudioChunkReceived { chunk, is_final, timestamp_ms } => {
-                self.handle_audio_chunk(chunk, is_final, timestamp_ms).await?;
+            SessionEvent::AudioChunkReceived { chunk, is_final, timestamp_ms, client_timestamp_ms } => {
+                self.handle_audio_chunk(chunk, is_final, timestamp_ms, client_timestamp_ms).await?;
             }
             SessionEvent::PauseExceeded { timestamp_ms } => {
                 self.handle_pause_exceeded(timestamp_ms).await?;
@@ -198,6 +199,7 @@ impl SessionActor {
         chunk: Vec<u8>,
         is_final: bool,
         timestamp_ms: i64,
+        client_timestamp_ms: Option<i64>,
     ) -> Result<(), anyhow::Error> {
         let mut utterance_index = self.internal_state.current_utterance_index;
 
@@ -224,6 +226,10 @@ impl SessionActor {
             .await;
 
         self.internal_state.last_chunk_timestamp_ms = Some(timestamp_ms);
+        // 如果是第一个音频块，记录客户端时间戳
+        if self.internal_state.first_chunk_client_timestamp_ms.is_none() {
+            self.internal_state.first_chunk_client_timestamp_ms = client_timestamp_ms;
+        }
         self.internal_state.enter_collecting();
 
         // 如果是最终块，立即 finalize
@@ -412,6 +418,7 @@ impl SessionActor {
             Some(true), // enable_streaming_asr
             Some(1000u64), // partial_update_interval_ms
             session.trace_id.clone(),
+            self.internal_state.first_chunk_client_timestamp_ms,
         )
         .await?;
 

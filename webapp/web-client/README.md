@@ -105,4 +105,21 @@ export const DEFAULT_CONFIG: Config = {
 
 ## 文档
 
-详细文档请参考 `../docs/` 目录。
+详细文档请参考 `docs/` 目录：
+
+### 快速开始
+- [README.md](docs/README.md) - 文档索引
+
+### 开发文档
+- [架构设计](docs/ARCHITECTURE.md) - Web 客户端架构设计
+- [调试指南](docs/DEBUGGING_GUIDE.md) - 日志查看和问题诊断
+- [兼容性修复](docs/SCHEDULER_COMPATIBILITY_FIX.md) - 与调度服务器的兼容性修复
+
+### 测试文档
+- [测试指南](docs/TEST_RUN_GUIDE.md) - 测试运行指南
+- [测试结果](docs/TEST_RESULTS.md) - 测试结果报告
+
+### 系统文档
+- [系统架构](../../ARCHITECTURE.md) - 系统整体架构设计
+
+更多文档请查看 [docs/README.md](docs/README.md)。

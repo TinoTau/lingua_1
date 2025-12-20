@@ -12,7 +12,7 @@ pub mod node;
 #[allow(unused_imports)]  // These are used in tests
 pub use common::{
     FeatureFlags, PipelineConfig, InstalledModel, InstalledService, ModelStatus, CapabilityState,
-    HardwareInfo, NodeStatus, GpuInfo, ResourceUsage, ServiceTimings,
+    HardwareInfo, NodeStatus, GpuInfo, ResourceUsage, ServiceTimings, NetworkTimings,
 };
 pub use error::{ErrorCode, get_error_hint};
 pub use ui_event::{UiEventType, UiEventStatus};

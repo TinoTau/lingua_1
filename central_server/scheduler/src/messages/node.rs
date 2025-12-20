@@ -171,6 +171,9 @@ pub enum NodeMessage {
         /// Group Part Index（可选，用于标识 Group 内的 part）
         #[serde(skip_serializing_if = "Option::is_none")]
         part_index: Option<u64>,
+        /// 节点端处理完成时间戳（毫秒，UTC时区）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        node_completed_at_ms: Option<i64>,
     },
     #[serde(rename = "asr_partial")]
     AsrPartial {

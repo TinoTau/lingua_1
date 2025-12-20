@@ -93,6 +93,7 @@ pub(super) async fn handle_node_message(
             trace_id,
             group_id,
             part_index,
+            node_completed_at_ms,
         } => {
             job_result::handle_job_result(
                 state,
@@ -112,6 +113,7 @@ pub(super) async fn handle_node_message(
                 trace_id,
                 group_id,
                 part_index,
+                node_completed_at_ms,
             )
             .await;
             Ok(())

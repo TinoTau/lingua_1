@@ -4,6 +4,7 @@ use crate::utils::ModuleResolver;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;
+use tracing::warn;
 use uuid::Uuid;
 
 #[derive(Debug, Clone)]
@@ -73,6 +74,9 @@ pub struct Job {
     /// Phase 3：租户 ID（用于两级调度 routing_key 与运维排障）
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tenant_id: Option<String>,
+    /// 第一个音频块的客户端发送时间戳（毫秒，UTC时区），用于计算网络传输耗时
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub first_chunk_client_timestamp_ms: Option<i64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -171,6 +175,7 @@ impl JobDispatcher {
         // Phase 1：任务级幂等 request_id（建议调用方传入稳定值）
         request_id: Option<String>,
         target_session_ids: Option<Vec<String>>, // 目标接收者 session_id 列表（会议室模式使用）
+        first_chunk_client_timestamp_ms: Option<i64>, // 第一个音频块的客户端发送时间戳
     ) -> Job {
         let request_id = request_id.unwrap_or_else(|| format!("req-{}", Uuid::new_v4().to_string()[..12].to_uppercase()));
         let now_ms = chrono::Utc::now().timestamp_millis();
@@ -218,6 +223,7 @@ impl JobDispatcher {
                     partial_update_interval_ms,
                     target_session_ids: target_session_ids.clone(),
                     tenant_id: tenant_id.clone(),
+                    first_chunk_client_timestamp_ms,
                 };
                 self.jobs.write().await.insert(job_id, job.clone());
                 return job;
@@ -273,6 +279,7 @@ impl JobDispatcher {
                         partial_update_interval_ms,
                         target_session_ids: target_session_ids.clone(),
                         tenant_id: tenant_id.clone(),
+                        first_chunk_client_timestamp_ms,
                     };
                     self.jobs.write().await.insert(job_id, job.clone());
                     return job;
@@ -451,6 +458,7 @@ impl JobDispatcher {
                     partial_update_interval_ms,
                     target_session_ids,
                     tenant_id: tenant_id.clone(),
+                    first_chunk_client_timestamp_ms,
                 };
                 self.jobs.write().await.insert(job_id, job.clone());
                 return job;
@@ -666,8 +674,25 @@ impl JobDispatcher {
         if assigned_node_id.is_none() {
             if let Some((selector, reason)) = no_available_node_metric {
                 crate::metrics::prometheus_metrics::on_no_available_node(selector, reason);
+                // 添加详细的诊断日志
+                warn!(
+                    trace_id = %trace_id,
+                    job_id = %job_id,
+                    session_id = %session_id,
+                    utterance_index = utterance_index,
+                    selector = selector,
+                    reason = reason,
+                    "Job创建时未找到可用节点，请检查节点状态和服务包安装情况"
+                );
             } else {
                 crate::metrics::prometheus_metrics::on_no_available_node("unknown", "unknown");
+                warn!(
+                    trace_id = %trace_id,
+                    job_id = %job_id,
+                    session_id = %session_id,
+                    utterance_index = utterance_index,
+                    "Job创建时未找到可用节点（原因未知）"
+                );
             }
         }
 
@@ -704,6 +729,7 @@ impl JobDispatcher {
             partial_update_interval_ms,
             target_session_ids,
             tenant_id: tenant_id.clone(),
+            first_chunk_client_timestamp_ms,
         };
 
         let mut jobs = self.jobs.write().await;

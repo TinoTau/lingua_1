@@ -11,11 +11,13 @@ pub struct QueuedResult {
     #[allow(dead_code)]
     pub received_at: chrono::DateTime<chrono::Utc>,
     /// 结果截止时间（毫秒时间戳），超过此时间未到达则视为失败
+    #[allow(dead_code)]
     pub deadline_ms: Option<i64>,
 }
 
 // 结果状态
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[allow(dead_code)]
 pub enum ResultStatus {
     /// 成功
     Success,
@@ -42,6 +44,7 @@ impl ResultQueueManager {
         }
     }
 
+    #[allow(dead_code)]
     pub fn new_with_timeout(timeout_seconds: u64) -> Self {
         Self {
             queues: Arc::new(RwLock::new(HashMap::new())),
@@ -177,6 +180,7 @@ impl ResultQueueManager {
     }
 
     /// 获取待处理的结果索引列表（用于监控）
+    #[allow(dead_code)]
     pub async fn get_pending_indices(&self, session_id: &str) -> Vec<u64> {
         let queues = self.queues.read().await;
         if let Some((expected_index, queue, _)) = queues.get(session_id) {

@@ -168,25 +168,33 @@ impl AsrFilterConfig {
     }
     
     /// 从默认路径加载配置
+    /// 配置文件路径固定为：config/asr_filters.json（相对于服务运行目录）
     pub fn load_default() -> Result<Self, String> {
-        // 尝试从多个可能的路径加载
-        let possible_paths = vec![
-            "config/asr_filters.json",
-            "electron_node/services/node-inference/config/asr_filters.json",
-            "../config/asr_filters.json",
-            "../../config/asr_filters.json",
-        ];
+        // 固定路径：config/asr_filters.json
+        let config_path = Path::new("config/asr_filters.json");
         
-        for path in &possible_paths {
-            if Path::new(path).exists() {
-                tracing::info!("[ASR Filter] Loading config from: {}", path);
-                return Self::load_from_file(path);
+        if config_path.exists() {
+            match Self::load_from_file(config_path) {
+                Ok(config) => {
+                    // 记录到日志（此时日志系统应该已初始化）
+                    tracing::info!(
+                        "[ASR Filter] ✅ Config loaded: filter_brackets={}, bracket_chars={:?}, exact_matches_count={}",
+                        config.rules.filter_brackets,
+                        config.rules.bracket_chars,
+                        config.rules.exact_matches.len()
+                    );
+                    Ok(config)
+                }
+                Err(e) => {
+                    tracing::error!("[ASR Filter] ❌ Failed to load config: {}", e);
+                    Err(e)
+                }
             }
+        } else {
+            // 如果找不到配置文件，返回默认配置
+            tracing::warn!("[ASR Filter] ⚠️ Config file not found at config/asr_filters.json, using default rules");
+            Ok(Self::default())
         }
-        
-        // 如果找不到配置文件，返回默认配置
-        tracing::warn!("[ASR Filter] Config file not found, using default rules");
-        Ok(Self::default())
     }
     
     /// 创建默认配置（用于测试或作为后备）
@@ -211,12 +219,17 @@ pub fn init_config(config: AsrFilterConfig) {
 pub fn init_config_from_file() -> Result<(), String> {
     match AsrFilterConfig::load_default() {
         Ok(config) => {
-            tracing::info!("[ASR Filter] Config loaded successfully");
+            tracing::info!(
+                "[ASR Filter] ✅ Config initialized: filter_brackets={}, bracket_chars_count={}, exact_matches_count={}",
+                config.rules.filter_brackets,
+                config.rules.bracket_chars.len(),
+                config.rules.exact_matches.len()
+            );
             init_config(config);
             Ok(())
         }
         Err(e) => {
-            tracing::warn!("[ASR Filter] Failed to load config: {}, using default", e);
+            tracing::warn!("[ASR Filter] ⚠️ Failed to load config: {}, using default", e);
             init_config(AsrFilterConfig::default());
             Ok(())
         }
@@ -225,9 +238,26 @@ pub fn init_config_from_file() -> Result<(), String> {
 
 /// 获取全局配置
 pub fn get_config() -> Arc<AsrFilterConfig> {
-    GLOBAL_CONFIG.get_or_init(|| {
+    // 如果配置尚未初始化，先尝试从文件加载
+    if GLOBAL_CONFIG.get().is_none() {
+        tracing::warn!("[ASR Filter] ⚠️ Config not initialized, loading from file...");
         let _ = init_config_from_file();
+    }
+    
+    // 获取配置（如果加载失败，使用默认配置）
+    let config = GLOBAL_CONFIG.get_or_init(|| {
+        tracing::warn!("[ASR Filter] ⚠️ Using default config (file load may have failed)");
         Arc::new(AsrFilterConfig::default())
-    }).clone()
+    });
+    
+    // 验证配置状态
+    if config.rules.filter_brackets {
+        tracing::debug!("[ASR Filter] ✅ Config loaded: filter_brackets=true, bracket_chars={:?}", config.rules.bracket_chars);
+    } else {
+        tracing::warn!("[ASR Filter] ⚠️ Config loaded but filter_brackets=false!");
+    }
+    
+    config.clone()
 }
+
 

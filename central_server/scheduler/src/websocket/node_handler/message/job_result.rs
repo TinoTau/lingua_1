@@ -24,6 +24,7 @@ pub(super) async fn handle_job_result(
     trace_id: String,
     _group_id: Option<String>,
     _part_index: Option<u64>,
+    node_completed_at_ms: Option<i64>,
 ) {
     // Phase 1: Support failover retry, must ignore "stale node" results (avoid race condition)
     let job = state.dispatcher.get_job(&job_id).await;
@@ -81,6 +82,7 @@ pub(super) async fn handle_job_result(
                         tts_format: tts_format.clone(),
                         extra: extra.clone(),
                         processing_time_ms: None,
+                        node_completed_at_ms,
                         error: job_error.clone(),
                         trace_id: trace_id.clone(),
                         group_id: None,
@@ -222,6 +224,54 @@ pub(super) async fn handle_job_result(
                 })
             });
 
+        // 计算网络传输耗时（使用时间戳+时区）
+        let now_ms = chrono::Utc::now().timestamp_millis();
+        let scheduler_sent_at_ms = now_ms; // 记录调度服务器发送结果的时间戳
+        let network_timings = job.as_ref().and_then(|j| {
+            let created_at_ms = j.created_at.timestamp_millis();
+            let dispatched_at_ms = j.dispatched_at_ms?;
+            
+            // Web端到调度服务器：使用第一个音频块的客户端时间戳和调度服务器接收时间的差值
+            // 如果客户端时间戳存在，使用 created_at_ms - first_chunk_client_timestamp_ms
+            // 否则使用 None（无法准确计算）
+            let web_to_scheduler_ms = j.first_chunk_client_timestamp_ms.and_then(|client_ts| {
+                if created_at_ms > client_ts {
+                    Some((created_at_ms - client_ts) as u64)
+                } else {
+                    None // 时间戳异常
+                }
+            });
+            
+            // 调度服务器到节点端：dispatched_at_ms - created_at
+            let scheduler_to_node_ms = if dispatched_at_ms > created_at_ms {
+                Some((dispatched_at_ms - created_at_ms) as u64)
+            } else {
+                None
+            };
+            
+            // 节点端返回结果到调度服务器：使用节点端处理完成时间戳和调度服务器接收时间的差值
+            // 如果节点端时间戳存在，使用 now_ms - node_completed_at_ms
+            // 否则使用 None（无法准确计算）
+            let node_to_scheduler_ms = node_completed_at_ms.and_then(|node_ts| {
+                if now_ms > node_ts {
+                    Some((now_ms - node_ts) as u64)
+                } else {
+                    None // 时间戳异常
+                }
+            });
+            
+            // 调度服务器返回结果到Web端：无法准确计算，因为不知道Web端接收时间
+            // 这里我们设为 None，实际应该在Web端计算（使用 scheduler_sent_at_ms 和客户端接收时间的差值）
+            let scheduler_to_web_ms = None;
+            
+            Some(crate::messages::common::NetworkTimings {
+                web_to_scheduler_ms,
+                scheduler_to_node_ms,
+                node_to_scheduler_ms,
+                scheduler_to_web_ms,
+            })
+        });
+
         // 准备日志输出（在移动 service_timings 之前）
         let elapsed_ms_str = elapsed_ms.map(|ms| format!("{}ms", ms)).unwrap_or_else(|| "N/A".to_string());
         let timings_str = service_timings.as_ref().map(|t| {
@@ -245,6 +295,8 @@ pub(super) async fn handle_job_result(
             group_id: group_id.clone(),
             part_index,
             service_timings,
+            network_timings,
+            scheduler_sent_at_ms: Some(scheduler_sent_at_ms),
         };
         // 记录详细的翻译结果日志（便于检查翻译准确性）
         let asr_text = text_asr.as_deref().unwrap_or("(empty)");
@@ -317,12 +369,23 @@ pub(super) async fn handle_job_result(
                     }
                 } else {
                     // Single session mode: only send to sender
-                    info!(
-                        trace_id = %trace_id,
-                        session_id = %session_id,
-                        result_type = ?result,
-                        "Sending translation result to session (single mode)"
-                    );
+                    // 只打印摘要信息，不打印完整的 tts_audio 内容
+                    if let SessionMessage::TranslationResult { text_asr, text_translated, tts_audio, .. } = &result {
+                        info!(
+                            trace_id = %trace_id,
+                            session_id = %session_id,
+                            text_asr = %text_asr,
+                            text_translated = %text_translated,
+                            tts_audio_len = tts_audio.len(),
+                            "Sending translation result to session (single mode)"
+                        );
+                    } else {
+                        info!(
+                            trace_id = %trace_id,
+                            session_id = %session_id,
+                            "Sending translation result to session (single mode)"
+                        );
+                    }
                     if !crate::phase2::send_session_message_routed(state, &session_id, result.clone()).await {
                         warn!(trace_id = %trace_id, session_id = %session_id, "Failed to send result to session");
                     } else {
@@ -335,12 +398,23 @@ pub(super) async fn handle_job_result(
                 }
             } else {
                 // Job does not exist, fallback to single session mode
-                info!(
-                    trace_id = %trace_id,
-                    session_id = %session_id,
-                    result_type = ?result,
-                    "Sending translation result to session (fallback mode, job not found)"
-                );
+                // 只打印摘要信息，不打印完整的 tts_audio 内容
+                if let SessionMessage::TranslationResult { text_asr, text_translated, tts_audio, .. } = &result {
+                    info!(
+                        trace_id = %trace_id,
+                        session_id = %session_id,
+                        text_asr = %text_asr,
+                        text_translated = %text_translated,
+                        tts_audio_len = tts_audio.len(),
+                        "Sending translation result to session (fallback mode, job not found)"
+                    );
+                } else {
+                    info!(
+                        trace_id = %trace_id,
+                        session_id = %session_id,
+                        "Sending translation result to session (fallback mode, job not found)"
+                    );
+                }
                 if !crate::phase2::send_session_message_routed(state, &session_id, result.clone()).await {
                     warn!(trace_id = %trace_id, session_id = %session_id, "Failed to send result to session");
                 } else {

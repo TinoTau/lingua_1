@@ -28,6 +28,8 @@ pub struct SessionActorInternalState {
     pub timer_generation: u64,
     /// 最后收到音频的时间戳（毫秒）
     pub last_chunk_timestamp_ms: Option<i64>,
+    /// 第一个音频块的客户端发送时间戳（毫秒，UTC时区），用于计算网络传输耗时
+    pub first_chunk_client_timestamp_ms: Option<i64>,
 }
 
 impl SessionActorInternalState {
@@ -38,6 +40,7 @@ impl SessionActorInternalState {
             finalize_inflight: None,
             timer_generation: 0,
             last_chunk_timestamp_ms: None,
+            first_chunk_client_timestamp_ms: None,
         }
     }
 

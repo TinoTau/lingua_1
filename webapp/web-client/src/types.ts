@@ -77,6 +77,13 @@ export interface TranslationResultMessage {
     tts_ms?: number;
     total_ms?: number;
   };
+  network_timings?: {
+    web_to_scheduler_ms?: number;
+    scheduler_to_node_ms?: number;
+    node_to_scheduler_ms?: number;
+    scheduler_to_web_ms?: number;
+  };
+  scheduler_sent_at_ms?: number; // 调度服务器发送结果到Web端的时间戳（毫秒，UTC时区）
 }
 
 export interface TtsAudioMessage {

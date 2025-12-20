@@ -166,6 +166,20 @@ impl NodeRegistry {
         }
 
         if available_nodes.is_empty() {
+            // 添加详细的诊断日志，说明为什么没有找到可用节点
+            use tracing::warn;
+            warn!(
+                total_nodes = breakdown.total_nodes,
+                status_not_ready = breakdown.status_not_ready,
+                offline = breakdown.offline,
+                not_in_public_pool = breakdown.not_in_public_pool,
+                gpu_unavailable = breakdown.gpu_unavailable,
+                model_not_available = breakdown.model_not_available,
+                capacity_exceeded = breakdown.capacity_exceeded,
+                resource_threshold_exceeded = breakdown.resource_threshold_exceeded,
+                best_reason = %breakdown.best_reason_label(),
+                "节点选择失败（功能感知选择）：没有找到可用节点"
+            );
             return (None, breakdown);
         }
 
@@ -269,6 +283,21 @@ impl NodeRegistry {
         }
 
         if available_nodes.is_empty() {
+            // 添加详细的诊断日志，说明为什么没有找到可用节点
+            use tracing::warn;
+            warn!(
+                total_nodes = breakdown.total_nodes,
+                status_not_ready = breakdown.status_not_ready,
+                offline = breakdown.offline,
+                not_in_public_pool = breakdown.not_in_public_pool,
+                gpu_unavailable = breakdown.gpu_unavailable,
+                model_not_available = breakdown.model_not_available,
+                capacity_exceeded = breakdown.capacity_exceeded,
+                resource_threshold_exceeded = breakdown.resource_threshold_exceeded,
+                best_reason = %breakdown.best_reason_label(),
+                required_models = ?required_model_ids,
+                "节点选择失败（模型选择）：没有找到可用节点，请检查节点是否安装了所需服务包"
+            );
             return (None, breakdown);
         }
 

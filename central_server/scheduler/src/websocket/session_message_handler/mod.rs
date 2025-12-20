@@ -63,8 +63,9 @@ pub(crate) async fn handle_session_message(
             seq: _,
             is_final,
             payload,
+            client_timestamp_ms,
         } => {
-            audio::handle_audio_chunk(state, tx, sess_id, is_final, payload).await?;
+            audio::handle_audio_chunk(state, tx, sess_id, is_final, payload, client_timestamp_ms).await?;
         }
 
         SessionMessage::Utterance {

@@ -34,32 +34,27 @@ impl Default for LoggingConfig {
 
 impl LoggingConfig {
     /// 从配置文件加载日志配置
-    /// 配置文件路径：observability.json（在项目根目录）
+    /// 配置文件路径固定为：config/observability.json（相对于服务运行目录）
     pub fn load() -> Self {
-        let config_paths = vec![
-            PathBuf::from("observability.json"),
-            PathBuf::from("config/observability.json"),
-            PathBuf::from("../observability.json"),
-        ];
+        // 固定路径：config/observability.json
+        let config_path = PathBuf::from("config/observability.json");
         
-        for config_path in config_paths {
-            if config_path.exists() {
-                match std::fs::read_to_string(&config_path) {
-                    Ok(content) => {
-                        match serde_json::from_str::<LoggingConfig>(&content) {
-                            Ok(config) => {
-                                // 注意：此时日志系统尚未初始化，使用 println! 输出
-                                println!("已加载日志配置文件: {:?}", config_path);
-                                return config;
-                            }
-                            Err(e) => {
-                                eprintln!("解析日志配置文件失败: {:?}, 错误: {}", config_path, e);
-                            }
+        if config_path.exists() {
+            match std::fs::read_to_string(&config_path) {
+                Ok(content) => {
+                    match serde_json::from_str::<LoggingConfig>(&content) {
+                        Ok(config) => {
+                            // 注意：此时日志系统尚未初始化，使用 println! 输出
+                            println!("已加载日志配置文件: {:?}", config_path);
+                            return config;
+                        }
+                        Err(e) => {
+                            eprintln!("解析日志配置文件失败: {:?}, 错误: {}", config_path, e);
                         }
                     }
-                    Err(e) => {
-                        eprintln!("读取日志配置文件失败: {:?}, 错误: {}", config_path, e);
-                    }
+                }
+                Err(e) => {
+                    eprintln!("读取日志配置文件失败: {:?}, 错误: {}", config_path, e);
                 }
             }
         }
