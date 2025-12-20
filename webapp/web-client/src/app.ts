@@ -214,6 +214,24 @@ export class App {
         this.currentTraceId = message.trace_id;
         this.currentGroupId = message.group_id || null;
         
+        // 显示翻译结果（原文、译文和处理时间）
+        console.log('=== 翻译结果 ===');
+        console.log('原文 (ASR):', message.text_asr);
+        console.log('译文 (NMT):', message.text_translated);
+        if (message.service_timings) {
+          const timings = message.service_timings;
+          console.log('处理时间:', {
+            ASR: timings.asr_ms ? `${timings.asr_ms}ms` : 'N/A',
+            NMT: timings.nmt_ms ? `${timings.nmt_ms}ms` : 'N/A',
+            TTS: timings.tts_ms ? `${timings.tts_ms}ms` : 'N/A',
+            Total: timings.total_ms ? `${timings.total_ms}ms` : 'N/A'
+          });
+        }
+        console.log('===============');
+        
+        // 更新 UI 显示翻译结果
+        this.displayTranslationResult(message.text_asr, message.text_translated, message.service_timings);
+        
         // 处理 TTS 音频（如果存在）
         if (message.tts_audio) {
           if (this.isInRoom) {
@@ -320,6 +338,76 @@ export class App {
     
     // 状态机会根据会话状态自动切换到 INPUT_RECORDING（会话进行中）或 INPUT_READY（会话未开始）
     // 状态切换会触发 onStateChange，在那里处理录音器的重新启动
+  }
+
+  /**
+   * 显示翻译结果到 UI
+   * @param originalText 原文（ASR）
+   * @param translatedText 译文（NMT）
+   * @param serviceTimings 服务耗时信息
+   */
+  private displayTranslationResult(
+    originalText: string,
+    translatedText: string,
+    serviceTimings?: { asr_ms?: number; nmt_ms?: number; tts_ms?: number; total_ms?: number }
+  ): void {
+    // 查找或创建翻译结果显示容器
+    let resultContainer = document.getElementById('translation-result-container');
+    if (!resultContainer) {
+      resultContainer = document.createElement('div');
+      resultContainer.id = 'translation-result-container';
+      resultContainer.style.cssText = `
+        margin: 20px 0;
+        padding: 15px;
+        background: #f0f8ff;
+        border-radius: 8px;
+        border: 1px solid #b0d4f1;
+      `;
+      
+      // 插入到 ASR 字幕容器之后
+      const asrContainer = document.getElementById('asr-subtitle-container');
+      if (asrContainer && asrContainer.parentElement) {
+        asrContainer.parentElement.insertBefore(resultContainer, asrContainer.nextSibling);
+      } else {
+        // 如果找不到 ASR 容器，添加到 app 容器
+        const appContainer = document.getElementById('app');
+        if (appContainer) {
+          appContainer.appendChild(resultContainer);
+        }
+      }
+    }
+    
+    // 显示容器
+    resultContainer.style.display = 'block';
+    
+    // 更新原文显示
+    const originalDiv = document.getElementById('translation-original');
+    if (originalDiv) {
+      originalDiv.textContent = originalText || '(空)';
+    }
+    
+    // 更新译文显示
+    const translatedDiv = document.getElementById('translation-translated');
+    if (translatedDiv) {
+      translatedDiv.textContent = translatedText || '(空)';
+    }
+    
+    // 更新处理时间显示
+    const timingsDiv = document.getElementById('translation-timings');
+    if (timingsDiv && serviceTimings) {
+      const parts: string[] = [];
+      if (serviceTimings.asr_ms) parts.push(`ASR: ${serviceTimings.asr_ms}ms`);
+      if (serviceTimings.nmt_ms) parts.push(`NMT: ${serviceTimings.nmt_ms}ms`);
+      if (serviceTimings.tts_ms) parts.push(`TTS: ${serviceTimings.tts_ms}ms`);
+      if (serviceTimings.total_ms) parts.push(`总计: ${serviceTimings.total_ms}ms`);
+      if (parts.length > 0) {
+        timingsDiv.textContent = `处理时间: ${parts.join(', ')}`;
+      } else {
+        timingsDiv.textContent = '';
+      }
+    } else if (timingsDiv) {
+      timingsDiv.textContent = '';
+    }
   }
 
   /**

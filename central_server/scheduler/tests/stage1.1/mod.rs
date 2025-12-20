@@ -29,3 +29,6 @@ mod result_queue_test;
 #[path = "node_status_test.rs"]
 mod node_status_test;
 
+#[path = "session_actor_test.rs"]
+mod session_actor_test;
+

@@ -71,6 +71,19 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
         <div id="asr-subtitle"></div>
       </div>
 
+      <div id="translation-result-container" style="margin: 20px 0; padding: 15px; background: #f0f8ff; border-radius: 8px; border: 1px solid #b0d4f1; display: none;">
+        <div style="font-weight: bold; margin-bottom: 10px; color: #0066cc;">翻译结果：</div>
+        <div style="margin-bottom: 8px;">
+          <div style="font-weight: bold; color: #333; margin-bottom: 4px;">原文 (ASR):</div>
+          <div id="translation-original" style="padding: 8px; background: white; border-radius: 4px; border: 1px solid #ddd;">等待翻译结果...</div>
+        </div>
+        <div style="margin-bottom: 8px;">
+          <div style="font-weight: bold; color: #333; margin-bottom: 4px;">译文 (NMT):</div>
+          <div id="translation-translated" style="padding: 8px; background: white; border-radius: 4px; border: 1px solid #ddd; color: #0066cc;">等待翻译结果...</div>
+        </div>
+        <div id="translation-timings" style="margin-top: 10px; font-size: 12px; color: #666;"></div>
+      </div>
+
       <div style="margin: 20px 0;">
         <button id="connect-btn" style="padding: 10px 20px; margin: 5px; font-size: 16px; cursor: pointer;">
           连接服务器
@@ -471,6 +484,19 @@ export function renderRoom(container: HTMLElement, app: App): void {
       <div id="asr-subtitle-container" style="margin: 20px 0;">
         <div style="font-weight: bold; margin-bottom: 10px;">ASR 字幕：</div>
         <div id="asr-subtitle"></div>
+      </div>
+
+      <div id="translation-result-container" style="margin: 20px 0; padding: 15px; background: #f0f8ff; border-radius: 8px; border: 1px solid #b0d4f1; display: none;">
+        <div style="font-weight: bold; margin-bottom: 10px; color: #0066cc;">翻译结果：</div>
+        <div style="margin-bottom: 8px;">
+          <div style="font-weight: bold; color: #333; margin-bottom: 4px;">原文 (ASR):</div>
+          <div id="translation-original" style="padding: 8px; background: white; border-radius: 4px; border: 1px solid #ddd;">等待翻译结果...</div>
+        </div>
+        <div style="margin-bottom: 8px;">
+          <div style="font-weight: bold; color: #333; margin-bottom: 4px;">译文 (NMT):</div>
+          <div id="translation-translated" style="padding: 8px; background: white; border-radius: 4px; border: 1px solid #ddd; color: #0066cc;">等待翻译结果...</div>
+        </div>
+        <div id="translation-timings" style="margin-top: 10px; font-size: 12px; color: #666;"></div>
       </div>
 
       <div style="margin: 20px 0;">

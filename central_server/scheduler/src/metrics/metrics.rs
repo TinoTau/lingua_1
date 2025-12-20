@@ -17,6 +17,12 @@ pub struct Metrics {
     pub web_tasks_finalized_by_send_total: AtomicU64,
     pub web_tasks_finalized_by_pause_total: AtomicU64,
 
+    // Session Actor 指标
+    pub session_actor_backlog_size: AtomicU64, // 当前积压事件数（峰值）
+    pub duplicate_finalize_suppressed_total: AtomicU64, // 被抑制的重复 finalize 次数
+    pub duplicate_job_blocked_total: AtomicU64, // 被阻止的重复 job 创建次数
+    pub result_gap_timeout_total: AtomicU64, // 结果队列超时次数
+
     pub model_na_received_total: AtomicU64,
     pub model_na_rate_limited_total: AtomicU64,
     pub model_na_marked_total: AtomicU64,
@@ -412,6 +418,29 @@ pub fn on_web_task_finalized_by_pause() {
     Metrics::inc(&METRICS.web_tasks_finalized_total);
     Metrics::inc(&METRICS.web_tasks_finalized_by_pause_total);
     crate::metrics::prometheus_metrics::on_web_task_finalized("pause");
+}
+
+/// 记录 Session Actor 积压事件数（峰值）
+pub fn on_session_actor_backlog(backlog_size: usize) {
+    let current = METRICS.session_actor_backlog_size.load(Ordering::Relaxed);
+    if backlog_size as u64 > current {
+        METRICS.session_actor_backlog_size.store(backlog_size as u64, Ordering::Relaxed);
+    }
+}
+
+/// 记录被抑制的重复 finalize
+pub fn on_duplicate_finalize_suppressed() {
+    METRICS.duplicate_finalize_suppressed_total.fetch_add(1, Ordering::Relaxed);
+}
+
+/// 记录被阻止的重复 job 创建
+pub fn on_duplicate_job_blocked() {
+    METRICS.duplicate_job_blocked_total.fetch_add(1, Ordering::Relaxed);
+}
+
+/// 记录结果队列超时
+pub fn on_result_gap_timeout() {
+    METRICS.result_gap_timeout_total.fetch_add(1, Ordering::Relaxed);
 }
 
 pub fn on_slow_lock_wait(lock_name: &'static str) {

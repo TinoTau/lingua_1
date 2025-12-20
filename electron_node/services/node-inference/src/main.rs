@@ -12,6 +12,7 @@ use tracing_subscriber::Layer;
 
 // 导入库模块
 use lingua_node_inference::{InferenceService, http_server};
+use lingua_node_inference::text_filter;
 
 mod logging_config;
 
@@ -78,6 +79,9 @@ async fn main() -> Result<()> {
     // 保持 guard 不被释放（确保日志缓冲区被刷新）
     // 使用 Box::leak 确保 guard 在程序运行期间一直存在
     Box::leak(Box::new(guard));
+    
+    // 初始化 ASR 文本过滤配置
+    lingua_node_inference::text_filter::init_config();
 
     let models_dir = PathBuf::from(std::env::var("MODELS_DIR").unwrap_or_else(|_| "./models".to_string()));
     

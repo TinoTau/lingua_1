@@ -1,6 +1,6 @@
 // 会话管理单元测试
 
-use lingua_scheduler::session::{SessionManager, SessionUpdate};
+use lingua_scheduler::core::session::{SessionManager, SessionUpdate};
 use lingua_scheduler::messages::FeatureFlags;
 
 #[tokio::test]

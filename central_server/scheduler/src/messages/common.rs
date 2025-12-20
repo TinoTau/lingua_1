@@ -92,6 +92,23 @@ pub struct ResourceUsage {
     pub running_jobs: usize,
 }
 
+/// 服务耗时信息（毫秒）
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ServiceTimings {
+    /// ASR 服务耗时（毫秒）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub asr_ms: Option<u64>,
+    /// NMT 服务耗时（毫秒）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub nmt_ms: Option<u64>,
+    /// TTS 服务耗时（毫秒）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tts_ms: Option<u64>,
+    /// 总耗时（毫秒，包含所有服务及中间处理时间）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub total_ms: Option<u64>,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ExtraResult {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -100,6 +117,9 @@ pub struct ExtraResult {
     pub speech_rate: Option<f32>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub voice_style: Option<String>,
+    /// 各服务耗时信息
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub service_timings: Option<ServiceTimings>,
 }
 
 /// 节点生命周期状态（Scheduler 权威）

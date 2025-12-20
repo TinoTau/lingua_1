@@ -90,6 +90,17 @@ export interface UtteranceMessage {
   trace_id?: string;
 }
 
+export interface ServiceTimings {
+  /** ASR 服务耗时（毫秒） */
+  asr_ms?: number;
+  /** NMT 服务耗时（毫秒） */
+  nmt_ms?: number;
+  /** TTS 服务耗时（毫秒） */
+  tts_ms?: number;
+  /** 总耗时（毫秒，包含所有服务及中间处理时间） */
+  total_ms?: number;
+}
+
 export interface TranslationResultMessage {
   type: 'translation_result';
   session_id: string;
@@ -103,10 +114,13 @@ export interface TranslationResultMessage {
     emotion?: string | null;
     speech_rate?: number | null;
     voice_style?: string | null;
+    service_timings?: ServiceTimings;
     [key: string]: unknown;
   };
   /** 追踪 ID（必需，用于全链路追踪） */
   trace_id: string;
+  /** 各服务耗时信息（从节点返回的 extra.service_timings 中提取） */
+  service_timings?: ServiceTimings;
 }
 
 export interface AsrPartialMessage {

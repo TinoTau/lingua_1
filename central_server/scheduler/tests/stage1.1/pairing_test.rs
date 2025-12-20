@@ -1,6 +1,6 @@
 // 配对服务单元测试
 
-use lingua_scheduler::pairing::PairingService;
+use lingua_scheduler::services::PairingService;
 
 #[tokio::test]
 async fn test_generate_pairing_code() {

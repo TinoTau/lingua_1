@@ -210,7 +210,8 @@ impl ASREngine {
                         if let Some(end_idx) = segment_debug[text_start..].find("\")") {
                             let text = &segment_debug[text_start..text_start + end_idx];
                             let text_trimmed = text.trim();
-                            if !text_trimmed.is_empty() {
+                            // 在segment级别进行过滤，跳过带括号等无意义的文本
+                            if !text_trimmed.is_empty() && !crate::text_filter::is_meaningless_transcript(text_trimmed) {
                                 full_text.push_str(text_trimmed);
                                 full_text.push(' ');
                             }
@@ -219,12 +220,25 @@ impl ASREngine {
                 }
             }
 
-            Ok::<(String, Option<String>), anyhow::Error>((full_text.trim().to_string(), language))
+            let raw_text = full_text.trim().to_string();
+            // 对最终拼接的文本再次进行过滤（双重保险）
+            let filtered_text = if raw_text.is_empty() || crate::text_filter::is_meaningless_transcript(&raw_text) {
+                String::new()
+            } else {
+                raw_text
+            };
+            Ok::<(String, Option<String>), anyhow::Error>((filtered_text, language))
         })
         .await
         .map_err(|e| anyhow!("Whisper inference task panicked: {}", e))??;
 
-        Ok(text)
+        // 对最终结果也进行过滤
+        let filtered_text = if text.is_empty() || crate::text_filter::is_meaningless_transcript(&text) {
+            String::new()
+        } else {
+            text.trim().to_string()
+        };
+        Ok(filtered_text)
     }
 
     /// 获取模型路径
@@ -343,7 +357,8 @@ impl ASREngine {
                         if let Some(end_idx) = segment_debug[text_start..].find("\")") {
                             let text = &segment_debug[text_start..text_start + end_idx];
                             let text_trimmed = text.trim();
-                            if !text_trimmed.is_empty() {
+                            // 在segment级别进行过滤，跳过带括号等无意义的文本
+                            if !text_trimmed.is_empty() && !crate::text_filter::is_meaningless_transcript(text_trimmed) {
                                 full_text.push_str(text_trimmed);
                                 full_text.push(' ');
                             }
@@ -352,16 +367,29 @@ impl ASREngine {
                 }
             }
 
-            Ok::<(String, Option<String>), anyhow::Error>((full_text.trim().to_string(), language))
+            let raw_text = full_text.trim().to_string();
+            // 对最终拼接的文本再次进行过滤（双重保险）
+            let filtered_text = if raw_text.is_empty() || crate::text_filter::is_meaningless_transcript(&raw_text) {
+                String::new()
+            } else {
+                raw_text
+            };
+            Ok::<(String, Option<String>), anyhow::Error>((filtered_text, language))
         })
         .await
         .map_err(|e| anyhow!("Whisper inference task panicked: {}", e))??;
 
-        if text.is_empty() {
+        // 对部分结果也进行过滤
+        let filtered_text = if text.is_empty() || crate::text_filter::is_meaningless_transcript(&text) {
+            String::new()
+        } else {
+            text.trim().to_string()
+        };
+        if filtered_text.is_empty() {
             Ok(None)
         } else {
             Ok(Some(ASRPartialResult {
-                text,
+                text: filtered_text,
                 confidence: 0.90, // 部分结果的置信度稍低
                 is_final: false,
             }))
@@ -426,7 +454,8 @@ impl ASREngine {
                         if let Some(end_idx) = segment_debug[text_start..].find("\")") {
                             let text = &segment_debug[text_start..text_start + end_idx];
                             let text_trimmed = text.trim();
-                            if !text_trimmed.is_empty() {
+                            // 在segment级别进行过滤，跳过带括号等无意义的文本
+                            if !text_trimmed.is_empty() && !crate::text_filter::is_meaningless_transcript(text_trimmed) {
                                 full_text.push_str(text_trimmed);
                                 full_text.push(' ');
                             }
@@ -435,12 +464,25 @@ impl ASREngine {
                 }
             }
 
-            Ok::<(String, Option<String>), anyhow::Error>((full_text.trim().to_string(), language))
+            let raw_text = full_text.trim().to_string();
+            // 对最终拼接的文本再次进行过滤（双重保险）
+            let filtered_text = if raw_text.is_empty() || crate::text_filter::is_meaningless_transcript(&raw_text) {
+                String::new()
+            } else {
+                raw_text
+            };
+            Ok::<(String, Option<String>), anyhow::Error>((filtered_text, language))
         })
         .await
         .map_err(|e| anyhow!("Whisper inference task panicked: {}", e))??;
 
-        Ok(text)
+        // 对最终结果也进行过滤（三重保险，确保带括号的文本被过滤）
+        let filtered_text = if text.is_empty() || crate::text_filter::is_meaningless_transcript(&text) {
+            String::new()
+        } else {
+            text.trim().to_string()
+        };
+        Ok(filtered_text)
     }
     
     /// 获取 Whisper 上下文（用于共享给 LanguageDetector）

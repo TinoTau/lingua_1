@@ -71,6 +71,12 @@ export interface TranslationResultMessage {
   trace_id: string;
   group_id?: string; // Utterance Group ID（可选）
   part_index?: number; // Group Part Index（可选）
+  service_timings?: {
+    asr_ms?: number;
+    nmt_ms?: number;
+    tts_ms?: number;
+    total_ms?: number;
+  };
 }
 
 export interface TtsAudioMessage {

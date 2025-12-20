@@ -2,10 +2,10 @@ use crate::core::AppState;
 use crate::messages::{ErrorCode, UiEventStatus, UiEventType};
 use crate::websocket::{create_job_assign_message, send_error, send_ui_event};
 use crate::websocket::job_creator::create_translation_jobs;
+use crate::websocket::session_actor::SessionEvent;
 use axum::extract::ws::Message;
 use tokio::sync::mpsc;
 use tracing::{info, warn};
-use std::time::Duration;
 
 #[derive(Debug, Clone, Copy)]
 enum FinalizeReason {
@@ -15,153 +15,54 @@ enum FinalizeReason {
 
 pub(super) async fn handle_audio_chunk(
     state: &AppState,
-    tx: &mpsc::UnboundedSender<Message>,
+    _tx: &mpsc::UnboundedSender<Message>,
     sess_id: String,
     is_final: bool,
     payload: Option<String>,
 ) -> Result<(), anyhow::Error> {
     // 验证会话
-    let session = state
+    let _session = state
         .session_manager
         .get_session(&sess_id)
         .await
         .ok_or_else(|| anyhow::anyhow!("Session does not exist: {}", sess_id))?;
 
-    // 获取当前 utterance_index
-    let mut utterance_index = session.utterance_index;
-    tracing::debug!(
-        session_id = %sess_id,
-        current_utterance_index = utterance_index,
-        "Handling audio chunk"
-    );
+    // 获取 Session Actor Handle
+    let actor_handle = state
+        .session_manager
+        .get_actor_handle(&sess_id)
+        .await
+        .ok_or_else(|| anyhow::anyhow!("Session Actor not found: {}", sess_id))?;
 
-    // Web 端分段规则：超过 pause_ms 视为一个任务结束（自动切句�?
-    let now_ms = chrono::Utc::now().timestamp_millis();
-    let pause_ms = state.web_task_segmentation.pause_ms;
-    let pause_exceeded = state
-        .audio_buffer
-        .record_chunk_and_check_pause(&sess_id, now_ms, pause_ms)
-        .await;
-    if pause_exceeded {
-        tracing::info!(
-            session_id = %sess_id,
-            utterance_index = utterance_index,
-            "Pause exceeded, finalizing current utterance"
-        );
-        // 自动结束上一句（如果上一句缓冲区有内容）
-        let finalized = finalize_audio_utterance(
-            state,
-            tx,
-            &sess_id,
-            utterance_index,
-            FinalizeReason::Pause,
-        )
-        .await?;
-        if finalized {
-            // utterance_index 增加已在 finalize 中完成；刷新本地索引
-            if let Some(updated) = state.session_manager.get_session(&sess_id).await {
-                let old_index = utterance_index;
-                utterance_index = updated.utterance_index;
-                tracing::info!(
-                    session_id = %sess_id,
-                    old_utterance_index = old_index,
-                    new_utterance_index = utterance_index,
-                    "Updated utterance_index after pause finalization"
-                );
-            }
-        } else {
-            tracing::debug!(
-                session_id = %sess_id,
-                utterance_index = utterance_index,
-                "Pause finalization returned false (empty buffer)"
-            );
-        }
-    }
-
-    // 如果�?payload，解码并累积音频�?
-    if let Some(payload_str) = payload {
+    // 解码音频数据
+    let chunk = if let Some(payload_str) = payload {
         use base64::{engine::general_purpose, Engine as _};
-        if let Ok(audio_chunk) = general_purpose::STANDARD.decode(&payload_str) {
-            state
-                .audio_buffer
-                .add_chunk(&sess_id, utterance_index, audio_chunk)
-                .await;
-        }
-    }
+        general_purpose::STANDARD
+            .decode(&payload_str)
+            .unwrap_or_default()
+    } else {
+        Vec::new()
+    };
 
-    // 自动切句（停顿）需要“无�?chunk 的超时触发”：每次收到 chunk 都安排一个延迟任�?
-    if !is_final && pause_ms > 0 {
-        let state_for_timer = state.clone();
-        let tx_for_timer = tx.clone();
-        let sess_id_for_timer = sess_id.clone();
-        let utterance_index_for_timer = utterance_index;
-        let last_ts = now_ms;
-        tokio::spawn(async move {
-            tokio::time::sleep(Duration::from_millis(pause_ms)).await;
-            // 若之后还有新 chunk 到来，则 last_chunk_at_ms 会更新，本次 timer 不触�?
-            if state_for_timer
-                .audio_buffer
-                .get_last_chunk_at_ms(&sess_id_for_timer)
-                .await
-                != Some(last_ts)
-            {
-                return;
-            }
-            // 超时触发：将当前缓冲区视为一个任务结?
-            // 但需要重新获取当前的 utterance_index，因为可能已经被其他操作更新
-            let current_session = state_for_timer.session_manager.get_session(&sess_id_for_timer).await;
-            let current_utterance_index = current_session
-                .map(|s| s.utterance_index)
-                .unwrap_or(utterance_index_for_timer);
+    let now_ms = chrono::Utc::now().timestamp_millis();
 
-            if current_utterance_index != utterance_index_for_timer {
-                tracing::warn!(
-                    session_id = %sess_id_for_timer,
-                    old_utterance_index = utterance_index_for_timer,
-                    current_utterance_index = current_utterance_index,
-                    "Timeout task using outdated utterance_index, updating to current"
-                );
-            }
+    // 发送音频块事件到 Actor
+    actor_handle.send(SessionEvent::AudioChunkReceived {
+        chunk,
+        is_final,
+        timestamp_ms: now_ms,
+    })?;
 
-            tracing::info!(
-                session_id = %sess_id_for_timer,
-                utterance_index = current_utterance_index,
-                "Timeout task triggered: finalizing audio utterance"
-            );
-
-            let _ = finalize_audio_utterance(
-                &state_for_timer,
-                &tx_for_timer,
-                &sess_id_for_timer,
-                current_utterance_index,  // 修复：使用最新的 index
-                FinalizeReason::Pause,
-            )
-            .await;
-        });
-    }
-
-    // 如果是最终块，创�?job
+    // 如果是 is_final，发送 IsFinalReceived 事件
     if is_final {
-        tracing::info!(
-            session_id = %sess_id,
-            utterance_index = utterance_index,
-            "Received final chunk, finalizing audio utterance"
-        );
-        let finalized = finalize_audio_utterance(state, tx, &sess_id, utterance_index, FinalizeReason::Send).await?;
-        if !finalized {
-            tracing::warn!(
-                session_id = %sess_id,
-                utterance_index = utterance_index,
-                "Final chunk finalization returned false (empty buffer or already finalized)"
-            );
-        }
+        actor_handle.send(SessionEvent::IsFinalReceived)?;
     }
 
     Ok(())
 }
 
-/// 将指�?utterance_index 的音频缓冲区“封口”为一个任务（创建 job 并派发），并推进 session �?utterance_index�?
-/// 返回 true 表示本次确实产生了任务；false 表示缓冲区为空（不产生任务）�?
+// 保留旧的 finalize_audio_utterance 函数用于向后兼容（如果其他地方还在使用）
+#[allow(dead_code)]
 async fn finalize_audio_utterance(
     state: &AppState,
     tx: &mpsc::UnboundedSender<Message>,
@@ -174,7 +75,21 @@ async fn finalize_audio_utterance(
         None => return Ok(false),
     };
 
-    // 获取累积的音频数�?
+    // 去重检查：如果当前的 utterance_index 已经大于传入的 utterance_index，
+    // 说明这个 utterance_index 已经被其他操作 finalize 了，直接返回 false
+    // 这是一个轻量级的检查，避免重复 finalize 导致的重复 job 创建
+    if session.utterance_index > utterance_index {
+        tracing::debug!(
+            session_id = %sess_id,
+            requested_utterance_index = utterance_index,
+            current_utterance_index = session.utterance_index,
+            reason = ?reason,
+            "Skipping finalize: utterance_index already finalized by another operation"
+        );
+        return Ok(false);
+    }
+
+    // 获取累积的音频数据
     let audio_data_opt = state.audio_buffer.take_combined(sess_id, utterance_index).await;
     let Some(audio_data) = audio_data_opt else {
         tracing::warn!(
@@ -203,7 +118,7 @@ async fn finalize_audio_utterance(
         "Finalizing audio utterance with audio data"
     );
 
-    // 使用会话的默认配�?
+    // 使用会话的默认配置
     let src_lang = session.src_lang.clone();
     let tgt_lang = session.tgt_lang.clone();
     let dialect = session.dialect.clone();
@@ -213,7 +128,7 @@ async fn finalize_audio_utterance(
     let enable_streaming_asr = Some(true);
     let partial_update_interval_ms = Some(1000u64);
 
-    // 创建翻译任务（支持房间模式多语言�?
+    // 创建翻译任务（支持房间模式多语言）
     let jobs = create_translation_jobs(
         state,
         sess_id,
@@ -250,7 +165,7 @@ async fn finalize_audio_utterance(
         "Incremented utterance_index after finalizing audio"
     );
 
-    // 为每�?Job 发送到节点
+    // 为每个 Job 发送到节点
     for job in jobs {
         info!(
             trace_id = %job.trace_id,
@@ -285,7 +200,7 @@ async fn finalize_audio_utterance(
                     .await;
                 } else {
                     warn!("Failed to send job to node {}", node_id);
-                    // 发送失败：释放 reserved 并发槽（幂等�?
+                    // 发送失败：释放 reserved 并发槽（幂等）
                     state.node_registry.release_job_slot(node_id, &job.job_id).await;
                     if let Some(rt) = state.phase2.as_ref() {
                         rt.release_node_slot(node_id, &job.job_id).await;
@@ -294,7 +209,7 @@ async fn finalize_audio_utterance(
                             .await;
                         let _ = rt.job_fsm_to_released(&job.job_id).await;
                     }
-                    // 标记 job 为失�?
+                    // 标记 job 为失败
                     state
                         .dispatcher
                         .update_job_status(&job.job_id, crate::core::dispatcher::JobStatus::Failed)
@@ -338,5 +253,3 @@ async fn finalize_audio_utterance(
 
     Ok(true)
 }
-
-

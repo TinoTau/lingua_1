@@ -5,6 +5,7 @@ use tokio::sync::RwLock;
 use uuid::Uuid;
 
 use crate::messages::FeatureFlags;
+use crate::websocket::session_actor::SessionActorHandle;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Session {
@@ -38,13 +39,34 @@ pub struct Session {
 #[derive(Clone)]
 pub struct SessionManager {
     sessions: Arc<RwLock<HashMap<String, Session>>>,
+    /// Session Actor 注册表（session_id -> ActorHandle）
+    actor_handles: Arc<RwLock<HashMap<String, SessionActorHandle>>>,
 }
 
 impl SessionManager {
     pub fn new() -> Self {
         Self {
             sessions: Arc::new(RwLock::new(HashMap::new())),
+            actor_handles: Arc::new(RwLock::new(HashMap::new())),
         }
+    }
+
+    /// 注册 Session Actor Handle
+    pub async fn register_actor(&self, session_id: String, handle: SessionActorHandle) {
+        let mut handles = self.actor_handles.write().await;
+        handles.insert(session_id, handle);
+    }
+
+    /// 获取 Session Actor Handle
+    pub async fn get_actor_handle(&self, session_id: &str) -> Option<SessionActorHandle> {
+        let handles = self.actor_handles.read().await;
+        handles.get(session_id).cloned()
+    }
+
+    /// 移除 Session Actor Handle
+    pub async fn remove_actor(&self, session_id: &str) {
+        let mut handles = self.actor_handles.write().await;
+        handles.remove(session_id);
     }
 
     pub async fn create_session(

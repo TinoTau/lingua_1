@@ -1,6 +1,6 @@
 // 结果队列单元测试
 
-use lingua_scheduler::result_queue::ResultQueueManager;
+use lingua_scheduler::managers::ResultQueueManager;
 use lingua_scheduler::messages::SessionMessage;
 
 fn create_test_result(session_id: &str, utterance_index: u64, text: &str) -> SessionMessage {
@@ -16,6 +16,7 @@ fn create_test_result(session_id: &str, utterance_index: u64, text: &str) -> Ses
         trace_id: format!("trace-{}", utterance_index),
         group_id: None, // Added for Utterance Group
         part_index: None, // Added for Utterance Group
+        service_timings: None, // Service timings
     }
 }
 

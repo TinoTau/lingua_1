@@ -1,12 +1,12 @@
 // 节点状态管理单元测试
 
 use lingua_scheduler::node_registry::NodeRegistry;
-use lingua_scheduler::node_status_manager::NodeStatusManager;
-use lingua_scheduler::connection_manager::NodeConnectionManager;
+use lingua_scheduler::managers::NodeStatusManager;
+use lingua_scheduler::managers::NodeConnectionManager;
 use lingua_scheduler::messages::{
     FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, InstalledService, ModelStatus, NodeStatus,
 };
-use lingua_scheduler::config::NodeHealthConfig;
+use lingua_scheduler::core::config::NodeHealthConfig;
 use std::sync::Arc;
 use std::collections::HashMap;
 

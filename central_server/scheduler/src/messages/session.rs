@@ -117,6 +117,9 @@ pub enum SessionMessage {
         /// Group Part Index（可选，用于标识 Group 内的 part）
         #[serde(skip_serializing_if = "Option::is_none")]
         part_index: Option<u64>,
+        /// 各服务耗时信息（从节点返回的 extra.service_timings 中提取）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        service_timings: Option<crate::messages::common::ServiceTimings>,
     },
     #[serde(rename = "asr_partial")]
     AsrPartial {

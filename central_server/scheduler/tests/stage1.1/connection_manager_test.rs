@@ -1,6 +1,6 @@
 // 连接管理单元测试
 
-use lingua_scheduler::connection_manager::{SessionConnectionManager, NodeConnectionManager};
+use lingua_scheduler::managers::{SessionConnectionManager, NodeConnectionManager};
 use axum::extract::ws::Message;
 use tokio::sync::mpsc;
 

@@ -2,6 +2,7 @@ use crate::core::AppState;
 use crate::messages::{ErrorCode, SessionMessage};
 use crate::core::session::SessionUpdate;
 use crate::websocket::{send_error, send_message};
+use crate::websocket::session_actor::{SessionActor, SessionEvent};
 use axum::extract::ws::Message;
 use tokio::sync::mpsc;
 use tracing::info;
@@ -81,6 +82,27 @@ pub(super) async fn handle_session_init(
         .result_queue
         .initialize_session(session.session_id.clone())
         .await;
+
+    // Create and start Session Actor
+    let pause_ms = state.web_task_segmentation.pause_ms;
+    let (actor, actor_handle) = SessionActor::new(
+        session.session_id.clone(),
+        state.clone(),
+        tx.clone(),
+        session.utterance_index,
+        pause_ms,
+    );
+    
+    // Register actor handle
+    state
+        .session_manager
+        .register_actor(session.session_id.clone(), actor_handle.clone())
+        .await;
+    
+    // Spawn actor task
+    tokio::spawn(async move {
+        actor.run().await;
+    });
 
     // Send acknowledgment message (include trace_id)
     let ack = SessionMessage::SessionInitAck {
@@ -165,6 +187,12 @@ pub(super) async fn handle_session_close(
                 }
             }
         }
+    }
+
+    // Close Session Actor
+    if let Some(actor_handle) = state.session_manager.get_actor_handle(&sess_id).await {
+        let _ = actor_handle.send(SessionEvent::CloseSession);
+        state.session_manager.remove_actor(&sess_id).await;
     }
 
     // Cleanup session

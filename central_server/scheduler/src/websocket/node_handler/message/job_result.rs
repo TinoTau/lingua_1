@@ -209,6 +209,28 @@ pub(super) async fn handle_job_result(
             }
         }
 
+        // 从 extra 中提取 service_timings，如果没有则尝试从 processing_time_ms 构造
+        let service_timings = extra.as_ref()
+            .and_then(|e| e.service_timings.clone())
+            .or_else(|| {
+                // 如果没有 service_timings，但有 processing_time_ms，创建一个包含总耗时的结构
+                _processing_time_ms.map(|total| crate::messages::common::ServiceTimings {
+                    asr_ms: None,
+                    nmt_ms: None,
+                    tts_ms: None,
+                    total_ms: Some(total),
+                })
+            });
+
+        // 准备日志输出（在移动 service_timings 之前）
+        let elapsed_ms_str = elapsed_ms.map(|ms| format!("{}ms", ms)).unwrap_or_else(|| "N/A".to_string());
+        let timings_str = service_timings.as_ref().map(|t| {
+            format!(
+                "ASR: {:?}ms, NMT: {:?}ms, TTS: {:?}ms, Total: {:?}ms",
+                t.asr_ms, t.nmt_ms, t.tts_ms, t.total_ms
+            )
+        }).unwrap_or_else(|| "N/A".to_string());
+
         // Create translation result message
         let result = SessionMessage::TranslationResult {
             session_id: session_id.clone(),
@@ -222,19 +244,44 @@ pub(super) async fn handle_job_result(
             trace_id: trace_id.clone(),
             group_id: group_id.clone(),
             part_index,
+            service_timings,
         };
-
-        let elapsed_ms_str = elapsed_ms.map(|ms| format!("{}ms", ms)).unwrap_or_else(|| "N/A".to_string());
+        // 记录详细的翻译结果日志（便于检查翻译准确性）
+        let asr_text = text_asr.as_deref().unwrap_or("(empty)");
+        let translated_text = text_translated.as_deref().unwrap_or("(empty)");
         info!(
             trace_id = %trace_id,
             job_id = %job_id,
             session_id = %session_id,
             utterance_index = utterance_index,
             elapsed_ms = %elapsed_ms_str,
-            text_asr = ?text_asr.as_ref().map(|s| s.as_str()),
-            text_translated = ?text_translated.as_ref().map(|s| s.as_str()),
+            service_timings = %timings_str,
             "Received JobResult, adding to result queue"
         );
+        info!(
+            trace_id = %trace_id,
+            job_id = %job_id,
+            "翻译结果详情 - 原文(ASR): \"{}\", 译文(NMT): \"{}\"",
+            asr_text,
+            translated_text
+        );
+        
+        // 检查ASR结果是否可能不完整（以不完整的句子结尾）
+        if let Some(ref asr) = text_asr {
+            if !asr.is_empty() {
+                let trimmed = asr.trim();
+                // 检查是否以句号、问号、感叹号结尾（中文和英文）
+                let sentence_endings = ['。', '！', '？', '.', '!', '?'];
+                if !trimmed.ends_with(sentence_endings) && trimmed.len() > 5 {
+                    warn!(
+                        trace_id = %trace_id,
+                        job_id = %job_id,
+                        asr_text = %trimmed,
+                        "ASR结果可能不完整：句子未以标点符号结尾，可能是音频被过早截断"
+                    );
+                }
+            }
+        }
 
         // Add to result queue (use sender's session_id)
         state

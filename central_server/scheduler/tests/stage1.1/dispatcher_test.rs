@@ -1,6 +1,6 @@
 // 任务分发单元测试
 
-use lingua_scheduler::dispatcher::JobDispatcher;
+use lingua_scheduler::core::dispatcher::JobDispatcher;
 use lingua_scheduler::node_registry::NodeRegistry;
 use lingua_scheduler::messages::{
     CapabilityState, FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, InstalledService,
@@ -251,7 +251,7 @@ async fn test_create_job_no_available_node() {
     
     // 应该没有分配节点
     assert!(job.assigned_node_id.is_none());
-    assert_eq!(job.status, lingua_scheduler::dispatcher::JobStatus::Pending);
+    assert_eq!(job.status, lingua_scheduler::core::dispatcher::JobStatus::Pending);
 }
 
 #[tokio::test]
@@ -383,19 +383,19 @@ async fn test_update_job_status() {
         None,
     ).await;
     
-    assert_eq!(job.status, lingua_scheduler::dispatcher::JobStatus::Assigned);
+    assert_eq!(job.status, lingua_scheduler::core::dispatcher::JobStatus::Assigned);
     
-    let success = dispatcher.update_job_status(&job.job_id, lingua_scheduler::dispatcher::JobStatus::Processing).await;
+    let success = dispatcher.update_job_status(&job.job_id, lingua_scheduler::core::dispatcher::JobStatus::Processing).await;
     assert!(success);
     
     let updated = dispatcher.get_job(&job.job_id).await.unwrap();
-    assert_eq!(updated.status, lingua_scheduler::dispatcher::JobStatus::Processing);
+    assert_eq!(updated.status, lingua_scheduler::core::dispatcher::JobStatus::Processing);
     
-    let success = dispatcher.update_job_status(&job.job_id, lingua_scheduler::dispatcher::JobStatus::Completed).await;
+    let success = dispatcher.update_job_status(&job.job_id, lingua_scheduler::core::dispatcher::JobStatus::Completed).await;
     assert!(success);
     
     let updated = dispatcher.get_job(&job.job_id).await.unwrap();
-    assert_eq!(updated.status, lingua_scheduler::dispatcher::JobStatus::Completed);
+    assert_eq!(updated.status, lingua_scheduler::core::dispatcher::JobStatus::Completed);
 }
 
 #[tokio::test]
@@ -403,7 +403,7 @@ async fn test_update_nonexistent_job_status() {
     let node_registry = create_test_node_registry();
     let dispatcher = JobDispatcher::new(node_registry);
     
-    let success = dispatcher.update_job_status("nonexistent", lingua_scheduler::dispatcher::JobStatus::Completed).await;
+    let success = dispatcher.update_job_status("nonexistent", lingua_scheduler::core::dispatcher::JobStatus::Completed).await;
     assert!(!success);
 }
 

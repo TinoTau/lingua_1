@@ -214,6 +214,9 @@ async fn main() -> Result<()> {
     // Phase 2：将 runtime 注入 dispatcher（用于 request_id bind/lock + node reserved）
     dispatcher.set_phase2(phase2_runtime.clone());
 
+    // 初始化 Job 幂等键管理器
+    let job_idempotency = crate::core::JobIdempotencyManager::new();
+
     // 创建应用状态
     let app_state = AppState {
         session_manager,
@@ -233,6 +236,7 @@ async fn main() -> Result<()> {
         group_manager,
         node_status_manager,
         room_manager: room_manager.clone(),
+        job_idempotency,
         phase2: phase2_runtime.clone(),
     };
 
@@ -287,6 +291,69 @@ async fn main() -> Result<()> {
                         }
                     }
                 }
+            }
+        }
+    });
+
+    // 启动结果队列超时检查任务（每10秒检查一次）
+    let app_state_for_result_check = app_state.clone();
+    tokio::spawn(async move {
+        let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(10));
+        // 跳过第一次立即触发
+        interval.tick().await;
+        
+        loop {
+            interval.tick().await;
+            
+            // 添加错误处理，避免任务崩溃
+            if let Err(e) = async {
+                // 获取所有活跃会话
+                let sessions = app_state_for_result_check.session_manager.list_all_sessions().await;
+                
+                // 限制每次处理的会话数量，避免长时间阻塞
+                let max_sessions_per_cycle = 100;
+                let sessions_to_process: Vec<_> = sessions.into_iter().take(max_sessions_per_cycle).collect();
+                
+                for session in sessions_to_process {
+                    // 调用 get_ready_results 会触发超时检测
+                    let ready_results = app_state_for_result_check
+                        .result_queue
+                        .get_ready_results(&session.session_id)
+                        .await;
+                    
+                    // 如果有就绪的结果（包括超时生成的失败结果），发送给客户端
+                    if !ready_results.is_empty() {
+                        if let Some(tx) = app_state_for_result_check
+                            .session_connections
+                            .get(&session.session_id)
+                            .await
+                        {
+                            for result in ready_results {
+                                let result_json = match serde_json::to_string(&result) {
+                                    Ok(json) => json,
+                                    Err(e) => {
+                                        tracing::warn!(
+                                            session_id = %session.session_id,
+                                            error = %e,
+                                            "Failed to serialize result"
+                                        );
+                                        continue;
+                                    }
+                                };
+                                if tx.send(axum::extract::ws::Message::Text(result_json)).is_err() {
+                                    // 发送失败，连接可能已关闭，继续处理下一个
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                Ok::<(), anyhow::Error>(())
+            }.await {
+                tracing::error!(
+                    error = %e,
+                    "Error in result queue timeout checker task"
+                );
             }
         }
     });
@@ -559,20 +626,13 @@ async fn get_cluster_stats(
         });
     }
 
-    // 获取全局节点数（从 nodes:all）
-    let nodes_all_key = format!("{}:v1:nodes:all", key_prefix);
-    let mut scard_cmd = redis::cmd("SCARD");
-    scard_cmd.arg(&nodes_all_key);
-    let total_nodes: u64 = match phase2.redis_query::<u64>(scard_cmd).await {
-        Ok(v) => {
-            tracing::debug!("Total nodes from Redis: {}", v);
-            v
-        },
-        Err(e) => {
-            tracing::warn!("Failed to get total nodes from Redis: {}", e);
-            0
-        },
+    // 获取在线节点数（从本地 NodeRegistry 统计，因为 Redis nodes:all 包含已下线的节点）
+    // 注意：nodes:all 包含所有注册过的节点（包括已下线的），所以应该从本地状态统计在线节点
+    let total_nodes = {
+        let nodes = state.node_registry.nodes.read().await;
+        nodes.values().filter(|n| n.online).count()
     };
+    tracing::debug!("Total online nodes from local registry: {}", total_nodes);
 
     // 获取会话数（简化：从本地状态获取，多实例需要从 Redis 聚合）
     let total_sessions = state.session_manager.list_all_sessions().await.len();

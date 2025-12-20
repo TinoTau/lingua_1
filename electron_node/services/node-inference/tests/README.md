@@ -4,6 +4,10 @@
 
 本目录包含节点推理服务的所有单元测试。
 
+## 相关文档
+
+- [ASR 文本过滤配置文档](../docs/ASR_TEXT_FILTER_CONFIG.md) - ASR 文本过滤规则配置说明
+
 ### 测试模块
 
 - **asr_test.rs**: ASR (Whisper) 引擎测试

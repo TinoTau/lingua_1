@@ -553,13 +553,13 @@ impl Default for TaskBindingConfig {
 /// Web 端音频分段（AudioChunk）任务边界配置
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct WebTaskSegmentationConfig {
-    /// 超过该停顿（毫秒）视为一个任务结束（默认 1000ms）
+    /// 超过该停顿（毫秒）视为一个任务结束（默认 2000ms，增加以避免句子中间停顿导致截断）
     #[serde(default = "default_web_pause_ms")]
     pub pause_ms: u64,
 }
 
 fn default_web_pause_ms() -> u64 {
-    1000
+    2000  // 从 1000ms 增加到 2000ms，减少句子中间停顿导致的截断问题
 }
 
 impl Default for WebTaskSegmentationConfig {

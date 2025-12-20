@@ -12,6 +12,7 @@ pub mod pipeline;
 pub mod speaker;
 pub mod speech_rate;
 pub mod language_detector;
+pub mod text_filter;
 mod inference;
 pub mod http_server;
 
