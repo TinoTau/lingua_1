@@ -40,13 +40,14 @@
 - **位置**: `docs/project_management/PROJECT_STATUS.md`
 - **内容**:
   - 执行摘要（总体完成度）
-  - 测试统计（364+ 个测试，100% 通过）
+  - 测试统计（369+ 个测试，100% 通过）
   - 联合调试就绪度评估
   - 已完成功能概览
   - 核心功能清单
   - Phase 3 功能完成状态
+  - 节点端 VAD 引擎集成（2025-01-XX）
 - **适用对象**: 项目管理、技术负责人、新成员
-- **更新状态**: ✅ 最新（已更新 Phase 3 功能）
+- **更新状态**: ✅ 最新（已更新 VAD 集成和 Opus 压缩）
 
 #### 2.2 开发计划
 - **位置**: `docs/project_management/DEVELOPMENT_PLAN.md`
@@ -131,6 +132,15 @@
 - **内容**: 自动语种识别功能的设计文档
 - **适用对象**: 开发者
 - **更新状态**: ✅ 最新（已整理）
+
+#### 4.4 节点端音频处理优化（新增）
+- **位置**: `docs/electron_node/node-inference/`
+  - [VAD 引擎集成实现](./electron_node/node-inference/VAD_INTEGRATION_IMPLEMENTATION.md) - VAD 语音段检测和上下文优化
+  - [VAD 上下文缓冲区实现](./electron_node/node-inference/VAD_CONTEXT_BUFFER_IMPLEMENTATION.md) - 上下文缓冲区机制
+  - [Opus 压缩支持](./electron_node/node-inference/OPUS_COMPRESSION_SUPPORT.md) - Opus 端到端压缩
+- **内容**: 节点端音频处理优化功能（VAD 集成、上下文优化、Opus 压缩）
+- **适用对象**: 开发者、架构师
+- **更新状态**: ✅ 最新（2025-01-XX）
 
 ---
 

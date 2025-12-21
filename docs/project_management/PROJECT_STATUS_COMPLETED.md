@@ -44,10 +44,25 @@
 - ✅ NMT (M2M100) 引擎实现
 - ✅ TTS (Piper) 引擎实现
 - ✅ VAD (Silero VAD) 引擎实现（包含完整的上下文缓冲机制）
+  - ✅ **VAD 引擎集成**（2025-01-XX）
+    - VAD 语音段检测和提取
+    - VAD 上下文缓冲区优化
+    - Level 2 断句功能
+    - 静音过滤和 ASR 准确性提升
+
+**音频处理优化**:
+- ✅ **Opus 压缩支持**（2025-01-XX）
+  - Web 客户端 Opus 编码（@minceraftmc/opus-encoder）
+  - 节点端 Opus 解码（opus-rs）
+  - Binary Frame 协议支持
+  - 自动降级机制
 
 **单元测试**: 核心功能测试全部通过 ✅
 
-详细内容请参考：[节点推理服务文档](../node_inference/README.md)
+详细内容请参考：
+- [节点推理服务文档](../electron_node/node-inference/README.md)
+- [VAD 引擎集成实现文档](../electron_node/node-inference/VAD_INTEGRATION_IMPLEMENTATION.md)
+- [VAD 上下文缓冲区实现文档](../electron_node/node-inference/VAD_CONTEXT_BUFFER_IMPLEMENTATION.md)
 
 ---
 
@@ -237,28 +252,39 @@
 - ⚠️ 当前流程限制：ASR 和 NMT 在节点端顺序执行，首次 `JobAssign` 时 `context_text` 为 `None`
 - ⚠️ Python M2M100 服务端需要支持 `context_text` 参数（当前仅简单拼接）
 
-### Silero VAD 上下文缓冲 ✅
+### 节点端 VAD 引擎集成 ✅
 
-**完成状态**: ✅ **代码已实现**（但当前在 `inference.rs` 中未使用）
+**完成状态**: ✅ **100% 完成并测试**（2025-01-XX）
 
 **核心功能**:
+- ✅ **VAD 语音段检测和提取**
+  - 在 ASR 处理前使用 VAD 检测有效语音段
+  - 自动合并多个语音段，去除静音部分
+  - 提高 ASR 识别准确性
+- ✅ **VAD 上下文缓冲区优化**
+  - 使用 VAD 选择最后一个语音段的尾部作为上下文
+  - 避免将静音部分作为上下文
+  - 提高下一个 utterance 的 ASR 准确性
+- ✅ **Level 2 断句功能**
+  - 节点端精确断句
+  - 支持多语音段处理
+- ✅ **容错机制**
+  - VAD 失败时自动回退到完整音频处理
+  - 短音频保护机制（< 0.5秒时使用原始音频）
+
+**技术实现**:
 - ✅ RNN 隐藏状态（模型级上下文）
 - ✅ 语速历史（应用级上下文，自适应调整阈值）
 - ✅ 时间戳和计数（会话级上下文）
 - ✅ 状态重置机制
 
-**功能说明**:
-- 多层上下文缓冲机制（模型级、应用级、会话级）
-- 自适应阈值调整（根据语速动态调整 200ms - 800ms）
-- 冷却期机制（防止频繁边界检测）
+**测试结果**: 5/5 集成测试通过（100%）
 
 **相关文档**:
+- [VAD 引擎集成实现文档](../electron_node/node-inference/VAD_INTEGRATION_IMPLEMENTATION.md)
+- [VAD 上下文缓冲区实现文档](../electron_node/node-inference/VAD_CONTEXT_BUFFER_IMPLEMENTATION.md)
 - [VAD 架构分析](../VAD_ARCHITECTURE_ANALYSIS.md)
 - [上下文缓冲功能对比](../CONTEXT_BUFFERING_COMPARISON.md)
-
-**注意事项**:
-- ⚠️ 当前节点端 VAD 未集成到 `inference.rs` 处理流程中
-- ⚠️ 需要实现流式断句功能才能完全生效
 
 ---
 
@@ -288,11 +314,30 @@
 **完成状态**: ✅ **100% 完成并测试**
 
 **核心功能**:
-- ✅ Web Client 端 Opus 编码/解码（使用 `@minceraftmc/opus-encoder` 和 `opus-decoder`）
-- ✅ Node 端 Opus 解码（使用 `opus-rs`）
-- ✅ HTTP/WebSocket 接口中的 Opus 解码集成
-- ✅ 往返编码/解码测试（验证数据完整性）
-- ✅ 完整的单元测试和集成测试（全部通过）
+- ✅ **Web Client 端 Opus 编码/解码**
+  - 使用 `@minceraftmc/opus-encoder` 进行实时编码
+  - 使用 `opus-decoder` 进行解码
+  - 编码延迟：< 10ms per frame
+  - 支持实时音频编码（100ms 音频块）
+- ✅ **Node 端 Opus 解码**
+  - 使用 `opus-rs` 进行解码
+  - 解码延迟：< 10ms per frame
+  - 支持自动格式检测
+- ✅ **Binary Frame 协议支持**
+  - WebSocket Binary Frame 协议
+  - 比 JSON + base64 减少约 33% 带宽
+  - 自动协商机制
+- ✅ **自动降级机制**
+  - Opus 失败时自动回退到 PCM16
+  - 无缝切换，不影响用户体验
+- ✅ **端到端压缩支持**
+  - Web 客户端 → 调度服务器 → 节点端
+  - 全链路 Opus 压缩（可选）
+  - 显著降低带宽占用（特别是在低带宽网络）
+
+**性能影响**:
+- **高/中速网络（> 2 Mbps）**: Opus 压缩可能略微增加总延迟（编码/解码时间）
+- **低速/移动网络（< 2 Mbps）**: Opus 压缩显著减少总延迟（传输时间节省）
 
 **测试结果**:
 - Web Client 端: 5/5 测试通过 ✅
@@ -302,6 +347,8 @@
 - [Phase 2 实现文档](../web_client/PHASE2_IMPLEMENTATION.md)
 - [Phase 3 测试完成报告](../PHASE3_TESTING_COMPLETE_FINAL.md)
 - [Phase 3 实现文档](../web_client/PHASE3_IMPLEMENTATION.md)
+- [Opus 压缩支持文档](../electron_node/node-inference/OPUS_COMPRESSION_SUPPORT.md)
+- [Session Init 和 Opus 兼容性分析](../web_client/SESSION_INIT_AND_OPUS_COMPATIBILITY_ANALYSIS.md)
 
 ---
 

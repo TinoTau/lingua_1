@@ -72,6 +72,10 @@ Lingua 是一个**分布式实时语音翻译系统**，采用**三层架构**�
 - ✅ 双向模式（面对面翻译）
 - ✅ 会议室模式（WebRTC 原声传递）
 - ✅ 功能选择（模块化功能）
+- ✅ **Opus 音频压缩支持**（2025-01-XX）
+  - 实时 Opus 编码（@minceraftmc/opus-encoder）
+  - Binary Frame 协议支持
+  - 自动降级机制
 
 **连接端点**: `ws://localhost:5010/ws/session`
 
@@ -157,6 +161,14 @@ Web端 → WebSocket → [Scheduler] ← WebSocket ← 节点端
   - 从 service.json 读取配置
   - 签名验证支持（SHA256 + Ed25519）
 - ✅ 推理服务管理（ASR/NMT/TTS/VAD）
+- ✅ **VAD 引擎集成**（2025-01-XX）
+  - Level 2 断句功能
+  - 语音段检测和静音过滤
+  - VAD 上下文缓冲区优化
+- ✅ **Opus 音频解码支持**（2025-01-XX）
+  - Opus 解码（opus-rs）
+  - 自动格式检测
+  - PCM16 兼容
 - ✅ 模块化功能支持（动态启用/禁用）
 - ✅ 服务热插拔（Python 服务）
 
@@ -178,7 +190,10 @@ Electron App (主进程)
             │   ├── ASR (Whisper)
             │   ├── NMT (M2M100)
             │   ├── TTS (Piper/YourTTS)
-            │   └── VAD (Silero)
+            │   └── VAD (Silero) - ✅ 已集成（2025-01-XX）
+            │       ├── Level 2 断句
+            │       ├── 语音段检测和提取
+            │       └── 上下文缓冲区优化
             │
             └── Python Services
                 ├── NMT Service (端口 5008)

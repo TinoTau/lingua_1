@@ -35,6 +35,11 @@
 - [中文 TTS 修复总结](./CHINESE_TTS_FIX_SUMMARY.md)
 - [平台化实现总结](./PLATFORM_READY_IMPLEMENTATION_SUMMARY.md)
 
+### 节点推理服务优化（新增）
+- [VAD 引擎集成实现](./node-inference/VAD_INTEGRATION_IMPLEMENTATION.md)
+- [VAD 上下文缓冲区实现](./node-inference/VAD_CONTEXT_BUFFER_IMPLEMENTATION.md)
+- [Opus 压缩支持](./node-inference/OPUS_COMPRESSION_SUPPORT.md)（待创建）
+
 ---
 
 ## 相关链接

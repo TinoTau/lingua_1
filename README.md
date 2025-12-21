@@ -164,8 +164,15 @@ npm start
 ### 节点端 (electron_node/)
 - **Electron 应用**: Electron + Node.js + TypeScript + React
 - **推理服务**: Rust + ONNX Runtime
+  - **ASR**: Whisper (GGML)
+  - **VAD**: Silero VAD (ONNX) - 支持 Level 2 断句和上下文优化
+  - **音频处理**: Opus 解码支持（opus-rs）
 - **Python 服务**: Python (NMT、TTS、YourTTS)
 - **连接**: WebSocket 连接到 Scheduler (节点注册)
+- **音频优化**:
+  - Opus 压缩支持（端到端）
+  - VAD 语音段检测和静音过滤
+  - VAD 上下文缓冲区优化
 
 ### 中央服务器 (central_server/)
 - **调度服务器**: Rust + Tokio + Axum (端口 5010)

@@ -67,8 +67,7 @@ pub struct InferenceService {
     asr_engine: asr::ASREngine,
     nmt_engine: nmt::NMTEngine,
     tts_engine: tts::TTSEngine,
-    #[allow(dead_code)]
-    vad_engine: vad::VADEngine,  // VAD 用于节点端 Level 2 断句，当前在 process 中暂未使用
+    vad_engine: vad::VADEngine,  // VAD 用于节点端 Level 2 断句、语音段提取和上下文缓冲区优化
     
     // 语言检测器（可选，用于自动语种识别）
     language_detector: Option<language_detector::LanguageDetector>,
@@ -81,6 +80,11 @@ pub struct InferenceService {
     
     // 模块管理器
     module_manager: ModuleManager,
+    
+    // 上下文缓冲区：保存前一个utterance的尾部音频（用于提高ASR准确性）
+    // 采样率：16kHz，格式：f32，范围：[-1.0, 1.0]
+    // 最大长度：2秒（32000个样本 @ 16kHz）
+    context_buffer: Arc<tokio::sync::Mutex<Vec<f32>>>,
 }
 
 impl InferenceService {
@@ -116,6 +120,7 @@ impl InferenceService {
             speech_rate_detector: None,
             speech_rate_controller: None,
             module_manager,
+            context_buffer: Arc::new(tokio::sync::Mutex::new(Vec::new())),
         })
     }
 
@@ -214,6 +219,25 @@ impl InferenceService {
         }
         self.module_manager.disable_module(module_name).await?;
         Ok(())
+    }
+
+    /// 清空上下文缓冲区
+    /// 
+    /// 用于会话结束或需要重置上下文时调用
+    pub async fn clear_context_buffer(&self) {
+        let mut context = self.context_buffer.lock().await;
+        context.clear();
+        // 同时重置VAD状态
+        if let Err(e) = self.vad_engine.reset_state() {
+            tracing::warn!("重置VAD状态失败: {}", e);
+        }
+        tracing::debug!("上下文缓冲区和VAD状态已清空");
+    }
+
+    /// 获取上下文缓冲区当前大小（样本数）
+    pub async fn get_context_buffer_size(&self) -> usize {
+        let context = self.context_buffer.lock().await;
+        context.len()
     }
 
     /// 处理推理请求（支持部分结果回调）
@@ -320,6 +344,82 @@ impl InferenceService {
         
         // 2. ASR: 语音识别（必需，使用检测到的语言）
         debug!(trace_id = %trace_id, src_lang = %src_lang, "开始 ASR 语音识别");
+        
+        // 2.0 上下文缓冲区处理：前置前一个utterance的尾部音频
+        // 这可以提高Whisper对句子开头的识别准确性
+        let audio_f32_with_context = {
+            let context = self.context_buffer.lock().await;
+            if !context.is_empty() {
+                let mut audio_with_context = context.clone();
+                audio_with_context.extend_from_slice(&audio_f32);
+                debug!(
+                    trace_id = %trace_id,
+                    context_samples = context.len(),
+                    original_samples = audio_f32.len(),
+                    total_samples = audio_with_context.len(),
+                    "前置上下文音频到当前utterance"
+                );
+                audio_with_context
+            } else {
+                audio_f32.clone()
+            }
+        };
+        
+        // 2.0.1 使用VAD检测有效语音段（Level 2断句）
+        // 提取有效语音段，去除静音部分，提高ASR准确性
+        let audio_f32_processed = {
+            match self.vad_engine.detect_speech(&audio_f32_with_context) {
+                Ok(segments) => {
+                    if segments.is_empty() {
+                        warn!(
+                            trace_id = %trace_id,
+                            "VAD未检测到语音段，使用完整音频进行ASR"
+                        );
+                        audio_f32_with_context.clone()
+                    } else {
+                        // 如果检测到多个语音段，合并所有段
+                        // 这样可以处理包含多个句子的长音频
+                        let mut processed_audio = Vec::new();
+                        
+                        for (start, end) in &segments {
+                            let segment = &audio_f32_with_context[*start..*end];
+                            processed_audio.extend_from_slice(segment);
+                        }
+                        
+                        info!(
+                            trace_id = %trace_id,
+                            segments_count = segments.len(),
+                            original_samples = audio_f32_with_context.len(),
+                            processed_samples = processed_audio.len(),
+                            removed_samples = audio_f32_with_context.len() - processed_audio.len(),
+                            "VAD检测到{}个语音段，已提取有效语音", segments.len()
+                        );
+                        
+                        // 如果处理后的音频太短（< 0.5秒），使用原始音频
+                        const MIN_AUDIO_SAMPLES: usize = 8000; // 0.5秒 @ 16kHz
+                        if processed_audio.len() < MIN_AUDIO_SAMPLES {
+                            warn!(
+                                trace_id = %trace_id,
+                                processed_samples = processed_audio.len(),
+                                "VAD处理后的音频过短，使用原始音频"
+                            );
+                            audio_f32_with_context.clone()
+                        } else {
+                            processed_audio
+                        }
+                    }
+                }
+                Err(e) => {
+                    warn!(
+                        trace_id = %trace_id,
+                        error = %e,
+                        "VAD检测失败，使用完整音频进行ASR"
+                    );
+                    audio_f32_with_context.clone()
+                }
+            }
+        };
+        
         // 如果启用了流式 ASR，使用流式处理；否则使用一次性处理
         let transcript = if request.enable_streaming_asr.unwrap_or(false) {
             // 启用流式 ASR
@@ -342,7 +442,7 @@ impl InferenceService {
             self.asr_engine.clear_buffer().await;
             
             // 分块累积音频并定期获取部分结果
-            for chunk in audio_f32.chunks(chunk_size as usize) {
+            for chunk in audio_f32_processed.chunks(chunk_size as usize) {
                 // 累积音频块
                 self.asr_engine.accumulate_audio(chunk).await;
                 
@@ -363,9 +463,83 @@ impl InferenceService {
             self.asr_engine.disable_streaming().await;
             final_text
         } else {
-            // 一次性处理
-            self.asr_engine.transcribe_f32(&audio_f32, &src_lang).await?
+            // 一次性处理（使用VAD处理后的音频）
+            self.asr_engine.transcribe_f32(&audio_f32_processed, &src_lang).await?
         };
+        
+        // 2.1 更新上下文缓冲区：使用VAD选择最佳上下文片段
+        // 优先选择最后一个语音段的尾部，而不是简单的音频尾部
+        {
+            const CONTEXT_DURATION_SEC: f32 = 2.0;  // 保存最后2秒
+            const SAMPLE_RATE: u32 = 16000;
+            let context_samples = (CONTEXT_DURATION_SEC * SAMPLE_RATE as f32) as usize;
+            
+            let mut context = self.context_buffer.lock().await;
+            
+            // 使用VAD检测原始音频（不带上下文）的语音段
+            match self.vad_engine.detect_speech(&audio_f32) {
+                Ok(segments) => {
+                    if !segments.is_empty() {
+                        // 选择最后一个语音段
+                        let (last_start, last_end) = segments.last().unwrap();
+                        let last_segment = &audio_f32[*last_start..*last_end];
+                        
+                        // 从最后一个语音段的尾部提取上下文
+                        if last_segment.len() > context_samples {
+                            let start_idx = last_segment.len() - context_samples;
+                            *context = last_segment[start_idx..].to_vec();
+                            debug!(
+                                trace_id = %trace_id,
+                                context_samples = context.len(),
+                                segment_start = last_start,
+                                segment_end = last_end,
+                                "更新上下文缓冲区（使用VAD选择的最后一个语音段尾部）"
+                            );
+                        } else {
+                            // 如果最后一个段太短，保存整个段
+                            *context = last_segment.to_vec();
+                            debug!(
+                                trace_id = %trace_id,
+                                context_samples = context.len(),
+                                "更新上下文缓冲区（最后一个语音段较短，保存全部）"
+                            );
+                        }
+                    } else {
+                        // 如果没有检测到语音段，回退到简单尾部保存
+                        if audio_f32.len() > context_samples {
+                            let start_idx = audio_f32.len() - context_samples;
+                            *context = audio_f32[start_idx..].to_vec();
+                            debug!(
+                                trace_id = %trace_id,
+                                context_samples = context.len(),
+                                "更新上下文缓冲区（VAD未检测到语音段，保存最后{}秒）", CONTEXT_DURATION_SEC
+                            );
+                        } else {
+                            *context = audio_f32.clone();
+                            debug!(
+                                trace_id = %trace_id,
+                                context_samples = context.len(),
+                                "更新上下文缓冲区（utterance较短，保存全部）"
+                            );
+                        }
+                    }
+                }
+                Err(e) => {
+                    // VAD检测失败，回退到简单尾部保存
+                    warn!(
+                        trace_id = %trace_id,
+                        error = %e,
+                        "VAD检测失败，使用简单尾部保存上下文"
+                    );
+                    if audio_f32.len() > context_samples {
+                        let start_idx = audio_f32.len() - context_samples;
+                        *context = audio_f32[start_idx..].to_vec();
+                    } else {
+                        *context = audio_f32.clone();
+                    }
+                }
+            }
+        }
         
         // 将 ASR 结果写入 PipelineContext
         // 记录过滤前后的文本（用于调试）

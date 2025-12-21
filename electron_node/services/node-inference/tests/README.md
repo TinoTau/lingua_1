@@ -34,6 +34,13 @@
   - 阈值设置
   - 状态重置
 
+- **vad_integration_test.rs**: VAD 集成测试（新增）
+  - 上下文缓冲区 API 测试
+  - VAD 语音段检测和提取
+  - 上下文缓冲区 VAD 优化
+  - VAD 失败回退机制
+  - [测试报告](./VAD_INTEGRATION_TEST_REPORT.md)
+
 - **integration_test.rs**: 集成测试
   - 完整推理流程（ASR → NMT → TTS）
   - 推理服务初始化

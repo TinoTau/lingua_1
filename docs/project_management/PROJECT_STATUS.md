@@ -4,6 +4,12 @@
 **联合调试就绪度**: ✅ **已就绪**（核心功能 100% 完成并测试）
 
 **重要更新**:
+- ✅ **节点端 VAD 引擎集成完成**（2025-01-XX）
+  - VAD 语音段检测和提取（100% 完成并测试）
+  - VAD 上下文缓冲区优化（100% 完成并测试）
+  - Level 2 断句功能（100% 完成并测试）
+  - 静音过滤和 ASR 准确性提升（100% 完成并测试）
+  - 单元测试：5 个集成测试用例全部通过（100%）
 - ✅ **Web 客户端 Phase 3 功能完成**（2025-01-XX）
   - 客户端背压与降级机制（100% 完成并测试）
   - Opus 编码集成（Web Client + Node 端，100% 完成并测试）
@@ -15,6 +21,8 @@
   - 节点端实现服务包安装、校验、启动完整流程
   - 支持 SHA256 和 Ed25519 签名验证
   - 单元测试：18 个测试用例全部通过
+- ✅ 新增文档：[VAD 引擎集成实现](../electron_node/node-inference/VAD_INTEGRATION_IMPLEMENTATION.md)
+- ✅ 新增文档：[VAD 上下文缓冲区实现](../electron_node/node-inference/VAD_CONTEXT_BUFFER_IMPLEMENTATION.md)
 - ✅ 新增文档：[Utterance Group 实现原理](../UTTERANCE_GROUP_IMPLEMENTATION.md)
 - ✅ 新增文档：[上下文缓冲功能对比](../CONTEXT_BUFFERING_COMPARISON.md)
 - ✅ 新增文档：[VAD 架构分析](../VAD_ARCHITECTURE_ANALYSIS.md)
@@ -53,7 +61,8 @@
 | Web 客户端会议室模式（原声传递偏好） | 12 | ✅ 12 | 0 | 100% |
 | Web 客户端会议室模式（成员加入流程） | 16 | ✅ 16 | 0 | 100% |
 | Web 客户端 Phase 3（背压、Opus、Session Init） | 28 | ✅ 28 | 0 | 100% |
-| **总计** | **364+** | **✅ 364+** | **0** | **100%** |
+| 节点端 VAD 集成（语音段检测、上下文优化） | 5 | ✅ 5 | 0 | 100% |
+| **总计** | **369+** | **✅ 369+** | **0** | **100%** |
 
 *注：WebRTC 连接和音频混控功能已完成实现，但暂无独立单元测试（已集成在会议室模式功能中）
 
@@ -67,7 +76,6 @@
 - 可选模块模型集成（音色识别、语速识别等）
 - Web 客户端语言检测 UI
 - Utterance Group 功能（所有组件已完成 ✅，需要 Python M2M100 服务端支持上下文参数）
-- Silero VAD 上下文缓冲（已实现 ✅，但当前在 `inference.rs` 中未使用）
 
 ---
 
@@ -88,6 +96,10 @@
 - ✅ **调度服务器核心功能** - 100% 完成并测试
 - ✅ **客户端消息格式对齐** - 100% 完成并测试
 - ✅ **节点推理服务** - 100% 完成并测试
+  - ✅ **VAD 引擎集成** - 100% 完成并测试（2025-01-XX）
+    - VAD 语音段检测和提取
+    - VAD 上下文缓冲区优化
+    - Level 2 断句功能
 - ✅ **自动语种识别与双向模式** - 核心功能完成并测试
 
 详细内容请参考：[已完成功能详细列表](./PROJECT_STATUS_COMPLETED.md#阶段一核心功能实现)
@@ -115,12 +127,39 @@
 
 - ✅ **客户端背压与降级机制** - 100% 完成并测试
 - ✅ **Opus 编码集成** - 100% 完成并测试（Web Client + Node 端）
+  - Web 客户端 Opus 编码支持（@minceraftmc/opus-encoder）
+  - 节点端 Opus 解码支持（opus-rs）
+  - Binary Frame 协议支持
+  - 自动降级机制（Opus 失败时回退到 PCM16）
 - ✅ **Session Init 协议增强** - 100% 完成并测试（trace_id, tenant_id）
 - ✅ **Node 端 Opus 解码支持** - 100% 完成并测试
 
 **测试结果**: 28/28 测试通过（100%）
 
 详细内容请参考：[已完成功能详细列表](./PROJECT_STATUS_COMPLETED.md#web-客户端-phase-3-功能)
+
+### 节点端 VAD 引擎集成 ✅
+
+- ✅ **VAD 语音段检测和提取** - 100% 完成并测试
+  - 在 ASR 处理前使用 VAD 检测有效语音段
+  - 自动合并多个语音段，去除静音部分
+  - 提高 ASR 识别准确性
+- ✅ **VAD 上下文缓冲区优化** - 100% 完成并测试
+  - 使用 VAD 选择最后一个语音段的尾部作为上下文
+  - 避免将静音部分作为上下文
+  - 提高下一个 utterance 的 ASR 准确性
+- ✅ **Level 2 断句功能** - 100% 完成并测试
+  - 节点端精确断句
+  - 支持多语音段处理
+- ✅ **容错机制** - 100% 完成并测试
+  - VAD 失败时自动回退到完整音频处理
+  - 短音频保护机制
+
+**测试结果**: 5/5 集成测试通过（100%）
+
+详细内容请参考：
+- [VAD 引擎集成实现文档](../electron_node/node-inference/VAD_INTEGRATION_IMPLEMENTATION.md)
+- [VAD 上下文缓冲区实现文档](../electron_node/node-inference/VAD_CONTEXT_BUFFER_IMPLEMENTATION.md)
 
 ### 其他已完成功能 ✅
 
