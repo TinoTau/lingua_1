@@ -6,6 +6,20 @@
 
 ## 📋 测试报告链接
 
+### Phase 3 功能测试 ✅
+
+- **Phase 3 测试完成报告**: [PHASE3_TESTING_COMPLETE_FINAL.md](../PHASE3_TESTING_COMPLETE_FINAL.md)
+  - Scheduler 端: 6/6 测试通过 ✅
+  - Node 端: 17/17 测试通过 ✅
+  - Web Client 端: 5/5 测试通过 ✅
+  - 总计: 28/28 测试通过（100%）
+
+- **Phase 3 实现总结**: [PHASE3_IMPLEMENTATION_SUMMARY.md](../PHASE3_IMPLEMENTATION_SUMMARY.md)
+  - 客户端背压与降级机制
+  - Opus 编码集成（Web Client + Node 端）
+  - Session Init 协议增强
+  - Node 端 Opus 解码支持
+
 ### 调度服务器
 
 - [阶段 1.1 测试报告](../../scheduler/tests/stage1.1/TEST_REPORT.md)
@@ -24,6 +38,11 @@
 - [阶段 2.1 测试报告](../../web-client/tests/stage2.1/TEST_REPORT.md)
 - [阶段 2.1.4 会话模式测试报告](../../web-client/tests/session_mode/TEST_REPORT.md)
 - [阶段 3.2 测试报告](../../web-client/tests/stage3.2/TEST_REPORT.md)
+- [Phase 3 测试完成报告](../PHASE3_TESTING_COMPLETE_FINAL.md) ✅
+  - 客户端背压与降级机制测试
+  - Opus 编码集成测试（Web Client + Node 端）
+  - Session Init 协议增强测试
+  - 总计: 28/28 测试通过（100%）
 
 ### Electron Node 客户端
 
@@ -53,7 +72,8 @@
 | Web 客户端双向模式（面对面模式） | 14 | ✅ 14 | 0 | 100% |
 | Web 客户端会议室模式（原声传递偏好） | 12 | ✅ 12 | 0 | 100% |
 | Web 客户端会议室模式（成员加入流程） | 16 | ✅ 16 | 0 | 100% |
-| **总计** | **318+** | **✅ 318+** | **0** | **100%** |
+| Web 客户端 Phase 3（背压、Opus、Session Init） | 28 | ✅ 28 | 0 | 100% |
+| **总计** | **346+** | **✅ 346+** | **0** | **100%** |
 
 *注：WebRTC 连接和音频混控功能已完成实现，但暂无独立单元测试（已集成在会议室模式功能中）
 

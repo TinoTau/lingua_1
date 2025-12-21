@@ -99,4 +99,5 @@ npm install
 - **项目说明**: `webapp/README.md`
 - **文档索引**: `webapp/docs/README.md`
 - **测试结果**: `webapp/web-client/TEST_RESULTS.md`
-- **测试状态**: `webapp/TEST_STATUS.md`
+- **测试指南**: `webapp/web-client/docs/TEST_RUN_GUIDE.md`
+- **项目状态**: `docs/project_management/PROJECT_STATUS.md`

@@ -2,7 +2,7 @@
 
 本文档列出了最能说明当前产品形态、功能、进度的核心文档。
 
-**最后更新**: 2025-12-17
+**最后更新**: 2025-01-XX
 
 ---
 
@@ -40,12 +40,13 @@
 - **位置**: `docs/project_management/PROJECT_STATUS.md`
 - **内容**:
   - 执行摘要（总体完成度）
-  - 测试统计（318+ 个测试，100% 通过）
+  - 测试统计（364+ 个测试，100% 通过）
   - 联合调试就绪度评估
   - 已完成功能概览
   - 核心功能清单
+  - Phase 3 功能完成状态
 - **适用对象**: 项目管理、技术负责人、新成员
-- **更新状态**: ✅ 最新
+- **更新状态**: ✅ 最新（已更新 Phase 3 功能）
 
 #### 2.2 开发计划
 - **位置**: `docs/project_management/DEVELOPMENT_PLAN.md`
@@ -108,51 +109,55 @@
 ### 4. 功能特性文档
 
 #### 4.1 Web 客户端功能
-- **位置**: `webapp/docs/webClient/`
-  - `Web_端实时语音翻译_统一设计方案_v3.md` - 产品设计概述
-  - `FACE_TO_FACE_MODE.md` - 面对面模式功能
-  - `UTTERANCE_GROUP.md` - Utterance Group 功能完整文档
+- **位置**: `docs/web_client/`
+  - [架构设计](./web_client/ARCHITECTURE.md) - Web 客户端架构设计
+  - [Phase 2 实现](./web_client/PHASE2_IMPLEMENTATION.md) - Binary Frame、Opus 框架
+  - [Phase 3 实现](./web_client/PHASE3_IMPLEMENTATION.md) - 背压、Opus、Session Init
+  - [规模化规范](./web_client/SCALABILITY_SPEC.md) - 规模化能力要求与协议规范
 - **内容**: 详细功能设计和使用说明
 - **适用对象**: 开发者、产品经理
-- **更新状态**: ✅ 最新
+- **更新状态**: ✅ 最新（已整理）
 
 #### 4.2 模块化功能
-- **位置**: `electron_node/docs/modular/LINGUA_完整技术说明书_v2.md`
+- **位置**: `docs/electron_node/modular/`
+  - [完整技术说明书](./electron_node/modular/LINGUA_完整技术说明书_v2.md) - 模块化架构设计
+  - [模块化功能说明](./electron_node/modular/MODULAR_FEATURES.md) - 功能选择机制
 - **内容**: 模块化架构设计、功能选择机制
 - **适用对象**: 架构师、高级开发者
-- **更新状态**: ✅ 最新
+- **更新状态**: ✅ 最新（已整理）
 
 #### 4.3 自动语种识别和双向模式
-- **位置**: `electron_node/docs/`（参考开发计划中的链接）
+- **位置**: `docs/electron_node/`（参考开发计划中的链接）
 - **内容**: 自动语种识别功能的设计文档
 - **适用对象**: 开发者
-- **更新状态**: ✅ 最新
+- **更新状态**: ✅ 最新（已整理）
 
 ---
 
 ### 5. API 文档
 
 #### 5.1 API Gateway 文档
-- **位置**: `central_server/docs/api_gateway/`
-  - `PUBLIC_API_SPEC.md` - 公共 API 规范
-  - `PUBLIC_API_STATUS.md` - API 状态
+- **位置**: `docs/central_server/api_gateway/`
+  - [公共 API 规范](./central_server/api_gateway/PUBLIC_API_SPEC.md)
+  - [公共 API 状态](./central_server/api_gateway/PUBLIC_API_STATUS.md)
+  - [公共 API 设计](./central_server/api_gateway/PUBLIC_API_DESIGN.md)
 - **内容**: REST/WebSocket API 规范
 - **适用对象**: 第三方开发者、集成开发者
-- **更新状态**: ✅ 最新
+- **更新状态**: ✅ 最新（已整理）
 
 #### 5.2 Model Hub API
-- **位置**: `central_server/model-hub/README.md`
+- **位置**: `docs/central_server/model_hub/README.md`
 - **内容**: 模型库服务 API 端点和使用示例
 - **适用对象**: 开发者
-- **更新状态**: ✅ 最新
+- **更新状态**: ✅ 最新（已整理）
 
 #### 5.3 平台化服务包管理 API
 - **位置**: 
-  - `central_server/model-hub/docs/Platform_Ready_Model_Management_and_Node_Service_Package_Spec.md` - 完整规范
-  - `electron_node/electron-node/docs/PLATFORM_READY_IMPLEMENTATION_SUMMARY.md` - 实现总结
+  - `docs/central_server/model_manager/公司模型库与Electron客户端模型管理统一技术方案.md` - 完整规范
+  - `docs/electron_node/PLATFORM_READY_IMPLEMENTATION_SUMMARY.md` - 实现总结
 - **内容**: 平台化服务包管理 API（支持多平台）、服务包安装和管理
 - **适用对象**: 开发者、架构师
-- **更新状态**: ✅ 最新（2025-12-17）
+- **更新状态**: ✅ 最新（已整理）
 
 ---
 
@@ -171,10 +176,10 @@
 - **更新状态**: ✅ 最新
 
 #### 6.3 平台化服务包管理集成测试
-- **位置**: `electron_node/electron-node/tests/stage3.2/INTEGRATION_TEST_GUIDE.md`
+- **位置**: `electron_node/electron-node/tests/stage3.2/INTEGRATION_TEST_GUIDE.md`（代码仓库内）
 - **内容**: 平台化服务包管理系统集成测试步骤和验证方法
 - **适用对象**: 测试人员、开发者
-- **更新状态**: ✅ 最新（2025-12-17）
+- **更新状态**: ✅ 最新（已整理）
 
 ---
 

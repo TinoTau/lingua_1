@@ -1,6 +1,6 @@
 import { App } from './app';
 import { renderMainMenu, renderRoomMode, renderRoom, setUIMode, getUIMode } from './ui/renderers';
-import { RoomMember } from './types';
+import { RoomMember, SessionState } from './types';
 
 // 初始化应用
 const app = new App();
@@ -89,5 +89,25 @@ document.addEventListener('DOMContentLoaded', () => {
   (window as any).onRoomExpired = () => {
     setUIMode('main');
     renderMainMenu(container, app);
+  };
+
+  // 注册 TTS 音频可用回调（用于更新 UI）
+  (window as any).onTtsAudioAvailable = (duration: number) => {
+    // 更新播放按钮和时长显示
+    const playPauseBtn = document.getElementById('play-pause-btn') as HTMLButtonElement;
+    const playPauseText = document.getElementById('play-pause-text') as HTMLElement;
+    const ttsAudioInfo = document.getElementById('tts-audio-info') as HTMLElement;
+    const ttsDuration = document.getElementById('tts-duration') as HTMLElement;
+    
+    if (playPauseBtn && playPauseText && ttsAudioInfo && ttsDuration) {
+      // 只有在 INPUT_RECORDING 状态下才启用播放按钮
+      const stateMachine = app.getStateMachine();
+      if (stateMachine && stateMachine.getState() === SessionState.INPUT_RECORDING) {
+        playPauseBtn.disabled = false;
+        playPauseText.textContent = '播放';
+        ttsAudioInfo.style.display = 'block';
+        ttsDuration.textContent = duration.toFixed(1);
+      }
+    }
   };
 });

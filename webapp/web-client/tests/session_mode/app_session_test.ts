@@ -75,15 +75,15 @@ describe('WebClient Session Mode - State Machine Integration', () => {
   });
 
   describe('发送当前话语流程', () => {
-    it('应该在会话进行中时，发送后继续监听', () => {
+    it('应该在会话进行中时，发送后继续监听（重构后）', () => {
       // 开始会话
       stateMachine.startSession();
       expect(stateMachine.getState()).toBe(SessionState.INPUT_RECORDING);
       expect(stateMachine.getIsSessionActive()).toBe(true);
 
-      // 发送当前话语（停止录音）
+      // 重构后：stopRecording不再切换状态，保持在INPUT_RECORDING
       stateMachine.stopRecording();
-      expect(stateMachine.getState()).toBe(SessionState.WAITING_RESULT);
+      expect(stateMachine.getState()).toBe(SessionState.INPUT_RECORDING);
       expect(stateMachine.getIsSessionActive()).toBe(true); // 会话仍然进行中
 
       // 开始播放
@@ -97,15 +97,15 @@ describe('WebClient Session Mode - State Machine Integration', () => {
       expect(stateMachine.getIsSessionActive()).toBe(true); // 会话仍然进行中
     });
 
-    it('应该在非会话模式下，发送后回到 INPUT_READY', () => {
+    it('应该在非会话模式下，发送后回到 INPUT_READY（重构后）', () => {
       // 非会话模式：直接开始录音
       stateMachine.startRecording();
       expect(stateMachine.getState()).toBe(SessionState.INPUT_RECORDING);
       expect(stateMachine.getIsSessionActive()).toBe(false);
 
-      // 停止录音
+      // 重构后：stopRecording不再切换状态
       stateMachine.stopRecording();
-      expect(stateMachine.getState()).toBe(SessionState.WAITING_RESULT);
+      expect(stateMachine.getState()).toBe(SessionState.INPUT_RECORDING);
 
       // 开始播放
       stateMachine.startPlaying();
@@ -161,14 +161,12 @@ describe('WebClient Session Mode - State Machine Integration', () => {
       stateMachine.finishPlaying();
       stateMachine.endSession();
 
-      // 验证状态转换序列
+      // 验证状态转换序列（重构后：stopRecording不再切换状态）
       expect(stateChangeHistory).toEqual([
         { newState: SessionState.INPUT_RECORDING, oldState: SessionState.INPUT_READY },
-        { newState: SessionState.WAITING_RESULT, oldState: SessionState.INPUT_RECORDING },
-        { newState: SessionState.PLAYING_TTS, oldState: SessionState.WAITING_RESULT },
+        { newState: SessionState.PLAYING_TTS, oldState: SessionState.INPUT_RECORDING },
         { newState: SessionState.INPUT_RECORDING, oldState: SessionState.PLAYING_TTS },
-        { newState: SessionState.WAITING_RESULT, oldState: SessionState.INPUT_RECORDING },
-        { newState: SessionState.PLAYING_TTS, oldState: SessionState.WAITING_RESULT },
+        { newState: SessionState.PLAYING_TTS, oldState: SessionState.INPUT_RECORDING },
         { newState: SessionState.INPUT_RECORDING, oldState: SessionState.PLAYING_TTS },
         { newState: SessionState.INPUT_READY, oldState: SessionState.INPUT_RECORDING },
       ]);
@@ -180,11 +178,10 @@ describe('WebClient Session Mode - State Machine Integration', () => {
       stateMachine.startPlaying();
       stateMachine.finishPlaying();
 
-      // 验证状态转换序列
+      // 验证状态转换序列（重构后：stopRecording不再切换状态）
       expect(stateChangeHistory).toEqual([
         { newState: SessionState.INPUT_RECORDING, oldState: SessionState.INPUT_READY },
-        { newState: SessionState.WAITING_RESULT, oldState: SessionState.INPUT_RECORDING },
-        { newState: SessionState.PLAYING_TTS, oldState: SessionState.WAITING_RESULT },
+        { newState: SessionState.PLAYING_TTS, oldState: SessionState.INPUT_RECORDING },
         { newState: SessionState.INPUT_READY, oldState: SessionState.PLAYING_TTS },
       ]);
     });

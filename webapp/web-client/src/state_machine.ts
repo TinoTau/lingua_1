@@ -72,19 +72,31 @@ export class StateMachine {
 
   /**
    * 停止录音（Send 按钮或静音超时）
+   * 注意：不再转换到 WAITING_RESULT，保持在 INPUT_RECORDING 状态
    */
   stopRecording(): void {
-    if (this.state === SessionState.INPUT_RECORDING) {
-      this.transitionTo(SessionState.WAITING_RESULT);
-    }
+    // 保持在 INPUT_RECORDING 状态，允许持续输入
+    // 状态不改变，只是发送结束帧
   }
 
   /**
-   * 收到翻译结果，开始播放
+   * 开始播放（用户手动触发）
    */
   startPlaying(): void {
-    if (this.state === SessionState.WAITING_RESULT) {
+    if (this.state === SessionState.INPUT_RECORDING || this.state === SessionState.PLAYING_TTS) {
       this.transitionTo(SessionState.PLAYING_TTS);
+    }
+  }
+  
+  /**
+   * 暂停播放，回到监听状态
+   */
+  pausePlaying(): void {
+    if (this.state === SessionState.PLAYING_TTS) {
+      console.log('[StateMachine] 暂停播放，从 PLAYING_TTS 转换到 INPUT_RECORDING');
+      this.transitionTo(SessionState.INPUT_RECORDING);
+    } else {
+      console.log('[StateMachine] pausePlaying 被调用，但当前状态不是 PLAYING_TTS:', this.state);
     }
   }
 
@@ -97,12 +109,30 @@ export class StateMachine {
     if (this.state === SessionState.PLAYING_TTS) {
       if (this.isSessionActive) {
         // 会话进行中：自动回到 INPUT_RECORDING（继续监听）
+        console.log('[StateMachine] 播放完成，从 PLAYING_TTS 转换到 INPUT_RECORDING (会话进行中)');
         this.transitionTo(SessionState.INPUT_RECORDING);
       } else {
         // 会话未开始：回到 INPUT_READY（需要再次点击开始）
+        console.log('[StateMachine] 播放完成，从 PLAYING_TTS 转换到 INPUT_READY (会话未开始)');
         this.transitionTo(SessionState.INPUT_READY);
       }
+    } else {
+      console.log('[StateMachine] finishPlaying 被调用，但当前状态不是 PLAYING_TTS:', this.state, 'isSessionActive:', this.isSessionActive);
     }
+  }
+  
+  /**
+   * 检查是否可以发送（在 INPUT_RECORDING 状态下）
+   */
+  canSend(): boolean {
+    return this.state === SessionState.INPUT_RECORDING;
+  }
+  
+  /**
+   * 检查是否可以播放（有音频累积时）
+   */
+  canPlay(): boolean {
+    return this.state === SessionState.INPUT_RECORDING || this.state === SessionState.PLAYING_TTS;
   }
 
   /**

@@ -13,6 +13,7 @@ pub mod speaker;
 pub mod speech_rate;
 pub mod language_detector;
 pub mod text_filter;
+pub mod audio_codec;
 mod inference;
 pub mod http_server;
 
@@ -25,4 +26,5 @@ pub use vad::VADEngine;
 pub use inference::{InferenceRequest, InferenceResult, InferenceService, PartialResultCallback};
 pub use pipeline::PipelineContext;
 pub use modules::{ModuleManager, ModuleMetadata, ModelRequirement, MODULE_TABLE};
+pub use audio_codec::{AudioFormat, OpusDecoder, decode_audio};
 

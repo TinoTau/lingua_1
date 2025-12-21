@@ -6,6 +6,64 @@
 
 ## 🔨 进行中 / 待完成
 
+### Web 客户端 Phase 3 开发
+
+#### ✅ 已完成功能
+
+1. **客户端背压与降级机制** ✅
+   - **状态**: ✅ **100% 完成并测试**
+   - **位置**: `webapp/web-client/src/websocket_client.ts`
+   - **完成内容**:
+     - ✅ 发送策略调整逻辑（BUSY / PAUSE / SLOW_DOWN）
+     - ✅ 发送队列管理（暂停时缓存，恢复时发送）
+     - ✅ 背压状态回调通知
+     - ✅ 完整的单元测试（全部通过）
+   - **测试结果**: 单元测试全部通过 ✅
+   - **详细文档**: [Phase 3 实现文档](../web_client/PHASE3_IMPLEMENTATION.md)
+
+2. **Opus 编码集成** ✅
+   - **状态**: ✅ **100% 完成并测试**
+   - **位置**: `webapp/web-client/src/audio_codec.ts`
+   - **完成内容**:
+     - ✅ 集成 Opus 库（`@minceraftmc/opus-encoder` 和 `opus-decoder`）
+     - ✅ 实现 OpusEncoder 和 OpusDecoder
+     - ✅ Opus 编码/解码测试（全部通过）
+   - **测试结果**: 单元测试全部通过 ✅
+   - **详细文档**: [Phase 2 实现文档](../web_client/PHASE2_IMPLEMENTATION.md)
+
+3. **Session Init 协议增强** ✅
+   - **状态**: ✅ **100% 完成并测试**
+   - **位置**: `webapp/web-client/src/websocket_client.ts`
+   - **完成内容**:
+     - ✅ 添加 `trace_id` 字段（自动生成 UUID）
+     - ✅ 添加 `tenant_id` 字段（可选，支持多租户）
+     - ✅ 移除不支持的字段（`audio_format`, `sample_rate`, `channel_count`, `protocol_version` 等）
+     - ✅ 完整的单元测试（全部通过）
+   - **测试结果**: 单元测试全部通过 ✅
+   - **详细文档**: [Phase 3 实现文档](../web_client/PHASE3_IMPLEMENTATION.md)
+
+4. **Node 端 Opus 解码支持** ✅
+   - **状态**: ✅ **100% 完成并测试**
+   - **位置**: `electron_node/services/node-inference/src/audio_codec.rs`
+   - **完成内容**:
+     - ✅ Opus 解码器实现（使用 `opus-rs`）
+     - ✅ HTTP/WebSocket 接口中的 Opus 解码集成
+     - ✅ 完整的单元测试和集成测试（全部通过）
+   - **测试结果**: 17/17 测试通过 ✅
+   - **详细文档**: [Phase 3 测试完成报告](../PHASE3_TESTING_COMPLETE_FINAL.md)
+
+#### 🟡 待完成功能
+
+1. **VAD 配置界面** 🔄
+   - **状态**: VAD 已实现，但阈值硬编码
+   - **影响**: 无法根据环境动态调整，影响静音过滤效果
+   - **位置**: `webapp/web-client/src/ui/renderers.ts`
+   - **待完成**:
+     - ⚠️ 添加 VAD 配置 UI（环境噪音强度选择：弱/中/强）
+     - ⚠️ 支持实时调整和保存配置
+     - ⚠️ 添加 VAD 可视化（显示当前是否在发送音频）
+   - **详细计划**: [Phase 3 实现文档](../web_client/PHASE3_IMPLEMENTATION.md)
+
 ### 可能影响联合调试的未完成功能
 
 #### 🟡 中优先级（建议在联合调试时验证）

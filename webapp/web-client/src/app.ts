@@ -6,6 +6,8 @@ import { TtsPlayer } from './tts_player';
 import { AsrSubtitle } from './asr_subtitle';
 import { AudioMixer } from './audio_mixer';
 import { Config, DEFAULT_CONFIG, ServerMessage, FeatureFlags } from './types';
+import { ObservabilityManager } from './observability';
+import { AudioCodecConfig, isOpusSupported } from './audio_codec';
 
 /**
  * 主应用类
@@ -20,8 +22,6 @@ export class App {
   private audioMixer: AudioMixer;
   private config: Config;
   private audioBuffer: Float32Array[] = [];
-  // 静音检测阈值（RMS 值，范围 0-1，默认 0.01）
-  private silenceThreshold: number = 0.01;
   // 当前 utterance 的 trace_id 和 group_id（用于 TTS_PLAY_ENDED）
   private currentTraceId: string | null = null;
   private currentGroupId: string | null = null;
@@ -38,14 +38,38 @@ export class App {
   private localStream: MediaStream | null = null;
   // 音频混控器输出流（用于播放）
   private audioMixerOutput: HTMLAudioElement | null = null;
+  // 可观测性管理器
+  private observability: ObservabilityManager | null = null;
 
   constructor(config: Partial<Config> = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
     
+    // 初始化可观测性管理器（如果配置了上报 URL）
+    if (this.config.observabilityReportUrl) {
+      this.observability = new ObservabilityManager(
+        this.config.observabilityReportUrl,
+        this.config.observabilityReportIntervalMs || 60000
+      );
+    }
+    
     // 初始化模块
     this.stateMachine = new StateMachine();
     this.recorder = new Recorder(this.stateMachine, this.config);
-    this.wsClient = new WebSocketClient(this.stateMachine, this.config.schedulerUrl);
+    this.wsClient = new WebSocketClient(
+      this.stateMachine, 
+      this.config.schedulerUrl,
+      this.config.reconnectConfig,
+      this.config.clientVersion
+    );
+    
+    // Phase 2: 设置音频编解码器配置
+    const codecConfig: AudioCodecConfig = this.config.audioCodecConfig || {
+      codec: 'pcm16', // 默认使用 PCM16，如果支持 Opus 可以改为 'opus'
+      sampleRate: 16000,
+      channelCount: 1,
+    };
+    this.wsClient.setAudioCodecConfig(codecConfig);
+    
     this.ttsPlayer = new TtsPlayer(this.stateMachine);
     this.asrSubtitle = new AsrSubtitle('app');
     this.audioMixer = new AudioMixer();
@@ -106,10 +130,22 @@ export class App {
     this.wsClient.setMessageCallback((message) => {
       this.onServerMessage(message);
     });
+    
+    // WebSocket 重连回调
+    this.wsClient.setReconnectCallback(() => {
+      if (this.observability) {
+        this.observability.recordReconnect();
+      }
+    });
 
     // TTS 播放回调
     this.ttsPlayer.setPlaybackFinishedCallback(() => {
       this.onPlaybackFinished();
+    });
+
+    // 内存压力回调
+    this.ttsPlayer.setMemoryPressureCallback((pressure) => {
+      this.onMemoryPressure(pressure);
     });
   }
 
@@ -141,82 +177,70 @@ export class App {
           });
         }
       }
-    } else if (newState === SessionState.WAITING_RESULT || newState === SessionState.PLAYING_TTS) {
-      // 输出模式：如果会话未开始，关闭麦克风；如果会话进行中，只停止录音（不关闭）
-      if (!this.isSessionActive) {
+    } else if (newState === SessionState.PLAYING_TTS) {
+      // 播放模式：屏蔽麦克风输入，避免声学回响
+      if (this.isSessionActive) {
+        // 会话进行中：停止录音（不关闭），屏蔽输入
+        this.recorder.stop();
+        console.log('播放模式：已屏蔽麦克风输入，避免声学回响');
+      } else {
         // 会话未开始：关闭麦克风
         this.recorder.stop();
         this.recorder.close();
-      } else {
-        // 会话进行中：只停止录音（不关闭），等待播放完成后继续监听
-        this.recorder.stop();
       }
     }
-  }
-
-  /**
-   * 检测音频块是否为静音
-   * @param audioData 音频数据（Float32Array）
-   * @returns 如果是静音返回 true，否则返回 false
-   */
-  private isSilence(audioData: Float32Array): boolean {
-    if (audioData.length === 0) {
-      return true;
+    
+    // 从播放状态回到录音状态时，恢复录音
+    if (newState === SessionState.INPUT_RECORDING && oldState === SessionState.PLAYING_TTS) {
+      if (this.isSessionActive) {
+        // 会话进行中：恢复录音
+        if (!this.recorder.getIsRecording()) {
+          this.recorder.start().catch((error) => {
+            console.error('恢复录音失败:', error);
+          });
+        }
+        console.log('已恢复录音，可以继续说话');
+      }
     }
-
-    // 计算 RMS (Root Mean Square) 值
-    let sumSquares = 0;
-    for (let i = 0; i < audioData.length; i++) {
-      const sample = audioData[i];
-      sumSquares += sample * sample;
-    }
-    const rms = Math.sqrt(sumSquares / audioData.length);
-
-    // 如果 RMS 值低于阈值，认为是静音
-    return rms < this.silenceThreshold;
   }
 
   /**
    * 音频帧处理
+   * 注意：静音过滤在 Recorder 中处理，这里只接收有效语音帧
+   * 只有有效语音才会被缓存和发送，静音片段完全不发送
    */
   private onAudioFrame(audioData: Float32Array): void {
+    // 只在输入状态下处理音频
     if (this.stateMachine.getState() !== SessionState.INPUT_RECORDING) {
       return;
     }
 
-    // 检测当前帧是否为静音
-    if (this.isSilence(audioData)) {
-      // 静音帧不发送，直接丢弃
-      return;
-    }
-
-    // 缓存音频数据
+    // Recorder 已经过滤了静音，这里收到的都是有效语音
+    // 缓存有效音频数据
     this.audioBuffer.push(new Float32Array(audioData));
 
     // 发送音频块（每 100ms 发送一次）
-    // 这里简化处理，实际应该按时间间隔发送
-    if (this.audioBuffer.length >= 10) { // 假设每 10ms 一帧，10 帧 = 100ms
+    // 假设每 10ms 一帧，10 帧 = 100ms
+    if (this.audioBuffer.length >= 10) {
       const chunk = this.concatAudioBuffers(this.audioBuffer.splice(0, 10));
-      // 再次检测整个块是否为静音（防止累积的静音帧）
-      if (!this.isSilence(chunk)) {
-        this.wsClient.sendAudioChunk(chunk, false);
+      this.wsClient.sendAudioChunk(chunk, false);
+      // 记录音频块发送
+      if (this.observability) {
+        this.observability.recordAudioChunkSent();
       }
     }
   }
 
   /**
-   * 静音检测处理
+   * 静音检测处理（静音超时）
    */
   private onSilenceDetected(): void {
     if (this.stateMachine.getState() === SessionState.INPUT_RECORDING) {
-      // 发送剩余的音频数据（如果不是静音）
+      // 发送剩余的音频数据
       if (this.audioBuffer.length > 0) {
         const chunk = this.concatAudioBuffers(this.audioBuffer);
         this.audioBuffer = [];
-        // 只发送非静音数据
-        if (!this.isSilence(chunk)) {
-          this.wsClient.sendAudioChunk(chunk, false);
-        }
+        this.wsClient.sendAudioChunk(chunk, false);
       }
       
       // 发送结束帧
@@ -245,6 +269,15 @@ export class App {
         console.log('Translation:', message.text);
         break;
       
+      case 'backpressure':
+        // 背压消息已在 WebSocketClient 中处理，这里可以记录日志或更新 UI
+        console.log('Backpressure received:', message);
+        // 记录背压事件
+        if (this.observability) {
+          this.observability.recordBackpressureEvent(message.action);
+        }
+        break;
+        
       case 'translation_result':
         // 保存 trace_id 和 group_id，用于后续发送 TTS_PLAY_ENDED
         this.currentTraceId = message.trace_id;
@@ -254,6 +287,9 @@ export class App {
         console.log('=== 翻译结果 ===');
         console.log('原文 (ASR):', message.text_asr);
         console.log('译文 (NMT):', message.text_translated);
+        console.log('当前状态:', this.stateMachine.getState());
+        console.log('是否有 TTS 音频:', !!message.tts_audio, message.tts_audio ? `长度: ${message.tts_audio.length}` : '无');
+        
         if (message.service_timings) {
           const timings = message.service_timings;
           console.log('服务耗时:', {
@@ -294,24 +330,37 @@ export class App {
         );
         
         // 处理 TTS 音频（如果存在）
-        if (message.tts_audio) {
+        // 注意：不再自动播放，而是累积到缓冲区，等待用户手动触发播放
+        if (message.tts_audio && message.tts_audio.length > 0) {
+          console.log('收到 TTS 音频，累积到缓冲区，不自动播放');
           if (this.isInRoom) {
-            // 房间模式：使用音频混控器
+            // 房间模式：使用音频混控器（房间模式可能需要不同的处理）
             this.handleTtsAudioForRoomMode(message.tts_audio);
           } else {
-            // 单会话模式：使用 TtsPlayer
-            this.ttsPlayer.addAudioChunk(message.tts_audio);
+            // 单会话模式：累积到 TtsPlayer，不自动播放
+            this.ttsPlayer.addAudioChunk(message.tts_audio).catch((error) => {
+              console.error('添加 TTS 音频块失败:', error);
+            });
           }
+          // 触发 UI 更新，显示播放按钮和时长
+          this.notifyTtsAudioAvailable();
+        } else {
+          console.log('翻译结果中没有 TTS 音频');
         }
         break;
       
       case 'tts_audio':
+        console.log('收到单独的 TTS 音频消息，当前状态:', this.stateMachine.getState(), 'payload长度:', message.payload?.length || 0);
         if (this.isInRoom) {
           // 房间模式：使用音频混控器
           this.handleTtsAudioForRoomMode(message.payload);
         } else {
-          // 单会话模式：使用 TtsPlayer
-          this.ttsPlayer.addAudioChunk(message.payload);
+          // 单会话模式：累积到 TtsPlayer，不自动播放
+          this.ttsPlayer.addAudioChunk(message.payload).catch((error) => {
+            console.error('添加 TTS 音频块失败:', error);
+          });
+          // 触发 UI 更新
+          this.notifyTtsAudioAvailable();
         }
         break;
       
@@ -379,6 +428,32 @@ export class App {
   }
 
   /**
+   * 内存压力处理
+   */
+  private onMemoryPressure(pressure: 'normal' | 'warning' | 'critical'): void {
+    console.log(`[App] 内存压力: ${pressure}`);
+    
+    // 触发UI更新（内存压力变化）
+    if (typeof window !== 'undefined' && (window as any).onMemoryPressure) {
+      (window as any).onMemoryPressure(pressure);
+    }
+    
+    // 如果内存压力过高，自动开始播放（打断用户发言）
+    if (pressure === 'critical') {
+      const currentState = this.stateMachine.getState();
+      const hasPendingAudio = this.ttsPlayer.hasPendingAudio();
+      
+      // 只有在输入状态且有待播放音频时才自动播放
+      if (currentState === SessionState.INPUT_RECORDING && hasPendingAudio && !this.ttsPlayer.getIsPlaying()) {
+        console.warn('[App] 内存压力过高，自动开始播放以释放内存');
+        this.startTtsPlayback().catch((error) => {
+          console.error('[App] 自动播放失败:', error);
+        });
+      }
+    }
+  }
+
+  /**
    * 播放完成处理
    */
   private onPlaybackFinished(): void {
@@ -399,6 +474,117 @@ export class App {
     
     // 状态机会根据会话状态自动切换到 INPUT_RECORDING（会话进行中）或 INPUT_READY（会话未开始）
     // 状态切换会触发 onStateChange，在那里处理录音器的重新启动
+  }
+  
+  /**
+   * 通知 UI TTS 音频可用（累积中）
+   */
+  private notifyTtsAudioAvailable(): void {
+    const duration = this.ttsPlayer.getTotalDuration();
+    console.log('TTS 音频可用，总时长:', duration.toFixed(2), '秒');
+    
+    // 触发 UI 更新（如果存在回调）
+    if (typeof window !== 'undefined' && (window as any).onTtsAudioAvailable) {
+      (window as any).onTtsAudioAvailable(duration);
+    }
+    
+    // 如果当前在 INPUT_RECORDING 状态，需要更新播放按钮文本（显示时长）
+    if (this.stateMachine.getState() === SessionState.INPUT_RECORDING) {
+      // 触发状态变化回调，更新 UI
+      // 注意：这里不改变状态，只是触发 UI 更新
+      const currentState = this.stateMachine.getState();
+      // 通过模拟状态变化来触发 UI 更新（实际上状态没变）
+      // 更好的方式是直接更新 UI，但为了保持一致性，我们通过状态机回调
+      // 实际上 UI 应该监听音频可用事件，这里先保持现状
+    }
+  }
+  
+  /**
+   * 手动开始播放 TTS（用户点击播放按钮）
+   */
+  async startTtsPlayback(): Promise<void> {
+    if (!this.ttsPlayer.hasPendingAudio()) {
+      console.warn('没有待播放的音频');
+      return;
+    }
+    
+    console.log('用户手动触发播放，当前状态:', this.stateMachine.getState());
+    await this.ttsPlayer.startPlayback();
+  }
+  
+  /**
+   * 暂停播放 TTS（用户点击暂停按钮）
+   */
+  pauseTtsPlayback(): void {
+    if (this.ttsPlayer.getIsPlaying()) {
+      console.log('用户手动暂停播放');
+      this.ttsPlayer.pausePlayback();
+      
+      // 如果会话进行中，恢复录音
+      if (this.isSessionActive && this.stateMachine.getState() === SessionState.INPUT_RECORDING) {
+        if (!this.recorder.getIsRecording()) {
+          this.recorder.start().catch((error) => {
+            console.error('恢复录音失败:', error);
+          });
+        }
+      }
+    }
+  }
+  
+  /**
+   * 获取 TTS 音频总时长（秒）
+   */
+  getTtsAudioDuration(): number {
+    return this.ttsPlayer.getTotalDuration();
+  }
+  
+  /**
+   * 检查是否有待播放的 TTS 音频
+   */
+  hasPendingTtsAudio(): boolean {
+    return this.ttsPlayer.hasPendingAudio();
+  }
+  
+  /**
+   * 检查 TTS 是否正在播放
+   */
+  isTtsPlaying(): boolean {
+    return this.ttsPlayer.getIsPlaying();
+  }
+
+  /**
+   * 获取当前内存压力状态
+   */
+  getMemoryPressure(): 'normal' | 'warning' | 'critical' {
+    return this.ttsPlayer.getMemoryPressure();
+  }
+  
+  /**
+   * 检查 TTS 是否已暂停
+   */
+  isTtsPaused(): boolean {
+    return this.ttsPlayer.getIsPaused();
+  }
+  
+  /**
+   * 切换 TTS 播放倍速
+   */
+  toggleTtsPlaybackRate(): number {
+    return this.ttsPlayer.togglePlaybackRate();
+  }
+  
+  /**
+   * 获取当前 TTS 播放倍速
+   */
+  getTtsPlaybackRate(): number {
+    return this.ttsPlayer.getPlaybackRate();
+  }
+  
+  /**
+   * 获取当前 TTS 播放倍速的显示文本
+   */
+  getTtsPlaybackRateText(): string {
+    return this.ttsPlayer.getPlaybackRateText();
   }
 
   /**
@@ -556,8 +742,20 @@ export class App {
    * @param features 可选功能标志（由用户选择）
    */
   async connect(srcLang: string = 'zh', tgtLang: string = 'en', features?: FeatureFlags): Promise<void> {
-    await this.wsClient.connect(srcLang, tgtLang, features);
-    await this.recorder.initialize();
+    try {
+      await this.wsClient.connect(srcLang, tgtLang, features);
+      await this.recorder.initialize();
+      // 记录连接成功
+      if (this.observability) {
+        this.observability.recordConnectionSuccess();
+      }
+    } catch (error) {
+      // 记录连接失败
+      if (this.observability) {
+        this.observability.recordConnectionFailure();
+      }
+      throw error;
+    }
   }
 
   /**
@@ -567,8 +765,20 @@ export class App {
    * @param features 可选功能标志（由用户选择）
    */
   async connectTwoWay(langA: string = 'zh', langB: string = 'en', features?: FeatureFlags): Promise<void> {
-    await this.wsClient.connectTwoWay(langA, langB, features);
-    await this.recorder.initialize();
+    try {
+      await this.wsClient.connectTwoWay(langA, langB, features);
+      await this.recorder.initialize();
+      // 记录连接成功
+      if (this.observability) {
+        this.observability.recordConnectionSuccess();
+      }
+    } catch (error) {
+      // 记录连接失败
+      if (this.observability) {
+        this.observability.recordConnectionFailure();
+      }
+      throw error;
+    }
   }
 
   /**
@@ -582,6 +792,9 @@ export class App {
       // 清空当前的 trace_id 和 group_id（新的会话）
       this.currentTraceId = null;
       this.currentGroupId = null;
+      
+      // 清空所有未播放的音频（新会话开始时丢弃之前的音频）
+      this.ttsPlayer.clearBuffers();
       
       // 开始会话（状态机会自动进入 INPUT_RECORDING）
       this.stateMachine.startSession();
@@ -603,10 +816,11 @@ export class App {
     this.recorder.stop();
     this.recorder.close();
     
-    // 停止播放
+    // 停止播放并清空所有未播放的音频
     this.ttsPlayer.stop();
+    this.ttsPlayer.clearBuffers(); // 确保清空缓冲区
     
-    // 清空缓冲区
+    // 清空音频缓冲区
     this.audioBuffer = [];
     
     // 结束会话（状态机会回到 INPUT_READY）
@@ -615,29 +829,66 @@ export class App {
 
   /**
    * 发送当前说的话（控制说话节奏）
-   * 发送后继续监听（不停止录音）
+   * 发送后继续监听（保持在 INPUT_RECORDING 状态）
    */
   sendCurrentUtterance(): void {
-    if (this.stateMachine.getState() === SessionState.INPUT_RECORDING && this.isSessionActive) {
-      // 发送剩余的音频数据（如果不是静音）
+    const currentState = this.stateMachine.getState();
+    console.log('sendCurrentUtterance 被调用，当前状态:', currentState, '会话是否活跃:', this.isSessionActive);
+    
+    // 允许在 INPUT_RECORDING 状态下随时发送（只要会话活跃）
+    if (this.isSessionActive && currentState === SessionState.INPUT_RECORDING) {
+      // 发送剩余的音频数据
       if (this.audioBuffer.length > 0) {
         const chunk = this.concatAudioBuffers(this.audioBuffer);
+        console.log('发送音频数据，长度:', chunk.length);
         this.audioBuffer = []; // 清空缓冲区，准备下一句话
-        // 只发送非静音数据
-        if (!this.isSilence(chunk)) {
-          this.wsClient.sendAudioChunk(chunk, false);
-        }
+        this.wsClient.sendAudioChunk(chunk, false);
+      } else {
+        console.log('音频缓冲区为空，只发送结束帧');
       }
       
       // 发送结束帧（标记当前 utterance 结束）
       this.wsClient.sendFinal();
+      console.log('已发送结束帧');
       
-      // 切换到等待结果状态
-      // 注意：状态切换会触发 onStateChange，在那里会根据会话状态决定是否停止录音
-      // 会话进行中：只停止录音（不关闭），等待播放完成后继续监听
-      // 会话未开始：停止并关闭录音
-      this.stateMachine.stopRecording();
+      // 注意：不再切换状态，保持在 INPUT_RECORDING，允许持续输入
+      // 录音继续，用户可以继续说话
+      console.log('已发送当前话语，继续监听...');
+    } else {
+      console.warn('当前状态不允许发送:', {
+        state: currentState,
+        isSessionActive: this.isSessionActive,
+        expectedState: SessionState.INPUT_RECORDING
+      });
     }
+  }
+  
+  /**
+   * 更新静音过滤配置
+   */
+  updateSilenceFilterConfig(config: Partial<import('./types').SilenceFilterConfig>): void {
+    this.recorder.updateSilenceFilterConfig(config);
+  }
+  
+  /**
+   * 获取静音过滤配置
+   */
+  getSilenceFilterConfig(): import('./types').SilenceFilterConfig {
+    return this.recorder.getSilenceFilterConfig();
+  }
+  
+  /**
+   * 获取背压状态
+   */
+  getBackpressureState(): import('./websocket_client').BackpressureState {
+    return this.wsClient.getBackpressureState();
+  }
+  
+  /**
+   * 获取重连次数
+   */
+  getReconnectAttempts(): number {
+    return this.wsClient.getReconnectAttempts();
   }
 
   /**
@@ -696,7 +947,23 @@ export class App {
     
     this.recorder.close();
     this.wsClient.disconnect();
+    
+    // 停止播放并清空所有未播放的音频
     this.ttsPlayer.stop();
+    this.ttsPlayer.clearBuffers(); // 确保清空缓冲区
+    
+    // 销毁可观测性管理器
+    if (this.observability) {
+      this.observability.destroy();
+      this.observability = null;
+    }
+  }
+  
+  /**
+   * 获取可观测性指标
+   */
+  getObservabilityMetrics(): Readonly<import('./observability').ObservabilityMetrics> | null {
+    return this.observability ? this.observability.getMetrics() : null;
   }
 
   /**
@@ -799,6 +1066,15 @@ export class App {
    */
   getSessionId(): string | null {
     return this.wsClient.getSessionId();
+  }
+  
+  /**
+   * 检查 WebSocket 是否已连接
+   */
+  isConnected(): boolean {
+    const connected = this.wsClient.isConnected();
+    console.log('[App] isConnected() 调用:', connected);
+    return connected;
   }
   
   /**

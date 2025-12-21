@@ -33,37 +33,36 @@ describe('StateMachine', () => {
       );
     });
 
-    it('应该从 INPUT_RECORDING 转换到 WAITING_RESULT', () => {
+    it('stopRecording应该不改变状态（重构后行为）', () => {
       stateMachine.startRecording();
       stateChangeCallback.mockClear();
       
+      // 重构后：stopRecording不再切换状态，保持在INPUT_RECORDING
       stateMachine.stopRecording();
-      expect(stateMachine.getState()).toBe(SessionState.WAITING_RESULT);
-      expect(stateChangeCallback).toHaveBeenCalledWith(
-        SessionState.WAITING_RESULT,
-        SessionState.INPUT_RECORDING
-      );
+      expect(stateMachine.getState()).toBe(SessionState.INPUT_RECORDING);
+      // 不应该触发状态变化回调
+      expect(stateChangeCallback).not.toHaveBeenCalled();
     });
 
-    it('应该从 WAITING_RESULT 转换到 PLAYING_TTS', () => {
+    it('应该从 INPUT_RECORDING 直接转换到 PLAYING_TTS', () => {
       stateMachine.startRecording();
-      stateMachine.stopRecording();
       stateChangeCallback.mockClear();
       
+      // 可以直接从INPUT_RECORDING开始播放（不需要WAITING_RESULT）
       stateMachine.startPlaying();
       expect(stateMachine.getState()).toBe(SessionState.PLAYING_TTS);
       expect(stateChangeCallback).toHaveBeenCalledWith(
         SessionState.PLAYING_TTS,
-        SessionState.WAITING_RESULT
+        SessionState.INPUT_RECORDING
       );
     });
 
-    it('应该从 PLAYING_TTS 转换到 INPUT_READY', () => {
+    it('应该从 PLAYING_TTS 转换到 INPUT_READY（非会话模式）', () => {
       stateMachine.startRecording();
-      stateMachine.stopRecording();
       stateMachine.startPlaying();
       stateChangeCallback.mockClear();
       
+      // 非会话模式：播放完成后回到INPUT_READY
       stateMachine.finishPlaying();
       expect(stateMachine.getState()).toBe(SessionState.INPUT_READY);
       expect(stateChangeCallback).toHaveBeenCalledWith(
@@ -93,14 +92,17 @@ describe('StateMachine', () => {
       expect(stateChangeCallback).not.toHaveBeenCalled();
     });
 
-    it('不应该从非 WAITING_RESULT 状态开始播放', () => {
+    it('应该允许从 INPUT_RECORDING 状态开始播放（重构后行为）', () => {
       stateMachine.startRecording();
       stateChangeCallback.mockClear();
       
-      // 尝试在 INPUT_RECORDING 状态下开始播放
+      // 重构后：允许从INPUT_RECORDING直接开始播放
       stateMachine.startPlaying();
-      expect(stateMachine.getState()).toBe(SessionState.INPUT_RECORDING);
-      expect(stateChangeCallback).not.toHaveBeenCalled();
+      expect(stateMachine.getState()).toBe(SessionState.PLAYING_TTS);
+      expect(stateChangeCallback).toHaveBeenCalledWith(
+        SessionState.PLAYING_TTS,
+        SessionState.INPUT_RECORDING
+      );
     });
 
     it('不应该从非 PLAYING_TTS 状态完成播放', () => {
@@ -115,7 +117,7 @@ describe('StateMachine', () => {
   });
 
   describe('完整状态循环', () => {
-    it('应该完成完整的状态循环', () => {
+    it('应该完成完整的状态循环（重构后）', () => {
       const states: SessionState[] = [];
       const callback = (newState: SessionState) => {
         states.push(newState);
@@ -126,15 +128,15 @@ describe('StateMachine', () => {
       stateMachine.startRecording();
       expect(states[states.length - 1]).toBe(SessionState.INPUT_RECORDING);
 
-      // INPUT_RECORDING -> WAITING_RESULT
+      // 重构后：stopRecording不再切换状态
       stateMachine.stopRecording();
-      expect(states[states.length - 1]).toBe(SessionState.WAITING_RESULT);
+      expect(states[states.length - 1]).toBe(SessionState.INPUT_RECORDING);
 
-      // WAITING_RESULT -> PLAYING_TTS
+      // INPUT_RECORDING -> PLAYING_TTS（可以直接转换）
       stateMachine.startPlaying();
       expect(states[states.length - 1]).toBe(SessionState.PLAYING_TTS);
 
-      // PLAYING_TTS -> INPUT_READY
+      // PLAYING_TTS -> INPUT_READY（非会话模式）
       stateMachine.finishPlaying();
       expect(states[states.length - 1]).toBe(SessionState.INPUT_READY);
     });

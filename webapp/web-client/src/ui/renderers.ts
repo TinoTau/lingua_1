@@ -94,9 +94,21 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
         <button id="send-btn" style="padding: 10px 20px; margin: 5px; font-size: 16px; cursor: pointer;" disabled>
           发送
         </button>
+        <button id="play-pause-btn" style="padding: 10px 20px; margin: 5px; font-size: 16px; cursor: pointer; background: #28a745; color: white; border: none; border-radius: 8px;" disabled>
+          <span id="play-pause-text">播放</span>
+        </button>
+        <button id="playback-rate-btn" style="padding: 10px 20px; margin: 5px; font-size: 16px; cursor: pointer; background: #6c757d; color: white; border: none; border-radius: 8px;" disabled>
+          <span id="playback-rate-text">1x</span>
+        </button>
         <button id="end-btn" style="padding: 10px 20px; margin: 5px; font-size: 16px; cursor: pointer;" disabled>
           结束
         </button>
+      </div>
+      
+      <div id="tts-audio-info" style="margin: 10px 0; padding: 10px; background: #e7f3ff; border-radius: 8px; display: none;">
+        <div style="font-size: 14px; color: #0066cc;">
+          可播放音频时长: <span id="tts-duration">0.0</span> 秒
+        </div>
       </div>
 
       <div style="margin: 20px 0; padding: 15px; background: #e7f3ff; border-radius: 8px;">
@@ -190,8 +202,14 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
   const connectBtn = document.getElementById('connect-btn') as HTMLButtonElement;
   const startBtn = document.getElementById('start-btn') as HTMLButtonElement;
   const sendBtn = document.getElementById('send-btn') as HTMLButtonElement;
+  const playPauseBtn = document.getElementById('play-pause-btn') as HTMLButtonElement;
+  const playPauseText = document.getElementById('play-pause-text') as HTMLElement;
+  const playbackRateBtn = document.getElementById('playback-rate-btn') as HTMLButtonElement;
+  const playbackRateText = document.getElementById('playback-rate-text') as HTMLElement;
   const endBtn = document.getElementById('end-btn') as HTMLButtonElement;
   const statusText = document.getElementById('status-text') as HTMLElement;
+  const ttsAudioInfo = document.getElementById('tts-audio-info') as HTMLElement;
+  const ttsDuration = document.getElementById('tts-duration') as HTMLElement;
 
   // 翻译模式切换事件
   const oneWayRadio = document.getElementById('mode-one-way') as HTMLInputElement;
@@ -263,6 +281,19 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
       statusText.textContent = '已连接';
       connectBtn.disabled = true;
       startBtn.disabled = false;
+      // 连接成功后，立即启用倍速按钮
+      const isConnected = app.isConnected();
+      console.log('[UI] 连接成功:', {
+        isConnected,
+        playbackRateBtnExists: !!playbackRateBtn
+      });
+      if (playbackRateBtn) {
+        playbackRateBtn.disabled = !isConnected;
+        console.log('[UI] 连接后更新倍速按钮:', {
+          isConnected,
+          disabled: playbackRateBtn.disabled
+        });
+      }
     } catch (error) {
       alert('连接失败: ' + error);
     }
@@ -274,8 +305,43 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
   });
 
   sendBtn.addEventListener('click', () => {
+    // 添加动态效果：点击反馈
+    sendBtn.style.transform = 'scale(0.95)';
+    sendBtn.style.opacity = '0.8';
+    sendBtn.style.transition = 'all 0.1s ease';
+    
+    // 执行发送操作
     app.sendCurrentUtterance();
-    // 状态变化会通过状态监听自动更新按钮状态，这里不需要手动设置
+    
+    // 恢复按钮样式（延迟恢复，让用户看到反馈）
+    setTimeout(() => {
+      sendBtn.style.transform = 'scale(1)';
+      sendBtn.style.opacity = '1';
+    }, 150);
+    
+    // 添加闪烁效果（可选）
+    sendBtn.style.boxShadow = '0 0 10px rgba(0, 123, 255, 0.5)';
+    setTimeout(() => {
+      sendBtn.style.boxShadow = '';
+    }, 300);
+  });
+
+  playPauseBtn.addEventListener('click', async () => {
+    const isPlaying = app.isTtsPlaying();
+    if (isPlaying) {
+      // 暂停播放
+      app.pauseTtsPlayback();
+    } else {
+      // 开始播放
+      await app.startTtsPlayback();
+    }
+  });
+
+  playbackRateBtn.addEventListener('click', () => {
+    const newRate = app.toggleTtsPlaybackRate();
+    if (playbackRateText) {
+      playbackRateText.textContent = `${newRate}x`;
+    }
   });
 
   endBtn.addEventListener('click', async () => {
@@ -283,14 +349,113 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
     // 状态变化会通过状态监听自动更新按钮状态，这里不需要手动设置
   });
 
+  // 定期更新播放按钮的时长显示（在 INPUT_RECORDING 状态时）
+  let durationUpdateInterval: number | null = null;
+  const startDurationUpdate = () => {
+    if (durationUpdateInterval) {
+      clearInterval(durationUpdateInterval);
+    }
+    durationUpdateInterval = window.setInterval(() => {
+      if (stateMachine && stateMachine.getState() === SessionState.INPUT_RECORDING) {
+        const hasPendingAudio = app.hasPendingTtsAudio();
+        if (hasPendingAudio && playPauseText) {
+          const duration = app.getTtsAudioDuration();
+          playPauseText.textContent = `播放 (${duration.toFixed(1)}s)`;
+        }
+      }
+    }, 500); // 每500ms更新一次
+  };
+  const stopDurationUpdate = () => {
+    if (durationUpdateInterval) {
+      clearInterval(durationUpdateInterval);
+      durationUpdateInterval = null;
+    }
+  };
+
+  // 播放按钮闪烁效果（内存压力警告）
+  let blinkInterval: number | null = null;
+  let isBlinking = false;
+  const startBlink = () => {
+    if (isBlinking) return;
+    isBlinking = true;
+    let blinkState = false;
+    blinkInterval = window.setInterval(() => {
+      if (playPauseBtn) {
+        blinkState = !blinkState;
+        if (blinkState) {
+          playPauseBtn.style.boxShadow = '0 0 20px rgba(255, 193, 7, 0.8)';
+          playPauseBtn.style.backgroundColor = '#ffc107';
+        } else {
+          playPauseBtn.style.boxShadow = '';
+          playPauseBtn.style.backgroundColor = '#28a745';
+        }
+      }
+    }, 500); // 每500ms闪烁一次
+  };
+  const stopBlink = () => {
+    if (blinkInterval) {
+      clearInterval(blinkInterval);
+      blinkInterval = null;
+    }
+    isBlinking = false;
+    if (playPauseBtn) {
+      playPauseBtn.style.boxShadow = '';
+      playPauseBtn.style.backgroundColor = '#28a745';
+    }
+  };
+
+  // 监听内存压力变化
+  if (typeof window !== 'undefined') {
+    (window as any).onMemoryPressure = (pressure: 'normal' | 'warning' | 'critical') => {
+      console.log('[UI] 内存压力变化:', pressure);
+      
+      if (pressure === 'warning') {
+        // 内存压力50%：开始闪烁提醒
+        if (stateMachine && stateMachine.getState() === SessionState.INPUT_RECORDING) {
+          const hasPendingAudio = app.hasPendingTtsAudio();
+          if (hasPendingAudio && !app.isTtsPlaying()) {
+            startBlink();
+          }
+        }
+      } else if (pressure === 'critical') {
+        // 内存压力80%：停止闪烁（因为会自动播放）
+        stopBlink();
+        // 显示紧急提示
+        if (statusText) {
+          const originalText = statusText.textContent;
+          statusText.textContent = '⚠️ 内存压力过高，自动播放中...';
+          statusText.style.color = '#dc3545';
+          setTimeout(() => {
+            if (statusText) {
+              statusText.style.color = '';
+            }
+          }, 3000);
+        }
+      } else {
+        // 正常：停止闪烁
+        stopBlink();
+      }
+    };
+  }
+
   // 状态监听（通过公共方法）
   const stateMachine = app.getStateMachine();
   if (stateMachine) {
     stateMachine.onStateChange((newState: SessionState) => {
       const isSessionActive = stateMachine.getIsSessionActive ? stateMachine.getIsSessionActive() : false;
+      const isConnected = app.isConnected(); // 在 switch 之前声明，所有 case 都可以使用
+      
+      console.log('[UI] 状态变化:', {
+        newState,
+        isSessionActive,
+        isConnected,
+        playbackRateBtnExists: !!playbackRateBtn
+      });
       
       switch (newState) {
         case SessionState.INPUT_READY:
+          // 停止定期更新播放按钮时长
+          stopDurationUpdate();
           if (isSessionActive) {
             statusText.textContent = '会话进行中，准备就绪';
           } else {
@@ -299,25 +464,87 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
           // 只有在会话未开始时，开始按钮才可用
           startBtn.disabled = isSessionActive;
           sendBtn.disabled = true;
+          playPauseBtn.disabled = true;
+          // 倍速按钮：连接建立后即可使用（作为配置）
+          if (playbackRateBtn) {
+            const shouldEnable = isConnected;
+            playbackRateBtn.disabled = !shouldEnable;
+            console.log('[UI] INPUT_READY: 倍速按钮状态', {
+              isConnected,
+              isSessionActive,
+              shouldEnable,
+              disabled: playbackRateBtn.disabled
+            });
+          }
           endBtn.disabled = !isSessionActive;
+          // 隐藏 TTS 音频信息
+          ttsAudioInfo.style.display = 'none';
           break;
         case SessionState.INPUT_RECORDING:
           statusText.textContent = isSessionActive ? '会话进行中，正在监听...' : '正在录音...';
           startBtn.disabled = true;
           sendBtn.disabled = !isSessionActive; // 只有在会话进行中时，发送按钮才可用
+          console.log('[UI] INPUT_RECORDING: sendBtn 状态', {
+            isSessionActive,
+            sendBtnDisabled: sendBtn.disabled
+          });
+          // 开始定期更新播放按钮时长
+          startDurationUpdate();
+          // 播放按钮：只有在有待播放音频时才可用
+          const hasPendingAudio = app.hasPendingTtsAudio();
+          playPauseBtn.disabled = !hasPendingAudio;
+          // 倍速按钮：连接建立后即可使用（作为配置）
+          if (playbackRateBtn) {
+            const shouldEnable = isConnected;
+            playbackRateBtn.disabled = !shouldEnable;
+            console.log('[UI] INPUT_RECORDING: 倍速按钮状态', {
+              isConnected,
+              isSessionActive,
+              shouldEnable,
+              disabled: playbackRateBtn.disabled
+            });
+          }
+          if (playbackRateText) {
+            playbackRateText.textContent = app.getTtsPlaybackRateText();
+          }
+          if (hasPendingAudio) {
+            // INPUT_RECORDING状态：播放按钮显示可播放音频时长（秒）
+            const duration = app.getTtsAudioDuration();
+            playPauseText.textContent = `播放 (${duration.toFixed(1)}s)`;
+            ttsAudioInfo.style.display = 'block';
+            ttsDuration.textContent = duration.toFixed(1);
+          } else {
+            playPauseText.textContent = '播放';
+            ttsAudioInfo.style.display = 'none';
+          }
           endBtn.disabled = !isSessionActive; // 只有在会话进行中时，结束按钮才可用
           break;
-        case SessionState.WAITING_RESULT:
-          statusText.textContent = '等待翻译结果...';
-          startBtn.disabled = true;
-          sendBtn.disabled = true;
-          endBtn.disabled = !isSessionActive;
-          break;
         case SessionState.PLAYING_TTS:
+          // 停止定期更新播放按钮时长
+          stopDurationUpdate();
+          // 停止闪烁（因为正在播放）
+          stopBlink();
           statusText.textContent = '播放翻译结果...';
           startBtn.disabled = true;
-          sendBtn.disabled = true;
+          sendBtn.disabled = true; // 播放时禁用发送按钮
+          playPauseBtn.disabled = false; // 播放按钮可用（用于暂停）
+          // PLAYING_TTS状态：播放按钮变为暂停按钮，不显示时长
+          playPauseText.textContent = '暂停';
+          if (playbackRateBtn) {
+            playbackRateBtn.disabled = false; // 播放时倍速按钮可用
+          }
+          if (playbackRateText) {
+            playbackRateText.textContent = app.getTtsPlaybackRateText();
+          }
           endBtn.disabled = !isSessionActive;
+          // 显示 TTS 音频信息（但不显示在播放按钮上）
+          ttsAudioInfo.style.display = 'block';
+          const duration = app.getTtsAudioDuration();
+          ttsDuration.textContent = duration.toFixed(1);
+          console.log('[UI] PLAYING_TTS: sendBtn 已禁用', {
+            isSessionActive,
+            sendBtnDisabled: sendBtn.disabled
+          });
           break;
       }
     });
@@ -506,6 +733,9 @@ export function renderRoom(container: HTMLElement, app: App): void {
         <button id="send-btn" style="padding: 10px 20px; margin: 5px; font-size: 16px; cursor: pointer;" disabled>
           发送
         </button>
+        <button id="play-pause-btn" style="padding: 10px 20px; margin: 5px; font-size: 16px; cursor: pointer; background: #28a745; color: white; border: none; border-radius: 8px;" disabled>
+          <span id="play-pause-text">播放</span>
+        </button>
         <button id="end-btn" style="padding: 10px 20px; margin: 5px; font-size: 16px; cursor: pointer;" disabled>
           结束
         </button>
@@ -513,22 +743,83 @@ export function renderRoom(container: HTMLElement, app: App): void {
           退出房间
         </button>
       </div>
+      
+      <div id="tts-audio-info" style="margin: 10px 0; padding: 10px; background: #e7f3ff; border-radius: 8px; display: none;">
+        <div style="font-size: 14px; color: #0066cc;">
+          可播放音频时长: <span id="tts-duration">0.0</span> 秒
+        </div>
+      </div>
     </div>
   `;
 
   // 房间内按钮事件
   const startBtn = document.getElementById('start-btn') as HTMLButtonElement;
   const sendBtn = document.getElementById('send-btn') as HTMLButtonElement;
+  const playPauseBtn = document.getElementById('play-pause-btn') as HTMLButtonElement;
+  const playPauseText = document.getElementById('play-pause-text') as HTMLElement;
+  const playbackRateBtn = document.getElementById('playback-rate-btn') as HTMLButtonElement;
+  const playbackRateText = document.getElementById('playback-rate-text') as HTMLElement;
   const endBtn = document.getElementById('end-btn') as HTMLButtonElement;
   const leaveRoomBtn = document.getElementById('leave-room-btn') as HTMLButtonElement;
   const statusText = document.getElementById('status-text') as HTMLElement;
+  const ttsAudioInfo = document.getElementById('tts-audio-info') as HTMLElement;
+  const ttsDuration = document.getElementById('tts-duration') as HTMLElement;
 
   startBtn.addEventListener('click', async () => {
+    console.log('[UI-房间] 开始按钮被点击');
     await app.startSession();
+    // 状态变化会通过状态监听自动更新按钮状态，这里不需要手动设置
+    // 手动触发一次状态检查，确保倍速按钮状态更新
+    setTimeout(() => {
+      const isConnected = app.isConnected();
+      if (playbackRateBtn) {
+        playbackRateBtn.disabled = !isConnected;
+        console.log('[UI-房间] 开始会话后更新倍速按钮:', {
+          isConnected,
+          disabled: playbackRateBtn.disabled
+        });
+      }
+    }, 100);
   });
 
   sendBtn.addEventListener('click', () => {
+    // 添加动态效果：点击反馈
+    sendBtn.style.transform = 'scale(0.95)';
+    sendBtn.style.opacity = '0.8';
+    sendBtn.style.transition = 'all 0.1s ease';
+    
+    // 执行发送操作
     app.sendCurrentUtterance();
+    
+    // 恢复按钮样式（延迟恢复，让用户看到反馈）
+    setTimeout(() => {
+      sendBtn.style.transform = 'scale(1)';
+      sendBtn.style.opacity = '1';
+    }, 150);
+    
+    // 添加闪烁效果（可选）
+    sendBtn.style.boxShadow = '0 0 10px rgba(0, 123, 255, 0.5)';
+    setTimeout(() => {
+      sendBtn.style.boxShadow = '';
+    }, 300);
+  });
+
+  playPauseBtn.addEventListener('click', async () => {
+    const isPlaying = app.isTtsPlaying();
+    if (isPlaying) {
+      // 暂停播放
+      app.pauseTtsPlayback();
+    } else {
+      // 开始播放
+      await app.startTtsPlayback();
+    }
+  });
+
+  playbackRateBtn.addEventListener('click', () => {
+    const newRate = app.toggleTtsPlaybackRate();
+    if (playbackRateText) {
+      playbackRateText.textContent = `${newRate}x`;
+    }
   });
 
   endBtn.addEventListener('click', async () => {
@@ -541,36 +832,186 @@ export function renderRoom(container: HTMLElement, app: App): void {
     renderMainMenu(container, app);
   });
 
+  // 定期更新播放按钮的时长显示（在 INPUT_RECORDING 状态时）- 会议室模式
+  let roomDurationUpdateInterval: number | null = null;
+  const startRoomDurationUpdate = () => {
+    if (roomDurationUpdateInterval) {
+      clearInterval(roomDurationUpdateInterval);
+    }
+    roomDurationUpdateInterval = window.setInterval(() => {
+      if (stateMachine && stateMachine.getState() === SessionState.INPUT_RECORDING) {
+        const hasPendingAudio = app.hasPendingTtsAudio();
+        if (hasPendingAudio && playPauseText) {
+          const duration = app.getTtsAudioDuration();
+          playPauseText.textContent = `播放 (${duration.toFixed(1)}s)`;
+        }
+      }
+    }, 500); // 每500ms更新一次
+  };
+  const stopRoomDurationUpdate = () => {
+    if (roomDurationUpdateInterval) {
+      clearInterval(roomDurationUpdateInterval);
+      roomDurationUpdateInterval = null;
+    }
+  };
+
+  // 播放按钮闪烁效果（内存压力警告）- 会议室模式
+  let roomBlinkInterval: number | null = null;
+  let isRoomBlinking = false;
+  const startRoomBlink = () => {
+    if (isRoomBlinking) return;
+    isRoomBlinking = true;
+    let blinkState = false;
+    roomBlinkInterval = window.setInterval(() => {
+      if (playPauseBtn) {
+        blinkState = !blinkState;
+        if (blinkState) {
+          playPauseBtn.style.boxShadow = '0 0 20px rgba(255, 193, 7, 0.8)';
+          playPauseBtn.style.backgroundColor = '#ffc107';
+        } else {
+          playPauseBtn.style.boxShadow = '';
+          playPauseBtn.style.backgroundColor = '#28a745';
+        }
+      }
+    }, 500);
+  };
+  const stopRoomBlink = () => {
+    if (roomBlinkInterval) {
+      clearInterval(roomBlinkInterval);
+      roomBlinkInterval = null;
+    }
+    isRoomBlinking = false;
+    if (playPauseBtn) {
+      playPauseBtn.style.boxShadow = '';
+      playPauseBtn.style.backgroundColor = '#28a745';
+    }
+  };
+
+  // 监听内存压力变化（会议室模式）
+  if (typeof window !== 'undefined') {
+    const originalOnMemoryPressure = (window as any).onMemoryPressure;
+    (window as any).onMemoryPressure = (pressure: 'normal' | 'warning' | 'critical') => {
+      if (originalOnMemoryPressure) {
+        originalOnMemoryPressure(pressure);
+      }
+      
+      console.log('[UI-房间] 内存压力变化:', pressure);
+      
+      if (pressure === 'warning') {
+        if (stateMachine && stateMachine.getState() === SessionState.INPUT_RECORDING) {
+          const hasPendingAudio = app.hasPendingTtsAudio();
+          if (hasPendingAudio && !app.isTtsPlaying()) {
+            startRoomBlink();
+          }
+        }
+      } else if (pressure === 'critical') {
+        stopRoomBlink();
+        if (statusText) {
+          statusText.textContent = '⚠️ 内存压力过高，自动播放中...';
+          statusText.style.color = '#dc3545';
+          setTimeout(() => {
+            if (statusText) {
+              statusText.style.color = '';
+            }
+          }, 3000);
+        }
+      } else {
+        stopRoomBlink();
+      }
+    };
+  }
+
   // 状态监听
   const stateMachine = app.getStateMachine();
   if (stateMachine) {
     stateMachine.onStateChange((newState: SessionState) => {
       const isSessionActive = stateMachine.getIsSessionActive ? stateMachine.getIsSessionActive() : false;
+      const isConnected = app.isConnected(); // 在 switch 之前声明，所有 case 都可以使用
       
       switch (newState) {
         case SessionState.INPUT_READY:
+          // 停止定期更新播放按钮时长
+          stopRoomDurationUpdate();
           statusText.textContent = isSessionActive ? '会话进行中，准备就绪' : '准备就绪';
           startBtn.disabled = isSessionActive;
           sendBtn.disabled = true;
+          if (playPauseBtn) playPauseBtn.disabled = true;
+          // 倍速按钮：连接建立且会话建立后可用（作为配置）
+          if (playbackRateBtn) playbackRateBtn.disabled = !(isConnected && isSessionActive);
+          if (playbackRateText) {
+            playbackRateText.textContent = app.getTtsPlaybackRateText();
+          }
           endBtn.disabled = !isSessionActive;
+          // 隐藏 TTS 音频信息
+          if (ttsAudioInfo) ttsAudioInfo.style.display = 'none';
           break;
         case SessionState.INPUT_RECORDING:
+          // 开始定期更新播放按钮时长
+          startRoomDurationUpdate();
           statusText.textContent = isSessionActive ? '会话进行中，正在监听...' : '正在录音...';
           startBtn.disabled = true;
           sendBtn.disabled = !isSessionActive;
-          endBtn.disabled = !isSessionActive;
-          break;
-        case SessionState.WAITING_RESULT:
-          statusText.textContent = '等待翻译结果...';
-          startBtn.disabled = true;
-          sendBtn.disabled = true;
+          // 播放按钮：只有在有待播放音频时才可用
+          const hasPendingAudio = app.hasPendingTtsAudio();
+          if (playPauseBtn) {
+            playPauseBtn.disabled = !hasPendingAudio;
+            // INPUT_RECORDING状态：播放按钮显示可播放音频时长（秒）
+            if (hasPendingAudio && playPauseText) {
+              const duration = app.getTtsAudioDuration();
+              playPauseText.textContent = `播放 (${duration.toFixed(1)}s)`;
+            } else if (playPauseText) {
+              playPauseText.textContent = '播放';
+            }
+          }
+          // 倍速按钮：连接建立后即可使用（作为配置）
+          if (playbackRateBtn) {
+            const shouldEnable = isConnected;
+            playbackRateBtn.disabled = !shouldEnable;
+            console.log('[UI-房间] INPUT_RECORDING: 倍速按钮状态', {
+              isConnected,
+              isSessionActive,
+              shouldEnable,
+              disabled: playbackRateBtn.disabled
+            });
+          }
+          if (playbackRateText) {
+            playbackRateText.textContent = app.getTtsPlaybackRateText();
+          }
+          if (hasPendingAudio && ttsAudioInfo && ttsDuration) {
+            ttsAudioInfo.style.display = 'block';
+            const duration = app.getTtsAudioDuration();
+            ttsDuration.textContent = duration.toFixed(1);
+          } else if (ttsAudioInfo) {
+            ttsAudioInfo.style.display = 'none';
+          }
           endBtn.disabled = !isSessionActive;
           break;
         case SessionState.PLAYING_TTS:
+          // 停止定期更新播放按钮时长
+          stopRoomDurationUpdate();
+          // 停止闪烁（因为正在播放）
+          stopRoomBlink();
           statusText.textContent = '播放翻译结果...';
           startBtn.disabled = true;
-          sendBtn.disabled = true;
+          sendBtn.disabled = true; // 播放时禁用发送按钮
+          if (playPauseBtn && playPauseText) {
+            playPauseBtn.disabled = false; // 播放按钮可用（用于暂停）
+            // PLAYING_TTS状态：播放按钮变为暂停按钮，不显示时长
+            playPauseText.textContent = '暂停';
+          }
+          if (playbackRateBtn) {
+            playbackRateBtn.disabled = false; // 播放时倍速按钮可用
+          }
+          if (playbackRateText) {
+            playbackRateText.textContent = app.getTtsPlaybackRateText();
+          }
           endBtn.disabled = !isSessionActive;
+          // 显示 TTS 音频信息（但不显示在播放按钮上）
+          if (ttsAudioInfo && ttsDuration) {
+            ttsAudioInfo.style.display = 'block';
+            const duration = app.getTtsAudioDuration();
+            ttsDuration.textContent = duration.toFixed(1);
+          }
           break;
       }
     });

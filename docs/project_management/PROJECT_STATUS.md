@@ -1,9 +1,15 @@
 # 项目状态
 
-**最后更新**: 2025-12-17  
+**最后更新**: 2025-01-XX  
 **联合调试就绪度**: ✅ **已就绪**（核心功能 100% 完成并测试）
 
 **重要更新**:
+- ✅ **Web 客户端 Phase 3 功能完成**（2025-01-XX）
+  - 客户端背压与降级机制（100% 完成并测试）
+  - Opus 编码集成（Web Client + Node 端，100% 完成并测试）
+  - Session Init 协议增强（trace_id, tenant_id，100% 完成并测试）
+  - Node 端 Opus 解码支持（100% 完成并测试）
+  - 单元测试：28 个测试用例全部通过（100%）
 - ✅ **平台化模型管理功能改造完成**（2025-12-17）
   - Model Hub 支持多平台服务包管理
   - 节点端实现服务包安装、校验、启动完整流程
@@ -12,6 +18,8 @@
 - ✅ 新增文档：[Utterance Group 实现原理](../UTTERANCE_GROUP_IMPLEMENTATION.md)
 - ✅ 新增文档：[上下文缓冲功能对比](../CONTEXT_BUFFERING_COMPARISON.md)
 - ✅ 新增文档：[VAD 架构分析](../VAD_ARCHITECTURE_ANALYSIS.md)
+- ✅ 新增文档：[Phase 3 实现总结](../PHASE3_IMPLEMENTATION_SUMMARY.md)
+- ✅ 新增文档：[Phase 3 测试完成报告](../PHASE3_TESTING_COMPLETE_FINAL.md)
 
 ---
 
@@ -44,7 +52,8 @@
 | Web 客户端双向模式（面对面模式） | 14 | ✅ 14 | 0 | 100% |
 | Web 客户端会议室模式（原声传递偏好） | 12 | ✅ 12 | 0 | 100% |
 | Web 客户端会议室模式（成员加入流程） | 16 | ✅ 16 | 0 | 100% |
-| **总计** | **336+** | **✅ 336+** | **0** | **100%** |
+| Web 客户端 Phase 3（背压、Opus、Session Init） | 28 | ✅ 28 | 0 | 100% |
+| **总计** | **364+** | **✅ 364+** | **0** | **100%** |
 
 *注：WebRTC 连接和音频混控功能已完成实现，但暂无独立单元测试（已集成在会议室模式功能中）
 
@@ -87,6 +96,10 @@
 
 - ✅ **Web 客户端** - 核心功能完成并测试
 - ✅ **Electron Node 客户端** - 100% 完成并测试
+- ✅ **Web 客户端 Phase 3** - 100% 完成并测试
+  - 客户端背压与降级机制
+  - Opus 编码集成（Web Client + Node 端）
+  - Session Init 协议增强
 
 详细内容请参考：[已完成功能详细列表](./PROJECT_STATUS_COMPLETED.md#阶段二客户端开发)
 
@@ -97,6 +110,17 @@
 - ✅ **平台化服务包管理系统** - 100% 完成并测试（2025-12-17）
 
 详细内容请参考：[已完成功能详细列表](./PROJECT_STATUS_COMPLETED.md#阶段三模型库与模块化功能)
+
+### Web 客户端 Phase 3 功能 ✅
+
+- ✅ **客户端背压与降级机制** - 100% 完成并测试
+- ✅ **Opus 编码集成** - 100% 完成并测试（Web Client + Node 端）
+- ✅ **Session Init 协议增强** - 100% 完成并测试（trace_id, tenant_id）
+- ✅ **Node 端 Opus 解码支持** - 100% 完成并测试
+
+**测试结果**: 28/28 测试通过（100%）
+
+详细内容请参考：[已完成功能详细列表](./PROJECT_STATUS_COMPLETED.md#web-客户端-phase-3-功能)
 
 ### 其他已完成功能 ✅
 
@@ -173,3 +197,5 @@
 - [Utterance Group 实现原理](../UTTERANCE_GROUP_IMPLEMENTATION.md) - Utterance Group 的工作原理和节点端生效机制
 - [上下文缓冲功能对比](../CONTEXT_BUFFERING_COMPARISON.md) - Silero VAD 和 Utterance Group 上下文缓冲的对比分析
 - [VAD 架构分析](../VAD_ARCHITECTURE_ANALYSIS.md) - 两层 VAD 架构设计和上下文缓冲机制详解
+- [Phase 3 实现总结](../PHASE3_IMPLEMENTATION_SUMMARY.md) - Phase 3 功能实现总结（背压、Opus、Session Init）
+- [Phase 3 测试完成报告](../PHASE3_TESTING_COMPLETE_FINAL.md) - Phase 3 测试完成报告（28/28 测试通过）

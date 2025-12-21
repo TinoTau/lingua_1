@@ -105,11 +105,22 @@ async fn handle_inference(
 ) -> Result<Json<HttpInferenceResponse>, StatusCode> {
     // 解码 base64 音频
     use base64::{Engine as _, engine::general_purpose};
-    let audio_data = general_purpose::STANDARD.decode(&request.audio)
+    let audio_data_raw = general_purpose::STANDARD.decode(&request.audio)
         .map_err(|e| {
             error!("解码音频数据失败: {}", e);
             StatusCode::BAD_REQUEST
         })?;
+
+    // 根据 audio_format 解码音频（支持 Opus）
+    let audio_format = request.audio_format.as_deref().unwrap_or("pcm16");
+    let sample_rate = request.sample_rate.unwrap_or(16000);
+    let audio_data = match crate::audio_codec::decode_audio(&audio_data_raw, audio_format, sample_rate) {
+        Ok(decoded) => decoded,
+        Err(e) => {
+            error!("音频解码失败 (format={}, sample_rate={}): {}", audio_format, sample_rate, e);
+            return Err(StatusCode::BAD_REQUEST);
+        }
+    };
 
     // 转换为 InferenceRequest
     let inference_request = InferenceRequest {
@@ -248,7 +259,7 @@ async fn handle_inference_stream(
 
                         // 解码 base64 音频
                         use base64::{Engine as _, engine::general_purpose};
-                        let audio_data = match general_purpose::STANDARD.decode(&request.audio) {
+                        let audio_data_raw = match general_purpose::STANDARD.decode(&request.audio) {
                             Ok(data) => data,
                             Err(e) => {
                                 error!("解码音频数据失败: {}", e);
@@ -258,6 +269,23 @@ async fn handle_inference_stream(
                             "message": format!("解码音频数据失败: {}", e),
                         });
                         let _ = tx_msg.send(Message::Text(serde_json::to_string(&error_msg).unwrap()));
+                                continue;
+                            }
+                        };
+
+                        // 根据 audio_format 解码音频（支持 Opus）
+                        let audio_format = request.audio_format.as_deref().unwrap_or("pcm16");
+                        let sample_rate = request.sample_rate.unwrap_or(16000);
+                        let audio_data = match crate::audio_codec::decode_audio(&audio_data_raw, audio_format, sample_rate) {
+                            Ok(decoded) => decoded,
+                            Err(e) => {
+                                error!("音频解码失败 (format={}, sample_rate={}): {}", audio_format, sample_rate, e);
+                                let error_msg = serde_json::json!({
+                                    "type": "error",
+                                    "code": "AUDIO_DECODE_ERROR",
+                                    "message": format!("音频解码失败: {}", e),
+                                });
+                                let _ = tx_msg.send(Message::Text(serde_json::to_string(&error_msg).unwrap()));
                                 continue;
                             }
                         };

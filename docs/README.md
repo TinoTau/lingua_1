@@ -39,34 +39,22 @@
 
 ## 各组件文档
 
+所有模块文档已统一移动到 `docs/` 目录下，避免多层嵌套路径。
+
 ### Web 客户端
 
-- **位置**: `../webapp/docs/`
-- **迁移文档**: `../webapp/docs/MIGRATION.md`
-- **文档索引**: `../webapp/docs/README.md`
+- **位置**: `web_client/`
+- **文档索引**: [web_client/README.md](./web_client/README.md)
 
 ### 中央服务器
 
-- **位置**: `../central_server/docs/`
-- **迁移文档**: `../central_server/docs/MIGRATION.md`
-- **文档索引**: `../central_server/docs/README.md`
-
-#### Scheduler Phase 2（多实例 + Redis Cluster）快速入口
-
-- **实现总览（代码内文档）**：`../central_server/scheduler/docs/phase2_implementation.md`
-- **Streams/DLQ 运维**：`../central_server/scheduler/docs/phase2_streams_ops.md`
-- **Cluster 一键验收脚本**：`../central_server/scheduler/scripts/phase2_cluster_acceptance.ps1`
-- **进度/决策文档**：`../central_server/docs/project/Scheduler_Phase2_开发进度记录_2025-12-19.md`
+- **位置**: `central_server/`
+- **文档索引**: [central_server/README.md](./central_server/README.md)
 
 ### Electron 节点客户端
 
-- **位置**: `../electron_node/docs/`
-- **迁移文档**: `../electron_node/docs/MIGRATION.md`
-- **文档索引**: `../electron_node/docs/README.md`
-- **项目完整性**: `../electron_node/PROJECT_COMPLETENESS.md`
-- **测试状态**: `../electron_node/TEST_STATUS.md`
-- **服务热插拔验证**: `../electron_node/docs/SERVICE_HOT_PLUG_VERIFICATION.md`
-- **YourTTS 集成实现**: `../electron_node/docs/YOURTTS_INTEGRATION_IMPLEMENTATION.md`
+- **位置**: `electron_node/`
+- **文档索引**: [electron_node/README.md](./electron_node/README.md)
 
 ## 项目结构
 
@@ -87,6 +75,8 @@ lingua_1/
 ## 快速参考
 
 - **项目迁移**: `PROJECT_MIGRATION.md`
-- **Web 客户端文档**: `../webapp/docs/README.md`
-- **中央服务器文档**: `../central_server/docs/README.md`
-- **项目重组指南**: `../PROJECT_REORGANIZATION_GUIDE.md`
+- **文档索引**: [DOCUMENTATION_INDEX.md](./DOCUMENTATION_INDEX.md)
+- **产品文档索引**: [PRODUCT_DOCUMENTATION_INDEX.md](./PRODUCT_DOCUMENTATION_INDEX.md)
+- **Web 客户端文档**: [web_client/README.md](./web_client/README.md)
+- **中央服务器文档**: [central_server/README.md](./central_server/README.md)
+- **Electron Node 文档**: [electron_node/README.md](./electron_node/README.md)

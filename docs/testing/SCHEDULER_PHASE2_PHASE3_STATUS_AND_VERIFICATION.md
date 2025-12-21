@@ -64,7 +64,7 @@ Phase2/Redis 相关测试在 Redis 不可用时会 `skip`，不会导致整套�
 
 ## 3. 对应项目级文档
 
-- `central_server/docs/project/Scheduler_Phase2_开发进度记录_2025-12-19.md`
+- `docs/central_server/project/Scheduler_Phase2_开发进度记录_2025-12-19.md`
 - `central_server/docs/project/Scheduler_扩展与容量规划说明_含Redis设计.md`
 
 

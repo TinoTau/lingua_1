@@ -2,7 +2,7 @@
 export enum SessionState {
   INPUT_READY = 'input_ready',
   INPUT_RECORDING = 'input_recording',
-  WAITING_RESULT = 'waiting_result',
+  // WAITING_RESULT 已移除，实现持续输入
   PLAYING_TTS = 'playing_tts',
 }
 
@@ -22,13 +22,64 @@ export interface Config {
   tailBufferMs: number; // 250ms
   groupTimeoutSec: number; // 30s
   schedulerUrl: string;
+  // 静音过滤配置
+  silenceFilter?: SilenceFilterConfig;
+  // WebSocket 重连配置
+  reconnectConfig?: ReconnectConfig;
+  // 客户端版本
+  clientVersion?: string;
+  // 可观测性配置
+  observabilityReportUrl?: string; // 指标上报 URL
+  observabilityReportIntervalMs?: number; // 上报间隔（毫秒）
+  // Phase 2: 音频编解码器配置
+  audioCodecConfig?: import('./audio_codec').AudioCodecConfig;
 }
+
+// 静音过滤配置
+export interface SilenceFilterConfig {
+  enabled: boolean; // 是否启用静音过滤
+  threshold: number; // RMS 阈值（0-1，默认 0.01）
+  windowMs: number; // 窗口大小（毫秒，默认 100ms）
+  // 平滑配置（避免频繁启停）
+  attackFrames: number; // 连续 N 帧语音才开始发送（默认 3）
+  releaseFrames: number; // 连续 M 帧静音才停止发送（默认 5）
+  attackThreshold?: number; // 进入语音的阈值（可选，默认使用 threshold）
+  releaseThreshold?: number; // 退出语音的阈值（可选，默认使用 threshold）
+}
+
+export const DEFAULT_SILENCE_FILTER_CONFIG: SilenceFilterConfig = {
+  enabled: true,
+  threshold: 0.015, // 调整为更严格的阈值，更好地过滤静音（原值：0.01）
+  windowMs: 100,
+  attackFrames: 3, // 连续3帧语音才开始发送（避免误触发）
+  releaseFrames: 5, // 连续5帧静音才停止发送（平滑过渡，避免频繁启停）
+};
+
+// WebSocket 重连配置
+export interface ReconnectConfig {
+  enabled: boolean; // 是否启用自动重连
+  maxRetries: number; // 最大重试次数（-1 表示无限重试）
+  retryDelayMs: number; // 重试延迟（毫秒）
+  heartbeatIntervalMs: number; // 心跳间隔（毫秒）
+  heartbeatTimeoutMs: number; // 心跳超时（毫秒）
+}
+
+export const DEFAULT_RECONNECT_CONFIG: ReconnectConfig = {
+  enabled: true,
+  maxRetries: -1, // 无限重试
+  retryDelayMs: 1000,
+  heartbeatIntervalMs: 30000, // 30秒
+  heartbeatTimeoutMs: 60000, // 60秒
+};
 
 export const DEFAULT_CONFIG: Config = {
   silenceTimeoutMs: 1000,
   tailBufferMs: 250,
   groupTimeoutSec: 30,
   schedulerUrl: 'ws://localhost:5010/ws/session',
+  silenceFilter: DEFAULT_SILENCE_FILTER_CONFIG,
+  reconnectConfig: DEFAULT_RECONNECT_CONFIG,
+  clientVersion: 'web-client-v1.0',
 };
 
 // WebSocket 消息类型
@@ -99,6 +150,45 @@ export interface SessionInitAckMessage {
   assigned_node_id: string | null;
   message: string;
   trace_id: string; // 追踪 ID（服务器生成并回传）
+  // 协议协商结果
+  negotiated_audio_format?: string;
+  negotiated_sample_rate?: number;
+  negotiated_channel_count?: number;
+  protocol_version?: string;
+  // Phase 2 协商结果
+  use_binary_frame?: boolean; // 是否使用 Binary Frame
+  negotiated_codec?: string; // 协商后的编解码器
+}
+
+// 背压消息（服务端发送）
+export interface BackpressureMessage {
+  type: 'backpressure';
+  action: 'BUSY' | 'PAUSE' | 'SLOW_DOWN';
+  resume_after_ms?: number; // 恢复时间（毫秒）
+  message?: string; // 可选消息
+}
+
+// Session Init 消息（客户端发送，增强版）
+export interface SessionInitMessage {
+  type: 'session_init';
+  client_version: string;
+  platform: 'web';
+  src_lang: string;
+  tgt_lang: string;
+  dialect: string | null;
+  features: FeatureFlags;
+  pairing_code: string | null;
+  mode: 'one_way' | 'two_way_auto';
+  // 双向模式额外字段
+  lang_a?: string;
+  lang_b?: string;
+  auto_langs?: string[];
+  // Phase 3 新增字段（与 Scheduler 兼容）
+  trace_id?: string; // 追踪 ID（用于可观测性）
+  tenant_id?: string | null; // 租户 ID（用于多租户支持）
+  // 注意：以下字段不应在 SessionInit 中发送（Scheduler 不支持）
+  // audio_format, sample_rate, channel_count 只在 Utterance 消息中使用
+  // protocol_version, supports_binary_frame, preferred_codec Scheduler 不支持
 }
 
 // 客户端发送的消息类型
@@ -205,5 +295,6 @@ export type ServerMessage =
   | RoomExpiredMessage
   | WebRTCOfferMessage
   | WebRTCAnswerMessage
-  | WebRTCIceMessage;
+  | WebRTCIceMessage
+  | BackpressureMessage;
 

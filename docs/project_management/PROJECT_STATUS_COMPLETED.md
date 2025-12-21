@@ -262,5 +262,69 @@
 
 ---
 
+## Web 客户端 Phase 3 功能 ✅
+
+### 客户端背压与降级机制 ✅
+
+**完成状态**: ✅ **100% 完成并测试**
+
+**核心功能**:
+- ✅ 背压消息处理（BUSY / PAUSE / SLOW_DOWN）
+- ✅ 发送频率动态调整
+- ✅ 发送队列管理（暂停时缓存，恢复时发送）
+- ✅ 背压状态回调通知
+- ✅ 完整的单元测试（全部通过）
+
+**测试结果**: 单元测试全部通过 ✅
+
+**相关文档**:
+- [Phase 3 实现文档](../web_client/PHASE3_IMPLEMENTATION.md)
+- [Phase 3 测试完成报告](../PHASE3_TESTING_COMPLETE_FINAL.md)
+
+---
+
+### Opus 编码集成 ✅
+
+**完成状态**: ✅ **100% 完成并测试**
+
+**核心功能**:
+- ✅ Web Client 端 Opus 编码/解码（使用 `@minceraftmc/opus-encoder` 和 `opus-decoder`）
+- ✅ Node 端 Opus 解码（使用 `opus-rs`）
+- ✅ HTTP/WebSocket 接口中的 Opus 解码集成
+- ✅ 往返编码/解码测试（验证数据完整性）
+- ✅ 完整的单元测试和集成测试（全部通过）
+
+**测试结果**:
+- Web Client 端: 5/5 测试通过 ✅
+- Node 端: 17/17 测试通过 ✅（包括往返编码/解码测试）
+
+**相关文档**:
+- [Phase 2 实现文档](../web_client/PHASE2_IMPLEMENTATION.md)
+- [Phase 3 测试完成报告](../PHASE3_TESTING_COMPLETE_FINAL.md)
+- [Phase 3 实现文档](../web_client/PHASE3_IMPLEMENTATION.md)
+
+---
+
+### Session Init 协议增强 ✅
+
+**完成状态**: ✅ **100% 完成并测试**
+
+**核心功能**:
+- ✅ `trace_id` 字段（自动生成 UUID，用于追踪）
+- ✅ `tenant_id` 字段（可选，支持多租户）
+- ✅ 移除不支持的字段（`audio_format`, `sample_rate`, `channel_count`, `protocol_version` 等）
+- ✅ Scheduler 端支持验证
+- ✅ 完整的单元测试（全部通过）
+
+**测试结果**:
+- Web Client 端: 5/5 测试通过 ✅
+- Scheduler 端: 6/6 测试通过 ✅
+
+**相关文档**:
+- [Phase 3 实现文档](../web_client/PHASE3_IMPLEMENTATION.md)
+- [Phase 3 测试完成报告](../PHASE3_TESTING_COMPLETE_FINAL.md)
+
+---
+
 **返回**: [项目状态主文档](./PROJECT_STATUS.md)
 

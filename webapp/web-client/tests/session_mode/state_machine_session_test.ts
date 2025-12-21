@@ -84,16 +84,19 @@ describe('StateMachine - Session Mode', () => {
   });
 
   describe('State Transitions in Session Mode', () => {
-    it('should transition correctly in session mode', () => {
+    it('should transition correctly in session mode (refactored)', () => {
       stateMachine.startSession();
       expect(stateMachine.getState()).toBe(SessionState.INPUT_RECORDING);
       
+      // 重构后：stopRecording不再切换状态
       stateMachine.stopRecording();
-      expect(stateMachine.getState()).toBe(SessionState.WAITING_RESULT);
+      expect(stateMachine.getState()).toBe(SessionState.INPUT_RECORDING);
       
+      // 可以直接从INPUT_RECORDING开始播放
       stateMachine.startPlaying();
       expect(stateMachine.getState()).toBe(SessionState.PLAYING_TTS);
       
+      // 播放完成后回到INPUT_RECORDING（会话进行中）
       stateMachine.finishPlaying();
       expect(stateMachine.getState()).toBe(SessionState.INPUT_RECORDING);
       expect(stateMachine.getIsSessionActive()).toBe(true);

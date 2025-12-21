@@ -91,9 +91,8 @@ webapp/
 
 ## 相关文档
 
-- **项目完整性**: `../PROJECT_CHECK.md`
-- **测试状态**: `../TEST_STATUS.md`
-- **文档状态**: `../DOCUMENTATION_STATUS.md`
+- **项目状态归档**: `../../docs/web_client/PROJECT_STATUS_ARCHIVE.md`
+- **统一项目状态**: `../../docs/project_management/PROJECT_STATUS.md`
 - **快速开始**: `QUICK_START.md`
 - **文档索引**: `README.md`
 
