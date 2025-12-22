@@ -3,6 +3,7 @@
 use anyhow::Result;
 use serde::{Deserialize, Serialize};  // Deserialize 在 InferenceRequest/InferenceResult 中使用（用于 JSON 反序列化）
 use std::path::PathBuf;
+use tracing::{info, warn, debug};
 
 use crate::modules::{FeatureSet, ModuleManager, InferenceModule};
 use crate::pipeline::PipelineContext;
@@ -226,12 +227,17 @@ impl InferenceService {
     /// 用于会话结束或需要重置上下文时调用
     pub async fn clear_context_buffer(&self) {
         let mut context = self.context_buffer.lock().await;
+        let previous_size = context.len();
         context.clear();
         // 同时重置VAD状态
         if let Err(e) = self.vad_engine.reset_state() {
             tracing::warn!("重置VAD状态失败: {}", e);
         }
-        tracing::debug!("上下文缓冲区和VAD状态已清空");
+        info!(
+            previous_context_samples = previous_size,
+            previous_context_duration_sec = (previous_size as f32 / 16000.0),
+            "🗑️ 上下文缓冲区和VAD状态已清空"
+        );
     }
 
     /// 获取上下文缓冲区当前大小（样本数）
@@ -352,15 +358,24 @@ impl InferenceService {
             if !context.is_empty() {
                 let mut audio_with_context = context.clone();
                 audio_with_context.extend_from_slice(&audio_f32);
-                debug!(
+                info!(
                     trace_id = %trace_id,
                     context_samples = context.len(),
+                    context_duration_sec = (context.len() as f32 / 16000.0),
                     original_samples = audio_f32.len(),
+                    original_duration_sec = (audio_f32.len() as f32 / 16000.0),
                     total_samples = audio_with_context.len(),
-                    "前置上下文音频到当前utterance"
+                    total_duration_sec = (audio_with_context.len() as f32 / 16000.0),
+                    "✅ 前置上下文音频到当前utterance（上下文缓冲区不为空）"
                 );
                 audio_with_context
             } else {
+                info!(
+                    trace_id = %trace_id,
+                    original_samples = audio_f32.len(),
+                    original_duration_sec = (audio_f32.len() as f32 / 16000.0),
+                    "ℹ️ 上下文缓冲区为空，使用原始音频（第一个utterance或上下文已清空）"
+                );
                 audio_f32.clone()
             }
         };
@@ -467,84 +482,10 @@ impl InferenceService {
             self.asr_engine.transcribe_f32(&audio_f32_processed, &src_lang).await?
         };
         
-        // 2.1 更新上下文缓冲区：使用VAD选择最佳上下文片段
-        // 优先选择最后一个语音段的尾部，而不是简单的音频尾部
-        {
-            const CONTEXT_DURATION_SEC: f32 = 2.0;  // 保存最后2秒
-            const SAMPLE_RATE: u32 = 16000;
-            let context_samples = (CONTEXT_DURATION_SEC * SAMPLE_RATE as f32) as usize;
-            
-            let mut context = self.context_buffer.lock().await;
-            
-            // 使用VAD检测原始音频（不带上下文）的语音段
-            match self.vad_engine.detect_speech(&audio_f32) {
-                Ok(segments) => {
-                    if !segments.is_empty() {
-                        // 选择最后一个语音段
-                        let (last_start, last_end) = segments.last().unwrap();
-                        let last_segment = &audio_f32[*last_start..*last_end];
-                        
-                        // 从最后一个语音段的尾部提取上下文
-                        if last_segment.len() > context_samples {
-                            let start_idx = last_segment.len() - context_samples;
-                            *context = last_segment[start_idx..].to_vec();
-                            debug!(
-                                trace_id = %trace_id,
-                                context_samples = context.len(),
-                                segment_start = last_start,
-                                segment_end = last_end,
-                                "更新上下文缓冲区（使用VAD选择的最后一个语音段尾部）"
-                            );
-                        } else {
-                            // 如果最后一个段太短，保存整个段
-                            *context = last_segment.to_vec();
-                            debug!(
-                                trace_id = %trace_id,
-                                context_samples = context.len(),
-                                "更新上下文缓冲区（最后一个语音段较短，保存全部）"
-                            );
-                        }
-                    } else {
-                        // 如果没有检测到语音段，回退到简单尾部保存
-                        if audio_f32.len() > context_samples {
-                            let start_idx = audio_f32.len() - context_samples;
-                            *context = audio_f32[start_idx..].to_vec();
-                            debug!(
-                                trace_id = %trace_id,
-                                context_samples = context.len(),
-                                "更新上下文缓冲区（VAD未检测到语音段，保存最后{}秒）", CONTEXT_DURATION_SEC
-                            );
-                        } else {
-                            *context = audio_f32.clone();
-                            debug!(
-                                trace_id = %trace_id,
-                                context_samples = context.len(),
-                                "更新上下文缓冲区（utterance较短，保存全部）"
-                            );
-                        }
-                    }
-                }
-                Err(e) => {
-                    // VAD检测失败，回退到简单尾部保存
-                    warn!(
-                        trace_id = %trace_id,
-                        error = %e,
-                        "VAD检测失败，使用简单尾部保存上下文"
-                    );
-                    if audio_f32.len() > context_samples {
-                        let start_idx = audio_f32.len() - context_samples;
-                        *context = audio_f32[start_idx..].to_vec();
-                    } else {
-                        *context = audio_f32.clone();
-                    }
-                }
-            }
-        }
-        
         // 将 ASR 结果写入 PipelineContext
         // 记录过滤前后的文本（用于调试）
         if transcript.contains('(') || transcript.contains('（') || transcript.contains('[') || transcript.contains('【') {
-            tracing::warn!(
+            warn!(
                 trace_id = %trace_id,
                 transcript = %transcript,
                 transcript_len = transcript.len(),
@@ -552,7 +493,13 @@ impl InferenceService {
             );
         }
         ctx.set_transcript(transcript.clone());
-        info!(trace_id = %trace_id, transcript_len = transcript.len(), transcript_preview = %transcript.chars().take(50).collect::<String>(), "ASR 识别完成");
+        info!(
+            trace_id = %trace_id,
+            transcript_len = transcript.len(),
+            transcript_preview = %transcript.chars().take(50).collect::<String>(),
+            transcript_trimmed_len = transcript.trim().len(),
+            "✅ ASR 识别完成"
+        );
 
         // 3. 可选模块处理（使用 PipelineContext）
         // 3.1 音色识别
@@ -594,10 +541,17 @@ impl InferenceService {
         }
 
         // 4. NMT: 机器翻译（必需，使用动态确定的翻译方向）
-        // 如果 ASR 结果为空，跳过翻译和 TTS，直接返回空结果
-        if transcript.trim().is_empty() {
-            warn!(trace_id = %trace_id, "ASR transcript is empty, skipping NMT and TTS");
-            // 返回空结果，不进行翻译和 TTS
+        // 如果 ASR 结果为空或无意义，跳过翻译和 TTS，直接返回空结果
+        // 这样可以避免对静音识别结果进行翻译和TTS，节省资源
+        // 重要：在检查空文本后，才更新上下文缓冲区，避免静音音频污染上下文
+        let transcript_trimmed = transcript.trim();
+        if transcript_trimmed.is_empty() {
+            warn!(
+                trace_id = %trace_id,
+                transcript = %transcript,
+                "ASR transcript is empty, skipping NMT and TTS, and NOT updating context buffer"
+            );
+            // 返回空结果，不进行翻译和 TTS，也不更新上下文缓冲区
             let result = InferenceResult {
                 transcript: String::new(),
                 translation: String::new(),
@@ -607,6 +561,121 @@ impl InferenceService {
                 emotion: None,
             };
             return Ok(result);
+        }
+        
+        // 检查文本是否为无意义的识别结果（如静音时的误识别）
+        if crate::text_filter::is_meaningless_transcript(transcript_trimmed) {
+            warn!(
+                trace_id = %trace_id,
+                transcript = %transcript_trimmed,
+                transcript_len = transcript_trimmed.len(),
+                "ASR transcript is meaningless (likely silence misrecognition), skipping NMT and TTS, and NOT updating context buffer"
+            );
+            // 返回空结果，不进行翻译和 TTS，也不更新上下文缓冲区
+            let result = InferenceResult {
+                transcript: String::new(),
+                translation: String::new(),
+                audio: Vec::new(),
+                speaker_id: None,
+                speech_rate: None,
+                emotion: None,
+            };
+            return Ok(result);
+        }
+        
+        // 2.1 更新上下文缓冲区：使用VAD选择最佳上下文片段
+        // 优先选择最后一个语音段的尾部，而不是简单的音频尾部
+        // 重要：只有在文本有意义时才更新上下文缓冲区，避免静音音频污染上下文
+        {
+            const CONTEXT_DURATION_SEC: f32 = 2.0;  // 保存最后2秒
+            const SAMPLE_RATE: u32 = 16000;
+            let context_samples = (CONTEXT_DURATION_SEC * SAMPLE_RATE as f32) as usize;
+            
+            let mut context = self.context_buffer.lock().await;
+            
+            // 使用VAD检测原始音频（不带上下文）的语音段
+            match self.vad_engine.detect_speech(&audio_f32) {
+                Ok(segments) => {
+                    if !segments.is_empty() {
+                        // 选择最后一个语音段
+                        let (last_start, last_end) = segments.last().unwrap();
+                        let last_segment = &audio_f32[*last_start..*last_end];
+                        
+                        // 从最后一个语音段的尾部提取上下文
+                        if last_segment.len() > context_samples {
+                            let start_idx = last_segment.len() - context_samples;
+                            *context = last_segment[start_idx..].to_vec();
+                            info!(
+                                trace_id = %trace_id,
+                                context_samples = context.len(),
+                                context_duration_sec = (context.len() as f32 / 16000.0),
+                                segment_start = last_start,
+                                segment_end = last_end,
+                                segment_samples = last_segment.len(),
+                                "✅ 更新上下文缓冲区（使用VAD选择的最后一个语音段尾部）"
+                            );
+                        } else {
+                            // 如果最后一个段太短，保存整个段
+                            *context = last_segment.to_vec();
+                            info!(
+                                trace_id = %trace_id,
+                                context_samples = context.len(),
+                                context_duration_sec = (context.len() as f32 / 16000.0),
+                                segment_samples = last_segment.len(),
+                                "✅ 更新上下文缓冲区（最后一个语音段较短，保存全部）"
+                            );
+                        }
+                    } else {
+                        // 如果没有检测到语音段，回退到简单尾部保存
+                        if audio_f32.len() > context_samples {
+                            let start_idx = audio_f32.len() - context_samples;
+                            *context = audio_f32[start_idx..].to_vec();
+                            info!(
+                                trace_id = %trace_id,
+                                context_samples = context.len(),
+                                context_duration_sec = (context.len() as f32 / 16000.0),
+                                original_samples = audio_f32.len(),
+                                "⚠️ 更新上下文缓冲区（VAD未检测到语音段，保存最后{}秒）", CONTEXT_DURATION_SEC
+                            );
+                        } else {
+                            *context = audio_f32.clone();
+                            info!(
+                                trace_id = %trace_id,
+                                context_samples = context.len(),
+                                context_duration_sec = (context.len() as f32 / 16000.0),
+                                original_samples = audio_f32.len(),
+                                "⚠️ 更新上下文缓冲区（utterance较短，保存全部）"
+                            );
+                        }
+                    }
+                }
+                Err(e) => {
+                    // VAD检测失败，回退到简单尾部保存
+                    warn!(
+                        trace_id = %trace_id,
+                        error = %e,
+                        "VAD检测失败，使用简单尾部保存上下文"
+                    );
+                    if audio_f32.len() > context_samples {
+                        let start_idx = audio_f32.len() - context_samples;
+                        *context = audio_f32[start_idx..].to_vec();
+                        info!(
+                            trace_id = %trace_id,
+                            context_samples = context.len(),
+                            context_duration_sec = (context.len() as f32 / 16000.0),
+                            "⚠️ 更新上下文缓冲区（VAD失败回退，保存最后{}秒）", CONTEXT_DURATION_SEC
+                        );
+                    } else {
+                        *context = audio_f32.clone();
+                        info!(
+                            trace_id = %trace_id,
+                            context_samples = context.len(),
+                            context_duration_sec = (context.len() as f32 / 16000.0),
+                            "⚠️ 更新上下文缓冲区（VAD失败回退，utterance较短，保存全部）"
+                        );
+                    }
+                }
+            }
         }
         
         debug!(trace_id = %trace_id, src_lang = %src_lang, tgt_lang = %tgt_lang, "开始机器翻译");

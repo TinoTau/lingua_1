@@ -38,7 +38,10 @@
 ### 节点推理服务优化（新增）
 - [VAD 引擎集成实现](./node-inference/VAD_INTEGRATION_IMPLEMENTATION.md)
 - [VAD 上下文缓冲区实现](./node-inference/VAD_CONTEXT_BUFFER_IMPLEMENTATION.md)
-- [Opus 压缩支持](./node-inference/OPUS_COMPRESSION_SUPPORT.md)（待创建）
+- [Opus 压缩支持](./node-inference/OPUS_COMPRESSION_SUPPORT.md)
+- [ASR 文本过滤配置](../../electron_node/services/node-inference/docs/ASR_TEXT_FILTER_CONFIG.md) - ASR 文本过滤规则配置（包含标点符号过滤）
+- [上下文缓冲区状态](../../electron_node/services/node-inference/docs/CONTEXT_BUFFER_STATUS.md) - 上下文缓冲区使用说明
+- [ASR 日志查看指南](../../electron_node/services/node-inference/docs/HOW_TO_VIEW_ASR_LOGS.md) - ASR 日志查看方法
 
 ---
 

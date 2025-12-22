@@ -62,6 +62,7 @@ async fn handle_translate(
                     String::from_utf8(field.bytes().await
                         .map_err(|_| axum::http::StatusCode::BAD_REQUEST)?
                         .to_vec())
+                    .map_err(|_| axum::http::StatusCode::BAD_REQUEST)?
                     .parse::<u32>()
                     .map_err(|_| axum::http::StatusCode::BAD_REQUEST)?
                 );

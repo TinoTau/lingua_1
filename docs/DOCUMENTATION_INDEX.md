@@ -35,6 +35,7 @@ docs/
 - [Phase 2 实现](./web_client/PHASE2_IMPLEMENTATION.md)
 - [Phase 3 实现](./web_client/PHASE3_IMPLEMENTATION.md)
 - [规模化规范](./web_client/SCALABILITY_SPEC.md)
+- [UI 改进和功能更新](../webapp/web-client/docs/UI_IMPROVEMENTS_AND_FEATURES.md) - 最新更新（2025-01）
 
 ### 中央服务器
 - [文档索引](./central_server/README.md)

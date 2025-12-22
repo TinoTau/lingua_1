@@ -72,37 +72,42 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
       </div>
 
       <div id="translation-result-container" style="margin: 20px 0; padding: 15px; background: #f0f8ff; border-radius: 8px; border: 1px solid #b0d4f1; display: none;">
-        <div style="font-weight: bold; margin-bottom: 10px; color: #0066cc;">翻译结果：</div>
-        <div style="margin-bottom: 8px;">
-          <div style="font-weight: bold; color: #333; margin-bottom: 4px;">原文 (ASR):</div>
-          <div id="translation-original" style="padding: 8px; background: white; border-radius: 4px; border: 1px solid #ddd;">等待翻译结果...</div>
+        <div style="font-weight: bold; margin-bottom: 12px; color: #0066cc; font-size: 16px;">翻译结果：</div>
+        <div style="margin-bottom: 12px;">
+          <div style="font-weight: bold; color: #333; margin-bottom: 6px; font-size: 14px;">原文 (ASR):</div>
+          <div id="translation-original" style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; line-height: 1.6; min-height: 60px; max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word;"></div>
         </div>
-        <div style="margin-bottom: 8px;">
-          <div style="font-weight: bold; color: #333; margin-bottom: 4px;">译文 (NMT):</div>
-          <div id="translation-translated" style="padding: 8px; background: white; border-radius: 4px; border: 1px solid #ddd; color: #0066cc;">等待翻译结果...</div>
+        <div style="margin-bottom: 12px;">
+          <div style="font-weight: bold; color: #333; margin-bottom: 6px; font-size: 14px;">译文 (NMT):</div>
+          <div id="translation-translated" style="padding: 12px; background: #f0f8ff; border-radius: 6px; border: 1px solid #b0d4f1; color: #0066cc; font-size: 14px; line-height: 1.6; min-height: 60px; max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word;"></div>
         </div>
-        <div id="translation-timings" style="margin-top: 10px; font-size: 12px; color: #666;"></div>
       </div>
 
       <div style="margin: 20px 0;">
-        <button id="connect-btn" style="padding: 10px 20px; margin: 5px; font-size: 16px; cursor: pointer;">
-          连接服务器
-        </button>
-        <button id="start-btn" style="padding: 10px 20px; margin: 5px; font-size: 16px; cursor: pointer;" disabled>
-          开始
-        </button>
-        <button id="send-btn" style="padding: 10px 20px; margin: 5px; font-size: 16px; cursor: pointer;" disabled>
-          发送
-        </button>
-        <button id="play-pause-btn" style="padding: 10px 20px; margin: 5px; font-size: 16px; cursor: pointer; background: #28a745; color: white; border: none; border-radius: 8px;" disabled>
-          <span id="play-pause-text">播放</span>
-        </button>
-        <button id="playback-rate-btn" style="padding: 10px 20px; margin: 5px; font-size: 16px; cursor: pointer; background: #6c757d; color: white; border: none; border-radius: 8px;" disabled>
-          <span id="playback-rate-text">1x</span>
-        </button>
-        <button id="end-btn" style="padding: 10px 20px; margin: 5px; font-size: 16px; cursor: pointer;" disabled>
-          结束
-        </button>
+        <!-- 第一行：连接服务器、开始、结束 -->
+        <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 10px;">
+          <button id="connect-btn" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">
+            连接服务器
+          </button>
+          <button id="start-btn" style="padding: 10px 20px; font-size: 16px; cursor: pointer;" disabled>
+            开始
+          </button>
+          <button id="end-btn" style="padding: 10px 20px; font-size: 16px; cursor: pointer;" disabled>
+            结束
+          </button>
+        </div>
+        <!-- 第二行：发送、播放（放大1.5倍）、倍速 -->
+        <div style="display: flex; justify-content: center; gap: 10px; align-items: center;">
+          <button id="send-btn" style="padding: 15px 30px; margin: 0; font-size: 24px; cursor: pointer;" disabled>
+            发送
+          </button>
+          <button id="play-pause-btn" style="padding: 15px 30px; margin: 0; font-size: 24px; cursor: pointer; background: #28a745; color: white; border: none; border-radius: 8px;" disabled>
+            <span id="play-pause-text">播放</span>
+          </button>
+          <button id="playback-rate-btn" style="padding: 10px 20px; margin: 0; font-size: 16px; cursor: pointer; background: #6c757d; color: white; border: none; border-radius: 8px;" disabled>
+            <span id="playback-rate-text">1x</span>
+          </button>
+        </div>
       </div>
       
       <div id="tts-audio-info" style="margin: 10px 0; padding: 10px; background: #e7f3ff; border-radius: 8px; display: none;">
@@ -714,16 +719,15 @@ export function renderRoom(container: HTMLElement, app: App): void {
       </div>
 
       <div id="translation-result-container" style="margin: 20px 0; padding: 15px; background: #f0f8ff; border-radius: 8px; border: 1px solid #b0d4f1; display: none;">
-        <div style="font-weight: bold; margin-bottom: 10px; color: #0066cc;">翻译结果：</div>
-        <div style="margin-bottom: 8px;">
-          <div style="font-weight: bold; color: #333; margin-bottom: 4px;">原文 (ASR):</div>
-          <div id="translation-original" style="padding: 8px; background: white; border-radius: 4px; border: 1px solid #ddd;">等待翻译结果...</div>
+        <div style="font-weight: bold; margin-bottom: 12px; color: #0066cc; font-size: 16px;">翻译结果：</div>
+        <div style="margin-bottom: 12px;">
+          <div style="font-weight: bold; color: #333; margin-bottom: 6px; font-size: 14px;">原文 (ASR):</div>
+          <div id="translation-original" style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; line-height: 1.6; min-height: 60px; max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word;"></div>
         </div>
-        <div style="margin-bottom: 8px;">
-          <div style="font-weight: bold; color: #333; margin-bottom: 4px;">译文 (NMT):</div>
-          <div id="translation-translated" style="padding: 8px; background: white; border-radius: 4px; border: 1px solid #ddd; color: #0066cc;">等待翻译结果...</div>
+        <div style="margin-bottom: 12px;">
+          <div style="font-weight: bold; color: #333; margin-bottom: 6px; font-size: 14px;">译文 (NMT):</div>
+          <div id="translation-translated" style="padding: 12px; background: #f0f8ff; border-radius: 6px; border: 1px solid #b0d4f1; color: #0066cc; font-size: 14px; line-height: 1.6; min-height: 60px; max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word;"></div>
         </div>
-        <div id="translation-timings" style="margin-top: 10px; font-size: 12px; color: #666;"></div>
       </div>
 
       <div style="margin: 20px 0;">

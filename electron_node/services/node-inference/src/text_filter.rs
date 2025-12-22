@@ -26,6 +26,30 @@ pub fn init_config() {
     });
 }
 
+/// 检查文本是否包含标点符号
+/// 
+/// 语音输入的文本不应该包含任何标点符号，所以所有带标点符号的文本都应该被过滤。
+/// 包括中文和英文标点符号。
+fn contains_punctuation(text: &str) -> bool {
+    // 定义所有需要过滤的标点符号
+    // 中文标点：，。！？；：、""''（）【】《》…—·等
+    // 英文标点：,.!?;:'"()[]{}等
+    let punctuation_chars: &[char] = &[
+        // 中文标点
+        '，', '。', '！', '？', '；', '：', '、', 
+        '"', '"', '\u{2018}', '\u{2019}', '（', '）', '【', '】', 
+        '《', '》', '…', '—', '·',
+        // 英文标点
+        ',', '.', '!', '?', ';', ':', '\'', '"', 
+        '(', ')', '[', ']', '{', '}',
+        // 其他常见标点
+        '-', '_', '/', '\\', '|', '@', '#', '$', '%', 
+        '^', '&', '*', '+', '=', '<', '>', '~', '`',
+    ];
+    
+    text.chars().any(|c| punctuation_chars.contains(&c))
+}
+
 /// 检查文本是否为无意义的识别结果（带上下文判断）
 /// 
 /// 这个函数用于过滤 Whisper 模型在静音时产生的误识别文本。
@@ -68,7 +92,16 @@ pub fn is_meaningless_transcript_with_context(text: &str, context: &str) -> bool
         return true;
     }
     
-    // 3. 检查括号（使用配置文件中的括号字符列表）
+    // 3. 检查标点符号（语音输入的文本不应该包含任何标点符号）
+    // 包括中文和英文标点符号：，。！？；：、""''（）【】《》…—·,.!?;:'"()[]{}等
+    if rules.filter_punctuation {
+        if contains_punctuation(text_trimmed) {
+            tracing::warn!("[ASR Filter] ✅ Filtering text with punctuation: \"{}\" (filter_punctuation={})", text_trimmed, rules.filter_punctuation);
+            return true;
+        }
+    }
+    
+    // 4. 检查括号（使用配置文件中的括号字符列表）
     // 人类说话不可能出现括号，所以所有带括号的文本都应该被过滤
     if rules.filter_brackets {
         for bracket_char in &rules.bracket_chars {
@@ -87,7 +120,7 @@ pub fn is_meaningless_transcript_with_context(text: &str, context: &str) -> bool
     let text_lower = text_trimmed.to_lowercase();
     let context_lower = context.trim().to_lowercase();
     
-    // 4. 检查上下文相关的感谢语
+    // 5. 检查上下文相关的感谢语
     if rules.context_aware_thanks.enabled {
         let is_thanks_text = rules.context_aware_thanks.thanks_patterns.iter()
             .any(|pattern| text_lower == pattern.to_lowercase() || text_lower.starts_with(&pattern.to_lowercase()));
@@ -111,7 +144,7 @@ pub fn is_meaningless_transcript_with_context(text: &str, context: &str) -> bool
         }
     }
     
-    // 5. 检查精确匹配
+    // 6. 检查精确匹配
     for pattern in &rules.exact_matches {
         if text_trimmed.eq_ignore_ascii_case(pattern) {
             tracing::info!("[ASR Filter] ✅ Filtering exact match: \"{}\" (pattern: \"{}\")", text_trimmed, pattern);
@@ -119,21 +152,21 @@ pub fn is_meaningless_transcript_with_context(text: &str, context: &str) -> bool
         }
     }
     
-    // 6. 检查部分匹配模式
+    // 7. 检查部分匹配模式
     for pattern in &rules.contains_patterns {
         if text_lower.contains(&pattern.to_lowercase()) {
             return true;
         }
     }
     
-    // 7. 检查需要同时包含多个模式的组合
+    // 8. 检查需要同时包含多个模式的组合
     for all_contains in &rules.all_contains_patterns {
         if all_contains.patterns.iter().all(|p| text_lower.contains(&p.to_lowercase())) {
             return true;
         }
     }
     
-    // 8. 检查字幕相关模式
+    // 9. 检查字幕相关模式
     // 检查是否包含字幕关键词（从配置中读取）
     let has_subtitle_keyword = rules.subtitle_keywords.iter()
         .any(|keyword| text_lower.contains(&keyword.to_lowercase()));
@@ -155,7 +188,7 @@ pub fn is_meaningless_transcript_with_context(text: &str, context: &str) -> bool
         }
     }
     
-    // 9. 检查无意义模式（需要进一步检查是否在括号内）
+    // 10. 检查无意义模式（需要进一步检查是否在括号内）
     for pattern in &rules.meaningless_patterns {
         if text_lower.contains(&pattern.to_lowercase()) {
             let pattern_pos = text_lower.find(&pattern.to_lowercase());

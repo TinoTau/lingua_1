@@ -48,30 +48,96 @@ const port_manager_1 = require("../utils/port-manager");
 const service_logging_1 = require("./service-logging");
 const service_health_1 = require("./service-health");
 /**
+ * 检测 CUDA 是否可用（通过 Python 脚本）
+ */
+async function checkCudaAvailable(pythonExe) {
+    return new Promise((resolve) => {
+        const checkScript = 'import torch; exit(0 if torch.cuda.is_available() else 1)';
+        const python = (0, child_process_1.spawn)(pythonExe, ['-c', checkScript], {
+            stdio: 'ignore',
+        });
+        let resolved = false;
+        const cleanup = () => {
+            if (!resolved) {
+                resolved = true;
+                python.kill();
+            }
+        };
+        // 超时保护
+        const timeout = setTimeout(() => {
+            cleanup();
+            resolve(false);
+        }, 3000);
+        python.on('close', (code) => {
+            if (!resolved) {
+                resolved = true;
+                clearTimeout(timeout);
+                resolve(code === 0);
+            }
+        });
+        python.on('error', () => {
+            if (!resolved) {
+                resolved = true;
+                clearTimeout(timeout);
+                resolve(false);
+            }
+        });
+    });
+}
+/**
  * 构建服务启动参数
  */
-function buildServiceArgs(serviceName, config) {
+async function buildServiceArgs(serviceName, config, pythonExe) {
+    // 检测 CUDA 是否可用（如果提供了 pythonExe）
+    let cudaAvailable = false;
+    if (pythonExe) {
+        try {
+            cudaAvailable = await checkCudaAvailable(pythonExe);
+            if (cudaAvailable) {
+                logger_1.default.info({ serviceName }, 'CUDA detected, GPU acceleration will be enabled');
+            }
+            else {
+                logger_1.default.info({ serviceName }, 'CUDA not available, using CPU');
+            }
+        }
+        catch (error) {
+            logger_1.default.warn({ error, serviceName }, 'Failed to check CUDA availability, assuming CPU');
+        }
+    }
     if (serviceName === 'nmt') {
-        // NMT 服务使用 uvicorn
+        // NMT 服务使用 uvicorn，自动检测 GPU（在服务内部）
         return ['-m', 'uvicorn', 'nmt_service:app', '--host', '127.0.0.1', '--port', config.port.toString()];
     }
     else if (serviceName === 'tts') {
-        // Piper TTS 服务
-        return [
+        // Piper TTS 服务：通过环境变量启用 GPU
+        const args = [
             config.scriptPath,
             '--host', '127.0.0.1',
             '--port', config.port.toString(),
             '--model-dir', config.env.PIPER_MODEL_DIR || '',
         ];
+        // 环境变量会在 spawn 时设置（通过修改 config.env）
+        if (cudaAvailable && config.env) {
+            config.env.PIPER_USE_GPU = 'true';
+            logger_1.default.info({ serviceName }, 'Piper TTS: GPU enabled via PIPER_USE_GPU environment variable');
+        }
+        else {
+            config.env.PIPER_USE_GPU = 'false';
+        }
+        return args;
     }
     else if (serviceName === 'yourtts') {
-        // YourTTS 服务
-        return [
+        // YourTTS 服务：通过 --gpu 参数启用 GPU
+        const args = [
             config.scriptPath,
             '--host', '127.0.0.1',
             '--port', config.port.toString(),
             '--model-dir', config.env.YOURTTS_MODEL_DIR || '',
         ];
+        if (cudaAvailable) {
+            args.push('--gpu');
+        }
+        return args;
     }
     return [];
 }
@@ -101,8 +167,8 @@ async function startServiceProcess(serviceName, config, handlers) {
         // 等待端口释放
         await new Promise((resolve) => setTimeout(resolve, 1000));
     }
-    // 构建启动命令
-    const args = buildServiceArgs(serviceName, config);
+    // 构建启动命令（需要检测 CUDA）
+    const args = await buildServiceArgs(serviceName, config, pythonExe);
     // 启动进程
     const process = (0, child_process_1.spawn)(pythonExe, args, {
         env: config.env,

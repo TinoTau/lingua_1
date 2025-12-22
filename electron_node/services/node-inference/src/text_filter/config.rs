@@ -30,6 +30,11 @@ pub struct FilterRules {
     #[serde(default = "default_bracket_chars")]
     pub bracket_chars: Vec<String>,
     
+    /// 是否过滤包含标点符号的文本
+    /// 语音输入的文本不应该包含任何标点符号，所以所有带标点符号的文本都应该被过滤
+    #[serde(default = "default_true")]
+    pub filter_punctuation: bool,
+    
     /// 单个字的无意义语气词列表
     #[serde(default)]
     pub single_char_fillers: Vec<String>,
@@ -141,6 +146,7 @@ impl Default for FilterRules {
             filter_empty: true,
             filter_brackets: true,
             bracket_chars: default_bracket_chars(),
+            filter_punctuation: true,
             single_char_fillers: Vec::new(),
             exact_matches: Vec::new(),
             contains_patterns: Vec::new(),

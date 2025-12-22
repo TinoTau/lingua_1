@@ -40,10 +40,22 @@ export class App {
   private audioMixerOutput: HTMLAudioElement | null = null;
   // 可观测性管理器
   private observability: ObservabilityManager | null = null;
+  // 翻译结果计数器（用于给每条结果编号）
+  private translationResultCount: number = 0;
+  // 待显示的翻译结果队列（只有播放时才显示）
+  private pendingTranslationResults: Array<{
+    originalText: string;
+    translatedText: string;
+    serviceTimings?: { asr_ms?: number; nmt_ms?: number; tts_ms?: number; total_ms?: number };
+    networkTimings?: { web_to_scheduler_ms?: number; scheduler_to_node_ms?: number; node_to_scheduler_ms?: number; scheduler_to_web_ms?: number };
+    schedulerSentAtMs?: number;
+  }> = [];
+  // 已显示的翻译结果数量（用于跟踪哪些结果已显示）
+  private displayedTranslationCount: number = 0;
 
   constructor(config: Partial<Config> = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
-    
+
     // 初始化可观测性管理器（如果配置了上报 URL）
     if (this.config.observabilityReportUrl) {
       this.observability = new ObservabilityManager(
@@ -51,17 +63,17 @@ export class App {
         this.config.observabilityReportIntervalMs || 60000
       );
     }
-    
+
     // 初始化模块
     this.stateMachine = new StateMachine();
     this.recorder = new Recorder(this.stateMachine, this.config);
     this.wsClient = new WebSocketClient(
-      this.stateMachine, 
+      this.stateMachine,
       this.config.schedulerUrl,
       this.config.reconnectConfig,
       this.config.clientVersion
     );
-    
+
     // Phase 2: 设置音频编解码器配置
     const codecConfig: AudioCodecConfig = this.config.audioCodecConfig || {
       codec: 'pcm16', // 默认使用 PCM16，如果支持 Opus 可以改为 'opus'
@@ -69,7 +81,7 @@ export class App {
       channelCount: 1,
     };
     this.wsClient.setAudioCodecConfig(codecConfig);
-    
+
     this.ttsPlayer = new TtsPlayer(this.stateMachine);
     this.asrSubtitle = new AsrSubtitle('app');
     this.audioMixer = new AudioMixer();
@@ -130,7 +142,7 @@ export class App {
     this.wsClient.setMessageCallback((message) => {
       this.onServerMessage(message);
     });
-    
+
     // WebSocket 重连回调
     this.wsClient.setReconnectCallback(() => {
       if (this.observability) {
@@ -189,7 +201,7 @@ export class App {
         this.recorder.close();
       }
     }
-    
+
     // 从播放状态回到录音状态时，恢复录音
     if (newState === SessionState.INPUT_RECORDING && oldState === SessionState.PLAYING_TTS) {
       if (this.isSessionActive) {
@@ -242,10 +254,10 @@ export class App {
         this.audioBuffer = [];
         this.wsClient.sendAudioChunk(chunk, false);
       }
-      
+
       // 发送结束帧
       this.wsClient.sendFinal();
-      
+
       // 停止录音
       this.stateMachine.stopRecording();
     }
@@ -257,39 +269,59 @@ export class App {
   private async onServerMessage(message: ServerMessage): Promise<void> {
     switch (message.type) {
       case 'asr_partial':
+        // 如果会话已结束，丢弃 ASR 部分结果
+        if (!this.isSessionActive) {
+          console.log('[App] 会话已结束，丢弃 ASR 部分结果:', message.text);
+          return;
+        }
         if (message.is_final) {
           this.asrSubtitle.updateFinal(message.text);
         } else {
           this.asrSubtitle.updatePartial(message.text);
         }
         break;
-      
+
       case 'translation':
+        // 如果会话已结束，丢弃翻译消息
+        if (!this.isSessionActive) {
+          console.log('[App] 会话已结束，丢弃翻译消息:', message.text);
+          return;
+        }
         // 翻译文本可以显示在另一个区域
         console.log('Translation:', message.text);
         break;
-      
+
       case 'backpressure':
         // 背压消息已在 WebSocketClient 中处理，这里可以记录日志或更新 UI
+        // 注意：背压消息与会话状态无关，不应该被过滤
         console.log('Backpressure received:', message);
         // 记录背压事件
         if (this.observability) {
           this.observability.recordBackpressureEvent(message.action);
         }
         break;
-        
+
       case 'translation_result':
+        // 如果会话已结束，丢弃翻译结果
+        if (!this.isSessionActive) {
+          console.log('[App] 会话已结束，丢弃翻译结果:', {
+            text_asr: message.text_asr,
+            text_translated: message.text_translated,
+            trace_id: message.trace_id
+          });
+          return;
+        }
         // 保存 trace_id 和 group_id，用于后续发送 TTS_PLAY_ENDED
         this.currentTraceId = message.trace_id;
         this.currentGroupId = message.group_id || null;
-        
+
         // 显示翻译结果（原文、译文和处理时间）
         console.log('=== 翻译结果 ===');
         console.log('原文 (ASR):', message.text_asr);
         console.log('译文 (NMT):', message.text_translated);
         console.log('当前状态:', this.stateMachine.getState());
         console.log('是否有 TTS 音频:', !!message.tts_audio, message.tts_audio ? `长度: ${message.tts_audio.length}` : '无');
-        
+
         if (message.service_timings) {
           const timings = message.service_timings;
           console.log('服务耗时:', {
@@ -319,16 +351,17 @@ export class App {
           }
         }
         console.log('===============');
-        
-        // 更新 UI 显示翻译结果
-        this.displayTranslationResult(
-          message.text_asr,
-          message.text_translated,
-          message.service_timings,
-          message.network_timings,
-          message.scheduler_sent_at_ms
-        );
-        
+
+        // 缓存翻译结果，不立即显示（只有播放时才显示）
+        this.pendingTranslationResults.push({
+          originalText: message.text_asr,
+          translatedText: message.text_translated,
+          serviceTimings: message.service_timings,
+          networkTimings: message.network_timings,
+          schedulerSentAtMs: message.scheduler_sent_at_ms
+        });
+        console.log('[App] 翻译结果已缓存，待播放时显示。当前待显示数量:', this.pendingTranslationResults.length);
+
         // 处理 TTS 音频（如果存在）
         // 注意：不再自动播放，而是累积到缓冲区，等待用户手动触发播放
         if (message.tts_audio && message.tts_audio.length > 0) {
@@ -348,8 +381,13 @@ export class App {
           console.log('翻译结果中没有 TTS 音频');
         }
         break;
-      
+
       case 'tts_audio':
+        // 如果会话已结束，丢弃 TTS 音频
+        if (!this.isSessionActive) {
+          console.log('[App] 会话已结束，丢弃 TTS 音频消息，payload长度:', message.payload?.length || 0);
+          return;
+        }
         console.log('收到单独的 TTS 音频消息，当前状态:', this.stateMachine.getState(), 'payload长度:', message.payload?.length || 0);
         if (this.isInRoom) {
           // 房间模式：使用音频混控器
@@ -363,7 +401,7 @@ export class App {
           this.notifyTtsAudioAvailable();
         }
         break;
-      
+
       case 'room_create_ack':
         // 房间创建成功，保存房间码
         this.currentRoomCode = message.room_code;
@@ -374,44 +412,44 @@ export class App {
           (window as any).onRoomCreated(message.room_code);
         }
         break;
-      
+
       case 'room_members':
         // 更新成员列表
         if (message.room_code === this.currentRoomCode) {
           this.roomMembers = message.members;
           this.isInRoom = true; // 确保标记为在房间中
           console.log('Room members updated:', message.members);
-          
+
           // 同步 WebRTC 连接状态
           this.syncPeerConnections();
-          
+
           // 触发 UI 更新
           if (typeof window !== 'undefined' && (window as any).onRoomMembersUpdated) {
             (window as any).onRoomMembersUpdated(message.members);
           }
         }
         break;
-      
+
       case 'webrtc_offer':
         // 处理 WebRTC offer
         await this.handleWebRTCOffer(message.room_code, message.to, message.sdp);
         break;
-      
+
       case 'webrtc_answer':
         // 处理 WebRTC answer
         await this.handleWebRTCAnswer(message.to, message.sdp);
         break;
-      
+
       case 'webrtc_ice':
         // 处理 WebRTC ICE candidate
         await this.handleWebRTCIce(message.to, message.candidate);
         break;
-      
+
       case 'room_error':
         console.error('Room error:', message.code, message.message);
         // 可以触发 UI 错误提示
         break;
-      
+
       case 'room_expired':
         // 房间过期，退出房间
         if (message.room_code === this.currentRoomCode) {
@@ -432,17 +470,17 @@ export class App {
    */
   private onMemoryPressure(pressure: 'normal' | 'warning' | 'critical'): void {
     console.log(`[App] 内存压力: ${pressure}`);
-    
+
     // 触发UI更新（内存压力变化）
     if (typeof window !== 'undefined' && (window as any).onMemoryPressure) {
       (window as any).onMemoryPressure(pressure);
     }
-    
+
     // 如果内存压力过高，自动开始播放（打断用户发言）
     if (pressure === 'critical') {
       const currentState = this.stateMachine.getState();
       const hasPendingAudio = this.ttsPlayer.hasPendingAudio();
-      
+
       // 只有在输入状态且有待播放音频时才自动播放
       if (currentState === SessionState.INPUT_RECORDING && hasPendingAudio && !this.ttsPlayer.getIsPlaying()) {
         console.warn('[App] 内存压力过高，自动开始播放以释放内存');
@@ -458,7 +496,7 @@ export class App {
    */
   private onPlaybackFinished(): void {
     console.log('Playback finished');
-    
+
     // 发送 TTS_PLAY_ENDED 消息（如果 trace_id 和 group_id 存在）
     if (this.currentTraceId && this.currentGroupId) {
       const tsEndMs = Date.now();
@@ -467,27 +505,27 @@ export class App {
     } else {
       console.warn('Cannot send TTS_PLAY_ENDED: missing trace_id or group_id');
     }
-    
+
     // 清空当前的 trace_id 和 group_id（准备下一句话）
     this.currentTraceId = null;
     this.currentGroupId = null;
-    
+
     // 状态机会根据会话状态自动切换到 INPUT_RECORDING（会话进行中）或 INPUT_READY（会话未开始）
     // 状态切换会触发 onStateChange，在那里处理录音器的重新启动
   }
-  
+
   /**
    * 通知 UI TTS 音频可用（累积中）
    */
   private notifyTtsAudioAvailable(): void {
     const duration = this.ttsPlayer.getTotalDuration();
     console.log('TTS 音频可用，总时长:', duration.toFixed(2), '秒');
-    
+
     // 触发 UI 更新（如果存在回调）
     if (typeof window !== 'undefined' && (window as any).onTtsAudioAvailable) {
       (window as any).onTtsAudioAvailable(duration);
     }
-    
+
     // 如果当前在 INPUT_RECORDING 状态，需要更新播放按钮文本（显示时长）
     if (this.stateMachine.getState() === SessionState.INPUT_RECORDING) {
       // 触发状态变化回调，更新 UI
@@ -498,7 +536,7 @@ export class App {
       // 实际上 UI 应该监听音频可用事件，这里先保持现状
     }
   }
-  
+
   /**
    * 手动开始播放 TTS（用户点击播放按钮）
    */
@@ -507,11 +545,15 @@ export class App {
       console.warn('没有待播放的音频');
       return;
     }
-    
+
     console.log('用户手动触发播放，当前状态:', this.stateMachine.getState());
+    
+    // 在开始播放时，显示待显示的翻译结果
+    this.displayPendingTranslationResults();
+    
     await this.ttsPlayer.startPlayback();
   }
-  
+
   /**
    * 暂停播放 TTS（用户点击暂停按钮）
    */
@@ -519,7 +561,7 @@ export class App {
     if (this.ttsPlayer.getIsPlaying()) {
       console.log('用户手动暂停播放');
       this.ttsPlayer.pausePlayback();
-      
+
       // 如果会话进行中，恢复录音
       if (this.isSessionActive && this.stateMachine.getState() === SessionState.INPUT_RECORDING) {
         if (!this.recorder.getIsRecording()) {
@@ -530,21 +572,21 @@ export class App {
       }
     }
   }
-  
+
   /**
    * 获取 TTS 音频总时长（秒）
    */
   getTtsAudioDuration(): number {
     return this.ttsPlayer.getTotalDuration();
   }
-  
+
   /**
    * 检查是否有待播放的 TTS 音频
    */
   hasPendingTtsAudio(): boolean {
     return this.ttsPlayer.hasPendingAudio();
   }
-  
+
   /**
    * 检查 TTS 是否正在播放
    */
@@ -558,28 +600,28 @@ export class App {
   getMemoryPressure(): 'normal' | 'warning' | 'critical' {
     return this.ttsPlayer.getMemoryPressure();
   }
-  
+
   /**
    * 检查 TTS 是否已暂停
    */
   isTtsPaused(): boolean {
     return this.ttsPlayer.getIsPaused();
   }
-  
+
   /**
    * 切换 TTS 播放倍速
    */
   toggleTtsPlaybackRate(): number {
     return this.ttsPlayer.togglePlaybackRate();
   }
-  
+
   /**
    * 获取当前 TTS 播放倍速
    */
   getTtsPlaybackRate(): number {
     return this.ttsPlayer.getPlaybackRate();
   }
-  
+
   /**
    * 获取当前 TTS 播放倍速的显示文本
    */
@@ -588,7 +630,7 @@ export class App {
   }
 
   /**
-   * 显示翻译结果到 UI
+   * 显示翻译结果到 UI（追加方式，不替换已有内容）
    * @param originalText 原文（ASR）
    * @param translatedText 译文（NMT）
    * @param serviceTimings 服务耗时信息
@@ -602,6 +644,11 @@ export class App {
     networkTimings?: { web_to_scheduler_ms?: number; scheduler_to_node_ms?: number; node_to_scheduler_ms?: number; scheduler_to_web_ms?: number },
     schedulerSentAtMs?: number
   ): void {
+    // 如果原文和译文都为空，不显示
+    if ((!originalText || originalText.trim() === '') && (!translatedText || translatedText.trim() === '')) {
+      return;
+    }
+
     // 查找或创建翻译结果显示容器
     let resultContainer = document.getElementById('translation-result-container');
     if (!resultContainer) {
@@ -614,7 +661,7 @@ export class App {
         border-radius: 8px;
         border: 1px solid #b0d4f1;
       `;
-      
+
       // 插入到 ASR 字幕容器之后
       const asrContainer = document.getElementById('asr-subtitle-container');
       if (asrContainer && asrContainer.parentElement) {
@@ -626,84 +673,108 @@ export class App {
           appContainer.appendChild(resultContainer);
         }
       }
+
+      // 创建标题和文本框结构
+      resultContainer.innerHTML = `
+        <div style="font-weight: bold; margin-bottom: 12px; color: #0066cc; font-size: 16px;">翻译结果：</div>
+        <div style="margin-bottom: 12px;">
+          <div style="font-weight: bold; color: #333; margin-bottom: 6px; font-size: 14px;">原文 (ASR):</div>
+          <div id="translation-original" style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; line-height: 1.6; min-height: 60px; max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word;"></div>
+        </div>
+        <div style="margin-bottom: 12px;">
+          <div style="font-weight: bold; color: #333; margin-bottom: 6px; font-size: 14px;">译文 (NMT):</div>
+          <div id="translation-translated" style="padding: 12px; background: #f0f8ff; border-radius: 6px; border: 1px solid #b0d4f1; color: #0066cc; font-size: 14px; line-height: 1.6; min-height: 60px; max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word;"></div>
+        </div>
+      `;
     }
-    
+
     // 显示容器
     resultContainer.style.display = 'block';
-    
-    // 更新原文显示
+
+    // 获取原文和译文文本框
     const originalDiv = document.getElementById('translation-original');
-    if (originalDiv) {
-      // 不要显示占位符，如果为空则显示空字符串或提示信息
-      if (!originalText || originalText.trim() === '') {
-        originalDiv.textContent = '';
-      } else {
-        originalDiv.textContent = originalText;
-      }
-    }
-    
-    // 更新译文显示
     const translatedDiv = document.getElementById('translation-translated');
-    if (translatedDiv) {
-      // 不要显示占位符，如果为空则显示空字符串或提示信息
-      if (!translatedText || translatedText.trim() === '') {
-        translatedDiv.textContent = '';
+
+    if (!originalDiv || !translatedDiv) {
+      console.error('无法找到翻译结果文本框');
+      return;
+    }
+
+    // 获取当前文本内容
+    const currentOriginal = originalDiv.textContent || '';
+    const currentTranslated = translatedDiv.textContent || '';
+
+    // 追加新文本（如果当前有内容，先添加换行和分隔符）
+    let newOriginal = currentOriginal;
+    let newTranslated = currentTranslated;
+
+    if (originalText && originalText.trim() !== '') {
+      if (newOriginal) {
+        newOriginal += '\n\n' + originalText;
       } else {
-        translatedDiv.textContent = translatedText;
+        newOriginal = originalText;
       }
+    }
+
+    if (translatedText && translatedText.trim() !== '') {
+      if (newTranslated) {
+        newTranslated += '\n\n' + translatedText;
+      } else {
+        newTranslated = translatedText;
+      }
+    }
+
+    // 更新文本框内容
+    originalDiv.textContent = newOriginal;
+    translatedDiv.textContent = newTranslated;
+
+    // 自动滚动到底部，显示最新内容
+    originalDiv.scrollTop = originalDiv.scrollHeight;
+    translatedDiv.scrollTop = translatedDiv.scrollHeight;
+  }
+
+  /**
+   * 显示待显示的翻译结果（在开始播放时调用）
+   */
+  private displayPendingTranslationResults(): void {
+    // 显示所有待显示的翻译结果
+    for (const result of this.pendingTranslationResults) {
+      this.displayTranslationResult(
+        result.originalText,
+        result.translatedText,
+        result.serviceTimings,
+        result.networkTimings,
+        result.schedulerSentAtMs
+      );
+    }
+    // 更新已显示的数量
+    this.displayedTranslationCount += this.pendingTranslationResults.length;
+    // 清空待显示队列（已显示的结果不再需要保留）
+    this.pendingTranslationResults = [];
+    console.log('[App] 已显示所有待显示的翻译结果，已显示总数:', this.displayedTranslationCount);
+  }
+
+  /**
+   * 清空已显示的翻译结果文本
+   */
+  private clearDisplayedTranslationResults(): void {
+    const originalDiv = document.getElementById('translation-original');
+    const translatedDiv = document.getElementById('translation-translated');
+    
+    if (originalDiv) {
+      originalDiv.textContent = '';
+    }
+    if (translatedDiv) {
+      translatedDiv.textContent = '';
     }
     
-    // 更新处理时间显示（包括服务耗时和网络传输耗时）
-    const timingsDiv = document.getElementById('translation-timings');
-    if (timingsDiv) {
-      const parts: string[] = [];
-      
-      // 服务耗时信息
-      if (serviceTimings) {
-        const serviceParts: string[] = [];
-        if (serviceTimings.asr_ms) serviceParts.push(`ASR: ${serviceTimings.asr_ms}ms`);
-        if (serviceTimings.nmt_ms) serviceParts.push(`NMT: ${serviceTimings.nmt_ms}ms`);
-        if (serviceTimings.tts_ms) serviceParts.push(`TTS: ${serviceTimings.tts_ms}ms`);
-        if (serviceTimings.total_ms) serviceParts.push(`总计: ${serviceTimings.total_ms}ms`);
-        if (serviceParts.length > 0) {
-          parts.push(`服务耗时: ${serviceParts.join(', ')}`);
-        }
-      }
-      
-      // 网络传输耗时信息
-      if (networkTimings) {
-        const networkParts: string[] = [];
-        if (networkTimings.web_to_scheduler_ms !== undefined) {
-          networkParts.push(`Web→调度: ${networkTimings.web_to_scheduler_ms}ms`);
-        }
-        if (networkTimings.scheduler_to_node_ms !== undefined) {
-          networkParts.push(`调度→节点: ${networkTimings.scheduler_to_node_ms}ms`);
-        }
-        if (networkTimings.node_to_scheduler_ms !== undefined) {
-          networkParts.push(`节点→调度: ${networkTimings.node_to_scheduler_ms}ms`);
-        }
-        // 计算调度服务器到Web端的传输耗时（如果时间戳存在）
-        if (schedulerSentAtMs) {
-          const nowMs = Date.now();
-          const schedulerToWebMs = nowMs - schedulerSentAtMs;
-          if (schedulerToWebMs >= 0) {
-            networkParts.push(`调度→Web: ${schedulerToWebMs}ms`);
-          }
-        } else if (networkTimings.scheduler_to_web_ms !== undefined) {
-          networkParts.push(`调度→Web: ${networkTimings.scheduler_to_web_ms}ms`);
-        }
-        if (networkParts.length > 0) {
-          parts.push(`网络传输: ${networkParts.join(', ')}`);
-        }
-      }
-      
-      if (parts.length > 0) {
-        timingsDiv.innerHTML = parts.map(p => `<div style="margin: 4px 0;">${p}</div>`).join('');
-        timingsDiv.style.cssText = 'margin-top: 10px; font-size: 12px; color: #666; line-height: 1.5;';
-      } else {
-        timingsDiv.textContent = '';
-      }
+    // 隐藏翻译结果容器
+    const resultContainer = document.getElementById('translation-result-container');
+    if (resultContainer) {
+      resultContainer.style.display = 'none';
     }
+    
+    console.log('[App] 已清空显示的翻译结果');
   }
 
   /**
@@ -792,13 +863,29 @@ export class App {
       // 清空当前的 trace_id 和 group_id（新的会话）
       this.currentTraceId = null;
       this.currentGroupId = null;
-      
+
       // 清空所有未播放的音频（新会话开始时丢弃之前的音频）
       this.ttsPlayer.clearBuffers();
-      
+
+      // 重置翻译结果计数器
+      this.translationResultCount = 0;
+
+      // 清空待显示的翻译结果队列
+      this.pendingTranslationResults = [];
+      this.displayedTranslationCount = 0;
+
+      // 清空翻译结果显示（但保留容器结构）
+      this.clearDisplayedTranslationResults();
+      if (originalDiv) {
+        originalDiv.textContent = '';
+      }
+      if (translatedDiv) {
+        translatedDiv.textContent = '';
+      }
+
       // 开始会话（状态机会自动进入 INPUT_RECORDING）
       this.stateMachine.startSession();
-      
+
       // 确保录音器已初始化并开始录音
       if (!this.recorder.getIsRecording()) {
         await this.recorder.start();
@@ -811,18 +898,28 @@ export class App {
    */
   async endSession(): Promise<void> {
     this.isSessionActive = false;
-    
+
     // 停止录音
     this.recorder.stop();
     this.recorder.close();
-    
+
     // 停止播放并清空所有未播放的音频
     this.ttsPlayer.stop();
     this.ttsPlayer.clearBuffers(); // 确保清空缓冲区
-    
+
     // 清空音频缓冲区
     this.audioBuffer = [];
+
+    // 清空 WebSocket 发送队列（丢弃所有未发送的音频数据）
+    this.wsClient.clearSendQueue();
+
+    // 清空待显示的翻译结果队列
+    this.pendingTranslationResults = [];
+    this.displayedTranslationCount = 0;
     
+    // 清空已显示的翻译结果文本
+    this.clearDisplayedTranslationResults();
+
     // 结束会话（状态机会回到 INPUT_READY）
     this.stateMachine.endSession();
   }
@@ -834,7 +931,7 @@ export class App {
   sendCurrentUtterance(): void {
     const currentState = this.stateMachine.getState();
     console.log('sendCurrentUtterance 被调用，当前状态:', currentState, '会话是否活跃:', this.isSessionActive);
-    
+
     // 允许在 INPUT_RECORDING 状态下随时发送（只要会话活跃）
     if (this.isSessionActive && currentState === SessionState.INPUT_RECORDING) {
       // 发送剩余的音频数据
@@ -846,11 +943,11 @@ export class App {
       } else {
         console.log('音频缓冲区为空，只发送结束帧');
       }
-      
+
       // 发送结束帧（标记当前 utterance 结束）
       this.wsClient.sendFinal();
       console.log('已发送结束帧');
-      
+
       // 注意：不再切换状态，保持在 INPUT_RECORDING，允许持续输入
       // 录音继续，用户可以继续说话
       console.log('已发送当前话语，继续监听...');
@@ -862,28 +959,28 @@ export class App {
       });
     }
   }
-  
+
   /**
    * 更新静音过滤配置
    */
   updateSilenceFilterConfig(config: Partial<import('./types').SilenceFilterConfig>): void {
     this.recorder.updateSilenceFilterConfig(config);
   }
-  
+
   /**
    * 获取静音过滤配置
    */
   getSilenceFilterConfig(): import('./types').SilenceFilterConfig {
     return this.recorder.getSilenceFilterConfig();
   }
-  
+
   /**
    * 获取背压状态
    */
   getBackpressureState(): import('./websocket_client').BackpressureState {
     return this.wsClient.getBackpressureState();
   }
-  
+
   /**
    * 获取重连次数
    */
@@ -924,41 +1021,41 @@ export class App {
     if (this.isInRoom && this.currentRoomCode) {
       this.leaveRoom();
     }
-    
+
     // 关闭所有 WebRTC 连接
     for (const [memberId] of this.peerConnections.entries()) {
       this.closePeerConnection(memberId);
     }
-    
+
     // 停止本地音频流
     if (this.localStream) {
       this.localStream.getTracks().forEach(track => track.stop());
       this.localStream = null;
     }
-    
+
     // 停止音频混控器
     this.audioMixer.stop();
-    
+
     // 移除音频混控器输出元素
     if (this.audioMixerOutput) {
       this.audioMixerOutput.remove();
       this.audioMixerOutput = null;
     }
-    
+
     this.recorder.close();
     this.wsClient.disconnect();
-    
+
     // 停止播放并清空所有未播放的音频
     this.ttsPlayer.stop();
     this.ttsPlayer.clearBuffers(); // 确保清空缓冲区
-    
+
     // 销毁可观测性管理器
     if (this.observability) {
       this.observability.destroy();
       this.observability = null;
     }
   }
-  
+
   /**
    * 获取可观测性指标
    */
@@ -977,7 +1074,7 @@ export class App {
       console.error('WebSocket not connected, cannot create room');
       return;
     }
-    
+
     this.wsClient.createRoom(displayName, preferredLang);
   }
 
@@ -992,13 +1089,13 @@ export class App {
       console.error('WebSocket not connected, cannot join room');
       return;
     }
-    
+
     // 验证房间码格式（6位数字）
     if (!/^\d{6}$/.test(roomCode)) {
       console.error('Invalid room code format, must be 6 digits');
       return;
     }
-    
+
     this.displayName = displayName || 'User';
     this.wsClient.joinRoom(roomCode, displayName, preferredLang);
   }
@@ -1010,18 +1107,18 @@ export class App {
     if (!this.isInRoom || !this.currentRoomCode) {
       return;
     }
-    
+
     // 如果会话正在进行，先结束会话
     if (this.isSessionActive) {
       this.endSession();
     }
-    
+
     // 关闭所有 WebRTC 连接
     for (const [memberId] of this.peerConnections.entries()) {
       this.closePeerConnection(memberId);
     }
     this.peerConnections.clear();
-    
+
     // 停止音频混控器（但不清除，因为可能还会重新加入房间）
     // 注意：这里不调用 stop()，因为 stop() 会关闭 AudioContext
     // 只需要移除所有远程流即可
@@ -1031,9 +1128,9 @@ export class App {
         this.audioMixer.removeRemoteStream(memberId);
       }
     }
-    
+
     this.wsClient.leaveRoom(this.currentRoomCode);
-    
+
     // 清理房间状态
     this.currentRoomCode = null;
     this.roomMembers = [];
@@ -1067,7 +1164,7 @@ export class App {
   getSessionId(): string | null {
     return this.wsClient.getSessionId();
   }
-  
+
   /**
    * 检查 WebSocket 是否已连接
    */
@@ -1076,13 +1173,13 @@ export class App {
     console.log('[App] isConnected() 调用:', connected);
     return connected;
   }
-  
+
   /**
    * 设置原声传递偏好
    */
   setRawVoicePreference(roomCode: string, targetSessionId: string, receiveRawVoice: boolean): void {
     this.wsClient.setRawVoicePreference(roomCode, targetSessionId, receiveRawVoice);
-    
+
     // 实时切换 WebRTC 连接
     if (receiveRawVoice) {
       // 切换到接收：建立连接
@@ -1092,7 +1189,7 @@ export class App {
       this.closePeerConnection(targetSessionId);
     }
   }
-  
+
   /**
    * 确保与目标成员的 WebRTC 连接存在
    */
@@ -1101,7 +1198,7 @@ export class App {
     if (this.peerConnections.has(targetSessionId)) {
       return;
     }
-    
+
     try {
       // 获取本地音频流（如果还没有）
       if (!this.localStream) {
@@ -1113,24 +1210,24 @@ export class App {
           },
         });
       }
-      
+
       // 创建 RTCPeerConnection
       const pc = new RTCPeerConnection({
         iceServers: [
           { urls: 'stun:stun.l.google.com:19302' },
         ],
       });
-      
+
       // 添加本地音频轨道
       this.localStream.getAudioTracks().forEach(track => {
         pc.addTrack(track, this.localStream!);
       });
-      
+
       // 处理远程音频流
       pc.ontrack = async (event) => {
         const remoteStream = event.streams[0];
         console.log('收到远程音频流:', targetSessionId, remoteStream);
-        
+
         // 将远程流添加到音频混控器
         try {
           await this.audioMixer.addRemoteStream(targetSessionId, remoteStream);
@@ -1138,32 +1235,32 @@ export class App {
           console.error('添加远程音频流到混控器失败:', error);
         }
       };
-      
+
       // 处理 ICE candidate
       pc.onicecandidate = (event) => {
         if (event.candidate && this.currentRoomCode) {
           this.wsClient.sendWebRTCIce(this.currentRoomCode, targetSessionId, event.candidate);
         }
       };
-      
+
       // 存储连接
       this.peerConnections.set(targetSessionId, pc);
-      
+
       // 创建 offer
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
-      
+
       // 发送 offer
       if (this.currentRoomCode) {
         this.wsClient.sendWebRTCOffer(this.currentRoomCode, targetSessionId, offer);
       }
-      
+
       console.log('WebRTC 连接已建立:', targetSessionId);
     } catch (error) {
       console.error('建立 WebRTC 连接失败:', error);
     }
   }
-  
+
   /**
    * 关闭与目标成员的 WebRTC 连接
    */
@@ -1172,14 +1269,14 @@ export class App {
     if (pc) {
       pc.close();
       this.peerConnections.delete(targetSessionId);
-      
+
       // 从音频混控器中移除远程流
       this.audioMixer.removeRemoteStream(targetSessionId);
-      
+
       console.log('WebRTC 连接已关闭:', targetSessionId);
     }
   }
-  
+
   /**
    * 处理 WebRTC offer
    */
@@ -1191,7 +1288,7 @@ export class App {
         console.log('忽略 WebRTC offer: 已屏蔽该成员的原声', fromSessionId);
         return;
       }
-      
+
       // 获取或创建连接
       let pc = this.peerConnections.get(fromSessionId);
       if (!pc) {
@@ -1205,24 +1302,24 @@ export class App {
             },
           });
         }
-        
+
         // 创建 RTCPeerConnection
         pc = new RTCPeerConnection({
           iceServers: [
             { urls: 'stun:stun.l.google.com:19302' },
           ],
         });
-        
+
         // 添加本地音频轨道
         this.localStream.getAudioTracks().forEach(track => {
           pc!.addTrack(track, this.localStream!);
         });
-        
+
         // 处理远程音频流
         pc.ontrack = async (event) => {
           const remoteStream = event.streams[0];
           console.log('收到远程音频流:', fromSessionId, remoteStream);
-          
+
           // 将远程流添加到音频混控器
           try {
             await this.audioMixer.addRemoteStream(fromSessionId, remoteStream);
@@ -1230,24 +1327,24 @@ export class App {
             console.error('添加远程音频流到混控器失败:', error);
           }
         };
-        
+
         // 处理 ICE candidate
         pc.onicecandidate = (event) => {
           if (event.candidate && this.currentRoomCode) {
             this.wsClient.sendWebRTCIce(this.currentRoomCode, fromSessionId, event.candidate);
           }
         };
-        
+
         this.peerConnections.set(fromSessionId, pc);
       }
-      
+
       // 设置远程描述
       await pc.setRemoteDescription(sdp);
-      
+
       // 创建 answer
       const answer = await pc.createAnswer();
       await pc.setLocalDescription(answer);
-      
+
       // 发送 answer
       if (this.currentRoomCode) {
         this.wsClient.sendWebRTCAnswer(this.currentRoomCode, fromSessionId, answer);
@@ -1256,7 +1353,7 @@ export class App {
       console.error('处理 WebRTC offer 失败:', error);
     }
   }
-  
+
   /**
    * 处理 WebRTC answer
    */
@@ -1271,7 +1368,7 @@ export class App {
       }
     }
   }
-  
+
   /**
    * 处理 WebRTC ICE candidate
    */
@@ -1285,7 +1382,7 @@ export class App {
       }
     }
   }
-  
+
   /**
    * 检查是否应该接收某个成员的原声
    */
@@ -1294,21 +1391,21 @@ export class App {
     if (!currentSessionId) {
       return false;
     }
-    
+
     // 查找目标成员
     const targetMember = this.roomMembers.find(
       m => (m.session_id || m.participant_id) === targetSessionId
     );
-    
+
     if (!targetMember) {
       return false;
     }
-    
+
     // 检查偏好设置（默认接收）
     const rawVoicePrefs = targetMember.raw_voice_preferences || {};
     return rawVoicePrefs[currentSessionId] !== false;
   }
-  
+
   /**
    * 更新房间成员列表并同步 WebRTC 连接
    */
@@ -1316,24 +1413,24 @@ export class App {
     if (!this.currentRoomCode || !this.isInRoom) {
       return;
     }
-    
+
     const currentSessionId = this.wsClient.getSessionId();
     if (!currentSessionId) {
       return;
     }
-    
+
     // 遍历所有成员，确保连接状态与偏好一致
     for (const member of this.roomMembers) {
       const memberId = member.session_id || member.participant_id;
-      
+
       // 跳过自己
       if (memberId === currentSessionId) {
         continue;
       }
-      
+
       const shouldReceive = this.shouldReceiveRawVoice(memberId);
       const hasConnection = this.peerConnections.has(memberId);
-      
+
       if (shouldReceive && !hasConnection) {
         // 应该接收但没有连接：建立连接
         this.ensurePeerConnection(this.currentRoomCode, memberId);
@@ -1342,7 +1439,7 @@ export class App {
         this.closePeerConnection(memberId);
       }
     }
-    
+
     // 清理已离开的成员的连接
     const activeMemberIds = new Set(
       this.roomMembers.map(m => m.session_id || m.participant_id)

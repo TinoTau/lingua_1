@@ -442,9 +442,9 @@ export class WebSocketClient {
   }
 
   /**
-   * 清空发送队列
+   * 清空发送队列（公开方法，供外部调用）
    */
-  private clearSendQueue(): void {
+  public clearSendQueue(): void {
     this.audioSendQueue = [];
     if (this.sendInterval !== null) {
       clearInterval(this.sendInterval);
