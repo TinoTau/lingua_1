@@ -7,7 +7,7 @@ import { AsrSubtitle } from './asr_subtitle';
 import { AudioMixer } from './audio_mixer';
 import { Config, DEFAULT_CONFIG, ServerMessage, FeatureFlags } from './types';
 import { ObservabilityManager } from './observability';
-import { AudioCodecConfig, isOpusSupported } from './audio_codec';
+import { AudioCodecConfig } from './audio_codec';
 
 /**
  * 主应用类
@@ -30,7 +30,7 @@ export class App {
   // 房间状态
   private currentRoomCode: string | null = null;
   private roomMembers: RoomMember[] = [];
-  private displayName: string = 'User';
+  private displayName: string = 'User'; // 在 createRoom 中被设置
   private isInRoom: boolean = false;
   // WebRTC 连接管理（key: 目标成员的 session_id, value: RTCPeerConnection）
   private peerConnections: Map<string, RTCPeerConnection> = new Map();
@@ -40,7 +40,7 @@ export class App {
   private audioMixerOutput: HTMLAudioElement | null = null;
   // 可观测性管理器
   private observability: ObservabilityManager | null = null;
-  // 翻译结果计数器（用于给每条结果编号）
+  // 翻译结果计数器（用于给每条结果编号，在 resetSession 中被重置）
   private translationResultCount: number = 0;
   // 待显示的翻译结果队列（只有播放时才显示）
   private pendingTranslationResults: Array<{
@@ -530,7 +530,7 @@ export class App {
     if (this.stateMachine.getState() === SessionState.INPUT_RECORDING) {
       // 触发状态变化回调，更新 UI
       // 注意：这里不改变状态，只是触发 UI 更新
-      const currentState = this.stateMachine.getState();
+      // const currentState = this.stateMachine.getState(); // 保留用于未来可能的用途
       // 通过模拟状态变化来触发 UI 更新（实际上状态没变）
       // 更好的方式是直接更新 UI，但为了保持一致性，我们通过状态机回调
       // 实际上 UI 应该监听音频可用事件，这里先保持现状
@@ -640,9 +640,9 @@ export class App {
   private displayTranslationResult(
     originalText: string,
     translatedText: string,
-    serviceTimings?: { asr_ms?: number; nmt_ms?: number; tts_ms?: number; total_ms?: number },
-    networkTimings?: { web_to_scheduler_ms?: number; scheduler_to_node_ms?: number; node_to_scheduler_ms?: number; scheduler_to_web_ms?: number },
-    schedulerSentAtMs?: number
+    _serviceTimings?: { asr_ms?: number; nmt_ms?: number; tts_ms?: number; total_ms?: number },
+    _networkTimings?: { web_to_scheduler_ms?: number; scheduler_to_node_ms?: number; node_to_scheduler_ms?: number; scheduler_to_web_ms?: number },
+    _schedulerSentAtMs?: number
   ): void {
     // 如果原文和译文都为空，不显示
     if ((!originalText || originalText.trim() === '') && (!translatedText || translatedText.trim() === '')) {
@@ -1199,7 +1199,7 @@ export class App {
   /**
    * 确保与目标成员的 WebRTC 连接存在
    */
-  private async ensurePeerConnection(roomCode: string, targetSessionId: string): Promise<void> {
+  private async ensurePeerConnection(_roomCode: string, targetSessionId: string): Promise<void> {
     // 如果连接已存在，直接返回
     if (this.peerConnections.has(targetSessionId)) {
       return;
@@ -1286,7 +1286,7 @@ export class App {
   /**
    * 处理 WebRTC offer
    */
-  private async handleWebRTCOffer(roomCode: string, fromSessionId: string, sdp: RTCSessionDescriptionInit): Promise<void> {
+  private async handleWebRTCOffer(_roomCode: string, fromSessionId: string, sdp: RTCSessionDescriptionInit): Promise<void> {
     try {
       // 检查是否应该接收该成员的原声
       const shouldReceive = this.shouldReceiveRawVoice(fromSessionId);

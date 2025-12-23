@@ -9,31 +9,64 @@ use lingua_scheduler::node_registry::NodeRegistry;
 use lingua_scheduler::services::{PairingService, ModelHub, ServiceCatalogCache};
 use lingua_scheduler::metrics::DashboardSnapshotCache;
 use lingua_scheduler::model_not_available::ModelNotAvailableBus;
-use lingua_scheduler::core::config::{CoreServicesConfig, WebTaskSegmentationConfig};
+use lingua_scheduler::core::config::{CoreServicesConfig, WebTaskSegmentationConfig, ModelHubConfig, NodeHealthConfig};
+use lingua_scheduler::managers::{GroupManager, GroupConfig, NodeStatusManager};
 use axum::extract::ws::Message;
 use tokio::sync::mpsc;
 use std::time::Duration;
 use tokio::time::sleep;
 
 fn create_test_app_state() -> AppState {
+    let node_registry = std::sync::Arc::new(NodeRegistry::new());
+    let node_connections = NodeConnectionManager::new();
+    
+    // 创建 ModelHub
+    let storage_dir = std::env::temp_dir()
+        .join("lingua_scheduler_test_modelhub")
+        .join(uuid::Uuid::new_v4().to_string());
+    let model_hub_cfg = ModelHubConfig {
+        base_url: "http://127.0.0.1:0".to_string(),
+        storage_path: storage_dir,
+    };
+    let model_hub = ModelHub::new(&model_hub_cfg).unwrap();
+    
+    // 创建其他服务
+    let service_catalog = ServiceCatalogCache::new("http://127.0.0.1:0".to_string());
+    let dashboard_snapshot = DashboardSnapshotCache::new(Duration::from_secs(3600));
+    
+    // 创建 ModelNotAvailableBus
+    let (model_na_tx, _model_na_rx) = tokio::sync::mpsc::unbounded_channel();
+    let model_not_available_bus = ModelNotAvailableBus::new(model_na_tx);
+    
+    // 创建 GroupManager
+    let group_manager = GroupManager::new(GroupConfig::default());
+    
+    // 创建 NodeStatusManager
+    let node_status_manager = NodeStatusManager::new(
+        node_registry.clone(),
+        std::sync::Arc::new(node_connections.clone()),
+        NodeHealthConfig::default(),
+    );
+    
     AppState {
         session_manager: SessionManager::new(),
-        dispatcher: JobDispatcher::new(std::sync::Arc::new(NodeRegistry::new())),
-        node_registry: std::sync::Arc::new(NodeRegistry::new()),
+        dispatcher: JobDispatcher::new(node_registry.clone()),
+        node_registry,
         pairing_service: PairingService::new(),
-        model_hub: ModelHub::new(),
-        service_catalog: ServiceCatalogCache::new(),
-        dashboard_snapshot: DashboardSnapshotCache::new(),
-        model_not_available_bus: ModelNotAvailableBus::new(),
+        model_hub,
+        service_catalog,
+        dashboard_snapshot,
+        model_not_available_bus,
         core_services: CoreServicesConfig::default(),
         web_task_segmentation: WebTaskSegmentationConfig { pause_ms: 1000 },
         session_connections: SessionConnectionManager::new(),
-        node_connections: NodeConnectionManager::new(),
+        node_connections,
         result_queue: ResultQueueManager::new(),
         audio_buffer: AudioBufferManager::new(),
-        group_manager: lingua_scheduler::managers::GroupManager::new(),
-        node_status_manager: lingua_scheduler::managers::NodeStatusManager::new(),
+        group_manager,
+        node_status_manager,
         room_manager: lingua_scheduler::managers::RoomManager::new(),
+        job_idempotency: lingua_scheduler::core::JobIdempotencyManager::default(),
         phase2: None,
     }
 }
@@ -105,10 +138,12 @@ async fn test_session_actor_audio_chunk() {
     
     // 发送音频块
     let audio_data = vec![0u8; 100];
+    let now = chrono::Utc::now().timestamp_millis();
     handle.send(SessionEvent::AudioChunkReceived {
         chunk: audio_data.clone(),
         is_final: false,
-        timestamp_ms: chrono::Utc::now().timestamp_millis(),
+        timestamp_ms: now,
+        client_timestamp_ms: Some(now),
     }).unwrap();
     
     // 等待处理
@@ -246,10 +281,12 @@ async fn test_session_actor_timeout_generation() {
     });
     
     // 发送音频块，触发 timer
+    let now = chrono::Utc::now().timestamp_millis();
     handle.send(SessionEvent::AudioChunkReceived {
         chunk: vec![1, 2, 3],
         is_final: false,
-        timestamp_ms: chrono::Utc::now().timestamp_millis(),
+        timestamp_ms: now,
+        client_timestamp_ms: Some(now),
     }).unwrap();
     
     // 等待 timer 触发

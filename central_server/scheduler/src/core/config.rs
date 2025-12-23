@@ -49,7 +49,7 @@ pub struct SchedulerConfig {
     /// 观测/验收（方向A：采样日志）
     #[serde(default)]
     pub observability: ObservabilityConfig,
-    /// Phase 1：核心服务包映射（用于 required_models/required_services 计算与选节点过滤）
+    /// Phase 1：核心服务包映射（用于 required_types (ServiceType) 计算与选节点过滤）
     #[serde(default)]
     pub core_services: CoreServicesConfig,
     /// Phase 2：Redis / 多实例相关配置（默认关闭，开启后按文档启用 instance presence + owner + Streams）
@@ -93,7 +93,7 @@ pub struct Phase3Config {
 
     /// pool 资格匹配范围：
     /// - "core_only"：只对 ASR/NMT/TTS 核心服务做 pool 级过滤（默认，兼容性最好）
-    /// - "all_required"：对 required_model_ids 全量做 pool 级过滤（更强隔离，需 pool.required_services 覆盖完整）
+    /// - "all_required"：对 required_types (ServiceType) 全量做 pool 级过滤（更强隔离，需 pool.required_services 覆盖完整）
     #[serde(default = "default_phase3_pool_match_scope")]
     pub pool_match_scope: String,
 
@@ -115,7 +115,7 @@ pub struct Phase3PoolConfig {
     pub pool_id: u16,
     #[serde(default)]
     pub name: String,
-    /// 该 pool “保证具备”的服务包（service_id 列表）
+    /// 该 pool "保证具备"的服务类型（ServiceType 字符串列表，如 ["ASR", "NMT", "TTS"]）
     #[serde(default)]
     pub required_services: Vec<String>,
 }
@@ -696,7 +696,7 @@ pub struct LoadBalancerConfig {
 }
 
 fn default_resource_threshold() -> f32 {
-    25.0 // 默认 25%
+    75.0 // 默认 75%（CPU、GPU、内存使用率超过此值将被跳过）
 }
 
 fn default_load_balancer_strategy() -> String {

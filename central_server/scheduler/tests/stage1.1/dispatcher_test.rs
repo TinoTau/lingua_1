@@ -3,8 +3,8 @@
 use lingua_scheduler::core::dispatcher::JobDispatcher;
 use lingua_scheduler::node_registry::NodeRegistry;
 use lingua_scheduler::messages::{
-    CapabilityState, FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, InstalledService,
-    ModelStatus, NodeStatus, PipelineConfig,
+    CapabilityByType, FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, InstalledService,
+    ServiceStatus, ServiceType, DeviceType, NodeStatus, PipelineConfig,
 };
 use std::sync::Arc;
 
@@ -61,18 +61,39 @@ fn create_core_installed_services() -> Vec<InstalledService> {
     vec![
         InstalledService {
             service_id: "node-inference".to_string(),
-            version: "1.0.0".to_string(),
-            platform: "linux-x64".to_string(),
+            r#type: lingua_scheduler::messages::ServiceType::Asr,
+            device: lingua_scheduler::messages::DeviceType::Gpu,
+            status: lingua_scheduler::messages::ServiceStatus::Running,
+            version: Some("1.0.0".to_string()),
+            model_id: None,
+            engine: None,
+            mem_mb: None,
+            warmup_ms: None,
+            last_error: None,
         },
         InstalledService {
             service_id: "nmt-m2m100".to_string(),
-            version: "1.0.0".to_string(),
-            platform: "linux-x64".to_string(),
+            r#type: lingua_scheduler::messages::ServiceType::Nmt,
+            device: lingua_scheduler::messages::DeviceType::Gpu,
+            status: lingua_scheduler::messages::ServiceStatus::Running,
+            version: Some("1.0.0".to_string()),
+            model_id: None,
+            engine: None,
+            mem_mb: None,
+            warmup_ms: None,
+            last_error: None,
         },
         InstalledService {
             service_id: "piper-tts".to_string(),
-            version: "1.0.0".to_string(),
-            platform: "linux-x64".to_string(),
+            r#type: lingua_scheduler::messages::ServiceType::Tts,
+            device: lingua_scheduler::messages::DeviceType::Gpu,
+            status: lingua_scheduler::messages::ServiceStatus::Running,
+            version: Some("1.0.0".to_string()),
+            model_id: None,
+            engine: None,
+            mem_mb: None,
+            warmup_ms: None,
+            last_error: None,
         },
     ]
 }
@@ -83,11 +104,11 @@ async fn test_create_job() {
     let dispatcher = JobDispatcher::new(node_registry.clone());
     
     // 先注册一个节点
-    let mut cap: CapabilityState = CapabilityState::new();
-    // Phase 1：严格模式下，核心 required ids 必须在 capability_state(Ready) 或 installed_services 出现
-    cap.insert("node-inference".to_string(), ModelStatus::Ready);
-    cap.insert("nmt-m2m100".to_string(), ModelStatus::Ready);
-    cap.insert("piper-tts".to_string(), ModelStatus::Ready);
+    let cap = vec![
+        CapabilityByType { r#type: ServiceType::Asr, ready: true, reason: None, ready_impl_ids: Some(vec!["node-inference".to_string()]) },
+        CapabilityByType { r#type: ServiceType::Nmt, ready: true, reason: None, ready_impl_ids: Some(vec!["nmt-m2m100".to_string()]) },
+        CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(vec!["piper-tts".to_string()]) },
+    ];
     let _node = node_registry.register_node(
         None,
         "Test Node".to_string(),
@@ -105,7 +126,7 @@ async fn test_create_job() {
             persona_adaptation: None,
         },
         true,
-        Some(cap),
+        cap,
     ).await.unwrap();
     
     // 将节点状态设置为 ready（才能被分配任务）
@@ -137,6 +158,7 @@ async fn test_create_job() {
         None,
         None,
         None,
+        None,
     ).await;
     
     assert!(job.job_id.starts_with("job-"));
@@ -156,10 +178,11 @@ async fn test_create_job_with_preferred_node() {
     let node_registry = create_test_node_registry();
     let dispatcher = JobDispatcher::new(node_registry.clone());
     
-    let mut cap: CapabilityState = CapabilityState::new();
-    cap.insert("node-inference".to_string(), ModelStatus::Ready);
-    cap.insert("nmt-m2m100".to_string(), ModelStatus::Ready);
-    cap.insert("piper-tts".to_string(), ModelStatus::Ready);
+    let cap = vec![
+        CapabilityByType { r#type: ServiceType::Asr, ready: true, reason: None, ready_impl_ids: Some(vec!["node-inference".to_string()]) },
+        CapabilityByType { r#type: ServiceType::Nmt, ready: true, reason: None, ready_impl_ids: Some(vec!["nmt-m2m100".to_string()]) },
+        CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(vec!["piper-tts".to_string()]) },
+    ];
     let _node = node_registry.register_node(
         Some("node-123".to_string()),
         "Test Node".to_string(),
@@ -177,7 +200,7 @@ async fn test_create_job_with_preferred_node() {
             persona_adaptation: None,
         },
         true,
-        Some(cap),
+        cap,
     ).await.unwrap();
     
     // 需要设置为 ready，Phase 1 只允许对 ready 节点做并发占用（reserve）与派发
@@ -206,6 +229,7 @@ async fn test_create_job_with_preferred_node() {
         None,
         None,
         "trace-2".to_string(),
+        None,
         None,
         None,
         None,
@@ -247,6 +271,7 @@ async fn test_create_job_no_available_node() {
         None,
         None,
         None,
+        None,
     ).await;
     
     // 应该没有分配节点
@@ -276,7 +301,7 @@ async fn test_get_job() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     let job = dispatcher.create_job(
@@ -305,6 +330,7 @@ async fn test_get_job() {
         None,
         None,
         None,
+        None,
     ).await;
     
     let retrieved = dispatcher.get_job(&job.job_id).await;
@@ -328,10 +354,11 @@ async fn test_update_job_status() {
     let node_registry = create_test_node_registry();
     let dispatcher = JobDispatcher::new(node_registry.clone());
     
-    let mut cap: CapabilityState = CapabilityState::new();
-    cap.insert("node-inference".to_string(), ModelStatus::Ready);
-    cap.insert("nmt-m2m100".to_string(), ModelStatus::Ready);
-    cap.insert("piper-tts".to_string(), ModelStatus::Ready);
+    let cap = vec![
+        CapabilityByType { r#type: ServiceType::Asr, ready: true, reason: None, ready_impl_ids: Some(vec!["node-inference".to_string()]) },
+        CapabilityByType { r#type: ServiceType::Nmt, ready: true, reason: None, ready_impl_ids: Some(vec!["nmt-m2m100".to_string()]) },
+        CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(vec!["piper-tts".to_string()]) },
+    ];
     let _node = node_registry.register_node(
         None,
         "Test Node".to_string(),
@@ -349,7 +376,7 @@ async fn test_update_job_status() {
             persona_adaptation: None,
         },
         true,
-        Some(cap),
+        cap,
     ).await.unwrap();
     
     // 将节点状态设置为 ready（才能被分配任务）
@@ -378,6 +405,7 @@ async fn test_update_job_status() {
         None,
         None,
         "trace-5".to_string(),
+        None,
         None,
         None,
         None,

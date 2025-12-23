@@ -11,7 +11,7 @@ pub mod node;
 // 注意：GpuInfo, ResourceUsage, JobError 在测试中被使用，所以保留导出
 #[allow(unused_imports)]  // These are used in tests
 pub use common::{
-    FeatureFlags, PipelineConfig, InstalledModel, InstalledService, ModelStatus, CapabilityState,
+    FeatureFlags, PipelineConfig, InstalledModel, InstalledService, CapabilityByType, ServiceType, DeviceType, ServiceStatus,
     HardwareInfo, NodeStatus, GpuInfo, ResourceUsage, ServiceTimings, NetworkTimings,
 };
 pub use error::{ErrorCode, get_error_hint};

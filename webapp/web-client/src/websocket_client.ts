@@ -1,6 +1,6 @@
 import { AudioChunkMessage, ServerMessage, FeatureFlags, RoomCreateMessage, RoomJoinMessage, RoomLeaveMessage, RoomRawVoicePreferenceMessage, SessionInitMessage, BackpressureMessage, ReconnectConfig, DEFAULT_RECONNECT_CONFIG, SessionInitAckMessage } from './types';
 import { StateMachine } from './state_machine';
-import { encodeAudioChunkFrame, encodeFinalFrame, BinaryFrameType, decodeBinaryFrame, isBinaryFrame, AudioChunkBinaryFrame, FinalBinaryFrame } from './binary_protocol';
+import { encodeAudioChunkFrame, encodeFinalFrame, BinaryFrameType, AudioChunkBinaryFrame, FinalBinaryFrame } from './binary_protocol';
 import { createAudioEncoder, AudioEncoder, AudioCodecConfig } from './audio_codec';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -28,7 +28,7 @@ export class WebSocketClient {
   private messageCallback: MessageCallback | null = null;
   private reconnectCallback: ReconnectCallback | null = null;
   private backpressureStateCallback: BackpressureStateCallback | null = null;
-  private stateMachine: StateMachine;
+  // private _stateMachine: StateMachine; // 保留用于未来可能的用途（目前未使用）
   private url: string;
   private reconnectConfig: ReconnectConfig;
   private clientVersion: string;
@@ -70,8 +70,8 @@ export class WebSocketClient {
   private audioCodecConfig: AudioCodecConfig | null = null; // 音频编解码器配置
   private negotiatedCodec: string = 'pcm16'; // 协商后的编解码器
 
-  constructor(stateMachine: StateMachine, url: string, reconnectConfig?: ReconnectConfig, clientVersion?: string) {
-    this.stateMachine = stateMachine;
+  constructor(_stateMachine: StateMachine, url: string, reconnectConfig?: ReconnectConfig, clientVersion?: string) {
+    // this._stateMachine = _stateMachine; // 保留用于未来可能的用途（目前未使用）
     this.url = url;
     this.reconnectConfig = reconnectConfig || DEFAULT_RECONNECT_CONFIG;
     this.clientVersion = clientVersion || 'web-client-v1.0';

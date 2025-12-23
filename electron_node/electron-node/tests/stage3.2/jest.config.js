@@ -7,10 +7,17 @@ module.exports = {
   transform: {
     '^.+\\.ts$': 'ts-jest',
   },
+  moduleDirectories: ['node_modules', '<rootDir>', '<rootDir>/../../'],
   moduleNameMapper: {
     '^electron$': '<rootDir>/../../__mocks__/electron.js',
     '^../logger$': '<rootDir>/../../__mocks__/logger.ts',
     '^../../main/src/logger$': '<rootDir>/../../__mocks__/logger.ts',
+    '^@shared/(.*)$': '<rootDir>/../../../shared/$1.ts',
+  },
+  globals: {
+    'ts-jest': {
+      tsconfig: '<rootDir>/../../tsconfig.main.json',
+    },
   },
   collectCoverageFrom: [
     '../../main/src/platform-adapter/**/*.ts',

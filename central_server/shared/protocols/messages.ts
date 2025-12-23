@@ -4,6 +4,22 @@
 export type Platform = 'android' | 'ios' | 'web';
 export type NodePlatform = 'windows' | 'linux' | 'macos';
 
+// ===== 能力类型与服务状态（type 粒度） =====
+
+/** 服务能力类型 */
+export enum ServiceType {
+  ASR = 'asr',
+  NMT = 'nmt',
+  TTS = 'tts',
+  TONE = 'tone',
+}
+
+/** 服务运行设备 */
+export type DeviceType = 'gpu' | 'cpu';
+
+/** 服务运行状态 */
+export type ServiceStatus = 'running' | 'stopped' | 'error';
+
 export interface FeatureFlags {
   emotion_detection?: boolean;
   voice_style_detection?: boolean;
@@ -21,6 +37,9 @@ export interface ResourceUsage {
   running_jobs: number;
 }
 
+/** 模型状态（用于 InstalledModel 等模型生命周期，不再用于服务能力） */
+export type ModelStatus = 'ready' | 'downloading' | 'not_installed' | 'error';
+
 export interface InstalledModel {
   model_id: string;
   kind: 'asr' | 'nmt' | 'tts' | 'emotion' | 'other';
@@ -29,6 +48,33 @@ export interface InstalledModel {
   dialect: string | null;
   version: string;
   enabled?: boolean;
+}
+
+/**
+ * 节点端已安装的服务实现（实现粒度）
+ * 调度按 ServiceType 聚合能力，不再直接使用 service_id 进行匹配
+ */
+export interface InstalledService {
+  service_id: string;
+  type: ServiceType;
+  device: DeviceType;
+  status: ServiceStatus;
+  version?: string;
+  model_id?: string;
+  engine?: string;
+  mem_mb?: number;
+  warmup_ms?: number;
+  last_error?: string;
+}
+
+/** 按 ServiceType 聚合的可用性 */
+export interface CapabilityByType {
+  type: ServiceType;
+  ready: boolean;
+  /** ready=false 时给出原因：如 no_impl / no_running_impl / only_cpu_running / gpu_impl_not_running / missing_capability_entry */
+  reason?: string;
+  /** 满足 ready 的实现列表（服务端仅用于可观测） */
+  ready_impl_ids?: string[];
 }
 
 // ===== 移动端 ↔ 调度服务器 =====
@@ -221,8 +267,6 @@ export interface UiEventMessage {
 
 // ===== 节点 ↔ 调度服务器 =====
 
-export type ModelStatus = 'ready' | 'downloading' | 'not_installed' | 'error';
-
 export interface NodeRegisterMessage {
   type: 'node_register';
   node_id?: string | null;
@@ -237,12 +281,12 @@ export interface NodeRegisterMessage {
     }>;
   };
   installed_models: InstalledModel[];
-  /** 节点已安装的服务包列表（可选） */
+  /** 节点已安装的服务实现列表（可选） */
   installed_services?: InstalledService[];
+  /** 按 ServiceType 聚合的能力图 */
+  capability_by_type: CapabilityByType[];
   features_supported: FeatureFlags;
   accept_public_jobs: boolean;
-  /** 节点模型能力图（capability_state） */
-  capability_state?: Record<string, ModelStatus>;
 }
 
 export interface NodeRegisterAckMessage {
@@ -257,10 +301,10 @@ export interface NodeHeartbeatMessage {
   timestamp: number;
   resource_usage: ResourceUsage;
   installed_models?: InstalledModel[];
-  /** 节点已安装的服务包列表（可选） */
-  installed_services?: InstalledService[];
-  /** 节点模型能力图（capability_state） */
-  capability_state?: Record<string, ModelStatus>;
+  /** 节点已安装的服务实现列表 */
+  installed_services: InstalledService[];
+  /** 按 ServiceType 聚合的能力图 */
+  capability_by_type: CapabilityByType[];
 }
 
 export interface JobAssignMessage {

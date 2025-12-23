@@ -1,6 +1,6 @@
 // 节点注册表类型定义
 
-use crate::messages::{FeatureFlags, HardwareInfo, InstalledModel, InstalledService, CapabilityState, NodeStatus};
+use crate::messages::{FeatureFlags, HardwareInfo, InstalledModel, InstalledService, CapabilityByType, ServiceType, NodeStatus};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -17,12 +17,15 @@ pub struct Node {
     pub gpu_usage: Option<f32>,
     pub memory_usage: f32,
     pub installed_models: Vec<InstalledModel>,
-    /// 节点已安装的服务包列表
+    /// 节点已安装的服务实现列表
     pub installed_services: Vec<InstalledService>,
     pub features_supported: FeatureFlags,
     pub accept_public_jobs: bool,
-    /// 节点模型能力图（capability_state）
-    pub capability_state: CapabilityState,
+    /// 节点能力图（按 ServiceType 聚合）
+    pub capability_by_type: Vec<CapabilityByType>,
+    /// 便捷的 type -> bool 视图（运行时缓存，不序列化）
+    #[serde(skip)]
+    pub capability_by_type_map: std::collections::HashMap<ServiceType, bool>,
     pub current_jobs: usize,
     pub max_concurrent_jobs: usize,
     pub last_heartbeat: chrono::DateTime<chrono::Utc>,

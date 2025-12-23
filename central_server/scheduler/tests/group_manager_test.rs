@@ -1,6 +1,6 @@
 //! GroupManager 单元测试
 
-use lingua_scheduler::group_manager::{GroupManager, GroupConfig};
+use lingua_scheduler::managers::{GroupManager, GroupConfig};
 
 #[tokio::test]
 async fn test_create_new_group() {

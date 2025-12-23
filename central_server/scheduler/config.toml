@@ -124,7 +124,7 @@ strict_pool_eligibility = false
 strategy = "least_connections"
 # 资源使用率阈值（%），超过此值的节点将被跳过
 # 根据设计理念：调度服务器只负责跳过高负载节点，具体计算压力交给节点端
-resource_threshold = 25.0
+resource_threshold = 75.0  # CPU、GPU、内存使用率超过此值将被跳过（默认 75%）
 
 [scheduler.node_health]
 # 心跳间隔（秒）

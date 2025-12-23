@@ -89,6 +89,7 @@
             group_manager,
             node_status_manager,
             room_manager,
+            job_idempotency: crate::core::JobIdempotencyManager::default(),
             phase2: Some(rt.clone()),
         };
 
@@ -140,15 +141,16 @@
     }
 
     fn sample_node_register(node_id: &str) -> crate::messages::NodeMessage {
-        let mut capability_state: HashMap<String, ModelStatus> = HashMap::new();
-        capability_state.insert("node-inference".to_string(), ModelStatus::Ready);
-        capability_state.insert("nmt-m2m100".to_string(), ModelStatus::Ready);
-        capability_state.insert("piper-tts".to_string(), ModelStatus::Ready);
+        let capability_by_type = vec![
+            CapabilityByType { r#type: ServiceType::Asr, ready: true, reason: None, ready_impl_ids: Some(vec!["node-inference".into()]) },
+            CapabilityByType { r#type: ServiceType::Nmt, ready: true, reason: None, ready_impl_ids: Some(vec!["nmt-m2m100".into()]) },
+            CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(vec!["piper-tts".into()]) },
+        ];
 
         crate::messages::NodeMessage::NodeRegister {
             node_id: Some(node_id.to_string()),
             version: "test".to_string(),
-            capability_schema_version: Some("1.0".to_string()),
+            capability_schema_version: Some("2.0".to_string()),
             platform: "test".to_string(),
             hardware: HardwareInfo {
                 cpu_cores: 8,
@@ -165,9 +167,9 @@
                 enabled: Some(true),
             }],
             installed_services: Some(vec![
-                InstalledService { service_id: "node-inference".to_string(), version: "1".to_string(), platform: "test".to_string() },
-                InstalledService { service_id: "nmt-m2m100".to_string(), version: "1".to_string(), platform: "test".to_string() },
-                InstalledService { service_id: "piper-tts".to_string(), version: "1".to_string(), platform: "test".to_string() },
+                InstalledService { service_id: "node-inference".to_string(), r#type: ServiceType::Asr, device: DeviceType::Gpu, status: ServiceStatus::Running, version: Some("1".to_string()), model_id: None, engine: None, mem_mb: None, warmup_ms: None, last_error: None },
+                InstalledService { service_id: "nmt-m2m100".to_string(), r#type: ServiceType::Nmt, device: DeviceType::Gpu, status: ServiceStatus::Running, version: Some("1".to_string()), model_id: None, engine: None, mem_mb: None, warmup_ms: None, last_error: None },
+                InstalledService { service_id: "piper-tts".to_string(), r#type: ServiceType::Tts, device: DeviceType::Gpu, status: ServiceStatus::Running, version: Some("1".to_string()), model_id: None, engine: None, mem_mb: None, warmup_ms: None, last_error: None },
             ]),
             features_supported: FeatureFlags {
                 emotion_detection: None,
@@ -179,15 +181,16 @@
             },
             advanced_features: None,
             accept_public_jobs: true,
-            capability_state: Some(capability_state),
+            capability_by_type,
         }
     }
 
     fn sample_node_heartbeat(node_id: &str) -> crate::messages::NodeMessage {
-        let mut capability_state: HashMap<String, ModelStatus> = HashMap::new();
-        capability_state.insert("node-inference".to_string(), ModelStatus::Ready);
-        capability_state.insert("nmt-m2m100".to_string(), ModelStatus::Ready);
-        capability_state.insert("piper-tts".to_string(), ModelStatus::Ready);
+        let capability_by_type = vec![
+            CapabilityByType { r#type: ServiceType::Asr, ready: true, reason: None, ready_impl_ids: Some(vec!["node-inference".into()]) },
+            CapabilityByType { r#type: ServiceType::Nmt, ready: true, reason: None, ready_impl_ids: Some(vec!["nmt-m2m100".into()]) },
+            CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(vec!["piper-tts".into()]) },
+        ];
 
         crate::messages::NodeMessage::NodeHeartbeat {
             node_id: node_id.to_string(),
@@ -200,12 +203,12 @@
                 running_jobs: 0,
             },
             installed_models: None,
-            installed_services: Some(vec![
-                InstalledService { service_id: "node-inference".to_string(), version: "1".to_string(), platform: "test".to_string() },
-                InstalledService { service_id: "nmt-m2m100".to_string(), version: "1".to_string(), platform: "test".to_string() },
-                InstalledService { service_id: "piper-tts".to_string(), version: "1".to_string(), platform: "test".to_string() },
-            ]),
-            capability_state: Some(capability_state),
+            installed_services: vec![
+                InstalledService { service_id: "node-inference".to_string(), r#type: ServiceType::Asr, device: DeviceType::Gpu, status: ServiceStatus::Running, version: Some("1".to_string()), model_id: None, engine: None, mem_mb: None, warmup_ms: None, last_error: None },
+                InstalledService { service_id: "nmt-m2m100".to_string(), r#type: ServiceType::Nmt, device: DeviceType::Gpu, status: ServiceStatus::Running, version: Some("1".to_string()), model_id: None, engine: None, mem_mb: None, warmup_ms: None, last_error: None },
+                InstalledService { service_id: "piper-tts".to_string(), r#type: ServiceType::Tts, device: DeviceType::Gpu, status: ServiceStatus::Running, version: Some("1".to_string()), model_id: None, engine: None, mem_mb: None, warmup_ms: None, last_error: None },
+            ],
+            capability_by_type,
         }
     }
 

@@ -1,8 +1,7 @@
 //! 调试测试：用于定位节点选择失败的原因
 
 use lingua_scheduler::node_registry::NodeRegistry;
-use lingua_scheduler::messages::{FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, CapabilityState, ModelStatus, NodeStatus};
-use std::collections::HashMap;
+use lingua_scheduler::messages::{FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, CapabilityByType, ServiceType, NodeStatus};
 use std::sync::Arc;
 
 fn create_test_hardware() -> HardwareInfo {
@@ -48,12 +47,38 @@ fn create_test_models(src_lang: &str, tgt_lang: &str) -> Vec<InstalledModel> {
     ]
 }
 
-fn create_capability_state_with_models(model_ids: &[&str]) -> CapabilityState {
-    let mut state = HashMap::new();
+fn create_capability_by_type_with_models(model_ids: &[&str]) -> Vec<CapabilityByType> {
+    // 根据 model_id 映射到 ServiceType（简化版）
+    let mut result = Vec::new();
+    let mut asr_impls = Vec::new();
+    let mut nmt_impls = Vec::new();
+    let mut tts_impls = Vec::new();
+    let mut tone_impls = Vec::new();
+    
     for model_id in model_ids {
-        state.insert(model_id.to_string(), ModelStatus::Ready);
+        match *model_id {
+            id if id.starts_with("whisper") || id.starts_with("faster-whisper") => asr_impls.push(id.to_string()),
+            id if id.starts_with("m2m100") => nmt_impls.push(id.to_string()),
+            id if id.starts_with("piper-tts") => tts_impls.push(id.to_string()),
+            id if id.starts_with("emotion") || id.starts_with("speaker") || id.starts_with("yourtts") => tone_impls.push(id.to_string()),
+            _ => {}
+        }
     }
-    state
+    
+    if !asr_impls.is_empty() {
+        result.push(CapabilityByType { r#type: ServiceType::Asr, ready: true, reason: None, ready_impl_ids: Some(asr_impls) });
+    }
+    if !nmt_impls.is_empty() {
+        result.push(CapabilityByType { r#type: ServiceType::Nmt, ready: true, reason: None, ready_impl_ids: Some(nmt_impls) });
+    }
+    if !tts_impls.is_empty() {
+        result.push(CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(tts_impls) });
+    }
+    if !tone_impls.is_empty() {
+        result.push(CapabilityByType { r#type: ServiceType::Tone, ready: true, reason: None, ready_impl_ids: Some(tone_impls) });
+    }
+    
+    result
 }
 
 #[tokio::test]
@@ -61,7 +86,7 @@ async fn debug_test_node_registration() {
     let registry = Arc::new(NodeRegistry::new());
     
     // 注册节点1：有 emotion-xlm-r 模型且状态为 ready
-    let cap_state_1 = create_capability_state_with_models(&[
+    let cap_by_type_1 = create_capability_by_type_with_models(&[
         "whisper-large-v3-zh",
         "m2m100-zh-en",
         "piper-tts-en",
@@ -69,7 +94,7 @@ async fn debug_test_node_registration() {
     ]);
     
     println!("=== 注册节点1 ===");
-    println!("capability_state: {:?}", cap_state_1);
+    println!("capability_by_type: {:?}", cap_by_type_1);
     println!("installed_models: {:?}", create_test_models("zh", "en"));
     
     let result = registry.register_node(
@@ -89,7 +114,7 @@ async fn debug_test_node_registration() {
             persona_adaptation: None,
         },
         true,
-        Some(cap_state_1.clone()),
+        cap_by_type_1.clone(),
     ).await;
     
     match result {
@@ -99,7 +124,7 @@ async fn debug_test_node_registration() {
             println!("状态: {:?}", node.status);
             println!("在线: {}", node.online);
             println!("GPU: {:?}", node.hardware.gpus);
-            println!("capability_state: {:?}", node.capability_state);
+            println!("capability_by_type: {:?}", node.capability_by_type);
             println!("installed_models: {:?}", node.installed_models);
         }
         Err(e) => {
@@ -123,17 +148,17 @@ async fn debug_test_node_registration() {
         println!("内存使用率: {}", node.memory_usage);
         println!("当前任务数: {}/{}", node.current_jobs, node.max_concurrent_jobs);
         println!("接受公共任务: {}", node.accept_public_jobs);
-        println!("capability_state: {:?}", node.capability_state);
+        println!("capability_by_type: {:?}", node.capability_by_type);
         println!("installed_models: {:?}", node.installed_models);
     }
     drop(nodes);
     
-    // 选择需要 emotion-xlm-r 模型的节点
+    // 选择需要 TONE 类型服务的节点
     println!("\n=== 选择节点 ===");
-    let required_models = vec!["emotion-xlm-r".to_string()];
-    println!("需要的模型: {:?}", required_models);
+    let required_types = vec![ServiceType::Tone];
+    println!("需要的服务类型: {:?}", required_types);
     let (selected, _bd) = registry
-        .select_node_with_models_excluding_with_breakdown("zh", "en", &required_models, true, None)
+        .select_node_with_types_excluding_with_breakdown("zh", "en", &required_types, true, None)
         .await;
     println!("选择的节点: {:?}", selected);
     

@@ -1,13 +1,13 @@
 //! 阶段 3.2 节点选择测试
 //! 测试基于 capability_state 和模块依赖展开的节点选择逻辑
 
-use lingua_scheduler::dispatcher::JobDispatcher;
+use lingua_scheduler::core::dispatcher::JobDispatcher;
 use lingua_scheduler::node_registry::NodeRegistry;
 use lingua_scheduler::messages::{
-    CapabilityState, FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, InstalledService,
-    ModelStatus, NodeStatus, PipelineConfig,
+    CapabilityByType, FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, InstalledService,
+    ServiceStatus, DeviceType, NodeStatus, PipelineConfig, ServiceType,
 };
-use lingua_scheduler::config::{Phase3Config, Phase3PoolConfig, Phase3TenantOverride, CoreServicesConfig};
+use lingua_scheduler::core::config::{Phase3Config, Phase3PoolConfig, Phase3TenantOverride, CoreServicesConfig};
 use std::collections::HashMap;
 use std::sync::Arc;
 
@@ -54,21 +54,64 @@ fn create_test_models(src_lang: &str, tgt_lang: &str) -> Vec<InstalledModel> {
     ]
 }
 
-fn create_capability_state_with_services(service_ids: &[&str]) -> CapabilityState {
-    let mut state = HashMap::new();
+fn create_capability_by_type_with_services(service_ids: &[&str]) -> Vec<CapabilityByType> {
+    // 根据 service_id 映射到 ServiceType（简化版，实际应该根据服务配置）
+    let mut result = Vec::new();
+    let mut asr_impls = Vec::new();
+    let mut nmt_impls = Vec::new();
+    let mut tts_impls = Vec::new();
+    let mut tone_impls = Vec::new();
+    
     for service_id in service_ids {
-        state.insert(service_id.to_string(), ModelStatus::Ready);
+        match *service_id {
+            "node-inference" | "faster-whisper-vad" => asr_impls.push(service_id.to_string()),
+            "nmt-m2m100" => nmt_impls.push(service_id.to_string()),
+            "piper-tts" => tts_impls.push(service_id.to_string()),
+            "emotion-xlm-r" | "speaker-id-ecapa" | "yourtts" => tone_impls.push(service_id.to_string()),
+            _ => {}
+        }
     }
-    state
+    
+    if !asr_impls.is_empty() {
+        result.push(CapabilityByType { r#type: ServiceType::Asr, ready: true, reason: None, ready_impl_ids: Some(asr_impls) });
+    }
+    if !nmt_impls.is_empty() {
+        result.push(CapabilityByType { r#type: ServiceType::Nmt, ready: true, reason: None, ready_impl_ids: Some(nmt_impls) });
+    }
+    if !tts_impls.is_empty() {
+        result.push(CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(tts_impls) });
+    }
+    if !tone_impls.is_empty() {
+        result.push(CapabilityByType { r#type: ServiceType::Tone, ready: true, reason: None, ready_impl_ids: Some(tone_impls) });
+    }
+    
+    result
 }
 
 fn create_installed_services(service_ids: &[&str]) -> Vec<InstalledService> {
     service_ids
         .iter()
-        .map(|sid| InstalledService {
-            service_id: (*sid).to_string(),
-            version: "1.0.0".to_string(),
-            platform: "linux-x64".to_string(),
+        .map(|sid| {
+            // 根据 service_id 映射到正确的 ServiceType
+            let service_type = match *sid {
+                "node-inference" | "faster-whisper-vad" => ServiceType::Asr,
+                "nmt-m2m100" => ServiceType::Nmt,
+                "piper-tts" => ServiceType::Tts,
+                "emotion-xlm-r" | "speaker-id-ecapa" | "yourtts" => ServiceType::Tone,
+                _ => ServiceType::Asr, // 默认值
+            };
+            InstalledService {
+                service_id: (*sid).to_string(),
+                r#type: service_type,
+                device: lingua_scheduler::messages::DeviceType::Gpu,
+                status: lingua_scheduler::messages::ServiceStatus::Running,
+                version: Some("1.0.0".to_string()),
+                model_id: None,
+                engine: None,
+                mem_mb: None,
+                warmup_ms: None,
+                last_error: None,
+            }
         })
         .collect()
 }
@@ -96,18 +139,18 @@ async fn test_phase3_capability_pools_tenant_override_and_hash() {
             pool_id: 10,
             name: "core-a".to_string(),
             required_services: vec![
-                "node-inference".to_string(),
-                "nmt-m2m100".to_string(),
-                "piper-tts".to_string(),
+                "ASR".to_string(),
+                "NMT".to_string(),
+                "TTS".to_string(),
             ],
         },
         Phase3PoolConfig {
             pool_id: 11,
             name: "core-b".to_string(),
             required_services: vec![
-                "node-inference".to_string(),
-                "nmt-m2m100".to_string(),
-                "piper-tts".to_string(),
+                "ASR".to_string(),
+                "NMT".to_string(),
+                "TTS".to_string(),
             ],
         },
     ];
@@ -138,7 +181,7 @@ async fn test_phase3_capability_pools_tenant_override_and_hash() {
     let node_for_11 = node_for_11.expect("failed to find node_id mapping to pool 11");
 
     // 注册两个节点（都具备核心服务包）
-    let cap = create_capability_state_with_services(&["node-inference", "nmt-m2m100", "piper-tts"]);
+    let cap = create_capability_by_type_with_services(&["node-inference", "nmt-m2m100", "piper-tts"]);
     let services = create_installed_services(&["node-inference", "nmt-m2m100", "piper-tts"]);
 
     let _ = registry
@@ -159,7 +202,7 @@ async fn test_phase3_capability_pools_tenant_override_and_hash() {
                 persona_adaptation: None,
             },
             true,
-            Some(cap.clone()),
+            cap.clone(),
         )
         .await
         .unwrap();
@@ -181,7 +224,7 @@ async fn test_phase3_capability_pools_tenant_override_and_hash() {
                 persona_adaptation: None,
             },
             true,
-            Some(cap.clone()),
+            cap.clone(),
         )
         .await
         .unwrap();
@@ -191,12 +234,12 @@ async fn test_phase3_capability_pools_tenant_override_and_hash() {
 
     // 1) tenant override：应优先选择 pool 11
     let required = vec![
-        "node-inference".to_string(),
-        "nmt-m2m100".to_string(),
-        "piper-tts".to_string(),
+        ServiceType::Asr,
+        ServiceType::Nmt,
+        ServiceType::Tts,
     ];
     let (nid, dbg, _bd) = registry
-        .select_node_with_models_two_level_excluding_with_breakdown(
+        .select_node_with_types_two_level_excluding_with_breakdown(
             "tenant-A",
             "zh",
             "en",
@@ -215,7 +258,7 @@ async fn test_phase3_capability_pools_tenant_override_and_hash() {
     let expected_idx = lingua_scheduler::phase3::pick_index_for_key(2, p3.hash_seed, rk);
     let expected_preferred = if expected_idx == 0 { 10 } else { 11 };
     let (nid2, dbg2, _bd2) = registry
-        .select_node_with_models_two_level_excluding_with_breakdown(
+        .select_node_with_types_two_level_excluding_with_breakdown(
             rk,
             "zh",
             "en",
@@ -259,27 +302,26 @@ async fn test_phase3_capability_pools_exact_match_and_specificity_assignment() {
             pool_id: 10,
             name: "core".to_string(),
             required_services: vec![
-                "node-inference".to_string(),
-                "nmt-m2m100".to_string(),
-                "piper-tts".to_string(),
+                "ASR".to_string(),
+                "NMT".to_string(),
+                "TTS".to_string(),
             ],
         },
         Phase3PoolConfig {
             pool_id: 12,
             name: "core+optional".to_string(),
             required_services: vec![
-                "node-inference".to_string(),
-                "nmt-m2m100".to_string(),
-                "piper-tts".to_string(),
-                "speaker-id-ecapa".to_string(),
-                "yourtts".to_string(),
+                "ASR".to_string(),
+                "NMT".to_string(),
+                "TTS".to_string(),
+                "TONE".to_string(),
             ],
         },
     ];
     registry.set_phase3_config(p3).await;
 
     // 注册 core 节点（应进入 pool10）
-    let cap_core = create_capability_state_with_services(&["node-inference", "nmt-m2m100", "piper-tts"]);
+    let cap_core = create_capability_by_type_with_services(&["node-inference", "nmt-m2m100", "piper-tts"]);
     let services_core = create_installed_services(&["node-inference", "nmt-m2m100", "piper-tts"]);
     let _ = registry
         .register_node(
@@ -299,14 +341,14 @@ async fn test_phase3_capability_pools_exact_match_and_specificity_assignment() {
                 persona_adaptation: None,
             },
             true,
-            Some(cap_core),
+            cap_core,
         )
         .await
         .unwrap();
     registry.set_node_status("node-core", NodeStatus::Ready).await;
 
     // 注册 core+optional 节点（应进入 pool12：更具体优先）
-    let cap_opt = create_capability_state_with_services(&[
+    let cap_opt = create_capability_by_type_with_services(&[
         "node-inference",
         "nmt-m2m100",
         "piper-tts",
@@ -338,7 +380,7 @@ async fn test_phase3_capability_pools_exact_match_and_specificity_assignment() {
                 persona_adaptation: None,
             },
             true,
-            Some(cap_opt),
+            cap_opt,
         )
         .await
         .unwrap();
@@ -348,14 +390,14 @@ async fn test_phase3_capability_pools_exact_match_and_specificity_assignment() {
     let pid_opt = registry.phase3_node_pool_id("node-opt").await;
     assert_eq!(pid_opt, Some(12));
 
-    // 1) core job：应只匹配 pool10，选择 node-core
+    // 1) core job：应只匹配 pool10，选择 node-core（按 ServiceType 过滤）
     let required_core = vec![
-        "node-inference".to_string(),
-        "nmt-m2m100".to_string(),
-        "piper-tts".to_string(),
+        ServiceType::Asr,
+        ServiceType::Nmt,
+        ServiceType::Tts,
     ];
     let (nid1, dbg1, _bd1) = registry
-        .select_node_with_models_two_level_excluding_with_breakdown(
+        .select_node_with_types_two_level_excluding_with_breakdown(
             "tenant-core",
             "zh",
             "en",
@@ -370,14 +412,13 @@ async fn test_phase3_capability_pools_exact_match_and_specificity_assignment() {
 
     // 2) core+optional job：应只匹配 pool12，选择 node-opt
     let required_opt = vec![
-        "node-inference".to_string(),
-        "nmt-m2m100".to_string(),
-        "piper-tts".to_string(),
-        "speaker-id-ecapa".to_string(),
-        "yourtts".to_string(),
+        ServiceType::Asr,
+        ServiceType::Nmt,
+        ServiceType::Tts,
+        ServiceType::Tone,
     ];
     let (nid2, dbg2, _bd2) = registry
-        .select_node_with_models_two_level_excluding_with_breakdown(
+        .select_node_with_types_two_level_excluding_with_breakdown(
             "tenant-opt",
             "zh",
             "en",
@@ -397,7 +438,7 @@ async fn test_select_node_with_models_ready() {
     
     // Phase 1：capability_state 的 key 统一为 service_id
     // 注册节点1：包含 emotion-xlm-r 服务且状态 ready
-    let cap_state_1 = create_capability_state_with_services(&[
+    let cap_state_1 = create_capability_by_type_with_services(&[
         "emotion-xlm-r",
     ]);
     
@@ -418,13 +459,13 @@ async fn test_select_node_with_models_ready() {
             persona_adaptation: None,
         },
         true,
-        Some(cap_state_1.clone()),
+        cap_state_1.clone(),
     ).await;
     
     assert!(result.is_ok(), "节点1注册失败: {:?}", result.err());
     
     // 注册节点2：不包含 emotion-xlm-r
-    let cap_state_2 = create_capability_state_with_services(&[]);
+    let cap_state_2 = create_capability_by_type_with_services(&[]);
     
     let result = registry.register_node(
         Some("node-2".to_string()),
@@ -443,7 +484,7 @@ async fn test_select_node_with_models_ready() {
             persona_adaptation: None,
         },
         true,
-        Some(cap_state_2.clone()),
+        cap_state_2.clone(),
     ).await;
     
     // 检查注册是否成功
@@ -453,21 +494,21 @@ async fn test_select_node_with_models_ready() {
     registry.set_node_status("node-1", NodeStatus::Ready).await;
     registry.set_node_status("node-2", NodeStatus::Ready).await;
     
-    // 选择需要 emotion-xlm-r 模型的节点
-    let required_models = vec!["emotion-xlm-r".to_string()];
+    // 选择需要某个 ServiceType 的节点（这里用 Tone 做占位）
+    let required_models = vec![ServiceType::Tone];
     
     // 调试：检查节点状态
     let node_ids = registry.list_node_ids_for_test().await;
     eprintln!("已注册的节点: {:?}", node_ids);
     for node_id in &node_ids {
         if let Some(node) = registry.get_node_for_test(node_id).await {
-            eprintln!("节点 {}: status={:?}, online={}, gpus={:?}, capability_state={:?}", 
-                node_id, node.status, node.online, node.hardware.gpus, node.capability_state);
+            eprintln!("节点 {}: status={:?}, online={}, gpus={:?}, capability_by_type={:?}", 
+                node_id, node.status, node.online, node.hardware.gpus, node.capability_by_type);
         }
     }
     
     let (selected, _bd) = registry
-        .select_node_with_models_excluding_with_breakdown("zh", "en", &required_models, true, None)
+        .select_node_with_types_excluding_with_breakdown("zh", "en", &required_models, true, None)
         .await;
     
     // 应该选择节点1（有模型且状态为 ready）
@@ -478,9 +519,10 @@ async fn test_select_node_with_models_ready() {
 async fn test_select_node_with_models_not_ready() {
     let registry = Arc::new(NodeRegistry::new());
     
-    // 注册节点：有 emotion-xlm-r 服务但状态为 downloading
-    let mut cap_state = HashMap::new();
-    cap_state.insert("emotion-xlm-r".to_string(), ModelStatus::Downloading); // 正在下载
+    // 注册节点：有 emotion-xlm-r 服务但状态为 downloading（ready: false）
+    let cap_state = vec![
+        CapabilityByType { r#type: ServiceType::Tone, ready: false, reason: Some("downloading".to_string()), ready_impl_ids: Some(vec!["emotion-xlm-r".to_string()]) },
+    ];
     
     let _ = registry.register_node(
         Some("node-1".to_string()),
@@ -499,13 +541,13 @@ async fn test_select_node_with_models_not_ready() {
             persona_adaptation: None,
         },
         true,
-        Some(cap_state),
+        cap_state,
     ).await;
     
     // 选择需要 emotion-xlm-r 模型的节点
-    let required_models = vec!["emotion-xlm-r".to_string()];
+    let required_models = vec![ServiceType::Tone];
     let (selected, _bd) = registry
-        .select_node_with_models_excluding_with_breakdown("zh", "en", &required_models, true, None)
+        .select_node_with_types_excluding_with_breakdown("zh", "en", &required_models, true, None)
         .await;
     
     // 应该没有选择节点（模型未就绪）
@@ -518,7 +560,7 @@ async fn test_select_node_with_module_expansion() {
     let dispatcher = JobDispatcher::new(registry.clone());
     
     // 注册节点：支持 emotion_detection 功能，且有 emotion-xlm-r 服务
-    let cap_state = create_capability_state_with_services(&[
+    let cap_state = create_capability_by_type_with_services(&[
         "node-inference",
         "nmt-m2m100",
         "piper-tts",
@@ -542,7 +584,7 @@ async fn test_select_node_with_module_expansion() {
             persona_adaptation: None,
         },
         true,
-        Some(cap_state),
+        cap_state,
     ).await;
     
     // Set node to ready status
@@ -584,6 +626,7 @@ async fn test_select_node_with_module_expansion() {
         None,
         None,
         None,
+        None,
     ).await;
     
     // 应该分配了节点（节点有 emotion-xlm-r 模型且状态为 ready）
@@ -596,7 +639,7 @@ async fn test_select_node_with_module_expansion_no_model() {
     let dispatcher = JobDispatcher::new(registry.clone());
     
     // 注册节点：支持 emotion_detection 功能，但没有 emotion-xlm-r 服务
-    let cap_state = create_capability_state_with_services(&[
+    let cap_state = create_capability_by_type_with_services(&[
         "node-inference",
         "nmt-m2m100",
         "piper-tts",
@@ -620,7 +663,7 @@ async fn test_select_node_with_module_expansion_no_model() {
             persona_adaptation: None,
         },
         true,
-        Some(cap_state),
+        cap_state,
     ).await;
     
     // 创建需要 emotion_detection 功能的 job
@@ -659,6 +702,7 @@ async fn test_select_node_with_module_expansion_no_model() {
         None,
         None,
         None,
+        None,
     ).await;
     
     // 应该没有分配节点（节点没有所需的模型）
@@ -669,9 +713,10 @@ async fn test_select_node_with_module_expansion_no_model() {
 async fn test_update_node_heartbeat_capability_state() {
     let registry = NodeRegistry::new();
     
-    // 注册节点，初始时 emotion-xlm-r 服务状态为 downloading
-    let mut initial_cap_state = HashMap::new();
-    initial_cap_state.insert("emotion-xlm-r".to_string(), ModelStatus::Downloading);
+    // 注册节点，初始时 emotion-xlm-r 服务状态为 downloading（ready: false）
+    let initial_cap_state = vec![
+        CapabilityByType { r#type: ServiceType::Tone, ready: false, reason: Some("downloading".to_string()), ready_impl_ids: Some(vec!["emotion-xlm-r".to_string()]) },
+    ];
     
     let _node = registry.register_node(
         Some("node-1".to_string()),
@@ -690,23 +735,24 @@ async fn test_update_node_heartbeat_capability_state() {
             persona_adaptation: None,
         },
         true,
-        Some(initial_cap_state),
+        initial_cap_state,
     ).await;
     
     // Set node to ready status
     registry.set_node_status("node-1", NodeStatus::Ready).await;
     
-    // 检查初始状态：通过尝试选择节点来验证（模型未就绪，应该选不到）
-    let required_models = vec!["emotion-xlm-r".to_string()];
+    // 检查初始状态：通过尝试选择节点来验证（能力未就绪，应该选不到）
+    let required_models = vec![ServiceType::Tone];
     let (selected_before, _bd) = registry
-        .select_node_with_models_excluding_with_breakdown("zh", "en", &required_models, true, None)
+        .select_node_with_types_excluding_with_breakdown("zh", "en", &required_models, true, None)
         .await;
     assert_eq!(selected_before, None); // 模型未就绪，应该选不到
-    
+
     // 更新心跳，服务状态变为 ready
-    let mut updated_cap_state = HashMap::new();
-    updated_cap_state.insert("emotion-xlm-r".to_string(), ModelStatus::Ready); // 现在 ready 了
-    
+    let updated_cap_state = vec![
+        CapabilityByType { r#type: ServiceType::Tone, ready: true, reason: None, ready_impl_ids: Some(vec!["emotion-xlm-r".to_string()]) },
+    ];
+
     let success = registry.update_node_heartbeat(
         "node-1",
         10.0, // cpu_usage：低于阈值，避免因资源过滤导致选不到节点
@@ -717,13 +763,13 @@ async fn test_update_node_heartbeat_capability_state() {
         0,
         Some(updated_cap_state),
     ).await;
-    
+
     assert!(success);
-    
+
     // 检查更新后的状态：现在应该可以选择这个节点了
-    let required_models = vec!["emotion-xlm-r".to_string()];
+    let required_models = vec![ServiceType::Tone];
     let (selected, _bd) = registry
-        .select_node_with_models_excluding_with_breakdown("zh", "en", &required_models, true, None)
+        .select_node_with_types_excluding_with_breakdown("zh", "en", &required_models, true, None)
         .await;
     assert_eq!(selected, Some("node-1".to_string()));
 }
@@ -733,7 +779,7 @@ async fn test_select_node_with_multiple_required_models() {
     let registry = Arc::new(NodeRegistry::new());
     
     // 注册节点1：只有 emotion-xlm-r 服务
-    let cap_state_1 = create_capability_state_with_services(&[
+    let cap_state_1 = create_capability_by_type_with_services(&[
         "emotion-xlm-r",
     ]);
     
@@ -754,11 +800,11 @@ async fn test_select_node_with_multiple_required_models() {
             persona_adaptation: None,
         },
         true,
-        Some(cap_state_1),
+        cap_state_1,
     ).await;
     
     // 注册节点2：有 emotion-xlm-r 和 speaker-id-ecapa 服务
-    let cap_state_2 = create_capability_state_with_services(&[
+    let cap_state_2 = create_capability_by_type_with_services(&[
         "emotion-xlm-r",
         "speaker-id-ecapa",
     ]);
@@ -780,29 +826,29 @@ async fn test_select_node_with_multiple_required_models() {
             persona_adaptation: None,
         },
         true,
-        Some(cap_state_2),
+        cap_state_2,
     ).await;
     
     // Set nodes to ready status
     registry.set_node_status("node-1", NodeStatus::Ready).await;
     registry.set_node_status("node-2", NodeStatus::Ready).await;
     
-    // 选择需要 emotion-xlm-r 和 speaker-id-ecapa 模型的节点
+    // 选择需要 TONE 类型服务的节点（两个节点都满足，因为都有 TONE 类型且 ready）
     let required_models = vec![
-        "emotion-xlm-r".to_string(),
-        "speaker-id-ecapa".to_string(),
+        ServiceType::Tone,
     ];
     let (selected, _bd) = registry
-        .select_node_with_models_excluding_with_breakdown("zh", "en", &required_models, true, None)
+        .select_node_with_types_excluding_with_breakdown("zh", "en", &required_models, true, None)
         .await;
     
-    // 应该选择节点2（有所有所需的模型）
-    assert_eq!(selected, Some("node-2".to_string()));
+    // 两个节点都满足要求（都有 TONE 类型且 ready），选择哪个都可以（按负载选择）
+    // 由于两个节点的 current_jobs 都是 0，选择是随机的或按节点ID顺序
+    assert!(selected == Some("node-1".to_string()) || selected == Some("node-2".to_string()));
     
-    // 如果只选择 emotion-xlm-r，两个节点都可以，应该选择负载更低的
-    let required_models = vec!["emotion-xlm-r".to_string()];
+    // 如果只选择 TONE，两个节点都可以，应该选择负载更低的
+    let required_models = vec![ServiceType::Tone];
     let (selected, _bd) = registry
-        .select_node_with_models_excluding_with_breakdown("zh", "en", &required_models, true, None)
+        .select_node_with_types_excluding_with_breakdown("zh", "en", &required_models, true, None)
         .await;
     assert!(selected == Some("node-1".to_string()) || selected == Some("node-2".to_string()));
 }

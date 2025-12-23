@@ -21,6 +21,7 @@ use tokio::sync::RwLock;
 
 #[derive(Debug, Clone)]
 pub(super) struct UnavailableServiceEntry {
+    #[allow(dead_code)] // 用于过期检查，通过 retain 间接使用
     pub(super) expire_at_ms: i64,
 }
 

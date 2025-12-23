@@ -1,7 +1,7 @@
 // 节点 ↔ 调度服务器消息
 
 use serde::{Deserialize, Serialize};
-use super::common::{FeatureFlags, PipelineConfig, InstalledModel, InstalledService, CapabilityState, ResourceUsage, ExtraResult, HardwareInfo};
+use super::common::{FeatureFlags, PipelineConfig, InstalledModel, InstalledService, CapabilityByType, ResourceUsage, ExtraResult, HardwareInfo};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type")]
@@ -11,25 +11,23 @@ pub enum NodeMessage {
         #[serde(skip_serializing_if = "Option::is_none")]
         node_id: Option<String>,
         version: String,
-        /// 能力描述版本（可选，默认 "1.0"）
+        /// 能力描述版本（必需，必须为 "2.0" - ServiceType 模型）
         #[serde(skip_serializing_if = "Option::is_none")]
         capability_schema_version: Option<String>,
         platform: String, // "windows" | "linux" | "macos"
         hardware: HardwareInfo,
         installed_models: Vec<InstalledModel>,
-        /// 节点已安装的服务包列表（可选）
+        /// 节点已安装的服务实现列表（含 type/device/status）
         #[serde(skip_serializing_if = "Option::is_none")]
         installed_services: Option<Vec<InstalledService>>,
+        /// 按 ServiceType 聚合的能力图（必填）
+        capability_by_type: Vec<CapabilityByType>,
         /// 可选功能/插件能力（保留现有 FeatureFlags）
         features_supported: FeatureFlags,
         /// 性能/调度相关高级能力（如 batched_inference、kv_cache）
         #[serde(skip_serializing_if = "Option::is_none")]
         advanced_features: Option<Vec<String>>,
         accept_public_jobs: bool,
-        /// 节点模型能力图（capability_state）
-        /// Phase 1：key=service_id，value=服务包状态
-        #[serde(skip_serializing_if = "Option::is_none")]
-        capability_state: Option<CapabilityState>,
     },
     #[serde(rename = "node_register_ack")]
     NodeRegisterAck {
@@ -52,13 +50,10 @@ pub enum NodeMessage {
         resource_usage: ResourceUsage,
         #[serde(skip_serializing_if = "Option::is_none")]
         installed_models: Option<Vec<InstalledModel>>,
-        /// 节点已安装的服务包列表（可选）
-        #[serde(skip_serializing_if = "Option::is_none")]
-        installed_services: Option<Vec<InstalledService>>,
-        /// 节点模型能力图（capability_state）
-        /// Phase 1：key=service_id，value=服务包状态
-        #[serde(skip_serializing_if = "Option::is_none")]
-        capability_state: Option<CapabilityState>,
+        /// 节点已安装的服务实现列表（含 type/device/status）
+        installed_services: Vec<InstalledService>,
+        /// 按 ServiceType 聚合的能力图
+        capability_by_type: Vec<CapabilityByType>,
     },
     #[serde(rename = "job_assign")]
     JobAssign {

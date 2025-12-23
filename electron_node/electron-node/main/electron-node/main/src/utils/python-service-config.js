@@ -35,11 +35,15 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPythonServiceConfig = getPythonServiceConfig;
 const path = __importStar(require("path"));
 const fs = __importStar(require("fs"));
 const cuda_env_1 = require("./cuda-env");
+const logger_1 = __importDefault(require("../logger"));
 /**
  * 获取 Python 服务配置
  */
@@ -243,8 +247,14 @@ function getPythonServiceConfig(serviceName, projectRoot) {
             }
             // GPU 配置：如果 CUDA 可用，使用 CUDA 和 float16；否则使用 CPU 和 float32
             // 注意：CPU 不支持 float16，必须使用 float32 或 int8
+            // 检查 baseEnv 中是否有 CUDA_PATH（由 setupCudaEnvironment() 设置）
             const cudaAvailable = !!baseEnv.CUDA_PATH;
             const asrDevice = cudaAvailable ? 'cuda' : 'cpu';
+            logger_1.default.info({
+                cudaPath: baseEnv.CUDA_PATH,
+                cudaAvailable,
+                asrDevice
+            }, 'Faster Whisper VAD: GPU detection result');
             // CPU 模式下强制使用 float32（不支持 float16）
             // 如果环境变量已设置，使用环境变量的值；否则根据设备自动选择
             let asrComputeType;

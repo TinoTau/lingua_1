@@ -163,7 +163,7 @@ fn test_node_register_message_format() {
         },
         advanced_features: None,
         accept_public_jobs: true,
-        capability_state: None,
+        capability_by_type: vec![],
     };
 
     // 验证所有必需字段都存在
@@ -179,7 +179,7 @@ fn test_node_register_message_format() {
             features_supported,
             advanced_features: _,
             accept_public_jobs,
-            capability_state: _,
+            capability_by_type: _,
         } => {
             assert!(node_id.is_none());
             assert_eq!(version, "1.0.0");
@@ -210,8 +210,8 @@ fn test_node_heartbeat_message_format() {
             running_jobs: 2,
         },
         installed_models: None,
-        installed_services: None,
-        capability_state: None,
+        installed_services: vec![],
+        capability_by_type: vec![],
     };
 
     // 验证所有必需字段都存在
@@ -222,7 +222,7 @@ fn test_node_heartbeat_message_format() {
             resource_usage,
             installed_models,
             installed_services: _,
-            capability_state: _,
+            capability_by_type: _,
         } => {
             assert_eq!(node_id, "node-123");
             assert_eq!(timestamp, 1234567890);
@@ -260,6 +260,7 @@ fn test_job_result_message_format() {
         trace_id: "trace-123".to_string(),
         group_id: None,
         part_index: None,
+        node_completed_at_ms: None,
     };
 
     match success_message {
@@ -280,6 +281,7 @@ fn test_job_result_message_format() {
             trace_id: _,
             group_id: _,
             part_index: _,
+            node_completed_at_ms: _,
         } => {
             assert_eq!(job_id, "job-123");
             assert_eq!(node_id, "node-123");
@@ -319,6 +321,7 @@ fn test_job_result_message_format() {
         trace_id: "trace-456".to_string(),
         group_id: None,
         part_index: None,
+        node_completed_at_ms: None,
     };
 
     match error_message {

@@ -438,7 +438,7 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
         stopBlink();
         // 显示紧急提示
         if (statusText) {
-          const originalText = statusText.textContent;
+          // const originalText = statusText.textContent; // 保留用于未来可能的恢复功能
           statusText.textContent = '⚠️ 内存压力过高，自动播放中...';
           statusText.style.color = '#dc3545';
           setTimeout(() => {

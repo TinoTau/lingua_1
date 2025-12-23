@@ -77,7 +77,7 @@ async fn test_register_node() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap(); // 蹇呴』锟?GPU锛屾墍浠ュ簲璇ユ垚锟?
     
     assert!(node.node_id.starts_with("node-"));
@@ -112,7 +112,7 @@ async fn test_register_node_no_gpu() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await;
     
     // 搴旇杩斿洖閿欒
@@ -141,7 +141,7 @@ async fn test_register_node_with_id() {
             persona_adaptation: None,
         },
         false,
-        None,
+        vec![],
     ).await.unwrap(); // 蹇呴』锟?GPU锛屾墍浠ュ簲璇ユ垚锟?
     
     assert_eq!(node.node_id, "custom-node-123");
@@ -169,7 +169,7 @@ async fn test_is_node_available() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     assert!(registry.is_node_available("node-1").await);
@@ -197,7 +197,7 @@ async fn test_is_node_available_when_overloaded() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     // 鏇存柊鑺傜偣锛屼娇鍏惰揪鍒版渶澶у苟鍙戞暟
@@ -236,7 +236,7 @@ async fn test_update_node_heartbeat() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     let success = registry.update_node_heartbeat(
@@ -296,7 +296,7 @@ async fn test_select_node_with_features() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     // 娉ㄥ唽鏀寔鑻辨枃鍒颁腑鏂囩殑鑺傜偣
@@ -317,7 +317,7 @@ async fn test_select_node_with_features() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     // 閫夋嫨涓枃鍒拌嫳鏂囩殑鑺傜偣
@@ -361,7 +361,7 @@ async fn test_select_node_with_required_features() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     // 娉ㄥ唽鏀寔鎯呮劅鍒嗘瀽鐨勮妭锟?
@@ -382,7 +382,7 @@ async fn test_select_node_with_required_features() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     // 瑕佹眰鎯呮劅鍒嗘瀽鍔熻兘
@@ -433,7 +433,7 @@ async fn test_mark_node_offline() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     assert!(registry.is_node_available("node-4").await);
@@ -465,7 +465,7 @@ async fn test_select_node_least_connections() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     registry.register_node(
@@ -485,7 +485,7 @@ async fn test_select_node_least_connections() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     registry.register_node(
@@ -505,7 +505,7 @@ async fn test_select_node_least_connections() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     // 灏嗘墍鏈夎妭鐐圭姸鎬佽缃负 ready
@@ -556,7 +556,7 @@ async fn test_select_node_resource_threshold_cpu() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     registry.register_node(
@@ -576,7 +576,7 @@ async fn test_select_node_resource_threshold_cpu() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     // 鏇存柊鑺傜偣璧勬簮浣跨敤鐜囷細low-cpu=20%, high-cpu=30%锛堣秴杩囬槇鍊硷級
@@ -615,7 +615,7 @@ async fn test_select_node_resource_threshold_gpu() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     registry.register_node(
@@ -635,7 +635,7 @@ async fn test_select_node_resource_threshold_gpu() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     // 鏇存柊鑺傜偣璧勬簮浣跨敤鐜囷細low-gpu GPU=20%, high-gpu GPU=30%锛堣秴杩囬槇鍊硷級
@@ -674,7 +674,7 @@ async fn test_select_node_resource_threshold_memory() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     registry.register_node(
@@ -694,7 +694,7 @@ async fn test_select_node_resource_threshold_memory() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     // 更新节点资源使用率：low-mem 内存=20%，high-mem 内存=80%（超过内存阈值 75%）
@@ -733,7 +733,7 @@ async fn test_select_node_resource_threshold_all_resources() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     registry.register_node(
@@ -753,7 +753,7 @@ async fn test_select_node_resource_threshold_all_resources() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     registry.register_node(
@@ -773,7 +773,7 @@ async fn test_select_node_resource_threshold_all_resources() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     // 鏇存柊鑺傜偣璧勬簮浣跨敤锟?
@@ -817,7 +817,7 @@ async fn test_select_node_resource_threshold_no_available() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     // 鏇存柊鑺傜偣璧勬簮浣跨敤鐜囷紝鎵€鏈夎祫婧愰兘瓒呰繃闃堬拷?
@@ -851,7 +851,7 @@ async fn test_select_node_resource_threshold_custom_threshold() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     registry.register_node(
@@ -871,7 +871,7 @@ async fn test_select_node_resource_threshold_custom_threshold() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     // Set all nodes to ready status

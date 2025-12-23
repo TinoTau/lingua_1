@@ -1,5 +1,5 @@
 use crate::core::AppState;
-use crate::messages::{CapabilityState, FeatureFlags, HardwareInfo, InstalledModel, InstalledService, NodeMessage, ResourceUsage};
+use crate::messages::{CapabilityByType, FeatureFlags, HardwareInfo, InstalledModel, InstalledService, NodeMessage, ResourceUsage};
 use crate::websocket::send_node_message;
 use axum::extract::ws::Message;
 use tokio::sync::mpsc;
@@ -18,23 +18,46 @@ pub(super) async fn handle_node_register(
     installed_services: Option<Vec<InstalledService>>,
     features_supported: FeatureFlags,
     accept_public_jobs: bool,
-    capability_state: Option<CapabilityState>,
+    capability_by_type: Vec<CapabilityByType>,
 ) -> Result<(), anyhow::Error> {
-    // Validate capability_schema_version (if provided)
+    // Validate capability_schema_version (require "2.0" - ServiceType-based model)
+    // Reject "1.0" (old model-based) as it's deprecated
+    let gpus_info = hardware.gpus.clone();
+    info!(
+        "Processing node registration: capability_schema_version={:?}, gpus={:?}, capability_by_type_count={}",
+        capability_schema_version,
+        gpus_info,
+        capability_by_type.len()
+    );
+    
     if let Some(ref schema_version) = capability_schema_version {
-        if schema_version != "1.0" {
+        if schema_version != "2.0" {
             let error_msg = NodeMessage::Error {
                 code: crate::messages::ErrorCode::InvalidCapabilitySchema.to_string(),
-                message: format!("Unsupported capability schema version: {}", schema_version),
+                message: format!(
+                    "Unsupported capability schema version: {} (required: 2.0). Please upgrade your node client.",
+                    schema_version
+                ),
                 details: None,
             };
             send_node_message(tx, &error_msg).await?;
             warn!(
-                "Node registration failed (unsupported capability schema version): {}",
+                "Node registration failed (unsupported capability schema version: {}, required: 2.0)",
                 schema_version
             );
             return Ok(());
         }
+    } else {
+        // If capability_schema_version is not provided, reject registration
+        // (assume it's an old client that doesn't support ServiceType model)
+        let error_msg = NodeMessage::Error {
+            code: crate::messages::ErrorCode::InvalidCapabilitySchema.to_string(),
+            message: "Missing capability_schema_version. Please upgrade your node client to support ServiceType model (schema version 2.0).".to_string(),
+            details: None,
+        };
+        send_node_message(tx, &error_msg).await?;
+        warn!("Node registration failed (missing capability_schema_version, required: 2.0)");
+        return Ok(());
     }
 
     // Register node (require GPU)
@@ -50,7 +73,7 @@ pub(super) async fn handle_node_register(
             installed_services,
             features_supported,
             accept_public_jobs,
-            capability_state,
+            capability_by_type,
             // Phase 2: Allow overwriting existing node_id (avoid "remote snapshot exists" causing registration failure)
             state.phase2.is_some(),
         )
@@ -100,7 +123,11 @@ pub(super) async fn handle_node_register(
             if is_node_id_conflict {
                 warn!("Node registration failed (node_id conflict): {}", err);
             } else {
-                warn!("Node registration failed (no GPU): {}", err);
+                warn!(
+                    "Node registration failed: {}. Hardware: gpus={:?}",
+                    err,
+                    gpus_info
+                );
             }
             return Ok(());
         }
@@ -115,8 +142,15 @@ pub(super) async fn handle_node_heartbeat(
     resource_usage: ResourceUsage,
     installed_models: Option<Vec<InstalledModel>>,
     installed_services: Option<Vec<InstalledService>>,
-    capability_state: Option<CapabilityState>,
+    capability_by_type: Vec<CapabilityByType>,
 ) {
+    let installed_services_count = installed_services.as_ref().map(|v| v.len()).unwrap_or(0);
+    info!(
+        "Processing node heartbeat: node_id={}, installed_services_count={}, capability_by_type_count={}",
+        node_id,
+        installed_services_count,
+        capability_by_type.len()
+    );
     // Update node heartbeat
     state
         .node_registry
@@ -128,7 +162,7 @@ pub(super) async fn handle_node_heartbeat(
             installed_models,
             installed_services,
             resource_usage.running_jobs,
-            capability_state,
+            Some(capability_by_type),
         )
         .await;
 

@@ -156,16 +156,16 @@ async function buildServiceArgs(serviceName, config, pythonExe) {
     }
     else if (serviceName === 'faster_whisper_vad') {
         // Faster Whisper VAD 服务：通过环境变量启用 GPU（已在 python-service-config.ts 中设置）
-        // 注意：不要在 service-process.js 中覆盖 ASR_DEVICE，因为 python-service-config.ts 已经根据 CUDA_PATH 正确设置了
+        // 注意：不要在 service-process.ts 中覆盖 ASR_DEVICE，因为 python-service-config.ts 已经根据 CUDA_PATH 正确设置了
         // 如果这里覆盖，会忽略 python-service-config.ts 中的 CUDA 检测逻辑
         const args = [
             config.scriptPath,
         ];
         // ASR_DEVICE 和 ASR_COMPUTE_TYPE 已在 python-service-config.ts 中根据 CUDA_PATH 正确设置
         // 这里只记录日志，不覆盖配置
-        if (config.env && config.env.ASR_DEVICE) {
+        if (config.env?.ASR_DEVICE) {
             logger_1.default.info({
-                serviceName: serviceName,
+                serviceName,
                 asrDevice: config.env.ASR_DEVICE,
                 asrComputeType: config.env.ASR_COMPUTE_TYPE,
                 cudaPath: config.env.CUDA_PATH

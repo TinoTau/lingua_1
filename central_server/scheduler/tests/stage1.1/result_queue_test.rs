@@ -17,6 +17,8 @@ fn create_test_result(session_id: &str, utterance_index: u64, text: &str) -> Ses
         group_id: None, // Added for Utterance Group
         part_index: None, // Added for Utterance Group
         service_timings: None, // Service timings
+        network_timings: None,
+        scheduler_sent_at_ms: None,
     }
 }
 

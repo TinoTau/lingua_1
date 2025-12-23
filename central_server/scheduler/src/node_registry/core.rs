@@ -1,6 +1,6 @@
 use super::NodeRegistry;
 use crate::messages::{
-    CapabilityState, FeatureFlags, HardwareInfo, InstalledModel, InstalledService, NodeStatus,
+    CapabilityByType, FeatureFlags, HardwareInfo, InstalledModel, InstalledService, NodeStatus, ServiceType,
 };
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -14,7 +14,7 @@ impl NodeRegistry {
     pub fn new() -> Self {
         Self {
             nodes: Arc::new(RwLock::new(HashMap::new())),
-            resource_threshold: 25.0, // 默认 25%
+            resource_threshold: 75.0, // 默认 75%（CPU、GPU、内存使用率超过此值将被跳过）
             exclude_reason_stats: Arc::new(RwLock::new(HashMap::new())),
             unavailable_services: Arc::new(RwLock::new(HashMap::new())),
             reserved_jobs: Arc::new(RwLock::new(HashMap::new())),
@@ -104,7 +104,7 @@ impl NodeRegistry {
         installed_services: Option<Vec<InstalledService>>,
         features_supported: FeatureFlags,
         accept_public_jobs: bool,
-        capability_state: Option<CapabilityState>,
+        capability_by_type: Vec<CapabilityByType>,
     ) -> Result<super::Node, String> {
         self.register_node_with_policy(
             node_id,
@@ -116,7 +116,7 @@ impl NodeRegistry {
             installed_services,
             features_supported,
             accept_public_jobs,
-            capability_state,
+            capability_by_type,
             false,
         )
         .await
@@ -134,7 +134,7 @@ impl NodeRegistry {
         installed_services: Option<Vec<InstalledService>>,
         features_supported: FeatureFlags,
         accept_public_jobs: bool,
-        capability_state: Option<CapabilityState>,
+        capability_by_type: Vec<CapabilityByType>,
         allow_existing_id: bool,
     ) -> Result<super::Node, String> {
         // 检查节点是否有 GPU（必需）
@@ -179,9 +179,11 @@ impl NodeRegistry {
             format!("node-{}", Uuid::new_v4().to_string()[..8].to_uppercase())
         };
 
-        // Phase 1：capability_state 语义统一为 service_id。
-        // 不再从 installed_models 推断（旧 model_id 痕迹清理），必须由节点端按服务包维度上报。
-        let capability_state = capability_state.unwrap_or_default();
+        let capability_by_type = capability_by_type;
+        let capability_by_type_map = capability_by_type
+            .iter()
+            .map(|c| (c.r#type.clone(), c.ready))
+            .collect::<std::collections::HashMap<ServiceType, bool>>();
 
         // 保存用于日志的字段（在 move 之前）
         let gpu_count = hardware.gpus.as_ref().map(|gpus| gpus.len()).unwrap_or(0);
@@ -203,7 +205,8 @@ impl NodeRegistry {
             installed_services: installed_services.unwrap_or_default(),
             features_supported,
             accept_public_jobs,
-            capability_state,
+            capability_by_type,
+            capability_by_type_map,
             current_jobs: 0,
             max_concurrent_jobs: 4,
             last_heartbeat: now,
@@ -246,7 +249,7 @@ impl NodeRegistry {
         installed_models: Option<Vec<InstalledModel>>,
         installed_services: Option<Vec<InstalledService>>,
         current_jobs: usize,
-        capability_state: Option<CapabilityState>,
+        capability_by_type: Option<Vec<CapabilityByType>>,
     ) -> bool {
         let mut updated: Option<super::Node> = None;
         let ok = {
@@ -267,8 +270,13 @@ impl NodeRegistry {
             if let Some(services) = installed_services {
                 node.installed_services = services;
             }
-            if let Some(cap_state) = capability_state {
-                node.capability_state = cap_state;
+            if let Some(cap_by_type) = capability_by_type {
+                node.capability_by_type = cap_by_type;
+                node.capability_by_type_map = node
+                    .capability_by_type
+                    .iter()
+                    .map(|c| (c.r#type.clone(), c.ready))
+                    .collect();
             }
             node.current_jobs = current_jobs;
             node.last_heartbeat = chrono::Utc::now();
@@ -279,7 +287,7 @@ impl NodeRegistry {
             }
         };
         if let Some(n) = updated {
-            // Phase 3：installed_services/capability_state 可能变化，需更新 pool 归属
+            // Phase 3：installed_services/capability_by_type 可能变化，需更新 pool 归属
             self.phase3_upsert_node_to_pool_index(node_id).await;
             self.phase3_core_cache_upsert_node(n).await;
         }
@@ -340,20 +348,13 @@ impl NodeRegistry {
     }
 
     /// 检查指定节点是否具备所需的模型（异步版本）
-    pub async fn check_node_has_models_ready(&self, node_id: &str, required_model_ids: &[String]) -> bool {
+    pub async fn check_node_has_types_ready(&self, node_id: &str, required_types: &[ServiceType]) -> bool {
         let nodes = self.nodes.read().await;
         if let Some(node) = nodes.get(node_id) {
-            super::validation::node_has_required_services_ready(node, required_model_ids)
+            super::validation::node_has_required_types_ready(node, required_types)
         } else {
             false
         }
-    }
-
-    /// 检查节点是否具备所需的模型（通过 capability_state）
-    #[allow(dead_code)]
-    pub fn node_has_models_ready(&self, node: &super::Node, required_model_ids: &[String]) -> bool {
-        // 兼容旧方法名：内部语义已切换为 “service_id readiness”
-        super::validation::node_has_required_services_ready(node, required_model_ids)
     }
 
     /// 测试辅助方法：获取节点信息（仅用于测试）

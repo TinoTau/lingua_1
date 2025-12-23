@@ -761,7 +761,7 @@ struct Phase3SimulateQuery {
     /// 便捷：与线上语义保持一致（若 routing_key 为空，则优先 tenant_id，其次 session_id）
     tenant_id: Option<String>,
     session_id: Option<String>,
-    /// required service_id 列表（可重复传参）：?required=a&required=b
+    /// required ServiceType 列表（可重复传参）：?required=ASR&required=NMT（使用 ServiceType 字符串）
     #[serde(default)]
     required: Vec<String>,
     /// 语言仅用于日志/兼容现有选择函数参数，不影响 required 过滤本身
@@ -796,13 +796,21 @@ async fn get_phase3_simulate(
     let accept_public = q.accept_public.unwrap_or(true);
     let exclude = q.exclude_node_id.as_deref();
 
+    // 将 required ServiceType 字符串转换为 ServiceType 枚举
+    use std::str::FromStr;
+    use crate::messages::ServiceType;
+    let required_types: Vec<ServiceType> = q.required
+        .iter()
+        .filter_map(|s| ServiceType::from_str(s).ok())
+        .collect();
+
     let (nid, dbg, bd) = state
         .node_registry
-        .select_node_with_models_two_level_excluding_with_breakdown(
+        .select_node_with_types_two_level_excluding_with_breakdown(
             &routing_key,
             &src_lang,
             &tgt_lang,
-            &q.required,
+            &required_types,
             accept_public,
             exclude,
             Some(&state.core_services),

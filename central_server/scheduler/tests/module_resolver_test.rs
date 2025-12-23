@@ -1,6 +1,6 @@
 //! 模块依赖解析器单元测试
 
-use lingua_scheduler::module_resolver::{ModuleResolver, MODULE_TABLE};
+use lingua_scheduler::utils::module_resolver::{ModuleResolver, MODULE_TABLE};
 
 #[test]
 fn test_module_table_exists() {

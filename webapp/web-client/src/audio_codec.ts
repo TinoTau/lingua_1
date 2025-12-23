@@ -205,7 +205,7 @@ export class OpusEncoderImpl implements AudioEncoder {
  * 注意：这个类主要用于测试，生产环境应该使用 createAudioDecoder
  */
 export class OpusDecoderImpl implements AudioDecoder {
-  private decoder: OpusDecoder | null = null;
+  private decoder: OpusDecoder<8000 | 12000 | 16000 | 24000 | 48000> | null = null;
   private config: AudioCodecConfig;
   private isReady: boolean = false;
   
@@ -229,8 +229,10 @@ export class OpusDecoderImpl implements AudioDecoder {
       });
       
       // 等待 WASM 编译完成
-      await this.decoder.ready;
-      this.isReady = true;
+      if (this.decoder) {
+        await this.decoder.ready;
+        this.isReady = true;
+      }
       console.log('OpusDecoder initialized', { 
         sampleRate: this.config.sampleRate,
         channelCount: this.config.channelCount,

@@ -339,7 +339,10 @@ export class TtsPlayer {
       // 立即移除音频块（边播放边清理，减少内存占用）
       const buffer = this.audioBuffers.shift()!;
       const audioBuffer = this.audioContext!.createBuffer(1, buffer.length, this.sampleRate);
-      audioBuffer.copyToChannel(buffer, 0);
+      // 类型转换：Float32Array<ArrayBufferLike> -> Float32Array
+      const channelData = new Float32Array(buffer.length);
+      channelData.set(buffer);
+      audioBuffer.copyToChannel(channelData, 0);
 
       const source = this.audioContext!.createBufferSource();
       source.buffer = audioBuffer;

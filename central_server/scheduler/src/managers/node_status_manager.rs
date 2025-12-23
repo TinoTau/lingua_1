@@ -1,5 +1,5 @@
 use crate::core::config::NodeHealthConfig;
-use crate::messages::{NodeStatus, ModelStatus};
+use crate::messages::NodeStatus;
 use crate::node_registry::{Node, NodeRegistry};
 use super::NodeConnectionManager;
 use std::sync::Arc;
@@ -161,23 +161,37 @@ impl NodeStatusManager {
             return false;
         }
         
-        // Phase 1：capability_state key 语义统一为 service_id
-        // - registering：要求节点已上报 installed_services，且这些 service_id 在 capability_state 中均为 Ready
-        // - ready/degraded：要求 capability_state 中至少存在一个 Ready（避免空状态误判健康）
+        // 按类型检查能力：registering 阶段要求已上报 installed_services，且核心类型（ASR、NMT、TTS）ready=true；ready/degraded 阶段要求至少有一个类型 ready
+        // 注意：TONE 是可选的，不参与 registering 阶段的健康检查
         let services_ready = if node.status == NodeStatus::Registering {
             if node.installed_services.is_empty() {
-                warn!(node_id = %node.node_id, "Node health check failed: installed_services is empty (Phase1 strict)");
+                warn!(node_id = %node.node_id, "Node health check failed: installed_services is empty (type schema)");
                 return false;
             }
-            node.installed_services.iter().all(|svc| {
-                node.capability_state
-                    .get(&svc.service_id)
-                    .map(|status| status == &ModelStatus::Ready)
-                    .unwrap_or(false)
-            })
+            // 只检查核心服务类型（ASR、NMT、TTS），TONE 是可选的
+            let core_types = vec![
+                crate::messages::ServiceType::Asr,
+                crate::messages::ServiceType::Nmt,
+                crate::messages::ServiceType::Tts,
+            ];
+            // 检查节点是否安装了核心类型，如果安装了，则要求 ready
+            let mut has_core_type = false;
+            let mut all_core_ready = true;
+            for core_type in &core_types {
+                let has_installed = node.installed_services.iter().any(|s| s.r#type == *core_type);
+                if has_installed {
+                    has_core_type = true;
+                    let is_ready = node.capability_by_type_map.get(core_type).copied().unwrap_or(false);
+                    if !is_ready {
+                        all_core_ready = false;
+                    }
+                }
+            }
+            // 必须至少有一个核心类型，且所有已安装的核心类型都必须 ready
+            has_core_type && all_core_ready
         } else {
-            !node.capability_state.is_empty()
-                && node.capability_state.values().any(|status| status == &ModelStatus::Ready)
+            !node.capability_by_type_map.is_empty()
+                && node.capability_by_type_map.values().any(|ready| *ready)
         };
         
         if !services_ready {
@@ -185,13 +199,13 @@ impl NodeStatusManager {
                 node_id = %node.node_id,
                 status = ?node.status,
                 installed_services_count = node.installed_services.len(),
-                capability_state_count = node.capability_state.len(),
+                capability_by_type_count = node.capability_by_type.len(),
                 "Node health check failed: Services not ready"
             );
             // 记录详细的服务状态
-            if !node.capability_state.is_empty() {
-                for (service_id, status) in &node.capability_state {
-                    debug!(node_id = %node.node_id, service_id = %service_id, status = ?status, "Service status");
+            if !node.capability_by_type.is_empty() {
+                for entry in &node.capability_by_type {
+                    debug!(node_id = %node.node_id, service_type = ?entry.r#type, ready = entry.ready, reason = ?entry.reason, "Service type status");
                 }
             }
             return false;

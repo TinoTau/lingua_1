@@ -40,32 +40,77 @@ pub struct InstalledModel {
     pub enabled: Option<bool>,
 }
 
-/// 已安装的服务包信息
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct InstalledService {
-    pub service_id: String,
-    pub version: String,
-    pub platform: String, // "windows-x64" | "linux-x64" | etc.
+/// 能力类型（按类型聚合能力）
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash, Ord, PartialOrd)]
+#[serde(rename_all = "lowercase")]
+pub enum ServiceType {
+    Asr,
+    Nmt,
+    Tts,
+    Tone,
 }
 
-/// 模型状态（用于 capability_state）
+impl std::str::FromStr for ServiceType {
+    type Err = ();
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_ascii_lowercase().as_str() {
+            "asr" => Ok(ServiceType::Asr),
+            "nmt" => Ok(ServiceType::Nmt),
+            "tts" => Ok(ServiceType::Tts),
+            "tone" => Ok(ServiceType::Tone),
+            _ => Err(()),
+        }
+    }
+}
+
+/// 服务运行设备
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[serde(rename_all = "snake_case")]
-pub enum ModelStatus {
-    /// 模型已安装可用
-    Ready,
-    /// 正在下载
-    Downloading,
-    /// 未安装
-    NotInstalled,
-    /// 模型损坏 / 无法加载
+#[serde(rename_all = "lowercase")]
+pub enum DeviceType {
+    Gpu,
+    Cpu,
+}
+
+/// 服务运行状态
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "lowercase")]
+pub enum ServiceStatus {
+    Running,
+    Stopped,
     Error,
 }
 
-/// 节点服务能力图（capability_state）
-/// 
-/// **Phase 1 规范：key 必须是 service_id（服务包 ID）**，value 为该服务包当前状态
-pub type CapabilityState = std::collections::HashMap<String, ModelStatus>;
+/// 已安装的服务实现信息（实现粒度）
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct InstalledService {
+    pub service_id: String,
+    pub r#type: ServiceType,
+    pub device: DeviceType,
+    pub status: ServiceStatus,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub version: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub model_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub engine: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub mem_mb: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub warmup_ms: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub last_error: Option<String>,
+}
+
+/// 按 ServiceType 聚合的能力
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CapabilityByType {
+    pub r#type: ServiceType,
+    pub ready: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reason: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub ready_impl_ids: Option<Vec<String>>,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HardwareInfo {

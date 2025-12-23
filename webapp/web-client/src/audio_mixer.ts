@@ -23,7 +23,7 @@ export class AudioMixer {
   // 当前播放状态
   private isPlayingTts: boolean = false;
   private ttsQueue: Float32Array[] = [];
-  private currentTtsBuffer: AudioBuffer | null = null;
+  // private currentTtsBuffer: AudioBuffer | null = null; // 保留用于未来可能的用途
   private ttsPlaybackStartTime: number = 0;
   
   // 淡入淡出参数
@@ -183,17 +183,20 @@ export class AudioMixer {
 
     const audioData = this.ttsQueue.shift()!;
     const audioBuffer = this.audioContext.createBuffer(1, audioData.length, 16000);
-    audioBuffer.copyToChannel(audioData, 0);
+    // 类型转换：Float32Array<ArrayBufferLike> -> Float32Array
+    const channelData = new Float32Array(audioData.length);
+    channelData.set(audioData);
+    audioBuffer.copyToChannel(channelData, 0);
 
-    const source = this.audioContext.createAudioBufferSource();
+    const source = this.audioContext.createBufferSource();
     source.buffer = audioBuffer;
     source.connect(this.ttsGain);
 
     this.ttsPlaybackStartTime = this.audioContext.currentTime;
     source.start(this.ttsPlaybackStartTime);
 
-    // 计算播放时长
-    const duration = audioBuffer.duration;
+    // 计算播放时长（保留用于未来可能的用途）
+    // const duration = audioBuffer.duration;
 
     // 播放完成后继续播放下一个块
     source.onended = () => {
@@ -212,7 +215,7 @@ export class AudioMixer {
     const currentTime = this.audioContext.currentTime;
 
     // 对所有远程成员的原声进行淡出
-    for (const [memberId, gain] of this.rawVoiceGains.entries()) {
+    for (const [_memberId, gain] of this.rawVoiceGains.entries()) {
       gain.gain.cancelScheduledValues(currentTime);
       gain.gain.setValueAtTime(gain.gain.value, currentTime);
       gain.gain.linearRampToValueAtTime(0.0, currentTime + this.FADE_OUT_DURATION);
@@ -230,7 +233,7 @@ export class AudioMixer {
     const currentTime = this.audioContext.currentTime;
 
     // 对所有远程成员的原声进行淡入
-    for (const [memberId, gain] of this.rawVoiceGains.entries()) {
+    for (const [_memberId, gain] of this.rawVoiceGains.entries()) {
       gain.gain.cancelScheduledValues(currentTime);
       gain.gain.setValueAtTime(0.0, currentTime);
       gain.gain.linearRampToValueAtTime(1.0, currentTime + this.FADE_IN_DURATION);

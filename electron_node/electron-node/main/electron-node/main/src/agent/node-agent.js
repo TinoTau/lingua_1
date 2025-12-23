@@ -40,6 +40,7 @@ exports.NodeAgent = void 0;
 const ws_1 = __importDefault(require("ws"));
 const si = __importStar(require("systeminformation"));
 const os = __importStar(require("os"));
+const messages_1 = require("../../../../shared/protocols/messages");
 const model_manager_1 = require("../model-manager/model-manager");
 const node_config_1 = require("../node-config");
 const logger_1 = __importDefault(require("../logger"));
@@ -49,6 +50,8 @@ class NodeAgent {
         this.nodeId = null;
         this.heartbeatInterval = null;
         this.capabilityStateChangedHandler = null; // 保存监听器函数，用于清理
+        this.heartbeatDebounceTimer = null; // 心跳防抖定时器
+        this.HEARTBEAT_DEBOUNCE_MS = 2000; // 防抖延迟：2秒内最多触发一次立即心跳
         // 优先从配置文件读取，其次从环境变量，最后使用默认值
         const config = (0, node_config_1.loadNodeConfig)();
         this.schedulerUrl =
@@ -71,18 +74,23 @@ class NodeAgent {
             }
             this.ws = new ws_1.default(this.schedulerUrl);
             this.ws.on('open', () => {
-                logger_1.default.info({}, 'Connected to scheduler server');
-                this.registerNode();
+                logger_1.default.info({ schedulerUrl: this.schedulerUrl }, 'Connected to scheduler server, starting registration');
+                // 使用 Promise 确保注册完成后再启动心跳
+                this.registerNode().catch((error) => {
+                    logger_1.default.error({ error }, 'Failed to register node in open handler');
+                });
                 this.startHeartbeat();
             });
             this.ws.on('message', (data) => {
-                this.handleMessage(data.toString());
+                const messageStr = data.toString();
+                logger_1.default.debug({ message: messageStr }, 'Received message from scheduler');
+                this.handleMessage(messageStr);
             });
             this.ws.on('error', (error) => {
-                logger_1.default.error({ error }, 'WebSocket error');
+                logger_1.default.error({ error, schedulerUrl: this.schedulerUrl }, 'WebSocket error');
             });
-            this.ws.on('close', () => {
-                logger_1.default.info({}, 'Connection to scheduler server closed');
+            this.ws.on('close', (code, reason) => {
+                logger_1.default.info({ code, reason: reason?.toString() }, 'Connection to scheduler server closed');
                 this.stopHeartbeat();
                 // 尝试重连
                 setTimeout(() => this.start(), 5000);
@@ -95,11 +103,19 @@ class NodeAgent {
                 }
                 // 创建新的监听器函数并保存
                 this.capabilityStateChangedHandler = () => {
-                    // 状态变化时，在下次心跳时更新 capability_state
-                    // 这里不立即发送，因为心跳会定期发送最新的状态
-                    logger_1.default.debug({}, 'Model state changed, will update capability_state on next heartbeat');
+                    // 状态变化时，立即触发心跳（带防抖）
+                    logger_1.default.debug({}, 'Model state changed, triggering immediate heartbeat');
+                    this.triggerImmediateHeartbeat();
                 };
                 this.modelManager.on('capability-state-changed', this.capabilityStateChangedHandler);
+            }
+            // 注册 Python 服务状态变化回调
+            if (this.pythonServiceManager && typeof this.pythonServiceManager.setOnStatusChangeCallback === 'function') {
+                this.pythonServiceManager.setOnStatusChangeCallback((serviceName, status) => {
+                    // 服务状态变化时，立即触发心跳（带防抖）
+                    logger_1.default.debug({ serviceName, running: status.running }, 'Python service status changed, triggering immediate heartbeat');
+                    this.triggerImmediateHeartbeat();
+                });
             }
         }
         catch (error) {
@@ -119,47 +135,79 @@ class NodeAgent {
         }
     }
     async registerNode() {
-        if (!this.ws || this.ws.readyState !== ws_1.default.OPEN)
+        if (!this.ws) {
+            logger_1.default.warn({}, 'Cannot register node: WebSocket is null');
             return;
+        }
+        if (this.ws.readyState !== ws_1.default.OPEN) {
+            logger_1.default.warn({ readyState: this.ws.readyState }, 'Cannot register node: WebSocket is not OPEN');
+            return;
+        }
+        logger_1.default.info({ readyState: this.ws.readyState }, 'Starting node registration');
         try {
             // 获取硬件信息
+            logger_1.default.debug({}, 'Getting hardware info...');
             const hardware = await this.getHardwareInfo();
+            logger_1.default.debug({ gpus: hardware.gpus?.length || 0 }, 'Hardware info retrieved');
             // 获取已安装的模型
+            logger_1.default.debug({}, 'Getting installed models...');
             const installedModels = await this.inferenceService.getInstalledModels();
-            // 获取 capability_state（节点模型能力图）
-            const capabilityState = await this.getCapabilityState();
-            // 只保留状态为 'ready' 的服务（只有正在使用的服务才应该传递给调度服务器）
-            // 已下载但未启用的服务不应计入热度统计
+            logger_1.default.debug({ modelCount: installedModels.length }, 'Installed models retrieved');
+            // 获取服务实现列表与按类型聚合的能力
+            logger_1.default.debug({}, 'Getting installed services...');
             const installedServicesAll = await this.getInstalledServices();
-            const enabledServices = [];
-            // 从 capability_state 中筛选出状态为 ready 的服务
-            for (const service of installedServicesAll) {
-                const status = capabilityState[service.service_id];
-                if (status === 'ready') {
-                    enabledServices.push(service);
-                }
-            }
+            logger_1.default.debug({ serviceCount: installedServicesAll.length }, 'Installed services retrieved');
+            logger_1.default.debug({}, 'Getting capability by type...');
+            const capabilityByType = await this.getCapabilityByType(installedServicesAll);
+            logger_1.default.debug({ capabilityCount: capabilityByType.length }, 'Capability by type retrieved');
             // 获取支持的功能
+            logger_1.default.debug({}, 'Getting features supported...');
             const featuresSupported = this.inferenceService.getFeaturesSupported();
+            logger_1.default.debug({ features: featuresSupported }, 'Features supported retrieved');
             // 对齐协议规范：node_register 消息格式
             const message = {
                 type: 'node_register',
                 node_id: this.nodeId || null, // 首次连接时为 null
-                version: '1.0.0', // TODO: 从 package.json 读取
+                version: '2.0.0', // TODO: 从 package.json 读取
+                capability_schema_version: '2.0', // ServiceType 能力模型版本
                 platform: this.getPlatform(),
                 hardware: hardware,
                 installed_models: installedModels,
-                // 只发送启用的服务（capability_state 中状态为 ready 的服务）
-                // 已下载但未启用的服务不应传递给调度服务器，避免影响热度统计
-                installed_services: enabledServices.length > 0 ? enabledServices : undefined,
+                // 上报全部已安装实现（含运行状态），调度按 type 聚合
+                // 如果为空数组，则发送 undefined 以匹配 Option<Vec<InstalledService>>
+                installed_services: installedServicesAll.length > 0 ? installedServicesAll : undefined,
+                capability_by_type: capabilityByType,
                 features_supported: featuresSupported,
                 accept_public_jobs: true, // TODO: 从配置读取
-                capability_state: Object.keys(capabilityState).length > 0 ? capabilityState : undefined,
             };
-            this.ws.send(JSON.stringify(message));
+            const messageStr = JSON.stringify(message);
+            logger_1.default.info({
+                node_id: this.nodeId,
+                capability_schema_version: message.capability_schema_version,
+                platform: message.platform,
+                gpus: hardware.gpus?.length || 0,
+                installed_services_count: installedServicesAll.length,
+                capability_by_type_count: capabilityByType.length,
+                capabilityByType,
+                message_length: messageStr.length,
+                ws_readyState: this.ws.readyState,
+            }, 'Sending node registration message');
+            logger_1.default.debug({ message: messageStr }, 'Node registration message content');
+            if (this.ws.readyState !== ws_1.default.OPEN) {
+                logger_1.default.error({ readyState: this.ws.readyState }, 'WebSocket is not OPEN when trying to send registration message');
+                return;
+            }
+            this.ws.send(messageStr);
+            logger_1.default.info({ message_length: messageStr.length }, 'Node registration message sent successfully');
         }
         catch (error) {
-            logger_1.default.error({ error }, 'Failed to register node');
+            const errorDetails = {
+                message: error instanceof Error ? error.message : String(error),
+                stack: error instanceof Error ? error.stack : undefined,
+                name: error instanceof Error ? error.name : undefined,
+                error: error,
+            };
+            logger_1.default.error(errorDetails, 'Failed to register node');
         }
     }
     getPlatform() {
@@ -254,6 +302,13 @@ class NodeAgent {
         });
     }
     startHeartbeat() {
+        // 如果 nodeId 已存在（重连场景），立即发送一次心跳
+        if (this.ws && this.ws.readyState === ws_1.default.OPEN && this.nodeId) {
+            this.sendHeartbeatOnce().catch((error) => {
+                logger_1.default.warn({ error }, 'Failed to send initial heartbeat');
+            });
+        }
+        // 设置定时器，每15秒发送一次心跳
         this.heartbeatInterval = setInterval(async () => {
             if (!this.ws || this.ws.readyState !== ws_1.default.OPEN || !this.nodeId)
                 return;
@@ -269,33 +324,16 @@ class NodeAgent {
             return;
         const resources = await this.getSystemResources();
         const installedModels = await this.inferenceService.getInstalledModels();
-        // 获取 capability_state（节点模型能力图）
-        const capabilityState = await this.getCapabilityState();
-        // 只保留状态为 'ready' 的服务（只有正在使用的服务才应该传递给调度服务器）
-        // 已下载但未启用的服务不应计入热度统计
-        const enabledServices = [];
         const installedServicesAll = await this.getInstalledServices();
-        // 从 capability_state 中筛选出状态为 ready 的服务
-        for (const service of installedServicesAll) {
-            const status = capabilityState[service.service_id];
-            if (status === 'ready') {
-                enabledServices.push(service);
-            }
-        }
-        // 记录 capability_state 信息
-        const capabilityStateCount = Object.keys(capabilityState).length;
-        const readyCount = Object.values(capabilityState).filter(s => s === 'ready').length;
+        const capabilityByType = await this.getCapabilityByType(installedServicesAll);
         logger_1.default.info({
-            capabilityStateCount,
-            readyCount,
+            nodeId: this.nodeId,
             installedModelsCount: installedModels.length,
             installedServicesCount: installedServicesAll.length,
-            enabledServicesCount: enabledServices.length,
-            enabledServices: enabledServices.map(s => s.service_id),
-            installedButNotEnabledServices: installedServicesAll
-                .filter(s => capabilityState[s.service_id] !== 'ready')
-                .map(s => s.service_id)
-        }, 'Sending heartbeat with capability_state and enabled services only');
+            capabilityByTypeCount: capabilityByType.length,
+            capabilityByType,
+            installedServices: installedServicesAll.map(s => `${s.service_id}:${s.type}:${s.status}`),
+        }, 'Sending heartbeat with type-level capability');
         // 对齐协议规范：node_heartbeat 消息格式
         const message = {
             type: 'node_heartbeat',
@@ -309,56 +347,175 @@ class NodeAgent {
                 running_jobs: this.inferenceService.getCurrentJobCount(),
             },
             installed_models: installedModels.length > 0 ? installedModels : undefined,
-            // 只发送启用的服务（capability_state 中状态为 ready 的服务）
-            // 已下载但未启用的服务不应传递给调度服务器，避免影响热度统计
-            installed_services: enabledServices.length > 0 ? enabledServices : undefined,
-            // 为空时不要发送，避免把 Scheduler 端已有的 capability_state 覆盖成空
-            capability_state: capabilityStateCount > 0 ? capabilityState : undefined,
+            installed_services: installedServicesAll,
+            capability_by_type: capabilityByType,
         };
-        this.ws.send(JSON.stringify(message));
-        if (capabilityStateCount === 0) {
-            logger_1.default.warn({
-                modelHubUrl: this.modelManager ? 'configured' : 'not configured'
-            }, 'Heartbeat sent with empty capability_state - this may cause health check failures');
-        }
+        const messageStr = JSON.stringify(message);
+        logger_1.default.debug({ message: messageStr }, 'Heartbeat message content');
+        this.ws.send(messageStr);
     }
     /**
      * 获取已安装的服务包列表
+     * 包括：
+     * 1. 从服务注册表中读取的已注册服务
+     * 2. 实际运行但未在注册表中的本地服务（如 faster-whisper-vad、speaker-embedding）
      */
     async getInstalledServices() {
-        if (!this.serviceRegistryManager) {
-            logger_1.default.warn({}, 'ServiceRegistryManager not available for heartbeat');
-            return [];
+        const result = [];
+        const defaultVersion = '2.0.0';
+        const serviceTypeMap = {
+            'faster-whisper-vad': messages_1.ServiceType.ASR,
+            'node-inference': messages_1.ServiceType.ASR,
+            'nmt-m2m100': messages_1.ServiceType.NMT,
+            'piper-tts': messages_1.ServiceType.TTS,
+            'speaker-embedding': messages_1.ServiceType.TONE,
+            'your-tts': messages_1.ServiceType.TONE,
+        };
+        const defaultDevice = 'gpu';
+        const pushService = (service_id, status, version) => {
+            const type = serviceTypeMap[service_id];
+            if (!type) {
+                logger_1.default.warn({ service_id }, 'Unknown service_id, skipped when building installed_services');
+                return;
+            }
+            // 去重：若已存在则更新状态
+            const existingIndex = result.findIndex(s => s.service_id === service_id);
+            const entry = {
+                service_id,
+                type,
+                device: defaultDevice,
+                status,
+                version: version || defaultVersion,
+            };
+            if (existingIndex >= 0) {
+                result[existingIndex] = entry;
+            }
+            else {
+                result.push(entry);
+            }
+        };
+        // 1. 从服务注册表获取已注册的服务
+        if (this.serviceRegistryManager) {
+            try {
+                await this.serviceRegistryManager.loadRegistry();
+                const installed = this.serviceRegistryManager.listInstalled();
+                logger_1.default.debug({
+                    installedCount: installed.length,
+                    installed: installed.map((s) => ({
+                        service_id: s.service_id,
+                        version: s.version,
+                        platform: s.platform
+                    }))
+                }, 'Getting installed services from registry for heartbeat');
+                installed.forEach((service) => {
+                    const running = this.isServiceRunning(service.service_id);
+                    pushService(service.service_id, running ? 'running' : 'stopped', service.version);
+                });
+            }
+            catch (error) {
+                logger_1.default.error({ error }, 'Failed to get installed services from registry');
+            }
         }
-        try {
-            // 确保注册表已加载
-            await this.serviceRegistryManager.loadRegistry();
-            const installed = this.serviceRegistryManager.listInstalled();
-            logger_1.default.debug({
-                installedCount: installed.length,
-                installed: installed.map((s) => ({
-                    service_id: s.service_id,
-                    version: s.version,
-                    platform: s.platform
-                }))
-            }, 'Getting installed services for heartbeat');
-            // 转换为协议格式
-            return installed.map((service) => ({
-                service_id: service.service_id,
-                version: service.version,
-                platform: service.platform,
-            }));
+        // 2. 补充实际运行但未在注册表中的本地服务（Python）
+        const serviceIdMap = {
+            nmt: 'nmt-m2m100',
+            tts: 'piper-tts',
+            yourtts: 'your-tts',
+            speaker_embedding: 'speaker-embedding',
+            faster_whisper_vad: 'faster-whisper-vad',
+        };
+        if (this.pythonServiceManager) {
+            const pythonServiceNames = ['nmt', 'tts', 'yourtts', 'speaker_embedding', 'faster_whisper_vad'];
+            for (const serviceName of pythonServiceNames) {
+                const serviceId = serviceIdMap[serviceName];
+                const alreadyAdded = result.some(s => s.service_id === serviceId);
+                if (!alreadyAdded) {
+                    const status = this.pythonServiceManager.getServiceStatus(serviceName);
+                    if (status?.running) {
+                        pushService(serviceId, 'running');
+                        logger_1.default.debug({ serviceId, serviceName }, 'Added running service to installed services list (not in registry)');
+                    }
+                }
+            }
         }
-        catch (error) {
-            logger_1.default.error({ error }, 'Failed to get installed services for heartbeat');
-            return [];
+        // 3. 补充 Rust 服务（node-inference）
+        if (this.rustServiceManager && typeof this.rustServiceManager.getStatus === 'function') {
+            const rustStatus = this.rustServiceManager.getStatus();
+            const alreadyAdded = result.some(s => s.service_id === 'node-inference');
+            if (!alreadyAdded && rustStatus?.running) {
+                pushService('node-inference', 'running');
+                logger_1.default.debug({}, 'Added node-inference to installed services list (not in registry)');
+            }
         }
+        logger_1.default.info({
+            totalCount: result.length,
+            services: result.map(s => `${s.service_id}:${s.status}`),
+        }, 'Getting installed services for heartbeat (type-level)');
+        return result;
+    }
+    /**
+     * 聚合 type 级可用性：同一类型只要有 GPU+running 的实现即 ready
+     */
+    async getCapabilityByType(installedServices) {
+        const types = [messages_1.ServiceType.ASR, messages_1.ServiceType.NMT, messages_1.ServiceType.TTS, messages_1.ServiceType.TONE];
+        const capability = [];
+        for (const t of types) {
+            const runningGpu = installedServices.filter(s => s.type === t && s.device === 'gpu' && s.status === 'running');
+            if (runningGpu.length > 0) {
+                capability.push({
+                    type: t,
+                    ready: true,
+                    ready_impl_ids: runningGpu.map(s => s.service_id),
+                });
+                continue;
+            }
+            const anyInstalled = installedServices.some(s => s.type === t);
+            const anyRunning = installedServices.some(s => s.type === t && s.status === 'running');
+            const anyGpu = installedServices.some(s => s.type === t && s.device === 'gpu');
+            let reason = 'no_impl';
+            if (anyInstalled && anyGpu && !anyRunning)
+                reason = 'gpu_impl_not_running';
+            else if (anyInstalled && anyRunning && !anyGpu)
+                reason = 'only_cpu_running';
+            else if (anyInstalled && !anyRunning)
+                reason = 'no_running_impl';
+            capability.push({
+                type: t,
+                ready: false,
+                reason,
+            });
+        }
+        logger_1.default.debug({ capability }, 'Built capability_by_type');
+        return capability;
     }
     stopHeartbeat() {
         if (this.heartbeatInterval) {
             clearInterval(this.heartbeatInterval);
             this.heartbeatInterval = null;
         }
+        // 清理防抖定时器
+        if (this.heartbeatDebounceTimer) {
+            clearTimeout(this.heartbeatDebounceTimer);
+            this.heartbeatDebounceTimer = null;
+        }
+    }
+    /**
+     * 触发立即心跳（带防抖机制）
+     * 避免在短时间内多次触发导致心跳过于频繁
+     */
+    triggerImmediateHeartbeat() {
+        // 如果已有待发送的立即心跳，取消它
+        if (this.heartbeatDebounceTimer) {
+            clearTimeout(this.heartbeatDebounceTimer);
+        }
+        // 设置新的防抖定时器
+        this.heartbeatDebounceTimer = setTimeout(async () => {
+            this.heartbeatDebounceTimer = null;
+            if (this.ws && this.ws.readyState === ws_1.default.OPEN && this.nodeId) {
+                logger_1.default.debug({}, 'Triggering immediate heartbeat due to service state change');
+                await this.sendHeartbeatOnce();
+            }
+        }, this.HEARTBEAT_DEBOUNCE_MS);
     }
     async getSystemResources() {
         try {
@@ -421,68 +578,19 @@ class NodeAgent {
                     return status?.running === true;
                 }
             }
+            else if (serviceId === 'faster-whisper-vad') {
+                // faster-whisper-vad 通过 PythonServiceManager 管理（服务名是 'faster_whisper_vad'）
+                if (this.pythonServiceManager && typeof this.pythonServiceManager.getServiceStatus === 'function') {
+                    const status = this.pythonServiceManager.getServiceStatus('faster_whisper_vad');
+                    return status?.running === true;
+                }
+            }
             // 未知的服务 ID 或服务管理器不可用，返回 false
             return false;
         }
         catch (error) {
             logger_1.default.error({ error, serviceId }, 'Failed to check service running status');
             return false;
-        }
-    }
-    /**
-     * 获取节点当前的 capability_state（服务包能力图）
-     * Phase 1 规范：key 必须是 service_id（服务包 ID），value 为该服务包当前状态
-     *
-     * 状态判断逻辑：
-     * - ready: 服务包已安装且正在运行（进程正在运行）
-     * - not_installed: 服务包未安装或已安装但未运行
-     * - error: 服务包安装失败或损坏（暂不支持，预留）
-     */
-    async getCapabilityState() {
-        const capabilityState = {};
-        try {
-            if (!this.serviceRegistryManager) {
-                logger_1.default.warn('ServiceRegistryManager not available, returning empty capability_state');
-                return {};
-            }
-            // 确保注册表已加载
-            await this.serviceRegistryManager.loadRegistry();
-            // 获取所有已安装的服务包
-            const installedServices = this.serviceRegistryManager.listInstalled();
-            // 获取所有 service_id（去重）
-            const serviceIds = new Set();
-            installedServices.forEach((service) => {
-                serviceIds.add(service.service_id);
-            });
-            // 为每个 service_id 检查状态
-            for (const serviceId of serviceIds) {
-                // 检查服务是否正在运行
-                const isRunning = this.isServiceRunning(serviceId);
-                if (isRunning) {
-                    // 服务包已安装且正在运行，状态为 ready
-                    capabilityState[serviceId] = 'ready';
-                }
-                else {
-                    // 服务包已安装但未运行，状态为 not_installed
-                    capabilityState[serviceId] = 'not_installed';
-                }
-            }
-            const readyCount = Object.values(capabilityState).filter(s => s === 'ready').length;
-            logger_1.default.debug({
-                capabilityStateCount: Object.keys(capabilityState).length,
-                readyCount,
-                readyServices: Object.entries(capabilityState)
-                    .filter(([_, status]) => status === 'ready')
-                    .map(([serviceId, _]) => serviceId),
-                notInstalledServices: Object.entries(capabilityState)
-                    .filter(([_, status]) => status === 'not_installed')
-                    .map(([serviceId, _]) => serviceId)
-            }, 'Built capability_state from service registry (service_id based)');
-            return capabilityState;
-        }
-        catch (error) {
-            logger_1.default.error({ error }, 'Failed to get capability_state from service registry');
-            return {};
         }
     }
     async handleMessage(data) {

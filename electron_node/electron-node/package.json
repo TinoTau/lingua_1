@@ -8,7 +8,7 @@
     "dev:main": "tsc -w --project tsconfig.main.json",
     "dev:renderer": "vite",
     "build": "npm run build:main && npm run build:renderer",
-    "build:main": "tsc --project tsconfig.main.json",
+    "build:main": "tsc --project tsconfig.main.json && node scripts/fix-service-type-export.js",
     "build:renderer": "vite build",
     "start": "electron .",
     "package": "electron-builder",
@@ -49,6 +49,7 @@
   "dependencies": {
     "adm-zip": "^0.5.10",
     "axios": "^1.0.0",
+    "module-alias": "^2.2.3",
     "pino": "^8.17.0",
     "pino-pretty": "^10.3.0",
     "react": "^18.0.0",

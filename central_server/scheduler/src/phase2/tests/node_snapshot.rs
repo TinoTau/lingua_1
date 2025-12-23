@@ -1,7 +1,18 @@
+    use crate::phase2::Phase2Runtime;
+    use crate::node_registry::Node as RegistryNode;
+
     fn sample_node(node_id: &str) -> RegistryNode {
         let now = chrono::Utc::now();
-        let mut capability_state: HashMap<String, ModelStatus> = HashMap::new();
-        capability_state.insert("node-inference".to_string(), ModelStatus::Ready);
+        let capability_by_type = vec![CapabilityByType {
+            r#type: ServiceType::Asr,
+            ready: true,
+            reason: None,
+            ready_impl_ids: Some(vec!["node-inference".to_string()]),
+        }];
+        let capability_by_type_map = capability_by_type
+            .iter()
+            .map(|c| (c.r#type.clone(), c.ready))
+            .collect();
 
         RegistryNode {
             node_id: node_id.to_string(),
@@ -29,8 +40,15 @@
             }],
             installed_services: vec![InstalledService {
                 service_id: "node-inference".to_string(),
-                version: "1".to_string(),
-                platform: "windows-x64".to_string(),
+                r#type: ServiceType::Asr,
+                device: DeviceType::Gpu,
+                status: ServiceStatus::Running,
+                version: Some("1".to_string()),
+                model_id: None,
+                engine: None,
+                mem_mb: None,
+                warmup_ms: None,
+                last_error: None,
             }],
             features_supported: FeatureFlags {
                 emotion_detection: None,
@@ -41,7 +59,8 @@
                 persona_adaptation: None,
             },
             accept_public_jobs: true,
-            capability_state,
+            capability_by_type,
+            capability_by_type_map,
             current_jobs: 0,
             max_concurrent_jobs: 4,
             last_heartbeat: now,

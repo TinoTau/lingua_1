@@ -115,6 +115,7 @@
                         trace_id,
                         group_id: None,
                         part_index: None,
+                        node_completed_at_ms: None,
                     };
                     let _ = node_tx2.send(serde_json::to_string(&ack).unwrap());
                     let _ = node_tx2.send(serde_json::to_string(&started).unwrap());

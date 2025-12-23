@@ -1,51 +1,51 @@
 // 节点验证逻辑
 
-use crate::messages::{FeatureFlags, ModelStatus};
+use crate::messages::{FeatureFlags, ServiceType};
 use super::types::Node;
 
-/// Phase 1：capability_state 语义统一为 service_id。
-/// required_ids 也被视为 service_id 列表（服务包 ID / 逻辑服务 ID）。
-pub fn node_has_required_services_ready(node: &Node, required_ids: &[String]) -> bool {
-    let result = required_ids.iter().all(|service_id| {
-        node.capability_state
-            .get(service_id)
-            .map(|s| s == &ModelStatus::Ready)
+/// 检查节点是否具备所需的 ServiceType（按 capability_by_type.ready）
+pub fn node_has_required_types_ready(node: &Node, required_types: &[ServiceType]) -> bool {
+    let result = required_types.iter().all(|t| {
+        node.capability_by_type
+            .iter()
+            .find(|c| c.r#type == *t)
+            .map(|c| c.ready)
             .unwrap_or(false)
     });
-    
-    // 如果检查失败，记录详细日志
+
     if !result {
         use tracing::debug;
-        let missing_or_not_ready: Vec<String> = required_ids
+        let missing_or_not_ready: Vec<String> = required_types
             .iter()
-            .filter(|service_id| {
-                node.capability_state
-                    .get(*service_id)
-                    .map(|s| s != &ModelStatus::Ready)
-                    .unwrap_or(true)
+            .filter(|t| {
+                !node
+                    .capability_by_type_map
+                    .get(*t)
+                    .copied()
+                    .unwrap_or(false)
             })
-            .cloned()
+            .map(|t| format!("{:?}", t))
             .collect();
         debug!(
             node_id = %node.node_id,
-            required_services = ?required_ids,
+            required_types = ?required_types,
             missing_or_not_ready = ?missing_or_not_ready,
-            capability_state = ?node.capability_state,
+            capability_by_type = ?node.capability_by_type,
             installed_services = ?node.installed_services.iter().map(|s| &s.service_id).collect::<Vec<_>>(),
-            "Node does not have all required services ready"
+            "Node does not have all required types ready"
         );
     }
-    
+
     result
 }
 
-/// Phase 1：基于 installed_services 的硬过滤（service_id 存在即可）。
-pub fn node_has_installed_services(node: &Node, required_ids: &[String]) -> bool {
-    if required_ids.is_empty() {
+/// 基于 installed_services 的硬过滤（type 存在即可）。
+pub fn node_has_installed_types(node: &Node, required_types: &[ServiceType]) -> bool {
+    if required_types.is_empty() {
         return true;
     }
-    required_ids.iter().all(|rid| {
-        node.installed_services.iter().any(|s| s.service_id == *rid)
+    required_types.iter().all(|rt| {
+        node.installed_services.iter().any(|s| s.r#type == *rt)
     })
 }
 
@@ -101,34 +101,56 @@ pub fn node_supports_features(node: &Node, required_features: &Option<FeatureFla
 /// 
 /// # 要求
 /// - GPU 使用率必须检查（所有节点都必须有 GPU）
-/// - CPU 使用率阈值：50%
-/// - GPU 使用率阈值：75%
-/// - 内存使用率阈值：75%（内存可以更高使用率）
-pub fn is_node_resource_available(node: &Node, _resource_threshold: f32) -> bool {
-    // CPU 和 GPU 使用独立的阈值
-    const CPU_THRESHOLD: f32 = 50.0;
-    const GPU_THRESHOLD: f32 = 75.0;
+/// 检查节点资源是否可用
+/// - CPU 使用率阈值：使用 resource_threshold 参数
+/// - GPU 使用率阈值：使用 resource_threshold 参数
+/// - 内存使用率阈值：使用 resource_threshold 参数
+pub fn is_node_resource_available(node: &Node, resource_threshold: f32) -> bool {
+    use tracing::debug;
     
-    // 检查 CPU 使用率（阈值：50%）
-    if node.cpu_usage > CPU_THRESHOLD {
+    // 检查 CPU 使用率
+    if node.cpu_usage > resource_threshold {
+        debug!(
+            node_id = %node.node_id,
+            cpu_usage = node.cpu_usage,
+            threshold = resource_threshold,
+            "Node resource check failed: CPU usage exceeds threshold"
+        );
         return false;
     }
     
-    // 检查 GPU 使用率（所有节点都必须有 GPU，阈值：75%）
-    if let Some(gpu_usage) = node.gpu_usage {
-        if gpu_usage > GPU_THRESHOLD {
-            return false;
-        }
-    } else {
-        // 如果没有 GPU 使用率信息，认为不可用（所有节点都必须有 GPU）
+    // 检查 GPU 使用率（所有节点都必须有 GPU）
+    // 如果 GPU 使用率为 None，使用 0.0 作为默认值（节点端可能暂时无法获取 GPU 使用率）
+    let gpu_usage = node.gpu_usage.unwrap_or(0.0);
+    if gpu_usage > resource_threshold {
+        debug!(
+            node_id = %node.node_id,
+            gpu_usage = gpu_usage,
+            threshold = resource_threshold,
+            "Node resource check failed: GPU usage exceeds threshold"
+        );
         return false;
     }
     
-    // 检查内存使用率（阈值：75%，内存可以更高使用率）
-    const MEMORY_THRESHOLD: f32 = 75.0;
-    if node.memory_usage > MEMORY_THRESHOLD {
+    // 检查内存使用率
+    if node.memory_usage > resource_threshold {
+        debug!(
+            node_id = %node.node_id,
+            memory_usage = node.memory_usage,
+            threshold = resource_threshold,
+            "Node resource check failed: Memory usage exceeds threshold"
+        );
         return false;
     }
+    
+    debug!(
+        node_id = %node.node_id,
+        cpu_usage = node.cpu_usage,
+        gpu_usage = gpu_usage,
+        memory_usage = node.memory_usage,
+        threshold = resource_threshold,
+        "Node resource check passed"
+    );
     
     true
 }

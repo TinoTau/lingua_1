@@ -1,5 +1,6 @@
 use super::NodeRegistry;
 use std::collections::{HashMap, HashSet};
+use std::str::FromStr;
 use std::time::Instant;
 
 impl NodeRegistry {
@@ -136,7 +137,7 @@ fn determine_pool_for_node(cfg: &crate::core::config::Phase3Config, n: &super::N
         return None;
     }
 
-    // 收集所有匹配 pools（node.installed_services 覆盖 pool.required_services）
+    // 收集所有匹配 pools（按类型匹配：node.installed_services.type 覆盖 pool.required_services）
     let mut matching: Vec<(u16, usize)> = Vec::new(); // (pool_id, specificity_len)
     for p in cfg.pools.iter() {
         if p.required_services.is_empty() {
@@ -147,7 +148,8 @@ fn determine_pool_for_node(cfg: &crate::core::config::Phase3Config, n: &super::N
         let ok = p
             .required_services
             .iter()
-            .all(|rid| n.installed_services.iter().any(|s| s.service_id == *rid));
+            .filter_map(|x| crate::messages::ServiceType::from_str(x).ok())
+            .all(|t| n.installed_services.iter().any(|s| s.r#type == t));
         if ok {
             matching.push((p.pool_id, p.required_services.len()));
         }

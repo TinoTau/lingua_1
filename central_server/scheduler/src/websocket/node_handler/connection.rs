@@ -30,10 +30,11 @@ pub async fn handle_node(socket: WebSocket, state: AppState) {
     while let Some(msg) = receiver.next().await {
         match msg {
             Ok(Message::Text(text)) => {
-                debug!("Received node message: {}", text);
+                info!("Received node message (length: {}): {}", text.len(), text);
                 
                 match serde_json::from_str::<NodeMessage>(&text) {
                     Ok(message) => {
+                        info!("Successfully parsed node message, type: {:?}", std::mem::discriminant(&message));
                         match handle_node_message(message, &state, &mut node_id, &tx).await {
                             Ok(()) => {}
                             Err(e) => {
@@ -42,7 +43,7 @@ pub async fn handle_node(socket: WebSocket, state: AppState) {
                         }
                     }
                     Err(e) => {
-                        warn!("Failed to parse node message: {}", e);
+                        warn!("Failed to parse node message: {}. Raw message (first 500 chars): {}", e, &text[..text.len().min(500)]);
                     }
                 }
             }

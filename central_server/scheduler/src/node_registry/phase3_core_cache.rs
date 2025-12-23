@@ -180,32 +180,26 @@ impl NodeRegistry {
 fn compute_node_state(
     n: &super::Node,
     pool_id: u16,
-    core: &CoreServicesConfig,
+    _core: &CoreServicesConfig,
 ) -> NodeCoreState {
     // online：用于 pool online_nodes
     let online = n.online;
     // ready：用于 ready_nodes 与核心服务覆盖（保持与调度路径一致：只统计 online+Ready）
     let ready = n.online && n.status == NodeStatus::Ready;
 
-    let (asr_id, nmt_id, tts_id) = (
-        core.asr_service_id.as_str(),
-        core.nmt_service_id.as_str(),
-        core.tts_service_id.as_str(),
-    );
-
-    let asr_installed = ready && !asr_id.is_empty() && n.installed_services.iter().any(|s| s.service_id == asr_id);
-    let nmt_installed = ready && !nmt_id.is_empty() && n.installed_services.iter().any(|s| s.service_id == nmt_id);
-    let tts_installed = ready && !tts_id.is_empty() && n.installed_services.iter().any(|s| s.service_id == tts_id);
-
     let asr_ready = ready
-        && !asr_id.is_empty()
-        && n.capability_state.get(asr_id).map(|s| s == &crate::messages::ModelStatus::Ready).unwrap_or(false);
+        && n.capability_by_type_map.get(&crate::messages::ServiceType::Asr).copied().unwrap_or(false);
     let nmt_ready = ready
-        && !nmt_id.is_empty()
-        && n.capability_state.get(nmt_id).map(|s| s == &crate::messages::ModelStatus::Ready).unwrap_or(false);
+        && n.capability_by_type_map.get(&crate::messages::ServiceType::Nmt).copied().unwrap_or(false);
     let tts_ready = ready
-        && !tts_id.is_empty()
-        && n.capability_state.get(tts_id).map(|s| s == &crate::messages::ModelStatus::Ready).unwrap_or(false);
+        && n.capability_by_type_map.get(&crate::messages::ServiceType::Tts).copied().unwrap_or(false);
+
+    let asr_installed = ready
+        && n.installed_services.iter().any(|s| s.r#type == crate::messages::ServiceType::Asr);
+    let nmt_installed = ready
+        && n.installed_services.iter().any(|s| s.r#type == crate::messages::ServiceType::Nmt);
+    let tts_installed = ready
+        && n.installed_services.iter().any(|s| s.r#type == crate::messages::ServiceType::Tts);
 
     NodeCoreState {
         pool_id,

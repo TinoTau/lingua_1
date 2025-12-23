@@ -11,7 +11,7 @@
 ### Electron Node 客户端
 - [Electron Node 文档](./electron_node/README.md)
 - [架构建议](./electron_node/ARCHITECTURE_RECOMMENDATION.md)
-- [能力状态实现](./electron_node/CAPABILITY_STATE_IMPLEMENTATION.md)
+- [**ServiceType 能力重构总结**](../architecture/SERVICE_TYPE_CAPABILITY_REFACTOR_SUMMARY.md) - 服务类型改造过程及结果总结 ⭐
 - [功能对比](./electron_node/FEATURE_COMPARISON.md)
 - [GPU 统计追踪](./electron_node/GPU_STATISTICS_TRACKING.md)
 - [模块热插拔实现](./electron_node/MODULE_HOT_PLUG_IMPLEMENTATION.md)

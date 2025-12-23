@@ -4,11 +4,10 @@ use lingua_scheduler::node_registry::NodeRegistry;
 use lingua_scheduler::managers::NodeStatusManager;
 use lingua_scheduler::managers::NodeConnectionManager;
 use lingua_scheduler::messages::{
-    FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, InstalledService, ModelStatus, NodeStatus,
+    FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, InstalledService, ServiceType, DeviceType, ServiceStatus, NodeStatus,
 };
 use lingua_scheduler::core::config::NodeHealthConfig;
 use std::sync::Arc;
-use std::collections::HashMap;
 
 fn create_test_hardware() -> HardwareInfo {
     HardwareInfo {
@@ -59,18 +58,39 @@ fn create_core_installed_services() -> Vec<InstalledService> {
     vec![
         InstalledService {
             service_id: "node-inference".to_string(),
-            version: "1.0.0".to_string(),
-            platform: "linux-x64".to_string(),
+            r#type: ServiceType::Asr,
+            device: DeviceType::Gpu,
+            status: ServiceStatus::Running,
+            version: Some("1.0.0".to_string()),
+            model_id: None,
+            engine: None,
+            mem_mb: None,
+            warmup_ms: None,
+            last_error: None,
         },
         InstalledService {
             service_id: "nmt-m2m100".to_string(),
-            version: "1.0.0".to_string(),
-            platform: "linux-x64".to_string(),
+            r#type: ServiceType::Nmt,
+            device: DeviceType::Gpu,
+            status: ServiceStatus::Running,
+            version: Some("1.0.0".to_string()),
+            model_id: None,
+            engine: None,
+            mem_mb: None,
+            warmup_ms: None,
+            last_error: None,
         },
         InstalledService {
             service_id: "piper-tts".to_string(),
-            version: "1.0.0".to_string(),
-            platform: "linux-x64".to_string(),
+            r#type: ServiceType::Tts,
+            device: DeviceType::Gpu,
+            status: ServiceStatus::Running,
+            version: Some("1.0.0".to_string()),
+            model_id: None,
+            engine: None,
+            mem_mb: None,
+            warmup_ms: None,
+            last_error: None,
         },
     ]
 }
@@ -96,7 +116,7 @@ async fn test_node_initial_status_is_registering() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     // 初始状态应该是 registering
@@ -125,7 +145,7 @@ async fn test_node_id_conflict_detection() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     // 尝试用相同的 node_id 注册第二个节点，应该失败
@@ -146,7 +166,7 @@ async fn test_node_id_conflict_detection() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await;
     
     assert!(result.is_err());
@@ -175,7 +195,7 @@ async fn test_select_node_filters_by_status() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     // 节点状态是 registering，不应该被选中
@@ -227,13 +247,11 @@ async fn test_node_status_manager_health_check() {
             persona_adaptation: None,
         },
         true,
-        Some({
-            let mut state = HashMap::new();
-            state.insert("node-inference".to_string(), ModelStatus::Ready);
-            state.insert("nmt-m2m100".to_string(), ModelStatus::Ready);
-            state.insert("piper-tts".to_string(), ModelStatus::Ready);
-            state
-        }),
+        vec![
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Asr, ready: true, reason: None, ready_impl_ids: Some(vec!["node-inference".to_string()]) },
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Nmt, ready: true, reason: None, ready_impl_ids: Some(vec!["nmt-m2m100".to_string()]) },
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(vec!["piper-tts".to_string()]) },
+        ],
     ).await.unwrap();
     
     // 更新心跳，触发健康检查
@@ -281,13 +299,11 @@ async fn test_node_status_manager_registering_to_ready() {
             persona_adaptation: None,
         },
         true,
-        Some({
-            let mut state = HashMap::new();
-            state.insert("node-inference".to_string(), ModelStatus::Ready);
-            state.insert("nmt-m2m100".to_string(), ModelStatus::Ready);
-            state.insert("piper-tts".to_string(), ModelStatus::Ready);
-            state
-        }),
+        vec![
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Asr, ready: true, reason: None, ready_impl_ids: Some(vec!["node-inference".to_string()]) },
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Nmt, ready: true, reason: None, ready_impl_ids: Some(vec!["nmt-m2m100".to_string()]) },
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(vec!["piper-tts".to_string()]) },
+        ],
     ).await.unwrap();
     
     // 连续发送 3 次心跳（健康检查通过）
@@ -335,13 +351,11 @@ async fn test_node_status_manager_ready_to_degraded() {
             persona_adaptation: None,
         },
         true,
-        Some({
-            let mut state = HashMap::new();
-            state.insert("node-inference".to_string(), ModelStatus::Ready);
-            state.insert("nmt-m2m100".to_string(), ModelStatus::Ready);
-            state.insert("piper-tts".to_string(), ModelStatus::Ready);
-            state
-        }),
+        vec![
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Asr, ready: true, reason: None, ready_impl_ids: Some(vec!["node-inference".to_string()]) },
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Nmt, ready: true, reason: None, ready_impl_ids: Some(vec!["nmt-m2m100".to_string()]) },
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(vec!["piper-tts".to_string()]) },
+        ],
     ).await.unwrap();
     
     // 设置为 ready 状态
@@ -358,14 +372,11 @@ async fn test_node_status_manager_ready_to_degraded() {
             None,
             None,
             0,
-            Some({
-                let mut state = HashMap::new();
-                // 模型状态为 NotReady，导致健康检查失败
-                state.insert("node-inference".to_string(), ModelStatus::Error);
-                state.insert("nmt-m2m100".to_string(), ModelStatus::Error);
-                state.insert("piper-tts".to_string(), ModelStatus::Error);
-                state
-            }),
+            Some(vec![
+                lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Asr, ready: false, reason: Some("error".to_string()), ready_impl_ids: None },
+                lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Nmt, ready: false, reason: Some("error".to_string()), ready_impl_ids: None },
+                lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Tts, ready: false, reason: Some("error".to_string()), ready_impl_ids: None },
+            ]),
         ).await;
         manager.on_heartbeat(&node.node_id).await;
     }
@@ -400,13 +411,11 @@ async fn test_node_status_manager_degraded_to_ready() {
             persona_adaptation: None,
         },
         true,
-        Some({
-            let mut state = HashMap::new();
-            state.insert("node-inference".to_string(), ModelStatus::Ready);
-            state.insert("nmt-m2m100".to_string(), ModelStatus::Ready);
-            state.insert("piper-tts".to_string(), ModelStatus::Ready);
-            state
-        }),
+        vec![
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Asr, ready: true, reason: None, ready_impl_ids: Some(vec!["node-inference".to_string()]) },
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Nmt, ready: true, reason: None, ready_impl_ids: Some(vec!["nmt-m2m100".to_string()]) },
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(vec!["piper-tts".to_string()]) },
+        ],
     ).await.unwrap();
     
     // 设置为 degraded 状态
@@ -421,13 +430,11 @@ async fn test_node_status_manager_degraded_to_ready() {
         None,
         None,
         0,
-        Some({
-            let mut state = HashMap::new();
-            state.insert("node-inference".to_string(), ModelStatus::Ready);
-            state.insert("nmt-m2m100".to_string(), ModelStatus::Ready);
-            state.insert("piper-tts".to_string(), ModelStatus::Ready);
-            state
-        }),
+        Some(vec![
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Asr, ready: true, reason: None, ready_impl_ids: Some(vec!["node-inference".to_string()]) },
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Nmt, ready: true, reason: None, ready_impl_ids: Some(vec!["nmt-m2m100".to_string()]) },
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(vec!["piper-tts".to_string()]) },
+        ]),
     ).await;
     manager.on_heartbeat(&node.node_id).await;
     
@@ -463,7 +470,7 @@ async fn test_node_status_manager_heartbeat_timeout() {
             persona_adaptation: None,
         },
         true,
-        None,
+        vec![],
     ).await.unwrap();
     
     // 设置为 ready 状态
@@ -507,14 +514,11 @@ async fn test_node_status_manager_warmup_timeout() {
             persona_adaptation: None,
         },
         true,
-        Some({
-            let mut state = HashMap::new();
-            // 模型状态为 NotReady，导致健康检查失败
-            state.insert("node-inference".to_string(), ModelStatus::Error);
-            state.insert("nmt-m2m100".to_string(), ModelStatus::Error);
-            state.insert("piper-tts".to_string(), ModelStatus::Error);
-            state
-        }),
+        vec![
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Asr, ready: false, reason: Some("error".to_string()), ready_impl_ids: None },
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Nmt, ready: false, reason: Some("error".to_string()), ready_impl_ids: None },
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Tts, ready: false, reason: Some("error".to_string()), ready_impl_ids: None },
+        ],
     ).await.unwrap();
     
     // 发送一次心跳（健康检查失败，会记录到 health_check_history）
@@ -526,14 +530,12 @@ async fn test_node_status_manager_warmup_timeout() {
         None,
         None,
         0,
-        Some({
+        Some(vec![
             // 保持模型状态为 Error，导致健康检查失败
-            let mut state = HashMap::new();
-            state.insert("node-inference".to_string(), ModelStatus::Error);
-            state.insert("nmt-m2m100".to_string(), ModelStatus::Error);
-            state.insert("piper-tts".to_string(), ModelStatus::Error);
-            state
-        }),
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Asr, ready: false, reason: Some("error".to_string()), ready_impl_ids: None },
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Nmt, ready: false, reason: Some("error".to_string()), ready_impl_ids: None },
+            lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Tts, ready: false, reason: Some("error".to_string()), ready_impl_ids: None },
+        ]),
     ).await;
     manager.on_heartbeat(&node.node_id).await;
     

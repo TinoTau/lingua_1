@@ -77,7 +77,9 @@ docs/
 - [系统架构](./SYSTEM_ARCHITECTURE.md)
 - [Web 客户端架构](./web_client/ARCHITECTURE.md)
 - [模块化架构](./electron_node/modular/LINGUA_完整技术说明书_v2.md)
-- [服务类型化能力改造方案](./architecture/SERVICE_TYPE_CAPABILITY_REDESIGN.md) - 将 service_id 粒度改为 ASR/NMT/TTS/TONE 类型粒度
+- [**ServiceType 能力重构总结**](./architecture/SERVICE_TYPE_CAPABILITY_REFACTOR_SUMMARY.md) - 服务类型改造过程及结果总结 ⭐
+- [节点服务独立性重构方案 - 决策文档](./architecture/NODE_SERVICE_INDEPENDENCE_REFACTOR_DECISION.md) - 面向决策部门的完整方案文档（当前架构、改造目的、方案A详细说明）⭐
+- [服务热插拔机制说明](./architecture/SERVICE_HOTPLUG_MECHANISM.md) - 服务热插拔实现机制与改造影响分析
 
 ---
 

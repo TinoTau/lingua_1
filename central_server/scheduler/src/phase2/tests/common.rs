@@ -1,6 +1,8 @@
     use super::*;
-    use crate::messages::{FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, InstalledService, NodeStatus, ModelStatus, ResourceUsage};
-    use std::collections::HashMap;
+    use crate::messages::{
+        CapabilityByType, DeviceType, FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, InstalledService,
+        NodeStatus, ResourceUsage, ServiceStatus, ServiceType,
+    };
     use base64::Engine as _;
     use futures_util::{SinkExt, StreamExt};
 

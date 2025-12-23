@@ -1,5 +1,5 @@
 import { App } from './app';
-import { renderMainMenu, renderRoomMode, renderRoom, setUIMode, getUIMode } from './ui/renderers';
+import { renderMainMenu, renderRoom, setUIMode, getUIMode } from './ui/renderers';
 import { RoomMember, SessionState } from './types';
 
 // 初始化应用
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderMainMenu(container, app);
 
   // 监听房间状态变化
-  const checkRoomStatus = setInterval(() => {
+  setInterval(() => {
     if (app.getIsInRoom() && getUIMode() !== 'room') {
       setUIMode('room');
       renderRoom(container, app);
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 500);
 
   // 注册全局回调（用于房间状态变化时更新 UI）
-  (window as any).onRoomCreated = (roomCode: string) => {
+  (window as any).onRoomCreated = (_roomCode: string) => {
     if (getUIMode() === 'room-create' || getUIMode() === 'room-join') {
       setUIMode('room');
       renderRoom(container, app);

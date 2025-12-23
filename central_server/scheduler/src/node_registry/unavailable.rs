@@ -38,6 +38,9 @@ impl NodeRegistry {
     }
 
     /// 检查某节点是否对 required_model_ids（服务包 id）存在暂不可用标记。
+    /// 
+    /// 注意：此方法目前未使用，保留用于未来可能的服务包级别的不可用标记检查。
+    #[allow(dead_code)]
     pub(super) async fn has_unavailable_required_services(
         &self,
         node_id: &str,

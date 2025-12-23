@@ -112,7 +112,7 @@ pub fn start_job_timeout_manager(
 
                 // 选新节点：优先避开上一节点；若没有其他节点可用，则允许回退到同一节点
                 // （通过 attempt_id 做结果去重，避免“同一节点取消+重派”的竞态覆盖）
-                let required = match state.dispatcher.required_services_for_job(&job).await {
+                let required = match state.dispatcher.required_types_for_job(&job).await {
                     Ok(v) => v,
                     Err(e) => {
                         warn!(trace_id = %job.trace_id, job_id = %job.job_id, error = %e, "计算 required_services 失败，标记为失败");
@@ -124,7 +124,7 @@ pub fn start_job_timeout_manager(
 
                 let (mut selected, _bd) = state
                     .node_registry
-                    .select_node_with_models_excluding_with_breakdown(
+                    .select_node_with_types_excluding_with_breakdown(
                         &job.src_lang,
                         &job.tgt_lang,
                         &required,
@@ -135,7 +135,7 @@ pub fn start_job_timeout_manager(
                 if selected.is_none() {
                     let (fallback, _bd2) = state
                         .node_registry
-                        .select_node_with_models_excluding_with_breakdown(
+                        .select_node_with_types_excluding_with_breakdown(
                             &job.src_lang,
                             &job.tgt_lang,
                             &required,

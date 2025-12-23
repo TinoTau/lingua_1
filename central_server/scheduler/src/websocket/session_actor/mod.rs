@@ -3,7 +3,7 @@
 
 mod actor;
 mod events;
-mod state;
+pub mod state;
 
 pub use actor::{SessionActor, SessionActorHandle};
 pub use events::SessionEvent;

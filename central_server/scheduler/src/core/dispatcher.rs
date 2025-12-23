@@ -503,9 +503,9 @@ impl JobDispatcher {
                 // 还需要检查节点是否具备所需的模型能力
                 if let Some(features) = &features {
                         if let Ok(required_models) =
-                            self.get_required_models_for_features(&pipeline, Some(features), &src_lang, &tgt_lang)
+                            self.get_required_types_for_features(&pipeline, Some(features), &src_lang, &tgt_lang)
                         {
-                        if !self.node_registry.check_node_has_models_ready(&node_id, &required_models).await {
+                        if !self.node_registry.check_node_has_types_ready(&node_id, &required_models).await {
                             // 节点不具备所需模型，回退到功能感知选择
                             let o = self
                                 .select_node_with_module_expansion_with_breakdown(
@@ -795,8 +795,8 @@ impl JobDispatcher {
         }
     }
 
-    pub async fn required_services_for_job(&self, job: &Job) -> anyhow::Result<Vec<String>> {
-        self.get_required_models_for_features(&job.pipeline, job.features.as_ref(), &job.src_lang, &job.tgt_lang)
+    pub async fn required_types_for_job(&self, job: &Job) -> anyhow::Result<Vec<crate::messages::ServiceType>> {
+        self.get_required_types_for_features(&job.pipeline, job.features.as_ref(), &job.src_lang, &job.tgt_lang)
     }
 
     /// 使用模块依赖展开算法选择节点
@@ -804,8 +804,8 @@ impl JobDispatcher {
     /// 按照 v2 技术说明书的步骤：
     /// 1. 解析用户请求 features
     /// 2. 递归展开依赖链
-    /// 3. 收集 required_models
-    /// 4. 过滤 capability_state == ready 的节点
+    /// 3. 收集 required_types (ServiceType)
+    /// 4. 过滤 capability_by_type ready 的节点
     /// 5. 负载均衡选节点
     async fn select_node_with_module_expansion_with_breakdown(
         &self,
@@ -850,11 +850,11 @@ impl JobDispatcher {
             }
         };
 
-        // 步骤 3: 收集 required_models
-        let required_models =
-            match self.get_required_models_for_features(pipeline, features.as_ref(), src_lang, tgt_lang)
+        // 步骤 3: 收集 required_types
+        let required_types =
+            match self.get_required_types_for_features(pipeline, features.as_ref(), src_lang, tgt_lang)
             {
-            Ok(models) => models,
+            Ok(types) => types,
             Err(e) => {
                 tracing::warn!("Failed to collect required models: {}", e);
                 // 回退到原来的方法
@@ -877,16 +877,16 @@ impl JobDispatcher {
             }
         };
 
-        // 步骤 4 & 5: 过滤 capability_state == ready 的节点，并负载均衡
+        // 步骤 4 & 5: 过滤 type ready 的节点，并负载均衡
         let p3 = self.node_registry.phase3_config().await;
         if p3.enabled && p3.mode == "two_level" {
             let (node_id, dbg, breakdown) = self
                 .node_registry
-                .select_node_with_models_two_level_excluding_with_breakdown(
+                .select_node_with_types_two_level_excluding_with_breakdown(
                     routing_key,
                     src_lang,
                     tgt_lang,
-                    &required_models,
+                    &required_types,
                     accept_public,
                     exclude_node_id,
                     Some(&self.core_services),
@@ -900,59 +900,64 @@ impl JobDispatcher {
             }
             SelectionOutcome {
                 node_id,
-                selector: "phase3",
+                selector: "phase3_type",
                 breakdown,
                 phase3_debug: Some(dbg),
             }
         } else {
             let (node_id, breakdown) = self
                 .node_registry
-                .select_node_with_models_excluding_with_breakdown(
+                .select_node_with_types_excluding_with_breakdown(
                     src_lang,
                     tgt_lang,
-                    &required_models,
+                    &required_types,
                     accept_public,
                     exclude_node_id,
                 )
                 .await;
             SelectionOutcome {
                 node_id,
-                selector: "models",
+                selector: "types",
                 breakdown,
                 phase3_debug: None,
             }
         }
     }
 
-    /// 获取功能所需的模型列表
-    fn get_required_models_for_features(
+    /// 获取功能所需的类型列表
+    fn get_required_types_for_features(
         &self,
         pipeline: &PipelineConfig,
         features: Option<&FeatureFlags>,
         _src_lang: &str,
         _tgt_lang: &str,
-    ) -> anyhow::Result<Vec<String>> {
-        let mut model_ids = Vec::new();
+    ) -> anyhow::Result<Vec<crate::messages::ServiceType>> {
+        let mut types = Vec::new();
 
-        // Phase 1：核心链路服务包（可配置，默认与 repo 内 services_index.json 对齐）
-        if pipeline.use_asr && !self.core_services.asr_service_id.is_empty() {
-            model_ids.push(self.core_services.asr_service_id.clone());
+        if pipeline.use_asr {
+            types.push(crate::messages::ServiceType::Asr);
         }
-        if pipeline.use_nmt && !self.core_services.nmt_service_id.is_empty() {
-            model_ids.push(self.core_services.nmt_service_id.clone());
+        if pipeline.use_nmt {
+            types.push(crate::messages::ServiceType::Nmt);
         }
-        if pipeline.use_tts && !self.core_services.tts_service_id.is_empty() {
-            model_ids.push(self.core_services.tts_service_id.clone());
+        if pipeline.use_tts {
+            types.push(crate::messages::ServiceType::Tts);
         }
 
-        // 可选模块的模型
+        // 可选模块映射到类型（当前仅 tone 可选）
         if let Some(features) = features {
             let module_names = ModuleResolver::parse_features_to_modules(features);
             let optional_models = ModuleResolver::collect_required_models(&module_names)?;
-            model_ids.extend(optional_models);
+            // tone: 若模块包含 tone（例如 voice_cloning 相关）则加入
+            if optional_models.iter().any(|m| m.contains("tone") || m.contains("speaker") || m.contains("voice")) {
+                types.push(crate::messages::ServiceType::Tone);
+            }
         }
 
-        Ok(model_ids)
+        types.sort();
+        types.dedup();
+
+        Ok(types)
     }
 
     pub async fn mark_job_dispatched(&self, job_id: &str) -> bool {

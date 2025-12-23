@@ -41,15 +41,14 @@ pub struct LanguageUsageStats {
 pub struct NodeStats {
     /// 当前连接的节点数
     pub connected_nodes: usize,
-    /// 每种服务包有多少节点正在提供算力（key 为 service_id，只统计 capability_state 中状态为 Ready 的）
-    /// 注意：此字段为向后兼容保留，实际与 service_node_counts 相同，建议使用 service_node_counts
-    pub model_node_counts: HashMap<String, usize>,
+    /// 每种 ServiceType 有多少节点正在提供算力（只统计 capability_by_type 中 ready=true 的）
+    pub type_node_counts: HashMap<String, usize>,
     /// Model Hub中可用的服务包列表
     pub available_services: Vec<ServiceInfo>,
     /// 服务包总数
     pub total_services: usize,
-    /// 每个服务包有多少节点正在使用（只统计 capability_state 中状态为 Ready 的，已下载但未启用的服务不计入）
-    pub service_node_counts: HashMap<String, usize>,
+    /// 每个 ServiceType 有多少节点正在使用（只统计 capability_by_type 中 ready=true 的，已安装未启用不计入）
+    pub type_in_use_counts: HashMap<String, usize>,
     /// 算力统计
     pub compute_power: ComputePowerStats,
 }
@@ -91,10 +90,10 @@ impl DashboardStats {
             },
             nodes: NodeStats {
                 connected_nodes: 0,
-                model_node_counts: HashMap::new(),
+                type_node_counts: HashMap::new(),
                 available_services: Vec::new(),
                 total_services: 0,
-                service_node_counts: HashMap::new(),
+                type_in_use_counts: HashMap::new(),
                 compute_power: ComputePowerStats {
                     total_cpu_power: 0.0,
                     total_gpu_power: 0.0,
@@ -213,19 +212,16 @@ impl DashboardStats {
         // 统计在线节点数
         let connected_nodes = nodes.values().filter(|n| n.online).count();
         
-        // 统计每个服务包有多少节点提供（向后兼容字段，与 service_node_counts 相同）
-        // Phase 1：capability_state key 语义统一为 service_id，因此这里统计的是 service_id
-        let mut model_node_counts: HashMap<String, usize> = HashMap::new();
+        // 统计每个 ServiceType 有多少节点提供（capability_by_type ready=true）
+        let mut type_node_counts: HashMap<String, usize> = HashMap::new();
         for node in nodes.values() {
             if !node.online {
                 continue;
             }
             
-            if !node.capability_state.is_empty() {
-                for (service_id, status) in &node.capability_state {
-                    if matches!(status, crate::messages::ModelStatus::Ready) {
-                        *model_node_counts.entry(service_id.clone()).or_insert(0) += 1;
-                    }
+            for entry in &node.capability_by_type {
+                if entry.ready {
+                    *type_node_counts.entry(format!("{:?}", entry.r#type)).or_insert(0) += 1;
                 }
             }
         }
@@ -234,21 +230,16 @@ impl DashboardStats {
         let available_services = state.service_catalog.get_services().await;
         let total_services = available_services.len();
 
-        // 统计每个服务包有多少节点正在使用（只统计 capability_state 中状态为 Ready 的服务）
-        // 只有正在使用的服务才能被计入热度，已下载但未启用的服务不应计入
-        let mut service_node_counts: HashMap<String, usize> = HashMap::new();
+        // 统计每个类型有多少节点正在使用（只统计 capability_by_type 中状态为 ready 的类型）
+        let mut type_in_use_counts: HashMap<String, usize> = HashMap::new();
         for node in nodes.values() {
             if !node.online {
                 continue;
             }
             
-            // 只统计 capability_state 中状态为 Ready 的服务
-            // 这确保只有正在使用的服务才被计入热度统计
-            if !node.capability_state.is_empty() {
-                for (service_id, status) in &node.capability_state {
-                    if matches!(status, crate::messages::ModelStatus::Ready) {
-                        *service_node_counts.entry(service_id.clone()).or_insert(0) += 1;
-                    }
+            for entry in &node.capability_by_type {
+                if entry.ready {
+                    *type_in_use_counts.entry(format!("{:?}", entry.r#type)).or_insert(0) += 1;
                 }
             }
         }
@@ -258,10 +249,10 @@ impl DashboardStats {
 
         NodeStats {
             connected_nodes,
-            model_node_counts,
+            type_node_counts,
             available_services,
             total_services,
-            service_node_counts,
+            type_in_use_counts,
             compute_power,
         }
     }

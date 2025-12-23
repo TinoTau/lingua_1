@@ -1,7 +1,7 @@
 // 音频缓冲区管理器测试
 // 测试流式音频块的累积和管理功能
 
-use lingua_scheduler::audio_buffer::AudioBufferManager;
+use lingua_scheduler::managers::AudioBufferManager;
 
 #[tokio::test]
 async fn test_audio_buffer_add_and_take() {

@@ -318,7 +318,10 @@ export class Recorder {
         return;
       }
 
-      this.analyser.getByteFrequencyData(this.dataArray);
+      // 类型转换：Uint8Array<ArrayBufferLike> -> Uint8Array
+      const dataArray = new Uint8Array(this.dataArray.length);
+      this.analyser.getByteFrequencyData(dataArray);
+      this.dataArray.set(dataArray);
       
       // 计算平均音量
       const average = this.dataArray.reduce((sum, value) => sum + value, 0) / this.dataArray.length;

@@ -54,6 +54,10 @@ impl SessionActorInternalState {
         if requested_index < self.current_utterance_index {
             return false;
         }
+        // 如果请求的 index 大于当前 index，说明是未来的 index，不允许
+        if requested_index > self.current_utterance_index {
+            return false;
+        }
         // 如果请求的 index 等于当前 index，且已经在 finalizing，不允许重复
         if requested_index == self.current_utterance_index && self.finalize_inflight.is_some() {
             return false;

@@ -36,7 +36,7 @@ pub(super) async fn handle_node_message(
             features_supported,
             advanced_features: _,
             accept_public_jobs,
-            capability_state,
+            capability_by_type,
         } => {
             register::handle_node_register(
                 state,
@@ -51,7 +51,7 @@ pub(super) async fn handle_node_message(
                 installed_services,
                 features_supported,
                 accept_public_jobs,
-                capability_state,
+                capability_by_type,
             )
             .await
         }
@@ -62,15 +62,15 @@ pub(super) async fn handle_node_message(
             resource_usage,
             installed_models,
             installed_services,
-            capability_state,
+            capability_by_type,
         } => {
             register::handle_node_heartbeat(
                 state,
                 &nid,
                 resource_usage,
                 installed_models,
-                installed_services,
-                capability_state,
+                Some(installed_services),
+                capability_by_type,
             )
             .await;
             Ok(())

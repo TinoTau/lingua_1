@@ -52,7 +52,15 @@ class PythonServiceManager {
         this.taskCounts = new Map(); // 任务计数
         this.gpuTrackers = new Map(); // GPU 跟踪器
         this.projectRoot = '';
+        this.onStatusChangeCallback = null; // 状态变化回调
         this.projectRoot = (0, project_root_1.findProjectRoot)();
+    }
+    /**
+     * 注册服务状态变化回调
+     * 当服务的 running 状态发生变化时，会调用此回调
+     */
+    setOnStatusChangeCallback(callback) {
+        this.onStatusChangeCallback = callback;
     }
     /**
      * 获取服务配置（优先从 service.json 读取，否则使用硬编码配置）
@@ -362,6 +370,9 @@ class PythonServiceManager {
             const tracker = this.gpuTrackers.get(serviceName);
             gpuUsageMs = tracker ? tracker.getGpuUsageMs() : 0;
         }
+        // 检查 running 状态是否发生变化
+        const previousRunning = current?.running ?? false;
+        const newRunning = status.running !== undefined ? status.running : (current?.running ?? false);
         // 合并状态，确保统计信息不被覆盖
         const mergedStatus = {
             name: serviceName,
@@ -385,6 +396,15 @@ class PythonServiceManager {
             mergedStatus.gpuUsageMs = (taskCount > 0) ? (current?.gpuUsageMs ?? gpuUsageMs) : 0;
         }
         this.statuses.set(serviceName, mergedStatus);
+        // 如果 running 状态发生变化，触发回调
+        if (previousRunning !== newRunning && this.onStatusChangeCallback) {
+            try {
+                this.onStatusChangeCallback(serviceName, mergedStatus);
+            }
+            catch (error) {
+                logger_1.default.error({ error, serviceName }, 'Error in onStatusChangeCallback');
+            }
+        }
     }
 }
 exports.PythonServiceManager = PythonServiceManager;
