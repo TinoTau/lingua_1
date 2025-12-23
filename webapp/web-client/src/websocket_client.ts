@@ -468,9 +468,15 @@ export class WebSocketClient {
 
     // 定期发送心跳
     this.heartbeatTimer = window.setInterval(() => {
-      if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      if (this.ws && this.ws.readyState === WebSocket.OPEN && this.sessionId) {
         try {
-          this.ws.send(JSON.stringify({ type: 'ping' }));
+          // 使用 client_heartbeat 而不是 ping，以匹配调度服务器的协议
+          // 协议要求：{ type: 'client_heartbeat', session_id: string, timestamp: number }
+          this.ws.send(JSON.stringify({
+            type: 'client_heartbeat',
+            session_id: this.sessionId,
+            timestamp: Date.now(),
+          }));
           this.lastHeartbeatTime = Date.now();
           this.resetHeartbeatTimeout();
         } catch (error) {

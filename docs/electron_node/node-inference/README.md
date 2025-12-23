@@ -7,7 +7,7 @@
 
 ## 概述
 
-节点推理服务是 Electron Node 客户端的核心推理引擎，提供 ASR、NMT、TTS 和 VAD 功能。
+节点推理服务是 Electron Node 客户端的核心推理引擎，提供 ASR、NMT、TTS、VAD 和 Speaker Embedding 功能。
 
 ---
 
@@ -38,6 +38,15 @@
 - **功能**: 语音活动检测
 - **加速**: CUDA GPU 支持
 - **集成状态**: ✅ **已集成到处理流程**（2025-01-XX）
+
+### 5. Speaker Embedding 服务 ✅
+
+- **模型**: SpeechBrain ECAPA-TDNN (通过 HTTP 服务)
+- **功能**: 说话者特征提取
+- **端口**: 5003
+- **输出**: 192 维特征向量
+- **集成状态**: ✅ **已集成到处理流程**（2025-01-XX）
+- **服务位置**: `electron_node/services/speaker_embedding/`
 
 ---
 
@@ -132,17 +141,47 @@ VAD 选择最佳上下文片段
 
 ---
 
+## 可选模块
+
+### Speaker Identification（说话者识别）✅
+
+- **功能**: 基于 Speaker Embedding 的说话者识别
+- **实现**: 调用 Python Speaker Embedding 服务（端口 5003）
+- **模式**: 支持单人模式和多人模式
+- **热插拔**: ✅ 支持动态启用/禁用
+
+**相关文档**:
+- [Embedding 模块迁移报告](../../electron_node/services/node-inference/docs/EMBEDDING_MODULE_MIGRATION.md)
+- [Embedding 模块对比分析](../../electron_node/services/node-inference/docs/EMBEDDING_MODULE_COMPARISON.md)
+- [模块实现方式说明](../../electron_node/services/node-inference/docs/MODULE_IMPLEMENTATION_METHODS.md)
+
 ## 相关文档
+
+### 核心功能文档
 
 - [VAD 引擎集成实现文档](./VAD_INTEGRATION_IMPLEMENTATION.md)
 - [VAD 上下文缓冲区实现文档](./VAD_CONTEXT_BUFFER_IMPLEMENTATION.md)
 - [Opus 压缩支持文档](./OPUS_COMPRESSION_SUPPORT.md)
+
+### 模块文档
+
+- [模块列表](../../electron_node/services/node-inference/docs/MODULE_LIST.md)
+- [模块实现方式说明](../../electron_node/services/node-inference/docs/MODULE_IMPLEMENTATION_METHODS.md)
+- [Embedding 模块迁移报告](../../electron_node/services/node-inference/docs/EMBEDDING_MODULE_MIGRATION.md)
+
+### 其他文档
+
 - [测试文档](../tests/README.md)
 
 ---
 
 ## 更新历史
 
+- **2025-01-XX**: Speaker Embedding 模块迁移完成
+  - Python Speaker Embedding 服务（端口 5003）
+  - Rust HTTP 客户端集成
+  - Speaker Identification 模块更新
+  - 支持热插拔和自动服务管理
 - **2025-01-XX**: VAD 引擎集成完成
   - VAD 语音段检测和提取
   - VAD 上下文缓冲区优化

@@ -856,7 +856,11 @@ export class App {
    * 开始整个会话（持续输入+输出模式）
    */
   async startSession(): Promise<void> {
-    if (this.stateMachine.getState() === SessionState.INPUT_READY) {
+    const currentState = this.stateMachine.getState();
+    console.log('[App] startSession 被调用，当前状态:', currentState);
+    
+    if (currentState === SessionState.INPUT_READY) {
+      console.log('[App] 状态为 INPUT_READY，开始会话');
       this.isSessionActive = true;
       this.audioBuffer = [];
       this.asrSubtitle.clear();
@@ -876,6 +880,8 @@ export class App {
 
       // 清空翻译结果显示（但保留容器结构）
       this.clearDisplayedTranslationResults();
+      const originalDiv = document.getElementById('translation-original');
+      const translatedDiv = document.getElementById('translation-translated');
       if (originalDiv) {
         originalDiv.textContent = '';
       }

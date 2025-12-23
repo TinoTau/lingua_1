@@ -37,6 +37,8 @@ export class NodeAgent {
   private rustServiceManager: any; // RustServiceManager 实例（用于检查 node-inference 运行状态）
   private pythonServiceManager: any; // PythonServiceManager 实例（用于检查 Python 服务运行状态）
   private capabilityStateChangedHandler: (() => void) | null = null; // 保存监听器函数，用于清理
+  private heartbeatDebounceTimer: NodeJS.Timeout | null = null; // 心跳防抖定时器
+  private readonly HEARTBEAT_DEBOUNCE_MS = 2000; // 防抖延迟：2秒内最多触发一次立即心跳
 
   constructor(
     inferenceService: InferenceService, 
@@ -99,11 +101,20 @@ export class NodeAgent {
         }
         // 创建新的监听器函数并保存
         this.capabilityStateChangedHandler = () => {
-          // 状态变化时，在下次心跳时更新 capability_state
-          // 这里不立即发送，因为心跳会定期发送最新的状态
-          logger.debug({}, 'Model state changed, will update capability_state on next heartbeat');
+          // 状态变化时，立即触发心跳（带防抖）
+          logger.debug({}, 'Model state changed, triggering immediate heartbeat');
+          this.triggerImmediateHeartbeat();
         };
         this.modelManager.on('capability-state-changed', this.capabilityStateChangedHandler);
+      }
+
+      // 注册 Python 服务状态变化回调
+      if (this.pythonServiceManager && typeof this.pythonServiceManager.setOnStatusChangeCallback === 'function') {
+        this.pythonServiceManager.setOnStatusChangeCallback((serviceName: string, status: any) => {
+          // 服务状态变化时，立即触发心跳（带防抖）
+          logger.debug({ serviceName, running: status.running }, 'Python service status changed, triggering immediate heartbeat');
+          this.triggerImmediateHeartbeat();
+        });
       }
     } catch (error) {
       logger.error({ error }, 'Failed to start Node Agent');
@@ -356,37 +367,102 @@ export class NodeAgent {
 
   /**
    * 获取已安装的服务包列表
+   * 包括：
+   * 1. 从服务注册表中读取的已注册服务
+   * 2. 实际运行但未在注册表中的本地服务（如 faster-whisper-vad、speaker-embedding）
    */
   private async getInstalledServices(): Promise<InstalledService[]> {
-    if (!this.serviceRegistryManager) {
-      logger.warn({}, 'ServiceRegistryManager not available for heartbeat');
-      return [];
+    const result: InstalledService[] = [];
+    const platform = this.getPlatform();
+    const defaultVersion = '1.0.0';
+
+    // 1. 从服务注册表获取已注册的服务
+    if (this.serviceRegistryManager) {
+      try {
+        await this.serviceRegistryManager.loadRegistry();
+        const installed = this.serviceRegistryManager.listInstalled();
+        
+        logger.debug({
+          installedCount: installed.length,
+          installed: installed.map((s: any) => ({
+            service_id: s.service_id,
+            version: s.version,
+            platform: s.platform
+          }))
+        }, 'Getting installed services from registry for heartbeat');
+
+        // 添加到结果中
+        installed.forEach((service: any) => {
+          result.push({
+            service_id: service.service_id,
+            version: service.version,
+            platform: service.platform,
+          });
+        });
+      } catch (error) {
+        logger.error({ error }, 'Failed to get installed services from registry');
+      }
     }
 
-    try {
-      // 确保注册表已加载
-      await this.serviceRegistryManager.loadRegistry();
-      const installed = this.serviceRegistryManager.listInstalled();
+    // 2. 补充实际运行但未在注册表中的本地服务
+    // 服务名称到 service_id 的映射
+    const serviceIdMap: Record<string, string> = {
+      nmt: 'nmt-m2m100',
+      tts: 'piper-tts',
+      yourtts: 'your-tts',
+      speaker_embedding: 'speaker-embedding',
+      faster_whisper_vad: 'faster-whisper-vad',
+    };
 
-      logger.debug({
-        installedCount: installed.length,
-        installed: installed.map((s: any) => ({
-          service_id: s.service_id,
-          version: s.version,
-          platform: s.platform
-        }))
-      }, 'Getting installed services for heartbeat');
-
-      // 转换为协议格式
-      return installed.map((service: any) => ({
-        service_id: service.service_id,
-        version: service.version,
-        platform: service.platform,
-      }));
-    } catch (error) {
-      logger.error({ error }, 'Failed to get installed services for heartbeat');
-      return [];
+    // 检查 Python 服务是否正在运行
+    if (this.pythonServiceManager) {
+      const pythonServiceNames: Array<'nmt' | 'tts' | 'yourtts' | 'speaker_embedding' | 'faster_whisper_vad'> = 
+        ['nmt', 'tts', 'yourtts', 'speaker_embedding', 'faster_whisper_vad'];
+      
+      for (const serviceName of pythonServiceNames) {
+        const serviceId = serviceIdMap[serviceName];
+        // 检查服务是否在注册表中（避免重复）
+        const alreadyInRegistry = result.some(s => s.service_id === serviceId);
+        
+        if (!alreadyInRegistry) {
+          // 检查服务是否正在运行
+          const status = this.pythonServiceManager.getServiceStatus(serviceName);
+          if (status?.running) {
+            // 服务正在运行但未在注册表中，添加到结果中
+            result.push({
+              service_id: serviceId,
+              version: defaultVersion,
+              platform: platform === 'windows' ? 'windows-x64' : platform === 'linux' ? 'linux-x64' : 'macos-x64',
+            });
+            logger.debug({ serviceId, serviceName }, 'Added running service to installed services list (not in registry)');
+          }
+        }
+      }
     }
+
+    // 检查 Rust 服务（node-inference）
+    if (this.rustServiceManager && typeof this.rustServiceManager.getStatus === 'function') {
+      const rustStatus = this.rustServiceManager.getStatus();
+      const alreadyInRegistry = result.some(s => s.service_id === 'node-inference');
+      
+      if (!alreadyInRegistry && rustStatus?.running) {
+        result.push({
+          service_id: 'node-inference',
+          version: defaultVersion,
+          platform: platform === 'windows' ? 'windows-x64' : platform === 'linux' ? 'linux-x64' : 'macos-x64',
+        });
+        logger.debug({}, 'Added node-inference to installed services list (not in registry)');
+      }
+    }
+
+    logger.info({
+      totalCount: result.length,
+      fromRegistry: this.serviceRegistryManager ? this.serviceRegistryManager.listInstalled().length : 0,
+      addedRunning: result.length - (this.serviceRegistryManager ? this.serviceRegistryManager.listInstalled().length : 0),
+      services: result.map(s => s.service_id)
+    }, 'Getting installed services for heartbeat (including running services not in registry)');
+
+    return result;
   }
 
   private stopHeartbeat(): void {
@@ -394,6 +470,31 @@ export class NodeAgent {
       clearInterval(this.heartbeatInterval);
       this.heartbeatInterval = null;
     }
+    // 清理防抖定时器
+    if (this.heartbeatDebounceTimer) {
+      clearTimeout(this.heartbeatDebounceTimer);
+      this.heartbeatDebounceTimer = null;
+    }
+  }
+
+  /**
+   * 触发立即心跳（带防抖机制）
+   * 避免在短时间内多次触发导致心跳过于频繁
+   */
+  private triggerImmediateHeartbeat(): void {
+    // 如果已有待发送的立即心跳，取消它
+    if (this.heartbeatDebounceTimer) {
+      clearTimeout(this.heartbeatDebounceTimer);
+    }
+
+    // 设置新的防抖定时器
+    this.heartbeatDebounceTimer = setTimeout(async () => {
+      this.heartbeatDebounceTimer = null;
+      if (this.ws && this.ws.readyState === WebSocket.OPEN && this.nodeId) {
+        logger.debug({}, 'Triggering immediate heartbeat due to service state change');
+        await this.sendHeartbeatOnce();
+      }
+    }, this.HEARTBEAT_DEBOUNCE_MS);
   }
 
   private async getSystemResources(): Promise<{
@@ -452,6 +553,18 @@ export class NodeAgent {
           const status = this.pythonServiceManager.getServiceStatus('yourtts');
           return status?.running === true;
         }
+      } else if (serviceId === 'speaker-embedding') {
+        // speaker-embedding 通过 PythonServiceManager 管理（服务名是 'speaker_embedding'）
+        if (this.pythonServiceManager && typeof this.pythonServiceManager.getServiceStatus === 'function') {
+          const status = this.pythonServiceManager.getServiceStatus('speaker_embedding');
+          return status?.running === true;
+        }
+      } else if (serviceId === 'faster-whisper-vad') {
+        // faster-whisper-vad 通过 PythonServiceManager 管理（服务名是 'faster_whisper_vad'）
+        if (this.pythonServiceManager && typeof this.pythonServiceManager.getServiceStatus === 'function') {
+          const status = this.pythonServiceManager.getServiceStatus('faster_whisper_vad');
+          return status?.running === true;
+        }
       }
       
       // 未知的服务 ID 或服务管理器不可用，返回 false
@@ -475,20 +588,14 @@ export class NodeAgent {
     const capabilityState: Record<string, ModelStatus> = {};
 
     try {
-      if (!this.serviceRegistryManager) {
-        logger.warn('ServiceRegistryManager not available, returning empty capability_state');
-        return {};
-      }
-
-      // 确保注册表已加载
-      await this.serviceRegistryManager.loadRegistry();
-
-      // 获取所有已安装的服务包
-      const installedServices = this.serviceRegistryManager.listInstalled();
+      // 获取所有已安装的服务（包括注册表中的和实际运行的）
+      // 这与 getInstalledServices() 保持一致，确保 installed_services 中的所有服务
+      // 都能在 capability_state 中找到对应的状态
+      const installedServices = await this.getInstalledServices();
       
       // 获取所有 service_id（去重）
       const serviceIds = new Set<string>();
-      installedServices.forEach((service: any) => {
+      installedServices.forEach((service) => {
         serviceIds.add(service.service_id);
       });
 
@@ -515,11 +622,11 @@ export class NodeAgent {
         notInstalledServices: Object.entries(capabilityState)
           .filter(([_, status]) => status === 'not_installed')
           .map(([serviceId, _]) => serviceId)
-      }, 'Built capability_state from service registry (service_id based)');
+      }, 'Built capability_state from installed services (including running services not in registry)');
 
       return capabilityState;
     } catch (error) {
-      logger.error({ error }, 'Failed to get capability_state from service registry');
+      logger.error({ error }, 'Failed to get capability_state');
       return {};
     }
   }
@@ -574,6 +681,16 @@ export class NodeAgent {
     const startTime = Date.now();
 
     try {
+      // 根据 features 启动所需的服务
+      if (job.features?.speaker_identification && this.pythonServiceManager) {
+        try {
+          await this.pythonServiceManager.startService('speaker_embedding');
+          logger.info({ jobId: job.job_id }, 'Started speaker_embedding service for speaker_identification feature');
+        } catch (error) {
+          logger.warn({ error, jobId: job.job_id }, 'Failed to start speaker_embedding service, continuing without it');
+        }
+      }
+
       // 如果启用了流式 ASR，设置部分结果回调
       const partialCallback = job.enable_streaming_asr ? (partial: { text: string; is_final: boolean; confidence: number }) => {
         // 发送 ASR 部分结果到调度服务器

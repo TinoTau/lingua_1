@@ -95,10 +95,10 @@ export function ServiceManagement() {
     }
   };
 
-  const handleStartPython = async (serviceName: 'nmt' | 'tts' | 'yourtts') => {
+  const handleStartPython = async (serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => {
     setLoading(prev => ({ ...prev, [serviceName]: true }));
     try {
-      const result = await window.electronAPI.startPythonService(serviceName);
+      const result = await window.electronAPI.startPythonService(serviceName as any);
       if (!result.success) {
         alert(`启动失败: ${result.error}`);
       }
@@ -111,10 +111,10 @@ export function ServiceManagement() {
     }
   };
 
-  const handleStopPython = async (serviceName: 'nmt' | 'tts' | 'yourtts') => {
+  const handleStopPython = async (serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => {
     setLoading(prev => ({ ...prev, [serviceName]: true }));
     try {
-      const result = await window.electronAPI.stopPythonService(serviceName);
+      const result = await window.electronAPI.stopPythonService(serviceName as any);
       if (!result.success) {
         alert(`停止失败: ${result.error}`);
       }
@@ -133,7 +133,9 @@ export function ServiceManagement() {
       nmt: 'NMT 翻译服务',
       tts: 'TTS 语音合成 (Piper)',
       yourtts: 'YourTTS 语音克隆',
-      rust: '节点推理服务',
+      faster_whisper_vad: 'FastWhisperVad语音识别服务',
+      speaker_embedding: 'Speaker Embedding 服务',
+      rust: '节点推理服务 (Rust)',
     };
     return map[name] || name;
   };
@@ -160,8 +162,10 @@ export function ServiceManagement() {
       const nmtEnabled = !!pythonStatuses.find(s => s.name === 'nmt')?.running;
       const ttsEnabled = !!pythonStatuses.find(s => s.name === 'tts')?.running;
       const yourttsEnabled = !!pythonStatuses.find(s => s.name === 'yourtts')?.running;
+      const fasterWhisperVadEnabled = !!pythonStatuses.find(s => s.name === 'faster_whisper_vad')?.running;
+      const speakerEmbeddingEnabled = !!pythonStatuses.find(s => s.name === 'speaker_embedding')?.running;
 
-      const newPrefs = { rustEnabled, nmtEnabled, ttsEnabled, yourttsEnabled };
+      const newPrefs = { rustEnabled, nmtEnabled, ttsEnabled, yourttsEnabled, fasterWhisperVadEnabled, speakerEmbeddingEnabled };
       await window.electronAPI.setServicePreferences(newPrefs);
     } catch (error) {
       console.error('同步服务偏好失败:', error);
@@ -176,7 +180,7 @@ export function ServiceManagement() {
     }
   };
 
-  const handleTogglePython = async (serviceName: 'nmt' | 'tts' | 'yourtts', checked: boolean) => {
+  const handleTogglePython = async (serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding', checked: boolean) => {
     if (checked) {
       await handleStartPython(serviceName);
     } else {
@@ -240,7 +244,7 @@ export function ServiceManagement() {
         </div>
 
         {/* Python 服务 */}
-        {['nmt', 'tts', 'yourtts'].map((serviceName) => {
+        {['faster_whisper_vad', 'nmt', 'tts', 'yourtts', 'speaker_embedding'].map((serviceName) => {
           const status = pythonStatuses.find(s => s.name === serviceName);
           const isRunning = status?.running || false;
           const isStarting = status?.starting || false;
@@ -286,7 +290,7 @@ export function ServiceManagement() {
                   <input
                     type="checkbox"
                     checked={isRunning}
-                    onChange={(e) => handleTogglePython(serviceName as 'nmt' | 'tts' | 'yourtts', e.target.checked)}
+                    onChange={(e) => handleTogglePython(serviceName as 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding', e.target.checked)}
                     disabled={isLoading || isStarting}
                   />
                   <span className="lsm-switch-slider"></span>

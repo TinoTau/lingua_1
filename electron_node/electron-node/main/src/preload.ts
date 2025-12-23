@@ -57,10 +57,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   stopRustService: () => ipcRenderer.invoke('stop-rust-service'),
 
   // Python 服务管理
-  getPythonServiceStatus: (serviceName: 'nmt' | 'tts' | 'yourtts') => ipcRenderer.invoke('get-python-service-status', serviceName),
+  getPythonServiceStatus: (serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => ipcRenderer.invoke('get-python-service-status', serviceName),
   getAllPythonServiceStatuses: () => ipcRenderer.invoke('get-all-python-service-statuses'),
-  startPythonService: (serviceName: 'nmt' | 'tts' | 'yourtts') => ipcRenderer.invoke('start-python-service', serviceName),
-  stopPythonService: (serviceName: 'nmt' | 'tts' | 'yourtts') => ipcRenderer.invoke('stop-python-service', serviceName),
+  startPythonService: (serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => ipcRenderer.invoke('start-python-service', serviceName),
+  stopPythonService: (serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => ipcRenderer.invoke('stop-python-service', serviceName),
 
   // 自动启动服务（根据已安装的模型）
   autoStartServicesByModels: () => ipcRenderer.invoke('auto-start-services-by-models'),
@@ -72,6 +72,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     nmtEnabled: boolean;
     ttsEnabled: boolean;
     yourttsEnabled: boolean;
+    fasterWhisperVadEnabled: boolean;
+    speakerEmbeddingEnabled: boolean;
   }) => ipcRenderer.invoke('set-service-preferences', prefs),
 
   // 注意：模块管理 API 已移除

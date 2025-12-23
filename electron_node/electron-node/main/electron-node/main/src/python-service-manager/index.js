@@ -63,6 +63,8 @@ class PythonServiceManager {
             nmt: 'nmt-m2m100',
             tts: 'piper-tts',
             yourtts: 'your-tts',
+            speaker_embedding: 'speaker-embedding',
+            faster_whisper_vad: 'faster-whisper-vad',
         };
         const serviceId = serviceIdMap[serviceName];
         // 尝试从 service.json 加载配置
@@ -116,9 +118,23 @@ class PythonServiceManager {
             logger_1.default.warn({ serviceName }, 'Service is already running');
             return;
         }
-        const config = await this.getServiceConfig(serviceName);
-        if (!config) {
-            throw new Error(`Unknown service: ${serviceName}`);
+        let config = null;
+        try {
+            config = await this.getServiceConfig(serviceName);
+            if (!config) {
+                throw new Error(`Unknown service: ${serviceName}`);
+            }
+        }
+        catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            logger_1.default.error({
+                error: {
+                    message: errorMessage,
+                    name: error instanceof Error ? error.name : typeof error,
+                },
+                serviceName,
+            }, 'Failed to get service config');
+            throw error;
         }
         // 设置启动中状态
         this.updateStatus(serviceName, {
@@ -179,14 +195,29 @@ class PythonServiceManager {
             logger_1.default.info({ serviceName, pid: process.pid, port: config.port }, 'Python service started');
         }
         catch (error) {
-            logger_1.default.error({ error, serviceName }, 'Failed to start Python service');
+            // 记录详细的错误信息
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            const errorStack = error instanceof Error ? error.stack : undefined;
+            logger_1.default.error({
+                error: {
+                    message: errorMessage,
+                    stack: errorStack,
+                    name: error instanceof Error ? error.name : typeof error,
+                },
+                serviceName,
+                config: {
+                    venvPath: config?.venvPath,
+                    scriptPath: config?.scriptPath,
+                    port: config?.port,
+                },
+            }, 'Failed to start Python service');
             this.updateStatus(serviceName, {
                 running: false,
                 starting: false,
                 pid: null,
-                port: config.port,
+                port: config?.port || null,
                 startedAt: null,
-                lastError: error instanceof Error ? error.message : String(error),
+                lastError: errorMessage,
             });
             throw error;
         }
@@ -223,7 +254,7 @@ class PythonServiceManager {
         this.services.delete(serviceName);
     }
     async stopAllServices() {
-        const serviceNames = ['nmt', 'tts', 'yourtts'];
+        const serviceNames = ['nmt', 'tts', 'yourtts', 'speaker_embedding', 'faster_whisper_vad'];
         // 记录当前运行的服务状态
         const runningServices = serviceNames
             .map((name) => {

@@ -59,7 +59,7 @@ class RustServiceManager {
             // 尝试从 service.json 读取配置
             let servicePath = this.projectPaths.servicePath;
             let port = this.port;
-            
+
             try {
                 let servicesDir: string;
                 try {
@@ -106,7 +106,9 @@ class RustServiceManager {
                         this.process = null;
 
                         // 如果非正常退出，记录错误
-                        if (code !== 0 && code !== null) {
+                        // 注意：在 Windows 上使用 taskkill /F 强制终止时，退出码为 1 是正常的，不应该视为错误
+                        const isWindows = require('process').platform === 'win32';
+                        if (code !== 0 && code !== null && !(code === 1 && isWindows)) {
                             const errorMsg = `Process exited with code: ${code}`;
                             this.status.lastError = errorMsg;
                             logger.error(
@@ -130,6 +132,9 @@ class RustServiceManager {
                                 },
                                 errorMsg
                             );
+                        } else if (code === 1 && isWindows) {
+                            // Windows 上 taskkill /F 导致的退出码 1，这是正常的
+                            logger.info({ code, signal }, 'Rust service stopped via taskkill (normal termination)');
                         }
                     },
                 }
@@ -170,14 +175,14 @@ class RustServiceManager {
 
             // 使用实际使用的端口（可能从 service.json 读取）
             const actualPort = port;
-            
+
             this.status.running = true;
             this.status.starting = false;
             this.status.pid = this.process.pid || null;
             this.status.port = actualPort;
             this.status.startedAt = new Date();
             this.status.lastError = null;
-            
+
             // 更新内部端口变量
             this.port = actualPort;
 

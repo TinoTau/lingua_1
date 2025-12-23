@@ -2,7 +2,100 @@
 
 本文档记录了 2025年1月 的主要功能更新和改进。
 
+## 新增 Python 服务（2025-12-23）
+
+### Faster Whisper VAD 服务
+
+**日期**: 2025-12-23
+
+**功能说明**:
+- ✅ 新增 Faster Whisper VAD 服务（端口 6007）
+- ✅ 整合 Faster Whisper ASR 和 Silero VAD 功能
+- ✅ 支持上下文缓冲（音频上下文和文本上下文）
+- ✅ 支持 Utterance 任务处理
+- ✅ **GPU 加速支持**：自动检测 CUDA，使用 `float16` 计算类型（10-20x 性能提升）
+- ✅ 服务独立性：每个服务只在自己的目录下查找模型
+
+**技术实现**:
+- Python 服务：`electron_node/services/faster_whisper_vad/faster_whisper_vad_service.py`
+- 模型转换工具：`electron_node/services/faster_whisper_vad/convert_model.py`
+- 使用 `faster-whisper` 库（基于 CTranslate2）
+- 使用 `onnxruntime-gpu` 进行 VAD GPU 加速
+
+**GPU 配置**:
+- 自动检测 CUDA 可用性
+- 如果 CUDA 可用，使用 GPU 和 `float16` 计算类型
+- 如果 CUDA 不可用，自动回退到 CPU 和 `float32`
+- VAD 模型使用 `CUDAExecutionProvider` 优先
+
+**相关文档**:
+- [Faster Whisper VAD 服务 README](../electron_node/services/faster_whisper_vad/README.md)
+- [GPU 性能分析](../electron_node/services/faster_whisper_vad/GPU_ANALYSIS.md)
+- [GPU 配置指南](../electron_node/services/faster_whisper_vad/GPU_SETUP.md)
+
+### Speaker Embedding 服务 GPU 配置
+
+**日期**: 2025-12-23
+
+**功能说明**:
+- ✅ 配置 Speaker Embedding 服务 GPU 加速
+- ✅ 自动检测 CUDA 可用性并启用 GPU
+- ✅ 性能提升：单次推理 5-10x，批量处理 10-32x
+
+**技术实现**:
+- 安装 PyTorch CUDA 版本（2.5.1+cu121）
+- 自动添加 `--gpu` 参数启动服务
+- 服务自动检测并使用 GPU（如果可用）
+
+**相关文档**:
+- [Speaker Embedding 服务 README](../electron_node/services/speaker_embedding/README.md)
+- [GPU 性能分析](../electron_node/services/speaker_embedding/GPU_ANALYSIS.md)
+- [GPU 配置指南](../electron_node/services/speaker_embedding/GPU_SETUP.md)
+
+### GPU 配置完成
+
+**日期**: 2025-12-23
+
+**配置状态**:
+- ✅ Faster Whisper VAD：已安装 `onnxruntime-gpu`，GPU 测试通过
+- ✅ Speaker Embedding：已安装 PyTorch CUDA 版本，GPU 测试通过
+- ✅ 所有服务使用独立的虚拟环境，无版本冲突
+
+**性能提升**:
+- Faster Whisper VAD：整体服务 5-15x 性能提升
+- Speaker Embedding：单次 5-10x，批量 10-32x 性能提升
+
+**相关文档**:
+- [GPU 配置完成报告](../electron_node/services/GPU_CONFIGURATION_COMPLETE.md)
+- [PyTorch 版本分析](../electron_node/services/PYTORCH_VERSION_ANALYSIS.md)
+
 ## Node Inference 服务更新
+
+### Speaker Embedding 模块迁移完成
+
+**日期**: 2025-01-XX
+
+**功能说明**:
+- ✅ 从原项目迁移完整的 Speaker Embedding 模块
+- ✅ Python HTTP 服务（端口 5003），使用 SpeechBrain ECAPA-TDNN 模型
+- ✅ Rust HTTP 客户端集成
+- ✅ Speaker Identification 模块更新，支持基于 embedding 的说话者识别
+- ✅ 支持单人模式和多人模式
+- ✅ 热插拔支持，可根据 features 动态启用/禁用
+- ✅ 自动服务管理，Node Agent 根据 features 自动启动服务
+
+**技术实现**:
+- Python 服务：`electron_node/services/speaker_embedding/speaker_embedding_service.py`
+- Rust 客户端：`electron_node/services/node-inference/src/speaker_embedding_client.rs`
+- 模块更新：`electron_node/services/node-inference/src/speaker.rs`
+- 服务管理：PythonServiceManager 支持启动/停止服务
+
+**相关文档**:
+- [Embedding 模块迁移报告](../electron_node/services/node-inference/docs/EMBEDDING_MODULE_MIGRATION.md)
+- [Embedding 模块对比分析](../electron_node/services/node-inference/docs/EMBEDDING_MODULE_COMPARISON.md)
+- [模块实现方式说明](../electron_node/services/node-inference/docs/MODULE_IMPLEMENTATION_METHODS.md)
+
+### 标点符号过滤功能
 
 ### 标点符号过滤功能
 
@@ -107,10 +200,16 @@
    - 位置: `electron_node/services/node-inference/docs/ASR_TEXT_FILTER_CONFIG.md`
    - 更新: 添加标点符号过滤功能说明
 
-2. **文档索引**
-   - `docs/DOCUMENTATION_INDEX.md` - 添加新文档链接
+2. **Speaker Embedding 相关文档**
+   - `electron_node/services/node-inference/docs/EMBEDDING_MODULE_MIGRATION.md` - 迁移报告
+   - `electron_node/services/node-inference/docs/EMBEDDING_MODULE_COMPARISON.md` - 对比分析
+   - `electron_node/services/node-inference/docs/MODULE_IMPLEMENTATION_METHODS.md` - 更新实现方式说明
+   - `docs/electron_node/node-inference/README.md` - 更新节点推理服务文档
+
+3. **文档索引**
+   - `docs/DOCUMENTATION_INDEX.md` - 添加 Speaker Embedding 文档链接
    - `docs/web_client/README.md` - 添加 UI 改进文档链接
-   - `docs/electron_node/README.md` - 添加 ASR 过滤文档链接
+   - `docs/electron_node/README.md` - 添加 Speaker Embedding 和 ASR 过滤文档链接
 
 ## 技术细节
 
@@ -162,6 +261,8 @@
 
 - [Web 客户端文档索引](./web_client/README.md)
 - [Electron Node 文档索引](./electron_node/README.md)
+- [节点推理服务文档](./electron_node/node-inference/README.md)
 - [ASR 文本过滤配置文档](../electron_node/services/node-inference/docs/ASR_TEXT_FILTER_CONFIG.md)
+- [Embedding 模块迁移报告](../electron_node/services/node-inference/docs/EMBEDDING_MODULE_MIGRATION.md)
 - [UI 改进和功能更新文档](../../webapp/web-client/docs/UI_IMPROVEMENTS_AND_FEATURES.md)
 

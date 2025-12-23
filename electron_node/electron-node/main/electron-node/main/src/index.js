@@ -161,12 +161,16 @@ electron_1.app.whenReady().then(async () => {
         // 按照偏好启动 Python 服务（异步启动，不阻塞窗口显示）
         if (pythonServiceManager) {
             const toStart = [];
+            if (prefs.fasterWhisperVadEnabled)
+                toStart.push('faster_whisper_vad');
             if (prefs.nmtEnabled)
                 toStart.push('nmt');
             if (prefs.ttsEnabled)
                 toStart.push('tts');
             if (prefs.yourttsEnabled)
                 toStart.push('yourtts');
+            if (prefs.speakerEmbeddingEnabled)
+                toStart.push('speaker_embedding');
             for (const name of toStart) {
                 logger_1.default.info({ serviceName: name }, 'Auto-starting Python service...');
                 pythonServiceManager.startService(name).catch((error) => {

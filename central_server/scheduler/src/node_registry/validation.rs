@@ -6,12 +6,37 @@ use super::types::Node;
 /// Phase 1：capability_state 语义统一为 service_id。
 /// required_ids 也被视为 service_id 列表（服务包 ID / 逻辑服务 ID）。
 pub fn node_has_required_services_ready(node: &Node, required_ids: &[String]) -> bool {
-    required_ids.iter().all(|service_id| {
+    let result = required_ids.iter().all(|service_id| {
         node.capability_state
             .get(service_id)
             .map(|s| s == &ModelStatus::Ready)
             .unwrap_or(false)
-    })
+    });
+    
+    // 如果检查失败，记录详细日志
+    if !result {
+        use tracing::debug;
+        let missing_or_not_ready: Vec<String> = required_ids
+            .iter()
+            .filter(|service_id| {
+                node.capability_state
+                    .get(*service_id)
+                    .map(|s| s != &ModelStatus::Ready)
+                    .unwrap_or(true)
+            })
+            .cloned()
+            .collect();
+        debug!(
+            node_id = %node.node_id,
+            required_services = ?required_ids,
+            missing_or_not_ready = ?missing_or_not_ready,
+            capability_state = ?node.capability_state,
+            installed_services = ?node.installed_services.iter().map(|s| &s.service_id).collect::<Vec<_>>(),
+            "Node does not have all required services ready"
+        );
+    }
+    
+    result
 }
 
 /// Phase 1：基于 installed_services 的硬过滤（service_id 存在即可）。

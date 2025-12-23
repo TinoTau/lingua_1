@@ -58,7 +58,7 @@ export interface ElectronAPI {
   stopRustService: () => Promise<{ success: boolean; error?: string }>;
 
   // Python 服务管理
-  getPythonServiceStatus: (serviceName: 'nmt' | 'tts' | 'yourtts') => Promise<{
+  getPythonServiceStatus: (serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => Promise<{
     name: string;
     running: boolean;
     starting: boolean;
@@ -80,8 +80,8 @@ export interface ElectronAPI {
     taskCount: number;
     gpuUsageMs: number;
   }>>;
-  startPythonService: (serviceName: 'nmt' | 'tts' | 'yourtts') => Promise<{ success: boolean; error?: string }>;
-  stopPythonService: (serviceName: 'nmt' | 'tts' | 'yourtts') => Promise<{ success: boolean; error?: string }>;
+  startPythonService: (serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => Promise<{ success: boolean; error?: string }>;
+  stopPythonService: (serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => Promise<{ success: boolean; error?: string }>;
 
   // 自动启动服务（根据已安装的模型）
   autoStartServicesByModels: () => Promise<{ success: boolean; results?: Record<string, boolean>; error?: string }>;
@@ -92,12 +92,16 @@ export interface ElectronAPI {
     nmtEnabled: boolean;
     ttsEnabled: boolean;
     yourttsEnabled: boolean;
+    fasterWhisperVadEnabled: boolean;
+    speakerEmbeddingEnabled: boolean;
   }>;
   setServicePreferences: (prefs: {
     rustEnabled: boolean;
     nmtEnabled: boolean;
     ttsEnabled: boolean;
     yourttsEnabled: boolean;
+    fasterWhisperVadEnabled: boolean;
+    speakerEmbeddingEnabled: boolean;
   }) => Promise<{ success: boolean; error?: string }>;
 }
 

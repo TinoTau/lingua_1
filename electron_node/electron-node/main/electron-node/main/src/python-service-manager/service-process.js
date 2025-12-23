@@ -47,6 +47,7 @@ const logger_1 = __importDefault(require("../logger"));
 const port_manager_1 = require("../utils/port-manager");
 const service_logging_1 = require("./service-logging");
 const service_health_1 = require("./service-health");
+const venv_setup_1 = require("./venv-setup");
 /**
  * 检测 CUDA 是否可用（通过 Python 脚本）
  */
@@ -136,6 +137,39 @@ async function buildServiceArgs(serviceName, config, pythonExe) {
         ];
         if (cudaAvailable) {
             args.push('--gpu');
+            logger_1.default.info({ serviceName }, 'YourTTS: GPU enabled via --gpu flag');
+        }
+        return args;
+    }
+    else if (serviceName === 'speaker_embedding') {
+        // Speaker Embedding 服务：通过 --gpu 参数启用 GPU
+        const args = [
+            config.scriptPath,
+            '--host', '127.0.0.1',
+            '--port', config.port.toString(),
+        ];
+        if (cudaAvailable) {
+            args.push('--gpu');
+            logger_1.default.info({ serviceName }, 'Speaker Embedding: GPU enabled via --gpu flag');
+        }
+        return args;
+    }
+    else if (serviceName === 'faster_whisper_vad') {
+        // Faster Whisper VAD 服务：通过环境变量启用 GPU（已在 python-service-config.ts 中设置）
+        // 注意：不要在 service-process.js 中覆盖 ASR_DEVICE，因为 python-service-config.ts 已经根据 CUDA_PATH 正确设置了
+        // 如果这里覆盖，会忽略 python-service-config.ts 中的 CUDA 检测逻辑
+        const args = [
+            config.scriptPath,
+        ];
+        // ASR_DEVICE 和 ASR_COMPUTE_TYPE 已在 python-service-config.ts 中根据 CUDA_PATH 正确设置
+        // 这里只记录日志，不覆盖配置
+        if (config.env && config.env.ASR_DEVICE) {
+            logger_1.default.info({
+                serviceName: serviceName,
+                asrDevice: config.env.ASR_DEVICE,
+                asrComputeType: config.env.ASR_COMPUTE_TYPE,
+                cudaPath: config.env.CUDA_PATH
+            }, 'Faster Whisper VAD: Device configuration from python-service-config.ts');
         }
         return args;
     }
@@ -145,11 +179,31 @@ async function buildServiceArgs(serviceName, config, pythonExe) {
  * 启动服务进程
  */
 async function startServiceProcess(serviceName, config, handlers) {
-    // 检查虚拟环境
+    // 确保虚拟环境已设置（如果不存在则自动创建并安装依赖）
+    try {
+        await (0, venv_setup_1.ensureVenvSetup)(config, serviceName);
+    }
+    catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        logger_1.default.error({
+            serviceName,
+            venvPath: config.venvPath,
+            error: errorMessage,
+        }, 'Failed to setup virtual environment');
+        throw error;
+    }
+    // 检查虚拟环境（应该已经存在）
     const pythonExe = path.join(config.venvPath, 'Scripts', 'python.exe');
     if (!fs.existsSync(pythonExe)) {
-        const error = `Virtual environment does not exist: ${config.venvPath}`;
-        logger_1.default.error({ serviceName, venvPath: config.venvPath }, error);
+        const error = `Virtual environment does not exist after setup: ${config.venvPath}`;
+        logger_1.default.error({
+            serviceName,
+            venvPath: config.venvPath,
+            pythonExe,
+            venvExists: fs.existsSync(config.venvPath),
+            scriptPath: config.scriptPath,
+            scriptExists: fs.existsSync(config.scriptPath),
+        }, error);
         throw new Error(error);
     }
     // 检查脚本文件

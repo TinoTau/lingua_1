@@ -124,7 +124,9 @@ class RustServiceManager {
                     this.status.pid = null;
                     this.process = null;
                     // 如果非正常退出，记录错误
-                    if (code !== 0 && code !== null) {
+                    // 注意：在 Windows 上使用 taskkill /F 强制终止时，退出码为 1 是正常的，不应该视为错误
+                    const isWindows = require('process').platform === 'win32';
+                    if (code !== 0 && code !== null && !(code === 1 && isWindows)) {
                         const errorMsg = `Process exited with code: ${code}`;
                         this.status.lastError = errorMsg;
                         logger_1.default.error({
@@ -134,6 +136,10 @@ class RustServiceManager {
                             workingDir: require('path').join(this.projectPaths.projectRoot, 'electron_node', 'services', 'node-inference'),
                             modelsDir: require('path').join(this.projectPaths.projectRoot, 'electron_node', 'services', 'node-inference', 'models'),
                         }, errorMsg);
+                    }
+                    else if (code === 1 && isWindows) {
+                        // Windows 上 taskkill /F 导致的退出码 1，这是正常的
+                        logger_1.default.info({ code, signal }, 'Rust service stopped via taskkill (normal termination)');
                     }
                 },
             });

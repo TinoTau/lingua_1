@@ -61,7 +61,11 @@ function createWindow() {
     // 开发环境加载 Vite 开发服务器，生产环境加载构建后的文件
     // 判断开发环境：NODE_ENV=development 或 app.isPackaged=false
     const isDev = process.env.NODE_ENV === 'development' || !electron_1.app.isPackaged;
-    if (isDev) {
+    // 检查构建文件是否存在，如果存在则优先使用构建文件
+    const distPath = path.join(__dirname, '../../renderer/dist/index.html');
+    const fs = require('fs');
+    const distExists = fs.existsSync(distPath);
+    if (isDev && !distExists) {
         // 开发模式：尝试连接 Vite dev server（默认 5173，如果被占用可能在其他端口）
         const vitePort = process.env.VITE_PORT || '5173';
         const viteUrl = `http://localhost:${vitePort}`;
@@ -82,8 +86,7 @@ function createWindow() {
     }
     else {
         // 生产模式：加载打包后的文件
-        const distPath = path.join(__dirname, '../../renderer/dist/index.html');
-        logger_1.default.info({ distPath }, 'Production mode: Loading built files');
+        logger_1.default.info({ distPath, distExists }, 'Production mode: Loading built files');
         if (mainWindow) {
             mainWindow.loadFile(distPath).catch((error) => {
                 logger_1.default.error({ error, distPath }, 'Failed to load built files');

@@ -13,6 +13,7 @@
 - [任务分发算法优化方案](./scheduler/DISPATCHER_OPTIMIZATION_PLAN.md)
 - [Phase 2 实现文档](./scheduler/phase2_implementation.md) - 多实例 + Redis
 - [Phase 2 Streams/DLQ 运维](./scheduler/phase2_streams_ops.md)
+- [**Pool 机制文档**](./scheduler/POOL_MECHANISM.md) - 两级调度与节点分组机制 ⭐
 - [仪表盘说明](./scheduler/DASHBOARD.md)
 - [GPU 需求说明](./scheduler/GPU_REQUIREMENT_EXPLANATION.md)
 

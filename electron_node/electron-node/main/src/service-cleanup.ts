@@ -39,6 +39,8 @@ export async function cleanupServices(
     const nmtEnabled = !!pythonStatuses.find(s => s.name === 'nmt')?.running;
     const ttsEnabled = !!pythonStatuses.find(s => s.name === 'tts')?.running;
     const yourttsEnabled = !!pythonStatuses.find(s => s.name === 'yourtts')?.running;
+    const fasterWhisperVadEnabled = !!pythonStatuses.find(s => s.name === 'faster_whisper_vad')?.running;
+    const speakerEmbeddingEnabled = !!pythonStatuses.find(s => s.name === 'speaker_embedding')?.running;
 
     const config = loadNodeConfig();
     config.servicePreferences = {
@@ -46,6 +48,8 @@ export async function cleanupServices(
       nmtEnabled,
       ttsEnabled,
       yourttsEnabled,
+      fasterWhisperVadEnabled,
+      speakerEmbeddingEnabled,
     };
     saveNodeConfig(config);
     logger.info(

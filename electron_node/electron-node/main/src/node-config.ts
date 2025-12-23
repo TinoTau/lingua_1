@@ -8,6 +8,8 @@ export interface ServicePreferences {
   nmtEnabled: boolean;
   ttsEnabled: boolean;
   yourttsEnabled: boolean;
+  fasterWhisperVadEnabled: boolean;
+  speakerEmbeddingEnabled: boolean;
 }
 
 export interface NodeConfig {
@@ -22,10 +24,12 @@ export interface NodeConfig {
 
 const DEFAULT_CONFIG: NodeConfig = {
   servicePreferences: {
-    rustEnabled: true,      // 默认启用推理服务
-    nmtEnabled: true,       // 默认启用 NMT
-    ttsEnabled: true,       // 默认启用 Piper TTS
-    yourttsEnabled: false,  // 默认关闭 YourTTS（资源较重）
+    rustEnabled: false,           // 默认关闭节点推理服务（Rust）
+    nmtEnabled: true,             // 默认启用 NMT
+    ttsEnabled: true,             // 默认启用 Piper TTS
+    yourttsEnabled: false,         // 默认关闭 YourTTS（资源较重）
+    fasterWhisperVadEnabled: true, // 默认启用 Faster Whisper VAD 语音识别服务
+    speakerEmbeddingEnabled: false, // 默认关闭 Speaker Embedding
   },
   scheduler: {
     url: 'ws://127.0.0.1:5010/ws/node',  // 默认本地地址，使用 127.0.0.1 避免 IPv6 解析问题

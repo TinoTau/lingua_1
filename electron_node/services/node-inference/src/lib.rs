@@ -10,6 +10,8 @@ pub mod vad;
 pub mod modules;
 pub mod pipeline;
 pub mod speaker;
+pub mod speaker_embedding_client;
+pub mod faster_whisper_vad_client;
 pub mod speech_rate;
 pub mod language_detector;
 pub mod text_filter;
@@ -27,4 +29,6 @@ pub use inference::{InferenceRequest, InferenceResult, InferenceService, Partial
 pub use pipeline::PipelineContext;
 pub use modules::{ModuleManager, ModuleMetadata, ModelRequirement, MODULE_TABLE};
 pub use audio_codec::{AudioFormat, OpusDecoder, decode_audio};
+pub use speaker_embedding_client::{SpeakerEmbeddingClient, SpeakerEmbeddingClientConfig, ExtractEmbeddingResult};
+pub use faster_whisper_vad_client::{FasterWhisperVADClient, FasterWhisperVADClientConfig, UtteranceResult};
 

@@ -177,9 +177,13 @@ function registerRuntimeHandlers(nodeAgent, modelManager, rustServiceManager, py
     electron_1.ipcMain.handle('set-service-preferences', async (_, prefs) => {
         try {
             const config = (0, node_config_1.loadNodeConfig)();
+            // 确保所有字段都被保存（包括新添加的字段）
             config.servicePreferences = {
                 ...config.servicePreferences,
                 ...prefs,
+                // 确保新字段有默认值（如果未提供）
+                fasterWhisperVadEnabled: prefs.fasterWhisperVadEnabled ?? config.servicePreferences.fasterWhisperVadEnabled ?? false,
+                speakerEmbeddingEnabled: prefs.speakerEmbeddingEnabled ?? config.servicePreferences.speakerEmbeddingEnabled ?? false,
             };
             (0, node_config_1.saveNodeConfig)(config);
             return { success: true };

@@ -414,6 +414,13 @@ class NodeAgent {
                     return status?.running === true;
                 }
             }
+            else if (serviceId === 'speaker-embedding') {
+                // speaker-embedding 通过 PythonServiceManager 管理（服务名是 'speaker_embedding'）
+                if (this.pythonServiceManager && typeof this.pythonServiceManager.getServiceStatus === 'function') {
+                    const status = this.pythonServiceManager.getServiceStatus('speaker_embedding');
+                    return status?.running === true;
+                }
+            }
             // 未知的服务 ID 或服务管理器不可用，返回 false
             return false;
         }
@@ -519,6 +526,16 @@ class NodeAgent {
             return;
         const startTime = Date.now();
         try {
+            // 根据 features 启动所需的服务
+            if (job.features?.speaker_identification && this.pythonServiceManager) {
+                try {
+                    await this.pythonServiceManager.startService('speaker_embedding');
+                    logger_1.default.info({ jobId: job.job_id }, 'Started speaker_embedding service for speaker_identification feature');
+                }
+                catch (error) {
+                    logger_1.default.warn({ error, jobId: job.job_id }, 'Failed to start speaker_embedding service, continuing without it');
+                }
+            }
             // 如果启用了流式 ASR，设置部分结果回调
             const partialCallback = job.enable_streaming_asr ? (partial) => {
                 // 发送 ASR 部分结果到调度服务器

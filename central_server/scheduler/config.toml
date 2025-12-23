@@ -105,15 +105,15 @@ pool_match_mode = "contains"
 # 调度 dry-run（Phase3）：
 # - 目的：不跑真实音频/WS，也能快速验证 routing_key/required_services 会落到哪个 pool、为何 fallback
 # - 例子：
-#   GET /api/v1/phase3/simulate?routing_key=tenant-A&required=node-inference&required=nmt-m2m100&required=piper-tts
+#   GET /api/v1/phase3/simulate?routing_key=tenant-A&required=faster-whisper-vad&required=nmt-m2m100&required=piper-tts
 # strict_pool_eligibility=true 时：没有 eligible pool 直接返回 NO_AVAILABLE_NODE（强隔离）
 strict_pool_eligibility = false
 
-# 示例：一个“全核心链路” pool（节点必须安装以下服务包才会进入该 pool）
+# 示例：一个"全核心链路" pool（节点必须安装以下服务包才会进入该 pool）
 # [[scheduler.phase3.pools]]
 # pool_id = 10
 # name = "core_all"
-# required_services = ["node-inference", "nmt-m2m100", "piper-tts"]
+# required_services = ["faster-whisper-vad", "nmt-m2m100", "piper-tts"]
 
 # 示例：tenant 强绑定（当 routing_key=tenant_id 时生效）
 # [[scheduler.phase3.tenant_overrides]]

@@ -55,6 +55,9 @@
 
 - **位置**: `electron_node/`
 - **文档索引**: [electron_node/README.md](./electron_node/README.md)
+- **新增服务**:
+  - [Faster Whisper VAD 服务](../electron_node/services/faster_whisper_vad/README.md) - ASR + VAD 整合服务（GPU加速）
+  - [Speaker Embedding 服务](../electron_node/services/speaker_embedding/README.md) - 说话者特征提取服务（GPU加速）
 
 ## 项目结构
 

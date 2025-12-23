@@ -49,7 +49,7 @@ export function registerRuntimeHandlers(
   });
 
   // Python 服务管理 IPC 接口
-  ipcMain.handle('get-python-service-status', async (_, serviceName: 'nmt' | 'tts' | 'yourtts') => {
+  ipcMain.handle('get-python-service-status', async (_, serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => {
     return pythonServiceManager?.getServiceStatus(serviceName) || {
       name: serviceName,
       running: false,
@@ -67,7 +67,7 @@ export function registerRuntimeHandlers(
     return pythonServiceManager?.getAllServiceStatuses() || [];
   });
 
-  ipcMain.handle('start-python-service', async (_, serviceName: 'nmt' | 'tts' | 'yourtts') => {
+  ipcMain.handle('start-python-service', async (_, serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => {
     if (!pythonServiceManager) {
       throw new Error('Python service manager not initialized');
     }
@@ -80,7 +80,7 @@ export function registerRuntimeHandlers(
     }
   });
 
-  ipcMain.handle('stop-python-service', async (_, serviceName: 'nmt' | 'tts' | 'yourtts') => {
+  ipcMain.handle('stop-python-service', async (_, serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => {
     if (!pythonServiceManager) {
       throw new Error('Python service manager not initialized');
     }
@@ -130,7 +130,7 @@ export function registerRuntimeHandlers(
       // 确保注册表已加载
       await serviceRegistryManager.loadRegistry();
       const installedServices = serviceRegistryManager.listInstalled();
-      
+
       // 获取所有已安装的 service_id（去重）
       const serviceIds = new Set<string>();
       installedServices.forEach((service) => {
@@ -195,9 +195,13 @@ export function registerRuntimeHandlers(
     ): Promise<{ success: boolean; error?: string }> => {
       try {
         const config = loadNodeConfig();
+        // 确保所有字段都被保存（包括新添加的字段）
         config.servicePreferences = {
           ...config.servicePreferences,
           ...prefs,
+          // 确保新字段有默认值（如果未提供）
+          fasterWhisperVadEnabled: prefs.fasterWhisperVadEnabled ?? config.servicePreferences.fasterWhisperVadEnabled ?? false,
+          speakerEmbeddingEnabled: prefs.speakerEmbeddingEnabled ?? config.servicePreferences.speakerEmbeddingEnabled ?? false,
         };
         saveNodeConfig(config);
         return { success: true };

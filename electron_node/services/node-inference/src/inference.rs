@@ -108,6 +108,7 @@ impl InferenceService {
         let module_manager = ModuleManager::new();
 
         // 初始化可选模块（即使未启用，也创建实例以便后续启用）
+        let speaker_identifier = Some(std::sync::Arc::new(tokio::sync::RwLock::new(speaker::SpeakerIdentifier::new())));
         let voice_cloner = Some(std::sync::Arc::new(tokio::sync::RwLock::new(speaker::VoiceCloner::new())));
 
         Ok(Self {
@@ -116,7 +117,7 @@ impl InferenceService {
             tts_engine,
             vad_engine,
             language_detector,
-            speaker_identifier: None,
+            speaker_identifier,
             voice_cloner,
             speech_rate_detector: None,
             speech_rate_controller: None,
@@ -502,13 +503,24 @@ impl InferenceService {
         );
 
         // 3. 可选模块处理（使用 PipelineContext）
-        // 3.1 音色识别
+        // 3.1 音色识别（使用 f32 音频数据）
         if features.map(|f| f.speaker_identification).unwrap_or(false) {
             if let Some(ref m) = self.speaker_identifier {
                 let module = m.read().await;
                 if InferenceModule::is_enabled(&*module) {
-                    if let Ok(speaker_id) = module.identify(&request.audio_data).await {
-                        ctx.set_speaker_id(speaker_id);
+                    match module.identify(&audio_f32).await {
+                        Ok(result) => {
+                            ctx.set_speaker_id(result.speaker_id.clone());
+                            // 如果返回了 voice_embedding，可以保存到 PipelineContext（如果需要）
+                            if let Some(ref embedding) = result.voice_embedding {
+                                info!(trace_id = %trace_id, speaker_id = %result.speaker_id, embedding_dim = embedding.len(), "说话者识别完成");
+                            } else {
+                                info!(trace_id = %trace_id, speaker_id = %result.speaker_id, "说话者识别完成（无 embedding）");
+                            }
+                        }
+                        Err(e) => {
+                            warn!(trace_id = %trace_id, error = %e, "说话者识别失败");
+                        }
                     }
                 }
             }

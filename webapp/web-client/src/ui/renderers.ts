@@ -242,17 +242,17 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
     const tgtLang = (document.getElementById('tgt-lang') as HTMLSelectElement).value;
     const langA = (document.getElementById('lang-a') as HTMLSelectElement)?.value || 'zh';
     const langB = (document.getElementById('lang-b') as HTMLSelectElement)?.value || 'en';
-    
+
     // 收集用户选择的功能（只包含选中的功能）
     const features: FeatureFlags = {};
-    
+
     const emotionCheckbox = (document.getElementById('feature-emotion') as HTMLInputElement);
     const voiceStyleCheckbox = (document.getElementById('feature-voice-style') as HTMLInputElement);
     const speechRateDetectionCheckbox = (document.getElementById('feature-speech-rate-detection') as HTMLInputElement);
     const speechRateControlCheckbox = (document.getElementById('feature-speech-rate-control') as HTMLInputElement);
     const speakerIdCheckbox = (document.getElementById('feature-speaker-id') as HTMLInputElement);
     const personaCheckbox = (document.getElementById('feature-persona') as HTMLInputElement);
-    
+
     if (emotionCheckbox.checked) {
       features.emotion_detection = true;
     }
@@ -271,10 +271,10 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
     if (personaCheckbox.checked) {
       features.persona_adaptation = true;
     }
-    
+
     // 如果没有任何功能被选中，传递 undefined（或空对象）
     const featuresToSend = Object.keys(features).length > 0 ? features : undefined;
-    
+
     try {
       if (mode === 'two_way_auto') {
         // 双向模式
@@ -305,7 +305,18 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
   });
 
   startBtn.addEventListener('click', async () => {
-    await app.startSession();
+    console.log('[UI] 开始按钮被点击，当前状态:', {
+      state: app.getStateMachine()?.getState(),
+      isSessionActive: app.getStateMachine()?.getIsSessionActive(),
+      isConnected: app.isConnected()
+    });
+    try {
+      await app.startSession();
+      console.log('[UI] startSession 调用完成，新状态:', app.getStateMachine()?.getState());
+    } catch (error) {
+      console.error('[UI] startSession 失败:', error);
+      alert('开始会话失败: ' + error);
+    }
     // 状态变化会通过状态监听自动更新按钮状态，这里不需要手动设置
   });
 
@@ -314,16 +325,16 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
     sendBtn.style.transform = 'scale(0.95)';
     sendBtn.style.opacity = '0.8';
     sendBtn.style.transition = 'all 0.1s ease';
-    
+
     // 执行发送操作
     app.sendCurrentUtterance();
-    
+
     // 恢复按钮样式（延迟恢复，让用户看到反馈）
     setTimeout(() => {
       sendBtn.style.transform = 'scale(1)';
       sendBtn.style.opacity = '1';
     }, 150);
-    
+
     // 添加闪烁效果（可选）
     sendBtn.style.boxShadow = '0 0 10px rgba(0, 123, 255, 0.5)';
     setTimeout(() => {
@@ -413,7 +424,7 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
   if (typeof window !== 'undefined') {
     (window as any).onMemoryPressure = (pressure: 'normal' | 'warning' | 'critical') => {
       console.log('[UI] 内存压力变化:', pressure);
-      
+
       if (pressure === 'warning') {
         // 内存压力50%：开始闪烁提醒
         if (stateMachine && stateMachine.getState() === SessionState.INPUT_RECORDING) {
@@ -449,14 +460,14 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
     stateMachine.onStateChange((newState: SessionState) => {
       const isSessionActive = stateMachine.getIsSessionActive ? stateMachine.getIsSessionActive() : false;
       const isConnected = app.isConnected(); // 在 switch 之前声明，所有 case 都可以使用
-      
+
       console.log('[UI] 状态变化:', {
         newState,
         isSessionActive,
         isConnected,
         playbackRateBtnExists: !!playbackRateBtn
       });
-      
+
       switch (newState) {
         case SessionState.INPUT_READY:
           // 停止定期更新播放按钮时长
@@ -467,7 +478,15 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
             statusText.textContent = '准备就绪';
           }
           // 只有在会话未开始时，开始按钮才可用
-          startBtn.disabled = isSessionActive;
+          // 同时需要确保 WebSocket 已连接
+          const shouldEnableStartBtn = !isSessionActive && isConnected;
+          startBtn.disabled = !shouldEnableStartBtn;
+          console.log('[UI] INPUT_READY: 开始按钮状态', {
+            isSessionActive,
+            isConnected,
+            shouldEnableStartBtn,
+            disabled: startBtn.disabled
+          });
           sendBtn.disabled = true;
           playPauseBtn.disabled = true;
           // 倍速按钮：连接建立后即可使用（作为配置）
@@ -617,7 +636,7 @@ export function renderRoomMode(container: HTMLElement, app: App): void {
         return;
       }
     }
-    
+
     app.createRoom();
     const statusDiv = document.getElementById('room-status');
     const statusText = document.getElementById('room-status-text');
@@ -640,17 +659,17 @@ export function renderRoomMode(container: HTMLElement, app: App): void {
         return;
       }
     }
-    
+
     const roomCodeInput = document.getElementById('room-code-input') as HTMLInputElement;
     const displayNameInput = document.getElementById('display-name-input') as HTMLInputElement;
     const roomCode = roomCodeInput.value.trim();
     const displayName = displayNameInput.value.trim() || undefined;
-    
+
     if (!/^\d{6}$/.test(roomCode)) {
       alert('房间码必须是6位数字');
       return;
     }
-    
+
     app.joinRoom(roomCode, displayName);
     const statusDiv = document.getElementById('room-status');
     const statusText = document.getElementById('room-status-text');
@@ -667,7 +686,7 @@ export function renderRoomMode(container: HTMLElement, app: App): void {
 export function renderRoom(container: HTMLElement, app: App): void {
   const roomCode = app.getCurrentRoomCode() || '';
   const members = app.getRoomMembers();
-  
+
   container.innerHTML = `
     <div style="text-align: center; padding: 20px;">
       <h1>房间模式</h1>
@@ -680,20 +699,20 @@ export function renderRoom(container: HTMLElement, app: App): void {
         <h3>成员列表 (${members.length})</h3>
         <div id="members-list" style="margin-top: 10px; text-align: left;">
           ${members.map((m, idx) => {
-            const memberId = m.session_id || m.participant_id;
-            const memberName = m.display_name || memberId;
-            const isSelf = memberId === app.getSessionId();
-            // 获取当前用户对该成员的原声接收偏好（默认 true）
-            const currentSessionId = app.getSessionId();
-            const rawVoicePrefs = m.raw_voice_preferences || {};
-            const receiveRawVoice = currentSessionId ? (rawVoicePrefs[currentSessionId] !== false) : true;
-            
-            if (isSelf) {
-              return `<div style="padding: 8px; border-bottom: 1px solid #ddd;">
+    const memberId = m.session_id || m.participant_id;
+    const memberName = m.display_name || memberId;
+    const isSelf = memberId === app.getSessionId();
+    // 获取当前用户对该成员的原声接收偏好（默认 true）
+    const currentSessionId = app.getSessionId();
+    const rawVoicePrefs = m.raw_voice_preferences || {};
+    const receiveRawVoice = currentSessionId ? (rawVoicePrefs[currentSessionId] !== false) : true;
+
+    if (isSelf) {
+      return `<div style="padding: 8px; border-bottom: 1px solid #ddd;">
                 <strong>${memberName}</strong> <span style="color: #666;">(我)</span>
               </div>`;
-            } else {
-              return `<div style="padding: 8px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;">
+    } else {
+      return `<div style="padding: 8px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;">
                 <span>${memberName}</span>
                 <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
                   <input type="checkbox" 
@@ -704,8 +723,8 @@ export function renderRoom(container: HTMLElement, app: App): void {
                   <span style="font-size: 12px; color: #666;">接收原声</span>
                 </label>
               </div>`;
-            }
-          }).join('')}
+    }
+  }).join('')}
         </div>
       </div>
 
@@ -791,16 +810,16 @@ export function renderRoom(container: HTMLElement, app: App): void {
     sendBtn.style.transform = 'scale(0.95)';
     sendBtn.style.opacity = '0.8';
     sendBtn.style.transition = 'all 0.1s ease';
-    
+
     // 执行发送操作
     app.sendCurrentUtterance();
-    
+
     // 恢复按钮样式（延迟恢复，让用户看到反馈）
     setTimeout(() => {
       sendBtn.style.transform = 'scale(1)';
       sendBtn.style.opacity = '1';
     }, 150);
-    
+
     // 添加闪烁效果（可选）
     sendBtn.style.boxShadow = '0 0 10px rgba(0, 123, 255, 0.5)';
     setTimeout(() => {
@@ -898,9 +917,9 @@ export function renderRoom(container: HTMLElement, app: App): void {
       if (originalOnMemoryPressure) {
         originalOnMemoryPressure(pressure);
       }
-      
+
       console.log('[UI-房间] 内存压力变化:', pressure);
-      
+
       if (pressure === 'warning') {
         if (stateMachine && stateMachine.getState() === SessionState.INPUT_RECORDING) {
           const hasPendingAudio = app.hasPendingTtsAudio();
@@ -931,7 +950,7 @@ export function renderRoom(container: HTMLElement, app: App): void {
     stateMachine.onStateChange((newState: SessionState) => {
       const isSessionActive = stateMachine.getIsSessionActive ? stateMachine.getIsSessionActive() : false;
       const isConnected = app.isConnected(); // 在 switch 之前声明，所有 case 都可以使用
-      
+
       switch (newState) {
         case SessionState.INPUT_READY:
           // 停止定期更新播放按钮时长
@@ -1037,7 +1056,7 @@ export function renderRoom(container: HTMLElement, app: App): void {
         const isSelf = memberId === currentSessionId;
         const rawVoicePrefs = m.raw_voice_preferences || {};
         const receiveRawVoice = currentSessionId ? (rawVoicePrefs[currentSessionId] !== false) : true;
-        
+
         if (isSelf) {
           return `<div style="padding: 8px; border-bottom: 1px solid #ddd;">
             <strong>${memberName}</strong> <span style="color: #666;">(我)</span>
@@ -1056,7 +1075,7 @@ export function renderRoom(container: HTMLElement, app: App): void {
           </div>`;
         }
       }).join('');
-      
+
       // 重新绑定开关事件
       currentMembers.forEach((m, idx) => {
         const memberId = m.session_id || m.participant_id;
@@ -1072,7 +1091,7 @@ export function renderRoom(container: HTMLElement, app: App): void {
       });
     }
   }, 1000);
-  
+
   // 初始绑定开关事件
   members.forEach((m, idx) => {
     const memberId = m.session_id || m.participant_id;

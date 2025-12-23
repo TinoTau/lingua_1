@@ -31,12 +31,16 @@ async function cleanupServices(nodeAgent, rustServiceManager, pythonServiceManag
         const nmtEnabled = !!pythonStatuses.find(s => s.name === 'nmt')?.running;
         const ttsEnabled = !!pythonStatuses.find(s => s.name === 'tts')?.running;
         const yourttsEnabled = !!pythonStatuses.find(s => s.name === 'yourtts')?.running;
+        const fasterWhisperVadEnabled = !!pythonStatuses.find(s => s.name === 'faster_whisper_vad')?.running;
+        const speakerEmbeddingEnabled = !!pythonStatuses.find(s => s.name === 'speaker_embedding')?.running;
         const config = (0, node_config_1.loadNodeConfig)();
         config.servicePreferences = {
             rustEnabled,
             nmtEnabled,
             ttsEnabled,
             yourttsEnabled,
+            fasterWhisperVadEnabled,
+            speakerEmbeddingEnabled,
         };
         (0, node_config_1.saveNodeConfig)(config);
         logger_1.default.info({ servicePreferences: config.servicePreferences }, 'Saved current service status to config file');

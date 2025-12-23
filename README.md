@@ -47,7 +47,9 @@ lingua_1/
 │   │   ├── node-inference/  # 节点推理服务（Rust）
 │   │   ├── nmt_m2m100/      # NMT服务（Python）
 │   │   ├── piper_tts/       # TTS服务（Python）
-│   │   └── your_tts/        # YourTTS服务（Python）
+│   │   ├── your_tts/        # YourTTS服务（Python）
+│   │   ├── faster_whisper_vad/  # Faster Whisper VAD服务（Python，GPU加速）
+│   │   └── speaker_embedding/  # Speaker Embedding服务（Python，GPU加速）
 │   └── docs/                 # 节点客户端文档
 │
 ├── scripts/                   # 启动脚本
@@ -167,8 +169,16 @@ npm start
   - **ASR**: Whisper (GGML)
   - **VAD**: Silero VAD (ONNX) - 支持 Level 2 断句和上下文优化
   - **音频处理**: Opus 解码支持（opus-rs）
-- **Python 服务**: Python (NMT、TTS、YourTTS)
+- **Python 服务**: 
+  - **NMT**: M2M100 机器翻译服务（端口 5008）
+  - **TTS**: Piper TTS 服务（端口 5006）
+  - **YourTTS**: 零样本语音克隆服务（端口 5004）
+  - **Faster Whisper VAD**: ASR + VAD 整合服务（端口 6007，GPU加速）
+  - **Speaker Embedding**: 说话者特征提取服务（端口 5003，GPU加速）
 - **连接**: WebSocket 连接到 Scheduler (节点注册)
+- **GPU 加速**: 
+  - Faster Whisper VAD 支持 CUDA 加速（10-20x 性能提升）
+  - Speaker Embedding 支持 CUDA 加速（5-10x 性能提升）
 - **音频优化**:
   - Opus 压缩支持（端到端）
   - VAD 语音段检测和静音过滤

@@ -43,6 +43,28 @@
 - [上下文缓冲区状态](../../electron_node/services/node-inference/docs/CONTEXT_BUFFER_STATUS.md) - 上下文缓冲区使用说明
 - [ASR 日志查看指南](../../electron_node/services/node-inference/docs/HOW_TO_VIEW_ASR_LOGS.md) - ASR 日志查看方法
 
+### Speaker Embedding 模块（新增）
+- [Embedding 模块迁移报告](../../electron_node/services/node-inference/docs/EMBEDDING_MODULE_MIGRATION.md) - 完整的迁移文档和架构说明
+- [Embedding 模块对比分析](../../electron_node/services/node-inference/docs/EMBEDDING_MODULE_COMPARISON.md) - 原项目与当前项目对比
+- [模块实现方式说明](../../electron_node/services/node-inference/docs/MODULE_IMPLEMENTATION_METHODS.md) - 包含 Speaker Embedding 服务说明
+- [模块列表](../../electron_node/services/node-inference/docs/MODULE_LIST.md) - 所有模块列表和说明
+
+### 新增 Python 服务（2025-12-23）
+
+#### Faster Whisper VAD 服务
+- [服务 README](../../electron_node/services/faster_whisper_vad/README.md) - 服务使用说明和 API 文档
+- [GPU 性能分析](../../electron_node/services/faster_whisper_vad/GPU_ANALYSIS.md) - GPU 可行性和性能分析
+- [GPU 配置指南](../../electron_node/services/faster_whisper_vad/GPU_SETUP.md) - GPU 配置步骤
+
+#### Speaker Embedding 服务
+- [服务 README](../../electron_node/services/speaker_embedding/README.md) - 服务使用说明和 API 文档
+- [GPU 性能分析](../../electron_node/services/speaker_embedding/GPU_ANALYSIS.md) - GPU 可行性和性能分析
+- [GPU 配置指南](../../electron_node/services/speaker_embedding/GPU_SETUP.md) - GPU 配置步骤
+
+#### GPU 配置相关
+- [GPU 配置完成报告](../../electron_node/services/GPU_CONFIGURATION_COMPLETE.md) - GPU 配置状态和验证结果
+- [PyTorch 版本分析](../../electron_node/services/PYTORCH_VERSION_ANALYSIS.md) - 各服务 PyTorch 版本分析和架构说明
+
 ---
 
 ## 相关链接

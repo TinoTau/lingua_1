@@ -41,6 +41,7 @@ docs/
 - [文档索引](./central_server/README.md)
 - [快速开始](./central_server/QUICK_START.md)
 - [Scheduler Phase 2](./central_server/scheduler/phase2_implementation.md)
+- [**Scheduler Pool 机制**](./central_server/scheduler/POOL_MECHANISM.md) - 两级调度与节点分组 ⭐
 - [API Gateway](./central_server/api_gateway/README.md)
 - [Model Hub](./central_server/model_hub/README.md)
 
@@ -48,6 +49,15 @@ docs/
 - [文档索引](./electron_node/README.md)
 - [模块化功能](./electron_node/modular/README.md)
 - [Electron Node 文档](./electron_node/electron_node/README.md)
+- [节点推理服务文档](./electron_node/node-inference/README.md)
+  - [Speaker Embedding 模块迁移报告](../electron_node/services/node-inference/docs/EMBEDDING_MODULE_MIGRATION.md)
+  - [Embedding 模块对比分析](../electron_node/services/node-inference/docs/EMBEDDING_MODULE_COMPARISON.md)
+  - [模块实现方式说明](../electron_node/services/node-inference/docs/MODULE_IMPLEMENTATION_METHODS.md)
+- **新增 Python 服务（2025-12-23）**:
+  - [Faster Whisper VAD 服务](../electron_node/services/faster_whisper_vad/README.md) - ASR + VAD 整合服务（GPU加速）
+  - [Speaker Embedding 服务](../electron_node/services/speaker_embedding/README.md) - 说话者特征提取服务（GPU加速）
+  - [GPU 配置完成报告](../electron_node/services/GPU_CONFIGURATION_COMPLETE.md) - GPU 配置状态
+  - [PyTorch 版本分析](../electron_node/services/PYTORCH_VERSION_ANALYSIS.md) - 版本分析和架构说明
 
 ---
 
@@ -67,6 +77,7 @@ docs/
 - [系统架构](./SYSTEM_ARCHITECTURE.md)
 - [Web 客户端架构](./web_client/ARCHITECTURE.md)
 - [模块化架构](./electron_node/modular/LINGUA_完整技术说明书_v2.md)
+- [服务类型化能力改造方案](./architecture/SERVICE_TYPE_CAPABILITY_REDESIGN.md) - 将 service_id 粒度改为 ASR/NMT/TTS/TONE 类型粒度
 
 ---
 

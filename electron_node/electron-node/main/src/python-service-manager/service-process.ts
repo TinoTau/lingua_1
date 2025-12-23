@@ -8,6 +8,7 @@ import { PythonServiceName } from './types';
 import { createLogStream, flushLogBuffer, detectLogLevel } from './service-logging';
 import { waitForServiceReady } from './service-health';
 import { PythonServiceConfig as PythonServiceConfigType } from '../utils/python-service-config';
+import { ensureVenvSetup } from './venv-setup';
 
 export interface ServiceProcessHandlers {
   onProcessError: (error: Error) => void;
@@ -23,22 +24,22 @@ async function checkCudaAvailable(pythonExe: string): Promise<boolean> {
     const python = spawn(pythonExe, ['-c', checkScript], {
       stdio: 'ignore',
     });
-    
+
     let resolved = false;
-    
+
     const cleanup = () => {
       if (!resolved) {
         resolved = true;
         python.kill();
       }
     };
-    
+
     // 超时保护
     const timeout = setTimeout(() => {
       cleanup();
       resolve(false);
     }, 3000);
-    
+
     python.on('close', (code: number | null) => {
       if (!resolved) {
         resolved = true;
@@ -46,7 +47,7 @@ async function checkCudaAvailable(pythonExe: string): Promise<boolean> {
         resolve(code === 0);
       }
     });
-    
+
     python.on('error', () => {
       if (!resolved) {
         resolved = true;
@@ -109,6 +110,37 @@ export async function buildServiceArgs(
     ];
     if (cudaAvailable) {
       args.push('--gpu');
+      logger.info({ serviceName }, 'YourTTS: GPU enabled via --gpu flag');
+    }
+    return args;
+  } else if (serviceName === 'speaker_embedding') {
+    // Speaker Embedding 服务：通过 --gpu 参数启用 GPU
+    const args = [
+      config.scriptPath,
+      '--host', '127.0.0.1',
+      '--port', config.port.toString(),
+    ];
+    if (cudaAvailable) {
+      args.push('--gpu');
+      logger.info({ serviceName }, 'Speaker Embedding: GPU enabled via --gpu flag');
+    }
+    return args;
+  } else if (serviceName === 'faster_whisper_vad') {
+    // Faster Whisper VAD 服务：通过环境变量启用 GPU（已在 python-service-config.ts 中设置）
+    // 注意：不要在 service-process.ts 中覆盖 ASR_DEVICE，因为 python-service-config.ts 已经根据 CUDA_PATH 正确设置了
+    // 如果这里覆盖，会忽略 python-service-config.ts 中的 CUDA 检测逻辑
+    const args = [
+      config.scriptPath,
+    ];
+    // ASR_DEVICE 和 ASR_COMPUTE_TYPE 已在 python-service-config.ts 中根据 CUDA_PATH 正确设置
+    // 这里只记录日志，不覆盖配置
+    if (config.env?.ASR_DEVICE) {
+      logger.info({ 
+        serviceName, 
+        asrDevice: config.env.ASR_DEVICE,
+        asrComputeType: config.env.ASR_COMPUTE_TYPE,
+        cudaPath: config.env.CUDA_PATH 
+      }, 'Faster Whisper VAD: Device configuration from python-service-config.ts');
     }
     return args;
   }
@@ -123,11 +155,37 @@ export async function startServiceProcess(
   config: PythonServiceConfig,
   handlers: ServiceProcessHandlers
 ): Promise<ChildProcess> {
-  // 检查虚拟环境
+  // 确保虚拟环境已设置（如果不存在则自动创建并安装依赖）
+  try {
+    await ensureVenvSetup(config, serviceName);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    logger.error(
+      {
+        serviceName,
+        venvPath: config.venvPath,
+        error: errorMessage,
+      },
+      'Failed to setup virtual environment'
+    );
+    throw error;
+  }
+
+  // 检查虚拟环境（应该已经存在）
   const pythonExe = path.join(config.venvPath, 'Scripts', 'python.exe');
   if (!fs.existsSync(pythonExe)) {
-    const error = `Virtual environment does not exist: ${config.venvPath}`;
-    logger.error({ serviceName, venvPath: config.venvPath }, error);
+    const error = `Virtual environment does not exist after setup: ${config.venvPath}`;
+    logger.error(
+      {
+        serviceName,
+        venvPath: config.venvPath,
+        pythonExe,
+        venvExists: fs.existsSync(config.venvPath),
+        scriptPath: config.scriptPath,
+        scriptExists: fs.existsSync(config.scriptPath),
+      },
+      error
+    );
     throw new Error(error);
   }
 

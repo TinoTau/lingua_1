@@ -128,8 +128,14 @@ async function stopRustProcess(childProcess, port) {
             resolve();
             return;
         }
-        childProcess.once('exit', async () => {
-            logger_1.default.info({ pid, port }, `Rust service process exited (port: ${port}, PID: ${pid})`);
+        childProcess.once('exit', async (code, signal) => {
+            // 使用 taskkill /F 强制终止时，退出码可能为 1，这是正常的，不应该视为错误
+            if (code === 1 && process.platform === 'win32') {
+                logger_1.default.info({ pid, port, code, signal }, `Rust service process exited (port: ${port}, PID: ${pid}) - normal termination via taskkill`);
+            }
+            else {
+                logger_1.default.info({ pid, port, code, signal }, `Rust service process exited (port: ${port}, PID: ${pid})`);
+            }
             // 验证端口是否已释放
             await (0, port_manager_1.verifyPortReleased)(port, 'rust');
             resolve();

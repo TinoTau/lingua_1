@@ -14,5 +14,5 @@ export interface PythonServiceStatus {
   gpuUsageMs: number; // GPU累计使用时长（毫秒）
 }
 
-export type PythonServiceName = 'nmt' | 'tts' | 'yourtts';
+export type PythonServiceName = 'nmt' | 'tts' | 'yourtts' | 'speaker_embedding' | 'faster_whisper_vad';
 

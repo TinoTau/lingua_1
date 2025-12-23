@@ -22,9 +22,18 @@ class PythonServiceManager {
   private taskCounts: Map<string, number> = new Map(); // 任务计数
   private gpuTrackers: Map<string, GpuUsageTracker> = new Map(); // GPU 跟踪器
   private projectRoot: string = '';
+  private onStatusChangeCallback: ((serviceName: PythonServiceName, status: PythonServiceStatus) => void) | null = null; // 状态变化回调
 
   constructor() {
     this.projectRoot = findProjectRoot();
+  }
+
+  /**
+   * 注册服务状态变化回调
+   * 当服务的 running 状态发生变化时，会调用此回调
+   */
+  setOnStatusChangeCallback(callback: (serviceName: PythonServiceName, status: PythonServiceStatus) => void): void {
+    this.onStatusChangeCallback = callback;
   }
 
   /**
@@ -36,6 +45,8 @@ class PythonServiceManager {
       nmt: 'nmt-m2m100',
       tts: 'piper-tts',
       yourtts: 'your-tts',
+      speaker_embedding: 'speaker-embedding',
+      faster_whisper_vad: 'faster-whisper-vad',
     };
 
     const serviceId = serviceIdMap[serviceName];
@@ -60,10 +71,10 @@ class PythonServiceManager {
       }
 
       const serviceConfig = await loadServiceConfigFromJson(serviceId, servicesDir);
-      
+
       if (serviceConfig) {
         logger.info({ serviceName, serviceId }, 'Using service.json configuration');
-        
+
         // 转换为 PythonServiceConfig 格式
         const converted = convertToPythonServiceConfig(
           serviceId,
@@ -74,7 +85,7 @@ class PythonServiceManager {
 
         // 获取硬编码配置以补充缺失的字段（如 env、logDir 等）
         const fallbackConfig = getPythonServiceConfig(serviceName, this.projectRoot);
-        
+
         if (fallbackConfig) {
           // 合并配置：使用 service.json 的配置，但保留硬编码配置的其他字段
           return {
@@ -101,9 +112,25 @@ class PythonServiceManager {
       return;
     }
 
-    const config = await this.getServiceConfig(serviceName);
-    if (!config) {
-      throw new Error(`Unknown service: ${serviceName}`);
+    let config: PythonServiceConfig | null = null;
+    try {
+      config = await this.getServiceConfig(serviceName);
+      if (!config) {
+        throw new Error(`Unknown service: ${serviceName}`);
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error(
+        {
+          error: {
+            message: errorMessage,
+            name: error instanceof Error ? error.name : typeof error,
+          },
+          serviceName,
+        },
+        'Failed to get service config'
+      );
+      throw error;
     }
 
     // 设置启动中状态
@@ -179,14 +206,32 @@ class PythonServiceManager {
         'Python service started'
       );
     } catch (error) {
-      logger.error({ error, serviceName }, 'Failed to start Python service');
+      // 记录详细的错误信息
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      logger.error(
+        {
+          error: {
+            message: errorMessage,
+            stack: errorStack,
+            name: error instanceof Error ? error.name : typeof error,
+          },
+          serviceName,
+          config: {
+            venvPath: config?.venvPath,
+            scriptPath: config?.scriptPath,
+            port: config?.port,
+          },
+        },
+        'Failed to start Python service'
+      );
       this.updateStatus(serviceName, {
         running: false,
         starting: false,
         pid: null,
-        port: config.port,
+        port: config?.port || null,
         startedAt: null,
-        lastError: error instanceof Error ? error.message : String(error),
+        lastError: errorMessage,
       });
       throw error;
     }
@@ -233,7 +278,7 @@ class PythonServiceManager {
   }
 
   async stopAllServices(): Promise<void> {
-    const serviceNames: Array<PythonServiceName> = ['nmt', 'tts', 'yourtts'];
+    const serviceNames: Array<PythonServiceName> = ['nmt', 'tts', 'yourtts', 'speaker_embedding', 'faster_whisper_vad'];
 
     // 记录当前运行的服务状态
     const runningServices = serviceNames
@@ -280,7 +325,7 @@ class PythonServiceManager {
       // 更新统计信息
       const taskCount = this.taskCounts.get(serviceName) || 0;
       status.taskCount = taskCount;
-      
+
       // 只有在有任务时才返回GPU使用时间，否则返回0
       if (taskCount > 0) {
         const tracker = this.gpuTrackers.get(serviceName);
@@ -297,7 +342,7 @@ class PythonServiceManager {
       // 更新统计信息
       const taskCount = this.taskCounts.get(status.name) || 0;
       status.taskCount = taskCount;
-      
+
       // 只有在有任务时才返回GPU使用时间，否则返回0
       if (taskCount > 0) {
         const tracker = this.gpuTrackers.get(status.name);
@@ -318,7 +363,7 @@ class PythonServiceManager {
     const current = this.taskCounts.get(serviceName) || 0;
     const newCount = current + 1;
     this.taskCounts.set(serviceName, newCount);
-    
+
     // 如果是第一个任务，开始GPU跟踪
     // 注意：这个方法在任务完成后被调用，但GPU跟踪应该在任务开始时开始
     // 因此这里启动GPU跟踪意味着"这个服务已经处理过任务了，应该开始跟踪"
@@ -327,7 +372,7 @@ class PythonServiceManager {
       this.startGpuTracking(serviceName);
       logger.info({ serviceName }, 'First task completed, starting GPU usage time tracking (will be counted during subsequent task execution)');
     }
-    
+
     const status = this.statuses.get(serviceName);
     if (status) {
       status.taskCount = newCount;
@@ -359,13 +404,17 @@ class PythonServiceManager {
   private updateStatus(serviceName: string, status: Partial<Omit<PythonServiceStatus, 'name'>>): void {
     const current = this.statuses.get(serviceName);
     const taskCount = this.taskCounts.get(serviceName) || 0;
-    
+
     // 只有在有任务时才计算GPU使用时间，否则为0
     let gpuUsageMs = 0;
     if (taskCount > 0) {
       const tracker = this.gpuTrackers.get(serviceName);
       gpuUsageMs = tracker ? tracker.getGpuUsageMs() : 0;
     }
+
+    // 检查 running 状态是否发生变化
+    const previousRunning = current?.running ?? false;
+    const newRunning = status.running !== undefined ? status.running : (current?.running ?? false);
 
     // 合并状态，确保统计信息不被覆盖
     const mergedStatus: PythonServiceStatus = {
@@ -392,6 +441,15 @@ class PythonServiceManager {
     }
 
     this.statuses.set(serviceName, mergedStatus);
+
+    // 如果 running 状态发生变化，触发回调
+    if (previousRunning !== newRunning && this.onStatusChangeCallback) {
+      try {
+        this.onStatusChangeCallback(serviceName as PythonServiceName, mergedStatus);
+      } catch (error) {
+        logger.error({ error, serviceName }, 'Error in onStatusChangeCallback');
+      }
+    }
   }
 }
 
