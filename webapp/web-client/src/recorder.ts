@@ -46,6 +46,40 @@ export class Recorder {
     this.consecutiveSilenceFrames = 0;
     this.isSendingAudio = false;
   }
+
+  /**
+   * 根据语速调整静音检测配置（未来功能）
+   * @param speechRate 语速倍数（1.0 = 正常，>1.0 = 快，<1.0 = 慢）
+   */
+  adjustSilenceFilterBySpeechRate(speechRate: number): void {
+    if (!this.silenceFilterConfig.speechRateAdaptive) {
+      return; // 如果未启用语速自适应，不调整
+    }
+
+    // 根据语速调整 releaseFrames
+    // 语速快 -> 需要更短的静音检测时间（减少 releaseFrames）
+    // 语速慢 -> 需要更长的静音检测时间（增加 releaseFrames）
+    const baseReleaseFrames = 30; // 基础值（正常语速）
+    const adjustedReleaseFrames = Math.round(baseReleaseFrames / speechRate);
+    
+    // 限制在合理范围内（10-60 帧，即 100ms-600ms）
+    const minReleaseFrames = 10;
+    const maxReleaseFrames = 60;
+    const clampedReleaseFrames = Math.max(minReleaseFrames, Math.min(maxReleaseFrames, adjustedReleaseFrames));
+
+    if (this.silenceFilterConfig.releaseFrames !== clampedReleaseFrames) {
+      this.updateSilenceFilterConfig({
+        releaseFrames: clampedReleaseFrames,
+        speechRateMultiplier: speechRate,
+      });
+      
+      console.log(
+        `[Recorder] Adjusted silence filter by speech rate: ` +
+        `speechRate=${speechRate.toFixed(2)}, ` +
+        `releaseFrames=${clampedReleaseFrames} (${clampedReleaseFrames * this.silenceFilterConfig.windowMs}ms)`
+      );
+    }
+  }
   
   /**
    * 获取静音过滤配置

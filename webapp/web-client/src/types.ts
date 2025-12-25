@@ -45,6 +45,9 @@ export interface SilenceFilterConfig {
   releaseFrames: number; // 连续 M 帧静音才停止发送（默认 5）
   attackThreshold?: number; // 进入语音的阈值（可选，默认使用 threshold）
   releaseThreshold?: number; // 退出语音的阈值（可选，默认使用 threshold）
+  // 语速自适应配置（未来功能：根据语速动态调整静音检测参数）
+  speechRateAdaptive?: boolean; // 是否启用语速自适应（默认 false）
+  speechRateMultiplier?: number; // 语速倍数（1.0 = 正常，>1.0 = 快，<1.0 = 慢），用于调整 releaseFrames
 }
 
 export const DEFAULT_SILENCE_FILTER_CONFIG: SilenceFilterConfig = {

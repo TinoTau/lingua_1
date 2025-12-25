@@ -266,6 +266,21 @@ async def process_utterance(req: UtteranceRequest):
     trace_id = req.trace_id or req.job_id
     # 严格按照 node-inference 的日志格式
     logger.info(f"[{trace_id}] Received utterance request: job_id={req.job_id}, audio_format={req.audio_format}, sample_rate={req.sample_rate}")
+    
+    # 详细记录入参信息（用于调试重复问题）
+    logger.info(
+        f"[{trace_id}] ========== ASR 接口入参 =========="
+    )
+    logger.info(
+        f"[{trace_id}] ASR 请求参数: "
+        f"job_id={req.job_id}, "
+        f"src_lang={req.src_lang}, "
+        f"audio_format={req.audio_format}, "
+        f"sample_rate={req.sample_rate}, "
+        f"use_context_buffer={req.use_context_buffer}, "
+        f"use_text_context={req.use_text_context}, "
+        f"condition_on_previous_text={req.condition_on_previous_text}"
+    )
     logger.debug(
         f"[{trace_id}] "
         f"trace_id={trace_id} "
@@ -430,6 +445,14 @@ async def process_utterance(req: UtteranceRequest):
                 logger.info(
                     f"[{trace_id}] "
                     f"Using text context ({len(text_context)} chars): \"{text_context[:100]}...\""
+                )
+                # 记录完整的文本上下文（用于调试重复问题）
+                logger.info(
+                    f"[{trace_id}] ASR 文本上下文 (完整): \"{text_context}\""
+                )
+            else:
+                logger.info(
+                    f"[{trace_id}] No text context available (first utterance or context was reset)"
                 )
         
         # 8. 验证音频数据格式（防止Faster Whisper崩溃）
@@ -705,6 +728,117 @@ async def process_utterance(req: UtteranceRequest):
                         f"original_text=\"{original_text[:100]}\", "
                         f"deduplicated_text=\"{full_text_trimmed[:100]}\""
                     )
+                
+                # 9.3. 跨 utterance 去重：检查当前文本是否与上一个 utterance 的文本重复
+                if req.use_text_context:
+                    previous_text = get_text_context()
+                    if previous_text and full_text_trimmed:
+                        previous_text_trimmed = previous_text.strip()
+                        # 记录用于调试
+                        logger.info(
+                            f"[{trace_id}] Step 9.3: Cross-utterance deduplication check: "
+                            f"previous_text=\"{previous_text_trimmed}\", "
+                            f"current_text=\"{full_text_trimmed}\""
+                        )
+                        # 检查是否完全重复
+                        if full_text_trimmed == previous_text_trimmed:
+                            logger.warning(
+                                f"[{trace_id}] Step 9.3: Cross-utterance complete duplicate detected, "
+                                f"previous_text=\"{previous_text_trimmed[:100]}\", "
+                                f"current_text=\"{full_text_trimmed[:100]}\", "
+                                f"returning empty result"
+                            )
+                            # 完全重复，返回空结果（跳过 NMT 和 TTS）
+                            return UtteranceResponse(
+                                text="",
+                                segments=[],
+                                language=info_language,
+                                duration=info_duration,
+                                vad_segments=[],
+                            )
+                        # 检查是否部分重复（多种情况）
+                        # 情况1：当前文本以上一个文本开头（例如：上一个="测试"，当前="测试一下"）
+                        elif full_text_trimmed.startswith(previous_text_trimmed):
+                            # 移除重复部分
+                            remaining_text = full_text_trimmed[len(previous_text_trimmed):].strip()
+                            if remaining_text:
+                                logger.info(
+                                    f"[{trace_id}] Step 9.3: Cross-utterance partial duplicate removed (current starts with previous), "
+                                    f"previous_text=\"{previous_text_trimmed[:50]}\", "
+                                    f"original_text=\"{full_text_trimmed[:100]}\", "
+                                    f"remaining_text=\"{remaining_text[:100]}\""
+                                )
+                                full_text_trimmed = remaining_text
+                            else:
+                                # 移除重复部分后为空，返回空结果
+                                logger.warning(
+                                    f"[{trace_id}] Step 9.3: Cross-utterance partial duplicate removed, "
+                                    f"but remaining text is empty, returning empty result"
+                                )
+                                return UtteranceResponse(
+                                    text="",
+                                    segments=[],
+                                    language=info_language,
+                                    duration=info_duration,
+                                    vad_segments=[],
+                                )
+                        # 情况2：当前文本是上一个文本的后缀（例如：上一个="实力语言 应万般的重复"，当前="语言 应万般的重复"）
+                        elif previous_text_trimmed.endswith(full_text_trimmed):
+                            # 当前文本完全包含在上一个文本的结尾，返回空结果
+                            logger.warning(
+                                f"[{trace_id}] Step 9.3: Cross-utterance suffix duplicate detected, "
+                                f"previous_text=\"{previous_text_trimmed[:100]}\", "
+                                f"current_text=\"{full_text_trimmed[:100]}\", "
+                                f"returning empty result"
+                            )
+                            return UtteranceResponse(
+                                text="",
+                                segments=[],
+                                language=info_language,
+                                duration=info_duration,
+                                vad_segments=[],
+                            )
+                        # 情况3：当前文本包含在上一个文本中（例如：上一个="实力语言 应万般的重复"，当前="应万般的重复"）
+                        elif full_text_trimmed in previous_text_trimmed:
+                            # 当前文本完全包含在上一个文本中，返回空结果
+                            logger.warning(
+                                f"[{trace_id}] Step 9.3: Cross-utterance contained duplicate detected, "
+                                f"previous_text=\"{previous_text_trimmed[:100]}\", "
+                                f"current_text=\"{full_text_trimmed[:100]}\", "
+                                f"returning empty result"
+                            )
+                            return UtteranceResponse(
+                                text="",
+                                segments=[],
+                                language=info_language,
+                                duration=info_duration,
+                                vad_segments=[],
+                            )
+                        # 情况4：上一个文本包含在当前文本中（例如：上一个="语言"，当前="语言 应万般的重复"）
+                        elif previous_text_trimmed in full_text_trimmed:
+                            # 移除重复部分（上一个文本）
+                            remaining_text = full_text_trimmed.replace(previous_text_trimmed, "", 1).strip()
+                            if remaining_text:
+                                logger.info(
+                                    f"[{trace_id}] Step 9.3: Cross-utterance partial duplicate removed (previous contained in current), "
+                                    f"previous_text=\"{previous_text_trimmed[:50]}\", "
+                                    f"original_text=\"{full_text_trimmed[:100]}\", "
+                                    f"remaining_text=\"{remaining_text[:100]}\""
+                                )
+                                full_text_trimmed = remaining_text
+                            else:
+                                # 移除重复部分后为空，返回空结果
+                                logger.warning(
+                                    f"[{trace_id}] Step 9.3: Cross-utterance partial duplicate removed, "
+                                    f"but remaining text is empty, returning empty result"
+                                )
+                                return UtteranceResponse(
+                                    text="",
+                                    segments=[],
+                                    language=info_language,
+                                    duration=info_duration,
+                                    vad_segments=[],
+                                )
         except Exception as e:
             logger.error(f"[{trace_id}] Step 9.1: Failed to trim text: {e}", exc_info=True)
             raise

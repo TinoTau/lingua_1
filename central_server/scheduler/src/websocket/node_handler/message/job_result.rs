@@ -342,23 +342,6 @@ pub(super) async fn handle_job_result(
                 "⚠️ TTS 音频为空（节点端未返回音频数据）"
             );
         }
-        
-        // 检查ASR结果是否可能不完整（以不完整的句子结尾）
-        if let Some(ref asr) = text_asr {
-            if !asr.is_empty() {
-                let trimmed = asr.trim();
-                // 检查是否以句号、问号、感叹号结尾（中文和英文）
-                let sentence_endings = ['。', '！', '？', '.', '!', '?'];
-                if !trimmed.ends_with(sentence_endings) && trimmed.len() > 5 {
-                    warn!(
-                        trace_id = %trace_id,
-                        job_id = %job_id,
-                        asr_text = %trimmed,
-                        "ASR结果可能不完整：句子未以标点符号结尾，可能是音频被过早截断"
-                    );
-                }
-            }
-        }
 
         // Add to result queue (use sender's session_id)
         state
