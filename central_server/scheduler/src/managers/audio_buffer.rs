@@ -73,11 +73,30 @@ impl AudioBufferManager {
     }
 
     /// 添加音频块
-    pub async fn add_chunk(&self, session_id: &str, utterance_index: u64, chunk: Vec<u8>) {
+    /// 返回 (should_finalize, current_size_bytes)
+    /// - should_finalize: 如果音频长度超过异常保护限制，返回 true 表示应该触发 finalize
+    /// - current_size_bytes: 当前音频的总字节数
+    /// 
+    /// 注意：正常情况下，Web 端 VAD 会过滤静音，调度服务器的 pause_ms 超时机制会触发 finalize。
+    /// 这里的限制仅作为异常保护，防止极端情况下（如 VAD 失效、超时机制失效）音频无限累积。
+    pub async fn add_chunk(&self, session_id: &str, utterance_index: u64, chunk: Vec<u8>) -> (bool, usize) {
         let key = format!("{}:{}", session_id, utterance_index);
         let mut buffers = self.buffers.write().await;
         let buffer = buffers.entry(key).or_insert_with(AudioBuffer::new);
         buffer.add_chunk(chunk);
+        
+        // 异常保护：限制音频总大小，防止极端情况下音频无限累积导致 GPU 内存溢出
+        // 正常情况下，Web 端 VAD 会过滤静音，调度服务器的 pause_ms（默认 2000ms）超时机制会触发 finalize
+        // 这里的限制设置为 500KB（约 2-3 分钟音频），仅作为异常保护
+        // 对于 16kHz 单声道，Opus 编码：
+        // - 低比特率（~16kbps）：约 60KB/30秒
+        // - 中等比特率（~32kbps）：约 120KB/30秒
+        // - 高比特率（~64kbps）：约 240KB/30秒
+        // 使用 500KB 作为异常保护上限，正常情况下不会触发（因为 pause_ms 会先触发）
+        const MAX_AUDIO_SIZE_BYTES: usize = 500 * 1024; // 500KB（异常保护）
+        let should_finalize = buffer.total_size > MAX_AUDIO_SIZE_BYTES;
+        
+        (should_finalize, buffer.total_size)
     }
 
     /// 获取并清空累积的音频数据

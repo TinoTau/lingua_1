@@ -49,10 +49,12 @@ export interface SilenceFilterConfig {
 
 export const DEFAULT_SILENCE_FILTER_CONFIG: SilenceFilterConfig = {
   enabled: true,
-  threshold: 0.015, // 调整为更严格的阈值，更好地过滤静音（原值：0.01）
+  threshold: 0.015,
+  attackThreshold: 0.015, // 进入语音：严格（避免误触发）
+  releaseThreshold: 0.005, // 退出语音：更宽松（从0.008降低到0.005，避免说话过程中音量稍微降低就被误判为静音）
   windowMs: 100,
   attackFrames: 3, // 连续3帧语音才开始发送（避免误触发）
-  releaseFrames: 5, // 连续5帧静音才停止发送（平滑过渡，避免频繁启停）
+  releaseFrames: 30, // 连续30帧静音才停止发送（300ms，从150ms增加到300ms，允许更长的停顿，避免过早截断导致ASR结果不完整）
 };
 
 // WebSocket 重连配置
@@ -73,7 +75,7 @@ export const DEFAULT_RECONNECT_CONFIG: ReconnectConfig = {
 };
 
 export const DEFAULT_CONFIG: Config = {
-  silenceTimeoutMs: 1000,
+  silenceTimeoutMs: 3000, // 3秒（已修复：从5秒减少到3秒，与调度服务器 pause_ms 保持一致）
   tailBufferMs: 250,
   groupTimeoutSec: 30,
   schedulerUrl: 'ws://localhost:5010/ws/session',
@@ -283,6 +285,16 @@ export interface RoomExpiredMessage {
   message: string;
 }
 
+// MissingResult 消息（用于防止队列锁死）
+export interface MissingResultMessage {
+  type: 'missing_result';
+  session_id: string;
+  utterance_index: number;
+  reason: string; // "gap_timeout" | "pending_overflow_evict"
+  created_at_ms: number;
+  trace_id?: string;
+}
+
 export type ServerMessage =
   | SessionInitAckMessage
   | AsrPartialMessage
@@ -296,5 +308,6 @@ export type ServerMessage =
   | WebRTCOfferMessage
   | WebRTCAnswerMessage
   | WebRTCIceMessage
-  | BackpressureMessage;
+  | BackpressureMessage
+  | MissingResultMessage;
 

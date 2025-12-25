@@ -4,7 +4,7 @@ use crate::messages::NodeMessage;
 use axum::extract::ws::{Message, WebSocket};
 use futures_util::{SinkExt, StreamExt};
 use tokio::sync::mpsc;
-use tracing::{debug, error, info, warn};
+use tracing::{error, info, warn};
 
 // Node-side WebSocket handler
 pub async fn handle_node(socket: WebSocket, state: AppState) {

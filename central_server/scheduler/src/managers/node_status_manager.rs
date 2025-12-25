@@ -147,6 +147,7 @@ impl NodeStatusManager {
         }
         
         // 检查 GPU 使用率是否异常（超过 100% 或为负值）
+        // 注意：update_node_heartbeat 会将 None 转换为 Some(0.0)，所以这里应该总是有值
         if let Some(gpu_usage) = node.gpu_usage {
             if gpu_usage < 0.0 || gpu_usage > 100.0 {
                 warn!(
@@ -157,8 +158,13 @@ impl NodeStatusManager {
                 return false;
             }
         } else {
-            warn!(node_id = %node.node_id, "Node health check failed: GPU usage is None");
-            return false;
+            // 这种情况不应该发生，因为 update_node_heartbeat 会将 None 转换为 Some(0.0)
+            // 但如果发生了，记录警告并使用 0.0 作为默认值
+            warn!(
+                node_id = %node.node_id,
+                "Node health check: GPU usage is None (unexpected), using 0.0 as default"
+            );
+            // 不返回 false，允许节点继续健康检查
         }
         
         // 按类型检查能力：registering 阶段要求已上报 installed_services，且核心类型（ASR、NMT、TTS）ready=true；ready/degraded 阶段要求至少有一个类型 ready

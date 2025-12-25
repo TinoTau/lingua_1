@@ -20,6 +20,7 @@ const model_handlers_1 = require("./ipc-handlers/model-handlers");
 const service_handlers_1 = require("./ipc-handlers/service-handlers");
 const service_cache_1 = require("./ipc-handlers/service-cache");
 const runtime_handlers_1 = require("./ipc-handlers/runtime-handlers");
+const dependency_checker_1 = require("./utils/dependency-checker");
 let nodeAgent = null;
 let modelManager = null;
 let inferenceService = null;
@@ -27,8 +28,97 @@ let rustServiceManager = null;
 let pythonServiceManager = null;
 let serviceRegistryManager = null;
 let servicePackageManager = null;
+/**
+ * 检查依赖并显示对话框
+ */
+function checkDependenciesAndShowDialog(mainWindow) {
+    try {
+        const dependencies = (0, dependency_checker_1.checkAllDependencies)();
+        const { valid, missing } = (0, dependency_checker_1.validateRequiredDependencies)();
+        if (!valid) {
+            logger_1.default.error({ missing }, 'Required dependencies are missing');
+            // 构建错误消息
+            const missingList = missing.join(', ');
+            const message = `缺少必需的依赖：${missingList}\n\n` +
+                '请安装以下依赖后重新启动应用：\n\n' +
+                dependencies
+                    .filter(dep => dep.required && !dep.installed)
+                    .map(dep => {
+                    let installGuide = '';
+                    if (dep.name === 'Python') {
+                        installGuide = '• Python 3.10+\n  下载：https://www.python.org/downloads/\n  安装时请勾选 "Add Python to PATH"';
+                    }
+                    else if (dep.name === 'ffmpeg') {
+                        installGuide = '• ffmpeg\n  Windows: 下载 https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip\n  解压到 C:\\ffmpeg，并将 C:\\ffmpeg\\bin 添加到系统 PATH';
+                    }
+                    return `${dep.name}:\n  ${dep.message}\n  ${installGuide}`;
+                })
+                    .join('\n\n') +
+                '\n\n详细安装指南请查看：electron_node/electron-node/docs/DEPENDENCY_INSTALLATION.md';
+            // 显示错误对话框
+            if (mainWindow) {
+                electron_1.dialog.showMessageBox(mainWindow, {
+                    type: 'error',
+                    title: '依赖检查失败',
+                    message: '缺少必需的系统依赖',
+                    detail: message,
+                    buttons: ['确定', '查看文档'],
+                    defaultId: 0,
+                    cancelId: 0,
+                }).then((result) => {
+                    if (result.response === 1) {
+                        // 打开文档（如果存在）
+                        const { shell } = require('electron');
+                        const path = require('path');
+                        const docPath = path.join(__dirname, '../../docs/DEPENDENCY_INSTALLATION.md');
+                        shell.openPath(docPath).catch(() => {
+                            // 如果文件不存在，打开包含文档的目录
+                            shell.openPath(path.dirname(docPath));
+                        });
+                    }
+                }).catch((error) => {
+                    logger_1.default.error({ error }, 'Failed to show dependency error dialog');
+                });
+            }
+            else {
+                // 如果窗口不存在，输出到控制台
+                console.error('缺少必需的依赖：', missing);
+                console.error(message);
+            }
+            // 注意：不阻止应用启动，但依赖缺失可能导致服务无法正常工作
+            logger_1.default.warn('应用将继续启动，但某些功能可能无法正常工作');
+        }
+        else {
+            logger_1.default.info('所有必需依赖已安装');
+        }
+    }
+    catch (error) {
+        logger_1.default.error({ error }, '依赖检查失败，继续启动应用');
+    }
+}
 electron_1.app.whenReady().then(async () => {
     (0, window_manager_1.createWindow)();
+    // 等待窗口加载完成后检查系统依赖
+    const mainWindow = (0, window_manager_1.getMainWindow)();
+    if (mainWindow) {
+        mainWindow.webContents.once('did-finish-load', () => {
+            // 检查系统依赖
+            checkDependenciesAndShowDialog(mainWindow);
+        });
+    }
+    else {
+        // 如果窗口创建失败，延迟检查
+        setTimeout(() => {
+            const window = (0, window_manager_1.getMainWindow)();
+            if (window) {
+                checkDependenciesAndShowDialog(window);
+            }
+            else {
+                // 如果窗口仍然不存在，只记录日志
+                checkDependenciesAndShowDialog(null);
+            }
+        }, 1000);
+    }
     try {
         // 初始化服务管理器
         rustServiceManager = new rust_service_manager_1.RustServiceManager();
@@ -110,14 +200,13 @@ electron_1.app.whenReady().then(async () => {
         }
         // 初始化其他服务
         modelManager = new model_manager_1.ModelManager();
-        inferenceService = new inference_service_1.InferenceService(modelManager);
+        inferenceService = new inference_service_1.InferenceService(modelManager, pythonServiceManager, rustServiceManager, serviceRegistryManager);
         // 设置任务记录回调
         inferenceService.setOnTaskProcessedCallback((serviceName) => {
-            if (serviceName === 'rust' && rustServiceManager) {
-                rustServiceManager.incrementTaskCount();
-            }
-            else if (pythonServiceManager && (serviceName === 'nmt' || serviceName === 'tts' || serviceName === 'yourtts')) {
-                pythonServiceManager.incrementTaskCount(serviceName);
+            // 新架构使用 'pipeline' 作为服务名称
+            if (serviceName === 'pipeline') {
+                // Pipeline 处理任务时，各个服务会分别处理，这里不需要单独计数
+                // 如果需要，可以在 TaskRouter 中分别计数各个服务的调用
             }
         });
         // 设置任务开始/结束回调（用于GPU跟踪）

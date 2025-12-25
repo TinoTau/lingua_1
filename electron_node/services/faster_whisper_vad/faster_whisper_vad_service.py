@@ -6,550 +6,93 @@ Faster Whisper + Silero VAD Service
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from faster_whisper import WhisperModel
-import onnxruntime as ort
 import numpy as np
-import soundfile as sf
-import io
-import os
 import logging
-import base64
-from typing import Optional, List, Tuple
-from collections import deque
-import threading
+import time
+import asyncio
+import signal
+import sys
+import traceback
+from typing import Optional, List, Tuple, Dict, Any
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+# Configure logging (必须在导入模块之前，因为导入时可能使用logger)
+# 确保 logs 目录存在
+import os
+log_dir = 'logs'
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir, exist_ok=True)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout),
+        logging.FileHandler(os.path.join(log_dir, 'faster-whisper-vad-service.log'), encoding='utf-8')
+    ]
+)
 logger = logging.getLogger(__name__)
 
-# ---------------------
-# Configuration
-# ---------------------
-# Faster Whisper
-# 模型路径：支持 HuggingFace 模型标识符或本地路径
-ASR_MODEL_PATH = os.getenv("ASR_MODEL_PATH", "Systran/faster-whisper-base")
-# 缓存目录：如果设置了 WHISPER_CACHE_DIR，Faster Whisper 会使用该目录作为模型缓存
-WHISPER_CACHE_DIR = os.getenv("WHISPER_CACHE_DIR")
-# GPU 配置：优先使用 CUDA（如果可用），否则使用 CPU
-# 检测 CUDA 可用性：优先通过 CTranslate2 检测，其次通过环境变量
-def check_cuda_available():
-    """检测 CUDA 是否真正可用"""
-    # 方法1：检查环境变量（快速检查）
-    cuda_path = os.getenv("CUDA_PATH")
-    if cuda_path:
-        logger.info(f"CUDA_PATH environment variable found: {cuda_path}")
-        # 方法2：尝试导入 ctranslate2 并检查 CUDA 支持（更可靠）
-        try:
-            import ctranslate2
-            # 检查 CUDA 设备是否支持
-            # 如果 ctranslate2 安装了 CUDA 版本，get_supported_compute_types 会返回支持的 compute types
-            try:
-                compute_types = ctranslate2.get_supported_compute_types("cuda")
-                if compute_types:
-                    logger.info(f"CTranslate2 CUDA support confirmed. Available compute types: {compute_types}")
-                    return True
-                else:
-                    logger.warning("CTranslate2 installed but CUDA compute types not available")
-            except Exception as e:
-                logger.warning(f"CTranslate2 CUDA check failed: {e}, will try CUDA anyway")
-        except ImportError:
-            logger.warning("ctranslate2 not available, cannot verify CUDA support")
-        except Exception as e:
-            logger.warning(f"Error checking CTranslate2 CUDA support: {e}")
-        # 如果环境变量设置了 CUDA_PATH，假设 CUDA 可用（让实际加载时验证）
-        return True
-    else:
-        logger.info("CUDA_PATH environment variable not set, CUDA not available")
-    return False
-
-_cuda_available = check_cuda_available()
-
-# 如果环境变量强制指定了设备，使用环境变量的值；否则根据 CUDA 可用性自动选择
-# 注意：如果环境变量强制指定了 cuda，即使检测不到 CUDA，也会尝试使用（让实际加载时验证）
-env_device = os.getenv("ASR_DEVICE")
-if env_device:
-    ASR_DEVICE = env_device.lower()
-    logger.info(f"Using device from environment variable: {ASR_DEVICE}")
-    # 如果强制使用 cuda 但检测不到，给出警告
-    if ASR_DEVICE == "cuda" and not _cuda_available:
-        logger.warning("ASR_DEVICE=cuda is set but CUDA may not be available, will attempt anyway")
-else:
-    ASR_DEVICE = "cuda" if _cuda_available else "cpu"
-    logger.info(f"Auto-detected device: {ASR_DEVICE} (CUDA available: {_cuda_available})")
-
-# CPU 不支持 float16，必须使用 float32；CUDA 可以使用 float16
-# 如果环境变量设置了 compute_type，使用环境变量的值；否则根据设备自动选择
-# 重要：即使环境变量设置了 float16，如果设备是 CPU，也必须强制使用 float32
-if os.getenv("ASR_COMPUTE_TYPE"):
-    env_compute_type = os.getenv("ASR_COMPUTE_TYPE")
-    # 如果设备是 CPU，强制使用 float32（CPU 不支持 float16）
-    if ASR_DEVICE == "cpu" and env_compute_type == "float16":
-        logger.warning(f"CPU device does not support float16, forcing float32")
-        ASR_COMPUTE_TYPE = "float32"
-    else:
-        ASR_COMPUTE_TYPE = env_compute_type
-else:
-    # CPU 模式下强制使用 float32（不支持 float16）
-    # CUDA 模式下优先使用 float16，但如果 GPU 不支持会自动回退到 float32
-    ASR_COMPUTE_TYPE = "float16" if (ASR_DEVICE == "cuda" and _cuda_available) else "float32"
-
-# Silero VAD
-VAD_MODEL_PATH = os.getenv("VAD_MODEL_PATH", "models/vad/silero/silero_vad_official.onnx")
-VAD_SAMPLE_RATE = 16000
-VAD_FRAME_SIZE = 512  # 32ms @ 16kHz
-VAD_SILENCE_THRESHOLD = 0.2
-VAD_MIN_SILENCE_DURATION_MS = 300
-VAD_BASE_THRESHOLD_MIN_MS = 200
-VAD_BASE_THRESHOLD_MAX_MS = 600
-VAD_FINAL_THRESHOLD_MIN_MS = 200
-VAD_FINAL_THRESHOLD_MAX_MS = 800
-VAD_MIN_UTTERANCE_MS = 1000
-VAD_ADAPTIVE_ENABLED = True
-
-# Service
-PORT = int(os.getenv("FASTER_WHISPER_VAD_PORT", "6007"))
-
-# ---------------------
-# Load Models
-# ---------------------
-logger.info(f"Loading Faster Whisper model from {ASR_MODEL_PATH}...")
-logger.info(f"Device: {ASR_DEVICE}, Compute Type: {ASR_COMPUTE_TYPE}")
-
-try:
-    # 尝试使用指定设备加载模型
-    # 如果配置为 GPU 模式，必须成功加载 GPU，失败则立即停止服务
-    model_kwargs = {
-        "device": ASR_DEVICE,
-        "compute_type": ASR_COMPUTE_TYPE,
-    }
-    if WHISPER_CACHE_DIR:
-        model_kwargs["download_root"] = WHISPER_CACHE_DIR
-        logger.info(f"Using model cache directory: {WHISPER_CACHE_DIR}")
-    
-    try:
-        asr_model = WhisperModel(
-            ASR_MODEL_PATH,
-            **model_kwargs
-        )
-        logger.info(f"✅ Faster Whisper model loaded successfully on {ASR_DEVICE.upper()}")
-    except Exception as e:
-        error_str = str(e).lower()
-        # 如果配置为 CUDA 但加载失败，尝试 float32（仍然使用 GPU）
-        if ASR_DEVICE == "cuda" and ("float16" in error_str or "compute type" in error_str):
-            logger.warning(f"CUDA does not support {ASR_COMPUTE_TYPE}, trying float32 on GPU: {e}")
-            fallback_kwargs = {
-                "device": "cuda",  # 仍然使用 GPU
-                "compute_type": "float32",  # 但使用 float32
-            }
-            if WHISPER_CACHE_DIR:
-                fallback_kwargs["download_root"] = WHISPER_CACHE_DIR
-            try:
-                asr_model = WhisperModel(
-                    ASR_MODEL_PATH,
-                    **fallback_kwargs
-                )
-                logger.info("✅ Faster Whisper model loaded successfully on CUDA with float32 (fallback from float16)")
-            except Exception as e2:
-                # GPU 模式失败，立即停止服务
-                logger.error(f"❌ Failed to load Faster Whisper model on GPU (float32 fallback also failed): {e2}")
-                logger.error("GPU mode is required but failed. Service will exit.")
-                raise RuntimeError(f"GPU mode required but model loading failed: {e2}") from e2
-        elif ASR_DEVICE == "cuda":
-            # GPU 模式失败，立即停止服务
-            logger.error(f"❌ Failed to load Faster Whisper model on GPU: {e}")
-            logger.error("GPU mode is required but failed. Service will exit.")
-            raise RuntimeError(f"GPU mode required but model loading failed: {e}") from e
-        else:
-            # CPU 模式失败，也停止服务
-            logger.error(f"❌ Failed to load Faster Whisper model on CPU: {e}")
-            raise
-except Exception as e:
-    logger.error(f"❌ Failed to load Faster Whisper model: {e}")
-    import traceback
-    logger.error(traceback.format_exc())
-    raise
-
-logger.info(f"Loading Silero VAD model from {VAD_MODEL_PATH}...")
-
-def find_cudnn_path():
-    """查找 cuDNN 路径（通过检查 DLL 文件）"""
-    cuda_path = os.getenv("CUDA_PATH")
-    if not cuda_path:
-        return None
-    
-    # 优先检查 cuDNN 9.x（用于 CUDA 12.x），然后检查其他版本
-    # 注意：cudnn_graph64_9.dll 是 ONNX Runtime CUDA 最需要的
-    cudnn_dlls = ['cudnn_graph64_9.dll', 'cudnn64_9.dll', 'cudnn64_8.dll']
-    search_paths = [
-        'C:\\Program Files\\NVIDIA\\CUDNN\\v9.6\\bin\\12.6',  # cuDNN 9.x for CUDA 12.x (优先)
-        'C:\\Program Files\\NVIDIA\\CUDNN\\v9.6\\bin\\11.8',  # cuDNN 9.x for CUDA 11.8
-        os.path.join(cuda_path, 'bin'),  # cuDNN 可能在 CUDA bin 目录中
-        'C:\\Program Files\\NVIDIA\\CUDNN\\v9.6\\bin',  # cuDNN 9.x 通用路径
-        'C:\\Program Files\\NVIDIA GPU Computing Toolkit\\cuDNN\\bin',
-        'C:\\cudnn\\bin',
-    ]
-    
-    # 也检查 PATH 环境变量中的路径（这些路径应该已经由 TypeScript 配置添加）
-    path_env = os.getenv("PATH", "")
-    path_paths = [p for p in path_env.split(os.pathsep) if p and os.path.exists(p)]
-    search_paths.extend(path_paths)
-    
-    # 去重，保持顺序
-    seen = set()
-    unique_paths = []
-    for p in search_paths:
-        if p and p not in seen:
-            seen.add(p)
-            unique_paths.append(p)
-    
-    for search_path in unique_paths:
-        if not os.path.exists(search_path):
-            continue
-        for dll_name in cudnn_dlls:
-            dll_path = os.path.join(search_path, dll_name)
-            if os.path.exists(dll_path):
-                logger.info(f"cuDNN DLL found: {dll_path}")
-                return search_path
-    return None
-
-def check_cudnn_available():
-    """检查 cuDNN 是否可用（通过检查 DLL 文件）"""
-    return find_cudnn_path() is not None
-
-try:
-    # VAD 模型加载：如果配置为 GPU 模式，必须成功加载 GPU，失败则立即停止服务
-    cuda_available = os.getenv("CUDA_PATH") is not None
-    cudnn_path = find_cudnn_path()
-    cudnn_available = cudnn_path is not None
-    
-    # 如果 ASR 使用 GPU，VAD 也必须使用 GPU
-    if ASR_DEVICE == "cuda":
-        if not cuda_available:
-            logger.error("❌ ASR configured for GPU but CUDA_PATH not set. Service will exit.")
-            raise RuntimeError("GPU mode required but CUDA_PATH not set")
-        
-        if not cudnn_available:
-            logger.error("❌ ASR configured for GPU but cuDNN not found. Service will exit.")
-            logger.error("cuDNN is required for ONNX Runtime CUDA support.")
-            raise RuntimeError("GPU mode required but cuDNN not found. Please ensure cuDNN is installed and in PATH.")
-        
-        # 在加载 ONNX Runtime 之前，确保 cuDNN 路径在 PATH 的最前面
-        # 这样可以确保 ONNX Runtime 在加载时能够找到 cuDNN DLL
-        if cudnn_path:
-            current_path = os.getenv("PATH", "")
-            # 如果 cuDNN 路径不在 PATH 的最前面，将其添加到最前面
-            path_parts = current_path.split(os.pathsep)
-            if cudnn_path not in path_parts or path_parts[0] != cudnn_path:
-                new_path = f"{cudnn_path}{os.pathsep}{current_path}"
-                os.environ["PATH"] = new_path
-                logger.info(f"Added cuDNN path to PATH: {cudnn_path}")
-        
-        # 尝试使用 CUDA 加载 VAD 模型
-        # GPU 模式下只使用 CUDAExecutionProvider，不允许回退到 CPU
-        try:
-            logger.info("Attempting to load VAD model with CUDA support (GPU mode required, no CPU fallback)...")
-            vad_session = ort.InferenceSession(
-                VAD_MODEL_PATH,
-                providers=['CUDAExecutionProvider']  # 只使用 CUDA，不允许回退到 CPU
-            )
-            # 验证实际使用的 provider（应该是 CUDA）
-            actual_provider = vad_session.get_providers()[0]
-            if actual_provider == 'CUDAExecutionProvider':
-                logger.info("✅ Silero VAD model loaded with CUDA support")
-            else:
-                # GPU 模式要求使用 GPU，如果实际使用的是其他 provider，则失败
-                logger.error(f"❌ GPU mode required but VAD model using {actual_provider}. Service will exit.")
-                raise RuntimeError(f"GPU mode required but VAD model loaded with {actual_provider}")
-        except RuntimeError:
-            # 重新抛出 RuntimeError（这是我们自己的错误或 ONNX Runtime 的错误）
-            raise
-        except Exception as e:
-            error_str = str(e).lower()
-            logger.error(f"❌ Failed to load VAD model on GPU: {e}")
-            logger.error("GPU mode is required but VAD model loading failed. Service will exit.")
-            logger.error("Please ensure CUDA and cuDNN are properly installed and accessible.")
-            raise RuntimeError(f"GPU mode required but VAD model loading failed: {e}") from e
-    else:
-        # CPU 模式，使用 CPU 加载 VAD 模型
-        logger.info("Loading VAD model with CPU provider...")
-        vad_session = ort.InferenceSession(
-            VAD_MODEL_PATH,
-            providers=['CPUExecutionProvider']
-        )
-        logger.info("✅ Silero VAD model loaded with CPU")
-    
-except RuntimeError:
-    # 重新抛出 RuntimeError（GPU 模式失败）
-    raise
-except Exception as e:
-    logger.error(f"❌ Failed to load Silero VAD model: {e}")
-    import traceback
-    logger.error(traceback.format_exc())
-    raise
-
-# ---------------------
-# VAD State (严格按照 Rust 实现)
-# ---------------------
-class VADState:
-    """VAD 状态管理，严格按照 Rust 实现"""
-    def __init__(self):
-        self.hidden_state: Optional[np.ndarray] = None  # [2, 128]
-        self.silence_frame_count = 0
-        self.last_speech_timestamp: Optional[int] = None
-        self.last_boundary_timestamp: Optional[int] = None
-        self.frame_buffer: List[float] = []
-        
-        # 自适应状态
-        self.speech_rate_history = deque(maxlen=20)
-        base_threshold = (VAD_BASE_THRESHOLD_MIN_MS + VAD_BASE_THRESHOLD_MAX_MS) // 2
-        self.base_threshold_ms = base_threshold
-        self.sample_count = 0
-        
-        self.lock = threading.Lock()
-    
-    def reset(self):
-        """重置状态"""
-        with self.lock:
-            self.hidden_state = None
-            self.silence_frame_count = 0
-            self.last_speech_timestamp = None
-            self.last_boundary_timestamp = None
-            self.frame_buffer.clear()
-            self.speech_rate_history.clear()
-            base_threshold = (VAD_BASE_THRESHOLD_MIN_MS + VAD_BASE_THRESHOLD_MAX_MS) // 2
-            self.base_threshold_ms = base_threshold
-            self.sample_count = 0
-
-# 全局 VAD 状态（每个会话应该有独立状态，这里简化处理）
-vad_state = VADState()
-
-# ---------------------
-# Context Buffer (严格按照 Rust 实现)
-# ---------------------
-# 上下文缓冲区：保存前一个 utterance 的尾部音频（最后 2 秒）
-# 采样率：16kHz，格式：f32，范围：[-1.0, 1.0]
-CONTEXT_DURATION_SEC = 2.0
-CONTEXT_SAMPLE_RATE = 16000
-CONTEXT_MAX_SAMPLES = int(CONTEXT_DURATION_SEC * CONTEXT_SAMPLE_RATE)
-
-# 全局上下文缓冲区（每个会话应该有独立缓冲区，这里简化处理）
-context_buffer: List[float] = []
-context_buffer_lock = threading.Lock()
-
-# 文本上下文缓存（用于 Faster Whisper 的 initial_prompt）
-text_context_cache: List[str] = []
-text_context_cache_lock = threading.Lock()
-
-# ---------------------
-# VAD Functions (严格按照 Rust 实现)
-# ---------------------
-def detect_voice_activity_frame(audio_frame: np.ndarray) -> float:
-    """
-    检测单帧的语音活动概率
-    严格按照 Rust 实现
-    """
-    if len(audio_frame) != VAD_FRAME_SIZE:
-        raise ValueError(f"Audio frame length {len(audio_frame)} does not match frame size {VAD_FRAME_SIZE}")
-    
-    # 归一化到 [-1, 1]
-    normalized = np.clip(audio_frame, -1.0, 1.0).astype(np.float32)
-    
-    # 创建输入数组 [1, frame_size]
-    input_array = normalized.reshape(1, -1).astype(np.float32)
-    
-    # 获取或初始化隐藏状态 [2, 1, 128]
-    with vad_state.lock:
-        if vad_state.hidden_state is None:
-            state_array = np.zeros((2, 1, 128), dtype=np.float32)
-        else:
-            state_array = vad_state.hidden_state.reshape(2, 1, 128).astype(np.float32)
-        
-        # 采样率输入 [1]
-        sr_array = np.array([VAD_SAMPLE_RATE], dtype=np.int64)
-        
-        # ONNX 推理
-        inputs = {
-            'input': input_array,
-            'h': state_array,
-            'sr': sr_array
-        }
-        
-        outputs = vad_session.run(None, inputs)
-        
-        # 提取输出
-        output = outputs[0]  # [1, 2] 或 [1, 1]
-        if output.shape[1] >= 2:
-            raw_output = output[0, 1]  # 第二列是语音概率
-        else:
-            raw_output = output[0, 0]
-        
-        # 更新隐藏状态
-        if len(outputs) > 1:
-            new_state = outputs[1]  # [2, 1, 128]
-            vad_state.hidden_state = new_state.reshape(2, 128)
-        
-        # 处理输出值（严格按照 Rust 实现）
-        if raw_output < -10.0 or raw_output > 10.0:
-            # logit，使用 sigmoid 转换
-            speech_prob = 1.0 / (1.0 + np.exp(-raw_output))
-        elif raw_output < 0.2 and raw_output > -0.01:
-            # 小值，需要乘以系数后再应用 sigmoid
-            scaled_logit = raw_output * 10.0
-            speech_prob = 1.0 / (1.0 + np.exp(-scaled_logit))
-        elif raw_output < 0.5:
-            # 可能是静音概率，取反
-            speech_prob = 1.0 - raw_output
-        else:
-            # 已经是语音概率
-            speech_prob = raw_output
-        
-        return float(speech_prob)
-
-def detect_speech(audio_data: np.ndarray) -> List[Tuple[int, int]]:
-    """
-    检测语音活动（用于拼接后的音频块）
-    严格按照 Rust 实现
-    返回语音段的起止位置列表（样本索引）
-    """
-    segments = []
-    current_segment_start: Optional[int] = None
-    
-    for frame_idx in range(0, len(audio_data), VAD_FRAME_SIZE):
-        frame = audio_data[frame_idx:frame_idx + VAD_FRAME_SIZE]
-        if len(frame) < VAD_FRAME_SIZE:
-            break
-        
-        speech_prob = detect_voice_activity_frame(frame)
-        
-        if speech_prob > VAD_SILENCE_THRESHOLD:
-            sample_start = frame_idx
-            if current_segment_start is None:
-                current_segment_start = sample_start
-        else:
-            if current_segment_start is not None:
-                sample_end = frame_idx
-                segments.append((current_segment_start, sample_end))
-                current_segment_start = None
-    
-    if current_segment_start is not None:
-        segments.append((current_segment_start, len(audio_data)))
-    
-    return segments
-
-def update_context_buffer(audio_data: np.ndarray, vad_segments: List[Tuple[int, int]]):
-    """
-    更新上下文缓冲区
-    严格按照 Rust 实现：使用 VAD 选择最佳上下文片段（最后一个语音段的尾部）
-    """
-    global context_buffer
-    
-    context_samples = int(CONTEXT_DURATION_SEC * CONTEXT_SAMPLE_RATE)
-    
-    with context_buffer_lock:
-        if len(vad_segments) > 0:
-            # 选择最后一个语音段
-            last_start, last_end = vad_segments[-1]
-            last_segment = audio_data[last_start:last_end]
-            
-            # 从最后一个语音段的尾部提取上下文
-            if len(last_segment) > context_samples:
-                start_idx = len(last_segment) - context_samples
-                context_buffer = last_segment[start_idx:].tolist()
-            else:
-                # 如果最后一个段太短，保存整个段
-                context_buffer = last_segment.tolist()
-        else:
-            # 如果没有检测到语音段，回退到简单尾部保存
-            if len(audio_data) > context_samples:
-                start_idx = len(audio_data) - context_samples
-                context_buffer = audio_data[start_idx:].tolist()
-            else:
-                context_buffer = audio_data.tolist()
-        
-        # 限制最大长度
-        if len(context_buffer) > CONTEXT_MAX_SAMPLES:
-            context_buffer = context_buffer[-CONTEXT_MAX_SAMPLES:]
-
-def get_context_audio() -> np.ndarray:
-    """获取上下文音频"""
-    with context_buffer_lock:
-        if len(context_buffer) > 0:
-            return np.array(context_buffer, dtype=np.float32)
-        else:
-            return np.array([], dtype=np.float32)
-
-def update_text_context(text: str):
-    """更新文本上下文缓存（只保留最后一句）"""
-    global text_context_cache
-    trimmed_text = text.strip()
-    if not trimmed_text:
+# 全局异常处理
+def handle_exception(exc_type, exc_value, exc_traceback):
+    """全局异常处理器"""
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
         return
     
-    with text_context_cache_lock:
-        # 只保留最后 1 句（替换而不是追加）
-        text_context_cache.clear()
-        text_context_cache.append(trimmed_text)
+    logger.critical("=" * 80)
+    logger.critical("🚨 Uncaught exception in main process, service may crash")
+    logger.critical(f"   Exception type: {exc_type.__name__}")
+    logger.critical(f"   Exception value: {exc_value}")
+    logger.critical("   Traceback:")
+    for line in traceback.format_exception(exc_type, exc_value, exc_traceback):
+        logger.critical(f"   {line.rstrip()}")
+    logger.critical("=" * 80)
+    
+    # 调用默认异常处理器
+    sys.__excepthook__(exc_type, exc_value, exc_traceback)
 
-def get_text_context() -> str:
-    """获取文本上下文（最后一句）"""
-    with text_context_cache_lock:
-        if len(text_context_cache) > 0:
-            return text_context_cache[-1]
-        else:
-            return ""
+sys.excepthook = handle_exception
 
-# ---------------------
-# Text Filter (严格按照 Rust 实现)
-# ---------------------
-def is_meaningless_transcript(text: str) -> bool:
-    """
-    检查文本是否为无意义的识别结果
-    严格按照 Rust 实现（electron_node/services/node-inference/src/text_filter.rs）
-    """
-    text_trimmed = text.strip()
-    
-    # 1. 检查空文本
-    if not text_trimmed:
-        return True
-    
-    # 2. 检查单个字的无意义语气词
-    single_char_fillers = ["嗯", "啊", "呃", "哦", "额", "嗯", "um", "uh", "ah", "er"]
-    if text_trimmed in single_char_fillers:
-        return True
-    
-    # 3. 检查标点符号（语音输入的文本不应该包含任何标点符号）
-    punctuation_chars = [
-        # 中文标点
-        '，', '。', '！', '？', '；', '：', '、', 
-        '"', '"', '\u2018', '\u2019', '（', '）', '【', '】', 
-        '《', '》', '…', '—', '·',
-        # 英文标点
-        ',', '.', '!', '?', ';', ':', "'", '"', 
-        '(', ')', '[', ']', '{', '}',
-        # 其他常见标点
-        '-', '_', '/', '\\', '|', '@', '#', '$', '%', 
-        '^', '&', '*', '+', '=', '<', '>', '~', '`',
-    ]
-    if any(c in text_trimmed for c in punctuation_chars):
-        logger.warning(f"[Text Filter] Filtering text with punctuation: \"{text_trimmed}\"")
-        return True
-    
-    # 4. 检查包含括号的文本（如 "(笑)"、"(字幕:J Chong)" 等）
-    if '(' in text_trimmed or '（' in text_trimmed or '[' in text_trimmed or '【' in text_trimmed:
-        logger.warning(f"[Text Filter] Filtering text with brackets: \"{text_trimmed}\"")
-        return True
-    
-    # 5. 检查精确匹配的无意义文本
-    exact_matches = [
-        "谢谢大家", "谢谢大家收看", "感谢观看", "感谢收看", 
-        "The", "the", "A", "a", "An", "an",
-        "谢谢", "感谢", "拜拜", "再见",
-    ]
-    if text_trimmed in exact_matches:
-        logger.warning(f"[Text Filter] Filtering exact match: \"{text_trimmed}\"")
-        return True
-    
-    return False
+# 信号处理（用于记录主进程退出）
+def signal_handler(signum, frame):
+    """信号处理器"""
+    logger.warning(f"Received signal {signum}, preparing to shutdown...")
+    if signum == signal.SIGTERM:
+        logger.info("SIGTERM received, graceful shutdown")
+    elif signum == signal.SIGINT:
+        logger.info("SIGINT received (Ctrl+C), graceful shutdown")
+    else:
+        logger.warning(f"Unexpected signal {signum} received")
+
+# 注册信号处理器（Windows 上可能不支持所有信号）
+try:
+    signal.signal(signal.SIGTERM, signal_handler)
+    signal.signal(signal.SIGINT, signal_handler)
+except (AttributeError, ValueError):
+    # Windows 可能不支持某些信号
+    logger.debug("Some signals not available on this platform")
+
+# 导入配置和模块
+from config import (
+    PORT,
+    MAX_AUDIO_DURATION_SEC,
+    CONTEXT_SAMPLE_RATE,
+    CONTEXT_DURATION_SEC,
+)
+# 注意：不再导入 asr_model，ASR 推理在独立子进程中执行
+from models import vad_session  # 只导入 VAD 模型
+from vad import vad_state, detect_speech
+from context import (
+    get_context_audio,
+    update_context_buffer,
+    reset_context_buffer,
+    get_text_context,
+    update_text_context,
+    reset_text_context,
+)
+from text_filter import is_meaningless_transcript
+from audio_decoder import decode_audio
+from asr_worker_manager import ASRWorkerManager, MAX_WAIT_SECONDS
 
 # ---------------------
 # FastAPI App
@@ -583,7 +126,7 @@ class UtteranceRequest(BaseModel):
     language: Optional[str] = None  # 语言代码（如果 src_lang == "auto"，则自动检测）
     task: str = "transcribe"  # "transcribe" or "translate"
     beam_size: int = 5
-    condition_on_previous_text: bool = True  # Use context for better accuracy
+    condition_on_previous_text: bool = False  # 禁用条件生成，避免重复识别（当上下文文本和当前音频内容相同时，会导致重复输出）
     use_context_buffer: bool = True  # 是否使用上下文缓冲区
     use_text_context: bool = True  # 是否使用文本上下文
     # 其他参数（与 node-inference 保持一致，但 ASR 服务不使用）
@@ -612,14 +155,41 @@ class ResetRequest(BaseModel):
     reset_text_context: bool = True  # 重置文本上下文
 
 # ---------------------
+# Global ASR Worker Manager
+# ---------------------
+_asr_worker_manager: Optional[ASRWorkerManager] = None
+
+def get_asr_worker_manager() -> ASRWorkerManager:
+    """获取全局 ASR Worker Manager 实例"""
+    global _asr_worker_manager
+    if _asr_worker_manager is None:
+        _asr_worker_manager = ASRWorkerManager()
+    return _asr_worker_manager
+
+# ---------------------
 # Health Check
 # ---------------------
 @app.get("/health")
-def health_check():
+async def health_check():
+    """健康检查端点，包含ASR Worker状态"""
+    manager = get_asr_worker_manager()
+    stats = manager.get_stats()
     return {
         "status": "ok",
-        "asr_model_loaded": True,
-        "vad_model_loaded": True
+        "asr_model_loaded": stats.get("worker_pid") is not None,  # 如果 worker 进程存在，说明模型已加载
+        "vad_model_loaded": True,
+        "asr_worker": {
+            "is_running": stats["is_running"],
+            "worker_state": stats["worker_state"],
+            "worker_pid": stats["worker_pid"],
+            "queue_depth": stats["queue_depth"],
+            "total_tasks": stats["total_tasks"],
+            "completed_tasks": stats["completed_tasks"],
+            "failed_tasks": stats["failed_tasks"],
+            "worker_restarts": stats["worker_restarts"],
+            "avg_wait_ms": round(stats["avg_wait_ms"], 2),
+            "pending_results": stats["pending_results"],
+        }
     }
 
 # ---------------------
@@ -633,22 +203,57 @@ def reset_state(req: ResetRequest):
         logger.info("✅ VAD state reset")
     
     if req.reset_context:
-        with context_buffer_lock:
-            context_buffer.clear()
+        reset_context_buffer()
         logger.info("✅ Context buffer reset")
     
     if req.reset_text_context:
-        with text_context_cache_lock:
-            text_context_cache.clear()
+        reset_text_context()
         logger.info("✅ Text context cache reset")
     
     return {"status": "ok"}
 
 # ---------------------
+# Startup/Shutdown Events
+# ---------------------
+@app.on_event("startup")
+async def startup():
+    """启动ASR Worker Manager"""
+    try:
+        logger.info("=" * 80)
+        logger.info("🚀 Starting Faster Whisper + Silero VAD Service")
+        logger.info(f"   Main process PID: {os.getpid()}")
+        logger.info(f"   Port: {PORT}")
+        logger.info("=" * 80)
+        
+        manager = get_asr_worker_manager()
+        await manager.start()
+        logger.info("✅ ASR Worker Manager started on startup")
+    except Exception as e:
+        logger.critical(f"❌ Failed to start ASR Worker Manager: {e}", exc_info=True)
+        raise
+
+@app.on_event("shutdown")
+async def shutdown():
+    """停止ASR Worker Manager"""
+    try:
+        logger.info("=" * 80)
+        logger.info("🛑 Shutting down Faster Whisper + Silero VAD Service")
+        logger.info(f"   Main process PID: {os.getpid()}")
+        logger.info("=" * 80)
+        
+        global _asr_worker_manager
+        if _asr_worker_manager:
+            await _asr_worker_manager.stop()
+            _asr_worker_manager = None
+        logger.info("✅ ASR Worker Manager stopped on shutdown")
+    except Exception as e:
+        logger.error(f"❌ Error during shutdown: {e}", exc_info=True)
+
+# ---------------------
 # Utterance Endpoint
 # ---------------------
 @app.post("/utterance", response_model=UtteranceResponse)
-def process_utterance(req: UtteranceRequest):
+async def process_utterance(req: UtteranceRequest):
     """
     处理 Utterance 任务
     严格按照现有实现，与 node-inference 接口保持一致：
@@ -660,6 +265,7 @@ def process_utterance(req: UtteranceRequest):
     """
     trace_id = req.trace_id or req.job_id
     # 严格按照 node-inference 的日志格式
+    logger.info(f"[{trace_id}] Received utterance request: job_id={req.job_id}, audio_format={req.audio_format}, sample_rate={req.sample_rate}")
     logger.debug(
         f"[{trace_id}] "
         f"trace_id={trace_id} "
@@ -668,37 +274,37 @@ def process_utterance(req: UtteranceRequest):
     )
     
     try:
-        # 1. 解码 base64 音频
-        try:
-            audio_bytes = base64.b64decode(req.audio)
-        except Exception as e:
-            logger.error(f"[{trace_id}] Failed to decode base64 audio: {e}")
-            raise HTTPException(status_code=400, detail=f"Invalid base64 audio: {e}")
-        
-        # 2. 根据 audio_format 解码音频（支持 Opus 等格式）
+        # 1. 解码音频
         audio_format = req.audio_format or "pcm16"
         sample_rate = req.sample_rate or 16000
         
-        if audio_format == "opus":
-            # 如果使用 Opus，需要先解码（这里简化处理，假设已经是 WAV）
-            logger.warning(f"[{trace_id}] Opus format not fully supported, assuming WAV")
-            audio_format = "pcm16"
+        logger.info(f"[{trace_id}] Audio format: {audio_format}, sample_rate: {sample_rate}")
         
-        # 3. 读取音频文件（假设是 WAV 格式）
         try:
-            audio, sr = sf.read(io.BytesIO(audio_bytes))
+            audio, sr = decode_audio(req.audio, audio_format, sample_rate, trace_id)
+        except ValueError as e:
+            logger.error(f"[{trace_id}] Audio decoding failed: {e}")
+            raise HTTPException(status_code=400, detail=str(e))
         except Exception as e:
-            logger.error(f"[{trace_id}] Failed to read audio file: {e}")
-            raise HTTPException(status_code=400, detail=f"Invalid audio format: {e}")
+            # 捕获所有其他异常（包括可能的segfault前的异常）
+            logger.critical(
+                f"[{trace_id}] 🚨 CRITICAL: Audio decoding raised unexpected exception: {e}, "
+                f"error_type={type(e).__name__}",
+                exc_info=True
+            )
+            raise HTTPException(status_code=500, detail=f"Audio decoding error: {str(e)}")
         
-        # 3. 转换为 float32 和单声道
-        if audio.dtype != np.float32:
-            audio = audio.astype(np.float32)
+        # 2. 检查音频长度限制（防止 GPU 内存溢出和栈缓冲区溢出）
+        audio_duration = len(audio) / sr
+        if audio_duration > MAX_AUDIO_DURATION_SEC:
+            logger.warning(
+                f"[{trace_id}] Audio duration ({audio_duration:.2f}s) exceeds maximum ({MAX_AUDIO_DURATION_SEC}s), "
+                f"truncating to {MAX_AUDIO_DURATION_SEC}s"
+            )
+            max_samples = int(MAX_AUDIO_DURATION_SEC * sr)
+            audio = audio[:max_samples]
         
-        if len(audio.shape) > 1:
-            audio = np.mean(audio, axis=1).astype(np.float32)
-        
-        # 4. 重采样到指定采样率（默认 16kHz）
+        # 3. 重采样到指定采样率（默认 16kHz）
         if sr != sample_rate:
             logger.warning(f"[{trace_id}] Audio sample rate is {sr}Hz, expected {sample_rate}Hz. Resampling...")
             from scipy import signal
@@ -706,11 +312,21 @@ def process_utterance(req: UtteranceRequest):
             audio = signal.resample(audio, num_samples).astype(np.float32)
             sr = sample_rate
         
+        # 3.1 重采样后再次检查音频长度限制
+        audio_duration = len(audio) / sr
+        if audio_duration > MAX_AUDIO_DURATION_SEC:
+            logger.warning(
+                f"[{trace_id}] Audio duration after resampling ({audio_duration:.2f}s) exceeds maximum ({MAX_AUDIO_DURATION_SEC}s), "
+                f"truncating to {MAX_AUDIO_DURATION_SEC}s"
+            )
+            max_samples = int(MAX_AUDIO_DURATION_SEC * sr)
+            audio = audio[:max_samples]
+        
         # 确保音频是连续的
         if not audio.flags['C_CONTIGUOUS']:
             audio = np.ascontiguousarray(audio)
         
-        # 5. 确定语言（如果 src_lang == "auto"，则使用 language 或自动检测）
+        # 4. 确定语言（如果 src_lang == "auto"，则使用 language 或自动检测）
         asr_language = None
         if req.src_lang != "auto":
             asr_language = req.src_lang
@@ -721,7 +337,7 @@ def process_utterance(req: UtteranceRequest):
         # 严格按照 node-inference 的日志格式
         logger.debug(f"[{trace_id}] trace_id={trace_id} src_lang={req.src_lang} '开始 ASR 语音识别'")
         
-        # 6. 前置上下文音频（如果启用）
+        # 5. 前置上下文音频（如果启用）
         # 严格按照 node-inference 的日志格式
         if req.use_context_buffer:
             context_audio = get_context_audio()
@@ -751,7 +367,7 @@ def process_utterance(req: UtteranceRequest):
         else:
             audio_with_context = audio
         
-        # 7. 使用 VAD 检测有效语音段（Level 2断句）
+        # 6. 使用 VAD 检测有效语音段（Level 2断句）
         # 严格按照 node-inference 的日志格式
         try:
             vad_segments = detect_speech(audio_with_context)
@@ -796,7 +412,17 @@ def process_utterance(req: UtteranceRequest):
                 )
                 processed_audio = audio_with_context
         
-        # 8. 获取文本上下文（用于 Faster Whisper 的 initial_prompt）
+        # 6.1 最终检查：确保传递给 Faster Whisper 的音频不超过最大长度
+        processed_audio_duration = len(processed_audio) / sr
+        if processed_audio_duration > MAX_AUDIO_DURATION_SEC:
+            logger.warning(
+                f"[{trace_id}] Processed audio duration ({processed_audio_duration:.2f}s) exceeds maximum ({MAX_AUDIO_DURATION_SEC}s), "
+                f"truncating to {MAX_AUDIO_DURATION_SEC}s before ASR"
+            )
+            max_samples = int(MAX_AUDIO_DURATION_SEC * sr)
+            processed_audio = processed_audio[:max_samples]
+        
+        # 7. 获取文本上下文（用于 Faster Whisper 的 initial_prompt）
         text_context = ""
         if req.use_text_context:
             text_context = get_text_context()
@@ -806,33 +432,243 @@ def process_utterance(req: UtteranceRequest):
                     f"Using text context ({len(text_context)} chars): \"{text_context[:100]}...\""
                 )
         
-        # 10. 使用 Faster Whisper 进行 ASR
-        import time
+        # 8. 验证音频数据格式（防止Faster Whisper崩溃）
+        # 检查音频数据是否有效
+        if len(processed_audio) == 0:
+            logger.error(f"[{trace_id}] Processed audio is empty, cannot perform ASR")
+            raise HTTPException(status_code=400, detail="Processed audio is empty")
+        
+        # 检查NaN和Inf值
+        if np.any(np.isnan(processed_audio)) or np.any(np.isinf(processed_audio)):
+            logger.error(f"[{trace_id}] Processed audio contains NaN or Inf values")
+            # 清理NaN和Inf值
+            processed_audio = np.nan_to_num(processed_audio, nan=0.0, posinf=1.0, neginf=-1.0)
+            logger.warning(f"[{trace_id}] Cleaned NaN/Inf values from audio")
+        
+        # 确保音频数据在有效范围内（[-1.0, 1.0]）
+        if np.any(np.abs(processed_audio) > 1.0):
+            logger.warning(f"[{trace_id}] Audio values out of range [-1.0, 1.0], clipping")
+            processed_audio = np.clip(processed_audio, -1.0, 1.0)
+        
+        # 确保音频是连续的numpy数组
+        if not isinstance(processed_audio, np.ndarray):
+            processed_audio = np.array(processed_audio, dtype=np.float32)
+        if processed_audio.dtype != np.float32:
+            processed_audio = processed_audio.astype(np.float32)
+        if not processed_audio.flags['C_CONTIGUOUS']:
+            processed_audio = np.ascontiguousarray(processed_audio)
+        
+        # 记录音频数据信息（用于调试和崩溃诊断）
+        audio_std = np.std(processed_audio)
+        audio_rms = np.sqrt(np.mean(processed_audio ** 2))
+        audio_dynamic_range = np.max(processed_audio) - np.min(processed_audio)
+        audio_duration = len(processed_audio) / sr
+        
+        logger.info(
+            f"[{trace_id}] Audio data validation: "
+            f"shape={processed_audio.shape}, "
+            f"dtype={processed_audio.dtype}, "
+            f"min={np.min(processed_audio):.4f}, "
+            f"max={np.max(processed_audio):.4f}, "
+            f"mean={np.mean(processed_audio):.4f}, "
+            f"std={audio_std:.4f}, "
+            f"rms={audio_rms:.4f}, "
+            f"dynamic_range={audio_dynamic_range:.4f}, "
+            f"duration={audio_duration:.3f}s, "
+            f"is_contiguous={processed_audio.flags['C_CONTIGUOUS']}"
+        )
+        
+        # 7.5. 音频质量检查（防止低质量音频进入 ASR）
+        # 如果音频质量太差，直接返回空响应，避免浪费 ASR 资源
+        # 注意：Faster Whisper 通常需要至少 0.5-1 秒的音频才能有效识别
+        # 虽然 0.24 秒的音频可能通过质量检查，但 Whisper 可能无法识别出有效内容
+        # 调整阈值以适应实际使用场景和Opus编码后的音频质量
+        # 关键修复：提高阈值，过滤更多低质量音频
+        # 从日志看，RMS=0.0018、STD=0.0018 虽然通过了阈值（0.0005），
+        # 但Faster Whisper仍然无法识别出文本，说明阈值太低
+        # 提高阈值，只让高质量音频进入ASR
+        MIN_AUDIO_RMS = 0.002  # 最小 RMS 能量（从 0.0005 提高到 0.002，过滤更多低质量音频）
+        MIN_AUDIO_STD = 0.002  # 最小标准差（从 0.0005 提高到 0.002，过滤更多低质量音频）
+        MIN_AUDIO_DYNAMIC_RANGE = 0.01  # 最小动态范围（从 0.002 提高到 0.01，过滤更多低质量音频）
+        # 关键修复：增加最短音频时长检查
+        # Faster Whisper 通常需要至少 0.5-1 秒的音频才能有效识别
+        # 虽然质量检查允许 0.3 秒，但实际 ASR 识别需要更长的音频
+        MIN_AUDIO_DURATION = 0.5  # 最小时长（秒），Faster Whisper 需要至少 0.5 秒才能有效识别
+        
+        audio_quality_issues = []
+        
+        if audio_rms < MIN_AUDIO_RMS:
+            audio_quality_issues.append(f"RMS too low ({audio_rms:.4f} < {MIN_AUDIO_RMS})")
+        
+        if audio_std < MIN_AUDIO_STD:
+            audio_quality_issues.append(f"std too low ({audio_std:.4f} < {MIN_AUDIO_STD})")
+        
+        if audio_dynamic_range < MIN_AUDIO_DYNAMIC_RANGE:
+            audio_quality_issues.append(f"dynamic_range too small ({audio_dynamic_range:.4f} < {MIN_AUDIO_DYNAMIC_RANGE})")
+        
+        if audio_duration < MIN_AUDIO_DURATION:
+            audio_quality_issues.append(f"duration too short ({audio_duration:.3f}s < {MIN_AUDIO_DURATION}s)")
+        
+        if audio_quality_issues:
+            logger.warning(
+                f"[{trace_id}] trace_id={trace_id} "
+                f"audio_rms={audio_rms:.4f} "
+                f"audio_std={audio_std:.4f} "
+                f"audio_dynamic_range={audio_dynamic_range:.4f} "
+                f"audio_duration={audio_duration:.3f}s "
+                f"issues={', '.join(audio_quality_issues)} "
+                f"'Audio quality too poor (likely silence, noise, or decoding issue), skipping ASR and returning empty response'"
+            )
+            # 返回空结果，不调用 ASR
+            return UtteranceResponse(
+                text="",
+                segments=[],
+                language=asr_language or "unknown",
+                duration=audio_duration,
+                vad_segments=vad_segments,
+            )
+        
+        # 8. 使用 ASR Worker Manager 进行 ASR（进程隔离架构）
         asr_start_time = time.time()
         
-        segments, info = asr_model.transcribe(
-            processed_audio,
-            language=asr_language,  # 使用确定的语言
-            task=req.task,
-            beam_size=req.beam_size,
-            vad_filter=False,  # 我们已经用 Silero VAD 处理过了
-            initial_prompt=text_context if text_context else None,
-            condition_on_previous_text=req.condition_on_previous_text,
+        # 获取ASR Worker Manager
+        manager = get_asr_worker_manager()
+        
+        # 检查队列是否已满（背压控制）
+        if manager.is_queue_full():
+            stats = manager.get_stats()
+            logger.warning(
+                f"[{trace_id}] ASR queue is full, returning 503 Service Busy. "
+                f"queue_depth={stats['queue_depth']}"
+            )
+            raise HTTPException(
+                status_code=503,
+                detail="ASR service is busy, please retry later",
+                headers={"Retry-After": "1"}
+            )
+        
+        # 在调用transcribe之前记录关键信息（包括上下文）
+        stats = manager.get_stats()
+        logger.info(
+            f"[{trace_id}] ========== ASR 识别请求开始 =========="
         )
+        logger.info(
+            f"[{trace_id}] ASR 参数: "
+            f"language={asr_language}, "
+            f"task={req.task}, "
+            f"beam_size={req.beam_size}, "
+            f"condition_on_previous_text={req.condition_on_previous_text}, "
+            f"queue_depth={stats['queue_depth']}, "
+            f"worker_state={stats['worker_state']}"
+        )
+        logger.info(
+            f"[{trace_id}] ASR 上下文参数: "
+            f"has_initial_prompt={text_context is not None and len(text_context) > 0}, "
+            f"initial_prompt_length={len(text_context) if text_context else 0}, "
+            f"initial_prompt_preview='{text_context[:100] if text_context else '(None)'}'"
+        )
+        logger.info(
+            f"[{trace_id}] ASR 音频参数: "
+            f"audio_len={len(processed_audio)}, "
+            f"sample_rate={sr}, "
+            f"duration_sec={len(processed_audio) / sr:.2f}"
+        )
+        
+        try:
+            # 提交任务到ASR Worker进程
+            asr_result = await manager.submit_task(
+                audio=processed_audio,
+                sample_rate=sr,
+                language=asr_language,
+                task=req.task,
+                beam_size=req.beam_size,
+                initial_prompt=text_context if text_context else None,
+                condition_on_previous_text=req.condition_on_previous_text,
+                trace_id=trace_id,
+                max_wait=MAX_WAIT_SECONDS
+            )
+            
+            # 检查结果
+            if asr_result.error:
+                logger.error(
+                    f"[{trace_id}] ASR Worker returned error: {asr_result.error}",
+                    exc_info=True
+                )
+                raise HTTPException(
+                    status_code=500,
+                    detail=f"ASR processing failed: {asr_result.error}"
+                )
+            
+            # 从结果中获取文本和语言信息
+            full_text = asr_result.text or ""
+            detected_language = asr_result.language
+            duration_sec = asr_result.duration_ms / 1000.0 if asr_result.duration_ms > 0 else 0.0
+            
+            logger.info(
+                f"[{trace_id}] ========== ASR 接口输出结果 =========="
+            )
+            logger.info(
+                f"[{trace_id}] ASR Worker completed successfully, "
+                f"text_len={len(full_text)}, language={detected_language}, "
+                f"duration_ms={asr_result.duration_ms}"
+            )
+            logger.info(
+                f"[{trace_id}] ASR 接口输出原始文本 (repr): {repr(full_text)}"
+            )
+            logger.info(
+                f"[{trace_id}] ASR 接口输出原始文本 (preview): '{full_text[:200]}'"
+            )
+            logger.info(
+                f"[{trace_id}] ASR 接口输出原始文本 (bytes): {full_text.encode('utf-8') if full_text else b''}"
+            )
+            
+            # 注意：进程隔离架构下，segments 已经在子进程中转换为文本
+            # 我们不再需要处理 segments 对象，直接使用返回的文本
+            # 为了兼容响应格式，我们需要将文本分割为 segments
+            # 简单处理：按空格分割（实际应用中可能需要更智能的分割）
+            # 注意：这里使用原始文本，因为去重会在Step 9.2中进行
+            segment_texts = [s.strip() for s in full_text.split() if s.strip()]
+            if not segment_texts:
+                segment_texts = [full_text] if full_text else []
+            
+            # 保存检测到的语言和时长，供后续使用
+            info_language = detected_language
+            info_duration = duration_sec
+            
+        except asyncio.TimeoutError:
+            stats = manager.get_stats()
+            logger.error(
+                f"[{trace_id}] ASR task timeout after {MAX_WAIT_SECONDS}s, "
+                f"queue_depth={stats['queue_depth']}"
+            )
+            raise HTTPException(
+                status_code=504,
+                detail=f"ASR processing timeout after {MAX_WAIT_SECONDS}s"
+            )
+        except RuntimeError as e:
+            # Worker 进程不可用
+            logger.error(
+                f"[{trace_id}] ASR Worker process not available: {e}",
+                exc_info=True
+            )
+            raise HTTPException(
+                status_code=503,
+                detail="ASR service is temporarily unavailable, please retry later",
+                headers={"Retry-After": "2"}
+            )
+        except Exception as e:
+            logger.error(
+                f"[{trace_id}] ASR Worker exception: {e}",
+                exc_info=True
+            )
+            raise HTTPException(
+                status_code=500,
+                detail=f"ASR processing failed: {str(e)}"
+            )
         
         asr_elapsed = time.time() - asr_start_time
         
-        # 10.1 提取文本和分段
-        segment_texts = []
-        full_text_parts = []
-        
-        for segment in segments:
-            segment_text = segment.text.strip()
-            if segment_text:
-                segment_texts.append(segment_text)
-                full_text_parts.append(segment_text)
-        
-        full_text = " ".join(full_text_parts)
+        logger.info(f"[{trace_id}] Step 8.1: Text extraction completed, segments={len(segment_texts)}, full_text_len={len(full_text)}")
         
         # 记录 ASR 处理时间（用于性能监控）
         if asr_elapsed > 1.0:
@@ -844,142 +680,230 @@ def process_utterance(req: UtteranceRequest):
                 f"(audio duration: {audio_duration:.2f}s, ratio: {ratio:.2f}x)"
             )
         
-        # 10. ASR 识别完成，记录结果
+        logger.info(f"[{trace_id}] Step 9: Starting ASR result processing")
+        
+        # 9. ASR 识别完成，记录结果
         # 严格按照 node-inference 的日志格式
-        full_text_trimmed = full_text.strip()
+        try:
+            full_text_trimmed = full_text.strip()
+            logger.info(f"[{trace_id}] Step 9.1: Text trimmed, len={len(full_text_trimmed)}")
+            
+            # 9.2. 去重处理：移除重复的文本片段
+            # 问题：ASR模型使用initial_prompt和condition_on_previous_text可能导致重复识别
+            # 例如："这边能不能用这边能不能用" -> "这边能不能用"
+            if full_text_trimmed:
+                from text_deduplicator import deduplicate_text
+                original_text = full_text_trimmed
+                full_text_trimmed = deduplicate_text(full_text_trimmed, trace_id=trace_id)
+                
+                # 如果文本被修改，记录日志
+                if full_text_trimmed != original_text:
+                    logger.info(
+                        f"[{trace_id}] Step 9.2: Deduplication applied, "
+                        f"original_len={len(original_text)}, "
+                        f"deduplicated_len={len(full_text_trimmed)}, "
+                        f"original_text=\"{original_text[:100]}\", "
+                        f"deduplicated_text=\"{full_text_trimmed[:100]}\""
+                    )
+        except Exception as e:
+            logger.error(f"[{trace_id}] Step 9.1: Failed to trim text: {e}", exc_info=True)
+            raise
         
         # 检查是否包含括号（用于调试，与 node-inference 一致）
-        if '(' in full_text_trimmed or '（' in full_text_trimmed or '[' in full_text_trimmed or '【' in full_text_trimmed:
-            logger.warning(
-                f"[{trace_id}] trace_id={trace_id} "
-                f"transcript='{full_text_trimmed}' "
-                f"transcript_len={len(full_text_trimmed)} "
-                f"'⚠️ [ASR Filter Check] Transcript contains brackets before setting to context!'"
-            )
+        try:
+            if '(' in full_text_trimmed or '（' in full_text_trimmed or '[' in full_text_trimmed or '【' in full_text_trimmed:
+                logger.warning(
+                    f"[{trace_id}] trace_id={trace_id} "
+                    f"transcript='{full_text_trimmed}' "
+                    f"transcript_len={len(full_text_trimmed)} "
+                    f"'⚠️ [ASR Filter Check] Transcript contains brackets before setting to context!'"
+                )
+        except Exception as e:
+            logger.error(f"[{trace_id}] Step 9.2: Failed to check brackets: {e}", exc_info=True)
         
         logger.info(
             f"[{trace_id}] trace_id={trace_id} "
             f"transcript_len={len(full_text)} "
             f"transcript_preview='{full_text[:50]}' "
             f"transcript_trimmed_len={len(full_text_trimmed)} "
+            f"transcript_deduplicated_preview='{full_text_trimmed[:50]}' "
             f"'✅ ASR 识别完成'"
         )
         
-        # 11. 检查文本是否为无意义的识别结果（严格按照 node_inference 实现）
+        # 在去重后，重新生成 segment_texts（使用去重后的文本）
+        # 这样返回的 segments 也是去重后的
+        segment_texts = [s.strip() for s in full_text_trimmed.split() if s.strip()]
+        if not segment_texts:
+            segment_texts = [full_text_trimmed] if full_text_trimmed else []
+        
+        logger.info(f"[{trace_id}] Step 10: Starting text validation")
+        
+        # 10. 检查文本是否为无意义的识别结果（严格按照 node_inference 实现）
         # 重要：只有在文本有意义时才更新上下文缓冲区，避免静音音频污染上下文
-        if not full_text_trimmed:
-            logger.warning(
-                f"[{trace_id}] trace_id={trace_id} "
-                f"transcript='{full_text}' "
-                f"'ASR transcript is empty, skipping NMT and TTS, and NOT updating context buffer'"
-            )
-            # 返回空结果，不更新上下文
-            return UtteranceResponse(
-                text="",
-                segments=[],
-                language=info.language,
-                duration=info.duration,
-                vad_segments=[],
-            )
-        
-        if is_meaningless_transcript(full_text_trimmed):
-            logger.warning(
-                f"[{trace_id}] trace_id={trace_id} "
-                f"transcript='{full_text_trimmed}' "
-                f"transcript_len={len(full_text_trimmed)} "
-                f"'ASR transcript is meaningless (likely silence misrecognition), skipping NMT and TTS, and NOT updating context buffer'"
-            )
-            # 返回空结果，不更新上下文
-            return UtteranceResponse(
-                text="",
-                segments=[],
-                language=info.language,
-                duration=info.duration,
-                vad_segments=[],
-            )
-        
-        # 12. 更新文本上下文缓存（只更新有意义的文本）
-        if req.use_text_context:
-            # 只保留最后一句
-            sentences = full_text.split('.')
-            if len(sentences) > 1:
-                last_sentence = sentences[-1].strip()
-                if last_sentence and not is_meaningless_transcript(last_sentence):
-                    update_text_context(last_sentence)
-            else:
-                if not is_meaningless_transcript(full_text_trimmed):
-                    update_text_context(full_text_trimmed)
-        
-        # 13. 更新上下文缓冲区（使用原始音频，不带上下文）
-        # 重要：只有在文本有意义时才更新上下文缓冲区
-        # 严格按照 node-inference 的日志格式
-        if req.use_context_buffer:
-            # 使用 VAD 检测原始音频的语音段
-            try:
-                original_vad_segments = detect_speech(audio)
-            except Exception as e:
-                # VAD检测失败，回退到简单尾部保存
+        try:
+            if not full_text_trimmed:
                 logger.warning(
                     f"[{trace_id}] trace_id={trace_id} "
-                    f"error='{str(e)}' "
-                    f"'VAD检测失败，使用简单尾部保存上下文'"
+                    f"transcript='{full_text}' "
+                    f"'ASR transcript is empty, skipping NMT and TTS, and NOT updating context buffer'"
                 )
-                original_vad_segments = []
-            
-            if len(original_vad_segments) > 0:
-                # 选择最后一个语音段
-                last_start, last_end = original_vad_segments[-1]
-                last_segment = audio[last_start:last_end]
-                context_samples = int(CONTEXT_DURATION_SEC * CONTEXT_SAMPLE_RATE)
+                logger.info(f"[{trace_id}] Step 10.1: Returning empty response (empty transcript)")
+                # 返回空结果，不更新上下文
+                return UtteranceResponse(
+                    text="",
+                    segments=[],
+                    language=info_language,
+                    duration=info_duration,
+                    vad_segments=[],
+                )
+        except Exception as e:
+            logger.error(f"[{trace_id}] Step 10.1: Failed to check empty text: {e}", exc_info=True)
+            raise
+        
+        try:
+            logger.info(f"[{trace_id}] Step 10.2: Checking if transcript is meaningless")
+            is_meaningless = is_meaningless_transcript(full_text_trimmed)
+            logger.info(f"[{trace_id}] Step 10.2: Meaningless check result: {is_meaningless}")
+        except Exception as e:
+            logger.error(f"[{trace_id}] Step 10.2: Failed to check meaningless transcript: {e}", exc_info=True)
+            raise
+        
+        if is_meaningless:
+                logger.warning(
+                    f"[{trace_id}] trace_id={trace_id} "
+                    f"transcript='{full_text_trimmed}' "
+                    f"transcript_len={len(full_text_trimmed)} "
+                    f"'ASR transcript is meaningless (likely silence misrecognition), skipping NMT and TTS, and NOT updating context buffer'"
+                )
+                logger.info(f"[{trace_id}] Step 10.3: Returning empty response (meaningless transcript)")
+                # 返回空结果，不更新上下文
+                return UtteranceResponse(
+                    text="",
+                    segments=[],
+                    language=info_language,
+                    duration=info_duration,
+                    vad_segments=[],
+                )
+        
+        logger.info(f"[{trace_id}] Step 11: Starting text context update (use_text_context={req.use_text_context})")
+        
+        # 11. 更新文本上下文缓存（只更新有意义的文本）
+        # 关键修复：使用去重后的文本更新上下文缓存，避免重复文本被反复使用
+        try:
+            if req.use_text_context:
+                # 只保留最后一句
+                logger.info(f"[{trace_id}] Step 11.1: Splitting text into sentences")
+                sentences = full_text_trimmed.split('.')  # 使用去重后的文本
+                if len(sentences) > 1:
+                    last_sentence = sentences[-1].strip()
+                    if last_sentence and not is_meaningless_transcript(last_sentence):
+                        logger.info(f"[{trace_id}] Step 11.2: Updating text context with last sentence (deduplicated)")
+                        update_text_context(last_sentence)
+                        logger.info(f"[{trace_id}] Step 11.2: Text context updated successfully")
+                else:
+                    if not is_meaningless_transcript(full_text_trimmed):
+                        logger.info(f"[{trace_id}] Step 11.3: Updating text context with full text (deduplicated)")
+                        update_text_context(full_text_trimmed)
+                        logger.info(f"[{trace_id}] Step 11.3: Text context updated successfully")
+            logger.info(f"[{trace_id}] Step 11: Text context update completed")
+        except Exception as e:
+            logger.error(f"[{trace_id}] Step 11: Failed to update text context: {e}", exc_info=True)
+            raise
+        
+        logger.info(f"[{trace_id}] Step 12: Starting context buffer update (use_context_buffer={req.use_context_buffer})")
+        
+        # 12. 更新上下文缓冲区（使用原始音频，不带上下文）
+        # 重要：只有在文本有意义时才更新上下文缓冲区
+        # 严格按照 node-inference 的日志格式
+        try:
+            if req.use_context_buffer:
+                # 使用 VAD 检测原始音频的语音段
+                logger.info(f"[{trace_id}] Step 12.1: Starting VAD detection for context buffer (audio_len={len(audio)})")
+                try:
+                    original_vad_segments = detect_speech(audio)
+                    logger.info(f"[{trace_id}] Step 12.1: VAD detection completed, segments={len(original_vad_segments)}")
+                except Exception as e:
+                    # VAD检测失败，回退到简单尾部保存
+                    logger.warning(
+                        f"[{trace_id}] trace_id={trace_id} "
+                        f"error='{str(e)}' "
+                        f"'VAD检测失败，使用简单尾部保存上下文'"
+                    )
+                    original_vad_segments = []
                 
-                if len(last_segment) > context_samples:
-                    logger.info(
-                        f"[{trace_id}] trace_id={trace_id} "
-                        f"context_samples={context_samples} "
-                        f"context_duration_sec={context_samples/CONTEXT_SAMPLE_RATE:.3f} "
-                        f"segment_start={last_start} "
-                        f"segment_end={last_end} "
-                        f"segment_samples={len(last_segment)} "
-                        f"'✅ 更新上下文缓冲区（使用VAD选择的最后一个语音段尾部）'"
-                    )
+                if len(original_vad_segments) > 0:
+                    # 选择最后一个语音段
+                    last_start, last_end = original_vad_segments[-1]
+                    last_segment = audio[last_start:last_end]
+                    context_samples = int(CONTEXT_DURATION_SEC * CONTEXT_SAMPLE_RATE)
+                    
+                    if len(last_segment) > context_samples:
+                        logger.info(
+                            f"[{trace_id}] trace_id={trace_id} "
+                            f"context_samples={context_samples} "
+                            f"context_duration_sec={context_samples/CONTEXT_SAMPLE_RATE:.3f} "
+                            f"segment_start={last_start} "
+                            f"segment_end={last_end} "
+                            f"segment_samples={len(last_segment)} "
+                            f"'✅ 更新上下文缓冲区（使用VAD选择的最后一个语音段尾部）'"
+                        )
+                    else:
+                        logger.info(
+                            f"[{trace_id}] trace_id={trace_id} "
+                            f"context_samples={len(last_segment)} "
+                            f"context_duration_sec={len(last_segment)/CONTEXT_SAMPLE_RATE:.3f} "
+                            f"segment_samples={len(last_segment)} "
+                            f"'✅ 更新上下文缓冲区（最后一个语音段较短，保存全部）'"
+                        )
+                    
+                    logger.info(f"[{trace_id}] Step 12.2: Updating context buffer")
+                    update_context_buffer(audio, original_vad_segments)
+                    logger.info(f"[{trace_id}] Step 12.2: Context buffer updated successfully")
                 else:
-                    logger.info(
-                        f"[{trace_id}] trace_id={trace_id} "
-                        f"context_samples={len(last_segment)} "
-                        f"context_duration_sec={len(last_segment)/CONTEXT_SAMPLE_RATE:.3f} "
-                        f"segment_samples={len(last_segment)} "
-                        f"'✅ 更新上下文缓冲区（最后一个语音段较短，保存全部）'"
-                    )
-            else:
-                # 如果没有检测到语音段，回退到简单尾部保存
-                context_samples = int(CONTEXT_DURATION_SEC * CONTEXT_SAMPLE_RATE)
-                if len(audio) > context_samples:
-                    logger.info(
-                        f"[{trace_id}] trace_id={trace_id} "
-                        f"context_samples={context_samples} "
-                        f"context_duration_sec={context_samples/CONTEXT_SAMPLE_RATE:.3f} "
-                        f"original_samples={len(audio)} "
-                        f"'⚠️ 更新上下文缓冲区（VAD未检测到语音段，保存最后{CONTEXT_DURATION_SEC}秒）'"
-                    )
-                else:
-                    logger.info(
-                        f"[{trace_id}] trace_id={trace_id} "
-                        f"context_samples={len(audio)} "
-                        f"context_duration_sec={len(audio)/CONTEXT_SAMPLE_RATE:.3f} "
-                        f"original_samples={len(audio)} "
-                        f"'⚠️ 更新上下文缓冲区（utterance较短，保存全部）'"
-                    )
-            
-            update_context_buffer(audio, original_vad_segments)
+                    # 如果没有检测到语音段，回退到简单尾部保存
+                    context_samples = int(CONTEXT_DURATION_SEC * CONTEXT_SAMPLE_RATE)
+                    if len(audio) > context_samples:
+                        logger.info(
+                            f"[{trace_id}] trace_id={trace_id} "
+                            f"context_samples={context_samples} "
+                            f"context_duration_sec={context_samples/CONTEXT_SAMPLE_RATE:.3f} "
+                            f"original_samples={len(audio)} "
+                            f"'⚠️ 更新上下文缓冲区（VAD未检测到语音段，保存最后{CONTEXT_DURATION_SEC}秒）'"
+                        )
+                    else:
+                        logger.info(
+                            f"[{trace_id}] trace_id={trace_id} "
+                            f"context_samples={len(audio)} "
+                            f"context_duration_sec={len(audio)/CONTEXT_SAMPLE_RATE:.3f} "
+                            f"original_samples={len(audio)} "
+                            f"'⚠️ 更新上下文缓冲区（utterance较短，保存全部）'"
+                        )
+                    
+                    logger.info(f"[{trace_id}] Step 12.2: Updating context buffer")
+                    update_context_buffer(audio, [])
+                    logger.info(f"[{trace_id}] Step 12.2: Context buffer updated successfully")
+            logger.info(f"[{trace_id}] Step 12: Context buffer update completed")
+        except Exception as e:
+            logger.error(f"[{trace_id}] Step 12: Failed to update context buffer: {e}", exc_info=True)
+            raise
+        
+        logger.info(f"[{trace_id}] Step 13: Starting response construction")
         
         # 13. 返回结果
-        return UtteranceResponse(
-            text=full_text,
-            segments=segment_texts,
-            language=info.language,
-            duration=info.duration,
-            vad_segments=vad_segments,
-        )
+        # 关键修复：返回去重后的文本，而不是原始文本
+        try:
+            response = UtteranceResponse(
+                text=full_text_trimmed,  # 使用去重后的文本
+                segments=segment_texts,
+                language=info_language,
+                duration=info_duration,
+                vad_segments=vad_segments,
+            )
+            logger.info(f"[{trace_id}] Step 13: Response constructed successfully, returning deduplicated text (len={len(full_text_trimmed)})")
+            return response
+        except Exception as e:
+            logger.error(f"[{trace_id}] Step 13: Failed to construct response: {e}", exc_info=True)
+            raise
         
     except HTTPException:
         raise
@@ -994,4 +918,3 @@ if __name__ == "__main__":
     import uvicorn
     logger.info(f"Starting Faster Whisper + Silero VAD service on port {PORT}...")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
-

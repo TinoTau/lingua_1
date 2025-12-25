@@ -12,7 +12,10 @@ export interface AudioCodecConfig {
   codec: AudioCodec;
   sampleRate: number;
   channelCount: number;
-  bitrate?: number; // Opus 比特率（可选）
+  // Opus 特定配置（可选）
+  frameSizeMs?: number; // 帧大小（毫秒），默认 20ms
+  application?: string; // 应用类型："voip" | "audio" | "lowdelay"，默认 "voip"
+  bitrate?: number; // 比特率（可选，单位：bps）
 }
 
 /**
@@ -128,10 +131,12 @@ export class OpusEncoderImpl implements AudioEncoder {
   private encoder: OpusEncoder<8000 | 12000 | 16000 | 24000 | 48000> | null = null;
   private config: AudioCodecConfig;
   private isReady: boolean = false;
+  private initPromise: Promise<void> | null = null;
   
   constructor(config: AudioCodecConfig) {
     this.config = config;
-    this.initialize();
+    // 异步初始化，但不阻塞构造函数
+    this.initPromise = this.initialize();
   }
   
   private async initialize(): Promise<void> {
@@ -143,15 +148,63 @@ export class OpusEncoderImpl implements AudioEncoder {
       }
       
       // 创建编码器实例
+      // 使用协议规范中的 application（如果提供），否则使用默认值 VOIP
+      // 注意：@minceraftmc/opus-encoder 可能只支持 VOIP 和 AUDIO
+      const application = this.config.application === 'voip' 
+        ? OpusApplication.VOIP 
+        : this.config.application === 'audio'
+        ? OpusApplication.AUDIO
+        : OpusApplication.VOIP; // 默认使用 VOIP（lowdelay 不支持时回退到 VOIP）
+      
       this.encoder = new OpusEncoder({
         sampleRate: this.config.sampleRate as 8000 | 12000 | 16000 | 24000 | 48000,
-        application: OpusApplication.VOIP, // 使用 VOIP 模式，适合实时语音
+        application: application, // 使用协议规范中的 application
       });
       
       // 等待 WASM 编译完成
       await this.encoder.ready;
+      
+      // 设置比特率（如果配置中提供了）
+      // 推荐：16-32 kbps for VOIP，24 kbps 是平衡质量和带宽的好选择
+      let bitrateSet = false;
+      let bitrateMethod = 'none';
+      if (this.config.bitrate) {
+        try {
+          // @minceraftmc/opus-encoder 可能支持 setBitrate 方法
+          if (typeof (this.encoder as any).setBitrate === 'function') {
+            (this.encoder as any).setBitrate(this.config.bitrate);
+            bitrateSet = true;
+            bitrateMethod = 'setBitrate()';
+            console.log(`[OpusEncoder] ✅ Bitrate set to ${this.config.bitrate} bps using setBitrate()`);
+          } else if (typeof (this.encoder as any).bitrate !== 'undefined') {
+            // 如果支持直接设置 bitrate 属性
+            (this.encoder as any).bitrate = this.config.bitrate;
+            bitrateSet = true;
+            bitrateMethod = 'bitrate property';
+            console.log(`[OpusEncoder] ✅ Bitrate set to ${this.config.bitrate} bps using bitrate property`);
+          } else {
+            console.warn(`[OpusEncoder] ⚠️ Does not support setting bitrate (no setBitrate() or bitrate property), using default`);
+            console.warn(`[OpusEncoder] ⚠️ Encoder methods:`, Object.getOwnPropertyNames(this.encoder));
+            console.warn(`[OpusEncoder] ⚠️ Encoder prototype methods:`, Object.getOwnPropertyNames(Object.getPrototypeOf(this.encoder)));
+          }
+        } catch (error) {
+          console.error(`[OpusEncoder] ❌ Failed to set bitrate:`, error);
+          bitrateMethod = 'error';
+        }
+      } else {
+        console.log(`[OpusEncoder] ℹ️ No bitrate configured, using encoder default`);
+      }
+      
       this.isReady = true;
-      console.log('OpusEncoder initialized', { sampleRate: this.config.sampleRate });
+      console.log('[OpusEncoder] ✅ Initialized successfully', { 
+        sampleRate: this.config.sampleRate,
+        channelCount: this.config.channelCount,
+        application: this.config.application,
+        frameSizeMs: this.config.frameSizeMs || 20,
+        bitrate: this.config.bitrate || 'default',
+        bitrateSet: bitrateSet,
+        bitrateMethod: bitrateMethod
+      });
     } catch (error) {
       console.error('Failed to initialize OpusEncoder:', error);
       throw error;
@@ -159,8 +212,14 @@ export class OpusEncoderImpl implements AudioEncoder {
   }
   
   async encode(audioData: Float32Array): Promise<Uint8Array> {
+    // 确保编码器已初始化
+    if (this.initPromise) {
+      await this.initPromise;
+      this.initPromise = null;
+    }
+    
     if (!this.isReady || !this.encoder) {
-      // 如果还没准备好，等待初始化
+      // 如果还没准备好，尝试重新初始化
       await this.initialize();
     }
     
@@ -169,11 +228,86 @@ export class OpusEncoderImpl implements AudioEncoder {
     }
     
     try {
-      // 使用 encodeFrame 方法编码
-      const encodedFrame = this.encoder.encodeFrame(audioData);
-      return encodedFrame;
+      // Opus 编码器需要固定大小的帧
+      // 使用协议规范中的 frameSizeMs（如果提供），否则使用默认值 20ms
+      const frameSizeMs = this.config.frameSizeMs || 20; // 默认 20ms
+      const frameSize = Math.floor(this.config.sampleRate * frameSizeMs / 1000); // 转换为样本数
+      const audioDurationMs = (audioData.length / this.config.sampleRate) * 1000;
+      
+      console.log(`[OpusEncoder] 📊 Encoding audio: input_samples=${audioData.length}, duration=${audioDurationMs.toFixed(2)}ms, frame_size=${frameSize} samples (${frameSizeMs}ms)`);
+      
+      // 如果数据长度小于等于帧大小，直接编码
+      if (audioData.length <= frameSize) {
+        // 如果数据长度不足，需要填充到帧大小
+        if (audioData.length < frameSize) {
+          const paddingSamples = frameSize - audioData.length;
+          const paddingMs = (paddingSamples / this.config.sampleRate) * 1000;
+          const paddedData = new Float32Array(frameSize);
+          paddedData.set(audioData, 0);
+          // 剩余部分填充为 0（静音）
+          console.log(`[OpusEncoder] ⚠️ Input too short, padding: ${paddingSamples} samples (${paddingMs.toFixed(2)}ms) of silence`);
+          const encoded = this.encoder.encodeFrame(paddedData);
+          console.log(`[OpusEncoder] ✅ Encoded: input=${audioData.length} samples (${audioDurationMs.toFixed(2)}ms) + ${paddingSamples} padding → output=${encoded.length} bytes`);
+          return encoded;
+        }
+        const encoded = this.encoder.encodeFrame(audioData);
+        console.log(`[OpusEncoder] ✅ Encoded: input=${audioData.length} samples (${audioDurationMs.toFixed(2)}ms) → output=${encoded.length} bytes`);
+        return encoded;
+      }
+      
+      // 如果数据长度大于帧大小，需要分割成多个帧
+      const encodedChunks: Uint8Array[] = [];
+      let offset = 0;
+      let fullFrames = 0;
+      let paddedFrames = 0;
+      let totalPaddingSamples = 0;
+      
+      while (offset < audioData.length) {
+        const remaining = audioData.length - offset;
+        const currentFrameSize = Math.min(frameSize, remaining);
+        
+        if (currentFrameSize === frameSize) {
+          // 完整帧，直接编码
+          const frame = audioData.slice(offset, offset + frameSize);
+          const encodedFrame = this.encoder.encodeFrame(frame);
+          encodedChunks.push(encodedFrame);
+          offset += frameSize;
+          fullFrames++;
+        } else {
+          // 最后一个不完整的帧，需要填充
+          const paddingSamples = frameSize - currentFrameSize;
+          totalPaddingSamples += paddingSamples;
+          const paddedFrame = new Float32Array(frameSize);
+          paddedFrame.set(audioData.slice(offset, offset + currentFrameSize), 0);
+          // 剩余部分填充为 0（静音）
+          const encodedFrame = this.encoder.encodeFrame(paddedFrame);
+          encodedChunks.push(encodedFrame);
+          offset += currentFrameSize;
+          paddedFrames++;
+        }
+      }
+      
+      // 返回packet数组（用于Plan A格式）
+      // 注意：为了保持向后兼容，仍然返回合并后的数组
+      // 但可以通过encodePackets方法获取packet数组
+      const totalLength = encodedChunks.reduce((sum, chunk) => sum + chunk.length, 0);
+      const result = new Uint8Array(totalLength);
+      let resultOffset = 0;
+      for (const chunk of encodedChunks) {
+        result.set(chunk, resultOffset);
+        resultOffset += chunk.length;
+      }
+      
+      const paddingMs = (totalPaddingSamples / this.config.sampleRate) * 1000;
+      console.log(`[OpusEncoder] ✅ Encoded: input=${audioData.length} samples (${audioDurationMs.toFixed(2)}ms) → ${fullFrames} full frames + ${paddedFrames} padded frames (${totalPaddingSamples} samples/${paddingMs.toFixed(2)}ms padding) → output=${result.length} bytes (${encodedChunks.length} packets)`);
+      
+      return result;
     } catch (error) {
-      console.error('Opus encoding error:', error);
+      console.error('Opus encoding error:', error, {
+        audioDataLength: audioData.length,
+        sampleRate: this.config.sampleRate,
+        frameSize: Math.floor(this.config.sampleRate * 0.02)
+      });
       throw error;
     }
   }
@@ -181,6 +315,60 @@ export class OpusEncoderImpl implements AudioEncoder {
   async flush(): Promise<Uint8Array> {
     // Opus 编码器不需要 flush，返回空数组
     return new Uint8Array(0);
+  }
+  
+  /**
+   * 编码音频数据并返回packet数组（用于Plan A格式）
+   * 每个packet对应一个20ms的音频帧
+   * @param audioData 音频数据（Float32Array）
+   * @returns packet数组，每个元素是一个Uint8Array（Opus packet）
+   */
+  async encodePackets(audioData: Float32Array): Promise<Uint8Array[]> {
+    // 确保编码器已初始化
+    if (this.initPromise) {
+      await this.initPromise;
+      this.initPromise = null;
+    }
+    
+    if (!this.isReady || !this.encoder) {
+      await this.initialize();
+    }
+    
+    if (!this.encoder) {
+      throw new Error('OpusEncoder not initialized');
+    }
+    
+    try {
+      const frameSizeMs = this.config.frameSizeMs || 20; // 默认 20ms
+      const frameSize = Math.floor(this.config.sampleRate * frameSizeMs / 1000);
+      
+      const packets: Uint8Array[] = [];
+      let offset = 0;
+      
+      while (offset < audioData.length) {
+        const remaining = audioData.length - offset;
+        const currentFrameSize = Math.min(frameSize, remaining);
+        
+        let frame: Float32Array;
+        if (currentFrameSize === frameSize) {
+          // 完整帧
+          frame = audioData.slice(offset, offset + frameSize);
+        } else {
+          // 不完整的帧，需要填充
+          frame = new Float32Array(frameSize);
+          frame.set(audioData.slice(offset, offset + currentFrameSize), 0);
+        }
+        
+        const encodedPacket = this.encoder.encodeFrame(frame);
+        packets.push(encodedPacket);
+        offset += currentFrameSize;
+      }
+      
+      return packets;
+    } catch (error) {
+      console.error('Opus encoding error:', error);
+      throw error;
+    }
   }
   
   reset(): void {

@@ -46,6 +46,13 @@ extraFiles:
     filter:
       - "**/*"
 
+  # FFmpeg 工具（用于 Opus 音频解码）
+  - from: "tools/ffmpeg/bin"
+    to: "tools/ffmpeg/bin"
+    filter:
+      - "ffmpeg.exe"
+      - "ffprobe.exe"  # 可选，用于音频信息
+
 win:
   target:
     - target: nsis

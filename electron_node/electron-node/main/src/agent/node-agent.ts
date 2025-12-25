@@ -371,13 +371,15 @@ export class NodeAgent {
     }, 'Sending heartbeat with type-level capability');
 
     // 对齐协议规范：node_heartbeat 消息格式
+    // 注意：gpu_percent 必须提供（不能为 undefined），因为调度服务器的健康检查要求所有节点都必须有 GPU
+    // 如果无法获取 GPU 使用率，使用 0.0 作为默认值
     const message: NodeHeartbeatMessage = {
       type: 'node_heartbeat',
       node_id: this.nodeId,
       timestamp: Date.now(),
       resource_usage: {
         cpu_percent: resources.cpu,
-        gpu_percent: resources.gpu || undefined,
+        gpu_percent: resources.gpu ?? 0.0, // 如果为 null，使用 0.0 作为默认值
         gpu_mem_percent: resources.gpuMem || undefined,
         mem_percent: resources.memory,
         running_jobs: this.inferenceService.getCurrentJobCount(),
@@ -696,9 +698,13 @@ export class NodeAgent {
   }
 
   private async handleJob(job: JobAssignMessage): Promise<void> {
-    if (!this.ws || this.ws.readyState !== WebSocket.OPEN || !this.nodeId) return;
+    if (!this.ws || this.ws.readyState !== WebSocket.OPEN || !this.nodeId) {
+      logger.warn({ jobId: job.job_id, wsState: this.ws?.readyState, nodeId: this.nodeId }, 'Cannot handle job: WebSocket not ready');
+      return;
+    }
 
     const startTime = Date.now();
+    logger.info({ jobId: job.job_id, traceId: job.trace_id, sessionId: job.session_id }, 'Received job_assign, starting processing');
 
     try {
       // 根据 features 启动所需的服务
@@ -731,7 +737,21 @@ export class NodeAgent {
       } : undefined;
 
       // 调用推理服务处理任务
+      logger.debug({ jobId: job.job_id }, 'Calling inferenceService.processJob');
       const result = await this.inferenceService.processJob(job, partialCallback);
+      
+      // 检查ASR结果是否为空
+      const asrTextTrimmed = (result.text_asr || '').trim();
+      const isEmpty = !asrTextTrimmed || asrTextTrimmed.length === 0;
+      
+      if (isEmpty) {
+        logger.warn(
+          { jobId: job.job_id, traceId: job.trace_id },
+          'ASR result is empty (silence detected), sending empty job_result for job_id/trace_id verification'
+        );
+      } else {
+        logger.info({ jobId: job.job_id, textAsr: result.text_asr?.substring(0, 50), textTranslated: result.text_translated?.substring(0, 50) }, 'Job processing completed successfully');
+      }
 
       // 对齐协议规范：job_result 消息格式
       const response: JobResultMessage = {
@@ -751,7 +771,9 @@ export class NodeAgent {
         trace_id: job.trace_id, // Added: propagate trace_id
       };
 
+      logger.info({ jobId: job.job_id, responseLength: JSON.stringify(response).length }, 'Sending job_result to scheduler');
       this.ws.send(JSON.stringify(response));
+      logger.info({ jobId: job.job_id, processingTimeMs: Date.now() - startTime }, 'Job result sent successfully');
     } catch (error) {
       logger.error({ error, jobId: job.job_id, traceId: job.trace_id }, 'Failed to process job');
 

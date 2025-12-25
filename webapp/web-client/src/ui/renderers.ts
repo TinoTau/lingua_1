@@ -457,16 +457,29 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
   // 状态监听（通过公共方法）
   const stateMachine = app.getStateMachine();
   if (stateMachine) {
-    stateMachine.onStateChange((newState: SessionState) => {
+    stateMachine.onStateChange((newState: SessionState, oldState?: SessionState) => {
       const isSessionActive = stateMachine.getIsSessionActive ? stateMachine.getIsSessionActive() : false;
       const isConnected = app.isConnected(); // 在 switch 之前声明，所有 case 都可以使用
 
-      console.log('[UI] 状态变化:', {
-        newState,
-        isSessionActive,
-        isConnected,
-        playbackRateBtnExists: !!playbackRateBtn
-      });
+      // 如果是状态不变的通知（UI 更新），记录日志
+      const isUIUpdate = oldState === newState;
+      if (isUIUpdate) {
+        console.log('[UI] UI 更新通知（状态未变化）:', {
+          state: newState,
+          isSessionActive,
+          isConnected,
+          hasPendingAudio: app.hasPendingTtsAudio(),
+          duration: app.getTtsAudioDuration()
+        });
+      } else {
+        console.log('[UI] 状态变化:', {
+          newState,
+          oldState,
+          isSessionActive,
+          isConnected,
+          playbackRateBtnExists: !!playbackRateBtn
+        });
+      }
 
       switch (newState) {
         case SessionState.INPUT_READY:

@@ -1,127 +1,211 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, BTreeMap};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use crate::messages::SessionMessage;
 
-// 结果队列项
+// 会话结果队列状态
 #[derive(Debug, Clone)]
-pub struct QueuedResult {
-    pub utterance_index: u64,
-    pub result: SessionMessage,
+struct SessionQueueState {
+    /// 下一个期望的 utterance_index
+    expected: u64,
+    /// 待处理的结果（按 utterance_index 排序）
+    pending: BTreeMap<u64, SessionMessage>,
+    /// Gap 超时时间（毫秒），默认 5 秒
+    gap_timeout_ms: i64,
+    /// 开始等待 expected 的时间戳（毫秒）
+    gap_wait_start_ms: i64,
+    /// Pending 上限，默认 200
+    pending_max: usize,
+    /// 连续 Missing 计数
+    consecutive_missing: u32,
+    /// Missing 重置阈值，默认 20
+    /// 注意：当前未使用，保留用于将来的会话重置功能
     #[allow(dead_code)]
-    pub received_at: chrono::DateTime<chrono::Utc>,
-    /// 结果截止时间（毫秒时间戳），超过此时间未到达则视为失败
-    #[allow(dead_code)]
-    pub deadline_ms: Option<i64>,
-}
-
-// 结果状态
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[allow(dead_code)]
-pub enum ResultStatus {
-    /// 成功
-    Success,
-    /// 失败
-    Failed,
-    /// 超时/跳过
-    Skipped,
+    missing_reset_threshold: u32,
 }
 
 // 会话结果队列管理器
 #[derive(Clone)]
 pub struct ResultQueueManager {
-    // session_id -> (下一个期望的 utterance_index, 结果队列, 待处理索引的截止时间)
-    queues: Arc<RwLock<HashMap<String, (u64, Vec<QueuedResult>, HashMap<u64, i64>)>>>,
-    /// 结果超时时间（毫秒），默认 60 秒
-    result_timeout_ms: i64,
+    // session_id -> SessionQueueState
+    queues: Arc<RwLock<HashMap<String, SessionQueueState>>>,
+    /// Gap 超时时间（毫秒），默认 5 秒
+    gap_timeout_ms: i64,
+    /// Pending 上限，默认 200
+    pending_max: usize,
+    /// Missing 重置阈值，默认 20
+    missing_reset_threshold: u32,
 }
 
 impl ResultQueueManager {
     pub fn new() -> Self {
         Self {
             queues: Arc::new(RwLock::new(HashMap::new())),
-            result_timeout_ms: 60 * 1000, // 默认 60 秒
+            gap_timeout_ms: 5 * 1000, // 默认 5 秒
+            pending_max: 200,
+            missing_reset_threshold: 20,
         }
     }
 
     #[allow(dead_code)]
-    pub fn new_with_timeout(timeout_seconds: u64) -> Self {
+    pub fn new_with_config(gap_timeout_seconds: u64, pending_max: usize, missing_reset_threshold: u32) -> Self {
         Self {
             queues: Arc::new(RwLock::new(HashMap::new())),
-            result_timeout_ms: (timeout_seconds * 1000) as i64,
+            gap_timeout_ms: (gap_timeout_seconds * 1000) as i64,
+            pending_max,
+            missing_reset_threshold,
         }
     }
 
     pub async fn initialize_session(&self, session_id: String) {
         let mut queues = self.queues.write().await;
-        queues.insert(session_id, (0, Vec::new(), HashMap::new()));
-    }
-
-    /// 为指定的 utterance_index 设置截止时间
-    pub async fn set_result_deadline(&self, session_id: &str, utterance_index: u64, deadline_ms: i64) {
-        let mut queues = self.queues.write().await;
-        if let Some((_, _, deadlines)) = queues.get_mut(session_id) {
-            deadlines.insert(utterance_index, deadline_ms);
-        }
+        let now_ms = chrono::Utc::now().timestamp_millis();
+        queues.insert(session_id, SessionQueueState {
+            expected: 0,
+            pending: BTreeMap::new(),
+            gap_timeout_ms: self.gap_timeout_ms,
+            gap_wait_start_ms: now_ms,
+            pending_max: self.pending_max,
+            consecutive_missing: 0,
+            missing_reset_threshold: self.missing_reset_threshold,
+        });
     }
 
     pub async fn add_result(&self, session_id: &str, utterance_index: u64, result: SessionMessage) {
         let mut queues = self.queues.write().await;
-        if let Some((_, queue, deadlines)) = queues.get_mut(session_id) {
-            // 移除对应的 deadline（如果存在）
-            deadlines.remove(&utterance_index);
+        if let Some(state) = queues.get_mut(session_id) {
+            // 插入或覆盖结果
+            state.pending.insert(utterance_index, result);
             
-            queue.push(QueuedResult {
-                utterance_index,
-                result,
-                received_at: chrono::Utc::now(),
-                deadline_ms: None, // 已到达，不需要 deadline
-            });
-            // 按 utterance_index 排序
-            queue.sort_by_key(|r| r.utterance_index);
-        }
-    }
-
-    pub async fn get_ready_results(&self, session_id: &str) -> Vec<SessionMessage> {
-        use tracing::debug;
-        let now_ms = chrono::Utc::now().timestamp_millis();
-        let mut queues = self.queues.write().await;
-        if let Some((expected_index, queue, deadlines)) = queues.get_mut(session_id) {
-            let mut ready = Vec::new();
-            
-            debug!(
-                session_id = %session_id,
-                expected_index = *expected_index,
-                queue_size = queue.len(),
-                queue_indices = ?queue.iter().map(|r| r.utterance_index).collect::<Vec<_>>(),
-                "Checking ready results"
-            );
-            
-            // 检查并处理超时的结果
-            self.check_and_skip_timeout_results(session_id, expected_index, deadlines, now_ms, &mut ready);
-            
-            // 从队列开头取出连续的结果
-            while let Some(first) = queue.first() {
-                if first.utterance_index == *expected_index {
-                    let result = queue.remove(0);
-                    ready.push(result.result);
-                    *expected_index += 1;
-                } else {
-                    debug!(
+            // Pending 上限保护：如果 pending 过大，优先丢弃"最远"的结果
+            while state.pending.len() > state.pending_max {
+                // 丢弃最大 key（最远未来），避免无限堆积
+                if let Some((&k, _)) = state.pending.iter().next_back() {
+                    state.pending.remove(&k);
+                    use tracing::warn;
+                    warn!(
                         session_id = %session_id,
-                        expected_index = *expected_index,
-                        first_index = first.utterance_index,
-                        "Waiting for expected index, breaking"
+                        evicted_index = k,
+                        "Pending queue overflow, evicted furthest result"
                     );
+                } else {
                     break;
                 }
             }
+        }
+    }
+
+    /// 为指定的 utterance_index 设置截止时间（已废弃，保留以保持兼容性）
+    /// 新的实现使用 gap_timeout 自动处理超时，不再需要显式设置 deadline
+    #[allow(dead_code)]
+    pub async fn set_result_deadline(&self, _session_id: &str, _utterance_index: u64, _deadline_ms: i64) {
+        // 不再需要，gap timeout 机制会自动处理
+    }
+
+    pub async fn get_ready_results(&self, session_id: &str) -> Vec<SessionMessage> {
+        use tracing::{info, warn};
+        let now_ms = chrono::Utc::now().timestamp_millis();
+        let mut queues = self.queues.write().await;
+        if let Some(state) = queues.get_mut(session_id) {
+            let mut ready = Vec::new();
             
-            debug!(
+            // 如果队列不为空且 expected 小于队列中的最小 index，调整 expected
+            if !state.pending.is_empty() {
+                if let Some(&min_index) = state.pending.keys().next() {
+                    if state.expected < min_index {
+                        warn!(
+                            session_id = %session_id,
+                            old_expected = state.expected,
+                            new_expected = min_index,
+                            "Adjusting expected_index to match first pending result"
+                        );
+                        state.expected = min_index;
+                        state.gap_wait_start_ms = now_ms;
+                    }
+                }
+            }
+            
+            info!(
+                session_id = %session_id,
+                expected_index = state.expected,
+                queue_size = state.pending.len(),
+                queue_indices = ?state.pending.keys().copied().collect::<Vec<_>>(),
+                "Checking ready results"
+            );
+            
+            // 核心逻辑：循环处理，直到没有更多可放行的结果
+            loop {
+                // 1) expected 已到：直接放行
+                if let Some(result) = state.pending.remove(&state.expected) {
+                    ready.push(result);
+                    state.expected += 1;
+                    state.gap_wait_start_ms = now_ms;
+                    state.consecutive_missing = 0;
+                    continue;
+                }
+                
+                // 2) expected 未到：检查队列中是否有更小的索引可以释放
+                // 如果队列中有比 expected 更小的索引，说明之前跳过了，现在应该释放它们
+                if let Some(&min_index) = state.pending.keys().next() {
+                    if min_index < state.expected {
+                        warn!(
+                            session_id = %session_id,
+                            expected_index = state.expected,
+                            found_index = min_index,
+                            "Found smaller index in queue, releasing it"
+                        );
+                        // 释放队列中最小的索引
+                        if let Some(result) = state.pending.remove(&min_index) {
+                            ready.push(result);
+                            state.expected = min_index + 1;
+                            state.gap_wait_start_ms = now_ms;
+                            state.consecutive_missing = 0;
+                            continue;
+                        }
+                    }
+                }
+                
+                // 3) expected 未到且队列中没有更小的索引：检查是否超时
+                let elapsed_ms = now_ms - state.gap_wait_start_ms;
+                if elapsed_ms >= state.gap_timeout_ms {
+                    // 超时，生成 Missing 占位结果
+                    warn!(
+                        session_id = %session_id,
+                        utterance_index = state.expected,
+                        elapsed_ms = elapsed_ms,
+                        gap_timeout_ms = state.gap_timeout_ms,
+                        "Gap timeout, creating Missing result"
+                    );
+                    
+                    // 记录超时指标
+                    crate::metrics::on_result_gap_timeout();
+                    
+                    // 创建 Missing 占位结果
+                    let missing_result = SessionMessage::MissingResult {
+                        session_id: session_id.to_string(),
+                        utterance_index: state.expected,
+                        reason: "gap_timeout".to_string(),
+                        created_at_ms: now_ms,
+                        trace_id: None,
+                    };
+                    ready.push(missing_result);
+                    
+                    state.expected += 1;
+                    state.gap_wait_start_ms = now_ms;
+                    state.consecutive_missing += 1;
+                    continue;
+                }
+                
+                // 4) 未超时且 expected 未到：停止
+                break;
+            }
+            
+            info!(
                 session_id = %session_id,
                 ready_count = ready.len(),
-                new_expected_index = *expected_index,
-                remaining_queue_size = queue.len(),
+                new_expected_index = state.expected,
+                remaining_queue_size = state.pending.len(),
+                consecutive_missing = state.consecutive_missing,
                 "Ready results extracted"
             );
             
@@ -131,51 +215,15 @@ impl ResultQueueManager {
         }
     }
 
-    /// 检查并跳过超时的结果
-    fn check_and_skip_timeout_results(
-        &self,
-        session_id: &str,
-        expected_index: &mut u64,
-        deadlines: &mut HashMap<u64, i64>,
-        now_ms: i64,
-        ready: &mut Vec<SessionMessage>,
-    ) {
-        use tracing::warn;
-        
-        // 检查当前期望的 index 是否超时
-        while let Some(&deadline_ms) = deadlines.get(expected_index) {
-            if now_ms > deadline_ms {
-                // 超时，生成失败结果并推进水位线
-                warn!(
-                    session_id = %session_id,
-                    utterance_index = *expected_index,
-                    deadline_ms = deadline_ms,
-                    now_ms = now_ms,
-                    "Result timeout, skipping utterance_index"
-                );
-                
-                // 记录超时指标
-                crate::metrics::on_result_gap_timeout();
-                
-                // 创建失败结果消息
-                let error_result = SessionMessage::Error {
-                    code: "RESULT_TIMEOUT".to_string(),
-                    message: format!("Result for utterance_index {} timed out", expected_index),
-                    details: Some(serde_json::json!({
-                        "utterance_index": *expected_index,
-                        "timeout_ms": self.result_timeout_ms,
-                        "deadline_ms": deadline_ms
-                    })),
-                };
-                ready.push(error_result);
-                
-                // 移除 deadline 并推进水位线
-                deadlines.remove(expected_index);
-                *expected_index += 1;
-            } else {
-                // 未超时，停止检查
-                break;
-            }
+    /// 检查是否应该重置会话（连续 Missing 过多）
+    /// 注意：当前未使用，保留用于将来的会话重置功能
+    #[allow(dead_code)]
+    pub async fn should_reset_session(&self, session_id: &str) -> bool {
+        let queues = self.queues.read().await;
+        if let Some(state) = queues.get(session_id) {
+            state.consecutive_missing >= state.missing_reset_threshold
+        } else {
+            false
         }
     }
 
@@ -183,24 +231,8 @@ impl ResultQueueManager {
     #[allow(dead_code)]
     pub async fn get_pending_indices(&self, session_id: &str) -> Vec<u64> {
         let queues = self.queues.read().await;
-        if let Some((expected_index, queue, _)) = queues.get(session_id) {
-            let mut pending = Vec::new();
-            for i in *expected_index.. {
-                // 检查队列中是否有这个 index
-                if queue.iter().any(|r| r.utterance_index == i) {
-                    pending.push(i);
-                } else {
-                    // 如果队列中没有，且队列不为空，检查是否已经跳过
-                    if queue.is_empty() || queue.iter().all(|r| r.utterance_index > i) {
-                        break;
-                    }
-                }
-                // 限制检查范围（避免无限循环）
-                if pending.len() > 100 {
-                    break;
-                }
-            }
-            pending
+        if let Some(state) = queues.get(session_id) {
+            state.pending.keys().copied().collect()
         } else {
             Vec::new()
         }

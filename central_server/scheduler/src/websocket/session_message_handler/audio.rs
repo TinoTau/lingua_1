@@ -153,7 +153,8 @@ async fn finalize_audio_utterance(
         final_features.clone(),
         session.tenant_id.clone(),
         audio_data,
-        "pcm16".to_string(),
+        // 从 session 配置中获取 audio_format，如果没有则使用默认值 "pcm16"
+        session.audio_format.clone().unwrap_or_else(|| "pcm16".to_string()),
         16000,
         session.paired_node_id.clone(),
         session.mode.clone(),
@@ -187,6 +188,8 @@ async fn finalize_audio_utterance(
             job_id = %job.job_id,
             node_id = ?job.assigned_node_id,
             tgt_lang = %job.tgt_lang,
+            audio_format = %job.audio_format,
+            audio_size_bytes = job.audio_data.len(),
             "Job created (from audio_chunk)"
         );
 
@@ -198,7 +201,7 @@ async fn finalize_audio_utterance(
                 }
             }
 
-            if let Some(job_assign_msg) = create_job_assign_message(&job, None, None, None) {
+            if let Some(job_assign_msg) = create_job_assign_message(state, &job, None, None, None).await {
                 if crate::phase2::send_node_message_routed(state, node_id, job_assign_msg).await {
                     state.dispatcher.mark_job_dispatched(&job.job_id).await;
                     send_ui_event(

@@ -40,6 +40,22 @@ export class StateMachine {
   }
 
   /**
+   * 触发 UI 更新（不改变状态）
+   * 用于在状态不变时通知 UI 更新（例如：TTS 音频缓冲区更新）
+   */
+  notifyUIUpdate(): void {
+    // 使用当前状态作为 newState 和 oldState，触发回调但不改变状态
+    const currentState = this.state;
+    this.callbacks.forEach(callback => {
+      try {
+        callback(currentState, currentState);
+      } catch (error) {
+        console.error('Error in UI update callback:', error);
+      }
+    });
+  }
+
+  /**
    * 切换到新状态
    */
   private transitionTo(newState: SessionState): void {

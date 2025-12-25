@@ -16,7 +16,7 @@ heartbeat_interval_seconds = 15
 # - instance presence（schedulers:presence:<instance_id>，TTL=2*heartbeat_interval_seconds）
 # - node/session owner（nodes:owner / sessions:owner，带 TTL）
 # - 跨实例投递（Redis Streams per-instance inbox；Job 指令/结果走 Streams，避免 Pub/Sub 丢消息）
-enabled = true  # 默认启用 Phase2（多实例支持）
+enabled = true  # 启用 Phase2（需要 Redis 支持集群监控）
 # 留空或 "auto" 将在启动时生成：hostname + pid + 短 uuid
 instance_id = "auto"
 # owner key TTL（秒）
@@ -124,7 +124,7 @@ strict_pool_eligibility = false
 strategy = "least_connections"
 # 资源使用率阈值（%），超过此值的节点将被跳过
 # 根据设计理念：调度服务器只负责跳过高负载节点，具体计算压力交给节点端
-resource_threshold = 75.0  # CPU、GPU、内存使用率超过此值将被跳过（默认 75%）
+resource_threshold = 85.0  # CPU、GPU、内存使用率超过此值将被跳过（默认 75%，已调整为 85% 以适应当前系统负载）
 
 [scheduler.node_health]
 # 心跳间隔（秒）

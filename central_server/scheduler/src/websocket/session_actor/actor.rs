@@ -189,6 +189,9 @@ impl SessionActor {
             SessionEvent::ResetTimers => {
                 self.reset_timers().await?;
             }
+            SessionEvent::UpdateUtteranceIndex { utterance_index } => {
+                self.handle_update_utterance_index(utterance_index).await?;
+            }
         }
         Ok(())
     }
@@ -220,7 +223,7 @@ impl SessionActor {
         }
 
         // 添加音频块到缓冲区（使用正确的 utterance_index）
-        self.state
+        let (should_finalize_due_to_length, current_size_bytes) = self.state
             .audio_buffer
             .add_chunk(&self.session_id, utterance_index, chunk)
             .await;
@@ -235,6 +238,22 @@ impl SessionActor {
         // 如果是最终块，立即 finalize
         if is_final {
             self.try_finalize(utterance_index, "IsFinal").await?;
+        } else if should_finalize_due_to_length {
+            // 异常保护：音频长度超过异常保护限制（500KB），自动触发 finalize
+            // 正常情况下不应该触发，因为 Web 端 VAD 会过滤静音，pause_ms 超时机制会先触发
+            // 这仅作为异常保护，防止极端情况下（如 VAD 失效、超时机制失效）音频无限累积导致 GPU 内存溢出
+            warn!(
+                session_id = %self.session_id,
+                utterance_index = utterance_index,
+                current_size_bytes = current_size_bytes,
+                pause_ms = self.pause_ms,
+                "Audio buffer exceeded异常保护限制 (500KB), auto-finalizing. This should not happen normally - check VAD and timeout mechanism"
+            );
+            let finalized = self.try_finalize(utterance_index, "MaxLength").await?;
+            if finalized {
+                // finalize 成功，新的音频块应该使用新的 utterance_index
+                // 注意：这里不需要手动更新 utterance_index，因为 try_finalize 成功后会自动 increment
+            }
         } else if self.pause_ms > 0 {
             // 启动/重置超时计时器
             self.reset_timers().await?;
@@ -382,11 +401,16 @@ impl SessionActor {
             }
         };
 
+        // 从 session 配置中获取 audio_format，如果没有则使用默认值 "pcm16"
+        // 注意：web 端现在使用 opus 编码发送 audio_chunk，所以 session.audio_format 应该是 "opus"
+        let audio_format = session.audio_format.clone().unwrap_or_else(|| "pcm16".to_string());
+        
         info!(
             session_id = %self.session_id,
             utterance_index = utterance_index,
             reason = reason,
             audio_size_bytes = audio_data.len(),
+            audio_format = %audio_format,
             "Finalizing audio utterance"
         );
 
@@ -408,7 +432,7 @@ impl SessionActor {
             session.default_features.clone(),
             session.tenant_id.clone(),
             audio_data,
-            "pcm16".to_string(),
+            audio_format,
             16000,
             session.paired_node_id.clone(),
             session.mode.clone(),
@@ -429,6 +453,8 @@ impl SessionActor {
                 job_id = %job.job_id,
                 node_id = ?job.assigned_node_id,
                 tgt_lang = %job.tgt_lang,
+                audio_format = %job.audio_format,
+                audio_size_bytes = job.audio_data.len(),
                 "Job created (from session actor)"
             );
 
@@ -440,7 +466,7 @@ impl SessionActor {
                     }
                 }
 
-                if let Some(job_assign_msg) = create_job_assign_message(&job, None, None, None) {
+                if let Some(job_assign_msg) = create_job_assign_message(&self.state, &job, None, None, None).await {
                     if crate::phase2::send_node_message_routed(&self.state, node_id, job_assign_msg).await {
                         self.state.dispatcher.mark_job_dispatched(&job.job_id).await;
                         send_ui_event(
@@ -564,6 +590,19 @@ impl SessionActor {
         });
 
         self.current_timer_handle = Some(handle);
+        Ok(())
+    }
+
+    /// 处理更新 utterance_index 事件
+    async fn handle_update_utterance_index(&mut self, new_index: u64) -> Result<(), anyhow::Error> {
+        let old_index = self.internal_state.current_utterance_index;
+        self.internal_state.update_utterance_index(new_index);
+        info!(
+            session_id = %self.session_id,
+            old_index = old_index,
+            new_index = new_index,
+            "Updated utterance_index from utterance message"
+        );
         Ok(())
     }
 

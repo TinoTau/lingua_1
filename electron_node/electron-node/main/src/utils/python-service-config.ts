@@ -4,6 +4,7 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
+import { app } from 'electron';
 import { setupCudaEnvironment } from './cuda-env';
 import logger from '../logger';
 
@@ -26,6 +27,8 @@ export function getPythonServiceConfig(
   serviceName: 'nmt' | 'tts' | 'yourtts' | 'speaker_embedding' | 'faster_whisper_vad',
   projectRoot: string
 ): PythonServiceConfig | null {
+  // 直接使用 process.env 构建 baseEnv（恢复改造前的行为）
+  // 注意：环境变量快照机制已移除，因为 Opus 编码已完全移除
   const baseEnv: Record<string, string> = {
     ...process.env,
     ...setupCudaEnvironment(),
@@ -269,6 +272,51 @@ export function getPythonServiceConfig(
         asrComputeType = cudaAvailable ? 'float16' : 'float32';
       }
       
+      // 查找打包的 ffmpeg（优先使用打包版本）
+      let ffmpegBinary: string | undefined;
+      const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged;
+      
+      if (isDev) {
+        // 开发环境：从项目根目录查找
+        const devFfmpegPath = path.join(projectRoot, 'electron_node', 'electron-node', 'tools', 'ffmpeg', 'bin', 'ffmpeg.exe');
+        if (fs.existsSync(devFfmpegPath)) {
+          ffmpegBinary = devFfmpegPath;
+          logger.info({ ffmpegPath: devFfmpegPath }, 'Using bundled ffmpeg (development)');
+        }
+      } else {
+        // 生产环境：从应用资源目录查找
+        const appPath = app.getAppPath();
+        const bundledFfmpegPath = path.join(appPath, 'tools', 'ffmpeg', 'bin', 'ffmpeg.exe');
+        if (fs.existsSync(bundledFfmpegPath)) {
+          ffmpegBinary = bundledFfmpegPath;
+          logger.info({ ffmpegPath: bundledFfmpegPath }, 'Using bundled ffmpeg (production)');
+        }
+      }
+      
+      // 如果找到打包的 ffmpeg，设置环境变量（pydub 会自动使用）
+      const env: Record<string, string> = {
+        ...baseEnv,
+        VIRTUAL_ENV: venvPath,
+        PATH: venvPathEnv,
+        ASR_MODEL_PATH: asrModelPath,
+        VAD_MODEL_PATH: vadModelPath,
+        ASR_DEVICE: asrDevice,
+        ASR_COMPUTE_TYPE: asrComputeType,
+        FASTER_WHISPER_VAD_PORT: '6007',
+      };
+      
+      // 如果环境变量中设置了 HF_TOKEN，传递给它（用于将来可能的模型下载）
+      // 当前模型已下载到本地，通常不需要 token
+      if (process.env.HF_TOKEN) {
+        env.HF_TOKEN = process.env.HF_TOKEN;
+      }
+      
+      if (ffmpegBinary) {
+        env.FFMPEG_BINARY = ffmpegBinary;
+        // 同时添加到 PATH，确保 pydub 能找到
+        env.PATH = `${path.dirname(ffmpegBinary)};${env.PATH}`;
+      }
+      
       return {
         name: 'Faster Whisper + VAD',
         port: 6007,
@@ -278,16 +326,7 @@ export function getPythonServiceConfig(
         workingDir: servicePath,
         logDir,
         logFile,
-        env: {
-          ...baseEnv,
-          VIRTUAL_ENV: venvPath,
-          PATH: venvPathEnv,
-          ASR_MODEL_PATH: asrModelPath,
-          VAD_MODEL_PATH: vadModelPath,
-          ASR_DEVICE: asrDevice,
-          ASR_COMPUTE_TYPE: asrComputeType,
-          FASTER_WHISPER_VAD_PORT: '6007',
-        },
+        env,
       };
     }
 

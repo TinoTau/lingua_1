@@ -209,6 +209,27 @@ impl NodeRegistry {
         let nodes = self.nodes.read().await;
         crate::metrics::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
 
+        // 诊断：记录注册表中的节点总数和状态分布
+        let total_registered = nodes.len();
+        if total_registered == 0 {
+            use tracing::warn;
+            warn!(
+                "节点选择失败：注册表中没有任何节点（total_registered=0）。可能原因：1) 节点未成功注册 2) 节点连接断开被清理 3) 节点心跳超时被标记为 offline"
+            );
+        } else {
+            use tracing::debug;
+            let mut status_distribution: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+            for node in nodes.values() {
+                let status_str = format!("{:?}", node.status);
+                *status_distribution.entry(status_str).or_insert(0) += 1;
+            }
+            debug!(
+                total_registered = total_registered,
+                status_distribution = ?status_distribution,
+                "节点选择：注册表中的节点状态分布"
+            );
+        }
+
         let mut breakdown = NoAvailableNodeBreakdown::default();
         let mut available_nodes: Vec<&super::Node> = Vec::new();
 
@@ -259,6 +280,15 @@ impl NodeRegistry {
             let effective_jobs = std::cmp::max(node.current_jobs, reserved);
             if effective_jobs >= node.max_concurrent_jobs {
                 breakdown.capacity_exceeded += 1;
+                // 添加详细日志，帮助诊断容量问题
+                debug!(
+                    node_id = %node.node_id,
+                    current_jobs = node.current_jobs,
+                    reserved = reserved,
+                    effective_jobs = effective_jobs,
+                    max_concurrent_jobs = node.max_concurrent_jobs,
+                    "Node capacity exceeded, excluding from selection"
+                );
                 self.record_exclude_reason(DispatchExcludeReason::CapacityExceeded, node.node_id.clone()).await;
                 continue;
             }

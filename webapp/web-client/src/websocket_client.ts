@@ -87,6 +87,7 @@ export class WebSocketClient {
       this.audioEncoder.close();
     }
     this.audioEncoder = createAudioEncoder(config);
+    console.log('Audio encoder created:', config.codec);
   }
 
   /**
@@ -226,8 +227,21 @@ export class WebSocketClient {
               this.useBinaryFrame = ack.use_binary_frame ?? false;
               this.negotiatedCodec = ack.negotiated_codec || ack.negotiated_audio_format || 'pcm16';
 
-              // 如果协商使用 Binary Frame，确保编码器已初始化
-              if (this.useBinaryFrame && !this.audioEncoder) {
+              // 如果协商的编解码器是 opus，确保编码器已初始化（无论是否使用 Binary Frame）
+              // 注意：即使不使用 Binary Frame，我们也可以在 JSON 消息中使用 opus 编码
+              if (this.negotiatedCodec === 'opus' && !this.audioEncoder) {
+                // 使用默认 Opus 配置（节点端自行解码，不需要从服务器获取配置）
+                const codecConfig: AudioCodecConfig = {
+                  codec: 'opus',
+                  sampleRate: ack.negotiated_sample_rate || 16000,
+                  channelCount: ack.negotiated_channel_count || 1,
+                  frameSizeMs: 20, // 默认 20ms 帧
+                  application: 'voip', // VOIP 模式，适合实时语音通信
+                  bitrate: 24000, // 设置 24 kbps for VOIP（推荐值，平衡质量和带宽）
+                };
+                this.setAudioCodecConfig(codecConfig);
+              } else if (this.useBinaryFrame && !this.audioEncoder) {
+                // 如果使用 Binary Frame 但编解码器不是 opus，也初始化编码器
                 const codecConfig: AudioCodecConfig = {
                   codec: this.negotiatedCodec as 'pcm16' | 'opus',
                   sampleRate: ack.negotiated_sample_rate || 16000,
@@ -244,6 +258,7 @@ export class WebSocketClient {
                 format: ack.negotiated_audio_format,
                 sample_rate: ack.negotiated_sample_rate,
                 channel_count: ack.negotiated_channel_count,
+                // opus_config: ack.opus_config, // 如果类型中不存在，注释掉
               });
 
               resolve();
@@ -267,9 +282,14 @@ export class WebSocketClient {
 
         this.ws.onerror = (error) => {
           console.error('WebSocket error:', error);
+          console.error('WebSocket error details:', {
+            url: this.url,
+            readyState: this.ws?.readyState,
+            reconnectAttempts: this.reconnectAttempts,
+          });
           if (this.reconnectAttempts === 0) {
             // 首次连接失败才 reject
-            reject(error);
+            reject(new Error(`WebSocket connection failed: ${error}`));
           }
         };
 
@@ -637,22 +657,85 @@ export class WebSocketClient {
 
   /**
    * 发送音频块（JSON + base64 格式，Phase 1 兼容）
+   * 注意：现在使用 Plan A 格式（packet格式），支持 opus 编码
    */
   private async sendAudioChunkJSON(audioData: Float32Array, isFinal: boolean = false): Promise<void> {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN || !this.sessionId) {
       return;
     }
 
-    // 将 Float32Array 转换为 Int16Array (PCM16)
-    const int16Array = new Int16Array(audioData.length);
-    for (let i = 0; i < audioData.length; i++) {
-      const s = Math.max(-1, Math.min(1, audioData[i]));
-      int16Array[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
-    }
+    // 使用 opus 编码（如果可用），否则使用 PCM16
+    let encodedAudio: Uint8Array;
+    let base64: string;
 
-    // 转换为 base64
-    const uint8Array = new Uint8Array(int16Array.buffer);
-    const base64 = btoa(String.fromCharCode(...uint8Array));
+    if (this.audioEncoder && this.audioCodecConfig?.codec === 'opus') {
+      try {
+        // Plan A要求：必须使用encodePackets()方法，没有回退机制
+        // 注意：AudioEncoder 接口中没有 isReady 和 initialize 方法
+        // 这些是 OpusEncoderImpl 的内部实现，通过类型断言访问
+        const encoder = this.audioEncoder as any;
+        if (encoder.encodePackets && typeof encoder.encodePackets === 'function') {
+          // 使用 encodePackets() 方法（Plan A格式）
+          const opusPackets = await encoder.encodePackets(audioData);
+          console.log(`[Plan A] sendAudioChunk: Encoded audio into ${opusPackets.length} Opus packets using encodePackets()`);
+          
+          // 为每个packet添加长度前缀（Plan A格式）
+          const packetDataParts: Uint8Array[] = [];
+          let totalSize = 0;
+          
+          for (const packet of opusPackets) {
+            if (packet.length === 0) continue; // 跳过空packet
+            
+            // packet_len (uint16_le, 2 bytes)
+            const lenBuffer = new ArrayBuffer(2);
+            const lenView = new DataView(lenBuffer);
+            lenView.setUint16(0, packet.length, true); // little-endian
+            
+            packetDataParts.push(new Uint8Array(lenBuffer));
+            packetDataParts.push(packet);
+            
+            totalSize += 2 + packet.length;
+          }
+          
+          // 合并所有packet数据
+          encodedAudio = new Uint8Array(totalSize);
+          let offset = 0;
+          for (const part of packetDataParts) {
+            encodedAudio.set(part, offset);
+            offset += part.length;
+          }
+        } else {
+          // 没有可用的回退方法，Plan A要求必须使用packet格式
+          const errorMsg = 'Opus encoder does not support encodePackets(). Plan A format requires encodePackets() method. Please ensure the encoder is properly initialized.';
+          console.error(errorMsg);
+          throw new Error(errorMsg);
+        }
+        
+        // 转换为 base64
+        if (encodedAudio.length < 65536) {
+          base64 = btoa(String.fromCharCode(...encodedAudio));
+        } else {
+          const chunks: string[] = [];
+          for (let i = 0; i < encodedAudio.length; i += 8192) {
+            const chunk = encodedAudio.slice(i, i + 8192);
+            chunks.push(String.fromCharCode(...chunk));
+          }
+          base64 = btoa(chunks.join(''));
+        }
+      } catch (error) {
+        console.error('Opus encoding failed in sendAudioChunkJSON:', error);
+        throw error; // Plan A要求：没有回退机制，直接失败
+      }
+    } else {
+      // 使用 PCM16（降级方案，仅当opus不可用时）
+      const int16Array = new Int16Array(audioData.length);
+      for (let i = 0; i < audioData.length; i++) {
+        const s = Math.max(-1, Math.min(1, audioData[i]));
+        int16Array[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+      }
+      const uint8Array = new Uint8Array(int16Array.buffer);
+      base64 = btoa(String.fromCharCode(...uint8Array));
+    }
 
     const message: AudioChunkMessage = {
       type: 'audio_chunk',
@@ -706,6 +789,153 @@ export class WebSocketClient {
         is_final: true,
       };
       this.ws.send(JSON.stringify(message));
+    }
+  }
+
+  /**
+   * 发送 Utterance 消息（使用 opus 编码）
+   * @param audioData 音频数据（Float32Array）
+   * @param utteranceIndex utterance 索引
+   * @param srcLang 源语言
+   * @param tgtLang 目标语言
+   * @param traceId 追踪 ID（可选）
+   */
+  async sendUtterance(
+    audioData: Float32Array,
+    utteranceIndex: number,
+    srcLang: string,
+    tgtLang: string,
+    traceId?: string
+  ): Promise<void> {
+    if (!this.ws || this.ws.readyState !== WebSocket.OPEN || !this.sessionId) {
+      console.warn('WebSocket not connected, cannot send utterance');
+      return;
+    }
+
+    try {
+      // 使用 opus 编码器编码音频数据
+      let encodedAudio: Uint8Array;
+      let audioFormat: string;
+
+      if (this.audioEncoder && this.audioCodecConfig?.codec === 'opus') {
+        // 使用 Plan A 格式：按packet发送，每个packet前加长度前缀
+        // 获取packet数组（每个packet对应一个20ms帧）
+        const encoder = this.audioEncoder as any;
+        let opusPackets: Uint8Array[];
+        
+        // Plan A要求：必须使用encodePackets()方法，没有回退机制
+        if (encoder.encodePackets && typeof encoder.encodePackets === 'function') {
+          // 使用编码器的encodePackets方法（Plan A要求）
+          opusPackets = await encoder.encodePackets(audioData);
+          console.log(`[Plan A] Encoded audio into ${opusPackets.length} Opus packets using encodePackets()`);
+        } else {
+          // 没有可用的回退方法，Plan A要求必须使用packet格式
+          const errorMsg = 'Opus encoder does not support encodePackets(). Plan A format requires encodePackets() method. Please ensure the encoder is properly initialized.';
+          console.error(errorMsg);
+          throw new Error(errorMsg);
+        }
+        
+        // 发送 flush 数据（如果有）
+        const flushData = await this.audioEncoder.flush();
+        if (flushData.length > 0) {
+          // flush数据也应该作为一个packet
+          opusPackets.push(flushData);
+        }
+        
+        // 按照Plan A格式打包：uint16_le packet_len + packet_bytes
+        // 将所有packet打包成一个二进制格式
+        const packetDataParts: Uint8Array[] = [];
+        let totalSize = 0;
+        const packetSizes: number[] = [];
+        
+        for (const packet of opusPackets) {
+          if (packet.length === 0) continue; // 跳过空packet
+          
+          // packet_len (uint16_le, 2 bytes)
+          const lenBuffer = new ArrayBuffer(2);
+          const lenView = new DataView(lenBuffer);
+          lenView.setUint16(0, packet.length, true); // little-endian
+          
+          packetDataParts.push(new Uint8Array(lenBuffer));
+          packetDataParts.push(packet);
+          packetSizes.push(packet.length);
+          
+          totalSize += 2 + packet.length;
+        }
+        
+        // 合并所有packet数据
+        encodedAudio = new Uint8Array(totalSize);
+        let offset = 0;
+        for (const part of packetDataParts) {
+          encodedAudio.set(part, offset);
+          offset += part.length;
+        }
+        
+        audioFormat = 'opus';
+        const minPacketSize = packetSizes.length > 0 ? Math.min(...packetSizes) : 0;
+        const maxPacketSize = packetSizes.length > 0 ? Math.max(...packetSizes) : 0;
+        const avgPacketSize = packetSizes.length > 0 ? Math.round(packetSizes.reduce((a, b) => a + b, 0) / packetSizes.length) : 0;
+        console.log('[OpusEncoder] 📦 Plan A format packaging:', {
+          input_samples: audioData.length,
+          input_duration_ms: (audioData.length / (this.audioCodecConfig?.sampleRate || 16000)) * 1000,
+          packetCount: opusPackets.length,
+          packetSizes: packetSizes.length > 0 ? `${minPacketSize}-${maxPacketSize} bytes (avg: ${avgPacketSize})` : 'N/A',
+          totalSize: encodedAudio.length,
+          overhead: totalSize - packetSizes.reduce((a, b) => a + b, 0), // 长度前缀的开销
+          compression_ratio: ((audioData.length * 2) / totalSize).toFixed(2) + 'x' // PCM16 vs Opus
+        });
+      } else {
+        // 如果 opus 编码器不可用，抛出错误
+        throw new Error('Opus encoder not available. Expected codec: opus, but encoder is: ' + (this.audioEncoder ? 'available' : 'null') + ', config: ' + JSON.stringify(this.audioCodecConfig));
+      }
+
+      // 转换为 base64（使用更高效的方式处理大数组）
+      let base64: string;
+      if (encodedAudio.length < 65536) {
+        // 小数组：直接使用 btoa
+        base64 = btoa(String.fromCharCode(...encodedAudio));
+      } else {
+        // 大数组：分块处理以避免堆栈溢出
+        const chunks: string[] = [];
+        for (let i = 0; i < encodedAudio.length; i += 8192) {
+          const chunk = encodedAudio.slice(i, i + 8192);
+          chunks.push(String.fromCharCode(...chunk));
+        }
+        base64 = btoa(chunks.join(''));
+      }
+
+      // 构建 Utterance 消息
+      const message = {
+        type: 'utterance',
+        session_id: this.sessionId,
+        utterance_index: utteranceIndex,
+        manual_cut: true,
+        src_lang: srcLang,
+        tgt_lang: tgtLang,
+        dialect: null,
+        features: undefined,
+        audio: base64,
+        audio_format: audioFormat,
+        sample_rate: 16000,
+        mode: undefined,
+        lang_a: undefined,
+        lang_b: undefined,
+        auto_langs: undefined,
+        enable_streaming_asr: undefined,
+        partial_update_interval_ms: undefined,
+        trace_id: traceId,
+      };
+
+      this.ws.send(JSON.stringify(message));
+      console.log('Sent utterance message:', {
+        utteranceIndex,
+        audioFormat,
+        audioSizeBytes: encodedAudio.length,
+        base64Size: base64.length,
+      });
+    } catch (error) {
+      console.error('Failed to send utterance:', error);
+      throw error;
     }
   }
 

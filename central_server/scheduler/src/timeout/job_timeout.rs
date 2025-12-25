@@ -202,7 +202,7 @@ pub fn start_job_timeout_manager(
                     continue;
                 };
 
-                if let Some(job_assign_msg) = crate::websocket::create_job_assign_message(&updated_job, None, None, None) {
+                if let Some(job_assign_msg) = crate::websocket::create_job_assign_message(&state, &updated_job, None, None, None).await {
                     let ok = crate::phase2::send_node_message_routed(&state, &new_node_id, job_assign_msg).await;
                     if ok {
                         state.dispatcher.mark_job_dispatched(&updated_job.job_id).await;

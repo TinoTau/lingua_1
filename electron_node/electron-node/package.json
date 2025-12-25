@@ -20,8 +20,12 @@
     "test:stage3.1:watch": "jest --config tests/stage3.1/jest.config.js --watch",
     "test:stage3.2": "jest --config tests/stage3.2/jest.config.js",
     "test:stage3.2:watch": "jest --config tests/stage3.2/jest.config.js --watch",
+    "test:refactor": "jest --config tests/refactor/jest.config.js",
+    "test:refactor:watch": "jest --config tests/refactor/jest.config.js --watch",
     "test:integration": "npm run build:main && node tests/stage3.2/integration-test.js",
-    "test:integration:ps1": "powershell -ExecutionPolicy Bypass -File tests/stage3.2/run-integration-test.ps1"
+    "test:integration:ps1": "powershell -ExecutionPolicy Bypass -File tests/stage3.2/run-integration-test.ps1",
+    "test:pipeline": "node tests/pipeline-e2e-test-simple.js",
+    "clear-cache": "powershell -ExecutionPolicy Bypass -File scripts/clear-cache.ps1"
   },
   "keywords": [
     "electron",
@@ -47,6 +51,7 @@
     "vite": "^5.0.0"
   },
   "dependencies": {
+    "@minceraftmc/opus-encoder": "^0.0.7-rc.1",
     "adm-zip": "^0.5.10",
     "axios": "^1.0.0",
     "module-alias": "^2.2.3",

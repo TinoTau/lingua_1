@@ -34,6 +34,12 @@ pub struct Session {
     /// 自动识别时限制的语言范围（可选）
     #[serde(skip_serializing_if = "Option::is_none")]
     pub auto_langs: Option<Vec<String>>,
+    /// 音频格式（"pcm16" | "opus" 等）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub audio_format: Option<String>,
+    /// 采样率（默认 16000）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sample_rate: Option<u32>,
 }
 
 #[derive(Clone)]
@@ -83,6 +89,8 @@ impl SessionManager {
         lang_b: Option<String>,
         auto_langs: Option<Vec<String>>,
         trace_id: Option<String>,
+        audio_format: Option<String>,
+        sample_rate: Option<u32>,
     ) -> Session {
         let session_id = format!("s-{}", Uuid::new_v4().to_string()[..8].to_uppercase());
         // 如果没有提供 trace_id，则生成一个新的 UUID v4
@@ -104,6 +112,8 @@ impl SessionManager {
             lang_a,
             lang_b,
             auto_langs,
+            audio_format,
+            sample_rate,
         };
 
         let mut sessions = self.sessions.write().await;

@@ -48,6 +48,10 @@ pub(super) async fn handle_session_init(
             lang_b.clone(),
             auto_langs.clone(),
             trace_id,
+            // 默认使用 opus 格式（web 端现在使用 opus 编码）
+            // 如果将来需要从 SessionInit 消息中获取，可以添加 audio_format 字段
+            Some("opus".to_string()),
+            Some(16000),
         )
         .await;
 
@@ -104,12 +108,19 @@ pub(super) async fn handle_session_init(
         actor.run().await;
     });
 
-    // Send acknowledgment message (include trace_id)
+    // Send acknowledgment message (include trace_id and protocol negotiation)
     let ack = SessionMessage::SessionInitAck {
         session_id: session.session_id.clone(),
         assigned_node_id: paired_node_id,
         message: "session created".to_string(),
         trace_id: session.trace_id.clone(),
+        // 协议协商结果：从 session 配置中获取
+        protocol_version: Some("1.0".to_string()),
+        use_binary_frame: Some(false), // Phase 2: 暂时不使用 Binary Frame
+        negotiated_codec: session.audio_format.clone(),
+        negotiated_audio_format: session.audio_format.clone(), // 兼容字段
+        negotiated_sample_rate: session.sample_rate,
+        negotiated_channel_count: Some(1), // 单声道
     };
 
     send_message(tx, &ack).await?;

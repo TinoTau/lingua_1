@@ -75,6 +75,8 @@ pub(super) async fn handle_utterance(
             job_id = %job.job_id,
             node_id = ?job.assigned_node_id,
             tgt_lang = %job.tgt_lang,
+            audio_format = %job.audio_format,
+            audio_size_bytes = job.audio_data.len(),
             "Job created"
         );
 
@@ -88,7 +90,7 @@ pub(super) async fn handle_utterance(
             }
 
             // Note: In current implementation, JobAssign doesn't have ASR result yet, so group_id, part_index, context_text are None
-            if let Some(job_assign_msg) = create_job_assign_message(&job, None, None, None) {
+            if let Some(job_assign_msg) = create_job_assign_message(state, &job, None, None, None).await {
                 if crate::phase2::send_node_message_routed(state, node_id, job_assign_msg).await {
                     state.dispatcher.mark_job_dispatched(&job.job_id).await;
                     // Send DISPATCHED event

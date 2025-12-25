@@ -42,7 +42,17 @@ export class App {
   private observability: ObservabilityManager | null = null;
   // 翻译结果计数器（用于给每条结果编号，在 resetSession 中被重置）
   private translationResultCount: number = 0;
-  // 待显示的翻译结果队列（只有播放时才显示）
+  // 翻译结果映射（key: utterance_index, value: 翻译结果）- 用于文本显示同步
+  private translationResults: Map<number, {
+    originalText: string;
+    translatedText: string;
+    serviceTimings?: { asr_ms?: number; nmt_ms?: number; tts_ms?: number; total_ms?: number };
+    networkTimings?: { web_to_scheduler_ms?: number; scheduler_to_node_ms?: number; node_to_scheduler_ms?: number; scheduler_to_web_ms?: number };
+    schedulerSentAtMs?: number;
+  }> = new Map();
+  // 已显示的 utterance_index 集合（用于去重，防止重复显示）
+  private displayedUtteranceIndices: Set<number> = new Set();
+  // 待显示的翻译结果队列（只有播放时才显示）- 保留用于兼容性
   private pendingTranslationResults: Array<{
     originalText: string;
     translatedText: string;
@@ -52,6 +62,11 @@ export class App {
   }> = [];
   // 已显示的翻译结果数量（用于跟踪哪些结果已显示）
   private displayedTranslationCount: number = 0;
+  // 当前会话的语言配置
+  private currentSrcLang: string = 'zh';
+  private currentTgtLang: string = 'en';
+  // 当前 utterance 索引
+  private currentUtteranceIndex: number = 0;
 
   constructor(config: Partial<Config> = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
@@ -75,12 +90,17 @@ export class App {
     );
 
     // Phase 2: 设置音频编解码器配置
+    // 使用 opus 编码以减小传输数据量
     const codecConfig: AudioCodecConfig = this.config.audioCodecConfig || {
-      codec: 'pcm16', // 默认使用 PCM16，如果支持 Opus 可以改为 'opus'
+      codec: 'opus', // 使用 Opus 编码
       sampleRate: 16000,
       channelCount: 1,
+      frameSizeMs: 20, // 默认 20ms 帧
+      application: 'voip', // VOIP 模式，适合实时语音通信
+      bitrate: 24000, // 设置 24 kbps for VOIP（推荐值，平衡质量和带宽）
     };
     this.wsClient.setAudioCodecConfig(codecConfig);
+    console.log('Audio codec config set:', codecConfig.codec);
 
     this.ttsPlayer = new TtsPlayer(this.stateMachine);
     this.asrSubtitle = new AsrSubtitle('app');
@@ -153,6 +173,11 @@ export class App {
     // TTS 播放回调
     this.ttsPlayer.setPlaybackFinishedCallback(() => {
       this.onPlaybackFinished();
+    });
+
+    // TTS 播放索引变化回调（用于文本显示同步）
+    this.ttsPlayer.setPlaybackIndexChangeCallback((utteranceIndex) => {
+      this.onPlaybackIndexChange(utteranceIndex);
     });
 
     // 内存压力回调
@@ -231,10 +256,11 @@ export class App {
     // 缓存有效音频数据
     this.audioBuffer.push(new Float32Array(audioData));
 
-    // 发送音频块（每 100ms 发送一次）
+    // 自动发送音频块（每 100ms 发送一次，使用 opus 编码）
     // 假设每 10ms 一帧，10 帧 = 100ms
     if (this.audioBuffer.length >= 10) {
       const chunk = this.concatAudioBuffers(this.audioBuffer.splice(0, 10));
+      // 使用 sendAudioChunk，它会根据配置使用 opus 编码（Binary Frame 模式）或 PCM16（JSON 模式）
       this.wsClient.sendAudioChunk(chunk, false);
       // 记录音频块发送
       if (this.observability) {
@@ -291,6 +317,18 @@ export class App {
         console.log('Translation:', message.text);
         break;
 
+      case 'missing_result':
+        // Missing 占位结果：静默丢弃，但记录 debug 日志
+        // 这表示某个 utterance_index 的结果超时或丢失，但系统继续运行
+        console.debug('[App] Missing result received (silently discarded):', {
+          utterance_index: message.utterance_index,
+          reason: message.reason,
+          created_at_ms: message.created_at_ms,
+          trace_id: message.trace_id,
+        });
+        // 不显示给用户，不缓存，直接返回
+        return;
+
       case 'backpressure':
         // 背压消息已在 WebSocketClient 中处理，这里可以记录日志或更新 UI
         // 注意：背压消息与会话状态无关，不应该被过滤
@@ -302,15 +340,46 @@ export class App {
         break;
 
       case 'translation_result':
+        // 详细日志：记录收到的消息
+        console.log('[App] 📥 收到 translation_result 消息:', {
+          utterance_index: message.utterance_index,
+          has_text_asr: !!message.text_asr,
+          text_asr_length: message.text_asr?.length || 0,
+          has_text_translated: !!message.text_translated,
+          text_translated_length: message.text_translated?.length || 0,
+          has_tts_audio: !!message.tts_audio,
+          tts_audio_length: message.tts_audio?.length || 0,
+          is_session_active: this.isSessionActive,
+          trace_id: message.trace_id,
+          job_id: message.job_id
+        });
+
         // 如果会话已结束，丢弃翻译结果
         if (!this.isSessionActive) {
-          console.log('[App] 会话已结束，丢弃翻译结果:', {
+          console.warn('[App] ⚠️ 会话已结束，丢弃翻译结果:', {
+            utterance_index: message.utterance_index,
             text_asr: message.text_asr,
             text_translated: message.text_translated,
             trace_id: message.trace_id
           });
           return;
         }
+
+        // 检查结果是否为空（空文本不应该进入待播放缓存区）
+        const asrEmpty = !message.text_asr || message.text_asr.trim() === '';
+        const translatedEmpty = !message.text_translated || message.text_translated.trim() === '';
+        const ttsEmpty = !message.tts_audio || message.tts_audio.length === 0;
+
+        if (asrEmpty && translatedEmpty && ttsEmpty) {
+          console.log('[App] ⚠️ 收到空文本结果（静音检测），跳过缓存和播放:', {
+            utterance_index: message.utterance_index,
+            trace_id: message.trace_id,
+            job_id: message.job_id
+          });
+          // 不缓存，不播放，直接返回
+          return;
+        }
+
         // 保存 trace_id 和 group_id，用于后续发送 TTS_PLAY_ENDED
         this.currentTraceId = message.trace_id;
         this.currentGroupId = message.group_id || null;
@@ -352,33 +421,86 @@ export class App {
         }
         console.log('===============');
 
-        // 缓存翻译结果，不立即显示（只有播放时才显示）
-        this.pendingTranslationResults.push({
-          originalText: message.text_asr,
-          translatedText: message.text_translated,
-          serviceTimings: message.service_timings,
-          networkTimings: message.network_timings,
-          schedulerSentAtMs: message.scheduler_sent_at_ms
-        });
-        console.log('[App] 翻译结果已缓存，待播放时显示。当前待显示数量:', this.pendingTranslationResults.length);
+        // 保存翻译结果到 Map（用于播放时同步显示）
+        // 使用 utterance_index 作为 key，用于文本显示同步
+        if (message.text_asr || message.text_translated) {
+          this.translationResults.set(message.utterance_index, {
+            originalText: message.text_asr,
+            translatedText: message.text_translated,
+            serviceTimings: message.service_timings,
+            networkTimings: message.network_timings,
+            schedulerSentAtMs: message.scheduler_sent_at_ms
+          });
+          console.log('[App] 翻译结果已保存到 Map，utterance_index:', message.utterance_index);
+
+          // 立即显示翻译结果（确保所有文本都能显示，不依赖播放回调）
+          // 如果已经显示过，跳过（避免重复）
+          if (this.displayedUtteranceIndices.has(message.utterance_index)) {
+            console.log('[App] 翻译结果已显示过，跳过重复显示，utterance_index:', message.utterance_index);
+          } else {
+            // 尝试显示文本，如果成功显示，才标记为已显示
+            const displayed = this.displayTranslationResult(
+              message.text_asr,
+              message.text_translated,
+              message.service_timings,
+              message.network_timings,
+              message.scheduler_sent_at_ms
+            );
+            // 只有成功显示（返回 true）才标记为已显示
+            if (displayed) {
+              this.displayedUtteranceIndices.add(message.utterance_index);
+              console.log('[App] 翻译结果已立即显示，utterance_index:', message.utterance_index);
+            } else {
+              console.warn('[App] 翻译结果显示失败（可能被过滤），utterance_index:', message.utterance_index, {
+                text_asr: message.text_asr?.substring(0, 50),
+                text_translated: message.text_translated?.substring(0, 50)
+              });
+            }
+          }
+        }
 
         // 处理 TTS 音频（如果存在）
         // 注意：不再自动播放，而是累积到缓冲区，等待用户手动触发播放
         if (message.tts_audio && message.tts_audio.length > 0) {
-          console.log('收到 TTS 音频，累积到缓冲区，不自动播放');
+          console.log('[App] 🎵 准备添加 TTS 音频到缓冲区:', {
+            utterance_index: message.utterance_index,
+            base64_length: message.tts_audio.length,
+            is_in_room: this.isInRoom
+          });
+
           if (this.isInRoom) {
             // 房间模式：使用音频混控器（房间模式可能需要不同的处理）
+            console.log('[App] 🏠 房间模式：使用音频混控器');
             this.handleTtsAudioForRoomMode(message.tts_audio);
+            // 触发 UI 更新，显示播放按钮和时长
+            this.notifyTtsAudioAvailable();
           } else {
             // 单会话模式：累积到 TtsPlayer，不自动播放
-            this.ttsPlayer.addAudioChunk(message.tts_audio).catch((error) => {
-              console.error('添加 TTS 音频块失败:', error);
+            // 传递 utterance_index 和 tts_format 用于文本显示同步和格式解码
+            console.log('[App] 🎧 单会话模式：添加到 TtsPlayer');
+            const ttsFormat = message.tts_format || 'pcm16'; // 默认使用 pcm16
+            this.ttsPlayer.addAudioChunk(message.tts_audio, message.utterance_index, ttsFormat).then(() => {
+              console.log('[App] ✅ TTS 音频块已成功添加到缓冲区:', {
+                utterance_index: message.utterance_index,
+                buffer_size: this.ttsPlayer.hasPendingAudio() ? '有音频' : '无音频'
+              });
+              // 触发 UI 更新，显示播放按钮和时长
+              this.notifyTtsAudioAvailable();
+            }).catch((error) => {
+              console.error('[App] ❌ 添加 TTS 音频块失败:', {
+                utterance_index: message.utterance_index,
+                error: error,
+                error_message: error?.message,
+                error_stack: error?.stack
+              });
             });
           }
-          // 触发 UI 更新，显示播放按钮和时长
-          this.notifyTtsAudioAvailable();
         } else {
-          console.log('翻译结果中没有 TTS 音频');
+          console.warn('[App] ⚠️ 翻译结果中没有 TTS 音频:', {
+            utterance_index: message.utterance_index,
+            has_tts_audio: !!message.tts_audio,
+            tts_audio_length: message.tts_audio?.length || 0
+          });
         }
         break;
 
@@ -389,16 +511,25 @@ export class App {
           return;
         }
         console.log('收到单独的 TTS 音频消息，当前状态:', this.stateMachine.getState(), 'payload长度:', message.payload?.length || 0);
+        // 注意：单独的 tts_audio 消息可能没有 utterance_index，使用 -1 作为占位符
+        const ttsUtteranceIndex = (message as any).utterance_index ?? -1;
+        const ttsFormat = (message as any).tts_format || 'pcm16'; // 默认使用 pcm16
         if (this.isInRoom) {
           // 房间模式：使用音频混控器
           this.handleTtsAudioForRoomMode(message.payload);
+          // 触发 UI 更新，显示播放按钮和时长
+          this.notifyTtsAudioAvailable();
         } else {
           // 单会话模式：累积到 TtsPlayer，不自动播放
-          this.ttsPlayer.addAudioChunk(message.payload).catch((error) => {
+          // 等待音频添加到缓冲区后再触发 UI 更新
+          // 注意：单独的 tts_audio 消息可能没有 utterance_index，使用 -1 作为占位符
+          this.ttsPlayer.addAudioChunk(message.payload, ttsUtteranceIndex, ttsFormat).then(() => {
+            console.log('[App] TTS 音频块已添加到缓冲区（单独消息），utterance_index:', ttsUtteranceIndex, '触发 UI 更新');
+            // 触发 UI 更新，显示播放按钮和时长
+            this.notifyTtsAudioAvailable();
+          }).catch((error) => {
             console.error('添加 TTS 音频块失败:', error);
           });
-          // 触发 UI 更新
-          this.notifyTtsAudioAvailable();
         }
         break;
 
@@ -466,6 +597,51 @@ export class App {
   }
 
   /**
+   * 播放索引变化回调（用于文本显示同步）
+   * 当播放到某个音频段时，显示对应的文本
+   */
+  private onPlaybackIndexChange(utteranceIndex: number): void {
+    console.log('[App] 播放索引变化，显示 utterance_index:', utteranceIndex);
+
+    // 如果 utterance_index 为 -1，说明是单独的 tts_audio 消息，不显示文本
+    if (utteranceIndex === -1) {
+      console.log('[App] utterance_index 为 -1，跳过文本显示');
+      return;
+    }
+
+    // 检查是否已经显示过（去重）
+    if (this.displayedUtteranceIndices.has(utteranceIndex)) {
+      console.log('[App] utterance_index 已显示过，跳过重复显示:', utteranceIndex);
+      return;
+    }
+
+    // 从 Map 中获取对应的翻译结果
+    const result = this.translationResults.get(utteranceIndex);
+    if (result) {
+      console.log('[App] 找到对应的翻译结果，显示文本，utterance_index:', utteranceIndex);
+      const displayed = this.displayTranslationResult(
+        result.originalText,
+        result.translatedText,
+        result.serviceTimings,
+        result.networkTimings,
+        result.schedulerSentAtMs
+      );
+      // 只有成功显示（返回 true）才标记为已显示
+      if (displayed) {
+        this.displayedUtteranceIndices.add(utteranceIndex);
+        console.log('[App] 播放时文本已显示，utterance_index:', utteranceIndex);
+      } else {
+        console.warn('[App] 播放时文本显示失败（可能被过滤），utterance_index:', utteranceIndex);
+      }
+    } else {
+      console.warn('[App] 未找到 utterance_index 对应的翻译结果:', utteranceIndex, {
+        availableIndices: Array.from(this.translationResults.keys()).sort((a, b) => a - b),
+        translationResultsSize: this.translationResults.size
+      });
+    }
+  }
+
+  /**
    * 内存压力处理
    */
   private onMemoryPressure(pressure: 'normal' | 'warning' | 'critical'): void {
@@ -519,7 +695,8 @@ export class App {
    */
   private notifyTtsAudioAvailable(): void {
     const duration = this.ttsPlayer.getTotalDuration();
-    console.log('TTS 音频可用，总时长:', duration.toFixed(2), '秒');
+    const hasPendingAudio = this.ttsPlayer.hasPendingAudio();
+    console.log('[App] TTS 音频可用，总时长:', duration.toFixed(2), '秒', 'hasPendingAudio:', hasPendingAudio);
 
     // 触发 UI 更新（如果存在回调）
     if (typeof window !== 'undefined' && (window as any).onTtsAudioAvailable) {
@@ -527,13 +704,14 @@ export class App {
     }
 
     // 如果当前在 INPUT_RECORDING 状态，需要更新播放按钮文本（显示时长）
-    if (this.stateMachine.getState() === SessionState.INPUT_RECORDING) {
-      // 触发状态变化回调，更新 UI
-      // 注意：这里不改变状态，只是触发 UI 更新
-      // const currentState = this.stateMachine.getState(); // 保留用于未来可能的用途
-      // 通过模拟状态变化来触发 UI 更新（实际上状态没变）
-      // 更好的方式是直接更新 UI，但为了保持一致性，我们通过状态机回调
-      // 实际上 UI 应该监听音频可用事件，这里先保持现状
+    const currentState = this.stateMachine.getState();
+    if (currentState === SessionState.INPUT_RECORDING) {
+      // 触发 UI 更新（不改变状态）
+      // 这会触发状态变化回调，让 UI 重新检查 hasPendingAudio 并更新播放按钮
+      console.log('[App] 触发 UI 更新（不改变状态），当前状态:', currentState, 'hasPendingAudio:', hasPendingAudio);
+      this.stateMachine.notifyUIUpdate();
+    } else {
+      console.log('[App] 当前状态不是 INPUT_RECORDING，不触发 UI 更新。当前状态:', currentState);
     }
   }
 
@@ -547,10 +725,10 @@ export class App {
     }
 
     console.log('用户手动触发播放，当前状态:', this.stateMachine.getState());
-    
+
     // 在开始播放时，显示待显示的翻译结果
     this.displayPendingTranslationResults();
-    
+
     await this.ttsPlayer.startPlayback();
   }
 
@@ -643,10 +821,11 @@ export class App {
     _serviceTimings?: { asr_ms?: number; nmt_ms?: number; tts_ms?: number; total_ms?: number },
     _networkTimings?: { web_to_scheduler_ms?: number; scheduler_to_node_ms?: number; node_to_scheduler_ms?: number; scheduler_to_web_ms?: number },
     _schedulerSentAtMs?: number
-  ): void {
+  ): boolean {
     // 如果原文和译文都为空，不显示
     if ((!originalText || originalText.trim() === '') && (!translatedText || translatedText.trim() === '')) {
-      return;
+      console.log('[App] displayTranslationResult: 文本为空，跳过显示');
+      return false;
     }
 
     // 查找或创建翻译结果显示容器
@@ -697,18 +876,43 @@ export class App {
 
     if (!originalDiv || !translatedDiv) {
       console.error('无法找到翻译结果文本框');
-      return;
+      return false;
     }
 
     // 获取当前文本内容
     const currentOriginal = originalDiv.textContent || '';
     const currentTranslated = translatedDiv.textContent || '';
 
+    // 检查是否重复（避免重复追加相同的文本）
+    // 使用更严格的检查：检查文本是否作为完整段落存在（以换行分隔或开头/结尾）
+    const originalTrimmed = originalText?.trim() || '';
+    const translatedTrimmed = translatedText?.trim() || '';
+
+    // 检查原文是否已经作为完整段落存在于当前文本中
+    // 检查方式：文本在开头、结尾，或者被 \n\n 包围
+    const originalPattern = originalTrimmed ? new RegExp(`(^|\\n\\n)${originalTrimmed.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\n\\n|$)`, 'm') : null;
+    const translatedPattern = translatedTrimmed ? new RegExp(`(^|\\n\\n)${translatedTrimmed.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\n\\n|$)`, 'm') : null;
+
+    const originalAlreadyExists = originalPattern ? originalPattern.test(currentOriginal) : false;
+    const translatedAlreadyExists = translatedPattern ? translatedPattern.test(currentTranslated) : false;
+
+    // 如果原文和译文都已存在，跳过追加（避免重复）
+    if (originalAlreadyExists && translatedAlreadyExists) {
+      console.log('[App] 文本已存在（完整段落匹配），跳过重复追加:', {
+        utterance_index: 'N/A',
+        originalText: originalText?.substring(0, 50),
+        translatedText: translatedText?.substring(0, 50),
+        currentOriginalLength: currentOriginal.length,
+        currentTranslatedLength: currentTranslated.length
+      });
+      return false; // 返回 false 表示未成功显示
+    }
+
     // 追加新文本（如果当前有内容，先添加换行和分隔符）
     let newOriginal = currentOriginal;
     let newTranslated = currentTranslated;
 
-    if (originalText && originalText.trim() !== '') {
+    if (originalText && originalText.trim() !== '' && !originalAlreadyExists) {
       if (newOriginal) {
         newOriginal += '\n\n' + originalText;
       } else {
@@ -716,7 +920,7 @@ export class App {
       }
     }
 
-    if (translatedText && translatedText.trim() !== '') {
+    if (translatedText && translatedText.trim() !== '' && !translatedAlreadyExists) {
       if (newTranslated) {
         newTranslated += '\n\n' + translatedText;
       } else {
@@ -731,13 +935,17 @@ export class App {
     // 自动滚动到底部，显示最新内容
     originalDiv.scrollTop = originalDiv.scrollHeight;
     translatedDiv.scrollTop = translatedDiv.scrollHeight;
+
+    // 返回 true 表示成功显示
+    return true;
   }
 
   /**
    * 显示待显示的翻译结果（在开始播放时调用）
+   * 注意：这个方法现在主要用于兼容性，实际文本显示通过 onPlaybackIndexChange 回调进行
    */
   private displayPendingTranslationResults(): void {
-    // 显示所有待显示的翻译结果
+    // 显示所有待显示的翻译结果（从 pendingTranslationResults 数组）
     for (const result of this.pendingTranslationResults) {
       this.displayTranslationResult(
         result.originalText,
@@ -751,7 +959,31 @@ export class App {
     this.displayedTranslationCount += this.pendingTranslationResults.length;
     // 清空待显示队列（已显示的结果不再需要保留）
     this.pendingTranslationResults = [];
-    console.log('[App] 已显示所有待显示的翻译结果，已显示总数:', this.displayedTranslationCount);
+
+    // 同时显示所有已保存但未显示的翻译结果（从 translationResults Map）
+    // 按 utterance_index 排序，确保按顺序显示
+    const sortedIndices = Array.from(this.translationResults.keys()).sort((a, b) => a - b);
+    let displayedCount = 0;
+    for (const utteranceIndex of sortedIndices) {
+      // 如果已经显示过，跳过
+      if (this.displayedUtteranceIndices.has(utteranceIndex)) {
+        continue;
+      }
+      const result = this.translationResults.get(utteranceIndex);
+      if (result) {
+        this.displayTranslationResult(
+          result.originalText,
+          result.translatedText,
+          result.serviceTimings,
+          result.networkTimings,
+          result.schedulerSentAtMs
+        );
+        this.displayedUtteranceIndices.add(utteranceIndex);
+        displayedCount++;
+      }
+    }
+
+    console.log('[App] 已显示所有待显示的翻译结果，已显示总数:', this.displayedTranslationCount, '本次新增:', displayedCount);
   }
 
   /**
@@ -760,20 +992,20 @@ export class App {
   private clearDisplayedTranslationResults(): void {
     const originalDiv = document.getElementById('translation-original');
     const translatedDiv = document.getElementById('translation-translated');
-    
+
     if (originalDiv) {
       originalDiv.textContent = '';
     }
     if (translatedDiv) {
       translatedDiv.textContent = '';
     }
-    
+
     // 隐藏翻译结果容器
     const resultContainer = document.getElementById('translation-result-container');
     if (resultContainer) {
       resultContainer.style.display = 'none';
     }
-    
+
     console.log('[App] 已清空显示的翻译结果');
   }
 
@@ -814,6 +1046,11 @@ export class App {
    */
   async connect(srcLang: string = 'zh', tgtLang: string = 'en', features?: FeatureFlags): Promise<void> {
     try {
+      // 保存语言配置
+      this.currentSrcLang = srcLang;
+      this.currentTgtLang = tgtLang;
+      // 重置 utterance 索引
+      this.currentUtteranceIndex = 0;
       await this.wsClient.connect(srcLang, tgtLang, features);
       await this.recorder.initialize();
       // 记录连接成功
@@ -858,7 +1095,7 @@ export class App {
   async startSession(): Promise<void> {
     const currentState = this.stateMachine.getState();
     console.log('[App] startSession 被调用，当前状态:', currentState);
-    
+
     if (currentState === SessionState.INPUT_READY) {
       console.log('[App] 状态为 INPUT_READY，开始会话');
       this.isSessionActive = true;
@@ -867,6 +1104,8 @@ export class App {
       // 清空当前的 trace_id 和 group_id（新的会话）
       this.currentTraceId = null;
       this.currentGroupId = null;
+      // 重置 utterance 索引
+      this.currentUtteranceIndex = 0;
 
       // 清空所有未播放的音频（新会话开始时丢弃之前的音频）
       this.ttsPlayer.clearBuffers();
@@ -874,7 +1113,9 @@ export class App {
       // 重置翻译结果计数器
       this.translationResultCount = 0;
 
-      // 清空待显示的翻译结果队列
+      // 清空翻译结果 Map 和待显示的翻译结果队列
+      this.translationResults.clear();
+      this.displayedUtteranceIndices.clear();
       this.pendingTranslationResults = [];
       this.displayedTranslationCount = 0;
 
@@ -919,10 +1160,11 @@ export class App {
     // 清空 WebSocket 发送队列（丢弃所有未发送的音频数据）
     this.wsClient.clearSendQueue();
 
-    // 清空待显示的翻译结果队列
+    // 清空翻译结果 Map 和待显示的翻译结果队列
+    this.translationResults.clear();
     this.pendingTranslationResults = [];
     this.displayedTranslationCount = 0;
-    
+
     // 清空已显示的翻译结果文本
     this.clearDisplayedTranslationResults();
 
@@ -933,8 +1175,9 @@ export class App {
   /**
    * 发送当前说的话（控制说话节奏）
    * 发送后继续监听（保持在 INPUT_RECORDING 状态）
+   * 使用 Utterance 消息，支持 opus 编码
    */
-  sendCurrentUtterance(): void {
+  async sendCurrentUtterance(): Promise<void> {
     const currentState = this.stateMachine.getState();
     console.log('sendCurrentUtterance 被调用，当前状态:', currentState, '会话是否活跃:', this.isSessionActive);
 
@@ -942,17 +1185,29 @@ export class App {
     if (this.isSessionActive && currentState === SessionState.INPUT_RECORDING) {
       // 发送剩余的音频数据
       if (this.audioBuffer.length > 0) {
-        const chunk = this.concatAudioBuffers(this.audioBuffer);
-        console.log('发送音频数据，长度:', chunk.length);
+        const audioData = this.concatAudioBuffers(this.audioBuffer);
+        console.log('发送音频数据，长度:', audioData.length, 'samples');
         this.audioBuffer = []; // 清空缓冲区，准备下一句话
-        this.wsClient.sendAudioChunk(chunk, false);
+
+        // 使用 Utterance 消息发送（opus 编码）
+        await this.wsClient.sendUtterance(
+          audioData,
+          this.currentUtteranceIndex,
+          this.currentSrcLang,
+          this.currentTgtLang,
+          this.currentTraceId || undefined
+        );
+        // 递增 utterance 索引
+        this.currentUtteranceIndex++;
+        console.log('已发送 Utterance 消息（opus 编码），utterance_index:', this.currentUtteranceIndex - 1);
       } else {
-        console.log('音频缓冲区为空，只发送结束帧');
+        console.log('音频缓冲区为空，跳过发送');
       }
 
-      // 发送结束帧（标记当前 utterance 结束）
+      // 修复：用户手动点击发送按钮时，立即触发 finalize
+      // 发送 is_final=true 的 audio_chunk 消息，确保调度服务器立即 finalize 当前正在累积的 audio_chunk
       this.wsClient.sendFinal();
-      console.log('已发送结束帧');
+      console.log('已发送 is_final=true，触发调度服务器立即 finalize');
 
       // 注意：不再切换状态，保持在 INPUT_RECORDING，允许持续输入
       // 录音继续，用户可以继续说话

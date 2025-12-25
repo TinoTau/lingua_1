@@ -46,7 +46,8 @@ pub(crate) async fn send_error(tx: &mpsc::UnboundedSender<Message>, code: ErrorC
 }
 
 // 创建 JobAssign 消息
-pub(crate) fn create_job_assign_message(
+pub(crate) async fn create_job_assign_message(
+    _state: &crate::core::AppState,
     job: &crate::core::dispatcher::Job,
     group_id: Option<String>,
     part_index: Option<u64>,
@@ -54,6 +55,16 @@ pub(crate) fn create_job_assign_message(
 ) -> Option<NodeMessage> {
     use base64::{Engine as _, engine::general_purpose};
     let audio_base64 = general_purpose::STANDARD.encode(&job.audio_data);
+    
+    // 记录发送给节点端的 audio_format（用于调试）
+    tracing::debug!(
+        job_id = %job.job_id,
+        session_id = %job.session_id,
+        utterance_index = job.utterance_index,
+        audio_format = %job.audio_format,
+        audio_size_bytes = job.audio_data.len(),
+        "Creating JobAssign message with audio format"
+    );
     
     Some(NodeMessage::JobAssign {
         group_id,

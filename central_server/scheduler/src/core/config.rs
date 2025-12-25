@@ -559,7 +559,7 @@ pub struct WebTaskSegmentationConfig {
 }
 
 fn default_web_pause_ms() -> u64 {
-    2000  // 从 1000ms 增加到 2000ms，减少句子中间停顿导致的截断问题
+    3000  // 3秒（已修复：从5秒减少到3秒，与Web端静音超时保持一致）
 }
 
 impl Default for WebTaskSegmentationConfig {

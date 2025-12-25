@@ -27,8 +27,9 @@ pub(super) async fn handle_job_result(
     node_completed_at_ms: Option<i64>,
 ) {
     // Phase 1: Support failover retry, must ignore "stale node" results (avoid race condition)
+    // 但是，为了确保 utterance_index 的连续性，即使 Job 状态不匹配，也应该将结果添加到队列
     let job = state.dispatcher.get_job(&job_id).await;
-    if let Some(ref j) = job {
+    let should_process_job = if let Some(ref j) = job {
         if matches!(
             j.status,
             crate::core::dispatcher::JobStatus::Completed | crate::core::dispatcher::JobStatus::Failed
@@ -38,30 +39,30 @@ pub(super) async fn handle_job_result(
                 job_id = %job_id,
                 node_id = %node_id,
                 current_node_id = ?j.assigned_node_id,
-                "Received result for terminated Job, ignoring"
+                "Received result for terminated Job, will still add to result queue for utterance_index continuity"
             );
-            return;
-        }
-        if j.assigned_node_id.as_deref() != Some(&node_id) {
+            false  // 不处理 Job 相关操作（释放 slot、更新状态等），但仍添加到队列
+        } else if j.assigned_node_id.as_deref() != Some(&node_id) {
             warn!(
                 trace_id = %trace_id,
                 job_id = %job_id,
                 node_id = %node_id,
                 current_node_id = ?j.assigned_node_id,
-                "Received JobResult from non-current node (possible failover), ignoring"
+                "Received JobResult from non-current node (possible failover), will still add to result queue for utterance_index continuity"
             );
-            return;
-        }
-        if j.dispatch_attempt_id != attempt_id {
+            false  // 不处理 Job 相关操作，但仍添加到队列
+        } else if j.dispatch_attempt_id != attempt_id {
             warn!(
                 trace_id = %trace_id,
                 job_id = %job_id,
                 node_id = %node_id,
                 attempt_id = attempt_id,
                 current_attempt_id = j.dispatch_attempt_id,
-                "Received JobResult for non-current attempt (possible cancel/retry), ignoring"
+                "Received JobResult for non-current attempt (possible cancel/retry), will still add to result queue for utterance_index continuity"
             );
-            return;
+            false  // 不处理 Job 相关操作，但仍添加到队列
+        } else {
+            true  // 正常情况，处理 Job 相关操作
         }
     } else {
         // Phase 2: Cross-instance (node on A, job/session on B), local dispatcher may not have job
@@ -99,7 +100,7 @@ pub(super) async fn handle_job_result(
                         owner = %owner,
                         "Local Job missing, forwarded JobResult to session owner"
                     );
-                    return;
+                    return;  // Phase 2 转发后返回，由 owner 实例处理
                 }
             }
         }
@@ -108,37 +109,41 @@ pub(super) async fn handle_job_result(
             trace_id = %trace_id,
             job_id = %job_id,
             node_id = %node_id,
-            "Received JobResult but Job does not exist, ignoring"
+            "Received JobResult but Job does not exist, will still add to result queue for utterance_index continuity"
         );
-        return;
+        false  // 不处理 Job 相关操作，但仍添加到队列
+    };
+
+    // 只有在 should_process_job 为 true 时才执行 Job 相关操作（释放 slot、更新状态等）
+    if should_process_job {
+        // Phase 1: Only release reserved when receiving "valid result" (idempotent)
+        state.node_registry.release_job_slot(&node_id, &job_id).await;
+        // Phase 2: Release Redis reservation (idempotent)
+        if let Some(rt) = state.phase2.as_ref() {
+            rt.release_node_slot(&node_id, &job_id).await;
+        }
+
+        // Phase 2: Job FSM -> FINISHED
+        if let Some(rt) = state.phase2.as_ref() {
+            let _ = rt.job_fsm_to_finished(&job_id, attempt_id, success).await;
+            // Mark RELEASED after release (follow FSM: FINISHED -> RELEASED)
+            let _ = rt.job_fsm_to_released(&job_id).await;
+        }
+
+        // Update job status (only when node_id == assigned_node_id)
+        if success {
+            state
+                .dispatcher
+                .update_job_status(&job_id, crate::core::dispatcher::JobStatus::Completed)
+                .await;
+        } else {
+            state
+                .dispatcher
+                .update_job_status(&job_id, crate::core::dispatcher::JobStatus::Failed)
+                .await;
+        }
     }
 
-    // Phase 1: Only release reserved when receiving "valid result" (idempotent)
-    state.node_registry.release_job_slot(&node_id, &job_id).await;
-    // Phase 2: Release Redis reservation (idempotent)
-    if let Some(rt) = state.phase2.as_ref() {
-        rt.release_node_slot(&node_id, &job_id).await;
-    }
-
-    // Phase 2: Job FSM -> FINISHED
-    if let Some(rt) = state.phase2.as_ref() {
-        let _ = rt.job_fsm_to_finished(&job_id, attempt_id, success).await;
-        // Mark RELEASED after release (follow FSM: FINISHED -> RELEASED)
-        let _ = rt.job_fsm_to_released(&job_id).await;
-    }
-
-    // Update job status (only when node_id == assigned_node_id)
-    if success {
-        state
-            .dispatcher
-            .update_job_status(&job_id, crate::core::dispatcher::JobStatus::Completed)
-            .await;
-    } else {
-        state
-            .dispatcher
-            .update_job_status(&job_id, crate::core::dispatcher::JobStatus::Failed)
-            .await;
-    }
 
     // Calculate elapsed_ms
     let elapsed_ms = job.as_ref().map(|j| {
@@ -318,6 +323,26 @@ pub(super) async fn handle_job_result(
             translated_text
         );
         
+        // 记录 TTS 音频信息（用于诊断）
+        let tts_audio_len = tts_audio.as_ref().map(|s| s.len()).unwrap_or(0);
+        let tts_format_str = tts_format.as_deref().unwrap_or("unknown");
+        if tts_audio_len > 0 {
+            info!(
+                trace_id = %trace_id,
+                job_id = %job_id,
+                tts_audio_len = tts_audio_len,
+                tts_format = %tts_format_str,
+                "TTS 音频已接收（节点端返回）"
+            );
+        } else {
+            warn!(
+                trace_id = %trace_id,
+                job_id = %job_id,
+                tts_format = %tts_format_str,
+                "⚠️ TTS 音频为空（节点端未返回音频数据）"
+            );
+        }
+        
         // 检查ASR结果是否可能不完整（以不完整的句子结尾）
         if let Some(ref asr) = text_asr {
             if !asr.is_empty() {
@@ -350,6 +375,32 @@ pub(super) async fn handle_job_result(
             "Getting ready results from queue"
         );
         for result in ready_results {
+            // 检查结果是否为空（空文本不应该转发给Web端）
+            let should_skip = if let SessionMessage::TranslationResult { text_asr, text_translated, tts_audio, .. } = &result {
+                let asr_empty = text_asr.trim().is_empty();
+                let translated_empty = text_translated.trim().is_empty();
+                let tts_empty = tts_audio.is_empty();
+                
+                // 如果ASR、翻译和TTS都为空，跳过转发（但已记录到result_queue，满足job_id/trace_id验证）
+                if asr_empty && translated_empty && tts_empty {
+                    warn!(
+                        trace_id = %trace_id,
+                        session_id = %session_id,
+                        job_id = %job_id,
+                        "Skipping empty translation result (silence detected), not forwarding to web client"
+                    );
+                    true
+                } else {
+                    false
+                }
+            } else {
+                false
+            };
+            
+            if should_skip {
+                continue;
+            }
+            
             // Check if Job is in target_session_ids (room mode)
             if let Some(ref job_info) = job {
                 if let Some(target_session_ids) = &job_info.target_session_ids {
