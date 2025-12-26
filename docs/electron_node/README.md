@@ -4,6 +4,9 @@
 
 ## 文档索引
 
+### 综合总结
+- **[TTS Opus 改造与 ASR 优化总结](./TTS_OPUS_AND_ASR_OPTIMIZATION_SUMMARY.md)** - 从 TTS Opus 改造开始的系列更新总结（包括 utterance_index 机制改造）
+
 ### 快速开始
 - [README](./README.md) - Electron Node 客户端概述
 - [路径结构](./PATH_STRUCTURE.md) - 路径结构说明

@@ -4,6 +4,9 @@
 
 ## 文档列表
 
+### 综合总结
+- **[TTS Opus 改造与 ASR 优化总结](../electron_node/TTS_OPUS_AND_ASR_OPTIMIZATION_SUMMARY.md)** - 包含 utterance_index 机制改造的完整总结
+
 ### 核心功能
 - [Phase 2 实现](./phase2_implementation.md) - Phase 2 实现文档
 - [Pool 机制](./POOL_MECHANISM.md) - 两级调度与节点分组机制 ⭐
