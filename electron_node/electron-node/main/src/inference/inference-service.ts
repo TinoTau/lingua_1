@@ -13,7 +13,19 @@ export interface JobResult {
     emotion?: string | null;
     speech_rate?: number | null;
     voice_style?: string | null;
+    language_probability?: number | null;  // 新增：检测到的语言的概率（0.0-1.0）
+    language_probabilities?: Record<string, number> | null;  // 新增：所有语言的概率信息（字典：语言代码 -> 概率）
     [key: string]: unknown;
+  };
+  /** OBS-2: ASR 质量信息 */
+  asr_quality_level?: 'good' | 'suspect' | 'bad';
+  reason_codes?: string[];
+  quality_score?: number;  // 0.0-1.0
+  rerun_count?: number;
+  segments_meta?: {
+    count: number;
+    max_gap: number;  // 最大间隔（秒）
+    avg_duration: number;  // 平均时长（秒）
   };
 }
 
@@ -64,6 +76,19 @@ export class InferenceService {
 
   setOnTaskEndCallback(callback: () => void): void {
     this.onTaskEndCallback = callback;
+  }
+
+  /**
+   * Gate-B: 获取 Rerun 指标（用于上报）
+   */
+  getRerunMetrics() {
+    return this.pipelineOrchestrator.getTaskRouter()?.getRerunMetrics() || {
+      totalReruns: 0,
+      successfulReruns: 0,
+      failedReruns: 0,
+      timeoutReruns: 0,
+      qualityImprovements: 0,
+    };
   }
 
   async processJob(job: JobAssignMessage, partialCallback?: PartialResultCallback): Promise<JobResult> {
@@ -145,7 +170,17 @@ export class InferenceService {
     const installed = this.modelManager.getInstalledModels();
 
     // 获取可用模型列表以获取完整元数据
-    const availableModels = await this.modelManager.getAvailableModels();
+    // 如果 Model Hub 连接失败，使用空数组，避免阻止节点注册
+    let availableModels: any[] = [];
+    try {
+      availableModels = await this.modelManager.getAvailableModels();
+    } catch (error: any) {
+      logger.warn({ 
+        error: error.message,
+        errorCode: error.code
+      }, 'Failed to get available models from Model Hub, using empty list (node registration will continue)');
+      // 继续执行，使用空数组，这样节点仍然可以注册
+    }
 
     return installed.map(m => {
       // 从可用模型列表中查找完整信息

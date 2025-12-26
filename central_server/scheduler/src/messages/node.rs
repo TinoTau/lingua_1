@@ -1,7 +1,7 @@
 // 节点 ↔ 调度服务器消息
 
 use serde::{Deserialize, Serialize};
-use super::common::{FeatureFlags, PipelineConfig, InstalledModel, InstalledService, CapabilityByType, ResourceUsage, ExtraResult, HardwareInfo};
+use super::common::{FeatureFlags, PipelineConfig, InstalledModel, InstalledService, CapabilityByType, ResourceUsage, ExtraResult, HardwareInfo, RerunMetrics};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type")]
@@ -54,6 +54,9 @@ pub enum NodeMessage {
         installed_services: Vec<InstalledService>,
         /// 按 ServiceType 聚合的能力图
         capability_by_type: Vec<CapabilityByType>,
+        /// Gate-B: Rerun 指标（可选）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        rerun_metrics: Option<RerunMetrics>,
     },
     #[serde(rename = "job_assign")]
     JobAssign {
@@ -101,6 +104,9 @@ pub enum NodeMessage {
         /// 上下文文本（可选，用于 NMT 上下文拼接）
         #[serde(skip_serializing_if = "Option::is_none")]
         context_text: Option<String>,
+        /// EDGE-4: Padding 配置（毫秒），用于在音频末尾添加静音
+        #[serde(skip_serializing_if = "Option::is_none")]
+        padding_ms: Option<u64>,
     },
     /// Scheduler -> Node：取消一个正在处理/排队的 job（best-effort）
     #[serde(rename = "job_cancel")]
@@ -169,6 +175,17 @@ pub enum NodeMessage {
         /// 节点端处理完成时间戳（毫秒，UTC时区）
         #[serde(skip_serializing_if = "Option::is_none")]
         node_completed_at_ms: Option<i64>,
+        /// OBS-2: ASR 质量信息
+        #[serde(skip_serializing_if = "Option::is_none")]
+        asr_quality_level: Option<String>, // 'good' | 'suspect' | 'bad'
+        #[serde(skip_serializing_if = "Option::is_none")]
+        reason_codes: Option<Vec<String>>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        quality_score: Option<f32>,  // 0.0-1.0
+        #[serde(skip_serializing_if = "Option::is_none")]
+        rerun_count: Option<u32>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        segments_meta: Option<crate::messages::common::SegmentsMeta>,
     },
     #[serde(rename = "asr_partial")]
     AsrPartial {

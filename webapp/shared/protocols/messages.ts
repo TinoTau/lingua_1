@@ -173,6 +173,16 @@ export interface TranslationResultMessage {
   network_timings?: NetworkTimings;
   /** 调度服务器发送结果到Web端的时间戳（毫秒，UTC时区） */
   scheduler_sent_at_ms?: number;
+  /** OBS-2: ASR 质量信息 */
+  asr_quality_level?: 'good' | 'suspect' | 'bad';
+  reason_codes?: string[];
+  quality_score?: number;  // 0.0-1.0
+  rerun_count?: number;
+  segments_meta?: {
+    count: number;
+    max_gap: number;  // 最大间隔（秒）
+    avg_duration: number;  // 平均时长（秒）
+  };
 }
 
 export interface AsrPartialMessage {
@@ -354,6 +364,8 @@ export interface JobAssignMessage {
   partial_update_interval_ms?: number;
   /** 追踪 ID（必需，用于全链路追踪） */
   trace_id: string;
+  /** EDGE-4: Padding 配置（毫秒），用于在音频末尾添加静音 */
+  padding_ms?: number;
 }
 
 export interface JobCancelMessage {

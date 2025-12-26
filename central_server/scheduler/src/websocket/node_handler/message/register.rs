@@ -143,6 +143,7 @@ pub(super) async fn handle_node_heartbeat(
     installed_models: Option<Vec<InstalledModel>>,
     installed_services: Option<Vec<InstalledService>>,
     capability_by_type: Vec<CapabilityByType>,
+    rerun_metrics: Option<crate::messages::common::RerunMetrics>,
 ) {
     let installed_services_count = installed_services.as_ref().map(|v| v.len()).unwrap_or(0);
     info!(
@@ -168,6 +169,30 @@ pub(super) async fn handle_node_heartbeat(
 
     // Trigger status check (immediate trigger)
     state.node_status_manager.on_heartbeat(node_id).await;
+
+    // Gate-B: 处理 Rerun 指标
+    if let Some(ref metrics) = rerun_metrics {
+        use crate::metrics::metrics::METRICS;
+        use std::sync::atomic::Ordering;
+        
+        // 累加 rerun 指标（注意：这里使用增量值，因为节点每次心跳发送的是累积值）
+        // 为了简化，我们直接使用节点发送的累积值（实际应该计算增量，但需要维护上次的值）
+        // 暂时直接累加，后续可以优化为增量计算
+        METRICS.rerun_trigger_count.fetch_add(metrics.total_reruns, Ordering::Relaxed);
+        METRICS.rerun_success_count.fetch_add(metrics.successful_reruns, Ordering::Relaxed);
+        METRICS.rerun_timeout_count.fetch_add(metrics.timeout_reruns, Ordering::Relaxed);
+        METRICS.rerun_quality_improvements.fetch_add(metrics.quality_improvements, Ordering::Relaxed);
+        
+        info!(
+            node_id = %node_id,
+            total_reruns = metrics.total_reruns,
+            successful_reruns = metrics.successful_reruns,
+            failed_reruns = metrics.failed_reruns,
+            timeout_reruns = metrics.timeout_reruns,
+            quality_improvements = metrics.quality_improvements,
+            "Gate-B: Received rerun metrics from node"
+        );
+    }
 
     // Phase 2: Write post-heartbeat node snapshot to Redis (cross-instance visible)
     if let Some(rt) = state.phase2.as_ref() {

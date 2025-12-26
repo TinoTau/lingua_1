@@ -89,6 +89,7 @@ pub(crate) async fn create_job_assign_message(
         enable_streaming_asr: job.enable_streaming_asr,
         partial_update_interval_ms: job.partial_update_interval_ms,
         trace_id: job.trace_id.clone(),
+        padding_ms: job.padding_ms, // EDGE-4: Padding 配置
     })
 }
 

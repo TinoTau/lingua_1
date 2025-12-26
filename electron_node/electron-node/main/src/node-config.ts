@@ -12,6 +12,15 @@ export interface ServicePreferences {
   speakerEmbeddingEnabled: boolean;
 }
 
+export interface ASRConfig {
+  beam_size?: number;  // Beam search 宽度，默认 10（提高准确度，减少同音字错误）
+  temperature?: number;  // 采样温度，默认 0.0（更确定，减少随机性）
+  patience?: number;  // Beam search 耐心值，默认 1.0
+  compression_ratio_threshold?: number;  // 压缩比阈值，默认 2.4
+  log_prob_threshold?: number;  // 对数概率阈值，默认 -1.0
+  no_speech_threshold?: number;  // 无语音阈值，默认 0.6
+}
+
 export interface NodeConfig {
   servicePreferences: ServicePreferences;
   scheduler?: {
@@ -20,6 +29,7 @@ export interface NodeConfig {
   modelHub?: {
     url?: string;  // Model Hub HTTP URL，例如: http://model-hub.example.com:5000
   };
+  asr?: ASRConfig;  // ASR 配置（beam_size 等参数）
 }
 
 const DEFAULT_CONFIG: NodeConfig = {
@@ -36,6 +46,14 @@ const DEFAULT_CONFIG: NodeConfig = {
   },
   modelHub: {
     url: 'http://127.0.0.1:5000',  // 默认本地地址，使用 127.0.0.1 避免 IPv6 解析问题
+  },
+  asr: {
+    beam_size: 10,  // 默认 10（提高准确度，减少同音字错误）
+    temperature: 0.0,  // 默认 0.0（更确定，减少随机性）
+    patience: 1.0,  // 默认 1.0
+    compression_ratio_threshold: 2.4,  // 默认 2.4
+    log_prob_threshold: -1.0,  // 默认 -1.0
+    no_speech_threshold: 0.6,  // 默认 0.6
   },
 };
 
@@ -66,6 +84,10 @@ export function loadNodeConfig(): NodeConfig {
       modelHub: {
         ...DEFAULT_CONFIG.modelHub,
         ...(parsed.modelHub || {}),
+      },
+      asr: {
+        ...DEFAULT_CONFIG.asr,
+        ...(parsed.asr || {}),
       },
     };
   } catch (error) {
@@ -99,6 +121,10 @@ export async function loadNodeConfigAsync(): Promise<NodeConfig> {
       modelHub: {
         ...DEFAULT_CONFIG.modelHub,
         ...(parsed.modelHub || {}),
+      },
+      asr: {
+        ...DEFAULT_CONFIG.asr,
+        ...(parsed.asr || {}),
       },
     };
   } catch (error) {

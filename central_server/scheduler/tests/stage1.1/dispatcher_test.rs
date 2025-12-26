@@ -155,10 +155,11 @@ async fn test_create_job() {
         None,
         None,
         "trace-1".to_string(),
-        None,
-        None,
-        None,
-        None,
+        None, // tenant_id
+        None, // request_id
+        None, // target_session_ids
+        None, // first_chunk_client_timestamp_ms
+        None, // padding_ms
     ).await;
     
     assert!(job.job_id.starts_with("job-"));
@@ -229,10 +230,11 @@ async fn test_create_job_with_preferred_node() {
         None,
         None,
         "trace-2".to_string(),
-        None,
-        None,
-        None,
-        None,
+        None, // tenant_id
+        None, // request_id
+        None, // target_session_ids
+        None, // first_chunk_client_timestamp_ms
+        None, // padding_ms
     ).await;
     
     assert_eq!(job.assigned_node_id, Some("node-123".to_string()));
@@ -268,10 +270,11 @@ async fn test_create_job_no_available_node() {
         None,
         None,
         "trace-3".to_string(),
-        None,
-        None,
-        None,
-        None,
+        None, // tenant_id
+        None, // request_id
+        None, // target_session_ids
+        None, // first_chunk_client_timestamp_ms
+        None, // padding_ms
     ).await;
     
     // 应该没有分配节点
@@ -327,10 +330,11 @@ async fn test_get_job() {
         None,
         None,
         "trace-4".to_string(),
-        None,
-        None,
-        None,
-        None,
+        None, // tenant_id
+        None, // request_id
+        None, // target_session_ids
+        None, // first_chunk_client_timestamp_ms
+        None, // padding_ms
     ).await;
     
     let retrieved = dispatcher.get_job(&job.job_id).await;
@@ -405,10 +409,11 @@ async fn test_update_job_status() {
         None,
         None,
         "trace-5".to_string(),
-        None,
-        None,
-        None,
-        None,
+        None, // tenant_id
+        None, // request_id
+        None, // target_session_ids
+        None, // first_chunk_client_timestamp_ms
+        None, // padding_ms
     ).await;
     
     assert_eq!(job.status, lingua_scheduler::core::dispatcher::JobStatus::Assigned);

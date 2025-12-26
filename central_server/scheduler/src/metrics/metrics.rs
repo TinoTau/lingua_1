@@ -41,6 +41,18 @@ pub struct Metrics {
     // —— slow path breakdown ——
     pub slow_path_node_registry_select_node_with_features_total: AtomicU64,
     pub slow_path_node_registry_select_node_with_models_total: AtomicU64,
+
+    // Gate-B: Rerun 指标
+    pub rerun_trigger_count: AtomicU64,
+    pub rerun_success_count: AtomicU64,
+    pub rerun_timeout_count: AtomicU64,
+    pub rerun_quality_improvements: AtomicU64,
+    pub context_reset_count: AtomicU64, // Gate-A: Context reset 指标
+
+    // OBS-1: ASR 指标
+    pub asr_total_count: AtomicU64, // ASR 总次数
+    pub asr_bad_segment_count: AtomicU64, // 坏段检测次数
+    pub asr_rerun_trigger_count: AtomicU64, // 重跑触发次数
 }
 
 impl Metrics {
@@ -61,6 +73,11 @@ lazy_static::lazy_static! {
     static ref MODEL_NA_OTHER_REASON_TOTAL: AtomicU64 = AtomicU64::new(0);
     static ref MODEL_NA_OTHER_RATE_LIMITED_NODE_TOTAL: AtomicU64 = AtomicU64::new(0);
     static ref MODEL_NA_OTHER_MARKED_NODE_TOTAL: AtomicU64 = AtomicU64::new(0);
+
+    // OBS-1: ASR 延迟统计（使用滑动窗口，最多保留最近 1000 个值）
+    static ref ASR_E2E_LATENCIES: Mutex<Vec<u64>> = Mutex::new(Vec::with_capacity(1000));
+    // OBS-1: 语言置信度分布（按区间统计）
+    static ref LANG_PROB_DISTRIBUTION: Mutex<HashMap<String, u64>> = Mutex::new(HashMap::new());
 }
 
 #[derive(Debug, Serialize)]
@@ -71,6 +88,8 @@ pub struct MetricsSnapshot {
     pub dispatch_exclude: DispatchExcludeMetrics,
     pub web_task_segmentation: WebTaskSegmentationMetrics,
     pub observability: ObservabilityMetrics,
+    pub rerun: RerunMetrics, // Gate-B: Rerun 指标
+    pub asr: AsrMetrics, // OBS-1: ASR 指标
 }
 
 #[derive(Debug, Serialize)]
@@ -142,6 +161,23 @@ pub struct ObservabilityMetrics {
     pub slow_path_by_path: SlowPathByPath,
 }
 
+/// OBS-1: ASR 指标
+#[derive(Debug, Serialize)]
+pub struct AsrMetrics {
+    pub e2e_latency: AsrLatencyMetrics,
+    pub lang_prob_distribution: Vec<KeyCount>,
+    pub bad_segment_rate: f64,  // 坏段检测率
+    pub rerun_trigger_rate: f64,  // 重跑触发率
+}
+
+#[derive(Debug, Serialize)]
+pub struct AsrLatencyMetrics {
+    pub p50_ms: u64,
+    pub p95_ms: u64,
+    pub p99_ms: u64,
+    pub count: u64,
+}
+
 #[derive(Debug, Serialize)]
 pub struct SlowLockWaitByLock {
     pub node_registry_nodes_read_total: u64,
@@ -158,6 +194,16 @@ pub struct SlowPathByPath {
     pub node_registry_select_node_with_features_total: u64,
     pub node_registry_select_node_with_models_total: u64,
     pub other_total: u64,
+}
+
+/// Gate-B: Rerun 指标
+#[derive(Debug, Serialize)]
+pub struct RerunMetrics {
+    pub trigger_count: u64,
+    pub success_count: u64,
+    pub timeout_count: u64,
+    pub quality_improvements: u64,
+    pub context_reset_count: u64, // Gate-A: Context reset 指标
 }
 
 pub async fn collect(state: &AppState) -> MetricsSnapshot {
@@ -273,6 +319,70 @@ pub async fn collect(state: &AppState) -> MetricsSnapshot {
                             .load(Ordering::Relaxed),
                 ),
             },
+        },
+        rerun: RerunMetrics {
+            trigger_count: METRICS.rerun_trigger_count.load(Ordering::Relaxed),
+            success_count: METRICS.rerun_success_count.load(Ordering::Relaxed),
+            timeout_count: METRICS.rerun_timeout_count.load(Ordering::Relaxed),
+            quality_improvements: METRICS.rerun_quality_improvements.load(Ordering::Relaxed),
+            context_reset_count: METRICS.context_reset_count.load(Ordering::Relaxed),
+        },
+        asr: {
+            // OBS-1: 计算 ASR 延迟分位数
+            let latencies_guard = ASR_E2E_LATENCIES.lock().unwrap_or_else(|e| e.into_inner());
+            let mut latencies = latencies_guard.clone();
+            drop(latencies_guard);
+            latencies.sort();
+            
+            let latency_count = latencies.len() as u64;
+            let p50_ms = if latency_count > 0 {
+                latencies[(latency_count as usize * 50 / 100).min(latencies.len() - 1)]
+            } else {
+                0
+            };
+            let p95_ms = if latency_count > 0 {
+                latencies[(latency_count as usize * 95 / 100).min(latencies.len() - 1)]
+            } else {
+                0
+            };
+            let p99_ms = if latency_count > 0 {
+                latencies[(latency_count as usize * 99 / 100).min(latencies.len() - 1)]
+            } else {
+                0
+            };
+
+            // OBS-1: 计算语言置信度分布
+            let lang_prob_guard = LANG_PROB_DISTRIBUTION.lock().unwrap_or_else(|e| e.into_inner());
+            let lang_prob_dist = top_k_from_map(&Mutex::new(lang_prob_guard.clone()), 20);
+
+            // OBS-1: 计算坏段检测率和重跑触发率
+            let asr_total = METRICS.asr_total_count.load(Ordering::Relaxed);
+            let bad_segment_count = METRICS.asr_bad_segment_count.load(Ordering::Relaxed);
+            let rerun_trigger_count = METRICS.asr_rerun_trigger_count.load(Ordering::Relaxed);
+            
+            let bad_segment_rate = if asr_total > 0 {
+                bad_segment_count as f64 / asr_total as f64
+            } else {
+                0.0
+            };
+            
+            let rerun_trigger_rate = if asr_total > 0 {
+                rerun_trigger_count as f64 / asr_total as f64
+            } else {
+                0.0
+            };
+
+            AsrMetrics {
+                e2e_latency: AsrLatencyMetrics {
+                    p50_ms,
+                    p95_ms,
+                    p99_ms,
+                    count: latency_count,
+                },
+                lang_prob_distribution: lang_prob_dist,
+                bad_segment_rate,
+                rerun_trigger_rate,
+            }
         },
     }
 }
@@ -477,6 +587,48 @@ pub fn on_slow_path(path_name: &'static str) {
         }
         _ => {}
     }
+}
+
+// OBS-1: ASR 指标记录函数
+
+/// 记录 ASR 端到端延迟
+pub fn record_asr_e2e_latency(latency_ms: u64) {
+    let mut latencies = ASR_E2E_LATENCIES.lock().unwrap_or_else(|e| e.into_inner());
+    latencies.push(latency_ms);
+    // 保持最多 1000 个值
+    if latencies.len() > 1000 {
+        latencies.remove(0);
+    }
+    METRICS.asr_total_count.fetch_add(1, Ordering::Relaxed);
+}
+
+/// 记录语言置信度分布
+pub fn record_lang_probability(lang_prob: f32) {
+    // 将置信度按区间分组：0.0-0.2, 0.2-0.4, 0.4-0.6, 0.6-0.8, 0.8-1.0
+    let bucket = if lang_prob < 0.2 {
+        "0.0-0.2"
+    } else if lang_prob < 0.4 {
+        "0.2-0.4"
+    } else if lang_prob < 0.6 {
+        "0.4-0.6"
+    } else if lang_prob < 0.8 {
+        "0.6-0.8"
+    } else {
+        "0.8-1.0"
+    };
+    
+    let mut dist = LANG_PROB_DISTRIBUTION.lock().unwrap_or_else(|e| e.into_inner());
+    *dist.entry(bucket.to_string()).or_insert(0) += 1;
+}
+
+/// 记录坏段检测
+pub fn record_bad_segment() {
+    METRICS.asr_bad_segment_count.fetch_add(1, Ordering::Relaxed);
+}
+
+/// 记录重跑触发
+pub fn record_rerun_trigger() {
+    METRICS.asr_rerun_trigger_count.fetch_add(1, Ordering::Relaxed);
 }
 
 

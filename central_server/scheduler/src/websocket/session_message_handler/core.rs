@@ -89,12 +89,14 @@ pub(super) async fn handle_session_init(
 
     // Create and start Session Actor
     let pause_ms = state.web_task_segmentation.pause_ms;
+    let edge_config = state.web_task_segmentation.edge_stabilization.clone();
     let (actor, actor_handle) = SessionActor::new(
         session.session_id.clone(),
         state.clone(),
         tx.clone(),
         session.utterance_index,
         pause_ms,
+        edge_config,
     );
     
     // Register actor handle

@@ -351,6 +351,8 @@ class NodeAgent {
             installed_models: installedModels.length > 0 ? installedModels : undefined,
             installed_services: installedServicesAll,
             capability_by_type: capabilityByType,
+            // Gate-B: Rerun 指标（如果可用）
+            rerun_metrics: this.inferenceService.getRerunMetrics?.() || undefined,
         };
         const messageStr = JSON.stringify(message);
         logger_1.default.debug({ message: messageStr }, 'Heartbeat message content');
@@ -695,6 +697,12 @@ class NodeAgent {
                 extra: result.extra,
                 processing_time_ms: Date.now() - startTime,
                 trace_id: job.trace_id, // Added: propagate trace_id
+                // OBS-2: 透传 ASR 质量信息
+                asr_quality_level: result.asr_quality_level,
+                reason_codes: result.reason_codes,
+                quality_score: result.quality_score,
+                rerun_count: result.rerun_count,
+                segments_meta: result.segments_meta,
             };
             logger_1.default.info({ jobId: job.job_id, responseLength: JSON.stringify(response).length }, 'Sending job_result to scheduler');
             this.ws.send(JSON.stringify(response));

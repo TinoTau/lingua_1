@@ -279,10 +279,14 @@ export class App {
         const chunk = this.concatAudioBuffers(this.audioBuffer);
         this.audioBuffer = [];
         this.wsClient.sendAudioChunk(chunk, false);
+        
+        // 只有在有音频数据时才发送结束帧
+        this.wsClient.sendFinal();
+        console.log('静音检测：已发送剩余音频数据和 finalize');
+      } else {
+        // 音频缓冲区为空，不发送 finalize（避免触发调度服务器的空 finalize）
+        console.log('静音检测：音频缓冲区为空，跳过发送和 finalize（避免触发调度服务器的空 finalize）');
       }
-
-      // 发送结束帧
-      this.wsClient.sendFinal();
 
       // 停止录音
       this.stateMachine.stopRecording();
@@ -1200,14 +1204,15 @@ export class App {
         // 递增 utterance 索引
         this.currentUtteranceIndex++;
         console.log('已发送 Utterance 消息（opus 编码），utterance_index:', this.currentUtteranceIndex - 1);
-      } else {
-        console.log('音频缓冲区为空，跳过发送');
-      }
 
-      // 修复：用户手动点击发送按钮时，立即触发 finalize
-      // 发送 is_final=true 的 audio_chunk 消息，确保调度服务器立即 finalize 当前正在累积的 audio_chunk
-      this.wsClient.sendFinal();
-      console.log('已发送 is_final=true，触发调度服务器立即 finalize');
+        // 修复：用户手动点击发送按钮时，立即触发 finalize
+        // 发送 is_final=true 的 audio_chunk 消息，确保调度服务器立即 finalize 当前正在累积的 audio_chunk
+        this.wsClient.sendFinal();
+        console.log('已发送 is_final=true，触发调度服务器立即 finalize');
+      } else {
+        // 音频缓冲区为空，不发送 finalize（避免触发调度服务器的空 finalize）
+        console.log('音频缓冲区为空，跳过发送和 finalize（避免触发调度服务器的空 finalize）');
+      }
 
       // 注意：不再切换状态，保持在 INPUT_RECORDING，允许持续输入
       // 录音继续，用户可以继续说话

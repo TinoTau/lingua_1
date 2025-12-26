@@ -9,7 +9,7 @@ use lingua_scheduler::node_registry::NodeRegistry;
 use lingua_scheduler::services::{PairingService, ModelHub, ServiceCatalogCache};
 use lingua_scheduler::metrics::DashboardSnapshotCache;
 use lingua_scheduler::model_not_available::ModelNotAvailableBus;
-use lingua_scheduler::core::config::{CoreServicesConfig, WebTaskSegmentationConfig, ModelHubConfig, NodeHealthConfig};
+use lingua_scheduler::core::config::{CoreServicesConfig, WebTaskSegmentationConfig, ModelHubConfig, NodeHealthConfig, EdgeStabilizationConfig};
 use lingua_scheduler::managers::{GroupManager, GroupConfig, NodeStatusManager};
 use axum::extract::ws::Message;
 use tokio::sync::mpsc;
@@ -58,7 +58,10 @@ fn create_test_app_state() -> AppState {
         dashboard_snapshot,
         model_not_available_bus,
         core_services: CoreServicesConfig::default(),
-        web_task_segmentation: WebTaskSegmentationConfig { pause_ms: 1000 },
+        web_task_segmentation: WebTaskSegmentationConfig { 
+            pause_ms: 1000,
+            edge_stabilization: EdgeStabilizationConfig::default(),
+        },
         session_connections: SessionConnectionManager::new(),
         node_connections,
         result_queue: ResultQueueManager::new(),
@@ -82,6 +85,7 @@ async fn test_session_actor_creation() {
         tx,
         0,
         1000,
+        EdgeStabilizationConfig::default(),
     );
     
     assert!(!handle.is_closed());
@@ -110,14 +114,16 @@ async fn test_session_actor_audio_chunk() {
         "web".to_string(),
         "zh".to_string(),
         "en".to_string(),
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
+        None, // dialect
+        None, // default_features
+        None, // tenant_id
+        None, // mode
+        None, // lang_a
+        None, // lang_b
+        None, // auto_langs
+        None, // trace_id
+        None, // audio_format
+        None, // sample_rate
     ).await;
     
     let (actor, handle) = SessionActor::new(
@@ -126,6 +132,7 @@ async fn test_session_actor_audio_chunk() {
         tx,
         session.utterance_index,
         1000,
+        EdgeStabilizationConfig::default(),
     );
     
     // 注册 actor
@@ -202,14 +209,16 @@ async fn test_session_actor_duplicate_finalize_prevention() {
         "web".to_string(),
         "zh".to_string(),
         "en".to_string(),
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
+        None, // dialect
+        None, // default_features
+        None, // tenant_id
+        None, // mode
+        None, // lang_a
+        None, // lang_b
+        None, // auto_langs
+        None, // trace_id
+        None, // audio_format
+        None, // sample_rate
     ).await;
     
     let (actor, handle) = SessionActor::new(
@@ -218,6 +227,7 @@ async fn test_session_actor_duplicate_finalize_prevention() {
         tx,
         session.utterance_index,
         1000,
+        EdgeStabilizationConfig::default(),
     );
     
     state.session_manager.register_actor(session.session_id.clone(), handle.clone()).await;
@@ -256,14 +266,16 @@ async fn test_session_actor_timeout_generation() {
         "web".to_string(),
         "zh".to_string(),
         "en".to_string(),
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
+        None, // dialect
+        None, // default_features
+        None, // tenant_id
+        None, // mode
+        None, // lang_a
+        None, // lang_b
+        None, // auto_langs
+        None, // trace_id
+        None, // audio_format
+        None, // sample_rate
     ).await;
     
     let (actor, handle) = SessionActor::new(
@@ -272,6 +284,7 @@ async fn test_session_actor_timeout_generation() {
         tx,
         session.utterance_index,
         100, // 很短的超时时间用于测试
+        EdgeStabilizationConfig::default(),
     );
     
     state.session_manager.register_actor(session.session_id.clone(), handle.clone()).await;

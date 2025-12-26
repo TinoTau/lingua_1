@@ -169,6 +169,17 @@ pub enum SessionMessage {
         /// 调度服务器发送结果到Web端的时间戳（毫秒，UTC时区）
         #[serde(skip_serializing_if = "Option::is_none")]
         scheduler_sent_at_ms: Option<i64>,
+        /// OBS-2: ASR 质量信息
+        #[serde(skip_serializing_if = "Option::is_none")]
+        asr_quality_level: Option<String>, // 'good' | 'suspect' | 'bad'
+        #[serde(skip_serializing_if = "Option::is_none")]
+        reason_codes: Option<Vec<String>>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        quality_score: Option<f32>,  // 0.0-1.0
+        #[serde(skip_serializing_if = "Option::is_none")]
+        rerun_count: Option<u32>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        segments_meta: Option<crate::messages::common::SegmentsMeta>,
     },
     #[serde(rename = "asr_partial")]
     AsrPartial {

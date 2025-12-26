@@ -150,7 +150,7 @@ def asr_worker_process(task_queue: mp.Queue, result_queue: mp.Queue):
                 f"[{trace_id}] transcribe() 参数: "
                 f"language={task.get('language')}, "
                 f"task={task.get('task', 'transcribe')}, "
-                f"beam_size={task.get('beam_size', 5)}, "
+                f"beam_size={task.get('beam_size', 10)}, "  # 默认值从 5 改为 10，与 faster_whisper_vad_service.py 保持一致
                 f"vad_filter=False, "
                 f"has_initial_prompt={initial_prompt is not None and len(initial_prompt) > 0}, "
                 f"initial_prompt_length={len(initial_prompt) if initial_prompt else 0}, "
@@ -165,15 +165,39 @@ def asr_worker_process(task_queue: mp.Queue, result_queue: mp.Queue):
             )
             
             try:
-                segments, info = model.transcribe(
-                    audio,
-                    language=task.get("language"),
-                    task=task.get("task", "transcribe"),
-                    beam_size=task.get("beam_size", 5),
-                    vad_filter=False,  # 已经用 Silero VAD 处理过了
-                    initial_prompt=initial_prompt,
-                    condition_on_previous_text=condition_on_previous_text,
-                )
+                # 获取优化参数（用于提高准确度）
+                best_of = task.get("best_of")
+                temperature = task.get("temperature")
+                patience = task.get("patience")
+                compression_ratio_threshold = task.get("compression_ratio_threshold")
+                log_prob_threshold = task.get("log_prob_threshold")
+                no_speech_threshold = task.get("no_speech_threshold")
+                
+                # 构建 transcribe 参数
+                transcribe_kwargs = {
+                    "language": task.get("language"),
+                    "task": task.get("task", "transcribe"),
+                    "beam_size": task.get("beam_size", 10),  # 默认值从 5 改为 10，与 faster_whisper_vad_service.py 保持一致
+                    "vad_filter": False,  # 已经用 Silero VAD 处理过了
+                    "initial_prompt": initial_prompt,
+                    "condition_on_previous_text": condition_on_previous_text,
+                }
+                
+                # 添加可选参数（如果提供）
+                if best_of is not None:
+                    transcribe_kwargs["best_of"] = best_of
+                if temperature is not None:
+                    transcribe_kwargs["temperature"] = temperature
+                if patience is not None:
+                    transcribe_kwargs["patience"] = patience
+                if compression_ratio_threshold is not None:
+                    transcribe_kwargs["compression_ratio_threshold"] = compression_ratio_threshold
+                if log_prob_threshold is not None:
+                    transcribe_kwargs["log_prob_threshold"] = log_prob_threshold
+                if no_speech_threshold is not None:
+                    transcribe_kwargs["no_speech_threshold"] = no_speech_threshold
+                
+                segments, info = model.transcribe(audio, **transcribe_kwargs)
                 
                 transcribe_elapsed = time.time() - transcribe_start
                 logger.info(
@@ -204,26 +228,66 @@ def asr_worker_process(task_queue: mp.Queue, result_queue: mp.Queue):
                         "error": f"Segments conversion failed: {str(e)}",
                         "text": None,
                         "language": None,
+                        "language_probabilities": None,
+                        "segments": None,  # 新增
                         "duration_ms": 0
                     })
                     continue
                 
-                # 提取文本
+                # 提取文本和 Segment 时间戳信息
                 text_parts = []
+                segments_data = []  # 新增：存储 Segment 元数据
+                
                 for seg in segments_list:
                     if hasattr(seg, 'text'):
                         text_parts.append(seg.text.strip())
+                        # 提取 Segment 时间戳和元数据
+                        segment_info = {
+                            "text": seg.text.strip(),
+                            "start": getattr(seg, 'start', None),  # 开始时间（秒）
+                            "end": getattr(seg, 'end', None),      # 结束时间（秒）
+                            "no_speech_prob": getattr(seg, 'no_speech_prob', None),  # 无语音概率（可选）
+                        }
+                        segments_data.append(segment_info)
                     elif isinstance(seg, str):
                         text_parts.append(seg.strip())
+                        # 字符串格式的 segment，只保存文本
+                        segments_data.append({
+                            "text": seg.strip(),
+                            "start": None,
+                            "end": None,
+                            "no_speech_prob": None,
+                        })
                 
                 full_text = " ".join(text_parts)
                 
                 # 获取语言信息
                 detected_language = None
-                if info and hasattr(info, 'language'):
-                    detected_language = info.language
-                elif info and isinstance(info, dict):
-                    detected_language = info.get("language")
+                language_probabilities = None
+                
+                if info:
+                    # 提取 detected_language
+                    if hasattr(info, 'language'):
+                        detected_language = info.language
+                    elif isinstance(info, dict):
+                        detected_language = info.get("language")
+                    
+                    # 提取 language_probabilities（Faster Whisper 可能提供）
+                    if hasattr(info, 'language_probabilities'):
+                        # language_probabilities 是一个字典，键为语言代码，值为概率
+                        lang_probs = info.language_probabilities
+                        if lang_probs and isinstance(lang_probs, dict):
+                            # 转换为可序列化的字典格式
+                            language_probabilities = dict(lang_probs)
+                            logger.info(
+                                f"[{trace_id}] ASR Worker: Extracted language_probabilities: {language_probabilities}"
+                            )
+                    elif isinstance(info, dict) and "language_probabilities" in info:
+                        language_probabilities = info.get("language_probabilities")
+                        if language_probabilities:
+                            logger.info(
+                                f"[{trace_id}] ASR Worker: Extracted language_probabilities from dict: {language_probabilities}"
+                            )
                 
                 # 计算音频时长
                 duration_ms = int((len(audio) / task.get("sample_rate", 16000)) * 1000)
@@ -255,6 +319,8 @@ def asr_worker_process(task_queue: mp.Queue, result_queue: mp.Queue):
                     "job_id": job_id,
                     "text": full_text,
                     "language": detected_language,
+                    "language_probabilities": language_probabilities,  # 新增：语言概率信息
+                    "segments": segments_data,  # 新增：Segment 元数据（包含时间戳）
                     "duration_ms": duration_ms,
                     "error": None
                 })
@@ -269,6 +335,8 @@ def asr_worker_process(task_queue: mp.Queue, result_queue: mp.Queue):
                     "error": f"Transcribe failed: {str(e)}",
                     "text": None,
                     "language": None,
+                    "language_probabilities": None,
+                    "segments": None,  # 新增
                     "duration_ms": 0
                 })
                 

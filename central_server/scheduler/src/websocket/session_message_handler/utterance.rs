@@ -65,6 +65,7 @@ pub(super) async fn handle_utterance(
         partial_update_interval_ms,
         trace_id.clone(), // Use trace_id from Utterance or Session
         None, // Utterance 消息没有客户端时间戳
+        None, // EDGE-4: Padding 配置（Utterance 消息不传递 padding_ms，由 finalize 时计算）
     )
     .await?;
 

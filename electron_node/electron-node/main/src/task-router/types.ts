@@ -14,6 +14,16 @@ export interface ServiceEndpoint {
 }
 
 /**
+ * Segment 信息（包含时间戳）
+ */
+export interface SegmentInfo {
+  text: string;
+  start?: number;  // 开始时间（秒）
+  end?: number;    // 结束时间（秒）
+  no_speech_prob?: number;  // 无语音概率（可选）
+}
+
+/**
  * ASR 任务请求
  */
 export interface ASRTask {
@@ -24,6 +34,10 @@ export interface ASRTask {
   enable_streaming?: boolean;
   context_text?: string;
   job_id?: string; // 任务 ID（用于取消任务）
+  padding_ms?: number; // EDGE-4: 尾部静音 padding（毫秒），None 表示不添加 padding
+  rerun_count?: number; // P0.5-SH-4: 当前重跑次数（用于限频）
+  max_rerun_count?: number; // P0.5-SH-4: 最大重跑次数（默认 2）
+  rerun_timeout_ms?: number; // P0.5-SH-4: 单次重跑超时（毫秒，默认 5000）
 }
 
 /**
@@ -33,7 +47,16 @@ export interface ASRResult {
   text: string;
   confidence?: number;
   language?: string;
+  language_probability?: number;  // 新增：检测到的语言的概率（0.0-1.0）
+  language_probabilities?: Record<string, number>;  // 新增：所有语言的概率信息（字典：语言代码 -> 概率）
+  segments?: SegmentInfo[];  // 新增：Segment 元数据（包含时间戳）
   is_final?: boolean;
+  // CONF-3: 坏段检测结果（可选，用于日志和后续重跑逻辑）
+  badSegmentDetection?: {
+    isBad: boolean;
+    reasonCodes: string[];
+    qualityScore: number;
+  };
 }
 
 /**

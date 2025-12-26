@@ -1,4 +1,6 @@
 // Mock logger for testing
+import { jest } from '@jest/globals';
+
 export default {
   info: jest.fn(),
   warn: jest.fn(),

@@ -4,6 +4,7 @@
 mod actor;
 mod events;
 pub mod state;
+mod audio_duration;
 
 pub use actor::{SessionActor, SessionActorHandle};
 pub use events::SessionEvent;

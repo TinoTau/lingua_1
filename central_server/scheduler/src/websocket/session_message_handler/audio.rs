@@ -165,6 +165,7 @@ async fn finalize_audio_utterance(
         partial_update_interval_ms,
         session.trace_id.clone(),
         None, // audio_chunk 的客户端时间戳在 Session Actor 中处理
+        None, // EDGE-4: Padding 配置（audio_chunk 消息不传递 padding_ms，由 finalize 时计算）
     )
     .await?;
 

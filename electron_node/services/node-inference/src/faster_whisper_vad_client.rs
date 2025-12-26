@@ -45,10 +45,23 @@ struct UtteranceRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
     language: Option<String>,
     task: String,
-    beam_size: i32,
+    beam_size: i32,  // 增加到10以提高准确度（从5增加到10，减少同音字错误）
     condition_on_previous_text: bool,
     use_context_buffer: bool,
     use_text_context: bool,
+    // 新增：提高准确度的参数（可选，使用默认值）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    best_of: Option<i32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    temperature: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    patience: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    compression_ratio_threshold: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    log_prob_threshold: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    no_speech_threshold: Option<f32>,
     // 其他参数（与 node-inference 保持一致，但 ASR 服务不使用）
     #[serde(skip_serializing_if = "Option::is_none")]
     features: Option<serde_json::Value>,
@@ -199,6 +212,8 @@ impl FasterWhisperVADClient {
         };
         
         // 构建请求（与 node-inference 接口保持一致）
+        // 注意：beam_size 增加到 10 以提高准确度（减少同音字错误）
+        // 其他优化参数使用默认值（由 Python 服务处理）
         let request = UtteranceRequest {
             job_id: job_id.to_string(),
             src_lang: src_lang.to_string(),
@@ -208,10 +223,17 @@ impl FasterWhisperVADClient {
             sample_rate,
             language,
             task: "transcribe".to_string(),
-            beam_size: 5,
+            beam_size: 10,  // 增加到10以提高准确度（从5增加到10，减少同音字错误）
             condition_on_previous_text: true,
             use_context_buffer,
             use_text_context,
+            // 新增：提高准确度的参数（使用默认值，由 Python 服务处理）
+            best_of: None,  // 使用 Python 服务默认值
+            temperature: None,  // 使用 Python 服务默认值 (0.0)
+            patience: None,  // 使用 Python 服务默认值 (1.0)
+            compression_ratio_threshold: None,  // 使用 Python 服务默认值 (2.4)
+            log_prob_threshold: None,  // 使用 Python 服务默认值 (-1.0)
+            no_speech_threshold: None,  // 使用 Python 服务默认值 (0.6)
             features: None,  // ASR 服务不使用
             mode: None,  // ASR 服务不使用
             lang_a: None,  // ASR 服务不使用

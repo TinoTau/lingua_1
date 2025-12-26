@@ -55,6 +55,14 @@ const DEFAULT_CONFIG = {
     modelHub: {
         url: 'http://127.0.0.1:5000', // 默认本地地址，使用 127.0.0.1 避免 IPv6 解析问题
     },
+    asr: {
+        beam_size: 10, // 默认 10（提高准确度，减少同音字错误）
+        temperature: 0.0, // 默认 0.0（更确定，减少随机性）
+        patience: 1.0, // 默认 1.0
+        compression_ratio_threshold: 2.4, // 默认 2.4
+        log_prob_threshold: -1.0, // 默认 -1.0
+        no_speech_threshold: 0.6, // 默认 0.6
+    },
 };
 function getConfigPath() {
     const userData = electron_1.app.getPath('userData');
@@ -82,6 +90,10 @@ function loadNodeConfig() {
             modelHub: {
                 ...DEFAULT_CONFIG.modelHub,
                 ...(parsed.modelHub || {}),
+            },
+            asr: {
+                ...DEFAULT_CONFIG.asr,
+                ...(parsed.asr || {}),
             },
         };
     }
@@ -116,6 +128,10 @@ async function loadNodeConfigAsync() {
             modelHub: {
                 ...DEFAULT_CONFIG.modelHub,
                 ...(parsed.modelHub || {}),
+            },
+            asr: {
+                ...DEFAULT_CONFIG.asr,
+                ...(parsed.asr || {}),
             },
         };
     }

@@ -77,6 +77,9 @@ pub struct Job {
     /// 第一个音频块的客户端发送时间戳（毫秒，UTC时区），用于计算网络传输耗时
     #[serde(skip_serializing_if = "Option::is_none")]
     pub first_chunk_client_timestamp_ms: Option<i64>,
+    /// EDGE-4: Padding 配置（毫秒），用于在音频末尾添加静音
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub padding_ms: Option<u64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -176,6 +179,7 @@ impl JobDispatcher {
         request_id: Option<String>,
         target_session_ids: Option<Vec<String>>, // 目标接收者 session_id 列表（会议室模式使用）
         first_chunk_client_timestamp_ms: Option<i64>, // 第一个音频块的客户端发送时间戳
+        padding_ms: Option<u64>, // EDGE-4: Padding 配置（毫秒）
     ) -> Job {
         let request_id = request_id.unwrap_or_else(|| format!("req-{}", Uuid::new_v4().to_string()[..12].to_uppercase()));
         let now_ms = chrono::Utc::now().timestamp_millis();
@@ -224,6 +228,7 @@ impl JobDispatcher {
                     target_session_ids: target_session_ids.clone(),
                     tenant_id: tenant_id.clone(),
                     first_chunk_client_timestamp_ms,
+                    padding_ms: None, // EDGE-4: Padding 配置（在 Phase2 幂等检查时，padding_ms 尚未确定）
                 };
                 self.jobs.write().await.insert(job_id, job.clone());
                 return job;
@@ -280,6 +285,7 @@ impl JobDispatcher {
                         target_session_ids: target_session_ids.clone(),
                         tenant_id: tenant_id.clone(),
                         first_chunk_client_timestamp_ms,
+                        padding_ms: None, // EDGE-4: Padding 配置（在 Phase2 幂等检查时，padding_ms 尚未确定）
                     };
                     self.jobs.write().await.insert(job_id, job.clone());
                     return job;
@@ -459,6 +465,7 @@ impl JobDispatcher {
                     target_session_ids,
                     tenant_id: tenant_id.clone(),
                     first_chunk_client_timestamp_ms,
+                    padding_ms,
                 };
                 self.jobs.write().await.insert(job_id, job.clone());
                 return job;
@@ -730,6 +737,7 @@ impl JobDispatcher {
             target_session_ids,
             tenant_id: tenant_id.clone(),
             first_chunk_client_timestamp_ms,
+            padding_ms,
         };
 
         let mut jobs = self.jobs.write().await;

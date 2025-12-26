@@ -55,9 +55,12 @@ pub struct SchedulerConfig {
     /// Phase 2：Redis / 多实例相关配置（默认关闭，开启后按文档启用 instance presence + owner + Streams）
     #[serde(default)]
     pub phase2: Phase2Config,
-    /// Phase 3：两级调度 / Pool（默认关闭；开启后优先走“Global 选 pool -> pool 内选 node”的路径）
+    /// Phase 3：两级调度 / Pool（默认关闭；开启后优先走"Global 选 pool -> pool 内选 node"的路径）
     #[serde(default)]
     pub phase3: Phase3Config,
+    /// OBS-3: ASR 重跑限频/超时机制配置
+    #[serde(default)]
+    pub asr_rerun: AsrRerunConfig,
 }
 
 /// Phase 3：两级调度（Two-level scheduling）
@@ -556,6 +559,9 @@ pub struct WebTaskSegmentationConfig {
     /// 超过该停顿（毫秒）视为一个任务结束（默认 2000ms，增加以避免句子中间停顿导致截断）
     #[serde(default = "default_web_pause_ms")]
     pub pause_ms: u64,
+    /// 边界稳态化配置（EDGE-1: 统一 finalize 接口）
+    #[serde(default)]
+    pub edge_stabilization: EdgeStabilizationConfig,
 }
 
 fn default_web_pause_ms() -> u64 {
@@ -564,7 +570,62 @@ fn default_web_pause_ms() -> u64 {
 
 impl Default for WebTaskSegmentationConfig {
     fn default() -> Self {
-        Self { pause_ms: default_web_pause_ms() }
+        Self { 
+            pause_ms: default_web_pause_ms(),
+            edge_stabilization: EdgeStabilizationConfig::default(),
+        }
+    }
+}
+
+/// 边界稳态化配置（Hangover + Padding）
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct EdgeStabilizationConfig {
+    /// Hangover：自动 finalize 延迟（毫秒，默认 150ms）
+    #[serde(default = "default_hangover_auto_ms")]
+    pub hangover_auto_ms: u64,
+    /// Hangover：手动截断 finalize 延迟（毫秒，默认 200ms）
+    #[serde(default = "default_hangover_manual_ms")]
+    pub hangover_manual_ms: u64,
+    /// Padding：自动 finalize 尾部静音（毫秒，默认 220ms）
+    #[serde(default = "default_padding_auto_ms")]
+    pub padding_auto_ms: u64,
+    /// Padding：手动截断尾部静音（毫秒，默认 280ms）
+    #[serde(default = "default_padding_manual_ms")]
+    pub padding_manual_ms: u64,
+    /// Short-merge：短片段合并阈值（毫秒，默认 400ms）
+    #[serde(default = "default_short_merge_threshold_ms")]
+    pub short_merge_threshold_ms: u64,
+}
+
+fn default_hangover_auto_ms() -> u64 {
+    150  // 自动 finalize：150ms
+}
+
+fn default_hangover_manual_ms() -> u64 {
+    200  // 手动截断：200ms
+}
+
+fn default_padding_auto_ms() -> u64 {
+    220  // 自动 finalize：220ms
+}
+
+fn default_padding_manual_ms() -> u64 {
+    280  // 手动截断：280ms
+}
+
+fn default_short_merge_threshold_ms() -> u64 {
+    400  // <400ms 片段合并
+}
+
+impl Default for EdgeStabilizationConfig {
+    fn default() -> Self {
+        Self {
+            hangover_auto_ms: default_hangover_auto_ms(),
+            hangover_manual_ms: default_hangover_manual_ms(),
+            padding_auto_ms: default_padding_auto_ms(),
+            padding_manual_ms: default_padding_manual_ms(),
+            short_merge_threshold_ms: default_short_merge_threshold_ms(),
+        }
     }
 }
 
@@ -757,6 +818,7 @@ impl Default for Config {
                 core_services: CoreServicesConfig::default(),
                 phase2: Phase2Config::default(),
                 phase3: Phase3Config::default(),
+                asr_rerun: AsrRerunConfig::default(),
             },
         }
     }
@@ -786,6 +848,42 @@ impl Default for ObservabilityConfig {
         Self {
             lock_wait_warn_ms: default_obs_lock_wait_warn_ms(),
             path_warn_ms: default_obs_path_warn_ms(),
+        }
+    }
+}
+
+/// OBS-3: ASR 重跑限频/超时机制配置
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AsrRerunConfig {
+    /// 最多重跑次数（默认 2 次）
+    #[serde(default = "default_asr_rerun_max_count")]
+    pub max_rerun_count: u32,
+    /// 单次重跑超时（毫秒，默认 5000ms）
+    #[serde(default = "default_asr_rerun_timeout_ms")]
+    pub rerun_timeout_ms: u64,
+    /// 会议室模式是否更严格（默认 true，会议室模式 max_rerun_count 减半）
+    #[serde(default = "default_asr_rerun_conference_mode_strict")]
+    pub conference_mode_strict: bool,
+}
+
+fn default_asr_rerun_max_count() -> u32 {
+    2
+}
+
+fn default_asr_rerun_timeout_ms() -> u64 {
+    5000
+}
+
+fn default_asr_rerun_conference_mode_strict() -> bool {
+    true
+}
+
+impl Default for AsrRerunConfig {
+    fn default() -> Self {
+        Self {
+            max_rerun_count: default_asr_rerun_max_count(),
+            rerun_timeout_ms: default_asr_rerun_timeout_ms(),
+            conference_mode_strict: default_asr_rerun_conference_mode_strict(),
         }
     }
 }

@@ -128,3 +128,18 @@ CONTEXT_DURATION_SEC = 2.0
 CONTEXT_SAMPLE_RATE = 16000
 CONTEXT_MAX_SAMPLES = int(CONTEXT_DURATION_SEC * CONTEXT_SAMPLE_RATE)
 
+# ---------------------
+# ASR Parameters Configuration
+# ---------------------
+# ASR 参数配置：支持从环境变量读取，用于提高识别准确度
+BEAM_SIZE = int(os.getenv("ASR_BEAM_SIZE", "10"))  # Beam search 宽度，默认 10（提高准确度，减少同音字错误）
+TEMPERATURE = float(os.getenv("ASR_TEMPERATURE", "0.0"))  # 采样温度，默认 0.0（更确定，减少随机性）
+PATIENCE = float(os.getenv("ASR_PATIENCE", "1.0"))  # Beam search 耐心值，默认 1.0
+COMPRESSION_RATIO_THRESHOLD = float(os.getenv("ASR_COMPRESSION_RATIO_THRESHOLD", "2.4"))  # 压缩比阈值，默认 2.4
+LOG_PROB_THRESHOLD = float(os.getenv("ASR_LOG_PROB_THRESHOLD", "-1.0"))  # 对数概率阈值，默认 -1.0
+NO_SPEECH_THRESHOLD = float(os.getenv("ASR_NO_SPEECH_THRESHOLD", "0.6"))  # 无语音阈值，默认 0.6
+
+logger.info(f"ASR Parameters: beam_size={BEAM_SIZE}, temperature={TEMPERATURE}, patience={PATIENCE}, "
+            f"compression_ratio_threshold={COMPRESSION_RATIO_THRESHOLD}, log_prob_threshold={LOG_PROB_THRESHOLD}, "
+            f"no_speech_threshold={NO_SPEECH_THRESHOLD}")
+

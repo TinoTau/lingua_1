@@ -22,11 +22,13 @@ async fn test_create_session() {
             persona_adaptation: None,
         }),
         Some("tenant-1".to_string()),
-        None,
-        None,
-        None,
-        None,
-        None,
+        None, // mode
+        None, // lang_a
+        None, // lang_b
+        None, // auto_langs
+        None, // trace_id
+        None, // audio_format
+        None, // sample_rate
     ).await;
     
     assert!(session.session_id.starts_with("s-"));
@@ -49,14 +51,16 @@ async fn test_get_session() {
         "ios".to_string(),
         "en".to_string(),
         "zh".to_string(),
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
+        None, // dialect
+        None, // default_features
+        None, // tenant_id
+        None, // mode
+        None, // lang_a
+        None, // lang_b
+        None, // auto_langs
+        None, // trace_id
+        None, // audio_format
+        None, // sample_rate
     ).await;
     
     let retrieved = manager.get_session(&session.session_id).await;
@@ -84,14 +88,16 @@ async fn test_update_session_pair_node() {
         "web".to_string(),
         "zh".to_string(),
         "en".to_string(),
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
+        None, // dialect
+        None, // default_features
+        None, // tenant_id
+        None, // mode
+        None, // lang_a
+        None, // lang_b
+        None, // auto_langs
+        None, // trace_id
+        None, // audio_format
+        None, // sample_rate
     ).await;
     
     let success = manager.update_session(
@@ -114,14 +120,16 @@ async fn test_update_session_increment_utterance_index() {
         "android".to_string(),
         "zh".to_string(),
         "en".to_string(),
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
+        None, // dialect
+        None, // default_features
+        None, // tenant_id
+        None, // mode
+        None, // lang_a
+        None, // lang_b
+        None, // auto_langs
+        None, // trace_id
+        None, // audio_format
+        None, // sample_rate
     ).await;
     
     assert_eq!(session.utterance_index, 0);
@@ -167,14 +175,16 @@ async fn test_remove_session() {
         "ios".to_string(),
         "zh".to_string(),
         "en".to_string(),
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
+        None, // dialect
+        None, // default_features
+        None, // tenant_id
+        None, // mode
+        None, // lang_a
+        None, // lang_b
+        None, // auto_langs
+        None, // trace_id
+        None, // audio_format
+        None, // sample_rate
     ).await;
     
     manager.remove_session(&session.session_id).await;
@@ -192,14 +202,16 @@ async fn test_multiple_sessions() {
         "android".to_string(),
         "zh".to_string(),
         "en".to_string(),
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
+        None, // dialect
+        None, // default_features
+        None, // tenant_id
+        None, // mode
+        None, // lang_a
+        None, // lang_b
+        None, // auto_langs
+        None, // trace_id
+        None, // audio_format
+        None, // sample_rate
     ).await;
     
     let session2 = manager.create_session(
@@ -207,14 +219,16 @@ async fn test_multiple_sessions() {
         "ios".to_string(),
         "en".to_string(),
         "zh".to_string(),
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
+        None, // dialect
+        None, // default_features
+        None, // tenant_id
+        None, // mode
+        None, // lang_a
+        None, // lang_b
+        None, // auto_langs
+        None, // trace_id
+        None, // audio_format
+        None, // sample_rate
     ).await;
     
     assert_ne!(session1.session_id, session2.session_id);

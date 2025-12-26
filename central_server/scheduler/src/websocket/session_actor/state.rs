@@ -30,6 +30,12 @@ pub struct SessionActorInternalState {
     pub last_chunk_timestamp_ms: Option<i64>,
     /// 第一个音频块的客户端发送时间戳（毫秒，UTC时区），用于计算网络传输耗时
     pub first_chunk_client_timestamp_ms: Option<i64>,
+    /// EDGE-5: Short-merge 状态
+    /// 如果为 true，表示当前 utterance 是短片段（< threshold），正在等待合并
+    pub pending_short_audio: bool,
+    /// EDGE-5: Short-merge 累积时长（毫秒）
+    /// 用于跟踪连续短片段的累积时长，超过最大累积时长后强制 finalize
+    pub accumulated_short_audio_duration_ms: u64,
 }
 
 impl SessionActorInternalState {
@@ -41,6 +47,8 @@ impl SessionActorInternalState {
             timer_generation: 0,
             last_chunk_timestamp_ms: None,
             first_chunk_client_timestamp_ms: None,
+            pending_short_audio: false,
+            accumulated_short_audio_duration_ms: 0,
         }
     }
 

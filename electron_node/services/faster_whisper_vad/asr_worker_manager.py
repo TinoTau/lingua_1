@@ -9,7 +9,7 @@ import logging
 import time
 import numpy as np
 import pickle
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from dataclasses import dataclass
 from enum import Enum
 
@@ -42,7 +42,22 @@ class ASRTask:
     beam_size: int
     initial_prompt: Optional[str]
     condition_on_previous_text: bool
+    # 新增：提高准确度的参数
+    best_of: Optional[int] = None
+    temperature: Optional[float] = None
+    patience: Optional[float] = None
+    compression_ratio_threshold: Optional[float] = None
+    log_prob_threshold: Optional[float] = None
+    no_speech_threshold: Optional[float] = None
 
+
+@dataclass
+class SegmentInfo:
+    """Segment 信息"""
+    text: str
+    start: Optional[float] = None  # 开始时间（秒）
+    end: Optional[float] = None    # 结束时间（秒）
+    no_speech_prob: Optional[float] = None  # 无语音概率（可选）
 
 @dataclass
 class ASRResult:
@@ -50,6 +65,8 @@ class ASRResult:
     job_id: str
     text: Optional[str] = None
     language: Optional[str] = None
+    language_probabilities: Optional[Dict[str, float]] = None  # 新增：语言概率信息（字典：语言代码 -> 概率）
+    segments: Optional[List[SegmentInfo]] = None  # 新增：Segment 元数据（包含时间戳）
     duration_ms: int = 0
     error: Optional[str] = None
 
@@ -380,10 +397,26 @@ class ASRWorkerManager:
                         self.stats["failed_tasks"] += 1
                     else:
                         # 设置结果
+                        # 转换 segments 数据
+                        segments_raw = result_data.get("segments")
+                        segments_list = None
+                        if segments_raw:
+                            segments_list = [
+                                SegmentInfo(
+                                    text=seg.get("text", ""),
+                                    start=seg.get("start"),
+                                    end=seg.get("end"),
+                                    no_speech_prob=seg.get("no_speech_prob"),
+                                )
+                                for seg in segments_raw
+                            ]
+                        
                         result = ASRResult(
                             job_id=job_id,
                             text=result_data.get("text"),
                             language=result_data.get("language"),
+                            language_probabilities=result_data.get("language_probabilities"),  # 新增：语言概率信息
+                            segments=segments_list,  # 新增：Segment 元数据
                             duration_ms=result_data.get("duration_ms", 0),
                             error=None
                         )
@@ -411,7 +444,14 @@ class ASRWorkerManager:
         initial_prompt: Optional[str],
         condition_on_previous_text: bool,
         trace_id: str,
-        max_wait: float = MAX_WAIT_SECONDS
+        max_wait: float = MAX_WAIT_SECONDS,
+        # 新增：提高准确度的参数
+        best_of: Optional[int] = None,
+        temperature: Optional[float] = None,
+        patience: Optional[float] = None,
+        compression_ratio_threshold: Optional[float] = None,
+        log_prob_threshold: Optional[float] = None,
+        no_speech_threshold: Optional[float] = None,
     ) -> ASRResult:
         """
         提交 ASR 任务到 Worker 进程
@@ -452,6 +492,12 @@ class ASRWorkerManager:
             beam_size=beam_size,
             initial_prompt=initial_prompt,
             condition_on_previous_text=condition_on_previous_text,
+            best_of=best_of,
+            temperature=temperature,
+            patience=patience,
+            compression_ratio_threshold=compression_ratio_threshold,
+            log_prob_threshold=log_prob_threshold,
+            no_speech_threshold=no_speech_threshold,
         )
         
         # 创建 Future
@@ -464,7 +510,8 @@ class ASRWorkerManager:
         # 提交到队列
         try:
             # 使用线程池执行阻塞的 put 操作
-            await asyncio.to_thread(self.task_queue.put, {
+            # 注意：需要传递所有优化参数到 worker 进程
+            task_dict = {
                 "job_id": job_id,
                 "trace_id": trace_id,
                 "audio": audio_bytes,
@@ -475,7 +522,22 @@ class ASRWorkerManager:
                 "beam_size": beam_size,
                 "initial_prompt": initial_prompt,
                 "condition_on_previous_text": condition_on_previous_text,
-            })
+            }
+            # 添加优化参数（如果提供）
+            if best_of is not None:
+                task_dict["best_of"] = best_of
+            if temperature is not None:
+                task_dict["temperature"] = temperature
+            if patience is not None:
+                task_dict["patience"] = patience
+            if compression_ratio_threshold is not None:
+                task_dict["compression_ratio_threshold"] = compression_ratio_threshold
+            if log_prob_threshold is not None:
+                task_dict["log_prob_threshold"] = log_prob_threshold
+            if no_speech_threshold is not None:
+                task_dict["no_speech_threshold"] = no_speech_threshold
+            
+            await asyncio.to_thread(self.task_queue.put, task_dict)
         except Exception as e:
             # 清理 Future
             self.pending_results.pop(job_id, None)

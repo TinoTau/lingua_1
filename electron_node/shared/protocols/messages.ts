@@ -161,6 +161,16 @@ export interface TranslationResultMessage {
   trace_id: string;
   /** 各服务耗时信息（从节点返回的 extra.service_timings 中提取） */
   service_timings?: ServiceTimings;
+  /** OBS-2: ASR 质量信息 */
+  asr_quality_level?: 'good' | 'suspect' | 'bad';
+  reason_codes?: string[];
+  quality_score?: number;  // 0.0-1.0
+  rerun_count?: number;
+  segments_meta?: {
+    count: number;
+    max_gap: number;  // 最大间隔（秒）
+    avg_duration: number;  // 平均时长（秒）
+  };
 }
 
 export interface AsrPartialMessage {
@@ -297,6 +307,24 @@ export interface NodeRegisterAckMessage {
   message: string;
 }
 
+/** Gate-B: Rerun 指标 */
+export interface RerunMetrics {
+  totalReruns: number;
+  successfulReruns: number;
+  failedReruns: number;
+  timeoutReruns: number;
+  qualityImprovements: number;
+}
+
+/** Gate-B: Rerun 指标 */
+export interface RerunMetrics {
+  totalReruns: number;
+  successfulReruns: number;
+  failedReruns: number;
+  timeoutReruns: number;
+  qualityImprovements: number;
+}
+
 export interface NodeHeartbeatMessage {
   type: 'node_heartbeat';
   node_id: string;
@@ -307,6 +335,8 @@ export interface NodeHeartbeatMessage {
   installed_services: InstalledService[];
   /** 按 ServiceType 聚合的能力图 */
   capability_by_type: CapabilityByType[];
+  /** Gate-B: Rerun 指标（可选） */
+  rerun_metrics?: RerunMetrics;
 }
 
 export interface JobAssignMessage {
@@ -342,6 +372,8 @@ export interface JobAssignMessage {
   partial_update_interval_ms?: number;
   /** 追踪 ID（必需，用于全链路追踪） */
   trace_id: string;
+  /** EDGE-4: Padding 配置（毫秒），用于在音频末尾添加静音 */
+  padding_ms?: number;
 }
 
 export interface JobCancelMessage {
@@ -380,6 +412,16 @@ export interface JobResultMessage {
   };
   /** 追踪 ID（必需，用于全链路追踪） */
   trace_id: string;
+  /** OBS-2: ASR 质量信息 */
+  asr_quality_level?: 'good' | 'suspect' | 'bad';
+  reason_codes?: string[];
+  quality_score?: number;  // 0.0-1.0
+  rerun_count?: number;
+  segments_meta?: {
+    count: number;
+    max_gap: number;  // 最大间隔（秒）
+    avg_duration: number;  // 平均时长（秒）
+  };
 }
 
 export interface NodeErrorMessage {

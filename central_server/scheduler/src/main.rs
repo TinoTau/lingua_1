@@ -298,7 +298,8 @@ async fn main() -> Result<()> {
     // 启动结果队列超时检查任务（每10秒检查一次）
     let app_state_for_result_check = app_state.clone();
     tokio::spawn(async move {
-        let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(10));
+        // 优化：缩短结果检查间隔，从10秒降到1秒，减少延迟
+        let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(1));
         // 跳过第一次立即触发
         interval.tick().await;
         

@@ -6,9 +6,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PipelineOrchestrator = void 0;
 const logger_1 = __importDefault(require("../logger"));
+// Gate-A: Session Context Manager
+const session_context_manager_1 = require("./session-context-manager");
 class PipelineOrchestrator {
     constructor(taskRouter) {
         this.taskRouter = taskRouter;
+        // Gate-A: 初始化 Session Context Manager
+        this.sessionContextManager = new session_context_manager_1.SessionContextManager();
+        this.sessionContextManager.setTaskRouter(taskRouter);
+    }
+    /**
+     * Gate-B: 获取 TaskRouter 实例（用于获取 Rerun 指标）
+     */
+    getTaskRouter() {
+        return this.taskRouter;
     }
     /**
      * 处理完整任务（ASR -> NMT -> TTS）
@@ -27,6 +38,10 @@ class PipelineOrchestrator {
                 enable_streaming: job.enable_streaming_asr || false,
                 context_text: job.context_text,
                 job_id: job.job_id, // 传递 job_id 用于任务取消
+                // EDGE-4: Padding 配置（从 job 中提取，如果调度服务器传递了该参数）
+                padding_ms: job.padding_ms,
+                // P0.5-SH-4: 传递重跑次数（从 job 中提取，如果调度服务器传递了该参数）
+                rerun_count: job.rerun_count || 0,
             };
             let asrResult;
             if (job.enable_streaming_asr && partialCallback) {
@@ -37,6 +52,36 @@ class PipelineOrchestrator {
                 asrResult = await this.taskRouter.routeASRTask(asrTask);
             }
             logger_1.default.debug({ jobId: job.job_id, text: asrResult.text }, 'ASR task completed');
+            // Gate-A: 检查是否需要重置上下文
+            if (asrResult.shouldResetContext) {
+                const sessionId = job.session_id || job.job_id || 'unknown';
+                const resetRequest = {
+                    sessionId,
+                    reason: 'consecutive_low_quality',
+                    jobId: job.job_id,
+                };
+                logger_1.default.info({
+                    sessionId,
+                    jobId: job.job_id,
+                    qualityScore: asrResult.badSegmentDetection?.qualityScore,
+                }, 'Gate-A: Detected shouldResetContext flag, triggering context reset');
+                // 执行上下文重置（异步，不阻塞主流程）
+                this.sessionContextManager.resetContext(resetRequest, this.taskRouter)
+                    .then((resetResult) => {
+                    logger_1.default.info({
+                        sessionId,
+                        jobId: job.job_id,
+                        resetResult,
+                    }, 'Gate-A: Context reset completed');
+                })
+                    .catch((error) => {
+                    logger_1.default.error({
+                        sessionId,
+                        jobId: job.job_id,
+                        error: error.message,
+                    }, 'Gate-A: Context reset failed');
+                });
+            }
             // ASR 完成后，立即通知 InferenceService 从 currentJobs 中移除任务
             // 这样可以让 ASR 服务更快地处理下一个任务，避免任务堆积
             if (asrCompletedCallback) {
@@ -57,6 +102,8 @@ class PipelineOrchestrator {
                         emotion: undefined,
                         speech_rate: undefined,
                         voice_style: undefined,
+                        language_probability: asrResult.language_probability, // 新增：即使 ASR 为空，也传递语言概率信息
+                        language_probabilities: asrResult.language_probabilities, // 新增
                     },
                 };
             }
@@ -74,6 +121,8 @@ class PipelineOrchestrator {
                         emotion: undefined,
                         speech_rate: undefined,
                         voice_style: undefined,
+                        language_probability: asrResult.language_probability, // 新增
+                        language_probabilities: asrResult.language_probabilities, // 新增
                     },
                 };
             }
@@ -104,6 +153,8 @@ class PipelineOrchestrator {
                         emotion: undefined,
                         speech_rate: undefined,
                         voice_style: undefined,
+                        language_probability: asrResult.language_probability, // 新增
+                        language_probabilities: asrResult.language_probabilities, // 新增
                     },
                 };
             }
@@ -135,6 +186,47 @@ class PipelineOrchestrator {
             const ttsResult = await this.taskRouter.routeTTSTask(ttsTask);
             logger_1.default.debug({ jobId: job.job_id }, 'TTS task completed');
             // 4. 返回结果
+            // OBS-2: 计算 ASR 质量级别
+            let asrQualityLevel;
+            if (asrResult.badSegmentDetection) {
+                const qualityScore = asrResult.badSegmentDetection.qualityScore;
+                if (qualityScore >= 0.7) {
+                    asrQualityLevel = 'good';
+                }
+                else if (qualityScore >= 0.4) {
+                    asrQualityLevel = 'suspect';
+                }
+                else {
+                    asrQualityLevel = 'bad';
+                }
+            }
+            // OBS-2: 计算 segments_meta
+            let segmentsMeta;
+            if (asrResult.segments && asrResult.segments.length > 0) {
+                const segments = asrResult.segments;
+                let maxGap = 0;
+                let totalDuration = 0;
+                for (let i = 0; i < segments.length; i++) {
+                    const segment = segments[i];
+                    if (segment.end && segment.start) {
+                        const duration = segment.end - segment.start;
+                        totalDuration += duration;
+                        // 计算与前一个 segment 的间隔
+                        if (i > 0 && segments[i - 1].end !== undefined) {
+                            const prevEnd = segments[i - 1].end;
+                            const gap = segment.start - prevEnd;
+                            if (gap > maxGap) {
+                                maxGap = gap;
+                            }
+                        }
+                    }
+                }
+                segmentsMeta = {
+                    count: segments.length,
+                    max_gap: maxGap,
+                    avg_duration: segments.length > 0 ? totalDuration / segments.length : 0,
+                };
+            }
             const result = {
                 text_asr: asrResult.text,
                 text_translated: nmtResult.text,
@@ -144,7 +236,15 @@ class PipelineOrchestrator {
                     emotion: undefined,
                     speech_rate: undefined,
                     voice_style: undefined,
+                    language_probability: asrResult.language_probability, // 新增：检测到的语言的概率
+                    language_probabilities: asrResult.language_probabilities, // 新增：所有语言的概率信息
                 },
+                // OBS-2: ASR 质量信息
+                asr_quality_level: asrQualityLevel,
+                reason_codes: asrResult.badSegmentDetection?.reasonCodes,
+                quality_score: asrResult.badSegmentDetection?.qualityScore,
+                rerun_count: asrTask.rerun_count,
+                segments_meta: segmentsMeta,
             };
             const processingTime = Date.now() - startTime;
             logger_1.default.info({ jobId: job.job_id, processingTime }, 'Pipeline orchestration completed');

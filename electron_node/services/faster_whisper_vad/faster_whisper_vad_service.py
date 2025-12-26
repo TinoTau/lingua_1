@@ -78,6 +78,12 @@ from config import (
     MAX_AUDIO_DURATION_SEC,
     CONTEXT_SAMPLE_RATE,
     CONTEXT_DURATION_SEC,
+    BEAM_SIZE,
+    TEMPERATURE,
+    PATIENCE,
+    COMPRESSION_RATIO_THRESHOLD,
+    LOG_PROB_THRESHOLD,
+    NO_SPEECH_THRESHOLD,
 )
 # 注意：不再导入 asr_model，ASR 推理在独立子进程中执行
 from models import vad_session  # 只导入 VAD 模型
@@ -125,8 +131,15 @@ class UtteranceRequest(BaseModel):
     # ASR 特定参数
     language: Optional[str] = None  # 语言代码（如果 src_lang == "auto"，则自动检测）
     task: str = "transcribe"  # "transcribe" or "translate"
-    beam_size: int = 5
+    beam_size: int = BEAM_SIZE  # 从配置文件读取，默认 10（提高准确度，减少同音字错误）
     condition_on_previous_text: bool = False  # 禁用条件生成，避免重复识别（当上下文文本和当前音频内容相同时，会导致重复输出）
+    # 新增：提高准确度的参数
+    best_of: Optional[int] = 5  # 候选数量（用于非beam search模式，当前使用beam search，此参数不影响）
+    temperature: Optional[float] = TEMPERATURE  # 从配置文件读取，默认 0.0（更确定，减少随机性，提高准确度）
+    patience: Optional[float] = PATIENCE  # 从配置文件读取，默认 1.0（Beam search耐心值）
+    compression_ratio_threshold: Optional[float] = COMPRESSION_RATIO_THRESHOLD  # 从配置文件读取，默认 2.4（压缩比阈值）
+    log_prob_threshold: Optional[float] = LOG_PROB_THRESHOLD  # 从配置文件读取，默认 -1.0（对数概率阈值）
+    no_speech_threshold: Optional[float] = NO_SPEECH_THRESHOLD  # 从配置文件读取，默认 0.6（无语音阈值）
     use_context_buffer: bool = True  # 是否使用上下文缓冲区
     use_text_context: bool = True  # 是否使用文本上下文
     # 其他参数（与 node-inference 保持一致，但 ASR 服务不使用）
@@ -139,12 +152,23 @@ class UtteranceRequest(BaseModel):
     partial_update_interval_ms: Optional[int] = None  # 部分结果更新间隔（当前不支持）
     trace_id: Optional[str] = None  # 追踪 ID（用于全链路日志追踪）
     context_text: Optional[str] = None  # 上下文文本（用于 NMT，ASR 服务不使用）
+    # EDGE-4: Padding 配置
+    padding_ms: Optional[int] = None  # 尾部静音 padding（毫秒），None 表示不添加 padding
+
+class SegmentInfo(BaseModel):
+    """Segment 信息（包含时间戳）"""
+    text: str
+    start: Optional[float] = None  # 开始时间（秒）
+    end: Optional[float] = None    # 结束时间（秒）
+    no_speech_prob: Optional[float] = None  # 无语音概率（可选）
 
 class UtteranceResponse(BaseModel):
     """Utterance 任务响应"""
     text: str  # Full transcribed text
-    segments: List[str]  # List of segment texts
+    segments: List[SegmentInfo]  # List of segment info (包含时间戳和元数据)
     language: Optional[str] = None  # Detected language
+    language_probability: Optional[float] = None  # 检测到的语言的概率（0.0-1.0）
+    language_probabilities: Optional[Dict[str, float]] = None  # 所有语言的概率信息（字典：语言代码 -> 概率）
     duration: float  # Audio duration in seconds
     vad_segments: List[Tuple[int, int]]  # VAD 检测到的语音段（样本索引）
 
@@ -341,6 +365,17 @@ async def process_utterance(req: UtteranceRequest):
         if not audio.flags['C_CONTIGUOUS']:
             audio = np.ascontiguousarray(audio)
         
+        # EDGE-4: Padding（在音频末尾添加静音）
+        if req.padding_ms is not None and req.padding_ms > 0:
+            padding_samples = int((req.padding_ms / 1000.0) * sr)
+            if padding_samples > 0:
+                padding = np.zeros(padding_samples, dtype=np.float32)
+                audio = np.concatenate([audio, padding])
+                logger.info(
+                    f"[{trace_id}] EDGE-4: Applied padding: {req.padding_ms}ms "
+                    f"({padding_samples} samples), total_duration={len(audio)/sr:.3f}s"
+                )
+        
         # 4. 确定语言（如果 src_lang == "auto"，则使用 language 或自动检测）
         asr_language = None
         if req.src_lang != "auto":
@@ -504,19 +539,18 @@ async def process_utterance(req: UtteranceRequest):
         # 7.5. 音频质量检查（防止低质量音频进入 ASR）
         # 如果音频质量太差，直接返回空响应，避免浪费 ASR 资源
         # 注意：Faster Whisper 通常需要至少 0.5-1 秒的音频才能有效识别
-        # 虽然 0.24 秒的音频可能通过质量检查，但 Whisper 可能无法识别出有效内容
         # 调整阈值以适应实际使用场景和Opus编码后的音频质量
-        # 关键修复：提高阈值，过滤更多低质量音频
-        # 从日志看，RMS=0.0018、STD=0.0018 虽然通过了阈值（0.0005），
-        # 但Faster Whisper仍然无法识别出文本，说明阈值太低
-        # 提高阈值，只让高质量音频进入ASR
-        MIN_AUDIO_RMS = 0.002  # 最小 RMS 能量（从 0.0005 提高到 0.002，过滤更多低质量音频）
-        MIN_AUDIO_STD = 0.002  # 最小标准差（从 0.0005 提高到 0.002，过滤更多低质量音频）
-        MIN_AUDIO_DYNAMIC_RANGE = 0.01  # 最小动态范围（从 0.002 提高到 0.01，过滤更多低质量音频）
+        # 关键修复：降低阈值，适应 Opus 编码后的音频特性
+        # 从日志看，Opus 编码后的音频 RMS/STD 值通常较低（0.0003-0.0007），
+        # 但这些音频仍然可能包含有效语音，应该让 ASR 模型来判断
+        # 降低阈值，减少误判，让更多有效音频进入 ASR
+        MIN_AUDIO_RMS = 0.0005  # 最小 RMS 能量（降低到 0.0005，适应 Opus 编码音频）
+        MIN_AUDIO_STD = 0.0005  # 最小标准差（降低到 0.0005，适应 Opus 编码音频）
+        MIN_AUDIO_DYNAMIC_RANGE = 0.005  # 最小动态范围（降低到 0.005，适应 Opus 编码音频）
         # 关键修复：增加最短音频时长检查
         # Faster Whisper 通常需要至少 0.5-1 秒的音频才能有效识别
         # 虽然质量检查允许 0.3 秒，但实际 ASR 识别需要更长的音频
-        MIN_AUDIO_DURATION = 0.5  # 最小时长（秒），Faster Whisper 需要至少 0.5 秒才能有效识别
+        MIN_AUDIO_DURATION = 0.3  # 最小时长（秒），降低到 0.3 秒，让更多短音频进入 ASR
         
         audio_quality_issues = []
         
@@ -608,7 +642,14 @@ async def process_utterance(req: UtteranceRequest):
                 initial_prompt=text_context if text_context else None,
                 condition_on_previous_text=req.condition_on_previous_text,
                 trace_id=trace_id,
-                max_wait=MAX_WAIT_SECONDS
+                max_wait=MAX_WAIT_SECONDS,
+                # 传递优化参数以提高准确度
+                best_of=req.best_of,
+                temperature=req.temperature,
+                patience=req.patience,
+                compression_ratio_threshold=req.compression_ratio_threshold,
+                log_prob_threshold=req.log_prob_threshold,
+                no_speech_threshold=req.no_speech_threshold,
             )
             
             # 检查结果
@@ -625,7 +666,19 @@ async def process_utterance(req: UtteranceRequest):
             # 从结果中获取文本和语言信息
             full_text = asr_result.text or ""
             detected_language = asr_result.language
+            language_probabilities = asr_result.language_probabilities  # 新增：语言概率信息
+            segments_info_raw = asr_result.segments  # 新增：Segment 元数据
             duration_sec = asr_result.duration_ms / 1000.0 if asr_result.duration_ms > 0 else 0.0
+            
+            # 计算检测到的语言的概率（如果 language_probabilities 存在）
+            language_probability = None
+            if language_probabilities and detected_language:
+                language_probability = language_probabilities.get(detected_language)
+                if language_probability is not None:
+                    logger.info(
+                        f"[{trace_id}] ASR 语言检测概率: language={detected_language}, "
+                        f"probability={language_probability:.4f}"
+                    )
             
             logger.info(
                 f"[{trace_id}] ========== ASR 接口输出结果 =========="
@@ -645,17 +698,35 @@ async def process_utterance(req: UtteranceRequest):
                 f"[{trace_id}] ASR 接口输出原始文本 (bytes): {full_text.encode('utf-8') if full_text else b''}"
             )
             
-            # 注意：进程隔离架构下，segments 已经在子进程中转换为文本
-            # 我们不再需要处理 segments 对象，直接使用返回的文本
-            # 为了兼容响应格式，我们需要将文本分割为 segments
-            # 简单处理：按空格分割（实际应用中可能需要更智能的分割）
-            # 注意：这里使用原始文本，因为去重会在Step 9.2中进行
-            segment_texts = [s.strip() for s in full_text.split() if s.strip()]
-            if not segment_texts:
-                segment_texts = [full_text] if full_text else []
+            # 使用真正的 segments 数据（包含时间戳）
+            segments_info: List[SegmentInfo] = []
+            if segments_info_raw:
+                # 转换 SegmentInfo 对象为 Pydantic 模型
+                segments_info = [
+                    SegmentInfo(
+                        text=seg.text,
+                        start=seg.start,
+                        end=seg.end,
+                        no_speech_prob=seg.no_speech_prob,
+                    )
+                    for seg in segments_info_raw
+                ]
+            
+            # 如果 segments 为空，从文本生成（向后兼容）
+            if not segments_info and full_text:
+                # 按空格分割作为后备方案
+                segment_texts_split = [s.strip() for s in full_text.split() if s.strip()]
+                if segment_texts_split:
+                    segments_info = [
+                        SegmentInfo(text=text, start=None, end=None, no_speech_prob=None)
+                        for text in segment_texts_split
+                    ]
+                else:
+                    segments_info = [SegmentInfo(text=full_text, start=None, end=None, no_speech_prob=None)]
             
             # 保存检测到的语言和时长，供后续使用
             info_language = detected_language
+            # language_probability 和 language_probabilities 已经在上面计算/提取
             info_duration = duration_sec
             
         except asyncio.TimeoutError:
@@ -691,7 +762,7 @@ async def process_utterance(req: UtteranceRequest):
         
         asr_elapsed = time.time() - asr_start_time
         
-        logger.info(f"[{trace_id}] Step 8.1: Text extraction completed, segments={len(segment_texts)}, full_text_len={len(full_text)}")
+        logger.info(f"[{trace_id}] Step 8.1: Text extraction completed, segments={len(segments_info)}, full_text_len={len(full_text)}")
         
         # 记录 ASR 处理时间（用于性能监控）
         if asr_elapsed > 1.0:
@@ -864,11 +935,38 @@ async def process_utterance(req: UtteranceRequest):
             f"'✅ ASR 识别完成'"
         )
         
-        # 在去重后，重新生成 segment_texts（使用去重后的文本）
-        # 这样返回的 segments 也是去重后的
-        segment_texts = [s.strip() for s in full_text_trimmed.split() if s.strip()]
-        if not segment_texts:
-            segment_texts = [full_text_trimmed] if full_text_trimmed else []
+        # 在去重后，重新生成 segments_info（使用去重后的文本）
+        # 注意：去重可能会改变文本，所以需要重新生成 segments
+        # 但尽量保留时间戳信息（如果原始 segments 存在）
+        if segments_info and full_text_trimmed != full_text:
+            # 文本被去重修改了，需要重新生成 segments
+            # 简单处理：按空格分割，但保留第一个 segment 的时间戳（如果存在）
+            segment_texts_split = [s.strip() for s in full_text_trimmed.split() if s.strip()]
+            if segment_texts_split:
+                # 尝试保留第一个 segment 的时间戳
+                first_seg_start = segments_info[0].start if segments_info else None
+                first_seg_end = segments_info[-1].end if segments_info else None
+                segments_info = [
+                    SegmentInfo(
+                        text=text,
+                        start=first_seg_start if i == 0 else None,
+                        end=first_seg_end if i == len(segment_texts_split) - 1 else None,
+                        no_speech_prob=None,
+                    )
+                    for i, text in enumerate(segment_texts_split)
+                ]
+            else:
+                segments_info = [SegmentInfo(text=full_text_trimmed, start=None, end=None, no_speech_prob=None)]
+        elif not segments_info and full_text_trimmed:
+            # 如果原始 segments 为空，从去重后的文本生成
+            segment_texts_split = [s.strip() for s in full_text_trimmed.split() if s.strip()]
+            if segment_texts_split:
+                segments_info = [
+                    SegmentInfo(text=text, start=None, end=None, no_speech_prob=None)
+                    for text in segment_texts_split
+                ]
+            else:
+                segments_info = [SegmentInfo(text=full_text_trimmed, start=None, end=None, no_speech_prob=None)]
         
         logger.info(f"[{trace_id}] Step 10: Starting text validation")
         
@@ -1028,8 +1126,10 @@ async def process_utterance(req: UtteranceRequest):
         try:
             response = UtteranceResponse(
                 text=full_text_trimmed,  # 使用去重后的文本
-                segments=segment_texts,
+                segments=segments_info,  # 使用包含时间戳的 segments
                 language=info_language,
+                language_probability=language_probability,  # 新增：检测到的语言的概率
+                language_probabilities=language_probabilities,  # 新增：所有语言的概率信息
                 duration=info_duration,
                 vad_segments=vad_segments,
             )

@@ -53,11 +53,11 @@ export interface SilenceFilterConfig {
 export const DEFAULT_SILENCE_FILTER_CONFIG: SilenceFilterConfig = {
   enabled: true,
   threshold: 0.015,
-  attackThreshold: 0.015, // 进入语音：严格（避免误触发）
-  releaseThreshold: 0.005, // 退出语音：更宽松（从0.008降低到0.005，避免说话过程中音量稍微降低就被误判为静音）
+  attackThreshold: 0.01, // 进入语音：降低阈值（从0.015降低到0.01，更容易触发，避免前几句话被过滤）
+  releaseThreshold: 0.003, // 退出语音：进一步降低（从0.005降低到0.003，更宽松，避免说话过程中音量稍微降低就被误判为静音）
   windowMs: 100,
   attackFrames: 3, // 连续3帧语音才开始发送（避免误触发）
-  releaseFrames: 30, // 连续30帧静音才停止发送（300ms，从150ms增加到300ms，允许更长的停顿，避免过早截断导致ASR结果不完整）
+  releaseFrames: 20, // 连续20帧静音才停止发送（200ms，从300ms减少到200ms，避免前几句话被过早截断）
 };
 
 // WebSocket 重连配置

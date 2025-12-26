@@ -3,4 +3,5 @@
 
 pub mod audio_buffer_test;
 pub mod asr_partial_message_test;
+pub mod edge_finalize_test;
 

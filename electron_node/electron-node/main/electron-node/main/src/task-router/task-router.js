@@ -8,9 +8,24 @@ exports.TaskRouter = void 0;
 const axios_1 = __importDefault(require("axios"));
 const logger_1 = __importDefault(require("../logger"));
 const messages_1 = require("../../../../shared/protocols/messages");
+const node_config_1 = require("../node-config");
 // Opus 编码支持（使用 WebAssembly 实现，不会影响其他服务）
 const opus_encoder_1 = require("../utils/opus-encoder");
+// CONF-3: 基于 segments 时间戳的断裂/异常检测
+const bad_segment_detector_1 = require("./bad-segment-detector");
+// P0.5-SH-1: 坏段触发条件封装
+const rerun_trigger_1 = require("./rerun-trigger");
 class TaskRouter {
+    /**
+     * Gate-A: 重置指定 session 的连续低质量计数
+     * @param sessionId 会话 ID
+     */
+    resetConsecutiveLowQualityCount(sessionId) {
+        this.consecutiveLowQualityCount.set(sessionId, 0);
+        logger_1.default.info({
+            sessionId,
+        }, 'Gate-A: Reset consecutiveLowQualityCount for session');
+    }
     constructor(pythonServiceManager, rustServiceManager, serviceRegistryManager) {
         this.pythonServiceManager = pythonServiceManager;
         this.rustServiceManager = rustServiceManager;
@@ -21,6 +36,61 @@ class TaskRouter {
         this.roundRobinIndex = new Map();
         // best-effort cancel 支持：HTTP AbortController（用于中断 HTTP 请求）
         this.jobAbortControllers = new Map();
+        // P0.5-SH-5: Rerun 指标统计
+        this.rerunMetrics = {
+            totalReruns: 0,
+            successfulReruns: 0,
+            failedReruns: 0,
+            timeoutReruns: 0,
+            qualityImprovements: 0, // 质量提升的重跑次数
+        };
+        // P0.5-CTX-2: 连续低质量计数（用于 reset context）
+        this.consecutiveLowQualityCount = new Map(); // sessionId -> count
+        // 初始化时加载 ASR 配置
+        this.loadASRConfig();
+    }
+    /**
+     * 加载 ASR 配置
+     */
+    loadASRConfig() {
+        try {
+            const config = (0, node_config_1.loadNodeConfig)();
+            this.asrConfig = config.asr;
+        }
+        catch (error) {
+            logger_1.default.warn({ error }, 'Failed to load ASR config, using defaults');
+            this.asrConfig = undefined; // 使用默认值
+        }
+    }
+    /**
+     * 获取 ASR 配置（带默认值）
+     * 返回完整的配置对象，确保所有字段都有值
+     */
+    getASRConfig() {
+        if (!this.asrConfig) {
+            // 如果配置未加载，尝试重新加载
+            this.loadASRConfig();
+        }
+        const defaultConfig = {
+            beam_size: 10,
+            temperature: 0.0,
+            patience: 1.0,
+            compression_ratio_threshold: 2.4,
+            log_prob_threshold: -1.0,
+            no_speech_threshold: 0.6,
+        };
+        if (!this.asrConfig) {
+            return defaultConfig;
+        }
+        // 合并配置，确保所有字段都有值
+        return {
+            beam_size: this.asrConfig.beam_size ?? defaultConfig.beam_size,
+            temperature: this.asrConfig.temperature ?? defaultConfig.temperature,
+            patience: this.asrConfig.patience ?? defaultConfig.patience,
+            compression_ratio_threshold: this.asrConfig.compression_ratio_threshold ?? defaultConfig.compression_ratio_threshold,
+            log_prob_threshold: this.asrConfig.log_prob_threshold ?? defaultConfig.log_prob_threshold,
+            no_speech_threshold: this.asrConfig.no_speech_threshold ?? defaultConfig.no_speech_threshold,
+        };
     }
     /**
      * 初始化服务端点列表
@@ -257,6 +327,21 @@ class TaskRouter {
         return map[serviceName] || serviceName;
     }
     /**
+     * Gate-A: 获取 ASR 服务端点列表（用于上下文重置）
+     */
+    getASREndpoints() {
+        const endpoints = this.serviceEndpoints.get(messages_1.ServiceType.ASR) || [];
+        return endpoints
+            .filter(e => e.status === 'running')
+            .map(e => e.baseUrl);
+    }
+    /**
+     * Gate-B: 获取 Rerun 指标（用于上报）
+     */
+    getRerunMetrics() {
+        return { ...this.rerunMetrics };
+    }
+    /**
      * 选择服务端点
      */
     selectServiceEndpoint(serviceType) {
@@ -377,12 +462,14 @@ class TaskRouter {
                     audio_format: audioFormat,
                     sample_rate: task.sample_rate || 16000,
                     task: 'transcribe', // 必需字段
-                    beam_size: 5, // 必需字段
+                    beam_size: this.getASRConfig().beam_size, // 从配置文件读取，默认 10
                     condition_on_previous_text: false, // 修复：改为 false，避免重复识别（当上下文文本和当前音频内容相同时，会导致重复输出）
                     use_context_buffer: false, // 修复：禁用音频上下文，避免重复识别和增加处理时间（utterance已经是完整的，不需要音频上下文）
                     use_text_context: true, // 保留文本上下文（initial_prompt），这是Faster Whisper的标准功能
                     enable_streaming_asr: task.enable_streaming || false,
                     context_text: task.context_text,
+                    // EDGE-4: Padding 配置（如果提供）
+                    padding_ms: task.padding_ms,
                 };
                 try {
                     response = await httpClient.post('/utterance', requestBody, {
@@ -410,12 +497,240 @@ class TaskRouter {
                     throw axiosError;
                 }
                 // UtteranceResponse 返回的字段是 text，不是 transcript
-                return {
+                // 实现语言置信度分级逻辑（CONF-1）
+                const langProb = response.data.language_probability ?? 0;
+                let useTextContext = false; // 默认关闭上下文
+                let conditionOnPreviousText = false; // 默认关闭
+                // P0.5-CTX-1: 低质量禁用 context（在坏段检测之前先检查 qualityScore）
+                // 注意：这里先使用默认值，坏段检测后会在重跑逻辑中更新
+                const tempBadSegmentDetection = (0, bad_segment_detector_1.detectBadSegment)({
+                    text: response.data.text || '',
+                    language: response.data.language || task.src_lang,
+                    language_probability: langProb,
+                    language_probabilities: response.data.language_probabilities,
+                    segments: response.data.segments,
+                }, response.data.duration ? Math.round(response.data.duration * 1000) : undefined, task.context_text);
+                // P0.5-CTX-1: qualityScore < 0.4 → 禁用上下文 prompt
+                if (tempBadSegmentDetection.qualityScore < 0.4) {
+                    useTextContext = false;
+                    conditionOnPreviousText = false;
+                    logger_1.default.info({
+                        jobId: task.job_id,
+                        qualityScore: tempBadSegmentDetection.qualityScore,
+                    }, 'P0.5-CTX-1: Low quality score, disabling context');
+                }
+                // 仅在极少数"同语种连续且高置信"的窗口中才允许开启（可选）
+                // 这里先实现基础逻辑，后续可以添加"最近多段语言一致"的检查
+                if (langProb >= 0.90 && tempBadSegmentDetection.qualityScore >= 0.4) {
+                    // 高置信且高质量：可以启用上下文（可选，根据方案默认关闭）
+                    // useTextContext = true;  // 暂时保持关闭，等待后续优化
+                }
+                if (langProb < 0.70) {
+                    // 低置信：强制关闭上下文（防污染）
+                    useTextContext = false;
+                    conditionOnPreviousText = false;
+                }
+                // 构建 ASR 结果
+                const asrResult = {
                     text: response.data.text || '',
                     confidence: 1.0, // faster-whisper-vad 不返回 confidence
                     language: response.data.language || task.src_lang,
+                    language_probability: response.data.language_probability, // 新增：检测到的语言的概率
+                    language_probabilities: response.data.language_probabilities, // 新增：所有语言的概率信息
+                    segments: response.data.segments, // 新增：Segment 元数据（包含时间戳）
                     is_final: true,
                 };
+                // CONF-3 + RERUN-1: 基于 segments 时间戳的断裂/异常检测 + 坏段判定
+                const audioDurationMs = response.data.duration
+                    ? Math.round(response.data.duration * 1000) // 转换为毫秒
+                    : undefined;
+                // 获取上一段文本（从 context_text 中提取，如果可用）
+                // 注意：context_text 是传递给 ASR 服务的，可能包含上一个 utterance 的文本
+                const previousText = task.context_text || undefined;
+                const badSegmentDetection = (0, bad_segment_detector_1.detectBadSegment)(asrResult, audioDurationMs, previousText);
+                if (badSegmentDetection.isBad) {
+                    logger_1.default.warn({
+                        jobId: task.job_id,
+                        reasonCodes: badSegmentDetection.reasonCodes,
+                        qualityScore: badSegmentDetection.qualityScore,
+                        segmentCount: asrResult.segments?.length || 0,
+                        audioDurationMs,
+                        languageProbability: asrResult.language_probability,
+                    }, 'CONF-3: Bad segment detected based on segments timestamps');
+                }
+                else {
+                    logger_1.default.debug({
+                        jobId: task.job_id,
+                        qualityScore: badSegmentDetection.qualityScore,
+                        segmentCount: asrResult.segments?.length || 0,
+                    }, 'CONF-3: Segment quality check passed');
+                }
+                // 将检测结果附加到 ASR 结果中（用于日志和后续处理）
+                asrResult.badSegmentDetection = badSegmentDetection;
+                // P0.5-CTX-2: 检查连续低质量（在重跑之前）
+                const sessionId = task.session_id || task.job_id || 'unknown';
+                if (badSegmentDetection.qualityScore < 0.4) {
+                    const currentCount = this.consecutiveLowQualityCount.get(sessionId) || 0;
+                    const newCount = currentCount + 1;
+                    this.consecutiveLowQualityCount.set(sessionId, newCount);
+                    if (newCount >= 2) {
+                        logger_1.default.warn({
+                            jobId: task.job_id,
+                            sessionId,
+                            consecutiveLowQualityCount: newCount,
+                            qualityScore: badSegmentDetection.qualityScore,
+                        }, 'P0.5-CTX-2: Consecutive low quality detected (>=2), should reset context');
+                        asrResult.shouldResetContext = true;
+                    }
+                }
+                else {
+                    // 质量正常，重置连续低质量计数
+                    this.consecutiveLowQualityCount.set(sessionId, 0);
+                }
+                // P0.5-SH-1/2: 检查是否应该触发 Top-2 语言重跑
+                const rerunCondition = (0, rerun_trigger_1.shouldTriggerRerun)(asrResult, audioDurationMs, task);
+                if (rerunCondition.shouldRerun) {
+                    logger_1.default.info({
+                        jobId: task.job_id,
+                        reason: rerunCondition.reason,
+                        languageProbability: asrResult.language_probability,
+                        qualityScore: badSegmentDetection.qualityScore,
+                    }, 'P0.5-SH-2: Triggering Top-2 language rerun');
+                    // P0.5-SH-2: 获取 Top-2 语言并执行重跑
+                    const top2Langs = (0, rerun_trigger_1.getTop2LanguagesForRerun)(asrResult.language_probabilities || {}, asrResult.language);
+                    if (top2Langs.length > 0) {
+                        // 尝试使用 Top-2 语言重跑
+                        let bestResult = asrResult; // 默认使用原始结果
+                        let bestQualityScore = badSegmentDetection.qualityScore;
+                        for (const lang of top2Langs) {
+                            try {
+                                logger_1.default.info({
+                                    jobId: task.job_id,
+                                    rerunLanguage: lang,
+                                    originalLanguage: asrResult.language,
+                                    rerunCount: (task.rerun_count || 0) + 1,
+                                }, 'P0.5-SH-2: Attempting rerun with forced language');
+                                // P0.5-SH-4: 创建带超时的 AbortController
+                                const rerunTimeoutMs = task.rerun_timeout_ms ?? 5000; // 默认 5 秒
+                                const rerunAbortController = new AbortController();
+                                const rerunTimeoutId = setTimeout(() => {
+                                    rerunAbortController.abort();
+                                    logger_1.default.warn({
+                                        jobId: task.job_id,
+                                        rerunLanguage: lang,
+                                        timeoutMs: rerunTimeoutMs,
+                                    }, 'P0.5-SH-4: Rerun timeout exceeded');
+                                }, rerunTimeoutMs);
+                                try {
+                                    // 使用强制语言重跑 ASR
+                                    const rerunTask = {
+                                        ...task,
+                                        src_lang: lang, // 强制使用指定语言
+                                        rerun_count: (task.rerun_count || 0) + 1, // 递增重跑次数
+                                    };
+                                    // 创建新的请求体，强制使用指定语言
+                                    const rerunRequestBody = {
+                                        ...requestBody,
+                                        src_lang: lang,
+                                        language: lang, // 强制语言
+                                    };
+                                    // 执行重跑请求（带超时）
+                                    const rerunResponse = await httpClient.post('/utterance', rerunRequestBody, {
+                                        signal: rerunAbortController.signal,
+                                    });
+                                    clearTimeout(rerunTimeoutId); // 清除超时定时器
+                                    // 构建重跑结果
+                                    const rerunResult = {
+                                        text: rerunResponse.data.text || '',
+                                        confidence: 1.0,
+                                        language: rerunResponse.data.language || lang,
+                                        language_probability: rerunResponse.data.language_probability,
+                                        language_probabilities: rerunResponse.data.language_probabilities,
+                                        segments: rerunResponse.data.segments,
+                                        is_final: true,
+                                    };
+                                    // 重新检测坏段（用于质量评分）
+                                    const rerunAudioDurationMs = rerunResponse.data.duration
+                                        ? Math.round(rerunResponse.data.duration * 1000)
+                                        : undefined;
+                                    const rerunBadSegmentDetection = (0, bad_segment_detector_1.detectBadSegment)(rerunResult, rerunAudioDurationMs, previousText);
+                                    rerunResult.badSegmentDetection = rerunBadSegmentDetection;
+                                    // P0.5-SH-3: 使用 qualityScore 择优
+                                    if (rerunBadSegmentDetection.qualityScore > bestQualityScore) {
+                                        logger_1.default.info({
+                                            jobId: task.job_id,
+                                            rerunLanguage: lang,
+                                            originalQualityScore: bestQualityScore,
+                                            rerunQualityScore: rerunBadSegmentDetection.qualityScore,
+                                        }, 'P0.5-SH-3: Rerun result has better quality score, selecting it');
+                                        bestResult = rerunResult;
+                                        bestQualityScore = rerunBadSegmentDetection.qualityScore;
+                                        // P0.5-SH-5: 记录质量提升
+                                        this.rerunMetrics.qualityImprovements++;
+                                    }
+                                    else {
+                                        logger_1.default.debug({
+                                            jobId: task.job_id,
+                                            rerunLanguage: lang,
+                                            originalQualityScore: bestQualityScore,
+                                            rerunQualityScore: rerunBadSegmentDetection.qualityScore,
+                                        }, 'P0.5-SH-3: Rerun result quality score not better, keeping original');
+                                    }
+                                    // P0.5-SH-5: 记录成功重跑
+                                    this.rerunMetrics.totalReruns++;
+                                    this.rerunMetrics.successfulReruns++;
+                                }
+                                catch (rerunError) {
+                                    clearTimeout(rerunTimeoutId); // 确保清除超时定时器
+                                    // P0.5-SH-5: 记录失败重跑
+                                    this.rerunMetrics.totalReruns++;
+                                    if (rerunAbortController.signal.aborted) {
+                                        logger_1.default.warn({
+                                            jobId: task.job_id,
+                                            rerunLanguage: lang,
+                                            timeoutMs: rerunTimeoutMs,
+                                        }, 'P0.5-SH-4: Rerun aborted due to timeout');
+                                        this.rerunMetrics.timeoutReruns++;
+                                    }
+                                    else {
+                                        logger_1.default.warn({
+                                            jobId: task.job_id,
+                                            rerunLanguage: lang,
+                                            error: rerunError.message,
+                                        }, 'P0.5-SH-2: Rerun failed, continuing with next language or original result');
+                                        this.rerunMetrics.failedReruns++;
+                                    }
+                                    // 继续尝试下一个语言，或使用原始结果
+                                }
+                            }
+                            catch (outerError) {
+                                logger_1.default.error({
+                                    jobId: task.job_id,
+                                    rerunLanguage: lang,
+                                    error: outerError.message,
+                                }, 'P0.5-SH-2: Unexpected error during rerun setup');
+                                // 继续尝试下一个语言，或使用原始结果
+                            }
+                        }
+                        // 返回最佳结果
+                        if (bestResult !== asrResult) {
+                            logger_1.default.info({
+                                jobId: task.job_id,
+                                originalLanguage: asrResult.language,
+                                selectedLanguage: bestResult.language,
+                                originalQualityScore: badSegmentDetection.qualityScore,
+                                selectedQualityScore: bestQualityScore,
+                            }, 'P0.5-SH-3: Selected rerun result as best');
+                        }
+                        return bestResult;
+                    }
+                    else {
+                        logger_1.default.warn({
+                            jobId: task.job_id,
+                        }, 'P0.5-SH-2: No Top-2 languages available for rerun');
+                    }
+                }
+                return asrResult;
             }
             else {
                 // 标准 ASR 接口（其他服务）

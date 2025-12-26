@@ -2,6 +2,21 @@
 
 use serde::{Deserialize, Serialize};
 
+/// Gate-B: Rerun 指标
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RerunMetrics {
+    #[serde(rename = "totalReruns")]
+    pub total_reruns: u64,
+    #[serde(rename = "successfulReruns")]
+    pub successful_reruns: u64,
+    #[serde(rename = "failedReruns")]
+    pub failed_reruns: u64,
+    #[serde(rename = "timeoutReruns")]
+    pub timeout_reruns: u64,
+    #[serde(rename = "qualityImprovements")]
+    pub quality_improvements: u64,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FeatureFlags {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -182,6 +197,20 @@ pub struct ExtraResult {
     /// 各服务耗时信息
     #[serde(skip_serializing_if = "Option::is_none")]
     pub service_timings: Option<ServiceTimings>,
+    /// ASR 检测到的语言的概率（0.0-1.0）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub language_probability: Option<f32>,
+    /// ASR 所有语言的概率信息（字典：语言代码 -> 概率）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub language_probabilities: Option<std::collections::HashMap<String, f32>>,
+}
+
+/// OBS-2: Segments 元数据
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SegmentsMeta {
+    pub count: u32,
+    pub max_gap: f32,  // 最大间隔（秒）
+    pub avg_duration: f32,  // 平均时长（秒）
 }
 
 /// 节点生命周期状态（Scheduler 权威）

@@ -4,6 +4,7 @@ use crate::messages::{ErrorCode, JobError, SessionMessage, UiEventStatus, UiEven
 use crate::messages::common::ExtraResult;
 use crate::model_not_available::ModelNotAvailableEvent;
 use crate::phase2::InterInstanceEvent;
+use crate::metrics::metrics;
 use tracing::{debug, error, info, warn};
 
 pub(super) async fn handle_job_result(
@@ -25,6 +26,12 @@ pub(super) async fn handle_job_result(
     _group_id: Option<String>,
     _part_index: Option<u64>,
     node_completed_at_ms: Option<i64>,
+    // OBS-2: ASR 质量信息
+    asr_quality_level: Option<String>,
+    reason_codes: Option<Vec<String>>,
+    quality_score: Option<f32>,
+    rerun_count: Option<u32>,
+    segments_meta: Option<crate::messages::common::SegmentsMeta>,
 ) {
     // Phase 1: Support failover retry, must ignore "stale node" results (avoid race condition)
     // 但是，为了确保 utterance_index 的连续性，即使 Job 状态不匹配，也应该将结果添加到队列
@@ -88,6 +95,12 @@ pub(super) async fn handle_job_result(
                         trace_id: trace_id.clone(),
                         group_id: None,
                         part_index: None,
+                        // OBS-2: 透传 ASR 质量信息
+                        asr_quality_level: asr_quality_level.clone(),
+                        reason_codes: reason_codes.clone(),
+                        quality_score,
+                        rerun_count,
+                        segments_meta: segments_meta.clone(),
                     };
                     let _ = rt
                         .enqueue_to_instance(&owner, &InterInstanceEvent::ForwardNodeMessage { message: forwarded })
@@ -277,6 +290,22 @@ pub(super) async fn handle_job_result(
             })
         });
 
+        // OBS-1: 记录 ASR 指标
+        if let Some(elapsed) = elapsed_ms {
+            metrics::record_asr_e2e_latency(elapsed);
+        }
+        if let Some(ref extra) = extra {
+            if let Some(lang_prob) = extra.language_probability {
+                metrics::record_lang_probability(lang_prob);
+            }
+        }
+        if asr_quality_level.as_deref() == Some("bad") {
+            metrics::record_bad_segment();
+        }
+        if rerun_count.is_some() && rerun_count.unwrap_or(0) > 0 {
+            metrics::record_rerun_trigger();
+        }
+
         // 准备日志输出（在移动 service_timings 之前）
         let elapsed_ms_str = elapsed_ms.map(|ms| format!("{}ms", ms)).unwrap_or_else(|| "N/A".to_string());
         let timings_str = service_timings.as_ref().map(|t| {
@@ -302,6 +331,12 @@ pub(super) async fn handle_job_result(
             service_timings,
             network_timings,
             scheduler_sent_at_ms: Some(scheduler_sent_at_ms),
+            // OBS-2: 透传 ASR 质量信息
+            asr_quality_level: asr_quality_level.clone(),
+            reason_codes: reason_codes.clone(),
+            quality_score,
+            rerun_count,
+            segments_meta: segments_meta.clone(),
         };
         // 记录详细的翻译结果日志（便于检查翻译准确性）
         let asr_text = text_asr.as_deref().unwrap_or("(empty)");

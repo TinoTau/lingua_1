@@ -63,6 +63,7 @@ pub(super) async fn handle_node_message(
             installed_models,
             installed_services,
             capability_by_type,
+            rerun_metrics,
         } => {
             register::handle_node_heartbeat(
                 state,
@@ -71,6 +72,7 @@ pub(super) async fn handle_node_message(
                 installed_models,
                 Some(installed_services),
                 capability_by_type,
+                rerun_metrics,
             )
             .await;
             Ok(())
@@ -94,6 +96,12 @@ pub(super) async fn handle_node_message(
             group_id,
             part_index,
             node_completed_at_ms,
+            // OBS-2: ASR 质量信息
+            asr_quality_level,
+            reason_codes,
+            quality_score,
+            rerun_count,
+            segments_meta,
         } => {
             job_result::handle_job_result(
                 state,
@@ -114,6 +122,12 @@ pub(super) async fn handle_node_message(
                 group_id,
                 part_index,
                 node_completed_at_ms,
+                // OBS-2: 透传 ASR 质量信息
+                asr_quality_level,
+                reason_codes,
+                quality_score,
+                rerun_count,
+                segments_meta,
             )
             .await;
             Ok(())

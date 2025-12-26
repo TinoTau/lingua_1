@@ -6,9 +6,21 @@ use crate::websocket::{create_job_assign_message, send_error, send_ui_event};
 use crate::websocket::job_creator::create_translation_jobs;
 use super::events::{SessionEvent, MessageSender};
 use super::state::{SessionActorInternalState, SessionActorState};
+use super::audio_duration::calculate_audio_duration_ms;
 use tokio::sync::mpsc;
 use tokio::time::{sleep, Duration, Instant};
 use tracing::{debug, info, warn, error};
+
+/// EDGE-1: Finalize 类型枚举
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum FinalizeType {
+    /// 手动截断（is_final=true）
+    Manual,
+    /// 自动 finalize（pause/timeout）
+    Auto,
+    /// 异常保护（MaxLength）
+    Exception,
+}
 
 /// Session Actor Handle（用于向 Actor 发送事件）
 #[derive(Clone)]
@@ -45,6 +57,8 @@ pub struct SessionActor {
     last_activity: Instant,
     /// 暂停阈值（毫秒）
     pause_ms: u64,
+    /// 边界稳态化配置（EDGE-1）
+    edge_config: crate::core::config::EdgeStabilizationConfig,
     /// 最大待处理事件数（背压控制）
     max_pending_events: usize,
     /// 当前待处理事件数（用于背压检测）
@@ -59,6 +73,7 @@ impl SessionActor {
         message_tx: MessageSender,
         initial_utterance_index: u64,
         pause_ms: u64,
+        edge_config: crate::core::config::EdgeStabilizationConfig,
     ) -> (Self, SessionActorHandle) {
         let (tx, rx) = mpsc::unbounded_channel();
         let handle = SessionActorHandle { sender: tx.clone() };
@@ -73,6 +88,7 @@ impl SessionActor {
             idle_timeout_secs: 60, // 默认 60 秒空闲超时
             last_activity: Instant::now(),
             pause_ms,
+            edge_config,
             max_pending_events: 200, // 默认最大 200 个待处理事件
             pending_events_count: 0,
         };
@@ -222,6 +238,85 @@ impl SessionActor {
             // 如果 finalize 失败，继续使用原来的 utterance_index
         }
 
+        // EDGE-5: Short-merge 检查（在添加音频块之前）
+        // 获取 session 配置以确定 audio_format 和 sample_rate
+        let session = match self.state.session_manager.get_session(&self.session_id).await {
+            Some(s) => s,
+            None => {
+                warn!(
+                    session_id = %self.session_id,
+                    "Session not found, skipping Short-merge check"
+                );
+                return Ok(());
+            }
+        };
+        
+        let audio_format = session.audio_format.clone().unwrap_or_else(|| "pcm16".to_string());
+        let sample_rate = 16000u32; // 默认采样率（Web 端使用 16kHz）
+        
+        // 计算当前音频块的时长
+        let chunk_duration_ms = calculate_audio_duration_ms(&chunk, &audio_format, sample_rate);
+        
+        // EDGE-5: Short-merge 逻辑
+        // 如果当前音频块 < threshold 且不是 is_final，标记为 pending，不 finalize
+        let short_merge_threshold_ms = self.edge_config.short_merge_threshold_ms;
+        const MAX_ACCUMULATED_DURATION_MS: u64 = 2000; // 最大累积时长 2 秒
+        
+        if chunk_duration_ms < short_merge_threshold_ms && !is_final {
+            // 短片段：累积到下一段
+            self.internal_state.pending_short_audio = true;
+            self.internal_state.accumulated_short_audio_duration_ms += chunk_duration_ms;
+            
+            debug!(
+                session_id = %self.session_id,
+                utterance_index = utterance_index,
+                chunk_duration_ms = chunk_duration_ms,
+                accumulated_duration_ms = self.internal_state.accumulated_short_audio_duration_ms,
+                threshold_ms = short_merge_threshold_ms,
+                "EDGE-5: Short audio chunk detected, merging to next segment"
+            );
+            
+            // 检查是否超过最大累积时长
+            if self.internal_state.accumulated_short_audio_duration_ms >= MAX_ACCUMULATED_DURATION_MS {
+                warn!(
+                    session_id = %self.session_id,
+                    utterance_index = utterance_index,
+                    accumulated_duration_ms = self.internal_state.accumulated_short_audio_duration_ms,
+                    max_duration_ms = MAX_ACCUMULATED_DURATION_MS,
+                    "EDGE-5: Accumulated short audio duration exceeded max, forcing finalize"
+                );
+                // 强制 finalize（即使 < threshold）
+                // 继续执行后续逻辑，添加音频块并 finalize
+            } else {
+                // 正常情况：添加音频块但不 finalize，等待下一段
+                let (_should_finalize_due_to_length, _current_size_bytes) = self.state
+                    .audio_buffer
+                    .add_chunk(&self.session_id, utterance_index, chunk)
+                    .await;
+                
+                self.internal_state.last_chunk_timestamp_ms = Some(timestamp_ms);
+                if self.internal_state.first_chunk_client_timestamp_ms.is_none() {
+                    self.internal_state.first_chunk_client_timestamp_ms = client_timestamp_ms;
+                }
+                self.internal_state.enter_collecting();
+                
+                // 不 finalize，等待下一段
+                return Ok(());
+            }
+        } else {
+            // 正常片段（>= threshold 或 is_final）：重置 Short-merge 状态
+            if self.internal_state.pending_short_audio {
+                debug!(
+                    session_id = %self.session_id,
+                    utterance_index = utterance_index,
+                    accumulated_duration_ms = self.internal_state.accumulated_short_audio_duration_ms,
+                    "EDGE-5: Normal audio chunk received, resetting Short-merge state"
+                );
+            }
+            self.internal_state.pending_short_audio = false;
+            self.internal_state.accumulated_short_audio_duration_ms = 0;
+        }
+
         // 添加音频块到缓冲区（使用正确的 utterance_index）
         let (should_finalize_due_to_length, current_size_bytes) = self.state
             .audio_buffer
@@ -317,7 +412,7 @@ impl SessionActor {
         Ok(())
     }
 
-    /// 尝试 finalize（带去重检查）
+    /// 尝试 finalize（带去重检查 + EDGE-1: 统一接口）
     async fn try_finalize(
         &mut self,
         utterance_index: u64,
@@ -341,12 +436,37 @@ impl SessionActor {
         // 进入 finalizing 状态
         self.internal_state.enter_finalizing(utterance_index);
 
-        // 执行 finalize
-        let finalized = self.do_finalize(utterance_index, reason).await?;
+        // EDGE-1: 统一 finalize 接口 - 判断 finalize 类型
+        let finalize_type = self.determine_finalize_type(reason);
+        
+        // EDGE-2/3: 应用 Hangover（延迟 finalize）
+        let hangover_ms = match finalize_type {
+            FinalizeType::Manual => self.edge_config.hangover_manual_ms,
+            FinalizeType::Auto => self.edge_config.hangover_auto_ms,
+            FinalizeType::Exception => 0, // 异常情况不延迟
+        };
+        
+        if hangover_ms > 0 {
+            debug!(
+                session_id = %self.session_id,
+                utterance_index = utterance_index,
+                reason = reason,
+                finalize_type = ?finalize_type,
+                hangover_ms = hangover_ms,
+                "Applying hangover delay before finalize"
+            );
+            sleep(Duration::from_millis(hangover_ms)).await;
+        }
+
+        // 执行 finalize（包含 Padding 处理）
+        let finalized = self.do_finalize(utterance_index, reason, finalize_type).await?;
 
         if finalized {
             // 完成 finalize，递增 index
             self.internal_state.complete_finalize();
+            // EDGE-5: 重置 Short-merge 状态
+            self.internal_state.pending_short_audio = false;
+            self.internal_state.accumulated_short_audio_duration_ms = 0;
             self.state
                 .session_manager
                 .update_session(
@@ -363,11 +483,22 @@ impl SessionActor {
         Ok(finalized)
     }
 
-    /// 执行 finalize（实际创建 job）
+    /// EDGE-1: 判断 finalize 类型（自动/手动/异常）
+    fn determine_finalize_type(&self, reason: &str) -> FinalizeType {
+        match reason {
+            "IsFinal" => FinalizeType::Manual,  // 手动截断
+            "Pause" | "Timeout" => FinalizeType::Auto,  // 自动 finalize（静音/超时）
+            "MaxLength" => FinalizeType::Exception,  // 异常保护
+            _ => FinalizeType::Auto,  // 默认按自动处理
+        }
+    }
+
+    /// 执行 finalize（实际创建 job + EDGE-4: Padding）
     async fn do_finalize(
         &self,
         utterance_index: u64,
         reason: &str,
+        finalize_type: FinalizeType,
     ) -> Result<bool, anyhow::Error> {
         // 获取会话信息
         let session = match self.state.session_manager.get_session(&self.session_id).await {
@@ -391,13 +522,17 @@ impl SessionActor {
         let audio_data = match audio_data_opt {
             Some(data) if !data.is_empty() => data,
             _ => {
-                debug!(
+                // 修复：即使音频缓冲区为空，仍然 finalize（递增 utterance_index）
+                // 这样可以避免 utterance_index 卡住，导致后续任务无法创建
+                warn!(
                     session_id = %self.session_id,
                     utterance_index = utterance_index,
                     reason = reason,
-                    "No audio buffer found or empty, skipping finalize"
+                    "Audio buffer empty, but still finalizing to increment utterance_index (prevent index stuck)"
                 );
-                return Ok(false);
+                // 返回 true，允许 finalize（递增 utterance_index）
+                // 注意：不会创建 job（因为没有音频数据），但 utterance_index 会递增
+                return Ok(true);
             }
         };
 
@@ -405,14 +540,37 @@ impl SessionActor {
         // 注意：web 端现在使用 opus 编码发送 audio_chunk，所以 session.audio_format 应该是 "opus"
         let audio_format = session.audio_format.clone().unwrap_or_else(|| "pcm16".to_string());
         
+        // EDGE-4: Padding（在音频末尾添加静音）
+        // 注意：Padding 需要在节点端处理（因为需要解码 Opus），这里只记录配置
+        // 实际 Padding 将在节点端的 task-router.ts 中实现
+        let padding_ms = match finalize_type {
+            FinalizeType::Manual => self.edge_config.padding_manual_ms,
+            FinalizeType::Auto => self.edge_config.padding_auto_ms,
+            FinalizeType::Exception => 0, // 异常情况不添加 padding
+        };
+        
         info!(
             session_id = %self.session_id,
             utterance_index = utterance_index,
             reason = reason,
+            finalize_type = ?finalize_type,
             audio_size_bytes = audio_data.len(),
             audio_format = %audio_format,
-            "Finalizing audio utterance"
+            padding_ms = padding_ms,
+            "Finalizing audio utterance (EDGE-1: unified finalize interface)"
         );
+        
+        if padding_ms > 0 {
+            debug!(
+                session_id = %self.session_id,
+                utterance_index = utterance_index,
+                padding_ms = padding_ms,
+                audio_format = %audio_format,
+                "Padding will be applied in node side (requires Opus decoding)"
+            );
+            // 注意：Padding 将在节点端实现，因为需要解码 Opus 格式
+            // 这里只记录配置，实际处理在 task-router.ts 中
+        }
 
         // 设置结果截止时间（用于抗缺口机制）
         let deadline_ms = chrono::Utc::now().timestamp_millis() + 60_000; // 60 秒后
@@ -443,6 +601,7 @@ impl SessionActor {
             Some(1000u64), // partial_update_interval_ms
             session.trace_id.clone(),
             self.internal_state.first_chunk_client_timestamp_ms,
+            Some(padding_ms), // EDGE-4: Padding 配置（传递到节点端）
         )
         .await?;
 
