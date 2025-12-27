@@ -144,6 +144,8 @@ pub(super) async fn handle_node_heartbeat(
     installed_services: Option<Vec<InstalledService>>,
     capability_by_type: Vec<CapabilityByType>,
     rerun_metrics: Option<crate::messages::common::RerunMetrics>,
+    asr_metrics: Option<crate::messages::common::ASRMetrics>,
+    processing_metrics: Option<crate::messages::common::ProcessingMetrics>,
 ) {
     let installed_services_count = installed_services.as_ref().map(|v| v.len()).unwrap_or(0);
     info!(
@@ -164,6 +166,7 @@ pub(super) async fn handle_node_heartbeat(
             installed_services,
             resource_usage.running_jobs,
             Some(capability_by_type),
+            processing_metrics.clone(),
         )
         .await;
 
@@ -192,6 +195,38 @@ pub(super) async fn handle_node_heartbeat(
             quality_improvements = metrics.quality_improvements,
             "Gate-B: Received rerun metrics from node"
         );
+    }
+
+    // OBS-1: 处理处理效率观测指标（按心跳周期，按服务ID分组）
+    if let Some(ref metrics) = processing_metrics {
+        if !metrics.service_efficiencies.is_empty() {
+            for (service_id, efficiency) in &metrics.service_efficiencies {
+                info!(
+                    node_id = %node_id,
+                    service_id = %service_id,
+                    efficiency = efficiency,
+                    "OBS-1: Received service processing efficiency from node (heartbeat cycle)"
+                );
+            }
+        } else {
+            info!(
+                node_id = %node_id,
+                "OBS-1: No processing efficiency (no tasks processed in this heartbeat cycle)"
+            );
+        }
+        // TODO: 可以将指标存储到 metrics 系统或数据库中，用于后续分析和展示
+        // 注意：调度服务器端可以对每个节点的处理效率进行平均计算
+    }
+    
+    // OBS-1: 向后兼容：处理旧的 ASR 指标（已废弃）
+    if let Some(ref metrics) = asr_metrics {
+        if let Some(efficiency) = metrics.processing_efficiency {
+            info!(
+                node_id = %node_id,
+                processing_efficiency = efficiency,
+                "OBS-1: Received ASR processing efficiency (deprecated, use processing_metrics instead)"
+            );
+        }
     }
 
     // Phase 2: Write post-heartbeat node snapshot to Redis (cross-instance visible)

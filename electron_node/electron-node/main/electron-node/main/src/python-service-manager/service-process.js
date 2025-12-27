@@ -320,16 +320,63 @@ async function stopServiceProcess(serviceName, child, port) {
         else {
             child.kill('SIGTERM');
         }
-        setTimeout(async () => {
+        // 增加超时时间到10秒，并添加更严格的进程验证
+        const timeoutId = setTimeout(async () => {
             if (child.exitCode === null && !child.killed) {
-                logger_1.default.warn({ serviceName, pid, port }, `Service did not stop within 5 seconds, forcing termination (port: ${port}, PID: ${pid})`);
-                child.kill('SIGKILL');
-                // 即使强制终止，也验证端口是否释放
-                if (port) {
-                    await (0, port_manager_1.verifyPortReleased)(port, serviceName);
+                logger_1.default.warn({ serviceName, pid, port }, `Service did not stop within 10 seconds, forcing termination (port: ${port}, PID: ${pid})`);
+                // 在 Windows 上，使用更强制的方式终止进程树
+                if (process.platform === 'win32' && pid) {
+                    try {
+                        // 使用 taskkill /T /F 强制终止进程树
+                        const killProcess = (0, child_process_1.spawn)('taskkill', ['/PID', pid.toString(), '/T', '/F'], {
+                            stdio: 'ignore',
+                            windowsHide: true,
+                        });
+                        killProcess.on('exit', async (code) => {
+                            if (code === 0) {
+                                logger_1.default.info({ serviceName, pid, port }, 'Process tree terminated successfully');
+                            }
+                            else {
+                                logger_1.default.warn({ serviceName, pid, port, code }, 'taskkill returned non-zero exit code');
+                            }
+                            // 验证端口是否释放
+                            if (port) {
+                                await (0, port_manager_1.verifyPortReleased)(port, serviceName);
+                            }
+                            resolve();
+                        });
+                        killProcess.on('error', async (error) => {
+                            logger_1.default.error({ error, serviceName, pid, port }, 'Failed to execute taskkill, using child.kill');
+                            child.kill('SIGKILL');
+                            if (port) {
+                                await (0, port_manager_1.verifyPortReleased)(port, serviceName);
+                            }
+                            resolve();
+                        });
+                    }
+                    catch (error) {
+                        logger_1.default.error({ error, serviceName, pid, port }, 'Exception during force kill');
+                        child.kill('SIGKILL');
+                        if (port) {
+                            await (0, port_manager_1.verifyPortReleased)(port, serviceName);
+                        }
+                        resolve();
+                    }
+                }
+                else {
+                    // 非 Windows 平台使用 SIGKILL
+                    child.kill('SIGKILL');
+                    if (port) {
+                        await (0, port_manager_1.verifyPortReleased)(port, serviceName);
+                    }
+                    resolve();
                 }
             }
-        }, 5000);
+        }, 10000); // 从 5 秒增加到 10 秒
+        // 如果进程正常退出，清除超时定时器
+        child.once('exit', () => {
+            clearTimeout(timeoutId);
+        });
     });
 }
 /**

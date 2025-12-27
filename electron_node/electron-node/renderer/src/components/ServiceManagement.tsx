@@ -28,6 +28,7 @@ export function ServiceManagement() {
   const [rustStatus, setRustStatus] = useState<RustServiceStatus | null>(null);
   const [pythonStatuses, setPythonStatuses] = useState<ServiceStatus[]>([]);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
+  const [processingMetrics, setProcessingMetrics] = useState<Record<string, number>>({});
 
   useEffect(() => {
     // 加载服务偏好和当前状态
@@ -52,12 +53,18 @@ export function ServiceManagement() {
 
   const updateStatuses = async () => {
     try {
-      const [rust, python] = await Promise.all([
+      const [rust, python, metrics] = await Promise.all([
         window.electronAPI.getRustServiceStatus(),
         window.electronAPI.getAllPythonServiceStatuses(),
+        window.electronAPI.getProcessingMetrics(),
       ]);
       setRustStatus(rust);
       setPythonStatuses(python);
+      setProcessingMetrics(metrics || {});
+      // 调试日志
+      if (metrics && Object.keys(metrics).length > 0) {
+        console.log('Processing metrics:', metrics);
+      }
     } catch (error) {
       console.error('获取服务状态失败:', error);
     }
@@ -138,6 +145,18 @@ export function ServiceManagement() {
       rust: '节点推理服务 (Rust)',
     };
     return map[name] || name;
+  };
+
+  // 获取服务ID（用于查找处理效率）
+  const getServiceId = (serviceName: string): string => {
+    const map: Record<string, string> = {
+      faster_whisper_vad: 'faster-whisper-vad',
+      nmt: 'nmt-m2m100',
+      tts: 'piper-tts',
+      yourtts: 'your-tts',
+      speaker_embedding: 'speaker-embedding',
+    };
+    return map[serviceName] || serviceName;
   };
 
   const formatGpuUsageMs = (ms: number): string => {
@@ -221,6 +240,11 @@ export function ServiceManagement() {
                     {formatGpuUsageMs(rustStatus.gpuUsageMs || 0)}
                   </span>
                 </div>
+                {(() => {
+                  // Rust 服务不直接处理任务，不显示处理效率
+                  // 处理效率由各个 Python 服务分别显示
+                  return null;
+                })()}
               </div>
             )}
             {rustStatus?.lastError && (
@@ -276,6 +300,59 @@ export function ServiceManagement() {
                         {formatGpuUsageMs(status.gpuUsageMs || 0)}
                       </span>
                     </div>
+                    {(() => {
+                      const serviceId = getServiceId(serviceName);
+                      const efficiency = processingMetrics[serviceId];
+                      
+                      // 调试日志
+                      if (serviceName === 'faster_whisper_vad') {
+                        console.log(`[${serviceName}] serviceId: ${serviceId}, efficiency:`, efficiency, 'all metrics:', processingMetrics);
+                      }
+                      
+                      if (efficiency !== undefined && efficiency !== null && !isNaN(efficiency)) {
+                        // 根据服务类型决定显示格式
+                        if (serviceName === 'faster_whisper_vad') {
+                          // ASR 服务：显示为倍数
+                          return (
+                            <div className="lsm-detail-row">
+                              <span className="lsm-detail-label">处理效率:</span>
+                              <span className="lsm-detail-value">
+                                {efficiency.toFixed(2)}x
+                              </span>
+                            </div>
+                          );
+                        } else if (serviceName === 'nmt') {
+                          // NMT 服务：显示为字符/秒
+                          return (
+                            <div className="lsm-detail-row">
+                              <span className="lsm-detail-label">处理效率:</span>
+                              <span className="lsm-detail-value">
+                                {efficiency.toFixed(2)} 字符/秒
+                              </span>
+                            </div>
+                          );
+                        } else if (serviceName === 'tts' || serviceName === 'yourtts') {
+                          // TTS 服务：显示为倍数
+                          return (
+                            <div className="lsm-detail-row">
+                              <span className="lsm-detail-label">处理效率:</span>
+                              <span className="lsm-detail-value">
+                                {efficiency.toFixed(2)}x
+                              </span>
+                            </div>
+                          );
+                        }
+                      }
+                      // 如果没有数据，显示占位符
+                      return (
+                        <div className="lsm-detail-row">
+                          <span className="lsm-detail-label">处理效率:</span>
+                          <span className="lsm-detail-value" style={{ color: '#999' }}>
+                            暂无数据
+                          </span>
+                        </div>
+                      );
+                    })()}
                   </div>
                 )}
                 {status?.lastError && (

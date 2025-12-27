@@ -31,6 +31,9 @@ pub struct Node {
     pub last_heartbeat: chrono::DateTime<chrono::Utc>,
     /// 节点注册时间（用于 warmup 超时检查）
     pub registered_at: chrono::DateTime<chrono::Utc>,
+    /// OBS-1: 最近心跳周期的处理效率指标（按服务ID分组）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub processing_metrics: Option<crate::messages::common::ProcessingMetrics>,
 }
 
 /// 调度过滤排除原因

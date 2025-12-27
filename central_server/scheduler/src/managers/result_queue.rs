@@ -338,9 +338,41 @@ impl ResultQueueManager {
         }
     }
 
-    pub async fn remove_session(&self, session_id: &str) {
+    /// 移除会话（在移除前 flush 所有待发送的结果）
+    /// 返回所有待发送的结果，调用者应该发送这些结果
+    pub async fn remove_session(&self, session_id: &str) -> Vec<SessionMessage> {
+        // 先获取所有待发送的结果（flush）
+        let pending_results = self.get_all_pending_results(session_id).await;
+        
+        // 然后删除会话
         let mut queues = self.queues.write().await;
         queues.remove(session_id);
+        
+        // 返回待发送的结果（调用者应该发送这些结果）
+        pending_results
+    }
+    
+    /// 获取所有待发送的结果（用于 session 关闭时 flush）
+    /// 返回所有 pending 的结果，不检查 expected 或补位状态
+    pub async fn get_all_pending_results(&self, session_id: &str) -> Vec<SessionMessage> {
+        let mut queues = self.queues.write().await;
+        if let Some(state) = queues.get_mut(session_id) {
+            // 获取所有 pending 的结果，按 index 排序
+            let mut results: Vec<_> = state.pending.values().cloned().collect();
+            // 按 utterance_index 排序（虽然 BTreeMap 已经排序，但为了安全起见）
+            results.sort_by_key(|msg| {
+                if let SessionMessage::TranslationResult { utterance_index, .. } = msg {
+                    *utterance_index
+                } else if let SessionMessage::MissingResult { utterance_index, .. } = msg {
+                    *utterance_index
+                } else {
+                    0
+                }
+            });
+            results
+        } else {
+            Vec::new()
+        }
     }
 }
 

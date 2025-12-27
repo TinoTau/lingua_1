@@ -1,6 +1,6 @@
 use crate::core::AppState;
 use crate::messages::{ErrorCode, UiEventStatus, UiEventType};
-use crate::websocket::{create_job_assign_message, send_error, send_ui_event};
+use crate::websocket::{create_job_assign_message, send_ui_event};
 use crate::websocket::job_creator::create_translation_jobs;
 use axum::extract::ws::Message;
 use tokio::sync::mpsc;
@@ -139,21 +139,14 @@ pub(super) async fn handle_utterance(
                 }
             }
         } else {
-            warn!("Job {} has no available nodes", job.job_id);
-            send_error(tx, ErrorCode::NodeUnavailable, "No available nodes").await;
-            // Send ERROR event
-            send_ui_event(
-                tx,
-                &trace_id,
-                &sess_id,
-                &job.job_id,
-                utterance_index,
-                UiEventType::Error,
-                None,
-                UiEventStatus::Error,
-                Some(ErrorCode::NoAvailableNode),
-            )
-            .await;
+            // 节点不可用是内部调度问题，只记录日志，不发送错误给Web端
+            warn!(
+                job_id = %job.job_id,
+                session_id = %sess_id,
+                utterance_index = utterance_index,
+                "Job has no available nodes (internal scheduling issue, not sent to client)"
+            );
+            // 不发送错误给Web端，让任务在超时后自然失败
         }
     }
 

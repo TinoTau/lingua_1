@@ -126,6 +126,7 @@ fn test_job_assign_with_streaming_asr() {
     use lingua_scheduler::messages::PipelineConfig;
 
     let message = NodeMessage::JobAssign {
+        padding_ms: None,
         job_id: "job-123".to_string(),
         attempt_id: 1,
         session_id: "session-789".to_string(),
@@ -184,6 +185,7 @@ fn test_job_assign_without_streaming_asr() {
     use lingua_scheduler::messages::PipelineConfig;
 
     let message = NodeMessage::JobAssign {
+        padding_ms: None,
         job_id: "job-123".to_string(),
         attempt_id: 1,
         session_id: "session-789".to_string(),

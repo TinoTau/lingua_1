@@ -2,7 +2,7 @@
 
 use crate::core::AppState;
 use crate::messages::{ErrorCode, UiEventStatus, UiEventType};
-use crate::websocket::{create_job_assign_message, send_error, send_ui_event};
+use crate::websocket::{create_job_assign_message, send_ui_event};
 use crate::websocket::job_creator::create_translation_jobs;
 use super::events::{SessionEvent, MessageSender};
 use super::state::{SessionActorInternalState, SessionActorState};
@@ -224,32 +224,18 @@ impl SessionActor {
         timestamp_ms: i64,
         client_timestamp_ms: Option<i64>,
     ) -> Result<(), anyhow::Error> {
-        let mut utterance_index = self.internal_state.current_utterance_index;
+        let utterance_index = self.internal_state.current_utterance_index;
 
-        // 检查暂停是否超过阈值
-        let pause_exceeded = self.state
-            .audio_buffer
-            .record_chunk_and_check_pause(&self.session_id, timestamp_ms, self.pause_ms)
-            .await;
-
-        if pause_exceeded {
-            // 先 finalize 当前 utterance（如果成功，这会 increment utterance_index）
-            let finalized = self.try_finalize(utterance_index, "Pause").await?;
-            if finalized {
-                // 更新 utterance_index 为新的值（因为 finalize 成功会 increment）
-                utterance_index = self.internal_state.current_utterance_index;
-            }
-            // 如果 finalize 失败，继续使用原来的 utterance_index
-        }
-
-        // EDGE-5: Short-merge 检查（在添加音频块之前）
+        // Fix-A (RF-1): 重构 chunk 处理顺序 - 先 add_chunk，后判断 finalize
+        // 原则：任何到达的音频 chunk，必须先进入当前 utterance 的缓冲，然后才允许触发 finalize
+        
         // 获取 session 配置以确定 audio_format 和 sample_rate
         let session = match self.state.session_manager.get_session(&self.session_id).await {
             Some(s) => s,
             None => {
                 warn!(
                     session_id = %self.session_id,
-                    "Session not found, skipping Short-merge check"
+                    "Session not found, skipping audio chunk"
                 );
                 return Ok(());
             }
@@ -261,10 +247,39 @@ impl SessionActor {
         // 计算当前音频块的时长
         let chunk_duration_ms = calculate_audio_duration_ms(&chunk, &audio_format, sample_rate);
         
+        // 步骤1：先添加当前音频块到缓冲区（使用当前的 utterance_index）
+        let (should_finalize_due_to_length, current_size_bytes) = self.state
+            .audio_buffer
+            .add_chunk(&self.session_id, utterance_index, chunk)
+            .await;
+
+        // 更新状态
+        self.internal_state.last_chunk_timestamp_ms = Some(timestamp_ms);
+        if self.internal_state.first_chunk_client_timestamp_ms.is_none() {
+            self.internal_state.first_chunk_client_timestamp_ms = client_timestamp_ms;
+        }
+        self.internal_state.enter_collecting();
+        
         // 累积音频时长（用于最大时长限制检查）
         self.internal_state.accumulated_audio_duration_ms += chunk_duration_ms;
         
-        // 检查是否超过最大时长限制
+        // 步骤2：检查暂停是否超过阈值（在添加音频块之后）
+        let pause_exceeded = self.state
+            .audio_buffer
+            .record_chunk_and_check_pause(&self.session_id, timestamp_ms, self.pause_ms)
+            .await;
+
+        // 步骤3：检查是否需要 finalize（在添加音频块之后）
+        let mut should_finalize = false;
+        let mut finalize_reason = "";
+        
+        // 检查 pause_exceeded
+        if pause_exceeded {
+            should_finalize = true;
+            finalize_reason = "Pause";
+        }
+        
+        // 检查最大时长限制
         if self.max_duration_ms > 0 && self.internal_state.accumulated_audio_duration_ms >= self.max_duration_ms {
             warn!(
                 session_id = %self.session_id,
@@ -273,113 +288,18 @@ impl SessionActor {
                 max_duration_ms = self.max_duration_ms,
                 "Audio duration exceeded max limit, auto-finalizing"
             );
-            let finalized = self.try_finalize(utterance_index, "MaxDuration").await?;
-            if finalized {
-                // finalize 成功，新的音频块应该使用新的 utterance_index
-                utterance_index = self.internal_state.current_utterance_index;
-            }
+            should_finalize = true;
+            finalize_reason = "MaxDuration";
         }
         
-        // EDGE-5: Short-merge 逻辑
-        // 如果当前音频块 < threshold 且不是 is_final，标记为 pending，不 finalize
-        let short_merge_threshold_ms = self.edge_config.short_merge_threshold_ms;
-        const MAX_ACCUMULATED_DURATION_MS: u64 = 2000; // 最大累积时长 2 秒
-        
-        if chunk_duration_ms < short_merge_threshold_ms && !is_final {
-            // 短片段：累积到下一段
-            self.internal_state.pending_short_audio = true;
-            self.internal_state.accumulated_short_audio_duration_ms += chunk_duration_ms;
-            
-            debug!(
-                session_id = %self.session_id,
-                utterance_index = utterance_index,
-                chunk_duration_ms = chunk_duration_ms,
-                accumulated_duration_ms = self.internal_state.accumulated_short_audio_duration_ms,
-                threshold_ms = short_merge_threshold_ms,
-                "EDGE-5: Short audio chunk detected, merging to next segment"
-            );
-            
-            // 检查是否超过最大累积时长
-            if self.internal_state.accumulated_short_audio_duration_ms >= MAX_ACCUMULATED_DURATION_MS {
-                warn!(
-                    session_id = %self.session_id,
-                    utterance_index = utterance_index,
-                    accumulated_duration_ms = self.internal_state.accumulated_short_audio_duration_ms,
-                    max_duration_ms = MAX_ACCUMULATED_DURATION_MS,
-                    "EDGE-5: Accumulated short audio duration exceeded max, forcing finalize"
-                );
-                // 强制 finalize（即使 < threshold）
-                // 继续执行后续逻辑，添加音频块并 finalize
-            } else {
-                // 正常情况：添加音频块但不 finalize，等待下一段
-                // 注意：短片段也需要累积时长，用于最大时长限制检查
-                let (_should_finalize_due_to_length, _current_size_bytes) = self.state
-                    .audio_buffer
-                    .add_chunk(&self.session_id, utterance_index, chunk)
-                    .await;
-                
-                self.internal_state.last_chunk_timestamp_ms = Some(timestamp_ms);
-                if self.internal_state.first_chunk_client_timestamp_ms.is_none() {
-                    self.internal_state.first_chunk_client_timestamp_ms = client_timestamp_ms;
-                }
-                self.internal_state.enter_collecting();
-                
-                // 检查是否超过最大时长限制（短片段也需要检查）
-                if self.max_duration_ms > 0 && self.internal_state.accumulated_audio_duration_ms >= self.max_duration_ms {
-                    warn!(
-                        session_id = %self.session_id,
-                        utterance_index = utterance_index,
-                        accumulated_duration_ms = self.internal_state.accumulated_audio_duration_ms,
-                        max_duration_ms = self.max_duration_ms,
-                        "Audio duration exceeded max limit (short-merge path), auto-finalizing"
-                    );
-                    let finalized = self.try_finalize(utterance_index, "MaxDuration").await?;
-                    if finalized {
-                        // finalize 成功，新的音频块应该使用新的 utterance_index
-                        // 注意：这里不需要手动更新 utterance_index，因为 try_finalize 成功后会自动 increment
-                    }
-                } else if self.pause_ms > 0 {
-                    // 启动/重置超时计时器
-                    self.reset_timers().await?;
-                }
-                
-                // 不 finalize，等待下一段
-                return Ok(());
-            }
-        } else {
-            // 正常片段（>= threshold 或 is_final）：重置 Short-merge 状态
-            if self.internal_state.pending_short_audio {
-                debug!(
-                    session_id = %self.session_id,
-                    utterance_index = utterance_index,
-                    accumulated_duration_ms = self.internal_state.accumulated_short_audio_duration_ms,
-                    "EDGE-5: Normal audio chunk received, resetting Short-merge state"
-                );
-            }
-            self.internal_state.pending_short_audio = false;
-            self.internal_state.accumulated_short_audio_duration_ms = 0;
-        }
-
-        // 添加音频块到缓冲区（使用正确的 utterance_index）
-        let (should_finalize_due_to_length, current_size_bytes) = self.state
-            .audio_buffer
-            .add_chunk(&self.session_id, utterance_index, chunk)
-            .await;
-
-        self.internal_state.last_chunk_timestamp_ms = Some(timestamp_ms);
-        // 如果是第一个音频块，记录客户端时间戳
-        if self.internal_state.first_chunk_client_timestamp_ms.is_none() {
-            self.internal_state.first_chunk_client_timestamp_ms = client_timestamp_ms;
-        }
-        self.internal_state.enter_collecting();
-
-        // 如果是最终块，立即 finalize
+        // 检查 is_final
         if is_final {
-            self.try_finalize(utterance_index, "IsFinal").await?;
-        } else if should_finalize_due_to_length {
-            // 异常保护：音频长度超过异常保护限制（500KB），自动触发 finalize
-            // 正常情况下不应该触发，因为 Web 端 VAD 会过滤静音，pause_ms 超时机制会先触发
-            // 这仅作为异常保护，防止极端情况下（如 VAD 失效、超时机制失效）音频无限累积导致 GPU 内存溢出
+            should_finalize = true;
+            finalize_reason = "IsFinal";
+        }
+        
+        // 检查异常保护限制
+        if should_finalize_due_to_length {
             warn!(
                 session_id = %self.session_id,
                 utterance_index = utterance_index,
@@ -387,13 +307,19 @@ impl SessionActor {
                 pause_ms = self.pause_ms,
                 "Audio buffer exceeded异常保护限制 (500KB), auto-finalizing. This should not happen normally - check VAD and timeout mechanism"
             );
-            let finalized = self.try_finalize(utterance_index, "MaxLength").await?;
+            should_finalize = true;
+            finalize_reason = "MaxLength";
+        }
+        
+        // 如果需要 finalize，执行 finalize（此时音频块已经在缓冲区中）
+        if should_finalize {
+            let finalized = self.try_finalize(utterance_index, finalize_reason).await?;
             if finalized {
-                // finalize 成功，新的音频块应该使用新的 utterance_index
-                // 注意：这里不需要手动更新 utterance_index，因为 try_finalize 成功后会自动 increment
+                // finalize 成功，utterance_index 已经在 try_finalize 中递增
+                // 这里不需要再次更新，因为下一个 chunk 会使用新的 utterance_index
             }
         } else if self.pause_ms > 0 {
-            // 启动/重置超时计时器
+            // 不需要 finalize，启动/重置超时计时器
             self.reset_timers().await?;
         }
 
@@ -425,16 +351,28 @@ impl SessionActor {
         }
 
         // 检查时间戳是否匹配（防止旧 timer 触发）
-        if let Some(last_ts) = self.internal_state.last_chunk_timestamp_ms {
+        // 注意：这里应该检查 audio_buffer 的时间戳，而不是 internal_state 的时间戳
+        // 因为 audio_buffer 的时间戳是实际最后收到音频块的时间戳
+        let audio_buffer_last_ts = self.state.audio_buffer.get_last_chunk_at_ms(&self.session_id).await;
+        if let Some(last_ts) = audio_buffer_last_ts {
             if timestamp_ms != last_ts {
                 debug!(
                     session_id = %self.session_id,
                     timeout_timestamp = timestamp_ms,
-                    last_chunk_timestamp = last_ts,
-                    "Timeout fired with mismatched timestamp, ignoring"
+                    audio_buffer_last_timestamp = last_ts,
+                    "Timeout fired with mismatched timestamp (new chunk arrived), ignoring"
                 );
                 return Ok(());
             }
+        } else {
+            // audio_buffer 中没有时间戳，说明可能已经 finalize 了，或者 session 已关闭
+            // 这种情况下，不应该触发 finalize
+            debug!(
+                session_id = %self.session_id,
+                timeout_timestamp = timestamp_ms,
+                "Timeout fired but no audio buffer timestamp found, ignoring (may be already finalized)"
+            );
+            return Ok(());
         }
 
         let utterance_index = self.internal_state.current_utterance_index;
@@ -450,7 +388,29 @@ impl SessionActor {
     }
 
     /// 处理关闭会话
+    /// Fix-D (RF-4): Session 结束时强制 flush_finalize
     async fn handle_close(&mut self) -> Result<(), anyhow::Error> {
+        // 在关闭前，强制 finalize 当前 utterance（如果有数据）
+        let utterance_index = self.internal_state.current_utterance_index;
+        
+        // 直接调用 try_finalize，它会检查缓冲区是否有数据
+        // 如果有数据，会创建 job；如果没有数据，会返回 false（不递增 index）
+        let finalized = self.try_finalize(utterance_index, "SessionClose").await?;
+        
+        if finalized {
+            info!(
+                session_id = %self.session_id,
+                utterance_index = utterance_index,
+                "Session closing: successfully finalized remaining audio data"
+            );
+        } else {
+            debug!(
+                session_id = %self.session_id,
+                utterance_index = utterance_index,
+                "Session closing: no audio data to finalize"
+            );
+        }
+        
         self.internal_state.state = SessionActorState::Closed;
         Ok(())
     }
@@ -539,6 +499,7 @@ impl SessionActor {
     }
 
     /// 执行 finalize（实际创建 job + EDGE-4: Padding）
+    /// Fix-C (RF-3): finalize 时合并 short pending
     async fn do_finalize(
         &self,
         utterance_index: u64,
@@ -557,7 +518,12 @@ impl SessionActor {
             }
         };
 
-        // 获取音频数据
+        // Fix-C (RF-3): 如果存在 pending short audio，确保它们被包含在 finalize 中
+        // 注意：由于我们已经重构了处理顺序（Fix-A），音频块在 finalize 之前已经被添加到缓冲区
+        // 所以这里只需要确保缓冲区中的数据被正确取出即可
+        // 如果将来需要更复杂的 short-merge 逻辑，可以在这里添加
+
+        // 获取音频数据（Fix-E: take_combined 已经是原子的，获取并清空）
         let audio_data_opt = self
             .state
             .audio_buffer
@@ -567,17 +533,20 @@ impl SessionActor {
         let audio_data = match audio_data_opt {
             Some(data) if !data.is_empty() => data,
             _ => {
-                // 修复：即使音频缓冲区为空，仍然 finalize（递增 utterance_index）
-                // 这样可以避免 utterance_index 卡住，导致后续任务无法创建
+                // 修复：如果音频缓冲区为空，不应该 finalize（不递增 utterance_index）
+                // 这样可以避免 utterance_index 跳过，导致音频块丢失
+                // 如果确实需要 finalize（例如 pause 超时），应该在添加音频块后再 finalize
                 warn!(
                     session_id = %self.session_id,
                     utterance_index = utterance_index,
                     reason = reason,
-                    "Audio buffer empty, but still finalizing to increment utterance_index (prevent index stuck)"
+                    "Audio buffer empty, skipping finalize to prevent utterance_index skip (audio chunks may be lost)"
                 );
-                // 返回 true，允许 finalize（递增 utterance_index）
-                // 注意：不会创建 job（因为没有音频数据），但 utterance_index 会递增
-                return Ok(true);
+                // RF-6: 记录空缓冲区 finalize 尝试（应该为 0，表示修复生效）
+                crate::metrics::on_empty_finalize();
+                // 返回 false，不允许 finalize（不递增 utterance_index）
+                // 这样可以确保后续的音频块仍然使用当前的 utterance_index
+                return Ok(false);
             }
         };
 
@@ -720,24 +689,14 @@ impl SessionActor {
                     }
                 }
             } else {
+                // 节点不可用是内部调度问题，只记录日志，不发送错误给Web端
                 warn!(
                     session_id = %self.session_id,
                     job_id = %job.job_id,
-                    "Job has no available nodes"
+                    utterance_index = utterance_index,
+                    "Job has no available nodes (internal scheduling issue, not sent to client)"
                 );
-                send_error(&self.message_tx, ErrorCode::NodeUnavailable, "No available nodes").await;
-                send_ui_event(
-                    &self.message_tx,
-                    &job.trace_id,
-                    &self.session_id,
-                    &job.job_id,
-                    utterance_index,
-                    UiEventType::Error,
-                    None,
-                    UiEventStatus::Error,
-                    Some(ErrorCode::NoAvailableNode),
-                )
-                .await;
+                // 不发送错误给Web端，让任务在超时后自然失败
             }
         }
 

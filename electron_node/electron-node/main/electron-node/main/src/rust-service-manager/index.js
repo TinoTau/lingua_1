@@ -219,13 +219,9 @@ class RustServiceManager {
     getStatus() {
         // 更新统计信息
         this.status.taskCount = this.taskCount;
-        // 只有在有任务时才返回GPU使用时间，否则返回0
-        if (this.taskCount > 0) {
-            this.status.gpuUsageMs = this.gpuTracker.getGpuUsageMs();
-        }
-        else {
-            this.status.gpuUsageMs = 0;
-        }
+        // 获取GPU使用时间（无论是否有任务，都返回累计值）
+        // 注意：如果跟踪器未启动，getGpuUsageMs() 会返回 0
+        this.status.gpuUsageMs = this.gpuTracker.getGpuUsageMs();
         return { ...this.status };
     }
     /**

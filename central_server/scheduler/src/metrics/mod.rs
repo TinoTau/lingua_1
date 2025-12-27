@@ -11,5 +11,6 @@ pub use metrics::{
     on_model_na_rate_limited, on_model_na_rate_limited_detail, on_slow_lock_wait, on_slow_path,
     on_web_task_finalized_by_pause, on_web_task_finalized_by_send,
     on_session_actor_backlog, on_duplicate_finalize_suppressed, on_duplicate_job_blocked, on_result_gap_timeout,
+    on_empty_finalize,
 };
 

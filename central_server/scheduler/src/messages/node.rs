@@ -1,7 +1,7 @@
 // 节点 ↔ 调度服务器消息
 
 use serde::{Deserialize, Serialize};
-use super::common::{FeatureFlags, PipelineConfig, InstalledModel, InstalledService, CapabilityByType, ResourceUsage, ExtraResult, HardwareInfo, RerunMetrics};
+use super::common::{FeatureFlags, PipelineConfig, InstalledModel, InstalledService, CapabilityByType, ResourceUsage, ExtraResult, HardwareInfo, RerunMetrics, ASRMetrics, ProcessingMetrics};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type")]
@@ -57,6 +57,12 @@ pub enum NodeMessage {
         /// Gate-B: Rerun 指标（可选）
         #[serde(skip_serializing_if = "Option::is_none")]
         rerun_metrics: Option<RerunMetrics>,
+        /// OBS-1: ASR 观测指标（可选，向后兼容，已废弃）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        asr_metrics: Option<ASRMetrics>,
+        /// OBS-1: 处理效率观测指标（按心跳周期统计，分别记录 ASR、NMT、TTS）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        processing_metrics: Option<ProcessingMetrics>,
     },
     #[serde(rename = "job_assign")]
     JobAssign {

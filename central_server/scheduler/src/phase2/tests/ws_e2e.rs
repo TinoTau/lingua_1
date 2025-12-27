@@ -112,10 +112,15 @@
                         extra: None,
                         processing_time_ms: Some(1),
                         error: None,
-                        trace_id,
+                        trace_id: trace_id.clone(),
                         group_id: None,
                         part_index: None,
                         node_completed_at_ms: None,
+                        asr_quality_level: None,
+                        reason_codes: None,
+                        quality_score: None,
+                        rerun_count: None,
+                        segments_meta: None,
                     };
                     let _ = node_tx2.send(serde_json::to_string(&ack).unwrap());
                     let _ = node_tx2.send(serde_json::to_string(&started).unwrap());

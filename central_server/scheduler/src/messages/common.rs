@@ -17,6 +17,32 @@ pub struct RerunMetrics {
     pub quality_improvements: u64,
 }
 
+/// OBS-1: ASR 观测指标（按心跳周期统计，向后兼容，已废弃）
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ASRMetrics {
+    /// @deprecated 使用 ProcessingMetrics.asr_efficiency 代替
+    #[serde(rename = "processingEfficiency")]
+    pub processing_efficiency: Option<f64>,
+}
+
+/// OBS-1: 处理效率观测指标（按心跳周期统计，按服务ID分组）
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProcessingMetrics {
+    /// 每个服务ID的处理效率
+    /// key: 服务ID（如 "faster-whisper-vad", "nmt-m2m100", "piper-tts", "your-tts" 等）
+    /// value: 该服务在心跳周期内的平均处理效率
+    /// 
+    /// 处理效率计算方式：
+    /// - ASR服务：处理效率 = 原音频时长(ms) / 处理时间(ms)
+    /// - NMT服务：处理效率 = 文本长度(字符数) / 处理时间(ms) * 1000 (字符/秒)
+    /// - TTS服务：处理效率 = 生成音频时长(ms) / 处理时间(ms)
+    /// 
+    /// 值越大表示处理越快
+    /// 如果心跳周期内某个服务没有任务，则该服务ID不会出现在此对象中
+    #[serde(rename = "serviceEfficiencies")]
+    pub service_efficiencies: std::collections::HashMap<String, f64>,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FeatureFlags {
     #[serde(skip_serializing_if = "Option::is_none")]

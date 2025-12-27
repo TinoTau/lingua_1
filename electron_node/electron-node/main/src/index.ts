@@ -278,7 +278,7 @@ app.whenReady().then(async () => {
     // 注册所有 IPC 处理器
     registerModelHandlers(modelManager);
     registerServiceHandlers(serviceRegistryManager, servicePackageManager, rustServiceManager, pythonServiceManager);
-    registerRuntimeHandlers(nodeAgent, modelManager, rustServiceManager, pythonServiceManager, serviceRegistryManager);
+    registerRuntimeHandlers(nodeAgent, modelManager, inferenceService, rustServiceManager, pythonServiceManager, serviceRegistryManager);
 
     // 注册系统资源 IPC 处理器
     ipcMain.handle('get-system-resources', async () => {

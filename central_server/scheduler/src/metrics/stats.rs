@@ -77,6 +77,20 @@ pub struct NodePowerDetail {
     pub gpu_power: f64,
     /// 内存可用算力（GB * 可用百分比，单位：GB）
     pub memory_power: f64,
+    /// OBS-1: 按服务ID分组的处理效率（最近心跳周期的平均值）
+    /// key: 服务ID（如 "faster-whisper-vad", "nmt-m2m100", "piper-tts", "your-tts" 等）
+    /// value: 该服务的处理效率
+    #[serde(skip_serializing_if = "std::collections::HashMap::is_empty")]
+    pub service_efficiencies: std::collections::HashMap<String, f64>,
+    /// OBS-1: ASR 处理效率（向后兼容，从 service_efficiencies 中提取）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub asr_efficiency: Option<f64>,
+    /// OBS-1: NMT 处理效率（向后兼容，从 service_efficiencies 中提取）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub nmt_efficiency: Option<f64>,
+    /// OBS-1: TTS 处理效率（向后兼容，从 service_efficiencies 中提取）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tts_efficiency: Option<f64>,
 }
 
 impl DashboardStats {
@@ -302,12 +316,35 @@ impl DashboardStats {
             let memory_available = (MEMORY_THRESHOLD - node.memory_usage).max(0.0);
             let memory_power = memory_available as f64 * node.hardware.memory_gb as f64 / 100.0;
 
+            // 获取处理效率指标（按服务ID分组）
+            let mut service_efficiencies: std::collections::HashMap<String, f64> = std::collections::HashMap::new();
+            let mut asr_efficiency: Option<f64> = None;
+            let mut nmt_efficiency: Option<f64> = None;
+            let mut tts_efficiency: Option<f64> = None;
+            
+            if let Some(ref metrics) = node.processing_metrics {
+                // 复制所有服务的效率
+                service_efficiencies = metrics.service_efficiencies.clone();
+                
+                // 向后兼容：提取常见服务的效率
+                asr_efficiency = metrics.service_efficiencies.get("faster-whisper-vad").copied();
+                nmt_efficiency = metrics.service_efficiencies.get("nmt-m2m100").copied();
+                // TTS 可能有多个服务（piper-tts, your-tts），优先显示 piper-tts
+                tts_efficiency = metrics.service_efficiencies.get("piper-tts")
+                    .or_else(|| metrics.service_efficiencies.get("your-tts"))
+                    .copied();
+            }
+
             node_power_details.push(NodePowerDetail {
                 node_id: node.node_id.clone(),
                 node_name: node.name.clone(),
                 cpu_power,
                 gpu_power,
                 memory_power,
+                service_efficiencies,
+                asr_efficiency,
+                nmt_efficiency,
+                tts_efficiency,
             });
 
             total_cpu_power += cpu_power;

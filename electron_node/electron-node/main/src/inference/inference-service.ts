@@ -91,6 +91,50 @@ export class InferenceService {
     };
   }
 
+  /**
+   * OBS-1: 获取 ASR 观测指标（用于上报）
+   * 返回当前心跳周期内的处理效率
+   */
+  getASRMetrics() {
+    return this.pipelineOrchestrator.getTaskRouter()?.getASRMetrics() || {
+      processingEfficiency: null,
+    };
+  }
+
+  /**
+   * OBS-1: 获取处理效率指标（按服务ID分组）
+   * @returns Record<serviceId, efficiency>
+   */
+  getProcessingMetrics(): Record<string, number> {
+    return this.pipelineOrchestrator.getTaskRouter()?.getProcessingMetrics() || {};
+  }
+
+  /**
+   * OBS-1: 获取指定服务ID的处理效率
+   * @param serviceId 服务ID
+   * @returns 处理效率，如果该服务在心跳周期内没有任务则为 null
+   */
+  getServiceEfficiency(serviceId: string): number | null {
+    return this.pipelineOrchestrator.getTaskRouter()?.getServiceEfficiency(serviceId) || null;
+  }
+
+  /**
+   * OBS-1: 重置当前心跳周期的处理效率指标（所有服务）
+   * 在心跳发送后调用，清空当前周期的数据
+   * @deprecated 使用 resetProcessingMetrics() 代替，但保留此方法以保持向后兼容
+   */
+  resetASRMetrics(): void {
+    this.resetProcessingMetrics();
+  }
+
+  /**
+   * OBS-1: 重置当前心跳周期的处理效率指标（所有服务）
+   * 在心跳发送后调用，清空当前周期的数据
+   */
+  resetProcessingMetrics(): void {
+    this.pipelineOrchestrator.getTaskRouter()?.resetCycleMetrics();
+  }
+
   async processJob(job: JobAssignMessage, partialCallback?: PartialResultCallback): Promise<JobResult> {
     const wasFirstJob = this.currentJobs.size === 0;
     this.currentJobs.add(job.job_id);

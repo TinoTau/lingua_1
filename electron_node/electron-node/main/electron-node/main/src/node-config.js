@@ -63,6 +63,14 @@ const DEFAULT_CONFIG = {
         log_prob_threshold: -1.0, // 默认 -1.0
         no_speech_threshold: 0.6, // 默认 0.6
     },
+    metrics: {
+        enabled: true, // 默认启用指标收集（向后兼容）
+        metrics: {
+            rerun: true, // 默认启用 Rerun 指标
+            asr: true, // 默认启用 ASR 指标
+            // 未来扩展：nmt, tts 等
+        },
+    },
 };
 function getConfigPath() {
     const userData = electron_1.app.getPath('userData');
@@ -94,6 +102,15 @@ function loadNodeConfig() {
             asr: {
                 ...DEFAULT_CONFIG.asr,
                 ...(parsed.asr || {}),
+            },
+            metrics: {
+                ...DEFAULT_CONFIG.metrics,
+                ...(parsed.metrics || {}),
+                // 深度合并 metrics.metrics 对象
+                metrics: {
+                    ...DEFAULT_CONFIG.metrics?.metrics,
+                    ...(parsed.metrics?.metrics || {}),
+                },
             },
         };
     }
@@ -132,6 +149,15 @@ async function loadNodeConfigAsync() {
             asr: {
                 ...DEFAULT_CONFIG.asr,
                 ...(parsed.asr || {}),
+            },
+            metrics: {
+                ...DEFAULT_CONFIG.metrics,
+                ...(parsed.metrics || {}),
+                // 深度合并 metrics.metrics 对象
+                metrics: {
+                    ...DEFAULT_CONFIG.metrics?.metrics,
+                    ...(parsed.metrics?.metrics || {}),
+                },
             },
         };
     }

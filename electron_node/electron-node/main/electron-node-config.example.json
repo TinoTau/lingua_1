@@ -3,7 +3,9 @@
     "rustEnabled": true,
     "nmtEnabled": true,
     "ttsEnabled": true,
-    "yourttsEnabled": false
+    "yourttsEnabled": false,
+    "fasterWhisperVadEnabled": true,
+    "speakerEmbeddingEnabled": false
   },
   "scheduler": {
     "url": "ws://scheduler.example.com:5010/ws/node"
@@ -18,6 +20,13 @@
     "compression_ratio_threshold": 2.4,
     "log_prob_threshold": -1.0,
     "no_speech_threshold": 0.6
+  },
+  "metrics": {
+    "enabled": true,
+    "metrics": {
+      "rerun": true,
+      "asr": true
+    }
   }
 }
 

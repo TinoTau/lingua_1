@@ -22,6 +22,9 @@ pub struct Metrics {
     pub duplicate_finalize_suppressed_total: AtomicU64, // 被抑制的重复 finalize 次数
     pub duplicate_job_blocked_total: AtomicU64, // 被阻止的重复 job 创建次数
     pub result_gap_timeout_total: AtomicU64, // 结果队列超时次数
+    // RF-6: 音频块丢失修复相关指标
+    pub empty_finalize_total: AtomicU64, // 空缓冲区 finalize 尝试次数（应该为 0，表示修复生效）
+    pub index_gap_total: AtomicU64, // utterance_index 不连续次数（应该为 0，表示修复生效）
 
     pub model_na_received_total: AtomicU64,
     pub model_na_rate_limited_total: AtomicU64,
@@ -148,6 +151,9 @@ pub struct WebTaskSegmentationMetrics {
     pub finalized_by_send_total: u64,
     pub finalized_by_pause_total: u64,
     pub pause_ms: u64,
+    // RF-6: 音频块丢失修复相关指标
+    pub empty_finalize_total: u64, // 空缓冲区 finalize 尝试次数（应该为 0，表示修复生效）
+    pub index_gap_total: u64, // utterance_index 不连续次数（应该为 0，表示修复生效）
 }
 
 #[derive(Debug, Serialize)]
@@ -256,6 +262,9 @@ pub async fn collect(state: &AppState) -> MetricsSnapshot {
             finalized_by_send_total: METRICS.web_tasks_finalized_by_send_total.load(Ordering::Relaxed),
             finalized_by_pause_total: METRICS.web_tasks_finalized_by_pause_total.load(Ordering::Relaxed),
             pause_ms: state.web_task_segmentation.pause_ms,
+            // RF-6: 音频块丢失修复相关指标
+            empty_finalize_total: METRICS.empty_finalize_total.load(Ordering::Relaxed),
+            index_gap_total: METRICS.index_gap_total.load(Ordering::Relaxed),
         },
         observability: ObservabilityMetrics {
             slow_lock_wait_total: METRICS.slow_lock_wait_total.load(Ordering::Relaxed),
@@ -551,6 +560,16 @@ pub fn on_duplicate_job_blocked() {
 /// 记录结果队列超时
 pub fn on_result_gap_timeout() {
     METRICS.result_gap_timeout_total.fetch_add(1, Ordering::Relaxed);
+}
+
+/// RF-6: 记录空缓冲区 finalize 尝试（应该为 0，表示修复生效）
+pub fn on_empty_finalize() {
+    METRICS.empty_finalize_total.fetch_add(1, Ordering::Relaxed);
+}
+
+/// RF-6: 记录 utterance_index 不连续（应该为 0，表示修复生效）
+pub fn on_index_gap() {
+    METRICS.index_gap_total.fetch_add(1, Ordering::Relaxed);
 }
 
 pub fn on_slow_lock_wait(lock_name: &'static str) {

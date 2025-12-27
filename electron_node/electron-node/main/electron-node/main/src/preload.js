@@ -60,6 +60,8 @@ electron_1.contextBridge.exposeInMainWorld('electronAPI', {
     // 服务偏好（记住用户上一次选择的功能）
     getServicePreferences: () => electron_1.ipcRenderer.invoke('get-service-preferences'),
     setServicePreferences: (prefs) => electron_1.ipcRenderer.invoke('set-service-preferences', prefs),
+    // 处理效率指标（OBS-1）
+    getProcessingMetrics: () => electron_1.ipcRenderer.invoke('get-processing-metrics'),
     // 注意：模块管理 API 已移除
     // 模块现在根据任务请求中的 features 自动启用/禁用，不需要手动管理
 });

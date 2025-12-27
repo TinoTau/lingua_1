@@ -103,6 +103,9 @@ export interface ElectronAPI {
     fasterWhisperVadEnabled: boolean;
     speakerEmbeddingEnabled: boolean;
   }) => Promise<{ success: boolean; error?: string }>;
+
+  // 处理效率指标（OBS-1，按服务ID分组）
+  getProcessingMetrics: () => Promise<Record<string, number>>;
 }
 
 declare global {

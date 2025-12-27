@@ -64,6 +64,8 @@ pub(super) async fn handle_node_message(
             installed_services,
             capability_by_type,
             rerun_metrics,
+            asr_metrics,
+            processing_metrics,
         } => {
             register::handle_node_heartbeat(
                 state,
@@ -73,6 +75,8 @@ pub(super) async fn handle_node_message(
                 Some(installed_services),
                 capability_by_type,
                 rerun_metrics,
+                asr_metrics,
+                processing_metrics,
             )
             .await;
             Ok(())

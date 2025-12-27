@@ -76,6 +76,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
     speakerEmbeddingEnabled: boolean;
   }) => ipcRenderer.invoke('set-service-preferences', prefs),
 
+  // 处理效率指标（OBS-1）
+  getProcessingMetrics: () => ipcRenderer.invoke('get-processing-metrics'),
+
   // 注意：模块管理 API 已移除
   // 模块现在根据任务请求中的 features 自动启用/禁用，不需要手动管理
 });

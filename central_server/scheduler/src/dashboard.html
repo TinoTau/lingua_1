@@ -280,6 +280,26 @@
                     </table>
                 </div>
             </div>
+
+            <!-- 节点处理效率统计（按服务ID分组） -->
+            <div class="section">
+                <h2>⚡ 节点处理效率统计（按服务）</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>节点ID</th>
+                                <th>节点名称</th>
+                                <th>服务ID</th>
+                                <th>处理效率</th>
+                            </tr>
+                        </thead>
+                        <tbody id="nodeEfficiencyTable">
+                            <!-- 动态填充 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -327,6 +347,8 @@
                 // 更新算力详情
                 if (data.nodes.compute_power) {
                     updateComputePowerDetails(data.nodes.compute_power.node_power_details);
+                    // 更新节点处理效率
+                    updateNodeEfficiency(data.nodes.compute_power.node_power_details);
                 }
                 
                 // 更新最后更新时间
@@ -418,6 +440,91 @@
                     <td><strong>${nodeCount}</strong></td>
                 `;
                 tbody.appendChild(row);
+            });
+        }
+        
+        function updateNodeEfficiency(nodeDetails) {
+            const tbody = document.getElementById('nodeEfficiencyTable');
+            tbody.innerHTML = '';
+            
+            if (!nodeDetails || nodeDetails.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #666;">暂无数据</td></tr>';
+                return;
+            }
+            
+            // 按服务ID分组显示处理效率
+            nodeDetails.forEach(node => {
+                // 优先使用 service_efficiencies（新格式）
+                const serviceEfficiencies = node.service_efficiencies || {};
+                
+                if (Object.keys(serviceEfficiencies).length > 0) {
+                    // 按服务ID排序
+                    const sortedServices = Object.keys(serviceEfficiencies).sort();
+                    
+                    sortedServices.forEach(serviceId => {
+                        const efficiency = serviceEfficiencies[serviceId];
+                        const row = document.createElement('tr');
+                        
+                        // 根据服务ID决定显示格式
+                        let efficiencyDisplay = '';
+                        if (serviceId === 'faster-whisper-vad') {
+                            efficiencyDisplay = `${efficiency.toFixed(2)}x`;
+                        } else if (serviceId === 'nmt-m2m100') {
+                            efficiencyDisplay = `${efficiency.toFixed(2)} 字符/秒`;
+                        } else if (serviceId === 'piper-tts' || serviceId === 'your-tts') {
+                            efficiencyDisplay = `${efficiency.toFixed(2)}x`;
+                        } else {
+                            // 其他服务，默认显示为倍数
+                            efficiencyDisplay = `${efficiency.toFixed(2)}x`;
+                        }
+                        
+                        row.innerHTML = `
+                            <td><strong>${node.node_id}</strong></td>
+                            <td>${node.node_name || '-'}</td>
+                            <td>${serviceId}</td>
+                            <td>${efficiencyDisplay}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    // 向后兼容：如果没有 service_efficiencies，使用旧的 asr_efficiency/nmt_efficiency/tts_efficiency
+                    const services = [];
+                    if (node.asr_efficiency !== null && node.asr_efficiency !== undefined) {
+                        services.push({ id: 'faster-whisper-vad', eff: node.asr_efficiency, format: 'x' });
+                    }
+                    if (node.nmt_efficiency !== null && node.nmt_efficiency !== undefined) {
+                        services.push({ id: 'nmt-m2m100', eff: node.nmt_efficiency, format: 'chars/s' });
+                    }
+                    if (node.tts_efficiency !== null && node.tts_efficiency !== undefined) {
+                        services.push({ id: 'piper-tts', eff: node.tts_efficiency, format: 'x' });
+                    }
+                    
+                    if (services.length > 0) {
+                        services.forEach(service => {
+                            const row = document.createElement('tr');
+                            const efficiencyDisplay = service.format === 'chars/s' 
+                                ? `${service.eff.toFixed(2)} 字符/秒`
+                                : `${service.eff.toFixed(2)}x`;
+                            
+                            row.innerHTML = `
+                                <td><strong>${node.node_id}</strong></td>
+                                <td>${node.node_name || '-'}</td>
+                                <td>${service.id}</td>
+                                <td>${efficiencyDisplay}</td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+                    } else {
+                        // 没有任何处理效率数据
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td><strong>${node.node_id}</strong></td>
+                            <td>${node.node_name || '-'}</td>
+                            <td colspan="2" style="text-align: center; color: #666;">暂无数据</td>
+                        `;
+                        tbody.appendChild(row);
+                    }
+                }
             });
         }
         

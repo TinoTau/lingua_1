@@ -27,6 +27,7 @@
             status: NodeStatus::Ready,
             online: true,
             cpu_usage: 1.0,
+            processing_metrics: None,
             gpu_usage: Some(2.0),
             memory_usage: 3.0,
             installed_models: vec![InstalledModel {

@@ -270,7 +270,7 @@ electron_1.app.whenReady().then(async () => {
         // 注册所有 IPC 处理器
         (0, model_handlers_1.registerModelHandlers)(modelManager);
         (0, service_handlers_1.registerServiceHandlers)(serviceRegistryManager, servicePackageManager, rustServiceManager, pythonServiceManager);
-        (0, runtime_handlers_1.registerRuntimeHandlers)(nodeAgent, modelManager, rustServiceManager, pythonServiceManager, serviceRegistryManager);
+        (0, runtime_handlers_1.registerRuntimeHandlers)(nodeAgent, modelManager, inferenceService, rustServiceManager, pythonServiceManager, serviceRegistryManager);
         // 注册系统资源 IPC 处理器
         electron_1.ipcMain.handle('get-system-resources', async () => {
             const si = require('systeminformation');

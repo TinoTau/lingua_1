@@ -100,10 +100,21 @@ export async function cleanupServices(
         { count: runningPythonServices.length },
         `Stopping all Python services (${runningPythonServices.length} service(s))...`
       );
-      await pythonServiceManager.stopAllServices();
+      
+      // 添加超时保护，确保清理不会无限期等待
+      const cleanupTimeout = 30000; // 30秒超时
+      const cleanupPromise = pythonServiceManager.stopAllServices();
+      const timeoutPromise = new Promise<void>((_, reject) => {
+        setTimeout(() => {
+          reject(new Error(`Python services cleanup timeout after ${cleanupTimeout}ms`));
+        }, cleanupTimeout);
+      });
+      
+      await Promise.race([cleanupPromise, timeoutPromise]);
       logger.info({}, 'All Python services stopped');
     } catch (error) {
       logger.error({ error }, 'Failed to stop Python services');
+      // 即使清理失败，也继续执行，避免阻塞应用退出
     }
   }
 

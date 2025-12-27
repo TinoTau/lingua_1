@@ -7,7 +7,7 @@ exports.registerRuntimeHandlers = registerRuntimeHandlers;
 const electron_1 = require("electron");
 const node_config_1 = require("../node-config");
 const logger_1 = __importDefault(require("../logger"));
-function registerRuntimeHandlers(nodeAgent, modelManager, rustServiceManager, pythonServiceManager, serviceRegistryManager) {
+function registerRuntimeHandlers(nodeAgent, modelManager, inferenceService, rustServiceManager, pythonServiceManager, serviceRegistryManager) {
     electron_1.ipcMain.handle('get-node-status', async () => {
         return nodeAgent?.getStatus() || { online: false, nodeId: null };
     });
@@ -198,5 +198,12 @@ function registerRuntimeHandlers(nodeAgent, modelManager, rustServiceManager, py
     });
     electron_1.ipcMain.handle('generate-pairing-code', async () => {
         return nodeAgent?.generatePairingCode() || null;
+    });
+    // 获取处理效率指标（OBS-1，按服务ID分组）
+    electron_1.ipcMain.handle('get-processing-metrics', async () => {
+        if (!inferenceService) {
+            return {};
+        }
+        return inferenceService.getProcessingMetrics() || {};
     });
 }

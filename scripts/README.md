@@ -30,6 +30,10 @@
 - `start_web_client.ps1` - 启动 Web 客户端（旧版，已迁移到 start_webapp.ps1）
 - `start_all.ps1` - 一键启动所有服务
 
+### 维护脚本
+
+- `cleanup_orphaned_processes.ps1` - 清理集成测试后残留的 Node.js、Python 和 esBuilder 进程
+
 ### Bash 脚本（Linux/macOS）
 
 - `copy_models.sh` - 复制原项目的模型文件到新项目
@@ -110,6 +114,22 @@ D:\Programs\github\lingua\core\engine\models\
 ```
 
 详细启动指南请参考 `README_STARTUP.md`。
+
+### 清理孤立进程
+
+如果集成测试后发现有大量未关闭的进程（Node.js、Python、esBuilder），可以使用清理脚本：
+
+```powershell
+.\scripts\cleanup_orphaned_processes.ps1
+```
+
+该脚本会：
+1. 扫描所有相关进程
+2. 显示进程详细信息（PID、路径、命令行）
+3. 确认后清理进程
+4. 验证清理结果
+
+详细诊断信息请参考 `docs/troubleshooting/ORPHANED_PROCESSES_DIAGNOSIS.md`。
 
 ## 注意事项
 

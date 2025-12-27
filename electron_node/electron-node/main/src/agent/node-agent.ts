@@ -19,7 +19,7 @@ import {
   ServiceStatus,
 } from '../../../../shared/protocols/messages';
 import { ModelNotAvailableError } from '../model-manager/model-manager';
-import { loadNodeConfig } from '../node-config';
+import { loadNodeConfig, type NodeConfig } from '../node-config';
 import logger from '../logger';
 
 export interface NodeStatus {
@@ -42,6 +42,7 @@ export class NodeAgent {
   private capabilityStateChangedHandler: (() => void) | null = null; // 保存监听器函数，用于清理
   private heartbeatDebounceTimer: NodeJS.Timeout | null = null; // 心跳防抖定时器
   private readonly HEARTBEAT_DEBOUNCE_MS = 2000; // 防抖延迟：2秒内最多触发一次立即心跳
+  private nodeConfig: NodeConfig; // 节点配置（用于指标收集配置）
 
   constructor(
     inferenceService: InferenceService,
@@ -51,9 +52,9 @@ export class NodeAgent {
     pythonServiceManager?: any
   ) {
     // 优先从配置文件读取，其次从环境变量，最后使用默认值
-    const config = loadNodeConfig();
+    this.nodeConfig = loadNodeConfig();
     this.schedulerUrl =
-      config.scheduler?.url ||
+      this.nodeConfig.scheduler?.url ||
       process.env.SCHEDULER_URL ||
       'ws://127.0.0.1:5010/ws/node';
     this.inferenceService = inferenceService;
@@ -387,13 +388,51 @@ export class NodeAgent {
       installed_models: installedModels.length > 0 ? installedModels : undefined,
       installed_services: installedServicesAll,
       capability_by_type: capabilityByType,
-      // Gate-B: Rerun 指标（如果可用）
-      rerun_metrics: this.inferenceService.getRerunMetrics?.() || undefined,
     };
+
+    // 方案1+方案2：基于配置和服务状态的动态指标收集（支持热插拔）
+    const metricsConfig = this.nodeConfig.metrics;
+    const metricsEnabled = metricsConfig?.enabled !== false; // 默认启用（向后兼容）
+
+    if (metricsEnabled) {
+      // 检查 Rerun 指标（Gate-B）
+      const rerunMetricsEnabled = metricsConfig?.metrics?.rerun !== false; // 默认启用
+      if (rerunMetricsEnabled && this.shouldCollectRerunMetrics(installedServicesAll)) {
+        const rerunMetrics = this.inferenceService.getRerunMetrics?.();
+        if (rerunMetrics) {
+          message.rerun_metrics = rerunMetrics;
+        }
+      }
+
+      // 检查处理效率指标（OBS-1）
+      const asrMetricsEnabled = metricsConfig?.metrics?.asr !== false; // 默认启用
+      if (asrMetricsEnabled && this.shouldCollectASRMetrics(installedServicesAll)) {
+        // 获取按服务ID分组的处理效率指标
+        // 注意：在发送心跳前获取，因为心跳发送后会重置数据
+        const serviceEfficiencies = this.inferenceService.getProcessingMetrics?.();
+        if (serviceEfficiencies && Object.keys(serviceEfficiencies).length > 0) {
+          message.processing_metrics = {
+            serviceEfficiencies,
+          };
+        }
+        // 向后兼容：保留 asr_metrics
+        const asrMetrics = this.inferenceService.getASRMetrics?.();
+        if (asrMetrics) {
+          message.asr_metrics = asrMetrics;
+        }
+      }
+    }
 
     const messageStr = JSON.stringify(message);
     logger.debug({ message: messageStr }, 'Heartbeat message content');
     this.ws.send(messageStr);
+
+    // OBS-1: 心跳发送后重置周期数据，为下一个周期做准备
+    // 注意：在消息发送之后重置，确保 UI 可以获取到当前周期的数据
+    const asrMetricsEnabled = this.nodeConfig.metrics?.metrics?.asr !== false;
+    if (asrMetricsEnabled && this.shouldCollectASRMetrics(installedServicesAll)) {
+      this.inferenceService.resetProcessingMetrics?.();
+    }
   }
 
   /**
@@ -505,6 +544,29 @@ export class NodeAgent {
     }, 'Getting installed services for heartbeat (type-level)');
 
     return result;
+  }
+
+  /**
+   * 方案2：动态检测是否应该收集 Rerun 指标
+   * 检查是否有 ASR 服务运行（Rerun 功能依赖 ASR）
+   */
+  private shouldCollectRerunMetrics(installedServices: InstalledService[]): boolean {
+    // Rerun 功能需要 ASR 服务支持
+    const hasASRService = installedServices.some(
+      s => s.type === ServiceType.ASR && s.status === 'running'
+    );
+    return hasASRService;
+  }
+
+  /**
+   * 方案2：动态检测是否应该收集 ASR 指标
+   * 检查是否有 ASR 服务运行
+   */
+  private shouldCollectASRMetrics(installedServices: InstalledService[]): boolean {
+    const hasASRService = installedServices.some(
+      s => s.type === ServiceType.ASR && s.status === 'running'
+    );
+    return hasASRService;
   }
 
   /**
@@ -741,11 +803,11 @@ export class NodeAgent {
       // 调用推理服务处理任务
       logger.debug({ jobId: job.job_id }, 'Calling inferenceService.processJob');
       const result = await this.inferenceService.processJob(job, partialCallback);
-      
+
       // 检查ASR结果是否为空
       const asrTextTrimmed = (result.text_asr || '').trim();
       const isEmpty = !asrTextTrimmed || asrTextTrimmed.length === 0;
-      
+
       if (isEmpty) {
         logger.warn(
           { jobId: job.job_id, traceId: job.trace_id },

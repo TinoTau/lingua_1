@@ -1,6 +1,6 @@
 use crate::core::AppState;
 use crate::messages::{ErrorCode, UiEventStatus, UiEventType};
-use crate::websocket::{create_job_assign_message, send_error, send_ui_event};
+use crate::websocket::{create_job_assign_message, send_ui_event};
 use crate::websocket::job_creator::create_translation_jobs;
 use crate::websocket::session_actor::SessionEvent;
 use axum::extract::ws::Message;
@@ -62,13 +62,10 @@ pub(super) async fn handle_audio_chunk(
         return Ok(());
     }
 
-    // 如果是 is_final，发送 IsFinalReceived 事件
-    if is_final {
-        if let Err(_) = actor_handle.send(SessionEvent::IsFinalReceived) {
-            debug!(session_id = %sess_id, "Session Actor channel closed while sending IsFinalReceived");
-            return Ok(());
-        }
-    }
+    // 注意：is_final 的处理已经在 handle_audio_chunk 中完成（在添加音频块之后）
+    // 这里不需要再发送 IsFinalReceived 事件，避免重复 finalize
+    // 如果 is_final=true，handle_audio_chunk 会在添加音频块后自动触发 finalize
+    // 如果再次发送 IsFinalReceived，会导致重复 finalize，可能造成空缓冲区
 
     Ok(())
 }
@@ -248,20 +245,14 @@ async fn finalize_audio_utterance(
                 }
             }
         } else {
-            warn!("Job {} has no available nodes", job.job_id);
-            send_error(tx, ErrorCode::NodeUnavailable, "No available nodes").await;
-            send_ui_event(
-                tx,
-                &job.trace_id,
-                sess_id,
-                &job.job_id,
-                utterance_index,
-                UiEventType::Error,
-                None,
-                UiEventStatus::Error,
-                Some(ErrorCode::NoAvailableNode),
-            )
-            .await;
+            // 节点不可用是内部调度问题，只记录日志，不发送错误给Web端
+            warn!(
+                job_id = %job.job_id,
+                session_id = %sess_id,
+                utterance_index = utterance_index,
+                "Job has no available nodes (internal scheduling issue, not sent to client)"
+            );
+            // 不发送错误给Web端，让任务在超时后自然失败
         }
     }
 

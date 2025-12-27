@@ -209,6 +209,9 @@
                 InstalledService { service_id: "piper-tts".to_string(), r#type: ServiceType::Tts, device: DeviceType::Gpu, status: ServiceStatus::Running, version: Some("1".to_string()), model_id: None, engine: None, mem_mb: None, warmup_ms: None, last_error: None },
             ],
             capability_by_type,
+            rerun_metrics: None,
+            asr_metrics: None,
+            processing_metrics: None,
         }
     }
 

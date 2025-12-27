@@ -3,6 +3,7 @@ import { loadNodeConfig, saveNodeConfig, ServicePreferences } from '../node-conf
 import logger from '../logger';
 import type { NodeAgent } from '../agent/node-agent';
 import type { ModelManager } from '../model-manager/model-manager';
+import type { InferenceService } from '../inference/inference-service';
 import type { RustServiceManager } from '../rust-service-manager';
 import type { PythonServiceManager } from '../python-service-manager';
 import type { ServiceRegistryManager } from '../service-registry';
@@ -10,6 +11,7 @@ import type { ServiceRegistryManager } from '../service-registry';
 export function registerRuntimeHandlers(
   nodeAgent: NodeAgent | null,
   modelManager: ModelManager | null,
+  inferenceService: InferenceService | null,
   rustServiceManager: RustServiceManager | null,
   pythonServiceManager: PythonServiceManager | null,
   serviceRegistryManager: ServiceRegistryManager | null
@@ -217,6 +219,14 @@ export function registerRuntimeHandlers(
 
   ipcMain.handle('generate-pairing-code', async () => {
     return nodeAgent?.generatePairingCode() || null;
+  });
+
+  // 获取处理效率指标（OBS-1，按服务ID分组）
+  ipcMain.handle('get-processing-metrics', async () => {
+    if (!inferenceService) {
+      return {};
+    }
+    return inferenceService.getProcessingMetrics() || {};
   });
 }
 

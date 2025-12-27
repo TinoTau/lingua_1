@@ -316,13 +316,28 @@ export interface RerunMetrics {
   qualityImprovements: number;
 }
 
-/** Gate-B: Rerun 指标 */
-export interface RerunMetrics {
-  totalReruns: number;
-  successfulReruns: number;
-  failedReruns: number;
-  timeoutReruns: number;
-  qualityImprovements: number;
+/** OBS-1: 处理效率观测指标（按心跳周期统计，按服务ID分组） */
+export interface ProcessingMetrics {
+  /** 
+   * 每个服务ID的处理效率
+   * key: 服务ID（如 'faster-whisper-vad', 'nmt-m2m100', 'piper-tts', 'your-tts' 等）
+   * value: 该服务在心跳周期内的平均处理效率
+   * 
+   * 处理效率计算方式：
+   * - ASR服务：处理效率 = 原音频时长(ms) / 处理时间(ms)
+   * - NMT服务：处理效率 = 文本长度(字符数) / 处理时间(ms) * 1000 (字符/秒)
+   * - TTS服务：处理效率 = 生成音频时长(ms) / 处理时间(ms)
+   * 
+   * 值越大表示处理越快
+   * 如果心跳周期内某个服务没有任务，则该服务ID不会出现在此对象中
+   */
+  serviceEfficiencies: Record<string, number>;
+}
+
+/** OBS-1: ASR 观测指标（向后兼容，已废弃，使用 processing_metrics） */
+export interface ASRMetrics {
+  /** @deprecated 使用 processing_metrics.asrEfficiency 代替 */
+  processingEfficiency: number | null;
 }
 
 export interface NodeHeartbeatMessage {
@@ -337,6 +352,10 @@ export interface NodeHeartbeatMessage {
   capability_by_type: CapabilityByType[];
   /** Gate-B: Rerun 指标（可选） */
   rerun_metrics?: RerunMetrics;
+  /** OBS-1: ASR 观测指标（可选，向后兼容，已废弃） */
+  asr_metrics?: ASRMetrics;
+  /** OBS-1: 处理效率观测指标（按心跳周期统计，分别记录 ASR、NMT、TTS） */
+  processing_metrics?: ProcessingMetrics;
 }
 
 export interface JobAssignMessage {

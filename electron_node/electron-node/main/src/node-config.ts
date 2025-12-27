@@ -21,6 +21,28 @@ export interface ASRConfig {
   no_speech_threshold?: number;  // 无语音阈值，默认 0.6
 }
 
+/**
+ * 指标收集配置
+ * 支持热插拔：根据配置和服务状态动态决定收集哪些指标
+ */
+export interface MetricsConfig {
+  /** 是否启用指标收集（默认 true，向后兼容） */
+  enabled?: boolean;
+  /** 具体指标开关配置 */
+  metrics?: {
+    /** 是否收集 Rerun 指标（Gate-B） */
+    rerun?: boolean;
+    /** 是否收集 ASR 指标（OBS-1） */
+    asr?: boolean;
+    /** 是否收集 NMT 指标（未来扩展） */
+    nmt?: boolean;
+    /** 是否收集 TTS 指标（未来扩展） */
+    tts?: boolean;
+    /** 支持扩展其他指标类型 */
+    [key: string]: boolean | undefined;
+  };
+}
+
 export interface NodeConfig {
   servicePreferences: ServicePreferences;
   scheduler?: {
@@ -30,6 +52,8 @@ export interface NodeConfig {
     url?: string;  // Model Hub HTTP URL，例如: http://model-hub.example.com:5000
   };
   asr?: ASRConfig;  // ASR 配置（beam_size 等参数）
+  /** 指标收集配置（支持热插拔） */
+  metrics?: MetricsConfig;
 }
 
 const DEFAULT_CONFIG: NodeConfig = {
@@ -54,6 +78,14 @@ const DEFAULT_CONFIG: NodeConfig = {
     compression_ratio_threshold: 2.4,  // 默认 2.4
     log_prob_threshold: -1.0,  // 默认 -1.0
     no_speech_threshold: 0.6,  // 默认 0.6
+  },
+  metrics: {
+    enabled: true,  // 默认启用指标收集（向后兼容）
+    metrics: {
+      rerun: true,  // 默认启用 Rerun 指标
+      asr: true,    // 默认启用 ASR 指标
+      // 未来扩展：nmt, tts 等
+    },
   },
 };
 
@@ -88,6 +120,15 @@ export function loadNodeConfig(): NodeConfig {
       asr: {
         ...DEFAULT_CONFIG.asr,
         ...(parsed.asr || {}),
+      },
+      metrics: {
+        ...DEFAULT_CONFIG.metrics,
+        ...(parsed.metrics || {}),
+        // 深度合并 metrics.metrics 对象
+        metrics: {
+          ...DEFAULT_CONFIG.metrics?.metrics,
+          ...(parsed.metrics?.metrics || {}),
+        },
       },
     };
   } catch (error) {
@@ -125,6 +166,15 @@ export async function loadNodeConfigAsync(): Promise<NodeConfig> {
       asr: {
         ...DEFAULT_CONFIG.asr,
         ...(parsed.asr || {}),
+      },
+      metrics: {
+        ...DEFAULT_CONFIG.metrics,
+        ...(parsed.metrics || {}),
+        // 深度合并 metrics.metrics 对象
+        metrics: {
+          ...DEFAULT_CONFIG.metrics?.metrics,
+          ...(parsed.metrics?.metrics || {}),
+        },
       },
     };
   } catch (error) {

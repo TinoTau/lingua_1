@@ -1,3 +1,8 @@
+# 0. 清理日志
+cd D:\Programs\github\lingua_1
+.\scripts\cleanup_orphaned_processes.ps1
+.\clear_logs.ps1
+
 # 1. 节点端
 cd D:\Programs\github\lingua_1\electron_node\electron-node
 npm run clear-cache
@@ -48,9 +53,13 @@ Get-Location
 npm run build:main  
 
 
-0.服务分组
+0.调度服务器和节点端的代码文件拆分
+0.Nmt校验文本合理性？
+0.fast-whisper-vad拆分，将opus解码拆分出来
+1.tts拆分，将opus编码拆分出来
+2.embedding实装
+3.yourtts实装
 1.model hub改造成多实例
-2.embedding分离 done
 3.公司指定服务器
 4.收费模式
 5.模型训练

@@ -211,6 +211,7 @@ impl NodeRegistry {
             max_concurrent_jobs: 4,
             last_heartbeat: now,
             registered_at: now, // 记录注册时间
+            processing_metrics: None, // 初始化为 None，等待心跳更新
         };
 
         nodes.insert(final_node_id.clone(), node.clone());
@@ -250,6 +251,7 @@ impl NodeRegistry {
         installed_services: Option<Vec<InstalledService>>,
         current_jobs: usize,
         capability_by_type: Option<Vec<CapabilityByType>>,
+        processing_metrics: Option<crate::messages::common::ProcessingMetrics>,
     ) -> bool {
         let mut updated: Option<super::Node> = None;
         let ok = {
@@ -277,6 +279,9 @@ impl NodeRegistry {
                     .iter()
                     .map(|c| (c.r#type.clone(), c.ready))
                     .collect();
+            }
+            if let Some(metrics) = processing_metrics {
+                node.processing_metrics = Some(metrics);
             }
             node.current_jobs = current_jobs;
             node.last_heartbeat = chrono::Utc::now();

@@ -24,36 +24,50 @@ try:
     mem_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
     print(f"{util.gpu},{mem_info.used / mem_info.total * 100}")
     pynvml.nvmlShutdown()
-except:
-    print("ERROR")
+except Exception as e:
+    print(f"ERROR:{str(e)}")
 `;
 
     return new Promise((resolve) => {
       const python = spawn('python', ['-c', pythonScript]);
       let output = '';
+      let errorOutput = '';
 
       python.stdout.on('data', (data: Buffer) => {
         output += data.toString();
       });
 
+      python.stderr.on('data', (data: Buffer) => {
+        errorOutput += data.toString();
+      });
+
       python.on('close', (code: number) => {
-        if (code === 0 && output.trim() !== 'ERROR') {
+        if (code === 0 && output.trim() && !output.trim().startsWith('ERROR')) {
           try {
             const [usage, memory] = output.trim().split(',').map(Number);
             if (!isNaN(usage) && !isNaN(memory)) {
+              logger.debug({ usage, memory }, 'GPU usage retrieved successfully');
               resolve({ usage, memory });
             } else {
+              logger.warn({ output: output.trim() }, 'Failed to parse GPU usage output');
               resolve(null);
             }
           } catch (error) {
+            logger.warn({ error, output: output.trim() }, 'Error parsing GPU usage');
             resolve(null);
           }
         } else {
+          if (output.trim().startsWith('ERROR:')) {
+            logger.warn({ error: output.trim(), code }, 'GPU usage check failed');
+          } else {
+            logger.debug({ code, output: output.trim(), errorOutput: errorOutput.trim() }, 'GPU usage check returned no data');
+          }
           resolve(null);
         }
       });
 
-      python.on('error', () => {
+      python.on('error', (error: Error) => {
+        logger.warn({ error }, 'Failed to spawn Python process for GPU usage check');
         resolve(null);
       });
     });
@@ -78,6 +92,7 @@ export class GpuUsageTracker {
    */
   startTracking(): void {
     if (this.gpuCheckInterval) {
+      logger.debug({}, 'GPU tracking already started, skipping');
       return; // 已经在跟踪
     }
 
@@ -93,6 +108,7 @@ export class GpuUsageTracker {
             // 从非使用状态变为使用状态，记录开始时间
             this.isGpuInUse = true;
             this.gpuUsageStartTime = now;
+            logger.debug({ usage: gpuInfo.usage, memory: gpuInfo.memory }, 'GPU usage detected, starting tracking');
           }
           // 如果已经在使用状态，继续等待下次检查，不累计时间
           // 时间会在检测到GPU停止使用时累计，或者在getGpuUsageMs时实时计算
@@ -102,11 +118,13 @@ export class GpuUsageTracker {
             // 从使用状态变为非使用状态，累计这段时间
             const elapsed = now - this.gpuUsageStartTime;
             this.gpuUsageMs += elapsed;
+            logger.debug({ elapsed, totalMs: this.gpuUsageMs }, 'GPU usage stopped, accumulated time');
           }
           this.isGpuInUse = false;
           this.gpuUsageStartTime = null;
         }
       } catch (error) {
+        logger.warn({ error }, 'Error checking GPU usage');
         // 忽略错误，继续跟踪
         // 如果出错，保守处理：如果有开始时间，累计到当前
         if (this.isGpuInUse && this.gpuUsageStartTime) {
@@ -117,6 +135,8 @@ export class GpuUsageTracker {
         }
       }
     }, this.checkIntervalMs);
+    
+    logger.info({}, 'GPU tracking started');
   }
 
   /**
@@ -133,10 +153,12 @@ export class GpuUsageTracker {
       const now = Date.now();
       const elapsed = now - this.gpuUsageStartTime;
       this.gpuUsageMs += elapsed;
+      logger.debug({ elapsed, totalMs: this.gpuUsageMs }, 'GPU tracking stopped, final accumulation');
     }
     
     this.isGpuInUse = false;
     this.gpuUsageStartTime = null;
+    logger.info({ totalMs: this.gpuUsageMs }, 'GPU tracking stopped');
   }
 
   /**

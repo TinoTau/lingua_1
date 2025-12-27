@@ -364,12 +364,10 @@ class PythonServiceManager {
     updateStatus(serviceName, status) {
         const current = this.statuses.get(serviceName);
         const taskCount = this.taskCounts.get(serviceName) || 0;
-        // 只有在有任务时才计算GPU使用时间，否则为0
-        let gpuUsageMs = 0;
-        if (taskCount > 0) {
-            const tracker = this.gpuTrackers.get(serviceName);
-            gpuUsageMs = tracker ? tracker.getGpuUsageMs() : 0;
-        }
+        // 获取GPU使用时间（无论是否有任务，都返回累计值）
+        // 注意：如果跟踪器未启动，getGpuUsageMs() 会返回 0
+        const tracker = this.gpuTrackers.get(serviceName);
+        const gpuUsageMs = tracker ? tracker.getGpuUsageMs() : 0;
         // 检查 running 状态是否发生变化
         const previousRunning = current?.running ?? false;
         const newRunning = status.running !== undefined ? status.running : (current?.running ?? false);

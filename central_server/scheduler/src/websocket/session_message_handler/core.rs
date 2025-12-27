@@ -5,7 +5,7 @@ use crate::websocket::{send_error, send_message};
 use crate::websocket::session_actor::{SessionActor, SessionEvent};
 use axum::extract::ws::Message;
 use tokio::sync::mpsc;
-use tracing::info;
+use tracing::{info, warn};
 
 pub(super) async fn handle_session_init(
     state: &AppState,
@@ -210,9 +210,29 @@ pub(super) async fn handle_session_close(
         state.session_manager.remove_actor(&sess_id).await;
     }
 
+    // RF-4 增强：在删除结果队列前，flush 所有待发送的结果
+    // 确保最后一句话的翻译结果能够被推送给 web 端
+    let pending_results = state.result_queue.remove_session(&sess_id).await;
+    if !pending_results.is_empty() {
+        info!(
+            session_id = %sess_id,
+            pending_count = pending_results.len(),
+            "Flushing pending results before session close"
+        );
+        // 发送所有待发送的结果
+        for result in pending_results {
+            if let Err(e) = send_message(tx, &result).await {
+                warn!(
+                    session_id = %sess_id,
+                    error = %e,
+                    "Failed to send pending result during session close"
+                );
+            }
+        }
+    }
+
     // Cleanup session
     state.session_connections.unregister(&sess_id).await;
-    state.result_queue.remove_session(&sess_id).await;
     state.session_manager.remove_session(&sess_id).await;
     // Schema compat: Clear v1:sessions:bind (default off)
     if let Some(rt) = state.phase2.as_ref() {
