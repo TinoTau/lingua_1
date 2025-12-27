@@ -393,20 +393,65 @@ pub(super) async fn handle_job_result(
             "Getting ready results from queue"
         );
         for result in ready_results {
-            // 检查结果是否为空（空文本不应该转发给Web端）
-            let should_skip = if let SessionMessage::TranslationResult { text_asr, text_translated, tts_audio, .. } = &result {
+            // 检查结果是否为空（空文本应该发送 MissingResult 而不是直接跳过）
+            let should_send_missing = if let SessionMessage::TranslationResult { text_asr, text_translated, tts_audio, utterance_index, .. } = &result {
                 let asr_empty = text_asr.trim().is_empty();
                 let translated_empty = text_translated.trim().is_empty();
                 let tts_empty = tts_audio.is_empty();
                 
-                // 如果ASR、翻译和TTS都为空，跳过转发（但已记录到result_queue，满足job_id/trace_id验证）
+                // 如果ASR、翻译和TTS都为空，发送 MissingResult 消息（保持 utterance_index 连续性）
                 if asr_empty && translated_empty && tts_empty {
                     warn!(
                         trace_id = %trace_id,
                         session_id = %session_id,
                         job_id = %job_id,
-                        "Skipping empty translation result (silence detected), not forwarding to web client"
+                        utterance_index = utterance_index,
+                        "Empty translation result (silence detected), sending MissingResult to maintain utterance_index continuity"
                     );
+                    
+                    // 创建 MissingResult 消息
+                    let missing_result = SessionMessage::MissingResult {
+                        session_id: session_id.clone(),
+                        utterance_index: *utterance_index,
+                        reason: "silence_detected".to_string(),
+                        created_at_ms: chrono::Utc::now().timestamp_millis(),
+                        trace_id: Some(trace_id.clone()),
+                    };
+                    
+                    // 发送 MissingResult 消息（支持房间模式和单会话模式）
+                    if let Some(ref job_info) = job {
+                        if let Some(target_session_ids) = &job_info.target_session_ids {
+                            // Room mode: send to all target sessions
+                            for target_session_id in target_session_ids {
+                                if !crate::phase2::send_session_message_routed(state, target_session_id, missing_result.clone()).await {
+                                    warn!(
+                                        trace_id = %trace_id,
+                                        session_id = %target_session_id,
+                                        "Failed to send MissingResult to target session"
+                                    );
+                                }
+                            }
+                        } else {
+                            // Single session mode: send to sender
+                            if !crate::phase2::send_session_message_routed(state, &session_id, missing_result).await {
+                                warn!(
+                                    trace_id = %trace_id,
+                                    session_id = %session_id,
+                                    "Failed to send MissingResult to session"
+                                );
+                            }
+                        }
+                    } else {
+                        // Job does not exist, fallback to single session mode
+                        if !crate::phase2::send_session_message_routed(state, &session_id, missing_result).await {
+                            warn!(
+                                trace_id = %trace_id,
+                                session_id = %session_id,
+                                "Failed to send MissingResult to session (fallback mode)"
+                            );
+                        }
+                    }
+                    
                     true
                 } else {
                     false
@@ -415,8 +460,8 @@ pub(super) async fn handle_job_result(
                 false
             };
             
-            if should_skip {
-                continue;
+            if should_send_missing {
+                continue; // 跳过原始结果，因为已经发送了 MissingResult
             }
             
             // Check if Job is in target_session_ids (room mode)

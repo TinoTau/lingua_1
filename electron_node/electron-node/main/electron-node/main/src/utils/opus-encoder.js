@@ -79,9 +79,7 @@ async function initializeOpusEncoder(sampleRate = 16000, channels = 1) {
         try {
             // 延迟导入 @minceraftmc/opus-encoder，避免在模块加载时初始化
             // 这样可以确保不会影响其他服务（如 NMT）的启动
-            // 注意：@minceraftmc/opus-encoder 是 ES Module，必须使用动态 import()，不能使用 require()
-            const opusEncoderModule = await import('@minceraftmc/opus-encoder');
-            const { OpusEncoder, OpusApplication } = opusEncoderModule;
+            const { OpusEncoder, OpusApplication } = await Promise.resolve().then(() => __importStar(require('@minceraftmc/opus-encoder')));
             // 验证采样率
             const validSampleRates = [8000, 12000, 16000, 24000, 48000];
             if (!validSampleRates.includes(sampleRate)) {

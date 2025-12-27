@@ -36,6 +36,9 @@ pub struct SessionActorInternalState {
     /// EDGE-5: Short-merge 累积时长（毫秒）
     /// 用于跟踪连续短片段的累积时长，超过最大累积时长后强制 finalize
     pub accumulated_short_audio_duration_ms: u64,
+    /// 当前 utterance 的累积音频时长（毫秒）
+    /// 用于跟踪当前 utterance 的总时长，超过 max_duration_ms 后自动触发 finalize
+    pub accumulated_audio_duration_ms: u64,
 }
 
 impl SessionActorInternalState {
@@ -49,6 +52,7 @@ impl SessionActorInternalState {
             first_chunk_client_timestamp_ms: None,
             pending_short_audio: false,
             accumulated_short_audio_duration_ms: 0,
+            accumulated_audio_duration_ms: 0,
         }
     }
 

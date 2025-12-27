@@ -70,9 +70,11 @@ function shouldTriggerRerun(asrResult, audioDurationMs, task) {
         reasonCodes: asrResult.badSegmentDetection.reasonCodes,
         qualityScore: asrResult.badSegmentDetection.qualityScore,
     }, 'P0.5-SH-1: Rerun trigger condition met');
+    // 防御性检查：确保 qualityScore 不为 null/undefined
+    const qualityScore = asrResult.badSegmentDetection.qualityScore ?? 0.0;
     return {
         shouldRerun: true,
-        reason: `Bad segment detected: langProb=${langProb.toFixed(2)}, duration=${audioDurationMs}ms, qualityScore=${asrResult.badSegmentDetection.qualityScore.toFixed(2)}`,
+        reason: `Bad segment detected: langProb=${langProb.toFixed(2)}, duration=${audioDurationMs}ms, qualityScore=${qualityScore.toFixed(2)}`,
     };
 }
 /**

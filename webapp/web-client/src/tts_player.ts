@@ -1,34 +1,9 @@
 import { StateMachine } from './state_machine';
 import { createAudioDecoder, AudioCodecConfig, AudioDecoder } from './audio_codec';
+import { MemoryManager, getMaxBufferDuration, getDeviceType, MemoryPressureCallback } from './tts_player/memory_manager';
 
 export type PlaybackFinishedCallback = () => void;
-export type MemoryPressureCallback = (pressure: 'normal' | 'warning' | 'critical') => void;
 export type PlaybackIndexChangeCallback = (utteranceIndex: number) => void;
-
-/**
- * 获取最大缓存时长（根据设备类型自适应）
- */
-function getMaxBufferDuration(): number {
-  // 检测是否为移动设备
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  
-  if (!isMobile) {
-    return 20; // 桌面：20秒
-  }
-  
-  // 检测设备内存（如果支持）
-  const deviceMemory = (navigator as any).deviceMemory || 0;
-  
-  if (deviceMemory >= 6) {
-    return 15; // 高端手机：15秒
-  } else if (deviceMemory >= 4) {
-    return 10; // 中端手机：10秒
-  } else if (deviceMemory >= 2) {
-    return 5;  // 低端手机：5秒
-  } else {
-    return 3;  // 老旧手机：3秒
-  }
-}
 
 /**
  * TTS 播放模块
@@ -56,86 +31,44 @@ export class TtsPlayer {
   private readonly playbackRates: number[] = [1.0, 1.25, 1.5, 2.0]; // 可用的倍速选项
   private currentRateIndex: number = 0; // 当前倍速索引
   private maxBufferDuration: number; // 最大缓存时长（秒）
-  private memoryPressureCallback: MemoryPressureCallback | null = null; // 内存压力回调
-  private memoryCheckInterval: number | null = null; // 内存检查定时器
-  private lastMemoryPressure: 'normal' | 'warning' | 'critical' = 'normal'; // 上次内存压力状态
+  private memoryManager: MemoryManager; // 内存管理器
   private audioDecoder: AudioDecoder | null = null; // 音频解码器（支持PCM16和Opus）
   private currentTtsFormat: string = 'pcm16'; // 当前TTS音频格式
 
   constructor(stateMachine: StateMachine) {
     this.stateMachine = stateMachine;
     this.maxBufferDuration = getMaxBufferDuration();
-    console.log(`[TtsPlayer] 初始化，最大缓存时长: ${this.maxBufferDuration}秒 (设备类型: ${this.getDeviceType()})`);
-    
+    console.log(`[TtsPlayer] 初始化，最大缓存时长: ${this.maxBufferDuration}秒 (设备类型: ${getDeviceType()})`);
+
+    // 初始化内存管理器
+    this.memoryManager = new MemoryManager(
+      this.maxBufferDuration,
+      () => this.getTotalDuration(),
+      () => this.removeOldestBuffer()
+    );
+
     // 监听页面可见性变化（手机端后台标签页处理）
     if (typeof document !== 'undefined') {
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
-          this.handlePageHidden();
+          this.memoryManager.handlePageHidden(() => this.removeOldestBuffer());
         } else {
           // 页面恢复可见时，重新开始内存监控
-          this.startMemoryMonitoring();
+          this.memoryManager.startMemoryMonitoring();
         }
       });
     }
-    
+
     // 开始内存监控
-    this.startMemoryMonitoring();
+    this.memoryManager.startMemoryMonitoring();
   }
 
   /**
-   * 获取设备类型描述
+   * 移除最旧的音频缓冲区
    */
-  private getDeviceType(): string {
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    if (!isMobile) {
-      return '桌面';
-    }
-    const deviceMemory = (navigator as any).deviceMemory || 0;
-    if (deviceMemory >= 6) return '高端手机';
-    if (deviceMemory >= 4) return '中端手机';
-    if (deviceMemory >= 2) return '低端手机';
-    return '老旧手机';
-  }
-
-  /**
-   * 处理页面进入后台（手机端优化）
-   */
-  private handlePageHidden(): void {
-    const currentDuration = this.getTotalDuration();
-    if (currentDuration > 0) {
-      // 只保留30%的缓存
-      const keepDuration = this.maxBufferDuration * 0.3;
-      let removedCount = 0;
-      while (this.getTotalDuration() > keepDuration && this.audioBuffers.length > 0) {
-        this.audioBuffers.shift();
-        removedCount++;
-      }
-      if (removedCount > 0) {
-        console.log(`[TtsPlayer] 页面进入后台，清理缓存: ${removedCount}个音频块，保留: ${this.getTotalDuration().toFixed(1)}秒`);
-      }
-    }
-  }
-
-  /**
-   * 检查并限制缓存大小
-   */
-  private enforceMaxBufferDuration(): void {
-    // 如果正在播放，不清理缓存（避免播放时丢失音频）
-    if (this.isPlaying) {
-      return;
-    }
-    
-    const currentDuration = this.getTotalDuration();
-    if (currentDuration > this.maxBufferDuration) {
-      let removedCount = 0;
-      // 保留至少30%的缓存，避免全部清空
-      const keepDuration = this.maxBufferDuration * 0.3;
-      while (this.getTotalDuration() > keepDuration && this.audioBuffers.length > 0) {
-        this.audioBuffers.shift();
-        removedCount++;
-      }
-      console.warn(`[TtsPlayer] 缓存已满，丢弃最旧音频块: ${removedCount}个，保留缓存: ${this.getTotalDuration().toFixed(1)}秒 (限制: ${this.maxBufferDuration}秒)`);
+  private removeOldestBuffer(): void {
+    if (this.audioBuffers.length > 0) {
+      this.audioBuffers.shift();
     }
   }
 
@@ -157,103 +90,14 @@ export class TtsPlayer {
    * 设置内存压力回调
    */
   setMemoryPressureCallback(callback: MemoryPressureCallback): void {
-    this.memoryPressureCallback = callback;
-  }
-
-  /**
-   * 开始内存监控
-   */
-  private startMemoryMonitoring(): void {
-    // 停止之前的监控
-    this.stopMemoryMonitoring();
-    
-    // 每2秒检查一次内存
-    this.memoryCheckInterval = window.setInterval(() => {
-      this.checkMemoryPressure();
-    }, 2000);
-  }
-
-  /**
-   * 停止内存监控
-   */
-  private stopMemoryMonitoring(): void {
-    if (this.memoryCheckInterval) {
-      clearInterval(this.memoryCheckInterval);
-      this.memoryCheckInterval = null;
-    }
-  }
-
-  /**
-   * 检查内存压力
-   */
-  private checkMemoryPressure(): void {
-    let pressure: 'normal' | 'warning' | 'critical' = 'normal';
-    
-    // 方法1：使用 Performance API（如果支持）
-    if ('memory' in performance) {
-      const memory = (performance as any).memory;
-      const usedMB = memory.usedJSHeapSize / 1048576;
-      const limitMB = memory.jsHeapSizeLimit / 1048576;
-      const usagePercent = (usedMB / limitMB) * 100;
-      
-      if (usagePercent >= 80) {
-        pressure = 'critical';
-      } else if (usagePercent >= 50) {
-        pressure = 'warning';
-      }
-      
-      // 调试日志（每10次记录一次，避免日志过多）
-      if (Math.random() < 0.1) {
-        console.log(`[Memory] 内存使用: ${usagePercent.toFixed(1)}% (${usedMB.toFixed(1)}MB / ${limitMB.toFixed(1)}MB), 压力: ${pressure}`);
-      }
-    }
-    
-    // 方法2：根据缓存时长估算内存压力
-    const bufferDuration = this.getTotalDuration();
-    const bufferDurationPercent = (bufferDuration / this.maxBufferDuration) * 100;
-    
-    if (bufferDurationPercent >= 80) {
-      pressure = 'critical';
-    } else if (bufferDurationPercent >= 50 && pressure === 'normal') {
-      pressure = 'warning';
-    }
-    
-    // 如果压力状态变化，触发回调
-    if (pressure !== this.lastMemoryPressure) {
-      this.lastMemoryPressure = pressure;
-      if (this.memoryPressureCallback) {
-        this.memoryPressureCallback(pressure);
-      }
-      
-      // 如果压力过高，自动清理缓存
-      if (pressure === 'critical') {
-        this.handleCriticalMemoryPressure();
-      }
-    }
-  }
-
-  /**
-   * 处理严重内存压力
-   */
-  private handleCriticalMemoryPressure(): void {
-    const currentDuration = this.getTotalDuration();
-    if (currentDuration > 0) {
-      // 清理50%的缓存
-      const targetDuration = currentDuration * 0.5;
-      let removedCount = 0;
-      while (this.getTotalDuration() > targetDuration && this.audioBuffers.length > 0) {
-        this.audioBuffers.shift();
-        removedCount++;
-      }
-      console.warn(`[Memory] 严重内存压力，自动清理缓存: ${removedCount}个音频块，保留: ${this.getTotalDuration().toFixed(1)}秒`);
-    }
+    this.memoryManager.setMemoryPressureCallback(callback);
   }
 
   /**
    * 获取当前内存压力状态
    */
   getMemoryPressure(): 'normal' | 'warning' | 'critical' {
-    return this.lastMemoryPressure;
+    return this.memoryManager.getMemoryPressure();
   }
 
   /**
@@ -282,7 +126,7 @@ export class TtsPlayer {
     }
 
     console.log('TtsPlayer: 添加音频块，当前状态:', this.stateMachine.getState(), 'base64长度:', base64Data.length, 'utteranceIndex:', utteranceIndex, 'format:', ttsFormat);
-    
+
     try {
       await this.ensureAudioContext();
 
@@ -327,13 +171,30 @@ export class TtsPlayer {
         audio: float32Array,
         utteranceIndex: utteranceIndex
       });
-      
+
       // 检查并限制缓存大小（只在未播放时清理，避免播放时丢失音频）
+      const durationBefore = this.getTotalDuration();
       if (!this.isPlaying) {
-        this.enforceMaxBufferDuration();
+        this.memoryManager.enforceMaxBufferDuration(() => this.removeOldestBuffer(), this.isPlaying);
       }
-      
-      console.log('TtsPlayer: 音频块已添加到缓冲区，缓冲区大小:', this.audioBuffers.length, '是否正在播放:', this.isPlaying, '总时长:', this.getTotalDuration(), '秒', 'utteranceIndex:', utteranceIndex);
+      const durationAfter = this.getTotalDuration();
+      const wasTrimmed = durationBefore > durationAfter;
+
+      console.log('TtsPlayer: ✅ 音频块已添加到缓冲区', {
+        utterance_index: utteranceIndex,
+        buffer_count: this.audioBuffers.length,
+        is_playing: this.isPlaying,
+        total_duration: durationAfter.toFixed(2) + '秒',
+        was_trimmed: wasTrimmed,
+        duration_before: durationBefore.toFixed(2) + '秒',
+        duration_after: durationAfter.toFixed(2) + '秒',
+        audio_length_samples: float32Array.length,
+        audio_duration_seconds: (float32Array.length / this.sampleRate).toFixed(2) + '秒'
+      });
+
+      if (wasTrimmed) {
+        console.warn('TtsPlayer: ⚠️ 缓存已满，已丢弃最旧的音频块');
+      }
 
       // 不再自动播放，等待用户手动触发
     } catch (error) {
@@ -396,7 +257,7 @@ export class TtsPlayer {
       this.currentPlaybackIndex++;
       const currentBuffer = this.audioBuffers[0]; // 获取第一个音频块
       const utteranceIndex = currentBuffer.utteranceIndex;
-      
+
       // 通知 App 显示对应的文本
       if (this.playbackIndexChangeCallback) {
         console.log('TtsPlayer: 播放索引变化，显示 utteranceIndex:', utteranceIndex);
@@ -428,7 +289,7 @@ export class TtsPlayer {
 
     playNext();
   }
-  
+
   /**
    * 暂停播放
    */
@@ -449,46 +310,60 @@ export class TtsPlayer {
       console.log('TtsPlayer: 播放已暂停');
     }
   }
-  
+
   /**
    * 获取总音频时长（秒）
    */
   getTotalDuration(): number {
-    const totalSamples = this.audioBuffers.reduce((sum, buffer) => sum + buffer.audio.length, 0);
-    return totalSamples / this.sampleRate;
+    if (!this.sampleRate || this.sampleRate <= 0) {
+      console.warn('TtsPlayer: sampleRate 未初始化或无效，返回0');
+      return 0;
+    }
+    const totalSamples = this.audioBuffers.reduce((sum, buffer) => sum + (buffer.audio?.length || 0), 0);
+    const duration = totalSamples / this.sampleRate;
+    // 防御性检查：确保返回值是有效数字
+    if (isNaN(duration) || !isFinite(duration)) {
+      console.warn('TtsPlayer: getTotalDuration 计算出无效值，返回0', { totalSamples, sampleRate: this.sampleRate });
+      return 0;
+    }
+    return duration;
   }
-  
+
   /**
    * 获取缓冲区中的音频块数量
    */
   getBufferCount(): number {
     return this.audioBuffers.length;
   }
-  
+
   /**
    * 检查是否有待播放的音频
    */
   hasPendingAudio(): boolean {
     return this.audioBuffers.length > 0;
   }
-  
+
   /**
    * 清空缓冲区
    */
   clearBuffers(): void {
+    const bufferCount = this.audioBuffers.length;
+    const totalDuration = this.getTotalDuration();
+    const stackTrace = new Error().stack;
     this.audioBuffers = [];
-    this.lastMemoryPressure = 'normal';
-    if (this.memoryPressureCallback) {
-      this.memoryPressureCallback('normal');
-    }
-    console.log('TtsPlayer: 缓冲区已清空');
+    console.warn('TtsPlayer: ⚠️ 缓冲区已清空', {
+      buffer_count: bufferCount,
+      total_duration: totalDuration.toFixed(2) + '秒',
+      is_playing: this.isPlaying,
+      stack_trace: stackTrace?.split('\n').slice(0, 5).join('\n')
+    });
   }
 
   /**
    * 销毁播放器（清理资源）
    */
   destroy(): void {
-    this.stopMemoryMonitoring();
+    this.memoryManager.stopMemoryMonitoring();
     this.stop();
     this.clearBuffers();
     if (this.audioContext) {
@@ -520,14 +395,14 @@ export class TtsPlayer {
   getIsPlaying(): boolean {
     return this.isPlaying && !this.isPaused;
   }
-  
+
   /**
    * 检查是否已暂停
    */
   getIsPaused(): boolean {
     return this.isPaused;
   }
-  
+
   /**
    * 切换播放倍速
    * 循环：1x → 1.25x → 1.5x → 2x → 1x
@@ -536,23 +411,23 @@ export class TtsPlayer {
     // 移动到下一个倍速
     this.currentRateIndex = (this.currentRateIndex + 1) % this.playbackRates.length;
     this.playbackRate = this.playbackRates[this.currentRateIndex];
-    
+
     // 如果正在播放，更新当前音频源的倍速
     if (this.currentSource && this.isPlaying && !this.isPaused) {
       this.currentSource.playbackRate.value = this.playbackRate;
     }
-    
+
     console.log('TtsPlayer: 播放倍速已切换为', this.playbackRate, 'x');
     return this.playbackRate;
   }
-  
+
   /**
    * 获取当前播放倍速
    */
   getPlaybackRate(): number {
     return this.playbackRate;
   }
-  
+
   /**
    * 获取当前播放倍速的显示文本
    */

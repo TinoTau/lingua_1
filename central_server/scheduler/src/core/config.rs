@@ -559,6 +559,9 @@ pub struct WebTaskSegmentationConfig {
     /// 超过该停顿（毫秒）视为一个任务结束（默认 2000ms，增加以避免句子中间停顿导致截断）
     #[serde(default = "default_web_pause_ms")]
     pub pause_ms: u64,
+    /// 最大音频时长限制（毫秒），超过该时长自动触发 finalize（默认 20 秒）
+    #[serde(default = "default_max_audio_duration_ms")]
+    pub max_duration_ms: u64,
     /// 边界稳态化配置（EDGE-1: 统一 finalize 接口）
     #[serde(default)]
     pub edge_stabilization: EdgeStabilizationConfig,
@@ -568,10 +571,15 @@ fn default_web_pause_ms() -> u64 {
     3000  // 3秒（已修复：从5秒减少到3秒，与Web端静音超时保持一致）
 }
 
+fn default_max_audio_duration_ms() -> u64 {
+    20000  // 20秒（最大音频时长限制）
+}
+
 impl Default for WebTaskSegmentationConfig {
     fn default() -> Self {
         Self { 
             pause_ms: default_web_pause_ms(),
+            max_duration_ms: default_max_audio_duration_ms(),
             edge_stabilization: EdgeStabilizationConfig::default(),
         }
     }

@@ -173,7 +173,7 @@ impl ResultQueueManager {
     }
 
     pub async fn get_ready_results(&self, session_id: &str) -> Vec<SessionMessage> {
-        use tracing::{info, warn};
+        use tracing::{debug, info, warn};
         let now_ms = chrono::Utc::now().timestamp_millis();
         let mut queues = self.queues.write().await;
         if let Some(state) = queues.get_mut(session_id) {
@@ -195,7 +195,7 @@ impl ResultQueueManager {
                 }
             }
             
-            info!(
+            debug!(
                 session_id = %session_id,
                 expected_index = state.expected,
                 queue_size = state.pending.len(),
@@ -300,7 +300,7 @@ impl ResultQueueManager {
                 break;
             }
             
-            info!(
+            debug!(
                 session_id = %session_id,
                 ready_count = ready.len(),
                 new_expected_index = state.expected,

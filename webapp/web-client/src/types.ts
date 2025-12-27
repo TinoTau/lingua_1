@@ -298,6 +298,14 @@ export interface MissingResultMessage {
   trace_id?: string;
 }
 
+// 通用错误消息（来自调度服务器）
+export interface ErrorMessage {
+  type: 'error';
+  code: string;
+  message: string;
+  details?: any;
+}
+
 export type ServerMessage =
   | SessionInitAckMessage
   | AsrPartialMessage
@@ -312,5 +320,6 @@ export type ServerMessage =
   | WebRTCAnswerMessage
   | WebRTCIceMessage
   | BackpressureMessage
-  | MissingResultMessage;
+  | MissingResultMessage
+  | ErrorMessage;
 

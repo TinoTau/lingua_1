@@ -57,6 +57,8 @@ pub struct SessionActor {
     last_activity: Instant,
     /// 暂停阈值（毫秒）
     pause_ms: u64,
+    /// 最大音频时长限制（毫秒）
+    max_duration_ms: u64,
     /// 边界稳态化配置（EDGE-1）
     edge_config: crate::core::config::EdgeStabilizationConfig,
     /// 最大待处理事件数（背压控制）
@@ -73,6 +75,7 @@ impl SessionActor {
         message_tx: MessageSender,
         initial_utterance_index: u64,
         pause_ms: u64,
+        max_duration_ms: u64,
         edge_config: crate::core::config::EdgeStabilizationConfig,
     ) -> (Self, SessionActorHandle) {
         let (tx, rx) = mpsc::unbounded_channel();
@@ -88,6 +91,7 @@ impl SessionActor {
             idle_timeout_secs: 60, // 默认 60 秒空闲超时
             last_activity: Instant::now(),
             pause_ms,
+            max_duration_ms,
             edge_config,
             max_pending_events: 200, // 默认最大 200 个待处理事件
             pending_events_count: 0,
@@ -257,6 +261,25 @@ impl SessionActor {
         // 计算当前音频块的时长
         let chunk_duration_ms = calculate_audio_duration_ms(&chunk, &audio_format, sample_rate);
         
+        // 累积音频时长（用于最大时长限制检查）
+        self.internal_state.accumulated_audio_duration_ms += chunk_duration_ms;
+        
+        // 检查是否超过最大时长限制
+        if self.max_duration_ms > 0 && self.internal_state.accumulated_audio_duration_ms >= self.max_duration_ms {
+            warn!(
+                session_id = %self.session_id,
+                utterance_index = utterance_index,
+                accumulated_duration_ms = self.internal_state.accumulated_audio_duration_ms,
+                max_duration_ms = self.max_duration_ms,
+                "Audio duration exceeded max limit, auto-finalizing"
+            );
+            let finalized = self.try_finalize(utterance_index, "MaxDuration").await?;
+            if finalized {
+                // finalize 成功，新的音频块应该使用新的 utterance_index
+                utterance_index = self.internal_state.current_utterance_index;
+            }
+        }
+        
         // EDGE-5: Short-merge 逻辑
         // 如果当前音频块 < threshold 且不是 is_final，标记为 pending，不 finalize
         let short_merge_threshold_ms = self.edge_config.short_merge_threshold_ms;
@@ -289,6 +312,7 @@ impl SessionActor {
                 // 继续执行后续逻辑，添加音频块并 finalize
             } else {
                 // 正常情况：添加音频块但不 finalize，等待下一段
+                // 注意：短片段也需要累积时长，用于最大时长限制检查
                 let (_should_finalize_due_to_length, _current_size_bytes) = self.state
                     .audio_buffer
                     .add_chunk(&self.session_id, utterance_index, chunk)
@@ -299,6 +323,25 @@ impl SessionActor {
                     self.internal_state.first_chunk_client_timestamp_ms = client_timestamp_ms;
                 }
                 self.internal_state.enter_collecting();
+                
+                // 检查是否超过最大时长限制（短片段也需要检查）
+                if self.max_duration_ms > 0 && self.internal_state.accumulated_audio_duration_ms >= self.max_duration_ms {
+                    warn!(
+                        session_id = %self.session_id,
+                        utterance_index = utterance_index,
+                        accumulated_duration_ms = self.internal_state.accumulated_audio_duration_ms,
+                        max_duration_ms = self.max_duration_ms,
+                        "Audio duration exceeded max limit (short-merge path), auto-finalizing"
+                    );
+                    let finalized = self.try_finalize(utterance_index, "MaxDuration").await?;
+                    if finalized {
+                        // finalize 成功，新的音频块应该使用新的 utterance_index
+                        // 注意：这里不需要手动更新 utterance_index，因为 try_finalize 成功后会自动 increment
+                    }
+                } else if self.pause_ms > 0 {
+                    // 启动/重置超时计时器
+                    self.reset_timers().await?;
+                }
                 
                 // 不 finalize，等待下一段
                 return Ok(());
@@ -467,6 +510,8 @@ impl SessionActor {
             // EDGE-5: 重置 Short-merge 状态
             self.internal_state.pending_short_audio = false;
             self.internal_state.accumulated_short_audio_duration_ms = 0;
+            // 重置累积音频时长
+            self.internal_state.accumulated_audio_duration_ms = 0;
             self.state
                 .session_manager
                 .update_session(

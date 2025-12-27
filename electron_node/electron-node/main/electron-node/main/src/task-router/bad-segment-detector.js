@@ -123,22 +123,25 @@ function detectBadSegment(asrResult, audioDurationMs, previousText) {
     }
     // 5. RERUN-1: 低置信 + 短文本检测
     // 方案要求：language_probability < 0.70 且音频 >= 1500ms 但文本 < 5 字符
-    if (asrResult.language_probability !== undefined) {
+    if (asrResult.language_probability !== undefined && asrResult.language_probability !== null) {
         const langProb = asrResult.language_probability;
-        const textLen = asrResult.text.trim().length;
-        // 检测低置信 + 短文本（需要 audioDurationMs）
-        if (audioDurationMs !== undefined && langProb < 0.70 && audioDurationMs >= 1500 && textLen < 5) {
-            reasonCodes.push(`LOW_CONFIDENCE_SHORT_TEXT_${langProb.toFixed(2)}_${textLen}chars`);
-            qualityScore = Math.max(0.0, qualityScore - 0.4);
-            logger_1.default.debug(`RERUN-1: Low confidence + short text detected: langProb=${langProb.toFixed(2)}, ` +
-                `audioDuration=${audioDurationMs}ms, textLen=${textLen}`);
-        }
-        // 低语言置信度（< 0.70）会降低质量评分（即使不是短文本，也不依赖 audioDurationMs）
-        if (langProb < 0.70) {
-            qualityScore = Math.max(0.0, qualityScore - (0.70 - langProb));
-            // 添加低置信度原因代码（阈值 < 0.70），但避免重复添加
-            if (!reasonCodes.some(code => code.includes('LOW_CONFIDENCE_SHORT_TEXT'))) {
-                reasonCodes.push(`LOW_LANGUAGE_CONFIDENCE_${(langProb * 100).toFixed(0)}%`);
+        // 防御性检查：确保langProb是有效数字
+        if (typeof langProb === 'number' && !isNaN(langProb) && isFinite(langProb)) {
+            const textLen = asrResult.text.trim().length;
+            // 检测低置信 + 短文本（需要 audioDurationMs）
+            if (audioDurationMs !== undefined && langProb < 0.70 && audioDurationMs >= 1500 && textLen < 5) {
+                reasonCodes.push(`LOW_CONFIDENCE_SHORT_TEXT_${langProb.toFixed(2)}_${textLen}chars`);
+                qualityScore = Math.max(0.0, qualityScore - 0.4);
+                logger_1.default.debug(`RERUN-1: Low confidence + short text detected: langProb=${langProb.toFixed(2)}, ` +
+                    `audioDuration=${audioDurationMs}ms, textLen=${textLen}`);
+            }
+            // 低语言置信度（< 0.70）会降低质量评分（即使不是短文本，也不依赖 audioDurationMs）
+            if (langProb < 0.70) {
+                qualityScore = Math.max(0.0, qualityScore - (0.70 - langProb));
+                // 添加低置信度原因代码（阈值 < 0.70），但避免重复添加
+                if (!reasonCodes.some(code => code.includes('LOW_CONFIDENCE_SHORT_TEXT'))) {
+                    reasonCodes.push(`LOW_LANGUAGE_CONFIDENCE_${(langProb * 100).toFixed(0)}%`);
+                }
             }
         }
     }
@@ -172,10 +175,19 @@ function detectBadSegment(asrResult, audioDurationMs, previousText) {
             languageProbability: asrResult.language_probability,
         }, 'RERUN-1: Bad segment detected (segments timestamps + low confidence + garbage + overlap)');
     }
+    // 防御性检查：确保qualityScore是有效数字，防止NaN
+    let finalQualityScore = qualityScore;
+    if (typeof finalQualityScore !== 'number' || isNaN(finalQualityScore) || !isFinite(finalQualityScore)) {
+        logger_1.default.warn({
+            originalQualityScore: qualityScore,
+            qualityScoreType: typeof qualityScore,
+        }, 'Bad segment detector: qualityScore is invalid, using default 1.0');
+        finalQualityScore = 1.0;
+    }
     return {
         isBad,
         reasonCodes,
-        qualityScore: Math.max(0.0, Math.min(1.0, qualityScore)), // 限制在 0.0-1.0 范围
+        qualityScore: Math.max(0.0, Math.min(1.0, finalQualityScore)), // 限制在 0.0-1.0 范围
     };
 }
 /**
