@@ -24,6 +24,7 @@
 ### 开发与调试
 - [DEBUGGING_GUIDE.md](./DEBUGGING_GUIDE.md) - 调试指南
 - [SCHEDULER_COMPATIBILITY_FIX.md](./SCHEDULER_COMPATIBILITY_FIX.md) - 与调度服务器的兼容性修复说明
+- [WEB_CLIENT_REFACTOR_2025_01.md](./WEB_CLIENT_REFACTOR_2025_01.md) - Web 客户端重构与 Bug 修复文档（2025-01）
 - [UI 改进和功能更新](../webapp/web-client/docs/UI_IMPROVEMENTS_AND_FEATURES.md) - UI 改进和功能更新（2025-01）
 
 ### 测试

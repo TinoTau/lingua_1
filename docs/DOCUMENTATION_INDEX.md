@@ -35,7 +35,8 @@ docs/
 - [Phase 2 实现](./web_client/PHASE2_IMPLEMENTATION.md)
 - [Phase 3 实现](./web_client/PHASE3_IMPLEMENTATION.md)
 - [规模化规范](./web_client/SCALABILITY_SPEC.md)
-- [UI 改进和功能更新](../webapp/web-client/docs/UI_IMPROVEMENTS_AND_FEATURES.md) - 最新更新（2025-01）
+- [**Web 客户端重构与 Bug 修复（2025-01）**](./web_client/WEB_CLIENT_REFACTOR_2025_01.md) - 最新重构和修复文档 ⭐
+- [UI 改进和功能更新](../webapp/web-client/docs/UI_IMPROVEMENTS_AND_FEATURES.md) - UI 更新（2025-01）
 
 ### 中央服务器
 - [文档索引](./central_server/README.md)
