@@ -449,20 +449,25 @@ export class App {
         break;
 
       case 'translation_result':
-        // 详细日志：记录收到的消息
-        console.log('[App] 📥 收到 translation_result 消息:', {
+        // 详细日志：记录收到的消息（用于跟踪每个job的音频接收情况）
+        const audioStatus = message.tts_audio && message.tts_audio.length > 0 
+          ? `✅ 有音频 (${message.tts_audio.length} bytes, format: ${message.tts_format || 'unknown'})` 
+          : '❌ 无音频';
+        console.log(`[App] 📥 [Job ${message.job_id}] 收到 translation_result 消息 (utterance_index=${message.utterance_index}):`, {
           utterance_index: message.utterance_index,
+          job_id: message.job_id,
+          trace_id: message.trace_id,
+          audio_status: audioStatus,
           has_text_asr: !!message.text_asr,
           text_asr_length: message.text_asr?.length || 0,
           has_text_translated: !!message.text_translated,
           text_translated_length: message.text_translated?.length || 0,
           has_tts_audio: !!message.tts_audio,
           tts_audio_length: message.tts_audio?.length || 0,
+          tts_format: message.tts_format || 'unknown',
           tts_audio_preview: message.tts_audio ? message.tts_audio.substring(0, 50) + '...' : 'null',
           is_session_active: this.sessionManager.getIsSessionActive(),
-          current_state: this.stateMachine.getState(),
-          trace_id: message.trace_id,
-          job_id: message.job_id
+          current_state: this.stateMachine.getState()
         });
 
         // 如果会话已结束，丢弃翻译结果
@@ -485,13 +490,29 @@ export class App {
         const ttsEmpty = !message.tts_audio || message.tts_audio.length === 0;
 
         if (asrEmpty && translatedEmpty && ttsEmpty) {
-          console.log('[App] ⚠️ 收到空文本结果（静音检测），跳过缓存和播放:', {
+          console.log(`[App] ⚠️ [Job ${message.job_id}] 收到空文本结果（静音检测），跳过缓存和播放 (utterance_index=${message.utterance_index}):`, {
             utterance_index: message.utterance_index,
+            job_id: message.job_id,
             trace_id: message.trace_id,
-            job_id: message.job_id
+            has_text_asr: !!message.text_asr,
+            has_text_translated: !!message.text_translated,
+            has_tts_audio: !!message.tts_audio
           });
           // 不缓存，不播放，直接返回
           return;
+        }
+        
+        // 记录音频状态摘要（用于快速诊断）
+        if (!message.tts_audio || message.tts_audio.length === 0) {
+          console.warn(`[App] ⚠️ [Job ${message.job_id}] ⚠️ 警告：收到 translation_result 但没有音频数据 (utterance_index=${message.utterance_index}):`, {
+            utterance_index: message.utterance_index,
+            job_id: message.job_id,
+            trace_id: message.trace_id,
+            has_text_asr: !!message.text_asr,
+            has_text_translated: !!message.text_translated,
+            text_asr: message.text_asr?.substring(0, 50),
+            text_translated: message.text_translated?.substring(0, 50)
+          });
         }
 
         // 保存 trace_id 和 group_id，用于后续发送 TTS_PLAY_ENDED
@@ -576,19 +597,24 @@ export class App {
         }
 
         // 处理 TTS 音频（如果存在）
-        console.log('[App] 🔍 检查 TTS 音频:', {
+        console.log(`[App] 🔍 [Job ${message.job_id}] 检查 TTS 音频 (utterance_index=${message.utterance_index}):`, {
           utterance_index: message.utterance_index,
+          job_id: message.job_id,
+          trace_id: message.trace_id,
           has_tts_audio: !!message.tts_audio,
           tts_audio_length: message.tts_audio?.length || 0,
           tts_audio_type: typeof message.tts_audio,
           tts_audio_is_string: typeof message.tts_audio === 'string',
-          tts_format: message.tts_format
+          tts_format: message.tts_format || 'unknown'
         });
         
         if (message.tts_audio && message.tts_audio.length > 0) {
-          console.log('[App] 🎵 准备添加 TTS 音频到缓冲区:', {
+          console.log(`[App] 🎵 [Job ${message.job_id}] 准备添加 TTS 音频到缓冲区 (utterance_index=${message.utterance_index}):`, {
             utterance_index: message.utterance_index,
+            job_id: message.job_id,
+            trace_id: message.trace_id,
             base64_length: message.tts_audio.length,
+            tts_format: message.tts_format || 'pcm16',
             is_in_room: this.roomManager.getIsInRoom(),
             is_session_active: this.sessionManager.getIsSessionActive(),
             buffer_count_before: this.ttsPlayer.getBufferCount(),
@@ -597,9 +623,12 @@ export class App {
 
           // 再次检查会话状态（防止在异步操作期间会话被结束）
           if (!this.sessionManager.getIsSessionActive()) {
-            console.warn('[App] ⚠️ 会话已结束，丢弃 TTS 音频（在添加到缓冲区之前）:', {
+            console.warn(`[App] ⚠️ [Job ${message.job_id}] 会话已结束，丢弃 TTS 音频（在添加到缓冲区之前）:`, {
               utterance_index: message.utterance_index,
-              base64_length: message.tts_audio.length
+              job_id: message.job_id,
+              trace_id: message.trace_id,
+              base64_length: message.tts_audio.length,
+              tts_format: message.tts_format || 'unknown'
             });
             return;
           }
@@ -646,11 +675,24 @@ export class App {
               }
             }
             
+            // 添加音频到播放器，并记录结果
+            console.log(`[App] 🎧 [Job ${message.job_id}] 开始添加音频到 TtsPlayer (utterance_index=${message.utterance_index}, format=${ttsFormat})`);
             this.ttsPlayer.addAudioChunk(message.tts_audio, message.utterance_index, ttsFormat).then(() => {
+              console.log(`[App] ✅ [Job ${message.job_id}] 音频成功添加到 TtsPlayer (utterance_index=${message.utterance_index}):`, {
+                utterance_index: message.utterance_index,
+                job_id: message.job_id,
+                trace_id: message.trace_id,
+                base64_length: message.tts_audio.length,
+                tts_format: ttsFormat,
+                buffer_count_after: this.ttsPlayer.getBufferCount(),
+                total_duration: this.ttsPlayer.getTotalDuration()?.toFixed(2) + '秒'
+              });
               // 再次检查会话状态（防止在异步操作期间会话被结束）
               if (!this.sessionManager.getIsSessionActive()) {
-                console.warn('[App] ⚠️ 会话已结束，但音频已添加到缓冲区:', {
+                console.warn(`[App] ⚠️ [Job ${message.job_id}] 会话已结束，但音频已添加到缓冲区:`, {
                   utterance_index: message.utterance_index,
+                  job_id: message.job_id,
+                  trace_id: message.trace_id,
                   buffer_count: this.ttsPlayer.getBufferCount()
                 });
                 // 注意：不清空缓冲区，因为可能还有其他音频需要播放
@@ -661,8 +703,10 @@ export class App {
               const hasPendingAudio = this.ttsPlayer.hasPendingAudio();
               const totalDuration = this.ttsPlayer.getTotalDuration() || 0; // 防御性检查
               
-              console.log('[App] ✅ TTS 音频块已成功添加到缓冲区:', {
+              console.log(`[App] ✅ [Job ${message.job_id}] TTS 音频块已成功添加到缓冲区 (utterance_index=${message.utterance_index}):`, {
                 utterance_index: message.utterance_index,
+                job_id: message.job_id,
+                trace_id: message.trace_id,
                 buffer_size: hasPendingAudio ? '有音频' : '无音频',
                 buffer_count: bufferCount,
                 total_duration: (totalDuration || 0).toFixed(2) + '秒',
@@ -673,10 +717,13 @@ export class App {
               
               // 检查音频是否被丢弃（buffer_count为0或hasPendingAudio为false）
               if (!hasPendingAudio || bufferCount === 0) {
-                console.warn('[App] ⚠️ 音频被缓存清理丢弃，显示文本并标记[播放失败]:', {
+                console.warn(`[App] ⚠️ [Job ${message.job_id}] 音频被缓存清理丢弃，显示文本并标记[播放失败] (utterance_index=${message.utterance_index}):`, {
                   utterance_index: message.utterance_index,
+                  job_id: message.job_id,
+                  trace_id: message.trace_id,
                   buffer_count: bufferCount,
-                  total_duration: (totalDuration || 0).toFixed(2) + '秒'
+                  total_duration: (totalDuration || 0).toFixed(2) + '秒',
+                  has_pending_audio: hasPendingAudio
                 });
                 
                 // 即使音频被丢弃，也显示文本并标记[播放失败]或[内存限制]
@@ -752,8 +799,12 @@ export class App {
                 // 如果后续播放失败，会在播放失败的回调中处理
               }
             }).catch((error) => {
-              console.error('[App] ❌ 添加 TTS 音频块失败:', {
+              console.error(`[App] ❌ [Job ${message.job_id}] 添加 TTS 音频块失败 (utterance_index=${message.utterance_index}):`, {
                 utterance_index: message.utterance_index,
+                job_id: message.job_id,
+                trace_id: message.trace_id,
+                base64_length: message.tts_audio.length,
+                tts_format: ttsFormat,
                 error: error,
                 error_message: error?.message,
                 error_stack: error?.stack,

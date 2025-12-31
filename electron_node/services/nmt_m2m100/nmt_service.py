@@ -49,9 +49,8 @@ def load_config():
     config_path = os.path.join(os.path.dirname(__file__), "nmt_config.json")
     default_config = {
         "separator": {
-            "default": " ^^ ",
-            "translations": [" ^^ ", "^^", " ^^", "^^ "],
-            "word_variants": []
+            "default": " ⟪⟪SEP_MARKER⟫⟫ ",
+            "translations": [" ⟪⟪SEP_MARKER⟫⟫ ", "⟪⟪SEP_MARKER⟫⟫", " ⟪⟪SEP_MARKER⟫⟫", "⟪⟪SEP_MARKER⟫⟫ "]
         }
     }
     
@@ -72,8 +71,7 @@ def load_config():
 NMT_CONFIG = load_config()
 SEPARATOR = NMT_CONFIG["separator"]["default"]
 SEPARATOR_TRANSLATIONS = NMT_CONFIG["separator"]["translations"]
-SEPARATOR_WORD_VARIANTS = NMT_CONFIG["separator"]["word_variants"]
-print(f"[NMT Service] Separator configuration loaded: default='{SEPARATOR}', translations={len(SEPARATOR_TRANSLATIONS)}, word_variants={len(SEPARATOR_WORD_VARIANTS)}", flush=True)
+print(f"[NMT Service] Sentinel sequence configuration loaded: default='{SEPARATOR}', variants={len(SEPARATOR_TRANSLATIONS)}", flush=True)
 
 # 加载文本过滤配置
 PUNCTUATION_FILTER_ENABLED = NMT_CONFIG.get("text_filter", {}).get("punctuation_only_filter", {}).get("enabled", True)
@@ -502,13 +500,13 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
         # 如果需要真正的上下文支持，需要修改模型输入格式
         input_text = req.text
         context_text = req.context_text  # 保存 context_text 用于后续提取
-        # 使用特殊分隔符来准确识别和提取当前句翻译（从配置文件读取）
+        # 使用哨兵序列（Sentinel Sequence）来准确识别和提取当前句翻译（从配置文件读取）
         # 如果context_text为空或空字符串，直接使用当前文本，不需要拼接
         if req.context_text and req.context_text.strip():
-                # 使用特殊分隔符拼接：上下文 + 分隔符 + 当前文本
-                # 这样在提取时可以准确找到分界点
+                # 使用哨兵序列拼接：上下文 + 哨兵序列 + 当前文本
+                # 哨兵序列设计为长序列，提高被NMT模型原样保留的概率，便于准确提取
                 input_text = f"{req.context_text}{SEPARATOR}{req.text}"
-                print(f"[NMT Service] Concatenated input with separator: '{input_text[:100]}{'...' if len(input_text) > 100 else ''}' (total length={len(input_text)})")
+                print(f"[NMT Service] Concatenated input with sentinel sequence: '{input_text[:100]}{'...' if len(input_text) > 100 else ''}' (total length={len(input_text)})")
         else:
                 # context_text为空或空字符串，直接使用当前文本（如job0的情况）
                 print(f"[NMT Service] No context text provided, translating current text directly (length={len(req.text)})")
@@ -672,54 +670,75 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
         if req.context_text and req.context_text.strip():
             print(f"[NMT Service] WARNING: Output contains translation of BOTH context_text and text. Extracting only current sentence translation.")
             
-            # 方法：使用特殊分隔符来准确识别和提取当前句翻译
-            # 分隔符 <SEP> 会被翻译，但通常会被翻译成空格或标点，我们需要查找分隔符的翻译位置
-            # 从配置文件读取分隔符配置（已在模块加载时读取）
+            # 方法：使用哨兵序列（Sentinel Sequence）来准确识别和提取当前句翻译
+            # 哨兵序列设计为长序列（≥8字符），使用非常规Unicode字符，提高被NMT模型原样保留的概率
             
             try:
-                # 方法1：查找分隔符在完整翻译中的位置（最准确）
-                separator_pos = -1
-                found_separator = None
+                # 方法1：查找哨兵序列在完整翻译中的位置（最准确）
+                # 首先查找完整的哨兵序列（带Unicode括号），如果找不到，再查找纯文本SEP_MARKER
+                sentinel_pos = -1
+                found_sentinel = None
+                
+                # 第一步：查找完整的哨兵序列（带Unicode括号）
                 for sep_variant in SEPARATOR_TRANSLATIONS:
                     pos = out.find(sep_variant)
                     if pos != -1:
-                        separator_pos = pos + len(sep_variant)
-                        found_separator = sep_variant
-                        print(f"[NMT Service] Found separator '{sep_variant}' at position {pos}, extracted text will start at position {separator_pos}")
-                        print(f"[NMT Service] Text before separator: '{out[:pos][-50:]}'")
-                        print(f"[NMT Service] Text after separator (first 100 chars): '{out[separator_pos:separator_pos+100]}'")
+                        sentinel_pos = pos + len(sep_variant)
+                        found_sentinel = sep_variant
+                        print(f"[NMT Service] Found sentinel sequence '{sep_variant}' at position {pos}, extracted text will start at position {sentinel_pos}")
+                        print(f"[NMT Service] Text before sentinel: '{out[:pos][-50:]}'")
+                        print(f"[NMT Service] Text after sentinel (first 100 chars): '{out[sentinel_pos:sentinel_pos+100]}'")
                         break
                 
-                if separator_pos != -1:
-                    # 找到分隔符，提取之后的部分（当前句翻译）
-                    # 关键：确保提取位置跳过整个分隔符，不包含分隔符的任何部分
-                    raw_extracted = out[separator_pos:].strip()
+                # 第二步：如果完整哨兵序列未找到，查找纯文本SEP_MARKER（NMT可能将Unicode括号翻译掉了）
+                if sentinel_pos == -1:
+                    # 查找纯文本SEP_MARKER（可能带空格变体）
+                    sep_marker_variants = [' SEP_MARKER ', 'SEP_MARKER', ' SEP_MARKER', 'SEP_MARKER ']
+                    for marker_variant in sep_marker_variants:
+                        pos = out.find(marker_variant)
+                        if pos != -1:
+                            sentinel_pos = pos + len(marker_variant)
+                            found_sentinel = marker_variant
+                            print(f"[NMT Service] Found plain text SEP_MARKER '{marker_variant}' at position {pos} (Unicode brackets were translated away), extracted text will start at position {sentinel_pos}")
+                            print(f"[NMT Service] Text before SEP_MARKER: '{out[:pos][-50:]}'")
+                            print(f"[NMT Service] Text after SEP_MARKER (first 100 chars): '{out[sentinel_pos:sentinel_pos+100]}'")
+                            break
+                
+                if sentinel_pos != -1:
+                    # 找到哨兵序列，提取之后的部分（当前句翻译）
+                    # 关键：确保提取位置跳过整个哨兵序列，不包含哨兵序列的任何部分
+                    raw_extracted = out[sentinel_pos:].strip()
                     
-                    # 立即清理：移除提取内容开头的任何分隔符残留
-                    # 因为分隔符可能被部分翻译（如 `<SEP>` 变成 `P>`），需要彻底清理
+                    # 清理：移除提取内容中可能残留的哨兵序列
                     final_output = raw_extracted
-                    
-                    # 清理：移除所有分隔符变体
-                    # ^^ 分隔符不太可能被翻译，只需要移除分隔符变体即可
+                    # 清理完整哨兵序列（带Unicode括号）
                     for sep_variant in SEPARATOR_TRANSLATIONS:
                         if final_output.startswith(sep_variant):
                             final_output = final_output[len(sep_variant):].strip()
-                            print(f"[NMT Service] Removed separator variant '{sep_variant}' from extracted text start")
-                    
-                    # 移除中间的分隔符（不应该有，但以防万一）
-                    for sep_variant in SEPARATOR_TRANSLATIONS:
+                            print(f"[NMT Service] Removed sentinel sequence variant '{sep_variant}' from extracted text start")
+                        # 移除中间可能残留的哨兵序列
                         if sep_variant in final_output:
                             final_output = final_output.replace(sep_variant, " ").strip()
-                            print(f"[NMT Service] Removed separator variant '{sep_variant}' from extracted text middle")
+                            print(f"[NMT Service] Removed sentinel sequence variant '{sep_variant}' from extracted text middle")
+                    # 清理纯文本SEP_MARKER（NMT可能将Unicode括号翻译掉了）
+                    sep_marker_variants = [' SEP_MARKER ', 'SEP_MARKER', ' SEP_MARKER', 'SEP_MARKER ']
+                    for marker_variant in sep_marker_variants:
+                        if final_output.startswith(marker_variant):
+                            final_output = final_output[len(marker_variant):].strip()
+                            print(f"[NMT Service] Removed plain text SEP_MARKER '{marker_variant}' from extracted text start")
+                        # 移除中间可能残留的SEP_MARKER
+                        if marker_variant in final_output:
+                            final_output = final_output.replace(marker_variant, " ").strip()
+                            print(f"[NMT Service] Removed plain text SEP_MARKER '{marker_variant}' from extracted text middle")
                     
                     extraction_mode = "SENTINEL"
                     extraction_confidence = "HIGH"
-                    print(f"[NMT Service] Extracted current sentence translation (method: SENTINEL, separator pos={separator_pos}, raw length={len(raw_extracted)}, cleaned length={len(final_output)}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}'")
+                    print(f"[NMT Service] Extracted current sentence translation (method: SENTINEL, sentinel pos={sentinel_pos}, raw length={len(raw_extracted)}, cleaned length={len(final_output)}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}'")
                 else:
                     # ========== 阶段2：上下文翻译对齐切割（Fallback） ==========
-                    print(f"[NMT Service] Separator not found in output, falling back to context translation alignment method")
+                    print(f"[NMT Service] Sentinel sequence not found in output, falling back to context translation alignment method")
                     print(f"[NMT Service] Full output: '{out[:200]}{'...' if len(out) > 200 else ''}'")
-                    print(f"[NMT Service] Separator variants searched: {SEPARATOR_TRANSLATIONS}")
+                    print(f"[NMT Service] Sentinel sequence variants searched: {SEPARATOR_TRANSLATIONS}")
                     
                     # 单独翻译 context_text，用于在完整翻译中定位
                     context_text = req.context_text
@@ -779,14 +798,20 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
                                 extraction_confidence = "LOW"
                                 print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK estimated length with 5% buffer, context length={context_translation_length}, estimated pos={estimated_context_translation_length}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
                     
-                    # 注意：不再进行重叠检测，因为分隔符的回退机制已经处理了重复问题
-                    # 如果分隔符丢失，ALIGN_FALLBACK会通过上下文对齐来提取，这已经足够准确
+                    # 注意：不再进行重叠检测，因为哨兵序列的回退机制已经处理了重复问题
+                    # 如果哨兵序列丢失，ALIGN_FALLBACK会通过上下文对齐来提取，这已经足够准确
                     
-                    # 清理：移除所有可能的分隔符残留
+                    # 清理：移除所有可能残留的哨兵序列
                     for sep_variant in SEPARATOR_TRANSLATIONS:
                         if sep_variant in final_output:
                             final_output = final_output.replace(sep_variant, " ").strip()
-                            print(f"[NMT Service] Removed separator '{sep_variant}' from final output (fallback cleanup)")
+                            print(f"[NMT Service] Removed sentinel sequence '{sep_variant}' from final output (fallback cleanup)")
+                    # 清理纯文本SEP_MARKER（fallback cleanup）
+                    sep_marker_variants = [' SEP_MARKER ', 'SEP_MARKER', ' SEP_MARKER', 'SEP_MARKER ']
+                    for marker_variant in sep_marker_variants:
+                        if marker_variant in final_output:
+                            final_output = final_output.replace(marker_variant, " ").strip()
+                            print(f"[NMT Service] Removed plain text SEP_MARKER '{marker_variant}' from final output (fallback cleanup)")
                 
                 # ========== 阶段3：最终不为空兜底 ==========
                 if not final_output or final_output.strip() == "":
@@ -861,16 +886,18 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
                             if match_pos > 0:
                                 # 检查前面是否有更合理的起始点（以大写字母或数字开头）
                                 # 向前查找，找到最近的大写字母或数字作为可能的起始点
-                                # 但需要排除分隔符相关的字符（<, >, P等）
+                                # 跳过哨兵序列相关的字符
                                 for i in range(match_pos - 1, max(0, match_pos - 50), -1):
-                                    # 跳过分隔符相关的字符
-                                    if out[i] in ['<', '>', 'P', 'S', 'E']:
-                                        # 检查是否是分隔符的一部分
-                                        if i > 0 and i < len(out) - 1:
-                                            # 检查前后字符，判断是否是分隔符
-                                            context = out[max(0, i-2):min(len(out), i+3)]
-                                            if '<SEP>' in context or '<sep>' in context or 'SEP' in context:
-                                                continue  # 跳过分隔符字符
+                                    # 检查是否是哨兵序列的一部分
+                                    if i > 0 and i < len(out) - 1:
+                                        context = out[max(0, i-10):min(len(out), i+20)]
+                                        # 如果当前位置在哨兵序列范围内，跳过
+                                        for sep_variant in SEPARATOR_TRANSLATIONS:
+                                            if sep_variant in context:
+                                                sep_start = context.find(sep_variant)
+                                                sep_end = sep_start + len(sep_variant)
+                                                if max(0, i-10) + sep_start <= i < max(0, i-10) + sep_end:
+                                                    continue
                                     
                                     if out[i].isupper() or out[i].isdigit():
                                         # 找到可能的起始点，但需要检查是否合理（不要太远）
@@ -879,19 +906,30 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
                                             # 检查从该位置到提取结果之间的文本是否合理
                                             potential_text = out[potential_start:match_pos + len(final_output)]
                                             
-                                            # 检查potential_text是否包含分隔符，如果包含则跳过
-                                            has_separator = False
+                                            # 检查potential_text是否包含哨兵序列，如果包含则跳过
+                                            has_sentinel = False
                                             for sep_variant in SEPARATOR_TRANSLATIONS:
                                                 if sep_variant in potential_text:
-                                                    has_separator = True
+                                                    has_sentinel = True
                                                     break
+                                            # 也检查纯文本SEP_MARKER
+                                            if not has_sentinel:
+                                                sep_marker_variants = [' SEP_MARKER ', 'SEP_MARKER', ' SEP_MARKER', 'SEP_MARKER ']
+                                                for marker_variant in sep_marker_variants:
+                                                    if marker_variant in potential_text:
+                                                        has_sentinel = True
+                                                        break
                                             
-                                            if not has_separator and final_output in potential_text and len(potential_text) <= len(out) * 0.8:
+                                            if not has_sentinel and final_output in potential_text and len(potential_text) <= len(out) * 0.8:
                                                 print(f"[NMT Service] Found better extraction point (starts with uppercase): '{potential_text[:100]}{'...' if len(potential_text) > 100 else ''}'")
                                                 final_output = potential_text.strip()
-                                                # 清理潜在的分隔符
+                                                # 清理潜在的哨兵序列残留（完整序列）
                                                 for sep_variant in SEPARATOR_TRANSLATIONS:
                                                     final_output = final_output.replace(sep_variant, " ").strip()
+                                                # 清理纯文本SEP_MARKER
+                                                sep_marker_variants = [' SEP_MARKER ', 'SEP_MARKER', ' SEP_MARKER', 'SEP_MARKER ']
+                                                for marker_variant in sep_marker_variants:
+                                                    final_output = final_output.replace(marker_variant, " ").strip()
                                                 break
             except Exception as e:
                 print(f"[NMT Service] WARNING: Failed to extract current sentence translation: {e}, using full output")

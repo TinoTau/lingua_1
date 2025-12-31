@@ -121,11 +121,18 @@ export class TtsPlayer {
    */
   async addAudioChunk(base64Data: string, utteranceIndex: number, ttsFormat: string = 'pcm16'): Promise<void> {
     if (!base64Data || base64Data.length === 0) {
-      console.warn('TtsPlayer: 收到空的音频数据，跳过');
+      console.warn(`[TtsPlayer] ⚠️ 收到空的音频数据，跳过 (utterance_index=${utteranceIndex})`);
       return;
     }
 
-    console.log('TtsPlayer: 添加音频块，当前状态:', this.stateMachine.getState(), 'base64长度:', base64Data.length, 'utteranceIndex:', utteranceIndex, 'format:', ttsFormat);
+    console.log(`[TtsPlayer] 🎵 开始添加音频块 (utterance_index=${utteranceIndex}):`, {
+      utterance_index: utteranceIndex,
+      base64_length: base64Data.length,
+      format: ttsFormat,
+      current_state: this.stateMachine.getState(),
+      buffer_count_before: this.audioBuffers.length,
+      total_duration_before: (this.getTotalDuration() || 0).toFixed(2) + '秒'
+    });
 
     try {
       await this.ensureAudioContext();
@@ -143,11 +150,18 @@ export class TtsPlayer {
       }
 
       // 解码 base64
+      console.log(`[TtsPlayer] 🔄 [utterance_index=${utteranceIndex}] 开始解码音频数据 (format=${ttsFormat})`);
       const binaryString = atob(base64Data);
       const bytes = new Uint8Array(binaryString.length);
       for (let i = 0; i < binaryString.length; i++) {
         bytes[i] = binaryString.charCodeAt(i);
       }
+      console.log(`[TtsPlayer] 🔄 [utterance_index=${utteranceIndex}] Base64解码完成:`, {
+        utterance_index: utteranceIndex,
+        base64_length: base64Data.length,
+        binary_length: bytes.length,
+        format: ttsFormat
+      });
 
       // 根据格式解码音频
       let float32Array: Float32Array;
@@ -156,14 +170,26 @@ export class TtsPlayer {
         if (!this.audioDecoder) {
           throw new Error('Opus decoder not initialized');
         }
+        console.log(`[TtsPlayer] 🔄 [utterance_index=${utteranceIndex}] 开始Opus解码`);
         float32Array = await this.audioDecoder.decode(bytes);
+        console.log(`[TtsPlayer] 🔄 [utterance_index=${utteranceIndex}] Opus解码完成:`, {
+          utterance_index: utteranceIndex,
+          decoded_samples: float32Array.length,
+          duration_seconds: (float32Array.length / this.sampleRate).toFixed(2) + '秒'
+        });
       } else {
         // PCM16 格式：直接转换
+        console.log(`[TtsPlayer] 🔄 [utterance_index=${utteranceIndex}] 开始PCM16转换`);
         const int16Array = new Int16Array(bytes.buffer);
         float32Array = new Float32Array(int16Array.length);
         for (let i = 0; i < int16Array.length; i++) {
           float32Array[i] = int16Array[i] / 32768.0;
         }
+        console.log(`[TtsPlayer] 🔄 [utterance_index=${utteranceIndex}] PCM16转换完成:`, {
+          utterance_index: utteranceIndex,
+          decoded_samples: float32Array.length,
+          duration_seconds: (float32Array.length / this.sampleRate).toFixed(2) + '秒'
+        });
       }
 
       // 将音频块与 utteranceIndex 关联
@@ -215,7 +241,14 @@ export class TtsPlayer {
             this.audioBuffers.splice(indexToRemove, 1);
             shouldDiscard = true;
             discardReason = result.reason;
-            console.warn(`[TtsPlayer] ⚠️ 音频块因内存限制被丢弃: ${discardReason}`);
+            console.warn(`[TtsPlayer] ⚠️ [utterance_index=${utteranceIndex}] 音频块因内存限制被丢弃:`, {
+              utterance_index: utteranceIndex,
+              reason: discardReason,
+              duration_before: (durationBefore || 0).toFixed(2) + '秒',
+              new_chunk_duration: (newChunkDuration || 0).toFixed(2) + '秒',
+              max_duration: (this.maxBufferDuration || 0) + '秒',
+              buffer_count_after: this.audioBuffers.length
+            });
           }
         } else {
           // 如果总时长超过限制，触发自动播放（多个音频累加的情况）
@@ -242,8 +275,10 @@ export class TtsPlayer {
         throw new Error(`AUDIO_DISCARDED: ${discardReason || '内存超过限制'}`);
       }
 
-      console.log('TtsPlayer: ✅ 音频块已添加到缓冲区', {
+      console.log(`[TtsPlayer] ✅ [utterance_index=${utteranceIndex}] 音频块已成功添加到缓冲区:`, {
         utterance_index: utteranceIndex,
+        format: ttsFormat,
+        base64_length: base64Data.length,
         buffer_count: this.audioBuffers.length,
         is_playing: this.isPlaying,
         total_duration: durationAfter.toFixed(2) + '秒',
@@ -251,7 +286,8 @@ export class TtsPlayer {
         duration_before: durationBefore.toFixed(2) + '秒',
         duration_after: durationAfter.toFixed(2) + '秒',
         audio_length_samples: float32Array.length,
-        audio_duration_seconds: (float32Array.length / this.sampleRate).toFixed(2) + '秒'
+        audio_duration_seconds: (float32Array.length / this.sampleRate).toFixed(2) + '秒',
+        buffer_order: this.audioBuffers.map(b => b.utteranceIndex).join(', ')
       });
 
       if (wasTrimmed) {
