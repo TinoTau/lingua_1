@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 """下载 Piper 官方中文模型"""
 
-from huggingface_hub import hf_hub_download
-from pathlib import Path
 import os
+from pathlib import Path
+from huggingface_hub import hf_hub_download
 
 repo_id = "rhasspy/piper-voices"
 subfolder = "zh/zh_CN/huayan/medium"

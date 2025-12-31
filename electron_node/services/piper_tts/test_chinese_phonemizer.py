@@ -2,6 +2,7 @@
 """测试中文音素化器"""
 
 import sys
+import traceback
 from chinese_phonemizer import ChinesePhonemizer
 
 lexicon_path = "models/vits-zh-aishell3/lexicon.txt"
@@ -23,7 +24,6 @@ try:
     
 except Exception as e:
     print(f"✗ Error: {e}")
-    import traceback
     traceback.print_exc()
     sys.exit(1)
 
