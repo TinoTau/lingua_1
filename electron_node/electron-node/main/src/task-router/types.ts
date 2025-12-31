@@ -34,10 +34,16 @@ export interface ASRTask {
   enable_streaming?: boolean;
   context_text?: string;
   job_id?: string; // 任务 ID（用于取消任务）
+  utterance_index?: number; // 新增：utterance 索引（用于日志和调试）
   padding_ms?: number; // EDGE-4: 尾部静音 padding（毫秒），None 表示不添加 padding
   rerun_count?: number; // P0.5-SH-4: 当前重跑次数（用于限频）
   max_rerun_count?: number; // P0.5-SH-4: 最大重跑次数（默认 2）
   rerun_timeout_ms?: number; // P0.5-SH-4: 单次重跑超时（毫秒，默认 5000）
+  // S2-6: 二次解码参数（可选，用于更保守的配置）
+  beam_size?: number; // Beam size（默认从配置读取，二次解码可使用更大值）
+  patience?: number; // Patience（默认从配置读取，二次解码可使用更高值）
+  temperature?: number; // Temperature（默认从配置读取，二次解码可使用更低值）
+  best_of?: number; // Best of（默认从配置读取）
 }
 
 /**
@@ -68,6 +74,7 @@ export interface NMTTask {
   tgt_lang: string;
   context_text?: string;
   job_id?: string; // 任务 ID（用于取消任务）
+  num_candidates?: number; // 生成候选数量（可选，用于 NMT Repair）
 }
 
 /**
@@ -76,6 +83,7 @@ export interface NMTTask {
 export interface NMTResult {
   text: string;
   confidence?: number;
+  candidates?: string[]; // 候选翻译列表（可选，用于 NMT Repair）
 }
 
 /**

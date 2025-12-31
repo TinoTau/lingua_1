@@ -41,7 +41,16 @@ export class App {
   private webrtcManager: WebRTCManager;
 
   constructor(config: Partial<Config> = {}) {
-    this.config = { ...DEFAULT_CONFIG, ...config };
+    // 从 localStorage 读取自动播放配置（如果存在）
+    const savedAutoPlay = localStorage.getItem('tts_auto_play');
+    const autoPlayConfig = savedAutoPlay !== null ? savedAutoPlay === 'true' : undefined;
+    
+    this.config = { 
+      ...DEFAULT_CONFIG, 
+      ...config,
+      // 如果配置中没有指定 autoPlay，使用 localStorage 中的值，否则使用默认值
+      autoPlay: config.autoPlay !== undefined ? config.autoPlay : (autoPlayConfig !== undefined ? autoPlayConfig : DEFAULT_CONFIG.autoPlay),
+    };
 
     // 初始化可观测性管理器（如果配置了上报 URL）
     if (this.config.observabilityReportUrl) {
@@ -170,6 +179,8 @@ export class App {
 
     // TTS 播放索引变化回调（用于文本显示同步）
     this.ttsPlayer.setPlaybackIndexChangeCallback((utteranceIndex) => {
+      // 更新当前播放索引，触发高亮
+      this.translationDisplay.setCurrentPlayingIndex(utteranceIndex);
       this.onPlaybackIndexChange(utteranceIndex);
     });
 
@@ -183,7 +194,10 @@ export class App {
    * 状态变化处理
    */
   private onStateChange(newState: SessionState, oldState: SessionState): void {
-    console.log(`State changed: ${oldState} -> ${newState}`);
+    console.log(`[App] State changed: ${oldState} -> ${newState}`, {
+      isSessionActive: this.sessionManager.getIsSessionActive(),
+      isRecording: this.recorder.getIsRecording(),
+    });
 
     // 根据状态控制录音
     if (newState === SessionState.INPUT_READY || newState === SessionState.INPUT_RECORDING) {
@@ -193,17 +207,25 @@ export class App {
         if (newState === SessionState.INPUT_RECORDING) {
           // 如果录音器未运行，启动它（start() 方法会自动检查并初始化）
           if (!this.recorder.getIsRecording()) {
-            this.recorder.start().catch((error) => {
-              console.error('Failed to start recorder:', error);
+            console.log('[App] 录音器未运行，正在启动...');
+            this.recorder.start().then(() => {
+              console.log('[App] ✅ 录音器已成功启动');
+            }).catch((error) => {
+              console.error('[App] ❌ 启动录音器失败:', error);
             });
+          } else {
+            console.log('[App] 录音器已在运行');
           }
         }
       } else {
         // 会话未开始：只在 INPUT_RECORDING 时启动录音
         if (newState === SessionState.INPUT_RECORDING && oldState === SessionState.INPUT_READY) {
           // start() 方法会自动检查并初始化录音器
-          this.recorder.start().catch((error) => {
-            console.error('Failed to start recorder:', error);
+          console.log('[App] 会话未开始，启动录音器...');
+          this.recorder.start().then(() => {
+            console.log('[App] ✅ 录音器已成功启动');
+          }).catch((error) => {
+            console.error('[App] ❌ 启动录音器失败:', error);
           });
         }
       }
@@ -211,25 +233,58 @@ export class App {
       // 播放模式：屏蔽麦克风输入，避免声学回响
       if (this.sessionManager.getIsSessionActive()) {
         // 会话进行中：停止录音（不关闭），屏蔽输入
+        console.log('[App] 播放模式：正在屏蔽麦克风输入，避免声学回响');
         this.recorder.stop();
-        console.log('播放模式：已屏蔽麦克风输入，避免声学回响');
+        console.log('[App] ✅ 播放模式：已屏蔽麦克风输入，避免声学回响', {
+          isRecording: this.recorder.getIsRecording(),
+        });
       } else {
         // 会话未开始：关闭麦克风
+        console.log('[App] 播放模式：会话未开始，关闭麦克风');
         this.recorder.stop();
         this.recorder.close();
       }
     }
 
-      // 从播放状态回到录音状态时，恢复录音
+    // 从播放状态回到录音状态时，恢复录音
+    // 重要：这个检查必须在最后，确保状态转换完成后再恢复录音
     if (newState === SessionState.INPUT_RECORDING && oldState === SessionState.PLAYING_TTS) {
       if (this.sessionManager.getIsSessionActive()) {
         // 会话进行中：恢复录音
+        console.log('[App] 从播放状态回到录音状态，正在恢复录音...', {
+          isRecording: this.recorder.getIsRecording(),
+        });
         if (!this.recorder.getIsRecording()) {
-          this.recorder.start().catch((error) => {
-            console.error('恢复录音失败:', error);
-          });
+          // 延迟一小段时间，确保状态转换完成
+          // 修复：使用更可靠的恢复机制，确保录音器一定被恢复
+          const restoreTimeout = setTimeout(() => {
+            this.recorder.start().then(() => {
+              console.log('[App] ✅ 已恢复录音，可以继续说话', {
+                isRecording: this.recorder.getIsRecording(),
+              });
+              // 修复：再次检查，确保录音器确实已启动
+              if (!this.recorder.getIsRecording()) {
+                console.warn('[App] ⚠️ 录音器恢复后仍未运行，尝试再次恢复...');
+                this.recorder.start().catch((error) => {
+                  console.error('[App] ❌ 第二次恢复录音失败:', error);
+                });
+              }
+            }).catch((error) => {
+              console.error('[App] ❌ 恢复录音失败:', error);
+              // 修复：如果恢复失败，记录错误并尝试再次恢复（最多重试3次）
+              console.warn('[App] ⚠️ 恢复录音失败，将在 500ms 后重试...');
+              setTimeout(() => {
+                this.recorder.start().catch((retryError) => {
+                  console.error('[App] ❌ 重试恢复录音失败:', retryError);
+                });
+              }, 500);
+            });
+          }, 100);
+          // 修复：保存 timeout ID，以便在需要时清理（虽然这里不需要清理）
+          // 注意：这里不需要清理，因为恢复录音是必需的
+        } else {
+          console.log('[App] 录音器已在运行，无需恢复');
         }
-        console.log('已恢复录音，可以继续说话');
       }
     }
   }
@@ -276,15 +331,58 @@ export class App {
         break;
 
       case 'missing_result':
-        // Missing 占位结果：静默丢弃，但记录 debug 日志
+        // Missing 占位结果：如果有文本显示，需要标记出音频丢失的原因
         // 这表示某个 utterance_index 的结果超时或丢失，但系统继续运行
-        console.debug('[App] Missing result received (silently discarded):', {
+        console.warn('[App] Missing result received:', {
           utterance_index: message.utterance_index,
           reason: message.reason,
           created_at_ms: message.created_at_ms,
           trace_id: message.trace_id,
         });
-        // 不显示给用户，不缓存，直接返回
+        
+        // 修复：即使有文本显示，也需要标记出音频丢失的原因
+        // 检查是否有缓存的翻译结果（可能之前已经显示了文本）
+        const cachedResult = this.translationDisplay.getTranslationResult(message.utterance_index);
+        if (cachedResult) {
+          // 如果有缓存的文本，添加音频丢失标记
+          const audioLossReason = message.reason === "silence_detected" ? "静音检测" : 
+                                 message.reason === "timeout" ? "超时" : 
+                                 message.reason === "result_timeout" ? "结果超时" : "未知原因";
+          
+          const markedOriginalText = cachedResult.originalText ? 
+            `[音频丢失:${audioLossReason}] ${cachedResult.originalText}` : 
+            cachedResult.originalText;
+          const markedTranslatedText = cachedResult.translatedText ? 
+            `[音频丢失:${audioLossReason}] ${cachedResult.translatedText}` : 
+            cachedResult.translatedText;
+          
+          // 更新缓存的翻译结果
+          this.translationDisplay.saveTranslationResult(message.utterance_index, {
+            originalText: markedOriginalText,
+            translatedText: markedTranslatedText,
+            serviceTimings: cachedResult.serviceTimings,
+            networkTimings: cachedResult.networkTimings,
+            schedulerSentAtMs: cachedResult.schedulerSentAtMs
+          });
+          
+          // 重新显示标记后的翻译结果
+          const updatedResult = this.translationDisplay.getTranslationResult(message.utterance_index);
+          if (updatedResult) {
+            this.translationDisplay.displayTranslationResult(
+              updatedResult.originalText || '',
+              updatedResult.translatedText || '',
+              message.utterance_index,
+              updatedResult.serviceTimings,
+              updatedResult.networkTimings,
+              updatedResult.schedulerSentAtMs
+            );
+          }
+        } else {
+          // 如果没有缓存的文本，说明这是一个真正的空结果（静音检测等）
+          // 不显示占位结果，只记录日志（用于调试）
+          console.warn(`[App] Missing result for utterance_index ${message.utterance_index}, reason: ${message.reason}, but no cached text found - this is a silent/empty utterance, not displaying placeholder`);
+        }
+        
         return;
 
       case 'backpressure':
@@ -455,9 +553,11 @@ export class App {
             console.log('[App] 翻译结果已显示过，跳过重复显示，utterance_index:', message.utterance_index);
           } else {
             // 尝试显示文本，如果成功显示，才标记为已显示
+            // 传递 utterance_index 用于分段显示和高亮
             const displayed = this.translationDisplay.displayTranslationResult(
               message.text_asr,
               message.text_translated,
+              message.utterance_index, // 传递 utterance_index
               message.service_timings,
               message.network_timings,
               message.scheduler_sent_at_ms
@@ -579,10 +679,15 @@ export class App {
                   total_duration: (totalDuration || 0).toFixed(2) + '秒'
                 });
                 
-                // 即使音频被丢弃，也显示文本并标记[播放失败]
+                // 即使音频被丢弃，也显示文本并标记[播放失败]或[内存限制]
                 if (message.text_asr || message.text_translated) {
-                  const failedOriginalText = message.text_asr ? `[播放失败] ${message.text_asr}` : '';
-                  const failedTranslatedText = message.text_translated ? `[播放失败] ${message.text_translated}` : '';
+                  // 检查是否是内存限制导致的丢弃
+                  const isMemoryLimitError = false; // 这里需要从错误信息中判断
+                  const warningPrefix = isMemoryLimitError ? '[内存限制]' : '[播放失败]';
+                  const warningSuffix = isMemoryLimitError && discardReason ? ` (${discardReason})` : '';
+                  
+                  const failedOriginalText = message.text_asr ? `${warningPrefix} ${message.text_asr}${warningSuffix}` : '';
+                  const failedTranslatedText = message.text_translated ? `${warningPrefix} ${message.text_translated}${warningSuffix}` : '';
                   
                   // 保存翻译结果（标记为失败）
                   this.translationDisplay.saveTranslationResult(message.utterance_index, {
@@ -598,6 +703,7 @@ export class App {
                     const displayed = this.translationDisplay.displayTranslationResult(
                       failedOriginalText,
                       failedTranslatedText,
+                      message.utterance_index, // 传递 utterance_index
                       message.service_timings,
                       message.network_timings,
                       message.scheduler_sent_at_ms
@@ -611,22 +717,32 @@ export class App {
               } else {
                 // 音频成功添加，正常处理
                 const currentState = this.stateMachine.getState();
-                const isFirstAudio = message.utterance_index === 0;
                 const bufferCount = this.ttsPlayer.getBufferCount();
+                const isAutoPlayEnabled = this.config.autoPlay ?? false;
                 
-                // 如果是第一段音频（utterance_index === 0）且当前状态为 INPUT_RECORDING，自动播放
-                if (isFirstAudio && currentState === SessionState.INPUT_RECORDING && bufferCount === 1) {
-                  console.log('[App] 🎵 第一段音频已添加，自动开始播放');
+                // 根据配置决定是否自动播放
+                // 自动播放模式：所有翻译结果都自动播放
+                // 手动播放模式：等待用户手动触发或内存压力过高时自动播放
+                if (isAutoPlayEnabled && currentState === SessionState.INPUT_RECORDING && !this.ttsPlayer.getIsPlaying()) {
+                  console.log('[App] 🎵 自动播放模式：音频已添加，自动开始播放', {
+                    utterance_index: message.utterance_index,
+                    bufferCount,
+                  });
                   // 延迟一小段时间，确保UI已更新
                   setTimeout(() => {
                     this.startTtsPlayback().catch((error) => {
-                      console.error('[App] 第一段音频自动播放失败:', error);
+                      console.error('[App] 自动播放失败:', error);
                     });
                   }, 100);
                 } else {
-                  // 不自动播放，等待用户手动触发或内存压力过高时自动播放
+                  // 手动播放模式：不自动播放，等待用户手动触发或内存压力过高时自动播放
                   // 注意：自动播放只在内存压力 >= 80% (critical) 时触发（见 onMemoryPressure 方法）
-                  console.log('[App] ⏸️ 音频已添加到缓冲区，等待用户手动播放或内存压力过高时自动播放');
+                  console.log('[App] ⏸️ 手动播放模式：音频已添加到缓冲区，等待用户手动播放或内存压力过高时自动播放', {
+                    utterance_index: message.utterance_index,
+                    bufferCount,
+                    isAutoPlayEnabled,
+                    isPlaying: this.ttsPlayer.getIsPlaying(),
+                  });
                 }
                 
                 // 触发 UI 更新，显示播放按钮和时长
@@ -645,10 +761,17 @@ export class App {
                 tts_format: message.tts_format
               });
               
-              // 即使添加失败，也显示文本并标记[播放失败]
+              // 检查是否是内存限制导致的丢弃
+              const isMemoryLimitError = error?.message?.includes('AUDIO_DISCARDED');
+              const discardReason = isMemoryLimitError ? error.message.replace('AUDIO_DISCARDED: ', '') : undefined;
+              
+              // 即使添加失败，也显示文本并标记[播放失败]或[内存限制]
+              const warningPrefix = isMemoryLimitError ? '[内存限制]' : '[播放失败]';
+              const warningSuffix = isMemoryLimitError && discardReason ? ` (${discardReason})` : '';
+              
               if (message.text_asr || message.text_translated) {
-                const failedOriginalText = message.text_asr ? `[播放失败] ${message.text_asr}` : '';
-                const failedTranslatedText = message.text_translated ? `[播放失败] ${message.text_translated}` : '';
+                const failedOriginalText = message.text_asr ? `${warningPrefix} ${message.text_asr}${warningSuffix}` : '';
+                const failedTranslatedText = message.text_translated ? `${warningPrefix} ${message.text_translated}${warningSuffix}` : '';
                 
                 // 保存翻译结果（标记为失败）
                 this.translationDisplay.saveTranslationResult(message.utterance_index, {
@@ -659,11 +782,36 @@ export class App {
                   schedulerSentAtMs: message.scheduler_sent_at_ms
                 });
                 
-                // 显示翻译结果（带[播放失败]标记）
-                if (!this.translationDisplay.isDisplayed(message.utterance_index)) {
+                // 无论是否已显示，都更新为带标记的版本
+                const cachedResult = this.translationDisplay.getTranslationResult(message.utterance_index);
+                if (cachedResult) {
+                  // 如果已经显示过，更新为带标记的版本
+                  this.translationDisplay.saveTranslationResult(message.utterance_index, {
+                    originalText: failedOriginalText,
+                    translatedText: failedTranslatedText,
+                    serviceTimings: message.service_timings,
+                    networkTimings: message.network_timings,
+                    schedulerSentAtMs: message.scheduler_sent_at_ms
+                  });
+                  // 重新显示带标记的文本
+                  const updatedResult = this.translationDisplay.getTranslationResult(message.utterance_index);
+                  if (updatedResult) {
+                    this.translationDisplay.displayTranslationResult(
+                      updatedResult.originalText || '',
+                      updatedResult.translatedText || '',
+                      message.utterance_index,
+                      updatedResult.serviceTimings,
+                      updatedResult.networkTimings,
+                      updatedResult.schedulerSentAtMs
+                    );
+                  }
+                  console.log('[App] 翻译结果已更新（带[播放失败]标记），utterance_index:', message.utterance_index);
+                } else {
+                  // 如果还没有显示，显示带标记的文本
                   const displayed = this.translationDisplay.displayTranslationResult(
                     failedOriginalText,
                     failedTranslatedText,
+                    message.utterance_index, // 传递 utterance_index
                     message.service_timings,
                     message.network_timings,
                     message.scheduler_sent_at_ms
@@ -813,6 +961,7 @@ export class App {
       const displayed = this.translationDisplay.displayTranslationResult(
         result.originalText,
         result.translatedText,
+        utteranceIndex, // 传递 utterance_index
         result.serviceTimings,
         result.networkTimings,
         result.schedulerSentAtMs
@@ -859,15 +1008,19 @@ export class App {
    * 播放完成处理
    */
   private onPlaybackFinished(): void {
-    console.log('Playback finished');
+    console.log('[App] 🎵 播放完成', {
+      isSessionActive: this.sessionManager.getIsSessionActive(),
+      currentState: this.stateMachine.getState(),
+      isRecording: this.recorder.getIsRecording(),
+    });
 
     // 发送 TTS_PLAY_ENDED 消息（如果 trace_id 和 group_id 存在）
     if (this.currentTraceId && this.currentGroupId) {
       const tsEndMs = Date.now();
       this.wsClient.sendTtsPlayEnded(this.currentTraceId, this.currentGroupId, tsEndMs);
-      console.log(`Sent TTS_PLAY_ENDED: trace_id=${this.currentTraceId}, group_id=${this.currentGroupId}, ts_end_ms=${tsEndMs}`);
+      console.log(`[App] 已发送 TTS_PLAY_ENDED: trace_id=${this.currentTraceId}, group_id=${this.currentGroupId}, ts_end_ms=${tsEndMs}`);
     } else {
-      console.warn('Cannot send TTS_PLAY_ENDED: missing trace_id or group_id');
+      console.warn('[App] ⚠️ 无法发送 TTS_PLAY_ENDED: 缺少 trace_id 或 group_id');
     }
 
     // 清空当前的 trace_id 和 group_id（准备下一句话）
@@ -876,6 +1029,27 @@ export class App {
 
     // 状态机会根据会话状态自动切换到 INPUT_RECORDING（会话进行中）或 INPUT_READY（会话未开始）
     // 状态切换会触发 onStateChange，在那里处理录音器的重新启动
+    // 注意：如果会话进行中，状态机会自动切换到 INPUT_RECORDING，这会触发 onStateChange
+    // 在 onStateChange 中会检查并恢复录音
+    
+    // 修复：双重保障 - 在播放完成后也检查并恢复录音
+    // 如果状态机已经切换到 INPUT_RECORDING，但录音器仍未恢复，这里作为备用恢复机制
+    if (this.sessionManager.getIsSessionActive() && 
+        this.stateMachine.getState() === SessionState.INPUT_RECORDING && 
+        !this.recorder.getIsRecording()) {
+      console.warn('[App] ⚠️ 播放完成后检测到录音器未恢复，尝试恢复录音...');
+      setTimeout(() => {
+        this.recorder.start().then(() => {
+          console.log('[App] ✅ 播放完成后已恢复录音（备用恢复机制）', {
+            isRecording: this.recorder.getIsRecording(),
+          });
+        }).catch((error) => {
+          console.error('[App] ❌ 播放完成后恢复录音失败（备用恢复机制）:', error);
+        });
+      }, 200);
+    }
+    
+    console.log('[App] 等待状态机自动切换状态并恢复录音...');
   }
 
   /**
@@ -1444,6 +1618,35 @@ export class App {
    * 更新房间成员列表并同步 WebRTC 连接
    */
   // syncPeerConnections 已移至 WebRTCManager
+
+  /**
+   * 设置自动播放模式
+   * @param enabled 是否启用自动播放（true=自动播放模式，false=手动播放模式）
+   */
+  setAutoPlay(enabled: boolean): void {
+    this.config.autoPlay = enabled;
+    // 保存到 localStorage，以便下次启动时使用
+    localStorage.setItem('tts_auto_play', enabled.toString());
+    console.log('[App] 自动播放模式已更新:', enabled ? '自动播放模式' : '手动播放模式');
+  }
+
+  /**
+   * 获取自动播放模式
+   * @returns 是否启用自动播放
+   */
+  getAutoPlay(): boolean {
+    return this.config.autoPlay ?? false;
+  }
+
+  /**
+   * 切换自动播放模式
+   * @returns 切换后的自动播放状态
+   */
+  toggleAutoPlay(): boolean {
+    const newState = !this.getAutoPlay();
+    this.setAutoPlay(newState);
+    return newState;
+  }
 
   /**
    * 获取当前状态

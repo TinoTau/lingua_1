@@ -107,14 +107,62 @@ export class AudioSender {
     try {
       if (this.useBinaryFrame && this.audioEncoder && this.sessionId) {
         // Binary Frame 模式
-        const encoded = await this.audioEncoder.encode(audioData);
+        // Opus 必须使用 Plan A 格式（packet 格式），与 JSON 模式保持一致
+        let encodedAudio: Uint8Array;
+        
+        if (this.audioCodecConfig?.codec === 'opus') {
+          const encoder = this.audioEncoder as any;
+          if (encoder.encodePackets && typeof encoder.encodePackets === 'function') {
+            const opusPackets = await encoder.encodePackets(audioData);
+            
+            // Plan A 格式打包：每个 packet 前面加上 2 字节的长度前缀
+            const packetDataParts: Uint8Array[] = [];
+            let totalSize = 0;
+            
+            for (const packet of opusPackets) {
+              if (packet.length === 0) {
+                continue; // 跳过空 packet
+              }
+              
+              if (packet.length > 65535) {
+                console.error(`[AudioSender] Packet too large: ${packet.length} bytes (max 65535)`);
+                throw new Error(`Opus packet too large: ${packet.length} bytes`);
+              }
+              
+              const lenBuffer = new ArrayBuffer(2);
+              const lenView = new DataView(lenBuffer);
+              lenView.setUint16(0, packet.length, true); // little-endian
+              
+              packetDataParts.push(new Uint8Array(lenBuffer));
+              packetDataParts.push(packet);
+              totalSize += 2 + packet.length;
+            }
+            
+            if (packetDataParts.length === 0) {
+              throw new Error('No valid Opus packets after encoding');
+            }
+            
+            encodedAudio = new Uint8Array(totalSize);
+            let offset = 0;
+            for (const part of packetDataParts) {
+              encodedAudio.set(part, offset);
+              offset += part.length;
+            }
+          } else {
+            throw new Error('Opus encoder does not support encodePackets()');
+          }
+        } else {
+          // PCM16 或其他格式，使用 encode() 方法
+          encodedAudio = await this.audioEncoder.encode(audioData);
+        }
+        
         const frame: AudioChunkBinaryFrame = {
           frameType: BinaryFrameType.AUDIO_CHUNK,
           sessionId: this.sessionId,
           seq: this.sequence++,
           timestamp: Date.now(),
           isFinal: isFinal,
-          audioData: encoded,
+          audioData: encodedAudio,
         };
         const binaryFrame = encodeAudioChunkFrame(frame);
         // 将 Uint8Array 转换为 ArrayBuffer（确保是 ArrayBuffer 而不是 SharedArrayBuffer）

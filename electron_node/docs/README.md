@@ -25,9 +25,12 @@
 
 ## 核心参考（仍然有价值）
 
-- **迁移文档**：`MIGRATION.md`
-- **服务热插拔验证**：`SERVICE_HOT_PLUG_VERIFICATION.md`
-- **中文 TTS 问题修复总结**：`CHINESE_TTS_FIX_SUMMARY.md` - 记录中文 TTS 问题诊断和解决方案
+- **迁移文档**：`MIGRATION.md` - 从 expired/ 迁移到 electron_node/ 的详细说明
+- **服务热插拔验证**：`SERVICE_HOT_PLUG_VERIFICATION.md` - 服务热插拔与任务链验证
+- **TTS 服务文档**：`TTS_SERVICES.md` - Piper TTS 和 YourTTS 服务说明
+- **路径结构**：`PATH_STRUCTURE.md` - 路径结构与目录解析
+- **音频处理索引**：`AUDIO_PROCESSING_INDEX.md` - 音频处理相关文档索引
+- **音频聚合完整机制**：`short_utterance/AUDIO_AGGREGATION_COMPLETE_MECHANISM.md` ⭐ **重要** - 完整的音频聚合、ASR、NMT、调度服务器finalize和Web端机制文档
 
 ## 模块化功能（历史/设计材料）
 
@@ -37,6 +40,4 @@
 
 ## 项目状态
 
-- `../PROJECT_COMPLETENESS.md`
-- `../TEST_STATUS.md`
-- `../TEST_EXECUTION_REPORT.md`
+- `../PROJECT_COMPLETENESS.md` - 项目完整性报告

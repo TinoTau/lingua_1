@@ -236,6 +236,18 @@
                 </div>
 
                 <div class="stat-card">
+                    <h2>✅ 在线节点</h2>
+                    <div class="stat-value" id="onlineNodes">0</div>
+                    <div class="stat-label">当前在线的节点数</div>
+                </div>
+
+                <div class="stat-card">
+                    <h2>🚀 就绪节点</h2>
+                    <div class="stat-value" id="readyNodes">0</div>
+                    <div class="stat-label">服务就绪的节点数（所有核心服务 ready=true）</div>
+                </div>
+
+                <div class="stat-card">
                     <h2>👥 总会话数</h2>
                     <div class="stat-value" id="totalSessions">0</div>
                     <div class="stat-label">当前活跃的会话数</div>
@@ -273,6 +285,33 @@
                             </tr>
                         </thead>
                         <tbody id="instancesTable">
+                            <!-- 动态填充 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 节点列表 -->
+            <div class="section">
+                <h2>🖥️ 节点列表</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>节点 ID</th>
+                                <th>平台</th>
+                                <th>状态</th>
+                                <th>在线</th>
+                                <th>CPU</th>
+                                <th>GPU</th>
+                                <th>内存</th>
+                                <th>任务</th>
+                                <th>服务状态</th>
+                                <th>能力状态</th>
+                                <th>最后心跳</th>
+                            </tr>
+                        </thead>
+                        <tbody id="nodesTable">
                             <!-- 动态填充 -->
                         </tbody>
                     </table>
@@ -316,6 +355,8 @@
                 document.getElementById('totalInstances').textContent = data.total_instances;
                 document.getElementById('onlineInstances').textContent = data.online_instances;
                 document.getElementById('totalNodes').textContent = data.total_nodes;
+                document.getElementById('onlineNodes').textContent = data.online_nodes || 0;
+                document.getElementById('readyNodes').textContent = data.ready_nodes || 0;
                 document.getElementById('totalSessions').textContent = data.total_sessions;
                 
                 // 更新 Pending 和 DLQ（带颜色提示）
@@ -335,6 +376,11 @@
                 
                 // 更新实例列表
                 updateInstancesTable(data.instances);
+                
+                // 更新节点列表
+                if (data.nodes) {
+                    updateNodesTable(data.nodes);
+                }
                 
                 // 更新最后更新时间
                 document.getElementById('lastUpdate').textContent = new Date().toLocaleString('zh-CN');
@@ -380,6 +426,72 @@
                     <td class="${pendingClass}">${inst.inbox_pending}</td>
                     <td class="${dlqClass}">${inst.dlq_length}</td>
                     <td>${inst.pid}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateNodesTable(nodes) {
+            const tbody = document.getElementById('nodesTable');
+            tbody.innerHTML = '';
+            
+            if (!nodes || nodes.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="11" style="text-align: center; color: #666;">暂无节点数据</td></tr>';
+                return;
+            }
+            
+            nodes.forEach(node => {
+                const row = document.createElement('tr');
+                row.className = 'instance-row';
+                
+                const onlineBadge = node.online 
+                    ? '<span class="badge badge-online">在线</span>'
+                    : '<span class="badge badge-offline">离线</span>';
+                
+                const statusBadge = node.status === 'Ready' 
+                    ? '<span class="badge badge-online">就绪</span>'
+                    : node.status === 'WarmingUp'
+                    ? '<span class="badge badge-warning">预热中</span>'
+                    : '<span class="badge badge-offline">未就绪</span>';
+                
+                // 格式化服务状态
+                const servicesText = node.services && node.services.length > 0
+                    ? node.services.map(s => `${s.service_id}:${s.status}`).join(', ')
+                    : '无';
+                
+                // 格式化能力状态
+                const capabilitiesText = node.capabilities && node.capabilities.length > 0
+                    ? node.capabilities.map(c => {
+                        const readyBadge = c.ready 
+                            ? '<span class="badge badge-online">✓</span>' 
+                            : '<span class="badge badge-offline">✗</span>';
+                        return `${c.service_type}${readyBadge}`;
+                    }).join(' ')
+                    : '无';
+                
+                // 格式化最后心跳时间
+                const lastHeartbeat = node.last_heartbeat 
+                    ? new Date(node.last_heartbeat).toLocaleString('zh-CN')
+                    : '未知';
+                
+                const gpuUsage = node.gpu_usage !== null && node.gpu_usage !== undefined 
+                    ? `${node.gpu_usage.toFixed(1)}%` 
+                    : 'N/A';
+                
+                const jobInfo = `${node.current_jobs}/${node.max_concurrent_jobs}`;
+                
+                row.innerHTML = `
+                    <td><strong>${node.node_id}</strong></td>
+                    <td>${node.platform}</td>
+                    <td>${statusBadge}</td>
+                    <td>${onlineBadge}</td>
+                    <td>${node.cpu_usage.toFixed(1)}%</td>
+                    <td>${gpuUsage}</td>
+                    <td>${node.memory_usage.toFixed(1)}%</td>
+                    <td>${jobInfo}</td>
+                    <td style="font-size: 12px; max-width: 200px; overflow: hidden; text-overflow: ellipsis;" title="${servicesText}">${servicesText}</td>
+                    <td style="font-size: 12px;">${capabilitiesText}</td>
+                    <td style="font-size: 12px;">${lastHeartbeat}</td>
                 `;
                 tbody.appendChild(row);
             });

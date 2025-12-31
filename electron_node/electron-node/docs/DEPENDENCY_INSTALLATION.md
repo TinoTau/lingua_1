@@ -16,13 +16,22 @@ Lingua Node Client 需要以下系统依赖：
 
 ## 安装方式
 
-### 方案1：用户手动安装（当前实现）
+### Python
 
-#### Python
-- 下载：https://www.python.org/downloads/
-- 安装时勾选 "Add Python to PATH"
+**必需依赖**，需要手动安装：
 
-#### ffmpeg
+1. 下载：https://www.python.org/downloads/
+2. 安装时勾选 "Add Python to PATH"
+3. 验证安装：
+   ```powershell
+   python --version
+   ```
+   应该显示 Python 3.10 或更高版本
+
+### ffmpeg
+
+**已自动打包**，无需手动安装。如果打包版本不可用，可以手动安装：
+
 - **Windows**：
   1. 下载：https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip
   2. 解压到 `C:\ffmpeg`
@@ -38,64 +47,94 @@ Lingua Node Client 需要以下系统依赖：
   brew install ffmpeg
   ```
 
-#### CUDA（可选）
-- 下载：https://developer.nvidia.com/cuda-downloads
-- 安装后会自动添加到 PATH
+### CUDA（可选）
 
-### 方案2：安装程序自动检查（推荐实现）
+用于 GPU 加速，可选安装：
 
-在安装程序中添加依赖检查脚本，如果缺失依赖：
-1. 显示友好的错误提示
-2. 提供下载链接
-3. 引导用户安装
-
-### 方案3：打包 ffmpeg 到应用（最佳体验）
-
-将 ffmpeg 二进制文件打包到应用中，自动使用：
-- 优点：用户无需手动安装
-- 缺点：增加安装包大小（~50MB）
+1. 下载：https://developer.nvidia.com/cuda-downloads
+2. 安装后会自动添加到 PATH
+3. 应用会自动检测并使用 CUDA
 
 ## 当前实现状态
 
 ### ✅ 已实现
-- CUDA 环境自动检测和配置（`cuda-env.ts`）
-- Python 依赖通过 `requirements.txt` 自动安装
 
-### ✅ 已实现
-- ffmpeg 自动检测（优先检查打包版本）
-- ffmpeg 打包到应用
-- Python 依赖通过 `requirements.txt` 自动安装
+- **ffmpeg 自动打包和检测**
+  - 打包到应用中（`tools/ffmpeg/bin/ffmpeg.exe`）
+  - 自动检测打包版本，回退到系统版本
+  - 自动配置 `FFMPEG_BINARY` 环境变量
+  - 实现位置：`main/src/utils/dependency-checker.ts`、`main/src/utils/python-service-config.ts`
+
+- **CUDA 环境自动检测和配置**
+  - 自动检测 CUDA 安装路径
+  - 自动配置 CUDA 环境变量
+  - 实现位置：`main/src/utils/cuda-env.ts`
+
+- **Python 依赖自动安装**
+  - 通过各服务的 `requirements.txt` 自动安装
+  - 虚拟环境自动管理
+
+- **依赖检查器**
+  - 启动时自动检查所有依赖
+  - 提供详细的状态信息
+  - 实现位置：`main/src/utils/dependency-checker.ts`
 
 ### ❌ 未实现
-- 安装程序依赖检查
 
-## 建议的改进
+- 安装程序依赖检查（计划中）
 
-### 短期（v0.2.0）
-1. 在应用启动时检查 ffmpeg
-2. 如果缺失，显示友好的错误提示和安装指南
+## 依赖检查
 
-### 中期（v0.3.0）
-1. 在安装程序中添加依赖检查
-2. 提供一键安装脚本
+应用启动时会自动检查所有依赖。检查结果会记录在日志中：
 
-### 长期（v0.4.0）
-1. ✅ 将 ffmpeg 打包到应用中（已完成）
-2. ✅ 自动配置环境变量（已完成）
-3. 在安装程序中添加依赖检查
+- ✅ **已安装**：依赖可用，版本信息已记录
+- ⚠️ **缺失（必需）**：必需依赖缺失，应用可能无法正常工作
+- ℹ️ **缺失（可选）**：可选依赖缺失，功能受限但不影响基本使用
 
-## 检查脚本示例
+### 手动检查依赖
+
+依赖检查器提供以下函数：
 
 ```typescript
-// src/utils/dependency-checker.ts
-export function checkFfmpegAvailable(): boolean {
-  try {
-    const { execSync } = require('child_process');
-    execSync('ffmpeg -version', { stdio: 'ignore' });
-    return true;
-  } catch {
-    return false;
-  }
-}
+import { checkAllDependencies, validateRequiredDependencies } from './utils/dependency-checker';
+
+// 检查所有依赖
+const dependencies = checkAllDependencies();
+
+// 验证必需依赖
+const { valid, missing } = validateRequiredDependencies();
 ```
+
+## 故障排除
+
+### Python 未找到
+
+**症状**：应用无法启动 Python 服务
+
+**解决方案**：
+1. 确认 Python 已安装：`python --version`
+2. 确认 Python 在 PATH 中：`where python`（Windows）或 `which python`（Linux/macOS）
+3. 如果不在 PATH 中，重新安装 Python 并勾选 "Add Python to PATH"
+
+### ffmpeg 未找到
+
+**症状**：faster-whisper-vad 服务无法解码 Opus 音频
+
+**解决方案**：
+1. 应用已打包 ffmpeg，通常不需要手动安装
+2. 如果打包版本不可用，检查系统 PATH 中是否有 ffmpeg
+3. 如果都没有，按照上述安装方式手动安装
+
+### CUDA 未检测到
+
+**症状**：GPU 加速不可用，使用 CPU 模式
+
+**解决方案**：
+1. 确认 CUDA 已正确安装
+2. 检查 CUDA 路径是否在标准位置
+3. CPU 模式也可以正常工作，只是速度较慢
+
+## 相关文档
+
+- [FFmpeg 配置与打包](./FFMPEG.md)：详细的 FFmpeg 配置说明
 

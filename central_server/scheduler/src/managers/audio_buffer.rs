@@ -82,7 +82,35 @@ impl AudioBufferManager {
     pub async fn add_chunk(&self, session_id: &str, utterance_index: u64, chunk: Vec<u8>) -> (bool, usize) {
         let key = format!("{}:{}", session_id, utterance_index);
         let mut buffers = self.buffers.write().await;
-        let buffer = buffers.entry(key).or_insert_with(AudioBuffer::new);
+        
+        // 检查是否有其他utterance_index的残留缓冲区（不应该存在）
+        let session_prefix = format!("{}:", session_id);
+        let residual_keys: Vec<String> = buffers
+            .keys()
+            .filter(|k| {
+                k.starts_with(&session_prefix) && {
+                    if let Some(idx_str) = k.strip_prefix(&session_prefix) {
+                        if let Ok(idx) = idx_str.parse::<u64>() {
+                            return idx != utterance_index;
+                        }
+                    }
+                    false
+                }
+            })
+            .cloned()
+            .collect();
+        
+        if !residual_keys.is_empty() {
+            tracing::warn!(
+                session_id = %session_id,
+                current_utterance_index = utterance_index,
+                residual_keys = ?residual_keys,
+                "⚠️ Residual audio buffers detected when adding chunk! These should have been cleared after finalize."
+            );
+        }
+        
+        let buffer = buffers.entry(key.clone()).or_insert_with(AudioBuffer::new);
+        let chunk_size = chunk.len();
         buffer.add_chunk(chunk);
         
         // 异常保护：限制音频总大小，防止极端情况下音频无限累积导致 GPU 内存溢出
@@ -95,6 +123,16 @@ impl AudioBufferManager {
         // 使用 500KB 作为异常保护上限，正常情况下不会触发（因为 pause_ms 会先触发）
         const MAX_AUDIO_SIZE_BYTES: usize = 500 * 1024; // 500KB（异常保护）
         let should_finalize = buffer.total_size > MAX_AUDIO_SIZE_BYTES;
+        
+        tracing::debug!(
+            session_id = %session_id,
+            utterance_index = utterance_index,
+            chunk_size_bytes = chunk_size,
+            total_size_bytes = buffer.total_size,
+            chunk_count = buffer.chunks.len(),
+            should_finalize = should_finalize,
+            "Audio chunk added to buffer"
+        );
         
         (should_finalize, buffer.total_size)
     }
@@ -126,6 +164,45 @@ impl AudioBufferManager {
         buffers.retain(|key, _| !key.starts_with(&format!("{}:", session_id)));
         let mut map = self.last_chunk_at_ms.write().await;
         map.remove(session_id);
+    }
+
+    /// 获取指定会话的所有音频缓冲区状态（用于调试）
+    pub async fn get_session_buffers_status(&self, session_id: &str) -> Vec<(u64, usize)> {
+        let buffers = self.buffers.read().await;
+        let prefix = format!("{}:", session_id);
+        buffers
+            .iter()
+            .filter_map(|(key, buffer)| {
+                if key.starts_with(&prefix) {
+                    // 提取 utterance_index
+                    if let Some(index_str) = key.strip_prefix(&prefix) {
+                        if let Ok(utterance_index) = index_str.parse::<u64>() {
+                            return Some((utterance_index, buffer.total_size));
+                        }
+                    }
+                }
+                None
+            })
+            .collect()
+    }
+
+    /// 检查指定会话是否有残留的音频缓冲区（用于调试）
+    pub async fn has_residual_buffers(&self, session_id: &str, current_utterance_index: u64) -> bool {
+        let buffers = self.buffers.read().await;
+        let prefix = format!("{}:", session_id);
+        buffers
+            .iter()
+            .any(|(key, _)| {
+                if key.starts_with(&prefix) {
+                    if let Some(index_str) = key.strip_prefix(&prefix) {
+                        if let Ok(utterance_index) = index_str.parse::<u64>() {
+                            // 检查是否有其他utterance_index的缓冲区（不应该存在）
+                            return utterance_index != current_utterance_index;
+                        }
+                    }
+                }
+                false
+            })
     }
 }
 

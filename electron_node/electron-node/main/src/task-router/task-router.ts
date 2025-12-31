@@ -16,8 +16,8 @@ import {
   TONEResult,
   ServiceSelectionStrategy,
 } from './types';
-// Opus 编码支持（使用 WebAssembly 实现，不会影响其他服务）
-import { parseWavFile, encodePcm16ToOpus, isOpusEncoderAvailable } from '../utils/opus-encoder';
+// Opus 编码支持（已移至 PipelineOrchestrator，这里只保留 parseWavFile 用于效率统计）
+import { parseWavFile } from '../utils/opus-encoder';
 // CONF-3: 基于 segments 时间戳的断裂/异常检测
 import { detectBadSegment, BadSegmentDetectionResult } from './bad-segment-detector';
 // P0.5-SH-1: 坏段触发条件封装
@@ -707,6 +707,54 @@ export class TaskRouter {
           jobId: task.job_id,
         }, 'Routing ASR task to faster-whisper-vad');
 
+        // 检查音频输入质量（用于调试 Job2 问题）
+        let audioDataLength = 0;
+        let audioDataPreview = '';
+        try {
+          if (task.audio) {
+            const audioBuffer = Buffer.from(task.audio, 'base64');
+            audioDataLength = audioBuffer.length;
+            // 计算音频时长（假设 PCM16，16kHz）
+            const estimatedDurationMs = Math.round((audioDataLength / 2) / 16); // PCM16 = 2 bytes per sample, 16kHz = 16000 samples per second
+            // 计算 RMS（用于检查音频是否为空或静音）
+            const samples = new Int16Array(audioBuffer.buffer, audioBuffer.byteOffset, audioBuffer.length / 2);
+            let sumSquares = 0;
+            for (let i = 0; i < samples.length; i++) {
+              sumSquares += samples[i] * samples[i];
+            }
+            const rms = Math.sqrt(sumSquares / samples.length);
+            const rmsNormalized = rms / 32768.0; // 归一化到 0-1
+            
+            audioDataPreview = `length=${audioDataLength}, duration=${estimatedDurationMs}ms, rms=${rmsNormalized.toFixed(4)}`;
+            
+            logger.info(
+              {
+                serviceId: endpoint.serviceId,
+                jobId: task.job_id,
+                utteranceIndex: task.utterance_index,
+                audioDataLength,
+                estimatedDurationMs,
+                rms: rmsNormalized.toFixed(4),
+                audioFormat,
+                sampleRate: task.sample_rate || 16000,
+                contextTextLength: task.context_text?.length || 0,
+                contextTextPreview: task.context_text ? task.context_text.substring(0, 200) : null,
+              },
+              'ASR task: Audio input quality check'
+            );
+          }
+        } catch (error) {
+          logger.warn(
+            {
+              serviceId: endpoint.serviceId,
+              jobId: task.job_id,
+              utteranceIndex: task.utterance_index,
+              error: (error as Error).message,
+            },
+            'ASR task: Failed to analyze audio input quality'
+          );
+        }
+        
         const requestBody: any = {
           job_id: task.job_id || `asr_${Date.now()}`,
           src_lang: task.src_lang,
@@ -715,12 +763,16 @@ export class TaskRouter {
           audio_format: audioFormat,
           sample_rate: task.sample_rate || 16000,
           task: 'transcribe', // 必需字段
-          beam_size: this.getASRConfig().beam_size, // 从配置文件读取，默认 10
+          beam_size: task.beam_size || this.getASRConfig().beam_size, // S2-6: 支持自定义 beam_size（二次解码使用更大值）
           condition_on_previous_text: false, // 修复：改为 false，避免重复识别（当上下文文本和当前音频内容相同时，会导致重复输出）
           use_context_buffer: false, // 修复：禁用音频上下文，避免重复识别和增加处理时间（utterance已经是完整的，不需要音频上下文）
           use_text_context: true, // 保留文本上下文（initial_prompt），这是Faster Whisper的标准功能
           enable_streaming_asr: task.enable_streaming || false,
           context_text: task.context_text,
+          // S2-6: 二次解码参数（如果提供）
+          best_of: task.best_of,
+          temperature: task.temperature,
+          patience: task.patience,
           // EDGE-4: Padding 配置（如果提供）
           padding_ms: task.padding_ms,
         };
@@ -796,8 +848,9 @@ export class TaskRouter {
         }
         
         // 构建 ASR 结果
+        const asrText = response.data.text || '';
         const asrResult: ASRResult = {
-          text: response.data.text || '',
+          text: asrText,
           confidence: 1.0, // faster-whisper-vad 不返回 confidence
           language: response.data.language || task.src_lang,
           language_probability: response.data.language_probability,  // 新增：检测到的语言的概率
@@ -805,6 +858,29 @@ export class TaskRouter {
           segments: response.data.segments,  // 新增：Segment 元数据（包含时间戳）
           is_final: true,
         };
+        
+        // 记录 ASR 服务返回的原始文本（用于调试）
+        // 改为 info 级别，以便在日志中看到 ASR 服务返回的原始结果
+        logger.info(
+          {
+            serviceId: endpoint.serviceId,
+            jobId: task.job_id,
+            utteranceIndex: task.utterance_index,
+            asrTextLength: asrText.length,
+            asrTextPreview: asrText.substring(0, 100),
+            language: asrResult.language,
+            languageProbability: asrResult.language_probability,
+            segmentCount: response.data.segments?.length || 0,
+            audioDurationMs: response.data.duration ? Math.round(response.data.duration * 1000) : undefined,
+            // 添加 segments 的详细信息，以便调试
+            segmentsPreview: response.data.segments?.slice(0, 3).map((seg: any) => ({
+              text: seg.text?.substring(0, 50) || '',
+              start: seg.start,
+              end: seg.end,
+            })) || [],
+          },
+          'ASR service returned result'
+        );
 
         // CONF-3 + RERUN-1: 基于 segments 时间戳的断裂/异常检测 + 坏段判定
         // OBS-1: 计算音频时长（用于处理效率统计）
@@ -1183,6 +1259,7 @@ export class TaskRouter {
         src_lang: task.src_lang,
         tgt_lang: task.tgt_lang,
         context_text: task.context_text,
+        num_candidates: task.num_candidates, // 传递候选数量（如果指定）
       }, {
         signal: abortController.signal, // 支持任务取消
       });
@@ -1193,9 +1270,23 @@ export class TaskRouter {
       const textLength = task.text?.length || 0;
       this.recordNMTEfficiency(endpoint.serviceId, textLength, processingTimeMs);
 
+      const translatedText = response.data.text || '';
+      logger.debug(
+        {
+          serviceId: endpoint.serviceId,
+          jobId: task.job_id,
+          translatedTextLength: translatedText.length,
+          translatedTextPreview: translatedText.substring(0, 100),
+          sourceTextLength: task.text.length,
+          sourceTextPreview: task.text.substring(0, 50),
+        },
+        'NMT service returned translation'
+      );
+      
       return {
-        text: response.data.text || '',
+        text: translatedText,
         confidence: response.data.confidence,
+        candidates: response.data.candidates || undefined, // 返回候选列表（如果有）
       };
     } catch (error) {
       logger.error({ error, serviceId: endpoint.serviceId }, 'NMT task failed');
@@ -1268,72 +1359,41 @@ export class TaskRouter {
       // 将WAV音频数据转换为Buffer
       const wavBuffer = Buffer.from(response.data);
 
-      // 尝试使用 Opus 编码（如果可用），否则使用 PCM16
-      let audioBase64: string;
-      let audioFormat: string;
-      let audioDurationMs: number | undefined;
-      
-      if (isOpusEncoderAvailable()) {
-        try {
-          // 解析 WAV 文件，提取 PCM16 数据和元信息
-          const { pcm16Data, sampleRate, channels } = parseWavFile(wavBuffer);
-          
-          // 计算音频时长（毫秒）
-          // 音频时长 = 样本数 / 采样率
-          // 样本数 = PCM16数据长度 / (2字节 * 声道数)
-          const sampleCount = pcm16Data.length / (2 * channels);
-          audioDurationMs = Math.round((sampleCount / sampleRate) * 1000);
-          
-          // 编码为 Opus
-          const opusData = await encodePcm16ToOpus(pcm16Data, sampleRate, channels);
-          
-          // 转换为 base64
-          audioBase64 = opusData.toString('base64');
-          audioFormat = 'opus';
-          
-          logger.debug(
-            `TTS audio encoded to Opus: ${wavBuffer.length} bytes (WAV) -> ${opusData.length} bytes (Opus), ` +
-            `compression: ${(wavBuffer.length / opusData.length).toFixed(2)}x`
-          );
-        } catch (opusError) {
-          // Opus 编码失败，回退到 PCM16
-          logger.warn({ error: opusError }, 'Opus encoding failed, falling back to PCM16');
-          // 如果 Opus 编码失败，需要重新解析 WAV 来计算时长
-          try {
-            const { pcm16Data, sampleRate, channels } = parseWavFile(wavBuffer);
-            const sampleCount = pcm16Data.length / (2 * channels);
-            audioDurationMs = Math.round((sampleCount / sampleRate) * 1000);
-          } catch (parseError) {
-            logger.warn({ error: parseError }, 'Failed to parse WAV for duration calculation');
-          }
-          audioBase64 = wavBuffer.toString('base64');
-          audioFormat = 'pcm16';
-        }
-      } else {
-        // Opus 编码器不可用，使用 PCM16
-        // 解析 WAV 文件以计算音频时长
-        try {
-          const { pcm16Data, sampleRate, channels } = parseWavFile(wavBuffer);
-          const sampleCount = pcm16Data.length / (2 * channels);
-          audioDurationMs = Math.round((sampleCount / sampleRate) * 1000);
-        } catch (parseError) {
-          logger.warn({ error: parseError }, 'Failed to parse WAV for duration calculation');
-        }
-        audioBase64 = wavBuffer.toString('base64');
-        audioFormat = 'pcm16';
-      }
+      // 注意：Opus 编码已移至 PipelineOrchestrator 中处理
+      // TaskRouter 现在只返回 WAV 数据，由 Pipeline 负责编码为 Opus
+      const wavBase64 = wavBuffer.toString('base64');
 
       // OBS-1: 记录 TTS 处理效率
       const taskEndTime = Date.now();
       const processingTimeMs = taskEndTime - taskStartTime;
-      if (audioDurationMs) {
-        this.recordTTSEfficiency(endpoint.serviceId, audioDurationMs, processingTimeMs);
+      
+      // 计算音频时长（用于效率统计）
+      let audioDurationMs: number | undefined;
+      try {
+        const { sampleRate, channels } = parseWavFile(wavBuffer);
+        const sampleCount = wavBuffer.length / (2 * channels);
+        audioDurationMs = Math.round((sampleCount / sampleRate) * 1000);
+        if (audioDurationMs) {
+          this.recordTTSEfficiency(endpoint.serviceId, audioDurationMs, processingTimeMs);
+        }
+      } catch (error) {
+        logger.warn({ error }, 'Failed to calculate audio duration for efficiency tracking');
       }
 
+      logger.info(
+        {
+          serviceId: endpoint.serviceId,
+          wavSize: wavBuffer.length,
+          base64Length: wavBase64.length,
+          audioDurationMs,
+        },
+        'TTS: WAV audio received, will be encoded to Opus in Pipeline'
+      );
+
       return {
-        audio: audioBase64,
-        audio_format: audioFormat,
-        sample_rate: task.sample_rate || 16000, // 使用目标采样率
+        audio: wavBase64,
+        audio_format: 'wav', // 返回 WAV 格式，由 Pipeline 编码为 Opus
+        sample_rate: task.sample_rate || 16000,
       };
     } catch (error) {
       logger.error({ error, serviceId: endpoint.serviceId }, 'TTS task failed');

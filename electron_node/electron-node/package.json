@@ -25,6 +25,9 @@
     "test:integration": "npm run build:main && node tests/stage3.2/integration-test.js",
     "test:integration:ps1": "powershell -ExecutionPolicy Bypass -File tests/stage3.2/run-integration-test.ps1",
     "test:pipeline": "node tests/pipeline-e2e-test-simple.js",
+    "test:aggregator": "npm run build:main && node tests/run-aggregator-test.js",
+    "test:aggregator:vectors": "npm run build:main && node tests/run-aggregator-test-vectors.js",
+    "test:aggregator:ts": "npx ts-node --project tsconfig.main.json tests/aggregator-test.ts",
     "clear-cache": "powershell -ExecutionPolicy Bypass -File scripts/clear-cache.ps1"
   },
   "keywords": [
@@ -54,7 +57,9 @@
     "@minceraftmc/opus-encoder": "^0.0.7-rc.1",
     "adm-zip": "^0.5.10",
     "axios": "^1.0.0",
+    "lru-cache": "^11.2.4",
     "module-alias": "^2.2.3",
+    "opus-decoder": "^0.7.11",
     "pino": "^8.17.0",
     "pino-pretty": "^10.3.0",
     "react": "^18.0.0",

@@ -1,54 +1,53 @@
-# 中央服务器文档
+# 中央服务器文档索引
 
-本文档目录包含中央服务器的所有文档，已从 `central_server/docs/` 移动至此。
+本目录聚焦 `central_server/` 相关文档（Scheduler / API Gateway / Model Hub / 模型管理方案）。
 
-## 文档索引
+> 说明：此前版本的索引中引用了 `ARCHITECTURE.md` / `PROTOCOLS.md` / `project_management/` / `testing/` 等路径，
+> 但这些文件/目录并不位于 `central_server/docs/` 内，容易造成断链和误解；本索引已按当前代码与目录结构校正。
 
-### 快速开始
-- [概览](./OVERVIEW.md) - 中央服务器组件概览
-- [快速开始指南](./QUICK_START.md) - 启动顺序与最小可用验证
+## 快速开始
+
+- `QUICK_START.md`：启动顺序与最小可用验证
+- `MIGRATION.md`：迁移与路径调整说明
+- `OVERVIEW.md`：central_server 组件概览（原 `central_server/README.md`）
+
+## 测试与项目
+
+- `testing/TEST_GUIDE.md`：测试运行指南
+- `testing/TEST_STATUS.md`：测试状态概览
+- `project/PROJECT_COMPLETENESS.md`：项目完整性检查报告
+- `project/SCHEDULER_PHASE1_OVERVIEW.md`：Phase 1 总览
+- `project/SCHEDULER_PHASE2_OVERVIEW.md`：Phase 2 总览
+- `project/SCHEDULER_CAPACITY_AND_SCALING.md`：容量规划与扩展
+
+## 组件文档
 
 ### Scheduler（调度服务器）
-- [Scheduler 文档](./scheduler/README.md)
-- [任务分发算法优化方案](./scheduler/DISPATCHER_OPTIMIZATION_PLAN.md)
-- [Phase 2 实现文档](./scheduler/phase2_implementation.md) - 多实例 + Redis
-- [Phase 2 Streams/DLQ 运维](./scheduler/phase2_streams_ops.md)
-- [**Pool 机制文档**](./scheduler/POOL_MECHANISM.md) - 两级调度与节点分组机制 ⭐
-- [**ServiceType 能力重构总结**](../architecture/SERVICE_TYPE_CAPABILITY_REFACTOR_SUMMARY.md) - 服务类型改造过程及结果总结 ⭐
-- [仪表盘说明](./scheduler/DASHBOARD.md)
-- [GPU 需求说明](./scheduler/GPU_REQUIREMENT_EXPLANATION.md)
+
+- `scheduler/README.md`：Scheduler 文档索引
+- `scheduler/ARCHITECTURE.md`：完整架构文档
+- `scheduler/DISPATCHER_OPTIMIZATION_PLAN.md`：任务分发优化方案
+- `scheduler/DASHBOARD.md`：Dashboard 说明
+- `scheduler/GPU_REQUIREMENT_EXPLANATION.md`：GPU 要求说明
 
 ### API Gateway（对外网关）
-- [API Gateway 文档](./api_gateway/README.md)
-- [公共 API 设计](./api_gateway/PUBLIC_API_DESIGN.md)
-- [公共 API 规范](./api_gateway/PUBLIC_API_SPEC.md)
-- [公共 API 状态](./api_gateway/PUBLIC_API_STATUS.md)
+
+- `api_gateway/README.md`
+- `api_gateway/PUBLIC_API.md`
+- `api_gateway/PUBLIC_API_DESIGN.md`
+- `api_gateway/PUBLIC_API_SPEC.md`
+- `api_gateway/PUBLIC_API_STATUS.md`
+
+### 模型管理方案（v3）
+
+- `modelManager/README.md`
+- `modelManager/公司模型库与Electron客户端模型管理统一技术方案.md`
 
 ### Model Hub（模型库服务）
-- [Model Hub 文档](./model_hub/README.md)
 
-### 模型管理
-- [模型管理文档](./model_manager/README.md)
-- [统一技术方案](./model_manager/公司模型库与Electron客户端模型管理统一技术方案.md)
+- `model_hub/README.md`
 
-### 项目文档
-- [项目完整性](./project/PROJECT_COMPLETENESS.md)
-- [Scheduler Phase 1 技术规范](./project/Scheduler_Phase1_补充技术规范与实现清单_v1.1.md)
-- [Scheduler Phase 2 开发进度](./project/Scheduler_Phase2_开发进度记录_2025-12-19.md)
-- [Scheduler Phase 2 决策补充](./project/Scheduler_Phase2_决策补充_v1.1_Instance_Job_Redis.md)
-- [Scheduler Phase 2 推进建议](./project/Scheduler_Phase2_推进建议_决策版.md)
-- [Scheduler 架构说明](./project/Scheduler_当前架构与Phase1拆分优化说明_决策版.md)
-- [Scheduler 扩展与容量规划](./project/Scheduler_扩展与容量规划说明_含Redis设计.md)
+## 相关入口（代码仓库内）
 
-### 测试文档
-- [测试指南](../testing/END_TO_END_TESTING_GUIDE.md)
-- [测试状态](../testing/SCHEDULER_PHASE2_PHASE3_STATUS_AND_VERIFICATION.md)
-
----
-
-## 相关链接
-
-- [项目根目录 README](../../README.md)
-- [项目状态文档](../project_management/PROJECT_STATUS.md)
-- [系统架构文档](../SYSTEM_ARCHITECTURE.md)
-
+- `../README.md`：central_server 组件概览（含各服务启动命令）
+- `../model-hub/README.md`：Model Hub 详细说明（FastAPI 服务与端点）

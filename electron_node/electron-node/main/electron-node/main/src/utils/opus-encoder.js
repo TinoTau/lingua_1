@@ -6,39 +6,6 @@
  *
  * 注意：使用延迟导入，避免在模块加载时初始化，确保不影响其他服务（如 NMT）的启动
  */
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -79,15 +46,23 @@ async function initializeOpusEncoder(sampleRate = 16000, channels = 1) {
         try {
             // 延迟导入 @minceraftmc/opus-encoder，避免在模块加载时初始化
             // 这样可以确保不会影响其他服务（如 NMT）的启动
-            const { OpusEncoder, OpusApplication } = await Promise.resolve().then(() => __importStar(require('@minceraftmc/opus-encoder')));
+            // 使用 Function 构造函数来动态执行 import()，避免 TypeScript 编译器将其转换为 require()
+            // 因为 @minceraftmc/opus-encoder 是 ES Module，不能使用 require() 导入
+            const dynamicImport = new Function('specifier', 'return import(specifier)');
+            const opusModule = await dynamicImport('@minceraftmc/opus-encoder');
+            const { OpusEncoder, OpusApplication } = opusModule;
             // 验证采样率
             const validSampleRates = [8000, 12000, 16000, 24000, 48000];
             if (!validSampleRates.includes(sampleRate)) {
                 // 如果采样率不支持，使用最接近的支持值
+                // 对于 22050 Hz，优先使用 16000 Hz（更接近，且 Web 端也使用 16000）
                 const closestRate = validSampleRates.reduce((prev, curr) => {
                     return Math.abs(curr - sampleRate) < Math.abs(prev - sampleRate) ? curr : prev;
                 });
-                logger_1.default.warn(`Sample rate ${sampleRate} not supported by Opus, using ${closestRate} instead`);
+                logger_1.default.warn({
+                    originalRate: sampleRate,
+                    targetRate: closestRate,
+                }, `Sample rate ${sampleRate} not supported by Opus, using ${closestRate} instead`);
                 sampleRate = closestRate;
             }
             // 创建编码器实例
@@ -134,12 +109,7 @@ async function initializeOpusEncoder(sampleRate = 16000, channels = 1) {
 function isOpusEncoderAvailable() {
     if (!opusCheckAttempted) {
         opusCheckAttempted = true;
-        // 检查是否通过环境变量禁用 Opus 编码
-        if (process.env.OPUS_ENCODING_ENABLED === 'false') {
-            logger_1.default.info('Opus encoding is disabled via OPUS_ENCODING_ENABLED environment variable');
-            opusAvailable = false;
-            return false;
-        }
+        // 不再检查环境变量，Opus 编码是必需的
         // @minceraftmc/opus-encoder 是纯 JavaScript/WASM，总是可用（除非初始化失败）
         opusAvailable = true;
     }
@@ -256,16 +226,100 @@ async function encodePcm16ToOpus(pcm16Data, sampleRate = 16000, channels = 1) {
         throw new Error('Opus encoding is disabled or not available');
     }
     try {
+        // 保存原始采样率（用于日志和验证）
+        const originalSampleRate = sampleRate;
+        // 检查采样率是否被调整（initializeOpusEncoder 内部会调整不支持的采样率）
+        const validSampleRates = [8000, 12000, 16000, 24000, 48000];
+        let targetSampleRate = sampleRate;
+        if (!validSampleRates.includes(sampleRate)) {
+            // 对于 22050 Hz，强制使用 16000 Hz（更接近，且 Web 端也使用 16000）
+            // 24000 Hz 虽然更接近，但会导致帧大小不匹配问题
+            if (sampleRate === 22050) {
+                targetSampleRate = 16000;
+                logger_1.default.warn({
+                    originalRate: originalSampleRate,
+                    targetRate: targetSampleRate,
+                    pcm16Length: pcm16Data.length,
+                    reason: '22050Hz not supported, using 16000Hz (closer than 24000Hz and matches web client)',
+                }, `Sample rate ${originalSampleRate}Hz not supported, using ${targetSampleRate}Hz encoder`);
+            }
+            else {
+                // 对于其他不支持的采样率，选择最接近的支持值
+                targetSampleRate = validSampleRates.reduce((prev, curr) => {
+                    return Math.abs(curr - sampleRate) < Math.abs(prev - sampleRate) ? curr : prev;
+                });
+                logger_1.default.warn({
+                    originalRate: originalSampleRate,
+                    targetRate: targetSampleRate,
+                    pcm16Length: pcm16Data.length,
+                }, `Sample rate ${originalSampleRate}Hz not supported, using ${targetSampleRate}Hz encoder`);
+            }
+        }
         // 初始化编码器（如果尚未初始化或配置不同）
-        await initializeOpusEncoder(sampleRate, channels);
-        if (!encoderInstance) {
+        await initializeOpusEncoder(targetSampleRate, channels);
+        if (!encoderInstance || !encoderConfig) {
             throw new Error('Opus encoder initialization failed');
+        }
+        // 使用编码器的实际采样率（可能已被调整）
+        const encoderSampleRate = encoderConfig.sampleRate;
+        // 验证输入数据
+        if (!pcm16Data || pcm16Data.length === 0) {
+            throw new Error('PCM16 data is empty or invalid');
+        }
+        // 检查 PCM16 数据是否全为零
+        const pcm16HasNonZero = pcm16Data.some((byte) => byte !== 0);
+        if (!pcm16HasNonZero) {
+            logger_1.default.warn({
+                pcm16Length: pcm16Data.length,
+                sampleRate,
+            }, 'PCM16 input data is all zeros, Opus encoding may produce invalid result');
+            // 不抛出错误，允许继续处理（可能是静音）
         }
         // 将 PCM16 转换为 Float32Array
         const float32Data = pcm16ToFloat32(pcm16Data);
+        // 验证转换后的数据
+        if (float32Data.length === 0) {
+            throw new Error('Float32 conversion produced empty array');
+        }
+        // 检查 Float32 数据范围（使用循环避免栈溢出）
+        let float32Min = float32Data[0];
+        let float32Max = float32Data[0];
+        for (let i = 1; i < float32Data.length; i++) {
+            if (float32Data[i] < float32Min)
+                float32Min = float32Data[i];
+            if (float32Data[i] > float32Max)
+                float32Max = float32Data[i];
+        }
+        logger_1.default.debug({
+            float32Length: float32Data.length,
+            float32Range: `[${float32Min.toFixed(3)}, ${float32Max.toFixed(3)}]`,
+            sampleRate,
+        }, 'PCM16 converted to Float32');
         // Opus 帧大小：20ms
+        // 关键：当采样率不匹配时，必须使用编码器的采样率计算帧大小
+        // 因为编码器是用特定采样率初始化的，它期望特定大小的帧
         const frameSizeMs = 20;
-        const frameSize = Math.floor((sampleRate * frameSizeMs) / 1000); // 每帧样本数
+        let frameSize;
+        if (originalSampleRate !== encoderSampleRate) {
+            // 采样率不匹配：使用编码器的采样率计算帧大小
+            // 这样编码器才能正确处理帧
+            frameSize = Math.floor((encoderSampleRate * frameSizeMs) / 1000);
+            const originalFrameSize = Math.floor((originalSampleRate * frameSizeMs) / 1000);
+            logger_1.default.warn({
+                originalRate: originalSampleRate,
+                encoderRate: encoderSampleRate,
+                frameSize,
+                originalFrameSize,
+                float32Length: float32Data.length,
+                expectedFrames: Math.ceil(float32Data.length / frameSize),
+                note: 'Using encoder sample rate for frame size calculation due to sample rate mismatch',
+            }, `Sample rate mismatch: audio is ${originalSampleRate}Hz but encoder uses ${encoderSampleRate}Hz. Using frame size ${frameSize} (based on encoder rate) instead of ${originalFrameSize} (based on original rate). Audio will be resampled by the encoder.`);
+            // 注意：使用编码器的采样率计算帧大小，编码器会自动处理采样率转换
+        }
+        else {
+            // 采样率匹配：使用原始采样率计算帧大小
+            frameSize = Math.floor((originalSampleRate * frameSizeMs) / 1000);
+        }
         const opusPackets = [];
         // 按帧编码
         for (let offset = 0; offset < float32Data.length; offset += frameSize) {
@@ -284,19 +338,77 @@ async function encodePcm16ToOpus(pcm16Data, sampleRate = 16000, channels = 1) {
             }
             // 编码帧
             const encodedPacket = encoderInstance.encodeFrame(frame);
+            // 验证编码后的数据是否有效
+            if (!encodedPacket || encodedPacket.length === 0) {
+                logger_1.default.warn({
+                    frameIndex: opusPackets.length,
+                    frameSize: frame.length,
+                    sampleRate,
+                }, 'Opus encodeFrame returned empty packet, skipping');
+                continue; // 跳过空包
+            }
+            // 检查是否全为零（全零数据 base64 编码后会全是 'A'）
+            const hasNonZero = encodedPacket.some((byte) => byte !== 0);
+            if (!hasNonZero) {
+                // 计算帧数据范围（使用循环避免栈溢出）
+                let frameMin = frame[0];
+                let frameMax = frame[0];
+                for (let i = 1; i < frame.length; i++) {
+                    if (frame[i] < frameMin)
+                        frameMin = frame[i];
+                    if (frame[i] > frameMax)
+                        frameMax = frame[i];
+                }
+                logger_1.default.warn({
+                    frameIndex: opusPackets.length,
+                    frameSize: frame.length,
+                    packetLength: encodedPacket.length,
+                    sampleRate,
+                    frameDataRange: `[${frameMin.toFixed(3)}, ${frameMax.toFixed(3)}]`,
+                }, 'Opus encodeFrame returned all-zero packet, this may indicate encoding failure');
+                // 仍然添加，但记录警告
+            }
             opusPackets.push(encodedPacket);
         }
-        // 合并所有 Opus packets
-        const totalSize = opusPackets.reduce((sum, packet) => sum + packet.length, 0);
+        // 检查是否有有效的包
+        if (opusPackets.length === 0) {
+            throw new Error('Opus encoding produced no valid packets');
+        }
+        // 合并所有 Opus packets，在每个帧前添加长度前缀（2 字节，小端序）
+        // 这样 Web 端就可以知道每个帧的边界，正确分割多个帧
+        const frameHeaderSize = 2; // 每个帧的长度前缀（字节）
+        const totalSize = opusPackets.reduce((sum, packet) => sum + frameHeaderSize + packet.length, 0);
         const result = Buffer.alloc(totalSize);
         let resultOffset = 0;
         for (const packet of opusPackets) {
+            // 写入帧长度前缀（2 字节，小端序，最大 65535 字节）
+            if (packet.length > 65535) {
+                throw new Error(`Opus frame too large: ${packet.length} bytes (max 65535)`);
+            }
+            result.writeUInt16LE(packet.length, resultOffset);
+            resultOffset += frameHeaderSize;
+            // 写入帧数据
             result.set(packet, resultOffset);
             resultOffset += packet.length;
         }
-        logger_1.default.debug(`Encoded PCM16 to Opus: ${pcm16Data.length} bytes -> ${result.length} bytes ` +
-            `(compression: ${(pcm16Data.length / result.length).toFixed(2)}x, ` +
-            `frames: ${opusPackets.length})`);
+        // 验证最终结果是否全为零
+        const resultHasNonZero = result.some((byte) => byte !== 0);
+        if (!resultHasNonZero) {
+            logger_1.default.error({
+                pcm16DataLength: pcm16Data.length,
+                resultLength: result.length,
+                packetCount: opusPackets.length,
+                sampleRate,
+            }, 'Opus encoding produced all-zero result, this indicates encoding failure');
+            throw new Error('Opus encoding produced all-zero result, encoding may have failed');
+        }
+        logger_1.default.debug({
+            pcm16Length: pcm16Data.length,
+            opusLength: result.length,
+            compression: (pcm16Data.length / result.length).toFixed(2),
+            frameCount: opusPackets.length,
+            sampleRate,
+        }, 'Encoded PCM16 to Opus successfully');
         return result;
     }
     catch (error) {

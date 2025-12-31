@@ -167,18 +167,80 @@ export class TtsPlayer {
       }
 
       // 将音频块与 utteranceIndex 关联
-      this.audioBuffers.push({
+      // 按照 utteranceIndex 排序插入，确保播放顺序正确
+      const newBuffer: AudioBufferWithIndex = {
         audio: float32Array,
         utteranceIndex: utteranceIndex
+      };
+      
+      // 找到正确的插入位置（按 utteranceIndex 升序）
+      let insertIndex = this.audioBuffers.length;
+      for (let i = 0; i < this.audioBuffers.length; i++) {
+        if (this.audioBuffers[i].utteranceIndex > utteranceIndex) {
+          insertIndex = i;
+          break;
+        }
+      }
+      
+      // 插入到正确位置
+      this.audioBuffers.splice(insertIndex, 0, newBuffer);
+      
+      console.log('TtsPlayer: 音频块已按 utteranceIndex 排序插入', {
+        utterance_index: utteranceIndex,
+        insert_index: insertIndex,
+        total_buffers: this.audioBuffers.length,
+        buffer_order: this.audioBuffers.map(b => b.utteranceIndex).join(', ')
       });
 
-      // 检查并限制缓存大小（只在未播放时清理，避免播放时丢失音频）
+      // 计算新音频块的时长
+      const newChunkDuration = float32Array.length / this.sampleRate;
+      
+      // 检查内存限制（在添加前检查，如果超过限制则丢弃）
       const durationBefore = this.getTotalDuration();
+      let shouldDiscard = false;
+      let discardReason: string | undefined;
+      
       if (!this.isPlaying) {
-        this.memoryManager.enforceMaxBufferDuration(() => this.removeOldestBuffer(), this.isPlaying);
+        const result = this.memoryManager.enforceMaxBufferDuration(
+          () => this.removeOldestBuffer(), 
+          this.isPlaying,
+          () => this.audioBuffers.length,
+          newChunkDuration
+        );
+        
+        if (result.shouldDiscard) {
+          // 如果应该丢弃，移除刚添加的音频块
+          const indexToRemove = this.audioBuffers.findIndex(b => b.utteranceIndex === utteranceIndex);
+          if (indexToRemove >= 0) {
+            this.audioBuffers.splice(indexToRemove, 1);
+            shouldDiscard = true;
+            discardReason = result.reason;
+            console.warn(`[TtsPlayer] ⚠️ 音频块因内存限制被丢弃: ${discardReason}`);
+          }
+        } else {
+          // 如果总时长超过限制，触发自动播放（多个音频累加的情况）
+          const totalDuration = this.getTotalDuration();
+          if (totalDuration > this.maxBufferDuration) {
+            console.warn(`[TtsPlayer] ⚠️ 总音频时长(${totalDuration.toFixed(1)}秒)超过限制(${this.maxBufferDuration}秒)，将触发自动播放`);
+            // 延迟触发，确保音频块已添加
+            setTimeout(() => {
+              if (this.hasPendingAudio() && !this.isPlaying) {
+                this.startPlayback().catch((error) => {
+                  console.error('[TtsPlayer] 自动播放失败:', error);
+                });
+              }
+            }, 100);
+          }
+        }
       }
+      
       const durationAfter = this.getTotalDuration();
       const wasTrimmed = durationBefore > durationAfter;
+      
+      // 如果音频块被丢弃，抛出错误以便上层处理
+      if (shouldDiscard) {
+        throw new Error(`AUDIO_DISCARDED: ${discardReason || '内存超过限制'}`);
+      }
 
       console.log('TtsPlayer: ✅ 音频块已添加到缓冲区', {
         utterance_index: utteranceIndex,

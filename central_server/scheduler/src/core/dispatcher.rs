@@ -80,6 +80,15 @@ pub struct Job {
     /// EDGE-4: Padding 配置（毫秒），用于在音频末尾添加静音
     #[serde(skip_serializing_if = "Option::is_none")]
     pub padding_ms: Option<u64>,
+    /// 是否由用户手动发送（is_final=true）
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    pub is_manual_cut: bool,
+    /// 是否由3秒静音触发（pause触发）
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    pub is_pause_triggered: bool,
+    /// 是否由10秒超时触发（timeout触发）
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    pub is_timeout_triggered: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -180,6 +189,9 @@ impl JobDispatcher {
         target_session_ids: Option<Vec<String>>, // 目标接收者 session_id 列表（会议室模式使用）
         first_chunk_client_timestamp_ms: Option<i64>, // 第一个音频块的客户端发送时间戳
         padding_ms: Option<u64>, // EDGE-4: Padding 配置（毫秒）
+        is_manual_cut: bool, // 是否由用户手动发送
+        is_pause_triggered: bool, // 是否由3秒静音触发
+        is_timeout_triggered: bool, // 是否由10秒超时触发
     ) -> Job {
         let request_id = request_id.unwrap_or_else(|| format!("req-{}", Uuid::new_v4().to_string()[..12].to_uppercase()));
         let now_ms = chrono::Utc::now().timestamp_millis();
@@ -229,6 +241,9 @@ impl JobDispatcher {
                     tenant_id: tenant_id.clone(),
                     first_chunk_client_timestamp_ms,
                     padding_ms: None, // EDGE-4: Padding 配置（在 Phase2 幂等检查时，padding_ms 尚未确定）
+                    is_manual_cut: false,
+                    is_pause_triggered: false,
+                    is_timeout_triggered: false,
                 };
                 self.jobs.write().await.insert(job_id, job.clone());
                 return job;
@@ -283,9 +298,12 @@ impl JobDispatcher {
                         enable_streaming_asr,
                         partial_update_interval_ms,
                         target_session_ids: target_session_ids.clone(),
-                        tenant_id: tenant_id.clone(),
-                        first_chunk_client_timestamp_ms,
-                        padding_ms: None, // EDGE-4: Padding 配置（在 Phase2 幂等检查时，padding_ms 尚未确定）
+                    tenant_id: tenant_id.clone(),
+                    first_chunk_client_timestamp_ms,
+                    padding_ms: None, // EDGE-4: Padding 配置（在 Phase2 幂等检查时，padding_ms 尚未确定）
+                    is_manual_cut, // 使用传入的参数
+                    is_pause_triggered, // 使用传入的参数
+                    is_timeout_triggered, // 使用传入的参数
                     };
                     self.jobs.write().await.insert(job_id, job.clone());
                     return job;
@@ -466,6 +484,9 @@ impl JobDispatcher {
                     tenant_id: tenant_id.clone(),
                     first_chunk_client_timestamp_ms,
                     padding_ms,
+                    is_manual_cut, // 使用传入的参数
+                    is_pause_triggered, // 使用传入的参数
+                    is_timeout_triggered, // 使用传入的参数
                 };
                 self.jobs.write().await.insert(job_id, job.clone());
                 return job;
@@ -738,6 +759,9 @@ impl JobDispatcher {
             tenant_id: tenant_id.clone(),
             first_chunk_client_timestamp_ms,
             padding_ms,
+            is_manual_cut,
+            is_pause_triggered,
+            is_timeout_triggered,
         };
 
         let mut jobs = self.jobs.write().await;

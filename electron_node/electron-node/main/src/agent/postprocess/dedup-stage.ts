@@ -1,0 +1,129 @@
+/**
+ * DedupStage - 去重阶段
+ * 职责：基于最终文本决定是否发送，维护 lastSentText
+ */
+
+import { JobAssignMessage } from '@shared/protocols/messages';
+import logger from '../../logger';
+
+export interface DedupStageResult {
+  shouldSend: boolean;
+  reason?: string;  // 如果 shouldSend=false，说明原因
+}
+
+export class DedupStage {
+  private lastSentJobIds: Map<string, Set<string>> = new Map();  // 记录已发送的job_id（用于去重）
+  private lastAccessTime: Map<string, number> = new Map();  // 记录最后访问时间，用于清理过期记录
+  private readonly CLEANUP_INTERVAL_MS = 5 * 60 * 1000;  // 5 分钟清理一次
+  private readonly TTL_MS = 10 * 60 * 1000;  // 10 分钟 TTL
+  private readonly JOB_ID_TTL_MS = 30 * 1000;  // job_id 去重 TTL：30秒（与调度服务器保持一致）
+
+
+  /**
+   * 检查是否应该发送（去重检查）
+   * 统一使用 job_id 进行去重，不基于文本内容
+   * 理由：
+   * 1. 对文本进行过滤只会增加调度服务器的负担
+   * 2. 文本丢失的情况是节点端的问题，不应该掩盖这个问题
+   * 
+   * @param job 原始 job 请求
+   * @param aggregatedText 聚合后的文本（不再用于去重）
+   * @param translatedText 翻译后的文本（不再用于去重）
+   */
+  process(
+    job: JobAssignMessage,
+    aggregatedText: string,
+    translatedText: string
+  ): DedupStageResult {
+    // 检查 session_id
+    if (!job.session_id || job.session_id.trim() === '') {
+      logger.warn(
+        { jobId: job.job_id },
+        'DedupStage: Missing session_id, allowing send'
+      );
+      return { shouldSend: true };
+    }
+
+    // 统一使用 job_id 进行去重（30秒TTL，与调度服务器保持一致）
+    const sessionJobIds = this.lastSentJobIds.get(job.session_id) || new Set<string>();
+    const now = Date.now();
+    
+    // 检查该 job_id 是否在30秒内已发送过
+    if (sessionJobIds.has(job.job_id)) {
+      logger.info(
+        {
+          jobId: job.job_id,
+          sessionId: job.session_id,
+          aggregatedTextLength: aggregatedText?.length || 0,
+          translatedTextLength: translatedText?.length || 0,
+          reason: 'This job_id already sent within TTL, skipping duplicate',
+        },
+        'DedupStage: Duplicate job_id detected, skipping send'
+      );
+      return {
+        shouldSend: false,
+        reason: 'duplicate_job_id',
+      };
+    }
+
+    // 记录已发送的 job_id
+    sessionJobIds.add(job.job_id);
+    this.lastSentJobIds.set(job.session_id, sessionJobIds);
+    
+    // 更新最后访问时间
+    this.lastAccessTime.set(job.session_id, now);
+    
+    logger.debug(
+      {
+        jobId: job.job_id,
+        sessionId: job.session_id,
+        aggregatedTextLength: aggregatedText?.length || 0,
+        translatedTextLength: translatedText?.length || 0,
+      },
+      'DedupStage: Job_id recorded, will be deduplicated for 30 seconds'
+    );
+    
+    return { shouldSend: true };
+  }
+
+
+  /**
+   * 清理 session
+   */
+  removeSession(sessionId: string): void {
+    this.lastAccessTime.delete(sessionId);
+    this.lastSentJobIds.delete(sessionId);
+  }
+
+  /**
+   * 清理过期的记录
+   */
+  private cleanupExpiredEntries(): void {
+    const now = Date.now();
+    const expiredSessions: string[] = [];
+
+    for (const [sessionId, lastAccess] of this.lastAccessTime.entries()) {
+      if (now - lastAccess > this.TTL_MS) {
+        expiredSessions.push(sessionId);
+      }
+    }
+
+    for (const sessionId of expiredSessions) {
+      this.removeSession(sessionId);
+    }
+
+    // 注意：job_id的TTL（30秒）由session的TTL（10分钟）统一管理
+    // 如果需要更精确的控制，可以单独维护job_id的时间戳
+
+    if (expiredSessions.length > 0) {
+      logger.info(
+        {
+          count: expiredSessions.length,
+          remainingJobIdsCount: Array.from(this.lastSentJobIds.values()).reduce((sum, set) => sum + set.size, 0),
+        },
+        'DedupStage: Cleaned up expired job_id entries'
+      );
+    }
+  }
+}
+

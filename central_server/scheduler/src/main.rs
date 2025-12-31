@@ -217,6 +217,9 @@ async fn main() -> Result<()> {
     // 初始化 Job 幂等键管理器
     let job_idempotency = crate::core::JobIdempotencyManager::new();
 
+    // 初始化 JobResult 去重管理器
+    let job_result_deduplicator = crate::core::JobResultDeduplicator::new();
+
     // 创建应用状态
     let app_state = AppState {
         session_manager,
@@ -237,6 +240,7 @@ async fn main() -> Result<()> {
         node_status_manager,
         room_manager: room_manager.clone(),
         job_idempotency,
+        job_result_deduplicator,
         phase2: phase2_runtime.clone(),
     };
 
@@ -267,6 +271,16 @@ async fn main() -> Result<()> {
         app_state.phase2.clone(),
     );
     
+    // 启动JobResult去重管理器清理任务（每30秒清理一次过期记录）
+    let job_result_deduplicator_for_cleanup = app_state.job_result_deduplicator.clone();
+    tokio::spawn(async move {
+        let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(30));
+        loop {
+            interval.tick().await;
+            job_result_deduplicator_for_cleanup.cleanup_expired().await;
+        }
+    });
+
     // 启动房间过期清理任务（每1分钟扫描一次）
     let app_state_for_cleanup = app_state.clone();
     tokio::spawn(async move {
@@ -472,10 +486,46 @@ struct ClusterStatsResponse {
     total_instances: usize,
     online_instances: usize,
     total_nodes: usize,
+    online_nodes: usize,
+    ready_nodes: usize, // 服务就绪的节点数
     total_sessions: usize,
     total_pending: u64,
     total_dlq: u64,
     redis_key_prefix: String,
+    nodes: Vec<NodeInfo>, // 节点列表（包含服务状态）
+}
+
+#[derive(serde::Serialize)]
+struct NodeInfo {
+    node_id: String,
+    platform: String,
+    online: bool,
+    status: String, // NodeStatus 的字符串表示
+    cpu_usage: f32,
+    gpu_usage: Option<f32>,
+    memory_usage: f32,
+    current_jobs: usize,
+    max_concurrent_jobs: usize,
+    last_heartbeat: i64, // 时间戳（毫秒）
+    // 服务状态信息
+    services: Vec<ServiceStatusInfo>,
+    // 能力状态（按 ServiceType）
+    capabilities: Vec<CapabilityStatusInfo>,
+}
+
+#[derive(serde::Serialize)]
+struct ServiceStatusInfo {
+    service_id: String,
+    service_type: String, // ServiceType 的字符串表示
+    status: String, // ServiceStatus 的字符串表示
+}
+
+#[derive(serde::Serialize)]
+struct CapabilityStatusInfo {
+    service_type: String, // ServiceType 的字符串表示
+    ready: bool,
+    reason: Option<String>,
+    ready_impl_ids: Option<Vec<String>>,
 }
 
 #[derive(serde::Serialize)]
@@ -627,13 +677,55 @@ async fn get_cluster_stats(
         });
     }
 
-    // 获取在线节点数（从本地 NodeRegistry 统计，因为 Redis nodes:all 包含已下线的节点）
-    // 注意：nodes:all 包含所有注册过的节点（包括已下线的），所以应该从本地状态统计在线节点
-    let total_nodes = {
+    // 获取节点列表和服务状态（从本地 NodeRegistry）
+    let (total_nodes, online_nodes, ready_nodes, nodes_list) = {
         let nodes = state.node_registry.nodes.read().await;
-        nodes.values().filter(|n| n.online).count()
+        let total = nodes.len();
+        let online = nodes.values().filter(|n| n.online).count();
+        let ready = nodes.values().filter(|n| {
+            // 检查节点是否所有核心服务都就绪
+            n.online && n.capability_by_type.iter().all(|c| c.ready)
+        }).count();
+        
+        let nodes_list: Vec<NodeInfo> = nodes.values().map(|node| {
+            // 构建服务状态列表
+            let services: Vec<ServiceStatusInfo> = node.installed_services.iter().map(|s| {
+                ServiceStatusInfo {
+                    service_id: s.service_id.clone(),
+                    service_type: format!("{:?}", s.r#type),
+                    status: format!("{:?}", s.status),
+                }
+            }).collect();
+            
+            // 构建能力状态列表
+            let capabilities: Vec<CapabilityStatusInfo> = node.capability_by_type.iter().map(|c| {
+                CapabilityStatusInfo {
+                    service_type: format!("{:?}", c.r#type),
+                    ready: c.ready,
+                    reason: c.reason.clone(),
+                    ready_impl_ids: c.ready_impl_ids.clone(),
+                }
+            }).collect();
+            
+            NodeInfo {
+                node_id: node.node_id.clone(),
+                platform: node.platform.clone(),
+                online: node.online,
+                status: format!("{:?}", node.status),
+                cpu_usage: node.cpu_usage,
+                gpu_usage: node.gpu_usage,
+                memory_usage: node.memory_usage,
+                current_jobs: node.current_jobs,
+                max_concurrent_jobs: node.max_concurrent_jobs,
+                last_heartbeat: node.last_heartbeat.timestamp_millis(),
+                services,
+                capabilities,
+            }
+        }).collect();
+        
+        (total, online, ready, nodes_list)
     };
-    tracing::debug!("Total online nodes from local registry: {}", total_nodes);
+    tracing::debug!("Total nodes: {}, online: {}, ready: {}", total_nodes, online_nodes, ready_nodes);
 
     // 获取会话数（简化：从本地状态获取，多实例需要从 Redis 聚合）
     let total_sessions = state.session_manager.list_all_sessions().await.len();
@@ -643,18 +735,23 @@ async fn get_cluster_stats(
         instances,
         total_instances: total_instances_count,
         online_instances: online_count,
-        total_nodes: total_nodes as usize,
+        total_nodes,
+        online_nodes,
+        ready_nodes,
         total_sessions,
         total_pending,
         total_dlq,
         redis_key_prefix: key_prefix.to_string(),
+        nodes: nodes_list,
     };
 
     tracing::info!(
-        "Cluster stats: {} instances ({} online), {} nodes, {} sessions, {} pending, {} dlq",
+        "Cluster stats: {} instances ({} online), {} nodes ({} online, {} ready), {} sessions, {} pending, {} dlq",
         total_instances_count,
         online_count,
         total_nodes,
+        online_nodes,
+        ready_nodes,
         total_sessions,
         total_pending,
         total_dlq

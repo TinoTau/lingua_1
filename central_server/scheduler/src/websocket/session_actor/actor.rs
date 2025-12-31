@@ -224,7 +224,23 @@ impl SessionActor {
         timestamp_ms: i64,
         client_timestamp_ms: Option<i64>,
     ) -> Result<(), anyhow::Error> {
-        let utterance_index = self.internal_state.current_utterance_index;
+        // 修复：如果正在 finalize，新的 audio_chunk 应该直接进入下一次 finalize 的缓冲区
+        // 因为 finalize 完成后 utterance_index 会递增，所以使用 current_utterance_index + 1
+        let utterance_index = if let Some(finalizing_index) = self.internal_state.finalize_inflight {
+            // 如果正在 finalize，新的 chunk 应该进入下一个 utterance_index 的缓冲区
+            // finalize 完成后，current_utterance_index 会递增，所以这里使用 finalizing_index + 1
+            debug!(
+                session_id = %self.session_id,
+                current_index = self.internal_state.current_utterance_index,
+                finalizing_index = finalizing_index,
+                next_index = finalizing_index + 1,
+                "Audio chunk arrived during finalize, adding to next utterance buffer"
+            );
+            finalizing_index + 1
+        } else {
+            // 否则使用当前的 utterance_index
+            self.internal_state.current_utterance_index
+        };
 
         // Fix-A (RF-1): 重构 chunk 处理顺序 - 先 add_chunk，后判断 finalize
         // 原则：任何到达的音频 chunk，必须先进入当前 utterance 的缓冲，然后才允许触发 finalize
@@ -312,15 +328,26 @@ impl SessionActor {
         }
         
         // 如果需要 finalize，执行 finalize（此时音频块已经在缓冲区中）
-        if should_finalize {
+        // 修复：如果正在 finalize 另一个 utterance，不触发新的 finalize
+        // 新的 chunk 已经添加到下一个 utterance_index 的缓冲区，等待当前 finalize 完成后再处理
+        if should_finalize && self.internal_state.finalize_inflight.is_none() {
             let finalized = self.try_finalize(utterance_index, finalize_reason).await?;
             if finalized {
                 // finalize 成功，utterance_index 已经在 try_finalize 中递增
                 // 这里不需要再次更新，因为下一个 chunk 会使用新的 utterance_index
             }
-        } else if self.pause_ms > 0 {
-            // 不需要 finalize，启动/重置超时计时器
+        } else if self.pause_ms > 0 && self.internal_state.finalize_inflight.is_none() {
+            // 不需要 finalize，启动/重置超时计时器（但如果正在 finalize，不重置计时器）
             self.reset_timers().await?;
+        } else if self.internal_state.finalize_inflight.is_some() {
+            // 正在 finalize，新的 chunk 已经添加到下一个 utterance_index 的缓冲区
+            // 等待当前 finalize 完成后再处理（finalize 完成后 utterance_index 会递增）
+            debug!(
+                session_id = %self.session_id,
+                utterance_index = utterance_index,
+                finalize_inflight = ?self.internal_state.finalize_inflight,
+                "Audio chunk added to next utterance buffer during finalize, will be processed after current finalize completes"
+            );
         }
 
         Ok(())
@@ -523,6 +550,21 @@ impl SessionActor {
         // 所以这里只需要确保缓冲区中的数据被正确取出即可
         // 如果将来需要更复杂的 short-merge 逻辑，可以在这里添加
 
+        // 记录finalize前的音频缓冲区状态（用于调试）
+        let buffers_before = self
+            .state
+            .audio_buffer
+            .get_session_buffers_status(&self.session_id)
+            .await;
+        if !buffers_before.is_empty() {
+            info!(
+                session_id = %self.session_id,
+                utterance_index = utterance_index,
+                buffers_before = ?buffers_before,
+                "Audio buffer status before finalize (should only contain current utterance_index)"
+            );
+        }
+
         // 获取音频数据（Fix-E: take_combined 已经是原子的，获取并清空）
         let audio_data_opt = self
             .state
@@ -573,6 +615,64 @@ impl SessionActor {
             padding_ms = padding_ms,
             "Finalizing audio utterance (EDGE-1: unified finalize interface)"
         );
+
+        // 记录finalize后的音频缓冲区状态（用于调试）
+        // 注意：现在音频合并应该由节点端处理，调度服务器在finalize后不应该保留音频缓存
+        let buffers_after = self
+            .state
+            .audio_buffer
+            .get_session_buffers_status(&self.session_id)
+            .await;
+        if !buffers_after.is_empty() {
+            warn!(
+                session_id = %self.session_id,
+                utterance_index = utterance_index,
+                buffers_after = ?buffers_after,
+                "⚠️ Audio buffer still contains data after finalize! This should not happen. Audio merging should be handled by node side."
+            );
+        } else {
+            debug!(
+                session_id = %self.session_id,
+                utterance_index = utterance_index,
+                "Audio buffer cleared after finalize (expected behavior)"
+            );
+        }
+
+        // 检查是否有残留的音频缓冲区（其他utterance_index的缓冲区）
+        let has_residual = self
+            .state
+            .audio_buffer
+            .has_residual_buffers(&self.session_id, utterance_index)
+            .await;
+        if has_residual {
+            warn!(
+                session_id = %self.session_id,
+                utterance_index = utterance_index,
+                "⚠️ Residual audio buffers detected for other utterance_index! This may cause extra utterances. Cleaning up..."
+            );
+            
+            // 清理残留的音频缓冲区（不应该存在）
+            // 注意：现在音频合并应该由节点端处理，调度服务器不应该保留这些残留缓冲区
+            let all_buffers = self
+                .state
+                .audio_buffer
+                .get_session_buffers_status(&self.session_id)
+                .await;
+            for (residual_idx, _) in all_buffers {
+                if residual_idx != utterance_index {
+                    self.state
+                        .audio_buffer
+                        .clear(&self.session_id, residual_idx)
+                        .await;
+                    warn!(
+                        session_id = %self.session_id,
+                        utterance_index = utterance_index,
+                        residual_utterance_index = residual_idx,
+                        "Cleaned up residual audio buffer"
+                    );
+                }
+            }
+        }
         
         if padding_ms > 0 {
             debug!(
@@ -592,6 +692,13 @@ impl SessionActor {
             .result_queue
             .set_result_deadline(&self.session_id, utterance_index, deadline_ms)
             .await;
+
+        // 根据finalize原因设置标识
+        let is_manual_cut = reason == "IsFinal" || reason == "Send";
+        let is_pause_triggered = reason == "Pause";
+        // MaxDuration和Timeout都设置为is_timeout_triggered=true
+        // MaxDuration是20秒超时强制截断，需要节点端进行音频切割处理
+        let is_timeout_triggered = reason == "Timeout" || reason == "MaxDuration";
 
         // 创建翻译任务
         let jobs = create_translation_jobs(
@@ -616,6 +723,9 @@ impl SessionActor {
             session.trace_id.clone(),
             self.internal_state.first_chunk_client_timestamp_ms,
             Some(padding_ms), // EDGE-4: Padding 配置（传递到节点端）
+            is_manual_cut,
+            is_pause_triggered,
+            is_timeout_triggered,
         )
         .await?;
 
@@ -779,6 +889,9 @@ impl SessionActor {
         for i in 0..=current_index {
             let _ = self.state.audio_buffer.take_combined(&self.session_id, i).await;
         }
+
+        // 清理JobResult去重记录
+        self.state.job_result_deduplicator.remove_session(&self.session_id).await;
 
         // 标记未完成的 job 为 cancelled（通过结果队列超时机制处理）
         // 这里主要确保 timer generation 失效

@@ -7,12 +7,24 @@
 ```
 docs/
 ├── web_client/              # Web 客户端文档
+│   └── analysis/           # Web 端音频传输、播放等分析文档
+├── webapp/                 # Web 应用文档（WebRTC、iOS 等）
+│   └── web-client/         # Web 客户端详细文档
 ├── central_server/          # 中央服务器文档
+│   ├── scheduler/          # 调度服务器文档
+│   ├── api_gateway/        # API 网关文档
+│   ├── model_hub/          # 模型库服务文档
+│   ├── modelManager/       # 模型管理文档
+│   ├── project/            # 项目相关文档
+│   └── testing/            # 测试文档
 ├── electron_node/           # Electron Node 客户端文档
 ├── project_management/     # 项目管理文档
 ├── testing/                # 测试文档
 ├── logging/                # 日志文档
 ├── architecture/           # 架构文档
+├── troubleshooting/        # 故障排除文档
+├── trainning/              # 训练相关文档
+├── user/                   # 用户相关文档
 └── reference/              # 参考文档
 ```
 
@@ -36,7 +48,20 @@ docs/
 - [Phase 3 实现](./web_client/PHASE3_IMPLEMENTATION.md)
 - [规模化规范](./web_client/SCALABILITY_SPEC.md)
 - [**Web 客户端重构与 Bug 修复（2025-01）**](./web_client/WEB_CLIENT_REFACTOR_2025_01.md) - 最新重构和修复文档 ⭐
-- [UI 改进和功能更新](../webapp/web-client/docs/UI_IMPROVEMENTS_AND_FEATURES.md) - UI 更新（2025-01）
+- [UI 改进和功能更新](./webapp/web-client/UI_IMPROVEMENTS_AND_FEATURES.md) - UI 更新（2025-01）
+- **分析文档** (`web_client/analysis/`):
+  - [Web 端音频发送和播放逻辑总结](./web_client/analysis/web_audio_logic_summary.md)
+  - [Web 端音频传输检查总结](./web_client/analysis/web_audio_check_summary.md)
+  - [Web 端音频接收和播放区添加情况分析](./web_client/analysis/web_audio_analysis_summary.md)
+  - [节点端音频传输过程分析](./web_client/analysis/audio_transmission_analysis.md)
+  - [Finalize 时长和音频累积分析](./web_client/analysis/finalize_timing_analysis.md)
+  - [第一段音频播放问题分析](./web_client/analysis/analyze_first_audio_playback.md)
+
+### Web 应用
+- [文档索引](./webapp/README.md) - Web 应用文档（包含 WebRTC、iOS 等）
+- [WebRTC 文档](./webapp/webRTC/) - WebRTC 相关文档
+- [iOS 文档](./webapp/IOS/) - iOS 客户端文档
+- [Web 客户端详细文档](./webapp/web-client/) - Web 客户端详细实现文档
 
 ### 中央服务器
 - [文档索引](./central_server/README.md)
@@ -59,6 +84,8 @@ docs/
   - [Speaker Embedding 服务](../electron_node/services/speaker_embedding/README.md) - 说话者特征提取服务（GPU加速）
   - [GPU 配置完成报告](../electron_node/services/GPU_CONFIGURATION_COMPLETE.md) - GPU 配置状态
   - [PyTorch 版本分析](../electron_node/services/PYTORCH_VERSION_ANALYSIS.md) - 版本分析和架构说明
+- **音频聚合与处理机制（2025-12-31）**:
+  - [**音频聚合完整机制**](../electron_node/docs/short_utterance/AUDIO_AGGREGATION_COMPLETE_MECHANISM.md) ⭐ **重要** - 完整的音频聚合、ASR、NMT、调度服务器finalize和Web端机制文档
 
 ---
 
@@ -86,15 +113,23 @@ docs/
 
 ## 文档更新说明
 
-所有模块文档已从各自的 `docs/` 目录移动到项目根目录的 `docs/` 下：
-- ✅ `webapp/web-client/docs/` → `docs/web_client/`
-- ✅ `central_server/docs/` → `docs/central_server/`
-- ✅ `electron_node/docs/` → `docs/electron_node/`
+所有模块文档已统一整合到项目根目录的 `docs/` 下：
+- ✅ `webapp/docs/` → `docs/webapp/`（已同步）
+- ✅ `webapp/web-client/docs/` → `docs/webapp/web-client/`（已同步）
+- ✅ `central_server/docs/` → `docs/central_server/`（已同步）
+- ✅ `electron_node/docs/` → `docs/electron_node/`（已同步）
+- ✅ 根目录散落的文档 → `docs/` 相应目录（已整合）
+  - `ARCHITECTURE.md` → `docs/SYSTEM_ARCHITECTURE.md`
+  - `web_audio_*.md` → `docs/web_client/analysis/`
+  - `audio_transmission_analysis.md` → `docs/web_client/analysis/`
+  - `finalize_timing_analysis.md` → `docs/web_client/analysis/`
+  - `analyze_first_audio_playback.md` → `docs/web_client/analysis/`
 
 **优势**:
 - 统一文档位置，避免多层嵌套
 - 便于查找和维护
 - 每个文档不超过500行，便于阅读
+- 所有文档集中在 `docs/` 目录，便于管理
 
 ---
 

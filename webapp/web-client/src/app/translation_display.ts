@@ -19,6 +19,7 @@ export class TranslationDisplayManager {
   private displayedUtteranceIndices: Set<number> = new Set();
   private pendingTranslationResults: TranslationResult[] = [];
   private displayedTranslationCount: number = 0;
+  private currentPlayingIndex: number = -1; // 当前播放的 utterance_index
 
   /**
    * 保存翻译结果
@@ -56,24 +57,163 @@ export class TranslationDisplayManager {
     this.displayedUtteranceIndices.clear();
     this.pendingTranslationResults = [];
     this.displayedTranslationCount = 0;
+    this.currentPlayingIndex = -1;
   }
 
   /**
-   * 显示翻译结果到 UI（追加方式，不替换已有内容）
+   * 设置当前播放的 utterance_index（用于高亮显示）
+   */
+  setCurrentPlayingIndex(utteranceIndex: number): void {
+    this.currentPlayingIndex = utteranceIndex;
+    this.updateHighlight();
+  }
+
+  /**
+   * 更新高亮显示
+   */
+  private updateHighlight(): void {
+    const originalDiv = document.getElementById('translation-original');
+    const translatedDiv = document.getElementById('translation-translated');
+
+    if (!originalDiv || !translatedDiv) {
+      return;
+    }
+
+    // 保存当前文本内容
+    const originalText = originalDiv.textContent || '';
+    const translatedText = translatedDiv.textContent || '';
+
+    // 清空并重新构建（移除所有高亮）
+    originalDiv.textContent = originalText;
+    translatedDiv.textContent = translatedText;
+
+    // 如果当前播放索引有效，高亮对应的文本段
+    if (this.currentPlayingIndex >= 0) {
+      const result = this.translationResults.get(this.currentPlayingIndex);
+      if (result && result.originalText && result.translatedText) {
+        this.highlightText(originalDiv, result.originalText.trim());
+        this.highlightText(translatedDiv, result.translatedText.trim());
+      }
+    }
+  }
+
+  /**
+   * 高亮文本中的指定内容
+   */
+  private highlightText(container: HTMLElement, textToHighlight: string): void {
+    if (!textToHighlight || textToHighlight.trim() === '') {
+      return;
+    }
+
+    const fullText = container.textContent || '';
+    const searchText = textToHighlight.trim();
+    
+    // 尝试多种匹配方式：精确匹配、带索引前缀匹配
+    let index = fullText.indexOf(searchText);
+    
+    // 如果精确匹配失败，尝试匹配带 [utteranceIndex] 前缀的文本
+    if (index === -1 && this.currentPlayingIndex >= 0) {
+      const prefixPattern = `[${this.currentPlayingIndex}] ${searchText}`;
+      index = fullText.indexOf(prefixPattern);
+      if (index !== -1) {
+        // 找到带前缀的文本，高亮整个段落（包括前缀）
+        const beforeText = fullText.substring(0, index);
+        const highlightText = fullText.substring(index, index + prefixPattern.length);
+        const afterText = fullText.substring(index + prefixPattern.length);
+
+        // 创建高亮元素
+        const highlightSpan = document.createElement('span');
+        highlightSpan.className = 'highlight-segment';
+        highlightSpan.style.cssText = `
+          background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+          padding: 2px 4px;
+          border-radius: 4px;
+          font-weight: 500;
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        `;
+        highlightSpan.textContent = highlightText;
+
+        // 重新构建内容
+        container.innerHTML = '';
+        if (beforeText) {
+          container.appendChild(document.createTextNode(beforeText));
+        }
+        container.appendChild(highlightSpan);
+        if (afterText) {
+          container.appendChild(document.createTextNode(afterText));
+        }
+
+        // 滚动到高亮位置
+        setTimeout(() => {
+          highlightSpan.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+        return;
+      }
+    }
+
+    if (index === -1) {
+      return; // 文本不存在，无法高亮
+    }
+
+    // 创建新的内容，包含高亮
+    const beforeText = fullText.substring(0, index);
+    const highlightText = fullText.substring(index, index + searchText.length);
+    const afterText = fullText.substring(index + searchText.length);
+
+    // 创建高亮元素
+    const highlightSpan = document.createElement('span');
+    highlightSpan.className = 'highlight-segment';
+    highlightSpan.style.cssText = `
+      background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    `;
+    highlightSpan.textContent = highlightText;
+
+    // 重新构建内容
+    container.innerHTML = '';
+    if (beforeText) {
+      container.appendChild(document.createTextNode(beforeText));
+    }
+    container.appendChild(highlightSpan);
+    if (afterText) {
+      container.appendChild(document.createTextNode(afterText));
+    }
+
+    // 滚动到高亮位置
+    setTimeout(() => {
+      highlightSpan.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  }
+
+  /**
+   * 显示翻译结果到 UI（追加方式，不替换已有内容，支持按 utterance_index 分段显示）
    */
   displayTranslationResult(
     originalText: string,
     translatedText: string,
+    utteranceIndex?: number,
     _serviceTimings?: { asr_ms?: number; nmt_ms?: number; tts_ms?: number; total_ms?: number },
     _networkTimings?: { web_to_scheduler_ms?: number; scheduler_to_node_ms?: number; node_to_scheduler_ms?: number; scheduler_to_web_ms?: number },
     _schedulerSentAtMs?: number
   ): boolean {
     // 如果原文和译文都为空，不显示
-    if ((!originalText || originalText.trim() === '') && (!translatedText || translatedText.trim() === '')) {
+    // 修复：确保originalText和translatedText是字符串类型
+    const originalTextStr = typeof originalText === 'string' ? originalText : (originalText || '');
+    const translatedTextStr = typeof translatedText === 'string' ? translatedText : (translatedText || '');
+    if ((!originalTextStr || originalTextStr.trim() === '') && (!translatedTextStr || translatedTextStr.trim() === '')) {
       console.log('[TranslationDisplay] 文本为空，跳过显示');
       return false;
     }
 
+    // 使用修复后的字符串变量
+    const origText = originalTextStr;
+    const transText = translatedTextStr;
+    
     // 查找或创建翻译结果显示容器
     let resultContainer = document.getElementById('translation-result-container');
     if (!resultContainer) {
@@ -131,8 +271,8 @@ export class TranslationDisplayManager {
 
     // 检查是否重复（避免重复追加相同的文本）
     // 使用更严格的检查：检查文本是否作为完整段落存在（以换行分隔或开头/结尾）
-    const originalTrimmed = originalText?.trim() || '';
-    const translatedTrimmed = translatedText?.trim() || '';
+    const originalTrimmed = origText?.trim() || '';
+    const translatedTrimmed = transText?.trim() || '';
 
     // 检查原文是否已经作为完整段落存在于当前文本中
     // 检查方式：文本在开头、结尾，或者被 \n\n 包围
@@ -146,8 +286,8 @@ export class TranslationDisplayManager {
     if (originalAlreadyExists && translatedAlreadyExists) {
       console.log('[TranslationDisplay] 文本已存在（完整段落匹配），跳过重复追加:', {
         utterance_index: 'N/A',
-        originalText: originalText?.substring(0, 50),
-        translatedText: translatedText?.substring(0, 50),
+        originalText: origText?.substring(0, 50),
+        translatedText: transText?.substring(0, 50),
         currentOriginalLength: currentOriginal.length,
         currentTranslatedLength: currentTranslated.length
       });
@@ -155,28 +295,38 @@ export class TranslationDisplayManager {
     }
 
     // 追加新文本（如果当前有内容，先添加换行和分隔符）
+    // 如果提供了 utteranceIndex，添加索引标识
     let newOriginal = currentOriginal;
     let newTranslated = currentTranslated;
 
-    if (originalText && originalText.trim() !== '' && !originalAlreadyExists) {
+    if (origText && origText.trim() !== '' && !originalAlreadyExists) {
       if (newOriginal) {
-        newOriginal += '\n\n' + originalText;
+        const separator = utteranceIndex !== undefined ? `\n\n[${utteranceIndex}] ` : '\n\n';
+        newOriginal += separator + origText;
       } else {
-        newOriginal = originalText;
+        const prefix = utteranceIndex !== undefined ? `[${utteranceIndex}] ` : '';
+        newOriginal = prefix + origText;
       }
     }
 
-    if (translatedText && translatedText.trim() !== '' && !translatedAlreadyExists) {
+    if (transText && transText.trim() !== '' && !translatedAlreadyExists) {
       if (newTranslated) {
-        newTranslated += '\n\n' + translatedText;
+        const separator = utteranceIndex !== undefined ? `\n\n[${utteranceIndex}] ` : '\n\n';
+        newTranslated += separator + transText;
       } else {
-        newTranslated = translatedText;
+        const prefix = utteranceIndex !== undefined ? `[${utteranceIndex}] ` : '';
+        newTranslated = prefix + transText;
       }
     }
 
     // 更新文本框内容
     originalDiv.textContent = newOriginal;
     translatedDiv.textContent = newTranslated;
+    
+    // 更新高亮（如果当前播放的索引匹配）
+    if (utteranceIndex !== undefined && utteranceIndex === this.currentPlayingIndex) {
+      this.updateHighlight();
+    }
 
     // 自动滚动到底部，显示最新内容
     originalDiv.scrollTop = originalDiv.scrollHeight;
@@ -214,10 +364,12 @@ export class TranslationDisplayManager {
    */
   displayPendingTranslationResults(): void {
     // 显示所有待显示的翻译结果（从 pendingTranslationResults 数组）
+    // 注意：pendingTranslationResults 不包含 utteranceIndex，使用 undefined
     for (const result of this.pendingTranslationResults) {
       this.displayTranslationResult(
         result.originalText,
         result.translatedText,
+        undefined, // pendingTranslationResults 没有 utteranceIndex
         result.serviceTimings,
         result.networkTimings,
         result.schedulerSentAtMs
@@ -242,6 +394,7 @@ export class TranslationDisplayManager {
         this.displayTranslationResult(
           result.originalText,
           result.translatedText,
+          utteranceIndex, // 传递 utterance_index
           result.serviceTimings,
           result.networkTimings,
           result.schedulerSentAtMs

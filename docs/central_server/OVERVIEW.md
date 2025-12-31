@@ -116,7 +116,6 @@ cargo test --test stage3_2   # 运行阶段 3.2 测试
 - ⚠️ API Gateway: 无单元测试（建议添加）
 - ⚠️ Model Hub: 无单元测试（建议添加）
 
-**注意**: 阶段 3.2 的测试已修复，`test_select_node_with_models_ready` 已通过。详细修复说明请参考 `testing/scheduler/TEST_FIXES_COMPLETE.md`。
 
 ## 文档
 

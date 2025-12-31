@@ -216,19 +216,21 @@ describe('TaskRouter', () => {
       // 验证结果
       expect(result.audio).toBeDefined();
       expect(result.audio.length).toBeGreaterThan(0);
-      // 如果 Opus 编码器可用，格式应该是 opus；否则是 pcm16
-      expect(['opus', 'pcm16']).toContain(result.audio_format);
+      // TaskRouter 现在返回 WAV 格式，由 Pipeline 负责编码为 Opus
+      expect(result.audio_format).toBe('wav');
       expect(result.sample_rate).toBe(16000);
       
       // 验证 Base64 编码
       const decodedAudio = Buffer.from(result.audio, 'base64');
       expect(decodedAudio.length).toBeGreaterThan(0);
       
-      // 如果格式是 Opus，验证压缩效果
-      if (result.audio_format === 'opus') {
-        const compressionRatio = testWavBuffer.length / decodedAudio.length;
-        expect(compressionRatio).toBeGreaterThan(3); // 至少 3x 压缩
-        console.log(`✅ TTS Opus 编码成功，压缩比: ${compressionRatio.toFixed(2)}x`);
+      // TaskRouter 返回 WAV 格式，Pipeline 会将其编码为 Opus
+      // 这里只验证 WAV 数据是否有效
+      if (result.audio_format === 'wav') {
+        // 验证 WAV 文件头
+        expect(decodedAudio.toString('ascii', 0, 4)).toBe('RIFF');
+        expect(decodedAudio.toString('ascii', 8, 12)).toBe('WAVE');
+        console.log(`✅ TTS WAV 格式正确，Pipeline 会将其编码为 Opus`);
       }
     });
   });

@@ -66,6 +66,9 @@ pub(super) async fn handle_utterance(
         trace_id.clone(), // Use trace_id from Utterance or Session
         None, // Utterance 消息没有客户端时间戳
         None, // EDGE-4: Padding 配置（Utterance 消息不传递 padding_ms，由 finalize 时计算）
+        false, // is_manual_cut: Utterance 消息不是手动发送（由finalize时确定）
+        false, // is_pause_triggered: Utterance 消息不是pause触发
+        false, // is_timeout_triggered: Utterance 消息不是timeout触发
     )
     .await?;
 

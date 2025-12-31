@@ -141,7 +141,7 @@ InferenceResult {
 4. ✅ 实现优雅降级：YourTTS 不可用时自动降级到 Piper TTS
 
 **详细实现文档**：
-- 📄 `electron_node/docs/YOURTTS_INTEGRATION_IMPLEMENTATION.md`
+- 📄 `electron_node/docs/TTS_SERVICES.md`
 
 ## 四、任务链完整性验证
 

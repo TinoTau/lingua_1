@@ -1,5 +1,5 @@
 import { ModelManager } from '../model-manager/model-manager';
-import type { JobAssignMessage, InstalledModel, FeatureFlags } from '@shared/protocols/messages';
+import type { JobAssignMessage, InstalledModel, FeatureFlags, ServiceType } from '@shared/protocols/messages';
 import logger from '../logger';
 import { TaskRouter } from '../task-router/task-router';
 import { PipelineOrchestrator } from '../pipeline-orchestrator/pipeline-orchestrator';
@@ -27,6 +27,12 @@ export interface JobResult {
     max_gap: number;  // 最大间隔（秒）
     avg_duration: number;  // 平均时长（秒）
   };
+  segments?: Array<{  // 传递 segments 信息给中间件使用
+    text: string;
+    start?: number;
+    end?: number;
+    no_speech_prob?: number;
+  }>;
 }
 
 export interface PartialResultCallback {
@@ -36,6 +42,7 @@ export interface PartialResultCallback {
 export class InferenceService {
   private modelManager: ModelManager;
   private currentJobs: Set<string> = new Set();
+  private hasProcessedFirstJob: boolean = false; // 跟踪是否已经处理过第一个 job
   private onTaskProcessedCallback: ((serviceName: string) => void) | null = null;
   private onTaskStartCallback: (() => void) | null = null;
   private onTaskEndCallback: (() => void) | null = null;
@@ -43,12 +50,18 @@ export class InferenceService {
   // 新架构组件
   private taskRouter: TaskRouter;
   private pipelineOrchestrator: PipelineOrchestrator;
+  // S1: AggregatorManager引用（可选，用于构建prompt）
+  private aggregatorManager: any = null;
+  // AggregatorMiddleware引用（可选，用于在ASR之后、NMT之前进行文本聚合）
+  private aggregatorMiddleware: any = null;
 
   constructor(
     modelManager: ModelManager,
     pythonServiceManager: any,
     rustServiceManager: any,
-    serviceRegistryManager: any
+    serviceRegistryManager: any,
+    aggregatorManager?: any,  // S1: 可选的AggregatorManager
+    aggregatorMiddleware?: any  // 可选的AggregatorMiddleware
   ) {
     this.modelManager = modelManager;
 
@@ -58,12 +71,54 @@ export class InferenceService {
     }
 
     this.taskRouter = new TaskRouter(pythonServiceManager, rustServiceManager, serviceRegistryManager);
-    this.pipelineOrchestrator = new PipelineOrchestrator(this.taskRouter);
+    
+    // S1: 传递AggregatorManager给PipelineOrchestrator（如果提供）
+    this.aggregatorManager = aggregatorManager;
+    this.aggregatorMiddleware = aggregatorMiddleware;
+    const mode = 'offline';  // 默认模式，可以根据需要调整
+    this.pipelineOrchestrator = new PipelineOrchestrator(
+      this.taskRouter,
+      aggregatorManager,
+      mode,
+      aggregatorMiddleware
+    );
     
     // 异步初始化服务端点
     this.taskRouter.initialize().catch((error) => {
       logger.error({ error }, 'Failed to initialize TaskRouter');
     });
+  }
+  
+  /**
+   * S1: 设置AggregatorManager（用于动态更新）
+   */
+  setAggregatorManager(aggregatorManager: any): void {
+    this.aggregatorManager = aggregatorManager;
+    // 重新创建PipelineOrchestrator以应用新的AggregatorManager
+    const mode = 'offline';
+    this.pipelineOrchestrator = new PipelineOrchestrator(
+      this.taskRouter,
+      aggregatorManager,
+      mode,
+      this.aggregatorMiddleware
+    );
+    logger.info({}, 'S1: AggregatorManager updated in InferenceService');
+  }
+
+  /**
+   * 设置AggregatorMiddleware（用于动态更新）
+   */
+  setAggregatorMiddleware(aggregatorMiddleware: any): void {
+    this.aggregatorMiddleware = aggregatorMiddleware;
+    // 重新创建PipelineOrchestrator以应用新的AggregatorMiddleware
+    const mode = 'offline';
+    this.pipelineOrchestrator = new PipelineOrchestrator(
+      this.taskRouter,
+      this.aggregatorManager,
+      mode,
+      aggregatorMiddleware
+    );
+    logger.info({}, 'AggregatorMiddleware updated in InferenceService');
   }
 
   setOnTaskProcessedCallback(callback: (serviceName: string) => void): void {
@@ -136,8 +191,15 @@ export class InferenceService {
   }
 
   async processJob(job: JobAssignMessage, partialCallback?: PartialResultCallback): Promise<JobResult> {
-    const wasFirstJob = this.currentJobs.size === 0;
+    const wasFirstJob = !this.hasProcessedFirstJob;
     this.currentJobs.add(job.job_id);
+    
+    // 如果是第一个任务（节点启动后的第一个），等待服务就绪
+    if (wasFirstJob) {
+      this.hasProcessedFirstJob = true;
+      logger.info({ jobId: job.job_id }, 'First job detected, waiting for services to be ready');
+      await this.waitForServicesReady();
+    }
     
     // 如果是第一个任务，通知任务开始（用于启动GPU跟踪）
     if (wasFirstJob && this.onTaskStartCallback) {
@@ -260,6 +322,86 @@ export class InferenceService {
         enabled: m.info.status === 'ready', // 只有 ready 状态才启用
       };
     });
+  }
+
+  /**
+   * 等待服务就绪（用于第一次任务）
+   * 检查ASR、NMT、TTS服务是否都有可用的端点
+   */
+  private async waitForServicesReady(maxWaitMs: number = 5000): Promise<void> {
+    const startTime = Date.now();
+    const checkInterval = 200; // 每200ms检查一次（更频繁的检查）
+    
+    logger.info({ maxWaitMs }, 'Waiting for services to be ready');
+    
+    // 先刷新一次服务端点列表
+    await this.taskRouter.refreshServiceEndpoints();
+    
+    while (Date.now() - startTime < maxWaitMs) {
+      try {
+        // 刷新服务端点列表
+        await this.taskRouter.refreshServiceEndpoints();
+        
+        // 检查是否有可用的服务端点
+        const hasASR = await this.checkServiceTypeReady('ASR');
+        const hasNMT = await this.checkServiceTypeReady('NMT');
+        const hasTTS = await this.checkServiceTypeReady('TTS');
+        
+        if (hasASR && hasNMT && hasTTS) {
+          logger.info({ elapsedMs: Date.now() - startTime }, 'All services are ready');
+          return;
+        }
+        
+        logger.debug(
+          {
+            elapsedMs: Date.now() - startTime,
+            hasASR,
+            hasNMT,
+            hasTTS,
+          },
+          'Services not all ready yet, waiting...'
+        );
+      } catch (error) {
+        logger.warn({ error, elapsedMs: Date.now() - startTime }, 'Error checking service readiness');
+      }
+      
+      // 等待后重试
+      await new Promise(resolve => setTimeout(resolve, checkInterval));
+    }
+    
+    logger.warn(
+      {
+        elapsedMs: Date.now() - startTime,
+        maxWaitMs,
+      },
+      'Services not ready after timeout, proceeding anyway (may fail)'
+    );
+  }
+
+  /**
+   * 检查指定服务类型是否有可用的端点
+   */
+  private async checkServiceTypeReady(serviceType: string): Promise<boolean> {
+    try {
+      // 通过TaskRouter的公共方法检查（需要添加）
+      // 暂时通过反射或类型断言访问（不推荐，但可以工作）
+      const router = this.taskRouter as any;
+      // ServiceType是枚举，值应该是 'ASR', 'NMT', 'TTS', 'TONE'
+      const serviceTypeEnum = serviceType as ServiceType;
+      const endpoints = router.serviceEndpoints?.get(serviceTypeEnum) || [];
+      // 注意：refreshServiceEndpoints 只会添加 status === 'running' 的服务
+      // 所以这里只需要检查端点数量即可
+      const hasEndpoints = endpoints.length > 0;
+      
+      if (!hasEndpoints) {
+        logger.debug({ serviceType, endpointCount: endpoints.length }, 'No endpoints available for service type');
+      }
+      
+      return hasEndpoints;
+    } catch (error) {
+      logger.warn({ error, serviceType }, 'Error checking service type readiness');
+      return false;
+    }
   }
 
   getFeaturesSupported(): FeatureFlags {

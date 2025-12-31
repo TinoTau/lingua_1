@@ -33,6 +33,8 @@ export interface Config {
   observabilityReportIntervalMs?: number; // 上报间隔（毫秒）
   // Phase 2: 音频编解码器配置
   audioCodecConfig?: import('./audio_codec').AudioCodecConfig;
+  // TTS 自动播放配置
+  autoPlay?: boolean; // 是否自动播放 TTS 音频（默认 false，手动播放模式）
 }
 
 // 静音过滤配置
@@ -85,6 +87,7 @@ export const DEFAULT_CONFIG: Config = {
   silenceFilter: DEFAULT_SILENCE_FILTER_CONFIG,
   reconnectConfig: DEFAULT_RECONNECT_CONFIG,
   clientVersion: 'web-client-v1.0',
+  autoPlay: false, // 默认手动播放模式（用户需要手动点击播放按钮）
 };
 
 // WebSocket 消息类型

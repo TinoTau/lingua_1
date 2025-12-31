@@ -173,10 +173,17 @@ export class Recorder {
    */
   async start(): Promise<void> {
     if (this.isRecording) {
+      console.log('[Recorder] 录音器已在运行，跳过启动');
       return;
     }
 
+    console.log('[Recorder] 正在启动录音器...', {
+      hasAudioContext: !!this.audioContext,
+      hasMediaStream: !!this.mediaStream,
+    });
+
     if (!this.audioContext || !this.mediaStream) {
+      console.log('[Recorder] AudioContext 或 MediaStream 不存在，正在初始化...');
       await this.initialize();
     }
 
@@ -187,6 +194,12 @@ export class Recorder {
     this.consecutiveSilenceFrames = 0;
     this.isSendingAudio = false;
     this.frameCounter = 0; // 重置帧计数器
+    
+    console.log('[Recorder] ✅ 录音器已成功启动', {
+      isRecording: this.isRecording,
+      hasAudioContext: !!this.audioContext,
+      hasMediaStream: !!this.mediaStream,
+    });
     this.startSilenceDetection();
     console.log('[Recorder] 录音已开始，VAD 静音过滤已启用', {
       threshold: this.silenceFilterConfig.threshold,
@@ -199,16 +212,22 @@ export class Recorder {
    */
   stop(): void {
     if (!this.isRecording) {
+      console.log('[Recorder] 录音器未运行，跳过停止');
       return;
     }
 
+    console.log('[Recorder] 正在停止录音器...');
     this.isRecording = false;
     this.stopSilenceDetection();
     // 重置静音过滤状态
     this.consecutiveVoiceFrames = 0;
     this.consecutiveSilenceFrames = 0;
     this.isSendingAudio = false;
-    console.log('Recording stopped');
+    console.log('[Recorder] ✅ 录音器已停止', {
+      isRecording: this.isRecording,
+      hasAudioContext: !!this.audioContext,
+      hasMediaStream: !!this.mediaStream,
+    });
   }
 
   /**

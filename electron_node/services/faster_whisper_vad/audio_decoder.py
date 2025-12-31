@@ -1,6 +1,10 @@
 """
 Faster Whisper + Silero VAD Service - Audio Decoder
 音频解码功能（支持 Opus、PCM16 等格式）
+
+注意：Pipeline 现在负责 Opus 解码，Faster-Whisper-vad 服务通常只接收 PCM16 格式。
+Opus 解码代码保留但已废弃，仅用于向后兼容（如果 Pipeline 解码失败）。
+三端之间只使用 Opus 格式传输，Pipeline 负责解码为 PCM16 后发送给 ASR 服务。
 """
 import base64
 import numpy as np
@@ -38,9 +42,13 @@ def decode_audio(
     """
     解码音频数据
     
+    注意：Pipeline 现在负责 Opus 解码，Faster-Whisper-vad 服务通常只接收 PCM16 格式。
+    Opus 解码代码保留但已废弃，仅用于向后兼容（如果 Pipeline 解码失败）。
+    三端之间只使用 Opus 格式传输，Pipeline 负责解码为 PCM16 后发送给 ASR 服务。
+    
     Args:
         audio_b64: Base64编码的音频数据
-        audio_format: 音频格式（"pcm16" | "opus"）
+        audio_format: 音频格式（"pcm16" | "opus" - Opus 已废弃）
         sample_rate: 采样率
         trace_id: 追踪ID（用于日志）
     
@@ -59,9 +67,27 @@ def decode_audio(
     sr = None
     
     if audio_format == "opus":
+        # 警告：Opus 解码应该由 Pipeline 完成，这里保留仅用于向后兼容
+        logger.warning(
+            f"[{trace_id}] ⚠️  DEPRECATED: Received Opus format audio. "
+            f"Opus decoding should be handled by Pipeline. "
+            f"This is a fallback and may be removed in the future. "
+            f"Three-end communication only uses Opus format, Pipeline should decode to PCM16 before sending to ASR."
+        )
         audio, sr = decode_opus_audio(audio_bytes, sample_rate, trace_id)
+    elif audio_format == "pcm16":
+        # PCM16 格式：直接处理原始 PCM16 数据（Pipeline 解码后的格式）
+        try:
+            import array
+            # 将 PCM16 bytes 转换为 int16 array，然后转换为 float32 numpy array
+            pcm16_array = array.array('h', audio_bytes)  # int16 little-endian
+            audio = np.array(pcm16_array, dtype=np.float32) / 32768.0  # 归一化到 [-1.0, 1.0]
+            sr = sample_rate
+        except Exception as e:
+            logger.error(f"[{trace_id}] Failed to decode PCM16 audio: {e}")
+            raise ValueError(f"Invalid PCM16 audio: {e}")
     else:
-        # 默认：PCM16/WAV 格式
+        # WAV 格式：使用 soundfile 读取（包含文件头）
         try:
             audio, sr = sf.read(io.BytesIO(audio_bytes))
         except Exception as e:

@@ -113,6 +113,15 @@ pub enum NodeMessage {
         /// EDGE-4: Padding 配置（毫秒），用于在音频末尾添加静音
         #[serde(skip_serializing_if = "Option::is_none")]
         padding_ms: Option<u64>,
+        /// 是否由用户手动发送（is_final=true）
+        #[serde(skip_serializing_if = "std::ops::Not::not")]
+        is_manual_cut: bool,
+        /// 是否由3秒静音触发（pause触发）
+        #[serde(skip_serializing_if = "std::ops::Not::not")]
+        is_pause_triggered: bool,
+        /// 是否由10秒超时触发（timeout触发）
+        #[serde(skip_serializing_if = "std::ops::Not::not")]
+        is_timeout_triggered: bool,
     },
     /// Scheduler -> Node：取消一个正在处理/排队的 job（best-effort）
     #[serde(rename = "job_cancel")]

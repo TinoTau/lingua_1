@@ -43,13 +43,29 @@
 
 ### Web 客户端
 
-- **位置**: `web_client/`
-- **文档索引**: [web_client/README.md](./web_client/README.md)
+- **位置**: `web_client/` 和 `webapp/`
+- **文档索引**: 
+  - [web_client/README.md](./web_client/README.md) - Web 客户端文档
+  - [webapp/README.md](./webapp/README.md) - Web 应用文档（包含 WebRTC、iOS 等）
+- **分析文档**: `web_client/analysis/` - Web 端音频传输、播放等分析文档
+  - `web_audio_logic_summary.md` - Web 端音频发送和播放逻辑总结
+  - `web_audio_check_summary.md` - Web 端音频传输检查总结
+  - `web_audio_analysis_summary.md` - Web 端音频接收和播放区添加情况分析
+  - `audio_transmission_analysis.md` - 节点端音频传输过程分析
+  - `finalize_timing_analysis.md` - Finalize 时长和音频累积分析
+  - `analyze_first_audio_playback.md` - 第一段音频播放问题分析
 
 ### 中央服务器
 
 - **位置**: `central_server/`
 - **文档索引**: [central_server/README.md](./central_server/README.md)
+- **子模块文档**:
+  - `central_server/scheduler/` - 调度服务器文档
+  - `central_server/api_gateway/` - API 网关文档
+  - `central_server/model_hub/` - 模型库服务文档
+  - `central_server/modelManager/` - 模型管理文档
+  - `central_server/project/` - 项目相关文档
+  - `central_server/testing/` - 测试文档
 
 ### Electron 节点客户端
 
@@ -58,22 +74,32 @@
 - **新增服务**:
   - [Faster Whisper VAD 服务](../electron_node/services/faster_whisper_vad/README.md) - ASR + VAD 整合服务（GPU加速）
   - [Speaker Embedding 服务](../electron_node/services/speaker_embedding/README.md) - 说话者特征提取服务（GPU加速）
+- **音频聚合与处理机制（2025-12-31）**:
+  - [**音频聚合完整机制**](./electron_node/short_utterance/AUDIO_AGGREGATION_COMPLETE_MECHANISM.md) ⭐ **重要** - 完整的音频聚合、ASR、NMT、调度服务器finalize和Web端机制文档
 
 ## 项目结构
 
 ```
 lingua_1/
 ├── webapp/                    # Web 客户端
-│   └── docs/                 # Web 客户端文档
+│   ├── web-client/           # Web 客户端代码
+│   └── docs/                 # Web 客户端文档（已同步到 docs/webapp/）
 ├── central_server/            # 中央服务器
-│   └── docs/                 # 中央服务器文档
+│   └── docs/                 # 中央服务器文档（已同步到 docs/central_server/）
 ├── electron_node/             # Electron 节点客户端
-│   └── docs/                 # 节点客户端文档
+│   └── docs/                 # 节点客户端文档（已同步到 docs/electron_node/）
 ├── scripts/                   # 启动脚本
 ├── shared/                    # 共享代码
-├── docs/                      # 项目级文档（本目录）
+├── docs/                      # 项目级文档（本目录，统一管理所有文档）
+│   ├── web_client/           # Web 客户端文档
+│   ├── webapp/               # Web 应用文档（WebRTC、iOS 等）
+│   ├── central_server/       # 中央服务器文档
+│   ├── electron_node/        # Electron 节点客户端文档
+│   └── ...                    # 其他项目级文档
 └── expired/                   # 备份代码（旧版本）
 ```
+
+> **注意**: 所有文档已统一整合到 `docs/` 目录下，各子项目的 `docs/` 目录内容已同步到根目录 `docs/` 中。
 
 ## 快速参考
 

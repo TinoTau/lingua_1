@@ -71,6 +71,11 @@ const DEFAULT_CONFIG = {
             // 未来扩展：nmt, tts 等
         },
     },
+    features: {
+        enablePostProcessTranslation: true, // 默认启用 PostProcess 翻译
+        enableS1PromptBias: false, // 默认禁用 S1 Prompt Bias（暂时禁用，避免错误传播）
+        enableS2Rescoring: false, // 默认禁用 S2 Rescoring（已禁用）
+    },
 };
 function getConfigPath() {
     const userData = electron_1.app.getPath('userData');

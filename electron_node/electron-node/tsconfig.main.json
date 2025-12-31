@@ -28,12 +28,12 @@
   },
   "include": [
     "main/src/**/*",
-    "../shared/**/*"
+    "../shared/**/*",
+    "tests/aggregator-test*.ts"
   ],
   "exclude": [
     "node_modules",
     "renderer",
-    "main/src/**/*.test.ts",
-    "tests"
+    "main/src/**/*.test.ts"
   ]
 }

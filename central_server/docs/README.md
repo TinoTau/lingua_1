@@ -16,19 +16,19 @@
 - `testing/TEST_GUIDE.md`：测试运行指南
 - `testing/TEST_STATUS.md`：测试状态概览
 - `project/PROJECT_COMPLETENESS.md`：项目完整性检查报告
+- `project/SCHEDULER_PHASE1_OVERVIEW.md`：Phase 1 总览
+- `project/SCHEDULER_PHASE2_OVERVIEW.md`：Phase 2 总览
+- `project/SCHEDULER_CAPACITY_AND_SCALING.md`：容量规划与扩展
 
 ## 组件文档
 
 ### Scheduler（调度服务器）
 
-- `scheduler/README.md`
-- `scheduler/DISPATCHER_OPTIMIZATION_PLAN.md`
-- **Phase 2（多实例 + Redis）**
-  - 进度记录：`project/Scheduler_Phase2_开发进度记录_2025-12-19.md`
-  - 容量规划与 Redis 设计：`project/Scheduler_扩展与容量规划说明_含Redis设计.md`
-  - 实现总览（代码内文档）：`../scheduler/docs/phase2_implementation.md`
-  - Streams/DLQ 运维：`../scheduler/docs/phase2_streams_ops.md`
-  - Cluster 一键验收脚本：`../scheduler/scripts/phase2_cluster_acceptance.ps1`
+- `scheduler/README.md`：Scheduler 文档索引
+- `scheduler/ARCHITECTURE.md`：完整架构文档
+- `scheduler/DISPATCHER_OPTIMIZATION_PLAN.md`：任务分发优化方案
+- `scheduler/DASHBOARD.md`：Dashboard 说明
+- `scheduler/GPU_REQUIREMENT_EXPLANATION.md`：GPU 要求说明
 
 ### API Gateway（对外网关）
 

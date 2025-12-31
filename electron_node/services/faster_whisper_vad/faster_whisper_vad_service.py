@@ -126,7 +126,7 @@ class UtteranceRequest(BaseModel):
     src_lang: str  # 源语言（支持 "auto" | "zh" | "en" | "ja" | "ko"）
     tgt_lang: Optional[str] = None  # 目标语言（可选，ASR 服务不使用）
     audio: str  # Base64 encoded audio（与 node-inference 一致）
-    audio_format: Optional[str] = "pcm16"  # 音频格式（"pcm16" | "opus" 等）
+    audio_format: Optional[str] = "pcm16"  # 音频格式（"pcm16" | "opus" - Opus 已废弃，Pipeline 负责解码）
     sample_rate: Optional[int] = 16000  # 采样率
     # ASR 特定参数
     language: Optional[str] = None  # 语言代码（如果 src_lang == "auto"，则自动检测）
@@ -800,116 +800,78 @@ async def process_utterance(req: UtteranceRequest):
                         f"deduplicated_text=\"{full_text_trimmed[:100]}\""
                     )
                 
-                # 9.3. 跨 utterance 去重：检查当前文本是否与上一个 utterance 的文本重复
-                if req.use_text_context:
-                    previous_text = get_text_context()
-                    if previous_text and full_text_trimmed:
-                        previous_text_trimmed = previous_text.strip()
-                        # 记录用于调试
-                        logger.info(
-                            f"[{trace_id}] Step 9.3: Cross-utterance deduplication check: "
-                            f"previous_text=\"{previous_text_trimmed}\", "
-                            f"current_text=\"{full_text_trimmed}\""
-                        )
-                        # 检查是否完全重复
-                        if full_text_trimmed == previous_text_trimmed:
+                # 注意：跨 utterance 去重已迁移到 Aggregator 层（节点端）
+                # Step 9.2 保留：单个 utterance 内部去重（处理如 "这边能不能用这边能不能用" 的情况）
+                # Step 9.3 已移除：跨 utterance 去重由 Aggregator 统一处理，避免重复处理，职责更清晰
+                
+                # 修复：在ASR之后进行跨utterance的文本过滤
+                # 当音频质量较差（静音或白噪音）时，ASR模型可能会基于initial_prompt生成文本
+                # 导致识别出的文本是前一个utterance的部分内容
+                # 需要在ASR服务内部进行过滤，避免返回重复文本
+                # 改进：只有在音频质量很差时才进行过滤，避免误判用户真的说了类似的话
+                if text_context and full_text_trimmed:
+                    # 标准化文本（去除空格差异）
+                    def normalize_text(text: str) -> str:
+                        return text.replace('\n', ' ').replace('\r', ' ').replace('\t', ' ').replace(' ', '').strip()
+                    
+                    normalized_current = normalize_text(full_text_trimmed)
+                    normalized_context = normalize_text(text_context)
+                    
+                    # 检查音频质量：只有当音频质量很差时才进行子串过滤
+                    # 从日志看，Job8-17 的音频质量都很差（RMS < 0.001, duration < 1.0）
+                    # 正常的音频应该 RMS > 0.001 且 duration > 1.0
+                    # 如果音频质量正常，即使文本有子串关系，也可能是用户真的说了类似的话，不应该过滤
+                    POOR_AUDIO_RMS_THRESHOLD = 0.001  # RMS 阈值（低于此值认为音频质量差）
+                    POOR_AUDIO_DURATION_THRESHOLD = 1.0  # 时长阈值（低于此值认为音频质量差）
+                    
+                    is_poor_audio_quality = (
+                        audio_rms < POOR_AUDIO_RMS_THRESHOLD or 
+                        audio_duration < POOR_AUDIO_DURATION_THRESHOLD
+                    )
+                    
+                    # 检查当前文本是否是上下文文本的子串（至少3个字符，避免误判）
+                    if len(normalized_current) >= 3 and normalized_context and normalized_context.find(normalized_current) != -1:
+                        if is_poor_audio_quality:
                             logger.warning(
-                                f"[{trace_id}] Step 9.3: Cross-utterance complete duplicate detected, "
-                                f"previous_text=\"{previous_text_trimmed[:100]}\", "
-                                f"current_text=\"{full_text_trimmed[:100]}\", "
-                                f"returning empty result"
+                                f"[{trace_id}] Step 9.3: Current text is a substring of context text, "
+                                f"and audio quality is poor (rms={audio_rms:.4f}, duration={audio_duration:.3f}s), "
+                                f"likely generated from initial_prompt due to poor audio quality. "
+                                f"Filtering to avoid duplicate output. "
+                                f"current_text='{full_text_trimmed[:50]}', "
+                                f"context_text='{text_context[:50]}'"
                             )
-                            # 完全重复，返回空结果（跳过 NMT 和 TTS）
-                            return UtteranceResponse(
-                                text="",
-                                segments=[],
-                                language=info_language,
-                                duration=info_duration,
-                                vad_segments=[],
+                            # 返回空结果，避免重复输出
+                            full_text_trimmed = ""
+                        else:
+                            logger.info(
+                                f"[{trace_id}] Step 9.3: Current text is a substring of context text, "
+                                f"but audio quality is normal (rms={audio_rms:.4f}, duration={audio_duration:.3f}s), "
+                                f"likely user actually said similar content. Not filtering. "
+                                f"current_text='{full_text_trimmed[:50]}', "
+                                f"context_text='{text_context[:50]}'"
                             )
-                        # 检查是否部分重复（多种情况）
-                        # 情况1：当前文本以上一个文本开头（例如：上一个="测试"，当前="测试一下"）
-                        elif full_text_trimmed.startswith(previous_text_trimmed):
-                            # 移除重复部分
-                            remaining_text = full_text_trimmed[len(previous_text_trimmed):].strip()
-                            if remaining_text:
-                                logger.info(
-                                    f"[{trace_id}] Step 9.3: Cross-utterance partial duplicate removed (current starts with previous), "
-                                    f"previous_text=\"{previous_text_trimmed[:50]}\", "
-                                    f"original_text=\"{full_text_trimmed[:100]}\", "
-                                    f"remaining_text=\"{remaining_text[:100]}\""
-                                )
-                                full_text_trimmed = remaining_text
-                            else:
-                                # 移除重复部分后为空，返回空结果
-                                logger.warning(
-                                    f"[{trace_id}] Step 9.3: Cross-utterance partial duplicate removed, "
-                                    f"but remaining text is empty, returning empty result"
-                                )
-                                return UtteranceResponse(
-                                    text="",
-                                    segments=[],
-                                    language=info_language,
-                                    duration=info_duration,
-                                    vad_segments=[],
-                                )
-                        # 情况2：当前文本是上一个文本的后缀（例如：上一个="实力语言 应万般的重复"，当前="语言 应万般的重复"）
-                        elif previous_text_trimmed.endswith(full_text_trimmed):
-                            # 当前文本完全包含在上一个文本的结尾，返回空结果
+                    
+                    # 检查上下文文本是否是当前文本的子串（至少3个字符，避免误判）
+                    elif len(normalized_context) >= 3 and normalized_current and normalized_current.find(normalized_context) != -1:
+                        if is_poor_audio_quality:
                             logger.warning(
-                                f"[{trace_id}] Step 9.3: Cross-utterance suffix duplicate detected, "
-                                f"previous_text=\"{previous_text_trimmed[:100]}\", "
-                                f"current_text=\"{full_text_trimmed[:100]}\", "
-                                f"returning empty result"
+                                f"[{trace_id}] Step 9.3: Context text is a substring of current text, "
+                                f"and audio quality is poor (rms={audio_rms:.4f}, duration={audio_duration:.3f}s), "
+                                f"likely generated from initial_prompt due to poor audio quality. "
+                                f"Filtering to avoid duplicate output. "
+                                f"current_text='{full_text_trimmed[:50]}', "
+                                f"context_text='{text_context[:50]}'"
                             )
-                            return UtteranceResponse(
-                                text="",
-                                segments=[],
-                                language=info_language,
-                                duration=info_duration,
-                                vad_segments=[],
+                            # 返回空结果，避免重复输出
+                            full_text_trimmed = ""
+                        else:
+                            logger.info(
+                                f"[{trace_id}] Step 9.3: Context text is a substring of current text, "
+                                f"but audio quality is normal (rms={audio_rms:.4f}, duration={audio_duration:.3f}s), "
+                                f"likely user actually said similar content. Not filtering. "
+                                f"current_text='{full_text_trimmed[:50]}', "
+                                f"context_text='{text_context[:50]}'"
                             )
-                        # 情况3：当前文本包含在上一个文本中（例如：上一个="实力语言 应万般的重复"，当前="应万般的重复"）
-                        elif full_text_trimmed in previous_text_trimmed:
-                            # 当前文本完全包含在上一个文本中，返回空结果
-                            logger.warning(
-                                f"[{trace_id}] Step 9.3: Cross-utterance contained duplicate detected, "
-                                f"previous_text=\"{previous_text_trimmed[:100]}\", "
-                                f"current_text=\"{full_text_trimmed[:100]}\", "
-                                f"returning empty result"
-                            )
-                            return UtteranceResponse(
-                                text="",
-                                segments=[],
-                                language=info_language,
-                                duration=info_duration,
-                                vad_segments=[],
-                            )
-                        # 情况4：上一个文本包含在当前文本中（例如：上一个="语言"，当前="语言 应万般的重复"）
-                        elif previous_text_trimmed in full_text_trimmed:
-                            # 移除重复部分（上一个文本）
-                            remaining_text = full_text_trimmed.replace(previous_text_trimmed, "", 1).strip()
-                            if remaining_text:
-                                logger.info(
-                                    f"[{trace_id}] Step 9.3: Cross-utterance partial duplicate removed (previous contained in current), "
-                                    f"previous_text=\"{previous_text_trimmed[:50]}\", "
-                                    f"original_text=\"{full_text_trimmed[:100]}\", "
-                                    f"remaining_text=\"{remaining_text[:100]}\""
-                                )
-                                full_text_trimmed = remaining_text
-                            else:
-                                # 移除重复部分后为空，返回空结果
-                                logger.warning(
-                                    f"[{trace_id}] Step 9.3: Cross-utterance partial duplicate removed, "
-                                    f"but remaining text is empty, returning empty result"
-                                )
-                                return UtteranceResponse(
-                                    text="",
-                                    segments=[],
-                                    language=info_language,
-                                    duration=info_duration,
-                                    vad_segments=[],
-                                )
         except Exception as e:
             logger.error(f"[{trace_id}] Step 9.1: Failed to trim text: {e}", exc_info=True)
             raise

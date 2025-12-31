@@ -18,11 +18,11 @@ describe('InferenceService', () => {
     };
 
     mockPythonServiceManager = {
-      getServiceStatus: jest.fn().mockReturnValue({ running: false }),
+      getServiceStatus: jest.fn().mockReturnValue({ running: true }), // 设置为运行中，避免等待
     };
 
     mockRustServiceManager = {
-      getStatus: jest.fn().mockReturnValue({ running: false }),
+      getStatus: jest.fn().mockReturnValue({ running: true }), // 设置为运行中，避免等待
     };
 
     mockServiceRegistryManager = {
@@ -37,6 +37,10 @@ describe('InferenceService', () => {
       mockRustServiceManager,
       mockServiceRegistryManager
     );
+    
+    // Mock waitForServicesReady 以避免实际等待
+    (inferenceService as any).waitForServicesReady = jest.fn().mockResolvedValue(undefined);
+    (inferenceService as any).hasProcessedFirstJob = true; // 跳过第一个任务的等待逻辑
   });
 
   describe('processJob', () => {
@@ -56,7 +60,7 @@ describe('InferenceService', () => {
           use_tts: true,
         },
         audio: 'base64_audio_data',
-        audio_format: 'pcm16',
+        audio_format: 'opus',
         sample_rate: 16000,
         trace_id: 'test-trace',
       };
@@ -64,8 +68,8 @@ describe('InferenceService', () => {
       const mockOrchestrator = {
         processJob: jest.fn().mockResolvedValue({
           text_asr: '你好世界',
-          text_translated: 'Hello World',
-          tts_audio: 'base64_tts_audio',
+          text_translated: '',  // Pipeline 现在只处理 ASR，NMT/TTS 由 PostProcess 处理
+          tts_audio: '',  // Pipeline 现在只处理 ASR，NMT/TTS 由 PostProcess 处理
           tts_format: 'pcm16',
           extra: {},
         }),
@@ -83,8 +87,10 @@ describe('InferenceService', () => {
       const result = await inferenceService.processJob(job);
 
       expect(result.text_asr).toBe('你好世界');
-      expect(result.text_translated).toBe('Hello World');
-      expect(mockOrchestrator.processJob).toHaveBeenCalledWith(job, undefined);
+      // Pipeline 现在只处理 ASR，text_translated 和 tts_audio 由 PostProcess 处理
+      expect(result.text_translated).toBe('');
+      expect(result.tts_audio).toBe('');
+      expect(mockOrchestrator.processJob).toHaveBeenCalledWith(job, undefined, expect.any(Function));
       expect(mockTaskRouter.refreshServiceEndpoints).toHaveBeenCalled();
     });
 
@@ -104,7 +110,7 @@ describe('InferenceService', () => {
           use_tts: true,
         },
         audio: 'base64_audio_data',
-        audio_format: 'pcm16',
+        audio_format: 'opus',
         sample_rate: 16000,
         trace_id: 'test-trace',
       };

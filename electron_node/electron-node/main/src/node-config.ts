@@ -54,6 +54,16 @@ export interface NodeConfig {
   asr?: ASRConfig;  // ASR 配置（beam_size 等参数）
   /** 指标收集配置（支持热插拔） */
   metrics?: MetricsConfig;
+  /** Feature Flags - 功能开关 */
+  features?: {
+    /** 是否启用 Pipeline NMT（默认 false，已迁移到 PostProcess） */
+    /** 是否启用 PostProcess 翻译（默认 true） */
+    enablePostProcessTranslation?: boolean;
+    /** 是否启用 S1 Prompt Bias（默认 false，暂时禁用） */
+    enableS1PromptBias?: boolean;
+    /** 是否启用 S2 Rescoring（默认 false，已禁用） */
+    enableS2Rescoring?: boolean;
+  };
 }
 
 const DEFAULT_CONFIG: NodeConfig = {
@@ -86,6 +96,11 @@ const DEFAULT_CONFIG: NodeConfig = {
       asr: true,    // 默认启用 ASR 指标
       // 未来扩展：nmt, tts 等
     },
+  },
+  features: {
+      enablePostProcessTranslation: true,  // 默认启用 PostProcess 翻译
+    enableS1PromptBias: false,  // 默认禁用 S1 Prompt Bias（暂时禁用，避免错误传播）
+    enableS2Rescoring: false,  // 默认禁用 S2 Rescoring（已禁用）
   },
 };
 

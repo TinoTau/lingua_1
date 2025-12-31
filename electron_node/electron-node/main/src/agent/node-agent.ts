@@ -21,6 +21,8 @@ import {
 import { ModelNotAvailableError } from '../model-manager/model-manager';
 import { loadNodeConfig, type NodeConfig } from '../node-config';
 import logger from '../logger';
+import { AggregatorMiddleware, AggregatorMiddlewareConfig } from './aggregator-middleware';
+import { PostProcessCoordinator, PostProcessConfig } from './postprocess/postprocess-coordinator';
 
 export interface NodeStatus {
   online: boolean;
@@ -43,6 +45,10 @@ export class NodeAgent {
   private heartbeatDebounceTimer: NodeJS.Timeout | null = null; // 心跳防抖定时器
   private readonly HEARTBEAT_DEBOUNCE_MS = 2000; // 防抖延迟：2秒内最多触发一次立即心跳
   private nodeConfig: NodeConfig; // 节点配置（用于指标收集配置）
+  private aggregatorMiddleware: AggregatorMiddleware; // Aggregator 中间件（旧架构）
+  private postProcessCoordinator: PostProcessCoordinator | null = null; // PostProcess 协调器（新架构）
+  // 防止重复处理同一个job（只保留最近的两个job_id，用于检测相邻重复）
+  private recentJobIds: string[] = [];
 
   constructor(
     inferenceService: InferenceService,
@@ -63,6 +69,61 @@ export class NodeAgent {
     this.serviceRegistryManager = serviceRegistryManager;
     this.rustServiceManager = rustServiceManager;
     this.pythonServiceManager = pythonServiceManager;
+
+    // 初始化 Aggregator 中间件（默认启用）
+    // 从 InferenceService 获取 TaskRouter（用于重新触发 NMT）
+    const taskRouter = (this.inferenceService as any).taskRouter;
+    const aggregatorConfig: AggregatorMiddlewareConfig = {
+      enabled: true,  // 可以通过配置控制
+      mode: 'offline',  // 默认 offline，可以根据 job 动态调整
+      ttlMs: 5 * 60 * 1000,  // 5 分钟 TTL
+      maxSessions: 500,  // 降低最大会话数（从 1000 降低到 500，减少内存占用）
+      translationCacheSize: 200,  // 翻译缓存大小：最多 200 条（提高缓存命中率）
+      translationCacheTtlMs: 10 * 60 * 1000,  // 翻译缓存过期时间：10 分钟（提高缓存命中率）
+      enableAsyncRetranslation: true,  // 异步重新翻译（默认启用，长文本使用异步处理）
+      asyncRetranslationThreshold: 50,  // 异步重新翻译阈值（文本长度，默认 50 字符）
+      nmtRepairEnabled: true,  // 启用 NMT Repair
+      nmtRepairNumCandidates: 5,  // 生成 5 个候选
+      nmtRepairThreshold: 0.7,  // 质量分数 < 0.7 时触发
+    };
+    this.aggregatorMiddleware = new AggregatorMiddleware(aggregatorConfig, taskRouter);
+
+    // 初始化 PostProcessCoordinator（新架构，通过 Feature Flag 控制）
+    const enablePostProcessTranslation = this.nodeConfig.features?.enablePostProcessTranslation ?? true;
+    if (enablePostProcessTranslation) {
+      const aggregatorManager = (this.aggregatorMiddleware as any).manager;
+      const postProcessConfig: PostProcessConfig = {
+        enabled: true,
+        translationConfig: {
+          translationCacheSize: aggregatorConfig.translationCacheSize,
+          translationCacheTtlMs: aggregatorConfig.translationCacheTtlMs,
+          enableAsyncRetranslation: aggregatorConfig.enableAsyncRetranslation,
+          asyncRetranslationThreshold: aggregatorConfig.asyncRetranslationThreshold,
+          nmtRepairEnabled: aggregatorConfig.nmtRepairEnabled,
+          nmtRepairNumCandidates: aggregatorConfig.nmtRepairNumCandidates,
+          nmtRepairThreshold: aggregatorConfig.nmtRepairThreshold,
+        },
+      };
+      this.postProcessCoordinator = new PostProcessCoordinator(
+        aggregatorManager,
+        taskRouter,
+        postProcessConfig
+      );
+      logger.info({}, 'PostProcessCoordinator initialized (new architecture)');
+    }
+
+    // S1: 将AggregatorManager传递给InferenceService（用于构建prompt）
+    const aggregatorManager = (this.aggregatorMiddleware as any).manager;
+    if (aggregatorManager && this.inferenceService) {
+      (this.inferenceService as any).setAggregatorManager(aggregatorManager);
+      logger.info({}, 'S1: AggregatorManager passed to InferenceService for prompt building');
+    }
+
+    // 将AggregatorMiddleware传递给InferenceService（用于在ASR之后、NMT之前进行文本聚合）
+    if (this.aggregatorMiddleware && this.inferenceService) {
+      (this.inferenceService as any).setAggregatorMiddleware(this.aggregatorMiddleware);
+      logger.info({}, 'AggregatorMiddleware passed to InferenceService for pre-NMT aggregation');
+    }
 
     logger.info({ schedulerUrl: this.schedulerUrl }, 'Scheduler server URL configured');
   }
@@ -767,8 +828,37 @@ export class NodeAgent {
       return;
     }
 
+    // 检查是否与最近处理的job_id重复（只检查相邻的两个，因为重复通常是明显的）
+    if (this.recentJobIds.length > 0 && this.recentJobIds[this.recentJobIds.length - 1] === job.job_id) {
+      logger.warn(
+        {
+          jobId: job.job_id,
+          traceId: job.trace_id,
+          sessionId: job.session_id,
+          utteranceIndex: job.utterance_index,
+          recentJobIds: this.recentJobIds,
+        },
+        'Skipping duplicate job_id (same as last processed job)'
+      );
+      return;
+    }
+
+    // 更新最近处理的job_id列表（只保留最近2个）
+    this.recentJobIds.push(job.job_id);
+    if (this.recentJobIds.length > 2) {
+      this.recentJobIds.shift(); // 移除最旧的
+    }
+
     const startTime = Date.now();
-    logger.info({ jobId: job.job_id, traceId: job.trace_id, sessionId: job.session_id }, 'Received job_assign, starting processing');
+    logger.info(
+      {
+        jobId: job.job_id,
+        traceId: job.trace_id,
+        sessionId: job.session_id,
+        utteranceIndex: job.utterance_index,
+      },
+      'Received job_assign, starting processing'
+    );
 
     try {
       // 根据 features 启动所需的服务
@@ -801,20 +891,145 @@ export class NodeAgent {
       } : undefined;
 
       // 调用推理服务处理任务
-      logger.debug({ jobId: job.job_id }, 'Calling inferenceService.processJob');
+      logger.info(
+        {
+          jobId: job.job_id,
+          sessionId: job.session_id,
+          utteranceIndex: job.utterance_index,
+          audioFormat: job.audio_format,
+          audioLength: job.audio ? job.audio.length : 0,
+        },
+        'Processing job: received audio data'
+      );
       const result = await this.inferenceService.processJob(job, partialCallback);
 
+      // 后处理（在发送结果前）
+      // 优先使用 PostProcessCoordinator（新架构），否则使用 AggregatorMiddleware（旧架构）
+      let finalResult = result;
+      const enablePostProcessTranslation = this.nodeConfig.features?.enablePostProcessTranslation ?? true;
+      
+      if (enablePostProcessTranslation && this.postProcessCoordinator) {
+        // 使用新架构：PostProcessCoordinator
+        logger.debug({ jobId: job.job_id, sessionId: job.session_id }, 'Processing through PostProcessCoordinator (new architecture)');
+        
+        const postProcessResult = await this.postProcessCoordinator.process(job, result);
+        
+        // 统一处理 TTS Opus 编码（无论来自 Pipeline 还是 PostProcess）
+        let ttsAudio = postProcessResult.ttsAudio || result.tts_audio || '';
+        let ttsFormat = postProcessResult.ttsFormat || result.tts_format || 'opus';
+        
+        // 如果 TTS 音频是 WAV 格式，需要编码为 Opus（统一在 NodeAgent 层处理）
+        if (ttsAudio && (ttsFormat === 'wav' || ttsFormat === 'pcm16')) {
+          try {
+            const { convertWavToOpus } = await import('../utils/opus-codec');
+            const wavBuffer = Buffer.from(ttsAudio, 'base64');
+            const opusData = await convertWavToOpus(wavBuffer);
+            ttsAudio = opusData.toString('base64');
+            ttsFormat = 'opus';
+            logger.info(
+              {
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                wavSize: wavBuffer.length,
+                opusSize: opusData.length,
+                compression: (wavBuffer.length / opusData.length).toFixed(2),
+              },
+              'NodeAgent: TTS WAV audio encoded to Opus successfully (unified encoding)'
+            );
+          } catch (opusError) {
+            const errorMessage = opusError instanceof Error ? opusError.message : String(opusError);
+            logger.error(
+              {
+                error: opusError,
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                errorMessage,
+              },
+              'NodeAgent: Failed to encode TTS WAV to Opus, returning empty audio'
+            );
+            ttsAudio = '';
+            ttsFormat = 'opus';
+          }
+        }
+        
+        if (postProcessResult.shouldSend) {
+          finalResult = {
+            ...result,
+            text_asr: postProcessResult.aggregatedText,
+            text_translated: postProcessResult.translatedText,
+            tts_audio: ttsAudio,
+            tts_format: ttsFormat,
+          };
+          
+          logger.debug(
+            {
+              jobId: job.job_id,
+              sessionId: job.session_id,
+              action: postProcessResult.action,
+              originalLength: result.text_asr?.length || 0,
+              aggregatedLength: postProcessResult.aggregatedText.length,
+            },
+            'PostProcessCoordinator processing completed'
+          );
+        } else {
+          // PostProcessCoordinator 决定不发送（可能是重复文本或被过滤）
+          // 修复：如果PostProcessCoordinator决定不发送（shouldSend=false），不发送job_result
+          // 避免发送重复内容或空结果导致重复输出
+          logger.info(
+            {
+              jobId: job.job_id,
+              sessionId: job.session_id,
+              utteranceIndex: job.utterance_index,
+              reason: postProcessResult.reason || 'PostProcessCoordinator filtered result',
+              aggregatedText: postProcessResult.aggregatedText?.substring(0, 50) || '',
+              aggregatedTextLength: postProcessResult.aggregatedText?.length || 0,
+            },
+            'PostProcessCoordinator filtered result (shouldSend=false), skipping job_result send to avoid duplicate output'
+          );
+          return;  // 不发送结果，避免重复输出
+        }
+      } else {
+        // 如果未使用 PostProcessCoordinator（不应该发生，但保留作为安全措施）
+        finalResult = result;
+      }
+      // 注意：AggregatorMiddleware 现在在 PipelineOrchestrator 中调用（ASR 之后、NMT 之前）
+      // 不再在这里调用，避免重复处理和重复翻译
+      // 如果启用了 AggregatorMiddleware，文本聚合已经在 PipelineOrchestrator 中完成
+
       // 检查ASR结果是否为空
-      const asrTextTrimmed = (result.text_asr || '').trim();
+      const asrTextTrimmed = (finalResult.text_asr || '').trim();
       const isEmpty = !asrTextTrimmed || asrTextTrimmed.length === 0;
 
       if (isEmpty) {
-        logger.warn(
-          { jobId: job.job_id, traceId: job.trace_id },
-          'ASR result is empty (silence detected), sending empty job_result for job_id/trace_id verification'
+        // 修复：即使ASR结果为空，也发送job_result（空结果）给调度服务器
+        // 这样调度服务器知道节点端已经处理完成，不会触发超时
+        // 调度服务器的result_queue会处理空结果，不会发送给客户端
+        logger.info(
+          { 
+            jobId: job.job_id, 
+            traceId: job.trace_id,
+            sessionId: job.session_id,
+            utteranceIndex: job.utterance_index,
+            reason: 'ASR result is empty, but sending empty job_result to scheduler to prevent timeout',
+          },
+          'NodeAgent: ASR result is empty, sending empty job_result to scheduler to prevent timeout'
         );
+        // 继续执行，发送空结果
       } else {
-        logger.info({ jobId: job.job_id, textAsr: result.text_asr?.substring(0, 50), textTranslated: result.text_translated?.substring(0, 50) }, 'Job processing completed successfully');
+        logger.info(
+          {
+            jobId: job.job_id,
+            utteranceIndex: job.utterance_index,
+            textAsr: finalResult.text_asr?.substring(0, 50),
+            textAsrLength: finalResult.text_asr?.length || 0,
+            textTranslated: finalResult.text_translated?.substring(0, 100),
+            textTranslatedLength: finalResult.text_translated?.length || 0,
+            ttsAudioLength: finalResult.tts_audio?.length || 0,
+          },
+          'Job processing completed successfully'
+        );
       }
 
       // 对齐协议规范：job_result 消息格式
@@ -826,24 +1041,72 @@ export class NodeAgent {
         session_id: job.session_id,
         utterance_index: job.utterance_index,
         success: true,
-        text_asr: result.text_asr,
-        text_translated: result.text_translated,
-        tts_audio: result.tts_audio,
-        tts_format: result.tts_format || 'pcm16',
-        extra: result.extra,
+        text_asr: finalResult.text_asr,
+        text_translated: finalResult.text_translated,
+        tts_audio: finalResult.tts_audio,
+        tts_format: finalResult.tts_format || 'opus',  // 强制使用 opus 格式
+        extra: finalResult.extra,
         processing_time_ms: Date.now() - startTime,
         trace_id: job.trace_id, // Added: propagate trace_id
         // OBS-2: 透传 ASR 质量信息
-        asr_quality_level: result.asr_quality_level,
-        reason_codes: result.reason_codes,
-        quality_score: result.quality_score,
-        rerun_count: result.rerun_count,
-        segments_meta: result.segments_meta,
+        asr_quality_level: finalResult.asr_quality_level,
+        reason_codes: finalResult.reason_codes,
+        quality_score: finalResult.quality_score,
+        rerun_count: finalResult.rerun_count,
+        segments_meta: finalResult.segments_meta,
       };
 
-      logger.info({ jobId: job.job_id, responseLength: JSON.stringify(response).length }, 'Sending job_result to scheduler');
+      // 检查是否与上次发送的文本完全相同（防止重复发送）
+      // 优化：使用更严格的文本比较
+      const lastSentText = this.aggregatorMiddleware.getLastSentText(job.session_id);
+      if (lastSentText && finalResult.text_asr) {
+        const normalizeText = (text: string): string => {
+          return text.replace(/\s+/g, ' ').trim();
+        };
+
+        const normalizedCurrent = normalizeText(finalResult.text_asr);
+        const normalizedLast = normalizeText(lastSentText);
+
+        if (normalizedCurrent === normalizedLast && normalizedCurrent.length > 0) {
+          logger.info(
+            {
+              jobId: job.job_id,
+              sessionId: job.session_id,
+              text: finalResult.text_asr.substring(0, 50),
+              normalizedText: normalizedCurrent.substring(0, 50),
+            },
+            'Skipping duplicate job result (same as last sent after normalization)'
+          );
+          return;  // 不发送重复的结果
+        }
+      }
+
+      logger.info(
+        {
+          jobId: job.job_id,
+          sessionId: job.session_id,
+          utteranceIndex: job.utterance_index,
+          responseLength: JSON.stringify(response).length,
+          textAsrLength: finalResult.text_asr?.length || 0,
+          ttsAudioLength: finalResult.tts_audio?.length || 0,
+        },
+        'Sending job_result to scheduler'
+      );
       this.ws.send(JSON.stringify(response));
-      logger.info({ jobId: job.job_id, processingTimeMs: Date.now() - startTime }, 'Job result sent successfully');
+      logger.info(
+        {
+          jobId: job.job_id,
+          sessionId: job.session_id,
+          utteranceIndex: job.utterance_index,
+          processingTimeMs: Date.now() - startTime,
+        },
+        'Job result sent successfully'
+      );
+
+      // 更新最后发送的文本（在成功发送后）
+      if (finalResult.text_asr) {
+        this.aggregatorMiddleware.setLastSentText(job.session_id, finalResult.text_asr.trim());
+      }
     } catch (error) {
       logger.error({ error, jobId: job.job_id, traceId: job.trace_id }, 'Failed to process job');
 

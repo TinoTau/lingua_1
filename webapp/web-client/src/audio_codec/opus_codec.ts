@@ -305,25 +305,113 @@ export class OpusDecoderImpl implements AudioDecoder {
     }
     
     try {
-      const decoded = this.decoder.decodeFrame(encodedData);
-      
-      if (decoded.channelData.length === 0) {
-        throw new Error('No channel data decoded');
-      }
-      
-      if (decoded.channelData.length === 1) {
-        return decoded.channelData[0];
-      }
-      
-      // 如果是多声道，合并为单声道（取平均值）
-      const merged = new Float32Array(decoded.channelData[0].length);
-      for (let i = 0; i < merged.length; i++) {
-        let sum = 0;
-        for (let ch = 0; ch < decoded.channelData.length; ch++) {
-          sum += decoded.channelData[ch][i];
+      // 尝试使用 decode() 方法（如果支持多个帧）
+      if (typeof (this.decoder as any).decode === 'function') {
+        try {
+          const decoded = (this.decoder as any).decode(encodedData);
+          if (decoded && decoded.channelData && decoded.channelData.length > 0) {
+            if (decoded.channelData.length === 1) {
+              return decoded.channelData[0];
+            }
+            // 多声道合并
+            const merged = new Float32Array(decoded.channelData[0].length);
+            for (let i = 0; i < merged.length; i++) {
+              let sum = 0;
+              for (let ch = 0; ch < decoded.channelData.length; ch++) {
+                sum += decoded.channelData[ch][i];
+              }
+              merged[i] = sum / decoded.channelData.length;
+            }
+            return merged;
+          }
+        } catch (e) {
+          // decode() 方法不支持，回退到帧分割逻辑
+          console.log('[OpusDecoder] decode() method not supported, using frame splitting');
         }
-        merged[i] = sum / decoded.channelData.length;
       }
+      
+      // 帧分割逻辑：节点端在每个 Opus 帧前添加了 2 字节的长度前缀（小端序）
+      // 使用长度前缀来分割多个帧
+      const decodedChunks: Float32Array[] = [];
+      let offset = 0;
+      let frameIndex = 0;
+      const frameHeaderSize = 2; // 帧长度前缀的大小（字节）
+      
+      while (offset < encodedData.length) {
+        // 检查是否有足够的数据读取帧长度前缀
+        if (encodedData.length - offset < frameHeaderSize) {
+          console.warn(`[OpusDecoder] Remaining data too small for frame header at offset ${offset}, skipping`);
+          break;
+        }
+        
+        // 读取帧长度前缀（2 字节，小端序）
+        const frameSize = (encodedData[offset] | (encodedData[offset + 1] << 8));
+        offset += frameHeaderSize;
+        
+        // 检查帧长度是否合理
+        if (frameSize === 0 || frameSize > 65535) {
+          console.warn(`[OpusDecoder] Invalid frame size: ${frameSize} at offset ${offset - frameHeaderSize}`);
+          break;
+        }
+        
+        // 检查是否有足够的数据读取帧数据
+        if (encodedData.length - offset < frameSize) {
+          console.warn(`[OpusDecoder] Not enough data for frame ${frameIndex}: need ${frameSize} bytes, have ${encodedData.length - offset} bytes`);
+          break;
+        }
+        
+        // 提取帧数据
+        const frameData = encodedData.slice(offset, offset + frameSize);
+        offset += frameSize;
+        
+        try {
+          // 解码帧
+          const decoded = this.decoder.decodeFrame(frameData);
+          
+          if (!decoded || !decoded.channelData || decoded.channelData.length === 0) {
+            console.warn(`[OpusDecoder] Frame ${frameIndex} decoded to empty data`);
+            continue;
+          }
+          
+          // 提取解码后的音频数据
+          let audioData: Float32Array;
+          if (decoded.channelData.length === 1) {
+            audioData = decoded.channelData[0];
+          } else {
+            // 多声道合并
+            audioData = new Float32Array(decoded.channelData[0].length);
+            for (let i = 0; i < audioData.length; i++) {
+              let sum = 0;
+              for (let ch = 0; ch < decoded.channelData.length; ch++) {
+                sum += decoded.channelData[ch][i];
+              }
+              audioData[i] = sum / decoded.channelData.length;
+            }
+          }
+          
+          decodedChunks.push(audioData);
+          frameIndex++;
+        } catch (e) {
+          console.error(`[OpusDecoder] Failed to decode frame ${frameIndex}:`, e);
+          // 继续处理下一个帧
+          continue;
+        }
+      }
+      
+      if (decodedChunks.length === 0) {
+        throw new Error('No valid Opus frames found in data');
+      }
+      
+      // 合并所有解码后的音频块
+      const totalLength = decodedChunks.reduce((sum, chunk) => sum + chunk.length, 0);
+      const merged = new Float32Array(totalLength);
+      let mergedOffset = 0;
+      for (const chunk of decodedChunks) {
+        merged.set(chunk, mergedOffset);
+        mergedOffset += chunk.length;
+      }
+      
+      console.log(`[OpusDecoder] Decoded ${decodedChunks.length} frames, total samples: ${merged.length}`);
       return merged;
     } catch (error) {
       console.error('Opus decoding error:', error);

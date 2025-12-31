@@ -247,7 +247,7 @@ electron_1.app.whenReady().then(async () => {
                 logger_1.default.error({ error }, 'Failed to auto-start Rust inference service');
             });
         }
-        // 按照偏好启动 Python 服务（异步启动，不阻塞窗口显示）
+        // 按照偏好启动 Python 服务（串行启动，避免GPU内存过载）
         if (pythonServiceManager) {
             const toStart = [];
             if (prefs.fasterWhisperVadEnabled)
@@ -260,12 +260,22 @@ electron_1.app.whenReady().then(async () => {
                 toStart.push('yourtts');
             if (prefs.speakerEmbeddingEnabled)
                 toStart.push('speaker_embedding');
-            for (const name of toStart) {
-                logger_1.default.info({ serviceName: name }, 'Auto-starting Python service...');
-                pythonServiceManager.startService(name).catch((error) => {
-                    logger_1.default.error({ error, serviceName: name }, 'Failed to auto-start Python service');
-                });
-            }
+            // 串行启动服务，等待每个服务完全启动后再启动下一个（避免GPU内存过载）
+            // 使用异步函数避免阻塞窗口显示
+            (async () => {
+                for (const name of toStart) {
+                    logger_1.default.info({ serviceName: name }, 'Auto-starting Python service...');
+                    try {
+                        await pythonServiceManager.startService(name);
+                        logger_1.default.info({ serviceName: name }, 'Python service started successfully');
+                    }
+                    catch (error) {
+                        logger_1.default.error({ error, serviceName: name }, 'Failed to auto-start Python service');
+                    }
+                }
+            })().catch((error) => {
+                logger_1.default.error({ error }, 'Failed to start Python services');
+            });
         }
         // 注册所有 IPC 处理器
         (0, model_handlers_1.registerModelHandlers)(modelManager);

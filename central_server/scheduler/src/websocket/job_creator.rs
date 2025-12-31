@@ -28,6 +28,9 @@ pub(crate) async fn create_translation_jobs(
     trace_id: String,
     first_chunk_client_timestamp_ms: Option<i64>,
     padding_ms: Option<u64>, // EDGE-4: Padding 配置（毫秒）
+    is_manual_cut: bool, // 是否由用户手动发送
+    is_pause_triggered: bool, // 是否由3秒静音触发
+    is_timeout_triggered: bool, // 是否由10秒超时触发
 ) -> Result<Vec<crate::core::dispatcher::Job>, anyhow::Error> {
     // 检查是否在房间中
     if let Some(room_code) = state.room_manager.find_room_by_session(session_id).await {
@@ -84,6 +87,9 @@ pub(crate) async fn create_translation_jobs(
                 None, // 单会话模式
                 first_chunk_client_timestamp_ms,
                 padding_ms, // EDGE-4: Padding 配置
+                is_manual_cut, // 从参数传递
+                is_pause_triggered, // 从参数传递
+                is_timeout_triggered, // 从参数传递
             ).await;
             
             // 注册 job_key 到 job_id 的映射
@@ -147,6 +153,9 @@ pub(crate) async fn create_translation_jobs(
                 Some(target_session_ids), // 指定目标接收者
                 first_chunk_client_timestamp_ms,
                 padding_ms, // EDGE-4: Padding 配置
+                is_manual_cut, // 从参数传递
+                is_pause_triggered, // 从参数传递
+                is_timeout_triggered, // 从参数传递
             ).await;
             
             // 注册 job_key 到 job_id 的映射
@@ -206,6 +215,9 @@ pub(crate) async fn create_translation_jobs(
             None, // 单会话模式
             first_chunk_client_timestamp_ms,
             padding_ms, // EDGE-4: Padding 配置
+            is_manual_cut, // 从参数传递
+            is_pause_triggered, // 从参数传递
+            is_timeout_triggered, // 从参数传递
         ).await;
         
         // 注册 job_key 到 job_id 的映射

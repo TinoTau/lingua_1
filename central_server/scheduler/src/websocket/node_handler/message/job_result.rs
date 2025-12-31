@@ -33,6 +33,19 @@ pub(super) async fn handle_job_result(
     rerun_count: Option<u32>,
     segments_meta: Option<crate::messages::common::SegmentsMeta>,
 ) {
+    // 核销机制：检查是否在30秒内已经收到过相同job_id的结果
+    // 如果是，直接过滤掉，避免重复输出
+    if state.job_result_deduplicator.check_and_record(&session_id, &job_id).await {
+        warn!(
+            trace_id = %trace_id,
+            job_id = %job_id,
+            session_id = %session_id,
+            utterance_index = utterance_index,
+            "Duplicate job_result filtered (received within 30 seconds), skipping processing"
+        );
+        return; // 直接返回，不进行后续处理
+    }
+
     // Phase 1: Support failover retry, must ignore "stale node" results (avoid race condition)
     // 但是，为了确保 utterance_index 的连续性，即使 Job 状态不匹配，也应该将结果添加到队列
     let job = state.dispatcher.get_job(&job_id).await;
@@ -392,12 +405,14 @@ pub(super) async fn handle_job_result(
             ready_results_count = ready_results.len(),
             "Getting ready results from queue"
         );
-        for result in ready_results {
+        for mut result in ready_results {
             // 检查结果是否为空（空文本应该发送 MissingResult 而不是直接跳过）
+            // 修复：即使有文本显示，如果音频为空，也需要标记出音频丢失的原因
             let should_send_missing = if let SessionMessage::TranslationResult { text_asr, text_translated, tts_audio, utterance_index, .. } = &result {
                 let asr_empty = text_asr.trim().is_empty();
                 let translated_empty = text_translated.trim().is_empty();
                 let tts_empty = tts_audio.is_empty();
+                let has_text = !asr_empty || !translated_empty;
                 
                 // 如果ASR、翻译和TTS都为空，发送 MissingResult 消息（保持 utterance_index 连续性）
                 if asr_empty && translated_empty && tts_empty {
@@ -453,6 +468,28 @@ pub(super) async fn handle_job_result(
                     }
                     
                     true
+                } else if has_text && tts_empty {
+                    // 修复：即使有文本显示，如果音频为空，也需要标记出音频丢失的原因
+                    // 修改 TranslationResult，在文本前添加 [音频丢失] 标记
+                    warn!(
+                        trace_id = %trace_id,
+                        session_id = %session_id,
+                        job_id = %job_id,
+                        utterance_index = utterance_index,
+                        "Translation result has text but no audio, marking audio loss reason"
+                    );
+                    
+                    // 修改 result 中的文本，添加音频丢失标记
+                    if let SessionMessage::TranslationResult { text_asr, text_translated, .. } = &mut result {
+                        if !text_asr.trim().is_empty() {
+                            *text_asr = format!("[音频丢失] {}", text_asr);
+                        }
+                        if !text_translated.trim().is_empty() {
+                            *text_translated = format!("[音频丢失] {}", text_translated);
+                        }
+                    }
+                    
+                    false // 不发送 MissingResult，而是修改原始结果
                 } else {
                     false
                 }

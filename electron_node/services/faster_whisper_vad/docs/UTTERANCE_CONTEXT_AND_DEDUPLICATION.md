@@ -193,45 +193,50 @@ Utterance 3: "然后评并调整"  # 部分重复（"然后"）
 
 ### 跨 Utterance 去重方案
 
-#### 方案 1: ASR 服务端去重（推荐）
+**状态更新**：⚠️ **已迁移到 Aggregator 层**
+
+**说明**：
+- 跨 utterance 去重功能已从 ASR 服务端移除（Step 9.3）
+- 现在由 Aggregator 机制在节点端统一处理跨 utterance 的文本去重（dedup 功能）
+- 这样可以避免重复处理，职责更清晰，在翻译前去重，性能更好
+
+**当前实现**：
+```python
+# 在 process_utterance 中
+# Step 9.2: 单个 utterance 内去重（保留）
+full_text_trimmed = deduplicate_text(full_text_trimmed, trace_id=trace_id)
+
+# Step 9.3: 跨 utterance 去重（已移除）
+# 注意：跨 utterance 去重已迁移到 Aggregator 层（节点端）
+```
+
+**保留内容**：
+- ✅ Step 9.2：单个 utterance 内部去重（`deduplicate_text`）- **保留**
+- ✅ `get_text_context()` 函数 - **保留**（可能用于其他用途）
+- ✅ `use_text_context` 参数 - **保留**（可能用于其他用途）
+
+**历史方案**（已废弃）：
+
+#### 方案 1: ASR 服务端去重（已移除）
 
 **位置**: `electron_node/services/faster_whisper_vad/faster_whisper_vad_service.py`
 
-**实现**：
-```python
-# 在 process_utterance 中
-# Step 9.2: 单个 utterance 内去重
-full_text_trimmed = deduplicate_text(full_text_trimmed, trace_id=trace_id)
+**状态**: ❌ **已移除**（Step 9.3）
 
-# Step 9.3: 跨 utterance 去重
-previous_text = get_text_context()  # 获取上一个 utterance 的文本
-if previous_text and full_text_trimmed:
-    # 检查当前文本是否与上一个文本重复
-    if full_text_trimmed == previous_text:
-        # 完全重复，返回空结果
-        logger.warning(f"[{trace_id}] Cross-utterance duplicate detected, returning empty")
-        return UtteranceResponse(...)
-    elif full_text_trimmed.startswith(previous_text):
-        # 部分重复（当前文本以上一个文本开头），移除重复部分
-        full_text_trimmed = full_text_trimmed[len(previous_text):].strip()
-        logger.info(f"[{trace_id}] Cross-utterance partial duplicate removed")
-```
-
-**优点**：
-- ✅ 在 ASR 服务端统一处理
-- ✅ 可以访问上一个 utterance 的文本上下文
-- ✅ 不需要修改调度服务器
-
-**缺点**：
-- ⚠️ 需要维护跨 utterance 的状态
+**移除原因**：
+- Aggregator 会在节点端统一处理跨 utterance 的文本去重（dedup 功能）
+- 避免重复处理，职责更清晰
+- 在翻译前去重，性能更好
 
 ---
 
-#### 方案 2: 调度服务器端去重
+#### 方案 2: 调度服务器端去重（未实现）
 
 **位置**: `central_server/scheduler/src/websocket/node_handler/message/job_result.rs`
 
-**实现**：
+**状态**: ❌ **未实现**
+
+**实现**（仅供参考）：
 ```rust
 // 在收到 JobResult 时
 // 检查当前 ASR 文本是否与上一个 utterance 的文本重复
@@ -257,18 +262,20 @@ state.last_asr_text = text_asr.clone();
 
 ## 推荐方案
 
-### 推荐：方案 1（ASR 服务端去重）
+### 当前方案：Aggregator 层去重（节点端）
 
 **理由**：
-1. **上下文可用**：ASR 服务已经有 `get_text_context()` 可以获取上一个 utterance 的文本
-2. **统一处理**：在 ASR 服务端统一处理单个 utterance 内和跨 utterance 的去重
-3. **不需要修改调度服务器**：减少对调度服务器的影响
+1. **职责清晰**：Aggregator 负责跨 utterance 的文本聚合和去重
+2. **性能更好**：在翻译前去重，避免不必要的翻译和 TTS 处理
+3. **统一处理**：在节点端统一处理所有 utterance 的去重逻辑
 
-**实现步骤**：
-1. 在 `process_utterance` 中添加跨 utterance 去重逻辑
-2. 检查当前文本是否与上一个 utterance 的文本重复
-3. 如果完全重复，返回空结果
-4. 如果部分重复，移除重复部分
+**实现位置**：
+- Aggregator 机制（节点端）
+- 参考：`electron_node/docs/AGGREGATOR/AGGREGATOR_TEXT_INCOMPLETENESS_LANGUAGE_GATE_DESIGN.md`
+
+**ASR 服务端职责**：
+- ✅ Step 9.2：单个 utterance 内部去重（保留）
+- ❌ Step 9.3：跨 utterance 去重（已移除，由 Aggregator 处理）
 
 ---
 

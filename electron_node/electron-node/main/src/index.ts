@@ -258,7 +258,7 @@ app.whenReady().then(async () => {
       });
     }
 
-    // 按照偏好启动 Python 服务（异步启动，不阻塞窗口显示）
+    // 按照偏好启动 Python 服务（串行启动，避免GPU内存过载）
     if (pythonServiceManager) {
       const toStart: Array<'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding'> = [];
       if (prefs.fasterWhisperVadEnabled) toStart.push('faster_whisper_vad');
@@ -267,12 +267,21 @@ app.whenReady().then(async () => {
       if (prefs.yourttsEnabled) toStart.push('yourtts');
       if (prefs.speakerEmbeddingEnabled) toStart.push('speaker_embedding');
 
-      for (const name of toStart) {
-        logger.info({ serviceName: name }, 'Auto-starting Python service...');
-        pythonServiceManager.startService(name).catch((error) => {
-          logger.error({ error, serviceName: name }, 'Failed to auto-start Python service');
-        });
-      }
+      // 串行启动服务，等待每个服务完全启动后再启动下一个（避免GPU内存过载）
+      // 使用异步函数避免阻塞窗口显示
+      (async () => {
+        for (const name of toStart) {
+          logger.info({ serviceName: name }, 'Auto-starting Python service...');
+          try {
+            await pythonServiceManager.startService(name);
+            logger.info({ serviceName: name }, 'Python service started successfully');
+          } catch (error) {
+            logger.error({ error, serviceName: name }, 'Failed to auto-start Python service');
+          }
+        }
+      })().catch((error) => {
+        logger.error({ error }, 'Failed to start Python services');
+      });
     }
 
     // 注册所有 IPC 处理器

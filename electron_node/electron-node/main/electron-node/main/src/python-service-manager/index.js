@@ -321,20 +321,19 @@ class PythonServiceManager {
     }
     /**
      * 增加任务计数
-     * 当第一个任务开始时，启动GPU跟踪
-     * 注意：GPU跟踪应该在任务实际执行期间进行，而不是在任务完成后
+     * 注意：GPU跟踪现在在任务路由时（routeASRTask/routeNMTTask/routeTTSTask）启动，
+     * 而不是在这里启动，以确保能够捕获整个任务期间的 GPU 使用
      */
     incrementTaskCount(serviceName) {
         const current = this.taskCounts.get(serviceName) || 0;
         const newCount = current + 1;
         this.taskCounts.set(serviceName, newCount);
-        // 如果是第一个任务，开始GPU跟踪
-        // 注意：这个方法在任务完成后被调用，但GPU跟踪应该在任务开始时开始
-        // 因此这里启动GPU跟踪意味着"这个服务已经处理过任务了，应该开始跟踪"
-        // 实际的GPU时间统计只在GPU实际使用时累计
-        if (current === 0) {
-            this.startGpuTracking(serviceName);
-            logger_1.default.info({ serviceName }, 'First task completed, starting GPU usage time tracking (will be counted during subsequent task execution)');
+        // GPU 跟踪现在在任务路由时启动，这里不再启动
+        // 但确保跟踪器已创建（如果还没有创建）
+        if (current === 0 && !this.gpuTrackers.has(serviceName)) {
+            // 创建跟踪器但不启动（将在任务路由时启动）
+            this.gpuTrackers.set(serviceName, new gpu_tracker_1.GpuUsageTracker());
+            logger_1.default.debug({ serviceName }, 'Created GPU tracker for service (will be started when task routes)');
         }
         const status = this.statuses.get(serviceName);
         if (status) {

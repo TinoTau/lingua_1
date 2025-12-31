@@ -29,6 +29,8 @@ function createAgent(): NodeAgent {
     getInstalledModels: async () => [],
     getCurrentJobCount: () => 0,
     getFeaturesSupported: () => ({}),
+    setAggregatorManager: jest.fn(), // 添加缺失的方法
+    setAggregatorMiddleware: jest.fn(), // 添加缺失的方法
   };
   return new NodeAgent(dummyInferenceService, undefined, undefined, undefined, undefined);
 }

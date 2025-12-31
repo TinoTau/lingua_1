@@ -1,6 +1,6 @@
 // 应用状态定义
 
-use super::{JobDispatcher, SessionManager, JobIdempotencyManager};
+use super::{JobDispatcher, SessionManager, JobIdempotencyManager, JobResultDeduplicator};
 use crate::node_registry::NodeRegistry;
 use crate::services::{ModelHub, PairingService, ServiceCatalogCache};
 use crate::managers::{
@@ -39,6 +39,8 @@ pub struct AppState {
     pub room_manager: RoomManager,
     /// Job 幂等键管理器（用于防止重复创建 job）
     pub job_idempotency: JobIdempotencyManager,
+    /// JobResult 去重管理器（用于防止重复返回结果）
+    pub job_result_deduplicator: JobResultDeduplicator,
     /// Phase 2：Redis/多实例运行时（可选，默认 None）
     pub phase2: Option<std::sync::Arc<Phase2Runtime>>,
 }

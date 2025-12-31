@@ -425,7 +425,22 @@ Utterance 3: "然后评并调整"  # 部分重复（"然后"）
 # Step 9.2: 单个 utterance 内去重
 full_text_trimmed = deduplicate_text(full_text_trimmed, trace_id=trace_id)
 
-# Step 9.3: 跨 utterance 去重
+# Step 9.3: 跨 utterance 去重（已移除，迁移到 Aggregator 层）
+# 注意：跨 utterance 去重已迁移到 Aggregator 层（节点端）
+# Step 9.2 保留：单个 utterance 内部去重（处理如 "这边能不能用这边能不能用" 的情况）
+# Step 9.3 已移除：跨 utterance 去重由 Aggregator 统一处理，避免重复处理，职责更清晰
+```
+
+**状态**：❌ **已移除**（迁移到 Aggregator 层）
+
+**移除原因**：
+- Aggregator 会在节点端统一处理跨 utterance 的文本去重（dedup 功能）
+- 避免重复处理，职责更清晰
+- 在翻译前去重，性能更好
+
+**历史实现**（仅供参考）：
+```python
+# Step 9.3: 跨 utterance 去重（已移除）
 previous_text = get_text_context()  # 获取上一个 utterance 的文本
 if previous_text and full_text_trimmed:
     # 检查当前文本是否与上一个文本重复
@@ -439,12 +454,12 @@ if previous_text and full_text_trimmed:
         logger.info(f"[{trace_id}] Cross-utterance partial duplicate removed")
 ```
 
-**优点**：
+**历史优点**（已废弃）：
 - ✅ 在 ASR 服务端统一处理
 - ✅ 可以访问上一个 utterance 的文本上下文
 - ✅ 不需要修改调度服务器
 
-**缺点**：
+**历史缺点**（已废弃）：
 - ⚠️ 需要维护跨 utterance 的状态
 
 ---
@@ -479,18 +494,26 @@ state.last_asr_text = text_asr.clone();
 
 ## 推荐方案
 
-### 推荐：方案 1（ASR 服务端去重）
+### 当前方案：Aggregator 层去重（节点端）
+
+**状态**：✅ **已迁移**（Step 9.3 已移除）
 
 **理由**：
-1. **上下文可用**：ASR 服务已经有 `get_text_context()` 可以获取上一个 utterance 的文本
-2. **统一处理**：在 ASR 服务端统一处理单个 utterance 内和跨 utterance 的去重
-3. **不需要修改调度服务器**：减少对调度服务器的影响
+1. **职责清晰**：Aggregator 负责跨 utterance 的文本聚合和去重
+2. **性能更好**：在翻译前去重，避免不必要的翻译和 TTS 处理
+3. **统一处理**：在节点端统一处理所有 utterance 的去重逻辑
 
-**实现步骤**：
-1. 在 `process_utterance` 中添加跨 utterance 去重逻辑
-2. 检查当前文本是否与上一个 utterance 的文本重复
-3. 如果完全重复，返回空结果
-4. 如果部分重复，移除重复部分
+**实现位置**：
+- Aggregator 机制（节点端）
+- 参考：`electron_node/docs/AGGREGATOR/AGGREGATOR_TEXT_INCOMPLETENESS_LANGUAGE_GATE_DESIGN.md`
+
+**ASR 服务端职责**：
+- ✅ Step 9.2：单个 utterance 内部去重（保留）
+- ❌ Step 9.3：跨 utterance 去重（已移除，由 Aggregator 处理）
+
+**历史推荐**（已废弃）：
+- 方案 1（ASR 服务端去重）- 已移除
+- 方案 2（调度服务器端去重）- 未实现
 
 ---
 

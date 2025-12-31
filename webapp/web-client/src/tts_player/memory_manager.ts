@@ -162,24 +162,87 @@ export class MemoryManager {
 
   /**
    * 检查并限制缓存大小
+   * @param removeBuffer 移除最旧音频块的函数
+   * @param isPlaying 是否正在播放
+   * @param getBufferCount 获取音频块数量的函数（可选）
+   * @param newChunkDuration 新添加的音频块时长（秒，可选）
+   * @returns 如果应该丢弃新音频块，返回 { shouldDiscard: true, reason: string }，否则返回 { shouldDiscard: false }
    */
-  enforceMaxBufferDuration(removeBuffer: () => void, isPlaying: boolean): void {
+  enforceMaxBufferDuration(
+    removeBuffer: () => void, 
+    isPlaying: boolean, 
+    getBufferCount?: () => number,
+    newChunkDuration?: number
+  ): { shouldDiscard: boolean; reason?: string } {
     // 如果正在播放，不清理缓存（避免播放时丢失音频）
     if (isPlaying) {
-      return;
+      return { shouldDiscard: false };
     }
     
     const currentDuration = this.getTotalDuration();
+    const newChunkDurationValue = newChunkDuration || 0;
+    const totalDurationAfterAdd = currentDuration + newChunkDurationValue;
+    
+    // 检查内存限制（80%阈值）
+    const memoryLimitPercent = 80;
+    const memoryLimitDuration = this.maxBufferDuration * (memoryLimitPercent / 100);
+    
+    // 检查是否需要丢弃新音频块
+    // 规则：
+    // 1. 如果单个新音频块超过maxBufferDuration（25秒），应该丢弃并标记
+    // 2. 如果多个音频累加超过25秒，应该自动播放，而不是丢弃
+    if (newChunkDurationValue > 0) {
+      // 规则1：单个音频块超过25秒，应该丢弃
+      if (newChunkDurationValue > this.maxBufferDuration) {
+        const reason = `单个音频块时长(${newChunkDurationValue.toFixed(1)}秒)超过限制(${this.maxBufferDuration}秒)`;
+        console.warn(`[MemoryManager] ${reason}`);
+        return { shouldDiscard: true, reason };
+      }
+      // 规则2：多个音频累加超过25秒，不丢弃，应该自动播放（由上层处理）
+      // 这里不返回shouldDiscard，让上层处理自动播放
+    }
+    
+    // 如果当前总时长超过限制，清理旧音频块（但保留至少一个）
     if (currentDuration > this.maxBufferDuration) {
+      const initialBufferCount = getBufferCount ? getBufferCount() : undefined;
+      
+      // 如果只有一个音频块，且它的长度超过限制，允许它保留（这是ASR拼接导致的长音频，应该允许）
+      if (initialBufferCount === 1 && currentDuration > this.maxBufferDuration) {
+        console.log(`[MemoryManager] 单个音频块长度(${currentDuration.toFixed(1)}秒)超过限制(${this.maxBufferDuration}秒)，但保留该音频块（可能是ASR拼接导致的长音频）`);
+        return { shouldDiscard: false };
+      }
+      
+      // 多个音频块时，清理超出限制的部分
       // 保留至少30%的缓存，避免全部清空
       const keepDuration = this.maxBufferDuration * 0.3;
       let removedCount = 0;
+      
       while (this.getTotalDuration() > keepDuration) {
+        const bufferCountBefore = getBufferCount ? getBufferCount() : undefined;
         removeBuffer();
+        const bufferCountAfter = getBufferCount ? getBufferCount() : undefined;
+        
+        // 如果删除后没有音频块了，停止清理（至少保留一个）
+        if (bufferCountAfter !== undefined && bufferCountAfter === 0) {
+          console.warn(`[MemoryManager] 清理后音频块数量为0，停止清理以保留至少一个音频块`);
+          break;
+        }
+        
         removedCount++;
+        
+        // 防止无限循环（防御性检查）
+        if (removedCount > 1000) {
+          console.error(`[MemoryManager] 清理循环超过1000次，强制停止`);
+          break;
+        }
       }
-      console.warn(`[MemoryManager] 缓存已满，丢弃最旧音频块: ${removedCount}个，保留缓存: ${this.getTotalDuration().toFixed(1)}秒 (限制: ${this.maxBufferDuration}秒)`);
+      
+      if (removedCount > 0) {
+        console.warn(`[MemoryManager] 缓存已满，丢弃最旧音频块: ${removedCount}个，保留缓存: ${this.getTotalDuration().toFixed(1)}秒 (限制: ${this.maxBufferDuration}秒)`);
+      }
     }
+    
+    return { shouldDiscard: false };
   }
 
   /**

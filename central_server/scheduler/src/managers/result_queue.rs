@@ -63,10 +63,10 @@ impl ResultQueueManager {
         }
     }
     
-    /// 补位超时时间（毫秒），默认 5 秒
+    /// 补位超时时间（毫秒），默认 10 秒
     /// 基于单进程顺序处理的特性：如果后续 index 已到达，说明前面的 index 已经处理完了
     /// 给前面的 index 一个补位窗口，如果超时就直接跳过（不创建 Missing result）
-    const ACK_TIMEOUT_MS: i64 = 5 * 1000;
+    const ACK_TIMEOUT_MS: i64 = 10 * 1000;
 
     #[allow(dead_code)]
     pub fn new_with_config(gap_timeout_seconds: u64, pending_max: usize, missing_reset_threshold: u32) -> Self {
@@ -138,7 +138,7 @@ impl ResultQueueManager {
                             session_id = %session_id,
                             missing_index = missing_index,
                             future_index = utterance_index,
-                            "Future index arrived, marking missing index as pending acknowledgment (5s grace period, will skip if timeout)"
+                            "Future index arrived, marking missing index as pending acknowledgment (10s grace period, will skip if timeout)"
                         );
                     }
                 }
@@ -263,7 +263,7 @@ impl ResultQueueManager {
                 
                 // 4) expected 未到且队列中没有后续索引：检查 expected 的等待补位状态是否超时
                 // 基于单进程顺序处理的特性：如果后续 index 已到达，说明前面的 index 已经处理完了
-                // 给前面的 index 一个补位窗口（5秒），如果超时就直接跳过（不创建 Missing result）
+                // 给前面的 index 一个补位窗口（10秒），如果超时就直接跳过（不创建 Missing result）
                 if let Some(ack_state) = state.pending_acknowledgments.get(&state.expected) {
                     let elapsed_ms = now_ms - ack_state.wait_start_ms;
                     if elapsed_ms >= ack_state.ack_timeout_ms {

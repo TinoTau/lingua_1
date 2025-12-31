@@ -58,5 +58,26 @@ def is_meaningless_transcript(text: str) -> bool:
         logger.warning(f"[Text Filter] Filtering exact match: \"{text_trimmed}\"")
         return True
     
+    # 6. 检查叠词（重复字符或重复词）
+    # 除了"谢谢"外，其他叠词都应该被过滤（如"射射"、"证证"等）
+    # 这些通常是ASR模型在音频质量差时的噪音输出
+    if len(text_trimmed) >= 2:
+        # 检查是否全部是重复的单个字符（如"射射"、"证证"）
+        if len(set(text_trimmed)) == 1:
+            # 单个字符重复，但"谢谢"是例外
+            if text_trimmed != "谢谢":
+                logger.warning(f"[Text Filter] Filtering repetitive single character: \"{text_trimmed}\"")
+                return True
+        
+        # 检查是否全部是重复的两个字符（如"射射射"、"证证证"）
+        if len(text_trimmed) >= 4 and len(text_trimmed) % 2 == 0:
+            # 尝试将文本分成两个字符的片段
+            chunks = [text_trimmed[i:i+2] for i in range(0, len(text_trimmed), 2)]
+            if len(set(chunks)) == 1:
+                # 两个字符重复，但"谢谢"是例外
+                if chunks[0] != "谢谢":
+                    logger.warning(f"[Text Filter] Filtering repetitive two-character pattern: \"{text_trimmed}\"")
+                    return True
+    
     return False
 
