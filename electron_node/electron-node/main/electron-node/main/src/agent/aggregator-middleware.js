@@ -11,49 +11,41 @@ exports.AggregatorMiddleware = void 0;
 const aggregator_1 = require("../aggregator");
 const logger_1 = __importDefault(require("../logger"));
 const lru_cache_1 = require("lru-cache");
-// S1/S2: 短句准确率提升
 const prompt_builder_1 = require("../asr/prompt-builder");
 const need_rescore_1 = require("../asr/need-rescore");
 const rescorer_1 = require("../asr/rescorer");
 const candidate_provider_1 = require("../asr/candidate-provider");
-const audio_ring_buffer_1 = require("../asr/audio-ring-buffer");
+const aggregator_middleware_translation_1 = require("./aggregator-middleware-translation");
+const aggregator_middleware_audio_1 = require("./aggregator-middleware-audio");
+const aggregator_middleware_deduplication_1 = require("./aggregator-middleware-deduplication");
 class AggregatorMiddleware {
     constructor(config, taskRouter) {
         this.manager = null;
-        this.taskRouter = null; // TaskRouter 用于重新触发 NMT
-        this.lastSentText = new Map(); // 记录每个 session 最后发送的文本（防止重复发送）
-        this.lastSentTextAccessTime = new Map(); // 记录最后访问时间，用于清理过期记录
-        this.LAST_SENT_TEXT_TTL_MS = 10 * 60 * 1000; // 10 分钟 TTL
-        this.LAST_SENT_TEXT_CLEANUP_INTERVAL_MS = 5 * 60 * 1000; // 5 分钟清理一次
+        this.taskRouter = null;
         // S1/S2: 短句准确率提升组件
         this.promptBuilder = null;
         this.needRescoreDetector = null;
         this.rescorer = null;
         this.candidateProvider = null;
-        // S2-5: 音频 ring buffer（按 session 管理）
-        this.audioBuffers = new Map();
         // S2-6: 二次解码 worker
         this.secondaryDecodeWorker = null;
-        // 批量处理队列
-        this.batchQueue = [];
-        this.batchTimer = null;
-        this.BATCH_WINDOW_MS = 500; // 批量处理窗口：500ms（增加以减少GPU峰值）
-        this.MAX_BATCH_SIZE = 5; // 最大批量大小：5个（减少以降低GPU占用）
-        this.MAX_CONCURRENT_NMT = 2; // 批量翻译最大并发数：2个（限制GPU占用）
-        // 异步处理：存储待更新的翻译
-        this.pendingAsyncTranslations = new Map(); // cacheKey -> Promise<translation>
         this.config = config;
         this.taskRouter = taskRouter || null;
         // 初始化翻译缓存：默认 200 条，10 分钟过期（提高缓存命中率）
         this.translationCache = new lru_cache_1.LRUCache({
-            max: config.translationCacheSize || 200, // 提高：从 100 提高到 200
-            ttl: config.translationCacheTtlMs || 10 * 60 * 1000, // 提高：从 5 分钟提高到 10 分钟
+            max: config.translationCacheSize || 200,
+            ttl: config.translationCacheTtlMs || 10 * 60 * 1000,
         });
+        // 初始化模块化处理器
+        this.audioHandler = new aggregator_middleware_audio_1.AudioHandler();
+        this.deduplicationHandler = new aggregator_middleware_deduplication_1.DeduplicationHandler();
         if (config.enabled) {
             this.manager = new aggregator_1.AggregatorManager({
                 ttlMs: config.ttlMs || 5 * 60 * 1000,
                 maxSessions: config.maxSessions || 1000,
             });
+            // 初始化翻译处理器
+            this.translationHandler = new aggregator_middleware_translation_1.TranslationHandler(this.taskRouter, this.translationCache, this.manager);
             // S1/S2: 初始化短句准确率提升组件
             const mode = config.mode || 'offline';
             this.promptBuilder = new prompt_builder_1.PromptBuilder(mode);
@@ -61,7 +53,6 @@ class AggregatorMiddleware {
             this.rescorer = new rescorer_1.Rescorer();
             this.candidateProvider = new candidate_provider_1.CandidateProvider();
             // S2-6: 二次解码已禁用（GPU占用过高）
-            // 不再初始化SecondaryDecodeWorker
             this.secondaryDecodeWorker = null;
             logger_1.default.info({}, 'S2-6: Secondary decode worker disabled (GPU optimization)');
             logger_1.default.info({
@@ -72,6 +63,10 @@ class AggregatorMiddleware {
                 s1S2Enabled: true,
                 s2SecondaryDecodeEnabled: !!this.secondaryDecodeWorker,
             }, 'Aggregator middleware initialized with S1/S2 support');
+        }
+        else {
+            // 即使未启用，也需要初始化处理器（用于兼容）
+            this.translationHandler = new aggregator_middleware_translation_1.TranslationHandler(this.taskRouter, this.translationCache, null);
         }
     }
     /**
@@ -187,77 +182,14 @@ class AggregatorMiddleware {
             shouldProcess = true;
         }
         // 检查是否与上次发送的文本完全相同（防止重复处理）
-        const lastSent = this.lastSentText.get(job.session_id);
-        if (lastSent) {
-            const normalizeText = (text) => {
-                return text.replace(/\s+/g, ' ').trim();
+        const duplicateCheck = this.deduplicationHandler.isDuplicate(job.session_id, aggregatedText, job.job_id, job.utterance_index);
+        if (duplicateCheck.isDuplicate) {
+            return {
+                aggregatedText: '',
+                shouldProcess: false,
+                action: aggregatorResult.action,
+                metrics: aggregatorResult.metrics,
             };
-            const normalizedAggregated = normalizeText(aggregatedText);
-            const normalizedLastSent = normalizeText(lastSent);
-            if (normalizedAggregated === normalizedLastSent && normalizedAggregated.length > 0) {
-                // 完全相同的文本，不处理（防止重复）
-                logger_1.default.info({
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    utteranceIndex: job.utterance_index,
-                    originalASRText: asrTextTrimmed,
-                    aggregatedText: aggregatedText,
-                    normalizedText: normalizedAggregated,
-                    lastSentText: lastSent,
-                    reason: 'Duplicate text detected (same as last sent)',
-                }, 'AggregatorMiddleware: Filtering duplicate text, returning empty result (no NMT/TTS)');
-                return {
-                    aggregatedText: '',
-                    shouldProcess: false,
-                    action: aggregatorResult.action,
-                    metrics: aggregatorResult.metrics,
-                };
-            }
-            // 修复：如果当前文本是前一个utterance的子串，也应该过滤掉
-            // 避免ASR服务对短音频识别出前一个utterance的部分内容，导致重复输出
-            if (normalizedLastSent.length > 0 && normalizedAggregated.length > 0) {
-                // 检查当前文本是否是前一个utterance的子串（至少3个字符，避免误判）
-                if (normalizedAggregated.length >= 3 && normalizedLastSent.includes(normalizedAggregated)) {
-                    logger_1.default.info({
-                        jobId: job.job_id,
-                        sessionId: job.session_id,
-                        utteranceIndex: job.utterance_index,
-                        originalASRText: asrTextTrimmed,
-                        aggregatedText: aggregatedText,
-                        normalizedText: normalizedAggregated,
-                        lastSentText: lastSent,
-                        normalizedLastSent: normalizedLastSent,
-                        reason: 'Current text is a substring of last sent text, filtering to avoid duplicate output',
-                    }, 'AggregatorMiddleware: Filtering substring duplicate text, returning empty result (no NMT/TTS)');
-                    return {
-                        aggregatedText: '',
-                        shouldProcess: false,
-                        action: aggregatorResult.action,
-                        metrics: aggregatorResult.metrics,
-                    };
-                }
-                // 检查前一个utterance是否是当前文本的子串（至少3个字符，避免误判）
-                // 这种情况不应该发生，但为了安全起见，也检查一下
-                if (normalizedLastSent.length >= 3 && normalizedAggregated.includes(normalizedLastSent)) {
-                    logger_1.default.info({
-                        jobId: job.job_id,
-                        sessionId: job.session_id,
-                        utteranceIndex: job.utterance_index,
-                        originalASRText: asrTextTrimmed,
-                        aggregatedText: aggregatedText,
-                        normalizedText: normalizedAggregated,
-                        lastSentText: lastSent,
-                        normalizedLastSent: normalizedLastSent,
-                        reason: 'Last sent text is a substring of current text, this should not happen, but filtering to avoid duplicate output',
-                    }, 'AggregatorMiddleware: Filtering reverse substring duplicate text, returning empty result (no NMT/TTS)');
-                    return {
-                        aggregatedText: '',
-                        shouldProcess: false,
-                        action: aggregatorResult.action,
-                        metrics: aggregatorResult.metrics,
-                    };
-                }
-            }
         }
         return {
             aggregatedText,
@@ -384,7 +316,7 @@ class AggregatorMiddleware {
                 const flushedText = this.manager?.flush(job.session_id) || '';
                 if (flushedText && flushedText.trim().length > 0) {
                     // 检查是否与上次发送的文本相同（防止重复发送）
-                    const lastSent = this.lastSentText.get(job.session_id);
+                    const lastSent = this.deduplicationHandler.getLastSentText(job.session_id);
                     if (lastSent) {
                         const normalizeText = (text) => {
                             return text.replace(/\s+/g, ' ').trim();
@@ -510,7 +442,7 @@ class AggregatorMiddleware {
               nmtRetranslationTimeMs = Date.now() - nmtStartTime;  // 异步处理延迟接近 0
               
               // 后台异步处理翻译
-              this.processAsyncRetranslation(job, aggregatedText, contextText, cacheKey, shouldCacheThis, result);
+              this.translationHandler.processAsyncRetranslation(job, aggregatedText, contextText, cacheKey, shouldCacheThis);
               
               logger.debug(
                 {
@@ -746,7 +678,14 @@ class AggregatorMiddleware {
                       });
                       
                       // 调度批量处理
-                      this.scheduleBatchProcessing();
+                      this.translationHandler.addBatchTranslation({
+                        job,
+                        aggregatedText,
+                        contextText,
+                        resolve,
+                        reject,
+                        timestamp: Date.now(),
+                      });
                     });
                   } else {
                     // 直接翻译
@@ -813,7 +752,7 @@ class AggregatorMiddleware {
         // 注意：我们使用1分钟过期机制，所以不需要手动清理
         // 检查是否与上次发送的文本完全相同（防止重复发送）
         // 优化：使用更严格的文本比较（去除所有空白字符，包括换行符、多个空格等）
-        const lastSent = this.lastSentText.get(job.session_id);
+        const lastSent = this.deduplicationHandler.getLastSentText(job.session_id);
         if (lastSent) {
             // 规范化文本：去除所有空白字符，只保留实际内容
             const normalizeText = (text) => {
@@ -844,7 +783,7 @@ class AggregatorMiddleware {
             }
             // 额外检查：如果文本非常相似（相似度>95%），也视为重复
             if (normalizedAggregated.length > 0 && normalizedLastSent.length > 0) {
-                const similarity = this.calculateTextSimilarity(normalizedAggregated, normalizedLastSent);
+                const similarity = this.deduplicationHandler.calculateTextSimilarity(normalizedAggregated, normalizedLastSent);
                 if (similarity > 0.95) {
                     logger_1.default.warn({
                         jobId: job.job_id,
@@ -870,10 +809,7 @@ class AggregatorMiddleware {
         // 在返回前立即更新lastSentText（防止并发请求导致的重复发送）
         // 注意：这里只是标记，实际发送在NodeAgent中
         if (aggregatedText && aggregatedText.length > 0) {
-            const normalizeText = (text) => {
-                return text.replace(/\s+/g, ' ').trim();
-            };
-            this.lastSentText.set(job.session_id, normalizeText(aggregatedText));
+            this.deduplicationHandler.setLastSentText(job.session_id, aggregatedText);
             logger_1.default.debug({
                 jobId: job.job_id,
                 sessionId: job.session_id,
@@ -911,43 +847,13 @@ class AggregatorMiddleware {
      * 获取最后发送的文本
      */
     getLastSentText(sessionId) {
-        return this.lastSentText.get(sessionId);
+        return this.deduplicationHandler.getLastSentText(sessionId);
     }
     /**
      * 设置最后发送的文本（在成功发送后调用）
      */
     setLastSentText(sessionId, text) {
-        // 规范化存储：去除所有空白字符
-        const normalizeText = (t) => {
-            return t.replace(/\s+/g, ' ').trim();
-        };
-        this.lastSentText.set(sessionId, normalizeText(text));
-        this.lastSentTextAccessTime.set(sessionId, Date.now());
-    }
-    /**
-     * 计算文本相似度（简单的字符重叠度）
-     */
-    calculateTextSimilarity(text1, text2) {
-        if (text1.length === 0 && text2.length === 0)
-            return 1.0;
-        if (text1.length === 0 || text2.length === 0)
-            return 0.0;
-        // 使用较短的文本作为基准
-        const shorter = text1.length < text2.length ? text1 : text2;
-        const longer = text1.length >= text2.length ? text1 : text2;
-        // 检查较短文本是否完全包含在较长文本中
-        if (longer.includes(shorter)) {
-            return shorter.length / longer.length;
-        }
-        // 计算字符重叠度（简化版）
-        let matches = 0;
-        const minLen = Math.min(text1.length, text2.length);
-        for (let i = 0; i < minLen; i++) {
-            if (text1[i] === text2[i]) {
-                matches++;
-            }
-        }
-        return matches / Math.max(text1.length, text2.length);
+        this.deduplicationHandler.setLastSentText(sessionId, text);
     }
     /**
      * 清理 session（显式关闭）
@@ -958,214 +864,9 @@ class AggregatorMiddleware {
         }
         this.manager.removeSession(sessionId);
         // 清理最后发送的文本记录
-        this.lastSentText.delete(sessionId);
-        this.lastSentTextAccessTime.delete(sessionId);
+        this.deduplicationHandler.removeSession(sessionId);
         // S2-5: 清理音频缓存
-        this.audioBuffers.delete(sessionId);
-        // 清理 pendingAsyncTranslations（如果存在）
-        // 注意：这里只清理与 sessionId 相关的，但 pendingAsyncTranslations 的 key 是 cacheKey，不是 sessionId
-        // 所以这里无法直接清理，需要在其他地方清理
-    }
-    /**
-     * 清理过期的 lastSentText 记录
-     */
-    cleanupExpiredLastSentText() {
-        const now = Date.now();
-        const expiredSessions = [];
-        for (const [sessionId, lastAccess] of this.lastSentTextAccessTime.entries()) {
-            if (now - lastAccess > this.LAST_SENT_TEXT_TTL_MS) {
-                expiredSessions.push(sessionId);
-            }
-        }
-        for (const sessionId of expiredSessions) {
-            this.lastSentText.delete(sessionId);
-            this.lastSentTextAccessTime.delete(sessionId);
-        }
-        if (expiredSessions.length > 0) {
-            logger_1.default.info({
-                count: expiredSessions.length,
-                remainingCount: this.lastSentText.size,
-            }, 'AggregatorMiddleware: Cleaned up expired lastSentText entries');
-        }
-    }
-    /**
-     * S2-5: 缓存音频
-     */
-    cacheAudio(sessionId, audio, audioFormat = 'pcm16', sampleRate = 16000) {
-        try {
-            // 获取或创建音频缓冲区
-            let buffer = this.audioBuffers.get(sessionId);
-            if (!buffer) {
-                buffer = new audio_ring_buffer_1.AudioRingBuffer(15000, 10000); // 15秒缓存，10秒TTL
-                this.audioBuffers.set(sessionId, buffer);
-            }
-            // 估算音频时长（简化：假设是PCM16格式）
-            // 实际应该根据音频格式和长度计算
-            let durationMs = 0;
-            if (audioFormat === 'pcm16' && audio.length > 0) {
-                // base64解码后的字节数
-                const decodedLength = Buffer.from(audio, 'base64').length;
-                // PCM16: 2字节/样本，单声道
-                const samples = decodedLength / 2;
-                durationMs = (samples / sampleRate) * 1000;
-            }
-            else {
-                // 其他格式：使用估算值（100ms）
-                durationMs = 100;
-            }
-            // 添加音频块
-            buffer.addChunk(audio, durationMs, sampleRate, audioFormat);
-        }
-        catch (error) {
-            logger_1.default.warn({
-                error,
-                sessionId,
-                audioLength: audio?.length || 0,
-            }, 'S2-5: Failed to cache audio');
-        }
-    }
-    /**
-     * S2-5: 获取音频引用（用于二次解码）
-     */
-    getAudioRef(sessionId) {
-        const buffer = this.audioBuffers.get(sessionId);
-        if (!buffer) {
-            return null;
-        }
-        // 获取最近5秒的音频（用于二次解码）
-        return buffer.getRecentAudioRef(5);
-    }
-    /**
-     * 异步处理重新翻译（后台更新）
-     */
-    async processAsyncRetranslation(job, aggregatedText, contextText, cacheKey, shouldCacheThis, result) {
-        // 检查是否已经有正在进行的异步翻译
-        if (this.pendingAsyncTranslations.has(cacheKey)) {
-            logger_1.default.debug({
-                jobId: job.job_id,
-                sessionId: job.session_id,
-                cacheKey: cacheKey.substring(0, 50),
-            }, 'Async retranslation already in progress, skipping');
-            return;
-        }
-        // 创建异步翻译 Promise
-        const translationPromise = (async () => {
-            try {
-                if (!this.taskRouter) {
-                    logger_1.default.error({ jobId: job.job_id, sessionId: job.session_id }, 'Async retranslation: TaskRouter not available');
-                    return '';
-                }
-                const nmtTask = {
-                    text: aggregatedText,
-                    src_lang: job.src_lang,
-                    tgt_lang: job.tgt_lang,
-                    context_text: contextText,
-                    job_id: job.job_id,
-                };
-                const nmtResult = await this.taskRouter.routeNMTTask(nmtTask);
-                const translatedText = nmtResult.text;
-                // 存入缓存
-                if (shouldCacheThis && translatedText) {
-                    this.translationCache.set(cacheKey, translatedText);
-                }
-                // 保存当前翻译文本，供下一个 utterance 使用
-                if (translatedText && this.manager) {
-                    this.manager.setLastTranslatedText(job.session_id, translatedText);
-                }
-                logger_1.default.info({
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    aggregatedText: aggregatedText.substring(0, 50),
-                    newTranslation: translatedText?.substring(0, 50),
-                    async: true,
-                }, 'Async retranslation completed');
-                return translatedText;
-            }
-            catch (error) {
-                logger_1.default.error({
-                    error,
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                }, 'Async retranslation failed');
-                return '';
-            }
-            finally {
-                // 清理待处理的异步翻译
-                this.pendingAsyncTranslations.delete(cacheKey);
-            }
-        })();
-        // 存储 Promise
-        this.pendingAsyncTranslations.set(cacheKey, translationPromise);
-        // 不等待完成，直接返回
-        translationPromise.catch(() => {
-            // 错误已在 Promise 内部处理
-        });
-    }
-    /**
-     * 批量处理重新翻译
-     */
-    async processBatchRetranslation() {
-        if (this.batchQueue.length === 0) {
-            return;
-        }
-        // 取出当前批次（最多 MAX_BATCH_SIZE 个）
-        const batch = this.batchQueue.splice(0, this.MAX_BATCH_SIZE);
-        if (batch.length === 0) {
-            return;
-        }
-        logger_1.default.debug({
-            batchSize: batch.length,
-        }, 'Processing batch retranslation');
-        // 限制并发数，分批处理（避免GPU过载）
-        const MAX_CONCURRENT = this.MAX_CONCURRENT_NMT;
-        for (let i = 0; i < batch.length; i += MAX_CONCURRENT) {
-            const chunk = batch.slice(i, i + MAX_CONCURRENT);
-            const promises = chunk.map(async (item) => {
-                try {
-                    if (!this.taskRouter) {
-                        item.reject(new Error('TaskRouter not available'));
-                        return;
-                    }
-                    const nmtTask = {
-                        text: item.aggregatedText,
-                        src_lang: item.job.src_lang,
-                        tgt_lang: item.job.tgt_lang,
-                        context_text: item.contextText,
-                        job_id: item.job.job_id,
-                    };
-                    const nmtResult = await this.taskRouter.routeNMTTask(nmtTask);
-                    item.resolve(nmtResult.text);
-                }
-                catch (error) {
-                    item.reject(error);
-                }
-            });
-            // 等待当前批次完成后再处理下一批
-            await Promise.allSettled(promises);
-        }
-        // 如果还有待处理的任务，继续处理
-        if (this.batchQueue.length > 0) {
-            this.scheduleBatchProcessing();
-        }
-    }
-    /**
-     * 调度批量处理
-     */
-    scheduleBatchProcessing() {
-        // 清除现有定时器
-        if (this.batchTimer) {
-            clearTimeout(this.batchTimer);
-        }
-        // 如果队列已满，立即处理
-        if (this.batchQueue.length >= this.MAX_BATCH_SIZE) {
-            this.processBatchRetranslation();
-            return;
-        }
-        // 否则，设置定时器
-        this.batchTimer = setTimeout(() => {
-            this.batchTimer = null;
-            this.processBatchRetranslation();
-        }, this.BATCH_WINDOW_MS);
+        this.audioHandler.clearAudio(sessionId);
     }
     /**
      * 判断是否应该触发 NMT Repair

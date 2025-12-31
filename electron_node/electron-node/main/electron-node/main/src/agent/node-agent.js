@@ -871,8 +871,9 @@ class NodeAgent {
                 }
                 else {
                     // PostProcessCoordinator 决定不发送（可能是重复文本或被过滤）
-                    // 修复：如果PostProcessCoordinator决定不发送（shouldSend=false），不发送job_result
-                    // 避免发送重复内容或空结果导致重复输出
+                    // 修复：即使PostProcessCoordinator决定不发送（shouldSend=false），仍然需要发送空的job_result给调度服务器
+                    // 这样调度服务器知道节点端已经处理完成，不会触发超时
+                    // 调度服务器的result_queue会处理空结果，不会发送给客户端
                     logger_1.default.info({
                         jobId: job.job_id,
                         sessionId: job.session_id,
@@ -880,8 +881,35 @@ class NodeAgent {
                         reason: postProcessResult.reason || 'PostProcessCoordinator filtered result',
                         aggregatedText: postProcessResult.aggregatedText?.substring(0, 50) || '',
                         aggregatedTextLength: postProcessResult.aggregatedText?.length || 0,
-                    }, 'PostProcessCoordinator filtered result (shouldSend=false), skipping job_result send to avoid duplicate output');
-                    return; // 不发送结果，避免重复输出
+                        note: 'Sending empty job_result to scheduler to prevent timeout (result filtered by PostProcessCoordinator)',
+                    }, 'PostProcessCoordinator filtered result (shouldSend=false), but sending empty job_result to scheduler to prevent timeout');
+                    // 发送空的job_result给调度服务器，用于核销job，避免超时
+                    const emptyResponse = {
+                        type: 'job_result',
+                        job_id: job.job_id,
+                        attempt_id: job.attempt_id,
+                        node_id: this.nodeId,
+                        session_id: job.session_id,
+                        utterance_index: job.utterance_index,
+                        success: true,
+                        text_asr: '',
+                        text_translated: '',
+                        tts_audio: '',
+                        tts_format: 'opus',
+                        processing_time_ms: Date.now() - startTime,
+                        trace_id: job.trace_id,
+                        extra: {
+                            filtered: true,
+                            reason: postProcessResult.reason || 'PostProcessCoordinator filtered result',
+                        },
+                    };
+                    this.ws.send(JSON.stringify(emptyResponse));
+                    logger_1.default.info({
+                        jobId: job.job_id,
+                        sessionId: job.session_id,
+                        utteranceIndex: job.utterance_index,
+                    }, 'Empty job_result sent to scheduler (filtered by PostProcessCoordinator) to prevent timeout');
+                    return; // 返回，不继续处理
                 }
             }
             else {
