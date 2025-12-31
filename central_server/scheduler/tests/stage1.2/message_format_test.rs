@@ -212,6 +212,9 @@ fn test_node_heartbeat_message_format() {
         installed_models: None,
         installed_services: vec![],
         capability_by_type: vec![],
+        rerun_metrics: None,
+        asr_metrics: None,
+        processing_metrics: None,
     };
 
     // 验证所有必需字段都存在
@@ -223,6 +226,9 @@ fn test_node_heartbeat_message_format() {
             installed_models,
             installed_services: _,
             capability_by_type: _,
+            rerun_metrics: _,
+            asr_metrics: _,
+            processing_metrics: _,
         } => {
             assert_eq!(node_id, "node-123");
             assert_eq!(timestamp, 1234567890);
@@ -261,6 +267,11 @@ fn test_job_result_message_format() {
         group_id: None,
         part_index: None,
         node_completed_at_ms: None,
+        asr_quality_level: None,
+        quality_score: None,
+        reason_codes: None,
+        rerun_count: None,
+        segments_meta: None,
     };
 
     match success_message {
@@ -281,6 +292,11 @@ fn test_job_result_message_format() {
             trace_id: _,
             group_id: _,
             part_index: _,
+            asr_quality_level: _,
+            quality_score: _,
+            reason_codes: _,
+            rerun_count: _,
+            segments_meta: _,
             node_completed_at_ms: _,
         } => {
             assert_eq!(job_id, "job-123");
@@ -322,6 +338,11 @@ fn test_job_result_message_format() {
         group_id: None,
         part_index: None,
         node_completed_at_ms: None,
+        asr_quality_level: None,
+        quality_score: None,
+        reason_codes: None,
+        rerun_count: None,
+        segments_meta: None,
     };
 
     match error_message {
@@ -399,6 +420,10 @@ fn test_job_assign_message_format() {
         group_id: None,
         part_index: None,
         context_text: None,
+        padding_ms: None,
+        is_manual_cut: false,
+        is_pause_triggered: false,
+        is_timeout_triggered: false,
     };
 
     // 验证所有必需字段都存在
@@ -426,6 +451,10 @@ fn test_job_assign_message_format() {
             group_id: _,
             part_index: _,
             context_text: _,
+            padding_ms: _,
+            is_manual_cut: _,
+            is_pause_triggered: _,
+            is_timeout_triggered: _,
         } => {
             assert_eq!(job_id, "job-123");
             assert_eq!(session_id, "sess-123");

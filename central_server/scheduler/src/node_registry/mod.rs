@@ -11,8 +11,7 @@ mod phase3_pool;
 mod phase3_core_cache;
 
 pub use types::{Node, DispatchExcludeReason};
-pub use selection::NoAvailableNodeBreakdown;
-pub use selection::Phase3TwoLevelDebug;
+pub use selection::{NoAvailableNodeBreakdown, Phase3TwoLevelDebug};
 
 use std::collections::HashMap;
 use std::collections::HashSet;

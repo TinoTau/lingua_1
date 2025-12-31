@@ -1,169 +1,4 @@
-use crate::node_registry::NodeRegistry;
-use crate::messages::{FeatureFlags, PipelineConfig};
-use crate::utils::ModuleResolver;
-use serde::{Deserialize, Serialize};
-use std::sync::Arc;
-use tokio::sync::RwLock;
-use tracing::warn;
-use uuid::Uuid;
-
-#[derive(Debug, Clone)]
-struct SelectionOutcome {
-    node_id: Option<String>,
-    selector: &'static str,
-    breakdown: crate::node_registry::NoAvailableNodeBreakdown,
-    phase3_debug: Option<crate::node_registry::Phase3TwoLevelDebug>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Job {
-    pub job_id: String,
-    /// 幂等请求 ID（Phase 1：任务级绑定使用）
-    #[serde(skip_serializing_if = "String::is_empty")]
-    pub request_id: String,
-    /// 是否已成功下发到节点（Phase 1：用于避免 request_id 重试导致重复派发）
-    #[serde(skip_serializing_if = "std::ops::Not::not")]
-    pub dispatched_to_node: bool,
-    /// 最近一次成功下发到节点的时间戳（ms），用于 job_timeout_seconds 的计时起点（从 dispatched 开始）
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub dispatched_at_ms: Option<i64>,
-    /// 超时后的自动重派次数（不包含首次派发）
-    #[serde(skip_serializing_if = "is_zero_u32")]
-    pub failover_attempts: u32,
-    /// 下发 attempt 序号（从 1 开始）。用于同一节点重派时的结果去重/竞态保护。
-    #[serde(skip_serializing_if = "is_zero_u32")]
-    pub dispatch_attempt_id: u32,
-    pub session_id: String, // 发送者的 session_id
-    pub utterance_index: u64,
-    pub src_lang: String,  // 支持 "auto" | "zh" | "en" | "ja" | "ko"
-    pub tgt_lang: String,
-    pub dialect: Option<String>,
-    pub features: Option<FeatureFlags>,
-    pub pipeline: PipelineConfig,
-    pub audio_data: Vec<u8>,
-    pub audio_format: String,
-    pub sample_rate: u32,
-    pub assigned_node_id: Option<String>,
-    pub status: JobStatus,
-    pub created_at: chrono::DateTime<chrono::Utc>,
-    /// 追踪 ID（用于全链路日志追踪）
-    pub trace_id: String,
-    /// 翻译模式："one_way" | "two_way_auto"
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub mode: Option<String>,
-    /// 双向模式的语言 A（当 mode == "two_way_auto" 时使用）
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub lang_a: Option<String>,
-    /// 双向模式的语言 B（当 mode == "two_way_auto" 时使用）
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub lang_b: Option<String>,
-    /// 自动识别时限制的语言范围（可选）
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub auto_langs: Option<Vec<String>>,
-    /// 是否启用流式 ASR（部分结果输出）
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub enable_streaming_asr: Option<bool>,
-    /// 部分结果更新间隔（毫秒），仅在 enable_streaming_asr 为 true 时有效
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub partial_update_interval_ms: Option<u64>,
-    /// 目标接收者 session_id 列表（会议室模式使用，用于多语言翻译）
-    /// 如果为 None，表示单会话模式，翻译结果发送给发送者
-    /// 如果为 Some，表示会议室模式，翻译结果发送给列表中的所有成员
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub target_session_ids: Option<Vec<String>>,
-    /// Phase 3：租户 ID（用于两级调度 routing_key 与运维排障）
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub tenant_id: Option<String>,
-    /// 第一个音频块的客户端发送时间戳（毫秒，UTC时区），用于计算网络传输耗时
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub first_chunk_client_timestamp_ms: Option<i64>,
-    /// EDGE-4: Padding 配置（毫秒），用于在音频末尾添加静音
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub padding_ms: Option<u64>,
-    /// 是否由用户手动发送（is_final=true）
-    #[serde(skip_serializing_if = "std::ops::Not::not")]
-    pub is_manual_cut: bool,
-    /// 是否由3秒静音触发（pause触发）
-    #[serde(skip_serializing_if = "std::ops::Not::not")]
-    pub is_pause_triggered: bool,
-    /// 是否由10秒超时触发（timeout触发）
-    #[serde(skip_serializing_if = "std::ops::Not::not")]
-    pub is_timeout_triggered: bool,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub enum JobStatus {
-    Pending,
-    Assigned,
-    Processing,
-    Completed,
-    Failed,
-}
-
-#[derive(Clone)]
-pub struct JobDispatcher {
-    node_registry: Arc<NodeRegistry>,
-    jobs: Arc<RwLock<std::collections::HashMap<String, Job>>>,
-    /// request_id -> job_id（带 lease 过期时间）
-    request_bindings: Arc<RwLock<std::collections::HashMap<String, (String, i64)>>>,
-    lease_seconds: u64,
-    reserved_ttl_seconds: u64,
-    spread_enabled: bool,
-    spread_window_ms: i64,
-    core_services: crate::core::config::CoreServicesConfig,
-    /// session_id -> (last_dispatched_node_id, ts_ms)
-    last_dispatched_node_by_session: Arc<RwLock<std::collections::HashMap<String, (String, i64)>>>,
-    /// Phase 2：Redis 运行时（request_id bind/lock + node reserved）
-    phase2: Option<Arc<crate::phase2::Phase2Runtime>>,
-}
-
-fn is_zero_u32(v: &u32) -> bool {
-    *v == 0
-}
-
-impl JobDispatcher {
-    pub fn new(node_registry: Arc<NodeRegistry>) -> Self {
-        Self {
-            node_registry,
-            jobs: Arc::new(RwLock::new(std::collections::HashMap::new())),
-            request_bindings: Arc::new(RwLock::new(std::collections::HashMap::new())),
-            lease_seconds: 90,
-            reserved_ttl_seconds: 90,
-            spread_enabled: false,
-            spread_window_ms: 30_000,
-            core_services: crate::core::config::CoreServicesConfig::default(),
-            last_dispatched_node_by_session: Arc::new(RwLock::new(std::collections::HashMap::new())),
-            phase2: None,
-        }
-    }
-
-    pub fn new_with_task_binding_config(
-        node_registry: Arc<NodeRegistry>,
-        cfg: crate::core::config::TaskBindingConfig,
-    ) -> Self {
-        let mut s = Self::new(node_registry);
-        s.lease_seconds = cfg.lease_seconds.max(1);
-        s.reserved_ttl_seconds = cfg.reserved_ttl_seconds.max(1);
-        s.spread_enabled = cfg.spread_enabled;
-        s.spread_window_ms = (cfg.spread_window_seconds.max(1) as i64) * 1000;
-        s
-    }
-
-    pub fn new_with_phase1_config(
-        node_registry: Arc<NodeRegistry>,
-        task_binding: crate::core::config::TaskBindingConfig,
-        core_services: crate::core::config::CoreServicesConfig,
-    ) -> Self {
-        let mut s = Self::new_with_task_binding_config(node_registry, task_binding);
-        s.core_services = core_services;
-        s
-    }
-
-    pub fn set_phase2(&mut self, phase2: Option<Arc<crate::phase2::Phase2Runtime>>) {
-        self.phase2 = phase2;
-    }
-
-    pub async fn create_job(
+﻿    pub async fn create_job(
         &self,
         session_id: String,
         utterance_index: u64,
@@ -184,26 +19,26 @@ impl JobDispatcher {
         partial_update_interval_ms: Option<u64>,
         trace_id: String,
         tenant_id: Option<String>,
-        // Phase 1：任务级幂等 request_id（建议调用方传入稳定值）
+        // Phase 1锛氫换鍔＄骇骞傜瓑 request_id锛堝缓璁皟鐢ㄦ柟浼犲叆绋冲畾鍊硷級
         request_id: Option<String>,
-        target_session_ids: Option<Vec<String>>, // 目标接收者 session_id 列表（会议室模式使用）
-        first_chunk_client_timestamp_ms: Option<i64>, // 第一个音频块的客户端发送时间戳
-        padding_ms: Option<u64>, // EDGE-4: Padding 配置（毫秒）
-        is_manual_cut: bool, // 是否由用户手动发送
-        is_pause_triggered: bool, // 是否由3秒静音触发
-        is_timeout_triggered: bool, // 是否由10秒超时触发
+        target_session_ids: Option<Vec<String>>, // 鐩爣鎺ユ敹鑰?session_id 鍒楄〃锛堜細璁妯″紡浣跨敤锛?
+        first_chunk_client_timestamp_ms: Option<i64>, // 绗竴涓煶棰戝潡鐨勫鎴风鍙戦€佹椂闂存埑
+        padding_ms: Option<u64>, // EDGE-4: Padding 閰嶇疆锛堟绉掞級
+        is_manual_cut: bool, // 鏄惁鐢辩敤鎴锋墜鍔ㄥ彂閫?
+        is_pause_triggered: bool, // 鏄惁鐢?绉掗潤闊宠Е鍙?
+        is_timeout_triggered: bool, // 鏄惁鐢?0绉掕秴鏃惰Е鍙?
     ) -> Job {
         let request_id = request_id.unwrap_or_else(|| format!("req-{}", Uuid::new_v4().to_string()[..12].to_uppercase()));
         let now_ms = chrono::Utc::now().timestamp_millis();
-        // Phase 3：routing_key 优先 tenant_id，其次 session_id（保证同租户/同会话稳定落 pool；不影响 request_id 幂等）
+        // Phase 3锛歳outing_key 浼樺厛 tenant_id锛屽叾娆?session_id锛堜繚璇佸悓绉熸埛/鍚屼細璇濈ǔ瀹氳惤 pool锛涗笉褰卞搷 request_id 骞傜瓑锛?
         let routing_key = tenant_id
             .as_deref()
             .filter(|s| !s.trim().is_empty())
             .unwrap_or(session_id.as_str());
 
-        // Phase 2：跨实例幂等（优先使用 Redis request_id bind）
+        // Phase 2锛氳法瀹炰緥骞傜瓑锛堜紭鍏堜娇鐢?Redis request_id bind锛?
         if let Some(rt) = self.phase2.clone() {
-            // 先做一次无锁读取（快速路径）
+            // 鍏堝仛涓€娆℃棤閿佽鍙栵紙蹇€熻矾寰勶級
             if let Some(b) = rt.get_request_binding(&request_id).await {
                 let job_id = b.job_id.clone();
                 if let Some(job) = self.get_job(&job_id).await {
@@ -240,7 +75,7 @@ impl JobDispatcher {
                     target_session_ids: target_session_ids.clone(),
                     tenant_id: tenant_id.clone(),
                     first_chunk_client_timestamp_ms,
-                    padding_ms: None, // EDGE-4: Padding 配置（在 Phase2 幂等检查时，padding_ms 尚未确定）
+                    padding_ms: None, // EDGE-4: Padding 閰嶇疆锛堝湪 Phase2 骞傜瓑妫€鏌ユ椂锛宲adding_ms 灏氭湭纭畾锛?
                     is_manual_cut: false,
                     is_pause_triggered: false,
                     is_timeout_triggered: false,
@@ -249,7 +84,7 @@ impl JobDispatcher {
                 return job;
             }
 
-            // 加锁路径：避免同 request_id 并发创建/占用
+            // 鍔犻攣璺緞锛氶伩鍏嶅悓 request_id 骞跺彂鍒涘缓/鍗犵敤
             let lock_owner = format!("{}:{}", rt.instance_id, Uuid::new_v4().to_string());
             let deadline = tokio::time::Instant::now() + std::time::Duration::from_millis(1000);
             let mut locked = false;
@@ -262,7 +97,7 @@ impl JobDispatcher {
             }
 
             if locked {
-                // lock 后复查
+                // lock 鍚庡鏌?
                 if let Some(b) = rt.get_request_binding(&request_id).await {
                     rt.release_request_lock(&request_id, &lock_owner).await;
                     let job_id = b.job_id.clone();
@@ -300,22 +135,22 @@ impl JobDispatcher {
                         target_session_ids: target_session_ids.clone(),
                     tenant_id: tenant_id.clone(),
                     first_chunk_client_timestamp_ms,
-                    padding_ms: None, // EDGE-4: Padding 配置（在 Phase2 幂等检查时，padding_ms 尚未确定）
-                    is_manual_cut, // 使用传入的参数
-                    is_pause_triggered, // 使用传入的参数
-                    is_timeout_triggered, // 使用传入的参数
+                    padding_ms: None, // EDGE-4: Padding 閰嶇疆锛堝湪 Phase2 骞傜瓑妫€鏌ユ椂锛宲adding_ms 灏氭湭纭畾锛?
+                    is_manual_cut, // 浣跨敤浼犲叆鐨勫弬鏁?
+                    is_pause_triggered, // 浣跨敤浼犲叆鐨勫弬鏁?
+                    is_timeout_triggered, // 浣跨敤浼犲叆鐨勫弬鏁?
                     };
                     self.jobs.write().await.insert(job_id, job.clone());
                     return job;
                 }
 
-                // 还没有绑定：创建新 job_id，并走“本地选节点 -> Redis reserve -> 写 bind”
+                // 杩樻病鏈夌粦瀹氾細鍒涘缓鏂?job_id锛屽苟璧扳€滄湰鍦伴€夎妭鐐?-> Redis reserve -> 鍐?bind鈥?
                 let job_id = format!("job-{}", Uuid::new_v4().to_string()[..8].to_uppercase());
 
-                // Prometheus：若最终 NO_AVAILABLE_NODE，则记录“按原因拆分”的一次计数
+                // Prometheus锛氳嫢鏈€缁?NO_AVAILABLE_NODE锛屽垯璁板綍鈥滄寜鍘熷洜鎷嗗垎鈥濈殑涓€娆¤鏁?
                 let mut no_available_node_metric: Option<(&'static str, &'static str)> = None;
 
-                // Phase 1：可选“打散”策略
+                // Phase 1锛氬彲閫夆€滄墦鏁ｂ€濈瓥鐣?
                 let exclude_node_id = if self.spread_enabled {
                     self.last_dispatched_node_by_session
                         .read()
@@ -413,7 +248,7 @@ impl JobDispatcher {
                     }
                 };
 
-                // Phase 2：全局并发占用（Redis reserve）
+                // Phase 2锛氬叏灞€骞跺彂鍗犵敤锛圧edis reserve锛?
                 if let Some(ref node_id) = assigned_node_id {
                     let ttl_s = self.reserved_ttl_seconds.max(1);
                     let node = self.node_registry.get_node_snapshot(node_id).await;
@@ -430,7 +265,7 @@ impl JobDispatcher {
                     }
                 }
 
-                // 写入 request_id bind（即使未分配到节点，也写入以避免短时间重复创建）
+                // 鍐欏叆 request_id bind锛堝嵆浣挎湭鍒嗛厤鍒拌妭鐐癸紝涔熷啓鍏ヤ互閬垮厤鐭椂闂撮噸澶嶅垱寤猴級
                 rt.set_request_binding(
                     &request_id,
                     &job_id,
@@ -440,7 +275,7 @@ impl JobDispatcher {
                 )
                 .await;
 
-                // Phase 2：初始化 Job FSM（CREATED）
+                // Phase 2锛氬垵濮嬪寲 Job FSM锛圕REATED锛?
                 let fsm_ttl = std::cmp::max(self.lease_seconds, self.reserved_ttl_seconds).saturating_add(300);
                 rt.job_fsm_init(&job_id, assigned_node_id.as_deref(), 1, fsm_ttl).await;
                 rt.release_request_lock(&request_id, &lock_owner).await;
@@ -484,16 +319,16 @@ impl JobDispatcher {
                     tenant_id: tenant_id.clone(),
                     first_chunk_client_timestamp_ms,
                     padding_ms,
-                    is_manual_cut, // 使用传入的参数
-                    is_pause_triggered, // 使用传入的参数
-                    is_timeout_triggered, // 使用传入的参数
+                    is_manual_cut, // 浣跨敤浼犲叆鐨勫弬鏁?
+                    is_pause_triggered, // 浣跨敤浼犲叆鐨勫弬鏁?
+                    is_timeout_triggered, // 浣跨敤浼犲叆鐨勫弬鏁?
                 };
                 self.jobs.write().await.insert(job_id, job.clone());
                 return job;
             }
         }
 
-        // 幂等：若 request_id 在 lease 内已生成过 job，则直接返回同一个 job（避免重复派发/重复占用并发槽）
+        // 骞傜瓑锛氳嫢 request_id 鍦?lease 鍐呭凡鐢熸垚杩?job锛屽垯鐩存帴杩斿洖鍚屼竴涓?job锛堥伩鍏嶉噸澶嶆淳鍙?閲嶅鍗犵敤骞跺彂妲斤級
         if let Some((existing_job_id, exp_ms)) = self.request_bindings.read().await.get(&request_id).cloned() {
             if exp_ms > now_ms {
                 if let Some(job) = self.get_job(&existing_job_id).await {
@@ -504,10 +339,10 @@ impl JobDispatcher {
 
         let job_id = format!("job-{}", Uuid::new_v4().to_string()[..8].to_uppercase());
         
-        // 用于 Prometheus：若最终 NO_AVAILABLE_NODE，则记录“按原因拆分”的一次计数
+        // 鐢ㄤ簬 Prometheus锛氳嫢鏈€缁?NO_AVAILABLE_NODE锛屽垯璁板綍鈥滄寜鍘熷洜鎷嗗垎鈥濈殑涓€娆¤鏁?
         let mut no_available_node_metric: Option<(&'static str, &'static str)> = None;
 
-        // Phase 1：可选“打散”策略。若开启且窗口内存在上一次已派发节点，则优先避开（若无其他候选则回退）
+        // Phase 1锛氬彲閫夆€滄墦鏁ｂ€濈瓥鐣ャ€傝嫢寮€鍚笖绐楀彛鍐呭瓨鍦ㄤ笂涓€娆″凡娲惧彂鑺傜偣锛屽垯浼樺厛閬垮紑锛堣嫢鏃犲叾浠栧€欓€夊垯鍥為€€锛?
         let exclude_node_id = if self.spread_enabled {
             self.last_dispatched_node_by_session
                 .read()
@@ -524,17 +359,17 @@ impl JobDispatcher {
             None
         };
 
-        // 根据 v2 技术说明书，使用模块依赖展开算法选择节点
+        // 鏍规嵁 v2 鎶€鏈鏄庝功锛屼娇鐢ㄦā鍧椾緷璧栧睍寮€绠楁硶閫夋嫨鑺傜偣
         let mut assigned_node_id = if let Some(node_id) = preferred_node_id {
-            // 如果指定了节点，检查节点是否可用
+            // 濡傛灉鎸囧畾浜嗚妭鐐癸紝妫€鏌ヨ妭鐐规槸鍚﹀彲鐢?
             if self.node_registry.is_node_available(&node_id).await {
-                // 还需要检查节点是否具备所需的模型能力
+                // 杩橀渶瑕佹鏌ヨ妭鐐规槸鍚﹀叿澶囨墍闇€鐨勬ā鍨嬭兘鍔?
                 if let Some(features) = &features {
                         if let Ok(required_models) =
                             self.get_required_types_for_features(&pipeline, Some(features), &src_lang, &tgt_lang)
                         {
                         if !self.node_registry.check_node_has_types_ready(&node_id, &required_models).await {
-                            // 节点不具备所需模型，回退到功能感知选择
+                            // 鑺傜偣涓嶅叿澶囨墍闇€妯″瀷锛屽洖閫€鍒板姛鑳芥劅鐭ラ€夋嫨
                             let o = self
                                 .select_node_with_module_expansion_with_breakdown(
                                     routing_key,
@@ -575,7 +410,7 @@ impl JobDispatcher {
                     Some(node_id)
                 }
             } else {
-                // 回退到功能感知选择
+                // 鍥為€€鍒板姛鑳芥劅鐭ラ€夋嫨
                 let o = self
                     .select_node_with_module_expansion_with_breakdown(
                         routing_key,
@@ -607,8 +442,8 @@ impl JobDispatcher {
                 o.node_id
             }
         } else {
-            // 使用模块依赖展开算法选择节点
-            // 先尝试避开上一节点；如果无候选再回退不避开
+            // 浣跨敤妯″潡渚濊禆灞曞紑绠楁硶閫夋嫨鑺傜偣
+            // 鍏堝皾璇曢伩寮€涓婁竴鑺傜偣锛涘鏋滄棤鍊欓€夊啀鍥為€€涓嶉伩寮€
             let excluded = exclude_node_id.as_deref();
             let first = self
                 .select_node_with_module_expansion_with_breakdown(
@@ -666,7 +501,7 @@ impl JobDispatcher {
                     }
                 }
                 if second.node_id.is_none() {
-                    // 仅记录最终失败的原因（第二次：不避开上一节点）
+                    // 浠呰褰曟渶缁堝け璐ョ殑鍘熷洜锛堢浜屾锛氫笉閬垮紑涓婁竴鑺傜偣锛?
                     no_available_node_metric =
                         Some((second.selector, second.breakdown.best_reason_label()));
                 }
@@ -674,7 +509,7 @@ impl JobDispatcher {
             }
         };
 
-        // Phase 1：并发一致性（reserve）——绑定成功 ≈ 占用 1 个槽
+        // Phase 1锛氬苟鍙戜竴鑷存€э紙reserve锛夆€斺€旂粦瀹氭垚鍔?鈮?鍗犵敤 1 涓Ы
         if let Some(ref node_id) = assigned_node_id {
             let ttl = std::time::Duration::from_secs(self.reserved_ttl_seconds);
             let reserved = self
@@ -683,12 +518,12 @@ impl JobDispatcher {
                 .await;
             if !reserved {
                 assigned_node_id = None;
-                // 选择到了节点但 reserve 失败：多数是并发槽竞争/心跳滞后导致
+                // 閫夋嫨鍒颁簡鑺傜偣浣?reserve 澶辫触锛氬鏁版槸骞跺彂妲界珵浜?蹇冭烦婊炲悗瀵艰嚧
                 no_available_node_metric = Some(("reserve", "reserve_denied"));
             }
         }
 
-        // 写入 request_id lease（只在成功创建时写入；无论是否分配到节点，都写入以避免短时间重复创建）
+        // 鍐欏叆 request_id lease锛堝彧鍦ㄦ垚鍔熷垱寤烘椂鍐欏叆锛涙棤璁烘槸鍚﹀垎閰嶅埌鑺傜偣锛岄兘鍐欏叆浠ラ伩鍏嶇煭鏃堕棿閲嶅鍒涘缓锛?
         let lease_ms = (self.lease_seconds as i64) * 1000;
         let exp_ms = now_ms + lease_ms;
         self.request_bindings
@@ -697,12 +532,12 @@ impl JobDispatcher {
             .insert(request_id.clone(), (job_id.clone(), exp_ms));
 
         use tracing::debug;
-        debug!(trace_id = %trace_id, job_id = %job_id, request_id = %request_id, session_id = %session_id, utterance_index = utterance_index, node_id = ?assigned_node_id, "创建 Job");
+        debug!(trace_id = %trace_id, job_id = %job_id, request_id = %request_id, session_id = %session_id, utterance_index = utterance_index, node_id = ?assigned_node_id, "鍒涘缓 Job");
 
         if assigned_node_id.is_none() {
             if let Some((selector, reason)) = no_available_node_metric {
                 crate::metrics::prometheus_metrics::on_no_available_node(selector, reason);
-                // 添加详细的诊断日志
+                // 娣诲姞璇︾粏鐨勮瘖鏂棩蹇?
                 warn!(
                     trace_id = %trace_id,
                     job_id = %job_id,
@@ -710,7 +545,7 @@ impl JobDispatcher {
                     utterance_index = utterance_index,
                     selector = selector,
                     reason = reason,
-                    "Job创建时未找到可用节点，请检查节点状态和服务包安装情况"
+                    "Job鍒涘缓鏃舵湭鎵惧埌鍙敤鑺傜偣锛岃妫€鏌ヨ妭鐐圭姸鎬佸拰鏈嶅姟鍖呭畨瑁呮儏鍐?
                 );
             } else {
                 crate::metrics::prometheus_metrics::on_no_available_node("unknown", "unknown");
@@ -719,7 +554,7 @@ impl JobDispatcher {
                     job_id = %job_id,
                     session_id = %session_id,
                     utterance_index = utterance_index,
-                    "Job创建时未找到可用节点（原因未知）"
+                    "Job鍒涘缓鏃舵湭鎵惧埌鍙敤鑺傜偣锛堝師鍥犳湭鐭ワ級"
                 );
             }
         }
@@ -768,254 +603,3 @@ impl JobDispatcher {
         jobs.insert(job_id, job.clone());
         job
     }
-
-    pub async fn get_job(&self, job_id: &str) -> Option<Job> {
-        let jobs = self.jobs.read().await;
-        jobs.get(job_id).cloned()
-    }
-
-    pub async fn list_jobs_snapshot(&self) -> Vec<Job> {
-        let jobs = self.jobs.read().await;
-        jobs.values().cloned().collect()
-    }
-
-    pub async fn update_job_status(&self, job_id: &str, status: JobStatus) -> bool {
-        let mut jobs = self.jobs.write().await;
-        if let Some(job) = jobs.get_mut(job_id) {
-            let is_terminal = matches!(status, JobStatus::Completed | JobStatus::Failed);
-            job.status = status;
-            // 完成/失败后清理 request_id 绑定（避免内存增长；任务级绑定不需要长期保留）
-            if is_terminal && !job.request_id.is_empty() {
-                self.request_bindings.write().await.remove(&job.request_id);
-            }
-            true
-        } else {
-            false
-        }
-    }
-
-    /// Phase 1：用于超时/重派的内部状态更新
-    /// - 设置新节点
-    /// - 重置 dispatched 标记与 dispatched_at_ms
-    /// - 递增 failover_attempts
-    pub async fn set_job_assigned_node_for_failover(&self, job_id: &str, new_node_id: String) -> bool {
-        let mut jobs = self.jobs.write().await;
-        if let Some(job) = jobs.get_mut(job_id) {
-            if matches!(job.status, JobStatus::Completed | JobStatus::Failed) {
-                return false;
-            }
-            let request_id = job.request_id.clone();
-            let next_attempt = job.dispatch_attempt_id.saturating_add(1).max(1);
-            job.assigned_node_id = Some(new_node_id.clone());
-            job.status = JobStatus::Assigned;
-            job.dispatched_to_node = false;
-            job.dispatched_at_ms = None;
-            job.failover_attempts = job.failover_attempts.saturating_add(1);
-            job.dispatch_attempt_id = next_attempt;
-            // Phase 2：更新 bind 的 node_id，并清理 dispatched 标记
-            if let Some(ref rt) = self.phase2 {
-                if !request_id.is_empty() {
-                    rt.update_request_binding_node(&request_id, &new_node_id).await;
-                }
-                // Phase 2：Job FSM reset -> CREATED（新 attempt）
-                let fsm_ttl = std::cmp::max(self.lease_seconds, self.reserved_ttl_seconds).saturating_add(300);
-                rt.job_fsm_reset_created(job_id, Some(&new_node_id), next_attempt, fsm_ttl).await;
-            }
-            true
-        } else {
-            false
-        }
-    }
-
-    pub async fn required_types_for_job(&self, job: &Job) -> anyhow::Result<Vec<crate::messages::ServiceType>> {
-        self.get_required_types_for_features(&job.pipeline, job.features.as_ref(), &job.src_lang, &job.tgt_lang)
-    }
-
-    /// 使用模块依赖展开算法选择节点
-    /// 
-    /// 按照 v2 技术说明书的步骤：
-    /// 1. 解析用户请求 features
-    /// 2. 递归展开依赖链
-    /// 3. 收集 required_types (ServiceType)
-    /// 4. 过滤 capability_by_type ready 的节点
-    /// 5. 负载均衡选节点
-    async fn select_node_with_module_expansion_with_breakdown(
-        &self,
-        routing_key: &str,
-        src_lang: &str,
-        tgt_lang: &str,
-        features: Option<FeatureFlags>,
-        pipeline: &PipelineConfig,
-        accept_public: bool,
-        exclude_node_id: Option<&str>,
-    ) -> SelectionOutcome {
-        // 步骤 1: 解析用户请求 features
-        let module_names = if let Some(ref features) = features {
-            ModuleResolver::parse_features_to_modules(features)
-        } else {
-            // 如果没有 features，只使用核心模块
-            vec!["asr".to_string(), "nmt".to_string(), "tts".to_string()]
-        };
-
-        // 步骤 2: 递归展开依赖链
-        let _expanded_modules = match ModuleResolver::expand_dependencies(&module_names) {
-            Ok(modules) => modules,
-            Err(e) => {
-                tracing::warn!("Failed to expand module dependencies: {}", e);
-                // 回退到原来的方法
-                let (node_id, breakdown) = self
-                    .node_registry
-                    .select_node_with_features_excluding_with_breakdown(
-                        src_lang,
-                        tgt_lang,
-                        &features,
-                        accept_public,
-                        exclude_node_id,
-                    )
-                    .await;
-                return SelectionOutcome {
-                    node_id,
-                    selector: "features",
-                    breakdown,
-                    phase3_debug: None,
-                };
-            }
-        };
-
-        // 步骤 3: 收集 required_types
-        let required_types =
-            match self.get_required_types_for_features(pipeline, features.as_ref(), src_lang, tgt_lang)
-            {
-            Ok(types) => types,
-            Err(e) => {
-                tracing::warn!("Failed to collect required models: {}", e);
-                // 回退到原来的方法
-                let (node_id, breakdown) = self
-                    .node_registry
-                    .select_node_with_features_excluding_with_breakdown(
-                        src_lang,
-                        tgt_lang,
-                        &features,
-                        accept_public,
-                        exclude_node_id,
-                    )
-                    .await;
-                return SelectionOutcome {
-                    node_id,
-                    selector: "features",
-                    breakdown,
-                    phase3_debug: None,
-                };
-            }
-        };
-
-        // 步骤 4 & 5: 过滤 type ready 的节点，并负载均衡
-        let p3 = self.node_registry.phase3_config().await;
-        if p3.enabled && p3.mode == "two_level" {
-            let (node_id, dbg, breakdown) = self
-                .node_registry
-                .select_node_with_types_two_level_excluding_with_breakdown(
-                    routing_key,
-                    src_lang,
-                    tgt_lang,
-                    &required_types,
-                    accept_public,
-                    exclude_node_id,
-                    Some(&self.core_services),
-                )
-                .await;
-            // Prometheus：记录 pool 命中/回退
-            if let Some(pid) = dbg.selected_pool {
-                crate::metrics::prometheus_metrics::on_phase3_pool_selected(pid, true, dbg.fallback_used);
-            } else {
-                crate::metrics::prometheus_metrics::on_phase3_pool_selected(dbg.preferred_pool, false, false);
-            }
-            SelectionOutcome {
-                node_id,
-                selector: "phase3_type",
-                breakdown,
-                phase3_debug: Some(dbg),
-            }
-        } else {
-            let (node_id, breakdown) = self
-                .node_registry
-                .select_node_with_types_excluding_with_breakdown(
-                    src_lang,
-                    tgt_lang,
-                    &required_types,
-                    accept_public,
-                    exclude_node_id,
-                )
-                .await;
-            SelectionOutcome {
-                node_id,
-                selector: "types",
-                breakdown,
-                phase3_debug: None,
-            }
-        }
-    }
-
-    /// 获取功能所需的类型列表
-    fn get_required_types_for_features(
-        &self,
-        pipeline: &PipelineConfig,
-        features: Option<&FeatureFlags>,
-        _src_lang: &str,
-        _tgt_lang: &str,
-    ) -> anyhow::Result<Vec<crate::messages::ServiceType>> {
-        let mut types = Vec::new();
-
-        if pipeline.use_asr {
-            types.push(crate::messages::ServiceType::Asr);
-        }
-        if pipeline.use_nmt {
-            types.push(crate::messages::ServiceType::Nmt);
-        }
-        if pipeline.use_tts {
-            types.push(crate::messages::ServiceType::Tts);
-        }
-
-        // 可选模块映射到类型（当前仅 tone 可选）
-        if let Some(features) = features {
-            let module_names = ModuleResolver::parse_features_to_modules(features);
-            let optional_models = ModuleResolver::collect_required_models(&module_names)?;
-            // tone: 若模块包含 tone（例如 voice_cloning 相关）则加入
-            if optional_models.iter().any(|m| m.contains("tone") || m.contains("speaker") || m.contains("voice")) {
-                types.push(crate::messages::ServiceType::Tone);
-            }
-        }
-
-        types.sort();
-        types.dedup();
-
-        Ok(types)
-    }
-
-    pub async fn mark_job_dispatched(&self, job_id: &str) -> bool {
-        let mut jobs = self.jobs.write().await;
-        if let Some(job) = jobs.get_mut(job_id) {
-            job.dispatched_to_node = true;
-            job.dispatched_at_ms = Some(chrono::Utc::now().timestamp_millis());
-            // Phase 2：同步更新 request_id bind 的 dispatched 标记，避免跨实例重复派发
-            if let Some(ref rt) = self.phase2 {
-                if !job.request_id.is_empty() {
-                    rt.mark_request_dispatched(&job.request_id).await;
-                }
-                // Phase 2：Job FSM -> DISPATCHED（幂等）
-                let _ = rt.job_fsm_to_dispatched(&job.job_id, job.dispatch_attempt_id.max(1)).await;
-            }
-            if let Some(ref nid) = job.assigned_node_id {
-                let now_ms = chrono::Utc::now().timestamp_millis();
-                self.last_dispatched_node_by_session
-                    .write()
-                    .await
-                    .insert(job.session_id.clone(), (nid.clone(), now_ms));
-            }
-            true
-        } else {
-            false
-        }
-    }
-}
-

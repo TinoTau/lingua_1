@@ -623,10 +623,14 @@ async fn test_select_node_with_module_expansion() {
         None,
         None,
         "trace-1".to_string(),
-        None,
-        None,
-        None,
-        None,
+        None, // tenant_id
+        None, // request_id
+        None, // target_session_ids
+        None, // first_chunk_client_timestamp_ms
+        None, // padding_ms
+        false, // is_manual_cut
+        false, // is_pause_triggered
+        false, // is_timeout_triggered
     ).await;
     
     // 应该分配了节点（节点有 emotion-xlm-r 模型且状态为 ready）
@@ -699,10 +703,14 @@ async fn test_select_node_with_module_expansion_no_model() {
         None,
         None,
         "trace-2".to_string(),
-        None,
-        None,
-        None,
-        None,
+        None, // tenant_id
+        None, // request_id
+        None, // target_session_ids
+        None, // first_chunk_client_timestamp_ms
+        None, // padding_ms
+        false, // is_manual_cut
+        false, // is_pause_triggered
+        false, // is_timeout_triggered
     ).await;
     
     // 应该没有分配节点（节点没有所需的模型）
@@ -762,6 +770,7 @@ async fn test_update_node_heartbeat_capability_state() {
         None,  // installed_services
         0,
         Some(updated_cap_state),
+        None, // processing_metrics
     ).await;
 
     assert!(success);

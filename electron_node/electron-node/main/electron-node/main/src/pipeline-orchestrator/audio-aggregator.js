@@ -162,8 +162,11 @@ class AudioAggregator {
         // 2. 3秒静音（isPauseTriggered）
         // 3. 20秒超时（isTimeoutTriggered，有特殊处理逻辑）
         // 4. 10秒自动处理（如果用户说够10秒，应该足够ASR识别出正确的文本）
+        // 5. 修复：如果isTimeoutTriggered为true（调度服务器的超时finalize），即使时长小于10秒也应该处理
+        //    因为这是调度服务器检测到没有更多chunk后触发的finalize，说明这是最后一句话
         const shouldProcessNow = isManualCut || // 手动截断：立即处理
-            isPauseTriggered || // 3秒静音：立即处理
+            isPauseTriggered || // 3秒静音：立即处理（包括调度服务器的pause超时finalize）
+            isTimeoutTriggered || // 修复：超时finalize（调度服务器检测到没有更多chunk），立即处理（即使时长小于10秒）
             buffer.totalDurationMs >= this.MAX_BUFFER_DURATION_MS || // 超过最大缓冲时长（20秒）：立即处理
             (buffer.totalDurationMs >= this.MIN_AUTO_PROCESS_DURATION_MS && !isTimeoutTriggered); // 达到最短自动处理时长（10秒）且不是超时触发：立即处理
         // 特殊处理：超时标识（is_timeout_triggered）

@@ -76,6 +76,7 @@ fn create_test_app_state() -> AppState {
         node_status_manager,
         room_manager: lingua_scheduler::managers::RoomManager::new(),
         job_idempotency: lingua_scheduler::core::JobIdempotencyManager::default(),
+        job_result_deduplicator: lingua_scheduler::core::JobResultDeduplicator::new(),
         phase2: None,
     }
 }

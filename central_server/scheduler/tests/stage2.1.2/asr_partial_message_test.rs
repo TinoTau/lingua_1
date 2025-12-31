@@ -153,6 +153,9 @@ fn test_job_assign_with_streaming_asr() {
         group_id: None,
         part_index: None,
         context_text: None,
+        is_manual_cut: false,
+        is_pause_triggered: false,
+        is_timeout_triggered: false,
     };
 
     // 序列化
@@ -212,6 +215,9 @@ fn test_job_assign_without_streaming_asr() {
         group_id: None,
         part_index: None,
         context_text: None,
+        is_manual_cut: false,
+        is_pause_triggered: false,
+        is_timeout_triggered: false,
     };
 
     // 序列化

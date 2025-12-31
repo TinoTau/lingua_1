@@ -171,6 +171,12 @@ fn test_session_init_ack_with_trace_id() {
         assigned_node_id: Some("node-1".to_string()),
         message: "OK".to_string(),
         trace_id: "trace-ack-123".to_string(),
+        protocol_version: None,
+        use_binary_frame: None,
+        negotiated_codec: None,
+        negotiated_audio_format: None,
+        negotiated_sample_rate: None,
+        negotiated_channel_count: None,
     };
     
     match ack {

@@ -160,6 +160,9 @@ async fn test_create_job() {
         None, // target_session_ids
         None, // first_chunk_client_timestamp_ms
         None, // padding_ms
+        false, // is_manual_cut
+        false, // is_pause_triggered
+        false, // is_timeout_triggered
     ).await;
     
     assert!(job.job_id.starts_with("job-"));
@@ -235,6 +238,9 @@ async fn test_create_job_with_preferred_node() {
         None, // target_session_ids
         None, // first_chunk_client_timestamp_ms
         None, // padding_ms
+        false, // is_manual_cut
+        false, // is_pause_triggered
+        false, // is_timeout_triggered
     ).await;
     
     assert_eq!(job.assigned_node_id, Some("node-123".to_string()));
@@ -275,6 +281,9 @@ async fn test_create_job_no_available_node() {
         None, // target_session_ids
         None, // first_chunk_client_timestamp_ms
         None, // padding_ms
+        false, // is_manual_cut
+        false, // is_pause_triggered
+        false, // is_timeout_triggered
     ).await;
     
     // 应该没有分配节点
@@ -335,6 +344,9 @@ async fn test_get_job() {
         None, // target_session_ids
         None, // first_chunk_client_timestamp_ms
         None, // padding_ms
+        false, // is_manual_cut
+        false, // is_pause_triggered
+        false, // is_timeout_triggered
     ).await;
     
     let retrieved = dispatcher.get_job(&job.job_id).await;
@@ -414,6 +426,9 @@ async fn test_update_job_status() {
         None, // target_session_ids
         None, // first_chunk_client_timestamp_ms
         None, // padding_ms
+        false, // is_manual_cut
+        false, // is_pause_triggered
+        false, // is_timeout_triggered
     ).await;
     
     assert_eq!(job.status, lingua_scheduler::core::dispatcher::JobStatus::Assigned);

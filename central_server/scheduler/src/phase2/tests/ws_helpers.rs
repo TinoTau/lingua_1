@@ -90,6 +90,7 @@
             node_status_manager,
             room_manager,
             job_idempotency: crate::core::JobIdempotencyManager::default(),
+            job_result_deduplicator: crate::core::JobResultDeduplicator::new(),
             phase2: Some(rt.clone()),
         };
 
