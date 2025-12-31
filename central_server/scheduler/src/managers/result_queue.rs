@@ -1,6 +1,7 @@
 use std::collections::{HashMap, BTreeMap};
 use std::sync::Arc;
 use tokio::sync::RwLock;
+use tracing::{debug, info, warn};
 use crate::messages::SessionMessage;
 
 // 等待补位的索引状态
@@ -95,7 +96,6 @@ impl ResultQueueManager {
     }
 
     pub async fn add_result(&self, session_id: &str, utterance_index: u64, result: SessionMessage) {
-        use tracing::{info, warn};
         let mut queues = self.queues.write().await;
         if let Some(state) = queues.get_mut(session_id) {
             let now_ms = chrono::Utc::now().timestamp_millis();
@@ -152,7 +152,6 @@ impl ResultQueueManager {
                 // 丢弃最大 key（最远未来），避免无限堆积
                 if let Some((&k, _)) = state.pending.iter().next_back() {
                     state.pending.remove(&k);
-                    use tracing::warn;
                     warn!(
                         session_id = %session_id,
                         evicted_index = k,
@@ -173,7 +172,6 @@ impl ResultQueueManager {
     }
 
     pub async fn get_ready_results(&self, session_id: &str) -> Vec<SessionMessage> {
-        use tracing::{debug, info, warn};
         let now_ms = chrono::Utc::now().timestamp_millis();
         let mut queues = self.queues.write().await;
         if let Some(state) = queues.get_mut(session_id) {

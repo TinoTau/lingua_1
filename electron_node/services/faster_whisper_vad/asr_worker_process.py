@@ -11,6 +11,15 @@ from typing import Optional, Dict, Any
 import sys
 import os
 
+# 导入配置和模型（在文件顶部统一导入）
+from config import (
+    ASR_MODEL_PATH,
+    ASR_DEVICE,
+    ASR_COMPUTE_TYPE,
+    WHISPER_CACHE_DIR,
+)
+from faster_whisper import WhisperModel
+
 # 配置日志（子进程需要独立配置）
 logging.basicConfig(
     level=logging.INFO,
@@ -32,14 +41,6 @@ def asr_worker_process(task_queue: mp.Queue, result_queue: mp.Queue):
     
     # 在子进程中加载模型（避免 fork 污染）
     try:
-        from config import (
-            ASR_MODEL_PATH,
-            ASR_DEVICE,
-            ASR_COMPUTE_TYPE,
-            WHISPER_CACHE_DIR,
-        )
-        from faster_whisper import WhisperModel
-        
         logger.info(f"Loading Faster Whisper model in worker process...")
         logger.info(f"Model path: {ASR_MODEL_PATH}, Device: {ASR_DEVICE}, Compute Type: {ASR_COMPUTE_TYPE}")
         

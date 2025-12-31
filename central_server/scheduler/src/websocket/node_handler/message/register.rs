@@ -1,7 +1,9 @@
 use crate::core::AppState;
 use crate::messages::{CapabilityByType, FeatureFlags, HardwareInfo, InstalledModel, InstalledService, NodeMessage, ResourceUsage};
+use crate::metrics::metrics::METRICS;
 use crate::websocket::send_node_message;
 use axum::extract::ws::Message;
+use std::sync::atomic::Ordering;
 use tokio::sync::mpsc;
 use tracing::{info, warn};
 
@@ -175,9 +177,6 @@ pub(super) async fn handle_node_heartbeat(
 
     // Gate-B: 处理 Rerun 指标
     if let Some(ref metrics) = rerun_metrics {
-        use crate::metrics::metrics::METRICS;
-        use std::sync::atomic::Ordering;
-        
         // 累加 rerun 指标（注意：这里使用增量值，因为节点每次心跳发送的是累积值）
         // 为了简化，我们直接使用节点发送的累积值（实际应该计算增量，但需要维护上次的值）
         // 暂时直接累加，后续可以优化为增量计算

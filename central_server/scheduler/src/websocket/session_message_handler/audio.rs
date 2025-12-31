@@ -1,3 +1,4 @@
+use base64::{engine::general_purpose, Engine as _};
 use crate::core::AppState;
 use crate::messages::{ErrorCode, UiEventStatus, UiEventType};
 use crate::websocket::{create_job_assign_message, send_ui_event};
@@ -38,7 +39,6 @@ pub(super) async fn handle_audio_chunk(
 
     // 解码音频数据
     let chunk = if let Some(payload_str) = payload {
-        use base64::{engine::general_purpose, Engine as _};
         general_purpose::STANDARD
             .decode(&payload_str)
             .unwrap_or_default()

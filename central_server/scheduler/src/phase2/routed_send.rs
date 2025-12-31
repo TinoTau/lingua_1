@@ -1,4 +1,6 @@
-﻿pub async fn send_node_message_routed(state: &AppState, node_id: &str, msg: NodeMessage) -> bool {
+﻿// 注意：此文件通过 include! 宏包含在 phase2.rs 中，因此不需要重复导入已在父模块中导入的类型
+
+pub async fn send_node_message_routed(state: &AppState, node_id: &str, msg: NodeMessage) -> bool {
     // 先尝试本地直发
     if state
         .node_connections
@@ -26,8 +28,6 @@
 
 /// Phase 2：发送 SessionMessage（本地直发；否则按 owner 投递到目标实例 Streams）
 pub async fn send_session_message_routed(state: &AppState, session_id: &str, msg: SessionMessage) -> bool {
-    use tracing::{debug, warn};
-    
     // 尝试本地直发
     if state
         .session_connections

@@ -1,6 +1,7 @@
 // 房间管理模块
 // 负责房间的创建、加入、退出和成员管理
 
+use rand::Rng;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -100,7 +101,6 @@ impl RoomManager {
 
     /// 生成6位数字房间码
     fn generate_room_code() -> String {
-        use rand::Rng;
         let mut rng = rand::thread_rng();
         format!("{:06}", rng.gen_range(100000..=999999))
     }

@@ -5,9 +5,10 @@ import { WebSocketClient } from './websocket_client';
 import { TtsPlayer } from './tts_player';
 import { AsrSubtitle } from './asr_subtitle';
 import { AudioMixer } from './audio_mixer';
-import { Config, DEFAULT_CONFIG, ServerMessage, FeatureFlags } from './types';
-import { ObservabilityManager } from './observability';
+import { Config, DEFAULT_CONFIG, ServerMessage, FeatureFlags, ErrorMessage, SilenceFilterConfig } from './types';
+import { ObservabilityManager, ObservabilityMetrics } from './observability';
 import { AudioCodecConfig } from './audio_codec';
+import { BackpressureState } from './websocket_client';
 import { TranslationDisplayManager } from './app/translation_display';
 import { SessionManager } from './app/session_manager';
 import { RoomManager } from './app/room_manager';
@@ -397,7 +398,7 @@ export class App {
 
       case 'error':
         // 处理服务器错误消息
-        const errorMsg = message as import('./types').ErrorMessage;
+        const errorMsg = message as ErrorMessage;
         const errorTraceId = (errorMsg as any).trace_id;
         console.error('[App] ❌ 收到服务器错误消息:', {
           code: errorMsg.code,
@@ -1493,21 +1494,21 @@ export class App {
   /**
    * 更新静音过滤配置
    */
-  updateSilenceFilterConfig(config: Partial<import('./types').SilenceFilterConfig>): void {
+  updateSilenceFilterConfig(config: Partial<SilenceFilterConfig>): void {
     this.recorder.updateSilenceFilterConfig(config);
   }
 
   /**
    * 获取静音过滤配置
    */
-  getSilenceFilterConfig(): import('./types').SilenceFilterConfig {
+  getSilenceFilterConfig(): SilenceFilterConfig {
     return this.recorder.getSilenceFilterConfig();
   }
 
   /**
    * 获取背压状态
    */
-  getBackpressureState(): import('./websocket_client').BackpressureState {
+  getBackpressureState(): BackpressureState {
     return this.wsClient.getBackpressureState();
   }
 
@@ -1576,7 +1577,7 @@ export class App {
   /**
    * 获取可观测性指标
    */
-  getObservabilityMetrics(): Readonly<import('./observability').ObservabilityMetrics> | null {
+  getObservabilityMetrics(): Readonly<ObservabilityMetrics> | null {
     return this.observability ? this.observability.getMetrics() : null;
   }
 

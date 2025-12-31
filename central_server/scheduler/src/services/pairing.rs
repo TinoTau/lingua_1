@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
+use std::time::{SystemTime, UNIX_EPOCH};
 use tokio::sync::RwLock;
 use chrono::{DateTime, Utc, Duration};
 
@@ -31,7 +32,6 @@ impl PairingService {
     pub async fn generate_pairing_code(&self, node_id: String) -> String {
         // 生成 6 位数字码
         // 使用时间戳和节点ID生成（简化实现）
-        use std::time::{SystemTime, UNIX_EPOCH};
         let timestamp = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .unwrap()

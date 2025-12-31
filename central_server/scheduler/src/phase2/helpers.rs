@@ -1,4 +1,6 @@
-﻿fn normalize_instance_id(s: &str) -> String {
+﻿use std::collections::HashMap;
+
+fn normalize_instance_id(s: &str) -> String {
     if s.trim().is_empty() || s.trim().eq_ignore_ascii_case("auto") {
         let hostname = std::env::var("COMPUTERNAME")
             .or_else(|_| std::env::var("HOSTNAME"))
@@ -125,8 +127,7 @@ fn parse_xpending_summary_total(value: redis::Value) -> Option<u64> {
 }
 
 #[allow(dead_code)]
-fn redis_value_to_hashmap(value: redis::Value) -> Option<std::collections::HashMap<String, String>> {
-    use std::collections::HashMap;
+fn redis_value_to_hashmap(value: redis::Value) -> Option<HashMap<String, String>> {
     let redis::Value::Bulk(items) = value else { return None };
     let mut out = HashMap::new();
     let mut i = 0;

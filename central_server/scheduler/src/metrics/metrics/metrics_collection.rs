@@ -1,6 +1,7 @@
 // 指标收集函数
 
 use crate::core::AppState;
+use crate::node_registry::DispatchExcludeReason;
 use super::metrics_types::*;
 use std::sync::atomic::Ordering;
 use std::collections::HashMap;
@@ -202,15 +203,14 @@ fn top_k_from_map(map: &Mutex<HashMap<String, u64>>, k: usize) -> Vec<KeyCount> 
         .collect()
 }
 
-fn format_dispatch_exclude_reason(r: &crate::node_registry::DispatchExcludeReason) -> String {
-    use crate::node_registry::DispatchExcludeReason::*;
+fn format_dispatch_exclude_reason(r: &DispatchExcludeReason) -> String {
     match r {
-        StatusNotReady => "StatusNotReady",
-        NotInPublicPool => "NotInPublicPool",
-        GpuUnavailable => "GpuUnavailable",
-        ModelNotAvailable => "ModelNotAvailable",
-        CapacityExceeded => "CapacityExceeded",
-        ResourceThresholdExceeded => "ResourceThresholdExceeded",
+        DispatchExcludeReason::StatusNotReady => "StatusNotReady",
+        DispatchExcludeReason::NotInPublicPool => "NotInPublicPool",
+        DispatchExcludeReason::GpuUnavailable => "GpuUnavailable",
+        DispatchExcludeReason::ModelNotAvailable => "ModelNotAvailable",
+        DispatchExcludeReason::CapacityExceeded => "CapacityExceeded",
+        DispatchExcludeReason::ResourceThresholdExceeded => "ResourceThresholdExceeded",
     }
     .to_string()
 }

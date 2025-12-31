@@ -16,6 +16,7 @@ from shared_types import WorkerState, ASRResult, SegmentInfo
 from worker_watchdog import watchdog_loop
 from result_listener import result_listener_loop
 from config import MAX_WAIT_SECONDS
+from asr_worker_process import asr_worker_process
 
 logger = logging.getLogger(__name__)
 
@@ -175,9 +176,6 @@ class ASRWorkerManager:
         self._state = WorkerState.STARTING
         
         try:
-            # 导入 worker 函数（必须在主进程中导入）
-            from asr_worker_process import asr_worker_process
-            
             # 创建子进程
             self.worker_process = mp.Process(
                 target=asr_worker_process,

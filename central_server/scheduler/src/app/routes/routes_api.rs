@@ -1,7 +1,9 @@
 use crate::core::AppState;
+use crate::messages::ServiceType;
 use axum::extract::Query;
 use axum::response::IntoResponse;
 use serde::{Deserialize, Serialize};
+use std::str::FromStr;
 
 // 健康检查
 pub async fn health_check() -> &'static str {
@@ -453,8 +455,6 @@ pub async fn get_phase3_simulate(
     let exclude = q.exclude_node_id.as_deref();
 
     // 将 required ServiceType 字符串转换为 ServiceType 枚举
-    use std::str::FromStr;
-    use crate::messages::ServiceType;
     let required_types: Vec<ServiceType> = q.required
         .iter()
         .filter_map(|s| ServiceType::from_str(s).ok())

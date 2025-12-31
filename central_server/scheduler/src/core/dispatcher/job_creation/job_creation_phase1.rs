@@ -1,7 +1,7 @@
 use super::super::JobDispatcher;
 use super::super::job::{Job, JobStatus};
 use crate::messages::{FeatureFlags, PipelineConfig};
-use tracing::warn;
+use tracing::{debug, warn};
 
 impl JobDispatcher {
     /// Phase 1: 本地幂等检查
@@ -82,7 +82,6 @@ impl JobDispatcher {
             .await
             .insert(request_id.clone(), (job_id.clone(), exp_ms));
 
-        use tracing::debug;
         debug!(trace_id = %trace_id, job_id = %job_id, request_id = %request_id, session_id = %session_id, utterance_index = utterance_index, node_id = ?final_assigned_node_id, "创建 Job");
 
         if final_assigned_node_id.is_none() {

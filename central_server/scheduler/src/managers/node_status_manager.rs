@@ -1,3 +1,4 @@
+use axum::extract::ws::Message;
 use crate::core::config::NodeHealthConfig;
 use crate::messages::NodeStatus;
 use crate::node_registry::{Node, NodeRegistry};
@@ -267,7 +268,6 @@ impl NodeStatusManager {
             
             // 发送消息到节点（如果连接存在）
             if let Some(tx) = self.node_connections.get_sender(node_id).await {
-                use axum::extract::ws::Message;
                 if let Ok(json) = serde_json::to_string(&status_msg) {
                     if let Err(e) = tx.send(Message::Text(json)) {
                         warn!("发送 node_status 消息到节点 {} 失败: {}", node_id, e);

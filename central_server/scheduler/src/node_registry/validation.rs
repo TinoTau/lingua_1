@@ -1,5 +1,6 @@
 // 节点验证逻辑
 
+use tracing::debug;
 use crate::messages::{FeatureFlags, ServiceType};
 use super::types::Node;
 
@@ -14,7 +15,6 @@ pub fn node_has_required_types_ready(node: &Node, required_types: &[ServiceType]
     });
 
     if !result {
-        use tracing::debug;
         let missing_or_not_ready: Vec<String> = required_types
             .iter()
             .filter(|t| {
@@ -106,8 +106,6 @@ pub fn node_supports_features(node: &Node, required_features: &Option<FeatureFla
 /// - GPU 使用率阈值：使用 resource_threshold 参数
 /// - 内存使用率阈值：使用 resource_threshold 参数
 pub fn is_node_resource_available(node: &Node, resource_threshold: f32) -> bool {
-    use tracing::debug;
-    
     // 检查 CPU 使用率
     if node.cpu_usage > resource_threshold {
         debug!(

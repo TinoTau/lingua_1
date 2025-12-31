@@ -1,3 +1,6 @@
+// 导入类型
+import { AudioCodecConfig } from './audio_codec';
+
 // 状态机状态定义
 export enum SessionState {
   INPUT_READY = 'input_ready',
@@ -32,7 +35,7 @@ export interface Config {
   observabilityReportUrl?: string; // 指标上报 URL
   observabilityReportIntervalMs?: number; // 上报间隔（毫秒）
   // Phase 2: 音频编解码器配置
-  audioCodecConfig?: import('./audio_codec').AudioCodecConfig;
+  audioCodecConfig?: AudioCodecConfig;
   // TTS 自动播放配置
   autoPlay?: boolean; // 是否自动播放 TTS 音频（默认 false，手动播放模式）
 }

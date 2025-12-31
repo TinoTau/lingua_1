@@ -5,6 +5,7 @@
 // - 未来 cluster：可把这个缓存实现替换为 Redis/独立聚合器，无需动调度主路径
 
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::RwLock;
@@ -212,8 +213,6 @@ impl ServiceCatalogCache {
     }
 
     async fn fetch_services_from_hub(&self) -> Result<Vec<ServiceInfo>, String> {
-        use serde_json::Value;
-
         // 允许通过环境变量覆盖（保持向后兼容）
         let hub_url = std::env::var("MODEL_HUB_URL").unwrap_or_else(|_| self.hub_base_url.clone());
         let api_url = format!("{}/api/services", hub_url.trim_end_matches('/'));
@@ -292,8 +291,6 @@ impl ServiceCatalogCache {
     }
 
     async fn fetch_services_from_local_index(&self, path: &PathBuf) -> Result<Vec<ServiceInfo>, String> {
-        use serde_json::Value;
-
         let content = tokio::fs::read_to_string(path)
             .await
             .map_err(|e| format!("读取本地 services_index.json 失败 ({}): {}", path.display(), e))?;

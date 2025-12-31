@@ -1,3 +1,4 @@
+use base64::{engine::general_purpose, Engine as _};
 use crate::core::AppState;
 use crate::messages::{ErrorCode, UiEventStatus, UiEventType};
 use crate::websocket::{create_job_assign_message, send_ui_event};
@@ -31,7 +32,6 @@ pub(super) async fn handle_utterance(
     let trace_id = utterance_trace_id.unwrap_or_else(|| session.trace_id.clone());
 
     // 解码音频
-    use base64::{engine::general_purpose, Engine as _};
     let audio_data = general_purpose::STANDARD
         .decode(&audio)
         .map_err(|e| anyhow::anyhow!("Audio decode failed: {}", e))?;

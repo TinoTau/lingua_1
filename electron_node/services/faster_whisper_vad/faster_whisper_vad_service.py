@@ -10,10 +10,10 @@ import signal
 import sys
 import traceback
 import os
+import uvicorn
 
 # Configure logging (必须在导入模块之前，因为导入时可能使用logger)
 # 确保 logs 目录存在
-import os
 log_dir = 'logs'
 if not os.path.exists(log_dir):
     os.makedirs(log_dir, exist_ok=True)
@@ -127,6 +127,5 @@ async def process_utterance_route(req: UtteranceRequest):
 # Main
 # ---------------------
 if __name__ == "__main__":
-    import uvicorn
     logger.info(f"Starting Faster Whisper + Silero VAD service on port {PORT}...")
     uvicorn.run(app, host="0.0.0.0", port=PORT)

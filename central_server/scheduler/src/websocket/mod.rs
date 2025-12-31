@@ -11,6 +11,7 @@ pub use session_handler::handle_session;
 pub use node_handler::handle_node;
 
 // 公共辅助函数
+use base64::{Engine as _, engine::general_purpose};
 use crate::messages::{SessionMessage, NodeMessage, ErrorCode};
 use axum::extract::ws::Message;
 use tokio::sync::mpsc;
@@ -53,7 +54,6 @@ pub(crate) async fn create_job_assign_message(
     part_index: Option<u64>,
     context_text: Option<String>,
 ) -> Option<NodeMessage> {
-    use base64::{Engine as _, engine::general_purpose};
     let audio_base64 = general_purpose::STANDARD.encode(&job.audio_data);
     
     // 记录发送给节点端的 audio_format（用于调试）

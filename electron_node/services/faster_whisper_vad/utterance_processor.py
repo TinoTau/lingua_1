@@ -8,6 +8,7 @@ import time
 import asyncio
 from typing import Optional, List, Tuple, Dict, Any
 from fastapi import HTTPException
+from scipy import signal
 
 from config import (
     MAX_AUDIO_DURATION_SEC,
@@ -79,7 +80,6 @@ def decode_and_preprocess_audio(
     # 重采样到指定采样率（默认 16kHz）
     if sr != sample_rate:
         logger.warning(f"[{trace_id}] Audio sample rate is {sr}Hz, expected {sample_rate}Hz. Resampling...")
-        from scipy import signal
         num_samples = int(len(audio) * sample_rate / sr)
         audio = signal.resample(audio, num_samples).astype(np.float32)
         sr = sample_rate
