@@ -119,6 +119,10 @@ PORT = int(os.getenv("FASTER_WHISPER_VAD_PORT", "6007"))
 MAX_AUDIO_DURATION_SEC = float(os.getenv("MAX_AUDIO_DURATION_SEC", "30.0"))
 MAX_AUDIO_SAMPLES = int(MAX_AUDIO_DURATION_SEC * 16000)  # 16kHz sample rate
 
+# ASR Worker timeout configuration
+# Maximum wait time for ASR task completion (seconds)
+MAX_WAIT_SECONDS = float(os.getenv("MAX_WAIT_SECONDS", "30.0"))
+
 # ---------------------
 # Context Buffer Configuration
 # ---------------------

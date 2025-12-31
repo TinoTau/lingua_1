@@ -716,6 +716,16 @@ class NodeAgent {
                 }
                 case 'job_assign': {
                     const job = message;
+                    // 诊断：记录接收到的 audio_format（用于调试为什么会出现空值）
+                    logger_1.default.info({
+                        jobId: job.job_id,
+                        traceId: job.trace_id,
+                        audioFormat: job.audio_format,
+                        audioFormatType: typeof job.audio_format,
+                        audioFormatLength: job.audio_format?.length,
+                        hasAudioFormat: 'audio_format' in job,
+                        messageKeys: Object.keys(job),
+                    }, 'Received job_assign message, checking audio_format field');
                     await this.handleJob(job);
                     break;
                 }

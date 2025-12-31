@@ -729,9 +729,10 @@ export class App {
                 // 即使音频被丢弃，也显示文本并标记[播放失败]或[内存限制]
                 if (message.text_asr || message.text_translated) {
                   // 检查是否是内存限制导致的丢弃
+                  // 注意：discardReason 在 catch 块中定义，这里无法访问，所以设为 undefined
                   const isMemoryLimitError = false; // 这里需要从错误信息中判断
                   const warningPrefix = isMemoryLimitError ? '[内存限制]' : '[播放失败]';
-                  const warningSuffix = isMemoryLimitError && discardReason ? ` (${discardReason})` : '';
+                  const warningSuffix = ''; // discardReason 在 catch 块中定义，这里无法访问
                   
                   const failedOriginalText = message.text_asr ? `${warningPrefix} ${message.text_asr}${warningSuffix}` : '';
                   const failedTranslatedText = message.text_translated ? `${warningPrefix} ${message.text_translated}${warningSuffix}` : '';
@@ -807,9 +808,7 @@ export class App {
                 tts_format: ttsFormat,
                 error: error,
                 error_message: error?.message,
-                error_stack: error?.stack,
-                base64_length: message.tts_audio.length,
-                tts_format: message.tts_format
+                error_stack: error?.stack
               });
               
               // 检查是否是内存限制导致的丢弃

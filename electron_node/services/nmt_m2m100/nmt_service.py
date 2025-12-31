@@ -704,13 +704,70 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
                             print(f"[NMT Service] Text after SEP_MARKER (first 100 chars): '{out[sentinel_pos:sentinel_pos+100]}'")
                             break
                 
+                # 第三步：如果仍然未找到，检查是否SEP_MARKER被截断了
+                # 注意：不应该硬编码删除特定字符（如"R"），因为分隔符可能随时调整
+                # 单独出现一个字符更有可能是index计算错误，截取文本的错误
+                if sentinel_pos == -1:
+                    # 检查截断的SEP_MARKER模式（基于配置的分隔符）
+                    # 尝试查找分隔符的部分片段
+                    truncated_patterns = []
+                    # 从配置的分隔符中提取可能的截断模式
+                    for sep_variant in SEPARATOR_TRANSLATIONS:
+                        # 检查分隔符的各个部分
+                        if '⟫⟫' in sep_variant:
+                            truncated_patterns.append('⟫⟫')
+                            truncated_patterns.append('⟫')
+                        if 'MARKER' in sep_variant:
+                            truncated_patterns.append('_MARKER')
+                            truncated_patterns.append(' MARKER')
+                            truncated_patterns.append('MARKER')
+                    
+                    for pattern in truncated_patterns:
+                        pos = out.find(pattern)
+                        if pos != -1:
+                            # 如果找到截断的模式，尝试从模式之后提取文本
+                            # 但需要检查模式之前是否有上下文翻译的痕迹
+                            sentinel_pos = pos + len(pattern)
+                            found_sentinel = pattern
+                            print(f"[NMT Service] WARNING: Found truncated SEP_MARKER pattern '{pattern}' at position {pos}, extracted text will start at position {sentinel_pos}")
+                            print(f"[NMT Service] Text before truncated pattern: '{out[:pos][-50:]}'")
+                            print(f"[NMT Service] Text after truncated pattern (first 100 chars): '{out[sentinel_pos:sentinel_pos+100]}'")
+                            # 验证提取位置是否正确：检查提取的文本是否合理
+                            extracted_preview = out[sentinel_pos:sentinel_pos+20].strip()
+                            if len(extracted_preview) > 0:
+                                print(f"[NMT Service] Extracted text preview: '{extracted_preview}'")
+                            break
+                
                 if sentinel_pos != -1:
                     # 找到哨兵序列，提取之后的部分（当前句翻译）
                     # 关键：确保提取位置跳过整个哨兵序列，不包含哨兵序列的任何部分
-                    raw_extracted = out[sentinel_pos:].strip()
-                    
-                    # 清理：移除提取内容中可能残留的哨兵序列
-                    final_output = raw_extracted
+                    # 验证 sentinel_pos 是否在有效范围内
+                    if sentinel_pos < 0 or sentinel_pos >= len(out):
+                        print(f"[NMT Service] ERROR: Invalid sentinel_pos={sentinel_pos}, output length={len(out)}, using fallback")
+                        sentinel_pos = -1
+                    else:
+                        raw_extracted = out[sentinel_pos:].strip()
+                        # 验证提取的文本是否合理：不应该以分隔符的字符开头
+                        if raw_extracted:
+                            first_char = raw_extracted[0]
+                            # 检查第一个字符是否是分隔符的一部分（可能是index计算错误）
+                            for sep_variant in SEPARATOR_TRANSLATIONS:
+                                if first_char in sep_variant and len(raw_extracted) > 1:
+                                    # 如果第一个字符是分隔符的一部分，且后面是空格，可能是index计算错误
+                                    if raw_extracted[1:2] == ' ':
+                                        print(f"[NMT Service] WARNING: Extracted text starts with separator character '{first_char}', "
+                                              f"this may indicate index calculation error. sentinel_pos={sentinel_pos}, "
+                                              f"separator='{sep_variant}', extracted='{raw_extracted[:50]}'")
+                                        # 尝试修正：跳过这个字符
+                                        corrected_pos = sentinel_pos + 1
+                                        if corrected_pos < len(out):
+                                            raw_extracted = out[corrected_pos:].strip()
+                                            print(f"[NMT Service] Corrected extraction: '{raw_extracted[:50]}'")
+                                            sentinel_pos = corrected_pos
+                                        break
+                        
+                        # 清理：移除提取内容中可能残留的哨兵序列
+                        final_output = raw_extracted
                     # 清理完整哨兵序列（带Unicode括号）
                     for sep_variant in SEPARATOR_TRANSLATIONS:
                         if final_output.startswith(sep_variant):
@@ -1007,6 +1064,26 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
                     print(f"[NMT Service] WARNING: Translation contains quotes and is likely noise, filtering. "
                           f"original_text='{final_output}', text_without_quotes='{text_without_quotes}', length={len(final_output)}")
                     final_output = ""
+        
+        # 后处理：验证提取的文本是否正确
+        # 如果提取的文本以单个字符开头（且后面是空格），可能是index计算错误
+        # 记录警告信息，但不硬编码删除，因为分隔符可能随时调整
+        if final_output and len(final_output) > 1:
+            first_char = final_output[0]
+            next_char = final_output[1:2] if len(final_output) > 1 else ""
+            # 如果第一个字符是单个字符，且后面是空格，可能是index计算错误
+            if len(first_char) == 1 and next_char == ' ':
+                print(f"[NMT Service] WARNING: Extracted text starts with single character '{first_char}' followed by space, "
+                      f"this may indicate an index calculation error in text extraction. "
+                      f"Full output: '{out[:200]}{'...' if len(out) > 200 else ''}', "
+                      f"Extracted: '{final_output[:100]}{'...' if len(final_output) > 100 else ''}'")
+                # 检查是否可能是分隔符的一部分
+                for sep_variant in SEPARATOR_TRANSLATIONS:
+                    if first_char in sep_variant:
+                        print(f"[NMT Service] WARNING: Character '{first_char}' is part of separator '{sep_variant}', "
+                              f"this suggests the extraction index may be off by 1. "
+                              f"Consider checking sentinel_pos calculation.")
+                        break
         
         print(f"[NMT Service] Final output: '{final_output[:200]}{'...' if len(final_output) > 200 else ''}' (length={len(final_output)})")
         print(f"[NMT Service] ===== Translation Request Completed in {total_elapsed:.2f}ms =====")

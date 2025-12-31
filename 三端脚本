@@ -54,7 +54,7 @@ npm run build:main
 
 
 0.
-0.调度服务器和节点端的代码文件拆分
+0.节点端的代码文件拆分
 1.ASR能力提升，专业词汇语境识别？
 2.embedding实装
 3.yourtts实装
@@ -66,3 +66,5 @@ npm run build:main
 5.模型训练
 
 请将D:\Programs\github\lingua_1\electron_node的docs文档进行整理，根据实际代码补充新增功能，移除过期内容，并能合并的就合并，文档大小最好不要超过500行。测试报告之类的文件全都移除
+
+现在请对D:\Programs\github\lingua_1\electron_node\services\faster_whisper_vad的代码文件进行整理，拆分超过500行的大文件，合并重复的逻辑，只对代码进行迁移，不要改变任何接口，参数和返回结果，也不要改动任何代码逻辑。异步方法之间如果有必要的话采用状态机进行管理

@@ -695,9 +695,18 @@ export class TaskRouter {
       {
         // faster-whisper-vad 使用 /utterance 接口
         // 注意：需要提供所有必需字段，包括 task、beam_size 等
-        // 使用调度服务器发送的 audio_format（默认值 pcm16）
-        const audioFormat = task.audio_format || 'pcm16';
+        // 使用调度服务器发送的 audio_format
+        // 注意：web 端现在使用 opus 编码，调度服务器应该传递 "opus" 格式
+        // 如果 task.audio_format 为空，说明调度服务器没有正确传递，应该使用 "opus" 而不是 "pcm16"
+        const audioFormat = task.audio_format || 'opus';
         const requestUrl = `${endpoint.baseUrl}/utterance`;
+        if (!task.audio_format) {
+          logger.warn({
+            serviceId: endpoint.serviceId,
+            jobId: task.job_id,
+            message: 'task.audio_format is missing, defaulting to opus (web client uses opus format)',
+          }, 'Missing audio_format in task, using opus as default');
+        }
         logger.info({
           serviceId: endpoint.serviceId,
           baseUrl: endpoint.baseUrl,
