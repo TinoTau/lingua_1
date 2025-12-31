@@ -42,6 +42,12 @@ class PostProcessCoordinator {
         }, 'PostProcessCoordinator initialized');
     }
     /**
+     * 获取 DedupStage 实例（用于在成功发送后记录job_id）
+     */
+    getDedupStage() {
+        return this.dedupStage;
+    }
+    /**
      * 处理 JobResult（后处理入口）
      */
     async process(job, result) {
@@ -166,13 +172,27 @@ class PostProcessCoordinator {
                 originalAsrTextLength: result.text_asr?.length || 0,
                 originalAsrTextPreview: result.text_asr?.substring(0, 50),
             }, 'PostProcessCoordinator: Passing aggregated text to TranslationStage');
+            const translationStartTime = Date.now();
             translationResult = await this.translationStage.process(job, aggregationResult.aggregatedText, result.quality_score, aggregationResult.metrics?.dedupCharsRemoved || 0);
+            const translationDuration = Date.now() - translationStartTime;
+            if (translationDuration > 30000) {
+                logger_1.default.warn({
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                    utteranceIndex: job.utterance_index,
+                    translationDurationMs: translationDuration,
+                    nmtRepairApplied: translationResult.nmtRepairApplied,
+                    note: 'Translation stage took longer than 30 seconds - may be blocked by NMT Repair or homophone repair',
+                }, 'PostProcessCoordinator: Translation stage took too long');
+            }
             logger_1.default.debug({
                 jobId: job.job_id,
                 utteranceIndex: job.utterance_index,
                 translatedTextLength: translationResult.translatedText.length,
                 translatedTextPreview: translationResult.translatedText.substring(0, 100),
                 fromCache: translationResult.fromCache,
+                translationDurationMs: translationDuration,
+                nmtRepairApplied: translationResult.nmtRepairApplied,
             }, 'PostProcessCoordinator: Translation completed');
         }
         else if (result.text_translated) {
@@ -193,7 +213,18 @@ class PostProcessCoordinator {
         // 如果去重检查失败，说明这是重复的文本，不应该生成 TTS 音频
         if (dedupResult.shouldSend && translationResult.translatedText && translationResult.translatedText.trim().length > 0 && this.ttsStage) {
             try {
+                const ttsStartTime = Date.now();
                 ttsResult = await this.ttsStage.process(job, translationResult.translatedText);
+                const ttsDuration = Date.now() - ttsStartTime;
+                if (ttsDuration > 30000) {
+                    logger_1.default.warn({
+                        jobId: job.job_id,
+                        sessionId: job.session_id,
+                        utteranceIndex: job.utterance_index,
+                        ttsDurationMs: ttsDuration,
+                        note: 'TTS generation took longer than 30 seconds - GPU may be overloaded',
+                    }, 'PostProcessCoordinator: TTS generation took too long');
+                }
                 // TTSStage 返回 WAV 格式，Opus 编码由 NodeAgent 统一处理
             }
             catch (ttsError) {

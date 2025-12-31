@@ -179,6 +179,16 @@ export class TranslationStage {
 
     // 如果只有一个原文候选且启用了 NMT Repair，使用 NMT 候选生成
     if (sourceCandidates.length === 1 && shouldRepair) {
+      const nmtRepairStartTime = Date.now();
+      logger.info({
+        jobId: job.job_id,
+        sessionId: job.session_id,
+        textLength: aggregatedText.length,
+        numCandidates: this.config.nmtRepairNumCandidates || 5,
+        qualityScore,
+        note: 'NMT Repair triggered - this may take longer due to multiple candidates',
+      }, 'TranslationStage: Starting NMT Repair (may block if GPU is overloaded)');
+      
       const nmtTask: NMTTask = {
         text: aggregatedText,
         src_lang: job.src_lang,
@@ -186,9 +196,22 @@ export class TranslationStage {
         context_text: contextText, // 使用上一个utterance的原文（中文），用于NMT纠错
         job_id: job.job_id,
         num_candidates: this.config.nmtRepairNumCandidates || 5,
-      };
+      } as any; // 添加session_id和utterance_index用于日志
+      (nmtTask as any).session_id = job.session_id;
+      (nmtTask as any).utterance_index = job.utterance_index;
 
       const nmtResult = await this.taskRouter.routeNMTTask(nmtTask);
+      
+      const nmtRepairDuration = Date.now() - nmtRepairStartTime;
+      if (nmtRepairDuration > 30000) {
+        logger.warn({
+          jobId: job.job_id,
+          sessionId: job.session_id,
+          nmtRepairDurationMs: nmtRepairDuration,
+          numCandidates: this.config.nmtRepairNumCandidates || 5,
+          note: 'NMT Repair took longer than 30 seconds - GPU may be overloaded',
+        }, 'TranslationStage: NMT Repair took too long');
+      }
 
       // 构建候选列表
       const candidates = [
@@ -233,11 +256,28 @@ export class TranslationStage {
       }
     } else if (sourceCandidates.length > 1) {
       // 有多个原文候选（同音字修复），对每个候选进行 NMT 翻译并打分
+      const homophoneRepairStartTime = Date.now();
+      logger.info({
+        jobId: job.job_id,
+        sessionId: job.session_id,
+        numSourceCandidates: sourceCandidates.length,
+        note: 'Homophone repair triggered - multiple NMT calls may take longer if GPU is overloaded',
+      }, 'TranslationStage: Starting homophone repair (may block if GPU is overloaded)');
+      
       const MAX_CONCURRENT_CANDIDATES = 2;
       const translatedCandidates: Array<{ candidate: string; translation: string }> = [];
 
       for (let i = 0; i < sourceCandidates.length; i += MAX_CONCURRENT_CANDIDATES) {
         const chunk = sourceCandidates.slice(i, i + MAX_CONCURRENT_CANDIDATES);
+        const chunkStartTime = Date.now();
+        logger.debug({
+          jobId: job.job_id,
+          sessionId: job.session_id,
+          chunkIndex: i,
+          chunkSize: chunk.length,
+          totalCandidates: sourceCandidates.length,
+        }, 'TranslationStage: Processing homophone repair chunk');
+        
         const translationPromises = chunk.map(async (sourceCandidate) => {
           const nmtTask: NMTTask = {
             text: sourceCandidate,
@@ -245,7 +285,9 @@ export class TranslationStage {
             tgt_lang: job.tgt_lang,
             context_text: contextText, // 使用上一个utterance的原文（中文），用于NMT纠错
             job_id: job.job_id,
-          };
+          } as any; // 添加session_id和utterance_index用于日志
+          (nmtTask as any).session_id = job.session_id;
+          (nmtTask as any).utterance_index = job.utterance_index;
 
           const nmtResult = await this.taskRouter!.routeNMTTask(nmtTask);
           return {
@@ -256,7 +298,27 @@ export class TranslationStage {
 
         const chunkResults = await Promise.all(translationPromises);
         translatedCandidates.push(...chunkResults);
+        
+        const chunkDuration = Date.now() - chunkStartTime;
+        if (chunkDuration > 30000) {
+          logger.warn({
+            jobId: job.job_id,
+            sessionId: job.session_id,
+            chunkDurationMs: chunkDuration,
+            chunkSize: chunk.length,
+            note: 'Homophone repair chunk took longer than 30 seconds - GPU may be overloaded',
+          }, 'TranslationStage: Homophone repair chunk took too long');
+        }
       }
+      
+      const homophoneRepairDuration = Date.now() - homophoneRepairStartTime;
+      logger.info({
+        jobId: job.job_id,
+        sessionId: job.session_id,
+        homophoneRepairDurationMs: homophoneRepairDuration,
+        numCandidates: sourceCandidates.length,
+        numTranslated: translatedCandidates.length,
+      }, 'TranslationStage: Homophone repair completed');
 
       // 获取上一个翻译作为上下文（用于打分）
       const previousTranslation = this.aggregatorManager ? (this.aggregatorManager.getLastTranslatedText(job.session_id) || undefined) : undefined;
@@ -298,7 +360,9 @@ export class TranslationStage {
         tgt_lang: job.tgt_lang,
         context_text: contextText, // 使用上一个utterance的原文（中文），用于NMT纠错
         job_id: job.job_id,
-      };
+      } as any; // 添加session_id和utterance_index用于日志
+      (nmtTask as any).session_id = job.session_id;
+      (nmtTask as any).utterance_index = job.utterance_index;
 
       // 记录实际发送给NMT的文本
       logger.info(

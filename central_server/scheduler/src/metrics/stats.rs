@@ -277,6 +277,7 @@ impl DashboardStats {
     /// - CPU算力 = (50% - 当前CPU使用率) * CPU核心数 / 100
     /// - GPU算力 = (75% - 当前GPU使用率) * GPU数量 * GPU显存(GB) / 100
     /// - 内存算力 = (75% - 当前内存使用率) * 内存大小(GB) / 100
+    /// 注意：这些阈值用于算力计算，与节点选择的资源阈值（85%）不同
     fn calculate_compute_power(nodes: &tokio::sync::RwLockReadGuard<'_, std::collections::HashMap<String, crate::node_registry::Node>>) -> ComputePowerStats {
         const CPU_THRESHOLD: f32 = 50.0;
         const GPU_THRESHOLD: f32 = 75.0;

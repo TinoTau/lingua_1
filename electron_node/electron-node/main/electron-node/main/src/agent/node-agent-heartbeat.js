@@ -100,6 +100,18 @@ class HeartbeatHandler {
         const installedModels = await this.inferenceService.getInstalledModels();
         const installedServicesAll = await this.getInstalledServices();
         const capabilityByType = await this.getCapabilityByType(installedServicesAll);
+        // 记录资源使用情况，特别是GPU使用率
+        const gpuUsage = resources.gpu ?? 0.0;
+        if (gpuUsage > 85.0) {
+            logger_1.default.warn({
+                nodeId: this.nodeId,
+                gpuUsage,
+                cpuUsage: resources.cpu,
+                memoryUsage: resources.memory,
+                gpuMemUsage: resources.gpuMem,
+                note: 'GPU usage exceeds 85% threshold',
+            }, 'High GPU usage detected in heartbeat');
+        }
         logger_1.default.info({
             nodeId: this.nodeId,
             installedModelsCount: installedModels.length,
@@ -107,6 +119,12 @@ class HeartbeatHandler {
             capabilityByTypeCount: capabilityByType.length,
             capabilityByType,
             installedServices: installedServicesAll.map(s => `${s.service_id}:${s.type}:${s.status}`),
+            resourceUsage: {
+                cpu: resources.cpu,
+                gpu: gpuUsage,
+                gpuMem: resources.gpuMem,
+                memory: resources.memory,
+            },
         }, 'Sending heartbeat with type-level capability');
         // 对齐协议规范：node_heartbeat 消息格式
         // 注意：gpu_percent 必须提供（不能为 undefined），因为调度服务器的健康检查要求所有节点都必须有 GPU
@@ -189,15 +207,16 @@ class HeartbeatHandler {
      */
     async getSystemResources() {
         try {
-            const [cpu, mem] = await Promise.all([
+            const { getGpuUsage } = await Promise.resolve().then(() => __importStar(require('../system-resources')));
+            const [cpu, mem, gpuInfo] = await Promise.all([
                 si.currentLoad(),
                 si.mem(),
+                getGpuUsage(), // 获取 GPU 使用率
             ]);
-            // TODO: 获取 GPU 使用率（需要额外库，如 nvidia-ml-py）
             return {
                 cpu: cpu.currentLoad || 0,
-                gpu: null,
-                gpuMem: null,
+                gpu: gpuInfo?.usage ?? null,
+                gpuMem: gpuInfo?.memory ?? null,
                 memory: (mem.used / mem.total) * 100,
             };
         }

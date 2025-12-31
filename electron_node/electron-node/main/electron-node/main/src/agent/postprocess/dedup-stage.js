@@ -51,9 +51,8 @@ class DedupStage {
                 reason: 'duplicate_job_id',
             };
         }
-        // 记录已发送的 job_id
-        sessionJobIds.add(job.job_id);
-        this.lastSentJobIds.set(job.session_id, sessionJobIds);
+        // 注意：不再在这里记录job_id，而是在ResultSender成功发送后才记录
+        // 这样可以避免发送失败后重试时被误判为重复
         // 更新最后访问时间
         this.lastAccessTime.set(job.session_id, now);
         logger_1.default.debug({
@@ -61,8 +60,26 @@ class DedupStage {
             sessionId: job.session_id,
             aggregatedTextLength: aggregatedText?.length || 0,
             translatedTextLength: translatedText?.length || 0,
-        }, 'DedupStage: Job_id recorded, will be deduplicated for 30 seconds');
+        }, 'DedupStage: Job_id check passed, will be recorded after successful send');
         return { shouldSend: true };
+    }
+    /**
+     * 标记job_id为已发送（在成功发送后调用）
+     * 修复：不再在process()中记录，而是在成功发送后才记录
+     */
+    markJobIdAsSent(sessionId, jobId) {
+        if (!sessionId || !jobId) {
+            return;
+        }
+        const sessionJobIds = this.lastSentJobIds.get(sessionId) || new Set();
+        sessionJobIds.add(jobId);
+        this.lastSentJobIds.set(sessionId, sessionJobIds);
+        // 更新最后访问时间
+        this.lastAccessTime.set(sessionId, Date.now());
+        logger_1.default.debug({
+            jobId,
+            sessionId,
+        }, 'DedupStage: Job_id marked as sent, will be deduplicated for 30 seconds');
     }
     /**
      * 清理 session

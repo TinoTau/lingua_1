@@ -16,6 +16,7 @@ const dedup_1 = require("./dedup");
 const tail_carry_1 = require("./tail-carry");
 const logger_1 = __importDefault(require("../logger"));
 const aggregator_state_utils_1 = require("./aggregator-state-utils");
+const aggregator_state_context_1 = require("./aggregator-state-context");
 class AggregatorState {
     constructor(sessionId, mode = 'offline', tuning, dedupConfig, tailCarryConfig) {
         // 状态
@@ -32,15 +33,6 @@ class AggregatorState {
         this.lastUtteranceEndTimeMs = 0;
         this.accumulatedAudioDurationMs = 0; // 累积的音频时长（毫秒）
         this.mergeGroupStartTimeMs = 0; // 当前合并组的开始时间（用于计算累积时长）
-        // 新增：存储上一个 utterance 的翻译文本（带1分钟过期）
-        this.lastTranslatedText = null;
-        this.lastTranslatedTextTimestamp = 0;
-        this.CONTEXT_TTL_MS = 60 * 1000; // 1 分钟过期
-        // S1/S2: 上下文和关键词存储
-        this.recentCommittedText = []; // 最近提交的文本（用于S1 prompt和S2 context）
-        this.recentKeywords = []; // 最近关键词（用户配置 + 上下文抽取）
-        this.lastCommitQuality = undefined; // 上一次提交的质量分数
-        this.MAX_RECENT_COMMITS = 5; // 最多保存5条最近提交
         // 指标
         this.metrics = {
             commitCount: 0,
@@ -60,6 +52,7 @@ class AggregatorState {
         this.tailCarryConfig = tailCarryConfig || tail_carry_1.DEFAULT_TAIL_CARRY_CONFIG;
         this.sessionStartTimeMs = Date.now();
         this.lastCommitTsMs = Date.now();
+        this.contextManager = new aggregator_state_context_1.AggregatorStateContextManager();
     }
     /**
      * 处理新的 utterance
@@ -348,8 +341,8 @@ class AggregatorState {
             this.lastCommitTsMs = nowMs;
             this.metrics.commitCount++;
             // S1/S2: 更新最近提交的文本
-            this.updateRecentCommittedText(commitText);
-            this.lastCommitQuality = qualityScore;
+            this.contextManager.updateRecentCommittedText(commitText);
+            this.contextManager.setLastCommitQuality(qualityScore);
             // 提交后，清空合并组相关标志和累积时长
             if (this.mergeGroupStartUtterance) {
                 logger_1.default.info(// 改为 info 级别，确保输出
@@ -380,8 +373,8 @@ class AggregatorState {
             this.lastCommitTsMs = nowMs;
             this.metrics.commitCount++;
             // S1/S2: 更新最近提交的文本
-            this.updateRecentCommittedText(commitText);
-            this.lastCommitQuality = qualityScore;
+            this.contextManager.updateRecentCommittedText(commitText);
+            this.contextManager.setLastCommitQuality(qualityScore);
             // 标记为应该提交
             shouldCommitNow = true;
             // 提交后，清空合并组相关标志和累积时长
@@ -488,85 +481,55 @@ class AggregatorState {
             commitLatencyMs: 0,
         };
         // 清理翻译文本和上下文缓存
-        this.lastTranslatedText = null;
-        this.lastTranslatedTextTimestamp = 0;
-        // S1/S2: 清理上下文和关键词
-        this.recentCommittedText = [];
-        this.recentKeywords = [];
-        this.lastCommitQuality = undefined;
+        this.contextManager.clearContext();
     }
     /**
      * 获取上一个 utterance 的翻译文本（检查是否过期）
      */
     getLastTranslatedText() {
-        const now = Date.now();
-        // 如果超过1分钟，返回 null
-        if (this.lastTranslatedText && (now - this.lastTranslatedTextTimestamp) <= this.CONTEXT_TTL_MS) {
-            return this.lastTranslatedText;
-        }
-        // 过期或不存在，返回 null
-        this.lastTranslatedText = null;
-        this.lastTranslatedTextTimestamp = 0;
-        return null;
+        return this.contextManager.getLastTranslatedText();
     }
     /**
      * 设置上一个 utterance 的翻译文本
      */
     setLastTranslatedText(translatedText) {
-        this.lastTranslatedText = translatedText;
-        this.lastTranslatedTextTimestamp = Date.now();
+        this.contextManager.setLastTranslatedText(translatedText);
     }
     /**
      * 清理翻译文本（NEW_STREAM 时可选调用）
      */
     clearLastTranslatedText() {
-        this.lastTranslatedText = null;
-        this.lastTranslatedTextTimestamp = 0;
-    }
-    /**
-     * S1/S2: 更新最近提交的文本
-     */
-    updateRecentCommittedText(text) {
-        if (!text || !text.trim())
-            return;
-        this.recentCommittedText.push(text.trim());
-        // 保持最多MAX_RECENT_COMMITS条
-        if (this.recentCommittedText.length > this.MAX_RECENT_COMMITS) {
-            this.recentCommittedText.shift();
-        }
+        this.contextManager.clearLastTranslatedText();
     }
     /**
      * S1/S2: 获取最近提交的文本
      */
     getRecentCommittedText() {
-        return [...this.recentCommittedText];
+        return this.contextManager.getRecentCommittedText();
     }
     /**
      * S1/S2: 获取最近关键词
      */
     getRecentKeywords() {
-        return [...this.recentKeywords];
+        return this.contextManager.getRecentKeywords();
     }
     /**
      * S1/S2: 设置用户关键词
      */
     setUserKeywords(keywords) {
-        this.recentKeywords = [...keywords];
+        this.contextManager.setUserKeywords(keywords);
     }
     /**
      * S1/S2: 更新关键词（从最近文本中提取）
      */
     updateKeywordsFromRecent() {
-        // 从最近提交的文本中提取关键词
-        const extractedKeywords = aggregator_state_utils_1.AggregatorStateUtils.extractKeywordsFromRecent(this.recentCommittedText);
-        // 合并到现有关键词（保留用户配置的）
-        this.recentKeywords = aggregator_state_utils_1.AggregatorStateUtils.mergeKeywords(this.recentKeywords, extractedKeywords);
+        this.contextManager.updateKeywordsFromRecent();
     }
     /**
      * S1/S2: 获取上一次提交的质量分数
      */
     getLastCommitQuality() {
-        return this.lastCommitQuality;
+        return this.contextManager.getLastCommitQuality();
     }
 }
 exports.AggregatorState = AggregatorState;

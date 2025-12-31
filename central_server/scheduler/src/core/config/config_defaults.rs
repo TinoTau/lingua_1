@@ -387,7 +387,7 @@ impl Default for NodeHealthConfig {
 
 // Load Balancer 默认值函数
 pub fn default_resource_threshold() -> f32 {
-    75.0 // 默认 75%（CPU、GPU、内存使用率超过此值将被跳过）
+    85.0 // 默认 85%（CPU、GPU、内存使用率超过此值将被跳过）
 }
 
 pub fn default_load_balancer_strategy() -> String {

@@ -133,7 +133,8 @@ class PipelineOrchestrator {
                 padding_ms: job.padding_ms,
                 // P0.5-SH-4: 传递重跑次数（从 job 中提取，如果调度服务器传递了该参数）
                 rerun_count: job.rerun_count || 0,
-            };
+            }; // 添加session_id用于日志
+            asrTask.session_id = job.session_id;
             let asrResult;
             if (job.enable_streaming_asr && partialCallback) {
                 // 流式 ASR 处理

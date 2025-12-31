@@ -12,24 +12,19 @@ const axios_1 = __importDefault(require("axios"));
 const logger_1 = __importDefault(require("../logger"));
 const messages_1 = require("../../../../shared/protocols/messages");
 const bad_segment_detector_1 = require("./bad-segment-detector");
-const rerun_trigger_1 = require("./rerun-trigger");
+const task_router_asr_audio_quality_1 = require("./task-router-asr-audio-quality");
+const task_router_asr_rerun_1 = require("./task-router-asr-rerun");
+const task_router_asr_metrics_1 = require("./task-router-asr-metrics");
 class TaskRouterASRHandler {
     constructor(selectServiceEndpoint, startGpuTrackingForService, serviceConnections, updateServiceConnections) {
         this.selectServiceEndpoint = selectServiceEndpoint;
         this.startGpuTrackingForService = startGpuTrackingForService;
         this.serviceConnections = serviceConnections;
         this.updateServiceConnections = updateServiceConnections;
-        this.consecutiveLowQualityCount = new Map();
-        this.currentCycleServiceEfficiencies = new Map();
         this.jobAbortControllers = new Map();
-        this.rerunMetrics = {
-            totalReruns: 0,
-            successfulReruns: 0,
-            failedReruns: 0,
-            timeoutReruns: 0,
-            qualityImprovements: 0,
-        };
         this.loadASRConfig();
+        this.rerunHandler = new task_router_asr_rerun_1.ASRRerunHandler();
+        this.metricsHandler = new task_router_asr_metrics_1.ASRMetricsHandler();
     }
     /**
      * 加载 ASR 配置
@@ -120,43 +115,7 @@ class TaskRouterASRHandler {
                 jobId: task.job_id,
             }, 'Routing ASR task to faster-whisper-vad');
             // 检查音频输入质量（用于调试 Job2 问题）
-            let audioDataLength = 0;
-            let audioDataPreview = '';
-            try {
-                if (task.audio) {
-                    const audioBuffer = Buffer.from(task.audio, 'base64');
-                    audioDataLength = audioBuffer.length;
-                    const estimatedDurationMs = Math.round((audioDataLength / 2) / 16);
-                    const samples = new Int16Array(audioBuffer.buffer, audioBuffer.byteOffset, audioBuffer.length / 2);
-                    let sumSquares = 0;
-                    for (let i = 0; i < samples.length; i++) {
-                        sumSquares += samples[i] * samples[i];
-                    }
-                    const rms = Math.sqrt(sumSquares / samples.length);
-                    const rmsNormalized = rms / 32768.0;
-                    audioDataPreview = `length=${audioDataLength}, duration=${estimatedDurationMs}ms, rms=${rmsNormalized.toFixed(4)}`;
-                    logger_1.default.info({
-                        serviceId: endpoint.serviceId,
-                        jobId: task.job_id,
-                        utteranceIndex: task.utterance_index,
-                        audioDataLength,
-                        estimatedDurationMs,
-                        rms: rmsNormalized.toFixed(4),
-                        audioFormat,
-                        sampleRate: task.sample_rate || 16000,
-                        contextTextLength: task.context_text?.length || 0,
-                        contextTextPreview: task.context_text ? task.context_text.substring(0, 200) : null,
-                    }, 'ASR task: Audio input quality check');
-                }
-            }
-            catch (error) {
-                logger_1.default.warn({
-                    serviceId: endpoint.serviceId,
-                    jobId: task.job_id,
-                    utteranceIndex: task.utterance_index,
-                    error: error.message,
-                }, 'ASR task: Failed to analyze audio input quality');
-            }
+            (0, task_router_asr_audio_quality_1.checkAudioQuality)(task, endpoint.serviceId);
             const requestBody = {
                 job_id: task.job_id || `asr_${Date.now()}`,
                 src_lang: task.src_lang,
@@ -177,18 +136,55 @@ class TaskRouterASRHandler {
                 padding_ms: task.padding_ms,
             };
             let response;
+            const requestStartTime = Date.now();
             try {
+                // 详细记录ASR输入
+                logger_1.default.info({
+                    serviceId: endpoint.serviceId,
+                    requestUrl,
+                    jobId: task.job_id,
+                    sessionId: task.session_id,
+                    utteranceIndex: task.utterance_index,
+                    audioLength: task.audio?.length || 0,
+                    audioFormat: audioFormat,
+                    srcLang: task.src_lang,
+                    sampleRate: task.sample_rate || 16000,
+                    contextText: task.context_text,
+                    contextTextLength: task.context_text?.length || 0,
+                    enableStreaming: task.enable_streaming || false,
+                    beamSize: requestBody.beam_size,
+                    timeout: httpClient.defaults.timeout,
+                    requestBodySize: JSON.stringify(requestBody).length,
+                }, 'ASR INPUT: Sending ASR request to faster-whisper-vad');
                 response = await httpClient.post('/utterance', requestBody, {
                     signal: abortController.signal,
                 });
+                const requestDuration = Date.now() - requestStartTime;
+                // 详细记录ASR输出
+                const asrText = response.data?.text || '';
+                const segments = response.data?.segments || [];
+                const qualityScore = response.data?.badSegmentDetection?.qualityScore;
+                const languageProbability = response.data?.language_probability;
                 logger_1.default.info({
                     serviceId: endpoint.serviceId,
                     requestUrl,
                     status: response.status,
                     jobId: task.job_id,
-                }, 'faster-whisper-vad request succeeded');
+                    sessionId: task.session_id,
+                    utteranceIndex: task.utterance_index,
+                    requestDurationMs: requestDuration,
+                    asrText: asrText,
+                    asrTextLength: asrText.length,
+                    asrTextPreview: asrText.substring(0, 100),
+                    segmentsCount: segments.length,
+                    qualityScore: qualityScore,
+                    languageProbability: languageProbability,
+                    hasLanguageProbabilities: !!response.data?.language_probabilities,
+                }, 'ASR OUTPUT: faster-whisper-vad request succeeded');
             }
             catch (axiosError) {
+                const requestDuration = Date.now() - requestStartTime;
+                const isTimeout = axiosError.code === 'ECONNABORTED' || axiosError.message?.includes('timeout');
                 logger_1.default.error({
                     serviceId: endpoint.serviceId,
                     requestUrl,
@@ -199,7 +195,10 @@ class TaskRouterASRHandler {
                     errorCode: axiosError.code,
                     jobId: task.job_id,
                     responseData: axiosError.response?.data,
-                }, 'faster-whisper-vad request failed');
+                    requestDurationMs: requestDuration,
+                    isTimeout,
+                    timeout: httpClient.defaults.timeout,
+                }, `faster-whisper-vad request failed${isTimeout ? ' (TIMEOUT)' : ''}'`);
                 throw axiosError;
             }
             const langProb = response.data.language_probability ?? 0;
@@ -286,159 +285,23 @@ class TaskRouterASRHandler {
             asrResult.badSegmentDetection = badSegmentDetection;
             // P0.5-CTX-2: 检查连续低质量
             const sessionId = task.session_id || task.job_id || 'unknown';
-            if (badSegmentDetection.qualityScore < 0.4) {
-                const currentCount = this.consecutiveLowQualityCount.get(sessionId) || 0;
-                const newCount = currentCount + 1;
-                this.consecutiveLowQualityCount.set(sessionId, newCount);
-                if (newCount >= 2) {
-                    logger_1.default.warn({
-                        jobId: task.job_id,
-                        sessionId,
-                        consecutiveLowQualityCount: newCount,
-                        qualityScore: badSegmentDetection.qualityScore,
-                    }, 'P0.5-CTX-2: Consecutive low quality detected (>=2), should reset context');
-                    asrResult.shouldResetContext = true;
-                }
-            }
-            else {
-                this.consecutiveLowQualityCount.set(sessionId, 0);
+            const shouldResetContext = this.metricsHandler.updateConsecutiveLowQualityCount(sessionId, badSegmentDetection.qualityScore);
+            if (shouldResetContext) {
+                asrResult.shouldResetContext = true;
             }
             // P0.5-SH-1/2: 检查是否应该触发 Top-2 语言重跑
-            const rerunCondition = (0, rerun_trigger_1.shouldTriggerRerun)(asrResult, audioDurationMs, task);
-            if (rerunCondition.shouldRerun) {
-                logger_1.default.info({
-                    jobId: task.job_id,
-                    reason: rerunCondition.reason,
-                    languageProbability: asrResult.language_probability,
-                    qualityScore: badSegmentDetection.qualityScore,
-                }, 'P0.5-SH-2: Triggering Top-2 language rerun');
-                const top2Langs = (0, rerun_trigger_1.getTop2LanguagesForRerun)(asrResult.language_probabilities || {}, asrResult.language);
-                if (top2Langs.length > 0) {
-                    let bestResult = asrResult;
-                    let bestQualityScore = badSegmentDetection.qualityScore;
-                    for (const lang of top2Langs) {
-                        try {
-                            logger_1.default.info({
-                                jobId: task.job_id,
-                                rerunLanguage: lang,
-                                originalLanguage: asrResult.language,
-                                rerunCount: (task.rerun_count || 0) + 1,
-                            }, 'P0.5-SH-2: Attempting rerun with forced language');
-                            const rerunTimeoutMs = task.rerun_timeout_ms ?? 5000;
-                            const rerunAbortController = new AbortController();
-                            const rerunTimeoutId = setTimeout(() => {
-                                rerunAbortController.abort();
-                                logger_1.default.warn({
-                                    jobId: task.job_id,
-                                    rerunLanguage: lang,
-                                    timeoutMs: rerunTimeoutMs,
-                                }, 'P0.5-SH-4: Rerun timeout exceeded');
-                            }, rerunTimeoutMs);
-                            try {
-                                const rerunTask = {
-                                    ...task,
-                                    src_lang: lang,
-                                    rerun_count: (task.rerun_count || 0) + 1,
-                                };
-                                const rerunRequestBody = {
-                                    ...requestBody,
-                                    src_lang: lang,
-                                    language: lang,
-                                };
-                                const rerunResponse = await httpClient.post('/utterance', rerunRequestBody, {
-                                    signal: rerunAbortController.signal,
-                                });
-                                clearTimeout(rerunTimeoutId);
-                                const rerunResult = {
-                                    text: rerunResponse.data.text || '',
-                                    confidence: 1.0,
-                                    language: rerunResponse.data.language || lang,
-                                    language_probability: rerunResponse.data.language_probability,
-                                    language_probabilities: rerunResponse.data.language_probabilities,
-                                    segments: rerunResponse.data.segments,
-                                    is_final: true,
-                                };
-                                const rerunAudioDurationMs = rerunResponse.data.duration
-                                    ? Math.round(rerunResponse.data.duration * 1000)
-                                    : undefined;
-                                const rerunBadSegmentDetection = (0, bad_segment_detector_1.detectBadSegment)(rerunResult, rerunAudioDurationMs, previousText);
-                                rerunResult.badSegmentDetection = rerunBadSegmentDetection;
-                                if (rerunBadSegmentDetection.qualityScore > bestQualityScore) {
-                                    logger_1.default.info({
-                                        jobId: task.job_id,
-                                        rerunLanguage: lang,
-                                        originalQualityScore: bestQualityScore,
-                                        rerunQualityScore: rerunBadSegmentDetection.qualityScore,
-                                    }, 'P0.5-SH-3: Rerun result has better quality score, selecting it');
-                                    bestResult = rerunResult;
-                                    bestQualityScore = rerunBadSegmentDetection.qualityScore;
-                                    this.rerunMetrics.qualityImprovements++;
-                                }
-                                else {
-                                    logger_1.default.debug({
-                                        jobId: task.job_id,
-                                        rerunLanguage: lang,
-                                        originalQualityScore: bestQualityScore,
-                                        rerunQualityScore: rerunBadSegmentDetection.qualityScore,
-                                    }, 'P0.5-SH-3: Rerun result quality score not better, keeping original');
-                                }
-                                this.rerunMetrics.totalReruns++;
-                                this.rerunMetrics.successfulReruns++;
-                            }
-                            catch (rerunError) {
-                                clearTimeout(rerunTimeoutId);
-                                this.rerunMetrics.totalReruns++;
-                                if (rerunAbortController.signal.aborted) {
-                                    logger_1.default.warn({
-                                        jobId: task.job_id,
-                                        rerunLanguage: lang,
-                                        timeoutMs: rerunTimeoutMs,
-                                    }, 'P0.5-SH-4: Rerun aborted due to timeout');
-                                    this.rerunMetrics.timeoutReruns++;
-                                }
-                                else {
-                                    logger_1.default.warn({
-                                        jobId: task.job_id,
-                                        rerunLanguage: lang,
-                                        error: rerunError.message,
-                                    }, 'P0.5-SH-2: Rerun failed, continuing with next language or original result');
-                                    this.rerunMetrics.failedReruns++;
-                                }
-                            }
-                        }
-                        catch (outerError) {
-                            logger_1.default.error({
-                                jobId: task.job_id,
-                                rerunLanguage: lang,
-                                error: outerError.message,
-                            }, 'P0.5-SH-2: Unexpected error during rerun setup');
-                        }
-                    }
-                    if (bestResult !== asrResult) {
-                        logger_1.default.info({
-                            jobId: task.job_id,
-                            originalLanguage: asrResult.language,
-                            selectedLanguage: bestResult.language,
-                            originalQualityScore: badSegmentDetection.qualityScore,
-                            selectedQualityScore: bestQualityScore,
-                        }, 'P0.5-SH-3: Selected rerun result as best');
-                    }
-                    // OBS-1: 记录处理效率（重跑场景，包含重跑时间）
-                    const taskEndTime = Date.now();
-                    const processingTimeMs = taskEndTime - taskStartTime;
-                    this.recordASREfficiency(endpoint.serviceId, calculatedAudioDurationMs || audioDurationMs, processingTimeMs);
-                    return bestResult;
-                }
-                else {
-                    logger_1.default.warn({
-                        jobId: task.job_id,
-                    }, 'P0.5-SH-2: No Top-2 languages available for rerun');
-                }
+            const rerunResult = await this.rerunHandler.executeRerun(task, asrResult, badSegmentDetection, audioDurationMs, httpClient, requestBody, previousText);
+            if (rerunResult) {
+                // OBS-1: 记录处理效率（重跑场景，包含重跑时间）
+                const taskEndTime = Date.now();
+                const processingTimeMs = taskEndTime - taskStartTime;
+                this.metricsHandler.recordASREfficiency(endpoint.serviceId, calculatedAudioDurationMs || audioDurationMs, processingTimeMs);
+                return rerunResult;
             }
             // OBS-1: 记录处理效率（正常场景，无重跑）
             const taskEndTime = Date.now();
             const processingTimeMs = taskEndTime - taskStartTime;
-            this.recordASREfficiency(endpoint.serviceId, calculatedAudioDurationMs || audioDurationMs, processingTimeMs);
+            this.metricsHandler.recordASREfficiency(endpoint.serviceId, calculatedAudioDurationMs || audioDurationMs, processingTimeMs);
             return asrResult;
         }
         catch (error) {
@@ -476,56 +339,28 @@ class TaskRouterASRHandler {
         }
     }
     /**
-     * OBS-1: 记录 ASR 处理效率
-     */
-    recordASREfficiency(serviceId, audioDurationMs, processingTimeMs) {
-        if (!audioDurationMs || audioDurationMs <= 0 || processingTimeMs <= 0) {
-            logger_1.default.debug({ serviceId, audioDurationMs, processingTimeMs }, 'OBS-1: Skipping ASR efficiency recording due to invalid parameters');
-            return;
-        }
-        const efficiency = audioDurationMs / processingTimeMs;
-        let efficiencies = this.currentCycleServiceEfficiencies.get(serviceId);
-        if (!efficiencies) {
-            efficiencies = [];
-            this.currentCycleServiceEfficiencies.set(serviceId, efficiencies);
-        }
-        efficiencies.push(efficiency);
-        logger_1.default.debug({ serviceId, audioDurationMs, processingTimeMs, efficiency: efficiency.toFixed(2) }, 'OBS-1: Recorded ASR processing efficiency');
-    }
-    /**
      * Gate-A: 重置指定 session 的连续低质量计数
      */
     resetConsecutiveLowQualityCount(sessionId) {
-        this.consecutiveLowQualityCount.set(sessionId, 0);
-        logger_1.default.info({
-            sessionId,
-        }, 'Gate-A: Reset consecutiveLowQualityCount for session');
+        this.metricsHandler.resetConsecutiveLowQualityCount(sessionId);
     }
     /**
      * Gate-B: 获取 Rerun 指标
      */
     getRerunMetrics() {
-        return { ...this.rerunMetrics };
+        return this.rerunHandler.getRerunMetrics();
     }
     /**
      * OBS-1: 获取当前心跳周期的处理效率指标
      */
     getProcessingMetrics() {
-        const result = {};
-        for (const [serviceId, efficiencies] of this.currentCycleServiceEfficiencies.entries()) {
-            if (efficiencies.length > 0) {
-                const sum = efficiencies.reduce((a, b) => a + b, 0);
-                const average = sum / efficiencies.length;
-                result[serviceId] = average;
-            }
-        }
-        return result;
+        return this.metricsHandler.getProcessingMetrics();
     }
     /**
      * OBS-1: 重置当前心跳周期的统计数据
      */
     resetCycleMetrics() {
-        this.currentCycleServiceEfficiencies.clear();
+        this.metricsHandler.resetCycleMetrics();
     }
 }
 exports.TaskRouterASRHandler = TaskRouterASRHandler;

@@ -60,7 +60,7 @@ class TTSStage {
                 sample_rate: job.sample_rate || 16000,
                 job_id: job.job_id,
             };
-            logger_1.default.debug({
+            logger_1.default.info({
                 jobId: job.job_id,
                 sessionId: job.session_id,
                 textLength: translatedText.length,
@@ -68,6 +68,15 @@ class TTSStage {
             }, 'TTSStage: Starting TTS task');
             const ttsResult = await this.taskRouter.routeTTSTask(ttsTask);
             const ttsTimeMs = Date.now() - startTime;
+            if (ttsTimeMs > 30000) {
+                logger_1.default.warn({
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                    ttsTimeMs,
+                    textLength: translatedText.length,
+                    note: 'TTS generation took longer than 30 seconds - GPU may be overloaded',
+                }, 'TTSStage: TTS generation took too long');
+            }
             logger_1.default.info({
                 jobId: job.job_id,
                 sessionId: job.session_id,

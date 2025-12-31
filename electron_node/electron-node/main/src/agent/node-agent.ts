@@ -17,6 +17,8 @@ import { HardwareInfoHandler } from './node-agent-hardware';
 import { ServicesHandler } from './node-agent-services';
 import { HeartbeatHandler } from './node-agent-heartbeat';
 import { RegistrationHandler } from './node-agent-registration';
+import { JobProcessor } from './node-agent-job-processor';
+import { ResultSender } from './node-agent-result-sender';
 
 export interface NodeStatus {
   online: boolean;
@@ -46,6 +48,8 @@ export class NodeAgent {
   private servicesHandler: ServicesHandler;
   private heartbeatHandler: HeartbeatHandler;
   private registrationHandler: RegistrationHandler;
+  private jobProcessor: JobProcessor;
+  private resultSender: ResultSender;
 
   constructor(
     inferenceService: InferenceService,
@@ -152,6 +156,21 @@ export class NodeAgent {
       logger.info({}, 'AggregatorMiddleware passed to InferenceService for pre-NMT aggregation');
     }
 
+    // 初始化job处理器和结果发送器
+    this.jobProcessor = new JobProcessor(
+      this.inferenceService,
+      this.postProcessCoordinator,
+      this.aggregatorMiddleware,
+      this.nodeConfig,
+      this.pythonServiceManager
+    );
+    // 获取DedupStage实例，传递给ResultSender用于在成功发送后记录job_id
+    const dedupStage = this.postProcessCoordinator?.getDedupStage() || null;
+    this.resultSender = new ResultSender(
+      this.aggregatorMiddleware,
+      dedupStage
+    );
+
     logger.info({ schedulerUrl: this.schedulerUrl }, 'Scheduler server URL configured');
   }
 
@@ -165,10 +184,13 @@ export class NodeAgent {
       this.ws = new WebSocket(this.schedulerUrl);
 
       this.ws.on('open', () => {
-        logger.info({ schedulerUrl: this.schedulerUrl }, 'Connected to scheduler server, starting registration');
+        logger.info({ schedulerUrl: this.schedulerUrl, nodeId: this.nodeId }, 'Connected to scheduler server, starting registration');
         // 更新handler的连接信息
         this.heartbeatHandler.updateConnection(this.ws, this.nodeId);
         this.registrationHandler.updateConnection(this.ws, this.nodeId);
+        // 更新job处理器和结果发送器的连接信息
+        this.jobProcessor.updateConnection(this.ws, this.nodeId);
+        this.resultSender.updateConnection(this.ws, this.nodeId);
         // 使用 Promise 确保注册完成后再启动心跳
         this.registrationHandler.registerNode().catch((error) => {
           logger.error({ error }, 'Failed to register node in open handler');
@@ -187,10 +209,23 @@ export class NodeAgent {
       });
 
       this.ws.on('close', (code, reason) => {
-        logger.info({ code, reason: reason?.toString() }, 'Connection to scheduler server closed');
+        logger.warn({
+          code,
+          reason: reason?.toString(),
+          nodeId: this.nodeId,
+          note: code === 1006 ? 'Abnormal closure - connection may have been lost during job processing' : 'Normal closure'
+        }, 'Connection to scheduler server closed');
         this.heartbeatHandler.stopHeartbeat();
+        // 连接关闭时，更新所有handler的连接信息（但保留nodeId用于重连）
+        this.heartbeatHandler.updateConnection(null, this.nodeId);
+        this.registrationHandler.updateConnection(null, this.nodeId);
+        this.jobProcessor.updateConnection(null, this.nodeId);
+        this.resultSender.updateConnection(null, this.nodeId);
         // 尝试重连
-        setTimeout(() => this.start(), 5000);
+        setTimeout(() => {
+          logger.info({ nodeId: this.nodeId }, 'Attempting to reconnect to scheduler server');
+          this.start();
+        }, 5000);
       });
 
       // 监听模型状态变化，实时更新 capability_state
@@ -243,9 +278,11 @@ export class NodeAgent {
         case 'node_register_ack': {
           const ack = message as NodeRegisterAckMessage;
           this.nodeId = ack.node_id;
-          // 更新handler的nodeId
+          // 更新所有handler的nodeId（确保它们有正确的nodeId和WebSocket连接）
           this.heartbeatHandler.updateConnection(this.ws, this.nodeId);
           this.registrationHandler.updateConnection(this.ws, this.nodeId);
+          this.jobProcessor.updateConnection(this.ws, this.nodeId);
+          this.resultSender.updateConnection(this.ws, this.nodeId);
           logger.info({ nodeId: this.nodeId }, 'Node registered successfully');
           // 立刻补发一次心跳，把 installed_services/capability_state 尽快同步到 Scheduler
           this.heartbeatHandler.sendHeartbeatOnce().catch((error) => {
@@ -334,335 +371,29 @@ export class NodeAgent {
     );
 
     try {
-      // 根据 features 启动所需的服务
-      if (job.features?.speaker_identification && this.pythonServiceManager) {
-        try {
-          await this.pythonServiceManager.startService('speaker_embedding');
-          logger.info({ jobId: job.job_id }, 'Started speaker_embedding service for speaker_identification feature');
-        } catch (error) {
-          logger.warn({ error, jobId: job.job_id }, 'Failed to start speaker_embedding service, continuing without it');
-        }
-      }
+      // 使用job处理器处理job
+      const processStartTime = Date.now();
+      const processResult = await this.jobProcessor.processJob(job, startTime);
+      const processDuration = Date.now() - processStartTime;
 
-      // 如果启用了流式 ASR，设置部分结果回调
-      const partialCallback = job.enable_streaming_asr ? (partial: { text: string; is_final: boolean; confidence: number }) => {
-        // 发送 ASR 部分结果到调度服务器
-        // 对齐协议规范：asr_partial 消息格式（从节点发送到调度服务器，需要包含 node_id）
-        if (this.ws && this.ws.readyState === WebSocket.OPEN && this.nodeId) {
-          const partialMessage: AsrPartialMessage = {
-            type: 'asr_partial',
-            node_id: this.nodeId,
-            session_id: job.session_id,
-            utterance_index: job.utterance_index,
-            job_id: job.job_id,
-            text: partial.text,
-            is_final: partial.is_final,
-            trace_id: job.trace_id, // Added: propagate trace_id
-          };
-          this.ws.send(JSON.stringify(partialMessage));
-        }
-      } : undefined;
-
-      // 调用推理服务处理任务
-      logger.info(
-        {
+      if (processDuration > 30000) {
+        logger.warn({
           jobId: job.job_id,
-          sessionId: job.session_id,
-          utteranceIndex: job.utterance_index,
-          audioFormat: job.audio_format,
-          audioLength: job.audio ? job.audio.length : 0,
-        },
-        'Processing job: received audio data'
-      );
-      const result = await this.inferenceService.processJob(job, partialCallback);
-
-      // 后处理（在发送结果前）
-      // 优先使用 PostProcessCoordinator（新架构），否则使用 AggregatorMiddleware（旧架构）
-      let finalResult = result;
-      const enablePostProcessTranslation = this.nodeConfig.features?.enablePostProcessTranslation ?? true;
-      
-      if (enablePostProcessTranslation && this.postProcessCoordinator) {
-        // 使用新架构：PostProcessCoordinator
-        logger.debug({ jobId: job.job_id, sessionId: job.session_id }, 'Processing through PostProcessCoordinator (new architecture)');
-        
-        const postProcessResult = await this.postProcessCoordinator.process(job, result);
-        
-        // 统一处理 TTS Opus 编码（无论来自 Pipeline 还是 PostProcess）
-        let ttsAudio = postProcessResult.ttsAudio || result.tts_audio || '';
-        let ttsFormat = postProcessResult.ttsFormat || result.tts_format || 'opus';
-        
-        // 如果 TTS 音频是 WAV 格式，需要编码为 Opus（统一在 NodeAgent 层处理）
-        if (ttsAudio && (ttsFormat === 'wav' || ttsFormat === 'pcm16')) {
-          try {
-            const { convertWavToOpus } = await import('../utils/opus-codec');
-            const wavBuffer = Buffer.from(ttsAudio, 'base64');
-            const opusData = await convertWavToOpus(wavBuffer);
-            ttsAudio = opusData.toString('base64');
-            ttsFormat = 'opus';
-            logger.info(
-              {
-                jobId: job.job_id,
-                sessionId: job.session_id,
-                utteranceIndex: job.utterance_index,
-                wavSize: wavBuffer.length,
-                opusSize: opusData.length,
-                compression: (wavBuffer.length / opusData.length).toFixed(2),
-              },
-              'NodeAgent: TTS WAV audio encoded to Opus successfully (unified encoding)'
-            );
-          } catch (opusError) {
-            const errorMessage = opusError instanceof Error ? opusError.message : String(opusError);
-            logger.error(
-              {
-                error: opusError,
-                jobId: job.job_id,
-                sessionId: job.session_id,
-                utteranceIndex: job.utterance_index,
-                errorMessage,
-              },
-              'NodeAgent: Failed to encode TTS WAV to Opus, returning empty audio'
-            );
-            ttsAudio = '';
-            ttsFormat = 'opus';
-          }
-        }
-        
-        if (postProcessResult.shouldSend) {
-          finalResult = {
-            ...result,
-            text_asr: postProcessResult.aggregatedText,
-            text_translated: postProcessResult.translatedText,
-            tts_audio: ttsAudio,
-            tts_format: ttsFormat,
-          };
-          
-          logger.debug(
-            {
-              jobId: job.job_id,
-              sessionId: job.session_id,
-              action: postProcessResult.action,
-              originalLength: result.text_asr?.length || 0,
-              aggregatedLength: postProcessResult.aggregatedText.length,
-            },
-            'PostProcessCoordinator processing completed'
-          );
-        } else {
-          // PostProcessCoordinator 决定不发送（可能是重复文本或被过滤）
-          // 修复：即使PostProcessCoordinator决定不发送（shouldSend=false），仍然需要发送空的job_result给调度服务器
-          // 这样调度服务器知道节点端已经处理完成，不会触发超时
-          // 调度服务器的result_queue会处理空结果，不会发送给客户端
-          logger.info(
-            {
-              jobId: job.job_id,
-              sessionId: job.session_id,
-              utteranceIndex: job.utterance_index,
-              reason: postProcessResult.reason || 'PostProcessCoordinator filtered result',
-              aggregatedText: postProcessResult.aggregatedText?.substring(0, 50) || '',
-              aggregatedTextLength: postProcessResult.aggregatedText?.length || 0,
-              note: 'Sending empty job_result to scheduler to prevent timeout (result filtered by PostProcessCoordinator)',
-            },
-            'PostProcessCoordinator filtered result (shouldSend=false), but sending empty job_result to scheduler to prevent timeout'
-          );
-          
-          // 发送空的job_result给调度服务器，用于核销job，避免超时
-          const emptyResponse: JobResultMessage = {
-            type: 'job_result',
-            job_id: job.job_id,
-            attempt_id: job.attempt_id,
-            node_id: this.nodeId,
-            session_id: job.session_id,
-            utterance_index: job.utterance_index,
-            success: true,
-            text_asr: '',
-            text_translated: '',
-            tts_audio: '',
-            tts_format: 'opus',
-            processing_time_ms: Date.now() - startTime,
-            trace_id: job.trace_id,
-            extra: {
-              filtered: true,
-              reason: postProcessResult.reason || 'PostProcessCoordinator filtered result',
-            },
-          };
-          
-          this.ws.send(JSON.stringify(emptyResponse));
-          logger.info(
-            {
-              jobId: job.job_id,
-              sessionId: job.session_id,
-              utteranceIndex: job.utterance_index,
-            },
-            'Empty job_result sent to scheduler (filtered by PostProcessCoordinator) to prevent timeout'
-          );
-          return;  // 返回，不继续处理
-        }
-      } else {
-        // 如果未使用 PostProcessCoordinator（不应该发生，但保留作为安全措施）
-        finalResult = result;
-      }
-      // 注意：AggregatorMiddleware 现在在 PipelineOrchestrator 中调用（ASR 之后、NMT 之前）
-      // 不再在这里调用，避免重复处理和重复翻译
-      // 如果启用了 AggregatorMiddleware，文本聚合已经在 PipelineOrchestrator 中完成
-
-      // 检查ASR结果是否为空
-      const asrTextTrimmed = (finalResult.text_asr || '').trim();
-      const isEmpty = !asrTextTrimmed || asrTextTrimmed.length === 0;
-
-      if (isEmpty) {
-        // 修复：即使ASR结果为空，也发送job_result（空结果）给调度服务器
-        // 这样调度服务器知道节点端已经处理完成，不会触发超时
-        // 调度服务器的result_queue会处理空结果，不会发送给客户端
-        logger.info(
-          { 
-            jobId: job.job_id, 
-            traceId: job.trace_id,
-            sessionId: job.session_id,
-            utteranceIndex: job.utterance_index,
-            reason: 'ASR result is empty, but sending empty job_result to scheduler to prevent timeout',
-          },
-          'NodeAgent: ASR result is empty, sending empty job_result to scheduler to prevent timeout'
-        );
-        // 继续执行，发送空结果
-      } else {
-        logger.info(
-          {
-            jobId: job.job_id,
-            utteranceIndex: job.utterance_index,
-            textAsr: finalResult.text_asr?.substring(0, 50),
-            textAsrLength: finalResult.text_asr?.length || 0,
-            textTranslated: finalResult.text_translated?.substring(0, 100),
-            textTranslatedLength: finalResult.text_translated?.length || 0,
-            ttsAudioLength: finalResult.tts_audio?.length || 0,
-          },
-          'Job processing completed successfully'
-        );
+          processDurationMs: processDuration,
+          note: 'Job processing took longer than 30 seconds',
+        }, 'Long job processing time detected');
       }
 
-      // 对齐协议规范：job_result 消息格式
-      const response: JobResultMessage = {
-        type: 'job_result',
-        job_id: job.job_id,
-        attempt_id: job.attempt_id,
-        node_id: this.nodeId,
-        session_id: job.session_id,
-        utterance_index: job.utterance_index,
-        success: true,
-        text_asr: finalResult.text_asr,
-        text_translated: finalResult.text_translated,
-        tts_audio: finalResult.tts_audio,
-        tts_format: finalResult.tts_format || 'opus',  // 强制使用 opus 格式
-        extra: finalResult.extra,
-        processing_time_ms: Date.now() - startTime,
-        trace_id: job.trace_id, // Added: propagate trace_id
-        // OBS-2: 透传 ASR 质量信息
-        asr_quality_level: finalResult.asr_quality_level,
-        reason_codes: finalResult.reason_codes,
-        quality_score: finalResult.quality_score,
-        rerun_count: finalResult.rerun_count,
-        segments_meta: finalResult.segments_meta,
-      };
-
-      // 检查是否与上次发送的文本完全相同（防止重复发送）
-      // 优化：使用更严格的文本比较
-      const lastSentText = this.aggregatorMiddleware.getLastSentText(job.session_id);
-      if (lastSentText && finalResult.text_asr) {
-        const normalizeText = (text: string): string => {
-          return text.replace(/\s+/g, ' ').trim();
-        };
-
-        const normalizedCurrent = normalizeText(finalResult.text_asr);
-        const normalizedLast = normalizeText(lastSentText);
-
-        if (normalizedCurrent === normalizedLast && normalizedCurrent.length > 0) {
-          logger.info(
-            {
-              jobId: job.job_id,
-              sessionId: job.session_id,
-              text: finalResult.text_asr.substring(0, 50),
-              normalizedText: normalizedCurrent.substring(0, 50),
-            },
-            'Skipping duplicate job result (same as last sent after normalization)'
-          );
-          return;  // 不发送重复的结果
-        }
-      }
-
-      logger.info(
-        {
-          jobId: job.job_id,
-          sessionId: job.session_id,
-          utteranceIndex: job.utterance_index,
-          responseLength: JSON.stringify(response).length,
-          textAsrLength: finalResult.text_asr?.length || 0,
-          ttsAudioLength: finalResult.tts_audio?.length || 0,
-        },
-        'Sending job_result to scheduler'
-      );
-      this.ws.send(JSON.stringify(response));
-      logger.info(
-        {
-          jobId: job.job_id,
-          sessionId: job.session_id,
-          utteranceIndex: job.utterance_index,
-          processingTimeMs: Date.now() - startTime,
-        },
-        'Job result sent successfully'
-      );
-
-      // 更新最后发送的文本（在成功发送后）
-      if (finalResult.text_asr) {
-        this.aggregatorMiddleware.setLastSentText(job.session_id, finalResult.text_asr.trim());
-      }
-    } catch (error) {
-      logger.error({ error, jobId: job.job_id, traceId: job.trace_id }, 'Failed to process job');
-
-      // 检查是否是 ModelNotAvailableError
-      if (error instanceof ModelNotAvailableError) {
-        // 发送 MODEL_NOT_AVAILABLE 错误给调度服务器
-        // 注意：根据新架构，使用 service_id 而不是 model_id
-        const errorResponse: JobResultMessage = {
-          type: 'job_result',
-          job_id: job.job_id,
-          attempt_id: job.attempt_id,
-          node_id: this.nodeId,
-          session_id: job.session_id,
-          utterance_index: job.utterance_index,
-          success: false,
-          processing_time_ms: Date.now() - startTime,
-          error: {
-            code: 'MODEL_NOT_AVAILABLE',
-            message: `Service ${error.modelId}@${error.version} is not available: ${error.reason}`,
-            details: {
-              service_id: error.modelId,
-              service_version: error.version,
-              reason: error.reason,
-            },
-          },
-          trace_id: job.trace_id, // Added: propagate trace_id
-        };
-
-        this.ws.send(JSON.stringify(errorResponse));
+      // 使用结果发送器发送结果
+      if (!processResult.shouldSend) {
+        // PostProcessCoordinator决定不发送，发送空结果
+        this.resultSender.sendJobResult(job, processResult.finalResult, startTime, false, processResult.reason);
         return;
       }
 
-      // 其他错误
-      const errorResponse: JobResultMessage = {
-        type: 'job_result',
-        job_id: job.job_id,
-        attempt_id: job.attempt_id,
-        node_id: this.nodeId,
-        session_id: job.session_id,
-        utterance_index: job.utterance_index,
-        success: false,
-        processing_time_ms: Date.now() - startTime,
-        error: {
-          code: 'PROCESSING_ERROR',
-          message: error instanceof Error ? error.message : String(error),
-        },
-        trace_id: job.trace_id, // Added: propagate trace_id
-      };
-
-      this.ws.send(JSON.stringify(errorResponse));
+      this.resultSender.sendJobResult(job, processResult.finalResult, startTime, true);
+    } catch (error) {
+      this.resultSender.sendErrorResult(job, error, startTime);
     }
   }
 

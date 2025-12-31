@@ -14,7 +14,7 @@ impl NodeRegistry {
     pub fn new() -> Self {
         Self {
             nodes: Arc::new(RwLock::new(HashMap::new())),
-            resource_threshold: 75.0, // 默认 75%（CPU、GPU、内存使用率超过此值将被跳过）
+            resource_threshold: 85.0, // 默认 85%（CPU、GPU、内存使用率超过此值将被跳过）
             exclude_reason_stats: Arc::new(RwLock::new(HashMap::new())),
             unavailable_services: Arc::new(RwLock::new(HashMap::new())),
             reserved_jobs: Arc::new(RwLock::new(HashMap::new())),
