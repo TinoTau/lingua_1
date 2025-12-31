@@ -9,20 +9,33 @@ M2M100 NMT 服务（FastAPI）
 # 注意：使用 line_buffering=False 以减少内存开销
 import sys
 import io
+import os
+import time
+import datetime
+import traceback
+from typing import Optional
+
+import torch
+from fastapi import FastAPI
+from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
+
+from api_models import TranslateRequest, TranslateResponse
+from config import SEPARATOR
+from model_loader import (
+    setup_device,
+    log_gpu_info,
+    find_local_model_path,
+    load_tokenizer,
+    load_model_with_retry,
+    move_model_to_device,
+)
+from translation_extractor import extract_translation
+from translation_utils import calculate_max_new_tokens, is_translation_complete
+
 if sys.platform == 'win32':
     # Windows 系统：强制使用 UTF-8 编码，但不使用行缓冲以减少内存开销
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace', line_buffering=False)
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace', line_buffering=False)
-
-from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import Optional, Dict, Any
-import time
-import torch
-from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
-import os
-import re
-import json
 
 # 在创建 FastAPI 应用之前就输出诊断信息
 print("[NMT Service] [MODULE] Module is being imported...", flush=True)
@@ -43,142 +56,6 @@ tokenizer: Optional[M2M100Tokenizer] = None
 model: Optional[M2M100ForConditionalGeneration] = None
 loaded_model_path: Optional[str] = None  # 实际加载的模型路径
 
-# 配置加载函数
-def load_config():
-    """从配置文件加载配置"""
-    config_path = os.path.join(os.path.dirname(__file__), "nmt_config.json")
-    default_config = {
-        "separator": {
-            "default": " ⟪⟪SEP_MARKER⟫⟫ ",
-            "translations": [" ⟪⟪SEP_MARKER⟫⟫ ", "⟪⟪SEP_MARKER⟫⟫", " ⟪⟪SEP_MARKER⟫⟫", "⟪⟪SEP_MARKER⟫⟫ "]
-        }
-    }
-    
-    try:
-        if os.path.exists(config_path):
-            with open(config_path, 'r', encoding='utf-8') as f:
-                config = json.load(f)
-                print(f"[NMT Service] Configuration loaded from {config_path}", flush=True)
-                return config
-        else:
-            print(f"[NMT Service] Configuration file not found at {config_path}, using default config", flush=True)
-            return default_config
-    except Exception as e:
-        print(f"[NMT Service] Failed to load configuration: {e}, using default config", flush=True)
-        return default_config
-
-# 加载配置
-NMT_CONFIG = load_config()
-SEPARATOR = NMT_CONFIG["separator"]["default"]
-SEPARATOR_TRANSLATIONS = NMT_CONFIG["separator"]["translations"]
-print(f"[NMT Service] Sentinel sequence configuration loaded: default='{SEPARATOR}', variants={len(SEPARATOR_TRANSLATIONS)}", flush=True)
-
-# 加载文本过滤配置
-PUNCTUATION_FILTER_ENABLED = NMT_CONFIG.get("text_filter", {}).get("punctuation_only_filter", {}).get("enabled", True)
-PUNCTUATION_FILTER_PATTERN = NMT_CONFIG.get("text_filter", {}).get("punctuation_only_filter", {}).get("regex_pattern", r"[^\w\u4e00-\u9fff]")
-PUNCTUATION_FILTER_MIN_LENGTH = NMT_CONFIG.get("text_filter", {}).get("punctuation_only_filter", {}).get("min_text_length_after_filter", 1)
-print(f"[NMT Service] Punctuation filter configuration loaded: enabled={PUNCTUATION_FILTER_ENABLED}, pattern='{PUNCTUATION_FILTER_PATTERN}', min_length={PUNCTUATION_FILTER_MIN_LENGTH}", flush=True)
-
-
-def generate_truncated_patterns(separator_variants):
-    """
-    从分隔符变体中动态生成所有可能的截断模式
-    
-    策略：
-    1. 提取分隔符中的核心标记（如 "SEP_MARKER"）
-    2. 提取分隔符中的特殊字符（如 Unicode 括号）
-    3. 为核心标记生成所有可能的截断模式（从完整标记到单个字符）
-    4. 为特殊字符生成所有可能的截断模式
-    
-    Args:
-        separator_variants: 分隔符变体列表（如 [" ⟪⟪SEP_MARKER⟫⟫ ", "⟪⟪SEP_MARKER⟫⟫"]）
-    
-    Returns:
-        截断模式列表，按长度降序排序
-    """
-    truncated_patterns = []
-    core_markers = set()  # 核心标记（如 "SEP_MARKER"）
-    special_chars = set()  # 特殊字符序列（如 "⟫⟫", "⟪⟪"）
-    
-    # 第一步：从所有分隔符变体中提取核心标记和特殊字符
-    for sep_variant in separator_variants:
-        # 提取核心标记：查找连续的字母数字字符序列（可能包含下划线）
-        # 查找所有连续的字母数字字符序列（可能包含下划线），这些可能是核心标记
-        marker_matches = re.findall(r'[A-Za-z0-9_]+', sep_variant)
-        for marker in marker_matches:
-            if len(marker) > 1:  # 至少2个字符才认为是核心标记
-                core_markers.add(marker)
-        
-        # 提取特殊字符序列：查找连续的 Unicode 字符（非字母数字）
-        # 例如 "⟫⟫", "⟪⟪" 等
-        special_char_matches = re.findall(r'[^\w\s]+', sep_variant)
-        for special_char in special_char_matches:
-            if len(special_char) > 0:
-                special_chars.add(special_char)
-    
-    # 第二步：为核心标记生成所有可能的截断模式
-    for core_marker in core_markers:
-        # 生成从完整标记到单个字符的所有可能截断
-        # 例如 "SEP_MARKER" -> ["SEP_MARKER", "EP_MARKER", "P_MARKER", "_MARKER", "MARKER", "ARKER", "RKER", "KER", "ER", "R"]
-        for start_pos in range(len(core_marker)):
-            truncated = core_marker[start_pos:]
-            if truncated and truncated not in truncated_patterns:
-                truncated_patterns.append(truncated)
-        
-        # 也生成带下划线和空格的变体（如果原标记包含下划线）
-        if '_' in core_marker:
-            # 例如 "_MARKER", " MARKER" 等
-            marker_without_prefix = core_marker.split('_', 1)[-1] if '_' in core_marker else core_marker
-            if marker_without_prefix and marker_without_prefix not in truncated_patterns:
-                truncated_patterns.append(marker_without_prefix)
-            # 带空格前缀的变体
-            space_marker = ' ' + marker_without_prefix
-            if space_marker not in truncated_patterns:
-                truncated_patterns.append(space_marker)
-            # 带下划线前缀的变体
-            underscore_marker = '_' + marker_without_prefix
-            if underscore_marker not in truncated_patterns:
-                truncated_patterns.append(underscore_marker)
-    
-    # 第三步：为特殊字符序列生成所有可能的截断模式
-    for special_char in special_chars:
-        # 生成从完整序列到单个字符的所有可能截断
-        # 例如 "⟫⟫" -> ["⟫⟫", "⟫"]
-        for start_pos in range(len(special_char)):
-            truncated = special_char[start_pos:]
-            if truncated and truncated not in truncated_patterns:
-                truncated_patterns.append(truncated)
-    
-    # 按长度降序排序，优先匹配更长的模式
-    truncated_patterns = sorted(list(set(truncated_patterns)), key=len, reverse=True)
-    
-    return truncated_patterns
-
-
-# 预生成截断模式（在服务启动时生成一次，避免每次请求都重新生成）
-TRUNCATED_PATTERNS = generate_truncated_patterns(SEPARATOR_TRANSLATIONS)
-print(f"[NMT Service] Generated {len(TRUNCATED_PATTERNS)} truncated patterns from separator variants", flush=True)
-
-
-class TranslateRequest(BaseModel):
-    src_lang: str
-    tgt_lang: str
-    text: str
-    context_text: Optional[str] = None  # 上下文文本（可选，用于提升翻译质量）
-    num_candidates: Optional[int] = None  # 生成候选数量（可选，用于 NMT Repair）
-
-
-class TranslateResponse(BaseModel):
-    ok: bool
-    text: Optional[str] = None
-    model: Optional[str] = None
-    provider: str = "local-m2m100"
-    extraction_mode: Optional[str] = None  # 提取模式：SENTINEL, ALIGN_FALLBACK, SINGLE_ONLY, FULL_ONLY
-    extraction_confidence: Optional[str] = None  # 提取置信度：HIGH, MEDIUM, LOW
-    extra: Optional[Dict[str, Any]] = None
-    error: Optional[str] = None
-    candidates: Optional[list[str]] = None  # 候选翻译列表（可选，用于 NMT Repair）
-
 
 @app.on_event("startup")
 async def load_model():
@@ -191,352 +68,36 @@ async def load_model():
         print(f"[NMT Service] PyTorch version: {torch.__version__}", flush=True)
         print(f"[NMT Service] Initial device setting: {DEVICE}", flush=True)
         
-        # 临时修复：如果遇到访问违规，可以尝试强制使用 CPU 模式
-        # 取消下面的注释来强制使用 CPU（用于诊断 CUDA 问题）
-        # FORCE_CPU_MODE = os.environ.get('NMT_FORCE_CPU', 'false').lower() == 'true'
-        FORCE_CPU_MODE = False  # 默认不强制 CPU，但可以通过环境变量 NMT_FORCE_CPU=true 启用
-        
-        if FORCE_CPU_MODE:
-            print(f"[NMT Service] [WARN] FORCE_CPU_MODE is enabled, using CPU instead of CUDA", flush=True)
-            DEVICE = torch.device("cpu")
-        # 在加载模型之前，先测试 CUDA 是否真的可用
-        elif torch.cuda.is_available():
-            try:
-                # 尝试创建一个小的 tensor 来测试 CUDA
-                test_tensor = torch.zeros(1).cuda()
-                print(f"[NMT Service] [OK] CUDA test passed, device will be: cuda", flush=True)
-                del test_tensor
-                torch.cuda.empty_cache()
-            except Exception as cuda_test_err:
-                print(f"[NMT Service] [ERROR] CUDA test failed: {cuda_test_err}", flush=True)
-                print(f"[NMT Service] [WARN] Forcing CPU mode due to CUDA test failure", flush=True)
-                DEVICE = torch.device("cpu")
-        else:
-            print(f"[NMT Service] CUDA not available, using CPU", flush=True)
-        
+        # 设置设备
+        DEVICE = setup_device()
         print(f"[NMT Service] Device: {DEVICE}", flush=True)
         
-        # GPU 检查
-        if torch.cuda.is_available():
-            print(f"[NMT Service] [OK] CUDA available: {torch.cuda.is_available()}", flush=True)
-            print(f"[NMT Service] [OK] CUDA version: {torch.version.cuda}", flush=True)
-            print(f"[NMT Service] [OK] GPU count: {torch.cuda.device_count()}", flush=True)
-            print(f"[NMT Service] [OK] GPU name: {torch.cuda.get_device_name(0)}", flush=True)
-            print(f"[NMT Service] [OK] GPU memory: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.2f} GB", flush=True)
-        else:
-            print(f"[NMT Service] [WARN] CUDA not available, using CPU", flush=True)
+        # 记录 GPU 信息
+        log_gpu_info()
         
         # 强制只使用本地文件 - 不允许从 HuggingFace 下载模型
-        # 公司在上架模型时会保证模型可用性
         os.environ["HF_HUB_DISABLE_IMPLICIT_TOKEN"] = "1"
         os.environ["HF_LOCAL_FILES_ONLY"] = "1"
         
         # 从服务目录查找本地模型
         service_dir = os.path.dirname(__file__)
-        models_dir = os.path.join(service_dir, "models")
-        
-        if not os.path.exists(models_dir):
-            raise FileNotFoundError(
-                f"Models directory not found: {models_dir}\n"
-                "Please ensure models are properly installed in the service directory."
-            )
-        
-        # 检查是否有本地模型目录（m2m100-en-zh 或 m2m100-zh-en）
-        local_model_path = None
-        en_zh_path = os.path.join(models_dir, "m2m100-en-zh")
-        zh_en_path = os.path.join(models_dir, "m2m100-zh-en")
-        
-        # 检查模型目录是否包含必要的文件
-        def check_model_complete(model_path):
-            """检查模型目录是否完整（包含 tokenizer 和 PyTorch 模型文件）"""
-            if not os.path.exists(model_path):
-                return False, "Directory does not exist"
-            if not os.path.exists(os.path.join(model_path, "tokenizer.json")):
-                return False, "Missing tokenizer.json"
-            
-            # 检查是否有 PyTorch 模型文件
-            pytorch_files = [
-                "pytorch_model.bin",
-                "model.safetensors",
-                "pytorch_model.bin.index.json",  # 分片模型
-            ]
-            has_pytorch_model = any(
-                os.path.exists(os.path.join(model_path, f)) for f in pytorch_files
-            )
-            if not has_pytorch_model:
-                # 检查是否有分片模型文件（pytorch_model-*.bin）
-                bin_files = [f for f in os.listdir(model_path) if f.startswith("pytorch_model-") and f.endswith(".bin")]
-                if not bin_files:
-                    return False, "Missing PyTorch model file (pytorch_model.bin or model.safetensors)"
-            return True, None
-        
-        # 优先使用 m2m100-en-zh（如果存在且完整）
-        if os.path.exists(en_zh_path):
-            is_complete, error_msg = check_model_complete(en_zh_path)
-            if is_complete:
-                local_model_path = en_zh_path
-                print(f"[NMT Service] Found local model directory: {local_model_path}")
-            else:
-                print(f"[NMT Service] Model directory {en_zh_path} is incomplete: {error_msg}")
-        elif os.path.exists(zh_en_path):
-            is_complete, error_msg = check_model_complete(zh_en_path)
-            if is_complete:
-                local_model_path = zh_en_path
-                print(f"[NMT Service] Found local model directory: {local_model_path}")
-            else:
-                print(f"[NMT Service] Model directory {zh_en_path} is incomplete: {error_msg}")
-        
-        # 如果找不到完整的本地模型，直接报错
-        if not local_model_path:
-            error_details = []
-            if os.path.exists(en_zh_path):
-                _, error_msg = check_model_complete(en_zh_path)
-                error_details.append(f"m2m100-en-zh: {error_msg}")
-            if os.path.exists(zh_en_path):
-                _, error_msg = check_model_complete(zh_en_path)
-                error_details.append(f"m2m100-zh-en: {error_msg}")
-            
-            if error_details:
-                raise FileNotFoundError(
-                    f"Local model files are incomplete in {models_dir}\n"
-                    + "\n".join(f"  - {detail}" for detail in error_details) + "\n"
-                    "Required files: tokenizer.json, pytorch_model.bin (or model.safetensors)\n"
-                    "Please ensure models are properly installed. The service will not download models from HuggingFace."
-                )
-            else:
-                raise FileNotFoundError(
-                    f"Local model not found in {models_dir}\n"
-                    "Expected model directories: m2m100-en-zh or m2m100-zh-en\n"
-                    "Please ensure models are properly installed. The service will not download models from HuggingFace."
-                )
-        
-        # 配置加载选项 - 强制使用本地文件
-        extra = {
-            "local_files_only": True,
-            "use_safetensors": True,  # 优先使用 safetensors 格式（更安全且已下载）
-        }
-        
-        print(f"[NMT Service] Loading tokenizer from local path: {local_model_path}")
-        print("[NMT Service] Using local files only (no network requests)")
+        local_model_path = find_local_model_path(service_dir)
         
         # 保存实际使用的模型路径
         loaded_model_path = local_model_path
         
-        # 加载 tokenizer - 如果失败直接报错
-        try:
-            tokenizer = M2M100Tokenizer.from_pretrained(local_model_path, **extra)
-        except MemoryError as mem_err:
-            raise RuntimeError(
-                f"Failed to load tokenizer due to insufficient memory: {mem_err}\n"
-                "This is a system-level issue. Please:\n"
-                "1. Close other applications to free up memory\n"
-                "2. Increase Windows page file size\n"
-                "3. Restart your computer to free up memory\n"
-                "4. Consider using a smaller model or running on a machine with more RAM"
-            )
-        except ImportError as import_err:
-            if 'protobuf' in str(import_err).lower():
-                raise RuntimeError(
-                    f"Missing protobuf library: {import_err}\n"
-                    "Please install protobuf: pip install protobuf>=3.20.0\n"
-                    "Note: If installation fails due to MemoryError, you need to free up memory first."
-                )
-            raise
-        except Exception as e:
-            raise RuntimeError(
-                f"Failed to load tokenizer from {local_model_path}: {e}\n"
-                "Please ensure the model files are complete and valid."
-            )
+        # 加载 tokenizer
+        tokenizer = load_tokenizer(local_model_path)
         
-        # 加载 PyTorch 模型
-        print(f"[NMT Service] Loading PyTorch model from local path: {local_model_path}", flush=True)
-        # 启用低内存模式以减少虚拟内存使用（解决 Windows 页面文件不足的问题）
-        os.environ["TRANSFORMERS_NO_ADVISORY_WARNINGS"] = "1"
-        
-        print(f"[NMT Service] [STEP] About to call M2M100ForConditionalGeneration.from_pretrained()", flush=True)
-        print(f"[NMT Service] [STEP] Model path: {local_model_path}", flush=True)
-        print(f"[NMT Service] [STEP] Model path exists: {os.path.exists(local_model_path)}", flush=True)
-        
-        # 尝试加载模型，使用更安全的参数
-        # 注意：访问违规错误无法被 Python try-except 捕获，但我们可以尝试不同的加载方式
-        model_loaded = False
-        
-        # 方法1：使用 low_cpu_mem_usage=True（减少内存占用，避免系统卡住）
-        # 注意：虽然改造前使用 False，但为了减少内存占用，现在优先使用 True
-        if not model_loaded:
-            try:
-                print(f"[NMT Service] [STEP] Attempt 1: Calling from_pretrained with low_cpu_mem_usage=True, torch_dtype=float32", flush=True)
-                print(f"[NMT Service] [STEP] This may take a while...", flush=True)
-                print(f"[NMT Service] [STEP] Flushing stdout before model load...", flush=True)
-                sys.stdout.flush()
-                sys.stderr.flush()
-                
-                # 在加载模型前，先清理 CUDA 缓存（如果有）
-                if torch.cuda.is_available():
-                    print(f"[NMT Service] [STEP] Clearing CUDA cache before model load...", flush=True)
-                    torch.cuda.empty_cache()
-                    print(f"[NMT Service] [STEP] CUDA cache cleared", flush=True)
-                
-                # 使用 low_cpu_mem_usage=True 以减少内存占用
-                # 注意：如果这里发生访问违规，Python 无法捕获，进程会直接崩溃
-                print(f"[NMT Service] [STEP] About to call from_pretrained() with low_cpu_mem_usage=True...", flush=True)
-                sys.stdout.flush()
-                model = M2M100ForConditionalGeneration.from_pretrained(
-                    local_model_path, 
-                    **extra,
-                    low_cpu_mem_usage=True,  # 使用低内存模式（减少内存占用）
-                    torch_dtype=torch.float32,
-                )
-                print(f"[NMT Service] [STEP] Model loaded successfully with low_cpu_mem_usage=True", flush=True)
-                model_loaded = True
-            except OSError as mem_error:
-                if '1455' in str(mem_error) or '页面文件' in str(mem_error):
-                    print(f"[NMT Service] [ERROR] Memory error (OSError 1455) in attempt 1: {mem_error}", flush=True)
-                    print(f"[NMT Service] [ERROR] This indicates insufficient virtual memory (page file)", flush=True)
-                    print(f"[NMT Service] [WARN] Will try method 2 (low_cpu_mem_usage=False) as fallback", flush=True)
-                    # 不直接 raise，继续尝试方法2
-                    pass
-                else:
-                    print(f"[NMT Service] [ERROR] OSError during model loading (attempt 1): {mem_error}", flush=True)
-                    # 其他 OSError 也继续尝试方法2
-                    pass
-            except Exception as e:
-                print(f"[NMT Service] [ERROR] Exception during model loading (attempt 1): {e}", flush=True)
-                import traceback
-                traceback.print_exc()
-                # 继续尝试方法2
-                pass
-        
-        # 方法2：如果方法1失败，尝试使用改造前的配置（low_cpu_mem_usage=False）
-        # 这是之前集成测试时正常工作的配置，但会占用更多内存
-        if not model_loaded:
-            try:
-                print(f"[NMT Service] [STEP] Attempt 2: Calling from_pretrained with low_cpu_mem_usage=False (original config, uses more memory)", flush=True)
-                print(f"[NMT Service] [WARN] This will use more memory but may be more stable", flush=True)
-                print(f"[NMT Service] [STEP] Flushing stdout before model load...", flush=True)
-                sys.stdout.flush()
-                sys.stderr.flush()
-                
-                # 清理 CUDA 缓存
-                if torch.cuda.is_available():
-                    print(f"[NMT Service] [STEP] Clearing CUDA cache before model load...", flush=True)
-                    torch.cuda.empty_cache()
-                
-                print(f"[NMT Service] [STEP] About to call from_pretrained() with low_cpu_mem_usage=False...", flush=True)
-                sys.stdout.flush()
-                model = M2M100ForConditionalGeneration.from_pretrained(
-                    local_model_path, 
-                    **extra,
-                    low_cpu_mem_usage=False,  # 使用改造前的配置（占用更多内存但可能更稳定）
-                    torch_dtype=torch.float32,
-                )
-                print(f"[NMT Service] [STEP] Model loaded successfully with low_cpu_mem_usage=False (original config)", flush=True)
-                model_loaded = True
-            except OSError as mem_error:
-                if '1455' in str(mem_error) or '页面文件' in str(mem_error):
-                    print(f"[NMT Service] [ERROR] Memory error (OSError 1455) in attempt 2: {mem_error}", flush=True)
-                    print(f"[NMT Service] [ERROR] Both loading methods failed due to insufficient virtual memory", flush=True)
-                    raise RuntimeError(
-                        f"Failed to load model after multiple attempts due to insufficient virtual memory. "
-                        f"Please increase Windows page file size or free up system memory. "
-                        f"Error: {mem_error}\n"
-                        f"Both low_cpu_mem_usage=True and low_cpu_mem_usage=False failed."
-                    )
-                else:
-                    print(f"[NMT Service] [ERROR] OSError during model loading (attempt 2): {mem_error}", flush=True)
-                    raise RuntimeError(
-                        f"Failed to load model after multiple attempts. "
-                        f"Last error: {mem_error}\n"
-                        f"Please check:\n"
-                        f"1. Model files are complete and valid\n"
-                        f"2. PyTorch version is compatible\n"
-                        f"3. System has sufficient memory\n"
-                        f"4. CUDA drivers are up to date (if using GPU)"
-                    )
-            except Exception as e:
-                print(f"[NMT Service] [ERROR] Exception during model loading (attempt 2): {e}", flush=True)
-                import traceback
-                traceback.print_exc()
-                raise RuntimeError(
-                    f"Failed to load model after multiple attempts. "
-                    f"Last error: {e}\n"
-                    f"Please check:\n"
-                    f"1. Model files are complete and valid\n"
-                    f"2. PyTorch version is compatible\n"
-                    f"3. System has sufficient memory\n"
-                    f"4. CUDA drivers are up to date (if using GPU)"
-                )
-        
-        if not model_loaded:
-            raise RuntimeError("Failed to load model: all loading attempts failed")
-        
-        print(f"[NMT Service] [STEP] Model loaded successfully, checking parameters...", flush=True)
-        
-        # 检查模型是否在 meta 设备上
-        print(f"[NMT Service] [STEP] Checking if model is on meta device...", flush=True)
-        try:
-            first_param = next(model.parameters(), None)
-            if first_param is not None:
-                param_device = str(first_param.device)
-                print(f"[NMT Service] [STEP] First parameter device: {param_device}", flush=True)
-                if param_device == "meta":
-                    print(f"[NMT Service] [WARN] Model loaded to meta device, will move to {DEVICE} during .to() call", flush=True)
-                    # 如果模型在 meta 设备上，在移动到目标设备时会自动加载
-        except StopIteration:
-            print(f"[NMT Service] [WARN] Model has no parameters (unexpected)", flush=True)
-            pass  # 模型没有参数（不应该发生）
-        print(f"[NMT Service] [STEP] Meta device check completed", flush=True)
+        # 加载模型
+        model = load_model_with_retry(local_model_path, DEVICE)
         
         # 移动到目标设备
-        print(f"[NMT Service] [STEP] Moving model to device: {DEVICE}", flush=True)
-        print(f"[NMT Service] [STEP] CUDA available: {torch.cuda.is_available()}", flush=True)
-        if torch.cuda.is_available():
-            print(f"[NMT Service] [STEP] CUDA device count: {torch.cuda.device_count()}", flush=True)
-            try:
-                print(f"[NMT Service] [STEP] Current CUDA device: {torch.cuda.current_device()}", flush=True)
-                print(f"[NMT Service] [STEP] CUDA device name: {torch.cuda.get_device_name(0)}", flush=True)
-            except Exception as cuda_err:
-                print(f"[NMT Service] [WARN] Warning: Failed to get CUDA device info: {cuda_err}", flush=True)
-        
-        # 尝试移动到设备，如果失败则回退到 CPU
-        # 注意：如果内存不足，强制使用 CPU 模式以减少内存占用
-        try:
-            # 如果使用 low_cpu_mem_usage=True，模型可能在 meta 设备上，需要先移动到 CPU
-            first_param = next(model.parameters(), None)
-            if first_param is not None and str(first_param.device) == "meta":
-                print(f"[NMT Service] [STEP] Model is on meta device, moving to CPU first...", flush=True)
-                model = model.to("cpu")
-                print(f"[NMT Service] [STEP] Model moved to CPU from meta device", flush=True)
-            
-            print(f"[NMT Service] [STEP] Calling model.to({DEVICE})...", flush=True)
-            model = model.to(DEVICE)
-            print(f"[NMT Service] [STEP] Model moved to {DEVICE}, calling eval()...", flush=True)
-            model = model.eval()
-            print(f"[NMT Service] [OK] Model moved to {DEVICE} successfully", flush=True)
-            
-            # 记录内存使用情况
-            if torch.cuda.is_available() and str(DEVICE).startswith('cuda'):
-                try:
-                    allocated = torch.cuda.memory_allocated(0) / 1024**3  # GB
-                    reserved = torch.cuda.memory_reserved(0) / 1024**3  # GB
-                    total = torch.cuda.get_device_properties(0).total_memory / 1024**3  # GB
-                    print(f"[NMT Service] [MEMORY] GPU memory allocated: {allocated:.2f} GB", flush=True)
-                    print(f"[NMT Service] [MEMORY] GPU memory reserved: {reserved:.2f} GB", flush=True)
-                    print(f"[NMT Service] [MEMORY] GPU memory total: {total:.2f} GB", flush=True)
-                    print(f"[NMT Service] [MEMORY] GPU memory usage: {reserved/total*100:.1f}%", flush=True)
-                except Exception as mem_err:
-                    print(f"[NMT Service] [WARN] Failed to get GPU memory info: {mem_err}", flush=True)
-        except Exception as device_err:
-            print(f"[NMT Service] [ERROR] Failed to move model to {DEVICE}: {device_err}", flush=True)
-            print(f"[NMT Service] [WARN] Falling back to CPU", flush=True)
-            DEVICE = torch.device("cpu")
-            model = model.to(DEVICE).eval()
-            print(f"[NMT Service] [OK] Model moved to CPU successfully", flush=True)
+        model = move_model_to_device(model, DEVICE)
         
         print(f"[NMT Service] Model loaded successfully on {DEVICE}", flush=True)
     except Exception as e:
         print(f"[NMT Service] [CRITICAL ERROR] Failed to load model: {e}", flush=True)
-        import traceback
         traceback.print_exc()
         raise
 
@@ -554,7 +115,6 @@ async def health():
 @app.post("/v1/translate", response_model=TranslateResponse)
 async def translate(req: TranslateRequest) -> TranslateResponse:
     """翻译接口"""
-    import datetime
     request_start = time.time()
     request_timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
     
@@ -576,20 +136,17 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
         tokenizer.src_lang = req.src_lang
         
         # 如果有上下文文本，拼接上下文和当前文本
-        # 注意：M2M100 本身不支持上下文参数，这里只是简单拼接
-        # 如果需要真正的上下文支持，需要修改模型输入格式
         input_text = req.text
         context_text = req.context_text  # 保存 context_text 用于后续提取
         # 使用哨兵序列（Sentinel Sequence）来准确识别和提取当前句翻译（从配置文件读取）
         # 如果context_text为空或空字符串，直接使用当前文本，不需要拼接
         if req.context_text and req.context_text.strip():
-                # 使用哨兵序列拼接：上下文 + 哨兵序列 + 当前文本
-                # 哨兵序列设计为长序列，提高被NMT模型原样保留的概率，便于准确提取
-                input_text = f"{req.context_text}{SEPARATOR}{req.text}"
-                print(f"[NMT Service] Concatenated input with sentinel sequence: '{input_text[:100]}{'...' if len(input_text) > 100 else ''}' (total length={len(input_text)})")
+            # 使用哨兵序列拼接：上下文 + 哨兵序列 + 当前文本
+            input_text = f"{req.context_text}{SEPARATOR}{req.text}"
+            print(f"[NMT Service] Concatenated input with sentinel sequence: '{input_text[:100]}{'...' if len(input_text) > 100 else ''}' (total length={len(input_text)})")
         else:
-                # context_text为空或空字符串，直接使用当前文本（如job0的情况）
-                print(f"[NMT Service] No context text provided, translating current text directly (length={len(req.text)})")
+            # context_text为空或空字符串，直接使用当前文本（如job0的情况）
+            print(f"[NMT Service] No context text provided, translating current text directly (length={len(req.text)})")
         
         # 编码输入文本（M2M100 会在文本前自动添加源语言 token）
         encoded = tokenizer(input_text, return_tensors="pt").to(DEVICE)
@@ -606,69 +163,10 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
         num_candidates = req.num_candidates or 1
         num_beams = max(4, num_candidates)  # 至少使用 4 个 beam，如果请求更多候选则增加
         
-        # 动态计算 max_new_tokens  based on input text length
-        def calculate_max_new_tokens(
-            input_text: str,
-            context_text: Optional[str] = None,
-            min_tokens: int = 128,
-            max_tokens: int = 512,
-            safety_margin: float = 1.5
-        ) -> int:
-            """
-            根据输入文本长度动态计算 max_new_tokens
-            
-            Args:
-                input_text: 当前要翻译的文本
-                context_text: 上下文文本（可选）
-                min_tokens: 最小 token 数
-                max_tokens: 最大 token 数
-                safety_margin: 安全缓冲系数（默认 1.5，即 +50%）
-            
-            Returns:
-                合理的 max_new_tokens 值
-            """
-            # 使用 tokenizer 精确计算（如果可用）
-            if tokenizer:
-                input_tokens = len(tokenizer.encode(input_text))
-                if context_text:
-                    context_tokens = len(tokenizer.encode(context_text))
-                    total_input_tokens = input_tokens + context_tokens
-                else:
-                    total_input_tokens = input_tokens
-                
-                # 中英文 token 比例（保守估计）
-                # 中文更紧凑，1 个中文 token 通常对应 1.5-2.5 个英文 token
-                ratio = 2.5
-                estimated_output_tokens = int(total_input_tokens * ratio)
-            else:
-                # 粗略估算：使用字符数
-                input_length = len(input_text)
-                if context_text:
-                    total_input_length = len(context_text) + len(input_text)
-                else:
-                    total_input_length = input_length
-                
-                # 根据输入长度调整比例
-                if total_input_length < 20:
-                    ratio = 2.0  # 短句：1:2
-                elif total_input_length < 50:
-                    ratio = 2.5  # 中等句子：1:2.5
-                else:
-                    ratio = 3.0  # 长句：1:3
-                
-                estimated_output_tokens = int(total_input_length * ratio)
-            
-            # 添加安全缓冲
-            estimated_output_tokens = int(estimated_output_tokens * safety_margin)
-            
-            # 限制在合理范围内
-            max_new_tokens = max(min_tokens, min(estimated_output_tokens, max_tokens))
-            
-            return max_new_tokens
-        
         # 计算动态 max_new_tokens
         max_new_tokens = calculate_max_new_tokens(
             input_text=req.text,
+            tokenizer=tokenizer,
             context_text=req.context_text,
             min_tokens=128,   # 最短至少 128 个 token
             max_tokens=512,   # 最长不超过 512 个 token（避免显存溢出）
@@ -741,444 +239,18 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
         print(f"[NMT Service] Output (full translation): '{out[:200]}{'...' if len(out) > 200 else ''}' (length={len(out)})")
         
         # 如果提供了 context_text，需要从完整翻译中提取只当前句的翻译部分
-        # 如果没有 context_text（如job0的情况），直接使用完整翻译
-        final_output = out
-        extraction_mode = "FULL_ONLY"  # 默认模式
-        extraction_confidence = "HIGH"  # 默认置信度
+        final_output, extraction_mode, extraction_confidence = extract_translation(
+            out=out,
+            context_text=context_text,
+            current_text=req.text,
+            tokenizer=tokenizer,
+            model=model,
+            tgt_lang=req.tgt_lang,
+            device=DEVICE,
+            max_new_tokens=max_new_tokens
+        )
         
-        # 如果context_text为空或空字符串，直接使用完整翻译，不需要提取
-        if req.context_text and req.context_text.strip():
-            print(f"[NMT Service] WARNING: Output contains translation of BOTH context_text and text. Extracting only current sentence translation.")
-            
-            # 方法：使用哨兵序列（Sentinel Sequence）来准确识别和提取当前句翻译
-            # 哨兵序列设计为长序列（≥8字符），使用非常规Unicode字符，提高被NMT模型原样保留的概率
-            
-            try:
-                # 方法1：查找哨兵序列在完整翻译中的位置（最准确）
-                # 首先查找完整的哨兵序列（带Unicode括号），如果找不到，再查找纯文本SEP_MARKER
-                sentinel_pos = -1
-                found_sentinel = None
-                
-                # 第一步：查找完整的哨兵序列（带Unicode括号）
-                for sep_variant in SEPARATOR_TRANSLATIONS:
-                    pos = out.find(sep_variant)
-                    if pos != -1:
-                        sentinel_pos = pos + len(sep_variant)
-                        found_sentinel = sep_variant
-                        print(f"[NMT Service] Found sentinel sequence '{sep_variant}' at position {pos}, extracted text will start at position {sentinel_pos}")
-                        print(f"[NMT Service] Text before sentinel: '{out[:pos][-50:]}'")
-                        print(f"[NMT Service] Text after sentinel (first 100 chars): '{out[sentinel_pos:sentinel_pos+100]}'")
-                        break
-                
-                # 第二步：如果完整哨兵序列未找到，查找纯文本SEP_MARKER（NMT可能将Unicode括号翻译掉了）
-                if sentinel_pos == -1:
-                    # 查找纯文本SEP_MARKER（可能带空格变体）
-                    sep_marker_variants = [' SEP_MARKER ', 'SEP_MARKER', ' SEP_MARKER', 'SEP_MARKER ']
-                    for marker_variant in sep_marker_variants:
-                        pos = out.find(marker_variant)
-                        if pos != -1:
-                            sentinel_pos = pos + len(marker_variant)
-                            found_sentinel = marker_variant
-                            print(f"[NMT Service] Found plain text SEP_MARKER '{marker_variant}' at position {pos} (Unicode brackets were translated away), extracted text will start at position {sentinel_pos}")
-                            print(f"[NMT Service] Text before SEP_MARKER: '{out[:pos][-50:]}'")
-                            print(f"[NMT Service] Text after SEP_MARKER (first 100 chars): '{out[sentinel_pos:sentinel_pos+100]}'")
-                            break
-                
-                # 第三步：如果仍然未找到，检查是否SEP_MARKER被截断了
-                # 注意：不应该硬编码删除特定字符，因为分隔符可能随时调整
-                # 单独出现一个字符更有可能是index计算错误，截取文本的错误
-                if sentinel_pos == -1:
-                    # 使用预生成的截断模式（基于配置的分隔符动态生成）
-                    # 这些模式在服务启动时从配置文件中提取，不包含任何硬编码
-                    for pattern in TRUNCATED_PATTERNS:
-                        pos = out.find(pattern)
-                        if pos != -1:
-                            # 如果找到截断的模式，尝试从模式之后提取文本
-                            # 但需要检查模式之前是否有上下文翻译的痕迹
-                            sentinel_pos = pos + len(pattern)
-                            found_sentinel = pattern
-                            print(f"[NMT Service] WARNING: Found truncated SEP_MARKER pattern '{pattern}' at position {pos}, extracted text will start at position {sentinel_pos}")
-                            print(f"[NMT Service] Text before truncated pattern: '{out[:pos][-50:]}'")
-                            print(f"[NMT Service] Text after truncated pattern (first 100 chars): '{out[sentinel_pos:sentinel_pos+100]}'")
-                            # 验证提取位置是否正确：检查提取的文本是否合理
-                            extracted_preview = out[sentinel_pos:sentinel_pos+20].strip()
-                            if len(extracted_preview) > 0:
-                                print(f"[NMT Service] Extracted text preview: '{extracted_preview}'")
-                            # 如果模式很短（如单个字符），需要额外验证
-                            if len(pattern) <= 2:
-                                # 检查提取的文本是否以空格开头，且后面跟着合理的文本
-                                if sentinel_pos < len(out) and out[sentinel_pos:sentinel_pos+1] == ' ':
-                                    # 跳过空格，检查后面的文本是否合理
-                                    next_text_start = sentinel_pos + 1
-                                    if next_text_start < len(out):
-                                        next_text = out[next_text_start:next_text_start+10].strip()
-                                        if len(next_text) > 0:
-                                            # 如果后面有合理的文本，使用跳过空格后的位置
-                                            sentinel_pos = next_text_start
-                                            print(f"[NMT Service] Adjusted sentinel_pos to skip space after short pattern, new pos={sentinel_pos}")
-                            break
-                
-                if sentinel_pos != -1:
-                    # 找到哨兵序列，提取之后的部分（当前句翻译）
-                    # 关键：确保提取位置跳过整个哨兵序列，不包含哨兵序列的任何部分
-                    # 验证 sentinel_pos 是否在有效范围内
-                    if sentinel_pos < 0 or sentinel_pos >= len(out):
-                        print(f"[NMT Service] ERROR: Invalid sentinel_pos={sentinel_pos}, output length={len(out)}, using fallback")
-                        sentinel_pos = -1
-                    else:
-                        raw_extracted = out[sentinel_pos:].strip()
-                        # 验证提取的文本是否合理：不应该以分隔符的字符开头
-                        if raw_extracted:
-                            first_char = raw_extracted[0]
-                            # 检查第一个字符是否是分隔符的一部分（可能是index计算错误）
-                            for sep_variant in SEPARATOR_TRANSLATIONS:
-                                if first_char in sep_variant and len(raw_extracted) > 1:
-                                    # 如果第一个字符是分隔符的一部分，且后面是空格，可能是index计算错误
-                                    if raw_extracted[1:2] == ' ':
-                                        print(f"[NMT Service] WARNING: Extracted text starts with separator character '{first_char}', "
-                                              f"this may indicate index calculation error. sentinel_pos={sentinel_pos}, "
-                                              f"separator='{sep_variant}', extracted='{raw_extracted[:50]}'")
-                                        # 尝试修正：跳过这个字符
-                                        corrected_pos = sentinel_pos + 1
-                                        if corrected_pos < len(out):
-                                            raw_extracted = out[corrected_pos:].strip()
-                                            print(f"[NMT Service] Corrected extraction: '{raw_extracted[:50]}'")
-                                            sentinel_pos = corrected_pos
-                                        break
-                        
-                        # 清理：移除提取内容中可能残留的哨兵序列
-                        final_output = raw_extracted
-                    # 清理完整哨兵序列（带Unicode括号）
-                    for sep_variant in SEPARATOR_TRANSLATIONS:
-                        if final_output.startswith(sep_variant):
-                            final_output = final_output[len(sep_variant):].strip()
-                            print(f"[NMT Service] Removed sentinel sequence variant '{sep_variant}' from extracted text start")
-                        # 移除中间可能残留的哨兵序列
-                        if sep_variant in final_output:
-                            final_output = final_output.replace(sep_variant, " ").strip()
-                            print(f"[NMT Service] Removed sentinel sequence variant '{sep_variant}' from extracted text middle")
-                    # 清理纯文本SEP_MARKER（NMT可能将Unicode括号翻译掉了）
-                    sep_marker_variants = [' SEP_MARKER ', 'SEP_MARKER', ' SEP_MARKER', 'SEP_MARKER ']
-                    for marker_variant in sep_marker_variants:
-                        if final_output.startswith(marker_variant):
-                            final_output = final_output[len(marker_variant):].strip()
-                            print(f"[NMT Service] Removed plain text SEP_MARKER '{marker_variant}' from extracted text start")
-                        # 移除中间可能残留的SEP_MARKER
-                        if marker_variant in final_output:
-                            final_output = final_output.replace(marker_variant, " ").strip()
-                            print(f"[NMT Service] Removed plain text SEP_MARKER '{marker_variant}' from extracted text middle")
-                    
-                    extraction_mode = "SENTINEL"
-                    extraction_confidence = "HIGH"
-                    print(f"[NMT Service] Extracted current sentence translation (method: SENTINEL, sentinel pos={sentinel_pos}, raw length={len(raw_extracted)}, cleaned length={len(final_output)}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}'")
-                else:
-                    # ========== 阶段2：上下文翻译对齐切割（Fallback） ==========
-                    print(f"[NMT Service] Sentinel sequence not found in output, falling back to context translation alignment method")
-                    print(f"[NMT Service] Full output: '{out[:200]}{'...' if len(out) > 200 else ''}'")
-                    print(f"[NMT Service] Sentinel sequence variants searched: {SEPARATOR_TRANSLATIONS}")
-                    
-                    # 单独翻译 context_text，用于在完整翻译中定位
-                    context_text = req.context_text
-                    context_encoded = tokenizer(context_text, return_tensors="pt").to(DEVICE)
-                    context_forced_bos = tokenizer.get_lang_id(req.tgt_lang)
-                    
-                    with torch.no_grad():
-                        context_gen = model.generate(
-                            **context_encoded,
-                            forced_bos_token_id=context_forced_bos,
-                            num_beams=4,
-                            num_return_sequences=1,
-                            no_repeat_ngram_size=3,
-                            repetition_penalty=1.2,
-                            max_new_tokens=min(256, max_new_tokens),  # 限制 context 翻译的 token 数
-                            early_stopping=False,
-                        )
-                    
-                    # 解码 context_text 的翻译
-                    context_translation = tokenizer.decode(context_gen[0], skip_special_tokens=True)
-                    context_translation_length = len(context_translation)
-                    
-                    print(f"[NMT Service] Context translation: '{context_translation[:100]}{'...' if len(context_translation) > 100 else ''}' (length={context_translation_length})")
-                    
-                    # 在完整翻译中查找 context 翻译的位置（限制在前80%，避免在中间找到错误位置）
-                    search_range = int(len(out) * 0.8)
-                    search_text = out[:search_range]
-                    
-                    # 方法1：如果完整翻译以 context 翻译开头，提取剩余部分（最准确）
-                    if out.startswith(context_translation):
-                        potential_output = out[context_translation_length:].strip()
-                        # 验证：确保提取的文本不是空的，且不是 context 翻译的一部分
-                        # 如果提取的文本太短（小于 context 翻译长度的 10%），可能是匹配错误
-                        if potential_output and len(potential_output) >= max(5, context_translation_length * 0.1):
-                            # 额外验证：检查提取的文本是否与 context 翻译有重叠（避免提取错误）
-                            if potential_output[:min(20, len(potential_output))] not in context_translation:
-                                final_output = potential_output
-                                extraction_mode = "ALIGN_FALLBACK"
-                                extraction_confidence = "HIGH"
-                                print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK prefix match): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
-                            else:
-                                # 提取的文本与 context 翻译重叠，可能是匹配错误，使用方法2
-                                print(f"[NMT Service] WARNING: Extracted text overlaps with context translation, using substring match instead")
-                                context_end_pos = search_text.find(context_translation)
-                                if context_end_pos != -1 and context_end_pos > 0:
-                                    final_output = out[context_end_pos + context_translation_length:].strip()
-                                    extraction_mode = "ALIGN_FALLBACK"
-                                    extraction_confidence = "MEDIUM"
-                                    print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK substring match after prefix overlap check, context end pos={context_end_pos + context_translation_length}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
-                                else:
-                                    # 如果 substring match 也失败，使用方法3
-                                    if len(out) > context_translation_length:
-                                        estimated_context_translation_length = int(context_translation_length * 1.05)
-                                        estimated_context_translation_length = min(estimated_context_translation_length, len(out) - 1)
-                                        final_output = out[estimated_context_translation_length:].strip()
-                                        extraction_mode = "ALIGN_FALLBACK"
-                                        extraction_confidence = "LOW"
-                                        print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK estimated length after validation failures, context length={context_translation_length}, estimated pos={estimated_context_translation_length}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
-                                    else:
-                                        final_output = out
-                                        extraction_mode = "FULL_ONLY"
-                                        extraction_confidence = "LOW"
-                        else:
-                            # 提取的文本太短，可能是匹配错误，使用方法2
-                            print(f"[NMT Service] WARNING: Extracted text too short (length={len(potential_output) if potential_output else 0}), using substring match instead")
-                            context_end_pos = search_text.find(context_translation)
-                            if context_end_pos != -1:
-                                final_output = out[context_end_pos + context_translation_length:].strip()
-                                extraction_mode = "ALIGN_FALLBACK"
-                                extraction_confidence = "MEDIUM"
-                                print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK substring match after short text check, context end pos={context_end_pos + context_translation_length}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
-                            else:
-                                # 如果 substring match 也失败，使用方法3
-                                if len(out) > context_translation_length:
-                                    estimated_context_translation_length = int(context_translation_length * 1.05)
-                                    estimated_context_translation_length = min(estimated_context_translation_length, len(out) - 1)
-                                    final_output = out[estimated_context_translation_length:].strip()
-                                    extraction_mode = "ALIGN_FALLBACK"
-                                    extraction_confidence = "LOW"
-                                    print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK estimated length after substring match failure, context length={context_translation_length}, estimated pos={estimated_context_translation_length}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
-                                else:
-                                    final_output = out
-                                    extraction_mode = "FULL_ONLY"
-                                    extraction_confidence = "LOW"
-                    else:
-                        # 方法2：在完整翻译的前80%中查找 context 翻译的位置
-                        context_end_pos = search_text.find(context_translation)
-                        if context_end_pos != -1:
-                            potential_output = out[context_end_pos + context_translation_length:].strip()
-                            # 验证：确保提取的文本不是空的，且不是 context 翻译的一部分
-                            if potential_output and len(potential_output) >= max(5, context_translation_length * 0.1):
-                                # 额外验证：检查提取的文本是否与 context 翻译有重叠
-                                if potential_output[:min(20, len(potential_output))] not in context_translation:
-                                    final_output = potential_output
-                                    extraction_mode = "ALIGN_FALLBACK"
-                                    extraction_confidence = "MEDIUM"
-                                    print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK substring match in first 80%, context end pos={context_end_pos + context_translation_length}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
-                                else:
-                                    # 提取的文本与 context 翻译重叠，使用方法3
-                                    print(f"[NMT Service] WARNING: Extracted text overlaps with context translation, using estimated length instead")
-                                    if len(out) > context_translation_length:
-                                        estimated_context_translation_length = int(context_translation_length * 1.05)
-                                        estimated_context_translation_length = min(estimated_context_translation_length, len(out) - 1)
-                                        final_output = out[estimated_context_translation_length:].strip()
-                                        extraction_mode = "ALIGN_FALLBACK"
-                                        extraction_confidence = "LOW"
-                                        print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK estimated length after overlap check, context length={context_translation_length}, estimated pos={estimated_context_translation_length}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
-                                    else:
-                                        final_output = out
-                                        extraction_mode = "FULL_ONLY"
-                                        extraction_confidence = "LOW"
-                            else:
-                                # 提取的文本太短，使用方法3
-                                print(f"[NMT Service] WARNING: Extracted text too short (length={len(potential_output) if potential_output else 0}), using estimated length instead")
-                                if len(out) > context_translation_length:
-                                    estimated_context_translation_length = int(context_translation_length * 1.05)
-                                    estimated_context_translation_length = min(estimated_context_translation_length, len(out) - 1)
-                                    final_output = out[estimated_context_translation_length:].strip()
-                                    extraction_mode = "ALIGN_FALLBACK"
-                                    extraction_confidence = "LOW"
-                                    print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK estimated length after short text check, context length={context_translation_length}, estimated pos={estimated_context_translation_length}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
-                                else:
-                                    final_output = out
-                                    extraction_mode = "FULL_ONLY"
-                                    extraction_confidence = "LOW"
-                        else:
-                            # 方法3：使用实际context翻译长度估算（保守方法）
-                            if len(out) <= context_translation_length:
-                                # 完整翻译长度小于context翻译长度，说明有问题
-                                print(f"[NMT Service] WARNING: Full translation ({len(out)}) is shorter than context translation ({context_translation_length}), using full output as fallback")
-                                final_output = out
-                                extraction_mode = "FULL_ONLY"
-                                extraction_confidence = "LOW"
-                            else:
-                                # 使用实际context翻译长度，加5%缓冲（处理可能的空格/标点差异）
-                                estimated_context_translation_length = int(context_translation_length * 1.05)
-                                estimated_context_translation_length = min(estimated_context_translation_length, len(out) - 1)
-                                final_output = out[estimated_context_translation_length:].strip()
-                                extraction_mode = "ALIGN_FALLBACK"
-                                extraction_confidence = "LOW"
-                                print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK estimated length with 5% buffer, context length={context_translation_length}, estimated pos={estimated_context_translation_length}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
-                    
-                    # 注意：不再进行重叠检测，因为哨兵序列的回退机制已经处理了重复问题
-                    # 如果哨兵序列丢失，ALIGN_FALLBACK会通过上下文对齐来提取，这已经足够准确
-                    
-                    # 清理：移除所有可能残留的哨兵序列
-                    for sep_variant in SEPARATOR_TRANSLATIONS:
-                        if sep_variant in final_output:
-                            final_output = final_output.replace(sep_variant, " ").strip()
-                            print(f"[NMT Service] Removed sentinel sequence '{sep_variant}' from final output (fallback cleanup)")
-                    # 清理纯文本SEP_MARKER（fallback cleanup）
-                    sep_marker_variants = [' SEP_MARKER ', 'SEP_MARKER', ' SEP_MARKER', 'SEP_MARKER ']
-                    for marker_variant in sep_marker_variants:
-                        if marker_variant in final_output:
-                            final_output = final_output.replace(marker_variant, " ").strip()
-                            print(f"[NMT Service] Removed plain text SEP_MARKER '{marker_variant}' from final output (fallback cleanup)")
-                
-                # ========== 阶段3：最终不为空兜底 ==========
-                if not final_output or final_output.strip() == "":
-                    print(f"[NMT Service] WARNING: Extracted translation is empty after all methods, using fallback strategies")
-                    
-                    # 兜底策略1：尝试单独翻译当前文本（不使用context）
-                    print(f"[NMT Service] Fallback: Attempting to translate current text without context")
-                    try:
-                        single_encoded = tokenizer(req.text, return_tensors="pt").to(DEVICE)
-                        single_forced_bos = tokenizer.get_lang_id(req.tgt_lang)
-                        
-                        with torch.no_grad():
-                            single_gen = model.generate(
-                                **single_encoded,
-                                forced_bos_token_id=single_forced_bos,
-                                num_beams=4,
-                                num_return_sequences=1,
-                                no_repeat_ngram_size=3,
-                                repetition_penalty=1.2,
-                                max_new_tokens=max_new_tokens,
-                                early_stopping=False,
-                            )
-                        
-                        single_translation = tokenizer.decode(single_gen[0], skip_special_tokens=True)
-                        if single_translation and single_translation.strip():
-                            final_output = single_translation.strip()
-                            extraction_mode = "SINGLE_ONLY"
-                            extraction_confidence = "MEDIUM"
-                            print(f"[NMT Service] Fallback successful: Translated current text without context: '{final_output[:100]}{'...' if len(final_output) > 100 else ''}'")
-                        else:
-                            # 兜底策略2：使用完整翻译（虽然包含context，但至少保证有结果）
-                            print(f"[NMT Service] Fallback: Single translation also empty, using full output as last resort")
-                            final_output = out
-                            extraction_mode = "FULL_ONLY"
-                            extraction_confidence = "LOW"
-                    except Exception as e:
-                        print(f"[NMT Service] ERROR: Fallback translation failed: {e}, using full output as last resort")
-                        final_output = out
-                        extraction_mode = "FULL_ONLY"
-                        extraction_confidence = "LOW"
-                
-                # 修复：不应该因为提取结果为空或太短就使用完整输出
-                # 超长句+超短句是常见情况，应该直接返回提取结果，即使它很短
-                # 如果提取失败，应该返回空字符串，而不是完整输出（完整输出包含 context 翻译）
-                if not final_output:
-                    # 提取结果为空，返回空字符串（而不是完整输出）
-                    # 完整输出包含 context 翻译，不应该返回
-                    print(f"[NMT Service] WARNING: Extracted translation is empty, returning empty string (not using full output which contains context translation)")
-                    final_output = ""
-                elif len(final_output) < len(req.text) * 0.5 and len(req.text) > 5:
-                    # 只有当当前文本长度>5时，才认为提取结果太短可能是错误
-                    # 如果当前文本本身就很短（<=5个字符），提取结果短是正常的
-                    print(f"[NMT Service] WARNING: Extracted translation too short (extracted={len(final_output)}, original={len(req.text)}), but original text is long")
-                    # 修复：如果提取结果太短，不应该使用完整输出（完整输出包含 context 翻译）
-                    # 应该直接返回提取结果，即使它很短
-                    # 超长句+超短句是常见情况，不应该按照特殊机制处理
-                    print(f"[NMT Service] Returning extracted translation as-is (even if short), not using full output which contains context translation")
-                    # final_output 保持不变，直接返回提取结果
-                else:
-                    # 当前文本很短，提取结果短是正常的，不需要使用完整输出
-                    print(f"[NMT Service] Extracted translation length is acceptable (extracted={len(final_output)}, original={len(req.text)})")
-                    
-                    # 额外检查：如果提取结果以小写字母开头（可能是截断），尝试查找更准确的分割点
-                    # 例如："ave not yet come back" 应该是 "Three sentences have not yet come back"
-                    if final_output and len(final_output) > 0 and final_output[0].islower():
-                        # 尝试在完整翻译中查找当前句翻译的起始位置
-                        # 方法：查找完整翻译中与提取结果匹配的部分，但向前扩展
-                        # 如果完整翻译包含提取结果，尝试找到更早的起始位置
-                        if final_output in out:
-                            # 查找提取结果在完整翻译中的位置
-                            match_pos = out.find(final_output)
-                            if match_pos > 0:
-                                # 检查前面是否有更合理的起始点（以大写字母或数字开头）
-                                # 向前查找，找到最近的大写字母或数字作为可能的起始点
-                                # 跳过哨兵序列相关的字符
-                                for i in range(match_pos - 1, max(0, match_pos - 50), -1):
-                                    # 检查是否是哨兵序列的一部分
-                                    if i > 0 and i < len(out) - 1:
-                                        context = out[max(0, i-10):min(len(out), i+20)]
-                                        # 如果当前位置在哨兵序列范围内，跳过
-                                        for sep_variant in SEPARATOR_TRANSLATIONS:
-                                            if sep_variant in context:
-                                                sep_start = context.find(sep_variant)
-                                                sep_end = sep_start + len(sep_variant)
-                                                if max(0, i-10) + sep_start <= i < max(0, i-10) + sep_end:
-                                                    continue
-                                    
-                                    if out[i].isupper() or out[i].isdigit():
-                                        # 找到可能的起始点，但需要检查是否合理（不要太远）
-                                        if match_pos - i < 30:  # 最多向前30个字符
-                                            potential_start = i
-                                            # 检查从该位置到提取结果之间的文本是否合理
-                                            potential_text = out[potential_start:match_pos + len(final_output)]
-                                            
-                                            # 检查potential_text是否包含哨兵序列，如果包含则跳过
-                                            has_sentinel = False
-                                            for sep_variant in SEPARATOR_TRANSLATIONS:
-                                                if sep_variant in potential_text:
-                                                    has_sentinel = True
-                                                    break
-                                            # 也检查纯文本SEP_MARKER
-                                            if not has_sentinel:
-                                                sep_marker_variants = [' SEP_MARKER ', 'SEP_MARKER', ' SEP_MARKER', 'SEP_MARKER ']
-                                                for marker_variant in sep_marker_variants:
-                                                    if marker_variant in potential_text:
-                                                        has_sentinel = True
-                                                        break
-                                            
-                                            if not has_sentinel and final_output in potential_text and len(potential_text) <= len(out) * 0.8:
-                                                print(f"[NMT Service] Found better extraction point (starts with uppercase): '{potential_text[:100]}{'...' if len(potential_text) > 100 else ''}'")
-                                                final_output = potential_text.strip()
-                                                # 清理潜在的哨兵序列残留（完整序列）
-                                                for sep_variant in SEPARATOR_TRANSLATIONS:
-                                                    final_output = final_output.replace(sep_variant, " ").strip()
-                                                # 清理纯文本SEP_MARKER
-                                                sep_marker_variants = [' SEP_MARKER ', 'SEP_MARKER', ' SEP_MARKER', 'SEP_MARKER ']
-                                                for marker_variant in sep_marker_variants:
-                                                    final_output = final_output.replace(marker_variant, " ").strip()
-                                                break
-            except Exception as e:
-                print(f"[NMT Service] WARNING: Failed to extract current sentence translation: {e}, using full output")
-                final_output = out
-                extraction_mode = "FULL_ONLY"
-                extraction_confidence = "LOW"
-        
-        # 修复：检查翻译结果是否可能被截断（包括开头截断）
-        def is_translation_complete(text: str) -> bool:
-            """检查翻译结果是否完整（简单启发式方法）"""
-            text = text.strip()
-            if not text:
-                return False
-            
-            # 检查是否以标点符号结尾
-            ending_punctuation = ['.', '!', '?', '。', '！', '？', ',', '，', ';', '；']
-            if text[-1] in ending_punctuation:
-                return True
-            
-            # 检查最后几个词是否完整（简单检查）
-            last_words = text.split()[-3:]  # 最后 3 个词
-            for word in last_words:
-                if len(word) < 2:  # 单字符词可能是截断
-                    return False
-            
-            return True
-        
-        # 修复：检查翻译是否可能被截断（包括开头截断）
-        # 如果翻译以小写字母开头且不是专有名词，可能是截断
+        # 检查翻译结果是否可能被截断（包括开头截断）
         translation_complete = is_translation_complete(final_output)
         translation_starts_properly = True
         if final_output and len(final_output) > 0:
@@ -1197,71 +269,8 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
             print(f"[NMT Service] WARNING: First 50 chars: '{final_output[:50]}'")
             print(f"[NMT Service] WARNING: Last 50 chars: '{final_output[-50:]}'")
             # 如果检测到截断，尝试增加 max_new_tokens 并重新生成（仅当没有 context_text 时）
-            # 注意：这会导致额外的延迟，但可以确保翻译完整
             if not req.context_text and not translation_starts_properly:
                 print(f"[NMT Service] WARNING: Translation appears truncated at beginning, but cannot retry without context_text")
-        
-        # 过滤只包含标点符号的翻译结果（如 "试试试" 被翻译成 "try." 的情况）
-        if final_output and PUNCTUATION_FILTER_ENABLED:
-            try:
-                # 使用配置文件中的正则表达式模式移除标点符号
-                text_without_punctuation = re.sub(PUNCTUATION_FILTER_PATTERN, '', final_output)
-                # 如果去除标点后的长度小于最小长度，说明文本只包含标点符号
-                if not text_without_punctuation or len(text_without_punctuation.strip()) < PUNCTUATION_FILTER_MIN_LENGTH:
-                    print(f"[NMT Service] WARNING: Translation contains only punctuation marks, filtering to avoid invalid output. "
-                          f"original_text='{final_output}', pattern='{PUNCTUATION_FILTER_PATTERN}', min_length={PUNCTUATION_FILTER_MIN_LENGTH}")
-                    final_output = ""
-            except Exception as e:
-                print(f"[NMT Service] ERROR: Failed to filter punctuation-only text: {e}")
-        
-        # 修复：过滤包含引号的短句翻译（正常说话不可能出现引号，这是模型噪音）
-        # 检查翻译结果是否包含引号，且长度较短（可能是噪音）
-        if final_output and len(final_output) < 50:  # 短句（少于50个字符）
-            # 检查是否包含引号（单引号或双引号）
-            has_quotes = "'" in final_output or '"' in final_output
-            if has_quotes:
-                # 移除引号后检查是否还有有效内容
-                text_without_quotes = final_output.replace("'", "").replace('"', '').strip()
-                # 如果移除引号后只剩下很少的内容，或者引号是主要内容，则过滤掉
-                if len(text_without_quotes) < len(final_output) * 0.5 or len(text_without_quotes) < 3:
-                    print(f"[NMT Service] WARNING: Translation contains quotes and is likely noise, filtering. "
-                          f"original_text='{final_output}', text_without_quotes='{text_without_quotes}', length={len(final_output)}")
-                    final_output = ""
-        
-        # 后处理：验证提取的文本是否正确
-        # 如果提取的文本以单个字符开头（且后面是空格），可能是index计算错误
-        # 修复：如果提取的文本以单个字符开头（且该字符是分隔符的一部分），且后面是空格，自动修正
-        # 这种情况通常是 index 计算错误，应该跳过这个字符
-        if final_output and len(final_output) > 1:
-            first_char = final_output[0]
-            next_char = final_output[1:2] if len(final_output) > 1 else ""
-            # 如果第一个字符是单个字符，且后面是空格，可能是index计算错误
-            if len(first_char) == 1 and next_char == ' ':
-                # 检查是否可能是分隔符的一部分
-                is_separator_char = False
-                for sep_variant in SEPARATOR_TRANSLATIONS:
-                    if first_char in sep_variant:
-                        is_separator_char = True
-                        print(f"[NMT Service] WARNING: Extracted text starts with separator character '{first_char}' (part of '{sep_variant}') followed by space, "
-                              f"this indicates an index calculation error. Auto-correcting by skipping this character.")
-                        print(f"[NMT Service] Full output: '{out[:200]}{'...' if len(out) > 200 else ''}', ")
-                        print(f"[NMT Service] Original extracted: '{final_output[:100]}{'...' if len(final_output) > 100 else ''}'")
-                        break
-                
-                # 如果确认是分隔符的一部分，自动修正：跳过这个字符和后面的空格
-                if is_separator_char:
-                    corrected_output = final_output[2:].strip()  # 跳过第一个字符和空格
-                    if corrected_output:  # 确保修正后还有内容
-                        final_output = corrected_output
-                        print(f"[NMT Service] Corrected extraction: '{final_output[:100]}{'...' if len(final_output) > 100 else ''}'")
-                    else:
-                        print(f"[NMT Service] WARNING: After correction, extracted text is empty, keeping original")
-                else:
-                    # 如果不是分隔符的一部分，只记录警告
-                    print(f"[NMT Service] WARNING: Extracted text starts with single character '{first_char}' followed by space, "
-                          f"but it's not part of any known separator. This may indicate an index calculation error. "
-                          f"Full output: '{out[:200]}{'...' if len(out) > 200 else ''}', "
-                          f"Extracted: '{final_output[:100]}{'...' if len(final_output) > 100 else ''}'")
         
         print(f"[NMT Service] Final output: '{final_output[:200]}{'...' if len(final_output) > 200 else ''}' (length={len(final_output)})")
         print(f"[NMT Service] ===== Translation Request Completed in {total_elapsed:.2f}ms =====")
@@ -1290,7 +299,6 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
         total_elapsed = (time.time() - request_start) * 1000
         print(f"[NMT Service] Error: {e}")
         print(f"[NMT Service] ===== Translation Request Failed in {total_elapsed:.2f}ms =====")
-        import traceback
         traceback.print_exc()
         return TranslateResponse(
             ok=False,
@@ -1303,4 +311,3 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=5008)
-
