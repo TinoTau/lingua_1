@@ -80,6 +80,86 @@ PUNCTUATION_FILTER_MIN_LENGTH = NMT_CONFIG.get("text_filter", {}).get("punctuati
 print(f"[NMT Service] Punctuation filter configuration loaded: enabled={PUNCTUATION_FILTER_ENABLED}, pattern='{PUNCTUATION_FILTER_PATTERN}', min_length={PUNCTUATION_FILTER_MIN_LENGTH}", flush=True)
 
 
+def generate_truncated_patterns(separator_variants):
+    """
+    从分隔符变体中动态生成所有可能的截断模式
+    
+    策略：
+    1. 提取分隔符中的核心标记（如 "SEP_MARKER"）
+    2. 提取分隔符中的特殊字符（如 Unicode 括号）
+    3. 为核心标记生成所有可能的截断模式（从完整标记到单个字符）
+    4. 为特殊字符生成所有可能的截断模式
+    
+    Args:
+        separator_variants: 分隔符变体列表（如 [" ⟪⟪SEP_MARKER⟫⟫ ", "⟪⟪SEP_MARKER⟫⟫"]）
+    
+    Returns:
+        截断模式列表，按长度降序排序
+    """
+    truncated_patterns = []
+    core_markers = set()  # 核心标记（如 "SEP_MARKER"）
+    special_chars = set()  # 特殊字符序列（如 "⟫⟫", "⟪⟪"）
+    
+    # 第一步：从所有分隔符变体中提取核心标记和特殊字符
+    for sep_variant in separator_variants:
+        # 提取核心标记：查找连续的字母数字字符序列（可能包含下划线）
+        # 查找所有连续的字母数字字符序列（可能包含下划线），这些可能是核心标记
+        marker_matches = re.findall(r'[A-Za-z0-9_]+', sep_variant)
+        for marker in marker_matches:
+            if len(marker) > 1:  # 至少2个字符才认为是核心标记
+                core_markers.add(marker)
+        
+        # 提取特殊字符序列：查找连续的 Unicode 字符（非字母数字）
+        # 例如 "⟫⟫", "⟪⟪" 等
+        special_char_matches = re.findall(r'[^\w\s]+', sep_variant)
+        for special_char in special_char_matches:
+            if len(special_char) > 0:
+                special_chars.add(special_char)
+    
+    # 第二步：为核心标记生成所有可能的截断模式
+    for core_marker in core_markers:
+        # 生成从完整标记到单个字符的所有可能截断
+        # 例如 "SEP_MARKER" -> ["SEP_MARKER", "EP_MARKER", "P_MARKER", "_MARKER", "MARKER", "ARKER", "RKER", "KER", "ER", "R"]
+        for start_pos in range(len(core_marker)):
+            truncated = core_marker[start_pos:]
+            if truncated and truncated not in truncated_patterns:
+                truncated_patterns.append(truncated)
+        
+        # 也生成带下划线和空格的变体（如果原标记包含下划线）
+        if '_' in core_marker:
+            # 例如 "_MARKER", " MARKER" 等
+            marker_without_prefix = core_marker.split('_', 1)[-1] if '_' in core_marker else core_marker
+            if marker_without_prefix and marker_without_prefix not in truncated_patterns:
+                truncated_patterns.append(marker_without_prefix)
+            # 带空格前缀的变体
+            space_marker = ' ' + marker_without_prefix
+            if space_marker not in truncated_patterns:
+                truncated_patterns.append(space_marker)
+            # 带下划线前缀的变体
+            underscore_marker = '_' + marker_without_prefix
+            if underscore_marker not in truncated_patterns:
+                truncated_patterns.append(underscore_marker)
+    
+    # 第三步：为特殊字符序列生成所有可能的截断模式
+    for special_char in special_chars:
+        # 生成从完整序列到单个字符的所有可能截断
+        # 例如 "⟫⟫" -> ["⟫⟫", "⟫"]
+        for start_pos in range(len(special_char)):
+            truncated = special_char[start_pos:]
+            if truncated and truncated not in truncated_patterns:
+                truncated_patterns.append(truncated)
+    
+    # 按长度降序排序，优先匹配更长的模式
+    truncated_patterns = sorted(list(set(truncated_patterns)), key=len, reverse=True)
+    
+    return truncated_patterns
+
+
+# 预生成截断模式（在服务启动时生成一次，避免每次请求都重新生成）
+TRUNCATED_PATTERNS = generate_truncated_patterns(SEPARATOR_TRANSLATIONS)
+print(f"[NMT Service] Generated {len(TRUNCATED_PATTERNS)} truncated patterns from separator variants", flush=True)
+
+
 class TranslateRequest(BaseModel):
     src_lang: str
     tgt_lang: str
@@ -705,24 +785,12 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
                             break
                 
                 # 第三步：如果仍然未找到，检查是否SEP_MARKER被截断了
-                # 注意：不应该硬编码删除特定字符（如"R"），因为分隔符可能随时调整
+                # 注意：不应该硬编码删除特定字符，因为分隔符可能随时调整
                 # 单独出现一个字符更有可能是index计算错误，截取文本的错误
                 if sentinel_pos == -1:
-                    # 检查截断的SEP_MARKER模式（基于配置的分隔符）
-                    # 尝试查找分隔符的部分片段
-                    truncated_patterns = []
-                    # 从配置的分隔符中提取可能的截断模式
-                    for sep_variant in SEPARATOR_TRANSLATIONS:
-                        # 检查分隔符的各个部分
-                        if '⟫⟫' in sep_variant:
-                            truncated_patterns.append('⟫⟫')
-                            truncated_patterns.append('⟫')
-                        if 'MARKER' in sep_variant:
-                            truncated_patterns.append('_MARKER')
-                            truncated_patterns.append(' MARKER')
-                            truncated_patterns.append('MARKER')
-                    
-                    for pattern in truncated_patterns:
+                    # 使用预生成的截断模式（基于配置的分隔符动态生成）
+                    # 这些模式在服务启动时从配置文件中提取，不包含任何硬编码
+                    for pattern in TRUNCATED_PATTERNS:
                         pos = out.find(pattern)
                         if pos != -1:
                             # 如果找到截断的模式，尝试从模式之后提取文本
@@ -736,6 +804,18 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
                             extracted_preview = out[sentinel_pos:sentinel_pos+20].strip()
                             if len(extracted_preview) > 0:
                                 print(f"[NMT Service] Extracted text preview: '{extracted_preview}'")
+                            # 如果模式很短（如单个字符），需要额外验证
+                            if len(pattern) <= 2:
+                                # 检查提取的文本是否以空格开头，且后面跟着合理的文本
+                                if sentinel_pos < len(out) and out[sentinel_pos:sentinel_pos+1] == ' ':
+                                    # 跳过空格，检查后面的文本是否合理
+                                    next_text_start = sentinel_pos + 1
+                                    if next_text_start < len(out):
+                                        next_text = out[next_text_start:next_text_start+10].strip()
+                                        if len(next_text) > 0:
+                                            # 如果后面有合理的文本，使用跳过空格后的位置
+                                            sentinel_pos = next_text_start
+                                            print(f"[NMT Service] Adjusted sentinel_pos to skip space after short pattern, new pos={sentinel_pos}")
                             break
                 
                 if sentinel_pos != -1:
@@ -826,18 +906,101 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
                     
                     # 方法1：如果完整翻译以 context 翻译开头，提取剩余部分（最准确）
                     if out.startswith(context_translation):
-                        final_output = out[context_translation_length:].strip()
-                        extraction_mode = "ALIGN_FALLBACK"
-                        extraction_confidence = "HIGH"
-                        print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK prefix match): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
+                        potential_output = out[context_translation_length:].strip()
+                        # 验证：确保提取的文本不是空的，且不是 context 翻译的一部分
+                        # 如果提取的文本太短（小于 context 翻译长度的 10%），可能是匹配错误
+                        if potential_output and len(potential_output) >= max(5, context_translation_length * 0.1):
+                            # 额外验证：检查提取的文本是否与 context 翻译有重叠（避免提取错误）
+                            if potential_output[:min(20, len(potential_output))] not in context_translation:
+                                final_output = potential_output
+                                extraction_mode = "ALIGN_FALLBACK"
+                                extraction_confidence = "HIGH"
+                                print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK prefix match): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
+                            else:
+                                # 提取的文本与 context 翻译重叠，可能是匹配错误，使用方法2
+                                print(f"[NMT Service] WARNING: Extracted text overlaps with context translation, using substring match instead")
+                                context_end_pos = search_text.find(context_translation)
+                                if context_end_pos != -1 and context_end_pos > 0:
+                                    final_output = out[context_end_pos + context_translation_length:].strip()
+                                    extraction_mode = "ALIGN_FALLBACK"
+                                    extraction_confidence = "MEDIUM"
+                                    print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK substring match after prefix overlap check, context end pos={context_end_pos + context_translation_length}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
+                                else:
+                                    # 如果 substring match 也失败，使用方法3
+                                    if len(out) > context_translation_length:
+                                        estimated_context_translation_length = int(context_translation_length * 1.05)
+                                        estimated_context_translation_length = min(estimated_context_translation_length, len(out) - 1)
+                                        final_output = out[estimated_context_translation_length:].strip()
+                                        extraction_mode = "ALIGN_FALLBACK"
+                                        extraction_confidence = "LOW"
+                                        print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK estimated length after validation failures, context length={context_translation_length}, estimated pos={estimated_context_translation_length}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
+                                    else:
+                                        final_output = out
+                                        extraction_mode = "FULL_ONLY"
+                                        extraction_confidence = "LOW"
+                        else:
+                            # 提取的文本太短，可能是匹配错误，使用方法2
+                            print(f"[NMT Service] WARNING: Extracted text too short (length={len(potential_output) if potential_output else 0}), using substring match instead")
+                            context_end_pos = search_text.find(context_translation)
+                            if context_end_pos != -1:
+                                final_output = out[context_end_pos + context_translation_length:].strip()
+                                extraction_mode = "ALIGN_FALLBACK"
+                                extraction_confidence = "MEDIUM"
+                                print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK substring match after short text check, context end pos={context_end_pos + context_translation_length}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
+                            else:
+                                # 如果 substring match 也失败，使用方法3
+                                if len(out) > context_translation_length:
+                                    estimated_context_translation_length = int(context_translation_length * 1.05)
+                                    estimated_context_translation_length = min(estimated_context_translation_length, len(out) - 1)
+                                    final_output = out[estimated_context_translation_length:].strip()
+                                    extraction_mode = "ALIGN_FALLBACK"
+                                    extraction_confidence = "LOW"
+                                    print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK estimated length after substring match failure, context length={context_translation_length}, estimated pos={estimated_context_translation_length}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
+                                else:
+                                    final_output = out
+                                    extraction_mode = "FULL_ONLY"
+                                    extraction_confidence = "LOW"
                     else:
                         # 方法2：在完整翻译的前80%中查找 context 翻译的位置
                         context_end_pos = search_text.find(context_translation)
                         if context_end_pos != -1:
-                            final_output = out[context_end_pos + context_translation_length:].strip()
-                            extraction_mode = "ALIGN_FALLBACK"
-                            extraction_confidence = "MEDIUM"
-                            print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK substring match in first 80%, context end pos={context_end_pos + context_translation_length}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
+                            potential_output = out[context_end_pos + context_translation_length:].strip()
+                            # 验证：确保提取的文本不是空的，且不是 context 翻译的一部分
+                            if potential_output and len(potential_output) >= max(5, context_translation_length * 0.1):
+                                # 额外验证：检查提取的文本是否与 context 翻译有重叠
+                                if potential_output[:min(20, len(potential_output))] not in context_translation:
+                                    final_output = potential_output
+                                    extraction_mode = "ALIGN_FALLBACK"
+                                    extraction_confidence = "MEDIUM"
+                                    print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK substring match in first 80%, context end pos={context_end_pos + context_translation_length}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
+                                else:
+                                    # 提取的文本与 context 翻译重叠，使用方法3
+                                    print(f"[NMT Service] WARNING: Extracted text overlaps with context translation, using estimated length instead")
+                                    if len(out) > context_translation_length:
+                                        estimated_context_translation_length = int(context_translation_length * 1.05)
+                                        estimated_context_translation_length = min(estimated_context_translation_length, len(out) - 1)
+                                        final_output = out[estimated_context_translation_length:].strip()
+                                        extraction_mode = "ALIGN_FALLBACK"
+                                        extraction_confidence = "LOW"
+                                        print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK estimated length after overlap check, context length={context_translation_length}, estimated pos={estimated_context_translation_length}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
+                                    else:
+                                        final_output = out
+                                        extraction_mode = "FULL_ONLY"
+                                        extraction_confidence = "LOW"
+                            else:
+                                # 提取的文本太短，使用方法3
+                                print(f"[NMT Service] WARNING: Extracted text too short (length={len(potential_output) if potential_output else 0}), using estimated length instead")
+                                if len(out) > context_translation_length:
+                                    estimated_context_translation_length = int(context_translation_length * 1.05)
+                                    estimated_context_translation_length = min(estimated_context_translation_length, len(out) - 1)
+                                    final_output = out[estimated_context_translation_length:].strip()
+                                    extraction_mode = "ALIGN_FALLBACK"
+                                    extraction_confidence = "LOW"
+                                    print(f"[NMT Service] Extracted current sentence translation (method: ALIGN_FALLBACK estimated length after short text check, context length={context_translation_length}, estimated pos={estimated_context_translation_length}): '{final_output[:100]}{'...' if len(final_output) > 100 else ''}' (length={len(final_output)})")
+                                else:
+                                    final_output = out
+                                    extraction_mode = "FULL_ONLY"
+                                    extraction_confidence = "LOW"
                         else:
                             # 方法3：使用实际context翻译长度估算（保守方法）
                             if len(out) <= context_translation_length:
@@ -1067,23 +1230,38 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
         
         # 后处理：验证提取的文本是否正确
         # 如果提取的文本以单个字符开头（且后面是空格），可能是index计算错误
-        # 记录警告信息，但不硬编码删除，因为分隔符可能随时调整
+        # 修复：如果提取的文本以单个字符开头（且该字符是分隔符的一部分），且后面是空格，自动修正
+        # 这种情况通常是 index 计算错误，应该跳过这个字符
         if final_output and len(final_output) > 1:
             first_char = final_output[0]
             next_char = final_output[1:2] if len(final_output) > 1 else ""
             # 如果第一个字符是单个字符，且后面是空格，可能是index计算错误
             if len(first_char) == 1 and next_char == ' ':
-                print(f"[NMT Service] WARNING: Extracted text starts with single character '{first_char}' followed by space, "
-                      f"this may indicate an index calculation error in text extraction. "
-                      f"Full output: '{out[:200]}{'...' if len(out) > 200 else ''}', "
-                      f"Extracted: '{final_output[:100]}{'...' if len(final_output) > 100 else ''}'")
                 # 检查是否可能是分隔符的一部分
+                is_separator_char = False
                 for sep_variant in SEPARATOR_TRANSLATIONS:
                     if first_char in sep_variant:
-                        print(f"[NMT Service] WARNING: Character '{first_char}' is part of separator '{sep_variant}', "
-                              f"this suggests the extraction index may be off by 1. "
-                              f"Consider checking sentinel_pos calculation.")
+                        is_separator_char = True
+                        print(f"[NMT Service] WARNING: Extracted text starts with separator character '{first_char}' (part of '{sep_variant}') followed by space, "
+                              f"this indicates an index calculation error. Auto-correcting by skipping this character.")
+                        print(f"[NMT Service] Full output: '{out[:200]}{'...' if len(out) > 200 else ''}', ")
+                        print(f"[NMT Service] Original extracted: '{final_output[:100]}{'...' if len(final_output) > 100 else ''}'")
                         break
+                
+                # 如果确认是分隔符的一部分，自动修正：跳过这个字符和后面的空格
+                if is_separator_char:
+                    corrected_output = final_output[2:].strip()  # 跳过第一个字符和空格
+                    if corrected_output:  # 确保修正后还有内容
+                        final_output = corrected_output
+                        print(f"[NMT Service] Corrected extraction: '{final_output[:100]}{'...' if len(final_output) > 100 else ''}'")
+                    else:
+                        print(f"[NMT Service] WARNING: After correction, extracted text is empty, keeping original")
+                else:
+                    # 如果不是分隔符的一部分，只记录警告
+                    print(f"[NMT Service] WARNING: Extracted text starts with single character '{first_char}' followed by space, "
+                          f"but it's not part of any known separator. This may indicate an index calculation error. "
+                          f"Full output: '{out[:200]}{'...' if len(out) > 200 else ''}', "
+                          f"Extracted: '{final_output[:100]}{'...' if len(final_output) > 100 else ''}'")
         
         print(f"[NMT Service] Final output: '{final_output[:200]}{'...' if len(final_output) > 200 else ''}' (length={len(final_output)})")
         print(f"[NMT Service] ===== Translation Request Completed in {total_elapsed:.2f}ms =====")
