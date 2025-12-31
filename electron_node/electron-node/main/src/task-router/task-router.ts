@@ -16,12 +16,9 @@ import {
   TONEResult,
   ServiceSelectionStrategy,
 } from './types';
-// Opus 编码支持（已移至 PipelineOrchestrator，这里只保留 parseWavFile 用于效率统计）
 import { parseWavFile } from '../utils/opus-encoder';
-// CONF-3: 基于 segments 时间戳的断裂/异常检测
-import { detectBadSegment, BadSegmentDetectionResult } from './bad-segment-detector';
-// P0.5-SH-1: 坏段触发条件封装
-import { shouldTriggerRerun, getTop2LanguagesForRerun } from './rerun-trigger';
+import { TaskRouterASRHandler } from './task-router-asr';
+import { detectBadSegment } from './bad-segment-detector';
 
 export class TaskRouter {
   private serviceEndpoints: Map<ServiceType, ServiceEndpoint[]> = new Map();
@@ -30,20 +27,10 @@ export class TaskRouter {
   private roundRobinIndex: Map<ServiceType, number> = new Map();
   // best-effort cancel 支持：HTTP AbortController（用于中断 HTTP 请求）
   private jobAbortControllers: Map<string, AbortController> = new Map();
-  // P0.5-SH-5: Rerun 指标统计
-  private rerunMetrics = {
-    totalReruns: 0,
-    successfulReruns: 0,
-    failedReruns: 0,
-    timeoutReruns: 0,
-    qualityImprovements: 0, // 质量提升的重跑次数
-  };
-  // P0.5-CTX-2: 连续低质量计数（用于 reset context）
-  private consecutiveLowQualityCount: Map<string, number> = new Map(); // sessionId -> count
-  // ASR 配置缓存
-  private asrConfig: NodeConfig['asr'];
+  // ASR 路由处理器
+  private asrHandler: TaskRouterASRHandler;
   // OBS-1: 处理效率观测指标统计（按心跳周期，按服务ID分组）
-  // 每个服务ID对应一个处理效率列表
+  // 每个服务ID对应一个处理效率列表（用于NMT、TTS等非ASR服务）
   private currentCycleServiceEfficiencies: Map<string, number[]> = new Map(); // serviceId -> efficiency[]
 
   /**
@@ -51,13 +38,7 @@ export class TaskRouter {
    * @param sessionId 会话 ID
    */
   resetConsecutiveLowQualityCount(sessionId: string): void {
-    this.consecutiveLowQualityCount.set(sessionId, 0);
-    logger.info(
-      {
-        sessionId,
-      },
-      'Gate-A: Reset consecutiveLowQualityCount for session'
-    );
+    this.asrHandler.resetConsecutiveLowQualityCount(sessionId);
   }
 
   constructor(
@@ -65,53 +46,18 @@ export class TaskRouter {
     private rustServiceManager: any,
     private serviceRegistryManager: any
   ) {
-    // 初始化时加载 ASR 配置
-    this.loadASRConfig();
+    // 初始化 ASR 路由处理器
+    this.asrHandler = new TaskRouterASRHandler(
+      (serviceType) => this.selectServiceEndpoint(serviceType),
+      (serviceId) => this.startGpuTrackingForService(serviceId),
+      this.serviceConnections,
+      (serviceId, delta) => {
+        const connections = this.serviceConnections.get(serviceId) || 0;
+        this.serviceConnections.set(serviceId, Math.max(0, connections + delta));
+      }
+    );
   }
 
-  /**
-   * 加载 ASR 配置
-   */
-  private loadASRConfig(): void {
-    try {
-      const config = loadNodeConfig();
-      this.asrConfig = config.asr;
-    } catch (error) {
-      logger.warn({ error }, 'Failed to load ASR config, using defaults');
-      this.asrConfig = undefined; // 使用默认值
-    }
-  }
-
-  /**
-   * 获取 ASR 配置（带默认值）
-   * 返回完整的配置对象，确保所有字段都有值
-   */
-  private getASRConfig(): Required<NonNullable<NodeConfig['asr']>> {
-    if (!this.asrConfig) {
-      // 如果配置未加载，尝试重新加载
-      this.loadASRConfig();
-    }
-    const defaultConfig: Required<NonNullable<NodeConfig['asr']>> = {
-      beam_size: 10,
-      temperature: 0.0,
-      patience: 1.0,
-      compression_ratio_threshold: 2.4,
-      log_prob_threshold: -1.0,
-      no_speech_threshold: 0.6,
-    };
-    if (!this.asrConfig) {
-      return defaultConfig;
-    }
-    // 合并配置，确保所有字段都有值
-    return {
-      beam_size: this.asrConfig.beam_size ?? defaultConfig.beam_size,
-      temperature: this.asrConfig.temperature ?? defaultConfig.temperature,
-      patience: this.asrConfig.patience ?? defaultConfig.patience,
-      compression_ratio_threshold: this.asrConfig.compression_ratio_threshold ?? defaultConfig.compression_ratio_threshold,
-      log_prob_threshold: this.asrConfig.log_prob_threshold ?? defaultConfig.log_prob_threshold,
-      no_speech_threshold: this.asrConfig.no_speech_threshold ?? defaultConfig.no_speech_threshold,
-    };
-  }
 
   /**
    * 初始化服务端点列表
@@ -391,7 +337,7 @@ export class TaskRouter {
    * Gate-B: 获取 Rerun 指标（用于上报）
    */
   getRerunMetrics() {
-    return { ...this.rerunMetrics };
+    return this.asrHandler.getRerunMetrics();
   }
 
   /**
@@ -402,11 +348,13 @@ export class TaskRouter {
    * 返回每个服务ID的平均处理效率
    */
   getProcessingMetrics(): Record<string, number> {
-    const result: Record<string, number> = {};
+    // 合并 ASR handler 的指标和其他服务的指标
+    const asrMetrics = this.asrHandler.getProcessingMetrics();
+    const result: Record<string, number> = { ...asrMetrics };
     
-    // 计算每个服务ID的平均处理效率
+    // 计算其他服务（NMT、TTS等）的平均处理效率
     for (const [serviceId, efficiencies] of this.currentCycleServiceEfficiencies.entries()) {
-      if (efficiencies.length > 0) {
+      if (efficiencies.length > 0 && !result[serviceId]) {
         const sum = efficiencies.reduce((a, b) => a + b, 0);
         const average = sum / efficiencies.length;
         result[serviceId] = average;
@@ -447,6 +395,7 @@ export class TaskRouter {
    * 在每次心跳发送后调用，清空当前周期的数据
    */
   resetCycleMetrics(): void {
+    this.asrHandler.resetCycleMetrics();
     this.currentCycleServiceEfficiencies.clear();
   }
 
@@ -482,20 +431,6 @@ export class TaskRouter {
     }
   }
 
-  /**
-   * OBS-1: 判断任务模式（会议室或线下）
-   * 注意：节点端无法直接判断任务是否在房间中，因为节点端没有 room_manager
-   * 简化实现：
-   * - 如果任务有 session_id（通过调度服务器），默认为普通会话模式（offline）
-   * - 真正的会议室模式判断需要在调度服务器端完成
-   * - 这里暂时统一使用 'offline' 模式统计，后续可以通过任务中的其他字段（如 target_session_ids）来判断
-   */
-  private getTaskMode(task: ASRTask): 'conference' | 'offline' {
-    // TODO: 如果调度服务器在 job_assign 中传递了模式信息，可以使用该信息
-    // 目前暂时统一使用 'offline' 模式统计
-    // 真正的会议室模式判断应该在调度服务器端完成，然后通过指标聚合来区分
-    return 'offline';
-  }
 
   /**
    * OBS-1: 记录服务处理效率（按心跳周期，按服务ID分组）
@@ -522,31 +457,6 @@ export class TaskRouter {
     );
   }
 
-  /**
-   * OBS-1: 记录 ASR 处理效率（按心跳周期）
-   * @param serviceId 服务ID（如 'faster-whisper-vad'）
-   * @param audioDurationMs 音频时长（毫秒）
-   * @param processingTimeMs ASR 处理时间（毫秒，包含重跑时间）
-   */
-  private recordASREfficiency(serviceId: string, audioDurationMs: number | undefined, processingTimeMs: number): void {
-    // 如果音频时长无效，跳过记录
-    if (!audioDurationMs || audioDurationMs <= 0 || processingTimeMs <= 0) {
-      logger.debug(
-        { serviceId, audioDurationMs, processingTimeMs },
-        'OBS-1: Skipping ASR efficiency recording due to invalid parameters'
-      );
-      return;
-    }
-
-    // 计算处理效率 = 音频时长 / 处理时间
-    const efficiency = audioDurationMs / processingTimeMs;
-    this.recordServiceEfficiency(serviceId, efficiency);
-    
-    logger.debug(
-      { serviceId, audioDurationMs, processingTimeMs, efficiency: efficiency.toFixed(2) },
-      'OBS-1: Recorded ASR processing efficiency'
-    );
-  }
 
   /**
    * OBS-1: 记录 NMT 处理效率（按心跳周期）
@@ -651,568 +561,7 @@ export class TaskRouter {
    * 路由 ASR 任务
    */
   async routeASRTask(task: ASRTask): Promise<ASRResult> {
-    // OBS-1: 记录任务开始时间（用于计算延迟）
-    const taskStartTime = Date.now();
-    // OBS-1: 获取任务模式
-    const taskMode = this.getTaskMode(task);
-    
-    const endpoint = this.selectServiceEndpoint(ServiceType.ASR);
-    if (!endpoint) {
-      throw new Error('No available ASR service');
-    }
-
-    // GPU 跟踪：在任务开始时启动 GPU 跟踪（确保能够捕获整个任务期间的 GPU 使用）
-    this.startGpuTrackingForService(endpoint.serviceId);
-
-    // 增加连接计数
-    const connections = this.serviceConnections.get(endpoint.serviceId) || 0;
-    this.serviceConnections.set(endpoint.serviceId, connections + 1);
-
-    try {
-      // 创建 AbortController 用于支持任务取消
-      // 注意：job_id 是调度服务器发送的，用于任务管理和取消
-      // trace_id 用于全链路追踪，不用于任务管理
-      if (!task.job_id) {
-        logger.warn({}, 'ASR task missing job_id, cannot support cancellation');
-      }
-      const abortController = new AbortController();
-      if (task.job_id) {
-        this.jobAbortControllers.set(task.job_id, abortController);
-      }
-
-      const httpClient: AxiosInstance = axios.create({
-        baseURL: endpoint.baseUrl,
-        timeout: 60000, // 60秒超时（参考 Rust 客户端使用 30 秒，这里使用 60 秒以应对更复杂的任务）
-      });
-
-      // ASR 服务路由：目前只支持 faster-whisper-vad
-      if (endpoint.serviceId !== 'faster-whisper-vad') {
-        throw new Error(`Unsupported ASR service: ${endpoint.serviceId}. Only faster-whisper-vad is supported.`);
-      }
-
-      // faster-whisper-vad 使用 /utterance 接口
-      let response;
-      {
-        // faster-whisper-vad 使用 /utterance 接口
-        // 注意：需要提供所有必需字段，包括 task、beam_size 等
-        // 使用调度服务器发送的 audio_format
-        // 注意：web 端现在使用 opus 编码，调度服务器应该传递 "opus" 格式
-        // 如果 task.audio_format 为空，说明调度服务器没有正确传递，应该使用 "opus" 而不是 "pcm16"
-        const audioFormat = task.audio_format || 'opus';
-        const requestUrl = `${endpoint.baseUrl}/utterance`;
-        if (!task.audio_format) {
-          logger.warn({
-            serviceId: endpoint.serviceId,
-            jobId: task.job_id,
-            message: 'task.audio_format is missing, defaulting to opus (web client uses opus format)',
-          }, 'Missing audio_format in task, using opus as default');
-        }
-        logger.info({
-          serviceId: endpoint.serviceId,
-          baseUrl: endpoint.baseUrl,
-          requestUrl,
-          audioFormat,
-          originalFormat: task.audio_format,
-          jobId: task.job_id,
-        }, 'Routing ASR task to faster-whisper-vad');
-
-        // 检查音频输入质量（用于调试 Job2 问题）
-        let audioDataLength = 0;
-        let audioDataPreview = '';
-        try {
-          if (task.audio) {
-            const audioBuffer = Buffer.from(task.audio, 'base64');
-            audioDataLength = audioBuffer.length;
-            // 计算音频时长（假设 PCM16，16kHz）
-            const estimatedDurationMs = Math.round((audioDataLength / 2) / 16); // PCM16 = 2 bytes per sample, 16kHz = 16000 samples per second
-            // 计算 RMS（用于检查音频是否为空或静音）
-            const samples = new Int16Array(audioBuffer.buffer, audioBuffer.byteOffset, audioBuffer.length / 2);
-            let sumSquares = 0;
-            for (let i = 0; i < samples.length; i++) {
-              sumSquares += samples[i] * samples[i];
-            }
-            const rms = Math.sqrt(sumSquares / samples.length);
-            const rmsNormalized = rms / 32768.0; // 归一化到 0-1
-            
-            audioDataPreview = `length=${audioDataLength}, duration=${estimatedDurationMs}ms, rms=${rmsNormalized.toFixed(4)}`;
-            
-            logger.info(
-              {
-                serviceId: endpoint.serviceId,
-                jobId: task.job_id,
-                utteranceIndex: task.utterance_index,
-                audioDataLength,
-                estimatedDurationMs,
-                rms: rmsNormalized.toFixed(4),
-                audioFormat,
-                sampleRate: task.sample_rate || 16000,
-                contextTextLength: task.context_text?.length || 0,
-                contextTextPreview: task.context_text ? task.context_text.substring(0, 200) : null,
-              },
-              'ASR task: Audio input quality check'
-            );
-          }
-        } catch (error) {
-          logger.warn(
-            {
-              serviceId: endpoint.serviceId,
-              jobId: task.job_id,
-              utteranceIndex: task.utterance_index,
-              error: (error as Error).message,
-            },
-            'ASR task: Failed to analyze audio input quality'
-          );
-        }
-        
-        const requestBody: any = {
-          job_id: task.job_id || `asr_${Date.now()}`,
-          src_lang: task.src_lang,
-          tgt_lang: task.src_lang, // ASR 不需要目标语言
-          audio: task.audio,
-          audio_format: audioFormat,
-          sample_rate: task.sample_rate || 16000,
-          task: 'transcribe', // 必需字段
-          beam_size: task.beam_size || this.getASRConfig().beam_size, // S2-6: 支持自定义 beam_size（二次解码使用更大值）
-          condition_on_previous_text: false, // 修复：改为 false，避免重复识别（当上下文文本和当前音频内容相同时，会导致重复输出）
-          use_context_buffer: false, // 修复：禁用音频上下文，避免重复识别和增加处理时间（utterance已经是完整的，不需要音频上下文）
-          use_text_context: true, // 保留文本上下文（initial_prompt），这是Faster Whisper的标准功能
-          enable_streaming_asr: task.enable_streaming || false,
-          context_text: task.context_text,
-          // S2-6: 二次解码参数（如果提供）
-          best_of: task.best_of,
-          temperature: task.temperature,
-          patience: task.patience,
-          // EDGE-4: Padding 配置（如果提供）
-          padding_ms: task.padding_ms,
-        };
-
-        try {
-          response = await httpClient.post('/utterance', requestBody, {
-            signal: abortController.signal, // 支持任务取消
-          });
-          logger.info({
-            serviceId: endpoint.serviceId,
-            requestUrl,
-            status: response.status,
-            jobId: task.job_id,
-          }, 'faster-whisper-vad request succeeded');
-        } catch (axiosError: any) {
-          logger.error({
-            serviceId: endpoint.serviceId,
-            requestUrl,
-            baseUrl: endpoint.baseUrl,
-            status: axiosError.response?.status,
-            statusText: axiosError.response?.statusText,
-            errorMessage: axiosError.message,
-            errorCode: axiosError.code,
-            jobId: task.job_id,
-            responseData: axiosError.response?.data,
-          }, 'faster-whisper-vad request failed');
-          throw axiosError;
-        }
-        // UtteranceResponse 返回的字段是 text，不是 transcript
-        // 实现语言置信度分级逻辑（CONF-1）
-        const langProb = response.data.language_probability ?? 0;
-        let useTextContext = false;  // 默认关闭上下文
-        let conditionOnPreviousText = false;  // 默认关闭
-        
-        // P0.5-CTX-1: 低质量禁用 context（在坏段检测之前先检查 qualityScore）
-        // 注意：这里先使用默认值，坏段检测后会在重跑逻辑中更新
-        const tempBadSegmentDetection = detectBadSegment(
-          {
-            text: response.data.text || '',
-            language: response.data.language || task.src_lang,
-            language_probability: langProb,
-            language_probabilities: response.data.language_probabilities,
-            segments: response.data.segments,
-          },
-          response.data.duration ? Math.round(response.data.duration * 1000) : undefined,
-          task.context_text
-        );
-        
-        // P0.5-CTX-1: qualityScore < 0.4 → 禁用上下文 prompt
-        if (tempBadSegmentDetection.qualityScore < 0.4) {
-          useTextContext = false;
-          conditionOnPreviousText = false;
-          logger.info(
-            {
-              jobId: task.job_id,
-              qualityScore: tempBadSegmentDetection.qualityScore,
-            },
-            'P0.5-CTX-1: Low quality score, disabling context'
-          );
-        }
-        
-        // 仅在极少数"同语种连续且高置信"的窗口中才允许开启（可选）
-        // 这里先实现基础逻辑，后续可以添加"最近多段语言一致"的检查
-        if (langProb >= 0.90 && tempBadSegmentDetection.qualityScore >= 0.4) {
-          // 高置信且高质量：可以启用上下文（可选，根据方案默认关闭）
-          // useTextContext = true;  // 暂时保持关闭，等待后续优化
-        }
-        
-        if (langProb < 0.70) {
-          // 低置信：强制关闭上下文（防污染）
-          useTextContext = false;
-          conditionOnPreviousText = false;
-        }
-        
-        // 构建 ASR 结果
-        const asrText = response.data.text || '';
-        const asrResult: ASRResult = {
-          text: asrText,
-          confidence: 1.0, // faster-whisper-vad 不返回 confidence
-          language: response.data.language || task.src_lang,
-          language_probability: response.data.language_probability,  // 新增：检测到的语言的概率
-          language_probabilities: response.data.language_probabilities,  // 新增：所有语言的概率信息
-          segments: response.data.segments,  // 新增：Segment 元数据（包含时间戳）
-          is_final: true,
-        };
-        
-        // 记录 ASR 服务返回的原始文本（用于调试）
-        // 改为 info 级别，以便在日志中看到 ASR 服务返回的原始结果
-        logger.info(
-          {
-            serviceId: endpoint.serviceId,
-            jobId: task.job_id,
-            utteranceIndex: task.utterance_index,
-            asrTextLength: asrText.length,
-            asrTextPreview: asrText.substring(0, 100),
-            language: asrResult.language,
-            languageProbability: asrResult.language_probability,
-            segmentCount: response.data.segments?.length || 0,
-            audioDurationMs: response.data.duration ? Math.round(response.data.duration * 1000) : undefined,
-            // 添加 segments 的详细信息，以便调试
-            segmentsPreview: response.data.segments?.slice(0, 3).map((seg: any) => ({
-              text: seg.text?.substring(0, 50) || '',
-              start: seg.start,
-              end: seg.end,
-            })) || [],
-          },
-          'ASR service returned result'
-        );
-
-        // CONF-3 + RERUN-1: 基于 segments 时间戳的断裂/异常检测 + 坏段判定
-        // OBS-1: 计算音频时长（用于处理效率统计）
-        const audioDurationMs = response.data.duration 
-          ? Math.round(response.data.duration * 1000)  // 转换为毫秒
-          : undefined;
-        
-        // 如果 response.data.duration 不存在，尝试从 segments 计算
-        // 注意：这是备用方案，优先使用 response.data.duration
-        let calculatedAudioDurationMs = audioDurationMs;
-        if (!calculatedAudioDurationMs && asrResult.segments && asrResult.segments.length > 0) {
-          // 从 segments 计算音频时长（最后一个 segment 的 end 时间）
-          const lastSegment = asrResult.segments[asrResult.segments.length - 1];
-          if (lastSegment && lastSegment.end) {
-            calculatedAudioDurationMs = Math.round(lastSegment.end * 1000);
-            logger.debug(
-              { jobId: task.job_id, calculatedAudioDurationMs },
-              'OBS-1: Calculated audio duration from segments'
-            );
-          }
-        }
-        
-        // 获取上一段文本（从 context_text 中提取，如果可用）
-        // 注意：context_text 是传递给 ASR 服务的，可能包含上一个 utterance 的文本
-        const previousText = task.context_text || undefined;
-        
-        const badSegmentDetection = detectBadSegment(asrResult, audioDurationMs, previousText);
-        
-        if (badSegmentDetection.isBad) {
-          logger.warn(
-            {
-              jobId: task.job_id,
-              reasonCodes: badSegmentDetection.reasonCodes,
-              qualityScore: badSegmentDetection.qualityScore,
-              segmentCount: asrResult.segments?.length || 0,
-              audioDurationMs,
-              languageProbability: asrResult.language_probability,
-            },
-            'CONF-3: Bad segment detected based on segments timestamps'
-          );
-        } else {
-          logger.debug(
-            {
-              jobId: task.job_id,
-              qualityScore: badSegmentDetection.qualityScore,
-              segmentCount: asrResult.segments?.length || 0,
-            },
-            'CONF-3: Segment quality check passed'
-          );
-        }
-
-        // 将检测结果附加到 ASR 结果中（用于日志和后续处理）
-        asrResult.badSegmentDetection = badSegmentDetection;
-        
-        // P0.5-CTX-2: 检查连续低质量（在重跑之前）
-        const sessionId = (task as any).session_id || task.job_id || 'unknown';
-        if (badSegmentDetection.qualityScore < 0.4) {
-          const currentCount = this.consecutiveLowQualityCount.get(sessionId) || 0;
-          const newCount = currentCount + 1;
-          this.consecutiveLowQualityCount.set(sessionId, newCount);
-          
-          if (newCount >= 2) {
-            logger.warn(
-              {
-                jobId: task.job_id,
-                sessionId,
-                consecutiveLowQualityCount: newCount,
-                qualityScore: badSegmentDetection.qualityScore,
-              },
-              'P0.5-CTX-2: Consecutive low quality detected (>=2), should reset context'
-            );
-            (asrResult as any).shouldResetContext = true;
-          }
-        } else {
-          // 质量正常，重置连续低质量计数
-          this.consecutiveLowQualityCount.set(sessionId, 0);
-        }
-        
-        // P0.5-SH-1/2: 检查是否应该触发 Top-2 语言重跑
-        const rerunCondition = shouldTriggerRerun(asrResult, audioDurationMs, task);
-        
-        if (rerunCondition.shouldRerun) {
-          logger.info(
-            {
-              jobId: task.job_id,
-              reason: rerunCondition.reason,
-              languageProbability: asrResult.language_probability,
-              qualityScore: badSegmentDetection.qualityScore,
-            },
-            'P0.5-SH-2: Triggering Top-2 language rerun'
-          );
-          
-          // P0.5-SH-2: 获取 Top-2 语言并执行重跑
-          const top2Langs = getTop2LanguagesForRerun(
-            asrResult.language_probabilities || {},
-            asrResult.language
-          );
-          
-          if (top2Langs.length > 0) {
-            // 尝试使用 Top-2 语言重跑
-            let bestResult = asrResult; // 默认使用原始结果
-            let bestQualityScore = badSegmentDetection.qualityScore;
-            
-            for (const lang of top2Langs) {
-              try {
-                logger.info(
-                  {
-                    jobId: task.job_id,
-                    rerunLanguage: lang,
-                    originalLanguage: asrResult.language,
-                    rerunCount: (task.rerun_count || 0) + 1,
-                  },
-                  'P0.5-SH-2: Attempting rerun with forced language'
-                );
-                
-                // P0.5-SH-4: 创建带超时的 AbortController
-                const rerunTimeoutMs = task.rerun_timeout_ms ?? 5000; // 默认 5 秒
-                const rerunAbortController = new AbortController();
-                const rerunTimeoutId = setTimeout(() => {
-                  rerunAbortController.abort();
-                  logger.warn(
-                    {
-                      jobId: task.job_id,
-                      rerunLanguage: lang,
-                      timeoutMs: rerunTimeoutMs,
-                    },
-                    'P0.5-SH-4: Rerun timeout exceeded'
-                  );
-                }, rerunTimeoutMs);
-                
-                try {
-                  // 使用强制语言重跑 ASR
-                  const rerunTask: ASRTask = {
-                    ...task,
-                    src_lang: lang, // 强制使用指定语言
-                    rerun_count: (task.rerun_count || 0) + 1, // 递增重跑次数
-                  };
-                  
-                  // 创建新的请求体，强制使用指定语言
-                  const rerunRequestBody: any = {
-                    ...requestBody,
-                    src_lang: lang,
-                    language: lang, // 强制语言
-                  };
-                  
-                  // 执行重跑请求（带超时）
-                  const rerunResponse = await httpClient.post('/utterance', rerunRequestBody, {
-                    signal: rerunAbortController.signal,
-                  });
-                  
-                  clearTimeout(rerunTimeoutId); // 清除超时定时器
-                
-                // 构建重跑结果
-                const rerunResult: ASRResult = {
-                  text: rerunResponse.data.text || '',
-                  confidence: 1.0,
-                  language: rerunResponse.data.language || lang,
-                  language_probability: rerunResponse.data.language_probability,
-                  language_probabilities: rerunResponse.data.language_probabilities,
-                  segments: rerunResponse.data.segments,
-                  is_final: true,
-                };
-                
-                // 重新检测坏段（用于质量评分）
-                const rerunAudioDurationMs = rerunResponse.data.duration
-                  ? Math.round(rerunResponse.data.duration * 1000)
-                  : undefined;
-                const rerunBadSegmentDetection = detectBadSegment(
-                  rerunResult,
-                  rerunAudioDurationMs,
-                  previousText
-                );
-                rerunResult.badSegmentDetection = rerunBadSegmentDetection;
-                
-                  // P0.5-SH-3: 使用 qualityScore 择优
-                  if (rerunBadSegmentDetection.qualityScore > bestQualityScore) {
-                    logger.info(
-                      {
-                        jobId: task.job_id,
-                        rerunLanguage: lang,
-                        originalQualityScore: bestQualityScore,
-                        rerunQualityScore: rerunBadSegmentDetection.qualityScore,
-                      },
-                      'P0.5-SH-3: Rerun result has better quality score, selecting it'
-                    );
-                    bestResult = rerunResult;
-                    bestQualityScore = rerunBadSegmentDetection.qualityScore;
-                    
-                    // P0.5-SH-5: 记录质量提升
-                    this.rerunMetrics.qualityImprovements++;
-                  } else {
-                    logger.debug(
-                      {
-                        jobId: task.job_id,
-                        rerunLanguage: lang,
-                        originalQualityScore: bestQualityScore,
-                        rerunQualityScore: rerunBadSegmentDetection.qualityScore,
-                      },
-                      'P0.5-SH-3: Rerun result quality score not better, keeping original'
-                    );
-                  }
-                  
-                  // P0.5-SH-5: 记录成功重跑
-                  this.rerunMetrics.totalReruns++;
-                  this.rerunMetrics.successfulReruns++;
-                } catch (rerunError: any) {
-                  clearTimeout(rerunTimeoutId); // 确保清除超时定时器
-                  
-                  // P0.5-SH-5: 记录失败重跑
-                  this.rerunMetrics.totalReruns++;
-                  
-                  if (rerunAbortController.signal.aborted) {
-                    logger.warn(
-                      {
-                        jobId: task.job_id,
-                        rerunLanguage: lang,
-                        timeoutMs: rerunTimeoutMs,
-                      },
-                      'P0.5-SH-4: Rerun aborted due to timeout'
-                    );
-                    this.rerunMetrics.timeoutReruns++;
-                  } else {
-                    logger.warn(
-                      {
-                        jobId: task.job_id,
-                        rerunLanguage: lang,
-                        error: rerunError.message,
-                      },
-                      'P0.5-SH-2: Rerun failed, continuing with next language or original result'
-                    );
-                    this.rerunMetrics.failedReruns++;
-                  }
-                  // 继续尝试下一个语言，或使用原始结果
-                }
-              } catch (outerError: any) {
-                logger.error(
-                  {
-                    jobId: task.job_id,
-                    rerunLanguage: lang,
-                    error: outerError.message,
-                  },
-                  'P0.5-SH-2: Unexpected error during rerun setup'
-                );
-                // 继续尝试下一个语言，或使用原始结果
-              }
-            }
-            
-            // 返回最佳结果
-            if (bestResult !== asrResult) {
-              logger.info(
-                {
-                  jobId: task.job_id,
-                  originalLanguage: asrResult.language,
-                  selectedLanguage: bestResult.language,
-                  originalQualityScore: badSegmentDetection.qualityScore,
-                  selectedQualityScore: bestQualityScore,
-                },
-                'P0.5-SH-3: Selected rerun result as best'
-              );
-            }
-            
-            // OBS-1: 记录处理效率（重跑场景，包含重跑时间）
-            const taskEndTime = Date.now();
-            const processingTimeMs = taskEndTime - taskStartTime;
-            // 使用原始音频时长（calculatedAudioDurationMs 或 audioDurationMs），不是重跑的音频时长
-            this.recordASREfficiency(endpoint.serviceId, calculatedAudioDurationMs || audioDurationMs, processingTimeMs);
-            
-            return bestResult;
-          } else {
-            logger.warn(
-              {
-                jobId: task.job_id,
-              },
-              'P0.5-SH-2: No Top-2 languages available for rerun'
-            );
-          }
-        }
-        
-        // OBS-1: 记录处理效率（正常场景，无重跑）
-        const taskEndTime = Date.now();
-        const processingTimeMs = taskEndTime - taskStartTime;
-        // 使用计算出的音频时长（优先使用 response.data.duration，否则使用 segments 计算的值）
-        this.recordASREfficiency(endpoint.serviceId, calculatedAudioDurationMs || audioDurationMs, processingTimeMs);
-        
-        return asrResult;
-      }
-    } catch (error: any) {
-      // 增强错误日志，特别是对于Axios错误
-      const errorDetails: any = {
-        serviceId: endpoint.serviceId,
-        baseUrl: endpoint.baseUrl,
-        jobId: task.job_id,
-        errorMessage: error.message,
-      };
-
-      if (error.response) {
-        // Axios错误响应
-        errorDetails.status = error.response.status;
-        errorDetails.statusText = error.response.statusText;
-        errorDetails.responseData = error.response.data;
-        errorDetails.requestUrl = error.config?.url || 'unknown';
-        errorDetails.requestMethod = error.config?.method || 'unknown';
-      } else if (error.request) {
-        // 请求已发送但没有收到响应
-        errorDetails.requestError = true;
-        errorDetails.requestUrl = error.config?.url || 'unknown';
-      } else {
-        // 其他错误
-        errorDetails.errorCode = error.code;
-        errorDetails.errorStack = error.stack;
-      }
-
-      logger.error(errorDetails, 'ASR task failed');
-      throw error;
-    } finally {
-      // 清理 AbortController
-      if (task.job_id) {
-        this.jobAbortControllers.delete(task.job_id);
-      }
-      // 减少连接计数
-      const connections = this.serviceConnections.get(endpoint.serviceId) || 0;
-      this.serviceConnections.set(endpoint.serviceId, Math.max(0, connections - 1));
-    }
+    return await this.asrHandler.routeASRTask(task);
   }
 
   /**
