@@ -15,6 +15,7 @@ const aggregator_decision_1 = require("./aggregator-decision");
 const dedup_1 = require("./dedup");
 const tail_carry_1 = require("./tail-carry");
 const logger_1 = __importDefault(require("../logger"));
+const aggregator_state_utils_1 = require("./aggregator-state-utils");
 class AggregatorState {
     constructor(sessionId, mode = 'offline', tuning, dedupConfig, tailCarryConfig) {
         // 状态
@@ -75,10 +76,16 @@ class AggregatorState {
         // 先检测并移除完全重复和内部重复
         text = (0, dedup_1.detectInternalRepetition)(text);
         // 计算 utterance 的时间戳（从 segments 推导）
-        const utteranceTime = this.calculateUtteranceTime(segments);
+        const utteranceTime = aggregator_state_utils_1.AggregatorStateUtils.calculateUtteranceTime(segments, this.sessionStartTimeMs, this.lastUtteranceEndTimeMs);
         const startMs = utteranceTime.startMs;
         const endMs = utteranceTime.endMs;
         const gapMs = utteranceTime.gapMs;
+        if (utteranceTime.newSessionStartTimeMs !== this.sessionStartTimeMs) {
+            this.sessionStartTimeMs = utteranceTime.newSessionStartTimeMs;
+        }
+        if (!segments || segments.length === 0) {
+            this.metrics.missingGapCount++;
+        }
         // 构建 UtteranceInfo
         const curr = {
             text,
@@ -453,67 +460,6 @@ class AggregatorState {
         return textToFlush;
     }
     /**
-     * 计算 utterance 的时间戳（从 segments 推导）
-     */
-    calculateUtteranceTime(segments) {
-        let startMs = 0;
-        let endMs = 0;
-        if (segments && segments.length > 0) {
-            // 从 segments 推导时间戳
-            const firstSegment = segments[0];
-            const lastSegment = segments[segments.length - 1];
-            if (firstSegment.start !== undefined) {
-                // segments 的时间是相对于音频开始的（秒），需要转换为绝对时间
-                // 第一个 utterance：使用会话开始时间
-                // 后续 utterance：使用上一个 utterance 的结束时间作为参考
-                if (this.sessionStartTimeMs === 0) {
-                    // 第一个 utterance
-                    this.sessionStartTimeMs = Date.now();
-                    startMs = this.sessionStartTimeMs;
-                }
-                else {
-                    // 后续 utterance：使用上一个 utterance 的结束时间 + segments 的相对时间
-                    startMs = this.lastUtteranceEndTimeMs + (firstSegment.start * 1000);
-                }
-            }
-            else {
-                // segments 没有时间戳，使用当前时间
-                startMs = Date.now();
-            }
-            if (lastSegment.end !== undefined) {
-                // 计算结束时间
-                if (this.sessionStartTimeMs === 0) {
-                    endMs = this.sessionStartTimeMs + (lastSegment.end * 1000);
-                }
-                else {
-                    endMs = startMs + ((lastSegment.end - (firstSegment.start || 0)) * 1000);
-                }
-            }
-            else {
-                // 估算：假设 utterance 持续 1 秒
-                endMs = startMs + 1000;
-            }
-        }
-        else {
-            // 没有 segments，使用当前时间和估算
-            const nowMs = Date.now();
-            if (this.sessionStartTimeMs === 0) {
-                this.sessionStartTimeMs = nowMs;
-                startMs = nowMs;
-            }
-            else {
-                startMs = this.lastUtteranceEndTimeMs || nowMs;
-            }
-            endMs = startMs + 1000; // 估算 1 秒
-            this.metrics.missingGapCount++;
-        }
-        // 计算 gap
-        const gapMs = this.lastUtteranceEndTimeMs > 0
-            ? Math.max(0, startMs - this.lastUtteranceEndTimeMs)
-            : 0;
-        return { startMs, endMs, gapMs };
-    }
-    /**
      * 获取指标
      */
     getMetrics() {
@@ -611,34 +557,10 @@ class AggregatorState {
      * S1/S2: 更新关键词（从最近文本中提取）
      */
     updateKeywordsFromRecent() {
-        // 简单实现：从最近提交的文本中提取关键词
-        // 更复杂的实现可以交给PromptBuilder
-        const keywords = new Set();
-        for (const text of this.recentCommittedText) {
-            // 提取可能的专名和术语
-            const cjkMatches = text.match(/[\u4e00-\u9fff]{2,6}/g);
-            if (cjkMatches) {
-                for (const word of cjkMatches) {
-                    keywords.add(word);
-                }
-            }
-            const enMatches = text.match(/\b[A-Z][a-z]{2,}\b|\b[A-Z]{3,}\b/g);
-            if (enMatches) {
-                for (const word of enMatches) {
-                    keywords.add(word);
-                }
-            }
-        }
+        // 从最近提交的文本中提取关键词
+        const extractedKeywords = aggregator_state_utils_1.AggregatorStateUtils.extractKeywordsFromRecent(this.recentCommittedText);
         // 合并到现有关键词（保留用户配置的）
-        for (const kw of Array.from(keywords)) {
-            if (!this.recentKeywords.includes(kw)) {
-                this.recentKeywords.push(kw);
-            }
-        }
-        // 限制数量
-        if (this.recentKeywords.length > 30) {
-            this.recentKeywords = this.recentKeywords.slice(-30);
-        }
+        this.recentKeywords = aggregator_state_utils_1.AggregatorStateUtils.mergeKeywords(this.recentKeywords, extractedKeywords);
     }
     /**
      * S1/S2: 获取上一次提交的质量分数
