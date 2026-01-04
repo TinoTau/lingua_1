@@ -74,7 +74,7 @@ export interface NMTTask {
   tgt_lang: string;
   context_text?: string;
   job_id?: string; // 任务 ID（用于取消任务）
-  num_candidates?: number; // 生成候选数量（可选，用于 NMT Repair）
+  num_candidates?: number; // 生成候选数量（可选，保留用于未来扩展）
 }
 
 /**
@@ -83,7 +83,7 @@ export interface NMTTask {
 export interface NMTResult {
   text: string;
   confidence?: number;
-  candidates?: string[]; // 候选翻译列表（可选，用于 NMT Repair）
+  candidates?: string[]; // 候选翻译列表（可选，保留用于未来扩展）
 }
 
 /**
@@ -126,6 +126,42 @@ export interface TONEResult {
   embedding?: string; // base64 encoded embedding
   speaker_id?: string;
   audio?: string; // base64 encoded cloned audio
+}
+
+/**
+ * 语义修复任务请求
+ */
+export interface SemanticRepairTask {
+  job_id: string;
+  session_id: string;
+  utterance_index: number;
+  lang: 'zh' | 'en';
+  text_in: string;                    // 聚合后的ASR文本
+  quality_score?: number;              // ASR质量分数
+  micro_context?: string;              // 上一句尾部（80-150字）
+  meta?: {
+    segments?: any[];                  // ASR segments信息
+    language_probability?: number;      // 语言检测概率
+    reason_codes?: string[];           // 质量检测原因码
+    score?: number;                    // P1-1: 综合评分
+    score_details?: any;                // P1-1: 评分详情
+  };
+}
+
+/**
+ * 语义修复任务结果
+ */
+export interface SemanticRepairResult {
+  decision: 'PASS' | 'REPAIR' | 'REJECT';
+  text_out: string;                    // 修复后的文本（PASS则等于text_in）
+  confidence: number;                   // 修复置信度（0-1）
+  diff?: Array<{                       // 编辑差异（用于审计）
+    from: string;
+    to: string;
+    position: number;
+  }>;
+  reason_codes: string[];              // 触发原因
+  repair_time_ms?: number;              // 修复耗时
 }
 
 /**

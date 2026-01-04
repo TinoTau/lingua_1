@@ -10,19 +10,19 @@ def calculate_max_new_tokens(
     input_text: str,
     tokenizer: Optional[M2M100Tokenizer],
     context_text: Optional[str] = None,
-    min_tokens: int = 128,
+    min_tokens: int = 64,
     max_tokens: int = 512,
     safety_margin: float = 1.5
 ) -> int:
     """
-    根据输入文本长度动态计算 max_new_tokens
+    根据输入文本长度动态计算 max_new_tokens，并动态调整 max_tokens 上限
     
     Args:
         input_text: 当前要翻译的文本
         tokenizer: Tokenizer 实例（可选）
         context_text: 上下文文本（可选）
-        min_tokens: 最小 token 数
-        max_tokens: 最大 token 数
+        min_tokens: 最小 token 数（默认 64）
+        max_tokens: 最大 token 数上限（默认 512，会根据输入长度动态调整）
         safety_margin: 安全缓冲系数（默认 1.5，即 +50%）
     
     Returns:
@@ -41,6 +41,14 @@ def calculate_max_new_tokens(
         # 中文更紧凑，1 个中文 token 通常对应 1.5-2.5 个英文 token
         ratio = 2.5
         estimated_output_tokens = int(total_input_tokens * ratio)
+        
+        # 根据输入 token 数动态调整 max_tokens 上限
+        if total_input_tokens < 20:
+            dynamic_max_tokens = 256  # 短文本：256 足够
+        elif total_input_tokens < 50:
+            dynamic_max_tokens = 384  # 中等文本：384
+        else:
+            dynamic_max_tokens = max_tokens  # 长文本：使用原始上限 512
     else:
         # 粗略估算：使用字符数
         input_length = len(input_text)
@@ -52,18 +60,21 @@ def calculate_max_new_tokens(
         # 根据输入长度调整比例
         if total_input_length < 20:
             ratio = 2.0  # 短句：1:2
+            dynamic_max_tokens = 256  # 短文本：256 足够
         elif total_input_length < 50:
             ratio = 2.5  # 中等句子：1:2.5
+            dynamic_max_tokens = 384  # 中等文本：384
         else:
             ratio = 3.0  # 长句：1:3
+            dynamic_max_tokens = max_tokens  # 长文本：使用原始上限 512
         
         estimated_output_tokens = int(total_input_length * ratio)
     
     # 添加安全缓冲
     estimated_output_tokens = int(estimated_output_tokens * safety_margin)
     
-    # 限制在合理范围内
-    max_new_tokens = max(min_tokens, min(estimated_output_tokens, max_tokens))
+    # 限制在合理范围内（使用动态调整后的 max_tokens）
+    max_new_tokens = max(min_tokens, min(estimated_output_tokens, dynamic_max_tokens))
     
     return max_new_tokens
 

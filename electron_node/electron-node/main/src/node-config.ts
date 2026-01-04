@@ -63,6 +63,27 @@ export interface NodeConfig {
     enableS1PromptBias?: boolean;
     /** 是否启用 S2 Rescoring（默认 false，已禁用） */
     enableS2Rescoring?: boolean;
+    /** 语义修复配置 */
+    semanticRepair?: {
+      zh?: {
+        qualityThreshold?: number;  // 质量分数阈值（默认0.70）
+        forceForShortSentence?: boolean;  // 是否强制处理短句
+      };
+      en?: {
+        qualityThreshold?: number;  // 质量分数阈值（默认0.70）
+      };
+      /** P2-1: 缓存配置 */
+      cache?: {
+        maxSize?: number;      // 最大缓存条目数（默认200）
+        ttlMs?: number;        // TTL（默认5分钟）
+        modelVersion?: string; // 模型版本（用于缓存键）
+      };
+      /** P2-2: 模型完整性检查配置 */
+      modelIntegrityCheck?: {
+        enabled?: boolean;     // 是否启用模型完整性检查（默认false）
+        checkInterval?: number; // 检查间隔（默认30分钟，单位：毫秒）
+      };
+    };
   };
 }
 

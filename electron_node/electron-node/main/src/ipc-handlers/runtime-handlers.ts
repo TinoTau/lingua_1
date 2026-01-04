@@ -7,6 +7,7 @@ import type { InferenceService } from '../inference/inference-service';
 import type { RustServiceManager } from '../rust-service-manager';
 import type { PythonServiceManager } from '../python-service-manager';
 import type { ServiceRegistryManager } from '../service-registry';
+import type { SemanticRepairServiceManager } from '../semantic-repair-service-manager';
 
 export function registerRuntimeHandlers(
   nodeAgent: NodeAgent | null,
@@ -14,7 +15,8 @@ export function registerRuntimeHandlers(
   inferenceService: InferenceService | null,
   rustServiceManager: RustServiceManager | null,
   pythonServiceManager: PythonServiceManager | null,
-  serviceRegistryManager: ServiceRegistryManager | null
+  serviceRegistryManager: ServiceRegistryManager | null,
+  semanticRepairServiceManager: SemanticRepairServiceManager | null
 ): void {
   ipcMain.handle('get-node-status', async () => {
     return nodeAgent?.getStatus() || { online: false, nodeId: null };
@@ -227,6 +229,52 @@ export function registerRuntimeHandlers(
       return {};
     }
     return inferenceService.getProcessingMetrics() || {};
+  });
+
+  // 语义修复服务管理 IPC 接口
+  ipcMain.handle('get-semantic-repair-service-status', async (_, serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => {
+    return semanticRepairServiceManager?.getServiceStatus(serviceId) || {
+      serviceId,
+      running: false,
+      starting: false,
+      pid: null,
+      port: null,
+      startedAt: null,
+      lastError: null,
+    };
+  });
+
+  ipcMain.handle('get-all-semantic-repair-service-statuses', async () => {
+    if (!semanticRepairServiceManager) {
+      return [];
+    }
+    return await semanticRepairServiceManager.getAllServiceStatuses();
+  });
+
+  ipcMain.handle('start-semantic-repair-service', async (_, serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => {
+    if (!semanticRepairServiceManager) {
+      return { success: false, error: 'Semantic repair service manager not initialized' };
+    }
+    try {
+      await semanticRepairServiceManager.startService(serviceId);
+      return { success: true };
+    } catch (error) {
+      logger.error({ error, serviceId }, 'Failed to start semantic repair service');
+      return { success: false, error: error instanceof Error ? error.message : String(error) };
+    }
+  });
+
+  ipcMain.handle('stop-semantic-repair-service', async (_, serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => {
+    if (!semanticRepairServiceManager) {
+      return { success: false, error: 'Semantic repair service manager not initialized' };
+    }
+    try {
+      await semanticRepairServiceManager.stopService(serviceId);
+      return { success: true };
+    } catch (error) {
+      logger.error({ error, serviceId }, 'Failed to stop semantic repair service');
+      return { success: false, error: error instanceof Error ? error.message : String(error) };
+    }
   });
 }
 

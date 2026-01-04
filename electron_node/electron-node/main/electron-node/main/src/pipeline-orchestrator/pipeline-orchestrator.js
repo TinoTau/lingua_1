@@ -97,16 +97,41 @@ class PipelineOrchestrator {
             let audioForASR;
             let audioFormatForASR = 'pcm16';
             try {
+                // 验证聚合后的音频长度是否为2的倍数（PCM16要求）
+                let finalAudio = aggregatedAudio;
+                if (aggregatedAudio.length % 2 !== 0) {
+                    logger_1.default.error({
+                        jobId: job.job_id,
+                        sessionId: job.session_id,
+                        utteranceIndex: job.utterance_index,
+                        aggregatedAudioLength: aggregatedAudio.length,
+                        isOdd: aggregatedAudio.length % 2 !== 0,
+                    }, '🚨 CRITICAL: Aggregated audio length is not a multiple of 2 before sending to ASR! This will cause 400 error.');
+                    // 修复：截断最后一个字节
+                    const fixedLength = aggregatedAudio.length - (aggregatedAudio.length % 2);
+                    finalAudio = aggregatedAudio.slice(0, fixedLength);
+                    logger_1.default.warn({
+                        jobId: job.job_id,
+                        sessionId: job.session_id,
+                        utteranceIndex: job.utterance_index,
+                        originalLength: aggregatedAudio.length,
+                        fixedLength: finalAudio.length,
+                        bytesRemoved: aggregatedAudio.length - finalAudio.length,
+                    }, 'Fixed aggregated audio length by truncating last byte(s) before sending to ASR');
+                }
                 // 使用聚合后的音频（已经是PCM16格式）
                 // 将 PCM16 Buffer 转换为 base64 字符串
-                audioForASR = aggregatedAudio.toString('base64');
+                audioForASR = finalAudio.toString('base64');
                 audioFormatForASR = 'pcm16';
                 logger_1.default.info({
                     jobId: job.job_id,
                     sessionId: job.session_id,
                     utteranceIndex: job.utterance_index,
-                    aggregatedAudioLength: aggregatedAudio.length,
+                    aggregatedAudioLength: finalAudio.length,
+                    originalLength: aggregatedAudio.length,
+                    wasFixed: finalAudio.length !== aggregatedAudio.length,
                     sampleRate: job.sample_rate || 16000,
+                    isLengthValid: finalAudio.length % 2 === 0,
                 }, 'PipelineOrchestrator: Aggregated audio ready for ASR (PCM16 format)');
             }
             catch (error) {

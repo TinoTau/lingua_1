@@ -147,7 +147,8 @@ class ModelManager extends events_1.EventEmitter {
             const response = await axios_1.default.get(`${this.modelHubUrl}/api/models`, {
                 timeout: 10000, // 10秒超时
             });
-            logger_1.default.info({ modelCount: response.data.length, modelHubUrl: this.modelHubUrl }, 'Successfully fetched available models from Model Hub');
+            // 降低Model Hub相关日志级别为debug，减少终端输出
+            logger_1.default.debug({ modelCount: response.data.length, modelHubUrl: this.modelHubUrl }, 'Successfully fetched available models from Model Hub');
             return response.data;
         }
         catch (error) {

@@ -92,28 +92,61 @@ def find_local_model_path(service_dir: str) -> str:
 
 
 def setup_device() -> torch.device:
-    """设置计算设备（CPU/CUDA）"""
-    FORCE_CPU_MODE = False  # 默认不强制 CPU，但可以通过环境变量 NMT_FORCE_CPU=true 启用
+    """设置计算设备（强制使用GPU，不允许回退到CPU）"""
+    # 检查环境变量是否强制使用CPU（仅用于调试，生产环境不允许）
+    FORCE_CPU_MODE = os.getenv("NMT_FORCE_CPU", "false").lower() == "true"
     
     if FORCE_CPU_MODE:
-        print(f"[NMT Service] [WARN] FORCE_CPU_MODE is enabled, using CPU instead of CUDA", flush=True)
-        return torch.device("cpu")
-    # 在加载模型之前，先测试 CUDA 是否真的可用
-    elif torch.cuda.is_available():
+        error_msg = (
+            "[NMT Service] ❌ NMT_FORCE_CPU=true is not allowed. GPU is required for NMT service.\n"
+            "  Please remove NMT_FORCE_CPU environment variable or set it to false."
+        )
+        print(error_msg, flush=True)
+        raise RuntimeError("GPU is required for NMT service. CPU mode is not allowed.")
+    
+    # 强制使用GPU：在加载模型之前，先测试 CUDA 是否真的可用
+    if not torch.cuda.is_available():
+        error_msg = (
+            "[NMT Service] ❌ CUDA is not available! GPU is required.\n"
+            f"  PyTorch version: {torch.__version__}\n"
+            f"  CUDA compiled: {torch.version.cuda if hasattr(torch.version, 'cuda') else 'N/A'}\n"
+            "  To use GPU, please ensure:\n"
+            "  1. CUDA is properly installed\n"
+            "  2. PyTorch is installed with CUDA support\n"
+            "  3. CUDA drivers are up to date"
+        )
+        print(error_msg, flush=True)
+        raise RuntimeError("CUDA is not available. GPU is required for NMT service.")
+    
+    # 尝试多次检测CUDA（最多3次），因为启动时GPU可能被其他服务占用
+    max_retries = 3
+    retry_delay = 1.0  # 每次重试间隔1秒
+    
+    for attempt in range(max_retries):
         try:
             # 尝试创建一个小的 tensor 来测试 CUDA
             test_tensor = torch.zeros(1).cuda()
-            print(f"[NMT Service] [OK] CUDA test passed, device will be: cuda", flush=True)
+            print(f"[NMT Service] [OK] CUDA test passed (attempt {attempt + 1}/{max_retries}), device will be: cuda", flush=True)
             del test_tensor
             torch.cuda.empty_cache()
             return torch.device("cuda")
         except Exception as cuda_test_err:
-            print(f"[NMT Service] [ERROR] CUDA test failed: {cuda_test_err}", flush=True)
-            print(f"[NMT Service] [WARN] Forcing CPU mode due to CUDA test failure", flush=True)
-            return torch.device("cpu")
-    else:
-        print(f"[NMT Service] CUDA not available, using CPU", flush=True)
-        return torch.device("cpu")
+            if attempt < max_retries - 1:
+                print(f"[NMT Service] [WARN] CUDA test failed (attempt {attempt + 1}/{max_retries}): {cuda_test_err}, retrying in {retry_delay}s...", flush=True)
+                import time
+                time.sleep(retry_delay)
+            else:
+                error_msg = (
+                    f"[NMT Service] ❌ CUDA test failed after {max_retries} attempts: {cuda_test_err}\n"
+                    "  GPU is required for NMT service. Service will exit.\n"
+                    "  Please check:\n"
+                    "  1. GPU drivers are installed and up to date\n"
+                    "  2. CUDA toolkit is properly installed\n"
+                    "  3. PyTorch is installed with CUDA support\n"
+                    "  4. No other processes are blocking GPU access"
+                )
+                print(error_msg, flush=True)
+                raise RuntimeError(f"CUDA test failed after {max_retries} attempts: {cuda_test_err}. GPU is required for NMT service.")
 
 
 def log_gpu_info():

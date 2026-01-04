@@ -189,7 +189,38 @@ export class PipelineOrchestratorASRHandler {
       );
       
       const pcm16Buffer = await decodeOpusToPcm16(job.audio, job.sample_rate || 16000);
-      audioForASR = pcm16Buffer.toString('base64');
+      
+      // 验证PCM16 Buffer长度是否为2的倍数（PCM16要求）
+      let finalPcm16Buffer = pcm16Buffer;
+      if (pcm16Buffer.length % 2 !== 0) {
+        logger.error(
+          {
+            jobId: job.job_id,
+            sessionId: job.session_id,
+            utteranceIndex: job.utterance_index,
+            pcm16DataLength: pcm16Buffer.length,
+            isOdd: pcm16Buffer.length % 2 !== 0,
+            opusDataLength: job.audio.length,
+          },
+          '🚨 CRITICAL: Decoded PCM16 buffer length is not a multiple of 2 before sending to ASR! This will cause 400 error.'
+        );
+        // 修复：截断最后一个字节
+        const fixedLength = pcm16Buffer.length - (pcm16Buffer.length % 2);
+        finalPcm16Buffer = pcm16Buffer.slice(0, fixedLength);
+        logger.warn(
+          {
+            jobId: job.job_id,
+            sessionId: job.session_id,
+            utteranceIndex: job.utterance_index,
+            originalLength: pcm16Buffer.length,
+            fixedLength: finalPcm16Buffer.length,
+            bytesRemoved: pcm16Buffer.length - finalPcm16Buffer.length,
+          },
+          'Fixed PCM16 buffer length by truncating last byte(s) before sending to ASR'
+        );
+      }
+      
+      audioForASR = finalPcm16Buffer.toString('base64');
       audioFormatForASR = 'pcm16';
       
       logger.info(
@@ -198,8 +229,11 @@ export class PipelineOrchestratorASRHandler {
           sessionId: job.session_id,
           utteranceIndex: job.utterance_index,
           opusDataLength: job.audio.length,
-          pcm16DataLength: pcm16Buffer.length,
+          pcm16DataLength: finalPcm16Buffer.length,
+          originalLength: pcm16Buffer.length,
+          wasFixed: finalPcm16Buffer.length !== pcm16Buffer.length,
           sampleRate: job.sample_rate || 16000,
+          isLengthValid: finalPcm16Buffer.length % 2 === 0,
         },
         'PipelineOrchestratorASRHandler: Opus audio decoded to PCM16 successfully (ASR Only)'
       );

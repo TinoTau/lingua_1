@@ -113,9 +113,6 @@ export class NodeAgent {
       translationCacheTtlMs: 10 * 60 * 1000,  // 翻译缓存过期时间：10 分钟（提高缓存命中率）
       enableAsyncRetranslation: true,  // 异步重新翻译（默认启用，长文本使用异步处理）
       asyncRetranslationThreshold: 50,  // 异步重新翻译阈值（文本长度，默认 50 字符）
-      nmtRepairEnabled: true,  // 启用 NMT Repair
-      nmtRepairNumCandidates: 5,  // 生成 5 个候选
-      nmtRepairThreshold: 0.7,  // 质量分数 < 0.7 时触发
     };
     this.aggregatorMiddleware = new AggregatorMiddleware(aggregatorConfig, taskRouter);
 
@@ -130,14 +127,12 @@ export class NodeAgent {
           translationCacheTtlMs: aggregatorConfig.translationCacheTtlMs,
           enableAsyncRetranslation: aggregatorConfig.enableAsyncRetranslation,
           asyncRetranslationThreshold: aggregatorConfig.asyncRetranslationThreshold,
-          nmtRepairEnabled: aggregatorConfig.nmtRepairEnabled,
-          nmtRepairNumCandidates: aggregatorConfig.nmtRepairNumCandidates,
-          nmtRepairThreshold: aggregatorConfig.nmtRepairThreshold,
         },
       };
       this.postProcessCoordinator = new PostProcessCoordinator(
         aggregatorManager,
         taskRouter,
+        this.servicesHandler,  // 传递ServicesHandler用于服务发现
         postProcessConfig
       );
       logger.info({}, 'PostProcessCoordinator initialized (new architecture)');

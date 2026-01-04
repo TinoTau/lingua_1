@@ -49,7 +49,8 @@ export class ServiceRegistryManager {
         // 替换路径占位符 {SERVICES_DIR} 为实际路径
         // 将 Windows 路径中的反斜杠转换为正斜杠以匹配占位符格式
         const servicesDirNormalized = this.registryPath.replace(/\\/g, '/');
-        logger.info({
+        // 降低服务注册表加载日志级别为debug，减少终端输出
+        logger.debug({
           registryPath: this.registryPath,
           servicesDirNormalized,
           hasPlaceholder: installedData.includes('{SERVICES_DIR}'),
@@ -62,7 +63,8 @@ export class ServiceRegistryManager {
         if (afterReplace.includes('{SERVICES_DIR}')) {
           logger.warn({}, 'Path placeholder replacement may have failed');
         } else {
-          logger.info({}, 'Path placeholder replacement successful');
+          // 降低服务注册表相关日志级别为debug，减少终端输出
+          logger.debug({}, 'Path placeholder replacement successful');
         }
       } catch (error: any) {
         if (error.code !== 'ENOENT') {
@@ -86,7 +88,8 @@ export class ServiceRegistryManager {
         this.registry.current = {};
       }
 
-      logger.info({
+      // 降低服务注册表加载日志级别为debug，减少终端输出
+      logger.debug({
         installedCount: Object.keys(this.registry.installed).length,
         currentCount: Object.keys(this.registry.current).length,
       }, 'Service registry loaded');

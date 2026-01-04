@@ -47,6 +47,58 @@ export class DeduplicationHandler {
   }
 
   /**
+   * 检测句子开头/结尾的重叠（由于hangover导致的重复）
+   * 例如："有一些東西會重複 但是問題不大" 和 "不大 感覺反彙速度也會重複 但是問題不大"
+   * 返回重叠的部分和去重后的文本
+   */
+  private detectAndRemoveOverlap(
+    lastSent: string,
+    current: string
+  ): { hasOverlap: boolean; overlapText?: string; deduplicatedText?: string; overlapAtStart?: boolean } {
+    const normalizedLastSent = this.normalizeText(lastSent);
+    const normalizedCurrent = this.normalizeText(current);
+
+    // 检查当前文本的开头是否与上次文本的结尾重叠（hangover导致的重复）
+    // 从最长匹配开始，逐步缩短
+    const maxOverlapLength = Math.min(normalizedLastSent.length, normalizedCurrent.length, 50); // 最多检查50个字符
+    
+    for (let overlapLen = maxOverlapLength; overlapLen >= 3; overlapLen--) {
+      const lastSentEnd = normalizedLastSent.slice(-overlapLen);
+      const currentStart = normalizedCurrent.slice(0, overlapLen);
+      
+      if (lastSentEnd === currentStart) {
+        // 找到重叠，移除当前文本开头的重叠部分
+        const deduplicatedText = normalizedCurrent.slice(overlapLen).trim();
+        return {
+          hasOverlap: true,
+          overlapText: lastSentEnd,
+          deduplicatedText: deduplicatedText.length > 0 ? deduplicatedText : undefined,
+          overlapAtStart: true,
+        };
+      }
+    }
+
+    // 检查当前文本的结尾是否与上次文本的开头重叠（反向情况）
+    for (let overlapLen = maxOverlapLength; overlapLen >= 3; overlapLen--) {
+      const lastSentStart = normalizedLastSent.slice(0, overlapLen);
+      const currentEnd = normalizedCurrent.slice(-overlapLen);
+      
+      if (lastSentStart === currentEnd) {
+        // 找到重叠，移除当前文本结尾的重叠部分
+        const deduplicatedText = normalizedCurrent.slice(0, -overlapLen).trim();
+        return {
+          hasOverlap: true,
+          overlapText: lastSentStart,
+          deduplicatedText: deduplicatedText.length > 0 ? deduplicatedText : undefined,
+          overlapAtStart: false,
+        };
+      }
+    }
+
+    return { hasOverlap: false };
+  }
+
+  /**
    * 检查是否与上次发送的文本重复
    */
   isDuplicate(
@@ -54,7 +106,7 @@ export class DeduplicationHandler {
     text: string,
     jobId?: string,
     utteranceIndex?: number
-  ): { isDuplicate: boolean; reason?: string } {
+  ): { isDuplicate: boolean; reason?: string; deduplicatedText?: string } {
     const lastSent = this.lastSentText.get(sessionId);
     if (!lastSent) {
       return { isDuplicate: false };
@@ -115,6 +167,50 @@ export class DeduplicationHandler {
           'AggregatorMiddleware: Filtering reverse substring duplicate text, returning empty result (no NMT/TTS)'
         );
         return { isDuplicate: true, reason: 'last_sent_is_substring' };
+      }
+
+      // 检查句子开头/结尾的重叠（hangover导致的重复）
+      const overlapResult = this.detectAndRemoveOverlap(normalizedLastSent, normalizedCurrent);
+      if (overlapResult.hasOverlap && overlapResult.deduplicatedText) {
+        logger.info(
+          {
+            jobId,
+            sessionId,
+            utteranceIndex,
+            originalASRText: text,
+            normalizedText: normalizedCurrent,
+            lastSentText: lastSent,
+            normalizedLastSent: normalizedLastSent,
+            overlapText: overlapResult.overlapText,
+            deduplicatedText: overlapResult.deduplicatedText,
+            overlapAtStart: overlapResult.overlapAtStart,
+            reason: 'Overlap detected (likely due to hangover), returning deduplicated text',
+          },
+          'AggregatorMiddleware: Detected overlap, deduplicating text'
+        );
+        // 返回去重后的文本，而不是完全过滤
+        return { 
+          isDuplicate: false, 
+          deduplicatedText: overlapResult.deduplicatedText,
+          reason: 'overlap_deduplicated'
+        };
+      } else if (overlapResult.hasOverlap && !overlapResult.deduplicatedText) {
+        // 重叠后没有剩余文本，完全过滤
+        logger.info(
+          {
+            jobId,
+            sessionId,
+            utteranceIndex,
+            originalASRText: text,
+            normalizedText: normalizedCurrent,
+            lastSentText: lastSent,
+            normalizedLastSent: normalizedLastSent,
+            overlapText: overlapResult.overlapText,
+            reason: 'Overlap detected but no remaining text after deduplication, filtering',
+          },
+          'AggregatorMiddleware: Overlap detected, no remaining text, filtering'
+        );
+        return { isDuplicate: true, reason: 'overlap_no_remaining_text' };
       }
 
       // 检查相似度

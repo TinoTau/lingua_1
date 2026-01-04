@@ -161,16 +161,16 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
         
         # 如果请求候选生成，增加 num_beams 并返回多个候选
         num_candidates = req.num_candidates or 1
-        num_beams = max(4, num_candidates)  # 至少使用 4 个 beam，如果请求更多候选则增加
+        num_beams = max(3, num_candidates)  # 至少使用 3 个 beam（优化：从 4 降到 3 以提升性能），如果请求更多候选则增加
         
-        # 计算动态 max_new_tokens
+        # 计算动态 max_new_tokens（根据输入长度动态调整上限）
         max_new_tokens = calculate_max_new_tokens(
             input_text=req.text,
             tokenizer=tokenizer,
             context_text=req.context_text,
-            min_tokens=128,   # 最短至少 128 个 token
-            max_tokens=512,   # 最长不超过 512 个 token（避免显存溢出）
-            safety_margin=2.0  # 提高安全缓冲到 +100%，确保翻译完整，避免截断
+            min_tokens=64,    # 最短至少 64 个 token（优化：从 128 降到 64）
+            max_tokens=512,   # 最长不超过 512 个 token（避免显存溢出，根据输入长度动态调整）
+            safety_margin=1.5  # 安全缓冲 +50%（优化：从 2.0 降到 1.5）
         )
         print(f"[NMT Service] [Generation] Calculated max_new_tokens={max_new_tokens} (input_length={len(req.text)}, context_length={len(req.context_text) if req.context_text else 0})")
         

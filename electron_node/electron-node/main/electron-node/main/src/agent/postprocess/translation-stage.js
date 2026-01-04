@@ -1,7 +1,7 @@
 "use strict";
 /**
  * TranslationStage - 翻译阶段（唯一 NMT 入口）
- * 职责：TranslationCache 查询、NMT 调用、可选 NMT Repair
+ * 职责：TranslationCache 查询、NMT 调用
  */
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -45,11 +45,12 @@ class TranslationStage {
     /**
      * 执行翻译
      * @param job 原始 job 请求
-     * @param aggregatedText 聚合后的文本
+     * @param aggregatedText 聚合后的文本（可能已经过语义修复）
      * @param qualityScore ASR 质量分数
      * @param dedupCharsRemoved 去重移除的字符数
+     * @param semanticRepairContext 语义修复上下文（保留用于兼容性，但不再使用）
      */
-    async process(job, aggregatedText, qualityScore, dedupCharsRemoved = 0) {
+    async process(job, aggregatedText, qualityScore, dedupCharsRemoved = 0, semanticRepairContext) {
         const startTime = Date.now();
         // 检查是否需要翻译
         if (!aggregatedText || aggregatedText.trim().length === 0) {
@@ -100,8 +101,6 @@ class TranslationStage {
                 translationTimeMs: Date.now() - startTime,
             };
         }
-        // 检查是否应该使用 NMT Repair
-        const shouldRepair = this.shouldRepair(aggregatedText, qualityScore, dedupCharsRemoved);
         // 检查是否可能包含同音字错误
         const hasHomophoneErrors = (0, homophone_detector_1.hasPossibleHomophoneErrors)(aggregatedText);
         // 如果可能包含同音字错误，生成原文候选
@@ -115,67 +114,7 @@ class TranslationStage {
             }, 'TranslationStage: Detected possible homophone errors');
         }
         let translatedText = '';
-        let nmtRepairApplied = false;
-        // 如果只有一个原文候选且启用了 NMT Repair，使用 NMT 候选生成
-        if (sourceCandidates.length === 1 && shouldRepair) {
-            const nmtRepairStartTime = Date.now();
-            logger_1.default.info({
-                jobId: job.job_id,
-                sessionId: job.session_id,
-                textLength: aggregatedText.length,
-                numCandidates: this.config.nmtRepairNumCandidates || 5,
-                qualityScore,
-                note: 'NMT Repair triggered - this may take longer due to multiple candidates',
-            }, 'TranslationStage: Starting NMT Repair (may block if GPU is overloaded)');
-            const nmtTask = {
-                text: aggregatedText,
-                src_lang: job.src_lang,
-                tgt_lang: job.tgt_lang,
-                context_text: contextText, // 使用上一个utterance的原文（中文），用于NMT纠错
-                job_id: job.job_id,
-                num_candidates: this.config.nmtRepairNumCandidates || 5,
-            }; // 添加session_id和utterance_index用于日志
-            nmtTask.session_id = job.session_id;
-            nmtTask.utterance_index = job.utterance_index;
-            const nmtResult = await this.taskRouter.routeNMTTask(nmtTask);
-            const nmtRepairDuration = Date.now() - nmtRepairStartTime;
-            if (nmtRepairDuration > 30000) {
-                logger_1.default.warn({
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    nmtRepairDurationMs: nmtRepairDuration,
-                    numCandidates: this.config.nmtRepairNumCandidates || 5,
-                    note: 'NMT Repair took longer than 30 seconds - GPU may be overloaded',
-                }, 'TranslationStage: NMT Repair took too long');
-            }
-            // 构建候选列表
-            const candidates = [
-                { candidate: aggregatedText, translation: nmtResult.text },
-                ...(nmtResult.candidates || []).map(candidate => ({
-                    candidate: aggregatedText,
-                    translation: candidate,
-                })),
-            ];
-            // 获取上一个翻译作为上下文（用于打分）
-            const previousTranslation = this.aggregatorManager ? (this.aggregatorManager.getLastTranslatedText(job.session_id) || undefined) : undefined;
-            // 对候选进行打分
-            const scoredCandidates = (0, candidate_scorer_1.scoreCandidates)(candidates, aggregatedText, nmtResult.text, previousTranslation);
-            // 选择最佳候选
-            const bestCandidate = (0, candidate_scorer_1.selectBestCandidate)(scoredCandidates, nmtResult.text, this.config.nmtRepairThreshold ? 1 - this.config.nmtRepairThreshold : 0.05);
-            if (bestCandidate) {
-                translatedText = bestCandidate.translation;
-                nmtRepairApplied = true;
-                logger_1.default.info({
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    bestScore: bestCandidate.score,
-                }, 'TranslationStage: NMT Repair applied, best candidate selected');
-            }
-            else {
-                translatedText = nmtResult.text;
-            }
-        }
-        else if (sourceCandidates.length > 1) {
+        if (sourceCandidates.length > 1) {
             // 有多个原文候选（同音字修复），对每个候选进行 NMT 翻译并打分
             const homophoneRepairStartTime = Date.now();
             logger_1.default.info({
@@ -237,11 +176,10 @@ class TranslationStage {
             const previousTranslation = this.aggregatorManager ? (this.aggregatorManager.getLastTranslatedText(job.session_id) || undefined) : undefined;
             // 对候选进行打分
             const scoredCandidates = (0, candidate_scorer_1.scoreCandidates)(translatedCandidates, aggregatedText, translatedCandidates[0]?.translation || '', previousTranslation);
-            // 选择最佳候选
-            const bestCandidate = (0, candidate_scorer_1.selectBestCandidate)(scoredCandidates, translatedCandidates[0]?.translation || '', this.config.nmtRepairThreshold ? 1 - this.config.nmtRepairThreshold : 0.05);
+            // 选择最佳候选（使用固定阈值 0.05）
+            const bestCandidate = (0, candidate_scorer_1.selectBestCandidate)(scoredCandidates, translatedCandidates[0]?.translation || '', 0.05);
             if (bestCandidate) {
                 translatedText = bestCandidate.translation;
-                nmtRepairApplied = true;
                 logger_1.default.info({
                     jobId: job.job_id,
                     sessionId: job.session_id,
@@ -302,7 +240,6 @@ class TranslationStage {
             sessionId: job.session_id,
             translationTimeMs,
             fromCache: false,
-            nmtRepairApplied,
             translatedTextLength: translatedText.length,
             translatedTextPreview: translatedText.substring(0, 100),
         }, 'TranslationStage: Translation completed');
@@ -310,31 +247,7 @@ class TranslationStage {
             translatedText,
             translationTimeMs,
             fromCache: false,
-            nmtRepairApplied,
         };
-    }
-    /**
-     * 判断是否应该触发 NMT Repair
-     * 注意：NMT Repair 会生成多个候选并打分，导致延迟增加
-     * 应该只在确实需要时才触发（质量很差或明显重复）
-     */
-    shouldRepair(text, qualityScore, dedupCharsRemoved) {
-        if (!this.config.nmtRepairEnabled) {
-            return false;
-        }
-        // 文本太短或太长，不修复（可能是错误）
-        if (text.length < 3 || text.length > 500) {
-            return false;
-        }
-        // 质量分数很低（阈值降低，避免过度触发）
-        if (qualityScore !== undefined && qualityScore < (this.config.nmtRepairThreshold || 0.5)) {
-            return true;
-        }
-        // 明显重复（Dedup 裁剪量大，阈值提高，避免过度触发）
-        if (dedupCharsRemoved > 20) {
-            return true;
-        }
-        return false;
     }
 }
 exports.TranslationStage = TranslationStage;

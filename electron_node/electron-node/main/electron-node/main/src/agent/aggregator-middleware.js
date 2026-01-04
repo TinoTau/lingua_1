@@ -191,9 +191,22 @@ class AggregatorMiddleware {
                 metrics: aggregatorResult.metrics,
             };
         }
+        // 如果检测到重叠并已去重，使用去重后的文本
+        let finalText = aggregatedText;
+        if (duplicateCheck.deduplicatedText) {
+            finalText = duplicateCheck.deduplicatedText;
+            logger_1.default.info({
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                originalText: aggregatedText,
+                deduplicatedText: finalText,
+                reason: duplicateCheck.reason,
+            }, 'AggregatorMiddleware: Using deduplicated text (overlap removed)');
+        }
         return {
-            aggregatedText,
-            shouldProcess,
+            aggregatedText: finalText,
+            shouldProcess: finalText.trim().length > 0,
             action: aggregatorResult.action,
             metrics: aggregatorResult.metrics,
         };
@@ -257,25 +270,11 @@ class AggregatorMiddleware {
         this.audioHandler.clearAudio(sessionId);
     }
     /**
-     * 判断是否应该触发 NMT Repair
+     * 判断是否应该触发修复（已移除NMT Repair，保留方法用于兼容性）
+     * 注意：现在只依赖语义修复服务，不再使用NMT Repair
      */
     shouldRepair(text, qualityScore, dedupCharsRemoved) {
-        // 如果未启用 NMT Repair，直接返回 false
-        if (!this.config.nmtRepairEnabled) {
-            return false;
-        }
-        // 质量分数低
-        if (qualityScore !== undefined && qualityScore < (this.config.nmtRepairThreshold || 0.7)) {
-            return true;
-        }
-        // 明显重复（Dedup 裁剪量大）
-        if (dedupCharsRemoved > 10) {
-            return true;
-        }
-        // 文本过短或过长（可能是错误）
-        if (text.length < 3 || text.length > 500) {
-            return false; // 过短或过长不修复
-        }
+        // NMT Repair 已移除，现在只依赖语义修复服务
         return false;
     }
     /**

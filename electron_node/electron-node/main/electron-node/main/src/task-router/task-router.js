@@ -7,10 +7,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TaskRouter = void 0;
 const logger_1 = __importDefault(require("../logger"));
 const messages_1 = require("../../../../shared/protocols/messages");
+const node_config_1 = require("../node-config");
 const task_router_asr_1 = require("./task-router-asr");
 const task_router_nmt_1 = require("./task-router-nmt");
 const task_router_tts_1 = require("./task-router-tts");
 const task_router_tone_1 = require("./task-router-tone");
+const task_router_semantic_repair_1 = require("./task-router-semantic-repair");
 const task_router_service_manager_1 = require("./task-router-service-manager");
 const task_router_service_selector_1 = require("./task-router-service-selector");
 class TaskRouter {
@@ -36,6 +38,8 @@ class TaskRouter {
         // 初始化服务管理器和选择器
         this.serviceManager = new task_router_service_manager_1.TaskRouterServiceManager(this.pythonServiceManager, this.rustServiceManager, this.serviceRegistryManager);
         this.serviceSelector = new task_router_service_selector_1.TaskRouterServiceSelector();
+        // 初始化SEMANTIC类型的端点列表（用于语义修复服务）
+        this.serviceEndpoints.set(messages_1.ServiceType.SEMANTIC, []);
         // 初始化路由处理器
         const updateConnections = (serviceId, delta) => {
             const connections = this.serviceConnections.get(serviceId) || 0;
@@ -45,6 +49,34 @@ class TaskRouter {
         this.nmtHandler = new task_router_nmt_1.TaskRouterNMTHandler((serviceType) => this.selectServiceEndpoint(serviceType), (serviceId) => this.startGpuTrackingForService(serviceId), this.serviceConnections, updateConnections, (serviceId, efficiency) => this.recordServiceEfficiency(serviceId, efficiency));
         this.ttsHandler = new task_router_tts_1.TaskRouterTTSHandler((serviceType) => this.selectServiceEndpoint(serviceType), (serviceId) => this.startGpuTrackingForService(serviceId), this.serviceConnections, updateConnections, (serviceId, efficiency) => this.recordServiceEfficiency(serviceId, efficiency));
         this.toneHandler = new task_router_tone_1.TaskRouterTONEHandler((serviceType) => this.selectServiceEndpoint(serviceType), this.serviceConnections, updateConnections);
+        // P0-5: 语义修复服务并发限制（默认2）
+        const semanticRepairMaxConcurrency = 2;
+        // P2-1: 读取缓存配置
+        const config = (0, node_config_1.loadNodeConfig)();
+        const cacheConfig = config.features?.semanticRepair?.cache;
+        // P2-2: 读取模型完整性检查配置
+        const enableModelIntegrityCheck = config.features?.semanticRepair?.modelIntegrityCheck?.enabled ?? false;
+        // P0-1: 传递服务运行状态检查回调
+        // P2-2: 传递获取服务包路径的回调
+        this.semanticRepairHandler = new task_router_semantic_repair_1.TaskRouterSemanticRepairHandler((serviceType) => this.selectServiceEndpoint(serviceType), (serviceId) => this.startGpuTrackingForService(serviceId), this.serviceConnections, updateConnections, semanticRepairMaxConcurrency, (serviceId) => {
+            // 检查语义修复服务是否运行（通过SEMANTIC类型的端点列表）
+            const semanticEndpoints = this.serviceEndpoints.get(messages_1.ServiceType.SEMANTIC) || [];
+            const endpoint = semanticEndpoints.find(e => e.serviceId === serviceId);
+            return endpoint?.status === 'running' || false;
+        }, cacheConfig, // P2-1: 传递缓存配置
+        enableModelIntegrityCheck, // P2-2: 是否启用模型完整性检查
+        (serviceId) => {
+            // P2-2: 从服务注册表获取服务包路径
+            if (!this.serviceRegistryManager) {
+                return null;
+            }
+            const current = this.serviceRegistryManager.getCurrent(serviceId);
+            return current?.install_path || null;
+        }, (serviceId) => {
+            // 直接根据服务ID查找端点（用于语义修复服务）
+            const semanticEndpoints = this.serviceEndpoints.get(messages_1.ServiceType.SEMANTIC) || [];
+            return semanticEndpoints.find(e => e.serviceId === serviceId && e.status === 'running') || null;
+        });
     }
     /**
      * 初始化服务端点列表
@@ -269,6 +301,18 @@ class TaskRouter {
      */
     async routeTONETask(task) {
         return await this.toneHandler.routeTONETask(task);
+    }
+    /**
+     * 路由语义修复任务
+     */
+    async routeSemanticRepairTask(task) {
+        return await this.semanticRepairHandler.routeSemanticRepairTask(task);
+    }
+    /**
+     * 检查语义修复服务健康状态
+     */
+    async checkSemanticRepairServiceHealth(serviceId, baseUrl) {
+        return await this.semanticRepairHandler.checkServiceHealth(serviceId, baseUrl);
     }
     /**
      * 设置服务选择策略

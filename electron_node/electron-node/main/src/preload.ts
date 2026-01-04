@@ -79,6 +79,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // 处理效率指标（OBS-1）
   getProcessingMetrics: () => ipcRenderer.invoke('get-processing-metrics'),
 
+  // 语义修复服务管理
+  getSemanticRepairServiceStatus: (serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => ipcRenderer.invoke('get-semantic-repair-service-status', serviceId),
+  getAllSemanticRepairServiceStatuses: () => ipcRenderer.invoke('get-all-semantic-repair-service-statuses'),
+  startSemanticRepairService: (serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => ipcRenderer.invoke('start-semantic-repair-service', serviceId),
+  stopSemanticRepairService: (serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => ipcRenderer.invoke('stop-semantic-repair-service', serviceId),
+
   // 注意：模块管理 API 已移除
   // 模块现在根据任务请求中的 features 自动启用/禁用，不需要手动管理
 });

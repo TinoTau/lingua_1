@@ -8,6 +8,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostProcessCoordinator = void 0;
+const postprocess_semantic_repair_initializer_1 = require("./postprocess-semantic-repair-initializer");
 const aggregation_stage_1 = require("./aggregation-stage");
 const translation_stage_1 = require("./translation-stage");
 const dedup_stage_1 = require("./dedup-stage");
@@ -15,11 +16,15 @@ const tts_stage_1 = require("./tts-stage");
 const logger_1 = __importDefault(require("../../logger"));
 const node_config_1 = require("../../node-config");
 class PostProcessCoordinator {
-    constructor(aggregatorManager, taskRouter, config) {
+    constructor(aggregatorManager, taskRouter, servicesHandler, config) {
         this.aggregatorManager = aggregatorManager;
         this.taskRouter = taskRouter;
+        this.servicesHandler = servicesHandler;
         this.translationStage = null;
         this.ttsStage = null;
+        // P0-3: 热插拔并发安全 - 使用版本号确保并发安全
+        this.semanticRepairVersion = 0;
+        this.reinitLock = { locked: false };
         // 读取 Feature Flag 配置
         const nodeConfig = (0, node_config_1.loadNodeConfig)();
         this.enablePostProcessTranslation = nodeConfig.features?.enablePostProcessTranslation ?? true;
@@ -35,11 +40,49 @@ class PostProcessCoordinator {
         else {
             logger_1.default.info({}, 'PostProcessCoordinator: TranslationStage and TTSStage disabled');
         }
+        // 初始化语义修复Stage初始化器
+        this.semanticRepairInitializer = new postprocess_semantic_repair_initializer_1.SemanticRepairInitializer(servicesHandler, taskRouter);
         logger_1.default.info({
             enablePostProcessTranslation: this.enablePostProcessTranslation,
             hasAggregatorManager: !!aggregatorManager,
             hasTaskRouter: !!taskRouter,
+            hasServicesHandler: !!servicesHandler,
         }, 'PostProcessCoordinator initialized');
+        // P0-2: 初始化时序保证 - 异步初始化，但不阻塞构造函数
+        // 在首次process调用时会等待初始化完成
+        this.semanticRepairInitializer.initialize().catch((error) => {
+            logger_1.default.error({ error: error.message }, 'PostProcessCoordinator: Failed to initialize semantic repair stage in constructor');
+        });
+    }
+    /**
+     * 重新初始化语义修复Stage（用于热插拔）
+     * P0-3: 热插拔并发安全 - 使用锁机制避免并发重新初始化
+     */
+    async reinitializeSemanticRepairStage() {
+        // 如果已经在重新初始化，等待完成
+        if (this.reinitLock.locked && this.reinitLock.promise) {
+            await this.reinitLock.promise;
+            return;
+        }
+        // 获取锁
+        this.reinitLock.locked = true;
+        this.reinitLock.promise = (async () => {
+            try {
+                // 增加版本号，使正在进行的任务使用旧版本
+                this.semanticRepairVersion++;
+                logger_1.default.info({ version: this.semanticRepairVersion }, 'PostProcessCoordinator: Starting semantic repair stage reinitialization');
+                await this.semanticRepairInitializer.reinitialize();
+                logger_1.default.info({ version: this.semanticRepairVersion }, 'PostProcessCoordinator: Semantic repair stage reinitialization completed');
+            }
+            catch (error) {
+                logger_1.default.error({ error: error.message, version: this.semanticRepairVersion }, 'PostProcessCoordinator: Failed to reinitialize semantic repair stage');
+            }
+            finally {
+                this.reinitLock.locked = false;
+                this.reinitLock.promise = undefined;
+            }
+        })();
+        await this.reinitLock.promise;
     }
     /**
      * 获取 DedupStage 实例（用于在成功发送后记录job_id）
@@ -96,6 +139,76 @@ class PostProcessCoordinator {
             };
         }
         const aggregationResult = this.aggregationStage.process(job, result);
+        // P0-2: 初始化时序保证 - 确保语义修复Stage已初始化
+        const initPromise = this.semanticRepairInitializer.getInitPromise();
+        if (!this.semanticRepairInitializer.isInitialized() && initPromise) {
+            await initPromise;
+        }
+        // P0-3: 热插拔并发安全 - 捕获当前版本号，确保使用一致的Stage实例
+        const currentVersion = this.semanticRepairVersion;
+        const semanticRepairStage = this.semanticRepairInitializer.getSemanticRepairStage();
+        // Phase 2: 语义修复Stage（在AggregationStage之后、TranslationStage之前）
+        let textForTranslation = aggregationResult.aggregatedText;
+        let semanticRepairApplied = false;
+        let semanticRepairConfidence = 1.0;
+        if (semanticRepairStage) {
+            try {
+                // P0-3: 检查版本是否一致（如果版本已变化，说明正在重新初始化，跳过修复）
+                if (currentVersion !== this.semanticRepairVersion) {
+                    logger_1.default.debug({
+                        jobId: job.job_id,
+                        currentVersion,
+                        latestVersion: this.semanticRepairVersion,
+                    }, 'PostProcessCoordinator: Semantic repair stage version changed during processing, skipping repair');
+                    textForTranslation = aggregationResult.aggregatedText;
+                }
+                else {
+                    const repairResult = await semanticRepairStage.process(job, aggregationResult.aggregatedText, result.quality_score, {
+                        segments: result.segments,
+                        language_probability: result.extra?.language_probability,
+                        micro_context: undefined, // TODO: 从AggregatorManager获取
+                    });
+                    if (repairResult.decision === 'REPAIR' || repairResult.decision === 'PASS') {
+                        textForTranslation = repairResult.textOut;
+                        semanticRepairApplied = repairResult.semanticRepairApplied || false;
+                        semanticRepairConfidence = repairResult.confidence;
+                        // 提高日志级别为info，确保能看到修复结果
+                        logger_1.default.info({
+                            jobId: job.job_id,
+                            sessionId: job.session_id,
+                            utteranceIndex: job.utterance_index,
+                            decision: repairResult.decision,
+                            confidence: repairResult.confidence,
+                            reasonCodes: repairResult.reasonCodes,
+                            originalText: aggregationResult.aggregatedText.substring(0, 100),
+                            repairedText: textForTranslation.substring(0, 100),
+                            originalLength: aggregationResult.aggregatedText.length,
+                            repairedLength: textForTranslation.length,
+                            textChanged: textForTranslation !== aggregationResult.aggregatedText,
+                            semanticRepairApplied,
+                        }, 'PostProcessCoordinator: Semantic repair result');
+                    }
+                    else if (repairResult.decision === 'REJECT') {
+                        logger_1.default.warn({
+                            jobId: job.job_id,
+                            reasonCodes: repairResult.reasonCodes,
+                        }, 'PostProcessCoordinator: Semantic repair rejected text');
+                        // REJECT时使用原文，但标记为已处理
+                        textForTranslation = aggregationResult.aggregatedText;
+                        semanticRepairApplied = false;
+                    }
+                }
+            }
+            catch (error) {
+                logger_1.default.error({
+                    error: error.message,
+                    jobId: job.job_id,
+                }, 'PostProcessCoordinator: Semantic repair failed, using original text');
+                // 错误时使用原文
+                textForTranslation = aggregationResult.aggregatedText;
+                semanticRepairApplied = false;
+            }
+        }
         // 新逻辑：如果这个 utterance 被合并但不是最后一个，返回空结果（让调度服务器核销后过滤）
         // 例如：job 0, 1, 2 被合并到 job 3，job 0, 1, 2 返回空结果，job 3 返回聚合后的文本
         if (aggregationResult.action === 'MERGE' && !aggregationResult.isLastInMergedGroup) {
@@ -159,21 +272,25 @@ class PostProcessCoordinator {
             hasPipelineTranslation: !!result.text_translated,
         }, 'PostProcessCoordinator: Before translation stage');
         if (needsTranslation && this.translationStage) {
-            // 重要：翻译时使用合并后的文本（aggregatedText），而不是原始 ASR 文本
+            // 重要：翻译时使用语义修复后的文本（textForTranslation），而不是原始聚合文本
             // 记录实际传递给TranslationStage的文本
             logger_1.default.info({
                 jobId: job.job_id,
                 sessionId: job.session_id,
                 utteranceIndex: job.utterance_index,
-                aggregatedTextToTranslate: aggregationResult.aggregatedText,
-                aggregatedTextToTranslateLength: aggregationResult.aggregatedText.length,
-                aggregatedTextPreview: aggregationResult.aggregatedText.substring(0, 100),
-                originalAsrText: result.text_asr,
-                originalAsrTextLength: result.text_asr?.length || 0,
-                originalAsrTextPreview: result.text_asr?.substring(0, 50),
-            }, 'PostProcessCoordinator: Passing aggregated text to TranslationStage');
+                textToTranslate: textForTranslation,
+                textToTranslateLength: textForTranslation.length,
+                textPreview: textForTranslation.substring(0, 100),
+                originalAggregatedText: aggregationResult.aggregatedText,
+                originalAggregatedTextLength: aggregationResult.aggregatedText.length,
+                semanticRepairApplied,
+                semanticRepairConfidence,
+            }, 'PostProcessCoordinator: Passing text to TranslationStage (after semantic repair)');
             const translationStartTime = Date.now();
-            translationResult = await this.translationStage.process(job, aggregationResult.aggregatedText, result.quality_score, aggregationResult.metrics?.dedupCharsRemoved || 0);
+            translationResult = await this.translationStage.process(job, textForTranslation, result.quality_score, aggregationResult.metrics?.dedupCharsRemoved || 0, {
+                semanticRepairApplied,
+                semanticRepairConfidence,
+            });
             const translationDuration = Date.now() - translationStartTime;
             if (translationDuration > 30000) {
                 logger_1.default.warn({
@@ -181,8 +298,7 @@ class PostProcessCoordinator {
                     sessionId: job.session_id,
                     utteranceIndex: job.utterance_index,
                     translationDurationMs: translationDuration,
-                    nmtRepairApplied: translationResult.nmtRepairApplied,
-                    note: 'Translation stage took longer than 30 seconds - may be blocked by NMT Repair or homophone repair',
+                    note: 'Translation stage took longer than 30 seconds - may be blocked by homophone repair',
                 }, 'PostProcessCoordinator: Translation stage took too long');
             }
             logger_1.default.debug({
@@ -192,7 +308,6 @@ class PostProcessCoordinator {
                 translatedTextPreview: translationResult.translatedText.substring(0, 100),
                 fromCache: translationResult.fromCache,
                 translationDurationMs: translationDuration,
-                nmtRepairApplied: translationResult.nmtRepairApplied,
             }, 'PostProcessCoordinator: Translation completed');
         }
         else if (result.text_translated) {
@@ -250,9 +365,12 @@ class PostProcessCoordinator {
             };
         }
         // 汇总结果
+        // 重要：如果进行了语义修复，使用修复后的文本作为 aggregatedText（用于返回给web端的text_asr字段）
+        // 这样web端显示的就是修复后的文本，而不是原始ASR文本
+        const finalAggregatedText = textForTranslation || aggregationResult.aggregatedText;
         const postProcessResult = {
             shouldSend: dedupResult.shouldSend,
-            aggregatedText: aggregationResult.aggregatedText,
+            aggregatedText: finalAggregatedText,
             translatedText: translationResult.translatedText,
             ttsAudio: ttsResult.ttsAudio,
             ttsFormat: ttsResult.ttsFormat,
@@ -262,7 +380,6 @@ class PostProcessCoordinator {
                 translationTimeMs: translationResult.translationTimeMs,
                 ttsTimeMs: ttsResult.ttsTimeMs,
                 fromCache: translationResult.fromCache,
-                nmtRepairApplied: translationResult.nmtRepairApplied,
             },
             reason: dedupResult.reason,
         };

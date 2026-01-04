@@ -2,7 +2,8 @@ fastapi>=0.104.0
 uvicorn[standard]>=0.24.0
 # GPU 支持：如果需要 GPU 加速，请安装支持 CUDA 的 PyTorch
 # CPU 版本：pip install torch>=2.0.0 torchaudio<2.9.0
-# GPU 版本：pip install torch>=2.0.0 torchaudio<2.9.0 --index-url https://download.pytorch.org/whl/cu118
+# GPU 版本（CUDA 12.1）：pip install torch>=2.0.0 torchaudio<2.9.0 --index-url https://download.pytorch.org/whl/cu121
+# GPU 版本（CUDA 11.8）：pip install torch>=2.0.0 torchaudio<2.9.0 --index-url https://download.pytorch.org/whl/cu118
 torch>=2.0.0
 torchaudio<2.9.0
 speechbrain>=0.5.16

@@ -272,7 +272,7 @@ describe('AudioAggregator', () => {
       
       // 应该在第3秒静音段之后分割（最长停顿）
       expect(result).not.toBeNull();
-      // 前半句应该包含前3秒 + 1秒静音 + 2秒有声音 + 3秒静音 + Hangover（200ms）
+      // 前半句应该包含前3秒 + 1秒静音 + 2秒有声音 + 3秒静音 + Hangover（600ms）
       // 大约9.2秒的音频
       const expectedFirstHalfDuration = (3000 + 1000 + 2000 + 3000 + 200) / 1000 * 16000 * 2;
       expect(result!.length).toBeCloseTo(expectedFirstHalfDuration, -3); // 允许3KB误差

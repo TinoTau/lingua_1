@@ -528,6 +528,15 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
                 } else if (service.serviceId === 'your-tts') {
                   const status = pythonStatuses.find(s => s.name === 'yourtts');
                   return status?.running || false;
+                } else if (
+                  service.serviceId === 'en-normalize' ||
+                  service.serviceId === 'semantic-repair-zh' ||
+                  service.serviceId === 'semantic-repair-en'
+                ) {
+                  // 语义修复服务：通过HTTP健康检查判断运行状态
+                  // 注意：这里暂时返回false，实际状态需要通过健康检查端点判断
+                  // 未来可以添加健康检查状态缓存
+                  return false; // TODO: 实现HTTP健康检查
                 }
                 return false;
               };

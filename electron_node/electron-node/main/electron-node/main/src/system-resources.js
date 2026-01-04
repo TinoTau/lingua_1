@@ -76,15 +76,17 @@ async function getGpuUsageViaNvidiaSmi() {
                 try {
                     // 输出格式: "utilization.gpu, memory.used, memory.total"
                     const parts = output.trim().split(',');
-                    logger_1.default.info({ code, output: output.trim(), parts }, 'nvidia-smi command executed successfully, starting to parse output');
+                    // 降低nvidia-smi相关日志级别为debug，减少终端输出
+                    logger_1.default.debug({ code, output: output.trim(), parts }, 'nvidia-smi command executed successfully, starting to parse output');
                     if (parts.length >= 3) {
                         const usage = parseFloat(parts[0].trim());
                         const memUsed = parseFloat(parts[1].trim());
                         const memTotal = parseFloat(parts[2].trim());
                         const memPercent = (memUsed / memTotal) * 100;
-                        logger_1.default.info({ usage, memUsed, memTotal, memPercent }, 'Parsed GPU info');
+                        logger_1.default.debug({ usage, memUsed, memTotal, memPercent }, 'Parsed GPU info');
                         if (!isNaN(usage) && !isNaN(memPercent)) {
-                            logger_1.default.info({ usage, memory: memPercent }, 'nvidia-smi successfully returned GPU usage');
+                            // 降低nvidia-smi成功日志级别为debug，减少终端输出
+                            logger_1.default.debug({ usage, memory: memPercent }, 'nvidia-smi successfully returned GPU usage');
                             resolve({ usage, memory: memPercent });
                             return;
                         }

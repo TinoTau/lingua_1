@@ -89,6 +89,7 @@ pub enum ServiceType {
     Nmt,
     Tts,
     Tone,
+    Semantic,  // 语义修复服务类型
 }
 
 impl std::str::FromStr for ServiceType {
@@ -99,6 +100,7 @@ impl std::str::FromStr for ServiceType {
             "nmt" => Ok(ServiceType::Nmt),
             "tts" => Ok(ServiceType::Tts),
             "tone" => Ok(ServiceType::Tone),
+            "semantic" => Ok(ServiceType::Semantic),
             _ => Err(()),
         }
     }

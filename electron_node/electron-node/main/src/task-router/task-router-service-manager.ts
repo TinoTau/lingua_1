@@ -21,7 +21,7 @@ export class TaskRouterServiceManager {
     const endpoints: Map<ServiceType, ServiceEndpoint[]> = new Map();
 
     // 初始化每个服务类型的列表
-    [ServiceType.ASR, ServiceType.NMT, ServiceType.TTS, ServiceType.TONE].forEach((type) => {
+    [ServiceType.ASR, ServiceType.NMT, ServiceType.TTS, ServiceType.TONE, ServiceType.SEMANTIC].forEach((type) => {
       endpoints.set(type, []);
     });
 
@@ -120,6 +120,10 @@ export class TaskRouterServiceManager {
       'piper-tts': 5006,
       'your-tts': 5004,
       'speaker-embedding': 5003,
+      // 语义修复服务端口（待确认，这里使用临时端口号）
+      'semantic-repair-zh': 5013,
+      'semantic-repair-en': 5011,
+      'en-normalize': 5012,
     };
 
     // 首先尝试从映射表获取
@@ -143,6 +147,10 @@ export class TaskRouterServiceManager {
       'your-tts': 'yourtts',
       'speaker-embedding': 'speaker_embedding',
       'faster-whisper-vad': 'faster_whisper_vad',
+      // 语义修复服务可能通过Python服务管理器管理
+      'semantic-repair-zh': 'semantic_repair_zh',
+      'semantic-repair-en': 'semantic_repair_en',
+      'en-normalize': 'en_normalize',
     };
 
     const pythonServiceName = pythonServiceNameMap[serviceId];
@@ -200,6 +208,30 @@ export class TaskRouterServiceManager {
       }
     }
 
+    // 补充语义修复服务（从服务注册表获取，检查是否运行）
+    const semanticRepairServices = ['semantic-repair-zh', 'semantic-repair-en', 'en-normalize'];
+    for (const serviceId of semanticRepairServices) {
+      // 检查服务是否在注册表中
+      if (this.serviceRegistryManager) {
+        try {
+          const current = this.serviceRegistryManager.getCurrent(serviceId);
+          if (current) {
+            // 检查服务是否运行（通过端口检查或进程检查）
+            const running = this.isServiceRunning(serviceId);
+            result.push({
+              service_id: serviceId,
+              type: this.getServiceType(serviceId),
+              device: 'gpu',
+              status: running ? 'running' : 'stopped',
+              version: current.version || '2.0.0',
+            });
+          }
+        } catch (error) {
+          logger.debug({ serviceId, error }, 'Failed to check semantic repair service in registry');
+        }
+      }
+    }
+
     // 补充Rust服务
     if (this.rustServiceManager) {
       const status = this.rustServiceManager.getStatus();
@@ -224,6 +256,22 @@ export class TaskRouterServiceManager {
     if (serviceId === 'node-inference' && this.rustServiceManager) {
       const status = this.rustServiceManager.getStatus();
       return status?.running === true;
+    }
+
+    // 语义修复服务：通过检查服务注册表来判断（因为语义修复服务由SemanticRepairServiceManager管理，不在PythonServiceManager中）
+    if (serviceId === 'semantic-repair-zh' || serviceId === 'semantic-repair-en' || serviceId === 'en-normalize') {
+      // 检查服务是否在注册表中（如果服务已安装，认为可能运行，实际状态由健康检查机制判断）
+      if (this.serviceRegistryManager) {
+        try {
+          const current = this.serviceRegistryManager.getCurrent(serviceId);
+          // 如果服务在注册表中，认为可能运行（实际状态由健康检查决定）
+          // 这里返回true表示服务已安装，运行状态由后续的健康检查确定
+          return current !== null && current !== undefined;
+        } catch (error) {
+          logger.debug({ serviceId, error }, 'Failed to check semantic repair service in registry');
+        }
+      }
+      return false;
     }
 
     const pythonServiceNameMap: Record<string, string> = {
@@ -254,6 +302,10 @@ export class TaskRouterServiceManager {
       'piper-tts': ServiceType.TTS,
       'your-tts': ServiceType.TTS,
       'speaker-embedding': ServiceType.TONE,
+      // 语义修复服务归类为SEMANTIC类型
+      'semantic-repair-zh': ServiceType.SEMANTIC,
+      'semantic-repair-en': ServiceType.SEMANTIC,
+      'en-normalize': ServiceType.SEMANTIC,
     };
     return typeMap[serviceId] || ServiceType.ASR;
   }
@@ -268,6 +320,10 @@ export class TaskRouterServiceManager {
       yourtts: 'your-tts',
       speaker_embedding: 'speaker-embedding',
       faster_whisper_vad: 'faster-whisper-vad',
+      // 语义修复服务
+      semantic_repair_zh: 'semantic-repair-zh',
+      semantic_repair_en: 'semantic-repair-en',
+      en_normalize: 'en-normalize',
     };
     return map[serviceName] || serviceName;
   }

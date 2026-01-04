@@ -1,6 +1,7 @@
 # 0. 清理日志
 cd D:\Programs\github\lingua_1
 .\scripts\cleanup_orphaned_processes.ps1
+.\scripts\clear_python_cache.ps1
 .\clear_logs.ps1
 
 # 1. 节点端
@@ -10,7 +11,8 @@ npm run build
 cd D:\Programs\github\lingua_1
 .\scripts\start_electron_node.ps1
 
-
+cd D:\Programs\github\lingua_1\electron_node\services\semantic_repair_zh
+.\start_all_in_one.ps1
 
 
 # 2. 调度服务器（在新窗口）

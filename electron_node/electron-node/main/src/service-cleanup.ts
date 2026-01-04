@@ -3,11 +3,13 @@ import logger from './logger';
 import type { NodeAgent } from './agent/node-agent';
 import type { RustServiceManager } from './rust-service-manager';
 import type { PythonServiceManager } from './python-service-manager';
+import type { SemanticRepairServiceManager } from './semantic-repair-service-manager';
 
 export async function cleanupServices(
   nodeAgent: NodeAgent | null,
   rustServiceManager: RustServiceManager | null,
-  pythonServiceManager: PythonServiceManager | null
+  pythonServiceManager: PythonServiceManager | null,
+  semanticRepairServiceManager: SemanticRepairServiceManager | null = null
 ): Promise<void> {
   logger.info({}, '========================================');
   logger.info({}, 'Starting cleanup of all services...');
@@ -114,6 +116,38 @@ export async function cleanupServices(
       logger.info({}, 'All Python services stopped');
     } catch (error) {
       logger.error({ error }, 'Failed to stop Python services');
+      // 即使清理失败，也继续执行，避免阻塞应用退出
+    }
+  }
+
+  // 停止所有语义修复服务（修复：之前遗漏了语义修复服务的清理）
+  if (semanticRepairServiceManager) {
+    try {
+      const allStatuses = await semanticRepairServiceManager.getAllServiceStatuses();
+      const runningSemanticRepairServices = allStatuses.filter(s => s.running);
+      
+      if (runningSemanticRepairServices.length > 0) {
+        logger.info(
+          { count: runningSemanticRepairServices.length, services: runningSemanticRepairServices.map(s => ({ id: s.serviceId, pid: s.pid, port: s.port })) },
+          `Stopping all semantic repair services (${runningSemanticRepairServices.length} service(s))...`
+        );
+        
+        // 添加超时保护
+        const cleanupTimeout = 30000; // 30秒超时
+        const cleanupPromise = semanticRepairServiceManager.stopAllServices();
+        const timeoutPromise = new Promise<void>((_, reject) => {
+          setTimeout(() => {
+            reject(new Error(`Semantic repair services cleanup timeout after ${cleanupTimeout}ms`));
+          }, cleanupTimeout);
+        });
+        
+        await Promise.race([cleanupPromise, timeoutPromise]);
+        logger.info({}, 'All semantic repair services stopped');
+      } else {
+        logger.info({}, 'No semantic repair services running, no need to stop');
+      }
+    } catch (error) {
+      logger.error({ error }, 'Failed to stop semantic repair services');
       // 即使清理失败，也继续执行，避免阻塞应用退出
     }
   }

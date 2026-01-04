@@ -10,11 +10,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ServicesHandler = void 0;
 const messages_1 = require("../../../../shared/protocols/messages");
 const logger_1 = __importDefault(require("../logger"));
+const node_agent_services_semantic_repair_1 = require("./node-agent-services-semantic-repair");
 class ServicesHandler {
     constructor(serviceRegistryManager, rustServiceManager, pythonServiceManager) {
         this.serviceRegistryManager = serviceRegistryManager;
         this.rustServiceManager = rustServiceManager;
         this.pythonServiceManager = pythonServiceManager;
+        // 初始化语义修复服务发现
+        this.semanticRepairDiscovery = new node_agent_services_semantic_repair_1.SemanticRepairServiceDiscovery(this.serviceRegistryManager, (serviceId) => this.isServiceRunning(serviceId));
     }
     /**
      * 获取已安装的服务包列表
@@ -32,6 +35,10 @@ class ServicesHandler {
             'piper-tts': messages_1.ServiceType.TTS,
             'speaker-embedding': messages_1.ServiceType.TONE,
             'your-tts': messages_1.ServiceType.TONE,
+            // 语义修复服务归类为SEMANTIC类型
+            'semantic-repair-zh': messages_1.ServiceType.SEMANTIC,
+            'semantic-repair-en': messages_1.ServiceType.SEMANTIC,
+            'en-normalize': messages_1.ServiceType.SEMANTIC,
         };
         const defaultDevice = 'gpu';
         const pushService = (service_id, status, version) => {
@@ -109,7 +116,8 @@ class ServicesHandler {
                 logger_1.default.debug({}, 'Added node-inference to installed services list (not in registry)');
             }
         }
-        logger_1.default.info({
+        // 降低心跳相关日志级别为 debug，减少终端输出
+        logger_1.default.debug({
             totalCount: result.length,
             services: result.map(s => `${s.service_id}:${s.status}`),
         }, 'Getting installed services for heartbeat (type-level)');
@@ -163,6 +171,26 @@ class ServicesHandler {
                     const status = this.pythonServiceManager.getServiceStatus('faster_whisper_vad');
                     return status?.running === true;
                 }
+            }
+            else if (serviceId === 'semantic-repair-zh' ||
+                serviceId === 'semantic-repair-en' ||
+                serviceId === 'en-normalize') {
+                // 语义修复服务通过服务注册表管理
+                // 检查服务是否在注册表中且已安装
+                // 实际运行状态由健康检查机制在TaskRouter中判断
+                if (this.serviceRegistryManager) {
+                    try {
+                        const current = this.serviceRegistryManager.getCurrent(serviceId);
+                        // 如果服务在注册表中，认为可能运行（实际状态由健康检查决定）
+                        // 这里返回true表示服务已安装，运行状态由后续的健康检查确定
+                        return current !== null && current !== undefined;
+                    }
+                    catch (error) {
+                        logger_1.default.debug({ serviceId, error }, 'Failed to check semantic repair service status');
+                    }
+                }
+                // 如果无法检查，默认返回false
+                return false;
             }
             // 未知的服务 ID 或服务管理器不可用，返回 false
             return false;
@@ -223,6 +251,20 @@ class ServicesHandler {
         }
         logger_1.default.debug({ capability }, 'Built capability_by_type');
         return capability;
+    }
+    /**
+     * 获取已安装的语义修复服务列表
+     * 返回已安装且运行中的语义修复服务信息
+     */
+    async getInstalledSemanticRepairServices() {
+        return await this.semanticRepairDiscovery.getInstalledSemanticRepairServices();
+    }
+    /**
+     * 检查语义修复服务是否运行
+     * @param serviceId 服务ID（'semantic-repair-zh' | 'semantic-repair-en' | 'en-normalize'）
+     */
+    isSemanticRepairServiceRunning(serviceId) {
+        return this.semanticRepairDiscovery.isSemanticRepairServiceRunning(serviceId);
     }
 }
 exports.ServicesHandler = ServicesHandler;

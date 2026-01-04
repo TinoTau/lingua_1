@@ -25,8 +25,17 @@ class AudioAggregator {
         // 优化参数
         this.PENDING_SECOND_HALF_TTL_MS = 12000; // pendingSecondHalf TTL：12秒
         this.PENDING_SECOND_HALF_MAX_DURATION_MS = 12000; // pendingSecondHalf最大时长：12秒
-        this.SPLIT_HANGOVER_MS = 200; // 分割点Hangover：200ms
+        // 分割点Hangover：600ms
+        // 作用：
+        // 1. 避免在单词中间切断，提高ASR识别准确度
+        // 2. 包含一个完整的词或短语（通常200-500ms一个词，600ms可以包含1-2个词）
+        // 3. 制造更明显的重复内容，提高文本去重检测的成功率
+        // 4. 即使有重复，后续的去重逻辑可以准确检测并移除
+        this.SPLIT_HANGOVER_MS = 600; // 从200ms增加到600ms，提高去重检测成功率
         this.SECONDARY_SPLIT_THRESHOLD_MS = 10000; // 二级切割阈值：10秒
+        // 短句延迟合并参数
+        this.SHORT_UTTERANCE_THRESHOLD_MS = 6000; // 短句阈值：6秒（小于6秒认为是短句）
+        this.SHORT_UTTERANCE_WAIT_MS = 2000; // 短句等待时间：2秒（等待下一个chunk到达）
         // 音频分析工具
         this.audioUtils = new audio_aggregator_utils_1.AudioAggregatorUtils();
     }
@@ -63,6 +72,39 @@ class AudioAggregator {
                 }, 'AudioAggregator: Unsupported audio format');
                 throw new Error(`Unsupported audio format: ${job.audio_format}`);
             }
+            // 验证解码后的音频长度是否为2的倍数（PCM16要求）
+            if (currentAudio.length % 2 !== 0) {
+                logger_1.default.error({
+                    jobId: job.job_id,
+                    sessionId,
+                    utteranceIndex: job.utterance_index,
+                    audioFormat: job.audio_format,
+                    audioLength: currentAudio.length,
+                    isOdd: currentAudio.length % 2 !== 0,
+                    audioBase64Length: job.audio.length,
+                }, '🚨 CRITICAL: Decoded audio chunk length is not a multiple of 2! This will cause ASR service to fail.');
+                // 修复：截断最后一个字节，确保长度是2的倍数
+                const fixedLength = currentAudio.length - (currentAudio.length % 2);
+                const fixedAudio = currentAudio.slice(0, fixedLength);
+                logger_1.default.warn({
+                    jobId: job.job_id,
+                    sessionId,
+                    utteranceIndex: job.utterance_index,
+                    originalLength: currentAudio.length,
+                    fixedLength: fixedAudio.length,
+                    bytesRemoved: currentAudio.length - fixedAudio.length,
+                }, 'Fixed audio chunk length by truncating last byte(s)');
+                currentAudio = fixedAudio;
+            }
+            logger_1.default.debug({
+                jobId: job.job_id,
+                sessionId,
+                utteranceIndex: job.utterance_index,
+                audioFormat: job.audio_format,
+                audioLength: currentAudio.length,
+                isLengthValid: currentAudio.length % 2 === 0,
+                audioBase64Length: job.audio.length,
+            }, 'AudioAggregator: Audio chunk decoded and validated');
         }
         catch (error) {
             logger_1.default.error({
@@ -70,6 +112,8 @@ class AudioAggregator {
                 jobId: job.job_id,
                 sessionId,
                 utteranceIndex: job.utterance_index,
+                audioFormat: job.audio_format,
+                audioBase64Length: job.audio?.length || 0,
             }, 'AudioAggregator: Failed to decode audio chunk');
             throw error;
         }
@@ -144,7 +188,8 @@ class AudioAggregator {
         buffer.isManualCut = buffer.isManualCut || isManualCut;
         buffer.isPauseTriggered = buffer.isPauseTriggered || isPauseTriggered;
         buffer.isTimeoutTriggered = buffer.isTimeoutTriggered || isTimeoutTriggered;
-        logger_1.default.info({
+        // 降低音频块添加日志级别为debug，减少终端输出（每个音频块都会触发，非常频繁）
+        logger_1.default.debug({
             jobId: job.job_id,
             sessionId,
             utteranceIndex: job.utterance_index,
@@ -167,6 +212,59 @@ class AudioAggregator {
         // 4. 10秒自动处理（如果用户说够10秒，应该足够ASR识别出正确的文本）
         // 5. 修复：如果isTimeoutTriggered为true（调度服务器的超时finalize），即使时长小于10秒也应该处理
         //    因为这是调度服务器检测到没有更多chunk后触发的finalize，说明这是最后一句话
+        // 6. 优化：短句延迟合并 - 如果当前音频很短（<6秒）且isManualCut=true，延迟处理等待下一个chunk
+        // 检查是否在等待延迟合并期间（优先检查，避免重复设置等待）
+        if (buffer.shortUtteranceWaitUntil) {
+            if (nowMs < buffer.shortUtteranceWaitUntil) {
+                // 还在等待期间，继续缓冲当前chunk
+                logger_1.default.debug({
+                    jobId: job.job_id,
+                    sessionId,
+                    utteranceIndex: job.utterance_index,
+                    waitUntil: buffer.shortUtteranceWaitUntil,
+                    nowMs,
+                    remainingMs: buffer.shortUtteranceWaitUntil - nowMs,
+                    totalDurationMs: buffer.totalDurationMs,
+                    reason: 'Still waiting for short utterance merge, buffering current chunk',
+                }, 'AudioAggregator: Still waiting for short utterance merge, buffering current chunk');
+                return null; // 继续缓冲
+            }
+            else {
+                // 等待超时，清除等待标志，继续正常处理
+                logger_1.default.info({
+                    jobId: job.job_id,
+                    sessionId,
+                    utteranceIndex: job.utterance_index,
+                    waitedJobId: buffer.shortUtteranceJobId,
+                    waitUntil: buffer.shortUtteranceWaitUntil,
+                    nowMs,
+                    elapsedMs: nowMs - (buffer.shortUtteranceWaitUntil - this.SHORT_UTTERANCE_WAIT_MS),
+                    totalDurationMs: buffer.totalDurationMs,
+                    reason: 'Short utterance wait timeout, processing now',
+                }, 'AudioAggregator: Short utterance wait timeout, processing buffered audio');
+                buffer.shortUtteranceWaitUntil = undefined;
+                buffer.shortUtteranceJobId = undefined;
+                // 注意：等待超时后，继续执行下面的逻辑，因为 isManualCut 可能仍然为 true
+            }
+        }
+        // 检查是否应该延迟合并（只在没有等待标志时设置）
+        const isShortUtterance = buffer.totalDurationMs < this.SHORT_UTTERANCE_THRESHOLD_MS;
+        const shouldDelayForMerge = isShortUtterance && isManualCut && !isPauseTriggered && !isTimeoutTriggered && !buffer.shortUtteranceWaitUntil;
+        if (shouldDelayForMerge) {
+            // 设置延迟等待，等待下一个chunk到达
+            buffer.shortUtteranceWaitUntil = nowMs + this.SHORT_UTTERANCE_WAIT_MS;
+            buffer.shortUtteranceJobId = job.job_id;
+            logger_1.default.info({
+                jobId: job.job_id,
+                sessionId,
+                utteranceIndex: job.utterance_index,
+                totalDurationMs: buffer.totalDurationMs,
+                waitUntil: buffer.shortUtteranceWaitUntil,
+                waitMs: this.SHORT_UTTERANCE_WAIT_MS,
+                reason: 'Short utterance detected, waiting for potential merge with next chunk',
+            }, 'AudioAggregator: Short utterance detected, delaying processing to wait for merge');
+            return null; // 继续缓冲，等待下一个chunk
+        }
         const shouldProcessNow = isManualCut || // 手动截断：立即处理
             isPauseTriggered || // 3秒静音：立即处理（包括调度服务器的pause超时finalize）
             isTimeoutTriggered || // 修复：超时finalize（调度服务器检测到没有更多chunk），立即处理（即使时长小于10秒）
@@ -191,13 +289,15 @@ class AudioAggregator {
                     sessionId,
                     utteranceIndex: job.utterance_index,
                     originalSplitPosition: splitResult.splitPosition,
+                    hangoverMs: this.SPLIT_HANGOVER_MS,
                     hangoverBytes,
                     hangoverEnd,
                     firstHalfDurationMs: (firstHalfWithHangover.length / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000,
                     secondHalfDurationMs: (secondHalfAfterHangover.length / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000,
                     longestPauseMs: splitResult.longestPauseMs,
                     hadPendingSecondHalf: !!buffer.pendingSecondHalf,
-                }, 'AudioAggregator: Timeout triggered, split audio at longest pause with hangover. First half ready for ASR, second half buffered.');
+                    hangoverPurpose: 'Improve ASR accuracy and enable better text deduplication',
+                }, `AudioAggregator: Timeout triggered, split audio at longest pause with ${this.SPLIT_HANGOVER_MS}ms hangover. First half ready for ASR, second half buffered. Hangover helps ASR accuracy and creates overlap for deduplication.`);
                 // 优化：检查前半句是否仍然过长，如果是则进行二级切割
                 const firstHalfDurationMs = (firstHalfWithHangover.length / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000;
                 let finalFirstHalf = firstHalfWithHangover;
@@ -331,6 +431,11 @@ class AudioAggregator {
                 aggregatedAudioLength: aggregatedAudio.length,
                 hasPendingSecondHalf: !!buffer.pendingSecondHalf,
             }, 'AudioAggregator: Aggregated audio ready for ASR');
+            // 清除延迟等待标志（如果存在，因为音频已经处理）
+            if (buffer.shortUtteranceWaitUntil) {
+                buffer.shortUtteranceWaitUntil = undefined;
+                buffer.shortUtteranceJobId = undefined;
+            }
             // 修复：如果存在pendingSecondHalf，保留它；否则清空缓冲区
             if (buffer.pendingSecondHalf) {
                 // 类型断言：在if检查后，pendingSecondHalf 应该是 Buffer 类型
@@ -349,6 +454,7 @@ class AudioAggregator {
                 buffer.isPauseTriggered = false;
                 buffer.isTimeoutTriggered = false;
                 // 注意：不清空pendingSecondHalf和pendingSecondHalfCreatedAt
+                // 注意：shortUtteranceWaitUntil 已经在上面清除（第545-548行），因为音频已经处理
             }
             else {
                 // 没有pendingSecondHalf，可以安全删除缓冲区
@@ -376,10 +482,42 @@ class AudioAggregator {
             throw new Error('AudioAggregator: No audio chunks to aggregate');
         }
         if (chunks.length === 1) {
-            return chunks[0];
+            // 验证单个chunk的长度
+            const chunk = chunks[0];
+            if (chunk.length % 2 !== 0) {
+                logger_1.default.error({
+                    chunkLength: chunk.length,
+                    isOdd: chunk.length % 2 !== 0,
+                }, '🚨 CRITICAL: Single audio chunk length is not a multiple of 2!');
+                // 修复：截断最后一个字节
+                const fixedLength = chunk.length - (chunk.length % 2);
+                return chunk.slice(0, fixedLength);
+            }
+            return chunk;
         }
+        // 验证每个chunk的长度并记录
+        const chunkLengths = chunks.map((chunk, idx) => {
+            const isValid = chunk.length % 2 === 0;
+            if (!isValid) {
+                logger_1.default.error({
+                    chunkIndex: idx,
+                    chunkLength: chunk.length,
+                    isOdd: chunk.length % 2 !== 0,
+                }, '🚨 CRITICAL: Audio chunk length is not a multiple of 2!');
+            }
+            return { index: idx, length: chunk.length, isValid };
+        });
         // 计算总长度
         const totalLength = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+        // 验证总长度是否为2的倍数
+        if (totalLength % 2 !== 0) {
+            logger_1.default.error({
+                totalLength,
+                chunkCount: chunks.length,
+                chunkLengths: chunkLengths.map(c => `${c.index}:${c.length}(${c.isValid ? 'valid' : 'INVALID'})`),
+                isOdd: totalLength % 2 !== 0,
+            }, '🚨 CRITICAL: Aggregated audio total length is not a multiple of 2! This will cause ASR service to fail.');
+        }
         // 创建聚合后的音频缓冲区
         const aggregated = Buffer.alloc(totalLength);
         let offset = 0;
@@ -387,6 +525,23 @@ class AudioAggregator {
             chunk.copy(aggregated, offset);
             offset += chunk.length;
         }
+        // 如果总长度不是2的倍数，修复它
+        if (aggregated.length % 2 !== 0) {
+            const fixedLength = aggregated.length - (aggregated.length % 2);
+            const fixedBuffer = aggregated.slice(0, fixedLength);
+            logger_1.default.warn({
+                originalLength: aggregated.length,
+                fixedLength: fixedBuffer.length,
+                bytesRemoved: aggregated.length - fixedBuffer.length,
+                chunkCount: chunks.length,
+            }, 'Fixed aggregated audio length by truncating last byte(s)');
+            return fixedBuffer;
+        }
+        logger_1.default.debug({
+            totalLength: aggregated.length,
+            chunkCount: chunks.length,
+            isLengthValid: aggregated.length % 2 === 0,
+        }, 'AudioAggregator: Audio chunks aggregated successfully');
         return aggregated;
     }
     /**

@@ -91,7 +91,8 @@ export class HeartbeatHandler {
       }, 'High GPU usage detected in heartbeat');
     }
 
-    logger.info({
+    // 降低心跳日志级别为 debug，减少终端输出
+    logger.debug({
       nodeId: this.nodeId,
       installedModelsCount: installedModels.length,
       installedServicesCount: installedServicesAll.length,

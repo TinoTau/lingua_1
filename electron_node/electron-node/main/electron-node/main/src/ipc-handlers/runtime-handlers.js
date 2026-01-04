@@ -7,7 +7,7 @@ exports.registerRuntimeHandlers = registerRuntimeHandlers;
 const electron_1 = require("electron");
 const node_config_1 = require("../node-config");
 const logger_1 = __importDefault(require("../logger"));
-function registerRuntimeHandlers(nodeAgent, modelManager, inferenceService, rustServiceManager, pythonServiceManager, serviceRegistryManager) {
+function registerRuntimeHandlers(nodeAgent, modelManager, inferenceService, rustServiceManager, pythonServiceManager, serviceRegistryManager, semanticRepairServiceManager) {
     electron_1.ipcMain.handle('get-node-status', async () => {
         return nodeAgent?.getStatus() || { online: false, nodeId: null };
     });
@@ -205,5 +205,49 @@ function registerRuntimeHandlers(nodeAgent, modelManager, inferenceService, rust
             return {};
         }
         return inferenceService.getProcessingMetrics() || {};
+    });
+    // 语义修复服务管理 IPC 接口
+    electron_1.ipcMain.handle('get-semantic-repair-service-status', async (_, serviceId) => {
+        return semanticRepairServiceManager?.getServiceStatus(serviceId) || {
+            serviceId,
+            running: false,
+            starting: false,
+            pid: null,
+            port: null,
+            startedAt: null,
+            lastError: null,
+        };
+    });
+    electron_1.ipcMain.handle('get-all-semantic-repair-service-statuses', async () => {
+        if (!semanticRepairServiceManager) {
+            return [];
+        }
+        return await semanticRepairServiceManager.getAllServiceStatuses();
+    });
+    electron_1.ipcMain.handle('start-semantic-repair-service', async (_, serviceId) => {
+        if (!semanticRepairServiceManager) {
+            return { success: false, error: 'Semantic repair service manager not initialized' };
+        }
+        try {
+            await semanticRepairServiceManager.startService(serviceId);
+            return { success: true };
+        }
+        catch (error) {
+            logger_1.default.error({ error, serviceId }, 'Failed to start semantic repair service');
+            return { success: false, error: error instanceof Error ? error.message : String(error) };
+        }
+    });
+    electron_1.ipcMain.handle('stop-semantic-repair-service', async (_, serviceId) => {
+        if (!semanticRepairServiceManager) {
+            return { success: false, error: 'Semantic repair service manager not initialized' };
+        }
+        try {
+            await semanticRepairServiceManager.stopService(serviceId);
+            return { success: true };
+        }
+        catch (error) {
+            logger_1.default.error({ error, serviceId }, 'Failed to stop semantic repair service');
+            return { success: false, error: error instanceof Error ? error.message : String(error) };
+        }
     });
 }

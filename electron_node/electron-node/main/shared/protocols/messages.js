@@ -10,4 +10,5 @@ var ServiceType;
     ServiceType["NMT"] = "nmt";
     ServiceType["TTS"] = "tts";
     ServiceType["TONE"] = "tone";
+    ServiceType["SEMANTIC"] = "semantic";
 })(ServiceType = exports.ServiceType || (exports.ServiceType = {}));

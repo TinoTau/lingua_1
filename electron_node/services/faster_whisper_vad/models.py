@@ -207,13 +207,13 @@ try:
             logger.error("Please ensure CUDA and cuDNN are properly installed and accessible.")
             raise RuntimeError(f"GPU mode required but VAD model loading failed: {e}") from e
     else:
-        # CPU 模式，使用 CPU 加载 VAD 模型
-        logger.info("Loading VAD model with CPU provider...")
-        vad_session = ort.InferenceSession(
-            VAD_MODEL_PATH,
-            providers=['CPUExecutionProvider']
+        # CPU模式不允许：如果ASR_DEVICE不是cuda，说明配置错误
+        error_msg = (
+            "❌ ASR_DEVICE is not set to 'cuda'. GPU is required for ASR service.\n"
+            "  CPU mode is not allowed. Please ensure ASR_DEVICE=cuda is set."
         )
-        logger.info("✅ Silero VAD model loaded with CPU")
+        logger.error(error_msg)
+        raise RuntimeError("GPU is required for ASR service. CPU mode is not allowed.")
     
 except RuntimeError:
     # 重新抛出 RuntimeError（GPU 模式失败）

@@ -13,12 +13,15 @@ import {
   TTSResult,
   TONETask,
   TONEResult,
+  SemanticRepairTask,
+  SemanticRepairResult,
   ServiceSelectionStrategy,
 } from './types';
 import { TaskRouterASRHandler } from './task-router-asr';
 import { TaskRouterNMTHandler } from './task-router-nmt';
 import { TaskRouterTTSHandler } from './task-router-tts';
 import { TaskRouterTONEHandler } from './task-router-tone';
+import { TaskRouterSemanticRepairHandler } from './task-router-semantic-repair';
 import { TaskRouterServiceManager } from './task-router-service-manager';
 import { TaskRouterServiceSelector } from './task-router-service-selector';
 
@@ -33,6 +36,7 @@ export class TaskRouter {
   private nmtHandler: TaskRouterNMTHandler;
   private ttsHandler: TaskRouterTTSHandler;
   private toneHandler: TaskRouterTONEHandler;
+  private semanticRepairHandler: TaskRouterSemanticRepairHandler;
   // 服务管理器和选择器
   private serviceManager: TaskRouterServiceManager;
   private serviceSelector: TaskRouterServiceSelector;
@@ -60,6 +64,9 @@ export class TaskRouter {
       this.serviceRegistryManager
     );
     this.serviceSelector = new TaskRouterServiceSelector();
+    
+    // 初始化SEMANTIC类型的端点列表（用于语义修复服务）
+    this.serviceEndpoints.set(ServiceType.SEMANTIC, []);
 
     // 初始化路由处理器
     const updateConnections = (serviceId: string, delta: number) => {
@@ -95,6 +102,44 @@ export class TaskRouter {
       this.serviceConnections,
       updateConnections
     );
+
+          // P0-5: 语义修复服务并发限制（默认2）
+          const semanticRepairMaxConcurrency = 2;
+          // P2-1: 读取缓存配置
+          const config = loadNodeConfig();
+          const cacheConfig = config.features?.semanticRepair?.cache;
+          // P2-2: 读取模型完整性检查配置
+          const enableModelIntegrityCheck = config.features?.semanticRepair?.modelIntegrityCheck?.enabled ?? false;
+          // P0-1: 传递服务运行状态检查回调
+          // P2-2: 传递获取服务包路径的回调
+          this.semanticRepairHandler = new TaskRouterSemanticRepairHandler(
+            (serviceType) => this.selectServiceEndpoint(serviceType),
+            (serviceId) => this.startGpuTrackingForService(serviceId),
+            this.serviceConnections,
+            updateConnections,
+            semanticRepairMaxConcurrency,
+            (serviceId: string) => {
+              // 检查语义修复服务是否运行（通过SEMANTIC类型的端点列表）
+              const semanticEndpoints = this.serviceEndpoints.get(ServiceType.SEMANTIC) || [];
+              const endpoint = semanticEndpoints.find(e => e.serviceId === serviceId);
+              return endpoint?.status === 'running' || false;
+            },
+            cacheConfig,  // P2-1: 传递缓存配置
+            enableModelIntegrityCheck,  // P2-2: 是否启用模型完整性检查
+            (serviceId: string) => {
+              // P2-2: 从服务注册表获取服务包路径
+              if (!this.serviceRegistryManager) {
+                return null;
+              }
+              const current = this.serviceRegistryManager.getCurrent(serviceId);
+              return current?.install_path || null;
+            },
+            (serviceId: string) => {
+              // 直接根据服务ID查找端点（用于语义修复服务）
+              const semanticEndpoints = this.serviceEndpoints.get(ServiceType.SEMANTIC) || [];
+              return semanticEndpoints.find(e => e.serviceId === serviceId && e.status === 'running') || null;
+            }
+          );
   }
 
 
@@ -349,6 +394,20 @@ export class TaskRouter {
    */
   async routeTONETask(task: TONETask): Promise<TONEResult> {
     return await this.toneHandler.routeTONETask(task);
+  }
+
+  /**
+   * 路由语义修复任务
+   */
+  async routeSemanticRepairTask(task: SemanticRepairTask): Promise<SemanticRepairResult> {
+    return await this.semanticRepairHandler.routeSemanticRepairTask(task);
+  }
+
+  /**
+   * 检查语义修复服务健康状态
+   */
+  async checkSemanticRepairServiceHealth(serviceId: string, baseUrl: string): Promise<boolean> {
+    return await this.semanticRepairHandler.checkServiceHealth(serviceId, baseUrl);
   }
 
   /**

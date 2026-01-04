@@ -21,6 +21,7 @@ const service_handlers_1 = require("./ipc-handlers/service-handlers");
 const service_cache_1 = require("./ipc-handlers/service-cache");
 const runtime_handlers_1 = require("./ipc-handlers/runtime-handlers");
 const dependency_checker_1 = require("./utils/dependency-checker");
+const semantic_repair_service_manager_1 = require("./semantic-repair-service-manager");
 let nodeAgent = null;
 let modelManager = null;
 let inferenceService = null;
@@ -28,6 +29,7 @@ let rustServiceManager = null;
 let pythonServiceManager = null;
 let serviceRegistryManager = null;
 let servicePackageManager = null;
+let semanticRepairServiceManager = null;
 /**
  * 检查依赖并显示对话框
  */
@@ -189,7 +191,7 @@ electron_1.app.whenReady().then(async () => {
                 installedPath: serviceRegistryManager.installedPath,
                 installedCount: Object.keys(registry.installed).length,
                 currentCount: Object.keys(registry.current).length
-            }, 'Service registry loaded successfully');
+            }, 'Service registry loaded successfully'); // 已在service-registry中降低为debug级别，这里保留info用于初始化日志
         }
         catch (error) {
             logger_1.default.warn({
@@ -280,7 +282,9 @@ electron_1.app.whenReady().then(async () => {
         // 注册所有 IPC 处理器
         (0, model_handlers_1.registerModelHandlers)(modelManager);
         (0, service_handlers_1.registerServiceHandlers)(serviceRegistryManager, servicePackageManager, rustServiceManager, pythonServiceManager);
-        (0, runtime_handlers_1.registerRuntimeHandlers)(nodeAgent, modelManager, inferenceService, rustServiceManager, pythonServiceManager, serviceRegistryManager);
+        // 初始化语义修复服务管理器
+        semanticRepairServiceManager = new semantic_repair_service_manager_1.SemanticRepairServiceManager(serviceRegistryManager, servicesDir);
+        (0, runtime_handlers_1.registerRuntimeHandlers)(nodeAgent, modelManager, inferenceService, rustServiceManager, pythonServiceManager, serviceRegistryManager, semanticRepairServiceManager);
         // 注册系统资源 IPC 处理器
         electron_1.ipcMain.handle('get-system-resources', async () => {
             const si = require('systeminformation');
@@ -297,7 +301,8 @@ electron_1.app.whenReady().then(async () => {
                     gpuMem: gpuInfo?.memory ?? null,
                     memory: (mem.used / mem.total) * 100,
                 };
-                logger_1.default.info({ gpuInfo, result }, 'System resources fetched successfully');
+                // 降低系统资源获取日志级别为debug，减少终端输出
+                logger_1.default.debug({ gpuInfo, result }, 'System resources fetched successfully');
                 return result;
             }
             catch (error) {
@@ -323,7 +328,7 @@ electron_1.app.whenReady().then(async () => {
 // 正常关闭窗口时清理服务
 electron_1.app.on('window-all-closed', async () => {
     if (process.platform !== 'darwin') {
-        await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager);
+        await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
         electron_1.app.quit();
     }
 });
@@ -332,9 +337,10 @@ electron_1.app.on('before-quit', async (event) => {
     // 如果服务还在运行，阻止默认退出行为，先清理服务
     const rustRunning = rustServiceManager?.getStatus().running;
     const pythonRunning = pythonServiceManager?.getAllServiceStatuses().some(s => s.running);
-    if (rustRunning || pythonRunning) {
+    const semanticRepairRunning = semanticRepairServiceManager ? (await semanticRepairServiceManager.getAllServiceStatuses()).some((s) => s.running) : false;
+    if (rustRunning || pythonRunning || semanticRepairRunning) {
         event.preventDefault();
-        await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager);
+        await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
         electron_1.app.quit();
     }
 });
@@ -343,23 +349,23 @@ electron_1.app.on('before-quit', async (event) => {
 // 但运行时实际支持 Node.js 的所有 process 事件（SIGTERM, SIGINT 等）
 process.on('SIGTERM', async () => {
     logger_1.default.info({}, 'Received SIGTERM signal, cleaning up services...');
-    await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager);
+    await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
     process.exit(0);
 });
 process.on('SIGINT', async () => {
     logger_1.default.info({}, 'Received SIGINT signal, cleaning up services...');
-    await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager);
+    await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
     process.exit(0);
 });
 // 处理未捕获的异常，确保服务被清理
 process.on('uncaughtException', async (error) => {
     logger_1.default.error({ error }, 'Uncaught exception, cleaning up services...');
-    await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager);
+    await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
     process.exit(1);
 });
 process.on('unhandledRejection', async (reason, promise) => {
     logger_1.default.error({ reason, promise }, 'Unhandled promise rejection, cleaning up services...');
-    await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager);
+    await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
     process.exit(1);
 });
 // 注意：模块管理 IPC 已移除

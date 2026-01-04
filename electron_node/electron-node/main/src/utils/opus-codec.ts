@@ -325,11 +325,49 @@ export async function decodeOpusToPcm16(
     }
 
     // 将 Float32Array 转换为 PCM16 Buffer
-    const pcm16Buffer = Buffer.allocUnsafe(mergedAudio.length * 2);
+    const pcm16BufferLength = mergedAudio.length * 2;
+    const pcm16Buffer = Buffer.allocUnsafe(pcm16BufferLength);
     for (let i = 0; i < mergedAudio.length; i++) {
       // 将 float32 [-1.0, 1.0] 转换为 int16 [-32768, 32767]
       const int16Value = Math.max(-32768, Math.min(32767, Math.round(mergedAudio[i] * 32768)));
       pcm16Buffer.writeInt16LE(int16Value, i * 2);
+    }
+
+    // 验证PCM16 Buffer长度是否为2的倍数（PCM16要求每个样本2字节）
+    if (pcm16Buffer.length % 2 !== 0) {
+      logger.error(
+        {
+          pcm16BufferLength: pcm16Buffer.length,
+          decodedSamples: mergedAudio.length,
+          expectedLength: mergedAudio.length * 2,
+          isOdd: pcm16Buffer.length % 2 !== 0,
+          opusDataLength: opusData.length,
+        },
+        '🚨 CRITICAL: PCM16 buffer length is not a multiple of 2! This will cause ASR service to fail.'
+      );
+      // 修复：截断最后一个字节，确保长度是2的倍数
+      const fixedLength = pcm16Buffer.length - (pcm16Buffer.length % 2);
+      const fixedBuffer = pcm16Buffer.slice(0, fixedLength);
+      logger.warn(
+        {
+          originalLength: pcm16Buffer.length,
+          fixedLength: fixedBuffer.length,
+          bytesRemoved: pcm16Buffer.length - fixedBuffer.length,
+        },
+        'Fixed PCM16 buffer length by truncating last byte(s)'
+      );
+      logger.info(
+        {
+          opusDataLength: opusData.length,
+          pcm16DataLength: fixedBuffer.length,
+          decodedSamples: mergedAudio.length,
+          sampleRate,
+          duration: (fixedBuffer.length / 2 / sampleRate).toFixed(2) + 's',
+          wasFixed: true,
+        },
+        'Opus audio decoded to PCM16 successfully (length was fixed)'
+      );
+      return fixedBuffer;
     }
 
     logger.info(
@@ -339,6 +377,7 @@ export async function decodeOpusToPcm16(
         decodedSamples: mergedAudio.length,
         sampleRate,
         duration: (mergedAudio.length / sampleRate).toFixed(2) + 's',
+        isLengthValid: pcm16Buffer.length % 2 === 0,
       },
       'Opus audio decoded to PCM16 successfully'
     );

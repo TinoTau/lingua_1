@@ -49,41 +49,94 @@ const service_logging_1 = require("./service-logging");
 const service_health_1 = require("./service-health");
 const venv_setup_1 = require("./venv-setup");
 /**
- * 检测 CUDA 是否可用（通过 Python 脚本）
+ * 检测 CUDA 是否可用（通过 Python 脚本，带重试机制）
+ * 因为启动时GPU可能被其他服务占用，需要重试
+ * 使用多种方法检测：优先使用 torch，如果失败则尝试 onnxruntime
  */
 async function checkCudaAvailable(pythonExe) {
-    return new Promise((resolve) => {
-        const checkScript = 'import torch; exit(0 if torch.cuda.is_available() else 1)';
-        const python = (0, child_process_1.spawn)(pythonExe, ['-c', checkScript], {
-            stdio: 'ignore',
-        });
-        let resolved = false;
-        const cleanup = () => {
-            if (!resolved) {
-                resolved = true;
-                python.kill();
-            }
-        };
-        // 超时保护
-        const timeout = setTimeout(() => {
-            cleanup();
-            resolve(false);
-        }, 3000);
-        python.on('close', (code) => {
-            if (!resolved) {
-                resolved = true;
-                clearTimeout(timeout);
-                resolve(code === 0);
-            }
-        });
-        python.on('error', () => {
-            if (!resolved) {
-                resolved = true;
-                clearTimeout(timeout);
+    const maxRetries = 5; // 增加重试次数到5次
+    const retryDelay = 2000; // 增加重试延迟到2秒
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        // 方法1：尝试使用 torch 检测
+        const torchResult = await new Promise((resolve) => {
+            const checkScript = 'import torch; exit(0 if torch.cuda.is_available() else 1)';
+            const python = (0, child_process_1.spawn)(pythonExe, ['-c', checkScript], {
+                stdio: 'ignore',
+            });
+            let resolved = false;
+            const cleanup = () => {
+                if (!resolved) {
+                    resolved = true;
+                    python.kill();
+                }
+            };
+            // 超时保护
+            const timeout = setTimeout(() => {
+                cleanup();
                 resolve(false);
-            }
+            }, 5000); // 增加超时时间到5秒
+            python.on('close', (code) => {
+                if (!resolved) {
+                    resolved = true;
+                    clearTimeout(timeout);
+                    resolve(code === 0);
+                }
+            });
+            python.on('error', () => {
+                if (!resolved) {
+                    resolved = true;
+                    clearTimeout(timeout);
+                    resolve(false);
+                }
+            });
         });
-    });
+        if (torchResult) {
+            return true; // CUDA可用，立即返回
+        }
+        // 方法2：如果 torch 检测失败，尝试使用 onnxruntime 检测（TTS服务使用onnxruntime）
+        const onnxResult = await new Promise((resolve) => {
+            const checkScript = 'import onnxruntime as ort; providers = ort.get_available_providers(); exit(0 if "CUDAExecutionProvider" in providers else 1)';
+            const python = (0, child_process_1.spawn)(pythonExe, ['-c', checkScript], {
+                stdio: 'ignore',
+            });
+            let resolved = false;
+            const cleanup = () => {
+                if (!resolved) {
+                    resolved = true;
+                    python.kill();
+                }
+            };
+            // 超时保护
+            const timeout = setTimeout(() => {
+                cleanup();
+                resolve(false);
+            }, 5000);
+            python.on('close', (code) => {
+                if (!resolved) {
+                    resolved = true;
+                    clearTimeout(timeout);
+                    resolve(code === 0);
+                }
+            });
+            python.on('error', () => {
+                if (!resolved) {
+                    resolved = true;
+                    clearTimeout(timeout);
+                    resolve(false);
+                }
+            });
+        });
+        if (onnxResult) {
+            return true; // CUDA可用（通过onnxruntime检测到）
+        }
+        // 如果检测失败且还有重试机会，等待后重试
+        if (attempt < maxRetries - 1) {
+            logger_1.default.debug({ attempt: attempt + 1, maxRetries }, 'CUDA detection failed (both torch and onnxruntime), retrying...');
+            await new Promise(resolve => setTimeout(resolve, retryDelay));
+        }
+    }
+    // 所有重试都失败，返回false
+    return false;
 }
 /**
  * 构建服务启动参数
@@ -117,13 +170,17 @@ async function buildServiceArgs(serviceName, config, pythonExe) {
             '--port', config.port.toString(),
             '--model-dir', config.env.PIPER_MODEL_DIR || '',
         ];
-        // 环境变量会在 spawn 时设置（通过修改 config.env）
-        if (cudaAvailable && config.env) {
+        // 强制使用GPU：TTS服务必须使用GPU
+        // 注意：即使Node.js端检测失败，也设置PIPER_USE_GPU=true，让服务内部验证
+        // 因为TTS服务使用onnxruntime，而检测可能使用torch，检测结果可能不准确
+        if (config.env) {
             config.env.PIPER_USE_GPU = 'true';
-            logger_1.default.info({ serviceName }, 'Piper TTS: GPU enabled via PIPER_USE_GPU environment variable');
-        }
-        else {
-            config.env.PIPER_USE_GPU = 'false';
+            if (cudaAvailable) {
+                logger_1.default.info({ serviceName }, 'Piper TTS: GPU enabled via PIPER_USE_GPU environment variable (CUDA detected)');
+            }
+            else {
+                logger_1.default.warn({ serviceName }, 'Piper TTS: CUDA detection failed in Node.js, but setting PIPER_USE_GPU=true anyway. Service will verify GPU availability internally.');
+            }
         }
         return args;
     }

@@ -1,6 +1,6 @@
 /**
  * TranslationStage - 翻译阶段（唯一 NMT 入口）
- * 职责：TranslationCache 查询、NMT 调用、可选 NMT Repair
+ * 职责：TranslationCache 查询、NMT 调用
  */
 
 import { JobAssignMessage } from '@shared/protocols/messages';
@@ -11,7 +11,6 @@ import { LRUCache } from 'lru-cache';
 import { generateCacheKey, shouldCache } from '../../aggregator/cache-key-generator';
 import { scoreCandidates, selectBestCandidate } from '../../aggregator/candidate-scorer';
 import { detectHomophoneErrors, hasPossibleHomophoneErrors } from '../../aggregator/homophone-detector';
-import { learnHomophonePattern } from '../../aggregator/homophone-learner';
 import logger from '../../logger';
 
 export interface TranslationStageConfig {
@@ -19,16 +18,17 @@ export interface TranslationStageConfig {
   translationCacheTtlMs?: number;
   enableAsyncRetranslation?: boolean;
   asyncRetranslationThreshold?: number;
-  nmtRepairEnabled?: boolean;
-  nmtRepairNumCandidates?: number;
-  nmtRepairThreshold?: number;
 }
 
 export interface TranslationStageResult {
   translatedText: string;
   translationTimeMs?: number;
   fromCache?: boolean;
-  nmtRepairApplied?: boolean;
+}
+
+export interface SemanticRepairContext {
+  semanticRepairApplied?: boolean;
+  semanticRepairConfidence?: number;
 }
 
 export class TranslationStage {
@@ -72,15 +72,17 @@ export class TranslationStage {
   /**
    * 执行翻译
    * @param job 原始 job 请求
-   * @param aggregatedText 聚合后的文本
+   * @param aggregatedText 聚合后的文本（可能已经过语义修复）
    * @param qualityScore ASR 质量分数
    * @param dedupCharsRemoved 去重移除的字符数
+   * @param semanticRepairContext 语义修复上下文（保留用于兼容性，但不再使用）
    */
   async process(
     job: JobAssignMessage,
     aggregatedText: string,
     qualityScore?: number,
-    dedupCharsRemoved: number = 0
+    dedupCharsRemoved: number = 0,
+    semanticRepairContext?: SemanticRepairContext
   ): Promise<TranslationStageResult> {
     const startTime = Date.now();
 
@@ -154,9 +156,6 @@ export class TranslationStage {
       };
     }
 
-    // 检查是否应该使用 NMT Repair
-    const shouldRepair = this.shouldRepair(aggregatedText, qualityScore, dedupCharsRemoved);
-
     // 检查是否可能包含同音字错误
     const hasHomophoneErrors = hasPossibleHomophoneErrors(aggregatedText);
 
@@ -175,86 +174,8 @@ export class TranslationStage {
     }
 
     let translatedText = '';
-    let nmtRepairApplied = false;
 
-    // 如果只有一个原文候选且启用了 NMT Repair，使用 NMT 候选生成
-    if (sourceCandidates.length === 1 && shouldRepair) {
-      const nmtRepairStartTime = Date.now();
-      logger.info({
-        jobId: job.job_id,
-        sessionId: job.session_id,
-        textLength: aggregatedText.length,
-        numCandidates: this.config.nmtRepairNumCandidates || 5,
-        qualityScore,
-        note: 'NMT Repair triggered - this may take longer due to multiple candidates',
-      }, 'TranslationStage: Starting NMT Repair (may block if GPU is overloaded)');
-      
-      const nmtTask: NMTTask = {
-        text: aggregatedText,
-        src_lang: job.src_lang,
-        tgt_lang: job.tgt_lang,
-        context_text: contextText, // 使用上一个utterance的原文（中文），用于NMT纠错
-        job_id: job.job_id,
-        num_candidates: this.config.nmtRepairNumCandidates || 5,
-      } as any; // 添加session_id和utterance_index用于日志
-      (nmtTask as any).session_id = job.session_id;
-      (nmtTask as any).utterance_index = job.utterance_index;
-
-      const nmtResult = await this.taskRouter.routeNMTTask(nmtTask);
-      
-      const nmtRepairDuration = Date.now() - nmtRepairStartTime;
-      if (nmtRepairDuration > 30000) {
-        logger.warn({
-          jobId: job.job_id,
-          sessionId: job.session_id,
-          nmtRepairDurationMs: nmtRepairDuration,
-          numCandidates: this.config.nmtRepairNumCandidates || 5,
-          note: 'NMT Repair took longer than 30 seconds - GPU may be overloaded',
-        }, 'TranslationStage: NMT Repair took too long');
-      }
-
-      // 构建候选列表
-      const candidates = [
-        { candidate: aggregatedText, translation: nmtResult.text },
-        ...(nmtResult.candidates || []).map(candidate => ({
-          candidate: aggregatedText,
-          translation: candidate,
-        })),
-      ];
-
-      // 获取上一个翻译作为上下文（用于打分）
-      const previousTranslation = this.aggregatorManager ? (this.aggregatorManager.getLastTranslatedText(job.session_id) || undefined) : undefined;
-
-      // 对候选进行打分
-      const scoredCandidates = scoreCandidates(
-        candidates,
-        aggregatedText,
-        nmtResult.text,
-        previousTranslation
-      );
-
-      // 选择最佳候选
-      const bestCandidate = selectBestCandidate(
-        scoredCandidates,
-        nmtResult.text,
-        this.config.nmtRepairThreshold ? 1 - this.config.nmtRepairThreshold : 0.05
-      );
-
-      if (bestCandidate) {
-        translatedText = bestCandidate.translation;
-        nmtRepairApplied = true;
-        logger.info(
-          {
-            jobId: job.job_id,
-            sessionId: job.session_id,
-            bestScore: bestCandidate.score,
-          },
-          'TranslationStage: NMT Repair applied, best candidate selected'
-        );
-      } else {
-        translatedText = nmtResult.text;
-      }
-    } else if (sourceCandidates.length > 1) {
+    if (sourceCandidates.length > 1) {
       // 有多个原文候选（同音字修复），对每个候选进行 NMT 翻译并打分
       const homophoneRepairStartTime = Date.now();
       logger.info({
@@ -331,16 +252,15 @@ export class TranslationStage {
         previousTranslation
       );
 
-      // 选择最佳候选
+      // 选择最佳候选（使用固定阈值 0.05）
       const bestCandidate = selectBestCandidate(
         scoredCandidates,
         translatedCandidates[0]?.translation || '',
-        this.config.nmtRepairThreshold ? 1 - this.config.nmtRepairThreshold : 0.05
+        0.05
       );
 
       if (bestCandidate) {
         translatedText = bestCandidate.translation;
-        nmtRepairApplied = true;
         logger.info(
           {
             jobId: job.job_id,
@@ -416,7 +336,6 @@ export class TranslationStage {
         sessionId: job.session_id,
         translationTimeMs,
         fromCache: false,
-        nmtRepairApplied,
         translatedTextLength: translatedText.length,
         translatedTextPreview: translatedText.substring(0, 100),
       },
@@ -427,40 +346,7 @@ export class TranslationStage {
       translatedText,
       translationTimeMs,
       fromCache: false,
-      nmtRepairApplied,
     };
-  }
-
-  /**
-   * 判断是否应该触发 NMT Repair
-   * 注意：NMT Repair 会生成多个候选并打分，导致延迟增加
-   * 应该只在确实需要时才触发（质量很差或明显重复）
-   */
-  private shouldRepair(
-    text: string,
-    qualityScore: number | undefined,
-    dedupCharsRemoved: number
-  ): boolean {
-    if (!this.config.nmtRepairEnabled) {
-      return false;
-    }
-
-    // 文本太短或太长，不修复（可能是错误）
-    if (text.length < 3 || text.length > 500) {
-      return false;
-    }
-
-    // 质量分数很低（阈值降低，避免过度触发）
-    if (qualityScore !== undefined && qualityScore < (this.config.nmtRepairThreshold || 0.5)) {
-      return true;
-    }
-
-    // 明显重复（Dedup 裁剪量大，阈值提高，避免过度触发）
-    if (dedupCharsRemoved > 20) {
-      return true;
-    }
-
-    return false;
   }
 }
 

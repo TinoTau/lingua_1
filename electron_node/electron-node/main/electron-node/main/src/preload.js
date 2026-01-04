@@ -62,6 +62,11 @@ electron_1.contextBridge.exposeInMainWorld('electronAPI', {
     setServicePreferences: (prefs) => electron_1.ipcRenderer.invoke('set-service-preferences', prefs),
     // 处理效率指标（OBS-1）
     getProcessingMetrics: () => electron_1.ipcRenderer.invoke('get-processing-metrics'),
+    // 语义修复服务管理
+    getSemanticRepairServiceStatus: (serviceId) => electron_1.ipcRenderer.invoke('get-semantic-repair-service-status', serviceId),
+    getAllSemanticRepairServiceStatuses: () => electron_1.ipcRenderer.invoke('get-all-semantic-repair-service-statuses'),
+    startSemanticRepairService: (serviceId) => electron_1.ipcRenderer.invoke('start-semantic-repair-service', serviceId),
+    stopSemanticRepairService: (serviceId) => electron_1.ipcRenderer.invoke('stop-semantic-repair-service', serviceId),
     // 注意：模块管理 API 已移除
     // 模块现在根据任务请求中的 features 自动启用/禁用，不需要手动管理
 });

@@ -24,9 +24,20 @@ interface RustServiceStatus {
   gpuUsageMs: number; // GPU累计使用时长（毫秒）
 }
 
+interface SemanticRepairServiceStatus {
+  serviceId: string;
+  running: boolean;
+  starting: boolean;
+  pid: number | null;
+  port: number | null;
+  startedAt: Date | null;
+  lastError: string | null;
+}
+
 export function ServiceManagement() {
   const [rustStatus, setRustStatus] = useState<RustServiceStatus | null>(null);
   const [pythonStatuses, setPythonStatuses] = useState<ServiceStatus[]>([]);
+  const [semanticRepairStatuses, setSemanticRepairStatuses] = useState<SemanticRepairServiceStatus[]>([]);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [processingMetrics, setProcessingMetrics] = useState<Record<string, number>>({});
 
@@ -53,14 +64,20 @@ export function ServiceManagement() {
 
   const updateStatuses = async () => {
     try {
-      const [rust, python, metrics] = await Promise.all([
+      const [rust, python, metrics, semanticRepair] = await Promise.all([
         window.electronAPI.getRustServiceStatus(),
         window.electronAPI.getAllPythonServiceStatuses(),
         window.electronAPI.getProcessingMetrics(),
+        window.electronAPI.getAllSemanticRepairServiceStatuses(),
       ]);
       setRustStatus(rust);
       setPythonStatuses(python);
       setProcessingMetrics(metrics || {});
+      
+      // 调试日志
+      console.log('Semantic repair services:', semanticRepair);
+      setSemanticRepairStatuses(semanticRepair || []);
+      
       // 调试日志
       if (metrics && Object.keys(metrics).length > 0) {
         console.log('Processing metrics:', metrics);
@@ -143,6 +160,9 @@ export function ServiceManagement() {
       faster_whisper_vad: 'FastWhisperVad语音识别服务',
       speaker_embedding: 'Speaker Embedding 服务',
       rust: '节点推理服务 (Rust)',
+      'en-normalize': 'EN Normalize 英文标准化服务',
+      'semantic-repair-zh': 'Semantic Repair 中文语义修复',
+      'semantic-repair-en': 'Semantic Repair 英文语义修复',
     };
     return map[name] || name;
   };
@@ -207,6 +227,44 @@ export function ServiceManagement() {
     }
   };
 
+  const handleStartSemanticRepair = async (serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => {
+    setLoading(prev => ({ ...prev, [serviceId]: true }));
+    try {
+      const result = await window.electronAPI.startSemanticRepairService(serviceId);
+      if (!result.success) {
+        alert(`启动失败: ${result.error}`);
+      }
+    } catch (error) {
+      alert(`启动失败: ${error}`);
+    } finally {
+      setLoading(prev => ({ ...prev, [serviceId]: false }));
+      await updateStatuses();
+    }
+  };
+
+  const handleStopSemanticRepair = async (serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => {
+    setLoading(prev => ({ ...prev, [serviceId]: true }));
+    try {
+      const result = await window.electronAPI.stopSemanticRepairService(serviceId);
+      if (!result.success) {
+        alert(`停止失败: ${result.error}`);
+      }
+    } catch (error) {
+      alert(`停止失败: ${error}`);
+    } finally {
+      setLoading(prev => ({ ...prev, [serviceId]: false }));
+      await updateStatuses();
+    }
+  };
+
+  const handleToggleSemanticRepair = async (serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en', checked: boolean) => {
+    if (checked) {
+      await handleStartSemanticRepair(serviceId);
+    } else {
+      await handleStopSemanticRepair(serviceId);
+    }
+  };
+
   return (
     <div className="lsm-root">
       <div className="lsm-header">
@@ -266,6 +324,64 @@ export function ServiceManagement() {
             </label>
           </div>
         </div>
+
+        {/* 语义修复服务 */}
+        {semanticRepairStatuses.map((status) => {
+          const serviceId = status.serviceId;
+          const isRunning = status.running;
+          const isStarting = status.starting;
+          const isLoading = loading[serviceId] || false;
+          const displayName = getServiceDisplayName(serviceId);
+
+          return (
+            <div key={serviceId} className="lsm-item">
+              <div className="lsm-info">
+                <div className="lsm-name-row">
+                  <h3>{displayName}</h3>
+                  <span className={`lsm-badge ${isRunning ? 'is-running' :
+                    isStarting ? 'is-starting' :
+                      'is-stopped'
+                    }`}>
+                    {isRunning ? '运行中' :
+                      isStarting ? '正在启动...' :
+                        '已停止'}
+                  </span>
+                </div>
+                {isRunning && status.port && (
+                  <div className="lsm-details">
+                    <div className="lsm-detail-row">
+                      <span className="lsm-detail-label">端口:</span>
+                      <span className="lsm-detail-value">{status.port}</span>
+                    </div>
+                    {status.pid && (
+                      <div className="lsm-detail-row">
+                        <span className="lsm-detail-label">PID:</span>
+                        <span className="lsm-detail-value">{status.pid}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+                {status.lastError && (
+                  <div className="lsm-error">
+                    <span className="lsm-error-icon">⚠️</span>
+                    <span>{status.lastError}</span>
+                  </div>
+                )}
+              </div>
+              <div className="lsm-actions">
+                <label className="lsm-switch">
+                  <input
+                    type="checkbox"
+                    checked={isRunning}
+                    onChange={(e) => handleToggleSemanticRepair(serviceId as 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en', e.target.checked)}
+                    disabled={isLoading || isStarting}
+                  />
+                  <span className="lsm-switch-slider"></span>
+                </label>
+              </div>
+            </div>
+          );
+        })}
 
         {/* Python 服务 */}
         {['faster_whisper_vad', 'nmt', 'tts', 'yourtts', 'speaker_embedding'].map((serviceName) => {

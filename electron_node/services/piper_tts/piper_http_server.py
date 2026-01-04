@@ -162,23 +162,55 @@ def main():
     print(f"  Model Directory: {args.model_dir}")
     print(f"  Piper Command: {find_piper_command()}")
     
-    # 检查 GPU 支持
+    # 强制使用GPU：检查PIPER_USE_GPU环境变量
     use_gpu = os.environ.get("PIPER_USE_GPU", "false").lower() == "true"
-    print(f"  GPU Acceleration: {'Enabled' if use_gpu else 'Disabled'}")
     
-    if use_gpu:
-        if ONNXRUNTIME_AVAILABLE:
-            try:
-                providers = ort.get_available_providers()
-                if 'CUDAExecutionProvider' in providers:
-                    print(f"  ✓ CUDA Execution Provider: Available")
-                    print(f"  ✓ GPU acceleration will be used")
-                else:
-                    print(f"  ⚠ CUDA Execution Provider: Not available (will use CPU)")
-            except Exception as e:
-                print(f"  ⚠ GPU check failed: {e}")
-        else:
-            print(f"  ⚠ ONNX Runtime not available for GPU check")
+    if not use_gpu:
+        error_msg = (
+            "❌ PIPER_USE_GPU is not set to 'true'. GPU is required for TTS service.\n"
+            "  Please set PIPER_USE_GPU=true environment variable.\n"
+            "  CPU mode is not allowed."
+        )
+        print(error_msg, flush=True)
+        raise RuntimeError("GPU is required for TTS service. PIPER_USE_GPU must be set to 'true'.")
+    
+    print(f"  GPU Acceleration: Enabled (required)")
+    
+    # 验证GPU是否真正可用
+    if ONNXRUNTIME_AVAILABLE:
+        try:
+            providers = ort.get_available_providers()
+            if 'CUDAExecutionProvider' in providers:
+                print(f"  ✓ CUDA Execution Provider: Available")
+                print(f"  ✓ GPU acceleration will be used")
+            else:
+                error_msg = (
+                    "❌ CUDA Execution Provider is not available!\n"
+                    "  GPU is required for TTS service.\n"
+                    "  Please ensure:\n"
+                    "  1. onnxruntime-gpu is installed: pip install onnxruntime-gpu\n"
+                    "  2. CUDA drivers are installed and up to date\n"
+                    "  3. CUDA toolkit is properly installed"
+                )
+                print(error_msg, flush=True)
+                raise RuntimeError("CUDA Execution Provider is not available. GPU is required for TTS service.")
+        except Exception as e:
+            if "CUDA Execution Provider" in str(e):
+                raise  # 重新抛出上面的错误
+            error_msg = (
+                f"❌ GPU check failed: {e}\n"
+                "  GPU is required for TTS service."
+            )
+            print(error_msg, flush=True)
+            raise RuntimeError(f"GPU check failed: {e}. GPU is required for TTS service.") from e
+    else:
+        error_msg = (
+            "❌ ONNX Runtime is not available!\n"
+            "  GPU is required for TTS service.\n"
+            "  Please install onnxruntime-gpu: pip install onnxruntime-gpu"
+        )
+        print(error_msg, flush=True)
+        raise RuntimeError("ONNX Runtime is not available. GPU is required for TTS service.")
     
     print(f"\nEndpoints:")
     print(f"  POST /tts - Synthesize speech")

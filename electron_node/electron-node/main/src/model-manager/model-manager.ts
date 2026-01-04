@@ -147,7 +147,8 @@ export class ModelManager extends EventEmitter {
       const response = await axios.get<ModelInfo[]>(`${this.modelHubUrl}/api/models`, {
         timeout: 10000, // 10秒超时
       });
-      logger.info({ modelCount: response.data.length, modelHubUrl: this.modelHubUrl }, 'Successfully fetched available models from Model Hub');
+      // 降低Model Hub相关日志级别为debug，减少终端输出
+      logger.debug({ modelCount: response.data.length, modelHubUrl: this.modelHubUrl }, 'Successfully fetched available models from Model Hub');
       return response.data;
     } catch (error: any) {
       const errorMessage = error.code === 'ECONNREFUSED' 

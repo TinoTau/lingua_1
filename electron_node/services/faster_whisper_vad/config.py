@@ -65,18 +65,28 @@ def check_cuda_available():
 
 _cuda_available = check_cuda_available()
 
-# 如果环境变量强制指定了设备，使用环境变量的值；否则根据 CUDA 可用性自动选择
-# 注意：如果环境变量强制指定了 cuda，即使检测不到 CUDA，也会尝试使用（让实际加载时验证）
+# 强制使用GPU：如果环境变量设置了ASR_DEVICE，使用环境变量的值；否则强制使用cuda
+# 如果GPU不可用，服务将无法启动（抛出错误）
 env_device = os.getenv("ASR_DEVICE")
 if env_device:
     ASR_DEVICE = env_device.lower()
     logger.info(f"Using device from environment variable: {ASR_DEVICE}")
-    # 如果强制使用 cuda 但检测不到，给出警告
+    # 如果强制使用 cuda 但检测不到，给出警告（但仍会尝试，让实际加载时验证）
     if ASR_DEVICE == "cuda" and not _cuda_available:
         logger.warning("ASR_DEVICE=cuda is set but CUDA may not be available, will attempt anyway")
+    # 如果环境变量设置为cpu，抛出错误（不允许使用CPU）
+    if ASR_DEVICE == "cpu":
+        error_msg = "ASR_DEVICE=cpu is not allowed. GPU is required for ASR service."
+        logger.error(error_msg)
+        raise RuntimeError(error_msg)
 else:
-    ASR_DEVICE = "cuda" if _cuda_available else "cpu"
-    logger.info(f"Auto-detected device: {ASR_DEVICE} (CUDA available: {_cuda_available})")
+    # 强制使用GPU，不自动回退到CPU
+    if not _cuda_available:
+        error_msg = "CUDA is not available. GPU is required for ASR service. Please ensure CUDA is properly installed and CUDA_PATH is set."
+        logger.error(error_msg)
+        raise RuntimeError(error_msg)
+    ASR_DEVICE = "cuda"
+    logger.info(f"GPU is required: forcing ASR_DEVICE=cuda (CUDA available: {_cuda_available})")
 
 # CPU 不支持 float16，必须使用 float32；CUDA 可以使用 float16
 # 如果环境变量设置了 compute_type，使用环境变量的值；否则根据设备自动选择

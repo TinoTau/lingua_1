@@ -98,6 +98,28 @@ interface Window {
       ttsEnabled: boolean;
       yourttsEnabled: boolean;
     }) => Promise<{ success: boolean; error?: string }>;
+
+    // 语义修复服务管理
+    getSemanticRepairServiceStatus: (serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => Promise<{
+      serviceId: string;
+      running: boolean;
+      starting: boolean;
+      pid: number | null;
+      port: number | null;
+      startedAt: Date | null;
+      lastError: string | null;
+    }>;
+    getAllSemanticRepairServiceStatuses: () => Promise<Array<{
+      serviceId: string;
+      running: boolean;
+      starting: boolean;
+      pid: number | null;
+      port: number | null;
+      startedAt: Date | null;
+      lastError: string | null;
+    }>>;
+    startSemanticRepairService: (serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => Promise<{ success: boolean; error?: string }>;
+    stopSemanticRepairService: (serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => Promise<{ success: boolean; error?: string }>;
   };
 }
 

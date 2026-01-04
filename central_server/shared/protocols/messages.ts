@@ -12,6 +12,7 @@ export enum ServiceType {
   NMT = 'nmt',
   TTS = 'tts',
   TONE = 'tone',
+  SEMANTIC = 'semantic',  // 语义修复服务类型
 }
 
 /** 服务运行设备 */

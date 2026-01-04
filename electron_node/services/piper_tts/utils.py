@@ -199,14 +199,23 @@ def get_or_load_voice(model_path: str, config_path: Optional[str], use_gpu: bool
         load_time = (time.time() - load_start) * 1000
         logger.info(f"Model loaded in {load_time:.2f}ms")
         
-        # 检查 GPU 使用情况
+        # 强制检查 GPU 使用情况（GPU是必需的）
         try:
             session = voice.session
             providers = session.get_providers()
             if 'CUDAExecutionProvider' in providers:
                 logger.info(f"✓ Model using GPU (CUDAExecutionProvider)")
             else:
-                logger.warning(f"⚠ Model using CPU (providers: {providers})")
+                error_msg = (
+                    f"❌ Model is using CPU instead of GPU (providers: {providers})\n"
+                    "  GPU is required for TTS service. Service will exit.\n"
+                    "  Please ensure:\n"
+                    "  1. PIPER_USE_GPU=true is set\n"
+                    "  2. onnxruntime-gpu is installed\n"
+                    "  3. CUDA drivers are up to date"
+                )
+                logger.error(error_msg)
+                raise RuntimeError(f"Model is using CPU instead of GPU. GPU is required for TTS service. Providers: {providers}")
         except Exception as e:
             logger.warning(f"Could not check execution providers: {e}")
         
