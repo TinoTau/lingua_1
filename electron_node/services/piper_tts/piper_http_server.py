@@ -13,18 +13,18 @@ import traceback
 from pathlib import Path
 
 try:
+    import onnxruntime as ort
+    ONNXRUNTIME_AVAILABLE = True
+except ImportError:
+    ONNXRUNTIME_AVAILABLE = False
+
+try:
     from fastapi import FastAPI, HTTPException
     import uvicorn
 except ImportError:
     print("ERROR: FastAPI and uvicorn are required. Please install:")
     print("  pip install fastapi uvicorn")
     sys.exit(1)
-
-try:
-    import onnxruntime as ort
-    ONNXRUNTIME_AVAILABLE = True
-except ImportError:
-    ONNXRUNTIME_AVAILABLE = False
 
 # 尝试导入 Piper Python API
 try:

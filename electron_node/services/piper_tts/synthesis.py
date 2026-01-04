@@ -11,13 +11,13 @@ import traceback
 from pathlib import Path
 from typing import List, Optional, Tuple
 
+import numpy as np
 from fastapi import HTTPException
 from fastapi.responses import Response
 
 try:
     from piper.config import SynthesisConfig
     from piper.voice import AudioChunk, PiperVoice
-    import numpy as np
     PIPER_PYTHON_API_AVAILABLE = True
 except ImportError:
     PIPER_PYTHON_API_AVAILABLE = False
