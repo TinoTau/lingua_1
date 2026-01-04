@@ -8,8 +8,6 @@ import torch
 from typing import Optional, Tuple
 from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
 
-from align_fallback import extract_with_align_fallback
-
 from config import (
     SEPARATOR,
     SEPARATOR_TRANSLATIONS,
@@ -134,9 +132,6 @@ def extract_with_sentinel(out: str, sentinel_pos: int) -> str:
             print(f"[NMT Service] Removed plain text SEP_MARKER '{marker_variant}' from extracted text middle")
     
     return final_output
-
-
-from align_fallback import extract_with_align_fallback
 
 
 def cleanup_sentinel_sequences(text: str) -> str:

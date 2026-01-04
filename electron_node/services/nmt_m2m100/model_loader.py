@@ -4,9 +4,12 @@ M2M100 NMT 服务 - 模型加载器
 """
 import os
 import sys
+import time
+import traceback
+from typing import Optional, Tuple
+
 import torch
 from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
-from typing import Optional, Tuple
 
 
 def check_model_complete(model_path: str) -> Tuple[bool, Optional[str]]:
@@ -133,7 +136,6 @@ def setup_device() -> torch.device:
         except Exception as cuda_test_err:
             if attempt < max_retries - 1:
                 print(f"[NMT Service] [WARN] CUDA test failed (attempt {attempt + 1}/{max_retries}): {cuda_test_err}, retrying in {retry_delay}s...", flush=True)
-                import time
                 time.sleep(retry_delay)
             else:
                 error_msg = (
@@ -249,7 +251,6 @@ def load_model_with_retry(local_model_path: str, device: torch.device) -> M2M100
                 print(f"[NMT Service] [ERROR] OSError during model loading (attempt 1): {mem_error}", flush=True)
         except Exception as e:
             print(f"[NMT Service] [ERROR] Exception during model loading (attempt 1): {e}", flush=True)
-            import traceback
             traceback.print_exc()
     
     # 方法2：如果方法1失败，尝试使用改造前的配置（low_cpu_mem_usage=False）
@@ -299,7 +300,6 @@ def load_model_with_retry(local_model_path: str, device: torch.device) -> M2M100
                 )
         except Exception as e:
             print(f"[NMT Service] [ERROR] Exception during model loading (attempt 2): {e}", flush=True)
-            import traceback
             traceback.print_exc()
             raise RuntimeError(
                 f"Failed to load model after multiple attempts. "

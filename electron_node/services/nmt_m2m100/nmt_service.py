@@ -7,15 +7,16 @@ M2M100 NMT 服务（FastAPI）
 
 # 强制设置标准输出和错误输出为 UTF-8 编码（Windows 兼容性）
 # 注意：使用 line_buffering=False 以减少内存开销
-import sys
+import datetime
 import io
 import os
+import sys
 import time
-import datetime
 import traceback
 from typing import Optional
 
 import torch
+import uvicorn
 from fastapi import FastAPI
 from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
 
@@ -309,5 +310,4 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
 
 
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=5008)

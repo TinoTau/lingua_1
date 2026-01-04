@@ -5,7 +5,9 @@
 
 import os
 import sys
+import traceback
 from pathlib import Path
+
 from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
 
 def download_model(model_name, target_dir):
@@ -50,7 +52,6 @@ def download_model(model_name, target_dir):
         return True
     except Exception as e:
         print(f"[错误] 下载失败: {e}")
-        import traceback
         traceback.print_exc()
         return False
 
