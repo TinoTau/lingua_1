@@ -233,7 +233,6 @@ class ASRWorker:
         注意：这个方法在后台线程中执行，但仍然是串行的（只有一个worker）
         """
         # 在锁内将segments转换为list（避免迭代器线程安全问题）
-        import time
         transcribe_start = time.time()
         
         segments, info = asr_model.transcribe(

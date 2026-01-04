@@ -6,15 +6,18 @@ Faster Whisper + Silero VAD Service - Audio Decoder
 Opus 解码代码保留但已废弃，仅用于向后兼容（如果 Pipeline 解码失败）。
 三端之间只使用 Opus 格式传输，Pipeline 负责解码为 PCM16 后发送给 ASR 服务。
 """
+import array
 import base64
-import numpy as np
-import soundfile as sf
 import io
 import logging
+import os
+import struct
 import subprocess
 import tempfile
-import os
 from typing import Tuple, Optional
+
+import numpy as np
+import soundfile as sf
 
 logger = logging.getLogger(__name__)
 
@@ -78,7 +81,6 @@ def decode_audio(
     elif audio_format == "pcm16":
         # PCM16 格式：直接处理原始 PCM16 数据（Pipeline 解码后的格式）
         try:
-            import array
             # 将 PCM16 bytes 转换为 int16 array，然后转换为 float32 numpy array
             pcm16_array = array.array('h', audio_bytes)  # int16 little-endian
             audio = np.array(pcm16_array, dtype=np.float32) / 32768.0  # 归一化到 [-1.0, 1.0]
@@ -118,7 +120,6 @@ def decode_opus_audio(
     use_packet_format = False
     if PLAN_A_AVAILABLE and len(audio_bytes) >= 2:
         try:
-            import struct
             # 检查前两个字节是否是合理的 packet_len
             packet_len = struct.unpack_from("<H", audio_bytes, 0)[0]
             # 如果 packet_len 合理（> 0 且 < MAX_PACKET_BYTES），且数据长度足够包含至少一个 packet
@@ -237,7 +238,6 @@ def decode_opus_packet_format(
         
         # 将 PCM16 bytes 转换为 float32 numpy array
         try:
-            import array
             pcm16_array = array.array('h', pcm16_bytes)  # int16
             audio = np.array(pcm16_array, dtype=np.float32) / 32768.0  # 归一化到 [-1.0, 1.0]
             sr = sample_rate
