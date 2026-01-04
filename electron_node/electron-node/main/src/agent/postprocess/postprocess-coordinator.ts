@@ -156,6 +156,19 @@ export class PostProcessCoordinator {
     job: JobAssignMessage,
     result: JobResult
   ): Promise<PostProcessResult> {
+    const processStartTime = Date.now();
+    logger.info(
+      {
+        jobId: job.job_id,
+        sessionId: job.session_id,
+        utteranceIndex: job.utterance_index,
+        asrTextLength: result.text_asr?.length || 0,
+        hasTranslatedText: !!result.text_translated,
+        timestamp: new Date().toISOString(),
+      },
+      'PostProcessCoordinator: Starting post-process (ENTRY)'
+    );
+    
     // 如果未启用，直接返回原始结果
     if (!this.enablePostProcessTranslation) {
       return {
@@ -209,7 +222,20 @@ export class PostProcessCoordinator {
       };
     }
     
+    const aggregationStartTime = Date.now();
     const aggregationResult = this.aggregationStage.process(job, result);
+    const aggregationDuration = Date.now() - aggregationStartTime;
+    logger.info(
+      {
+        jobId: job.job_id,
+        sessionId: job.session_id,
+        utteranceIndex: job.utterance_index,
+        aggregationDurationMs: aggregationDuration,
+        aggregatedTextLength: aggregationResult.aggregatedText.length,
+        action: aggregationResult.action,
+      },
+      'PostProcessCoordinator: Aggregation stage completed'
+    );
 
     // P0-2: 初始化时序保证 - 确保语义修复Stage已初始化
     const initPromise = this.semanticRepairInitializer.getInitPromise();
@@ -222,10 +248,20 @@ export class PostProcessCoordinator {
     const semanticRepairStage = this.semanticRepairInitializer.getSemanticRepairStage();
 
     // Phase 2: 语义修复Stage（在AggregationStage之后、TranslationStage之前）
+    const semanticRepairStartTime = Date.now();
     let textForTranslation = aggregationResult.aggregatedText;
     let semanticRepairApplied = false;
     let semanticRepairConfidence = 1.0;
     if (semanticRepairStage) {
+      logger.info(
+        {
+          jobId: job.job_id,
+          sessionId: job.session_id,
+          utteranceIndex: job.utterance_index,
+          textLength: aggregationResult.aggregatedText.length,
+        },
+        'PostProcessCoordinator: Starting semantic repair stage'
+      );
       try {
         // P0-3: 检查版本是否一致（如果版本已变化，说明正在重新初始化，跳过修复）
         if (currentVersion !== this.semanticRepairVersion) {
@@ -239,6 +275,45 @@ export class PostProcessCoordinator {
           );
           textForTranslation = aggregationResult.aggregatedText;
         } else {
+          // 获取微上下文（上一句尾部，用于语义修复）
+          // 注意：getLastCommittedText 已经内置去重逻辑，如果上一句和当前句相同会返回 null
+          let microContext: string | undefined = undefined;
+          if (this.aggregatorManager) {
+            const lastCommittedText = this.aggregatorManager.getLastCommittedText(
+              job.session_id,
+              aggregationResult.aggregatedText
+            );
+            if (lastCommittedText && lastCommittedText.trim().length > 0) {
+              // 限制长度：取最后150个字符（避免上下文过长）
+              const trimmedContext = lastCommittedText.trim();
+              microContext = trimmedContext.length > 150 
+                ? trimmedContext.substring(trimmedContext.length - 150)
+                : trimmedContext;
+              
+              logger.debug(
+                {
+                  jobId: job.job_id,
+                  sessionId: job.session_id,
+                  utteranceIndex: job.utterance_index,
+                  microContextLength: microContext.length,
+                  microContextPreview: microContext.substring(0, 50),
+                  originalLastCommittedLength: lastCommittedText.length,
+                },
+                'PostProcessCoordinator: Retrieved micro_context for semantic repair'
+              );
+            } else {
+              logger.debug(
+                {
+                  jobId: job.job_id,
+                  sessionId: job.session_id,
+                  utteranceIndex: job.utterance_index,
+                  reason: lastCommittedText === null ? 'no_previous_text' : 'empty_text',
+                },
+                'PostProcessCoordinator: No micro_context available (deduplicated or first utterance)'
+              );
+            }
+          }
+
           const repairResult = await semanticRepairStage.process(
             job,
             aggregationResult.aggregatedText,
@@ -246,10 +321,11 @@ export class PostProcessCoordinator {
             {
               segments: result.segments,
               language_probability: result.extra?.language_probability,
-              micro_context: undefined,  // TODO: 从AggregatorManager获取
+              micro_context: microContext,
             }
           );
 
+          const semanticRepairDuration = Date.now() - semanticRepairStartTime;
           if (repairResult.decision === 'REPAIR' || repairResult.decision === 'PASS') {
             textForTranslation = repairResult.textOut;
             semanticRepairApplied = repairResult.semanticRepairApplied || false;
@@ -270,8 +346,10 @@ export class PostProcessCoordinator {
                 repairedLength: textForTranslation.length,
                 textChanged: textForTranslation !== aggregationResult.aggregatedText,
                 semanticRepairApplied,
+                semanticRepairDurationMs: semanticRepairDuration,
+                repairTimeMs: repairResult.repairTimeMs,
               },
-              'PostProcessCoordinator: Semantic repair result'
+              'PostProcessCoordinator: Semantic repair stage completed'
             );
           } else if (repairResult.decision === 'REJECT') {
             logger.warn(
@@ -287,10 +365,15 @@ export class PostProcessCoordinator {
           }
         }
       } catch (error: any) {
+        const semanticRepairDuration = Date.now() - semanticRepairStartTime;
         logger.error(
           {
             error: error.message,
+            stack: error.stack,
             jobId: job.job_id,
+            sessionId: job.session_id,
+            utteranceIndex: job.utterance_index,
+            semanticRepairDurationMs: semanticRepairDuration,
           },
           'PostProcessCoordinator: Semantic repair failed, using original text'
         );
@@ -298,6 +381,16 @@ export class PostProcessCoordinator {
         textForTranslation = aggregationResult.aggregatedText;
         semanticRepairApplied = false;
       }
+    } else {
+      logger.info(
+        {
+          jobId: job.job_id,
+          sessionId: job.session_id,
+          utteranceIndex: job.utterance_index,
+          reason: 'semanticRepairStage is null',
+        },
+        'PostProcessCoordinator: Semantic repair stage skipped (not available)'
+      );
     }
 
     // 新逻辑：如果这个 utterance 被合并但不是最后一个，返回空结果（让调度服务器核销后过滤）
@@ -377,6 +470,7 @@ export class PostProcessCoordinator {
     if (needsTranslation && this.translationStage) {
       // 重要：翻译时使用语义修复后的文本（textForTranslation），而不是原始聚合文本
       // 记录实际传递给TranslationStage的文本
+      const translationStartTime = Date.now();
       logger.info(
         {
           jobId: job.job_id,
@@ -389,11 +483,11 @@ export class PostProcessCoordinator {
           originalAggregatedTextLength: aggregationResult.aggregatedText.length,
           semanticRepairApplied,
           semanticRepairConfidence,
+          timestamp: new Date().toISOString(),
         },
-        'PostProcessCoordinator: Passing text to TranslationStage (after semantic repair)'
+        'PostProcessCoordinator: Starting translation stage (NMT request START)'
       );
       
-      const translationStartTime = Date.now();
       translationResult = await this.translationStage.process(
         job,
         textForTranslation,
@@ -495,6 +589,21 @@ export class PostProcessCoordinator {
     // 重要：如果进行了语义修复，使用修复后的文本作为 aggregatedText（用于返回给web端的text_asr字段）
     // 这样web端显示的就是修复后的文本，而不是原始ASR文本
     const finalAggregatedText = textForTranslation || aggregationResult.aggregatedText;
+    const totalProcessDuration = Date.now() - processStartTime;
+    
+    logger.info(
+      {
+        jobId: job.job_id,
+        sessionId: job.session_id,
+        utteranceIndex: job.utterance_index,
+        totalProcessDurationMs: totalProcessDuration,
+        shouldSend: dedupResult.shouldSend,
+        aggregatedTextLength: finalAggregatedText.length,
+        translatedTextLength: translationResult.translatedText.length,
+        timestamp: new Date().toISOString(),
+      },
+      'PostProcessCoordinator: Post-process completed (EXIT)'
+    );
     
     const postProcessResult: PostProcessResult = {
       shouldSend: dedupResult.shouldSend,

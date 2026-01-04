@@ -32,6 +32,7 @@ class TaskRouterNMTHandler {
         // GPU 跟踪：在任务开始时启动 GPU 跟踪（确保能够捕获整个任务期间的 GPU 使用）
         this.startGpuTrackingForService(endpoint.serviceId);
         this.updateServiceConnections(endpoint.serviceId, 1);
+        const taskStartTime = Date.now();
         try {
             // 创建 AbortController 用于支持任务取消
             // 注意：job_id 是调度服务器发送的，用于任务管理和取消
@@ -47,7 +48,6 @@ class TaskRouterNMTHandler {
                 baseURL: endpoint.baseUrl,
                 timeout: 60000, // 60秒超时（参考 Rust 客户端使用 30 秒，这里使用 60 秒以应对更复杂的任务）
             });
-            const taskStartTime = Date.now();
             // 详细记录NMT输入
             logger_1.default.info({
                 serviceId: endpoint.serviceId,
@@ -64,7 +64,8 @@ class TaskRouterNMTHandler {
                 contextTextPreview: task.context_text?.substring(0, 50),
                 numCandidates: task.num_candidates,
                 timeout: httpClient.defaults.timeout,
-            }, 'NMT INPUT: Sending NMT request');
+                timestamp: new Date().toISOString(),
+            }, 'NMT INPUT: Sending NMT request (START)');
             const response = await httpClient.post('/v1/translate', {
                 text: task.text,
                 src_lang: task.src_lang,
@@ -90,7 +91,8 @@ class TaskRouterNMTHandler {
                 translatedTextPreview: translatedText.substring(0, 100),
                 numCandidates: candidates.length,
                 candidatesPreview: candidates.slice(0, 3).map((c) => c.substring(0, 50)),
-            }, 'NMT OUTPUT: NMT request succeeded');
+                timestamp: new Date().toISOString(),
+            }, 'NMT OUTPUT: NMT request succeeded (END)');
             if (requestDuration > 30000) {
                 logger_1.default.warn({
                     serviceId: endpoint.serviceId,
@@ -119,7 +121,21 @@ class TaskRouterNMTHandler {
             };
         }
         catch (error) {
-            logger_1.default.error({ error, serviceId: endpoint.serviceId }, 'NMT task failed');
+            const requestDuration = Date.now() - taskStartTime;
+            const isTimeout = error.code === 'ECONNABORTED' || error.message?.includes('timeout') || error.name === 'AbortError';
+            logger_1.default.error({
+                error: error.message,
+                errorCode: error.code,
+                errorName: error.name,
+                serviceId: endpoint.serviceId,
+                jobId: task.job_id,
+                sessionId: task.session_id,
+                utteranceIndex: task.utterance_index,
+                requestDurationMs: requestDuration,
+                timeout: 60000, // NMT timeout is 60 seconds
+                isTimeout,
+                timestamp: new Date().toISOString(),
+            }, `NMT task failed${isTimeout ? ' (TIMEOUT)' : ''}`);
             throw error;
         }
         finally {

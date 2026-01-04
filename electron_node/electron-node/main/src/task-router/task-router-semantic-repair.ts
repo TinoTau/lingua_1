@@ -154,14 +154,38 @@ export class TaskRouterSemanticRepairHandler {
     }
 
     // P0-5: 获取并发许可（如果超过限制则等待）
+    const acquireStartTime = Date.now();
     try {
+      logger.info(
+        {
+          jobId: task.job_id,
+          sessionId: task.session_id,
+          utteranceIndex: task.utterance_index,
+          serviceId: endpoint.serviceId,
+          textLength: task.text_in?.length || 0,
+        },
+        'SemanticRepairHandler: Attempting to acquire concurrency permit'
+      );
       await this.concurrencyManager.acquire(endpoint.serviceId, task.job_id, 5000);
+      const acquireDuration = Date.now() - acquireStartTime;
+      logger.info(
+        {
+          jobId: task.job_id,
+          serviceId: endpoint.serviceId,
+          acquireDurationMs: acquireDuration,
+        },
+        'SemanticRepairHandler: Concurrency permit acquired'
+      );
     } catch (error: any) {
+      const acquireDuration = Date.now() - acquireStartTime;
       logger.warn(
         {
           error: error.message,
           jobId: task.job_id,
+          sessionId: task.session_id,
+          utteranceIndex: task.utterance_index,
           serviceId: endpoint.serviceId,
+          acquireDurationMs: acquireDuration,
         },
         'Semantic repair concurrency timeout, returning PASS'
       );
@@ -177,20 +201,36 @@ export class TaskRouterSemanticRepairHandler {
     this.updateConnections(endpoint.serviceId, 1);
     this.startGpuTrackingForService(endpoint.serviceId);
 
+    const serviceCallStartTime = Date.now();
     try {
       // 调用语义修复服务
+      logger.info(
+        {
+          jobId: task.job_id,
+          sessionId: task.session_id,
+          utteranceIndex: task.utterance_index,
+          serviceId: endpoint.serviceId,
+          baseUrl: endpoint.baseUrl,
+          textLength: task.text_in?.length || 0,
+        },
+        'SemanticRepairHandler: Calling semantic repair service'
+      );
       const result = await this.callSemanticRepairService(endpoint, task);
+      const serviceCallDuration = Date.now() - serviceCallStartTime;
       
       // P2-1: 缓存结果（只缓存REPAIR决策）
       this.cache.set(task.lang, task.text_in, result);
       
-      logger.debug(
+      logger.info(
         {
           jobId: task.job_id,
+          sessionId: task.session_id,
+          utteranceIndex: task.utterance_index,
           lang: task.lang,
           decision: result.decision,
           confidence: result.confidence,
           reasonCodes: result.reason_codes,
+          serviceCallDurationMs: serviceCallDuration,
           cached: result.decision === 'REPAIR',
         },
         'Semantic repair task completed'
@@ -198,13 +238,18 @@ export class TaskRouterSemanticRepairHandler {
 
       return result;
     } catch (error: any) {
+      const serviceCallDuration = Date.now() - serviceCallStartTime;
       logger.error(
         {
           error: error.message,
           stack: error.stack,
           jobId: task.job_id,
+          sessionId: task.session_id,
+          utteranceIndex: task.utterance_index,
           lang: task.lang,
           serviceId: endpoint.serviceId,
+          serviceCallDurationMs: serviceCallDuration,
+          isTimeout: error.message?.includes('timeout') || error.name === 'AbortError',
         },
         'Semantic repair service error, returning PASS'
       );
@@ -218,6 +263,13 @@ export class TaskRouterSemanticRepairHandler {
       };
     } finally {
       // P0-5: 释放并发许可
+      logger.info(
+        {
+          jobId: task.job_id,
+          serviceId: endpoint.serviceId,
+        },
+        'SemanticRepairHandler: Releasing concurrency permit'
+      );
       this.concurrencyManager.release(endpoint.serviceId, task.job_id);
       // 更新连接数
       this.updateConnections(endpoint.serviceId, -1);

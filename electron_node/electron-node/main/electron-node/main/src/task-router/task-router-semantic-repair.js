@@ -122,14 +122,32 @@ class TaskRouterSemanticRepairHandler {
             }
         }
         // P0-5: 获取并发许可（如果超过限制则等待）
+        const acquireStartTime = Date.now();
         try {
+            logger_1.default.info({
+                jobId: task.job_id,
+                sessionId: task.session_id,
+                utteranceIndex: task.utterance_index,
+                serviceId: endpoint.serviceId,
+                textLength: task.text_in?.length || 0,
+            }, 'SemanticRepairHandler: Attempting to acquire concurrency permit');
             await this.concurrencyManager.acquire(endpoint.serviceId, task.job_id, 5000);
+            const acquireDuration = Date.now() - acquireStartTime;
+            logger_1.default.info({
+                jobId: task.job_id,
+                serviceId: endpoint.serviceId,
+                acquireDurationMs: acquireDuration,
+            }, 'SemanticRepairHandler: Concurrency permit acquired');
         }
         catch (error) {
+            const acquireDuration = Date.now() - acquireStartTime;
             logger_1.default.warn({
                 error: error.message,
                 jobId: task.job_id,
+                sessionId: task.session_id,
+                utteranceIndex: task.utterance_index,
                 serviceId: endpoint.serviceId,
+                acquireDurationMs: acquireDuration,
             }, 'Semantic repair concurrency timeout, returning PASS');
             return {
                 decision: 'PASS',
@@ -141,28 +159,46 @@ class TaskRouterSemanticRepairHandler {
         // 更新连接数
         this.updateConnections(endpoint.serviceId, 1);
         this.startGpuTrackingForService(endpoint.serviceId);
+        const serviceCallStartTime = Date.now();
         try {
             // 调用语义修复服务
+            logger_1.default.info({
+                jobId: task.job_id,
+                sessionId: task.session_id,
+                utteranceIndex: task.utterance_index,
+                serviceId: endpoint.serviceId,
+                baseUrl: endpoint.baseUrl,
+                textLength: task.text_in?.length || 0,
+            }, 'SemanticRepairHandler: Calling semantic repair service');
             const result = await this.callSemanticRepairService(endpoint, task);
+            const serviceCallDuration = Date.now() - serviceCallStartTime;
             // P2-1: 缓存结果（只缓存REPAIR决策）
             this.cache.set(task.lang, task.text_in, result);
-            logger_1.default.debug({
+            logger_1.default.info({
                 jobId: task.job_id,
+                sessionId: task.session_id,
+                utteranceIndex: task.utterance_index,
                 lang: task.lang,
                 decision: result.decision,
                 confidence: result.confidence,
                 reasonCodes: result.reason_codes,
+                serviceCallDurationMs: serviceCallDuration,
                 cached: result.decision === 'REPAIR',
             }, 'Semantic repair task completed');
             return result;
         }
         catch (error) {
+            const serviceCallDuration = Date.now() - serviceCallStartTime;
             logger_1.default.error({
                 error: error.message,
                 stack: error.stack,
                 jobId: task.job_id,
+                sessionId: task.session_id,
+                utteranceIndex: task.utterance_index,
                 lang: task.lang,
                 serviceId: endpoint.serviceId,
+                serviceCallDurationMs: serviceCallDuration,
+                isTimeout: error.message?.includes('timeout') || error.name === 'AbortError',
             }, 'Semantic repair service error, returning PASS');
             // 错误时返回PASS，不阻塞流程
             return {
@@ -174,6 +210,10 @@ class TaskRouterSemanticRepairHandler {
         }
         finally {
             // P0-5: 释放并发许可
+            logger_1.default.info({
+                jobId: task.job_id,
+                serviceId: endpoint.serviceId,
+            }, 'SemanticRepairHandler: Releasing concurrency permit');
             this.concurrencyManager.release(endpoint.serviceId, task.job_id);
             // 更新连接数
             this.updateConnections(endpoint.serviceId, -1);

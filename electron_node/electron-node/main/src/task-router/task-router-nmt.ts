@@ -38,6 +38,7 @@ export class TaskRouterNMTHandler {
 
     this.updateServiceConnections(endpoint.serviceId, 1);
 
+    const taskStartTime = Date.now();
     try {
       // 创建 AbortController 用于支持任务取消
       // 注意：job_id 是调度服务器发送的，用于任务管理和取消
@@ -54,8 +55,6 @@ export class TaskRouterNMTHandler {
         baseURL: endpoint.baseUrl,
         timeout: 60000, // 60秒超时（参考 Rust 客户端使用 30 秒，这里使用 60 秒以应对更复杂的任务）
       });
-
-      const taskStartTime = Date.now();
       
       // 详细记录NMT输入
       logger.info({
@@ -73,7 +72,8 @@ export class TaskRouterNMTHandler {
         contextTextPreview: task.context_text?.substring(0, 50),
         numCandidates: task.num_candidates,
         timeout: httpClient.defaults.timeout,
-      }, 'NMT INPUT: Sending NMT request');
+        timestamp: new Date().toISOString(),
+      }, 'NMT INPUT: Sending NMT request (START)');
       
       const response = await httpClient.post('/v1/translate', {
         text: task.text,
@@ -103,7 +103,8 @@ export class TaskRouterNMTHandler {
         translatedTextPreview: translatedText.substring(0, 100),
         numCandidates: candidates.length,
         candidatesPreview: candidates.slice(0, 3).map((c: string) => c.substring(0, 50)),
-      }, 'NMT OUTPUT: NMT request succeeded');
+        timestamp: new Date().toISOString(),
+      }, 'NMT OUTPUT: NMT request succeeded (END)');
       if (requestDuration > 30000) {
         logger.warn({
           serviceId: endpoint.serviceId,
@@ -136,8 +137,22 @@ export class TaskRouterNMTHandler {
         confidence: response.data.confidence,
         candidates: response.data.candidates || undefined, // 返回候选列表（如果有）
       };
-    } catch (error) {
-      logger.error({ error, serviceId: endpoint.serviceId }, 'NMT task failed');
+    } catch (error: any) {
+      const requestDuration = Date.now() - taskStartTime;
+      const isTimeout = error.code === 'ECONNABORTED' || error.message?.includes('timeout') || error.name === 'AbortError';
+      logger.error({
+        error: error.message,
+        errorCode: error.code,
+        errorName: error.name,
+        serviceId: endpoint.serviceId,
+        jobId: task.job_id,
+        sessionId: (task as any).session_id,
+        utteranceIndex: (task as any).utterance_index,
+        requestDurationMs: requestDuration,
+        timeout: 60000, // NMT timeout is 60 seconds
+        isTimeout,
+        timestamp: new Date().toISOString(),
+      }, `NMT task failed${isTimeout ? ' (TIMEOUT)' : ''}`);
       throw error;
     } finally {
       // 清理 AbortController

@@ -65,13 +65,17 @@ export class SemanticRepairConcurrencyManager {
     }
 
     // 超过限制，加入等待队列
-    logger.debug(
+    const queueStartTime = Date.now();
+    logger.info(
       {
         serviceId,
         jobId,
         activeCount,
         maxConcurrency,
         queueLength: this.waitingQueue.length,
+        timeoutMs,
+        waitingJobIds: this.waitingQueue.map(item => item.jobId),
+        activeJobIds: Array.from(this.activeRequests.get(serviceId) || []),
       },
       'SemanticRepairConcurrencyManager: Concurrency limit reached, queuing request'
     );
@@ -79,12 +83,25 @@ export class SemanticRepairConcurrencyManager {
     return new Promise<void>((resolve, reject) => {
       const timeout = setTimeout(() => {
         // 从等待队列中移除
+        const waitDuration = Date.now() - queueStartTime;
         const index = this.waitingQueue.findIndex(
           (item) => item.serviceId === serviceId && item.jobId === jobId
         );
         if (index >= 0) {
           this.waitingQueue.splice(index, 1);
         }
+        logger.warn(
+          {
+            serviceId,
+            jobId,
+            waitDurationMs: waitDuration,
+            timeoutMs,
+            activeCount: this.getActiveCount(serviceId),
+            queueLength: this.waitingQueue.length,
+            activeJobIds: Array.from(this.activeRequests.get(serviceId) || []),
+          },
+          'SemanticRepairConcurrencyManager: Concurrency timeout - job waited too long'
+        );
         reject(new Error(`Semantic repair concurrency timeout for ${serviceId}, job ${jobId}`));
       }, timeoutMs);
 
@@ -93,6 +110,17 @@ export class SemanticRepairConcurrencyManager {
         jobId,
         resolve: () => {
           clearTimeout(timeout);
+          const waitDuration = Date.now() - queueStartTime;
+          logger.info(
+            {
+              serviceId,
+              jobId,
+              waitDurationMs: waitDuration,
+              queueLength: this.waitingQueue.length - 1,
+              activeCount: this.getActiveCount(serviceId),
+            },
+            'SemanticRepairConcurrencyManager: Permit acquired after waiting'
+          );
           this.addActiveRequest(serviceId, jobId);
           resolve();
         },
@@ -120,17 +148,35 @@ export class SemanticRepairConcurrencyManager {
       }
     }
 
-    logger.debug(
+    const activeCountAfter = this.getActiveCount(serviceId);
+    const queueLengthBefore = this.waitingQueue.length;
+    
+    logger.info(
       {
         serviceId,
         jobId,
-        activeCount: this.getActiveCount(serviceId),
+        activeCount: activeCountAfter,
+        queueLengthBefore,
+        waitingJobIds: this.waitingQueue.map(item => item.jobId),
       },
-      'SemanticRepairConcurrencyManager: Released permit'
+      'SemanticRepairConcurrencyManager: Released permit, processing waiting queue'
     );
 
     // 处理等待队列
     this.processWaitingQueue();
+    
+    const queueLengthAfter = this.waitingQueue.length;
+    if (queueLengthAfter < queueLengthBefore) {
+      logger.info(
+        {
+          serviceId,
+          queueLengthBefore,
+          queueLengthAfter,
+          processedCount: queueLengthBefore - queueLengthAfter,
+        },
+        'SemanticRepairConcurrencyManager: Processed waiting queue items'
+      );
+    }
   }
 
   /**

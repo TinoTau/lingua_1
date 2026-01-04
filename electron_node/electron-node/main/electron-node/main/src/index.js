@@ -1,9 +1,45 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const fs = __importStar(require("fs"));
+const path = __importStar(require("path"));
 const electron_1 = require("electron");
+const si = __importStar(require("systeminformation"));
 const node_agent_1 = require("./agent/node-agent");
 const model_manager_1 = require("./model-manager/model-manager");
 const inference_service_1 = require("./inference/inference-service");
@@ -70,12 +106,10 @@ function checkDependenciesAndShowDialog(mainWindow) {
                 }).then((result) => {
                     if (result.response === 1) {
                         // 打开文档（如果存在）
-                        const { shell } = require('electron');
-                        const path = require('path');
                         const docPath = path.join(__dirname, '../../docs/DEPENDENCY_INSTALLATION.md');
-                        shell.openPath(docPath).catch(() => {
+                        electron_1.shell.openPath(docPath).catch(() => {
                             // 如果文件不存在，打开包含文档的目录
-                            shell.openPath(path.dirname(docPath));
+                            electron_1.shell.openPath(path.dirname(docPath));
                         });
                     }
                 }).catch((error) => {
@@ -138,8 +172,6 @@ electron_1.app.whenReady().then(async () => {
             if (isDev) {
                 // 尝试找到项目根目录下的 electron_node/services
                 // 从当前文件向上查找，直到找到包含 services/installed.json 的目录
-                const fs = require('fs');
-                const path = require('path');
                 let currentDir = __dirname;
                 let projectServicesDir = null;
                 // 最多向上查找 10 级
@@ -174,7 +206,6 @@ electron_1.app.whenReady().then(async () => {
             else {
                 // 生产环境：使用 userData/services
                 const userData = electron_1.app.getPath('userData');
-                const path = require('path');
                 servicesDir = path.join(userData, 'services');
             }
         }
@@ -287,7 +318,6 @@ electron_1.app.whenReady().then(async () => {
         (0, runtime_handlers_1.registerRuntimeHandlers)(nodeAgent, modelManager, inferenceService, rustServiceManager, pythonServiceManager, serviceRegistryManager, semanticRepairServiceManager);
         // 注册系统资源 IPC 处理器
         electron_1.ipcMain.handle('get-system-resources', async () => {
-            const si = require('systeminformation');
             try {
                 logger_1.default.debug({}, 'Starting to fetch system resources');
                 const [cpu, mem, gpuInfo] = await Promise.all([

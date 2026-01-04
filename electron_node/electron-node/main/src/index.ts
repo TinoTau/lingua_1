@@ -1,4 +1,8 @@
-import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import * as fs from 'fs';
+import * as path from 'path';
+import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron';
+import * as si from 'systeminformation';
+
 import { NodeAgent } from './agent/node-agent';
 import { ModelManager } from './model-manager/model-manager';
 import { InferenceService } from './inference/inference-service';
@@ -69,8 +73,6 @@ function checkDependenciesAndShowDialog(mainWindow: BrowserWindow | null): void 
         }).then((result) => {
           if (result.response === 1) {
             // 打开文档（如果存在）
-            const { shell } = require('electron');
-            const path = require('path');
             const docPath = path.join(__dirname, '../../docs/DEPENDENCY_INSTALLATION.md');
             shell.openPath(docPath).catch(() => {
               // 如果文件不存在，打开包含文档的目录
@@ -136,8 +138,6 @@ app.whenReady().then(async () => {
       if (isDev) {
         // 尝试找到项目根目录下的 electron_node/services
         // 从当前文件向上查找，直到找到包含 services/installed.json 的目录
-        const fs = require('fs');
-        const path = require('path');
         let currentDir = __dirname;
         let projectServicesDir: string | null = null;
         // 最多向上查找 10 级
@@ -170,7 +170,6 @@ app.whenReady().then(async () => {
       } else {
         // 生产环境：使用 userData/services
         const userData = app.getPath('userData');
-        const path = require('path');
         servicesDir = path.join(userData, 'services');
       }
     }
@@ -299,8 +298,6 @@ app.whenReady().then(async () => {
 
     // 注册系统资源 IPC 处理器
     ipcMain.handle('get-system-resources', async () => {
-      const si = require('systeminformation');
-
       try {
         logger.debug({}, 'Starting to fetch system resources');
         const [cpu, mem, gpuInfo] = await Promise.all([
