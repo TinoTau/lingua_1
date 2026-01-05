@@ -179,9 +179,9 @@ export class MemoryManager {
       return { shouldDiscard: false };
     }
     
+    // 注意：这个方法是在添加新音频块之后调用的，所以 currentDuration 已经包含了新添加的音频块
     const currentDuration = this.getTotalDuration();
     const newChunkDurationValue = newChunkDuration || 0;
-    const totalDurationAfterAdd = currentDuration + newChunkDurationValue;
     
     // 检查内存限制（80%阈值）
     const memoryLimitPercent = 80;
@@ -202,7 +202,8 @@ export class MemoryManager {
       // 这里不返回shouldDiscard，让上层处理自动播放
     }
     
-    // 如果当前总时长超过限制，清理旧音频块（但保留至少一个）
+    // 关键修复：currentDuration 已经包含了新添加的音频块
+    // 如果总时长超过限制，需要清理旧音频块，但必须保留新添加的音频块
     if (currentDuration > this.maxBufferDuration) {
       const initialBufferCount = getBufferCount ? getBufferCount() : undefined;
       
@@ -212,13 +213,26 @@ export class MemoryManager {
         return { shouldDiscard: false };
       }
       
-      // 多个音频块时，清理超出限制的部分
-      // 保留至少30%的缓存，避免全部清空
-      const keepDuration = this.maxBufferDuration * 0.3;
-      let removedCount = 0;
+      // 计算需要保留的时长
+      // 策略：保留至少 max(新音频块时长, 30%的限制时长)
+      // 这样可以确保新音频块有空间，同时保留一些旧音频块
+      const minKeepDuration = Math.max(newChunkDurationValue, this.maxBufferDuration * 0.3);
+      // 目标：清理到限制时长的80%，为新音频块和后续音频块预留空间
+      const targetKeepDuration = Math.max(minKeepDuration, this.maxBufferDuration * 0.8);
       
-      while (this.getTotalDuration() > keepDuration) {
+      let removedCount = 0;
+      const maxRemovals = initialBufferCount ? Math.max(1, initialBufferCount - 1) : 1000; // 至少保留一个音频块（新添加的）
+      
+      // 清理旧音频块，但保留至少一个（新添加的音频块）
+      while (this.getTotalDuration() > targetKeepDuration && removedCount < maxRemovals) {
         const bufferCountBefore = getBufferCount ? getBufferCount() : undefined;
+        
+        // 如果只剩一个音频块，停止清理（至少保留一个，即新添加的音频块）
+        if (bufferCountBefore !== undefined && bufferCountBefore <= 1) {
+          console.warn(`[MemoryManager] 只剩一个音频块（新添加的），停止清理以保留该音频块`);
+          break;
+        }
+        
         removeBuffer();
         const bufferCountAfter = getBufferCount ? getBufferCount() : undefined;
         
@@ -238,7 +252,8 @@ export class MemoryManager {
       }
       
       if (removedCount > 0) {
-        console.warn(`[MemoryManager] 缓存已满，丢弃最旧音频块: ${removedCount}个，保留缓存: ${this.getTotalDuration().toFixed(1)}秒 (限制: ${this.maxBufferDuration}秒)`);
+        const remainingDuration = this.getTotalDuration();
+        console.warn(`[MemoryManager] 缓存已满，为新音频块(${newChunkDurationValue.toFixed(1)}秒)腾出空间，丢弃最旧音频块: ${removedCount}个，保留缓存: ${remainingDuration.toFixed(1)}秒 (限制: ${this.maxBufferDuration}秒)`);
       }
     }
     
