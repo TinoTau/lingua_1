@@ -13,6 +13,9 @@ import {
   GpuArbiterConfig,
   GpuArbiterSnapshot,
   BusyPolicy,
+  GpuUsageCache,
+  GpuAdmissionState,
+  AsrGpuHint,
 } from './types';
 
 interface PendingRequest {
@@ -55,25 +58,64 @@ export class GpuArbiter {
   
   private leaseIdCounter: number = 0;
   
-  // GPU使用率监控
+  // GPU使用率监控和缓存
   private gpuUsageMonitorInterval: NodeJS.Timeout | null = null;
-  private gpuUsageThreshold: number = 85.0; // 默认阈值85%
+  private gpuUsageCache: Map<string, GpuUsageCache> = new Map(); // gpuKey -> cache
+  private gpuAdmissionStates: Map<string, GpuAdmissionState> = new Map(); // gpuKey -> state
+  private gpuUsageThreshold: number = 85.0; // 默认阈值85%（向后兼容）
   private lastLoggedGpuUsage: number | null = null; // 上次记录的GPU使用率，用于避免重复日志
   private lastLogTime: number = 0; // 上次记录日志的时间戳
+  
+  // GPU使用率配置
+  private usageSampleIntervalMs: number = 800;
+  private usageCacheTtlMs: number = 2000;
+  private baseHighWater: number = 85;
+  private baseLowWater: number = 78;
+  
+  // 动态调整配置
+  private dynamicAdjustmentEnabled: boolean = true;
+  private longAudioThresholdMs: number = 8000;
+  private highWaterBoost: number = 7;
+  private lowWaterBoost: number = 7;
+  private adjustmentTtlMs: number = 15000;
+  
+  // 动态调整状态（按gpuKey）
+  private dynamicAdjustments: Map<string, {
+    highWater: number;
+    lowWater: number;
+    expiresAt: number;
+  }> = new Map();
 
   constructor(config: GpuArbiterConfig) {
     this.config = config;
     this.enabled = config.enabled;
     
-    // 从配置中读取GPU使用率阈值（如果存在）
+    // 从配置中读取GPU使用率阈值（向后兼容）
     if (config.gpuUsageThreshold !== undefined) {
       this.gpuUsageThreshold = config.gpuUsageThreshold;
     }
     
-    // 初始化每个GPU的互斥锁和队列
+    // 读取GPU使用率配置
+    if (config.gpuUsage) {
+      this.usageSampleIntervalMs = config.gpuUsage.sampleIntervalMs ?? 800;
+      this.usageCacheTtlMs = config.gpuUsage.cacheTtlMs ?? 2000;
+      this.baseHighWater = config.gpuUsage.baseHighWater ?? 85;
+      this.baseLowWater = config.gpuUsage.baseLowWater ?? 78;
+      
+      if (config.gpuUsage.dynamicAdjustment) {
+        this.dynamicAdjustmentEnabled = config.gpuUsage.dynamicAdjustment.enabled ?? true;
+        this.longAudioThresholdMs = config.gpuUsage.dynamicAdjustment.longAudioThresholdMs ?? 8000;
+        this.highWaterBoost = config.gpuUsage.dynamicAdjustment.highWaterBoost ?? 7;
+        this.lowWaterBoost = config.gpuUsage.dynamicAdjustment.lowWaterBoost ?? 7;
+        this.adjustmentTtlMs = config.gpuUsage.dynamicAdjustment.adjustmentTtlMs ?? 15000;
+      }
+    }
+    
+    // 初始化每个GPU的互斥锁、队列、状态和缓存
     for (const gpuKey of config.gpuKeys) {
       this.mutexes.set(gpuKey, false);
       this.queues.set(gpuKey, []);
+      this.gpuAdmissionStates.set(gpuKey, GpuAdmissionState.NORMAL);
       this.metrics.set(gpuKey, {
         acquireTotal: { ACQUIRED: 0, SKIPPED: 0, FALLBACK_CPU: 0 },
         queueWaitMs: [],
@@ -96,6 +138,13 @@ export class GpuArbiter {
         defaultQueueLimit: config.defaultQueueLimit,
         defaultHoldMaxMs: config.defaultHoldMaxMs,
         gpuUsageThreshold: this.gpuUsageThreshold,
+        gpuUsage: {
+          sampleIntervalMs: this.usageSampleIntervalMs,
+          cacheTtlMs: this.usageCacheTtlMs,
+          baseHighWater: this.baseHighWater,
+          baseLowWater: this.baseLowWater,
+          dynamicAdjustmentEnabled: this.dynamicAdjustmentEnabled,
+        },
       },
       'GpuArbiter initialized'
     );
@@ -129,6 +178,7 @@ export class GpuArbiter {
 
     const queue = this.queues.get(gpuKey)!;
     const isLocked = this.mutexes.get(gpuKey)!;
+    const admissionState = this.gpuAdmissionStates.get(gpuKey)!;
 
     // 检查队列是否已满
     if (queue.length >= queueLimit) {
@@ -160,6 +210,95 @@ export class GpuArbiter {
       // WAIT策略：继续等待（但队列已满，实际上会超时）
     }
 
+    // 检查GPU使用率状态（只读缓存，O(1)操作）
+    const gpuUsageInfo = this.getGpuUsageFromCache(gpuKey);
+    const isHighPressure = admissionState === GpuAdmissionState.HIGH_PRESSURE;
+
+    // Admission兜底规则：即使usage >= highWater，如果无active lease且队列为空，允许最高优任务（ASR）尝试acquire
+    if (isHighPressure && !isLocked && queue.length === 0 && taskType === "ASR" && priority >= 90) {
+      logger.debug(
+        {
+          gpuKey,
+          taskType,
+          priority,
+          admissionState,
+          ...trace,
+        },
+        'GpuArbiter: Admission fallback rule applied for high-priority ASR task'
+      );
+      return this.acquireImmediately(gpuKey, taskType, holdMaxMs, trace);
+    }
+
+    // 如果GPU使用率高，根据任务类型和策略处理
+    if (isHighPressure) {
+      // 高优任务（ASR/NMT/TTS）：允许进入等待队列
+      if (priority >= 70) {
+        // 如果GPU空闲，检查是否可以立即获取（在HIGH_PRESSURE状态下，通常需要等待）
+        if (!isLocked) {
+          // 在HIGH_PRESSURE状态下，即使GPU空闲，也建议等待，但允许立即获取
+          // 这样可以避免在GPU使用率刚降低但状态还未切换时立即分配新任务
+          logger.debug(
+            {
+              gpuKey,
+              taskType,
+              priority,
+              admissionState,
+              gpuUsage: gpuUsageInfo?.usagePercent,
+              ...trace,
+            },
+            'GpuArbiter: GPU idle but in HIGH_PRESSURE state, allowing immediate acquire for high-priority task'
+          );
+          return this.acquireImmediately(gpuKey, taskType, holdMaxMs, trace);
+        }
+        // GPU被占用，加入队列等待
+        return this.enqueueRequest(gpuKey, request, maxWaitMs);
+      } else {
+        // 低优任务（Semantic Repair）：直接SKIP/FALLBACK，不入队
+        if (busyPolicy === "SKIP") {
+          this.recordMetric(gpuKey, 'acquireTotal', 'SKIPPED', 1);
+          logger.debug(
+            {
+              gpuKey,
+              taskType,
+              priority,
+              admissionState,
+              gpuUsage: gpuUsageInfo?.usagePercent,
+              ...trace,
+            },
+            'GpuArbiter: GPU usage high, skipping low-priority task (SKIP policy)'
+          );
+          return {
+            status: "SKIPPED",
+            reason: "GPU_USAGE_HIGH",
+          };
+        } else if (busyPolicy === "FALLBACK_CPU") {
+          this.recordMetric(gpuKey, 'acquireTotal', 'FALLBACK_CPU', 1);
+          logger.debug(
+            {
+              gpuKey,
+              taskType,
+              priority,
+              admissionState,
+              gpuUsage: gpuUsageInfo?.usagePercent,
+              ...trace,
+            },
+            'GpuArbiter: GPU usage high, falling back to CPU for low-priority task (FALLBACK_CPU policy)'
+          );
+          return {
+            status: "FALLBACK_CPU",
+            reason: "GPU_USAGE_HIGH",
+          };
+        }
+        // WAIT策略的低优任务在HIGH_PRESSURE状态下也直接SKIP
+        this.recordMetric(gpuKey, 'acquireTotal', 'SKIPPED', 1);
+        return {
+          status: "SKIPPED",
+          reason: "GPU_USAGE_HIGH",
+        };
+      }
+    }
+
+    // GPU使用率正常，继续原有逻辑
     // 如果GPU空闲，直接获取
     if (!isLocked) {
       return this.acquireImmediately(gpuKey, taskType, holdMaxMs, trace);
@@ -294,7 +433,11 @@ export class GpuArbiter {
         }
 
         this.recordMetric(gpuKey, 'timeoutsTotal', 1);
-        this.recordMetric(gpuKey, 'acquireTotal', 'SKIPPED', 1);
+        
+        // 检查是否因为GPU使用率高而超时
+        const admissionState = this.gpuAdmissionStates.get(gpuKey);
+        const isHighPressure = admissionState === GpuAdmissionState.HIGH_PRESSURE;
+        const timeoutReason = isHighPressure ? "GPU_USAGE_HIGH" : "TIMEOUT";
 
         logger.warn(
           {
@@ -303,20 +446,30 @@ export class GpuArbiter {
             leaseId,
             waitTimeMs: Date.now() - queuedAt,
             maxWaitMs,
+            admissionState,
             ...request.trace,
           },
-          'GpuArbiter: Request timeout in queue'
+          `GpuArbiter: Request timeout in queue (${timeoutReason})`
         );
 
-        if (request.busyPolicy === "FALLBACK_CPU") {
+        if (isHighPressure && request.priority >= 70) {
+          // 高优先级任务在HIGH_PRESSURE状态下超时，返回TIMEOUT状态
+          this.recordMetric(gpuKey, 'acquireTotal', 'SKIPPED', 1);
+          resolve({
+            status: "TIMEOUT",
+            reason: "GPU_USAGE_HIGH",
+          });
+        } else if (request.busyPolicy === "FALLBACK_CPU") {
+          this.recordMetric(gpuKey, 'acquireTotal', 'FALLBACK_CPU', 1);
           resolve({
             status: "FALLBACK_CPU",
-            reason: "TIMEOUT",
+            reason: timeoutReason,
           });
         } else {
+          this.recordMetric(gpuKey, 'acquireTotal', 'SKIPPED', 1);
           resolve({
             status: "SKIPPED",
-            reason: "TIMEOUT",
+            reason: timeoutReason,
           });
         }
       }, maxWaitMs);
@@ -359,6 +512,58 @@ export class GpuArbiter {
       return; // 队列为空
     }
 
+    // 检查GPU使用率状态
+    const admissionState = this.gpuAdmissionStates.get(gpuKey)!;
+    const usageCache = this.getGpuUsageFromCache(gpuKey);
+    
+    // 如果处于HIGH_PRESSURE状态，只处理高优先级任务
+    if (admissionState === GpuAdmissionState.HIGH_PRESSURE) {
+      // 查找第一个高优先级任务（priority >= 70）
+      const highPriorityIndex = queue.findIndex(req => req.request.priority >= 70);
+      if (highPriorityIndex === -1) {
+        // 没有高优先级任务，等待状态恢复
+        return;
+      }
+      
+      // 移除高优先级任务
+      const pendingRequest = queue.splice(highPriorityIndex, 1)[0];
+      if (pendingRequest.timeoutHandle) {
+        clearTimeout(pendingRequest.timeoutHandle);
+      }
+
+      const { request } = pendingRequest;
+      const result = this.acquireImmediately(
+        gpuKey,
+        request.taskType,
+        request.holdMaxMs,
+        request.trace
+      );
+
+      // 记录等待时间
+      const queueWaitMs = Date.now() - pendingRequest.queuedAt;
+      this.recordMetric(gpuKey, 'queueWaitMs', queueWaitMs);
+
+      logger.debug(
+        {
+          gpuKey,
+          taskType: request.taskType,
+          leaseId: result.status === "ACQUIRED" ? result.leaseId : undefined,
+          queueWaitMs,
+          admissionState,
+          gpuUsage: usageCache?.usagePercent,
+          ...request.trace,
+        },
+        'GpuArbiter: High-priority request dequeued and acquired (HIGH_PRESSURE state)'
+      );
+
+      pendingRequest.resolve(result);
+      
+      // 继续处理队列（可能有更多高优先级任务）
+      setImmediate(() => this.processQueue(gpuKey));
+      return;
+    }
+
+    // NORMAL状态：正常处理队列
     // 取出队列头部的请求
     const pendingRequest = queue.shift()!;
     if (pendingRequest.timeoutHandle) {
@@ -449,6 +654,8 @@ export class GpuArbiter {
     const isLocked = this.mutexes.get(gpuKey)!;
     const queue = this.queues.get(gpuKey)!;
     const metrics = this.metrics.get(gpuKey)!;
+    const admissionState = this.gpuAdmissionStates.get(gpuKey)!;
+    const usageCache = this.getGpuUsageFromCache(gpuKey);
 
     // 查找当前活跃租约
     let currentLease: GpuArbiterSnapshot['currentLease'] = null;
@@ -479,6 +686,9 @@ export class GpuArbiter {
         queueWaitMs: [...metrics.queueWaitMs].slice(-100), // 保留最近100条
         holdMs: [...metrics.holdMs].slice(-100), // 保留最近100条
       },
+      gpuAdmissionState: admissionState,
+      gpuUsage: usageCache?.usagePercent,
+      gpuUsageCacheAgeMs: usageCache ? Date.now() - usageCache.sampledAt : undefined,
     };
   }
 
@@ -490,9 +700,49 @@ export class GpuArbiter {
     this.config = { ...this.config, ...configPatch };
     this.enabled = this.config.enabled;
     
-    // 更新GPU使用率阈值
+    // 更新GPU使用率阈值（向后兼容）
     if (configPatch.gpuUsageThreshold !== undefined) {
       this.gpuUsageThreshold = configPatch.gpuUsageThreshold;
+    }
+    
+    // 更新GPU使用率配置
+    if (configPatch.gpuUsage) {
+      if (configPatch.gpuUsage.sampleIntervalMs !== undefined) {
+        this.usageSampleIntervalMs = configPatch.gpuUsage.sampleIntervalMs;
+      }
+      if (configPatch.gpuUsage.cacheTtlMs !== undefined) {
+        this.usageCacheTtlMs = configPatch.gpuUsage.cacheTtlMs;
+      }
+      if (configPatch.gpuUsage.baseHighWater !== undefined) {
+        this.baseHighWater = configPatch.gpuUsage.baseHighWater;
+      }
+      if (configPatch.gpuUsage.baseLowWater !== undefined) {
+        this.baseLowWater = configPatch.gpuUsage.baseLowWater;
+      }
+      
+      if (configPatch.gpuUsage.dynamicAdjustment) {
+        if (configPatch.gpuUsage.dynamicAdjustment.enabled !== undefined) {
+          this.dynamicAdjustmentEnabled = configPatch.gpuUsage.dynamicAdjustment.enabled;
+        }
+        if (configPatch.gpuUsage.dynamicAdjustment.longAudioThresholdMs !== undefined) {
+          this.longAudioThresholdMs = configPatch.gpuUsage.dynamicAdjustment.longAudioThresholdMs;
+        }
+        if (configPatch.gpuUsage.dynamicAdjustment.highWaterBoost !== undefined) {
+          this.highWaterBoost = configPatch.gpuUsage.dynamicAdjustment.highWaterBoost;
+        }
+        if (configPatch.gpuUsage.dynamicAdjustment.lowWaterBoost !== undefined) {
+          this.lowWaterBoost = configPatch.gpuUsage.dynamicAdjustment.lowWaterBoost;
+        }
+        if (configPatch.gpuUsage.dynamicAdjustment.adjustmentTtlMs !== undefined) {
+          this.adjustmentTtlMs = configPatch.gpuUsage.dynamicAdjustment.adjustmentTtlMs;
+        }
+      }
+      
+      // 如果采样间隔改变，重启监控
+      if (this.enabled && wasEnabled) {
+        this.stopGpuUsageMonitoring();
+        this.startGpuUsageMonitoring();
+      }
     }
     
     // 如果启用状态改变，重新启动或停止监控
@@ -513,12 +763,15 @@ export class GpuArbiter {
       return; // 已经启动
     }
     
-    // 每5秒检查一次GPU使用率
+    // 按配置的采样间隔检查GPU使用率
     this.gpuUsageMonitorInterval = setInterval(() => {
-      this.checkGpuUsage();
-    }, 5000);
+      this.sampleGpuUsage();
+    }, this.usageSampleIntervalMs);
     
-    logger.debug({}, 'GpuArbiter: GPU usage monitoring started');
+    logger.debug(
+      { sampleIntervalMs: this.usageSampleIntervalMs },
+      'GpuArbiter: GPU usage monitoring started'
+    );
   }
   
   /**
@@ -533,9 +786,9 @@ export class GpuArbiter {
   }
   
   /**
-   * 检查GPU使用率，如果超过阈值则记录详细日志
+   * 采样GPU使用率并更新缓存
    */
-  private async checkGpuUsage(): Promise<void> {
+  private async sampleGpuUsage(): Promise<void> {
     try {
       const gpuInfo = await getGpuUsage();
       if (!gpuInfo || gpuInfo.usage === null || gpuInfo.usage === undefined) {
@@ -543,11 +796,21 @@ export class GpuArbiter {
       }
       
       const gpuUsage = gpuInfo.usage;
+      const now = Date.now();
       
-      // 如果GPU使用率超过阈值，记录详细日志
+      // 更新所有GPU的缓存（当前实现假设只有一个GPU，但支持多GPU扩展）
+      for (const gpuKey of this.config.gpuKeys) {
+        this.gpuUsageCache.set(gpuKey, {
+          usagePercent: gpuUsage,
+          sampledAt: now,
+        });
+        
+        // 更新滞回线状态
+        this.updateAdmissionState(gpuKey, gpuUsage);
+      }
+      
+      // 如果GPU使用率超过阈值，记录详细日志（向后兼容）
       if (gpuUsage > this.gpuUsageThreshold) {
-        const now = Date.now();
-        // 避免重复日志：如果上次记录时间在30秒内，且GPU使用率变化小于5%，则跳过
         const timeSinceLastLog = now - this.lastLogTime;
         const usageChanged = this.lastLoggedGpuUsage === null || 
                             Math.abs(this.lastLoggedGpuUsage - gpuUsage) > 5;
@@ -565,7 +828,152 @@ export class GpuArbiter {
         }
       }
     } catch (error) {
-      logger.debug({ error }, 'GpuArbiter: Failed to check GPU usage');
+      logger.debug({ error }, 'GpuArbiter: Failed to sample GPU usage');
+    }
+  }
+  
+  /**
+   * 更新GPU准入状态（滞回线逻辑）
+   */
+  private updateAdmissionState(gpuKey: string, gpuUsage: number): void {
+    const currentState = this.gpuAdmissionStates.get(gpuKey)!;
+    
+    // 获取当前有效的阈值（考虑动态调整）
+    const { highWater, lowWater } = this.getEffectiveThresholds(gpuKey);
+    
+    let newState = currentState;
+    
+    if (currentState === GpuAdmissionState.NORMAL) {
+      // NORMAL → HIGH_PRESSURE：usage >= highWater
+      if (gpuUsage >= highWater) {
+        newState = GpuAdmissionState.HIGH_PRESSURE;
+        logger.info(
+          {
+            gpuKey,
+            gpuUsage,
+            highWater,
+            lowWater,
+          },
+          'GpuArbiter: GPU admission state changed to HIGH_PRESSURE'
+        );
+      }
+    } else {
+      // HIGH_PRESSURE → NORMAL：usage <= lowWater
+      if (gpuUsage <= lowWater) {
+        newState = GpuAdmissionState.NORMAL;
+        logger.info(
+          {
+            gpuKey,
+            gpuUsage,
+            highWater,
+            lowWater,
+          },
+          'GpuArbiter: GPU admission state changed to NORMAL'
+        );
+        
+        // 状态恢复正常，处理等待队列
+        this.processQueue(gpuKey);
+      }
+    }
+    
+    if (newState !== currentState) {
+      this.gpuAdmissionStates.set(gpuKey, newState);
+    }
+    
+    // 清理过期的动态调整
+    this.cleanupExpiredAdjustments(gpuKey);
+  }
+  
+  /**
+   * 获取有效的阈值（考虑动态调整）
+   */
+  private getEffectiveThresholds(gpuKey: string): { highWater: number; lowWater: number } {
+    const adjustment = this.dynamicAdjustments.get(gpuKey);
+    const now = Date.now();
+    
+    if (adjustment && adjustment.expiresAt > now) {
+      return {
+        highWater: adjustment.highWater,
+        lowWater: adjustment.lowWater,
+      };
+    }
+    
+    return {
+      highWater: this.baseHighWater,
+      lowWater: this.baseLowWater,
+    };
+  }
+  
+  /**
+   * 清理过期的动态调整
+   */
+  private cleanupExpiredAdjustments(gpuKey: string): void {
+    const adjustment = this.dynamicAdjustments.get(gpuKey);
+    if (adjustment && adjustment.expiresAt <= Date.now()) {
+      this.dynamicAdjustments.delete(gpuKey);
+      logger.debug(
+        { gpuKey },
+        'GpuArbiter: Dynamic adjustment expired, reverted to base thresholds'
+      );
+    }
+  }
+  
+  /**
+   * 从缓存获取GPU使用率
+   */
+  private getGpuUsageFromCache(gpuKey: string): GpuUsageCache | null {
+    const cache = this.gpuUsageCache.get(gpuKey);
+    if (!cache) {
+      return null;
+    }
+    
+    const now = Date.now();
+    const age = now - cache.sampledAt;
+    
+    // 如果缓存过期，返回null（视为不可靠数据）
+    if (age > this.usageCacheTtlMs) {
+      return null;
+    }
+    
+    return cache;
+  }
+  
+  /**
+   * ASR任务感知的动态滞回调整
+   */
+  notifyAsrTaskHint(gpuKey: string, hint: AsrGpuHint): void {
+    if (!this.dynamicAdjustmentEnabled) {
+      return;
+    }
+    
+    // 检查是否为长音频
+    if (hint.estimatedAudioMs >= this.longAudioThresholdMs) {
+      const now = Date.now();
+      const expiresAt = now + this.adjustmentTtlMs;
+      
+      // 临时提高阈值
+      const adjustedHighWater = this.baseHighWater + this.highWaterBoost;
+      const adjustedLowWater = this.baseLowWater + this.lowWaterBoost;
+      
+      this.dynamicAdjustments.set(gpuKey, {
+        highWater: adjustedHighWater,
+        lowWater: adjustedLowWater,
+        expiresAt,
+      });
+      
+      logger.info(
+        {
+          gpuKey,
+          estimatedAudioMs: hint.estimatedAudioMs,
+          estimatedGpuHoldMs: hint.estimatedGpuHoldMs,
+          baseHighWater: this.baseHighWater,
+          baseLowWater: this.baseLowWater,
+          adjustedHighWater,
+          adjustedLowWater,
+          adjustmentTtlMs: this.adjustmentTtlMs,
+        },
+        'GpuArbiter: Dynamic adjustment applied for long ASR task'
+      );
     }
   }
   

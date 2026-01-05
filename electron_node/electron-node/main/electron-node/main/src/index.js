@@ -324,7 +324,10 @@ electron_1.app.whenReady().then(async () => {
                     // 加载服务注册表
                     await serviceRegistryManager.loadRegistry();
                     const installed = serviceRegistryManager.listInstalled();
-                    // 检查已安装的语义修复服务
+                    // 加载用户偏好配置
+                    const config = (0, node_config_1.loadNodeConfig)();
+                    const prefs = config.servicePreferences || {};
+                    // 检查已安装的语义修复服务，并根据用户偏好决定是否启动
                     const semanticRepairServiceIds = [
                         'semantic-repair-zh',
                         'semantic-repair-en',
@@ -333,7 +336,32 @@ electron_1.app.whenReady().then(async () => {
                     const toStart = [];
                     for (const service of installed) {
                         if (semanticRepairServiceIds.includes(service.service_id)) {
-                            toStart.push(service.service_id);
+                            const serviceId = service.service_id;
+                            // 根据用户偏好决定是否启动
+                            let shouldStart = false;
+                            if (serviceId === 'semantic-repair-zh') {
+                                // 如果用户偏好未设置，默认启用（向后兼容）
+                                shouldStart = prefs.semanticRepairZhEnabled !== false;
+                            }
+                            else if (serviceId === 'semantic-repair-en') {
+                                shouldStart = prefs.semanticRepairEnEnabled !== false;
+                            }
+                            else if (serviceId === 'en-normalize') {
+                                shouldStart = prefs.enNormalizeEnabled !== false;
+                            }
+                            if (shouldStart) {
+                                toStart.push(serviceId);
+                            }
+                            else {
+                                logger_1.default.debug({
+                                    serviceId,
+                                    preference: serviceId === 'semantic-repair-zh'
+                                        ? prefs.semanticRepairZhEnabled
+                                        : serviceId === 'semantic-repair-en'
+                                            ? prefs.semanticRepairEnEnabled
+                                            : prefs.enNormalizeEnabled
+                                }, 'Semantic repair service auto-start disabled by user preference');
+                            }
                         }
                     }
                     // 串行启动语义修复服务（避免GPU内存过载）

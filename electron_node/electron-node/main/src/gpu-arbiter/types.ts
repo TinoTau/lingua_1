@@ -24,8 +24,9 @@ export interface GpuLeaseRequest {
 
 export type GpuLeaseAcquireResult =
   | { status: "ACQUIRED"; leaseId: string; acquiredAt: number; queueWaitMs: number; }
-  | { status: "SKIPPED"; reason: "GPU_BUSY" | "QUEUE_FULL" | "TIMEOUT"; }
-  | { status: "FALLBACK_CPU"; reason: "GPU_BUSY" | "QUEUE_FULL" | "TIMEOUT"; };
+  | { status: "SKIPPED"; reason: "GPU_BUSY" | "QUEUE_FULL" | "TIMEOUT" | "GPU_USAGE_HIGH"; }
+  | { status: "FALLBACK_CPU"; reason: "GPU_BUSY" | "QUEUE_FULL" | "TIMEOUT" | "GPU_USAGE_HIGH"; }
+  | { status: "TIMEOUT"; reason: "GPU_USAGE_HIGH"; };
 
 export interface GpuLease {
   leaseId: string;
@@ -36,12 +37,42 @@ export interface GpuLease {
   release(): void;
 }
 
+export interface GpuUsageCache {
+  usagePercent: number;
+  sampledAt: number;
+}
+
+export enum GpuAdmissionState {
+  NORMAL = "NORMAL",
+  HIGH_PRESSURE = "HIGH_PRESSURE"
+}
+
+export interface GpuUsageConfig {
+  sampleIntervalMs?: number;      // 采样间隔（默认800ms）
+  cacheTtlMs?: number;            // 缓存TTL（默认2000ms）
+  baseHighWater?: number;          // 基础高水位（默认85%）
+  baseLowWater?: number;           // 基础低水位（默认78%）
+  dynamicAdjustment?: {
+    enabled?: boolean;             // 是否启用动态调整（默认true）
+    longAudioThresholdMs?: number; // 长音频阈值（默认8000ms）
+    highWaterBoost?: number;       // 高水位提升值（默认7%）
+    lowWaterBoost?: number;        // 低水位提升值（默认7%）
+    adjustmentTtlMs?: number;      // 调整持续时间（默认15000ms）
+  };
+}
+
+export interface AsrGpuHint {
+  estimatedAudioMs: number;
+  estimatedGpuHoldMs: number;
+}
+
 export interface GpuArbiterConfig {
   enabled: boolean;
   gpuKeys: string[];              // e.g. ["gpu:0"]
   defaultQueueLimit: number;
   defaultHoldMaxMs: number;
-  gpuUsageThreshold?: number;    // GPU使用率阈值（默认85%），超过此值会记录详细日志
+  gpuUsageThreshold?: number;    // GPU使用率阈值（默认85%），超过此值会记录详细日志（已废弃，使用gpuUsage.baseHighWater）
+  gpuUsage?: GpuUsageConfig;     // GPU使用率控制配置
   policies?: {
     [key in GpuTaskType]?: {
       priority: number;
@@ -78,4 +109,7 @@ export interface GpuArbiterSnapshot {
     queueFullTotal: number;
     watchdogExceededTotal: number;
   };
+  gpuAdmissionState?: GpuAdmissionState;  // GPU准入状态
+  gpuUsage?: number;                      // 当前GPU使用率
+  gpuUsageCacheAgeMs?: number;            // GPU使用率缓存年龄
 }

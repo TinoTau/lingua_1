@@ -81,7 +81,24 @@ export async function withGpuLease<T>(
     throw new Error(`GPU lease fallback to CPU: ${result.reason}`);
   }
 
-  // 获取租约成功
+  if (result.status === 'TIMEOUT') {
+    logger.debug(
+      {
+        taskType,
+        reason: result.reason,
+        ...trace,
+      },
+      'GpuLeaseHelper: GPU lease timeout'
+    );
+    throw new Error(`GPU lease timeout: ${result.reason}`);
+  }
+
+  // 获取租约成功（此时result.status一定是'ACQUIRED'）
+  if (result.status !== 'ACQUIRED') {
+    // TypeScript类型保护，理论上不会到达这里
+    throw new Error(`Unexpected GPU lease status: ${(result as any).status}`);
+  }
+
   const lease: GpuLease = {
     leaseId: result.leaseId,
     gpuKey: request.gpuKey,

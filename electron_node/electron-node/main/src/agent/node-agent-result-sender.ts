@@ -172,6 +172,20 @@ export class ResultSender {
           },
           'Skipping duplicate job result (same as last sent after normalization)'
         );
+        
+        // 修复：即使因为文本重复而不发送，也要记录job_id，确保后续的重复job能被正确过滤
+        // 这样可以防止调度服务器重试时导致重复发送
+        if (this.dedupStage && typeof this.dedupStage.markJobIdAsSent === 'function') {
+          this.dedupStage.markJobIdAsSent(job.session_id, job.job_id);
+          logger.debug(
+            {
+              jobId: job.job_id,
+              sessionId: job.session_id,
+            },
+            'ResultSender: Job_id marked as sent (text duplicate, but recorded for deduplication)'
+          );
+        }
+        
         return;  // 不发送重复的结果
       }
     }

@@ -33,6 +33,13 @@ async function cleanupServices(nodeAgent, rustServiceManager, pythonServiceManag
         const yourttsEnabled = !!pythonStatuses.find(s => s.name === 'yourtts')?.running;
         const fasterWhisperVadEnabled = !!pythonStatuses.find(s => s.name === 'faster_whisper_vad')?.running;
         const speakerEmbeddingEnabled = !!pythonStatuses.find(s => s.name === 'speaker_embedding')?.running;
+        // 获取语义修复服务状态
+        const semanticRepairStatuses = semanticRepairServiceManager
+            ? await semanticRepairServiceManager.getAllServiceStatuses()
+            : [];
+        const semanticRepairZhEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-zh')?.running;
+        const semanticRepairEnEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en')?.running;
+        const enNormalizeEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'en-normalize')?.running;
         const config = (0, node_config_1.loadNodeConfig)();
         config.servicePreferences = {
             rustEnabled,
@@ -41,6 +48,9 @@ async function cleanupServices(nodeAgent, rustServiceManager, pythonServiceManag
             yourttsEnabled,
             fasterWhisperVadEnabled,
             speakerEmbeddingEnabled,
+            semanticRepairZhEnabled,
+            semanticRepairEnEnabled,
+            enNormalizeEnabled,
         };
         (0, node_config_1.saveNodeConfig)(config);
         logger_1.default.info({ servicePreferences: config.servicePreferences }, 'Saved current service status to config file');

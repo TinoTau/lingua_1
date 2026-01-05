@@ -110,6 +110,8 @@ function loadGpuArbiterConfig(): GpuArbiterConfig {
     gpuKeys: gpuArbiterConfig.gpuKeys ?? defaultConfig.gpuKeys,
     defaultQueueLimit: gpuArbiterConfig.defaultQueueLimit ?? defaultConfig.defaultQueueLimit,
     defaultHoldMaxMs: gpuArbiterConfig.defaultHoldMaxMs ?? defaultConfig.defaultHoldMaxMs,
+    gpuUsageThreshold: gpuArbiterConfig.gpuUsageThreshold, // 向后兼容
+    gpuUsage: gpuArbiterConfig.gpuUsage, // 新的GPU使用率配置
     policies: mergedPolicies,
   };
 }

@@ -89,6 +89,20 @@ export interface NodeConfig {
     gpuKeys?: string[];
     defaultQueueLimit?: number;
     defaultHoldMaxMs?: number;
+    gpuUsageThreshold?: number;  // 向后兼容，已废弃，使用gpuUsage.baseHighWater
+    gpuUsage?: {
+      sampleIntervalMs?: number;      // 采样间隔（默认800ms）
+      cacheTtlMs?: number;            // 缓存TTL（默认2000ms）
+      baseHighWater?: number;          // 基础高水位（默认85%）
+      baseLowWater?: number;           // 基础低水位（默认78%）
+      dynamicAdjustment?: {
+        enabled?: boolean;             // 是否启用动态调整（默认true）
+        longAudioThresholdMs?: number; // 长音频阈值（默认8000ms）
+        highWaterBoost?: number;       // 高水位提升值（默认7%）
+        lowWaterBoost?: number;        // 低水位提升值（默认7%）
+        adjustmentTtlMs?: number;      // 调整持续时间（默认15000ms）
+      };
+    };
     policies?: {
       ASR?: {
         priority?: number;
