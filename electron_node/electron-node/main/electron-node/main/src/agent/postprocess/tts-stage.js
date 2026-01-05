@@ -8,6 +8,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TTSStage = void 0;
+const text_validator_1 = require("../../utils/text-validator");
 const logger_1 = __importDefault(require("../../logger"));
 const sequential_executor_factory_1 = require("../../sequential-executor/sequential-executor-factory");
 const gpu_arbiter_1 = require("../../gpu-arbiter");
@@ -21,7 +22,7 @@ class TTSStage {
     async process(job, translatedText) {
         const startTime = Date.now();
         // 检查是否需要生成 TTS
-        if (!translatedText || translatedText.trim().length === 0) {
+        if ((0, text_validator_1.isEmptyText)(translatedText)) {
             logger_1.default.debug({ jobId: job.job_id, sessionId: job.session_id }, 'TTSStage: Translated text is empty, skipping TTS');
             return {
                 ttsAudio: '',
@@ -44,8 +45,7 @@ class TTSStage {
             };
         }
         // 检查是否为无意义单词（避免生成无意义的 TTS）
-        const meaninglessWords = ['the', 'a', 'an', 'this', 'that', 'it'];
-        if (meaninglessWords.includes(translatedText.trim().toLowerCase())) {
+        if ((0, text_validator_1.isMeaninglessWord)(translatedText)) {
             logger_1.default.warn({ jobId: job.job_id, translatedText }, 'TTSStage: Translated text is meaningless word, skipping TTS');
             return {
                 ttsAudio: '',

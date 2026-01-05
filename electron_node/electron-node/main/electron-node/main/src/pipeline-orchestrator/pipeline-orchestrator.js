@@ -10,6 +10,9 @@ const session_context_manager_1 = require("./session-context-manager");
 const audio_aggregator_1 = require("./audio-aggregator");
 const pipeline_orchestrator_asr_1 = require("./pipeline-orchestrator-asr");
 const gpu_arbiter_1 = require("../gpu-arbiter");
+const pipeline_orchestrator_audio_processor_1 = require("./pipeline-orchestrator-audio-processor");
+const pipeline_orchestrator_asr_result_processor_1 = require("./pipeline-orchestrator-asr-result-processor");
+const pipeline_orchestrator_result_builder_1 = require("./pipeline-orchestrator-result-builder");
 class PipelineOrchestrator {
     constructor(taskRouter, aggregatorManager, mode = 'offline', aggregatorMiddleware) {
         this.taskRouter = taskRouter;
@@ -30,6 +33,10 @@ class PipelineOrchestrator {
         // 初始化音频聚合器（用于在ASR之前聚合音频）
         this.audioAggregator = new audio_aggregator_1.AudioAggregator();
         logger_1.default.info({}, 'PipelineOrchestrator: AudioAggregator initialized for pre-ASR audio aggregation');
+        // 初始化模块化处理器
+        this.audioProcessor = new pipeline_orchestrator_audio_processor_1.PipelineOrchestratorAudioProcessor(this.audioAggregator);
+        this.asrResultProcessor = new pipeline_orchestrator_asr_result_processor_1.PipelineOrchestratorASRResultProcessor(this.aggregatorMiddleware);
+        this.resultBuilder = new pipeline_orchestrator_result_builder_1.PipelineOrchestratorResultBuilder();
     }
     /**
      * Gate-B: 获取 TaskRouter 实例（用于获取 Rerun 指标）
@@ -48,104 +55,16 @@ class PipelineOrchestrator {
             logger_1.default.debug({ jobId: job.job_id }, 'Starting ASR task');
             // S1: 构建prompt（如果启用）
             const contextText = this.asrHandler.buildPrompt(job) || job.context_text;
-            // 音频聚合：在ASR之前根据 is_manual_cut 和 is_pause_triggered 标识聚合音频
-            // 这样可以避免ASR识别不完整的短句，提高识别准确率
-            const aggregatedAudio = await this.audioAggregator.processAudioChunk(job);
-            // 如果返回null，说明音频被缓冲，等待更多音频块或触发标识
-            // 此时应该返回空结果，不进行ASR处理
-            if (aggregatedAudio === null) {
-                logger_1.default.info({
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    utteranceIndex: job.utterance_index,
-                    bufferStatus: this.audioAggregator.getBufferStatus(job.session_id),
-                }, 'PipelineOrchestrator: Audio chunk buffered, waiting for more chunks or trigger. Returning empty result.');
-                // 返回空结果，等待更多音频块或触发标识
-                return {
-                    text_asr: '',
-                    text_translated: '',
-                    tts_audio: '',
-                    tts_format: 'pcm16',
-                    extra: {
-                        emotion: undefined,
-                        speech_rate: undefined,
-                        voice_style: undefined,
-                        language_probability: undefined,
-                        language_probabilities: undefined,
-                    },
-                };
+            // 处理音频：聚合和格式转换
+            const audioProcessResult = await this.audioProcessor.processAudio(job);
+            if (audioProcessResult?.shouldReturnEmpty) {
+                return this.resultBuilder.buildEmptyResult();
             }
-            // 音频已聚合，继续处理
-            logger_1.default.info({
-                jobId: job.job_id,
-                sessionId: job.session_id,
-                utteranceIndex: job.utterance_index,
-                aggregatedAudioLength: aggregatedAudio.length,
-            }, 'PipelineOrchestrator: Audio aggregated, proceeding to ASR');
-            // Opus 解码：强制要求输入格式必须是 Opus，在 Pipeline 中解码为 PCM16
-            // 注意：三端之间只使用 Opus 格式传输，不再支持其他格式
-            const audioFormat = job.audio_format || 'opus';
-            if (audioFormat !== 'opus') {
-                const errorMessage = `Audio format must be 'opus', but received '${audioFormat}'. Three-end communication only uses Opus format.`;
-                logger_1.default.error({
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    utteranceIndex: job.utterance_index,
-                    receivedFormat: audioFormat,
-                }, errorMessage);
-                throw new Error(errorMessage);
+            if (!audioProcessResult) {
+                throw new Error('Failed to process audio');
             }
-            let audioForASR;
-            let audioFormatForASR = 'pcm16';
-            try {
-                // 验证聚合后的音频长度是否为2的倍数（PCM16要求）
-                let finalAudio = aggregatedAudio;
-                if (aggregatedAudio.length % 2 !== 0) {
-                    logger_1.default.error({
-                        jobId: job.job_id,
-                        sessionId: job.session_id,
-                        utteranceIndex: job.utterance_index,
-                        aggregatedAudioLength: aggregatedAudio.length,
-                        isOdd: aggregatedAudio.length % 2 !== 0,
-                    }, '🚨 CRITICAL: Aggregated audio length is not a multiple of 2 before sending to ASR! This will cause 400 error.');
-                    // 修复：截断最后一个字节
-                    const fixedLength = aggregatedAudio.length - (aggregatedAudio.length % 2);
-                    finalAudio = aggregatedAudio.slice(0, fixedLength);
-                    logger_1.default.warn({
-                        jobId: job.job_id,
-                        sessionId: job.session_id,
-                        utteranceIndex: job.utterance_index,
-                        originalLength: aggregatedAudio.length,
-                        fixedLength: finalAudio.length,
-                        bytesRemoved: aggregatedAudio.length - finalAudio.length,
-                    }, 'Fixed aggregated audio length by truncating last byte(s) before sending to ASR');
-                }
-                // 使用聚合后的音频（已经是PCM16格式）
-                // 将 PCM16 Buffer 转换为 base64 字符串
-                audioForASR = finalAudio.toString('base64');
-                audioFormatForASR = 'pcm16';
-                logger_1.default.info({
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    utteranceIndex: job.utterance_index,
-                    aggregatedAudioLength: finalAudio.length,
-                    originalLength: aggregatedAudio.length,
-                    wasFixed: finalAudio.length !== aggregatedAudio.length,
-                    sampleRate: job.sample_rate || 16000,
-                    isLengthValid: finalAudio.length % 2 === 0,
-                }, 'PipelineOrchestrator: Aggregated audio ready for ASR (PCM16 format)');
-            }
-            catch (error) {
-                const errorMessage = error instanceof Error ? error.message : String(error);
-                logger_1.default.error({
-                    error,
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    utteranceIndex: job.utterance_index,
-                    errorMessage,
-                }, 'PipelineOrchestrator: Failed to process aggregated audio');
-                throw new Error(`Failed to process aggregated audio: ${errorMessage}`);
-            }
+            const audioForASR = audioProcessResult.audioForASR;
+            const audioFormatForASR = audioProcessResult.audioFormatForASR;
             const asrTask = {
                 audio: audioForASR,
                 audio_format: audioFormatForASR,
@@ -223,195 +142,21 @@ class PipelineOrchestrator {
             if (asrCompletedCallback) {
                 asrCompletedCallback(true);
             }
-            // 检查 ASR 结果是否为空或无意义（防止空文本进入 NMT/TTS）
-            // 重要：ASR 服务已经过滤了空文本，但节点端也应该检查以确保安全
-            const asrTextTrimmed = (asrResult.text || '').trim();
-            if (!asrTextTrimmed || asrTextTrimmed.length === 0) {
-                logger_1.default.info({
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    utteranceIndex: job.utterance_index,
-                    asrText: asrResult.text,
-                }, 'PipelineOrchestrator: ASR result is empty, returning empty result to scheduler (no NMT/TTS)');
-                // 返回空结果，不进行翻译和 TTS
-                return {
-                    text_asr: '',
-                    text_translated: '',
-                    tts_audio: '',
-                    tts_format: 'pcm16',
-                    extra: {
-                        emotion: undefined,
-                        speech_rate: undefined,
-                        voice_style: undefined,
-                        language_probability: asrResult.language_probability,
-                        language_probabilities: asrResult.language_probabilities,
-                    },
-                };
-            }
-            // 检查是否为无意义文本（如 "The", "A", "An" 等）
-            // 这些通常是 NMT 对空文本的默认翻译
-            const meaninglessWords = ['the', 'a', 'an', 'this', 'that', 'it'];
-            if (meaninglessWords.includes(asrTextTrimmed.toLowerCase())) {
-                logger_1.default.info({
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    utteranceIndex: job.utterance_index,
-                    asrText: asrResult.text,
-                }, 'PipelineOrchestrator: ASR result is meaningless word, returning empty result to scheduler (no NMT/TTS)');
-                return {
-                    text_asr: asrResult.text,
-                    text_translated: '',
-                    tts_audio: '',
-                    tts_format: 'pcm16',
-                    extra: {
-                        emotion: undefined,
-                        speech_rate: undefined,
-                        voice_style: undefined,
-                        language_probability: asrResult.language_probability,
-                        language_probabilities: asrResult.language_probabilities,
-                    },
-                };
-            }
-            // 1.5. AggregatorMiddleware: 在 ASR 之后、NMT 之前进行文本聚合
-            let textForNMT = asrTextTrimmed;
-            let shouldProcessNMT = true;
-            if (this.aggregatorMiddleware) {
-                const aggregationResult = this.aggregatorMiddleware.processASRResult(job, {
-                    text: asrTextTrimmed,
-                    segments: asrResult.segments,
-                    language_probability: asrResult.language_probability,
-                    language_probabilities: asrResult.language_probabilities,
-                    badSegmentDetection: asrResult.badSegmentDetection,
-                });
-                if (aggregationResult.shouldProcess) {
-                    textForNMT = aggregationResult.aggregatedText;
-                    shouldProcessNMT = true;
-                    // 记录合并后的结果
-                    logger_1.default.info({
-                        jobId: job.job_id,
-                        sessionId: job.session_id,
-                        utteranceIndex: job.utterance_index,
-                        originalASRText: asrTextTrimmed,
-                        originalASRTextLength: asrTextTrimmed.length,
-                        aggregatedText: textForNMT,
-                        aggregatedTextLength: textForNMT.length,
-                        action: aggregationResult.action,
-                        dedupCharsRemoved: aggregationResult.metrics?.dedupCharsRemoved || 0,
-                        textChanged: textForNMT !== asrTextTrimmed,
-                    }, 'PipelineOrchestrator: Text aggregated after ASR, ready for NMT');
+            // 处理ASR结果：空文本检查、无意义文本检查、文本聚合
+            const asrResultProcessResult = this.asrResultProcessor.processASRResult(job, asrResult);
+            if (asrResultProcessResult.shouldReturnEmpty) {
+                if (asrResultProcessResult.textForNMT) {
+                    // 无意义文本
+                    return this.resultBuilder.buildMeaninglessTextResult(asrResultProcessResult.textForNMT, asrResult);
                 }
                 else {
-                    // Aggregator 决定不处理（可能是重复文本）
-                    shouldProcessNMT = false;
-                    logger_1.default.info({
-                        jobId: job.job_id,
-                        sessionId: job.session_id,
-                        utteranceIndex: job.utterance_index,
-                        originalASRText: asrTextTrimmed,
-                        originalASRTextLength: asrTextTrimmed.length,
-                        aggregatedText: aggregationResult.aggregatedText,
-                        reason: 'Aggregator filtered duplicate text',
-                        action: aggregationResult.action,
-                    }, 'PipelineOrchestrator: Aggregator filtered text, returning empty result to scheduler (no NMT/TTS)');
+                    // 空文本
+                    return this.resultBuilder.buildEmptyResult(asrResult);
                 }
             }
-            else {
-                // 没有 AggregatorMiddleware，使用原始 ASR 文本
-                logger_1.default.debug({
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    utteranceIndex: job.utterance_index,
-                    asrText: asrTextTrimmed,
-                    note: 'No AggregatorMiddleware, using original ASR text for NMT',
-                }, 'PipelineOrchestrator: Using original ASR text for NMT');
-            }
-            // 2. 返回聚合后的文本，由 PostProcess 处理 NMT/TTS
-            if (!shouldProcessNMT) {
-                // Aggregator 决定不处理，返回空结果
-                // 修复：确保textForNMT为空，避免PostProcess处理
-                textForNMT = '';
-                logger_1.default.info({
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    utteranceIndex: job.utterance_index,
-                    asrText: asrTextTrimmed,
-                    aggregatedText: textForNMT,
-                    reason: 'Aggregator filtered duplicate text, returning empty result to scheduler (no NMT/TTS)',
-                }, 'PipelineOrchestrator: Aggregator filtered duplicate text, returning empty result (no NMT/TTS)');
-            }
-            else {
-                logger_1.default.info({
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    utteranceIndex: job.utterance_index,
-                    asrText: asrTextTrimmed,
-                    aggregatedText: textForNMT,
-                }, 'PipelineOrchestrator: Passing aggregated text to PostProcess for NMT/TTS');
-            }
-            // 返回聚合后的文本（如果 AggregatorMiddleware 处理过），由 PostProcess 处理
-            // 3. 返回结果
-            // OBS-2: 计算 ASR 质量级别
-            let asrQualityLevel;
-            if (asrResult.badSegmentDetection) {
-                const qualityScore = asrResult.badSegmentDetection.qualityScore;
-                if (qualityScore >= 0.7) {
-                    asrQualityLevel = 'good';
-                }
-                else if (qualityScore >= 0.4) {
-                    asrQualityLevel = 'suspect';
-                }
-                else {
-                    asrQualityLevel = 'bad';
-                }
-            }
-            // OBS-2: 计算 segments_meta
-            let segmentsMeta;
-            if (asrResult.segments && asrResult.segments.length > 0) {
-                const segments = asrResult.segments;
-                let maxGap = 0;
-                let totalDuration = 0;
-                for (let i = 0; i < segments.length; i++) {
-                    const segment = segments[i];
-                    if (segment.end && segment.start) {
-                        const duration = segment.end - segment.start;
-                        totalDuration += duration;
-                        // 计算与前一个 segment 的间隔
-                        if (i > 0 && segments[i - 1].end !== undefined) {
-                            const prevEnd = segments[i - 1].end;
-                            const gap = segment.start - prevEnd;
-                            if (gap > maxGap) {
-                                maxGap = gap;
-                            }
-                        }
-                    }
-                }
-                segmentsMeta = {
-                    count: segments.length,
-                    max_gap: maxGap,
-                    avg_duration: segments.length > 0 ? totalDuration / segments.length : 0,
-                };
-            }
-            const result = {
-                text_asr: textForNMT, // 使用聚合后的文本（如果 AggregatorMiddleware 处理过）
-                text_translated: '', // 空翻译，由 PostProcess 填充
-                tts_audio: '', // TTS 也由 PostProcess 处理
-                tts_format: 'pcm16',
-                extra: {
-                    emotion: undefined,
-                    speech_rate: undefined,
-                    voice_style: undefined,
-                    language_probability: asrResult.language_probability, // 新增：检测到的语言的概率
-                    language_probabilities: asrResult.language_probabilities, // 新增：所有语言的概率信息
-                },
-                // OBS-2: ASR 质量信息
-                asr_quality_level: asrQualityLevel,
-                reason_codes: asrResult.badSegmentDetection?.reasonCodes,
-                quality_score: asrResult.badSegmentDetection?.qualityScore,
-                rerun_count: asrTask.rerun_count,
-                segments_meta: segmentsMeta,
-                // 传递 segments 信息给中间件使用
-                segments: asrResult.segments,
-            };
+            const textForNMT = asrResultProcessResult.textForNMT;
+            // 构建结果
+            const result = this.resultBuilder.buildResult(textForNMT, asrResult, asrTask.rerun_count);
             const processingTime = Date.now() - startTime;
             logger_1.default.info({ jobId: job.job_id, processingTime }, 'Pipeline orchestration completed');
             return result;

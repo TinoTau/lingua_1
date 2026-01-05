@@ -6,6 +6,7 @@
 import { JobAssignMessage } from '@shared/protocols/messages';
 import { TaskRouter } from '../../task-router/task-router';
 import { TTSTask } from '../../task-router/types';
+import { isMeaninglessWord, isEmptyText } from '../../utils/text-validator';
 import logger from '../../logger';
 import { getSequentialExecutor } from '../../sequential-executor/sequential-executor-factory';
 import { withGpuLease } from '../../gpu-arbiter';
@@ -29,7 +30,7 @@ export class TTSStage {
     const startTime = Date.now();
 
     // 检查是否需要生成 TTS
-    if (!translatedText || translatedText.trim().length === 0) {
+    if (isEmptyText(translatedText)) {
       logger.debug(
         { jobId: job.job_id, sessionId: job.session_id },
         'TTSStage: Translated text is empty, skipping TTS'
@@ -64,8 +65,7 @@ export class TTSStage {
     }
 
     // 检查是否为无意义单词（避免生成无意义的 TTS）
-    const meaninglessWords = ['the', 'a', 'an', 'this', 'that', 'it'];
-    if (meaninglessWords.includes(translatedText.trim().toLowerCase())) {
+    if (isMeaninglessWord(translatedText)) {
       logger.warn(
         { jobId: job.job_id, translatedText },
         'TTSStage: Translated text is meaningless word, skipping TTS'
