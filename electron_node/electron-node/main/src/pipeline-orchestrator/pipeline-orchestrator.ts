@@ -17,6 +17,7 @@ import { AggregatorMiddleware } from '../agent/aggregator-middleware';
 import { decodeOpusToPcm16 } from '../utils/opus-codec';
 import { AudioAggregator } from './audio-aggregator';
 import { PipelineOrchestratorASRHandler } from './pipeline-orchestrator-asr';
+import { withGpuLease } from '../gpu-arbiter';
 
 export class PipelineOrchestrator {
   private sessionContextManager: SessionContextManager;
@@ -225,7 +226,19 @@ export class PipelineOrchestrator {
         // 流式 ASR 处理
         asrResult = await this.asrHandler.processASRStreaming(asrTask, partialCallback);
       } else {
-        asrResult = await this.taskRouter.routeASRTask(asrTask);
+        // GPU仲裁：获取GPU租约
+        asrResult = await withGpuLease(
+          'ASR',
+          async () => {
+            return await this.taskRouter.routeASRTask(asrTask);
+          },
+          {
+            jobId: job.job_id,
+            sessionId: job.session_id,
+            utteranceIndex: job.utterance_index,
+            stage: 'ASR',
+          }
+        );
       }
 
       // 记录 ASR 所有生成结果

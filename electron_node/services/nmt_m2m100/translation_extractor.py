@@ -390,14 +390,19 @@ def extract_translation(
                 extraction_confidence = "LOW"
         
         # 修复：不应该因为提取结果为空或太短就使用完整输出
+        # 改进：更严格的长度检查，避免截断的翻译被返回
         if not final_output:
             print(f"[NMT Service] WARNING: Extracted translation is empty, returning empty string (not using full output which contains context translation)")
             final_output = ""
+        elif len(final_output) < len(current_text) * 0.3 and len(current_text) > 10:
+            # 修复：如果提取的翻译太短（少于原文30%），且原文较长，可能是提取错误
+            print(f"[NMT Service] WARNING: Extracted translation too short (extracted={len(final_output)}, original={len(current_text)}, ratio={len(final_output)/len(current_text):.2f}), but original text is long")
+            print(f"[NMT Service] This may indicate extraction error, but still returning extracted translation (not using full output which contains context translation)")
         elif len(final_output) < len(current_text) * 0.5 and len(current_text) > 5:
-            print(f"[NMT Service] WARNING: Extracted translation too short (extracted={len(final_output)}, original={len(current_text)}), but original text is long")
+            print(f"[NMT Service] WARNING: Extracted translation shorter than expected (extracted={len(final_output)}, original={len(current_text)}, ratio={len(final_output)/len(current_text):.2f})")
             print(f"[NMT Service] Returning extracted translation as-is (even if short), not using full output which contains context translation")
         else:
-            print(f"[NMT Service] Extracted translation length is acceptable (extracted={len(final_output)}, original={len(current_text)})")
+            print(f"[NMT Service] Extracted translation length is acceptable (extracted={len(final_output)}, original={len(current_text)}, ratio={len(final_output)/len(current_text):.2f})")
         
         # 额外检查：如果提取结果以小写字母开头（可能是截断），尝试查找更准确的分割点
         final_output = fix_lowercase_start(final_output, out)

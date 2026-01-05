@@ -68,20 +68,97 @@ function extractTail(text, config = exports.DEFAULT_TAIL_CARRY_CONFIG) {
     }
 }
 /**
+ * 检测文本末尾的重复（叠字叠词）
+ * 例如："再提高了一点速度 再提高了一点速度" -> 检测到重复，返回重复部分的长度
+ */
+function detectTailRepetition(text) {
+    if (!text || text.length < 4)
+        return 0;
+    const trimmedText = text.trim();
+    const isCjk = (0, aggregator_decision_1.looksLikeCjk)(text);
+    if (isCjk) {
+        // CJK模式：检测末尾重复的字符或短语
+        const chars = Array.from(trimmedText);
+        const totalLen = chars.length;
+        // 检测末尾重复的字符（如 "速度速度"）
+        for (let repeatLen = 1; repeatLen <= Math.min(6, totalLen / 2); repeatLen++) {
+            if (totalLen < repeatLen * 2)
+                break;
+            const lastRepeat = chars.slice(-repeatLen).join('');
+            const beforeRepeat = chars.slice(-repeatLen * 2, -repeatLen).join('');
+            if (lastRepeat === beforeRepeat) {
+                return repeatLen; // 返回重复部分的长度
+            }
+        }
+        // 检测末尾重复的短语（如 "再提高了一点速度 再提高了一点速度"）
+        // 从较长的短语开始检测（最多检测到文本长度的一半）
+        for (let phraseLen = 3; phraseLen <= Math.min(20, totalLen / 2); phraseLen++) {
+            if (totalLen < phraseLen * 2)
+                break;
+            const lastPhrase = chars.slice(-phraseLen).join('');
+            const beforePhrase = chars.slice(-phraseLen * 2, -phraseLen).join('');
+            if (lastPhrase === beforePhrase) {
+                return phraseLen; // 返回重复部分的长度
+            }
+        }
+    }
+    else {
+        // 英文模式：检测末尾重复的词或短语
+        const words = trimmedText.split(/\s+/);
+        const totalWords = words.length;
+        // 检测末尾重复的词（如 "speed speed"）
+        for (let repeatWords = 1; repeatWords <= Math.min(3, totalWords / 2); repeatWords++) {
+            if (totalWords < repeatWords * 2)
+                break;
+            const lastRepeat = words.slice(-repeatWords).join(' ');
+            const beforeRepeat = words.slice(-repeatWords * 2, -repeatWords).join(' ');
+            if (lastRepeat === beforeRepeat) {
+                return lastRepeat.length; // 返回重复部分的字符长度
+            }
+        }
+    }
+    return 0; // 没有检测到重复
+}
+/**
  * 移除尾部文本（用于 commit）
+ * 修复：优先检测并移除末尾的重复文本（叠字叠词），而不是固定移除字符数
  */
 function removeTail(text, config = exports.DEFAULT_TAIL_CARRY_CONFIG) {
+    if (!text || text.trim().length === 0)
+        return text;
+    const trimmedText = text.trim();
+    // 优先检测末尾重复（叠字叠词）
+    const repetitionLen = detectTailRepetition(trimmedText);
+    if (repetitionLen > 0) {
+        // 检测到重复，移除重复部分
+        const isCjk = (0, aggregator_decision_1.looksLikeCjk)(text);
+        if (isCjk) {
+            const chars = Array.from(trimmedText);
+            if (chars.length >= repetitionLen) {
+                return chars.slice(0, chars.length - repetitionLen).join('').trim();
+            }
+        }
+        else {
+            // 英文模式：按词移除
+            const words = trimmedText.split(/\s+/);
+            // 计算重复部分包含的词数（近似）
+            const repeatWords = Math.ceil(repetitionLen / 10); // 粗略估算：每个词约10个字符
+            if (words.length >= repeatWords) {
+                return words.slice(0, words.length - repeatWords).join(' ').trim();
+            }
+        }
+    }
+    // 如果没有检测到重复，使用原有的tail buffer逻辑
     const tail = extractTail(text, config);
     if (!tail)
         return text;
     // 从文本末尾精确移除 tail（不使用 lastIndexOf，因为 tail 可能在文本中间也出现）
     // 直接检查文本是否以 tail 结尾
-    const trimmedText = text.trim();
     if (trimmedText.endsWith(tail)) {
         // 从末尾移除 tail
         return trimmedText.slice(0, trimmedText.length - tail.length).trim();
     }
-    // 如果文本不以 tail 结尾（可能因为空格等），尝试从末尾按字符数移除
+    // 如果文本不以 tail 结尾（可能因为空格等），尝试从末尾按字符数移除（兜底逻辑）
     const isCjk = (0, aggregator_decision_1.looksLikeCjk)(text);
     if (isCjk) {
         const chars = Array.from(trimmedText);

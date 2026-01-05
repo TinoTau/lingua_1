@@ -55,14 +55,7 @@ const DEFAULT_CONFIG = {
     modelHub: {
         url: 'http://127.0.0.1:5000', // 默认本地地址，使用 127.0.0.1 避免 IPv6 解析问题
     },
-    asr: {
-        beam_size: 10, // 默认 10（提高准确度，减少同音字错误）
-        temperature: 0.0, // 默认 0.0（更确定，减少随机性）
-        patience: 1.0, // 默认 1.0
-        compression_ratio_threshold: 2.4, // 默认 2.4
-        log_prob_threshold: -1.0, // 默认 -1.0
-        no_speech_threshold: 0.6, // 默认 0.6
-    },
+    // ASR配置已移除：各服务的参数应该随着服务走，避免节点端与服务强制绑定
     metrics: {
         enabled: true, // 默认启用指标收集（向后兼容）
         metrics: {
@@ -104,10 +97,7 @@ function loadNodeConfig() {
                 ...DEFAULT_CONFIG.modelHub,
                 ...(parsed.modelHub || {}),
             },
-            asr: {
-                ...DEFAULT_CONFIG.asr,
-                ...(parsed.asr || {}),
-            },
+            // ASR配置已移除：各服务的参数应该随着服务走
             metrics: {
                 ...DEFAULT_CONFIG.metrics,
                 ...(parsed.metrics || {}),
@@ -116,6 +106,15 @@ function loadNodeConfig() {
                     ...DEFAULT_CONFIG.metrics?.metrics,
                     ...(parsed.metrics?.metrics || {}),
                 },
+            },
+            features: {
+                ...DEFAULT_CONFIG.features,
+                ...(parsed.features || {}),
+            },
+            gpuArbiter: parsed.gpuArbiter || DEFAULT_CONFIG.gpuArbiter,
+            sequentialExecutor: {
+                ...(DEFAULT_CONFIG.sequentialExecutor || {}),
+                ...(parsed.sequentialExecutor || {}),
             },
         };
     }
@@ -151,10 +150,7 @@ async function loadNodeConfigAsync() {
                 ...DEFAULT_CONFIG.modelHub,
                 ...(parsed.modelHub || {}),
             },
-            asr: {
-                ...DEFAULT_CONFIG.asr,
-                ...(parsed.asr || {}),
-            },
+            // ASR配置已移除：各服务的参数应该随着服务走
             metrics: {
                 ...DEFAULT_CONFIG.metrics,
                 ...(parsed.metrics || {}),
@@ -163,6 +159,15 @@ async function loadNodeConfigAsync() {
                     ...DEFAULT_CONFIG.metrics?.metrics,
                     ...(parsed.metrics?.metrics || {}),
                 },
+            },
+            features: {
+                ...DEFAULT_CONFIG.features,
+                ...(parsed.features || {}),
+            },
+            gpuArbiter: parsed.gpuArbiter || DEFAULT_CONFIG.gpuArbiter,
+            sequentialExecutor: {
+                ...(DEFAULT_CONFIG.sequentialExecutor || {}),
+                ...(parsed.sequentialExecutor || {}),
             },
         };
     }

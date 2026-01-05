@@ -9,6 +9,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TTSStage = void 0;
 const logger_1 = __importDefault(require("../../logger"));
+const sequential_executor_factory_1 = require("../../sequential-executor/sequential-executor-factory");
+const gpu_arbiter_1 = require("../../gpu-arbiter");
 class TTSStage {
     constructor(taskRouter) {
         this.taskRouter = taskRouter;
@@ -66,7 +68,25 @@ class TTSStage {
                 textLength: translatedText.length,
                 tgtLang: job.tgt_lang,
             }, 'TTSStage: Starting TTS task');
-            const ttsResult = await this.taskRouter.routeTTSTask(ttsTask);
+            // 顺序执行：确保TTS按utterance_index顺序执行
+            const sequentialExecutor = (0, sequential_executor_factory_1.getSequentialExecutor)();
+            const sessionId = job.session_id || '';
+            const utteranceIndex = job.utterance_index || 0;
+            // 使用顺序执行管理器包装TTS调用
+            const ttsResult = await sequentialExecutor.execute(sessionId, utteranceIndex, 'TTS', async () => {
+                // GPU仲裁：获取GPU租约
+                if (!this.taskRouter) {
+                    throw new Error('TaskRouter not available');
+                }
+                return await (0, gpu_arbiter_1.withGpuLease)('TTS', async () => {
+                    return await this.taskRouter.routeTTSTask(ttsTask);
+                }, {
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                    utteranceIndex: job.utterance_index,
+                    stage: 'TTS',
+                });
+            }, job.job_id);
             const ttsTimeMs = Date.now() - startTime;
             if (ttsTimeMs > 30000) {
                 logger_1.default.warn({

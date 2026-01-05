@@ -46,20 +46,43 @@ export class AggregatorStateTextProcessor {
         const tailDedup = dedupMergePrecise(tailBuffer, text, this.dedupConfig);
         processedText = tailDedup.text;
         
-        // 修复：如果去重后文本为空，且原始文本较短（可能是误判），保留原始文本
-        if (tailDedup.deduped && !processedText.trim() && text.length <= 10) {
-          logger.warn(
-            {
-              originalText: text,
-              originalTextLength: text.length,
-              tailBuffer: tailBuffer.substring(0, 50),
-              overlapChars: tailDedup.overlapChars,
-              reason: 'Dedup with tail buffer resulted in empty text for short utterance, keeping original text',
-            },
-            'AggregatorStateTextProcessor: Dedup with tail buffer removed all text for short utterance, keeping original'
-          );
-          processedText = text; // 保留原始文本
-          deduped = false; // 重置去重标志
+        // 修复：处理完全包含的情况
+        if (tailDedup.deduped && !processedText.trim()) {
+          // 检查是否是完全包含
+          if (tailDedup.isCompletelyContained) {
+            // 完全重复，丢弃这个utterance
+            logger.info(
+              {
+                originalText: text,
+                originalTextLength: text.length,
+                tailBuffer: tailBuffer.substring(0, 50),
+                overlapChars: tailDedup.overlapChars,
+                reason: 'Current utterance is completely contained in tail buffer, discarding duplicate',
+              },
+              'AggregatorStateTextProcessor: Current utterance completely contained in tail buffer, discarding duplicate'
+            );
+            processedText = ''; // 返回空文本，表示丢弃
+            deduped = true;
+            dedupChars += tailDedup.overlapChars;
+          } else if (text.length <= 16) {
+            // 可能是误判，保留原始文本（统一使用SemanticRepairScorer的标准：16字符）
+            logger.warn(
+              {
+                originalText: text,
+                originalTextLength: text.length,
+                tailBuffer: tailBuffer.substring(0, 50),
+                overlapChars: tailDedup.overlapChars,
+                reason: 'Dedup with tail buffer resulted in empty text for short utterance, keeping original text',
+              },
+              'AggregatorStateTextProcessor: Dedup with tail buffer removed all text for short utterance, keeping original'
+            );
+            processedText = text; // 保留原始文本
+            deduped = false; // 重置去重标志
+          } else {
+            // 去重后为空，但不是完全包含，也不是短句
+            deduped = true;
+            dedupChars += tailDedup.overlapChars;
+          }
         } else if (tailDedup.deduped) {
           deduped = true;
           dedupChars += tailDedup.overlapChars;
@@ -72,22 +95,45 @@ export class AggregatorStateTextProcessor {
         const dedupResult = dedupMergePrecise(lastTail, text, this.dedupConfig);
         processedText = dedupResult.text;
         
-        // 修复：如果去重后文本为空，且原始文本较短（可能是误判），保留原始文本
-        // 避免短句（如 "就回来了"）被完全去重导致语音丢失
-        if (dedupResult.deduped && !processedText.trim() && text.length <= 10) {
-          logger.warn(
-            {
-              originalText: text,
-              originalTextLength: text.length,
-              lastTail: lastTail.substring(0, 50),
-              overlapChars: dedupResult.overlapChars,
-              reason: 'Dedup resulted in empty text for short utterance, keeping original text to avoid speech loss',
-            },
-            'AggregatorStateTextProcessor: Dedup removed all text for short utterance, keeping original to prevent speech loss'
-          );
-          processedText = text; // 保留原始文本，避免语音丢失
-          deduped = false; // 重置去重标志，因为保留了原始文本
-          dedupChars = Math.max(0, dedupChars - dedupResult.overlapChars); // 调整去重字符数
+        // 修复：处理完全包含的情况
+        if (dedupResult.deduped && !processedText.trim()) {
+          // 检查是否是完全包含（第二个utterance完全被第一个utterance包含）
+          if (dedupResult.isCompletelyContained) {
+            // 完全重复，丢弃这个utterance
+            logger.info(
+              {
+                originalText: text,
+                originalTextLength: text.length,
+                lastTail: lastTail.substring(0, 50),
+                lastText: lastText.substring(0, 100),
+                overlapChars: dedupResult.overlapChars,
+                reason: 'Current utterance is completely contained in previous utterance, discarding duplicate',
+              },
+              'AggregatorStateTextProcessor: Current utterance completely contained in previous, discarding duplicate'
+            );
+            processedText = ''; // 返回空文本，表示丢弃
+            deduped = true;
+            dedupChars += dedupResult.overlapChars;
+          } else if (text.length <= 16) {
+            // 可能是误判，保留原始文本（避免短句被误判为重复，统一使用SemanticRepairScorer的标准：16字符）
+            logger.warn(
+              {
+                originalText: text,
+                originalTextLength: text.length,
+                lastTail: lastTail.substring(0, 50),
+                overlapChars: dedupResult.overlapChars,
+                reason: 'Dedup resulted in empty text for short utterance, keeping original text to avoid speech loss',
+              },
+              'AggregatorStateTextProcessor: Dedup removed all text for short utterance, keeping original to prevent speech loss'
+            );
+            processedText = text; // 保留原始文本，避免语音丢失
+            deduped = false; // 重置去重标志，因为保留了原始文本
+            dedupChars = Math.max(0, dedupChars - dedupResult.overlapChars); // 调整去重字符数
+          } else {
+            // 去重后为空，但不是完全包含，也不是短句，可能是正常去重
+            deduped = true;
+            dedupChars += dedupResult.overlapChars;
+          }
         } else if (dedupResult.deduped) {
           deduped = true;
           dedupChars += dedupResult.overlapChars;

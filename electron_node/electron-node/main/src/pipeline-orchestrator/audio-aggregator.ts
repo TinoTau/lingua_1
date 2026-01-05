@@ -53,8 +53,10 @@ export class AudioAggregator {
   private readonly SPLIT_HANGOVER_MS = 600; // 从200ms增加到600ms，提高去重检测成功率
   private readonly SECONDARY_SPLIT_THRESHOLD_MS = 10000; // 二级切割阈值：10秒
   // 短句延迟合并参数
-  private readonly SHORT_UTTERANCE_THRESHOLD_MS = 6000; // 短句阈值：6秒（小于6秒认为是短句）
-  private readonly SHORT_UTTERANCE_WAIT_MS = 2000; // 短句等待时间：2秒（等待下一个chunk到达）
+  // 优化：减少等待时间，避免用户等待过久
+  // 原因：等待时间过长导致用户感觉系统很慢（Job 9等待9秒，Job 12等待32秒）
+  private readonly SHORT_UTTERANCE_THRESHOLD_MS = 8000; // 短句阈值：8秒（从6秒增加到8秒，减少短句误判）
+  private readonly SHORT_UTTERANCE_WAIT_MS = 3000; // 短句等待时间：3秒（从5秒减少到3秒，减少用户等待时间）
 
   // 音频分析工具
   private readonly audioUtils = new AudioAggregatorUtils();
@@ -167,7 +169,10 @@ export class AudioAggregator {
         );
         return null; // 继续缓冲
       } else {
-        // 等待超时，清除等待标志，继续正常处理
+        // 等待超时，直接处理，不再延长等待
+        // 优化：移除延长等待逻辑，避免用户等待过久（Job 9等待9秒，Job 12等待32秒）
+        // 即使音频仍然很短，也直接处理，避免无限等待
+        const elapsedMs = nowMs - (buffer.shortUtteranceWaitUntil - this.SHORT_UTTERANCE_WAIT_MS);
         logger.info(
           {
             jobId: job.job_id,
@@ -176,11 +181,11 @@ export class AudioAggregator {
             waitedJobId: buffer.shortUtteranceJobId,
             waitUntil: buffer.shortUtteranceWaitUntil,
             nowMs,
-            elapsedMs: nowMs - (buffer.shortUtteranceWaitUntil - this.SHORT_UTTERANCE_WAIT_MS),
+            elapsedMs,
             totalDurationMs: buffer.totalDurationMs,
-            reason: 'Short utterance wait timeout, processing now',
+            reason: 'Short utterance wait timeout, processing buffered audio immediately (no extended wait)',
           },
-          'AudioAggregator: Short utterance wait timeout, processing buffered audio'
+          'AudioAggregator: Short utterance wait timeout, processing buffered audio immediately'
         );
         buffer.shortUtteranceWaitUntil = undefined;
         buffer.shortUtteranceJobId = undefined;
@@ -189,8 +194,10 @@ export class AudioAggregator {
     }
     
     // 检查是否应该延迟合并（只在没有等待标志时设置）
+    // 修复：如果手动截断（isManualCut=true），说明用户认为这句话完整，不应该等待合并
+    // 只有非手动截断的短句才延迟合并
     const isShortUtterance = buffer.totalDurationMs < this.SHORT_UTTERANCE_THRESHOLD_MS;
-    const shouldDelayForMerge = isShortUtterance && isManualCut && !isPauseTriggered && !isTimeoutTriggered && !buffer.shortUtteranceWaitUntil;
+    const shouldDelayForMerge = isShortUtterance && !isManualCut && !isPauseTriggered && !isTimeoutTriggered && !buffer.shortUtteranceWaitUntil;
     
     if (shouldDelayForMerge) {
       // 设置延迟等待，等待下一个chunk到达
@@ -204,7 +211,7 @@ export class AudioAggregator {
           totalDurationMs: buffer.totalDurationMs,
           waitUntil: buffer.shortUtteranceWaitUntil,
           waitMs: this.SHORT_UTTERANCE_WAIT_MS,
-          reason: 'Short utterance detected, waiting for potential merge with next chunk',
+          reason: 'Short utterance detected (non-manual cut), waiting for potential merge with next chunk',
         },
         'AudioAggregator: Short utterance detected, delaying processing to wait for merge'
       );

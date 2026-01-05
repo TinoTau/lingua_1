@@ -134,11 +134,20 @@ class AudioAggregatorUtils {
         const WINDOW_SIZE_BYTES = WINDOW_SIZE_SAMPLES * this.BYTES_PER_SAMPLE;
         const MIN_INTERVAL_WINDOWS = Math.ceil(minIntervalMs / WINDOW_SIZE_MS);
         const MAX_INTERVAL_WINDOWS = Math.floor(maxIntervalMs / WINDOW_SIZE_MS);
-        // 只在音频中段（30%-70%）查找，避免切在开头或结尾
-        const startSearchOffset = Math.floor(audio.length * 0.3);
-        const endSearchOffset = Math.floor(audio.length * 0.7);
+        // 优化：更倾向于在音频中段（40%-60%）查找，避免在句子开头或结尾切分
+        // 这样可以确保前半句和后半句都有足够的长度，减少不完整句子的概率
+        let startSearchOffset = Math.floor(audio.length * 0.4);
+        let endSearchOffset = Math.floor(audio.length * 0.6);
         if (endSearchOffset - startSearchOffset < MIN_INTERVAL_WINDOWS * WINDOW_SIZE_BYTES) {
-            return null;
+            // 如果搜索区间太小，回退到30%-70%
+            const fallbackStart = Math.floor(audio.length * 0.3);
+            const fallbackEnd = Math.floor(audio.length * 0.7);
+            if (fallbackEnd - fallbackStart < MIN_INTERVAL_WINDOWS * WINDOW_SIZE_BYTES) {
+                return null;
+            }
+            // 使用回退区间
+            startSearchOffset = fallbackStart;
+            endSearchOffset = fallbackEnd;
         }
         // 计算每个窗口的RMS值
         const rmsValues = [];
@@ -152,10 +161,12 @@ class AudioAggregatorUtils {
         if (rmsValues.length < MIN_INTERVAL_WINDOWS) {
             return null;
         }
-        // 寻找能量最低的连续区间
+        // 优化：寻找能量最低的连续区间，但优先选择靠近音频中点的位置
+        const audioMidpoint = audio.length / 2;
         let lowestEnergy = Infinity;
         let bestStart = 0;
         let bestEnd = 0;
+        let bestScore = Infinity; // 综合得分（能量 + 位置权重）
         for (let i = 0; i <= rmsValues.length - MIN_INTERVAL_WINDOWS; i++) {
             const intervalLength = Math.min(MAX_INTERVAL_WINDOWS, rmsValues.length - i);
             let sumEnergy = 0;
@@ -163,7 +174,14 @@ class AudioAggregatorUtils {
                 sumEnergy += rmsValues[i + j];
             }
             const avgEnergy = sumEnergy / intervalLength;
-            if (avgEnergy < lowestEnergy) {
+            // 计算区间中心位置
+            const intervalCenter = windowOffsets[i] + (intervalLength * WINDOW_SIZE_BYTES) / 2;
+            // 位置权重：距离中点越近，权重越小（越优先）
+            const positionWeight = Math.abs(intervalCenter - audioMidpoint) / audioMidpoint;
+            // 综合得分：能量越低越好，位置越靠近中点越好
+            const score = avgEnergy * (1 + positionWeight * 0.3); // 位置权重30%
+            if (score < bestScore) {
+                bestScore = score;
                 lowestEnergy = avgEnergy;
                 bestStart = windowOffsets[i];
                 bestEnd = windowOffsets[Math.min(i + intervalLength - 1, windowOffsets.length - 1)] + WINDOW_SIZE_BYTES;

@@ -13,8 +13,10 @@ const aggregation_stage_1 = require("./aggregation-stage");
 const translation_stage_1 = require("./translation-stage");
 const dedup_stage_1 = require("./dedup-stage");
 const tts_stage_1 = require("./tts-stage");
+const dedup_1 = require("../../aggregator/dedup");
 const logger_1 = __importDefault(require("../../logger"));
 const node_config_1 = require("../../node-config");
+const sequential_executor_factory_1 = require("../../sequential-executor/sequential-executor-factory");
 class PostProcessCoordinator {
     constructor(aggregatorManager, taskRouter, servicesHandler, config) {
         this.aggregatorManager = aggregatorManager;
@@ -158,6 +160,29 @@ class PostProcessCoordinator {
             aggregatedTextLength: aggregationResult.aggregatedText.length,
             action: aggregationResult.action,
         }, 'PostProcessCoordinator: Aggregation stage completed');
+        // 修复：在语义修复之前检测并移除文本内部重复（叠字叠词）
+        // 如果ASR文本本身就有重复（如"再提高了一点速度 再提高了一点速度"），
+        // 应该在进入NMT之前就去除重复，而不是让NMT翻译后再提取
+        let textAfterDedup = aggregationResult.aggregatedText;
+        if (textAfterDedup && textAfterDedup.trim().length > 0) {
+            const originalText = textAfterDedup;
+            textAfterDedup = (0, dedup_1.detectInternalRepetition)(textAfterDedup);
+            if (textAfterDedup !== originalText) {
+                logger_1.default.warn({
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                    utteranceIndex: job.utterance_index,
+                    originalText: originalText.substring(0, 100),
+                    dedupedText: textAfterDedup.substring(0, 100),
+                    originalLength: originalText.length,
+                    dedupedLength: textAfterDedup.length,
+                    removedChars: originalText.length - textAfterDedup.length,
+                    note: 'Detected and removed internal repetition (duplicate words/phrases) before semantic repair',
+                }, 'PostProcessCoordinator: Detected and removed internal repetition before semantic repair');
+                // 更新aggregationResult中的文本
+                aggregationResult.aggregatedText = textAfterDedup;
+            }
+        }
         // P0-2: 初始化时序保证 - 确保语义修复Stage已初始化
         const initPromise = this.semanticRepairInitializer.getInitPromise();
         if (!this.semanticRepairInitializer.isInitialized() && initPromise) {
@@ -167,11 +192,14 @@ class PostProcessCoordinator {
         const currentVersion = this.semanticRepairVersion;
         const semanticRepairStage = this.semanticRepairInitializer.getSemanticRepairStage();
         // Phase 2: 语义修复Stage（在AggregationStage之后、TranslationStage之前）
+        // 注意：textAfterDedup已经移除了内部重复，这里使用去重后的文本
+        // 只有shouldSendToSemanticRepair为true时才进行语义修复（默认true，除非明确设置为false）
+        const shouldPerformSemanticRepair = aggregationResult.shouldSendToSemanticRepair !== false;
         const semanticRepairStartTime = Date.now();
-        let textForTranslation = aggregationResult.aggregatedText;
+        let textForTranslation = aggregationResult.aggregatedText; // 已经过内部重复检测和去重
         let semanticRepairApplied = false;
         let semanticRepairConfidence = 1.0;
-        if (semanticRepairStage) {
+        if (semanticRepairStage && shouldPerformSemanticRepair) {
             logger_1.default.info({
                 jobId: job.job_id,
                 sessionId: job.session_id,
@@ -283,6 +311,17 @@ class PostProcessCoordinator {
         // 新逻辑：如果这个 utterance 被合并但不是最后一个，返回空结果（让调度服务器核销后过滤）
         // 例如：job 0, 1, 2 被合并到 job 3，job 0, 1, 2 返回空结果，job 3 返回聚合后的文本
         if (aggregationResult.action === 'MERGE' && !aggregationResult.isLastInMergedGroup) {
+            // 取消顺序执行管理器中的任务（如果还在队列中）
+            // 注意：ASR阶段已经完成，所以只需要取消后续阶段（NMT、TTS、Semantic Repair）的任务
+            const sequentialExecutor = (0, sequential_executor_factory_1.getSequentialExecutor)();
+            const sessionId = job.session_id || '';
+            const utteranceIndex = job.utterance_index || 0;
+            // 取消所有后续服务类型的任务（NMT、TTS、Semantic Repair）
+            // ASR已经完成，不需要取消
+            const serviceTypes = ['NMT', 'TTS', 'SEMANTIC_REPAIR'];
+            for (const serviceType of serviceTypes) {
+                sequentialExecutor.cancelTask(sessionId, utteranceIndex, 'Task merged into later utterance', serviceType);
+            }
             logger_1.default.info(// 改为 info 级别，确保输出
             {
                 jobId: job.job_id,
@@ -291,7 +330,7 @@ class PostProcessCoordinator {
                 isLastInMergedGroup: aggregationResult.isLastInMergedGroup,
                 aggregatedTextLength: aggregationResult.aggregatedText.length,
                 aggregatedTextPreview: aggregationResult.aggregatedText.substring(0, 50),
-            }, 'PostProcessCoordinator: Utterance merged but not last in group, returning empty result (will be sent to scheduler for cancellation)');
+            }, 'PostProcessCoordinator: Utterance merged but not last in group, cancelled sequential executor tasks (NMT/TTS/SemanticRepair), returning empty result');
             return {
                 shouldSend: true, // 仍然返回，让调度服务器核销
                 aggregatedText: '',
@@ -300,6 +339,82 @@ class PostProcessCoordinator {
                 ttsFormat: 'opus',
                 action: aggregationResult.action,
                 metrics: aggregationResult.metrics,
+            };
+        }
+        // 新逻辑：处理向前合并的结果
+        // 如果合并了前一个utterance或待合并的文本，通知GPU仲裁器取消被合并utterance的任务
+        if (aggregationResult.mergedFromUtteranceIndex !== undefined || aggregationResult.mergedFromPendingUtteranceIndex !== undefined) {
+            const sequentialExecutor = (0, sequential_executor_factory_1.getSequentialExecutor)();
+            const sessionId = job.session_id || '';
+            // 取消被合并的前一个utterance的任务
+            if (aggregationResult.mergedFromUtteranceIndex !== undefined) {
+                const previousUtteranceIndex = aggregationResult.mergedFromUtteranceIndex;
+                const serviceTypes = ['NMT', 'TTS', 'SEMANTIC_REPAIR'];
+                for (const serviceType of serviceTypes) {
+                    sequentialExecutor.cancelTask(sessionId, previousUtteranceIndex, `Previous utterance text merged into current utterance (${job.utterance_index})`, serviceType);
+                }
+                logger_1.default.info({
+                    jobId: job.job_id,
+                    currentUtteranceIndex: job.utterance_index,
+                    previousUtteranceIndex,
+                    sessionId,
+                    reason: 'Previous utterance text merged into current, cancelled previous utterance GPU tasks',
+                }, 'PostProcessCoordinator: Previous utterance text merged, cancelled previous utterance GPU tasks');
+            }
+            // 取消被合并的待合并文本的任务
+            if (aggregationResult.mergedFromPendingUtteranceIndex !== undefined) {
+                const pendingUtteranceIndex = aggregationResult.mergedFromPendingUtteranceIndex;
+                const serviceTypes = ['NMT', 'TTS', 'SEMANTIC_REPAIR'];
+                for (const serviceType of serviceTypes) {
+                    sequentialExecutor.cancelTask(sessionId, pendingUtteranceIndex, `Pending utterance text merged into current utterance (${job.utterance_index})`, serviceType);
+                }
+                logger_1.default.info({
+                    jobId: job.job_id,
+                    currentUtteranceIndex: job.utterance_index,
+                    pendingUtteranceIndex,
+                    sessionId,
+                    reason: 'Pending utterance text merged into current, cancelled pending utterance GPU tasks',
+                }, 'PostProcessCoordinator: Pending utterance text merged, cancelled pending utterance GPU tasks');
+            }
+        }
+        if (aggregationResult.shouldDiscard) {
+            // < 6字符：直接丢弃
+            logger_1.default.info({
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                aggregatedTextLength: aggregationResult.aggregatedText.length,
+                reason: 'Text too short (< 6 chars), discarding (>= 16 chars will be sent to semantic repair)',
+            }, 'PostProcessCoordinator: Text too short, discarding');
+            return {
+                shouldSend: false,
+                aggregatedText: '',
+                translatedText: '',
+                ttsAudio: '',
+                ttsFormat: 'opus',
+                action: aggregationResult.action,
+                metrics: aggregationResult.metrics,
+                reason: 'Text too short (< 6 chars), discarded (>= 16 chars will be sent to semantic repair)',
+            };
+        }
+        if (aggregationResult.shouldWaitForMerge) {
+            // 6-10字符：等待与下一句合并
+            logger_1.default.info({
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                aggregatedTextLength: aggregationResult.aggregatedText.length,
+                reason: 'Text length 6-16 chars, waiting for merge with next utterance (unified with SemanticRepairScorer standard)',
+            }, 'PostProcessCoordinator: Text length 6-16 chars, waiting for merge (unified with SemanticRepairScorer standard)');
+            return {
+                shouldSend: false,
+                aggregatedText: '',
+                translatedText: '',
+                ttsAudio: '',
+                ttsFormat: 'opus',
+                action: aggregationResult.action,
+                metrics: aggregationResult.metrics,
+                reason: 'Text length 6-16 chars, waiting for merge (unified with SemanticRepairScorer standard)',
             };
         }
         // 如果聚合后的文本为空，直接返回

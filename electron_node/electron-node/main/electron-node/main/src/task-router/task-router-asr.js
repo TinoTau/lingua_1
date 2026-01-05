@@ -21,51 +21,12 @@ class TaskRouterASRHandler {
         this.startGpuTrackingForService = startGpuTrackingForService;
         this.serviceConnections = serviceConnections;
         this.updateServiceConnections = updateServiceConnections;
+        // ASR配置已移除：各服务的参数应该随着服务走，避免节点端与服务强制绑定
+        // ASR服务的参数（如beam_size）应该在ASR服务自己的配置文件中设置（config.py）
+        // 节点端不预加载这些参数，避免服务未启动时配置无意义
         this.jobAbortControllers = new Map();
-        this.loadASRConfig();
         this.rerunHandler = new task_router_asr_rerun_1.ASRRerunHandler();
         this.metricsHandler = new task_router_asr_metrics_1.ASRMetricsHandler();
-    }
-    /**
-     * 加载 ASR 配置
-     */
-    loadASRConfig() {
-        try {
-            const { loadNodeConfig } = require('../node-config');
-            const config = loadNodeConfig();
-            this.asrConfig = config.asr;
-        }
-        catch (error) {
-            logger_1.default.warn({ error }, 'Failed to load ASR config, using defaults');
-            this.asrConfig = undefined;
-        }
-    }
-    /**
-     * 获取 ASR 配置（带默认值）
-     */
-    getASRConfig() {
-        if (!this.asrConfig) {
-            this.loadASRConfig();
-        }
-        const defaultConfig = {
-            beam_size: 10,
-            temperature: 0.0,
-            patience: 1.0,
-            compression_ratio_threshold: 2.4,
-            log_prob_threshold: -1.0,
-            no_speech_threshold: 0.6,
-        };
-        if (!this.asrConfig) {
-            return defaultConfig;
-        }
-        return {
-            beam_size: this.asrConfig.beam_size ?? defaultConfig.beam_size,
-            temperature: this.asrConfig.temperature ?? defaultConfig.temperature,
-            patience: this.asrConfig.patience ?? defaultConfig.patience,
-            compression_ratio_threshold: this.asrConfig.compression_ratio_threshold ?? defaultConfig.compression_ratio_threshold,
-            log_prob_threshold: this.asrConfig.log_prob_threshold ?? defaultConfig.log_prob_threshold,
-            no_speech_threshold: this.asrConfig.no_speech_threshold ?? defaultConfig.no_speech_threshold,
-        };
     }
     /**
      * 路由 ASR 任务
@@ -124,15 +85,18 @@ class TaskRouterASRHandler {
                 audio_format: audioFormat,
                 sample_rate: task.sample_rate || 16000,
                 task: 'transcribe',
-                beam_size: task.beam_size || this.getASRConfig().beam_size,
+                // 如果任务中指定了beam_size，使用任务中的值；否则不传递，让服务使用自己的默认值
+                // 这样避免节点端与服务强制绑定，支持服务热插拔
+                ...(task.beam_size !== undefined ? { beam_size: task.beam_size } : {}),
                 condition_on_previous_text: false,
                 use_context_buffer: false,
                 use_text_context: true,
                 enable_streaming_asr: task.enable_streaming || false,
                 context_text: task.context_text,
-                best_of: task.best_of,
-                temperature: task.temperature,
-                patience: task.patience,
+                // 如果任务中指定了这些参数，使用任务中的值；否则不传递，让服务使用自己的默认值
+                ...(task.best_of !== undefined ? { best_of: task.best_of } : {}),
+                ...(task.temperature !== undefined ? { temperature: task.temperature } : {}),
+                ...(task.patience !== undefined ? { patience: task.patience } : {}),
                 padding_ms: task.padding_ms,
             };
             let response;

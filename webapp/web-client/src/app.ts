@@ -256,31 +256,44 @@ export class App {
           isRecording: this.recorder.getIsRecording(),
         });
         if (!this.recorder.getIsRecording()) {
-          // 延迟一小段时间，确保状态转换完成
-          // 修复：使用更可靠的恢复机制，确保录音器一定被恢复
-          const restoreTimeout = setTimeout(() => {
-            this.recorder.start().then(() => {
-              console.log('[App] ✅ 已恢复录音，可以继续说话', {
-                isRecording: this.recorder.getIsRecording(),
+          // 方案一：事件驱动恢复录音 - 使用 requestAnimationFrame 替代固定延迟
+          // 确保状态转换完成后再恢复录音器
+          requestAnimationFrame(() => {
+            if (this.sessionManager.getIsSessionActive() && 
+                this.stateMachine.getState() === SessionState.INPUT_RECORDING && 
+                !this.recorder.getIsRecording()) {
+              this.recorder.start().then(() => {
+                console.log('[App] ✅ 已恢复录音，可以继续说话（事件驱动）', {
+                  isRecording: this.recorder.getIsRecording(),
+                });
+              }).catch((error) => {
+                console.error('[App] ❌ 恢复录音失败（事件驱动）:', error);
+                // 如果恢复失败，记录错误并尝试再次恢复（最多重试1次）
+                console.warn('[App] ⚠️ 恢复录音失败，将在 500ms 后重试...');
+                setTimeout(() => {
+                  this.recorder.start().catch((retryError) => {
+                    console.error('[App] ❌ 重试恢复录音失败:', retryError);
+                  });
+                }, 500);
               });
-              // 修复：再次检查，确保录音器确实已启动
-              if (!this.recorder.getIsRecording()) {
-                console.warn('[App] ⚠️ 录音器恢复后仍未运行，尝试再次恢复...');
-                this.recorder.start().catch((error) => {
-                  console.error('[App] ❌ 第二次恢复录音失败:', error);
+            }
+          });
+          
+          // 可选：50ms fallback timeout 作为兜底
+          const restoreTimeout = setTimeout(() => {
+            if (!this.recorder.getIsRecording() && 
+                this.sessionManager.getIsSessionActive() && 
+                this.stateMachine.getState() === SessionState.INPUT_RECORDING) {
+              console.warn('[App] ⚠️ 事件驱动恢复失败，使用fallback');
+              this.recorder.start().then(() => {
+                console.log('[App] ✅ 已恢复录音，可以继续说话（fallback）', {
+                  isRecording: this.recorder.getIsRecording(),
                 });
-              }
-            }).catch((error) => {
-              console.error('[App] ❌ 恢复录音失败:', error);
-              // 修复：如果恢复失败，记录错误并尝试再次恢复（最多重试3次）
-              console.warn('[App] ⚠️ 恢复录音失败，将在 500ms 后重试...');
-              setTimeout(() => {
-                this.recorder.start().catch((retryError) => {
-                  console.error('[App] ❌ 重试恢复录音失败:', retryError);
-                });
-              }, 500);
-            });
-          }, 100);
+              }).catch((error) => {
+                console.error('[App] ❌ 恢复录音失败（fallback）:', error);
+              });
+            }
+          }, 50);
           // 修复：保存 timeout ID，以便在需要时清理（虽然这里不需要清理）
           // 注意：这里不需要清理，因为恢复录音是必需的
         } else {
@@ -1083,21 +1096,44 @@ export class App {
     // 注意：如果会话进行中，状态机会自动切换到 INPUT_RECORDING，这会触发 onStateChange
     // 在 onStateChange 中会检查并恢复录音
     
-    // 修复：双重保障 - 在播放完成后也检查并恢复录音
+    // 方案一：事件驱动恢复录音 - 使用 requestAnimationFrame 替代固定延迟
     // 如果状态机已经切换到 INPUT_RECORDING，但录音器仍未恢复，这里作为备用恢复机制
     if (this.sessionManager.getIsSessionActive() && 
         this.stateMachine.getState() === SessionState.INPUT_RECORDING && 
         !this.recorder.getIsRecording()) {
-      console.warn('[App] ⚠️ 播放完成后检测到录音器未恢复，尝试恢复录音...');
-      setTimeout(() => {
-        this.recorder.start().then(() => {
-          console.log('[App] ✅ 播放完成后已恢复录音（备用恢复机制）', {
-            isRecording: this.recorder.getIsRecording(),
+      console.log('[App] 播放完成后检测到录音器未恢复，使用事件驱动恢复录音...');
+      
+      // 使用 requestAnimationFrame 确保状态转换完成（通常只需要16ms）
+      requestAnimationFrame(() => {
+        // 状态转换已完成，立即恢复录音器
+        if (this.sessionManager.getIsSessionActive() && 
+            this.stateMachine.getState() === SessionState.INPUT_RECORDING && 
+            !this.recorder.getIsRecording()) {
+          this.recorder.start().then(() => {
+            console.log('[App] ✅ 播放完成后已恢复录音（事件驱动）', {
+              isRecording: this.recorder.getIsRecording(),
+            });
+          }).catch((error) => {
+            console.error('[App] ❌ 播放完成后恢复录音失败（事件驱动）:', error);
           });
-        }).catch((error) => {
-          console.error('[App] ❌ 播放完成后恢复录音失败（备用恢复机制）:', error);
-        });
-      }, 200);
+        }
+      });
+      
+      // 可选：50ms fallback timeout 作为兜底
+      setTimeout(() => {
+        if (!this.recorder.getIsRecording() && 
+            this.sessionManager.getIsSessionActive() && 
+            this.stateMachine.getState() === SessionState.INPUT_RECORDING) {
+          console.warn('[App] ⚠️ 事件驱动恢复失败，使用fallback');
+          this.recorder.start().then(() => {
+            console.log('[App] ✅ 播放完成后已恢复录音（fallback）', {
+              isRecording: this.recorder.getIsRecording(),
+            });
+          }).catch((error) => {
+            console.error('[App] ❌ 播放完成后恢复录音失败（fallback）:', error);
+          });
+        }
+      }, 50);
     }
     
     console.log('[App] 等待状态机自动切换状态并恢复录音...');

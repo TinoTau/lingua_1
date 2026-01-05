@@ -43,12 +43,15 @@ def calculate_max_new_tokens(
         estimated_output_tokens = int(total_input_tokens * ratio)
         
         # 根据输入 token 数动态调整 max_tokens 上限
+        # 修复：增加上限以支持长文本翻译，避免截断
         if total_input_tokens < 20:
             dynamic_max_tokens = 256  # 短文本：256 足够
         elif total_input_tokens < 50:
-            dynamic_max_tokens = 384  # 中等文本：384
+            dynamic_max_tokens = 512  # 中等文本：512（从384增加到512）
+        elif total_input_tokens < 100:
+            dynamic_max_tokens = 768  # 长文本：768（新增）
         else:
-            dynamic_max_tokens = max_tokens  # 长文本：使用原始上限 512
+            dynamic_max_tokens = 1024  # 超长文本：1024（从512增加到1024）
     else:
         # 粗略估算：使用字符数
         input_length = len(input_text)
@@ -58,15 +61,19 @@ def calculate_max_new_tokens(
             total_input_length = input_length
         
         # 根据输入长度调整比例
+        # 修复：增加上限以支持长文本翻译，避免截断
         if total_input_length < 20:
             ratio = 2.0  # 短句：1:2
             dynamic_max_tokens = 256  # 短文本：256 足够
         elif total_input_length < 50:
             ratio = 2.5  # 中等句子：1:2.5
-            dynamic_max_tokens = 384  # 中等文本：384
+            dynamic_max_tokens = 512  # 中等文本：512（从384增加到512）
+        elif total_input_length < 100:
+            ratio = 3.0  # 长句：1:3
+            dynamic_max_tokens = 768  # 长文本：768（新增）
         else:
             ratio = 3.0  # 长句：1:3
-            dynamic_max_tokens = max_tokens  # 长文本：使用原始上限 512
+            dynamic_max_tokens = 1024  # 超长文本：1024（从512增加到1024）
         
         estimated_output_tokens = int(total_input_length * ratio)
     

@@ -13,6 +13,8 @@ const cache_key_generator_1 = require("../../aggregator/cache-key-generator");
 const candidate_scorer_1 = require("../../aggregator/candidate-scorer");
 const homophone_detector_1 = require("../../aggregator/homophone-detector");
 const logger_1 = __importDefault(require("../../logger"));
+const sequential_executor_factory_1 = require("../../sequential-executor/sequential-executor-factory");
+const gpu_arbiter_1 = require("../../gpu-arbiter");
 class TranslationStage {
     constructor(taskRouter, aggregatorManager, config) {
         this.taskRouter = taskRouter;
@@ -72,6 +74,50 @@ class TranslationStage {
         // 因为NMT服务会将context_text和text拼接，如果context_text是英文翻译，会导致混合语言输入
         // 传入 currentText 参数，确保不会返回当前句
         let contextText = this.aggregatorManager?.getLastCommittedText(job.session_id, aggregatedText) || undefined;
+        // 额外检查：如果contextText和当前文本相同或非常相似，清空contextText
+        // 优化：同时检查contextText是否是不完整句子，如果是则不使用
+        if (contextText && aggregatedText) {
+            const contextTrimmed = contextText.trim().replace(/\s+/g, ' ');
+            const currentTrimmed = aggregatedText.trim().replace(/\s+/g, ' ');
+            // 检查1：是否完全相同
+            if (contextTrimmed === currentTrimmed) {
+                logger_1.default.warn({
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                    utteranceIndex: job.utterance_index,
+                    note: 'contextText is same as current text, using null instead',
+                }, 'TranslationStage: contextText is same as current text, ignoring');
+                contextText = undefined;
+            }
+            // 检查2：是否非常相似（子串关系且长度差异小于20%）
+            else if (contextTrimmed.includes(currentTrimmed) || currentTrimmed.includes(contextTrimmed)) {
+                const lengthDiff = Math.abs(contextTrimmed.length - currentTrimmed.length);
+                const avgLength = (contextTrimmed.length + currentTrimmed.length) / 2;
+                if (lengthDiff / avgLength < 0.2) {
+                    logger_1.default.warn({
+                        jobId: job.job_id,
+                        sessionId: job.session_id,
+                        utteranceIndex: job.utterance_index,
+                        contextTextLength: contextTrimmed.length,
+                        currentTextLength: currentTrimmed.length,
+                        lengthDiffRatio: lengthDiff / avgLength,
+                        note: 'contextText is very similar to current text, using null instead',
+                    }, 'TranslationStage: contextText is very similar to current text, ignoring');
+                    contextText = undefined;
+                }
+            }
+            // 检查3：contextText是否是不完整句子（不以标点符号结尾且较短）
+            else if (this.isIncompleteSentence(contextTrimmed)) {
+                logger_1.default.warn({
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                    utteranceIndex: job.utterance_index,
+                    contextText: contextTrimmed.substring(0, 100),
+                    note: 'contextText appears to be incomplete sentence, using null instead to avoid confusion',
+                }, 'TranslationStage: contextText is incomplete sentence, ignoring');
+                contextText = undefined;
+            }
+        }
         if (contextText && contextText.length > 200) {
             contextText = contextText.substring(contextText.length - 200);
         }
@@ -101,6 +147,23 @@ class TranslationStage {
                 translationTimeMs: Date.now() - startTime,
             };
         }
+        // 顺序执行：确保NMT按utterance_index顺序执行
+        const sequentialExecutor = (0, sequential_executor_factory_1.getSequentialExecutor)();
+        const sessionId = job.session_id || '';
+        const utteranceIndex = job.utterance_index || 0;
+        // 使用顺序执行管理器包装NMT调用
+        return await sequentialExecutor.execute(sessionId, utteranceIndex, 'NMT', async () => {
+            return await this.executeNMT(job, aggregatedText, contextText, startTime);
+        }, job.job_id);
+    }
+    /**
+     * 执行NMT翻译（内部方法，由顺序执行管理器调用）
+     */
+    async executeNMT(job, aggregatedText, contextText, startTime) {
+        // 生成缓存键
+        const cacheKey = (0, cache_key_generator_1.generateCacheKey)(job.src_lang, job.tgt_lang, aggregatedText, contextText);
+        // 检查是否应该缓存
+        const shouldCacheThis = (0, cache_key_generator_1.shouldCache)(aggregatedText);
         // 检查是否可能包含同音字错误
         const hasHomophoneErrors = (0, homophone_detector_1.hasPossibleHomophoneErrors)(aggregatedText);
         // 如果可能包含同音字错误，生成原文候选
@@ -145,7 +208,15 @@ class TranslationStage {
                     }; // 添加session_id和utterance_index用于日志
                     nmtTask.session_id = job.session_id;
                     nmtTask.utterance_index = job.utterance_index;
-                    const nmtResult = await this.taskRouter.routeNMTTask(nmtTask);
+                    // GPU仲裁：获取GPU租约
+                    const nmtResult = await (0, gpu_arbiter_1.withGpuLease)('NMT', async () => {
+                        return await this.taskRouter.routeNMTTask(nmtTask);
+                    }, {
+                        jobId: job.job_id,
+                        sessionId: job.session_id,
+                        utteranceIndex: job.utterance_index,
+                        stage: 'NMT',
+                    });
                     return {
                         candidate: sourceCandidate,
                         translation: nmtResult.text,
@@ -214,7 +285,18 @@ class TranslationStage {
                 srcLang: job.src_lang,
                 tgtLang: job.tgt_lang,
             }, 'TranslationStage: Sending text to NMT service (with context_text as previous ASR text for error correction)');
-            const nmtResult = await this.taskRouter.routeNMTTask(nmtTask);
+            // GPU仲裁：获取GPU租约
+            if (!this.taskRouter) {
+                throw new Error('TaskRouter not available');
+            }
+            const nmtResult = await (0, gpu_arbiter_1.withGpuLease)('NMT', async () => {
+                return await this.taskRouter.routeNMTTask(nmtTask);
+            }, {
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                stage: 'NMT',
+            });
             translatedText = nmtResult.text;
             // 记录NMT返回的结果
             logger_1.default.info({
@@ -248,6 +330,36 @@ class TranslationStage {
             translationTimeMs,
             fromCache: false,
         };
+    }
+    /**
+     * 检测不完整句子
+     * 如果文本不以标点符号结尾，且长度较短，可能是被切分的句子
+     */
+    isIncompleteSentence(text) {
+        if (!text || text.trim().length === 0) {
+            return false;
+        }
+        const trimmed = text.trim();
+        // 检查是否以标点符号结尾（中文和英文标点）
+        const endsWithPunctuation = /[。，！？、；：.!?,;:]$/.test(trimmed);
+        // 如果以标点符号结尾，认为是完整句子
+        if (endsWithPunctuation) {
+            return false;
+        }
+        // 如果文本较短（少于16个字符），且不以标点符号结尾，可能是不完整句子（统一使用SemanticRepairScorer的标准：16字符）
+        if (trimmed.length < 16) {
+            // 检查是否包含常见的不完整句子模式
+            const incompletePatterns = [
+                /的$/, /了$/, /在$/, /是$/, /有$/, /会$/, /能$/, /要$/, /我们$/, /这个$/, /那个$/,
+                /问题$/, /方法$/, /系统$/, /服务$/, /结果$/, /原因$/, /效果$/, /处理$/, /解决$/
+            ];
+            for (const pattern of incompletePatterns) {
+                if (pattern.test(trimmed)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
 exports.TranslationStage = TranslationStage;

@@ -29,6 +29,12 @@ export class Recorder {
   private consecutiveSilenceFrames: number = 0; // 连续静音帧数
   private isSendingAudio: boolean = false; // 当前是否在发送音频
   private frameCounter: number = 0; // 帧计数器（用于调试日志）
+  
+  // 方案二：智能VAD状态恢复
+  private stopTimestamp: number | null = null; // 录音器停止时间戳
+  
+  // 方案三：恢复保护窗口
+  private recoveryProtectionUntil: number = 0; // 恢复保护窗口结束时间戳
 
   constructor(stateMachine: StateMachine, config: Partial<Config> = {}) {
     this.stateMachine = stateMachine;
@@ -189,10 +195,38 @@ export class Recorder {
 
     this.isRecording = true;
     this.silenceStartTime = 0;
-    // 重置静音过滤状态
+    
+    // 方案二：智能VAD状态恢复
+    // 计算停止时长
+    const stopDuration = this.stopTimestamp ? Date.now() - this.stopTimestamp : Infinity;
+    
+    if (stopDuration < 1000) {
+      // 停止时间 < 1秒：保持VAD状态（避免重新攻击）
+      // 不重置 isSendingAudio，保持之前的状态
+      console.log('[Recorder] 短期停止，保持VAD状态', { 
+        stopDuration: `${stopDuration}ms`,
+        isSendingAudio: this.isSendingAudio 
+      });
+    } else {
+      // 停止时间 >= 1秒：重置VAD状态（避免状态不准确）
+      this.isSendingAudio = false;
+      console.log('[Recorder] 长期停止，重置VAD状态', { 
+        stopDuration: `${stopDuration}ms` 
+      });
+    }
+    
+    // 无论哪种情况，始终重置计数器
     this.consecutiveVoiceFrames = 0;
     this.consecutiveSilenceFrames = 0;
-    this.isSendingAudio = false;
+    this.stopTimestamp = null; // 重置停止时间戳
+    
+    // 方案三：恢复保护窗口（200ms）
+    this.recoveryProtectionUntil = Date.now() + 200;
+    console.log('[Recorder] 设置恢复保护窗口', { 
+      protectionUntil: new Date(this.recoveryProtectionUntil).toISOString(),
+      duration: '200ms'
+    });
+    
     this.frameCounter = 0; // 重置帧计数器
     
     console.log('[Recorder] ✅ 录音器已成功启动', {
@@ -219,10 +253,20 @@ export class Recorder {
     console.log('[Recorder] 正在停止录音器...');
     this.isRecording = false;
     this.stopSilenceDetection();
+    
+    // 方案二：记录停止时间戳
+    this.stopTimestamp = Date.now();
+    console.log('[Recorder] 记录停止时间戳', { 
+      stopTimestamp: new Date(this.stopTimestamp).toISOString() 
+    });
+    
     // 重置静音过滤状态
     this.consecutiveVoiceFrames = 0;
     this.consecutiveSilenceFrames = 0;
     this.isSendingAudio = false;
+    
+    // 方案三：重置恢复保护窗口
+    this.recoveryProtectionUntil = 0;
     console.log('[Recorder] ✅ 录音器已停止', {
       isRecording: this.isRecording,
       hasAudioContext: !!this.audioContext,
@@ -307,6 +351,24 @@ export class Recorder {
       
       // 如果已经在发送
       if (this.isSendingAudio) {
+        // 方案三：恢复保护窗口 - 检查是否在保护窗口内
+        const inProtectionWindow = Date.now() < this.recoveryProtectionUntil;
+        
+        // 如果在保护窗口内，禁止触发release（即使检测到静音也继续发送）
+        if (inProtectionWindow) {
+          if (shouldLog) {
+            console.log('[VAD] 🛡️  恢复保护窗口内，禁止触发release', {
+              rms: rms.toFixed(4),
+              consecutiveSilenceFrames: this.consecutiveSilenceFrames,
+              protectionRemaining: `${this.recoveryProtectionUntil - Date.now()}ms`,
+              frameCounter: this.frameCounter
+            });
+          }
+          // 保护窗口内，即使检测到静音也继续发送
+          return true;
+        }
+        
+        // 保护窗口外，正常释放逻辑
         // 如果连续 M 帧静音，停止发送（过滤静音片段）
         if (this.consecutiveSilenceFrames >= this.silenceFilterConfig.releaseFrames) {
           this.isSendingAudio = false;

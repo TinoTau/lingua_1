@@ -162,15 +162,16 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
         
         # 如果请求候选生成，增加 num_beams 并返回多个候选
         num_candidates = req.num_candidates or 1
-        num_beams = max(3, num_candidates)  # 至少使用 3 个 beam（优化：从 4 降到 3 以提升性能），如果请求更多候选则增加
+        num_beams = 1  # 固定使用 1 个 beam（优化：降低beam以提高处理速度）
         
         # 计算动态 max_new_tokens（根据输入长度动态调整上限）
+        # 修复：增加默认上限以支持长文本翻译，避免截断
         max_new_tokens = calculate_max_new_tokens(
             input_text=req.text,
             tokenizer=tokenizer,
             context_text=req.context_text,
             min_tokens=64,    # 最短至少 64 个 token（优化：从 128 降到 64）
-            max_tokens=512,   # 最长不超过 512 个 token（避免显存溢出，根据输入长度动态调整）
+            max_tokens=1024,  # 最长不超过 1024 个 token（从512增加到1024，避免显存溢出，根据输入长度动态调整）
             safety_margin=1.5  # 安全缓冲 +50%（优化：从 2.0 降到 1.5）
         )
         print(f"[NMT Service] [Generation] Calculated max_new_tokens={max_new_tokens} (input_length={len(req.text)}, context_length={len(req.context_text) if req.context_text else 0})")
@@ -180,14 +181,14 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
                 **encoded,
                 forced_bos_token_id=forced_bos,
                 num_beams=num_beams,
-                num_return_sequences=min(num_candidates, num_beams),  # 返回的候选数量
+                num_return_sequences=1,  # 固定返回 1 个候选（因为 num_beams=1）
                 no_repeat_ngram_size=3,
                 repetition_penalty=1.2,
                 max_new_tokens=max_new_tokens,  # 动态计算的最大 token 数
                 early_stopping=False,  # 禁用早停，确保完整翻译
             )
         generation_elapsed = (time.time() - generation_start) * 1000
-        print(f"[NMT Service] [Generation] Completed in {generation_elapsed:.2f}ms (num_beams={num_beams}, num_return_sequences={min(num_candidates, num_beams)})")
+        print(f"[NMT Service] [Generation] Completed in {generation_elapsed:.2f}ms (num_beams={num_beams}, num_return_sequences=1)")
         
         # 解码输出
         decode_start = time.time()

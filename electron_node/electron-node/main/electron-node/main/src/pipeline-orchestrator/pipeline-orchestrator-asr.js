@@ -12,6 +12,8 @@ const logger_1 = __importDefault(require("../logger"));
 const opus_codec_1 = require("../utils/opus-codec");
 const prompt_builder_1 = require("../asr/prompt-builder");
 const node_config_1 = require("../node-config");
+const sequential_executor_factory_1 = require("../sequential-executor/sequential-executor-factory");
+const gpu_arbiter_1 = require("../gpu-arbiter");
 class PipelineOrchestratorASRHandler {
     constructor(taskRouter, aggregatorManager) {
         this.taskRouter = taskRouter;
@@ -115,9 +117,17 @@ class PipelineOrchestratorASRHandler {
         // 这里简化处理，实际应该使用 WebSocket 客户端
         // 暂时回退到非流式处理
         logger_1.default.warn({}, 'Streaming ASR not fully implemented, falling back to non-streaming');
-        return await this.taskRouter.routeASRTask({
-            ...task,
-            enable_streaming: false,
+        // GPU仲裁：获取GPU租约
+        return await (0, gpu_arbiter_1.withGpuLease)('ASR', async () => {
+            return await this.taskRouter.routeASRTask({
+                ...task,
+                enable_streaming: false,
+            });
+        }, {
+            jobId: task.job_id,
+            sessionId: task.session_id,
+            utteranceIndex: task.utterance_index,
+            stage: 'ASR',
         });
     }
     /**
@@ -206,7 +216,22 @@ class PipelineOrchestratorASRHandler {
             context_text: contextText, // S1: 使用构建的prompt或原始context_text
             job_id: job.job_id, // 传递 job_id 用于任务取消
         };
-        const asrResult = await this.taskRouter.routeASRTask(asrTask);
+        // 顺序执行：确保ASR按utterance_index顺序执行
+        const sequentialExecutor = (0, sequential_executor_factory_1.getSequentialExecutor)();
+        const sessionId = job.session_id || '';
+        const utteranceIndex = job.utterance_index || 0;
+        // 使用顺序执行管理器包装ASR调用
+        const asrResult = await sequentialExecutor.execute(sessionId, utteranceIndex, 'ASR', async () => {
+            // GPU仲裁：获取GPU租约
+            return await (0, gpu_arbiter_1.withGpuLease)('ASR', async () => {
+                return await this.taskRouter.routeASRTask(asrTask);
+            }, {
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                stage: 'ASR',
+            });
+        }, job.job_id);
         return { text_asr: asrResult.text };
     }
 }

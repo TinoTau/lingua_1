@@ -45,8 +45,8 @@ export function detectBadSegment(
 
   // 如果没有 segments 信息，无法进行检测
   if (!asrResult.segments || asrResult.segments.length === 0) {
-    // 如果没有 segments，但音频时长很长，可能是异常
-    if (audioDurationMs && audioDurationMs > 2000 && asrResult.text.trim().length < 10) {
+    // 如果没有 segments，但音频时长很长，可能是异常（统一使用SemanticRepairScorer的标准：16字符）
+    if (audioDurationMs && audioDurationMs > 2000 && asrResult.text.trim().length < 16) {
       reasonCodes.push('NO_SEGMENTS_LONG_AUDIO_SHORT_TEXT');
       qualityScore = 0.3;
       return {

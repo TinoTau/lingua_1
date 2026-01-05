@@ -9,6 +9,9 @@ import { SemanticRepairTask, SemanticRepairResult } from '../../task-router/type
 import { SemanticRepairScorer, SemanticRepairScorerConfig } from './semantic-repair-scorer';
 import { SemanticRepairValidator, SemanticRepairValidatorConfig } from './semantic-repair-validator';
 import logger from '../../logger';
+import { getSequentialExecutor } from '../../sequential-executor/sequential-executor-factory';
+import { tryAcquireGpuLease } from '../../gpu-arbiter';
+import { loadNodeConfig } from '../../node-config';
 
 export interface SemanticRepairStageZHConfig {
   enabled: boolean;
@@ -112,8 +115,103 @@ export class SemanticRepairStageZH {
         },
       };
 
-      // 调用修复服务
-      const repairResult = await this.taskRouter.routeSemanticRepairTask(repairTask);
+      // 顺序执行：确保Semantic Repair按utterance_index顺序执行
+      const sequentialExecutor = getSequentialExecutor();
+      const sessionId = job.session_id || '';
+      const utteranceIndex = job.utterance_index || 0;
+
+      // 使用顺序执行管理器包装Semantic Repair调用
+      const repairResult = await sequentialExecutor.execute(
+        sessionId,
+        utteranceIndex,
+        'SEMANTIC_REPAIR',
+        async () => {
+          // GPU仲裁：获取GPU租约（支持忙时降级）
+          let result: any;
+          
+          try {
+            const lease = await tryAcquireGpuLease(
+              'SEMANTIC_REPAIR',
+              {
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                stage: 'SemanticRepair',
+              }
+            );
+
+            if (lease) {
+              // 成功获取GPU租约，使用GPU执行
+              try {
+                result = await this.taskRouter!.routeSemanticRepairTask(repairTask);
+              } finally {
+                lease.release();
+              }
+            } else {
+              // GPU租约获取失败（忙时降级），根据策略处理
+              const config = loadNodeConfig();
+              const policy = config.gpuArbiter?.policies?.SEMANTIC_REPAIR;
+              const busyPolicy = policy?.busyPolicy || 'SKIP';
+
+              if (busyPolicy === 'FALLBACK_CPU') {
+                // TODO: 实现CPU fallback（需要语义修复服务支持CPU模式）
+                logger.warn(
+                  {
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                    utteranceIndex: job.utterance_index,
+                  },
+                  'SemanticRepairStageZH: GPU busy, FALLBACK_CPU not implemented, skipping repair'
+                );
+                // 回退到PASS
+                result = {
+                  decision: 'PASS',
+                  text_out: text,
+                  confidence: 1.0,
+                  reason_codes: ['GPU_BUSY_FALLBACK_CPU_NOT_IMPLEMENTED'],
+                };
+              } else {
+                // SKIP策略：直接PASS
+                logger.debug(
+                  {
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                    utteranceIndex: job.utterance_index,
+                  },
+                  'SemanticRepairStageZH: GPU busy, skipping repair (SKIP policy)'
+                );
+                result = {
+                  decision: 'PASS',
+                  text_out: text,
+                  confidence: 1.0,
+                  reason_codes: ['GPU_BUSY_SKIPPED'],
+                };
+              }
+            }
+          } catch (error: any) {
+            // GPU租约获取异常，回退到PASS
+            logger.error(
+              {
+                error: error.message,
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+              },
+              'SemanticRepairStageZH: GPU lease error, skipping repair'
+            );
+            result = {
+              decision: 'PASS',
+              text_out: text,
+              confidence: 1.0,
+              reason_codes: ['GPU_LEASE_ERROR'],
+            };
+          }
+          
+          return result;
+        },
+        job.job_id
+      );
+      
       const repairTimeMs = Date.now() - startTime;
 
       // P1-2: 输出校验

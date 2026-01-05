@@ -8,10 +8,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AggregationStage = void 0;
+const text_forward_merge_manager_1 = require("./text-forward-merge-manager");
 const logger_1 = __importDefault(require("../../logger"));
 class AggregationStage {
     constructor(aggregatorManager) {
         this.aggregatorManager = aggregatorManager;
+        this.forwardMergeManager = new text_forward_merge_manager_1.TextForwardMergeManager();
     }
     /**
      * 执行文本聚合
@@ -150,7 +152,44 @@ class AggregationStage {
             isFirstInMergedGroup = false;
             isLastInMergedGroup = false;
         }
-        const aggregationChanged = aggregatedText.trim() !== asrTextTrimmed.trim();
+        // 新逻辑：向前合并和去重
+        // 获取上一个已提交的文本（用于去重）
+        const previousText = this.aggregatorManager?.getLastCommittedText(job.session_id, aggregatedText) || null;
+        // 使用向前合并管理器处理文本
+        const forwardMergeResult = this.forwardMergeManager.processText(job.session_id, aggregatedText, previousText, job.job_id, job.utterance_index || 0);
+        // 根据处理结果更新aggregatedText
+        let finalAggregatedText = aggregatedText;
+        if (forwardMergeResult.shouldDiscard) {
+            // < 6字符：丢弃
+            finalAggregatedText = '';
+        }
+        else if (forwardMergeResult.shouldWaitForMerge) {
+            // 6-10字符：等待合并，暂时不发送
+            finalAggregatedText = '';
+        }
+        else if (forwardMergeResult.shouldSendToSemanticRepair) {
+            // > 10字符：发送给语义修复
+            finalAggregatedText = forwardMergeResult.processedText;
+        }
+        else {
+            // 其他情况：使用原始文本
+            finalAggregatedText = forwardMergeResult.processedText;
+        }
+        const aggregationChanged = finalAggregatedText.trim() !== asrTextTrimmed.trim();
+        // 优化：检测不完整句子（如果文本不以标点符号结尾，且长度较短，可能是被切分的句子）
+        const isIncompleteSentence = this.detectIncompleteSentence(finalAggregatedText);
+        if (isIncompleteSentence) {
+            logger_1.default.warn({
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                aggregatedText: finalAggregatedText.substring(0, 100),
+                note: 'Detected incomplete sentence, may be caused by audio split in the middle',
+            }, 'AggregationStage: Detected incomplete sentence, text may be split incorrectly');
+        }
+        // 合并去重指标
+        const totalDedupChars = (aggregatorResult.metrics?.dedupCharsRemoved || 0) + forwardMergeResult.dedupChars;
+        const totalDedupCount = (aggregatorResult.metrics?.dedupCount || 0) + (forwardMergeResult.deduped ? 1 : 0);
         // 记录指标（始终记录，包含关键信息）- 在 aggregatedText 确定之后
         logger_1.default.info({
             jobId: job.job_id,
@@ -161,22 +200,69 @@ class AggregationStage {
             isLastInMergedGroup: aggregatorResult.isLastInMergedGroup,
             hasText: !!aggregatorResult.text,
             textLength: aggregatorResult.text?.length || 0,
-            aggregatedTextLength: aggregatedText.length,
             originalTextLength: asrTextTrimmed.length,
+            aggregatedTextLength: finalAggregatedText.length,
             originalTextPreview: asrTextTrimmed.substring(0, 50),
-            aggregatedTextPreview: aggregatedText.substring(0, 50),
+            aggregatedTextPreview: finalAggregatedText.substring(0, 50),
             aggregatorTextPreview: aggregatorResult.text?.substring(0, 50),
-            deduped: aggregatorResult.metrics?.dedupCount ? aggregatorResult.metrics.dedupCount > 0 : false,
-            dedupChars: aggregatorResult.metrics?.dedupCharsRemoved || 0,
-        }, 'AggregationStage: Processing completed');
+            shouldDiscard: forwardMergeResult.shouldDiscard,
+            shouldWaitForMerge: forwardMergeResult.shouldWaitForMerge,
+            shouldSendToSemanticRepair: forwardMergeResult.shouldSendToSemanticRepair,
+            deduped: totalDedupCount > 0,
+            dedupChars: totalDedupChars,
+            forwardMergeDeduped: forwardMergeResult.deduped,
+            forwardMergeDedupChars: forwardMergeResult.dedupChars,
+        }, 'AggregationStage: Processing completed with forward merge');
         return {
-            aggregatedText,
+            aggregatedText: finalAggregatedText,
             aggregationChanged,
             action: aggregatorResult.action,
-            metrics: aggregatorResult.metrics,
+            shouldDiscard: forwardMergeResult.shouldDiscard,
+            shouldWaitForMerge: forwardMergeResult.shouldWaitForMerge,
+            shouldSendToSemanticRepair: forwardMergeResult.shouldSendToSemanticRepair,
+            mergedFromUtteranceIndex: forwardMergeResult.mergedFromUtteranceIndex, // 如果合并了前一个utterance，传递索引
+            mergedFromPendingUtteranceIndex: forwardMergeResult.mergedFromPendingUtteranceIndex, // 如果合并了待合并的文本，传递索引
+            metrics: {
+                dedupCount: totalDedupCount,
+                dedupCharsRemoved: totalDedupChars,
+            },
             isFirstInMergedGroup, // 保留用于兼容
             isLastInMergedGroup, // 新逻辑：标识是否是合并组中的最后一个
         };
+    }
+    /**
+     * 检测不完整句子
+     * 如果文本不以标点符号结尾，且长度较短，可能是被切分的句子
+     */
+    detectIncompleteSentence(text) {
+        if (!text || text.trim().length === 0) {
+            return false;
+        }
+        const trimmed = text.trim();
+        // 检查是否以标点符号结尾（中文和英文标点）
+        const endsWithPunctuation = /[。，！？、；：.!?,;:]$/.test(trimmed);
+        // 如果以标点符号结尾，认为是完整句子
+        if (endsWithPunctuation) {
+            return false;
+        }
+        // 如果文本较短（少于16个字符），且不以标点符号结尾，可能是不完整句子（统一使用SemanticRepairScorer的标准：16字符）
+        // 但也要排除一些特殊情况（如单个词、数字等）
+        if (trimmed.length < 16) {
+            // 检查是否包含常见的不完整句子模式
+            // 例如：以"的"、"了"、"在"等结尾，但没有后续内容
+            const incompletePatterns = [
+                /的$/, /了$/, /在$/, /是$/, /有$/, /会$/, /能$/, /要$/, /我们$/, /这个$/, /那个$/,
+                /问题$/, /方法$/, /系统$/, /服务$/, /结果$/, /原因$/, /效果$/
+            ];
+            for (const pattern of incompletePatterns) {
+                if (pattern.test(trimmed)) {
+                    return true;
+                }
+            }
+        }
+        // 如果文本较长但不以标点符号结尾，也可能是不完整句子
+        // 但这种情况比较复杂，暂时不标记为不完整
+        return false;
     }
 }
 exports.AggregationStage = AggregationStage;

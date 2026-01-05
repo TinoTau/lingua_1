@@ -9,6 +9,7 @@ const logger_1 = __importDefault(require("../logger"));
 const session_context_manager_1 = require("./session-context-manager");
 const audio_aggregator_1 = require("./audio-aggregator");
 const pipeline_orchestrator_asr_1 = require("./pipeline-orchestrator-asr");
+const gpu_arbiter_1 = require("../gpu-arbiter");
 class PipelineOrchestrator {
     constructor(taskRouter, aggregatorManager, mode = 'offline', aggregatorMiddleware) {
         this.taskRouter = taskRouter;
@@ -166,7 +167,15 @@ class PipelineOrchestrator {
                 asrResult = await this.asrHandler.processASRStreaming(asrTask, partialCallback);
             }
             else {
-                asrResult = await this.taskRouter.routeASRTask(asrTask);
+                // GPU仲裁：获取GPU租约
+                asrResult = await (0, gpu_arbiter_1.withGpuLease)('ASR', async () => {
+                    return await this.taskRouter.routeASRTask(asrTask);
+                }, {
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                    utteranceIndex: job.utterance_index,
+                    stage: 'ASR',
+                });
             }
             // 记录 ASR 所有生成结果
             logger_1.default.info({

@@ -11,6 +11,9 @@ exports.SemanticRepairStageZH = void 0;
 const semantic_repair_scorer_1 = require("./semantic-repair-scorer");
 const semantic_repair_validator_1 = require("./semantic-repair-validator");
 const logger_1 = __importDefault(require("../../logger"));
+const sequential_executor_factory_1 = require("../../sequential-executor/sequential-executor-factory");
+const gpu_arbiter_1 = require("../../gpu-arbiter");
+const node_config_1 = require("../../node-config");
 class SemanticRepairStageZH {
     constructor(taskRouter, config) {
         this.taskRouter = taskRouter;
@@ -72,8 +75,83 @@ class SemanticRepairStageZH {
                     score_details: scoreResult.details, // P1-1: 传递评分详情
                 },
             };
-            // 调用修复服务
-            const repairResult = await this.taskRouter.routeSemanticRepairTask(repairTask);
+            // 顺序执行：确保Semantic Repair按utterance_index顺序执行
+            const sequentialExecutor = (0, sequential_executor_factory_1.getSequentialExecutor)();
+            const sessionId = job.session_id || '';
+            const utteranceIndex = job.utterance_index || 0;
+            // 使用顺序执行管理器包装Semantic Repair调用
+            const repairResult = await sequentialExecutor.execute(sessionId, utteranceIndex, 'SEMANTIC_REPAIR', async () => {
+                // GPU仲裁：获取GPU租约（支持忙时降级）
+                let result;
+                try {
+                    const lease = await (0, gpu_arbiter_1.tryAcquireGpuLease)('SEMANTIC_REPAIR', {
+                        jobId: job.job_id,
+                        sessionId: job.session_id,
+                        utteranceIndex: job.utterance_index,
+                        stage: 'SemanticRepair',
+                    });
+                    if (lease) {
+                        // 成功获取GPU租约，使用GPU执行
+                        try {
+                            result = await this.taskRouter.routeSemanticRepairTask(repairTask);
+                        }
+                        finally {
+                            lease.release();
+                        }
+                    }
+                    else {
+                        // GPU租约获取失败（忙时降级），根据策略处理
+                        const config = (0, node_config_1.loadNodeConfig)();
+                        const policy = config.gpuArbiter?.policies?.SEMANTIC_REPAIR;
+                        const busyPolicy = policy?.busyPolicy || 'SKIP';
+                        if (busyPolicy === 'FALLBACK_CPU') {
+                            // TODO: 实现CPU fallback（需要语义修复服务支持CPU模式）
+                            logger_1.default.warn({
+                                jobId: job.job_id,
+                                sessionId: job.session_id,
+                                utteranceIndex: job.utterance_index,
+                            }, 'SemanticRepairStageZH: GPU busy, FALLBACK_CPU not implemented, skipping repair');
+                            // 回退到PASS
+                            result = {
+                                decision: 'PASS',
+                                text_out: text,
+                                confidence: 1.0,
+                                reason_codes: ['GPU_BUSY_FALLBACK_CPU_NOT_IMPLEMENTED'],
+                            };
+                        }
+                        else {
+                            // SKIP策略：直接PASS
+                            logger_1.default.debug({
+                                jobId: job.job_id,
+                                sessionId: job.session_id,
+                                utteranceIndex: job.utterance_index,
+                            }, 'SemanticRepairStageZH: GPU busy, skipping repair (SKIP policy)');
+                            result = {
+                                decision: 'PASS',
+                                text_out: text,
+                                confidence: 1.0,
+                                reason_codes: ['GPU_BUSY_SKIPPED'],
+                            };
+                        }
+                    }
+                }
+                catch (error) {
+                    // GPU租约获取异常，回退到PASS
+                    logger_1.default.error({
+                        error: error.message,
+                        jobId: job.job_id,
+                        sessionId: job.session_id,
+                        utteranceIndex: job.utterance_index,
+                    }, 'SemanticRepairStageZH: GPU lease error, skipping repair');
+                    result = {
+                        decision: 'PASS',
+                        text_out: text,
+                        confidence: 1.0,
+                        reason_codes: ['GPU_LEASE_ERROR'],
+                    };
+                }
+                return result;
+            }, job.job_id);
             const repairTimeMs = Date.now() - startTime;
             // P1-2: 输出校验
             let finalTextOut = repairResult.text_out;

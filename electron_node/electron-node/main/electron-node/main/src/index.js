@@ -315,6 +315,56 @@ electron_1.app.whenReady().then(async () => {
         (0, service_handlers_1.registerServiceHandlers)(serviceRegistryManager, servicePackageManager, rustServiceManager, pythonServiceManager);
         // 初始化语义修复服务管理器
         semanticRepairServiceManager = new semantic_repair_service_manager_1.SemanticRepairServiceManager(serviceRegistryManager, servicesDir);
+        // 自动启动语义修复服务（如果已安装）
+        // 注意：与Python服务不同，语义修复服务需要加载模型，启动时间较长
+        // 因此使用异步启动，不阻塞应用启动
+        if (semanticRepairServiceManager && serviceRegistryManager) {
+            (async () => {
+                try {
+                    // 加载服务注册表
+                    await serviceRegistryManager.loadRegistry();
+                    const installed = serviceRegistryManager.listInstalled();
+                    // 检查已安装的语义修复服务
+                    const semanticRepairServiceIds = [
+                        'semantic-repair-zh',
+                        'semantic-repair-en',
+                        'en-normalize',
+                    ];
+                    const toStart = [];
+                    for (const service of installed) {
+                        if (semanticRepairServiceIds.includes(service.service_id)) {
+                            toStart.push(service.service_id);
+                        }
+                    }
+                    // 串行启动语义修复服务（避免GPU内存过载）
+                    // 注意：en-normalize是轻量级服务，可以优先启动
+                    // semantic-repair-zh和semantic-repair-en需要加载模型，启动较慢
+                    const sortedToStart = toStart.sort((a, b) => {
+                        // en-normalize优先
+                        if (a === 'en-normalize')
+                            return -1;
+                        if (b === 'en-normalize')
+                            return 1;
+                        return 0;
+                    });
+                    for (const serviceId of sortedToStart) {
+                        logger_1.default.info({ serviceId }, 'Auto-starting semantic repair service...');
+                        try {
+                            await semanticRepairServiceManager.startService(serviceId);
+                            logger_1.default.info({ serviceId }, 'Semantic repair service started successfully');
+                        }
+                        catch (error) {
+                            logger_1.default.error({ error, serviceId }, 'Failed to auto-start semantic repair service');
+                        }
+                    }
+                }
+                catch (error) {
+                    logger_1.default.error({ error }, 'Failed to auto-start semantic repair services');
+                }
+            })().catch((error) => {
+                logger_1.default.error({ error }, 'Failed to start semantic repair services');
+            });
+        }
         (0, runtime_handlers_1.registerRuntimeHandlers)(nodeAgent, modelManager, inferenceService, rustServiceManager, pythonServiceManager, serviceRegistryManager, semanticRepairServiceManager);
         // 注册系统资源 IPC 处理器
         electron_1.ipcMain.handle('get-system-resources', async () => {

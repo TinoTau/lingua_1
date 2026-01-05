@@ -44,6 +44,14 @@ export async function cleanupServices(
     const fasterWhisperVadEnabled = !!pythonStatuses.find(s => s.name === 'faster_whisper_vad')?.running;
     const speakerEmbeddingEnabled = !!pythonStatuses.find(s => s.name === 'speaker_embedding')?.running;
 
+    // 获取语义修复服务状态
+    const semanticRepairStatuses = semanticRepairServiceManager 
+      ? await semanticRepairServiceManager.getAllServiceStatuses()
+      : [];
+    const semanticRepairZhEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-zh')?.running;
+    const semanticRepairEnEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en')?.running;
+    const enNormalizeEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'en-normalize')?.running;
+
     const config = loadNodeConfig();
     config.servicePreferences = {
       rustEnabled,
@@ -52,6 +60,9 @@ export async function cleanupServices(
       yourttsEnabled,
       fasterWhisperVadEnabled,
       speakerEmbeddingEnabled,
+      semanticRepairZhEnabled,
+      semanticRepairEnEnabled,
+      enNormalizeEnabled,
     };
     saveNodeConfig(config);
     logger.info(

@@ -7,6 +7,8 @@ import { JobAssignMessage } from '@shared/protocols/messages';
 import { TaskRouter } from '../../task-router/task-router';
 import { TTSTask } from '../../task-router/types';
 import logger from '../../logger';
+import { getSequentialExecutor } from '../../sequential-executor/sequential-executor-factory';
+import { withGpuLease } from '../../gpu-arbiter';
 
 export interface TTSStageResult {
   ttsAudio: string;
@@ -95,7 +97,36 @@ export class TTSStage {
         'TTSStage: Starting TTS task'
       );
 
-      const ttsResult = await this.taskRouter.routeTTSTask(ttsTask);
+      // 顺序执行：确保TTS按utterance_index顺序执行
+      const sequentialExecutor = getSequentialExecutor();
+      const sessionId = job.session_id || '';
+      const utteranceIndex = job.utterance_index || 0;
+
+      // 使用顺序执行管理器包装TTS调用
+      const ttsResult = await sequentialExecutor.execute(
+        sessionId,
+        utteranceIndex,
+        'TTS',
+        async () => {
+          // GPU仲裁：获取GPU租约
+          if (!this.taskRouter) {
+            throw new Error('TaskRouter not available');
+          }
+          return await withGpuLease(
+            'TTS',
+            async () => {
+              return await this.taskRouter!.routeTTSTask(ttsTask);
+            },
+            {
+              jobId: job.job_id,
+              sessionId: job.session_id,
+              utteranceIndex: job.utterance_index,
+              stage: 'TTS',
+            }
+          );
+        },
+        job.job_id
+      );
       const ttsTimeMs = Date.now() - startTime;
       
       if (ttsTimeMs > 30000) {

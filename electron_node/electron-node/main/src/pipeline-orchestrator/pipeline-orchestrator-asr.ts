@@ -15,6 +15,8 @@ import { decodeOpusToPcm16 } from '../utils/opus-codec';
 import { AggregatorManager } from '../aggregator/aggregator-manager';
 import { PromptBuilder, PromptBuilderContext } from '../asr/prompt-builder';
 import { loadNodeConfig } from '../node-config';
+import { getSequentialExecutor } from '../sequential-executor/sequential-executor-factory';
+import { withGpuLease } from '../gpu-arbiter';
 
 export class PipelineOrchestratorASRHandler {
   private enableS1PromptBias: boolean;
@@ -146,10 +148,23 @@ export class PipelineOrchestratorASRHandler {
     // 这里简化处理，实际应该使用 WebSocket 客户端
     // 暂时回退到非流式处理
     logger.warn({}, 'Streaming ASR not fully implemented, falling back to non-streaming');
-    return await this.taskRouter.routeASRTask({
-      ...task,
-      enable_streaming: false,
-    });
+    
+    // GPU仲裁：获取GPU租约
+    return await withGpuLease(
+      'ASR',
+      async () => {
+        return await this.taskRouter.routeASRTask({
+          ...task,
+          enable_streaming: false,
+        });
+      },
+      {
+        jobId: task.job_id,
+        sessionId: (task as any).session_id,
+        utteranceIndex: task.utterance_index,
+        stage: 'ASR',
+      }
+    );
   }
 
   /**
@@ -265,7 +280,33 @@ export class PipelineOrchestratorASRHandler {
       job_id: job.job_id, // 传递 job_id 用于任务取消
     };
 
-    const asrResult = await this.taskRouter.routeASRTask(asrTask);
+    // 顺序执行：确保ASR按utterance_index顺序执行
+    const sequentialExecutor = getSequentialExecutor();
+    const sessionId = job.session_id || '';
+    const utteranceIndex = job.utterance_index || 0;
+
+    // 使用顺序执行管理器包装ASR调用
+    const asrResult = await sequentialExecutor.execute(
+      sessionId,
+      utteranceIndex,
+      'ASR',
+      async () => {
+        // GPU仲裁：获取GPU租约
+        return await withGpuLease(
+          'ASR',
+          async () => {
+            return await this.taskRouter.routeASRTask(asrTask);
+          },
+          {
+            jobId: job.job_id,
+            sessionId: job.session_id,
+            utteranceIndex: job.utterance_index,
+            stage: 'ASR',
+          }
+        );
+      },
+      job.job_id
+    );
     return { text_asr: asrResult.text };
   }
 }

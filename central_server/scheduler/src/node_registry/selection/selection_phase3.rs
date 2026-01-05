@@ -6,7 +6,7 @@ use crate::node_registry::validation::{
 };
 use std::str::FromStr;
 use std::time::Instant;
-use tracing::debug;
+use tracing::{debug, warn};
 
 impl NodeRegistry {
     /// Phase 3：两级调度（Two-level）
@@ -333,6 +333,15 @@ impl NodeRegistry {
 
                 if !is_node_resource_available(node, self.resource_threshold) {
                     breakdown.resource_threshold_exceeded += 1;
+                    // 添加详细日志，显示节点的实际资源使用率
+                    warn!(
+                        node_id = %node.node_id,
+                        cpu_usage = node.cpu_usage,
+                        gpu_usage = ?node.gpu_usage,
+                        memory_usage = node.memory_usage,
+                        threshold = self.resource_threshold,
+                        "Node excluded: resource threshold exceeded"
+                    );
                     self.record_exclude_reason(DispatchExcludeReason::ResourceThresholdExceeded, node.node_id.clone()).await;
                     continue;
                 }
