@@ -204,7 +204,22 @@ export function ServiceManagement() {
       const fasterWhisperVadEnabled = !!pythonStatuses.find(s => s.name === 'faster_whisper_vad')?.running;
       const speakerEmbeddingEnabled = !!pythonStatuses.find(s => s.name === 'speaker_embedding')?.running;
 
-      const newPrefs = { rustEnabled, nmtEnabled, ttsEnabled, yourttsEnabled, fasterWhisperVadEnabled, speakerEmbeddingEnabled };
+      // 语义修复服务状态
+      const semanticRepairZhEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-zh')?.running;
+      const semanticRepairEnEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en')?.running;
+      const enNormalizeEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'en-normalize')?.running;
+
+      const newPrefs = { 
+        rustEnabled, 
+        nmtEnabled, 
+        ttsEnabled, 
+        yourttsEnabled, 
+        fasterWhisperVadEnabled, 
+        speakerEmbeddingEnabled,
+        semanticRepairZhEnabled,
+        semanticRepairEnEnabled,
+        enNormalizeEnabled,
+      };
       await window.electronAPI.setServicePreferences(newPrefs);
     } catch (error) {
       console.error('同步服务偏好失败:', error);
@@ -239,6 +254,7 @@ export function ServiceManagement() {
     } finally {
       setLoading(prev => ({ ...prev, [serviceId]: false }));
       await updateStatuses();
+      await syncPreferencesFromStatus();
     }
   };
 
@@ -254,6 +270,7 @@ export function ServiceManagement() {
     } finally {
       setLoading(prev => ({ ...prev, [serviceId]: false }));
       await updateStatuses();
+      await syncPreferencesFromStatus();
     }
   };
 

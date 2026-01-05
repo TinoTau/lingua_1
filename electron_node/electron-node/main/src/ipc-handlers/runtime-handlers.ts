@@ -206,6 +206,10 @@ export function registerRuntimeHandlers(
           // 确保新字段有默认值（如果未提供）
           fasterWhisperVadEnabled: prefs.fasterWhisperVadEnabled ?? config.servicePreferences.fasterWhisperVadEnabled ?? false,
           speakerEmbeddingEnabled: prefs.speakerEmbeddingEnabled ?? config.servicePreferences.speakerEmbeddingEnabled ?? false,
+          // 语义修复服务偏好（如果未提供，保持原有值）
+          semanticRepairZhEnabled: prefs.semanticRepairZhEnabled ?? config.servicePreferences.semanticRepairZhEnabled,
+          semanticRepairEnEnabled: prefs.semanticRepairEnEnabled ?? config.servicePreferences.semanticRepairEnEnabled,
+          enNormalizeEnabled: prefs.enNormalizeEnabled ?? config.servicePreferences.enNormalizeEnabled,
         };
         saveNodeConfig(config);
         return { success: true };
