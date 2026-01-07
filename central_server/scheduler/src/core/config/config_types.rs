@@ -111,6 +111,14 @@ pub struct Phase3Config {
     /// 若为 false：eligible 为空时回退到"遍历所有配置 pools"（兼容模式）
     #[serde(default)]
     pub strict_pool_eligibility: bool,
+
+    /// 是否自动生成语言对 Pool（根据节点语言能力自动生成）
+    #[serde(default)]
+    pub auto_generate_language_pools: bool,
+
+    /// 自动生成 Pool 的配置选项
+    #[serde(default)]
+    pub auto_pool_config: Option<AutoLanguagePoolConfig>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -121,6 +129,67 @@ pub struct Phase3PoolConfig {
     /// 该 pool "保证具备"的服务类型（ServiceType 字符串列表，如 ["ASR", "NMT", "TTS"]）
     #[serde(default)]
     pub required_services: Vec<String>,
+    /// 语言能力要求（用于自动生成的 Pool）
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub language_requirements: Option<PoolLanguageRequirements>,
+}
+
+/// 自动生成语言对 Pool 的配置
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AutoLanguagePoolConfig {
+    /// 最小节点数：如果某个语言对的节点数少于这个值，不创建 Pool
+    #[serde(default = "super::config_defaults::default_min_nodes_per_pool")]
+    pub min_nodes_per_pool: usize,
+    /// 最大 Pool 数量：如果超过这个值，只创建节点数最多的前 N 个 Pool（仅用于精确池）
+    #[serde(default = "super::config_defaults::default_max_pools")]
+    pub max_pools: usize,
+    /// Pool 命名规则
+    /// - "pair": 使用语言对命名（如 "zh-en"）
+    /// - "bidirectional": 双向语言对合并为一个 Pool（如 "zh-en" 包含 zh→en 和 en→zh）
+    #[serde(default = "super::config_defaults::default_pool_naming")]
+    pub pool_naming: String,
+    /// 是否包含语义修复服务（SEMANTIC）
+    #[serde(default = "super::config_defaults::default_true")]
+    pub require_semantic: bool,
+    /// 是否启用混合池（多对一 Pool）：用于支持 src_lang = "auto" 场景
+    /// - true: 同时生成精确池（一对一）和混合池（多对一）
+    /// - false: 只生成精确池（一对一）
+    #[serde(default = "super::config_defaults::default_true")]
+    pub enable_mixed_pools: bool,
+}
+
+/// Pool 语言能力要求
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PoolLanguageRequirements {
+    /// ASR 支持的语言列表
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub asr_languages: Option<Vec<String>>,
+    /// TTS 支持的语言列表
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub tts_languages: Option<Vec<String>>,
+    /// NMT 能力要求
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub nmt_requirements: Option<PoolNmtRequirements>,
+    /// 语义修复支持的语言列表
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub semantic_languages: Option<Vec<String>>,
+}
+
+/// Pool NMT 能力要求
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PoolNmtRequirements {
+    /// 支持的语言列表
+    #[serde(default)]
+    pub languages: Vec<String>,
+    /// NMT 规则：any_to_any | any_to_en | en_to_any | specific_pairs
+    #[serde(default)]
+    pub rule: String,
+    /// 明确支持的语言对（rule=specific_pairs 时使用）
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub supported_pairs: Option<Vec<crate::messages::common::LanguagePair>>,
+    /// 阻止的语言对
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub blocked_pairs: Option<Vec<crate::messages::common::LanguagePair>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

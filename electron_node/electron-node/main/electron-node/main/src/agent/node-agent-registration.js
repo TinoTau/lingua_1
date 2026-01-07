@@ -10,6 +10,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RegistrationHandler = void 0;
 const ws_1 = __importDefault(require("ws"));
 const logger_1 = __importDefault(require("../logger"));
+const node_agent_language_capability_1 = require("./node-agent-language-capability");
 class RegistrationHandler {
     constructor(ws, nodeId, inferenceService, hardwareHandler, getInstalledServices, getCapabilityByType) {
         this.ws = ws;
@@ -18,6 +19,7 @@ class RegistrationHandler {
         this.hardwareHandler = hardwareHandler;
         this.getInstalledServices = getInstalledServices;
         this.getCapabilityByType = getCapabilityByType;
+        this.languageDetector = new node_agent_language_capability_1.LanguageCapabilityDetector();
     }
     /**
      * 注册节点
@@ -48,6 +50,14 @@ class RegistrationHandler {
             logger_1.default.debug({}, 'Getting capability by type...');
             const capabilityByType = await this.getCapabilityByType(installedServicesAll);
             logger_1.default.debug({ capabilityCount: capabilityByType.length }, 'Capability by type retrieved');
+            // 获取语言能力
+            logger_1.default.debug({}, 'Detecting language capabilities...');
+            const languageCapabilities = await this.languageDetector.detectLanguageCapabilities(installedServicesAll, installedModels, capabilityByType);
+            logger_1.default.debug({
+                asr_languages: languageCapabilities.asr_languages?.length || 0,
+                tts_languages: languageCapabilities.tts_languages?.length || 0,
+                nmt_capabilities: languageCapabilities.nmt_capabilities?.length || 0
+            }, 'Language capabilities detected');
             // 获取支持的功能
             logger_1.default.debug({}, 'Getting features supported...');
             const featuresSupported = this.inferenceService.getFeaturesSupported();
@@ -67,6 +77,7 @@ class RegistrationHandler {
                 capability_by_type: capabilityByType,
                 features_supported: featuresSupported,
                 accept_public_jobs: true, // TODO: 从配置读取
+                language_capabilities: languageCapabilities,
             };
             const messageStr = JSON.stringify(message);
             logger_1.default.info({

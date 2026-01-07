@@ -23,6 +23,7 @@ impl NodeRegistry {
             phase3_node_pool: Arc::new(RwLock::new(HashMap::new())),
             core_services: Arc::new(RwLock::new(crate::core::config::CoreServicesConfig::default())),
             phase3_core_cache: Arc::new(RwLock::new(super::phase3_core_cache::Phase3CoreCacheState::default())),
+            language_capability_index: Arc::new(RwLock::new(super::language_capability_index::LanguageCapabilityIndex::new())),
         }
     }
 
@@ -38,6 +39,7 @@ impl NodeRegistry {
             phase3_node_pool: Arc::new(RwLock::new(HashMap::new())),
             core_services: Arc::new(RwLock::new(crate::core::config::CoreServicesConfig::default())),
             phase3_core_cache: Arc::new(RwLock::new(super::phase3_core_cache::Phase3CoreCacheState::default())),
+            language_capability_index: Arc::new(RwLock::new(super::language_capability_index::LanguageCapabilityIndex::new())),
         }
     }
 
@@ -117,7 +119,8 @@ impl NodeRegistry {
             features_supported,
             accept_public_jobs,
             capability_by_type,
-            false,
+            false,  // allow_existing_id
+            None,  // language_capabilities
         )
         .await
     }
@@ -136,6 +139,7 @@ impl NodeRegistry {
         accept_public_jobs: bool,
         capability_by_type: Vec<CapabilityByType>,
         allow_existing_id: bool,
+        language_capabilities: Option<crate::messages::common::NodeLanguageCapabilities>,
     ) -> Result<super::Node, String> {
         // 检查节点是否有 GPU（必需）
         if hardware.gpus.is_none() || hardware.gpus.as_ref().unwrap().is_empty() {
@@ -212,10 +216,39 @@ impl NodeRegistry {
             last_heartbeat: now,
             registered_at: now, // 记录注册时间
             processing_metrics: None, // 初始化为 None，等待心跳更新
+            language_capabilities, // 语言能力信息
         };
 
         nodes.insert(final_node_id.clone(), node.clone());
         drop(nodes);
+
+        // 更新语言能力索引
+        {
+            let mut index = self.language_capability_index.write().await;
+            index.update_node_capabilities(&final_node_id, &node.language_capabilities);
+        }
+
+        // Phase 3：如果启用自动生成且 pools 为空，先尝试为当前节点创建 Pool
+        // 这样可以避免循环依赖：节点需要 Pool 才能 Ready，但 Pool 生成需要节点信息
+        {
+            let cfg = self.phase3.read().await.clone();
+            if cfg.auto_generate_language_pools && cfg.pools.is_empty() {
+                // 先尝试为当前节点创建 Pool
+                if let Some(_pool_id) = self.try_create_pool_for_node(&final_node_id).await {
+                    info!(
+                        node_id = %final_node_id,
+                        "节点注册时成功创建了 Pool"
+                    );
+                } else {
+                    // 如果无法为单个节点创建 Pool，尝试全量重建（可能节点没有语言能力信息）
+                    tracing::debug!(
+                        node_id = %final_node_id,
+                        "无法为节点创建 Pool，尝试全量重建"
+                    );
+                    self.rebuild_auto_language_pools(None).await;
+                }
+            }
+        }
 
         // Phase 3：更新 pool index（node_id -> pool）
         self.phase3_upsert_node_to_pool_index(&final_node_id).await;
@@ -252,6 +285,7 @@ impl NodeRegistry {
         current_jobs: usize,
         capability_by_type: Option<Vec<CapabilityByType>>,
         processing_metrics: Option<crate::messages::common::ProcessingMetrics>,
+        language_capabilities: Option<crate::messages::common::NodeLanguageCapabilities>,
     ) -> bool {
         let mut updated: Option<super::Node> = None;
         let ok = {
@@ -283,6 +317,9 @@ impl NodeRegistry {
             if let Some(metrics) = processing_metrics {
                 node.processing_metrics = Some(metrics);
             }
+            if let Some(lang_caps) = language_capabilities {
+                node.language_capabilities = Some(lang_caps.clone());
+            }
             node.current_jobs = current_jobs;
             node.last_heartbeat = chrono::Utc::now();
             updated = Some(node.clone());
@@ -292,6 +329,11 @@ impl NodeRegistry {
             }
         };
         if let Some(n) = updated {
+            // 更新语言能力索引
+            {
+                let mut index = self.language_capability_index.write().await;
+                index.update_node_capabilities(node_id, &n.language_capabilities);
+            }
             // Phase 3：installed_services/capability_by_type 可能变化，需更新 pool 归属
             self.phase3_upsert_node_to_pool_index(node_id).await;
             self.phase3_core_cache_upsert_node(n).await;
@@ -344,11 +386,32 @@ impl NodeRegistry {
                 updated = Some(node.clone());
             }
         }
+        
+        // 从 Pool 索引中移除节点（如果节点在 Pool 中）
+        self.phase3_remove_node_from_pool_index(node_id).await;
+        
         if let Some(n) = updated {
             self.phase3_core_cache_upsert_node(n).await;
         } else {
             // 若节点不存在，确保缓存也不残留
             self.phase3_core_cache_remove_node(node_id).await;
+        }
+        
+        // 如果启用自动生成，检查是否需要重建 Pool
+        let cfg = self.phase3.read().await.clone();
+        if cfg.auto_generate_language_pools {
+            // 检查是否有 Pool 变空（延迟重建，避免频繁重建）
+            // 注意：这里只检查，不立即重建，由定期清理任务处理
+            let pool_sizes = self.phase3_pool_sizes().await;
+            let empty_pools = pool_sizes.iter().filter(|(_, size)| *size == 0).count();
+            if empty_pools > 0 {
+                use tracing::debug;
+                debug!(
+                    empty_pools = empty_pools,
+                    "检测到 {} 个空 Pool（节点离线后），将在下次定期清理时重建",
+                    empty_pools
+                );
+            }
         }
     }
 

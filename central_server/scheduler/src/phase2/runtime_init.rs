@@ -122,6 +122,19 @@
         format!("{}:nodes:reserved:{{node:{}}}", self.v1_prefix(), node_id)
     }
 
+    /// Phase 3 Pool 配置相关的 Redis Key
+    fn phase3_pool_config_key(&self) -> String {
+        format!("{}:phase3:pools:config", self.v1_prefix())
+    }
+
+    fn phase3_pool_leader_key(&self) -> String {
+        format!("{}:phase3:pools:leader", self.v1_prefix())
+    }
+
+    fn phase3_pool_version_key(&self) -> String {
+        format!("{}:phase3:pools:version", self.v1_prefix())
+    }
+
     async fn set_scheduler_presence(&self) {
         let hostname = std::env::var("COMPUTERNAME")
             .or_else(|_| std::env::var("HOSTNAME"))

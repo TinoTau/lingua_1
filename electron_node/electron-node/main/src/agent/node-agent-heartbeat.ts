@@ -14,11 +14,13 @@ import {
 import { InferenceService } from '../inference/inference-service';
 import { NodeConfig } from '../node-config';
 import logger from '../logger';
+import { LanguageCapabilityDetector } from './node-agent-language-capability';
 
 export class HeartbeatHandler {
   private heartbeatInterval: NodeJS.Timeout | null = null;
   private heartbeatDebounceTimer: NodeJS.Timeout | null = null;
   private readonly HEARTBEAT_DEBOUNCE_MS = 2000; // 防抖延迟：2秒内最多触发一次立即心跳
+  private languageDetector: LanguageCapabilityDetector;
 
   constructor(
     private ws: WebSocket | null,
@@ -29,7 +31,9 @@ export class HeartbeatHandler {
     private getCapabilityByType: (services: InstalledService[]) => Promise<CapabilityByType[]>,
     private shouldCollectRerunMetrics: (services: InstalledService[]) => boolean,
     private shouldCollectASRMetrics: (services: InstalledService[]) => boolean
-  ) {}
+  ) {
+    this.languageDetector = new LanguageCapabilityDetector();
+  }
 
   /**
    * 启动心跳
@@ -124,7 +128,26 @@ export class HeartbeatHandler {
       installed_models: installedModels.length > 0 ? installedModels : undefined,
       installed_services: installedServicesAll,
       capability_by_type: capabilityByType,
+      language_capabilities: await this.languageDetector.detectLanguageCapabilities(
+        installedServicesAll,
+        installedModels,
+        capabilityByType
+      ),
     };
+
+    // 记录语言对列表上报信息（用于调试）
+    if (message.language_capabilities?.supported_language_pairs) {
+      const pairs = message.language_capabilities.supported_language_pairs;
+      logger.info({
+        nodeId: this.nodeId,
+        pair_count: pairs.length,
+        pairs: pairs.map(p => `${p.src}-${p.tgt}`).join(', ')
+      }, '上报语言对列表到调度服务器');
+    } else {
+      logger.warn({
+        nodeId: this.nodeId
+      }, '未生成语言对列表，将使用向后兼容模式');
+    }
 
     // 方案1+方案2：基于配置和服务状态的动态指标收集（支持热插拔）
     const metricsConfig = this.nodeConfig.metrics;

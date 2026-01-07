@@ -39,8 +39,27 @@ impl Default for Phase3Config {
             pool_match_scope: default_phase3_pool_match_scope(),
             pool_match_mode: default_phase3_pool_match_mode(),
             strict_pool_eligibility: false,
+            auto_generate_language_pools: false,
+            auto_pool_config: None,
         }
     }
+}
+
+// AutoLanguagePoolConfig 默认值函数
+pub fn default_min_nodes_per_pool() -> usize {
+    1  // 允许单个节点创建 Pool，适合小规模部署
+}
+
+pub fn default_max_pools() -> usize {
+    50
+}
+
+pub fn default_pool_naming() -> String {
+    "pair".to_string()
+}
+
+pub fn default_true() -> bool {
+    true
 }
 
 // Phase 2 默认值函数
@@ -353,7 +372,7 @@ pub fn default_heartbeat_timeout() -> u64 {
 }
 
 pub fn default_health_check_count() -> usize {
-    3
+    1  // 1次心跳即可变为 Ready，加快节点可用速度
 }
 
 pub fn default_warmup_timeout() -> u64 {

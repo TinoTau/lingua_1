@@ -52,6 +52,7 @@ const logger_1 = __importDefault(require("./logger"));
 const window_manager_1 = require("./window-manager");
 const service_cleanup_1 = require("./service-cleanup");
 const system_resources_1 = require("./system-resources");
+const esbuild_cleanup_1 = require("./utils/esbuild-cleanup");
 const model_handlers_1 = require("./ipc-handlers/model-handlers");
 const service_handlers_1 = require("./ipc-handlers/service-handlers");
 const service_cache_1 = require("./ipc-handlers/service-cache");
@@ -256,7 +257,7 @@ electron_1.app.whenReady().then(async () => {
             }
             // Python服务的GPU跟踪会在任务计数为0时停止（在显示时检查）
         });
-        nodeAgent = new node_agent_1.NodeAgent(inferenceService, modelManager, serviceRegistryManager, rustServiceManager, pythonServiceManager);
+        nodeAgent = new node_agent_1.NodeAgent(inferenceService, modelManager, serviceRegistryManager, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
         // 启动 Node Agent（连接到调度服务器）
         logger_1.default.info({}, 'Starting Node Agent (connecting to scheduler server)...');
         nodeAgent.start().catch((error) => {
@@ -272,6 +273,23 @@ electron_1.app.whenReady().then(async () => {
         // 根据用户上一次选择的功能自动启动对应服务
         const config = (0, node_config_1.loadNodeConfig)();
         const prefs = config.servicePreferences;
+        // 确保配置文件包含所有必需字段（首次启动时补齐缺失字段）
+        // 检查配置文件中是否缺少 servicePreferences 字段（通过读取原始文件检查）
+        try {
+            const configPath = require('path').join(require('electron').app.getPath('userData'), 'electron-node-config.json');
+            if (require('fs').existsSync(configPath)) {
+                const rawConfig = require('fs').readFileSync(configPath, 'utf-8');
+                const parsedConfig = JSON.parse(rawConfig);
+                if (!parsedConfig.servicePreferences) {
+                    logger_1.default.info({}, 'Config file missing servicePreferences, saving default configuration...');
+                    (0, node_config_1.saveNodeConfig)(config);
+                }
+            }
+        }
+        catch (error) {
+            // 忽略检查错误，继续启动
+            logger_1.default.debug({ error }, 'Failed to check config file for missing fields');
+        }
         logger_1.default.info({ prefs }, 'Service manager initialized, auto-starting services based on previous selection');
         // 按照偏好启动 Rust 推理服务（异步启动，不阻塞窗口显示）
         if (prefs.rustEnabled) {
@@ -437,6 +455,8 @@ electron_1.app.whenReady().then(async () => {
 electron_1.app.on('window-all-closed', async () => {
     if (process.platform !== 'darwin') {
         await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
+        // 清理 ESBuild 进程
+        (0, esbuild_cleanup_1.cleanupEsbuild)();
         electron_1.app.quit();
     }
 });
@@ -449,32 +469,139 @@ electron_1.app.on('before-quit', async (event) => {
     if (rustRunning || pythonRunning || semanticRepairRunning) {
         event.preventDefault();
         await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
+        // 清理 ESBuild 进程
+        (0, esbuild_cleanup_1.cleanupEsbuild)();
         electron_1.app.quit();
+    }
+    else {
+        // 即使服务没有运行，也要保存当前服务状态（以便下次启动时恢复）
+        // 这样用户关闭应用时，即使所有服务都已停止，也能记住用户的选择
+        try {
+            const pythonStatuses = pythonServiceManager?.getAllServiceStatuses() || [];
+            const semanticRepairStatuses = semanticRepairServiceManager
+                ? await semanticRepairServiceManager.getAllServiceStatuses()
+                : [];
+            const config = (0, node_config_1.loadNodeConfig)();
+            config.servicePreferences = {
+                rustEnabled: false,
+                nmtEnabled: !!pythonStatuses.find(s => s.name === 'nmt')?.running,
+                ttsEnabled: !!pythonStatuses.find(s => s.name === 'tts')?.running,
+                yourttsEnabled: !!pythonStatuses.find(s => s.name === 'yourtts')?.running,
+                fasterWhisperVadEnabled: !!pythonStatuses.find(s => s.name === 'faster_whisper_vad')?.running,
+                speakerEmbeddingEnabled: !!pythonStatuses.find(s => s.name === 'speaker_embedding')?.running,
+                semanticRepairZhEnabled: !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-zh')?.running,
+                semanticRepairEnEnabled: !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en')?.running,
+                enNormalizeEnabled: !!semanticRepairStatuses.find(s => s.serviceId === 'en-normalize')?.running,
+            };
+            (0, node_config_1.saveNodeConfig)(config);
+            logger_1.default.info({ servicePreferences: config.servicePreferences }, 'Saved current service status to config file (no services running)');
+        }
+        catch (error) {
+            logger_1.default.error({ error }, 'Failed to save service status to config file');
+        }
+        // 清理 ESBuild 进程
+        (0, esbuild_cleanup_1.cleanupEsbuild)();
     }
 });
 // 处理系统信号（SIGTERM, SIGINT）确保服务被清理
 // 注意：使用 (process as any) 因为 Electron 的 process 类型定义只包含 'loaded' 事件，
 // 但运行时实际支持 Node.js 的所有 process 事件（SIGTERM, SIGINT 等）
 process.on('SIGTERM', async () => {
-    logger_1.default.info({}, 'Received SIGTERM signal, cleaning up services...');
-    await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
+    logger_1.default.info({}, 'Received SIGTERM signal, cleaning up services and notifying scheduler...');
+    try {
+        await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
+    }
+    catch (error) {
+        logger_1.default.error({ error }, 'Cleanup failed, but attempting to notify scheduler');
+        if (nodeAgent) {
+            try {
+                nodeAgent.stop();
+            }
+            catch (e) {
+                // 忽略错误
+            }
+        }
+    }
+    // 清理 ESBuild 进程
+    (0, esbuild_cleanup_1.cleanupEsbuild)();
     process.exit(0);
 });
 process.on('SIGINT', async () => {
-    logger_1.default.info({}, 'Received SIGINT signal, cleaning up services...');
-    await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
+    logger_1.default.info({}, 'Received SIGINT signal, cleaning up services and notifying scheduler...');
+    try {
+        await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
+    }
+    catch (error) {
+        logger_1.default.error({ error }, 'Cleanup failed, but attempting to notify scheduler');
+        if (nodeAgent) {
+            try {
+                nodeAgent.stop();
+            }
+            catch (e) {
+                // 忽略错误
+            }
+        }
+    }
+    // 清理 ESBuild 进程
+    (0, esbuild_cleanup_1.cleanupEsbuild)();
     process.exit(0);
 });
 // 处理未捕获的异常，确保服务被清理
 process.on('uncaughtException', async (error) => {
-    logger_1.default.error({ error }, 'Uncaught exception, cleaning up services...');
-    await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
+    logger_1.default.error({ error }, 'Uncaught exception, cleaning up services and notifying scheduler...');
+    try {
+        // 设置超时，确保即使清理失败也能退出
+        const cleanupPromise = (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
+        const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('Cleanup timeout')), 5000);
+        });
+        await Promise.race([cleanupPromise, timeoutPromise]);
+    }
+    catch (cleanupError) {
+        logger_1.default.error({ error: cleanupError }, 'Cleanup failed or timeout, forcing exit');
+        // 即使清理失败，也尝试通知调度服务器
+        if (nodeAgent) {
+            try {
+                nodeAgent.stop();
+            }
+            catch (e) {
+                // 忽略错误
+            }
+        }
+    }
+    // 清理 ESBuild 进程
+    (0, esbuild_cleanup_1.cleanupEsbuild)();
     process.exit(1);
 });
 process.on('unhandledRejection', async (reason, promise) => {
-    logger_1.default.error({ reason, promise }, 'Unhandled promise rejection, cleaning up services...');
-    await (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
+    logger_1.default.error({ reason, promise }, 'Unhandled promise rejection, cleaning up services and notifying scheduler...');
+    try {
+        // 设置超时，确保即使清理失败也能退出
+        const cleanupPromise = (0, service_cleanup_1.cleanupServices)(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
+        const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('Cleanup timeout')), 5000);
+        });
+        await Promise.race([cleanupPromise, timeoutPromise]);
+    }
+    catch (cleanupError) {
+        logger_1.default.error({ error: cleanupError }, 'Cleanup failed or timeout, forcing exit');
+        // 即使清理失败，也尝试通知调度服务器
+        if (nodeAgent) {
+            try {
+                nodeAgent.stop();
+            }
+            catch (e) {
+                // 忽略错误
+            }
+        }
+    }
+    // 清理 ESBuild 进程
+    (0, esbuild_cleanup_1.cleanupEsbuild)();
     process.exit(1);
+});
+// 进程退出时的最后清理（确保 ESBuild 被清理）
+process.on('exit', () => {
+    (0, esbuild_cleanup_1.cleanupEsbuild)();
 });
 // 注意：模块管理 IPC 已移除
 // 模块现在根据任务请求中的 features 自动启用/禁用，不需要手动管理

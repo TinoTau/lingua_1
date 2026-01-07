@@ -223,7 +223,7 @@ export class PipelineOrchestrator {
       const result = this.resultBuilder.buildResult(
         textForNMT,
         asrResult,
-        asrTask.rerun_count
+        asrTask.rerun_count ?? 0
       );
 
       const processingTime = Date.now() - startTime;

@@ -8,7 +8,18 @@ mod unavailable;
 mod exclude_stats;
 mod selection;
 mod phase3_pool;
+mod phase3_pool_allocation;
+pub mod phase3_pool_constants;
 mod phase3_core_cache;
+mod language_capability_index;
+mod auto_language_pool;
+
+#[cfg(test)]
+mod auto_language_pool_test;
+#[cfg(test)]
+mod phase3_pool_redis_test;
+#[cfg(test)]
+mod phase3_pool_allocation_test;
 
 pub use types::{Node, DispatchExcludeReason};
 pub use selection::{NoAvailableNodeBreakdown, Phase3TwoLevelDebug};
@@ -50,10 +61,13 @@ pub struct NodeRegistry {
     phase3: Arc<RwLock<crate::core::config::Phase3Config>>,
     /// Phase 3：pool -> node_id 集合（用于 pool 内选节点，避免全量遍历）
     phase3_pool_index: Arc<RwLock<HashMap<u16, HashSet<String>>>>,
-    /// Phase 3：node_id -> pool_id（用于快速移除/迁移节点的 pool 归属）
-    phase3_node_pool: Arc<RwLock<HashMap<String, u16>>>,
+    /// Phase 3：node_id -> pool_ids（用于快速移除/迁移节点的 pool 归属）
+    /// 一个节点可以属于多个 Pool（支持多个语言对）
+    phase3_node_pool: Arc<RwLock<HashMap<String, HashSet<u16>>>>,
     /// 核心服务包配置（用于 Phase3 pool 核心能力缓存与快速定位）
     core_services: Arc<RwLock<crate::core::config::CoreServicesConfig>>,
     /// Phase 3：pool 核心能力缓存（online/ready + core services installed/ready 覆盖）
     phase3_core_cache: Arc<RwLock<phase3_core_cache::Phase3CoreCacheState>>,
+    /// 语言能力索引（用于快速查询支持特定语言的节点）
+    language_capability_index: Arc<RwLock<language_capability_index::LanguageCapabilityIndex>>,
 }

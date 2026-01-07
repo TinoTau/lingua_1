@@ -8,6 +8,74 @@ import type { RustServiceManager } from '../rust-service-manager';
 import type { PythonServiceManager } from '../python-service-manager';
 import type { ServiceRegistryManager } from '../service-registry';
 import type { SemanticRepairServiceManager } from '../semantic-repair-service-manager';
+import type { PythonServiceName } from '../python-service-manager/types';
+import type { SemanticRepairServiceId } from '../semantic-repair-service-manager';
+
+/**
+ * Python 服务名称到配置字段名的映射
+ */
+const PYTHON_SERVICE_PREFERENCE_MAP: Record<PythonServiceName, keyof ServicePreferences> = {
+  nmt: 'nmtEnabled',
+  tts: 'ttsEnabled',
+  yourtts: 'yourttsEnabled',
+  faster_whisper_vad: 'fasterWhisperVadEnabled',
+  speaker_embedding: 'speakerEmbeddingEnabled',
+};
+
+/**
+ * 语义修复服务ID到配置字段名的映射
+ */
+const SEMANTIC_REPAIR_SERVICE_PREFERENCE_MAP: Record<SemanticRepairServiceId, keyof ServicePreferences> = {
+  'semantic-repair-zh': 'semanticRepairZhEnabled',
+  'semantic-repair-en': 'semanticRepairEnEnabled',
+  'en-normalize': 'enNormalizeEnabled',
+};
+
+/**
+ * 更新服务自动启动配置（Python 服务）
+ */
+function updatePythonServicePreference(
+  serviceName: PythonServiceName,
+  enabled: boolean,
+  config: ReturnType<typeof loadNodeConfig>
+): boolean {
+  const preferenceKey = PYTHON_SERVICE_PREFERENCE_MAP[serviceName];
+  if (!preferenceKey) {
+    logger.warn({ serviceName }, 'Unknown Python service name for preference mapping');
+    return false;
+  }
+
+  const currentValue = config.servicePreferences[preferenceKey] as boolean | undefined;
+  // 如果当前值与目标值不同，则更新
+  if (currentValue !== enabled) {
+    (config.servicePreferences[preferenceKey] as boolean) = enabled;
+    return true;
+  }
+  return false;
+}
+
+/**
+ * 更新服务自动启动配置（语义修复服务）
+ */
+function updateSemanticRepairServicePreference(
+  serviceId: SemanticRepairServiceId,
+  enabled: boolean,
+  config: ReturnType<typeof loadNodeConfig>
+): boolean {
+  const preferenceKey = SEMANTIC_REPAIR_SERVICE_PREFERENCE_MAP[serviceId];
+  if (!preferenceKey) {
+    logger.warn({ serviceId }, 'Unknown semantic repair service ID for preference mapping');
+    return false;
+  }
+
+  const currentValue = config.servicePreferences[preferenceKey] as boolean | undefined;
+  // 如果当前值与目标值不同，则更新
+  if (currentValue !== enabled) {
+    (config.servicePreferences[preferenceKey] as boolean) = enabled;
+    return true;
+  }
+  return false;
+}
 
 export function registerRuntimeHandlers(
   nodeAgent: NodeAgent | null,
@@ -71,12 +139,22 @@ export function registerRuntimeHandlers(
     return pythonServiceManager?.getAllServiceStatuses() || [];
   });
 
-  ipcMain.handle('start-python-service', async (_, serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => {
+  ipcMain.handle('start-python-service', async (_, serviceName: PythonServiceName) => {
     if (!pythonServiceManager) {
       throw new Error('Python service manager not initialized');
     }
     try {
       await pythonServiceManager.startService(serviceName);
+
+      // 用户手动启动服务后，将自动启动设为是（记录用户选择）
+      const config = loadNodeConfig();
+      const updated = updatePythonServicePreference(serviceName, true, config);
+
+      if (updated) {
+        saveNodeConfig(config);
+        logger.info({ serviceName }, '用户手动启动服务，已更新自动启动配置为是');
+      }
+
       return { success: true };
     } catch (error) {
       logger.error({ error, serviceName }, 'Failed to start Python service');
@@ -84,12 +162,22 @@ export function registerRuntimeHandlers(
     }
   });
 
-  ipcMain.handle('stop-python-service', async (_, serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => {
+  ipcMain.handle('stop-python-service', async (_, serviceName: PythonServiceName) => {
     if (!pythonServiceManager) {
       throw new Error('Python service manager not initialized');
     }
     try {
       await pythonServiceManager.stopService(serviceName);
+
+      // 用户手动关闭服务后，将自动启动设为否
+      const config = loadNodeConfig();
+      const updated = updatePythonServicePreference(serviceName, false, config);
+
+      if (updated) {
+        saveNodeConfig(config);
+        logger.info({ serviceName }, '用户手动关闭服务，已更新自动启动配置为否');
+      }
+
       return { success: true };
     } catch (error) {
       logger.error({ error, serviceName }, 'Failed to stop Python service');
@@ -104,6 +192,15 @@ export function registerRuntimeHandlers(
     }
     try {
       await rustServiceManager.start();
+
+      // 用户手动启动服务后，将自动启动设为是（记录用户选择）
+      const config = loadNodeConfig();
+      if (!config.servicePreferences.rustEnabled) {
+        config.servicePreferences.rustEnabled = true;
+        saveNodeConfig(config);
+        logger.info({}, '用户手动启动 Rust 服务，已更新自动启动配置为是');
+      }
+
       return { success: true };
     } catch (error) {
       logger.error({ error }, 'Failed to start Rust service');
@@ -117,6 +214,15 @@ export function registerRuntimeHandlers(
     }
     try {
       await rustServiceManager.stop();
+
+      // 用户手动关闭服务后，将自动启动设为否
+      const config = loadNodeConfig();
+      if (config.servicePreferences.rustEnabled) {
+        config.servicePreferences.rustEnabled = false;
+        saveNodeConfig(config);
+        logger.info({}, '用户手动关闭 Rust 服务，已更新自动启动配置为否');
+      }
+
       return { success: true };
     } catch (error) {
       logger.error({ error }, 'Failed to stop Rust service');
@@ -255,12 +361,22 @@ export function registerRuntimeHandlers(
     return await semanticRepairServiceManager.getAllServiceStatuses();
   });
 
-  ipcMain.handle('start-semantic-repair-service', async (_, serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => {
+  ipcMain.handle('start-semantic-repair-service', async (_, serviceId: SemanticRepairServiceId) => {
     if (!semanticRepairServiceManager) {
       return { success: false, error: 'Semantic repair service manager not initialized' };
     }
     try {
       await semanticRepairServiceManager.startService(serviceId);
+
+      // 用户手动启动服务后，将自动启动设为是（记录用户选择）
+      const config = loadNodeConfig();
+      const updated = updateSemanticRepairServicePreference(serviceId, true, config);
+
+      if (updated) {
+        saveNodeConfig(config);
+        logger.info({ serviceId }, '用户手动启动语义修复服务，已更新自动启动配置为是');
+      }
+
       return { success: true };
     } catch (error) {
       logger.error({ error, serviceId }, 'Failed to start semantic repair service');
@@ -268,12 +384,22 @@ export function registerRuntimeHandlers(
     }
   });
 
-  ipcMain.handle('stop-semantic-repair-service', async (_, serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => {
+  ipcMain.handle('stop-semantic-repair-service', async (_, serviceId: SemanticRepairServiceId) => {
     if (!semanticRepairServiceManager) {
       return { success: false, error: 'Semantic repair service manager not initialized' };
     }
     try {
       await semanticRepairServiceManager.stopService(serviceId);
+
+      // 用户手动关闭服务后，将自动启动设为否
+      const config = loadNodeConfig();
+      const updated = updateSemanticRepairServicePreference(serviceId, false, config);
+
+      if (updated) {
+        saveNodeConfig(config);
+        logger.info({ serviceId }, '用户手动关闭语义修复服务，已更新自动启动配置为否');
+      }
+
       return { success: true };
     } catch (error) {
       logger.error({ error, serviceId }, 'Failed to stop semantic repair service');

@@ -43,7 +43,7 @@ pub struct ProcessingMetrics {
     pub service_efficiencies: std::collections::HashMap<String, f64>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct FeatureFlags {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub emotion_detection: Option<bool>,
@@ -153,6 +153,45 @@ pub struct CapabilityByType {
     pub reason: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ready_impl_ids: Option<Vec<String>>,
+}
+
+/// NMT 能力（避免语言对爆炸）
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NmtCapability {
+    pub model_id: String,
+    pub languages: Vec<String>,
+    pub rule: String, // "any_to_any" | "any_to_en" | "en_to_any" | "specific_pairs"
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub blocked_pairs: Option<Vec<LanguagePair>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub supported_pairs: Option<Vec<LanguagePair>>,
+}
+
+/// 语言对
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
+pub struct LanguagePair {
+    pub src: String,
+    pub tgt: String,
+}
+
+/// 节点语言能力
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NodeLanguageCapabilities {
+    /// @deprecated 保留用于向后兼容，优先使用 supported_language_pairs
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub asr_languages: Option<Vec<String>>,
+    /// @deprecated 保留用于向后兼容，优先使用 supported_language_pairs
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tts_languages: Option<Vec<String>>,
+    /// @deprecated 保留用于向后兼容，优先使用 supported_language_pairs
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub nmt_capabilities: Option<Vec<NmtCapability>>,
+    /// @deprecated 保留用于向后兼容，优先使用 supported_language_pairs
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub semantic_languages: Option<Vec<String>>,
+    /// 节点支持的语言对列表（所有服务的交集，节点端计算）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub supported_language_pairs: Option<Vec<LanguagePair>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

@@ -7,6 +7,58 @@ exports.registerRuntimeHandlers = registerRuntimeHandlers;
 const electron_1 = require("electron");
 const node_config_1 = require("../node-config");
 const logger_1 = __importDefault(require("../logger"));
+/**
+ * Python 服务名称到配置字段名的映射
+ */
+const PYTHON_SERVICE_PREFERENCE_MAP = {
+    nmt: 'nmtEnabled',
+    tts: 'ttsEnabled',
+    yourtts: 'yourttsEnabled',
+    faster_whisper_vad: 'fasterWhisperVadEnabled',
+    speaker_embedding: 'speakerEmbeddingEnabled',
+};
+/**
+ * 语义修复服务ID到配置字段名的映射
+ */
+const SEMANTIC_REPAIR_SERVICE_PREFERENCE_MAP = {
+    'semantic-repair-zh': 'semanticRepairZhEnabled',
+    'semantic-repair-en': 'semanticRepairEnEnabled',
+    'en-normalize': 'enNormalizeEnabled',
+};
+/**
+ * 更新服务自动启动配置（Python 服务）
+ */
+function updatePythonServicePreference(serviceName, enabled, config) {
+    const preferenceKey = PYTHON_SERVICE_PREFERENCE_MAP[serviceName];
+    if (!preferenceKey) {
+        logger_1.default.warn({ serviceName }, 'Unknown Python service name for preference mapping');
+        return false;
+    }
+    const currentValue = config.servicePreferences[preferenceKey];
+    // 如果当前值与目标值不同，则更新
+    if (currentValue !== enabled) {
+        config.servicePreferences[preferenceKey] = enabled;
+        return true;
+    }
+    return false;
+}
+/**
+ * 更新服务自动启动配置（语义修复服务）
+ */
+function updateSemanticRepairServicePreference(serviceId, enabled, config) {
+    const preferenceKey = SEMANTIC_REPAIR_SERVICE_PREFERENCE_MAP[serviceId];
+    if (!preferenceKey) {
+        logger_1.default.warn({ serviceId }, 'Unknown semantic repair service ID for preference mapping');
+        return false;
+    }
+    const currentValue = config.servicePreferences[preferenceKey];
+    // 如果当前值与目标值不同，则更新
+    if (currentValue !== enabled) {
+        config.servicePreferences[preferenceKey] = enabled;
+        return true;
+    }
+    return false;
+}
 function registerRuntimeHandlers(nodeAgent, modelManager, inferenceService, rustServiceManager, pythonServiceManager, serviceRegistryManager, semanticRepairServiceManager) {
     electron_1.ipcMain.handle('get-node-status', async () => {
         return nodeAgent?.getStatus() || { online: false, nodeId: null };
@@ -63,6 +115,13 @@ function registerRuntimeHandlers(nodeAgent, modelManager, inferenceService, rust
         }
         try {
             await pythonServiceManager.startService(serviceName);
+            // 用户手动启动服务后，将自动启动设为是（记录用户选择）
+            const config = (0, node_config_1.loadNodeConfig)();
+            const updated = updatePythonServicePreference(serviceName, true, config);
+            if (updated) {
+                (0, node_config_1.saveNodeConfig)(config);
+                logger_1.default.info({ serviceName }, '用户手动启动服务，已更新自动启动配置为是');
+            }
             return { success: true };
         }
         catch (error) {
@@ -76,6 +135,13 @@ function registerRuntimeHandlers(nodeAgent, modelManager, inferenceService, rust
         }
         try {
             await pythonServiceManager.stopService(serviceName);
+            // 用户手动关闭服务后，将自动启动设为否
+            const config = (0, node_config_1.loadNodeConfig)();
+            const updated = updatePythonServicePreference(serviceName, false, config);
+            if (updated) {
+                (0, node_config_1.saveNodeConfig)(config);
+                logger_1.default.info({ serviceName }, '用户手动关闭服务，已更新自动启动配置为否');
+            }
             return { success: true };
         }
         catch (error) {
@@ -90,6 +156,13 @@ function registerRuntimeHandlers(nodeAgent, modelManager, inferenceService, rust
         }
         try {
             await rustServiceManager.start();
+            // 用户手动启动服务后，将自动启动设为是（记录用户选择）
+            const config = (0, node_config_1.loadNodeConfig)();
+            if (!config.servicePreferences.rustEnabled) {
+                config.servicePreferences.rustEnabled = true;
+                (0, node_config_1.saveNodeConfig)(config);
+                logger_1.default.info({}, '用户手动启动 Rust 服务，已更新自动启动配置为是');
+            }
             return { success: true };
         }
         catch (error) {
@@ -103,6 +176,13 @@ function registerRuntimeHandlers(nodeAgent, modelManager, inferenceService, rust
         }
         try {
             await rustServiceManager.stop();
+            // 用户手动关闭服务后，将自动启动设为否
+            const config = (0, node_config_1.loadNodeConfig)();
+            if (config.servicePreferences.rustEnabled) {
+                config.servicePreferences.rustEnabled = false;
+                (0, node_config_1.saveNodeConfig)(config);
+                logger_1.default.info({}, '用户手动关闭 Rust 服务，已更新自动启动配置为否');
+            }
             return { success: true };
         }
         catch (error) {
@@ -184,6 +264,10 @@ function registerRuntimeHandlers(nodeAgent, modelManager, inferenceService, rust
                 // 确保新字段有默认值（如果未提供）
                 fasterWhisperVadEnabled: prefs.fasterWhisperVadEnabled ?? config.servicePreferences.fasterWhisperVadEnabled ?? false,
                 speakerEmbeddingEnabled: prefs.speakerEmbeddingEnabled ?? config.servicePreferences.speakerEmbeddingEnabled ?? false,
+                // 语义修复服务偏好（如果未提供，保持原有值）
+                semanticRepairZhEnabled: prefs.semanticRepairZhEnabled ?? config.servicePreferences.semanticRepairZhEnabled,
+                semanticRepairEnEnabled: prefs.semanticRepairEnEnabled ?? config.servicePreferences.semanticRepairEnEnabled,
+                enNormalizeEnabled: prefs.enNormalizeEnabled ?? config.servicePreferences.enNormalizeEnabled,
             };
             (0, node_config_1.saveNodeConfig)(config);
             return { success: true };
@@ -230,6 +314,13 @@ function registerRuntimeHandlers(nodeAgent, modelManager, inferenceService, rust
         }
         try {
             await semanticRepairServiceManager.startService(serviceId);
+            // 用户手动启动服务后，将自动启动设为是（记录用户选择）
+            const config = (0, node_config_1.loadNodeConfig)();
+            const updated = updateSemanticRepairServicePreference(serviceId, true, config);
+            if (updated) {
+                (0, node_config_1.saveNodeConfig)(config);
+                logger_1.default.info({ serviceId }, '用户手动启动语义修复服务，已更新自动启动配置为是');
+            }
             return { success: true };
         }
         catch (error) {
@@ -243,6 +334,13 @@ function registerRuntimeHandlers(nodeAgent, modelManager, inferenceService, rust
         }
         try {
             await semanticRepairServiceManager.stopService(serviceId);
+            // 用户手动关闭服务后，将自动启动设为否
+            const config = (0, node_config_1.loadNodeConfig)();
+            const updated = updateSemanticRepairServicePreference(serviceId, false, config);
+            if (updated) {
+                (0, node_config_1.saveNodeConfig)(config);
+                logger_1.default.info({ serviceId }, '用户手动关闭语义修复服务，已更新自动启动配置为否');
+            }
             return { success: true };
         }
         catch (error) {

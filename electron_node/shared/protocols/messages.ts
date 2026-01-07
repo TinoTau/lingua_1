@@ -78,6 +78,30 @@ export interface CapabilityByType {
   ready_impl_ids?: string[];
 }
 
+/** NMT 能力（避免语言对爆炸） */
+export interface NmtCapability {
+  model_id: string;
+  languages: string[];
+  rule: 'any_to_any' | 'any_to_en' | 'en_to_any' | 'specific_pairs';
+  blocked_pairs?: Array<{ src: string; tgt: string }>;
+  supported_pairs?: Array<{ src: string; tgt: string }>;
+}
+
+/** 节点语言能力 */
+export interface NodeLanguageCapabilities {
+  /** @deprecated 保留用于向后兼容，优先使用 supported_language_pairs */
+  asr_languages?: string[];
+  /** @deprecated 保留用于向后兼容，优先使用 supported_language_pairs */
+  tts_languages?: string[];
+  /** @deprecated 保留用于向后兼容，优先使用 supported_language_pairs */
+  nmt_capabilities?: NmtCapability[];
+  /** @deprecated 保留用于向后兼容，优先使用 supported_language_pairs */
+  semantic_languages?: string[];  // 语义修复服务支持的语言
+  
+  /** 节点支持的语言对列表（所有服务的交集，节点端计算） */
+  supported_language_pairs?: Array<{ src: string; tgt: string }>;
+}
+
 // ===== 移动端 ↔ 调度服务器 =====
 
 export interface SessionInitMessage {
@@ -300,6 +324,8 @@ export interface NodeRegisterMessage {
   capability_by_type: CapabilityByType[];
   features_supported: FeatureFlags;
   accept_public_jobs: boolean;
+  /** 语言能力信息（新增，可选，向后兼容） */
+  language_capabilities?: NodeLanguageCapabilities;
 }
 
 export interface NodeRegisterAckMessage {
@@ -357,6 +383,8 @@ export interface NodeHeartbeatMessage {
   asr_metrics?: ASRMetrics;
   /** OBS-1: 处理效率观测指标（按心跳周期统计，分别记录 ASR、NMT、TTS） */
   processing_metrics?: ProcessingMetrics;
+  /** 语言能力信息（新增，可选，向后兼容） */
+  language_capabilities?: NodeLanguageCapabilities;
 }
 
 export interface JobAssignMessage {

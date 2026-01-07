@@ -36,11 +36,98 @@ impl NodeRegistry {
             v
         }
 
-        // 选择"候选 pools"（按类型）
+        // 选择"候选 pools"（按类型或语言对）
         // - 兼容模式：cfg.pools 为空 -> 继续用 hash 分桶（0..pool_count）
         // - 强隔离：cfg.pools 非空 -> pool_id 来自配置（按能力分配节点）
+        // - 自动生成模式：根据语言对直接选择 Pool
         let (all_pools, preferred_pool, pools) = if cfg.enabled && cfg.mode == "two_level" {
-            if using_capability_pools {
+            if cfg.auto_generate_language_pools && using_capability_pools {
+                // 自动生成模式：根据语言对直接选择 Pool
+                debug!(
+                    src_lang = %src_lang,
+                    tgt_lang = %tgt_lang,
+                    "自动生成模式：根据语言对选择 Pool"
+                );
+                if src_lang == "auto" {
+                    // 未知源语言：使用混合池（多对一 Pool）
+                    // 选择所有以 *-tgt_lang 格式命名的混合池
+                    debug!(
+                        src_lang = %src_lang,
+                        tgt_lang = %tgt_lang,
+                        "源语言为 auto，使用混合池（多对一）支持目标语言 {}",
+                        tgt_lang
+                    );
+                    let eligible_pools: Vec<u16> = cfg.pools
+                        .iter()
+                        .filter(|p| {
+                            // 混合池命名格式：*-tgt_lang（如 *-en）
+                            p.name == format!("*-{}", tgt_lang)
+                        })
+                        .map(|p| p.pool_id)
+                        .collect();
+                    
+                    if eligible_pools.is_empty() {
+                        warn!(
+                            tgt_lang = %tgt_lang,
+                            total_pools = cfg.pools.len(),
+                            "未找到支持目标语言 {} 的混合池",
+                            tgt_lang
+                        );
+                        let dbg = Phase3TwoLevelDebug {
+                            pool_count: cfg.pools.len() as u16,
+                            preferred_pool: 0,
+                            selected_pool: None,
+                            fallback_used: false,
+                            attempts: vec![],
+                        };
+                        return (None, dbg, NoAvailableNodeBreakdown::default());
+                    }
+                    
+                    debug!(
+                        tgt_lang = %tgt_lang,
+                        eligible_pool_count = eligible_pools.len(),
+                        "找到 {} 个支持目标语言 {} 的混合池",
+                        eligible_pools.len(),
+                        tgt_lang
+                    );
+                    let all_pool_ids: Vec<u16> = cfg.pools.iter().map(|p| p.pool_id).collect();
+                    let preferred = eligible_pools[0]; // 使用第一个匹配的混合池作为 preferred
+                    (all_pool_ids, preferred, eligible_pools)
+                } else {
+                    // 已知源语言：使用精确池（一对一语言对 Pool）
+                    let pool_name = format!("{}-{}", src_lang, tgt_lang);
+                    let matching_pool = cfg.pools.iter().find(|p| p.name == pool_name);
+                    
+                    if let Some(pool) = matching_pool {
+                        debug!(
+                            pool_id = pool.pool_id,
+                            pool_name = %pool_name,
+                            "找到匹配的精确池: {}",
+                            pool_name
+                        );
+                        let all_pool_ids: Vec<u16> = cfg.pools.iter().map(|p| p.pool_id).collect();
+                        let preferred = pool.pool_id;
+                        let eligible = vec![pool.pool_id];
+                        (all_pool_ids, preferred, eligible)
+                    } else {
+                        // 没有找到匹配的精确池
+                        warn!(
+                            pool_name = %pool_name,
+                            total_pools = cfg.pools.len(),
+                            "未找到匹配的精确池: {}",
+                            pool_name
+                        );
+                        let dbg = Phase3TwoLevelDebug {
+                            pool_count: cfg.pools.len() as u16,
+                            preferred_pool: 0,
+                            selected_pool: None,
+                            fallback_used: false,
+                            attempts: vec![],
+                        };
+                        return (None, dbg, NoAvailableNodeBreakdown::default());
+                    }
+                }
+            } else if using_capability_pools {
                 // pool 资格过滤（core_only / all_required）
                 let required_for_pool: Vec<crate::messages::ServiceType> = match cfg.pool_match_scope.as_str() {
                     "all_required" => required_types.to_vec(),

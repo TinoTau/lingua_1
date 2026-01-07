@@ -137,9 +137,9 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
     };
 
     // Phase 2：启动后台任务（presence + owner 续约 + Streams inbox）
-    if let Some(rt) = phase2_runtime {
+    if let Some(ref rt) = phase2_runtime {
         let rt_for_log = rt.clone();
-        rt.spawn_background_tasks(app_state.clone());
+        rt.clone().spawn_background_tasks(app_state.clone());
         info!(instance_id = %rt_for_log.instance_id, key_prefix = %rt_for_log.key_prefix(), "Phase2 已启用");
     }
 
@@ -154,6 +154,11 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
     // 启动后台缓存刷新：服务目录缓存 + Dashboard stats 快照缓存
     app_state.service_catalog.start_background_refresh();
     app_state.dashboard_snapshot.start_background_refresh(app_state.clone());
+    
+    // 启动 Pool 定期清理任务（自动生成模式）
+    if config.scheduler.phase3.auto_generate_language_pools {
+        app_state.node_registry.start_pool_cleanup_task(phase2_runtime.clone());
+    }
 
     // 启动 MODEL_NOT_AVAILABLE 后台处理（主路径只入队）
     start_worker(

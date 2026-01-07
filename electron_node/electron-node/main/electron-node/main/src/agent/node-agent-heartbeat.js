@@ -44,6 +44,7 @@ exports.HeartbeatHandler = void 0;
 const ws_1 = __importDefault(require("ws"));
 const si = __importStar(require("systeminformation"));
 const logger_1 = __importDefault(require("../logger"));
+const node_agent_language_capability_1 = require("./node-agent-language-capability");
 class HeartbeatHandler {
     constructor(ws, nodeId, inferenceService, nodeConfig, getInstalledServices, getCapabilityByType, shouldCollectRerunMetrics, shouldCollectASRMetrics) {
         this.ws = ws;
@@ -57,6 +58,7 @@ class HeartbeatHandler {
         this.heartbeatInterval = null;
         this.heartbeatDebounceTimer = null;
         this.HEARTBEAT_DEBOUNCE_MS = 2000; // 防抖延迟：2秒内最多触发一次立即心跳
+        this.languageDetector = new node_agent_language_capability_1.LanguageCapabilityDetector();
     }
     /**
      * 启动心跳
@@ -144,7 +146,22 @@ class HeartbeatHandler {
             installed_models: installedModels.length > 0 ? installedModels : undefined,
             installed_services: installedServicesAll,
             capability_by_type: capabilityByType,
+            language_capabilities: await this.languageDetector.detectLanguageCapabilities(installedServicesAll, installedModels, capabilityByType),
         };
+        // 记录语言对列表上报信息（用于调试）
+        if (message.language_capabilities?.supported_language_pairs) {
+            const pairs = message.language_capabilities.supported_language_pairs;
+            logger_1.default.info({
+                nodeId: this.nodeId,
+                pair_count: pairs.length,
+                pairs: pairs.map(p => `${p.src}-${p.tgt}`).join(', ')
+            }, '上报语言对列表到调度服务器');
+        }
+        else {
+            logger_1.default.warn({
+                nodeId: this.nodeId
+            }, '未生成语言对列表，将使用向后兼容模式');
+        }
         // 方案1+方案2：基于配置和服务状态的动态指标收集（支持热插拔）
         const metricsConfig = this.nodeConfig.metrics;
         const metricsEnabled = metricsConfig?.enabled !== false; // 默认启用（向后兼容）

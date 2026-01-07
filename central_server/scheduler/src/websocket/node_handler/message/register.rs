@@ -21,6 +21,7 @@ pub(super) async fn handle_node_register(
     features_supported: FeatureFlags,
     accept_public_jobs: bool,
     capability_by_type: Vec<CapabilityByType>,
+    language_capabilities: Option<crate::messages::common::NodeLanguageCapabilities>,
 ) -> Result<(), anyhow::Error> {
     // Validate capability_schema_version (require "2.0" - ServiceType-based model)
     // Reject "1.0" (old model-based) as it's deprecated
@@ -78,6 +79,7 @@ pub(super) async fn handle_node_register(
             capability_by_type,
             // Phase 2: Allow overwriting existing node_id (avoid "remote snapshot exists" causing registration failure)
             state.phase2.is_some(),
+            language_capabilities,
         )
         .await
     {
@@ -148,6 +150,7 @@ pub(super) async fn handle_node_heartbeat(
     rerun_metrics: Option<crate::messages::common::RerunMetrics>,
     asr_metrics: Option<crate::messages::common::ASRMetrics>,
     processing_metrics: Option<crate::messages::common::ProcessingMetrics>,
+    language_capabilities: Option<crate::messages::common::NodeLanguageCapabilities>,
 ) {
     let installed_services_count = installed_services.as_ref().map(|v| v.len()).unwrap_or(0);
     info!(
@@ -169,6 +172,7 @@ pub(super) async fn handle_node_heartbeat(
             resource_usage.running_jobs,
             Some(capability_by_type),
             processing_metrics.clone(),
+            language_capabilities,
         )
         .await;
 

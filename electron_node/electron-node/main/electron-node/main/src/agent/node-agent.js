@@ -16,7 +16,7 @@ const node_agent_registration_1 = require("./node-agent-registration");
 const node_agent_job_processor_1 = require("./node-agent-job-processor");
 const node_agent_result_sender_1 = require("./node-agent-result-sender");
 class NodeAgent {
-    constructor(inferenceService, modelManager, serviceRegistryManager, rustServiceManager, pythonServiceManager) {
+    constructor(inferenceService, modelManager, serviceRegistryManager, rustServiceManager, pythonServiceManager, semanticRepairServiceManager) {
         this.ws = null;
         this.nodeId = null;
         this.capabilityStateChangedHandler = null; // 保存监听器函数，用于清理
@@ -35,6 +35,7 @@ class NodeAgent {
         this.serviceRegistryManager = serviceRegistryManager;
         this.rustServiceManager = rustServiceManager;
         this.pythonServiceManager = pythonServiceManager;
+        this.semanticRepairServiceManager = semanticRepairServiceManager;
         // 初始化模块化处理器
         this.hardwareHandler = new node_agent_hardware_1.HardwareInfoHandler();
         this.servicesHandler = new node_agent_services_1.ServicesHandler(this.serviceRegistryManager, this.rustServiceManager, this.pythonServiceManager);
@@ -158,6 +159,20 @@ class NodeAgent {
                 this.pythonServiceManager.setOnStatusChangeCallback((serviceName, status) => {
                     // 服务状态变化时，立即触发心跳（带防抖）
                     logger_1.default.debug({ serviceName, running: status.running }, 'Python service status changed, triggering immediate heartbeat');
+                    this.heartbeatHandler.triggerImmediateHeartbeat();
+                });
+            }
+            // 注册语义修复服务状态变化回调
+            if (this.semanticRepairServiceManager && typeof this.semanticRepairServiceManager.setOnStatusChangeCallback === 'function') {
+                this.semanticRepairServiceManager.setOnStatusChangeCallback((serviceId, status) => {
+                    // 语义修复服务状态变化时，立即触发心跳（带防抖）
+                    // 语义修复服务的变化会影响语言能力，需要重新检测并上报
+                    logger_1.default.info({
+                        serviceId,
+                        running: status.running,
+                        starting: status.starting,
+                        port: status.port
+                    }, '语义修复服务状态变化，触发立即心跳以更新语言能力：serviceId={}, running={}', serviceId, status.running);
                     this.heartbeatHandler.triggerImmediateHeartbeat();
                 });
             }

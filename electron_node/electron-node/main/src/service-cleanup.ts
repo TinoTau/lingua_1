@@ -73,14 +73,19 @@ export async function cleanupServices(
     logger.error({ error }, 'Failed to save service status to config file');
   }
 
-  // 停止 Node Agent
+  // 停止 Node Agent（通知调度服务器节点离线）
   if (nodeAgent) {
     try {
-      logger.info({}, 'Stopping Node Agent...');
+      logger.info({}, 'Stopping Node Agent and notifying scheduler server...');
+      // 停止心跳，避免在关闭连接时继续发送心跳
       nodeAgent.stop();
-      logger.info({}, 'Node Agent stopped');
+      // 给 WebSocket 一点时间发送关闭帧（如果可能）
+      // 注意：WebSocket 关闭是异步的，但 close() 调用会立即触发 close 事件
+      await new Promise(resolve => setTimeout(resolve, 100));
+      logger.info({}, 'Node Agent stopped, scheduler server notified');
     } catch (error) {
       logger.error({ error }, 'Failed to stop Node Agent');
+      // 即使失败也继续，确保其他服务能被清理
     }
   }
 

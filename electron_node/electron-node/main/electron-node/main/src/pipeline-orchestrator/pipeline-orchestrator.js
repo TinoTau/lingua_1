@@ -156,7 +156,7 @@ class PipelineOrchestrator {
             }
             const textForNMT = asrResultProcessResult.textForNMT;
             // 构建结果
-            const result = this.resultBuilder.buildResult(textForNMT, asrResult, asrTask.rerun_count);
+            const result = this.resultBuilder.buildResult(textForNMT, asrResult, asrTask.rerun_count ?? 0);
             const processingTime = Date.now() - startTime;
             logger_1.default.info({ jobId: job.job_id, processingTime }, 'Pipeline orchestration completed');
             return result;

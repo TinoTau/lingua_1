@@ -1,7 +1,7 @@
 // 节点 ↔ 调度服务器消息
 
 use serde::{Deserialize, Serialize};
-use super::common::{FeatureFlags, PipelineConfig, InstalledModel, InstalledService, CapabilityByType, ResourceUsage, ExtraResult, HardwareInfo, RerunMetrics, ASRMetrics, ProcessingMetrics};
+use super::common::{FeatureFlags, PipelineConfig, InstalledModel, InstalledService, CapabilityByType, ResourceUsage, ExtraResult, HardwareInfo, RerunMetrics, ASRMetrics, ProcessingMetrics, NodeLanguageCapabilities};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type")]
@@ -28,6 +28,9 @@ pub enum NodeMessage {
         #[serde(skip_serializing_if = "Option::is_none")]
         advanced_features: Option<Vec<String>>,
         accept_public_jobs: bool,
+        /// 语言能力信息（新增，可选，向后兼容）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        language_capabilities: Option<NodeLanguageCapabilities>,
     },
     #[serde(rename = "node_register_ack")]
     NodeRegisterAck {
@@ -63,6 +66,9 @@ pub enum NodeMessage {
         /// OBS-1: 处理效率观测指标（按心跳周期统计，分别记录 ASR、NMT、TTS）
         #[serde(skip_serializing_if = "Option::is_none")]
         processing_metrics: Option<ProcessingMetrics>,
+        /// 语言能力信息（新增，可选，向后兼容）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        language_capabilities: Option<NodeLanguageCapabilities>,
     },
     #[serde(rename = "job_assign")]
     JobAssign {

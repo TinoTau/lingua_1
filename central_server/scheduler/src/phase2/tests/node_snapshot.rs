@@ -15,6 +15,7 @@
             .collect();
 
         RegistryNode {
+            language_capabilities: None,
             node_id: node_id.to_string(),
             name: "Node-Sample".to_string(),
             version: "0.0.1".to_string(),

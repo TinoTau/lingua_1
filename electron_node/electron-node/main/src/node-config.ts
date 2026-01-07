@@ -277,6 +277,40 @@ export function saveNodeConfig(config: NodeConfig): void {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
-  fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf-8');
+  
+  // 确保所有必需字段都存在（合并默认配置，避免丢失字段）
+  const configToSave: NodeConfig = {
+    servicePreferences: {
+      ...DEFAULT_CONFIG.servicePreferences,
+      ...(config.servicePreferences || {}),
+    },
+    scheduler: {
+      ...DEFAULT_CONFIG.scheduler,
+      ...(config.scheduler || {}),
+    },
+    modelHub: {
+      ...DEFAULT_CONFIG.modelHub,
+      ...(config.modelHub || {}),
+    },
+    metrics: {
+      ...DEFAULT_CONFIG.metrics,
+      ...(config.metrics || {}),
+      metrics: {
+        ...DEFAULT_CONFIG.metrics?.metrics,
+        ...(config.metrics?.metrics || {}),
+      },
+    },
+    features: {
+      ...DEFAULT_CONFIG.features,
+      ...(config.features || {}),
+    },
+    gpuArbiter: config.gpuArbiter || DEFAULT_CONFIG.gpuArbiter,
+    sequentialExecutor: {
+      ...(DEFAULT_CONFIG.sequentialExecutor || {}),
+      ...(config.sequentialExecutor || {}),
+    },
+  };
+  
+  fs.writeFileSync(configPath, JSON.stringify(configToSave, null, 2), 'utf-8');
 }
 

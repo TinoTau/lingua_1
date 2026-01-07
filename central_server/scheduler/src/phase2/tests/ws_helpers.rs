@@ -149,6 +149,7 @@
         ];
 
         crate::messages::NodeMessage::NodeRegister {
+            language_capabilities: None,
             node_id: Some(node_id.to_string()),
             version: "test".to_string(),
             capability_schema_version: Some("2.0".to_string()),
@@ -194,6 +195,7 @@
         ];
 
         crate::messages::NodeMessage::NodeHeartbeat {
+            language_capabilities: None,
             node_id: node_id.to_string(),
             timestamp: chrono::Utc::now().timestamp_millis(),
             resource_usage: ResourceUsage {

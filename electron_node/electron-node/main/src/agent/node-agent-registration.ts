@@ -13,8 +13,11 @@ import {
 import { InferenceService } from '../inference/inference-service';
 import logger from '../logger';
 import { HardwareInfoHandler } from './node-agent-hardware';
+import { LanguageCapabilityDetector } from './node-agent-language-capability';
 
 export class RegistrationHandler {
+  private languageDetector: LanguageCapabilityDetector;
+
   constructor(
     private ws: WebSocket | null,
     private nodeId: string | null,
@@ -22,7 +25,9 @@ export class RegistrationHandler {
     private hardwareHandler: HardwareInfoHandler,
     private getInstalledServices: () => Promise<InstalledService[]>,
     private getCapabilityByType: (services: InstalledService[]) => Promise<CapabilityByType[]>
-  ) {}
+  ) {
+    this.languageDetector = new LanguageCapabilityDetector();
+  }
 
   /**
    * 注册节点
@@ -60,6 +65,19 @@ export class RegistrationHandler {
       const capabilityByType = await this.getCapabilityByType(installedServicesAll);
       logger.debug({ capabilityCount: capabilityByType.length }, 'Capability by type retrieved');
 
+      // 获取语言能力
+      logger.debug({}, 'Detecting language capabilities...');
+      const languageCapabilities = await this.languageDetector.detectLanguageCapabilities(
+        installedServicesAll,
+        installedModels,
+        capabilityByType
+      );
+      logger.debug({ 
+        asr_languages: languageCapabilities.asr_languages?.length || 0,
+        tts_languages: languageCapabilities.tts_languages?.length || 0,
+        nmt_capabilities: languageCapabilities.nmt_capabilities?.length || 0
+      }, 'Language capabilities detected');
+
       // 获取支持的功能
       logger.debug({}, 'Getting features supported...');
       const featuresSupported = this.inferenceService.getFeaturesSupported();
@@ -80,6 +98,7 @@ export class RegistrationHandler {
         capability_by_type: capabilityByType,
         features_supported: featuresSupported,
         accept_public_jobs: true, // TODO: 从配置读取
+        language_capabilities: languageCapabilities,
       };
 
       const messageStr = JSON.stringify(message);

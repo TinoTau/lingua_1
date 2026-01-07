@@ -211,6 +211,10 @@ fn format_dispatch_exclude_reason(r: &DispatchExcludeReason) -> String {
         DispatchExcludeReason::ModelNotAvailable => "ModelNotAvailable",
         DispatchExcludeReason::CapacityExceeded => "CapacityExceeded",
         DispatchExcludeReason::ResourceThresholdExceeded => "ResourceThresholdExceeded",
+        DispatchExcludeReason::LangPairUnsupported => "LangPairUnsupported",
+        DispatchExcludeReason::AsrLangUnsupported => "AsrLangUnsupported",
+        DispatchExcludeReason::TtsLangUnsupported => "TtsLangUnsupported",
+        DispatchExcludeReason::SrcAutoNoCandidate => "SrcAutoNoCandidate",
     }
     .to_string()
 }

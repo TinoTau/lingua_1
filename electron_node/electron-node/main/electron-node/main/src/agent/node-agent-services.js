@@ -221,7 +221,7 @@ class ServicesHandler {
      * 聚合 type 级可用性：同一类型只要有 GPU+running 的实现即 ready
      */
     async getCapabilityByType(installedServices) {
-        const types = [messages_1.ServiceType.ASR, messages_1.ServiceType.NMT, messages_1.ServiceType.TTS, messages_1.ServiceType.TONE];
+        const types = [messages_1.ServiceType.ASR, messages_1.ServiceType.NMT, messages_1.ServiceType.TTS, messages_1.ServiceType.TONE, messages_1.ServiceType.SEMANTIC];
         const capability = [];
         for (const t of types) {
             const runningGpu = installedServices.filter(s => s.type === t && s.device === 'gpu' && s.status === 'running');

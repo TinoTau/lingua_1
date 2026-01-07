@@ -124,10 +124,17 @@ impl NodeRegistry {
 
         let mut st = Phase3CoreCacheState::default();
         for (nid, n) in nodes.iter() {
-            let Some(pool_id) = node_pool.get(nid).copied() else { continue };
-            let s = compute_node_state(n, pool_id, &core);
-            st.inc_pool(&s);
-            st.nodes.insert(nid.clone(), s);
+            let pool_ids = node_pool.get(nid).cloned().unwrap_or_default();
+            if pool_ids.is_empty() {
+                continue;
+            }
+            // 为节点的每个 Pool 创建缓存条目
+            for pool_id in &pool_ids {
+                let cache_key = format!("{}:{}", nid, pool_id);
+                let s = compute_node_state(n, *pool_id, &core);
+                st.inc_pool(&s);
+                st.nodes.insert(cache_key, s);
+            }
         }
         drop(nodes);
 
@@ -143,29 +150,60 @@ impl NodeRegistry {
             return;
         }
         let core = self.core_services.read().await.clone();
-        let Some(pool_id) = self.phase3_node_pool_id(&node.node_id).await else {
+        let pool_ids = self.phase3_node_pool_ids(&node.node_id).await;
+        if pool_ids.is_empty() {
             // 节点不属于任何 pool：确保从缓存中移除
             self.phase3_core_cache_remove_node(&node.node_id).await;
             return;
-        };
-        let new_state = compute_node_state(&node, pool_id, &core);
-
+        }
+        
+        // 为节点的每个 Pool 创建缓存状态
+        // 注意：由于 NodeCoreState 只存储一个 pool_id，我们需要为每个 Pool 创建单独的条目
+        // 使用 node_id + pool_id 作为 key
         let t0 = Instant::now();
         let mut w = self.phase3_core_cache.write().await;
         crate::metrics::observability::record_lock_wait("node_registry.phase3_core_cache.write", t0.elapsed().as_millis() as u64);
-        if let Some(old) = w.nodes.remove(&node.node_id) {
-            w.dec_pool(&old);
+        
+        // 先移除旧的缓存条目（所有以 node_id 开头的 key，包括 node_id 本身和 node_id:pool_id 格式）
+        let node_id_str = &node.node_id;
+        let old_keys: Vec<String> = w.nodes.keys()
+            .filter(|k| {
+                k.as_str() == node_id_str || k.starts_with(&format!("{}:", node_id_str))
+            })
+            .cloned()
+            .collect();
+        for old_key in &old_keys {
+            if let Some(old) = w.nodes.remove(old_key) {
+                w.dec_pool(&old);
+            }
         }
-        w.inc_pool(&new_state);
-        w.nodes.insert(node.node_id.clone(), new_state);
+        
+        // 为每个 Pool 创建新的缓存条目
+        for pool_id in &pool_ids {
+            let cache_key = format!("{}:{}", node.node_id, pool_id);
+            let new_state = compute_node_state(&node, *pool_id, &core);
+            w.inc_pool(&new_state);
+            w.nodes.insert(cache_key, new_state);
+        }
     }
 
     pub(super) async fn phase3_core_cache_remove_node(&self, node_id: &str) {
+        // 移除节点的所有缓存条目（支持一个节点属于多个 Pool）
         let t0 = Instant::now();
         let mut w = self.phase3_core_cache.write().await;
         crate::metrics::observability::record_lock_wait("node_registry.phase3_core_cache.write", t0.elapsed().as_millis() as u64);
-        if let Some(old) = w.nodes.remove(node_id) {
-            w.dec_pool(&old);
+        
+        // 移除所有以 node_id 开头的 key（包括 node_id 本身和 node_id:pool_id 格式）
+        let old_keys: Vec<String> = w.nodes.keys()
+            .filter(|k| {
+                k.as_str() == node_id || k.starts_with(&format!("{}:", node_id))
+            })
+            .cloned()
+            .collect();
+        for old_key in &old_keys {
+            if let Some(old) = w.nodes.remove(old_key) {
+                w.dec_pool(&old);
+            }
         }
     }
 

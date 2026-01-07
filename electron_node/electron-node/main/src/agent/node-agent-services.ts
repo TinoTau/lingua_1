@@ -244,7 +244,7 @@ export class ServicesHandler {
    * 聚合 type 级可用性：同一类型只要有 GPU+running 的实现即 ready
    */
   async getCapabilityByType(installedServices: InstalledService[]): Promise<CapabilityByType[]> {
-    const types = [ServiceType.ASR, ServiceType.NMT, ServiceType.TTS, ServiceType.TONE];
+    const types = [ServiceType.ASR, ServiceType.NMT, ServiceType.TTS, ServiceType.TONE, ServiceType.SEMANTIC];
     const capability: CapabilityByType[] = [];
 
     for (const t of types) {

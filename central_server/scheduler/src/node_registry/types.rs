@@ -34,6 +34,9 @@ pub struct Node {
     /// OBS-1: 最近心跳周期的处理效率指标（按服务ID分组）
     #[serde(skip_serializing_if = "Option::is_none")]
     pub processing_metrics: Option<crate::messages::common::ProcessingMetrics>,
+    /// 语言能力信息（新增，可选，向后兼容）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub language_capabilities: Option<crate::messages::common::NodeLanguageCapabilities>,
 }
 
 /// 调度过滤排除原因
@@ -45,5 +48,10 @@ pub enum DispatchExcludeReason {
     ModelNotAvailable,
     CapacityExceeded,
     ResourceThresholdExceeded,
+    /// 新增：语言相关失败原因
+    LangPairUnsupported,
+    AsrLangUnsupported,
+    TtsLangUnsupported,
+    SrcAutoNoCandidate,
 }
 

@@ -10,6 +10,11 @@ pub struct NoAvailableNodeBreakdown {
     pub model_not_available: usize,
     pub capacity_exceeded: usize,
     pub resource_threshold_exceeded: usize,
+    /// 新增：语言相关失败原因
+    pub lang_pair_unsupported: usize,
+    pub asr_lang_unsupported: usize,
+    pub tts_lang_unsupported: usize,
+    pub src_auto_no_candidate: usize,
 }
 
 impl NoAvailableNodeBreakdown {
@@ -26,6 +31,10 @@ impl NoAvailableNodeBreakdown {
             ("model_not_available", self.model_not_available),
             ("capacity_exceeded", self.capacity_exceeded),
             ("resource_threshold_exceeded", self.resource_threshold_exceeded),
+            ("lang_pair_unsupported", self.lang_pair_unsupported),
+            ("asr_lang_unsupported", self.asr_lang_unsupported),
+            ("tts_lang_unsupported", self.tts_lang_unsupported),
+            ("src_auto_no_candidate", self.src_auto_no_candidate),
         ];
         for (label, v) in candidates {
             if v > best.1 {

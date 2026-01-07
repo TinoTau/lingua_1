@@ -37,6 +37,7 @@ pub(super) async fn handle_node_message(
             advanced_features: _,
             accept_public_jobs,
             capability_by_type,
+            language_capabilities,
         } => {
             register::handle_node_register(
                 state,
@@ -52,6 +53,7 @@ pub(super) async fn handle_node_message(
                 features_supported,
                 accept_public_jobs,
                 capability_by_type,
+                language_capabilities,
             )
             .await
         }
@@ -66,6 +68,7 @@ pub(super) async fn handle_node_message(
             rerun_metrics,
             asr_metrics,
             processing_metrics,
+            language_capabilities,
         } => {
             register::handle_node_heartbeat(
                 state,
@@ -77,6 +80,7 @@ pub(super) async fn handle_node_message(
                 rerun_metrics,
                 asr_metrics,
                 processing_metrics,
+                language_capabilities,
             )
             .await;
             Ok(())

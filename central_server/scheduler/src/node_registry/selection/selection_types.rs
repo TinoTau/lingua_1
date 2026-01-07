@@ -87,6 +87,51 @@ impl NodeRegistry {
                 continue;
             }
 
+            // 语言能力过滤（新增）
+            let language_index = self.language_capability_index.read().await;
+            
+            // NMT 语言对过滤
+            if required_types.contains(&crate::messages::ServiceType::Nmt) {
+                let nmt_capable_nodes = language_index.find_nodes_for_nmt_pair(src_lang, tgt_lang);
+                if !nmt_capable_nodes.contains(&node.node_id) {
+                    breakdown.lang_pair_unsupported += 1;
+                    self.record_exclude_reason(DispatchExcludeReason::LangPairUnsupported, node.node_id.clone()).await;
+                    continue;
+                }
+            }
+
+            // TTS 语言过滤
+            if required_types.contains(&crate::messages::ServiceType::Tts) {
+                let tts_capable_nodes = language_index.find_nodes_for_tts_lang(tgt_lang);
+                if !tts_capable_nodes.contains(&node.node_id) {
+                    breakdown.tts_lang_unsupported += 1;
+                    self.record_exclude_reason(DispatchExcludeReason::TtsLangUnsupported, node.node_id.clone()).await;
+                    continue;
+                }
+            }
+
+            // ASR 语言过滤（如果 src_lang != "auto"）
+            // P1-3: src_lang = auto 时，必须确保节点有 READY ASR
+            if required_types.contains(&crate::messages::ServiceType::Asr) {
+                if src_lang != "auto" {
+                    let asr_capable_nodes = language_index.find_nodes_for_asr_lang(src_lang);
+                    if !asr_capable_nodes.contains(&node.node_id) {
+                        breakdown.asr_lang_unsupported += 1;
+                        self.record_exclude_reason(DispatchExcludeReason::AsrLangUnsupported, node.node_id.clone()).await;
+                        continue;
+                    }
+                } else {
+                    // P1-3: auto 场景 - 节点必须有 READY ASR
+                    let nodes_with_asr = language_index.find_nodes_with_ready_asr();
+                    if !nodes_with_asr.contains(&node.node_id) {
+                        breakdown.src_auto_no_candidate += 1;
+                        self.record_exclude_reason(DispatchExcludeReason::SrcAutoNoCandidate, node.node_id.clone()).await;
+                        continue;
+                    }
+                }
+            }
+            drop(language_index);
+
             let reserved = reserved_counts.get(&node.node_id).copied().unwrap_or(0);
             let effective_jobs = std::cmp::max(node.current_jobs, reserved);
             if effective_jobs >= node.max_concurrent_jobs {
@@ -133,17 +178,46 @@ impl NodeRegistry {
                 model_not_available = breakdown.model_not_available,
                 capacity_exceeded = breakdown.capacity_exceeded,
                 resource_threshold_exceeded = breakdown.resource_threshold_exceeded,
+                lang_pair_unsupported = breakdown.lang_pair_unsupported,
+                asr_lang_unsupported = breakdown.asr_lang_unsupported,
+                tts_lang_unsupported = breakdown.tts_lang_unsupported,
+                src_auto_no_candidate = breakdown.src_auto_no_candidate,
                 best_reason = %breakdown.best_reason_label(),
                 required_types = ?required_types,
-                "节点选择失败（类型选择）：没有找到可用节点，请检查节点是否具备所需能力类型"
+                src_lang = %src_lang,
+                tgt_lang = %tgt_lang,
+                "节点选择失败（类型选择）：没有找到可用节点，请检查节点是否具备所需能力类型和语言支持"
             );
             return (None, breakdown);
         }
 
-        available_nodes.sort_by_key(|node| {
-            let reserved = reserved_counts.get(&node.node_id).copied().unwrap_or(0);
-            std::cmp::max(node.current_jobs, reserved)
+        // P1-3: src_lang = auto 时，按 ASR 语言覆盖度排序
+        let language_index = self.language_capability_index.read().await;
+        available_nodes.sort_by(|a, b| {
+            // 首先按负载排序
+            let reserved_a = reserved_counts.get(&a.node_id).copied().unwrap_or(0);
+            let reserved_b = reserved_counts.get(&b.node_id).copied().unwrap_or(0);
+            let load_a = std::cmp::max(a.current_jobs, reserved_a);
+            let load_b = std::cmp::max(b.current_jobs, reserved_b);
+            
+            let load_cmp = load_a.cmp(&load_b);
+            if load_cmp != std::cmp::Ordering::Equal {
+                return load_cmp;
+            }
+            
+            // 如果 src_lang = auto，按 ASR 语言覆盖度排序
+            if src_lang == "auto" {
+                let coverage_a = language_index.get_asr_language_coverage(&a.node_id);
+                let coverage_b = language_index.get_asr_language_coverage(&b.node_id);
+                return coverage_b.cmp(&coverage_a);  // 覆盖度高的优先
+            }
+            
+            // 其他情况按 GPU 使用率排序
+            let gpu_a = a.gpu_usage.unwrap_or(0.0);
+            let gpu_b = b.gpu_usage.unwrap_or(0.0);
+            gpu_a.partial_cmp(&gpu_b).unwrap_or(std::cmp::Ordering::Equal)
         });
+        drop(language_index);
         let selected_node_id = available_nodes[0].node_id.clone();
 
         debug!(

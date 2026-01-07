@@ -31,6 +31,8 @@ export class SemanticRepairServiceManager {
   // 启动队列：确保需要加载模型的服务串行启动，避免GPU内存过载
   private startQueue: Array<{ serviceId: SemanticRepairServiceId; resolve: () => void; reject: (error: Error) => void }> = [];
   private isProcessingQueue = false;
+  // 状态变化回调（用于通知节点代理服务状态变化）
+  private onStatusChangeCallback: ((serviceId: SemanticRepairServiceId, status: SemanticRepairServiceStatus) => void) | null = null;
 
   constructor(
     private serviceRegistryManager: ServiceRegistryManager | null,
@@ -320,6 +322,16 @@ export class SemanticRepairServiceManager {
   }
 
   /**
+   * 设置状态变化回调
+   * 当服务状态变化时（启动/停止/错误），会调用此回调
+   */
+  setOnStatusChangeCallback(
+    callback: (serviceId: SemanticRepairServiceId, status: SemanticRepairServiceStatus) => void
+  ): void {
+    this.onStatusChangeCallback = callback;
+  }
+
+  /**
    * 更新服务状态
    */
   private updateStatus(
@@ -328,7 +340,14 @@ export class SemanticRepairServiceManager {
   ): void {
     const current = this.statuses.get(serviceId);
     if (current) {
-      this.statuses.set(serviceId, { ...current, ...updates });
+      const oldRunning = current.running;
+      const newStatus = { ...current, ...updates };
+      this.statuses.set(serviceId, newStatus);
+      
+      // 如果运行状态发生变化，触发回调
+      if (oldRunning !== newStatus.running && this.onStatusChangeCallback) {
+        this.onStatusChangeCallback(serviceId, newStatus);
+      }
     }
   }
 
