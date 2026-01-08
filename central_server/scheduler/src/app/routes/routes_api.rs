@@ -237,51 +237,85 @@ pub async fn get_cluster_stats(
         });
     }
 
-    // 获取节点列表和服务状态（从本地 NodeRegistry）
+    // 获取节点列表和服务状态（从本地 NodeRegistry 和 Redis）
     let (total_nodes, online_nodes, ready_nodes, nodes_list) = {
         let nodes = state.node_registry.nodes.read().await;
         let total = nodes.len();
         let online = nodes.values().filter(|n| n.online).count();
-        let ready = nodes.values().filter(|n| {
-            // 检查节点是否所有核心服务都就绪
-            n.online && n.capability_by_type.iter().all(|c| c.ready)
-        }).count();
         
-        let nodes_list: Vec<NodeInfo> = nodes.values().map(|node| {
-            // 构建服务状态列表
-            let services: Vec<ServiceStatusInfo> = node.installed_services.iter().map(|s| {
-                ServiceStatusInfo {
-                    service_id: s.service_id.clone(),
-                    service_type: format!("{:?}", s.r#type),
-                    status: format!("{:?}", s.status),
+        // 从 Redis 读取节点能力信息来统计 ready 节点
+        let ready = if let Some(rt) = state.phase2.as_ref() {
+            let mut ready_count = 0;
+            for node in nodes.values() {
+                if !node.online {
+                    continue;
                 }
-            }).collect();
-            
-            // 构建能力状态列表
-            let capabilities: Vec<CapabilityStatusInfo> = node.capability_by_type.iter().map(|c| {
-                CapabilityStatusInfo {
-                    service_type: format!("{:?}", c.r#type),
-                    ready: c.ready,
-                    reason: c.reason.clone(),
-                    ready_impl_ids: c.ready_impl_ids.clone(),
+                // 检查所有核心服务是否就绪（从 Redis 读取）
+                let has_asr = rt.has_node_capability(&node.node_id, &crate::messages::ServiceType::Asr).await;
+                let has_nmt = rt.has_node_capability(&node.node_id, &crate::messages::ServiceType::Nmt).await;
+                let has_tts = rt.has_node_capability(&node.node_id, &crate::messages::ServiceType::Tts).await;
+                if has_asr && has_nmt && has_tts {
+                    ready_count += 1;
                 }
-            }).collect();
-            
-            NodeInfo {
-                node_id: node.node_id.clone(),
-                platform: node.platform.clone(),
-                online: node.online,
-                status: format!("{:?}", node.status),
-                cpu_usage: node.cpu_usage,
-                gpu_usage: node.gpu_usage,
-                memory_usage: node.memory_usage,
-                current_jobs: node.current_jobs,
-                max_concurrent_jobs: node.max_concurrent_jobs,
-                last_heartbeat: node.last_heartbeat.timestamp_millis(),
-                services,
-                capabilities,
             }
-        }).collect();
+            ready_count
+        } else {
+            // 如果没有 Phase2Runtime，无法从 Redis 读取，返回 0
+            0
+        };
+        
+        let nodes_list: Vec<NodeInfo> = {
+            let mut result = Vec::new();
+            for node in nodes.values() {
+                // 构建服务状态列表
+                let services: Vec<ServiceStatusInfo> = node.installed_services.iter().map(|s| {
+                    ServiceStatusInfo {
+                        service_id: s.service_id.clone(),
+                        service_type: format!("{:?}", s.r#type),
+                        status: format!("{:?}", s.status),
+                    }
+                }).collect();
+                
+                // 构建能力状态列表（从 Redis 读取）
+                let capabilities: Vec<CapabilityStatusInfo> = if let Some(rt) = state.phase2.as_ref() {
+                    let mut caps = Vec::new();
+                    for service_type in &[
+                        crate::messages::ServiceType::Asr,
+                        crate::messages::ServiceType::Nmt,
+                        crate::messages::ServiceType::Tts,
+                        crate::messages::ServiceType::Tone,
+                        crate::messages::ServiceType::Semantic,
+                    ] {
+                        let ready = rt.has_node_capability(&node.node_id, service_type).await;
+                        caps.push(CapabilityStatusInfo {
+                            service_type: format!("{:?}", service_type),
+                            ready,
+                            reason: None, // Redis 中不存储 reason
+                            ready_impl_ids: None, // Redis 中不存储 ready_impl_ids
+                        });
+                    }
+                    caps
+                } else {
+                    Vec::new()
+                };
+            
+                result.push(NodeInfo {
+                    node_id: node.node_id.clone(),
+                    platform: node.platform.clone(),
+                    online: node.online,
+                    status: format!("{:?}", node.status),
+                    cpu_usage: node.cpu_usage,
+                    gpu_usage: node.gpu_usage,
+                    memory_usage: node.memory_usage,
+                    current_jobs: node.current_jobs,
+                    max_concurrent_jobs: node.max_concurrent_jobs,
+                    last_heartbeat: node.last_heartbeat.timestamp_millis(),
+                    services,
+                    capabilities,
+                });
+            }
+            result
+        };
         
         (total, online, ready, nodes_list)
     };
@@ -353,8 +387,9 @@ pub async fn get_phase3_pools(
     axum::extract::State(state): axum::extract::State<AppState>,
 ) -> axum::Json<Phase3PoolsResponse> {
     let cfg = state.node_registry.phase3_config().await;
+    let phase2_runtime = state.phase2.as_ref().map(|rt| rt.as_ref());
     let sizes: std::collections::HashMap<u16, usize> =
-        state.node_registry.phase3_pool_sizes().await.into_iter().collect();
+        state.node_registry.phase3_pool_sizes(phase2_runtime).await.into_iter().collect();
     let core_cache = state.node_registry.phase3_pool_core_cache_snapshot().await;
 
     // pool 列表来源：
@@ -394,7 +429,7 @@ pub async fn get_phase3_pools(
             core_services_ready.insert(state.core_services.tts_service_id.clone(), pc.tts_ready);
         }
 
-        let sample_node_ids = state.node_registry.phase3_pool_sample_node_ids(pid, 5).await;
+        let sample_node_ids = state.node_registry.phase3_pool_sample_node_ids(pid, 5, phase2_runtime).await;
         pools.push(Phase3PoolEntry {
             pool_id: pid,
             pool_name: name,
@@ -470,6 +505,7 @@ pub async fn get_phase3_simulate(
             accept_public,
             exclude,
             Some(&state.core_services),
+            state.phase2.as_ref().map(|rt| rt.as_ref()),
         )
         .await;
 

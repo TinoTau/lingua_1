@@ -265,17 +265,27 @@ impl JobDispatcher {
             }
         };
 
-        // Phase 2：全局并发占用（Redis reserve）
+        // Phase 2：全局并发占用（Redis reserve，按照设计文档实现）
         if let Some(ref node_id) = assigned_node_id {
             let ttl_s = self.reserved_ttl_seconds.max(1);
-            let node = self.node_registry.get_node_snapshot(node_id).await;
-            let (running_jobs, max_jobs) = node
-                .as_ref()
-                .map(|n| (n.current_jobs, n.max_concurrent_jobs))
-                .unwrap_or((0, 1));
+            let attempt_id = 1; // 首次创建，attempt_id=1
             let ok = rt
-                .reserve_node_slot(node_id, &job_id, ttl_s, running_jobs, max_jobs)
+                .reserve_node_slot(node_id, &job_id, attempt_id, ttl_s)
                 .await;
+            let ok = match ok {
+                Ok(true) => true,
+                Ok(false) => false,
+                Err(crate::messages::ErrorCode::SchedulerDependencyDown) => {
+                    // Redis 不可用：fail closed，拒绝新任务
+                    tracing::error!(
+                        job_id = %job_id,
+                        node_id = %node_id,
+                        "Redis 不可用，无法预留节点槽位，拒绝任务"
+                    );
+                    return None; // 返回 None 表示创建失败
+                }
+                Err(_) => false, // 其他错误，按失败处理
+            };
             if !ok {
                 assigned_node_id = None;
                 no_available_node_metric = Some(("reserve", "reserve_denied"));

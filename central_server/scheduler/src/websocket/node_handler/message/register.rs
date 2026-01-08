@@ -5,7 +5,7 @@ use crate::websocket::send_node_message;
 use axum::extract::ws::Message;
 use std::sync::atomic::Ordering;
 use tokio::sync::mpsc;
-use tracing::{info, warn};
+use tracing::{debug, info, warn};
 
 pub(super) async fn handle_node_register(
     state: &AppState,
@@ -76,10 +76,12 @@ pub(super) async fn handle_node_register(
             installed_services,
             features_supported,
             accept_public_jobs,
-            capability_by_type,
+            capability_by_type.clone(),
             // Phase 2: Allow overwriting existing node_id (avoid "remote snapshot exists" causing registration failure)
             state.phase2.is_some(),
             language_capabilities,
+            // Phase 2: 传递 phase2_runtime，用于同步动态创建的 Pool 到 Redis
+            state.phase2.as_ref().map(|rt| rt.as_ref()),
         )
         .await
     {
@@ -95,8 +97,27 @@ pub(super) async fn handle_node_register(
             // Phase 2: Write node owner (with TTL; for cross-instance delivery)
             if let Some(rt) = state.phase2.as_ref() {
                 rt.set_node_owner(&node.node_id).await;
+                // Phase 2: 同步节点能力到 Redis（不占用内存）
+                // 注意：capability_by_type 已从 Node 结构体中移除，直接从参数传递
+                rt.sync_node_capabilities_to_redis(&node.node_id, &capability_by_type).await;
                 // Phase 2: Write node snapshot + presence (cross-instance visible)
                 rt.upsert_node_snapshot(&node).await;
+                
+                // Phase 3: 同步 Pool 成员索引到 Redis
+                let cfg = state.node_registry.phase3_config().await;
+                if cfg.enabled && cfg.mode == "two_level" {
+                    let pool_ids = state.node_registry.phase3_node_pool_ids(&node.node_id).await;
+                    if !pool_ids.is_empty() {
+                        // 获取 pool_index 的克隆
+                        let pool_index = state.node_registry.phase3_pool_index_clone(Some(rt.as_ref())).await;
+                        let _ = rt.sync_node_pools_to_redis(
+                            &node.node_id,
+                            &pool_ids,
+                            &cfg.pools,
+                            &pool_index,
+                        ).await;
+                    }
+                }
             }
 
             // Send acknowledgment message (status initially registering)
@@ -159,6 +180,9 @@ pub(super) async fn handle_node_heartbeat(
         installed_services_count,
         capability_by_type.len()
     );
+    // 优化：在更新心跳之前检查语言能力是否变化（用于决定是否需要重新分配 Pool）
+    let language_capabilities_changed = language_capabilities.is_some();
+
     // Update node heartbeat
     state
         .node_registry
@@ -170,11 +194,49 @@ pub(super) async fn handle_node_heartbeat(
             installed_models,
             installed_services,
             resource_usage.running_jobs,
-            Some(capability_by_type),
+            Some(capability_by_type.clone()),
             processing_metrics.clone(),
             language_capabilities,
         )
         .await;
+
+    // Phase 3: 如果启用了 Phase3，在心跳后更新 Pool 分配（传递 phase2_runtime 以从 Redis 读取配置）
+    // 优化：只在语言能力变化或节点状态变化时重新分配 Pool
+    {
+        let cfg = state.node_registry.phase3_config().await;
+        if cfg.enabled && cfg.mode == "two_level" {
+            if let Some(rt) = state.phase2.as_ref() {
+                // 优化：检查是否需要重新分配 Pool
+                // 如果语言能力没有变化（language_capabilities 为 None），且节点已经在 Pool 中，则跳过
+                let should_reallocate = if language_capabilities_changed {
+                    // 语言能力有变化，需要重新分配
+                    true
+                } else {
+                    // 语言能力没有变化，检查节点是否在 Pool 中
+                    let current_pools = state.node_registry.phase3_node_pool_ids(node_id).await;
+                    let node_in_pool = !current_pools.is_empty();
+                    // 如果节点不在 Pool 中，需要分配
+                    !node_in_pool
+                };
+                
+                if should_reallocate {
+                    // 使用带 runtime 的版本，以便从 Redis 读取 Pool 配置
+                    state.node_registry.phase3_upsert_node_to_pool_index_with_runtime(node_id, Some(rt.as_ref())).await;
+                } else {
+                    debug!(
+                        node_id = %node_id,
+                        "节点语言能力未变化且已在 Pool 中，跳过 Pool 重新分配（优化：减少不必要的 Redis 查询）"
+                    );
+                }
+            } else {
+                // 产品可用性要求：必须提供 phase2_runtime，不允许降级
+                warn!(
+                    node_id = %node_id,
+                    "Phase3 已启用但未提供 phase2_runtime，跳过 Pool 分配（产品可用性要求）"
+                );
+            }
+        }
+    }
 
     // Trigger status check (immediate trigger)
     state.node_status_manager.on_heartbeat(node_id).await;
@@ -236,7 +298,40 @@ pub(super) async fn handle_node_heartbeat(
     if let Some(rt) = state.phase2.as_ref() {
         if rt.node_snapshot_enabled() {
             if let Some(node) = state.node_registry.get_node_snapshot(node_id).await {
+                // Phase 2: 同步节点能力到 Redis（不占用内存）
+                // 注意：capability_by_type 已从 Node 结构体中移除，直接从参数传递
+                if !capability_by_type.is_empty() {
+                    rt.sync_node_capabilities_to_redis(node_id, &capability_by_type).await;
+                }
                 rt.upsert_node_snapshot(&node).await;
+                // 同步节点容量到Redis（按照设计文档）
+                let health = if node.status == crate::messages::NodeStatus::Ready && node.online {
+                    "ready"
+                } else {
+                    "degraded"
+                };
+                let _ = rt.sync_node_capacity_to_redis(
+                    node_id,
+                    node.max_concurrent_jobs,
+                    node.current_jobs,
+                    health,
+                ).await;
+                
+                // Phase 3: 同步 Pool 成员索引到 Redis
+                let cfg = state.node_registry.phase3_config().await;
+                if cfg.enabled && cfg.mode == "two_level" {
+                    let pool_ids = state.node_registry.phase3_node_pool_ids(node_id).await;
+                    if !pool_ids.is_empty() {
+                        // 获取 pool_index 的克隆
+                        let pool_index = state.node_registry.phase3_pool_index_clone(Some(rt.as_ref())).await;
+                        let _ = rt.sync_node_pools_to_redis(
+                            node_id,
+                            &pool_ids,
+                            &cfg.pools,
+                            &pool_index,
+                        ).await;
+                    }
+                }
             } else {
                 rt.touch_node_presence(node_id).await;
             }

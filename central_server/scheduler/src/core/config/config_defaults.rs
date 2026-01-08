@@ -26,6 +26,14 @@ pub fn default_phase3_pool_match_mode() -> String {
     "contains".to_string()
 }
 
+pub fn default_phase3_random_sample_size() -> usize {
+    20
+}
+
+pub fn default_phase3_enable_session_affinity() -> bool {
+    false
+}
+
 impl Default for Phase3Config {
     fn default() -> Self {
         Self {
@@ -41,6 +49,8 @@ impl Default for Phase3Config {
             strict_pool_eligibility: false,
             auto_generate_language_pools: false,
             auto_pool_config: None,
+            random_sample_size: default_phase3_random_sample_size(),
+            enable_session_affinity: default_phase3_enable_session_affinity(),
         }
     }
 }

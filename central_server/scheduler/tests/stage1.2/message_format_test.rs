@@ -164,6 +164,7 @@ fn test_node_register_message_format() {
         advanced_features: None,
         accept_public_jobs: true,
         capability_by_type: vec![],
+        language_capabilities: None,
     };
 
     // 验证所有必需字段都存在
@@ -180,6 +181,7 @@ fn test_node_register_message_format() {
             advanced_features: _,
             accept_public_jobs,
             capability_by_type: _,
+            language_capabilities: _,
         } => {
             assert!(node_id.is_none());
             assert_eq!(version, "1.0.0");
@@ -215,6 +217,7 @@ fn test_node_heartbeat_message_format() {
         rerun_metrics: None,
         asr_metrics: None,
         processing_metrics: None,
+        language_capabilities: None,
     };
 
     // 验证所有必需字段都存在
@@ -229,6 +232,7 @@ fn test_node_heartbeat_message_format() {
             rerun_metrics: _,
             asr_metrics: _,
             processing_metrics: _,
+            language_capabilities: _,
         } => {
             assert_eq!(node_id, "node-123");
             assert_eq!(timestamp, 1234567890);

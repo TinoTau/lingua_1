@@ -70,9 +70,11 @@ pub(super) async fn handle_job_ack(
         .update_job_status(&job_id, crate::core::dispatcher::JobStatus::Processing)
         .await;
 
-    // Phase 2: FSM -> ACCEPTED (idempotent)
+    // Phase 2: FSM -> ACCEPTED (idempotent) 并 COMMIT reservation (reserved -> running)
     if let Some(rt) = state.phase2.as_ref() {
         let _ = rt.job_fsm_to_accepted(&job_id, attempt_id).await;
+        // COMMIT: reserved -> running
+        let _ = rt.commit_node_reservation(&node_id, &job_id, attempt_id).await;
     }
 
     // Send NODE_ACCEPTED event (unified UI event)

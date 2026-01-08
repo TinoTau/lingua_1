@@ -95,6 +95,7 @@ impl JobDispatcher {
                     accept_public,
                     exclude_node_id,
                     Some(&self.core_services),
+                    self.phase2.as_ref().map(|rt| rt.as_ref()),
                 )
                 .await;
             // Prometheus：记录 pool 命中/回退

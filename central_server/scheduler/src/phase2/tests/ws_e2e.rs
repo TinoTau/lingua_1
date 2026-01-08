@@ -1,4 +1,5 @@
-﻿    async fn phase2_ws_e2e_real_websocket_minimal() {
+﻿    #[tokio::test]
+    async fn phase2_ws_e2e_real_websocket_minimal() {
         // 目标：启动两个 scheduler（A/B），node 连 A，session 连 B，
         // 验证：B 创建 job -> routed 到 A 下发 -> node 回传结果 -> routed 回 B -> session 收到 TranslationResult。
         //
@@ -63,6 +64,26 @@
                 .send(serde_json::to_string(&sample_node_heartbeat(node_id)).unwrap())
                 .unwrap();
             tokio::time::sleep(std::time::Duration::from_millis(50)).await;
+        }
+
+        // 等待节点注册完成，然后触发 Pool 重建（如果启用 Phase3 自动生成）
+        {
+            let cfg_a = state_a.node_registry.phase3_config().await;
+            if cfg_a.enabled && cfg_a.auto_generate_language_pools {
+                // 等待节点注册完成
+                let deadline = tokio::time::Instant::now() + std::time::Duration::from_secs(2);
+                loop {
+                    if state_a.node_registry.get_node_snapshot(node_id).await.is_some() {
+                        break;
+                    }
+                    if tokio::time::Instant::now() > deadline {
+                        break;
+                    }
+                    tokio::time::sleep(std::time::Duration::from_millis(50)).await;
+                }
+                // 触发 Pool 重建（确保 Pool 配置生成）
+                state_a.node_registry.rebuild_auto_language_pools(Some(rt_a.clone())).await;
+            }
         }
 
         // reader/reactor task：收到 job_assign 就立即回 ack/started/result
@@ -148,6 +169,85 @@
                 panic!("node snapshot not propagated to scheduler B as ready (current={})", st);
             }
             tokio::time::sleep(std::time::Duration::from_millis(50)).await;
+        }
+
+        // 等待 Phase3 Pool 配置和成员索引同步到 Redis（如果启用 Phase3）
+        let cfg_b = state_b.node_registry.phase3_config().await;
+        if cfg_b.enabled && cfg_b.mode == "two_level" {
+            // 等待 Pool 配置生成（如果自动生成模式）
+            if cfg_b.auto_generate_language_pools {
+                // 等待节点快照同步到 B，然后触发 Pool 重建
+                let deadline = tokio::time::Instant::now() + std::time::Duration::from_secs(3);
+                loop {
+                    // 检查节点是否在本地注册表中（快照同步后会在本地注册表中）
+                    let node_in_local = {
+                        let nodes = state_b.node_registry.nodes.read().await;
+                        nodes.contains_key(node_id)
+                    };
+                    if node_in_local {
+                        // 节点已在本地注册表，触发 Pool 重建
+                        state_b.node_registry.rebuild_auto_language_pools(Some(rt_b.clone())).await;
+                        // 重新分配节点到 Pool（因为 Pool 配置可能刚生成）
+                        // 注意：节点快照同步时会自动调用 phase3_upsert_node_to_pool_index
+                        // 但为了确保分配，我们触发一次快照更新
+                        if let Some(node) = state_b.node_registry.get_node_snapshot(node_id).await {
+                            state_b.node_registry.upsert_node_from_snapshot(node).await;
+                        }
+                        break;
+                    }
+                    if tokio::time::Instant::now() > deadline {
+                        break;
+                    }
+                    tokio::time::sleep(std::time::Duration::from_millis(50)).await;
+                }
+
+                // 等待 Pool 配置生成并同步到 Redis
+                let deadline = tokio::time::Instant::now() + std::time::Duration::from_secs(5);
+                loop {
+                    let cfg = state_b.node_registry.phase3_config().await;
+                    if !cfg.pools.is_empty() {
+                        // Pool 配置已生成，检查 Pool 成员索引
+                        let pool_ids = state_b.node_registry.phase3_node_pool_ids(node_id).await;
+                        if !pool_ids.is_empty() {
+                            // 如果启用 Phase2，检查 Redis 中的 Pool 成员
+                            if let Some(rt_b) = state_b.phase2.as_ref() {
+                                let mut all_synced = true;
+                                for pool_id in &pool_ids {
+                                    if let Some(pool) = cfg.pools.iter().find(|p| p.pool_id == *pool_id) {
+                                        let members_opt = rt_b.get_pool_members_from_redis(&pool.name).await;
+                                        if let Some(members) = members_opt {
+                                            if !members.contains(node_id) {
+                                                all_synced = false;
+                                                break;
+                                            }
+                                        } else {
+                                            // Redis 中还没有 Pool 成员，继续等待
+                                            all_synced = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if all_synced {
+                                    break;
+                                }
+                            } else {
+                                // 未启用 Phase2，只需要检查本地 Pool 分配
+                                break;
+                            }
+                        }
+                    }
+                    if tokio::time::Instant::now() > deadline {
+                        let cfg = state_b.node_registry.phase3_config().await;
+                        let pool_ids = state_b.node_registry.phase3_node_pool_ids(node_id).await;
+                        panic!(
+                            "Phase3 Pool not ready: pools={}, node_pool_ids={:?}",
+                            cfg.pools.len(),
+                            pool_ids
+                        );
+                    }
+                    tokio::time::sleep(std::time::Duration::from_millis(100)).await;
+                }
+            }
         }
 
         // ===== session client（连接 B）=====

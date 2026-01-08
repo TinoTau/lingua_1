@@ -225,12 +225,15 @@ fn compute_node_state(
     // ready：用于 ready_nodes 与核心服务覆盖（保持与调度路径一致：只统计 online+Ready）
     let ready = n.online && n.status == NodeStatus::Ready;
 
+    // 注意：节点能力信息已迁移到 Redis，这里需要从 Redis 读取
+    // 但由于 phase3_core_cache 没有 phase2_runtime，暂时使用 installed_services 作为替代
+    // TODO: 重构 phase3_core_cache 以支持从 Redis 读取能力信息
     let asr_ready = ready
-        && n.capability_by_type_map.get(&crate::messages::ServiceType::Asr).copied().unwrap_or(false);
+        && n.installed_services.iter().any(|s| s.r#type == crate::messages::ServiceType::Asr && s.status == crate::messages::ServiceStatus::Running);
     let nmt_ready = ready
-        && n.capability_by_type_map.get(&crate::messages::ServiceType::Nmt).copied().unwrap_or(false);
+        && n.installed_services.iter().any(|s| s.r#type == crate::messages::ServiceType::Nmt && s.status == crate::messages::ServiceStatus::Running);
     let tts_ready = ready
-        && n.capability_by_type_map.get(&crate::messages::ServiceType::Tts).copied().unwrap_or(false);
+        && n.installed_services.iter().any(|s| s.r#type == crate::messages::ServiceType::Tts && s.status == crate::messages::ServiceStatus::Running);
 
     let asr_installed = ready
         && n.installed_services.iter().any(|s| s.r#type == crate::messages::ServiceType::Asr);

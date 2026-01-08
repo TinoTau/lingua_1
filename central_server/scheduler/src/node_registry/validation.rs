@@ -3,40 +3,46 @@
 use tracing::debug;
 use crate::messages::{FeatureFlags, ServiceType};
 use super::types::Node;
+use crate::phase2::Phase2Runtime;
 
-/// 检查节点是否具备所需的 ServiceType（按 capability_by_type.ready）
-pub fn node_has_required_types_ready(node: &Node, required_types: &[ServiceType]) -> bool {
-    let result = required_types.iter().all(|t| {
-        node.capability_by_type
-            .iter()
-            .find(|c| c.r#type == *t)
-            .map(|c| c.ready)
-            .unwrap_or(false)
-    });
+/// 检查节点是否具备所需的 ServiceType（从 Redis 读取）
+/// 注意：节点能力信息已迁移到 Redis，不再存储在 Node 结构体中
+pub async fn node_has_required_types_ready(
+    node: &Node,
+    required_types: &[ServiceType],
+    phase2_runtime: Option<&Phase2Runtime>,
+) -> bool {
+    // 如果没有提供 phase2_runtime，无法从 Redis 读取，返回 false
+    let Some(rt) = phase2_runtime else {
+        debug!(
+            node_id = %node.node_id,
+            "未提供 Phase2Runtime，无法从 Redis 读取节点能力"
+        );
+        return false;
+    };
 
-    if !result {
-        let missing_or_not_ready: Vec<String> = required_types
-            .iter()
-            .filter(|t| {
-                !node
-                    .capability_by_type_map
-                    .get(*t)
-                    .copied()
-                    .unwrap_or(false)
-            })
-            .map(|t| format!("{:?}", t))
-            .collect();
+    let mut missing_or_not_ready = Vec::new();
+    let mut all_ready = true;
+
+    for t in required_types {
+        let ready = rt.has_node_capability(&node.node_id, t).await;
+        if !ready {
+            all_ready = false;
+            missing_or_not_ready.push(format!("{:?}", t));
+        }
+    }
+
+    if !all_ready {
         debug!(
             node_id = %node.node_id,
             required_types = ?required_types,
             missing_or_not_ready = ?missing_or_not_ready,
-            capability_by_type = ?node.capability_by_type,
             installed_services = ?node.installed_services.iter().map(|s| &s.service_id).collect::<Vec<_>>(),
-            "Node does not have all required types ready"
+            "Node does not have all required types ready (from Redis)"
         );
     }
 
-    result
+    all_ready
 }
 
 /// 基于 installed_services 的硬过滤（type 存在即可）。

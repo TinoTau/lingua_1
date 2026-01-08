@@ -116,10 +116,32 @@
         format!("{}:nodes:snapshot:{{node:{}}}", self.v1_prefix(), node_id)
     }
 
-    fn node_reserved_zset_key(&self, node_id: &str) -> String {
-        // ZSET：member=job_id, score=expire_at_ms
+
+    /// 节点容量Hash Key（设计文档：sched:node:{node_id}:cap）
+    /// 存储: max, running, reserved
+    fn node_cap_key(&self, node_id: &str) -> String {
         // hash tag: {node:<id>}
-        format!("{}:nodes:reserved:{{node:{}}}", self.v1_prefix(), node_id)
+        format!("{}:nodes:cap:{{node:{}}}", self.v1_prefix(), node_id)
+    }
+
+    /// 节点元数据Hash Key（设计文档：sched:node:{node_id}:meta）
+    /// 存储: health, semantic_langs, nmt_pairs, tts_langs, max_concurrent_jobs, last_heartbeat_ms
+    fn node_meta_key(&self, node_id: &str) -> String {
+        // hash tag: {node:<id>}
+        format!("{}:nodes:meta:{{node:{}}}", self.v1_prefix(), node_id)
+    }
+
+    /// 节点能力Hash Key（设计文档：sched:node:{node_id}:capabilities）
+    /// 存储: asr, nmt, tts, tone, semantic（每个字段为 "true" 或 "false"）
+    fn node_capabilities_key(&self, node_id: &str) -> String {
+        // hash tag: {node:<id>}
+        format!("{}:nodes:capabilities:{{node:{}}}", self.v1_prefix(), node_id)
+    }
+
+    /// Reservation记录Key（设计文档：sched:resv:{resv_id}）
+    /// resv_id格式: {job_id}:{attempt_id}:{node_id}
+    fn resv_key(&self, resv_id: &str) -> String {
+        format!("{}:resv:{}", self.v1_prefix(), resv_id)
     }
 
     /// Phase 3 Pool 配置相关的 Redis Key
@@ -133,6 +155,13 @@
 
     fn phase3_pool_version_key(&self) -> String {
         format!("{}:phase3:pools:version", self.v1_prefix())
+    }
+
+    /// Pool 成员索引 Key（设计文档：sched:pool:{src}:{tgt}:members）
+    /// 存储: Redis Set，成员为 node_id
+    fn pool_members_key(&self, pool_name: &str) -> String {
+        // pool_name 格式: "zh-en" 或 "*-en" (混合池)
+        format!("{}:pool:{}:members", self.v1_prefix(), pool_name)
     }
 
     async fn set_scheduler_presence(&self) {

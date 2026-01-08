@@ -327,9 +327,8 @@ impl SessionActor {
                             "Failed to send job to node"
                         );
                         // 发送失败，释放资源
-                        self.state.node_registry.release_job_slot(node_id, &job.job_id).await;
                         if let Some(rt) = self.state.phase2.as_ref() {
-                            rt.release_node_slot(node_id, &job.job_id).await;
+                            rt.release_node_slot(node_id, &job.job_id, job.dispatch_attempt_id).await;
                             let _ = rt
                                 .job_fsm_to_finished(&job.job_id, job.dispatch_attempt_id.max(1), false)
                                 .await;

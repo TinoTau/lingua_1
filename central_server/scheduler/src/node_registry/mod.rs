@@ -3,7 +3,6 @@
 mod types;
 mod validation;
 mod core;
-mod reserved;
 mod unavailable;
 mod exclude_stats;
 mod selection;
@@ -20,6 +19,10 @@ mod auto_language_pool_test;
 mod phase3_pool_redis_test;
 #[cfg(test)]
 mod phase3_pool_allocation_test;
+#[cfg(test)]
+mod phase3_pool_heartbeat_test;
+#[cfg(test)]
+mod phase3_pool_registration_test;
 
 pub use types::{Node, DispatchExcludeReason};
 pub use selection::{NoAvailableNodeBreakdown, Phase3TwoLevelDebug};
@@ -35,10 +38,6 @@ pub(super) struct UnavailableServiceEntry {
     pub(super) expire_at_ms: i64,
 }
 
-#[derive(Debug, Clone)]
-pub(super) struct ReservedJobEntry {
-    pub(super) expire_at_ms: i64,
-}
 
 #[derive(Clone)]
 pub struct NodeRegistry {
@@ -52,11 +51,6 @@ pub struct NodeRegistry {
     /// key1: node_id
     /// key2: service_id（当前项目中也可能使用 model_id 表达）
     unavailable_services: Arc<RwLock<HashMap<String, HashMap<String, UnavailableServiceEntry>>>>,
-    /// 节点并发占用（reserved jobs，Phase 1）
-    /// 用于弥补“心跳 current_jobs 更新滞后”导致的超卖风险。
-    /// key1: node_id
-    /// key2: job_id
-    reserved_jobs: Arc<RwLock<HashMap<String, HashMap<String, ReservedJobEntry>>>>,
     /// Phase 3：两级调度配置（pool_count/hash_seed 等）
     phase3: Arc<RwLock<crate::core::config::Phase3Config>>,
     /// Phase 3：pool -> node_id 集合（用于 pool 内选节点，避免全量遍历）

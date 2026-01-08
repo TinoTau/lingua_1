@@ -1,7 +1,76 @@
 use super::super::JobDispatcher;
 use crate::messages::{FeatureFlags, PipelineConfig};
+use std::collections::HashSet;
 
 impl JobDispatcher {
+    /// 检查节点是否能够处理指定的语言对 (src_lang, tgt_lang)
+    /// 根据设计文档，节点必须：
+    /// 1. 在包含 src_lang 和 tgt_lang 的 Pool 中（语言集合 Pool）
+    /// 2. 或者节点的语言能力支持该语言对
+    async fn check_node_supports_language_pair(
+        &self,
+        node_id: &str,
+        src_lang: &str,
+        tgt_lang: &str,
+    ) -> bool {
+        // 方法1：检查节点是否在包含 src_lang 和 tgt_lang 的 Pool 中
+        let node_pools = self.node_registry.phase3_node_pool_ids(node_id).await;
+        if !node_pools.is_empty() {
+            let cfg = self.node_registry.phase3_config().await;
+            for pool_id in &node_pools {
+                if let Some(pool) = cfg.pools.iter().find(|p| p.pool_id == *pool_id) {
+                    // 检查 Pool 名称是否包含 src_lang 和 tgt_lang（语言集合 Pool）
+                    let pool_langs: HashSet<&str> = pool.name.split('-').collect();
+                    if pool_langs.contains(src_lang) && pool_langs.contains(tgt_lang) {
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        // 方法2：直接检查节点的语言能力
+        let nodes = self.node_registry.nodes.read().await;
+        if let Some(node) = nodes.get(node_id) {
+            if let Some(ref caps) = node.language_capabilities {
+                // 检查语义修复服务是否支持 src_lang 和 tgt_lang
+                if let Some(ref semantic_langs) = caps.semantic_languages {
+                    let semantic_set: HashSet<&str> = semantic_langs.iter().map(|s| s.as_str()).collect();
+                    if semantic_set.contains(src_lang) && semantic_set.contains(tgt_lang) {
+                        // 还需要检查 ASR、TTS、NMT 能力
+                        let has_asr = caps.asr_languages.as_ref()
+                            .map(|v| v.contains(&src_lang.to_string()))
+                            .unwrap_or(false);
+                        let has_tts = caps.tts_languages.as_ref()
+                            .map(|v| v.contains(&tgt_lang.to_string()))
+                            .unwrap_or(false);
+                        // NMT 检查：需要支持 (src, tgt) 语言对
+                        let has_nmt = if let Some(ref nmt_caps) = caps.nmt_capabilities {
+                            nmt_caps.iter().any(|cap| {
+                                match cap.rule.as_str() {
+                                    "any_to_any" => true,
+                                    "any_to_en" => tgt_lang == "en",
+                                    "en_to_any" => src_lang == "en",
+                                    "specific_pairs" => {
+                                        if let Some(ref pairs) = cap.supported_pairs {
+                                            pairs.iter().any(|p| p.src == src_lang && p.tgt == tgt_lang)
+                                        } else {
+                                            false
+                                        }
+                                    }
+                                    _ => false
+                                }
+                            })
+                        } else {
+                            false
+                        };
+                        return has_asr && has_tts && has_nmt;
+                    }
+                }
+            }
+        }
+        
+        false
+    }
     /// 节点选择逻辑（支持 preferred_node_id、spread策略、模块依赖展开等）
     pub(crate) async fn select_node_for_job_creation(
         &self,
@@ -37,56 +106,25 @@ impl JobDispatcher {
         };
 
         // 根据 v2 技术说明书，使用模块依赖展开算法选择节点
+        tracing::info!(
+            trace_id = %trace_id,
+            request_id = %request_id,
+            session_id = %session_id,
+            src_lang = %src_lang,
+            tgt_lang = %tgt_lang,
+            preferred_node_id = ?preferred_node_id,
+            "开始节点选择"
+        );
+        
         if let Some(node_id) = preferred_node_id {
-            // 如果指定了节点，检查节点是否可用
-            if self.node_registry.is_node_available(&node_id).await {
-                // 还需要检查节点是否具备所需的模型能力
-                if let Some(features) = features {
-                    if let Ok(required_models) =
-                        self.get_required_types_for_features(pipeline, Some(features), src_lang, tgt_lang)
-                    {
-                        if !self.node_registry.check_node_has_types_ready(&node_id, &required_models).await {
-                            // 节点不具备所需模型，回退到功能感知选择
-                            let o = self
-                                .select_node_with_module_expansion_with_breakdown(
-                                    routing_key,
-                                    src_lang,
-                                    tgt_lang,
-                                    Some(features.clone()),
-                                    pipeline,
-                                    true,
-                                    None,
-                                )
-                                .await;
-                            if o.selector == "phase3" {
-                                if let Some(ref dbg) = o.phase3_debug {
-                                    tracing::debug!(
-                                        trace_id = %trace_id,
-                                        request_id = %request_id,
-                                        pool_count = dbg.pool_count,
-                                        preferred_pool = dbg.preferred_pool,
-                                        selected_pool = ?dbg.selected_pool,
-                                        fallback_used = dbg.fallback_used,
-                                        attempts = ?dbg.attempts,
-                                        "Phase3 two-level scheduling fallback from preferred node"
-                                    );
-                                }
-                            }
-                            if o.node_id.is_none() {
-                                no_available_node_metric =
-                                    Some((o.selector, o.breakdown.best_reason_label()));
-                            }
-                            (o.node_id, no_available_node_metric)
-                        } else {
-                            (Some(node_id), None)
-                        }
-                    } else {
-                        (Some(node_id), None)
-                    }
-                } else {
-                    (Some(node_id), None)
-                }
-            } else {
+            // 步骤1：检查节点是否可用
+            if !self.node_registry.is_node_available(&node_id).await {
+                tracing::debug!(
+                    trace_id = %trace_id,
+                    request_id = %request_id,
+                    node_id = %node_id,
+                    "preferred_node_id 节点不可用，fallback 到随机选择"
+                );
                 // 回退到功能感知选择
                 let o = self
                     .select_node_with_module_expansion_with_breakdown(
@@ -116,11 +154,134 @@ impl JobDispatcher {
                 if o.node_id.is_none() {
                     no_available_node_metric = Some((o.selector, o.breakdown.best_reason_label()));
                 }
+                tracing::info!(
+                    trace_id = %trace_id,
+                    request_id = %request_id,
+                    preferred_node_id = %node_id,
+                    fallback_reason = "node_unavailable",
+                    selected_node = ?o.node_id,
+                    "preferred_node_id 节点不可用，已回退到随机选择"
+                );
                 return (o.node_id, no_available_node_metric);
             }
+            
+            // 步骤2：校验节点是否在对应池中（或是否满足能力约束）
+            if !self.check_node_supports_language_pair(&node_id, src_lang, tgt_lang).await {
+                tracing::debug!(
+                    trace_id = %trace_id,
+                    request_id = %request_id,
+                    node_id = %node_id,
+                    src_lang = %src_lang,
+                    tgt_lang = %tgt_lang,
+                    "preferred_node_id 节点不在对应池中或不支持语言对，fallback 到随机选择"
+                );
+                // 回退到功能感知选择
+                let o = self
+                    .select_node_with_module_expansion_with_breakdown(
+                        routing_key,
+                        src_lang,
+                        tgt_lang,
+                        features.clone(),
+                        pipeline,
+                        true,
+                        None,
+                    )
+                    .await;
+                if o.selector == "phase3" {
+                    if let Some(ref dbg) = o.phase3_debug {
+                        tracing::debug!(
+                            trace_id = %trace_id,
+                            request_id = %request_id,
+                            pool_count = dbg.pool_count,
+                            preferred_pool = dbg.preferred_pool,
+                            selected_pool = ?dbg.selected_pool,
+                            fallback_used = dbg.fallback_used,
+                            attempts = ?dbg.attempts,
+                            "Phase3 two-level scheduling fallback from preferred node (not in pool)"
+                        );
+                    }
+                }
+                if o.node_id.is_none() {
+                    no_available_node_metric = Some((o.selector, o.breakdown.best_reason_label()));
+                }
+                tracing::info!(
+                    trace_id = %trace_id,
+                    request_id = %request_id,
+                    preferred_node_id = %node_id,
+                    fallback_reason = "node_not_in_pool",
+                    selected_node = ?o.node_id,
+                    "preferred_node_id 节点不在对应池中，已回退到随机选择"
+                );
+                return (o.node_id, no_available_node_metric);
+            }
+            
+            // 步骤3：检查节点是否具备所需的模型能力
+            if let Some(features) = features {
+                if let Ok(required_models) =
+                    self.get_required_types_for_features(pipeline, Some(features), src_lang, tgt_lang)
+                {
+                    if !self.node_registry.check_node_has_types_ready(&node_id, &required_models, self.phase2.as_ref().map(|rt| rt.as_ref())).await {
+                        tracing::debug!(
+                            trace_id = %trace_id,
+                            request_id = %request_id,
+                            node_id = %node_id,
+                            "preferred_node_id 节点不具备所需模型，fallback 到随机选择"
+                        );
+                        // 节点不具备所需模型，回退到功能感知选择
+                        let o = self
+                            .select_node_with_module_expansion_with_breakdown(
+                                routing_key,
+                                src_lang,
+                                tgt_lang,
+                                Some(features.clone()),
+                                pipeline,
+                                true,
+                                None,
+                            )
+                            .await;
+                        if o.selector == "phase3" {
+                            if let Some(ref dbg) = o.phase3_debug {
+                                tracing::debug!(
+                                    trace_id = %trace_id,
+                                    request_id = %request_id,
+                                    pool_count = dbg.pool_count,
+                                    preferred_pool = dbg.preferred_pool,
+                                    selected_pool = ?dbg.selected_pool,
+                                    fallback_used = dbg.fallback_used,
+                                    attempts = ?dbg.attempts,
+                                    "Phase3 two-level scheduling fallback from preferred node (missing models)"
+                                );
+                            }
+                        }
+                        if o.node_id.is_none() {
+                            no_available_node_metric =
+                                Some((o.selector, o.breakdown.best_reason_label()));
+                        }
+                        return (o.node_id, no_available_node_metric);
+                    }
+                }
+            }
+            
+            // 所有校验通过，返回 preferred_node_id
+            tracing::debug!(
+                trace_id = %trace_id,
+                request_id = %request_id,
+                node_id = %node_id,
+                "preferred_node_id 校验通过，使用指定节点"
+            );
+            (Some(node_id), None)
         } else {
             // 使用模块依赖展开算法选择节点
             // 先尝试避开上一节点；如果无候选再回退不避开
+            tracing::debug!(
+                trace_id = %trace_id,
+                request_id = %request_id,
+                routing_key = %routing_key,
+                src_lang = %src_lang,
+                tgt_lang = %tgt_lang,
+                exclude_node_id = ?exclude_node_id,
+                "使用功能感知选择（模块依赖展开）"
+            );
             let excluded = exclude_node_id.as_deref();
             let first = self
                 .select_node_with_module_expansion_with_breakdown(
@@ -133,6 +294,43 @@ impl JobDispatcher {
                     excluded,
                 )
                 .await;
+            
+            // 记录节点选择结果
+            if let Some(ref node_id) = first.node_id {
+                tracing::info!(
+                    trace_id = %trace_id,
+                    request_id = %request_id,
+                    selected_node = %node_id,
+                    selector = %first.selector,
+                    src_lang = %src_lang,
+                    tgt_lang = %tgt_lang,
+                    "节点选择成功"
+                );
+                if first.selector == "phase3" {
+                    if let Some(ref dbg) = first.phase3_debug {
+                        tracing::info!(
+                            trace_id = %trace_id,
+                            request_id = %request_id,
+                            pool_count = dbg.pool_count,
+                            preferred_pool = dbg.preferred_pool,
+                            selected_pool = ?dbg.selected_pool,
+                            fallback_used = dbg.fallback_used,
+                            attempts = ?dbg.attempts,
+                            "Phase3 两级调度详情"
+                        );
+                    }
+                }
+            } else {
+                tracing::warn!(
+                    trace_id = %trace_id,
+                    request_id = %request_id,
+                    selector = %first.selector,
+                    reason = %first.breakdown.best_reason_label(),
+                    src_lang = %src_lang,
+                    tgt_lang = %tgt_lang,
+                    "节点选择失败：无可用节点"
+                );
+            }
             if first.selector == "phase3" {
                 if let Some(ref dbg) = first.phase3_debug {
                     if dbg.fallback_used || dbg.selected_pool.is_none() {

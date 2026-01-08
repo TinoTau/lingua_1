@@ -40,8 +40,27 @@ pub(crate) async fn handle_job_result(
     rerun_count: Option<u32>,
     segments_meta: Option<crate::messages::common::SegmentsMeta>,
 ) {
+    use tracing::info;
+    
+    info!(
+        trace_id = %trace_id,
+        job_id = %job_id,
+        node_id = %node_id,
+        session_id = %session_id,
+        utterance_index = utterance_index,
+        success = success,
+        attempt_id = attempt_id,
+        "收到节点返回的 JobResult"
+    );
+    
     // 核销机制：检查是否在30秒内已经收到过相同job_id的结果
     if check_job_result_deduplication(&state, &session_id, &job_id, &trace_id, utterance_index).await {
+        info!(
+            trace_id = %trace_id,
+            job_id = %job_id,
+            session_id = %session_id,
+            "JobResult 重复，已跳过处理"
+        );
         return; // 直接返回，不进行后续处理
     }
 

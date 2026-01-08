@@ -211,7 +211,8 @@ export class AggregationStage {
       aggregatedText,
       previousText,
       job.job_id,
-      job.utterance_index || 0
+      job.utterance_index || 0,
+      isManualCut  // 传递手动发送标志
     );
 
     // 根据处理结果更新aggregatedText

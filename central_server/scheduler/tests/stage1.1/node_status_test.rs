@@ -265,6 +265,7 @@ async fn test_node_status_manager_health_check() {
         0,
         None,
         None, // processing_metrics
+        None, // language_capabilities
     ).await;
     
     // 触发状态检查
@@ -319,6 +320,7 @@ async fn test_node_status_manager_registering_to_ready() {
             0,
             None,
             None, // processing_metrics
+            None, // language_capabilities
         ).await;
         manager.on_heartbeat(&node.node_id).await;
     }
@@ -380,6 +382,7 @@ async fn test_node_status_manager_ready_to_degraded() {
                 lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Tts, ready: false, reason: Some("error".to_string()), ready_impl_ids: None },
             ]),
             None, // processing_metrics
+            None, // language_capabilities
         ).await;
         manager.on_heartbeat(&node.node_id).await;
     }
@@ -439,6 +442,7 @@ async fn test_node_status_manager_degraded_to_ready() {
             lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(vec!["piper-tts".to_string()]) },
         ]),
         None, // processing_metrics
+        None, // language_capabilities
     ).await;
     manager.on_heartbeat(&node.node_id).await;
     
@@ -541,6 +545,7 @@ async fn test_node_status_manager_warmup_timeout() {
             lingua_scheduler::messages::CapabilityByType { r#type: ServiceType::Tts, ready: false, reason: Some("error".to_string()), ready_impl_ids: None },
         ]),
         None, // processing_metrics
+        None, // language_capabilities
     ).await;
     manager.on_heartbeat(&node.node_id).await;
     

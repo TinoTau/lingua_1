@@ -1,3 +1,4 @@
+    #[tokio::test]
     async fn phase2_cluster_acceptance_smoke() {
         // Cluster 自动化验收专用：
         // - 只在 LINGUA_TEST_REDIS_MODE=cluster 时跑（避免本地 single 环境变慢）
@@ -131,13 +132,16 @@
             _ => {}
         }
 
-        // ===== 3) Lua：node reservation（capacity）=====
-        let ok1 = rt_a.reserve_node_slot("node-cap", "job-1", 30, 0, 1).await;
-        let ok2 = rt_a.reserve_node_slot("node-cap", "job-2", 30, 0, 1).await;
+        // ===== 3) Lua：node reservation（capacity，按照设计文档实现）=====
+        // 先同步节点容量到Redis
+        let _ = rt_a.sync_node_capacity_to_redis("node-cap", 1, 0, "ready").await;
+        
+        let ok1 = rt_a.reserve_node_slot("node-cap", "job-1", 1, 30).await.unwrap_or(false);
+        let ok2 = rt_a.reserve_node_slot("node-cap", "job-2", 1, 30).await.unwrap_or(false);
         assert!(ok1);
-        assert!(!ok2);
-        rt_a.release_node_slot("node-cap", "job-1").await;
-        let ok3 = rt_a.reserve_node_slot("node-cap", "job-2", 30, 0, 1).await;
+        assert!(!ok2); // 容量已满,应该失败
+        rt_a.release_node_slot("node-cap", "job-1", 1).await;
+        let ok3 = rt_a.reserve_node_slot("node-cap", "job-2", 1, 30).await.unwrap_or(false);
         assert!(ok3);
 
         // ===== 4) Job FSM：Lua 迁移（同 slot hash tag {job:<id>}) =====

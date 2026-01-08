@@ -33,6 +33,23 @@
 
         let session_manager = SessionManager::new();
         let node_registry = std::sync::Arc::new(NodeRegistry::with_resource_threshold(100.0));
+        
+        // 启用 Phase3 Pool 配置（自动生成语言集合 Pool）
+        use crate::core::config::{Phase3Config, AutoLanguagePoolConfig};
+        let mut phase3_config = Phase3Config::default();
+        phase3_config.enabled = true;
+        phase3_config.mode = "two_level".to_string();
+        phase3_config.auto_generate_language_pools = true;
+        phase3_config.auto_pool_config = Some(AutoLanguagePoolConfig {
+            min_nodes_per_pool: 1,
+            max_pools: 10,
+            pool_naming: "set".to_string(), // 语言集合模式
+            require_semantic: true,
+            enable_mixed_pools: false,
+            ..Default::default()
+        });
+        node_registry.set_phase3_config(phase3_config).await;
+        
         let mut dispatcher = JobDispatcher::new_with_phase1_config(
             node_registry.clone(),
             TaskBindingConfig::default(),
@@ -74,7 +91,7 @@
         let state = AppState {
             session_manager,
             dispatcher,
-            node_registry,
+            node_registry: node_registry.clone(),
             pairing_service,
             model_hub,
             service_catalog,
@@ -96,6 +113,15 @@
 
         // 启动 Phase2 后台任务（presence + owner 续约 + Streams inbox + snapshot refresh）
         rt.clone().spawn_background_tasks(state.clone());
+
+        // 如果启用了 Phase3 自动生成 Pool，触发一次 Pool 重建（确保 Pool 配置生成）
+        {
+            let cfg = node_registry.phase3_config().await;
+            if cfg.enabled && cfg.auto_generate_language_pools {
+                // 传递 phase2_runtime 以便同步到 Redis
+                node_registry.rebuild_auto_language_pools(Some(rt.clone())).await;
+            }
+        }
 
         (state, rt)
     }
@@ -148,8 +174,24 @@
             CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(vec!["piper-tts".into()]) },
         ];
 
+        // 添加语言能力，支持 en→zh 翻译
+        use crate::messages::common::{NodeLanguageCapabilities, NmtCapability, LanguagePair};
+        let language_capabilities = Some(NodeLanguageCapabilities {
+            semantic_languages: Some(vec!["en".to_string(), "zh".to_string()]),
+            asr_languages: Some(vec!["en".to_string()]),
+            tts_languages: Some(vec!["zh".to_string()]),
+            nmt_capabilities: Some(vec![NmtCapability {
+                model_id: "nmt-m2m100".to_string(),
+                languages: vec!["en".to_string(), "zh".to_string()],
+                rule: "any_to_any".to_string(),
+                blocked_pairs: None,
+                supported_pairs: Some(vec![LanguagePair { src: "en".to_string(), tgt: "zh".to_string() }]),
+            }]),
+            supported_language_pairs: Some(vec![LanguagePair { src: "en".to_string(), tgt: "zh".to_string() }]),
+        });
+
         crate::messages::NodeMessage::NodeRegister {
-            language_capabilities: None,
+            language_capabilities,
             node_id: Some(node_id.to_string()),
             version: "test".to_string(),
             capability_schema_version: Some("2.0".to_string()),
@@ -194,8 +236,24 @@
             CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(vec!["piper-tts".into()]) },
         ];
 
+        // 添加语言能力，支持 en→zh 翻译
+        use crate::messages::common::{NodeLanguageCapabilities, NmtCapability, LanguagePair};
+        let language_capabilities = Some(NodeLanguageCapabilities {
+            semantic_languages: Some(vec!["en".to_string(), "zh".to_string()]),
+            asr_languages: Some(vec!["en".to_string()]),
+            tts_languages: Some(vec!["zh".to_string()]),
+            nmt_capabilities: Some(vec![NmtCapability {
+                model_id: "nmt-m2m100".to_string(),
+                languages: vec!["en".to_string(), "zh".to_string()],
+                rule: "any_to_any".to_string(),
+                blocked_pairs: None,
+                supported_pairs: Some(vec![LanguagePair { src: "en".to_string(), tgt: "zh".to_string() }]),
+            }]),
+            supported_language_pairs: Some(vec![LanguagePair { src: "en".to_string(), tgt: "zh".to_string() }]),
+        });
+
         crate::messages::NodeMessage::NodeHeartbeat {
-            language_capabilities: None,
+            language_capabilities,
             node_id: node_id.to_string(),
             timestamp: chrono::Utc::now().timestamp_millis(),
             resource_usage: ResourceUsage {

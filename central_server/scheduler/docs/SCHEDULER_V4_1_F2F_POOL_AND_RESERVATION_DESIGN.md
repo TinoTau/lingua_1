@@ -91,7 +91,21 @@
   - `max_concurrent_jobs` = int
   - `last_heartbeat_ms` = epoch ms
 
-> 注：`semantic_langs` 也可以在服务内存缓存；Redis 用于多实例共享与恢复。
+**Redis Hash：节点服务能力（新增，v4.1 设计）**
+- Key：`sched:node:{node_id}:capabilities`
+- Fields：
+  - `asr` = `"true"` | `"false"`（字符串格式）
+  - `nmt` = `"true"` | `"false"`
+  - `tts` = `"true"` | `"false"`
+  - `tone` = `"true"` | `"false"`
+  - `semantic` = `"true"` | `"false"`
+- TTL：1 小时（与节点容量信息一致）
+
+> **重要变更（v4.1）**：
+> - 节点服务能力信息（`capability_by_type`）已从内存中的 `Node` 结构体迁移到 Redis
+> - 所有节点能力查询都从 Redis 读取，确保多实例间的一致性
+> - 节点注册和心跳时，能力信息会同步到 Redis
+> - 这样可以减少内存占用，避免序列化处理，并保证多实例间的一致性
 
 ### 4.2 Node 并发计数（Reservation / Running）
 
@@ -247,14 +261,22 @@
 
 ### 6.2 更新时机
 
-- **register**：写入 meta/cap，计算入池并 `SADD` 到对应 `pool members`  
+- **register**：
+  - 写入 `sched:node:{node_id}:meta`（节点元数据）
+  - 写入 `sched:node:{node_id}:capabilities`（节点服务能力，从 `capability_by_type` 同步）
+  - 写入 `sched:node:{node_id}:cap`（节点并发计数）
+  - 计算入池并 `SADD` 到对应 `pool members`
 - **heartbeat**：若能力发生变化（semantic/nmt/tts/max_concurrent/health），更新 Redis 并调整 membership：
+  - 更新 `sched:node:{node_id}:capabilities`（如果 `capability_by_type` 变化）
+  - 更新 `sched:node:{node_id}:meta`（如果元数据变化）
+  - 更新 `sched:node:{node_id}:cap`（如果并发计数变化）
   - 需要入池：`SADD`
   - 需要出池：`SREM`
 - **offline/draining**：可保留在 pool 中（不影响正确性），但建议在 `health != ready` 时：
   - either：直接 `SREM` 出所有池（简单但要维护反向索引）
   - or：保留 membership，仅在选节点时过滤 `health`（更简单，推荐）
 
+> **重要**：节点服务能力信息（`capability_by_type`）在注册和心跳时都会同步到 Redis 的 `sched:node:{node_id}:capabilities`，所有能力查询都从 Redis 读取，确保多实例间的一致性。  
 > 推荐：**membership 不因短暂 health 抖动频繁修改**；选节点时通过 `health` 与 `try_reserve` 自然过滤。
 
 ---
@@ -300,12 +322,15 @@
 
 当 `preferred_node_id` 不为空：
 1. 校验该节点是否在对应池中（或是否满足能力约束）
+   - 从 Redis 读取节点能力：`sched:node:{node_id}:capabilities`
+   - 检查节点是否具备所需服务类型（ASR/NMT/TTS/Semantic）
 2. 尝试 `try_reserve(preferred_node_id)`
 3. 成功则派发；失败则：
    - 若 `strict=true`（未来扩展）：直接返回错误
    - 默认：fallback 到随机策略
 
-> 当前阶段可固定 fallback 行为为“失败则随机”，并在日志记录 reason。
+> **重要**：节点能力校验从 Redis 读取，确保多实例间的一致性。  
+> 当前阶段可固定 fallback 行为为"失败则随机"，并在日志记录 reason。
 
 ---
 
@@ -534,13 +559,23 @@ on node_done(job_id, attempt, node_id, status):
 
 ## 14. 交付清单（开发任务拆分）
 
-1) NodeRegistry：注册/心跳、写 Redis meta/cap  
+1) NodeRegistry：注册/心跳、写 Redis meta/cap/capabilities  
+   - ✅ 节点能力信息（`capability_by_type`）已迁移到 Redis：`sched:node:{node_id}:capabilities`
+   - ✅ 所有节点能力查询从 Redis 读取，确保多实例间的一致性
 2) PoolIndex：入池计算、写 Redis set、随机采样接口  
+   - ✅ Pool 成员索引已完全迁移到 Redis
+   - ✅ 所有 Pool 相关查询从 Redis 读取
 3) ReservationManager：Lua 脚本（try/commit/release/dec_running）+ 单测  
+   - ✅ 所有 Lua 脚本已实现
 4) Dispatcher：派发、ACK 超时、释放预留、重试  
+   - ✅ 已实现
 5) JobManager：状态机、幂等、日志与指标  
+   - ✅ 已实现
 6) PolicyEngine：默认随机、指定节点路径（仅后端能力）  
+   - ✅ 节点能力校验从 Redis 读取：`sched:node:{node_id}:capabilities`
+   - ✅ 随机选择策略已实现
 7) Observability：指标与告警面板
+   - ✅ 已实现
 
 ---
 

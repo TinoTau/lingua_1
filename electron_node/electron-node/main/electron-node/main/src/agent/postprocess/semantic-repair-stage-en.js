@@ -27,8 +27,8 @@ class SemanticRepairStageEN {
                 reasonCodes: ['EMPTY_TEXT'],
             };
         }
-        // 对每句话都进行修复，不根据阈值触发
-        // 仍然计算触发原因用于日志记录，但不作为触发条件
+        // 对每句话都进行修复，跳过质量评分
+        // 仍然计算触发原因用于日志记录
         const shouldRepair = this.shouldTriggerRepair(text, qualityScore, meta);
         // 调用语义修复服务
         if (!this.taskRouter) {
@@ -95,26 +95,32 @@ class SemanticRepairStageEN {
     }
     /**
      * 判断是否应该触发修复
+     * 修改：跳过质量评分，对 >= 16 字符的文本都进行修复
      */
     shouldTriggerRepair(text, qualityScore, meta) {
         const reasonCodes = [];
-        const threshold = this.config.qualityThreshold || this.DEFAULT_QUALITY_THRESHOLD;
-        // 条件1：质量分触发
-        if (qualityScore !== undefined && qualityScore < threshold) {
-            reasonCodes.push('LOW_QUALITY_SCORE');
-        }
-        // 条件2：片段化检测
-        if (this.isFragmented(text)) {
-            reasonCodes.push('FRAGMENTED_TEXT');
-        }
-        // 条件3：结构异常检测
-        if (this.hasStructuralIssues(text)) {
-            reasonCodes.push('STRUCTURAL_ISSUES');
-        }
-        // 条件4：可翻译性检查触发
-        const languageProbability = meta?.language_probability || 1.0;
-        if (languageProbability < 0.7) {
-            reasonCodes.push('LOW_LANGUAGE_PROBABILITY');
+        const MIN_LENGTH_FOR_REPAIR = 16; // 最小修复长度：16个字符
+        // 跳过质量评分，只检查文本长度
+        // 对 >= 16 字符的文本都进行修复
+        if (text.length >= MIN_LENGTH_FOR_REPAIR) {
+            reasonCodes.push('LENGTH_MEETS_THRESHOLD');
+            // 仍然记录其他检测结果用于日志，但不作为触发条件
+            if (qualityScore !== undefined) {
+                const threshold = this.config.qualityThreshold || this.DEFAULT_QUALITY_THRESHOLD;
+                if (qualityScore < threshold) {
+                    reasonCodes.push('LOW_QUALITY_SCORE');
+                }
+            }
+            if (this.isFragmented(text)) {
+                reasonCodes.push('FRAGMENTED_TEXT');
+            }
+            if (this.hasStructuralIssues(text)) {
+                reasonCodes.push('STRUCTURAL_ISSUES');
+            }
+            const languageProbability = meta?.language_probability || 1.0;
+            if (languageProbability < 0.7) {
+                reasonCodes.push('LOW_LANGUAGE_PROBABILITY');
+            }
         }
         return {
             shouldRepair: reasonCodes.length > 0,

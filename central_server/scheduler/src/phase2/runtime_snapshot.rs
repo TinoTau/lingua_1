@@ -54,7 +54,7 @@
                 let presence_key = self.node_presence_key(&node_id);
                 let online = self.redis.exists(&presence_key).await.unwrap_or(false);
                 if !online {
-                    state.node_registry.mark_node_offline(&node_id).await;
+                    state.node_registry.mark_node_offline(&node_id, Some(self)).await;
                     continue;
                 }
 
@@ -76,7 +76,8 @@
                 let mut node = node;
                 node.current_jobs = std::cmp::max(node.current_jobs, reserved);
                 // upsert 到本地 NodeRegistry（允许跨实例选节点）
-                state.node_registry.upsert_node_from_snapshot(node).await;
+                // 传递 phase2_runtime 以从 Redis 读取节点能力和 Pool 配置
+                state.node_registry.upsert_node_from_snapshot(node, Some(self)).await;
             }
 
             // 清理 nodes:all（避免长期增长）

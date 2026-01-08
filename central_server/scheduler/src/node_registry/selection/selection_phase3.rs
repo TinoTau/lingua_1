@@ -7,10 +7,30 @@ use crate::node_registry::validation::{
 use std::str::FromStr;
 use std::time::Instant;
 use tracing::{debug, warn};
+use rand::seq::SliceRandom;
+use rand::{thread_rng, Rng};
 
 impl NodeRegistry {
+    /// 从候选节点中随机采样 k 个节点
+    /// 如果候选节点数 <= k，返回全部节点
+    #[cfg(test)]
+    pub fn random_sample_nodes(candidates: &[String], sample_size: usize) -> Vec<String> {
+        Self::random_sample_nodes_impl(candidates, sample_size)
+    }
+
+    fn random_sample_nodes_impl(candidates: &[String], sample_size: usize) -> Vec<String> {
+        if candidates.len() <= sample_size {
+            return candidates.to_vec();
+        }
+        let mut rng = thread_rng();
+        let mut sampled: Vec<String> = candidates.choose_multiple(&mut rng, sample_size).cloned().collect();
+        // 打乱顺序以保证随机性
+        sampled.shuffle(&mut rng);
+        sampled
+    }
+
     /// Phase 3：两级调度（Two-level）
-    /// - Global：按 routing_key 选择 preferred pool（hash）
+    /// - Global：按 routing_key 选择 preferred pool（hash 或随机，取决于配置）
     /// - Pool：在该 pool 内选节点；若无可用则按配置 fallback 其他 pool
     ///
     /// 返回：
@@ -26,6 +46,7 @@ impl NodeRegistry {
         accept_public: bool,
         exclude_node_id: Option<&str>,
         core_services: Option<&crate::core::config::CoreServicesConfig>,
+        phase2: Option<&crate::phase2::Phase2Runtime>,
     ) -> (Option<String>, Phase3TwoLevelDebug, NoAvailableNodeBreakdown) {
         let cfg = self.phase3.read().await.clone();
         let using_capability_pools = !cfg.pools.is_empty();
@@ -94,28 +115,24 @@ impl NodeRegistry {
                     let preferred = eligible_pools[0]; // 使用第一个匹配的混合池作为 preferred
                     (all_pool_ids, preferred, eligible_pools)
                 } else {
-                    // 已知源语言：使用精确池（一对一语言对 Pool）
-                    let pool_name = format!("{}-{}", src_lang, tgt_lang);
-                    let matching_pool = cfg.pools.iter().find(|p| p.name == pool_name);
+                    // 已知源语言：搜索所有包含源语言和目标语言的 Pool（语言集合 Pool）
+                    let eligible_pools: Vec<u16> = cfg.pools.iter()
+                        .filter(|p| {
+                            // 检查 Pool 名称是否包含 src_lang 和 tgt_lang
+                            let pool_langs: std::collections::HashSet<&str> = p.name.split('-').collect();
+                            pool_langs.contains(src_lang) && pool_langs.contains(tgt_lang)
+                        })
+                        .map(|p| p.pool_id)
+                        .collect();
                     
-                    if let Some(pool) = matching_pool {
-                        debug!(
-                            pool_id = pool.pool_id,
-                            pool_name = %pool_name,
-                            "找到匹配的精确池: {}",
-                            pool_name
-                        );
-                        let all_pool_ids: Vec<u16> = cfg.pools.iter().map(|p| p.pool_id).collect();
-                        let preferred = pool.pool_id;
-                        let eligible = vec![pool.pool_id];
-                        (all_pool_ids, preferred, eligible)
-                    } else {
-                        // 没有找到匹配的精确池
+                    if eligible_pools.is_empty() {
                         warn!(
-                            pool_name = %pool_name,
+                            src_lang = %src_lang,
+                            tgt_lang = %tgt_lang,
                             total_pools = cfg.pools.len(),
-                            "未找到匹配的精确池: {}",
-                            pool_name
+                            "未找到包含源语言 {} 和目标语言 {} 的 Pool",
+                            src_lang,
+                            tgt_lang
                         );
                         let dbg = Phase3TwoLevelDebug {
                             pool_count: cfg.pools.len() as u16,
@@ -126,6 +143,20 @@ impl NodeRegistry {
                         };
                         return (None, dbg, NoAvailableNodeBreakdown::default());
                     }
+                    
+                    debug!(
+                        src_lang = %src_lang,
+                        tgt_lang = %tgt_lang,
+                        eligible_pool_count = eligible_pools.len(),
+                        eligible_pool_ids = ?eligible_pools,
+                        "找到 {} 个包含源语言 {} 和目标语言 {} 的 Pool",
+                        eligible_pools.len(),
+                        src_lang,
+                        tgt_lang
+                    );
+                    let all_pool_ids: Vec<u16> = cfg.pools.iter().map(|p| p.pool_id).collect();
+                    let preferred = eligible_pools[0]; // 使用第一个匹配的 Pool 作为 preferred
+                    (all_pool_ids, preferred, eligible_pools)
                 }
             } else if using_capability_pools {
                 // pool 资格过滤（core_only / all_required）
@@ -217,8 +248,21 @@ impl NodeRegistry {
                         preferred_pool = ov.pool_id;
                     }
                 } else {
-                    preferred_idx = crate::phase3::pick_index_for_key(eligible.len(), cfg.hash_seed, routing_key);
-                    preferred_pool = eligible[preferred_idx];
+                    // 根据配置选择策略：hash-based（session affinity）或随机
+                    if cfg.enable_session_affinity {
+                        preferred_idx = crate::phase3::pick_index_for_key(eligible.len(), cfg.hash_seed, routing_key);
+                        preferred_pool = eligible[preferred_idx];
+                    } else {
+                        // 随机选择 preferred pool（无 session affinity）
+                        let mut rng = thread_rng();
+                        if let Some(&pool) = eligible.choose(&mut rng) {
+                            preferred_pool = pool;
+                            preferred_idx = eligible.iter().position(|&p| p == pool).unwrap_or(0);
+                        } else {
+                            preferred_pool = eligible[0];
+                            preferred_idx = 0;
+                        }
+                    }
                 }
 
                 let order = if cfg.fallback_scan_all_pools {
@@ -230,7 +274,13 @@ impl NodeRegistry {
             } else {
                 // hash 分桶：pool_id ∈ [0, pool_count)
                 let pool_count = cfg.pool_count.max(1);
-                let preferred = crate::phase3::pool_id_for_key(pool_count, cfg.hash_seed, routing_key);
+                let preferred = if cfg.enable_session_affinity {
+                    crate::phase3::pool_id_for_key(pool_count, cfg.hash_seed, routing_key)
+                } else {
+                    // 随机选择 preferred pool（无 session affinity）
+                    let mut rng = thread_rng();
+                    rng.gen_range(0..pool_count)
+                };
                 let order = if cfg.fallback_scan_all_pools {
                     crate::phase3::pool_probe_order(pool_count, preferred)
                 } else {
@@ -262,22 +312,78 @@ impl NodeRegistry {
             return (nid, dbg, bd);
         };
 
-        let reserved_counts = self.reserved_counts_snapshot().await;
+        // Phase2已将reserved融合到current_jobs，无需单独获取reserved_counts
 
-        // 性能：预取 pool -> node_ids，避免在 pool_loop 内反复读 phase3_pool_index（降低锁竞争）
-        let t0 = Instant::now();
-        let idx = self.phase3_pool_index.read().await;
-        crate::metrics::observability::record_lock_wait("node_registry.phase3_pool_index.read", t0.elapsed().as_millis() as u64);
+        // 性能：预取 pool -> node_ids
+        // 如果启用 Phase 2，从 Redis 读取（保持原子性）；否则返回错误（必须启用 Phase 2）
         let mut pool_candidates: std::collections::HashMap<u16, Vec<String>> =
             std::collections::HashMap::with_capacity(pools.len());
-        for pid in pools.iter().copied() {
-            let v = idx
-                .get(&pid)
-                .map(|s| s.iter().cloned().collect())
-                .unwrap_or_default();
-            pool_candidates.insert(pid, v);
+        
+        if let Some(rt) = phase2 {
+            // 从 Redis 批量读取 Pool 成员（保持原子性，优化性能）
+            let cfg = self.phase3.read().await.clone();
+            
+            // 收集所有 pool_name
+            let pool_names: Vec<(&str, u16)> = pools.iter().copied()
+                .filter_map(|pid| {
+                    cfg.pools.iter()
+                        .find(|p| p.pool_id == pid)
+                        .map(|p| (p.name.as_str(), pid))
+                })
+                .collect();
+            
+            if !pool_names.is_empty() {
+                // 批量读取（并行）
+                let pool_name_strs: Vec<&str> = pool_names.iter().map(|(name, _)| *name).collect();
+                let members_map = rt.get_pool_members_batch_from_redis(&pool_name_strs).await;
+                
+                // 将结果映射到 pool_id
+                for (pool_name, pid) in pool_names {
+                    if let Some(members) = members_map.get(pool_name) {
+                        let node_ids: Vec<String> = members.iter().cloned().collect();
+                        let is_empty = node_ids.is_empty();
+                        pool_candidates.insert(pid, node_ids);
+                        // 记录 Pool 查询指标
+                        crate::metrics::prometheus_metrics::on_pool_query(!is_empty);
+                        debug!(
+                            pool_id = pid,
+                            pool_name = %pool_name,
+                            node_count = pool_candidates.get(&pid).map(|v| v.len()).unwrap_or(0),
+                            is_empty = is_empty,
+                            "从 Redis 批量读取 Pool 成员"
+                        );
+                    } else {
+                        // 记录 Pool 查询为空
+                        crate::metrics::prometheus_metrics::on_pool_query(false);
+                        warn!(
+                            pool_id = pid,
+                            pool_name = %pool_name,
+                            "从 Redis 批量读取 Pool 成员失败，使用空列表"
+                        );
+                        pool_candidates.insert(pid, vec![]);
+                    }
+                }
+            }
+            
+            // 处理未找到配置的 Pool
+            for pid in pools.iter().copied() {
+                if !pool_candidates.contains_key(&pid) {
+                    warn!(
+                        pool_id = pid,
+                        "未找到 Pool 配置，使用空列表"
+                    );
+                    pool_candidates.insert(pid, vec![]);
+                }
+            }
+        } else {
+            // Phase 2 未启用：返回空列表并记录警告
+            warn!(
+                "Phase 2 未启用，无法从 Redis 读取 Pool 成员，返回空列表。请启用 Phase 2 以确保多实例一致性。"
+            );
+            for pid in pools.iter().copied() {
+                pool_candidates.insert(pid, vec![]);
+            }
         }
-        drop(idx);
 
         // 性能：预取 pool 核心能力缓存（online/ready + 核心服务 installed/ready），用于快速跳过明显不满足的 pools
         let pool_core_cache = self.phase3_pool_core_cache_snapshot().await;
@@ -366,7 +472,29 @@ impl NodeRegistry {
                 }
             }
 
-            for nid in candidate_ids.iter() {
+            // 根据配置选择策略：随机采样或全量遍历
+            let nodes_to_check = if cfg.enable_session_affinity {
+                // 保持原有行为：全量遍历，选择负载最低的节点
+                candidate_ids.clone()
+            } else {
+                // 随机采样：从候选节点中随机采样 k 个节点
+                let sample_size = cfg.random_sample_size;
+                Self::random_sample_nodes_impl(&candidate_ids, sample_size)
+            };
+
+            debug!(
+                pool_id = pool_id,
+                total_candidates = candidate_ids.len(),
+                sampled_size = nodes_to_check.len(),
+                enable_session_affinity = cfg.enable_session_affinity,
+                "节点选择策略: {}",
+                if cfg.enable_session_affinity { "hash-based (session affinity)" } else { "random sampling" }
+            );
+
+            // 收集所有符合条件的候选节点及其负载信息
+            let mut valid_candidates: Vec<(&crate::node_registry::Node, usize)> = Vec::new();
+
+            for nid in nodes_to_check.iter() {
                 if let Some(ex) = exclude_node_id {
                     if ex == nid {
                         continue;
@@ -404,14 +532,14 @@ impl NodeRegistry {
                     continue;
                 }
 
-                if !node_has_required_types_ready(node, required_types) {
+                if !node_has_required_types_ready(node, required_types, phase2).await {
                     breakdown.model_not_available += 1;
                     self.record_exclude_reason(DispatchExcludeReason::ModelNotAvailable, node.node_id.clone()).await;
                     continue;
                 }
 
-                let reserved = reserved_counts.get(&node.node_id).copied().unwrap_or(0);
-                let effective_jobs = std::cmp::max(node.current_jobs, reserved);
+                // Phase2已将reserved融合到current_jobs，直接使用current_jobs
+                let effective_jobs = node.current_jobs;
                 if effective_jobs >= node.max_concurrent_jobs {
                     breakdown.capacity_exceeded += 1;
                     self.record_exclude_reason(DispatchExcludeReason::CapacityExceeded, node.node_id.clone()).await;
@@ -433,22 +561,16 @@ impl NodeRegistry {
                     continue;
                 }
 
-                // candidate
-                match best {
-                    None => best = Some(node),
-                    Some(cur) => {
-                        let cur_reserved = reserved_counts.get(&cur.node_id).copied().unwrap_or(0);
-                        let cur_eff = std::cmp::max(cur.current_jobs, cur_reserved);
-                        if effective_jobs < cur_eff {
-                            best = Some(node);
-                        }
-                    }
-                }
+                // 符合条件的候选节点
+                valid_candidates.push((node, effective_jobs));
+            }
 
-                // 早停：effective_jobs 不可能 < 0，已达到最优
-                if effective_jobs == 0 {
-                    break;
-                }
+            // 按负载排序（effective_jobs 升序）
+            valid_candidates.sort_by_key(|(_, eff)| *eff);
+
+            // 选择负载最低的节点（如果有多个负载相同，随机选择第一个）
+            if let Some((best_node, _)) = valid_candidates.first() {
+                best = Some(*best_node);
             }
 
             let reason = if best.is_some() { "ok" } else { breakdown.best_reason_label() };

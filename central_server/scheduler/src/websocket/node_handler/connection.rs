@@ -66,9 +66,10 @@ pub async fn handle_node(socket: WebSocket, state: AppState) {
             rt.clear_node_presence(nid).await;
         }
         // Phase 3: Remove from pool index (node disconnects, no longer participates in pool member selection; re-register will re-add)
-        state.node_registry.phase3_remove_node_from_pool_index(nid).await;
+        let phase2_runtime = state.phase2.as_ref().map(|rt| rt.as_ref());
+        state.node_registry.phase3_remove_node_from_pool_index(nid, phase2_runtime).await;
         state.node_connections.unregister(nid).await;
-        state.node_registry.mark_node_offline(nid).await;
+        state.node_registry.mark_node_offline(nid, phase2_runtime).await;
         info!("Node {} cleaned up", nid);
     }
 

@@ -143,6 +143,7 @@ async fn test_phase3_capability_pools_tenant_override_and_hash() {
                 "NMT".to_string(),
                 "TTS".to_string(),
             ],
+            language_requirements: None,
         },
         Phase3PoolConfig {
             pool_id: 11,
@@ -152,6 +153,7 @@ async fn test_phase3_capability_pools_tenant_override_and_hash() {
                 "NMT".to_string(),
                 "TTS".to_string(),
             ],
+            language_requirements: None,
         },
     ];
     p3.tenant_overrides = vec![Phase3TenantOverride {
@@ -247,6 +249,7 @@ async fn test_phase3_capability_pools_tenant_override_and_hash() {
             true,
             None,
             Some(&CoreServicesConfig::default()),
+            None, // phase2: 测试中不使用 Redis
         )
         .await;
     assert_eq!(dbg.preferred_pool, 11);
@@ -266,6 +269,7 @@ async fn test_phase3_capability_pools_tenant_override_and_hash() {
             true,
             None,
             Some(&CoreServicesConfig::default()),
+            None, // phase2: 测试中不使用 Redis
         )
         .await;
     assert_eq!(dbg2.preferred_pool, expected_preferred);
@@ -306,6 +310,7 @@ async fn test_phase3_capability_pools_exact_match_and_specificity_assignment() {
                 "NMT".to_string(),
                 "TTS".to_string(),
             ],
+            language_requirements: None,
         },
         Phase3PoolConfig {
             pool_id: 12,
@@ -316,6 +321,7 @@ async fn test_phase3_capability_pools_exact_match_and_specificity_assignment() {
                 "TTS".to_string(),
                 "TONE".to_string(),
             ],
+            language_requirements: None,
         },
     ];
     registry.set_phase3_config(p3).await;
@@ -405,6 +411,7 @@ async fn test_phase3_capability_pools_exact_match_and_specificity_assignment() {
             true,
             None,
             Some(&CoreServicesConfig::default()),
+            None, // phase2: 测试中不使用 Redis
         )
         .await;
     assert_eq!(dbg1.selected_pool, Some(10));
@@ -426,6 +433,7 @@ async fn test_phase3_capability_pools_exact_match_and_specificity_assignment() {
             true,
             None,
             Some(&CoreServicesConfig::default()),
+            None, // phase2: 测试中不使用 Redis
         )
         .await;
     assert_eq!(dbg2.selected_pool, Some(12));
@@ -503,7 +511,7 @@ async fn test_select_node_with_models_ready() {
     for node_id in &node_ids {
         if let Some(node) = registry.get_node_for_test(node_id).await {
             eprintln!("节点 {}: status={:?}, online={}, gpus={:?}, capability_by_type={:?}", 
-                node_id, node.status, node.online, node.hardware.gpus, node.capability_by_type);
+                node_id, node.status, node.online, node.hardware.gpus, "capability_by_type已迁移到Redis");
         }
     }
     
@@ -771,6 +779,7 @@ async fn test_update_node_heartbeat_capability_state() {
         0,
         Some(updated_cap_state),
         None, // processing_metrics
+        None, // language_capabilities
     ).await;
 
     assert!(success);

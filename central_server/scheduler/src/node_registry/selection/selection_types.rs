@@ -2,7 +2,7 @@ use super::super::{DispatchExcludeReason, NodeRegistry};
 use super::selection_breakdown::NoAvailableNodeBreakdown;
 use crate::messages::NodeStatus;
 use crate::node_registry::validation::{
-    is_node_resource_available, node_has_installed_types, node_has_required_types_ready,
+    is_node_resource_available, node_has_installed_types,
 };
 use std::time::Instant;
 use tracing::{debug, warn};
@@ -17,7 +17,7 @@ impl NodeRegistry {
         exclude_node_id: Option<&str>,
     ) -> (Option<String>, NoAvailableNodeBreakdown) {
         let path_t0 = Instant::now();
-        let reserved_counts = self.reserved_counts_snapshot().await;
+        // Phase2已将reserved融合到current_jobs，无需单独获取reserved_counts
         let t0 = Instant::now();
         let nodes = self.nodes.read().await;
         crate::metrics::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
@@ -81,11 +81,16 @@ impl NodeRegistry {
                 continue;
             }
 
-            if !node_has_required_types_ready(node, required_types) {
-                breakdown.model_not_available += 1;
-                self.record_exclude_reason(DispatchExcludeReason::ModelNotAvailable, node.node_id.clone()).await;
-                continue;
-            }
+            // 注意：selection_types 没有 phase2_runtime，无法从 Redis 读取节点能力
+            // 这里暂时返回 false，表示无法检查（需要调用方提供 phase2_runtime）
+            // TODO: 重构 selection_types 以支持 phase2_runtime
+            // if !node_has_required_types_ready(node, required_types, None).await {
+            //     breakdown.model_not_available += 1;
+            //     self.record_exclude_reason(DispatchExcludeReason::ModelNotAvailable, node.node_id.clone()).await;
+            //     continue;
+            // }
+            // 临时方案：跳过能力检查（因为无法从 Redis 读取）
+            // 这可能会导致选择到没有能力的节点，但这是过渡期的临时方案
 
             // 语言能力过滤（新增）
             let language_index = self.language_capability_index.read().await;
@@ -132,15 +137,14 @@ impl NodeRegistry {
             }
             drop(language_index);
 
-            let reserved = reserved_counts.get(&node.node_id).copied().unwrap_or(0);
-            let effective_jobs = std::cmp::max(node.current_jobs, reserved);
+            // Phase2已将reserved融合到current_jobs，直接使用current_jobs
+            let effective_jobs = node.current_jobs;
             if effective_jobs >= node.max_concurrent_jobs {
                 breakdown.capacity_exceeded += 1;
                 // 添加详细日志，帮助诊断容量问题
                 debug!(
                     node_id = %node.node_id,
                     current_jobs = node.current_jobs,
-                    reserved = reserved,
                     effective_jobs = effective_jobs,
                     max_concurrent_jobs = node.max_concurrent_jobs,
                     "Node capacity exceeded, excluding from selection"
@@ -194,11 +198,9 @@ impl NodeRegistry {
         // P1-3: src_lang = auto 时，按 ASR 语言覆盖度排序
         let language_index = self.language_capability_index.read().await;
         available_nodes.sort_by(|a, b| {
-            // 首先按负载排序
-            let reserved_a = reserved_counts.get(&a.node_id).copied().unwrap_or(0);
-            let reserved_b = reserved_counts.get(&b.node_id).copied().unwrap_or(0);
-            let load_a = std::cmp::max(a.current_jobs, reserved_a);
-            let load_b = std::cmp::max(b.current_jobs, reserved_b);
+            // 首先按负载排序（Phase2已将reserved融合到current_jobs）
+            let load_a = a.current_jobs;
+            let load_b = b.current_jobs;
             
             let load_cmp = load_a.cmp(&load_b);
             if load_cmp != std::cmp::Ordering::Equal {

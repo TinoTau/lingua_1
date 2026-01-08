@@ -51,7 +51,7 @@ class SemanticRepairStageZH {
                 reasonCodes: ['TASK_ROUTER_NOT_AVAILABLE'],
             };
         }
-        // 对每句话都进行修复，不根据阈值触发
+        // 对每句话都进行修复，跳过质量评分
         // 仍然计算评分用于日志记录，但不作为触发条件
         const scoreResult = this.scorer.score(text, qualityScore, meta);
         const startTime = Date.now();

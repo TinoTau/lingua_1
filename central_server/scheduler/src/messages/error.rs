@@ -26,6 +26,8 @@ pub enum ErrorCode {
     NoGpuAvailable,
     NodeIdConflict,
     InvalidCapabilitySchema,
+    /// 调度服务器依赖服务不可用（如 Redis 不可用）
+    SchedulerDependencyDown,
 }
 
 impl ToString for ErrorCode {
@@ -51,6 +53,7 @@ impl ToString for ErrorCode {
             ErrorCode::NoGpuAvailable => "NO_GPU_AVAILABLE".to_string(),
             ErrorCode::NodeIdConflict => "NODE_ID_CONFLICT".to_string(),
             ErrorCode::InvalidCapabilitySchema => "INVALID_CAPABILITY_SCHEMA".to_string(),
+            ErrorCode::SchedulerDependencyDown => "SCHEDULER_DEPENDENCY_DOWN".to_string(),
         }
     }
 }
@@ -69,6 +72,7 @@ pub fn get_error_hint(code: &ErrorCode) -> &'static str {
         ErrorCode::NoGpuAvailable => "节点没有 GPU，无法注册为算力提供方。",
         ErrorCode::NodeIdConflict => "节点 ID 冲突，请清除本地 node_id 后重新注册。",
         ErrorCode::InvalidCapabilitySchema => "不支持的能力描述版本，请更新节点客户端。",
+        ErrorCode::SchedulerDependencyDown => "调度服务器依赖服务不可用，请稍后重试。",
         _ => "发生错误，请稍后重试。",
     }
 }

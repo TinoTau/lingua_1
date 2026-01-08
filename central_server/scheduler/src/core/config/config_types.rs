@@ -119,6 +119,17 @@ pub struct Phase3Config {
     /// 自动生成 Pool 的配置选项
     #[serde(default)]
     pub auto_pool_config: Option<AutoLanguagePoolConfig>,
+
+    /// 随机采样节点数量（默认 20）
+    /// 从 Pool 成员中随机采样 k 个节点，然后按负载排序，依次尝试 reserve
+    #[serde(default = "super::config_defaults::default_phase3_random_sample_size")]
+    pub random_sample_size: usize,
+
+    /// 是否启用 session affinity（默认 false，随机选择）
+    /// 若为 true，则使用 hash-based 选择（保持原有行为）
+    /// 若为 false，则使用随机采样（符合设计文档要求）
+    #[serde(default = "super::config_defaults::default_phase3_enable_session_affinity")]
+    pub enable_session_affinity: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

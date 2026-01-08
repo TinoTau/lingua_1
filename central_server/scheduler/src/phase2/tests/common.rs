@@ -1,4 +1,5 @@
     use super::*;
+    use crate::core::config::Phase2Config;
     use crate::messages::{
         CapabilityByType, DeviceType, FeatureFlags, HardwareInfo, GpuInfo, InstalledModel, InstalledService,
         NodeStatus, ResourceUsage, ServiceStatus, ServiceType,

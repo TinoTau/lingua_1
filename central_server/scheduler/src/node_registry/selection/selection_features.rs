@@ -52,7 +52,7 @@ impl NodeRegistry {
         exclude_node_id: Option<&str>,
     ) -> (Option<String>, NoAvailableNodeBreakdown) {
         let path_t0 = Instant::now();
-        let reserved_counts = self.reserved_counts_snapshot().await;
+        // Phase2已将reserved融合到current_jobs，无需单独获取reserved_counts
         let t0 = Instant::now();
         let nodes = self.nodes.read().await;
         crate::metrics::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
@@ -99,8 +99,8 @@ impl NodeRegistry {
                 continue;
             }
 
-            let reserved = reserved_counts.get(&node.node_id).copied().unwrap_or(0);
-            let effective_jobs = std::cmp::max(node.current_jobs, reserved);
+            // Phase2已将reserved融合到current_jobs，直接使用current_jobs
+            let effective_jobs = node.current_jobs;
             if effective_jobs >= node.max_concurrent_jobs {
                 breakdown.capacity_exceeded += 1;
                 self.record_exclude_reason(DispatchExcludeReason::CapacityExceeded, node.node_id.clone()).await;
@@ -143,8 +143,8 @@ impl NodeRegistry {
         }
 
         available_nodes.sort_by_key(|node| {
-            let reserved = reserved_counts.get(&node.node_id).copied().unwrap_or(0);
-            std::cmp::max(node.current_jobs, reserved)
+            // Phase2已将reserved融合到current_jobs
+            node.current_jobs
         });
         let selected = Some(available_nodes[0].node_id.clone());
         crate::metrics::observability::record_path_latency(

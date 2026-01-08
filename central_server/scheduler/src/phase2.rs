@@ -146,5 +146,6 @@ mod tests {
     include!("phase2/tests/ws_helpers.rs");
     include!("phase2/tests/ws_e2e.rs");
     include!("phase2/tests/cluster_acceptance.rs");
+    include!("phase2/tests/runtime_routing_test.rs");
 }
 

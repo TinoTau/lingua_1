@@ -194,6 +194,54 @@ lazy_static::lazy_static! {
     ))
     .expect("metric");
 
+    // —— Reservation observability —— //
+    static ref RESERVE_ATTEMPT_TOTAL: IntCounterVec = IntCounterVec::new(
+        Opts::new(
+            "reserve_attempt_total",
+            "Reserve attempt total (by result)"
+        ),
+        &["result"] // result=success|fail|error
+    )
+    .expect("metric");
+
+    static ref POOL_QUERY_TOTAL: IntCounterVec = IntCounterVec::new(
+        Opts::new(
+            "pool_query_total",
+            "Pool query total (by result)"
+        ),
+        &["result"] // result=found|empty
+    )
+    .expect("metric");
+
+    static ref DISPATCH_LATENCY_SECONDS: Histogram = Histogram::with_opts(
+        HistogramOpts::new(
+            "dispatch_latency_seconds",
+            "Dispatch latency from reserve to send (seconds)"
+        )
+        .buckets(vec![
+            0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0, 2.0, 5.0,
+        ]),
+    )
+    .expect("metric");
+
+    static ref ACK_TIMEOUT_TOTAL: IntCounterVec = IntCounterVec::new(
+        Opts::new(
+            "ack_timeout_total",
+            "ACK timeout total (by job_id prefix for bounded cardinality)"
+        ),
+        &["job_prefix"] // job_id 前缀（限制基数）
+    )
+    .expect("metric");
+
+    static ref NODE_OVERLOAD_REJECT_TOTAL: IntCounterVec = IntCounterVec::new(
+        Opts::new(
+            "node_overload_reject_total",
+            "Node overload reject total (by node_id and reason)"
+        ),
+        &["node_id", "reason"] // reason=full|not_ready|error
+    )
+    .expect("metric");
+
     static ref SERVICE_KEYS: Mutex<HashSet<String>> = Mutex::new(HashSet::new());
     static ref REASON_KEYS: Mutex<HashSet<String>> = Mutex::new(HashSet::new());
     static ref RATE_LIMITED_NODE_KEYS: Mutex<HashSet<String>> = Mutex::new(HashSet::new());
@@ -233,6 +281,12 @@ pub fn init() {
     let _ = REGISTRY.register(Box::new(PHASE2_REDIS_OP_TOTAL.clone()));
     let _ = REGISTRY.register(Box::new(PHASE2_INBOX_PENDING.clone()));
     let _ = REGISTRY.register(Box::new(PHASE2_DLQ_MOVED_TOTAL.clone()));
+
+    let _ = REGISTRY.register(Box::new(RESERVE_ATTEMPT_TOTAL.clone()));
+    let _ = REGISTRY.register(Box::new(POOL_QUERY_TOTAL.clone()));
+    let _ = REGISTRY.register(Box::new(DISPATCH_LATENCY_SECONDS.clone()));
+    let _ = REGISTRY.register(Box::new(ACK_TIMEOUT_TOTAL.clone()));
+    let _ = REGISTRY.register(Box::new(NODE_OVERLOAD_REJECT_TOTAL.clone()));
 }
 
 pub fn observe_stats_request_duration_seconds(secs: f64) {
@@ -394,6 +448,48 @@ pub async fn render_text(state: &AppState) -> (String, String) {
     encoder.encode(&metric_families, &mut buf).unwrap_or(());
     let content_type = encoder.format_type().to_string();
     (String::from_utf8_lossy(&buf).to_string(), content_type)
+}
+
+// ===== Reservation observability =====
+
+/// 记录 reserve 尝试（成功/失败）
+pub fn on_reserve_attempt(success: bool) {
+    let result = if success { "success" } else { "fail" };
+    RESERVE_ATTEMPT_TOTAL.with_label_values(&[result]).inc();
+}
+
+/// 记录 reserve 错误（Redis 不可用等）
+pub fn on_reserve_error() {
+    RESERVE_ATTEMPT_TOTAL.with_label_values(&["error"]).inc();
+}
+
+/// 记录 Pool 查询结果（找到节点/空池）
+pub fn on_pool_query(found: bool) {
+    let result = if found { "found" } else { "empty" };
+    POOL_QUERY_TOTAL.with_label_values(&[result]).inc();
+}
+
+/// 记录派发延迟（从 reserve 到 send 的耗时）
+pub fn observe_dispatch_latency(seconds: f64) {
+    DISPATCH_LATENCY_SECONDS.observe(seconds);
+}
+
+/// 记录 ACK 超时（使用 job_id 前缀限制基数）
+pub fn on_ack_timeout(job_id: &str) {
+    // 使用 job_id 的前8个字符作为前缀，限制 label 基数
+    let prefix = if job_id.len() >= 8 {
+        &job_id[..8]
+    } else {
+        job_id
+    };
+    ACK_TIMEOUT_TOTAL.with_label_values(&[prefix]).inc();
+}
+
+/// 记录节点过载拒绝（FULL / NOT_READY / ERROR）
+pub fn on_node_overload_reject(node_id: &str, reason: &'static str) {
+    NODE_OVERLOAD_REJECT_TOTAL
+        .with_label_values(&[node_id, reason])
+        .inc();
 }
 
 

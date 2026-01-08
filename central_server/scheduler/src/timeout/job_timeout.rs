@@ -1,6 +1,6 @@
 use crate::core::{AppState, config::JobTimeoutPolicyConfig};
 use crate::messages::{ErrorCode, SessionMessage, UiEventStatus, UiEventType, get_error_hint, NodeMessage};
-use tracing::{warn, info};
+use tracing::{warn, info, error};
 
 /// Phase 1：Job 超时管理（单机可跑 + 为后续集群留空间）
 ///
@@ -18,7 +18,7 @@ pub fn start_job_timeout_manager(
     let dispatched_timeout_ms = (dispatched_timeout_seconds.max(1) as i64) * 1000;
     let pending_timeout_ms = (policy.pending_timeout_seconds.max(1) as i64) * 1000;
     let scan_interval = std::time::Duration::from_millis(policy.scan_interval_ms.max(200));
-    let ttl = std::time::Duration::from_secs(reserved_ttl_seconds.max(1));
+    let _ttl = std::time::Duration::from_secs(reserved_ttl_seconds.max(1));
     let reserved_ttl_seconds = reserved_ttl_seconds.max(1);
 
     tokio::spawn(async move {
@@ -66,6 +66,9 @@ pub fn start_job_timeout_manager(
                     continue;
                 }
 
+                // 记录 ACK 超时指标
+                crate::metrics::prometheus_metrics::on_ack_timeout(&job.job_id);
+                
                 warn!(
                     trace_id = %job.trace_id,
                     job_id = %job.job_id,
@@ -75,6 +78,7 @@ pub fn start_job_timeout_manager(
                     dispatched_timeout_seconds = dispatched_timeout_seconds,
                     failover_attempts = job.failover_attempts,
                     failover_max_attempts = policy.failover_max_attempts,
+                    elapsed_ms = now_ms - dispatched_at_ms,
                     "Job dispatched 超时，尝试 cancel + failover"
                 );
 
@@ -88,10 +92,9 @@ pub fn start_job_timeout_manager(
                     let _ = crate::phase2::send_node_message_routed(&state, current_node_id, cancel_msg).await;
                 }
 
-                // 释放旧节点 reserved（幂等）
-                state.node_registry.release_job_slot(current_node_id, &job.job_id).await;
+                // 释放旧节点 reserved（幂等）- 统一使用Phase2 Redis实现
                 if let Some(rt) = state.phase2.as_ref() {
-                    rt.release_node_slot(current_node_id, &job.job_id).await;
+                    rt.release_node_slot(current_node_id, &job.job_id, job.dispatch_attempt_id).await;
                         let _ = rt
                             .job_fsm_to_finished(&job.job_id, job.dispatch_attempt_id.max(1), false)
                             .await;
@@ -153,20 +156,33 @@ pub fn start_job_timeout_manager(
                     continue;
                 };
 
-                // 预占位（reserve）
+                // 预占位（reserve）- 统一使用Phase2 Redis实现
+                let new_attempt_id = job.dispatch_attempt_id + 1;
                 let reserved = if let Some(rt) = state.phase2.as_ref() {
-                    let node = state.node_registry.get_node_snapshot(&new_node_id).await;
-                    let (running_jobs, max_jobs) = node
-                        .as_ref()
-                        .map(|n| (n.current_jobs, n.max_concurrent_jobs))
-                        .unwrap_or((0, 1));
-                    rt.reserve_node_slot(&new_node_id, &job.job_id, reserved_ttl_seconds, running_jobs, max_jobs)
-                        .await
+                    match rt.reserve_node_slot(&new_node_id, &job.job_id, new_attempt_id, reserved_ttl_seconds).await {
+                        Ok(true) => true,
+                        Ok(false) => false,
+                        Err(crate::messages::ErrorCode::SchedulerDependencyDown) => {
+                            // Redis 不可用：fail closed，标记任务失败
+                            error!(
+                                job_id = %job.job_id,
+                                node_id = %new_node_id,
+                                "Redis 不可用，无法预留节点槽位，任务失败"
+                            );
+                            state.dispatcher.update_job_status(&job.job_id, crate::core::dispatcher::JobStatus::Failed).await;
+                            notify_job_timeout(&state, &job, Some(now_ms as u64)).await;
+                            continue;
+                        }
+                        Err(_) => false,
+                    }
                 } else {
-                    state
-                        .node_registry
-                        .reserve_job_slot(&new_node_id, &job.job_id, ttl)
-                        .await
+                    // Phase2未启用：无法进行reservation
+                    warn!(
+                        job_id = %job.job_id,
+                        node_id = %new_node_id,
+                        "Phase2未启用，无法进行reservation"
+                    );
+                    false
                 };
                 if !reserved {
                     state.dispatcher.update_job_status(&job.job_id, crate::core::dispatcher::JobStatus::Failed).await;
@@ -186,25 +202,29 @@ pub fn start_job_timeout_manager(
                     .set_job_assigned_node_for_failover(&job.job_id, new_node_id.clone())
                     .await
                 {
-                    state.node_registry.release_job_slot(&new_node_id, &job.job_id).await;
                     if let Some(rt) = state.phase2.as_ref() {
-                        rt.release_node_slot(&new_node_id, &job.job_id).await;
+                        rt.release_node_slot(&new_node_id, &job.job_id, new_attempt_id).await;
                     }
                     continue;
                 }
 
                 // 下发到新节点
                 let Some(updated_job) = state.dispatcher.get_job(&job.job_id).await else {
-                    state.node_registry.release_job_slot(&new_node_id, &job.job_id).await;
                     if let Some(rt) = state.phase2.as_ref() {
-                        rt.release_node_slot(&new_node_id, &job.job_id).await;
+                        rt.release_node_slot(&new_node_id, &job.job_id, new_attempt_id).await;
                     }
                     continue;
                 };
 
+                // 记录派发开始时间（用于计算 dispatch_latency）
+                let dispatch_start = std::time::Instant::now();
                 if let Some(job_assign_msg) = crate::websocket::create_job_assign_message(&state, &updated_job, None, None, None).await {
                     let ok = crate::phase2::send_node_message_routed(&state, &new_node_id, job_assign_msg).await;
                     if ok {
+                        // 记录派发延迟
+                        let dispatch_latency = dispatch_start.elapsed().as_secs_f64();
+                        crate::metrics::prometheus_metrics::observe_dispatch_latency(dispatch_latency);
+                        
                         state.dispatcher.mark_job_dispatched(&updated_job.job_id).await;
                         info!(
                             trace_id = %updated_job.trace_id,
@@ -212,13 +232,13 @@ pub fn start_job_timeout_manager(
                             old_node_id = %current_node_id,
                             new_node_id = %new_node_id,
                             failover_attempts = updated_job.failover_attempts,
+                            dispatch_latency_seconds = dispatch_latency,
                             "Job failover 重派成功下发"
                         );
                     } else {
                         // 发送失败：释放 reserved 并发槽并标记失败（避免泄漏）
-                        state.node_registry.release_job_slot(&new_node_id, &updated_job.job_id).await;
                         if let Some(rt) = state.phase2.as_ref() {
-                            rt.release_node_slot(&new_node_id, &updated_job.job_id).await;
+                            rt.release_node_slot(&new_node_id, &updated_job.job_id, updated_job.dispatch_attempt_id).await;
                         }
                         state.dispatcher.update_job_status(&updated_job.job_id, crate::core::dispatcher::JobStatus::Failed).await;
                         notify_job_node_unavailable(&state, &updated_job, Some(now_ms as u64)).await;

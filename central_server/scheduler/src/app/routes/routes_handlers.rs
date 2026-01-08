@@ -44,9 +44,10 @@ pub async fn start_server(
             info!("清理 {} 个节点连接", nodes.len());
             let node_ids: Vec<String> = nodes.keys().cloned().collect();
             drop(nodes);
+            let phase2_runtime = app_state_for_shutdown.phase2.as_ref().map(|rt| rt.as_ref());
             for node_id in node_ids {
                 app_state_for_shutdown.node_connections.unregister(&node_id).await;
-                app_state_for_shutdown.node_registry.mark_node_offline(&node_id).await;
+                app_state_for_shutdown.node_registry.mark_node_offline(&node_id, phase2_runtime).await;
             }
         }
         

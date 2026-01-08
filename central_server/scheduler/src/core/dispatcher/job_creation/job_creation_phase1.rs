@@ -53,23 +53,50 @@ impl JobDispatcher {
         is_timeout_triggered: bool,
         no_available_node_metric: Option<(&'static str, &'static str)>,
     ) -> Job {
-        // Phase 1：并发一致性（reserve）——绑定成功 ≈ 占用 1 个槽
+        // Phase 2：统一使用Redis Reservation机制
         let mut final_assigned_node_id = assigned_node_id.clone();
         if let Some(node_id) = &assigned_node_id {
-            let ttl = std::time::Duration::from_secs(self.reserved_ttl_seconds);
-            let reserved = self
-                .node_registry
-                .reserve_job_slot(node_id, &job_id, ttl)
-                .await;
-            if !reserved {
-                final_assigned_node_id = None;
-                // 选择到了节点但 reserve 失败：多数是并发槽竞争/心跳滞后导致
+            if let Some(rt) = self.phase2.as_ref() {
+                let attempt_id = 1; // 首次创建，attempt_id=1
+                let ttl_s = self.reserved_ttl_seconds.max(1);
+                let reserved = match rt.reserve_node_slot(node_id, &job_id, attempt_id, ttl_s).await {
+                    Ok(true) => true,
+                    Ok(false) => {
+                        // 预留失败（节点已满等），继续执行但标记为无节点
+                        false
+                    }
+                    Err(crate::messages::ErrorCode::SchedulerDependencyDown) => {
+                        // Redis 不可用：fail closed，拒绝新任务
+                        // 注意：由于函数返回类型是 Job 而不是 Option<Job>，我们创建一个失败的 Job
+                        // 通过设置 assigned_node_id = None 和记录错误日志来处理
+                        tracing::error!(
+                            job_id = %job_id,
+                            node_id = %node_id,
+                            "Redis 不可用，无法预留节点槽位，拒绝任务（SCHEDULER_DEPENDENCY_DOWN）"
+                        );
+                        // 标记为无节点，后续可以通过检查 assigned_node_id 来判断是否因 Redis 不可用而失败
+                        false
+                    }
+                    Err(_) => false, // 其他错误，按失败处理
+                };
+                if !reserved {
+                    final_assigned_node_id = None;
+                    warn!(
+                        trace_id = %trace_id,
+                        job_id = %job_id,
+                        node_id = %node_id,
+                        "Node selected but reserve failed, falling back to no node"
+                    );
+                }
+            } else {
+                // Phase2未启用：无法进行reservation，直接失败
                 warn!(
                     trace_id = %trace_id,
                     job_id = %job_id,
                     node_id = %node_id,
-                    "Node selected but reserve failed, falling back to no node"
+                    "Phase2未启用，无法进行reservation"
                 );
+                final_assigned_node_id = None;
             }
         }
 

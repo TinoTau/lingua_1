@@ -187,59 +187,6 @@ return 0
         self.query(cmd).await
     }
 
-    async fn zcard_clean_expired(&self, key: &str) -> redis::RedisResult<u64> {
-        let script = r#"
-local now = tonumber(ARGV[1])
-redis.call('ZREMRANGEBYSCORE', KEYS[1], 0, now)
-return redis.call('ZCARD', KEYS[1])
-"#;
-        let now_ms = chrono::Utc::now().timestamp_millis();
-        let mut cmd = redis::cmd("EVAL");
-        cmd.arg(script).arg(1).arg(key).arg(now_ms);
-        self.query(cmd).await
-    }
-
-    async fn zreserve_with_capacity(
-        &self,
-        key: &str,
-        job_id: &str,
-        ttl_seconds: u64,
-        running_jobs: u64,
-        max_jobs: u64,
-    ) -> redis::RedisResult<bool> {
-        let script = r#"
-local now = tonumber(ARGV[1])
-local ttl_ms = tonumber(ARGV[2])
-local running = tonumber(ARGV[3])
-local maxj = tonumber(ARGV[4])
-local job = ARGV[5]
-
-redis.call('ZREMRANGEBYSCORE', KEYS[1], 0, now)
-local reserved = redis.call('ZCARD', KEYS[1])
-local effective = reserved
-if running > reserved then effective = running end
-if effective >= maxj then
-  return 0
-end
-redis.call('ZADD', KEYS[1], now + ttl_ms, job)
--- best-effort 保持 key 不永久增长（空集合也无所谓）
-redis.call('EXPIRE', KEYS[1], math.max(60, math.floor(ttl_ms/1000) + 60))
-return 1
-"#;
-        let now_ms = chrono::Utc::now().timestamp_millis();
-        let ttl_ms = (ttl_seconds.max(1) * 1000) as i64;
-        let mut cmd = redis::cmd("EVAL");
-        cmd.arg(script)
-            .arg(1)
-            .arg(key)
-            .arg(now_ms)
-            .arg(ttl_ms)
-            .arg(running_jobs)
-            .arg(max_jobs)
-            .arg(job_id);
-        let v: i64 = self.query(cmd).await?;
-        Ok(v == 1)
-    }
 
     async fn execute_lua_hset_session_bind(
         &self,
@@ -267,6 +214,165 @@ return 1
             .arg(updated_at)
             .arg(ttl);
         self.query(cmd).await
+    }
+
+    /// TRY_RESERVE: 按照设计文档实现原子预留
+    /// KEYS[1]=node_cap_key, KEYS[2]=node_meta_key, KEYS[3]=resv_key
+    /// ARGV[1]=ttl_ms, ARGV[2]=resv_value_json
+    /// 返回: {1, 'OK'} 或 {0, reason}
+    async fn try_reserve(
+        &self,
+        node_cap_key: &str,
+        node_meta_key: &str,
+        resv_key: &str,
+        ttl_ms: u64,
+        resv_value_json: &str,
+    ) -> redis::RedisResult<(i64, String)> {
+        let script = r#"
+local health = redis.call('HGET', KEYS[2], 'health')
+if health ~= 'ready' and health ~= false then
+  return {0, 'NOT_READY'}
+end
+
+local maxv = tonumber(redis.call('HGET', KEYS[1], 'max') or '0')
+local running = tonumber(redis.call('HGET', KEYS[1], 'running') or '0')
+local reserved = tonumber(redis.call('HGET', KEYS[1], 'reserved') or '0')
+
+if maxv <= 0 then
+  return {0, 'NO_CAPACITY'}
+end
+
+if (running + reserved) >= maxv then
+  return {0, 'FULL'}
+end
+
+redis.call('HINCRBY', KEYS[1], 'reserved', 1)
+
+local ok = redis.call('SET', KEYS[3], ARGV[2], 'PX', ARGV[1], 'NX')
+if not ok then
+  redis.call('HINCRBY', KEYS[1], 'reserved', -1)
+  return {0, 'RESV_EXISTS'}
+end
+
+return {1, 'OK'}
+"#;
+        let mut cmd = redis::cmd("EVAL");
+        cmd.arg(script)
+            .arg(3)
+            .arg(node_cap_key)
+            .arg(node_meta_key)
+            .arg(resv_key)
+            .arg(ttl_ms.max(1))
+            .arg(resv_value_json);
+        
+        // 返回格式: [1, "OK"] 或 [0, "FULL"]
+        // Redis Lua返回数组时,可能是Bulk或Array格式
+        let result: redis::Value = self.query(cmd).await?;
+        let (status, reason) = match result {
+            redis::Value::Bulk(items) => {
+                let status = match items.get(0) {
+                    Some(redis::Value::Int(v)) => *v,
+                    _ => 0,
+                };
+                let reason = match items.get(1) {
+                    Some(redis::Value::Data(v)) => String::from_utf8_lossy(v).to_string(),
+                    Some(redis::Value::Status(v)) => v.to_string(),
+                    _ => "UNKNOWN".to_string(),
+                };
+                (status, reason)
+            }
+            _ => (0, "INVALID_RESPONSE".to_string()),
+        };
+        Ok((status, reason))
+    }
+
+    /// COMMIT_RESERVE: reserved -> running
+    /// KEYS[1]=node_cap_key, KEYS[2]=resv_key
+    /// 返回: true表示成功, false表示失败(resv_key不存在或已过期)
+    async fn commit_reserve(
+        &self,
+        node_cap_key: &str,
+        resv_key: &str,
+    ) -> redis::RedisResult<bool> {
+        let script = r#"
+-- 检查 resv_key 是否存在
+if redis.call('EXISTS', KEYS[2]) == 0 then
+  return 0
+end
+
+-- reserved -= 1
+local reserved = tonumber(redis.call('HGET', KEYS[1], 'reserved') or '0')
+if reserved > 0 then
+  redis.call('HINCRBY', KEYS[1], 'reserved', -1)
+end
+
+-- running += 1
+redis.call('HINCRBY', KEYS[1], 'running', 1)
+
+-- 删除 resv_key
+redis.call('DEL', KEYS[2])
+
+return 1
+"#;
+        let mut cmd = redis::cmd("EVAL");
+        cmd.arg(script)
+            .arg(2)
+            .arg(node_cap_key)
+            .arg(resv_key);
+        let v: i64 = self.query(cmd).await?;
+        Ok(v == 1)
+    }
+
+    /// RELEASE_RESERVE: 释放预留
+    /// KEYS[1]=node_cap_key, KEYS[2]=resv_key
+    /// 返回: true表示成功释放, false表示resv_key不存在(已过期)
+    async fn release_reserve(
+        &self,
+        node_cap_key: &str,
+        resv_key: &str,
+    ) -> redis::RedisResult<bool> {
+        let script = r#"
+-- 如果 resv_key 存在
+if redis.call('EXISTS', KEYS[2]) == 1 then
+  local reserved = tonumber(redis.call('HGET', KEYS[1], 'reserved') or '0')
+  if reserved > 0 then
+    redis.call('HINCRBY', KEYS[1], 'reserved', -1)
+  end
+  redis.call('DEL', KEYS[2])
+  return 1
+end
+-- resv_key 不存在(已过期), 不做任何操作, 返回0
+return 0
+"#;
+        let mut cmd = redis::cmd("EVAL");
+        cmd.arg(script)
+            .arg(2)
+            .arg(node_cap_key)
+            .arg(resv_key);
+        let v: i64 = self.query(cmd).await?;
+        Ok(v == 1)
+    }
+
+    /// DEC_RUNNING: 任务完成时 running -= 1
+    /// KEYS[1]=node_cap_key
+    /// 返回: true表示成功
+    async fn dec_running(
+        &self,
+        node_cap_key: &str,
+    ) -> redis::RedisResult<bool> {
+        let script = r#"
+local running = tonumber(redis.call('HGET', KEYS[1], 'running') or '0')
+if running > 0 then
+  redis.call('HINCRBY', KEYS[1], 'running', -1)
+  return 1
+end
+-- running 已经是0, 不做任何操作
+return 1
+"#;
+        let mut cmd = redis::cmd("EVAL");
+        cmd.arg(script).arg(1).arg(node_cap_key);
+        let v: i64 = self.query(cmd).await?;
+        Ok(v == 1)
     }
 }
 

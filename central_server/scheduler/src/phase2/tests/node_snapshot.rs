@@ -3,16 +3,6 @@
 
     fn sample_node(node_id: &str) -> RegistryNode {
         let now = chrono::Utc::now();
-        let capability_by_type = vec![CapabilityByType {
-            r#type: ServiceType::Asr,
-            ready: true,
-            reason: None,
-            ready_impl_ids: Some(vec!["node-inference".to_string()]),
-        }];
-        let capability_by_type_map = capability_by_type
-            .iter()
-            .map(|c| (c.r#type.clone(), c.ready))
-            .collect();
 
         RegistryNode {
             language_capabilities: None,
@@ -61,8 +51,7 @@
                 persona_adaptation: None,
             },
             accept_public_jobs: true,
-            capability_by_type,
-            capability_by_type_map,
+            // capability_by_type 和 capability_by_type_map 已从 Node 结构体中移除，能力信息存储在 Redis
             current_jobs: 0,
             max_concurrent_jobs: 4,
             last_heartbeat: now,

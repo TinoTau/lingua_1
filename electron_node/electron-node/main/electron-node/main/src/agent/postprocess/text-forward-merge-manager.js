@@ -48,36 +48,22 @@ class TextForwardMergeManager {
                 reason: 'Pending text wait timeout, processing now',
             }, 'TextForwardMergeManager: Pending text wait timeout, processing now');
             this.pendingTexts.delete(sessionId);
-            // 如果待合并的文本长度 >= 16字符，发送给语义修复（统一使用SemanticRepairScorer的标准）
-            if (pending.text.length >= this.MIN_LENGTH_TO_SEND) {
-                return {
-                    processedText: pending.text,
-                    shouldDiscard: false,
-                    shouldWaitForMerge: false,
-                    shouldSendToSemanticRepair: true,
-                    deduped: false,
-                    dedupChars: 0,
-                    // 注意：超时处理时，不需要通知GPU仲裁器，因为任务可能已经完成
-                };
-            }
-            else {
-                // 如果待合并的文本长度 < 16字符，丢弃
-                logger_1.default.info({
-                    sessionId,
-                    pendingText: pending.text.substring(0, 50),
-                    pendingLength: pending.text.length,
-                    reason: 'Pending text too short after timeout, discarding',
-                }, 'TextForwardMergeManager: Pending text too short after timeout, discarding');
-                return {
-                    processedText: '',
-                    shouldDiscard: true,
-                    shouldWaitForMerge: false,
-                    shouldSendToSemanticRepair: false,
-                    deduped: false,
-                    dedupChars: 0,
-                    // 注意：超时处理时，不需要通知GPU仲裁器，因为任务可能已经完成
-                };
-            }
+            // 超时后，无论文本长度如何，都发送给语义修复服务，跳过过滤
+            logger_1.default.info({
+                sessionId,
+                pendingText: pending.text.substring(0, 50),
+                pendingLength: pending.text.length,
+                reason: 'Pending text wait timeout, sending to semantic repair regardless of length',
+            }, 'TextForwardMergeManager: Pending text wait timeout, sending to semantic repair regardless of length');
+            return {
+                processedText: pending.text,
+                shouldDiscard: false,
+                shouldWaitForMerge: false,
+                shouldSendToSemanticRepair: true,
+                deduped: false,
+                dedupChars: 0,
+                // 注意：超时处理时，不需要通知GPU仲裁器，因为任务可能已经完成
+            };
         }
         // 如果有待合并的文本且未超时，与当前文本合并
         if (pending && nowMs < pending.waitUntil) {

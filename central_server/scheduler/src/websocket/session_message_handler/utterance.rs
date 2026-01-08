@@ -94,9 +94,22 @@ pub(super) async fn handle_utterance(
             }
 
             // Note: In current implementation, JobAssign doesn't have ASR result yet, so group_id, part_index, context_text are None
+            // 记录派发开始时间（用于计算 dispatch_latency）
+            let dispatch_start = std::time::Instant::now();
             if let Some(job_assign_msg) = create_job_assign_message(state, &job, None, None, None).await {
                 if crate::phase2::send_node_message_routed(state, node_id, job_assign_msg).await {
+                    // 记录派发延迟
+                    let dispatch_latency = dispatch_start.elapsed().as_secs_f64();
+                    crate::metrics::prometheus_metrics::observe_dispatch_latency(dispatch_latency);
+                    
                     state.dispatcher.mark_job_dispatched(&job.job_id).await;
+                    info!(
+                        trace_id = %trace_id,
+                        job_id = %job.job_id,
+                        node_id = %node_id,
+                        dispatch_latency_seconds = dispatch_latency,
+                        "任务派发成功"
+                    );
                     // Send DISPATCHED event
                     send_ui_event(
                         tx,
@@ -111,11 +124,15 @@ pub(super) async fn handle_utterance(
                     )
                     .await;
                 } else {
-                    warn!("Failed to send job to node {}", node_id);
+                    warn!(
+                        trace_id = %trace_id,
+                        job_id = %job.job_id,
+                        node_id = %node_id,
+                        "Failed to send job to node"
+                    );
                     // 发送失败：释放 reserved 并发槽（幂等�?
-                    state.node_registry.release_job_slot(node_id, &job.job_id).await;
                     if let Some(rt) = state.phase2.as_ref() {
-                        rt.release_node_slot(node_id, &job.job_id).await;
+                        rt.release_node_slot(node_id, &job.job_id, job.dispatch_attempt_id).await;
                         let _ = rt
                             .job_fsm_to_finished(&job.job_id, job.dispatch_attempt_id.max(1), false)
                             .await;

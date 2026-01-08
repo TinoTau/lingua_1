@@ -227,15 +227,30 @@ impl DashboardStats {
         let connected_nodes = nodes.values().filter(|n| n.online).count();
         
         // 统计每个 ServiceType 有多少节点提供（capability_by_type ready=true）
+        // 从 Redis 读取节点能力信息来统计
         let mut type_node_counts: HashMap<String, usize> = HashMap::new();
-        for node in nodes.values() {
-            if !node.online {
-                continue;
-            }
-            
-            for entry in &node.capability_by_type {
-                if entry.ready {
-                    *type_node_counts.entry(format!("{:?}", entry.r#type)).or_insert(0) += 1;
+        let mut type_in_use_counts: HashMap<String, usize> = HashMap::new();
+        
+        if let Some(rt) = state.phase2.as_ref() {
+            for node in nodes.values() {
+                if !node.online {
+                    continue;
+                }
+                
+                // 从 Redis 读取节点能力
+                for service_type in &[
+                    crate::messages::ServiceType::Asr,
+                    crate::messages::ServiceType::Nmt,
+                    crate::messages::ServiceType::Tts,
+                    crate::messages::ServiceType::Tone,
+                    crate::messages::ServiceType::Semantic,
+                ] {
+                    let ready = rt.has_node_capability(&node.node_id, service_type).await;
+                    if ready {
+                        let type_str = format!("{:?}", service_type);
+                        *type_node_counts.entry(type_str.clone()).or_insert(0) += 1;
+                        *type_in_use_counts.entry(type_str).or_insert(0) += 1;
+                    }
                 }
             }
         }
@@ -243,20 +258,6 @@ impl DashboardStats {
         // 从 ServiceCatalogCache 获取可用服务包列表（无网络 IO）
         let available_services = state.service_catalog.get_services().await;
         let total_services = available_services.len();
-
-        // 统计每个类型有多少节点正在使用（只统计 capability_by_type 中状态为 ready 的类型）
-        let mut type_in_use_counts: HashMap<String, usize> = HashMap::new();
-        for node in nodes.values() {
-            if !node.online {
-                continue;
-            }
-            
-            for entry in &node.capability_by_type {
-                if entry.ready {
-                    *type_in_use_counts.entry(format!("{:?}", entry.r#type)).or_insert(0) += 1;
-                }
-            }
-        }
 
         // 计算算力统计
         let compute_power = Self::calculate_compute_power(&nodes);

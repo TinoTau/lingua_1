@@ -1,10 +1,8 @@
-# Pool 配置 Redis 同步机制
+# Pool Redis 同步机制
 
 ## 文档信息
-
 - **版本**: v2.0
-- **日期**: 2026-01-06
-- **目的**: 记录 Pool 配置同步到 Redis 的实现细节和优化方案
+- **日期**: 2026-01-XX
 - **状态**: 已实现
 
 ---
@@ -13,7 +11,7 @@
 
 ### 1.1 目标
 
-在多实例环境下，避免每个实例都独立生成 Pool 配置，减少重复计算：
+在多实例环境下，避免每个实例都独立生成 Pool 配置：
 - **只有 Leader 实例生成 Pool 配置**
 - **其他实例从 Redis 读取 Pool 配置**
 - **自动故障转移**：Leader 失效时自动切换
@@ -40,7 +38,8 @@
 ```
 {key_prefix}:v1:phase3:pools:config      -> Pool 配置（JSON，TTL=1小时）
 {key_prefix}:v1:phase3:pools:leader     -> Leader 实例 ID（TTL=60秒）
-{key_prefix}:v1:phase3:pools:version   -> 配置版本号（递增）
+{key_prefix}:v1:phase3:pools:version     -> 配置版本号（递增）
+{key_prefix}:v1:pool:{pool_name}:members -> Pool 成员索引（Set，TTL=1小时）
 ```
 
 ### 2.2 数据结构
@@ -52,11 +51,10 @@
   "pools": [
     {
       "pool_id": 1,
-      "name": "zh-en",
+      "name": "en-zh",
       "required_services": ["asr", "nmt", "tts", "semantic"],
       "language_requirements": { ... }
-    },
-    ...
+    }
   ],
   "version": 1,
   "generated_at": 1704556800000,
@@ -80,11 +78,7 @@ scheduler-1  (TTL=60秒)
 
 ## 三、实现细节
 
-### 3.1 Phase2Runtime 扩展
-
-在 `Phase2Runtime` 中添加了以下方法：
-
-#### Leader 选举
+### 3.1 Leader 选举
 
 ```rust
 // 尝试获取 Leader 锁
@@ -100,7 +94,7 @@ pub async fn is_pool_leader(&self) -> bool
 pub async fn get_pool_leader(&self) -> Option<String>
 ```
 
-#### Pool 配置操作
+### 3.2 Pool 配置操作
 
 ```rust
 // 将 Pool 配置写入 Redis
@@ -113,83 +107,23 @@ pub async fn get_pool_config(&self) -> Option<(Vec<Phase3PoolConfig>, u64)>
 pub async fn get_pool_config_version(&self) -> Option<u64>
 ```
 
-### 3.2 rebuild_auto_language_pools 改造
-
-修改后的 `rebuild_auto_language_pools` 方法支持从 Redis 读取/写入：
+### 3.3 Pool 成员索引操作
 
 ```rust
-pub async fn rebuild_auto_language_pools(
-    &self, 
-    phase2_runtime: Option<Arc<Phase2Runtime>>
-) {
-    // 1. 优先从 Redis 读取配置
-    if let Some((redis_pools, version)) = rt.get_pool_config().await {
-        // 更新本地配置并返回
-        return;
-    }
-    
-    // 2. Redis 中没有配置，尝试成为 Leader 并生成
-    if rt.try_acquire_pool_leader(60).await {
-        // 生成 Pool 配置
-        let new_pools = self.auto_generate_language_pair_pools().await;
-        // 写入 Redis
-        rt.set_pool_config(&new_pools).await;
-        // 更新本地配置
-    } else {
-        // 3. 不是 Leader，等待后重试读取
-        tokio::time::sleep(Duration::from_millis(500)).await;
-        if let Some((redis_pools, _)) = rt.get_pool_config().await {
-            // 更新本地配置
-        }
-    }
-    
-    // 4. Fallback：本地生成（单实例模式或 Redis 不可用）
-    let new_pools = self.auto_generate_language_pair_pools().await;
-    // 更新本地配置
-}
-```
+// 同步单个节点的 Pool 成员索引到 Redis
+pub async fn sync_node_pools_to_redis(
+    &self,
+    node_id: &str,
+    pool_ids: &[u16],
+    pools: &[Phase3PoolConfig],
+    pool_index: &HashMap<u16, HashSet<String>>,
+) -> bool
 
-### 3.3 定期同步任务
-
-在 `start_pool_cleanup_task` 中添加了定期从 Redis 拉取配置的逻辑：
-
-```rust
-pub fn start_pool_cleanup_task(
-    self: &std::sync::Arc<Self>, 
-    phase2_runtime: Option<Arc<Phase2Runtime>>
-) {
-    tokio::spawn(async move {
-        // 定期清理任务（每60秒）
-        let mut interval = tokio::time::interval(Duration::from_secs(60));
-        
-        // 配置同步任务（每10秒）
-        let mut pool_config_check_interval = tokio::time::interval(Duration::from_secs(10));
-        
-        loop {
-            tokio::select! {
-                _ = interval.tick() => {
-                    // 清理离线节点、检查空 Pool
-                }
-                _ = pool_config_check_interval.tick() => {
-                    // 检查 Redis 配置版本
-                    let current_version = rt.get_pool_config_version().await;
-                    if current_version != last_version {
-                        // 从 Redis 同步配置
-                        if let Some((redis_pools, version)) = rt.get_pool_config().await {
-                            // 更新本地配置
-                            // 重建 Pool 索引
-                        }
-                    }
-                    
-                    // Leader 续约
-                    if rt.is_pool_leader().await {
-                        rt.renew_pool_leader(60).await;
-                    }
-                }
-            }
-        }
-    });
-}
+// 批量从 Redis 读取 Pool 成员索引
+pub async fn get_pool_members_batch_from_redis(
+    &self,
+    pool_names: &[&str],
+) -> HashMap<String, HashSet<String>>
 ```
 
 ---
@@ -232,8 +166,8 @@ pub fn start_pool_cleanup_task(
     ├─ 3. 更新本地配置
     │   └─ phase3.pools = new_pools
     │
-    └─ 4. 重建 Pool 索引
-        └─ rebuild_phase3_pool_index()
+    └─ 4. 同步 Pool 成员索引到 Redis
+        └─ sync_all_pool_members_to_redis()
 ```
 
 ### 4.3 配置同步流程
@@ -274,67 +208,57 @@ pub fn start_pool_cleanup_task(
 
 ---
 
-## 五、配置与使用
+## 五、节点选择时的 Redis 读取
 
-### 5.1 启用条件
+### 5.1 从 Redis 读取 Pool 成员
+
+**实现**：
+```rust
+// 如果启用 Phase 2，从 Redis 读取 Pool 成员（保持原子性）
+if let Some(rt) = phase2 {
+    let members_map = rt.get_pool_members_batch_from_redis(&pool_name_strs).await;
+    for (pool_name, pid) in pool_names {
+        if let Some(members) = members_map.get(pool_name) {
+            pool_candidates.insert(pid, members.iter().cloned().collect());
+        }
+    }
+} else {
+    // 向后兼容：从内存读取
+    let idx = self.phase3_pool_index.read().await;
+    // ...
+}
+```
+
+**优势**：
+- ✅ **原子性**：从 Redis 读取，保证多实例间一致性
+- ✅ **实时性**：总是读取最新的 Pool 成员信息
+- ✅ **向后兼容**：如果未启用 Phase 2，仍从内存读取
+
+---
+
+## 六、配置与使用
+
+### 6.1 启用条件
 
 Pool 配置 Redis 同步**自动启用**，当满足以下条件时：
 1. `phase2.enabled = true`（Phase 2 已启用）
 2. `phase3.auto_generate_language_pools = true`（自动生成 Pool 已启用）
 
-### 5.2 配置示例
+### 6.2 配置示例
 
 ```toml
-[scheduler.phase2]
+[phase2]
 enabled = true
 instance_id = "scheduler-1"
 redis.mode = "cluster"  # 或 "single"
 redis.url = "redis://127.0.0.1:6379"
-redis.key_prefix = "lingua"  # 多个实例使用相同前缀即可共享
-redis.cluster_urls = [
-    "redis://node1:6379",
-    "redis://node2:6379",
-    "redis://node3:6379"
-]
+redis.key_prefix = "lingua"
 
-[scheduler.phase3]
+[phase3]
 enabled = true
 mode = "two_level"
 auto_generate_language_pools = true
-
-[scheduler.phase3.auto_pool_config]
-min_nodes_per_pool = 1
-max_pools = 50
-require_semantic = true
-enable_mixed_pools = true
 ```
-
-### 5.3 监控指标
-
-**推荐监控**：
-1. **Leader 状态**：当前 Leader 实例 ID
-2. **配置版本**：Pool 配置版本号
-3. **同步延迟**：配置从 Redis 同步到本地的时间
-4. **Leader 切换**：Leader 切换频率
-
----
-
-## 六、优势与限制
-
-### 6.1 优势
-
-1. **减少重复计算**：只有 Leader 实例生成 Pool，节省 60-67% CPU 资源
-2. **保证一致性**：所有实例使用相同的 Pool 配置
-3. **自动故障转移**：Leader 失效时自动切换
-4. **向后兼容**：单实例模式或 Redis 不可用时，fallback 到本地生成
-5. **支持 Redis Cluster**：支持分布式 Redis 集群模式
-
-### 6.2 限制
-
-1. **依赖 Redis**：需要 Redis 可用
-2. **Leader 选举开销**：需要分布式锁机制
-3. **配置同步延迟**：非 Leader 实例需要定期拉取配置（最多 10 秒延迟）
-4. **Leader 切换延迟**：Leader 失效后，最多 60 秒才会切换
 
 ---
 
@@ -364,54 +288,33 @@ enable_mixed_pools = true
 
 ---
 
-## 八、多实例支持
+## 八、优势与限制
 
-### 8.1 多个调度服务器使用同一个 Redis
+### 8.1 优势
 
-**实现方式**：
-- 通过 `key_prefix` 实现多实例共享同一个 Redis key 空间
-- 多个实例使用相同的 `key_prefix`（如 `"lingua"`）即可共享
-- Pool 配置存储在：`{key_prefix}:v1:phase3:pools:config`
+1. **减少重复计算**：只有 Leader 实例生成 Pool，节省 60-67% CPU 资源
+2. **保证一致性**：所有实例使用相同的 Pool 配置
+3. **自动故障转移**：Leader 失效时自动切换
+4. **向后兼容**：单实例模式或 Redis 不可用时，fallback 到本地生成
+5. **支持 Redis Cluster**：支持分布式 Redis 集群模式
 
-### 8.2 Redis 支持分布式（Cluster 模式）
+### 8.2 限制
 
-**实现方式**：
-- 配置项 `phase2.redis.mode` 支持 `'single'` 和 `'cluster'` 两种模式
-- Cluster 模式使用 `redis::cluster::ClusterClient`
-- 支持 `cluster_urls` 配置多个 Redis 节点
-- 使用 Hash Tag（如 `{node:<id>}`）确保相关 key 在同一 slot
-
----
-
-## 九、性能对比
-
-### 9.1 当前方案（每个实例独立生成）
-
-| 场景 | 节点数 | 实例数 | 单实例开销 | 总开销 | CPU 浪费 |
-|------|--------|--------|-----------|--------|---------|
-| 小规模 | 10 | 3 | < 1ms | < 3ms | 200% |
-| 中规模 | 100 | 3 | 1-5ms | 3-15ms | 200% |
-| 大规模 | 1000 | 3 | 10-50ms | 30-150ms | 200% |
-
-### 9.2 优化方案（Pool 配置同步到 Redis）
-
-| 场景 | 节点数 | 实例数 | Leader 开销 | 其他实例开销 | 总开销 | CPU 节省 |
-|------|--------|--------|------------|-------------|--------|---------|
-| 小规模 | 10 | 3 | < 1ms | < 0.1ms | < 1.2ms | 60% |
-| 中规模 | 100 | 3 | 1-5ms | < 0.5ms | 1.5-5.5ms | 63-67% |
-| 大规模 | 1000 | 3 | 10-50ms | < 1ms | 10-51ms | 67-66% |
-
-**结论**：优化方案可以节省 **60-67%** 的 CPU 资源。
+1. **依赖 Redis**：需要 Redis 可用
+2. **Leader 选举开销**：需要分布式锁机制
+3. **配置同步延迟**：非 Leader 实例需要定期拉取配置（最多 10 秒延迟）
+4. **Leader 切换延迟**：Leader 失效后，最多 60 秒才会切换
 
 ---
 
-## 十、代码位置
+## 九、代码位置
 
 - **Leader 选举**：`central_server/scheduler/src/phase2/runtime_routing.rs`
 - **Pool 配置同步**：`central_server/scheduler/src/node_registry/phase3_pool.rs`
 - **定期同步任务**：`central_server/scheduler/src/node_registry/phase3_pool.rs::start_pool_cleanup_task`
-- **常量定义**：`central_server/scheduler/src/node_registry/phase3_pool_constants.rs`
+- **Pool 成员索引同步**：`central_server/scheduler/src/phase2/runtime_routing.rs`
+- **节点选择时 Redis 读取**：`central_server/scheduler/src/node_registry/selection/selection_phase3.rs`
 
 ---
 
-**最后更新**: 2026-01-06
+**最后更新**: 2026-01-XX

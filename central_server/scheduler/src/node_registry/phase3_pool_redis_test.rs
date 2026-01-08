@@ -3,7 +3,7 @@ mod tests {
     use crate::core::config::{AutoLanguagePoolConfig, Phase3Config, Phase3PoolConfig, Phase2Config};
     use crate::messages::{CapabilityByType, ServiceType, common::{NodeLanguageCapabilities, LanguagePair}, FeatureFlags};
     use crate::node_registry::{NodeRegistry, Node};
-    use crate::messages::{NodeStatus, HardwareInfo};
+    use crate::messages::{NodeStatus, HardwareInfo, DeviceType, ServiceStatus, InstalledService};
     use crate::phase2::Phase2Runtime;
     use std::sync::Arc;
     use std::time::Duration;
@@ -47,6 +47,18 @@ mod tests {
             })
             .collect();
 
+        // 从语言对中提取所有语言，作为 semantic_languages（语言集合）
+        let mut semantic_langs: std::collections::HashSet<String> = std::collections::HashSet::new();
+        for (src, tgt) in &language_pairs {
+            semantic_langs.insert(src.clone());
+            semantic_langs.insert(tgt.clone());
+        }
+        let mut semantic_langs_vec: Vec<String> = semantic_langs.into_iter().collect();
+        semantic_langs_vec.sort();
+
+        // 注意：capability_by_type_map 已从 Node 结构体中移除
+        // 节点能力信息现在存储在 Redis 中
+
         Node {
             node_id: node_id.to_string(),
             name: format!("node-{}", node_id),
@@ -59,15 +71,65 @@ mod tests {
                 memory_gb: 16,
                 gpus: Some(vec![]),
             },
-            capability_by_type,
-            installed_services: vec![],
+            // capability_by_type 已从 Node 结构体中移除，能力信息存储在 Redis
+            // 添加必要的服务，以便 node_has_all_required_services 能正确检查
+            installed_services: vec![
+                InstalledService {
+                    service_id: "asr-service".to_string(),
+                    r#type: ServiceType::Asr,
+                    device: DeviceType::Cpu,
+                    status: ServiceStatus::Running,
+                    version: Some("1.0".to_string()),
+                    model_id: None,
+                    engine: None,
+                    mem_mb: None,
+                    warmup_ms: None,
+                    last_error: None,
+                },
+                InstalledService {
+                    service_id: "nmt-service".to_string(),
+                    r#type: ServiceType::Nmt,
+                    device: DeviceType::Cpu,
+                    status: ServiceStatus::Running,
+                    version: Some("1.0".to_string()),
+                    model_id: None,
+                    engine: None,
+                    mem_mb: None,
+                    warmup_ms: None,
+                    last_error: None,
+                },
+                InstalledService {
+                    service_id: "tts-service".to_string(),
+                    r#type: ServiceType::Tts,
+                    device: DeviceType::Cpu,
+                    status: ServiceStatus::Running,
+                    version: Some("1.0".to_string()),
+                    model_id: None,
+                    engine: None,
+                    mem_mb: None,
+                    warmup_ms: None,
+                    last_error: None,
+                },
+                InstalledService {
+                    service_id: "semantic-service".to_string(),
+                    r#type: ServiceType::Semantic,
+                    device: DeviceType::Cpu,
+                    status: ServiceStatus::Running,
+                    version: Some("1.0".to_string()),
+                    model_id: None,
+                    engine: None,
+                    mem_mb: None,
+                    warmup_ms: None,
+                    last_error: None,
+                },
+            ],
             installed_models: vec![],
             language_capabilities: Some(NodeLanguageCapabilities {
                 supported_language_pairs: Some(supported_pairs),
                 asr_languages: None,
                 tts_languages: None,
                 nmt_capabilities: None,
-                semantic_languages: None,
+                semantic_languages: Some(semantic_langs_vec), // 从语言对中提取
             }),
             features_supported: FeatureFlags {
                 emotion_detection: None,
@@ -86,7 +148,7 @@ mod tests {
             last_heartbeat: chrono::Utc::now(),
             registered_at: chrono::Utc::now(),
             processing_metrics: None,
-            capability_by_type_map: std::collections::HashMap::new(),
+            // capability_by_type_map 已移除，能力信息存储在 Redis
         }
     }
 
@@ -147,9 +209,18 @@ mod tests {
                 let leader_key = format!("{}:v1:phase3:pools:leader", key_prefix);
                 let version_key = format!("{}:v1:phase3:pools:version", key_prefix);
                 
+                // 清理所有相关的 key
                 let _: Result<(), _> = conn.del(&config_key);
                 let _: Result<(), _> = conn.del(&leader_key);
                 let _: Result<(), _> = conn.del(&version_key);
+                
+                // 清理所有 pool members keys（使用 KEYS 模式匹配）
+                let pattern = format!("{}:v1:pool:*:members", key_prefix);
+                if let Ok(keys) = conn.keys::<_, Vec<String>>(&pattern) {
+                    for key in keys {
+                        let _: Result<(), _> = conn.del(&key);
+                    }
+                }
             }
         }
     }
@@ -220,17 +291,17 @@ mod tests {
         // 清理测试数据
         cleanup_test_keys(&rt).await;
 
-        // 创建测试 Pool 配置
+        // 创建测试 Pool 配置（语言集合，排序后）
         let test_pools = vec![
             Phase3PoolConfig {
                 pool_id: 1,
-                name: "zh-en".to_string(),
+                name: "en-zh".to_string(), // 语言集合，排序后
                 required_services: vec!["asr".to_string(), "nmt".to_string(), "tts".to_string()],
                 language_requirements: None,
             },
             Phase3PoolConfig {
                 pool_id: 2,
-                name: "en-zh".to_string(),
+                name: "de-en-zh".to_string(), // 语言集合，排序后
                 required_services: vec!["asr".to_string(), "nmt".to_string(), "tts".to_string()],
                 language_requirements: None,
             },
@@ -243,8 +314,8 @@ mod tests {
         // 测试 2：读取 Pool 配置
         let (read_pools, version) = rt.get_pool_config().await.expect("应该能读取 Pool 配置");
         assert_eq!(read_pools.len(), 2, "读取的 Pool 数量应该为 2");
-        assert_eq!(read_pools[0].name, "zh-en", "第一个 Pool 名称应该匹配");
-        assert_eq!(read_pools[1].name, "en-zh", "第二个 Pool 名称应该匹配");
+        assert_eq!(read_pools[0].name, "en-zh", "第一个 Pool 名称应该匹配");
+        assert_eq!(read_pools[1].name, "de-en-zh", "第二个 Pool 名称应该匹配");
         assert_eq!(version, 1, "版本号应该为 1");
 
         // 测试 3：再次写入（版本号应该递增）
@@ -300,7 +371,7 @@ mod tests {
             max_pools: 50,
             require_semantic: true,
             enable_mixed_pools: true,
-            pool_naming: "pair".to_string(),
+            pool_naming: "set".to_string(), // 语言集合模式
             ..Default::default()
         });
         registry.set_phase3_config(phase3_config).await;
@@ -378,7 +449,7 @@ mod tests {
             max_pools: 50,
             require_semantic: true,
             enable_mixed_pools: true,
-            pool_naming: "pair".to_string(),
+            pool_naming: "set".to_string(), // 语言集合模式
             ..Default::default()
         });
         registry_a.set_phase3_config(phase3_config.clone()).await;
@@ -492,7 +563,7 @@ mod tests {
             max_pools: 50,
             require_semantic: true,
             enable_mixed_pools: true,
-            pool_naming: "pair".to_string(),
+            pool_naming: "set".to_string(), // 语言集合模式
             ..Default::default()
         });
         registry.set_phase3_config(phase3_config).await;
@@ -538,7 +609,7 @@ mod tests {
             max_pools: 50,
             require_semantic: true,
             enable_mixed_pools: true,
-            pool_naming: "pair".to_string(),
+            pool_naming: "set".to_string(), // 语言集合模式
             ..Default::default()
         });
         registry.set_phase3_config(phase3_config).await;
@@ -617,7 +688,7 @@ mod tests {
             max_pools: 50,
             require_semantic: true,
             enable_mixed_pools: true,
-            pool_naming: "pair".to_string(),
+            pool_naming: "set".to_string(), // 语言集合模式
             ..Default::default()
         });
         registry.set_phase3_config(phase3_config).await;
@@ -728,7 +799,7 @@ mod tests {
             max_pools: 50,
             require_semantic: true,
             enable_mixed_pools: true,
-            pool_naming: "pair".to_string(),
+            pool_naming: "set".to_string(), // 语言集合模式
             ..Default::default()
         });
         registry_a.set_phase3_config(phase3_config.clone()).await;
@@ -817,7 +888,7 @@ mod tests {
             max_pools: 50,
             require_semantic: true,
             enable_mixed_pools: true,
-            pool_naming: "pair".to_string(),
+            pool_naming: "set".to_string(), // 语言集合模式
             ..Default::default()
         });
         registry.set_phase3_config(phase3_config).await;
@@ -878,6 +949,361 @@ mod tests {
         assert!(redis_pools_opt_2.is_some(), "Redis 中应该重新有配置");
         let (redis_pools, _) = redis_pools_opt_2.unwrap();
         assert_eq!(redis_pools.len(), pools_2, "Redis 配置应该与本地配置一致");
+
+        // 清理
+        cleanup_test_keys(&rt).await;
+    }
+
+    #[tokio::test]
+    async fn test_try_create_pool_for_node_sync_to_redis() {
+        let rt = match create_test_phase2_runtime("test-create-pool").await {
+            Some(rt) => rt,
+            None => {
+                eprintln!("跳过测试：Redis 不可用");
+                return;
+            }
+        };
+
+        // 清理测试数据
+        cleanup_test_keys(&rt).await;
+
+        // 创建 NodeRegistry
+        let registry = Arc::new(NodeRegistry::new());
+
+        // 配置 Phase3
+        let mut phase3_config = Phase3Config::default();
+        phase3_config.enabled = true;
+        phase3_config.mode = "two_level".to_string();
+        phase3_config.auto_generate_language_pools = true;
+        phase3_config.auto_pool_config = Some(AutoLanguagePoolConfig {
+            min_nodes_per_pool: 1,
+            max_pools: 50,
+            pool_naming: "set".to_string(), // 语言集合模式
+            require_semantic: true,
+            enable_mixed_pools: false,
+        });
+        *registry.phase3.write().await = phase3_config;
+
+        // 创建测试节点（支持中英文）
+        let capability_by_type = vec![
+            CapabilityByType {
+                r#type: ServiceType::Asr,
+                ready: true,
+                ready_impl_ids: Some(vec![]),
+                reason: None,
+            },
+            CapabilityByType {
+                r#type: ServiceType::Nmt,
+                ready: true,
+                ready_impl_ids: Some(vec![]),
+                reason: None,
+            },
+            CapabilityByType {
+                r#type: ServiceType::Tts,
+                ready: true,
+                ready_impl_ids: Some(vec![]),
+                reason: None,
+            },
+            CapabilityByType {
+                r#type: ServiceType::Semantic,
+                ready: true,
+                ready_impl_ids: Some(vec![]),
+                reason: None,
+            },
+        ];
+        let mut capability_by_type_map = std::collections::HashMap::new();
+        for c in &capability_by_type {
+            capability_by_type_map.insert(c.r#type.clone(), c.ready);
+        }
+        
+        let node = Node {
+            node_id: "node-1".to_string(),
+            name: "node-1".to_string(),
+            version: "1.0.0".to_string(),
+            platform: "test".to_string(),
+            status: NodeStatus::Ready,
+            online: true,
+            hardware: HardwareInfo {
+                cpu_cores: 4,
+                memory_gb: 16,
+                gpus: Some(vec![]),
+            },
+            // capability_by_type 已从 Node 结构体中移除，能力信息存储在 Redis
+            // 添加必要的服务，以便 node_has_all_required_services 能正确检查
+            installed_services: vec![
+                InstalledService {
+                    service_id: "asr-service".to_string(),
+                    r#type: ServiceType::Asr,
+                    device: DeviceType::Cpu,
+                    status: ServiceStatus::Running,
+                    version: Some("1.0".to_string()),
+                    model_id: None,
+                    engine: None,
+                    mem_mb: None,
+                    warmup_ms: None,
+                    last_error: None,
+                },
+                InstalledService {
+                    service_id: "nmt-service".to_string(),
+                    r#type: ServiceType::Nmt,
+                    device: DeviceType::Cpu,
+                    status: ServiceStatus::Running,
+                    version: Some("1.0".to_string()),
+                    model_id: None,
+                    engine: None,
+                    mem_mb: None,
+                    warmup_ms: None,
+                    last_error: None,
+                },
+                InstalledService {
+                    service_id: "tts-service".to_string(),
+                    r#type: ServiceType::Tts,
+                    device: DeviceType::Cpu,
+                    status: ServiceStatus::Running,
+                    version: Some("1.0".to_string()),
+                    model_id: None,
+                    engine: None,
+                    mem_mb: None,
+                    warmup_ms: None,
+                    last_error: None,
+                },
+                InstalledService {
+                    service_id: "semantic-service".to_string(),
+                    r#type: ServiceType::Semantic,
+                    device: DeviceType::Cpu,
+                    status: ServiceStatus::Running,
+                    version: Some("1.0".to_string()),
+                    model_id: None,
+                    engine: None,
+                    mem_mb: None,
+                    warmup_ms: None,
+                    last_error: None,
+                },
+            ],
+            installed_models: vec![],
+            language_capabilities: Some(NodeLanguageCapabilities {
+                supported_language_pairs: None,
+                asr_languages: None,
+                tts_languages: None,
+                nmt_capabilities: None,
+                semantic_languages: Some(vec!["en".to_string(), "zh".to_string()]),  // 支持中英文，排序后
+            }),
+            features_supported: FeatureFlags {
+                emotion_detection: None,
+                voice_style_detection: None,
+                speech_rate_detection: None,
+                speech_rate_control: None,
+                speaker_identification: None,
+                persona_adaptation: None,
+            },
+            accept_public_jobs: true,
+            current_jobs: 0,
+            max_concurrent_jobs: 4,
+            cpu_usage: 0.0,
+            gpu_usage: None,
+            memory_usage: 0.0,
+            last_heartbeat: chrono::Utc::now(),
+            registered_at: chrono::Utc::now(),
+            processing_metrics: None,
+            // capability_by_type_map 已移除，能力信息存储在 Redis
+        };
+
+        // 注册节点
+        registry.nodes.write().await.insert("node-1".to_string(), node);
+
+        // 测试 1：动态创建 Pool（不传递 phase2_runtime，应该只更新本地）
+        let pool_id_1 = registry.try_create_pool_for_node("node-1", None).await;
+        assert!(pool_id_1.is_some(), "应该成功创建 Pool");
+        let pool_id_1 = pool_id_1.unwrap();
+
+        // 验证本地配置
+        let cfg = registry.phase3_config().await;
+        assert_eq!(cfg.pools.len(), 1, "本地应该有 1 个 Pool");
+        assert_eq!(cfg.pools[0].name, "en-zh", "Pool 名称应该是 en-zh（排序后）");
+
+        // 验证 Redis 中没有配置（因为没有传递 phase2_runtime）
+        let redis_config = rt.get_pool_config().await;
+        assert!(redis_config.is_none(), "Redis 中不应该有配置（未传递 phase2_runtime）");
+
+        // 清理本地配置
+        registry.phase3.write().await.pools.clear();
+
+        // 测试 2：动态创建 Pool（传递 phase2_runtime，应该同步到 Redis）
+        let pool_id_2 = registry.try_create_pool_for_node("node-1", Some(rt.as_ref())).await;
+        assert!(pool_id_2.is_some(), "应该成功创建 Pool");
+        let pool_id_2 = pool_id_2.unwrap();
+
+        // 验证本地配置
+        let cfg = registry.phase3_config().await;
+        assert_eq!(cfg.pools.len(), 1, "本地应该有 1 个 Pool");
+        assert_eq!(cfg.pools[0].name, "en-zh", "Pool 名称应该是 en-zh");
+
+        // 等待 Redis 写入完成
+        tokio::time::sleep(Duration::from_millis(200)).await;
+
+        // 验证 Redis 中有配置
+        let redis_config = rt.get_pool_config().await;
+        assert!(redis_config.is_some(), "Redis 中应该有配置");
+        let (redis_pools, _version) = redis_config.unwrap();
+        assert_eq!(redis_pools.len(), 1, "Redis 中应该有 1 个 Pool");
+        assert_eq!(redis_pools[0].name, "en-zh", "Redis 中的 Pool 名称应该匹配");
+        assert_eq!(redis_pools[0].pool_id, pool_id_2, "Redis 中的 Pool ID 应该匹配");
+
+        // 测试 3：再次创建相同的 Pool（应该返回 None，因为已存在）
+        let pool_id_3 = registry.try_create_pool_for_node("node-1", Some(rt.as_ref())).await;
+        assert!(pool_id_3.is_none(), "不应该再次创建相同的 Pool");
+
+        // 验证本地和 Redis 配置没有变化
+        let cfg = registry.phase3_config().await;
+        assert_eq!(cfg.pools.len(), 1, "本地应该仍然只有 1 个 Pool");
+        let redis_config = rt.get_pool_config().await;
+        let (redis_pools, _) = redis_config.unwrap();
+        assert_eq!(redis_pools.len(), 1, "Redis 应该仍然只有 1 个 Pool");
+
+        // 测试 4：创建不同语言集合的 Pool
+        let capability_by_type_2 = vec![
+            CapabilityByType {
+                r#type: ServiceType::Asr,
+                ready: true,
+                ready_impl_ids: Some(vec![]),
+                reason: None,
+            },
+            CapabilityByType {
+                r#type: ServiceType::Nmt,
+                ready: true,
+                ready_impl_ids: Some(vec![]),
+                reason: None,
+            },
+            CapabilityByType {
+                r#type: ServiceType::Tts,
+                ready: true,
+                ready_impl_ids: Some(vec![]),
+                reason: None,
+            },
+            CapabilityByType {
+                r#type: ServiceType::Semantic,
+                ready: true,
+                ready_impl_ids: Some(vec![]),
+                reason: None,
+            },
+        ];
+        let mut capability_by_type_map_2 = std::collections::HashMap::new();
+        for c in &capability_by_type_2 {
+            capability_by_type_map_2.insert(c.r#type.clone(), c.ready);
+        }
+        
+        let node2 = Node {
+            node_id: "node-2".to_string(),
+            name: "node-2".to_string(),
+            version: "1.0.0".to_string(),
+            platform: "test".to_string(),
+            status: NodeStatus::Ready,
+            online: true,
+            hardware: HardwareInfo {
+                cpu_cores: 4,
+                memory_gb: 16,
+                gpus: Some(vec![]),
+            },
+            // capability_by_type 已从 Node 结构体中移除，能力信息存储在 Redis
+            // 添加必要的服务，以便 node_has_all_required_services 能正确检查
+            installed_services: vec![
+                InstalledService {
+                    service_id: "asr-service".to_string(),
+                    r#type: ServiceType::Asr,
+                    device: DeviceType::Cpu,
+                    status: ServiceStatus::Running,
+                    version: Some("1.0".to_string()),
+                    model_id: None,
+                    engine: None,
+                    mem_mb: None,
+                    warmup_ms: None,
+                    last_error: None,
+                },
+                InstalledService {
+                    service_id: "nmt-service".to_string(),
+                    r#type: ServiceType::Nmt,
+                    device: DeviceType::Cpu,
+                    status: ServiceStatus::Running,
+                    version: Some("1.0".to_string()),
+                    model_id: None,
+                    engine: None,
+                    mem_mb: None,
+                    warmup_ms: None,
+                    last_error: None,
+                },
+                InstalledService {
+                    service_id: "tts-service".to_string(),
+                    r#type: ServiceType::Tts,
+                    device: DeviceType::Cpu,
+                    status: ServiceStatus::Running,
+                    version: Some("1.0".to_string()),
+                    model_id: None,
+                    engine: None,
+                    mem_mb: None,
+                    warmup_ms: None,
+                    last_error: None,
+                },
+                InstalledService {
+                    service_id: "semantic-service".to_string(),
+                    r#type: ServiceType::Semantic,
+                    device: DeviceType::Cpu,
+                    status: ServiceStatus::Running,
+                    version: Some("1.0".to_string()),
+                    model_id: None,
+                    engine: None,
+                    mem_mb: None,
+                    warmup_ms: None,
+                    last_error: None,
+                },
+            ],
+            installed_models: vec![],
+            language_capabilities: Some(NodeLanguageCapabilities {
+                supported_language_pairs: None,
+                asr_languages: None,
+                tts_languages: None,
+                nmt_capabilities: None,
+                semantic_languages: Some(vec!["de".to_string(), "en".to_string(), "zh".to_string()]),  // 支持中英德，排序后
+            }),
+            features_supported: FeatureFlags {
+                emotion_detection: None,
+                voice_style_detection: None,
+                speech_rate_detection: None,
+                speech_rate_control: None,
+                speaker_identification: None,
+                persona_adaptation: None,
+            },
+            accept_public_jobs: true,
+            current_jobs: 0,
+            max_concurrent_jobs: 4,
+            cpu_usage: 0.0,
+            gpu_usage: None,
+            memory_usage: 0.0,
+            last_heartbeat: chrono::Utc::now(),
+            registered_at: chrono::Utc::now(),
+            processing_metrics: None,
+            // capability_by_type_map 已从 Node 结构体中移除，能力信息存储在 Redis
+        };
+
+        registry.nodes.write().await.insert("node-2".to_string(), node2);
+
+        let pool_id_4 = registry.try_create_pool_for_node("node-2", Some(rt.as_ref())).await;
+        assert!(pool_id_4.is_some(), "应该成功创建新的 Pool");
+        let pool_id_4 = pool_id_4.unwrap();
+
+        // 等待 Redis 写入完成
+        tokio::time::sleep(Duration::from_millis(200)).await;
+
+        // 验证本地和 Redis 都有 2 个 Pool
+        let cfg = registry.phase3_config().await;
+        assert_eq!(cfg.pools.len(), 2, "本地应该有 2 个 Pool");
+        let redis_config = rt.get_pool_config().await;
+        let (redis_pools, _) = redis_config.unwrap();
+        assert_eq!(redis_pools.len(), 2, "Redis 中应该有 2 个 Pool");
+
+        // 验证 Pool 名称
+        let pool_names: Vec<String> = cfg.pools.iter().map(|p| p.name.clone()).collect();
+        assert!(pool_names.contains(&"en-zh".to_string()), "应该有 en-zh Pool");
+        assert!(pool_names.contains(&"de-en-zh".to_string()), "应该有 de-en-zh Pool");
 
         // 清理
         cleanup_test_keys(&rt).await;

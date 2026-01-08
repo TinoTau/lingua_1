@@ -67,11 +67,11 @@ pub(crate) async fn process_job_operations(
     attempt_id: u32,
     success: bool,
 ) {
-    // Phase 1: Only release reserved when receiving "valid result" (idempotent)
-    state.node_registry.release_job_slot(node_id, job_id).await;
-    // Phase 2: Release Redis reservation (idempotent)
+    // Phase 2: Release Redis reservation (idempotent) 并减少running计数
     if let Some(rt) = state.phase2.as_ref() {
-        rt.release_node_slot(node_id, job_id).await;
+        rt.release_node_slot(node_id, job_id, attempt_id).await;
+        // 任务完成：running -= 1
+        let _ = rt.dec_node_running(node_id).await;
     }
 
     // Phase 2: Job FSM -> FINISHED

@@ -181,24 +181,29 @@ impl NodeStatusManager {
                 crate::messages::ServiceType::Nmt,
                 crate::messages::ServiceType::Tts,
             ];
-            // 检查节点是否安装了核心类型，如果安装了，则要求 ready
+            // 检查节点是否安装了核心类型，如果安装了，则要求状态为 Running
+            // 注意：节点能力信息已迁移到 Redis，这里使用 installed_services 作为替代
             let mut has_core_type = false;
             let mut all_core_ready = true;
             for core_type in &core_types {
                 let has_installed = node.installed_services.iter().any(|s| s.r#type == *core_type);
                 if has_installed {
                     has_core_type = true;
-                    let is_ready = node.capability_by_type_map.get(core_type).copied().unwrap_or(false);
+                    // 检查服务状态是否为 Running
+                    let is_ready = node.installed_services
+                        .iter()
+                        .any(|s| s.r#type == *core_type && s.status == crate::messages::ServiceStatus::Running);
                     if !is_ready {
                         all_core_ready = false;
                     }
                 }
             }
-            // 必须至少有一个核心类型，且所有已安装的核心类型都必须 ready
+            // 必须至少有一个核心类型，且所有已安装的核心类型都必须 Running
             has_core_type && all_core_ready
         } else {
-            !node.capability_by_type_map.is_empty()
-                && node.capability_by_type_map.values().any(|ready| *ready)
+            // ready/degraded 阶段：至少有一个服务状态为 Running
+            !node.installed_services.is_empty()
+                && node.installed_services.iter().any(|s| s.status == crate::messages::ServiceStatus::Running)
         };
         
         if !services_ready {
@@ -206,14 +211,17 @@ impl NodeStatusManager {
                 node_id = %node.node_id,
                 status = ?node.status,
                 installed_services_count = node.installed_services.len(),
-                capability_by_type_count = node.capability_by_type.len(),
-                "Node health check failed: Services not ready"
+                "Node health check failed: Services not ready（使用 installed_services 检查）"
             );
             // 记录详细的服务状态
-            if !node.capability_by_type.is_empty() {
-                for entry in &node.capability_by_type {
-                    debug!(node_id = %node.node_id, service_type = ?entry.r#type, ready = entry.ready, reason = ?entry.reason, "Service type status");
-                }
+            for service in &node.installed_services {
+                debug!(
+                    node_id = %node.node_id,
+                    service_id = %service.service_id,
+                    service_type = ?service.r#type,
+                    status = ?service.status,
+                    "Service status"
+                );
             }
             return false;
         }
