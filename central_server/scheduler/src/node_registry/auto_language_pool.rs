@@ -143,14 +143,18 @@ impl NodeRegistry {
 
     /// 收集所有节点的语言集合（基于 semantic_langs）
     async fn collect_language_sets(&self, auto_cfg: &AutoLanguagePoolConfig) -> Vec<Vec<String>> {
-        let nodes = self.nodes.read().await;
+        // 使用 ManagementRegistry（统一管理锁）
+        let node_clones: Vec<super::Node> = {
+            let mgmt = self.management_registry.read().await;
+            mgmt.nodes.values().map(|state| state.node.clone()).collect()
+        };
         let language_index = self.language_capability_index.read().await;
         let mut language_sets = HashSet::new();
         let mut nodes_checked = 0;
         let mut nodes_with_services = 0;
         let mut nodes_with_sets = 0;
 
-        for node in nodes.values() {
+        for node in &node_clones {
             nodes_checked += 1;
             
             // 检查节点是否具备所有必需服务
@@ -201,12 +205,16 @@ impl NodeRegistry {
         lang_set: &[String],
         auto_cfg: &AutoLanguagePoolConfig,
     ) -> usize {
-        let nodes = self.nodes.read().await;
+        // 使用 ManagementRegistry（统一管理锁）
+        let node_clones: Vec<super::Node> = {
+            let mgmt = self.management_registry.read().await;
+            mgmt.nodes.values().map(|state| state.node.clone()).collect()
+        };
         let language_index = self.language_capability_index.read().await;
         let lang_set_set: HashSet<String> = lang_set.iter().cloned().collect();
         let mut count = 0;
 
-        for node in nodes.values() {
+        for node in &node_clones {
             // 检查节点是否具备所有必需服务
             if !self.node_has_all_required_services(node, auto_cfg) {
                 continue;

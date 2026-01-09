@@ -17,8 +17,7 @@ mod dispatcher_test;
 #[path = "node_registry_test.rs"]
 mod node_registry_test;
 
-#[path = "pairing_test.rs"]
-mod pairing_test;
+// pairing_test 已删除（generate_pairing_code 和 cleanup_expired_codes 方法已被移除）
 
 #[path = "connection_manager_test.rs"]
 mod connection_manager_test;

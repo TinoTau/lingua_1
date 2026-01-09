@@ -13,11 +13,6 @@ pub enum SessionEvent {
         timestamp_ms: i64, // 调度服务器接收时间戳
         client_timestamp_ms: Option<i64>, // 客户端发送时间戳
     },
-    /// 暂停时间超过阈值
-    #[allow(dead_code)]
-    PauseExceeded {
-        timestamp_ms: i64,
-    },
     /// 超时触发（带 generation 用于过期检测）
     TimeoutFired {
         generation: u64,
@@ -27,18 +22,6 @@ pub enum SessionEvent {
     // 此变体从未被构造，is_final 的处理已在 handle_audio_chunk 中完成
     /// 关闭会话
     CloseSession,
-    /// 取消所有计时器
-    #[allow(dead_code)]
-    CancelTimers,
-    /// 重置计时器
-    #[allow(dead_code)]
-    ResetTimers,
-    /// 更新 utterance_index（用于同步 Web 端发送的 utterance 消息中的 utterance_index）
-    /// 注意：当前未使用，保留用于将来的功能
-    #[allow(dead_code)]
-    UpdateUtteranceIndex {
-        utterance_index: u64,
-    },
 }
 
 /// 用于向 WebSocket 发送消息的回调

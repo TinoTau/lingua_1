@@ -69,13 +69,6 @@ return 0
         Ok(v > 0)
     }
 
-    #[allow(dead_code)]
-    async fn xadd_payload(&self, stream: &str, payload: &str) -> redis::RedisResult<String> {
-        // 兼容旧调用点：不裁剪
-        let mut cmd = redis::cmd("XADD");
-        cmd.arg(stream).arg("*").arg("payload").arg(payload);
-        self.query(cmd).await
-    }
 
     async fn xadd_payload_maxlen(&self, stream: &str, payload: &str, maxlen: usize) -> redis::RedisResult<String> {
         // XADD <stream> MAXLEN ~ <maxlen> * payload <payload>

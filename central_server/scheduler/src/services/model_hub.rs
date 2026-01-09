@@ -51,16 +51,5 @@ impl ModelHub {
         })
     }
 
-    #[allow(dead_code)]
-    pub async fn list_models(&self, _model_type: Option<ModelType>) -> Vec<ModelMetadata> {
-        // TODO: 实现模型列表查询
-        vec![]
-    }
-
-    #[allow(dead_code)]
-    pub async fn get_model(&self, _model_id: &str) -> Option<ModelMetadata> {
-        // TODO: 实现模型查询
-        None
-    }
 }
 

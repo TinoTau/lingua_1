@@ -1,12 +1,11 @@
 #[cfg(test)]
 mod tests {
     use crate::core::config::{AutoLanguagePoolConfig, Phase3Config, Phase2Config};
-    use crate::messages::{CapabilityByType, ServiceType, common::{NodeLanguageCapabilities, LanguagePair}, FeatureFlags};
+    use crate::messages::{CapabilityByType, ServiceType, common::NodeLanguageCapabilities, FeatureFlags};
     use crate::node_registry::{NodeRegistry, Node};
     use crate::messages::{NodeStatus, HardwareInfo, InstalledModel, InstalledService, ServiceStatus, DeviceType};
     use crate::phase2::Phase2Runtime;
     use std::sync::Arc;
-    use std::collections::HashSet;
 
     async fn create_test_phase2_runtime(instance_id: &str) -> Option<Arc<Phase2Runtime>> {
         let redis_url = std::env::var("LINGUA_TEST_REDIS_URL")
@@ -36,7 +35,7 @@ mod tests {
         node_id: &str,
         semantic_langs: Vec<String>,
     ) -> Node {
-        let capability_by_type = vec![
+        let _capability_by_type = vec![
             CapabilityByType {
                 r#type: ServiceType::Asr,
                 ready: true,
@@ -283,11 +282,13 @@ mod tests {
         assert!(!pool_ids.is_empty(), "节点应该被分配到至少一个 Pool");
         println!("节点 node-1 分配到 Pool: {:?}", pool_ids);
 
-        // 检查节点状态是否变为 Ready
-        let nodes = registry.nodes.read().await;
-        let node = nodes.get("node-1").unwrap();
+        // 检查节点状态是否变为 Ready（使用 ManagementRegistry）
+        let node = {
+            let mgmt = registry.management_registry.read().await;
+            mgmt.nodes.get("node-1").map(|state| state.node.clone())
+        };
+        let node = node.expect("节点应该存在");
         assert_eq!(node.status, NodeStatus::Ready, "节点状态应该从 Registering 变为 Ready");
-        drop(nodes);
 
         // 检查 Pool 配置是否同步到 Redis
         let redis_pools = rt.get_pool_config().await;

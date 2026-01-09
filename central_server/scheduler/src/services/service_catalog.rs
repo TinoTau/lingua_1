@@ -96,12 +96,6 @@ impl ServiceCatalogCache {
         self
     }
 
-    /// 可选：覆盖默认刷新间隔（秒）
-    #[allow(dead_code)]
-    pub fn with_refresh_interval(mut self, secs: u64) -> Self {
-        self.refresh_interval = Duration::from_secs(secs.max(5));
-        self
-    }
 
     /// 获取当前缓存的服务目录（无网络 IO）
     pub async fn get_services(&self) -> Vec<ServiceInfo> {
@@ -113,10 +107,6 @@ impl ServiceCatalogCache {
         self.inner.read().await.updated_at_ms
     }
 
-    #[allow(dead_code)]
-    pub async fn last_error(&self) -> Option<String> {
-        self.inner.read().await.last_error.clone()
-    }
 
     pub async fn get_meta(&self) -> ServiceCatalogMeta {
         let guard = self.inner.read().await;

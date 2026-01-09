@@ -60,7 +60,7 @@ fn create_test_models(src_lang: &str, tgt_lang: &str) -> Vec<InstalledModel> {
 async fn test_register_node() {
     let registry = NodeRegistry::new();
     
-    let node = registry.register_node(
+    let node = registry.register_node_for_test(
         None,
         "Test Node".to_string(),
         "1.0.0".to_string(),
@@ -95,7 +95,7 @@ async fn test_register_node_no_gpu() {
     let registry = NodeRegistry::new();
     
     // 灏濊瘯娉ㄥ唽娌℃湁 GPU 鐨勮妭鐐癸紝搴旇澶辫触
-    let result = registry.register_node(
+    let result = registry.register_node_for_test(
         Some("test-node-no-gpu".to_string()),
         "Test Node No GPU".to_string(),
         "1.0.0".to_string(),
@@ -124,7 +124,7 @@ async fn test_register_node_no_gpu() {
 async fn test_register_node_with_id() {
     let registry = NodeRegistry::new();
     
-    let node = registry.register_node(
+    let node = registry.register_node_for_test(
         Some("custom-node-123".to_string()),
         "Custom Node".to_string(),
         "1.0.0".to_string(),
@@ -152,7 +152,7 @@ async fn test_register_node_with_id() {
 async fn test_is_node_available() {
     let registry = NodeRegistry::new();
     
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-1".to_string()),
         "Test Node".to_string(),
         "1.0.0".to_string(),
@@ -180,7 +180,7 @@ async fn test_is_node_available() {
 async fn test_is_node_available_when_overloaded() {
     let registry = NodeRegistry::new();
     
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-2".to_string()),
         "Test Node".to_string(),
         "1.0.0".to_string(),
@@ -221,7 +221,7 @@ async fn test_is_node_available_when_overloaded() {
 async fn test_update_node_heartbeat() {
     let registry = NodeRegistry::new();
     
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-3".to_string()),
         "Test Node".to_string(),
         "1.0.0".to_string(),
@@ -285,7 +285,7 @@ async fn test_select_node_with_features() {
     let registry = NodeRegistry::new();
     
     // 娉ㄥ唽鏀寔涓枃鍒拌嫳鏂囩殑鑺傜偣
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-zh-en".to_string()),
         "ZH-EN Node".to_string(),
         "1.0.0".to_string(),
@@ -306,7 +306,7 @@ async fn test_select_node_with_features() {
     ).await.unwrap();
     
     // 娉ㄥ唽鏀寔鑻辨枃鍒颁腑鏂囩殑鑺傜偣
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-en-zh".to_string()),
         "EN-ZH Node".to_string(),
         "1.0.0".to_string(),
@@ -328,8 +328,8 @@ async fn test_select_node_with_features() {
     
     // 閫夋嫨涓枃鍒拌嫳鏂囩殑鑺傜偣
     // 灏嗚妭鐐圭姸鎬佽缃负 ready锛堟墠鑳借閫変腑锛?
-    registry.set_node_status("node-zh-en", NodeStatus::Ready).await;
-    registry.set_node_status("node-en-zh", NodeStatus::Ready).await;
+    registry.set_node_status_for_test("node-zh-en", NodeStatus::Ready).await;
+    registry.set_node_status_for_test("node-en-zh", NodeStatus::Ready).await;
 
     // Phase 1：select_node_with_features 不再按语言过滤，验证“按负载选择最空闲节点”
     registry.update_node_heartbeat("node-zh-en", 10.0, Some(0.0), 10.0, None, None, 0, None, None, None).await;
@@ -350,7 +350,7 @@ async fn test_select_node_with_required_features() {
     let registry = NodeRegistry::new();
     
     // 娉ㄥ唽涓嶆敮鎸佹儏鎰熷垎鏋愮殑鑺傜偣
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-no-emotion".to_string()),
         "No Emotion Node".to_string(),
         "1.0.0".to_string(),
@@ -371,7 +371,7 @@ async fn test_select_node_with_required_features() {
     ).await.unwrap();
     
     // 娉ㄥ唽鏀寔鎯呮劅鍒嗘瀽鐨勮妭锟?
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-with-emotion".to_string()),
         "Emotion Node".to_string(),
         "1.0.0".to_string(),
@@ -402,7 +402,7 @@ async fn test_select_node_with_required_features() {
     });
     
     // 灏嗚妭鐐圭姸鎬佽缃负 ready
-    registry.set_node_status("node-with-emotion", NodeStatus::Ready).await;
+    registry.set_node_status_for_test("node-with-emotion", NodeStatus::Ready).await;
     
     let selected = registry.select_node_with_features("zh", "en", &required_features, true).await;
     assert_eq!(selected, Some("node-with-emotion".to_string()));
@@ -422,7 +422,7 @@ async fn test_select_node_no_match() {
 async fn test_mark_node_offline() {
     let registry = NodeRegistry::new();
     
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-4".to_string()),
         "Test Node".to_string(),
         "1.0.0".to_string(),
@@ -444,7 +444,7 @@ async fn test_mark_node_offline() {
     
     assert!(registry.is_node_available("node-4").await);
     
-    registry.mark_node_offline("node-4").await;
+    registry.mark_node_offline("node-4", None).await;
     
     assert!(!registry.is_node_available("node-4").await);
 }
@@ -454,7 +454,7 @@ async fn test_select_node_least_connections() {
     let registry = NodeRegistry::new();
     
     // 娉ㄥ唽涓変釜鑺傜偣锛岄兘鏀寔鐩稿悓鐨勮瑷€锟?
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-heavy".to_string()),
         "Heavy Load Node".to_string(),
         "1.0.0".to_string(),
@@ -474,7 +474,7 @@ async fn test_select_node_least_connections() {
         vec![],
     ).await.unwrap();
     
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-medium".to_string()),
         "Medium Load Node".to_string(),
         "1.0.0".to_string(),
@@ -494,7 +494,7 @@ async fn test_select_node_least_connections() {
         vec![],
     ).await.unwrap();
     
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-light".to_string()),
         "Light Load Node".to_string(),
         "1.0.0".to_string(),
@@ -515,9 +515,9 @@ async fn test_select_node_least_connections() {
     ).await.unwrap();
     
     // 灏嗘墍鏈夎妭鐐圭姸鎬佽缃负 ready
-    registry.set_node_status("node-heavy", NodeStatus::Ready).await;
-    registry.set_node_status("node-medium", NodeStatus::Ready).await;
-    registry.set_node_status("node-light", NodeStatus::Ready).await;
+    registry.set_node_status_for_test("node-heavy", NodeStatus::Ready).await;
+    registry.set_node_status_for_test("node-medium", NodeStatus::Ready).await;
+    registry.set_node_status_for_test("node-light", NodeStatus::Ready).await;
     
     // 鏇存柊鑺傜偣璐熻浇锛歨eavy=3, medium=1, light=0
     // 娉ㄦ剰锛氳祫婧愪娇鐢ㄧ巼闇€瑕佷綆浜庨槇鍊硷紙榛樿 25%锛夛紝鎵€浠ヨ缃负 20%
@@ -545,7 +545,7 @@ async fn test_select_node_resource_threshold_cpu() {
     let registry = NodeRegistry::with_resource_threshold(25.0);
     
     // 娉ㄥ唽涓や釜鑺傜偣锛岄兘鏀寔鐩稿悓鐨勮瑷€锟?
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-low-cpu".to_string()),
         "Low CPU Node".to_string(),
         "1.0.0".to_string(),
@@ -565,7 +565,7 @@ async fn test_select_node_resource_threshold_cpu() {
         vec![],
     ).await.unwrap();
     
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-high-cpu".to_string()),
         "High CPU Node".to_string(),
         "1.0.0".to_string(),
@@ -590,8 +590,8 @@ async fn test_select_node_resource_threshold_cpu() {
     registry.update_node_heartbeat("node-high-cpu", 30.0, None, 15.0, None, None, 0, None, None, None).await;
     
     // 灏嗘墍鏈夎妭鐐圭姸鎬佽缃负 ready
-    registry.set_node_status("node-low-cpu", NodeStatus::Ready).await;
-    registry.set_node_status("node-high-cpu", NodeStatus::Ready).await;
+    registry.set_node_status_for_test("node-low-cpu", NodeStatus::Ready).await;
+    registry.set_node_status_for_test("node-high-cpu", NodeStatus::Ready).await;
     
     // 閫夋嫨鑺傜偣锛屽簲璇ュ彧閫夋嫨 CPU 浣跨敤鐜囦綆浜庨槇鍊肩殑鑺傜偣
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
@@ -604,7 +604,7 @@ async fn test_select_node_resource_threshold_gpu() {
     let registry = NodeRegistry::with_resource_threshold(25.0);
     
     // 娉ㄥ唽涓や釜鑺傜偣锛岄兘鏀寔鐩稿悓鐨勮瑷€锟?
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-low-gpu".to_string()),
         "Low GPU Node".to_string(),
         "1.0.0".to_string(),
@@ -624,7 +624,7 @@ async fn test_select_node_resource_threshold_gpu() {
         vec![],
     ).await.unwrap();
     
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-high-gpu".to_string()),
         "High GPU Node".to_string(),
         "1.0.0".to_string(),
@@ -649,8 +649,8 @@ async fn test_select_node_resource_threshold_gpu() {
     registry.update_node_heartbeat("node-high-gpu", 15.0, Some(30.0), 15.0, None, None, 0, None, None, None).await;
     
     // 灏嗘墍鏈夎妭鐐圭姸鎬佽缃负 ready
-    registry.set_node_status("node-low-gpu", NodeStatus::Ready).await;
-    registry.set_node_status("node-high-gpu", NodeStatus::Ready).await;
+    registry.set_node_status_for_test("node-low-gpu", NodeStatus::Ready).await;
+    registry.set_node_status_for_test("node-high-gpu", NodeStatus::Ready).await;
     
     // 閫夋嫨鑺傜偣锛屽簲璇ュ彧閫夋嫨 GPU 浣跨敤鐜囦綆浜庨槇鍊肩殑鑺傜偣
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
@@ -663,7 +663,7 @@ async fn test_select_node_resource_threshold_memory() {
     let registry = NodeRegistry::with_resource_threshold(25.0);
     
     // 娉ㄥ唽涓や釜鑺傜偣锛岄兘鏀寔鐩稿悓鐨勮瑷€锟?
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-low-mem".to_string()),
         "Low Memory Node".to_string(),
         "1.0.0".to_string(),
@@ -683,7 +683,7 @@ async fn test_select_node_resource_threshold_memory() {
         vec![],
     ).await.unwrap();
     
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-high-mem".to_string()),
         "High Memory Node".to_string(),
         "1.0.0".to_string(),
@@ -708,8 +708,8 @@ async fn test_select_node_resource_threshold_memory() {
     registry.update_node_heartbeat("node-high-mem", 15.0, None, 80.0, None, None, 0, None, None, None).await;
     
     // 灏嗘墍鏈夎妭鐐圭姸鎬佽缃负 ready
-    registry.set_node_status("node-low-mem", NodeStatus::Ready).await;
-    registry.set_node_status("node-high-mem", NodeStatus::Ready).await;
+    registry.set_node_status_for_test("node-low-mem", NodeStatus::Ready).await;
+    registry.set_node_status_for_test("node-high-mem", NodeStatus::Ready).await;
     
     // 閫夋嫨鑺傜偣锛屽簲璇ュ彧閫夋嫨鍐呭瓨浣跨敤鐜囦綆浜庨槇鍊肩殑鑺傜偣
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
@@ -722,7 +722,7 @@ async fn test_select_node_resource_threshold_all_resources() {
     let registry = NodeRegistry::with_resource_threshold(25.0);
     
     // 娉ㄥ唽涓変釜鑺傜偣
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-ok".to_string()),
         "OK Node".to_string(),
         "1.0.0".to_string(),
@@ -742,7 +742,7 @@ async fn test_select_node_resource_threshold_all_resources() {
         vec![],
     ).await.unwrap();
     
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-high-cpu".to_string()),
         "High CPU Node".to_string(),
         "1.0.0".to_string(),
@@ -762,7 +762,7 @@ async fn test_select_node_resource_threshold_all_resources() {
         vec![],
     ).await.unwrap();
     
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-high-gpu".to_string()),
         "High GPU Node".to_string(),
         "1.0.0".to_string(),
@@ -791,9 +791,9 @@ async fn test_select_node_resource_threshold_all_resources() {
     registry.update_node_heartbeat("node-high-gpu", 20.0, Some(30.0), 20.0, None, None, 0, None, None, None).await;
     
     // 灏嗘墍鏈夎妭鐐圭姸鎬佽缃负 ready
-    registry.set_node_status("node-ok", NodeStatus::Ready).await;
-    registry.set_node_status("node-high-cpu", NodeStatus::Ready).await;
-    registry.set_node_status("node-high-gpu", NodeStatus::Ready).await;
+    registry.set_node_status_for_test("node-ok", NodeStatus::Ready).await;
+    registry.set_node_status_for_test("node-high-cpu", NodeStatus::Ready).await;
+    registry.set_node_status_for_test("node-high-gpu", NodeStatus::Ready).await;
     
     // 閫夋嫨鑺傜偣锛屽簲璇ュ彧閫夋嫨鎵€鏈夎祫婧愰兘鍦ㄩ槇鍊间互涓嬬殑鑺傜偣
     let selected = registry.select_node_with_features("zh", "en", &None, true).await;
@@ -806,7 +806,7 @@ async fn test_select_node_resource_threshold_no_available() {
     let registry = NodeRegistry::with_resource_threshold(25.0);
     
     // 娉ㄥ唽涓€涓妭鐐癸紝浣嗚祫婧愪娇鐢ㄧ巼瓒呰繃闃堬拷?
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-overloaded".to_string()),
         "Overloaded Node".to_string(),
         "1.0.0".to_string(),
@@ -840,7 +840,7 @@ async fn test_select_node_resource_threshold_custom_threshold() {
     let registry = NodeRegistry::with_resource_threshold(50.0);
     
     // 娉ㄥ唽涓や釜鑺傜偣
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-40".to_string()),
         "40% Node".to_string(),
         "1.0.0".to_string(),
@@ -860,7 +860,7 @@ async fn test_select_node_resource_threshold_custom_threshold() {
         vec![],
     ).await.unwrap();
     
-    registry.register_node(
+    registry.register_node_for_test(
         Some("node-60".to_string()),
         "60% Node".to_string(),
         "1.0.0".to_string(),
@@ -881,8 +881,8 @@ async fn test_select_node_resource_threshold_custom_threshold() {
     ).await.unwrap();
     
     // Set all nodes to ready status
-    registry.set_node_status("node-40", NodeStatus::Ready).await;
-    registry.set_node_status("node-60", NodeStatus::Ready).await;
+    registry.set_node_status_for_test("node-40", NodeStatus::Ready).await;
+    registry.set_node_status_for_test("node-60", NodeStatus::Ready).await;
 
     // 鏇存柊鑺傜偣璧勬簮浣跨敤锟?
     registry.update_node_heartbeat("node-40", 40.0, None, 40.0, None, None, 0, None, None, None).await;

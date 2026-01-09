@@ -8,13 +8,15 @@
 //! - key 命名使用 hash tag `{...}`，以便未来引入 Lua 原子更新时天然满足同 slot
 
 use crate::core::AppState;
+use crate::core::config::Phase3PoolConfig;
 use crate::messages::{NodeMessage, SessionMessage};
 use crate::node_registry::Node as RegistryNode;
 use axum::extract::ws::Message as WsMessage;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::Mutex;
-use tracing::{debug, info, warn};
+use tracing::{debug, error, info, warn};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RequestBinding {
@@ -25,7 +27,7 @@ pub struct RequestBinding {
     pub expire_at_ms: i64,
 }
 
-#[allow(dead_code)]
+#[allow(dead_code)] // 枚举变体在 Redis Lua 脚本中使用（作为字符串），不会被 Rust 代码构造
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum JobFsmState {
     Created,
@@ -36,9 +38,9 @@ pub enum JobFsmState {
     Released,
 }
 
-#[allow(dead_code)]
 impl JobFsmState {
-    fn as_str(&self) -> &'static str {
+    #[allow(dead_code)] // 在测试中使用
+    pub(crate) fn as_str(&self) -> &'static str {
         match self {
             JobFsmState::Created => "CREATED",
             JobFsmState::Dispatched => "DISPATCHED",
@@ -46,18 +48,6 @@ impl JobFsmState {
             JobFsmState::Running => "RUNNING",
             JobFsmState::Finished => "FINISHED",
             JobFsmState::Released => "RELEASED",
-        }
-    }
-
-    fn parse(s: &str) -> Option<Self> {
-        match s {
-            "CREATED" => Some(JobFsmState::Created),
-            "DISPATCHED" => Some(JobFsmState::Dispatched),
-            "ACCEPTED" => Some(JobFsmState::Accepted),
-            "RUNNING" => Some(JobFsmState::Running),
-            "FINISHED" => Some(JobFsmState::Finished),
-            "RELEASED" => Some(JobFsmState::Released),
-            _ => None,
         }
     }
 }
@@ -127,6 +117,12 @@ pub enum InterInstanceEvent {
 
 include!("phase2/runtime_init.rs");
 include!("phase2/runtime_routing.rs");
+include!("phase2/runtime_routing_instance_communication.rs");
+include!("phase2/runtime_routing_request_binding.rs");
+include!("phase2/runtime_routing_node_capacity.rs");
+include!("phase2/runtime_routing_node_capabilities.rs");
+include!("phase2/runtime_routing_pool_config.rs");
+include!("phase2/runtime_routing_pool_members.rs");
 include!("phase2/runtime_job_fsm.rs");
 include!("phase2/runtime_background.rs");
 include!("phase2/runtime_snapshot.rs");

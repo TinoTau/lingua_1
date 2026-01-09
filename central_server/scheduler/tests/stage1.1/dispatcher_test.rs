@@ -109,7 +109,7 @@ async fn test_create_job() {
         CapabilityByType { r#type: ServiceType::Nmt, ready: true, reason: None, ready_impl_ids: Some(vec!["nmt-m2m100".to_string()]) },
         CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(vec!["piper-tts".to_string()]) },
     ];
-    let _node = node_registry.register_node(
+    let _node = (*node_registry).register_node_for_test(
         None,
         "Test Node".to_string(),
         "1.0.0".to_string(),
@@ -130,7 +130,7 @@ async fn test_create_job() {
     ).await.unwrap();
     
     // 将节点状态设置为 ready（才能被分配任务）
-    node_registry.set_node_status(&_node.node_id, NodeStatus::Ready).await;
+    (*node_registry).set_node_status_for_test(&_node.node_id, NodeStatus::Ready).await;
     
     let job = dispatcher.create_job(
         "session-1".to_string(),
@@ -187,7 +187,7 @@ async fn test_create_job_with_preferred_node() {
         CapabilityByType { r#type: ServiceType::Nmt, ready: true, reason: None, ready_impl_ids: Some(vec!["nmt-m2m100".to_string()]) },
         CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(vec!["piper-tts".to_string()]) },
     ];
-    let _node = node_registry.register_node(
+    let _node = (*node_registry).register_node_for_test(
         Some("node-123".to_string()),
         "Test Node".to_string(),
         "1.0.0".to_string(),
@@ -208,7 +208,7 @@ async fn test_create_job_with_preferred_node() {
     ).await.unwrap();
     
     // 需要设置为 ready，Phase 1 只允许对 ready 节点做并发占用（reserve）与派发
-    node_registry.set_node_status("node-123", NodeStatus::Ready).await;
+    (*node_registry).set_node_status_for_test("node-123", NodeStatus::Ready).await;
     
     let job = dispatcher.create_job(
         "session-2".to_string(),
@@ -296,7 +296,7 @@ async fn test_get_job() {
     let node_registry = create_test_node_registry();
     let dispatcher = JobDispatcher::new(node_registry.clone());
     
-    let _node = node_registry.register_node(
+    let _node = (*node_registry).register_node_for_test(
         None,
         "Test Node".to_string(),
         "1.0.0".to_string(),
@@ -375,7 +375,7 @@ async fn test_update_job_status() {
         CapabilityByType { r#type: ServiceType::Nmt, ready: true, reason: None, ready_impl_ids: Some(vec!["nmt-m2m100".to_string()]) },
         CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(vec!["piper-tts".to_string()]) },
     ];
-    let _node = node_registry.register_node(
+    let _node = (*node_registry).register_node_for_test(
         None,
         "Test Node".to_string(),
         "1.0.0".to_string(),
@@ -396,7 +396,7 @@ async fn test_update_job_status() {
     ).await.unwrap();
     
     // 将节点状态设置为 ready（才能被分配任务）
-    node_registry.set_node_status(&_node.node_id, NodeStatus::Ready).await;
+    (*node_registry).set_node_status_for_test(&_node.node_id, NodeStatus::Ready).await;
     
     let job = dispatcher.create_job(
         "session-5".to_string(),

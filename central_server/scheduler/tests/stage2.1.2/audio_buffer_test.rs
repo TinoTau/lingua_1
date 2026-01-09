@@ -95,7 +95,7 @@ async fn test_audio_buffer_clear_all_for_session() {
     manager.add_chunk(session_id, utterance2, vec![3u8, 4u8]).await;
 
     // 清空整个会话的缓冲区
-    manager.clear_all_for_session(session_id).await;
+    manager.clear_all_for_session_for_test(session_id).await;
 
     // 验证所有 utterance 的数据都被清空
     assert!(manager.take_combined(session_id, utterance1).await.is_none());

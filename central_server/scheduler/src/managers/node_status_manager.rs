@@ -39,12 +39,15 @@ impl NodeStatusManager {
 
     /// 处理节点心跳（立即触发状态检查）
     pub async fn on_heartbeat(&self, node_id: &str) {
-        let nodes = self.node_registry.nodes.read().await;
-        let node = match nodes.get(node_id) {
-            Some(n) => n.clone(),
+        // 使用 ManagementRegistry（统一管理锁）
+        let node = {
+            let mgmt = self.node_registry.management_registry.read().await;
+            mgmt.nodes.get(node_id).map(|state| state.node.clone())
+        };
+        let node = match node {
+            Some(n) => n,
             None => return,
         };
-        drop(nodes);
 
         // 执行健康检查
         let health_ok = self.check_node_health(&node).await;
@@ -237,49 +240,53 @@ impl NodeStatusManager {
         to: NodeStatus,
         reason: Option<String>,
     ) {
-        let mut nodes = self.node_registry.nodes.write().await;
-        if let Some(node) = nodes.get_mut(node_id) {
-            if node.status != from {
-                // 状态已经改变，不执行转换
+        // 使用 ManagementRegistry（统一管理锁）
+        let old_status = {
+            let mut mgmt = self.node_registry.management_registry.write().await;
+            if let Some(node_state) = mgmt.nodes.get_mut(node_id) {
+                if node_state.node.status != from {
+                    // 状态已经改变，不执行转换
+                    return;
+                }
+                let old_status = node_state.node.status.clone();
+                node_state.node.status = to.clone();
+                old_status
+            } else {
                 return;
             }
-            
-            let old_status = node.status.clone();
-            node.status = to.clone();
-            drop(nodes);
-            
-            info!(
-                node_id = node_id,
-                from = ?old_status,
-                to = ?to,
-                reason = reason.as_deref(),
-                "Node status transition"
-            );
-            
-            // 发送 node_status 消息（最小版）
-            let status_str = match to {
-                NodeStatus::Registering => "registering",
-                NodeStatus::Ready => "ready",
-                NodeStatus::Degraded => "degraded",
-                NodeStatus::Draining => "draining",
-                NodeStatus::Offline => "offline",
-            };
-            
-            // 构造 node_status 消息（最小版）
-            let status_msg = serde_json::json!({
-                "type": "node_status",
-                "node_id": node_id,
-                "status": status_str,
-                "reason": reason,
-                "timestamp": Utc::now().timestamp(),
-            });
-            
-            // 发送消息到节点（如果连接存在）
-            if let Some(tx) = self.node_connections.get_sender(node_id).await {
-                if let Ok(json) = serde_json::to_string(&status_msg) {
-                    if let Err(e) = tx.send(Message::Text(json)) {
-                        warn!("发送 node_status 消息到节点 {} 失败: {}", node_id, e);
-                    }
+        };
+        
+        info!(
+            node_id = node_id,
+            from = ?old_status,
+            to = ?to,
+            reason = reason.as_deref(),
+            "Node status transition"
+        );
+        
+        // 发送 node_status 消息（最小版）
+        let status_str = match to {
+            NodeStatus::Registering => "registering",
+            NodeStatus::Ready => "ready",
+            NodeStatus::Degraded => "degraded",
+            NodeStatus::Draining => "draining",
+            NodeStatus::Offline => "offline",
+        };
+        
+        // 构造 node_status 消息（最小版）
+        let status_msg = serde_json::json!({
+            "type": "node_status",
+            "node_id": node_id,
+            "status": status_str,
+            "reason": reason,
+            "timestamp": Utc::now().timestamp(),
+        });
+        
+        // 发送消息到节点（如果连接存在）
+        if let Some(tx) = self.node_connections.get_sender(node_id).await {
+            if let Ok(json) = serde_json::to_string(&status_msg) {
+                if let Err(e) = tx.send(Message::Text(json)) {
+                    warn!("发送 node_status 消息到节点 {} 失败: {}", node_id, e);
                 }
             }
         }
@@ -289,17 +296,22 @@ impl NodeStatusManager {
     /// 处理超时、offline、warmup 超时等情况
     pub async fn periodic_scan(&self) {
         let now = Utc::now();
-        let nodes = self.node_registry.nodes.read().await;
-        let node_ids: Vec<String> = nodes.keys().cloned().collect();
-        drop(nodes);
+        // 使用 ManagementRegistry（统一管理锁）
+        let node_ids: Vec<String> = {
+            let mgmt = self.node_registry.management_registry.read().await;
+            mgmt.nodes.keys().cloned().collect()
+        };
 
         for node_id in node_ids {
-            let nodes = self.node_registry.nodes.read().await;
-            let node = match nodes.get(&node_id) {
-                Some(n) => n.clone(),
+            // 使用 ManagementRegistry（统一管理锁）
+            let node = {
+                let mgmt = self.node_registry.management_registry.read().await;
+                mgmt.nodes.get(&node_id).map(|state| state.node.clone())
+            };
+            let node = match node {
+                Some(n) => n,
                 None => continue,
             };
-            drop(nodes);
 
             // 检查心跳超时（any → offline）
             let heartbeat_timeout = chrono::Duration::seconds(self.config.heartbeat_timeout_seconds as i64);

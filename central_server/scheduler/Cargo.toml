@@ -67,6 +67,12 @@ prometheus = "0.13"
 # Phase 2：Redis（Cluster-ready + Streams）
 redis = { version = "0.25", features = ["tokio-comp", "cluster-async"] }
 
+# 并发HashMap（用于SessionManager）
+dashmap = "5.5"
+
+# 小向量优化（用于RuntimeSnapshot）
+smallvec = "1.11"
+
 [dev-dependencies]
 tokio-test = "0.4"
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "rt", "time", "process", "fs", "test-util"] }

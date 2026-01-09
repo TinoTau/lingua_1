@@ -242,11 +242,6 @@ impl SessionActor {
         }
 
         // 设置结果截止时间（用于抗缺口机制）
-        let deadline_ms = chrono::Utc::now().timestamp_millis() + 60_000; // 60 秒后
-        self.state
-            .result_queue
-            .set_result_deadline(&self.session_id, utterance_index, deadline_ms)
-            .await;
 
         // 根据finalize原因设置标识
         let is_manual_cut = reason == "IsFinal" || reason == "Send";

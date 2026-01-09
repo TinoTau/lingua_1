@@ -296,11 +296,4 @@ pub enum NodeStatus {
     Offline,
 }
 
-impl NodeStatus {
-    /// 检查节点是否可以被调度
-    #[allow(dead_code)]
-    pub fn is_schedulable(&self) -> bool {
-        matches!(self, NodeStatus::Ready)
-    }
-}
 

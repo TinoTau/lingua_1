@@ -1,9 +1,5 @@
 use super::super::{DispatchExcludeReason, NodeRegistry};
 use super::selection_breakdown::NoAvailableNodeBreakdown;
-use crate::messages::NodeStatus;
-use crate::node_registry::validation::{
-    is_node_resource_available, node_has_installed_types,
-};
 use std::time::Instant;
 use tracing::{debug, warn};
 
@@ -17,49 +13,49 @@ impl NodeRegistry {
         exclude_node_id: Option<&str>,
     ) -> (Option<String>, NoAvailableNodeBreakdown) {
         let path_t0 = Instant::now();
-        // Phase2已将reserved融合到current_jobs，无需单独获取reserved_counts
-        let t0 = Instant::now();
-        let nodes = self.nodes.read().await;
-        crate::metrics::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
+        // 使用 RuntimeSnapshot（无锁读取）
+        let snapshot_manager = self.get_or_init_snapshot_manager().await;
+        let snapshot = snapshot_manager.get_snapshot().await;
 
-        // 诊断：记录注册表中的节点总数和状态分布
-        let total_registered = nodes.len();
+        // 诊断：记录快照中的节点总数和状态分布
+        let total_registered = snapshot.nodes.len();
         if total_registered == 0 {
             warn!(
-                "节点选择失败：注册表中没有任何节点（total_registered=0）。可能原因：1) 节点未成功注册 2) 节点连接断开被清理 3) 节点心跳超时被标记为 offline"
+                "节点选择失败：快照中没有任何节点（total_registered=0）。可能原因：1) 节点未成功注册 2) 节点连接断开被清理 3) 节点心跳超时被标记为 offline"
             );
         } else {
             let mut status_distribution: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
-            for node in nodes.values() {
-                let status_str = format!("{:?}", node.status);
+            for node in snapshot.nodes.values() {
+                let status_str = format!("{:?}", node.health);
                 *status_distribution.entry(status_str).or_insert(0) += 1;
             }
             debug!(
                 total_registered = total_registered,
                 status_distribution = ?status_distribution,
-                "节点选择：注册表中的节点状态分布"
+                "节点选择：快照中的节点状态分布"
             );
         }
 
         let mut breakdown = NoAvailableNodeBreakdown::default();
-        let mut available_nodes: Vec<&super::super::Node> = Vec::new();
+        let mut available_nodes: Vec<(String, std::sync::Arc<super::super::runtime_snapshot::NodeRuntimeSnapshot>)> = Vec::new();
 
-        for node in nodes.values() {
+        for (node_id, node) in snapshot.nodes.iter() {
             if let Some(ex) = exclude_node_id {
-                if ex == node.node_id {
+                if ex == node_id {
                     continue;
                 }
             }
             breakdown.total_nodes += 1;
 
-            if node.status != NodeStatus::Ready {
+            if node.health != super::super::runtime_snapshot::NodeHealth::Online {
                 breakdown.status_not_ready += 1;
                 self.record_exclude_reason(DispatchExcludeReason::StatusNotReady, node.node_id.clone()).await;
                 continue;
             }
 
-            if !node.online {
-                breakdown.offline += 1;
+            if !node.has_gpu {
+                breakdown.gpu_unavailable += 1;
+                self.record_exclude_reason(DispatchExcludeReason::GpuUnavailable, node.node_id.clone()).await;
                 continue;
             }
 
@@ -69,16 +65,16 @@ impl NodeRegistry {
                 continue;
             }
 
-            if node.hardware.gpus.is_none() || node.hardware.gpus.as_ref().unwrap().is_empty() {
-                breakdown.gpu_unavailable += 1;
-                self.record_exclude_reason(DispatchExcludeReason::GpuUnavailable, node.node_id.clone()).await;
-                continue;
-            }
-
-            if !node_has_installed_types(node, required_types) {
-                breakdown.model_not_available += 1;
-                self.record_exclude_reason(DispatchExcludeReason::ModelNotAvailable, node.node_id.clone()).await;
-                continue;
+            // 检查已安装的服务类型
+            if !required_types.is_empty() {
+                let has_all_types = required_types.iter().all(|rt| {
+                    node.installed_services.iter().any(|s| s.r#type == *rt)
+                });
+                if !has_all_types {
+                    breakdown.model_not_available += 1;
+                    self.record_exclude_reason(DispatchExcludeReason::ModelNotAvailable, node.node_id.clone()).await;
+                    continue;
+                }
             }
 
             // 注意：selection_types 没有 phase2_runtime，无法从 Redis 读取节点能力
@@ -139,21 +135,25 @@ impl NodeRegistry {
 
             // Phase2已将reserved融合到current_jobs，直接使用current_jobs
             let effective_jobs = node.current_jobs;
-            if effective_jobs >= node.max_concurrent_jobs {
+            if effective_jobs >= node.max_concurrency as usize {
                 breakdown.capacity_exceeded += 1;
                 // 添加详细日志，帮助诊断容量问题
                 debug!(
                     node_id = %node.node_id,
                     current_jobs = node.current_jobs,
                     effective_jobs = effective_jobs,
-                    max_concurrent_jobs = node.max_concurrent_jobs,
+                    max_concurrency = node.max_concurrency,
                     "Node capacity exceeded, excluding from selection"
                 );
                 self.record_exclude_reason(DispatchExcludeReason::CapacityExceeded, node.node_id.clone()).await;
                 continue;
             }
 
-            if !is_node_resource_available(node, self.resource_threshold) {
+            // 检查资源使用率
+            let cpu_ok = node.cpu_usage < self.resource_threshold;
+            let gpu_ok = node.gpu_usage.map(|g| g < self.resource_threshold).unwrap_or(true);
+            let memory_ok = node.memory_usage < self.resource_threshold;
+            if !cpu_ok || !gpu_ok || !memory_ok {
                 breakdown.resource_threshold_exceeded += 1;
                 // 添加详细日志，显示节点的实际资源使用率
                 warn!(
@@ -168,7 +168,7 @@ impl NodeRegistry {
                 continue;
             }
 
-            available_nodes.push(node);
+            available_nodes.push((node_id.clone(), node.clone()));
         }
 
         if available_nodes.is_empty() {
@@ -197,7 +197,7 @@ impl NodeRegistry {
 
         // P1-3: src_lang = auto 时，按 ASR 语言覆盖度排序
         let language_index = self.language_capability_index.read().await;
-        available_nodes.sort_by(|a, b| {
+        available_nodes.sort_by(|(id_a, a), (id_b, b)| {
             // 首先按负载排序（Phase2已将reserved融合到current_jobs）
             let load_a = a.current_jobs;
             let load_b = b.current_jobs;
@@ -209,8 +209,8 @@ impl NodeRegistry {
             
             // 如果 src_lang = auto，按 ASR 语言覆盖度排序
             if src_lang == "auto" {
-                let coverage_a = language_index.get_asr_language_coverage(&a.node_id);
-                let coverage_b = language_index.get_asr_language_coverage(&b.node_id);
+                let coverage_a = language_index.get_asr_language_coverage(id_a);
+                let coverage_b = language_index.get_asr_language_coverage(id_b);
                 return coverage_b.cmp(&coverage_a);  // 覆盖度高的优先
             }
             
@@ -220,7 +220,7 @@ impl NodeRegistry {
             gpu_a.partial_cmp(&gpu_b).unwrap_or(std::cmp::Ordering::Equal)
         });
         drop(language_index);
-        let selected_node_id = available_nodes[0].node_id.clone();
+        let selected_node_id = available_nodes[0].0.clone();
 
         debug!(
             node_id = %selected_node_id,

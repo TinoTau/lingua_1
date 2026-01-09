@@ -158,8 +158,8 @@ pub fn on_slow_lock_wait(lock_name: &'static str) {
     super::metrics_types::Metrics::inc(&METRICS.slow_lock_wait_total);
     crate::metrics::prometheus_metrics::on_slow_lock_wait(lock_name);
     match lock_name {
-        "node_registry.nodes.read" => super::metrics_types::Metrics::inc(&METRICS.slow_lock_node_registry_nodes_read_total),
-        "node_registry.nodes.write" => super::metrics_types::Metrics::inc(&METRICS.slow_lock_node_registry_nodes_write_total),
+        "node_registry.management_registry.read" => super::metrics_types::Metrics::inc(&METRICS.slow_lock_node_registry_nodes_read_total),
+        "node_registry.management_registry.write" => super::metrics_types::Metrics::inc(&METRICS.slow_lock_node_registry_nodes_write_total),
         "node_registry.reserved_jobs.write" => {
             super::metrics_types::Metrics::inc(&METRICS.slow_lock_node_registry_reserved_jobs_write_total)
         }

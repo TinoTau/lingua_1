@@ -9,9 +9,6 @@ impl SessionActor {
             SessionEvent::AudioChunkReceived { chunk, is_final, timestamp_ms, client_timestamp_ms } => {
                 self.handle_audio_chunk(chunk, is_final, timestamp_ms, client_timestamp_ms).await?;
             }
-            SessionEvent::PauseExceeded { timestamp_ms } => {
-                self.handle_pause_exceeded(timestamp_ms).await?;
-            }
             SessionEvent::TimeoutFired { generation, timestamp_ms } => {
                 self.handle_timeout_fired(generation, timestamp_ms).await?;
             }
@@ -19,15 +16,6 @@ impl SessionActor {
             // 此变体从未被构造，is_final 的处理已在 handle_audio_chunk 中完成
             SessionEvent::CloseSession => {
                 self.handle_close().await?;
-            }
-            SessionEvent::CancelTimers => {
-                self.cancel_timers();
-            }
-            SessionEvent::ResetTimers => {
-                self.reset_timers().await?;
-            }
-            SessionEvent::UpdateUtteranceIndex { utterance_index } => {
-                self.handle_update_utterance_index(utterance_index).await?;
             }
         }
         Ok(())
@@ -170,12 +158,6 @@ impl SessionActor {
         Ok(())
     }
 
-    /// 处理暂停超过阈值
-    pub(crate) async fn handle_pause_exceeded(&mut self, _timestamp_ms: i64) -> Result<(), anyhow::Error> {
-        let utterance_index = self.internal_state.current_utterance_index;
-        self.try_finalize(utterance_index, "Pause").await?;
-        Ok(())
-    }
 
     /// 处理超时触发
     pub(crate) async fn handle_timeout_fired(
@@ -255,17 +237,5 @@ impl SessionActor {
         Ok(())
     }
 
-    /// 处理更新 utterance_index 事件
-    pub(crate) async fn handle_update_utterance_index(&mut self, new_index: u64) -> Result<(), anyhow::Error> {
-        let old_index = self.internal_state.current_utterance_index;
-        self.internal_state.update_utterance_index(new_index);
-        tracing::info!(
-            session_id = %self.session_id,
-            old_index = old_index,
-            new_index = new_index,
-            "Updated utterance_index from utterance message"
-        );
-        Ok(())
-    }
 }
 

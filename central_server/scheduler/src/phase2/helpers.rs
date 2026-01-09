@@ -1,4 +1,4 @@
-﻿use std::collections::HashMap;
+﻿// HashMap is imported in phase2.rs
 
 fn normalize_instance_id(s: &str) -> String {
     if s.trim().is_empty() || s.trim().eq_ignore_ascii_case("auto") {
@@ -70,7 +70,7 @@ fn extract_payload_from_field_list(value: &redis::Value) -> Option<String> {
 #[derive(Debug, Clone)]
 struct PendingEntry {
     id: String,
-    #[allow(dead_code)]
+    #[allow(dead_code)] // 目前未使用，保留用于未来扩展
     consumer: String,
     idle_ms: u64,
     deliveries: u64,
@@ -126,7 +126,6 @@ fn parse_xpending_summary_total(value: redis::Value) -> Option<u64> {
     redis::from_redis_value::<u64>(&parts[0]).ok()
 }
 
-#[allow(dead_code)]
 fn redis_value_to_hashmap(value: redis::Value) -> Option<HashMap<String, String>> {
     let redis::Value::Bulk(items) = value else { return None };
     let mut out = HashMap::new();

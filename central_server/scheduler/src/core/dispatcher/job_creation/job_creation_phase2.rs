@@ -82,6 +82,7 @@ impl JobDispatcher {
     }
 
     /// Phase 2: 尝试获取锁并创建新 Job（带锁路径）
+    /// 优化：节点选择在 Redis 锁外进行，减少锁持有时间
     pub(crate) async fn create_job_with_phase2_lock(
         &self,
         request_id: &str,
@@ -109,85 +110,32 @@ impl JobDispatcher {
         _now_ms: i64,
         target_session_ids: Option<Vec<String>>,
         first_chunk_client_timestamp_ms: Option<i64>,
-        padding_ms: Option<u64>,
+        _padding_ms: Option<u64>,
         is_manual_cut: bool,
         is_pause_triggered: bool,
         is_timeout_triggered: bool,
     ) -> Option<Job> {
         let rt = self.phase2.clone()?;
         
-        // 加锁路径：避免同 request_id 并发创建/占用
-        let lock_owner = format!("{}:{}", rt.instance_id, Uuid::new_v4().to_string());
-        let deadline = tokio::time::Instant::now() + std::time::Duration::from_millis(1000);
-        let mut locked = false;
-        while tokio::time::Instant::now() < deadline {
-            if rt.acquire_request_lock(request_id, &lock_owner, 1500).await {
-                locked = true;
-                break;
-            }
-            tokio::time::sleep(std::time::Duration::from_millis(50)).await;
-        }
-
-        if !locked {
-            return None;
-        }
-
-        // lock 后复查
+        // 优化：先快速检查 request_id 绑定（无锁，避免不必要的锁获取）
         if let Some(b) = rt.get_request_binding(request_id).await {
-            rt.release_request_lock(request_id, &lock_owner).await;
             let job_id = b.job_id.clone();
             if let Some(job) = self.get_job(&job_id).await {
                 return Some(job);
             }
-            let assigned_node_id = b.node_id.clone();
-            let job = Job {
-                job_id: job_id.clone(),
-                request_id: request_id.to_string(),
-                dispatched_to_node: b.dispatched_to_node,
-                dispatched_at_ms: None,
-                failover_attempts: 0,
-                dispatch_attempt_id: if assigned_node_id.is_some() { 1 } else { 0 },
-                session_id: session_id.to_string(),
-                utterance_index,
-                src_lang: src_lang.to_string(),
-                tgt_lang: tgt_lang.to_string(),
-                dialect: dialect.clone(),
-                features: features.clone(),
-                pipeline: pipeline.clone(),
-                audio_data: audio_data.clone(),
-                audio_format: audio_format.clone(),
-                sample_rate,
-                assigned_node_id: assigned_node_id.clone(),
-                status: if assigned_node_id.is_some() { JobStatus::Assigned } else { JobStatus::Pending },
-                created_at: chrono::Utc::now(),
-                trace_id: trace_id.clone(),
-                mode: mode.clone(),
-                lang_a: lang_a.clone(),
-                lang_b: lang_b.clone(),
-                auto_langs: auto_langs.clone(),
-                enable_streaming_asr,
-                partial_update_interval_ms,
-                target_session_ids: target_session_ids.clone(),
-                tenant_id: tenant_id.clone(),
-                first_chunk_client_timestamp_ms,
-                padding_ms: None, // EDGE-4: Padding 配置（在 Phase2 幂等检查时，padding_ms 尚未确定）
-                is_manual_cut,
-                is_pause_triggered,
-                is_timeout_triggered,
-            };
-            self.jobs.write().await.insert(job_id, job.clone());
-            return Some(job);
+            // 如果 Job 不存在，继续创建流程
         }
 
-        // 还没有绑定：创建新 job_id，并走"本地选节点 -> Redis reserve -> 写 bind"
+        // 优化：节点选择在 Redis 锁外进行（避免在锁内进行耗时操作）
+        // 创建新 job_id
         let job_id = format!("job-{}", Uuid::new_v4().to_string()[..8].to_uppercase());
 
-        // 节点选择逻辑（由调用方传入）
-        let (mut assigned_node_id, mut no_available_node_metric) = if let Some(node_id) = preferred_node_id {
+        // 节点选择逻辑（在锁外执行，50-200ms）
+        let assigned_node_id = if let Some(node_id) = preferred_node_id {
             if self.node_registry.is_node_available(&node_id).await {
-                (Some(node_id), None)
+                Some(node_id)
             } else {
-                (None, None)
+                None
             }
         } else {
             let excluded = exclude_node_id.as_deref();
@@ -229,7 +177,7 @@ impl JobDispatcher {
                 }
             }
             if first.node_id.is_some() {
-                (first.node_id, None)
+                first.node_id
             } else {
                 let second = self
                     .select_node_with_module_expansion_with_breakdown(
@@ -256,15 +204,76 @@ impl JobDispatcher {
                         );
                     }
                 }
-                let metric = if second.node_id.is_none() {
-                    Some((second.selector, second.breakdown.best_reason_label()))
-                } else {
-                    None
-                };
-                (second.node_id, metric)
+                second.node_id
             }
         };
 
+        // 优化：节点选择已完成（锁外），现在获取 Redis 锁进行快速操作（30-150ms）
+        // 加锁路径：避免同 request_id 并发创建/占用
+        let lock_owner = format!("{}:{}", rt.instance_id, Uuid::new_v4().to_string());
+        let deadline = tokio::time::Instant::now() + std::time::Duration::from_millis(1000);
+        let mut locked = false;
+        while tokio::time::Instant::now() < deadline {
+            if rt.acquire_request_lock(request_id, &lock_owner, 1500).await {
+                locked = true;
+                break;
+            }
+            tokio::time::sleep(std::time::Duration::from_millis(50)).await;
+        }
+
+        if !locked {
+            return None;
+        }
+
+        // lock 后复查（防止并发创建）
+        if let Some(b) = rt.get_request_binding(request_id).await {
+            rt.release_request_lock(request_id, &lock_owner).await;
+            let existing_job_id = b.job_id.clone();
+            if let Some(job) = self.get_job(&existing_job_id).await {
+                return Some(job);
+            }
+            // 如果 Job 不存在，使用已选择的节点继续创建
+            let assigned_node_id = b.node_id.clone();
+            let job = Job {
+                job_id: existing_job_id.clone(),
+                request_id: request_id.to_string(),
+                dispatched_to_node: b.dispatched_to_node,
+                dispatched_at_ms: None,
+                failover_attempts: 0,
+                dispatch_attempt_id: if assigned_node_id.is_some() { 1 } else { 0 },
+                session_id: session_id.to_string(),
+                utterance_index,
+                src_lang: src_lang.to_string(),
+                tgt_lang: tgt_lang.to_string(),
+                dialect: dialect.clone(),
+                features: features.clone(),
+                pipeline: pipeline.clone(),
+                audio_data: audio_data.clone(),
+                audio_format: audio_format.to_string(),
+                sample_rate,
+                assigned_node_id: assigned_node_id.clone(),
+                status: if assigned_node_id.is_some() { JobStatus::Assigned } else { JobStatus::Pending },
+                created_at: chrono::Utc::now(),
+                trace_id: trace_id.clone(),
+                mode: mode.clone(),
+                lang_a: lang_a.clone(),
+                lang_b: lang_b.clone(),
+                auto_langs: auto_langs.clone(),
+                enable_streaming_asr,
+                partial_update_interval_ms,
+                target_session_ids: target_session_ids.clone(),
+                tenant_id: tenant_id.clone(),
+                first_chunk_client_timestamp_ms,
+                padding_ms: None,
+                is_manual_cut,
+                is_pause_triggered,
+                is_timeout_triggered,
+            };
+            self.jobs.write().await.insert(existing_job_id, job.clone());
+            return Some(job);
+        }
+
+        // 优化：节点选择已完成（锁外），现在进行快速 Redis 操作（30-150ms）
         // Phase 2：全局并发占用（Redis reserve，按照设计文档实现）
         if let Some(ref node_id) = assigned_node_id {
             let ttl_s = self.reserved_ttl_seconds.max(1);
@@ -280,41 +289,43 @@ impl JobDispatcher {
                     tracing::error!(
                         job_id = %job_id,
                         node_id = %node_id,
-                        "Redis 不可用，无法预留节点槽位，拒绝任务"
+                        "Redis 不可用，拒绝新任务（fail closed）"
                     );
-                    return None; // 返回 None 表示创建失败
+                    rt.release_request_lock(request_id, &lock_owner).await;
+                    return None;
                 }
-                Err(_) => false, // 其他错误，按失败处理
+                Err(e) => {
+                    tracing::error!(
+                        job_id = %job_id,
+                        node_id = %node_id,
+                        error = ?e,
+                        "Redis reserve_node_slot 失败"
+                    );
+                    rt.release_request_lock(request_id, &lock_owner).await;
+                    return None;
+                }
             };
             if !ok {
-                assigned_node_id = None;
-                no_available_node_metric = Some(("reserve", "reserve_denied"));
+                // 节点槽位已被占用，释放锁并返回 None
+                rt.release_request_lock(request_id, &lock_owner).await;
+                return None;
             }
         }
 
-        // 写入 request_id bind（即使未分配到节点，也写入以避免短时间重复创建）
+        // Phase 2：写入 request_id 绑定（快速操作）
+        let lease_seconds = self.reserved_ttl_seconds.max(1);
         rt.set_request_binding(
             request_id,
             &job_id,
             assigned_node_id.as_deref(),
-            self.lease_seconds.max(1),
-            false,
-        )
-        .await;
+            lease_seconds,
+            false, // dispatched_to_node 将在 mark_job_dispatched 时更新
+        ).await;
 
-        // Phase 2：初始化 Job FSM（CREATED）
-        let fsm_ttl = std::cmp::max(self.lease_seconds, self.reserved_ttl_seconds).saturating_add(300);
-        rt.job_fsm_init(&job_id, assigned_node_id.as_deref(), 1, fsm_ttl).await;
+        // 释放 Redis 锁（快速操作完成）
         rt.release_request_lock(request_id, &lock_owner).await;
 
-        if assigned_node_id.is_none() {
-            if let Some((selector, reason)) = no_available_node_metric {
-                crate::metrics::prometheus_metrics::on_no_available_node(selector, reason);
-            } else {
-                crate::metrics::prometheus_metrics::on_no_available_node("unknown", "unknown");
-            }
-        }
-
+        // 创建 Job 对象（锁外）
         let job = Job {
             job_id: job_id.clone(),
             request_id: request_id.to_string(),
@@ -335,7 +346,7 @@ impl JobDispatcher {
             assigned_node_id: assigned_node_id.clone(),
             status: if assigned_node_id.is_some() { JobStatus::Assigned } else { JobStatus::Pending },
             created_at: chrono::Utc::now(),
-            trace_id: trace_id.clone(),
+            trace_id,
             mode,
             lang_a,
             lang_b,
@@ -343,15 +354,17 @@ impl JobDispatcher {
             enable_streaming_asr,
             partial_update_interval_ms,
             target_session_ids,
-            tenant_id: tenant_id.clone(),
+            tenant_id,
             first_chunk_client_timestamp_ms,
-            padding_ms,
+            padding_ms: None, // EDGE-4: Padding 配置（在 Phase2 幂等检查时，padding_ms 尚未确定）
             is_manual_cut,
             is_pause_triggered,
             is_timeout_triggered,
         };
+
+        // 存储 Job（快速操作）
         self.jobs.write().await.insert(job_id, job.clone());
+
         Some(job)
     }
 }
-

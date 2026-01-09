@@ -515,7 +515,7 @@ async fn test_concurrent_session_end() {
     }
     
     // 等待所有 groups 创建完成
-    let _group_ids: Vec<_> = futures::future::join_all(handles).await
+    let _group_ids: Vec<_> = futures_util::future::join_all(handles).await
         .into_iter()
         .map(|r| r.unwrap())
         .collect();
@@ -532,7 +532,7 @@ async fn test_concurrent_session_end() {
     }
     
     // 等待所有 session_end 完成（不应该有 panic 或死锁）
-    let results: Vec<_> = futures::future::join_all(end_handles).await;
+    let results: Vec<_> = futures_util::future::join_all(end_handles).await;
     for result in results {
         result.expect("session_end 不应该 panic");
     }

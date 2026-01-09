@@ -34,14 +34,6 @@ impl NodeRegistry {
         guard.clone()
     }
 
-    /// 清除调度排除原因统计（定期调用，避免内存无限增长）
-    #[allow(dead_code)]
-    pub async fn clear_exclude_reason_stats(&self) {
-        let t0 = Instant::now();
-        let mut stats = self.exclude_reason_stats.write().await;
-        crate::metrics::observability::record_lock_wait("node_registry.exclude_reason_stats.write", t0.elapsed().as_millis() as u64);
-        stats.clear();
-    }
 }
 
 

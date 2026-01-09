@@ -83,13 +83,6 @@ impl JobIdempotencyManager {
         }
     }
 
-    #[allow(dead_code)]
-    pub fn new_with_ttl(ttl_seconds: u64) -> Self {
-        Self {
-            mappings: Arc::new(RwLock::new(HashMap::new())),
-            ttl_ms: (ttl_seconds * 1000) as i64,
-        }
-    }
 
     /// 获取或创建 job_id（幂等）
     /// 如果 job_key 已存在，返回已存在的 job_id
@@ -111,20 +104,6 @@ impl JobIdempotencyManager {
         job_id
     }
 
-    /// 检查 job_key 是否已存在
-    #[allow(dead_code)]
-    pub async fn exists(&self, job_key: &JobKey) -> bool {
-        let now_ms = chrono::Utc::now().timestamp_millis();
-        let mappings = self.mappings.read().await;
-
-        if let Some((_, created_at)) = mappings.get(job_key) {
-            // 检查是否过期
-            if now_ms - *created_at < self.ttl_ms {
-                return true;
-            }
-        }
-        false
-    }
 
     /// 获取 job_id（如果存在）
     pub async fn get_job_id(&self, job_key: &JobKey) -> Option<String> {
@@ -147,13 +126,6 @@ impl JobIdempotencyManager {
         });
     }
 
-    /// 手动清理过期项（用于定期清理任务）
-    #[allow(dead_code)]
-    pub async fn cleanup(&self) {
-        let now_ms = chrono::Utc::now().timestamp_millis();
-        let mut mappings = self.mappings.write().await;
-        self.cleanup_expired(&mut mappings, now_ms);
-    }
 }
 
 impl Default for JobIdempotencyManager {

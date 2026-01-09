@@ -244,10 +244,27 @@ async fn test_session_actor_duplicate_finalize_prevention() {
     // 添加一些音频数据
     state.audio_buffer.add_chunk(&session.session_id, 0, vec![1, 2, 3, 4]).await;
     
-    // 发送多个 finalize 请求（模拟竞态）
-    handle.send(SessionEvent::IsFinalReceived).unwrap();
-    handle.send(SessionEvent::IsFinalReceived).unwrap();
-    handle.send(SessionEvent::IsFinalReceived).unwrap();
+    // 注意：SessionEvent::IsFinalReceived 已被删除
+    // is_final 的处理已在 handle_audio_chunk 中完成
+    // 这里测试多个 final 音频块的处理（通过 AudioChunkReceived 事件）
+    handle.send(SessionEvent::AudioChunkReceived {
+        chunk: vec![5, 6, 7, 8],
+        is_final: true,
+        timestamp_ms: chrono::Utc::now().timestamp_millis(),
+        client_timestamp_ms: None,
+    }).unwrap();
+    handle.send(SessionEvent::AudioChunkReceived {
+        chunk: vec![9, 10, 11, 12],
+        is_final: true,
+        timestamp_ms: chrono::Utc::now().timestamp_millis(),
+        client_timestamp_ms: None,
+    }).unwrap();
+    handle.send(SessionEvent::AudioChunkReceived {
+        chunk: vec![13, 14, 15, 16],
+        is_final: true,
+        timestamp_ms: chrono::Utc::now().timestamp_millis(),
+        client_timestamp_ms: None,
+    }).unwrap();
     
     sleep(Duration::from_millis(200)).await;
     

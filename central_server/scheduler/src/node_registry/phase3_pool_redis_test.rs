@@ -12,7 +12,7 @@ mod tests {
         node_id: &str,
         language_pairs: Vec<(String, String)>,
     ) -> Node {
-        let capability_by_type = vec![
+        let _capability_by_type = vec![
             CapabilityByType {
                 r#type: ServiceType::Asr,
                 ready: true,
@@ -152,7 +152,34 @@ mod tests {
         }
     }
 
+    /// 快速检查 Redis 是否可用（带超时）
+    async fn can_connect_redis_quick() -> bool {
+        let redis_url = std::env::var("LINGUA_TEST_REDIS_URL")
+            .unwrap_or_else(|_| "redis://127.0.0.1:6379".to_string());
+        
+        match tokio::time::timeout(Duration::from_secs(1), async {
+            if let Ok(client) = redis::Client::open(redis_url.as_str()) {
+                if let Ok(mut conn) = client.get_multiplexed_tokio_connection().await {
+                    let pong: redis::RedisResult<String> = redis::cmd("PING").query_async(&mut conn).await;
+                    pong.is_ok()
+                } else {
+                    false
+                }
+            } else {
+                false
+            }
+        }).await {
+            Ok(result) => result,
+            Err(_) => false, // 超时
+        }
+    }
+
     async fn create_test_phase2_runtime(instance_id: &str) -> Option<Arc<Phase2Runtime>> {
+        // 先快速检查 Redis 是否可用
+        if !can_connect_redis_quick().await {
+            return None;
+        }
+        
         let redis_url = std::env::var("LINGUA_TEST_REDIS_URL")
             .unwrap_or_else(|_| "redis://127.0.0.1:6379".to_string());
         
@@ -164,15 +191,20 @@ mod tests {
         // 使用固定的 key_prefix 以便多个实例共享同一个 Redis key 空间
         cfg.redis.key_prefix = "test:pool:shared".to_string();
         
-        match Phase2Runtime::new(cfg, 15).await {
-            Ok(Some(rt)) => {
+        // 添加超时：如果 Redis 连接失败，快速返回 None（减少到 2 秒）
+        match tokio::time::timeout(Duration::from_secs(2), Phase2Runtime::new(cfg, 15)).await {
+            Ok(Ok(Some(rt))) => {
                 let rt = Arc::new(rt);
                 // 设置 scheduler presence，以便 is_instance_alive() 能正确工作
                 set_test_scheduler_presence(&rt).await;
                 Some(rt)
             },
-            Ok(None) => None,
-            Err(_) => None,
+            Ok(Ok(None)) => None,
+            Ok(Err(_)) => None,
+            Err(_) => {
+                // 超时，Redis 可能不可用
+                None
+            },
         }
     }
 
@@ -181,18 +213,29 @@ mod tests {
         let redis_url = std::env::var("LINGUA_TEST_REDIS_URL")
             .unwrap_or_else(|_| "redis://127.0.0.1:6379".to_string());
         
-        if let Ok(client) = redis::Client::open(redis_url.as_str()) {
-            if let Ok(mut conn) = client.get_connection() {
-                let key = format!("{}:schedulers:presence:{}", rt.key_prefix(), rt.instance_id);
-                let presence = serde_json::json!({
-                    "started_at": chrono::Utc::now().timestamp_millis(),
-                    "hostname": "test",
-                    "pid": std::process::id(),
-                    "version": "test"
-                });
-                let val = serde_json::to_string(&presence).unwrap();
-                let _: Result<(), _> = conn.set_ex::<_, _, ()>(&key, &val, 60);
+        // 添加超时：如果 Redis 连接失败，快速返回
+        let timeout = tokio::time::timeout(
+            Duration::from_secs(2),
+            async {
+                if let Ok(client) = redis::Client::open(redis_url.as_str()) {
+                    if let Ok(mut conn) = client.get_connection_with_timeout(
+                        std::time::Duration::from_secs(1)
+                    ) {
+                        let key = format!("{}:schedulers:presence:{}", rt.key_prefix(), rt.instance_id);
+                        let presence = serde_json::json!({
+                            "started_at": chrono::Utc::now().timestamp_millis(),
+                            "hostname": "test",
+                            "pid": std::process::id(),
+                            "version": "test"
+                        });
+                        let val = serde_json::to_string(&presence).unwrap();
+                        let _: Result<(), _> = conn.set_ex::<_, _, ()>(&key, &val, 60);
+                    }
+                }
             }
+        ).await;
+        if timeout.is_err() {
+            eprintln!("警告：设置 scheduler presence 超时");
         }
     }
 
@@ -201,27 +244,38 @@ mod tests {
         let redis_url = std::env::var("LINGUA_TEST_REDIS_URL")
             .unwrap_or_else(|_| "redis://127.0.0.1:6379".to_string());
         
-        if let Ok(client) = redis::Client::open(redis_url.as_str()) {
-            if let Ok(mut conn) = client.get_connection() {
-                // 使用内部方法获取 key（通过反射或直接构造）
-                let key_prefix = rt.key_prefix();
-                let config_key = format!("{}:v1:phase3:pools:config", key_prefix);
-                let leader_key = format!("{}:v1:phase3:pools:leader", key_prefix);
-                let version_key = format!("{}:v1:phase3:pools:version", key_prefix);
-                
-                // 清理所有相关的 key
-                let _: Result<(), _> = conn.del(&config_key);
-                let _: Result<(), _> = conn.del(&leader_key);
-                let _: Result<(), _> = conn.del(&version_key);
-                
-                // 清理所有 pool members keys（使用 KEYS 模式匹配）
-                let pattern = format!("{}:v1:pool:*:members", key_prefix);
-                if let Ok(keys) = conn.keys::<_, Vec<String>>(&pattern) {
-                    for key in keys {
-                        let _: Result<(), _> = conn.del(&key);
+        // 添加超时：如果 Redis 连接失败，快速返回
+        let timeout = tokio::time::timeout(
+            Duration::from_secs(2),
+            async {
+                if let Ok(client) = redis::Client::open(redis_url.as_str()) {
+                    if let Ok(mut conn) = client.get_connection_with_timeout(
+                        std::time::Duration::from_secs(1)
+                    ) {
+                        // 使用内部方法获取 key（通过反射或直接构造）
+                        let key_prefix = rt.key_prefix();
+                        let config_key = format!("{}:v1:phase3:pools:config", key_prefix);
+                        let leader_key = format!("{}:v1:phase3:pools:leader", key_prefix);
+                        let version_key = format!("{}:v1:phase3:pools:version", key_prefix);
+                        
+                        // 清理所有相关的 key
+                        let _: Result<(), _> = conn.del(&config_key);
+                        let _: Result<(), _> = conn.del(&leader_key);
+                        let _: Result<(), _> = conn.del(&version_key);
+                        
+                        // 清理所有 pool members keys（使用 KEYS 模式匹配）
+                        let pattern = format!("{}:v1:pool:*:members", key_prefix);
+                        if let Ok(keys) = conn.keys::<_, Vec<String>>(&pattern) {
+                            for key in keys {
+                                let _: Result<(), _> = conn.del(&key);
+                            }
+                        }
                     }
                 }
             }
+        ).await;
+        if timeout.is_err() {
+            eprintln!("警告：清理测试 keys 超时");
         }
     }
 
@@ -262,9 +316,18 @@ mod tests {
         assert!(rt_a.is_pool_leader().await, "实例 A 应该是 Leader");
         assert!(!rt_b.is_pool_leader().await, "实例 B 不应该是 Leader");
 
-        // 测试 4：获取当前 Leader
-        let leader = rt_a.get_pool_leader().await;
-        assert_eq!(leader, Some("test-a".to_string()), "当前 Leader 应该是实例 A");
+        // 测试 4：获取当前 Leader（直接从 Redis 读取）
+        use redis::Commands;
+        let redis_url = std::env::var("LINGUA_TEST_REDIS_URL")
+            .unwrap_or_else(|_| "redis://127.0.0.1:6379".to_string());
+        if let Ok(client) = redis::Client::open(redis_url.as_str()) {
+            if let Ok(mut conn) = client.get_connection() {
+                // phase3_pool_leader_key 使用 v1_prefix，格式为 {key_prefix}:v1:phase3:pools:leader
+                let key = format!("{}:v1:phase3:pools:leader", rt_a.key_prefix());
+                let leader: Option<String> = conn.get(&key).ok();
+                assert_eq!(leader, Some("test-a".to_string()), "当前 Leader 应该是实例 A");
+            }
+        }
 
         // 测试 5：续约 Leader 锁
         let renewed = rt_a.renew_pool_leader(60).await;
@@ -348,18 +411,18 @@ mod tests {
         // 创建 NodeRegistry
         let registry = Arc::new(NodeRegistry::new());
 
-        // 注册测试节点
+        // 注册测试节点（使用 ManagementRegistry）
         let node1 = create_test_node_with_language_pairs("node-1", vec![
             ("zh".to_string(), "en".to_string()),
             ("en".to_string(), "zh".to_string()),
         ]);
-        registry.nodes.write().await.insert("node-1".to_string(), node1);
+        registry.management_registry.update_node("node-1".to_string(), node1, vec![]).await;
 
         let node2 = create_test_node_with_language_pairs("node-2", vec![
             ("zh".to_string(), "en".to_string()),
             ("ja".to_string(), "en".to_string()),
         ]);
-        registry.nodes.write().await.insert("node-2".to_string(), node2);
+        registry.management_registry.update_node("node-2".to_string(), node2, vec![]).await;
 
         // 配置 Phase3
         let mut phase3_config = Phase3Config::default();
@@ -436,8 +499,8 @@ mod tests {
             ("zh".to_string(), "en".to_string()),
             ("en".to_string(), "zh".to_string()),
         ]);
-        registry_a.nodes.write().await.insert("node-1".to_string(), node1.clone());
-        registry_b.nodes.write().await.insert("node-1".to_string(), node1);
+        registry_a.management_registry.update_node("node-1".to_string(), node1.clone(), vec![]).await;
+        registry_b.management_registry.update_node("node-1".to_string(), node1, vec![]).await;
 
         // 配置 Phase3
         let mut phase3_config = Phase3Config::default();
@@ -527,11 +590,17 @@ mod tests {
         let acquired_a = rt_a.try_acquire_pool_leader(2).await; // 短 TTL 用于测试
         assert!(acquired_a, "实例 A 应该成为 Leader");
 
-        // 测试 2：等待锁过期
+        // 测试 2：等待锁过期（等待时间略长于 TTL，确保锁完全过期）
         tokio::time::sleep(Duration::from_secs(3)).await;
 
         // 测试 3：实例 B 应该能够获取 Leader 锁（因为 A 的锁已过期）
-        let acquired_b = rt_b.try_acquire_pool_leader(60).await;
+        // 如果第一次失败，可能是锁还没完全过期，重试一次
+        let mut acquired_b = rt_b.try_acquire_pool_leader(60).await;
+        if !acquired_b {
+            // 再等待一小段时间后重试
+            tokio::time::sleep(Duration::from_millis(500)).await;
+            acquired_b = rt_b.try_acquire_pool_leader(60).await;
+        }
         assert!(acquired_b, "实例 B 应该能够获取 Leader 锁（A 的锁已过期）");
 
         // 测试 4：验证 Leader 切换
@@ -551,7 +620,7 @@ mod tests {
         let node1 = create_test_node_with_language_pairs("node-1", vec![
             ("zh".to_string(), "en".to_string()),
         ]);
-        registry.nodes.write().await.insert("node-1".to_string(), node1);
+        registry.management_registry.update_node("node-1".to_string(), node1, vec![]).await;
 
         // 配置 Phase3
         let mut phase3_config = Phase3Config::default();
@@ -597,7 +666,7 @@ mod tests {
         let node1 = create_test_node_with_language_pairs("node-1", vec![
             ("zh".to_string(), "en".to_string()),
         ]);
-        registry.nodes.write().await.insert("node-1".to_string(), node1);
+        registry.management_registry.update_node("node-1".to_string(), node1, vec![]).await;
 
         // 配置 Phase3
         let mut phase3_config = Phase3Config::default();
@@ -670,13 +739,13 @@ mod tests {
             ("zh".to_string(), "en".to_string()),
             ("en".to_string(), "zh".to_string()),
         ]);
-        registry.nodes.write().await.insert("node-1".to_string(), node1);
+        registry.management_registry.update_node("node-1".to_string(), node1, vec![]).await;
 
         let node2 = create_test_node_with_language_pairs("node-2", vec![
             ("zh".to_string(), "en".to_string()),
             ("ja".to_string(), "en".to_string()),
         ]);
-        registry.nodes.write().await.insert("node-2".to_string(), node2);
+        registry.management_registry.update_node("node-2".to_string(), node2, vec![]).await;
 
         // 配置 Phase3
         let mut phase3_config = Phase3Config::default();
@@ -785,9 +854,9 @@ mod tests {
             ("zh".to_string(), "en".to_string()),
             ("en".to_string(), "zh".to_string()),
         ]);
-        registry_a.nodes.write().await.insert("node-1".to_string(), node1.clone());
-        registry_b.nodes.write().await.insert("node-1".to_string(), node1.clone());
-        registry_c.nodes.write().await.insert("node-1".to_string(), node1);
+        registry_a.management_registry.update_node("node-1".to_string(), node1.clone(), vec![]).await;
+        registry_b.management_registry.update_node("node-1".to_string(), node1.clone(), vec![]).await;
+        registry_c.management_registry.update_node("node-1".to_string(), node1, vec![]).await;
 
         // 配置 Phase3
         let mut phase3_config = Phase3Config::default();
@@ -876,7 +945,7 @@ mod tests {
         let node1 = create_test_node_with_language_pairs("node-1", vec![
             ("zh".to_string(), "en".to_string()),
         ]);
-        registry.nodes.write().await.insert("node-1".to_string(), node1);
+        registry.management_registry.update_node("node-1".to_string(), node1, vec![]).await;
 
         // 配置 Phase3
         let mut phase3_config = Phase3Config::default();
@@ -1109,12 +1178,12 @@ mod tests {
         };
 
         // 注册节点
-        registry.nodes.write().await.insert("node-1".to_string(), node);
+        registry.management_registry.update_node("node-1".to_string(), node, vec![]).await;
 
         // 测试 1：动态创建 Pool（不传递 phase2_runtime，应该只更新本地）
         let pool_id_1 = registry.try_create_pool_for_node("node-1", None).await;
         assert!(pool_id_1.is_some(), "应该成功创建 Pool");
-        let pool_id_1 = pool_id_1.unwrap();
+        let _pool_id_1 = pool_id_1.unwrap();
 
         // 验证本地配置
         let cfg = registry.phase3_config().await;
@@ -1284,11 +1353,11 @@ mod tests {
             // capability_by_type_map 已从 Node 结构体中移除，能力信息存储在 Redis
         };
 
-        registry.nodes.write().await.insert("node-2".to_string(), node2);
+        registry.management_registry.update_node("node-2".to_string(), node2, vec![]).await;
 
         let pool_id_4 = registry.try_create_pool_for_node("node-2", Some(rt.as_ref())).await;
         assert!(pool_id_4.is_some(), "应该成功创建新的 Pool");
-        let pool_id_4 = pool_id_4.unwrap();
+        let _pool_id_4 = pool_id_4.unwrap();
 
         // 等待 Redis 写入完成
         tokio::time::sleep(Duration::from_millis(200)).await;

@@ -220,11 +220,11 @@ impl DashboardStats {
     }
 
     async fn collect_node_stats(state: &AppState) -> NodeStats {
-        // 获取所有节点
-        let nodes = state.node_registry.nodes.read().await;
+        // 使用 ManagementRegistry（统一管理锁）
+        let mgmt = state.node_registry.management_registry.read().await;
         
         // 统计在线节点数
-        let connected_nodes = nodes.values().filter(|n| n.online).count();
+        let connected_nodes = mgmt.nodes.values().filter(|state| state.node.online).count();
         
         // 统计每个 ServiceType 有多少节点提供（capability_by_type ready=true）
         // 从 Redis 读取节点能力信息来统计
@@ -232,7 +232,8 @@ impl DashboardStats {
         let mut type_in_use_counts: HashMap<String, usize> = HashMap::new();
         
         if let Some(rt) = state.phase2.as_ref() {
-            for node in nodes.values() {
+            for node_state in mgmt.nodes.values() {
+                let node = &node_state.node;
                 if !node.online {
                     continue;
                 }
@@ -260,7 +261,8 @@ impl DashboardStats {
         let total_services = available_services.len();
 
         // 计算算力统计
-        let compute_power = Self::calculate_compute_power(&nodes);
+        let node_clones: Vec<crate::node_registry::Node> = mgmt.nodes.values().map(|state| state.node.clone()).collect();
+        let compute_power = Self::calculate_compute_power(&node_clones);
 
         NodeStats {
             connected_nodes,
@@ -279,7 +281,7 @@ impl DashboardStats {
     /// - GPU算力 = (75% - 当前GPU使用率) * GPU数量 * GPU显存(GB) / 100
     /// - 内存算力 = (75% - 当前内存使用率) * 内存大小(GB) / 100
     /// 注意：这些阈值用于算力计算，与节点选择的资源阈值（85%）不同
-    fn calculate_compute_power(nodes: &tokio::sync::RwLockReadGuard<'_, std::collections::HashMap<String, crate::node_registry::Node>>) -> ComputePowerStats {
+    fn calculate_compute_power(nodes: &[crate::node_registry::Node]) -> ComputePowerStats {
         const CPU_THRESHOLD: f32 = 50.0;
         const GPU_THRESHOLD: f32 = 75.0;
         const MEMORY_THRESHOLD: f32 = 75.0;
@@ -289,7 +291,7 @@ impl DashboardStats {
         let mut total_gpu_power = 0.0;
         let mut total_memory_power = 0.0;
 
-        for node in nodes.values() {
+        for node in nodes.iter() {
             if !node.online {
                 continue;
             }

@@ -3,5 +3,4 @@
 
 mod session_init_trace_tenant_test;
 
-pub use session_init_trace_tenant_test::*;
 

@@ -70,7 +70,7 @@ mod tests {
         nmt_capabilities: Vec<NmtCapability>,
         semantic_langs: Vec<String>,
     ) -> Node {
-        let capability_by_type = vec![
+        let _capability_by_type = vec![
             CapabilityByType {
                 r#type: ServiceType::Asr,
                 ready: true,

@@ -1,4 +1,5 @@
 ﻿impl Phase2Runtime {
+    #[allow(dead_code)] // 目前仅在测试中使用
     pub async fn job_fsm_init(
         &self,
         job_id: &str,

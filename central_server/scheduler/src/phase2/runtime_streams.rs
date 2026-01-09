@@ -299,22 +299,5 @@ impl Phase2Runtime {
         crate::metrics::prometheus_metrics::phase2_redis_op("xdel", r.is_ok());
         r
     }
-
-    #[allow(dead_code)]
-    async fn xrange_payload(&self, stream: &str, id: &str) -> Option<String> {
-        let mut cmd = redis::cmd("XRANGE");
-        cmd.arg(stream).arg(id).arg(id);
-        let value: redis::Value = match self.redis.query(cmd).await {
-            Ok(v) => {
-                crate::metrics::prometheus_metrics::phase2_redis_op("xrange", true);
-                v
-            }
-            Err(_) => {
-                crate::metrics::prometheus_metrics::phase2_redis_op("xrange", false);
-                return None;
-            }
-        };
-        extract_payload_from_xrange(value)
-    }
 }
 

@@ -96,8 +96,12 @@ impl Phase3CoreCacheState {
 impl NodeRegistry {
     pub async fn set_core_services_config(&self, cfg: CoreServicesConfig) {
         let mut w = self.core_services.write().await;
-        *w = cfg;
+        *w = cfg.clone();
         drop(w);
+        
+        // 同步到 ManagementRegistry（如果已启用锁优化）
+        self.sync_core_services_to_management(cfg).await;
+        
         self.rebuild_phase3_core_cache().await;
     }
 
@@ -119,11 +123,12 @@ impl NodeRegistry {
         let node_pool = node_pool.clone();
 
         // 优化：快速克隆节点信息，立即释放读锁，避免在持有锁时进行缓存计算
+        // 使用 ManagementRegistry（统一管理锁）
         let node_clones: Vec<(String, super::Node)> = {
             let t0 = Instant::now();
-            let nodes = self.nodes.read().await;
-            crate::metrics::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
-            nodes.iter().map(|(nid, n)| (nid.clone(), n.clone())).collect()
+            let mgmt = self.management_registry.read().await;
+            crate::metrics::observability::record_lock_wait("node_registry.management_registry.read", t0.elapsed().as_millis() as u64);
+            mgmt.nodes.iter().map(|(nid, state)| (nid.clone(), state.node.clone())).collect()
         };
 
         // 在锁外进行缓存计算（避免阻塞其他读操作）

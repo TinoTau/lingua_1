@@ -99,7 +99,7 @@ fn create_core_installed_services() -> Vec<InstalledService> {
 async fn test_node_initial_status_is_registering() {
     let registry = NodeRegistry::new();
     
-    let node = registry.register_node(
+    let node = registry.register_node_for_test(
         None,
         "Test Node".to_string(),
         "1.0.0".to_string(),
@@ -128,7 +128,7 @@ async fn test_node_id_conflict_detection() {
     let registry = NodeRegistry::new();
     
     // 注册第一个节点
-    let _node1 = registry.register_node(
+    let _node1 = registry.register_node_for_test(
         Some("test-node-1".to_string()),
         "Test Node 1".to_string(),
         "1.0.0".to_string(),
@@ -149,7 +149,7 @@ async fn test_node_id_conflict_detection() {
     ).await.unwrap();
     
     // 尝试用相同的 node_id 注册第二个节点，应该失败
-    let result = registry.register_node(
+    let result = registry.register_node_for_test(
         Some("test-node-1".to_string()),
         "Test Node 2".to_string(),
         "1.0.0".to_string(),
@@ -178,7 +178,7 @@ async fn test_select_node_filters_by_status() {
     let registry = NodeRegistry::new();
     
     // 注册一个节点
-    let node = registry.register_node(
+    let node = registry.register_node_for_test(
         None,
         "Test Node".to_string(),
         "1.0.0".to_string(),
@@ -209,7 +209,7 @@ async fn test_select_node_filters_by_status() {
     assert!(selected.is_none(), "registering 状态的节点不应该被选中");
     
     // 手动将节点状态改为 ready
-    registry.set_node_status(&node.node_id, NodeStatus::Ready).await;
+    registry.set_node_status_for_test(&node.node_id, NodeStatus::Ready).await;
     
     // 现在应该能被选中
     let selected = registry.select_node_with_features(
@@ -230,7 +230,7 @@ async fn test_node_status_manager_health_check() {
     let manager = NodeStatusManager::new(registry.clone(), node_connections, config);
     
     // 注册一个节点
-    let node = registry.register_node(
+    let node = (*registry).register_node_for_test(
         None,
         "Test Node".to_string(),
         "1.0.0".to_string(),
@@ -284,7 +284,7 @@ async fn test_node_status_manager_registering_to_ready() {
     let manager = NodeStatusManager::new(registry.clone(), node_connections, config);
     
     // 注册一个节点
-    let node = registry.register_node(
+    let node = (*registry).register_node_for_test(
         None,
         "Test Node".to_string(),
         "1.0.0".to_string(),
@@ -338,7 +338,7 @@ async fn test_node_status_manager_ready_to_degraded() {
     let manager = NodeStatusManager::new(registry.clone(), node_connections, config);
     
     // 注册一个节点并设置为 ready
-    let node = registry.register_node(
+    let node = (*registry).register_node_for_test(
         None,
         "Test Node".to_string(),
         "1.0.0".to_string(),
@@ -363,7 +363,7 @@ async fn test_node_status_manager_ready_to_degraded() {
     ).await.unwrap();
     
     // 设置为 ready 状态
-    registry.set_node_status(&node.node_id, NodeStatus::Ready).await;
+    (*registry).set_node_status_for_test(&node.node_id, NodeStatus::Ready).await;
     
     // 模拟健康检查失败（连续 3 次）
     for _ in 0..3 {
@@ -400,7 +400,7 @@ async fn test_node_status_manager_degraded_to_ready() {
     let manager = NodeStatusManager::new(registry.clone(), node_connections, config);
     
     // 注册一个节点并设置为 degraded
-    let node = registry.register_node(
+    let node = (*registry).register_node_for_test(
         None,
         "Test Node".to_string(),
         "1.0.0".to_string(),
@@ -425,7 +425,7 @@ async fn test_node_status_manager_degraded_to_ready() {
     ).await.unwrap();
     
     // 设置为 degraded 状态
-    registry.set_node_status(&node.node_id, NodeStatus::Degraded).await;
+    (*registry).set_node_status_for_test(&node.node_id, NodeStatus::Degraded).await;
     
     // 发送健康检查通过的心跳
     registry.update_node_heartbeat(
@@ -461,7 +461,7 @@ async fn test_node_status_manager_heartbeat_timeout() {
     let manager = NodeStatusManager::new(registry.clone(), node_connections, config);
     
     // 注册一个节点并设置为 ready
-    let node = registry.register_node(
+    let node = (*registry).register_node_for_test(
         None,
         "Test Node".to_string(),
         "1.0.0".to_string(),
@@ -482,7 +482,7 @@ async fn test_node_status_manager_heartbeat_timeout() {
     ).await.unwrap();
     
     // 设置为 ready 状态
-    registry.set_node_status(&node.node_id, NodeStatus::Ready).await;
+    (*registry).set_node_status_for_test(&node.node_id, NodeStatus::Ready).await;
     
     // 等待超时
     tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
@@ -505,7 +505,7 @@ async fn test_node_status_manager_warmup_timeout() {
     let manager = NodeStatusManager::new(registry.clone(), node_connections, config);
     
     // 注册一个节点（初始状态为 registering）
-    let node = registry.register_node(
+    let node = (*registry).register_node_for_test(
         None,
         "Test Node".to_string(),
         "1.0.0".to_string(),

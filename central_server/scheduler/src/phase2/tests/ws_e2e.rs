@@ -181,8 +181,8 @@
                 loop {
                     // 检查节点是否在本地注册表中（快照同步后会在本地注册表中）
                     let node_in_local = {
-                        let nodes = state_b.node_registry.nodes.read().await;
-                        nodes.contains_key(node_id)
+                        let mgmt = state_b.node_registry.management_registry.read().await;
+                        mgmt.nodes.contains_key(node_id)
                     };
                     if node_in_local {
                         // 节点已在本地注册表，触发 Pool 重建
@@ -191,7 +191,7 @@
                         // 注意：节点快照同步时会自动调用 phase3_upsert_node_to_pool_index
                         // 但为了确保分配，我们触发一次快照更新
                         if let Some(node) = state_b.node_registry.get_node_snapshot(node_id).await {
-                            state_b.node_registry.upsert_node_from_snapshot(node).await;
+                            state_b.node_registry.upsert_node_from_snapshot(node, Some(&*rt_b)).await;
                         }
                         break;
                     }

@@ -7,26 +7,6 @@ use super::error::ErrorCode;
 use super::ui_event::{UiEventType, UiEventStatus};
 
 /// Opus 编码规范
-/// 用于统一 Web 端和节点端的 Opus 编码/解码参数
-/// 注意：当前未使用，保留用于将来的配置功能
-#[allow(dead_code)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct OpusConfig {
-    /// 采样率（Hz），通常为 16000、24000、48000
-    pub sample_rate: u32,
-    /// 声道数，通常为 1（单声道）
-    pub channels: u32,
-    /// 帧大小（毫秒），通常为 20ms
-    /// 在 16kHz 下，20ms = 320 样本
-    pub frame_size_ms: u32,
-    /// 应用类型："voip" | "audio" | "lowdelay"
-    /// "voip" 适合实时语音通信，延迟低
-    pub application: String,
-    /// 比特率（可选，单位：bps）
-    /// 如果未指定，使用 Opus 默认值
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub bitrate: Option<u32>,
-}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type")]

@@ -1,11 +1,14 @@
 //! Phase 3 Pool 节点分配逻辑
 
+use std::collections::HashSet;
+use std::str::FromStr;
+
+use tracing::{info, warn};
+
 use crate::core::config::Phase3Config;
 use crate::messages::ServiceType;
 use crate::node_registry::{Node, language_capability_index::LanguageCapabilityIndex};
 use crate::phase2::Phase2Runtime;
-use std::collections::HashSet;
-use tracing::{info, warn};
 
 /// 确定节点应该分配到哪些 Pool（自动生成模式，基于语言集合）
 /// 返回匹配的 Pool ID（一个节点只属于一个 Pool，基于其语言集合）
@@ -125,4 +128,54 @@ pub(super) async fn determine_pools_for_node_auto_mode_with_index(
     );
     
     matched_pools
+}
+
+/// 确定节点应该分配到哪个 Pool（手动配置模式，基于服务类型）
+pub(super) fn determine_pool_for_node(cfg: &Phase3Config, n: &Node) -> Option<u16> {
+    if cfg.pools.is_empty() {
+        return None;
+    }
+
+    // 注意：自动生成模式下的节点分配在 phase3_upsert_node_to_pool_index 中处理
+    // 这里只处理手动配置模式
+    // 手动配置模式：按服务类型匹配
+    // 收集所有匹配 pools（按类型匹配：node.installed_services.type 覆盖 pool.required_services）
+    let mut matching: Vec<(u16, usize)> = Vec::new(); // (pool_id, specificity_len)
+    for p in cfg.pools.iter() {
+        if p.required_services.is_empty() {
+            // 通配 pool：specificity=0；仅在没有更具体匹配时才会被选中
+            matching.push((p.pool_id, 0));
+            continue;
+        }
+        let ok = p
+            .required_services
+            .iter()
+            .filter_map(|x| ServiceType::from_str(x).ok())
+            .all(|t| n.installed_services.iter().any(|s| s.r#type == t));
+        if ok {
+            matching.push((p.pool_id, p.required_services.len()));
+        }
+    }
+    if matching.is_empty() {
+        return None;
+    }
+    if matching.len() == 1 {
+        return Some(matching[0].0);
+    }
+
+    // 多个 pool 都匹配：
+    // - 先选"更具体"的 pool（required_services 更长），避免"能力更全的节点"被分配到更通用的 pool（有利于强隔离）
+    // - 若 specificity 相同（例如两个能力相同的 pools），再用 node_id 稳定 hash 分配（避免热点倾斜）
+    let max_spec = matching.iter().map(|(_, s)| *s).max().unwrap_or(0);
+    let mut best: Vec<u16> = matching
+        .into_iter()
+        .filter(|(_, s)| *s == max_spec)
+        .map(|(pid, _)| pid)
+        .collect();
+    if best.len() == 1 {
+        return Some(best[0]);
+    }
+    best.sort();
+    let idx = crate::phase3::pick_index_for_key(best.len(), cfg.hash_seed, &n.node_id);
+    Some(best[idx])
 }

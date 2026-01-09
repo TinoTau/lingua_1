@@ -1,7 +1,7 @@
 //! Phase 3: Session Init 协议增强测试
 //! 测试 trace_id 和 tenant_id 字段的处理
 
-use lingua_scheduler::messages::{SessionMessage, FeatureFlags};
+use lingua_scheduler::messages::SessionMessage;
 
 #[test]
 fn test_session_init_with_trace_id() {

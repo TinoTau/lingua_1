@@ -210,13 +210,6 @@ impl RoomManager {
         Ok(is_empty)
     }
 
-    /// 获取房间信息
-    #[allow(dead_code)]
-    pub async fn get_room(&self, room_code: &str) -> Option<Room> {
-        let rooms = self.rooms.read().await;
-        rooms.get(room_code).cloned()
-    }
-
     /// 获取房间成员列表
     pub async fn get_room_members(&self, room_code: &str) -> Option<Vec<Participant>> {
         let rooms = self.rooms.read().await;
@@ -232,35 +225,6 @@ impl RoomManager {
             }
         }
         None
-    }
-
-    /// 获取房间内所有目标语言的成员（用于翻译路由）
-    #[allow(dead_code)]
-    pub async fn get_target_language_members(
-        &self,
-        room_code: &str,
-        target_lang: &str,
-        exclude_session_id: Option<&str>, // 排除发送者
-    ) -> Vec<Participant> {
-        let rooms = self.rooms.read().await;
-        if let Some(room) = rooms.get(room_code) {
-            room.participants
-                .values()
-                .filter(|p| {
-                    // 排除发送者
-                    if let Some(exclude_id) = exclude_session_id {
-                        if p.session_id == exclude_id {
-                            return false;
-                        }
-                    }
-                    // 匹配目标语言
-                    p.preferred_lang.as_ref().map_or(false, |lang| lang == target_lang)
-                })
-                .cloned()
-                .collect()
-        } else {
-            Vec::new()
-        }
     }
 
     /// 获取房间内所有不同的目标语言（排除发送者）

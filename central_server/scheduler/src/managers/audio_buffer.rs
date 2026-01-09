@@ -33,11 +33,6 @@ impl AudioBuffer {
         combined
     }
 
-    #[allow(dead_code)]
-    fn clear(&mut self) {
-        self.chunks.clear();
-        self.total_size = 0;
-    }
 }
 
 /// 音频缓冲区管理器
@@ -150,21 +145,21 @@ impl AudioBufferManager {
     }
 
     /// 清空指定会话的缓冲区
-    #[allow(dead_code)]
     pub async fn clear(&self, session_id: &str, utterance_index: u64) {
         let key = format!("{}:{}", session_id, utterance_index);
         let mut buffers = self.buffers.write().await;
         buffers.remove(&key);
     }
 
-    /// 清空所有缓冲区（用于会话关闭时）
-    #[allow(dead_code)]
-    pub async fn clear_all_for_session(&self, session_id: &str) {
+    /// 测试辅助方法：清空所有缓冲区（仅用于测试）
+    #[cfg(test)]
+    pub async fn clear_all_for_session_for_test(&self, session_id: &str) {
         let mut buffers = self.buffers.write().await;
         buffers.retain(|key, _| !key.starts_with(&format!("{}:", session_id)));
         let mut map = self.last_chunk_at_ms.write().await;
         map.remove(session_id);
     }
+
 
     /// 获取指定会话的所有音频缓冲区状态（用于调试）
     pub async fn get_session_buffers_status(&self, session_id: &str) -> Vec<(u64, usize)> {

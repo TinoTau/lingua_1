@@ -38,12 +38,13 @@ pub async fn start_server(
             .expect("无法安装 Ctrl+C 信号处理器");
         info!("收到关闭信号，开始优雅关闭...");
         
-        // 清理节点连接
-        let nodes = app_state_for_shutdown.node_registry.nodes.read().await;
-        if !nodes.is_empty() {
-            info!("清理 {} 个节点连接", nodes.len());
-            let node_ids: Vec<String> = nodes.keys().cloned().collect();
-            drop(nodes);
+        // 清理节点连接（使用 ManagementRegistry）
+        let node_ids: Vec<String> = {
+            let mgmt = app_state_for_shutdown.node_registry.management_registry.read().await;
+            mgmt.nodes.keys().cloned().collect()
+        };
+        if !node_ids.is_empty() {
+            info!("清理 {} 个节点连接", node_ids.len());
             let phase2_runtime = app_state_for_shutdown.phase2.as_ref().map(|rt| rt.as_ref());
             for node_id in node_ids {
                 app_state_for_shutdown.node_connections.unregister(&node_id).await;

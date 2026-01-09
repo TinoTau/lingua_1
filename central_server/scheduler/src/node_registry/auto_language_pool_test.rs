@@ -3,7 +3,7 @@ mod tests {
     use crate::core::config::{AutoLanguagePoolConfig, Phase3Config, Phase3PoolConfig, Phase2Config};
     use crate::messages::{CapabilityByType, ServiceType, common::{NodeLanguageCapabilities, NmtCapability, LanguagePair}};
     use crate::node_registry::{NodeRegistry, Node};
-    use crate::messages::{NodeStatus, HardwareInfo, DeviceType, ServiceStatus, InstalledService};
+    use crate::messages::{NodeStatus, HardwareInfo};
     use crate::phase2::Phase2Runtime;
     use std::sync::Arc;
 
@@ -13,7 +13,7 @@ mod tests {
         tts_langs: Vec<String>,
         nmt_capabilities: Vec<NmtCapability>,
     ) -> Node {
-        let capability_by_type = vec![
+        let _capability_by_type = vec![
             CapabilityByType {
                 r#type: ServiceType::Asr,
                 ready: true,
@@ -224,8 +224,7 @@ mod tests {
         );
         
         {
-            let mut nodes = registry.nodes.write().await;
-            nodes.insert("node1".to_string(), node1.clone());
+            registry.management_registry.update_node("node1".to_string(), node1.clone(), vec![]).await;
         }
         
         // 更新语言能力索引
@@ -289,8 +288,7 @@ mod tests {
         });
         
         {
-            let mut nodes = registry.nodes.write().await;
-            nodes.insert("node1".to_string(), node1_modified.clone());
+            registry.management_registry.update_node("node1".to_string(), node1_modified.clone(), vec![]).await;
         }
         
         // 更新语言能力索引
@@ -352,8 +350,7 @@ mod tests {
         });
         
         {
-            let mut nodes = registry.nodes.write().await;
-            nodes.insert("node1".to_string(), node1_modified.clone());
+            registry.management_registry.update_node("node1".to_string(), node1_modified.clone(), vec![]).await;
         }
         
         // 更新语言能力索引
@@ -406,8 +403,7 @@ mod tests {
         );
         
         {
-            let mut nodes = registry.nodes.write().await;
-            nodes.insert("node1".to_string(), node1.clone());
+            registry.management_registry.update_node("node1".to_string(), node1.clone(), vec![]).await;
         }
         
         {
@@ -459,9 +455,8 @@ mod tests {
         );
         
         {
-            let mut nodes = registry.nodes.write().await;
-            nodes.insert("node1".to_string(), node1.clone());
-            nodes.insert("node2".to_string(), node2.clone());
+            registry.management_registry.update_node("node1".to_string(), node1.clone(), vec![]).await;
+            registry.management_registry.update_node("node2".to_string(), node2.clone(), vec![]).await;
         }
         
         {
@@ -556,8 +551,7 @@ mod tests {
         });
         
         {
-            let mut nodes = registry.nodes.write().await;
-            nodes.insert("node1".to_string(), node1_modified.clone());
+            registry.management_registry.update_node("node1".to_string(), node1_modified.clone(), vec![]).await;
         }
         
         // 更新语言能力索引
@@ -567,10 +561,10 @@ mod tests {
         }
         
         // 尝试分配节点到 Pool
-        registry.phase3_upsert_node_to_pool_index("node1").await;
+        registry.phase3_upsert_node_to_pool_index_with_runtime("node1", None).await;
         
         // 检查节点是否被分配到 Pool
-        let pool_id = registry.phase3_node_pool_id("node1").await;
+        let pool_id = registry.phase3_node_pool_ids("node1").await.into_iter().next();
         
         // 在新的语言集合 Pool 设计中，如果节点只有 ["zh"]，而 Pool 是 ["en", "zh"]，节点不应该被分配
         // 但是，如果 auto_pool_config 启用了动态 Pool 创建，可能会为 ["zh"] 创建一个新的 Pool
@@ -666,8 +660,7 @@ mod tests {
         });
         
         {
-            let mut nodes = registry.nodes.write().await;
-            nodes.insert("node1".to_string(), node1_modified.clone());
+            registry.management_registry.update_node("node1".to_string(), node1_modified.clone(), vec![]).await;
         }
         
         // 更新语言能力索引
@@ -685,11 +678,11 @@ mod tests {
             registry.phase3_upsert_node_to_pool_index_with_runtime("node1", Some(rt)).await;
         } else {
             // 如果 Redis 不可用，使用不带 runtime 的版本（会失败，但不会 panic）
-            registry.phase3_upsert_node_to_pool_index("node1").await;
+            registry.phase3_upsert_node_to_pool_index_with_runtime("node1", None).await;
         }
         
         // 检查节点是否被分配到 Pool
-        let pool_id = registry.phase3_node_pool_id("node1").await;
+        let pool_id = registry.phase3_node_pool_ids("node1").await.into_iter().next();
         
         // 如果 Redis 可用，由于语义修复服务支持 zh 和 en，节点的语言集合 ["en", "zh"] 完全匹配 Pool 的语言集合
         if rt.is_some() {
@@ -777,8 +770,7 @@ mod tests {
         });
         
         {
-            let mut nodes = registry.nodes.write().await;
-            nodes.insert("node1".to_string(), node1_modified.clone());
+            registry.management_registry.update_node("node1".to_string(), node1_modified.clone(), vec![]).await;
         }
         
         // 更新语言能力索引
@@ -788,7 +780,7 @@ mod tests {
         }
         
         // 尝试分配节点到 Pool（应该动态创建新 Pool）
-        registry.phase3_upsert_node_to_pool_index("node1").await;
+        registry.phase3_upsert_node_to_pool_index_with_runtime("node1", None).await;
         
         // 检查 Pool 配置是否包含新创建的 Pool
         let cfg = registry.phase3_config().await;
@@ -798,7 +790,7 @@ mod tests {
         assert!(pool_names.contains(&"ja-zh".to_string()));
         
         // 检查节点是否被分配到新 Pool
-        let pool_id = registry.phase3_node_pool_id("node1").await;
+        let pool_id = registry.phase3_node_pool_ids("node1").await.into_iter().next();
         assert!(pool_id.is_some());
         
         // 验证新 Pool 的配置
@@ -849,8 +841,7 @@ mod tests {
                     );
                     
                     {
-                        let mut nodes = registry.nodes.write().await;
-                        nodes.insert(node_id.clone(), node.clone());
+                        registry.management_registry.update_node(node_id.clone(), node.clone(), vec![]).await;
                     }
                     
                     {

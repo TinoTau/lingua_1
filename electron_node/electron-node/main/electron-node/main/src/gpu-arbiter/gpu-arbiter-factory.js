@@ -31,7 +31,7 @@ function loadGpuArbiterConfig() {
     const gpuArbiterConfig = nodeConfig.gpuArbiter;
     // 默认配置
     const defaultConfig = {
-        enabled: false,
+        enabled: true, // GPU 仲裁器必须启用，用于控制 GPU 并发
         gpuKeys: ["gpu:0"],
         defaultQueueLimit: 8,
         defaultHoldMaxMs: 8000,

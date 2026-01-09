@@ -69,8 +69,9 @@ impl ResultQueueManager {
     /// 给前面的 index 一个补位窗口，如果超时就直接跳过（不创建 Missing result）
     const ACK_TIMEOUT_MS: i64 = 10 * 1000;
 
-    #[allow(dead_code)]
-    pub fn new_with_config(gap_timeout_seconds: u64, pending_max: usize, missing_reset_threshold: u32) -> Self {
+    /// 测试辅助方法：使用配置创建（仅用于测试）
+    #[cfg(test)]
+    pub fn new_with_config_for_test(gap_timeout_seconds: u64, pending_max: usize, missing_reset_threshold: u32) -> Self {
         Self {
             queues: Arc::new(RwLock::new(HashMap::new())),
             gap_timeout_ms: (gap_timeout_seconds * 1000) as i64,
@@ -164,12 +165,6 @@ impl ResultQueueManager {
         }
     }
 
-    /// 为指定的 utterance_index 设置截止时间（已废弃，保留以保持兼容性）
-    /// 新的实现使用 gap_timeout 自动处理超时，不再需要显式设置 deadline
-    #[allow(dead_code)]
-    pub async fn set_result_deadline(&self, _session_id: &str, _utterance_index: u64, _deadline_ms: i64) {
-        // 不再需要，gap timeout 机制会自动处理
-    }
 
     pub async fn get_ready_results(&self, session_id: &str) -> Vec<SessionMessage> {
         let now_ms = chrono::Utc::now().timestamp_millis();
@@ -313,28 +308,6 @@ impl ResultQueueManager {
         }
     }
 
-    /// 检查是否应该重置会话（连续 Missing 过多）
-    /// 注意：当前未使用，保留用于将来的会话重置功能
-    #[allow(dead_code)]
-    pub async fn should_reset_session(&self, session_id: &str) -> bool {
-        let queues = self.queues.read().await;
-        if let Some(state) = queues.get(session_id) {
-            state.consecutive_missing >= state.missing_reset_threshold
-        } else {
-            false
-        }
-    }
-
-    /// 获取待处理的结果索引列表（用于监控）
-    #[allow(dead_code)]
-    pub async fn get_pending_indices(&self, session_id: &str) -> Vec<u64> {
-        let queues = self.queues.read().await;
-        if let Some(state) = queues.get(session_id) {
-            state.pending.keys().copied().collect()
-        } else {
-            Vec::new()
-        }
-    }
 
     /// 移除会话（在移除前 flush 所有待发送的结果）
     /// 返回所有待发送的结果，调用者应该发送这些结果

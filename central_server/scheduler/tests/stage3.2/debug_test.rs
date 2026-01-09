@@ -97,7 +97,7 @@ async fn debug_test_node_registration() {
     println!("capability_by_type: {:?}", cap_by_type_1);
     println!("installed_models: {:?}", create_test_models("zh", "en"));
     
-    let result = registry.register_node(
+    let result = (*registry).register_node_for_test(
         Some("node-1".to_string()),
         "Node 1".to_string(),
         "1.0.0".to_string(),
@@ -134,11 +134,10 @@ async fn debug_test_node_registration() {
     }
     
     // Set node to ready status
-    registry.set_node_status("node-1", NodeStatus::Ready).await;
+    (*registry).set_node_status_for_test("node-1", NodeStatus::Ready).await;
     
     // 检查节点状态
-    let nodes = registry.nodes.read().await;
-    if let Some(node) = nodes.get("node-1") {
+    if let Some(node) = (*registry).get_node_for_test("node-1").await {
         println!("\n=== 节点1状态检查 ===");
         println!("状态: {:?}", node.status);
         println!("在线: {}", node.online);
@@ -151,7 +150,6 @@ async fn debug_test_node_registration() {
         println!("capability_by_type: {:?}", node.capability_by_type);
         println!("installed_models: {:?}", node.installed_models);
     }
-    drop(nodes);
     
     // 选择需要 TONE 类型服务的节点
     println!("\n=== 选择节点 ===");

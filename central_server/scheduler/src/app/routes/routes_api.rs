@@ -239,21 +239,22 @@ pub async fn get_cluster_stats(
 
     // 获取节点列表和服务状态（从本地 NodeRegistry 和 Redis）
     let (total_nodes, online_nodes, ready_nodes, nodes_list) = {
-        let nodes = state.node_registry.nodes.read().await;
-        let total = nodes.len();
-        let online = nodes.values().filter(|n| n.online).count();
+        // 使用 ManagementRegistry（统一管理锁）
+        let mgmt = state.node_registry.management_registry.read().await;
+        let total = mgmt.nodes.len();
+        let online = mgmt.nodes.values().filter(|state| state.node.online).count();
         
         // 从 Redis 读取节点能力信息来统计 ready 节点
         let ready = if let Some(rt) = state.phase2.as_ref() {
             let mut ready_count = 0;
-            for node in nodes.values() {
-                if !node.online {
+            for node_state in mgmt.nodes.values() {
+                if !node_state.node.online {
                     continue;
                 }
                 // 检查所有核心服务是否就绪（从 Redis 读取）
-                let has_asr = rt.has_node_capability(&node.node_id, &crate::messages::ServiceType::Asr).await;
-                let has_nmt = rt.has_node_capability(&node.node_id, &crate::messages::ServiceType::Nmt).await;
-                let has_tts = rt.has_node_capability(&node.node_id, &crate::messages::ServiceType::Tts).await;
+                let has_asr = rt.has_node_capability(&node_state.node.node_id, &crate::messages::ServiceType::Asr).await;
+                let has_nmt = rt.has_node_capability(&node_state.node.node_id, &crate::messages::ServiceType::Nmt).await;
+                let has_tts = rt.has_node_capability(&node_state.node.node_id, &crate::messages::ServiceType::Tts).await;
                 if has_asr && has_nmt && has_tts {
                     ready_count += 1;
                 }
@@ -266,7 +267,8 @@ pub async fn get_cluster_stats(
         
         let nodes_list: Vec<NodeInfo> = {
             let mut result = Vec::new();
-            for node in nodes.values() {
+            for node_state in mgmt.nodes.values() {
+                let node = &node_state.node;
                 // 构建服务状态列表
                 let services: Vec<ServiceStatusInfo> = node.installed_services.iter().map(|s| {
                     ServiceStatusInfo {
