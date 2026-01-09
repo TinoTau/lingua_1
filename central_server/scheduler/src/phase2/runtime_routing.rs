@@ -523,29 +523,8 @@ impl Phase2Runtime {
         current_leader.as_deref() == Some(&self.instance_id)
     }
 
-    /// 获取当前 Pool Leader 实例 ID
-    pub async fn get_pool_leader(&self) -> Option<String> {
-        use tracing::debug;
-        
-        let key = self.phase3_pool_leader_key();
-        let leader = self.redis.get_string(&key).await.ok().flatten()?;
-        // 验证 leader 是否仍然存活
-        if self.is_instance_alive(&leader).await {
-            debug!(
-                leader = %leader,
-                "当前 Pool Leader: {}",
-                leader
-            );
-            Some(leader)
-        } else {
-            debug!(
-                leader = %leader,
-                "Pool Leader {} 已失效（presence 不存在）",
-                leader
-            );
-            None
-        }
-    }
+    // 已删除未使用的函数：get_pool_leader
+    // 此函数只在测试中使用，如果测试需要，请使用其他方法获取 Leader 信息
 
     /// 将 Pool 配置写入 Redis
     pub async fn set_pool_config(&self, pools: &[crate::core::config::Phase3PoolConfig]) -> bool {

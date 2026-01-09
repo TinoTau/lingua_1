@@ -156,7 +156,8 @@ class AggregationStage {
         // 获取上一个已提交的文本（用于去重）
         const previousText = this.aggregatorManager?.getLastCommittedText(job.session_id, aggregatedText) || null;
         // 使用向前合并管理器处理文本
-        const forwardMergeResult = this.forwardMergeManager.processText(job.session_id, aggregatedText, previousText, job.job_id, job.utterance_index || 0);
+        const forwardMergeResult = this.forwardMergeManager.processText(job.session_id, aggregatedText, previousText, job.job_id, job.utterance_index || 0, isManualCut // 传递手动发送标志
+        );
         // 根据处理结果更新aggregatedText
         let finalAggregatedText = aggregatedText;
         if (forwardMergeResult.shouldDiscard) {

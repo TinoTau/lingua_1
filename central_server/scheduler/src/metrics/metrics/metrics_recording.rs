@@ -151,10 +151,8 @@ pub fn on_empty_finalize() {
     METRICS.empty_finalize_total.fetch_add(1, Ordering::Relaxed);
 }
 
-/// RF-6: 记录 utterance_index 不连续（应该为 0，表示修复生效）
-pub fn on_index_gap() {
-    METRICS.index_gap_total.fetch_add(1, Ordering::Relaxed);
-}
+// 已删除未使用的函数：on_index_gap
+// 此函数未被调用
 
 pub fn on_slow_lock_wait(lock_name: &'static str) {
     super::metrics_types::Metrics::inc(&METRICS.slow_lock_wait_total);

@@ -2,7 +2,7 @@
 //! 
 //! 负责管理 Utterance Group 的生命周期、上下文拼接和裁剪
 
-use std::collections::{HashMap, VecDeque};
+use std::collections::{HashMap, HashSet, VecDeque};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use tracing::{info, debug, warn};
@@ -58,8 +58,13 @@ impl Default for GroupConfig {
 #[derive(Clone)]
 pub struct GroupManager {
     cfg: GroupConfig,
+    /// session 当前活跃的主 group（若有）
     active: Arc<RwLock<HashMap<SessionId, GroupId>>>,
+    /// 所有 group 的详细信息
     groups: Arc<RwLock<HashMap<GroupId, UtteranceGroup>>>,
+    /// 按照 session 维度索引所有关联的 group
+    /// session_id -> { group_id_1, group_id_2, ... }
+    session_groups: Arc<RwLock<HashMap<SessionId, HashSet<GroupId>>>>,
 }
 
 impl GroupManager {
@@ -69,6 +74,7 @@ impl GroupManager {
             cfg,
             active: Arc::new(RwLock::new(HashMap::new())),
             groups: Arc::new(RwLock::new(HashMap::new())),
+            session_groups: Arc::new(RwLock::new(HashMap::new())),
         }
     }
 
@@ -204,12 +210,33 @@ impl GroupManager {
             self.close_group(gid, reason).await;
         }
 
-        // 清理：v1.1 建议 Session 结束时释放内存
-        let removed_count = {
-            let mut groups = self.groups.write().await;
-            let count = groups.values().filter(|g| g.session_id == session_id).count();
-            groups.retain(|_, g| g.session_id != session_id);
-            count
+        // 优化：从 session_groups 索引中快速获取所有关联的 group_id，避免全表扫描
+        let group_ids_to_remove: Vec<GroupId> = {
+            let sess_map = self.session_groups.read().await;
+            match sess_map.get(session_id) {
+                Some(set) => set.iter().cloned().collect(),
+                None => Vec::new(),
+            }
+        };
+
+        let removed_count = if group_ids_to_remove.is_empty() {
+            0
+        } else {
+            // 快速删除这些 group_id（持有写锁的时间很短）
+            {
+                let mut groups = self.groups.write().await;
+                for gid in &group_ids_to_remove {
+                    groups.remove(gid);
+                }
+            }
+
+            // 在 session_groups 中删除该 session 的记录
+            {
+                let mut sess_map = self.session_groups.write().await;
+                sess_map.remove(session_id);
+            }
+
+            group_ids_to_remove.len()
         };
 
         {
@@ -268,10 +295,8 @@ impl GroupManager {
             is_closed: false,
         };
 
-        {
-            let mut groups = self.groups.write().await;
-            groups.insert(gid.clone(), group);
-        }
+        // 使用 insert_group 保证索引一致性
+        self.insert_group(session_id.to_string(), gid.clone(), group).await;
 
         {
             let mut active = self.active.write().await;
@@ -302,6 +327,28 @@ impl GroupManager {
                 parts_count = parts_count,
                 "关闭 Utterance Group"
             );
+        }
+    }
+
+    /// 插入 Group（同时更新 groups 和 session_groups 索引）
+    /// 
+    /// 保证 groups 和 session_groups 的一致性
+    async fn insert_group(
+        &self,
+        session_id: SessionId,
+        group_id: GroupId,
+        group: UtteranceGroup,
+    ) {
+        {
+            let mut groups = self.groups.write().await;
+            groups.insert(group_id.clone(), group);
+        }
+        {
+            let mut sess_map = self.session_groups.write().await;
+            sess_map
+                .entry(session_id)
+                .or_insert_with(HashSet::new)
+                .insert(group_id);
         }
     }
 

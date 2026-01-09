@@ -274,24 +274,6 @@ impl LanguageCapabilityIndex {
             .count()
     }
 
-    /// 获取节点支持的所有 ASR 语言
-    pub fn get_node_asr_languages(&self, node_id: &str) -> HashSet<String> {
-        self.by_asr_lang
-            .iter()
-            .filter(|(_, nodes)| nodes.contains(node_id))
-            .map(|(lang, _)| lang.clone())
-            .collect()
-    }
-
-    /// 获取节点支持的所有 TTS 语言
-    pub fn get_node_tts_languages(&self, node_id: &str) -> HashSet<String> {
-        self.by_tts_lang
-            .iter()
-            .filter(|(_, nodes)| nodes.contains(node_id))
-            .map(|(lang, _)| lang.clone())
-            .collect()
-    }
-
     /// 获取节点支持的所有语义修复服务语言
     pub fn get_node_semantic_languages(&self, node_id: &str) -> HashSet<String> {
         self.by_semantic_lang
@@ -301,30 +283,10 @@ impl LanguageCapabilityIndex {
             .collect()
     }
 
-    /// 获取节点的 NMT 能力列表（用于 Pool 生成）
-    pub fn get_node_nmt_capabilities(&self, node_id: &str) -> Vec<NmtNodeCapabilityInfo> {
-        self.nmt_nodes
-            .iter()
-            .filter(|n| n.node_id == node_id)
-            .map(|n| NmtNodeCapabilityInfo {
-                languages: n.languages.clone(),
-                rule: match &n.rule {
-                    NmtRule::AnyToAny => "any_to_any".to_string(),
-                    NmtRule::AnyToEn => "any_to_en".to_string(),
-                    NmtRule::EnToAny => "en_to_any".to_string(),
-                    NmtRule::SpecificPairs(_) => {
-                        // 转换为字符串列表
-                        "specific_pairs".to_string()
-                    }
-                },
-                supported_pairs: match &n.rule {
-                    NmtRule::SpecificPairs(pairs) => Some(pairs.iter().cloned().collect()),
-                    _ => None,
-                },
-                blocked_pairs: n.blocked_pairs.iter().cloned().collect(),
-            })
-            .collect()
-    }
+    // 已删除未使用的函数：
+    // - get_node_asr_languages: 未被使用
+    // - get_node_tts_languages: 未被使用
+    // - get_node_nmt_capabilities: 未被使用
 
     /// 语言代码规范化（P1-1: 统一大小写、处理别名）
     fn normalize_language_code(lang: &str) -> String {
@@ -342,14 +304,8 @@ impl LanguageCapabilityIndex {
     }
 }
 
-/// NMT 节点能力信息（用于 Pool 生成）
-#[derive(Debug, Clone)]
-pub struct NmtNodeCapabilityInfo {
-    pub languages: HashSet<String>,
-    pub rule: String,
-    pub supported_pairs: Option<Vec<LanguagePair>>,
-    pub blocked_pairs: Vec<LanguagePair>,
-}
+// 已删除未使用的结构体：NmtNodeCapabilityInfo
+// 此结构体只在已删除的 get_node_nmt_capabilities 函数中使用
 
 impl Default for LanguageCapabilityIndex {
     fn default() -> Self {

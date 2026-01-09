@@ -450,6 +450,38 @@ electron_1.app.whenReady().then(async () => {
             (0, window_manager_1.createWindow)();
         }
     });
+    // 处理窗口关闭事件（在窗口关闭前保存配置，处理意外关闭的情况）
+    const mainWindowForClose = (0, window_manager_1.getMainWindow)();
+    if (mainWindowForClose) {
+        mainWindowForClose.on('close', async (event) => {
+            // 在窗口关闭前，尝试保存当前服务状态
+            // 注意：这里不能阻止关闭，只能尝试保存
+            try {
+                const pythonStatuses = pythonServiceManager?.getAllServiceStatuses() || [];
+                const semanticRepairStatuses = semanticRepairServiceManager
+                    ? await semanticRepairServiceManager.getAllServiceStatuses()
+                    : [];
+                const config = (0, node_config_1.loadNodeConfig)();
+                config.servicePreferences = {
+                    rustEnabled: false,
+                    nmtEnabled: !!pythonStatuses.find(s => s.name === 'nmt')?.running,
+                    ttsEnabled: !!pythonStatuses.find(s => s.name === 'tts')?.running,
+                    yourttsEnabled: !!pythonStatuses.find(s => s.name === 'yourtts')?.running,
+                    fasterWhisperVadEnabled: !!pythonStatuses.find(s => s.name === 'faster_whisper_vad')?.running,
+                    speakerEmbeddingEnabled: !!pythonStatuses.find(s => s.name === 'speaker_embedding')?.running,
+                    semanticRepairZhEnabled: !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-zh')?.running,
+                    semanticRepairEnEnabled: !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en')?.running,
+                    enNormalizeEnabled: !!semanticRepairStatuses.find(s => s.serviceId === 'en-normalize')?.running,
+                };
+                (0, node_config_1.saveNodeConfig)(config);
+                logger_1.default.info({ servicePreferences: config.servicePreferences }, 'Saved service preferences on window close (before cleanup)');
+            }
+            catch (error) {
+                logger_1.default.error({ error }, 'Failed to save service preferences on window close');
+                // 忽略错误，避免阻塞窗口关闭
+            }
+        });
+    }
 });
 // 正常关闭窗口时清理服务
 electron_1.app.on('window-all-closed', async () => {

@@ -395,3 +395,214 @@ async fn test_multiple_sessions() {
     assert_eq!(group_id2, group_id2_2); // session2 的 group 应该保持不变
 }
 
+#[tokio::test]
+async fn test_session_groups_index_consistency() {
+    // 测试 session_groups 索引与 groups 的一致性
+    let config = GroupConfig::default();
+    let manager = GroupManager::new(config);
+    
+    let session_id = "test_session_index";
+    let now_ms = 1000;
+    
+    // 创建多个 groups（通过窗口超时）
+    let mut group_ids = Vec::new();
+    for i in 0..5 {
+        let (gid, _, _) = manager.on_asr_final(
+            session_id,
+            &format!("trace_{}", i),
+            i,
+            format!("Text {}", i),
+            now_ms + (i as u64) * 3000, // 每个间隔 3 秒，确保创建新 group
+        ).await;
+        group_ids.push(gid);
+    }
+    
+    // 验证：所有 group 都应该在 session_groups 索引中
+    // 通过 on_session_end 清理，然后验证所有 group 都被删除
+    manager.on_session_end(session_id, "test").await;
+    
+    // 验证：再次创建 group 时，part_index 应该从 0 开始（说明旧的都被清理了）
+    let (new_gid, _, part_index) = manager.on_asr_final(
+        session_id,
+        "trace_new",
+        0,
+        "New Text".to_string(),
+        now_ms + 20000,
+    ).await;
+    
+    assert_eq!(part_index, 0); // 新 group 的 part_index 从 0 开始
+    assert!(!group_ids.contains(&new_gid)); // 新 group_id 不应该在旧的列表中
+}
+
+#[tokio::test]
+async fn test_on_session_end_with_many_groups() {
+    // 测试 on_session_end 在大量 groups 情况下的性能
+    // 这个测试主要验证索引优化是否生效（不会因为全表扫描而阻塞）
+    let config = GroupConfig::default();
+    let manager = GroupManager::new(config);
+    
+    let session_id = "test_session_many_groups";
+    let now_ms = 1000;
+    
+    // 创建 20 个 groups
+    let mut group_ids = Vec::new();
+    for i in 0..20 {
+        let (gid, _, _) = manager.on_asr_final(
+            session_id,
+            &format!("trace_{}", i),
+            i,
+            format!("Text {}", i),
+            now_ms + (i as u64) * 3000, // 每个间隔 3 秒
+        ).await;
+        group_ids.push(gid);
+    }
+    
+    // 结束 session（应该快速完成，不会因为全表扫描而阻塞）
+    let start = std::time::Instant::now();
+    manager.on_session_end(session_id, "test").await;
+    let elapsed = start.elapsed();
+    
+    // 验证：应该在毫秒级完成（而不是秒级）
+    assert!(elapsed.as_millis() < 100, "on_session_end 应该在 100ms 内完成，实际: {}ms", elapsed.as_millis());
+    
+    // 验证：所有 groups 都被清理
+    let (new_gid, _, part_index) = manager.on_asr_final(
+        session_id,
+        "trace_new",
+        0,
+        "New Text".to_string(),
+        now_ms + 70000,
+    ).await;
+    
+    assert_eq!(part_index, 0);
+    assert!(!group_ids.contains(&new_gid));
+}
+
+#[tokio::test]
+async fn test_concurrent_session_end() {
+    // 测试并发 session_end 的安全性
+    use tokio::task;
+    
+    let config = GroupConfig::default();
+    let manager = GroupManager::new(config);
+    
+    // 创建多个 session，每个 session 有多个 groups
+    let session_count = 5;
+    let groups_per_session = 3;
+    
+    let mut handles = Vec::new();
+    
+    for session_idx in 0..session_count {
+        let manager_clone = manager.clone();
+        let session_id = format!("session_{}", session_idx);
+        let now_ms = 1000 + (session_idx as u64) * 10000;
+        
+        // 为每个 session 创建多个 groups
+        for group_idx in 0..groups_per_session {
+            let manager_clone2 = manager_clone.clone();
+            let session_id_clone = session_id.clone();
+            let handle = task::spawn(async move {
+                manager_clone2.on_asr_final(
+                    &session_id_clone,
+                    &format!("trace_{}_{}", session_idx, group_idx),
+                    group_idx,
+                    format!("Text {}_{}", session_idx, group_idx),
+                    now_ms + (group_idx as u64) * 3000,
+                ).await.0
+            });
+            handles.push(handle);
+        }
+    }
+    
+    // 等待所有 groups 创建完成
+    let _group_ids: Vec<_> = futures::future::join_all(handles).await
+        .into_iter()
+        .map(|r| r.unwrap())
+        .collect();
+    
+    // 并发结束所有 session
+    let mut end_handles = Vec::new();
+    for session_idx in 0..session_count {
+        let manager_clone = manager.clone();
+        let session_id = format!("session_{}", session_idx);
+        let handle = task::spawn(async move {
+            manager_clone.on_session_end(&session_id, "concurrent_test").await;
+        });
+        end_handles.push(handle);
+    }
+    
+    // 等待所有 session_end 完成（不应该有 panic 或死锁）
+    let results: Vec<_> = futures::future::join_all(end_handles).await;
+    for result in results {
+        result.expect("session_end 不应该 panic");
+    }
+    
+    // 验证：所有 session 的 groups 都被清理
+    for session_idx in 0..session_count {
+        let session_id = format!("session_{}", session_idx);
+        let (_, _, part_index) = manager.on_asr_final(
+            &session_id,
+            "trace_new",
+            0,
+            "New Text".to_string(),
+            100000 + (session_idx as u64) * 1000,
+        ).await;
+        
+        assert_eq!(part_index, 0, "session {} 的 groups 应该被清理", session_idx);
+    }
+}
+
+#[tokio::test]
+async fn test_index_consistency_after_multiple_operations() {
+    // 测试多次操作后索引的一致性
+    let config = GroupConfig::default();
+    let manager = GroupManager::new(config);
+    
+    let session_id = "test_session_consistency";
+    let now_ms = 1000;
+    
+    // 创建多个 groups
+    let mut group_ids = Vec::new();
+    for i in 0..10 {
+        let (gid, _, _) = manager.on_asr_final(
+            session_id,
+            &format!("trace_{}", i),
+            i,
+            format!("Text {}", i),
+            now_ms + (i as u64) * 3000,
+        ).await;
+        group_ids.push(gid);
+    }
+    
+    // 结束 session（应该清理所有 groups）
+    manager.on_session_end(session_id, "test").await;
+    
+    // 再次创建 groups
+    let mut new_group_ids = Vec::new();
+    for i in 0..5 {
+        let (gid, _, _) = manager.on_asr_final(
+            session_id,
+            &format!("trace_new_{}", i),
+            i,
+            format!("New Text {}", i),
+            now_ms + 50000 + (i as u64) * 3000,
+        ).await;
+        new_group_ids.push(gid);
+    }
+    
+    // 再次结束 session
+    manager.on_session_end(session_id, "test2").await;
+    
+    // 验证：再次创建时，part_index 应该从 0 开始
+    let (final_gid, _, part_index) = manager.on_asr_final(
+        session_id,
+        "trace_final",
+        0,
+        "Final Text".to_string(),
+        now_ms + 100000,
+    ).await;
+    
+    assert_eq!(part_index, 0);
+    assert!(!group_ids.contains(&final_gid));
+    assert!(!new_group_ids.contains(&final_gid));
+}

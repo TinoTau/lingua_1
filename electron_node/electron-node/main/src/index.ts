@@ -437,9 +437,9 @@ app.whenReady().then(async () => {
   });
 
   // 处理窗口关闭事件（在窗口关闭前保存配置，处理意外关闭的情况）
-  const mainWindow = getMainWindow();
-  if (mainWindow) {
-    mainWindow.on('close', async (event) => {
+  const mainWindowForClose = getMainWindow();
+  if (mainWindowForClose) {
+    mainWindowForClose.on('close', async (event) => {
       // 在窗口关闭前，尝试保存当前服务状态
       // 注意：这里不能阻止关闭，只能尝试保存
       try {

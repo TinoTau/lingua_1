@@ -32,9 +32,10 @@ class TextForwardMergeManager {
      * @param previousText 上一个已提交的文本（用于去重）
      * @param jobId 当前任务ID
      * @param utteranceIndex 当前utterance索引
+     * @param isManualCut 是否是手动发送（如果是，6-16字符的文本直接发送给语义修复，不等待合并）
      * @returns 处理结果
      */
-    processText(sessionId, currentText, previousText, jobId, utteranceIndex) {
+    processText(sessionId, currentText, previousText, jobId, utteranceIndex, isManualCut = false) {
         const nowMs = Date.now();
         // 检查是否有待合并的文本（等待超时）
         const pending = this.pendingTexts.get(sessionId);
@@ -102,22 +103,43 @@ class TextForwardMergeManager {
                 };
             }
             else if (mergedText.length < this.MIN_LENGTH_TO_SEND) {
-                // 6-16字符：继续等待（统一使用SemanticRepairScorer的标准：16字符）
-                this.pendingTexts.set(sessionId, {
-                    text: mergedText,
-                    waitUntil: nowMs + this.WAIT_TIMEOUT_MS,
-                    jobId,
-                    utteranceIndex,
-                });
-                return {
-                    processedText: '',
-                    shouldDiscard: false,
-                    shouldWaitForMerge: true,
-                    shouldSendToSemanticRepair: false,
-                    deduped: dedupResult.deduped,
-                    dedupChars: dedupResult.overlapChars,
-                    mergedFromPendingUtteranceIndex, // 通知GPU仲裁器取消待合并文本的任务
-                };
+                // 6-16字符：如果是手动发送，直接发送给语义修复；否则继续等待
+                if (isManualCut) {
+                    // 手动发送：直接发送给语义修复，不等待合并
+                    logger_1.default.info({
+                        sessionId,
+                        mergedText: mergedText.substring(0, 50),
+                        length: mergedText.length,
+                        reason: 'Merged text length 6-16, but isManualCut=true, sending to semantic repair directly',
+                    }, 'TextForwardMergeManager: Merged text length 6-16, but isManualCut=true, sending to semantic repair directly');
+                    return {
+                        processedText: mergedText,
+                        shouldDiscard: false,
+                        shouldWaitForMerge: false,
+                        shouldSendToSemanticRepair: true,
+                        deduped: dedupResult.deduped,
+                        dedupChars: dedupResult.overlapChars,
+                        mergedFromPendingUtteranceIndex, // 通知GPU仲裁器取消待合并文本的任务
+                    };
+                }
+                else {
+                    // 非手动发送：继续等待（统一使用SemanticRepairScorer的标准：16字符）
+                    this.pendingTexts.set(sessionId, {
+                        text: mergedText,
+                        waitUntil: nowMs + this.WAIT_TIMEOUT_MS,
+                        jobId,
+                        utteranceIndex,
+                    });
+                    return {
+                        processedText: '',
+                        shouldDiscard: false,
+                        shouldWaitForMerge: true,
+                        shouldSendToSemanticRepair: false,
+                        deduped: dedupResult.deduped,
+                        dedupChars: dedupResult.overlapChars,
+                        mergedFromPendingUtteranceIndex, // 通知GPU仲裁器取消待合并文本的任务
+                    };
+                }
             }
             else {
                 // > 16字符：发送给语义修复（统一使用SemanticRepairScorer的标准）
@@ -192,30 +214,51 @@ class TextForwardMergeManager {
             };
         }
         else if (processedText.length < this.MIN_LENGTH_TO_SEND) {
-            // 6-16字符：等待与下一句合并（统一使用SemanticRepairScorer的标准：16字符）
-            this.pendingTexts.set(sessionId, {
-                text: processedText,
-                waitUntil: nowMs + this.WAIT_TIMEOUT_MS,
-                jobId,
-                utteranceIndex,
-            });
-            logger_1.default.info({
-                sessionId,
-                processedText: processedText.substring(0, 50),
-                length: processedText.length,
-                waitUntil: nowMs + this.WAIT_TIMEOUT_MS,
-                waitMs: this.WAIT_TIMEOUT_MS,
-                reason: 'Processed text length 6-16, waiting for merge with next utterance',
-            }, 'TextForwardMergeManager: Processed text length 6-16, waiting for merge');
-            return {
-                processedText: '',
-                shouldDiscard: false,
-                shouldWaitForMerge: true,
-                shouldSendToSemanticRepair: false,
-                deduped,
-                dedupChars,
-                mergedFromUtteranceIndex, // 如果合并了上一个utterance，通知GPU仲裁器
-            };
+            // 6-16字符：如果是手动发送，直接发送给语义修复；否则等待与下一句合并
+            if (isManualCut) {
+                // 手动发送：直接发送给语义修复，不等待合并
+                logger_1.default.info({
+                    sessionId,
+                    processedText: processedText.substring(0, 50),
+                    length: processedText.length,
+                    reason: 'Processed text length 6-16, but isManualCut=true, sending to semantic repair directly',
+                }, 'TextForwardMergeManager: Processed text length 6-16, but isManualCut=true, sending to semantic repair directly');
+                return {
+                    processedText,
+                    shouldDiscard: false,
+                    shouldWaitForMerge: false,
+                    shouldSendToSemanticRepair: true,
+                    deduped,
+                    dedupChars,
+                    mergedFromUtteranceIndex, // 如果合并了上一个utterance，通知GPU仲裁器
+                };
+            }
+            else {
+                // 非手动发送：等待与下一句合并（统一使用SemanticRepairScorer的标准：16字符）
+                this.pendingTexts.set(sessionId, {
+                    text: processedText,
+                    waitUntil: nowMs + this.WAIT_TIMEOUT_MS,
+                    jobId,
+                    utteranceIndex,
+                });
+                logger_1.default.info({
+                    sessionId,
+                    processedText: processedText.substring(0, 50),
+                    length: processedText.length,
+                    waitUntil: nowMs + this.WAIT_TIMEOUT_MS,
+                    waitMs: this.WAIT_TIMEOUT_MS,
+                    reason: 'Processed text length 6-16, waiting for merge with next utterance',
+                }, 'TextForwardMergeManager: Processed text length 6-16, waiting for merge');
+                return {
+                    processedText: '',
+                    shouldDiscard: false,
+                    shouldWaitForMerge: true,
+                    shouldSendToSemanticRepair: false,
+                    deduped,
+                    dedupChars,
+                    mergedFromUtteranceIndex, // 如果合并了上一个utterance，通知GPU仲裁器
+                };
+            }
         }
         else {
             // > 16字符：发送给语义修复（统一使用SemanticRepairScorer的标准）

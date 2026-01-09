@@ -15,9 +15,8 @@ impl SessionActor {
             SessionEvent::TimeoutFired { generation, timestamp_ms } => {
                 self.handle_timeout_fired(generation, timestamp_ms).await?;
             }
-            SessionEvent::IsFinalReceived => {
-                self.handle_is_final().await?;
-            }
+            // 已删除未使用的枚举变体处理：IsFinalReceived
+            // 此变体从未被构造，is_final 的处理已在 handle_audio_chunk 中完成
             SessionEvent::CloseSession => {
                 self.handle_close().await?;
             }
@@ -225,12 +224,8 @@ impl SessionActor {
         Ok(())
     }
 
-    /// 处理 is_final
-    pub(crate) async fn handle_is_final(&mut self) -> Result<(), anyhow::Error> {
-        let utterance_index = self.internal_state.current_utterance_index;
-        self.try_finalize(utterance_index, "IsFinal").await?;
-        Ok(())
-    }
+    // 已删除未使用的函数：handle_is_final
+    // 此函数只在已删除的 IsFinalReceived 事件处理中被调用
 
     /// 处理关闭会话
     /// Fix-D (RF-4): Session 结束时强制 flush_finalize

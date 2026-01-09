@@ -110,7 +110,7 @@ pub fn node_supports_features(node: &Node, required_features: &Option<FeatureFla
 /// 检查节点资源是否可用
 /// - CPU 使用率阈值：使用 resource_threshold 参数
 /// - GPU 使用率阈值：使用 resource_threshold 参数
-/// - 内存使用率阈值：使用 resource_threshold 参数
+/// - 内存使用率阈值：使用更宽松的阈值（95%），因为 GPU 模型加载会占用大量内存，这是正常的
 pub fn is_node_resource_available(node: &Node, resource_threshold: f32) -> bool {
     // 检查 CPU 使用率
     if node.cpu_usage > resource_threshold {
@@ -136,12 +136,14 @@ pub fn is_node_resource_available(node: &Node, resource_threshold: f32) -> bool 
         return false;
     }
     
-    // 检查内存使用率
-    if node.memory_usage > resource_threshold {
+    // 检查内存使用率（使用更宽松的阈值 95%，因为 GPU 模型加载会占用大量内存）
+    // 内存使用率高不一定意味着节点无法处理任务，只要 CPU 和 GPU 使用率正常即可
+    const MEMORY_THRESHOLD: f32 = 95.0;
+    if node.memory_usage > MEMORY_THRESHOLD {
         debug!(
             node_id = %node.node_id,
             memory_usage = node.memory_usage,
-            threshold = resource_threshold,
+            threshold = MEMORY_THRESHOLD,
             "Node resource check failed: Memory usage exceeds threshold"
         );
         return false;

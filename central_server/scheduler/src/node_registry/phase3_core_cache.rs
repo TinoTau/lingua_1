@@ -112,31 +112,35 @@ impl NodeRegistry {
         }
 
         let core = self.core_services.read().await.clone();
-        // 以 phase3_node_pool 为准：只统计“已分配到 pool 的节点”
+        // 以 phase3_node_pool 为准：只统计"已分配到 pool 的节点"
         let t0 = Instant::now();
         let node_pool = self.phase3_node_pool.read().await;
         crate::metrics::observability::record_lock_wait("node_registry.phase3_node_pool.read", t0.elapsed().as_millis() as u64);
         let node_pool = node_pool.clone();
 
-        let t0 = Instant::now();
-        let nodes = self.nodes.read().await;
-        crate::metrics::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
+        // 优化：快速克隆节点信息，立即释放读锁，避免在持有锁时进行缓存计算
+        let node_clones: Vec<(String, super::Node)> = {
+            let t0 = Instant::now();
+            let nodes = self.nodes.read().await;
+            crate::metrics::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
+            nodes.iter().map(|(nid, n)| (nid.clone(), n.clone())).collect()
+        };
 
+        // 在锁外进行缓存计算（避免阻塞其他读操作）
         let mut st = Phase3CoreCacheState::default();
-        for (nid, n) in nodes.iter() {
-            let pool_ids = node_pool.get(nid).cloned().unwrap_or_default();
+        for (nid, n) in node_clones {
+            let pool_ids = node_pool.get(&nid).cloned().unwrap_or_default();
             if pool_ids.is_empty() {
                 continue;
             }
             // 为节点的每个 Pool 创建缓存条目
             for pool_id in &pool_ids {
                 let cache_key = format!("{}:{}", nid, pool_id);
-                let s = compute_node_state(n, *pool_id, &core);
+                let s = compute_node_state(&n, *pool_id, &core);
                 st.inc_pool(&s);
                 st.nodes.insert(cache_key, s);
             }
         }
-        drop(nodes);
 
         let t0 = Instant::now();
         let mut w = self.phase3_core_cache.write().await;

@@ -34,9 +34,9 @@ impl NodeRegistry {
         self.rebuild_phase3_core_cache().await;
     }
 
-    pub(super) async fn phase3_upsert_node_to_pool_index(&self, node_id: &str) {
-        self.phase3_upsert_node_to_pool_index_with_runtime(node_id, None).await;
-    }
+    // 已删除未使用的函数：phase3_upsert_node_to_pool_index
+    // 此函数已被 phase3_upsert_node_to_pool_index_with_runtime 替代
+    // 如果测试需要，请使用 phase3_upsert_node_to_pool_index_with_runtime(node_id, None)
     
     /// Phase 3：更新节点到 Pool 索引（支持传递 phase2_runtime 以从 Redis 读取配置）
     pub(crate) async fn phase3_upsert_node_to_pool_index_with_runtime(
@@ -59,10 +59,15 @@ impl NodeRegistry {
             let current_pools = self.phase3_node_pool.read().await;
             if let Some(existing_pools) = current_pools.get(node_id) {
                 if !existing_pools.is_empty() {
-                    let nodes = self.nodes.read().await;
-                    if let Some(n) = nodes.get(node_id) {
+                    // 优化：快速克隆节点信息，立即释放读锁，避免在持有锁时进行 Redis 查询
+                    let node_clone = {
+                        let nodes = self.nodes.read().await;
+                        nodes.get(node_id).cloned()
+                    };
+                    if let Some(n) = node_clone {
                         // 节点已经在 Pool 中，且在线且状态为 Ready
                         if n.online && n.status == NodeStatus::Ready {
+                            // 优化：在锁外进行 Redis 查询，避免阻塞其他读操作
                             // 还需要检查节点的服务能力是否仍然有效（从 Redis 读取）
                             // 如果服务能力变化，需要重新分配
                             if let Some(rt) = phase2_runtime {
@@ -75,7 +80,7 @@ impl NodeRegistry {
                                     debug!(
                                         node_id = %node_id,
                                         existing_pools = ?existing_pools,
-                                        "节点已在 Pool 中且状态正常，服务能力有效，跳过重新分配（优化：减少不必要的 Redis 查询）"
+                                        "节点已在 Pool 中且状态正常，服务能力有效，跳过重新分配（优化：减少不必要的 Redis 查询和锁竞争）"
                                     );
                                     return;
                                 } else {
@@ -132,12 +137,20 @@ impl NodeRegistry {
         }
         
         let pool_ids: HashSet<u16> = if !cfg.pools.is_empty() {
-            let nodes = self.nodes.read().await;
-            let Some(n) = nodes.get(node_id) else {
-                warn!(node_id = %node_id, "节点不存在，无法分配 Pool");
-                return;
+            // 优化：快速克隆节点信息，立即释放读锁，避免在持有锁时进行 Redis 查询
+            let node_clone = {
+                let nodes = self.nodes.read().await;
+                match nodes.get(node_id) {
+                    Some(n) => Some(n.clone()),
+                    None => {
+                        warn!(node_id = %node_id, "节点不存在，无法分配 Pool");
+                        return;
+                    }
+                }
             };
+            let n = node_clone.as_ref().unwrap();
             
+            // 优化：在锁外进行 Redis 查询，避免阻塞其他读操作
             // 检查节点状态和服务能力（从 Redis 读取）
             let (has_asr, has_nmt, has_tts) = if let Some(rt) = phase2_runtime {
                 let has_asr = rt.has_node_capability(node_id, &crate::messages::ServiceType::Asr).await;
@@ -166,6 +179,7 @@ impl NodeRegistry {
             if cfg.auto_generate_language_pools {
                 // 自动生成模式：使用语言能力匹配（支持多个 Pool）
                 info!(node_id = %node_id, "使用自动生成模式分配 Pool");
+                // 优化：在锁外获取 language_index，避免在锁内进行异步操作
                 let language_index = self.language_capability_index.read().await;
                 let matched_pools = super::phase3_pool_allocation::determine_pools_for_node_auto_mode_with_index(&cfg, n, &language_index, phase2_runtime).await;
                 if !matched_pools.is_empty() {
@@ -183,7 +197,6 @@ impl NodeRegistry {
                         node_id = %node_id,
                         "节点未匹配到任何现有 Pool，检查是否需要创建新 Pool"
                     );
-                    drop(nodes);
                     drop(language_index);
                     // 传递 phase2_runtime 以便同步到 Redis
                     let new_pool_id = self.try_create_pool_for_node(node_id, phase2_runtime).await;
@@ -194,12 +207,16 @@ impl NodeRegistry {
                             "成功为节点动态创建新 Pool {}",
                             pid
                         );
+                        // 优化：快速克隆节点信息，立即释放锁，避免在持有锁时进行异步操作
                         // 创建新 Pool 后，重新读取配置并尝试匹配所有 Pool
                         let cfg_updated = self.phase3.read().await.clone();
-                        let nodes_updated = self.nodes.read().await;
-                        if let Some(n_updated) = nodes_updated.get(node_id) {
+                        let node_clone_retry = {
+                            let nodes_updated = self.nodes.read().await;
+                            nodes_updated.get(node_id).cloned()
+                        };
+                        if let Some(n_updated) = node_clone_retry {
                             let language_index_updated = self.language_capability_index.read().await;
-                            let matched_pools_retry = super::phase3_pool_allocation::determine_pools_for_node_auto_mode_with_index(&cfg_updated, n_updated, &language_index_updated, phase2_runtime).await;
+                            let matched_pools_retry = super::phase3_pool_allocation::determine_pools_for_node_auto_mode_with_index(&cfg_updated, &n_updated, &language_index_updated, phase2_runtime).await;
                             if !matched_pools_retry.is_empty() {
                                 info!(
                                     node_id = %node_id,
@@ -504,10 +521,16 @@ impl NodeRegistry {
         let mut new_idx: HashMap<u16, HashSet<String>> = HashMap::new();
         let mut new_node_pool: HashMap<String, HashSet<u16>> = HashMap::new();
         if cfg.enabled && cfg.mode == "two_level" {
-            let t0 = Instant::now();
-            let nodes = self.nodes.read().await;
-            crate::metrics::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
-            for nid in nodes.keys() {
+            // 优化：快速克隆节点信息，立即释放读锁，避免在持有锁时进行 Pool 分配计算
+            let node_clones: Vec<(String, super::Node)> = {
+                let t0 = Instant::now();
+                let nodes = self.nodes.read().await;
+                crate::metrics::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
+                nodes.iter().map(|(nid, n)| (nid.clone(), n.clone())).collect()
+            };
+            
+            // 在锁外进行 Pool 分配计算（避免阻塞其他读操作）
+            for (nid, n) in node_clones {
                 let pool_ids: HashSet<u16> = if !cfg.pools.is_empty() {
                     if cfg.auto_generate_language_pools {
                         // 自动生成模式：支持多个 Pool
@@ -517,7 +540,7 @@ impl NodeRegistry {
                         HashSet::new()
                     } else {
                         // 手动配置模式：只返回一个 Pool
-                        if let Some(pid) = nodes.get(nid).and_then(|n| determine_pool_for_node(&cfg, n)) {
+                        if let Some(pid) = determine_pool_for_node(&cfg, &n) {
                             [pid].iter().cloned().collect()
                         } else {
                             HashSet::new()
@@ -525,7 +548,7 @@ impl NodeRegistry {
                     }
                 } else {
                     // 非自动生成模式：使用 hash 分配
-                    [crate::phase3::pool_id_for_key(cfg.pool_count, cfg.hash_seed, nid)].iter().cloned().collect()
+                    [crate::phase3::pool_id_for_key(cfg.pool_count, cfg.hash_seed, &nid)].iter().cloned().collect()
                 };
                 if !pool_ids.is_empty() {
                     for pid in &pool_ids {
@@ -756,12 +779,9 @@ impl NodeRegistry {
         m.get(node_id).cloned().unwrap_or_default()
     }
     
-    /// 获取节点所属的 Pool ID（向后兼容，返回第一个 Pool）
-    /// 注意：此方法已废弃，建议使用 phase3_node_pool_ids
-    pub async fn phase3_node_pool_id(&self, node_id: &str) -> Option<u16> {
-        let pool_ids = self.phase3_node_pool_ids(node_id).await;
-        pool_ids.into_iter().next()
-    }
+    // 已删除未使用的函数：phase3_node_pool_id
+    // 此函数已被 phase3_node_pool_ids 替代
+    // 如果测试需要，请使用 phase3_node_pool_ids(node_id).await.into_iter().next()
 
     /// 运维/调试：返回 pool 内示例节点 ID（最多 limit 个）
     /// 如果提供了 phase2_runtime，从 Redis 读取；否则从内存读取（向后兼容）

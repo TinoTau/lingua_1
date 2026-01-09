@@ -388,10 +388,6 @@ impl NodeRegistry {
         // 性能：预取 pool 核心能力缓存（online/ready + 核心服务 installed/ready），用于快速跳过明显不满足的 pools
         let pool_core_cache = self.phase3_pool_core_cache_snapshot().await;
 
-        let t0 = Instant::now();
-        let nodes = self.nodes.read().await;
-        crate::metrics::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
-
         let mut preferred_breakdown = NoAvailableNodeBreakdown::default();
         let mut attempts: Vec<(u16, &'static str, usize)> = Vec::new();
 
@@ -406,7 +402,7 @@ impl NodeRegistry {
                 .cloned()
                 .unwrap_or_default();
             let mut breakdown = NoAvailableNodeBreakdown::default();
-            let mut best: Option<&crate::node_registry::Node> = None;
+            let mut best_node_id: Option<String> = None;
 
             // 快速跳过（只依赖 pool 缓存 + pool_index 大小，不做逐节点遍历）
             // 目标：降低 fallback_scan_all_pools 下的 CPU/锁竞争，同时保持可解释的 reason
@@ -491,16 +487,29 @@ impl NodeRegistry {
                 if cfg.enable_session_affinity { "hash-based (session affinity)" } else { "random sampling" }
             );
 
-            // 收集所有符合条件的候选节点及其负载信息
-            let mut valid_candidates: Vec<(&crate::node_registry::Node, usize)> = Vec::new();
-
-            for nid in nodes_to_check.iter() {
-                if let Some(ex) = exclude_node_id {
-                    if ex == nid {
-                        continue;
+            // 优化：先快速收集候选节点信息，立即释放读锁，避免在持有锁时进行 Redis 查询
+            let candidate_nodes: Vec<(String, crate::node_registry::Node)> = {
+                let t0 = Instant::now();
+                let nodes = self.nodes.read().await;
+                crate::metrics::observability::record_lock_wait("node_registry.nodes.read", t0.elapsed().as_millis() as u64);
+                let mut candidates = Vec::new();
+                for nid in nodes_to_check.iter() {
+                    if let Some(ex) = exclude_node_id {
+                        if ex == nid {
+                            continue;
+                        }
+                    }
+                    if let Some(node) = nodes.get(nid) {
+                        candidates.push((nid.clone(), node.clone()));
                     }
                 }
-                let Some(node) = nodes.get(nid) else { continue };
+                candidates
+            };
+
+            // 在锁外进行节点过滤和 Redis 查询
+            let mut valid_candidates: Vec<(crate::node_registry::Node, usize)> = Vec::new();
+
+            for (_nid, node) in candidate_nodes {
                 breakdown.total_nodes += 1;
 
                 if node.status != NodeStatus::Ready {
@@ -526,13 +535,14 @@ impl NodeRegistry {
                     continue;
                 }
 
-                if !node_has_installed_types(node, required_types) {
+                if !node_has_installed_types(&node, required_types) {
                     breakdown.model_not_available += 1;
                     self.record_exclude_reason(DispatchExcludeReason::ModelNotAvailable, node.node_id.clone()).await;
                     continue;
                 }
 
-                if !node_has_required_types_ready(node, required_types, phase2).await {
+                // 优化：在锁外进行 Redis 查询，避免阻塞其他读操作
+                if !node_has_required_types_ready(&node, required_types, phase2).await {
                     breakdown.model_not_available += 1;
                     self.record_exclude_reason(DispatchExcludeReason::ModelNotAvailable, node.node_id.clone()).await;
                     continue;
@@ -546,7 +556,7 @@ impl NodeRegistry {
                     continue;
                 }
 
-                if !is_node_resource_available(node, self.resource_threshold) {
+                if !is_node_resource_available(&node, self.resource_threshold) {
                     breakdown.resource_threshold_exceeded += 1;
                     // 添加详细日志，显示节点的实际资源使用率
                     warn!(
@@ -570,22 +580,22 @@ impl NodeRegistry {
 
             // 选择负载最低的节点（如果有多个负载相同，随机选择第一个）
             if let Some((best_node, _)) = valid_candidates.first() {
-                best = Some(*best_node);
+                best_node_id = Some(best_node.node_id.clone());
             }
 
-            let reason = if best.is_some() { "ok" } else { breakdown.best_reason_label() };
+            let reason = if best_node_id.is_some() { "ok" } else { breakdown.best_reason_label() };
 
             attempts.push((pool_id, reason, candidate_ids.len()));
-            crate::metrics::prometheus_metrics::on_phase3_pool_attempt(pool_id, best.is_some(), reason);
+            crate::metrics::prometheus_metrics::on_phase3_pool_attempt(pool_id, best_node_id.is_some(), reason);
 
             if idx == 0 {
                 preferred_breakdown = breakdown.clone();
             }
 
-            if let Some(best_node) = best {
+            if let Some(ref node_id) = best_node_id {
                 debug!(
                     pool_id = pool_id,
-                    node_id = %best_node.node_id,
+                    node_id = %node_id,
                     src_lang = %src_lang,
                     tgt_lang = %tgt_lang,
                     required_types = ?required_types,
@@ -598,7 +608,7 @@ impl NodeRegistry {
                     fallback_used: pool_id != preferred_pool,
                     attempts,
                 };
-                return (Some(best_node.node_id.clone()), dbg, breakdown);
+                return (Some(node_id.clone()), dbg, breakdown);
             }
         }
 

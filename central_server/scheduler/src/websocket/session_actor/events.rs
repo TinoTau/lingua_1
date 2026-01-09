@@ -23,8 +23,8 @@ pub enum SessionEvent {
         generation: u64,
         timestamp_ms: i64,
     },
-    /// 收到 is_final 标记
-    IsFinalReceived,
+    // 已删除未使用的枚举变体：IsFinalReceived
+    // 此变体从未被构造，is_final 的处理已在 handle_audio_chunk 中完成
     /// 关闭会话
     CloseSession,
     /// 取消所有计时器
