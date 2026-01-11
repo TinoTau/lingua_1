@@ -9,7 +9,8 @@ const task_router_1 = require("../task-router/task-router");
 const pipeline_orchestrator_1 = require("../pipeline-orchestrator/pipeline-orchestrator");
 class InferenceService {
     constructor(modelManager, pythonServiceManager, rustServiceManager, serviceRegistryManager, aggregatorManager, // S1: 可选的AggregatorManager
-    aggregatorMiddleware // 可选的AggregatorMiddleware
+    aggregatorMiddleware, // 可选的AggregatorMiddleware
+    semanticRepairServiceManager // 可选的SemanticRepairServiceManager（用于检查语义修复服务实际运行状态）
     ) {
         this.currentJobs = new Set();
         this.hasProcessedFirstJob = false; // 跟踪是否已经处理过第一个 job
@@ -25,7 +26,7 @@ class InferenceService {
         if (!pythonServiceManager || !rustServiceManager || !serviceRegistryManager) {
             throw new Error('TaskRouter requires pythonServiceManager, rustServiceManager, and serviceRegistryManager');
         }
-        this.taskRouter = new task_router_1.TaskRouter(pythonServiceManager, rustServiceManager, serviceRegistryManager);
+        this.taskRouter = new task_router_1.TaskRouter(pythonServiceManager, rustServiceManager, serviceRegistryManager, semanticRepairServiceManager);
         // S1: 传递AggregatorManager给PipelineOrchestrator（如果提供）
         this.aggregatorManager = aggregatorManager;
         this.aggregatorMiddleware = aggregatorMiddleware;

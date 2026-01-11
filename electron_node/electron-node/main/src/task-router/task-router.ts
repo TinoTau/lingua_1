@@ -55,16 +55,18 @@ export class TaskRouter {
   constructor(
     private pythonServiceManager: any,
     private rustServiceManager: any,
-    private serviceRegistryManager: any
+    private serviceRegistryManager: any,
+    private semanticRepairServiceManager?: any
   ) {
     // 初始化服务管理器和选择器
     this.serviceManager = new TaskRouterServiceManager(
       this.pythonServiceManager,
       this.rustServiceManager,
-      this.serviceRegistryManager
+      this.serviceRegistryManager,
+      this.semanticRepairServiceManager
     );
     this.serviceSelector = new TaskRouterServiceSelector();
-    
+
     // 初始化SEMANTIC类型的端点列表（用于语义修复服务）
     this.serviceEndpoints.set(ServiceType.SEMANTIC, []);
 
@@ -103,43 +105,43 @@ export class TaskRouter {
       updateConnections
     );
 
-          // P0-5: 语义修复服务并发限制（默认2）
-          const semanticRepairMaxConcurrency = 2;
-          // P2-1: 读取缓存配置
-          const config = loadNodeConfig();
-          const cacheConfig = config.features?.semanticRepair?.cache;
-          // P2-2: 读取模型完整性检查配置
-          const enableModelIntegrityCheck = config.features?.semanticRepair?.modelIntegrityCheck?.enabled ?? false;
-          // P0-1: 传递服务运行状态检查回调
-          // P2-2: 传递获取服务包路径的回调
-          this.semanticRepairHandler = new TaskRouterSemanticRepairHandler(
-            (serviceType) => this.selectServiceEndpoint(serviceType),
-            (serviceId) => this.startGpuTrackingForService(serviceId),
-            this.serviceConnections,
-            updateConnections,
-            semanticRepairMaxConcurrency,
-            (serviceId: string) => {
-              // 检查语义修复服务是否运行（通过SEMANTIC类型的端点列表）
-              const semanticEndpoints = this.serviceEndpoints.get(ServiceType.SEMANTIC) || [];
-              const endpoint = semanticEndpoints.find(e => e.serviceId === serviceId);
-              return endpoint?.status === 'running' || false;
-            },
-            cacheConfig,  // P2-1: 传递缓存配置
-            enableModelIntegrityCheck,  // P2-2: 是否启用模型完整性检查
-            (serviceId: string) => {
-              // P2-2: 从服务注册表获取服务包路径
-              if (!this.serviceRegistryManager) {
-                return null;
-              }
-              const current = this.serviceRegistryManager.getCurrent(serviceId);
-              return current?.install_path || null;
-            },
-            (serviceId: string) => {
-              // 直接根据服务ID查找端点（用于语义修复服务）
-              const semanticEndpoints = this.serviceEndpoints.get(ServiceType.SEMANTIC) || [];
-              return semanticEndpoints.find(e => e.serviceId === serviceId && e.status === 'running') || null;
-            }
-          );
+    // P0-5: 语义修复服务并发限制（默认2）
+    const semanticRepairMaxConcurrency = 2;
+    // P2-1: 读取缓存配置
+    const config = loadNodeConfig();
+    const cacheConfig = config.features?.semanticRepair?.cache;
+    // P2-2: 读取模型完整性检查配置
+    const enableModelIntegrityCheck = config.features?.semanticRepair?.modelIntegrityCheck?.enabled ?? false;
+    // P0-1: 传递服务运行状态检查回调
+    // P2-2: 传递获取服务包路径的回调
+    this.semanticRepairHandler = new TaskRouterSemanticRepairHandler(
+      (serviceType) => this.selectServiceEndpoint(serviceType),
+      (serviceId) => this.startGpuTrackingForService(serviceId),
+      this.serviceConnections,
+      updateConnections,
+      semanticRepairMaxConcurrency,
+      (serviceId: string) => {
+        // 检查语义修复服务是否运行（通过SEMANTIC类型的端点列表）
+        const semanticEndpoints = this.serviceEndpoints.get(ServiceType.SEMANTIC) || [];
+        const endpoint = semanticEndpoints.find(e => e.serviceId === serviceId);
+        return endpoint?.status === 'running' || false;
+      },
+      cacheConfig,  // P2-1: 传递缓存配置
+      enableModelIntegrityCheck,  // P2-2: 是否启用模型完整性检查
+      (serviceId: string) => {
+        // P2-2: 从服务注册表获取服务包路径
+        if (!this.serviceRegistryManager) {
+          return null;
+        }
+        const current = this.serviceRegistryManager.getCurrent(serviceId);
+        return current?.install_path || null;
+      },
+      (serviceId: string) => {
+        // 直接根据服务ID查找端点（用于语义修复服务）
+        const semanticEndpoints = this.serviceEndpoints.get(ServiceType.SEMANTIC) || [];
+        return semanticEndpoints.find(e => e.serviceId === serviceId && e.status === 'running') || null;
+      }
+    );
   }
 
 
@@ -186,9 +188,9 @@ export class TaskRouter {
     const asrMetrics = this.asrHandler.getProcessingMetrics();
     const nmtMetrics = this.nmtHandler.getProcessingMetrics();
     const ttsMetrics = this.ttsHandler.getProcessingMetrics();
-    
+
     const result: Record<string, number> = { ...asrMetrics, ...nmtMetrics, ...ttsMetrics };
-    
+
     // 计算其他服务的平均处理效率（如果有）
     for (const [serviceId, efficiencies] of this.currentCycleServiceEfficiencies.entries()) {
       if (efficiencies.length > 0 && !result[serviceId]) {
@@ -197,7 +199,7 @@ export class TaskRouter {
         result[serviceId] = average;
       }
     }
-    
+
     return result;
   }
 
@@ -287,7 +289,7 @@ export class TaskRouter {
       efficiencies = [];
       this.currentCycleServiceEfficiencies.set(serviceId, efficiencies);
     }
-    
+
     efficiencies.push(efficiency);
 
     logger.debug(

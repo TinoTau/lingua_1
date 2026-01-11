@@ -65,6 +65,8 @@ pub struct PipelineConfig {
     pub use_nmt: bool,
     pub use_tts: bool,
     /// 是否使用语义修复服务（Semantic Repair Service）
+    /// 注意：此字段由节点端自己决定，调度服务器不干预
+    /// 调度服务器仅根据节点的语义修复能力建立 pool
     #[serde(default = "default_false")]
     pub use_semantic: bool,
 }

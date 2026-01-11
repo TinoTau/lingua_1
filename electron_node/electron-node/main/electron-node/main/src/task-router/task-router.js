@@ -23,10 +23,11 @@ class TaskRouter {
     resetConsecutiveLowQualityCount(sessionId) {
         this.asrHandler.resetConsecutiveLowQualityCount(sessionId);
     }
-    constructor(pythonServiceManager, rustServiceManager, serviceRegistryManager) {
+    constructor(pythonServiceManager, rustServiceManager, serviceRegistryManager, semanticRepairServiceManager) {
         this.pythonServiceManager = pythonServiceManager;
         this.rustServiceManager = rustServiceManager;
         this.serviceRegistryManager = serviceRegistryManager;
+        this.semanticRepairServiceManager = semanticRepairServiceManager;
         this.serviceEndpoints = new Map();
         this.serviceConnections = new Map(); // 服务连接数统计
         this.selectionStrategy = 'round_robin';
@@ -36,7 +37,7 @@ class TaskRouter {
         // 每个服务ID对应一个处理效率列表（用于NMT、TTS等非ASR服务）
         this.currentCycleServiceEfficiencies = new Map(); // serviceId -> efficiency[]
         // 初始化服务管理器和选择器
-        this.serviceManager = new task_router_service_manager_1.TaskRouterServiceManager(this.pythonServiceManager, this.rustServiceManager, this.serviceRegistryManager);
+        this.serviceManager = new task_router_service_manager_1.TaskRouterServiceManager(this.pythonServiceManager, this.rustServiceManager, this.serviceRegistryManager, this.semanticRepairServiceManager);
         this.serviceSelector = new task_router_service_selector_1.TaskRouterServiceSelector();
         // 初始化SEMANTIC类型的端点列表（用于语义修复服务）
         this.serviceEndpoints.set(messages_1.ServiceType.SEMANTIC, []);

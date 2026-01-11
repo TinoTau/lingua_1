@@ -91,18 +91,9 @@ impl JobDispatcher {
             )
             .await;
 
-        // 决定语义修复服务
-        let mut final_pipeline = pipeline.clone();
-        self.decide_semantic_service_for_phase2(
-            &assigned_node_id,
-            src_lang,
-            tgt_lang,
-            &mut final_pipeline,
-            &trace_id,
-            request_id,
-            session_id,
-        )
-        .await;
+        // 语义修复服务由节点端自己决定，调度服务器不干预
+        // 调度服务器仅根据节点的语义修复能力建立 pool
+        let final_pipeline = pipeline.clone();
 
         // 优化：节点选择已完成（锁外），现在获取 Redis 锁进行快速操作（30-150ms）
         // 加锁路径：避免同 request_id 并发创建/占用

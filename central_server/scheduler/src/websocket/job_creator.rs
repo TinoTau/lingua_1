@@ -77,7 +77,7 @@ pub(crate) async fn create_translation_jobs(
                     use_asr: true,
                     use_nmt: true,
                     use_tts: true,
-                    use_semantic: false, // 初始为 false
+                    use_semantic: false, // 语义修复由节点端自己决定，调度服务器不干预
                 },
                 audio_data.clone(),
                 audio_format.clone(),
@@ -146,7 +146,7 @@ pub(crate) async fn create_translation_jobs(
                     use_asr: true,
                     use_nmt: true,
                     use_tts: true,
-                    use_semantic: false, // 初始为 false
+                    use_semantic: false, // 语义修复由节点端自己决定，调度服务器不干预
                 },
                 audio_data.clone(),
                 audio_format.clone(),

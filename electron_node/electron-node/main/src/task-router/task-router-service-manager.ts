@@ -11,7 +11,8 @@ export class TaskRouterServiceManager {
   constructor(
     private pythonServiceManager: any,
     private rustServiceManager: any,
-    private serviceRegistryManager: any
+    private serviceRegistryManager: any,
+    private semanticRepairServiceManager?: any
   ) {}
 
   /**
@@ -258,14 +259,23 @@ export class TaskRouterServiceManager {
       return status?.running === true;
     }
 
-    // 语义修复服务：通过检查服务注册表来判断（因为语义修复服务由SemanticRepairServiceManager管理，不在PythonServiceManager中）
+    // 语义修复服务：通过检查SemanticRepairServiceManager来获取实际运行状态
     if (serviceId === 'semantic-repair-zh' || serviceId === 'semantic-repair-en' || serviceId === 'en-normalize') {
-      // 检查服务是否在注册表中（如果服务已安装，认为可能运行，实际状态由健康检查机制判断）
+      // 优先使用SemanticRepairServiceManager检查实际运行状态
+      if (this.semanticRepairServiceManager) {
+        try {
+          const status = this.semanticRepairServiceManager.getServiceStatus(serviceId);
+          // 返回实际运行状态
+          return status?.running === true;
+        } catch (error) {
+          logger.debug({ serviceId, error }, 'Failed to check semantic repair service status from SemanticRepairServiceManager');
+        }
+      }
+      // 如果没有SemanticRepairServiceManager，降级到注册表检查（向后兼容）
       if (this.serviceRegistryManager) {
         try {
           const current = this.serviceRegistryManager.getCurrent(serviceId);
           // 如果服务在注册表中，认为可能运行（实际状态由健康检查决定）
-          // 这里返回true表示服务已安装，运行状态由后续的健康检查确定
           return current !== null && current !== undefined;
         } catch (error) {
           logger.debug({ serviceId, error }, 'Failed to check semantic repair service in registry');

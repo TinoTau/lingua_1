@@ -196,13 +196,19 @@ app.whenReady().then(async () => {
       }, 'Failed to load service registry, will use empty registry');
     }
 
+    // 初始化语义修复服务管理器（需要在 InferenceService 之前创建，以便传递给它）
+    semanticRepairServiceManager = new SemanticRepairServiceManager(serviceRegistryManager, servicesDir);
+
     // 初始化其他服务
     modelManager = new ModelManager();
     inferenceService = new InferenceService(
       modelManager,
       pythonServiceManager,
       rustServiceManager,
-      serviceRegistryManager
+      serviceRegistryManager,
+      undefined,  // aggregatorManager
+      undefined,  // aggregatorMiddleware
+      semanticRepairServiceManager  // semanticRepairServiceManager（用于检查语义修复服务实际运行状态）
     );
 
     // 设置任务记录回调
@@ -306,11 +312,7 @@ app.whenReady().then(async () => {
     // 注册所有 IPC 处理器
     registerModelHandlers(modelManager);
     registerServiceHandlers(serviceRegistryManager, servicePackageManager, rustServiceManager, pythonServiceManager);
-    // 初始化语义修复服务管理器
-    semanticRepairServiceManager = new SemanticRepairServiceManager(
-      serviceRegistryManager,
-      servicesDir
-    );
+    // 注意：semanticRepairServiceManager 已在上面初始化（在 InferenceService 之前），这里不需要重新创建
 
     // 自动启动语义修复服务（如果已安装）
     // 注意：与Python服务不同，语义修复服务需要加载模型，启动时间较长

@@ -9,7 +9,6 @@ mod job_creation_node_selection;
 mod job_builder;
 mod phase2_idempotency;
 mod phase2_node_selection;
-mod phase2_semantic_service;
 pub mod phase2_redis_lock;
 
 impl JobDispatcher {
@@ -349,70 +348,9 @@ impl JobDispatcher {
             );
         }
 
-        // 优化：根据调度模式来决定是否使用语义修复服务
-        // Phase3 模式：所有节点都支持语义修复服务（因为 Pool 是基于语义修复支持建立的），应该总是启用
-        // 非 Phase3 模式：根据节点端能力决定
-        // 使用快照克隆（无锁访问）
-        let mut final_pipeline = pipeline.clone();
-        if let Some(ref node_id) = assigned_node_id {
-            // 检查是否是 Phase3 模式（通过检查是否有 lang_index）
-            let phase3_enabled = !snapshot_clone.lang_index.is_empty();
-            
-            if phase3_enabled {
-                // Phase3 模式：所有节点都支持语义修复服务，应该总是启用
-                final_pipeline.use_semantic = true;
-                tracing::debug!(
-                    trace_id = %trace_id,
-                    node_id = %node_id,
-                    src_lang = %src_lang,
-                    tgt_lang = %tgt_lang,
-                    "Phase3 模式：启用语义修复服务（所有 Phase3 节点都支持）"
-                );
-            } else {
-                // 非 Phase3 模式：根据节点端能力决定（使用快照克隆，无锁访问）
-                if let Some(node) = snapshot_clone.nodes.get(node_id) {
-                    // 检查节点是否支持语义修复服务，且支持当前语言对
-                    let semantic_supported = !node.capabilities.semantic_languages.is_empty();
-                    if semantic_supported {
-                        // 检查是否支持当前语言对（src_lang 和 tgt_lang）
-                        let semantic_langs_set: std::collections::HashSet<&str> = 
-                            node.capabilities.semantic_languages.iter().map(|s| s.as_str()).collect();
-                        if semantic_langs_set.contains(src_lang.as_str()) && semantic_langs_set.contains(tgt_lang.as_str()) {
-                            final_pipeline.use_semantic = true;
-                            tracing::debug!(
-                                trace_id = %trace_id,
-                                node_id = %node_id,
-                                src_lang = %src_lang,
-                                tgt_lang = %tgt_lang,
-                                "非 Phase3 模式：根据节点端能力，启用语义修复服务"
-                            );
-                        } else {
-                            final_pipeline.use_semantic = false;
-                            tracing::debug!(
-                                trace_id = %trace_id,
-                                node_id = %node_id,
-                                src_lang = %src_lang,
-                                tgt_lang = %tgt_lang,
-                                "非 Phase3 模式：节点不支持当前语言对的语义修复服务，禁用语义修复服务"
-                            );
-                        }
-                    } else {
-                        final_pipeline.use_semantic = false;
-                        tracing::debug!(
-                            trace_id = %trace_id,
-                            node_id = %node_id,
-                            "非 Phase3 模式：节点不支持语义修复服务，禁用语义修复服务"
-                        );
-                    }
-                } else {
-                    // 节点不在快照中，保守处理：不使用语义修复服务
-                    final_pipeline.use_semantic = false;
-                }
-            }
-        } else {
-            // 没有选中节点，保守处理：不使用语义修复服务
-            final_pipeline.use_semantic = false;
-        }
+        // 语义修复服务由节点端自己决定，调度服务器不干预
+        // 调度服务器仅根据节点的语义修复能力建立 pool
+        let final_pipeline = pipeline.clone();
 
         // 创建 Job（Phase 1 模式）
         self.create_job_phase1(

@@ -46,7 +46,7 @@ export class InferenceService {
   private onTaskProcessedCallback: ((serviceName: string) => void) | null = null;
   private onTaskStartCallback: (() => void) | null = null;
   private onTaskEndCallback: (() => void) | null = null;
-  
+
   // 新架构组件
   private taskRouter: TaskRouter;
   private pipelineOrchestrator: PipelineOrchestrator;
@@ -61,7 +61,8 @@ export class InferenceService {
     rustServiceManager: any,
     serviceRegistryManager: any,
     aggregatorManager?: any,  // S1: 可选的AggregatorManager
-    aggregatorMiddleware?: any  // 可选的AggregatorMiddleware
+    aggregatorMiddleware?: any,  // 可选的AggregatorMiddleware
+    semanticRepairServiceManager?: any  // 可选的SemanticRepairServiceManager（用于检查语义修复服务实际运行状态）
   ) {
     this.modelManager = modelManager;
 
@@ -70,8 +71,8 @@ export class InferenceService {
       throw new Error('TaskRouter requires pythonServiceManager, rustServiceManager, and serviceRegistryManager');
     }
 
-    this.taskRouter = new TaskRouter(pythonServiceManager, rustServiceManager, serviceRegistryManager);
-    
+    this.taskRouter = new TaskRouter(pythonServiceManager, rustServiceManager, serviceRegistryManager, semanticRepairServiceManager);
+
     // S1: 传递AggregatorManager给PipelineOrchestrator（如果提供）
     this.aggregatorManager = aggregatorManager;
     this.aggregatorMiddleware = aggregatorMiddleware;
@@ -82,13 +83,13 @@ export class InferenceService {
       mode,
       aggregatorMiddleware
     );
-    
+
     // 异步初始化服务端点
     this.taskRouter.initialize().catch((error) => {
       logger.error({ error }, 'Failed to initialize TaskRouter');
     });
   }
-  
+
   /**
    * S1: 设置AggregatorManager（用于动态更新）
    */
@@ -193,14 +194,14 @@ export class InferenceService {
   async processJob(job: JobAssignMessage, partialCallback?: PartialResultCallback): Promise<JobResult> {
     const wasFirstJob = !this.hasProcessedFirstJob;
     this.currentJobs.add(job.job_id);
-    
+
     // 如果是第一个任务（节点启动后的第一个），等待服务就绪
     if (wasFirstJob) {
       this.hasProcessedFirstJob = true;
       logger.info({ jobId: job.job_id }, 'First job detected, waiting for services to be ready');
       await this.waitForServicesReady();
     }
-    
+
     // 如果是第一个任务，通知任务开始（用于启动GPU跟踪）
     if (wasFirstJob && this.onTaskStartCallback) {
       this.onTaskStartCallback();
@@ -209,7 +210,7 @@ export class InferenceService {
     try {
       // 刷新服务端点列表（确保使用最新的服务状态）
       await this.taskRouter.refreshServiceEndpoints();
-      
+
       // 优化：ASR 完成后立即从 currentJobs 中移除，让 ASR 服务可以处理下一个任务
       // NMT 和 TTS 可以异步处理，不阻塞 ASR 服务
       const result = await this.pipelineOrchestrator.processJob(job, partialCallback, (asrCompleted: boolean) => {
@@ -217,19 +218,19 @@ export class InferenceService {
         if (asrCompleted) {
           this.currentJobs.delete(job.job_id);
           logger.debug({ jobId: job.job_id }, 'ASR completed, removed from currentJobs to free ASR service capacity');
-          
+
           // 如果这是最后一个任务，通知任务结束（用于停止GPU跟踪）
           if (this.currentJobs.size === 0 && this.onTaskEndCallback) {
             this.onTaskEndCallback();
           }
         }
       });
-      
+
       // 记录任务调用
       if (this.onTaskProcessedCallback) {
         this.onTaskProcessedCallback('pipeline');
       }
-      
+
       return result;
     } catch (error) {
       logger.error({ error, jobId: job.job_id, traceId: job.trace_id }, 'Pipeline orchestration failed');
@@ -238,7 +239,7 @@ export class InferenceService {
       // 确保任务从 currentJobs 中移除（如果 ASR 完成回调没有执行）
       if (this.currentJobs.has(job.job_id)) {
         this.currentJobs.delete(job.job_id);
-        
+
         // 如果没有任务了，通知任务结束（用于停止GPU跟踪）
         if (this.currentJobs.size === 0 && this.onTaskEndCallback) {
           this.onTaskEndCallback();
@@ -281,7 +282,7 @@ export class InferenceService {
     try {
       availableModels = await this.modelManager.getAvailableModels();
     } catch (error: any) {
-      logger.warn({ 
+      logger.warn({
         error: error.message,
         errorCode: error.code
       }, 'Failed to get available models from Model Hub, using empty list (node registration will continue)');
@@ -331,27 +332,27 @@ export class InferenceService {
   private async waitForServicesReady(maxWaitMs: number = 5000): Promise<void> {
     const startTime = Date.now();
     const checkInterval = 200; // 每200ms检查一次（更频繁的检查）
-    
+
     logger.info({ maxWaitMs }, 'Waiting for services to be ready');
-    
+
     // 先刷新一次服务端点列表
     await this.taskRouter.refreshServiceEndpoints();
-    
+
     while (Date.now() - startTime < maxWaitMs) {
       try {
         // 刷新服务端点列表
         await this.taskRouter.refreshServiceEndpoints();
-        
+
         // 检查是否有可用的服务端点
         const hasASR = await this.checkServiceTypeReady('ASR');
         const hasNMT = await this.checkServiceTypeReady('NMT');
         const hasTTS = await this.checkServiceTypeReady('TTS');
-        
+
         if (hasASR && hasNMT && hasTTS) {
           logger.info({ elapsedMs: Date.now() - startTime }, 'All services are ready');
           return;
         }
-        
+
         logger.debug(
           {
             elapsedMs: Date.now() - startTime,
@@ -364,11 +365,11 @@ export class InferenceService {
       } catch (error) {
         logger.warn({ error, elapsedMs: Date.now() - startTime }, 'Error checking service readiness');
       }
-      
+
       // 等待后重试
       await new Promise(resolve => setTimeout(resolve, checkInterval));
     }
-    
+
     logger.warn(
       {
         elapsedMs: Date.now() - startTime,
@@ -392,11 +393,11 @@ export class InferenceService {
       // 注意：refreshServiceEndpoints 只会添加 status === 'running' 的服务
       // 所以这里只需要检查端点数量即可
       const hasEndpoints = endpoints.length > 0;
-      
+
       if (!hasEndpoints) {
         logger.debug({ serviceType, endpointCount: endpoints.length }, 'No endpoints available for service type');
       }
-      
+
       return hasEndpoints;
     } catch (error) {
       logger.warn({ error, serviceType }, 'Error checking service type readiness');
