@@ -32,10 +32,55 @@ pub async fn start_server(
     info!("调度服务器监听地址: {}", addr);
 
     let listener = tokio::net::TcpListener::bind(addr).await?;
+    
+    // 创建关闭信号通道，用于跨平台信号处理
+    let (shutdown_tx, mut shutdown_rx) = tokio::sync::mpsc::unbounded_channel::<()>();
+    
+    // 设置信号处理器（支持 Ctrl+C 和 SIGTERM）
+    let shutdown_tx1 = shutdown_tx.clone();
+    tokio::spawn(async move {
+        // Windows: 只支持 Ctrl+C (SIGINT)
+        // Unix: 支持 SIGINT 和 SIGTERM
+        #[cfg(unix)]
+        {
+            use tokio::signal::unix::{signal, SignalKind};
+            let mut sigterm = match signal(SignalKind::terminate()) {
+                Ok(s) => s,
+                Err(e) => {
+                    tracing::error!(error = %e, "无法安装 SIGTERM 信号处理器");
+                    return;
+                }
+            };
+            
+            tokio::select! {
+                _ = tokio::signal::ctrl_c() => {
+                    info!("收到 Ctrl+C 信号");
+                }
+                _ = sigterm.recv() => {
+                    info!("收到 SIGTERM 信号");
+                }
+            }
+        }
+        
+        #[cfg(not(unix))]
+        {
+            tokio::signal::ctrl_c()
+                .await
+                .expect("无法安装 Ctrl+C 信号处理器");
+            info!("收到 Ctrl+C 信号");
+        }
+        
+        let _ = shutdown_tx1.send(());
+    });
+    
     let shutdown_signal = async move {
-        tokio::signal::ctrl_c()
-            .await
-            .expect("无法安装 Ctrl+C 信号处理器");
+        // 等待关闭信号
+        if shutdown_rx.recv().await.is_none() {
+            // Channel 已关闭，可能是其他原因导致的关闭
+            info!("关闭信号通道已关闭");
+            return;
+        }
+        
         info!("收到关闭信号，开始优雅关闭...");
         
         // 清理节点连接（使用 ManagementRegistry）
@@ -52,15 +97,33 @@ pub async fn start_server(
             }
         }
         
-        info!("资源清理完成，等待连接关闭...");
+        // 清理 Phase2 资源（如果有）
+        if let Some(ref rt) = app_state_for_shutdown.phase2 {
+            info!("清理 Phase2 资源...");
+            // Phase2Runtime 应该有自己的清理逻辑（如果有）
+            // 这里只是记录日志，实际的清理可能在 Phase2Runtime 的 Drop 实现中
+        }
+        
+        info!("资源清理完成，等待 axum 优雅关闭连接...");
+        // 注意：with_graceful_shutdown 会等待所有连接关闭，所以这里不需要额外的等待
+        // shutdown_signal future 完成后，axum 会开始关闭服务器，等待所有连接关闭
     };
     
     // 使用优雅关闭启动服务器
-    axum::serve(listener, app)
+    info!("调度服务器已启动，等待连接...");
+    match axum::serve(listener, app)
         .with_graceful_shutdown(shutdown_signal)
-        .await?;
+        .await
+    {
+        Ok(_) => {
+            info!("调度服务器已优雅关闭");
+        }
+        Err(e) => {
+            tracing::error!(error = %e, "服务器关闭时出错");
+            return Err(anyhow::anyhow!("服务器关闭时出错: {}", e));
+        }
+    }
     
-    info!("调度服务器已优雅关闭");
     Ok(())
 }
 

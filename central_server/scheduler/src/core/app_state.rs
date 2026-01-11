@@ -2,7 +2,7 @@
 
 use super::{JobDispatcher, SessionManager, JobIdempotencyManager, JobResultDeduplicator};
 use crate::node_registry::NodeRegistry;
-use crate::services::{ModelHub, PairingService, ServiceCatalogCache};
+use crate::services::{ModelHub, PairingService, ServiceCatalogCache, MinimalSchedulerService};
 use crate::managers::{
     AudioBufferManager, GroupManager, NodeStatusManager,
     ResultQueueManager, RoomManager, SessionConnectionManager, NodeConnectionManager,
@@ -43,5 +43,7 @@ pub struct AppState {
     pub job_result_deduplicator: JobResultDeduplicator,
     /// Phase 2：Redis/多实例运行时（可选，默认 None）
     pub phase2: Option<std::sync::Arc<Phase2Runtime>>,
+    /// 极简无锁调度服务（可选，需要 Phase2 启用）
+    pub minimal_scheduler: Option<std::sync::Arc<MinimalSchedulerService>>,
 }
 

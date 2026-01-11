@@ -106,8 +106,18 @@ impl ManagementState {
             enabled = config.enabled,
             "更新 Phase 3 配置"
         );
+        let old_pool_count = self.phase3_config.pools.len();
+        let old_lang_index_size = self.lang_index.language_set_count();
         self.phase3_config = config.clone();
         self.lang_index = PoolLanguageIndex::rebuild_from_pools(&config.pools);
+        info!(
+            old_pool_count = old_pool_count,
+            new_pool_count = config.pools.len(),
+            old_lang_index_size = old_lang_index_size,
+            new_lang_index_size = self.lang_index.language_set_count(),
+            language_sets = ?self.lang_index.language_set_keys(0),
+            "Phase 3 配置已更新，lang_index 已重建"
+        );
     }
 
     /// 更新核心服务配置

@@ -9,6 +9,31 @@
 - **系统架构**: `SYSTEM_ARCHITECTURE.md` - 系统架构文档（三层架构、三个客户端详解）⭐ **重要**
 - **项目结构**: `PROJECT_STRUCTURE.md` - 项目目录结构和路径说明
 - **项目迁移**: `PROJECT_MIGRATION.md` - 项目迁移和路径调整文档
+- **文档索引**: `DOCUMENTATION_INDEX.md` - 文档索引
+- **产品文档索引**: `PRODUCT_DOCUMENTATION_INDEX.md` - 产品文档索引
+
+### 环境配置
+
+- `setup/` - 环境配置相关文档
+  - `ENVIRONMENT_SETUP.md` - 环境变量配置指南
+  - `ENVIRONMENT_CONFIGURATION_COMPLETE.md` - 环境变量配置完成报告
+  - `CMAKE_4.2_COMPATIBILITY_FIX.md` - CMake 4.2 兼容性修复
+  - `CMAKE_4.2_SOLUTION.md` - CMake 4.2 解决方案
+
+### 变更日志
+
+- `changelog/` - 变更日志
+  - `CHANGELOG_2025_01.md` - 2025年1月更新日志
+
+### 项目管理
+
+- `project_management/` - 项目管理相关文档
+  - 开发计划
+  - 项目状态
+  - 已完成/待完成项目
+- `project/phase3/` - Phase3 相关文档
+  - `PHASE3_IMPLEMENTATION_SUMMARY.md` - Phase3 功能实现总结
+  - `PHASE3_TESTING_*.md` - Phase3 测试相关文档
 
 ### 日志和可观测性
 
@@ -106,7 +131,7 @@ lingua_1/
 - **项目迁移**: `PROJECT_MIGRATION.md`
 - **文档索引**: [DOCUMENTATION_INDEX.md](./DOCUMENTATION_INDEX.md)
 - **产品文档索引**: [PRODUCT_DOCUMENTATION_INDEX.md](./PRODUCT_DOCUMENTATION_INDEX.md)
-- **更新日志**: [CHANGELOG_2025_01.md](./CHANGELOG_2025_01.md) - 最新更新（2025年1月）
+- **更新日志**: [changelog/CHANGELOG_2025_01.md](./changelog/CHANGELOG_2025_01.md) - 最新更新（2025年1月）
 - **ServiceType 能力重构总结**: [architecture/SERVICE_TYPE_CAPABILITY_REFACTOR_SUMMARY.md](./architecture/SERVICE_TYPE_CAPABILITY_REFACTOR_SUMMARY.md) - 服务类型改造过程及结果总结 ⭐
 - **Web 客户端文档**: [web_client/README.md](./web_client/README.md)
 - **中央服务器文档**: [central_server/README.md](./central_server/README.md)

@@ -1,5 +1,10 @@
 impl RedisHandle {
-    async fn connect(cfg: &crate::core::config::Phase2RedisConfig) -> anyhow::Result<Self> {
+    /// 创建新的 RedisHandle（用于测试和内部使用）
+    /// 
+    /// # 注意
+    /// 此方法主要用于测试。在生产代码中，应通过 Phase2Runtime 来获取 RedisHandle。
+    #[allow(dead_code)] // 允许在测试中未使用的警告
+    pub async fn connect(cfg: &crate::core::config::Phase2RedisConfig) -> anyhow::Result<Self> {
         let inner = match cfg.mode.as_str() {
             "cluster" => {
                 let urls = if cfg.cluster_urls.is_empty() {
@@ -22,7 +27,7 @@ impl RedisHandle {
         })
     }
 
-    async fn query<T: redis::FromRedisValue>(&self, cmd: redis::Cmd) -> redis::RedisResult<T> {
+    pub async fn query<T: redis::FromRedisValue>(&self, cmd: redis::Cmd) -> redis::RedisResult<T> {
         let mut guard = self.inner.lock().await;
         match &mut *guard {
             RedisConn::Single(c) => cmd.query_async(c).await,
@@ -30,13 +35,13 @@ impl RedisHandle {
         }
     }
 
-    async fn set_ex_string(&self, key: &str, val: &str, ttl_seconds: u64) -> redis::RedisResult<()> {
+    pub async fn set_ex_string(&self, key: &str, val: &str, ttl_seconds: u64) -> redis::RedisResult<()> {
         let mut cmd = redis::cmd("SET");
         cmd.arg(key).arg(val).arg("EX").arg(ttl_seconds.max(1));
         self.query(cmd).await
     }
 
-    async fn get_string(&self, key: &str) -> redis::RedisResult<Option<String>> {
+    pub async fn get_string(&self, key: &str) -> redis::RedisResult<Option<String>> {
         let mut cmd = redis::cmd("GET");
         cmd.arg(key);
         self.query(cmd).await
@@ -62,7 +67,7 @@ return 0
         self.query(cmd).await
     }
 
-    async fn exists(&self, key: &str) -> redis::RedisResult<bool> {
+    pub async fn exists(&self, key: &str) -> redis::RedisResult<bool> {
         let mut cmd = redis::cmd("EXISTS");
         cmd.arg(key);
         let v: u64 = self.query(cmd).await?;
@@ -349,7 +354,7 @@ return 0
     /// DEC_RUNNING: 任务完成时 running -= 1
     /// KEYS[1]=node_cap_key
     /// 返回: true表示成功
-    async fn dec_running(
+    pub async fn dec_running(
         &self,
         node_cap_key: &str,
     ) -> redis::RedisResult<bool> {

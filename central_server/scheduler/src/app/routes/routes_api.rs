@@ -497,6 +497,7 @@ pub async fn get_phase3_simulate(
         .filter_map(|s| ServiceType::from_str(s).ok())
         .collect();
 
+    // API 路由中没有 session，传递 None（向后兼容，内部决定 preferred_pool）
     let (nid, dbg, bd) = state
         .node_registry
         .select_node_with_types_two_level_excluding_with_breakdown(
@@ -508,6 +509,7 @@ pub async fn get_phase3_simulate(
             exclude,
             Some(&state.core_services),
             state.phase2.as_ref().map(|rt| rt.as_ref()),
+            None, // API 路由中没有 session，内部决定 preferred_pool（向后兼容）
         )
         .await;
 

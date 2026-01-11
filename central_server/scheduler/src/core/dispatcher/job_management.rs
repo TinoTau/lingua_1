@@ -66,29 +66,103 @@ impl JobDispatcher {
     }
 
     pub async fn mark_job_dispatched(&self, job_id: &str) -> bool {
-        let mut jobs = self.jobs.write().await;
-        if let Some(job) = jobs.get_mut(job_id) {
-            job.dispatched_to_node = true;
-            job.dispatched_at_ms = Some(chrono::Utc::now().timestamp_millis());
-            // Phase 2：同步更新 request_id bind 的 dispatched 标记，避免跨实例重复派发
-            if let Some(ref rt) = self.phase2 {
-                if !job.request_id.is_empty() {
-                    rt.mark_request_dispatched(&job.request_id).await;
+        use tracing::{info, warn};
+        
+        // 优化：快速读取 Job 信息，立即释放锁（在 Session 层级尽量减少锁操作）
+        let (session_id_opt, assigned_node_id, request_id, dispatch_attempt_id) = {
+            let jobs = self.jobs.read().await;
+            if let Some(job) = jobs.get(job_id) {
+                (
+                    Some(job.session_id.clone()),
+                    job.assigned_node_id.clone(),
+                    job.request_id.clone(),
+                    job.dispatch_attempt_id,
+                )
+            } else {
+                warn!(
+                    job_id = %job_id,
+                    "mark_job_dispatched: Job 不存在"
+                );
+                return false;
+            }
+        }; // 锁立即释放
+        
+        let session_id = session_id_opt.as_deref().unwrap_or("unknown");
+        let node_id_str = assigned_node_id.as_deref().unwrap_or("unknown");
+        
+        info!(
+            job_id = %job_id,
+            session_id = %session_id,
+            node_id = %node_id_str,
+            request_id = %request_id,
+            dispatch_attempt_id = dispatch_attempt_id,
+            "mark_job_dispatched: 开始标记任务为已分发"
+        );
+        
+        // 在锁外更新 Job 状态（快速更新，立即释放）
+        {
+            let mut jobs = self.jobs.write().await;
+            if let Some(job) = jobs.get_mut(job_id) {
+                if job.dispatched_to_node {
+                    warn!(
+                        job_id = %job_id,
+                        session_id = %session_id,
+                        node_id = %node_id_str,
+                        "mark_job_dispatched: Job 已经被标记为已分发（幂等调用）"
+                    );
+                    return true;
                 }
-                // Phase 2：Job FSM -> DISPATCHED（幂等）
-                let _ = rt.job_fsm_to_dispatched(&job.job_id, job.dispatch_attempt_id.max(1)).await;
+                job.dispatched_to_node = true;
+                job.dispatched_at_ms = Some(chrono::Utc::now().timestamp_millis());
+                info!(
+                    job_id = %job_id,
+                    session_id = %session_id,
+                    node_id = %node_id_str,
+                    dispatched_at_ms = job.dispatched_at_ms,
+                    "mark_job_dispatched: Job 状态已更新为已分发"
+                );
+            } else {
+                warn!(
+                    job_id = %job_id,
+                    session_id = %session_id,
+                    "mark_job_dispatched: Job 在写入时不存在（可能已被删除）"
+                );
+                return false;
             }
-            if let Some(ref nid) = job.assigned_node_id {
-                let now_ms = chrono::Utc::now().timestamp_millis();
-                self.last_dispatched_node_by_session
-                    .write()
-                    .await
-                    .insert(job.session_id.clone(), (nid.clone(), now_ms));
+        } // 快速释放 Job 锁
+        
+        // Phase 2：同步更新 request_id bind 的 dispatched 标记（在锁外进行 I/O，避免阻塞）
+        if let Some(ref rt) = self.phase2 {
+            if !request_id.is_empty() {
+                info!(
+                    job_id = %job_id,
+                    session_id = %session_id,
+                    request_id = %request_id,
+                    "mark_job_dispatched: 更新 request_id 绑定为已分发"
+                );
+                rt.mark_request_dispatched(&request_id).await;
             }
-            true
-        } else {
-            false
+            // Phase 2：Job FSM -> DISPATCHED（幂等）
+            info!(
+                job_id = %job_id,
+                session_id = %session_id,
+                dispatch_attempt_id = dispatch_attempt_id,
+                "mark_job_dispatched: 更新 Job FSM 状态为 DISPATCHED"
+            );
+            let _ = rt.job_fsm_to_dispatched(job_id, dispatch_attempt_id.max(1)).await;
         }
+        
+        // 根据 v3.0 设计，Session 状态由 SessionRuntimeManager 管理
+        // 这里不再需要更新 last_dispatched_node_by_session（已移除）
+        
+        info!(
+            job_id = %job_id,
+            session_id = %session_id,
+            node_id = %node_id_str,
+            "mark_job_dispatched: 任务标记为已分发完成"
+        );
+        
+        true
     }
 }
 

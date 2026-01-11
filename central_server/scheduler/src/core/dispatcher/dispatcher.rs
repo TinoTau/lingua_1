@@ -1,5 +1,6 @@
 use crate::node_registry::NodeRegistry;
 use crate::core::config::CoreServicesConfig;
+use crate::core::session_runtime::SessionRuntimeManager;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
@@ -14,8 +15,8 @@ pub struct JobDispatcher {
     pub(crate) spread_enabled: bool,
     pub(crate) spread_window_ms: i64,
     pub(crate) core_services: CoreServicesConfig,
-    /// session_id -> (last_dispatched_node_id, ts_ms)
-    pub(crate) last_dispatched_node_by_session: Arc<RwLock<std::collections::HashMap<String, (String, i64)>>>,
+    /// Session 运行时管理器（每个 session 一把锁）
+    pub(crate) session_manager: Arc<SessionRuntimeManager>,
     /// Phase 2：Redis 运行时（request_id bind/lock + node reserved）
     pub(crate) phase2: Option<Arc<crate::phase2::Phase2Runtime>>,
 }
@@ -31,7 +32,7 @@ impl JobDispatcher {
             spread_enabled: false,
             spread_window_ms: 30_000,
             core_services: crate::core::config::CoreServicesConfig::default(),
-            last_dispatched_node_by_session: Arc::new(RwLock::new(std::collections::HashMap::new())),
+            session_manager: Arc::new(SessionRuntimeManager::new()),
             phase2: None,
         }
     }

@@ -1,5 +1,6 @@
 //! 锁优化组件初始化和管理
 
+use std::sync::Arc;
 use super::NodeRegistry;
 use super::snapshot_manager::SnapshotManager;
 use crate::core::config::{Phase3Config, CoreServicesConfig};
@@ -38,5 +39,33 @@ impl NodeRegistry {
     /// 同步核心服务配置到 ManagementRegistry
     pub async fn sync_core_services_to_management(&self, config: CoreServicesConfig) {
         self.management_registry.update_core_services(config).await;
+    }
+    
+    /// 获取 Phase3 配置（无锁读取，从缓存获取）
+    /// 如果缓存为空，从 phase3 读取并更新缓存
+    pub(crate) async fn get_phase3_config_cached(&self) -> Arc<Phase3Config> {
+        // 先尝试从缓存读取（读锁）
+        {
+            let cache = self.phase3_cache.read().await;
+            if let Some(ref cfg) = *cache {
+                return cfg.clone();
+            }
+        }
+        
+        // 缓存为空，从 phase3 读取并更新缓存（写锁）
+        let cfg = {
+            let phase3 = self.phase3.read().await;
+            Arc::new(phase3.clone())
+        };
+        
+        let mut cache = self.phase3_cache.write().await;
+        *cache = Some(cfg.clone());
+        cfg
+    }
+    
+    /// 更新 Phase3 配置缓存（在配置更新时调用）
+    pub(crate) async fn update_phase3_config_cache(&self, cfg: &Phase3Config) {
+        let mut cache = self.phase3_cache.write().await;
+        *cache = Some(Arc::new(cfg.clone()));
     }
 }

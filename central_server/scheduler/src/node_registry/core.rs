@@ -32,6 +32,7 @@ impl NodeRegistry {
             // 锁优化组件
             management_registry,
             snapshot_manager,
+            phase3_cache: Arc::new(tokio::sync::RwLock::new(None)),
         }
     }
 
@@ -55,6 +56,7 @@ impl NodeRegistry {
             // 锁优化组件
             management_registry,
             snapshot_manager,
+            phase3_cache: Arc::new(tokio::sync::RwLock::new(None)),
         }
     }
 
@@ -109,9 +111,14 @@ impl NodeRegistry {
         }
         self.phase3_core_cache_upsert_node(updated).await;
         
-        // 更新快照
-        let snapshot_manager = self.get_or_init_snapshot_manager().await;
-        snapshot_manager.update_node_snapshot(&node_id).await;
+        // 【修复4】保持异步执行的一致性：将快照更新改为后台异步执行
+        // 虽然这是低频操作（快照同步时），但为了与 update_node_heartbeat 保持一致，改为异步执行
+        let node_id_clone = node_id.clone();
+        let registry_clone = self.clone();
+        tokio::spawn(async move {
+            let snapshot_manager = registry_clone.get_or_init_snapshot_manager().await;
+            snapshot_manager.update_node_snapshot(&node_id_clone).await;
+        });
     }
 
     /// Phase 2：获取节点快照（用于写入 Redis）
@@ -121,8 +128,12 @@ impl NodeRegistry {
         mgmt.nodes.get(node_id).map(|state| state.node.clone())
     }
 
-    /// Phase 2：注册节点（允许覆盖已有 node_id，用于节点重连/跨实例快照同步后的注册）
-    /// 如果提供了 phase2_runtime，动态创建的 Pool 会同步到 Redis（保持原子性）
+    /// 【已废弃】旧节点注册实现（使用锁和本地状态）
+    /// 已迁移到极简无锁调度服务：MinimalSchedulerService::register_node
+    /// 根据 LOCKLESS_MINIMAL_SCHEDULER_SPEC_v1.md，应该使用 Lua 脚本进行原子操作
+    /// 
+    /// 新实现应使用 MinimalSchedulerService::register_node（完全无锁，所有状态在 Redis）
+    #[allow(dead_code)]
     pub async fn register_node_with_policy(
         &self,
         node_id: Option<String>,
@@ -277,10 +288,15 @@ impl NodeRegistry {
         Ok(node)
     }
 
-    /// 更新节点心跳
+    /// 【已废弃】旧节点心跳实现（使用锁和本地状态）
+    /// 已迁移到极简无锁调度服务：MinimalSchedulerService::heartbeat
+    /// 根据 LOCKLESS_MINIMAL_SCHEDULER_SPEC_v1.md，应该使用 Lua 脚本进行原子操作
     ///
     /// # 要求
     /// - GPU 使用率必须提供（不能为 None），因为所有节点都必须有 GPU
+    /// 
+    /// 新实现应使用 MinimalSchedulerService::heartbeat（完全无锁，所有状态在 Redis）
+    #[allow(dead_code)]
     pub async fn update_node_heartbeat(
         &self,
         node_id: &str,
@@ -333,23 +349,31 @@ impl NodeRegistry {
         }
 
         // 锁外操作：更新语言能力索引和 core_cache（这些操作不需要在锁内进行）
+        // 【修复方案1】将耗时操作改为后台异步执行，避免阻塞心跳更新主流程
         if let Some(ref n) = updated_node {
-            // 更新语言能力索引（锁外）
+            let node_id_clone = node_id.to_string();
+            let node_clone = n.clone();
+            let registry_clone = self.clone();
+            
+            // 更新语言能力索引（快速操作，保留在锁外同步执行）
             {
                 let mut index = self.language_capability_index.write().await;
                 index.update_node_capabilities(node_id, &n.language_capabilities);
             }
             
-            // 更新 SnapshotManager（锁外）
-            // 使用 lock_optimization 中的辅助方法
-            let snapshot_manager = self.get_or_init_snapshot_manager().await;
-            snapshot_manager.update_node_snapshot(node_id).await;
-            
-            // Phase 3：installed_services/capability_by_type 可能变化，需更新 pool 归属
-            // 注意：update_node_heartbeat 没有访问 phase2_runtime 的权限
-            // 在心跳处理函数（handle_node_heartbeat）中会调用 phase3_upsert_node_to_pool_index_with_runtime
-            // 这里不再调用，避免重复调用
-            self.phase3_core_cache_upsert_node(n.clone()).await;
+            // 【修复】后台异步执行快照更新和缓存更新，不阻塞心跳更新主流程
+            tokio::spawn(async move {
+                // 更新 SnapshotManager（后台执行）
+                // 使用 lock_optimization 中的辅助方法
+                let snapshot_manager = registry_clone.get_or_init_snapshot_manager().await;
+                snapshot_manager.update_node_snapshot(&node_id_clone).await;
+                
+                // Phase 3：更新 core_cache（后台执行）
+                // 注意：update_node_heartbeat 没有访问 phase2_runtime 的权限
+                // 在心跳处理函数（handle_node_heartbeat）中会调用 phase3_upsert_node_to_pool_index_with_runtime
+                // 这里不再调用，避免重复调用
+                registry_clone.phase3_core_cache_upsert_node(node_clone).await;
+            });
         }
 
         updated_node.is_some()

@@ -36,6 +36,8 @@ export async function cleanupServices(
 
   // 在清理服务前，保存当前服务状态到配置文件
   // 这样即使窗口意外关闭，下次启动时也能恢复服务状态
+  // 注意：这里基于当前运行状态保存，因为 cleanupServices 是在服务还在运行时被调用的
+  // 如果服务已经停止，说明用户已经手动停止了服务，应该保存为 false
   try {
     const rustEnabled = !!rustStatus?.running;
     const nmtEnabled = !!pythonStatuses.find(s => s.name === 'nmt')?.running;
@@ -53,6 +55,9 @@ export async function cleanupServices(
     const enNormalizeEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'en-normalize')?.running;
 
     const config = loadNodeConfig();
+    // 保存当前运行状态作为下次启动的偏好
+    // 如果服务正在运行，保存为 true；如果已经停止，保存为 false
+    // 这样下次启动时会按照当前的运行状态自动启动服务
     config.servicePreferences = {
       rustEnabled,
       nmtEnabled,
@@ -66,8 +71,13 @@ export async function cleanupServices(
     };
     saveNodeConfig(config);
     logger.info(
-      { servicePreferences: config.servicePreferences },
-      'Saved current service status to config file'
+      { 
+        servicePreferences: config.servicePreferences,
+        rustRunning: rustEnabled,
+        pythonRunning: pythonStatuses.filter(s => s.running).length,
+        semanticRepairRunning: semanticRepairStatuses.filter(s => s.running).length,
+      },
+      'Saved current service status to config file (cleanupServices)'
     );
   } catch (error) {
     logger.error({ error }, 'Failed to save service status to config file');

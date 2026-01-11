@@ -440,17 +440,20 @@ app.whenReady().then(async () => {
   const mainWindowForClose = getMainWindow();
   if (mainWindowForClose) {
     mainWindowForClose.on('close', async (event) => {
-      // 在窗口关闭前，尝试保存当前服务状态
+      // 在窗口关闭前，尝试保存当前服务状态（基于当前运行状态）
       // 注意：这里不能阻止关闭，只能尝试保存
       try {
+        const rustStatus = rustServiceManager?.getStatus();
         const pythonStatuses = pythonServiceManager?.getAllServiceStatuses() || [];
         const semanticRepairStatuses = semanticRepairServiceManager 
           ? await semanticRepairServiceManager.getAllServiceStatuses()
           : [];
         
         const config = loadNodeConfig();
+        // 保存当前运行状态作为下次启动的偏好（保留用户之前的选择）
+        // 注意：这里基于当前运行状态，而不是总是设置为 false
         config.servicePreferences = {
-          rustEnabled: false,
+          rustEnabled: !!rustStatus?.running,
           nmtEnabled: !!pythonStatuses.find(s => s.name === 'nmt')?.running,
           ttsEnabled: !!pythonStatuses.find(s => s.name === 'tts')?.running,
           yourttsEnabled: !!pythonStatuses.find(s => s.name === 'yourtts')?.running,
@@ -463,7 +466,7 @@ app.whenReady().then(async () => {
         saveNodeConfig(config);
         logger.info(
           { servicePreferences: config.servicePreferences },
-          'Saved service preferences on window close (before cleanup)'
+          'Saved service preferences on window close (based on current running status)'
         );
       } catch (error) {
         logger.error({ error }, 'Failed to save service preferences on window close');
@@ -492,22 +495,27 @@ app.on('before-quit', async (event) => {
 
   if (rustRunning || pythonRunning || semanticRepairRunning) {
     event.preventDefault();
+    // cleanupServices 会保存当前运行状态
     await cleanupServices(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
     // 清理 ESBuild 进程
     cleanupEsbuild();
     app.quit();
   } else {
     // 即使服务没有运行，也要保存当前服务状态（以便下次启动时恢复）
-    // 这样用户关闭应用时，即使所有服务都已停止，也能记住用户的选择
+    // cleanupServices 已经会保存配置，但为了确保在 before-quit 时也保存，这里再保存一次
+    // 注意：这里基于当前运行状态，如果服务已经停止，保存为 false 是正确的
     try {
+      const rustStatus = rustServiceManager?.getStatus();
       const pythonStatuses = pythonServiceManager?.getAllServiceStatuses() || [];
       const semanticRepairStatuses = semanticRepairServiceManager 
         ? await semanticRepairServiceManager.getAllServiceStatuses()
         : [];
       
       const config = loadNodeConfig();
+      // 保存当前运行状态作为下次启动的偏好（如果服务没有运行，保存为 false）
+      // 这样用户关闭应用时，即使所有服务都已停止，也能记住用户的选择（所有服务都是 false）
       config.servicePreferences = {
-        rustEnabled: false,
+        rustEnabled: !!rustStatus?.running,
         nmtEnabled: !!pythonStatuses.find(s => s.name === 'nmt')?.running,
         ttsEnabled: !!pythonStatuses.find(s => s.name === 'tts')?.running,
         yourttsEnabled: !!pythonStatuses.find(s => s.name === 'yourtts')?.running,

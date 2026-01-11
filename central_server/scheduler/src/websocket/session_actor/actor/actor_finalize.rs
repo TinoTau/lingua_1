@@ -251,7 +251,14 @@ impl SessionActor {
         let is_timeout_triggered = reason == "Timeout" || reason == "MaxDuration";
 
         // 创建翻译任务
-        let jobs = create_translation_jobs(
+        tracing::info!(
+            session_id = %self.session_id,
+            utterance_index = utterance_index,
+            src_lang = %session.src_lang,
+            tgt_lang = %session.tgt_lang,
+            "开始创建翻译任务"
+        );
+        let jobs = match create_translation_jobs(
             &self.state,
             &self.session_id,
             utterance_index,
@@ -277,7 +284,27 @@ impl SessionActor {
             is_pause_triggered,
             is_timeout_triggered,
         )
-        .await?;
+        .await {
+            Ok(jobs) => {
+                tracing::info!(
+                    session_id = %self.session_id,
+                    utterance_index = utterance_index,
+                    job_count = jobs.len(),
+                    "翻译任务创建成功，共 {} 个任务",
+                    jobs.len()
+                );
+                jobs
+            },
+            Err(e) => {
+                tracing::error!(
+                    session_id = %self.session_id,
+                    utterance_index = utterance_index,
+                    error = %e,
+                    "翻译任务创建失败"
+                );
+                return Err(e);
+            }
+        };
 
         // 派发 jobs
         for job in jobs {
@@ -300,8 +327,33 @@ impl SessionActor {
                 }
 
                 if let Some(job_assign_msg) = create_job_assign_message(&self.state, &job, None, None, None).await {
+                    info!(
+                        trace_id = %job.trace_id,
+                        job_id = %job.job_id,
+                        session_id = %self.session_id,
+                        node_id = %node_id,
+                        utterance_index = utterance_index,
+                        "准备发送 JobAssign 消息到节点"
+                    );
                     if crate::phase2::send_node_message_routed(&self.state, node_id, job_assign_msg).await {
-                        self.state.dispatcher.mark_job_dispatched(&job.job_id).await;
+                        info!(
+                            trace_id = %job.trace_id,
+                            job_id = %job.job_id,
+                            session_id = %self.session_id,
+                            node_id = %node_id,
+                            utterance_index = utterance_index,
+                            "JobAssign 消息发送成功，标记任务为已分发"
+                        );
+                        let marked = self.state.dispatcher.mark_job_dispatched(&job.job_id).await;
+                        info!(
+                            trace_id = %job.trace_id,
+                            job_id = %job.job_id,
+                            session_id = %self.session_id,
+                            node_id = %node_id,
+                            utterance_index = utterance_index,
+                            marked = marked,
+                            "任务已标记为已分发"
+                        );
                         send_ui_event(
                             &self.message_tx,
                             &job.trace_id,
@@ -316,9 +368,11 @@ impl SessionActor {
                         .await;
                     } else {
                         warn!(
+                            trace_id = %job.trace_id,
                             session_id = %self.session_id,
                             job_id = %job.job_id,
                             node_id = %node_id,
+                            utterance_index = utterance_index,
                             "Failed to send job to node"
                         );
                         // 发送失败，释放资源

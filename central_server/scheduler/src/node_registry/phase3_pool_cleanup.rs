@@ -57,6 +57,12 @@ impl NodeRegistry {
                     );
                 }
                 
+                // 【关键修复】同步 Pool 配置到 ManagementRegistry 和缓存
+                // 这样 PoolLanguageIndex 才能正确更新，任务分配时才能找到 Pool 配置
+                let cfg = self.phase3.read().await.clone();
+                self.sync_phase3_config_to_management(cfg.clone()).await;
+                self.update_phase3_config_cache(&cfg).await;
+                
                 // 重建 Pool 索引
                 info!("开始重建 Pool 索引（从 Redis 配置）");
                 self.rebuild_phase3_pool_index(phase2_runtime.as_ref().map(|rt| rt.as_ref())).await;
@@ -108,6 +114,12 @@ impl NodeRegistry {
                     );
                 }
                 
+                // 【关键修复】同步 Pool 配置到 ManagementRegistry 和缓存
+                // 这样 PoolLanguageIndex 才能正确更新，任务分配时才能找到 Pool 配置
+                let cfg = self.phase3.read().await.clone();
+                self.sync_phase3_config_to_management(cfg.clone()).await;
+                self.update_phase3_config_cache(&cfg).await;
+                
                 // 重建 Pool 索引
                 info!("开始重建 Pool 索引");
                 self.rebuild_phase3_pool_index(phase2_runtime.as_ref().map(|rt| rt.as_ref())).await;
@@ -148,6 +160,11 @@ impl NodeRegistry {
                                 redis_pools.len()
                             );
                         }
+                        
+                        // 【关键修复】同步 Pool 配置到 ManagementRegistry 和缓存
+                        let cfg = self.phase3.read().await.clone();
+                        self.sync_phase3_config_to_management(cfg.clone()).await;
+                        self.update_phase3_config_cache(&cfg).await;
                         
                         // 重建 Pool 索引
                         info!("开始重建 Pool 索引（从 Redis 配置，重试成功）");
@@ -191,6 +208,11 @@ impl NodeRegistry {
                 new_pools.len()
             );
         }
+        
+        // 【关键修复】同步 Pool 配置到 ManagementRegistry 和缓存
+        let cfg = self.phase3.read().await.clone();
+        self.sync_phase3_config_to_management(cfg.clone()).await;
+        self.update_phase3_config_cache(&cfg).await;
         
         // 重建 Pool 索引
         info!("开始重建 Pool 索引");
@@ -333,6 +355,11 @@ impl NodeRegistry {
                                             );
                                         }
                                     }
+                                    
+                                    // 【关键修复】同步 Pool 配置到 ManagementRegistry 和缓存
+                                    let cfg = registry.phase3.read().await.clone();
+                                    registry.sync_phase3_config_to_management(cfg.clone()).await;
+                                    registry.update_phase3_config_cache(&cfg).await;
                                     
                                     // 重建 Pool 索引（清空后重新分配所有在线节点）
                                     registry.rebuild_phase3_pool_index(phase2_rt.as_ref().map(|rt| rt.as_ref())).await;

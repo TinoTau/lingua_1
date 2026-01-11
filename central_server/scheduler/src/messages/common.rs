@@ -64,6 +64,13 @@ pub struct PipelineConfig {
     pub use_asr: bool,
     pub use_nmt: bool,
     pub use_tts: bool,
+    /// 是否使用语义修复服务（Semantic Repair Service）
+    #[serde(default = "default_false")]
+    pub use_semantic: bool,
+}
+
+fn default_false() -> bool {
+    false
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

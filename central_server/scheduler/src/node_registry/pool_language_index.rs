@@ -4,7 +4,7 @@
 
 use crate::core::config::Phase3PoolConfig;
 use std::collections::HashMap;
-use tracing::{debug, info};
+use tracing::{debug, info, warn};
 
 /// Pool 语言索引
 /// 用于 O(1) 查找支持特定语言对的 Pool
@@ -80,6 +80,11 @@ impl PoolLanguageIndex {
             .push(pool.pool_id);
     }
 
+    /// 检查索引是否为空（用于判断 Phase3 是否启用）
+    pub fn is_empty(&self) -> bool {
+        self.by_language_set.is_empty()
+    }
+
     /// 查找支持特定语言对的 Pool IDs
     /// 简化：直接按排序后的语言集合查找（与 Pool 命名规则一致）
     pub fn find_pools_for_lang_pair(&self, src_lang: &str, tgt_lang: &str) -> Vec<u16> {
@@ -118,7 +123,7 @@ impl PoolLanguageIndex {
         
         let elapsed = start.elapsed();
         if result.is_empty() {
-            debug!(
+            warn!(
                 src_lang = %src_lang,
                 tgt_lang = %tgt_lang,
                 set_key = %set_key,
@@ -162,6 +167,21 @@ impl PoolLanguageIndex {
     pub fn stats(&self) -> PoolLanguageIndexStats {
         PoolLanguageIndexStats {
             set_count: self.by_language_set.len(),
+        }
+    }
+
+    /// 获取语言集合的数量（用于日志和调试）
+    pub fn language_set_count(&self) -> usize {
+        self.by_language_set.len()
+    }
+
+    /// 获取所有语言集合的键列表（用于日志和调试）
+    /// 返回前 `limit` 个键，如果 `limit` 为 0 则返回所有键
+    pub fn language_set_keys(&self, limit: usize) -> Vec<String> {
+        if limit == 0 {
+            self.by_language_set.keys().cloned().collect()
+        } else {
+            self.by_language_set.keys().take(limit).cloned().collect()
         }
     }
 }

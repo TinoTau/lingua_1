@@ -251,6 +251,15 @@ impl NodeRegistry {
             }
         }
         
+        // 【关键修复】同步 Pool 配置到 ManagementRegistry 和 SnapshotManager
+        // 这样 PoolLanguageIndex 才能正确更新，调度时才能找到新创建的 Pool
+        let cfg = self.phase3.read().await.clone();
+        self.sync_phase3_config_to_management(cfg.clone()).await;
+        
+        // 【关键修复】更新 Phase3 配置缓存（任务分配时使用无锁读取）
+        // 如果不更新缓存，get_phase3_config_cached() 仍然会返回旧的空配置
+        self.update_phase3_config_cache(&cfg).await;
+        
         // 重建 Pool 索引（将新节点添加到新 Pool）
         // 注意：这里不需要调用 rebuild_phase3_pool_index，因为 phase3_set_node_pool 会处理索引更新
         

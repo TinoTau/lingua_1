@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use rand::seq::SliceRandom;
 use rand::{thread_rng, Rng};
-use tracing::{debug, warn};
+use tracing::warn;
 
 use super::selection_breakdown::Phase3TwoLevelDebug;
 use crate::core::config::Phase3Config;
@@ -38,24 +38,44 @@ pub(super) fn select_eligible_pools(
     // - 兼容模式：cfg.pools 为空 -> 继续用 hash 分桶（0..pool_count）
     // - 强隔离：cfg.pools 非空 -> pool_id 来自配置（按能力分配节点）
     // - 自动生成模式：根据语言对直接选择 Pool
+    tracing::info!(
+        src_lang = %src_lang,
+        tgt_lang = %tgt_lang,
+        routing_key = %routing_key,
+        phase3_enabled = cfg.enabled,
+        phase3_mode = %cfg.mode,
+        auto_generate_language_pools = cfg.auto_generate_language_pools,
+        using_capability_pools = using_capability_pools,
+        pool_count = cfg.pools.len(),
+        "Pool 选择: 开始选择候选 pools（pool_selection.rs）"
+    );
     if cfg.enabled && cfg.mode == "two_level" {
         if cfg.auto_generate_language_pools && using_capability_pools {
             // 自动生成模式：根据语言对直接选择 Pool
-            debug!(
+            tracing::info!(
                 src_lang = %src_lang,
                 tgt_lang = %tgt_lang,
-                "自动生成模式：根据语言对选择 Pool"
+                "Pool 选择: 自动生成模式，根据语言对选择 Pool（pool_selection.rs）"
             );
             if src_lang == "auto" {
                 // 未知源语言：使用混合池（多对一 Pool）
-                debug!(
+                tracing::info!(
                     src_lang = %src_lang,
                     tgt_lang = %tgt_lang,
-                    "源语言为 auto，使用混合池（多对一）支持目标语言 {}",
-                    tgt_lang
+                    "Pool 选择: 源语言为 auto，使用混合池（多对一）支持目标语言（pool_selection.rs）"
                 );
                 // 使用 PoolLanguageIndex（O(1) 查找）
+                let lang_index_lookup_start = std::time::Instant::now();
                 let eligible_pools: Vec<u16> = lang_index.find_pools_for_lang_set(&[tgt_lang.to_string()]);
+                let lang_index_lookup_elapsed = lang_index_lookup_start.elapsed();
+                tracing::info!(
+                    src_lang = %src_lang,
+                    tgt_lang = %tgt_lang,
+                    eligible_pool_count = eligible_pools.len(),
+                    eligible_pool_ids = ?eligible_pools,
+                    elapsed_ms = lang_index_lookup_elapsed.as_millis(),
+                    "Pool 选择: lang_index 查找完成（pool_selection.rs）"
+                );
                 
                 if eligible_pools.is_empty() {
                     warn!(
@@ -74,12 +94,11 @@ pub(super) fn select_eligible_pools(
                     return Err(dbg);
                 }
                 
-                debug!(
+                tracing::info!(
                     tgt_lang = %tgt_lang,
                     eligible_pool_count = eligible_pools.len(),
-                    "找到 {} 个支持目标语言 {} 的混合池",
-                    eligible_pools.len(),
-                    tgt_lang
+                    eligible_pool_ids = ?eligible_pools,
+                    "Pool 选择: 找到支持目标语言的混合池（pool_selection.rs）"
                 );
                 let all_pool_ids: Vec<u16> = cfg.pools.iter().map(|p| p.pool_id).collect();
                 let preferred = eligible_pools[0]; // 使用第一个匹配的混合池作为 preferred
@@ -87,7 +106,22 @@ pub(super) fn select_eligible_pools(
             } else {
                 // 已知源语言：直接按排序后的语言集合查找（与 Pool 命名规则一致）
                 // 使用 PoolLanguageIndex（O(1) 查找）
+                tracing::info!(
+                    src_lang = %src_lang,
+                    tgt_lang = %tgt_lang,
+                    "Pool 选择: 已知源语言，使用 lang_index 查找 Pool（pool_selection.rs）"
+                );
+                let lang_index_lookup_start = std::time::Instant::now();
                 let eligible_pools = lang_index.find_pools_for_lang_pair(src_lang, tgt_lang);
+                let lang_index_lookup_elapsed = lang_index_lookup_start.elapsed();
+                tracing::info!(
+                    src_lang = %src_lang,
+                    tgt_lang = %tgt_lang,
+                    eligible_pool_count = eligible_pools.len(),
+                    eligible_pool_ids = ?eligible_pools,
+                    elapsed_ms = lang_index_lookup_elapsed.as_millis(),
+                    "Pool 选择: lang_index 查找完成（pool_selection.rs）"
+                );
                 
                 if eligible_pools.is_empty() {
                     warn!(
@@ -108,15 +142,12 @@ pub(super) fn select_eligible_pools(
                     return Err(dbg);
                 }
                 
-                debug!(
+                tracing::info!(
                     src_lang = %src_lang,
                     tgt_lang = %tgt_lang,
                     eligible_pool_count = eligible_pools.len(),
                     eligible_pool_ids = ?eligible_pools,
-                    "找到 {} 个包含源语言 {} 和目标语言 {} 的 Pool",
-                    eligible_pools.len(),
-                    src_lang,
-                    tgt_lang
+                    "Pool 选择: 找到包含源语言和目标语言的 Pool（pool_selection.rs）"
                 );
                 let all_pool_ids: Vec<u16> = cfg.pools.iter().map(|p| p.pool_id).collect();
                 let preferred = eligible_pools[0]; // 使用第一个匹配的 Pool 作为 preferred

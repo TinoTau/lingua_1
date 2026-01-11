@@ -23,11 +23,13 @@ mod management_state;
 mod runtime_snapshot;
 mod snapshot_manager;
 mod lock_optimization;
+mod lockless;
 
 // 锁优化组件（调度路径改造时使用）
 pub use pool_language_index::PoolLanguageIndex;
 pub use management_state::ManagementRegistry;
 pub use snapshot_manager::SnapshotManager;
+pub use runtime_snapshot::RuntimeSnapshot;
 
 #[cfg(test)]
 mod auto_language_pool_test;
@@ -83,6 +85,8 @@ pub struct NodeRegistry {
     unavailable_services: Arc<RwLock<HashMap<String, HashMap<String, UnavailableServiceEntry>>>>,
     /// Phase 3：两级调度配置（pool_count/hash_seed 等）
     phase3: Arc<RwLock<crate::core::config::Phase3Config>>,
+    /// Phase 3 配置缓存（无锁读取，任务分配时使用）
+    phase3_cache: Arc<tokio::sync::RwLock<Option<Arc<crate::core::config::Phase3Config>>>>,
     /// Phase 3：pool -> node_id 集合（用于 pool 内选节点，避免全量遍历）
     phase3_pool_index: Arc<RwLock<HashMap<u16, HashSet<String>>>>,
     /// Phase 3：node_id -> pool_ids（用于快速移除/迁移节点的 pool 归属）

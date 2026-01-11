@@ -16,6 +16,9 @@ impl NodeRegistry {
         // 同步到 ManagementRegistry（如果已启用锁优化）
         self.sync_phase3_config_to_management(cfg.clone()).await;
         
+        // 更新配置缓存（任务分配时使用无锁读取）
+        self.update_phase3_config_cache(&cfg).await;
+        
         // 如果启用自动生成且 pools 为空，则自动生成
         // 注意：这里无法访问 phase2_runtime，会在后续的定期任务中从 Redis 读取
         if should_auto_generate {

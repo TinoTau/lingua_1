@@ -37,7 +37,20 @@ impl NodeRegistry {
         
         if let Some(rt) = phase2 {
             // 从 Redis 批量读取 Pool 成员（保持原子性，优化性能）
-            let cfg = self.phase3.read().await.clone();
+            tracing::info!(
+                pool_count = pools.len(),
+                pools = ?pools,
+                "预取 Pool 成员: 开始获取 Phase3 配置缓存（node_selection.rs）"
+            );
+            let cfg_start = std::time::Instant::now();
+            let cfg = self.get_phase3_config_cached().await;
+            let cfg_elapsed = cfg_start.elapsed();
+            tracing::info!(
+                pool_count = pools.len(),
+                cfg_pool_count = cfg.pools.len(),
+                elapsed_ms = cfg_elapsed.as_millis(),
+                "预取 Pool 成员: Phase3 配置缓存获取完成（node_selection.rs）"
+            );
             
             // 收集所有 pool_name
             let pool_names: Vec<(&str, u16)> = pools.iter().copied()
@@ -48,10 +61,30 @@ impl NodeRegistry {
                 })
                 .collect();
             
+            tracing::info!(
+                pool_count = pools.len(),
+                found_pool_configs = pool_names.len(),
+                pool_names = ?pool_names.iter().map(|(name, pid)| format!("{}:{}", pid, name)).collect::<Vec<_>>(),
+                "预取 Pool 成员: Pool 配置查找完成（node_selection.rs）"
+            );
+            
             if !pool_names.is_empty() {
                 // 批量读取（并行）
                 let pool_name_strs: Vec<&str> = pool_names.iter().map(|(name, _)| *name).collect();
+                tracing::info!(
+                    pool_count = pool_name_strs.len(),
+                    pool_names = ?pool_name_strs,
+                    "预取 Pool 成员: 开始从 Redis 批量读取成员（node_selection.rs）"
+                );
+                let redis_start = std::time::Instant::now();
                 let members_map = rt.get_pool_members_batch_from_redis(&pool_name_strs).await;
+                let redis_elapsed = redis_start.elapsed();
+                tracing::info!(
+                    pool_count = pool_name_strs.len(),
+                    result_count = members_map.len(),
+                    elapsed_ms = redis_elapsed.as_millis(),
+                    "预取 Pool 成员: Redis 批量读取完成（node_selection.rs）"
+                );
                 
                 // 将结果映射到 pool_id
                 for (pool_name, pid) in pool_names {
@@ -118,7 +151,7 @@ impl NodeRegistry {
         need_nmt: bool,
         need_tts: bool,
     ) -> (Option<String>, NoAvailableNodeBreakdown) {
-        let cfg = self.phase3.read().await.clone();
+        let cfg = self.get_phase3_config_cached().await;
         let mut breakdown = NoAvailableNodeBreakdown::default();
         let mut best_node_id: Option<String> = None;
 

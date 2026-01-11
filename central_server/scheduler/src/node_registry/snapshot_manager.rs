@@ -120,12 +120,28 @@ impl SnapshotManager {
 
     /// 更新语言索引快照
     pub async fn update_lang_index_snapshot(&self) {
+        let state_start = std::time::Instant::now();
         let state = self.management.read().await;
-        let mut snapshot = self.snapshot.write().await;
-        snapshot.update_lang_index(state.lang_index.clone());
+        let state_elapsed = state_start.elapsed();
+        let lang_index_size = state.lang_index.language_set_count();
+        let language_sets = state.lang_index.language_set_keys(10);
         
-        debug!(
+        let snapshot_start = std::time::Instant::now();
+        let mut snapshot = self.snapshot.write().await;
+        let old_version = snapshot.version;
+        let old_lang_index_size = snapshot.lang_index.language_set_count();
+        snapshot.update_lang_index(state.lang_index.clone());
+        let snapshot_elapsed = snapshot_start.elapsed();
+        drop(state); // 显式释放读锁
+        
+        info!(
             snapshot_version = snapshot.version,
+            old_version = old_version,
+            old_lang_index_size = old_lang_index_size,
+            new_lang_index_size = lang_index_size,
+            language_sets = ?language_sets,
+            state_lock_wait_ms = state_elapsed.as_millis(),
+            snapshot_lock_wait_ms = snapshot_elapsed.as_millis(),
             "语言索引快照更新完成"
         );
     }

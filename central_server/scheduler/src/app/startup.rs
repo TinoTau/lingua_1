@@ -10,7 +10,7 @@ use crate::model_not_available::start_worker;
 use crate::node_registry::NodeRegistry;
 use crate::phase2::Phase2Runtime;
 use std::time::Duration;
-use tracing::info;
+use tracing::{debug, info};
 
 pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
     info!("启动 Lingua 调度服务器...");
@@ -106,6 +106,61 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
     // Phase 2：将 runtime 注入 dispatcher（用于 request_id bind/lock + node reserved）
     dispatcher.set_phase2(phase2_runtime.clone());
 
+    // 初始化极简无锁调度服务（需要 Phase2 启用）
+    let minimal_scheduler = if let Some(ref rt) = phase2_runtime {
+        // 从 Phase2 配置创建 RedisHandle（使用相同的配置）
+        use crate::phase2::RedisHandle;
+        match RedisHandle::connect(&config.scheduler.phase2.redis).await {
+            Ok(redis) => {
+                match crate::services::MinimalSchedulerService::new(std::sync::Arc::new(redis)).await {
+                    Ok(scheduler) => {
+                        info!("极简无锁调度服务已初始化");
+                        Some(std::sync::Arc::new(scheduler))
+                    }
+                    Err(e) => {
+                        tracing::warn!(error = %e, "极简无锁调度服务初始化失败");
+                        None
+                    }
+                }
+            }
+            Err(e) => {
+                tracing::warn!(error = %e, "创建 RedisHandle 失败，无法初始化极简无锁调度服务");
+                None
+            }
+        }
+    } else {
+        None
+    };
+
+    // 如果极简调度服务已初始化，启动时检查是否是 Leader 并清理 pool 中的离线节点
+    if let Some(ref scheduler) = minimal_scheduler {
+        info!("已初始化极简调度服务，将在启动后执行 pool 清理检查");
+        let scheduler_clone = scheduler.clone();
+        let node_connections_clone = node_connections.clone();
+        tokio::spawn(async move {
+            // 延迟 2 秒后执行清理，给系统一些时间初始化
+            info!("等待 2 秒后执行 pool 清理检查");
+            tokio::time::sleep(std::time::Duration::from_secs(2)).await;
+            
+            info!("开始执行 pool 清理检查");
+            match scheduler_clone.check_and_cleanup_pools_if_leader(&node_connections_clone).await {
+                Ok(is_leader) => {
+                    if is_leader {
+                        info!("当前实例作为 Leader 已执行 pool 清理");
+                    } else {
+                        debug!("当前实例不是 Leader，其他实例正在清理 pool，已跳过");
+                    }
+                }
+                Err(e) => {
+                    tracing::warn!(
+                        error = %e,
+                        "Pool 清理检查失败"
+                    );
+                }
+            }
+        });
+    }
+
     // 初始化 Job 幂等键管理器
     let job_idempotency = crate::core::JobIdempotencyManager::new();
 
@@ -134,6 +189,7 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
         job_idempotency,
         job_result_deduplicator,
         phase2: phase2_runtime.clone(),
+        minimal_scheduler,
     };
 
     // Phase 2：启动后台任务（presence + owner 续约 + Streams inbox）
@@ -141,6 +197,19 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
         let rt_for_log = rt.clone();
         rt.clone().spawn_background_tasks(app_state.clone());
         info!(instance_id = %rt_for_log.instance_id, key_prefix = %rt_for_log.key_prefix(), "Phase2 已启用");
+        
+        // Phase 2：冷启动预加载（按照 NODE_JOB_FLOW_MERGED_TECH_SPEC_v1.0.md 规范）
+        // 启动时加载全体节点、全体 pool、全体 lang-index，避免启动后 100-300ms 的抖动
+        let rt_for_preload = rt.clone();
+        let app_state_for_preload = app_state.clone();
+        tokio::spawn(async move {
+            // 延迟 1 秒后执行预加载，给后台任务一些时间初始化
+            tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+            
+            if let Err(e) = rt_for_preload.cold_start_preload(&app_state_for_preload).await {
+                tracing::warn!(error = %e, "冷启动预加载失败，但继续运行");
+            }
+        });
     }
 
     // Phase 1：Job 超时/重派管理（含 best-effort cancel）

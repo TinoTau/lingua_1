@@ -83,6 +83,7 @@ impl JobDispatcher {
 
     /// Phase 2: 尝试获取锁并创建新 Job（带锁路径）
     /// 优化：节点选择在 Redis 锁外进行，减少锁持有时间
+    /// 根据 v3.1 设计，preferred_pool 应该在 Session 锁内决定，这里接受 preferred_pool 参数
     pub(crate) async fn create_job_with_phase2_lock(
         &self,
         request_id: &str,
@@ -107,6 +108,7 @@ impl JobDispatcher {
         tenant_id: Option<String>,
         routing_key: &str,
         exclude_node_id: Option<String>,
+        preferred_pool: Option<u16>, // Session 锁内决定的 preferred_pool
         _now_ms: i64,
         target_session_ids: Option<Vec<String>>,
         first_chunk_client_timestamp_ms: Option<i64>,
@@ -129,16 +131,53 @@ impl JobDispatcher {
         // 优化：节点选择在 Redis 锁外进行（避免在锁内进行耗时操作）
         // 创建新 job_id
         let job_id = format!("job-{}", Uuid::new_v4().to_string()[..8].to_uppercase());
+        tracing::info!(
+            trace_id = %trace_id,
+            request_id = %request_id,
+            session_id = %session_id,
+            job_id = %job_id,
+            "Phase2 路径: job_id 已创建，开始节点选择（锁外）"
+        );
 
         // 节点选择逻辑（在锁外执行，50-200ms）
+        let node_selection_start = std::time::Instant::now();
         let assigned_node_id = if let Some(node_id) = preferred_node_id {
+            tracing::info!(
+                trace_id = %trace_id,
+                request_id = %request_id,
+                session_id = %session_id,
+                preferred_node_id = %node_id,
+                "Phase2 路径: 使用 preferred_node_id 进行节点选择"
+            );
             if self.node_registry.is_node_available(&node_id).await {
+                tracing::info!(
+                    trace_id = %trace_id,
+                    request_id = %request_id,
+                    session_id = %session_id,
+                    node_id = %node_id,
+                    "Phase2 路径: preferred_node_id 节点可用"
+                );
                 Some(node_id)
             } else {
+                tracing::warn!(
+                    trace_id = %trace_id,
+                    request_id = %request_id,
+                    session_id = %session_id,
+                    node_id = %node_id,
+                    "Phase2 路径: preferred_node_id 节点不可用，fallback 到模块展开选择"
+                );
                 None
             }
         } else {
             let excluded = exclude_node_id.as_deref();
+            tracing::info!(
+                trace_id = %trace_id,
+                request_id = %request_id,
+                session_id = %session_id,
+                preferred_pool = ?preferred_pool,
+                exclude_node_id = ?excluded,
+                "Phase2 路径: 使用模块展开算法进行节点选择"
+            );
             let first = self
                 .select_node_with_module_expansion_with_breakdown(
                     routing_key,
@@ -148,37 +187,66 @@ impl JobDispatcher {
                     &pipeline,
                     true,
                     excluded,
+                    preferred_pool, // 传递 Session 锁内决定的 preferred_pool
                 )
                 .await;
+            let first_selection_elapsed = node_selection_start.elapsed();
+            tracing::info!(
+                trace_id = %trace_id,
+                request_id = %request_id,
+                session_id = %session_id,
+                selector = %first.selector,
+                node_id = ?first.node_id,
+                elapsed_ms = first_selection_elapsed.as_millis(),
+                "Phase2 路径: 第一次节点选择完成"
+            );
             if first.selector == "phase3" {
                 if let Some(ref dbg) = first.phase3_debug {
+                    tracing::info!(
+                        trace_id = %trace_id,
+                        request_id = %request_id,
+                        session_id = %session_id,
+                        pool_count = dbg.pool_count,
+                        preferred_pool = dbg.preferred_pool,
+                        selected_pool = ?dbg.selected_pool,
+                        fallback_used = dbg.fallback_used,
+                        attempts = ?dbg.attempts,
+                        "Phase2 路径: Phase3 两级调度详情"
+                    );
                     if dbg.fallback_used || dbg.selected_pool.is_none() {
                         tracing::warn!(
                             trace_id = %trace_id,
                             request_id = %request_id,
+                            session_id = %session_id,
                             pool_count = dbg.pool_count,
                             preferred_pool = dbg.preferred_pool,
                             selected_pool = ?dbg.selected_pool,
                             fallback_used = dbg.fallback_used,
                             attempts = ?dbg.attempts,
-                            "Phase3 two-level scheduling used fallback or failed"
-                        );
-                    } else {
-                        tracing::debug!(
-                            trace_id = %trace_id,
-                            request_id = %request_id,
-                            pool_count = dbg.pool_count,
-                            preferred_pool = dbg.preferred_pool,
-                            selected_pool = ?dbg.selected_pool,
-                            attempts = ?dbg.attempts,
-                            "Phase3 two-level scheduling decision"
+                            "Phase2 路径: Phase3 two-level scheduling used fallback or failed"
                         );
                     }
                 }
             }
             if first.node_id.is_some() {
+                tracing::info!(
+                    trace_id = %trace_id,
+                    request_id = %request_id,
+                    session_id = %session_id,
+                    selected_node_id = %first.node_id.as_ref().unwrap(),
+                    "Phase2 路径: 节点选择成功（第一次尝试）"
+                );
                 first.node_id
             } else {
+                tracing::warn!(
+                    trace_id = %trace_id,
+                    request_id = %request_id,
+                    session_id = %session_id,
+                    breakdown_reason = %first.breakdown.best_reason_label(),
+                    "Phase2 路径: 第一次节点选择失败，开始第二次尝试（不排除节点）"
+                );
+                // 第二次尝试：不避开上一节点，但仍使用 preferred_pool（如果存在）
+                let second_start = std::time::Instant::now();
                 let second = self
                     .select_node_with_module_expansion_with_breakdown(
                         routing_key,
@@ -188,8 +256,19 @@ impl JobDispatcher {
                         &pipeline,
                         true,
                         None,
+                        preferred_pool, // 传递 Session 锁内决定的 preferred_pool
                     )
                     .await;
+                let second_elapsed = second_start.elapsed();
+                tracing::info!(
+                    trace_id = %trace_id,
+                    request_id = %request_id,
+                    session_id = %session_id,
+                    selector = %second.selector,
+                    node_id = ?second.node_id,
+                    elapsed_ms = second_elapsed.as_millis(),
+                    "Phase2 路径: 第二次节点选择完成"
+                );
                 if second.selector == "phase3" {
                     if let Some(ref dbg) = second.phase3_debug {
                         tracing::warn!(
@@ -207,21 +286,173 @@ impl JobDispatcher {
                 second.node_id
             }
         };
+        
+        let node_selection_elapsed = node_selection_start.elapsed();
+        tracing::info!(
+            trace_id = %trace_id,
+            request_id = %request_id,
+            session_id = %session_id,
+            assigned_node_id = ?assigned_node_id,
+            elapsed_ms = node_selection_elapsed.as_millis(),
+            "Phase2 路径: 节点选择完成（锁外）"
+        );
+
+        // 【修复1】优化：根据调度模式来决定是否使用语义修复服务
+        // Phase3 模式：所有节点都支持语义修复服务（因为 Pool 是基于语义修复支持建立的），应该总是启用
+        // 非 Phase3 模式：根据节点端能力决定
+        // 使用 phase3_config.enabled 来判断 Phase3 是否启用，避免获取快照（减少锁竞争）
+        tracing::info!(
+            trace_id = %trace_id,
+            request_id = %request_id,
+            session_id = %session_id,
+            assigned_node_id = ?assigned_node_id,
+            "Phase2 路径: 节点选择完成，开始决定语义修复服务"
+        );
+        let mut final_pipeline = pipeline.clone();
+        if let Some(ref node_id) = assigned_node_id {
+            // 【修复1】使用 phase3_config 来判断 Phase3 是否启用，而不是获取快照
+            let phase3_config = self.node_registry.get_phase3_config_cached().await;
+            let phase3_enabled = phase3_config.enabled && phase3_config.mode == "two_level";
+            tracing::info!(
+                trace_id = %trace_id,
+                request_id = %request_id,
+                session_id = %session_id,
+                node_id = %node_id,
+                phase3_enabled = phase3_enabled,
+                "Phase2 路径: 使用 phase3_config 判断 Phase3 模式，开始决定语义修复服务"
+            );
+            
+            if phase3_enabled {
+                // Phase3 模式：所有节点都支持语义修复服务，应该总是启用
+                final_pipeline.use_semantic = true;
+                tracing::debug!(
+                    trace_id = %trace_id,
+                    node_id = %node_id,
+                    src_lang = %src_lang,
+                    tgt_lang = %tgt_lang,
+                    "Phase3 模式：启用语义修复服务（所有 Phase3 节点都支持）（Phase2）"
+                );
+            } else {
+                // 非 Phase3 模式：根据节点端能力决定（需要获取快照以检查节点能力）
+                // 注意：这里仍然需要获取快照来检查节点的语义修复服务支持情况
+                tracing::info!(
+                    trace_id = %trace_id,
+                    request_id = %request_id,
+                    session_id = %session_id,
+                    node_id = %node_id,
+                    "Phase2 路径: 非 Phase3 模式，获取 snapshot 检查节点能力"
+                );
+                let snapshot_start = std::time::Instant::now();
+                let snapshot_manager = self.node_registry.get_or_init_snapshot_manager().await;
+                let snapshot = snapshot_manager.get_snapshot().await;
+                let snapshot_elapsed = snapshot_start.elapsed();
+                tracing::info!(
+                    trace_id = %trace_id,
+                    request_id = %request_id,
+                    session_id = %session_id,
+                    node_id = %node_id,
+                    elapsed_ms = snapshot_elapsed.as_millis(),
+                    "Phase2 路径: snapshot 获取完成，检查节点语义修复服务支持"
+                );
+                
+                if let Some(node) = snapshot.nodes.get(node_id) {
+                    // 检查节点是否支持语义修复服务，且支持当前语言对
+                    let semantic_supported = !node.capabilities.semantic_languages.is_empty();
+                    if semantic_supported {
+                        // 检查是否支持当前语言对（src_lang 和 tgt_lang）
+                        let semantic_langs_set: std::collections::HashSet<&str> = 
+                            node.capabilities.semantic_languages.iter().map(|s| s.as_str()).collect();
+                        if semantic_langs_set.contains(src_lang) && semantic_langs_set.contains(tgt_lang) {
+                            final_pipeline.use_semantic = true;
+                            tracing::debug!(
+                                trace_id = %trace_id,
+                                node_id = %node_id,
+                                src_lang = %src_lang,
+                                tgt_lang = %tgt_lang,
+                                "非 Phase3 模式：根据节点端能力，启用语义修复服务（Phase2）"
+                            );
+                        } else {
+                            final_pipeline.use_semantic = false;
+                            tracing::debug!(
+                                trace_id = %trace_id,
+                                node_id = %node_id,
+                                src_lang = %src_lang,
+                                tgt_lang = %tgt_lang,
+                                "非 Phase3 模式：节点不支持当前语言对的语义修复服务，禁用语义修复服务（Phase2）"
+                            );
+                        }
+                    } else {
+                        final_pipeline.use_semantic = false;
+                        tracing::debug!(
+                            trace_id = %trace_id,
+                            node_id = %node_id,
+                            "非 Phase3 模式：节点不支持语义修复服务，禁用语义修复服务（Phase2）"
+                        );
+                    }
+                } else {
+                    // 节点不在快照中，保守处理：不使用语义修复服务
+                    final_pipeline.use_semantic = false;
+                }
+            }
+        } else {
+            // 没有选中节点，保守处理：不使用语义修复服务
+            final_pipeline.use_semantic = false;
+            tracing::info!(
+                trace_id = %trace_id,
+                request_id = %request_id,
+                session_id = %session_id,
+                "Phase2 路径: 未选择节点，禁用语义修复服务"
+            );
+        }
+        
+        tracing::info!(
+            trace_id = %trace_id,
+            request_id = %request_id,
+            session_id = %session_id,
+            assigned_node_id = ?assigned_node_id,
+            use_semantic = final_pipeline.use_semantic,
+            "Phase2 路径: 语义修复服务决定完成"
+        );
 
         // 优化：节点选择已完成（锁外），现在获取 Redis 锁进行快速操作（30-150ms）
         // 加锁路径：避免同 request_id 并发创建/占用
+        tracing::info!(
+            trace_id = %trace_id,
+            request_id = %request_id,
+            session_id = %session_id,
+            job_id = %job_id,
+            assigned_node_id = ?assigned_node_id,
+            "Phase2 路径: 节点选择完成，开始获取 Redis request 锁"
+        );
         let lock_owner = format!("{}:{}", rt.instance_id, Uuid::new_v4().to_string());
         let deadline = tokio::time::Instant::now() + std::time::Duration::from_millis(1000);
         let mut locked = false;
+        let lock_acquire_start = std::time::Instant::now();
         while tokio::time::Instant::now() < deadline {
             if rt.acquire_request_lock(request_id, &lock_owner, 1500).await {
                 locked = true;
+                let lock_acquire_elapsed = lock_acquire_start.elapsed();
+                tracing::info!(
+                    trace_id = %trace_id,
+                    request_id = %request_id,
+                    session_id = %session_id,
+                    elapsed_ms = lock_acquire_elapsed.as_millis(),
+                    "Phase2 路径: Redis request 锁获取成功"
+                );
                 break;
             }
             tokio::time::sleep(std::time::Duration::from_millis(50)).await;
         }
 
         if !locked {
+            let lock_acquire_elapsed = lock_acquire_start.elapsed();
+            tracing::warn!(
+                trace_id = %trace_id,
+                request_id = %request_id,
+                session_id = %session_id,
+                elapsed_ms = lock_acquire_elapsed.as_millis(),
+                "Phase2 路径: Redis request 锁获取超时，返回 None"
+            );
             return None;
         }
 
@@ -247,7 +478,7 @@ impl JobDispatcher {
                 tgt_lang: tgt_lang.to_string(),
                 dialect: dialect.clone(),
                 features: features.clone(),
-                pipeline: pipeline.clone(),
+                pipeline: final_pipeline.clone(),
                 audio_data: audio_data.clone(),
                 audio_format: audio_format.to_string(),
                 sample_rate,
@@ -276,11 +507,30 @@ impl JobDispatcher {
         // 优化：节点选择已完成（锁外），现在进行快速 Redis 操作（30-150ms）
         // Phase 2：全局并发占用（Redis reserve，按照设计文档实现）
         if let Some(ref node_id) = assigned_node_id {
+            tracing::info!(
+                trace_id = %trace_id,
+                request_id = %request_id,
+                session_id = %session_id,
+                job_id = %job_id,
+                node_id = %node_id,
+                "Phase2 路径: 开始预留节点槽位（Redis reserve）"
+            );
             let ttl_s = self.reserved_ttl_seconds.max(1);
             let attempt_id = 1; // 首次创建，attempt_id=1
+            let reserve_start = std::time::Instant::now();
             let ok = rt
                 .reserve_node_slot(node_id, &job_id, attempt_id, ttl_s)
                 .await;
+            let reserve_elapsed = reserve_start.elapsed();
+            tracing::info!(
+                trace_id = %trace_id,
+                request_id = %request_id,
+                session_id = %session_id,
+                job_id = %job_id,
+                node_id = %node_id,
+                elapsed_ms = reserve_elapsed.as_millis(),
+                "Phase2 路径: 节点槽位预留完成"
+            );
             let ok = match ok {
                 Ok(true) => true,
                 Ok(false) => false,
@@ -339,7 +589,7 @@ impl JobDispatcher {
             tgt_lang: tgt_lang.to_string(),
             dialect,
             features,
-            pipeline,
+            pipeline: final_pipeline,
             audio_data,
             audio_format,
             sample_rate,
@@ -363,7 +613,24 @@ impl JobDispatcher {
         };
 
         // 存储 Job（快速操作）
-        self.jobs.write().await.insert(job_id, job.clone());
+        tracing::info!(
+            trace_id = %job.trace_id,
+            request_id = %request_id,
+            session_id = %session_id,
+            job_id = %job_id,
+            assigned_node_id = ?job.assigned_node_id,
+            "Phase2 路径: 开始存储 Job 对象"
+        );
+        self.jobs.write().await.insert(job_id.clone(), job.clone());
+        tracing::info!(
+            trace_id = %job.trace_id,
+            request_id = %request_id,
+            session_id = %session_id,
+            job_id = %job_id,
+            assigned_node_id = ?job.assigned_node_id,
+            status = ?job.status,
+            "Phase2 路径: Job 对象存储完成，任务创建成功"
+        );
 
         Some(job)
     }

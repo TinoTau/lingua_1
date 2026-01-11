@@ -1,5 +1,6 @@
 use crate::core::AppState;
 use crate::core::dispatcher::{Job, JobStatus};
+use crate::services::minimal_scheduler::CompleteTaskRequest;
 use tracing::warn;
 
 /// 检查是否应该处理 Job（基于 Job 状态和节点匹配）
@@ -59,29 +60,34 @@ pub(crate) async fn check_should_process_job(
     (should_process_job, job)
 }
 
-/// 处理 Job 相关操作（释放 slot、更新状态、FSM）
+/// 处理 Job 相关操作（释放 slot、更新状态）
+/// 使用极简无锁调度服务
 pub(crate) async fn process_job_operations(
     state: &AppState,
     job_id: &str,
     node_id: &str,
-    attempt_id: u32,
+    _attempt_id: u32,
     success: bool,
 ) {
-    // Phase 2: Release Redis reservation (idempotent) 并减少running计数
-    if let Some(rt) = state.phase2.as_ref() {
-        rt.release_node_slot(node_id, job_id, attempt_id).await;
-        // 任务完成：running -= 1
-        let _ = rt.dec_node_running(node_id).await;
+    // 使用新的极简无锁调度服务
+    if let Some(scheduler) = state.minimal_scheduler.as_ref() {
+        let status = if success { "finished" } else { "failed" };
+        
+        if let Err(e) = scheduler.complete_task(CompleteTaskRequest {
+            job_id: job_id.to_string(),
+            node_id: node_id.to_string(),
+            status: status.to_string(),
+        }).await {
+            warn!(
+                job_id = %job_id,
+                node_id = %node_id,
+                error = %e,
+                "任务完成失败（极简无锁调度服务）"
+            );
+        }
     }
 
-    // Phase 2: Job FSM -> FINISHED
-    if let Some(rt) = state.phase2.as_ref() {
-        let _ = rt.job_fsm_to_finished(job_id, attempt_id, success).await;
-        // Mark RELEASED after release (follow FSM: FINISHED -> RELEASED)
-        let _ = rt.job_fsm_to_released(job_id).await;
-    }
-
-    // Update job status (only when node_id == assigned_node_id)
+    // Update job status (本地状态，用于其他模块查询)
     if success {
         state
             .dispatcher

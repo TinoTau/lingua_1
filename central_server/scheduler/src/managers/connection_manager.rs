@@ -32,13 +32,34 @@ impl SessionConnectionManager {
     pub async fn send(&self, session_id: &str, message: Message) -> bool {
         let connections = self.connections.read().await;
         if let Some(sender) = connections.get(session_id) {
-            if let Err(e) = sender.send(message) {
-                error!("发送消息到会话 {} 失败: {}", session_id, e);
-                return false;
+            // 注意：UnboundedSender::send 只在 receiver 已关闭时失败
+            // 但即使返回 Ok，也不保证 WebSocket 真的发送成功
+            // WebSocket 发送失败会在 send_task 中检测，并通过连接清理机制处理
+            match sender.send(message) {
+                Ok(()) => {
+                    // Channel send 成功，但实际 WebSocket 发送可能在 send_task 中失败
+                    // 这种情况下，send_task 会触发连接清理
+                    true
+                }
+                Err(e) => {
+                    error!(
+                        session_id = %session_id,
+                        error = %e,
+                        "发送消息到会话失败（channel receiver 已关闭）"
+                    );
+                    // Channel receiver 已关闭，说明连接已断开
+                    // 触发连接清理（延迟清理，避免在持有锁时清理）
+                    drop(connections);
+                    // 在锁外执行清理，避免死锁
+                    self.unregister(session_id).await;
+                    false
+                }
             }
-            true
         } else {
-            warn!("会话 {} 的连接不存在", session_id);
+            warn!(
+                session_id = %session_id,
+                "会话连接不存在（可能已断开或未注册）"
+            );
             false
         }
     }

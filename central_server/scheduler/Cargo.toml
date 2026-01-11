@@ -29,7 +29,7 @@ anyhow = "1"
 thiserror = "1"
 
 # UUID 生成
-uuid = { version = "1.0", features = ["v4", "serde"] }
+uuid = { version = "1.0", features = ["v4", "v5", "serde"] }
 
 # 时间处理
 chrono = { version = "0.4", features = ["serde"] }

@@ -117,15 +117,23 @@
     }
 
 
-    /// 节点容量Hash Key（设计文档：sched:node:{node_id}:cap）
+    /// 节点容量Hash Key
+    /// 当前实现: lingua:v1:nodes:cap:{node:{node_id}}
+    /// 文档规范（NODE_JOB_FLOW_MERGED_TECH_SPEC_v1.0.md）: scheduler:node:runtime:{node_id}
     /// 存储: max, running, reserved
+    /// 注意: 文档中的 node:runtime 对应 current_jobs/max_jobs/health_score
+    /// 当前实现拆分为 cap (max/running/reserved) 和 meta (health/其他元数据)
     fn node_cap_key(&self, node_id: &str) -> String {
         // hash tag: {node:<id>}
         format!("{}:nodes:cap:{{node:{}}}", self.v1_prefix(), node_id)
     }
 
-    /// 节点元数据Hash Key（设计文档：sched:node:{node_id}:meta）
+    /// 节点元数据Hash Key
+    /// 当前实现: lingua:v1:nodes:meta:{node:{node_id}}
+    /// 文档规范（NODE_JOB_FLOW_MERGED_TECH_SPEC_v1.0.md）: scheduler:node:info:{node_id}
     /// 存储: health, semantic_langs, nmt_pairs, tts_langs, max_concurrent_jobs, last_heartbeat_ms
+    /// 注意: 文档中的 node:info 包含 online/cap/cpu/gpu/mem/last_heartbeat_ts/version
+    /// 当前实现主要在 meta 中存储 health，其他信息在 snapshot 中
     fn node_meta_key(&self, node_id: &str) -> String {
         // hash tag: {node:<id>}
         format!("{}:nodes:meta:{{node:{}}}", self.v1_prefix(), node_id)

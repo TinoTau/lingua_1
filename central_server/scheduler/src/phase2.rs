@@ -74,7 +74,7 @@ pub struct Phase2Runtime {
 }
 
 #[derive(Clone)]
-struct RedisHandle {
+pub struct RedisHandle {
     inner: Arc<Mutex<RedisConn>>,
 }
 
@@ -123,6 +123,9 @@ include!("phase2/runtime_routing_node_capacity.rs");
 include!("phase2/runtime_routing_node_capabilities.rs");
 include!("phase2/runtime_routing_pool_config.rs");
 include!("phase2/runtime_routing_pool_members.rs");
+include!("phase2/runtime_routing_session_state.rs");
+include!("phase2/runtime_routing_lang_index.rs");
+include!("phase2/runtime_cold_start.rs");
 include!("phase2/runtime_job_fsm.rs");
 include!("phase2/runtime_background.rs");
 include!("phase2/runtime_snapshot.rs");
