@@ -1,24 +1,39 @@
 impl Phase2Runtime {
-    async fn ensure_group(&self, stream: &str) {
+    async fn ensure_group(&self, stream: &str) -> bool {
         let mut cmd = redis::cmd("XGROUP");
         cmd.arg("CREATE")
             .arg(stream)
             .arg(&self.cfg.stream_group)
             .arg("$")
             .arg("MKSTREAM");
-        // BUSYGROUP 直接忽略
+        // BUSYGROUP 直接忽略（表示 group 已存在，这是正常的）
         let r: redis::RedisResult<()> = self.redis.query(cmd).await;
-        if let Err(e) = r {
-            let s = e.to_string();
-            if !s.contains("BUSYGROUP") {
-                warn!(error = %s, stream = %stream, "Phase2 XGROUP CREATE 失败");
+        match r {
+            Ok(()) => {
+                debug!(stream = %stream, group = %self.cfg.stream_group, "Phase2 consumer group 创建成功");
+                true
+            }
+            Err(e) => {
+                let s = e.to_string();
+                if s.contains("BUSYGROUP") {
+                    // BUSYGROUP 表示 group 已存在，这是正常的
+                    debug!(stream = %stream, group = %self.cfg.stream_group, "Phase2 consumer group 已存在");
+                    true
+                } else {
+                    warn!(error = %s, stream = %stream, group = %self.cfg.stream_group, "Phase2 XGROUP CREATE 失败");
+                    false
+                }
             }
         }
     }
 
     async fn run_inbox_worker(&self, state: AppState) {
         let stream = self.instance_inbox_stream_key(&self.instance_id);
-        self.ensure_group(&stream).await;
+        // 确保 consumer group 创建成功
+        if !self.ensure_group(&stream).await {
+            error!(instance_id = %self.instance_id, stream = %stream, group = %self.cfg.stream_group, "Phase2 consumer group 创建失败，worker 将退出");
+            return;
+        }
         info!(instance_id = %self.instance_id, stream = %stream, group = %self.cfg.stream_group, "Phase2 Streams inbox worker 已启动");
 
         // 先做一次 best-effort reclaim（为了覆盖：同组其他 consumer 死亡后遗留 pending）
@@ -57,8 +72,22 @@ impl Phase2Runtime {
                     }
                 }
                 Err(e) => {
-                    warn!(error = %e, "Phase2 XREADGROUP 失败，稍后重试");
-                    tokio::time::sleep(std::time::Duration::from_millis(300)).await;
+                    let error_str = e.to_string();
+                    // 如果是因为 NOGROUP 错误（Stream 或 consumer group 不存在），尝试重新创建
+                    if error_str.contains("NOGROUP") {
+                        warn!(error = %e, stream = %stream, group = %self.cfg.stream_group, "Phase2 XREADGROUP 失败（NOGROUP），尝试重新创建 consumer group");
+                        // 尝试重新创建 consumer group
+                        if self.ensure_group(&stream).await {
+                            info!(stream = %stream, group = %self.cfg.stream_group, "Phase2 consumer group 重新创建成功");
+                        } else {
+                            warn!(stream = %stream, group = %self.cfg.stream_group, "Phase2 consumer group 重新创建失败，将继续重试");
+                        }
+                        // 等待一小段时间后再重试
+                        tokio::time::sleep(std::time::Duration::from_millis(500)).await;
+                    } else {
+                        warn!(error = %e, "Phase2 XREADGROUP 失败，稍后重试");
+                        tokio::time::sleep(std::time::Duration::from_millis(300)).await;
+                    }
                 }
             }
         }

@@ -73,6 +73,7 @@ fn create_test_app_state() -> AppState {
         job_idempotency: lingua_scheduler::core::JobIdempotencyManager::default(),
         job_result_deduplicator: lingua_scheduler::core::JobResultDeduplicator::new(),
         phase2: None,
+        minimal_scheduler: None,
     }
 }
 

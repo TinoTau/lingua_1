@@ -6,6 +6,11 @@ use uuid::Uuid;
 mod job_creation_phase2;
 mod job_creation_phase1;
 mod job_creation_node_selection;
+mod job_builder;
+mod phase2_idempotency;
+mod phase2_node_selection;
+mod phase2_semantic_service;
+pub mod phase2_redis_lock;
 
 impl JobDispatcher {
     /// 【已废弃】旧任务创建实现（使用锁和本地状态）

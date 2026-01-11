@@ -89,6 +89,7 @@
         let room_manager = RoomManager::new();
 
         let state = AppState {
+            minimal_scheduler: None,
             session_manager,
             dispatcher,
             node_registry: node_registry.clone(),

@@ -7,7 +7,10 @@ use tokio::sync::RwLock;
 #[derive(Clone)]
 pub struct JobDispatcher {
     pub(crate) node_registry: Arc<NodeRegistry>,
+    #[cfg(not(test))]
     pub(crate) jobs: Arc<RwLock<std::collections::HashMap<String, crate::core::dispatcher::Job>>>,
+    #[cfg(test)]
+    pub jobs: Arc<RwLock<std::collections::HashMap<String, crate::core::dispatcher::Job>>>,
     /// request_id -> job_id（带 lease 过期时间）
     pub(crate) request_bindings: Arc<RwLock<std::collections::HashMap<String, (String, i64)>>>,
     pub(crate) lease_seconds: u64,
@@ -18,7 +21,10 @@ pub struct JobDispatcher {
     /// Session 运行时管理器（每个 session 一把锁）
     pub(crate) session_manager: Arc<SessionRuntimeManager>,
     /// Phase 2：Redis 运行时（request_id bind/lock + node reserved）
+    #[cfg(not(test))]
     pub(crate) phase2: Option<Arc<crate::phase2::Phase2Runtime>>,
+    #[cfg(test)]
+    pub phase2: Option<Arc<crate::phase2::Phase2Runtime>>,
 }
 
 impl JobDispatcher {

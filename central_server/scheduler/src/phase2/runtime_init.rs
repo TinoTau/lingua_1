@@ -21,9 +21,11 @@
 
         // 关键：在真正对外提供路由/投递之前，先确保 inbox stream 的 consumer group 已创建。
         // 否则在 worker 创建 group（XGROUP CREATE $）之前，如果其他实例先 XADD 了消息，
-        // 会导致这些“早到消息”被 group 起点跳过，从而出现跨实例链路偶发丢投递（非常难排查）。
+        // 会导致这些"早到消息"被 group 起点跳过，从而出现跨实例链路偶发丢投递（非常难排查）。
         let inbox = rt.instance_inbox_stream_key(&rt.instance_id);
-        rt.ensure_group(&inbox).await;
+        if !rt.ensure_group(&inbox).await {
+            warn!(instance_id = %rt.instance_id, stream = %inbox, "Phase2 consumer group 初始化失败，将在 worker 启动时重试");
+        }
 
         Ok(Some(rt))
     }

@@ -189,22 +189,33 @@ impl MinimalSchedulerService {
             "任务调度"
         );
 
-        let result: redis::Value = self.eval_script(
-            &self.scripts.dispatch_task,
-            &[],
-            &[
-                &req.session_id,
-                &req.src_lang,
-                &req.tgt_lang,
-                &req.payload_json,
-            ],
-        )
-        .await?;
+        // 直接执行 Lua 脚本，不进行类型转换，以便正确处理错误格式
+        let mut cmd = redis::cmd("EVAL");
+        cmd.arg(&self.scripts.dispatch_task).arg(0);
+        cmd.arg(&req.session_id);
+        cmd.arg(&req.src_lang);
+        cmd.arg(&req.tgt_lang);
+        cmd.arg(&req.payload_json);
+        
+        // 执行 Lua 脚本，不添加额外的上下文，以便错误消息直接包含 Lua 脚本返回的错误代码
+        let result: redis::Value = self.redis.query(cmd).await
+            .map_err(|e| anyhow::anyhow!("Redis 查询失败: {}", e))?;
 
         // 解析结果：可能是 [node_id, job_id] 或 {err, "ERROR_MESSAGE"}
         match result {
             redis::Value::Bulk(items) => {
                 if items.len() >= 2 {
+                    // 先检查是否是错误格式：{err, "ERROR_MESSAGE"}
+                    // 注意：Lua 脚本返回 {err = "NO_POOL_FOR_LANG_PAIR"} 会被 Redis 转换为 ["err", "NO_POOL_FOR_LANG_PAIR"]
+                    if let Ok(err_type) = redis::from_redis_value::<String>(&items[0]) {
+                        if err_type == "err" {
+                            if let Ok(err_msg) = redis::from_redis_value::<String>(&items[1]) {
+                                // 直接返回错误消息，确保包含原始错误代码（如 NO_POOL_FOR_LANG_PAIR）
+                                return Err(anyhow::anyhow!("{}", err_msg));
+                            }
+                        }
+                    }
+                    
                     // 成功格式：{node_id, job_id}
                     let node_id = redis::from_redis_value::<String>(&items[0])?;
                     let job_id = redis::from_redis_value::<String>(&items[1])?;
@@ -217,24 +228,14 @@ impl MinimalSchedulerService {
                     );
                     
                     Ok(DispatchResponse { node_id, job_id })
-                } else if items.len() >= 2 {
-                    // 错误格式：{err, "ERROR_MESSAGE"}
-                    if let Ok(err_type) = redis::from_redis_value::<String>(&items[0]) {
-                        if err_type == "err" {
-                            if let Ok(err_msg) = redis::from_redis_value::<String>(&items[1]) {
-                                return Err(anyhow::anyhow!("执行 Lua 脚本失败: {}", err_msg));
-                            }
-                        }
-                    }
-                    Err(anyhow::anyhow!("执行 Lua 脚本失败: 未知错误格式"))
                 } else {
-                    Err(anyhow::anyhow!("执行 Lua 脚本失败: 返回值格式错误"))
+                    Err(anyhow::anyhow!("执行 Lua 脚本失败: 返回值格式错误（长度不足）"))
                 }
             }
             _ => {
                 // 尝试解析为字符串错误
                 if let Ok(err_msg) = redis::from_redis_value::<String>(&result) {
-                    Err(anyhow::anyhow!("执行 Lua 脚本失败: {}", err_msg))
+                    Err(anyhow::anyhow!("{}", err_msg))
                 } else {
                     Err(anyhow::anyhow!("执行 Lua 脚本失败: 未知错误"))
                 }
