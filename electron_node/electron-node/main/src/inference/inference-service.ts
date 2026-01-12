@@ -45,6 +45,9 @@ export interface JobResult {
   semantic_repair_applied?: boolean;  // 是否应用了语义修复
   semantic_repair_confidence?: number;  // 语义修复置信度
   text_asr_repaired?: string;  // 语义修复后的 ASR 文本（如果应用了修复）
+  /** 去重相关字段 */
+  should_send?: boolean;  // 是否应该发送（去重检查结果）
+  dedup_reason?: string;  // 去重原因（如果 should_send=false）
 }
 
 export interface PartialResultCallback {
@@ -214,6 +217,13 @@ export class InferenceService {
    */
   getServiceEfficiency(serviceId: string): number | null {
     return this.pipelineOrchestrator.getTaskRouter()?.getServiceEfficiency(serviceId) || null;
+  }
+
+  /**
+   * 获取 DedupStage 实例（用于在成功发送后记录job_id）
+   */
+  getDedupStage() {
+    return this.pipelineOrchestrator.getDedupStage();
   }
 
   /**

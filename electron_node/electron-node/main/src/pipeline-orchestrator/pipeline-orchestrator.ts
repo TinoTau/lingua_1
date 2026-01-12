@@ -26,6 +26,9 @@ import { AggregationStage, AggregationStageResult } from '../agent/postprocess/a
 import { detectInternalRepetition } from '../aggregator/dedup';
 import { AggregatorMiddleware } from '../agent/aggregator-middleware';
 import { DeduplicationHandler } from '../agent/aggregator-middleware-deduplication';
+import { DedupStage, DedupStageResult } from '../agent/postprocess/dedup-stage';
+import { PostProcessMergeHandler } from '../agent/postprocess/postprocess-merge-handler';
+import { PostProcessTextFilter } from '../agent/postprocess/postprocess-text-filter';
 
 export class PipelineOrchestrator {
   private sessionContextManager: SessionContextManager;
@@ -37,6 +40,10 @@ export class PipelineOrchestrator {
   private resultBuilder: PipelineOrchestratorResultBuilder;
   // 文本聚合相关
   private aggregationStage: AggregationStage;
+  // 去重和过滤相关
+  private dedupStage: DedupStage;
+  private mergeHandler: PostProcessMergeHandler;
+  private textFilter: PostProcessTextFilter;
   
   /**
    * 设置去重处理器（从PostProcessCoordinator传递）
@@ -94,6 +101,12 @@ export class PipelineOrchestrator {
     );
     logger.info({}, 'PipelineOrchestrator: AggregationStage initialized (bound to ASR)');
 
+    // 初始化去重和过滤Stage
+    this.dedupStage = new DedupStage();
+    this.mergeHandler = new PostProcessMergeHandler();
+    this.textFilter = new PostProcessTextFilter();
+    logger.info({}, 'PipelineOrchestrator: DedupStage, MergeHandler, and TextFilter initialized');
+
     // 初始化语义修复（如果提供了ServicesHandler）
     if (servicesHandler) {
       this.semanticRepairInitializer = new SemanticRepairInitializer(servicesHandler, taskRouter);
@@ -115,6 +128,13 @@ export class PipelineOrchestrator {
    */
   getTaskRouter(): TaskRouter {
     return this.taskRouter;
+  }
+
+  /**
+   * 获取 DedupStage 实例（用于在成功发送后记录job_id）
+   */
+  getDedupStage(): DedupStage {
+    return this.dedupStage;
   }
 
   /**
@@ -305,6 +325,56 @@ export class PipelineOrchestrator {
         'PipelineOrchestrator: Aggregation stage completed (after ASR, before semantic repair)'
       );
 
+      // ========== 处理合并逻辑 ==========
+      const mergeResult = this.mergeHandler.process(job, aggregationResult);
+      if (mergeResult.shouldReturn && mergeResult.result) {
+        // 被合并但不是最后一个，返回空结果
+        logger.info(
+          {
+            jobId: job.job_id,
+            sessionId: job.session_id,
+            utteranceIndex: job.utterance_index,
+            action: aggregationResult.action,
+            isLastInMergedGroup: aggregationResult.isLastInMergedGroup,
+          },
+          'PipelineOrchestrator: Utterance merged but not last in group, returning empty result'
+        );
+        const emptyResult = this.resultBuilder.buildEmptyResult(asrResult);
+        emptyResult.aggregation_applied = aggregationResult.aggregationChanged;
+        emptyResult.aggregation_action = aggregationResult.action;
+        emptyResult.is_last_in_merged_group = aggregationResult.isLastInMergedGroup;
+        if (aggregationResult.metrics) {
+          emptyResult.aggregation_metrics = aggregationResult.metrics;
+        }
+        emptyResult.should_send = mergeResult.result.shouldSend;
+        emptyResult.dedup_reason = mergeResult.result.reason;
+        return emptyResult;
+      }
+
+      // ========== 处理文本过滤逻辑 ==========
+      const filterResult = this.textFilter.process(job, aggregationResult);
+      if (filterResult.shouldReturn && filterResult.result) {
+        // 文本被过滤（太短或等待合并），返回空结果
+        logger.info(
+          {
+            jobId: job.job_id,
+            sessionId: job.session_id,
+            utteranceIndex: job.utterance_index,
+            reason: filterResult.result.reason,
+          },
+          'PipelineOrchestrator: Text filtered, returning empty result'
+        );
+        const emptyResult = this.resultBuilder.buildEmptyResult(asrResult);
+        emptyResult.aggregation_applied = aggregationResult.aggregationChanged;
+        emptyResult.aggregation_action = aggregationResult.action;
+        if (aggregationResult.metrics) {
+          emptyResult.aggregation_metrics = aggregationResult.metrics;
+        }
+        emptyResult.should_send = filterResult.result.shouldSend;
+        emptyResult.dedup_reason = filterResult.result.reason;
+        return emptyResult;
+      }
+
       // 修复：在语义修复之前检测并移除文本内部重复（叠字叠词）
       let textAfterDedup = aggregationResult.aggregatedText;
       if (textAfterDedup && textAfterDedup.trim().length > 0) {
@@ -478,6 +548,33 @@ export class PipelineOrchestrator {
         );
       }
       
+      // ========== 去重检查（在语义修复之后）==========
+      // 注意：去重检查基于 job_id，不基于文本内容
+      const dedupResult = this.dedupStage.process(job, finalTextForNMT, '');
+      
+      if (!dedupResult.shouldSend) {
+        // 重复的 job_id，返回空结果
+        logger.info(
+          {
+            jobId: job.job_id,
+            sessionId: job.session_id,
+            utteranceIndex: job.utterance_index,
+            reason: dedupResult.reason,
+          },
+          'PipelineOrchestrator: Duplicate job_id detected, returning empty result'
+        );
+        const emptyResult = this.resultBuilder.buildEmptyResult(asrResult);
+        emptyResult.aggregation_applied = aggregationResult.aggregationChanged;
+        emptyResult.aggregation_action = aggregationResult.action;
+        emptyResult.is_last_in_merged_group = aggregationResult.isLastInMergedGroup;
+        if (aggregationResult.metrics) {
+          emptyResult.aggregation_metrics = aggregationResult.metrics;
+        }
+        emptyResult.should_send = false;
+        emptyResult.dedup_reason = dedupResult.reason;
+        return emptyResult;
+      }
+
       // 构建结果（包含聚合和语义修复后的文本）
       // 注意：如果应用了语义修复，finalTextForNMT 已经是修复后的文本
       // 如果应用了聚合，finalTextForNMT 已经是聚合后的文本
@@ -501,6 +598,12 @@ export class PipelineOrchestrator {
         result.semantic_repair_confidence = semanticRepairConfidence;
         result.text_asr_repaired = finalTextForNMT;  // 保存修复后的文本（用于 PostProcessCoordinator 检查）
         // 注意：result.text_asr 已经是聚合和修复后的文本（因为 buildResult 使用了 finalTextForNMT）
+      }
+
+      // 添加去重相关字段
+      result.should_send = dedupResult.shouldSend;
+      if (dedupResult.reason) {
+        result.dedup_reason = dedupResult.reason;
       }
 
       const processingTime = Date.now() - startTime;

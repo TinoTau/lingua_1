@@ -176,7 +176,8 @@ export class NodeAgent {
       this.pythonServiceManager
     );
     // 获取DedupStage实例，传递给ResultSender用于在成功发送后记录job_id
-    const dedupStage = this.postProcessCoordinator?.getDedupStage() || null;
+    // 注意：DedupStage 已迁移到 PipelineOrchestrator，从 InferenceService 获取
+    const dedupStage = this.inferenceService?.getDedupStage() || null;
     this.resultSender = new ResultSender(
       this.aggregatorMiddleware,
       dedupStage,

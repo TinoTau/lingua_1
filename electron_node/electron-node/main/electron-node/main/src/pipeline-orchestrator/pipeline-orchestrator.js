@@ -16,6 +16,9 @@ const pipeline_orchestrator_result_builder_1 = require("./pipeline-orchestrator-
 const postprocess_semantic_repair_initializer_1 = require("../agent/postprocess/postprocess-semantic-repair-initializer");
 const aggregation_stage_1 = require("../agent/postprocess/aggregation-stage");
 const dedup_1 = require("../aggregator/dedup");
+const dedup_stage_1 = require("../agent/postprocess/dedup-stage");
+const postprocess_merge_handler_1 = require("../agent/postprocess/postprocess-merge-handler");
+const postprocess_text_filter_1 = require("../agent/postprocess/postprocess-text-filter");
 class PipelineOrchestrator {
     /**
      * 设置去重处理器（从PostProcessCoordinator传递）
@@ -57,6 +60,11 @@ class PipelineOrchestrator {
         this.aggregationStage = new aggregation_stage_1.AggregationStage(aggregatorManager ?? null, aggregatorMiddleware ?? null, null // DeduplicationHandler将在运行时通过setDeduplicationHandler设置
         );
         logger_1.default.info({}, 'PipelineOrchestrator: AggregationStage initialized (bound to ASR)');
+        // 初始化去重和过滤Stage
+        this.dedupStage = new dedup_stage_1.DedupStage();
+        this.mergeHandler = new postprocess_merge_handler_1.PostProcessMergeHandler();
+        this.textFilter = new postprocess_text_filter_1.PostProcessTextFilter();
+        logger_1.default.info({}, 'PipelineOrchestrator: DedupStage, MergeHandler, and TextFilter initialized');
         // 初始化语义修复（如果提供了ServicesHandler）
         if (servicesHandler) {
             this.semanticRepairInitializer = new postprocess_semantic_repair_initializer_1.SemanticRepairInitializer(servicesHandler, taskRouter);
@@ -75,6 +83,12 @@ class PipelineOrchestrator {
      */
     getTaskRouter() {
         return this.taskRouter;
+    }
+    /**
+     * 获取 DedupStage 实例（用于在成功发送后记录job_id）
+     */
+    getDedupStage() {
+        return this.dedupStage;
     }
     /**
      * 处理完整任务（ASR -> NMT -> TTS）
@@ -213,6 +227,48 @@ class PipelineOrchestrator {
                 action: aggregationResult.action,
                 aggregationChanged: aggregationResult.aggregationChanged,
             }, 'PipelineOrchestrator: Aggregation stage completed (after ASR, before semantic repair)');
+            // ========== 处理合并逻辑 ==========
+            const mergeResult = this.mergeHandler.process(job, aggregationResult);
+            if (mergeResult.shouldReturn && mergeResult.result) {
+                // 被合并但不是最后一个，返回空结果
+                logger_1.default.info({
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                    utteranceIndex: job.utterance_index,
+                    action: aggregationResult.action,
+                    isLastInMergedGroup: aggregationResult.isLastInMergedGroup,
+                }, 'PipelineOrchestrator: Utterance merged but not last in group, returning empty result');
+                const emptyResult = this.resultBuilder.buildEmptyResult(asrResult);
+                emptyResult.aggregation_applied = aggregationResult.aggregationChanged;
+                emptyResult.aggregation_action = aggregationResult.action;
+                emptyResult.is_last_in_merged_group = aggregationResult.isLastInMergedGroup;
+                if (aggregationResult.metrics) {
+                    emptyResult.aggregation_metrics = aggregationResult.metrics;
+                }
+                emptyResult.should_send = mergeResult.result.shouldSend;
+                emptyResult.dedup_reason = mergeResult.result.reason;
+                return emptyResult;
+            }
+            // ========== 处理文本过滤逻辑 ==========
+            const filterResult = this.textFilter.process(job, aggregationResult);
+            if (filterResult.shouldReturn && filterResult.result) {
+                // 文本被过滤（太短或等待合并），返回空结果
+                logger_1.default.info({
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                    utteranceIndex: job.utterance_index,
+                    reason: filterResult.result.reason,
+                }, 'PipelineOrchestrator: Text filtered, returning empty result');
+                const emptyResult = this.resultBuilder.buildEmptyResult(asrResult);
+                emptyResult.aggregation_applied = aggregationResult.aggregationChanged;
+                emptyResult.aggregation_action = aggregationResult.action;
+                if (aggregationResult.metrics) {
+                    emptyResult.aggregation_metrics = aggregationResult.metrics;
+                }
+                emptyResult.should_send = filterResult.result.shouldSend;
+                emptyResult.dedup_reason = filterResult.result.reason;
+                return emptyResult;
+            }
             // 修复：在语义修复之前检测并移除文本内部重复（叠字叠词）
             let textAfterDedup = aggregationResult.aggregatedText;
             if (textAfterDedup && textAfterDedup.trim().length > 0) {
@@ -349,6 +405,28 @@ class PipelineOrchestrator {
                     reason,
                 }, 'PipelineOrchestrator: Semantic repair skipped');
             }
+            // ========== 去重检查（在语义修复之后）==========
+            // 注意：去重检查基于 job_id，不基于文本内容
+            const dedupResult = this.dedupStage.process(job, finalTextForNMT, '');
+            if (!dedupResult.shouldSend) {
+                // 重复的 job_id，返回空结果
+                logger_1.default.info({
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                    utteranceIndex: job.utterance_index,
+                    reason: dedupResult.reason,
+                }, 'PipelineOrchestrator: Duplicate job_id detected, returning empty result');
+                const emptyResult = this.resultBuilder.buildEmptyResult(asrResult);
+                emptyResult.aggregation_applied = aggregationResult.aggregationChanged;
+                emptyResult.aggregation_action = aggregationResult.action;
+                emptyResult.is_last_in_merged_group = aggregationResult.isLastInMergedGroup;
+                if (aggregationResult.metrics) {
+                    emptyResult.aggregation_metrics = aggregationResult.metrics;
+                }
+                emptyResult.should_send = false;
+                emptyResult.dedup_reason = dedupResult.reason;
+                return emptyResult;
+            }
             // 构建结果（包含聚合和语义修复后的文本）
             // 注意：如果应用了语义修复，finalTextForNMT 已经是修复后的文本
             // 如果应用了聚合，finalTextForNMT 已经是聚合后的文本
@@ -367,6 +445,11 @@ class PipelineOrchestrator {
                 result.semantic_repair_confidence = semanticRepairConfidence;
                 result.text_asr_repaired = finalTextForNMT; // 保存修复后的文本（用于 PostProcessCoordinator 检查）
                 // 注意：result.text_asr 已经是聚合和修复后的文本（因为 buildResult 使用了 finalTextForNMT）
+            }
+            // 添加去重相关字段
+            result.should_send = dedupResult.shouldSend;
+            if (dedupResult.reason) {
+                result.dedup_reason = dedupResult.reason;
             }
             const processingTime = Date.now() - startTime;
             logger_1.default.info({ jobId: job.job_id, processingTime }, 'Pipeline orchestration completed');

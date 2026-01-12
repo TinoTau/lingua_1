@@ -129,6 +129,12 @@ class InferenceService {
         return this.pipelineOrchestrator.getTaskRouter()?.getServiceEfficiency(serviceId) || null;
     }
     /**
+     * 获取 DedupStage 实例（用于在成功发送后记录job_id）
+     */
+    getDedupStage() {
+        return this.pipelineOrchestrator.getDedupStage();
+    }
+    /**
      * OBS-1: 重置当前心跳周期的处理效率指标（所有服务）
      * 在心跳发送后调用，清空当前周期的数据
      * @deprecated 使用 resetProcessingMetrics() 代替，但保留此方法以保持向后兼容

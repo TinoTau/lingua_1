@@ -9,13 +9,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostProcessCoordinator = void 0;
 const translation_stage_1 = require("./translation-stage");
-const dedup_stage_1 = require("./dedup-stage");
 const tts_stage_1 = require("./tts-stage");
 const tone_stage_1 = require("./tone-stage");
 const logger_1 = __importDefault(require("../../logger"));
 const node_config_1 = require("../../node-config");
-const postprocess_merge_handler_1 = require("./postprocess-merge-handler");
-const postprocess_text_filter_1 = require("./postprocess-text-filter");
 const aggregator_middleware_deduplication_1 = require("../aggregator-middleware-deduplication");
 class PostProcessCoordinator {
     constructor(aggregatorManager, taskRouter, servicesHandler, config) {
@@ -28,10 +25,7 @@ class PostProcessCoordinator {
         // 读取 Feature Flag 配置
         const nodeConfig = (0, node_config_1.loadNodeConfig)();
         this.enablePostProcessTranslation = nodeConfig.features?.enablePostProcessTranslation ?? true;
-        // 注意：文本聚合现在在 PipelineOrchestrator 中执行（与 ASR 绑定）
-        // 不再需要在这里初始化 AggregationStage
-        // 初始化各 Stage
-        this.dedupStage = new dedup_stage_1.DedupStage();
+        // 注意：聚合和去重逻辑已迁移到 PipelineOrchestrator
         // 如果启用 PostProcess 翻译，初始化 TranslationStage 和 TTSStage
         if (this.enablePostProcessTranslation && taskRouter) {
             this.translationStage = new translation_stage_1.TranslationStage(taskRouter, aggregatorManager, config?.translationConfig || {});
@@ -42,11 +36,7 @@ class PostProcessCoordinator {
         else {
             logger_1.default.info({}, 'PostProcessCoordinator: TranslationStage and TTSStage disabled');
         }
-        // 注意：语义修复现在在 PipelineOrchestrator 中执行（与 ASR 绑定）
-        // 不再需要在这里初始化语义修复Stage
-        // 初始化模块化处理器
-        this.mergeHandler = new postprocess_merge_handler_1.PostProcessMergeHandler();
-        this.textFilter = new postprocess_text_filter_1.PostProcessTextFilter();
+        // 注意：语义修复、聚合和去重现在在 PipelineOrchestrator 中执行
         // 初始化去重处理器（维护lastSentText，记录实际发送的文本）
         this.deduplicationHandler = new aggregator_middleware_deduplication_1.DeduplicationHandler();
         logger_1.default.info({
@@ -61,12 +51,6 @@ class PostProcessCoordinator {
      * 注意：语义修复现在在 PipelineOrchestrator 中执行（与 ASR 绑定）
      * 不再需要重新初始化语义修复Stage
      */
-    /**
-     * 获取 DedupStage 实例（用于在成功发送后记录job_id）
-     */
-    getDedupStage() {
-        return this.dedupStage;
-    }
     /**
      * 处理 JobResult（后处理入口）
      */
@@ -88,34 +72,38 @@ class PostProcessCoordinator {
                 translatedText: result.text_translated || '',
             };
         }
-        // Stage 1: 使用聚合和语义修复后的文本（如果已应用）
-        // 注意：文本聚合和语义修复现在在 PipelineOrchestrator 中执行（与 ASR 绑定）
-        // result.text_asr 已经是聚合和修复后的文本（如果应用了）
-        const asrTextTrimmed = (result.text_asr || '').trim();
-        if (!asrTextTrimmed || asrTextTrimmed.length === 0) {
-            // 先经过DedupStage检查，避免重复发送相同的空结果
-            const dedupResult = this.dedupStage.process(job, '', '');
-            if (!dedupResult.shouldSend) {
-                // DedupStage过滤了空结果，但仍然需要发送给调度服务器（用于核销）
-                logger_1.default.info({
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    utteranceIndex: job.utterance_index,
-                    reason: dedupResult.reason || 'duplicate_empty',
-                    note: 'DedupStage filtered duplicate empty result, but still sending to scheduler for job cancellation',
-                }, 'PostProcessCoordinator: Duplicate empty result filtered by DedupStage, but still sending to scheduler for cancellation');
-            }
-            else {
-                logger_1.default.info({
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    utteranceIndex: job.utterance_index,
-                    reason: 'ASR result is empty, returning empty result but shouldSend=true to prevent timeout',
-                }, 'PostProcessCoordinator: ASR result is empty, returning empty result (shouldSend=true to prevent scheduler timeout)');
-            }
-            // 无论DedupStage是否过滤，都返回shouldSend=true，确保调度服务器能够核销job
+        // Stage 1: 检查是否应该处理（聚合和去重已在 PipelineOrchestrator 中处理）
+        // 如果 PipelineOrchestrator 已经决定不发送（should_send=false），直接返回
+        if (result.should_send === false) {
+            logger_1.default.info({
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                reason: result.dedup_reason || 'filtered_by_pipeline',
+            }, 'PostProcessCoordinator: Result filtered by PipelineOrchestrator, returning empty result');
             return {
-                shouldSend: true, // 修复：返回true，确保发送空结果给调度服务器，避免超时
+                shouldSend: false,
+                aggregatedText: '',
+                translatedText: '',
+                ttsAudio: '',
+                ttsFormat: 'opus',
+                reason: result.dedup_reason || 'filtered_by_pipeline',
+            };
+        }
+        // 使用 PipelineOrchestrator 处理后的文本（已经是聚合和修复后的文本）
+        let textForTranslation = result.text_asr || ''; // 已经是聚合和修复后的文本
+        let semanticRepairApplied = result.semantic_repair_applied || false;
+        let semanticRepairConfidence = result.semantic_repair_confidence || 0;
+        // 如果文本为空，直接返回
+        if (!textForTranslation || textForTranslation.trim().length === 0) {
+            logger_1.default.info({
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                reason: 'ASR result is empty',
+            }, 'PostProcessCoordinator: ASR result is empty, returning empty result');
+            return {
+                shouldSend: true, // 返回true，确保发送空结果给调度服务器，避免超时
                 aggregatedText: '',
                 translatedText: '',
                 ttsAudio: '',
@@ -123,23 +111,6 @@ class PostProcessCoordinator {
                 reason: 'ASR result is empty',
             };
         }
-        // 使用 PipelineOrchestrator 处理后的文本（已经是聚合和修复后的文本）
-        let textForTranslation = result.text_asr; // 已经是聚合和修复后的文本
-        let semanticRepairApplied = result.semantic_repair_applied || false;
-        let semanticRepairConfidence = result.semantic_repair_confidence || 0;
-        // 构建聚合结果（用于后续处理）
-        // 注意：文本聚合现在在 PipelineOrchestrator 中执行，这里只是从 JobResult 中提取信息
-        const aggregationResult = {
-            aggregatedText: textForTranslation,
-            aggregationChanged: result.aggregation_applied || false,
-            action: result.aggregation_action,
-            isLastInMergedGroup: result.is_last_in_merged_group,
-            isFirstInMergedGroup: false, // 已废弃，保留用于兼容
-            shouldDiscard: false, // 文本过滤逻辑现在在 PipelineOrchestrator 中处理
-            shouldWaitForMerge: false, // 文本过滤逻辑现在在 PipelineOrchestrator 中处理
-            shouldSendToSemanticRepair: true, // 语义修复现在在 PipelineOrchestrator 中处理
-            metrics: result.aggregation_metrics,
-        };
         logger_1.default.info({
             jobId: job.job_id,
             sessionId: job.session_id,
@@ -150,16 +121,6 @@ class PostProcessCoordinator {
             action: result.aggregation_action,
             note: 'Using aggregated and semantic-repaired text from PipelineOrchestrator',
         }, 'PostProcessCoordinator: Using aggregated and semantic-repaired text from PipelineOrchestrator');
-        // 处理合并逻辑
-        const mergeResult = this.mergeHandler.process(job, aggregationResult);
-        if (mergeResult.shouldReturn && mergeResult.result) {
-            return mergeResult.result;
-        }
-        // 处理文本过滤逻辑
-        const filterResult = this.textFilter.process(job, aggregationResult);
-        if (filterResult.shouldReturn && filterResult.result) {
-            return filterResult.result;
-        }
         // Stage 2: 翻译（唯一 NMT 入口）
         let translationResult = {
             translatedText: '',
@@ -190,8 +151,7 @@ class PostProcessCoordinator {
             }
         }
         // 如果文本被聚合，或者 Pipeline NMT 已禁用，需要翻译
-        // 注意：aggregationResult.aggregationChanged 表示文本是否被聚合（与原始 ASR 文本不同）
-        const needsTranslation = shouldTranslate && (aggregationResult.aggregationChanged || // 文本被聚合
+        const needsTranslation = shouldTranslate && (result.aggregation_applied || // 文本被聚合
             !result.text_translated ||
             result.text_translated.trim().length === 0 ||
             job.pipeline?.use_asr === false // 只选择 NMT 模式
@@ -200,12 +160,11 @@ class PostProcessCoordinator {
         {
             jobId: job.job_id,
             utteranceIndex: job.utterance_index,
-            action: aggregationResult.action,
-            isFirstInMergedGroup: aggregationResult.isFirstInMergedGroup,
-            isLastInMergedGroup: aggregationResult.isLastInMergedGroup,
-            aggregatedTextLength: aggregationResult.aggregatedText.length,
-            aggregatedTextPreview: aggregationResult.aggregatedText.substring(0, 100),
-            aggregationChanged: aggregationResult.aggregationChanged,
+            action: result.aggregation_action,
+            isLastInMergedGroup: result.is_last_in_merged_group,
+            aggregatedTextLength: textForTranslation.length,
+            aggregatedTextPreview: textForTranslation.substring(0, 100),
+            aggregationApplied: result.aggregation_applied,
             needsTranslation,
             hasPipelineTranslation: !!result.text_translated,
         }, 'PostProcessCoordinator: Before translation stage');
@@ -217,17 +176,17 @@ class PostProcessCoordinator {
                 jobId: job.job_id,
                 sessionId: job.session_id,
                 utteranceIndex: job.utterance_index,
-                textToTranslate: textForTranslation,
-                textToTranslateLength: textForTranslation.length,
-                textPreview: textForTranslation.substring(0, 100),
-                originalAggregatedText: aggregationResult.aggregatedText,
-                originalAggregatedTextLength: aggregationResult.aggregatedText.length,
+                textToTranslate: textToTranslate,
+                textToTranslateLength: textToTranslate.length,
+                textPreview: textToTranslate.substring(0, 100),
+                originalAggregatedText: textForTranslation,
+                originalAggregatedTextLength: textForTranslation.length,
                 semanticRepairApplied,
                 semanticRepairConfidence,
                 timestamp: new Date().toISOString(),
             }, 'PostProcessCoordinator: Starting translation stage (NMT request START)');
             translationResult = await this.translationStage.process(job, textToTranslate, // 使用 textToTranslate（可能是 input_text 或 textForTranslation）
-            result.quality_score, aggregationResult.metrics?.dedupCharsRemoved || 0, {
+            result.quality_score, result.aggregation_metrics?.dedupCharsRemoved || 0, {
                 semanticRepairApplied,
                 semanticRepairConfidence,
             });
@@ -257,17 +216,14 @@ class PostProcessCoordinator {
                 fromCache: false,
             };
         }
-        // Stage 3: 去重检查
-        const dedupResult = this.dedupStage.process(job, aggregationResult.aggregatedText, translationResult.translatedText);
-        // Stage 4: TTS 音频生成（在翻译完成后，但只在去重检查通过时生成）
+        // Stage 2: TTS 音频生成（在翻译完成后）
+        // 注意：去重检查已在 PipelineOrchestrator 中完成
         let ttsResult = {
             ttsAudio: '',
             ttsFormat: 'opus', // 强制使用 opus 格式
         };
-        // 生成 TTS 音频（只有在去重检查通过时才生成 TTS）
-        // 如果去重检查失败，说明这是重复的文本，不应该生成 TTS 音频
         // 检查是否需要生成 TTS
-        const shouldGenerateTTS = job.pipeline?.use_tts !== false && dedupResult.shouldSend; // 默认 true，如果明确设置为 false 则跳过
+        const shouldGenerateTTS = job.pipeline?.use_tts !== false; // 默认 true，如果明确设置为 false 则跳过
         if (shouldGenerateTTS && translationResult.translatedText && translationResult.translatedText.trim().length > 0 && this.ttsStage) {
             try {
                 const ttsStartTime = Date.now();
@@ -312,7 +268,7 @@ class PostProcessCoordinator {
                 jobId: job.job_id,
                 sessionId: job.session_id,
                 useTts: job.pipeline?.use_tts,
-                shouldSend: dedupResult.shouldSend,
+                shouldSend: Boolean(result.should_send ?? true),
                 hasTranslatedText: !!translationResult.translatedText,
             }, 'PostProcessCoordinator: TTS disabled by pipeline config or skipped, no TTS audio generated');
         }
@@ -370,14 +326,15 @@ class PostProcessCoordinator {
         // 汇总结果
         // 重要：如果进行了语义修复，使用修复后的文本作为 aggregatedText（用于返回给web端的text_asr字段）
         // 这样web端显示的就是修复后的文本，而不是原始ASR文本
-        const finalAggregatedText = textForTranslation || aggregationResult.aggregatedText;
+        const finalAggregatedText = textForTranslation || result.text_asr || '';
         const totalProcessDuration = Date.now() - processStartTime;
+        const shouldSend = Boolean(result.should_send ?? true); // 默认 true，除非明确设置为 false
         logger_1.default.info({
             jobId: job.job_id,
             sessionId: job.session_id,
             utteranceIndex: job.utterance_index,
             totalProcessDurationMs: totalProcessDuration,
-            shouldSend: dedupResult.shouldSend,
+            shouldSend,
             aggregatedTextLength: finalAggregatedText.length,
             translatedTextLength: translationResult.translatedText.length,
             timestamp: new Date().toISOString(),
@@ -386,7 +343,7 @@ class PostProcessCoordinator {
         const finalAudio = toneResult.toneAudio || ttsResult.ttsAudio;
         const finalAudioFormat = toneResult.toneFormat || ttsResult.ttsFormat || 'opus';
         const postProcessResult = {
-            shouldSend: dedupResult.shouldSend,
+            shouldSend,
             aggregatedText: finalAggregatedText,
             translatedText: translationResult.translatedText,
             ttsAudio: finalAudio, // 使用 TONE 音频（如果存在）或 TTS 音频
@@ -394,15 +351,15 @@ class PostProcessCoordinator {
             toneAudio: toneResult.toneAudio, // 单独返回 TONE 音频（可选）
             toneFormat: toneResult.toneFormat,
             speakerId: toneResult.speakerId,
-            action: aggregationResult.action,
+            action: result.aggregation_action,
             metrics: {
-                ...aggregationResult.metrics,
+                ...result.aggregation_metrics,
                 translationTimeMs: translationResult.translationTimeMs,
                 ttsTimeMs: ttsResult.ttsTimeMs,
                 toneTimeMs: toneResult.toneTimeMs,
                 fromCache: translationResult.fromCache,
             },
-            reason: dedupResult.reason,
+            reason: result.dedup_reason,
         };
         logger_1.default.debug({
             jobId: job.job_id,
@@ -421,7 +378,7 @@ class PostProcessCoordinator {
      * 清理 session
      */
     removeSession(sessionId) {
-        this.dedupStage.removeSession(sessionId);
+        // 去重逻辑已迁移到 PipelineOrchestrator，这里不再需要清理
         this.deduplicationHandler.removeSession(sessionId);
         // AggregationStage 和 TranslationStage 使用 AggregatorManager，由外部管理
         logger_1.default.debug({ sessionId }, 'PostProcessCoordinator: Session removed');
