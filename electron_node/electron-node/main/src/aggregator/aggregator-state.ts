@@ -150,7 +150,8 @@ export class AggregatorState {
     isFinal: boolean = false,
     isManualCut: boolean = false,
     isPauseTriggered: boolean = false,
-    isTimeoutTriggered: boolean = false
+    isTimeoutTriggered: boolean = false,
+    hasPendingSecondHalfMerged: boolean = false
   ): AggregatorCommitResult {
     const nowMs = Date.now();
     
@@ -167,6 +168,11 @@ export class AggregatorState {
       this.sessionStartTimeMs,
       this.lastUtteranceEndTimeMs
     );
+    
+    // 修复：如果合并了pendingSecondHalf，将标志传递给utteranceInfo
+    if (hasPendingSecondHalfMerged) {
+      (utteranceResult.utteranceInfo as any).hasPendingSecondHalfMerged = true;
+    }
     
     const curr = utteranceResult.utteranceInfo;
     const startMs = utteranceResult.utteranceTime.startMs;
@@ -238,6 +244,9 @@ export class AggregatorState {
     }
     
     // 使用 pending manager 处理文本合并和状态管理
+    // 修复：在NEW_STREAM时，先保存之前的pendingText，用于提交
+    const previousPendingText = action === 'NEW_STREAM' ? this.pendingText : '';
+    
     let pendingUpdateResult: { newPendingText: string; newTailBuffer: string; mergeGroupStateSynced: boolean };
     if (action === 'MERGE' && this.lastUtterance) {
       pendingUpdateResult = this.pendingManager.handleMerge(
@@ -254,6 +263,52 @@ export class AggregatorState {
         this.pendingText,
         this.tailBuffer
       );
+      
+      // 修复：在NEW_STREAM时，如果之前的pendingText存在，先提交之前的文本
+      // 这样可以确保之前的文本被记录到recentCommittedText中，用于去重
+      if (previousPendingText && previousPendingText.trim().length > 0) {
+        // 使用临时提交处理器判断是否需要提交之前的文本
+        const previousMergeGroupState = this.mergeGroupManager.getState();
+        const previousCommitDecision = this.commitHandler.decideCommit(
+          'NEW_STREAM',
+          previousPendingText,
+          this.lastCommitTsMs,
+          nowMs,
+          previousMergeGroupState.mergeGroupStartTimeMs,
+          isFinal,
+          isManualCut,
+          isPauseTriggered,
+          isTimeoutTriggered
+        );
+        
+        // 如果之前的文本应该提交，先提交它
+        if (previousCommitDecision.shouldCommit) {
+          const previousCommitResult = this.commitExecutor.executeCommit(
+            previousPendingText,
+            this.tailBuffer,
+            isFinal,
+            isManualCut,
+            qualityScore,
+            gapMs,
+            previousCommitDecision.commitByManualCut,
+            previousCommitDecision.commitByTimeout
+          );
+          const previousCommitText = previousCommitResult.commitText;
+          if (previousCommitText && previousCommitText.trim().length > 0) {
+            // 更新上下文（记录到recentCommittedText，用于去重）
+            this.contextManager.updateRecentCommittedText(previousCommitText);
+            logger.info(
+              {
+                text: previousCommitText.substring(0, 50),
+                textLength: previousCommitText.length,
+                action: 'NEW_STREAM',
+                reason: 'Committed previous pendingText before starting new stream, for deduplication',
+              },
+              'AggregatorState: Committed previous pendingText in NEW_STREAM for deduplication'
+            );
+          }
+        }
+      }
     }
     
     // 更新 pending text 和 tail buffer

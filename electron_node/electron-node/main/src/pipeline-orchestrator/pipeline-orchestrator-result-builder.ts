@@ -60,7 +60,7 @@ export class PipelineOrchestratorResultBuilder {
     }
 
     const result: JobResult = {
-      text_asr: textForNMT,  // 使用聚合后的文本（如果 AggregatorMiddleware 处理过）
+      text_asr: textForNMT,  // 使用 ASR 文本（已应用聚合和语义修复，如果启用）
       text_translated: '',  // 空翻译，由 PostProcess 填充
       tts_audio: '',  // TTS 也由 PostProcess 处理
       tts_format: 'pcm16',

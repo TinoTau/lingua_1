@@ -139,6 +139,13 @@ export class NodeAgent {
         postProcessConfig
       );
       logger.info({}, 'PostProcessCoordinator initialized (new architecture)');
+      
+      // 将PostProcessCoordinator的DeduplicationHandler传递给PipelineOrchestrator（用于去重）
+      if (this.postProcessCoordinator && this.inferenceService) {
+        const deduplicationHandler = this.postProcessCoordinator.getDeduplicationHandler();
+        (this.inferenceService as any).setDeduplicationHandler(deduplicationHandler);
+        logger.info({}, 'DeduplicationHandler passed from PostProcessCoordinator to InferenceService');
+      }
     }
 
     // S1: 将AggregatorManager传递给InferenceService（用于构建prompt）
@@ -146,6 +153,12 @@ export class NodeAgent {
     if (aggregatorManager && this.inferenceService) {
       (this.inferenceService as any).setAggregatorManager(aggregatorManager);
       logger.info({}, 'S1: AggregatorManager passed to InferenceService for prompt building');
+    }
+
+    // 将ServicesHandler传递给InferenceService（用于语义修复服务发现）
+    if (this.servicesHandler && this.inferenceService) {
+      (this.inferenceService as any).setServicesHandler(this.servicesHandler);
+      logger.info({}, 'ServicesHandler passed to InferenceService for semantic repair');
     }
 
     // 将AggregatorMiddleware传递给InferenceService（用于在ASR之后、NMT之前进行文本聚合）
@@ -166,7 +179,8 @@ export class NodeAgent {
     const dedupStage = this.postProcessCoordinator?.getDedupStage() || null;
     this.resultSender = new ResultSender(
       this.aggregatorMiddleware,
-      dedupStage
+      dedupStage,
+      this.postProcessCoordinator  // 传递PostProcessCoordinator，用于更新lastSentText
     );
 
     logger.info({ schedulerUrl: this.schedulerUrl }, 'Scheduler server URL configured');

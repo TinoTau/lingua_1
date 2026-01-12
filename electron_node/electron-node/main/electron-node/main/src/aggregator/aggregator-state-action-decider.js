@@ -17,10 +17,22 @@ class AggregatorStateActionDecider {
     }
     /**
      * 决定流动作：merge 还是 new_stream
-     * 关键逻辑：如果上一个utterance有手动发送/3秒静音标识，当前应该是NEW_STREAM
-     * 因为上一个utterance已经被强制提交，当前应该是新的流
+     * 关键逻辑：
+     * 1. 如果当前utterance合并了pendingSecondHalf，应该标记为MERGE（因为这是上一个utterance的延续）
+     * 2. 如果上一个utterance有手动发送/3秒静音标识，且当前utterance没有合并pendingSecondHalf，当前应该是NEW_STREAM
+     *    因为上一个utterance已经被强制提交，当前应该是新的流
      */
     decideAction(lastUtterance, currentUtterance) {
+        // 修复：如果当前utterance合并了pendingSecondHalf，应该标记为MERGE
+        // 因为pendingSecondHalf是上一个utterance的后半部分，应该与当前utterance合并
+        if (currentUtterance.hasPendingSecondHalfMerged) {
+            logger_1.default.info({
+                text: currentUtterance.text.substring(0, 50),
+                lastUtteranceText: lastUtterance?.text.substring(0, 50),
+                reason: 'Current utterance merged pendingSecondHalf, forcing MERGE to continue previous utterance',
+            }, 'AggregatorStateActionDecider: Forcing MERGE due to pendingSecondHalf merge');
+            return 'MERGE';
+        }
         if (lastUtterance && (lastUtterance.isManualCut || lastUtterance.isPauseTriggered)) {
             // 上一个utterance有手动发送/3秒静音标识，当前应该是NEW_STREAM
             logger_1.default.info({

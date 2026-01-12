@@ -8,17 +8,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostProcessCoordinator = void 0;
-const postprocess_semantic_repair_initializer_1 = require("./postprocess-semantic-repair-initializer");
-const aggregation_stage_1 = require("./aggregation-stage");
 const translation_stage_1 = require("./translation-stage");
 const dedup_stage_1 = require("./dedup-stage");
 const tts_stage_1 = require("./tts-stage");
-const dedup_1 = require("../../aggregator/dedup");
+const tone_stage_1 = require("./tone-stage");
 const logger_1 = __importDefault(require("../../logger"));
 const node_config_1 = require("../../node-config");
-const postprocess_semantic_repair_handler_1 = require("./postprocess-semantic-repair-handler");
 const postprocess_merge_handler_1 = require("./postprocess-merge-handler");
 const postprocess_text_filter_1 = require("./postprocess-text-filter");
+const aggregator_middleware_deduplication_1 = require("../aggregator-middleware-deduplication");
 class PostProcessCoordinator {
     constructor(aggregatorManager, taskRouter, servicesHandler, config) {
         this.aggregatorManager = aggregatorManager;
@@ -26,71 +24,43 @@ class PostProcessCoordinator {
         this.servicesHandler = servicesHandler;
         this.translationStage = null;
         this.ttsStage = null;
-        // P0-3: 热插拔并发安全 - 使用版本号确保并发安全
-        this.semanticRepairVersion = 0;
-        this.reinitLock = { locked: false };
+        this.toneStage = null;
         // 读取 Feature Flag 配置
         const nodeConfig = (0, node_config_1.loadNodeConfig)();
         this.enablePostProcessTranslation = nodeConfig.features?.enablePostProcessTranslation ?? true;
+        // 注意：文本聚合现在在 PipelineOrchestrator 中执行（与 ASR 绑定）
+        // 不再需要在这里初始化 AggregationStage
         // 初始化各 Stage
-        this.aggregationStage = new aggregation_stage_1.AggregationStage(aggregatorManager);
         this.dedupStage = new dedup_stage_1.DedupStage();
         // 如果启用 PostProcess 翻译，初始化 TranslationStage 和 TTSStage
         if (this.enablePostProcessTranslation && taskRouter) {
             this.translationStage = new translation_stage_1.TranslationStage(taskRouter, aggregatorManager, config?.translationConfig || {});
             this.ttsStage = new tts_stage_1.TTSStage(taskRouter);
-            logger_1.default.info({}, 'PostProcessCoordinator: TranslationStage and TTSStage initialized');
+            this.toneStage = new tone_stage_1.TONEStage(taskRouter);
+            logger_1.default.info({}, 'PostProcessCoordinator: TranslationStage, TTSStage, and TONEStage initialized');
         }
         else {
             logger_1.default.info({}, 'PostProcessCoordinator: TranslationStage and TTSStage disabled');
         }
-        // 初始化语义修复Stage初始化器
-        this.semanticRepairInitializer = new postprocess_semantic_repair_initializer_1.SemanticRepairInitializer(servicesHandler, taskRouter);
+        // 注意：语义修复现在在 PipelineOrchestrator 中执行（与 ASR 绑定）
+        // 不再需要在这里初始化语义修复Stage
         // 初始化模块化处理器
         this.mergeHandler = new postprocess_merge_handler_1.PostProcessMergeHandler();
         this.textFilter = new postprocess_text_filter_1.PostProcessTextFilter();
+        // 初始化去重处理器（维护lastSentText，记录实际发送的文本）
+        this.deduplicationHandler = new aggregator_middleware_deduplication_1.DeduplicationHandler();
         logger_1.default.info({
             enablePostProcessTranslation: this.enablePostProcessTranslation,
             hasAggregatorManager: !!aggregatorManager,
             hasTaskRouter: !!taskRouter,
             hasServicesHandler: !!servicesHandler,
+            note: 'Text aggregation and semantic repair are now handled in PipelineOrchestrator (bound to ASR)',
         }, 'PostProcessCoordinator initialized');
-        // P0-2: 初始化时序保证 - 异步初始化，但不阻塞构造函数
-        // 在首次process调用时会等待初始化完成
-        this.semanticRepairInitializer.initialize().catch((error) => {
-            logger_1.default.error({ error: error.message }, 'PostProcessCoordinator: Failed to initialize semantic repair stage in constructor');
-        });
     }
     /**
-     * 重新初始化语义修复Stage（用于热插拔）
-     * P0-3: 热插拔并发安全 - 使用锁机制避免并发重新初始化
+     * 注意：语义修复现在在 PipelineOrchestrator 中执行（与 ASR 绑定）
+     * 不再需要重新初始化语义修复Stage
      */
-    async reinitializeSemanticRepairStage() {
-        // 如果已经在重新初始化，等待完成
-        if (this.reinitLock.locked && this.reinitLock.promise) {
-            await this.reinitLock.promise;
-            return;
-        }
-        // 获取锁
-        this.reinitLock.locked = true;
-        this.reinitLock.promise = (async () => {
-            try {
-                // 增加版本号，使正在进行的任务使用旧版本
-                this.semanticRepairVersion++;
-                logger_1.default.info({ version: this.semanticRepairVersion }, 'PostProcessCoordinator: Starting semantic repair stage reinitialization');
-                await this.semanticRepairInitializer.reinitialize();
-                logger_1.default.info({ version: this.semanticRepairVersion }, 'PostProcessCoordinator: Semantic repair stage reinitialization completed');
-            }
-            catch (error) {
-                logger_1.default.error({ error: error.message, version: this.semanticRepairVersion }, 'PostProcessCoordinator: Failed to reinitialize semantic repair stage');
-            }
-            finally {
-                this.reinitLock.locked = false;
-                this.reinitLock.promise = undefined;
-            }
-        })();
-        await this.reinitLock.promise;
-    }
     /**
      * 获取 DedupStage 实例（用于在成功发送后记录job_id）
      */
@@ -118,10 +88,9 @@ class PostProcessCoordinator {
                 translatedText: result.text_translated || '',
             };
         }
-        // Stage 1: 文本聚合
-        // 修复：如果text_asr为空，仍然需要经过DedupStage检查，避免重复发送相同的空结果
-        // 但是，如果DedupStage过滤了空结果，我们仍然需要发送一个空结果给调度服务器（用于核销）
-        // 这样调度服务器知道节点端已经处理完成，不会触发超时
+        // Stage 1: 使用聚合和语义修复后的文本（如果已应用）
+        // 注意：文本聚合和语义修复现在在 PipelineOrchestrator 中执行（与 ASR 绑定）
+        // result.text_asr 已经是聚合和修复后的文本（如果应用了）
         const asrTextTrimmed = (result.text_asr || '').trim();
         if (!asrTextTrimmed || asrTextTrimmed.length === 0) {
             // 先经过DedupStage检查，避免重复发送相同的空结果
@@ -151,52 +120,36 @@ class PostProcessCoordinator {
                 translatedText: '',
                 ttsAudio: '',
                 ttsFormat: 'opus',
-                reason: 'ASR result is empty (filtered by AggregatorMiddleware or empty ASR)',
+                reason: 'ASR result is empty',
             };
         }
-        const aggregationStartTime = Date.now();
-        const aggregationResult = this.aggregationStage.process(job, result);
-        const aggregationDuration = Date.now() - aggregationStartTime;
+        // 使用 PipelineOrchestrator 处理后的文本（已经是聚合和修复后的文本）
+        let textForTranslation = result.text_asr; // 已经是聚合和修复后的文本
+        let semanticRepairApplied = result.semantic_repair_applied || false;
+        let semanticRepairConfidence = result.semantic_repair_confidence || 0;
+        // 构建聚合结果（用于后续处理）
+        // 注意：文本聚合现在在 PipelineOrchestrator 中执行，这里只是从 JobResult 中提取信息
+        const aggregationResult = {
+            aggregatedText: textForTranslation,
+            aggregationChanged: result.aggregation_applied || false,
+            action: result.aggregation_action,
+            isLastInMergedGroup: result.is_last_in_merged_group,
+            isFirstInMergedGroup: false, // 已废弃，保留用于兼容
+            shouldDiscard: false, // 文本过滤逻辑现在在 PipelineOrchestrator 中处理
+            shouldWaitForMerge: false, // 文本过滤逻辑现在在 PipelineOrchestrator 中处理
+            shouldSendToSemanticRepair: true, // 语义修复现在在 PipelineOrchestrator 中处理
+            metrics: result.aggregation_metrics,
+        };
         logger_1.default.info({
             jobId: job.job_id,
             sessionId: job.session_id,
             utteranceIndex: job.utterance_index,
-            aggregationDurationMs: aggregationDuration,
-            aggregatedTextLength: aggregationResult.aggregatedText.length,
-            action: aggregationResult.action,
-        }, 'PostProcessCoordinator: Aggregation stage completed');
-        // 修复：在语义修复之前检测并移除文本内部重复（叠字叠词）
-        // 如果ASR文本本身就有重复（如"再提高了一点速度 再提高了一点速度"），
-        // 应该在进入NMT之前就去除重复，而不是让NMT翻译后再提取
-        let textAfterDedup = aggregationResult.aggregatedText;
-        if (textAfterDedup && textAfterDedup.trim().length > 0) {
-            const originalText = textAfterDedup;
-            textAfterDedup = (0, dedup_1.detectInternalRepetition)(textAfterDedup);
-            if (textAfterDedup !== originalText) {
-                logger_1.default.warn({
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    utteranceIndex: job.utterance_index,
-                    originalText: originalText.substring(0, 100),
-                    dedupedText: textAfterDedup.substring(0, 100),
-                    originalLength: originalText.length,
-                    dedupedLength: textAfterDedup.length,
-                    removedChars: originalText.length - textAfterDedup.length,
-                    note: 'Detected and removed internal repetition (duplicate words/phrases) before semantic repair',
-                }, 'PostProcessCoordinator: Detected and removed internal repetition before semantic repair');
-                // 更新aggregationResult中的文本
-                aggregationResult.aggregatedText = textAfterDedup;
-            }
-        }
-        // Phase 2: 语义修复Stage（在AggregationStage之后、TranslationStage之前）
-        // 注意：textAfterDedup已经移除了内部重复，这里使用去重后的文本
-        // P0-3: 热插拔并发安全 - 捕获当前版本号，确保使用一致的Stage实例
-        const currentVersion = this.semanticRepairVersion;
-        const semanticRepairHandler = new postprocess_semantic_repair_handler_1.PostProcessSemanticRepairHandler(this.aggregatorManager, this.semanticRepairInitializer, this.semanticRepairVersion);
-        const semanticRepairResult = await semanticRepairHandler.process(job, aggregationResult, result, currentVersion);
-        const textForTranslation = semanticRepairResult.textForTranslation;
-        const semanticRepairApplied = semanticRepairResult.semanticRepairApplied;
-        const semanticRepairConfidence = semanticRepairResult.semanticRepairConfidence;
+            aggregatedTextLength: textForTranslation.length,
+            aggregationApplied: result.aggregation_applied,
+            semanticRepairApplied: semanticRepairApplied,
+            action: result.aggregation_action,
+            note: 'Using aggregated and semantic-repaired text from PipelineOrchestrator',
+        }, 'PostProcessCoordinator: Using aggregated and semantic-repaired text from PipelineOrchestrator');
         // 处理合并逻辑
         const mergeResult = this.mergeHandler.process(job, aggregationResult);
         if (mergeResult.shouldReturn && mergeResult.result) {
@@ -211,8 +164,38 @@ class PostProcessCoordinator {
         let translationResult = {
             translatedText: '',
         };
+        // 检查是否需要翻译
+        let shouldTranslate = job.pipeline?.use_nmt !== false; // 默认 true，如果明确设置为 false 则跳过
+        // 支持只选择 NMT（文本翻译模式）：如果 use_asr === false，使用 job 中的输入文本
+        let textToTranslate = textForTranslation;
+        if (job.pipeline?.use_asr === false) {
+            // 只选择 NMT 模式：使用 job 中的输入文本（如果有）
+            const inputText = job.input_text || job.text || '';
+            if (inputText && inputText.trim().length > 0) {
+                textToTranslate = inputText.trim();
+                logger_1.default.info({
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                    inputTextLength: textToTranslate.length,
+                    note: 'Text translation mode: using input_text from job (ASR disabled)',
+                }, 'PostProcessCoordinator: Text translation mode - using input_text from job');
+            }
+            else {
+                logger_1.default.warn({
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                    note: 'Text translation mode but no input_text provided',
+                }, 'PostProcessCoordinator: Text translation mode but no input_text, skipping translation');
+                shouldTranslate = false;
+            }
+        }
         // 如果文本被聚合，或者 Pipeline NMT 已禁用，需要翻译
-        const needsTranslation = aggregationResult.aggregationChanged || !result.text_translated || result.text_translated.trim().length === 0;
+        // 注意：aggregationResult.aggregationChanged 表示文本是否被聚合（与原始 ASR 文本不同）
+        const needsTranslation = shouldTranslate && (aggregationResult.aggregationChanged || // 文本被聚合
+            !result.text_translated ||
+            result.text_translated.trim().length === 0 ||
+            job.pipeline?.use_asr === false // 只选择 NMT 模式
+        );
         logger_1.default.info(// 改为 info 级别，确保输出
         {
             jobId: job.job_id,
@@ -243,7 +226,8 @@ class PostProcessCoordinator {
                 semanticRepairConfidence,
                 timestamp: new Date().toISOString(),
             }, 'PostProcessCoordinator: Starting translation stage (NMT request START)');
-            translationResult = await this.translationStage.process(job, textForTranslation, result.quality_score, aggregationResult.metrics?.dedupCharsRemoved || 0, {
+            translationResult = await this.translationStage.process(job, textToTranslate, // 使用 textToTranslate（可能是 input_text 或 textForTranslation）
+            result.quality_score, aggregationResult.metrics?.dedupCharsRemoved || 0, {
                 semanticRepairApplied,
                 semanticRepairConfidence,
             });
@@ -282,7 +266,9 @@ class PostProcessCoordinator {
         };
         // 生成 TTS 音频（只有在去重检查通过时才生成 TTS）
         // 如果去重检查失败，说明这是重复的文本，不应该生成 TTS 音频
-        if (dedupResult.shouldSend && translationResult.translatedText && translationResult.translatedText.trim().length > 0 && this.ttsStage) {
+        // 检查是否需要生成 TTS
+        const shouldGenerateTTS = job.pipeline?.use_tts !== false && dedupResult.shouldSend; // 默认 true，如果明确设置为 false 则跳过
+        if (shouldGenerateTTS && translationResult.translatedText && translationResult.translatedText.trim().length > 0 && this.ttsStage) {
             try {
                 const ttsStartTime = Date.now();
                 ttsResult = await this.ttsStage.process(job, translationResult.translatedText);
@@ -320,6 +306,67 @@ class PostProcessCoordinator {
                 ttsFormat: result.tts_format || 'opus', // 强制使用 opus 格式
             };
         }
+        else {
+            // TTS 被禁用或跳过
+            logger_1.default.info({
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                useTts: job.pipeline?.use_tts,
+                shouldSend: dedupResult.shouldSend,
+                hasTranslatedText: !!translationResult.translatedText,
+            }, 'PostProcessCoordinator: TTS disabled by pipeline config or skipped, no TTS audio generated');
+        }
+        // Stage 5: TONE 音色配音（在 TTS 之后，如果启用了 TONE）
+        let toneResult = {
+            toneAudio: undefined,
+            toneFormat: undefined,
+            speakerId: undefined,
+        };
+        // 检查是否需要生成 TONE
+        const shouldGenerateTONE = job.pipeline?.use_tone === true && ttsResult.ttsAudio && ttsResult.ttsAudio.trim().length > 0;
+        if (shouldGenerateTONE && this.toneStage) {
+            try {
+                const toneStartTime = Date.now();
+                // 从 job 中提取 speaker_id
+                const speakerId = job.speaker_id || job.voice_id;
+                toneResult = await this.toneStage.process(job, ttsResult.ttsAudio, ttsResult.ttsFormat || 'opus', speakerId);
+                const toneDuration = Date.now() - toneStartTime;
+                if (toneDuration > 30000) {
+                    logger_1.default.warn({
+                        jobId: job.job_id,
+                        sessionId: job.session_id,
+                        utteranceIndex: job.utterance_index,
+                        toneDurationMs: toneDuration,
+                        note: 'TONE processing took longer than 30 seconds',
+                    }, 'PostProcessCoordinator: TONE processing took too long');
+                }
+                logger_1.default.info({
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                    utteranceIndex: job.utterance_index,
+                    speakerId: toneResult.speakerId,
+                    hasToneAudio: !!toneResult.toneAudio,
+                    toneDurationMs: toneDuration,
+                }, 'PostProcessCoordinator: TONE processing completed');
+            }
+            catch (toneError) {
+                // TONE 处理失败，记录错误但继续处理
+                logger_1.default.error({
+                    error: toneError,
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                }, 'PostProcessCoordinator: TONE processing failed, continuing without TONE audio');
+                // 保持 toneResult 为空
+            }
+        }
+        else {
+            logger_1.default.debug({
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                useTone: job.pipeline?.use_tone,
+                hasTtsAudio: !!ttsResult.ttsAudio,
+            }, 'PostProcessCoordinator: TONE disabled by pipeline config or no TTS audio, skipping TONE');
+        }
         // 汇总结果
         // 重要：如果进行了语义修复，使用修复后的文本作为 aggregatedText（用于返回给web端的text_asr字段）
         // 这样web端显示的就是修复后的文本，而不是原始ASR文本
@@ -335,17 +382,24 @@ class PostProcessCoordinator {
             translatedTextLength: translationResult.translatedText.length,
             timestamp: new Date().toISOString(),
         }, 'PostProcessCoordinator: Post-process completed (EXIT)');
+        // 如果使用了 TONE，优先使用 TONE 音频，否则使用 TTS 音频
+        const finalAudio = toneResult.toneAudio || ttsResult.ttsAudio;
+        const finalAudioFormat = toneResult.toneFormat || ttsResult.ttsFormat || 'opus';
         const postProcessResult = {
             shouldSend: dedupResult.shouldSend,
             aggregatedText: finalAggregatedText,
             translatedText: translationResult.translatedText,
-            ttsAudio: ttsResult.ttsAudio,
-            ttsFormat: ttsResult.ttsFormat,
+            ttsAudio: finalAudio, // 使用 TONE 音频（如果存在）或 TTS 音频
+            ttsFormat: finalAudioFormat, // 使用 TONE 格式（如果存在）或 TTS 格式
+            toneAudio: toneResult.toneAudio, // 单独返回 TONE 音频（可选）
+            toneFormat: toneResult.toneFormat,
+            speakerId: toneResult.speakerId,
             action: aggregationResult.action,
             metrics: {
                 ...aggregationResult.metrics,
                 translationTimeMs: translationResult.translationTimeMs,
                 ttsTimeMs: ttsResult.ttsTimeMs,
+                toneTimeMs: toneResult.toneTimeMs,
                 fromCache: translationResult.fromCache,
             },
             reason: dedupResult.reason,
@@ -368,27 +422,32 @@ class PostProcessCoordinator {
      */
     removeSession(sessionId) {
         this.dedupStage.removeSession(sessionId);
+        this.deduplicationHandler.removeSession(sessionId);
         // AggregationStage 和 TranslationStage 使用 AggregatorManager，由外部管理
         logger_1.default.debug({ sessionId }, 'PostProcessCoordinator: Session removed');
     }
     /**
-     * 获取最后发送的文本
-     * 注意：DedupStage 不再维护 lastSentText，此方法已废弃
-     * 如果需要获取最后发送的文本，应该从 AggregatorMiddleware 获取
+     * 获取最后发送的文本（用于去重）
      */
     getLastSentText(sessionId) {
-        // DedupStage 不再维护 lastSentText，返回 undefined
-        // 如果需要此功能，应该从 AggregatorMiddleware 获取
-        return undefined;
+        return this.deduplicationHandler.getLastSentText(sessionId);
     }
     /**
-     * 设置最后发送的文本
-     * 注意：DedupStage 不再维护 lastSentText，此方法已废弃
-     * 如果需要设置最后发送的文本，应该通过 AggregatorMiddleware 设置
+     * 设置最后发送的文本（在成功发送后调用）
      */
     setLastSentText(sessionId, text) {
-        // DedupStage 不再维护 lastSentText，此方法为空实现
-        // 如果需要此功能，应该通过 AggregatorMiddleware 设置
+        this.deduplicationHandler.setLastSentText(sessionId, text);
+        logger_1.default.debug({
+            sessionId,
+            textLength: text.length,
+            textPreview: text.substring(0, 50),
+        }, 'PostProcessCoordinator: Updated lastSentText after successful send');
+    }
+    /**
+     * 获取去重处理器（用于AggregationStage）
+     */
+    getDeduplicationHandler() {
+        return this.deduplicationHandler;
     }
 }
 exports.PostProcessCoordinator = PostProcessCoordinator;

@@ -82,7 +82,8 @@ export class AggregatorManager {
     isManualCut: boolean = false,
     mode: Mode = 'offline',
     isPauseTriggered: boolean = false,
-    isTimeoutTriggered: boolean = false
+    isTimeoutTriggered: boolean = false,
+    hasPendingSecondHalfMerged: boolean = false
   ): AggregatorCommitResult {
     const state = this.getOrCreateState(sessionId, mode);
     return state.processUtterance(
@@ -93,7 +94,8 @@ export class AggregatorManager {
       isFinal,
       isManualCut,
       isPauseTriggered,
-      isTimeoutTriggered
+      isTimeoutTriggered,
+      hasPendingSecondHalfMerged
     );
   }
 

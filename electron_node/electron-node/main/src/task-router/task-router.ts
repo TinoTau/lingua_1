@@ -31,6 +31,9 @@ export class TaskRouter {
   private selectionStrategy: ServiceSelectionStrategy = 'round_robin';
   // best-effort cancel 支持：HTTP AbortController（用于中断 HTTP 请求）
   private jobAbortControllers: Map<string, AbortController> = new Map();
+  // Service Endpoints 刷新缓存：避免频繁刷新服务端点列表
+  private lastRefreshTime: number = 0;
+  private refreshCacheTTL: number = 1000; // 默认 1 秒缓存（可配置，500ms-1000ms）
   // 路由处理器
   private asrHandler: TaskRouterASRHandler;
   private nmtHandler: TaskRouterNMTHandler;
@@ -153,10 +156,42 @@ export class TaskRouter {
   }
 
   /**
-   * 刷新服务端点列表
+   * 刷新服务端点列表（带缓存机制）
+   * @param forceRefresh 是否强制刷新（忽略缓存）
    */
-  async refreshServiceEndpoints(): Promise<void> {
-    this.serviceEndpoints = await this.serviceManager.refreshServiceEndpoints();
+  async refreshServiceEndpoints(forceRefresh: boolean = false): Promise<void> {
+    const now = Date.now();
+    const cacheAge = now - this.lastRefreshTime;
+
+    // 如果强制刷新或缓存已过期，则刷新
+    if (forceRefresh || cacheAge >= this.refreshCacheTTL) {
+      this.serviceEndpoints = await this.serviceManager.refreshServiceEndpoints();
+      this.lastRefreshTime = now;
+      logger.debug(
+        {
+          forceRefresh,
+          cacheAge,
+          ttl: this.refreshCacheTTL
+        },
+        'Service endpoints refreshed'
+      );
+    } else {
+      logger.debug(
+        {
+          cacheAge,
+          ttl: this.refreshCacheTTL
+        },
+        'Service endpoints refresh skipped (using cache)'
+      );
+    }
+  }
+
+  /**
+   * 强制刷新服务端点列表（忽略缓存）
+   * 用于 waitForServicesReady 等需要实时状态的场景
+   */
+  async forceRefreshServiceEndpoints(): Promise<void> {
+    await this.refreshServiceEndpoints(true);
   }
 
   /**

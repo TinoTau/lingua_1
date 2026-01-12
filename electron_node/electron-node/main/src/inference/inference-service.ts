@@ -33,6 +33,18 @@ export interface JobResult {
     end?: number;
     no_speech_prob?: number;
   }>;
+  /** 文本聚合相关字段 */
+  aggregation_applied?: boolean;  // 是否应用了文本聚合
+  aggregation_action?: 'MERGE' | 'NEW_STREAM' | 'COMMIT';  // 聚合动作
+  is_last_in_merged_group?: boolean;  // 是否是合并组中的最后一个 utterance
+  aggregation_metrics?: {
+    dedupCount?: number;
+    dedupCharsRemoved?: number;
+  };
+  /** 语义修复相关字段 */
+  semantic_repair_applied?: boolean;  // 是否应用了语义修复
+  semantic_repair_confidence?: number;  // 语义修复置信度
+  text_asr_repaired?: string;  // 语义修复后的 ASR 文本（如果应用了修复）
 }
 
 export interface PartialResultCallback {
@@ -60,9 +72,10 @@ export class InferenceService {
     pythonServiceManager: any,
     rustServiceManager: any,
     serviceRegistryManager: any,
-    aggregatorManager?: any,  // S1: 可选的AggregatorManager
-    aggregatorMiddleware?: any,  // 可选的AggregatorMiddleware
-    semanticRepairServiceManager?: any  // 可选的SemanticRepairServiceManager（用于检查语义修复服务实际运行状态）
+    aggregatorManager?: any,  // S1: 可选的AggregatorManager（仅用于构建prompt）
+    aggregatorMiddleware?: any,  // 已废弃：不再传递给PipelineOrchestrator，但保留参数以兼容旧代码
+    semanticRepairServiceManager?: any,  // 可选的SemanticRepairServiceManager（用于检查语义修复服务实际运行状态）
+    servicesHandler?: any  // 可选的ServicesHandler（用于语义修复服务发现）
   ) {
     this.modelManager = modelManager;
 
@@ -73,15 +86,18 @@ export class InferenceService {
 
     this.taskRouter = new TaskRouter(pythonServiceManager, rustServiceManager, serviceRegistryManager, semanticRepairServiceManager);
 
-    // S1: 传递AggregatorManager给PipelineOrchestrator（如果提供）
+    // S1: 传递AggregatorManager给PipelineOrchestrator（仅用于构建prompt）
+    // 注意：AggregatorMiddleware 的文本聚合逻辑已移除，现在由 PostProcessCoordinator 的 AggregationStage 统一处理
+    // 但是，AggregatorMiddleware 的 lastSentText 功能仍用于去重
     this.aggregatorManager = aggregatorManager;
-    this.aggregatorMiddleware = aggregatorMiddleware;
+    this.aggregatorMiddleware = aggregatorMiddleware;  // 保留引用并传递给PipelineOrchestrator用于去重
     const mode = 'offline';  // 默认模式，可以根据需要调整
     this.pipelineOrchestrator = new PipelineOrchestrator(
       this.taskRouter,
       aggregatorManager,
       mode,
-      aggregatorMiddleware
+      servicesHandler,  // 传递ServicesHandler用于语义修复服务发现
+      aggregatorMiddleware  // 传递AggregatorMiddleware用于去重时获取lastSentText
     );
 
     // 异步初始化服务端点
@@ -101,25 +117,51 @@ export class InferenceService {
       this.taskRouter,
       aggregatorManager,
       mode,
-      this.aggregatorMiddleware
+      undefined,  // servicesHandler 需要单独设置
+      this.aggregatorMiddleware  // 传递AggregatorMiddleware用于去重时获取lastSentText
     );
-    logger.info({}, 'S1: AggregatorManager updated in InferenceService');
   }
 
   /**
-   * 设置AggregatorMiddleware（用于动态更新）
+   * 设置ServicesHandler（用于语义修复服务发现）
    */
-  setAggregatorMiddleware(aggregatorMiddleware: any): void {
-    this.aggregatorMiddleware = aggregatorMiddleware;
-    // 重新创建PipelineOrchestrator以应用新的AggregatorMiddleware
+  setServicesHandler(servicesHandler: any): void {
+    // 重新创建PipelineOrchestrator以应用新的ServicesHandler
     const mode = 'offline';
     this.pipelineOrchestrator = new PipelineOrchestrator(
       this.taskRouter,
       this.aggregatorManager,
       mode,
-      aggregatorMiddleware
+      servicesHandler,
+      this.aggregatorMiddleware  // 传递AggregatorMiddleware用于去重时获取lastSentText
     );
-    logger.info({}, 'AggregatorMiddleware updated in InferenceService');
+    logger.info({}, 'InferenceService: ServicesHandler passed to PipelineOrchestrator for semantic repair');
+  }
+
+  /**
+   * 设置AggregatorMiddleware（已废弃：不再用于文本聚合）
+   * 保留此方法以兼容旧代码，但需要传递给PipelineOrchestrator用于去重
+   * AggregatorMiddleware 的 lastSentText 功能用于去重和ResultSender
+   */
+  setDeduplicationHandler(deduplicationHandler: any): void {
+    if (this.pipelineOrchestrator && typeof (this.pipelineOrchestrator as any).setDeduplicationHandler === 'function') {
+      (this.pipelineOrchestrator as any).setDeduplicationHandler(deduplicationHandler);
+      logger.info({}, 'InferenceService: DeduplicationHandler passed to PipelineOrchestrator');
+    }
+  }
+
+  setAggregatorMiddleware(aggregatorMiddleware: any): void {
+    this.aggregatorMiddleware = aggregatorMiddleware;
+    // 重新创建PipelineOrchestrator以应用新的AggregatorMiddleware（用于去重）
+    const mode = 'offline';
+    this.pipelineOrchestrator = new PipelineOrchestrator(
+      this.taskRouter,
+      this.aggregatorManager,
+      mode,
+      undefined,  // servicesHandler 需要单独设置
+      aggregatorMiddleware  // 传递AggregatorMiddleware用于去重时获取lastSentText
+    );
+    logger.info({}, 'AggregatorMiddleware reference updated and passed to PipelineOrchestrator for deduplication');
   }
 
   setOnTaskProcessedCallback(callback: (serviceName: string) => void): void {
@@ -208,7 +250,8 @@ export class InferenceService {
     }
 
     try {
-      // 刷新服务端点列表（确保使用最新的服务状态）
+      // 刷新服务端点列表（带缓存机制，避免频繁刷新）
+      // 注意：首次任务已在 waitForServicesReady() 中强制刷新，这里使用缓存即可
       await this.taskRouter.refreshServiceEndpoints();
 
       // 优化：ASR 完成后立即从 currentJobs 中移除，让 ASR 服务可以处理下一个任务
@@ -335,13 +378,13 @@ export class InferenceService {
 
     logger.info({ maxWaitMs }, 'Waiting for services to be ready');
 
-    // 先刷新一次服务端点列表
-    await this.taskRouter.refreshServiceEndpoints();
+    // 先强制刷新一次服务端点列表（确保获取最新状态）
+    await this.taskRouter.forceRefreshServiceEndpoints();
 
     while (Date.now() - startTime < maxWaitMs) {
       try {
-        // 刷新服务端点列表
-        await this.taskRouter.refreshServiceEndpoints();
+        // 循环中强制刷新服务端点列表（需要实时检测服务状态）
+        await this.taskRouter.forceRefreshServiceEndpoints();
 
         // 检查是否有可用的服务端点
         const hasASR = await this.checkServiceTypeReady('ASR');

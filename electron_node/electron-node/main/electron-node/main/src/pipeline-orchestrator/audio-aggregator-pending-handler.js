@@ -57,6 +57,8 @@ function handlePendingSecondHalf(job, buffer, currentAudio, currentDurationMs, s
             currentAudio.copy(mergedAudio, buffer.pendingSecondHalf.length);
             currentAudio = mergedAudio;
             currentDurationMs = (currentAudio.length / bytesPerSample / sampleRate) * 1000;
+            // 修复：标记job已合并pendingSecondHalf，用于聚合决策
+            job.hasPendingSecondHalfMerged = true;
             buffer.pendingSecondHalf = undefined; // 清空保留的后半句
             buffer.pendingSecondHalfCreatedAt = undefined;
         }

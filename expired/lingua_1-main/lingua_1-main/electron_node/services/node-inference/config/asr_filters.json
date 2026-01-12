@@ -1,0 +1,174 @@
+{
+  "version": "1.0",
+  "description": "ASR 文本过滤规则配置",
+  "rules": {
+    "filter_empty": true,
+    "filter_brackets": true,
+    "filter_punctuation": true,
+    "bracket_chars": [
+      "(",
+      ")",
+      "（",
+      "）",
+      "[",
+      "]",
+      "【",
+      "】"
+    ],
+    "single_char_fillers": [
+      "嗯",
+      "啊",
+      "呃",
+      "额",
+      "哦",
+      "噢",
+      "诶",
+      "欸"
+    ],
+    "exact_matches": [
+      "謝謝大家收看",
+      "谢谢大家收看",
+      "謝謝大家觀看",
+      "谢谢大家观看",
+      "謝謝觀看",
+      "谢谢观看",
+      "感謝收看",
+      "感谢收看",
+      "thank you for watching",
+      "thanks for watching",
+      "(字幕:j chong)",
+      "(字幕:J Chong)",
+      "( 字幕:j chong )",
+      "( 字幕:J Chong )",
+      "字幕:j chong",
+      "字幕:J Chong",
+      "詞曲:rol",
+      "词曲:rol",
+      "(空)",
+      "空",
+      "介紹哨音",
+      "介绍哨音",
+      "(音樂)",
+      "(音乐)",
+      "( 無法打開 )",
+      "( 无法打开 )",
+      "( 最後一集 )",
+      "( 最后一集 )",
+      "(回家)",
+      "请不吝点赞 转发 打赏支持明镜与点点栏目",
+      "请不吝点赞 订阅 转发 打赏支持明镜与点点栏目",
+      "請不吝點讚 轉發 打賞支持明鏡與點點欄目",
+      "請不吝點讚 訂閱 轉發 打賞支持明鏡與點點欄目",
+      "打赏支持明镜与点点栏目",
+      "打賞支持明鏡與點點欄目",
+      "中文字幕志愿者 杨栋梁",
+      "中文字幕志願者 楊棟樑",
+      "本期视频就分享到这里,感谢观看,下次见!",
+      "The",
+      "the",
+      "A",
+      "a",
+      "An",
+      "an"
+    ],
+    "contains_patterns": [
+      "謝謝大家收看",
+      "谢谢大家收看",
+      "謝謝大家觀看",
+      "谢谢大家观看",
+      "打赏支持",
+      "打賞支持",
+      "请不吝点赞",
+      "請不吝點讚",
+      "订阅 转发",
+      "訂閱 轉發",
+      "中文字幕",
+      "字幕志愿者",
+      "中文字幕志愿者",
+      "中文字幕志願者",
+      "詞曲:",
+      "词曲:",
+      "介紹哨音",
+      "介绍哨音"
+    ],
+    "all_contains_patterns": [
+      {
+        "patterns": [
+          "点赞",
+          "转发",
+          "打赏"
+        ],
+        "description": "视频推广文本组合"
+      },
+      {
+        "patterns": [
+          "點讚",
+          "轉發",
+          "打賞"
+        ],
+        "description": "视频推广文本组合（繁体）"
+      },
+      {
+        "patterns": [
+          "字幕",
+          "j chong"
+        ],
+        "description": "字幕制作者信息"
+      }
+    ],
+    "subtitle_keywords": [
+      "字幕"
+    ],
+    "subtitle_patterns": [
+      "字幕——",
+      "字幕--",
+      "字幕 - ",
+      "字幕:",
+      "字幕：",
+      "字幕志愿者",
+      "字幕制作者",
+      "字幕组"
+    ],
+    "subtitle_volunteer_patterns": [
+      "中文字幕志愿者",
+      "中文字幕志願者",
+      "字幕志愿者"
+    ],
+    "meaningless_patterns": [
+      "titled by",
+      "title:",
+      "字幕:",
+      "subtitle:",
+      "source:",
+      "author:",
+      "translated by"
+    ],
+    "context_aware_thanks": {
+      "enabled": true,
+      "min_context_length": 10,
+      "thanks_patterns": [
+        "谢谢大家",
+        "感謝大家",
+        "感谢大家",
+        "感谢观看",
+        "感謝觀看",
+        "谢谢观看",
+        "謝謝觀看"
+      ],
+      "context_indicators": [
+        "结束",
+        "完成",
+        "再见",
+        "拜拜",
+        "好了",
+        "就这样",
+        "end",
+        "finish",
+        "done",
+        "goodbye",
+        "bye"
+      ]
+    },
+    "subtitle_volunteer_min_length": 8
+  }
+}

@@ -347,6 +347,7 @@ export interface JobAssignMessage {
     use_asr: boolean;
     use_nmt: boolean;
     use_tts: boolean;
+    use_tone?: boolean;  // 是否使用 TONE 服务（音色配音）
   };
   audio: string; // base64
   audio_format: string;

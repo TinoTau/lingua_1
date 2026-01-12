@@ -75,10 +75,14 @@ class AggregatorState {
      * @param isManualCut 是否为手动截断
      * @returns 处理结果
      */
-    processUtterance(text, segments, langProbs, qualityScore, isFinal = false, isManualCut = false, isPauseTriggered = false, isTimeoutTriggered = false) {
+    processUtterance(text, segments, langProbs, qualityScore, isFinal = false, isManualCut = false, isPauseTriggered = false, isTimeoutTriggered = false, hasPendingSecondHalfMerged = false) {
         const nowMs = Date.now();
         // 使用 utterance 处理器进行预处理
         const utteranceResult = this.utteranceProcessor.processUtterance(text, segments, langProbs, qualityScore, isFinal, isManualCut, isPauseTriggered, isTimeoutTriggered, this.sessionStartTimeMs, this.lastUtteranceEndTimeMs);
+        // 修复：如果合并了pendingSecondHalf，将标志传递给utteranceInfo
+        if (hasPendingSecondHalfMerged) {
+            utteranceResult.utteranceInfo.hasPendingSecondHalfMerged = true;
+        }
         const curr = utteranceResult.utteranceInfo;
         const startMs = utteranceResult.utteranceTime.startMs;
         const endMs = utteranceResult.utteranceTime.endMs;
@@ -129,12 +133,36 @@ class AggregatorState {
             this.metrics.tailCarryUsage++;
         }
         // 使用 pending manager 处理文本合并和状态管理
+        // 修复：在NEW_STREAM时，先保存之前的pendingText，用于提交
+        const previousPendingText = action === 'NEW_STREAM' ? this.pendingText : '';
         let pendingUpdateResult;
         if (action === 'MERGE' && this.lastUtterance) {
             pendingUpdateResult = this.pendingManager.handleMerge(processedText, this.pendingText, curr, startMs, endMs, isFirstInMergedGroup);
         }
         else {
             pendingUpdateResult = this.pendingManager.handleNewStream(processedText, this.pendingText, this.tailBuffer);
+            // 修复：在NEW_STREAM时，如果之前的pendingText存在，先提交之前的文本
+            // 这样可以确保之前的文本被记录到recentCommittedText中，用于去重
+            if (previousPendingText && previousPendingText.trim().length > 0) {
+                // 使用临时提交处理器判断是否需要提交之前的文本
+                const previousMergeGroupState = this.mergeGroupManager.getState();
+                const previousCommitDecision = this.commitHandler.decideCommit('NEW_STREAM', previousPendingText, this.lastCommitTsMs, nowMs, previousMergeGroupState.mergeGroupStartTimeMs, isFinal, isManualCut, isPauseTriggered, isTimeoutTriggered);
+                // 如果之前的文本应该提交，先提交它
+                if (previousCommitDecision.shouldCommit) {
+                    const previousCommitResult = this.commitExecutor.executeCommit(previousPendingText, this.tailBuffer, isFinal, isManualCut, qualityScore, gapMs, previousCommitDecision.commitByManualCut, previousCommitDecision.commitByTimeout);
+                    const previousCommitText = previousCommitResult.commitText;
+                    if (previousCommitText && previousCommitText.trim().length > 0) {
+                        // 更新上下文（记录到recentCommittedText，用于去重）
+                        this.contextManager.updateRecentCommittedText(previousCommitText);
+                        logger_1.default.info({
+                            text: previousCommitText.substring(0, 50),
+                            textLength: previousCommitText.length,
+                            action: 'NEW_STREAM',
+                            reason: 'Committed previous pendingText before starting new stream, for deduplication',
+                        }, 'AggregatorState: Committed previous pendingText in NEW_STREAM for deduplication');
+                    }
+                }
+            }
         }
         // 更新 pending text 和 tail buffer
         this.pendingText = pendingUpdateResult.newPendingText;

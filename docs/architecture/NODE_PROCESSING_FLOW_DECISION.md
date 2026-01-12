@@ -642,10 +642,25 @@
 **当前实现**：
 - ASR、NMT、TTS 都使用 `SequentialExecutor` 确保按 `utterance_index` 顺序执行
 - 防止乱序导致的问题（如上下文丢失、翻译错误等）
+- **每个阶段（ASR、NMT、TTS、SEMANTIC_REPAIR）都有独立的顺序队列**，支持流水线并行处理
 
-**建议**：
-- 顺序执行机制是必要的，但可能会影响并发性能
-- 可以考虑优化顺序执行的实现（如使用队列而非串行执行）
+**设计说明**：
+- ✅ **SequentialExecutor 的设计是正确的**：每个 `taskType` 独立维护顺序队列
+- ✅ **支持流水线并行处理**：多个 job 可以并发处理，不同 job 的不同阶段可以并行执行
+- ✅ **不影响并发性能**：虽然单个 job 的流程是串行的，但多个 job 可以并发处理，提高了系统整体性能
+
+**示例（流水线并行）**：
+```
+时间线：
+Job1: ASR → NMT → TTS
+Job2:      ASR → NMT → TTS
+Job3:           ASR → NMT → TTS
+```
+- Job1 的 NMT 和 Job2 的 ASR 可以并行执行
+- Job1 的 TTS 和 Job2 的 NMT 和 Job3 的 ASR 可以并行执行
+- 每个阶段独立维护顺序队列，确保同一 session 的多个 job 按 `utterance_index` 顺序执行
+
+**结论**：SequentialExecutor 的"层层叠加"（每个阶段独立维护顺序队列）不是问题，而是**必要的设计**，支持流水线并行处理。
 
 ---
 

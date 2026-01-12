@@ -52,9 +52,9 @@ class AggregatorManager {
     /**
      * 处理 utterance
      */
-    processUtterance(sessionId, text, segments, langProbs, qualityScore, isFinal = false, isManualCut = false, mode = 'offline', isPauseTriggered = false, isTimeoutTriggered = false) {
+    processUtterance(sessionId, text, segments, langProbs, qualityScore, isFinal = false, isManualCut = false, mode = 'offline', isPauseTriggered = false, isTimeoutTriggered = false, hasPendingSecondHalfMerged = false) {
         const state = this.getOrCreateState(sessionId, mode);
-        return state.processUtterance(text, segments, langProbs, qualityScore, isFinal, isManualCut, isPauseTriggered, isTimeoutTriggered);
+        return state.processUtterance(text, segments, langProbs, qualityScore, isFinal, isManualCut, isPauseTriggered, isTimeoutTriggered, hasPendingSecondHalfMerged);
     }
     /**
      * 强制 flush session

@@ -4,6 +4,8 @@
 
 为了确保翻译结果的正确性和连贯性，我们实现了**顺序执行管理器（SequentialExecutor）**，确保每个服务（ASR、NMT、TTS、Semantic Repair）按`utterance_index`顺序执行。
 
+**重要说明**：SequentialExecutor 的设计支持**流水线并行处理**，多个 job 可以并发处理，但每个阶段（ASR、NMT、TTS）都需要独立的顺序保证。
+
 ## 问题背景
 
 在集成测试中发现，`job3`和`job4`应该是连接在一起的一句话，但被分开翻译了，导致翻译结果不连贯。这是因为：
@@ -22,6 +24,31 @@
 - **等待队列**：如果任务索引不连续，会加入等待队列，等待前面的任务完成
 - **超时保护**：避免死锁，超时后拒绝任务
 - **每个session独立**：不同session的任务互不影响
+- **每个taskType独立**：每个服务类型（ASR、NMT、TTS、SEMANTIC_REPAIR）都有独立的顺序队列
+
+### 1.1 为什么每个阶段需要独立的顺序保证？
+
+系统支持**流水线并行处理**，多个 job 可以并发处理：
+
+```
+时间线（流水线并行）：
+Job1: ASR → NMT → TTS
+Job2:      ASR → NMT → TTS
+Job3:           ASR → NMT → TTS
+```
+
+**关键点**：
+- 单个 job 的流程是**串行的**（ASR → NMT → TTS），需要等待前一个阶段完成
+- 多个 job 可以**并发处理**，不同 job 的同一阶段可能同时执行
+- 因此，**每个阶段都需要独立的顺序保证**，确保同一 session 的多个 job 按 `utterance_index` 顺序执行
+
+**示例**：
+- Job1 的 ASR 完成后，Job1 的 NMT 可以开始
+- 同时，Job2 的 ASR 也可以开始（与 Job1 的 NMT 并行）
+- Job1 的 NMT 和 Job2 的 NMT 可能同时执行
+- 需要 SequentialExecutor 保证它们按 `utterance_index` 顺序执行
+
+**结论**：SequentialExecutor 的"层层叠加"（每个阶段独立维护顺序队列）不是问题，而是**必要的设计**，支持流水线并行处理。
 
 ### 2. 实现位置
 
@@ -144,10 +171,12 @@ const result = await sequentialExecutor.execute(
 
 ### 3. 状态管理
 
-`SequentialExecutor`为每个session维护：
-- `currentIndex`: 当前处理的`utterance_index`
-- `waitingQueue`: 等待队列（按`utterance_index`排序）
-- `processing`: 当前正在处理的任务
+`SequentialExecutor`为每个session和每个taskType维护独立的状态：
+- `currentIndex`: `Map<sessionId, Map<taskType, index>>` - 当前处理的`utterance_index`（按服务类型）
+- `waitingQueue`: `Map<sessionId, Map<taskType, queue>>` - 等待队列（按`utterance_index`排序，按服务类型）
+- `processing`: `Map<sessionId, Map<taskType, task>>` - 当前正在处理的任务（按服务类型）
+
+**关键设计**：每个 `taskType`（ASR、NMT、TTS、SEMANTIC_REPAIR）都有独立的顺序队列，支持流水线并行处理。
 
 ### 4. 顺序保证机制
 
@@ -195,7 +224,10 @@ const result = await sequentialExecutor.execute(
 ### 2. 优化
 
 - **超时保护**：避免死锁，超时后拒绝任务
-- **并发优化**：虽然顺序执行，但不同session的任务可以并发执行
+- **并发优化**：
+  - 不同 session 的任务可以并发执行
+  - **流水线并行**：不同 job 的不同阶段可以并行执行（例如 Job1 的 NMT 和 Job2 的 ASR 可以并行）
+  - 每个阶段独立维护顺序队列，不影响其他阶段的并发性能
 
 ## 总结
 
@@ -204,6 +236,13 @@ const result = await sequentialExecutor.execute(
 2. ✅ 合并后的job使用正确的`utterance_index`
 3. ✅ `context_text`总是获取到正确的上一个utterance
 4. ✅ 翻译结果连贯，避免job3和job4分开翻译的问题
+5. ✅ **支持流水线并行处理**：多个 job 可以并发处理，不同 job 的不同阶段可以并行执行
+6. ✅ **每个阶段独立顺序保证**：ASR、NMT、TTS 各自维护独立的顺序队列，支持流水线并行
+
+**重要澄清**：
+- SequentialExecutor 的"层层叠加"（每个阶段独立维护顺序队列）不是问题，而是**必要的设计**
+- 这种设计支持流水线并行处理，提高了系统的并发性能
+- 单个 job 的串行流程（ASR → NMT → TTS）是正常的业务流程，不是性能问题
 
 ## 相关文档
 

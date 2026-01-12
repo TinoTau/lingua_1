@@ -270,13 +270,31 @@ async function startServiceProcess(serviceName, config, handlers) {
         throw new Error(error);
     }
     // 检查端口是否被占用，如果被占用则尝试清理
-    const { checkPortAvailable } = require('../utils/port-manager');
-    const portAvailable = await checkPortAvailable(config.port);
+    const { checkPortAvailable, verifyPortReleased, cleanupPortProcesses } = require('../utils/port-manager');
+    let portAvailable = await checkPortAvailable(config.port);
     if (!portAvailable) {
         logger_1.default.warn({ serviceName, port: config.port }, `Port ${config.port} is already in use, attempting to cleanup...`);
-        await (0, port_manager_1.cleanupPortProcesses)(config.port, serviceName);
-        // 等待端口释放
+        await cleanupPortProcesses(config.port, serviceName);
+        // 等待端口释放，并验证
         await new Promise((resolve) => setTimeout(resolve, 1000));
+        // 验证端口是否已释放
+        const portReleased = await verifyPortReleased(config.port, serviceName, 3000);
+        if (!portReleased) {
+            // 如果端口仍未释放，再次尝试清理并等待
+            logger_1.default.warn({ serviceName, port: config.port }, `Port ${config.port} still in use after cleanup, retrying...`);
+            await cleanupPortProcesses(config.port, serviceName);
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            // 再次验证
+            portAvailable = await checkPortAvailable(config.port);
+            if (!portAvailable) {
+                const error = `Port ${config.port} is still occupied after cleanup attempts. Please manually kill the process using this port.`;
+                logger_1.default.error({ serviceName, port: config.port }, error);
+                throw new Error(error);
+            }
+        }
+        else {
+            portAvailable = true;
+        }
     }
     // 构建启动命令（需要检测 CUDA）
     const args = await buildServiceArgs(serviceName, config, pythonExe);

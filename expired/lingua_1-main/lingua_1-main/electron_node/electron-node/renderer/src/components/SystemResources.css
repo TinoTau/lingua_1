@@ -1,0 +1,70 @@
+.lsr-root {
+  padding: 20px;
+}
+
+.lsr-root .lsr-title {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.lsr-root .lsr-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.lsr-root .lsr-item .lsr-label {
+  width: 60px;
+  font-weight: 500;
+}
+
+.lsr-root .lsr-progress {
+  flex: 1;
+  height: 20px;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.lsr-root .lsr-progress-fill {
+  height: 100%;
+  background-color: #2196f3;
+  transition: width 0.3s ease;
+}
+
+.lsr-root .lsr-item .lsr-value {
+  width: 50px;
+  text-align: right;
+  font-size: 14px;
+}
+
+.lsr-root .lsr-model-btn-container {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.lsr-root .lsr-model-btn {
+  width: 100%;
+  padding: 12px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.lsr-root .lsr-model-btn:hover {
+  background-color: #0056b3;
+}
+
+.lsr-root .lsr-model-btn:active {
+  background-color: #004085;
+}
+

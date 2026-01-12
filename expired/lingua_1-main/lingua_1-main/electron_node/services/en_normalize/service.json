@@ -1,0 +1,19 @@
+{
+  "service_id": "en-normalize",
+  "name": "EN Normalize Service",
+  "version": "1.0.0",
+  "type": "semantic-repair",
+  "language": "en",
+  "port": 5012,
+  "gpu_required": false,
+  "vram_estimate": 0,
+  "max_concurrency": 10,
+  "startup_command": "python",
+  "startup_args": [
+    "en_normalize_service.py"
+  ],
+  "health_check": {
+    "endpoint": "/health",
+    "timeout_ms": 500
+  }
+}

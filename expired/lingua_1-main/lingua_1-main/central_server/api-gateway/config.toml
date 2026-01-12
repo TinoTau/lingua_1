@@ -1,0 +1,15 @@
+[server]
+port = 8081
+host = "0.0.0.0"
+
+[scheduler]
+url = "ws://localhost:5010/ws/session"
+
+[rate_limit]
+default_max_rps = 100
+default_max_sessions = 10
+
+[tenant]
+# 租户配置可以通过数据库或配置文件管理
+# 这里使用内存存储，生产环境建议使用数据库
+

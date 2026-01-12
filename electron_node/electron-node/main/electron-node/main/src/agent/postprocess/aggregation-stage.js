@@ -11,8 +11,10 @@ exports.AggregationStage = void 0;
 const text_forward_merge_manager_1 = require("./text-forward-merge-manager");
 const logger_1 = __importDefault(require("../../logger"));
 class AggregationStage {
-    constructor(aggregatorManager) {
+    constructor(aggregatorManager, aggregatorMiddleware = null, deduplicationHandler = null) {
         this.aggregatorManager = aggregatorManager;
+        this.aggregatorMiddleware = aggregatorMiddleware;
+        this.deduplicationHandler = deduplicationHandler;
         this.forwardMergeManager = new text_forward_merge_manager_1.TextForwardMergeManager();
     }
     /**
@@ -80,10 +82,13 @@ class AggregationStage {
         const isManualCut = job.is_manual_cut || job.isManualCut || false;
         const isPauseTriggered = job.is_pause_triggered || job.isPauseTriggered || false;
         const isTimeoutTriggered = job.is_timeout_triggered || job.isTimeoutTriggered || false;
+        // 修复：检测是否合并了pendingSecondHalf，用于聚合决策
+        const hasPendingSecondHalfMerged = job.hasPendingSecondHalfMerged || false;
         const aggregatorResult = this.aggregatorManager.processUtterance(job.session_id, asrTextTrimmed, segments, langProbs, result.quality_score, true, // isFinal: P0 只处理 final 结果
         isManualCut, // 从 job 中提取
         mode, isPauseTriggered, // 从 job 中提取
-        isTimeoutTriggered // 从 job 中提取
+        isTimeoutTriggered, // 从 job 中提取
+        hasPendingSecondHalfMerged // 传递pendingSecondHalf合并标志
         );
         // 获取聚合后的文本
         let aggregatedText = asrTextTrimmed;
@@ -152,14 +157,89 @@ class AggregationStage {
             isFirstInMergedGroup = false;
             isLastInMergedGroup = false;
         }
-        // 新逻辑：向前合并和去重
-        // 获取上一个已提交的文本（用于去重）
-        const previousText = this.aggregatorManager?.getLastCommittedText(job.session_id, aggregatedText) || null;
-        // 使用向前合并管理器处理文本
-        const forwardMergeResult = this.forwardMergeManager.processText(job.session_id, aggregatedText, previousText, job.job_id, job.utterance_index || 0, isManualCut // 传递手动发送标志
+        // 新逻辑：去重和向前合并
+        // 修复：参考AggregatorMiddleware的去重逻辑，使用DeduplicationHandler进行完整的去重检查
+        // 1. 首先使用DeduplicationHandler进行去重（检查完全重复、子串重复、重叠、高相似度）
+        // 2. 然后使用TextForwardMergeManager进行向前合并和边界重叠裁剪
+        let textAfterDeduplication = aggregatedText;
+        let deduplicationApplied = false;
+        let deduplicationReason = undefined;
+        // 使用DeduplicationHandler进行去重（如果提供了）
+        if (this.deduplicationHandler && aggregatedText && aggregatedText.trim().length > 0) {
+            const duplicateCheck = this.deduplicationHandler.isDuplicate(job.session_id, aggregatedText, job.job_id, job.utterance_index);
+            if (duplicateCheck.isDuplicate) {
+                // 完全重复，返回空文本
+                logger_1.default.info({
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                    utteranceIndex: job.utterance_index,
+                    aggregatedText: aggregatedText.substring(0, 50),
+                    aggregatedTextLength: aggregatedText.length,
+                    reason: duplicateCheck.reason,
+                }, 'AggregationStage: Duplicate text detected by DeduplicationHandler, filtering');
+                return {
+                    aggregatedText: '',
+                    aggregationChanged: true,
+                    action: aggregatorResult.action,
+                    shouldDiscard: true,
+                    shouldWaitForMerge: false,
+                    shouldSendToSemanticRepair: false,
+                    metrics: aggregatorResult.metrics,
+                };
+            }
+            else if (duplicateCheck.deduplicatedText) {
+                // 重叠去重，使用去重后的文本
+                textAfterDeduplication = duplicateCheck.deduplicatedText;
+                deduplicationApplied = true;
+                deduplicationReason = duplicateCheck.reason;
+                logger_1.default.info({
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                    utteranceIndex: job.utterance_index,
+                    originalText: aggregatedText.substring(0, 50),
+                    deduplicatedText: textAfterDeduplication.substring(0, 50),
+                    originalLength: aggregatedText.length,
+                    deduplicatedLength: textAfterDeduplication.length,
+                    reason: deduplicationReason,
+                }, 'AggregationStage: Overlap detected by DeduplicationHandler, using deduplicated text');
+            }
+        }
+        // 获取previousText用于TextForwardMergeManager（边界重叠裁剪）
+        // 优先使用DeduplicationHandler的lastSentText，否则使用AggregatorMiddleware，最后使用recentCommittedText
+        let previousText = null;
+        if (this.deduplicationHandler) {
+            const lastSentText = this.deduplicationHandler.getLastSentText(job.session_id);
+            previousText = lastSentText || null;
+        }
+        else if (this.aggregatorMiddleware) {
+            const lastSentText = this.aggregatorMiddleware.getLastSentText(job.session_id);
+            previousText = lastSentText || null;
+        }
+        else {
+            previousText = this.aggregatorManager?.getLastCommittedText(job.session_id, textAfterDeduplication) || null;
+        }
+        // 添加调试日志：记录previousText和textAfterDeduplication，用于排查去重问题
+        logger_1.default.info({
+            jobId: job.job_id,
+            sessionId: job.session_id,
+            utteranceIndex: job.utterance_index,
+            aggregatedText: aggregatedText.substring(0, 50),
+            aggregatedTextLength: aggregatedText.length,
+            textAfterDeduplication: textAfterDeduplication.substring(0, 50),
+            textAfterDeduplicationLength: textAfterDeduplication.length,
+            deduplicationApplied,
+            deduplicationReason,
+            previousText: previousText ? previousText.substring(0, 50) : null,
+            previousTextLength: previousText ? previousText.length : 0,
+            hasPreviousText: !!previousText,
+            usingDeduplicationHandler: !!this.deduplicationHandler,
+            usingLastSentText: !!this.deduplicationHandler || !!this.aggregatorMiddleware,
+        }, 'AggregationStage: Before forward merge, checking previousText for deduplication');
+        // 使用向前合并管理器处理文本（边界重叠裁剪）
+        const forwardMergeResult = this.forwardMergeManager.processText(job.session_id, textAfterDeduplication, previousText, job.job_id, job.utterance_index || 0, isManualCut // 传递手动发送标志
         );
         // 根据处理结果更新aggregatedText
-        let finalAggregatedText = aggregatedText;
+        let finalAggregatedText = textAfterDeduplication;
         if (forwardMergeResult.shouldDiscard) {
             // < 6字符：丢弃
             finalAggregatedText = '';
@@ -176,7 +256,7 @@ class AggregationStage {
             // 其他情况：使用原始文本
             finalAggregatedText = forwardMergeResult.processedText;
         }
-        const aggregationChanged = finalAggregatedText.trim() !== asrTextTrimmed.trim();
+        const aggregationChanged = finalAggregatedText.trim() !== asrTextTrimmed.trim() || deduplicationApplied;
         // 优化：检测不完整句子（如果文本不以标点符号结尾，且长度较短，可能是被切分的句子）
         const isIncompleteSentence = this.detectIncompleteSentence(finalAggregatedText);
         if (isIncompleteSentence) {
@@ -209,8 +289,10 @@ class AggregationStage {
             shouldDiscard: forwardMergeResult.shouldDiscard,
             shouldWaitForMerge: forwardMergeResult.shouldWaitForMerge,
             shouldSendToSemanticRepair: forwardMergeResult.shouldSendToSemanticRepair,
-            deduped: totalDedupCount > 0,
+            deduped: totalDedupCount > 0 || deduplicationApplied,
             dedupChars: totalDedupChars,
+            deduplicationApplied,
+            deduplicationReason,
             forwardMergeDeduped: forwardMergeResult.deduped,
             forwardMergeDedupChars: forwardMergeResult.dedupChars,
         }, 'AggregationStage: Processing completed with forward merge');

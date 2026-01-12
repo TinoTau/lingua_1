@@ -60,38 +60,125 @@ export class TextForwardMergeManager {
     // 检查是否有待合并的文本（等待超时）
     const pending = this.pendingTexts.get(sessionId);
     if (pending && nowMs >= pending.waitUntil) {
-      // 等待超时，处理待合并的文本
+      // 等待超时，需要处理待合并的文本
+      // 但是，如果有当前的currentText，应该先尝试合并，而不是直接返回pendingText
       logger.info(
         {
           sessionId,
           pendingText: pending.text.substring(0, 50),
           pendingLength: pending.text.length,
+          currentText: currentText.substring(0, 50),
+          currentLength: currentText.length,
           waitTimeout: true,
-          reason: 'Pending text wait timeout, processing now',
+          reason: 'Pending text wait timeout, will merge with current text if available',
         },
-        'TextForwardMergeManager: Pending text wait timeout, processing now'
+        'TextForwardMergeManager: Pending text wait timeout, will merge with current text if available'
       );
-      this.pendingTexts.delete(sessionId);
       
-      // 超时后，无论文本长度如何，都发送给语义修复服务，跳过过滤
-      logger.info(
-        {
-          sessionId,
-          pendingText: pending.text.substring(0, 50),
-          pendingLength: pending.text.length,
-          reason: 'Pending text wait timeout, sending to semantic repair regardless of length',
-        },
-        'TextForwardMergeManager: Pending text wait timeout, sending to semantic repair regardless of length'
-      );
-      return {
-        processedText: pending.text,
-        shouldDiscard: false,
-        shouldWaitForMerge: false,
-        shouldSendToSemanticRepair: true,
-        deduped: false,
-        dedupChars: 0,
-        // 注意：超时处理时，不需要通知GPU仲裁器，因为任务可能已经完成
-      };
+      // 如果有currentText，先尝试合并
+      if (currentText && currentText.trim().length > 0) {
+        // 与当前文本去重合并
+        const dedupResult = dedupMergePrecise(pending.text, currentText, this.dedupConfig);
+        const mergedText = dedupResult.text;
+        
+        logger.info(
+          {
+            sessionId,
+            pendingText: pending.text.substring(0, 50),
+            currentText: currentText.substring(0, 50),
+            mergedText: mergedText.substring(0, 100),
+            pendingLength: pending.text.length,
+            currentLength: currentText.length,
+            mergedLength: mergedText.length,
+            deduped: dedupResult.deduped,
+            dedupChars: dedupResult.overlapChars,
+            pendingUtteranceIndex: pending.utteranceIndex,
+            currentUtteranceIndex: utteranceIndex,
+            reason: 'Pending text timeout, merged with current text',
+          },
+          'TextForwardMergeManager: Pending text timeout, merged with current text'
+        );
+        
+        // 清除待合并的文本
+        this.pendingTexts.delete(sessionId);
+        
+        // 判断合并后的文本长度
+        if (mergedText.length < this.MIN_LENGTH_TO_KEEP) {
+          // < 6字符：丢弃
+          return {
+            processedText: '',
+            shouldDiscard: true,
+            shouldWaitForMerge: false,
+            shouldSendToSemanticRepair: false,
+            deduped: dedupResult.deduped,
+            dedupChars: dedupResult.overlapChars,
+            mergedFromPendingUtteranceIndex: pending.utteranceIndex,
+          };
+        } else if (mergedText.length < this.MIN_LENGTH_TO_SEND) {
+          // 6-16字符：如果是手动发送，直接发送给语义修复；否则继续等待
+          if (isManualCut) {
+            return {
+              processedText: mergedText,
+              shouldDiscard: false,
+              shouldWaitForMerge: false,
+              shouldSendToSemanticRepair: true,
+              deduped: dedupResult.deduped,
+              dedupChars: dedupResult.overlapChars,
+              mergedFromPendingUtteranceIndex: pending.utteranceIndex,
+            };
+          } else {
+            // 非手动发送：继续等待
+            this.pendingTexts.set(sessionId, {
+              text: mergedText,
+              waitUntil: nowMs + this.WAIT_TIMEOUT_MS,
+              jobId,
+              utteranceIndex,
+            });
+            return {
+              processedText: '',
+              shouldDiscard: false,
+              shouldWaitForMerge: true,
+              shouldSendToSemanticRepair: false,
+              deduped: dedupResult.deduped,
+              dedupChars: dedupResult.overlapChars,
+              mergedFromPendingUtteranceIndex: pending.utteranceIndex,
+            };
+          }
+        } else {
+          // > 16字符：发送给语义修复
+          return {
+            processedText: mergedText,
+            shouldDiscard: false,
+            shouldWaitForMerge: false,
+            shouldSendToSemanticRepair: true,
+            deduped: dedupResult.deduped,
+            dedupChars: dedupResult.overlapChars,
+            mergedFromPendingUtteranceIndex: pending.utteranceIndex,
+          };
+        }
+      } else {
+        // 没有currentText，直接处理pendingText
+        this.pendingTexts.delete(sessionId);
+        
+        logger.info(
+          {
+            sessionId,
+            pendingText: pending.text.substring(0, 50),
+            pendingLength: pending.text.length,
+            reason: 'Pending text wait timeout, no current text, sending to semantic repair regardless of length',
+          },
+          'TextForwardMergeManager: Pending text wait timeout, no current text, sending to semantic repair regardless of length'
+        );
+        return {
+          processedText: pending.text,
+          shouldDiscard: false,
+          shouldWaitForMerge: false,
+          shouldSendToSemanticRepair: true,
+          deduped: false,
+          dedupChars: 0,
+          // 注意：超时处理时，不需要通知GPU仲裁器，因为任务可能已经完成
+        };
+      }
     }
 
     // 如果有待合并的文本且未超时，与当前文本合并

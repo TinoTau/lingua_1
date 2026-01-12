@@ -1,0 +1,114 @@
+name: lingua-scheduler-redis-cluster
+
+services:
+  redis-0:
+    image: redis:7.4
+    command:
+      [
+        "redis-server",
+        "--port",
+        "6379",
+        "--bind",
+        "0.0.0.0",
+        "--protected-mode",
+        "no",
+        "--appendonly",
+        "no",
+        "--save",
+        "",
+        "--cluster-enabled",
+        "yes",
+        "--cluster-config-file",
+        "nodes.conf",
+        "--cluster-node-timeout",
+        "5000"
+      ]
+    networks: [redis-cluster]
+
+  redis-1:
+    image: redis:7.4
+    command:
+      [
+        "redis-server",
+        "--port",
+        "6379",
+        "--bind",
+        "0.0.0.0",
+        "--protected-mode",
+        "no",
+        "--appendonly",
+        "no",
+        "--save",
+        "",
+        "--cluster-enabled",
+        "yes",
+        "--cluster-config-file",
+        "nodes.conf",
+        "--cluster-node-timeout",
+        "5000"
+      ]
+    networks: [redis-cluster]
+
+  redis-2:
+    image: redis:7.4
+    command:
+      [
+        "redis-server",
+        "--port",
+        "6379",
+        "--bind",
+        "0.0.0.0",
+        "--protected-mode",
+        "no",
+        "--appendonly",
+        "no",
+        "--save",
+        "",
+        "--cluster-enabled",
+        "yes",
+        "--cluster-config-file",
+        "nodes.conf",
+        "--cluster-node-timeout",
+        "5000"
+      ]
+    networks: [redis-cluster]
+
+  redis-cluster-init:
+    image: redis:7.4
+    depends_on:
+      - redis-0
+      - redis-1
+      - redis-2
+    networks: [redis-cluster]
+    entrypoint:
+      [
+        "sh",
+        "-lc",
+        "until redis-cli -h redis-0 -p 6379 PING | grep -q PONG; do sleep 1; done; until redis-cli -h redis-1 -p 6379 PING | grep -q PONG; do sleep 1; done; until redis-cli -h redis-2 -p 6379 PING | grep -q PONG; do sleep 1; done; redis-cli --cluster create redis-0:6379 redis-1:6379 redis-2:6379 --cluster-replicas 0 --cluster-yes || true; sleep 2"
+      ]
+
+  scheduler-tests:
+    image: rust:1.85
+    depends_on:
+      - redis-cluster-init
+    working_dir: /workspace
+    volumes:
+      - ../..:/workspace
+    environment:
+      - LINGUA_TEST_REDIS_MODE=cluster
+      - LINGUA_TEST_REDIS_CLUSTER_URLS=redis://redis-0:6379,redis://redis-1:6379,redis://redis-2:6379
+      - RUST_LOG=info
+      - CARGO_TERM_COLOR=always
+      # keep build cache inside the container filesystem to avoid Windows bind-mount edge cases
+      - CARGO_TARGET_DIR=/tmp/target
+    command: ["bash", "-lc", "export PATH=/usr/local/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin; cargo test -q phase2_cluster_acceptance_smoke"]
+    networks: [redis-cluster]
+
+networks:
+  redis-cluster:
+    driver: bridge
+
+volumes:
+  {}
+
+

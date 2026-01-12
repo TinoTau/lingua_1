@@ -1,0 +1,43 @@
+.lns-root {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.lns-root.is-connected {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.lns-root.is-disconnected {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.lns-root.is-disconnected.is-clickable {
+  transition: background-color 0.2s;
+}
+
+.lns-root.is-disconnected.is-clickable:hover {
+  background-color: #ffcdd2;
+}
+
+.lns-root .lns-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.lns-root .lns-text {
+  font-weight: 500;
+}
+
+.lns-root .lns-node-id {
+  font-size: 12px;
+  opacity: 0.7;
+}
+

@@ -1,0 +1,57 @@
+.lap-root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
+.lap-root .lap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.lap-root .lap-header-status {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.lap-root .lap-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.lap-root .lap-main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.lap-root .lap-left-panel {
+  width: 300px;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+}
+
+.lap-root .lap-middle-panel {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.lap-root .lap-model-management-page {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}

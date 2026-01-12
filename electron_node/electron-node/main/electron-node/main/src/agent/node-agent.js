@@ -73,12 +73,23 @@ class NodeAgent {
             this.postProcessCoordinator = new postprocess_coordinator_1.PostProcessCoordinator(aggregatorManager, taskRouter, this.servicesHandler, // 传递ServicesHandler用于服务发现
             postProcessConfig);
             logger_1.default.info({}, 'PostProcessCoordinator initialized (new architecture)');
+            // 将PostProcessCoordinator的DeduplicationHandler传递给PipelineOrchestrator（用于去重）
+            if (this.postProcessCoordinator && this.inferenceService) {
+                const deduplicationHandler = this.postProcessCoordinator.getDeduplicationHandler();
+                this.inferenceService.setDeduplicationHandler(deduplicationHandler);
+                logger_1.default.info({}, 'DeduplicationHandler passed from PostProcessCoordinator to InferenceService');
+            }
         }
         // S1: 将AggregatorManager传递给InferenceService（用于构建prompt）
         const aggregatorManager = this.aggregatorMiddleware.manager;
         if (aggregatorManager && this.inferenceService) {
             this.inferenceService.setAggregatorManager(aggregatorManager);
             logger_1.default.info({}, 'S1: AggregatorManager passed to InferenceService for prompt building');
+        }
+        // 将ServicesHandler传递给InferenceService（用于语义修复服务发现）
+        if (this.servicesHandler && this.inferenceService) {
+            this.inferenceService.setServicesHandler(this.servicesHandler);
+            logger_1.default.info({}, 'ServicesHandler passed to InferenceService for semantic repair');
         }
         // 将AggregatorMiddleware传递给InferenceService（用于在ASR之后、NMT之前进行文本聚合）
         if (this.aggregatorMiddleware && this.inferenceService) {
@@ -89,7 +100,8 @@ class NodeAgent {
         this.jobProcessor = new node_agent_job_processor_1.JobProcessor(this.inferenceService, this.postProcessCoordinator, this.aggregatorMiddleware, this.nodeConfig, this.pythonServiceManager);
         // 获取DedupStage实例，传递给ResultSender用于在成功发送后记录job_id
         const dedupStage = this.postProcessCoordinator?.getDedupStage() || null;
-        this.resultSender = new node_agent_result_sender_1.ResultSender(this.aggregatorMiddleware, dedupStage);
+        this.resultSender = new node_agent_result_sender_1.ResultSender(this.aggregatorMiddleware, dedupStage, this.postProcessCoordinator // 传递PostProcessCoordinator，用于更新lastSentText
+        );
         logger_1.default.info({ schedulerUrl: this.schedulerUrl }, 'Scheduler server URL configured');
     }
     async start() {

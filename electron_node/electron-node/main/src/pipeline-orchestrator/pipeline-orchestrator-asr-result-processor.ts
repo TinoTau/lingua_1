@@ -1,11 +1,12 @@
 /**
  * Pipeline ASR结果处理模块
  * 负责处理ASR结果、空文本检查、无意义文本检查等逻辑
+ * 
+ * 注意：文本聚合逻辑已移除，现在由 PostProcessCoordinator 的 AggregationStage 统一处理
  */
 
 import { JobAssignMessage } from '@shared/protocols/messages';
 import { ASRResult } from '../task-router/types';
-import { AggregatorMiddleware } from '../agent/aggregator-middleware';
 import { isMeaninglessWord, isEmptyText } from '../utils/text-validator';
 import logger from '../logger';
 
@@ -13,16 +14,10 @@ export interface ASRResultProcessorResult {
   textForNMT: string;
   shouldProcessNMT: boolean;
   shouldReturnEmpty: boolean;
-  aggregationResult?: {
-    action?: string;
-    metrics?: {
-      dedupCharsRemoved?: number;
-    };
-  };
 }
 
 export class PipelineOrchestratorASRResultProcessor {
-  constructor(private aggregatorMiddleware: AggregatorMiddleware | null) {}
+  constructor() {}
 
   /**
    * 处理ASR结果
@@ -68,110 +63,26 @@ export class PipelineOrchestratorASRResultProcessor {
       };
     }
 
-    // AggregatorMiddleware: 在 ASR 之后、NMT 之前进行文本聚合
-    let textForNMT = asrTextTrimmed;
-    let shouldProcessNMT = true;
-    let aggregationResult: any = undefined;
-    
-    if (this.aggregatorMiddleware) {
-      const middlewareResult = this.aggregatorMiddleware.processASRResult(job, {
-        text: asrTextTrimmed,
-        segments: asrResult.segments,
-        language_probability: asrResult.language_probability,
-        language_probabilities: asrResult.language_probabilities,
-        badSegmentDetection: asrResult.badSegmentDetection,
-      });
-      
-      if (middlewareResult.shouldProcess) {
-        textForNMT = middlewareResult.aggregatedText;
-        shouldProcessNMT = true;
-        aggregationResult = {
-          action: middlewareResult.action,
-          metrics: middlewareResult.metrics,
-        };
-        
-        // 记录合并后的结果
-        logger.info(
-          {
-            jobId: job.job_id,
-            sessionId: job.session_id,
-            utteranceIndex: job.utterance_index,
-            originalASRText: asrTextTrimmed,
-            originalASRTextLength: asrTextTrimmed.length,
-            aggregatedText: textForNMT,
-            aggregatedTextLength: textForNMT.length,
-            action: middlewareResult.action,
-            dedupCharsRemoved: middlewareResult.metrics?.dedupCharsRemoved || 0,
-            textChanged: textForNMT !== asrTextTrimmed,
-          },
-          'PipelineOrchestrator: Text aggregated after ASR, ready for NMT'
-        );
-      } else {
-        // Aggregator 决定不处理（可能是重复文本）
-        shouldProcessNMT = false;
-        aggregationResult = {
-          action: middlewareResult.action,
-        };
-        logger.info(
-          {
-            jobId: job.job_id,
-            sessionId: job.session_id,
-            utteranceIndex: job.utterance_index,
-            originalASRText: asrTextTrimmed,
-            originalASRTextLength: asrTextTrimmed.length,
-            aggregatedText: middlewareResult.aggregatedText,
-            reason: 'Aggregator filtered duplicate text',
-            action: middlewareResult.action,
-          },
-          'PipelineOrchestrator: Aggregator filtered text, returning empty result to scheduler (no NMT/TTS)'
-        );
-      }
-    } else {
-      // 没有 AggregatorMiddleware，使用原始 ASR 文本
-      logger.debug(
-        {
-          jobId: job.job_id,
-          sessionId: job.session_id,
-          utteranceIndex: job.utterance_index,
-          asrText: asrTextTrimmed,
-          note: 'No AggregatorMiddleware, using original ASR text for NMT',
-        },
-        'PipelineOrchestrator: Using original ASR text for NMT'
-      );
-    }
+    // 注意：文本聚合逻辑已移除，现在由 PostProcessCoordinator 的 AggregationStage 统一处理
+    // PipelineOrchestrator 只负责 ASR 任务编排，不做文本聚合
+    const textForNMT = asrTextTrimmed;
+    const shouldProcessNMT = true;
 
-    if (!shouldProcessNMT) {
-      // Aggregator 决定不处理，返回空结果
-      textForNMT = '';
-      logger.info(
-        {
-          jobId: job.job_id,
-          sessionId: job.session_id,
-          utteranceIndex: job.utterance_index,
-          asrText: asrTextTrimmed,
-          aggregatedText: textForNMT,
-          reason: 'Aggregator filtered duplicate text, returning empty result to scheduler (no NMT/TTS)',
-        },
-        'PipelineOrchestrator: Aggregator filtered duplicate text, returning empty result (no NMT/TTS)'
-      );
-    } else {
-      logger.info(
-        {
-          jobId: job.job_id,
-          sessionId: job.session_id,
-          utteranceIndex: job.utterance_index,
-          asrText: asrTextTrimmed,
-          aggregatedText: textForNMT,
-        },
-        'PipelineOrchestrator: Passing aggregated text to PostProcess for NMT/TTS'
-      );
-    }
+    logger.debug(
+      {
+        jobId: job.job_id,
+        sessionId: job.session_id,
+        utteranceIndex: job.utterance_index,
+        asrText: asrTextTrimmed,
+        note: 'Text aggregation is now handled by PostProcessCoordinator.AggregationStage',
+      },
+      'PipelineOrchestrator: Using original ASR text, aggregation will be handled by PostProcessCoordinator'
+    );
 
     return {
       textForNMT,
       shouldProcessNMT,
-      shouldReturnEmpty: !shouldProcessNMT,
-      aggregationResult,
+      shouldReturnEmpty: false,
     };
   }
 }
