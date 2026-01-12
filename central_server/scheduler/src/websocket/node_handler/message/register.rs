@@ -127,12 +127,13 @@ pub(super) async fn handle_node_heartbeat(
     resource_usage: ResourceUsage,
     _installed_models: Option<Vec<InstalledModel>>,
     _installed_services: Option<Vec<InstalledService>>,
-    _capability_by_type: Vec<CapabilityByType>,
+    capability_by_type: Vec<CapabilityByType>,
     _rerun_metrics: Option<crate::messages::common::RerunMetrics>,
     _asr_metrics: Option<crate::messages::common::ASRMetrics>,
     _processing_metrics: Option<crate::messages::common::ProcessingMetrics>,
     _language_capabilities: Option<crate::messages::common::NodeLanguageCapabilities>,
 ) {
+    // 1. 更新节点心跳状态（通过极简调度服务）
     if let Some(scheduler) = state.minimal_scheduler.as_ref() {
         // 注意：load_json 已被移除，因为其中的字段（cpu_percent, gpu_percent, mem_percent, running_jobs）
         // 都未被使用。节点任务管理由节点端 GPU 仲裁器负责，调度服务器不再管理。
@@ -145,5 +146,29 @@ pub(super) async fn handle_node_heartbeat(
         if let Err(e) = scheduler.heartbeat(req).await {
             tracing::warn!(node_id = %node_id, error = %e, "节点心跳失败");
         }
+    }
+
+    // 2. 同步节点能力到 Redis（如果提供了能力信息）
+    // 服务热插拔：当节点启动/停止服务时，能力会变化，需要同步到 Redis
+    if let Some(phase2_runtime) = state.phase2.as_ref() {
+        if !capability_by_type.is_empty() {
+            phase2_runtime.sync_node_capabilities_to_redis(node_id, &capability_by_type).await;
+            tracing::debug!(
+                node_id = %node_id,
+                capability_count = capability_by_type.len(),
+                "节点能力已同步到 Redis"
+            );
+        }
+    }
+
+    // 3. 触发 Pool 重新分配（如果服务能力变化）
+    // 服务热插拔：当节点服务能力变化时，需要重新分配 Pool
+    if let Some(phase2_runtime) = state.phase2.as_ref() {
+        let phase2_ref = phase2_runtime.as_ref();
+        state.node_registry.phase3_upsert_node_to_pool_index_with_runtime(node_id, Some(phase2_ref)).await;
+        tracing::debug!(
+            node_id = %node_id,
+            "已触发 Pool 重新分配检查"
+        );
     }
 }
