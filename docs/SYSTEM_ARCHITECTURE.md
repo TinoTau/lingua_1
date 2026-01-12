@@ -385,13 +385,27 @@ ResultQueueManager 排序
    ↓
 7. 分发任务到 Node
    ↓
-8. Node 执行 ASR
+8. Node 执行 ASR 及相关处理（PipelineOrchestrator）
+   ├─ 音频聚合（AudioAggregator）- 8秒阈值，延迟3秒等待合并
+   ├─ ASR 识别（ASRHandler）- 调用 ASR 服务
+   ├─ ASR 结果处理（ASRResultProcessor）- 空文本检查、无意义文本检查
+   ├─ 文本聚合（AggregationStage）- 处理跨utterance的边界重复
+   ├─ 合并处理（MergeHandler）- 取消被合并的 GPU 任务
+   ├─ 文本过滤（TextFilter）- shouldDiscard、shouldWaitForMerge
+   ├─ 内部重复检测（detectInternalRepetition）- 检测并移除文本内部重复
+   ├─ 语义修复（SemanticRepairStage）- 修复 ASR 识别错误
+   └─ 去重检查（DedupStage）- 基于 job_id，30秒 TTL
    ↓
-9. ASR 文本过滤（节点端）
+9. Node 执行 NMT（PostProcessCoordinator，如果 should_send=true 且 use_nmt !== false）
+   ├─ 如果 use_asr=false，使用 job.input_text
+   ├─ 否则使用 PipelineOrchestrator 处理后的文本
+   └─ 调用 NMT 服务
    ↓
-10. Node 执行 NMT（如果 ASR 结果非空）
+10. Node 执行 TTS（PostProcessCoordinator，如果 use_tts !== false）
+    └─ 调用 TTS 服务
     ↓
-11. Node 执行 TTS（如果 ASR 结果非空）
+11. Node 执行 TONE（PostProcessCoordinator，如果 use_tone === true）
+    └─ 调用 TONE 服务
     ↓
 12. 返回结果到 Scheduler
     ↓

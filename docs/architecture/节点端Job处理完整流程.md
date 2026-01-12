@@ -14,23 +14,55 @@
 NodeAgent.handleJob()
     ↓
 JobProcessor.processJob()
+    ├─ 按需启动服务（如 speaker_embedding）
+    ├─ 设置流式 ASR 部分结果回调（如果启用）
     ↓
 InferenceService.processJob()
+    ├─ 首次任务检查（等待服务就绪）
+    ├─ 刷新服务端点（带缓存，TTL 1000ms）
     ↓
 PipelineOrchestrator.processJob()  [ASR阶段]
+    ├─ 检查 use_asr（如果 false，返回空结果）
     ├─ AudioAggregator (音频聚合)
-    ├─ ASR Service (语音识别)
-    └─ ASRResultProcessor (结果处理)
+    │   └─ 8秒阈值判断，延迟3秒等待合并
+    ├─ ASRHandler (ASR识别)
+    │   └─ TaskRouter.routeASRTask()
+    ├─ ASRResultProcessor (ASR结果处理)
+    │   ├─ 空文本检查
+    │   └─ 无意义文本检查
+    ├─ AggregationStage (文本聚合) ← 已迁移
+    │   ├─ AggregatorManager.processUtterance()
+    │   ├─ TextForwardMergeManager (向前合并)
+    │   └─ DeduplicationHandler (去重)
+    ├─ MergeHandler (合并处理) ← 已迁移
+    │   └─ 取消被合并的 GPU 任务
+    ├─ TextFilter (文本过滤) ← 已迁移
+    │   ├─ shouldDiscard (< 6字符)
+    │   └─ shouldWaitForMerge (6-16字符)
+    ├─ detectInternalRepetition (内部重复检测)
+    ├─ SemanticRepairStage (语义修复)
+    │   └─ TaskRouter.routeSemanticRepairTask()
+    └─ DedupStage (job_id去重) ← 已迁移
+        └─ 基于 job_id，30秒 TTL
     ↓
 PostProcessCoordinator.process()  [后处理阶段]
-    ├─ AggregationStage (文本聚合)
-    ├─ DedupStage (job_id去重)
-    ├─ SemanticRepairStage (语义修复)
+    ├─ 检查 should_send（如果 false，直接返回）
+    ├─ 检查文本是否为空（如果为空，返回空结果）
     ├─ TranslationStage (NMT翻译)
-    └─ TTSStage (TTS语音生成)
+    │   ├─ 检查 use_nmt
+    │   ├─ 如果 use_asr=false，使用 job.input_text
+    │   └─ TaskRouter.routeNMTTask()
+    ├─ TTSStage (TTS语音生成)
+    │   ├─ 检查 use_tts
+    │   └─ TaskRouter.routeTTSTask()
+    └─ TONEStage (TONE音色配音)
+        ├─ 检查 use_tone
+        └─ TaskRouter.routeTONETask()
     ↓
 ResultSender.sendJobResult()
-    ├─ lastSentText检查 (文本去重)
+    ├─ lastSentText检查 (文本去重，最终防线)
+    ├─ 更新 lastSentText（通过 DeduplicationHandler）
+    ├─ 标记 job_id 为已发送（通过 DedupStage）
     └─ 发送到调度服务器
 ```
 
@@ -187,11 +219,47 @@ const asrResultProcessResult = this.asrResultProcessor.processASRResult(job, asr
 - 检查无意义文本（`isMeaninglessWord()`）
 - **注意**：文本聚合已移除，现在由 PostProcessCoordinator 统一处理
 
-#### 4.5 构建结果
+#### 4.4 文本聚合（AggregationStage）
 ```typescript
-const result = this.resultBuilder.buildResult(textForNMT, asrResult, rerunCount);
+const aggregationResult = this.aggregationStage.process(job, tempResult);
 ```
-- 返回 `JobResult`（`text_asr` 为原始 ASR 文本，`text_translated` 和 `tts_audio` 为空）
+- 调用 `AggregatorManager.processUtterance()` 进行文本聚合
+- 决定 MERGE / NEW_STREAM / COMMIT
+- 使用 `TextForwardMergeManager` 处理向前合并和去重
+
+#### 4.5 合并处理（MergeHandler）
+```typescript
+const mergeResult = this.mergeHandler.process(job, aggregationResult);
+```
+- 处理合并逻辑，取消被合并的 GPU 任务
+- 如果被合并但不是最后一个，返回空结果
+
+#### 4.6 文本过滤（TextFilter）
+```typescript
+const filterResult = this.textFilter.process(job, aggregationResult);
+```
+- 处理文本过滤逻辑（shouldDiscard、shouldWaitForMerge）
+- 如果文本太短或等待合并，返回空结果
+
+#### 4.7 语义修复（SemanticRepairStage）
+```typescript
+const repairResult = await semanticRepairStage.process(...);
+```
+- 调用语义修复服务修复文本
+- 返回修复后的文本
+
+#### 4.8 去重检查（DedupStage）
+```typescript
+const dedupResult = this.dedupStage.process(job, finalText, '');
+```
+- 基于 job_id 进行去重检查（30秒 TTL）
+- 如果重复，返回 `should_send: false`
+
+#### 4.9 构建结果
+```typescript
+const result = this.resultBuilder.buildResult(finalTextForNMT, asrResult, rerunCount);
+```
+- 返回 `JobResult`（包含 `text_asr`、`should_send`、`dedup_reason` 等）
 
 ---
 
@@ -199,47 +267,17 @@ const result = this.resultBuilder.buildResult(textForNMT, asrResult, rerunCount)
 
 **文件**：`electron_node/electron-node/main/src/agent/postprocess/postprocess-coordinator.ts`
 
-#### 5.1 文本聚合（AggregationStage）
+**注意**：聚合和去重逻辑已迁移到 PipelineOrchestrator，PostProcessCoordinator 现在只负责翻译、TTS 和 TONE。
+
+#### 5.1 检查是否应该处理
 ```typescript
-const aggregationResult = this.aggregationStage.process(job, result);
+if (result.should_send === false) {
+  return { shouldSend: false, ... };
+}
 ```
+- 如果 PipelineOrchestrator 已决定不发送（去重失败），直接返回空结果
 
-**AggregationStage**：
-- **目的**：保证上下文完整（在ASR之后）
-- **判断标准**：文本长度（6-16字符）
-- **功能**：
-  - 调用 `AggregatorManager.processUtterance()` 进行文本聚合
-  - 决定 MERGE / NEW_STREAM / COMMIT
-  - 使用 `TextForwardMergeManager` 处理向前合并和去重
-  - 处理短句等待（6-16字符等待3秒合并）
-
-**输出**：
-- `aggregatedText`：聚合后的文本
-- `action`：MERGE / NEW_STREAM / COMMIT
-- `shouldDiscard`：是否丢弃（< 6字符）
-- `shouldWaitForMerge`：是否等待合并（6-16字符）
-- `shouldSendToSemanticRepair`：是否发送给语义修复（> 16字符）
-
-#### 5.2 内部重复检测
-```typescript
-textAfterDedup = detectInternalRepetition(textAfterDedup);
-```
-- 检测单个文本内部的重复（如"再提高了一点速度 再提高了一点速度"）
-- 去除ASR识别错误导致的内部重复
-
-#### 5.3 语义修复（SemanticRepairStage）
-```typescript
-const semanticRepairResult = await semanticRepairHandler.process(
-  job,
-  aggregationResult,
-  result,
-  currentVersion
-);
-```
-- 调用语义修复服务修复文本
-- 返回 `textForTranslation`
-
-#### 5.4 翻译（TranslationStage）
+#### 5.2 翻译（TranslationStage）
 ```typescript
 const translationResult = await this.translationStage.process(
   job,
@@ -253,24 +291,7 @@ const translationResult = await this.translationStage.process(
 - 使用翻译缓存（LRU Cache，200条，10分钟TTL）
 - 返回 `translatedText`
 
-#### 5.5 去重检查（DedupStage）
-```typescript
-const dedupResult = this.dedupStage.process(
-  job,
-  aggregationResult.aggregatedText,
-  translationResult.translatedText
-);
-```
-
-**DedupStage**：
-- **目的**：防止同一个 job 被重复处理
-- **判断标准**：job_id（30秒 TTL）
-- **逻辑**：
-  - 检查该 job_id 是否在30秒内已发送过
-  - 如果重复，返回 `shouldSend: false`
-  - **注意**：job_id 在成功发送后才记录（通过 `markJobIdAsSent()`）
-
-#### 5.6 TTS 语音生成（TTSStage）
+#### 5.3 TTS 语音生成（TTSStage）
 ```typescript
 const ttsResult = await this.ttsStage.process(
   job,
@@ -283,14 +304,21 @@ const ttsResult = await this.ttsStage.process(
 - 调用 TTS 服务生成语音
 - 返回 `ttsAudio` 和 `ttsFormat`
 
-#### 5.7 返回结果
+#### 5.4 TONE 音色配音（TONEStage）
+```typescript
+const toneResult = await this.toneStage.process(job, ttsAudio, ttsFormat, speakerId);
+```
+- 如果 `use_tone === true`，生成音色配音
+- 返回 `toneAudio` 和 `toneFormat`
+
+#### 5.5 返回结果
 ```typescript
 return {
-  aggregatedText,
-  translatedText,
-  ttsAudio,
-  ttsFormat,
-  shouldSend: dedupResult.shouldSend,
+  shouldSend: result.should_send ?? true,
+  aggregatedText: textForTranslation,
+  translatedText: translationResult.translatedText,
+  ttsAudio: toneResult.toneAudio || ttsResult.ttsAudio,
+  ttsFormat: toneResult.toneFormat || ttsResult.ttsFormat,
   // ...
 };
 ```
@@ -353,13 +381,28 @@ this.dedupStage.markJobIdAsSent(job.session_id, job.job_id);
 - **功能**：将多个音频块聚合成完整句子，提高ASR识别准确率
 
 ### 2. AggregationStage（文本聚合）
-- **位置**：PostProcessCoordinator 中（ASR之后）
+- **位置**：PipelineOrchestrator 中（ASR之后）
 - **目的**：保证上下文完整
 - **判断标准**：文本长度（6-16字符）
 - **功能**：处理跨utterance的边界重复，合并连续句子
 
-### 3. DedupStage（job_id去重）
-- **位置**：PostProcessCoordinator 中（翻译之后）
+### 3. MergeHandler（合并处理）
+- **位置**：PipelineOrchestrator 中（聚合之后）
+- **目的**：处理合并逻辑，取消被合并的 GPU 任务
+- **功能**：如果 utterance 被合并但不是最后一个，返回空结果并取消后续任务
+
+### 4. TextFilter（文本过滤）
+- **位置**：PipelineOrchestrator 中（合并处理之后）
+- **目的**：处理文本过滤逻辑
+- **功能**：处理 shouldDiscard（< 6字符）和 shouldWaitForMerge（6-16字符）
+
+### 5. SemanticRepairStage（语义修复）
+- **位置**：PipelineOrchestrator 中（文本过滤之后）
+- **目的**：修复 ASR 识别错误
+- **功能**：调用语义修复服务修复文本
+
+### 6. DedupStage（job_id去重）
+- **位置**：PipelineOrchestrator 中（语义修复之后）
 - **目的**：防止同一个 job 被重复处理
 - **判断标准**：job_id（30秒 TTL）
 
@@ -427,12 +470,13 @@ this.dedupStage.markJobIdAsSent(job.session_id, job.job_id);
 1. **消息接收**：NodeAgent 接收 `job_assign` 消息
 2. **任务处理**：JobProcessor 按需启动服务，设置回调
 3. **推理服务**：InferenceService 刷新服务端点（带缓存），调用 PipelineOrchestrator
-4. **ASR阶段**：PipelineOrchestrator 进行音频聚合、ASR识别、结果处理
-5. **后处理阶段**：PostProcessCoordinator 进行文本聚合、语义修复、翻译、TTS、去重
+4. **ASR阶段**：PipelineOrchestrator 进行音频聚合、ASR识别、文本聚合、合并处理、文本过滤、语义修复、去重检查
+5. **后处理阶段**：PostProcessCoordinator 进行翻译、TTS、TONE
 6. **结果发送**：ResultSender 进行文本去重检查，发送到调度服务器
 
 **关键特点**：
 - ✅ 音频聚合和文本聚合职责不同，互补而非冲突
+- ✅ 聚合和去重逻辑统一在 PipelineOrchestrator 中处理，避免重复
 - ✅ 三处去重逻辑职责清晰，互补而非冲突
 - ✅ 顺序执行保证支持流水线并行处理
 - ✅ 多层缓存机制提高性能

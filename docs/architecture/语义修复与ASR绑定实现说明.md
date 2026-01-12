@@ -2,7 +2,9 @@
 
 ## 改动概述
 
-将语义修复从 `PostProcessCoordinator` 移到 `PipelineOrchestrator` 中，与 ASR 绑定。语义修复现在在 ASR 完成后立即执行，修复后的文本通过 `JobResult` 传递给 `PostProcessCoordinator`。
+将语义修复从 `PostProcessCoordinator` 移到 `PipelineOrchestrator` 中，与 ASR 绑定。语义修复现在在文本聚合、合并处理、文本过滤之后执行，修复后的文本通过 `JobResult` 传递给 `PostProcessCoordinator`。
+
+**更新**：已完成迁移，现在所有 ASR 相关的处理（聚合、合并、过滤、语义修复、去重）都在 `PipelineOrchestrator` 中统一处理。
 
 ## 改动详情
 
@@ -28,12 +30,19 @@
 
 **关键代码**：
 ```typescript
-// 在 ASR 完成后立即执行语义修复
-const shouldUseSemanticRepair = job.pipeline?.use_asr !== false && textForNMT && textForNMT.trim().length > 0;
+// ========== Stage 1: 文本聚合 ==========
+const aggregationResult = this.aggregationStage.process(job, tempResult);
+
+// ========== 合并处理和文本过滤 ==========
+const mergeResult = this.mergeHandler.process(job, aggregationResult);
+const filterResult = this.textFilter.process(job, aggregationResult);
+
+// ========== Stage 2: 语义修复（使用聚合和过滤后的文本）==========
+const shouldUseSemanticRepair = job.pipeline?.use_asr !== false && textAfterDedup && textAfterDedup.trim().length > 0;
 
 if (shouldUseSemanticRepair && this.semanticRepairInitializer) {
   // 执行语义修复
-  const repairResult = await semanticRepairStage.process(...);
+  const repairResult = await semanticRepairStage.process(job, textAfterDedup, ...);
   if (repairResult.decision === 'REPAIR' || repairResult.decision === 'PASS') {
     finalTextForNMT = repairResult.textOut;
     semanticRepairApplied = true;
@@ -41,8 +50,13 @@ if (shouldUseSemanticRepair && this.semanticRepairInitializer) {
   }
 }
 
-// 构建结果（包含语义修复后的文本）
+// ========== Stage 3: 去重检查 ==========
+const dedupResult = this.dedupStage.process(job, finalTextForNMT, '');
+
+// 构建结果（包含聚合、语义修复和去重后的文本）
 const result = this.resultBuilder.buildResult(finalTextForNMT, asrResult, rerunCount);
+result.should_send = dedupResult.shouldSend;
+result.dedup_reason = dedupResult.reason;
 if (semanticRepairApplied) {
   result.semantic_repair_applied = true;
   result.semantic_repair_confidence = semanticRepairConfidence;
@@ -67,21 +81,32 @@ if (semanticRepairApplied) {
 - 在构造函数中调用 `inferenceService.setServicesHandler(this.servicesHandler)`
 - 将 `ServicesHandler` 传递给 `InferenceService`
 
-### 5. ✅ PostProcessCoordinator 移除语义修复
+### 5. ✅ PostProcessCoordinator 移除语义修复、聚合和去重
 
 **文件**：`electron_node/electron-node/main/src/agent/postprocess/postprocess-coordinator.ts`
 
 **改动**：
 - 移除 `SemanticRepairInitializer` 相关代码
+- 移除 `AggregationStage` 相关代码
+- 移除 `DedupStage` 相关代码
+- 移除 `PostProcessMergeHandler` 相关代码
+- 移除 `PostProcessTextFilter` 相关代码
 - 移除 `reinitializeSemanticRepairStage()` 方法
 - 移除语义修复处理逻辑
-- 使用 `JobResult` 中的语义修复状态和文本
+- 移除聚合处理逻辑
+- 移除去重检查逻辑
+- 使用 `JobResult` 中的聚合、语义修复和去重状态
+- 检查 `result.should_send` 判断是否应该处理
 
 **关键代码**：
 ```typescript
-// 使用语义修复后的文本（如果已应用）
-// 注意：result.text_asr 已经是修复后的文本（如果应用了修复）
-let textForTranslation = aggregationResult.aggregatedText;  // 聚合后的文本（已经是修复后的文本）
+// 检查是否应该处理（聚合和去重已在 PipelineOrchestrator 中处理）
+if (result.should_send === false) {
+  return { shouldSend: false, ... };
+}
+
+// 使用 PipelineOrchestrator 处理后的文本（已经是聚合和修复后的文本）
+let textForTranslation = result.text_asr;  // 已经是聚合和修复后的文本
 let semanticRepairApplied = result.semantic_repair_applied || false;
 let semanticRepairConfidence = result.semantic_repair_confidence || 0;
 ```
@@ -112,10 +137,14 @@ NodeAgent.handleJob()
     → InferenceService.processJob() [ASR]
       → PipelineOrchestrator.processJob()
         → ASR 服务调用
+        → AggregationStage [文本聚合]
+        → MergeHandler [合并处理]
+        → TextFilter [文本过滤]
         → SemanticRepairStage [语义修复] ← 现在在这里执行（与 ASR 绑定）
+        → DedupStage [去重检查]
     → PostProcessCoordinator.process()
-      → AggregationStage [文本聚合]（使用已修复的文本）
-      → TranslationStage [NMT]
+      → 检查 should_send（如果 false，直接返回）
+      → TranslationStage [NMT]（使用已聚合和修复的文本）
       → TTSStage [TTS]
       → TONEStage [TONE]
 ```
@@ -131,7 +160,7 @@ NodeAgent.handleJob()
 ### 2. 语义修复与 NMT 解绑
 
 - **之前**：语义修复在 `PostProcessCoordinator` 中执行，在聚合之后、翻译之前
-- **现在**：语义修复在 `PipelineOrchestrator` 中执行，在 ASR 之后、聚合之前
+- **现在**：语义修复在 `PipelineOrchestrator` 中执行，在聚合、合并处理、文本过滤之后，去重检查之前
 - **通信方式**：通过 `JobResult` 传递语义修复状态和文本
 
 ### 3. 文本流程

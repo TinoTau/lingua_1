@@ -2,7 +2,9 @@
 
 ## 改动概述
 
-将文本聚合（AggregationStage）从 `PostProcessCoordinator` 移到 `PipelineOrchestrator` 中，放在 ASR 之后、语义修复之前，与 ASR 绑定，与 NMT 解绑。
+将文本聚合（AggregationStage）、合并处理（MergeHandler）、文本过滤（TextFilter）和去重检查（DedupStage）从 `PostProcessCoordinator` 移到 `PipelineOrchestrator` 中，放在 ASR 之后、语义修复之前，与 ASR 绑定，与 NMT 解绑。
+
+**更新**：已完成迁移，现在所有 ASR 相关的处理（聚合、合并、过滤、语义修复、去重）都在 `PipelineOrchestrator` 中统一处理。
 
 ## 改动详情
 
@@ -39,15 +41,22 @@ const repairResult = await semanticRepairStage.process(job, textAfterDedup, ...)
 - 添加 `is_last_in_merged_group?: boolean` - 是否是合并组中的最后一个 utterance
 - 添加 `aggregation_metrics?: { dedupCount?: number; dedupCharsRemoved?: number }` - 聚合指标
 
-### 3. ✅ PostProcessCoordinator 移除聚合相关代码
+### 3. ✅ PostProcessCoordinator 移除聚合和去重相关代码
 
 **文件**：`electron_node/electron-node/main/src/agent/postprocess/postprocess-coordinator.ts`
 
 **改动**：
 - 移除 `AggregationStage` 初始化
+- 移除 `DedupStage` 初始化
+- 移除 `PostProcessMergeHandler` 初始化
+- 移除 `PostProcessTextFilter` 初始化
 - 移除聚合处理逻辑
+- 移除合并处理逻辑
+- 移除文本过滤逻辑
+- 移除去重检查逻辑
 - 移除内部重复检测（现在在 PipelineOrchestrator 中处理）
-- 直接使用 `JobResult` 中的聚合后文本
+- 直接使用 `JobResult` 中的聚合和语义修复后文本
+- 检查 `result.should_send` 判断是否应该处理
 
 **关键代码**：
 ```typescript
@@ -87,12 +96,16 @@ PostProcessCoordinator.process()
 PipelineOrchestrator.processJob()
   → ASR 服务调用
   → AggregationStage [文本聚合] ← 现在在这里执行（与 ASR 绑定）
+  → MergeHandler [合并处理] ← 处理合并逻辑，取消被合并的 GPU 任务
+  → TextFilter [文本过滤] ← 处理文本过滤逻辑（shouldDiscard、shouldWaitForMerge）
   → 内部重复检测
-  → SemanticRepairStage [语义修复] ← 使用聚合后的文本
-  → 构建 JobResult（包含聚合和修复后的文本）
+  → SemanticRepairStage [语义修复] ← 使用聚合和过滤后的文本
+  → DedupStage [去重检查] ← 基于 job_id 去重
+  → 构建 JobResult（包含聚合、修复和去重后的文本，以及 should_send）
 
 PostProcessCoordinator.process()
-  → 使用 JobResult 中的聚合后文本
+  → 检查 should_send（如果 false，直接返回）
+  → 使用 JobResult 中的聚合和修复后文本
   → TranslationStage [NMT]
   → TTSStage [TTS]
   → TONEStage [TONE]
@@ -121,18 +134,22 @@ PostProcessCoordinator.process()
 
 1. **ASR 阶段**：`PipelineOrchestrator` 执行 ASR，得到原始文本
 2. **聚合阶段**：`PipelineOrchestrator` 执行文本聚合，得到聚合后的文本
-3. **去重阶段**：`PipelineOrchestrator` 检测并移除文本内部重复
-4. **语义修复阶段**：`PipelineOrchestrator` 执行语义修复，得到修复后的文本
-5. **结果构建**：将聚合和修复后的文本放入 `result.text_asr` 和 `result.text_asr_repaired`
-6. **翻译阶段**：`PostProcessCoordinator` 使用 `result.text_asr`（已经是聚合和修复后的文本）进行翻译
+3. **合并处理阶段**：`PipelineOrchestrator` 处理合并逻辑，取消被合并的 GPU 任务
+4. **文本过滤阶段**：`PipelineOrchestrator` 处理文本过滤逻辑（shouldDiscard、shouldWaitForMerge）
+5. **内部重复检测**：`PipelineOrchestrator` 检测并移除文本内部重复
+6. **语义修复阶段**：`PipelineOrchestrator` 执行语义修复，得到修复后的文本
+7. **去重检查阶段**：`PipelineOrchestrator` 执行去重检查（基于 job_id），得到 `should_send`
+8. **结果构建**：将聚合、修复和去重后的文本放入 `result.text_asr`，将 `should_send` 放入 `result.should_send`
+9. **翻译阶段**：`PostProcessCoordinator` 检查 `result.should_send`，如果为 `false` 则直接返回；否则使用 `result.text_asr`（已经是聚合和修复后的文本）进行翻译
 
 ## 优势
 
 1. **文本聚合与 ASR 绑定**：文本聚合现在与 ASR 紧密绑定，确保 ASR 输出立即得到聚合
-2. **语义修复使用聚合后的文本**：语义修复现在使用聚合后的文本，提高修复准确性
-3. **解耦 NMT**：文本聚合不再依赖 NMT，仅通过 `JobResult` 进行通信
-4. **统一管理**：所有 ASR 相关处理（ASR + 聚合 + 语义修复）都在 `PipelineOrchestrator` 中统一管理
-5. **清晰的职责**：`PostProcessCoordinator` 专注于后处理（翻译、TTS、TONE），不再处理聚合
+2. **统一处理流程**：所有 ASR 相关处理（聚合、合并、过滤、语义修复、去重）都在 `PipelineOrchestrator` 中统一管理
+3. **语义修复使用聚合后的文本**：语义修复现在使用聚合和过滤后的文本，提高修复准确性
+4. **解耦 NMT**：文本聚合不再依赖 NMT，仅通过 `JobResult` 进行通信
+5. **清晰的职责**：`PostProcessCoordinator` 专注于后处理（翻译、TTS、TONE），不再处理聚合和去重
+6. **避免重复处理**：不再在 `PostProcessCoordinator` 中重复处理聚合和去重，提高了性能
 
 ## 测试建议
 
