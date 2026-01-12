@@ -3,7 +3,7 @@
  * 职责：串联各 Stage，管理 session / trace / context，汇总最终输出
  */
 
-import { JobAssignMessage } from '@shared/protocols/messages';
+import { JobAssignMessage } from '../../../../../shared/protocols/messages';
 import { JobResult } from '../../inference/inference-service';
 import { AggregatorManager } from '../../aggregator/aggregator-manager';
 import { TaskRouter } from '../../task-router/task-router';
