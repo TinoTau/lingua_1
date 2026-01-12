@@ -6,7 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.InferenceService = void 0;
 const logger_1 = __importDefault(require("../logger"));
 const task_router_1 = require("../task-router/task-router");
-const pipeline_orchestrator_1 = require("../pipeline-orchestrator/pipeline-orchestrator");
+const job_pipeline_1 = require("../pipeline/job-pipeline");
+const session_context_manager_1 = require("../pipeline-orchestrator/session-context-manager");
 class InferenceService {
     constructor(modelManager, pythonServiceManager, rustServiceManager, serviceRegistryManager, aggregatorManager, // S1: 可选的AggregatorManager（仅用于构建prompt）
     aggregatorMiddleware, // 已废弃：不再传递给PipelineOrchestrator，但保留参数以兼容旧代码
@@ -28,15 +29,25 @@ class InferenceService {
             throw new Error('TaskRouter requires pythonServiceManager, rustServiceManager, and serviceRegistryManager');
         }
         this.taskRouter = new task_router_1.TaskRouter(pythonServiceManager, rustServiceManager, serviceRegistryManager, semanticRepairServiceManager);
-        // S1: 传递AggregatorManager给PipelineOrchestrator（仅用于构建prompt）
-        // 注意：AggregatorMiddleware 的文本聚合逻辑已移除，现在由 PostProcessCoordinator 的 AggregationStage 统一处理
-        // 但是，AggregatorMiddleware 的 lastSentText 功能仍用于去重
+        // S1: 保存引用
         this.aggregatorManager = aggregatorManager;
-        this.aggregatorMiddleware = aggregatorMiddleware; // 保留引用并传递给PipelineOrchestrator用于去重
-        const mode = 'offline'; // 默认模式，可以根据需要调整
-        this.pipelineOrchestrator = new pipeline_orchestrator_1.PipelineOrchestrator(this.taskRouter, aggregatorManager, mode, servicesHandler, // 传递ServicesHandler用于语义修复服务发现
-        aggregatorMiddleware // 传递AggregatorMiddleware用于去重时获取lastSentText
-        );
+        this.aggregatorMiddleware = aggregatorMiddleware;
+        // 初始化 SessionContextManager
+        this.sessionContextManager = new session_context_manager_1.SessionContextManager();
+        this.sessionContextManager.setTaskRouter(this.taskRouter);
+        // 初始化 DedupStage（全局实例，用于维护 job_id 去重状态）
+        const { DedupStage } = require('../agent/postprocess/dedup-stage');
+        const dedupStage = new DedupStage();
+        // 初始化 servicesBundle
+        this.servicesBundle = {
+            taskRouter: this.taskRouter,
+            aggregatorManager: aggregatorManager || null,
+            servicesHandler: servicesHandler || null,
+            deduplicationHandler: null, // 将在运行时通过 setDeduplicationHandler 设置
+            sessionContextManager: this.sessionContextManager,
+            aggregatorMiddleware: aggregatorMiddleware || null,
+            dedupStage: dedupStage,
+        };
         // 异步初始化服务端点
         this.taskRouter.initialize().catch((error) => {
             logger_1.default.error({ error }, 'Failed to initialize TaskRouter');
@@ -47,41 +58,47 @@ class InferenceService {
      */
     setAggregatorManager(aggregatorManager) {
         this.aggregatorManager = aggregatorManager;
-        // 重新创建PipelineOrchestrator以应用新的AggregatorManager
-        const mode = 'offline';
-        this.pipelineOrchestrator = new pipeline_orchestrator_1.PipelineOrchestrator(this.taskRouter, aggregatorManager, mode, undefined, // servicesHandler 需要单独设置
-        this.aggregatorMiddleware // 传递AggregatorMiddleware用于去重时获取lastSentText
-        );
+        this.servicesBundle.aggregatorManager = aggregatorManager;
+        logger_1.default.info({}, 'InferenceService: AggregatorManager updated');
     }
     /**
      * 设置ServicesHandler（用于语义修复服务发现）
      */
     setServicesHandler(servicesHandler) {
-        // 重新创建PipelineOrchestrator以应用新的ServicesHandler
-        const mode = 'offline';
-        this.pipelineOrchestrator = new pipeline_orchestrator_1.PipelineOrchestrator(this.taskRouter, this.aggregatorManager, mode, servicesHandler, this.aggregatorMiddleware // 传递AggregatorMiddleware用于去重时获取lastSentText
-        );
-        logger_1.default.info({}, 'InferenceService: ServicesHandler passed to PipelineOrchestrator for semantic repair');
+        this.servicesBundle.servicesHandler = servicesHandler;
+        logger_1.default.info({}, 'InferenceService: ServicesHandler updated');
     }
     /**
-     * 设置AggregatorMiddleware（已废弃：不再用于文本聚合）
-     * 保留此方法以兼容旧代码，但需要传递给PipelineOrchestrator用于去重
-     * AggregatorMiddleware 的 lastSentText 功能用于去重和ResultSender
+     * 设置DeduplicationHandler（用于去重）
      */
     setDeduplicationHandler(deduplicationHandler) {
-        if (this.pipelineOrchestrator && typeof this.pipelineOrchestrator.setDeduplicationHandler === 'function') {
-            this.pipelineOrchestrator.setDeduplicationHandler(deduplicationHandler);
-            logger_1.default.info({}, 'InferenceService: DeduplicationHandler passed to PipelineOrchestrator');
-        }
+        this.servicesBundle.deduplicationHandler = deduplicationHandler;
+        logger_1.default.info({}, 'InferenceService: DeduplicationHandler updated');
     }
+    /**
+     * 设置AggregatorMiddleware（用于去重时获取lastSentText）
+     */
     setAggregatorMiddleware(aggregatorMiddleware) {
         this.aggregatorMiddleware = aggregatorMiddleware;
-        // 重新创建PipelineOrchestrator以应用新的AggregatorMiddleware（用于去重）
-        const mode = 'offline';
-        this.pipelineOrchestrator = new pipeline_orchestrator_1.PipelineOrchestrator(this.taskRouter, this.aggregatorManager, mode, undefined, // servicesHandler 需要单独设置
-        aggregatorMiddleware // 传递AggregatorMiddleware用于去重时获取lastSentText
-        );
-        logger_1.default.info({}, 'AggregatorMiddleware reference updated and passed to PipelineOrchestrator for deduplication');
+        this.servicesBundle.aggregatorMiddleware = aggregatorMiddleware;
+        logger_1.default.info({}, 'InferenceService: AggregatorMiddleware updated');
+    }
+    /**
+     * 清理 Session（统一入口）
+     */
+    removeSession(sessionId) {
+        this.servicesBundle.aggregatorManager?.removeSession(sessionId);
+        this.servicesBundle.deduplicationHandler?.removeSession(sessionId);
+        this.servicesBundle.servicesHandler?.removeSession?.(sessionId);
+        this.servicesBundle.sessionContextManager?.removeSession?.(sessionId);
+        this.servicesBundle.dedupStage?.removeSession?.(sessionId);
+        logger_1.default.info({ sessionId }, 'InferenceService: Session removed from all components');
+    }
+    /**
+     * 获取 DedupStage 实例（用于在成功发送后记录job_id）
+     */
+    getDedupStage() {
+        return this.servicesBundle.dedupStage;
     }
     setOnTaskProcessedCallback(callback) {
         this.onTaskProcessedCallback = callback;
@@ -96,7 +113,7 @@ class InferenceService {
      * Gate-B: 获取 Rerun 指标（用于上报）
      */
     getRerunMetrics() {
-        return this.pipelineOrchestrator.getTaskRouter()?.getRerunMetrics() || {
+        return this.taskRouter.getRerunMetrics?.() || {
             totalReruns: 0,
             successfulReruns: 0,
             failedReruns: 0,
@@ -109,7 +126,7 @@ class InferenceService {
      * 返回当前心跳周期内的处理效率
      */
     getASRMetrics() {
-        return this.pipelineOrchestrator.getTaskRouter()?.getASRMetrics() || {
+        return this.taskRouter.getASRMetrics?.() || {
             processingEfficiency: null,
         };
     }
@@ -118,7 +135,7 @@ class InferenceService {
      * @returns Record<serviceId, efficiency>
      */
     getProcessingMetrics() {
-        return this.pipelineOrchestrator.getTaskRouter()?.getProcessingMetrics() || {};
+        return this.taskRouter.getProcessingMetrics?.() || {};
     }
     /**
      * OBS-1: 获取指定服务ID的处理效率
@@ -126,13 +143,7 @@ class InferenceService {
      * @returns 处理效率，如果该服务在心跳周期内没有任务则为 null
      */
     getServiceEfficiency(serviceId) {
-        return this.pipelineOrchestrator.getTaskRouter()?.getServiceEfficiency(serviceId) || null;
-    }
-    /**
-     * 获取 DedupStage 实例（用于在成功发送后记录job_id）
-     */
-    getDedupStage() {
-        return this.pipelineOrchestrator.getDedupStage();
+        return this.taskRouter.getServiceEfficiency?.(serviceId) || null;
     }
     /**
      * OBS-1: 重置当前心跳周期的处理效率指标（所有服务）
@@ -147,7 +158,7 @@ class InferenceService {
      * 在心跳发送后调用，清空当前周期的数据
      */
     resetProcessingMetrics() {
-        this.pipelineOrchestrator.getTaskRouter()?.resetCycleMetrics();
+        this.taskRouter.resetCycleMetrics?.();
     }
     async processJob(job, partialCallback) {
         const wasFirstJob = !this.hasProcessedFirstJob;
@@ -166,23 +177,28 @@ class InferenceService {
             // 刷新服务端点列表（带缓存机制，避免频繁刷新）
             // 注意：首次任务已在 waitForServicesReady() 中强制刷新，这里使用缓存即可
             await this.taskRouter.refreshServiceEndpoints();
-            // 优化：ASR 完成后立即从 currentJobs 中移除，让 ASR 服务可以处理下一个任务
-            // NMT 和 TTS 可以异步处理，不阻塞 ASR 服务
-            const result = await this.pipelineOrchestrator.processJob(job, partialCallback, (asrCompleted) => {
-                // ASR 完成回调：从 currentJobs 中移除，释放 ASR 服务容量
-                if (asrCompleted) {
-                    this.currentJobs.delete(job.job_id);
-                    logger_1.default.debug({ jobId: job.job_id }, 'ASR completed, removed from currentJobs to free ASR service capacity');
-                    // 如果这是最后一个任务，通知任务结束（用于停止GPU跟踪）
-                    if (this.currentJobs.size === 0 && this.onTaskEndCallback) {
-                        this.onTaskEndCallback();
+            // 使用新的 JobPipeline
+            const result = await (0, job_pipeline_1.runJobPipeline)({
+                job,
+                partialCallback,
+                asrCompletedCallback: (asrCompleted) => {
+                    // ASR 完成回调：从 currentJobs 中移除，释放 ASR 服务容量
+                    if (asrCompleted) {
+                        this.currentJobs.delete(job.job_id);
+                        logger_1.default.debug({ jobId: job.job_id }, 'ASR completed, removed from currentJobs to free ASR service capacity');
+                        // 如果这是最后一个任务，通知任务结束（用于停止GPU跟踪）
+                        if (this.currentJobs.size === 0 && this.onTaskEndCallback) {
+                            this.onTaskEndCallback();
+                        }
                     }
-                }
+                },
+                services: this.servicesBundle,
+                callbacks: {
+                    onTaskStart: this.onTaskStartCallback || undefined,
+                    onTaskEnd: this.onTaskEndCallback || undefined,
+                    onTaskProcessed: this.onTaskProcessedCallback || undefined,
+                },
             });
-            // 记录任务调用
-            if (this.onTaskProcessedCallback) {
-                this.onTaskProcessedCallback('pipeline');
-            }
             return result;
         }
         catch (error) {

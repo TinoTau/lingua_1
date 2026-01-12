@@ -44,10 +44,8 @@ exports.JobProcessor = void 0;
 const ws_1 = __importDefault(require("ws"));
 const logger_1 = __importDefault(require("../logger"));
 class JobProcessor {
-    constructor(inferenceService, postProcessCoordinator, aggregatorMiddleware, nodeConfig, pythonServiceManager) {
+    constructor(inferenceService, nodeConfig, pythonServiceManager) {
         this.inferenceService = inferenceService;
-        this.postProcessCoordinator = postProcessCoordinator;
-        this.aggregatorMiddleware = aggregatorMiddleware;
         this.nodeConfig = nodeConfig;
         this.pythonServiceManager = pythonServiceManager;
         this.ws = null;
@@ -101,93 +99,51 @@ class JobProcessor {
             audioLength: job.audio ? job.audio.length : 0,
         }, 'Processing job: received audio data');
         const result = await this.inferenceService.processJob(job, partialCallback);
-        // 后处理（在发送结果前）
-        // 优先使用 PostProcessCoordinator（新架构），否则使用 AggregatorMiddleware（旧架构）
+        // 新架构：所有处理都在 JobPipeline 中完成，这里只需要处理 TTS 音频格式转换
         let finalResult = result;
-        const enablePostProcessTranslation = this.nodeConfig.features?.enablePostProcessTranslation ?? true;
-        if (enablePostProcessTranslation && this.postProcessCoordinator) {
-            // 使用新架构：PostProcessCoordinator
-            logger_1.default.debug({ jobId: job.job_id, sessionId: job.session_id }, 'Processing through PostProcessCoordinator (new architecture)');
-            const postProcessResult = await this.postProcessCoordinator.process(job, result);
-            // 统一处理 TTS Opus 编码（无论来自 Pipeline 还是 PostProcess）
-            let ttsAudio = postProcessResult.ttsAudio || result.tts_audio || '';
-            let ttsFormat = postProcessResult.ttsFormat || result.tts_format || 'opus';
-            // 如果 TTS 音频是 WAV 格式，需要编码为 Opus（统一在 NodeAgent 层处理）
-            if (ttsAudio && (ttsFormat === 'wav' || ttsFormat === 'pcm16')) {
-                try {
-                    const { convertWavToOpus } = await Promise.resolve().then(() => __importStar(require('../utils/opus-codec')));
-                    const wavBuffer = Buffer.from(ttsAudio, 'base64');
-                    const opusData = await convertWavToOpus(wavBuffer);
-                    ttsAudio = opusData.toString('base64');
-                    ttsFormat = 'opus';
-                    logger_1.default.info({
-                        jobId: job.job_id,
-                        sessionId: job.session_id,
-                        utteranceIndex: job.utterance_index,
-                        wavSize: wavBuffer.length,
-                        opusSize: opusData.length,
-                        compression: (wavBuffer.length / opusData.length).toFixed(2),
-                    }, 'NodeAgent: TTS WAV audio encoded to Opus successfully (unified encoding)');
-                }
-                catch (opusError) {
-                    const errorMessage = opusError instanceof Error ? opusError.message : String(opusError);
-                    logger_1.default.error({
-                        error: opusError,
-                        jobId: job.job_id,
-                        sessionId: job.session_id,
-                        utteranceIndex: job.utterance_index,
-                        errorMessage,
-                    }, 'NodeAgent: Failed to encode TTS WAV to Opus, returning empty audio');
-                    ttsAudio = '';
-                    ttsFormat = 'opus';
-                }
-            }
-            if (postProcessResult.shouldSend) {
-                finalResult = {
-                    ...result,
-                    text_asr: postProcessResult.aggregatedText,
-                    text_translated: postProcessResult.translatedText,
-                    tts_audio: ttsAudio,
-                    tts_format: ttsFormat,
-                };
-                logger_1.default.debug({
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    action: postProcessResult.action,
-                    originalLength: result.text_asr?.length || 0,
-                    aggregatedLength: postProcessResult.aggregatedText.length,
-                }, 'PostProcessCoordinator processing completed');
-                return { finalResult, shouldSend: true };
-            }
-            else {
-                // PostProcessCoordinator 决定不发送（可能是重复文本或被过滤）
+        // 统一处理 TTS Opus 编码（如果 TTS 音频是 WAV 格式，需要编码为 Opus）
+        let ttsAudio = result.tts_audio || '';
+        let ttsFormat = result.tts_format || 'opus';
+        if (ttsAudio && (ttsFormat === 'wav' || ttsFormat === 'pcm16')) {
+            try {
+                const { convertWavToOpus } = await Promise.resolve().then(() => __importStar(require('../utils/opus-codec')));
+                const wavBuffer = Buffer.from(ttsAudio, 'base64');
+                const opusData = await convertWavToOpus(wavBuffer);
+                ttsAudio = opusData.toString('base64');
+                ttsFormat = 'opus';
                 logger_1.default.info({
                     jobId: job.job_id,
                     sessionId: job.session_id,
                     utteranceIndex: job.utterance_index,
-                    reason: postProcessResult.reason || 'PostProcessCoordinator filtered result',
-                    aggregatedText: postProcessResult.aggregatedText?.substring(0, 50) || '',
-                    aggregatedTextLength: postProcessResult.aggregatedText?.length || 0,
-                    note: 'Sending empty job_result to scheduler to prevent timeout (result filtered by PostProcessCoordinator)',
-                }, 'PostProcessCoordinator filtered result (shouldSend=false), but sending empty job_result to scheduler to prevent timeout');
-                return {
-                    finalResult: {
-                        ...result,
-                        text_asr: '',
-                        text_translated: '',
-                        tts_audio: '',
-                        tts_format: 'opus',
-                    },
-                    shouldSend: false,
-                    reason: postProcessResult.reason || 'PostProcessCoordinator filtered result',
-                };
+                    wavSize: wavBuffer.length,
+                    opusSize: opusData.length,
+                    compression: (wavBuffer.length / opusData.length).toFixed(2),
+                }, 'JobProcessor: TTS WAV audio encoded to Opus successfully');
+            }
+            catch (opusError) {
+                const errorMessage = opusError instanceof Error ? opusError.message : String(opusError);
+                logger_1.default.error({
+                    error: opusError,
+                    jobId: job.job_id,
+                    sessionId: job.session_id,
+                    utteranceIndex: job.utterance_index,
+                    errorMessage,
+                }, 'JobProcessor: Failed to encode TTS WAV to Opus, returning empty audio');
+                ttsAudio = '';
+                ttsFormat = 'opus';
             }
         }
-        else {
-            // 如果未使用 PostProcessCoordinator（不应该发生，但保留作为安全措施）
-            finalResult = result;
-            return { finalResult, shouldSend: true };
-        }
+        // 根据 should_send 决定是否发送
+        finalResult = {
+            ...result,
+            tts_audio: ttsAudio,
+            tts_format: ttsFormat,
+        };
+        return {
+            finalResult,
+            shouldSend: result.should_send ?? true,
+            reason: result.dedup_reason,
+        };
     }
 }
 exports.JobProcessor = JobProcessor;

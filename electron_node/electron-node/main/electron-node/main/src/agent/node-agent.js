@@ -8,7 +8,6 @@ const ws_1 = __importDefault(require("ws"));
 const node_config_1 = require("../node-config");
 const logger_1 = __importDefault(require("../logger"));
 const aggregator_middleware_1 = require("./aggregator-middleware");
-const postprocess_coordinator_1 = require("./postprocess/postprocess-coordinator");
 const node_agent_hardware_1 = require("./node-agent-hardware");
 const node_agent_services_1 = require("./node-agent-services");
 const node_agent_heartbeat_1 = require("./node-agent-heartbeat");
@@ -20,7 +19,6 @@ class NodeAgent {
         this.ws = null;
         this.nodeId = null;
         this.capabilityStateChangedHandler = null; // 保存监听器函数，用于清理
-        this.postProcessCoordinator = null; // PostProcess 协调器（新架构）
         // 防止重复处理同一个job（只保留最近的两个job_id，用于检测相邻重复）
         this.recentJobIds = [];
         // 优先从配置文件读取，其次从环境变量，最后使用默认值
@@ -57,28 +55,13 @@ class NodeAgent {
             asyncRetranslationThreshold: 50, // 异步重新翻译阈值（文本长度，默认 50 字符）
         };
         this.aggregatorMiddleware = new aggregator_middleware_1.AggregatorMiddleware(aggregatorConfig, taskRouter);
-        // 初始化 PostProcessCoordinator（新架构，通过 Feature Flag 控制）
-        const enablePostProcessTranslation = this.nodeConfig.features?.enablePostProcessTranslation ?? true;
-        if (enablePostProcessTranslation) {
-            const aggregatorManager = this.aggregatorMiddleware.manager;
-            const postProcessConfig = {
-                enabled: true,
-                translationConfig: {
-                    translationCacheSize: aggregatorConfig.translationCacheSize,
-                    translationCacheTtlMs: aggregatorConfig.translationCacheTtlMs,
-                    enableAsyncRetranslation: aggregatorConfig.enableAsyncRetranslation,
-                    asyncRetranslationThreshold: aggregatorConfig.asyncRetranslationThreshold,
-                },
-            };
-            this.postProcessCoordinator = new postprocess_coordinator_1.PostProcessCoordinator(aggregatorManager, taskRouter, this.servicesHandler, // 传递ServicesHandler用于服务发现
-            postProcessConfig);
-            logger_1.default.info({}, 'PostProcessCoordinator initialized (new architecture)');
-            // 将PostProcessCoordinator的DeduplicationHandler传递给PipelineOrchestrator（用于去重）
-            if (this.postProcessCoordinator && this.inferenceService) {
-                const deduplicationHandler = this.postProcessCoordinator.getDeduplicationHandler();
-                this.inferenceService.setDeduplicationHandler(deduplicationHandler);
-                logger_1.default.info({}, 'DeduplicationHandler passed from PostProcessCoordinator to InferenceService');
-            }
+        // 新架构：不再使用 PostProcessCoordinator，所有处理都在 JobPipeline 中完成
+        // 初始化 DeduplicationHandler 并传递给 InferenceService
+        const { DeduplicationHandler } = require('./aggregator-middleware-deduplication');
+        const deduplicationHandler = new DeduplicationHandler();
+        if (this.inferenceService) {
+            this.inferenceService.setDeduplicationHandler(deduplicationHandler);
+            logger_1.default.info({}, 'DeduplicationHandler initialized and passed to InferenceService');
         }
         // S1: 将AggregatorManager传递给InferenceService（用于构建prompt）
         const aggregatorManager = this.aggregatorMiddleware.manager;
@@ -97,11 +80,10 @@ class NodeAgent {
             logger_1.default.info({}, 'AggregatorMiddleware passed to InferenceService for pre-NMT aggregation');
         }
         // 初始化job处理器和结果发送器
-        this.jobProcessor = new node_agent_job_processor_1.JobProcessor(this.inferenceService, this.postProcessCoordinator, this.aggregatorMiddleware, this.nodeConfig, this.pythonServiceManager);
+        this.jobProcessor = new node_agent_job_processor_1.JobProcessor(this.inferenceService, this.nodeConfig, this.pythonServiceManager);
         // 获取DedupStage实例，传递给ResultSender用于在成功发送后记录job_id
-        // 注意：DedupStage 已迁移到 PipelineOrchestrator，从 InferenceService 获取
         const dedupStage = this.inferenceService?.getDedupStage() || null;
-        this.resultSender = new node_agent_result_sender_1.ResultSender(this.aggregatorMiddleware, dedupStage, this.postProcessCoordinator // 传递PostProcessCoordinator，用于更新lastSentText
+        this.resultSender = new node_agent_result_sender_1.ResultSender(this.aggregatorMiddleware, dedupStage, null // 不再使用 PostProcessCoordinator
         );
         logger_1.default.info({ schedulerUrl: this.schedulerUrl }, 'Scheduler server URL configured');
     }
@@ -299,7 +281,7 @@ class NodeAgent {
             }
             // 使用结果发送器发送结果
             if (!processResult.shouldSend) {
-                // PostProcessCoordinator决定不发送，发送空结果
+                // JobPipeline 决定不发送（去重检查失败），发送空结果
                 this.resultSender.sendJobResult(job, processResult.finalResult, startTime, false, processResult.reason);
                 return;
             }
@@ -316,6 +298,12 @@ class NodeAgent {
             connected: this.ws?.readyState === ws_1.default.OPEN || false,
             lastHeartbeat: new Date(),
         };
+    }
+    /**
+     * 清理 Session（统一入口）
+     */
+    removeSession(sessionId) {
+        this.inferenceService.removeSession(sessionId);
     }
     async generatePairingCode() {
         if (!this.ws || this.ws.readyState !== ws_1.default.OPEN)

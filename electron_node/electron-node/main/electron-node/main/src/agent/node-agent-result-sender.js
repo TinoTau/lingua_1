@@ -12,14 +12,13 @@ const ws_1 = __importDefault(require("ws"));
 const logger_1 = __importDefault(require("../logger"));
 const model_manager_1 = require("../model-manager/model-manager");
 class ResultSender {
-    constructor(aggregatorMiddleware, dedupStage, postProcessCoordinator) {
+    constructor(aggregatorMiddleware, dedupStage, postProcessCoordinator // 保留参数以兼容，但不再使用
+    ) {
         this.aggregatorMiddleware = aggregatorMiddleware;
         this.ws = null;
         this.nodeId = null;
-        this.dedupStage = null; // 用于在成功发送后记录job_id
-        this.postProcessCoordinator = null; // 用于获取DeduplicationHandler
+        this.dedupStage = null; // 用于在成功发送后记录job_id（新架构中不再使用）
         this.dedupStage = dedupStage || null;
-        this.postProcessCoordinator = postProcessCoordinator || null;
     }
     /**
      * 更新连接信息
@@ -76,7 +75,7 @@ class ResultSender {
                 ttsAudioLength: finalResult.tts_audio?.length || 0,
             }, 'Job processing completed successfully');
         }
-        // 如果PostProcessCoordinator决定不发送，发送空结果
+        // 如果 JobPipeline 决定不发送（去重检查失败），发送空结果
         if (!shouldSend) {
             const emptyResponse = {
                 type: 'job_result',
@@ -94,7 +93,7 @@ class ResultSender {
                 trace_id: job.trace_id,
                 extra: {
                     filtered: true,
-                    reason: reason || 'PostProcessCoordinator filtered result',
+                    reason: reason || 'JobPipeline filtered result',
                 },
             };
             this.ws.send(JSON.stringify(emptyResponse));
@@ -102,7 +101,7 @@ class ResultSender {
                 jobId: job.job_id,
                 sessionId: job.session_id,
                 utteranceIndex: job.utterance_index,
-            }, 'Empty job_result sent to scheduler (filtered by PostProcessCoordinator) to prevent timeout');
+            }, 'Empty job_result sent to scheduler (filtered by JobPipeline) to prevent timeout');
             return;
         }
         // 对齐协议规范：job_result 消息格式
@@ -172,31 +171,18 @@ class ResultSender {
             processingTimeMs: Date.now() - startTime,
         }, 'Job result sent successfully');
         // 更新最后发送的文本（在成功发送后）
-        // 优先使用PostProcessCoordinator的DeduplicationHandler，否则使用AggregatorMiddleware
-        if (finalResult.text_asr) {
+        // 使用 AggregatorMiddleware 记录最后发送的文本
+        if (finalResult.text_asr && this.aggregatorMiddleware) {
             const textToRecord = finalResult.text_asr.trim();
-            if (this.postProcessCoordinator) {
-                this.postProcessCoordinator.setLastSentText(job.session_id, textToRecord);
-                logger_1.default.debug({
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    utteranceIndex: job.utterance_index,
-                    textLength: textToRecord.length,
-                    textPreview: textToRecord.substring(0, 50),
-                    source: 'PostProcessCoordinator.DeduplicationHandler',
-                }, 'ResultSender: Updated lastSentText via PostProcessCoordinator');
-            }
-            else if (this.aggregatorMiddleware) {
-                this.aggregatorMiddleware.setLastSentText(job.session_id, textToRecord);
-                logger_1.default.debug({
-                    jobId: job.job_id,
-                    sessionId: job.session_id,
-                    utteranceIndex: job.utterance_index,
-                    textLength: textToRecord.length,
-                    textPreview: textToRecord.substring(0, 50),
-                    source: 'AggregatorMiddleware',
-                }, 'ResultSender: Updated lastSentText via AggregatorMiddleware');
-            }
+            this.aggregatorMiddleware.setLastSentText(job.session_id, textToRecord);
+            logger_1.default.debug({
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                textLength: textToRecord.length,
+                textPreview: textToRecord.substring(0, 50),
+                source: 'AggregatorMiddleware',
+            }, 'ResultSender: Updated lastSentText via AggregatorMiddleware');
         }
         // 在成功发送后记录job_id，避免发送失败后重试时被误判为重复
         if (this.dedupStage && typeof this.dedupStage.markJobIdAsSent === 'function') {

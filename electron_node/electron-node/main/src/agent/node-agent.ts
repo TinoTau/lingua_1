@@ -12,7 +12,6 @@ import { ModelNotAvailableError } from '../model-manager/model-manager';
 import { loadNodeConfig, type NodeConfig } from '../node-config';
 import logger from '../logger';
 import { AggregatorMiddleware, AggregatorMiddlewareConfig } from './aggregator-middleware';
-import { PostProcessCoordinator, PostProcessConfig } from './postprocess/postprocess-coordinator';
 import { HardwareInfoHandler } from './node-agent-hardware';
 import { ServicesHandler } from './node-agent-services';
 import { HeartbeatHandler } from './node-agent-heartbeat';
@@ -40,7 +39,6 @@ export class NodeAgent {
   private capabilityStateChangedHandler: (() => void) | null = null; // 保存监听器函数，用于清理
   private nodeConfig: NodeConfig; // 节点配置（用于指标收集配置）
   private aggregatorMiddleware: AggregatorMiddleware; // Aggregator 中间件（旧架构）
-  private postProcessCoordinator: PostProcessCoordinator | null = null; // PostProcess 协调器（新架构）
   // 防止重复处理同一个job（只保留最近的两个job_id，用于检测相邻重复）
   private recentJobIds: string[] = [];
 
@@ -119,33 +117,13 @@ export class NodeAgent {
     };
     this.aggregatorMiddleware = new AggregatorMiddleware(aggregatorConfig, taskRouter);
 
-    // 初始化 PostProcessCoordinator（新架构，通过 Feature Flag 控制）
-    const enablePostProcessTranslation = this.nodeConfig.features?.enablePostProcessTranslation ?? true;
-    if (enablePostProcessTranslation) {
-      const aggregatorManager = (this.aggregatorMiddleware as any).manager;
-      const postProcessConfig: PostProcessConfig = {
-        enabled: true,
-        translationConfig: {
-          translationCacheSize: aggregatorConfig.translationCacheSize,
-          translationCacheTtlMs: aggregatorConfig.translationCacheTtlMs,
-          enableAsyncRetranslation: aggregatorConfig.enableAsyncRetranslation,
-          asyncRetranslationThreshold: aggregatorConfig.asyncRetranslationThreshold,
-        },
-      };
-      this.postProcessCoordinator = new PostProcessCoordinator(
-        aggregatorManager,
-        taskRouter,
-        this.servicesHandler,  // 传递ServicesHandler用于服务发现
-        postProcessConfig
-      );
-      logger.info({}, 'PostProcessCoordinator initialized (new architecture)');
-      
-      // 将PostProcessCoordinator的DeduplicationHandler传递给PipelineOrchestrator（用于去重）
-      if (this.postProcessCoordinator && this.inferenceService) {
-        const deduplicationHandler = this.postProcessCoordinator.getDeduplicationHandler();
-        (this.inferenceService as any).setDeduplicationHandler(deduplicationHandler);
-        logger.info({}, 'DeduplicationHandler passed from PostProcessCoordinator to InferenceService');
-      }
+    // 新架构：不再使用 PostProcessCoordinator，所有处理都在 JobPipeline 中完成
+    // 初始化 DeduplicationHandler 并传递给 InferenceService
+    const { DeduplicationHandler } = require('./aggregator-middleware-deduplication');
+    const deduplicationHandler = new DeduplicationHandler();
+    if (this.inferenceService) {
+      (this.inferenceService as any).setDeduplicationHandler(deduplicationHandler);
+      logger.info({}, 'DeduplicationHandler initialized and passed to InferenceService');
     }
 
     // S1: 将AggregatorManager传递给InferenceService（用于构建prompt）
@@ -170,18 +148,15 @@ export class NodeAgent {
     // 初始化job处理器和结果发送器
     this.jobProcessor = new JobProcessor(
       this.inferenceService,
-      this.postProcessCoordinator,
-      this.aggregatorMiddleware,
       this.nodeConfig,
       this.pythonServiceManager
     );
     // 获取DedupStage实例，传递给ResultSender用于在成功发送后记录job_id
-    // 注意：DedupStage 已迁移到 PipelineOrchestrator，从 InferenceService 获取
     const dedupStage = this.inferenceService?.getDedupStage() || null;
     this.resultSender = new ResultSender(
       this.aggregatorMiddleware,
       dedupStage,
-      this.postProcessCoordinator  // 传递PostProcessCoordinator，用于更新lastSentText
+      null   // 不再使用 PostProcessCoordinator
     );
 
     logger.info({ schedulerUrl: this.schedulerUrl }, 'Scheduler server URL configured');
@@ -414,7 +389,7 @@ export class NodeAgent {
 
       // 使用结果发送器发送结果
       if (!processResult.shouldSend) {
-        // PostProcessCoordinator决定不发送，发送空结果
+        // JobPipeline 决定不发送（去重检查失败），发送空结果
         this.resultSender.sendJobResult(job, processResult.finalResult, startTime, false, processResult.reason);
         return;
       }
@@ -432,6 +407,13 @@ export class NodeAgent {
       connected: this.ws?.readyState === WebSocket.OPEN || false,
       lastHeartbeat: new Date(),
     };
+  }
+
+  /**
+   * 清理 Session（统一入口）
+   */
+  removeSession(sessionId: string): void {
+    this.inferenceService.removeSession(sessionId);
   }
 
   async generatePairingCode(): Promise<string | null> {
