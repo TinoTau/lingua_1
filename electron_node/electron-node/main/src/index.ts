@@ -39,10 +39,10 @@ function checkDependenciesAndShowDialog(mainWindow: BrowserWindow | null): void 
   try {
     const dependencies = checkAllDependencies();
     const { valid, missing } = validateRequiredDependencies();
-    
+
     if (!valid) {
       logger.error({ missing }, 'Required dependencies are missing');
-      
+
       // 构建错误消息
       const missingList = missing.join(', ');
       const message = `缺少必需的依赖：${missingList}\n\n` +
@@ -60,7 +60,7 @@ function checkDependenciesAndShowDialog(mainWindow: BrowserWindow | null): void 
           })
           .join('\n\n') +
         '\n\n详细安装指南请查看：electron_node/electron-node/docs/DEPENDENCY_INSTALLATION.md';
-      
+
       // 显示错误对话框
       if (mainWindow) {
         dialog.showMessageBox(mainWindow, {
@@ -88,7 +88,7 @@ function checkDependenciesAndShowDialog(mainWindow: BrowserWindow | null): void 
         console.error('缺少必需的依赖：', missing);
         console.error(message);
       }
-      
+
       // 注意：不阻止应用启动，但依赖缺失可能导致服务无法正常工作
       logger.warn('应用将继续启动，但某些功能可能无法正常工作');
     } else {
@@ -253,27 +253,90 @@ app.whenReady().then(async () => {
     }, 2000);
 
     // 根据用户上一次选择的功能自动启动对应服务
+    const configPath = require('path').join(require('electron').app.getPath('userData'), 'electron-node-config.json');
+    const configExists = require('fs').existsSync(configPath);
+
+    logger.info(
+      {
+        configPath,
+        configExists,
+      },
+      'Loading user service preferences from config file...'
+    );
+
     const config = loadNodeConfig();
     const prefs = config.servicePreferences;
 
+    // 记录读取到的配置
+    logger.info(
+      {
+        configPath,
+        servicePreferences: prefs,
+        rustEnabled: prefs.rustEnabled,
+        nmtEnabled: prefs.nmtEnabled,
+        ttsEnabled: prefs.ttsEnabled,
+        yourttsEnabled: prefs.yourttsEnabled,
+        fasterWhisperVadEnabled: prefs.fasterWhisperVadEnabled,
+        speakerEmbeddingEnabled: prefs.speakerEmbeddingEnabled,
+        semanticRepairZhEnabled: prefs.semanticRepairZhEnabled,
+        semanticRepairEnEnabled: prefs.semanticRepairEnEnabled,
+        enNormalizeEnabled: prefs.enNormalizeEnabled,
+      },
+      'User service preferences loaded successfully'
+    );
+
     // 确保配置文件包含所有必需字段（首次启动时补齐缺失字段）
     // 检查配置文件中是否缺少 servicePreferences 字段（通过读取原始文件检查）
+    // 注意：只有在配置文件存在且格式正确但缺少字段时才保存，避免覆盖用户配置
     try {
-      const configPath = require('path').join(require('electron').app.getPath('userData'), 'electron-node-config.json');
-      if (require('fs').existsSync(configPath)) {
+      if (configExists) {
         const rawConfig = require('fs').readFileSync(configPath, 'utf-8');
         const parsedConfig = JSON.parse(rawConfig);
-        if (!parsedConfig.servicePreferences) {
-          logger.info({}, 'Config file missing servicePreferences, saving default configuration...');
+        // 只有在配置文件格式正确但缺少 servicePreferences 字段时才保存
+        // 如果 JSON 解析失败，loadNodeConfig() 已经返回了默认配置，这里不应该再保存
+        if (parsedConfig && typeof parsedConfig === 'object' && !parsedConfig.servicePreferences) {
+          logger.info({ configPath }, 'Config file missing servicePreferences, saving default configuration...');
           saveNodeConfig(config);
+          logger.info({ servicePreferences: config.servicePreferences }, 'Default configuration saved');
+        } else {
+          logger.debug({ configPath }, 'Config file is valid and contains servicePreferences');
         }
+      } else {
+        // 配置文件不存在，保存默认配置（首次启动）
+        logger.info({ configPath }, 'Config file not found (first launch), saving default configuration...');
+        saveNodeConfig(config);
+        logger.info({ servicePreferences: config.servicePreferences }, 'Default configuration saved');
       }
     } catch (error) {
-      // 忽略检查错误，继续启动
-      logger.debug({ error }, 'Failed to check config file for missing fields');
+      // 如果读取或解析配置文件失败，loadNodeConfig() 已经返回了默认配置
+      // 这里不应该保存，因为可能是文件格式错误，保存会覆盖用户之前的配置
+      logger.warn(
+        {
+          error,
+          configPath,
+          message: error instanceof Error ? error.message : String(error),
+        },
+        'Failed to check config file, using loaded config without saving (to avoid overwriting user preferences)'
+      );
     }
 
-    logger.info({ prefs }, 'Service manager initialized, auto-starting services based on previous selection');
+    logger.info(
+      {
+        servicePreferences: prefs,
+        autoStartServices: {
+          rust: prefs.rustEnabled,
+          nmt: prefs.nmtEnabled,
+          tts: prefs.ttsEnabled,
+          yourtts: prefs.yourttsEnabled,
+          fasterWhisperVad: prefs.fasterWhisperVadEnabled,
+          speakerEmbedding: prefs.speakerEmbeddingEnabled,
+          semanticRepairZh: prefs.semanticRepairZhEnabled,
+          semanticRepairEn: prefs.semanticRepairEnEnabled,
+          enNormalize: prefs.enNormalizeEnabled,
+        },
+      },
+      'Service manager initialized, auto-starting services based on user preferences'
+    );
 
     // 按照偏好启动 Rust 推理服务（异步启动，不阻塞窗口显示）
     if (prefs.rustEnabled) {
@@ -323,23 +386,23 @@ app.whenReady().then(async () => {
           // 加载服务注册表
           await serviceRegistryManager.loadRegistry();
           const installed = serviceRegistryManager.listInstalled();
-          
+
           // 加载用户偏好配置
           const config = loadNodeConfig();
           const prefs = config.servicePreferences || {};
-          
+
           // 检查已安装的语义修复服务，并根据用户偏好决定是否启动
           const semanticRepairServiceIds: Array<'semantic-repair-zh' | 'semantic-repair-en' | 'en-normalize'> = [
             'semantic-repair-zh',
             'semantic-repair-en',
             'en-normalize',
           ];
-          
+
           const toStart: Array<'semantic-repair-zh' | 'semantic-repair-en' | 'en-normalize'> = [];
           for (const service of installed) {
             if (semanticRepairServiceIds.includes(service.service_id as any)) {
               const serviceId = service.service_id as 'semantic-repair-zh' | 'semantic-repair-en' | 'en-normalize';
-              
+
               // 根据用户偏好决定是否启动
               let shouldStart = false;
               if (serviceId === 'semantic-repair-zh') {
@@ -350,17 +413,17 @@ app.whenReady().then(async () => {
               } else if (serviceId === 'en-normalize') {
                 shouldStart = prefs.enNormalizeEnabled !== false;
               }
-              
+
               if (shouldStart) {
                 toStart.push(serviceId);
               } else {
                 logger.debug(
-                  { 
-                    serviceId, 
-                    preference: serviceId === 'semantic-repair-zh' 
-                      ? prefs.semanticRepairZhEnabled 
-                      : serviceId === 'semantic-repair-en' 
-                        ? prefs.semanticRepairEnEnabled 
+                  {
+                    serviceId,
+                    preference: serviceId === 'semantic-repair-zh'
+                      ? prefs.semanticRepairZhEnabled
+                      : serviceId === 'semantic-repair-en'
+                        ? prefs.semanticRepairEnEnabled
                         : prefs.enNormalizeEnabled
                   },
                   'Semantic repair service auto-start disabled by user preference'
@@ -368,7 +431,7 @@ app.whenReady().then(async () => {
               }
             }
           }
-          
+
           // 串行启动语义修复服务（避免GPU内存过载）
           // 注意：en-normalize是轻量级服务，可以优先启动
           // semantic-repair-zh和semantic-repair-en需要加载模型，启动较慢
@@ -378,7 +441,7 @@ app.whenReady().then(async () => {
             if (b === 'en-normalize') return 1;
             return 0;
           });
-          
+
           for (const serviceId of sortedToStart) {
             logger.info({ serviceId }, 'Auto-starting semantic repair service...');
             try {
@@ -444,34 +507,63 @@ app.whenReady().then(async () => {
     mainWindowForClose.on('close', async (event) => {
       // 在窗口关闭前，尝试保存当前服务状态（基于当前运行状态）
       // 注意：这里不能阻止关闭，只能尝试保存
+      logger.info({}, 'Window close event triggered, saving user service preferences...');
       try {
         const rustStatus = rustServiceManager?.getStatus();
         const pythonStatuses = pythonServiceManager?.getAllServiceStatuses() || [];
-        const semanticRepairStatuses = semanticRepairServiceManager 
+        const semanticRepairStatuses = semanticRepairServiceManager
           ? await semanticRepairServiceManager.getAllServiceStatuses()
           : [];
-        
+
+        // 记录当前服务运行状态
+        const currentServiceStatus = {
+          rust: !!rustStatus?.running,
+          nmt: !!pythonStatuses.find(s => s.name === 'nmt')?.running,
+          tts: !!pythonStatuses.find(s => s.name === 'tts')?.running,
+          yourtts: !!pythonStatuses.find(s => s.name === 'yourtts')?.running,
+          fasterWhisperVad: !!pythonStatuses.find(s => s.name === 'faster_whisper_vad')?.running,
+          speakerEmbedding: !!pythonStatuses.find(s => s.name === 'speaker_embedding')?.running,
+          semanticRepairZh: !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-zh')?.running,
+          semanticRepairEn: !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en')?.running,
+          enNormalize: !!semanticRepairStatuses.find(s => s.serviceId === 'en-normalize')?.running,
+        };
+
+        logger.info(
+          { currentServiceStatus },
+          'Current service running status before saving preferences'
+        );
+
         const config = loadNodeConfig();
         // 保存当前运行状态作为下次启动的偏好（保留用户之前的选择）
         // 注意：这里基于当前运行状态，而不是总是设置为 false
         config.servicePreferences = {
-          rustEnabled: !!rustStatus?.running,
-          nmtEnabled: !!pythonStatuses.find(s => s.name === 'nmt')?.running,
-          ttsEnabled: !!pythonStatuses.find(s => s.name === 'tts')?.running,
-          yourttsEnabled: !!pythonStatuses.find(s => s.name === 'yourtts')?.running,
-          fasterWhisperVadEnabled: !!pythonStatuses.find(s => s.name === 'faster_whisper_vad')?.running,
-          speakerEmbeddingEnabled: !!pythonStatuses.find(s => s.name === 'speaker_embedding')?.running,
-          semanticRepairZhEnabled: !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-zh')?.running,
-          semanticRepairEnEnabled: !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en')?.running,
-          enNormalizeEnabled: !!semanticRepairStatuses.find(s => s.serviceId === 'en-normalize')?.running,
+          rustEnabled: currentServiceStatus.rust,
+          nmtEnabled: currentServiceStatus.nmt,
+          ttsEnabled: currentServiceStatus.tts,
+          yourttsEnabled: currentServiceStatus.yourtts,
+          fasterWhisperVadEnabled: currentServiceStatus.fasterWhisperVad,
+          speakerEmbeddingEnabled: currentServiceStatus.speakerEmbedding,
+          semanticRepairZhEnabled: currentServiceStatus.semanticRepairZh,
+          semanticRepairEnEnabled: currentServiceStatus.semanticRepairEn,
+          enNormalizeEnabled: currentServiceStatus.enNormalize,
         };
         saveNodeConfig(config);
         logger.info(
-          { servicePreferences: config.servicePreferences },
-          'Saved service preferences on window close (based on current running status)'
+          {
+            servicePreferences: config.servicePreferences,
+            savedFrom: 'window-close-event',
+          },
+          'User service preferences saved successfully on window close (based on current running status)'
         );
       } catch (error) {
-        logger.error({ error }, 'Failed to save service preferences on window close');
+        logger.error(
+          {
+            error,
+            message: error instanceof Error ? error.message : String(error),
+            savedFrom: 'window-close-event',
+          },
+          'Failed to save service preferences on window close'
+        );
         // 忽略错误，避免阻塞窗口关闭
       }
     });
@@ -480,7 +572,9 @@ app.whenReady().then(async () => {
 
 // 正常关闭窗口时清理服务
 app.on('window-all-closed', async () => {
+  logger.info({ platform: process.platform }, 'window-all-closed event triggered');
   if (process.platform !== 'darwin') {
+    logger.info({}, 'Cleaning up services and saving user preferences (window-all-closed)...');
     await cleanupServices(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
     // 清理 ESBuild 进程
     cleanupEsbuild();
@@ -490,13 +584,25 @@ app.on('window-all-closed', async () => {
 
 // 在应用退出前确保清理（处理 macOS 等平台）
 app.on('before-quit', async (event) => {
+  logger.info({ platform: process.platform }, 'before-quit event triggered');
   // 如果服务还在运行，阻止默认退出行为，先清理服务
   const rustRunning = rustServiceManager?.getStatus().running;
   const pythonRunning = pythonServiceManager?.getAllServiceStatuses().some(s => s.running);
   const semanticRepairRunning = semanticRepairServiceManager ? (await semanticRepairServiceManager.getAllServiceStatuses()).some((s) => s.running) : false;
 
+  logger.info(
+    {
+      rustRunning,
+      pythonRunning,
+      semanticRepairRunning,
+      hasRunningServices: rustRunning || pythonRunning || semanticRepairRunning,
+    },
+    'Checking service status before quit'
+  );
+
   if (rustRunning || pythonRunning || semanticRepairRunning) {
     event.preventDefault();
+    logger.info({}, 'Services are running, cleaning up and saving user preferences (before-quit)...');
     // cleanupServices 会保存当前运行状态
     await cleanupServices(nodeAgent, rustServiceManager, pythonServiceManager, semanticRepairServiceManager);
     // 清理 ESBuild 进程
@@ -506,31 +612,52 @@ app.on('before-quit', async (event) => {
     // 即使服务没有运行，也要保存当前服务状态（以便下次启动时恢复）
     // cleanupServices 已经会保存配置，但为了确保在 before-quit 时也保存，这里再保存一次
     // 注意：这里基于当前运行状态，如果服务已经停止，保存为 false 是正确的
+    logger.info({}, 'No services running, saving user preferences (before-quit)...');
     try {
       const rustStatus = rustServiceManager?.getStatus();
       const pythonStatuses = pythonServiceManager?.getAllServiceStatuses() || [];
-      const semanticRepairStatuses = semanticRepairServiceManager 
+      const semanticRepairStatuses = semanticRepairServiceManager
         ? await semanticRepairServiceManager.getAllServiceStatuses()
         : [];
-      
+
+      const currentServiceStatus = {
+        rust: !!rustStatus?.running,
+        nmt: !!pythonStatuses.find(s => s.name === 'nmt')?.running,
+        tts: !!pythonStatuses.find(s => s.name === 'tts')?.running,
+        yourtts: !!pythonStatuses.find(s => s.name === 'yourtts')?.running,
+        fasterWhisperVad: !!pythonStatuses.find(s => s.name === 'faster_whisper_vad')?.running,
+        speakerEmbedding: !!pythonStatuses.find(s => s.name === 'speaker_embedding')?.running,
+        semanticRepairZh: !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-zh')?.running,
+        semanticRepairEn: !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en')?.running,
+        enNormalize: !!semanticRepairStatuses.find(s => s.serviceId === 'en-normalize')?.running,
+      };
+
+      logger.info(
+        { currentServiceStatus },
+        'Current service running status before saving preferences (before-quit)'
+      );
+
       const config = loadNodeConfig();
       // 保存当前运行状态作为下次启动的偏好（如果服务没有运行，保存为 false）
       // 这样用户关闭应用时，即使所有服务都已停止，也能记住用户的选择（所有服务都是 false）
       config.servicePreferences = {
-        rustEnabled: !!rustStatus?.running,
-        nmtEnabled: !!pythonStatuses.find(s => s.name === 'nmt')?.running,
-        ttsEnabled: !!pythonStatuses.find(s => s.name === 'tts')?.running,
-        yourttsEnabled: !!pythonStatuses.find(s => s.name === 'yourtts')?.running,
-        fasterWhisperVadEnabled: !!pythonStatuses.find(s => s.name === 'faster_whisper_vad')?.running,
-        speakerEmbeddingEnabled: !!pythonStatuses.find(s => s.name === 'speaker_embedding')?.running,
-        semanticRepairZhEnabled: !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-zh')?.running,
-        semanticRepairEnEnabled: !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en')?.running,
-        enNormalizeEnabled: !!semanticRepairStatuses.find(s => s.serviceId === 'en-normalize')?.running,
+        rustEnabled: currentServiceStatus.rust,
+        nmtEnabled: currentServiceStatus.nmt,
+        ttsEnabled: currentServiceStatus.tts,
+        yourttsEnabled: currentServiceStatus.yourtts,
+        fasterWhisperVadEnabled: currentServiceStatus.fasterWhisperVad,
+        speakerEmbeddingEnabled: currentServiceStatus.speakerEmbedding,
+        semanticRepairZhEnabled: currentServiceStatus.semanticRepairZh,
+        semanticRepairEnEnabled: currentServiceStatus.semanticRepairEn,
+        enNormalizeEnabled: currentServiceStatus.enNormalize,
       };
       saveNodeConfig(config);
       logger.info(
-        { servicePreferences: config.servicePreferences },
-        'Saved current service status to config file (no services running)'
+        {
+          servicePreferences: config.servicePreferences,
+          savedFrom: 'before-quit-event',
+        },
+        'User service preferences saved successfully on before-quit (based on current running status)'
       );
     } catch (error) {
       logger.error({ error }, 'Failed to save service status to config file');
@@ -633,7 +760,8 @@ app.on('before-quit', async (event) => {
 });
 
 // 进程退出时的最后清理（确保 ESBuild 被清理）
-process.on('exit', () => {
+// 注意：使用 (process as any) 因为 Electron 的 process 类型定义可能不完整
+(process as any).on('exit', () => {
   cleanupEsbuild();
 });
 

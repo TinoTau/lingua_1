@@ -180,6 +180,7 @@ export function loadNodeConfig(): NodeConfig {
     const raw = fs.readFileSync(configPath, 'utf-8');
     const parsed = JSON.parse(raw);
     // 简单合并，避免缺字段
+    // 注意：先展开默认配置，然后用用户配置覆盖，确保用户保存的值优先
     return {
       servicePreferences: {
         ...DEFAULT_CONFIG.servicePreferences,
@@ -215,6 +216,8 @@ export function loadNodeConfig(): NodeConfig {
     };
   } catch (error) {
     // 读取失败时使用默认配置
+    // 注意：这里不应该保存默认配置，因为可能是文件格式错误，保存会覆盖用户之前的配置
+    // 保存操作应该在调用方明确知道需要保存时才执行
     return { ...DEFAULT_CONFIG };
   }
 }

@@ -55,6 +55,10 @@ export async function cleanupServices(
     const enNormalizeEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'en-normalize')?.running;
 
     const config = loadNodeConfig();
+    
+    // 记录保存前的配置（用于对比）
+    const previousPreferences = { ...config.servicePreferences };
+    
     // 保存当前运行状态作为下次启动的偏好
     // 如果服务正在运行，保存为 true；如果已经停止，保存为 false
     // 这样下次启动时会按照当前的运行状态自动启动服务
@@ -69,15 +73,37 @@ export async function cleanupServices(
       semanticRepairEnEnabled,
       enNormalizeEnabled,
     };
+    
+    logger.info(
+      {
+        previousPreferences,
+        newPreferences: config.servicePreferences,
+        currentServiceStatus: {
+          rust: rustEnabled,
+          nmt: nmtEnabled,
+          tts: ttsEnabled,
+          yourtts: yourttsEnabled,
+          fasterWhisperVad: fasterWhisperVadEnabled,
+          speakerEmbedding: speakerEmbeddingEnabled,
+          semanticRepairZh: semanticRepairZhEnabled,
+          semanticRepairEn: semanticRepairEnEnabled,
+          enNormalize: enNormalizeEnabled,
+        },
+        rustRunning: rustEnabled,
+        pythonRunning: pythonStatuses.filter(s => s.running).length,
+        semanticRepairRunning: semanticRepairStatuses.filter(s => s.running).length,
+        savedFrom: 'cleanupServices',
+      },
+      'Saving user service preferences based on current running status (cleanupServices)...'
+    );
+    
     saveNodeConfig(config);
     logger.info(
       { 
         servicePreferences: config.servicePreferences,
-        rustRunning: rustEnabled,
-        pythonRunning: pythonStatuses.filter(s => s.running).length,
-        semanticRepairRunning: semanticRepairStatuses.filter(s => s.running).length,
+        savedFrom: 'cleanupServices',
       },
-      'Saved current service status to config file (cleanupServices)'
+      'User service preferences saved successfully (cleanupServices)'
     );
   } catch (error) {
     logger.error({ error }, 'Failed to save service status to config file');

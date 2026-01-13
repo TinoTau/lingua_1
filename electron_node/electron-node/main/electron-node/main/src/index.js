@@ -280,20 +280,29 @@ electron_1.app.whenReady().then(async () => {
         const prefs = config.servicePreferences;
         // 确保配置文件包含所有必需字段（首次启动时补齐缺失字段）
         // 检查配置文件中是否缺少 servicePreferences 字段（通过读取原始文件检查）
+        // 注意：只有在配置文件存在且格式正确但缺少字段时才保存，避免覆盖用户配置
         try {
             const configPath = require('path').join(require('electron').app.getPath('userData'), 'electron-node-config.json');
             if (require('fs').existsSync(configPath)) {
                 const rawConfig = require('fs').readFileSync(configPath, 'utf-8');
                 const parsedConfig = JSON.parse(rawConfig);
-                if (!parsedConfig.servicePreferences) {
+                // 只有在配置文件格式正确但缺少 servicePreferences 字段时才保存
+                // 如果 JSON 解析失败，loadNodeConfig() 已经返回了默认配置，这里不应该再保存
+                if (parsedConfig && typeof parsedConfig === 'object' && !parsedConfig.servicePreferences) {
                     logger_1.default.info({}, 'Config file missing servicePreferences, saving default configuration...');
                     (0, node_config_1.saveNodeConfig)(config);
                 }
             }
+            else {
+                // 配置文件不存在，保存默认配置（首次启动）
+                logger_1.default.info({}, 'Config file not found, saving default configuration...');
+                (0, node_config_1.saveNodeConfig)(config);
+            }
         }
         catch (error) {
-            // 忽略检查错误，继续启动
-            logger_1.default.debug({ error }, 'Failed to check config file for missing fields');
+            // 如果读取或解析配置文件失败，loadNodeConfig() 已经返回了默认配置
+            // 这里不应该保存，因为可能是文件格式错误，保存会覆盖用户之前的配置
+            logger_1.default.warn({ error }, 'Failed to check config file, using loaded config without saving (to avoid overwriting user preferences)');
         }
         logger_1.default.info({ prefs }, 'Service manager initialized, auto-starting services based on previous selection');
         // 按照偏好启动 Rust 推理服务（异步启动，不阻塞窗口显示）
