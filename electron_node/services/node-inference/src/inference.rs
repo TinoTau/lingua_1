@@ -503,12 +503,12 @@ impl InferenceService {
         );
 
         // 3. 可选模块处理（使用 PipelineContext）
-        // 3.1 音色识别（使用 f32 音频数据）
+        // 3.1 音色识别（使用 VAD 处理后的音频数据，去除静音部分，提高识别准确性）
         if features.map(|f| f.speaker_identification).unwrap_or(false) {
             if let Some(ref m) = self.speaker_identifier {
                 let module = m.read().await;
                 if InferenceModule::is_enabled(&*module) {
-                    match module.identify(&audio_f32).await {
+                    match module.identify(&audio_f32_processed).await {
                         Ok(result) => {
                             ctx.set_speaker_id(result.speaker_id.clone());
                             // 如果返回了 voice_embedding，可以保存到 PipelineContext（如果需要）

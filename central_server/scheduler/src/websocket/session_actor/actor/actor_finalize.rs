@@ -258,6 +258,15 @@ impl SessionActor {
             tgt_lang = %session.tgt_lang,
             "开始创建翻译任务"
         );
+        // 使用默认 pipeline 配置（finalize 时没有 pipeline 信息，使用默认值）
+        let default_pipeline = crate::messages::PipelineConfig {
+            use_asr: true,
+            use_nmt: true,
+            use_tts: true,
+            use_semantic: false, // 语义修复由节点端自己决定
+            use_tone: false, // 默认不使用音色克隆
+        };
+
         let jobs = match create_translation_jobs(
             &self.state,
             &self.session_id,
@@ -266,6 +275,7 @@ impl SessionActor {
             session.tgt_lang.clone(),
             session.dialect.clone(),
             session.default_features.clone(),
+            default_pipeline,
             session.tenant_id.clone(),
             audio_data,
             audio_format,

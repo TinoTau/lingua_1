@@ -18,6 +18,7 @@ pub(crate) async fn create_translation_jobs(
     default_tgt_lang: String, // 单会话模式使用的目标语言
     dialect: Option<String>,
     features: Option<FeatureFlags>,
+    pipeline: crate::messages::PipelineConfig,
     tenant_id: Option<String>,
     audio_data: Vec<u8>,
     audio_format: String,
@@ -73,12 +74,7 @@ pub(crate) async fn create_translation_jobs(
                 default_tgt_lang.clone(),
                 dialect.clone(),
                 features.clone(),
-                crate::messages::PipelineConfig {
-                    use_asr: true,
-                    use_nmt: true,
-                    use_tts: true,
-                    use_semantic: false, // 语义修复由节点端自己决定，调度服务器不干预
-                },
+                pipeline.clone(),
                 audio_data.clone(),
                 audio_format.clone(),
                 sample_rate,
@@ -142,12 +138,7 @@ pub(crate) async fn create_translation_jobs(
                 target_lang.clone(),
                 dialect.clone(),
                 features.clone(),
-                crate::messages::PipelineConfig {
-                    use_asr: true,
-                    use_nmt: true,
-                    use_tts: true,
-                    use_semantic: false, // 语义修复由节点端自己决定，调度服务器不干预
-                },
+                pipeline.clone(),
                 audio_data.clone(),
                 audio_format.clone(),
                 sample_rate,
@@ -212,6 +203,7 @@ pub(crate) async fn create_translation_jobs(
                 use_nmt: true,
                 use_tts: true,
                 use_semantic: false, // 初始为 false
+                use_tone: false, // 默认不使用音色克隆
             },
             audio_data,
             audio_format,
@@ -285,12 +277,15 @@ async fn create_job_with_minimal_scheduler(
     }).to_string();
 
     // 调用新的调度服务
+    // 在双向模式下，使用 lang_a 和 lang_b 来查找 Pool，而不是 src_lang="auto" 和 tgt_lang
     let src_lang_clone = src_lang.clone();
     let dispatch_resp = scheduler.dispatch_task(DispatchRequest {
         session_id: session_id.to_string(),
         src_lang: src_lang_clone,
         tgt_lang: tgt_lang.clone(),
         payload_json,
+        lang_a: lang_a.clone(),
+        lang_b: lang_b.clone(),
     }).await?;
 
     let node_id = Some(dispatch_resp.node_id);

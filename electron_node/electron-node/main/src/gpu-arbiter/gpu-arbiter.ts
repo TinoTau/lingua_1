@@ -153,7 +153,9 @@ export class GpuArbiter {
     const isLocked = this.mutexes.get(gpuKey)!;
     const admissionState = this.usageMonitor.getAdmissionState(gpuKey)!;
 
-    // 检查队列是否已满
+    // 检查队列长度，但不拒绝任务
+    // 如果队列已满或接近满，记录警告日志，但让任务进入队列等待
+    // 资源耗尽应该通过心跳通知调度服务器停止分配任务，而不是直接拒绝已分配的任务
     if (queue.length >= queueLimit) {
       this.metricsManager.recordMetric(gpuKey, 'queueFullTotal', 1);
       logger.warn(
@@ -162,24 +164,40 @@ export class GpuArbiter {
           taskType,
           queueLength: queue.length,
           queueLimit,
+          note: 'Queue is full, but task will still wait. Scheduler should stop assigning new tasks based on heartbeat resource usage.',
           ...trace,
         },
-        'GpuArbiter: Queue full'
+        'GpuArbiter: Queue full - task will wait, scheduler should be notified via heartbeat to stop assigning tasks'
       );
+      // 不拒绝任务，让它进入队列等待（即使超过 queueLimit）
+      // 这样调度服务器分配的任务不会被废弃
+    }
 
-      if (busyPolicy === "SKIP") {
-        this.metricsManager.recordMetric(gpuKey, 'acquireTotal', 'SKIPPED', 1);
-        return {
-          status: "SKIPPED",
-          reason: "QUEUE_FULL",
-        };
-      } else if (busyPolicy === "FALLBACK_CPU") {
-        this.metricsManager.recordMetric(gpuKey, 'acquireTotal', 'FALLBACK_CPU', 1);
-        return {
-          status: "FALLBACK_CPU",
-          reason: "QUEUE_FULL",
-        };
-      }
+    // 如果队列中有任务在等待，记录日志但不拒绝新任务
+    // 新任务会进入队列，按 FIFO 顺序等待，前面的任务优先完成
+    if (queue.length > 0) {
+      const now = Date.now();
+      const oldestTask = queue[0];
+      const oldestWaitTimeMs = now - oldestTask.queuedAt;
+      const gpuUsageInfo = this.usageMonitor.getGpuUsageFromCache(gpuKey);
+      const gpuUsagePercent = gpuUsageInfo?.usagePercent || 0;
+      
+      logger.info(
+        {
+          gpuKey,
+          taskType,
+          queueLength: queue.length,
+          oldestWaitTimeMs,
+          gpuUsagePercent,
+          oldestTaskType: oldestTask.request.taskType,
+          oldestJobId: oldestTask.request.trace?.jobId,
+          oldestUtteranceIndex: oldestTask.request.trace?.utteranceIndex,
+          newJobId: trace?.jobId,
+          newUtteranceIndex: trace?.utteranceIndex,
+          ...trace,
+        },
+        'GpuArbiter: New task will wait in queue - earlier tasks are waiting, FIFO scheduling ensures earlier tasks complete first'
+      );
     }
 
     // 检查GPU使用率状态

@@ -293,7 +293,13 @@ export class AudioSender {
     utteranceIndex: number,
     srcLang: string,
     tgtLang: string,
-    traceId?: string
+    traceId?: string,
+    pipeline?: {
+      use_asr?: boolean;
+      use_nmt?: boolean;
+      use_tts?: boolean;
+      use_tone?: boolean;
+    }
   ): Promise<void> {
     if (!this.sessionId) {
       console.warn('Session ID not set, cannot send utterance');
@@ -395,7 +401,7 @@ export class AudioSender {
 
       const base64 = this.arrayBufferToBase64(encodedAudio);
 
-      const message = {
+      const message: any = {
         type: 'utterance',
         session_id: this.sessionId,
         utterance_index: utteranceIndex,
@@ -408,6 +414,11 @@ export class AudioSender {
         sample_rate: 16000,
         trace_id: traceId,
       };
+
+      // 如果提供了 pipeline 配置，添加到消息中
+      if (pipeline) {
+        message.pipeline = pipeline;
+      }
 
       console.log(`[AudioSender] Sending utterance:`, {
         utterance_index: utteranceIndex,

@@ -3,10 +3,9 @@
  * 提供便捷的GPU租约获取和释放包装
  */
 
-import { getGpuArbiter } from './gpu-arbiter-factory';
+import { getGpuArbiter, loadGpuArbiterConfig } from './gpu-arbiter-factory';
 import { GpuTaskType, GpuLeaseRequest, GpuLease } from './types';
 import logger from '../logger';
-import { loadNodeConfig } from '../node-config';
 
 /**
  * 使用GPU租约执行函数
@@ -26,31 +25,26 @@ export async function withGpuLease<T>(
       taskType,
       acquiredAt: Date.now(),
       holdMaxMs: 8000,
-      release: () => {},
+      release: () => { },
     };
     return await fn(dummyLease);
   }
 
-  const config = loadNodeConfig();
-  const defaultConfig = config.gpuArbiter || {
-    enabled: false,
-    gpuKeys: ['gpu:0'],
-    defaultQueueLimit: 8,
-    defaultHoldMaxMs: 8000,
-  };
+  // 使用统一的配置加载逻辑，确保使用正确的默认配置（包括默认的 policies）
+  const config = loadGpuArbiterConfig();
 
   // 安全获取policy（处理OTHER类型）
-  const policy = (taskType !== 'OTHER' && config.gpuArbiter?.policies?.[taskType]) 
-    ? config.gpuArbiter.policies[taskType]
+  const policy = (taskType !== 'OTHER' && config.policies?.[taskType])
+    ? config.policies[taskType]
     : undefined;
 
   const request: GpuLeaseRequest = {
-    gpuKey: (defaultConfig.gpuKeys && defaultConfig.gpuKeys[0]) || 'gpu:0',
+    gpuKey: (config.gpuKeys && config.gpuKeys[0]) || 'gpu:0',
     taskType,
     priority: policy?.priority ?? 50,
-    maxWaitMs: policy?.maxWaitMs ?? (defaultConfig.defaultHoldMaxMs ?? 8000),
-    holdMaxMs: defaultConfig.defaultHoldMaxMs ?? 8000,
-    queueLimit: defaultConfig.defaultQueueLimit ?? 8,
+    maxWaitMs: policy?.maxWaitMs ?? (config.defaultHoldMaxMs ?? 8000),
+    holdMaxMs: config.defaultHoldMaxMs ?? 8000,
+    queueLimit: config.defaultQueueLimit ?? 8,
     busyPolicy: policy?.busyPolicy ?? 'WAIT',
     trace: trace || {},
   };
@@ -132,30 +126,25 @@ export async function tryAcquireGpuLease(
       taskType,
       acquiredAt: Date.now(),
       holdMaxMs: 8000,
-      release: () => {},
+      release: () => { },
     };
   }
 
-  const config = loadNodeConfig();
-  const defaultConfig = config.gpuArbiter || {
-    enabled: false,
-    gpuKeys: ['gpu:0'],
-    defaultQueueLimit: 8,
-    defaultHoldMaxMs: 8000,
-  };
+  // 使用统一的配置加载逻辑，确保使用正确的默认配置（包括默认的 policies）
+  const config = loadGpuArbiterConfig();
 
   // 安全获取policy（处理OTHER类型）
-  const policy = (taskType !== 'OTHER' && config.gpuArbiter?.policies?.[taskType]) 
-    ? config.gpuArbiter.policies[taskType]
+  const policy = (taskType !== 'OTHER' && config.policies?.[taskType])
+    ? config.policies[taskType]
     : undefined;
 
   const request: GpuLeaseRequest = {
-    gpuKey: (defaultConfig.gpuKeys && defaultConfig.gpuKeys[0]) || 'gpu:0',
+    gpuKey: (config.gpuKeys && config.gpuKeys[0]) || 'gpu:0',
     taskType,
     priority: policy?.priority ?? 50,
-    maxWaitMs: policy?.maxWaitMs ?? (defaultConfig.defaultHoldMaxMs ?? 8000),
-    holdMaxMs: defaultConfig.defaultHoldMaxMs ?? 8000,
-    queueLimit: defaultConfig.defaultQueueLimit ?? 8,
+    maxWaitMs: policy?.maxWaitMs ?? (config.defaultHoldMaxMs ?? 8000),
+    holdMaxMs: config.defaultHoldMaxMs ?? 8000,
+    queueLimit: config.defaultQueueLimit ?? 8,
     busyPolicy: policy?.busyPolicy ?? 'WAIT',
     trace: trace || {},
   };

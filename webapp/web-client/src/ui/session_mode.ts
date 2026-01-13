@@ -6,153 +6,183 @@
 import { App } from '../app';
 import { SessionState, FeatureFlags } from '../types';
 
+// 服务模式类型
+type ServiceMode = 'personal_voice' | 'voice_translation' | 'original_subtitle' | 'bilingual_subtitle' | 'text_translation';
+
 /**
  * 渲染会话模式界面
  */
 export function renderSessionMode(container: HTMLElement, app: App): void {
   container.innerHTML = `
-    <div style="text-align: center; padding: 20px;">
-      <h1>Lingua 实时语音翻译</h1>
+    <div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+      <h1 style="text-align: center; color: #333; margin-bottom: 30px;">Lingua 实时语音翻译</h1>
       
-      <div id="status" style="margin: 20px 0; padding: 10px; background: #f0f0f0; border-radius: 8px;">
-        状态: <span id="status-text">准备就绪</span>
+      <!-- 状态栏 -->
+      <div id="status" style="margin: 20px 0; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <div style="font-size: 16px; font-weight: bold;">状态: <span id="status-text">准备就绪</span></div>
       </div>
 
-      <div id="asr-subtitle-container" style="margin: 20px 0;">
-        <div style="font-weight: bold; margin-bottom: 10px;">ASR 字幕：</div>
-        <div id="asr-subtitle"></div>
-      </div>
 
-      <div id="translation-result-container" style="margin: 20px 0; padding: 15px; background: #f0f8ff; border-radius: 8px; border: 1px solid #b0d4f1; display: none;">
-        <div style="font-weight: bold; margin-bottom: 12px; color: #0066cc; font-size: 16px;">翻译结果：</div>
-        <div style="margin-bottom: 12px;">
-          <div style="font-weight: bold; color: #333; margin-bottom: 6px; font-size: 14px;">原文 (ASR):</div>
-          <div id="translation-original" style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; line-height: 1.6; min-height: 60px; max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word;"></div>
+      <!-- 语言配置 -->
+      <div id="language-config" style="margin: 20px 0; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: none;">
+        <div style="font-weight: bold; margin-bottom: 15px; font-size: 16px; color: #333;">语言配置：</div>
+        <div id="two-way-config" style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+          <div>
+            <label style="font-weight: 500; margin-right: 8px;">语言 A:</label>
+            <select id="lang-a" style="padding: 8px 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px; cursor: pointer;">
+              <option value="zh">中文</option>
+              <option value="en">英文</option>
+              <option value="ja">日文</option>
+              <option value="ko">韩文</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-weight: 500; margin-right: 8px;">语言 B:</label>
+            <select id="lang-b" style="padding: 8px 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px; cursor: pointer;">
+              <option value="en">英文</option>
+              <option value="zh">中文</option>
+              <option value="ja">日文</option>
+              <option value="ko">韩文</option>
+            </select>
+          </div>
+          <div style="width: 100%; margin-top: 10px; padding: 10px; background: #e7f3ff; border-radius: 6px; font-size: 13px; color: #0066cc;">
+            💡 双向互译：系统会自动识别语音语言，并翻译到另一种语言
+          </div>
         </div>
-        <div style="margin-bottom: 12px;">
-          <div style="font-weight: bold; color: #333; margin-bottom: 6px; font-size: 14px;">译文 (NMT):</div>
-          <div id="translation-translated" style="padding: 12px; background: #f0f8ff; border-radius: 6px; border: 1px solid #b0d4f1; color: #0066cc; font-size: 14px; line-height: 1.6; min-height: 60px; max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word;"></div>
-        </div>
       </div>
 
-      <div style="margin: 20px 0;">
-        <!-- 第一行：连接服务器、开始、结束 -->
-        <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 10px;">
-          <button id="connect-btn" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">
-            连接服务器
+      <!-- 文本输入区域（仅文本翻译模式显示） -->
+      <div id="text-input-section" style="margin: 20px 0; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: none;">
+        <div style="font-weight: bold; margin-bottom: 15px; font-size: 16px; color: #333;">文本翻译：</div>
+        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+          <textarea id="text-input" placeholder="请输入要翻译的文本..." style="flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; min-height: 100px; resize: vertical; font-family: inherit;"></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end;">
+          <button id="text-submit-btn" style="padding: 12px 30px; background: #dc3545; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s;">
+            提交翻译
           </button>
-          <button id="start-btn" style="padding: 10px 20px; font-size: 16px; cursor: pointer;" disabled>
+        </div>
+        <div id="text-translation-result" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; display: none;">
+          <div style="font-weight: bold; margin-bottom: 10px; color: #333;">翻译结果：</div>
+          <div id="text-translated-content" style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; min-height: 60px;"></div>
+        </div>
+      </div>
+
+      <!-- 字幕显示区域 -->
+      <div id="subtitle-container" style="margin: 20px 0; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: none;">
+        <div style="font-weight: bold; margin-bottom: 15px; font-size: 16px; color: #333;">实时字幕：</div>
+        <div id="asr-subtitle" style="padding: 15px; background: #f8f9fa; border-radius: 8px; min-height: 60px; font-size: 16px; line-height: 1.6; color: #333;"></div>
+        <div id="bilingual-subtitle" style="margin-top: 15px; padding: 15px; background: #e7f3ff; border-radius: 8px; min-height: 60px; font-size: 16px; line-height: 1.6; color: #0066cc; display: none;"></div>
+      </div>
+
+      <!-- 翻译结果显示区域 -->
+      <div id="translation-result-container" style="margin: 20px 0; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: none;">
+        <div style="font-weight: bold; margin-bottom: 15px; font-size: 16px; color: #0066cc;">翻译结果：</div>
+        <div style="margin-bottom: 15px;">
+          <div style="font-weight: bold; color: #333; margin-bottom: 8px; font-size: 14px;">原文 (ASR):</div>
+          <div id="translation-original" style="padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #ddd; font-size: 14px; line-height: 1.6; min-height: 60px; max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word;"></div>
+        </div>
+        <div style="margin-bottom: 15px;">
+          <div style="font-weight: bold; color: #333; margin-bottom: 8px; font-size: 14px;">译文 (NMT):</div>
+          <div id="translation-translated" style="padding: 15px; background: #e7f3ff; border-radius: 8px; border: 1px solid #b0d4f1; color: #0066cc; font-size: 14px; line-height: 1.6; min-height: 60px; max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word;"></div>
+        </div>
+      </div>
+
+      <!-- 控制按钮 -->
+      <div style="margin: 30px 0; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 15px;">
+          <button id="start-btn" style="padding: 12px 24px; background: #28a745; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" disabled>
             开始
           </button>
-          <button id="end-btn" style="padding: 10px 20px; font-size: 16px; cursor: pointer;" disabled>
+          <button id="end-btn" style="padding: 12px 24px; background: #dc3545; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" disabled>
             结束
           </button>
         </div>
-        <!-- 第二行：发送、播放（放大1.5倍）、倍速 -->
-        <div style="display: flex; justify-content: center; gap: 10px; align-items: center;">
-          <button id="send-btn" style="padding: 15px 30px; margin: 0; font-size: 24px; cursor: pointer;" disabled>
+        <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+          <button id="send-btn" style="padding: 15px 40px; background: #007bff; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" disabled>
             发送
           </button>
-          <button id="play-pause-btn" style="padding: 15px 30px; margin: 0; font-size: 24px; cursor: pointer; background: #28a745; color: white; border: none; border-radius: 8px;" disabled>
+          <button id="play-pause-btn" style="padding: 15px 40px; background: #28a745; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" disabled>
             <span id="play-pause-text">播放</span>
           </button>
-          <button id="playback-rate-btn" style="padding: 10px 20px; margin: 0; font-size: 16px; cursor: pointer; background: #6c757d; color: white; border: none; border-radius: 8px;" disabled>
+          <button id="playback-rate-btn" style="padding: 12px 24px; background: #6c757d; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" disabled>
             <span id="playback-rate-text">1x</span>
           </button>
         </div>
       </div>
       
-      <div id="tts-audio-info" style="margin: 10px 0; padding: 10px; background: #e7f3ff; border-radius: 8px; display: none;">
+      <div id="tts-audio-info" style="margin: 20px 0; padding: 15px; background: #e7f3ff; border-radius: 8px; display: none;">
         <div style="font-size: 14px; color: #0066cc;">
           可播放音频时长: <span id="tts-duration">0.0</span> 秒
         </div>
       </div>
 
-      <div style="margin: 20px 0; padding: 15px; background: #e7f3ff; border-radius: 8px;">
-        <div style="font-weight: bold; margin-bottom: 10px;">翻译模式：</div>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <label style="display: flex; align-items: center; cursor: pointer;">
-            <input type="radio" name="translation-mode" id="mode-one-way" value="one_way" checked style="margin-right: 8px; cursor: pointer;">
-            <span>单向模式</span>
-          </label>
-          <label style="display: flex; align-items: center; cursor: pointer;">
-            <input type="radio" name="translation-mode" id="mode-two-way" value="two_way_auto" style="margin-right: 8px; cursor: pointer;">
-            <span>双向模式（自动语言检测）</span>
-          </label>
-        </div>
-      </div>
-
-      <div id="one-way-config" style="margin: 20px 0;">
-        <label>
-          源语言: 
-          <select id="src-lang" style="padding: 5px; margin: 5px;">
-            <option value="zh">中文</option>
-            <option value="en">英文</option>
-          </select>
-        </label>
-        <label>
-          目标语言: 
-          <select id="tgt-lang" style="padding: 5px; margin: 5px;">
-            <option value="en">英文</option>
-            <option value="zh">中文</option>
-          </select>
-        </label>
-      </div>
-
-      <div id="two-way-config" style="margin: 20px 0; display: none;">
-        <div style="margin-bottom: 10px;">
-          <label>
-            语言 A: 
-            <select id="lang-a" style="padding: 5px; margin: 5px;">
-              <option value="zh">中文</option>
-              <option value="en">英文</option>
-            </select>
-          </label>
-        </div>
-        <div>
-          <label>
-            语言 B: 
-            <select id="lang-b" style="padding: 5px; margin: 5px;">
-              <option value="en">英文</option>
-              <option value="zh">中文</option>
-            </select>
-          </label>
-        </div>
-        <div style="margin-top: 10px; padding: 10px; background: #fff3cd; border-radius: 5px; font-size: 12px; color: #856404;">
-          💡 双向模式：系统会自动检测说话语言，并翻译成另一种语言。两人可以自由切换语言，无需手动切换。
-        </div>
-      </div>
-
-      <div style="margin: 20px 0; padding: 15px; background: #f9f9f9; border-radius: 8px;">
-        <div style="font-weight: bold; margin-bottom: 10px;">可选功能：</div>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <label style="display: flex; align-items: center; cursor: pointer;">
-            <input type="checkbox" id="feature-emotion" style="margin-right: 8px; cursor: pointer;">
-            <span>情感检测</span>
-          </label>
-          <label style="display: flex; align-items: center; cursor: pointer;">
-            <input type="checkbox" id="feature-voice-style" style="margin-right: 8px; cursor: pointer;">
-            <span>音色风格检测</span>
-          </label>
-          <label style="display: flex; align-items: center; cursor: pointer;">
-            <input type="checkbox" id="feature-speech-rate-detection" style="margin-right: 8px; cursor: pointer;">
-            <span>语速检测</span>
-          </label>
-          <label style="display: flex; align-items: center; cursor: pointer;">
-            <input type="checkbox" id="feature-speech-rate-control" style="margin-right: 8px; cursor: pointer;">
-            <span>语速控制</span>
-          </label>
-          <label style="display: flex; align-items: center; cursor: pointer;">
-            <input type="checkbox" id="feature-speaker-id" style="margin-right: 8px; cursor: pointer;">
-            <span>音色识别</span>
-          </label>
-          <label style="display: flex; align-items: center; cursor: pointer;">
-            <input type="checkbox" id="feature-persona" style="margin-right: 8px; cursor: pointer;">
-            <span>个性化适配</span>
-          </label>
-        </div>
+      <!-- 可选功能（折叠） -->
+      <div style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <details>
+          <summary style="font-weight: bold; font-size: 16px; color: #333; cursor: pointer; padding: 10px;">可选功能（点击展开）</summary>
+          <div style="margin-top: 15px;">
+            <!-- 服务模式选择 -->
+            <div style="margin-bottom: 20px;">
+              <div style="font-weight: bold; font-size: 16px; margin-bottom: 15px; color: #333;">选择服务模式：</div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+                <button id="mode-personal-voice" class="mode-btn" data-mode="personal_voice" style="padding: 15px; background: white; border: 3px solid #667eea; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: center;">
+                  <div style="font-size: 20px; margin-bottom: 6px;">🎤</div>
+                  <div style="font-weight: bold; font-size: 14px; color: #667eea; margin-bottom: 4px;">个人音色语音转译</div>
+                  <div style="font-size: 11px; color: #666;">ASR → NMT → YourTTS</div>
+                </button>
+                <button id="mode-voice-translation" class="mode-btn" data-mode="voice_translation" style="padding: 15px; background: white; border: 3px solid #28a745; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: center;">
+                  <div style="font-size: 20px; margin-bottom: 6px;">🔊</div>
+                  <div style="font-weight: bold; font-size: 14px; color: #28a745; margin-bottom: 4px;">语音转译</div>
+                  <div style="font-size: 11px; color: #666;">ASR → NMT → TTS</div>
+                </button>
+                <button id="mode-original-subtitle" class="mode-btn" data-mode="original_subtitle" style="padding: 15px; background: white; border: 3px solid #ffc107; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: center;">
+                  <div style="font-size: 20px; margin-bottom: 6px;">📝</div>
+                  <div style="font-weight: bold; font-size: 14px; color: #ffc107; margin-bottom: 4px;">原文字幕</div>
+                  <div style="font-size: 11px; color: #666;">ASR 仅</div>
+                </button>
+                <button id="mode-bilingual-subtitle" class="mode-btn" data-mode="bilingual_subtitle" style="padding: 15px; background: white; border: 3px solid #17a2b8; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: center;">
+                  <div style="font-size: 20px; margin-bottom: 6px;">🌐</div>
+                  <div style="font-weight: bold; font-size: 14px; color: #17a2b8; margin-bottom: 4px;">双语字幕</div>
+                  <div style="font-size: 11px; color: #666;">ASR → NMT</div>
+                </button>
+                <button id="mode-text-translation" class="mode-btn" data-mode="text_translation" style="padding: 15px; background: white; border: 3px solid #dc3545; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: center;">
+                  <div style="font-size: 20px; margin-bottom: 6px;">✍️</div>
+                  <div style="font-weight: bold; font-size: 14px; color: #dc3545; margin-bottom: 4px;">文本翻译</div>
+                  <div style="font-size: 11px; color: #666;">NMT 仅</div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </details>
       </div>
     </div>
+
+    <style>
+      .mode-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15) !important;
+      }
+      .mode-btn.selected {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        color: white !important;
+        border-color: transparent !important;
+      }
+      .mode-btn.selected div {
+        color: white !important;
+      }
+      button:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+      }
+      button:active:not(:disabled) {
+        transform: translateY(0);
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    </style>
   `;
 
   setupSessionModeEventHandlers(container, app);
@@ -162,8 +192,118 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
  * 设置会话模式事件处理器
  */
 function setupSessionModeEventHandlers(container: HTMLElement, app: App): void {
+  let selectedMode: ServiceMode | null = null;
+  
+  // 服务模式按钮事件 - 选择模式时自动连接服务器
+  const modeButtons = document.querySelectorAll('.mode-btn');
+  modeButtons.forEach(btn => {
+    btn.addEventListener('click', async () => {
+      // 移除所有选中状态
+      modeButtons.forEach(b => b.classList.remove('selected'));
+      // 添加选中状态
+      btn.classList.add('selected');
+      selectedMode = (btn as HTMLElement).dataset.mode as ServiceMode;
+      
+      // 根据模式显示/隐藏相关区域
+      updateUIForMode(selectedMode);
+      
+      // 自动连接服务器（始终使用双向模式）
+      await connectWithSelectedMode(selectedMode);
+    });
+  });
+
+  // 根据选择的模式自动连接服务器（始终使用双向模式）
+  async function connectWithSelectedMode(mode: ServiceMode) {
+    // 根据选择的模式设置 pipeline 配置
+    let pipeline: any = {};
+    switch (mode) {
+      case 'personal_voice':
+        pipeline = { use_asr: true, use_nmt: true, use_tts: false, use_tone: true };
+        break;
+      case 'voice_translation':
+        pipeline = { use_asr: true, use_nmt: true, use_tts: true, use_tone: false };
+        break;
+      case 'original_subtitle':
+        pipeline = { use_asr: true, use_nmt: false, use_tts: false, use_tone: false };
+        break;
+      case 'bilingual_subtitle':
+        pipeline = { use_asr: true, use_nmt: true, use_tts: false, use_tone: false };
+        break;
+      case 'text_translation':
+        pipeline = { use_asr: false, use_nmt: true, use_tts: false, use_tone: false };
+        break;
+    }
+
+    // 存储 pipeline 配置到 App 实例
+    (app as any).pipelineConfig = pipeline;
+
+    try {
+      statusText.textContent = '正在连接服务器...';
+      
+      // 始终使用双向互译模式
+      const langA = (document.getElementById('lang-a') as HTMLSelectElement)?.value || 'zh';
+      const langB = (document.getElementById('lang-b') as HTMLSelectElement)?.value || 'en';
+      await app.connectTwoWay(langA, langB, undefined);
+      
+      statusText.textContent = '已连接';
+      if (mode !== 'text_translation') {
+        startBtn.disabled = false;
+      }
+      const isConnected = app.isConnected();
+      if (playbackRateBtn) {
+        playbackRateBtn.disabled = !isConnected;
+      }
+    } catch (error: any) {
+      statusText.textContent = '连接失败';
+      alert('连接失败: ' + (error?.message || error));
+    }
+  }
+
+  // 更新UI根据选择的模式
+  function updateUIForMode(mode: ServiceMode) {
+    const languageConfig = document.getElementById('language-config') as HTMLElement;
+    const textInputSection = document.getElementById('text-input-section') as HTMLElement;
+    const subtitleContainer = document.getElementById('subtitle-container') as HTMLElement;
+    const twoWayConfig = document.getElementById('two-way-config') as HTMLElement;
+    const bilingualSubtitle = document.getElementById('bilingual-subtitle') as HTMLElement;
+
+    // 重置显示状态
+    languageConfig.style.display = 'none';
+    textInputSection.style.display = 'none';
+    subtitleContainer.style.display = 'none';
+    twoWayConfig.style.display = 'none';
+    bilingualSubtitle.style.display = 'none';
+
+    switch (mode) {
+      case 'text_translation':
+        // 文本翻译：只显示文本输入
+        languageConfig.style.display = 'block';
+        twoWayConfig.style.display = 'flex';
+        textInputSection.style.display = 'block';
+        break;
+      case 'original_subtitle':
+        // 原文字幕：显示字幕区域
+        languageConfig.style.display = 'block';
+        twoWayConfig.style.display = 'flex';
+        subtitleContainer.style.display = 'block';
+        break;
+      case 'bilingual_subtitle':
+        // 双语字幕：显示双语字幕区域
+        languageConfig.style.display = 'block';
+        twoWayConfig.style.display = 'flex';
+        subtitleContainer.style.display = 'block';
+        bilingualSubtitle.style.display = 'block';
+        break;
+      case 'voice_translation':
+      case 'personal_voice':
+        // 语音转译：显示语言配置
+        languageConfig.style.display = 'block';
+        twoWayConfig.style.display = 'flex';
+        break;
+    }
+  }
+
   // 按钮事件
-  const connectBtn = document.getElementById('connect-btn') as HTMLButtonElement;
   const startBtn = document.getElementById('start-btn') as HTMLButtonElement;
   const sendBtn = document.getElementById('send-btn') as HTMLButtonElement;
   const playPauseBtn = document.getElementById('play-pause-btn') as HTMLButtonElement;
@@ -174,69 +314,44 @@ function setupSessionModeEventHandlers(container: HTMLElement, app: App): void {
   const statusText = document.getElementById('status-text') as HTMLElement;
   const ttsAudioInfo = document.getElementById('tts-audio-info') as HTMLElement;
   const ttsDuration = document.getElementById('tts-duration') as HTMLElement;
+  const textInput = document.getElementById('text-input') as HTMLTextAreaElement;
+  const textSubmitBtn = document.getElementById('text-submit-btn') as HTMLButtonElement;
+  const textTranslationResult = document.getElementById('text-translation-result') as HTMLElement;
+  const textTranslatedContent = document.getElementById('text-translated-content') as HTMLElement;
 
-  // 翻译模式切换事件
-  const oneWayRadio = document.getElementById('mode-one-way') as HTMLInputElement;
-  const twoWayRadio = document.getElementById('mode-two-way') as HTMLInputElement;
-  const oneWayConfig = document.getElementById('one-way-config') as HTMLElement;
-  const twoWayConfig = document.getElementById('two-way-config') as HTMLElement;
-
-  oneWayRadio.addEventListener('change', () => {
-    if (oneWayRadio.checked) {
-      oneWayConfig.style.display = 'block';
-      twoWayConfig.style.display = 'none';
+  // 文本翻译提交
+  textSubmitBtn.addEventListener('click', async () => {
+    const text = textInput.value.trim();
+    if (!text) {
+      alert('请输入要翻译的文本');
+      return;
     }
-  });
 
-  twoWayRadio.addEventListener('change', () => {
-    if (twoWayRadio.checked) {
-      oneWayConfig.style.display = 'none';
-      twoWayConfig.style.display = 'block';
+    if (!app.isConnected()) {
+      alert('请先连接服务器');
+      return;
     }
-  });
-
-  connectBtn.addEventListener('click', async () => {
-    const mode = (document.querySelector('input[name="translation-mode"]:checked') as HTMLInputElement)?.value || 'one_way';
-    const srcLang = (document.getElementById('src-lang') as HTMLSelectElement).value;
-    const tgtLang = (document.getElementById('tgt-lang') as HTMLSelectElement).value;
-    const langA = (document.getElementById('lang-a') as HTMLSelectElement)?.value || 'zh';
-    const langB = (document.getElementById('lang-b') as HTMLSelectElement)?.value || 'en';
-
-    // 收集用户选择的功能
-    const features: FeatureFlags = {};
-    const emotionCheckbox = (document.getElementById('feature-emotion') as HTMLInputElement);
-    const voiceStyleCheckbox = (document.getElementById('feature-voice-style') as HTMLInputElement);
-    const speechRateDetectionCheckbox = (document.getElementById('feature-speech-rate-detection') as HTMLInputElement);
-    const speechRateControlCheckbox = (document.getElementById('feature-speech-rate-control') as HTMLInputElement);
-    const speakerIdCheckbox = (document.getElementById('feature-speaker-id') as HTMLInputElement);
-    const personaCheckbox = (document.getElementById('feature-persona') as HTMLInputElement);
-
-    if (emotionCheckbox.checked) features.emotion_detection = true;
-    if (voiceStyleCheckbox.checked) features.voice_style_detection = true;
-    if (speechRateDetectionCheckbox.checked) features.speech_rate_detection = true;
-    if (speechRateControlCheckbox.checked) features.speech_rate_control = true;
-    if (speakerIdCheckbox.checked) features.speaker_identification = true;
-    if (personaCheckbox.checked) features.persona_adaptation = true;
-
-    const featuresToSend = Object.keys(features).length > 0 ? features : undefined;
 
     try {
-      if (mode === 'two_way_auto') {
-        await app.connectTwoWay(langA, langB, featuresToSend);
-      } else {
-        await app.connect(srcLang, tgtLang, featuresToSend);
-      }
-      statusText.textContent = '已连接';
-      connectBtn.disabled = true;
-      startBtn.disabled = false;
-      const isConnected = app.isConnected();
-      if (playbackRateBtn) {
-        playbackRateBtn.disabled = !isConnected;
-      }
+      textSubmitBtn.disabled = true;
+      textSubmitBtn.textContent = '翻译中...';
+      
+      // TODO: 实现文本翻译API调用
+      // 这里需要调用调度服务器的文本翻译接口
+      // 暂时显示占位符
+      textTranslatedContent.textContent = '文本翻译功能待实现...';
+      textTranslationResult.style.display = 'block';
+      
+      // 模拟延迟
+      await new Promise(resolve => setTimeout(resolve, 1000));
     } catch (error) {
-      alert('连接失败: ' + error);
+      alert('翻译失败: ' + error);
+    } finally {
+      textSubmitBtn.disabled = false;
+      textSubmitBtn.textContent = '提交翻译';
     }
   });
+
 
   startBtn.addEventListener('click', async () => {
     try {
@@ -383,13 +498,11 @@ function setupSessionModeEventHandlers(container: HTMLElement, app: App): void {
           if (isSessionActive) {
             statusText.textContent = '会话进行中，准备就绪';
           } else {
-            statusText.textContent = '准备就绪';
+            statusText.textContent = isConnected ? '已连接，准备就绪' : '准备就绪';
           }
-          const shouldEnableStartBtn = !isSessionActive && isConnected;
+          const shouldEnableStartBtn = !isSessionActive && isConnected && selectedMode !== 'text_translation';
           startBtn.disabled = !shouldEnableStartBtn;
           sendBtn.disabled = true;
-          // INPUT_READY 状态下播放按钮禁用（与备份代码逻辑一致）
-          // 当状态变为 INPUT_RECORDING 时，状态变化回调会检查 hasPendingAudio 并更新播放按钮
           playPauseBtn.disabled = true;
           playPauseText.textContent = '播放';
           if (playbackRateBtn) {
@@ -445,4 +558,3 @@ function setupSessionModeEventHandlers(container: HTMLElement, app: App): void {
     });
   }
 }
-

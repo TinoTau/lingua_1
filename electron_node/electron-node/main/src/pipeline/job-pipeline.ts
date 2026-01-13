@@ -1,20 +1,15 @@
 /**
  * JobPipeline - 唯一编排器
- * 所有逻辑"平铺"在一条直线上，不使用 Stage/Orchestrator/Coordinator
+ * 使用配置驱动的方式，根据 Pipeline 模式动态执行步骤，避免硬编码 if/else
  */
 
 import { JobAssignMessage } from '@shared/protocols/messages';
 import { JobResult, PartialResultCallback } from '../inference/inference-service';
 import { JobContext, initJobContext } from './context/job-context';
 import logger from '../logger';
-import { runAsrStep } from './steps/asr-step';
-import { runAggregationStep } from './steps/aggregation-step';
-import { runSemanticRepairStep } from './steps/semantic-repair-step';
-import { runDedupStep } from './steps/dedup-step';
-import { runTranslationStep } from './steps/translation-step';
-import { runTtsStep } from './steps/tts-step';
-import { runToneStep } from './steps/tone-step';
 import { buildJobResult } from './result-builder';
+import { inferPipelineMode, shouldExecuteStep, PipelineMode } from './pipeline-mode-config';
+import { executeStep, PipelineStepType } from './pipeline-step-registry';
 
 export interface ServicesBundle {
   taskRouter: any;
@@ -40,6 +35,7 @@ export interface JobPipelineOptions {
 
 /**
  * 运行 JobPipeline（唯一编排器）
+ * 使用配置驱动的方式，根据 Pipeline 模式动态执行步骤
  */
 export async function runJobPipeline(options: JobPipelineOptions): Promise<JobResult> {
   const { job, partialCallback, asrCompletedCallback, services, callbacks } = options;
@@ -50,42 +46,82 @@ export async function runJobPipeline(options: JobPipelineOptions): Promise<JobRe
   callbacks?.onTaskStart?.();
 
   try {
-    // ASR 步骤
-    if (job.pipeline?.use_asr !== false) {
-      await runAsrStep(job, ctx, services, {
-        partialCallback,
-        asrCompletedCallback,
-      });
-      callbacks?.onTaskProcessed?.('ASR');
-    }
+    // 1. 根据 job.pipeline 配置推断 Pipeline 模式
+    const mode = inferPipelineMode(job);
 
-    // 聚合步骤
-    await runAggregationStep(job, ctx, services);
-    callbacks?.onTaskProcessed?.('AGGREGATION');
+    logger.info(
+      {
+        jobId: job.job_id,
+        sessionId: job.session_id,
+        modeName: mode.name,
+        steps: mode.steps,
+        pipeline: job.pipeline,
+      },
+      `Pipeline mode inferred: ${mode.name}`
+    );
 
-    // 语义修复步骤
-    await runSemanticRepairStep(job, ctx, services);
-    callbacks?.onTaskProcessed?.('SEMANTIC_REPAIR');
+    // 2. 按模式配置的步骤序列执行
+    for (const step of mode.steps) {
+      // 检查步骤是否应该执行（支持动态条件判断）
+      if (!shouldExecuteStep(step, mode, job)) {
+        logger.debug(
+          {
+            jobId: job.job_id,
+            step,
+            modeName: mode.name,
+          },
+          `Skipping step ${step} (condition not met)`
+        );
+        continue;
+      }
 
-    // 去重步骤
-    await runDedupStep(job, ctx, services);
+      try {
+        // 准备步骤特定的选项
+        const stepOptions = step === 'ASR' ? {
+          partialCallback,
+          asrCompletedCallback,
+        } : undefined;
 
-    // 翻译步骤
-    if (job.pipeline?.use_nmt !== false) {
-      await runTranslationStep(job, ctx, services);
-      callbacks?.onTaskProcessed?.('NMT');
-    }
+        // 执行步骤
+        await executeStep(step, job, ctx, services, stepOptions);
 
-    // TTS 步骤
-    if (job.pipeline?.use_tts !== false) {
-      await runTtsStep(job, ctx, services);
-      callbacks?.onTaskProcessed?.('TTS');
-    }
+        // 触发步骤完成回调
+        callbacks?.onTaskProcessed?.(step);
 
-    // TONE 步骤
-    if (job.pipeline?.use_tone === true) {
-      await runToneStep(job, ctx, services);
-      callbacks?.onTaskProcessed?.('TONE');
+        logger.debug(
+          {
+            jobId: job.job_id,
+            step,
+            modeName: mode.name,
+          },
+          `Step ${step} completed`
+        );
+      } catch (error) {
+        logger.error(
+          {
+            error,
+            jobId: job.job_id,
+            step,
+            modeName: mode.name,
+          },
+          `Step ${step} failed`
+        );
+
+        // 根据步骤的重要性决定是否继续
+        if (step === 'ASR' || step === 'TRANSLATION') {
+          // 关键步骤失败，抛出错误
+          throw error;
+        } else {
+          // 非关键步骤失败，记录错误但继续执行
+          logger.warn(
+            {
+              jobId: job.job_id,
+              step,
+            },
+            `Step ${step} failed, continuing with next step`
+          );
+        }
+      }
     }
   } finally {
     // 任务结束回调

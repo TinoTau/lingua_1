@@ -153,7 +153,30 @@ export function handleTimeoutSplit(
       shouldKeepBuffer: true,
     };
   } else {
-    // 优化：找不到静音段时，使用兜底策略 - 寻找能量最低的连续区间
+    // 优化：找不到静音段时，根据音频时长决定策略
+    const totalDurationMs = (aggregatedAudio.length / bytesPerSample / sampleRate) * 1000;
+    
+    // 如果音频较短（< 5秒），直接返回完整音频，避免切分导致质量下降
+    if (totalDurationMs < 5000) {
+      logger.info(
+        {
+          jobId: job.job_id,
+          sessionId,
+          utteranceIndex: job.utterance_index,
+          totalDurationMs,
+          reason: 'Audio too short for fallback split, using full audio without splitting',
+        },
+        'AudioAggregator: Timeout triggered but audio too short, using full audio'
+      );
+
+      return {
+        firstHalf: aggregatedAudio,
+        secondHalf: Buffer.alloc(0),
+        shouldKeepBuffer: false, // 清空缓冲区，避免重复处理
+      };
+    }
+
+    // 音频较长（>= 5秒），尝试使用兜底策略 - 寻找能量最低的连续区间
     logger.warn(
       {
         jobId: job.job_id,
@@ -167,28 +190,56 @@ export function handleTimeoutSplit(
 
     const fallbackSplit = audioUtils.findLowestEnergyInterval(aggregatedAudio);
     if (fallbackSplit) {
+      const firstHalf = aggregatedAudio.slice(0, fallbackSplit.end);
+      const secondHalf = aggregatedAudio.slice(fallbackSplit.end);
+      const firstHalfDurationMs = (firstHalf.length / bytesPerSample / sampleRate) * 1000;
+      const secondHalfDurationMs = (secondHalf.length / bytesPerSample / sampleRate) * 1000;
+
+      // 质量检查：检查前半段音频的RMS值，如果过低（可能是静音或噪声），返回完整音频
+      const firstHalfRms = audioUtils.calculateRMS(firstHalf);
+      const MIN_RMS_THRESHOLD = 100; // 最小RMS阈值，低于此值可能是静音或噪声
+
+      if (firstHalfRms < MIN_RMS_THRESHOLD) {
+        logger.warn(
+          {
+            jobId: job.job_id,
+            sessionId,
+            utteranceIndex: job.utterance_index,
+            firstHalfDurationMs,
+            firstHalfRms,
+            minRmsThreshold: MIN_RMS_THRESHOLD,
+            reason: 'First half RMS too low (likely silence or noise), using full audio',
+          },
+          'AudioAggregator: Fallback split quality check failed, using full audio'
+        );
+
+        return {
+          firstHalf: aggregatedAudio,
+          secondHalf: Buffer.alloc(0),
+          shouldKeepBuffer: false, // 清空缓冲区，避免重复处理
+        };
+      }
+
       logger.info(
         {
           jobId: job.job_id,
           sessionId,
           utteranceIndex: job.utterance_index,
           fallbackSplitPosition: fallbackSplit.end,
-          fallbackFirstHalfDurationMs: (fallbackSplit.end / bytesPerSample / sampleRate) * 1000,
-          fallbackSecondHalfDurationMs: ((aggregatedAudio.length - fallbackSplit.end) / bytesPerSample / sampleRate) * 1000,
+          fallbackFirstHalfDurationMs: firstHalfDurationMs,
+          fallbackSecondHalfDurationMs: secondHalfDurationMs,
+          firstHalfRms,
         },
-        'AudioAggregator: Fallback split successful'
+        'AudioAggregator: Fallback split successful with quality check passed'
       );
-
-      const firstHalf = aggregatedAudio.slice(0, fallbackSplit.end);
-      const secondHalf = aggregatedAudio.slice(fallbackSplit.end);
 
       logger.info(
         {
           jobId: job.job_id,
           sessionId,
           utteranceIndex: job.utterance_index,
-          firstHalfDurationMs: (firstHalf.length / bytesPerSample / sampleRate) * 1000,
-          secondHalfDurationMs: (secondHalf.length / bytesPerSample / sampleRate) * 1000,
+          firstHalfDurationMs,
+          secondHalfDurationMs,
           secondHalfLength: secondHalf.length,
           pendingSecondHalfCreatedAt: nowMs,
         },
@@ -216,7 +267,7 @@ export function handleTimeoutSplit(
       return {
         firstHalf: aggregatedAudio,
         secondHalf: Buffer.alloc(0),
-        shouldKeepBuffer: false,
+        shouldKeepBuffer: false, // 清空缓冲区，避免重复处理
       };
     }
   }

@@ -14,13 +14,6 @@ export async function runSemanticRepairStep(
   ctx: JobContext,
   services: ServicesBundle
 ): Promise<void> {
-  // 如果 use_asr === false，跳过语义修复
-  const useAsr = Boolean(job.pipeline?.use_asr ?? true);
-  if (!useAsr) {
-    ctx.repairedText = ctx.aggregatedText || ctx.asrText || '';
-    return;
-  }
-
   // 如果文本为空，跳过语义修复
   const textToRepair = ctx.aggregatedText || ctx.asrText || '';
   if (!textToRepair || textToRepair.trim().length === 0) {
@@ -81,10 +74,31 @@ export async function runSemanticRepairStep(
     }
   }
 
+  // 双向模式：使用动态确定的源语言
+  // 创建修改后的 job 对象（使用检测到的源语言）
+  let sourceLang = job.src_lang;
+  if (job.src_lang === 'auto' && ctx.detectedSourceLang) {
+    sourceLang = ctx.detectedSourceLang;
+    logger.info(
+      {
+        jobId: job.job_id,
+        sessionId: job.session_id,
+        originalSrcLang: job.src_lang,
+        detectedSrcLang: ctx.detectedSourceLang,
+      },
+      'runSemanticRepairStep: Two-way mode - using detected source language'
+    );
+  }
+
+  const jobWithDetectedLang = {
+    ...job,
+    src_lang: sourceLang,
+  };
+
   // 执行语义修复
   try {
     const repairResult = await semanticRepairStage.process(
-      job,
+      jobWithDetectedLang as any,
       textToRepair,
       ctx.qualityScore,
       {

@@ -92,10 +92,25 @@ impl NodeRegistry {
                     }
                     cfg.pools = redis_pools;
                 } else {
-                    warn!(
-                        node_id = %node_id,
-                        "本地 Pool 配置为空，Redis 中也没有配置"
-                    );
+                    // 如果 Redis 中也没有配置，且启用了自动生成，则触发重建
+                    if cfg.auto_generate_language_pools {
+                        info!(
+                            node_id = %node_id,
+                            "本地 Pool 配置为空，Redis 中也没有配置，触发自动生成 Pool 配置"
+                        );
+                        // 注意：rebuild_auto_language_pools 需要 Arc<Phase2Runtime>，但这里只有 &Phase2Runtime
+                        // 由于无法克隆 Phase2Runtime，我们需要在调用方传递 Arc
+                        // 这里只能记录警告，实际的 Pool 配置生成应该在启动时或定期任务中完成
+                        warn!(
+                            node_id = %node_id,
+                            "本地 Pool 配置为空，Redis 中也没有配置。Pool 配置将在定期任务中自动生成"
+                        );
+                    } else {
+                        warn!(
+                            node_id = %node_id,
+                            "本地 Pool 配置为空，Redis 中也没有配置，且自动生成未启用"
+                        );
+                    }
                 }
             } else {
                 warn!(

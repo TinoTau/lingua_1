@@ -326,14 +326,20 @@ export class WebSocketClient {
     utteranceIndex: number,
     srcLang: string,
     tgtLang: string,
-    traceId?: string
+    traceId?: string,
+    pipeline?: {
+      use_asr?: boolean;
+      use_nmt?: boolean;
+      use_tts?: boolean;
+      use_tone?: boolean;
+    }
   ): Promise<void> {
     if (!this.connectionManager.isConnected() || !this.messageHandler.getSessionId()) {
       console.warn('WebSocket not connected, cannot send utterance');
       return;
     }
 
-    await this.audioSender.sendUtterance(audioData, utteranceIndex, srcLang, tgtLang, traceId);
+    await this.audioSender.sendUtterance(audioData, utteranceIndex, srcLang, tgtLang, traceId, pipeline);
   }
 
   /**

@@ -86,6 +86,7 @@ pub(crate) async fn handle_session_message(
             enable_streaming_asr: _,
             partial_update_interval_ms: _,
             trace_id: utterance_trace_id,
+            pipeline,
         } => {
             utterance::handle_utterance(
                 state,
@@ -100,6 +101,7 @@ pub(crate) async fn handle_session_message(
                 audio_format,
                 sample_rate,
                 utterance_trace_id,
+                pipeline,
             )
             .await?;
         }

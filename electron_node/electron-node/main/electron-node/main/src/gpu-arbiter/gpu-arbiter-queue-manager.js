@@ -86,28 +86,13 @@ class GpuArbiterQueueManager {
                     });
                 }
             }, maxWaitMs);
-            // 按优先级插入队列（优先级高的在前，同优先级按FIFO）
-            this.insertByPriority(queue, pendingRequest);
+            // 按 FIFO 插入队列（先到先服务，前面的任务优先完成）
+            queue.push(pendingRequest);
             // 尝试处理队列
             if (this.callbacks.processQueueCallback) {
                 this.callbacks.processQueueCallback(gpuKey);
             }
         });
-    }
-    /**
-     * 按优先级插入队列
-     */
-    insertByPriority(queue, request) {
-        const priority = request.request.priority;
-        let insertIndex = queue.length;
-        // 找到第一个优先级小于等于当前请求的位置
-        for (let i = 0; i < queue.length; i++) {
-            if (queue[i].request.priority < priority) {
-                insertIndex = i;
-                break;
-            }
-        }
-        queue.splice(insertIndex, 0, request);
     }
     /**
      * 处理队列（尝试从队列中取出请求并分配租约）
@@ -123,42 +108,8 @@ class GpuArbiterQueueManager {
         // 检查GPU使用率状态
         const admissionState = this.callbacks.getAdmissionState(gpuKey);
         const usageCache = this.callbacks.getGpuUsageFromCache(gpuKey);
-        // 如果处于HIGH_PRESSURE状态，只处理高优先级任务
-        if (admissionState === types_1.GpuAdmissionState.HIGH_PRESSURE) {
-            // 查找第一个高优先级任务（priority >= 70）
-            const highPriorityIndex = queue.findIndex(req => req.request.priority >= 70);
-            if (highPriorityIndex === -1) {
-                // 没有高优先级任务，等待状态恢复
-                return;
-            }
-            // 移除高优先级任务
-            const pendingRequest = queue.splice(highPriorityIndex, 1)[0];
-            if (pendingRequest.timeoutHandle) {
-                clearTimeout(pendingRequest.timeoutHandle);
-            }
-            const { request } = pendingRequest;
-            const result = this.callbacks.acquireImmediately(gpuKey, request.taskType, request.holdMaxMs, request.trace);
-            // 记录等待时间
-            const queueWaitMs = Date.now() - pendingRequest.queuedAt;
-            this.callbacks.recordMetric(gpuKey, 'queueWaitMs', queueWaitMs);
-            logger_1.default.debug({
-                gpuKey,
-                taskType: request.taskType,
-                leaseId: result.status === "ACQUIRED" ? result.leaseId : undefined,
-                queueWaitMs,
-                admissionState,
-                gpuUsage: usageCache?.usagePercent,
-                ...request.trace,
-            }, 'GpuArbiter: High-priority request dequeued and acquired (HIGH_PRESSURE state)');
-            pendingRequest.resolve(result);
-            // 继续处理队列（可能有更多高优先级任务）
-            if (this.callbacks.processQueueCallback) {
-                setImmediate(() => this.callbacks.processQueueCallback(gpuKey));
-            }
-            return;
-        }
-        // NORMAL状态：正常处理队列
-        // 取出队列头部的请求
+        // FIFO 调度：无论什么状态，都按照到达顺序处理（前面的任务优先完成）
+        // 取出队列头部的请求（最早到达的任务）
         const pendingRequest = queue.shift();
         if (pendingRequest.timeoutHandle) {
             clearTimeout(pendingRequest.timeoutHandle);
@@ -168,13 +119,16 @@ class GpuArbiterQueueManager {
         // 记录等待时间
         const queueWaitMs = Date.now() - pendingRequest.queuedAt;
         this.callbacks.recordMetric(gpuKey, 'queueWaitMs', queueWaitMs);
-        logger_1.default.debug({
+        logger_1.default.info({
             gpuKey,
             taskType: request.taskType,
             leaseId: result.status === "ACQUIRED" ? result.leaseId : undefined,
             queueWaitMs,
+            queueLength: queue.length,
+            admissionState,
+            gpuUsage: usageCache?.usagePercent,
             ...request.trace,
-        }, 'GpuArbiter: Request dequeued and acquired');
+        }, 'GpuArbiter: Task dequeued (FIFO scheduling, first-come-first-served)');
         pendingRequest.resolve(result);
     }
     /**

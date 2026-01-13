@@ -43,6 +43,8 @@ async function cleanupServices(nodeAgent, rustServiceManager, pythonServiceManag
         const semanticRepairEnEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en')?.running;
         const enNormalizeEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'en-normalize')?.running;
         const config = (0, node_config_1.loadNodeConfig)();
+        // 记录保存前的配置（用于对比）
+        const previousPreferences = { ...config.servicePreferences };
         // 保存当前运行状态作为下次启动的偏好
         // 如果服务正在运行，保存为 true；如果已经停止，保存为 false
         // 这样下次启动时会按照当前的运行状态自动启动服务
@@ -57,13 +59,30 @@ async function cleanupServices(nodeAgent, rustServiceManager, pythonServiceManag
             semanticRepairEnEnabled,
             enNormalizeEnabled,
         };
-        (0, node_config_1.saveNodeConfig)(config);
         logger_1.default.info({
-            servicePreferences: config.servicePreferences,
+            previousPreferences,
+            newPreferences: config.servicePreferences,
+            currentServiceStatus: {
+                rust: rustEnabled,
+                nmt: nmtEnabled,
+                tts: ttsEnabled,
+                yourtts: yourttsEnabled,
+                fasterWhisperVad: fasterWhisperVadEnabled,
+                speakerEmbedding: speakerEmbeddingEnabled,
+                semanticRepairZh: semanticRepairZhEnabled,
+                semanticRepairEn: semanticRepairEnEnabled,
+                enNormalize: enNormalizeEnabled,
+            },
             rustRunning: rustEnabled,
             pythonRunning: pythonStatuses.filter(s => s.running).length,
             semanticRepairRunning: semanticRepairStatuses.filter(s => s.running).length,
-        }, 'Saved current service status to config file (cleanupServices)');
+            savedFrom: 'cleanupServices',
+        }, 'Saving user service preferences based on current running status (cleanupServices)...');
+        (0, node_config_1.saveNodeConfig)(config);
+        logger_1.default.info({
+            servicePreferences: config.servicePreferences,
+            savedFrom: 'cleanupServices',
+        }, 'User service preferences saved successfully (cleanupServices)');
     }
     catch (error) {
         logger_1.default.error({ error }, 'Failed to save service status to config file');

@@ -2,7 +2,7 @@
    Copy-paste friendly. No external deps.
 */
 
-export type Mode = "offline" | "room";
+export type Mode = "offline" | "room" | "two_way";
 export type StreamAction = "MERGE" | "NEW_STREAM";
 
 export interface LangProbs {
@@ -54,16 +54,19 @@ export interface AggregatorTuning {
 
 export function defaultTuning(mode: Mode): AggregatorTuning {
   const isRoom = mode === "room";
+  const isTwoWay = mode === "two_way";
+  // 双向互译模式使用与 room 模式相同的参数
+  const useRoomParams = isRoom || isTwoWay;
   return {
     // 质量优化：提高 strongMergeMs，降低 softGapMs，降低 scoreThreshold
     // 让更多片段被 MERGE，减少独立翻译，提升翻译质量
-    strongMergeMs: isRoom ? 800 : 1000,  // 提高：让更多短片段被 MERGE
-    softGapMs: isRoom ? 1000 : 1200,     // 降低：让更多片段被 MERGE
-    hardGapMs: isRoom ? 1500 : 2000,
+    strongMergeMs: useRoomParams ? 800 : 1000,  // 提高：让更多短片段被 MERGE
+    softGapMs: useRoomParams ? 1000 : 1200,     // 降低：让更多片段被 MERGE
+    hardGapMs: useRoomParams ? 1500 : 2000,
 
     langStableP: 0.8,
-    langSwitchMargin: isRoom ? 0.18 : 0.15,
-    langSwitchRequiresGapMs: isRoom ? 500 : 600,
+    langSwitchMargin: useRoomParams ? 0.18 : 0.15,
+    langSwitchRequiresGapMs: useRoomParams ? 500 : 600,
 
     scoreThreshold: 2.5,  // 降低：让更多片段被 MERGE
     wShort: 2,
@@ -72,21 +75,21 @@ export function defaultTuning(mode: Mode): AggregatorTuning {
     wNoStrongPunct: 1,
     wEndsWithConnective: 1,
     wLowQuality: 1,
-    lowQualityThreshold: isRoom ? 0.5 : 0.45,
+    lowQualityThreshold: useRoomParams ? 0.5 : 0.45,
 
-    shortCjkChars: isRoom ? 9 : 10,
+    shortCjkChars: useRoomParams ? 9 : 10,
     veryShortCjkChars: 4,
-    shortEnWords: isRoom ? 5 : 6,
+    shortEnWords: useRoomParams ? 5 : 6,
     veryShortEnWords: 3,
 
     // 优化：平衡延迟和质量
     // 问题：当前参数导致句子中间截断
     // 调整：提高 commit_interval_ms 和 commit_len，减少句子中间截断
     // 原值：offline 800ms/25字/10词，room 600ms/20字/8词
-    // 新值：offline 1200ms/30字/12词，room 900ms/25字/10词
-    commitIntervalMs: isRoom ? 900 : 1200,  // 提高：减少句子中间截断
-    commitLenCjk: isRoom ? 25 : 30,         // 提高：减少短句被提前提交
-    commitLenEnWords: isRoom ? 10 : 12,     // 提高：减少短句被提前提交
+    // 新值：offline 1200ms/30字/12词，room/two_way 900ms/25字/10词
+    commitIntervalMs: useRoomParams ? 900 : 1200,  // 提高：减少句子中间截断
+    commitLenCjk: useRoomParams ? 25 : 30,         // 提高：减少短句被提前提交
+    commitLenEnWords: useRoomParams ? 10 : 12,     // 提高：减少短句被提前提交
   };
 }
 

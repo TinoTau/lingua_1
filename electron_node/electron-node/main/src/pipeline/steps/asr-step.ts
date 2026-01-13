@@ -56,6 +56,11 @@ export async function runAsrStep(
   const audioForASR = audioProcessResult.audioForASR;
   const audioFormatForASR = audioProcessResult.audioFormatForASR;
 
+  // 将解码后的 PCM16 音频存储到 JobContext（供后续步骤使用，如 Embedding）
+  // audioForASR 是 base64 编码的 PCM16 字符串
+  ctx.audio = Buffer.from(audioForASR, 'base64');
+  ctx.audioFormat = 'pcm16';
+
   // 构建 ASR 任务
   const asrTask: ASRTask = {
     audio: audioForASR,
@@ -99,6 +104,55 @@ export async function runAsrStep(
   ctx.languageProbabilities = asrResult.language_probabilities;
   ctx.qualityScore = asrResult.badSegmentDetection?.qualityScore;
   ctx.rerunCount = (job as any).rerun_count || 0;
+
+  // 双向模式：根据检测到的语言自动确定目标语言
+  // 只使用 lang_a 和 lang_b，不考虑回退
+  if (job.lang_a && job.lang_b) {
+    const detectedLang = determineDetectedLanguage(asrResult.language_probabilities, job.lang_a, job.lang_b);
+    if (detectedLang) {
+      // 存储检测到的源语言
+      ctx.detectedSourceLang = detectedLang;
+      // 如果检测到的是 lang_a，则目标语言是 lang_b；反之亦然
+      ctx.detectedTargetLang = detectedLang === job.lang_a ? job.lang_b : job.lang_a;
+      logger.info(
+        {
+          jobId: job.job_id,
+          sessionId: job.session_id,
+          detectedLang,
+          sourceLang: ctx.detectedSourceLang,
+          targetLang: ctx.detectedTargetLang,
+          langA: job.lang_a,
+          langB: job.lang_b,
+        },
+        'runAsrStep: Two-way mode - determined source and target language from detected language'
+      );
+    } else {
+      // 如果无法确定检测到的语言，使用默认值
+      // 默认源语言为 lang_a，目标语言为 lang_b
+      ctx.detectedSourceLang = job.lang_a;
+      ctx.detectedTargetLang = job.lang_b;
+      logger.warn(
+        {
+          jobId: job.job_id,
+          sessionId: job.session_id,
+          languageProbabilities: asrResult.language_probabilities,
+          langA: job.lang_a,
+          langB: job.lang_b,
+        },
+        'runAsrStep: Two-way mode - could not determine detected language, using default source and target language'
+      );
+    }
+  } else {
+    logger.error(
+      {
+        jobId: job.job_id,
+        sessionId: job.session_id,
+        langA: job.lang_a,
+        langB: job.lang_b,
+      },
+      'runAsrStep: Missing lang_a or lang_b, cannot determine source and target language'
+    );
+  }
 
   logger.info(
     {
@@ -158,4 +212,50 @@ export async function runAsrStep(
 
   // ASR 完成回调
   options?.asrCompletedCallback?.(true);
+}
+
+/**
+ * 确定检测到的语言（双向模式）
+ * 从语言概率中找出最可能是 lang_a 或 lang_b 的语言
+ */
+function determineDetectedLanguage(
+  languageProbabilities?: Record<string, number>,
+  langA?: string,
+  langB?: string
+): string | null {
+  if (!languageProbabilities || !langA || !langB) {
+    return null;
+  }
+
+  // 获取概率最高的语言
+  let maxProb = 0;
+  let detectedLang: string | null = null;
+
+  for (const [lang, prob] of Object.entries(languageProbabilities)) {
+    if (prob > maxProb) {
+      maxProb = prob;
+      detectedLang = lang;
+    }
+  }
+
+  // 检查检测到的语言是否是 lang_a 或 lang_b
+  if (detectedLang === langA || detectedLang === langB) {
+    return detectedLang;
+  }
+
+  // 如果检测到的语言不在 lang_a 或 lang_b 中，尝试匹配（处理语言代码变体）
+  // 例如：'zh-CN' vs 'zh', 'en-US' vs 'en'
+  const normalizeLang = (lang: string) => lang.split('-')[0].toLowerCase();
+  const normalizedDetected = normalizeLang(detectedLang || '');
+  const normalizedLangA = normalizeLang(langA);
+  const normalizedLangB = normalizeLang(langB);
+
+  if (normalizedDetected === normalizedLangA) {
+    return langA;
+  }
+  if (normalizedDetected === normalizedLangB) {
+    return langB;
+  }
+
+  return null;
 }

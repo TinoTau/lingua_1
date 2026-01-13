@@ -32,6 +32,12 @@ export class SessionManager {
   private currentTraceId: string | null = null;
   private currentGroupId: string | null = null;
   private hasSentAudioChunksForCurrentUtterance: boolean = false; // 跟踪当前 utterance 是否已通过自动发送发送过音频块
+  private pipelineConfig?: {
+    use_asr?: boolean;
+    use_nmt?: boolean;
+    use_tts?: boolean;
+    use_tone?: boolean;
+  };
 
   constructor(
     stateMachine: StateMachine,
@@ -52,10 +58,16 @@ export class SessionManager {
   /**
    * 连接服务器（单向模式）
    */
-  async connect(srcLang: string = 'zh', tgtLang: string = 'en', features?: FeatureFlags): Promise<void> {
+  async connect(srcLang: string = 'zh', tgtLang: string = 'en', features?: FeatureFlags, pipeline?: {
+    use_asr?: boolean;
+    use_nmt?: boolean;
+    use_tts?: boolean;
+    use_tone?: boolean;
+  }): Promise<void> {
     // 保存语言配置
     this.currentSrcLang = srcLang;
     this.currentTgtLang = tgtLang;
+    this.pipelineConfig = pipeline;
     // 重置 utterance 索引
     this.currentUtteranceIndex = 0;
     await this.wsClient.connect(srcLang, tgtLang, features);
@@ -65,7 +77,13 @@ export class SessionManager {
   /**
    * 连接服务器（双向模式）
    */
-  async connectTwoWay(langA: string = 'zh', langB: string = 'en', features?: FeatureFlags): Promise<void> {
+  async connectTwoWay(langA: string = 'zh', langB: string = 'en', features?: FeatureFlags, pipeline?: {
+    use_asr?: boolean;
+    use_nmt?: boolean;
+    use_tts?: boolean;
+    use_tone?: boolean;
+  }): Promise<void> {
+    this.pipelineConfig = pipeline;
     await this.wsClient.connectTwoWay(langA, langB, features);
     await this.recorder.initialize();
   }

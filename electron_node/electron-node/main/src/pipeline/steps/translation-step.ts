@@ -28,12 +28,6 @@ export async function runTranslationStep(
     return;
   }
 
-  // 检查是否需要翻译
-  if (job.pipeline?.use_nmt === false) {
-    ctx.translatedText = '';
-    return;
-  }
-
   // 如果没有 TaskRouter，跳过翻译
   if (!services.taskRouter) {
     logger.error(
@@ -43,6 +37,39 @@ export async function runTranslationStep(
     ctx.translatedText = '';
     return;
   }
+
+  // 双向模式：使用动态确定的源语言和目标语言（如果已确定）
+  // 如果 src_lang 是 "auto"，使用检测到的源语言
+  let sourceLang = job.src_lang;
+  if (job.src_lang === 'auto' && ctx.detectedSourceLang) {
+    sourceLang = ctx.detectedSourceLang;
+  }
+  
+  // 使用动态确定的目标语言
+  let targetLang = ctx.detectedTargetLang || job.tgt_lang;
+  
+  if (ctx.detectedSourceLang || ctx.detectedTargetLang) {
+    logger.info(
+      {
+        jobId: job.job_id,
+        sessionId: job.session_id,
+        originalSrcLang: job.src_lang,
+        originalTgtLang: job.tgt_lang,
+        detectedSrcLang: ctx.detectedSourceLang,
+        detectedTgtLang: ctx.detectedTargetLang,
+        finalSrcLang: sourceLang,
+        finalTgtLang: targetLang,
+      },
+      'runTranslationStep: Two-way mode - using detected source and target language'
+    );
+  }
+
+  // 创建修改后的 job 对象（使用动态源语言和目标语言）
+  const jobWithDetectedLang = {
+    ...job,
+    src_lang: sourceLang,
+    tgt_lang: targetLang,
+  };
 
   // 创建 TranslationStage
   const translationStage = new TranslationStage(
@@ -54,7 +81,7 @@ export async function runTranslationStep(
   // 执行翻译
   try {
     const translationResult = await translationStage.process(
-      job,
+      jobWithDetectedLang as any,
       textToTranslate,
       ctx.qualityScore,
       0, // dedupCharsRemoved

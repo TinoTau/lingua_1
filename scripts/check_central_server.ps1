@@ -13,14 +13,16 @@ $port5000 = Get-NetTCPConnection -LocalPort 5000 -ErrorAction SilentlyContinue
 if ($port5010) {
     $proc = Get-Process -Id $port5010.OwningProcess -ErrorAction SilentlyContinue
     Write-Host "  端口 5010: 被占用 (PID: $($port5010.OwningProcess), 进程: $($proc.ProcessName))" -ForegroundColor Green
-} else {
+}
+else {
     Write-Host "  端口 5010: 未占用 (调度服务器未运行)" -ForegroundColor Red
 }
 
 if ($port5000) {
     $proc = Get-Process -Id $port5000.OwningProcess -ErrorAction SilentlyContinue
     Write-Host "  端口 5000: 被占用 (PID: $($port5000.OwningProcess), 进程: $($proc.ProcessName))" -ForegroundColor Green
-} else {
+}
+else {
     Write-Host "  端口 5000: 未占用 (Model Hub未运行)" -ForegroundColor Red
 }
 
@@ -39,7 +41,8 @@ if ($jobs) {
             }
         }
     }
-} else {
+}
+else {
     Write-Host "  没有运行中的后台任务" -ForegroundColor Gray
 }
 
@@ -59,7 +62,8 @@ if (Test-Path $schedulerLog) {
     Get-Content $schedulerLog -Tail 5 -ErrorAction SilentlyContinue | ForEach-Object {
         Write-Host "      $_" -ForegroundColor DarkGray
     }
-} else {
+}
+else {
     Write-Host "  调度服务器日志不存在" -ForegroundColor Yellow
 }
 
@@ -76,7 +80,8 @@ if (Test-Path $modelHubLogs) {
             Write-Host "      $_" -ForegroundColor DarkGray
         }
     }
-} else {
+}
+else {
     Write-Host "  Model Hub log directory not found" -ForegroundColor Yellow
 }
 
@@ -93,7 +98,8 @@ if (-not $port5010) {
 if (-not $port5000) {
     Write-Host "2. Model Hub未运行，尝试启动:" -ForegroundColor Yellow
     Write-Host "   .\scripts\start_central_server.ps1 --model-hub-only" -ForegroundColor Gray
-} elseif ($port5000.OwningProcess -ne $null) {
+}
+elseif ($port5000.OwningProcess -ne $null) {
     $proc = Get-Process -Id $port5000.OwningProcess -ErrorAction SilentlyContinue
     if ($proc -and $proc.Path -notlike "*model-hub*") {
         Write-Host "2. 端口5000被其他进程占用，可能需要停止:" -ForegroundColor Yellow

@@ -109,6 +109,9 @@ pub enum SessionMessage {
         /// 追踪 ID（可选，客户端提供或从 Session 中获取）
         #[serde(skip_serializing_if = "Option::is_none")]
         trace_id: Option<String>,
+        /// Pipeline 配置（可选，如果未提供则使用默认值）
+        #[serde(skip_serializing_if = "Option::is_none")]
+        pipeline: Option<super::common::PipelineConfig>,
     },
     #[serde(rename = "audio_chunk")]
     AudioChunk {

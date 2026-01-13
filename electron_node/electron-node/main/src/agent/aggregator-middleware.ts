@@ -100,7 +100,9 @@ export class AggregatorMiddleware {
       
       // S1/S2: 初始化短句准确率提升组件
       const mode = config.mode || 'offline';
-      this.promptBuilder = new PromptBuilder(mode);
+      // PromptBuilder 只支持 'offline' 和 'room'，将 'two_way' 映射到 'room'
+      const promptBuilderMode = mode === 'two_way' ? 'room' : (mode === 'room' ? 'room' : 'offline');
+      this.promptBuilder = new PromptBuilder(promptBuilderMode);
       this.needRescoreDetector = new NeedRescoreDetector();
       this.rescorer = new Rescorer();
       this.candidateProvider = new CandidateProvider();
@@ -199,7 +201,8 @@ export class AggregatorMiddleware {
     };
 
     // 确定模式
-    const mode: Mode = (job.mode === 'two_way_auto' || (job as any).room_mode) ? 'room' : 'offline';
+    // 始终使用双向互译模式
+    const mode: Mode = 'two_way';
 
     // 处理 utterance
     const aggregatorResult = this.manager.processUtterance(

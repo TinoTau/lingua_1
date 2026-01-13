@@ -27,13 +27,6 @@ export async function runTtsStep(
     return;
   }
 
-  // 检查是否需要生成 TTS
-  if (job.pipeline?.use_tts === false) {
-    ctx.ttsAudio = '';
-    ctx.ttsFormat = 'opus';
-    return;
-  }
-
   // 如果没有 TaskRouter，跳过 TTS
   if (!services.taskRouter) {
     logger.error(

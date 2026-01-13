@@ -39,6 +39,10 @@ export interface JobContext {
 
   // 翻译相关
   translatedText?: string;
+  /** 动态确定的目标语言（双向模式使用） */
+  detectedTargetLang?: string;
+  /** 动态检测到的源语言（双向模式使用） */
+  detectedSourceLang?: string;
 
   // TTS 相关
   ttsAudio?: string; // base64

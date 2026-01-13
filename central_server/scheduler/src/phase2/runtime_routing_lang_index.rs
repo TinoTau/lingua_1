@@ -164,7 +164,7 @@ return 1
         let mut lang_pair_to_pools: std::collections::HashMap<(String, String), Vec<u16>> = std::collections::HashMap::new();
         
         // 从 Pool 配置中收集所有语言对
-        for (pool_name, lang_pairs) in pools {
+        for (_pool_name, lang_pairs) in pools {
             // 从 pool_name 中提取 pool_id（例如 "zh-en" -> 需要查找 pool_id）
             // 这里简化处理，实际应该从 Phase3PoolConfig 获取 pool_id
             // 暂时跳过 pool_id 映射，直接使用语言对

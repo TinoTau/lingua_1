@@ -28,8 +28,9 @@ export function getGpuArbiter(): GpuArbiter | null {
 
 /**
  * 从配置加载GPU仲裁器配置
+ * 导出此函数以便其他模块可以使用统一的配置加载逻辑
  */
-function loadGpuArbiterConfig(): GpuArbiterConfig {
+export function loadGpuArbiterConfig(): GpuArbiterConfig {
   const nodeConfig = loadNodeConfig();
   const gpuArbiterConfig = nodeConfig.gpuArbiter;
 
@@ -52,7 +53,7 @@ function loadGpuArbiterConfig(): GpuArbiterConfig {
       },
       TTS: {
         priority: 70,
-        maxWaitMs: 2000,
+        maxWaitMs: 10000, // 增加到10秒，因为TTS首次运行需要加载模型，耗时较长
         busyPolicy: "WAIT",
       },
       SEMANTIC_REPAIR: {

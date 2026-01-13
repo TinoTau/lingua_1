@@ -48,7 +48,9 @@ class AggregatorMiddleware {
             this.translationHandler = new aggregator_middleware_translation_1.TranslationHandler(this.taskRouter, this.translationCache, this.manager);
             // S1/S2: 初始化短句准确率提升组件
             const mode = config.mode || 'offline';
-            this.promptBuilder = new prompt_builder_1.PromptBuilder(mode);
+            // PromptBuilder 只支持 'offline' 和 'room'，将 'two_way' 映射到 'room'
+            const promptBuilderMode = mode === 'two_way' ? 'room' : (mode === 'room' ? 'room' : 'offline');
+            this.promptBuilder = new prompt_builder_1.PromptBuilder(promptBuilderMode);
             this.needRescoreDetector = new need_rescore_1.NeedRescoreDetector();
             this.rescorer = new rescorer_1.Rescorer();
             this.candidateProvider = new candidate_provider_1.CandidateProvider();
@@ -125,7 +127,8 @@ class AggregatorMiddleware {
                 : undefined,
         };
         // 确定模式
-        const mode = (job.mode === 'two_way_auto' || job.room_mode) ? 'room' : 'offline';
+        // 始终使用双向互译模式
+        const mode = 'two_way';
         // 处理 utterance
         const aggregatorResult = this.manager.processUtterance(job.session_id, asrTextTrimmed, segments, langProbs, asrResult.badSegmentDetection?.qualityScore, true, // isFinal: P0 只处理 final 结果
         job.is_manual_cut || job.isManualCut || false, // 从 job 中提取

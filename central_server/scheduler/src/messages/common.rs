@@ -69,6 +69,9 @@ pub struct PipelineConfig {
     /// 调度服务器仅根据节点的语义修复能力建立 pool
     #[serde(default = "default_false")]
     pub use_semantic: bool,
+    /// 是否使用 TONE 服务（音色克隆，YourTTS）
+    #[serde(default = "default_false")]
+    pub use_tone: bool,
 }
 
 fn default_false() -> bool {

@@ -178,6 +178,23 @@ class AudioAggregator {
         // 需要找到最长停顿，分割成前半句和后半句
         // 注意：如果之前有pendingSecondHalf，已经在上面合并到currentAudio了
         if (isTimeoutTriggered) {
+            // 修复：如果 currentAudio 为空（新 job 没有音频），且存在 pendingSecondHalf，说明这是调度服务器错误地发送了一个空的超时 job
+            // 这种情况下，应该丢弃 pendingSecondHalf（因为它已经被处理过了），而不是作为新 job 处理
+            if (currentAudio.length === 0 && buffer.pendingSecondHalf) {
+                logger_1.default.warn({
+                    jobId: job.job_id,
+                    sessionId,
+                    utteranceIndex: job.utterance_index,
+                    pendingSecondHalfLength: buffer.pendingSecondHalf.length,
+                    pendingSecondHalfDurationMs: (buffer.pendingSecondHalf.length / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000,
+                    reason: 'Timeout job with empty audio but pendingSecondHalf exists, discarding pendingSecondHalf to avoid duplicate processing',
+                }, 'AudioAggregator: Timeout job with empty audio, discarding pendingSecondHalf to avoid duplicate processing');
+                // 清空 pendingSecondHalf 和缓冲区
+                buffer.pendingSecondHalf = undefined;
+                buffer.pendingSecondHalfCreatedAt = undefined;
+                this.buffers.delete(sessionId);
+                return null; // 返回 null，表示不需要处理这个 job
+            }
             // 聚合所有音频块（包括之前保留的后半句，如果有的话，已经合并到currentAudio）
             const aggregatedAudio = this.aggregateAudioChunks(buffer.audioChunks);
             // 处理超时切割

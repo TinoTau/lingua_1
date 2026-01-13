@@ -54,29 +54,37 @@ class AggregationStage {
         }
         // 提取 segments
         const segments = result.segments;
+        // 双向模式：确定源语言（优先使用检测到的语言，否则使用 lang_a 或 src_lang）
+        let sourceLang = job.src_lang;
+        if (job.src_lang === 'auto' && job.lang_a) {
+            // 双向模式下，如果 src_lang 是 "auto"，使用 lang_a 作为默认源语言
+            // 实际检测到的语言会在 language_probabilities 中体现
+            sourceLang = job.lang_a;
+        }
         // 提取语言概率信息
         const langProbs = {
             top1: result.extra?.language_probabilities
-                ? Object.keys(result.extra.language_probabilities)[0] || job.src_lang
-                : job.src_lang,
+                ? Object.keys(result.extra.language_probabilities)[0] || sourceLang
+                : sourceLang,
             p1: result.extra?.language_probability || 0.9,
             top2: result.extra?.language_probabilities
                 ? Object.keys(result.extra.language_probabilities).find((lang) => {
                     const keys = Object.keys(result.extra.language_probabilities);
-                    return lang !== (keys[0] || job.src_lang);
+                    return lang !== (keys[0] || sourceLang);
                 })
                 : undefined,
             p2: result.extra?.language_probabilities
                 ? (() => {
                     const keys = Object.keys(result.extra.language_probabilities);
-                    const top1Key = keys[0] || job.src_lang;
+                    const top1Key = keys[0] || sourceLang;
                     const top2Key = keys.find((lang) => lang !== top1Key);
                     return top2Key ? result.extra.language_probabilities[top2Key] : undefined;
                 })()
                 : undefined,
         };
         // 确定模式
-        const mode = (job.mode === 'two_way_auto' || job.room_mode) ? 'room' : 'offline';
+        // 始终使用双向互译模式
+        const mode = 'two_way';
         // 处理 utterance
         // 从 job 中提取标识（如果调度服务器传递了该参数）
         const isManualCut = job.is_manual_cut || job.isManualCut || false;

@@ -20,6 +20,7 @@ pub(super) async fn handle_utterance(
     audio_format: String,
     sample_rate: u32,
     utterance_trace_id: Option<String>,
+    pipeline: Option<crate::messages::PipelineConfig>,
 ) -> Result<(), anyhow::Error> {
     // 验证会话
     let session = state
@@ -39,6 +40,15 @@ pub(super) async fn handle_utterance(
     // 使用会话的默�?features（如果请求中没有指定�?
     let final_features = features.or(session.default_features.clone());
 
+    // 使用请求中的 pipeline 配置，如果没有则使用默认值
+    let final_pipeline = pipeline.unwrap_or_else(|| crate::messages::PipelineConfig {
+        use_asr: true,
+        use_nmt: true,
+        use_tts: true,
+        use_semantic: false, // 语义修复由节点端自己决定
+        use_tone: false, // 默认不使用音色克隆
+    });
+
     // 创建 job（从 session 获取流式 ASR 配置，默认启用）
     let enable_streaming_asr = Some(true); // 默认启用流式 ASR
     let partial_update_interval_ms = Some(1000u64); // 默认 1 秒更新间�?
@@ -52,6 +62,7 @@ pub(super) async fn handle_utterance(
         tgt_lang.clone(),
         dialect.clone(),
         final_features.clone(),
+        final_pipeline,
         session.tenant_id.clone(),
         audio_data,
         audio_format,

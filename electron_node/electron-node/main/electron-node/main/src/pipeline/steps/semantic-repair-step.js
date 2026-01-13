@@ -11,12 +11,6 @@ exports.runSemanticRepairStep = runSemanticRepairStep;
 const postprocess_semantic_repair_initializer_1 = require("../../agent/postprocess/postprocess-semantic-repair-initializer");
 const logger_1 = __importDefault(require("../../logger"));
 async function runSemanticRepairStep(job, ctx, services) {
-    // 如果 use_asr === false，跳过语义修复
-    const useAsr = Boolean(job.pipeline?.use_asr ?? true);
-    if (!useAsr) {
-        ctx.repairedText = ctx.aggregatedText || ctx.asrText || '';
-        return;
-    }
     // 如果文本为空，跳过语义修复
     const textToRepair = ctx.aggregatedText || ctx.asrText || '';
     if (!textToRepair || textToRepair.trim().length === 0) {
@@ -61,9 +55,25 @@ async function runSemanticRepairStep(job, ctx, services) {
                     : trimmedContext;
         }
     }
+    // 双向模式：使用动态确定的源语言
+    // 创建修改后的 job 对象（使用检测到的源语言）
+    let sourceLang = job.src_lang;
+    if (job.src_lang === 'auto' && ctx.detectedSourceLang) {
+        sourceLang = ctx.detectedSourceLang;
+        logger_1.default.info({
+            jobId: job.job_id,
+            sessionId: job.session_id,
+            originalSrcLang: job.src_lang,
+            detectedSrcLang: ctx.detectedSourceLang,
+        }, 'runSemanticRepairStep: Two-way mode - using detected source language');
+    }
+    const jobWithDetectedLang = {
+        ...job,
+        src_lang: sourceLang,
+    };
     // 执行语义修复
     try {
-        const repairResult = await semanticRepairStage.process(job, textToRepair, ctx.qualityScore, {
+        const repairResult = await semanticRepairStage.process(jobWithDetectedLang, textToRepair, ctx.qualityScore, {
             segments: ctx.asrSegments,
             language_probability: ctx.asrResult?.language_probability,
             micro_context: microContext,

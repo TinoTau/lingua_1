@@ -113,13 +113,13 @@ export class TranslationStage {
     // 因为NMT服务会将context_text和text拼接，如果context_text是英文翻译，会导致混合语言输入
     // 传入 currentText 参数，确保不会返回当前句
     let contextText = this.aggregatorManager?.getLastCommittedText(job.session_id, aggregatedText) || undefined;
-    
+
     // 额外检查：如果contextText和当前文本相同或非常相似，清空contextText
     // 优化：同时检查contextText是否是不完整句子，如果是则不使用
     if (contextText && aggregatedText) {
       const contextTrimmed = contextText.trim().replace(/\s+/g, ' ');
       const currentTrimmed = aggregatedText.trim().replace(/\s+/g, ' ');
-      
+
       // 检查1：是否完全相同
       if (contextTrimmed === currentTrimmed) {
         logger.warn(
@@ -132,7 +132,7 @@ export class TranslationStage {
           'TranslationStage: contextText is same as current text, ignoring'
         );
         contextText = undefined;
-      } 
+      }
       // 检查2：是否非常相似（子串关系且长度差异小于20%）
       else if (contextTrimmed.includes(currentTrimmed) || currentTrimmed.includes(contextTrimmed)) {
         const lengthDiff = Math.abs(contextTrimmed.length - currentTrimmed.length);
@@ -168,7 +168,7 @@ export class TranslationStage {
         contextText = undefined;
       }
     }
-    
+
     if (contextText && contextText.length > 200) {
       contextText = contextText.substring(contextText.length - 200);
     }
@@ -279,7 +279,7 @@ export class TranslationStage {
         numSourceCandidates: sourceCandidates.length,
         note: 'Homophone repair triggered - multiple NMT calls may take longer if GPU is overloaded',
       }, 'TranslationStage: Starting homophone repair (may block if GPU is overloaded)');
-      
+
       const MAX_CONCURRENT_CANDIDATES = 2;
       const translatedCandidates: Array<{ candidate: string; translation: string }> = [];
 
@@ -293,7 +293,7 @@ export class TranslationStage {
           chunkSize: chunk.length,
           totalCandidates: sourceCandidates.length,
         }, 'TranslationStage: Processing homophone repair chunk');
-        
+
         const translationPromises = chunk.map(async (sourceCandidate) => {
           const nmtTask: NMTTask = {
             text: sourceCandidate,
@@ -326,7 +326,7 @@ export class TranslationStage {
 
         const chunkResults = await Promise.all(translationPromises);
         translatedCandidates.push(...chunkResults);
-        
+
         const chunkDuration = Date.now() - chunkStartTime;
         if (chunkDuration > 30000) {
           logger.warn({
@@ -338,7 +338,7 @@ export class TranslationStage {
           }, 'TranslationStage: Homophone repair chunk took too long');
         }
       }
-      
+
       const homophoneRepairDuration = Date.now() - homophoneRepairStartTime;
       logger.info({
         jobId: job.job_id,
@@ -483,7 +483,7 @@ export class TranslationStage {
     const trimmed = text.trim();
     // 检查是否以标点符号结尾（中文和英文标点）
     const endsWithPunctuation = /[。，！？、；：.!?,;:]$/.test(trimmed);
-    
+
     // 如果以标点符号结尾，认为是完整句子
     if (endsWithPunctuation) {
       return false;
@@ -496,7 +496,7 @@ export class TranslationStage {
         /的$/, /了$/, /在$/, /是$/, /有$/, /会$/, /能$/, /要$/, /我们$/, /这个$/, /那个$/,
         /问题$/, /方法$/, /系统$/, /服务$/, /结果$/, /原因$/, /效果$/, /处理$/, /解决$/
       ];
-      
+
       for (const pattern of incompletePatterns) {
         if (pattern.test(trimmed)) {
           return true;

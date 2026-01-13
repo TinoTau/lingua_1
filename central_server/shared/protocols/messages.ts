@@ -129,6 +129,13 @@ export interface UtteranceMessage {
   partial_update_interval_ms?: number;
   /** 追踪 ID（可选，客户端提供或从 Session 中获取） */
   trace_id?: string;
+  /** Pipeline 配置（可选，如果未提供则使用默认值） */
+  pipeline?: {
+    use_asr?: boolean;
+    use_nmt?: boolean;
+    use_tts?: boolean;
+    use_tone?: boolean; // 是否使用 TONE 服务（音色克隆）
+  };
 }
 
 export interface ServiceTimings {

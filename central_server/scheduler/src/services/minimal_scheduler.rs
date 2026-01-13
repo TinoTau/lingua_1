@@ -37,6 +37,10 @@ pub struct DispatchRequest {
     pub src_lang: String,
     pub tgt_lang: String,
     pub payload_json: String,
+    /// 双向模式的语言 A（用于 Pool 查找）
+    pub lang_a: Option<String>,
+    /// 双向模式的语言 B（用于 Pool 查找）
+    pub lang_b: Option<String>,
 }
 
 /// 任务调度响应
@@ -186,15 +190,33 @@ impl MinimalSchedulerService {
             session_id = %req.session_id,
             src_lang = %req.src_lang,
             tgt_lang = %req.tgt_lang,
+            lang_a = ?req.lang_a,
+            lang_b = ?req.lang_b,
             "任务调度"
         );
+
+        // 在双向模式下，使用 lang_a 和 lang_b 来查找 Pool，而不是 src_lang="auto" 和 tgt_lang
+        // 但 src_lang 仍然保持为 "auto"（节点端需要检测语言）
+        let pool_src_lang = if req.src_lang == "auto" && req.lang_a.is_some() && req.lang_b.is_some() {
+            // 双向模式：使用 lang_a 和 lang_b 来查找 Pool
+            // 查找支持 lang_a 和 lang_b 的 Pool（使用 lang_a->lang_b 作为查找键）
+            req.lang_a.as_ref().unwrap()
+        } else {
+            &req.src_lang
+        };
+        let pool_tgt_lang = if req.src_lang == "auto" && req.lang_a.is_some() && req.lang_b.is_some() {
+            // 双向模式：使用 lang_b 作为目标语言
+            req.lang_b.as_ref().unwrap()
+        } else {
+            &req.tgt_lang
+        };
 
         // 直接执行 Lua 脚本，不进行类型转换，以便正确处理错误格式
         let mut cmd = redis::cmd("EVAL");
         cmd.arg(&self.scripts.dispatch_task).arg(0);
         cmd.arg(&req.session_id);
-        cmd.arg(&req.src_lang);
-        cmd.arg(&req.tgt_lang);
+        cmd.arg(pool_src_lang);  // 用于 Pool 查找的源语言
+        cmd.arg(pool_tgt_lang);  // 用于 Pool 查找的目标语言
         cmd.arg(&req.payload_json);
         
         // 执行 Lua 脚本，不添加额外的上下文，以便错误消息直接包含 Lua 脚本返回的错误代码

@@ -34,10 +34,30 @@ async function runAggregationStep(job, ctx, services) {
         quality_score: ctx.qualityScore,
         segments: ctx.asrSegments,
     };
+    // 双向模式：使用动态确定的源语言
+    // 创建修改后的 job 对象（使用检测到的源语言）
+    let sourceLang = job.src_lang;
+    if (job.src_lang === 'auto' && ctx.detectedSourceLang) {
+        sourceLang = ctx.detectedSourceLang;
+        logger_1.default.info({
+            jobId: job.job_id,
+            sessionId: job.session_id,
+            originalSrcLang: job.src_lang,
+            detectedSrcLang: ctx.detectedSourceLang,
+        }, 'runAggregationStep: Two-way mode - using detected source language');
+    }
+    else if (job.src_lang === 'auto' && job.lang_a) {
+        // 如果还没有检测到源语言，使用 lang_a 作为默认值
+        sourceLang = job.lang_a;
+    }
+    const jobWithDetectedLang = {
+        ...job,
+        src_lang: sourceLang,
+    };
     // 创建 AggregationStage
     const aggregationStage = new aggregation_stage_1.AggregationStage(services.aggregatorManager, services.aggregatorMiddleware || null, services.deduplicationHandler || null);
     // 执行聚合
-    const aggregationResult = aggregationStage.process(job, tempResult);
+    const aggregationResult = aggregationStage.process(jobWithDetectedLang, tempResult);
     // 更新 JobContext
     ctx.aggregatedText = aggregationResult.aggregatedText;
     ctx.aggregationAction = aggregationResult.action;

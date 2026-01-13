@@ -40,6 +40,14 @@ export class App {
   private sessionManager: SessionManager;
   private roomManager: RoomManager;
   private webrtcManager: WebRTCManager;
+  
+  // Pipeline 配置（由用户选择）
+  public pipelineConfig?: {
+    use_asr?: boolean;
+    use_nmt?: boolean;
+    use_tts?: boolean;
+    use_tone?: boolean;
+  };
 
   constructor(config: Partial<Config> = {}) {
     // 从 localStorage 读取自动播放配置（如果存在）
@@ -1468,7 +1476,7 @@ export class App {
    */
   async connect(srcLang: string = 'zh', tgtLang: string = 'en', features?: FeatureFlags): Promise<void> {
     try {
-      await this.sessionManager.connect(srcLang, tgtLang, features);
+      await this.sessionManager.connect(srcLang, tgtLang, features, this.pipelineConfig);
       // 记录连接成功
       if (this.observability) {
         this.observability.recordConnectionSuccess();
@@ -1490,7 +1498,7 @@ export class App {
    */
   async connectTwoWay(langA: string = 'zh', langB: string = 'en', features?: FeatureFlags): Promise<void> {
     try {
-      await this.sessionManager.connectTwoWay(langA, langB, features);
+      await this.sessionManager.connectTwoWay(langA, langB, features, this.pipelineConfig);
       // 记录连接成功
       if (this.observability) {
         this.observability.recordConnectionSuccess();

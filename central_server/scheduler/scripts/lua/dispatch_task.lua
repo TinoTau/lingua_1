@@ -15,8 +15,22 @@ local preferred_pool = redis.call("HGET", session_key, "preferred_pool")
 -- 2. 若没有 preferred_pool，则根据语言索引获取所有 pool
 local pools = {}
 if not preferred_pool or preferred_pool == "" then
-    local lang_key = "scheduler:lang:" .. src .. ":" .. tgt
-    local pools_json = redis.call("HGET", lang_key, "pools_json")
+    -- 排序语言对（与 Pool 命名规则一致）
+    local sorted_langs = {src, tgt}
+    if src > tgt then
+        sorted_langs = {tgt, src}
+    end
+    local sorted_src = sorted_langs[1]
+    local sorted_tgt = sorted_langs[2]
+    
+    -- 尝试两个方向的语言对（因为 Redis 可能只存储了一个方向）
+    local lang_key1 = "scheduler:lang:" .. sorted_src .. ":" .. sorted_tgt
+    local lang_key2 = "scheduler:lang:" .. sorted_tgt .. ":" .. sorted_src
+    local pools_json = redis.call("HGET", lang_key1, "pools_json")
+    
+    if not pools_json or pools_json == "" then
+        pools_json = redis.call("HGET", lang_key2, "pools_json")
+    end
     
     if not pools_json or pools_json == "" then
         return {err = "NO_POOL_FOR_LANG_PAIR"}
