@@ -26,14 +26,27 @@ export class AggregatorStateUtils {
       if (firstSegment.start !== undefined) {
         // segments 的时间是相对于音频开始的（秒），需要转换为绝对时间
         // 第一个 utterance：使用会话开始时间
-        // 后续 utterance：使用上一个 utterance 的结束时间作为参考
+        // 后续 utterance：需要判断是否是新音频块的开始
         if (sessionStartTimeMs === 0) {
           // 第一个 utterance
           newSessionStartTimeMs = Date.now();
           startMs = newSessionStartTimeMs;
         } else {
-          // 后续 utterance：使用上一个 utterance 的结束时间 + segments 的相对时间
-          startMs = lastUtteranceEndTimeMs + (firstSegment.start * 1000);
+          // 后续 utterance：判断是否是新音频块的开始
+          // 如果 firstSegment.start 接近 0（< 0.1秒），说明这是新音频块的开始
+          // 此时应该使用当前时间作为参考，而不是基于 lastUtteranceEndTimeMs
+          // 这样可以正确计算播放期间的时间间隔
+          const isNewAudioChunk = firstSegment.start < 0.1;
+          if (isNewAudioChunk) {
+            // 新音频块：使用当前时间作为参考点
+            // 这样可以正确反映从上一个 utterance 结束到新 utterance 开始的实际时间间隔
+            const nowMs = Date.now();
+            startMs = nowMs;
+            // 如果 lastUtteranceEndTimeMs 存在，gap 会通过后续计算得出
+          } else {
+            // 连续音频块：使用上一个 utterance 的结束时间 + segments 的相对时间
+            startMs = lastUtteranceEndTimeMs + (firstSegment.start * 1000);
+          }
         }
       } else {
         // segments 没有时间戳，使用当前时间
