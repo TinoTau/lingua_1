@@ -64,8 +64,8 @@ export class AggregatorStateTextProcessor {
             processedText = ''; // 返回空文本，表示丢弃
             deduped = true;
             dedupChars += tailDedup.overlapChars;
-          } else if (text.length <= 16) {
-            // 可能是误判，保留原始文本（统一使用SemanticRepairScorer的标准：16字符）
+          } else if (text.length <= 20) {
+            // 可能是误判，保留原始文本（统一使用20字符标准）
             logger.warn(
               {
                 originalText: text,
@@ -114,8 +114,8 @@ export class AggregatorStateTextProcessor {
             processedText = ''; // 返回空文本，表示丢弃
             deduped = true;
             dedupChars += dedupResult.overlapChars;
-          } else if (text.length <= 16) {
-            // 可能是误判，保留原始文本（避免短句被误判为重复，统一使用SemanticRepairScorer的标准：16字符）
+          } else if (text.length <= 20) {
+            // 可能是误判，保留原始文本（避免短句被误判为重复，统一使用20字符标准）
             logger.warn(
               {
                 originalText: text,

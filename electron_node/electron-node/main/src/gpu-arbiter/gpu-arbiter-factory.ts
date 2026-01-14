@@ -43,17 +43,17 @@ export function loadGpuArbiterConfig(): GpuArbiterConfig {
     policies: {
       ASR: {
         priority: 90,
-        maxWaitMs: 3000,
+        maxWaitMs: 10000, // 增加到10秒，避免GPU lease timeout导致ASR失败
         busyPolicy: "WAIT",
       },
       NMT: {
         priority: 80,
-        maxWaitMs: 3000,
+        maxWaitMs: 8000, // 增加到8秒，避免GPU lease timeout导致NMT失败
         busyPolicy: "WAIT",
       },
       TTS: {
         priority: 70,
-        maxWaitMs: 10000, // 增加到10秒，因为TTS首次运行需要加载模型，耗时较长
+        maxWaitMs: 13000, // 增加到13秒，因为TTS首次运行需要加载模型，耗时较长，避免超时
         busyPolicy: "WAIT",
       },
       SEMANTIC_REPAIR: {

@@ -35,11 +35,13 @@ async function runJobPipeline(options) {
         // 2. 按模式配置的步骤序列执行
         for (const step of mode.steps) {
             // 检查步骤是否应该执行（支持动态条件判断）
-            if (!(0, pipeline_mode_config_1.shouldExecuteStep)(step, mode, job)) {
+            // 对于 SEMANTIC_REPAIR 步骤，需要检查 ctx.shouldSendToSemanticRepair 标志
+            if (!(0, pipeline_mode_config_1.shouldExecuteStep)(step, mode, job, ctx)) {
                 logger_1.default.debug({
                     jobId: job.job_id,
                     step,
                     modeName: mode.name,
+                    shouldSendToSemanticRepair: step === 'SEMANTIC_REPAIR' ? ctx.shouldSendToSemanticRepair : undefined,
                 }, `Skipping step ${step} (condition not met)`);
                 continue;
             }

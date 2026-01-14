@@ -144,7 +144,8 @@ function buildDynamicMode(job) {
 /**
  * 检查步骤是否应该执行
  */
-function shouldExecuteStep(step, mode, job) {
+function shouldExecuteStep(step, mode, job, ctx // 可选的上下文，用于检查语义修复标志
+) {
     // 检查步骤是否在模式的步骤列表中
     if (!mode.steps.includes(step)) {
         return false;
@@ -167,7 +168,9 @@ function shouldExecuteStep(step, mode, job) {
         case 'DEDUP':
             return use_asr !== false;
         case 'SEMANTIC_REPAIR':
-            return use_semantic === true; // 语义修复需要显式启用
+            // 简化逻辑：只要 shouldSendToSemanticRepair 为 true，就执行语义修复
+            // 不再需要显式设置 use_semantic，避免多层判断导致的问题
+            return ctx?.shouldSendToSemanticRepair === true;
         case 'TRANSLATION':
             return use_nmt !== false;
         case 'TTS':

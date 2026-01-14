@@ -19,7 +19,9 @@ class SemanticRepairStageZH {
         this.taskRouter = taskRouter;
         this.config = config;
         this.DEFAULT_QUALITY_THRESHOLD = 0.70;
-        this.SHORT_SENTENCE_LENGTH = 16;
+        // 从配置文件加载文本长度配置
+        const nodeConfig = (0, node_config_1.loadNodeConfig)();
+        this.SHORT_SENTENCE_LENGTH = nodeConfig.textLength?.minLengthToSend ?? 20;
         // P1-1: 初始化打分器
         this.scorer = new semantic_repair_scorer_1.SemanticRepairScorer({
             qualityThreshold: config.qualityThreshold || this.DEFAULT_QUALITY_THRESHOLD,

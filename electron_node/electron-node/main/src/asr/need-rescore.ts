@@ -35,7 +35,7 @@ export interface RescoreConfig {
 }
 
 const DEFAULT_CONFIG: RescoreConfig = {
-  shortCjkChars: 16,  // 统一使用SemanticRepairScorer的标准：16字符
+  shortCjkChars: 20,  // 统一使用20字符标准
   shortEnWords: 9,
   qLowOffline: 0.45,
   qLowRoom: 0.50,

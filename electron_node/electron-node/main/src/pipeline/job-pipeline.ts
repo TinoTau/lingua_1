@@ -63,12 +63,14 @@ export async function runJobPipeline(options: JobPipelineOptions): Promise<JobRe
     // 2. 按模式配置的步骤序列执行
     for (const step of mode.steps) {
       // 检查步骤是否应该执行（支持动态条件判断）
-      if (!shouldExecuteStep(step, mode, job)) {
+      // 对于 SEMANTIC_REPAIR 步骤，需要检查 ctx.shouldSendToSemanticRepair 标志
+      if (!shouldExecuteStep(step, mode, job, ctx)) {
         logger.debug(
           {
             jobId: job.job_id,
             step,
             modeName: mode.name,
+            shouldSendToSemanticRepair: step === 'SEMANTIC_REPAIR' ? ctx.shouldSendToSemanticRepair : undefined,
           },
           `Skipping step ${step} (condition not met)`
         );

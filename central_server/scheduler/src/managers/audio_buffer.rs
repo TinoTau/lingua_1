@@ -67,6 +67,13 @@ impl AudioBufferManager {
         self.last_chunk_at_ms.read().await.get(session_id).copied()
     }
 
+    /// 仅更新 last_chunk_at_ms，不触发 pause 检测
+    /// 用于空的 is_final=true 消息，重置 pause 检测的基准时间
+    pub async fn update_last_chunk_at_ms(&self, session_id: &str, now_ms: i64) {
+        let mut map = self.last_chunk_at_ms.write().await;
+        map.insert(session_id.to_string(), now_ms);
+    }
+
     /// 添加音频块
     /// 返回 (should_finalize, current_size_bytes)
     /// - should_finalize: 如果音频长度超过异常保护限制，返回 true 表示应该触发 finalize

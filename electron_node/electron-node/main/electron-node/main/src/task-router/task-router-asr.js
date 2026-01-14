@@ -75,8 +75,28 @@ class TaskRouterASRHandler {
                 originalFormat: task.audio_format,
                 jobId: task.job_id,
             }, 'Routing ASR task to faster-whisper-vad');
-            // 检查音频输入质量（用于调试 Job2 问题）
-            (0, task_router_asr_audio_quality_1.checkAudioQuality)(task, endpoint.serviceId);
+            // 检查音频输入质量，如果质量太低（如静音或极低噪音），直接返回空结果
+            const audioQuality = (0, task_router_asr_audio_quality_1.checkAudioQuality)(task, endpoint.serviceId);
+            if (!audioQuality) {
+                logger_1.default.warn({
+                    serviceId: endpoint.serviceId,
+                    jobId: task.job_id,
+                    sessionId: task.session_id,
+                    utteranceIndex: task.utterance_index,
+                    reason: 'Audio quality check failed (likely silence or noise)',
+                }, 'ASR task: Rejecting low quality audio, returning empty result');
+                // 返回空结果，避免发送到 ASR 服务
+                return {
+                    text: '',
+                    segments: [],
+                    language_probability: 0,
+                    badSegmentDetection: {
+                        isBad: true,
+                        reasonCodes: ['low_quality_audio'],
+                        qualityScore: 0,
+                    },
+                };
+            }
             const requestBody = {
                 job_id: task.job_id || `asr_${Date.now()}`,
                 src_lang: task.src_lang,

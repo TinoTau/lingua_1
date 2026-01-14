@@ -1095,6 +1095,35 @@ export class App {
       console.warn('[App] ⚠️ 无法发送 TTS_PLAY_ENDED: 缺少 trace_id 或 group_id');
     }
 
+    // 播放完毕后，发送一个空的 is_final=true 来重置调度服务器的 timeout finalize 计时器
+    // 这样即使播放期间没有新chunk，播放结束后也能重置计时器，避免播放后输入语音被提前截断
+    if (this.sessionManager.getIsSessionActive()) {
+      try {
+        // 记录播放结束的时间戳（用于计算到首次音频发送的延迟）
+        const playbackEndTimestamp = Date.now();
+        this.sessionManager.setPlaybackFinishedTimestamp(playbackEndTimestamp);
+        
+        // 设置标志，阻止新的chunk发送，确保 sendFinal() 先到达调度服务器
+        this.sessionManager.setWaitingForPlaybackFinalize(true);
+        
+        // 发送 sendFinal()
+        this.wsClient.sendFinal();
+        console.log('[App] 已发送空的 is_final=true 来重置调度服务器的 timeout finalize 计时器', {
+          playbackEndTimestamp,
+          isoString: new Date(playbackEndTimestamp).toISOString(),
+        });
+        
+        // 使用 setTimeout 确保 sendFinal() 先被处理，然后再允许发送新chunk
+        // WebSocket 的 send() 是同步的（只是将消息加入队列），但我们需要确保消息先被发送
+        setTimeout(() => {
+          this.sessionManager.setWaitingForPlaybackFinalize(false);
+        }, 50); // 50ms 应该足够 WebSocket 发送消息
+      } catch (error) {
+        console.error('[App] 发送 is_final 失败:', error);
+        this.sessionManager.setWaitingForPlaybackFinalize(false); // 出错时也要清除标志
+      }
+    }
+
     // 清空当前的 trace_id 和 group_id（准备下一句话）
     this.currentTraceId = null;
     this.currentGroupId = null;

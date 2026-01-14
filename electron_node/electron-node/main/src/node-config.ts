@@ -132,6 +132,17 @@ export interface NodeConfig {
     maxWaitMs?: number;  // 最大等待时间（超时后跳过）
     timeoutCheckIntervalMs?: number;  // 超时检查间隔
   };
+  /** 文本长度配置 */
+  textLength?: {
+    /** 最小保留长度：太短的文本直接丢弃（默认6个字符） */
+    minLengthToKeep?: number;
+    /** 最小发送长度：小于此长度的文本等待合并（默认20个字符） */
+    minLengthToSend?: number;
+    /** 最大等待长度：超过此长度的文本强制截断（默认40个字符） */
+    maxLengthToWait?: number;
+    /** 等待超时时间：毫秒（默认3000ms，即3秒） */
+    waitTimeoutMs?: number;
+  };
 }
 
 const DEFAULT_CONFIG: NodeConfig = {
@@ -162,6 +173,12 @@ const DEFAULT_CONFIG: NodeConfig = {
     enablePostProcessTranslation: true,  // 默认启用 PostProcess 翻译
     enableS1PromptBias: false,  // 默认禁用 S1 Prompt Bias（暂时禁用，避免错误传播）
     enableS2Rescoring: false,  // 默认禁用 S2 Rescoring（已禁用）
+  },
+  textLength: {
+    minLengthToKeep: 6,   // 最小保留长度：6个字符（太短的文本直接丢弃）
+    minLengthToSend: 20,  // 最小发送长度：20个字符（6-20字符之间的文本等待合并）
+    maxLengthToWait: 40,  // 最大等待长度：40个字符（20-40字符之间的文本等待3秒确认是否有后续输入，超过40字符强制截断）
+    waitTimeoutMs: 3000,  // 等待超时：3秒
   },
 };
 
@@ -212,6 +229,10 @@ export function loadNodeConfig(): NodeConfig {
       sequentialExecutor: {
         ...(DEFAULT_CONFIG.sequentialExecutor || {}),
         ...(parsed.sequentialExecutor || {}),
+      },
+      textLength: {
+        ...(DEFAULT_CONFIG.textLength || {}),
+        ...(parsed.textLength || {}),
       },
     };
   } catch (error) {
@@ -267,6 +288,10 @@ export async function loadNodeConfigAsync(): Promise<NodeConfig> {
         ...(DEFAULT_CONFIG.sequentialExecutor || {}),
         ...(parsed.sequentialExecutor || {}),
       },
+      textLength: {
+        ...(DEFAULT_CONFIG.textLength || {}),
+        ...(parsed.textLength || {}),
+      },
     };
   } catch (error) {
     // 读取失败时使用默认配置
@@ -311,6 +336,10 @@ export function saveNodeConfig(config: NodeConfig): void {
     sequentialExecutor: {
       ...(DEFAULT_CONFIG.sequentialExecutor || {}),
       ...(config.sequentialExecutor || {}),
+    },
+    textLength: {
+      ...(DEFAULT_CONFIG.textLength || {}),
+      ...(config.textLength || {}),
     },
   };
   

@@ -21,7 +21,7 @@ class PostProcessTextFilter {
                 sessionId: job.session_id,
                 utteranceIndex: job.utterance_index,
                 aggregatedTextLength: aggregationResult.aggregatedText.length,
-                reason: 'Text too short (< 6 chars), discarding (>= 16 chars will be sent to semantic repair)',
+                reason: 'Text too short (< 6 chars), discarding (>= 20 chars will be sent to semantic repair)',
             }, 'PostProcessCoordinator: Text too short, discarding');
             return {
                 shouldReturn: true,
@@ -33,19 +33,19 @@ class PostProcessTextFilter {
                     ttsFormat: 'opus',
                     action: aggregationResult.action,
                     metrics: aggregationResult.metrics,
-                    reason: 'Text too short (< 6 chars), discarded (>= 16 chars will be sent to semantic repair)',
+                    reason: 'Text too short (< 6 chars), discarded (>= 20 chars will be sent to semantic repair)',
                 },
             };
         }
         if (aggregationResult.shouldWaitForMerge) {
-            // 6-10字符：等待与下一句合并
+            // 6-20字符：等待与下一句合并
             logger_1.default.info({
                 jobId: job.job_id,
                 sessionId: job.session_id,
                 utteranceIndex: job.utterance_index,
                 aggregatedTextLength: aggregationResult.aggregatedText.length,
-                reason: 'Text length 6-16 chars, waiting for merge with next utterance (unified with SemanticRepairScorer standard)',
-            }, 'PostProcessCoordinator: Text length 6-16 chars, waiting for merge (unified with SemanticRepairScorer standard)');
+                reason: 'Text length 6-20 chars, waiting for merge with next utterance',
+            }, 'PostProcessCoordinator: Text length 6-20 chars, waiting for merge');
             return {
                 shouldReturn: true,
                 result: {
@@ -56,7 +56,7 @@ class PostProcessTextFilter {
                     ttsFormat: 'opus',
                     action: aggregationResult.action,
                     metrics: aggregationResult.metrics,
-                    reason: 'Text length 6-16 chars, waiting for merge (unified with SemanticRepairScorer standard)',
+                    reason: 'Text length 6-20 chars, waiting for merge',
                 },
             };
         }

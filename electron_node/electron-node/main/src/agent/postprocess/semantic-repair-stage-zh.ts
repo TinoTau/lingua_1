@@ -36,7 +36,7 @@ export interface SemanticRepairStageZHResult {
 
 export class SemanticRepairStageZH {
   private readonly DEFAULT_QUALITY_THRESHOLD = 0.70;
-  private readonly SHORT_SENTENCE_LENGTH = 16;
+  private readonly SHORT_SENTENCE_LENGTH: number;
   private scorer: SemanticRepairScorer;
   private validator: SemanticRepairValidator;
 
@@ -44,6 +44,10 @@ export class SemanticRepairStageZH {
     private taskRouter: TaskRouter | null,
     private config: SemanticRepairStageZHConfig
   ) {
+    // 从配置文件加载文本长度配置
+    const nodeConfig = loadNodeConfig();
+    this.SHORT_SENTENCE_LENGTH = nodeConfig.textLength?.minLengthToSend ?? 20;
+    
     // P1-1: 初始化打分器
     this.scorer = new SemanticRepairScorer({
       qualityThreshold: config.qualityThreshold || this.DEFAULT_QUALITY_THRESHOLD,

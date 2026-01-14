@@ -426,9 +426,9 @@ export class AggregationStage {
       return false;
     }
 
-    // 如果文本较短（少于16个字符），且不以标点符号结尾，可能是不完整句子（统一使用SemanticRepairScorer的标准：16字符）
+    // 如果文本较短（少于20个字符），且不以标点符号结尾，可能是不完整句子（统一使用20字符标准）
     // 但也要排除一些特殊情况（如单个词、数字等）
-    if (trimmed.length < 16) {
+    if (trimmed.length < 20) {
       // 检查是否包含常见的不完整句子模式
       // 例如：以"的"、"了"、"在"等结尾，但没有后续内容
       const incompletePatterns = [

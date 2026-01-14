@@ -64,10 +64,11 @@ impl ResultQueueManager {
         }
     }
     
-    /// 补位超时时间（毫秒），默认 10 秒
+    /// 补位超时时间（毫秒），默认 30 秒
     /// 基于单进程顺序处理的特性：如果后续 index 已到达，说明前面的 index 已经处理完了
     /// 给前面的 index 一个补位窗口，如果超时就直接跳过（不创建 Missing result）
-    const ACK_TIMEOUT_MS: i64 = 10 * 1000;
+    /// 注意：第一个job（utterance_index=0）的TTS耗时可能更长，需要更长的补位时间
+    const ACK_TIMEOUT_MS: i64 = 30 * 1000;
 
     /// 测试辅助方法：使用配置创建（仅用于测试）
     #[cfg(test)]
@@ -139,7 +140,7 @@ impl ResultQueueManager {
                             session_id = %session_id,
                             missing_index = missing_index,
                             future_index = utterance_index,
-                            "Future index arrived, marking missing index as pending acknowledgment (10s grace period, will skip if timeout)"
+                            "Future index arrived, marking missing index as pending acknowledgment (30s grace period, will skip if timeout)"
                         );
                     }
                 }

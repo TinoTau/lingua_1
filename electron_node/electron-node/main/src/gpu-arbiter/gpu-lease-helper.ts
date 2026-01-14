@@ -52,13 +52,13 @@ export async function withGpuLease<T>(
   const result = await gpuArbiter.acquire(request);
 
   if (result.status === 'SKIPPED') {
-    logger.debug(
+    logger.warn(
       {
         taskType,
         reason: result.reason,
         ...trace,
       },
-      'GpuLeaseHelper: GPU lease skipped'
+      'GpuLeaseHelper: GPU lease skipped - this will cause job processing to fail'
     );
     throw new Error(`GPU lease skipped: ${result.reason}`);
   }
@@ -76,13 +76,13 @@ export async function withGpuLease<T>(
   }
 
   if (result.status === 'TIMEOUT') {
-    logger.debug(
+    logger.warn(
       {
         taskType,
         reason: result.reason,
         ...trace,
       },
-      'GpuLeaseHelper: GPU lease timeout'
+      'GpuLeaseHelper: GPU lease timeout - this will cause job processing to fail'
     );
     throw new Error(`GPU lease timeout: ${result.reason}`);
   }

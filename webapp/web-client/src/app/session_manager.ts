@@ -32,6 +32,8 @@ export class SessionManager {
   private currentTraceId: string | null = null;
   private currentGroupId: string | null = null;
   private hasSentAudioChunksForCurrentUtterance: boolean = false; // 跟踪当前 utterance 是否已通过自动发送发送过音频块
+  private isWaitingForPlaybackFinalize: boolean = false; // 标志：是否正在等待播放完成后的 sendFinal() 发送完成
+  private playbackFinishedTimestamp: number | null = null; // 播放结束的时间戳（用于计算到首次音频发送的延迟）
   private pipelineConfig?: {
     use_asr?: boolean;
     use_nmt?: boolean;
@@ -241,6 +243,14 @@ export class SessionManager {
       return;
     }
 
+    // 如果正在等待播放完成后的 sendFinal() 发送完成，暂时不发送新的chunk
+    // 这样可以确保 sendFinal() 先到达调度服务器，重置计时器
+    if (this.isWaitingForPlaybackFinalize) {
+      // 只缓存音频数据，不发送
+      this.audioBuffer.push(new Float32Array(audioData));
+      return;
+    }
+
     // 计算音频数据的 RMS（用于日志）
     let sum = 0;
     for (let i = 0; i < audioData.length; i++) {
@@ -270,6 +280,21 @@ export class SessionManager {
     if (this.audioBuffer.length >= 10) {
       // 当缓冲区有 10 帧时，发送前 10 帧（100ms）
       const chunk = this.concatAudioBuffers(this.audioBuffer.splice(0, 10));
+      const now = Date.now();
+      
+      // 如果是首次发送音频chunk，且之前有播放结束的时间戳，记录延迟
+      if (!this.hasSentAudioChunksForCurrentUtterance && this.playbackFinishedTimestamp !== null) {
+        const delayFromPlaybackEndMs = now - this.playbackFinishedTimestamp;
+        console.log('[SessionManager] 首次发送音频chunk（播放结束后）', {
+          playbackFinishedTimestamp: this.playbackFinishedTimestamp,
+          firstChunkSentTimestamp: now,
+          delayFromPlaybackEndMs,
+          delayFromPlaybackEndSeconds: (delayFromPlaybackEndMs / 1000).toFixed(2),
+        });
+        // 清除播放结束时间戳（只记录首次发送的延迟）
+        this.playbackFinishedTimestamp = null;
+      }
+      
       this.wsClient.sendAudioChunk(chunk, false);
       this.hasSentAudioChunksForCurrentUtterance = true; // 标记已发送过音频块
     }
@@ -328,6 +353,37 @@ export class SessionManager {
    */
   getIsSessionActive(): boolean {
     return this.isSessionActive;
+  }
+
+  /**
+   * 设置等待播放完成后的 sendFinal() 发送完成的标志
+   * 用于确保 sendFinal() 先到达调度服务器，再允许发送新的chunk
+   */
+  setWaitingForPlaybackFinalize(waiting: boolean): void {
+    this.isWaitingForPlaybackFinalize = waiting;
+    if (!waiting) {
+      // 清除等待标志，允许发送新的音频chunk
+      const now = Date.now();
+      if (this.playbackFinishedTimestamp !== null) {
+        const delayMs = now - this.playbackFinishedTimestamp;
+        console.log('[SessionManager] 已清除等待标志，允许发送新的音频chunk', {
+          playbackFinishedTimestamp: this.playbackFinishedTimestamp,
+          now,
+          delayFromPlaybackEndMs: delayMs,
+        });
+      }
+    }
+  }
+
+  /**
+   * 设置播放结束的时间戳
+   */
+  setPlaybackFinishedTimestamp(timestamp: number): void {
+    this.playbackFinishedTimestamp = timestamp;
+    console.log('[SessionManager] 设置播放结束时间戳', {
+      timestamp,
+      isoString: new Date(timestamp).toISOString(),
+    });
   }
 
   /**

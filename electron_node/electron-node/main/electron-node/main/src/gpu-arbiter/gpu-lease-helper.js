@@ -47,11 +47,11 @@ async function withGpuLease(taskType, fn, trace) {
     };
     const result = await gpuArbiter.acquire(request);
     if (result.status === 'SKIPPED') {
-        logger_1.default.debug({
+        logger_1.default.warn({
             taskType,
             reason: result.reason,
             ...trace,
-        }, 'GpuLeaseHelper: GPU lease skipped');
+        }, 'GpuLeaseHelper: GPU lease skipped - this will cause job processing to fail');
         throw new Error(`GPU lease skipped: ${result.reason}`);
     }
     if (result.status === 'FALLBACK_CPU') {
@@ -63,11 +63,11 @@ async function withGpuLease(taskType, fn, trace) {
         throw new Error(`GPU lease fallback to CPU: ${result.reason}`);
     }
     if (result.status === 'TIMEOUT') {
-        logger_1.default.debug({
+        logger_1.default.warn({
             taskType,
             reason: result.reason,
             ...trace,
-        }, 'GpuLeaseHelper: GPU lease timeout');
+        }, 'GpuLeaseHelper: GPU lease timeout - this will cause job processing to fail');
         throw new Error(`GPU lease timeout: ${result.reason}`);
     }
     // 获取租约成功（此时result.status一定是'ACQUIRED'）

@@ -381,6 +381,13 @@ function setupSessionModeEventHandlers(container: HTMLElement, app: App): void {
     if (isPlaying) {
       app.pauseTtsPlayback();
     } else {
+      // 在播放前，先发送已积累的语音（作为手动截断），然后再播放
+      // 这样调度服务器可以finalize已累积的音频块，避免播放期间计时器继续计时导致播放后输入语音被强制截断
+      try {
+        await app.sendCurrentUtterance();
+      } catch (error) {
+        console.error('[UI] 发送当前话语失败:', error);
+      }
       await app.startTtsPlayback();
     }
   });

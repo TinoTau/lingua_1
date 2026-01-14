@@ -196,7 +196,32 @@ class ResultSender {
         if (!this.ws || this.ws.readyState !== ws_1.default.OPEN || !this.nodeId) {
             return;
         }
-        logger_1.default.error({ error, jobId: job.job_id, traceId: job.trace_id }, 'Failed to process job');
+        // 详细记录错误信息，包括错误类型、消息、堆栈等
+        const errorDetails = {
+            jobId: job.job_id,
+            sessionId: job.session_id,
+            utteranceIndex: job.utterance_index,
+            traceId: job.trace_id,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            errorName: error instanceof Error ? error.name : typeof error,
+            errorStack: error instanceof Error ? error.stack : undefined,
+        };
+        // 检查是否是 GPU lease 相关错误
+        if (error instanceof Error) {
+            if (error.message.includes('GPU lease')) {
+                errorDetails.errorType = 'GPU_LEASE_ERROR';
+                if (error.message.includes('timeout')) {
+                    errorDetails.gpuLeaseStatus = 'TIMEOUT';
+                }
+                else if (error.message.includes('skipped')) {
+                    errorDetails.gpuLeaseStatus = 'SKIPPED';
+                }
+                else if (error.message.includes('fallback')) {
+                    errorDetails.gpuLeaseStatus = 'FALLBACK_CPU';
+                }
+            }
+        }
+        logger_1.default.error(errorDetails, 'Failed to process job - detailed error information');
         // 检查是否是 ModelNotAvailableError
         if (error instanceof model_manager_1.ModelNotAvailableError) {
             // 发送 MODEL_NOT_AVAILABLE 错误给调度服务器

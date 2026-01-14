@@ -167,6 +167,7 @@ pub(super) async fn handle_tts_play_ended(
 ) {
     // Update Group's last_tts_end_at (Scheduler authoritative time)
     state.group_manager.on_tts_play_ended(&group_id, ts_end_ms).await;
+    
     info!(
         session_id = %sess_id,
         group_id = %group_id,

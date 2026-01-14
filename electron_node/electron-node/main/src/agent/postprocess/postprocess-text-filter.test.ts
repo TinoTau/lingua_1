@@ -78,7 +78,7 @@ describe('PostProcessTextFilter', () => {
       expect(result.result).toBeDefined();
       expect(result.result?.shouldSend).toBe(false);
       expect(result.result?.aggregatedText).toBe('');
-      expect(result.result?.reason).toContain('Text length 6-16 chars');
+      expect(result.result?.reason).toContain('Text length 6-20 chars');
     });
   });
 

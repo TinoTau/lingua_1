@@ -80,6 +80,7 @@ export async function runAggregationStep(
   ctx.aggregationAction = aggregationResult.action;
   ctx.aggregationChanged = aggregationResult.aggregationChanged;
   ctx.isLastInMergedGroup = aggregationResult.isLastInMergedGroup;
+  ctx.shouldSendToSemanticRepair = aggregationResult.shouldSendToSemanticRepair;  // 保存语义修复标志
   ctx.aggregationMetrics = aggregationResult.metrics;
 
   logger.info(

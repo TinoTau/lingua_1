@@ -22,6 +22,7 @@ export interface JobContext {
   aggregationAction?: 'MERGE' | 'NEW_STREAM' | 'COMMIT';
   aggregationChanged?: boolean;
   isLastInMergedGroup?: boolean;
+  shouldSendToSemanticRepair?: boolean;  // 是否应该发送给语义修复
   aggregationMetrics?: {
     dedupCount?: number;
     dedupCharsRemoved?: number;

@@ -3,8 +3,12 @@
  * Aggregator State Utilities
  * 处理时间计算和关键词提取等辅助方法
  */
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AggregatorStateUtils = void 0;
+const logger_1 = __importDefault(require("../logger"));
 class AggregatorStateUtils {
     /**
      * 计算 utterance 的时间戳（从 segments 推导）
@@ -20,15 +24,38 @@ class AggregatorStateUtils {
             if (firstSegment.start !== undefined) {
                 // segments 的时间是相对于音频开始的（秒），需要转换为绝对时间
                 // 第一个 utterance：使用会话开始时间
-                // 后续 utterance：使用上一个 utterance 的结束时间作为参考
+                // 后续 utterance：需要判断是否是新音频块的开始
                 if (sessionStartTimeMs === 0) {
                     // 第一个 utterance
                     newSessionStartTimeMs = Date.now();
                     startMs = newSessionStartTimeMs;
                 }
                 else {
-                    // 后续 utterance：使用上一个 utterance 的结束时间 + segments 的相对时间
-                    startMs = lastUtteranceEndTimeMs + (firstSegment.start * 1000);
+                    // 后续 utterance：简化逻辑，不再区分"连续音频"和"播放后重新说话"
+                    // 因为节点端无法准确知道播放时间，且用户说话被播放打断是正常情况
+                    // 只需保证基本的audio合并和utterance合并逻辑即可
+                    const estimatedGapFromSegment = firstSegment.start * 1000;
+                    if (lastUtteranceEndTimeMs > 0) {
+                        // 使用上一个 utterance 的结束时间 + segments 的相对时间
+                        startMs = lastUtteranceEndTimeMs + estimatedGapFromSegment;
+                        logger_1.default.debug({
+                            firstSegmentStart: firstSegment.start,
+                            lastUtteranceEndTimeMs,
+                            estimatedGapFromSegment,
+                            startMs,
+                        }, 'AggregatorStateUtils: Using lastUtteranceEndTimeMs + segment.start for startMs');
+                    }
+                    else {
+                        // lastUtteranceEndTimeMs 不存在，使用当前时间
+                        const nowMs = Date.now();
+                        startMs = nowMs;
+                        logger_1.default.info({
+                            firstSegmentStart: firstSegment.start,
+                            lastUtteranceEndTimeMs: 0,
+                            startMs,
+                            nowMs,
+                        }, 'AggregatorStateUtils: No lastUtteranceEndTimeMs, using Date.now() for startMs');
+                    }
                 }
             }
             else {
@@ -64,10 +91,24 @@ class AggregatorStateUtils {
             }
             endMs = startMs + 1000; // 估算 1 秒
         }
-        // 计算 gap
+        // 计算 gap：简化逻辑，直接使用实际时间间隔
+        // 不再尝试区分"连续音频"和"播放后重新说话"，因为节点端无法准确知道播放时间
+        // 用户说话被播放打断是正常情况，不需要特殊处理
         const gapMs = lastUtteranceEndTimeMs > 0
             ? Math.max(0, startMs - lastUtteranceEndTimeMs)
             : 0;
+        // 记录时间戳计算的详细信息（用于诊断合并问题）
+        logger_1.default.info({
+            hasSegments: !!(segments && segments.length > 0),
+            firstSegmentStart: segments && segments.length > 0 ? segments[0].start : undefined,
+            sessionStartTimeMs,
+            lastUtteranceEndTimeMs,
+            startMs,
+            endMs,
+            gapMs,
+            calculatedGapSeconds: gapMs / 1000,
+            isNewSession: sessionStartTimeMs === 0,
+        }, 'AggregatorStateUtils: Utterance time calculated');
         return { startMs, endMs, gapMs, newSessionStartTimeMs };
     }
     /**

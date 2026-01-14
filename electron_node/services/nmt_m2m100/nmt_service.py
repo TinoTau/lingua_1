@@ -30,7 +30,7 @@ from model_loader import (
     load_model_with_retry,
     move_model_to_device,
 )
-from translation_extractor import extract_translation
+from translation_extractor import extract_translation, cleanup_sentinel_sequences
 from translation_utils import calculate_max_new_tokens, is_translation_complete
 
 if sys.platform == 'win32':
@@ -273,6 +273,9 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
             # 如果检测到截断，尝试增加 max_new_tokens 并重新生成（仅当没有 context_text 时）
             if not req.context_text and not translation_starts_properly:
                 print(f"[NMT Service] WARNING: Translation appears truncated at beginning, but cannot retry without context_text")
+        
+        # 最终清理：确保移除所有残留的SEP_MARKER（即使之前的清理逻辑遗漏了某些变体）
+        final_output = cleanup_sentinel_sequences(final_output)
         
         print(f"[NMT Service] Final output: '{final_output[:200]}{'...' if len(final_output) > 200 else ''}' (length={len(final_output)})")
         print(f"[NMT Service] ===== Translation Request Completed in {total_elapsed:.2f}ms =====")

@@ -53,20 +53,65 @@ async function runAsrStep(job, ctx, services, options) {
     asrTask.session_id = job.session_id;
     // 调用 ASR 服务
     let asrResult;
-    if (job.enable_streaming_asr && options?.partialCallback) {
-        // 流式 ASR
-        asrResult = await asrHandler.processASRStreaming(asrTask, options.partialCallback);
-    }
-    else {
-        // 非流式 ASR（使用 GPU 租约）
-        asrResult = await (0, gpu_arbiter_1.withGpuLease)('ASR', async () => {
-            return await services.taskRouter.routeASRTask(asrTask);
-        }, {
+    const asrStartTime = Date.now();
+    try {
+        if (job.enable_streaming_asr && options?.partialCallback) {
+            // 流式 ASR
+            logger_1.default.info({
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                stage: 'ASR',
+                mode: 'streaming',
+            }, 'runAsrStep: Starting streaming ASR');
+            asrResult = await asrHandler.processASRStreaming(asrTask, options.partialCallback);
+        }
+        else {
+            // 非流式 ASR（使用 GPU 租约）
+            logger_1.default.info({
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                stage: 'ASR',
+                mode: 'non-streaming',
+                audioLength: audioForASR.length,
+                audioFormat: audioFormatForASR,
+            }, 'runAsrStep: Starting non-streaming ASR with GPU lease');
+            asrResult = await (0, gpu_arbiter_1.withGpuLease)('ASR', async () => {
+                return await services.taskRouter.routeASRTask(asrTask);
+            }, {
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                stage: 'ASR',
+            });
+        }
+        const asrDuration = Date.now() - asrStartTime;
+        logger_1.default.info({
             jobId: job.job_id,
             sessionId: job.session_id,
             utteranceIndex: job.utterance_index,
             stage: 'ASR',
-        });
+            durationMs: asrDuration,
+            asrTextLength: asrResult.text?.length || 0,
+            asrTextPreview: asrResult.text?.substring(0, 50),
+            segmentCount: asrResult.segments?.length || 0,
+            qualityScore: asrResult.badSegmentDetection?.qualityScore,
+        }, 'runAsrStep: ASR completed successfully');
+    }
+    catch (error) {
+        const asrDuration = Date.now() - asrStartTime;
+        logger_1.default.error({
+            jobId: job.job_id,
+            sessionId: job.session_id,
+            utteranceIndex: job.utterance_index,
+            stage: 'ASR',
+            durationMs: asrDuration,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            errorName: error instanceof Error ? error.name : typeof error,
+            isGpuLeaseError: error instanceof Error && error.message.includes('GPU lease'),
+        }, 'runAsrStep: ASR failed');
+        throw error;
     }
     // 更新 JobContext
     ctx.asrText = asrResult.text;

@@ -7,6 +7,7 @@ import { JobAssignMessage } from '@shared/protocols/messages';
 import { TaskRouter } from '../../task-router/task-router';
 import { SemanticRepairTask, SemanticRepairResult } from '../../task-router/types';
 import logger from '../../logger';
+import { loadNodeConfig } from '../../node-config';
 
 export interface SemanticRepairStageENConfig {
   repairEnabled: boolean;
@@ -136,7 +137,7 @@ export class SemanticRepairStageEN {
 
   /**
    * 判断是否应该触发修复
-   * 修改：跳过质量评分，对 >= 16 字符的文本都进行修复
+   * 修改：跳过质量评分，对 >= 配置的最小发送长度 字符的文本都进行修复
    */
   private shouldTriggerRepair(
     text: string,
@@ -144,10 +145,12 @@ export class SemanticRepairStageEN {
     meta?: any
   ): { shouldRepair: boolean; reasonCodes: string[] } {
     const reasonCodes: string[] = [];
-    const MIN_LENGTH_FOR_REPAIR = 16;  // 最小修复长度：16个字符
+    // 从配置文件加载文本长度配置
+    const nodeConfig = loadNodeConfig();
+    const MIN_LENGTH_FOR_REPAIR = nodeConfig.textLength?.minLengthToSend ?? 20;  // 最小修复长度：默认20个字符
 
     // 跳过质量评分，只检查文本长度
-    // 对 >= 16 字符的文本都进行修复
+    // 对 >= 配置的最小发送长度 字符的文本都进行修复
     if (text.length >= MIN_LENGTH_FOR_REPAIR) {
       reasonCodes.push('LENGTH_MEETS_THRESHOLD');
       // 仍然记录其他检测结果用于日志，但不作为触发条件

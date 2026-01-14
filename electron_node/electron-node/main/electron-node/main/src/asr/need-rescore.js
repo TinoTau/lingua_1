@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.NeedRescoreDetector = void 0;
 const aggregator_decision_1 = require("../aggregator/aggregator-decision");
 const DEFAULT_CONFIG = {
-    shortCjkChars: 16, // 统一使用SemanticRepairScorer的标准：16字符
+    shortCjkChars: 20, // 统一使用20字符标准
     shortEnWords: 9,
     qLowOffline: 0.45,
     qLowRoom: 0.50,

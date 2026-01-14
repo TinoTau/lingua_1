@@ -346,8 +346,8 @@ class TranslationStage {
         if (endsWithPunctuation) {
             return false;
         }
-        // 如果文本较短（少于16个字符），且不以标点符号结尾，可能是不完整句子（统一使用SemanticRepairScorer的标准：16字符）
-        if (trimmed.length < 16) {
+        // 如果文本较短（少于20个字符），且不以标点符号结尾，可能是不完整句子（统一使用20字符标准）
+        if (trimmed.length < 20) {
             // 检查是否包含常见的不完整句子模式
             const incompletePatterns = [
                 /的$/, /了$/, /在$/, /是$/, /有$/, /会$/, /能$/, /要$/, /我们$/, /这个$/, /那个$/,

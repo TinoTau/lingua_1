@@ -69,6 +69,12 @@ const DEFAULT_CONFIG = {
         enableS1PromptBias: false, // 默认禁用 S1 Prompt Bias（暂时禁用，避免错误传播）
         enableS2Rescoring: false, // 默认禁用 S2 Rescoring（已禁用）
     },
+    textLength: {
+        minLengthToKeep: 6, // 最小保留长度：6个字符（太短的文本直接丢弃）
+        minLengthToSend: 20, // 最小发送长度：20个字符（6-20字符之间的文本等待合并）
+        maxLengthToWait: 40, // 最大等待长度：40个字符（20-40字符之间的文本等待3秒确认是否有后续输入，超过40字符强制截断）
+        waitTimeoutMs: 3000, // 等待超时：3秒
+    },
 };
 function getConfigPath() {
     const userData = electron_1.app.getPath('userData');
@@ -116,6 +122,10 @@ function loadNodeConfig() {
             sequentialExecutor: {
                 ...(DEFAULT_CONFIG.sequentialExecutor || {}),
                 ...(parsed.sequentialExecutor || {}),
+            },
+            textLength: {
+                ...(DEFAULT_CONFIG.textLength || {}),
+                ...(parsed.textLength || {}),
             },
         };
     }
@@ -172,6 +182,10 @@ async function loadNodeConfigAsync() {
                 ...(DEFAULT_CONFIG.sequentialExecutor || {}),
                 ...(parsed.sequentialExecutor || {}),
             },
+            textLength: {
+                ...(DEFAULT_CONFIG.textLength || {}),
+                ...(parsed.textLength || {}),
+            },
         };
     }
     catch (error) {
@@ -215,6 +229,10 @@ function saveNodeConfig(config) {
         sequentialExecutor: {
             ...(DEFAULT_CONFIG.sequentialExecutor || {}),
             ...(config.sequentialExecutor || {}),
+        },
+        textLength: {
+            ...(DEFAULT_CONFIG.textLength || {}),
+            ...(config.textLength || {}),
         },
     };
     fs.writeFileSync(configPath, JSON.stringify(configToSave, null, 2), 'utf-8');

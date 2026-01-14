@@ -2,6 +2,9 @@
 /* Aggregator core decision logic: Text Incompleteness Score + Language Stability Gate
    Copy-paste friendly. No external deps.
 */
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.defaultTuning = defaultTuning;
 exports.decideStreamAction = decideStreamAction;
@@ -49,26 +52,92 @@ function defaultTuning(mode) {
         commitLenEnWords: useRoomParams ? 10 : 12, // 提高：减少短句被提前提交
     };
 }
+// 添加 logger 导入（如果还没有）
+const logger_1 = __importDefault(require("../logger"));
 function decideStreamAction(prev, curr, mode, tuning = defaultTuning(mode)) {
-    if (!prev)
+    if (!prev) {
+        logger_1.default.info({
+            currText: curr.text.substring(0, 50),
+            currStartMs: curr.startMs,
+            reason: 'No previous utterance, starting new stream',
+        }, 'AggregatorDecision: NEW_STREAM (no previous utterance)');
         return "NEW_STREAM";
+    }
     const gapMs = Math.max(0, curr.startMs - prev.endMs);
     // Hard rules
     // P0 修复：只对 manualCut 强制 NEW_STREAM，isFinal 允许 MERGE
     // 因为 P0 只处理 final 结果，如果 isFinal 也强制 NEW_STREAM，会导致无法 MERGE
-    if (curr.isManualCut)
+    if (curr.isManualCut) {
+        logger_1.default.info({
+            prevText: prev.text.substring(0, 50),
+            currText: curr.text.substring(0, 50),
+            gapMs,
+            gapSeconds: gapMs / 1000,
+            reason: 'Manual cut detected',
+        }, 'AggregatorDecision: NEW_STREAM (manual cut)');
         return "NEW_STREAM";
-    if (gapMs >= tuning.hardGapMs)
+    }
+    if (gapMs >= tuning.hardGapMs) {
+        logger_1.default.info({
+            prevText: prev.text.substring(0, 50),
+            currText: curr.text.substring(0, 50),
+            gapMs,
+            gapSeconds: gapMs / 1000,
+            hardGapMs: tuning.hardGapMs,
+            reason: `Gap too large (${gapMs}ms >= ${tuning.hardGapMs}ms)`,
+        }, 'AggregatorDecision: NEW_STREAM (gap too large)');
         return "NEW_STREAM";
+    }
     // Language stability gate
-    if (isLangSwitchConfident(prev.lang, curr.lang, gapMs, tuning))
+    if (isLangSwitchConfident(prev.lang, curr.lang, gapMs, tuning)) {
+        logger_1.default.info({
+            prevText: prev.text.substring(0, 50),
+            currText: curr.text.substring(0, 50),
+            prevLang: prev.lang.top1,
+            currLang: curr.lang.top1,
+            gapMs,
+            gapSeconds: gapMs / 1000,
+            reason: 'Language switch detected',
+        }, 'AggregatorDecision: NEW_STREAM (language switch)');
         return "NEW_STREAM";
+    }
     // Strong merge
-    if (gapMs <= tuning.strongMergeMs)
+    if (gapMs <= tuning.strongMergeMs) {
+        logger_1.default.info({
+            prevText: prev.text.substring(0, 50),
+            currText: curr.text.substring(0, 50),
+            gapMs,
+            gapSeconds: gapMs / 1000,
+            strongMergeMs: tuning.strongMergeMs,
+            reason: `Gap small enough for strong merge (${gapMs}ms <= ${tuning.strongMergeMs}ms)`,
+        }, 'AggregatorDecision: MERGE (strong merge)');
         return "MERGE";
+    }
     const score = textIncompletenessScore(prev, curr, gapMs, tuning);
-    if (score >= tuning.scoreThreshold && gapMs <= tuning.softGapMs)
+    if (score >= tuning.scoreThreshold && gapMs <= tuning.softGapMs) {
+        logger_1.default.info({
+            prevText: prev.text.substring(0, 50),
+            currText: curr.text.substring(0, 50),
+            gapMs,
+            gapSeconds: gapMs / 1000,
+            score,
+            scoreThreshold: tuning.scoreThreshold,
+            softGapMs: tuning.softGapMs,
+            reason: `Text incompleteness score high enough (${score} >= ${tuning.scoreThreshold}) and gap within soft limit`,
+        }, 'AggregatorDecision: MERGE (text incompleteness)');
         return "MERGE";
+    }
+    logger_1.default.info({
+        prevText: prev.text.substring(0, 50),
+        currText: curr.text.substring(0, 50),
+        gapMs,
+        gapSeconds: gapMs / 1000,
+        score,
+        scoreThreshold: tuning.scoreThreshold,
+        softGapMs: tuning.softGapMs,
+        strongMergeMs: tuning.strongMergeMs,
+        reason: `Score too low (${score} < ${tuning.scoreThreshold}) or gap too large (${gapMs}ms > ${tuning.softGapMs}ms)`,
+    }, 'AggregatorDecision: NEW_STREAM (default)');
     return "NEW_STREAM";
 }
 function isLangSwitchConfident(prevLang, currLang, gapMs, tuning) {

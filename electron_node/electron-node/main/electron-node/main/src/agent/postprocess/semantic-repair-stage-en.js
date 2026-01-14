@@ -9,6 +9,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SemanticRepairStageEN = void 0;
 const logger_1 = __importDefault(require("../../logger"));
+const node_config_1 = require("../../node-config");
 class SemanticRepairStageEN {
     constructor(taskRouter, config) {
         this.taskRouter = taskRouter;
@@ -95,13 +96,15 @@ class SemanticRepairStageEN {
     }
     /**
      * 判断是否应该触发修复
-     * 修改：跳过质量评分，对 >= 16 字符的文本都进行修复
+     * 修改：跳过质量评分，对 >= 配置的最小发送长度 字符的文本都进行修复
      */
     shouldTriggerRepair(text, qualityScore, meta) {
         const reasonCodes = [];
-        const MIN_LENGTH_FOR_REPAIR = 16; // 最小修复长度：16个字符
+        // 从配置文件加载文本长度配置
+        const nodeConfig = (0, node_config_1.loadNodeConfig)();
+        const MIN_LENGTH_FOR_REPAIR = nodeConfig.textLength?.minLengthToSend ?? 20; // 最小修复长度：默认20个字符
         // 跳过质量评分，只检查文本长度
-        // 对 >= 16 字符的文本都进行修复
+        // 对 >= 配置的最小发送长度 字符的文本都进行修复
         if (text.length >= MIN_LENGTH_FOR_REPAIR) {
             reasonCodes.push('LENGTH_MEETS_THRESHOLD');
             // 仍然记录其他检测结果用于日志，但不作为触发条件
