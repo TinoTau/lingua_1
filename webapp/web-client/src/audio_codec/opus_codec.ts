@@ -248,8 +248,15 @@ export class OpusEncoderImpl implements AudioEncoder {
   }
   
   close(): void {
-    if (this.encoder) {
+    if (!this.encoder) {
+      return;
+    }
+
+    try {
       this.encoder.free();
+    } catch (error) {
+      console.warn('[OpusEncoder] Failed to free encoder:', error);
+    } finally {
       this.encoder = null;
       this.isReady = false;
     }
@@ -428,8 +435,15 @@ export class OpusDecoderImpl implements AudioDecoder {
   }
   
   close(): void {
-    if (this.decoder) {
+    if (!this.decoder) {
+      return;
+    }
+
+    try {
       this.decoder.free();
+    } catch (error) {
+      console.warn('[OpusDecoder] Failed to free decoder:', error);
+    } finally {
       this.decoder = null;
       this.isReady = false;
     }

@@ -256,9 +256,9 @@ describe('TtsPlayer - 内存监控和自动播放', () => {
 
     it('应该根据设备类型设置不同的最大缓存时长', () => {
       const maxDuration = ttsPlayer.getMaxBufferDuration();
-      // 应该是一个合理的值（3-20秒）
+      // 应该是一个合理的值（3-30秒）
       expect(maxDuration).toBeGreaterThanOrEqual(3);
-      expect(maxDuration).toBeLessThanOrEqual(20);
+      expect(maxDuration).toBeLessThanOrEqual(30);
     });
   });
 

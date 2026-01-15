@@ -63,5 +63,63 @@ describe('SessionManager', () => {
     expect(info.traceId).toBeNull();
     expect(info.groupId).toBeNull();
   });
+
+  describe('音频chunk发送控制（canSendChunks）', () => {
+    it('在禁止发送时，onAudioFrame 不应调用 sendAudioChunk', () => {
+      // 模拟会话已激活且处于录音状态
+      (manager as any).isSessionActive = true;
+      const sm = (manager as any).stateMachine as StateMachine;
+      sm.startSession();
+      expect(sm.getState()).toBe(SessionState.INPUT_RECORDING);
+
+      // 禁止发送chunk
+      manager.setCanSendChunks(false);
+
+      // 监控 WebSocketClient.sendAudioChunk 调用情况
+      const sendAudioChunkSpy = vi
+        .spyOn(wsClient as any, 'sendAudioChunk')
+        .mockImplementation(async () => {});
+
+      // 构造一帧伪造音频数据
+      const frame = new Float32Array(4096).fill(0.1);
+
+      // 调用 onAudioFrame，多次以确保不会意外触发发送
+      manager.onAudioFrame(frame);
+      manager.onAudioFrame(frame);
+
+      expect(sendAudioChunkSpy).not.toHaveBeenCalled();
+    });
+
+    it('在允许发送时，onAudioFrame 应按帧长发送chunk（约256ms一包）', () => {
+      // 模拟会话已激活且处于录音状态
+      (manager as any).isSessionActive = true;
+      const sm = (manager as any).stateMachine as StateMachine;
+      sm.startSession();
+      expect(sm.getState()).toBe(SessionState.INPUT_RECORDING);
+
+      // 允许发送chunk
+      manager.setCanSendChunks(true);
+
+      // 监控 WebSocketClient.sendAudioChunk 调用情况
+      const sendAudioChunkSpy = vi
+        .spyOn(wsClient as any, 'sendAudioChunk')
+        .mockImplementation(async () => {});
+
+      // 构造一帧伪造音频数据（长度用于推算帧时长）
+      const frame = new Float32Array(4096).fill(0.2);
+
+      // 第一次 onAudioFrame：初始化 samplesPerFrame 和 framesPerChunk，并立即发送第一个chunk
+      manager.onAudioFrame(frame);
+
+      expect(sendAudioChunkSpy).toHaveBeenCalledTimes(1);
+
+      // 检查 hasSentAudioChunksForCurrentUtterance 被标记为 true（通过内部状态）
+      expect((manager as any).hasSentAudioChunksForCurrentUtterance).toBe(true);
+
+      // 再来一帧，audioBuffer 中会累积新帧，根据 framesPerChunk（当前配置下为1）再次发送
+      manager.onAudioFrame(frame);
+      expect(sendAudioChunkSpy).toHaveBeenCalledTimes(2);
+    });
+  });
 });
 

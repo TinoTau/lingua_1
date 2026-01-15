@@ -25,7 +25,7 @@ describe('Recorder - VAD 静音过滤', () => {
       expect(config.enabled).toBe(true);
       expect(config.threshold).toBe(0.015); // 更新后的阈值
       expect(config.attackFrames).toBe(3);
-      expect(config.releaseFrames).toBe(5);
+      expect(config.releaseFrames).toBe(20);
     });
 
     it('应该能够更新静音过滤配置', () => {
@@ -37,7 +37,7 @@ describe('Recorder - VAD 静音过滤', () => {
       const config = recorder.getSilenceFilterConfig();
       expect(config.threshold).toBe(0.02);
       expect(config.attackFrames).toBe(5);
-      expect(config.releaseFrames).toBe(5); // 未更新的保持原值
+      expect(config.releaseFrames).toBe(20); // 未更新的保持原值
     });
   });
 

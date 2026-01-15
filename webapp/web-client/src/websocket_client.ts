@@ -349,6 +349,8 @@ export class WebSocketClient {
     this.connectionManager.disconnect();
     this.messageHandler.reset();
     this.audioSender.setSessionId(null);
+    // 清理音频编码器（避免资源泄露）
+    this.audioSender.setAudioEncoder(null);
     this.audioSender.resetSequence();
     this.backpressureManager.clearSendQueue();
     this.pendingConnectParams = null;

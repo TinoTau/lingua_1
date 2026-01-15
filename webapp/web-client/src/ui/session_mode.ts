@@ -5,6 +5,7 @@
 
 import { App } from '../app';
 import { SessionState, FeatureFlags } from '../types';
+import { getSessionModeTemplate } from './session_mode_template';
 
 // 服务模式类型
 type ServiceMode = 'personal_voice' | 'voice_translation' | 'original_subtitle' | 'bilingual_subtitle' | 'text_translation';

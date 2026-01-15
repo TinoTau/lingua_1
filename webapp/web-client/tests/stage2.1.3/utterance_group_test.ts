@@ -42,31 +42,30 @@ describe('Utterance Group - TTS_PLAY_ENDED 消息发送', () => {
   });
 
   it('应该能够发送 TTS_PLAY_ENDED 消息', () => {
-    // 创建新的 mock WebSocket 实例
-    const sendFn = vi.fn((msg: string) => {
-      sentMessages.push(msg);
+    // 针对重构后的 WebSocketClient：通过 ConnectionManager 和 MessageHandler 发送消息
+    const sendFn = vi.fn((msg: string | ArrayBuffer) => {
+      // 这里只处理 JSON 文本消息
+      if (typeof msg === 'string') {
+        sentMessages.push(msg);
+      }
     });
 
-    // 定义 WebSocket.OPEN 常量（值为 1）
-    const WS_OPEN = 1;
-    const testMockWs: any = {
-      readyState: WS_OPEN,
-      send: sendFn,
-      close: vi.fn(),
-    };
+    // 模拟连接已建立
+    const connectionManager = (wsClient as any).connectionManager;
+    connectionManager.isConnected = () => true;
+    connectionManager.send = sendFn;
 
-    // 设置 session_id 和 ws
-    (wsClient as any).sessionId = 'test_session_123';
-    (wsClient as any).ws = testMockWs;
+    // 模拟已有 sessionId
+    const messageHandler = (wsClient as any).messageHandler;
+    messageHandler.getSessionId = () => 'test_session_123';
 
     const traceId = 'trace_123';
     const groupId = 'group_456';
     const tsEndMs = 1234567890; // 使用固定时间戳以便测试
 
     // 验证条件
-    expect((wsClient as any).ws).toBe(testMockWs);
-    expect((wsClient as any).ws.readyState).toBe(WS_OPEN);
-    expect((wsClient as any).sessionId).toBe('test_session_123');
+    expect(connectionManager.isConnected()).toBe(true);
+    expect(messageHandler.getSessionId()).toBe('test_session_123');
 
     wsClient.sendTtsPlayEnded(traceId, groupId, tsEndMs);
 
@@ -81,8 +80,11 @@ describe('Utterance Group - TTS_PLAY_ENDED 消息发送', () => {
   });
 
   it('当 WebSocket 未连接时不应该发送消息', () => {
-    (wsClient as any).sessionId = null;
-    (wsClient as any).ws = null;
+    // 重构后：通过 ConnectionManager 和 MessageHandler 检查连接/会话状态
+    const connectionManager = (wsClient as any).connectionManager;
+    const messageHandler = (wsClient as any).messageHandler;
+    connectionManager.isConnected = () => false;
+    messageHandler.getSessionId = () => null;
 
     wsClient.sendTtsPlayEnded('trace_123', 'group_456', Date.now());
 

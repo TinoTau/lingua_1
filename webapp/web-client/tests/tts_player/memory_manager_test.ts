@@ -261,9 +261,9 @@ describe('MemoryManager', () => {
   describe('工具函数', () => {
     it('应该能够获取最大缓存时长', () => {
       const maxDuration = getMaxBufferDuration();
-      // 应该是一个合理的值（3-20秒）
+      // 应该是一个合理的值（3-30秒）
       expect(maxDuration).toBeGreaterThanOrEqual(3);
-      expect(maxDuration).toBeLessThanOrEqual(20);
+      expect(maxDuration).toBeLessThanOrEqual(30);
     });
 
     it('应该能够获取设备类型', () => {

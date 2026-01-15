@@ -77,7 +77,8 @@ describe('WebSocketClient Phase 2', () => {
       
       // 模拟服务器响应
       const mockWs = (global as any).WebSocket.prototype;
-      const wsInstance = (client as any).ws as MockWebSocket;
+      const connectionManager = (client as any).connectionManager;
+      const wsInstance = connectionManager.ws as MockWebSocket;
       
       if (wsInstance) {
         wsInstance.simulateMessage(JSON.stringify({
@@ -107,7 +108,8 @@ describe('WebSocketClient Phase 2', () => {
       
       await new Promise(resolve => setTimeout(resolve, 20));
       
-      const wsInstance = (client as any).ws as MockWebSocket;
+      const connectionManager = (client as any).connectionManager;
+      const wsInstance = connectionManager.ws as MockWebSocket;
       if (wsInstance) {
         wsInstance.simulateMessage(JSON.stringify({
           type: 'session_init_ack',
@@ -171,7 +173,8 @@ describe('WebSocketClient Phase 2', () => {
       const connectPromise = client.connect('zh', 'en');
       await new Promise(resolve => setTimeout(resolve, 20));
       
-      const wsInstance = (client as any).ws as MockWebSocket;
+      const connectionManager = (client as any).connectionManager;
+      const wsInstance = connectionManager.ws as MockWebSocket;
       if (wsInstance) {
         wsInstance.simulateMessage(JSON.stringify({
           type: 'session_init_ack',
@@ -220,7 +223,8 @@ describe('WebSocketClient Phase 2', () => {
       const connectPromise = client.connect('zh', 'en');
       await new Promise(resolve => setTimeout(resolve, 20));
       
-      const wsInstance = (client as any).ws as MockWebSocket;
+      const connectionManager = (client as any).connectionManager;
+      const wsInstance = connectionManager.ws as MockWebSocket;
       if (wsInstance) {
         wsInstance.simulateMessage(JSON.stringify({
           type: 'session_init_ack',
@@ -237,8 +241,9 @@ describe('WebSocketClient Phase 2', () => {
       await connectPromise;
       await new Promise(resolve => setTimeout(resolve, 10));
       
-      // 破坏编码器以触发降级
-      (client as any).audioEncoder = null;
+      // 破坏编码器以触发降级（重构后编码器位于 audioSender 内部）
+      const audioSender = (client as any).audioSender;
+      audioSender.audioEncoder = null;
       
       // 发送音频数据
       const audioData = new Float32Array(100).fill(0.5);
@@ -260,7 +265,8 @@ describe('WebSocketClient Phase 2', () => {
       const connectPromise = client.connect('zh', 'en');
       await new Promise(resolve => setTimeout(resolve, 20));
       
-      const wsInstance = (client as any).ws as MockWebSocket;
+      const connectionManager = (client as any).connectionManager;
+      const wsInstance = connectionManager.ws as MockWebSocket;
       if (wsInstance) {
         wsInstance.simulateMessage(JSON.stringify({
           type: 'session_init_ack',
@@ -292,7 +298,8 @@ describe('WebSocketClient Phase 2', () => {
       const connectPromise = client.connect('zh', 'en');
       await new Promise(resolve => setTimeout(resolve, 20));
       
-      const wsInstance = (client as any).ws as MockWebSocket;
+      const connectionManager = (client as any).connectionManager;
+      const wsInstance = connectionManager.ws as MockWebSocket;
       if (wsInstance) {
         wsInstance.simulateMessage(JSON.stringify({
           type: 'session_init_ack',
@@ -333,13 +340,15 @@ describe('WebSocketClient Phase 2', () => {
       client.setAudioCodecConfig(config);
       
       // 验证编码器存在
-      expect((client as any).audioEncoder).not.toBeNull();
+      const audioSender = (client as any).audioSender;
+      expect(audioSender).toBeDefined();
+      expect(audioSender.audioEncoder).not.toBeNull();
       
       // 断开连接
       client.disconnect();
       
       // 验证编码器已清理
-      expect((client as any).audioEncoder).toBeNull();
+      expect(audioSender.audioEncoder).toBeNull();
     });
   });
 });
