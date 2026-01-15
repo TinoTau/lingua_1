@@ -340,12 +340,23 @@ export class TtsPlayer {
 
       if (this.audioBuffers.length === 0) {
         // 所有音频块已播放完成
+        const playbackFinishTimestamp = Date.now();
         this.isPlaying = false;
         this.isPaused = false;
         this.currentSource = null;
         this.currentPlaybackIndex = -1; // 重置播放索引
+        console.log('[TtsPlayer] 所有音频块播放完成，调用 finishPlaying', {
+          timestamp: playbackFinishTimestamp,
+          timestampIso: new Date(playbackFinishTimestamp).toISOString(),
+        });
         this.stateMachine.finishPlaying();
         if (this.playbackFinishedCallback) {
+          const callbackTimestamp = Date.now();
+          console.log('[TtsPlayer] 调用 playbackFinishedCallback', {
+            timestamp: callbackTimestamp,
+            timestampIso: new Date(callbackTimestamp).toISOString(),
+            timeSinceFinishPlayingMs: callbackTimestamp - playbackFinishTimestamp,
+          });
           this.playbackFinishedCallback();
         }
         return;

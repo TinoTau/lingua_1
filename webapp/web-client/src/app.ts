@@ -13,6 +13,7 @@ import { TranslationDisplayManager } from './app/translation_display';
 import { SessionManager } from './app/session_manager';
 import { RoomManager } from './app/room_manager';
 import { WebRTCManager } from './app/webrtc_manager';
+import { logger } from './logger';
 
 /**
  * 主应用类
@@ -114,6 +115,14 @@ export class App {
 
     // 设置回调
     this.setupCallbacks();
+
+    // 应用日志配置（如果配置了自动保存）
+    // 注意：需要在logger系统初始化后设置
+    if (this.config.logConfig) {
+      // logger是单例，已经初始化，直接使用
+      logger.setLogConfig(this.config.logConfig);
+      console.log('[App] 日志配置已应用:', this.config.logConfig);
+    }
   }
 
   /**
@@ -258,54 +267,113 @@ export class App {
     // 从播放状态回到录音状态时，恢复录音
     // 重要：这个检查必须在最后，确保状态转换完成后再恢复录音
     if (newState === SessionState.INPUT_RECORDING && oldState === SessionState.PLAYING_TTS) {
+      const stateChangeTimestamp = Date.now();
       if (this.sessionManager.getIsSessionActive()) {
         // 会话进行中：恢复录音
         console.log('[App] 从播放状态回到录音状态，正在恢复录音...', {
+          timestamp: stateChangeTimestamp,
+          timestampIso: new Date(stateChangeTimestamp).toISOString(),
           isRecording: this.recorder.getIsRecording(),
         });
         if (!this.recorder.getIsRecording()) {
+          const requestAnimationFrameStart = Date.now();
           // 方案一：事件驱动恢复录音 - 使用 requestAnimationFrame 替代固定延迟
           // 确保状态转换完成后再恢复录音器
           requestAnimationFrame(() => {
+            const requestAnimationFrameEnd = Date.now();
+            const rafDelay = requestAnimationFrameEnd - requestAnimationFrameStart;
+            console.log('[App] requestAnimationFrame 回调执行', {
+              rafStartTimestamp: requestAnimationFrameStart,
+              rafEndTimestamp: requestAnimationFrameEnd,
+              rafDelayMs: rafDelay,
+            });
             if (this.sessionManager.getIsSessionActive() && 
                 this.stateMachine.getState() === SessionState.INPUT_RECORDING && 
                 !this.recorder.getIsRecording()) {
+              const recorderStartTimestamp = Date.now();
               this.recorder.start().then(() => {
+                const recorderStartEndTimestamp = Date.now();
+                const recorderStartDuration = recorderStartEndTimestamp - recorderStartTimestamp;
+                // 注意：无法直接访问私有属性，通过其他方式记录
                 console.log('[App] ✅ 已恢复录音，可以继续说话（事件驱动）', {
+                  recorderStartTimestamp,
+                  recorderStartEndTimestamp,
+                  recorderStartDurationMs: recorderStartDuration,
+                  timestampIso: new Date(recorderStartEndTimestamp).toISOString(),
                   isRecording: this.recorder.getIsRecording(),
+                  currentUtteranceIndex: this.sessionManager.getCurrentUtteranceIndex(),
                 });
+                // 记录：录音器启动后，需要等待音频流开始产生数据
+                console.log('[App] ⏳ 等待音频流开始产生数据（通常需要 0-100ms）...');
               }).catch((error) => {
-                console.error('[App] ❌ 恢复录音失败（事件驱动）:', error);
+                const recorderStartEndTimestamp = Date.now();
+                console.error('[App] ❌ 恢复录音失败（事件驱动）:', {
+                  error,
+                  recorderStartTimestamp,
+                  recorderStartEndTimestamp,
+                  timestampIso: new Date(recorderStartEndTimestamp).toISOString(),
+                });
                 // 如果恢复失败，记录错误并尝试再次恢复（最多重试1次）
                 console.warn('[App] ⚠️ 恢复录音失败，将在 500ms 后重试...');
                 setTimeout(() => {
-                  this.recorder.start().catch((retryError) => {
-                    console.error('[App] ❌ 重试恢复录音失败:', retryError);
+                  const retryTimestamp = Date.now();
+                  this.recorder.start().then(() => {
+                    console.log('[App] ✅ 重试恢复录音成功', {
+                      retryTimestamp,
+                      timestampIso: new Date(retryTimestamp).toISOString(),
+                    });
+                  }).catch((retryError) => {
+                    console.error('[App] ❌ 重试恢复录音失败:', {
+                      error: retryError,
+                      retryTimestamp,
+                      timestampIso: new Date(retryTimestamp).toISOString(),
+                    });
                   });
                 }, 500);
+              });
+            } else {
+              console.log('[App] requestAnimationFrame 回调中检查失败，不恢复录音', {
+                isSessionActive: this.sessionManager.getIsSessionActive(),
+                currentState: this.stateMachine.getState(),
+                isRecording: this.recorder.getIsRecording(),
               });
             }
           });
           
           // 可选：50ms fallback timeout 作为兜底
           const restoreTimeout = setTimeout(() => {
+            const fallbackTimestamp = Date.now();
             if (!this.recorder.getIsRecording() && 
                 this.sessionManager.getIsSessionActive() && 
                 this.stateMachine.getState() === SessionState.INPUT_RECORDING) {
-              console.warn('[App] ⚠️ 事件驱动恢复失败，使用fallback');
+              console.warn('[App] ⚠️ 事件驱动恢复失败，使用fallback', {
+                fallbackTimestamp,
+                timestampIso: new Date(fallbackTimestamp).toISOString(),
+              });
               this.recorder.start().then(() => {
+                const fallbackEndTimestamp = Date.now();
                 console.log('[App] ✅ 已恢复录音，可以继续说话（fallback）', {
+                  fallbackTimestamp,
+                  fallbackEndTimestamp,
+                  timestampIso: new Date(fallbackEndTimestamp).toISOString(),
                   isRecording: this.recorder.getIsRecording(),
                 });
               }).catch((error) => {
-                console.error('[App] ❌ 恢复录音失败（fallback）:', error);
+                console.error('[App] ❌ 恢复录音失败（fallback）:', {
+                  error,
+                  fallbackTimestamp,
+                  timestampIso: new Date(fallbackTimestamp).toISOString(),
+                });
               });
             }
           }, 50);
           // 修复：保存 timeout ID，以便在需要时清理（虽然这里不需要清理）
           // 注意：这里不需要清理，因为恢复录音是必需的
         } else {
-          console.log('[App] 录音器已在运行，无需恢复');
+          console.log('[App] 录音器已在运行，无需恢复', {
+            timestamp: stateChangeTimestamp,
+            timestampIso: new Date(stateChangeTimestamp).toISOString(),
+          });
         }
       }
     }
@@ -1080,53 +1148,67 @@ export class App {
    * 播放完成处理
    */
   private onPlaybackFinished(): void {
+    const playbackFinishedTimestamp = Date.now();
+    const currentState = this.stateMachine.getState();
+    const isRecording = this.recorder.getIsRecording();
+    const isSessionActive = this.sessionManager.getIsSessionActive();
+    
+    // 同时输出到控制台和logger（logger会保存到文件）
     console.log('[App] 🎵 播放完成', {
-      isSessionActive: this.sessionManager.getIsSessionActive(),
-      currentState: this.stateMachine.getState(),
-      isRecording: this.recorder.getIsRecording(),
+      timestamp: playbackFinishedTimestamp,
+      timestampIso: new Date(playbackFinishedTimestamp).toISOString(),
+      isSessionActive,
+      currentState,
+      isRecording,
     });
 
     // 发送 TTS_PLAY_ENDED 消息（如果 trace_id 和 group_id 存在）
     if (this.currentTraceId && this.currentGroupId) {
       const tsEndMs = Date.now();
       this.wsClient.sendTtsPlayEnded(this.currentTraceId, this.currentGroupId, tsEndMs);
-      console.log(`[App] 已发送 TTS_PLAY_ENDED: trace_id=${this.currentTraceId}, group_id=${this.currentGroupId}, ts_end_ms=${tsEndMs}`);
+      console.log(`[App] 已发送 TTS_PLAY_ENDED`, {
+        trace_id: this.currentTraceId,
+        group_id: this.currentGroupId,
+        ts_end_ms: tsEndMs,
+        ts_end_ms_iso: new Date(tsEndMs).toISOString(),
+        timestamp: Date.now(),
+        timestampIso: new Date().toISOString(),
+      });
     } else {
-      console.warn('[App] ⚠️ 无法发送 TTS_PLAY_ENDED: 缺少 trace_id 或 group_id');
+      console.warn('[App] ⚠️ 无法发送 TTS_PLAY_ENDED: 缺少 trace_id 或 group_id', {
+        hasTraceId: !!this.currentTraceId,
+        hasGroupId: !!this.currentGroupId,
+        timestamp: Date.now(),
+        timestampIso: new Date().toISOString(),
+      });
     }
 
-    // 播放完毕后，发送一个空的 is_final=true 来重置调度服务器的 timeout finalize 计时器
-    // 这样即使播放期间没有新chunk，播放结束后也能重置计时器，避免播放后输入语音被提前截断
+    // 播放完毕后，通过 TTS_PLAY_ENDED 消息触发调度服务器的计时器重启
+    // 不再发送 is_final=true，避免触发不必要的 finalize
+    // 记录播放结束的时间戳（用于计算到首次音频发送的延迟）
     if (this.sessionManager.getIsSessionActive()) {
-      try {
-        // 记录播放结束的时间戳（用于计算到首次音频发送的延迟）
-        const playbackEndTimestamp = Date.now();
-        this.sessionManager.setPlaybackFinishedTimestamp(playbackEndTimestamp);
-        
-        // 设置标志，阻止新的chunk发送，确保 sendFinal() 先到达调度服务器
-        this.sessionManager.setWaitingForPlaybackFinalize(true);
-        
-        // 发送 sendFinal()
-        this.wsClient.sendFinal();
-        console.log('[App] 已发送空的 is_final=true 来重置调度服务器的 timeout finalize 计时器', {
-          playbackEndTimestamp,
-          isoString: new Date(playbackEndTimestamp).toISOString(),
-        });
-        
-        // 使用 setTimeout 确保 sendFinal() 先被处理，然后再允许发送新chunk
-        // WebSocket 的 send() 是同步的（只是将消息加入队列），但我们需要确保消息先被发送
-        setTimeout(() => {
-          this.sessionManager.setWaitingForPlaybackFinalize(false);
-        }, 50); // 50ms 应该足够 WebSocket 发送消息
-      } catch (error) {
-        console.error('[App] 发送 is_final 失败:', error);
-        this.sessionManager.setWaitingForPlaybackFinalize(false); // 出错时也要清除标志
-      }
+      const playbackEndTimestamp = Date.now();
+      this.sessionManager.setPlaybackFinishedTimestamp(playbackEndTimestamp);
+      const currentUtteranceIndex = this.sessionManager.getCurrentUtteranceIndex();
+      console.log('[App] 播放完成，TTS_PLAY_ENDED 消息已发送，调度服务器将重启计时器', {
+        playbackEndTimestamp,
+        isoString: new Date(playbackEndTimestamp).toISOString(),
+        currentUtteranceIndex,
+      });
+
+      // 播放完成并发送 RestartTimer 后，允许发送新的音频chunk
+      // 在此之前（TTS 播放期间）会通过 setCanSendChunks(false) 禁止发送，避免在 RestartTimer 之前把新话语的chunk发给调度服务器
+      this.sessionManager.setCanSendChunks(true);
     }
 
     // 清空当前的 trace_id 和 group_id（准备下一句话）
     this.currentTraceId = null;
     this.currentGroupId = null;
+
+    // ========== 可监控的闭环：播放结束 → 恢复录音 → 等待第一帧音频 ==========
+    if (this.sessionManager.getIsSessionActive()) {
+      this.monitorPlaybackToFirstAudioFrame(playbackFinishedTimestamp);
+    }
 
     // 状态机会根据会话状态自动切换到 INPUT_RECORDING（会话进行中）或 INPUT_READY（会话未开始）
     // 状态切换会触发 onStateChange，在那里处理录音器的重新启动
@@ -1138,42 +1220,307 @@ export class App {
     if (this.sessionManager.getIsSessionActive() && 
         this.stateMachine.getState() === SessionState.INPUT_RECORDING && 
         !this.recorder.getIsRecording()) {
-      console.log('[App] 播放完成后检测到录音器未恢复，使用事件驱动恢复录音...');
+      const backupRecoverTimestamp = Date.now();
+      console.log('[App] 播放完成后检测到录音器未恢复，使用事件驱动恢复录音...', {
+        timestamp: backupRecoverTimestamp,
+        timestampIso: new Date(backupRecoverTimestamp).toISOString(),
+        timeSincePlaybackFinished: backupRecoverTimestamp - playbackFinishedTimestamp,
+      });
       
       // 使用 requestAnimationFrame 确保状态转换完成（通常只需要16ms）
+      const backupRafStart = Date.now();
       requestAnimationFrame(() => {
+        const backupRafEnd = Date.now();
+        const backupRafDelay = backupRafEnd - backupRafStart;
+        console.log('[App] 播放完成后的备用恢复 requestAnimationFrame 回调执行', {
+          rafStartTimestamp: backupRafStart,
+          rafEndTimestamp: backupRafEnd,
+          rafDelayMs: backupRafDelay,
+        });
         // 状态转换已完成，立即恢复录音器
         if (this.sessionManager.getIsSessionActive() && 
             this.stateMachine.getState() === SessionState.INPUT_RECORDING && 
             !this.recorder.getIsRecording()) {
+          const backupRecorderStartTimestamp = Date.now();
           this.recorder.start().then(() => {
+            const backupRecorderEndTimestamp = Date.now();
             console.log('[App] ✅ 播放完成后已恢复录音（事件驱动）', {
+              recorderStartTimestamp: backupRecorderStartTimestamp,
+              recorderEndTimestamp: backupRecorderEndTimestamp,
+              recorderStartDurationMs: backupRecorderEndTimestamp - backupRecorderStartTimestamp,
+              timestampIso: new Date(backupRecorderEndTimestamp).toISOString(),
               isRecording: this.recorder.getIsRecording(),
             });
           }).catch((error) => {
-            console.error('[App] ❌ 播放完成后恢复录音失败（事件驱动）:', error);
+            console.error('[App] ❌ 播放完成后恢复录音失败（事件驱动）:', {
+              error,
+              recorderStartTimestamp: backupRecorderStartTimestamp,
+              timestampIso: new Date(Date.now()).toISOString(),
+            });
           });
         }
       });
       
       // 可选：50ms fallback timeout 作为兜底
       setTimeout(() => {
+        const backupFallbackTimestamp = Date.now();
         if (!this.recorder.getIsRecording() && 
             this.sessionManager.getIsSessionActive() && 
             this.stateMachine.getState() === SessionState.INPUT_RECORDING) {
-          console.warn('[App] ⚠️ 事件驱动恢复失败，使用fallback');
+          console.warn('[App] ⚠️ 事件驱动恢复失败，使用fallback', {
+            fallbackTimestamp: backupFallbackTimestamp,
+            timestampIso: new Date(backupFallbackTimestamp).toISOString(),
+          });
           this.recorder.start().then(() => {
+            const backupFallbackEndTimestamp = Date.now();
             console.log('[App] ✅ 播放完成后已恢复录音（fallback）', {
+              fallbackTimestamp: backupFallbackTimestamp,
+              fallbackEndTimestamp: backupFallbackEndTimestamp,
+              timestampIso: new Date(backupFallbackEndTimestamp).toISOString(),
               isRecording: this.recorder.getIsRecording(),
             });
           }).catch((error) => {
-            console.error('[App] ❌ 播放完成后恢复录音失败（fallback）:', error);
+            console.error('[App] ❌ 播放完成后恢复录音失败（fallback）:', {
+              error,
+              fallbackTimestamp: backupFallbackTimestamp,
+              timestampIso: new Date(backupFallbackTimestamp).toISOString(),
+            });
           });
         }
       }, 50);
     }
     
     console.log('[App] 等待状态机自动切换状态并恢复录音...');
+  }
+
+  /**
+   * 监控闭环：播放结束 → 恢复录音 → 等待第一帧音频
+   * 这是一个可监控的小闭环，确保播放结束后能够真正收到第一帧音频
+   * @param playbackFinishedTimestamp 播放完成的时间戳
+   */
+  private monitorPlaybackToFirstAudioFrame(playbackFinishedTimestamp: number): void {
+    const MONITOR_TIMEOUT_MS = 2000; // 2秒超时
+    const monitorStartTime = Date.now();
+    let timeoutId: number | null = null;
+    let callbackTriggered = false;
+
+    logger.info('App', '🔄 开始监控闭环：播放结束 → 恢复录音 → 等待第一帧音频', {
+      playbackFinishedTimestamp,
+      playbackFinishedTimestampIso: new Date(playbackFinishedTimestamp).toISOString(),
+      monitorStartTime,
+      monitorStartTimeIso: new Date(monitorStartTime).toISOString(),
+      timeoutMs: MONITOR_TIMEOUT_MS,
+      currentState: this.stateMachine.getState(),
+      isRecording: this.recorder.getIsRecording(),
+    });
+
+    // 步骤1：确保录音器已启动（如果未启动，则启动）
+    const ensureRecorderStarted = async (): Promise<void> => {
+      if (!this.recorder.getIsRecording() && 
+          this.sessionManager.getIsSessionActive() && 
+          this.stateMachine.getState() === SessionState.INPUT_RECORDING) {
+        const recorderStartTime = Date.now();
+        logger.info('App', '📢 监控闭环：录音器未启动，正在启动...', {
+          recorderStartTime,
+          recorderStartTimeIso: new Date(recorderStartTime).toISOString(),
+          timeSincePlaybackFinished: recorderStartTime - playbackFinishedTimestamp,
+        });
+        
+        try {
+          await this.recorder.start();
+          const recorderEndTime = Date.now();
+          const recorderStartDuration = recorderEndTime - recorderStartTime;
+          logger.info('App', '✅ 监控闭环：录音器已启动', {
+            recorderStartTime,
+            recorderEndTime,
+            recorderStartDuration,
+            audioContextState: this.recorder.getAudioContextState() || 'unknown',
+            isRecording: this.recorder.getIsRecording(),
+          });
+        } catch (error) {
+          logger.error('App', '❌ 监控闭环：录音器启动失败', {
+            error,
+            recorderStartTime,
+            timestampIso: new Date().toISOString(),
+          });
+        }
+      } else {
+        logger.info('App', '📢 监控闭环：录音器状态检查', {
+          isRecording: this.recorder.getIsRecording(),
+          isSessionActive: this.sessionManager.getIsSessionActive(),
+          currentState: this.stateMachine.getState(),
+          audioContextState: (this.recorder as any).audioContext?.state || 'unknown',
+        });
+      }
+    };
+
+    // 步骤2：设置回调，等待第一帧音频到达
+    const firstAudioFrameCallback = (audioFrameTimestamp: number): void => {
+      if (callbackTriggered) {
+        return; // 防止重复触发
+      }
+      callbackTriggered = true;
+      
+      const timeToFirstFrame = audioFrameTimestamp - playbackFinishedTimestamp;
+      const monitorDuration = audioFrameTimestamp - monitorStartTime;
+      
+      // 清除超时定时器
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+      
+      // 清除回调（避免后续触发）
+      this.sessionManager.setFirstAudioFrameAfterPlaybackCallback(null);
+      
+      logger.info('App', '✅ 监控闭环：成功收到第一帧音频', {
+        playbackFinishedTimestamp,
+        playbackFinishedTimestampIso: new Date(playbackFinishedTimestamp).toISOString(),
+        audioFrameTimestamp,
+        audioFrameTimestampIso: new Date(audioFrameTimestamp).toISOString(),
+        timeToFirstFrame,
+        timeToFirstFrameSeconds: (timeToFirstFrame / 1000).toFixed(2),
+        monitorDuration,
+        monitorDurationSeconds: (monitorDuration / 1000).toFixed(2),
+        isRecording: this.recorder.getIsRecording(),
+        audioContextState: (this.recorder as any).audioContext?.state || 'unknown',
+      });
+      
+      console.log('[App] ✅ 监控闭环完成：播放结束 → 恢复录音 → 收到第一帧音频', {
+        timeToFirstFrame,
+        timeToFirstFrameSeconds: (timeToFirstFrame / 1000).toFixed(2),
+      });
+    };
+
+    // 设置回调
+    this.sessionManager.setFirstAudioFrameAfterPlaybackCallback(firstAudioFrameCallback);
+
+    // 步骤3：设置超时监控
+    timeoutId = window.setTimeout(() => {
+      if (callbackTriggered) {
+        return; // 如果已经收到第一帧，不需要处理超时
+      }
+      
+      callbackTriggered = true; // 标记为已处理，避免重复
+      const timeoutTimestamp = Date.now();
+      const timeSincePlaybackFinished = timeoutTimestamp - playbackFinishedTimestamp;
+      const monitorDuration = timeoutTimestamp - monitorStartTime;
+      
+      // 清除回调
+      this.sessionManager.setFirstAudioFrameAfterPlaybackCallback(null);
+      
+      logger.error('App', '❌ 监控闭环：超时未收到第一帧音频', {
+        playbackFinishedTimestamp,
+        playbackFinishedTimestampIso: new Date(playbackFinishedTimestamp).toISOString(),
+        timeoutTimestamp,
+        timeoutTimestampIso: new Date(timeoutTimestamp).toISOString(),
+        timeSincePlaybackFinished,
+        timeSincePlaybackFinishedSeconds: (timeSincePlaybackFinished / 1000).toFixed(2),
+        monitorDuration,
+        monitorDurationSeconds: (monitorDuration / 1000).toFixed(2),
+        timeoutMs: MONITOR_TIMEOUT_MS,
+        currentState: this.stateMachine.getState(),
+        isRecording: this.recorder.getIsRecording(),
+        isSessionActive: this.sessionManager.getIsSessionActive(),
+        audioContextState: (this.recorder as any).audioContext?.state || 'unknown',
+      });
+      
+      console.error('[App] ❌ 监控闭环超时：播放结束后 2 秒内未收到第一帧音频', {
+        timeSincePlaybackFinished,
+        timeSincePlaybackFinishedSeconds: (timeSincePlaybackFinished / 1000).toFixed(2),
+        audioContextState: (this.recorder as any).audioContext?.state || 'unknown',
+      });
+      
+      // 尝试恢复 AudioContext
+      this.attemptRecoverAudioContext(timeoutTimestamp);
+    }, MONITOR_TIMEOUT_MS);
+
+    // 步骤4：立即确保录音器已启动
+    // 使用 requestAnimationFrame 确保状态转换完成
+    requestAnimationFrame(() => {
+      ensureRecorderStarted().catch((error) => {
+        logger.error('App', '❌ 监控闭环：确保录音器启动失败', { error });
+      });
+    });
+  }
+
+  /**
+   * 尝试恢复 AudioContext（当监控闭环超时时）
+   * @param timeoutTimestamp 超时时间戳
+   */
+  private async attemptRecoverAudioContext(timeoutTimestamp: number): Promise<void> {
+    try {
+      const originalState = this.recorder.getAudioContextState();
+      if (!originalState) {
+        logger.warn('App', '⚠️ 尝试恢复 AudioContext：audioContext 不存在');
+        return;
+      }
+      
+      logger.info('App', '🔄 尝试恢复 AudioContext', {
+        originalState,
+        timeoutTimestamp,
+        timeoutTimestampIso: new Date(timeoutTimestamp).toISOString(),
+      });
+      
+      if (originalState === 'suspended') {
+        const recovered = await this.recorder.resumeAudioContextIfSuspended();
+        const newState = this.recorder.getAudioContextState();
+        
+        if (recovered) {
+          logger.info('App', '✅ AudioContext 已恢复', {
+            originalState,
+            newState,
+            timeoutTimestamp,
+            timeoutTimestampIso: new Date(timeoutTimestamp).toISOString(),
+          });
+        } else {
+          logger.warn('App', '⚠️ AudioContext 恢复失败或未恢复', {
+            originalState,
+            newState,
+            timeoutTimestamp,
+            timeoutTimestampIso: new Date(timeoutTimestamp).toISOString(),
+          });
+        }
+        
+        // 如果录音器未启动，尝试重新启动
+        if (!this.recorder.getIsRecording() && 
+            this.sessionManager.getIsSessionActive() && 
+            this.stateMachine.getState() === SessionState.INPUT_RECORDING) {
+          logger.info('App', '🔄 尝试重新启动录音器', {
+            timeoutTimestamp,
+            timeoutTimestampIso: new Date(timeoutTimestamp).toISOString(),
+          });
+          
+          try {
+            await this.recorder.start();
+            logger.info('App', '✅ 录音器已重新启动', {
+              timeoutTimestamp,
+              timeoutTimestampIso: new Date(timeoutTimestamp).toISOString(),
+              isRecording: this.recorder.getIsRecording(),
+              audioContextState: this.recorder.getAudioContextState(),
+            });
+          } catch (error) {
+            logger.error('App', '❌ 重新启动录音器失败', {
+              error,
+              timeoutTimestamp,
+              timeoutTimestampIso: new Date(timeoutTimestamp).toISOString(),
+            });
+          }
+        }
+      } else {
+        logger.info('App', 'ℹ️ AudioContext 状态正常，无需恢复', {
+          state: originalState,
+          timeoutTimestamp,
+          timeoutTimestampIso: new Date(timeoutTimestamp).toISOString(),
+        });
+      }
+    } catch (error) {
+      logger.error('App', '❌ 尝试恢复 AudioContext 失败', {
+        error,
+        timeoutTimestamp,
+        timeoutTimestampIso: new Date(timeoutTimestamp).toISOString(),
+      });
+    }
   }
 
   /**
@@ -1220,6 +1567,10 @@ export class App {
     }
 
     console.log('用户手动触发播放，当前状态:', this.stateMachine.getState());
+
+    // 开始播放 TTS 时，禁止向调度服务器发送新的音频chunk
+    // 这样可以确保在发送 RestartTimer 之前，新一轮话语的音频只在本地缓冲，不会提前打到调度服务器
+    this.sessionManager.setCanSendChunks(false);
 
     // 在开始播放时，显示待显示的翻译结果
     this.displayPendingTranslationResults();

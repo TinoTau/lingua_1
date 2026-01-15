@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web 端日志导出工具</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .status.info {
+            background: #e3f2fd;
+            color: #1976d2;
+            border-left: 4px solid #1976d2;
+        }
+        .status.success {
+            background: #e8f5e9;
+            color: #388e3c;
+            border-left: 4px solid #388e3c;
+        }
+        .status.error {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #c62828;
+        }
+        button {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #1565c0;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .log-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Web 端日志导出工具</h1>
+        
+        <div id="status" class="status info">
+            正在检查日志系统...
+        </div>
+        
+        <div>
+            <button id="exportBtn" onclick="exportLogs()" disabled>导出日志</button>
+            <button id="clearBtn" onclick="clearLogs()" disabled>清空日志</button>
+            <button onclick="window.location.href='/'">返回主页</button>
+        </div>
+        
+        <div id="logInfo" class="log-info" style="display: none;">
+            <h3>日志信息：</h3>
+            <pre id="logDetails"></pre>
+        </div>
+    </div>
+
+    <script type="module">
+        // 等待页面加载完成
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 尝试导入 logger
+            try {
+                const { logger } = await import('./src/logger.js');
+                
+                // 检查 IndexedDB 中的日志
+                const logCount = await getLogCount();
+                
+                const statusDiv = document.getElementById('status');
+                const exportBtn = document.getElementById('exportBtn');
+                const clearBtn = document.getElementById('clearBtn');
+                
+                if (logCount > 0) {
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = `✅ 找到 ${logCount} 条日志记录，可以导出`;
+                    exportBtn.disabled = false;
+                    clearBtn.disabled = false;
+                    
+                    // 显示日志信息
+                    document.getElementById('logInfo').style.display = 'block';
+                    document.getElementById('logDetails').textContent = `日志记录数: ${logCount}\n可以点击"导出日志"按钮导出所有日志`;
+                } else {
+                    statusDiv.className = 'status info';
+                    statusDiv.innerHTML = 'ℹ️ 未找到日志记录。请先运行 web 应用并生成一些日志，然后返回此页面导出。';
+                }
+                
+                // 暴露导出函数到全局
+                window.exportLogs = async () => {
+                    try {
+                        exportBtn.disabled = true;
+                        statusDiv.className = 'status info';
+                        statusDiv.innerHTML = '⏳ 正在导出日志...';
+                        
+                        await logger.exportLogs();
+                        
+                        statusDiv.className = 'status success';
+                        statusDiv.innerHTML = '✅ 日志已导出！文件已下载到浏览器的下载目录。';
+                        exportBtn.disabled = false;
+                    } catch (error) {
+                        statusDiv.className = 'status error';
+                        statusDiv.innerHTML = `❌ 导出失败: ${error.message}`;
+                        exportBtn.disabled = false;
+                        console.error('导出日志失败:', error);
+                    }
+                };
+                
+                window.clearLogs = async () => {
+                    if (!confirm('确定要清空所有日志吗？此操作不可恢复！')) {
+                        return;
+                    }
+                    
+                    try {
+                        clearBtn.disabled = true;
+                        statusDiv.className = 'status info';
+                        statusDiv.innerHTML = '⏳ 正在清空日志...';
+                        
+                        await logger.clearLogs();
+                        
+                        statusDiv.className = 'status success';
+                        statusDiv.innerHTML = '✅ 日志已清空';
+                        clearBtn.disabled = false;
+                        document.getElementById('logInfo').style.display = 'none';
+                    } catch (error) {
+                        statusDiv.className = 'status error';
+                        statusDiv.innerHTML = `❌ 清空失败: ${error.message}`;
+                        clearBtn.disabled = false;
+                        console.error('清空日志失败:', error);
+                    }
+                };
+                
+            } catch (error) {
+                const statusDiv = document.getElementById('status');
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = `❌ 无法加载日志系统: ${error.message}<br><br>请确保：<br>1. Web 应用正在运行<br>2. 在正确的端口访问此页面<br>3. 检查浏览器控制台查看详细错误`;
+                console.error('加载日志系统失败:', error);
+            }
+        });
+        
+        // 获取日志记录数
+        async function getLogCount() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('lingua-logs', 1);
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    const db = request.result;
+                    const transaction = db.transaction(['logs'], 'readonly');
+                    const store = transaction.objectStore('logs');
+                    const countRequest = store.count();
+                    
+                    countRequest.onsuccess = () => resolve(countRequest.result);
+                    countRequest.onerror = () => reject(countRequest.error);
+                };
+                
+                request.onupgradeneeded = () => {
+                    // 数据库不存在，返回0
+                    resolve(0);
+                };
+            });
+        }
+    </script>
+</body>
+</html>

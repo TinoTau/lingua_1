@@ -300,14 +300,17 @@ async fn create_job_with_minimal_scheduler(
         "任务创建成功（使用极简无锁调度服务）"
     );
 
-    // 写入 request_id lease
-    let now_ms = chrono::Utc::now().timestamp_millis();
-    let lease_ms = (state.dispatcher.lease_seconds as i64) * 1000;
-    let exp_ms = now_ms + lease_ms;
-    state.dispatcher.request_bindings
-        .write()
-        .await
-        .insert(request_id.clone(), (job_id.clone(), exp_ms));
+    // Phase2: request_id 绑定由 Phase2 的 Redis 实现管理
+    // 如果 Phase2 可用，使用 Phase2 的 request_binding
+    if let Some(ref rt) = state.phase2 {
+        rt.set_request_binding(
+            &request_id,
+            &job_id,
+            node_id.as_deref(),
+            state.dispatcher.lease_seconds,
+            false, // 尚未分发到节点
+        ).await;
+    }
 
     // 构建 Job 对象
     let job = Job {

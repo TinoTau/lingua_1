@@ -38,6 +38,22 @@ export interface Config {
   audioCodecConfig?: AudioCodecConfig;
   // TTS 自动播放配置
   autoPlay?: boolean; // 是否自动播放 TTS 音频（默认 false，手动播放模式）
+  // 日志配置
+  logConfig?: {
+    autoSaveToFile?: boolean; // 是否自动保存日志到文件
+    autoSaveIntervalMs?: number; // 自动保存间隔（毫秒），0 表示每次flush时都保存
+    logFilePrefix?: string; // 日志文件前缀
+  };
+}
+
+// 日志配置
+export interface LogConfig {
+  // 是否自动保存日志到文件
+  autoSaveToFile?: boolean; // 默认 false
+  // 自动保存间隔（毫秒），0 表示每次flush时都保存
+  autoSaveIntervalMs?: number; // 默认 30000（30秒）
+  // 日志文件保存目录（浏览器下载目录）
+  logFilePrefix?: string; // 默认 'web-client'
 }
 
 // 静音过滤配置
@@ -91,6 +107,11 @@ export const DEFAULT_CONFIG: Config = {
   reconnectConfig: DEFAULT_RECONNECT_CONFIG,
   clientVersion: 'web-client-v1.0',
   autoPlay: false, // 默认手动播放模式（用户需要手动点击播放按钮）
+  logConfig: {
+    autoSaveToFile: false, // 默认不自动保存（避免频繁下载文件）
+    autoSaveIntervalMs: 30000, // 30秒（如果启用自动保存）
+    logFilePrefix: 'web-client',
+  },
 };
 
 // WebSocket 消息类型

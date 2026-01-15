@@ -64,8 +64,13 @@ export class StateMachine {
     }
 
     const oldState = this.state;
+    const transitionTimestamp = Date.now();
     this.state = newState;
-    console.log(`State transition: ${oldState} -> ${newState}`);
+    console.log(`[StateMachine] State transition: ${oldState} -> ${newState}`, {
+      timestamp: transitionTimestamp,
+      timestampIso: new Date(transitionTimestamp).toISOString(),
+      isSessionActive: this.isSessionActive,
+    });
 
     // 通知所有回调
     this.callbacks.forEach(callback => {

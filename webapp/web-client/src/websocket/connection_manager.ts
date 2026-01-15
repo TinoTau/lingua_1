@@ -4,6 +4,7 @@
  */
 
 import { ReconnectConfig, DEFAULT_RECONNECT_CONFIG } from '../types';
+import { logger } from '../logger';
 
 export type ReconnectCallback = () => void;
 
@@ -90,11 +91,11 @@ export class ConnectionManager {
   ): Promise<WebSocket> {
     return new Promise((resolve, reject) => {
       try {
-        console.log(`[ConnectionManager] Attempting to connect to WebSocket: ${this.url}`);
+        logger.info('ConnectionManager', `Attempting to connect to WebSocket: ${this.url}`);
         this.ws = new WebSocket(this.url);
 
         this.ws.onopen = () => {
-          console.log('WebSocket connected');
+          logger.info('ConnectionManager', 'WebSocket connected');
           this.reconnectAttempts = 0;
           this.isManualDisconnect = false;
           // 心跳将在设置 sessionId 后启动
@@ -105,12 +106,7 @@ export class ConnectionManager {
         this.ws.onmessage = onMessage;
 
         this.ws.onerror = (error) => {
-          console.error(`WebSocket error connecting to ${this.url}:`, error);
-          console.error('Error details:', {
-            url: this.url,
-            readyState: this.ws?.readyState,
-            reconnectAttempts: this.reconnectAttempts,
-          });
+          logger.error('ConnectionManager', `WebSocket error connecting to ${this.url}`, { error, url: this.url, readyState: this.ws?.readyState, reconnectAttempts: this.reconnectAttempts });
           onError(error);
           if (this.reconnectAttempts === 0) {
             reject(new Error(`WebSocket connection failed to ${this.url}: ${error}`));
@@ -118,7 +114,7 @@ export class ConnectionManager {
         };
 
         this.ws.onclose = (event) => {
-          console.log(`WebSocket closed (code: ${event.code}, reason: ${event.reason || 'none'}, wasClean: ${event.wasClean})`);
+          logger.info('ConnectionManager', `WebSocket closed (code: ${event.code}, reason: ${event.reason || 'none'}, wasClean: ${event.wasClean})`);
           this.stopHeartbeat();
           onClose();
 
@@ -140,7 +136,7 @@ export class ConnectionManager {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.ws.send(data);
     } else {
-      console.warn('WebSocket is not connected, cannot send message');
+      logger.warn('ConnectionManager', 'WebSocket is not connected, cannot send message');
     }
   }
 
@@ -180,7 +176,7 @@ export class ConnectionManager {
           this.lastHeartbeatTime = Date.now();
           this.resetHeartbeatTimeout();
         } catch (error) {
-          console.error('Failed to send heartbeat:', error);
+          logger.error('ConnectionManager', 'Failed to send heartbeat', { error });
         }
       }
     }, intervalMs);
@@ -212,7 +208,7 @@ export class ConnectionManager {
     this.heartbeatTimeoutTimer = window.setTimeout(() => {
       const now = Date.now();
       if (now - this.lastHeartbeatTime > timeoutMs) {
-        console.warn('Heartbeat timeout, closing connection');
+        logger.warn('ConnectionManager', 'Heartbeat timeout, closing connection');
         if (this.ws) {
           this.ws.close();
         }
@@ -234,13 +230,13 @@ export class ConnectionManager {
     const maxDelay = this.reconnectConfig.retryDelayMs * 30 || 30000; // 使用 retryDelayMs * 30 作为最大延迟
 
     if (this.reconnectAttempts > maxAttempts) {
-      console.error('Max reconnect attempts reached');
+      logger.error('ConnectionManager', 'Max reconnect attempts reached');
       return;
     }
 
     // 指数退避
     const delay = Math.min(baseDelay * Math.pow(2, this.reconnectAttempts - 1), maxDelay);
-    console.log(`[ConnectionManager] Scheduling reconnect attempt ${this.reconnectAttempts} in ${delay}ms to ${this.url}`);
+    logger.info('ConnectionManager', `Scheduling reconnect attempt ${this.reconnectAttempts} in ${delay}ms to ${this.url}`);
 
     this.reconnectTimer = window.setTimeout(() => {
       this.reconnectTimer = null;

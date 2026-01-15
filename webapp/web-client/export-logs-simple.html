@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web 端日志导出工具</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .status.info { background: #e3f2fd; color: #1976d2; border-left: 4px solid #1976d2; }
+        .status.success { background: #e8f5e9; color: #388e3c; border-left: 4px solid #388e3c; }
+        .status.error { background: #ffebee; color: #c62828; border-left: 4px solid #c62828; }
+        button {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover { background: #1565c0; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .log-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Web 端日志导出工具</h1>
+        
+        <div id="status" class="status info">正在检查日志...</div>
+        
+        <div>
+            <button id="exportBtn" onclick="exportLogs()" disabled>导出日志</button>
+            <button id="clearBtn" onclick="clearLogs()" disabled>清空日志</button>
+            <button onclick="window.location.href='/'">返回主页</button>
+        </div>
+        
+        <div id="logInfo" class="log-info" style="display: none;">
+            <h3>日志信息：</h3>
+            <pre id="logDetails"></pre>
+        </div>
+    </div>
+
+    <script>
+        // 直接从 IndexedDB 导出日志
+        async function exportLogs() {
+            const statusDiv = document.getElementById('status');
+            const exportBtn = document.getElementById('exportBtn');
+            
+            try {
+                exportBtn.disabled = true;
+                statusDiv.className = 'status info';
+                statusDiv.textContent = '⏳ 正在导出日志...';
+                
+                const logs = await getAllLogs();
+                
+                if (logs.length === 0) {
+                    statusDiv.className = 'status info';
+                    statusDiv.textContent = 'ℹ️ 没有日志可导出';
+                    exportBtn.disabled = false;
+                    return;
+                }
+                
+                // 格式化日志内容
+                const logContent = logs.map(entry => entry.content).join('\n');
+                
+                // 下载日志文件
+                const blob = new Blob([logContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                a.download = `web-client-${timestamp}.log`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                statusDiv.className = 'status success';
+                statusDiv.textContent = `✅ 已导出 ${logs.length} 条日志记录！文件已下载。`;
+                exportBtn.disabled = false;
+                
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = `❌ 导出失败: ${error.message}`;
+                exportBtn.disabled = false;
+                console.error('导出日志失败:', error);
+            }
+        }
+        
+        async function clearLogs() {
+            if (!confirm('确定要清空所有日志吗？此操作不可恢复！')) {
+                return;
+            }
+            
+            const statusDiv = document.getElementById('status');
+            const clearBtn = document.getElementById('clearBtn');
+            
+            try {
+                clearBtn.disabled = true;
+                statusDiv.className = 'status info';
+                statusDiv.textContent = '⏳ 正在清空日志...';
+                
+                await clearAllLogs();
+                
+                statusDiv.className = 'status success';
+                statusDiv.textContent = '✅ 日志已清空';
+                clearBtn.disabled = false;
+                document.getElementById('logInfo').style.display = 'none';
+                
+                // 重新检查日志数量
+                checkLogs();
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = `❌ 清空失败: ${error.message}`;
+                clearBtn.disabled = false;
+                console.error('清空日志失败:', error);
+            }
+        }
+        
+        async function getAllLogs() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('lingua-logs', 1);
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    const db = request.result;
+                    const transaction = db.transaction(['logs'], 'readonly');
+                    const store = transaction.objectStore('logs');
+                    const getAllRequest = store.getAll();
+                    
+                    getAllRequest.onsuccess = () => resolve(getAllRequest.result || []);
+                    getAllRequest.onerror = () => reject(getAllRequest.error);
+                };
+                
+                request.onupgradeneeded = () => {
+                    const db = request.result;
+                    if (!db.objectStoreNames.contains('logs')) {
+                        db.createObjectStore('logs', { keyPath: 'id', autoIncrement: true });
+                    }
+                    resolve([]);
+                };
+            });
+        }
+        
+        async function clearAllLogs() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('lingua-logs', 1);
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    const db = request.result;
+                    const transaction = db.transaction(['logs'], 'readwrite');
+                    const store = transaction.objectStore('logs');
+                    const clearRequest = store.clear();
+                    
+                    clearRequest.onsuccess = () => resolve();
+                    clearRequest.onerror = () => reject(clearRequest.error);
+                };
+                
+                request.onupgradeneeded = () => {
+                    const db = request.result;
+                    if (!db.objectStoreNames.contains('logs')) {
+                        db.createObjectStore('logs', { keyPath: 'id', autoIncrement: true });
+                    }
+                    resolve();
+                };
+            });
+        }
+        
+        async function checkLogs() {
+            try {
+                const logs = await getAllLogs();
+                const statusDiv = document.getElementById('status');
+                const exportBtn = document.getElementById('exportBtn');
+                const clearBtn = document.getElementById('clearBtn');
+                const logInfo = document.getElementById('logInfo');
+                const logDetails = document.getElementById('logDetails');
+                
+                if (logs.length > 0) {
+                    statusDiv.className = 'status success';
+                    statusDiv.textContent = `✅ 找到 ${logs.length} 条日志记录，可以导出`;
+                    exportBtn.disabled = false;
+                    clearBtn.disabled = false;
+                    
+                    // 显示日志信息
+                    const totalSize = logs.reduce((sum, entry) => sum + (entry.content ? entry.content.length : 0), 0);
+                    const firstLog = logs[0];
+                    const lastLog = logs[logs.length - 1];
+                    logInfo.style.display = 'block';
+                    logDetails.textContent = `日志记录数: ${logs.length}\n总大小: ${(totalSize / 1024).toFixed(2)} KB\n` +
+                        `最早日志: ${firstLog.timestamp || '未知'}\n` +
+                        `最新日志: ${lastLog.timestamp || '未知'}`;
+                } else {
+                    statusDiv.className = 'status info';
+                    statusDiv.textContent = 'ℹ️ 未找到日志记录。请先运行 web 应用并生成一些日志，然后返回此页面导出。';
+                    logInfo.style.display = 'none';
+                }
+            } catch (error) {
+                const statusDiv = document.getElementById('status');
+                statusDiv.className = 'status error';
+                statusDiv.textContent = `❌ 检查日志失败: ${error.message}`;
+                console.error('检查日志失败:', error);
+            }
+        }
+        
+        // 页面加载时检查日志
+        document.addEventListener('DOMContentLoaded', checkLogs);
+    </script>
+</body>
+</html>

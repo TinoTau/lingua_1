@@ -8,6 +8,8 @@ pub mod job_result_deduplicator;
 
 #[cfg(test)]
 mod session_runtime_test;
+#[cfg(test)]
+mod job_idempotency_test;
 
 pub use app_state::AppState;
 pub use config::Config;

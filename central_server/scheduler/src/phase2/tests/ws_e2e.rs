@@ -309,6 +309,13 @@
             tgt_lang: "zh".to_string(),
             dialect: None,
             features: None,
+            pipeline: Some(crate::messages::PipelineConfig {
+                use_asr: true,
+                use_nmt: true,
+                use_tts: true,
+                use_semantic: false,
+                use_tone: false,
+            }),
             audio: audio_b64,
             audio_format: "wav".to_string(),
             sample_rate: 16000,

@@ -17,9 +17,11 @@ impl SessionActor {
 
         // 更新 generation
         let generation = self.internal_state.increment_timer_generation();
-        let timestamp_ms = self.internal_state.last_chunk_timestamp_ms.unwrap_or_else(|| {
-            chrono::Utc::now().timestamp_millis()
-        });
+        // 修复：优先使用 audio_buffer 的时间戳，因为它是最准确的（实际最后收到音频块的时间戳）
+        // 如果 audio_buffer 没有时间戳，则使用 internal_state 的时间戳或当前时间
+        let timestamp_ms = self.state.audio_buffer.get_last_chunk_at_ms(&self.session_id).await
+            .or_else(|| self.internal_state.last_chunk_timestamp_ms)
+            .unwrap_or_else(|| chrono::Utc::now().timestamp_millis());
 
         // 启动新计时器
         let session_id = self.session_id.clone();

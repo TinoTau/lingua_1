@@ -162,7 +162,9 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
     }
 
     // 初始化 Job 幂等键管理器
-    let job_idempotency = crate::core::JobIdempotencyManager::new();
+    let mut job_idempotency = crate::core::JobIdempotencyManager::new();
+    // 设置 Phase2 运行时（如果可用）
+    job_idempotency.set_phase2(phase2_runtime.clone());
 
     // 初始化 JobResult 去重管理器
     let job_result_deduplicator = crate::core::JobResultDeduplicator::new();

@@ -5,6 +5,9 @@ mod actor_event_handling;
 mod actor_finalize;
 mod actor_timers;
 
+#[cfg(test)]
+mod restart_flow_test;
+
 pub use actor_handle::SessionActorHandle;
 
 use crate::core::AppState;

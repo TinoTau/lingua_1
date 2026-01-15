@@ -5,6 +5,7 @@
 
 import { ServerMessage, SessionInitAckMessage, BackpressureMessage } from '../types';
 import { AudioCodecConfig, createAudioEncoder, AudioEncoder } from '../audio_codec';
+import { logger } from '../logger';
 
 export type MessageCallback = (message: ServerMessage) => void;
 
@@ -35,7 +36,7 @@ export class MessageHandler {
       this.audioEncoder.close();
     }
     this.audioEncoder = createAudioEncoder(config);
-    console.log('Audio encoder created:', config.codec);
+    logger.info('MessageHandler', 'Audio encoder created', { codec: config.codec });
   }
 
   /**
@@ -78,7 +79,7 @@ export class MessageHandler {
       const message = JSON.parse(event.data);
       
       // 记录所有收到的消息（用于调试）
-      console.log(`[MessageHandler] 📨 收到服务器消息:`, {
+      logger.debug('MessageHandler', '📨 收到服务器消息', {
         type: message.type,
         session_id: message.session_id || this.sessionId,
         has_callback: !!this.messageCallback,
@@ -86,14 +87,14 @@ export class MessageHandler {
 
       // 处理会话初始化确认
       if (message.type === 'session_init_ack') {
-        console.log('[MessageHandler] 处理 session_init_ack');
+        logger.debug('MessageHandler', '处理 session_init_ack');
         this.handleSessionInitAck(message as SessionInitAckMessage, onSessionCreated);
         return;
       }
 
       // 处理背压消息
       if (message.type === 'backpressure' && onBackpressure) {
-        console.log('[MessageHandler] 处理 backpressure');
+        logger.debug('MessageHandler', '处理 backpressure');
         onBackpressure(message as BackpressureMessage);
         return;
       }
@@ -102,7 +103,7 @@ export class MessageHandler {
       if (this.messageCallback) {
         // 对于 translation_result 消息，记录详细信息
         if (message.type === 'translation_result') {
-          console.log(`[MessageHandler] 📨 收到 translation_result 消息，准备转发:`, {
+          logger.debug('MessageHandler', '📨 收到 translation_result 消息，准备转发', {
             utterance_index: message.utterance_index,
             has_tts_audio: !!(message as any).tts_audio,
             tts_audio_length: (message as any).tts_audio?.length || 0,
@@ -110,17 +111,13 @@ export class MessageHandler {
             job_id: (message as any).job_id
           });
         }
-        console.log(`[MessageHandler] 转发消息到 callback: ${message.type}`);
+        logger.debug('MessageHandler', `转发消息到 callback: ${message.type}`);
         this.messageCallback(message as ServerMessage);
       } else {
-        console.warn(`[MessageHandler] ⚠️ 收到消息但无 callback:`, message.type);
+        logger.warn('MessageHandler', `⚠️ 收到消息但无 callback: ${message.type}`);
       }
     } catch (error) {
-      console.error('[MessageHandler] ❌ 解析消息失败:', error, {
-        data: event.data,
-        data_type: typeof event.data,
-        data_length: event.data?.length,
-      });
+      logger.error('MessageHandler', '❌ 解析消息失败', { error, data: event.data, data_type: typeof event.data, data_length: event.data?.length });
     }
   }
 
@@ -159,8 +156,8 @@ export class MessageHandler {
       this.setAudioCodecConfig(codecConfig);
     }
 
-    console.log('Session created:', this.sessionId);
-    console.log('Protocol negotiation:', {
+    logger.info('MessageHandler', 'Session created', { sessionId: this.sessionId });
+    logger.info('MessageHandler', 'Protocol negotiation', {
       protocol_version: ack.protocol_version || '1.0',
       use_binary_frame: this.useBinaryFrame,
       negotiated_codec: this.negotiatedCodec,

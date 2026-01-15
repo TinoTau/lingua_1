@@ -19,6 +19,7 @@ import {
 } from './types';
 import { AudioCodecConfig } from './audio_codec';
 import { v4 as uuidv4 } from 'uuid';
+import { logger } from './logger';
 
 // 导入模块
 import { ConnectionManager } from './websocket/connection_manager';
@@ -93,7 +94,7 @@ export class WebSocketClient {
       // 自动重连
       if (this.pendingConnectParams) {
         this.doConnect().catch((error) => {
-          console.error('Reconnect failed:', error);
+          logger.error('WebSocketClient', 'Reconnect failed', error);
         });
       }
     });
@@ -125,7 +126,7 @@ export class WebSocketClient {
    * 设置消息回调
    */
   setMessageCallback(callback: MessageCallback): void {
-    console.log('[WebSocketClient] 设置消息回调');
+    logger.info('WebSocketClient', '设置消息回调');
     this.messageCallback = callback;
     this.messageHandler.setMessageCallback(callback);
   }
@@ -148,7 +149,7 @@ export class WebSocketClient {
    * 连接 WebSocket（单向模式）
    */
   async connect(srcLang: string, tgtLang: string, features?: FeatureFlags): Promise<void> {
-    console.log(`[WebSocketClient] connect called: srcLang=${srcLang}, tgtLang=${tgtLang}`);
+    logger.info('WebSocketClient', `connect called: srcLang=${srcLang}, tgtLang=${tgtLang}`);
     this.pendingConnectParams = {
       srcLang,
       tgtLang,
@@ -181,8 +182,7 @@ export class WebSocketClient {
 
     const params = this.pendingConnectParams;
     const traceId = uuidv4();
-    console.log(`[WebSocketClient] doConnect: mode=${params.mode}, traceId=${traceId}`);
-    console.log(`[WebSocketClient] doConnect: mode=${params.mode}, traceId=${traceId}`);
+    logger.info('WebSocketClient', `doConnect: mode=${params.mode}, traceId=${traceId}`);
 
     // 创建连接
     await this.connectionManager.createConnection(
@@ -244,7 +244,7 @@ export class WebSocketClient {
           }
         }
         
-        console.log(`[WebSocketClient] 📥 收到 WebSocket 消息:`, {
+        logger.debug('WebSocketClient', '📥 收到 WebSocket 消息', {
           message_type: messageType,
           data_type: typeof event.data,
           data_length: dataLength,
@@ -257,7 +257,7 @@ export class WebSocketClient {
           event,
           (message: BackpressureMessage) => {
             // 处理背压消息
-            console.log('[WebSocketClient] 处理背压消息');
+            logger.debug('WebSocketClient', '处理背压消息');
             this.backpressureManager.handleBackpressure(message);
             // 通知消息回调
             if (this.messageCallback) {
@@ -266,7 +266,7 @@ export class WebSocketClient {
           },
           (sessionId: string) => {
             // 会话创建后，设置 sessionId 并启动心跳
-            console.log(`[WebSocketClient] 会话已创建: ${sessionId}`);
+            logger.info('WebSocketClient', `会话已创建: ${sessionId}`);
             this.connectionManager.setSessionId(sessionId);
             this.audioSender.setSessionId(sessionId);
             this.connectionManager.startHeartbeat();
@@ -284,7 +284,7 @@ export class WebSocketClient {
         );
       },
       (error) => {
-        console.error('WebSocket error:', error);
+        logger.error('WebSocketClient', 'WebSocket error', error);
       },
       () => {
         // 连接关闭
@@ -300,7 +300,7 @@ export class WebSocketClient {
    */
   sendAudioChunk(audioData: Float32Array, isFinal: boolean = false): void {
     if (!this.connectionManager.isConnected() || !this.messageHandler.getSessionId()) {
-      console.warn('WebSocket not connected, cannot send audio chunk');
+      logger.warn('WebSocketClient', 'WebSocket not connected, cannot send audio chunk');
       return;
     }
 
@@ -335,7 +335,7 @@ export class WebSocketClient {
     }
   ): Promise<void> {
     if (!this.connectionManager.isConnected() || !this.messageHandler.getSessionId()) {
-      console.warn('WebSocket not connected, cannot send utterance');
+      logger.warn('WebSocketClient', 'WebSocket not connected, cannot send utterance');
       return;
     }
 
@@ -373,17 +373,27 @@ export class WebSocketClient {
    */
   sendTtsPlayEnded(traceId: string, groupId: string, tsEndMs: number): void {
     if (!this.connectionManager.isConnected() || !this.messageHandler.getSessionId()) {
-      console.warn('WebSocket not connected, cannot send TTS_PLAY_ENDED');
+      logger.warn('WebSocketClient', 'WebSocket未连接，无法发送 TTS_PLAY_ENDED');
       return;
     }
 
+    const sessionId = this.messageHandler.getSessionId();
     const message = {
       type: 'tts_play_ended',
-      session_id: this.messageHandler.getSessionId(),
+      session_id: sessionId,
       trace_id: traceId,
       group_id: groupId,
       ts_end_ms: tsEndMs,
     };
+
+    logger.info('WebSocketClient', '发送 TTS_PLAY_ENDED 消息', {
+      session_id: sessionId,
+      trace_id: traceId,
+      group_id: groupId,
+      ts_end_ms: tsEndMs,
+      ts_end_ms_iso: new Date(tsEndMs).toISOString(),
+      message_type: 'tts_play_ended',
+    });
 
     this.connectionManager.send(JSON.stringify(message));
   }
@@ -414,7 +424,7 @@ export class WebSocketClient {
    */
   createRoom(displayName?: string, preferredLang?: string): void {
     if (!this.connectionManager.isConnected()) {
-      console.warn('WebSocket not connected, cannot create room');
+      logger.warn('WebSocketClient', 'WebSocket not connected, cannot create room');
       return;
     }
 
@@ -433,7 +443,7 @@ export class WebSocketClient {
    */
   joinRoom(roomCode: string, displayName?: string, preferredLang?: string): void {
     if (!this.connectionManager.isConnected()) {
-      console.warn('WebSocket not connected, cannot join room');
+      logger.warn('WebSocketClient', 'WebSocket not connected, cannot join room');
       return;
     }
 
@@ -452,7 +462,7 @@ export class WebSocketClient {
    */
   leaveRoom(roomCode: string): void {
     if (!this.connectionManager.isConnected()) {
-      console.warn('WebSocket not connected, cannot leave room');
+      logger.warn('WebSocketClient', 'WebSocket not connected, cannot leave room');
       return;
     }
 
@@ -469,7 +479,7 @@ export class WebSocketClient {
    */
   setRawVoicePreference(roomCode: string, targetSessionId: string, receiveRawVoice: boolean): void {
     if (!this.connectionManager.isConnected()) {
-      console.warn('WebSocket not connected, cannot set raw voice preference');
+      logger.warn('WebSocketClient', 'WebSocket not connected, cannot set raw voice preference');
       return;
     }
 
@@ -488,7 +498,7 @@ export class WebSocketClient {
    */
   sendWebRTCOffer(roomCode: string, to: string, sdp: RTCSessionDescriptionInit): void {
     if (!this.connectionManager.isConnected()) {
-      console.warn('WebSocket not connected, cannot send WebRTC offer');
+      logger.warn('WebSocketClient', 'WebSocket not connected, cannot send WebRTC offer');
       return;
     }
 
@@ -507,7 +517,7 @@ export class WebSocketClient {
    */
   sendWebRTCAnswer(roomCode: string, to: string, sdp: RTCSessionDescriptionInit): void {
     if (!this.connectionManager.isConnected()) {
-      console.warn('WebSocket not connected, cannot send WebRTC answer');
+      logger.warn('WebSocketClient', 'WebSocket not connected, cannot send WebRTC answer');
       return;
     }
 
@@ -526,7 +536,7 @@ export class WebSocketClient {
    */
   sendWebRTCIce(roomCode: string, to: string, candidate: RTCIceCandidateInit): void {
     if (!this.connectionManager.isConnected()) {
-      console.warn('WebSocket not connected, cannot send WebRTC ICE candidate');
+      logger.warn('WebSocketClient', 'WebSocket not connected, cannot send WebRTC ICE candidate');
       return;
     }
 

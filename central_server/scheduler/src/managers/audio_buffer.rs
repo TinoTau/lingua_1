@@ -84,33 +84,6 @@ impl AudioBufferManager {
     pub async fn add_chunk(&self, session_id: &str, utterance_index: u64, chunk: Vec<u8>) -> (bool, usize) {
         let key = format!("{}:{}", session_id, utterance_index);
         let mut buffers = self.buffers.write().await;
-        
-        // 检查是否有其他utterance_index的残留缓冲区（不应该存在）
-        let session_prefix = format!("{}:", session_id);
-        let residual_keys: Vec<String> = buffers
-            .keys()
-            .filter(|k| {
-                k.starts_with(&session_prefix) && {
-                    if let Some(idx_str) = k.strip_prefix(&session_prefix) {
-                        if let Ok(idx) = idx_str.parse::<u64>() {
-                            return idx != utterance_index;
-                        }
-                    }
-                    false
-                }
-            })
-            .cloned()
-            .collect();
-        
-        if !residual_keys.is_empty() {
-            tracing::warn!(
-                session_id = %session_id,
-                current_utterance_index = utterance_index,
-                residual_keys = ?residual_keys,
-                "⚠️ Residual audio buffers detected when adding chunk! These should have been cleared after finalize."
-            );
-        }
-        
         let buffer = buffers.entry(key.clone()).or_insert_with(AudioBuffer::new);
         let chunk_size = chunk.len();
         buffer.add_chunk(chunk);

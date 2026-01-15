@@ -47,14 +47,44 @@ export function renderMainMenu(container: HTMLElement, app: App, onSessionModeCl
     </div>
   `;
 
-  document.getElementById('session-mode-btn')?.addEventListener('click', () => {
-    currentUIMode = 'session';
-    onSessionModeClick();
-  });
+  // 直接绑定事件（innerHTML 后 DOM 已经更新）
+  const sessionBtn = document.getElementById('session-mode-btn');
+  const roomBtn = document.getElementById('room-mode-btn');
+  
+  if (sessionBtn) {
+    sessionBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('[MainMenu] 单会话模式按钮被点击');
+      try {
+        currentUIMode = 'session';
+        onSessionModeClick();
+        console.log('[MainMenu] 单会话模式回调执行完成');
+      } catch (error) {
+        console.error('[MainMenu] 单会话模式回调执行失败:', error);
+      }
+    });
+    console.log('[MainMenu] 单会话模式按钮事件监听器已绑定');
+  } else {
+    console.error('[MainMenu] 找不到单会话模式按钮');
+  }
 
-  document.getElementById('room-mode-btn')?.addEventListener('click', () => {
-    currentUIMode = 'room-create';
-    onRoomModeClick();
-  });
+  if (roomBtn) {
+    roomBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('[MainMenu] 房间模式按钮被点击');
+      try {
+        currentUIMode = 'room-create';
+        onRoomModeClick();
+        console.log('[MainMenu] 房间模式回调执行完成');
+      } catch (error) {
+        console.error('[MainMenu] 房间模式回调执行失败:', error);
+      }
+    });
+    console.log('[MainMenu] 房间模式按钮事件监听器已绑定');
+  } else {
+    console.error('[MainMenu] 找不到房间模式按钮');
+  }
 }
 

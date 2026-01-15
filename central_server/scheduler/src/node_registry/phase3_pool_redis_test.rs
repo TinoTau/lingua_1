@@ -194,10 +194,7 @@ mod tests {
         // 添加超时：如果 Redis 连接失败，快速返回 None（减少到 2 秒）
         match tokio::time::timeout(Duration::from_secs(2), Phase2Runtime::new(cfg, 15)).await {
             Ok(Ok(Some(rt))) => {
-                let rt = Arc::new(rt);
-                // 设置 scheduler presence，以便 is_instance_alive() 能正确工作
-                set_test_scheduler_presence(&rt).await;
-                Some(rt)
+                Some(Arc::new(rt))
             },
             Ok(Ok(None)) => None,
             Ok(Err(_)) => None,
@@ -208,75 +205,40 @@ mod tests {
         }
     }
 
-    async fn set_test_scheduler_presence(rt: &Phase2Runtime) {
-        use redis::Commands;
-        let redis_url = std::env::var("LINGUA_TEST_REDIS_URL")
-            .unwrap_or_else(|_| "redis://127.0.0.1:6379".to_string());
-        
-        // 添加超时：如果 Redis 连接失败，快速返回
-        let timeout = tokio::time::timeout(
-            Duration::from_secs(2),
-            async {
-                if let Ok(client) = redis::Client::open(redis_url.as_str()) {
-                    if let Ok(mut conn) = client.get_connection_with_timeout(
-                        std::time::Duration::from_secs(1)
-                    ) {
-                        let key = format!("{}:schedulers:presence:{}", rt.key_prefix(), rt.instance_id);
-                        let presence = serde_json::json!({
-                            "started_at": chrono::Utc::now().timestamp_millis(),
-                            "hostname": "test",
-                            "pid": std::process::id(),
-                            "version": "test"
-                        });
-                        let val = serde_json::to_string(&presence).unwrap();
-                        let _: Result<(), _> = conn.set_ex::<_, _, ()>(&key, &val, 60);
-                    }
-                }
-            }
-        ).await;
-        if timeout.is_err() {
-            eprintln!("警告：设置 scheduler presence 超时");
-        }
-    }
+    // 移除 set_test_scheduler_presence：try_acquire_pool_leader 不依赖 presence
 
     async fn cleanup_test_keys(rt: &Phase2Runtime) {
         use redis::Commands;
         let redis_url = std::env::var("LINGUA_TEST_REDIS_URL")
             .unwrap_or_else(|_| "redis://127.0.0.1:6379".to_string());
         
-        // 添加超时：如果 Redis 连接失败，快速返回
-        let timeout = tokio::time::timeout(
+        // 简化清理逻辑：直接删除所有 phase3 相关的 key
+        let _ = tokio::time::timeout(
             Duration::from_secs(2),
             async {
                 if let Ok(client) = redis::Client::open(redis_url.as_str()) {
                     if let Ok(mut conn) = client.get_connection_with_timeout(
                         std::time::Duration::from_secs(1)
                     ) {
-                        // 使用内部方法获取 key（通过反射或直接构造）
                         let key_prefix = rt.key_prefix();
-                        let config_key = format!("{}:v1:phase3:pools:config", key_prefix);
-                        let leader_key = format!("{}:v1:phase3:pools:leader", key_prefix);
-                        let version_key = format!("{}:v1:phase3:pools:version", key_prefix);
-                        
-                        // 清理所有相关的 key
-                        let _: Result<(), _> = conn.del(&config_key);
-                        let _: Result<(), _> = conn.del(&leader_key);
-                        let _: Result<(), _> = conn.del(&version_key);
-                        
-                        // 清理所有 pool members keys（使用 KEYS 模式匹配）
-                        let pattern = format!("{}:v1:pool:*:members", key_prefix);
+                        // 清理所有 phase3 相关的 key
+                        let pattern = format!("{}:v1:phase3:*", key_prefix);
                         if let Ok(keys) = conn.keys::<_, Vec<String>>(&pattern) {
-                            for key in keys {
-                                let _: Result<(), _> = conn.del(&key);
+                            if !keys.is_empty() {
+                                let _: Result<(), _> = conn.del(&keys);
+                            }
+                        }
+                        // 清理所有 pool members keys
+                        let pattern2 = format!("{}:v1:pool:*:members", key_prefix);
+                        if let Ok(keys) = conn.keys::<_, Vec<String>>(&pattern2) {
+                            if !keys.is_empty() {
+                                let _: Result<(), _> = conn.del(&keys);
                             }
                         }
                     }
                 }
             }
         ).await;
-        if timeout.is_err() {
-            eprintln!("警告：清理测试 keys 超时");
-        }
     }
 
     #[tokio::test]
@@ -296,13 +258,13 @@ mod tests {
             }
         };
 
-        // 清理测试数据
+        // 清理测试数据（确保没有残留的 Leader 锁）
         cleanup_test_keys(&rt_a).await;
         cleanup_test_keys(&rt_b).await;
+        
+        // 等待一下，确保清理完成
+        tokio::time::sleep(Duration::from_millis(100)).await;
 
-        // 确保 scheduler presence 已设置（以便 is_instance_alive() 能正确工作）
-        set_test_scheduler_presence(&rt_a).await;
-        set_test_scheduler_presence(&rt_b).await;
 
         // 测试 1：实例 A 尝试获取 Leader 锁
         let acquired_a = rt_a.try_acquire_pool_leader(60).await;
@@ -353,6 +315,7 @@ mod tests {
 
         // 清理测试数据
         cleanup_test_keys(&rt).await;
+        tokio::time::sleep(Duration::from_millis(200)).await;
 
         // 创建测试 Pool 配置（语言集合，排序后）
         let test_pools = vec![
@@ -442,8 +405,15 @@ mod tests {
         // 测试 1：第一次重建（应该成为 Leader 并生成配置）
         registry.rebuild_auto_language_pools(Some(rt.clone())).await;
 
-        // 验证配置已写入 Redis
-        let (redis_pools, version) = rt.get_pool_config().await.expect("应该能从 Redis 读取配置");
+        // 验证配置已写入 Redis（等待写入完成）
+        let mut retries = 0;
+        let mut redis_config = None;
+        while retries < 10 && redis_config.is_none() {
+            tokio::time::sleep(Duration::from_millis(100)).await;
+            redis_config = rt.get_pool_config().await;
+            retries += 1;
+        }
+        let (redis_pools, version) = redis_config.expect("应该能从 Redis 读取配置");
         assert!(redis_pools.len() > 0, "应该生成至少一个 Pool");
         assert_eq!(version, 1, "版本号应该为 1");
 
@@ -485,10 +455,7 @@ mod tests {
         // 清理测试数据
         cleanup_test_keys(&rt_a).await;
         cleanup_test_keys(&rt_b).await;
-
-        // 确保 scheduler presence 已设置（以便 is_instance_alive() 能正确工作）
-        set_test_scheduler_presence(&rt_a).await;
-        set_test_scheduler_presence(&rt_b).await;
+        tokio::time::sleep(Duration::from_millis(200)).await;
 
         // 创建两个 NodeRegistry（模拟两个实例）
         let registry_a = Arc::new(NodeRegistry::new());
@@ -550,6 +517,16 @@ mod tests {
         }
         
         assert!(redis_pools_opt.is_some(), "实例 A 应该已将配置写入 Redis");
+
+        // 等待配置写入 Redis
+        let mut retries = 0;
+        while retries < 10 {
+            tokio::time::sleep(Duration::from_millis(100)).await;
+            if rt_b.get_pool_config().await.is_some() {
+                break;
+            }
+            retries += 1;
+        }
 
         // 测试 2：实例 B 从 Redis 读取配置
         registry_b.rebuild_auto_language_pools(Some(rt_b.clone())).await;
@@ -659,6 +636,8 @@ mod tests {
 
         // 清理测试数据
         cleanup_test_keys(&rt).await;
+        tokio::time::sleep(Duration::from_millis(100)).await;
+
 
         let registry = Arc::new(NodeRegistry::new());
 
@@ -731,6 +710,8 @@ mod tests {
 
         // 清理测试数据
         cleanup_test_keys(&rt).await;
+        tokio::time::sleep(Duration::from_millis(100)).await;
+
 
         let registry = Arc::new(NodeRegistry::new());
 
@@ -839,10 +820,7 @@ mod tests {
         cleanup_test_keys(&rt_b).await;
         cleanup_test_keys(&rt_c).await;
 
-        // 确保 scheduler presence 已设置
-        set_test_scheduler_presence(&rt_a).await;
-        set_test_scheduler_presence(&rt_b).await;
-        set_test_scheduler_presence(&rt_c).await;
+        tokio::time::sleep(Duration::from_millis(200)).await;
 
         // 创建三个 NodeRegistry（模拟三个实例）
         let registry_a = Arc::new(NodeRegistry::new());
@@ -902,6 +880,16 @@ mod tests {
 
         assert!(redis_pools_opt.is_some(), "实例 A 应该已将配置写入 Redis");
 
+        // 等待配置写入 Redis
+        let mut retries = 0;
+        while retries < 10 {
+            tokio::time::sleep(Duration::from_millis(100)).await;
+            if rt_b.get_pool_config().await.is_some() && rt_c.get_pool_config().await.is_some() {
+                break;
+            }
+            retries += 1;
+        }
+
         // 测试 2：实例 B 和 C 从 Redis 读取配置
         registry_b.rebuild_auto_language_pools(Some(rt_b.clone())).await;
         registry_c.rebuild_auto_language_pools(Some(rt_c.clone())).await;
@@ -938,6 +926,8 @@ mod tests {
 
         // 清理测试数据
         cleanup_test_keys(&rt).await;
+        tokio::time::sleep(Duration::from_millis(100)).await;
+
 
         let registry = Arc::new(NodeRegistry::new());
 
@@ -1035,6 +1025,8 @@ mod tests {
 
         // 清理测试数据
         cleanup_test_keys(&rt).await;
+        tokio::time::sleep(Duration::from_millis(100)).await;
+
 
         // 创建 NodeRegistry
         let registry = Arc::new(NodeRegistry::new());
@@ -1191,6 +1183,8 @@ mod tests {
         assert_eq!(cfg.pools[0].name, "en-zh", "Pool 名称应该是 en-zh（排序后）");
 
         // 验证 Redis 中没有配置（因为没有传递 phase2_runtime）
+        // 注意：如果之前的测试留下了配置，先清理
+        cleanup_test_keys(&rt).await;
         let redis_config = rt.get_pool_config().await;
         assert!(redis_config.is_none(), "Redis 中不应该有配置（未传递 phase2_runtime）");
 
@@ -1210,8 +1204,14 @@ mod tests {
         // 等待 Redis 写入完成
         tokio::time::sleep(Duration::from_millis(200)).await;
 
-        // 验证 Redis 中有配置
-        let redis_config = rt.get_pool_config().await;
+        // 验证 Redis 中有配置（等待写入完成）
+        let mut retries = 0;
+        let mut redis_config = None;
+        while retries < 10 && redis_config.is_none() {
+            tokio::time::sleep(Duration::from_millis(100)).await;
+            redis_config = rt.get_pool_config().await;
+            retries += 1;
+        }
         assert!(redis_config.is_some(), "Redis 中应该有配置");
         let (redis_pools, _version) = redis_config.unwrap();
         assert_eq!(redis_pools.len(), 1, "Redis 中应该有 1 个 Pool");

@@ -186,11 +186,25 @@ export class Recorder {
     console.log('[Recorder] 正在启动录音器...', {
       hasAudioContext: !!this.audioContext,
       hasMediaStream: !!this.mediaStream,
+      audioContextState: this.audioContext?.state,
     });
 
     if (!this.audioContext || !this.mediaStream) {
       console.log('[Recorder] AudioContext 或 MediaStream 不存在，正在初始化...');
       await this.initialize();
+    }
+
+    // 检查并恢复 AudioContext 状态
+    // 重要：如果 AudioContext 处于 suspended 状态，ScriptProcessorNode 的 onaudioprocess 事件不会被触发
+    if (this.audioContext && this.audioContext.state === 'suspended') {
+      console.log('[Recorder] ⚠️ AudioContext 处于 suspended 状态，正在恢复...');
+      try {
+        await this.audioContext.resume();
+        console.log('[Recorder] ✅ AudioContext 已恢复，状态:', this.audioContext.state);
+      } catch (error) {
+        console.error('[Recorder] ❌ 恢复 AudioContext 失败:', error);
+        throw error;
+      }
     }
 
     this.isRecording = true;
@@ -482,6 +496,35 @@ export class Recorder {
    */
   getIsRecording(): boolean {
     return this.isRecording;
+  }
+
+  /**
+   * 获取 AudioContext 状态（用于监控和诊断）
+   */
+  getAudioContextState(): string | null {
+    return this.audioContext?.state || null;
+  }
+
+  /**
+   * 恢复 AudioContext（如果处于 suspended 状态）
+   * @returns Promise<boolean> 是否成功恢复（true=已恢复，false=无需恢复或恢复失败）
+   */
+  async resumeAudioContextIfSuspended(): Promise<boolean> {
+    if (!this.audioContext) {
+      return false;
+    }
+    
+    if (this.audioContext.state === 'suspended') {
+      try {
+        await this.audioContext.resume();
+        return this.audioContext.state === 'running';
+      } catch (error) {
+        console.error('[Recorder] ❌ 恢复 AudioContext 失败:', error);
+        return false;
+      }
+    }
+    
+    return false; // 无需恢复
   }
 }
 

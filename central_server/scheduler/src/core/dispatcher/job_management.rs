@@ -17,10 +17,7 @@ impl JobDispatcher {
         if let Some(job) = jobs.get_mut(job_id) {
             let is_terminal = matches!(status, crate::core::dispatcher::JobStatus::Completed | crate::core::dispatcher::JobStatus::Failed);
             job.status = status;
-            // 完成/失败后清理 request_id 绑定（避免内存增长；任务级绑定不需要长期保留）
-            if is_terminal && !job.request_id.is_empty() {
-                self.request_bindings.write().await.remove(&job.request_id);
-            }
+            // Phase2: request_id 绑定由 Redis 管理，自动过期，无需手动清理
             true
         } else {
             false

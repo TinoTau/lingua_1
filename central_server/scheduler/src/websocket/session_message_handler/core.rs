@@ -165,15 +165,50 @@ pub(super) async fn handle_tts_play_ended(
     group_id: String,
     ts_end_ms: u64,
 ) {
-    // Update Group's last_tts_end_at (Scheduler authoritative time)
-    state.group_manager.on_tts_play_ended(&group_id, ts_end_ms).await;
-    
     info!(
         session_id = %sess_id,
         group_id = %group_id,
-        ts_end_ms = ts_end_ms,
-        "TTS playback ended, updated Group last_tts_end_at"
+        client_ts_end_ms = ts_end_ms,
+        "收到 TTS_PLAY_ENDED 消息（Web端播放完成）"
     );
+    
+    // Update Group's last_tts_end_at (Scheduler authoritative time)
+    state.group_manager.on_tts_play_ended(&group_id, ts_end_ms).await;
+    
+    // 重启 SessionActor 的计时器（重置 pause 检测计时器）
+    // 使用调度服务器时间，确保与音频chunk的timestamp_ms（调度服务器接收时间）基准一致
+    if let Some(actor_handle) = state.session_manager.get_actor_handle(&sess_id).await {
+        // 使用调度服务器时间，与音频chunk的timestamp_ms（调度服务器接收时间）保持一致
+        // 这样可以避免客户端时间和服务器时间不同步导致的时间差问题
+        let timestamp_ms = chrono::Utc::now().timestamp_millis();
+        let time_diff_ms = timestamp_ms as i64 - ts_end_ms as i64;
+        
+        if let Err(e) = actor_handle.send(SessionEvent::RestartTimer {
+            timestamp_ms,
+        }) {
+            tracing::warn!(
+                session_id = %sess_id,
+                error = %e,
+                "Failed to send RestartTimer event to SessionActor"
+            );
+        } else {
+            info!(
+                session_id = %sess_id,
+                group_id = %group_id,
+                client_ts_end_ms = ts_end_ms,
+                server_timestamp_ms = timestamp_ms,
+                time_diff_ms = time_diff_ms,
+                "TTS_PLAY_ENDED: 已发送 RestartTimer 事件到 SessionActor"
+            );
+        }
+    } else {
+        info!(
+            session_id = %sess_id,
+            group_id = %group_id,
+            ts_end_ms = ts_end_ms,
+            "TTS_PLAY_ENDED: 已更新 Group last_tts_end_at（SessionActor 未找到，跳过计时器重启）"
+        );
+    }
 }
 
 pub(super) async fn handle_session_close(

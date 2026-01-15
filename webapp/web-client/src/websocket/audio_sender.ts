@@ -6,6 +6,7 @@
 import { AudioEncoder, AudioCodecConfig } from '../audio_codec';
 import { encodeAudioChunkFrame, encodeFinalFrame, BinaryFrameType, AudioChunkBinaryFrame, FinalBinaryFrame } from '../binary_protocol';
 import { BackpressureManager, BackpressureState } from './backpressure_manager';
+import { logger } from '../logger';
 
 /**
  * 音频发送器
@@ -44,7 +45,7 @@ export class AudioSender {
       this.audioEncoder.close();
     }
     this.audioEncoder = createAudioEncoder(config);
-    console.log('[AudioSender] Audio encoder created:', config.codec);
+    logger.info('AudioSender', 'Audio encoder created', { codec: config.codec });
   }
 
   /**
@@ -70,7 +71,7 @@ export class AudioSender {
    */
   async sendAudioChunk(audioData: Float32Array, isFinal: boolean = false): Promise<void> {
     if (!this.sessionId) {
-      console.warn('Session ID not set, cannot send audio chunk');
+      logger.warn('AudioSender', 'Session ID not set, cannot send audio chunk');
       return;
     }
 
@@ -125,7 +126,7 @@ export class AudioSender {
               }
               
               if (packet.length > 65535) {
-                console.error(`[AudioSender] Packet too large: ${packet.length} bytes (max 65535)`);
+                logger.error('AudioSender', `Packet too large: ${packet.length} bytes (max 65535)`);
                 throw new Error(`Opus packet too large: ${packet.length} bytes`);
               }
               
@@ -156,14 +157,23 @@ export class AudioSender {
           encodedAudio = await this.audioEncoder.encode(audioData);
         }
         
+        const sendTimestamp = Date.now();
         const frame: AudioChunkBinaryFrame = {
           frameType: BinaryFrameType.AUDIO_CHUNK,
           sessionId: this.sessionId,
           seq: this.sequence++,
-          timestamp: Date.now(),
+          timestamp: sendTimestamp,
           isFinal: isFinal,
           audioData: encodedAudio,
         };
+        logger.debug('AudioSender', '发送 audio_chunk 二进制帧', {
+          timestamp: sendTimestamp,
+          timestampIso: new Date(sendTimestamp).toISOString(),
+          seq: frame.seq,
+          is_final: isFinal,
+          audioDataSize: encodedAudio.length,
+          sessionId: this.sessionId,
+        });
         const binaryFrame = encodeAudioChunkFrame(frame);
         // 将 Uint8Array 转换为 ArrayBuffer（确保是 ArrayBuffer 而不是 SharedArrayBuffer）
         const arrayBuffer = binaryFrame.buffer instanceof SharedArrayBuffer
@@ -189,7 +199,7 @@ export class AudioSender {
               }
               
               if (packet.length > 65535) {
-                console.error(`[AudioSender] Packet too large: ${packet.length} bytes (max 65535)`);
+                logger.error('AudioSender', `Packet too large: ${packet.length} bytes (max 65535)`);
                 throw new Error(`Opus packet too large: ${packet.length} bytes`);
               }
               
@@ -237,7 +247,7 @@ export class AudioSender {
         this.sendCallback(JSON.stringify(message));
       }
     } catch (error) {
-      console.error('Failed to send audio chunk:', error);
+      logger.error('AudioSender', 'Failed to send audio chunk', { error });
       throw error;
     }
   }
@@ -254,12 +264,19 @@ export class AudioSender {
     try {
       if (this.useBinaryFrame && this.sessionId) {
         // Binary Frame 模式：发送 FINAL 帧
+        const sendFinalTimestamp = Date.now();
         const frame: FinalBinaryFrame = {
           frameType: BinaryFrameType.FINAL,
           sessionId: this.sessionId,
           seq: this.sequence++,
-          timestamp: Date.now(),
+          timestamp: sendFinalTimestamp,
         };
+        logger.info('AudioSender', '📤 发送 finalize 信号（Binary Frame: FINAL）', {
+          timestamp: sendFinalTimestamp,
+          timestampIso: new Date(sendFinalTimestamp).toISOString(),
+          sessionId: this.sessionId,
+          seq: frame.seq,
+        });
         const binaryFrame = encodeFinalFrame(frame);
         // 将 Uint8Array 转换为 ArrayBuffer（确保是 ArrayBuffer 而不是 SharedArrayBuffer）
         const arrayBuffer = binaryFrame.buffer instanceof SharedArrayBuffer
@@ -276,11 +293,18 @@ export class AudioSender {
           is_final: true,
           payload: '', // 空 payload，只用于触发 finalize
         };
-        console.log('[AudioSender] 发送 finalize 信号（is_final=true 的 audio_chunk）');
+        const sendFinalTimestamp = Date.now();
+        logger.info('AudioSender', '📤 发送 finalize 信号（is_final=true 的 audio_chunk）', {
+          timestamp: sendFinalTimestamp,
+          timestampIso: new Date(sendFinalTimestamp).toISOString(),
+          sessionId: this.sessionId,
+          seq: message.seq,
+          is_final: true,
+        });
         this.sendCallback(JSON.stringify(message));
       }
     } catch (error) {
-      console.error('Failed to send final:', error);
+      logger.error('AudioSender', 'Failed to send final', { error });
       throw error;
     }
   }
@@ -302,7 +326,7 @@ export class AudioSender {
     }
   ): Promise<void> {
     if (!this.sessionId) {
-      console.warn('Session ID not set, cannot send utterance');
+      logger.warn('AudioSender', 'Session ID not set, cannot send utterance');
       return;
     }
 
@@ -314,7 +338,7 @@ export class AudioSender {
         const encoder = this.audioEncoder as any;
         let opusPackets: Uint8Array[];
 
-        console.log(`[AudioSender] Encoding audio with Opus:`, {
+        logger.debug('AudioSender', 'Encoding audio with Opus', {
           audio_samples: audioData.length,
           sample_rate: this.audioCodecConfig.sampleRate,
           frame_size_ms: this.audioCodecConfig.frameSizeMs,
@@ -322,7 +346,7 @@ export class AudioSender {
 
         if (encoder.encodePackets && typeof encoder.encodePackets === 'function') {
           opusPackets = await encoder.encodePackets(audioData);
-          console.log(`[AudioSender] Opus encoding complete:`, {
+          logger.debug('AudioSender', 'Opus encoding complete', {
             packet_count: opusPackets.length,
             total_packets_size: opusPackets.reduce((sum, p) => sum + p.length, 0),
             packet_sizes: opusPackets.map(p => p.length),
@@ -338,7 +362,7 @@ export class AudioSender {
 
         const flushData = await this.audioEncoder.flush();
         if (flushData.length > 0) {
-          console.log(`[AudioSender] Flush data: ${flushData.length} bytes`);
+          logger.debug('AudioSender', `Flush data: ${flushData.length} bytes`);
           opusPackets.push(flushData);
         }
 
@@ -351,7 +375,7 @@ export class AudioSender {
         for (const packet of opusPackets) {
           if (packet.length === 0) {
             emptyPackets++;
-            console.warn(`[AudioSender] Skipping empty packet (${emptyPackets} total)`);
+            logger.warn('AudioSender', `Skipping empty packet (${emptyPackets} total)`);
             continue;
           }
 
@@ -374,7 +398,7 @@ export class AudioSender {
           throw new Error('No valid Opus packets after encoding (all packets were empty)');
         }
 
-        console.log(`[AudioSender] Plan A format packing:`, {
+        logger.debug('AudioSender', 'Plan A format packing', {
           valid_packets: validPackets,
           empty_packets: emptyPackets,
           total_size_bytes: totalSize,
@@ -420,7 +444,7 @@ export class AudioSender {
         message.pipeline = pipeline;
       }
 
-      console.log(`[AudioSender] Sending utterance:`, {
+      logger.info('AudioSender', 'Sending utterance', {
         utterance_index: utteranceIndex,
         audio_format: audioFormat,
         audio_size_bytes: encodedAudio.length,
@@ -430,7 +454,7 @@ export class AudioSender {
 
       this.sendCallback(JSON.stringify(message));
     } catch (error) {
-      console.error('Failed to send utterance:', error);
+      logger.error('AudioSender', 'Failed to send utterance', { error });
       throw error;
     }
   }

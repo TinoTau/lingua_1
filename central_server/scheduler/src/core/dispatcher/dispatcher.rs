@@ -11,8 +11,6 @@ pub struct JobDispatcher {
     pub(crate) jobs: Arc<RwLock<std::collections::HashMap<String, crate::core::dispatcher::Job>>>,
     #[cfg(test)]
     pub jobs: Arc<RwLock<std::collections::HashMap<String, crate::core::dispatcher::Job>>>,
-    /// request_id -> job_id（带 lease 过期时间）
-    pub(crate) request_bindings: Arc<RwLock<std::collections::HashMap<String, (String, i64)>>>,
     pub(crate) lease_seconds: u64,
     pub(crate) reserved_ttl_seconds: u64,
     pub(crate) spread_enabled: bool,
@@ -32,7 +30,6 @@ impl JobDispatcher {
         Self {
             node_registry,
             jobs: Arc::new(RwLock::new(std::collections::HashMap::new())),
-            request_bindings: Arc::new(RwLock::new(std::collections::HashMap::new())),
             lease_seconds: 90,
             reserved_ttl_seconds: 90,
             spread_enabled: false,

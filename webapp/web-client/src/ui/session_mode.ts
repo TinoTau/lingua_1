@@ -13,7 +13,15 @@ type ServiceMode = 'personal_voice' | 'voice_translation' | 'original_subtitle' 
  * 渲染会话模式界面
  */
 export function renderSessionMode(container: HTMLElement, app: App): void {
-  container.innerHTML = `
+  console.log('[SessionMode] renderSessionMode 开始执行', {
+    container: !!container,
+    app: !!app,
+    containerId: container.id,
+  });
+  
+  try {
+    // 直接设置 innerHTML（浏览器会处理 DOM 更新）
+    container.innerHTML = `
     <div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
       <h1 style="text-align: center; color: #333; margin-bottom: 30px;">Lingua 实时语音翻译</h1>
       
@@ -184,18 +192,39 @@ export function renderSessionMode(container: HTMLElement, app: App): void {
       }
     </style>
   `;
-
-  setupSessionModeEventHandlers(container, app);
+    
+    // 使用 setTimeout 确保 DOM 已经完全更新后再绑定事件
+    setTimeout(() => {
+      try {
+        setupSessionModeEventHandlers(container, app);
+        console.log('[SessionMode] renderSessionMode 执行完成');
+      } catch (error) {
+        console.error('[SessionMode] setupSessionModeEventHandlers 执行失败:', error);
+        throw error;
+      }
+    }, 0);
+  } catch (error) {
+    console.error('[SessionMode] renderSessionMode 执行失败:', error);
+    throw error;
+  }
 }
 
 /**
  * 设置会话模式事件处理器
  */
 function setupSessionModeEventHandlers(container: HTMLElement, app: App): void {
+  console.log('[SessionMode] setupSessionModeEventHandlers 开始执行');
+  
+  // 清理之前的定时器和事件监听器（如果有）
+  // 注意：这里我们需要存储之前的清理函数，但由于每次调用都会创建新的闭包，
+  // 所以我们只能在当前作用域内清理
+  
   let selectedMode: ServiceMode | null = null;
   
   // 服务模式按钮事件 - 选择模式时自动连接服务器
-  const modeButtons = document.querySelectorAll('.mode-btn');
+  // 使用 container.querySelectorAll 而不是 document.querySelectorAll，避免选择到其他页面的元素
+  const modeButtons = container.querySelectorAll('.mode-btn');
+  console.log('[SessionMode] 找到模式按钮数量:', modeButtons.length);
   modeButtons.forEach(btn => {
     btn.addEventListener('click', async () => {
       // 移除所有选中状态

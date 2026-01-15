@@ -9,11 +9,13 @@ impl JobDispatcher {
     pub(crate) async fn check_phase1_idempotency(
         &self,
         request_id: &str,
-        now_ms: i64,
+        _now_ms: i64,
     ) -> Option<Job> {
-        if let Some((existing_job_id, exp_ms)) = self.request_bindings.read().await.get(request_id).cloned() {
-            if exp_ms > now_ms {
-                if let Some(job) = self.get_job(&existing_job_id).await {
+        // Phase1 路径已废弃，改用 Phase2 的 Redis 实现
+        // 如果 phase2 可用，使用 phase2 的 request_binding
+        if let Some(ref rt) = self.phase2 {
+            if let Some(binding) = rt.get_request_binding(request_id).await {
+                if let Some(job) = self.get_job(&binding.job_id).await {
                     return Some(job);
                 }
             }
@@ -100,14 +102,17 @@ impl JobDispatcher {
             }
         }
 
-        // 写入 request_id lease（只在成功创建时写入；无论是否分配到节点，都写入以避免短时间重复创建）
-        let now_ms = chrono::Utc::now().timestamp_millis();
-        let lease_ms = (self.lease_seconds as i64) * 1000;
-        let exp_ms = now_ms + lease_ms;
-        self.request_bindings
-            .write()
-            .await
-            .insert(request_id.clone(), (job_id.clone(), exp_ms));
+        // Phase2: request_id 绑定由 Phase2 的 Redis 实现管理
+        // 如果 Phase2 可用，使用 Phase2 的 request_binding
+        if let Some(ref rt) = self.phase2 {
+            rt.set_request_binding(
+                &request_id,
+                &job_id,
+                final_assigned_node_id.as_deref(),
+                self.lease_seconds,
+                false, // 尚未分发到节点
+            ).await;
+        }
 
         debug!(trace_id = %trace_id, job_id = %job_id, request_id = %request_id, session_id = %session_id, utterance_index = utterance_index, node_id = ?final_assigned_node_id, "创建 Job");
 

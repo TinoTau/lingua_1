@@ -1,24 +1,102 @@
+// 立即输出，确认脚本已加载
+console.log('[Main] 脚本开始加载...');
+
 import { App } from './app';
 import { renderMainMenu, renderRoom, renderSessionMode, renderRoomMode, setUIMode, getUIMode } from './ui/renderers';
-import { RoomMember, SessionState } from './types';
+import { RoomMember, SessionState, Config } from './types';
+import { exposeLogHelper } from './utils/log_helper';
+import { initConsoleLoggerBridge } from './utils/console_logger_bridge';
 
-// 初始化应用
-const app = new App();
+console.log('[Main] 模块导入完成');
+
+// 初始化console日志桥接（延迟执行，确保页面基本加载完成）
+// 使用 setTimeout 确保在页面基本结构加载后再初始化
+setTimeout(() => {
+  try {
+    console.log('[Main] 开始初始化console日志桥接...');
+    initConsoleLoggerBridge();
+    console.log('[Main] console日志桥接初始化完成');
+  } catch (error) {
+    // 使用原始的 console.error，避免循环依赖
+    console.error('[Main] 初始化console日志桥接失败:', error);
+  }
+}, 0);
+
+// 从URL参数或localStorage读取日志配置
+const getLogConfigFromUrl = (): Partial<Config['logConfig']> | undefined => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const autoSave = urlParams.get('logAutoSave');
+  const autoSaveInterval = urlParams.get('logAutoSaveInterval');
+  const logPrefix = urlParams.get('logPrefix');
+  
+  if (autoSave === 'true' || autoSave === '1') {
+    return {
+      autoSaveToFile: true,
+      autoSaveIntervalMs: autoSaveInterval ? parseInt(autoSaveInterval, 10) : 30000,
+      logFilePrefix: logPrefix || 'web-client',
+    };
+  }
+  return undefined;
+};
+
+// 从localStorage读取日志配置
+const getLogConfigFromStorage = (): Partial<Config['logConfig']> | undefined => {
+  const saved = localStorage.getItem('logConfig');
+  if (saved) {
+    try {
+      return JSON.parse(saved);
+    } catch {
+      return undefined;
+    }
+  }
+  return undefined;
+};
+
+// 合并日志配置（URL参数 > localStorage > 默认值）
+const logConfig = getLogConfigFromUrl() || getLogConfigFromStorage() || undefined;
+console.log('[Main] 日志配置:', logConfig);
+
+// 初始化应用（传入日志配置）
+let app: App;
+try {
+  console.log('[Main] 开始实例化App...');
+  app = new App({
+    logConfig: logConfig,
+  });
+  console.log('[Main] App实例化成功');
+} catch (error) {
+  console.error('[Main] App实例化失败:', error);
+  throw error; // 重新抛出错误，让浏览器显示错误信息
+}
 
 // 导出给 UI 使用
 (window as any).app = app;
 
+// 暴露日志工具到window对象
+exposeLogHelper();
+
 // UI 初始化
-document.addEventListener('DOMContentLoaded', () => {
+function initUI() {
   const container = document.getElementById('app');
   if (!container) {
+    console.error('[Main] 找不到 app 容器元素');
     return;
   }
 
+  console.log('[Main] 开始初始化主菜单，app实例:', !!app);
+  
   // 初始化主菜单
   renderMainMenu(container, app, () => {
-    setUIMode('session');
-    renderSessionMode(container, app);
+    console.log('[Main] 单会话模式回调被调用');
+    try {
+      setUIMode('session');
+      console.log('[Main] 准备渲染会话模式界面');
+      renderSessionMode(container, app);
+      console.log('[Main] 会话模式界面渲染完成');
+    } catch (error) {
+      console.error('[Main] 渲染会话模式界面失败:', error);
+      alert('切换到会话模式失败: ' + (error instanceof Error ? error.message : String(error)));
+    }
   }, () => {
     setUIMode('room-create');
     renderRoomMode(container, app, () => {
@@ -215,4 +293,12 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   };
-});
+}
+
+// 页面加载完成后初始化 UI
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initUI);
+} else {
+  // DOM 已经加载完成，直接初始化
+  initUI();
+}
