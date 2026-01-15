@@ -33,6 +33,8 @@ export class SessionManager {
   private currentTraceId: string | null = null;
   private currentGroupId: string | null = null;
   private hasSentAudioChunksForCurrentUtterance: boolean = false; // 跟踪当前 utterance 是否已通过自动发送发送过音频块
+  // 当前 utterance 内已发送的 chunk 数量（用于精细日志和排查“半句/丢句”问题）
+  private sentChunkCountForCurrentUtterance: number = 0;
   private playbackFinishedTimestamp: number | null = null; // 播放结束的时间戳（用于计算到首次音频发送的延迟）
   private playbackFinishedDelayBuffer: Float32Array[] = []; // 播放完成后延迟发送的音频缓冲区
   private playbackFinishedDelayEndTime: number | null = null; // 播放完成延迟结束时间（毫秒）
@@ -82,6 +84,7 @@ export class SessionManager {
     this.pipelineConfig = pipeline;
     // 重置 utterance 索引
     this.currentUtteranceIndex = 0;
+    this.sentChunkCountForCurrentUtterance = 0;
     await this.wsClient.connect(srcLang, tgtLang, features);
     await this.recorder.initialize();
   }
@@ -118,6 +121,7 @@ export class SessionManager {
       // 重置 utterance 索引和标志
       this.currentUtteranceIndex = 0;
       this.hasSentAudioChunksForCurrentUtterance = false;
+      this.sentChunkCountForCurrentUtterance = 0;
 
       // 清空所有未播放的音频（新会话开始时丢弃之前的音频）
       // 注意：只在真正开始新会话时清空，避免在会话进行中误清空
@@ -225,12 +229,14 @@ export class SessionManager {
           timestamp: sendFinalTimestamp,
           timestampIso: new Date(sendFinalTimestamp).toISOString(),
           utteranceIndex: this.currentUtteranceIndex,
+          sentChunkCountForCurrentUtterance: this.sentChunkCountForCurrentUtterance,
           audioBufferLength: this.audioBuffer.length,
           hasSentAudioChunks: this.hasSentAudioChunksForCurrentUtterance,
         });
         this.wsClient.sendFinal();
         this.currentUtteranceIndex++;
         this.hasSentAudioChunksForCurrentUtterance = false; // 重置标志
+        this.sentChunkCountForCurrentUtterance = 0; // 新的 utterance 从 0 开始计数
       } else {
         // 音频缓冲区为空，且没有发送过音频块，不发送 finalize（避免触发调度服务器的空 finalize）
         logger.warn('SessionManager', '音频缓冲区为空，且没有发送过音频块，跳过发送和 finalize', {
@@ -427,6 +433,11 @@ export class SessionManager {
     if (this.audioBuffer.length >= this.framesPerChunk) {
       // 当缓冲区达到目标帧数时，发送前 framesPerChunk 帧
       const chunk = this.concatAudioBuffers(this.audioBuffer.splice(0, this.framesPerChunk));
+      const chunkSamples = chunk.length;
+      const chunkEstimatedDurationMs = Math.round(chunkSamples / 16); // 16kHz -> 每毫秒16个采样点
+
+      // 递增当前 utterance 内的 chunk 计数（从 1 开始）
+      this.sentChunkCountForCurrentUtterance += 1;
       
       // 如果是首次发送音频chunk，且之前有播放结束的时间戳，记录延迟
       const isFirstChunkAfterPlayback = !this.hasSentAudioChunksForCurrentUtterance && this.playbackFinishedTimestamp !== null;
@@ -442,7 +453,10 @@ export class SessionManager {
           delayFromPlaybackEndMs,
           delayFromPlaybackEndSeconds: (delayFromPlaybackEndMs / 1000).toFixed(2),
           chunkSize: chunk.length,
+          chunkSamples,
+          chunkEstimatedDurationMs,
           utteranceIndex: this.currentUtteranceIndex,
+          chunkIndexInUtterance: this.sentChunkCountForCurrentUtterance,
           expectedDelayMs: this.PLAYBACK_FINISHED_DELAY_MS,
           isAbnormalDelay,
           warning: isAbnormalDelay ? '⚠️ 延迟异常，可能是旧的 playbackFinishedTimestamp' : undefined,
@@ -455,25 +469,29 @@ export class SessionManager {
       if (isFirstChunkAfterPlayback) {
         logger.info('SessionManager', '📤 发送第一批音频chunk到调度服务器', {
           chunkSize: chunk.length,
+          chunkSamples,
+          chunkEstimatedDurationMs,
           utteranceIndex: this.currentUtteranceIndex,
           timestamp: now,
           timestampIso: new Date(now).toISOString(),
           isFirstChunk: true,
+          chunkIndexInUtterance: this.sentChunkCountForCurrentUtterance,
           playbackFinishedTimestamp: this.playbackFinishedTimestamp,
           playbackFinishedTimestampIso: this.playbackFinishedTimestamp ? new Date(this.playbackFinishedTimestamp).toISOString() : null,
           timeSincePlaybackFinishedMs: this.playbackFinishedTimestamp ? now - this.playbackFinishedTimestamp : null,
         });
       } else {
-        // 记录非首次chunk的发送（每10个chunk记录一次，减少日志量）
-        if (this.audioBuffer.length % 10 === 0) {
-          logger.debug('SessionManager', '发送音频chunk', {
-            chunkSize: chunk.length,
-            utteranceIndex: this.currentUtteranceIndex,
-            timestamp: now,
-            timestampIso: new Date(now).toISOString(),
-            audioBufferLength: this.audioBuffer.length,
-          });
-        }
+        // 记录每一个非首个 chunk 的发送，用于完整追踪“web 端实际发出了哪些音频”
+        logger.debug('SessionManager', '发送音频chunk', {
+          chunkSize: chunk.length,
+          chunkSamples,
+          chunkEstimatedDurationMs,
+          utteranceIndex: this.currentUtteranceIndex,
+          chunkIndexInUtterance: this.sentChunkCountForCurrentUtterance,
+          timestamp: now,
+          timestampIso: new Date(now).toISOString(),
+          remainingFramesInBuffer: this.audioBuffer.length,
+        });
       }
       
       const sendChunkStartTimestamp = Date.now();
