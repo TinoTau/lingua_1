@@ -1,263 +1,245 @@
-# Web 客户端音频处理流程完整文档
+# Web 客户端音频处理流程（精简版）
 
-## 概述
-
-本文档详细描述了 Web 客户端中音频的接收、发送和播放的完整流程，包括每个方法的调用链和关键节点。
-
----
-
-## 一、音频接收流程（麦克风 → 调度服务器）
-
-### 1.1 流程概览
-
-```
-用户说话 → Recorder 采集 → SessionManager 处理 → AudioSender 编码 → WebSocket 发送 → 调度服务器
-```
-
-### 1.2 详细调用链
-
-#### 1.2.1 初始化阶段
-
-**1. App 构造**
-- 文件：`webapp/web-client/src/app.ts`
-- 方法：`constructor(config)`
-- 调用链：
-  ```
-  App.constructor()
-    ├─> StateMachine (new)
-    ├─> Recorder (new, stateMachine, config)
-    ├─> WebSocketClient (new, stateMachine, schedulerUrl, ...)
-    ├─> SessionManager (new, stateMachine, recorder, wsClient, ttsPlayer, ...)
-    └─> setupCallbacks() // 设置回调函数
-  ```
-
-**2. 设置回调函数**
-- 文件：`webapp/web-client/src/app.ts`
-- 方法：`setupCallbacks()`
-- 关键回调设置：
-  ```typescript
-  // 音频帧回调：Recorder → SessionManager
-  recorder.setAudioFrameCallback((audioData) => {
-    sessionManager.onAudioFrame(audioData);
-  });
-  
-  // 静音检测回调：Recorder → SessionManager
-  recorder.setSilenceDetectedCallback(() => {
-    sessionManager.onSilenceDetected();
-  });
-  ```
-
-**3. Recorder 初始化**
-- 文件：`webapp/web-client/src/recorder.ts`
-- 方法：`initialize()`
-- 调用链：
-  ```
-  Recorder.initialize()
-    ├─> navigator.mediaDevices.getUserMedia() // 请求麦克风权限
-    ├─> AudioContext (new, sampleRate: 16000)
-    ├─> MediaStreamAudioSourceNode (create)
-    ├─> AnalyserNode (create, fftSize: 256) // 用于音量检测
-    ├─> ScriptProcessorNode (create, bufferSize: 4096) // 用于获取 PCM 数据
-    └─> processor.onaudioprocess = (event) => { ... } // 音频处理回调
-  ```
-
-#### 1.2.2 开始录音阶段
-
-**1. 用户点击"开始"按钮**
-- 文件：`webapp/web-client/src/ui/session_mode.ts`
-- 方法：`setupSessionModeEventHandlers()`
-- 事件处理：
-  ```typescript
-  startBtn.addEventListener('click', async () => {
-    await app.startSession();
-  });
-  ```
-
-**2. 开始会话**
-- 文件：`webapp/web-client/src/app.ts`
-- 方法：`startSession()`
-- 调用链：
-  ```
-  App.startSession()
-    └─> SessionManager.startSession()
-  ```
-
-**3. SessionManager 开始会话**
-- 文件：`webapp/web-client/src/app/session_manager.ts`
-- 方法：`startSession()`
-- 调用链：
-  ```
-  SessionManager.startSession()
-    ├─> isSessionActive = true
-    ├─> audioBuffer = [] // 清空音频缓冲区
-    ├─> currentUtteranceIndex = 0 // 重置 utterance 索引
-    ├─> StateMachine.startSession() // 状态机切换到 INPUT_RECORDING
-    └─> Recorder.start() // 如果未启动，启动录音器
-  ```
-
-**4. Recorder 启动**
-- 文件：`webapp/web-client/src/recorder.ts`
-- 方法：`start()`
-- 调用链：
-  ```
-  Recorder.start()
-    ├─> 检查 AudioContext 和 MediaStream 是否存在
-    │   └─> 如果不存在，调用 initialize()
-    ├─> 检查 AudioContext.state === 'suspended'
-    │   └─> 如果是，调用 audioContext.resume() // ⚠️ 关键修复：恢复 AudioContext
-    ├─> isRecording = true
-    ├─> 重置 VAD 状态（根据停止时长智能恢复）
-    ├─> 设置恢复保护窗口（200ms）
-    └─> startSilenceDetection() // 开始静音检测
-  ```
-
-**5. 状态机状态变化**
-- 文件：`webapp/web-client/src/app.ts`
-- 方法：`onStateChange(newState, oldState)`
-- 当状态变为 `INPUT_RECORDING` 时：
-  ```
-  App.onStateChange(INPUT_RECORDING, ...)
-    └─> 检查 recorder.getIsRecording()
-        └─> 如果为 false，调用 recorder.start()
-  ```
-
-#### 1.2.3 音频帧处理阶段
-
-**1. Recorder 音频处理回调**
-- 文件：`webapp/web-client/src/recorder.ts`
-- 方法：`processor.onaudioprocess(event)`
-- 处理流程：
-  ```typescript
-  processor.onaudioprocess = (event) => {
-    if (!this.isRecording) return; // 如果未录音，跳过
-    
-    const inputData = inputBuffer.getChannelData(0);
-    const audioData = new Float32Array(inputData);
-    
-    // 静音过滤处理
-    if (this.silenceFilterConfig.enabled) {
-      const shouldSend = this.processSilenceFilter(audioData);
-      if (shouldSend && this.audioFrameCallback) {
-        this.audioFrameCallback(audioData); // 调用回调
-      }
-    } else {
-      if (this.audioFrameCallback) {
-        this.audioFrameCallback(audioData); // 直接调用回调
-      }
-    }
-  };
-  ```
-
-**2. SessionManager 处理音频帧**
-- 文件：`webapp/web-client/src/app/session_manager.ts`
-- 方法：`onAudioFrame(audioData: Float32Array)`
-- 完整调用链：
-  ```
-  SessionManager.onAudioFrame(audioData)
-    ├─> 检查状态是否为 INPUT_RECORDING
-    │   └─> 如果不是，记录跳过并返回
-    ├─> 如果是播放完成后首次接收，记录日志
-    ├─> 将音频数据添加到 audioBuffer
-    ├─> 检查是否在播放完成延迟期间（500ms）
-    │   └─> 如果是，缓存到 playbackFinishedDelayBuffer
-    ├─> 延迟期间结束后，合并缓存的音频数据
-    └─> 如果 audioBuffer.length >= 10（100ms 音频）
-        ├─> 提取前 10 帧并合并为 chunk
-        ├─> 记录首次发送日志（如果是播放后首次）
-        ├─> WebSocketClient.sendAudioChunk(chunk, false)
-        └─> hasSentAudioChunksForCurrentUtterance = true
-  ```
-
-**3. WebSocketClient 发送音频**
-- 文件：`webapp/web-client/src/websocket_client.ts`
-- 方法：`sendAudioChunk(audioData: Float32Array, isFinal: boolean)`
-- 调用链：
-  ```
-  WebSocketClient.sendAudioChunk(audioData, isFinal)
-    └─> AudioSender.sendAudioChunk(audioData, isFinal)
-  ```
-
-**4. AudioSender 编码并发送**
-- 文件：`webapp/web-client/src/websocket/audio_sender.ts`
-- 方法：`sendAudioChunk(audioData: Float32Array, isFinal: boolean)`
-- 调用链：
-  ```
-  AudioSender.sendAudioChunk(audioData, isFinal)
-    ├─> 检查背压状态（BackpressureManager）
-    ├─> 如果正常，调用 sendAudioChunkInternal()
-    │   ├─> AudioEncoder.encode(audioData) // Opus 编码
-    │   ├─> encodeAudioChunkFrame() // 构建二进制帧
-    │   └─> sendCallback(encodedData) // 通过 WebSocket 发送
-    └─> 如果背压，加入队列等待发送
-  ```
-
-#### 1.2.4 手动发送（用户点击"发送"按钮）
-
-**1. 用户点击"发送"按钮**
-- 文件：`webapp/web-client/src/ui/session_mode.ts`
-- 方法：`setupSessionModeEventHandlers()`
-- 事件处理：
-  ```typescript
-  sendBtn.addEventListener('click', () => {
-    app.sendCurrentUtterance();
-  });
-  ```
-
-**2. App 发送当前话语**
-- 文件：`webapp/web-client/src/app.ts`
-- 方法：`sendCurrentUtterance()`
-- 调用链：
-  ```
-  App.sendCurrentUtterance()
-    └─> SessionManager.sendCurrentUtterance()
-  ```
-
-**3. SessionManager 发送当前话语**
-- 文件：`webapp/web-client/src/app/session_manager.ts`
-- 方法：`sendCurrentUtterance()`
-- 调用链：
-  ```
-  SessionManager.sendCurrentUtterance()
-    ├─> 检查状态是否为 INPUT_RECORDING
-    ├─> 如果 audioBuffer.length > 0
-    │   ├─> 合并所有音频数据为 chunk
-    │   ├─> WebSocketClient.sendAudioChunk(chunk, false)
-    │   ├─> audioBuffer = [] // 清空缓冲区
-    │   └─> hasSentAudioChunksForCurrentUtterance = true
-    ├─> WebSocketClient.sendFinal() // 发送 finalize 信号
-    └─> currentUtteranceIndex++ // 递增 utterance 索引
-  ```
-
-**4. WebSocketClient 发送 Finalize**
-- 文件：`webapp/web-client/src/websocket_client.ts`
-- 方法：`sendFinal()`
-- 调用链：
-  ```
-  WebSocketClient.sendFinal()
-    └─> AudioSender.sendFinal()
-        ├─> AudioEncoder.encode(new Float32Array(0)) // 空音频
-        ├─> encodeFinalFrame() // 构建 finalize 帧
-        └─> sendCallback(encodedData) // 通过 WebSocket 发送
-  ```
+> 本文是 Web 客户端音频处理的**单一权威文档**，已根据当前代码实现（2026-01）更新，去掉了过期描述和冗长调用链，总长度控制在约 500 行以内。  
+> 目标读者：需要排查“录音 → 调度服务器 → 节点 → 回放”全链路问题的开发者。
 
 ---
 
-## 二、音频发送流程（调度服务器 → 播放）
+## 1. 总体架构与关键模块
 
-### 2.1 流程概览
+### 1.1 模块一览
 
+- **`App`（`src/app.ts`）**  
+  - 负责整体会话流程编排：开始/结束会话、控制录音与播放、管理 UI 状态。  
+  - 维护 `StateMachine`，监听状态变化并驱动 `Recorder` / `SessionManager` / `TtsPlayer`。
+
+- **`StateMachine`（`src/state_machine.ts`）**  
+  - 会话状态：`INPUT_READY` → `INPUT_RECORDING` → `PLAYING_TTS`，支持“单次发送”和“连续会话（Session Mode）”。  
+  - 提供 `startSession / endSession / startRecording / stopRecording / startPlaying / finishPlaying` 等原子事件。
+
+- **`Recorder`（`src/recorder.ts`）**  
+  - 采集麦克风音频（16kHz 单声道）、做 VAD 静音过滤和平滑（`attackFrames` / `releaseFrames`）。  
+  - 保证 `AudioContext` 在每次 `start()` 时都从 `suspended` 恢复为 `running`，避免 `onaudioprocess` 不触发。  
+  - 通过 `setAudioFrameCallback` 将经过 VAD 的音频帧推给 `SessionManager`。
+
+- **`SessionManager`（`src/app/session_manager.ts`）**  
+  - 维护“当前会话 / 当前 utterance”的状态、音频缓冲和 WebSocket 发送逻辑。  
+  - 引入了 **`canSendChunks` + 动态 `framesPerChunk`**：
+    - 决定何时允许向调度服务器发送音频 chunk；  
+    - 目标 chunk 时长约 **200ms**，与调度服务器 3 秒 pause 检测和 10 秒 MaxDuration 更匹配。
+
+- **`WebSocketClient`（`src/websocket_client.ts`）**  
+  - 聚合 `ConnectionManager`、`MessageHandler`、`BackpressureManager`、`AudioSender` 四大子模块。  
+  - 负责 Session Init 协议协商（Phase 1/2）、双工消息处理与背压响应。  
+  - 提供 `sendAudioChunk` / `sendFinal` / `sendTtsPlayEnded` 等高层接口给 `SessionManager` 和 `App`。
+
+- **`AudioSender`（`src/websocket/audio_sender.ts`）**  
+  - 根据协商结果选择 JSON 或 Binary Frame；  
+  - 编码 PCM16/Opus 音频并通过 `BackpressureManager` 控制发送节奏；  
+  - 内部持有 `AudioEncoder`，在 `WebSocketClient.disconnect()` 时会被统一关闭并清理。
+
+- **`TtsPlayer`（`src/tts_player.ts` + `tts_player/memory_manager.ts`）**  
+  - 解码调度服务器回传的 TTS（PCM16 或 Opus），以 16kHz 在 `AudioContext` 中播放。  
+  - 通过 `MemoryManager` 控制最大缓存时长（**默认 25 秒**），在超限时丢弃最旧音频，避免浏览器 OOM。
+
+- **UI 层**  
+  - `session_mode.ts` + `session_mode_template.ts`：会话模式 UI 与事件绑定完全分离，模板集中在 `template` 文件中。  
+  - 通过 `App` 暴露的方法（`startSession / sendCurrentUtterance / stopSession` 等）驱动业务。
+
+---
+
+## 2. 麦克风 → 调度服务器：录音与发送
+
+### 2.1 录音管线
+
+**流程概览：**
+
+```text
+用户说话 → Recorder 采集 (16kHz) → VAD & 平滑过滤 → SessionManager.onAudioFrame
+         → (按约 200ms 一包切 chunk) → AudioSender.encode → WebSocket 发送 audio_chunk
 ```
-调度服务器 → WebSocket 接收 → App 处理 → TtsPlayer 解码缓存 → 用户点击播放 → AudioContext 播放
+
+### 2.2 Recorder 行为（含关键修复）
+
+- 初始化：`Recorder.initialize()`  
+  - `getUserMedia({ audio: { sampleRate: 16000, channelCount: 1, … } })`  
+  - `AudioContext({ sampleRate: 16000 })`  
+  - `ScriptProcessorNode(bufferSize = 4096)` → 每帧约 `4096 / 16000 ≈ 256ms`。
+
+- 启动：`Recorder.start()`  
+  - 如果 `audioContext` 或 `mediaStream` 不存在，先初始化。  
+  - **如果 `audioContext.state === 'suspended'`，强制 `await audioContext.resume()`**。  
+  - 重置 VAD 状态（连续语音/静音帧计数）、设置恢复保护窗口（约 200ms），`isRecording = true`。
+
+- VAD 默认配置（`DEFAULT_SILENCE_FILTER_CONFIG`）：
+  - `threshold = 0.015`，`attackFrames = 3`，`releaseFrames = 20`，`windowMs = 100`。  
+  - 语音检测需要 **连续 3 帧语音** 才起送，停止发送需要 **连续 20 帧静音**（约 200ms）。  
+
+- `onaudioprocess` 回调：
+  - 不录音时直接返回；  
+  - 将缓冲数据复制为 `Float32Array`；  
+  - 通过 `processSilenceFilter` 判断是否“语音帧”，再触发 `audioFrameCallback(audioData)`。
+
+### 2.3 SessionManager：chunk 切分与发送节奏
+
+#### 2.3.1 发送开关：`canSendChunks`
+
+- 新增字段：
+
+```typescript
+private canSendChunks: boolean = true;
+private samplesPerFrame: number | null = null;
+private framesPerChunk: number = 1;
+private readonly TARGET_CHUNK_DURATION_MS = 200;
 ```
 
-### 2.2 详细调用链
+- 行为：
+  - TTS 播放期间，以及调度服务器 RestartTimer 触发前：`canSendChunks = false`，**只缓存，不发送**；  
+  - `App.onPlaybackFinished()` 发送完 `TTS_PLAY_ENDED` 后：调用 `setCanSendChunks(true)`，**从此刻开始才允许发 chunk**；  
+  - `setPlaybackFinishedTimestamp()` 内部会先 `canSendChunks = false`，确保“重启计时器 → 再开始发送”的顺序。
 
-#### 2.2.1 接收服务器消息
+#### 2.3.2 动态 `framesPerChunk`（约 200ms 一包）
 
-**1. WebSocket 消息接收**
-- 文件：`webapp/web-client/src/websocket_client.ts`
-- 方法：`onMessage(event)`
-- 调用链：
+- 在收到 **首帧** 时，根据 `audioData.length` 推算帧时长：
+
+```typescript
+if (this.samplesPerFrame === null) {
+  this.samplesPerFrame = audioData.length;
+  const frameDurationMs = this.samplesPerFrame / 16; // 16kHz
+  const framesPerChunk = Math.max(
+    1,
+    Math.round(this.TARGET_CHUNK_DURATION_MS / frameDurationMs)
+  );
+  this.framesPerChunk = framesPerChunk;
+  // 日志中输出 samplesPerFrame / frameDurationMs / framesPerChunk
+}
+```
+
+- 在当前实现中：`bufferSize = 4096` → `frameDurationMs ≈ 256` → `framesPerChunk = 1`，因此：  
+  - **大约每 256ms 发送一个 chunk**，而不是旧逻辑中的“10 帧 ≈ 2.5 秒”一大包。  
+  - 这与调度侧 `pause_ms = 3000ms`、`max_duration_ms = 10000ms` 更匹配，避免 3 秒内没有任何 chunk 导致 `Pause Finalize`。
+
+#### 2.3.3 onAudioFrame 主逻辑（简化版）
+
+```typescript
+onAudioFrame(audioData: Float32Array) {
+  // 仅在状态为 INPUT_RECORDING 且允许发送时处理
+  if (!this.getIsSessionActive() || !this.stateMachine.isInputRecording()) return;
+
+  this.audioBuffer.push(audioData);
+
+  // RestartTimer 之前：只缓存不发
+  if (!this.canSendChunks) return;
+
+  // 首帧时初始化 framesPerChunk（见上）
+
+  if (this.audioBuffer.length >= this.framesPerChunk) {
+    const frames = this.audioBuffer.splice(0, this.framesPerChunk);
+    const chunk = this.concatAudioBuffers(frames);
+    this.wsClient.sendAudioChunk(chunk, false);
+    this.hasSentAudioChunksForCurrentUtterance = true;
+  }
+}
+```
+
+> 单元测试：`tests/app/session_manager_test.ts` 中新增了用例，分别验证  
+> - `canSendChunks=false` 时不发送；  
+> - `canSendChunks=true` 时按帧长度连续发送，并正确标记 `hasSentAudioChunksForCurrentUtterance`。
+
+---
+
+## 3. 调度服务器 → TTS 播放
+
+### 3.1 消息接收与解码
+
+- `WebSocketClient` 在 `onMessage` 中将服务器消息交给 `MessageHandler`：  
+  - 支持 Phase 1（JSON PCM16）与 Phase 2（二进制帧 + Opus/PCM16）；  
+  - 解包后生成统一的 TTS 音频块（base64 PCM16 或 Opus packet），交给 `TtsPlayer.addAudioChunk(...)`。
+
+- `TtsPlayer`：
+  - 统一在 16kHz 上创建 `AudioContext`，必要时调用 `audioContext.resume()`；  
+  - 内部维护 `audioBuffers: Array<{ audio: Float32Array; utteranceIndex: number }>`；  
+  - 使用 `MemoryManager` 控制最大总时长，**默认 25 秒**，高于 20 秒以配合自动播放触发阈值。
+
+### 3.2 内存与自动播放
+
+- `MemoryManager`（`tts_player/memory_manager.ts`）：
+  - `getMaxBufferDuration()` 默认返回 25 秒；  
+  - 当累计缓存接近上限时，丢弃最旧 buffer，并打印详细日志；  
+  - 在手机端页面进入后台时，只保留约 30% 缓存，减小内存压力。
+
+- 自动播放与 UI 同步：
+  - 当首段 TTS 缓冲达到一定阈值时，`TtsPlayer` 可触发自动播放（具体启用由配置控制）；  
+  - 通过 `playbackIndexChangeCallback` 同步当前播放的 `utteranceIndex` 到 UI，高亮对应文本；  
+  - 播放完成后调用 `playbackFinishedCallback`，`App.onPlaybackFinished()` 中会：
+    - 发送 `TTS_PLAY_ENDED` 给调度服务器（触发 RestartTimer）；  
+    - **重启录音并打开 `SessionManager.canSendChunks`**；  
+    - 启动“播放结束 → 首帧到达”的监控逻辑，超时则自动尝试恢复 `AudioContext`。
+
+---
+
+## 4. 背压与断线处理（概览）
+
+> 背压实现细节仍在 `BACKPRESSURE_IMPLEMENTATION.md`，这里只保留与音频流程强相关的关键点。
+
+- 调度服务器可发送 `BackpressureMessage`（`BUSY` / `PAUSE` / `SLOW_DOWN`）。  
+- `WebSocketClient` 将其交给 `BackpressureManager`，由 `AudioSender` 在发送前查询当前状态：  
+  - `PAUSED`：非 final 帧丢弃，final 帧入队，等待恢复后发送；  
+  - `BUSY/SLOW_DOWN`：所有帧入队，按较低频率（例如 500ms）发送；  
+  - `NORMAL`：直接发送。  
+- `WebSocketClient.disconnect()` 时：
+  - 调用 `audioSender.setSessionId(null)`、`audioSender.setAudioEncoder(null)`；  
+  - 重置发送序列号并清空背压队列，避免残留状态影响下次会话。
+
+---
+
+## 5. 与调度服务器超时逻辑的配合（重要）
+
+### 5.1 调度侧关键参数（当前值）
+
+- `pause_ms = 3000` ms：3 秒静音触发 `Pause Finalize`；  
+- `max_duration_ms = 10000` ms：**10 秒最大音频时长触发 `MaxDuration Finalize`**。  
+
+### 5.2 Web 客户端的配合策略
+
+1. **RestartTimer 之前严禁发送 chunk**  
+   - 播放 TTS 时 `SessionManager.canSendChunks = false`；  
+   - `App.onPlaybackFinished()` 先发送 `TTS_PLAY_ENDED`，让调度服务器重置 `last_chunk_at_ms`，再 `setCanSendChunks(true)` 开始发新语音。
+
+2. **持续输出 chunk，间隔远小于 3 秒**  
+   - 以约 256ms/帧的节奏发送音频（或接近 200ms 的动态目标），确保 `record_chunk_and_check_pause` 始终认为“在阈值内”；  
+   - 只要用户持续讲话，调度服务器就不会因 pause 而提前 finalize。
+
+3. **对 MaxDuration 的预期**  
+   - 当单个 utterance 累计音频时长超过 10 秒时，调度侧会以 `reason = "MaxDuration"` finalize；  
+   - 节点端据此进行“最长静音切分 + 尾部拼接”，尽量避免语义被硬切断；  
+   - Web 客户端不需要额外逻辑，只需保持稳定 chunk 输出即可。
+
+---
+
+## 6. 调试建议与常见问题
+
+- **症状：TTS 播放后讲话，调度侧 Pause Finalize 过早触发**  
+  - 检查前后日志：是否 `TTS_PLAY_ENDED` 已发送、`SessionManager.canSendChunks` 是否在播放结束后及时置为 `true`；  
+  - 查看首帧到达延迟：`Recorder` 是否成功 `resume AudioContext`，`onAudioFrame` 是否在 1–2 秒内收到首帧。
+
+- **症状：长句被 MaxDuration 截断**  
+  - 这是预期行为（超过 10 秒）；  
+  - 节点端会根据 `is_timeout_triggered=true` 做最长静音切分与拼接；  
+  - 如需改变阈值，应修改调度服务器 `WebTaskSegmentationConfig.max_duration_ms` 配置。
+
+- **症状：浏览器内存增长过快或卡顿**  
+  - 检查 `TtsPlayer` 日志中缓存总时长是否长时间接近 25 秒；  
+  - 如必要，可下调 `getMaxBufferDuration()` 的返回值，并同步更新相关单元测试期望。
+
+---
+
+> 如果需要更细节的实现（如 Binary Frame 编码格式、Opus 编解码细节、背压状态机等），请参考：  
+> - `BACKPRESSURE_IMPLEMENTATION.md`  
+> - `PHASE2_IMPLEMENTATION_SUMMARY.md`  
+> - `SESSION_INIT_PROTOCOL_ENHANCEMENT.md`  
+> 但本文件应作为排查音频路径问题时的首选入口文档。
+
   ```
   WebSocketClient.onMessage(event)
     ├─> 解析消息（JSON 或二进制）

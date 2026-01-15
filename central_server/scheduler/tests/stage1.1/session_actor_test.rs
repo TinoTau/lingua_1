@@ -88,7 +88,7 @@ async fn test_session_actor_creation() {
         tx,
         0,
         1000,
-        20000, // max_duration_ms
+        10000, // max_duration_ms（10秒）
         EdgeStabilizationConfig::default(),
     );
     

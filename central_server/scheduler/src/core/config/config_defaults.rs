@@ -298,7 +298,7 @@ pub fn default_web_pause_ms() -> u64 {
 }
 
 pub fn default_max_audio_duration_ms() -> u64 {
-    20000  // 20秒（最大音频时长限制）
+    10000  // 10秒（最大音频时长限制，从20秒缩短为10秒，便于更快切分长句）
 }
 
 impl Default for WebTaskSegmentationConfig {

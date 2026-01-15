@@ -106,7 +106,7 @@
 ## 路径 4: MaxDuration Finalize
 
 ### 触发条件
-- 在 `handle_audio_chunk` 中，累积音频时长超过 `max_duration_ms`（默认 20000ms）
+- 在 `handle_audio_chunk` 中，累积音频时长超过 `max_duration_ms`（默认 10000ms，10秒）
 - 每次收到 chunk 时，累积 `chunk_duration_ms` 到 `accumulated_audio_duration_ms`
 
 ### 流程

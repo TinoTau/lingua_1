@@ -39,7 +39,7 @@ Job 会在以下情况下被 finalize：
 1. **用户手动截断**：Web端发送 `is_final=true`
    - 触发 `IsFinal` finalize
 
-2. **达到最大音频时长**：`accumulated_audio_duration_ms >= max_duration_ms`（默认20秒）
+2. **达到最大音频时长**：`accumulated_audio_duration_ms >= max_duration_ms`（默认10秒）
    - 触发 `MaxDuration` finalize
 
 3. **用户停止说话超过3秒**：pause 检测发现时间差 > 3秒
