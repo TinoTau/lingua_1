@@ -24,6 +24,7 @@ const SEMANTIC_REPAIR_SERVICE_PREFERENCE_MAP = {
     'semantic-repair-zh': 'semanticRepairZhEnabled',
     'semantic-repair-en': 'semanticRepairEnEnabled',
     'en-normalize': 'enNormalizeEnabled',
+    'semantic-repair-en-zh': 'semanticRepairEnZhEnabled',
 };
 /**
  * 更新服务自动启动配置（Python 服务）
@@ -268,6 +269,7 @@ function registerRuntimeHandlers(nodeAgent, modelManager, inferenceService, rust
                 semanticRepairZhEnabled: prefs.semanticRepairZhEnabled ?? config.servicePreferences.semanticRepairZhEnabled,
                 semanticRepairEnEnabled: prefs.semanticRepairEnEnabled ?? config.servicePreferences.semanticRepairEnEnabled,
                 enNormalizeEnabled: prefs.enNormalizeEnabled ?? config.servicePreferences.enNormalizeEnabled,
+                semanticRepairEnZhEnabled: prefs.semanticRepairEnZhEnabled ?? config.servicePreferences.semanticRepairEnZhEnabled,
             };
             (0, node_config_1.saveNodeConfig)(config);
             return { success: true };

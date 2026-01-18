@@ -109,10 +109,11 @@ class TaskRouterServiceManager {
             'piper-tts': 5006,
             'your-tts': 5004,
             'speaker-embedding': 5003,
-            // 语义修复服务端口（待确认，这里使用临时端口号）
-            'semantic-repair-zh': 5013,
-            'semantic-repair-en': 5011,
-            'en-normalize': 5012,
+            // 语义修复服务端口
+            'semantic-repair-zh': 5013, // 旧服务（已弃用）
+            'semantic-repair-en': 5011, // 旧服务（已弃用）
+            'en-normalize': 5012, // 旧服务（已弃用）
+            'semantic-repair-en-zh': 5015, // 新统一服务
         };
         // 首先尝试从映射表获取
         if (portMap[serviceId]) {
@@ -134,9 +135,10 @@ class TaskRouterServiceManager {
             'speaker-embedding': 'speaker_embedding',
             'faster-whisper-vad': 'faster_whisper_vad',
             // 语义修复服务可能通过Python服务管理器管理
-            'semantic-repair-zh': 'semantic_repair_zh',
-            'semantic-repair-en': 'semantic_repair_en',
-            'en-normalize': 'en_normalize',
+            'semantic-repair-zh': 'semantic_repair_zh', // 旧服务
+            'semantic-repair-en': 'semantic_repair_en', // 旧服务
+            'en-normalize': 'en_normalize', // 旧服务
+            'semantic-repair-en-zh': 'semantic_repair_en_zh', // 新统一服务
         };
         const pythonServiceName = pythonServiceNameMap[serviceId];
         if (pythonServiceName && this.pythonServiceManager) {

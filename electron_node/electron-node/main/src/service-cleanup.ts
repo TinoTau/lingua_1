@@ -53,6 +53,7 @@ export async function cleanupServices(
     const semanticRepairZhEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-zh')?.running;
     const semanticRepairEnEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en')?.running;
     const enNormalizeEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'en-normalize')?.running;
+    const semanticRepairEnZhEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en-zh')?.running;
 
     const config = loadNodeConfig();
     
@@ -72,6 +73,7 @@ export async function cleanupServices(
       semanticRepairZhEnabled,
       semanticRepairEnEnabled,
       enNormalizeEnabled,
+      semanticRepairEnZhEnabled,
     };
     
     logger.info(
@@ -88,6 +90,7 @@ export async function cleanupServices(
           semanticRepairZh: semanticRepairZhEnabled,
           semanticRepairEn: semanticRepairEnEnabled,
           enNormalize: enNormalizeEnabled,
+          semanticRepairEnZh: semanticRepairEnZhEnabled,
         },
         rustRunning: rustEnabled,
         pythonRunning: pythonStatuses.filter(s => s.running).length,

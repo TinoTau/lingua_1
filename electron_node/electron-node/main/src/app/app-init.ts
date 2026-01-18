@@ -193,6 +193,7 @@ export function loadAndValidateConfig(): void {
       semanticRepairZhEnabled: prefs.semanticRepairZhEnabled,
       semanticRepairEnEnabled: prefs.semanticRepairEnEnabled,
       enNormalizeEnabled: prefs.enNormalizeEnabled,
+      semanticRepairEnZhEnabled: prefs.semanticRepairEnZhEnabled,
     },
     'User service preferences loaded successfully'
   );
@@ -248,6 +249,7 @@ export async function startServicesByPreference(
         semanticRepairZh: prefs.semanticRepairZhEnabled,
         semanticRepairEn: prefs.semanticRepairEnEnabled,
         enNormalize: prefs.enNormalizeEnabled,
+        semanticRepairEnZh: prefs.semanticRepairEnZhEnabled,
       },
     },
     'Service manager initialized, auto-starting services based on user preferences'
@@ -300,10 +302,10 @@ export async function startServicesByPreference(
           'en-normalize',
         ];
 
-        const toStart: Array<'semantic-repair-zh' | 'semantic-repair-en' | 'en-normalize'> = [];
+        const toStart: Array<'semantic-repair-zh' | 'semantic-repair-en' | 'en-normalize' | 'semantic-repair-en-zh'> = [];
         for (const service of installed) {
           if (semanticRepairServiceIds.includes(service.service_id as any)) {
-            const serviceId = service.service_id as 'semantic-repair-zh' | 'semantic-repair-en' | 'en-normalize';
+            const serviceId = service.service_id as 'semantic-repair-zh' | 'semantic-repair-en' | 'en-normalize' | 'semantic-repair-en-zh';
             let shouldStart = false;
             if (serviceId === 'semantic-repair-zh') {
               shouldStart = prefs.semanticRepairZhEnabled !== false;
@@ -311,6 +313,8 @@ export async function startServicesByPreference(
               shouldStart = prefs.semanticRepairEnEnabled !== false;
             } else if (serviceId === 'en-normalize') {
               shouldStart = prefs.enNormalizeEnabled !== false;
+            } else if (serviceId === 'semantic-repair-en-zh') {
+              shouldStart = prefs.semanticRepairEnZhEnabled !== false;
             }
 
             if (shouldStart) {
@@ -323,7 +327,9 @@ export async function startServicesByPreference(
                     ? prefs.semanticRepairZhEnabled
                     : serviceId === 'semantic-repair-en'
                       ? prefs.semanticRepairEnEnabled
-                      : prefs.enNormalizeEnabled,
+                      : serviceId === 'semantic-repair-en-zh'
+                        ? prefs.semanticRepairEnZhEnabled
+                        : prefs.enNormalizeEnabled,
                 },
                 'Semantic repair service auto-start disabled by user preference'
               );

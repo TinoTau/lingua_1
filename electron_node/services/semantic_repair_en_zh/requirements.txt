@@ -1,0 +1,18 @@
+# Unified Semantic Repair Service Dependencies
+
+# Web Framework
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.0.0
+
+# LLM Engine
+llama-cpp-python>=0.2.0
+
+# PyTorch (for device management)
+torch>=2.0.0
+
+# System Monitoring (for resource usage logging)
+psutil>=5.9.0
+
+# Testing (optional, for test_service.py and test_comprehensive.py)
+requests>=2.25.0

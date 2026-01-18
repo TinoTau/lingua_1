@@ -40,12 +40,17 @@ export function ServiceManagement() {
   const [semanticRepairStatuses, setSemanticRepairStatuses] = useState<SemanticRepairServiceStatus[]>([]);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [processingMetrics, setProcessingMetrics] = useState<Record<string, number>>({});
+  const [serviceMetadata, setServiceMetadata] = useState<Record<string, any>>({});
 
   useEffect(() => {
     // 加载服务偏好和当前状态
     const init = async () => {
       try {
         await window.electronAPI.getServicePreferences();
+        // 加载所有服务的元数据（用于动态显示服务名称）
+        const metadata = await window.electronAPI.getAllServiceMetadata();
+        setServiceMetadata(metadata);
+        console.log('Loaded service metadata:', metadata);
       } catch (e) {
         console.error('加载服务偏好失败:', e);
       }
@@ -152,19 +157,32 @@ export function ServiceManagement() {
   };
 
 
-  const getServiceDisplayName = (name: string): string => {
-    const map: Record<string, string> = {
+  /**
+   * 动态获取服务显示名（从 service.json 元数据）
+   * 支持热插拔：新服务无需修改代码即可正确显示
+   */
+  const getServiceDisplayName = (serviceId: string): string => {
+    // 优先从元数据获取
+    const meta = serviceMetadata[serviceId];
+    if (meta) {
+      let name = meta.name_zh || meta.name;
+      if (meta.deprecated) {
+        name += ' (已弃用)';
+      }
+      return name;
+    }
+    
+    // 回退到硬编码映射（仅用于没有 service.json 的核心服务）
+    const fallbackMap: Record<string, string> = {
       nmt: 'NMT 翻译服务',
       tts: 'TTS 语音合成 (Piper)',
       yourtts: 'YourTTS 语音克隆',
       faster_whisper_vad: 'FastWhisperVad语音识别服务',
       speaker_embedding: 'Speaker Embedding 服务',
       rust: '节点推理服务 (Rust)',
-      'en-normalize': 'EN Normalize 英文标准化服务',
-      'semantic-repair-zh': 'Semantic Repair 中文语义修复',
-      'semantic-repair-en': 'Semantic Repair 英文语义修复',
     };
-    return map[name] || name;
+    
+    return fallbackMap[serviceId] || serviceId;
   };
 
   // 获取服务ID（用于查找处理效率）
@@ -208,6 +226,7 @@ export function ServiceManagement() {
       const semanticRepairZhEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-zh')?.running;
       const semanticRepairEnEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en')?.running;
       const enNormalizeEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'en-normalize')?.running;
+      const semanticRepairEnZhEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en-zh')?.running;
 
       const newPrefs = { 
         rustEnabled, 
@@ -219,6 +238,7 @@ export function ServiceManagement() {
         semanticRepairZhEnabled,
         semanticRepairEnEnabled,
         enNormalizeEnabled,
+        semanticRepairEnZhEnabled,
       };
       await window.electronAPI.setServicePreferences(newPrefs);
     } catch (error) {
@@ -242,7 +262,10 @@ export function ServiceManagement() {
     }
   };
 
-  const handleStartSemanticRepair = async (serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => {
+  /**
+   * 启动语义修复服务（使用 string 类型支持动态服务）
+   */
+  const handleStartSemanticRepair = async (serviceId: string) => {
     setLoading(prev => ({ ...prev, [serviceId]: true }));
     try {
       const result = await window.electronAPI.startSemanticRepairService(serviceId);
@@ -258,7 +281,10 @@ export function ServiceManagement() {
     }
   };
 
-  const handleStopSemanticRepair = async (serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => {
+  /**
+   * 停止语义修复服务（使用 string 类型支持动态服务）
+   */
+  const handleStopSemanticRepair = async (serviceId: string) => {
     setLoading(prev => ({ ...prev, [serviceId]: true }));
     try {
       const result = await window.electronAPI.stopSemanticRepairService(serviceId);
@@ -274,7 +300,10 @@ export function ServiceManagement() {
     }
   };
 
-  const handleToggleSemanticRepair = async (serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en', checked: boolean) => {
+  /**
+   * 切换语义修复服务状态（使用 string 类型支持动态服务）
+   */
+  const handleToggleSemanticRepair = async (serviceId: string, checked: boolean) => {
     if (checked) {
       await handleStartSemanticRepair(serviceId);
     } else {
@@ -390,7 +419,7 @@ export function ServiceManagement() {
                   <input
                     type="checkbox"
                     checked={isRunning}
-                    onChange={(e) => handleToggleSemanticRepair(serviceId as 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en', e.target.checked)}
+                    onChange={(e) => handleToggleSemanticRepair(serviceId, e.target.checked)}
                     disabled={isLoading || isStarting}
                   />
                   <span className="lsm-switch-slider"></span>

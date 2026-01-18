@@ -22,6 +22,7 @@ export interface ServiceStatus {
   semanticRepairZh: boolean;
   semanticRepairEn: boolean;
   enNormalize: boolean;
+  semanticRepairEnZh: boolean;
 }
 
 /**
@@ -48,6 +49,7 @@ export async function getCurrentServiceStatus(
     semanticRepairZh: !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-zh')?.running,
     semanticRepairEn: !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en')?.running,
     enNormalize: !!semanticRepairStatuses.find(s => s.serviceId === 'en-normalize')?.running,
+    semanticRepairEnZh: !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en-zh')?.running,
   };
 }
 
@@ -75,6 +77,7 @@ export function saveServiceStatusToConfig(
       semanticRepairZhEnabled: serviceStatus.semanticRepairZh,
       semanticRepairEnEnabled: serviceStatus.semanticRepairEn,
       enNormalizeEnabled: serviceStatus.enNormalize,
+      semanticRepairEnZhEnabled: serviceStatus.semanticRepairEnZh,
     };
     saveNodeConfig(config);
     // 根据 savedFrom 生成不同的日志消息，与原始代码保持一致

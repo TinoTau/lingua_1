@@ -30,6 +30,7 @@ async function getCurrentServiceStatus(rustServiceManager, pythonServiceManager,
         semanticRepairZh: !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-zh')?.running,
         semanticRepairEn: !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en')?.running,
         enNormalize: !!semanticRepairStatuses.find(s => s.serviceId === 'en-normalize')?.running,
+        semanticRepairEnZh: !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en-zh')?.running,
     };
 }
 /**
@@ -49,6 +50,7 @@ function saveServiceStatusToConfig(serviceStatus, savedFrom) {
             semanticRepairZhEnabled: serviceStatus.semanticRepairZh,
             semanticRepairEnEnabled: serviceStatus.semanticRepairEn,
             enNormalizeEnabled: serviceStatus.enNormalize,
+            semanticRepairEnZhEnabled: serviceStatus.semanticRepairEnZh,
         };
         (0, node_config_1.saveNodeConfig)(config);
         // 根据 savedFrom 生成不同的日志消息，与原始代码保持一致

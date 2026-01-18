@@ -278,8 +278,18 @@ export class TaskRouterSemanticRepairHandler {
 
   /**
    * 根据语言获取服务ID
+   * 优先使用新的统一服务 semantic-repair-en-zh
    */
   private getServiceIdForLanguage(lang: 'zh' | 'en'): string {
+    // 优先检查新的统一服务是否可用
+    if (this.getServiceEndpointById) {
+      const unifiedEndpoint = this.getServiceEndpointById('semantic-repair-en-zh');
+      if (unifiedEndpoint && unifiedEndpoint.status === 'running') {
+        return 'semantic-repair-en-zh';
+      }
+    }
+    
+    // 回退到旧的独立服务
     if (lang === 'zh') {
       return 'semantic-repair-zh';
     } else {

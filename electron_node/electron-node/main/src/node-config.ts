@@ -11,9 +11,10 @@ export interface ServicePreferences {
   fasterWhisperVadEnabled: boolean;
   speakerEmbeddingEnabled: boolean;
   // 语义修复服务自动启动配置
-  semanticRepairZhEnabled?: boolean;    // semantic-repair-zh 自动启动
-  semanticRepairEnEnabled?: boolean;    // semantic-repair-en 自动启动
-  enNormalizeEnabled?: boolean;         // en-normalize 自动启动
+  semanticRepairZhEnabled?: boolean;    // semantic-repair-zh 自动启动（已弃用）
+  semanticRepairEnEnabled?: boolean;    // semantic-repair-en 自动启动（已弃用）
+  enNormalizeEnabled?: boolean;         // en-normalize 自动启动（已弃用）
+  semanticRepairEnZhEnabled?: boolean;  // semantic-repair-en-zh 自动启动（推荐）
 }
 
 // ASR配置已移除：各服务的参数应该随着服务走，避免节点端与服务强制绑定

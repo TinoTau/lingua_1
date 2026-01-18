@@ -38,25 +38,57 @@ export class ServicesHandler {
     const result: InstalledService[] = [];
     const defaultVersion = '2.0.0';
 
-    const serviceTypeMap: Record<string, ServiceType> = {
-      'faster-whisper-vad': ServiceType.ASR,
-      'node-inference': ServiceType.ASR,
-      'nmt-m2m100': ServiceType.NMT,
-      'piper-tts': ServiceType.TTS,
-      'speaker-embedding': ServiceType.TONE,
-      'your-tts': ServiceType.TONE,
-      // 语义修复服务归类为SEMANTIC类型
-      'semantic-repair-zh': ServiceType.SEMANTIC,
-      'semantic-repair-en': ServiceType.SEMANTIC,
-      'en-normalize': ServiceType.SEMANTIC,
+    // 服务类型映射：从 service.json 的 type 字段到 ServiceType 枚举
+    const serviceTypeEnumMap: Record<string, ServiceType> = {
+      'asr': ServiceType.ASR,
+      'nmt': ServiceType.NMT,
+      'tts': ServiceType.TTS,
+      'tone': ServiceType.TONE,
+      'semantic-repair': ServiceType.SEMANTIC,
+    };
+    
+    // 辅助函数：从 service.json 读取服务类型
+    const getServiceTypeFromJson = (installPath: string): ServiceType | null => {
+      try {
+        const serviceJsonPath = path.join(installPath, 'service.json');
+        if (!fs.existsSync(serviceJsonPath)) {
+          return null;
+        }
+        
+        const serviceJson = JSON.parse(fs.readFileSync(serviceJsonPath, 'utf-8'));
+        const serviceType = serviceJson.type;
+        
+        return serviceTypeEnumMap[serviceType] || null;
+      } catch (error) {
+        return null;
+      }
     };
 
     const defaultDevice: DeviceType = 'gpu';
 
-    const pushService = (service_id: string, status: ServiceStatus, version?: string) => {
-      const type = serviceTypeMap[service_id];
+    const pushService = (service_id: string, status: ServiceStatus, version?: string, installPath?: string) => {
+      // 优先从 service.json 读取类型（支持热插拔）
+      let type: ServiceType | null = null;
+      
+      if (installPath) {
+        type = getServiceTypeFromJson(installPath);
+      }
+      
+      // 回退到硬编码映射（仅用于没有 service.json 的旧服务）
       if (!type) {
-        logger.warn({ service_id }, 'Unknown service_id, skipped when building installed_services');
+        const fallbackMap: Record<string, ServiceType> = {
+          'faster-whisper-vad': ServiceType.ASR,
+          'node-inference': ServiceType.ASR,
+          'nmt-m2m100': ServiceType.NMT,
+          'piper-tts': ServiceType.TTS,
+          'speaker-embedding': ServiceType.TONE,
+          'your-tts': ServiceType.TONE,
+        };
+        type = fallbackMap[service_id] || null;
+      }
+      
+      if (!type) {
+        logger.warn({ service_id }, 'Unknown service type, skipped when building installed_services');
         return;
       }
       // 去重：若已存在则更新状态
@@ -92,7 +124,7 @@ export class ServicesHandler {
 
         installed.forEach((service: any) => {
           const running = this.isServiceRunning(service.service_id);
-          pushService(service.service_id, running ? 'running' : 'stopped', service.version);
+          pushService(service.service_id, running ? 'running' : 'stopped', service.version, service.install_path);
         });
       } catch (error) {
         logger.error({ error }, 'Failed to get installed services from registry');

@@ -42,6 +42,7 @@ async function cleanupServices(nodeAgent, rustServiceManager, pythonServiceManag
         const semanticRepairZhEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-zh')?.running;
         const semanticRepairEnEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en')?.running;
         const enNormalizeEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'en-normalize')?.running;
+        const semanticRepairEnZhEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en-zh')?.running;
         const config = (0, node_config_1.loadNodeConfig)();
         // 记录保存前的配置（用于对比）
         const previousPreferences = { ...config.servicePreferences };
@@ -58,6 +59,7 @@ async function cleanupServices(nodeAgent, rustServiceManager, pythonServiceManag
             semanticRepairZhEnabled,
             semanticRepairEnEnabled,
             enNormalizeEnabled,
+            semanticRepairEnZhEnabled,
         };
         logger_1.default.info({
             previousPreferences,
@@ -72,6 +74,7 @@ async function cleanupServices(nodeAgent, rustServiceManager, pythonServiceManag
                 semanticRepairZh: semanticRepairZhEnabled,
                 semanticRepairEn: semanticRepairEnEnabled,
                 enNormalize: enNormalizeEnabled,
+                semanticRepairEnZh: semanticRepairEnZhEnabled,
             },
             rustRunning: rustEnabled,
             pythonRunning: pythonStatuses.filter(s => s.running).length,

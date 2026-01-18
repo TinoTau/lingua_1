@@ -184,6 +184,7 @@ function loadAndValidateConfig() {
         semanticRepairZhEnabled: prefs.semanticRepairZhEnabled,
         semanticRepairEnEnabled: prefs.semanticRepairEnEnabled,
         enNormalizeEnabled: prefs.enNormalizeEnabled,
+        semanticRepairEnZhEnabled: prefs.semanticRepairEnZhEnabled,
     }, 'User service preferences loaded successfully');
     // 确保配置文件包含所有必需字段
     try {
@@ -231,6 +232,7 @@ async function startServicesByPreference(managers) {
             semanticRepairZh: prefs.semanticRepairZhEnabled,
             semanticRepairEn: prefs.semanticRepairEnEnabled,
             enNormalize: prefs.enNormalizeEnabled,
+            semanticRepairEnZh: prefs.semanticRepairEnZhEnabled,
         },
     }, 'Service manager initialized, auto-starting services based on user preferences');
     // 启动 Rust 推理服务
@@ -295,6 +297,9 @@ async function startServicesByPreference(managers) {
                         else if (serviceId === 'en-normalize') {
                             shouldStart = prefs.enNormalizeEnabled !== false;
                         }
+                        else if (serviceId === 'semantic-repair-en-zh') {
+                            shouldStart = prefs.semanticRepairEnZhEnabled !== false;
+                        }
                         if (shouldStart) {
                             toStart.push(serviceId);
                         }
@@ -305,7 +310,9 @@ async function startServicesByPreference(managers) {
                                     ? prefs.semanticRepairZhEnabled
                                     : serviceId === 'semantic-repair-en'
                                         ? prefs.semanticRepairEnEnabled
-                                        : prefs.enNormalizeEnabled,
+                                        : serviceId === 'semantic-repair-en-zh'
+                                            ? prefs.semanticRepairEnZhEnabled
+                                            : prefs.enNormalizeEnabled,
                             }, 'Semantic repair service auto-start disabled by user preference');
                         }
                     }

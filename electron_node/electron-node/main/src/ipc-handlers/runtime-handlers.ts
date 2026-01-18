@@ -1,4 +1,6 @@
 import { ipcMain } from 'electron';
+import * as fs from 'fs';
+import * as path from 'path';
 import { loadNodeConfig, saveNodeConfig, ServicePreferences } from '../node-config';
 import logger from '../logger';
 import type { NodeAgent } from '../agent/node-agent';
@@ -29,6 +31,7 @@ const SEMANTIC_REPAIR_SERVICE_PREFERENCE_MAP: Record<SemanticRepairServiceId, ke
   'semantic-repair-zh': 'semanticRepairZhEnabled',
   'semantic-repair-en': 'semanticRepairEnEnabled',
   'en-normalize': 'enNormalizeEnabled',
+  'semantic-repair-en-zh': 'semanticRepairEnZhEnabled',
 };
 
 /**
@@ -316,6 +319,7 @@ export function registerRuntimeHandlers(
           semanticRepairZhEnabled: prefs.semanticRepairZhEnabled ?? config.servicePreferences.semanticRepairZhEnabled,
           semanticRepairEnEnabled: prefs.semanticRepairEnEnabled ?? config.servicePreferences.semanticRepairEnEnabled,
           enNormalizeEnabled: prefs.enNormalizeEnabled ?? config.servicePreferences.enNormalizeEnabled,
+          semanticRepairEnZhEnabled: prefs.semanticRepairEnZhEnabled ?? config.servicePreferences.semanticRepairEnZhEnabled,
         };
         saveNodeConfig(config);
         return { success: true };
@@ -359,6 +363,38 @@ export function registerRuntimeHandlers(
       return [];
     }
     return await semanticRepairServiceManager.getAllServiceStatuses();
+  });
+
+  // 获取所有服务的元数据（用于动态显示服务名称和配置）
+  ipcMain.handle('get-all-service-metadata', async () => {
+    const metadata: Record<string, any> = {};
+    
+    if (!serviceRegistryManager) {
+      return metadata;
+    }
+    
+    try {
+      await serviceRegistryManager.loadRegistry();
+      const installed = serviceRegistryManager.listInstalled();
+      
+      for (const service of installed) {
+        try {
+          const serviceJsonPath = path.join(service.install_path, 'service.json');
+          if (fs.existsSync(serviceJsonPath)) {
+            const serviceJson = JSON.parse(fs.readFileSync(serviceJsonPath, 'utf-8'));
+            metadata[service.service_id] = serviceJson;
+          }
+        } catch (error) {
+          logger.warn({ service_id: service.service_id, error }, 'Failed to load service metadata');
+        }
+      }
+      
+      logger.debug({ count: Object.keys(metadata).length }, 'Loaded service metadata for UI');
+    } catch (error) {
+      logger.error({ error }, 'Failed to get service metadata');
+    }
+    
+    return metadata;
   });
 
   ipcMain.handle('start-semantic-repair-service', async (_, serviceId: SemanticRepairServiceId) => {

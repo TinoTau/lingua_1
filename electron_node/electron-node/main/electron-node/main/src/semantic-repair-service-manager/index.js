@@ -57,7 +57,7 @@ class SemanticRepairServiceManager {
         // 状态变化回调（用于通知节点代理服务状态变化）
         this.onStatusChangeCallback = null;
         // 初始化状态
-        const serviceIds = ['en-normalize', 'semantic-repair-zh', 'semantic-repair-en'];
+        const serviceIds = ['en-normalize', 'semantic-repair-zh', 'semantic-repair-en', 'semantic-repair-en-zh'];
         for (const serviceId of serviceIds) {
             this.statuses.set(serviceId, {
                 serviceId,
@@ -82,10 +82,10 @@ class SemanticRepairServiceManager {
             const { serviceId, resolve, reject } = this.startQueue.shift();
             try {
                 // 对于需要加载模型的服务，等待前一个服务完全启动后再启动下一个
-                const needsModel = serviceId === 'semantic-repair-zh' || serviceId === 'semantic-repair-en';
+                const needsModel = serviceId === 'semantic-repair-zh' || serviceId === 'semantic-repair-en' || serviceId === 'semantic-repair-en-zh';
                 if (needsModel) {
                     // 检查是否有其他模型服务正在启动
-                    const otherModelServiceStarting = Array.from(this.statuses.values()).some(s => (s.serviceId === 'semantic-repair-zh' || s.serviceId === 'semantic-repair-en') &&
+                    const otherModelServiceStarting = Array.from(this.statuses.values()).some(s => (s.serviceId === 'semantic-repair-zh' || s.serviceId === 'semantic-repair-en' || s.serviceId === 'semantic-repair-en-zh') &&
                         s.serviceId !== serviceId && s.starting);
                     if (otherModelServiceStarting) {
                         logger_1.default.info({ serviceId, reason: 'Waiting for other model service to finish loading' }, 'Delaying service start to avoid GPU overload');
@@ -94,7 +94,7 @@ class SemanticRepairServiceManager {
                         const checkInterval = 2000; // 每2秒检查一次
                         const startTime = Date.now();
                         while (Date.now() - startTime < maxWait) {
-                            const stillStarting = Array.from(this.statuses.values()).some(s => (s.serviceId === 'semantic-repair-zh' || s.serviceId === 'semantic-repair-en') &&
+                            const stillStarting = Array.from(this.statuses.values()).some(s => (s.serviceId === 'semantic-repair-zh' || s.serviceId === 'semantic-repair-en' || s.serviceId === 'semantic-repair-en-zh') &&
                                 s.serviceId !== serviceId && s.starting);
                             if (!stillStarting) {
                                 break;
@@ -121,7 +121,7 @@ class SemanticRepairServiceManager {
             return;
         }
         // 对于需要加载模型的服务，加入队列串行处理
-        const needsModel = serviceId === 'semantic-repair-zh' || serviceId === 'semantic-repair-en';
+        const needsModel = serviceId === 'semantic-repair-zh' || serviceId === 'semantic-repair-en' || serviceId === 'semantic-repair-en-zh';
         if (needsModel) {
             return new Promise((resolve, reject) => {
                 this.startQueue.push({ serviceId, resolve, reject });
@@ -174,6 +174,7 @@ class SemanticRepairServiceManager {
             this.services.set(serviceId, serviceProcess);
             // 等待服务就绪（通过健康检查）
             const isLightweightService = serviceId === 'en-normalize';
+            const isUnifiedService = serviceId === 'semantic-repair-en-zh';
             try {
                 await (0, service_starter_1.waitForServiceReady)(serviceId, config, isLightweightService, (updates) => this.updateStatus(serviceId, updates));
             }
@@ -256,7 +257,8 @@ class SemanticRepairServiceManager {
             const installedServiceIds = new Set(installed
                 .filter((s) => s.service_id === 'en-normalize' ||
                 s.service_id === 'semantic-repair-zh' ||
-                s.service_id === 'semantic-repair-en')
+                s.service_id === 'semantic-repair-en' ||
+                s.service_id === 'semantic-repair-en-zh')
                 .map((s) => s.service_id));
             // 更新端口信息（从service.json读取）
             const result = [];

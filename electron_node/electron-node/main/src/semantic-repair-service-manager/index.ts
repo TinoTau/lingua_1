@@ -12,7 +12,9 @@ import type { ServiceRegistryManager } from '../service-registry';
 import { getServiceConfig, startServiceProcess, waitForServiceReady, type ServiceJson } from './service-starter';
 import { stopServiceProcess } from './service-stopper';
 
-export type SemanticRepairServiceId = 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en';
+// 使用 string 类型支持动态服务发现，而不是硬编码的联合类型
+// 这样用户下载新服务后无需修改代码即可使用
+export type SemanticRepairServiceId = string;
 
 export interface SemanticRepairServiceStatus {
   serviceId: SemanticRepairServiceId;
@@ -38,19 +40,59 @@ export class SemanticRepairServiceManager {
     private serviceRegistryManager: ServiceRegistryManager | null,
     private servicesDir: string
   ) {
-    // 初始化状态
-    const serviceIds: SemanticRepairServiceId[] = ['en-normalize', 'semantic-repair-zh', 'semantic-repair-en'];
-    for (const serviceId of serviceIds) {
-      this.statuses.set(serviceId, {
-        serviceId,
-        running: false,
-        starting: false,
-        pid: null,
-        port: null,
-        startedAt: null,
-        lastError: null,
-      });
+    // 动态发现服务，不再硬编码服务列表
+    // 服务状态会在首次获取时延迟初始化
+  }
+
+  /**
+   * 动态发现语义修复服务
+   */
+  private async discoverServices(): Promise<string[]> {
+    const discovered: string[] = [];
+    
+    if (!this.serviceRegistryManager) {
+      return discovered;
     }
+    
+    try {
+      await this.serviceRegistryManager.loadRegistry();
+      const installed = this.serviceRegistryManager.listInstalled();
+      
+      for (const service of installed) {
+        try {
+          const serviceJsonPath = path.join(service.install_path, 'service.json');
+          if (fs.existsSync(serviceJsonPath)) {
+            const serviceJson = JSON.parse(fs.readFileSync(serviceJsonPath, 'utf-8'));
+            
+            // 只收集 semantic-repair 类型的服务
+            if (serviceJson.type === 'semantic-repair') {
+              discovered.push(service.service_id);
+              
+              // 确保服务状态已初始化
+              if (!this.statuses.has(service.service_id)) {
+                this.statuses.set(service.service_id, {
+                  serviceId: service.service_id,
+                  running: false,
+                  starting: false,
+                  pid: null,
+                  port: null,
+                  startedAt: null,
+                  lastError: null,
+                });
+              }
+            }
+          }
+        } catch (error) {
+          logger.warn({ service_id: service.service_id, error }, 'Failed to check service type');
+        }
+      }
+      
+      logger.info({ discovered }, 'Discovered semantic repair services');
+    } catch (error) {
+      logger.error({ error }, 'Failed to discover semantic repair services');
+    }
+    
+    return discovered;
   }
 
 
@@ -69,11 +111,11 @@ export class SemanticRepairServiceManager {
       
       try {
         // 对于需要加载模型的服务，等待前一个服务完全启动后再启动下一个
-        const needsModel = serviceId === 'semantic-repair-zh' || serviceId === 'semantic-repair-en';
+        const needsModel = serviceId === 'semantic-repair-zh' || serviceId === 'semantic-repair-en' || serviceId === 'semantic-repair-en-zh';
         if (needsModel) {
           // 检查是否有其他模型服务正在启动
           const otherModelServiceStarting = Array.from(this.statuses.values()).some(
-            s => (s.serviceId === 'semantic-repair-zh' || s.serviceId === 'semantic-repair-en') && 
+            s => (s.serviceId === 'semantic-repair-zh' || s.serviceId === 'semantic-repair-en' || s.serviceId === 'semantic-repair-en-zh') && 
                  s.serviceId !== serviceId && s.starting
           );
           
@@ -86,7 +128,7 @@ export class SemanticRepairServiceManager {
             
             while (Date.now() - startTime < maxWait) {
               const stillStarting = Array.from(this.statuses.values()).some(
-                s => (s.serviceId === 'semantic-repair-zh' || s.serviceId === 'semantic-repair-en') && 
+                s => (s.serviceId === 'semantic-repair-zh' || s.serviceId === 'semantic-repair-en' || s.serviceId === 'semantic-repair-en-zh') && 
                      s.serviceId !== serviceId && s.starting
               );
               if (!stillStarting) {
@@ -117,7 +159,7 @@ export class SemanticRepairServiceManager {
     }
 
     // 对于需要加载模型的服务，加入队列串行处理
-    const needsModel = serviceId === 'semantic-repair-zh' || serviceId === 'semantic-repair-en';
+    const needsModel = serviceId === 'semantic-repair-zh' || serviceId === 'semantic-repair-en' || serviceId === 'semantic-repair-en-zh';
     if (needsModel) {
       return new Promise<void>((resolve, reject) => {
         this.startQueue.push({ serviceId, resolve, reject });
@@ -180,6 +222,7 @@ export class SemanticRepairServiceManager {
 
       // 等待服务就绪（通过健康检查）
       const isLightweightService = serviceId === 'en-normalize';
+      const isUnifiedService = serviceId === 'semantic-repair-en-zh';
       try {
         await waitForServiceReady(
           serviceId,
@@ -267,16 +310,24 @@ export class SemanticRepairServiceManager {
       await this.serviceRegistryManager.loadRegistry();
       const installed = this.serviceRegistryManager.listInstalled();
       
-      // 只返回已安装的服务状态
-      const installedServiceIds = new Set(
-        installed
-          .filter((s: any) => 
-            s.service_id === 'en-normalize' || 
-            s.service_id === 'semantic-repair-zh' || 
-            s.service_id === 'semantic-repair-en'
-          )
-          .map((s: any) => s.service_id)
-      );
+      // 动态发现所有 semantic-repair 类型的服务（支持热插拔）
+      const installedServiceIds = new Set<string>();
+      
+      for (const service of installed) {
+        try {
+          const serviceJsonPath = path.join(service.install_path, 'service.json');
+          if (fs.existsSync(serviceJsonPath)) {
+            const serviceJson = JSON.parse(fs.readFileSync(serviceJsonPath, 'utf-8'));
+            
+            // 只收集 semantic-repair 类型的服务
+            if (serviceJson.type === 'semantic-repair') {
+              installedServiceIds.add(service.service_id);
+            }
+          }
+        } catch (error) {
+          logger.debug({ service_id: service.service_id, error }, 'Failed to read service.json, skipped');
+        }
+      }
 
       // 更新端口信息（从service.json读取）
       const result: SemanticRepairServiceStatus[] = [];
