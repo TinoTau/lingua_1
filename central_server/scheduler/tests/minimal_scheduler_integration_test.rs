@@ -92,6 +92,8 @@ async fn test_dispatch_task_without_lang_index_error() {
         src_lang: "zh".to_string(),
         tgt_lang: "en".to_string(),
         payload_json: r#"{"audio":"base64data"}"#.to_string(),
+        lang_a: None,
+        lang_b: None,
     };
 
     let result = service.dispatch_task(dispatch_req).await;
@@ -176,6 +178,8 @@ async fn test_full_workflow_with_pool_names() {
         src_lang: "zh".to_string(),
         tgt_lang: "en".to_string(),
         payload_json: r#"{"audio":"base64data","tenant_id":null,"trace_id":"test-trace-id"}"#.to_string(),
+        lang_a: None,
+        lang_b: None,
     };
 
     let dispatch_result = service.dispatch_task(dispatch_req).await;
@@ -338,6 +342,8 @@ async fn test_multiple_nodes_dispatch() {
         src_lang: "zh".to_string(),
         tgt_lang: "en".to_string(),
         payload_json: r#"{"audio":"base64data"}"#.to_string(),
+        lang_a: None,
+        lang_b: None,
     };
 
     let dispatch_result = service.dispatch_task(dispatch_req).await;
@@ -412,6 +418,8 @@ async fn test_dispatch_when_node_full() {
         src_lang: "zh".to_string(),
         tgt_lang: "en".to_string(),
         payload_json: r#"{"audio":"base64data"}"#.to_string(),
+        lang_a: None,
+        lang_b: None,
     };
 
     let dispatch_result = service.dispatch_task(dispatch_req).await;

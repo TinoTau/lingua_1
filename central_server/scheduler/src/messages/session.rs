@@ -193,6 +193,13 @@ pub enum SessionMessage {
     SessionCloseAck {
         session_id: String,
     },
+    #[serde(rename = "tts_started")]
+    TtsStarted {
+        session_id: String,
+        trace_id: String,
+        group_id: String,
+        ts_start_ms: u64,
+    },
     #[serde(rename = "tts_play_ended")]
     TtsPlayEnded {
         session_id: String,

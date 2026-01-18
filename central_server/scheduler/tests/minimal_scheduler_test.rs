@@ -260,6 +260,8 @@ async fn test_dispatch_task() {
         src_lang: "zh".to_string(),
         tgt_lang: "en".to_string(),
         payload_json: r#"{"audio":"base64data"}"#.to_string(),
+        lang_a: None,
+        lang_b: None,
     };
 
     let result = service.dispatch_task(dispatch_req).await;
@@ -444,6 +446,8 @@ async fn test_full_workflow() {
         src_lang: "zh".to_string(),
         tgt_lang: "en".to_string(),
         payload_json: r#"{"audio":"data"}"#.to_string(),
+        lang_a: None,
+        lang_b: None,
     };
     let dispatch_result = service.dispatch_task(dispatch_req).await.unwrap();
     let job_id = dispatch_result.job_id;

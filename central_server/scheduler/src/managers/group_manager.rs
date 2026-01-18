@@ -9,19 +9,15 @@ use tracing::{info, debug, warn};
 
 pub type SessionId = String;
 pub type GroupId = String;
-pub type TraceId = String;
 
 #[derive(Clone, Debug)]
 pub struct GroupPart {
-    pub part_index: u64,
-    pub trace_id: TraceId,
     #[allow(dead_code)]
     pub utterance_index: u64,
     pub asr_text: String,
     pub translated_text: Option<String>, // 允许为空（NMT 失败场景）
     #[allow(dead_code)]
     pub created_at_ms: u64,
-    pub error_code: Option<String>, // 可选：用于诊断
 }
 
 #[derive(Clone, Debug)]
@@ -31,6 +27,7 @@ pub struct UtteranceGroup {
     pub session_id: SessionId,
     #[allow(dead_code)]
     pub created_at_ms: u64,
+    pub last_tts_start_at_ms: Option<u64>,  // TTS播放开始时间（用于pause检测）
     pub last_tts_end_at_ms: u64,
     pub next_part_index: u64,
     pub parts: VecDeque<GroupPart>, // 用 VecDeque 便于头部裁剪
@@ -78,15 +75,16 @@ impl GroupManager {
         }
     }
 
-    /// 处理 ASR Final 结果
-    /// 
+
+    /// 修复8: 批量处理 ASR Final 和 NMT Done（在一次写锁内完成）
     /// 返回: (group_id, context_text, part_index)
-    pub async fn on_asr_final(
+    pub async fn on_asr_final_and_nmt_done(
         &self,
         session_id: &str,
         trace_id: &str,
         utterance_index: u64,
         asr_text: String,
+        translated_text: Option<String>,
         now_ms: u64,
     ) -> (GroupId, String, u64) {
         let group_id = self.ensure_target_group(session_id, now_ms).await;
@@ -97,13 +95,10 @@ impl GroupManager {
         group.next_part_index += 1;
 
         let part = GroupPart {
-            part_index,
-            trace_id: trace_id.to_string(),
             utterance_index,
             asr_text: asr_text.clone(),
-            translated_text: None,
+            translated_text: translated_text.clone(),
             created_at_ms: now_ms,
-            error_code: None,
         };
 
         group.parts.push_back(part);
@@ -119,58 +114,31 @@ impl GroupManager {
             part_index = part_index,
             asr_text = %asr_text,
             asr_text_len = asr_text.len(),
+            translated_text_len = translated_text.as_ref().map(|t| t.len()).unwrap_or(0),
             context_len = context.len(),
             parts_count = group.parts.len(),
-            "ASR Final 处理完成，已添加到 Group"
+            "ASR Final 和 NMT Done 批量处理完成，已添加到 Group"
         );
 
         (group_id, context, part_index)
     }
 
-    /// 处理 NMT 完成
-    pub async fn on_nmt_done(
-        &self,
-        group_id: &str,
-        part_index: u64,
-        translated_text: Option<String>,
-        error_code: Option<String>,
-    ) {
+    /// 处理 TTS 播放开始
+    pub async fn on_tts_started(&self, group_id: &str, tts_start_ms: u64) {
         let mut groups = self.groups.write().await;
         if let Some(group) = groups.get_mut(group_id) {
-            if let Some(part) = group.parts.iter_mut().find(|p| p.part_index == part_index) {
-                let trace_id = part.trace_id.clone();
-                part.translated_text = translated_text.clone();
-                part.error_code = error_code.clone();
-                
-                if let Some(ref error) = error_code {
-                    warn!(
-                        trace_id = %trace_id,
-                        group_id = %group_id,
-                        part_index = part_index,
-                        error_code = %error,
-                        "NMT 处理失败，但 Part 仍保留在 Group 中"
-                    );
-                } else {
-                    debug!(
-                        trace_id = %trace_id,
-                        group_id = %group_id,
-                        part_index = part_index,
-                        translated_text_len = translated_text.as_ref().map(|t| t.len()).unwrap_or(0),
-                        "NMT 处理完成，已更新 Group Part"
-                    );
-                }
-            } else {
-                warn!(
-                    group_id = %group_id,
-                    part_index = part_index,
-                    "NMT 完成时未找到对应的 Part"
-                );
-            }
+            group.last_tts_start_at_ms = Some(tts_start_ms);
+            
+            debug!(
+                group_id = %group_id,
+                session_id = %group.session_id,
+                tts_start_ms = tts_start_ms,
+                "TTS 播放开始，已更新 Group last_tts_start_at"
+            );
         } else {
             warn!(
                 group_id = %group_id,
-                part_index = part_index,
-                "NMT 完成时未找到对应的 Group"
+                "TTS 播放开始时未找到对应的 Group"
             );
         }
     }
@@ -187,6 +155,7 @@ impl GroupManager {
                 session_id = %group.session_id,
                 old_tts_end_ms = old_tts_end_ms,
                 new_tts_end_ms = tts_end_ms,
+                last_tts_start_at_ms = ?group.last_tts_start_at_ms,
                 "TTS 播放结束，已更新 Group last_tts_end_at"
             );
         } else {
@@ -194,6 +163,31 @@ impl GroupManager {
                 group_id = %group_id,
                 "TTS 播放结束时未找到对应的 Group"
             );
+        }
+    }
+
+    /// 获取session的活跃group_id
+    pub async fn get_active_group_id(&self, session_id: &str) -> Option<GroupId> {
+        let active = self.active.read().await;
+        active.get(session_id).cloned()
+    }
+    
+    
+    /// 检查是否在TTS播放期间（用于pause检测）
+    /// 从播放开始到播放结束期间，都不进行pause计时
+    pub async fn is_tts_playing(&self, group_id: &str, current_time_ms: i64) -> bool {
+        let groups = self.groups.read().await;
+        if let Some(group) = groups.get(group_id) {
+            if let Some(tts_start_ms) = group.last_tts_start_at_ms {
+                let tts_end_ms = group.last_tts_end_at_ms as i64;
+                let tts_start_ms_i64 = tts_start_ms as i64;
+                // 从播放开始到播放结束期间，都不进行pause计时
+                current_time_ms >= tts_start_ms_i64 && current_time_ms <= tts_end_ms
+            } else {
+                false
+            }
+        } else {
+            false
         }
     }
 
@@ -289,6 +283,7 @@ impl GroupManager {
             group_id: gid.clone(),
             session_id: session_id.to_string(),
             created_at_ms: now_ms,
+            last_tts_start_at_ms: None,  // 初始值：无播放记录
             last_tts_end_at_ms: now_ms, // 初始值：以创建时刻作为锚
             next_part_index: 0,
             parts: VecDeque::new(),

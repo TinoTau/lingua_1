@@ -53,19 +53,6 @@ impl RedisHandle {
         self.query(cmd).await
     }
 
-    async fn del_if_value_matches(&self, key: &str, expected: &str) -> redis::RedisResult<u64> {
-        // Lua: if GET == expected then DEL
-        let script = r#"
-local v = redis.call('GET', KEYS[1])
-if v == ARGV[1] then
-  return redis.call('DEL', KEYS[1])
-end
-return 0
-"#;
-        let mut cmd = redis::cmd("EVAL");
-        cmd.arg(script).arg(1).arg(key).arg(expected);
-        self.query(cmd).await
-    }
 
     pub async fn exists(&self, key: &str) -> redis::RedisResult<bool> {
         let mut cmd = redis::cmd("EXISTS");
@@ -117,11 +104,6 @@ return 0
         self.query(cmd).await
     }
 
-    async fn sadd_string(&self, key: &str, member: &str) -> redis::RedisResult<u64> {
-        let mut cmd = redis::cmd("SADD");
-        cmd.arg(key).arg(member);
-        self.query(cmd).await
-    }
 
     async fn smembers_strings(&self, key: &str) -> redis::RedisResult<Vec<String>> {
         let mut cmd = redis::cmd("SMEMBERS");
@@ -145,6 +127,20 @@ return 0
     }
 
     async fn set_nx_ex_u64(&self, key: &str, val: u64, ttl_seconds: u64) -> redis::RedisResult<bool> {
+        // SET key val NX EX ttl
+        let mut cmd = redis::cmd("SET");
+        cmd.arg(key)
+            .arg(val)
+            .arg("NX")
+            .arg("EX")
+            .arg(ttl_seconds.max(1));
+        let r: Option<String> = self.query(cmd).await?;
+        Ok(r.is_some())
+    }
+
+    /// 原子操作：SET key val NX EX ttl（字符串值）
+    /// 如果 key 不存在则创建，如果已存在则返回 false（避免死锁）
+    pub async fn set_nx_ex_string(&self, key: &str, val: &str, ttl_seconds: u64) -> redis::RedisResult<bool> {
         // SET key val NX EX ttl
         let mut cmd = redis::cmd("SET");
         cmd.arg(key)
@@ -351,26 +347,5 @@ return 0
         Ok(v == 1)
     }
 
-    /// DEC_RUNNING: 任务完成时 running -= 1
-    /// KEYS[1]=node_cap_key
-    /// 返回: true表示成功
-    pub async fn dec_running(
-        &self,
-        node_cap_key: &str,
-    ) -> redis::RedisResult<bool> {
-        let script = r#"
-local running = tonumber(redis.call('HGET', KEYS[1], 'running') or '0')
-if running > 0 then
-  redis.call('HINCRBY', KEYS[1], 'running', -1)
-  return 1
-end
--- running 已经是0, 不做任何操作
-return 1
-"#;
-        let mut cmd = redis::cmd("EVAL");
-        cmd.arg(script).arg(1).arg(node_cap_key);
-        let v: i64 = self.query(cmd).await?;
-        Ok(v == 1)
-    }
 }
 

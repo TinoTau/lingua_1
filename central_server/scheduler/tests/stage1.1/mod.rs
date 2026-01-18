@@ -31,3 +31,6 @@ mod node_status_test;
 #[path = "session_actor_test.rs"]
 mod session_actor_test;
 
+#[path = "session_affinity_test.rs"]
+mod session_affinity_test;
+

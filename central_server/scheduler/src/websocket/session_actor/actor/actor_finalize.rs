@@ -153,11 +153,53 @@ impl SessionActor {
         // 设置结果截止时间（用于抗缺口机制）
 
         // 根据finalize原因设置标识
-        let is_manual_cut = reason == "IsFinal" || reason == "Send";
+        let is_manual_cut = reason == "IsFinal";
         let is_pause_triggered = reason == "Pause";
         // MaxDuration和Timeout都设置为is_timeout_triggered=true
         // MaxDuration是20秒超时强制截断，需要节点端进行音频切割处理
         let is_timeout_triggered = reason == "Timeout" || reason == "MaxDuration";
+
+        // ============================================================
+        // Session Affinity：手动/pause finalize时立即清除timeout_node_id映射
+        // 必须在jobs创建之前清除，确保当前job不会使用旧的timeout_node_id
+        // ============================================================
+        if is_manual_cut || is_pause_triggered {
+            if let Some(ref rt) = self.state.phase2 {
+                let session_key = format!("scheduler:session:{}", self.session_id);
+                
+                // 使用Lua脚本原子性地清除timeout_node_id
+                let script = r#"
+redis.call('HDEL', KEYS[1], 'timeout_node_id')
+return 1
+"#;
+                let mut cmd = redis::cmd("EVAL");
+                cmd.arg(script).arg(1).arg(&session_key);
+                
+                match rt.redis_query::<i64>(cmd).await {
+                    Ok(_) => {
+                        info!(
+                            session_id = %self.session_id,
+                            utterance_index = utterance_index,
+                            reason = reason,
+                            is_manual_cut = is_manual_cut,
+                            is_pause_triggered = is_pause_triggered,
+                            "Session affinity: Cleared timeout_node_id mapping (manual/pause finalize) - cleared before job creation, subsequent jobs can use random assignment"
+                        );
+                    }
+                    Err(e) => {
+                        warn!(
+                            session_id = %self.session_id,
+                            utterance_index = utterance_index,
+                            reason = reason,
+                            is_manual_cut = is_manual_cut,
+                            is_pause_triggered = is_pause_triggered,
+                            error = %e,
+                            "Session affinity: Failed to clear timeout_node_id mapping (will retry after job creation)"
+                        );
+                    }
+                }
+            }
+        }
 
         // 创建翻译任务
         tracing::info!(
@@ -225,6 +267,100 @@ impl SessionActor {
                 return Err(e);
             }
         };
+
+        // ============================================================
+        // Session Affinity：超时finalize时记录sessionId->nodeId映射
+        // 注意：手动/pause finalize的清除已在jobs创建之前完成
+        // ============================================================
+        if is_timeout_triggered {
+            // 获取第一个job的node_id（如果有）
+            if let Some(first_job) = jobs.first() {
+                if let Some(ref node_id) = first_job.assigned_node_id {
+                    // 记录sessionId->nodeId映射到Redis
+                    if let Some(ref rt) = self.state.phase2 {
+                        let session_key = format!("scheduler:session:{}", self.session_id);
+                        let ttl_seconds = 5 * 60; // 5分钟TTL（优化：符合业务逻辑，避免长期缓存）
+                        
+                        // 使用Lua脚本原子性地设置timeout_node_id
+                        let script = r#"
+redis.call('HSET', KEYS[1], 'timeout_node_id', ARGV[1])
+redis.call('EXPIRE', KEYS[1], ARGV[2])
+return 1
+"#;
+                        let mut cmd = redis::cmd("EVAL");
+                        cmd.arg(script)
+                            .arg(1)
+                            .arg(&session_key)
+                            .arg(node_id)
+                            .arg(ttl_seconds);
+                        
+                        match rt.redis_query::<i64>(cmd).await {
+                            Ok(_) => {
+                                info!(
+                                    session_id = %self.session_id,
+                                    utterance_index = utterance_index,
+                                    reason = reason,
+                                    node_id = %node_id,
+                                    ttl_seconds = ttl_seconds,
+                                    job_count = jobs.len(),
+                                    first_job_id = ?jobs.first().map(|j| &j.job_id),
+                                    "Session affinity: Recorded timeout finalize session mapping (Timeout/MaxDuration) - subsequent jobs will route to same node"
+                                );
+                            }
+                            Err(e) => {
+                                warn!(
+                                    session_id = %self.session_id,
+                                    utterance_index = utterance_index,
+                                    reason = reason,
+                                    node_id = %node_id,
+                                    ttl_seconds = ttl_seconds,
+                                    error = %e,
+                                    "Session affinity: Failed to record timeout finalize session mapping"
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        } else if is_manual_cut || is_pause_triggered {
+            // 手动/pause finalize：如果之前清除失败，再次尝试清除（兜底）
+            // 注意：主要清除已在jobs创建之前完成，这里是兜底逻辑
+            if let Some(ref rt) = self.state.phase2 {
+                let session_key = format!("scheduler:session:{}", self.session_id);
+                
+                // 使用Lua脚本原子性地清除timeout_node_id
+                let script = r#"
+redis.call('HDEL', KEYS[1], 'timeout_node_id')
+return 1
+"#;
+                let mut cmd = redis::cmd("EVAL");
+                cmd.arg(script).arg(1).arg(&session_key);
+                
+                match rt.redis_query::<i64>(cmd).await {
+                    Ok(_) => {
+                        debug!(
+                            session_id = %self.session_id,
+                            utterance_index = utterance_index,
+                            reason = reason,
+                            is_manual_cut = is_manual_cut,
+                            is_pause_triggered = is_pause_triggered,
+                            "Session affinity: Cleared timeout_node_id mapping (fallback cleanup after job creation)"
+                        );
+                    }
+                    Err(e) => {
+                        warn!(
+                            session_id = %self.session_id,
+                            utterance_index = utterance_index,
+                            reason = reason,
+                            is_manual_cut = is_manual_cut,
+                            is_pause_triggered = is_pause_triggered,
+                            error = %e,
+                            "Session affinity: Failed to clear timeout_node_id mapping (fallback cleanup also failed)"
+                        );
+                    }
+                }
+            }
+        }
 
         // 派发 jobs
         for job in jobs {
@@ -335,7 +471,7 @@ impl SessionActor {
 
         // 更新指标
         match reason {
-            "Send" | "IsFinal" => crate::metrics::on_web_task_finalized_by_send(),
+            "IsFinal" => crate::metrics::on_web_task_finalized_by_send(),
             "Pause" | "Timeout" => crate::metrics::on_web_task_finalized_by_pause(),
             _ => {}
         }

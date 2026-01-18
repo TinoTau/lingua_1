@@ -252,17 +252,6 @@ export class TaskRouter {
     return sum / efficiencies.length;
   }
 
-  /**
-   * OBS-1: 获取当前心跳周期的 ASR 指标（向后兼容）
-   * @deprecated 使用 getProcessingMetrics() 或 getServiceEfficiency() 代替
-   */
-  getASRMetrics() {
-    // 向后兼容：查找 faster-whisper-vad 的处理效率
-    const asrEfficiency = this.getServiceEfficiency('faster-whisper-vad');
-    return {
-      processingEfficiency: asrEfficiency,
-    };
-  }
 
   /**
    * OBS-1: 重置当前心跳周期的统计数据

@@ -15,6 +15,7 @@ import { InferenceService } from '../inference/inference-service';
 import { NodeConfig } from '../node-config';
 import logger from '../logger';
 import { LanguageCapabilityDetector } from './node-agent-language-capability';
+import { getGpuArbiter } from '../gpu-arbiter/gpu-arbiter-factory';
 
 export class HeartbeatHandler {
   private heartbeatInterval: NodeJS.Timeout | null = null;
@@ -111,6 +112,26 @@ export class HeartbeatHandler {
       },
     }, 'Sending heartbeat with type-level capability');
 
+    // 获取GPU队列信息（用于通知调度服务器节点忙）
+    const gpuArbiter = getGpuArbiter();
+    let gpuQueueLength = 0;
+    if (gpuArbiter) {
+      const snapshot = gpuArbiter.snapshot('gpu:0');
+      if (snapshot) {
+        gpuQueueLength = snapshot.queueLength;
+        // 如果GPU队列有任务等待，记录警告日志
+        if (gpuQueueLength > 0) {
+          logger.warn({
+            nodeId: this.nodeId,
+            gpuQueueLength,
+            gpuUsage: snapshot.gpuUsage,
+            gpuAdmissionState: snapshot.gpuAdmissionState,
+            note: 'GPU queue has pending tasks, scheduler should stop assigning new tasks',
+          }, 'GPU queue has pending tasks - scheduler should be notified to stop assigning new tasks');
+        }
+      }
+    }
+
     // 对齐协议规范：node_heartbeat 消息格式
     // 注意：gpu_percent 必须提供（不能为 undefined），因为调度服务器的健康检查要求所有节点都必须有 GPU
     // 如果无法获取 GPU 使用率，使用 0.0 作为默认值
@@ -124,6 +145,8 @@ export class HeartbeatHandler {
         gpu_mem_percent: resources.gpuMem || undefined,
         mem_percent: resources.memory,
         running_jobs: this.inferenceService.getCurrentJobCount(),
+        // GPU队列长度：用于通知调度服务器节点忙，应该停止分配新任务
+        gpu_queue_length: gpuQueueLength > 0 ? gpuQueueLength : undefined,
       },
       installed_models: installedModels.length > 0 ? installedModels : undefined,
       installed_services: installedServicesAll,
@@ -174,11 +197,7 @@ export class HeartbeatHandler {
             serviceEfficiencies,
           };
         }
-        // 向后兼容：保留 asr_metrics
-        const asrMetrics = this.inferenceService.getASRMetrics?.();
-        if (asrMetrics) {
-          message.asr_metrics = asrMetrics;
-        }
+        // 注意：asr_metrics 已移除，使用 processing_metrics 代替
       }
     }
 

@@ -8,8 +8,8 @@ export interface DedupConfig {
 }
 
 export const DEFAULT_DEDUP_CONFIG: DedupConfig = {
-  minOverlap: 2,   // 降低：检测更短的重复
-  maxOverlap: 20,  // 提高：检测更长的重复
+  minOverlap: 2,   // 最小重叠：2个字符
+  maxOverlap: 50,  // 最大重叠：50个字符（支持hangover重叠，通常hangover在500ms左右，约10-20个字符，但为了安全起见提高到50）
 };
 
 /**

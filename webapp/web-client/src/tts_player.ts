@@ -3,6 +3,7 @@ import { createAudioDecoder, AudioCodecConfig, AudioDecoder } from './audio_code
 import { MemoryManager, getMaxBufferDuration, getDeviceType, MemoryPressureCallback } from './tts_player/memory_manager';
 
 export type PlaybackFinishedCallback = () => void;
+export type PlaybackStartedCallback = () => void;
 export type PlaybackIndexChangeCallback = (utteranceIndex: number) => void;
 
 /**
@@ -23,6 +24,7 @@ export class TtsPlayer {
   private isPaused: boolean = false;
   private stateMachine: StateMachine;
   private playbackFinishedCallback: PlaybackFinishedCallback | null = null;
+  private playbackStartedCallback: PlaybackStartedCallback | null = null; // 播放开始回调
   private playbackIndexChangeCallback: PlaybackIndexChangeCallback | null = null; // 播放索引变化回调
   private currentSource: AudioBufferSourceNode | null = null; // 当前播放的音频源
   private currentPlaybackIndex: number = -1; // 当前播放的索引（从0开始）
@@ -77,6 +79,13 @@ export class TtsPlayer {
    */
   setPlaybackFinishedCallback(callback: PlaybackFinishedCallback): void {
     this.playbackFinishedCallback = callback;
+  }
+
+  /**
+   * 设置播放开始回调
+   */
+  setPlaybackStartedCallback(callback: PlaybackStartedCallback): void {
+    this.playbackStartedCallback = callback;
   }
 
   /**
@@ -329,6 +338,12 @@ export class TtsPlayer {
     this.currentPlaybackIndex = -1; // 重置播放索引
     this.stateMachine.startPlaying();
     console.log('TtsPlayer: 状态已更新为 PLAYING_TTS');
+    
+    // 调用播放开始回调（用于发送 TTS_STARTED 消息）
+    if (this.playbackStartedCallback) {
+      console.log('[TtsPlayer] 调用 playbackStartedCallback');
+      this.playbackStartedCallback();
+    }
 
     // 创建音频缓冲区并播放
     const playNext = async () => {

@@ -19,6 +19,8 @@ export interface ServicesBundle {
   sessionContextManager?: any;
   aggregatorMiddleware?: any;
   dedupStage?: any;  // 全局 DedupStage 实例（用于维护 job_id 去重状态）
+  resultSender?: any;  // ResultSender 实例（用于发送原始job的结果）
+  audioAggregator?: any;  // AudioAggregator 实例（用于在job之间共享音频缓冲区）
 }
 
 export interface JobPipelineOptions {
@@ -26,6 +28,7 @@ export interface JobPipelineOptions {
   partialCallback?: PartialResultCallback;
   asrCompletedCallback?: (done: boolean) => void;
   services: ServicesBundle;
+  ctx?: JobContext; // 可选的预初始化的 JobContext（用于跳过 ASR 步骤）
   callbacks?: {
     onTaskStart?: () => void;
     onTaskEnd?: () => void;
@@ -38,9 +41,10 @@ export interface JobPipelineOptions {
  * 使用配置驱动的方式，根据 Pipeline 模式动态执行步骤
  */
 export async function runJobPipeline(options: JobPipelineOptions): Promise<JobResult> {
-  const { job, partialCallback, asrCompletedCallback, services, callbacks } = options;
+  const { job, partialCallback, asrCompletedCallback, services, ctx: providedCtx, callbacks } = options;
 
-  const ctx = initJobContext(job);
+  // 如果提供了预初始化的 JobContext，使用它；否则创建新的
+  const ctx = providedCtx || initJobContext(job);
 
   // 任务开始回调
   callbacks?.onTaskStart?.();
@@ -61,7 +65,23 @@ export async function runJobPipeline(options: JobPipelineOptions): Promise<JobRe
     );
 
     // 2. 按模式配置的步骤序列执行
+    // 如果 ctx 已经包含 ASR 结果（providedCtx），则跳过 ASR 步骤
+    const skipASR = providedCtx !== undefined && providedCtx.asrText !== undefined;
+    
     for (const step of mode.steps) {
+      // 如果已经提供了 ASR 结果，跳过 ASR 步骤
+      if (skipASR && step === 'ASR') {
+        logger.debug(
+          {
+            jobId: job.job_id,
+            step,
+            note: 'ASR result already provided, skipping ASR step',
+          },
+          `Skipping step ${step} (ASR result already provided)`
+        );
+        continue;
+      }
+      
       // 检查步骤是否应该执行（支持动态条件判断）
       // 对于 SEMANTIC_REPAIR 步骤，需要检查 ctx.shouldSendToSemanticRepair 标志
       if (!shouldExecuteStep(step, mode, job, ctx)) {
@@ -98,10 +118,12 @@ export async function runJobPipeline(options: JobPipelineOptions): Promise<JobRe
           },
           `Step ${step} completed`
         );
-      } catch (error) {
+      } catch (error: any) {
         logger.error(
           {
-            error,
+            error: error?.message || error || 'Unknown error',
+            stack: error?.stack,
+            errorType: error?.constructor?.name,
             jobId: job.job_id,
             step,
             modeName: mode.name,

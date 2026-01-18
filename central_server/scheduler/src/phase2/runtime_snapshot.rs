@@ -1,33 +1,4 @@
-﻿impl Phase2Runtime {
-    pub async fn upsert_node_snapshot(&self, node: &RegistryNode) {
-        let presence_key = self.node_presence_key(&node.node_id);
-        let snapshot_key = self.node_snapshot_key(&node.node_id);
-        let all_key = self.nodes_all_set_key();
-        let last_seen_key = self.nodes_last_seen_zset_key();
-
-        let snapshot_json = match serde_json::to_string(node) {
-            Ok(v) => v,
-            Err(e) => {
-                warn!(error = %e, node_id = %node.node_id, "Phase2 node snapshot 序列化失败");
-                return;
-            }
-        };
-
-        let ttl = self.cfg.node_snapshot.presence_ttl_seconds.max(2);
-        let _ = self.redis.set_ex_string(&presence_key, "1", ttl).await;
-        let _ = self.redis.set_ex_string(&snapshot_key, &snapshot_json, ttl).await;
-        let _ = self.redis.sadd_string(&all_key, &node.node_id).await;
-        let now_ms = chrono::Utc::now().timestamp_millis();
-        let _ = self.redis.zadd_score(&last_seen_key, &node.node_id, now_ms).await;
-    }
-
-    pub async fn touch_node_presence(&self, node_id: &str) {
-        let ttl = self.cfg.node_snapshot.presence_ttl_seconds.max(2);
-        let _ = self
-            .redis
-            .set_ex_string(&self.node_presence_key(node_id), "1", ttl)
-            .await;
-    }
+impl Phase2Runtime {
 
     pub async fn clear_node_presence(&self, node_id: &str) {
         let _ = self.redis.del(&self.node_presence_key(node_id)).await;

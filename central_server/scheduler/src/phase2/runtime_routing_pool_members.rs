@@ -148,31 +148,6 @@ return 1
         }
     }
 
-    /// 同步单个节点的 Pool 成员索引到 Redis
-    /// 用于节点注册/心跳时更新
-    pub async fn sync_node_pools_to_redis(
-        &self,
-        _node_id: &str,
-        pool_ids: &HashSet<u16>,
-        pool_configs: &[Phase3PoolConfig],
-        pool_index: &HashMap<u16, HashSet<String>>,
-    ) {
-        // 建立 pool_id -> pool_name 映射
-        let pool_id_to_name: HashMap<u16, String> = pool_configs
-            .iter()
-            .map(|p| (p.pool_id, p.name.clone()))
-            .collect();
-        
-        // 为每个 Pool 更新成员索引
-        for pool_id in pool_ids {
-            if let Some(pool_name) = pool_id_to_name.get(pool_id) {
-                // 从 pool_index 获取该 Pool 的所有节点
-                if let Some(all_node_ids) = pool_index.get(pool_id) {
-                    let _ = self.sync_pool_members_to_redis(pool_name, all_node_ids).await;
-                }
-            }
-        }
-    }
 
     /// 从 Redis 读取所有 Pool 的成员索引（pool_id -> HashSet<node_id>）
     /// 需要提供 pool_configs 以建立 pool_id -> pool_name 映射

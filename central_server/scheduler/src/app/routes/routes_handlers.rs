@@ -98,7 +98,7 @@ pub async fn start_server(
         }
         
         // 清理 Phase2 资源（如果有）
-        if let Some(ref rt) = app_state_for_shutdown.phase2 {
+        if let Some(ref _rt) = app_state_for_shutdown.phase2 {
             info!("清理 Phase2 资源...");
             // Phase2Runtime 应该有自己的清理逻辑（如果有）
             // 这里只是记录日志，实际的清理可能在 Phase2Runtime 的 Drop 实现中

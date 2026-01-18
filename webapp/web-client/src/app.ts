@@ -191,6 +191,11 @@ export class App {
     });
 
     // TTS 播放回调
+    // TTS 播放开始回调（用于发送 TTS_STARTED 消息）
+    this.ttsPlayer.setPlaybackStartedCallback(() => {
+      this.onPlaybackStarted();
+    });
+
     this.ttsPlayer.setPlaybackFinishedCallback(() => {
       this.onPlaybackFinished();
     });
@@ -421,8 +426,7 @@ export class App {
         break;
 
       case 'missing_result':
-        // Missing 占位结果：如果有文本显示，需要标记出音频丢失的原因
-        // 这表示某个 utterance_index 的结果超时或丢失，但系统继续运行
+        // Missing 占位结果：表示某个 utterance_index 的结果超时或丢失，但系统继续运行
         console.warn('[App] Missing result received:', {
           utterance_index: message.utterance_index,
           reason: message.reason,
@@ -430,43 +434,12 @@ export class App {
           trace_id: message.trace_id,
         });
         
-        // 修复：即使有文本显示，也需要标记出音频丢失的原因
-        // 检查是否有缓存的翻译结果（可能之前已经显示了文本）
+        // 修复：不应该重新显示，只记录日志
+        // 如果已经有翻译结果，说明已经显示过了，不需要重新显示
+        // Missing result 只是一个通知，用于防止队列锁死，不应该触发重新显示
         const cachedResult = this.translationDisplay.getTranslationResult(message.utterance_index);
         if (cachedResult) {
-          // 如果有缓存的文本，添加音频丢失标记
-          const audioLossReason = message.reason === "silence_detected" ? "静音检测" : 
-                                 message.reason === "timeout" ? "超时" : 
-                                 message.reason === "result_timeout" ? "结果超时" : "未知原因";
-          
-          const markedOriginalText = cachedResult.originalText ? 
-            `[音频丢失:${audioLossReason}] ${cachedResult.originalText}` : 
-            cachedResult.originalText;
-          const markedTranslatedText = cachedResult.translatedText ? 
-            `[音频丢失:${audioLossReason}] ${cachedResult.translatedText}` : 
-            cachedResult.translatedText;
-          
-          // 更新缓存的翻译结果
-          this.translationDisplay.saveTranslationResult(message.utterance_index, {
-            originalText: markedOriginalText,
-            translatedText: markedTranslatedText,
-            serviceTimings: cachedResult.serviceTimings,
-            networkTimings: cachedResult.networkTimings,
-            schedulerSentAtMs: cachedResult.schedulerSentAtMs
-          });
-          
-          // 重新显示标记后的翻译结果
-          const updatedResult = this.translationDisplay.getTranslationResult(message.utterance_index);
-          if (updatedResult) {
-            this.translationDisplay.displayTranslationResult(
-              updatedResult.originalText || '',
-              updatedResult.translatedText || '',
-              message.utterance_index,
-              updatedResult.serviceTimings,
-              updatedResult.networkTimings,
-              updatedResult.schedulerSentAtMs
-            );
-          }
+          console.log(`[App] Missing result for utterance_index ${message.utterance_index}, but translation result already exists and displayed - not re-displaying`);
         } else {
           // 如果没有缓存的文本，说明这是一个真正的空结果（静音检测等）
           // 不显示占位结果，只记录日志（用于调试）
@@ -605,7 +578,7 @@ export class App {
           });
         }
 
-        // 保存 trace_id 和 group_id，用于后续发送 TTS_PLAY_ENDED
+        // 保存 trace_id 和 group_id，用于后续发送 TTS_STARTED 和 TTS_PLAY_ENDED
         this.currentTraceId = message.trace_id;
         this.currentGroupId = message.group_id || null;
 
@@ -649,14 +622,21 @@ export class App {
         // 保存翻译结果到 Map（用于播放时同步显示）
         // 使用 utterance_index 作为 key，用于文本显示同步
         if (message.text_asr || message.text_translated) {
+          // 修复：在Web客户端检查音频是否为空，添加音频丢失标记（而不是在调度服务器）
+          const hasAudio = message.tts_audio && message.tts_audio.length > 0;
+          const audioLossMark = hasAudio ? '' : '[音频丢失] ';
+          
+          const originalText = hasAudio ? message.text_asr : (message.text_asr ? `${audioLossMark}${message.text_asr}` : message.text_asr);
+          const translatedText = hasAudio ? message.text_translated : (message.text_translated ? `${audioLossMark}${message.text_translated}` : message.text_translated);
+          
           this.translationDisplay.saveTranslationResult(message.utterance_index, {
-            originalText: message.text_asr,
-            translatedText: message.text_translated,
+            originalText,
+            translatedText,
             serviceTimings: message.service_timings,
             networkTimings: message.network_timings,
             schedulerSentAtMs: message.scheduler_sent_at_ms
           });
-          console.log('[App] 翻译结果已保存到 Map，utterance_index:', message.utterance_index);
+          console.log('[App] 翻译结果已保存到 Map，utterance_index:', message.utterance_index, 'hasAudio:', hasAudio);
 
           // 立即显示翻译结果（确保所有文本都能显示，不依赖播放回调）
           // 如果已经显示过，跳过（避免重复）
@@ -666,8 +646,8 @@ export class App {
             // 尝试显示文本，如果成功显示，才标记为已显示
             // 传递 utterance_index 用于分段显示和高亮
             const displayed = this.translationDisplay.displayTranslationResult(
-              message.text_asr,
-              message.text_translated,
+              originalText,
+              translatedText,
               message.utterance_index, // 传递 utterance_index
               message.service_timings,
               message.network_timings,
@@ -679,8 +659,8 @@ export class App {
               console.log('[App] 翻译结果已立即显示，utterance_index:', message.utterance_index);
             } else {
               console.warn('[App] 翻译结果显示失败（可能被过滤），utterance_index:', message.utterance_index, {
-                text_asr: message.text_asr?.substring(0, 50),
-                text_translated: message.text_translated?.substring(0, 50)
+                text_asr: originalText?.substring(0, 50),
+                text_translated: translatedText?.substring(0, 50)
               });
             }
           }
@@ -789,131 +769,72 @@ export class App {
                 return;
               }
               
+              // 音频成功添加到缓冲区，正常处理
+              const currentState = this.stateMachine.getState();
               const bufferCount = this.ttsPlayer.getBufferCount();
-              const hasPendingAudio = this.ttsPlayer.hasPendingAudio();
-              const totalDuration = this.ttsPlayer.getTotalDuration() || 0; // 防御性检查
+              const isAutoPlayEnabled = this.config.autoPlay ?? false;
               
               console.log(`[App] ✅ [Job ${message.job_id}] TTS 音频块已成功添加到缓冲区 (utterance_index=${message.utterance_index}):`, {
                 utterance_index: message.utterance_index,
                 job_id: message.job_id,
                 trace_id: message.trace_id,
-                buffer_size: hasPendingAudio ? '有音频' : '无音频',
                 buffer_count: bufferCount,
-                total_duration: (totalDuration || 0).toFixed(2) + '秒',
+                total_duration: (this.ttsPlayer.getTotalDuration() || 0).toFixed(2) + '秒',
                 is_playing: this.ttsPlayer.getIsPlaying(),
-                current_state: this.stateMachine.getState(),
-                memory_pressure: this.ttsPlayer.getMemoryPressure()
+                current_state: currentState
               });
               
-              // 检查音频是否被丢弃（buffer_count为0或hasPendingAudio为false）
-              if (!hasPendingAudio || bufferCount === 0) {
-                console.warn(`[App] ⚠️ [Job ${message.job_id}] 音频被缓存清理丢弃，显示文本并标记[播放失败] (utterance_index=${message.utterance_index}):`, {
+              // 根据配置决定是否自动播放
+              // 自动播放模式：所有翻译结果都自动播放
+              // 手动播放模式：等待用户手动触发或内存压力过高时自动播放
+              if (isAutoPlayEnabled && currentState === SessionState.INPUT_RECORDING && !this.ttsPlayer.getIsPlaying()) {
+                console.log('[App] 🎵 自动播放模式：音频已添加，自动开始播放', {
                   utterance_index: message.utterance_index,
-                  job_id: message.job_id,
-                  trace_id: message.trace_id,
-                  buffer_count: bufferCount,
-                  total_duration: (totalDuration || 0).toFixed(2) + '秒',
-                  has_pending_audio: hasPendingAudio
+                  bufferCount,
                 });
-                
-                // 即使音频被丢弃，也显示文本并标记[播放失败]或[内存限制]
-                if (message.text_asr || message.text_translated) {
-                  // 检查是否是内存限制导致的丢弃
-                  // 注意：discardReason 在 catch 块中定义，这里无法访问，所以设为 undefined
-                  const isMemoryLimitError = false; // 这里需要从错误信息中判断
-                  const warningPrefix = isMemoryLimitError ? '[内存限制]' : '[播放失败]';
-                  const warningSuffix = ''; // discardReason 在 catch 块中定义，这里无法访问
-                  
-                  const failedOriginalText = message.text_asr ? `${warningPrefix} ${message.text_asr}${warningSuffix}` : '';
-                  const failedTranslatedText = message.text_translated ? `${warningPrefix} ${message.text_translated}${warningSuffix}` : '';
-                  
-                  // 保存翻译结果（标记为失败）
-                  this.translationDisplay.saveTranslationResult(message.utterance_index, {
-                    originalText: failedOriginalText,
-                    translatedText: failedTranslatedText,
-                    serviceTimings: message.service_timings,
-                    networkTimings: message.network_timings,
-                    schedulerSentAtMs: message.scheduler_sent_at_ms
+                // 延迟一小段时间，确保UI已更新
+                setTimeout(() => {
+                  this.startTtsPlayback().catch((error) => {
+                    console.error('[App] 自动播放失败:', error);
                   });
-                  
-                  // 显示翻译结果（带[播放失败]标记）
-                  if (!this.translationDisplay.isDisplayed(message.utterance_index)) {
-                    const displayed = this.translationDisplay.displayTranslationResult(
-                      failedOriginalText,
-                      failedTranslatedText,
-                      message.utterance_index, // 传递 utterance_index
-                      message.service_timings,
-                      message.network_timings,
-                      message.scheduler_sent_at_ms
-                    );
-                    if (displayed) {
-                      this.translationDisplay.markAsDisplayed(message.utterance_index);
-                      console.log('[App] 翻译结果已显示（带[播放失败]标记），utterance_index:', message.utterance_index);
-                    }
-                  }
-                }
+                }, 100);
               } else {
-                // 音频成功添加，正常处理
-                const currentState = this.stateMachine.getState();
-                const bufferCount = this.ttsPlayer.getBufferCount();
-                const isAutoPlayEnabled = this.config.autoPlay ?? false;
-                
-                // 根据配置决定是否自动播放
-                // 自动播放模式：所有翻译结果都自动播放
-                // 手动播放模式：等待用户手动触发或内存压力过高时自动播放
-                if (isAutoPlayEnabled && currentState === SessionState.INPUT_RECORDING && !this.ttsPlayer.getIsPlaying()) {
-                  console.log('[App] 🎵 自动播放模式：音频已添加，自动开始播放', {
-                    utterance_index: message.utterance_index,
-                    bufferCount,
-                  });
-                  // 延迟一小段时间，确保UI已更新
-                  setTimeout(() => {
-                    this.startTtsPlayback().catch((error) => {
-                      console.error('[App] 自动播放失败:', error);
-                    });
-                  }, 100);
-                } else {
-                  // 手动播放模式：不自动播放，等待用户手动触发或内存压力过高时自动播放
-                  // 注意：自动播放只在内存压力 >= 80% (critical) 时触发（见 onMemoryPressure 方法）
-                  console.log('[App] ⏸️ 手动播放模式：音频已添加到缓冲区，等待用户手动播放或内存压力过高时自动播放', {
-                    utterance_index: message.utterance_index,
-                    bufferCount,
-                    isAutoPlayEnabled,
-                    isPlaying: this.ttsPlayer.getIsPlaying(),
-                  });
-                }
-                
-                // 触发 UI 更新，显示播放按钮和时长
-                this.notifyTtsAudioAvailable();
-                
-                // 注意：如果文本已经显示（在440-474行），这里不会再次显示
-                // 如果后续播放失败，会在播放失败的回调中处理
+                // 手动播放模式：不自动播放，等待用户手动触发或内存压力过高时自动播放
+                console.log('[App] ⏸️ 手动播放模式：音频已添加到缓冲区，等待用户手动播放或内存压力过高时自动播放', {
+                  utterance_index: message.utterance_index,
+                  bufferCount,
+                  isAutoPlayEnabled,
+                  isPlaying: this.ttsPlayer.getIsPlaying(),
+                });
               }
+              
+              // 触发 UI 更新，显示播放按钮和时长
+              this.notifyTtsAudioAvailable();
+              
+              // 注意：如果文本已经显示（在440-474行），这里不会再次显示
+              // 如果后续播放失败，会在播放失败的回调中处理
             }).catch((error) => {
+              // 音频添加失败（内存限制或其他错误），显示文本并标记错误原因
               console.error(`[App] ❌ [Job ${message.job_id}] 添加 TTS 音频块失败 (utterance_index=${message.utterance_index}):`, {
                 utterance_index: message.utterance_index,
                 job_id: message.job_id,
                 trace_id: message.trace_id,
                 base64_length: message.tts_audio.length,
                 tts_format: ttsFormat,
-                error: error,
-                error_message: error?.message,
-                error_stack: error?.stack
+                error: error?.message
               });
               
-              // 检查是否是内存限制导致的丢弃
-              const isMemoryLimitError = error?.message?.includes('AUDIO_DISCARDED');
-              const discardReason = isMemoryLimitError ? error.message.replace('AUDIO_DISCARDED: ', '') : undefined;
-              
-              // 即使添加失败，也显示文本并标记[播放失败]或[内存限制]
-              const warningPrefix = isMemoryLimitError ? '[内存限制]' : '[播放失败]';
-              const warningSuffix = isMemoryLimitError && discardReason ? ` (${discardReason})` : '';
-              
               if (message.text_asr || message.text_translated) {
+                // 判断错误类型
+                const isMemoryLimitError = error?.message?.includes('AUDIO_DISCARDED');
+                const discardReason = isMemoryLimitError ? error.message.replace('AUDIO_DISCARDED: ', '') : undefined;
+                const warningPrefix = isMemoryLimitError ? '[内存限制]' : '[播放失败]';
+                const warningSuffix = isMemoryLimitError && discardReason ? ` (${discardReason})` : '';
+                
                 const failedOriginalText = message.text_asr ? `${warningPrefix} ${message.text_asr}${warningSuffix}` : '';
                 const failedTranslatedText = message.text_translated ? `${warningPrefix} ${message.text_translated}${warningSuffix}` : '';
                 
-                // 保存翻译结果（标记为失败）
+                // 保存并显示翻译结果（带错误标记）
                 this.translationDisplay.saveTranslationResult(message.utterance_index, {
                   originalText: failedOriginalText,
                   translatedText: failedTranslatedText,
@@ -922,43 +843,18 @@ export class App {
                   schedulerSentAtMs: message.scheduler_sent_at_ms
                 });
                 
-                // 无论是否已显示，都更新为带标记的版本
-                const cachedResult = this.translationDisplay.getTranslationResult(message.utterance_index);
-                if (cachedResult) {
-                  // 如果已经显示过，更新为带标记的版本
-                  this.translationDisplay.saveTranslationResult(message.utterance_index, {
-                    originalText: failedOriginalText,
-                    translatedText: failedTranslatedText,
-                    serviceTimings: message.service_timings,
-                    networkTimings: message.network_timings,
-                    schedulerSentAtMs: message.scheduler_sent_at_ms
-                  });
-                  // 重新显示带标记的文本
-                  const updatedResult = this.translationDisplay.getTranslationResult(message.utterance_index);
-                  if (updatedResult) {
-                    this.translationDisplay.displayTranslationResult(
-                      updatedResult.originalText || '',
-                      updatedResult.translatedText || '',
-                      message.utterance_index,
-                      updatedResult.serviceTimings,
-                      updatedResult.networkTimings,
-                      updatedResult.schedulerSentAtMs
-                    );
-                  }
-                  console.log('[App] 翻译结果已更新（带[播放失败]标记），utterance_index:', message.utterance_index);
-                } else {
-                  // 如果还没有显示，显示带标记的文本
+                if (!this.translationDisplay.isDisplayed(message.utterance_index)) {
                   const displayed = this.translationDisplay.displayTranslationResult(
                     failedOriginalText,
                     failedTranslatedText,
-                    message.utterance_index, // 传递 utterance_index
+                    message.utterance_index,
                     message.service_timings,
                     message.network_timings,
                     message.scheduler_sent_at_ms
                   );
                   if (displayed) {
                     this.translationDisplay.markAsDisplayed(message.utterance_index);
-                    console.log('[App] 翻译结果已显示（带[播放失败]标记），utterance_index:', message.utterance_index);
+                    console.log(`[App] 翻译结果已显示（带${warningPrefix}标记），utterance_index: ${message.utterance_index}`);
                   }
                 }
               }
@@ -1141,6 +1037,34 @@ export class App {
           console.error('[App] 自动播放失败:', error);
         });
       }
+    }
+  }
+
+  /**
+   * 播放开始处理
+   */
+  private onPlaybackStarted(): void {
+    const playbackStartedTimestamp = Date.now();
+    
+    // 发送 TTS_STARTED 消息（如果 trace_id 和 group_id 存在）
+    if (this.currentTraceId && this.currentGroupId) {
+      const tsStartMs = Date.now();
+      this.wsClient.sendTtsStarted(this.currentTraceId, this.currentGroupId, tsStartMs);
+      console.log(`[App] 已发送 TTS_STARTED`, {
+        trace_id: this.currentTraceId,
+        group_id: this.currentGroupId,
+        ts_start_ms: tsStartMs,
+        ts_start_ms_iso: new Date(tsStartMs).toISOString(),
+        timestamp: Date.now(),
+        timestampIso: new Date().toISOString(),
+      });
+    } else {
+      console.warn('[App] ⚠️ 无法发送 TTS_STARTED: 缺少 trace_id 或 group_id', {
+        hasTraceId: !!this.currentTraceId,
+        hasGroupId: !!this.currentGroupId,
+        timestamp: Date.now(),
+        timestampIso: new Date().toISOString(),
+      });
     }
   }
 

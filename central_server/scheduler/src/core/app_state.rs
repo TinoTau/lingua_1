@@ -35,6 +35,7 @@ pub struct AppState {
     pub result_queue: ResultQueueManager,
     pub audio_buffer: AudioBufferManager,
     pub group_manager: GroupManager,
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub node_status_manager: NodeStatusManager,
     pub room_manager: RoomManager,
     /// Job 幂等键管理器（用于防止重复创建 job）

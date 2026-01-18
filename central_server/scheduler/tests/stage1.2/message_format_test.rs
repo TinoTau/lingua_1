@@ -92,6 +92,7 @@ fn test_utterance_message_format() {
         enable_streaming_asr: None,
         partial_update_interval_ms: None,
         trace_id: None,
+        pipeline: None,
     };
 
     // 验证所有必需字段都存在
@@ -114,6 +115,7 @@ fn test_utterance_message_format() {
             enable_streaming_asr: _,
             partial_update_interval_ms: _,
             trace_id: _,
+            pipeline: _,
         } => {
             assert_eq!(session_id, "sess-123");
             assert_eq!(utterance_index, 0);
@@ -410,6 +412,8 @@ fn test_job_assign_message_format() {
             use_asr: true,
             use_nmt: true,
             use_tts: true,
+            use_semantic: false,
+            use_tone: false,
         },
         audio: "base64audio".to_string(),
         audio_format: "pcm16".to_string(),

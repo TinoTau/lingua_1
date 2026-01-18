@@ -73,6 +73,11 @@ dashmap = "5.5"
 # 小向量优化（用于RuntimeSnapshot）
 smallvec = "1.11"
 
+[features]
+default = []
+# 测试辅助功能，用于集成测试访问测试辅助方法
+test-helpers = []
+
 [dev-dependencies]
 tokio-test = "0.4"
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "rt", "time", "process", "fs", "test-util"] }

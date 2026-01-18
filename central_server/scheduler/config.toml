@@ -8,7 +8,7 @@ storage_path = "./models"
 
 [scheduler]
 max_concurrent_jobs_per_node = 4
-job_timeout_seconds = 30
+job_timeout_seconds = 60  # 调整为60秒以容纳流式ASR聚合的额外等待时间（从30秒延长）
 heartbeat_interval_seconds = 15
 
 [scheduler.phase2]

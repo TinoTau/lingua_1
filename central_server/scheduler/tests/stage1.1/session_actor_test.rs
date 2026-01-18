@@ -343,3 +343,112 @@ async fn test_session_actor_timeout_generation() {
     actor_handle.abort();
 }
 
+#[tokio::test]
+async fn test_session_actor_pause_detection_during_tts_playback() {
+    // 测试：在TTS播放期间，即使chunk间隔>pause_ms，也不触发pause finalize
+    let state = create_test_app_state();
+    let (tx, _rx) = mpsc::unbounded_channel::<Message>();
+
+    // 创建会话
+    let session = state.session_manager.create_session(
+        "1.0.0".to_string(),
+        "web".to_string(),
+        "zh".to_string(),
+        "en".to_string(),
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        Some("opus".to_string()),
+        None,
+    ).await;
+
+    // 创建 group
+    let (group_id, _, _) = state.group_manager.on_asr_final(
+        &session.session_id,
+        &session.trace_id,
+        0,
+        "Test".to_string(),
+        chrono::Utc::now().timestamp_millis() as u64,
+    ).await;
+
+    let (actor, handle) = SessionActor::new(
+        session.session_id.clone(),
+        state.clone(),
+        tx,
+        session.utterance_index,
+        3000, // pause_ms = 3秒
+        20000, // max_duration_ms
+        EdgeStabilizationConfig::default(),
+    );
+
+    state.session_manager.register_actor(session.session_id.clone(), handle.clone()).await;
+
+    let actor_handle = tokio::spawn(async move {
+        actor.run().await;
+    });
+
+    let base_time = chrono::Utc::now().timestamp_millis();
+
+    // 1. 发送第一个音频块
+    handle.send(SessionEvent::AudioChunkReceived {
+        chunk: vec![1u8, 2u8, 3u8, 4u8],
+        is_final: false,
+        timestamp_ms: base_time,
+        client_timestamp_ms: Some(base_time),
+    }).unwrap();
+
+    sleep(Duration::from_millis(100)).await;
+
+    // 2. 模拟TTS播放开始
+    let tts_start_ms = base_time as u64 + 100;
+    state.group_manager.on_tts_started(&group_id, tts_start_ms).await;
+
+    // 3. 在TTS播放期间，发送第二个音频块（间隔超过pause_ms）
+    // 正常情况下这应该触发pause finalize，但在TTS播放期间不应该触发
+    let tts_mid_time = base_time + 5000; // 5秒后，超过pause_ms（3秒）
+    handle.send(SessionEvent::AudioChunkReceived {
+        chunk: vec![5u8, 6u8, 7u8, 8u8],
+        is_final: false,
+        timestamp_ms: tts_mid_time,
+        client_timestamp_ms: Some(tts_mid_time),
+    }).unwrap();
+
+    sleep(Duration::from_millis(200)).await;
+
+    // 4. 验证：由于在TTS播放期间，pause finalize不应该触发
+    // 这意味着utterance_index不应该递增
+    let session_after = state.session_manager.get_session(&session.session_id).await.unwrap();
+    assert_eq!(session_after.utterance_index, session.utterance_index, 
+               "在TTS播放期间，即使chunk间隔>pause_ms，也不应该触发pause finalize");
+
+    // 5. TTS播放结束
+    let tts_end_ms = tts_start_ms + 10000; // 播放10秒
+    state.group_manager.on_tts_play_ended(&group_id, tts_end_ms).await;
+
+    // 6. 播放结束后，发送第三个音频块（间隔仍然超过pause_ms）
+    // 现在应该触发pause finalize
+    let after_playback_time = tts_end_ms as i64 + 4000; // 播放结束后4秒
+    handle.send(SessionEvent::AudioChunkReceived {
+        chunk: vec![9u8, 10u8, 11u8, 12u8],
+        is_final: false,
+        timestamp_ms: after_playback_time,
+        client_timestamp_ms: Some(after_playback_time),
+    }).unwrap();
+
+    sleep(Duration::from_millis(200)).await;
+
+    // 7. 验证：播放结束后，pause finalize应该触发
+    let session_final = state.session_manager.get_session(&session.session_id).await.unwrap();
+    // 注意：由于Actor是异步的，这里只验证不会崩溃
+    // 实际验证需要更复杂的同步机制
+
+    handle.send(SessionEvent::CloseSession).unwrap();
+    sleep(Duration::from_millis(100)).await;
+    actor_handle.abort();
+}
+

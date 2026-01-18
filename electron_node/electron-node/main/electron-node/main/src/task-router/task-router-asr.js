@@ -137,7 +137,7 @@ class TaskRouterASRHandler {
                     contextTextLength: task.context_text?.length || 0,
                     enableStreaming: task.enable_streaming || false,
                     beamSize: requestBody.beam_size,
-                    timeout: httpClient.defaults.timeout,
+                    timeout: httpClient.defaults?.timeout ?? 60000,
                     requestBodySize: JSON.stringify(requestBody).length,
                 }, 'ASR INPUT: Sending ASR request to faster-whisper-vad');
                 response = await httpClient.post('/utterance', requestBody, {
@@ -181,7 +181,7 @@ class TaskRouterASRHandler {
                     responseData: axiosError.response?.data,
                     requestDurationMs: requestDuration,
                     isTimeout,
-                    timeout: httpClient.defaults.timeout,
+                    timeout: httpClient.defaults?.timeout ?? 60000,
                 }, `faster-whisper-vad request failed${isTimeout ? ' (TIMEOUT)' : ''}'`);
                 throw axiosError;
             }

@@ -27,6 +27,7 @@ pub(crate) async fn send_message(tx: &mpsc::UnboundedSender<Message>, message: &
 }
 
 // 辅助函数：发送节点消息
+#[allow(dead_code)] // 当前未使用，保留用于未来扩展
 pub(crate) async fn send_node_message(tx: &mpsc::UnboundedSender<Message>, message: &NodeMessage) -> Result<(), anyhow::Error> {
     let json = serde_json::to_string(message)?;
     tx.send(Message::Text(json))

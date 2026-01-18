@@ -54,57 +54,68 @@ class ResultSender {
         // 检查ASR结果是否为空
         const asrTextTrimmed = (finalResult.text_asr || '').trim();
         const isEmpty = !asrTextTrimmed || asrTextTrimmed.length === 0;
-        if (isEmpty) {
-            // 修复：即使ASR结果为空，也发送job_result（空结果）给调度服务器
+        // 检查是否是"核销"情况：所有结果都归并到其他job
+        const isConsolidated = finalResult.extra?.is_consolidated === true;
+        const consolidatedToJobIds = finalResult.extra?.consolidated_to_job_ids;
+        // 检查是否是"空容器核销"情况：NO_TEXT_ASSIGNED
+        const extraReason = finalResult.extra?.reason;
+        const isNoTextAssigned = extraReason === 'NO_TEXT_ASSIGNED';
+        // 决策：移除空结果保活机制 - 只在有实际结果时发送
+        // 例外1：如果是"核销"情况（所有结果都归并到其他job），发送空结果核销当前job
+        // 例外2：如果是"空容器核销"情况（NO_TEXT_ASSIGNED），发送空结果核销当前job
+        if (isEmpty && !isConsolidated && !isNoTextAssigned) {
             logger_1.default.info({
                 jobId: job.job_id,
                 traceId: job.trace_id,
                 sessionId: job.session_id,
                 utteranceIndex: job.utterance_index,
-                reason: 'ASR result is empty, but sending empty job_result to scheduler to prevent timeout',
-            }, 'NodeAgent: ASR result is empty, sending empty job_result to scheduler to prevent timeout');
+                reason: 'ASR result is empty, not sending job_result (audio may be cached for streaming merge)',
+            }, 'NodeAgent: ASR result is empty, skipping job_result send (will send when actual result is ready)');
+            return;
         }
-        else {
+        // 如果是"核销"情况，发送空结果核销当前job
+        if (isEmpty && (isConsolidated || isNoTextAssigned)) {
             logger_1.default.info({
                 jobId: job.job_id,
+                traceId: job.trace_id,
+                sessionId: job.session_id,
                 utteranceIndex: job.utterance_index,
-                textAsr: finalResult.text_asr?.substring(0, 50),
-                textAsrLength: finalResult.text_asr?.length || 0,
-                textTranslated: finalResult.text_translated?.substring(0, 100),
-                textTranslatedLength: finalResult.text_translated?.length || 0,
-                ttsAudioLength: finalResult.tts_audio?.length || 0,
-            }, 'Job processing completed successfully');
+                consolidatedToJobIds,
+                reason: isNoTextAssigned
+                    ? 'Empty container detected (NO_TEXT_ASSIGNED), sending empty result to acknowledge job'
+                    : 'All ASR results consolidated to other jobs, sending empty result to acknowledge current job',
+            }, isNoTextAssigned
+                ? 'NodeAgent: Sending empty job_result to acknowledge empty container job (NO_TEXT_ASSIGNED)'
+                : 'NodeAgent: Sending empty job_result to acknowledge job (all results consolidated to other jobs)');
+            // 继续执行，发送空结果（不记录到去重逻辑，因为这是正常的核销）
         }
-        // 如果 JobPipeline 决定不发送（去重检查失败），发送空结果
+        // 如果 JobPipeline 决定不发送（去重检查失败），不发送任何结果
+        // 决策：移除空结果保活机制 - 去重过滤的结果也不发送空结果
         if (!shouldSend) {
-            const emptyResponse = {
-                type: 'job_result',
-                job_id: job.job_id,
-                attempt_id: job.attempt_id,
-                node_id: this.nodeId,
-                session_id: job.session_id,
-                utterance_index: job.utterance_index,
-                success: true,
-                text_asr: '',
-                text_translated: '',
-                tts_audio: '',
-                tts_format: 'opus',
-                processing_time_ms: Date.now() - startTime,
-                trace_id: job.trace_id,
-                extra: {
-                    filtered: true,
-                    reason: reason || 'JobPipeline filtered result',
-                },
-            };
-            this.ws.send(JSON.stringify(emptyResponse));
             logger_1.default.info({
                 jobId: job.job_id,
                 sessionId: job.session_id,
                 utteranceIndex: job.utterance_index,
-            }, 'Empty job_result sent to scheduler (filtered by JobPipeline) to prevent timeout');
+                reason: reason || 'JobPipeline filtered result (duplicate)',
+            }, 'NodeAgent: Job filtered by JobPipeline, skipping job_result send');
             return;
         }
+        // 有实际ASR结果，正常发送
+        logger_1.default.info({
+            jobId: job.job_id,
+            utteranceIndex: job.utterance_index,
+            textAsr: finalResult.text_asr?.substring(0, 50),
+            textAsrLength: finalResult.text_asr?.length || 0,
+            textTranslated: finalResult.text_translated?.substring(0, 100),
+            textTranslatedLength: finalResult.text_translated?.length || 0,
+            ttsAudioLength: finalResult.tts_audio?.length || 0,
+        }, 'Job processing completed successfully');
         // 对齐协议规范：job_result 消息格式
+        // 关键修复：如果extraReason是NO_TEXT_ASSIGNED，确保extra中包含reason字段
+        const extra = finalResult.extra || {};
+        if (isNoTextAssigned && !extra.reason) {
+            extra.reason = 'NO_TEXT_ASSIGNED';
+        }
         const response = {
             type: 'job_result',
             job_id: job.job_id,
@@ -117,7 +128,7 @@ class ResultSender {
             text_translated: finalResult.text_translated,
             tts_audio: finalResult.tts_audio,
             tts_format: finalResult.tts_format || 'opus', // 强制使用 opus 格式
-            extra: finalResult.extra,
+            extra: extra,
             processing_time_ms: Date.now() - startTime,
             trace_id: job.trace_id, // Added: propagate trace_id
             // OBS-2: 透传 ASR 质量信息
@@ -185,8 +196,28 @@ class ResultSender {
             }, 'ResultSender: Updated lastSentText via AggregatorMiddleware');
         }
         // 在成功发送后记录job_id，避免发送失败后重试时被误判为重复
-        if (this.dedupStage && typeof this.dedupStage.markJobIdAsSent === 'function') {
+        // 决策：移除空结果保活机制
+        // - 实际结果（有ASR文本）：记录job_id
+        // - 核销空结果（所有结果归并到其他job）：不记录job_id（因为这是正常的核销，不是重复）
+        if (!isEmpty && this.dedupStage && typeof this.dedupStage.markJobIdAsSent === 'function') {
+            // 只有实际结果才记录job_id
             this.dedupStage.markJobIdAsSent(job.session_id, job.job_id);
+            logger_1.default.debug({
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                textAsrLength: finalResult.text_asr?.length || 0,
+            }, 'ResultSender: Job_id marked as sent (actual result)');
+        }
+        else if (isEmpty && isConsolidated) {
+            // 核销空结果不记录job_id（这是正常的核销，不是重复）
+            logger_1.default.debug({
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                consolidatedToJobIds,
+                reason: 'Empty result sent for consolidation acknowledgment, not marking job_id (normal acknowledgment)',
+            }, 'ResultSender: Empty result sent for consolidation, job_id not marked');
         }
     }
     /**

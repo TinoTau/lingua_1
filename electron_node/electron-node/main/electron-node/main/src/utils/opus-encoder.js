@@ -13,7 +13,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.isOpusEncoderAvailable = isOpusEncoderAvailable;
 exports.parseWavFile = parseWavFile;
 exports.encodePcm16ToOpus = encodePcm16ToOpus;
-exports.encodePcm16ToOpusSync = encodePcm16ToOpusSync;
 const logger_1 = __importDefault(require("../logger"));
 // Opus 编码器实例（单例，复用编码器）
 let encoderInstance = null;
@@ -415,15 +414,4 @@ async function encodePcm16ToOpus(pcm16Data, sampleRate = 16000, channels = 1) {
         logger_1.default.error({ error }, 'Failed to encode PCM16 to Opus');
         throw error;
     }
-}
-/**
- * 同步版本的 encodePcm16ToOpus（为了向后兼容）
- * 注意：实际上仍然是异步的，但返回 Promise
- * @deprecated 建议使用异步版本
- */
-function encodePcm16ToOpusSync(pcm16Data, sampleRate = 16000, channels = 1) {
-    // 这个函数实际上无法同步执行，因为需要等待 WASM 初始化
-    // 为了向后兼容，我们抛出错误，提示使用异步版本
-    throw new Error('encodePcm16ToOpusSync is not supported with @minceraftmc/opus-encoder. ' +
-        'Please use encodePcm16ToOpus (async) instead.');
 }

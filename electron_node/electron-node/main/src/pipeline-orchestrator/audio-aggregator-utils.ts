@@ -3,6 +3,8 @@
  * 处理音频分析、分割等辅助方法
  */
 
+import logger from '../logger';
+
 export class AudioAggregatorUtils {
   private readonly SAMPLE_RATE = 16000; // 固定采样率
   private readonly BYTES_PER_SAMPLE = 2; // PCM16: 2 bytes per sample
@@ -136,6 +138,32 @@ export class AudioAggregatorUtils {
     // 选择结束位置，因为这样可以保留更多上下文
     const splitPosition = longestPause.end;
 
+    // 记录找到的所有停顿和选择的切分点（用于调试）
+    const audioDurationMs = (audio.length / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000;
+    const splitPositionMs = (splitPosition / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000;
+    const longestPauseStartMs = (longestPause.start / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000;
+    const longestPauseEndMs = (longestPause.end / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000;
+    
+    logger.debug(
+      {
+        audioDurationMs,
+        silenceSegmentsCount: silenceSegments.length,
+        silenceSegments: silenceSegments.map(seg => ({
+          startMs: (seg.start / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000,
+          endMs: (seg.end / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000,
+          durationMs: seg.duration,
+        })),
+        longestPause: {
+          startMs: longestPauseStartMs,
+          endMs: longestPauseEndMs,
+          durationMs: longestPause.duration,
+        },
+        splitPositionMs,
+        splitPositionBytes: splitPosition,
+      },
+      'AudioAggregatorUtils: [FindLongestPause] Found longest pause and split position'
+    );
+
     return {
       splitPosition,
       longestPauseMs: longestPause.duration,
@@ -234,5 +262,117 @@ export class AudioAggregatorUtils {
       start: bestStart,
       end: bestEnd,
     };
+  }
+
+  /**
+   * 按能量切分音频为多段（递归切分，直到每段都足够短）
+   * 
+   * @param audio PCM16音频数据
+   * @param maxSegmentDurationMs 单段最大时长（默认10秒）
+   * @param minSegmentDurationMs 单段最小时长（默认2秒，避免切得太碎）
+   * @param splitHangoverMs 切分点hangover（默认600ms）
+   * @param depth 递归深度（防止栈溢出，默认最大10层）
+   * @returns 切分后的音频段数组
+   */
+  splitAudioByEnergy(
+    audio: Buffer,
+    maxSegmentDurationMs: number = 10000,
+    minSegmentDurationMs: number = 2000,
+    splitHangoverMs: number = 600,
+    depth: number = 0
+  ): Buffer[] {
+    const MAX_DEPTH = 10; // 最大递归深度，防止栈溢出
+
+    // 防止递归过深
+    if (depth >= MAX_DEPTH) {
+      return [audio];
+    }
+
+    const totalDurationMs = (audio.length / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000;
+
+    // 如果音频足够短，直接返回
+    if (totalDurationMs <= maxSegmentDurationMs) {
+      return [audio];
+    }
+
+    // 如果音频太短（小于最小时长），也直接返回（避免切得太碎）
+    if (totalDurationMs < minSegmentDurationMs) {
+      return [audio];
+    }
+
+    // 尝试找到最长停顿并切分
+    const splitResult = this.findLongestPauseAndSplit(audio);
+
+    if (!splitResult || splitResult.splitPosition <= 0 || splitResult.splitPosition >= audio.length) {
+      // 找不到合适的切分点，直接返回整段
+      logger.debug(
+        {
+          totalDurationMs,
+          depth,
+          reason: splitResult ? 'Invalid split position' : 'No pause found',
+          splitPosition: splitResult?.splitPosition,
+        },
+        'AudioAggregatorUtils: [SplitByEnergy] No valid split point found, returning full audio'
+      );
+      return [audio];
+    }
+
+    // 应用hangover
+    const hangoverBytes = Math.floor(
+      (splitHangoverMs / 1000) * this.SAMPLE_RATE * this.BYTES_PER_SAMPLE
+    );
+    const hangoverEnd = Math.min(splitResult.splitPosition + hangoverBytes, audio.length);
+
+    const firstHalf = audio.slice(0, hangoverEnd);
+    const secondHalf = audio.slice(hangoverEnd);
+
+    // 记录切分信息
+    const splitPositionMs = (splitResult.splitPosition / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000;
+    const hangoverEndMs = (hangoverEnd / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000;
+    const firstHalfDurationMs = (firstHalf.length / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000;
+    const secondHalfDurationMs = (secondHalf.length / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000;
+
+    logger.info(
+      {
+        totalDurationMs,
+        depth,
+        longestPauseMs: splitResult.longestPauseMs,
+        splitPositionMs,
+        splitPositionBytes: splitResult.splitPosition,
+        hangoverMs: splitHangoverMs,
+        hangoverEndMs,
+        firstHalfDurationMs,
+        secondHalfDurationMs,
+        reason: 'Split audio at longest pause with hangover',
+      },
+      'AudioAggregatorUtils: [SplitByEnergy] Split audio at pause'
+    );
+
+    // 检查切分后的两段是否都足够短，如果都足够短就不需要递归
+    // 注意：firstHalfDurationMs 和 secondHalfDurationMs 已在上面声明
+
+    if (firstHalfDurationMs <= maxSegmentDurationMs && secondHalfDurationMs <= maxSegmentDurationMs) {
+      // 两段都足够短，直接返回
+      return [firstHalf, secondHalf];
+    }
+
+    // 递归切分前后两段
+    const firstSegments = this.splitAudioByEnergy(
+      firstHalf,
+      maxSegmentDurationMs,
+      minSegmentDurationMs,
+      splitHangoverMs,
+      depth + 1
+    );
+    const secondSegments = this.splitAudioByEnergy(
+      secondHalf,
+      maxSegmentDurationMs,
+      minSegmentDurationMs,
+      splitHangoverMs,
+      depth + 1
+    );
+
+    // 合并结果
+    return [...firstSegments, ...secondSegments];
   }
 }

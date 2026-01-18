@@ -21,8 +21,8 @@ class AggregatorStateCommitExecutor {
     executeCommit(pendingText, tailBuffer, isFinal, isManualCut, qualityScore, gapMs, commitByManualCut, commitByTimeout) {
         // 使用提交处理器提取文本
         const commitTextResult = this.commitHandler.extractCommitText(pendingText, tailBuffer, isFinal, isManualCut);
-        // 更新上下文
-        this.contextManager.updateRecentCommittedText(commitTextResult.commitText);
+        // 注意：不再在聚合阶段更新recentCommittedText
+        // 只在语义修复后更新，确保recentCommittedText中只包含最终提交的文本
         this.contextManager.setLastCommitQuality(qualityScore);
         // 清空合并组状态
         const mergeGroupStateBeforeClear = this.mergeGroupManager.getState();

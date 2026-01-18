@@ -312,20 +312,6 @@ pub fn on_web_task_finalized(reason: &'static str) {
     WEB_TASK_FINALIZED_TOTAL.with_label_values(&[reason]).inc();
 }
 
-pub fn on_no_available_node(selector: &'static str, reason: &'static str) {
-    NO_AVAILABLE_NODE_TOTAL
-        .with_label_values(&[selector, reason])
-        .inc();
-}
-
-pub fn on_phase3_pool_selected(pool_id: u16, hit: bool, fallback: bool) {
-    let pool = pool_id.to_string();
-    let outcome = if hit { "hit" } else { "miss" };
-    let fb = if fallback { "true" } else { "false" };
-    PHASE3_POOL_SELECTED_TOTAL
-        .with_label_values(&[pool.as_str(), outcome, fb])
-        .inc();
-}
 
 pub fn on_phase3_pool_attempt(pool_id: u16, success: bool, reason: &'static str) {
     let pool = pool_id.to_string();

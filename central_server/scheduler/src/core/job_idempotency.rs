@@ -1,9 +1,6 @@
 // Job 幂等键管理模块
 // 实现统一的 job_key 机制，用于防止重复创建 job
 
-use std::collections::HashMap;
-use std::sync::Arc;
-use tokio::sync::RwLock;
 use std::hash::{Hash, Hasher};
 use std::collections::hash_map::DefaultHasher;
 
@@ -91,18 +88,31 @@ impl JobIdempotencyManager {
     /// 获取或创建 job_id（幂等）
     /// 如果 job_key 已存在，返回已存在的 job_id
     /// 如果不存在，创建新的映射并返回 job_id
-    /// 注意：当前实现使用 job_key 作为 request_id，通过 Phase2 的 request_binding 实现幂等
+    /// 使用 Redis 简单 key-value 存储，不再依赖 request_binding
     pub async fn get_or_create_job_id(&self, job_key: &JobKey, job_id: String) -> String {
         // 如果 Phase2 可用，使用 Redis 存储
         if let Some(ref rt) = self.phase2 {
-            // 使用 job_key 作为 request_id，通过 request_binding 实现幂等
-            if let Some(binding) = rt.get_request_binding(job_key).await {
-                return binding.job_id;
+            // 直接使用 Redis key-value 存储，key 格式：scheduler:job_key:{job_key}
+            let key = format!("scheduler:job_key:{}", job_key);
+            
+            // 尝试获取已存在的 job_id
+            if let Some(existing_job_id) = rt.redis_get_string(&key).await.ok().flatten() {
+                return existing_job_id;
             }
-            // 创建新的 request_binding
+            
+            // 使用 SETNX 原子操作创建新的映射
             let ttl_seconds = (self.ttl_ms / 1000) as u64;
-            rt.set_request_binding(job_key, &job_id, None, ttl_seconds, false).await;
-            return job_id;
+            let created = rt.redis_set_nx_ex_string(&key, &job_id, ttl_seconds).await.unwrap_or(false);
+            
+            if created {
+                // 成功创建，返回新的 job_id
+                return job_id;
+            } else {
+                // 创建失败（其他实例已创建），重新获取
+                if let Some(existing_job_id) = rt.redis_get_string(&key).await.ok().flatten() {
+                    return existing_job_id;
+                }
+            }
         }
         // Phase2 不可用时，直接返回 job_id（无幂等保护）
         job_id
@@ -112,9 +122,8 @@ impl JobIdempotencyManager {
     pub async fn get_job_id(&self, job_key: &JobKey) -> Option<String> {
         // 如果 Phase2 可用，从 Redis 读取
         if let Some(ref rt) = self.phase2 {
-            if let Some(binding) = rt.get_request_binding(job_key).await {
-                return Some(binding.job_id);
-            }
+            let key = format!("scheduler:job_key:{}", job_key);
+            return rt.redis_get_string(&key).await.ok().flatten();
         }
         None
     }

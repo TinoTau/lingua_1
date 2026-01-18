@@ -195,6 +195,15 @@ impl MinimalSchedulerService {
             "任务调度"
         );
 
+        // 优化：在执行调度前检查timeout_node_id（用于后续fallback检测）
+        let session_key = format!("scheduler:session:{}", req.session_id);
+        let check_timeout_script = r#"
+return redis.call('HGET', KEYS[1], 'timeout_node_id') or ''
+"#;
+        let mut check_cmd = redis::cmd("EVAL");
+        check_cmd.arg(check_timeout_script).arg(1).arg(&session_key);
+        let expected_timeout_node_id: Option<String> = self.redis.query(check_cmd).await.ok().flatten();
+        
         // 在双向模式下，使用 lang_a 和 lang_b 来查找 Pool，而不是 src_lang="auto" 和 tgt_lang
         // 但 src_lang 仍然保持为 "auto"（节点端需要检测语言）
         let pool_src_lang = if req.src_lang == "auto" && req.lang_a.is_some() && req.lang_b.is_some() {
@@ -232,6 +241,23 @@ impl MinimalSchedulerService {
                     if let Ok(err_type) = redis::from_redis_value::<String>(&items[0]) {
                         if err_type == "err" {
                             if let Ok(err_msg) = redis::from_redis_value::<String>(&items[1]) {
+                                // 优化：根据错误类型记录相应的日志
+                                if err_msg == "NO_POOL_FOR_LANG_PAIR" {
+                                    warn!(
+                                        session_id = %req.session_id,
+                                        src_lang = %pool_src_lang,
+                                        tgt_lang = %pool_tgt_lang,
+                                        "[PoolCorrupt] invalid pools_json / Redis record missing"
+                                    );
+                                } else if err_msg == "NO_AVAILABLE_NODE" {
+                                    warn!(
+                                        session_id = %req.session_id,
+                                        src_lang = %pool_src_lang,
+                                        tgt_lang = %pool_tgt_lang,
+                                        "[PoolEmpty] no online nodes in pool"
+                                    );
+                                }
+                                
                                 // 直接返回错误消息，确保包含原始错误代码（如 NO_POOL_FOR_LANG_PAIR）
                                 return Err(anyhow::anyhow!("{}", err_msg));
                             }
@@ -241,6 +267,36 @@ impl MinimalSchedulerService {
                     // 成功格式：{node_id, job_id}
                     let node_id = redis::from_redis_value::<String>(&items[0])?;
                     let job_id = redis::from_redis_value::<String>(&items[1])?;
+                    
+                    // 优化：检查是否发生了AffinityFallback
+                    // 如果session中有timeout_node_id但选中的节点不是它，说明发生了fallback
+                    if let Some(ref expected_node_id) = expected_timeout_node_id {
+                        if !expected_node_id.is_empty() {
+                            if expected_node_id == &node_id {
+                                info!(
+                                    session_id = %req.session_id,
+                                    node_id = %node_id,
+                                    job_id = %job_id,
+                                    "[SessionAffinity] timeout_node_id matched, routing to same node for AudioAggregator continuity"
+                                );
+                            } else {
+                                warn!(
+                                    session_id = %req.session_id,
+                                    expected_node_id = %expected_node_id,
+                                    actual_node_id = %node_id,
+                                    job_id = %job_id,
+                                    "[AffinityFallback] timeout_node_id not usable (node offline or not in candidate pools) → fallback to other node"
+                                );
+                            }
+                        }
+                    } else {
+                        debug!(
+                            session_id = %req.session_id,
+                            node_id = %node_id,
+                            job_id = %job_id,
+                            "[SessionAffinity] No timeout_node_id mapping found, using random assignment"
+                        );
+                    }
                     
                     info!(
                         session_id = %req.session_id,

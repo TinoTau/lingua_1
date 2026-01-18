@@ -138,6 +138,80 @@ async fn test_on_nmt_done() {
 }
 
 #[tokio::test]
+async fn test_on_tts_started() {
+    let config = GroupConfig {
+        group_window_ms: 2000,
+        max_parts_per_group: 10,
+        max_context_length: 1000,
+    };
+    let manager = GroupManager::new(config);
+    
+    let session_id = "test_session_tts_started";
+    let base_time = 1000;
+    
+    // 创建 group
+    let (group_id, _, _) = manager.on_asr_final(
+        session_id,
+        "trace_1",
+        0,
+        "Hello".to_string(),
+        base_time,
+    ).await;
+    
+    // 记录 TTS 播放开始时间
+    let tts_start_ms = base_time + 100;
+    manager.on_tts_started(&group_id, tts_start_ms).await;
+    
+    // 先设置播放结束时间，然后才能判断播放期间
+    let tts_end_ms = tts_start_ms + 5000; // 播放时长 5 秒
+    manager.on_tts_play_ended(&group_id, tts_end_ms).await;
+    
+    // 在播放期间（在 start 和 end 之间），is_tts_playing 应该返回 true
+    assert!(manager.is_tts_playing(&group_id, (tts_start_ms + 2000) as i64).await);
+    
+    // 在播放开始之前，应该返回 false
+    assert!(!manager.is_tts_playing(&group_id, (tts_start_ms - 100) as i64).await);
+    
+    // 在播放结束之后，应该返回 false
+    assert!(!manager.is_tts_playing(&group_id, (tts_end_ms + 100) as i64).await);
+}
+
+#[tokio::test]
+async fn test_is_tts_playing() {
+    let config = GroupConfig::default();
+    let manager = GroupManager::new(config);
+    
+    let session_id = "test_session_is_tts_playing";
+    let base_time = 1000;
+    
+    // 创建 group
+    let (group_id, _, _) = manager.on_asr_final(
+        session_id,
+        "trace_1",
+        0,
+        "Hello".to_string(),
+        base_time,
+    ).await;
+    
+    // 没有设置播放开始时间时，应该返回 false
+    assert!(!manager.is_tts_playing(&group_id, (base_time + 1000) as i64).await);
+    
+    // 设置 TTS 播放开始和结束时间
+    let tts_start_ms = base_time + 500;
+    let tts_end_ms = base_time + 5000;
+    
+    manager.on_tts_started(&group_id, tts_start_ms).await;
+    manager.on_tts_play_ended(&group_id, tts_end_ms).await;
+    
+    // 测试边界情况
+    assert!(!manager.is_tts_playing(&group_id, (tts_start_ms - 1) as i64).await, "播放开始之前应该返回 false");
+    assert!(manager.is_tts_playing(&group_id, tts_start_ms as i64).await, "播放开始时应该返回 true");
+    assert!(manager.is_tts_playing(&group_id, (tts_start_ms + 1000) as i64).await, "播放期间应该返回 true");
+    assert!(manager.is_tts_playing(&group_id, tts_end_ms as i64).await, "播放结束时应该返回 true");
+    assert!(!manager.is_tts_playing(&group_id, (tts_end_ms + 1) as i64).await, "播放结束后应该返回 false");
+}
+
+#[tokio::test]
 async fn test_on_tts_play_ended() {
     let config = GroupConfig {
         group_window_ms: 2000,
@@ -184,6 +258,48 @@ async fn test_on_tts_play_ended() {
     
     // 应该创建新的 group
     assert_ne!(group_id, group_id3);
+}
+
+#[tokio::test]
+async fn test_tts_started_and_ended_sequence() {
+    let config = GroupConfig::default();
+    let manager = GroupManager::new(config);
+    
+    let session_id = "test_session_tts_sequence";
+    let base_time = 1000;
+    
+    // 创建 group
+    let (group_id, _, _) = manager.on_asr_final(
+        session_id,
+        "trace_1",
+        0,
+        "Hello".to_string(),
+        base_time,
+    ).await;
+    
+    // 模拟完整的 TTS 播放流程：开始 -> 播放期间 -> 结束
+    let tts_start_ms = base_time + 200;
+    let tts_duration_ms = 5000;
+    let tts_end_ms = tts_start_ms + tts_duration_ms;
+    
+    // 1. TTS 播放开始
+    manager.on_tts_started(&group_id, tts_start_ms).await;
+    
+    // 2. TTS 播放结束（必须先设置end_at，才能判断播放期间）
+    manager.on_tts_play_ended(&group_id, tts_end_ms).await;
+    
+    // 3. 在播放期间，is_tts_playing 应该返回 true
+    assert!(manager.is_tts_playing(&group_id, (tts_start_ms + 1000) as i64).await);
+    assert!(manager.is_tts_playing(&group_id, (tts_start_ms + 2500) as i64).await);
+    assert!(manager.is_tts_playing(&group_id, (tts_start_ms + 4000) as i64).await);
+    
+    // 4. 播放结束后，is_tts_playing 应该返回 false
+    assert!(!manager.is_tts_playing(&group_id, (tts_end_ms + 100) as i64).await);
+    assert!(!manager.is_tts_playing(&group_id, (tts_end_ms + 1000) as i64).await);
+    
+    // 5. 验证边界情况
+    assert!(manager.is_tts_playing(&group_id, tts_start_ms as i64).await, "播放开始时应该返回 true");
+    assert!(manager.is_tts_playing(&group_id, tts_end_ms as i64).await, "播放结束时应该返回 true");
 }
 
 #[tokio::test]

@@ -282,6 +282,9 @@ pub struct ExtraResult {
     /// ASR 所有语言的概率信息（字典：语言代码 -> 概率）
     #[serde(skip_serializing_if = "Option::is_none")]
     pub language_probabilities: Option<std::collections::HashMap<String, f32>>,
+    /// 空容器核销原因（如 "NO_TEXT_ASSIGNED"）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reason: Option<String>,
 }
 
 /// OBS-2: Segments 元数据

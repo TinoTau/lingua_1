@@ -514,10 +514,13 @@ export class Recorder {
       return false;
     }
     
-    if (this.audioContext.state === 'suspended') {
+    const initialState = this.audioContext.state;
+    if (initialState === 'suspended') {
       try {
         await this.audioContext.resume();
-        return this.audioContext.state === 'running';
+        // 重新读取状态，resume() 后状态可能已改变
+        const newState = this.audioContext.state;
+        return newState === 'running';
       } catch (error) {
         console.error('[Recorder] ❌ 恢复 AudioContext 失败:', error);
         return false;

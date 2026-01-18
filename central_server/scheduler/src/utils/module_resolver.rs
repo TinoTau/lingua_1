@@ -14,7 +14,6 @@ pub struct ModuleMetadata {
     #[allow(dead_code)]
     pub module_name: String,
     pub required_models: Vec<String>,  // 简化为模型 ID 列表
-    pub dependencies: Vec<String>,     // 依赖的其他模块
 }
 
 // 模块配置表（简化版）
@@ -29,42 +28,36 @@ lazy_static::lazy_static! {
         m.insert("emotion_detection", ModuleMetadata {
             module_name: "emotion_detection".to_string(),
             required_models: vec!["emotion-xlm-r".to_string()],
-            dependencies: vec!["asr".to_string()],
         });
         
         // 可选模块：音色识别
         m.insert("speaker_identification", ModuleMetadata {
             module_name: "speaker_identification".to_string(),
             required_models: vec!["speaker-id-ecapa".to_string()],
-            dependencies: vec![],
         });
         
         // 可选模块：音色生成/克隆
         m.insert("voice_cloning", ModuleMetadata {
             module_name: "voice_cloning".to_string(),
             required_models: vec!["vc-model-v1".to_string()],
-            dependencies: vec!["speaker_identification".to_string()],
         });
         
         // 可选模块：语速识别
         m.insert("speech_rate_detection", ModuleMetadata {
             module_name: "speech_rate_detection".to_string(),
             required_models: vec!["sr-d-v1".to_string()],
-            dependencies: vec!["asr".to_string()],
         });
         
         // 可选模块：语速控制
         m.insert("speech_rate_control", ModuleMetadata {
             module_name: "speech_rate_control".to_string(),
             required_models: vec!["tts-vocoder-v1".to_string()],
-            dependencies: vec!["speech_rate_detection".to_string(), "tts".to_string()],
         });
         
         // 可选模块：个性化适配
         m.insert("persona_adaptation", ModuleMetadata {
             module_name: "persona_adaptation".to_string(),
             required_models: vec!["persona-style-transformer".to_string()],
-            dependencies: vec!["asr".to_string()],
         });
         
         m
@@ -75,55 +68,6 @@ lazy_static::lazy_static! {
 pub struct ModuleResolver;
 
 impl ModuleResolver {
-    /// 递归展开模块依赖链
-    /// 
-    /// # Arguments
-    /// * `module_names` - 请求的模块名称列表
-    /// 
-    /// # Returns
-    /// * `Ok(HashSet<String>)` - 所有依赖的模块名称（包括请求的模块本身）
-    /// * `Err` - 如果检测到循环依赖或模块不存在
-    pub fn expand_dependencies(module_names: &[String]) -> Result<HashSet<String>> {
-        let mut visited = HashSet::new();
-        let mut result = HashSet::new();
-        
-        for module_name in module_names {
-            Self::dfs_expand(module_name, &mut visited, &mut result)?;
-        }
-        
-        Ok(result)
-    }
-
-    fn dfs_expand(
-        module_name: &str,
-        visited: &mut HashSet<String>,
-        result: &mut HashSet<String>,
-    ) -> Result<()> {
-        let name = module_name.to_string();
-        
-        if visited.contains(&name) {
-            // 已经访问过，跳过（允许重复依赖，但不允许循环）
-            return Ok(());
-        }
-        
-        visited.insert(name.clone());
-        result.insert(name.clone());
-        
-        // 核心模块（asr, nmt, tts, vad）不需要在 MODULE_TABLE 中查找
-        if ["asr", "nmt", "tts", "vad"].contains(&module_name) {
-            return Ok(());
-        }
-        
-        if let Some(metadata) = MODULE_TABLE.get(module_name) {
-            for dep in &metadata.dependencies {
-                Self::dfs_expand(dep, visited, result)?;
-            }
-        } else {
-            return Err(anyhow!("Module {} not found in MODULE_TABLE", module_name));
-        }
-        
-        Ok(())
-    }
 
     /// 收集所有模块所需的模型 ID
     /// 

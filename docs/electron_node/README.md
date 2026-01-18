@@ -1,43 +1,99 @@
-# Electron 节点客户端文档索引（`electron_node/docs`）
+# Electron Node 文档索引
 
-这里集中存放 Electron 节点客户端相关文档。为避免“方案文档 / 阶段文档 / README”口径不一致，本索引将 **现行口径** 与 **历史/阶段性材料** 分开整理。
+## 核心文档
 
-## 从这里开始（现行口径）
+### 1. ASR模块流程文档
+**文件**: `ASR_MODULE_FLOW_DOCUMENTATION.md`
 
-- **Electron Node 主文档（以代码为准）**：`electron_node/README.md`
-  - 入口在：`docs/electron_node/README.md`
-- **路径结构与目录口径**：`PATH_STRUCTURE.md`
+完整的ASR模块流程和代码逻辑文档，包括：
+- 模块架构概览
+- 完整流程调用链（从入口到各个组件）
+- 关键逻辑分支总结
+- 代码逻辑检查（重复/矛盾/边界情况）
+- 关键设计决策
+- 参数配置
 
-> 本轮整理重点是 `electron-node`（Electron 应用本体）相关内容；每个 service 的细节文档请直接看 `../services/` 下对应目录（此处不展开）。
+**用途**: 决策部门审议、开发人员参考
 
-## Electron Node（Electron 应用）
+---
 
-- **主文档**：`electron_node/README.md`
-- **阶段性方案/评估（阅读时以代码与主文档为准）**：`electron_node/`
-  - `ARCHITECTURE_RECOMMENDATION.md`
-  - `NODE_CLIENT_STARTUP_AND_LOGGING.md`
-  - `SERVICE_MANAGER_REFACTORING.md`
-  - `GPU_STATISTICS_TRACKING.md`
-  - `SERVICE_MIGRATION_ASSESSMENT.md`
-  - `PLUGIN_ARCHITECTURE_NECESSITY_ASSESSMENT.md`
-  - `THIRD_PARTY_PLUGIN_SCENARIOS.md`
-  - 以及其它同目录文档
+### 2. 长语音流式ASR技术规范
+**文件**: `LONG_UTTERANCE_STREAMING_AND_SR_TRIGGER_SPEC.md`
 
-## 核心参考（仍然有价值）
+技术规范文档，定义：
+- 长语音流式ASR + 单次SR触发机制
+- UtteranceState数据结构规范
+- 批次累积与容器对齐策略
+- 生命周期管理（20秒超时）
 
-- **迁移文档**：`MIGRATION.md` - 从 expired/ 迁移到 electron_node/ 的详细说明
-- **服务热插拔验证**：`SERVICE_HOT_PLUG_VERIFICATION.md` - 服务热插拔与任务链验证
-- **TTS 服务文档**：`TTS_SERVICES.md` - Piper TTS 和 YourTTS 服务说明
-- **路径结构**：`PATH_STRUCTURE.md` - 路径结构与目录解析
-- **音频处理索引**：`AUDIO_PROCESSING_INDEX.md` - 音频处理相关文档索引
-- **音频聚合完整机制**：`short_utterance/AUDIO_AGGREGATION_COMPLETE_MECHANISM.md` ⭐ **重要** - 完整的音频聚合、ASR、NMT、调度服务器finalize和Web端机制文档
+**用途**: 技术实现规范、架构设计参考
 
-## 模块化功能（历史/设计材料）
+---
 
-- `modular/README.md`
-- `modular/MODULAR_FEATURES.md`
-- `modular/LINGUA_完整技术说明书_v2.md`
+### 3. 设计符合性评审
+**文件**: `ASR_MODULE_DESIGN_COMPLIANCE_REVIEW.md`
 
-## 项目状态
+设计评审文档，包含：
+- 设计符合性要点
+- 优化方向与任务清单（TASK-1到TASK-4）
+- 简化原则
 
-- `../PROJECT_COMPLETENESS.md` - 项目完整性报告
+**用途**: 代码优化指导、设计审查
+
+---
+
+### 4. 实现总结
+**文件**: `IMPLEMENTATION_SUMMARY.md`
+
+实现总结文档，包含：
+- 核心功能实现（长语音流式ASR、音频聚合、ASR结果分发、生命周期管理）
+- 代码优化完成情况
+- 日志增强
+- 遗留代码清理
+
+**用途**: 快速了解实现状态、变更历史
+
+---
+
+## 文档结构
+
+```
+docs/electron_node/
+├── README.md                                    # 本文档（索引，~100行）
+├── ASR_MODULE_FLOW_DOCUMENTATION.md            # 核心：ASR模块流程（264行）
+├── LONG_UTTERANCE_STREAMING_AND_SR_TRIGGER_SPEC.md  # 核心：技术规范（215行）
+├── ASR_MODULE_DESIGN_COMPLIANCE_REVIEW.md      # 核心：设计评审（227行）
+└── IMPLEMENTATION_SUMMARY.md                    # 核心：实现总结（191行）
+```
+
+**总计**: 约1000行核心文档，所有文档均在500行以内 ✅
+
+---
+
+## 快速导航
+
+### 新开发者
+1. 先阅读 `ASR_MODULE_FLOW_DOCUMENTATION.md` 了解整体架构
+2. 再阅读 `LONG_UTTERANCE_STREAMING_AND_SR_TRIGGER_SPEC.md` 了解技术规范
+3. 查看 `IMPLEMENTATION_SUMMARY.md` 了解实现状态
+
+### 架构评审
+1. 阅读 `ASR_MODULE_FLOW_DOCUMENTATION.md` 查看完整流程
+2. 阅读 `ASR_MODULE_DESIGN_COMPLIANCE_REVIEW.md` 了解设计符合性
+
+### 代码优化
+1. 参考 `ASR_MODULE_DESIGN_COMPLIANCE_REVIEW.md` 的优化任务清单
+2. 查看 `IMPLEMENTATION_SUMMARY.md` 的优化完成情况
+
+---
+
+## 文档维护原则
+
+1. **核心文档控制在500行以内**
+2. **删除过期的测试报告和分析文档**
+3. **合并相关的实现总结**
+4. **保持文档与代码同步**
+
+---
+
+**最后更新**: 2026年1月18日

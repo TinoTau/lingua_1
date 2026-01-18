@@ -102,55 +102,31 @@ class SemanticRepairStageZH {
                         }
                     }
                     else {
-                        // GPU租约获取失败（忙时降级），根据策略处理
-                        const config = (0, node_config_1.loadNodeConfig)();
-                        const policy = config.gpuArbiter?.policies?.SEMANTIC_REPAIR;
-                        const busyPolicy = policy?.busyPolicy || 'SKIP';
-                        if (busyPolicy === 'FALLBACK_CPU') {
-                            // TODO: 实现CPU fallback（需要语义修复服务支持CPU模式）
-                            logger_1.default.warn({
-                                jobId: job.job_id,
-                                sessionId: job.session_id,
-                                utteranceIndex: job.utterance_index,
-                            }, 'SemanticRepairStageZH: GPU busy, FALLBACK_CPU not implemented, skipping repair');
-                            // 回退到PASS
-                            result = {
-                                decision: 'PASS',
-                                text_out: text,
-                                confidence: 1.0,
-                                reason_codes: ['GPU_BUSY_FALLBACK_CPU_NOT_IMPLEMENTED'],
-                            };
-                        }
-                        else {
-                            // SKIP策略：直接PASS
-                            logger_1.default.debug({
-                                jobId: job.job_id,
-                                sessionId: job.session_id,
-                                utteranceIndex: job.utterance_index,
-                            }, 'SemanticRepairStageZH: GPU busy, skipping repair (SKIP policy)');
-                            result = {
-                                decision: 'PASS',
-                                text_out: text,
-                                confidence: 1.0,
-                                reason_codes: ['GPU_BUSY_SKIPPED'],
-                            };
-                        }
+                        // GPU租约获取失败（超时或队列满），这不应该发生（因为busyPolicy是WAIT）
+                        // 如果发生，说明配置错误或系统异常
+                        logger_1.default.error({
+                            jobId: job.job_id,
+                            sessionId: job.session_id,
+                            utteranceIndex: job.utterance_index,
+                            note: 'GPU lease acquisition failed unexpectedly. This should not happen with WAIT policy. Check GPU arbiter configuration.',
+                        }, 'SemanticRepairStageZH: GPU lease acquisition failed unexpectedly');
+                        // 抛出错误，让上层处理
+                        throw new Error('SemanticRepairStageZH: GPU lease acquisition failed unexpectedly');
                     }
                 }
                 catch (error) {
-                    // GPU租约获取异常，回退到PASS
+                    // GPU租约获取异常，这不应该发生（因为busyPolicy是WAIT，应该等待）
+                    // 如果发生，说明系统异常，抛出错误让上层处理
                     logger_1.default.error({
                         error: error.message,
+                        stack: error.stack,
                         jobId: job.job_id,
                         sessionId: job.session_id,
                         utteranceIndex: job.utterance_index,
-                    }, 'SemanticRepairStageZH: GPU lease error, skipping repair');
-                    result = {
-                        decision: 'PASS',
-                        text_out: text,
-                        confidence: 1.0,
-                        reason_codes: ['GPU_LEASE_ERROR'],
-                    };
+                        note: 'GPU lease acquisition error. This should not happen with WAIT policy. Check GPU arbiter configuration and system status.',
+                    }, 'SemanticRepairStageZH: GPU lease acquisition error');
+                    // 抛出错误，让上层处理
+                    throw error;
                 }
                 return result;
             }, job.job_id);

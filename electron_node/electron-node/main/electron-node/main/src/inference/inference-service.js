@@ -38,6 +38,10 @@ class InferenceService {
         // 初始化 DedupStage（全局实例，用于维护 job_id 去重状态）
         const { DedupStage } = require('../agent/postprocess/dedup-stage');
         const dedupStage = new DedupStage();
+        // 初始化 AudioAggregator（用于在job之间共享音频缓冲区）
+        // 通过依赖注入方式创建，支持热插拔场景：每次 InferenceService 创建时都有新的干净实例
+        const { AudioAggregator } = require('../pipeline-orchestrator/audio-aggregator');
+        const audioAggregator = new AudioAggregator();
         // 初始化 servicesBundle
         this.servicesBundle = {
             taskRouter: this.taskRouter,
@@ -47,6 +51,7 @@ class InferenceService {
             sessionContextManager: this.sessionContextManager,
             aggregatorMiddleware: aggregatorMiddleware || null,
             dedupStage: dedupStage,
+            audioAggregator: audioAggregator,
         };
         // 异步初始化服务端点
         this.taskRouter.initialize().catch((error) => {
@@ -82,6 +87,13 @@ class InferenceService {
         this.aggregatorMiddleware = aggregatorMiddleware;
         this.servicesBundle.aggregatorMiddleware = aggregatorMiddleware;
         logger_1.default.info({}, 'InferenceService: AggregatorMiddleware updated');
+    }
+    /**
+     * 设置ResultSender（用于发送原始job的结果）
+     */
+    setResultSender(resultSender) {
+        this.servicesBundle.resultSender = resultSender;
+        logger_1.default.info({}, 'InferenceService: ResultSender updated');
     }
     /**
      * 清理 Session（统一入口）
@@ -122,15 +134,6 @@ class InferenceService {
         };
     }
     /**
-     * OBS-1: 获取 ASR 观测指标（用于上报）
-     * 返回当前心跳周期内的处理效率
-     */
-    getASRMetrics() {
-        return this.taskRouter.getASRMetrics?.() || {
-            processingEfficiency: null,
-        };
-    }
-    /**
      * OBS-1: 获取处理效率指标（按服务ID分组）
      * @returns Record<serviceId, efficiency>
      */
@@ -144,14 +147,6 @@ class InferenceService {
      */
     getServiceEfficiency(serviceId) {
         return this.taskRouter.getServiceEfficiency?.(serviceId) || null;
-    }
-    /**
-     * OBS-1: 重置当前心跳周期的处理效率指标（所有服务）
-     * 在心跳发送后调用，清空当前周期的数据
-     * @deprecated 使用 resetProcessingMetrics() 代替，但保留此方法以保持向后兼容
-     */
-    resetASRMetrics() {
-        this.resetProcessingMetrics();
     }
     /**
      * OBS-1: 重置当前心跳周期的处理效率指标（所有服务）

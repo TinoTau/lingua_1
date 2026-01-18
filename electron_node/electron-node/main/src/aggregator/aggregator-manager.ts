@@ -82,8 +82,7 @@ export class AggregatorManager {
     isManualCut: boolean = false,
     mode: Mode = 'offline',
     isPauseTriggered: boolean = false,
-    isTimeoutTriggered: boolean = false,
-    hasPendingSecondHalfMerged: boolean = false
+    isTimeoutTriggered: boolean = false
   ): AggregatorCommitResult {
     const state = this.getOrCreateState(sessionId, mode);
     return state.processUtterance(
@@ -94,8 +93,7 @@ export class AggregatorManager {
       isFinal,
       isManualCut,
       isPauseTriggered,
-      isTimeoutTriggered,
-      hasPendingSecondHalfMerged
+      isTimeoutTriggered
     );
   }
 
@@ -236,73 +234,37 @@ export class AggregatorManager {
   }
 
   /**
-   * 获取上一个 utterance 的原文（ASR文本，中文）
-   * 用于NMT服务的context_text，应该是原文而不是翻译文本
+   * 获取上一个utterance的已提交文本（用于NMT服务的context_text）
    * 
-   * 重要：返回倒数第二个元素（上一句），而不是最后一个元素（当前句）
-   * 因为当前句在聚合阶段已经被提交并添加到 recentCommittedText 中
+   * 修复：只按utteranceIndex顺序选择最近一条已提交的完整文本
+   * 不再包含任何基于文本内容的heuristic（包含关系、长度差等）
    * 
-   * 注意：如果当前句刚刚被提交，recentCommittedText 可能已经包含当前句。
-   * 我们需要确保返回的是真正的上一句，而不是当前句。
+   * @param sessionId 会话ID
+   * @param currentUtteranceIndex 当前utterance的索引
+   * @returns 上一个utterance的文本，如果没有则返回null
    */
-  getLastCommittedText(sessionId: string, currentText?: string): string | null {
+  getLastCommittedText(sessionId: string, currentUtteranceIndex: number): string | null {
     const state = this.states.get(sessionId);
     if (!state) {
       return null;
     }
-    const recentCommittedText = (state as any).getRecentCommittedText();
-    if (!recentCommittedText || recentCommittedText.length === 0) {
-      return null;
+    return (state as any).getLastCommittedText(currentUtteranceIndex);
+  }
+
+  /**
+   * 更新最后一个提交的文本（用于语义修复后更新）
+   */
+  updateLastCommittedTextAfterRepair(
+    sessionId: string,
+    utteranceIndex: number,
+    originalText: string,
+    repairedText: string
+  ): void {
+    const state = this.states.get(sessionId);
+    if (!state) {
+      return;
     }
-    
-    // 如果提供了 currentText，排除当前句（避免返回当前句）
-    // 使用更严格的匹配逻辑：不仅检查完全相等，还检查是否是子串关系
-    if (currentText) {
-      const currentTextTrimmed = currentText.trim().replace(/\s+/g, ' '); // 标准化空格
-      // 从后往前查找，找到第一个不等于当前句的文本
-      for (let i = recentCommittedText.length - 1; i >= 0; i--) {
-        const text = recentCommittedText[i];
-        if (text) {
-          const textTrimmed = text.trim().replace(/\s+/g, ' '); // 标准化空格
-          // 检查是否完全相等
-          if (textTrimmed === currentTextTrimmed) {
-            continue; // 跳过完全相同的文本
-          }
-          // 检查是否是子串关系（如果当前文本包含在历史文本中，或历史文本包含在当前文本中，认为是同一文本的变体）
-          if (textTrimmed.includes(currentTextTrimmed) || currentTextTrimmed.includes(textTrimmed)) {
-            // 如果相似度很高（长度差异小于30%），认为是同一文本的变体，跳过
-            // 修复：提高相似度阈值从20%到30%，避免误判
-            const lengthDiff = Math.abs(textTrimmed.length - currentTextTrimmed.length);
-            const avgLength = (textTrimmed.length + currentTextTrimmed.length) / 2;
-            if (avgLength > 0 && lengthDiff / avgLength < 0.3) {
-              continue; // 跳过相似文本
-            }
-          }
-          // 检查：如果历史文本是当前文本的前缀或后缀，且长度差异较大，可能是合并后的文本，跳过
-          // 例如：当前文本="再提高了一点速度"，历史文本="提高了一点,那我希望接下来可以做到更好更快 也就是说我们需要把这个事情继续做下去 然后这个架构也没有太大的问题,只是需要再提升一点速度"
-          // 这种情况下，历史文本包含了当前文本，且长度差异很大，不应该使用历史文本作为context
-          if (textTrimmed.includes(currentTextTrimmed)) {
-            const lengthDiff = textTrimmed.length - currentTextTrimmed.length;
-            // 如果历史文本比当前文本长很多（超过50%），可能是合并后的文本，跳过
-            if (lengthDiff > currentTextTrimmed.length * 0.5) {
-              continue; // 跳过包含当前文本的长文本
-            }
-          }
-          // 找到不同的文本，返回
-          return text;
-        }
-      }
-      // 如果所有文本都等于当前句或非常相似，返回 null
-      return null;
-    }
-    
-    // 如果没有提供 currentText，返回倒数第二个元素（如果存在）
-    if (recentCommittedText.length > 1) {
-      return recentCommittedText[recentCommittedText.length - 2];
-    }
-    
-    // 如果只有1个元素，返回 null（没有上一句）
-    return null;
+    (state as any).updateLastCommittedTextAfterRepair(utteranceIndex, originalText, repairedText);
   }
 }
 

@@ -1,192 +1,239 @@
 "use strict";
 /**
- * Audio Aggregator - Timeout Handler
- * 超时处理逻辑
+ * 音频聚合器 - 超时处理器
+ *
+ * 功能：
+ * 1. 检查pendingTimeoutAudio是否超过TTL
+ * 2. 处理超时finalize，缓存音频到pendingTimeoutAudio
+ * 3. 处理连续的超时finalize，合并音频
+ *
+ * 设计：
+ * - 无状态类，所有逻辑基于传入的参数
+ * - 纯函数式设计，便于测试
  */
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleTimeoutSplit = handleTimeoutSplit;
+exports.AudioAggregatorTimeoutHandler = void 0;
 const logger_1 = __importDefault(require("../logger"));
-/**
- * 处理超时切割
- */
-function handleTimeoutSplit(job, buffer, aggregatedAudio, audioUtils, sampleRate, bytesPerSample, splitHangoverMs, secondarySplitThresholdMs, nowMs) {
-    const sessionId = job.session_id;
-    // 找到最长停顿并分割
-    const splitResult = audioUtils.findLongestPauseAndSplit(aggregatedAudio);
-    if (splitResult && splitResult.splitPosition > 0 && splitResult.splitPosition < aggregatedAudio.length) {
-        // 优化：应用Hangover - 对前半句额外保留SPLIT_HANGOVER_MS的音频
-        const hangoverBytes = Math.floor((splitHangoverMs / 1000) * sampleRate * bytesPerSample);
-        const hangoverEnd = Math.min(splitResult.splitPosition + hangoverBytes, aggregatedAudio.length);
-        const firstHalfWithHangover = aggregatedAudio.slice(0, hangoverEnd);
-        const secondHalfAfterHangover = aggregatedAudio.slice(hangoverEnd);
-        logger_1.default.info({
-            jobId: job.job_id,
-            sessionId,
-            utteranceIndex: job.utterance_index,
-            originalSplitPosition: splitResult.splitPosition,
-            hangoverMs: splitHangoverMs,
-            hangoverBytes,
-            hangoverEnd,
-            firstHalfDurationMs: (firstHalfWithHangover.length / bytesPerSample / sampleRate) * 1000,
-            secondHalfDurationMs: (secondHalfAfterHangover.length / bytesPerSample / sampleRate) * 1000,
-            longestPauseMs: splitResult.longestPauseMs,
-            hadPendingSecondHalf: !!buffer.pendingSecondHalf,
-            hangoverPurpose: 'Improve ASR accuracy and enable better text deduplication',
-        }, `AudioAggregator: Timeout triggered, split audio at longest pause with ${splitHangoverMs}ms hangover. First half ready for ASR, second half buffered. Hangover helps ASR accuracy and creates overlap for deduplication.`);
-        // 优化：检查前半句是否仍然过长，如果是则进行二级切割
-        const firstHalfDurationMs = (firstHalfWithHangover.length / bytesPerSample / sampleRate) * 1000;
-        let finalFirstHalf = firstHalfWithHangover;
-        let finalSecondHalf = secondHalfAfterHangover;
-        if (firstHalfDurationMs > secondarySplitThresholdMs) {
-            logger_1.default.info({
-                jobId: job.job_id,
-                sessionId,
-                utteranceIndex: job.utterance_index,
-                firstHalfDurationMs,
-                threshold: secondarySplitThresholdMs,
-            }, 'AudioAggregator: First half still too long, attempting secondary split');
-            const secondarySplit = audioUtils.findLongestPauseAndSplit(firstHalfWithHangover);
-            if (secondarySplit && secondarySplit.splitPosition > 0 && secondarySplit.splitPosition < firstHalfWithHangover.length) {
-                // 二级切割成功
-                const secondaryFirstHalf = firstHalfWithHangover.slice(0, secondarySplit.splitPosition);
-                const secondarySecondHalf = firstHalfWithHangover.slice(secondarySplit.splitPosition);
-                logger_1.default.info({
-                    jobId: job.job_id,
-                    sessionId,
-                    utteranceIndex: job.utterance_index,
-                    secondarySplitPosition: secondarySplit.splitPosition,
-                    secondaryFirstHalfDurationMs: (secondaryFirstHalf.length / bytesPerSample / sampleRate) * 1000,
-                    secondarySecondHalfDurationMs: (secondarySecondHalf.length / bytesPerSample / sampleRate) * 1000,
-                }, 'AudioAggregator: Secondary split successful');
-                // 将二级切割的后半句也加入pendingSecondHalf（在原始后半句之前）
-                if (secondHalfAfterHangover.length > 0) {
-                    const combinedSecondHalf = Buffer.alloc(secondarySecondHalf.length + secondHalfAfterHangover.length);
-                    secondarySecondHalf.copy(combinedSecondHalf, 0);
-                    secondHalfAfterHangover.copy(combinedSecondHalf, secondarySecondHalf.length);
-                    finalSecondHalf = combinedSecondHalf;
-                }
-                else {
-                    finalSecondHalf = secondarySecondHalf;
-                }
-                finalFirstHalf = secondaryFirstHalf;
-            }
-            else {
-                // 二级切割失败，使用原始前半句
-                logger_1.default.warn({
-                    jobId: job.job_id,
-                    sessionId,
-                    utteranceIndex: job.utterance_index,
-                    reason: 'Secondary split failed, using original first half',
-                }, 'AudioAggregator: Secondary split failed');
-            }
-        }
-        logger_1.default.info({
-            jobId: job.job_id,
-            sessionId,
-            utteranceIndex: job.utterance_index,
-            firstHalfDurationMs: (finalFirstHalf.length / bytesPerSample / sampleRate) * 1000,
-            secondHalfDurationMs: (finalSecondHalf.length / bytesPerSample / sampleRate) * 1000,
-            secondHalfLength: finalSecondHalf.length,
-            pendingSecondHalfCreatedAt: nowMs,
-        }, 'AudioAggregator: Timeout split completed, second half saved to pendingSecondHalf');
-        return {
-            firstHalf: finalFirstHalf,
-            secondHalf: finalSecondHalf,
-            shouldKeepBuffer: true,
-        };
+const audio_aggregator_utils_1 = require("./audio-aggregator-utils");
+const session_affinity_manager_1 = require("./session-affinity-manager");
+class AudioAggregatorTimeoutHandler {
+    constructor() {
+        this.PENDING_TIMEOUT_AUDIO_TTL_MS = 10000;
+        this.SAMPLE_RATE = 16000;
+        this.BYTES_PER_SAMPLE = 2;
+        this.SPLIT_HANGOVER_MS = 600;
+        this.audioUtils = new audio_aggregator_utils_1.AudioAggregatorUtils();
+        this.sessionAffinityManager = session_affinity_manager_1.SessionAffinityManager.getInstance();
     }
-    else {
-        // 优化：找不到静音段时，根据音频时长决定策略
-        const totalDurationMs = (aggregatedAudio.length / bytesPerSample / sampleRate) * 1000;
-        // 如果音频较短（< 5秒），直接返回完整音频，避免切分导致质量下降
-        if (totalDurationMs < 5000) {
-            logger_1.default.info({
-                jobId: job.job_id,
-                sessionId,
-                utteranceIndex: job.utterance_index,
-                totalDurationMs,
-                reason: 'Audio too short for fallback split, using full audio without splitting',
-            }, 'AudioAggregator: Timeout triggered but audio too short, using full audio');
-            return {
-                firstHalf: aggregatedAudio,
-                secondHalf: Buffer.alloc(0),
-                shouldKeepBuffer: false, // 清空缓冲区，避免重复处理
-            };
+    /**
+     * 检查pendingTimeoutAudio是否超过TTL
+     * 如果超过TTL，合并pendingTimeoutAudio和当前音频，然后按能量切分
+     */
+    checkTimeoutTTL(buffer, job, currentAudio, nowMs) {
+        if (!buffer.pendingTimeoutAudio || !buffer.pendingTimeoutAudioCreatedAt) {
+            return null;
         }
-        // 音频较长（>= 5秒），尝试使用兜底策略 - 寻找能量最低的连续区间
-        logger_1.default.warn({
-            jobId: job.job_id,
-            sessionId,
-            utteranceIndex: job.utterance_index,
-            totalDurationMs: buffer.totalDurationMs,
-            reason: 'No pause found in audio, attempting fallback split',
-        }, 'AudioAggregator: Timeout triggered but no pause found, attempting fallback split');
-        const fallbackSplit = audioUtils.findLowestEnergyInterval(aggregatedAudio);
-        if (fallbackSplit) {
-            const firstHalf = aggregatedAudio.slice(0, fallbackSplit.end);
-            const secondHalf = aggregatedAudio.slice(fallbackSplit.end);
-            const firstHalfDurationMs = (firstHalf.length / bytesPerSample / sampleRate) * 1000;
-            const secondHalfDurationMs = (secondHalf.length / bytesPerSample / sampleRate) * 1000;
-            // 质量检查：检查前半段音频的RMS值，如果过低（可能是静音或噪声），返回完整音频
-            const firstHalfRms = audioUtils.calculateRMS(firstHalf);
-            const MIN_RMS_THRESHOLD = 100; // 最小RMS阈值，低于此值可能是静音或噪声
-            if (firstHalfRms < MIN_RMS_THRESHOLD) {
-                logger_1.default.warn({
-                    jobId: job.job_id,
-                    sessionId,
-                    utteranceIndex: job.utterance_index,
-                    firstHalfDurationMs,
-                    firstHalfRms,
-                    minRmsThreshold: MIN_RMS_THRESHOLD,
-                    reason: 'First half RMS too low (likely silence or noise), using full audio',
-                }, 'AudioAggregator: Fallback split quality check failed, using full audio');
-                return {
-                    firstHalf: aggregatedAudio,
-                    secondHalf: Buffer.alloc(0),
-                    shouldKeepBuffer: false, // 清空缓冲区，避免重复处理
-                };
-            }
-            logger_1.default.info({
-                jobId: job.job_id,
-                sessionId,
-                utteranceIndex: job.utterance_index,
-                fallbackSplitPosition: fallbackSplit.end,
-                fallbackFirstHalfDurationMs: firstHalfDurationMs,
-                fallbackSecondHalfDurationMs: secondHalfDurationMs,
-                firstHalfRms,
-            }, 'AudioAggregator: Fallback split successful with quality check passed');
-            logger_1.default.info({
-                jobId: job.job_id,
-                sessionId,
-                utteranceIndex: job.utterance_index,
-                firstHalfDurationMs,
-                secondHalfDurationMs,
-                secondHalfLength: secondHalf.length,
-                pendingSecondHalfCreatedAt: nowMs,
-            }, 'AudioAggregator: Fallback split successful, second half saved to pendingSecondHalf');
-            return {
-                firstHalf,
-                secondHalf,
-                shouldKeepBuffer: true,
-            };
+        const pendingAgeMs = nowMs - buffer.pendingTimeoutAudioCreatedAt;
+        if (pendingAgeMs < this.PENDING_TIMEOUT_AUDIO_TTL_MS) {
+            return null;
         }
-        else {
-            // 兜底策略也失败，直接返回完整音频
+        // 检查utteranceIndex
+        const pendingUtteranceIndex = buffer.pendingTimeoutJobInfo && buffer.pendingTimeoutJobInfo.length > 0
+            ? buffer.pendingTimeoutJobInfo[0].utteranceIndex
+            : buffer.utteranceIndex;
+        // ✅ 修复：允许连续的utteranceIndex合并（超时finalize的正常场景）
+        // - TTL已过期但utteranceIndex连续（差值≤2），说明是超时finalize后的正常延续，应该合并
+        // - 只有当跳跃太大（差值>2）时，才说明中间有其他独立utterance，这时才清除
+        const utteranceIndexDiff = job.utterance_index - pendingUtteranceIndex;
+        if (utteranceIndexDiff > 2) {
             logger_1.default.warn({
                 jobId: job.job_id,
-                sessionId,
-                utteranceIndex: job.utterance_index,
-                totalDurationMs: buffer.totalDurationMs,
-                reason: 'Fallback split also failed, using full audio without splitting',
-            }, 'AudioAggregator: Timeout triggered but fallback split failed, using full audio');
+                sessionId: job.session_id,
+                pendingUtteranceIndex: pendingUtteranceIndex,
+                currentUtteranceIndex: job.utterance_index,
+                utteranceIndexDiff,
+                pendingAgeMs,
+                ttlMs: this.PENDING_TIMEOUT_AUDIO_TTL_MS,
+                reason: 'TTL已过期且utteranceIndex跳跃太大（>2），清除pendingTimeoutAudio',
+            }, 'AudioAggregatorTimeoutHandler: TTL过期且utteranceIndex跳跃太大，清除pendingTimeoutAudio');
             return {
-                firstHalf: aggregatedAudio,
-                secondHalf: Buffer.alloc(0),
-                shouldKeepBuffer: false, // 清空缓冲区，避免重复处理
+                shouldProcess: false,
+                audioSegments: [],
+                clearPendingTimeout: true,
             };
         }
+        if (utteranceIndexDiff === 0) {
+            logger_1.default.warn({
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                pendingUtteranceIndex: pendingUtteranceIndex,
+                currentUtteranceIndex: job.utterance_index,
+                pendingAgeMs,
+                ttlMs: this.PENDING_TIMEOUT_AUDIO_TTL_MS,
+                reason: 'TTL已过期且utteranceIndex相同（重复job），清除pendingTimeoutAudio',
+            }, 'AudioAggregatorTimeoutHandler: TTL过期且utteranceIndex相同，清除pendingTimeoutAudio');
+            return {
+                shouldProcess: false,
+                audioSegments: [],
+                clearPendingTimeout: true,
+            };
+        }
+        // utteranceIndexDiff === 1 或 2，即使TTL过期也允许合并（超时finalize的正常场景）
+        logger_1.default.info({
+            jobId: job.job_id,
+            sessionId: job.session_id,
+            pendingUtteranceIndex,
+            currentUtteranceIndex: job.utterance_index,
+            utteranceIndexDiff,
+            pendingAgeMs,
+            ttlMs: this.PENDING_TIMEOUT_AUDIO_TTL_MS,
+            reason: 'TTL已过期但utteranceIndex连续，允许合并（超时finalize的正常场景）',
+        }, 'AudioAggregatorTimeoutHandler: TTL过期但utteranceIndex连续，允许合并pendingTimeoutAudio');
+        // 合并音频
+        const pendingAudio = buffer.pendingTimeoutAudio;
+        const pendingJobInfo = buffer.pendingTimeoutJobInfo || [];
+        const mergedAudio = Buffer.concat([pendingAudio, currentAudio]);
+        const mergedDurationMs = (mergedAudio.length / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000;
+        logger_1.default.info({
+            jobId: job.job_id,
+            sessionId: job.session_id,
+            utteranceIndex: job.utterance_index,
+            pendingAgeMs,
+            ttlMs: this.PENDING_TIMEOUT_AUDIO_TTL_MS,
+            mergedAudioDurationMs: mergedDurationMs,
+            mergedAudioSizeBytes: mergedAudio.length,
+        }, 'AudioAggregatorTimeoutHandler: TTL exceeded, merging pendingTimeoutAudio with current audio');
+        // 按能量切分
+        const audioSegments = this.audioUtils.splitAudioByEnergy(mergedAudio, 10000, // maxSegmentDurationMs: 10秒
+        2000, // minSegmentDurationMs: 2秒
+        this.SPLIT_HANGOVER_MS);
+        // 合并jobInfo
+        const currentAudioDurationMs = (currentAudio.length / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000;
+        const currentExpectedDurationMs = job.expected_duration_ms ||
+            Math.ceil(currentAudioDurationMs * 1.2);
+        const currentJobInfo = {
+            jobId: job.job_id,
+            startOffset: pendingAudio.length,
+            endOffset: mergedAudio.length,
+            utteranceIndex: job.utterance_index,
+            expectedDurationMs: currentExpectedDurationMs,
+        };
+        const mergedJobInfo = [...pendingJobInfo, currentJobInfo];
+        // 分配originalJobIds
+        const originalJobIds = this.assignOriginalJobIds(audioSegments, mergedJobInfo, 0);
+        return {
+            shouldProcess: true,
+            audioSegments,
+            originalJobIds: originalJobIds.length > 0 ? originalJobIds : undefined,
+            clearPendingTimeout: true,
+        };
+    }
+    /**
+     * 处理超时finalize
+     * 缓存音频到pendingTimeoutAudio，等待下一个job合并
+     */
+    handleTimeoutFinalize(buffer, job, currentAudio, nowMs, aggregateAudioChunks) {
+        // 检查是否为空音频
+        if (currentAudio.length === 0) {
+            logger_1.default.warn({
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                reason: 'Timeout job with empty audio',
+            }, 'AudioAggregatorTimeoutHandler: Timeout job with empty audio');
+            return {
+                shouldCache: false,
+                clearBuffer: true,
+            };
+        }
+        // 检查是否已存在pendingTimeoutAudio（连续的超时finalize）
+        if (buffer.pendingTimeoutAudio) {
+            const existingPendingAudio = buffer.pendingTimeoutAudio;
+            const existingPendingJobInfo = buffer.pendingTimeoutJobInfo || [];
+            const currentAggregated = aggregateAudioChunks(buffer.audioChunks);
+            // 合并音频
+            const mergedAudio = Buffer.concat([existingPendingAudio, currentAggregated]);
+            const mergedDurationMs = (mergedAudio.length / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000;
+            logger_1.default.info({
+                jobId: job.job_id,
+                sessionId: job.session_id,
+                utteranceIndex: job.utterance_index,
+                mergedAudioDurationMs: mergedDurationMs,
+                mergedAudioSizeBytes: mergedAudio.length,
+                reason: 'Consecutive timeout finalize, merged existing and current audio',
+            }, 'AudioAggregatorTimeoutHandler: Consecutive timeout finalize, merged audio');
+            // 更新pendingTimeoutAudio
+            buffer.pendingTimeoutAudio = mergedAudio;
+            buffer.pendingTimeoutAudioCreatedAt = nowMs;
+            // 合并job信息（调整偏移）
+            const currentJobInfo = buffer.originalJobInfo.map((info) => ({
+                ...info,
+                startOffset: info.startOffset + existingPendingAudio.length,
+                endOffset: info.endOffset + existingPendingAudio.length,
+            }));
+            buffer.pendingTimeoutJobInfo = [...existingPendingJobInfo, ...currentJobInfo];
+            return {
+                shouldCache: true,
+                clearBuffer: false,
+            };
+        }
+        // 聚合音频并缓存
+        const aggregatedAudio = aggregateAudioChunks(buffer.audioChunks);
+        const aggregatedDurationMs = (aggregatedAudio.length / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000;
+        logger_1.default.info({
+            jobId: job.job_id,
+            sessionId: job.session_id,
+            utteranceIndex: job.utterance_index,
+            aggregatedAudioDurationMs: aggregatedDurationMs,
+            aggregatedAudioSizeBytes: aggregatedAudio.length,
+            ttlMs: this.PENDING_TIMEOUT_AUDIO_TTL_MS,
+        }, 'AudioAggregatorTimeoutHandler: Caching audio to pendingTimeoutAudio');
+        // 记录session affinity
+        const currentNodeId = this.sessionAffinityManager.getNodeId();
+        this.sessionAffinityManager.recordTimeoutFinalize(job.session_id);
+        logger_1.default.info({
+            sessionId: job.session_id,
+            nodeId: currentNodeId,
+            jobId: job.job_id,
+            utteranceIndex: job.utterance_index,
+        }, 'AudioAggregatorTimeoutHandler: Recorded timeout finalize session mapping');
+        // 缓存到pendingTimeoutAudio
+        buffer.pendingTimeoutAudio = aggregatedAudio;
+        buffer.pendingTimeoutAudioCreatedAt = nowMs;
+        buffer.pendingTimeoutJobInfo = [...buffer.originalJobInfo];
+        return {
+            shouldCache: true,
+            clearBuffer: false,
+        };
+    }
+    /**
+     * 分配originalJobIds
+     */
+    assignOriginalJobIds(audioSegments, originalJobInfo, aggregatedAudioStartOffset) {
+        const originalJobIds = [];
+        let currentOffset = aggregatedAudioStartOffset;
+        for (const segment of audioSegments) {
+            const segmentStartOffset = currentOffset;
+            const segmentEndOffset = currentOffset + segment.length;
+            const segmentMidpoint = (segmentStartOffset + segmentEndOffset) / 2;
+            // 找到包含segment中点的job
+            let assignedJobId;
+            for (const jobInfo of originalJobInfo) {
+                if (segmentMidpoint >= jobInfo.startOffset && segmentMidpoint < jobInfo.endOffset) {
+                    assignedJobId = jobInfo.jobId;
+                    break;
+                }
+            }
+            if (!assignedJobId && originalJobInfo.length > 0) {
+                assignedJobId = originalJobInfo[originalJobInfo.length - 1].jobId;
+            }
+            originalJobIds.push(assignedJobId || 'unknown');
+            currentOffset = segmentEndOffset;
+        }
+        return originalJobIds;
     }
 }
+exports.AudioAggregatorTimeoutHandler = AudioAggregatorTimeoutHandler;

@@ -53,13 +53,13 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
     let session_manager = SessionManager::new();
     let resource_threshold = config.scheduler.load_balancer.resource_threshold;
     let node_registry = std::sync::Arc::new(NodeRegistry::with_resource_threshold(resource_threshold));
-    // Phase 1：核心服务包映射（用于 Phase3 pool 核心能力缓存/快速跳过）
+    // 核心服务包映射（用于 Phase3 pool 核心能力缓存/快速跳过）
     node_registry
         .set_core_services_config(config.scheduler.core_services.clone())
         .await;
     // Phase 3：两级调度配置（pool_count/hash_seed 等）
     node_registry.set_phase3_config(config.scheduler.phase3.clone()).await;
-    let mut dispatcher = JobDispatcher::new_with_phase1_config(
+    let mut dispatcher = JobDispatcher::new_with_config(
         node_registry.clone(),
         config.scheduler.task_binding.clone(),
         config.scheduler.core_services.clone(),
@@ -107,7 +107,7 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
     dispatcher.set_phase2(phase2_runtime.clone());
 
     // 初始化极简无锁调度服务（需要 Phase2 启用）
-    let minimal_scheduler = if let Some(ref rt) = phase2_runtime {
+    let minimal_scheduler = if let Some(ref _rt) = phase2_runtime {
         // 从 Phase2 配置创建 RedisHandle（使用相同的配置）
         use crate::phase2::RedisHandle;
         match RedisHandle::connect(&config.scheduler.phase2.redis).await {
@@ -214,7 +214,7 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
         });
     }
 
-    // Phase 1：Job 超时/重派管理（含 best-effort cancel）
+    // Job 超时/重派管理（含 best-effort cancel）
     start_job_timeout_manager(
         app_state.clone(),
         config.scheduler.job_timeout_seconds,

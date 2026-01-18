@@ -29,7 +29,6 @@ mod lockless;
 pub use pool_language_index::PoolLanguageIndex;
 pub use management_state::ManagementRegistry;
 pub use snapshot_manager::SnapshotManager;
-pub use runtime_snapshot::RuntimeSnapshot;
 
 #[cfg(test)]
 mod auto_language_pool_test;

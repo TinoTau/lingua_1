@@ -1,4 +1,4 @@
-﻿    async fn build_test_state(
+    async fn build_test_state(
         instance_id: &str,
         redis_cfg: crate::core::config::Phase2RedisConfig,
         key_prefix: String,
@@ -50,7 +50,7 @@
         });
         node_registry.set_phase3_config(phase3_config).await;
         
-        let mut dispatcher = JobDispatcher::new_with_phase1_config(
+        let mut dispatcher = JobDispatcher::new_with_config(
             node_registry.clone(),
             TaskBindingConfig::default(),
             CoreServicesConfig::default(),

@@ -101,11 +101,9 @@ class GpuArbiter {
         }
         const { gpuKey, taskType, priority, maxWaitMs, holdMaxMs, queueLimit, busyPolicy, trace } = request;
         if (!this.mutexes.has(gpuKey)) {
-            logger_1.default.error({ gpuKey, taskType }, 'GpuArbiter: Invalid GPU key');
-            return {
-                status: "SKIPPED",
-                reason: "GPU_BUSY",
-            };
+            logger_1.default.error({ gpuKey, taskType }, 'GpuArbiter: Invalid GPU key - this is a configuration error');
+            // 配置错误，抛出异常而不是返回SKIPPED
+            throw new Error(`GpuArbiter: Invalid GPU key ${gpuKey} - this is a configuration error`);
         }
         const queue = this.queueManager.getQueue(gpuKey);
         const isLocked = this.mutexes.get(gpuKey);
@@ -179,73 +177,34 @@ class GpuArbiter {
                 return this.enqueueRequest(gpuKey, request, maxWaitMs);
             }
             else {
-                // 低优任务：直接SKIP/FALLBACK，不入队
-                if (busyPolicy === "SKIP") {
-                    this.metricsManager.recordMetric(gpuKey, 'acquireTotal', 'SKIPPED', 1);
-                    logger_1.default.debug({
-                        gpuKey,
-                        taskType,
-                        priority,
-                        admissionState,
-                        gpuUsage: gpuUsageInfo?.usagePercent,
-                        ...trace,
-                    }, 'GpuArbiter: GPU usage high, skipping low-priority task (SKIP policy)');
-                    return {
-                        status: "SKIPPED",
-                        reason: "GPU_USAGE_HIGH",
-                    };
-                }
-                else if (busyPolicy === "FALLBACK_CPU") {
-                    this.metricsManager.recordMetric(gpuKey, 'acquireTotal', 'FALLBACK_CPU', 1);
-                    logger_1.default.debug({
-                        gpuKey,
-                        taskType,
-                        priority,
-                        admissionState,
-                        gpuUsage: gpuUsageInfo?.usagePercent,
-                        ...trace,
-                    }, 'GpuArbiter: GPU usage high, falling back to CPU for low-priority task (FALLBACK_CPU policy)');
-                    return {
-                        status: "FALLBACK_CPU",
-                        reason: "GPU_USAGE_HIGH",
-                    };
-                }
-                this.metricsManager.recordMetric(gpuKey, 'acquireTotal', 'SKIPPED', 1);
-                return {
-                    status: "SKIPPED",
-                    reason: "GPU_USAGE_HIGH",
-                };
+                // 低优任务：必须等待，不能跳过
+                // 资源耗尽应该通过心跳通知调度服务器停止分配任务，而不是直接拒绝已分配的任务
+                logger_1.default.info({
+                    gpuKey,
+                    taskType,
+                    priority,
+                    admissionState,
+                    gpuUsage: gpuUsageInfo?.usagePercent,
+                    queueLength: queue.length,
+                    note: 'Low-priority task will wait in queue. Scheduler should stop assigning new tasks based on heartbeat resource usage.',
+                    ...trace,
+                }, 'GpuArbiter: GPU usage high, low-priority task will wait in queue (scheduler should be notified via heartbeat)');
+                return this.enqueueRequest(gpuKey, request, maxWaitMs);
             }
         }
         // GPU使用率正常，继续原有逻辑
         if (!isLocked) {
             return this.acquireImmediately(gpuKey, taskType, holdMaxMs, trace);
         }
-        // GPU被占用，根据策略处理
-        if (busyPolicy === "SKIP") {
-            this.metricsManager.recordMetric(gpuKey, 'acquireTotal', 'SKIPPED', 1);
-            logger_1.default.debug({
-                gpuKey,
-                taskType,
-                ...trace,
-            }, 'GpuArbiter: GPU busy, skipping (SKIP policy)');
-            return {
-                status: "SKIPPED",
-                reason: "GPU_BUSY",
-            };
-        }
-        if (busyPolicy === "FALLBACK_CPU") {
-            this.metricsManager.recordMetric(gpuKey, 'acquireTotal', 'FALLBACK_CPU', 1);
-            logger_1.default.debug({
-                gpuKey,
-                taskType,
-                ...trace,
-            }, 'GpuArbiter: GPU busy, falling back to CPU (FALLBACK_CPU policy)');
-            return {
-                status: "FALLBACK_CPU",
-                reason: "GPU_BUSY",
-            };
-        }
+        // GPU被占用，必须等待，不能跳过
+        // 资源耗尽应该通过心跳通知调度服务器停止分配任务，而不是直接拒绝已分配的任务
+        logger_1.default.info({
+            gpuKey,
+            taskType,
+            queueLength: queue.length,
+            note: 'GPU busy, task will wait in queue. Scheduler should stop assigning new tasks based on heartbeat resource usage.',
+            ...trace,
+        }, 'GpuArbiter: GPU busy, task will wait in queue (scheduler should be notified via heartbeat)');
         // WAIT策略：加入队列等待
         return this.enqueueRequest(gpuKey, request, maxWaitMs);
     }

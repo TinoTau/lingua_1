@@ -286,12 +286,4 @@ def decode_opus_packet_format(
             except Exception as e:
                 logger.warning(f"[{trace_id}] Error cleaning up pipeline: {e}")
 
-# decode_opus_continuous_stream 已迁移到 opus_legacy_decoder 模块
-# 保留导入以保持向后兼容（如果代码中仍有引用）
-try:
-    from opus_legacy_decoder import decode_opus_continuous_stream
-except ImportError:
-    # 如果模块不存在，定义一个占位函数
-    def decode_opus_continuous_stream(*args, **kwargs):
-        raise NotImplementedError("decode_opus_continuous_stream has been moved to opus_legacy_decoder module")
 

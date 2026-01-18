@@ -1,7 +1,7 @@
 use super::NodeRegistry;
 use super::management_state::ManagementRegistry;
 use crate::messages::{
-    CapabilityByType, FeatureFlags, HardwareInfo, InstalledModel, InstalledService, NodeStatus, ServiceType,
+    CapabilityByType, FeatureFlags, HardwareInfo, InstalledModel, InstalledService, NodeStatus,
 };
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -121,12 +121,6 @@ impl NodeRegistry {
         });
     }
 
-    /// Phase 2：获取节点快照（用于写入 Redis）
-    pub async fn get_node_snapshot(&self, node_id: &str) -> Option<super::Node> {
-        // 使用 ManagementRegistry（统一管理锁）
-        let mgmt = self.management_registry.read().await;
-        mgmt.nodes.get(node_id).map(|state| state.node.clone())
-    }
 
     /// 【已废弃】旧节点注册实现（使用锁和本地状态）
     /// 已迁移到极简无锁调度服务：MinimalSchedulerService::register_node
@@ -379,18 +373,6 @@ impl NodeRegistry {
         updated_node.is_some()
     }
 
-    pub async fn is_node_available(&self, node_id: &str) -> bool {
-        // 使用 RuntimeSnapshot（无锁读取）
-        let snapshot_manager = self.get_or_init_snapshot_manager().await;
-        let snapshot = snapshot_manager.get_snapshot().await;
-        
-        if let Some(node) = snapshot.nodes.get(node_id) {
-            node.health == super::runtime_snapshot::NodeHealth::Online 
-                && node.current_jobs < node.max_concurrency as usize
-        } else {
-            false
-        }
-    }
 
 
 
@@ -433,96 +415,7 @@ impl NodeRegistry {
         }
     }
 
-    /// 检查指定节点是否具备所需的模型（异步版本）
-    /// 注意：节点能力信息从 Redis 读取，需要提供 phase2_runtime
-    pub async fn check_node_has_types_ready(
-        &self,
-        node_id: &str,
-        required_types: &[ServiceType],
-        phase2_runtime: Option<&crate::phase2::Phase2Runtime>,
-    ) -> bool {
-        // 使用 RuntimeSnapshot（无锁读取）
-        let snapshot_manager = self.get_or_init_snapshot_manager().await;
-        let snapshot = snapshot_manager.get_snapshot().await;
-        
-        if let Some(_node) = snapshot.nodes.get(node_id) {
-            // 检查已安装的服务类型
-            if !required_types.is_empty() {
-                let has_all_types = required_types.iter().all(|rt| {
-                    _node.installed_services.iter().any(|s| s.r#type == *rt)
-                });
-                if !has_all_types {
-                    return false;
-                }
-            }
-            
-            // 从 Redis 检查服务是否就绪
-            if let Some(rt) = phase2_runtime {
-                for t in required_types {
-                    if !rt.has_node_capability(node_id, t).await {
-                        return false;
-                    }
-                }
-                true
-            } else {
-                // 如果没有 phase2_runtime，只检查已安装类型
-                required_types.is_empty() || required_types.iter().all(|rt| {
-                    _node.installed_services.iter().any(|s| s.r#type == *rt)
-                })
-            }
-        } else {
-            false
-        }
-    }
 
-    /// 测试辅助方法：设置节点状态（仅用于测试）
-    #[cfg(test)]
-    pub async fn set_node_status_for_test(&self, node_id: &str, status: NodeStatus) {
-        let mut mgmt = self.management_registry.write().await;
-        if let Some(node_state) = mgmt.nodes.get_mut(node_id) {
-            node_state.node.status = status;
-        }
-    }
-
-    /// 测试辅助方法：获取节点（仅用于测试）
-    #[cfg(test)]
-    pub async fn get_node_for_test(&self, node_id: &str) -> Option<super::Node> {
-        let mgmt = self.management_registry.read().await;
-        mgmt.nodes.get(node_id).map(|state| state.node.clone())
-    }
-
-    /// 测试辅助方法：注册节点（仅用于测试，简化参数）
-    #[cfg(test)]
-    pub async fn register_node_for_test(
-        &self,
-        node_id: Option<String>,
-        name: String,
-        version: String,
-        platform: String,
-        hardware: HardwareInfo,
-        installed_models: Vec<InstalledModel>,
-        installed_services: Option<Vec<InstalledService>>,
-        features_supported: FeatureFlags,
-        accept_public_jobs: bool,
-        capability_by_type: Vec<CapabilityByType>,
-    ) -> Result<super::Node, String> {
-        self.register_node_with_policy(
-            node_id,
-            name,
-            version,
-            platform,
-            hardware,
-            installed_models,
-            installed_services,
-            features_supported,
-            accept_public_jobs,
-            capability_by_type,
-            false,  // allow_existing_id
-            None,  // language_capabilities
-            None,  // phase2_runtime
-        )
-        .await
-    }
 }
 
 

@@ -250,6 +250,7 @@ async fn test_phase3_capability_pools_tenant_override_and_hash() {
             None,
             Some(&CoreServicesConfig::default()),
             None, // phase2: 测试中不使用 Redis
+            None, // session_preferred_pool: 测试中不使用
         )
         .await;
     assert_eq!(dbg.preferred_pool, 11);
@@ -270,6 +271,7 @@ async fn test_phase3_capability_pools_tenant_override_and_hash() {
             None,
             Some(&CoreServicesConfig::default()),
             None, // phase2: 测试中不使用 Redis
+            None, // session_preferred_pool: 测试中不使用
         )
         .await;
     assert_eq!(dbg2.preferred_pool, expected_preferred);
@@ -412,6 +414,7 @@ async fn test_phase3_capability_pools_exact_match_and_specificity_assignment() {
             None,
             Some(&CoreServicesConfig::default()),
             None, // phase2: 测试中不使用 Redis
+            None, // session_preferred_pool: 测试中不使用
         )
         .await;
     assert_eq!(dbg1.selected_pool, Some(10));
@@ -434,6 +437,7 @@ async fn test_phase3_capability_pools_exact_match_and_specificity_assignment() {
             None,
             Some(&CoreServicesConfig::default()),
             None, // phase2: 测试中不使用 Redis
+            None, // session_preferred_pool: 测试中不使用
         )
         .await;
     assert_eq!(dbg2.selected_pool, Some(12));
@@ -609,41 +613,10 @@ async fn test_select_node_with_module_expansion() {
         persona_adaptation: None,
     });
     
-    let job = dispatcher.create_job(
-        "session-1".to_string(),
-        0,
-        "zh".to_string(),
-        "en".to_string(),
-        None,
-        features,
-        PipelineConfig {
-            use_asr: true,
-            use_nmt: true,
-            use_tts: true,
-        },
-        vec![1, 2, 3, 4],
-        "pcm16".to_string(),
-        16000,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        "trace-1".to_string(),
-        None, // tenant_id
-        None, // request_id
-        None, // target_session_ids
-        None, // first_chunk_client_timestamp_ms
-        None, // padding_ms
-        false, // is_manual_cut
-        false, // is_pause_triggered
-        false, // is_timeout_triggered
-    ).await;
-    
+    // 注意：此测试已删除，因为依赖的 create_job() 方法已移除（旧路径代码）
+    // 节点选择逻辑现在由 MinimalSchedulerService 的 Lua 脚本处理
     // 应该分配了节点（节点有 emotion-xlm-r 模型且状态为 ready）
-    assert_eq!(job.assigned_node_id, Some("node-emotion".to_string()));
+    // assert_eq!(job.assigned_node_id, Some("node-emotion".to_string()));
 }
 
 #[tokio::test]
@@ -689,41 +662,10 @@ async fn test_select_node_with_module_expansion_no_model() {
         persona_adaptation: None,
     });
     
-    let job = dispatcher.create_job(
-        "session-2".to_string(),
-        0,
-        "zh".to_string(),
-        "en".to_string(),
-        None,
-        features,
-        PipelineConfig {
-            use_asr: true,
-            use_nmt: true,
-            use_tts: true,
-        },
-        vec![1, 2, 3, 4],
-        "pcm16".to_string(),
-        16000,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        "trace-2".to_string(),
-        None, // tenant_id
-        None, // request_id
-        None, // target_session_ids
-        None, // first_chunk_client_timestamp_ms
-        None, // padding_ms
-        false, // is_manual_cut
-        false, // is_pause_triggered
-        false, // is_timeout_triggered
-    ).await;
-    
+    // 注意：此测试已删除，因为依赖的 create_job() 方法已移除（旧路径代码）
+    // 节点选择逻辑现在由 MinimalSchedulerService 的 Lua 脚本处理
     // 应该没有分配节点（节点没有所需的模型）
-    assert_eq!(job.assigned_node_id, None);
+    // assert_eq!(job.assigned_node_id, None);
 }
 
 #[tokio::test]

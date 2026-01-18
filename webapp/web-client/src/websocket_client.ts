@@ -371,6 +371,36 @@ export class WebSocketClient {
   }
 
   /**
+   * 发送 TTS_STARTED 消息
+   */
+  sendTtsStarted(traceId: string, groupId: string, tsStartMs: number): void {
+    if (!this.connectionManager.isConnected() || !this.messageHandler.getSessionId()) {
+      logger.warn('WebSocketClient', 'WebSocket未连接，无法发送 TTS_STARTED');
+      return;
+    }
+
+    const sessionId = this.messageHandler.getSessionId();
+    const message = {
+      type: 'tts_started',
+      session_id: sessionId,
+      trace_id: traceId,
+      group_id: groupId,
+      ts_start_ms: tsStartMs,
+    };
+
+    logger.info('WebSocketClient', '发送 TTS_STARTED 消息', {
+      session_id: sessionId,
+      trace_id: traceId,
+      group_id: groupId,
+      ts_start_ms: tsStartMs,
+      ts_start_ms_iso: new Date(tsStartMs).toISOString(),
+      message_type: 'tts_started',
+    });
+
+    this.connectionManager.send(JSON.stringify(message));
+  }
+
+  /**
    * 发送 TTS_PLAY_ENDED 消息
    */
   sendTtsPlayEnded(traceId: string, groupId: string, tsEndMs: number): void {

@@ -1,0 +1,726 @@
+﻿开始分析音频chunk时间戳...
+
+解析Web端日志...
+提取到 160 个Web端事件
+解析调度服务器日志...
+提取到 0 个调度服务器事件
+
+================================================================================
+Web端chunk发送时间戳分析
+================================================================================
+
+找到 48 个Web端chunk发送事件
+找到 112 个TTS_PLAY_ENDED事件
+
+
+[WARN] 找到 7 个超过3秒的Web端chunk发送间隔:
+
+  间隔 19453ms (19.45秒):
+    2026-01-17T08:04:52.132Z - web_send
+    2026-01-17T08:05:11.585Z - web_send
+
+  间隔 255605ms (255.60秒):
+    2026-01-17T08:05:11.596Z - web_send
+    2026-01-17T08:09:27.201Z - web_send
+
+  间隔 6950563ms (6950.56秒):
+    2026-01-17T08:09:27.201Z - web_send
+    2026-01-17T10:05:17.764Z - web_send
+
+  间隔 52731ms (52.73秒):
+    2026-01-17T10:05:17.774Z - web_send
+    2026-01-17T10:06:10.505Z - web_send
+
+  间隔 2239830ms (2239.83秒):
+    2026-01-17T10:06:10.506Z - web_send
+    2026-01-17T10:43:30.336Z - web_send
+
+  间隔 28149ms (28.15秒):
+    2026-01-17T10:43:30.347Z - web_send
+    2026-01-17T10:43:58.496Z - web_send
+
+  间隔 46351ms (46.35秒):
+    2026-01-17T10:43:58.506Z - web_send
+    2026-01-17T10:44:44.857Z - web_send
+
+================================================================================
+调度服务器chunk接收时间戳分析
+================================================================================
+
+找到 0 个调度服务器chunk接收事件
+找到 0 个pause finalize事件
+找到 0 个TTS_PLAY_ENDED处理事件
+找到 0 个RestartTimer事件
+
+[OK] 调度服务器chunk接收间隔均小于3秒
+
+================================================================================
+TTS_PLAY_ENDED与Chunk发送时间关系分析
+================================================================================
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:46.306Z
+  utterance_index: None
+  第一个chunk发送延迟: 5819ms (5.82秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:46.307Z
+  utterance_index: None
+  第一个chunk发送延迟: 5818ms (5.82秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:46.308Z
+  utterance_index: None
+  第一个chunk发送延迟: 5817ms (5.82秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:46.308Z
+  utterance_index: None
+  第一个chunk发送延迟: 5817ms (5.82秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:46.308Z
+  utterance_index: None
+  第一个chunk发送延迟: 5817ms (5.82秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:46.308Z
+  utterance_index: None
+  第一个chunk发送延迟: 5817ms (5.82秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:46.309Z
+  utterance_index: None
+  第一个chunk发送延迟: 5816ms (5.82秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:47.005Z
+  utterance_index: None
+  第一个chunk发送延迟: 5120ms (5.12秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:47.005Z
+  utterance_index: None
+  第一个chunk发送延迟: 5120ms (5.12秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:47.255Z
+  utterance_index: None
+  第一个chunk发送延迟: 4870ms (4.87秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:47.255Z
+  utterance_index: None
+  第一个chunk发送延迟: 4870ms (4.87秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:47.515Z
+  utterance_index: None
+  第一个chunk发送延迟: 4610ms (4.61秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:47.515Z
+  utterance_index: None
+  第一个chunk发送延迟: 4610ms (4.61秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:47.764Z
+  utterance_index: None
+  第一个chunk发送延迟: 4361ms (4.36秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:47.765Z
+  utterance_index: None
+  第一个chunk发送延迟: 4360ms (4.36秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:48.025Z
+  utterance_index: None
+  第一个chunk发送延迟: 4100ms (4.10秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:48.025Z
+  utterance_index: None
+  第一个chunk发送延迟: 4100ms (4.10秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:48.285Z
+  utterance_index: None
+  第一个chunk发送延迟: 3840ms (3.84秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:48.285Z
+  utterance_index: None
+  第一个chunk发送延迟: 3840ms (3.84秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:48.534Z
+  utterance_index: None
+  第一个chunk发送延迟: 3591ms (3.59秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:48.535Z
+  utterance_index: None
+  第一个chunk发送延迟: 3590ms (3.59秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:48.794Z
+  utterance_index: None
+  第一个chunk发送延迟: 3331ms (3.33秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:48.795Z
+  utterance_index: None
+  第一个chunk发送延迟: 3330ms (3.33秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:49.045Z
+  utterance_index: None
+  第一个chunk发送延迟: 3080ms (3.08秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:49.045Z
+  utterance_index: None
+  第一个chunk发送延迟: 3080ms (3.08秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:49.305Z
+  utterance_index: None
+  第一个chunk发送延迟: 2820ms (2.82秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:49.305Z
+  utterance_index: None
+  第一个chunk发送延迟: 2820ms (2.82秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:49.565Z
+  utterance_index: None
+  第一个chunk发送延迟: 2560ms (2.56秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:49.565Z
+  utterance_index: None
+  第一个chunk发送延迟: 2560ms (2.56秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:49.815Z
+  utterance_index: None
+  第一个chunk发送延迟: 2310ms (2.31秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:49.815Z
+  utterance_index: None
+  第一个chunk发送延迟: 2310ms (2.31秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:50.075Z
+  utterance_index: None
+  第一个chunk发送延迟: 2050ms (2.05秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:50.075Z
+  utterance_index: None
+  第一个chunk发送延迟: 2050ms (2.05秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:50.325Z
+  utterance_index: None
+  第一个chunk发送延迟: 1800ms (1.80秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:50.325Z
+  utterance_index: None
+  第一个chunk发送延迟: 1800ms (1.80秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:50.584Z
+  utterance_index: None
+  第一个chunk发送延迟: 1541ms (1.54秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:50.585Z
+  utterance_index: None
+  第一个chunk发送延迟: 1540ms (1.54秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:50.845Z
+  utterance_index: None
+  第一个chunk发送延迟: 1280ms (1.28秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:50.845Z
+  utterance_index: None
+  第一个chunk发送延迟: 1280ms (1.28秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:51.095Z
+  utterance_index: None
+  第一个chunk发送延迟: 1030ms (1.03秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:51.095Z
+  utterance_index: None
+  第一个chunk发送延迟: 1030ms (1.03秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:51.354Z
+  utterance_index: None
+  第一个chunk发送延迟: 771ms (0.77秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:51.355Z
+  utterance_index: None
+  第一个chunk发送延迟: 770ms (0.77秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:51.605Z
+  utterance_index: None
+  第一个chunk发送延迟: 520ms (0.52秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:51.605Z
+  utterance_index: None
+  第一个chunk发送延迟: 520ms (0.52秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:51.865Z
+  utterance_index: None
+  第一个chunk发送延迟: 260ms (0.26秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:51.865Z
+  utterance_index: None
+  第一个chunk发送延迟: 260ms (0.26秒)
+  第一个chunk: 2026-01-17T08:04:52.125Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:52.125Z
+  utterance_index: None
+  第一个chunk发送延迟: 7ms (0.01秒)
+  第一个chunk: 2026-01-17T08:04:52.132Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:04:52.125Z
+  utterance_index: None
+  第一个chunk发送延迟: 7ms (0.01秒)
+  第一个chunk: 2026-01-17T08:04:52.132Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:05:08.306Z
+  utterance_index: None
+  第一个chunk发送延迟: 3279ms (3.28秒)
+  第一个chunk: 2026-01-17T08:05:11.585Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:05:08.306Z
+  utterance_index: None
+  第一个chunk发送延迟: 3279ms (3.28秒)
+  第一个chunk: 2026-01-17T08:05:11.585Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:05:08.306Z
+  utterance_index: None
+  第一个chunk发送延迟: 3279ms (3.28秒)
+  第一个chunk: 2026-01-17T08:05:11.585Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:05:08.306Z
+  utterance_index: None
+  第一个chunk发送延迟: 3279ms (3.28秒)
+  第一个chunk: 2026-01-17T08:05:11.585Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:05:08.306Z
+  utterance_index: None
+  第一个chunk发送延迟: 3279ms (3.28秒)
+  第一个chunk: 2026-01-17T08:05:11.585Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:05:08.306Z
+  utterance_index: None
+  第一个chunk发送延迟: 3279ms (3.28秒)
+  第一个chunk: 2026-01-17T08:05:11.585Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:05:08.306Z
+  utterance_index: None
+  第一个chunk发送延迟: 3279ms (3.28秒)
+  第一个chunk: 2026-01-17T08:05:11.585Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:05:11.585Z
+  utterance_index: None
+  第一个chunk发送延迟: 1ms (0.00秒)
+  第一个chunk: 2026-01-17T08:05:11.586Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:05:11.585Z
+  utterance_index: None
+  第一个chunk发送延迟: 1ms (0.00秒)
+  第一个chunk: 2026-01-17T08:05:11.586Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:05:40.846Z
+  utterance_index: None
+  第一个chunk发送延迟: 226355ms (226.35秒)
+  第一个chunk: 2026-01-17T08:09:27.201Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:05:40.846Z
+  utterance_index: None
+  第一个chunk发送延迟: 226355ms (226.35秒)
+  第一个chunk: 2026-01-17T08:09:27.201Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:05:40.847Z
+  utterance_index: None
+  第一个chunk发送延迟: 226354ms (226.35秒)
+  第一个chunk: 2026-01-17T08:09:27.201Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:05:40.847Z
+  utterance_index: None
+  第一个chunk发送延迟: 226354ms (226.35秒)
+  第一个chunk: 2026-01-17T08:09:27.201Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:05:40.847Z
+  utterance_index: None
+  第一个chunk发送延迟: 226354ms (226.35秒)
+  第一个chunk: 2026-01-17T08:09:27.201Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:05:40.847Z
+  utterance_index: None
+  第一个chunk发送延迟: 226354ms (226.35秒)
+  第一个chunk: 2026-01-17T08:09:27.201Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:05:40.847Z
+  utterance_index: None
+  第一个chunk发送延迟: 226354ms (226.35秒)
+  第一个chunk: 2026-01-17T08:09:27.201Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:09:27.201Z
+  utterance_index: None
+  第一个chunk发送延迟: 6950563ms (6950.56秒)
+  第一个chunk: 2026-01-17T10:05:17.764Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T08:09:27.201Z
+  utterance_index: None
+  第一个chunk发送延迟: 6950563ms (6950.56秒)
+  第一个chunk: 2026-01-17T10:05:17.764Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:05:14.054Z
+  utterance_index: None
+  第一个chunk发送延迟: 3710ms (3.71秒)
+  第一个chunk: 2026-01-17T10:05:17.764Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:05:14.054Z
+  utterance_index: None
+  第一个chunk发送延迟: 3710ms (3.71秒)
+  第一个chunk: 2026-01-17T10:05:17.764Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:05:14.055Z
+  utterance_index: None
+  第一个chunk发送延迟: 3709ms (3.71秒)
+  第一个chunk: 2026-01-17T10:05:17.764Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:05:14.055Z
+  utterance_index: None
+  第一个chunk发送延迟: 3709ms (3.71秒)
+  第一个chunk: 2026-01-17T10:05:17.764Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:05:14.055Z
+  utterance_index: None
+  第一个chunk发送延迟: 3709ms (3.71秒)
+  第一个chunk: 2026-01-17T10:05:17.764Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:05:14.055Z
+  utterance_index: None
+  第一个chunk发送延迟: 3709ms (3.71秒)
+  第一个chunk: 2026-01-17T10:05:17.764Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:05:14.055Z
+  utterance_index: None
+  第一个chunk发送延迟: 3709ms (3.71秒)
+  第一个chunk: 2026-01-17T10:05:17.764Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:05:17.763Z
+  utterance_index: None
+  第一个chunk发送延迟: 1ms (0.00秒)
+  第一个chunk: 2026-01-17T10:05:17.764Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:05:17.764Z
+  utterance_index: None
+  第一个chunk发送延迟: 10ms (0.01秒)
+  第一个chunk: 2026-01-17T10:05:17.774Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:05:58.575Z
+  utterance_index: None
+  第一个chunk发送延迟: 11930ms (11.93秒)
+  第一个chunk: 2026-01-17T10:06:10.505Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:05:58.575Z
+  utterance_index: None
+  第一个chunk发送延迟: 11930ms (11.93秒)
+  第一个chunk: 2026-01-17T10:06:10.505Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:05:58.575Z
+  utterance_index: None
+  第一个chunk发送延迟: 11930ms (11.93秒)
+  第一个chunk: 2026-01-17T10:06:10.505Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:05:58.575Z
+  utterance_index: None
+  第一个chunk发送延迟: 11930ms (11.93秒)
+  第一个chunk: 2026-01-17T10:06:10.505Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:05:58.576Z
+  utterance_index: None
+  第一个chunk发送延迟: 11929ms (11.93秒)
+  第一个chunk: 2026-01-17T10:06:10.505Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:05:58.576Z
+  utterance_index: None
+  第一个chunk发送延迟: 11929ms (11.93秒)
+  第一个chunk: 2026-01-17T10:06:10.505Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:05:58.576Z
+  utterance_index: None
+  第一个chunk发送延迟: 11929ms (11.93秒)
+  第一个chunk: 2026-01-17T10:06:10.505Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:06:10.505Z
+  utterance_index: None
+  第一个chunk发送延迟: 1ms (0.00秒)
+  第一个chunk: 2026-01-17T10:06:10.506Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:06:10.505Z
+  utterance_index: None
+  第一个chunk发送延迟: 1ms (0.00秒)
+  第一个chunk: 2026-01-17T10:06:10.506Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:43:19.085Z
+  utterance_index: None
+  第一个chunk发送延迟: 11251ms (11.25秒)
+  第一个chunk: 2026-01-17T10:43:30.336Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:43:19.085Z
+  utterance_index: None
+  第一个chunk发送延迟: 11251ms (11.25秒)
+  第一个chunk: 2026-01-17T10:43:30.336Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:43:19.087Z
+  utterance_index: None
+  第一个chunk发送延迟: 11249ms (11.25秒)
+  第一个chunk: 2026-01-17T10:43:30.336Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:43:19.087Z
+  utterance_index: None
+  第一个chunk发送延迟: 11249ms (11.25秒)
+  第一个chunk: 2026-01-17T10:43:30.336Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:43:19.087Z
+  utterance_index: None
+  第一个chunk发送延迟: 11249ms (11.25秒)
+  第一个chunk: 2026-01-17T10:43:30.336Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:43:19.087Z
+  utterance_index: None
+  第一个chunk发送延迟: 11249ms (11.25秒)
+  第一个chunk: 2026-01-17T10:43:30.336Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:43:19.088Z
+  utterance_index: None
+  第一个chunk发送延迟: 11248ms (11.25秒)
+  第一个chunk: 2026-01-17T10:43:30.336Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:43:30.335Z
+  utterance_index: None
+  第一个chunk发送延迟: 1ms (0.00秒)
+  第一个chunk: 2026-01-17T10:43:30.336Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:43:30.335Z
+  utterance_index: None
+  第一个chunk发送延迟: 1ms (0.00秒)
+  第一个chunk: 2026-01-17T10:43:30.336Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:43:50.846Z
+  utterance_index: None
+  第一个chunk发送延迟: 7650ms (7.65秒)
+  第一个chunk: 2026-01-17T10:43:58.496Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:43:50.846Z
+  utterance_index: None
+  第一个chunk发送延迟: 7650ms (7.65秒)
+  第一个chunk: 2026-01-17T10:43:58.496Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:43:50.847Z
+  utterance_index: None
+  第一个chunk发送延迟: 7649ms (7.65秒)
+  第一个chunk: 2026-01-17T10:43:58.496Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:43:50.848Z
+  utterance_index: None
+  第一个chunk发送延迟: 7648ms (7.65秒)
+  第一个chunk: 2026-01-17T10:43:58.496Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:43:50.848Z
+  utterance_index: None
+  第一个chunk发送延迟: 7648ms (7.65秒)
+  第一个chunk: 2026-01-17T10:43:58.496Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:43:50.848Z
+  utterance_index: None
+  第一个chunk发送延迟: 7648ms (7.65秒)
+  第一个chunk: 2026-01-17T10:43:58.496Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:43:50.848Z
+  utterance_index: None
+  第一个chunk发送延迟: 7648ms (7.65秒)
+  第一个chunk: 2026-01-17T10:43:58.496Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:43:58.496Z
+  utterance_index: None
+  第一个chunk发送延迟: 10ms (0.01秒)
+  第一个chunk: 2026-01-17T10:43:58.506Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:43:58.496Z
+  utterance_index: None
+  第一个chunk发送延迟: 10ms (0.01秒)
+  第一个chunk: 2026-01-17T10:43:58.506Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:44:30.427Z
+  utterance_index: None
+  第一个chunk发送延迟: 14430ms (14.43秒)
+  第一个chunk: 2026-01-17T10:44:44.857Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:44:30.427Z
+  utterance_index: None
+  第一个chunk发送延迟: 14430ms (14.43秒)
+  第一个chunk: 2026-01-17T10:44:44.857Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:44:30.427Z
+  utterance_index: None
+  第一个chunk发送延迟: 14430ms (14.43秒)
+  第一个chunk: 2026-01-17T10:44:44.857Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:44:30.427Z
+  utterance_index: None
+  第一个chunk发送延迟: 14430ms (14.43秒)
+  第一个chunk: 2026-01-17T10:44:44.857Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:44:30.427Z
+  utterance_index: None
+  第一个chunk发送延迟: 14430ms (14.43秒)
+  第一个chunk: 2026-01-17T10:44:44.857Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:44:30.428Z
+  utterance_index: None
+  第一个chunk发送延迟: 14429ms (14.43秒)
+  第一个chunk: 2026-01-17T10:44:44.857Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:44:30.428Z
+  utterance_index: None
+  第一个chunk发送延迟: 14429ms (14.43秒)
+  第一个chunk: 2026-01-17T10:44:44.857Z
+    utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:44:44.857Z
+  utterance_index: None
+
+TTS_PLAY_ENDED: 2026-01-17T10:44:44.857Z
+  utterance_index: None
+

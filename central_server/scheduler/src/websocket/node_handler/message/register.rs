@@ -1,6 +1,6 @@
 use crate::core::AppState;
 use crate::messages::{CapabilityByType, FeatureFlags, HardwareInfo, InstalledModel, InstalledService, ResourceUsage, NodeMessage};
-use crate::services::minimal_scheduler::{MinimalSchedulerService, RegisterNodeRequest, HeartbeatRequest};
+use crate::services::minimal_scheduler::{RegisterNodeRequest, HeartbeatRequest};
 use axum::extract::ws::Message;
 use tokio::sync::mpsc;
 use tracing::{debug, info, warn};
@@ -124,7 +124,7 @@ pub(super) async fn handle_node_register(
 pub(super) async fn handle_node_heartbeat(
     state: &AppState,
     node_id: &str,
-    resource_usage: ResourceUsage,
+    _resource_usage: ResourceUsage,
     _installed_models: Option<Vec<InstalledModel>>,
     _installed_services: Option<Vec<InstalledService>>,
     capability_by_type: Vec<CapabilityByType>,

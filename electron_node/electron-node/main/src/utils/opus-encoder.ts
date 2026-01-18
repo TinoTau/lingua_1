@@ -497,20 +497,3 @@ export async function encodePcm16ToOpus(
   }
 }
 
-/**
- * 同步版本的 encodePcm16ToOpus（为了向后兼容）
- * 注意：实际上仍然是异步的，但返回 Promise
- * @deprecated 建议使用异步版本
- */
-export function encodePcm16ToOpusSync(
-  pcm16Data: Buffer,
-  sampleRate: number = 16000,
-  channels: number = 1
-): Buffer {
-  // 这个函数实际上无法同步执行，因为需要等待 WASM 初始化
-  // 为了向后兼容，我们抛出错误，提示使用异步版本
-  throw new Error(
-    'encodePcm16ToOpusSync is not supported with @minceraftmc/opus-encoder. ' +
-    'Please use encodePcm16ToOpus (async) instead.'
-  );
-}

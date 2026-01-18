@@ -18,8 +18,9 @@ const pipeline_step_registry_1 = require("./pipeline-step-registry");
  * 使用配置驱动的方式，根据 Pipeline 模式动态执行步骤
  */
 async function runJobPipeline(options) {
-    const { job, partialCallback, asrCompletedCallback, services, callbacks } = options;
-    const ctx = (0, job_context_1.initJobContext)(job);
+    const { job, partialCallback, asrCompletedCallback, services, ctx: providedCtx, callbacks } = options;
+    // 如果提供了预初始化的 JobContext，使用它；否则创建新的
+    const ctx = providedCtx || (0, job_context_1.initJobContext)(job);
     // 任务开始回调
     callbacks?.onTaskStart?.();
     try {
@@ -33,7 +34,18 @@ async function runJobPipeline(options) {
             pipeline: job.pipeline,
         }, `Pipeline mode inferred: ${mode.name}`);
         // 2. 按模式配置的步骤序列执行
+        // 如果 ctx 已经包含 ASR 结果（providedCtx），则跳过 ASR 步骤
+        const skipASR = providedCtx !== undefined && providedCtx.asrText !== undefined;
         for (const step of mode.steps) {
+            // 如果已经提供了 ASR 结果，跳过 ASR 步骤
+            if (skipASR && step === 'ASR') {
+                logger_1.default.debug({
+                    jobId: job.job_id,
+                    step,
+                    note: 'ASR result already provided, skipping ASR step',
+                }, `Skipping step ${step} (ASR result already provided)`);
+                continue;
+            }
             // 检查步骤是否应该执行（支持动态条件判断）
             // 对于 SEMANTIC_REPAIR 步骤，需要检查 ctx.shouldSendToSemanticRepair 标志
             if (!(0, pipeline_mode_config_1.shouldExecuteStep)(step, mode, job, ctx)) {
@@ -63,7 +75,9 @@ async function runJobPipeline(options) {
             }
             catch (error) {
                 logger_1.default.error({
-                    error,
+                    error: error?.message || error || 'Unknown error',
+                    stack: error?.stack,
+                    errorType: error?.constructor?.name,
                     jobId: job.job_id,
                     step,
                     modeName: mode.name,

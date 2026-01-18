@@ -76,7 +76,7 @@ export class PostProcessSemanticRepairHandler {
           if (this.aggregatorManager) {
             const lastCommittedText = this.aggregatorManager.getLastCommittedText(
               job.session_id,
-              aggregationResult.aggregatedText
+              job.utterance_index
             );
             if (lastCommittedText && lastCommittedText.trim().length > 0) {
               // 限制长度：取最后150个字符（避免上下文过长）

@@ -159,6 +159,38 @@ pub(super) async fn handle_client_heartbeat(
     Ok(())
 }
 
+pub(super) async fn handle_tts_started(
+    state: &AppState,
+    sess_id: String,
+    group_id: String,
+    ts_start_ms: u64,
+) {
+    info!(
+        session_id = %sess_id,
+        group_id = %group_id,
+        client_ts_start_ms = ts_start_ms,
+        "收到 TTS_STARTED 消息（Web端开始播放）"
+    );
+    
+    // Update Group's last_tts_start_at (Scheduler authoritative time)
+    let timestamp_ms = chrono::Utc::now().timestamp_millis();
+    let timestamp_ms_u64 = timestamp_ms as u64;
+    state.group_manager.on_tts_started(&group_id, timestamp_ms_u64).await;
+    
+    // 立即更新last_chunk_at_ms（同步操作），停止计算chunk时间
+    // 从播放开始到播放结束期间，都不进行pause计时
+    state.audio_buffer.update_last_chunk_at_ms(&sess_id, timestamp_ms).await;
+    
+    info!(
+        session_id = %sess_id,
+        group_id = %group_id,
+        client_ts_start_ms = ts_start_ms,
+        server_timestamp_ms = timestamp_ms,
+        time_diff_ms = timestamp_ms as i64 - ts_start_ms as i64,
+        "TTS_STARTED: 已更新last_chunk_at_ms，停止计算chunk时间"
+    );
+}
+
 pub(super) async fn handle_tts_play_ended(
     state: &AppState,
     sess_id: String,
@@ -175,14 +207,27 @@ pub(super) async fn handle_tts_play_ended(
     // Update Group's last_tts_end_at (Scheduler authoritative time)
     state.group_manager.on_tts_play_ended(&group_id, ts_end_ms).await;
     
-    // 重启 SessionActor 的计时器（重置 pause 检测计时器）
+    // 修复：立即更新last_chunk_at_ms（同步操作），避免RestartTimer事件延迟导致的pause检测误触发
     // 使用调度服务器时间，确保与音频chunk的timestamp_ms（调度服务器接收时间）基准一致
+    let timestamp_ms = chrono::Utc::now().timestamp_millis();
+    
+    // 立即更新last_chunk_at_ms（同步操作）
+    // 这样可以确保在audio_chunk到达之前，last_chunk_at_ms已经更新
+    // 即使RestartTimer事件延迟处理，也不会影响pause检测
+    state.audio_buffer.update_last_chunk_at_ms(&sess_id, timestamp_ms).await;
+    
+    info!(
+        session_id = %sess_id,
+        group_id = %group_id,
+        client_ts_end_ms = ts_end_ms,
+        server_timestamp_ms = timestamp_ms,
+        time_diff_ms = timestamp_ms as i64 - ts_end_ms as i64,
+        "TTS_PLAY_ENDED: 已立即更新last_chunk_at_ms（同步操作），重置pause检测基准时间"
+    );
+    
+    // 发送 RestartTimer 事件到 SessionActor（用于重置超时计时器）
+    // 注意：last_chunk_at_ms已经在上面的同步操作中更新，这里只是发送RestartTimer事件用于重置计时器
     if let Some(actor_handle) = state.session_manager.get_actor_handle(&sess_id).await {
-        // 使用调度服务器时间，与音频chunk的timestamp_ms（调度服务器接收时间）保持一致
-        // 这样可以避免客户端时间和服务器时间不同步导致的时间差问题
-        let timestamp_ms = chrono::Utc::now().timestamp_millis();
-        let time_diff_ms = timestamp_ms as i64 - ts_end_ms as i64;
-        
         if let Err(e) = actor_handle.send(SessionEvent::RestartTimer {
             timestamp_ms,
         }) {
@@ -197,8 +242,8 @@ pub(super) async fn handle_tts_play_ended(
                 group_id = %group_id,
                 client_ts_end_ms = ts_end_ms,
                 server_timestamp_ms = timestamp_ms,
-                time_diff_ms = time_diff_ms,
-                "TTS_PLAY_ENDED: 已发送 RestartTimer 事件到 SessionActor"
+                time_diff_ms = timestamp_ms as i64 - ts_end_ms as i64,
+                "TTS_PLAY_ENDED: 已发送RestartTimer事件到SessionActor（用于重置计时器等操作）"
             );
         }
     } else {

@@ -150,8 +150,7 @@ export class AggregatorState {
     isFinal: boolean = false,
     isManualCut: boolean = false,
     isPauseTriggered: boolean = false,
-    isTimeoutTriggered: boolean = false,
-    hasPendingSecondHalfMerged: boolean = false
+    isTimeoutTriggered: boolean = false
   ): AggregatorCommitResult {
     const nowMs = Date.now();
     
@@ -168,11 +167,6 @@ export class AggregatorState {
       this.sessionStartTimeMs,
       this.lastUtteranceEndTimeMs
     );
-    
-    // 修复：如果合并了pendingSecondHalf，将标志传递给utteranceInfo
-    if (hasPendingSecondHalfMerged) {
-      (utteranceResult.utteranceInfo as any).hasPendingSecondHalfMerged = true;
-    }
     
     const curr = utteranceResult.utteranceInfo;
     const startMs = utteranceResult.utteranceTime.startMs;
@@ -295,8 +289,8 @@ export class AggregatorState {
           );
           const previousCommitText = previousCommitResult.commitText;
           if (previousCommitText && previousCommitText.trim().length > 0) {
-            // 更新上下文（记录到recentCommittedText，用于去重）
-            this.contextManager.updateRecentCommittedText(previousCommitText);
+            // 注意：不再在聚合阶段更新recentCommittedText
+            // 只在语义修复后更新，确保recentCommittedText中只包含最终提交的文本
             logger.info(
               {
                 text: previousCommitText.substring(0, 50),
@@ -597,6 +591,20 @@ export class AggregatorState {
    */
   getLastCommitQuality(): number | undefined {
     return this.contextManager.getLastCommitQuality();
+  }
+
+  /**
+   * 更新最后一个提交的文本（用于语义修复后更新）
+   */
+  updateLastCommittedTextAfterRepair(utteranceIndex: number, originalText: string, repairedText: string): void {
+    this.contextManager.updateLastCommittedText(utteranceIndex, originalText, repairedText);
+  }
+
+  /**
+   * 获取上一个utterance的已提交文本（用于NMT服务的context_text）
+   */
+  getLastCommittedText(currentUtteranceIndex: number): string | null {
+    return this.contextManager.getLastCommittedText(currentUtteranceIndex);
   }
 }
 

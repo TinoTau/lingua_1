@@ -113,6 +113,15 @@ pub(crate) async fn handle_session_message(
             core::handle_client_heartbeat(state, tx, sess_id).await?;
         }
 
+        SessionMessage::TtsStarted {
+            session_id: sess_id,
+            trace_id: _,
+            group_id,
+            ts_start_ms,
+        } => {
+            core::handle_tts_started(state, sess_id, group_id, ts_start_ms).await;
+        }
+
         SessionMessage::TtsPlayEnded {
             session_id: sess_id,
             trace_id: _,

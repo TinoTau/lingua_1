@@ -1,5 +1,7 @@
 use super::JobDispatcher;
 use crate::core::dispatcher::Job;
+use crate::messages::{FeatureFlags, PipelineConfig};
+use crate::utils::ModuleResolver;
 
 impl JobDispatcher {
     pub async fn get_job(&self, job_id: &str) -> Option<Job> {
@@ -15,7 +17,7 @@ impl JobDispatcher {
     pub async fn update_job_status(&self, job_id: &str, status: crate::core::dispatcher::JobStatus) -> bool {
         let mut jobs = self.jobs.write().await;
         if let Some(job) = jobs.get_mut(job_id) {
-            let is_terminal = matches!(status, crate::core::dispatcher::JobStatus::Completed | crate::core::dispatcher::JobStatus::Failed);
+            let _is_terminal = matches!(status, crate::core::dispatcher::JobStatus::Completed | crate::core::dispatcher::JobStatus::Failed);
             job.status = status;
             // Phase2: request_id 绑定由 Redis 管理，自动过期，无需手动清理
             true
@@ -58,8 +60,46 @@ impl JobDispatcher {
     }
 
     pub async fn required_types_for_job(&self, job: &Job) -> anyhow::Result<Vec<crate::messages::ServiceType>> {
-        // get_required_types_for_features 在 job_selection.rs 中定义，可以直接调用
         self.get_required_types_for_features(&job.pipeline, job.features.as_ref(), &job.src_lang, &job.tgt_lang)
+    }
+
+    /// 获取功能所需的类型列表
+    pub(crate) fn get_required_types_for_features(
+        &self,
+        pipeline: &PipelineConfig,
+        features: Option<&FeatureFlags>,
+        _src_lang: &str,
+        _tgt_lang: &str,
+    ) -> anyhow::Result<Vec<crate::messages::ServiceType>> {
+        let mut types = Vec::new();
+
+        if pipeline.use_asr {
+            types.push(crate::messages::ServiceType::Asr);
+        }
+        if pipeline.use_nmt {
+            types.push(crate::messages::ServiceType::Nmt);
+        }
+        if pipeline.use_tts {
+            types.push(crate::messages::ServiceType::Tts);
+        }
+        if pipeline.use_semantic {
+            types.push(crate::messages::ServiceType::Semantic);
+        }
+
+        // 可选模块映射到类型（当前仅 tone 可选）
+        if let Some(features) = features {
+            let module_names = ModuleResolver::parse_features_to_modules(features);
+            let optional_models = ModuleResolver::collect_required_models(&module_names)?;
+            // tone: 若模块包含 tone（例如 voice_cloning 相关）则加入
+            if optional_models.iter().any(|m| m.contains("tone") || m.contains("speaker") || m.contains("voice")) {
+                types.push(crate::messages::ServiceType::Tone);
+            }
+        }
+
+        types.sort();
+        types.dedup();
+
+        Ok(types)
     }
 
     pub async fn mark_job_dispatched(&self, job_id: &str) -> bool {

@@ -272,7 +272,7 @@ async fn test_node_status_manager_health_check() {
     manager.on_heartbeat(&node.node_id).await;
     
     // 检查状态（应该还是 registering，因为需要连续 3 次）
-    let status = registry.get_node_status(&node.node_id).await;
+    let status = registry.get_node_snapshot(&node.node_id).await.map(|n| n.status);
     assert_eq!(status, Some(NodeStatus::Registering));
 }
 
@@ -326,7 +326,7 @@ async fn test_node_status_manager_registering_to_ready() {
     }
     
     // 检查状态（应该变为 ready）
-    let status = registry.get_node_status(&node.node_id).await;
+    let status = registry.get_node_snapshot(&node.node_id).await.map(|n| n.status);
     assert_eq!(status, Some(NodeStatus::Ready));
 }
 
@@ -388,7 +388,7 @@ async fn test_node_status_manager_ready_to_degraded() {
     }
     
     // 检查状态（应该变为 degraded）
-    let status = registry.get_node_status(&node.node_id).await;
+    let status = registry.get_node_snapshot(&node.node_id).await.map(|n| n.status);
     assert_eq!(status, Some(NodeStatus::Degraded));
 }
 
@@ -447,7 +447,7 @@ async fn test_node_status_manager_degraded_to_ready() {
     manager.on_heartbeat(&node.node_id).await;
     
     // 检查状态（应该恢复为 ready）
-    let status = registry.get_node_status(&node.node_id).await;
+    let status = registry.get_node_snapshot(&node.node_id).await.map(|n| n.status);
     assert_eq!(status, Some(NodeStatus::Ready));
 }
 
@@ -491,7 +491,7 @@ async fn test_node_status_manager_heartbeat_timeout() {
     manager.periodic_scan().await;
     
     // 检查状态（应该变为 offline）
-    let status = registry.get_node_status(&node.node_id).await;
+    let status = registry.get_node_snapshot(&node.node_id).await.map(|n| n.status);
     assert_eq!(status, Some(NodeStatus::Offline));
 }
 
@@ -556,7 +556,7 @@ async fn test_node_status_manager_warmup_timeout() {
     manager.periodic_scan().await;
     
     // 检查状态（应该变为 degraded）
-    let status = registry.get_node_status(&node.node_id).await;
+    let status = registry.get_node_snapshot(&node.node_id).await.map(|n| n.status);
     assert_eq!(status, Some(NodeStatus::Degraded));
 }
 

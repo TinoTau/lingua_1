@@ -23,7 +23,7 @@ pub async fn get_stats(
     let json = state.dashboard_snapshot.get_json().await;
     let updated_at = state.dashboard_snapshot.last_updated_at_ms().await;
     let now_ms = chrono::Utc::now().timestamp_millis();
-    let is_stale = updated_at == 0 || (now_ms - updated_at) > 10_000; // 简单阈值：>10s 视为 stale（Phase 1 先用经验值）
+    let is_stale = updated_at == 0 || (now_ms - updated_at) > 10_000; // 简单阈值：>10s 视为 stale（经验值）
     crate::metrics::metrics::on_stats_response(is_stale);
     crate::metrics::prometheus_metrics::observe_stats_request_duration_seconds(t0.elapsed().as_secs_f64());
     (

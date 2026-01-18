@@ -14,6 +14,8 @@
 import { dedupMergePrecise, DedupConfig, DEFAULT_DEDUP_CONFIG } from '../../aggregator/dedup';
 import logger from '../../logger';
 import { loadNodeConfig } from '../../node-config';
+import { TextForwardMergeLengthDecider, LengthDecisionConfig } from './text-forward-merge-length-decider';
+import { TextForwardMergeDedupProcessor } from './text-forward-merge-dedup-processor';
 
 export interface ForwardMergeResult {
   processedText: string;
@@ -34,20 +36,28 @@ export class TextForwardMergeManager {
     utteranceIndex: number;
   }> = new Map();
 
-  private readonly MIN_LENGTH_TO_KEEP: number;
-  private readonly MIN_LENGTH_TO_SEND: number;
-  private readonly MAX_LENGTH_TO_WAIT: number;
-  private readonly WAIT_TIMEOUT_MS: number;
+  private readonly lengthConfig: LengthDecisionConfig;
+  private readonly lengthDecider: TextForwardMergeLengthDecider;
+  private readonly dedupProcessor: TextForwardMergeDedupProcessor;
   private readonly dedupConfig: DedupConfig = DEFAULT_DEDUP_CONFIG;
 
   constructor() {
     // 从配置文件加载文本长度配置
     const nodeConfig = loadNodeConfig();
     const textLengthConfig = nodeConfig.textLength || {};
-    this.MIN_LENGTH_TO_KEEP = textLengthConfig.minLengthToKeep ?? 6;  // 最小保留长度：6个字符（太短的文本直接丢弃）
-    this.MIN_LENGTH_TO_SEND = textLengthConfig.minLengthToSend ?? 20;  // 最小发送长度：20个字符（6-20字符之间的文本等待合并）
-    this.MAX_LENGTH_TO_WAIT = textLengthConfig.maxLengthToWait ?? 40;  // 最大等待长度：40个字符（20-40字符之间的文本等待3秒确认是否有后续输入，超过40字符强制截断）
-    this.WAIT_TIMEOUT_MS = textLengthConfig.waitTimeoutMs ?? 3000;  // 等待超时：3秒
+    
+    this.lengthConfig = {
+      minLengthToKeep: textLengthConfig.minLengthToKeep ?? 6,
+      minLengthToSend: textLengthConfig.minLengthToSend ?? 20,
+      maxLengthToWait: textLengthConfig.maxLengthToWait ?? 40,
+      waitTimeoutMs: textLengthConfig.waitTimeoutMs ?? 3000,
+    };
+    
+    this.lengthDecider = new TextForwardMergeLengthDecider(this.lengthConfig);
+    this.dedupProcessor = new TextForwardMergeDedupProcessor(
+      this.dedupConfig,
+      this.lengthConfig.minLengthToKeep
+    );
   }
 
   /**
@@ -153,7 +163,7 @@ export class TextForwardMergeManager {
         this.pendingTexts.delete(sessionId);
         
         // 判断合并后的文本长度
-        if (mergedText.length < this.MIN_LENGTH_TO_KEEP) {
+        if (mergedText.length < this.lengthConfig.minLengthToKeep) {
           // < 6字符：丢弃
           return {
             processedText: '',
@@ -164,7 +174,7 @@ export class TextForwardMergeManager {
             dedupChars: dedupResult.overlapChars,
             mergedFromPendingUtteranceIndex: pending.utteranceIndex,
           };
-        } else if (mergedText.length <= this.MIN_LENGTH_TO_SEND) {
+        } else if (mergedText.length <= this.lengthConfig.minLengthToSend) {
           // 6-20字符：如果是手动发送，直接发送给语义修复；否则继续等待
           if (isManualCut) {
             return {
@@ -180,7 +190,7 @@ export class TextForwardMergeManager {
             // 非手动发送：继续等待
             this.pendingTexts.set(sessionId, {
               text: mergedText,
-              waitUntil: nowMs + this.WAIT_TIMEOUT_MS,
+              waitUntil: nowMs + this.lengthConfig.waitTimeoutMs,
               jobId,
               utteranceIndex,
             });
@@ -194,7 +204,7 @@ export class TextForwardMergeManager {
               mergedFromPendingUtteranceIndex: pending.utteranceIndex,
             };
           }
-        } else if (mergedText.length <= this.MAX_LENGTH_TO_WAIT) {
+        } else if (mergedText.length <= this.lengthConfig.maxLengthToWait) {
           // 20-40字符：等待3秒确认是否有后续输入，如果没有后续输入，则发送给语义修复
           if (isManualCut) {
             return {
@@ -210,7 +220,7 @@ export class TextForwardMergeManager {
             // 非手动发送：等待3秒确认是否有后续输入
             this.pendingTexts.set(sessionId, {
               text: mergedText,
-              waitUntil: nowMs + this.WAIT_TIMEOUT_MS,
+              waitUntil: nowMs + this.lengthConfig.waitTimeoutMs,
               jobId,
               utteranceIndex,
             });
@@ -297,7 +307,7 @@ export class TextForwardMergeManager {
       this.pendingTexts.delete(sessionId);
       
       // 判断合并后的文本长度
-      if (mergedText.length < this.MIN_LENGTH_TO_KEEP) {
+      if (mergedText.length < this.lengthConfig.minLengthToKeep) {
         // < 6字符：丢弃
         return {
           processedText: '',
@@ -308,7 +318,7 @@ export class TextForwardMergeManager {
           dedupChars: dedupResult.overlapChars,
           mergedFromPendingUtteranceIndex,  // 通知GPU仲裁器取消待合并文本的任务
         };
-      } else if (mergedText.length <= this.MIN_LENGTH_TO_SEND) {
+      } else if (mergedText.length <= this.lengthConfig.minLengthToSend) {
         // 6-20字符：如果是手动发送，直接发送给语义修复；否则继续等待
         if (isManualCut) {
           // 手动发送：直接发送给语义修复，不等待合并
@@ -334,7 +344,7 @@ export class TextForwardMergeManager {
           // 非手动发送：继续等待（6-20字符之间的文本等待合并）
           this.pendingTexts.set(sessionId, {
             text: mergedText,
-            waitUntil: nowMs + this.WAIT_TIMEOUT_MS,
+            waitUntil: nowMs + this.lengthConfig.waitTimeoutMs,
             jobId,
             utteranceIndex,
           });
@@ -348,7 +358,7 @@ export class TextForwardMergeManager {
             mergedFromPendingUtteranceIndex,  // 通知GPU仲裁器取消待合并文本的任务
           };
         }
-      } else if (mergedText.length <= this.MAX_LENGTH_TO_WAIT) {
+      } else if (mergedText.length <= this.lengthConfig.maxLengthToWait) {
         // 20-40字符：等待3秒确认是否有后续输入，如果没有后续输入，则发送给语义修复
         if (isManualCut) {
           return {
@@ -364,7 +374,7 @@ export class TextForwardMergeManager {
           // 非手动发送：等待3秒确认是否有后续输入
           this.pendingTexts.set(sessionId, {
             text: mergedText,
-            waitUntil: nowMs + this.WAIT_TIMEOUT_MS,
+            waitUntil: nowMs + this.lengthConfig.waitTimeoutMs,
             jobId,
             utteranceIndex,
           });
@@ -409,7 +419,7 @@ export class TextForwardMergeManager {
       
       // 如果去重后文本为空或很短，说明当前文本被合并到上一个文本
       // 需要通知GPU仲裁器取消上一个utterance的任务
-      if (deduped && (processedText.length === 0 || processedText.length < this.MIN_LENGTH_TO_KEEP)) {
+      if (deduped && (processedText.length === 0 || processedText.length < this.lengthConfig.minLengthToKeep)) {
         // 假设utterance_index是连续的，上一个utterance的索引是当前索引-1
         mergedFromUtteranceIndex = utteranceIndex - 1;
         logger.info(
@@ -441,7 +451,7 @@ export class TextForwardMergeManager {
     }
 
     // 判断去重后的文本长度
-    if (processedText.length < this.MIN_LENGTH_TO_KEEP) {
+    if (processedText.length < this.lengthConfig.minLengthToKeep) {
       // < 6字符：丢弃
       logger.info(
         {
@@ -461,7 +471,7 @@ export class TextForwardMergeManager {
         dedupChars,
         mergedFromUtteranceIndex,  // 如果合并了上一个utterance，通知GPU仲裁器
       };
-    } else if (processedText.length <= this.MIN_LENGTH_TO_SEND) {
+    } else if (processedText.length <= this.lengthConfig.minLengthToSend) {
       // 6-20字符：如果是手动发送，直接发送给语义修复；否则等待与下一句合并
       if (isManualCut) {
         // 手动发送：直接发送给语义修复，不等待合并
@@ -487,7 +497,7 @@ export class TextForwardMergeManager {
         // 非手动发送：等待与下一句合并（6-20字符之间的文本等待合并）
         this.pendingTexts.set(sessionId, {
           text: processedText,
-          waitUntil: nowMs + this.WAIT_TIMEOUT_MS,
+          waitUntil: nowMs + this.lengthConfig.waitTimeoutMs,
           jobId,
           utteranceIndex,
         });
@@ -496,8 +506,8 @@ export class TextForwardMergeManager {
             sessionId,
             processedText: processedText.substring(0, 50),
             length: processedText.length,
-            waitUntil: nowMs + this.WAIT_TIMEOUT_MS,
-            waitMs: this.WAIT_TIMEOUT_MS,
+            waitUntil: nowMs + this.lengthConfig.waitTimeoutMs,
+            waitMs: this.lengthConfig.waitTimeoutMs,
             reason: 'Processed text length 6-20, waiting for merge with next utterance',
           },
           'TextForwardMergeManager: Processed text length 6-20, waiting for merge'
@@ -512,7 +522,7 @@ export class TextForwardMergeManager {
           mergedFromUtteranceIndex,  // 如果合并了上一个utterance，通知GPU仲裁器
         };
       }
-    } else if (processedText.length <= this.MAX_LENGTH_TO_WAIT) {
+    } else if (processedText.length <= this.lengthConfig.maxLengthToWait) {
       // 20-40字符：等待3秒确认是否有后续输入，如果没有后续输入，则发送给语义修复
       // 这是为了避免用户说到最后一句话的时候被截断一半，有没有后续输入来触发合并
       if (isManualCut) {
@@ -539,7 +549,7 @@ export class TextForwardMergeManager {
         // 非手动截断：等待3秒确认是否有后续输入
         this.pendingTexts.set(sessionId, {
           text: processedText,
-          waitUntil: nowMs + this.WAIT_TIMEOUT_MS,
+          waitUntil: nowMs + this.lengthConfig.waitTimeoutMs,
           jobId,
           utteranceIndex,
         });
@@ -548,8 +558,8 @@ export class TextForwardMergeManager {
             sessionId,
             processedText: processedText.substring(0, 50),
             length: processedText.length,
-            waitUntil: nowMs + this.WAIT_TIMEOUT_MS,
-            waitMs: this.WAIT_TIMEOUT_MS,
+            waitUntil: nowMs + this.lengthConfig.waitTimeoutMs,
+            waitMs: this.lengthConfig.waitTimeoutMs,
             reason: 'Processed text length 20-40, waiting 3 seconds to confirm if there is subsequent input',
           },
           'TextForwardMergeManager: Processed text length 20-40, waiting 3 seconds to confirm if there is subsequent input'
@@ -571,7 +581,7 @@ export class TextForwardMergeManager {
           sessionId,
           processedText: processedText.substring(0, 50),
           length: processedText.length,
-          maxLengthToWait: this.MAX_LENGTH_TO_WAIT,
+          maxLengthToWait: this.lengthConfig.maxLengthToWait,
           reason: 'Processed text length > 40, forcing truncation and sending to semantic repair',
         },
         'TextForwardMergeManager: Processed text length > 40, forcing truncation and sending to semantic repair'
@@ -586,6 +596,54 @@ export class TextForwardMergeManager {
         mergedFromUtteranceIndex,  // 如果合并了上一个utterance，通知GPU仲裁器
       };
     }
+  }
+
+  /**
+   * 处理合并后的文本：根据长度决定动作
+   */
+  private handleMergedText(
+    mergedText: string,
+    sessionId: string,
+    jobId: string,
+    utteranceIndex: number,
+    isManualCut: boolean,
+    deduped: boolean,
+    dedupChars: number,
+    mergedFromPendingUtteranceIndex?: number
+  ): ForwardMergeResult {
+    const nowMs = Date.now();
+    const decision = this.lengthDecider.decide(mergedText, isManualCut, sessionId, nowMs);
+
+    if (decision.shouldDiscard) {
+      return {
+        processedText: '',
+        shouldDiscard: true,
+        shouldWaitForMerge: false,
+        shouldSendToSemanticRepair: false,
+        deduped,
+        dedupChars,
+        mergedFromPendingUtteranceIndex,
+      };
+    }
+
+    if (decision.shouldSetPending) {
+      this.pendingTexts.set(sessionId, {
+        text: mergedText,
+        waitUntil: decision.pendingWaitUntil!,
+        jobId,
+        utteranceIndex,
+      });
+    }
+
+    return {
+      processedText: decision.shouldSendToSemanticRepair ? mergedText : '',
+      shouldDiscard: false,
+      shouldWaitForMerge: decision.shouldWaitForMerge,
+      shouldSendToSemanticRepair: decision.shouldSendToSemanticRepair,
+      deduped,
+      dedupChars,
+      mergedFromPendingUtteranceIndex,
+    };
   }
 
   /**

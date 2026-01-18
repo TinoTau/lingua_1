@@ -38,6 +38,7 @@ impl NodeStatusManager {
     }
 
     /// 处理节点心跳（立即触发状态检查）
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub async fn on_heartbeat(&self, node_id: &str) {
         // 使用 ManagementRegistry（统一管理锁）
         let node = {
@@ -121,6 +122,7 @@ impl NodeStatusManager {
     }
 
     /// 检查是否应该降级（ready → degraded）
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     async fn should_degrade(&self, node_id: &str) -> bool {
         let failure_history = self.failure_history.read().await;
         if let Some((window, consecutive)) = failure_history.get(node_id) {
@@ -143,6 +145,7 @@ impl NodeStatusManager {
     /// 健康检查条件：
     /// 1. GPU 可用（所有节点都必须有 GPU）
     /// 2. 必需模型 ready
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     async fn check_node_health(&self, node: &Node) -> bool {
         // 检查 GPU 可用性
         if node.hardware.gpus.is_none() || node.hardware.gpus.as_ref().unwrap().is_empty() {

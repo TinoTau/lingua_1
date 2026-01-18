@@ -1,4 +1,4 @@
-﻿impl Phase2Runtime {
+impl Phase2Runtime {
     pub async fn new(
         cfg: crate::core::config::Phase2Config,
         scheduler_heartbeat_interval_seconds: u64,
@@ -34,9 +34,6 @@
         &self.cfg.redis.key_prefix
     }
 
-    pub fn node_snapshot_enabled(&self) -> bool {
-        self.cfg.node_snapshot.enabled
-    }
 
     fn v1_prefix(&self) -> String {
         // 对齐容量规划文档中的 key 示例：lingua:v1:...
@@ -84,10 +81,6 @@
         format!("{}:ratelimit:node:{}:model_na", self.v1_prefix(), node_id)
     }
 
-    fn request_lock_key(&self, request_id: &str) -> String {
-        // hash tag: {req:<id>}
-        format!("{}:locks:{{req:{}}}", self.v1_prefix(), request_id)
-    }
 
     fn request_binding_key(&self, request_id: &str) -> String {
         // hash tag: {req:<id>}
@@ -232,6 +225,11 @@
     // 辅助方法：获取字符串值
     pub async fn redis_get_string(&self, key: &str) -> redis::RedisResult<Option<String>> {
         self.redis.get_string(key).await
+    }
+
+    // 辅助方法：SETNX + EX 原子操作
+    pub async fn redis_set_nx_ex_string(&self, key: &str, val: &str, ttl_seconds: u64) -> redis::RedisResult<bool> {
+        self.redis.set_nx_ex_string(key, val, ttl_seconds).await
     }
 
     // 获取 stream_group 配置

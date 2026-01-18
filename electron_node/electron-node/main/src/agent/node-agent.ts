@@ -18,6 +18,7 @@ import { HeartbeatHandler } from './node-agent-heartbeat';
 import { RegistrationHandler } from './node-agent-registration';
 import { JobProcessor } from './node-agent-job-processor';
 import { ResultSender } from './node-agent-result-sender';
+import { SessionAffinityManager } from '../pipeline-orchestrator/session-affinity-manager';
 
 export interface NodeStatus {
   online: boolean;
@@ -159,6 +160,12 @@ export class NodeAgent {
       null   // 不再使用 PostProcessCoordinator
     );
 
+    // 将ResultSender传递给InferenceService（用于发送原始job的结果）
+    if (this.resultSender && this.inferenceService) {
+      (this.inferenceService as any).setResultSender(this.resultSender);
+      logger.info({}, 'ResultSender passed to InferenceService for original job result sending');
+    }
+
     logger.info({ schedulerUrl: this.schedulerUrl }, 'Scheduler server URL configured');
   }
 
@@ -280,13 +287,15 @@ export class NodeAgent {
       switch (message.type) {
         case 'node_register_ack': {
           const ack = message as NodeRegisterAckMessage;
-          this.nodeId = ack.node_id;
-          // 更新所有handler的nodeId（确保它们有正确的nodeId和WebSocket连接）
-          this.heartbeatHandler.updateConnection(this.ws, this.nodeId);
-          this.registrationHandler.updateConnection(this.ws, this.nodeId);
-          this.jobProcessor.updateConnection(this.ws, this.nodeId);
-          this.resultSender.updateConnection(this.ws, this.nodeId);
-          logger.info({ nodeId: this.nodeId }, 'Node registered successfully');
+                    this.nodeId = ack.node_id;
+                    // 更新所有handler的nodeId（确保它们有正确的nodeId和WebSocket连接）
+                    this.heartbeatHandler.updateConnection(this.ws, this.nodeId);
+                    this.registrationHandler.updateConnection(this.ws, this.nodeId);
+                    this.jobProcessor.updateConnection(this.ws, this.nodeId);
+                    this.resultSender.updateConnection(this.ws, this.nodeId);
+                    // 更新SessionAffinityManager的nodeId（用于session affinity）
+                    SessionAffinityManager.getInstance().setNodeId(this.nodeId);
+                    logger.info({ nodeId: this.nodeId }, 'Node registered successfully');
           // 立刻补发一次心跳，把 installed_services/capability_state 尽快同步到 Scheduler
           this.heartbeatHandler.sendHeartbeatOnce().catch((error) => {
             logger.warn({ error }, 'Failed to send immediate heartbeat after node_register_ack');

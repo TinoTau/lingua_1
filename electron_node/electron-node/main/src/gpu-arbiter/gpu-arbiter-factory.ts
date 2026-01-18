@@ -58,8 +58,8 @@ export function loadGpuArbiterConfig(): GpuArbiterConfig {
       },
       SEMANTIC_REPAIR: {
         priority: 20,
-        maxWaitMs: 400,
-        busyPolicy: "SKIP",
+        maxWaitMs: 8000, // 增加到8秒，确保语义修复有足够时间等待GPU
+        busyPolicy: "WAIT", // 必须等待，不能跳过
       },
     },
   };

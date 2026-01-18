@@ -98,23 +98,16 @@ async fn check_and_handle_empty_result(
             send_missing_result(state, session_id, job, missing_result, trace_id).await;
             return true;
         } else if has_text && tts_empty {
-            // 即使有文本显示，如果音频为空，也需要标记出音频丢失的原因
+            // 有文本但无音频：只记录警告，不修改文本内容
+            // 音频丢失的判断和标记应该在Web客户端进行（检查tts_audio字段）
             warn!(
                 trace_id = %trace_id,
                 session_id = %session_id,
                 job_id = %job_id,
                 utterance_index = utterance_index,
-                "Translation result has text but no audio, marking audio loss reason"
+                "Translation result has text but no audio - Web client should handle this"
             );
-            
-            if let SessionMessage::TranslationResult { text_asr, text_translated, .. } = result {
-                if !text_asr.trim().is_empty() {
-                    *text_asr = format!("[音频丢失] {}", text_asr);
-                }
-                if !text_translated.trim().is_empty() {
-                    *text_translated = format!("[音频丢失] {}", text_translated);
-                }
-            }
+            // 不修改文本内容，让Web客户端判断音频是否为空
         }
     }
     false

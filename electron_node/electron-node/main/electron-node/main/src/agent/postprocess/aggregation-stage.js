@@ -90,13 +90,10 @@ class AggregationStage {
         const isManualCut = job.is_manual_cut || job.isManualCut || false;
         const isPauseTriggered = job.is_pause_triggered || job.isPauseTriggered || false;
         const isTimeoutTriggered = job.is_timeout_triggered || job.isTimeoutTriggered || false;
-        // 修复：检测是否合并了pendingSecondHalf，用于聚合决策
-        const hasPendingSecondHalfMerged = job.hasPendingSecondHalfMerged || false;
         const aggregatorResult = this.aggregatorManager.processUtterance(job.session_id, asrTextTrimmed, segments, langProbs, result.quality_score, true, // isFinal: P0 只处理 final 结果
         isManualCut, // 从 job 中提取
         mode, isPauseTriggered, // 从 job 中提取
-        isTimeoutTriggered, // 从 job 中提取
-        hasPendingSecondHalfMerged // 传递pendingSecondHalf合并标志
+        isTimeoutTriggered // 从 job 中提取
         );
         // 获取聚合后的文本
         let aggregatedText = asrTextTrimmed;
@@ -224,7 +221,7 @@ class AggregationStage {
             previousText = lastSentText || null;
         }
         else {
-            previousText = this.aggregatorManager?.getLastCommittedText(job.session_id, textAfterDeduplication) || null;
+            previousText = this.aggregatorManager?.getLastCommittedText(job.session_id, job.utterance_index) || null;
         }
         // 添加调试日志：记录previousText和textAfterDeduplication，用于排查去重问题
         logger_1.default.info({
@@ -253,8 +250,11 @@ class AggregationStage {
             finalAggregatedText = '';
         }
         else if (forwardMergeResult.shouldWaitForMerge) {
-            // 6-10字符：等待合并，暂时不发送
-            finalAggregatedText = '';
+            // 6-20字符：等待合并，但应该保留原文用于后续处理
+            // 修复：不应该设置为空字符串，应该保留原始文本
+            // 这样后续步骤（如翻译、去重检查、结果发送）可以使用原文，而不是等待合并
+            // 如果processedText为空（因为等待合并），使用textAfterDeduplication作为fallback
+            finalAggregatedText = forwardMergeResult.processedText || textAfterDeduplication;
         }
         else if (forwardMergeResult.shouldSendToSemanticRepair) {
             // > 10字符：发送给语义修复

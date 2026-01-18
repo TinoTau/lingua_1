@@ -22,6 +22,9 @@ export function buildJobResult(job: JobAssignMessage, ctx: JobContext): JobResul
     extra: {
       language_probability: ctx.asrResult?.language_probability || null,
       language_probabilities: ctx.languageProbabilities || null,
+      // 核销标记：如果所有结果都归并到其他job，标记为核销情况
+      is_consolidated: (ctx as any).isConsolidated || false,
+      consolidated_to_job_ids: (ctx as any).consolidatedToJobIds || undefined,
     },
     asr_quality_level: ctx.asrResult?.badSegmentDetection?.isBad ? 'bad' : 'good',
     quality_score: ctx.qualityScore || ctx.asrResult?.badSegmentDetection?.qualityScore,

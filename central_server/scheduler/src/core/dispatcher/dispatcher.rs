@@ -1,27 +1,21 @@
 use crate::node_registry::NodeRegistry;
 use crate::core::config::CoreServicesConfig;
-use crate::core::session_runtime::SessionRuntimeManager;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
 #[derive(Clone)]
 pub struct JobDispatcher {
+    #[allow(dead_code)] // 在 job_selection.rs 中使用
     pub(crate) node_registry: Arc<NodeRegistry>,
-    #[cfg(not(test))]
-    pub(crate) jobs: Arc<RwLock<std::collections::HashMap<String, crate::core::dispatcher::Job>>>,
-    #[cfg(test)]
+    #[doc(hidden)]
     pub jobs: Arc<RwLock<std::collections::HashMap<String, crate::core::dispatcher::Job>>>,
     pub(crate) lease_seconds: u64,
     pub(crate) reserved_ttl_seconds: u64,
     pub(crate) spread_enabled: bool,
     pub(crate) spread_window_ms: i64,
     pub(crate) core_services: CoreServicesConfig,
-    /// Session 运行时管理器（每个 session 一把锁）
-    pub(crate) session_manager: Arc<SessionRuntimeManager>,
     /// Phase 2：Redis 运行时（request_id bind/lock + node reserved）
-    #[cfg(not(test))]
-    pub(crate) phase2: Option<Arc<crate::phase2::Phase2Runtime>>,
-    #[cfg(test)]
+    #[doc(hidden)]
     pub phase2: Option<Arc<crate::phase2::Phase2Runtime>>,
 }
 
@@ -35,7 +29,6 @@ impl JobDispatcher {
             spread_enabled: false,
             spread_window_ms: 30_000,
             core_services: crate::core::config::CoreServicesConfig::default(),
-            session_manager: Arc::new(SessionRuntimeManager::new()),
             phase2: None,
         }
     }
@@ -52,7 +45,8 @@ impl JobDispatcher {
         s
     }
 
-    pub fn new_with_phase1_config(
+    /// 创建 JobDispatcher（带核心服务配置）
+    pub fn new_with_config(
         node_registry: Arc<NodeRegistry>,
         task_binding: crate::core::config::TaskBindingConfig,
         core_services: crate::core::config::CoreServicesConfig,

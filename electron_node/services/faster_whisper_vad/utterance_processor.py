@@ -153,6 +153,18 @@ def prepare_audio_with_context(
         audio_with_context = audio
     
     # 使用 VAD 检测有效语音段（Level 2断句）
+    # 记录VAD处理前的音频信息
+    original_audio_samples = len(audio_with_context)
+    original_audio_duration_ms = int((original_audio_samples / sample_rate) * 1000)
+    logger.info(
+        f"[{trace_id}] VAD处理前: "
+        f"original_samples={original_audio_samples} "
+        f"original_duration_ms={original_audio_duration_ms} "
+        f"sample_rate={sample_rate} "
+        f"use_context_buffer={use_context_buffer} "
+        f"'🔍 开始VAD检测（Level 2断句）'"
+    )
+    
     try:
         vad_segments = detect_speech(audio_with_context)
     except Exception as e:
@@ -163,27 +175,76 @@ def prepare_audio_with_context(
         )
         vad_segments = []
     
+    # 记录VAD检测结果详细信息
     if len(vad_segments) == 0:
         logger.warning(
-            f"[{trace_id}] trace_id={trace_id} "
-            f"'VAD未检测到语音段，使用完整音频进行ASR'"
+            f"[{trace_id}] VAD检测结果: "
+            f"segments_count=0 "
+            f"original_samples={original_audio_samples} "
+            f"original_duration_ms={original_audio_duration_ms} "
+            f"'⚠️ VAD未检测到语音段，使用完整音频进行ASR'"
         )
         processed_audio = audio_with_context
     else:
         # 提取有效语音段（去除静音部分）
         processed_audio_parts = []
-        for start, end in vad_segments:
-            processed_audio_parts.append(audio_with_context[start:end])
-        processed_audio = np.concatenate(processed_audio_parts)
+        segments_info = []
+        for seg_idx, (start, end) in enumerate(vad_segments):
+            segment_audio = audio_with_context[start:end]
+            processed_audio_parts.append(segment_audio)
+            segment_samples = end - start
+            segment_duration_ms = int((segment_samples / sample_rate) * 1000)
+            segment_start_ms = int((start / sample_rate) * 1000)
+            segment_end_ms = int((end / sample_rate) * 1000)
+            segments_info.append({
+                "index": seg_idx,
+                "start_sample": start,
+                "end_sample": end,
+                "start_ms": segment_start_ms,
+                "end_ms": segment_end_ms,
+                "samples": segment_samples,
+                "duration_ms": segment_duration_ms,
+            })
         
+        processed_audio = np.concatenate(processed_audio_parts)
+        processed_audio_samples = len(processed_audio)
+        processed_audio_duration_ms = int((processed_audio_samples / sample_rate) * 1000)
+        removed_samples = original_audio_samples - processed_audio_samples
+        removed_duration_ms = original_audio_duration_ms - processed_audio_duration_ms
+        removed_percentage = (removed_samples / original_audio_samples * 100) if original_audio_samples > 0 else 0
+        
+        # 记录VAD处理结果详细信息
         logger.info(
-            f"[{trace_id}] trace_id={trace_id} "
+            f"[{trace_id}] VAD检测结果: "
             f"segments_count={len(vad_segments)} "
-            f"original_samples={len(audio_with_context)} "
-            f"processed_samples={len(processed_audio)} "
-            f"removed_samples={len(audio_with_context) - len(processed_audio)} "
-            f"'VAD检测到{len(vad_segments)}个语音段，已提取有效语音'"
+            f"original_samples={original_audio_samples} "
+            f"original_duration_ms={original_audio_duration_ms} "
+            f"processed_samples={processed_audio_samples} "
+            f"processed_duration_ms={processed_audio_duration_ms} "
+            f"removed_samples={removed_samples} "
+            f"removed_duration_ms={removed_duration_ms} "
+            f"removed_percentage={removed_percentage:.2f}% "
+            f"'✅ VAD检测到{len(vad_segments)}个语音段，已提取有效语音'"
         )
+        
+        # 记录每个segment的详细信息
+        segments_details = ", ".join([
+            f"seg{i}: [{info['start_ms']}ms-{info['end_ms']}ms, {info['duration_ms']}ms]"
+            for i, info in enumerate(segments_info)
+        ])
+        logger.info(
+            f"[{trace_id}] VAD segments详情: {segments_details}"
+        )
+        
+        # 如果删除的音频比例很大（>30%），发出警告
+        if removed_percentage > 30:
+            logger.warning(
+                f"[{trace_id}] VAD过滤警告: "
+                f"removed_percentage={removed_percentage:.2f}% "
+                f"removed_samples={removed_samples} "
+                f"removed_duration_ms={removed_duration_ms} "
+                f"⚠️ VAD过滤掉了超过30%的音频，可能导致有效语音丢失"
+            )
         
         # 如果处理后的音频太短（< 0.5秒），使用原始音频
         MIN_AUDIO_SAMPLES = int(sample_rate * 0.5)  # 0.5秒

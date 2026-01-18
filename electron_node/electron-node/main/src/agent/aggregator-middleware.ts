@@ -310,35 +310,6 @@ export class AggregatorMiddleware {
     };
   }
 
-  /**
-   * 处理 JobResult（中间件入口）- 已废弃，保留用于兼容
-   * @param job 原始 job 请求
-   * @param result 推理服务返回的结果
-   * @returns 处理后的结果和是否应该发送
-   * @deprecated 使用 processASRResult 代替，在 NMT 之前处理
-   */
-  async process(
-    job: JobAssignMessage,
-    result: JobResult
-  ): Promise<AggregatorMiddlewareResult> {
-    // 已废弃：直接使用 processASRResult 的逻辑
-    const asrResult = {
-      text: result.text_asr || '',
-      segments: result.segments,
-      language_probability: result.extra?.language_probability ?? undefined,
-      language_probabilities: result.extra?.language_probabilities ?? undefined,
-      badSegmentDetection: { qualityScore: result.quality_score },
-    };
-    
-    const processResult = this.processASRResult(job, asrResult);
-    
-    return {
-      shouldSend: processResult.shouldProcess,
-      aggregatedText: processResult.aggregatedText,
-      action: processResult.action,
-      metrics: processResult.metrics,
-    };
-  }
 
   /**
    * 强制 flush session（stop/leave 时调用）

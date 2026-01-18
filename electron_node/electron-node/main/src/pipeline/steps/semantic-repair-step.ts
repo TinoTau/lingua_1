@@ -63,7 +63,7 @@ export async function runSemanticRepairStep(
   if (services.aggregatorManager) {
     const lastCommittedText = services.aggregatorManager.getLastCommittedText(
       job.session_id,
-      textToRepair
+      job.utterance_index
     );
     if (lastCommittedText && lastCommittedText.trim().length > 0) {
       const trimmedContext = lastCommittedText.trim();
@@ -113,6 +113,30 @@ export async function runSemanticRepairStep(
       ctx.semanticDecision = repairResult.decision;
       ctx.semanticRepairApplied = repairResult.semanticRepairApplied || false;
       ctx.semanticRepairConfidence = repairResult.confidence;
+
+      // 根据规范要求：当一条job完成SR修复后，应该更新committed text
+      // 无论文本是否改变（PASS或REPAIR），都应该更新，以便后续job能正确获取上下文
+      if (services.aggregatorManager) {
+        services.aggregatorManager.updateLastCommittedTextAfterRepair(
+          job.session_id,
+          job.utterance_index,
+          textToRepair,
+          ctx.repairedText
+        );
+        logger.info(
+          {
+            jobId: job.job_id,
+            sessionId: job.session_id,
+            utteranceIndex: job.utterance_index,
+            decision: repairResult.decision,
+            originalTextLength: textToRepair.length,
+            repairedTextLength: ctx.repairedText.length,
+            textChanged: ctx.repairedText !== textToRepair,
+            note: 'Updated recentCommittedText after semantic repair (PASS or REPAIR)',
+          },
+          'runSemanticRepairStep: Updated recentCommittedText with repaired text'
+        );
+      }
 
       logger.info(
         {

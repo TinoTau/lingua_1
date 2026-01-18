@@ -75,14 +75,10 @@ class AggregatorState {
      * @param isManualCut 是否为手动截断
      * @returns 处理结果
      */
-    processUtterance(text, segments, langProbs, qualityScore, isFinal = false, isManualCut = false, isPauseTriggered = false, isTimeoutTriggered = false, hasPendingSecondHalfMerged = false) {
+    processUtterance(text, segments, langProbs, qualityScore, isFinal = false, isManualCut = false, isPauseTriggered = false, isTimeoutTriggered = false) {
         const nowMs = Date.now();
         // 使用 utterance 处理器进行预处理
         const utteranceResult = this.utteranceProcessor.processUtterance(text, segments, langProbs, qualityScore, isFinal, isManualCut, isPauseTriggered, isTimeoutTriggered, this.sessionStartTimeMs, this.lastUtteranceEndTimeMs);
-        // 修复：如果合并了pendingSecondHalf，将标志传递给utteranceInfo
-        if (hasPendingSecondHalfMerged) {
-            utteranceResult.utteranceInfo.hasPendingSecondHalfMerged = true;
-        }
         const curr = utteranceResult.utteranceInfo;
         const startMs = utteranceResult.utteranceTime.startMs;
         const endMs = utteranceResult.utteranceTime.endMs;
@@ -152,8 +148,8 @@ class AggregatorState {
                     const previousCommitResult = this.commitExecutor.executeCommit(previousPendingText, this.tailBuffer, isFinal, isManualCut, qualityScore, gapMs, previousCommitDecision.commitByManualCut, previousCommitDecision.commitByTimeout);
                     const previousCommitText = previousCommitResult.commitText;
                     if (previousCommitText && previousCommitText.trim().length > 0) {
-                        // 更新上下文（记录到recentCommittedText，用于去重）
-                        this.contextManager.updateRecentCommittedText(previousCommitText);
+                        // 注意：不再在聚合阶段更新recentCommittedText
+                        // 只在语义修复后更新，确保recentCommittedText中只包含最终提交的文本
                         logger_1.default.info({
                             text: previousCommitText.substring(0, 50),
                             textLength: previousCommitText.length,
@@ -382,6 +378,18 @@ class AggregatorState {
      */
     getLastCommitQuality() {
         return this.contextManager.getLastCommitQuality();
+    }
+    /**
+     * 更新最后一个提交的文本（用于语义修复后更新）
+     */
+    updateLastCommittedTextAfterRepair(utteranceIndex, originalText, repairedText) {
+        this.contextManager.updateLastCommittedText(utteranceIndex, originalText, repairedText);
+    }
+    /**
+     * 获取上一个utterance的已提交文本（用于NMT服务的context_text）
+     */
+    getLastCommittedText(currentUtteranceIndex) {
+        return this.contextManager.getLastCommittedText(currentUtteranceIndex);
     }
 }
 exports.AggregatorState = AggregatorState;

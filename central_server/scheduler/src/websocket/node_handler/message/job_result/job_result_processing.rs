@@ -1,5 +1,6 @@
 use crate::core::AppState;
 use crate::messages::{JobError, common::ExtraResult};
+use tracing::warn;
 
 use super::job_result_deduplication::check_job_result_deduplication;
 use super::job_result_phase2::forward_job_result_if_needed;
@@ -98,6 +99,50 @@ pub(crate) async fn handle_job_result(
         attempt_id,
         &trace_id,
     ).await;
+
+    // 检查是否是空容器核销（NO_TEXT_ASSIGNED）
+    let is_no_text_assigned = extra.as_ref()
+        .and_then(|e| e.reason.as_deref())
+        .map(|r| r == "NO_TEXT_ASSIGNED")
+        .unwrap_or(false);
+
+    // 如果是空容器核销，特殊处理
+    if is_no_text_assigned {
+        info!(
+            trace_id = %trace_id,
+            job_id = %job_id,
+            session_id = %session_id,
+            utterance_index = utterance_index,
+            "收到空容器核销结果（NO_TEXT_ASSIGNED），跳过 group_manager 和 UI 事件"
+        );
+
+        // 设置 job.status = COMPLETED_NO_TEXT
+        if should_process_job {
+            state
+                .dispatcher
+                .update_job_status(&job_id, crate::core::dispatcher::JobStatus::CompletedNoText)
+                .await;
+            
+            // 释放节点槽位
+            if let Some(scheduler) = state.minimal_scheduler.as_ref() {
+                if let Err(e) = scheduler.complete_task(crate::services::minimal_scheduler::CompleteTaskRequest {
+                    job_id: job_id.clone(),
+                    node_id: node_id.clone(),
+                    status: "finished".to_string(),
+                }).await {
+                    warn!(
+                        job_id = %job_id,
+                        node_id = %node_id,
+                        error = %e,
+                        "空容器核销：任务完成失败（极简无锁调度服务）"
+                    );
+                }
+            }
+        }
+
+        // 跳过 group_manager 和 UI 事件，直接返回
+        return;
+    }
 
     // 只有在 should_process_job 为 true 时才执行 Job 相关操作
     if should_process_job {

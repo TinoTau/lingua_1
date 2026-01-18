@@ -72,8 +72,8 @@ class TranslationStage {
         // 获取上下文文本（用于NMT服务的context_text）
         // 重要：应该使用上一个utterance的原文（ASR文本，中文），而不是翻译文本（英文）
         // 因为NMT服务会将context_text和text拼接，如果context_text是英文翻译，会导致混合语言输入
-        // 传入 currentText 参数，确保不会返回当前句
-        let contextText = this.aggregatorManager?.getLastCommittedText(job.session_id, aggregatedText) || undefined;
+        // 修复：只按utteranceIndex顺序选择最近一条已提交的完整文本，不再基于文本内容匹配
+        let contextText = this.aggregatorManager?.getLastCommittedText(job.session_id, job.utterance_index) || undefined;
         // 额外检查：如果contextText和当前文本相同或非常相似，清空contextText
         // 优化：同时检查contextText是否是不完整句子，如果是则不使用
         if (contextText && aggregatedText) {

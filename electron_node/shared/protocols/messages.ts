@@ -36,6 +36,8 @@ export interface ResourceUsage {
   gpu_mem_percent?: number;
   mem_percent: number;
   running_jobs: number;
+  /** GPU队列长度（可选）：用于通知调度服务器节点忙，应该停止分配新任务 */
+  gpu_queue_length?: number;
 }
 
 /** 模型状态（用于 InstalledModel 等模型生命周期，不再用于服务能力） */

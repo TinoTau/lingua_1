@@ -26,6 +26,7 @@ pub struct LocklessRedisClient {
 
 impl LocklessRedisClient {
     /// 创建新的无锁 Redis 客户端
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub async fn new(handle: RedisHandle, redis_url: Option<String>) -> anyhow::Result<Self> {
         let client = if let Some(url) = redis_url {
             match RedisClient::open(url.as_str()) {
@@ -49,6 +50,7 @@ impl LocklessRedisClient {
     /// 
     /// Key: `scheduler:nodes:{node_id}`
     /// 返回: JSON 字符串或 None
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub async fn get_node_data(&self, node_id: &str) -> redis::RedisResult<Option<String>> {
         let key = format!("scheduler:nodes:{{node:{}}}", node_id);
         // 使用 HGETALL 获取所有字段，然后序列化为 JSON
@@ -59,6 +61,7 @@ impl LocklessRedisClient {
     /// 获取节点版本号（从 Redis Hash）
     /// 
     /// 更高效的版本号检查（只读取 version 字段）
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub async fn get_node_version(&self, node_id: &str) -> redis::RedisResult<Option<u64>> {
         let key = format!("scheduler:nodes:{{node:{}}}", node_id);
         // 使用 HGET 只读取 version 字段
@@ -74,6 +77,7 @@ impl LocklessRedisClient {
     /// 批量获取节点版本号
     /// 
     /// 使用 Pipeline 批量读取，减少网络往返
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub async fn get_node_versions_batch(
         &self,
         node_ids: &[String],
@@ -96,6 +100,7 @@ impl LocklessRedisClient {
     /// 获取 Pool 成员列表（从 Redis Set）
     /// 
     /// Key: `scheduler:pool:{pool_id}:members`
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub async fn get_pool_members(&self, pool_id: u16) -> redis::RedisResult<Vec<String>> {
         let key = format!("scheduler:pool:{}:members", pool_id);
         let mut cmd = redis::cmd("SMEMBERS");
@@ -104,6 +109,7 @@ impl LocklessRedisClient {
     }
 
     /// 批量获取 Pool 成员列表
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub async fn get_pool_members_batch(
         &self,
         pool_ids: &[u16],
@@ -126,6 +132,7 @@ impl LocklessRedisClient {
     /// 获取 Phase3 配置（从 Redis String）
     /// 
     /// Key: `scheduler:config:phase3`
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub async fn get_phase3_config(&self) -> redis::RedisResult<Option<String>> {
         let key = "scheduler:config:phase3";
         self.handle.get_string(key).await
@@ -134,6 +141,7 @@ impl LocklessRedisClient {
     /// 获取全局版本号
     /// 
     /// Key: `scheduler:version:{entity_type}`
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub async fn get_global_version(&self, entity_type: &str) -> redis::RedisResult<Option<u64>> {
         let key = format!("scheduler:version:{}", entity_type);
         match self.handle.get_string(&key).await {
@@ -183,6 +191,7 @@ impl LocklessRedisClient {
     /// 获取 Redis 客户端（用于 Pub/Sub 订阅）
     /// 
     /// 返回: Option<Arc<RedisClient>>（如果可用）
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub fn get_client_for_pubsub(&self) -> Option<Arc<RedisClient>> {
         match *self.client {
             Some(ref client) => Some(Arc::new(client.clone())),
@@ -193,6 +202,7 @@ impl LocklessRedisClient {
     /// 检查 Redis 连接健康状态
     /// 
     /// 返回: true 表示连接正常，false 表示连接异常
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub async fn health_check(&self) -> bool {
         let cmd = redis::cmd("PING");
         match self.handle.query::<String>(cmd).await {

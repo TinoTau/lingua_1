@@ -9,6 +9,7 @@ use tracing::warn;
 
 /// Redis 中存储的节点数据格式
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[allow(dead_code)] // 当前未使用，保留用于未来扩展
 pub struct RedisNodeData {
     pub node_id: String,
     pub status: String,  // "online", "offline"
@@ -42,6 +43,7 @@ pub struct RedisNodeResources {
 
 impl RedisNodeData {
     /// 转换为 NodeRuntimeSnapshot
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub fn to_snapshot(&self) -> Option<NodeRuntimeSnapshot> {
         // 解析 installed_services
         let installed_services: Vec<crate::messages::InstalledService> = self.installed_services
@@ -97,6 +99,7 @@ impl RedisNodeData {
     }
 
     /// 从 NodeRuntimeSnapshot 创建
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub fn from_snapshot(snapshot: &NodeRuntimeSnapshot, version: u64) -> Self {
         // 序列化 installed_services
         let installed_services: Vec<String> = snapshot.installed_services
@@ -139,6 +142,7 @@ impl RedisNodeData {
 
 /// Redis 中存储的 Phase3 配置格式
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[allow(dead_code)] // 当前未使用，保留用于未来扩展
 pub struct RedisPhase3Config {
     pub config: Phase3Config,
     pub version: u64,
@@ -146,6 +150,7 @@ pub struct RedisPhase3Config {
 }
 
 impl RedisPhase3Config {
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub fn from_config(config: Phase3Config, version: u64) -> Self {
         Self {
             config,

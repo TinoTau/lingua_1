@@ -75,6 +75,9 @@ pub struct Job {
     /// 是否由10秒超时触发（timeout触发）
     #[serde(skip_serializing_if = "std::ops::Not::not")]
     pub is_timeout_triggered: bool,
+    /// 预计处理时长（毫秒），用于动态计算 timeout
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub expected_duration_ms: Option<u64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -83,10 +86,15 @@ pub enum JobStatus {
     Assigned,
     Processing,
     Completed,
+    /// 空容器核销状态（NO_TEXT_ASSIGNED）
+    CompletedNoText,
     Failed,
 }
 
 pub(crate) fn is_zero_u32(v: &u32) -> bool {
     *v == 0
+}
+
+impl Job {
 }
 

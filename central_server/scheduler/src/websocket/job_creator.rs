@@ -23,7 +23,7 @@ pub(crate) async fn create_translation_jobs(
     audio_data: Vec<u8>,
     audio_format: String,
     sample_rate: u32,
-    paired_node_id: Option<String>,
+    _paired_node_id: Option<String>,
     mode: Option<String>,
     lang_a: Option<String>,
     lang_b: Option<String>,
@@ -300,17 +300,7 @@ async fn create_job_with_minimal_scheduler(
         "任务创建成功（使用极简无锁调度服务）"
     );
 
-    // Phase2: request_id 绑定由 Phase2 的 Redis 实现管理
-    // 如果 Phase2 可用，使用 Phase2 的 request_binding
-    if let Some(ref rt) = state.phase2 {
-        rt.set_request_binding(
-            &request_id,
-            &job_id,
-            node_id.as_deref(),
-            state.dispatcher.lease_seconds,
-            false, // 尚未分发到节点
-        ).await;
-    }
+    // 注意：不再使用 request_binding，幂等性通过 JobIdempotencyManager 管理
 
     // 构建 Job 对象
     let job = Job {
@@ -351,6 +341,7 @@ async fn create_job_with_minimal_scheduler(
         is_manual_cut,
         is_pause_triggered,
         is_timeout_triggered,
+        expected_duration_ms: None, // 默认不设置预计时长
     };
 
     // 写入 jobs 映射

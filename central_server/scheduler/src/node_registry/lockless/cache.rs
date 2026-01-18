@@ -121,6 +121,7 @@ pub struct LocklessCache {
 
 impl LocklessCache {
     /// 创建新的无锁缓存管理器
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub async fn new(
         redis_client: LocklessRedisClient,
         config: LocklessCacheConfig,
@@ -153,6 +154,7 @@ impl LocklessCache {
     /// 2. 异步检查版本号（非阻塞，超时 50ms）
     /// 3. 如果版本号匹配，直接返回（最快路径）
     /// 4. 如果版本号不匹配或缓存未命中，从 Redis 刷新（带穿透保护）
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub async fn get_node(&self, node_id: &str) -> Option<NodeRuntimeSnapshot> {
         let now_ms = chrono::Utc::now().timestamp_millis();
         
@@ -223,6 +225,7 @@ impl LocklessCache {
     }
 
     /// 检查 L2 缓存（降级模式使用，简化实现）
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     async fn check_l2_cache(&self, node_id: &str) -> Option<NodeRuntimeSnapshot> {
         let l2_cache = self.l2_nodes.read().await;
         let now_ms = chrono::Utc::now().timestamp_millis();
@@ -232,6 +235,7 @@ impl LocklessCache {
     }
 
     /// 从 Redis 刷新节点数据（带缓存穿透保护）
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub(crate) async fn refresh_node_from_redis(&self, node_id: &str) -> Option<NodeRuntimeSnapshot> {
         let start = Instant::now();
         
@@ -331,6 +335,7 @@ impl LocklessCache {
     /// 批量获取节点快照
     /// 
     /// 用于 Pool 内节点选择，并行获取多个节点的快照
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub async fn get_nodes_batch(&self, node_ids: &[String]) -> Vec<NodeRuntimeSnapshot> {
         // 并行获取所有节点快照（DashMap 支持并发读取）
         future::join_all(node_ids.iter().map(|node_id| self.get_node(node_id)))
@@ -346,6 +351,7 @@ impl LocklessCache {
     /// 1. 从 Redis 获取 Pool 成员列表（Set）
     /// 2. 并行获取所有节点的快照（DashMap 无锁读取）
     /// 3. 过滤符合条件的节点（本地过滤，无锁）
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub async fn select_nodes_for_pool(
         &self,
         pool_id: u16,
@@ -372,6 +378,7 @@ impl LocklessCache {
     }
 
     /// 检查节点是否满足要求（无锁本地检查）
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     fn matches_requirements(&self, node: &NodeRuntimeSnapshot, required_types: &[ServiceType]) -> bool {
         // 检查节点健康状态
         if node.health != NodeHealth::Online {
@@ -394,6 +401,7 @@ impl LocklessCache {
     }
 
     /// 获取 Phase3 配置（无锁读取）
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     pub async fn get_phase3_config(&self) -> Option<Arc<Phase3Config>> {
         // 检查本地缓存
         {
@@ -425,6 +433,7 @@ impl LocklessCache {
     }
 
     /// 从 Redis 刷新 Phase3 配置
+    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
     async fn refresh_phase3_config_from_redis(&self) -> Option<Arc<Phase3Config>> {
         let config_str = match self.redis_client.get_phase3_config().await {
             Ok(Some(s)) => s,

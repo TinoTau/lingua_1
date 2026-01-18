@@ -224,6 +224,14 @@ export interface SessionInitMessage {
 }
 
 // 客户端发送的消息类型
+export interface TtsStartedMessage {
+  type: 'tts_started';
+  session_id: string;
+  trace_id: string;
+  group_id: string;
+  ts_start_ms: number;
+}
+
 export interface TtsPlayEndedMessage {
   type: 'tts_play_ended';
   session_id: string;

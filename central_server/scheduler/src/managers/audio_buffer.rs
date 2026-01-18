@@ -124,60 +124,6 @@ impl AudioBufferManager {
         }
     }
 
-    /// 清空指定会话的缓冲区
-    pub async fn clear(&self, session_id: &str, utterance_index: u64) {
-        let key = format!("{}:{}", session_id, utterance_index);
-        let mut buffers = self.buffers.write().await;
-        buffers.remove(&key);
-    }
 
-    /// 测试辅助方法：清空所有缓冲区（仅用于测试）
-    #[cfg(test)]
-    pub async fn clear_all_for_session_for_test(&self, session_id: &str) {
-        let mut buffers = self.buffers.write().await;
-        buffers.retain(|key, _| !key.starts_with(&format!("{}:", session_id)));
-        let mut map = self.last_chunk_at_ms.write().await;
-        map.remove(session_id);
-    }
-
-
-    /// 获取指定会话的所有音频缓冲区状态（用于调试）
-    pub async fn get_session_buffers_status(&self, session_id: &str) -> Vec<(u64, usize)> {
-        let buffers = self.buffers.read().await;
-        let prefix = format!("{}:", session_id);
-        buffers
-            .iter()
-            .filter_map(|(key, buffer)| {
-                if key.starts_with(&prefix) {
-                    // 提取 utterance_index
-                    if let Some(index_str) = key.strip_prefix(&prefix) {
-                        if let Ok(utterance_index) = index_str.parse::<u64>() {
-                            return Some((utterance_index, buffer.total_size));
-                        }
-                    }
-                }
-                None
-            })
-            .collect()
-    }
-
-    /// 检查指定会话是否有残留的音频缓冲区（用于调试）
-    pub async fn has_residual_buffers(&self, session_id: &str, current_utterance_index: u64) -> bool {
-        let buffers = self.buffers.read().await;
-        let prefix = format!("{}:", session_id);
-        buffers
-            .iter()
-            .any(|(key, _)| {
-                if key.starts_with(&prefix) {
-                    if let Some(index_str) = key.strip_prefix(&prefix) {
-                        if let Ok(utterance_index) = index_str.parse::<u64>() {
-                            // 检查是否有其他utterance_index的缓冲区（不应该存在）
-                            return utterance_index != current_utterance_index;
-                        }
-                    }
-                }
-                false
-            })
-    }
 }
 

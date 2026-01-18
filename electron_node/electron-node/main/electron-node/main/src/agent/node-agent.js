@@ -14,6 +14,7 @@ const node_agent_heartbeat_1 = require("./node-agent-heartbeat");
 const node_agent_registration_1 = require("./node-agent-registration");
 const node_agent_job_processor_1 = require("./node-agent-job-processor");
 const node_agent_result_sender_1 = require("./node-agent-result-sender");
+const session_affinity_manager_1 = require("../pipeline-orchestrator/session-affinity-manager");
 class NodeAgent {
     constructor(inferenceService, modelManager, serviceRegistryManager, rustServiceManager, pythonServiceManager, semanticRepairServiceManager) {
         this.ws = null;
@@ -85,6 +86,11 @@ class NodeAgent {
         const dedupStage = this.inferenceService?.getDedupStage() || null;
         this.resultSender = new node_agent_result_sender_1.ResultSender(this.aggregatorMiddleware, dedupStage, null // 不再使用 PostProcessCoordinator
         );
+        // 将ResultSender传递给InferenceService（用于发送原始job的结果）
+        if (this.resultSender && this.inferenceService) {
+            this.inferenceService.setResultSender(this.resultSender);
+            logger_1.default.info({}, 'ResultSender passed to InferenceService for original job result sending');
+        }
         logger_1.default.info({ schedulerUrl: this.schedulerUrl }, 'Scheduler server URL configured');
     }
     async start() {
@@ -200,6 +206,8 @@ class NodeAgent {
                     this.registrationHandler.updateConnection(this.ws, this.nodeId);
                     this.jobProcessor.updateConnection(this.ws, this.nodeId);
                     this.resultSender.updateConnection(this.ws, this.nodeId);
+                    // 更新SessionAffinityManager的nodeId（用于session affinity）
+                    session_affinity_manager_1.SessionAffinityManager.getInstance().setNodeId(this.nodeId);
                     logger_1.default.info({ nodeId: this.nodeId }, 'Node registered successfully');
                     // 立刻补发一次心跳，把 installed_services/capability_state 尽快同步到 Scheduler
                     this.heartbeatHandler.sendHeartbeatOnce().catch((error) => {
