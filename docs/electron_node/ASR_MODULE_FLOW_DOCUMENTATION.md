@@ -22,14 +22,25 @@ ASR模块由以下核心组件组成：
 2. **`PipelineOrchestratorAudioProcessor`** (`pipeline-orchestrator/pipeline-orchestrator-audio-processor.ts`)
    - 音频聚合和格式转换的封装，调用AudioAggregator处理音频
 
-3. **`AudioAggregator`** (`pipeline-orchestrator/audio-aggregator.ts`)
-   - 音频聚合核心逻辑，处理音频缓冲、合并、切分
+3. **`AudioAggregator`** (`pipeline-orchestrator/audio-aggregator.ts`) - **已模块化重构**
+   - 音频聚合核心逻辑，协调各个子模块处理音频
+   - 子模块：
+     - `AudioAggregatorUtils`: 音频工具方法（能量计算、切分点检测）
+     - `AudioAggregatorMerger`: 音频合并和编码
+     - `AudioAggregatorStreamBatcher`: 流式音频批处理
+     - `AudioAggregatorJobContainer`: Job容器管理
+     - `AudioAggregatorPauseHandler`: 暂停触发处理
+     - `AudioAggregatorTimeoutHandler`: 超时处理
+     - `AudioAggregatorFinalizeHandler`: Finalize处理
 
 4. **`OriginalJobResultDispatcher`** (`pipeline-orchestrator/original-job-result-dispatcher.ts`)
    - 按原始job_id分发ASR结果，累积多个ASR批次，触发后续处理
 
 5. **`PipelineOrchestratorASRHandler`** (`pipeline-orchestrator/pipeline-orchestrator-asr.ts`)
    - ASR任务路由和处理，调用TaskRouter执行ASR识别
+
+6. **`SessionAffinityManager`** (`pipeline-orchestrator/session-affinity-manager.ts`)
+   - Session亲和性管理，记录sessionId到nodeId的映射
 
 ---
 
