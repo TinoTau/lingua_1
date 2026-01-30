@@ -22,22 +22,19 @@ pub struct CacheEvent {
 /// 
 /// 负责订阅 Redis 更新事件，并在收到事件时触发本地缓存失效
 #[derive(Clone)]
-#[allow(dead_code)] // 当前未使用，保留用于未来扩展
 pub struct PubSubHandler {
-    #[allow(dead_code)]
     redis_client: Arc<Option<RedisClient>>,
-    #[allow(dead_code)]
     subscription_handle: Arc<Mutex<Option<tokio::task::JoinHandle<()>>>>,
-    #[allow(dead_code)]
     event_tx: Arc<Mutex<Option<tokio::sync::mpsc::UnboundedSender<CacheEvent>>>>,
-    #[allow(dead_code)]
     degradation_manager: DegradationManager,
+    // 配置：用于替代硬编码
+    reconnect_delay_secs: u64,
+    keepalive_timeout_secs: u64,
 }
 
 impl PubSubHandler {
     /// 创建新的发布/订阅处理器
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub fn new(
+        pub fn new(
         redis_client: Arc<Option<RedisClient>>,
         degradation_manager: DegradationManager,
     ) -> Self {
@@ -54,8 +51,7 @@ impl PubSubHandler {
     /// 订阅以下通道：
     /// - `scheduler:events:node_update` - 节点更新事件
     /// - `scheduler:events:config_update` - 配置更新事件
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub async fn start_subscription<F>(&self, on_event: F) -> anyhow::Result<()>
+        pub async fn start_subscription<F>(&self, on_event: F) -> anyhow::Result<()>
     where
         F: Fn(CacheEvent) + Send + Sync + 'static,
     {
@@ -81,8 +77,8 @@ impl PubSubHandler {
                         warn!("Pub/Sub 订阅循环正常退出，重新连接...");
                     }
                     Err(e) => {
-                        error!(error = %e, "Pub/Sub 订阅循环出错，5 秒后重连...");
-                        tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
+                        error!(error = %e, "Pub/Sub 订阅循环出错，{} 秒后重连...", self.reconnect_delay_secs);
+                        tokio::time::sleep(tokio::time::Duration::from_secs(self.reconnect_delay_secs)).await;
                     }
                 }
             }
@@ -98,8 +94,7 @@ impl PubSubHandler {
     /// 
     /// 使用 Redis Pub/Sub 订阅节点更新事件，实现缓存失效通知
     /// 简化实现：使用轮询检查版本号替代 Pub/Sub（避免复杂的连接管理）
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    async fn subscribe_loop<F>(
+        async fn subscribe_loop<F>(
         _client: RedisClient,
         _on_event: &F,
         _degradation_manager: &DegradationManager,
@@ -113,13 +108,12 @@ impl PubSubHandler {
         // 如果需要实时更新，可以在心跳更新时直接更新本地缓存
         
         // 保持连接活跃（防止编译错误）
-        tokio::time::sleep(tokio::time::Duration::from_secs(3600)).await;
+        tokio::time::sleep(tokio::time::Duration::from_secs(self.keepalive_timeout_secs)).await;
         Ok(())
     }
 
     /// 停止订阅任务
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub async fn stop_subscription(&self) {
+        pub async fn stop_subscription(&self) {
         let mut handle_guard = self.subscription_handle.lock().await;
         if let Some(handle) = handle_guard.take() {
             handle.abort();
@@ -131,8 +125,7 @@ impl PubSubHandler {
     }
 
     /// 检查订阅是否活跃
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub async fn is_active(&self) -> bool {
+        pub async fn is_active(&self) -> bool {
         let handle_guard = self.subscription_handle.lock().await;
         handle_guard.is_some()
     }

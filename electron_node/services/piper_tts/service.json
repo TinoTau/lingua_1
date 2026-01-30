@@ -1,0 +1,14 @@
+{
+  "id": "piper-tts",
+  "name": "Piper TTS",
+  "type": "tts",
+  "device": "gpu",
+  "port": 5009,
+  "exec": {
+    "command": "python",
+    "args": ["piper_http_server.py"],
+    "cwd": "."
+  },
+  "version": "1.0.0",
+  "description": "Text-to-Speech service using Piper"
+}

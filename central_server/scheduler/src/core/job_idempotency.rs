@@ -13,20 +13,12 @@ pub type JobKey = String;
 pub enum JobType {
     /// 翻译任务（ASR + NMT + TTS）
     Translation,
-    /// 仅 ASR
-    #[allow(dead_code)]
-    AsrOnly,
-    /// 仅翻译（ASR + NMT）
-    #[allow(dead_code)]
-    TranslationOnly,
 }
 
 impl JobType {
     pub fn as_str(&self) -> &'static str {
         match self {
             JobType::Translation => "translation",
-            JobType::AsrOnly => "asr_only",
-            JobType::TranslationOnly => "translation_only",
         }
     }
 }
@@ -68,7 +60,7 @@ pub fn make_job_key(
 #[derive(Clone)]
 pub struct JobIdempotencyManager {
     /// Phase2 运行时（可选）
-    phase2: Option<std::sync::Arc<crate::phase2::Phase2Runtime>>,
+    phase2: Option<std::sync::Arc<crate::redis_runtime::Phase2Runtime>>,
     /// TTL（毫秒），默认 5 分钟
     ttl_ms: i64,
 }
@@ -81,7 +73,7 @@ impl JobIdempotencyManager {
         }
     }
 
-    pub fn set_phase2(&mut self, phase2: Option<std::sync::Arc<crate::phase2::Phase2Runtime>>) {
+    pub fn set_phase2(&mut self, phase2: Option<std::sync::Arc<crate::redis_runtime::Phase2Runtime>>) {
         self.phase2 = phase2;
     }
 

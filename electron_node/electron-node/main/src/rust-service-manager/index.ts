@@ -5,8 +5,8 @@ import { RustServiceStatus } from './types';
 import { findProjectPaths } from './project-root';
 import { startRustProcess, stopRustProcess } from './process-manager';
 import { waitForServiceReady } from './service-health';
-import { loadServiceConfigFromJson } from '../utils/service-config-loader';
 import * as path from 'path';
+import { getServiceRegistry } from '../service-layer';
 
 export type { RustServiceStatus };
 export { RustServiceManager };
@@ -56,35 +56,18 @@ class RustServiceManager {
         this.status.lastError = null;
 
         try {
-            // 尝试从 service.json 读取配置
-            let servicePath = this.projectPaths.servicePath;
-            let port = this.port;
-
-            try {
-                let servicesDir: string;
-                try {
-                    const { app } = require('electron');
-                    if (app && app.getPath) {
-                        const userData = app.getPath('userData');
-                        servicesDir = path.join(userData, 'services');
-                    } else {
-                        servicesDir = path.join(this.projectPaths.projectRoot, 'electron_node', 'services');
-                    }
-                } catch {
-                    servicesDir = path.join(this.projectPaths.projectRoot, 'electron_node', 'services');
-                }
-
-                const serviceConfig = await loadServiceConfigFromJson('node-inference', servicesDir);
-                if (serviceConfig) {
-                    logger.info({}, 'Using service.json configuration for Rust service');
-                    servicePath = serviceConfig.installPath;
-                    port = serviceConfig.platformConfig.default_port;
-                }
-            } catch (error) {
-                logger.debug({ error }, 'Failed to load service.json for Rust service, using fallback config');
+            // 从服务发现获取配置
+            const registry = getServiceRegistry();
+            if (!registry || !registry.has('node-inference')) {
+                throw new Error('node-inference service not found in registry');
             }
 
-            const logFile = require('path').join(this.projectPaths.logDir, 'node-inference.log');
+            const serviceEntry = registry.get('node-inference')!;
+            logger.info({}, 'Loading Rust service configuration from service discovery');
+            
+            const servicePath = serviceEntry.installPath;
+            const port = serviceEntry.def.port || this.port;
+            const logFile = path.join(this.projectPaths.logDir, 'node-inference.log');
 
             // 启动服务进程
             this.process = startRustProcess(

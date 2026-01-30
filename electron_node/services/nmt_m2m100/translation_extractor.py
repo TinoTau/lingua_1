@@ -22,12 +22,50 @@ from pattern_generator import generate_truncated_patterns
 TRUNCATED_PATTERNS = generate_truncated_patterns(SEPARATOR_TRANSLATIONS)
 
 
-def find_sentinel_position(out: str, truncated_patterns: list) -> Tuple[int, Optional[str]]:
-    """查找哨兵序列在完整翻译中的位置"""
+def find_sentinel_position(out: str, truncated_patterns: list, use_last_sentinel: bool = False) -> Tuple[int, Optional[str]]:
+    """
+    查找哨兵序列在完整翻译中的位置。
+    use_last_sentinel: 当有 context 时置 True，用最后一个哨兵位置提取当前句，避免前半句被丢弃（如 Job7「10秒鐘之後」）。
+    """
     sentinel_pos = -1
     found_sentinel = None
-    
-    # 第一步：查找完整的哨兵序列（带Unicode括号）
+
+    if use_last_sentinel:
+        # 有 context 时：取最后一个哨兵位置，使提取的是「当前句」而非「第一个哨兵之后整段」
+        best_pos = -1
+        best_sentinel = None
+        for sep_variant in SEPARATOR_TRANSLATIONS:
+            pos = out.rfind(sep_variant)
+            if pos != -1:
+                candidate = pos + len(sep_variant)
+                if candidate > best_pos:
+                    best_pos = candidate
+                    best_sentinel = sep_variant
+        for marker_variant in SEP_MARKER_VARIANTS:
+            pos = out.rfind(marker_variant)
+            if pos != -1:
+                candidate = pos + len(marker_variant)
+                if candidate > best_pos:
+                    best_pos = candidate
+                    best_sentinel = marker_variant
+        for pattern in truncated_patterns:
+            pos = out.rfind(pattern)
+            if pos != -1:
+                candidate = pos + len(pattern)
+                if candidate > best_pos:
+                    best_pos = candidate
+                    best_sentinel = pattern
+        if best_pos != -1 and best_sentinel:
+            sentinel_pos = best_pos
+            found_sentinel = best_sentinel
+            before_start = max(0, best_pos - len(best_sentinel))
+            print(f"[NMT Service] (use_last_sentinel) Found last sentinel -> extracted start at {sentinel_pos}")
+            print(f"[NMT Service] Text before last sentinel: '{out[:before_start][-50:]}'")
+            print(f"[NMT Service] Text after last sentinel (first 100 chars): '{out[sentinel_pos:sentinel_pos+100]}'")
+            return sentinel_pos, found_sentinel
+        return -1, None
+
+    # 原有逻辑：取第一个哨兵位置
     for sep_variant in SEPARATOR_TRANSLATIONS:
         pos = out.find(sep_variant)
         if pos != -1:
@@ -37,8 +75,7 @@ def find_sentinel_position(out: str, truncated_patterns: list) -> Tuple[int, Opt
             print(f"[NMT Service] Text before sentinel: '{out[:pos][-50:]}'")
             print(f"[NMT Service] Text after sentinel (first 100 chars): '{out[sentinel_pos:sentinel_pos+100]}'")
             return sentinel_pos, found_sentinel
-    
-    # 第二步：如果完整哨兵序列未找到，查找纯文本SEP_MARKER（NMT可能将Unicode括号翻译掉了）
+
     for marker_variant in SEP_MARKER_VARIANTS:
         pos = out.find(marker_variant)
         if pos != -1:
@@ -48,8 +85,7 @@ def find_sentinel_position(out: str, truncated_patterns: list) -> Tuple[int, Opt
             print(f"[NMT Service] Text before SEP_MARKER: '{out[:pos][-50:]}'")
             print(f"[NMT Service] Text after SEP_MARKER (first 100 chars): '{out[sentinel_pos:sentinel_pos+100]}'")
             return sentinel_pos, found_sentinel
-    
-    # 第三步：如果仍然未找到，检查是否SEP_MARKER被截断了
+
     for pattern in truncated_patterns:
         pos = out.find(pattern)
         if pos != -1:
@@ -58,26 +94,19 @@ def find_sentinel_position(out: str, truncated_patterns: list) -> Tuple[int, Opt
             print(f"[NMT Service] WARNING: Found truncated SEP_MARKER pattern '{pattern}' at position {pos}, extracted text will start at position {sentinel_pos}")
             print(f"[NMT Service] Text before truncated pattern: '{out[:pos][-50:]}'")
             print(f"[NMT Service] Text after truncated pattern (first 100 chars): '{out[sentinel_pos:sentinel_pos+100]}'")
-            
-            # 验证提取位置是否正确：检查提取的文本是否合理
             extracted_preview = out[sentinel_pos:sentinel_pos+20].strip()
             if len(extracted_preview) > 0:
                 print(f"[NMT Service] Extracted text preview: '{extracted_preview}'")
-            
-            # 如果模式很短（如单个字符），需要额外验证
             if len(pattern) <= 2:
-                # 检查提取的文本是否以空格开头，且后面跟着合理的文本
                 if sentinel_pos < len(out) and out[sentinel_pos:sentinel_pos+1] == ' ':
-                    # 跳过空格，检查后面的文本是否合理
                     next_text_start = sentinel_pos + 1
                     if next_text_start < len(out):
                         next_text = out[next_text_start:next_text_start+10].strip()
                         if len(next_text) > 0:
-                            # 如果后面有合理的文本，使用跳过空格后的位置
                             sentinel_pos = next_text_start
                             print(f"[NMT Service] Adjusted sentinel_pos to skip space after short pattern, new pos={sentinel_pos}")
             return sentinel_pos, found_sentinel
-    
+
     return -1, None
 
 
@@ -285,6 +314,55 @@ def filter_quotes_noise(text: str) -> str:
     return text
 
 
+# 兜底路径统一日志前缀，便于 grep 定位异常
+_EXTRACTION_FALLBACK_PREFIX = "[NMT Service] EXTRACTION_FALLBACK"
+
+
+def _fallback_full_or_last_segment(out: str) -> Tuple[str, str]:
+    """兜底：从完整输出取最后一段，或直接返回完整输出。返回 (final_output, extraction_mode)。"""
+    last_seg = try_extract_last_segment_from_full(out)
+    if last_seg:
+        return last_seg, "FULL_ONLY_LAST_SEGMENT"
+    return out, "FULL_ONLY"
+
+
+def try_extract_last_segment_from_full(out: str) -> Optional[str]:
+    """
+    当即将返回 FULL_ONLY（完整译文含上下文）时，尝试用分隔符/SEP_MARKER 变体分割，
+    取最后一段作为当前句译文，避免合并译文返回给客户端。
+    若找不到分隔符或最后一段为空，返回 None。
+    """
+    if not out or not out.strip():
+        print(f"{_EXTRACTION_FALLBACK_PREFIX} last_segment_from_full=skip reason=empty_out", flush=True)
+        return None
+    last_pos = -1
+    for sep_variant in SEPARATOR_TRANSLATIONS:
+        pos = out.rfind(sep_variant)
+        if pos != -1:
+            candidate = pos + len(sep_variant)
+            if candidate > last_pos:
+                last_pos = candidate
+    for marker_variant in SEP_MARKER_VARIANTS:
+        pos = out.rfind(marker_variant)
+        if pos != -1:
+            candidate = pos + len(marker_variant)
+            if candidate > last_pos:
+                last_pos = candidate
+    if last_pos <= 0:
+        print(f"{_EXTRACTION_FALLBACK_PREFIX} last_segment_from_full=no_separator out_len={len(out)} out_preview={repr(out[:80])}", flush=True)
+        return None
+    segment = out[last_pos:].strip()
+    if not segment or len(segment) < 2:
+        print(f"{_EXTRACTION_FALLBACK_PREFIX} last_segment_from_full=empty_after_sep out_len={len(out)}", flush=True)
+        return None
+    segment = cleanup_sentinel_sequences(segment)
+    if not segment or not segment.strip():
+        print(f"{_EXTRACTION_FALLBACK_PREFIX} last_segment_from_full=cleaned_empty out_len={len(out)}", flush=True)
+        return None
+    print(f"{_EXTRACTION_FALLBACK_PREFIX} last_segment_from_full=ok segment_len={len(segment)} segment_preview={repr(segment[:80])}", flush=True)
+    return segment
+
+
 def fix_separator_char_start(final_output: str, out: str) -> str:
     """修复以分隔符字符开头的提取结果"""
     if not final_output or len(final_output) <= 1:
@@ -324,6 +402,38 @@ def fix_separator_char_start(final_output: str, out: str) -> str:
     return final_output
 
 
+def fix_comma_start_extraction(final_output: str, out: str) -> str:
+    """
+    若提取结果以逗号开头（如 \", the system would not...\"），说明当前句前半可能被合并到 context 译文里。
+    在完整译文 out 中找第一个哨兵前的片段，若存在以逗号结尾的短句（如 \"After 10 seconds,\"），则拼到提取结果前。
+    """
+    if not final_output or len(final_output) < 2:
+        return final_output
+    s = final_output.strip()
+    if not s.startswith(",") and not (s.startswith(" ") and s.lstrip().startswith(",")):
+        return final_output
+    # 取第一个哨兵位置，得到「第一个哨兵之前」的文本
+    first_pos, _ = find_sentinel_position(out, TRUNCATED_PATTERNS, use_last_sentinel=False)
+    if first_pos <= 0:
+        return final_output
+    before_sentinel = out[:first_pos].strip()
+    if not before_sentinel:
+        return final_output
+    # 取最后一个以逗号结尾的短片段（约 8–80 字符），避免整段 context 译文
+    max_prefix = 80
+    for n in range(min(max_prefix, len(before_sentinel)), 7, -1):
+        suffix = before_sentinel[-n:].strip()
+        if suffix.endswith(",") and len(suffix) >= 8:
+            # 去掉提取结果前的逗号/空格
+            rest = s.lstrip().lstrip(",").strip()
+            if rest:
+                repaired = suffix + " " + rest
+                print(f"[NMT Service] fix_comma_start: prepended prefix '{suffix[:50]}...' -> '{repaired[:80]}...'")
+                return repaired
+            break
+    return final_output
+
+
 def extract_translation(
     out: str,
     context_text: Optional[str],
@@ -347,8 +457,8 @@ def extract_translation(
     print(f"[NMT Service] WARNING: Output contains translation of BOTH context_text and text. Extracting only current sentence translation.")
     
     try:
-        # 方法1：使用哨兵序列（Sentinel Sequence）来准确识别和提取当前句翻译
-        sentinel_pos, found_sentinel = find_sentinel_position(out, TRUNCATED_PATTERNS)
+        # 方法1：有 context 时优先用「最后一个」哨兵位置，避免当前句前半（如「10秒鐘之後」）被丢弃
+        sentinel_pos, found_sentinel = find_sentinel_position(out, TRUNCATED_PATTERNS, use_last_sentinel=True)
         
         if sentinel_pos != -1:
             final_output = extract_with_sentinel(out, sentinel_pos)
@@ -383,11 +493,11 @@ def extract_translation(
                 extraction_confidence = "MEDIUM"
                 print(f"[NMT Service] Fallback successful: Translated current text without context: '{final_output[:100]}{'...' if len(final_output) > 100 else ''}'")
             else:
-                # 兜底策略2：使用完整翻译（虽然包含context，但至少保证有结果）
-                print(f"[NMT Service] Fallback: Single translation also empty, using full output as last resort")
-                final_output = out
-                extraction_mode = "FULL_ONLY"
+                # 兜底策略2：先尝试从完整输出取「最后一段」，再回退到完整输出
+                final_output, extraction_mode = _fallback_full_or_last_segment(out)
                 extraction_confidence = "LOW"
+                print(f"{_EXTRACTION_FALLBACK_PREFIX} mode={extraction_mode} reason=single_translation_empty out_len={len(out)}"
+                      f"{' segment_len=' + str(len(final_output)) if extraction_mode == 'FULL_ONLY_LAST_SEGMENT' else ' out_preview=' + repr(out[:80])}", flush=True)
         
         # 修复：不应该因为提取结果为空或太短就使用完整输出
         # 改进：更严格的长度检查，避免截断的翻译被返回
@@ -410,11 +520,15 @@ def extract_translation(
         # 后处理：验证提取的文本是否正确
         final_output = fix_separator_char_start(final_output, out)
         
+        # 启发式：若提取结果以逗号开头（如 ", the system would not..."），尝试从完整译文第一个哨兵前补一段
+        final_output = fix_comma_start_extraction(final_output, out)
+        
     except Exception as e:
-        print(f"[NMT Service] WARNING: Failed to extract current sentence translation: {e}, using full output")
-        final_output = out
-        extraction_mode = "FULL_ONLY"
+        print(f"[NMT Service] WARNING: Failed to extract current sentence translation: {e}", flush=True)
+        final_output, extraction_mode = _fallback_full_or_last_segment(out)
         extraction_confidence = "LOW"
+        print(f"{_EXTRACTION_FALLBACK_PREFIX} mode={extraction_mode} reason=exception exception={repr(str(e)[:60])} out_len={len(out)}"
+              f"{' segment_len=' + str(len(final_output)) if extraction_mode == 'FULL_ONLY_LAST_SEGMENT' else ' out_preview=' + repr(out[:80])}", flush=True)
     
     # 过滤只包含标点符号的翻译结果
     final_output = filter_punctuation_only(final_output)

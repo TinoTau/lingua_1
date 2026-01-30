@@ -95,7 +95,6 @@ pub(super) async fn handle_room_join(
             let error_code = match e {
                 crate::managers::room_manager::RoomError::RoomNotFound => "ROOM_NOT_FOUND",
                 crate::managers::room_manager::RoomError::AlreadyInRoom => "ALREADY_IN_ROOM",
-                crate::managers::room_manager::RoomError::InvalidRoomCode => "INVALID_ROOM_CODE",
             };
             let error_msg = SessionMessage::RoomError {
                 code: error_code.to_string(),

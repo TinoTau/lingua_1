@@ -251,16 +251,10 @@ async def repair_unified(request: RepairRequest):
     elif lang == 'en':
         return await processor_wrapper.handle_request("en_repair", request)
     else:
-        # 不支持的语言，返回PASS
-        return RepairResponse(
-            request_id=request.job_id or str(uuid.uuid4()),
-            decision="PASS",
-            text_out=request.text_in,
-            confidence=1.0,
-            diff=[],
-            reason_codes=["UNSUPPORTED_LANGUAGE"],
-            process_time_ms=0,
-            processor_name="none"
+        # 不支持的语言：返回 400，由节点端 job 失败并回传调度重分配
+        raise HTTPException(
+            status_code=400,
+            detail={"code": "SEM_REPAIR_UNSUPPORTED_LANG", "reason": "UNSUPPORTED_LANGUAGE"},
         )
 
 

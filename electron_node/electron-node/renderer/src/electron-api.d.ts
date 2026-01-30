@@ -128,6 +128,45 @@ export interface ElectronAPI {
   }>>;
   startSemanticRepairService: (serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => Promise<{ success: boolean; error?: string }>;
   stopSemanticRepairService: (serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => Promise<{ success: boolean; error?: string }>;
+
+  // 新的统一服务管理 API（使用服务发现）
+  serviceDiscovery: {
+    list: () => Promise<Array<{
+      id: string;
+      name: string;
+      type: string;
+      status: 'stopped' | 'starting' | 'running' | 'stopping' | 'error';
+      pid?: number;
+      port?: number;
+      lastError?: string;
+      installPath: string;
+    }>>;
+    refresh: () => Promise<Array<{
+      id: string;
+      name: string;
+      type: string;
+      status: 'stopped' | 'starting' | 'running' | 'stopping' | 'error';
+      pid?: number;
+      port?: number;
+      lastError?: string;
+      installPath: string;
+    }>>;
+    start: (serviceId: string) => Promise<{ success: boolean; error?: string }>;
+    stop: (serviceId: string) => Promise<{ success: boolean; error?: string }>;
+    get: (serviceId: string) => Promise<{
+      id: string;
+      name: string;
+      type: string;
+      status: 'stopped' | 'starting' | 'running' | 'stopping' | 'error';
+      pid?: number;
+      port?: number;
+      lastError?: string;
+      installPath: string;
+    } | null>;
+  };
+
+  // 获取所有服务的元数据
+  getAllServiceMetadata: () => Promise<Record<string, any>>;
 }
 
 declare global {

@@ -1,9 +1,6 @@
 use crate::core::AppState;
-use crate::messages::ServiceType;
-use axum::extract::Query;
 use axum::response::IntoResponse;
-use serde::{Deserialize, Serialize};
-use std::str::FromStr;
+// ServiceType, Query, Deserialize, Serialize, FromStr 已删除（phase3_simulate API已删除）
 
 // 健康检查
 pub async fn health_check() -> &'static str {
@@ -237,38 +234,33 @@ pub async fn get_cluster_stats(
         });
     }
 
-    // 获取节点列表和服务状态（从本地 NodeRegistry 和 Redis）
+    // 获取节点列表和服务状态（从 Redis 直查）
     let (total_nodes, online_nodes, ready_nodes, nodes_list) = {
-        // 使用 ManagementRegistry（统一管理锁）
-        let mgmt = state.node_registry.management_registry.read().await;
-        let total = mgmt.nodes.len();
-        let online = mgmt.nodes.values().filter(|state| state.node.online).count();
-        
-        // 从 Redis 读取节点能力信息来统计 ready 节点
-        let ready = if let Some(rt) = state.phase2.as_ref() {
-            let mut ready_count = 0;
-            for node_state in mgmt.nodes.values() {
-                if !node_state.node.online {
-                    continue;
-                }
-                // 检查所有核心服务是否就绪（从 Redis 读取）
-                let has_asr = rt.has_node_capability(&node_state.node.node_id, &crate::messages::ServiceType::Asr).await;
-                let has_nmt = rt.has_node_capability(&node_state.node.node_id, &crate::messages::ServiceType::Nmt).await;
-                let has_tts = rt.has_node_capability(&node_state.node.node_id, &crate::messages::ServiceType::Tts).await;
-                if has_asr && has_nmt && has_tts {
-                    ready_count += 1;
-                }
+        // 使用 Redis 直查获取所有节点
+        let nodes = match state.node_registry.list_sched_nodes().await {
+            Ok(n) => n,
+            Err(e) => {
+                tracing::warn!(error = %e, "查询节点列表失败");
+                vec![]
             }
-            ready_count
-        } else {
-            // 如果没有 Phase2Runtime，无法从 Redis 读取，返回 0
-            0
         };
         
+        let total = nodes.len();
+        let online = nodes.iter().filter(|n| n.online).count();
+        
+        // 统计 ready 节点（拥有所有核心服务）
+        let ready = nodes.iter().filter(|n| {
+            if !n.online { return false; }
+            let has_asr = n.installed_services.iter().any(|s| matches!(s.r#type, crate::messages::ServiceType::Asr));
+            let has_nmt = n.installed_services.iter().any(|s| matches!(s.r#type, crate::messages::ServiceType::Nmt));
+            let has_tts = n.installed_services.iter().any(|s| matches!(s.r#type, crate::messages::ServiceType::Tts));
+            has_asr && has_nmt && has_tts
+        }).count();
+        
+        // 构建节点列表
         let nodes_list: Vec<NodeInfo> = {
             let mut result = Vec::new();
-            for node_state in mgmt.nodes.values() {
-                let node = &node_state.node;
+            for node in nodes.iter() {
                 // 构建服务状态列表
                 let services: Vec<ServiceStatusInfo> = node.installed_services.iter().map(|s| {
                     ServiceStatusInfo {
@@ -278,40 +270,34 @@ pub async fn get_cluster_stats(
                     }
                 }).collect();
                 
-                // 构建能力状态列表（从 Redis 读取）
-                let capabilities: Vec<CapabilityStatusInfo> = if let Some(rt) = state.phase2.as_ref() {
-                    let mut caps = Vec::new();
-                    for service_type in &[
-                        crate::messages::ServiceType::Asr,
-                        crate::messages::ServiceType::Nmt,
-                        crate::messages::ServiceType::Tts,
-                        crate::messages::ServiceType::Tone,
-                        crate::messages::ServiceType::Semantic,
-                    ] {
-                        let ready = rt.has_node_capability(&node.node_id, service_type).await;
-                        caps.push(CapabilityStatusInfo {
-                            service_type: format!("{:?}", service_type),
-                            ready,
-                            reason: None, // Redis 中不存储 reason
-                            ready_impl_ids: None, // Redis 中不存储 ready_impl_ids
-                        });
+                // 构建能力状态列表（基于 installed_services）
+                let capabilities: Vec<CapabilityStatusInfo> = [
+                    crate::messages::ServiceType::Asr,
+                    crate::messages::ServiceType::Nmt,
+                    crate::messages::ServiceType::Tts,
+                    crate::messages::ServiceType::Tone,
+                    crate::messages::ServiceType::Semantic,
+                ].iter().map(|service_type| {
+                    let ready = node.installed_services.iter().any(|s| &s.service_id == &format!("{:?}", service_type));
+                    CapabilityStatusInfo {
+                        service_type: format!("{:?}", service_type),
+                        ready,
+                        reason: None,
+                        ready_impl_ids: None,
                     }
-                    caps
-                } else {
-                    Vec::new()
-                };
+                }).collect();
             
                 result.push(NodeInfo {
                     node_id: node.node_id.clone(),
-                    platform: node.platform.clone(),
+                    platform: "".to_string(), // SchedNodeInfo 中没有 platform
                     online: node.online,
-                    status: format!("{:?}", node.status),
+                    status: node.status.clone(),
                     cpu_usage: node.cpu_usage,
                     gpu_usage: node.gpu_usage,
                     memory_usage: node.memory_usage,
                     current_jobs: node.current_jobs,
-                    max_concurrent_jobs: node.max_concurrent_jobs,
-                    last_heartbeat: node.last_heartbeat.timestamp_millis(),
+                    max_concurrent_jobs: node.max_concurrency as usize,
+                    last_heartbeat: node.last_heartbeat_ts,
                     services,
                     capabilities,
                 });
@@ -364,163 +350,10 @@ pub async fn get_cluster_stats(
         .into_response()
 }
 
-#[derive(serde::Serialize)]
-pub struct Phase3PoolsResponse {
-    config: crate::core::config::Phase3Config,
-    pools: Vec<Phase3PoolEntry>,
-}
+// Phase3 相关 API 已删除
+// 使用 PoolService 提供新的 Pool API
 
-#[derive(serde::Serialize)]
-pub struct Phase3PoolEntry {
-    pool_id: u16,
-    #[serde(skip_serializing_if = "String::is_empty")]
-    pool_name: String,
-    #[serde(skip_serializing_if = "Vec::is_empty")]
-    pool_required_services: Vec<String>,
-    total_nodes: usize,
-    online_nodes: usize,
-    ready_nodes: usize,
-    core_services_installed: std::collections::HashMap<String, usize>,
-    core_services_ready: std::collections::HashMap<String, usize>,
-    sample_node_ids: Vec<String>,
-}
-
-pub async fn get_phase3_pools(
-    axum::extract::State(state): axum::extract::State<AppState>,
-) -> axum::Json<Phase3PoolsResponse> {
-    let cfg = state.node_registry.phase3_config().await;
-    let phase2_runtime = state.phase2.as_ref().map(|rt| rt.as_ref());
-    let sizes: std::collections::HashMap<u16, usize> =
-        state.node_registry.phase3_pool_sizes(phase2_runtime).await.into_iter().collect();
-    let core_cache = state.node_registry.phase3_pool_core_cache_snapshot().await;
-
-    // pool 列表来源：
-    // - capability pools：使用 cfg.pools（可非连续 pool_id）
-    // - hash pools：使用 0..pool_count
-    let pool_defs: Vec<(u16, String, Vec<String>)> = if !cfg.pools.is_empty() {
-        cfg.pools
-            .iter()
-            .map(|p| (p.pool_id, p.name.clone(), p.required_services.clone()))
-            .collect()
-    } else {
-        let pool_count = cfg.pool_count.max(1);
-        (0..pool_count).map(|pid| (pid, "".to_string(), vec![])).collect()
-    };
-
-    let mut pools: Vec<Phase3PoolEntry> = Vec::with_capacity(pool_defs.len());
-    for (pid, name, reqs) in pool_defs {
-        let total_nodes = sizes.get(&pid).copied().unwrap_or(0);
-        let pc = core_cache
-            .get(&pid)
-            .cloned()
-            .unwrap_or_default();
-
-        // 只输出核心服务（低基数）
-        let mut core_services_installed: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
-        let mut core_services_ready: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
-        if !state.core_services.asr_service_id.is_empty() {
-            core_services_installed.insert(state.core_services.asr_service_id.clone(), pc.asr_installed);
-            core_services_ready.insert(state.core_services.asr_service_id.clone(), pc.asr_ready);
-        }
-        if !state.core_services.nmt_service_id.is_empty() {
-            core_services_installed.insert(state.core_services.nmt_service_id.clone(), pc.nmt_installed);
-            core_services_ready.insert(state.core_services.nmt_service_id.clone(), pc.nmt_ready);
-        }
-        if !state.core_services.tts_service_id.is_empty() {
-            core_services_installed.insert(state.core_services.tts_service_id.clone(), pc.tts_installed);
-            core_services_ready.insert(state.core_services.tts_service_id.clone(), pc.tts_ready);
-        }
-
-        let sample_node_ids = state.node_registry.phase3_pool_sample_node_ids(pid, 5, phase2_runtime).await;
-        pools.push(Phase3PoolEntry {
-            pool_id: pid,
-            pool_name: name,
-            pool_required_services: reqs,
-            total_nodes,
-            online_nodes: pc.online_nodes,
-            ready_nodes: pc.ready_nodes,
-            core_services_installed,
-            core_services_ready,
-            sample_node_ids,
-        });
-    }
-
-    pools.sort_by_key(|p| p.pool_id);
-    axum::Json(Phase3PoolsResponse { config: cfg, pools })
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Phase3SimulateQuery {
-    /// 显式指定 routing_key（优先级最高）
-    routing_key: Option<String>,
-    /// 便捷：与线上语义保持一致（若 routing_key 为空，则优先 tenant_id，其次 session_id）
-    tenant_id: Option<String>,
-    session_id: Option<String>,
-    /// required ServiceType 列表（可重复传参）：?required=ASR&required=NMT（使用 ServiceType 字符串）
-    #[serde(default)]
-    required: Vec<String>,
-    /// 语言仅用于日志/兼容现有选择函数参数，不影响 required 过滤本身
-    src_lang: Option<String>,
-    tgt_lang: Option<String>,
-    /// 是否允许 public 节点（默认 true）
-    accept_public: Option<bool>,
-    /// 排除某个节点（可选）
-    exclude_node_id: Option<String>,
-}
-
-#[derive(Debug, Serialize)]
-pub struct Phase3SimulateResponse {
-    routing_key: String,
-    required: Vec<String>,
-    selected_node_id: Option<String>,
-    debug: crate::node_registry::Phase3TwoLevelDebug,
-    breakdown: crate::node_registry::NoAvailableNodeBreakdown,
-}
-
-pub async fn get_phase3_simulate(
-    axum::extract::State(state): axum::extract::State<AppState>,
-    Query(q): Query<Phase3SimulateQuery>,
-) -> axum::Json<Phase3SimulateResponse> {
-    let routing_key = q
-        .routing_key
-        .or(q.tenant_id)
-        .or(q.session_id)
-        .unwrap_or_else(|| "default".to_string());
-    let src_lang = q.src_lang.unwrap_or_else(|| "zh".to_string());
-    let tgt_lang = q.tgt_lang.unwrap_or_else(|| "en".to_string());
-    let accept_public = q.accept_public.unwrap_or(true);
-    let exclude = q.exclude_node_id.as_deref();
-
-    // 将 required ServiceType 字符串转换为 ServiceType 枚举
-    let required_types: Vec<ServiceType> = q.required
-        .iter()
-        .filter_map(|s| ServiceType::from_str(s).ok())
-        .collect();
-
-    // API 路由中没有 session，传递 None（向后兼容，内部决定 preferred_pool）
-    let (nid, dbg, bd) = state
-        .node_registry
-        .select_node_with_types_two_level_excluding_with_breakdown(
-            &routing_key,
-            &src_lang,
-            &tgt_lang,
-            &required_types,
-            accept_public,
-            exclude,
-            Some(&state.core_services),
-            state.phase2.as_ref().map(|rt| rt.as_ref()),
-            None, // API 路由中没有 session，内部决定 preferred_pool（向后兼容）
-        )
-        .await;
-
-    axum::Json(Phase3SimulateResponse {
-        routing_key,
-        required: q.required,
-        selected_node_id: nid,
-        debug: dbg,
-        breakdown: bd,
-    })
-}
+// get_phase3_simulate API 已删除（Phase3已删除）
 
 pub async fn get_prometheus_metrics(
     axum::extract::State(state): axum::extract::State<AppState>,

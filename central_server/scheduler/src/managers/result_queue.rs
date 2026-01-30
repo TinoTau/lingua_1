@@ -20,19 +20,10 @@ struct SessionQueueState {
     expected: u64,
     /// 待处理的结果（按 utterance_index 排序）
     pending: BTreeMap<u64, SessionMessage>,
-    /// Gap 超时时间（毫秒），已废弃，不再使用
-    #[allow(dead_code)]
-    gap_timeout_ms: i64,
     /// 开始等待 expected 的时间戳（毫秒）
     gap_wait_start_ms: i64,
     /// Pending 上限，默认 200
     pending_max: usize,
-    /// 连续 Missing 计数
-    consecutive_missing: u32,
-    /// Missing 重置阈值，默认 20
-    /// 注意：当前未使用，保留用于将来的会话重置功能
-    #[allow(dead_code)]
-    missing_reset_threshold: u32,
     /// 等待补位的索引（当收到后续 index 时，前面的 index 进入等待补位状态）
     /// utterance_index -> PendingAcknowledgment
     pending_acknowledgments: HashMap<u64, PendingAcknowledgment>,
@@ -45,22 +36,15 @@ struct SessionQueueState {
 pub struct ResultQueueManager {
     // session_id -> SessionQueueState
     queues: Arc<RwLock<HashMap<String, SessionQueueState>>>,
-    /// Gap 超时时间（毫秒），已废弃，不再使用
-    #[allow(dead_code)]
-    gap_timeout_ms: i64,
     /// Pending 上限，默认 200
     pending_max: usize,
-    /// Missing 重置阈值，默认 20
-    missing_reset_threshold: u32,
 }
 
 impl ResultQueueManager {
     pub fn new() -> Self {
         Self {
             queues: Arc::new(RwLock::new(HashMap::new())),
-            gap_timeout_ms: 0, // 不再使用 gap_timeout，基于单进程顺序处理和补位机制
             pending_max: 200,
-            missing_reset_threshold: 20,
         }
     }
     
@@ -70,28 +54,14 @@ impl ResultQueueManager {
     /// 注意：第一个job（utterance_index=0）的TTS耗时可能更长，需要更长的补位时间
     const ACK_TIMEOUT_MS: i64 = 30 * 1000;
 
-    /// 测试辅助方法：使用配置创建（仅用于测试）
-    #[cfg(test)]
-    pub fn new_with_config_for_test(gap_timeout_seconds: u64, pending_max: usize, missing_reset_threshold: u32) -> Self {
-        Self {
-            queues: Arc::new(RwLock::new(HashMap::new())),
-            gap_timeout_ms: (gap_timeout_seconds * 1000) as i64,
-            pending_max,
-            missing_reset_threshold,
-        }
-    }
-
     pub async fn initialize_session(&self, session_id: String) {
         let mut queues = self.queues.write().await;
         let now_ms = chrono::Utc::now().timestamp_millis();
         queues.insert(session_id, SessionQueueState {
             expected: 0,
             pending: BTreeMap::new(),
-            gap_timeout_ms: self.gap_timeout_ms,
             gap_wait_start_ms: now_ms,
             pending_max: self.pending_max,
-            consecutive_missing: 0,
-            missing_reset_threshold: self.missing_reset_threshold,
             pending_acknowledgments: HashMap::new(),
             ack_timeout_ms: Self::ACK_TIMEOUT_MS,
         });
@@ -207,7 +177,6 @@ impl ResultQueueManager {
                     state.pending_acknowledgments.remove(&state.expected);
                     state.expected += 1;
                     state.gap_wait_start_ms = now_ms;
-                    state.consecutive_missing = 0;
                     continue;
                 }
                 
@@ -228,7 +197,6 @@ impl ResultQueueManager {
                             state.pending_acknowledgments.remove(&min_index);
                             state.expected = min_index + 1;
                             state.gap_wait_start_ms = now_ms;
-                            state.consecutive_missing = 0;
                             continue;
                         }
                     }
@@ -277,7 +245,6 @@ impl ResultQueueManager {
                         state.pending_acknowledgments.remove(&state.expected);
                         state.expected += 1;
                         state.gap_wait_start_ms = now_ms;
-                        state.consecutive_missing += 1;
                         continue;
                     } else {
                         // 还在等待补位，但队列中没有后续索引，停止等待
@@ -299,7 +266,6 @@ impl ResultQueueManager {
                 ready_count = ready.len(),
                 new_expected_index = state.expected,
                 remaining_queue_size = state.pending.len(),
-                consecutive_missing = state.consecutive_missing,
                 "Ready results extracted"
             );
             

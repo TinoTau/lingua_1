@@ -18,7 +18,7 @@ export interface JobContext {
   qualityScore?: number;
 
   // 聚合相关
-  aggregatedText?: string;
+  segmentForJobResult?: string;  // 本 job 的本段；语义修复只读此字段，产出 repairedText → text_asr / NMT
   aggregationAction?: 'MERGE' | 'NEW_STREAM' | 'COMMIT';
   aggregationChanged?: boolean;
   isLastInMergedGroup?: boolean;
@@ -27,6 +27,7 @@ export interface JobContext {
     dedupCount?: number;
     dedupCharsRemoved?: number;
   };
+  lastCommittedText?: string | null;  // 上一个已提交的文本（用于 Trim 操作，避免重复获取，null表示没有上一个已提交的文本）
 
   // 语义修复相关
   repairedText?: string;

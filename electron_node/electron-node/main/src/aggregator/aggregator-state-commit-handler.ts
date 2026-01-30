@@ -3,12 +3,11 @@
  * 处理提交逻辑（判断何时提交、提取文本等）
  */
 
-import { Mode, AggregatorTuning, shouldCommit } from './aggregator-decision';
+import { Mode, AggregatorTuning } from './aggregator-decision';
 import { extractTail, removeTail, TailCarryConfig } from './tail-carry';
 import logger from '../logger';
 
 export interface CommitDecision {
-  shouldCommit: boolean;
   commitByManualCut: boolean;
   commitByTimeout: boolean;
   isLastInMergedGroup: boolean;
@@ -40,42 +39,30 @@ export class AggregatorStateCommitHandler {
     mergeGroupStartTimeMs: number,
     isFinal: boolean,
     isManualCut: boolean,
-    isPauseTriggered: boolean,
     isTimeoutTriggered: boolean
   ): CommitDecision {
-    // 1. 手动发送或3秒静音触发：用户点击发送按钮或3秒静音，立即处理并强制提交
-    const commitByManualCut = isManualCut || isPauseTriggered;
+    // 1. 手动发送触发：用户点击发送按钮，立即处理并强制提交
+    const commitByManualCut = isManualCut;
     
     // 2. 10秒超时触发：从NEW_STREAM开始计时，如果超过10秒，自动提交
     const commitByTimeout = isTimeoutTriggered || 
       (action === 'MERGE' && mergeGroupStartTimeMs > 0 && 
        (nowMs - mergeGroupStartTimeMs) >= this.TIMEOUT_THRESHOLD_MS);
     
-    let shouldCommitResult: boolean;
     let isLastInMergedGroup = false;
+    
+    // 判断是否需要提交：手动发送、10秒超时、或最终结果
+    const shouldCommit = commitByManualCut || commitByTimeout || isFinal;
     
     if (commitByManualCut && action === 'MERGE') {
       // 强制提交当前合并组
-      shouldCommitResult = true;
       isLastInMergedGroup = true;
-    } else {
-      // 组合所有提交条件（优先级：手动发送/静音 > 10秒超时 > 原有条件）
-      shouldCommitResult = shouldCommit(
-        pendingText,
-        lastCommitTsMs,
-        nowMs,
-        this.mode,
-        this.tuning
-      ) || commitByManualCut || commitByTimeout || isFinal;
-      
+    } else if (action === 'MERGE' && shouldCommit) {
       // 如果是MERGE且触发提交，标记为合并组的最后一个
-      if (action === 'MERGE' && shouldCommitResult) {
-        isLastInMergedGroup = true;
-      }
+      isLastInMergedGroup = true;
     }
 
     return {
-      shouldCommit: shouldCommitResult,
       commitByManualCut,
       commitByTimeout,
       isLastInMergedGroup,
@@ -140,7 +127,6 @@ export class AggregatorStateCommitHandler {
       logger.info(
         {
           text: text.substring(0, 50),
-          shouldCommit: decision.shouldCommit,
           commitByManualCut: decision.commitByManualCut,
           commitByTimeout: decision.commitByTimeout,
           gapMs,

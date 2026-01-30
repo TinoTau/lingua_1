@@ -1,0 +1,774 @@
+﻿====================================================================================================
+分析日志文件: electron-node/logs/electron-main.log
+====================================================================================================
+
+找到 19 个job
+
+====================================================================================================
+Job详细分析: job-bc0927cc-79fd-4751-ad70-98c77e40d133
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: 1
+
+[AudioAggregator处理]
+  [14:04:05.854] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    MaxDuration触发: True
+  [14:04:05.878] AudioAggregator: Creating new buffer
+  [14:04:05.879] AudioAggregatorMaxDurationHandler: Recorded MaxDuration finalize session mapping
+  [14:04:05.891] AudioAggregatorMaxDurationHandler: Split audio by energy
+  [14:04:05.891] AudioAggregatorMaxDurationHandler: [DEBUG] Split and batch processing result
+  [14:04:05.892] AudioAggregatorMaxDurationHandler: All batches assigned to job containers based on head alignment
+  [14:04:05.892] AudioAggregatorMaxDurationHandler: Remaining audio assigned to first job container
+  [14:04:05.892] AudioAggregatorMaxDurationHandler: Processed first 5+ seconds, cached remaining audio
+  [14:04:05.892] AudioAggregator: [StateMachine] Buffer state -> PENDING_MAXDUR
+  [14:04:05.892] AudioAggregator: MaxDuration finalize processed first 5+ seconds
+  [14:04:05.892] AudioAggregator: [T1] Job1 MaxDuration finalize 后 pending 状态
+
+[ASR处理序列]
+
+  ASR调用 #1:
+    输入时间: 14:04:05.899
+    音频长度: 76800 bytes
+    估算时长: 2400ms (2.4秒)
+    音频格式: pcm16
+    源语言: auto
+    上下文长度: 0 字符
+    输出时间: 14:04:06.531
+    识别文本: "我会先读一读"
+    文本长度: 6 字符
+    片段数: 1
+    处理时间: 632ms
+
+  ASR调用 #2:
+    输入时间: 14:04:06.537
+    音频长度: 260268 bytes
+    估算时长: 8133ms (8.1秒)
+    音频格式: pcm16
+    源语言: auto
+    上下文长度: 0 字符
+    输出时间: 14:04:07.677
+    识别文本: "这一两句比较短的话用来确认系统不会在句子之间随意的把语音切断或者在没有"
+    文本长度: 35 字符
+    片段数: 1
+    处理时间: 1142ms
+
+[NMT处理]
+
+  NMT调用 #1:
+    输入时间: 14:04:07.680
+    待翻译文本: "我会先读一读 这一两句比较短的话用来确认系统不会在句子之间随意的把语音切断或者在没有"
+    文本长度: 42 字符
+    源语言: zh -> 目标语言: en
+    上下文长度: 0 字符
+    输出时间: 14:04:08.756
+    翻译文本: "I will read the two short words that are used to confirm that the system does not arbitrarily cut the voice between the sentences or in no way."
+    文本长度: 143 字符
+    处理时间: 1076ms
+
+[处理总结]
+  ASR调用次数: 2
+  NMT调用次数: 1
+  总ASR文本长度: 41 字符
+  [问题] 该job被分割成多个ASR调用，可能导致文本不完整
+
+
+====================================================================================================
+Job详细分析: job-8a192db0-5494-4d87-9126-8ea9554019fb
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: 2
+
+[AudioAggregator处理]
+  [14:04:08.970] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    手动截断: True
+  [14:04:08.976] AudioAggregator: [StateMachine] Buffer state -> FINALIZING
+  [14:04:08.976] AudioAggregatorFinalizeHandler: [T2] mergePendingMaxDurationAudio 入口
+  [14:04:08.976] AudioAggregatorFinalizeHandler: 连续utteranceIndex，允许合并pendingMaxDurationAudio
+  [14:04:08.976] AudioAggregatorFinalizeHandler: [T2] mergePendingMaxDurationAudio 合并后时长
+  [14:04:08.976] AudioAggregatorFinalizeHandler: Merged audio still < 5 seconds, keeping pendingMaxDurationAudio (wai
+  [14:04:08.977] AudioAggregatorFinalizeHandler: [T3(1)] mergePendingMaxDurationAudio 出口
+  [14:04:08.977] AudioAggregatorFinalizeHandler: PendingMaxDurationAudio held (merged audio still < 5s)
+    手动截断: True
+  [14:04:08.977] AudioAggregatorFinalizeHandler: [T3(2)] handleFinalize 出口
+  [14:04:08.977] AudioAggregator: [T3(3)] 最终返回前
+
+[处理总结]
+  ASR调用次数: 0
+  NMT调用次数: 0
+  总ASR文本长度: 0 字符
+
+
+====================================================================================================
+Job详细分析: job-66d64331-39d6-444b-8b11-7f9cb16f6640
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: 3
+
+[AudioAggregator处理]
+  [14:04:14.432] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    MaxDuration触发: True
+  [14:04:14.460] AudioAggregator: [StateMachine] Buffer in finalizing/closed state, switching epoch
+  [14:04:14.461] AudioAggregatorMaxDurationHandler: Recorded MaxDuration finalize session mapping
+  [14:04:14.467] AudioAggregatorMaxDurationHandler: Split audio by energy
+  [14:04:14.468] AudioAggregatorMaxDurationHandler: [DEBUG] Split and batch processing result
+  [14:04:14.468] AudioAggregatorMaxDurationHandler: All batches assigned to job containers based on head alignment
+  [14:04:14.468] AudioAggregatorMaxDurationHandler: Remaining audio assigned to first job container
+  [14:04:14.468] AudioAggregatorMaxDurationHandler: Processed first 5+ seconds, cached remaining audio
+  [14:04:14.468] AudioAggregator: [StateMachine] Buffer state -> PENDING_MAXDUR
+  [14:04:14.468] AudioAggregator: MaxDuration finalize processed first 5+ seconds
+  [14:04:14.468] AudioAggregator: [T1] Job1 MaxDuration finalize 后 pending 状态
+
+[ASR处理序列]
+
+  ASR调用 #1:
+    输入时间: 14:04:14.474
+    音频长度: 81068 bytes
+    估算时长: 2533ms (2.5秒)
+    音频格式: pcm16
+    源语言: auto
+    上下文长度: 0 字符
+    输出时间: 14:04:14.872
+    识别文本: "接下来最"
+    文本长度: 4 字符
+    片段数: 1
+    处理时间: 398ms
+    [问题] ASR输出文本过短
+
+  ASR调用 #2:
+    输入时间: 14:04:14.878
+    音频长度: 290136 bytes
+    估算时长: 9067ms (9.1秒)
+    音频格式: pcm16
+    源语言: auto
+    上下文长度: 0 字符
+    输出时间: 14:04:15.994
+    识别文本: "这一句我会尽量连续的说的长一些中间只保留自然的呼吸节奏不做刻意的停顿看看在超过"
+    文本长度: 39 字符
+    片段数: 1
+    处理时间: 1118ms
+
+[NMT处理]
+
+  NMT调用 #1:
+    输入时间: 14:04:15.999
+    待翻译文本: "接下来最 这一句我会尽量连续的说的长一些中间只保留自然的呼吸节奏不做刻意的停顿看看在超过"
+    文本长度: 44 字符
+    源语言: zh -> 目标语言: en
+    上下文长度: 0 字符
+    输出时间: 14:04:17.433
+    翻译文本: "Next the most this sentence I will try as continuously as long as possible to say that the middle only retains a natural breathing rate not do intentionally stops looking at over."
+    文本长度: 179 字符
+    处理时间: 1434ms
+
+[处理总结]
+  ASR调用次数: 2
+  NMT调用次数: 1
+  总ASR文本长度: 43 字符
+  [问题] 该job被分割成多个ASR调用，可能导致文本不完整
+
+
+====================================================================================================
+Job详细分析: job-6d136f14-e203-4811-884d-ae65a6e357fc
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: 4
+
+[AudioAggregator处理]
+  [14:04:20.803] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    MaxDuration触发: True
+  [14:04:20.835] AudioAggregatorMaxDurationHandler: Consecutive MaxDuration finalize, merged audio
+  [14:04:20.835] AudioAggregatorMaxDurationHandler: Recorded MaxDuration finalize session mapping
+  [14:04:20.839] AudioAggregatorMaxDurationHandler: Split audio by energy
+  [14:04:20.840] AudioAggregatorMaxDurationHandler: [DEBUG] Split and batch processing result
+  [14:04:20.840] AudioAggregatorMaxDurationHandler: All batches assigned to job containers based on head alignment
+  [14:04:20.840] AudioAggregatorMaxDurationHandler: Remaining audio assigned to first job container
+  [14:04:20.840] AudioAggregatorMaxDurationHandler: Processed first 5+ seconds, cached remaining audio
+  [14:04:20.840] AudioAggregator: [StateMachine] Buffer state -> PENDING_MAXDUR
+  [14:04:20.841] AudioAggregator: MaxDuration finalize processed first 5+ seconds
+  [14:04:20.841] AudioAggregator: [T1] Job1 MaxDuration finalize 后 pending 状态
+
+[ASR处理序列]
+
+  ASR调用 #1:
+    输入时间: 14:04:20.854
+    音频长度: 264536 bytes
+    估算时长: 8267ms (8.3秒)
+    音频格式: pcm16
+    源语言: auto
+    上下文长度: 0 字符
+    输出时间: 14:04:22.154
+    识别文本: "10秒钟之后系统会不会因为超时或者进行判定而创新把这句话解断从而导致"
+    文本长度: 34 字符
+    片段数: 1
+    处理时间: 1301ms
+
+[处理总结]
+  ASR调用次数: 1
+  NMT调用次数: 0
+  总ASR文本长度: 34 字符
+
+
+====================================================================================================
+Job详细分析: job-6e2a4dfe-7c72-48bb-949d-0826b96eecf0
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: 5
+
+[AudioAggregator处理]
+  [14:04:35.369] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    超时触发: True
+  [14:04:35.373] AudioAggregator: [StateMachine] Buffer state -> FINALIZING
+  [14:04:35.374] AudioAggregatorFinalizeHandler: [T2] mergePendingMaxDurationAudio 入口
+  [14:04:35.374] AudioAggregatorFinalizeHandler: 连续utteranceIndex，允许合并pendingMaxDurationAudio
+  [14:04:35.374] AudioAggregatorFinalizeHandler: [T2] mergePendingMaxDurationAudio 合并后时长
+  [14:04:35.374] AudioAggregatorFinalizeHandler: TTL expired, force flushing pendingMaxDurationAudio (< 5s)
+  [14:04:35.374] AudioAggregatorFinalizeHandler: Cleared MaxDuration session mapping (manual/timeout finalize merged 
+    超时触发: True
+  [14:04:35.374] AudioAggregatorFinalizeHandler: [T3(2)] handleFinalize 出口
+  [14:04:35.374] AudioAggregator: Merged pending audio, split by energy
+  [14:04:35.374] AudioAggregator: Batches assigned using unified head alignment strategy
+  [14:04:35.374] AudioAggregator: Sending audio segments to ASR
+  [14:04:35.374] AudioAggregator: No batches but has pending/buffer audio, should not return empty
+
+[处理总结]
+  ASR调用次数: 0
+  NMT调用次数: 0
+  总ASR文本长度: 0 字符
+
+
+====================================================================================================
+Job详细分析: job-ee117dd3-033a-46ed-96b9-22900bef2c57
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: 6
+
+[AudioAggregator处理]
+  [14:04:45.720] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    MaxDuration触发: True
+  [14:04:45.751] AudioAggregator: [StateMachine] Buffer in finalizing/closed state, switching epoch
+  [14:04:45.751] AudioAggregatorMaxDurationHandler: Recorded MaxDuration finalize session mapping
+  [14:04:45.755] AudioAggregatorMaxDurationHandler: Split audio by energy
+  [14:04:45.756] AudioAggregatorMaxDurationHandler: [DEBUG] Split and batch processing result
+  [14:04:45.756] AudioAggregatorMaxDurationHandler: All batches assigned to job containers based on head alignment
+  [14:04:45.756] AudioAggregatorMaxDurationHandler: Remaining audio assigned to first job container
+  [14:04:45.756] AudioAggregatorMaxDurationHandler: Processed first 5+ seconds, cached remaining audio
+  [14:04:45.756] AudioAggregator: [StateMachine] Buffer state -> PENDING_MAXDUR
+  [14:04:45.756] AudioAggregator: MaxDuration finalize processed first 5+ seconds
+  [14:04:45.756] AudioAggregator: [T1] Job1 MaxDuration finalize 后 pending 状态
+
+[ASR处理序列]
+
+  ASR调用 #1:
+    输入时间: 14:04:45.764
+    音频长度: 302936 bytes
+    估算时长: 9467ms (9.5秒)
+    音频格式: pcm16
+    源语言: auto
+    上下文长度: 0 字符
+    输出时间: 14:04:46.871
+    识别文本: "它的长距能够被完整的识别出来而且不会出现判军话被提前发送或者直接丢失的现象那就说明了"
+    文本长度: 42 字符
+    片段数: 1
+    处理时间: 1109ms
+
+[NMT处理]
+
+  NMT调用 #1:
+    输入时间: 14:04:46.874
+    待翻译文本: "它的长距能够被完整的识别出来而且不会出现判军话被提前发送或者直接丢失的现象那就说明了"
+    文本长度: 42 字符
+    源语言: zh -> 目标语言: en
+    上下文长度: 0 字符
+    输出时间: 14:04:47.877
+    翻译文本: "Its long distance can be fully identified and there is no phenomenon that the judgment of military words are sent in advance or lost directly."
+    文本长度: 142 字符
+    处理时间: 1003ms
+
+[处理总结]
+  ASR调用次数: 1
+  NMT调用次数: 1
+  总ASR文本长度: 42 字符
+
+
+====================================================================================================
+Job详细分析: job-bc80eb6d-68fb-48f4-9183-553f156ef362
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: 7
+
+[AudioAggregator处理]
+  [14:04:51.095] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    手动截断: True
+  [14:04:51.100] AudioAggregator: [StateMachine] Buffer state -> FINALIZING
+  [14:04:51.100] AudioAggregatorFinalizeHandler: [T2] mergePendingMaxDurationAudio 入口
+  [14:04:51.100] AudioAggregatorFinalizeHandler: 连续utteranceIndex，允许合并pendingMaxDurationAudio
+  [14:04:51.101] AudioAggregatorFinalizeHandler: [T2] mergePendingMaxDurationAudio 合并后时长
+  [14:04:51.101] AudioAggregatorFinalizeHandler: Merged audio still < 5 seconds, keeping pendingMaxDurationAudio (wai
+  [14:04:51.101] AudioAggregatorFinalizeHandler: [T3(1)] mergePendingMaxDurationAudio 出口
+  [14:04:51.101] AudioAggregatorFinalizeHandler: PendingMaxDurationAudio held (merged audio still < 5s)
+    手动截断: True
+  [14:04:51.101] AudioAggregatorFinalizeHandler: [T3(2)] handleFinalize 出口
+  [14:04:51.101] AudioAggregator: [T3(3)] 最终返回前
+
+[处理总结]
+  ASR调用次数: 0
+  NMT调用次数: 0
+  总ASR文本长度: 0 字符
+
+
+====================================================================================================
+Job详细分析: job-54f932e6-4aca-4b36-84f5-4966a59996b2
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: 8
+
+[AudioAggregator处理]
+  [14:04:59.323] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    手动截断: True
+  [14:04:59.343] AudioAggregator: [StateMachine] Buffer in finalizing/closed state, switching epoch
+  [14:04:59.343] AudioAggregator: [StateMachine] Buffer state -> FINALIZING
+  [14:04:59.343] AudioAggregatorFinalizeHandler: [T3(2)] handleFinalize 出口
+  [14:04:59.344] AudioAggregator: Audio split by energy completed
+  [14:04:59.344] AudioAggregator: Batches assigned using unified head alignment strategy
+  [14:04:59.345] AudioAggregator: Sending audio segments to ASR
+  [14:04:59.345] AudioAggregator: [T3(3)] 最终返回前
+
+[ASR处理序列]
+
+  ASR调用 #1:
+    输入时间: 14:04:59.351
+    音频长度: 102400 bytes
+    估算时长: 3200ms (3.2秒)
+    音频格式: pcm16
+    源语言: auto
+    上下文长度: 0 字符
+    输出时间: 14:05:00.190
+    识别文本: ""
+    文本长度: 0 字符
+    片段数: 0
+    处理时间: 840ms
+    [问题] ASR输出文本过短
+
+  ASR调用 #2:
+    输入时间: 14:05:00.193
+    音频长度: 110936 bytes
+    估算时长: 3467ms (3.5秒)
+    音频格式: pcm16
+    源语言: auto
+    上下文长度: 0 字符
+    输出时间: 14:05:00.765
+    识别文本: "我们还需要继续分析预置找出到底"
+    文本长度: 15 字符
+    片段数: 1
+    处理时间: 573ms
+
+  ASR调用 #3:
+    输入时间: 14:05:00.769
+    音频长度: 119468 bytes
+    估算时长: 3733ms (3.7秒)
+    音频格式: pcm16
+    源语言: auto
+    上下文长度: 0 字符
+    输出时间: 14:05:01.321
+    识别文本: "可以试在哪一个环节把我的语音吃掉了"
+    文本长度: 17 字符
+    片段数: 1
+    处理时间: 553ms
+
+[NMT处理]
+
+  NMT调用 #1:
+    输入时间: 14:05:01.323
+    待翻译文本: "我们还需要继续分析预置找出到底 可以试在哪一个环节把我的语音吃掉了"
+    文本长度: 33 字符
+    源语言: zh -> 目标语言: en
+    上下文长度: 0 字符
+    输出时间: 14:05:02.089
+    翻译文本: "We also need to continue the analysis of pre-set to find out where I can try which line my voice is eaten."
+    文本长度: 106 字符
+    处理时间: 766ms
+
+[处理总结]
+  ASR调用次数: 3
+  NMT调用次数: 1
+  总ASR文本长度: 32 字符
+  [问题] 该job被分割成多个ASR调用，可能导致文本不完整
+
+
+====================================================================================================
+Job详细分析: job-b1e0d7a7-7274-4842-bce8-091a1ede5669
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: 9
+
+[AudioAggregator处理]
+  [14:05:06.812] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    手动截断: True
+  [14:05:06.826] AudioAggregator: Creating new buffer
+  [14:05:06.827] AudioAggregator: [StateMachine] Buffer state -> FINALIZING
+  [14:05:06.827] AudioAggregatorFinalizeHandler: [T3(2)] handleFinalize 出口
+  [14:05:06.827] AudioAggregator: Audio split by energy completed
+  [14:05:06.827] AudioAggregator: Batches assigned using unified head alignment strategy
+  [14:05:06.827] AudioAggregator: Sending audio segments to ASR
+  [14:05:06.827] AudioAggregator: [T3(3)] 最终返回前
+
+[处理总结]
+  ASR调用次数: 0
+  NMT调用次数: 0
+  总ASR文本长度: 0 字符
+
+
+====================================================================================================
+Job详细分析: job-45d5d3b6-9a1d-4bb6-a6b0-b8cfc8efd3d3
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: 10
+
+[AudioAggregator处理]
+  [14:05:15.024] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    手动截断: True
+  [14:05:15.025] AudioAggregator: Creating new buffer
+  [14:05:15.025] AudioAggregator: [StateMachine] Buffer state -> FINALIZING
+  [14:05:15.025] AudioAggregatorFinalizeHandler: [T3(2)] handleFinalize 出口
+  [14:05:15.025] AudioAggregator: Audio split by energy completed
+  [14:05:15.025] AudioAggregator: Batches assigned using unified head alignment strategy
+  [14:05:15.025] AudioAggregator: Sending audio segments to ASR
+  [14:05:15.025] AudioAggregator: [T3(3)] 最终返回前
+
+[处理总结]
+  ASR调用次数: 0
+  NMT调用次数: 0
+  总ASR文本长度: 0 字符
+
+
+====================================================================================================
+Job详细分析: job-22be043d-fca8-442d-911a-d781a8f7d45c
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: 11
+
+[AudioAggregator处理]
+  [14:05:22.591] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    手动截断: True
+  [14:05:22.593] AudioAggregator: Creating new buffer
+  [14:05:22.593] AudioAggregator: [StateMachine] Buffer state -> FINALIZING
+  [14:05:22.593] AudioAggregatorFinalizeHandler: [T3(2)] handleFinalize 出口
+  [14:05:22.593] AudioAggregator: Audio split by energy completed
+  [14:05:22.593] AudioAggregator: Batches assigned using unified head alignment strategy
+  [14:05:22.593] AudioAggregator: Sending audio segments to ASR
+  [14:05:22.593] AudioAggregator: [T3(3)] 最终返回前
+
+[处理总结]
+  ASR调用次数: 0
+  NMT调用次数: 0
+  总ASR文本长度: 0 字符
+
+
+====================================================================================================
+Job详细分析: job-8036fa04-f5bd-449a-a4e9-99a8d39403b0
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: 12
+
+[AudioAggregator处理]
+  [14:05:32.272] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    手动截断: True
+  [14:05:32.272] AudioAggregator: Creating new buffer
+  [14:05:32.272] AudioAggregator: [StateMachine] Buffer state -> FINALIZING
+  [14:05:32.272] AudioAggregatorFinalizeHandler: [T3(2)] handleFinalize 出口
+  [14:05:32.272] AudioAggregator: Audio split by energy completed
+  [14:05:32.272] AudioAggregator: Batches assigned using unified head alignment strategy
+  [14:05:32.272] AudioAggregator: Sending audio segments to ASR
+  [14:05:32.273] AudioAggregator: [T3(3)] 最终返回前
+
+[处理总结]
+  ASR调用次数: 0
+  NMT调用次数: 0
+  总ASR文本长度: 0 字符
+
+
+====================================================================================================
+Job详细分析: job-9c575604-7077-4c26-8076-d309e1193ace
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: 13
+
+[AudioAggregator处理]
+  [14:05:38.520] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    手动截断: True
+  [14:05:38.521] AudioAggregator: Creating new buffer
+  [14:05:38.521] AudioAggregator: [StateMachine] Buffer state -> FINALIZING
+  [14:05:38.521] AudioAggregatorFinalizeHandler: [T3(2)] handleFinalize 出口
+  [14:05:38.521] AudioAggregator: Audio split by energy completed
+  [14:05:38.521] AudioAggregator: Batches assigned using unified head alignment strategy
+  [14:05:38.521] AudioAggregator: Sending audio segments to ASR
+  [14:05:38.521] AudioAggregator: [T3(3)] 最终返回前
+
+[处理总结]
+  ASR调用次数: 0
+  NMT调用次数: 0
+  总ASR文本长度: 0 字符
+
+
+====================================================================================================
+Job详细分析: job-1b7e60e5-c8fa-42fe-bf48-4c8746a33fae
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: 14
+
+[AudioAggregator处理]
+  [14:05:46.904] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    手动截断: True
+  [14:05:46.905] AudioAggregator: Creating new buffer
+  [14:05:46.905] AudioAggregator: [StateMachine] Buffer state -> FINALIZING
+  [14:05:46.905] AudioAggregatorFinalizeHandler: [T3(2)] handleFinalize 出口
+  [14:05:46.905] AudioAggregator: Audio split by energy completed
+  [14:05:46.905] AudioAggregator: Batches assigned using unified head alignment strategy
+  [14:05:46.905] AudioAggregator: Sending audio segments to ASR
+  [14:05:46.905] AudioAggregator: [T3(3)] 最终返回前
+
+[处理总结]
+  ASR调用次数: 0
+  NMT调用次数: 0
+  总ASR文本长度: 0 字符
+
+
+====================================================================================================
+Job详细分析: job-ee8e1cef-0d30-4aff-8170-22027986de68
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: 15
+
+[AudioAggregator处理]
+  [14:05:54.212] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    MaxDuration触发: True
+  [14:05:54.248] AudioAggregator: Creating new buffer
+  [14:05:54.248] AudioAggregatorMaxDurationHandler: Recorded MaxDuration finalize session mapping
+  [14:05:54.255] AudioAggregatorMaxDurationHandler: Split audio by energy
+  [14:05:54.255] AudioAggregatorMaxDurationHandler: [DEBUG] Split and batch processing result
+  [14:05:54.255] AudioAggregatorMaxDurationHandler: All batches assigned to job containers based on head alignment
+  [14:05:54.255] AudioAggregatorMaxDurationHandler: Remaining audio assigned to first job container
+  [14:05:54.256] AudioAggregatorMaxDurationHandler: Processed first 5+ seconds, cached remaining audio
+  [14:05:54.256] AudioAggregator: [StateMachine] Buffer state -> PENDING_MAXDUR
+  [14:05:54.256] AudioAggregator: MaxDuration finalize processed first 5+ seconds
+  [14:05:54.256] AudioAggregator: [T1] Job1 MaxDuration finalize 后 pending 状态
+
+[ASR处理序列]
+
+  ASR调用 #1:
+    输入时间: 14:05:54.267
+    音频长度: 302936 bytes
+    估算时长: 9467ms (9.5秒)
+    音频格式: pcm16
+    源语言: auto
+    上下文长度: 0 字符
+    输出时间: 14:05:55.488
+    识别文本: "他这一句我会尽量的连续的说得长一些中间只保留自然的呼吸节奏不做刻意的停顿看看在超过"
+    文本长度: 41 字符
+    片段数: 1
+    处理时间: 1223ms
+
+[NMT处理]
+
+  NMT调用 #1:
+    输入时间: 14:05:55.491
+    待翻译文本: "他这一句我会尽量的连续的说得长一些中间只保留自然的呼吸节奏不做刻意的停顿看看在超过"
+    文本长度: 41 字符
+    源语言: zh -> 目标语言: en
+    上下文长度: 0 字符
+    输出时间: 14:05:56.670
+    翻译文本: "He said that I would try as long as possible to say a few days in the middle only retain natural breathing rhythm not do intentionally stops looking at over."
+    文本长度: 157 字符
+    处理时间: 1179ms
+
+[处理总结]
+  ASR调用次数: 1
+  NMT调用次数: 1
+  总ASR文本长度: 41 字符
+
+
+====================================================================================================
+Job详细分析: job-2a74f42d-1887-4f9a-883f-7739fd060775
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: 16
+
+[AudioAggregator处理]
+  [14:05:59.686] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    MaxDuration触发: True
+  [14:05:59.727] AudioAggregatorMaxDurationHandler: Consecutive MaxDuration finalize, merged audio
+  [14:05:59.727] AudioAggregatorMaxDurationHandler: Recorded MaxDuration finalize session mapping
+  [14:05:59.733] AudioAggregatorMaxDurationHandler: Split audio by energy
+  [14:05:59.733] AudioAggregatorMaxDurationHandler: [DEBUG] Split and batch processing result
+  [14:05:59.735] AudioAggregatorMaxDurationHandler: All batches assigned to job containers based on head alignment
+  [14:05:59.735] AudioAggregatorMaxDurationHandler: Remaining audio assigned to first job container
+  [14:05:59.735] AudioAggregatorMaxDurationHandler: Processed first 5+ seconds, cached remaining audio
+  [14:05:59.735] AudioAggregator: [StateMachine] Buffer state -> PENDING_MAXDUR
+  [14:05:59.735] AudioAggregator: MaxDuration finalize processed first 5+ seconds
+  [14:05:59.735] AudioAggregator: [T1] Job1 MaxDuration finalize 后 pending 状态
+
+[ASR处理序列]
+
+  ASR调用 #1:
+    输入时间: 14:05:59.746
+    音频长度: 264536 bytes
+    估算时长: 8267ms (8.3秒)
+    音频格式: pcm16
+    源语言: auto
+    上下文长度: 0 字符
+    输出时间: 14:06:00.782
+    识别文本: "如果10秒钟之后系统会不会因为超时或者监控判定而相信把这句话解断"
+    文本长度: 32 字符
+    片段数: 1
+    处理时间: 1038ms
+
+[处理总结]
+  ASR调用次数: 1
+  NMT调用次数: 0
+  总ASR文本长度: 32 字符
+
+
+====================================================================================================
+Job详细分析: job-25c9d9ee-d9d4-48db-a866-f05ad19e965a
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: 17
+
+[AudioAggregator处理]
+  [14:06:07.117] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    手动截断: True
+  [14:06:07.126] AudioAggregator: [StateMachine] Buffer state -> FINALIZING
+  [14:06:07.126] AudioAggregatorFinalizeHandler: [T2] mergePendingMaxDurationAudio 入口
+  [14:06:07.126] AudioAggregatorFinalizeHandler: 连续utteranceIndex，允许合并pendingMaxDurationAudio
+  [14:06:07.126] AudioAggregatorFinalizeHandler: [T2] mergePendingMaxDurationAudio 合并后时长
+  [14:06:07.127] AudioAggregatorFinalizeHandler: Merging pendingMaxDurationAudio with current audio (≥5s)
+  [14:06:07.127] AudioAggregatorFinalizeHandler: [T3(1)] mergePendingMaxDurationAudio 出口
+  [14:06:07.127] AudioAggregatorFinalizeHandler: Cleared MaxDuration session mapping (manual/timeout finalize merged 
+    手动截断: True
+  [14:06:07.127] AudioAggregatorFinalizeHandler: [T3(2)] handleFinalize 出口
+  [14:06:07.127] AudioAggregator: Merged pending audio, split by energy
+  [14:06:07.127] AudioAggregator: Batches assigned using unified head alignment strategy
+  [14:06:07.128] AudioAggregator: Sending audio segments to ASR
+  [14:06:07.128] AudioAggregator: [T3(3)] 最终返回前
+
+[ASR处理序列]
+
+  ASR调用 #1:
+    输入时间: 14:06:07.133
+    音频长度: 179200 bytes
+    估算时长: 5600ms (5.6秒)
+    音频格式: pcm16
+    源语言: auto
+    上下文长度: 0 字符
+    输出时间: 14:06:08.077
+    识别文本: "前半句和后半句在几点端被参战两个不同的任务甚至出现"
+    文本长度: 25 字符
+    片段数: 1
+    处理时间: 945ms
+
+  ASR调用 #2:
+    输入时间: 14:06:08.082
+    音频长度: 129708 bytes
+    估算时长: 4053ms (4.1秒)
+    音频格式: pcm16
+    源语言: auto
+    上下文长度: 0 字符
+    输出时间: 14:06:08.757
+    识别文本: "变于医生的不完整,读起来前后不连关的情况"
+    文本长度: 20 字符
+    片段数: 1
+    处理时间: 676ms
+
+[NMT处理]
+
+  NMT调用 #1:
+    输入时间: 14:06:08.759
+    待翻译文本: "变于医生的不完整,读起来前后不连关的情况"
+    文本长度: 20 字符
+    源语言: zh -> 目标语言: en
+    上下文长度: 0 字符
+    输出时间: 14:06:09.326
+    翻译文本: "The doctors are not complete, and they are unrelated to the read before."
+    文本长度: 72 字符
+    处理时间: 567ms
+
+[处理总结]
+  ASR调用次数: 2
+  NMT调用次数: 1
+  总ASR文本长度: 45 字符
+  [问题] 该job被分割成多个ASR调用，可能导致文本不完整
+
+
+====================================================================================================
+Job详细分析: job-837fc3ac-8be4-43ac-beab-c33322959c83
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: 18
+
+[AudioAggregator处理]
+  [14:06:13.458] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    手动截断: True
+  [14:06:13.470] AudioAggregator: Creating new buffer
+  [14:06:13.470] AudioAggregator: [StateMachine] Buffer state -> FINALIZING
+  [14:06:13.470] AudioAggregatorFinalizeHandler: [T3(2)] handleFinalize 出口
+  [14:06:13.470] AudioAggregator: Audio split by energy completed
+  [14:06:13.470] AudioAggregator: Batches assigned using unified head alignment strategy
+  [14:06:13.471] AudioAggregator: Sending audio segments to ASR
+  [14:06:13.471] AudioAggregator: [T3(3)] 最终返回前
+
+[处理总结]
+  ASR调用次数: 0
+  NMT调用次数: 0
+  总ASR文本长度: 0 字符
+
+
+====================================================================================================
+Job详细分析: job-0cc12002-6762-47d0-9130-008977e758c4
+====================================================================================================
+Session ID: s-9791DB50
+Utterance Index: None
+
+[AudioAggregator处理]
+  [14:03:58.498] AudioAggregator: [BufferKey] Processing audio chunk - bufferKey check
+    手动截断: True
+  [14:03:58.584] AudioAggregator: Creating new buffer
+  [14:03:58.584] AudioAggregator: [StateMachine] Buffer state -> FINALIZING
+  [14:03:58.585] AudioAggregatorFinalizeHandler: [T3(2)] handleFinalize 出口
+  [14:03:58.585] AudioAggregator: Audio split by energy completed
+  [14:03:58.586] AudioAggregator: Batches assigned using unified head alignment strategy
+  [14:03:58.586] AudioAggregator: Sending audio segments to ASR
+  [14:03:58.587] AudioAggregator: [T3(3)] 最终返回前
+
+[ASR处理序列]
+
+  ASR调用 #1:
+    输入时间: 14:03:58.599
+    音频长度: 133120 bytes
+    估算时长: 4160ms (4.2秒)
+    音频格式: pcm16
+    源语言: auto
+    上下文长度: 0 字符
+    输出时间: 14:04:00.890
+    识别文本: "我开始进行一次运营识别稳定性测试"
+    文本长度: 16 字符
+    片段数: 1
+    处理时间: 2292ms
+
+[NMT处理]
+
+  NMT调用 #1:
+    输入时间: 14:04:00.905
+    待翻译文本: "我开始进行一次运营识别稳定性测试"
+    文本长度: 16 字符
+    源语言: zh -> 目标语言: en
+    上下文长度: 0 字符
+    输出时间: 14:04:02.369
+    翻译文本: "I started a operating identification stability test."
+    文本长度: 52 字符
+    处理时间: 1466ms
+
+[处理总结]
+  ASR调用次数: 1
+  NMT调用次数: 1
+  总ASR文本长度: 16 字符
+

@@ -415,6 +415,16 @@ export interface JobResultMessage {
   };
   /** 追踪 ID（必需，用于全链路追踪） */
   trace_id: string;
+  /** OBS-2: ASR 质量信息（与 Rust 端对齐） */
+  asr_quality_level?: 'good' | 'suspect' | 'bad';
+  reason_codes?: string[];
+  quality_score?: number;  // 0.0-1.0
+  rerun_count?: number;
+  segments_meta?: {
+    count: number;
+    max_gap: number;  // 最大间隔（秒）
+    avg_duration: number;  // 平均时长（秒）
+  };
 }
 
 export interface NodeErrorMessage {

@@ -117,10 +117,10 @@ pub fn on_web_task_finalized_by_send() {
     crate::metrics::prometheus_metrics::on_web_task_finalized("send");
 }
 
-pub fn on_web_task_finalized_by_pause() {
+pub fn on_web_task_finalized_by_timeout() {
     super::metrics_types::Metrics::inc(&METRICS.web_tasks_finalized_total);
-    super::metrics_types::Metrics::inc(&METRICS.web_tasks_finalized_by_pause_total);
-    crate::metrics::prometheus_metrics::on_web_task_finalized("pause");
+    super::metrics_types::Metrics::inc(&METRICS.web_tasks_finalized_by_pause_total); // 保留字段名以保持兼容性
+    crate::metrics::prometheus_metrics::on_web_task_finalized("timeout");
 }
 
 /// 记录 Session Actor 积压事件数（峰值）
@@ -151,30 +151,8 @@ pub fn on_empty_finalize() {
     METRICS.empty_finalize_total.fetch_add(1, Ordering::Relaxed);
 }
 
-// 已删除未使用的函数：on_index_gap
-// 此函数未被调用
-
-pub fn on_slow_lock_wait(lock_name: &'static str) {
-    super::metrics_types::Metrics::inc(&METRICS.slow_lock_wait_total);
-    crate::metrics::prometheus_metrics::on_slow_lock_wait(lock_name);
-    match lock_name {
-        "node_registry.management_registry.read" => super::metrics_types::Metrics::inc(&METRICS.slow_lock_node_registry_nodes_read_total),
-        "node_registry.management_registry.write" => super::metrics_types::Metrics::inc(&METRICS.slow_lock_node_registry_nodes_write_total),
-        "node_registry.reserved_jobs.write" => {
-            super::metrics_types::Metrics::inc(&METRICS.slow_lock_node_registry_reserved_jobs_write_total)
-        }
-        "node_registry.unavailable_services.write" => {
-            super::metrics_types::Metrics::inc(&METRICS.slow_lock_node_registry_unavailable_services_write_total)
-        }
-        "node_registry.exclude_reason_stats.read" => {
-            super::metrics_types::Metrics::inc(&METRICS.slow_lock_node_registry_exclude_reason_stats_read_total)
-        }
-        "node_registry.exclude_reason_stats.write" => {
-            super::metrics_types::Metrics::inc(&METRICS.slow_lock_node_registry_exclude_reason_stats_write_total)
-        }
-        _ => {}
-    }
-}
+// 已删除未使用的函数：on_index_gap, on_slow_lock_wait
+// 这些函数未被调用
 
 pub fn on_slow_path(path_name: &'static str) {
     super::metrics_types::Metrics::inc(&METRICS.slow_path_total);

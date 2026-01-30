@@ -230,38 +230,26 @@ export class AggregatorMiddleware {
       );
     }
 
-    // 如果 Aggregator 决定提交，返回聚合后的文本
+    // 如果 Aggregator 返回了文本，说明已经提交，使用聚合后的文本
+    // 否则使用原始 ASR 文本
     let aggregatedText = asrTextTrimmed;
     let shouldProcess = true;
 
-    if (aggregatorResult.shouldCommit && aggregatorResult.text) {
-      // Aggregator 决定提交，使用聚合后的文本
+    if (aggregatorResult.text) {
+      // Aggregator 返回了文本，说明已经提交，使用聚合后的文本
       aggregatedText = aggregatorResult.text;
       shouldProcess = true;
-      // 详细日志在 PipelineOrchestrator 中输出
     } else if (aggregatorResult.action === 'MERGE') {
-      // Merge 操作：文本已累积到 pending，但还没有提交
-      // 如果是 final，应该已经提交了 pending 文本（在 processUtterance 中）
-      // 如果 shouldCommit=false，说明 pending 文本还没有达到提交条件
-      // 但因为是 final，我们需要强制提交 pending 文本
-      if (!aggregatorResult.shouldCommit) {
-        // 强制 flush pending 文本（因为是 final）
-        const flushedText = this.manager?.flush(job.session_id) || '';
-        if (flushedText && flushedText.trim().length > 0) {
-          aggregatedText = flushedText;
-          shouldProcess = true;
-          // 详细日志在 PipelineOrchestrator 中输出
-        } else {
-          // 如果没有 pending 文本，使用当前文本
-          aggregatedText = asrTextTrimmed;
-          shouldProcess = true;
-          // 详细日志在 PipelineOrchestrator 中输出
-        }
+      // MERGE 操作但没有返回文本，说明还没有提交
+      // 如果是 final，强制 flush pending 文本
+      const flushedText = this.manager?.flush(job.session_id) || '';
+      if (flushedText && flushedText.trim().length > 0) {
+        aggregatedText = flushedText;
+        shouldProcess = true;
       } else {
-        // shouldCommit=true，但 action=MERGE，使用当前文本
+        // 如果没有 pending 文本，使用当前文本
         aggregatedText = asrTextTrimmed;
         shouldProcess = true;
-        // 详细日志在 PipelineOrchestrator 中输出
       }
     } else {
       // NEW_STREAM: 使用原始文本
@@ -285,26 +273,12 @@ export class AggregatorMiddleware {
       };
     }
 
-    // 如果检测到重叠并已去重，使用去重后的文本
-    let finalText = aggregatedText;
-    if (duplicateCheck.deduplicatedText) {
-      finalText = duplicateCheck.deduplicatedText;
-      logger.info(
-        {
-          jobId: job.job_id,
-          sessionId: job.session_id,
-          utteranceIndex: job.utterance_index,
-          originalText: aggregatedText,
-          deduplicatedText: finalText,
-          reason: duplicateCheck.reason,
-        },
-        'AggregatorMiddleware: Using deduplicated text (overlap removed)'
-      );
-    }
+    // 注意：不再处理 deduplicatedText，边界重叠裁剪由 dedupMergePrecise 统一处理
+    // DeduplicationHandler 现在只做 Drop 判定（完全重复、子串重复、高相似度）
 
     return {
-      aggregatedText: finalText,
-      shouldProcess: finalText.trim().length > 0,
+      aggregatedText: aggregatedText,
+      shouldProcess: aggregatedText.trim().length > 0,
       action: aggregatorResult.action,
       metrics: aggregatorResult.metrics,
     };

@@ -31,13 +31,13 @@ interface ActiveLease {
 export class GpuArbiter {
   private config: GpuArbiterConfig;
   private enabled: boolean;
-  
+
   // 每个GPU的互斥锁
   private mutexes: Map<string, boolean> = new Map();
   private activeLeases: Map<string, ActiveLease> = new Map();
-  
+
   private leaseIdCounter: number = 0;
-  
+
   // 模块化组件
   private usageMonitor: GpuUsageMonitor;
   private queueManager: GpuArbiterQueueManager;
@@ -46,7 +46,7 @@ export class GpuArbiter {
   constructor(config: GpuArbiterConfig) {
     this.config = config;
     this.enabled = config.enabled;
-    
+
     // 构建GPU使用率监控配置
     const gpuUsageThreshold = config.gpuUsageThreshold ?? 85.0;
     const usageConfig: GpuUsageMonitorConfig = {
@@ -61,7 +61,7 @@ export class GpuArbiter {
       adjustmentTtlMs: config.gpuUsage?.dynamicAdjustment?.adjustmentTtlMs ?? 15000,
       gpuUsageThreshold,
     };
-    
+
     // 初始化模块
     this.usageMonitor = new GpuUsageMonitor(
       usageConfig,
@@ -72,7 +72,7 @@ export class GpuArbiter {
       }
     );
     this.metricsManager = new GpuArbiterMetricsManager();
-    
+
     // 初始化队列管理器（需要回调）
     this.queueManager = new GpuArbiterQueueManager({
       acquireImmediately: (gpuKey, taskType, holdMaxMs, trace) => {
@@ -92,7 +92,7 @@ export class GpuArbiter {
         this.processQueue(gpuKey);
       },
     });
-    
+
     // 初始化每个GPU
     for (const gpuKey of config.gpuKeys) {
       this.mutexes.set(gpuKey, false);
@@ -100,12 +100,12 @@ export class GpuArbiter {
       this.queueManager.initializeGpuKey(gpuKey);
       this.metricsManager.initializeGpuKey(gpuKey);
     }
-    
+
     // 如果启用，启动GPU使用率监控
     if (this.enabled) {
       this.usageMonitor.startMonitoring();
     }
-    
+
     logger.info(
       {
         enabled: this.enabled,
@@ -179,7 +179,7 @@ export class GpuArbiter {
       const oldestWaitTimeMs = now - oldestTask.queuedAt;
       const gpuUsageInfo = this.usageMonitor.getGpuUsageFromCache(gpuKey);
       const gpuUsagePercent = gpuUsageInfo?.usagePercent || 0;
-      
+
       logger.info(
         {
           gpuKey,
@@ -384,7 +384,7 @@ export class GpuArbiter {
     this.activeLeases.delete(leaseId);
 
     const trace = lease.trace || {};
-    
+
     logger.debug(
       {
         gpuKey,
@@ -448,9 +448,9 @@ export class GpuArbiter {
     const wasEnabled = this.enabled;
     this.config = { ...this.config, ...configPatch };
     this.enabled = this.config.enabled;
-    
+
     const gpuUsageThreshold = configPatch.gpuUsageThreshold ?? this.config.gpuUsageThreshold ?? 85.0;
-    
+
     // 更新GPU使用率监控配置
     if (configPatch.gpuUsage || configPatch.gpuUsageThreshold !== undefined) {
       const usageConfigPatch: Partial<GpuUsageMonitorConfig> = {};
@@ -490,14 +490,14 @@ export class GpuArbiter {
       }
       this.usageMonitor.updateConfig(usageConfigPatch);
     }
-    
+
     // 如果启用状态改变，重新启动或停止监控
     if (this.enabled && !wasEnabled) {
       this.usageMonitor.startMonitoring();
     } else if (!this.enabled && wasEnabled) {
       this.usageMonitor.stopMonitoring();
     }
-    
+
     logger.info({ config: this.config }, 'GpuArbiter: Config updated');
   }
 

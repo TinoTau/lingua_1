@@ -49,6 +49,5 @@ pub enum DispatchExcludeReason {
     LangPairUnsupported,
     AsrLangUnsupported,
     TtsLangUnsupported,
-    SrcAutoNoCandidate,
 }
 

@@ -23,40 +23,105 @@ export function createWindow(): void {
   });
 
   // 开发环境加载 Vite 开发服务器，生产环境加载构建后的文件
-  // 判断开发环境：NODE_ENV=development 或 app.isPackaged=false
-  const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged;
+  // 如果 NODE_ENV=production，强制使用生产模式（即使 app.isPackaged=false）
+  const isProduction = process.env.NODE_ENV === 'production';
+  // 只有在非生产环境且未打包时，才使用开发模式
+  const isDev = !isProduction && !app.isPackaged;
   
-  // 检查构建文件是否存在，如果存在则优先使用构建文件
-  const distPath = path.join(__dirname, '../../renderer/dist/index.html');
+  // 检查构建文件是否存在
+  // 编译后输出到 dist/main/electron-node/main/src/window-manager.js
+  // 需要: ../../../../../renderer/dist/index.html
+  const distPath = path.join(__dirname, '../../../../../renderer/dist/index.html');
   const fs = require('fs');
   const distExists = fs.existsSync(distPath);
 
-  if (isDev && !distExists) {
-    // 开发模式：尝试连接 Vite dev server（默认 5173，如果被占用可能在其他端口）
-    const vitePort = process.env.VITE_PORT || '5173';
-    const viteUrl = `http://localhost:${vitePort}`;
-    logger.info({ viteUrl }, 'Development mode: Loading Vite dev server');
-    if (mainWindow) {
-      mainWindow.loadURL(viteUrl).catch((error) => {
-        logger.error({ error, viteUrl }, 'Failed to load Vite dev server, trying fallback port');
-        // 如果 5173 失败，尝试 5174（Vite 自动切换的端口）
-        if (mainWindow) {
-          mainWindow.loadURL('http://localhost:5174').catch((err) => {
-            logger.error({ error: err }, 'Failed to load Vite dev server');
-          });
-        }
-      });
-      // 不再自动打开调试工具，用户可以通过菜单或快捷键手动打开
-      // mainWindow.webContents.openDevTools();
-    }
-  } else {
-    // 生产模式：加载打包后的文件
+  logger.info({ 
+    isProduction, 
+    isDev, 
+    appIsPackaged: app.isPackaged, 
+    nodeEnv: process.env.NODE_ENV,
+    distExists, 
+    distPath 
+  }, 'Window loading mode decision');
+
+  // 生产模式：直接加载构建文件，不尝试Vite
+  if (isProduction) {
     logger.info({ distPath, distExists }, 'Production mode: Loading built files');
     if (mainWindow) {
-      mainWindow.loadFile(distPath).catch((error) => {
-        logger.error({ error, distPath }, 'Failed to load built files');
+      if (distExists) {
+        // 使用 loadFile，它应该能正确处理相对路径（如果 Vite 配置了 base: './'）
+        mainWindow.loadFile(distPath).then(() => {
+          logger.info({ distPath }, '✅ Successfully loaded built files');
+        }).catch((error) => {
+          logger.error({ error, distPath }, 'Failed to load built files');
+        });
+      } else {
+        logger.error({ distPath }, '❌ CRITICAL: Production mode but renderer/dist not found! Please build renderer first: npm run build:renderer');
+        mainWindow.loadURL('data:text/html,<html><body><h1>Renderer not built</h1><p>Please run: npm run build:renderer</p></body></html>');
+      }
+    }
+  } else if (isDev) {
+    // 开发模式：优先尝试 Vite，失败后回退到构建文件
+    // 开发模式：优先尝试连接 Vite dev server
+    const vitePort = process.env.VITE_PORT || '5173';
+    const viteUrl = `http://localhost:${vitePort}`;
+    logger.info({ viteUrl, distExists }, 'Development mode: Trying Vite dev server first');
+    
+    // 尝试多个可能的端口
+    const tryPorts = async (ports: string[]) => {
+      for (const port of ports) {
+        try {
+          const url = `http://localhost:${port}`;
+          await mainWindow?.loadURL(url);
+          logger.info({ url }, '✅ Successfully loaded Vite dev server');
+          return true;
+        } catch (error) {
+          logger.debug({ port }, `Vite not available on port ${port}, trying next...`);
+        }
+      }
+      return false;
+    };
+    
+    if (mainWindow) {
+      // 尝试 Vite，失败则回退到构建文件
+      tryPorts(['5173', '5174', '5175', '5176', '5177', '5178']).then((success) => {
+        if (!success && distExists) {
+          logger.info({ distPath }, 'Vite not available, falling back to built files');
+          mainWindow?.loadFile(distPath).catch((error) => {
+            logger.error({ error, distPath }, 'Failed to load built files');
+          });
+        } else if (!success) {
+          logger.error({}, '❌ CRITICAL: No Vite server and no built files found!');
+        }
+      }).catch((err) => {
+        logger.error({ error: err }, '❌ CRITICAL: Failed to load UI!');
       });
     }
+  } else {
+    // 既不是生产模式也不是开发模式（可能是已打包但NODE_ENV未设置）
+    // 默认使用构建文件
+    logger.info({ distPath, distExists, isProduction, isDev, appIsPackaged: app.isPackaged }, 'Fallback mode: Loading built files');
+    if (mainWindow) {
+      if (distExists) {
+        mainWindow.loadFile(distPath).catch((error) => {
+          logger.error({ error, distPath }, 'Failed to load built files');
+        });
+      } else {
+        logger.error({ distPath }, '❌ CRITICAL: renderer/dist not found! Please build renderer first: npm run build:renderer');
+        mainWindow.loadURL('data:text/html,<html><body><h1>Renderer not built</h1><p>Please run: npm run build:renderer</p></body></html>');
+      }
+    }
+  }
+
+  // 添加窗口加载事件监听，用于调试
+  if (mainWindow) {
+    mainWindow.webContents.on('did-finish-load', () => {
+      logger.info({}, '✅ Window content loaded successfully');
+    });
+    
+    mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
+      logger.error({ errorCode, errorDescription, validatedURL }, '❌ Window content failed to load');
+    });
   }
 
   mainWindow.on('closed', () => {

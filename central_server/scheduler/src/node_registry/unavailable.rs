@@ -1,10 +1,16 @@
-use super::{NodeRegistry, UnavailableServiceEntry};
-use std::collections::HashMap;
-use std::time::{Duration, Instant};
-use tracing::debug;
+use super::NodeRegistry;
+use std::time::Duration;
+use tracing::info;
 
 impl NodeRegistry {
-    /// 标记节点的某服务包暂不可用（TTL），用于快速抑制重复调度失败。
+    /// 标记节点的某服务包暂不可用（TTL），用于快速抑制重复调度失败
+    /// 
+    /// ## 实现方式
+    /// - 直接写入 Redis，使用 SETEX 设置 TTL
+    /// - 无锁设计，无需本地状态同步
+    /// 
+    /// ## Redis Key
+    /// - `unavailable:{node_id}:{service_id}`
     pub async fn mark_service_temporarily_unavailable(
         &self,
         node_id: &str,
@@ -13,29 +19,68 @@ impl NodeRegistry {
         reason: Option<String>,
         ttl: Duration,
     ) {
-        let now_ms = chrono::Utc::now().timestamp_millis();
-        let expire_at_ms = now_ms + ttl.as_millis() as i64;
-
-        let t0 = Instant::now();
-        let mut guard = self.unavailable_services.write().await;
-        crate::metrics::observability::record_lock_wait("node_registry.unavailable_services.write", t0.elapsed().as_millis() as u64);
-        let entry = guard.entry(node_id.to_string()).or_insert_with(HashMap::new);
-        entry.insert(
-            service_id.to_string(),
-            UnavailableServiceEntry {
-                expire_at_ms,
-            },
-        );
-
-        debug!(
+        let ttl_secs = ttl.as_secs();
+        
+        // 流程日志：开始标记
+        info!(
             node_id = %node_id,
             service_id = %service_id,
             service_version = ?service_version,
             reason = ?reason,
-            ttl_ms = ttl.as_millis() as u64,
-            "MODEL_NOT_AVAILABLE：已标记节点服务包暂不可用"
+            ttl_secs = ttl_secs,
+            "【服务不可用】开始标记节点服务临时不可用"
         );
+        
+        // 直接写入 Redis（Redis 直查架构）
+        let result = self.redis_repo().mark_service_unavailable(
+            node_id,
+            service_id,
+            service_version.as_deref(),
+            reason.as_deref(),
+            ttl_secs,
+        ).await;
+        
+        // 流程日志：完成标记
+        match result {
+            Ok(_) => {
+                info!(
+                    node_id = %node_id,
+                    service_id = %service_id,
+                    "【服务不可用】✅ 标记完成（Redis 直写）"
+                );
+            }
+            Err(e) => {
+                tracing::error!(
+                    node_id = %node_id,
+                    service_id = %service_id,
+                    error = %e,
+                    "【服务不可用】❌ 标记失败"
+                );
+            }
+        }
+    }
+    
+    /// 检查节点服务是否临时不可用
+    /// 
+    /// ## 实现方式
+    /// - 直接查询 Redis EXISTS
+    /// - 无锁设计
+    pub async fn is_service_temporarily_unavailable(
+        &self,
+        node_id: &str,
+        service_id: &str,
+    ) -> bool {
+        match self.redis_repo().is_service_unavailable(node_id, service_id).await {
+            Ok(unavailable) => unavailable,
+            Err(e) => {
+                tracing::warn!(
+                    node_id = %node_id,
+                    service_id = %service_id,
+                    error = %e,
+                    "检查服务可用性失败，默认视为可用"
+                );
+                false // 失败时默认视为可用，避免误判
+            }
+        }
     }
 }
-
-

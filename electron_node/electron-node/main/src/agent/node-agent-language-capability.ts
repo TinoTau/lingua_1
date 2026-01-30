@@ -11,7 +11,7 @@ import { detectASRLanguages } from './language-capability/language-capability-as
 import { detectTTSLanguages } from './language-capability/language-capability-tts';
 import { detectNMTLanguagePairs } from './language-capability/language-capability-nmt';
 import { detectSemanticLanguages } from './language-capability/language-capability-semantic';
-import { computeLanguagePairs } from './language-capability/language-capability-pairs';
+import { computeSemanticCentricLanguagePairs, LanguagePair } from './language-capability/language-capability-pairs';
 
 /**
  * NMT 能力
@@ -26,6 +26,8 @@ export interface NmtCapability {
 
 /**
  * 节点语言能力
+ * 重构日期：2026-01-20
+ * 以语义修复为中心的架构
  */
 export interface NodeLanguageCapabilities {
   /** @deprecated 保留用于向后兼容，优先使用 supported_language_pairs */
@@ -37,8 +39,11 @@ export interface NodeLanguageCapabilities {
   /** @deprecated 保留用于向后兼容，优先使用 supported_language_pairs */
   semantic_languages?: string[];  // 语义修复服务支持的语言
   
-  /** 节点支持的语言对列表（所有服务的交集，节点端计算） */
-  supported_language_pairs?: Array<{ src: string; tgt: string }>;
+  /** 节点支持的语言对列表（带语义修复标记） */
+  supported_language_pairs?: LanguagePair[];
+  
+  /** 语义修复核心就绪标记（是否有语义服务） */
+  semantic_core_ready?: boolean;
 }
 
 /**
@@ -129,23 +134,32 @@ export class LanguageCapabilityDetector {
     capabilities.tts_languages = normalizeLanguages([...new Set(capabilities.tts_languages!)]);
     capabilities.semantic_languages = normalizeLanguages([...new Set(capabilities.semantic_languages!)]);
 
-    // 5. 计算所有服务的交集，生成语言对列表（节点端计算）
-    capabilities.supported_language_pairs = computeLanguagePairs(
+    // 5. 以语义修复为中心计算语言对（纯函数，不依赖时序）
+    capabilities.supported_language_pairs = computeSemanticCentricLanguagePairs(
       capabilities.asr_languages!,
       capabilities.tts_languages!,
       capabilities.nmt_capabilities!,
       capabilities.semantic_languages!
     );
 
-    // 记录语言能力检测结果
+    // 6. 标记语义修复核心状态
+    capabilities.semantic_core_ready = capabilities.semantic_languages!.length > 0;
+
+    // 记录语言能力检测结果（增强版日志）
+    const semanticOnTgtCount = capabilities.supported_language_pairs?.filter(p => p.semantic_on_tgt).length || 0;
     logger.info({ 
       asr_languages: capabilities.asr_languages!.length,
       tts_languages: capabilities.tts_languages!.length,
       nmt_capabilities: capabilities.nmt_capabilities!.length,
       semantic_languages: capabilities.semantic_languages!.length,
+      semantic_core_ready: capabilities.semantic_core_ready,
       supported_language_pairs: capabilities.supported_language_pairs!.length,
-      language_pairs_detail: capabilities.supported_language_pairs?.map(p => `${p.src}-${p.tgt}`).join(', ') || 'none'
-    }, 'Language capabilities detected');
+      semantic_on_src: capabilities.supported_language_pairs!.length,  // 全部都有源语言语义修复
+      semantic_on_tgt: semanticOnTgtCount,
+      language_pairs_detail: capabilities.supported_language_pairs?.slice(0, 10).map(p => 
+        `${p.src}-${p.tgt}${p.semantic_on_tgt ? '(+tgt)' : ''}`
+      ).join(', ') || 'none'
+    }, '✅ Language capabilities detected (semantic-centric)');
 
     return capabilities;
   }

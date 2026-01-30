@@ -1,0 +1,14 @@
+{
+  "id": "your-tts",
+  "name": "YourTTS",
+  "type": "tone",
+  "device": "gpu",
+  "port": 5016,
+  "exec": {
+    "command": "python",
+    "args": ["yourtts_service.py"],
+    "cwd": "."
+  },
+  "version": "1.0.0",
+  "description": "YourTTS voice cloning service"
+}

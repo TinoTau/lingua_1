@@ -6,13 +6,20 @@
 import { JobAssignMessage } from '@shared/protocols/messages';
 import { JobResult } from '../inference/inference-service';
 import { JobContext } from './context/job-context';
+import logger from '../logger';
 
 /**
  * 构建 JobResult
  */
 export function buildJobResult(job: JobAssignMessage, ctx: JobContext): JobResult {
-  // 确定最终 ASR 文本（优先使用修复后的文本，然后是聚合后的文本，最后是原始 ASR 文本）
-  const finalAsrText = ctx.repairedText || ctx.aggregatedText || ctx.asrText || '';
+  // job_result.text_asr：仅用语义修复/聚合产出的 repairedText（不兼容回退；未送语义修复时由 aggregation-step 写入 repairedText）
+  const finalAsrText = (ctx.repairedText ?? '').trim();
+  if (!finalAsrText && (ctx.segmentForJobResult ?? '').trim().length > 0) {
+    logger.warn(
+      { note: 'buildJobResult' },
+      'ctx.repairedText empty but segmentForJobResult set, aggregation/semantic-repair should set repairedText'
+    );
+  }
 
   const result: JobResult = {
     text_asr: finalAsrText,
@@ -22,9 +29,8 @@ export function buildJobResult(job: JobAssignMessage, ctx: JobContext): JobResul
     extra: {
       language_probability: ctx.asrResult?.language_probability || null,
       language_probabilities: ctx.languageProbabilities || null,
-      // 核销标记：如果所有结果都归并到其他job，标记为核销情况
-      is_consolidated: (ctx as any).isConsolidated || false,
-      consolidated_to_job_ids: (ctx as any).consolidatedToJobIds || undefined,
+      audioBuffered: (ctx as any).audioBuffered || false,
+      pendingEmptyJobs: (ctx as any).pendingEmptyJobs || undefined,
     },
     asr_quality_level: ctx.asrResult?.badSegmentDetection?.isBad ? 'bad' : 'good',
     quality_score: ctx.qualityScore || ctx.asrResult?.badSegmentDetection?.qualityScore,
@@ -33,10 +39,10 @@ export function buildJobResult(job: JobAssignMessage, ctx: JobContext): JobResul
     segments: ctx.asrSegments || ctx.asrResult?.segments,
     segments_meta: ctx.asrResult?.segments
       ? {
-          count: ctx.asrResult.segments.length,
-          max_gap: calculateMaxGap(ctx.asrResult.segments),
-          avg_duration: calculateAvgDuration(ctx.asrResult.segments),
-        }
+        count: ctx.asrResult.segments.length,
+        max_gap: calculateMaxGap(ctx.asrResult.segments),
+        avg_duration: calculateAvgDuration(ctx.asrResult.segments),
+      }
       : undefined,
     aggregation_applied: ctx.aggregationChanged || false,
     aggregation_action: ctx.aggregationAction,

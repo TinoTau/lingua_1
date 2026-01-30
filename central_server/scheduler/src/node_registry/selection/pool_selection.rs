@@ -245,7 +245,7 @@ pub(super) fn select_eligible_pools(
             } else {
                 // 根据配置选择策略：hash-based（session affinity）或随机
                 if cfg.enable_session_affinity {
-                    preferred_idx = crate::phase3::pick_index_for_key(eligible.len(), cfg.hash_seed, routing_key);
+                    preferred_idx = crate::pool_hashing::pick_index_for_key(eligible.len(), cfg.hash_seed, routing_key);
                     preferred_pool = eligible[preferred_idx];
                 } else {
                     // 随机选择 preferred pool（无 session affinity）
@@ -261,7 +261,7 @@ pub(super) fn select_eligible_pools(
             }
 
             let order = if cfg.fallback_scan_all_pools {
-                crate::phase3::ring_order_ids(&eligible, preferred_idx)
+                crate::pool_hashing::ring_order_ids(&eligible, preferred_idx)
             } else {
                 vec![preferred_pool]
             };
@@ -270,14 +270,14 @@ pub(super) fn select_eligible_pools(
             // hash 分桶：pool_id ∈ [0, pool_count)
             let pool_count = cfg.pool_count.max(1);
             let preferred = if cfg.enable_session_affinity {
-                crate::phase3::pool_id_for_key(pool_count, cfg.hash_seed, routing_key)
+                crate::pool_hashing::pool_id_for_key(pool_count, cfg.hash_seed, routing_key)
             } else {
                 // 随机选择 preferred pool（无 session affinity）
                 let mut rng = thread_rng();
                 rng.gen_range(0..pool_count)
             };
             let order = if cfg.fallback_scan_all_pools {
-                crate::phase3::pool_probe_order(pool_count, preferred)
+                crate::pool_hashing::pool_probe_order(pool_count, preferred)
             } else {
                 vec![preferred]
             };

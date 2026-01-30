@@ -76,157 +76,9 @@ impl SessionActor {
         // 累积音频时长（用于最大时长限制检查）
         self.internal_state.accumulated_audio_duration_ms += chunk_duration_ms;
         
-        // 检查暂停是否超过阈值（只有实际音频内容才用于 pause 检测）
-        let pause_exceeded = if chunk_size > 0 {
-            let last_chunk_at = self.state
-                .audio_buffer
-                .get_last_chunk_at_ms(&self.session_id)
-                .await;
-            let pause_exceeded_result = self.state
-                .audio_buffer
-                .record_chunk_and_check_pause(&self.session_id, timestamp_ms, self.pause_ms)
-                .await;
-            
-            // 获取更新后的 last_chunk_at_ms（用于日志）
-            let updated_last_chunk_at = self.state
-                .audio_buffer
-                .get_last_chunk_at_ms(&self.session_id)
-                .await;
-            
-            // 判断是否是第一批chunk（用于特殊日志标记）
-            let is_first_chunk_after_restart = last_chunk_at.is_some() && 
-                last_chunk_at.map(|prev| timestamp_ms - prev).unwrap_or(0) < 1000; // 1秒内认为是第一批
-            
-            // 修复：检查是否是刚finalize后的新utterance的第一个chunk
-            // 如果时间差<5秒，可能是RestartTimer延迟，不应该触发pause finalize
-            let is_first_chunk_after_finalize = utterance_index > self.internal_state.current_utterance_index;
-            let pause_duration_ms = last_chunk_at.map(|prev| timestamp_ms - prev).unwrap_or(0);
-            const RESTART_TIMER_DELAY_TOLERANCE_MS: i64 = 5000; // RestartTimer延迟容忍度：5秒
-            
-            // 如果是新utterance的第一个chunk，且时间差<5秒，可能是RestartTimer延迟，不触发pause finalize
-            let should_ignore_pause_due_to_restart_timer_delay = 
-                is_first_chunk_after_finalize && 
-                pause_duration_ms > self.pause_ms as i64 && 
-                pause_duration_ms < RESTART_TIMER_DELAY_TOLERANCE_MS;
-            
-            // 详细日志：用于诊断 pause finalize 问题
-            if pause_exceeded_result {
-                if should_ignore_pause_due_to_restart_timer_delay {
-                    info!(
-                        session_id = %self.session_id,
-                        utterance_index = utterance_index,
-                        chunk_size = chunk_size,
-                        timestamp_ms = timestamp_ms,
-                        last_chunk_at_ms_before = ?last_chunk_at,
-                        last_chunk_at_ms_after = ?updated_last_chunk_at,
-                        pause_ms = self.pause_ms,
-                        pause_duration_ms = pause_duration_ms,
-                        is_first_chunk_after_finalize = is_first_chunk_after_finalize,
-                        restart_timer_delay_tolerance_ms = RESTART_TIMER_DELAY_TOLERANCE_MS,
-                        reason = "First chunk after finalize with pause duration < 5s, likely RestartTimer delay, not triggering pause finalize",
-                        "AudioChunk: Pause阈值已超过，但是新utterance的第一个chunk且时间差<5秒，可能是RestartTimer延迟，不触发finalize"
-                    );
-                    false // 不触发pause finalize
-                } else {
-                    info!(
-                        session_id = %self.session_id,
-                        utterance_index = utterance_index,
-                        chunk_size = chunk_size,
-                        timestamp_ms = timestamp_ms,
-                        last_chunk_at_ms_before = ?last_chunk_at,
-                        last_chunk_at_ms_after = ?updated_last_chunk_at,
-                        pause_ms = self.pause_ms,
-                        pause_duration_ms = pause_duration_ms,
-                        is_first_chunk_after_restart = is_first_chunk_after_restart,
-                        is_first_chunk_after_finalize = is_first_chunk_after_finalize,
-                        "AudioChunk: Pause阈值已超过，将触发finalize"
-                    );
-                    pause_exceeded_result
-                }
-            } else if let Some(prev) = last_chunk_at {
-                let pause_duration = timestamp_ms - prev;
-                if is_first_chunk_after_restart {
-                    info!(
-                        session_id = %self.session_id,
-                        utterance_index = utterance_index,
-                        chunk_size = chunk_size,
-                        timestamp_ms = timestamp_ms,
-                        last_chunk_at_ms_before = prev,
-                        last_chunk_at_ms_after = ?updated_last_chunk_at,
-                        pause_duration_ms = pause_duration,
-                        pause_ms = self.pause_ms,
-                        "AudioChunk: 第一批chunk到达（播放完成后），pause检测通过"
-                    );
-                } else {
-                    debug!(
-                        session_id = %self.session_id,
-                        utterance_index = utterance_index,
-                        chunk_size = chunk_size,
-                        timestamp_ms = timestamp_ms,
-                        last_chunk_at_ms_before = prev,
-                        last_chunk_at_ms_after = ?updated_last_chunk_at,
-                        pause_duration_ms = pause_duration,
-                        pause_ms = self.pause_ms,
-                        "AudioChunk: Pause检测通过（在阈值内）"
-                    );
-                }
-                pause_exceeded_result
-            } else {
-                info!(
-                    session_id = %self.session_id,
-                    utterance_index = utterance_index,
-                    chunk_size = chunk_size,
-                    timestamp_ms = timestamp_ms,
-                    last_chunk_at_ms_after = ?updated_last_chunk_at,
-                    "AudioChunk: 第一个chunk到达（无历史记录）"
-                );
-                pause_exceeded_result
-            }
-        } else {
-            false // 空的 is_final=true 不触发 pause finalize
-        };
-
         // 检查是否需要 finalize
         let mut should_finalize = false;
         let mut finalize_reason = "";
-        
-        // 检查 pause_exceeded
-        if pause_exceeded {
-            // 修复：检查是否在TTS播放期间
-            // 从播放开始到播放结束期间，都不进行pause计时
-            let is_tts_playing = {
-                // 获取session的活跃group_id
-                if let Some(group_id) = self.state.group_manager.get_active_group_id(&self.session_id).await {
-                    // 检查是否在TTS播放期间（从播放开始到播放结束）
-                    self.state.group_manager.is_tts_playing(&group_id, timestamp_ms).await
-                } else {
-                    false
-                }
-            };
-            
-            if is_tts_playing {
-                // 重新获取last_chunk_at用于日志（因为它在pause_exceeded块内）
-                let last_chunk_at_for_log = self.state
-                    .audio_buffer
-                    .get_last_chunk_at_ms(&self.session_id)
-                    .await;
-                let pause_duration_ms_for_log = last_chunk_at_for_log.map(|prev| timestamp_ms - prev).unwrap_or(0);
-                info!(
-                    session_id = %self.session_id,
-                    utterance_index = utterance_index,
-                    chunk_size = chunk_size,
-                    timestamp_ms = timestamp_ms,
-                    last_chunk_at_ms_before = ?last_chunk_at_for_log,
-                    pause_duration_ms = pause_duration_ms_for_log,
-                    reason = "Chunk间隔>3秒，但可能在TTS播放期间，不触发pause finalize",
-                    "AudioChunk: Pause阈值已超过，但可能在TTS播放期间，不触发finalize"
-                );
-                // 不触发pause finalize
-            } else {
-                should_finalize = true;
-                finalize_reason = "Pause";
-            }
-        }
         
         // 检查最大时长限制
         if self.max_duration_ms > 0 && self.internal_state.accumulated_audio_duration_ms >= self.max_duration_ms {
@@ -294,7 +146,7 @@ impl SessionActor {
                 // 这里不需要再次更新，因为下一个 chunk 会使用新的 utterance_index
             }
         } else if self.pause_ms > 0 && self.internal_state.finalize_inflight.is_none() {
-            // 不需要 finalize，重置超时计时器
+            // 不需要 finalize，重置超时计时器（用于 Timeout finalize）
             self.reset_timers().await?;
         }
 
@@ -352,7 +204,7 @@ impl SessionActor {
     // 已删除未使用的函数：handle_is_final
     // 此函数只在已删除的 IsFinalReceived 事件处理中被调用
 
-    /// 处理重启计时器（用于播放完成后重置 pause 检测计时器）
+    /// 处理重启计时器（用于播放完成后重置 timeout 检测计时器）
     pub(crate) async fn handle_restart_timer(&mut self, timestamp_ms: i64) -> Result<(), anyhow::Error> {
         // 获取更新前的时间戳，用于日志
         let prev_last_chunk_at = self.state
@@ -360,7 +212,7 @@ impl SessionActor {
             .get_last_chunk_at_ms(&self.session_id)
             .await;
         
-        // 更新 last_chunk_at_ms，重置 pause 检测的基准时间
+        // 更新 last_chunk_at_ms，重置 timeout 检测的基准时间
         // 使用调度服务器时间戳，确保与音频chunk的timestamp_ms（调度服务器接收时间）基准一致
         self.state
             .audio_buffer
@@ -384,7 +236,7 @@ impl SessionActor {
                 pause_ms = self.pause_ms,
                 current_utterance_index = self.internal_state.current_utterance_index,
                 finalize_inflight = ?self.internal_state.finalize_inflight,
-                "RestartTimer: 已更新 last_chunk_at_ms，重置 pause 检测计时器"
+                "RestartTimer: 已更新 last_chunk_at_ms，重置 timeout 检测计时器"
             );
             self.reset_timers().await?;
         }

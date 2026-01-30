@@ -22,16 +22,18 @@ export async function decodeAudioChunk(
 ): Promise<DecodeResult> {
   const sessionId = job.session_id;
   
-  // 解码当前音频块（从Opus base64字符串解码为PCM16 Buffer）
-  let currentAudio: Buffer;
-  try {
-    if (job.audio_format === 'opus') {
-      // Opus格式：需要解码
-      currentAudio = await decodeOpusToPcm16(job.audio, sampleRate);
-    } else if (job.audio_format === 'pcm16') {
-      // PCM16格式：直接解码base64
-      currentAudio = Buffer.from(job.audio, 'base64');
-    } else {
+    // 解码当前音频块（从Opus base64字符串解码为PCM16 Buffer）
+    let currentAudio: Buffer;
+    try {
+      if (job.audio_format === 'opus') {
+        // Opus格式：需要解码
+        const decoded = await decodeOpusToPcm16(job.audio, sampleRate);
+        // 确保返回的是Buffer类型
+        currentAudio = Buffer.isBuffer(decoded) ? decoded : Buffer.from(decoded);
+      } else if (job.audio_format === 'pcm16') {
+        // PCM16格式：直接解码base64
+        currentAudio = Buffer.from(job.audio, 'base64');
+      } else {
       logger.error(
         {
           jobId: job.job_id,

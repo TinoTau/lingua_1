@@ -108,58 +108,17 @@ try {
     # Set environment variables
     $env:SCHEDULER_URL = $schedulerUrl
     $env:PROJECT_ROOT = $projectRoot
-    $env:NODE_ENV = "development"
+    $env:NODE_ENV = "production"  # 生产环境模式，跳过Vite检查
 
-    # In development mode, we need to start both Vite dev server and Electron
-    # Check if we're in development mode (not packaged)
-    $isDev = $true  # Always assume dev mode when running from script
-    
-    if ($isDev) {
-        Write-Host "Starting Vite dev server in background..." -ForegroundColor Yellow
-        
-        # Start Vite dev server in a background job
-        $viteJob = Start-Job -ScriptBlock {
-            param($electronNodePath)
-            Set-Location $electronNodePath
-            npm run dev:renderer
-        } -ArgumentList $electronNodePath
-        
-        Write-Host "Waiting for Vite dev server to start..." -ForegroundColor Yellow
-        Start-Sleep -Seconds 5
-        
-        # Check if Vite is running
-        $viteReady = $false
-        for ($i = 0; $i -lt 10; $i++) {
-            try {
-                $response = Invoke-WebRequest -Uri "http://localhost:5173" -TimeoutSec 2 -ErrorAction SilentlyContinue
-                if ($response.StatusCode -eq 200) {
-                    $viteReady = $true
-                    Write-Host "Vite dev server is ready" -ForegroundColor Green
-                    break
-                }
-            }
-            catch {
-                Start-Sleep -Seconds 1
-            }
-        }
-        
-        if (-not $viteReady) {
-            Write-Host "Warning: Vite dev server may not be ready, but continuing..." -ForegroundColor Yellow
-        }
-    }
+    # 生产环境模式：不启动Vite，使用已构建的renderer
+    Write-Host "Running in production mode (NODE_ENV=production)" -ForegroundColor Green
+    Write-Host "Vite dev server will not be started" -ForegroundColor Gray
+    Write-Host "Using built renderer from: $rendererDistPath" -ForegroundColor Gray
 
     # Start Electron application
     # Note: npm start will start Electron, output will go to stdout/stderr
     Write-Host "Starting Electron application..." -ForegroundColor Green
     npm start 2>&1 | Tee-Object -FilePath $logFileWithTimestamp
-    
-    # Clean up Vite dev server job if it exists
-    if ($isDev -and $viteJob) {
-        Write-Host ""
-        Write-Host "Stopping Vite dev server..." -ForegroundColor Yellow
-        Stop-Job -Id $viteJob.Id -ErrorAction SilentlyContinue
-        Remove-Job -Id $viteJob.Id -ErrorAction SilentlyContinue
-    }
 
 }
 catch {

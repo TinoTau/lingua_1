@@ -30,7 +30,7 @@ class UtteranceRequest(BaseModel):
     # ASR 特定参数
     language: Optional[str] = None  # 语言代码（如果 src_lang == "auto"，则自动检测）
     task: str = "transcribe"  # "transcribe" or "translate"
-    beam_size: int = BEAM_SIZE  # 从配置文件读取，默认 10（提高准确度，减少同音字错误）
+    beam_size: int = BEAM_SIZE  # 从配置文件读取，默认 5（与备份代码一致）
     condition_on_previous_text: bool = False  # 禁用条件生成，避免重复识别（当上下文文本和当前音频内容相同时，会导致重复输出）
     # 新增：提高准确度的参数
     best_of: Optional[int] = 5  # 候选数量（用于非beam search模式，当前使用beam search，此参数不影响）

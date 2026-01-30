@@ -3,11 +3,11 @@
  * 处理语义修复Stage的初始化逻辑（基于服务发现）
  */
 
-import { ServicesHandler } from '../node-agent-services';
 import { TaskRouter } from '../../task-router/task-router';
-import { SemanticRepairStage, SemanticRepairStageConfig } from './semantic-repair-stage';
+import { SemanticRepairStage, SemanticRepairStageConfig, SemanticRepairServiceInfo } from './semantic-repair-stage';
 import { loadNodeConfig } from '../../node-config';
 import logger from '../../logger';
+import { getServiceRegistry } from '../../service-layer';
 
 export class SemanticRepairInitializer {
   private initialized: boolean = false;
@@ -15,7 +15,6 @@ export class SemanticRepairInitializer {
   private semanticRepairStage: SemanticRepairStage | null = null;
 
   constructor(
-    private servicesHandler: ServicesHandler | null | undefined,
     private taskRouter: TaskRouter | null | undefined
   ) {}
 
@@ -33,17 +32,22 @@ export class SemanticRepairInitializer {
     // 创建初始化Promise
     this.initPromise = (async () => {
       try {
-        if (!this.servicesHandler || !this.taskRouter) {
+        if (!this.taskRouter) {
           logger.debug(
             {},
-            'SemanticRepairInitializer: ServicesHandler or TaskRouter not available, skipping initialization'
+            'SemanticRepairInitializer: TaskRouter not available, skipping initialization'
           );
           this.initialized = true;
           return;
         }
 
-        // 获取已安装的语义修复服务
-        const installedServices = await this.servicesHandler.getInstalledSemanticRepairServices();
+        // 通过新的服务发现机制获取已安装的语义修复服务
+        const registry = getServiceRegistry();
+        const installedServices: SemanticRepairServiceInfo = {
+          zh: registry?.has('semantic-repair-zh') ?? false,
+          en: registry?.has('semantic-repair-en') ?? false,
+          enNormalize: registry?.has('en-normalize') ?? false,
+        };
 
         if (!installedServices.zh && !installedServices.en && !installedServices.enNormalize) {
           logger.info(

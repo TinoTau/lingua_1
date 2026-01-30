@@ -82,7 +82,8 @@ describe('asr-step.ts: TASK-S1 验证', () => {
         originalJobId,
         expectedSegmentCount, // 设置为batch数量
         job,
-        mockCallback
+        mockCallback,
+        false
       );
 
       // 验证expectedSegmentCount已设置
@@ -101,7 +102,8 @@ describe('asr-step.ts: TASK-S1 验证', () => {
         originalJobId,
         undefined, // 非finalize时为undefined
         job,
-        mockCallback
+        mockCallback,
+        false
       );
 
       // 验证expectedSegmentCount为undefined
@@ -123,7 +125,8 @@ describe('asr-step.ts: TASK-S1 验证', () => {
         originalJobId,
         batchCount, // 期望3个batch
         job,
-        mockCallback
+        mockCallback,
+        false
       );
 
       // 添加第一个batch
@@ -153,7 +156,8 @@ describe('asr-step.ts: TASK-S1 验证', () => {
         originalJobId,
         batchCount, // 期望2个batch
         job,
-        mockCallback
+        mockCallback,
+        false
       );
 
       // 添加所有batch
@@ -178,7 +182,8 @@ describe('asr-step.ts: TASK-S1 验证', () => {
         originalJobId,
         undefined, // 累积等待
         job,
-        mockCallback
+        mockCallback,
+        false
       );
 
       // 添加片段（不会立即触发，因为expectedSegmentCount为undefined）
@@ -201,7 +206,8 @@ describe('asr-step.ts: TASK-S1 验证', () => {
         originalJobId,
         undefined,
         job,
-        mockCallback
+        mockCallback,
+        false
       );
 
       await dispatcher.addASRSegment(sessionId, originalJobId, createASRData(originalJobId, 'Test', 0));
@@ -222,7 +228,8 @@ describe('asr-step.ts: TASK-S1 验证', () => {
         originalJobId,
         batchCount, // 期望3个batch
         job,
-        mockCallback
+        mockCallback,
+        false
       );
 
       // 只添加2个batch（未达到期望数量）
@@ -244,7 +251,8 @@ describe('asr-step.ts: TASK-S1 验证', () => {
         originalJobId,
         batchCount, // 期望2个batch
         job,
-        mockCallback
+        mockCallback,
+        false
       );
 
       // 添加所有batch（达到期望数量）
@@ -268,7 +276,8 @@ describe('asr-step.ts: TASK-S1 验证', () => {
         originalJobId,
         batchCount,
         job,
-        mockCallback
+        mockCallback,
+        false
       );
 
       // 添加所有batch
@@ -293,7 +302,8 @@ describe('asr-step.ts: TASK-S1 验证', () => {
         originalJobId,
         undefined, // 累积等待
         job,
-        mockCallback
+        mockCallback,
+        false
       );
 
       await dispatcher.addASRSegment(sessionId, originalJobId, createASRData(originalJobId, 'First', 0));

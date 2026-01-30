@@ -1,43 +1,40 @@
 use crate::node_registry::NodeRegistry;
-use crate::core::config::CoreServicesConfig;
+use crate::core::dispatcher::JobRedisRepository;
+use crate::redis_runtime::RedisHandle;
 use std::sync::Arc;
-use tokio::sync::RwLock;
 
 #[derive(Clone)]
 pub struct JobDispatcher {
-    #[allow(dead_code)] // 在 job_selection.rs 中使用
-    pub(crate) node_registry: Arc<NodeRegistry>,
-    #[doc(hidden)]
-    pub jobs: Arc<RwLock<std::collections::HashMap<String, crate::core::dispatcher::Job>>>,
+    /// Job Redis 仓储（SSOT）
+    pub(crate) job_repo: JobRedisRepository,
     pub(crate) lease_seconds: u64,
     pub(crate) reserved_ttl_seconds: u64,
     pub(crate) spread_enabled: bool,
     pub(crate) spread_window_ms: i64,
-    pub(crate) core_services: CoreServicesConfig,
     /// Phase 2：Redis 运行时（request_id bind/lock + node reserved）
     #[doc(hidden)]
-    pub phase2: Option<Arc<crate::phase2::Phase2Runtime>>,
+    pub phase2: Option<Arc<crate::redis_runtime::Phase2Runtime>>,
 }
 
 impl JobDispatcher {
-    pub fn new(node_registry: Arc<NodeRegistry>) -> Self {
+    pub fn new(_node_registry: Arc<NodeRegistry>, redis: Arc<RedisHandle>) -> Self {
+        let job_repo = JobRedisRepository::new(redis);
         Self {
-            node_registry,
-            jobs: Arc::new(RwLock::new(std::collections::HashMap::new())),
+            job_repo,
             lease_seconds: 90,
             reserved_ttl_seconds: 90,
             spread_enabled: false,
             spread_window_ms: 30_000,
-            core_services: crate::core::config::CoreServicesConfig::default(),
             phase2: None,
         }
     }
 
     pub fn new_with_task_binding_config(
         node_registry: Arc<NodeRegistry>,
+        redis: Arc<RedisHandle>,
         cfg: crate::core::config::TaskBindingConfig,
     ) -> Self {
-        let mut s = Self::new(node_registry);
+        let mut s = Self::new(node_registry, redis);
         s.lease_seconds = cfg.lease_seconds.max(1);
         s.reserved_ttl_seconds = cfg.reserved_ttl_seconds.max(1);
         s.spread_enabled = cfg.spread_enabled;
@@ -45,18 +42,7 @@ impl JobDispatcher {
         s
     }
 
-    /// 创建 JobDispatcher（带核心服务配置）
-    pub fn new_with_config(
-        node_registry: Arc<NodeRegistry>,
-        task_binding: crate::core::config::TaskBindingConfig,
-        core_services: crate::core::config::CoreServicesConfig,
-    ) -> Self {
-        let mut s = Self::new_with_task_binding_config(node_registry, task_binding);
-        s.core_services = core_services;
-        s
-    }
-
-    pub fn set_phase2(&mut self, phase2: Option<Arc<crate::phase2::Phase2Runtime>>) {
+    pub fn set_phase2(&mut self, phase2: Option<Arc<crate::redis_runtime::Phase2Runtime>>) {
         self.phase2 = phase2;
     }
 }

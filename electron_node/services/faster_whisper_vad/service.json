@@ -1,0 +1,14 @@
+{
+  "id": "faster-whisper-vad",
+  "name": "Faster Whisper VAD",
+  "type": "asr",
+  "device": "gpu",
+  "port": 6007,
+  "exec": {
+    "command": "python",
+    "args": ["faster_whisper_vad_service.py"],
+    "cwd": "."
+  },
+  "version": "2.0.0",
+  "description": "ASR service using Faster Whisper with VAD (Voice Activity Detection)"
+}

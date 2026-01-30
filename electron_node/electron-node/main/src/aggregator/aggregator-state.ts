@@ -40,7 +40,6 @@ export interface AggregatorMetrics {
 
 export interface AggregatorCommitResult {
   text: string;
-  shouldCommit: boolean;
   action: StreamAction;
   isFirstInMergedGroup?: boolean;  // 是否是合并组中的第一个 utterance（已废弃，保留用于兼容）
   isLastInMergedGroup?: boolean;  // 是否是合并组中的最后一个 utterance（新逻辑：合并到最后一个）
@@ -149,7 +148,6 @@ export class AggregatorState {
     qualityScore: number | undefined,
     isFinal: boolean = false,
     isManualCut: boolean = false,
-    isPauseTriggered: boolean = false,
     isTimeoutTriggered: boolean = false
   ): AggregatorCommitResult {
     const nowMs = Date.now();
@@ -162,7 +160,6 @@ export class AggregatorState {
       qualityScore,
       isFinal,
       isManualCut,
-      isPauseTriggered,
       isTimeoutTriggered,
       this.sessionStartTimeMs,
       this.lastUtteranceEndTimeMs
@@ -271,12 +268,13 @@ export class AggregatorState {
           previousMergeGroupState.mergeGroupStartTimeMs,
           isFinal,
           isManualCut,
-          isPauseTriggered,
           isTimeoutTriggered
         );
         
-        // 如果之前的文本应该提交，先提交它
-        if (previousCommitDecision.shouldCommit) {
+        // 如果之前的文本应该提交（手动发送、超时、或最终结果），先提交它
+        const shouldCommitPrevious = previousCommitDecision.commitByManualCut || 
+          previousCommitDecision.commitByTimeout || isFinal;
+        if (shouldCommitPrevious) {
           const previousCommitResult = this.commitExecutor.executeCommit(
             previousPendingText,
             this.tailBuffer,
@@ -334,16 +332,16 @@ export class AggregatorState {
       mergeGroupState.mergeGroupStartTimeMs,
       isFinal,
       isManualCut,
-      isPauseTriggered,
       isTimeoutTriggered
     );
     
-    let shouldCommitNow = commitDecision.shouldCommit;
     const isLastInMergedGroup = commitDecision.isLastInMergedGroup;
     const commitByManualCut = commitDecision.commitByManualCut;
     const commitByTimeout = commitDecision.commitByTimeout;
+    // 判断是否需要提交：手动发送、10秒超时、或最终结果
+    const shouldCommitNow = commitByManualCut || commitByTimeout || isFinal;
     
-    // 如果收到手动发送/3秒静音标识，清空合并组状态
+    // 如果收到手动发送标识，清空合并组状态
     if (commitByManualCut && action === 'MERGE') {
       this.mergeGroupManager.clearMergeGroup();
       // 同步状态
@@ -423,8 +421,6 @@ export class AggregatorState {
       this.pendingText = '';
       this.lastCommitTsMs = nowMs;
       this.metrics.commitCount++;
-      // 标记为应该提交
-      shouldCommitNow = true;
       
       // 同步合并组状态
       const syncedState = this.commitExecutor.syncMergeGroupState();
@@ -438,8 +434,8 @@ export class AggregatorState {
     // 提交可能由以下条件触发：
     // 1. 手动发送（commitByManualCut）
     // 2. 10秒超时（commitByTimeout）
-    // 3. 原有提交条件（shouldCommit 函数返回 true）
-    // 4. isFinal（最终结果）
+    // 3. isFinal（最终结果）
+    // 注意：已移除基于字符数量的提交逻辑，避免与shouldWaitForMerge矛盾
     // isLastInMergedGroup 已经在上面根据 shouldCommitNow 设置
     
     // 添加调试日志
@@ -448,9 +444,9 @@ export class AggregatorState {
         {
           text: text.substring(0, 50),
           isLastInMergedGroup,
-          shouldCommitNow,
           commitByManualCut,
           commitByTimeout,
+          isFinal,
           hasCommitText: !!commitText,
           commitTextLength: commitText.length,
         },
@@ -460,7 +456,6 @@ export class AggregatorState {
     
     return {
       text: commitText,
-      shouldCommit: shouldCommitNow,
       action,
       isFirstInMergedGroup: action === 'MERGE' ? isFirstInMergedGroup : undefined,  // 保留用于兼容
       isLastInMergedGroup: action === 'MERGE' ? isLastInMergedGroup : undefined,  // 新逻辑

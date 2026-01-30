@@ -1,9 +1,9 @@
 use crate::core::AppState;
 use crate::messages::{JobError, common::ExtraResult};
-use tracing::warn;
+// tracing::warn 已删除（complete_task() 调用已废弃，不再需要warn日志）
 
 use super::job_result_deduplication::check_job_result_deduplication;
-use super::job_result_phase2::forward_job_result_if_needed;
+use super::job_result_routing::forward_job_result_if_needed;
 use super::job_result_job_management::{check_should_process_job, process_job_operations};
 use super::job_result_group::process_group_for_job_result;
 use super::job_result_events::send_ui_events_for_job_result;
@@ -51,15 +51,22 @@ pub(crate) async fn handle_job_result(
         utterance_index = utterance_index,
         success = success,
         attempt_id = attempt_id,
-        "收到节点返回的 JobResult"
+        "【JobResult】收到节点返回"
     );
     
+    // 检查空结果核销：NO_TEXT_ASSIGNED（空容器）或 ASR_EMPTY（ASR 结果为空，静音/无效音频等）
+    let reason = extra.as_ref().and_then(|e| e.reason.as_deref()).unwrap_or("");
+    let is_empty_ack = reason == "NO_TEXT_ASSIGNED" || reason == "ASR_EMPTY";
+    let is_empty_result = is_empty_ack || text_asr.as_ref().map(|s| s.trim().is_empty()).unwrap_or(true);
+
     // 核销机制：检查是否在30秒内已经收到过相同job_id的结果
-    if check_job_result_deduplication(&state, &session_id, &job_id, &trace_id, utterance_index).await {
+    // 传入结果类型（是否为空），以便去重机制能够区分ASR_EMPTY和完整结果
+    if check_job_result_deduplication(&state, &session_id, &job_id, &trace_id, utterance_index, is_empty_result).await {
         info!(
             trace_id = %trace_id,
             job_id = %job_id,
             session_id = %session_id,
+            result_type = if is_empty_result { "empty" } else { "complete" },
             "JobResult 重复，已跳过处理"
         );
         return; // 直接返回，不进行后续处理
@@ -100,20 +107,16 @@ pub(crate) async fn handle_job_result(
         &trace_id,
     ).await;
 
-    // 检查是否是空容器核销（NO_TEXT_ASSIGNED）
-    let is_no_text_assigned = extra.as_ref()
-        .and_then(|e| e.reason.as_deref())
-        .map(|r| r == "NO_TEXT_ASSIGNED")
-        .unwrap_or(false);
-
-    // 如果是空容器核销，特殊处理
-    if is_no_text_assigned {
+    // 检查空结果核销：NO_TEXT_ASSIGNED（空容器）或 ASR_EMPTY（ASR 结果为空，静音/无效音频等）
+    // 注意：reason 已经在上面定义过了，这里直接使用
+    if is_empty_ack {
         info!(
             trace_id = %trace_id,
             job_id = %job_id,
             session_id = %session_id,
             utterance_index = utterance_index,
-            "收到空容器核销结果（NO_TEXT_ASSIGNED），跳过 group_manager 和 UI 事件"
+            reason = %reason,
+            "收到空结果核销，跳过 group_manager 和 UI 事件"
         );
 
         // 设置 job.status = COMPLETED_NO_TEXT
@@ -122,27 +125,14 @@ pub(crate) async fn handle_job_result(
                 .dispatcher
                 .update_job_status(&job_id, crate::core::dispatcher::JobStatus::CompletedNoText)
                 .await;
-            
-            // 释放节点槽位
-            if let Some(scheduler) = state.minimal_scheduler.as_ref() {
-                if let Err(e) = scheduler.complete_task(crate::services::minimal_scheduler::CompleteTaskRequest {
-                    job_id: job_id.clone(),
-                    node_id: node_id.clone(),
-                    status: "finished".to_string(),
-                }).await {
-                    warn!(
-                        job_id = %job_id,
-                        node_id = %node_id,
-                        error = %e,
-                        "空容器核销：任务完成失败（极简无锁调度服务）"
-                    );
-                }
-            }
         }
 
         // 跳过 group_manager 和 UI 事件，直接返回
         return;
     }
+
+    // Calculate elapsed_ms（在修改job之前）
+    let elapsed_ms = calculate_elapsed_ms(&job);
 
     // 只有在 should_process_job 为 true 时才执行 Job 相关操作
     if should_process_job {
@@ -154,9 +144,6 @@ pub(crate) async fn handle_job_result(
             success,
         ).await;
     }
-
-    // Calculate elapsed_ms
-    let elapsed_ms = calculate_elapsed_ms(&job);
 
     // Utterance Group processing
     let (group_id, part_index) = process_group_for_job_result(

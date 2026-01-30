@@ -1,6 +1,11 @@
 /**
  * Aggregator State Text Processor
  * 处理文本合并和去重逻辑
+ * 
+ * /// Invariant 2: TextProcessor 责任边界不变量
+ * /// AggregatorStateTextProcessor 只负责 MERGE 组内的尾部整形（hangover）。
+ * /// 禁止在此处决定 SEND / HOLD / DROP。
+ * /// 禁止通过空字符串或特殊值隐式触发丢弃。
  */
 
 import { UtteranceInfo } from './aggregator-decision';
@@ -28,6 +33,11 @@ export class AggregatorStateTextProcessor {
    * @param lastUtterance 上一个utterance
    * @param tailBuffer 尾部缓冲区
    * @returns 处理结果
+   * 
+   * /// Invariant 2: TextProcessor 责任边界不变量
+   * /// AggregatorStateTextProcessor 只负责 MERGE 组内的尾部整形（hangover）。
+   * /// 禁止在此处决定 SEND / HOLD / DROP。
+   /// 禁止通过空字符串或特殊值隐式触发丢弃。
    */
   processText(
     action: 'MERGE' | 'NEW_STREAM',
@@ -42,6 +52,7 @@ export class AggregatorStateTextProcessor {
 
     if (action === 'MERGE' && lastUtterance) {
       // 如果有 tail buffer，先与 tail 合并
+      // 注意：仅用于 MERGE 组内尾部整形（hangover），最终 Trim/Drop 决策由 forward-merge gate 统一完成
       if (tailBuffer) {
         const tailDedup = dedupMergePrecise(tailBuffer, text, this.dedupConfig);
         processedText = tailDedup.text;
@@ -61,9 +72,11 @@ export class AggregatorStateTextProcessor {
               },
               'AggregatorStateTextProcessor: Current utterance completely contained in tail buffer, discarding duplicate'
             );
-            processedText = ''; // 返回空文本，表示丢弃
-            deduped = true;
-            dedupChars += tailDedup.overlapChars;
+            // 注意：不再返回空文本作为丢弃信号，保留原文让 Gate 统一处理丢弃
+            // 内部包含判定，仅记录，不在此处丢弃
+            processedText = text; // 保留原文，让 Gate 决定是否丢弃
+            deduped = false; // 重置去重标志，因为保留了原文
+            dedupChars = 0; // 重置去重字符数
           } else if (text.length <= 20) {
             // 可能是误判，保留原始文本（统一使用20字符标准）
             logger.warn(
@@ -90,6 +103,7 @@ export class AggregatorStateTextProcessor {
         tailBufferCleared = true;
       } else {
         // 与上一个 utterance 的尾部去重
+        // 注意：仅用于 MERGE 组内尾部整形（hangover），最终 Trim/Drop 决策由 forward-merge gate 统一完成
         const lastText = lastUtterance.text;
         const lastTail = extractTail(lastText, this.tailCarryConfig) || lastText.slice(-20); // 使用最后 20 个字符作为参考
         const dedupResult = dedupMergePrecise(lastTail, text, this.dedupConfig);
@@ -111,9 +125,11 @@ export class AggregatorStateTextProcessor {
               },
               'AggregatorStateTextProcessor: Current utterance completely contained in previous, discarding duplicate'
             );
-            processedText = ''; // 返回空文本，表示丢弃
-            deduped = true;
-            dedupChars += dedupResult.overlapChars;
+            // 注意：不再返回空文本作为丢弃信号，保留原文让 Gate 统一处理丢弃
+            // 内部包含判定，仅记录，不在此处丢弃
+            processedText = text; // 保留原文，让 Gate 决定是否丢弃
+            deduped = false; // 重置去重标志，因为保留了原文
+            dedupChars = 0; // 重置去重字符数
           } else if (text.length <= 20) {
             // 可能是误判，保留原始文本（避免短句被误判为重复，统一使用20字符标准）
             logger.warn(

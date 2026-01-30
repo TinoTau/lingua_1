@@ -83,17 +83,18 @@ pub async fn start_server(
         
         info!("收到关闭信号，开始优雅关闭...");
         
-        // 清理节点连接（使用 ManagementRegistry）
-        let node_ids: Vec<String> = {
-            let mgmt = app_state_for_shutdown.node_registry.management_registry.read().await;
-            mgmt.nodes.keys().cloned().collect()
+        // 清理节点连接（Redis 直查）
+        let node_ids: Vec<String> = match app_state_for_shutdown.node_registry.list_sched_nodes().await {
+            Ok(nodes) => nodes.iter().map(|n| n.node_id.clone()).collect(),
+            Err(_) => vec![],
         };
         if !node_ids.is_empty() {
             info!("清理 {} 个节点连接", node_ids.len());
-            let phase2_runtime = app_state_for_shutdown.phase2.as_ref().map(|rt| rt.as_ref());
+            let _phase2_runtime = app_state_for_shutdown.phase2.as_ref().map(|rt| rt.as_ref());
             for node_id in node_ids {
                 app_state_for_shutdown.node_connections.unregister(&node_id).await;
-                app_state_for_shutdown.node_registry.mark_node_offline(&node_id, phase2_runtime).await;
+                // 节点下线由 Redis TTL 自动处理，无需手动标记
+                info!(node_id = %node_id, "节点连接已关闭，将由 Redis TTL 自动下线");
             }
         }
         

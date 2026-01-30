@@ -22,8 +22,9 @@ import { TaskRouterNMTHandler } from './task-router-nmt';
 import { TaskRouterTTSHandler } from './task-router-tts';
 import { TaskRouterTONEHandler } from './task-router-tone';
 import { TaskRouterSemanticRepairHandler } from './task-router-semantic-repair';
-import { TaskRouterServiceManager } from './task-router-service-manager';
+import { TaskRouterServiceManagerNew } from './task-router-service-manager-new';
 import { TaskRouterServiceSelector } from './task-router-service-selector';
+import { ServiceRegistry } from '../service-layer/ServiceTypes';
 
 export class TaskRouter {
   private serviceEndpoints: Map<ServiceType, ServiceEndpoint[]> = new Map();
@@ -41,7 +42,7 @@ export class TaskRouter {
   private toneHandler: TaskRouterTONEHandler;
   private semanticRepairHandler: TaskRouterSemanticRepairHandler;
   // 服务管理器和选择器
-  private serviceManager: TaskRouterServiceManager;
+  private serviceManager: TaskRouterServiceManagerNew;
   private serviceSelector: TaskRouterServiceSelector;
   // OBS-1: 处理效率观测指标统计（按心跳周期，按服务ID分组）
   // 每个服务ID对应一个处理效率列表（用于NMT、TTS等非ASR服务）
@@ -56,18 +57,10 @@ export class TaskRouter {
   }
 
   constructor(
-    private pythonServiceManager: any,
-    private rustServiceManager: any,
-    private serviceRegistryManager: any,
-    private semanticRepairServiceManager?: any
+    private registry: ServiceRegistry
   ) {
     // 初始化服务管理器和选择器
-    this.serviceManager = new TaskRouterServiceManager(
-      this.pythonServiceManager,
-      this.rustServiceManager,
-      this.serviceRegistryManager,
-      this.semanticRepairServiceManager
-    );
+    this.serviceManager = new TaskRouterServiceManagerNew(this.registry);
     this.serviceSelector = new TaskRouterServiceSelector();
 
     // 初始化SEMANTIC类型的端点列表（用于语义修复服务）
@@ -133,11 +126,8 @@ export class TaskRouter {
       enableModelIntegrityCheck,  // P2-2: 是否启用模型完整性检查
       (serviceId: string) => {
         // P2-2: 从服务注册表获取服务包路径
-        if (!this.serviceRegistryManager) {
-          return null;
-        }
-        const current = this.serviceRegistryManager.getCurrent(serviceId);
-        return current?.install_path || null;
+        const entry = this.registry.get(serviceId);
+        return entry?.installPath || null;
       },
       (serviceId: string) => {
         // 直接根据服务ID查找端点（用于语义修复服务）
@@ -266,34 +256,12 @@ export class TaskRouter {
 
   /**
    * GPU 跟踪：为指定服务启动 GPU 跟踪
-   * 根据 serviceId 自动判断是 Python 服务还是 Rust 服务
+   * 注意：新架构中GPU跟踪已经在ServiceProcessRunner中统一处理
+   * 这里保留空实现以兼容旧接口
    */
   private startGpuTrackingForService(serviceId: string): void {
-    try {
-      // 映射 serviceId 到 Python 服务名称
-      const serviceIdToPythonName: Record<string, string> = {
-        'faster-whisper-vad': 'faster_whisper_vad',
-        'nmt-m2m100': 'nmt',
-        'piper-tts': 'tts',
-        'your-tts': 'yourtts',
-        'speaker-embedding': 'speaker_embedding',
-      };
-
-      const pythonServiceName = serviceIdToPythonName[serviceId];
-      if (pythonServiceName && this.pythonServiceManager) {
-        // Python 服务：启动 GPU 跟踪
-        this.pythonServiceManager.startGpuTracking(pythonServiceName as any);
-        logger.debug({ serviceId, pythonServiceName }, 'Started GPU tracking for Python service');
-      } else if (serviceId === 'node-inference' && this.rustServiceManager) {
-        // Rust 服务：启动 GPU 跟踪
-        this.rustServiceManager.startGpuTracking();
-        logger.debug({ serviceId }, 'Started GPU tracking for Rust service');
-      } else {
-        logger.debug({ serviceId }, 'No GPU tracking available for service (service may not use GPU)');
-      }
-    } catch (error) {
-      logger.warn({ error, serviceId }, 'Failed to start GPU tracking for service');
-    }
+    // GPU跟踪已经在ServiceProcessRunner中处理，这里不需要额外操作
+    logger.debug({ serviceId }, 'GPU tracking handled by ServiceProcessRunner');
   }
 
 

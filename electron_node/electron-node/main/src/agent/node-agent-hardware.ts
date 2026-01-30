@@ -19,32 +19,53 @@ export class HardwareInfoHandler {
   }
 
   /**
-   * 获取硬件信息
+   * 获取硬件信息（带超时保护）
    */
   async getHardwareInfo(): Promise<{
     cpu_cores: number;
     memory_gb: number;
     gpus?: Array<{ name: string; memory_gb: number }>;
   }> {
+    const timeout = 3000; // 3秒超时
+
     try {
-      const mem = await si.mem();
-      const cpu = await si.cpu();
-
-      // 获取 GPU 硬件信息（使用 nvidia-smi）
-      const gpus = await this.getGpuHardwareInfo();
-
-      return {
-        cpu_cores: cpu.cores || os.cpus().length,
-        memory_gb: Math.round(mem.total / (1024 * 1024 * 1024)),
-        gpus: gpus.length > 0 ? gpus : undefined,
-      };
+      // 使用Promise.race添加超时保护
+      const result = await Promise.race([
+        this.fetchHardwareInfo(),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Hardware info timeout')), timeout)
+        ),
+      ]);
+      return result;
     } catch (error) {
-      logger.error({ error }, 'Failed to get hardware info');
+      logger.warn({ error: String(error) }, 'Hardware info fetch failed or timeout, using fallback');
+      // 超时或失败时，使用Node.js内置API返回基本信息
       return {
         cpu_cores: os.cpus().length,
         memory_gb: Math.round(os.totalmem() / (1024 * 1024 * 1024)),
       };
     }
+  }
+
+  /**
+   * 实际获取硬件信息的方法
+   */
+  private async fetchHardwareInfo(): Promise<{
+    cpu_cores: number;
+    memory_gb: number;
+    gpus?: Array<{ name: string; memory_gb: number }>;
+  }> {
+    const mem = await si.mem();
+    const cpu = await si.cpu();
+
+    // 获取 GPU 硬件信息（使用 nvidia-smi）
+    const gpus = await this.getGpuHardwareInfo();
+
+    return {
+      cpu_cores: cpu.cores || os.cpus().length,
+      memory_gb: Math.round(mem.total / (1024 * 1024 * 1024)),
+      gpus: gpus.length > 0 ? gpus : undefined,
+    };
   }
 
   /**

@@ -1,9 +1,11 @@
 import { ModelManager } from '../model-manager/model-manager';
-import type { JobAssignMessage, InstalledModel, FeatureFlags, ServiceType } from '@shared/protocols/messages';
+import type { JobAssignMessage, InstalledModel, FeatureFlags } from '@shared/protocols/messages';
+import { ServiceType } from '@shared/protocols/messages';
 import logger from '../logger';
 import { TaskRouter } from '../task-router/task-router';
 import { runJobPipeline, ServicesBundle } from '../pipeline/job-pipeline';
 import { SessionContextManager } from '../pipeline-orchestrator/session-context-manager';
+import { ServiceRegistry } from '../service-layer/ServiceTypes';
 
 export interface JobResult {
   text_asr: string;
@@ -74,22 +76,15 @@ export class InferenceService {
 
   constructor(
     modelManager: ModelManager,
-    pythonServiceManager: any,
-    rustServiceManager: any,
-    serviceRegistryManager: any,
+    registry: ServiceRegistry,
     aggregatorManager?: any,  // S1: 可选的AggregatorManager（仅用于构建prompt）
     aggregatorMiddleware?: any,  // 已废弃：不再传递给PipelineOrchestrator，但保留参数以兼容旧代码
-    semanticRepairServiceManager?: any,  // 可选的SemanticRepairServiceManager（用于检查语义修复服务实际运行状态）
     servicesHandler?: any  // 可选的ServicesHandler（用于语义修复服务发现）
   ) {
     this.modelManager = modelManager;
 
     // 初始化新架构组件（必需）
-    if (!pythonServiceManager || !rustServiceManager || !serviceRegistryManager) {
-      throw new Error('TaskRouter requires pythonServiceManager, rustServiceManager, and serviceRegistryManager');
-    }
-
-    this.taskRouter = new TaskRouter(pythonServiceManager, rustServiceManager, serviceRegistryManager, semanticRepairServiceManager);
+    this.taskRouter = new TaskRouter(registry);
 
     // S1: 保存引用
     this.aggregatorManager = aggregatorManager;
@@ -109,6 +104,17 @@ export class InferenceService {
     const audioAggregator = new AudioAggregator();
 
     // 初始化 servicesBundle
+    // 初始化SemanticRepairInitializer（如果servicesHandler可用）
+    let semanticRepairInitializer: any = null;
+    if (servicesHandler) {
+      const { SemanticRepairInitializer } = require('../agent/postprocess/postprocess-semantic-repair-initializer');
+      semanticRepairInitializer = new SemanticRepairInitializer(this.taskRouter);
+      // 异步初始化（不等待完成，让第一次使用时再等待）
+      semanticRepairInitializer.initialize().catch((error: any) => {
+        logger.error({ error: error.message }, 'Failed to initialize SemanticRepairInitializer');
+      });
+    }
+
     this.servicesBundle = {
       taskRouter: this.taskRouter,
       aggregatorManager: aggregatorManager || null,
@@ -118,6 +124,7 @@ export class InferenceService {
       aggregatorMiddleware: aggregatorMiddleware || null,
       dedupStage: dedupStage,
       audioAggregator: audioAggregator,
+      semanticRepairInitializer: semanticRepairInitializer,
     };
 
     // 异步初始化服务端点
@@ -140,6 +147,18 @@ export class InferenceService {
    */
   setServicesHandler(servicesHandler: any): void {
     this.servicesBundle.servicesHandler = servicesHandler;
+    
+    // 创建SemanticRepairInitializer（如果servicesHandler可用）
+    if (servicesHandler && !this.servicesBundle.semanticRepairInitializer) {
+      const { SemanticRepairInitializer } = require('../agent/postprocess/postprocess-semantic-repair-initializer');
+      const semanticRepairInitializer = new SemanticRepairInitializer(this.taskRouter);
+      // 异步初始化（不等待完成，让第一次使用时再等待）
+      semanticRepairInitializer.initialize().catch((error: any) => {
+        logger.error({ error: error.message }, 'Failed to initialize SemanticRepairInitializer');
+      });
+      this.servicesBundle.semanticRepairInitializer = semanticRepairInitializer;
+    }
+    
     logger.info({}, 'InferenceService: ServicesHandler updated');
   }
 
@@ -161,7 +180,7 @@ export class InferenceService {
   }
 
   /**
-   * 设置ResultSender（用于发送原始job的结果）
+   * 设置ResultSender（用于在音频聚合后发送原始job的结果）
    */
   setResultSender(resultSender: any): void {
     this.servicesBundle.resultSender = resultSender;
@@ -397,9 +416,9 @@ export class InferenceService {
         await this.taskRouter.forceRefreshServiceEndpoints();
 
         // 检查是否有可用的服务端点
-        const hasASR = await this.checkServiceTypeReady('ASR');
-        const hasNMT = await this.checkServiceTypeReady('NMT');
-        const hasTTS = await this.checkServiceTypeReady('TTS');
+        const hasASR = await this.checkServiceTypeReady(ServiceType.ASR);
+        const hasNMT = await this.checkServiceTypeReady(ServiceType.NMT);
+        const hasTTS = await this.checkServiceTypeReady(ServiceType.TTS);
 
         if (hasASR && hasNMT && hasTTS) {
           logger.info({ elapsedMs: Date.now() - startTime }, 'All services are ready');
@@ -435,14 +454,13 @@ export class InferenceService {
   /**
    * 检查指定服务类型是否有可用的端点
    */
-  private async checkServiceTypeReady(serviceType: string): Promise<boolean> {
+  private async checkServiceTypeReady(serviceType: ServiceType): Promise<boolean> {
     try {
       // 通过TaskRouter的公共方法检查（需要添加）
       // 暂时通过反射或类型断言访问（不推荐，但可以工作）
       const router = this.taskRouter as any;
-      // ServiceType是枚举，值应该是 'ASR', 'NMT', 'TTS', 'TONE'
-      const serviceTypeEnum = serviceType as ServiceType;
-      const endpoints = router.serviceEndpoints?.get(serviceTypeEnum) || [];
+      // ServiceType是枚举，值应该是 'asr', 'nmt', 'tts', 'tone'（小写）
+      const endpoints = router.serviceEndpoints?.get(serviceType) || [];
       // 注意：refreshServiceEndpoints 只会添加 status === 'running' 的服务
       // 所以这里只需要检查端点数量即可
       const hasEndpoints = endpoints.length > 0;

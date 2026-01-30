@@ -88,6 +88,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // 获取所有服务的元数据（用于动态显示服务信息）
   getAllServiceMetadata: () => ipcRenderer.invoke('get-all-service-metadata'),
 
+  // 新的统一服务管理 API（使用服务发现）
+  serviceDiscovery: {
+    list: () => ipcRenderer.invoke('services:list'),
+    refresh: () => ipcRenderer.invoke('services:refresh'),
+    start: (serviceId: string) => ipcRenderer.invoke('services:start', serviceId),
+    stop: (serviceId: string) => ipcRenderer.invoke('services:stop', serviceId),
+    get: (serviceId: string) => ipcRenderer.invoke('services:get', serviceId),
+  },
+
   // 注意：模块管理 API 已移除
   // 模块现在根据任务请求中的 features 自动启用/禁用，不需要手动管理
 });

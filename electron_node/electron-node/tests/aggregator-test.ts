@@ -34,7 +34,6 @@ function testBasicMerge() {
   
   console.log('第一个 utterance 结果:', {
     action: result1.action,
-    shouldCommit: result1.shouldCommit,
     text: result1.text,
   });
   
@@ -55,7 +54,6 @@ function testBasicMerge() {
   
   console.log('第二个 utterance 结果:', {
     action: result2.action,
-    shouldCommit: result2.shouldCommit,
     text: result2.text,
   });
   
@@ -112,7 +110,6 @@ function testHardGap() {
   
   console.log('第二个 utterance 结果:', {
     action: result2.action,
-    shouldCommit: result2.shouldCommit,
     text: result2.text,
   });
   
@@ -165,7 +162,6 @@ function testDedup() {
   
   console.log('第二个 utterance 结果:', {
     action: result2.action,
-    shouldCommit: result2.shouldCommit,
     text: result2.text,
     metrics: result2.metrics,
   });
@@ -225,7 +221,6 @@ function testLangSwitchNotConfident() {
   
   console.log('第二个 utterance 结果:', {
     action: result2.action,
-    shouldCommit: result2.shouldCommit,
     text: result2.text,
   });
   

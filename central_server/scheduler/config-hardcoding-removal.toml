@@ -1,0 +1,301 @@
+# ========================================
+# 调度服务器完整配置 - 无硬编码版本
+# ========================================
+# 说明：本配置文件消除了所有代码中的硬编码值
+# 版本：2026-01-22
+# ========================================
+
+[server]
+port = 5010
+host = "0.0.0.0"
+
+[model_hub]
+base_url = "http://localhost:5000"
+storage_path = "./models"
+
+[scheduler]
+max_concurrent_jobs_per_node = 4
+job_timeout_seconds = 60
+heartbeat_interval_seconds = 15
+
+# ========================================
+# 新增：后台任务配置（消除硬编码）
+# ========================================
+[scheduler.background_tasks]
+# 预加载延迟（秒）- 启动后延迟多久开始预加载
+preload_delay_seconds = 1
+
+# Job 结果去重清理间隔（秒）
+job_result_dedup_cleanup_interval_seconds = 30
+
+# Session 清理间隔（秒）
+session_cleanup_interval_seconds = 60
+
+# Job 清理间隔（秒）
+job_cleanup_interval_seconds = 60
+
+# Session 活跃结果检查间隔（秒）
+session_active_result_check_interval_seconds = 1
+
+# 节点状态扫描间隔（秒）
+node_status_scan_interval_seconds = 60
+
+# Dashboard 快照缓存 TTL（秒）
+dashboard_snapshot_cache_ttl_seconds = 5
+
+# ========================================
+# 新增：连接和通信超时配置
+# ========================================
+[scheduler.timeouts]
+# WebSocket 消息解析错误时显示的最大字符数
+ws_message_preview_max_chars = 500
+
+# Phase2 presence 等待超时（秒）
+phase2_presence_wait_timeout_seconds = 3
+
+# Phase2 presence 检查间隔（毫秒）
+phase2_presence_check_interval_ms = 50
+
+# Phase2 节点注册等待超时（秒）
+phase2_node_registration_timeout_seconds = 2
+
+# Phase2 节点快照同步超时（秒）
+phase2_node_snapshot_sync_timeout_seconds = 3
+
+# Phase2 Pool 配置同步超时（秒）
+phase2_pool_config_sync_timeout_seconds = 5
+
+# Phase2 Pool 配置检查间隔（毫秒）
+phase2_pool_config_check_interval_ms = 100
+
+# WebSocket ACK 超时（秒）
+ws_ack_timeout_seconds = 3
+
+# WebSocket 翻译结果超时（秒）
+ws_translation_result_timeout_seconds = 5
+
+# ========================================
+# 新增：重试和容错配置
+# ========================================
+[scheduler.retry]
+# TTL 最小值（秒）- 防止 TTL 为 0
+min_ttl_seconds = 1
+
+# TTL 最小值（毫秒）- 防止 TTL 为 0
+min_ttl_ms = 1
+
+# Redis SADD/SREM maxlen 最小值
+redis_stream_min_maxlen = 100
+
+# Pub/Sub 重连延迟（秒）
+pubsub_reconnect_delay_seconds = 5
+
+# Pub/Sub 保活超时（秒）
+pubsub_keepalive_timeout_seconds = 3600
+
+# 节点缓存版本检查超时（毫秒）
+node_cache_version_check_timeout_ms = 100
+
+# 节点缓存 miss 标记 TTL（毫秒）
+node_cache_miss_ttl_ms = 10
+
+# Job 尝试 ID 最小值（防止为 0）
+job_min_attempt_id = 1
+
+# ========================================
+# 新增：容量和限制配置
+# ========================================
+[scheduler.limits]
+# Phase2 owner TTL 计算基础（秒）
+phase2_owner_ttl_base_seconds = 10
+phase2_owner_ttl_divisor = 2
+phase2_owner_ttl_min_seconds = 5
+
+# Phase2 presence TTL 计算基础（秒）
+phase2_presence_ttl_min_seconds = 2
+phase2_presence_ttl_divisor = 2
+phase2_presence_ttl_absolute_min_seconds = 1
+
+# Redis 最小计数值
+redis_min_count = 1
+
+# Pool 最小计数值
+pool_min_count = 1
+
+# ========================================
+# Redis 配置（增强版）
+# ========================================
+[scheduler.phase2.redis]
+mode = "single"  # "single" | "cluster"
+url = "redis://127.0.0.1:6379"
+# cluster_urls = ["redis://127.0.0.1:7000", "redis://127.0.0.1:7001", "redis://127.0.0.1:7002"]
+key_prefix = "lingua"
+
+# Redis 容器名称（用于文档和脚本）
+container_name = "lingua-redis"
+# 备用容器名称
+alt_container_names = ["lingua-redis-phase2", "redis-lingua"]
+
+# Redis 连接超时（毫秒）
+connection_timeout_ms = 5000
+
+# Redis 命令超时（毫秒）
+command_timeout_ms = 3000
+
+# ========================================
+# Phase2 配置
+# ========================================
+[scheduler.phase2]
+enabled = true
+instance_id = "auto"
+owner_ttl_seconds = 45
+stream_block_ms = 1000
+stream_count = 64
+stream_group = "scheduler"
+stream_maxlen = 10000
+
+# DLQ 配置
+dlq_enabled = true
+dlq_maxlen = 10000
+dlq_max_deliveries = 10
+dlq_min_idle_ms = 60000
+dlq_scan_interval_ms = 5000
+dlq_scan_count = 100
+
+# ========================================
+# 新增：Phase2 Streams 配置（消除硬编码）
+# ========================================
+[scheduler.phase2.streams]
+# consumer group 创建失败后的重试延迟（毫秒）
+group_create_retry_delay_ms = 500
+
+# XREADGROUP 失败后的通用重试延迟（毫秒）
+xreadgroup_retry_delay_ms = 300
+
+# pending 消息 reclaim 间隔（秒）
+reclaim_interval_seconds = 5
+
+# DLQ 扫描间隔最小值（毫秒）
+dlq_scan_interval_min_ms = 1000
+
+# ========================================
+# Phase2 Schema 兼容层配置
+# ========================================
+[scheduler.phase2.schema_compat]
+enabled = false
+stats_snapshot_enabled = false
+stats_snapshot_ttl_seconds = 60
+stats_snapshot_interval_ms = 5000
+node_caps_enabled = false
+node_caps_ttl_seconds = 0
+session_bind_enabled = false
+session_bind_ttl_seconds = 3600
+
+# ========================================
+# Phase2 节点快照配置
+# ========================================
+[scheduler.phase2.node_snapshot]
+enabled = true
+presence_ttl_seconds = 45
+refresh_interval_ms = 2000
+remove_stale_after_seconds = 600
+
+# ========================================
+# Phase3 配置
+# ========================================
+[scheduler.phase3]
+enabled = true
+mode = "two_level"
+pool_count = 16
+hash_seed = 0
+fallback_scan_all_pools = true
+auto_generate_language_pools = true
+pool_match_scope = "core_only"
+pool_match_mode = "contains"
+strict_pool_eligibility = false
+
+[scheduler.phase3.auto_pool_config]
+min_nodes_per_pool = 1
+max_pools = 50
+require_semantic = false
+
+# ========================================
+# 负载均衡配置
+# ========================================
+[scheduler.load_balancer]
+strategy = "least_connections"
+resource_threshold = 85.0
+
+# ========================================
+# 节点健康配置
+# ========================================
+[scheduler.node_health]
+heartbeat_interval_seconds = 15
+heartbeat_timeout_seconds = 45
+health_check_count = 1
+warmup_timeout_seconds = 60
+status_scan_interval_seconds = 30
+
+[scheduler.node_health.failure_threshold]
+window_size = 5
+failure_count = 3
+consecutive_failure_count = 3
+
+# ========================================
+# 新增：测试配置（消除硬编码）
+# ========================================
+[scheduler.testing]
+# 测试用 Redis URL（可被环境变量覆盖）
+redis_url = "redis://127.0.0.1:6379"
+
+# 测试用 service catalog URL
+service_catalog_url = "http://127.0.0.1:0"
+
+# 测试用服务器绑定地址
+test_server_bind = "127.0.0.1:0"
+
+# 测试中的 dashboard 快照 TTL（秒）
+dashboard_snapshot_ttl_seconds = 3600
+
+# ========================================
+# 新增：调试和观测配置
+# ========================================
+[scheduler.observability]
+# Prometheus 指标更新间隔
+# dashboard_snapshot_age_max_ms = 0  # 0 表示实时
+# service_catalog_age_max_ms = 0
+
+# 日志采样率（0.0 - 1.0）
+log_sample_rate = 1.0
+
+# 是否记录详细的任务调度日志
+verbose_scheduling_logs = false
+
+# ========================================
+# 新增：性能调优配置
+# ========================================
+[scheduler.performance]
+# 异步任务通道容量
+async_task_channel_capacity = 1000
+
+# WebSocket 连接池初始容量
+ws_connection_pool_initial_capacity = 100
+
+# Job 缓存初始容量
+job_cache_initial_capacity = 1000
+
+# Session 缓存初始容量
+session_cache_initial_capacity = 500
+
+# ========================================
+# 新增：开发者配置
+# ========================================
+[scheduler.developer]
+# 是否启用开发模式（更详细的日志，更宽松的超时等）
+dev_mode = false
+
+# 是否在启动时打印配置
+print_config_on_startup = true
+
+# 是否启用配置热重载（未实现）
+enable_config_hot_reload = false

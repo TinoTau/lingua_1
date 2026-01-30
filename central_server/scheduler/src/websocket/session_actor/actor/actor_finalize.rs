@@ -108,17 +108,15 @@ impl SessionActor {
             }
         };
 
-        // 获取音频数据
-        let audio_data_opt = self
+        // 与备份一致：take 一次，传入 create_translation_jobs，随 Job 存储
+        let audio_data = match self
             .state
             .audio_buffer
             .take_combined(&self.session_id, utterance_index)
-            .await;
-
-        let audio_data = match audio_data_opt {
+            .await
+        {
             Some(data) if !data.is_empty() => data,
             _ => {
-                // 音频缓冲区为空，不应该 finalize
                 warn!(
                     session_id = %self.session_id,
                     utterance_index = utterance_index,
@@ -131,14 +129,11 @@ impl SessionActor {
         };
 
         let audio_format = session.audio_format.clone().unwrap_or_else(|| "pcm16".to_string());
-        
-        // Padding 配置（在节点端处理）
         let padding_ms = match finalize_type {
             FinalizeType::Manual => self.edge_config.padding_manual_ms,
             FinalizeType::Auto => self.edge_config.padding_auto_ms,
             FinalizeType::Exception => 0,
         };
-        
         info!(
             session_id = %self.session_id,
             utterance_index = utterance_index,
@@ -150,20 +145,18 @@ impl SessionActor {
             "Finalizing audio utterance"
         );
 
-        // 设置结果截止时间（用于抗缺口机制）
-
-        // 根据finalize原因设置标识
+        // 根据 finalize 原因设置标识
         let is_manual_cut = reason == "IsFinal";
-        let is_pause_triggered = reason == "Pause";
-        // MaxDuration和Timeout都设置为is_timeout_triggered=true
-        // MaxDuration是20秒超时强制截断，需要节点端进行音频切割处理
-        let is_timeout_triggered = reason == "Timeout" || reason == "MaxDuration";
+        // ✅ 修复：MaxDuration 使用独立的标签，不与 timeout 混用
+        let is_timeout_triggered = reason == "Timeout";
+        // MaxDuration：用户持续说话超过最大时长，产生多 job；节点端按切片处理
+        let is_max_duration_triggered = reason == "MaxDuration";
 
         // ============================================================
-        // Session Affinity：手动/pause finalize时立即清除timeout_node_id映射
+        // Session Affinity：手动/timeout finalize时立即清除timeout_node_id映射
         // 必须在jobs创建之前清除，确保当前job不会使用旧的timeout_node_id
         // ============================================================
-        if is_manual_cut || is_pause_triggered {
+        if is_manual_cut || is_timeout_triggered {
             if let Some(ref rt) = self.state.phase2 {
                 let session_key = format!("scheduler:session:{}", self.session_id);
                 
@@ -182,8 +175,8 @@ return 1
                             utterance_index = utterance_index,
                             reason = reason,
                             is_manual_cut = is_manual_cut,
-                            is_pause_triggered = is_pause_triggered,
-                            "Session affinity: Cleared timeout_node_id mapping (manual/pause finalize) - cleared before job creation, subsequent jobs can use random assignment"
+                            is_timeout_triggered = is_timeout_triggered,
+                            "Session affinity: Cleared timeout_node_id mapping (manual/timeout finalize) - cleared before job creation, subsequent jobs can use random assignment"
                         );
                     }
                     Err(e) => {
@@ -192,7 +185,7 @@ return 1
                             utterance_index = utterance_index,
                             reason = reason,
                             is_manual_cut = is_manual_cut,
-                            is_pause_triggered = is_pause_triggered,
+                            is_timeout_triggered = is_timeout_triggered,
                             error = %e,
                             "Session affinity: Failed to clear timeout_node_id mapping (will retry after job creation)"
                         );
@@ -202,12 +195,16 @@ return 1
         }
 
         // 创建翻译任务
-        tracing::info!(
+        info!(
             session_id = %self.session_id,
             utterance_index = utterance_index,
             src_lang = %session.src_lang,
             tgt_lang = %session.tgt_lang,
-            "开始创建翻译任务"
+            lang_a = ?session.lang_a,
+            lang_b = ?session.lang_b,
+            mode = ?session.mode,
+            audio_bytes = audio_data.len(),
+            "【Finalize】开始创建翻译任务"
         );
         // 使用默认 pipeline 配置（finalize 时没有 pipeline 信息，使用默认值）
         let default_pipeline = crate::messages::PipelineConfig {
@@ -243,16 +240,16 @@ return 1
             self.internal_state.first_chunk_client_timestamp_ms,
             Some(padding_ms),
             is_manual_cut,
-            is_pause_triggered,
             is_timeout_triggered,
+            is_max_duration_triggered,
         )
         .await {
             Ok(jobs) => {
-                tracing::info!(
+                info!(
                     session_id = %self.session_id,
                     utterance_index = utterance_index,
                     job_count = jobs.len(),
-                    "翻译任务创建成功，共 {} 个任务",
+                    "【Finalize】翻译任务创建成功，共 {} 个任务",
                     jobs.len()
                 );
                 jobs
@@ -269,10 +266,10 @@ return 1
         };
 
         // ============================================================
-        // Session Affinity：超时finalize时记录sessionId->nodeId映射
-        // 注意：手动/pause finalize的清除已在jobs创建之前完成
+        // Session Affinity：MaxDuration finalize 时记录 sessionId->nodeId 映射
+        // 连续长语音产生多 job，需路由到同一节点
         // ============================================================
-        if is_timeout_triggered {
+        if is_max_duration_triggered {
             // 获取第一个job的node_id（如果有）
             if let Some(first_job) = jobs.first() {
                 if let Some(ref node_id) = first_job.assigned_node_id {
@@ -281,9 +278,10 @@ return 1
                         let session_key = format!("scheduler:session:{}", self.session_id);
                         let ttl_seconds = 5 * 60; // 5分钟TTL（优化：符合业务逻辑，避免长期缓存）
                         
-                        // 使用Lua脚本原子性地设置timeout_node_id
+                        // ✅ 修复：MaxDuration 使用独立的 Redis key，不与 timeout 混用
+                        // 使用Lua脚本原子性地设置max_duration_node_id
                         let script = r#"
-redis.call('HSET', KEYS[1], 'timeout_node_id', ARGV[1])
+redis.call('HSET', KEYS[1], 'max_duration_node_id', ARGV[1])
 redis.call('EXPIRE', KEYS[1], ARGV[2])
 return 1
 "#;
@@ -304,7 +302,7 @@ return 1
                                     ttl_seconds = ttl_seconds,
                                     job_count = jobs.len(),
                                     first_job_id = ?jobs.first().map(|j| &j.job_id),
-                                    "Session affinity: Recorded timeout finalize session mapping (Timeout/MaxDuration) - subsequent jobs will route to same node"
+                                    "Session affinity: Recorded MaxDuration finalize session mapping - subsequent jobs will route to same node"
                                 );
                             }
                             Err(e) => {
@@ -315,15 +313,15 @@ return 1
                                     node_id = %node_id,
                                     ttl_seconds = ttl_seconds,
                                     error = %e,
-                                    "Session affinity: Failed to record timeout finalize session mapping"
+                                    "Session affinity: Failed to record MaxDuration finalize session mapping"
                                 );
                             }
                         }
                     }
                 }
             }
-        } else if is_manual_cut || is_pause_triggered {
-            // 手动/pause finalize：如果之前清除失败，再次尝试清除（兜底）
+        } else if is_manual_cut || is_timeout_triggered {
+            // 手动/timeout finalize：如果之前清除失败，再次尝试清除（兜底）
             // 注意：主要清除已在jobs创建之前完成，这里是兜底逻辑
             if let Some(ref rt) = self.state.phase2 {
                 let session_key = format!("scheduler:session:{}", self.session_id);
@@ -343,7 +341,7 @@ return 1
                             utterance_index = utterance_index,
                             reason = reason,
                             is_manual_cut = is_manual_cut,
-                            is_pause_triggered = is_pause_triggered,
+                            is_timeout_triggered = is_timeout_triggered,
                             "Session affinity: Cleared timeout_node_id mapping (fallback cleanup after job creation)"
                         );
                     }
@@ -353,7 +351,7 @@ return 1
                             utterance_index = utterance_index,
                             reason = reason,
                             is_manual_cut = is_manual_cut,
-                            is_pause_triggered = is_pause_triggered,
+                            is_timeout_triggered = is_timeout_triggered,
                             error = %e,
                             "Session affinity: Failed to clear timeout_node_id mapping (fallback cleanup also failed)"
                         );
@@ -362,7 +360,6 @@ return 1
             }
         }
 
-        // 派发 jobs
         for job in jobs {
             info!(
                 trace_id = %job.trace_id,
@@ -370,18 +367,34 @@ return 1
                 node_id = ?job.assigned_node_id,
                 tgt_lang = %job.tgt_lang,
                 audio_format = %job.audio_format,
-                audio_size_bytes = job.audio_data.len(),
-                "Job created (from session actor)"
+                audio_base64_len = job.audio_base64.len(),
+                "【Finalize】Job 已创建"
             );
 
             if let Some(ref node_id) = job.assigned_node_id {
-                // 检查是否已派发（幂等）
-                if let Some(existing) = self.state.dispatcher.get_job(&job.job_id).await {
-                    if existing.dispatched_to_node {
-                        continue;
-                    }
+                // 优化: 使用本地内存字段作为短路条件（性能优化）
+                // 注意：跨实例正确性必须通过 Redis Lua 原子占用保证，不能仅依赖本地字段
+                if job.dispatched_to_node {
+                    continue;  // 已派发，跳过（本地判断）
                 }
 
+                // 关键：必须以 Redis Lua 原子占用作为唯一闸门
+                // 先执行 Lua 原子占用 → 占用成功后再向节点发送任务
+                // 优化：使用 mark_job_dispatched，它内部会进行原子占用
+                let dispatch_result = self.state.dispatcher.mark_job_dispatched(&job.job_id, Some(&job.request_id), Some(job.dispatch_attempt_id)).await;
+                
+                if !dispatch_result {
+                    debug!(
+                        session_id = %self.session_id,
+                        job_id = %job.job_id,
+                        node_id = %node_id,
+                        utterance_index = utterance_index,
+                        "【Finalize】原子占用失败，跳过派发"
+                    );
+                    continue;
+                }
+                
+                // 原子占用成功，可以安全派发
                 if let Some(job_assign_msg) = create_job_assign_message(&self.state, &job, None, None, None).await {
                     info!(
                         trace_id = %job.trace_id,
@@ -389,27 +402,18 @@ return 1
                         session_id = %self.session_id,
                         node_id = %node_id,
                         utterance_index = utterance_index,
-                        "准备发送 JobAssign 消息到节点"
+                        "【派发】准备发送 JobAssign 到节点"
                     );
-                    if crate::phase2::send_node_message_routed(&self.state, node_id, job_assign_msg).await {
+                    if crate::redis_runtime::send_node_message_routed(&self.state, node_id, job_assign_msg).await {
                         info!(
                             trace_id = %job.trace_id,
                             job_id = %job.job_id,
                             session_id = %self.session_id,
                             node_id = %node_id,
                             utterance_index = utterance_index,
-                            "JobAssign 消息发送成功，标记任务为已分发"
+                            "【派发】JobAssign 发送成功，任务已分发"
                         );
-                        let marked = self.state.dispatcher.mark_job_dispatched(&job.job_id).await;
-                        info!(
-                            trace_id = %job.trace_id,
-                            job_id = %job.job_id,
-                            session_id = %self.session_id,
-                            node_id = %node_id,
-                            utterance_index = utterance_index,
-                            marked = marked,
-                            "任务已标记为已分发"
-                        );
+                        
                         send_ui_event(
                             &self.message_tx,
                             &job.trace_id,
@@ -429,7 +433,7 @@ return 1
                             job_id = %job.job_id,
                             node_id = %node_id,
                             utterance_index = utterance_index,
-                            "Failed to send job to node"
+                            "【派发】发往节点失败"
                         );
                         // 发送失败，释放资源
                         if let Some(rt) = self.state.phase2.as_ref() {
@@ -458,21 +462,24 @@ return 1
                     }
                 }
             } else {
-                // 节点不可用是内部调度问题，只记录日志，不发送错误给Web端
                 warn!(
                     session_id = %self.session_id,
                     job_id = %job.job_id,
                     utterance_index = utterance_index,
-                    "Job has no available nodes (internal scheduling issue, not sent to client)"
+                    "【任务创建】无可用节点（调度问题，未下发给客户端）"
                 );
-                // 不发送错误给Web端，让任务在超时后自然失败
             }
         }
 
         // 更新指标
         match reason {
             "IsFinal" => crate::metrics::on_web_task_finalized_by_send(),
-            "Pause" | "Timeout" => crate::metrics::on_web_task_finalized_by_pause(),
+            "Timeout" => crate::metrics::on_web_task_finalized_by_timeout(),
+            "MaxDuration" => {
+                // ✅ 修复：MaxDuration 使用独立的 metrics，但如果没有则使用 timeout（向后兼容）
+                // 注意：这里暂时使用 timeout metrics，因为 MaxDuration 和 timeout 都是自动 finalize
+                crate::metrics::on_web_task_finalized_by_timeout()
+            },
             _ => {}
         }
 

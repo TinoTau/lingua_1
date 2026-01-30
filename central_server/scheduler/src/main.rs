@@ -13,8 +13,9 @@ mod services;
 mod metrics;
 mod timeout;
 mod model_not_available;
-mod phase2;
-mod phase3;
+mod redis_runtime;
+mod pool_hashing;
+mod pool;
 mod app;
 
 #[tokio::main]

@@ -89,7 +89,7 @@ pub fn start_job_timeout_manager(
                         trace_id: Some(job.trace_id.clone()),
                         reason: Some("job_timeout".to_string()),
                     };
-                    let _ = crate::phase2::send_node_message_routed(&state, current_node_id, cancel_msg).await;
+                    let _ = crate::redis_runtime::send_node_message_routed(&state, current_node_id, cancel_msg).await;
                 }
 
                 // 释放旧节点 reserved（幂等）- 统一使用Phase2 Redis实现
@@ -196,52 +196,50 @@ pub fn start_job_timeout_manager(
                     continue;
                 }
 
-                // 更新 job 的当前节点（并递增 failover_attempts；同时重置 dispatched 标记）
-                if !state
+                // 优化：直接传入 job 对象，避免内部重复查询
+                // 更新 job 的当前节点（并递增 dispatch_attempt_id；原子性抢占）
+                let Some(actual_new_attempt_id) = state
                     .dispatcher
-                    .set_job_assigned_node_for_failover(&job.job_id, new_node_id.clone())
+                    .set_job_assigned_node_for_failover(&job, new_node_id.clone())
                     .await
-                {
-                    if let Some(rt) = state.phase2.as_ref() {
-                        rt.release_node_slot(&new_node_id, &job.job_id, new_attempt_id).await;
-                    }
-                    continue;
-                }
-
-                // 下发到新节点
-                let Some(updated_job) = state.dispatcher.get_job(&job.job_id).await else {
+                else {
+                    // 重派失败（Job不存在、已终止、或其他实例已抢占）
                     if let Some(rt) = state.phase2.as_ref() {
                         rt.release_node_slot(&new_node_id, &job.job_id, new_attempt_id).await;
                     }
                     continue;
                 };
 
+                // 优化：不再需要重新查询 job，因为 set_job_assigned_node_for_failover 已经返回了 attempt_id
                 // 记录派发开始时间（用于计算 dispatch_latency）
                 let dispatch_start = std::time::Instant::now();
-                if let Some(job_assign_msg) = crate::websocket::create_job_assign_message(&state, &updated_job, None, None, None).await {
-                    let ok = crate::phase2::send_node_message_routed(&state, &new_node_id, job_assign_msg).await;
+                // 注意：job 对象可能需要更新 assigned_node_id 和 dispatch_attempt_id
+                // 但为了简化，我们先使用现有的 job 对象，Lua 脚本已经更新了 Redis
+                if let Some(job_assign_msg) = crate::websocket::create_job_assign_message(&state, &job, None, None, None).await {
+                    let ok = crate::redis_runtime::send_node_message_routed(&state, &new_node_id, job_assign_msg).await;
                     if ok {
                         // 记录派发延迟
                         let dispatch_latency = dispatch_start.elapsed().as_secs_f64();
                         crate::metrics::prometheus_metrics::observe_dispatch_latency(dispatch_latency);
                         
-                        state.dispatcher.mark_job_dispatched(&updated_job.job_id).await;
+                        // 优化：使用本地 job 对象的字段，避免重复查询
+                        state.dispatcher.mark_job_dispatched(&job.job_id, Some(&job.request_id), Some(actual_new_attempt_id)).await;
                         info!(
-                            trace_id = %updated_job.trace_id,
-                            job_id = %updated_job.job_id,
+                            trace_id = %job.trace_id,
+                            job_id = %job.job_id,
                             old_node_id = %current_node_id,
                             new_node_id = %new_node_id,
-                            failover_attempts = updated_job.failover_attempts,
+                            failover_attempts = job.failover_attempts,
                             dispatch_latency_seconds = dispatch_latency,
                             "Job failover 重派成功下发"
                         );
                     } else {
                         // 发送失败：释放 reserved 并发槽并标记失败（避免泄漏）
                         if let Some(rt) = state.phase2.as_ref() {
-                            rt.release_node_slot(&new_node_id, &updated_job.job_id, updated_job.dispatch_attempt_id).await;
+                            rt.release_node_slot(&new_node_id, &job.job_id, actual_new_attempt_id).await;
                         }
-                        state.dispatcher.update_job_status(&updated_job.job_id, crate::core::dispatcher::JobStatus::Failed).await;
-                        notify_job_node_unavailable(&state, &updated_job, Some(now_ms as u64)).await;
+                        state.dispatcher.update_job_status(&job.job_id, crate::core::dispatcher::JobStatus::Failed).await;
+                        notify_job_node_unavailable(&state, &job, Some(now_ms as u64)).await;
                     }
                 }
             }
@@ -267,7 +265,7 @@ async fn notify_job_timeout(state: &AppState, job: &crate::core::dispatcher::Job
         error_code: Some(code),
         hint,
     };
-    let _ = crate::phase2::send_session_message_routed(state, &job.session_id, ui_event).await;
+    let _ = crate::redis_runtime::send_session_message_routed(state, &job.session_id, ui_event).await;
 }
 
 async fn notify_job_node_unavailable(state: &AppState, job: &crate::core::dispatcher::Job, now_ms_opt: Option<u64>) {
@@ -288,7 +286,7 @@ async fn notify_job_node_unavailable(state: &AppState, job: &crate::core::dispat
         error_code: Some(code),
         hint,
     };
-    let _ = crate::phase2::send_session_message_routed(state, &job.session_id, ui_event).await;
+    let _ = crate::redis_runtime::send_session_message_routed(state, &job.session_id, ui_event).await;
 }
 
 

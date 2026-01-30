@@ -10,15 +10,16 @@ pub mod services;
 pub mod metrics;
 pub mod timeout;
 pub mod model_not_available;
-pub mod phase2;
-pub mod phase3;
+pub mod redis_runtime;
+pub mod pool_hashing;
+pub mod pool;
 
 // Re-export commonly used types
 pub use core::{AppState, Config, JobDispatcher, SessionManager};
 pub use managers::{
-    AudioBufferManager, GroupManager, GroupConfig, NodeStatusManager,
+    AudioBufferManager, GroupManager, GroupConfig,
     ResultQueueManager, RoomManager, SessionConnectionManager, NodeConnectionManager,
 };
-pub use services::{ModelHub, PairingService, ServiceCatalogCache};
+pub use services::{PairingService, ServiceCatalogCache};
 pub use utils::ModuleResolver;
 

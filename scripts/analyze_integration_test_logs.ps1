@@ -1,225 +1,159 @@
-# 集成测试日志分析脚本
-# 分析调度服务器、节点端和Web端的日志，计算每个任务在各步骤的耗时
+# 分析集成测试日志
+# 用于诊断前半句丢失问题
+
+param(
+    [string]$SessionId = "",
+    [string]$SchedulerLogPath = "central_server\scheduler\logs\scheduler.log",
+    [string]$NodeLogPath = "electron_node\electron-node\logs\electron-main.log",
+    [int]$Lines = 1000
+)
 
 $ErrorActionPreference = "Continue"
 
-Write-Host "=== 集成测试日志分析 ===" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "集成测试日志分析" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
-# 日志文件路径
-$schedulerLog = "central_server\scheduler\logs\scheduler.log"
-$nodeLog = "electron_node\electron-node\logs\electron-main.log"
-$webLog = "webapp\web-client\logs\web-client.log"
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$projectRoot = Split-Path -Parent $scriptDir
 
-# 1. 检查日志文件是否存在
-Write-Host "1. 检查日志文件..." -ForegroundColor Yellow
-$logs = @{}
+# 1. 分析调度服务器日志
+Write-Host "1. 调度服务器日志分析" -ForegroundColor Yellow
+Write-Host "----------------------------------------" -ForegroundColor Gray
+
+$schedulerLog = Join-Path $projectRoot $SchedulerLogPath
 if (Test-Path $schedulerLog) {
-    $logs["scheduler"] = $schedulerLog
-    Write-Host "  ✓ 调度服务器日志: $schedulerLog" -ForegroundColor Green
+    $schedulerContent = Get-Content $schedulerLog -Tail $Lines
+    
+    # 提取 Job 创建日志
+    Write-Host "`n[Job 创建日志]" -ForegroundColor Green
+    $jobCreationLogs = $schedulerContent | Select-String -Pattern "任务创建|Job 创建成功|Finalize triggered" | Select-Object -Last 20
+    if ($jobCreationLogs) {
+        $jobCreationLogs | ForEach-Object {
+            Write-Host $_.Line -ForegroundColor White
+        }
+    } else {
+        Write-Host "未找到 Job 创建日志" -ForegroundColor Red
+    }
+    
+    # 提取 utterance_index
+    Write-Host "`n[UtteranceIndex 列表]" -ForegroundColor Green
+    $utteranceIndices = $schedulerContent | Select-String -Pattern "utterance_index\s*[=:]\s*(\d+)" | ForEach-Object {
+        if ($_.Matches[0].Groups[1].Value) {
+            [int]$_.Matches[0].Groups[1].Value
+        }
+    } | Sort-Object -Unique
+    
+    if ($utteranceIndices) {
+        Write-Host "找到的 utterance_index: $($utteranceIndices -join ', ')" -ForegroundColor White
+        
+        # 检查连续性
+        $maxIndex = ($utteranceIndices | Measure-Object -Maximum).Maximum
+        $expected = 0..$maxIndex
+        $missing = $expected | Where-Object { $_ -notin $utteranceIndices }
+        
+        if ($missing) {
+            Write-Host "缺失的 utterance_index: $($missing -join ', ')" -ForegroundColor Red
+        } else {
+            Write-Host "utterance_index 连续" -ForegroundColor Green
+        }
+    } else {
+        Write-Host "未找到 utterance_index" -ForegroundColor Red
+    }
+    
+    # 提取 Finalize 原因
+    Write-Host "`n[Finalize 原因统计]" -ForegroundColor Green
+    $finalizeReasons = $schedulerContent | Select-String -Pattern "reason\s*[=:]\s*['""]?(\w+)['""]?" | ForEach-Object {
+        if ($_.Matches[0].Groups[1].Value) {
+            $_.Matches[0].Groups[1].Value
+        }
+    } | Group-Object | Sort-Object Count -Descending
+    
+    if ($finalizeReasons) {
+        $finalizeReasons | ForEach-Object {
+            Write-Host "  $($_.Name): $($_.Count) 次" -ForegroundColor White
+        }
+    } else {
+        Write-Host "未找到 Finalize 原因" -ForegroundColor Red
+    }
+    
 } else {
-    Write-Host "  ✗ 调度服务器日志不存在: $schedulerLog" -ForegroundColor Red
+    Write-Host "调度服务器日志文件不存在: $schedulerLog" -ForegroundColor Red
 }
 
+Write-Host ""
+
+# 2. 分析节点端日志
+Write-Host "2. 节点端日志分析" -ForegroundColor Yellow
+Write-Host "----------------------------------------" -ForegroundColor Gray
+
+$nodeLog = Join-Path $projectRoot $NodeLogPath
 if (Test-Path $nodeLog) {
-    $logs["node"] = $nodeLog
-    Write-Host "  ✓ 节点端日志: $nodeLog" -ForegroundColor Green
+    $nodeContent = Get-Content $nodeLog -Tail $Lines
+    
+    # 提取 AudioAggregator 处理日志
+    Write-Host "`n[AudioAggregator 处理日志]" -ForegroundColor Green
+    $audioAggregatorLogs = $nodeContent | Select-String -Pattern "AudioAggregator.*Processing|hasMergedPendingAudio|inputAudioDurationMs" | Select-Object -Last 20
+    if ($audioAggregatorLogs) {
+        $audioAggregatorLogs | ForEach-Object {
+            Write-Host $_.Line -ForegroundColor White
+        }
+    } else {
+        Write-Host "未找到 AudioAggregator 处理日志" -ForegroundColor Red
+    }
+    
+    # 提取 Finalize Handler 日志
+    Write-Host "`n[Finalize Handler 日志]" -ForegroundColor Green
+    $finalizeHandlerLogs = $nodeContent | Select-String -Pattern "FinalizeHandler.*utteranceIndex|UtteranceIndex跳跃|连续utteranceIndex" | Select-Object -Last 20
+    if ($finalizeHandlerLogs) {
+        $finalizeHandlerLogs | ForEach-Object {
+            Write-Host $_.Line -ForegroundColor White
+        }
+    } else {
+        Write-Host "未找到 Finalize Handler 日志" -ForegroundColor Red
+    }
+    
+    # 提取 AggregatorMiddleware 去重日志
+    Write-Host "`n[AggregatorMiddleware 去重日志]" -ForegroundColor Green
+    $deduplicationLogs = $nodeContent | Select-String -Pattern "Filtering duplicate|Detected overlap|substring duplicate" | Select-Object -Last 20
+    if ($deduplicationLogs) {
+        $deduplicationLogs | ForEach-Object {
+            Write-Host $_.Line -ForegroundColor White
+        }
+    } else {
+        Write-Host "未找到 AggregatorMiddleware 去重日志" -ForegroundColor Gray
+    }
+    
+    # 提取音频时长信息
+    Write-Host "`n[音频时长统计]" -ForegroundColor Green
+    $audioDurationLogs = $nodeContent | Select-String -Pattern "inputAudioDurationMs\s*[=:]\s*(\d+)" | ForEach-Object {
+        if ($_.Matches[0].Groups[1].Value) {
+            [int]$_.Matches[0].Groups[1].Value
+        }
+    }
+    
+    if ($audioDurationLogs) {
+        $shortAudio = $audioDurationLogs | Where-Object { $_ -lt 1000 }
+        $mediumAudio = $audioDurationLogs | Where-Object { $_ -ge 1000 -and $_ -lt 5000 }
+        $longAudio = $audioDurationLogs | Where-Object { $_ -ge 5000 }
+        
+        Write-Host "  短音频（< 1秒）: $($shortAudio.Count) 个" -ForegroundColor $(if ($shortAudio.Count -gt 0) { "Yellow" } else { "Green" })
+        Write-Host "  中等音频（1-5秒）: $($mediumAudio.Count) 个" -ForegroundColor White
+        Write-Host "  长音频（≥ 5秒）: $($longAudio.Count) 个" -ForegroundColor White
+        
+        if ($shortAudio) {
+            Write-Host "  短音频时长: $($shortAudio -join 'ms, ')ms" -ForegroundColor Yellow
+        }
+    } else {
+        Write-Host "未找到音频时长信息" -ForegroundColor Red
+    }
+    
 } else {
-    Write-Host "  ✗ 节点端日志不存在: $nodeLog" -ForegroundColor Red
-}
-
-if (Test-Path $webLog) {
-    $logs["web"] = $webLog
-    Write-Host "  ✓ Web端日志: $webLog" -ForegroundColor Green
-} else {
-    Write-Host "  ✗ Web端日志不存在: $webLog" -ForegroundColor Red
+    Write-Host "节点端日志文件不存在: $nodeLog" -ForegroundColor Red
 }
 
 Write-Host ""
-
-# 2. 提取任务ID（session_id和job_id）
-Write-Host "2. 提取任务ID..." -ForegroundColor Yellow
-$allJobIds = @{}
-$allSessionIds = @{}
-
-if ($logs.ContainsKey("scheduler")) {
-    $schedulerLines = Get-Content $logs["scheduler"] -Tail 2000
-    foreach ($line in $schedulerLines) {
-        # 提取 session_id (格式: session_id=s-XXXXX)
-        if ($line -match 'session_id=([sS]-[A-F0-9]+)') {
-            $sessionId = $matches[1]
-            $allSessionIds[$sessionId] = $true
-        }
-        # 提取 job_id (格式: job_id=s-XXXXX:Y)
-        if ($line -match 'job_id=([sS]-[A-F0-9]+:\d+)') {
-            $jobId = $matches[1]
-            $allJobIds[$jobId] = $true
-        }
-    }
-}
-
-Write-Host "  找到 $($allSessionIds.Count) 个会话ID" -ForegroundColor Gray
-Write-Host "  找到 $($allJobIds.Count) 个任务ID" -ForegroundColor Gray
-
-# 显示前10个
-if ($allSessionIds.Count -gt 0) {
-    Write-Host "  示例会话ID:" -ForegroundColor Gray
-    $allSessionIds.Keys | Select-Object -First 5 | ForEach-Object { Write-Host "    $_" -ForegroundColor Gray }
-}
-
-Write-Host ""
-
-# 3. 分析每个任务的时间线
-Write-Host "3. 分析任务时间线..." -ForegroundColor Yellow
-
-# 解析日志行的时间戳（Rust tracing格式）
-function Parse-Timestamp {
-    param([string]$line)
-    
-    # Rust tracing 格式: 2025-01-11T23:05:12.123456Z
-    if ($line -match '(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+)') {
-        $timestampStr = $matches[1]
-        try {
-            return [DateTimeOffset]::Parse($timestampStr)
-        } catch {
-            return $null
-        }
-    }
-    return $null
-}
-
-# 分析单个任务
-$taskAnalysis = @{}
-
-foreach ($sessionId in $allSessionIds.Keys) {
-    $jobIds = $allJobIds.Keys | Where-Object { $_ -like "$sessionId*" }
-    
-    foreach ($jobId in $jobIds) {
-        Write-Host "  分析任务: $jobId" -ForegroundColor Gray
-        
-        $events = @{
-            "task_created" = $null      # 任务创建
-            "job_assign_sent" = $null   # 任务发送给节点
-            "job_ack_received" = $null  # 节点确认接收
-            "job_started" = $null       # 节点开始处理
-            "job_result_received" = $null  # 节点返回结果
-            "result_sent_to_web" = $null   # 结果发送给Web
-        }
-        
-        # 从调度服务器日志提取
-        if ($logs.ContainsKey("scheduler")) {
-            $schedulerLines = Get-Content $logs["scheduler"] -Tail 2000
-            foreach ($line in $schedulerLines) {
-                if ($line -match $jobId) {
-                    $ts = Parse-Timestamp $line
-                    if ($ts) {
-                        # 任务创建
-                        if ($line -match '翻译任务创建|create.*job|dispatch_task') {
-                            if (-not $events["task_created"]) {
-                                $events["task_created"] = $ts
-                            }
-                        }
-                        # 任务发送
-                        if ($line -match 'JobAssign|job_assign|发送.*任务') {
-                            if (-not $events["job_assign_sent"]) {
-                                $events["job_assign_sent"] = $ts
-                            }
-                        }
-                        # 节点确认
-                        if ($line -match 'JobAck|job_ack|确认.*接收') {
-                            if (-not $events["job_ack_received"]) {
-                                $events["job_ack_received"] = $ts
-                            }
-                        }
-                        # 节点开始
-                        if ($line -match 'JobStarted|job_started|开始.*处理') {
-                            if (-not $events["job_started"]) {
-                                $events["job_started"] = $ts
-                            }
-                        }
-                        # 结果接收
-                        if ($line -match 'JobResult|job_result|收到.*结果') {
-                            if (-not $events["job_result_received"]) {
-                                $events["job_result_received"] = $ts
-                            }
-                        }
-                        # 结果发送给Web
-                        if ($line -match '发送.*结果|send.*result|SessionMessage') {
-                            if (-not $events["result_sent_to_web"]) {
-                                $events["result_sent_to_web"] = $ts
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        # 计算耗时
-        $durations = @{}
-        if ($events["task_created"] -and $events["job_assign_sent"]) {
-            $durations["创建到发送"] = ($events["job_assign_sent"] - $events["task_created"]).TotalMilliseconds
-        }
-        if ($events["job_assign_sent"] -and $events["job_ack_received"]) {
-            $durations["发送到确认"] = ($events["job_ack_received"] - $events["job_assign_sent"]).TotalMilliseconds
-        }
-        if ($events["job_ack_received"] -and $events["job_started"]) {
-            $durations["确认到开始"] = ($events["job_started"] - $events["job_ack_received"]).TotalMilliseconds
-        }
-        if ($events["job_started"] -and $events["job_result_received"]) {
-            $durations["处理时间"] = ($events["job_result_received"] - $events["job_started"]).TotalMilliseconds
-        }
-        if ($events["job_result_received"] -and $events["result_sent_to_web"]) {
-            $durations["结果到Web"] = ($events["result_sent_to_web"] - $events["job_result_received"]).TotalMilliseconds
-        }
-        if ($events["task_created"] -and $events["result_sent_to_web"]) {
-            $durations["总耗时"] = ($events["result_sent_to_web"] - $events["task_created"]).TotalMilliseconds
-        }
-        
-        $taskAnalysis[$jobId] = @{
-            Events = $events
-            Durations = $durations
-        }
-    }
-}
-
-Write-Host ""
-
-# 4. 输出分析结果
-Write-Host "4. 任务耗时分析结果:" -ForegroundColor Yellow
-Write-Host ""
-
-foreach ($jobId in ($taskAnalysis.Keys | Sort-Object)) {
-    $analysis = $taskAnalysis[$jobId]
-    Write-Host "任务: $jobId" -ForegroundColor Cyan
-    
-    foreach ($key in $analysis.Durations.Keys | Sort-Object) {
-        $ms = $analysis.Durations[$key]
-        $color = if ($ms -gt 5000) { "Red" } elseif ($ms -gt 2000) { "Yellow" } else { "Green" }
-        Write-Host "  $key : $([math]::Round($ms, 2)) ms" -ForegroundColor $color
-    }
-    
-    Write-Host ""
-}
-
-# 5. 统计错误和警告
-Write-Host "5. 错误和警告统计:" -ForegroundColor Yellow
-Write-Host ""
-
-if ($logs.ContainsKey("scheduler")) {
-    $errorCount = (Get-Content $logs["scheduler"] -Tail 2000 | Select-String -Pattern "ERROR" -CaseSensitive).Count
-    $warnCount = (Get-Content $logs["scheduler"] -Tail 2000 | Select-String -Pattern "WARN" -CaseSensitive).Count
-    Write-Host "  调度服务器 (最近2000行):" -ForegroundColor Gray
-    Write-Host "    ERROR: $errorCount" -ForegroundColor $(if ($errorCount -gt 0) { "Red" } else { "Green" })
-    Write-Host "    WARN: $warnCount" -ForegroundColor $(if ($warnCount -gt 0) { "Yellow" } else { "Green" })
-}
-
-if ($logs.ContainsKey("node")) {
-    $errorCount = (Get-Content $logs["node"] -Tail 2000 | Select-String -Pattern '"level":\s*50|"level":\s*40' -CaseSensitive).Count
-    $warnCount = (Get-Content $logs["node"] -Tail 2000 | Select-String -Pattern '"level":\s*40' -CaseSensitive).Count
-    Write-Host "  节点端 (最近2000行):" -ForegroundColor Gray
-    Write-Host "    ERROR (level 50): $errorCount" -ForegroundColor $(if ($errorCount -gt 0) { "Red" } else { "Green" })
-    Write-Host "    WARN (level 40): $warnCount" -ForegroundColor $(if ($warnCount -gt 0) { "Yellow" } else { "Green" })
-}
-
-Write-Host ""
-Write-Host "分析完成！" -ForegroundColor Green
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "分析完成" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan

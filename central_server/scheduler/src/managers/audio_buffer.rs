@@ -39,7 +39,7 @@ impl AudioBuffer {
 #[derive(Clone)]
 pub struct AudioBufferManager {
     buffers: Arc<RwLock<HashMap<String, AudioBuffer>>>, // key: "{session_id}:{utterance_index}"
-    /// 记录每个 session 最近一次收到 audio_chunk 的时间（用于停顿自动切句）
+    /// 记录每个 session 最近一次收到 audio_chunk 的时间（用于 timeout 检测）
     last_chunk_at_ms: Arc<RwLock<HashMap<String, i64>>>,
 }
 
@@ -51,24 +51,12 @@ impl AudioBufferManager {
         }
     }
 
-    /// 记录收到音频块，并判断是否超过停顿阈值（毫秒）。
-    /// 返回 true 表示：本次与上次间隔 > pause_ms，应视为“新任务开始”（需要先结束上一任务）。
-    pub async fn record_chunk_and_check_pause(&self, session_id: &str, now_ms: i64, pause_ms: u64) -> bool {
-        let mut map = self.last_chunk_at_ms.write().await;
-        let exceeded = map
-            .get(session_id)
-            .map(|prev| now_ms.saturating_sub(*prev) > pause_ms as i64)
-            .unwrap_or(false);
-        map.insert(session_id.to_string(), now_ms);
-        exceeded
-    }
-
     pub async fn get_last_chunk_at_ms(&self, session_id: &str) -> Option<i64> {
         self.last_chunk_at_ms.read().await.get(session_id).copied()
     }
 
-    /// 仅更新 last_chunk_at_ms，不触发 pause 检测
-    /// 用于空的 is_final=true 消息，重置 pause 检测的基准时间
+    /// 更新 last_chunk_at_ms
+    /// 用于空的 is_final=true 消息或 RestartTimer 事件，重置 timeout 检测的基准时间
     pub async fn update_last_chunk_at_ms(&self, session_id: &str, now_ms: i64) {
         let mut map = self.last_chunk_at_ms.write().await;
         map.insert(session_id.to_string(), now_ms);
@@ -79,7 +67,7 @@ impl AudioBufferManager {
     /// - should_finalize: 如果音频长度超过异常保护限制，返回 true 表示应该触发 finalize
     /// - current_size_bytes: 当前音频的总字节数
     /// 
-    /// 注意：正常情况下，Web 端 VAD 会过滤静音，调度服务器的 pause_ms 超时机制会触发 finalize。
+    /// 注意：正常情况下，Web 端 VAD 会过滤静音，调度服务器的 timeout 机制会触发 finalize。
     /// 这里的限制仅作为异常保护，防止极端情况下（如 VAD 失效、超时机制失效）音频无限累积。
     pub async fn add_chunk(&self, session_id: &str, utterance_index: u64, chunk: Vec<u8>) -> (bool, usize) {
         let key = format!("{}:{}", session_id, utterance_index);
@@ -89,13 +77,13 @@ impl AudioBufferManager {
         buffer.add_chunk(chunk);
         
         // 异常保护：限制音频总大小，防止极端情况下音频无限累积导致 GPU 内存溢出
-        // 正常情况下，Web 端 VAD 会过滤静音，调度服务器的 pause_ms（默认 2000ms）超时机制会触发 finalize
+        // 正常情况下，Web 端 VAD 会过滤静音，调度服务器的 timeout 机制会触发 finalize
         // 这里的限制设置为 500KB（约 2-3 分钟音频），仅作为异常保护
         // 对于 16kHz 单声道，Opus 编码：
         // - 低比特率（~16kbps）：约 60KB/30秒
         // - 中等比特率（~32kbps）：约 120KB/30秒
         // - 高比特率（~64kbps）：约 240KB/30秒
-        // 使用 500KB 作为异常保护上限，正常情况下不会触发（因为 pause_ms 会先触发）
+        // 使用 500KB 作为异常保护上限，正常情况下不会触发（因为 timeout 机制会先触发）
         const MAX_AUDIO_SIZE_BYTES: usize = 500 * 1024; // 500KB（异常保护）
         let should_finalize = buffer.total_size > MAX_AUDIO_SIZE_BYTES;
         
@@ -123,7 +111,15 @@ impl AudioBufferManager {
             None
         }
     }
-
-
+    
+    /// 获取音频数据（不移除，用于读取）
+    pub async fn get_combined(&self, session_id: &str, utterance_index: u64) -> Option<Vec<u8>> {
+        let key = format!("{}:{}", session_id, utterance_index);
+        let buffers = self.buffers.read().await;
+        if let Some(buffer) = buffers.get(&key) {
+            Some(buffer.get_combined())
+        } else {
+            None
+        }
+    }
 }
-

@@ -1,0 +1,16 @@
+{
+  "id": "nmt-m2m100",
+  "name": "NMT M2M100 Translation",
+  "type": "nmt",
+  "device": "gpu",
+  "port": 5008,
+  "exec": {
+    "command": "python",
+    "args": [
+      "nmt_service.py"
+    ],
+    "cwd": "."
+  },
+  "version": "1.0.0",
+  "description": "Neural Machine Translation service using M2M100 model"
+}

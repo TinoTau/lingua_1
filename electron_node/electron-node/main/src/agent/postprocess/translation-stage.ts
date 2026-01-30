@@ -3,7 +3,7 @@
  * 职责：TranslationCache 查询、NMT 调用
  */
 
-import { JobAssignMessage } from '@shared/protocols/messages';
+import { JobAssignMessage } from '../../../../../shared/protocols/messages';
 import { TaskRouter } from '../../task-router/task-router';
 import { NMTTask } from '../../task-router/types';
 import { AggregatorManager } from '../../aggregator/aggregator-manager';
@@ -108,72 +108,8 @@ export class TranslationStage {
       };
     }
 
-    // 获取上下文文本（用于NMT服务的context_text）
-    // 重要：应该使用上一个utterance的原文（ASR文本，中文），而不是翻译文本（英文）
-    // 因为NMT服务会将context_text和text拼接，如果context_text是英文翻译，会导致混合语言输入
-    // 修复：只按utteranceIndex顺序选择最近一条已提交的完整文本，不再基于文本内容匹配
-    let contextText = this.aggregatorManager?.getLastCommittedText(job.session_id, job.utterance_index) || undefined;
-
-    // 额外检查：如果contextText和当前文本相同或非常相似，清空contextText
-    // 优化：同时检查contextText是否是不完整句子，如果是则不使用
-    if (contextText && aggregatedText) {
-      const contextTrimmed = contextText.trim().replace(/\s+/g, ' ');
-      const currentTrimmed = aggregatedText.trim().replace(/\s+/g, ' ');
-
-      // 检查1：是否完全相同
-      if (contextTrimmed === currentTrimmed) {
-        logger.warn(
-          {
-            jobId: job.job_id,
-            sessionId: job.session_id,
-            utteranceIndex: job.utterance_index,
-            note: 'contextText is same as current text, using null instead',
-          },
-          'TranslationStage: contextText is same as current text, ignoring'
-        );
-        contextText = undefined;
-      }
-      // 检查2：是否非常相似（子串关系且长度差异小于20%）
-      else if (contextTrimmed.includes(currentTrimmed) || currentTrimmed.includes(contextTrimmed)) {
-        const lengthDiff = Math.abs(contextTrimmed.length - currentTrimmed.length);
-        const avgLength = (contextTrimmed.length + currentTrimmed.length) / 2;
-        if (lengthDiff / avgLength < 0.2) {
-          logger.warn(
-            {
-              jobId: job.job_id,
-              sessionId: job.session_id,
-              utteranceIndex: job.utterance_index,
-              contextTextLength: contextTrimmed.length,
-              currentTextLength: currentTrimmed.length,
-              lengthDiffRatio: lengthDiff / avgLength,
-              note: 'contextText is very similar to current text, using null instead',
-            },
-            'TranslationStage: contextText is very similar to current text, ignoring'
-          );
-          contextText = undefined;
-        }
-      }
-      // 检查3：contextText是否是不完整句子（不以标点符号结尾且较短）
-      else if (this.isIncompleteSentence(contextTrimmed)) {
-        logger.warn(
-          {
-            jobId: job.job_id,
-            sessionId: job.session_id,
-            utteranceIndex: job.utterance_index,
-            contextText: contextTrimmed.substring(0, 100),
-            note: 'contextText appears to be incomplete sentence, using null instead to avoid confusion',
-          },
-          'TranslationStage: contextText is incomplete sentence, ignoring'
-        );
-        contextText = undefined;
-      }
-    }
-
-    if (contextText && contextText.length > 200) {
-      contextText = contextText.substring(contextText.length - 200);
-    }
-
-    // 生成缓存键
+    // 节点端不传 context_text，由 NMT 服务自行处理上下文；避免节点端拼接/截断导致译文空或合并错误。
+    const contextText: string | undefined = undefined;
     const cacheKey = generateCacheKey(
       job.src_lang,
       job.tgt_lang,
@@ -240,7 +176,6 @@ export class TranslationStage {
     contextText: string | undefined,
     startTime: number
   ): Promise<TranslationStageResult> {
-    // 生成缓存键
     const cacheKey = generateCacheKey(
       job.src_lang,
       job.tgt_lang,
@@ -299,9 +234,9 @@ export class TranslationStage {
             text: sourceCandidate,
             src_lang: job.src_lang,
             tgt_lang: job.tgt_lang,
-            context_text: contextText, // 使用上一个utterance的原文（中文），用于NMT纠错
+            context_text: contextText,
             job_id: job.job_id,
-          } as any; // 添加session_id和utterance_index用于日志
+          } as any;
           (nmtTask as any).session_id = job.session_id;
           (nmtTask as any).utterance_index = job.utterance_index;
 
@@ -385,13 +320,12 @@ export class TranslationStage {
         text: aggregatedText,
         src_lang: job.src_lang,
         tgt_lang: job.tgt_lang,
-        context_text: contextText, // 使用上一个utterance的原文（中文），用于NMT纠错
+        context_text: contextText,
         job_id: job.job_id,
-      } as any; // 添加session_id和utterance_index用于日志
+      } as any;
       (nmtTask as any).session_id = job.session_id;
       (nmtTask as any).utterance_index = job.utterance_index;
 
-      // 记录实际发送给NMT的文本
       logger.info(
         {
           jobId: job.job_id,
@@ -399,13 +333,11 @@ export class TranslationStage {
           utteranceIndex: job.utterance_index,
           textToTranslate: aggregatedText,
           textToTranslateLength: aggregatedText.length,
-          contextText: contextText,
-          contextTextLength: contextText?.length || 0,
-          contextTextPreview: contextText?.substring(0, 50),
+          contextTextLength: contextText?.length ?? 0,
           srcLang: job.src_lang,
           tgtLang: job.tgt_lang,
         },
-        'TranslationStage: Sending text to NMT service (with context_text as previous ASR text for error correction)'
+        'TranslationStage: Sending text to NMT service'
       );
 
       // GPU仲裁：获取GPU租约
@@ -469,42 +401,6 @@ export class TranslationStage {
       translationTimeMs,
       fromCache: false,
     };
-  }
-
-  /**
-   * 检测不完整句子
-   * 如果文本不以标点符号结尾，且长度较短，可能是被切分的句子
-   */
-  private isIncompleteSentence(text: string): boolean {
-    if (!text || text.trim().length === 0) {
-      return false;
-    }
-
-    const trimmed = text.trim();
-    // 检查是否以标点符号结尾（中文和英文标点）
-    const endsWithPunctuation = /[。，！？、；：.!?,;:]$/.test(trimmed);
-
-    // 如果以标点符号结尾，认为是完整句子
-    if (endsWithPunctuation) {
-      return false;
-    }
-
-    // 如果文本较短（少于20个字符），且不以标点符号结尾，可能是不完整句子（统一使用20字符标准）
-    if (trimmed.length < 20) {
-      // 检查是否包含常见的不完整句子模式
-      const incompletePatterns = [
-        /的$/, /了$/, /在$/, /是$/, /有$/, /会$/, /能$/, /要$/, /我们$/, /这个$/, /那个$/,
-        /问题$/, /方法$/, /系统$/, /服务$/, /结果$/, /原因$/, /效果$/, /处理$/, /解决$/
-      ];
-
-      for (const pattern of incompletePatterns) {
-        if (pattern.test(trimmed)) {
-          return true;
-        }
-      }
-    }
-
-    return false;
   }
 }
 

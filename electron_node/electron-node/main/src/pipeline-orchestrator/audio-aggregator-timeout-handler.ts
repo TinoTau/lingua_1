@@ -145,9 +145,10 @@ export class AudioAggregatorTimeoutHandler {
       );
 
     // 按能量切分
+    // 优化：降低maxSegmentDurationMs从10秒到5秒，以便在Timeout finalize的长音频中识别自然停顿
     const audioSegments = this.audioUtils.splitAudioByEnergy(
       mergedAudio,
-      10000, // maxSegmentDurationMs: 10秒
+      5000, // maxSegmentDurationMs: 5秒（从10秒降低，以便识别自然停顿）
       2000,  // minSegmentDurationMs: 2秒
       this.SPLIT_HANGOVER_MS
     );

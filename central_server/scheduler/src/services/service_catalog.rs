@@ -102,10 +102,6 @@ impl ServiceCatalogCache {
         self.inner.read().await.services.clone()
     }
 
-    #[allow(dead_code)]
-    pub async fn last_updated_at_ms(&self) -> i64 {
-        self.inner.read().await.updated_at_ms
-    }
 
 
     pub async fn get_meta(&self) -> ServiceCatalogMeta {

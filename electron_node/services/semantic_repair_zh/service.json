@@ -1,8 +1,8 @@
 {
-  "service_id": "semantic-repair-zh",
+  "id": "semantic-repair-zh",
   "name": "Semantic Repair Service - Chinese",
   "version": "1.0.0",
-  "type": "semantic-repair",
+  "type": "semantic",
   "language": "zh",
   "port": 5013,
   "enabled": false,
@@ -11,10 +11,11 @@
   "gpu_required": true,
   "vram_estimate": 2048,
   "max_concurrency": 1,
-  "startup_command": "python",
-  "startup_args": [
-    "semantic_repair_zh_service.py"
-  ],
+  "exec": {
+    "command": "python",
+    "args": ["semantic_repair_zh_service.py"],
+    "cwd": "."
+  },
   "health_check": {
     "endpoint": "/health",
     "timeout_ms": 5000

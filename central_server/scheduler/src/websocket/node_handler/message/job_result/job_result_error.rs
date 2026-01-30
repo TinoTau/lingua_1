@@ -56,7 +56,7 @@ pub(crate) async fn handle_job_result_error(
             .as_ref()
             .map(|code| crate::messages::get_error_hint(code).to_string()),
     };
-    let _ = crate::phase2::send_session_message_routed(state, session_id, ui_event).await;
+    let _ = crate::redis_runtime::send_session_message_routed(state, session_id, ui_event).await;
 
     // Send error to client
     error!(
@@ -71,7 +71,7 @@ pub(crate) async fn handle_job_result_error(
             message: err.message.clone(),
             details: err.details.clone(),
         };
-        let _ = crate::phase2::send_session_message_routed(state, session_id, error_msg).await;
+        let _ = crate::redis_runtime::send_session_message_routed(state, session_id, error_msg).await;
     }
 }
 

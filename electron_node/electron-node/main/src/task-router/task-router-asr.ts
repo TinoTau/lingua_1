@@ -104,12 +104,16 @@ export class TaskRouterASRHandler {
             jobId: task.job_id,
             sessionId: (task as any).session_id,
             utteranceIndex: (task as any).utterance_index,
+            audioDataLength: task.audio?.length || 0,
+            estimatedDurationMs: task.audio ? Math.round((Buffer.from(task.audio, 'base64').length / 2) / 16) : 0,
             reason: 'Audio quality check failed (likely silence or noise)',
+            note: 'This will return empty ASR result, but should NOT be marked as missing segment (audio quality rejection is intentional)',
           },
           'ASR task: Rejecting low quality audio, returning empty result'
         );
         
         // 返回空结果，避免发送到 ASR 服务
+        // 注意：这不是ASR失败，而是音频质量检查拒绝，所以不应该标记为missing segment
         return {
           text: '',
           segments: [],
@@ -207,11 +211,14 @@ export class TaskRouterASRHandler {
           errorMessage: axiosError.message,
           errorCode: axiosError.code,
           jobId: task.job_id,
+          sessionId: (task as any).session_id,
+          utteranceIndex: (task as any).utterance_index,
           responseData: axiosError.response?.data,
           requestDurationMs: requestDuration,
           isTimeout,
           timeout: httpClient.defaults?.timeout ?? 60000,
-        }, `faster-whisper-vad request failed${isTimeout ? ' (TIMEOUT)' : ''}'`);
+          note: isTimeout ? 'ASR service timeout - this should be marked as missing segment' : 'ASR service error - this should be marked as missing segment',
+        }, `faster-whisper-vad request failed${isTimeout ? ' (TIMEOUT)' : ''}`);
         throw axiosError;
       }
 

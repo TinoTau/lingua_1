@@ -26,7 +26,8 @@ pub struct Job {
     pub dialect: Option<String>,
     pub features: Option<FeatureFlags>,
     pub pipeline: PipelineConfig,
-    pub audio_data: Vec<u8>,
+    /// 音频 base64（与备份一致：随 Job 存储，支持房间多 Job 与 failover 重派）
+    pub audio_base64: String,
     pub audio_format: String,
     pub sample_rate: u32,
     pub assigned_node_id: Option<String>,
@@ -67,14 +68,14 @@ pub struct Job {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub padding_ms: Option<u64>,
     /// 是否由用户手动发送（is_final=true）
-    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    #[serde(skip_serializing_if = "std::ops::Not::not", default)]
     pub is_manual_cut: bool,
-    /// 是否由3秒静音触发（pause触发）
-    #[serde(skip_serializing_if = "std::ops::Not::not")]
-    pub is_pause_triggered: bool,
-    /// 是否由10秒超时触发（timeout触发）
-    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    /// 是否由 Timeout（超时）触发；节点端缓存到 pendingTimeoutAudio
+    #[serde(skip_serializing_if = "std::ops::Not::not", default)]
     pub is_timeout_triggered: bool,
+    /// 是否由 MaxDuration（持续说话超长）触发；节点端按切片送 ASR
+    #[serde(skip_serializing_if = "std::ops::Not::not", default)]
+    pub is_max_duration_triggered: bool,
     /// 预计处理时长（毫秒），用于动态计算 timeout
     #[serde(skip_serializing_if = "Option::is_none")]
     pub expected_duration_ms: Option<u64>,

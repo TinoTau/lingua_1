@@ -37,6 +37,27 @@ pub struct SchedulerConfig {
     pub load_balancer: LoadBalancerConfig,
     #[serde(default)]
     pub node_health: NodeHealthConfig,
+    /// 后台任务配置（消除硬编码）
+    #[serde(default)]
+    pub background_tasks: BackgroundTasksConfig,
+    /// 超时配置（消除硬编码）
+    #[serde(default)]
+    pub timeouts: TimeoutsConfig,
+    /// 重试和容错配置（消除硬编码）
+    #[serde(default)]
+    pub retry: RetryConfig,
+    /// 容量和限制配置（消除硬编码）
+    #[serde(default)]
+    pub limits: LimitsConfig,
+    /// 测试配置（消除硬编码）
+    #[serde(default)]
+    pub testing: TestingConfig,
+    /// 性能调优配置
+    #[serde(default)]
+    pub performance: PerformanceConfig,
+    /// 开发者配置
+    #[serde(default)]
+    pub developer: DeveloperConfig,
     /// Phase 1：MODEL_NOT_AVAILABLE 处理相关配置
     #[serde(default)]
     pub model_not_available: ModelNotAvailableConfig,
@@ -55,18 +76,19 @@ pub struct SchedulerConfig {
     /// Phase 2：Redis / 多实例相关配置（默认关闭，开启后按文档启用 instance presence + owner + Streams）
     #[serde(default)]
     pub phase2: Phase2Config,
-    /// Phase 3：两级调度 / Pool（默认关闭；开启后优先走"Global 选 pool -> pool 内选 node"的路径）
-    #[serde(default)]
-    pub phase3: Phase3Config,
+    // Phase3Config 已彻底删除 - 统一使用 MinimalScheduler + PoolService
     /// OBS-3: ASR 重跑限频/超时机制配置
     #[serde(default)]
     pub asr_rerun: AsrRerunConfig,
 }
 
-/// Phase 3：两级调度（Two-level scheduling）
-/// 目标：在节点规模增大时，把"全量遍历选节点"收敛为"先选 pool，再在 pool 内选 node"，并提供可观测性与可运维性。
+// Phase3Config 及相关结构体已彻底删除
+// MinimalScheduler + PoolService (Lua脚本系统) 是唯一流程
+
+/*
+// 以下代码已删除：
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Phase3Config {
+pub struct _Deleted_Phase3Config {
     /// 是否启用 Phase 3（默认 false）
     #[serde(default)]
     pub enabled: bool,
@@ -203,11 +225,8 @@ pub struct PoolNmtRequirements {
     pub blocked_pairs: Option<Vec<crate::messages::common::LanguagePair>>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Phase3TenantOverride {
-    pub tenant_id: String,
-    pub pool_id: u16,
 }
+*/
 
 /// Phase 2：Redis / 多实例基础能力（Instance 生命周期 + owner + Streams inbox）
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -493,4 +512,193 @@ pub struct AsrRerunConfig {
     #[serde(default = "super::config_defaults::default_asr_rerun_conference_mode_strict")]
     pub conference_mode_strict: bool,
 }
+
+// ========================================
+// 新增配置结构（消除硬编码）
+// ========================================
+
+/// 后台任务配置
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct BackgroundTasksConfig {
+    /// 预加载延迟（秒）
+    #[serde(default = "super::config_defaults::default_preload_delay_seconds")]
+    pub preload_delay_seconds: u64,
+    /// Job 结果去重清理间隔（秒）
+    #[serde(default = "super::config_defaults::default_job_result_dedup_cleanup_interval_seconds")]
+    pub job_result_dedup_cleanup_interval_seconds: u64,
+    /// Session 清理间隔（秒）
+    #[serde(default = "super::config_defaults::default_session_cleanup_interval_seconds")]
+    pub session_cleanup_interval_seconds: u64,
+    /// Job 清理间隔（秒）
+    #[serde(default = "super::config_defaults::default_job_cleanup_interval_seconds")]
+    pub job_cleanup_interval_seconds: u64,
+    /// Session 活跃结果检查间隔（秒）
+    #[serde(default = "super::config_defaults::default_session_active_result_check_interval_seconds")]
+    pub session_active_result_check_interval_seconds: u64,
+    /// 节点状态扫描间隔（秒）
+    #[serde(default = "super::config_defaults::default_node_status_scan_interval_seconds")]
+    pub node_status_scan_interval_seconds: u64,
+    /// Dashboard 快照缓存 TTL（秒）
+    #[serde(default = "super::config_defaults::default_dashboard_snapshot_cache_ttl_seconds")]
+    pub dashboard_snapshot_cache_ttl_seconds: u64,
+}
+
+/// 连接和通信超时配置
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TimeoutsConfig {
+    /// WebSocket 消息解析错误时显示的最大字符数
+    #[serde(default = "super::config_defaults::default_ws_message_preview_max_chars")]
+    pub ws_message_preview_max_chars: usize,
+    /// Phase2 presence 等待超时（秒）
+    #[serde(default = "super::config_defaults::default_phase2_presence_wait_timeout_seconds")]
+    pub phase2_presence_wait_timeout_seconds: u64,
+    /// Phase2 presence 检查间隔（毫秒）
+    #[serde(default = "super::config_defaults::default_phase2_presence_check_interval_ms")]
+    pub phase2_presence_check_interval_ms: u64,
+    /// Phase2 节点注册等待超时（秒）
+    #[serde(default = "super::config_defaults::default_phase2_node_registration_timeout_seconds")]
+    pub phase2_node_registration_timeout_seconds: u64,
+    /// Phase2 节点快照同步超时（秒）
+    #[serde(default = "super::config_defaults::default_phase2_node_snapshot_sync_timeout_seconds")]
+    pub phase2_node_snapshot_sync_timeout_seconds: u64,
+    /// Phase2 Pool 配置同步超时（秒）
+    #[serde(default = "super::config_defaults::default_phase2_pool_config_sync_timeout_seconds")]
+    pub phase2_pool_config_sync_timeout_seconds: u64,
+    /// Phase2 Pool 配置检查间隔（毫秒）
+    #[serde(default = "super::config_defaults::default_phase2_pool_config_check_interval_ms")]
+    pub phase2_pool_config_check_interval_ms: u64,
+    /// WebSocket ACK 超时（秒）
+    #[serde(default = "super::config_defaults::default_ws_ack_timeout_seconds")]
+    pub ws_ack_timeout_seconds: u64,
+    /// WebSocket 翻译结果超时（秒）
+    #[serde(default = "super::config_defaults::default_ws_translation_result_timeout_seconds")]
+    pub ws_translation_result_timeout_seconds: u64,
+}
+
+/// 重试和容错配置
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RetryConfig {
+    /// TTL 最小值（秒）
+    #[serde(default = "super::config_defaults::default_min_ttl_seconds")]
+    pub min_ttl_seconds: u64,
+    /// TTL 最小值（毫秒）
+    #[serde(default = "super::config_defaults::default_min_ttl_ms")]
+    pub min_ttl_ms: u64,
+    /// Redis Stream maxlen 最小值
+    #[serde(default = "super::config_defaults::default_redis_stream_min_maxlen")]
+    pub redis_stream_min_maxlen: usize,
+    /// Pub/Sub 重连延迟（秒）
+    #[serde(default = "super::config_defaults::default_pubsub_reconnect_delay_seconds")]
+    pub pubsub_reconnect_delay_seconds: u64,
+    /// Pub/Sub 保活超时（秒）
+    #[serde(default = "super::config_defaults::default_pubsub_keepalive_timeout_seconds")]
+    pub pubsub_keepalive_timeout_seconds: u64,
+    /// 节点缓存版本检查超时（毫秒）
+    #[serde(default = "super::config_defaults::default_node_cache_version_check_timeout_ms")]
+    pub node_cache_version_check_timeout_ms: u64,
+    /// 节点缓存 miss 标记 TTL（毫秒）
+    #[serde(default = "super::config_defaults::default_node_cache_miss_ttl_ms")]
+    pub node_cache_miss_ttl_ms: i64,
+    /// Job 尝试 ID 最小值
+    #[serde(default = "super::config_defaults::default_job_min_attempt_id")]
+    pub job_min_attempt_id: u32,
+    /// Phase2 Streams consumer group 创建失败后的重试延迟（毫秒）
+    #[serde(default = "super::config_defaults::default_phase2_group_create_retry_delay_ms")]
+    pub phase2_group_create_retry_delay_ms: u64,
+    /// Phase2 XREADGROUP 失败后的通用重试延迟（毫秒）
+    #[serde(default = "super::config_defaults::default_phase2_xreadgroup_retry_delay_ms")]
+    pub phase2_xreadgroup_retry_delay_ms: u64,
+}
+
+/// 容量和限制配置
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LimitsConfig {
+    /// Phase2 owner TTL 计算基础（秒）
+    #[serde(default = "super::config_defaults::default_phase2_owner_ttl_base_seconds")]
+    pub phase2_owner_ttl_base_seconds: u64,
+    /// Phase2 owner TTL 除数
+    #[serde(default = "super::config_defaults::default_phase2_owner_ttl_divisor")]
+    pub phase2_owner_ttl_divisor: u64,
+    /// Phase2 owner TTL 最小值（秒）
+    #[serde(default = "super::config_defaults::default_phase2_owner_ttl_min_seconds")]
+    pub phase2_owner_ttl_min_seconds: u64,
+    /// Phase2 presence TTL 最小值（秒）
+    #[serde(default = "super::config_defaults::default_phase2_presence_ttl_min_seconds")]
+    pub phase2_presence_ttl_min_seconds: u64,
+    /// Phase2 presence TTL 除数
+    #[serde(default = "super::config_defaults::default_phase2_presence_ttl_divisor")]
+    pub phase2_presence_ttl_divisor: u64,
+    /// Phase2 presence TTL 绝对最小值（秒）
+    #[serde(default = "super::config_defaults::default_phase2_presence_ttl_absolute_min_seconds")]
+    pub phase2_presence_ttl_absolute_min_seconds: u64,
+    /// Redis 最小计数值
+    #[serde(default = "super::config_defaults::default_redis_min_count")]
+    pub redis_min_count: usize,
+    /// Pool 最小计数值
+    #[serde(default = "super::config_defaults::default_pool_min_count")]
+    pub pool_min_count: u16,
+    /// pending 消息 reclaim 间隔（秒）
+    #[serde(default = "super::config_defaults::default_phase2_reclaim_interval_seconds")]
+    pub phase2_reclaim_interval_seconds: u64,
+    /// DLQ 扫描间隔最小值（毫秒）
+    #[serde(default = "super::config_defaults::default_phase2_dlq_scan_interval_min_ms")]
+    pub phase2_dlq_scan_interval_min_ms: u64,
+}
+
+/// 测试配置
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TestingConfig {
+    /// 测试用 Redis URL
+    #[serde(default = "super::config_defaults::default_test_redis_url")]
+    pub redis_url: String,
+    /// 测试用 service catalog URL
+    #[serde(default = "super::config_defaults::default_test_service_catalog_url")]
+    pub service_catalog_url: String,
+    /// 测试用服务器绑定地址
+    #[serde(default = "super::config_defaults::default_test_server_bind")]
+    pub test_server_bind: String,
+    /// 测试中的 dashboard 快照 TTL（秒）
+    #[serde(default = "super::config_defaults::default_test_dashboard_snapshot_ttl_seconds")]
+    pub dashboard_snapshot_ttl_seconds: u64,
+}
+
+/// 性能调优配置
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PerformanceConfig {
+    /// 异步任务通道容量
+    #[serde(default = "super::config_defaults::default_async_task_channel_capacity")]
+    pub async_task_channel_capacity: usize,
+    /// WebSocket 连接池初始容量
+    #[serde(default = "super::config_defaults::default_ws_connection_pool_initial_capacity")]
+    pub ws_connection_pool_initial_capacity: usize,
+    /// Job 缓存初始容量
+    #[serde(default = "super::config_defaults::default_job_cache_initial_capacity")]
+    pub job_cache_initial_capacity: usize,
+    /// Session 缓存初始容量
+    #[serde(default = "super::config_defaults::default_session_cache_initial_capacity")]
+    pub session_cache_initial_capacity: usize,
+}
+
+/// 开发者配置
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DeveloperConfig {
+    /// 是否启用开发模式
+    #[serde(default)]
+    pub dev_mode: bool,
+    /// 是否在启动时打印配置
+    #[serde(default = "super::config_defaults::default_true")]
+    pub print_config_on_startup: bool,
+    /// 是否启用配置热重载
+    #[serde(default)]
+    pub enable_config_hot_reload: bool,
+}
+
+// ========================================
+// Phase2RedisConfig 扩展
+// ========================================
+
+// Phase2RedisConfig 的方法实现已移除（未使用）
+// 如需访问配置值，直接使用结构体字段：
+// - config.phase2.redis.container_name
+// - config.phase2.redis.alt_container_names
 

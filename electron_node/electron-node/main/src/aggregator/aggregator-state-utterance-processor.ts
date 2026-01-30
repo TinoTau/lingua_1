@@ -31,7 +31,6 @@ export class AggregatorStateUtteranceProcessor {
     qualityScore: number | undefined,
     isFinal: boolean,
     isManualCut: boolean,
-    isPauseTriggered: boolean,
     isTimeoutTriggered: boolean,
     sessionStartTimeMs: number,
     lastUtteranceEndTimeMs: number
@@ -62,7 +61,6 @@ export class AggregatorStateUtteranceProcessor {
       qualityScore,
       isFinal,
       isManualCut,
-      isPauseTriggered,
       isTimeoutTriggered,
     } as any; // 临时使用any，因为UtteranceInfo接口需要更新
 

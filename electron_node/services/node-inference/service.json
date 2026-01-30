@@ -1,0 +1,16 @@
+{
+  "id": "node-inference",
+  "name": "Node Inference",
+  "type": "asr",
+  "device": "gpu",
+  "exec": {
+    "command": "cargo",
+    "args": [
+      "run",
+      "--release"
+    ],
+    "cwd": "."
+  },
+  "version": "1.0.0",
+  "description": "Rust-based inference service with ASR, NMT, TTS capabilities"
+}

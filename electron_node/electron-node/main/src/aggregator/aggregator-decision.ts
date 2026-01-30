@@ -20,7 +20,7 @@ export interface UtteranceInfo {
   qualityScore?: number;
   isFinal?: boolean;
   isManualCut?: boolean;
-  isPauseTriggered?: boolean;
+  // isPauseTriggered 已废弃（pause finalize 已删除）
   isTimeoutTriggered?: boolean;
 }
 
@@ -46,10 +46,6 @@ export interface AggregatorTuning {
   veryShortCjkChars: number;
   shortEnWords: number;
   veryShortEnWords: number;
-
-  commitIntervalMs: number;
-  commitLenCjk: number;
-  commitLenEnWords: number;
 }
 
 export function defaultTuning(mode: Mode): AggregatorTuning {
@@ -81,15 +77,6 @@ export function defaultTuning(mode: Mode): AggregatorTuning {
     veryShortCjkChars: 4,
     shortEnWords: useRoomParams ? 5 : 6,
     veryShortEnWords: 3,
-
-    // 优化：平衡延迟和质量
-    // 问题：当前参数导致句子中间截断
-    // 调整：提高 commit_interval_ms 和 commit_len，减少句子中间截断
-    // 原值：offline 800ms/25字/10词，room 600ms/20字/8词
-    // 新值：offline 1200ms/30字/12词，room/two_way 900ms/25字/10词
-    commitIntervalMs: useRoomParams ? 900 : 1200,  // 提高：减少句子中间截断
-    commitLenCjk: useRoomParams ? 25 : 30,         // 提高：减少短句被提前提交
-    commitLenEnWords: useRoomParams ? 10 : 12,     // 提高：减少短句被提前提交
   };
 }
 
@@ -259,21 +246,6 @@ export function textIncompletenessScore(
   if (!endsWithStrongSentencePunct(prev.text) && gapMs <= tuning.softGapMs) score += 1;
 
   return score;
-}
-
-export function shouldCommit(
-  pendingText: string,
-  lastCommitTsMs: number,
-  nowMs: number,
-  mode: Mode,
-  tuning: AggregatorTuning = defaultTuning(mode)
-): boolean {
-  const elapsed = nowMs - lastCommitTsMs;
-  if (elapsed >= tuning.commitIntervalMs) return true;
-
-  const isCjk = looksLikeCjk(pendingText);
-  if (isCjk) return countCjkChars(pendingText) >= tuning.commitLenCjk;
-  return countWords(pendingText) >= tuning.commitLenEnWords;
 }
 
 /* Helpers */

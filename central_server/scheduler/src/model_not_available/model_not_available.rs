@@ -9,7 +9,7 @@ use std::time::Duration;
 use tokio::sync::mpsc;
 use std::sync::Arc;
 
-use crate::phase2::Phase2Runtime;
+use crate::redis_runtime::Phase2Runtime;
 
 #[derive(Debug, Clone)]
 pub struct ModelNotAvailableEvent {

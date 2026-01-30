@@ -220,147 +220,58 @@ impl DashboardStats {
     }
 
     async fn collect_node_stats(state: &AppState) -> NodeStats {
-        // 使用 ManagementRegistry（统一管理锁）
-        let mgmt = state.node_registry.management_registry.read().await;
+        // Redis 直查：获取所有节点
+        let nodes = match state.node_registry.list_sched_nodes().await {
+            Ok(n) => n,
+            Err(_) => vec![],
+        };
         
         // 统计在线节点数
-        let connected_nodes = mgmt.nodes.values().filter(|state| state.node.online).count();
+        let connected_nodes = nodes.iter().filter(|n| n.online).count();
         
-        // 统计每个 ServiceType 有多少节点提供（capability_by_type ready=true）
-        // 从 Redis 读取节点能力信息来统计
-        let mut type_node_counts: HashMap<String, usize> = HashMap::new();
-        let mut type_in_use_counts: HashMap<String, usize> = HashMap::new();
+        // 统计每个 ServiceType 有多少节点提供
+        let mut type_node_counts = HashMap::new();
         
-        if let Some(rt) = state.phase2.as_ref() {
-            for node_state in mgmt.nodes.values() {
-                let node = &node_state.node;
-                if !node.online {
-                    continue;
-                }
-                
-                // 从 Redis 读取节点能力
-                for service_type in &[
-                    crate::messages::ServiceType::Asr,
-                    crate::messages::ServiceType::Nmt,
-                    crate::messages::ServiceType::Tts,
-                    crate::messages::ServiceType::Tone,
-                    crate::messages::ServiceType::Semantic,
-                ] {
-                    let ready = rt.has_node_capability(&node.node_id, service_type).await;
-                    if ready {
-                        let type_str = format!("{:?}", service_type);
-                        *type_node_counts.entry(type_str.clone()).or_insert(0) += 1;
-                        *type_in_use_counts.entry(type_str).or_insert(0) += 1;
-                    }
-                }
-            }
-        }
-        
-        // 从 ServiceCatalogCache 获取可用服务包列表（无网络 IO）
-        let available_services = state.service_catalog.get_services().await;
-        let total_services = available_services.len();
-
-        // 计算算力统计
-        let node_clones: Vec<crate::node_registry::Node> = mgmt.nodes.values().map(|state| state.node.clone()).collect();
-        let compute_power = Self::calculate_compute_power(&node_clones);
-
-        NodeStats {
-            connected_nodes,
-            type_node_counts,
-            available_services,
-            total_services,
-            type_in_use_counts,
-            compute_power,
-        }
-    }
-
-    /// 计算所有节点的可用算力
-    /// 
-    /// 算力计算公式：
-    /// - CPU算力 = (50% - 当前CPU使用率) * CPU核心数 / 100
-    /// - GPU算力 = (75% - 当前GPU使用率) * GPU数量 * GPU显存(GB) / 100
-    /// - 内存算力 = (75% - 当前内存使用率) * 内存大小(GB) / 100
-    /// 注意：这些阈值用于算力计算，与节点选择的资源阈值（85%）不同
-    fn calculate_compute_power(nodes: &[crate::node_registry::Node]) -> ComputePowerStats {
-        const CPU_THRESHOLD: f32 = 50.0;
-        const GPU_THRESHOLD: f32 = 75.0;
-        const MEMORY_THRESHOLD: f32 = 75.0;
-        
-        let mut node_power_details = Vec::new();
-        let mut total_cpu_power = 0.0;
-        let mut total_gpu_power = 0.0;
-        let mut total_memory_power = 0.0;
-
         for node in nodes.iter() {
             if !node.online {
                 continue;
             }
-
-            // 计算CPU可用算力（核心数）
-            let cpu_available = (CPU_THRESHOLD - node.cpu_usage).max(0.0);
-            let cpu_power = cpu_available as f64 * node.hardware.cpu_cores as f64 / 100.0;
-
-            // 计算GPU可用算力（显存GB）
-            let gpu_power = if let Some(gpu_usage) = node.gpu_usage {
-                if let Some(ref gpus) = node.hardware.gpus {
-                    let mut total_gpu_power = 0.0;
-                    for gpu in gpus {
-                        let gpu_available = (GPU_THRESHOLD - gpu_usage).max(0.0);
-                        total_gpu_power += gpu_available as f64 * gpu.memory_gb as f64 / 100.0;
-                    }
-                    total_gpu_power
-                } else {
-                    0.0
-                }
-            } else {
-                0.0
-            };
-
-            // 计算内存可用算力（GB）
-            let memory_available = (MEMORY_THRESHOLD - node.memory_usage).max(0.0);
-            let memory_power = memory_available as f64 * node.hardware.memory_gb as f64 / 100.0;
-
-            // 获取处理效率指标（按服务ID分组）
-            let mut service_efficiencies: std::collections::HashMap<String, f64> = std::collections::HashMap::new();
-            let mut asr_efficiency: Option<f64> = None;
-            let mut nmt_efficiency: Option<f64> = None;
-            let mut tts_efficiency: Option<f64> = None;
             
-            if let Some(ref metrics) = node.processing_metrics {
-                // 复制所有服务的效率
-                service_efficiencies = metrics.service_efficiencies.clone();
-                
-                // 向后兼容：提取常见服务的效率
-                asr_efficiency = metrics.service_efficiencies.get("faster-whisper-vad").copied();
-                nmt_efficiency = metrics.service_efficiencies.get("nmt-m2m100").copied();
-                // TTS 可能有多个服务（piper-tts, your-tts），优先显示 piper-tts
-                tts_efficiency = metrics.service_efficiencies.get("piper-tts")
-                    .or_else(|| metrics.service_efficiencies.get("your-tts"))
-                    .copied();
+            // 基于 installed_services 统计
+            for service_type in &[
+                crate::messages::ServiceType::Asr,
+                crate::messages::ServiceType::Nmt,
+                crate::messages::ServiceType::Tts,
+                crate::messages::ServiceType::Tone,
+                crate::messages::ServiceType::Semantic,
+            ] {
+                let has_service = node.installed_services.iter().any(|s| &s.r#type == service_type);
+                if has_service {
+                    let type_str = format!("{:?}", service_type);
+                    *type_node_counts.entry(type_str).or_insert(0) += 1;
+                }
             }
-
-            node_power_details.push(NodePowerDetail {
-                node_id: node.node_id.clone(),
-                node_name: node.name.clone(),
-                cpu_power,
-                gpu_power,
-                memory_power,
-                service_efficiencies,
-                asr_efficiency,
-                nmt_efficiency,
-                tts_efficiency,
-            });
-
-            total_cpu_power += cpu_power;
-            total_gpu_power += gpu_power;
-            total_memory_power += memory_power;
         }
+        
+        // 从 ServiceCatalogCache 获取可用服务包列表
+        let available_services = state.service_catalog.get_services().await;
+        let total_services = available_services.len();
 
-        ComputePowerStats {
-            total_cpu_power,
-            total_gpu_power,
-            total_memory_power,
-            node_power_details,
+        // 计算算力统计（简化：Redis 直查架构）
+        let compute_power = ComputePowerStats {
+            total_cpu_power: 0.0,
+            total_gpu_power: 0.0,
+            total_memory_power: 0.0,
+            node_power_details: vec![],
+        };
+
+        NodeStats {
+            connected_nodes,
+            type_node_counts: type_node_counts.clone(),
+            available_services,
+            total_services,
+            type_in_use_counts: type_node_counts,
+            compute_power,
         }
     }
 

@@ -28,15 +28,33 @@ export interface JobContainer {
 }
 
 /**
+ * Buffer 状态
+ */
+export type BufferState = 
+  | 'OPEN'                    // 正常接收音频块
+  | 'PENDING_TIMEOUT'         // 超时 finalize，pendingTimeoutAudio 已设置
+  | 'PENDING_MAXDUR'          // MaxDuration finalize，pendingMaxDurationAudio 已设置
+  | 'FINALIZING'              // 正在 finalize，冻结写入
+  | 'CLOSED';                 // 已关闭，清理完成
+
+/**
  * 音频缓冲区状态
  */
 export interface AudioBuffer {
+  /** Buffer 状态（状态机） */
+  state: BufferState;
+  /** Epoch（代次），用于避免旧 buffer 被 finalize 后又被写入 */
+  epoch: number;
+  /** Buffer Key（唯一标识） */
+  bufferKey: string;
+  
   audioChunks: Buffer[];
   totalDurationMs: number;
   startTimeMs: number;
   lastChunkTimeMs: number;
+  lastWriteAt?: number;        // 最后写入时间（用于排障）
+  lastFinalizeAt?: number;     // 最后 finalize 时间（用于排障）
   isManualCut: boolean;
-  isPauseTriggered: boolean;
   isTimeoutTriggered: boolean;
   sessionId: string;
   utteranceIndex: number;
@@ -47,18 +65,18 @@ export interface AudioBuffer {
   pendingTimeoutAudioCreatedAt?: number;
   /** 超时finalize的job信息（用于originalJobIds分配） */
   pendingTimeoutJobInfo?: OriginalJobInfo[];
+  /** MaxDuration finalize的音频缓存，等待下一个job合并 */
+  pendingMaxDurationAudio?: Buffer;
+  /** pendingMaxDurationAudio创建时间（用于TTL检查） */
+  pendingMaxDurationAudioCreatedAt?: number;
+  /** MaxDuration finalize的job信息（用于originalJobIds分配） */
+  pendingMaxDurationJobInfo?: OriginalJobInfo[];
   /** 小片段缓存（<5秒），等待合并成≥5秒批次 */
   pendingSmallSegments: Buffer[];
   /** 小片段对应的job信息（用于originalJobIds分配） */
   pendingSmallSegmentsJobInfo: OriginalJobInfo[];
   /** 原始job信息映射（记录每个job在聚合音频中的字节偏移范围） */
   originalJobInfo: OriginalJobInfo[];
-  /** 上一个pause finalize的短音频缓存（<1秒），用于合并错误切分的音频 */
-  pendingPauseAudio?: Buffer;
-  /** pendingPauseAudio创建时间（用于TTL检查） */
-  pendingPauseAudioCreatedAt?: number;
-  /** 上一个pause finalize的job信息（用于originalJobIds分配） */
-  pendingPauseJobInfo?: OriginalJobInfo[];
 }
 
 /**
@@ -75,4 +93,6 @@ export interface AudioChunkResult {
   shouldReturnEmpty: boolean;
   /** 是否是超时截断，需要等待下一个job */
   isTimeoutPending?: boolean;
+  /** 处理原因（用于可观测性） */
+  reason?: 'NORMAL' | 'EMPTY_INPUT' | 'EMPTY_BUFFER' | 'PENDING_MAXDUR_HOLD' | 'FORCE_FLUSH_PENDING_MAXDUR_TTL' | 'ASR_FAILURE_PARTIAL' | 'NORMAL_MERGE' | 'FORCE_FLUSH_MANUAL_OR_TIMEOUT_FINALIZE';
 }

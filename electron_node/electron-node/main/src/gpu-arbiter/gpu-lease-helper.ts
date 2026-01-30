@@ -60,7 +60,7 @@ export async function withGpuLease<T>(
       },
       'GpuLeaseHelper: GPU lease skipped - this will cause job processing to fail'
     );
-    throw new Error(`GPU lease skipped: ${result.reason}`);
+    throw new Error(`GPU lease skipped: ${result.reason} (${taskType})`);
   }
 
   if (result.status === 'FALLBACK_CPU') {
@@ -72,7 +72,7 @@ export async function withGpuLease<T>(
       },
       'GpuLeaseHelper: GPU lease fallback to CPU'
     );
-    throw new Error(`GPU lease fallback to CPU: ${result.reason}`);
+    throw new Error(`GPU lease fallback to CPU: ${result.reason} (${taskType})`);
   }
 
   if (result.status === 'TIMEOUT') {
@@ -84,7 +84,7 @@ export async function withGpuLease<T>(
       },
       'GpuLeaseHelper: GPU lease timeout - this will cause job processing to fail'
     );
-    throw new Error(`GPU lease timeout: ${result.reason}`);
+    throw new Error(`GPU lease timeout: ${result.reason} (${taskType})`);
   }
 
   // 获取租约成功（此时result.status一定是'ACQUIRED'）

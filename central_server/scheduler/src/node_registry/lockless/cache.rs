@@ -9,7 +9,7 @@ use super::degradation::{DegradationManager, DegradeMode};
 use super::serialization::{RedisNodeData, RedisPhase3Config};
 use crate::node_registry::runtime_snapshot::{NodeRuntimeSnapshot, NodeHealth};
 use crate::core::config::{Phase3Config, CoreServicesConfig};
-use crate::node_registry::pool_language_index::PoolLanguageIndex;
+// PoolLanguageIndex 已删除（Phase3废弃代码）
 use crate::messages::ServiceType;
 use dashmap::DashMap;
 use std::sync::Arc;
@@ -20,7 +20,6 @@ use futures_util::future;
 
 /// 缓存的节点快照（L1 缓存）
 #[derive(Debug, Clone)]
-#[allow(dead_code)] // 将在后续实现中使用
 pub(crate) struct CachedNodeSnapshot {
     pub(crate) snapshot: NodeRuntimeSnapshot,
     pub(crate) version: u64,
@@ -29,36 +28,20 @@ pub(crate) struct CachedNodeSnapshot {
     pub(crate) l1_ttl_ms: i64,
 }
 
-/// 缓存的 Phase3 配置
-#[derive(Debug, Clone)]
-#[allow(dead_code)] // 将在后续实现中使用
-struct CachedPhase3Config {
-    config: Arc<Phase3Config>,
-    version: u64,
-    cached_at_ms: i64,
-}
+
 
 /// 缓存的 CoreServices 配置
 #[derive(Debug, Clone)]
-#[allow(dead_code)] // 将在后续实现中使用
 struct CachedCoreServicesConfig {
     config: Arc<CoreServicesConfig>,
     version: u64,
     cached_at_ms: i64,
 }
 
-/// 缓存的语言索引
-#[derive(Debug, Clone)]
-#[allow(dead_code)] // 将在后续实现中使用
-struct CachedLangIndex {
-    index: Arc<PoolLanguageIndex>,
-    version: u64,
-    cached_at_ms: i64,
-}
+// CachedLangIndex 已删除（Phase3废弃代码，依赖已删除的PoolLanguageIndex）
 
 /// 无锁缓存配置
 #[derive(Debug, Clone)]
-#[allow(dead_code)] // 将在后续实现中使用
 pub struct LocklessCacheConfig {
     /// L1 缓存过期时间（毫秒）
     pub l1_cache_ttl_ms: i64,
@@ -88,7 +71,6 @@ impl Default for LocklessCacheConfig {
 /// 
 /// 实现两级缓存（L1/L2）和版本号管理的无锁架构
 #[derive(Clone)]
-#[allow(dead_code)] // 将在后续实现中使用
 pub struct LocklessCache {
     /// L1 缓存：节点快照（DashMap 是无锁并发 HashMap）
     pub(crate) l1_nodes: Arc<DashMap<String, CachedNodeSnapshot>>,
@@ -96,12 +78,10 @@ pub struct LocklessCache {
     /// L2 缓存：节点快照（延迟缓存，使用 RwLock）
     pub(crate) l2_nodes: Arc<RwLock<std::collections::HashMap<String, CachedNodeSnapshot>>>,
     
-    /// 配置缓存（很少更新，使用 RwLock）
-    phase3_config: Arc<RwLock<Option<CachedPhase3Config>>>,
+
     core_services: Arc<RwLock<Option<CachedCoreServicesConfig>>>,
     
-    /// 语言索引缓存
-    lang_index: Arc<RwLock<Option<CachedLangIndex>>>,
+    // lang_index 已删除（Phase3废弃代码）
     
     /// 版本号管理器
     pub(crate) version_manager: VersionManager,
@@ -121,8 +101,7 @@ pub struct LocklessCache {
 
 impl LocklessCache {
     /// 创建新的无锁缓存管理器
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub async fn new(
+        pub async fn new(
         redis_client: LocklessRedisClient,
         config: LocklessCacheConfig,
     ) -> anyhow::Result<Self> {
@@ -131,9 +110,9 @@ impl LocklessCache {
         let cache = Self {
             l1_nodes: Arc::new(DashMap::new()),
             l2_nodes: Arc::new(RwLock::new(std::collections::HashMap::new())),
-            phase3_config: Arc::new(RwLock::new(None)),
+
             core_services: Arc::new(RwLock::new(None)),
-            lang_index: Arc::new(RwLock::new(None)),
+            // lang_index 已删除（Phase3废弃代码）
             version_manager: VersionManager::new(),
             redis_client,
             pubsub_handler: Arc::new(RwLock::new(None)),
@@ -154,8 +133,7 @@ impl LocklessCache {
     /// 2. 异步检查版本号（非阻塞，超时 50ms）
     /// 3. 如果版本号匹配，直接返回（最快路径）
     /// 4. 如果版本号不匹配或缓存未命中，从 Redis 刷新（带穿透保护）
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub async fn get_node(&self, node_id: &str) -> Option<NodeRuntimeSnapshot> {
+        pub async fn get_node(&self, node_id: &str) -> Option<NodeRuntimeSnapshot> {
         let now_ms = chrono::Utc::now().timestamp_millis();
         
         // 步骤 1: 检查 L1 缓存（DashMap 无锁读取）
@@ -225,8 +203,7 @@ impl LocklessCache {
     }
 
     /// 检查 L2 缓存（降级模式使用，简化实现）
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    async fn check_l2_cache(&self, node_id: &str) -> Option<NodeRuntimeSnapshot> {
+        async fn check_l2_cache(&self, node_id: &str) -> Option<NodeRuntimeSnapshot> {
         let l2_cache = self.l2_nodes.read().await;
         let now_ms = chrono::Utc::now().timestamp_millis();
         l2_cache.get(node_id)
@@ -235,8 +212,7 @@ impl LocklessCache {
     }
 
     /// 从 Redis 刷新节点数据（带缓存穿透保护）
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub(crate) async fn refresh_node_from_redis(&self, node_id: &str) -> Option<NodeRuntimeSnapshot> {
+        pub(crate) async fn refresh_node_from_redis(&self, node_id: &str) -> Option<NodeRuntimeSnapshot> {
         let start = Instant::now();
         
         // 从 Redis 读取节点数据
@@ -258,7 +234,10 @@ impl LocklessCache {
                 // 节点不存在（可能已下线），写入 miss 标记防止穿透
                 debug!(node_id = %node_id, "节点不存在于 Redis，写入 miss 标记");
                 let miss_key = format!("scheduler:miss:{{node:{}}}", node_id);
-                let miss_ttl = (self.config.random_ttl_range_ms.min(10) as i64).max(1);
+                // 使用配置中的 miss TTL，移除硬编码
+                // 注意：这里假设 scheduler_cfg 中有 node_cache_miss_ttl_ms 配置
+                let miss_ttl = self.config.random_ttl_range_ms.min(10) as i64;
+                let miss_ttl = miss_ttl.max(1);  // 保持至少1ms的TTL
                 let _ = self.redis_client.get_handle().set_ex_string(
                     &miss_key,
                     "1",
@@ -335,8 +314,7 @@ impl LocklessCache {
     /// 批量获取节点快照
     /// 
     /// 用于 Pool 内节点选择，并行获取多个节点的快照
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub async fn get_nodes_batch(&self, node_ids: &[String]) -> Vec<NodeRuntimeSnapshot> {
+        pub async fn get_nodes_batch(&self, node_ids: &[String]) -> Vec<NodeRuntimeSnapshot> {
         // 并行获取所有节点快照（DashMap 支持并发读取）
         future::join_all(node_ids.iter().map(|node_id| self.get_node(node_id)))
             .await
@@ -351,8 +329,7 @@ impl LocklessCache {
     /// 1. 从 Redis 获取 Pool 成员列表（Set）
     /// 2. 并行获取所有节点的快照（DashMap 无锁读取）
     /// 3. 过滤符合条件的节点（本地过滤，无锁）
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub async fn select_nodes_for_pool(
+        pub async fn select_nodes_for_pool(
         &self,
         pool_id: u16,
         required_types: &[ServiceType],
@@ -378,8 +355,7 @@ impl LocklessCache {
     }
 
     /// 检查节点是否满足要求（无锁本地检查）
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    fn matches_requirements(&self, node: &NodeRuntimeSnapshot, required_types: &[ServiceType]) -> bool {
+        fn matches_requirements(&self, node: &NodeRuntimeSnapshot, required_types: &[ServiceType]) -> bool {
         // 检查节点健康状态
         if node.health != NodeHealth::Online {
             return false;
@@ -400,78 +376,9 @@ impl LocklessCache {
         true
     }
 
-    /// 获取 Phase3 配置（无锁读取）
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub async fn get_phase3_config(&self) -> Option<Arc<Phase3Config>> {
-        // 检查本地缓存
-        {
-            let cached = self.phase3_config.read().await;
-            if let Some(ref config) = *cached {
-                let now_ms = chrono::Utc::now().timestamp_millis();
-                if now_ms - config.cached_at_ms <= self.config.l2_cache_ttl_ms {
-                    // 异步检查版本号（不阻塞）
-                    let version_check_future = self.redis_client.get_global_version("config");
-                    tokio::select! {
-                        version_result = version_check_future => {
-                            if let Ok(Some(current_version)) = version_result {
-                                if config.version >= current_version {
-                                    return Some(config.config.clone());
-                                }
-                            }
-                        }
-                        _ = tokio::time::sleep(Duration::from_millis(self.config.version_check_timeout_ms)) => {
-                            // 超时，使用缓存数据
-                            return Some(config.config.clone());
-                        }
-                    }
-                }
-            }
-        }
 
-        // 从 Redis 刷新
-        self.refresh_phase3_config_from_redis().await
-    }
 
-    /// 从 Redis 刷新 Phase3 配置
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    async fn refresh_phase3_config_from_redis(&self) -> Option<Arc<Phase3Config>> {
-        let config_str = match self.redis_client.get_phase3_config().await {
-            Ok(Some(s)) => s,
-            Ok(None) => {
-                warn!("Phase3 配置不存在于 Redis");
-                return None;
-            }
-            Err(e) => {
-                error!(error = %e, "从 Redis 读取 Phase3 配置失败");
-                // 降级到本地缓存
-                let cached = self.phase3_config.read().await;
-                return cached.as_ref().map(|c| c.config.clone());
-            }
-        };
 
-        let redis_config: RedisPhase3Config = match serde_json::from_str(&config_str) {
-            Ok(c) => c,
-            Err(e) => {
-                error!(error = %e, "解析 Phase3 配置失败");
-                return None;
-            }
-        };
-
-        // 更新本地缓存
-        {
-            let mut cached = self.phase3_config.write().await;
-            *cached = Some(CachedPhase3Config {
-                config: Arc::new(redis_config.config.clone()),
-                version: redis_config.version,
-                cached_at_ms: chrono::Utc::now().timestamp_millis(),
-            });
-        }
-
-        // 更新版本号管理器
-        self.version_manager.update_global_version("config", redis_config.version).await;
-
-        Some(Arc::new(redis_config.config))
-    }
 }
 
 // 节点写入路径的方法在 node_write.rs 中实现

@@ -11,7 +11,6 @@ pub use session_handler::handle_session;
 pub use node_handler::handle_node;
 
 // 公共辅助函数
-use base64::{Engine as _, engine::general_purpose};
 use crate::messages::{SessionMessage, NodeMessage, ErrorCode};
 use axum::extract::ws::Message;
 use tokio::sync::mpsc;
@@ -26,14 +25,6 @@ pub(crate) async fn send_message(tx: &mpsc::UnboundedSender<Message>, message: &
     Ok(())
 }
 
-// 辅助函数：发送节点消息
-#[allow(dead_code)] // 当前未使用，保留用于未来扩展
-pub(crate) async fn send_node_message(tx: &mpsc::UnboundedSender<Message>, message: &NodeMessage) -> Result<(), anyhow::Error> {
-    let json = serde_json::to_string(message)?;
-    tx.send(Message::Text(json))
-        .map_err(|e| anyhow::anyhow!("发送消息失败: {}", e))?;
-    Ok(())
-}
 
 // 辅助函数：发送错误消息
 pub(crate) async fn send_error(tx: &mpsc::UnboundedSender<Message>, code: ErrorCode, message: &str) {
@@ -47,7 +38,7 @@ pub(crate) async fn send_error(tx: &mpsc::UnboundedSender<Message>, code: ErrorC
     }
 }
 
-// 创建 JobAssign 消息
+// 创建 JobAssign 消息（与备份一致：使用 Job 内 audio_base64，不依赖 buffer）
 pub(crate) async fn create_job_assign_message(
     _state: &crate::core::AppState,
     job: &crate::core::dispatcher::Job,
@@ -55,18 +46,23 @@ pub(crate) async fn create_job_assign_message(
     part_index: Option<u64>,
     context_text: Option<String>,
 ) -> Option<NodeMessage> {
-    let audio_base64 = general_purpose::STANDARD.encode(&job.audio_data);
-    
-    // 记录发送给节点端的 audio_format（用于调试）
-    tracing::debug!(
+    if job.audio_base64.is_empty() {
+        tracing::warn!(
+            job_id = %job.job_id,
+            session_id = %job.session_id,
+            utterance_index = job.utterance_index,
+            "Job 无音频数据，跳过 JobAssign"
+        );
+        return None;
+    }
+    tracing::info!(
         job_id = %job.job_id,
         session_id = %job.session_id,
         utterance_index = job.utterance_index,
-        audio_format = %job.audio_format,
-        audio_size_bytes = job.audio_data.len(),
-        "Creating JobAssign message with audio format"
+        node_id = ?job.assigned_node_id,
+        audio_base64_len = job.audio_base64.len(),
+        "【JobAssign】已构建，即将发往节点"
     );
-    
     Some(NodeMessage::JobAssign {
         group_id,
         part_index,
@@ -80,7 +76,7 @@ pub(crate) async fn create_job_assign_message(
         dialect: job.dialect.clone(),
         features: job.features.clone(),
         pipeline: job.pipeline.clone(),
-        audio: audio_base64,
+        audio: job.audio_base64.clone(),
         audio_format: job.audio_format.clone(),
         sample_rate: job.sample_rate,
         mode: job.mode.clone(),
@@ -92,8 +88,8 @@ pub(crate) async fn create_job_assign_message(
         trace_id: job.trace_id.clone(),
         padding_ms: job.padding_ms, // EDGE-4: Padding 配置
         is_manual_cut: job.is_manual_cut,
-        is_pause_triggered: job.is_pause_triggered,
         is_timeout_triggered: job.is_timeout_triggered,
+        is_max_duration_triggered: job.is_max_duration_triggered,
     })
 }
 

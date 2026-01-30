@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use chrono::{DateTime, Utc, Duration};
+use chrono::{DateTime, Utc};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PairingCode {
@@ -15,15 +15,12 @@ pub struct PairingCode {
 #[derive(Clone)]
 pub struct PairingService {
     codes: Arc<RwLock<HashMap<String, PairingCode>>>,
-    #[allow(dead_code)]
-    expiry_duration: Duration,
 }
 
 impl PairingService {
     pub fn new() -> Self {
         Self {
             codes: Arc::new(RwLock::new(HashMap::new())),
-            expiry_duration: Duration::minutes(5),
         }
     }
 

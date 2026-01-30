@@ -25,7 +25,7 @@ pub(crate) async fn send_ui_events_for_job_result(
                 error_code: None,
                 hint: None,
             };
-            let _ = crate::phase2::send_session_message_routed(state, session_id, ui_event).await;
+            let _ = crate::redis_runtime::send_session_message_routed(state, session_id, ui_event).await;
         }
     }
 
@@ -43,7 +43,7 @@ pub(crate) async fn send_ui_events_for_job_result(
                 error_code: None,
                 hint: None,
             };
-            let _ = crate::phase2::send_session_message_routed(state, session_id, ui_event).await;
+            let _ = crate::redis_runtime::send_session_message_routed(state, session_id, ui_event).await;
         }
     }
 }

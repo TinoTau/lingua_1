@@ -45,13 +45,5 @@ impl NoAvailableNodeBreakdown {
     }
 }
 
-#[derive(Debug, Clone, Serialize)]
-pub struct Phase3TwoLevelDebug {
-    pub pool_count: u16,
-    pub preferred_pool: u16,
-    pub selected_pool: Option<u16>,
-    pub fallback_used: bool,
-    /// (pool_id, best_reason_label, total_candidates)
-    pub attempts: Vec<(u16, &'static str, usize)>,
-}
+// Phase3TwoLevelDebug 已废弃，不再使用
 

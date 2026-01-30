@@ -66,7 +66,7 @@ export class AggregatorStatePendingManager {
       if (tail) {
         newTailBuffer = tail;
       }
-      // 注意：这里应该触发 commit，但为了简化，我们在 shouldCommit 中处理
+      // 注意：这里应该触发 commit，但为了简化，我们在 decideCommit 中处理
     }
 
     // 开始新的 stream，清空合并组起始标志和累积时长

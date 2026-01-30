@@ -4,6 +4,7 @@
  */
 
 import { JobAssignMessage } from '@shared/protocols/messages';
+import { JobContext } from './context/job-context';
 
 /**
  * Pipeline 步骤类型
@@ -193,7 +194,7 @@ export function shouldExecuteStep(
     step: PipelineStepType,
     mode: PipelineMode,
     job: JobAssignMessage,
-    ctx?: { shouldSendToSemanticRepair?: boolean }  // 可选的上下文，用于检查语义修复标志
+    ctx?: JobContext  // 可选的上下文，用于检查语义修复标志
 ): boolean {
     // 检查步骤是否在模式的步骤列表中
     if (!mode.steps.includes(step)) {
@@ -220,8 +221,7 @@ export function shouldExecuteStep(
         case 'DEDUP':
             return use_asr !== false;
         case 'SEMANTIC_REPAIR':
-            // 简化逻辑：只要 shouldSendToSemanticRepair 为 true，就执行语义修复
-            // 不再需要显式设置 use_semantic，避免多层判断导致的问题
+            // 由 AGGREGATION 步骤写入 ctx.shouldSendToSemanticRepair，无聚合器时 aggregation-step 也会设为 true
             return ctx?.shouldSendToSemanticRepair === true;
         case 'TRANSLATION':
             return use_nmt !== false;

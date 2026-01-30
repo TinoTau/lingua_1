@@ -8,15 +8,15 @@ use serde::{Deserialize, Serialize};
 use tracing::warn;
 
 /// Redis 中存储的节点数据格式
+/// 
+/// 注意：pool_ids 已删除，Pool 归属由 PoolService 管理
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[allow(dead_code)] // 当前未使用，保留用于未来扩展
 pub struct RedisNodeData {
     pub node_id: String,
     pub status: String,  // "online", "offline"
     pub health: String,  // "Online", "Offline", "NotReady"
     pub capabilities: RedisNodeCapabilities,
     pub resources: RedisNodeResources,
-    pub pool_ids: Vec<u16>,
     pub installed_services: Vec<String>,  // JSON 字符串数组
     pub features_supported: serde_json::Value,  // FeatureFlags 的 JSON 表示
     pub last_heartbeat_ms: i64,
@@ -43,8 +43,7 @@ pub struct RedisNodeResources {
 
 impl RedisNodeData {
     /// 转换为 NodeRuntimeSnapshot
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub fn to_snapshot(&self) -> Option<NodeRuntimeSnapshot> {
+        pub fn to_snapshot(&self) -> Option<NodeRuntimeSnapshot> {
         // 解析 installed_services
         let installed_services: Vec<crate::messages::InstalledService> = self.installed_services
             .iter()
@@ -88,7 +87,6 @@ impl RedisNodeData {
             max_concurrency: self.resources.max_concurrency,
             current_jobs: self.resources.current_jobs,
             accept_public_jobs: true, // 默认值，实际应从 Redis 读取
-            pool_ids: smallvec::SmallVec::from_vec(self.pool_ids.clone()),
             has_gpu: self.resources.gpu_usage.is_some(),
             installed_services,
             cpu_usage: self.resources.cpu_usage,
@@ -99,8 +97,7 @@ impl RedisNodeData {
     }
 
     /// 从 NodeRuntimeSnapshot 创建
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub fn from_snapshot(snapshot: &NodeRuntimeSnapshot, version: u64) -> Self {
+        pub fn from_snapshot(snapshot: &NodeRuntimeSnapshot, version: u64) -> Self {
         // 序列化 installed_services
         let installed_services: Vec<String> = snapshot.installed_services
             .iter()
@@ -131,7 +128,6 @@ impl RedisNodeData {
                 gpu_usage: snapshot.gpu_usage,
                 memory_usage: snapshot.memory_usage,
             },
-            pool_ids: snapshot.pool_ids.to_vec(),
             installed_services,
             features_supported,
             last_heartbeat_ms: chrono::Utc::now().timestamp_millis(),
@@ -140,22 +136,6 @@ impl RedisNodeData {
     }
 }
 
-/// Redis 中存储的 Phase3 配置格式
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[allow(dead_code)] // 当前未使用，保留用于未来扩展
-pub struct RedisPhase3Config {
-    pub config: Phase3Config,
-    pub version: u64,
-    pub updated_at_ms: i64,
-}
 
-impl RedisPhase3Config {
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub fn from_config(config: Phase3Config, version: u64) -> Self {
-        Self {
-            config,
-            version,
-            updated_at_ms: chrono::Utc::now().timestamp_millis(),
-        }
     }
 }

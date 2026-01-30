@@ -1,0 +1,14 @@
+{
+  "id": "speaker-embedding",
+  "name": "Speaker Embedding",
+  "type": "tone",
+  "device": "gpu",
+  "port": 5014,
+  "exec": {
+    "command": "python",
+    "args": ["speaker_embedding_service.py"],
+    "cwd": "."
+  },
+  "version": "1.0.0",
+  "description": "Speaker embedding service for voice cloning and speaker recognition"
+}

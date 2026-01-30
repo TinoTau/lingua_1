@@ -205,14 +205,14 @@ def main():
     # 4. 端点对比测试
     test_endpoint_comparison(base_url)
     
-    # 5. 测试不支持的语言
+    # 5. 测试不支持的语言（fail-fast：应返回 400）
     print_section("5. 不支持的语言测试")
     
     try:
         payload = {
             "job_id": "test_unsupported",
             "session_id": "session_001",
-            "lang": "fr",  # 不支持的语言
+            "lang": "fr",
             "text_in": "Bonjour le monde"
         }
         response = requests.post(
@@ -220,18 +220,14 @@ def main():
             json=payload,
             timeout=30
         )
-        response.raise_for_status()
-        result = response.json()
-        
-        is_pass = result.get('decision') == 'PASS'
-        has_unsupported = 'UNSUPPORTED_LANGUAGE' in result.get('reason_codes', [])
-        
-        if is_pass and has_unsupported:
-            print_result(True, "不支持的语言正确返回PASS")
-            print(f"    决策: {result.get('decision')}")
-            print(f"    原因: {result.get('reason_codes')}")
+        if response.status_code == 400:
+            detail = response.json().get("detail") or {}
+            if detail.get("code") == "SEM_REPAIR_UNSUPPORTED_LANG":
+                print_result(True, "不支持的语言正确返回 400 (SEM_REPAIR_UNSUPPORTED_LANG)")
+            else:
+                print_result(False, f"不支持的语言返回 400 但 detail 不正确: {detail}")
         else:
-            print_result(False, "不支持的语言处理不正确")
+            print_result(False, f"不支持的语言应返回 400，实际: {response.status_code}")
     except Exception as e:
         print_result(False, f"不支持的语言测试失败: {e}")
     

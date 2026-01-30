@@ -47,26 +47,27 @@ export class RegistrationHandler {
 
     try {
       // 获取硬件信息
-      logger.debug({}, 'Getting hardware info...');
+      logger.info({}, '[1/6] Getting hardware info...');
       const hardware = await this.hardwareHandler.getHardwareInfo();
-      logger.debug({ gpus: hardware.gpus?.length || 0 }, 'Hardware info retrieved');
+      logger.info({ gpus: hardware.gpus?.length || 0 }, '[1/6] Hardware info retrieved');
 
       // 获取已安装的模型
-      logger.debug({}, 'Getting installed models...');
       const installedModels = await this.inferenceService.getInstalledModels();
       logger.debug({ modelCount: installedModels.length }, 'Installed models retrieved');
 
       // 获取服务实现列表与按类型聚合的能力
-      logger.debug({}, 'Getting installed services...');
       const installedServicesAll = await this.getInstalledServices();
-      logger.debug({ serviceCount: installedServicesAll.length }, 'Installed services retrieved');
+      logger.info({ 
+        serviceCount: installedServicesAll.length,
+        services: installedServicesAll.map(s => `${s.service_id}:${s.type}:${s.status}`)
+      }, 'Installed services retrieved');
 
-      logger.debug({}, 'Getting capability by type...');
       const capabilityByType = await this.getCapabilityByType(installedServicesAll);
-      logger.debug({ capabilityCount: capabilityByType.length }, 'Capability by type retrieved');
+      logger.debug({ 
+        capabilityCount: capabilityByType.length,
+      }, 'Capability by type retrieved');
 
       // 获取语言能力
-      logger.debug({}, 'Detecting language capabilities...');
       const languageCapabilities = await this.languageDetector.detectLanguageCapabilities(
         installedServicesAll,
         installedModels,
@@ -79,7 +80,6 @@ export class RegistrationHandler {
       }, 'Language capabilities detected');
 
       // 获取支持的功能
-      logger.debug({}, 'Getting features supported...');
       const featuresSupported = this.inferenceService.getFeaturesSupported();
       logger.debug({ features: featuresSupported }, 'Features supported retrieved');
 
@@ -109,7 +109,6 @@ export class RegistrationHandler {
         gpus: hardware.gpus?.length || 0,
         installed_services_count: installedServicesAll.length,
         capability_by_type_count: capabilityByType.length,
-        capabilityByType,
         message_length: messageStr.length,
         ws_readyState: this.ws.readyState,
       }, 'Sending node registration message');
@@ -122,6 +121,7 @@ export class RegistrationHandler {
       }
 
       this.ws.send(messageStr);
+      logger.info({}, 'Registration message sent');
       logger.info({ message_length: messageStr.length }, 'Node registration message sent successfully');
     } catch (error) {
       const errorDetails = {

@@ -12,7 +12,6 @@ export interface CommitExecutionResult {
   commitText: string;
   newTailBuffer: string;
   tailCarryUsed: boolean;
-  shouldCommit: boolean;
 }
 
 export class AggregatorStateCommitExecutor {
@@ -69,7 +68,6 @@ export class AggregatorStateCommitExecutor {
       commitText: commitTextResult.commitText,
       newTailBuffer: commitTextResult.newTailBuffer,
       tailCarryUsed: commitTextResult.tailCarryUsed,
-      shouldCommit: true,
     };
   }
 

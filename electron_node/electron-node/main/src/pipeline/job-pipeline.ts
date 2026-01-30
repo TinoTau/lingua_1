@@ -21,6 +21,7 @@ export interface ServicesBundle {
   dedupStage?: any;  // 全局 DedupStage 实例（用于维护 job_id 去重状态）
   resultSender?: any;  // ResultSender 实例（用于发送原始job的结果）
   audioAggregator?: any;  // AudioAggregator 实例（用于在job之间共享音频缓冲区）
+  semanticRepairInitializer?: any;  // SemanticRepairInitializer 实例（复用，避免重复创建）
 }
 
 export interface JobPipelineOptions {
@@ -82,16 +83,10 @@ export async function runJobPipeline(options: JobPipelineOptions): Promise<JobRe
         continue;
       }
       
-      // 检查步骤是否应该执行（支持动态条件判断）
-      // 对于 SEMANTIC_REPAIR 步骤，需要检查 ctx.shouldSendToSemanticRepair 标志
+      // 检查步骤是否应该执行（支持动态条件判断，如 SEMANTIC_REPAIR 依赖 ctx.shouldSendToSemanticRepair）
       if (!shouldExecuteStep(step, mode, job, ctx)) {
         logger.debug(
-          {
-            jobId: job.job_id,
-            step,
-            modeName: mode.name,
-            shouldSendToSemanticRepair: step === 'SEMANTIC_REPAIR' ? ctx.shouldSendToSemanticRepair : undefined,
-          },
+          { jobId: job.job_id, step, modeName: mode.name },
           `Skipping step ${step} (condition not met)`
         );
         continue;
@@ -131,9 +126,8 @@ export async function runJobPipeline(options: JobPipelineOptions): Promise<JobRe
           `Step ${step} failed`
         );
 
-        // 根据步骤的重要性决定是否继续
-        if (step === 'ASR' || step === 'TRANSLATION') {
-          // 关键步骤失败，抛出错误
+        // 根据步骤的重要性决定是否继续（语义修复为必经且必须成功，失败即 job 失败）
+        if (step === 'ASR' || step === 'TRANSLATION' || step === 'SEMANTIC_REPAIR') {
           throw error;
         } else {
           // 非关键步骤失败，记录错误但继续执行

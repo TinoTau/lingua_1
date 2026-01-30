@@ -275,21 +275,13 @@ Write-Host "Tip: Set environment variable LOG_FORMAT=json to use JSON log format
 Write-Host ""
 
 # Build and run
-Write-Host "Building scheduler server..." -ForegroundColor Yellow
+Write-Host "Building and starting scheduler server..." -ForegroundColor Yellow
+Write-Host "Logs will be saved to: $logFile" -ForegroundColor Gray
+Write-Host "Errors will be displayed in this terminal" -ForegroundColor Gray
+Write-Host ""
 
 try {
-    cargo build --release
-    
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "Build failed (exit code: $LASTEXITCODE)" -ForegroundColor Red
-        exit 1
-    }
-    
-    Write-Host "Starting scheduler server..." -ForegroundColor Green
-    Write-Host "Logs will be saved to: $logFile" -ForegroundColor Gray
-    Write-Host "Errors will be displayed in this terminal" -ForegroundColor Gray
-    Write-Host ""
-    
+    # cargo run --release will automatically build if needed
     cargo run --release
     
     # Check exit code

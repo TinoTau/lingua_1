@@ -1,12 +1,51 @@
 use crate::core::AppState;
 use crate::messages::{CapabilityByType, FeatureFlags, HardwareInfo, InstalledModel, InstalledService, ResourceUsage, NodeMessage};
-use crate::services::minimal_scheduler::{RegisterNodeRequest, HeartbeatRequest};
+use crate::services::minimal_scheduler::RegisterNodeRequest;
 use axum::extract::ws::Message;
 use tokio::sync::mpsc;
 use tracing::{debug, info, warn};
-use uuid::Uuid;
+use anyhow::{anyhow, Result};
 
-/// 节点注册处理（使用极简无锁调度服务）
+/// 从节点语言能力中提取 ASR 和 Semantic 语言
+/// 
+/// # 核心规则
+/// 
+/// - ASR 语言作为源语言（用户说的语言）
+/// - Semantic 语言作为目标语言（系统输出的语言）
+/// - Semantic 服务是必需的，semantic_languages 不能为空
+/// 
+/// # 返回
+/// 提取 ASR、Semantic、TTS 语言。
+/// Semantic 用于能力校验（必填）；池分配使用 (asr × tts)，与任务查找 (src, tgt) 一致。
+fn extract_langs(
+    lang_caps: &Option<crate::messages::common::NodeLanguageCapabilities>,
+) -> Result<(Vec<String>, Vec<String>, Vec<String>)> {
+    let caps = lang_caps.as_ref()
+        .ok_or_else(|| anyhow!("language_capabilities is required"))?;
+    
+    let asr_langs = caps.asr_languages.clone()
+        .ok_or_else(|| anyhow!("asr_languages is required"))?;
+    let semantic_langs = caps.semantic_languages.clone()
+        .ok_or_else(|| anyhow!("semantic_languages is required"))?;
+    let tts_langs = caps.tts_languages.clone()
+        .ok_or_else(|| anyhow!("tts_languages is required"))?;
+    
+    if asr_langs.is_empty() {
+        return Err(anyhow!("asr_languages cannot be empty"));
+    }
+    if semantic_langs.is_empty() {
+        return Err(anyhow!(
+            "semantic_languages cannot be empty. Semantic service is mandatory for all nodes."
+        ));
+    }
+    if tts_langs.is_empty() {
+        return Err(anyhow!("tts_languages cannot be empty"));
+    }
+    
+    Ok((asr_langs, semantic_langs, tts_langs))
+}
+
+/// 节点注册处理（极简版）
 pub(super) async fn handle_node_register(
     state: &AppState,
     node_id: &mut Option<String>,
@@ -21,8 +60,14 @@ pub(super) async fn handle_node_register(
     _features_supported: FeatureFlags,
     _accept_public_jobs: bool,
     capability_by_type: Vec<CapabilityByType>,
-    _language_capabilities: Option<crate::messages::common::NodeLanguageCapabilities>,
+    language_capabilities: Option<crate::messages::common::NodeLanguageCapabilities>,
 ) -> Result<(), anyhow::Error> {
+    // 流程日志 1: 注册流程开始
+    info!(
+        step = "register_start",
+        "【节点管理流程】注册流程开始"
+    );
+
     let scheduler = state.minimal_scheduler.as_ref()
         .ok_or_else(|| anyhow::anyhow!("MinimalSchedulerService not initialized (Phase2 not enabled)"))?;
 
@@ -31,65 +76,77 @@ pub(super) async fn handle_node_register(
         format!("node-{}", uuid::Uuid::new_v4().to_string()[..8].to_uppercase())
     });
     *node_id = Some(final_node_id.clone());
+    
+    // 流程日志 2: 节点 ID 确定
+    info!(
+        step = "register_id_generated",
+        node_id = %final_node_id,
+        "【节点管理流程】节点 ID 已生成"
+    );
 
     // 将能力信息序列化为 JSON
-    let cap_json = serde_json::to_string(&capability_by_type)?;
+    let _cap_json = serde_json::to_string(&capability_by_type)?;
 
-    // 从语言能力提取 pool names
-    // 根据原代码逻辑，从 semantic_languages 生成 pool name（排序后的语言集合，用 '-' 连接）
-    let pool_names_json = if let Some(ref lang_caps) = _language_capabilities {
-        if let Some(ref semantic_langs) = lang_caps.semantic_languages {
-            if !semantic_langs.is_empty() {
-                // 排序语言集合（与 Pool 命名规则一致）
-                let mut sorted_langs = semantic_langs.clone();
-                sorted_langs.sort();
-                let pool_name = sorted_langs.join("-");
-                
-                // 使用 UUID v4 生成 pool_id（每次生成新的 UUID，不考虑兼容性）
-                let pool_uuid = Uuid::new_v4();
-                
-                // 从 UUID 中提取 u16（使用前 2 个字节）
-                let uuid_bytes = pool_uuid.as_bytes();
-                let pool_id = u16::from_be_bytes([uuid_bytes[0], uuid_bytes[1]]);
-                
-                // 生成 pool_names_json
-                // 格式: [{"id":pool_id,"name":"zh-en"}]
-                let pool_info = serde_json::json!({
-                    "id": pool_id,
-                    "name": pool_name
-                });
-                Some(serde_json::to_string(&vec![pool_info])?)
-            } else {
-                None
-            }
-        } else {
-            None
-        }
-    } else {
-        None
-    };
+    // 从语言能力提取 ASR、Semantic、TTS 语言
+    let (asr_langs, semantic_langs, tts_langs) = extract_langs(&language_capabilities)?;
+    
+    info!(
+        step = "register_langs_validated",
+        node_id = %final_node_id,
+        asr_langs = ?asr_langs,
+        semantic_langs = ?semantic_langs,
+        tts_langs = ?tts_langs,
+        "【节点管理流程】语言能力验证通过（Semantic 必需✅，池分配用 asr×tts）"
+    );
+    
+    let asr_langs_json = serde_json::to_string(&asr_langs)?;
+    let semantic_langs_json = serde_json::to_string(&semantic_langs)?;
+    let tts_langs_json = serde_json::to_string(&tts_langs)?;
 
-    // 创建注册请求
     let req = RegisterNodeRequest {
         node_id: final_node_id.clone(),
-        cap_json,
-        pool_names_json,
+        asr_langs_json,
+        semantic_langs_json,
+        tts_langs_json,
     };
 
+    // 流程日志 4: 准备写入 Redis
+    info!(
+        step = "register_redis_write",
+        node_id = %final_node_id,
+        "【节点管理流程】准备调用 register_node_v2.lua 写入 Redis（SSOT）"
+    );
+
     // 调用新实现
+    let t0 = std::time::Instant::now();
     scheduler.register_node(req).await
         .map_err(|e| {
-            warn!(node_id = %final_node_id, error = %e, "节点注册失败");
+            warn!(
+                step = "register_redis_failed",
+                node_id = %final_node_id,
+                error = %e,
+                "【节点管理流程】Redis 注册失败"
+            );
             e
         })?;
+    
+    // 流程日志 5: Redis 写入成功
+    info!(
+        step = "register_redis_success",
+        node_id = %final_node_id,
+        elapsed_ms = t0.elapsed().as_millis(),
+        "【节点管理流程】Redis 注册成功（节点状态已写入 SSOT）"
+    );
 
     // 注册节点的 WebSocket 连接（用于发送任务）
     // 注意：连接注册必须在节点注册成功后执行，否则任务无法发送
     state.node_connections.register(final_node_id.clone(), tx.clone()).await;
     
-    debug!(
+    // 流程日志 6: WebSocket 连接已注册
+    info!(
+        step = "register_connection_registered",
         node_id = %final_node_id,
-        "节点连接已注册"
+        "【节点管理流程】WebSocket 连接已注册（可接收任务）"
     );
 
     // 发送 node_register_ack 消息给节点
@@ -112,63 +169,72 @@ pub(super) async fn handle_node_register(
         return Err(anyhow::anyhow!("Failed to send node_register_ack: {}", e));
     }
     
+    // 流程日志 7: 注册流程完成
     info!(
+        step = "register_complete",
         node_id = %final_node_id,
-        "已发送 node_register_ack 消息"
+        "【节点管理流程】注册流程完成✅ (已发送 node_register_ack，Pool 将在首次心跳时分配)"
     );
 
     Ok(())
 }
 
-/// 节点心跳处理（使用极简无锁调度服务）
+/// 节点心跳处理
 pub(super) async fn handle_node_heartbeat(
     state: &AppState,
     node_id: &str,
     _resource_usage: ResourceUsage,
     _installed_models: Option<Vec<InstalledModel>>,
     _installed_services: Option<Vec<InstalledService>>,
-    capability_by_type: Vec<CapabilityByType>,
+    _capability_by_type: Vec<CapabilityByType>,
     _rerun_metrics: Option<crate::messages::common::RerunMetrics>,
     _asr_metrics: Option<crate::messages::common::ASRMetrics>,
     _processing_metrics: Option<crate::messages::common::ProcessingMetrics>,
     _language_capabilities: Option<crate::messages::common::NodeLanguageCapabilities>,
 ) {
-    // 1. 更新节点心跳状态（通过极简调度服务）
-    if let Some(scheduler) = state.minimal_scheduler.as_ref() {
-        // 注意：load_json 已被移除，因为其中的字段（cpu_percent, gpu_percent, mem_percent, running_jobs）
-        // 都未被使用。节点任务管理由节点端 GPU 仲裁器负责，调度服务器不再管理。
-        let req = HeartbeatRequest {
-            node_id: node_id.to_string(),
-            online: true,
-            load_json: None,
-        };
+    // 流程日志 1: 心跳流程开始
+    debug!(
+        step = "heartbeat_start",
+        node_id = %node_id,
+        "【节点管理流程】心跳流程开始"
+    );
 
-        if let Err(e) = scheduler.heartbeat(req).await {
-            tracing::warn!(node_id = %node_id, error = %e, "节点心跳失败");
+    // 使用 PoolService 处理心跳（自动分配池）
+    if let Some(pool_service) = state.pool_service.as_ref() {
+        // 流程日志 2: 调用 Redis Lua
+        let t0 = std::time::Instant::now();
+        match pool_service.as_ref().heartbeat(node_id).await {
+            Ok(_) => {
+                // 流程日志 3: Redis 心跳成功
+                debug!(
+                    step = "heartbeat_redis_success",
+                    node_id = %node_id,
+                    elapsed_ms = t0.elapsed().as_millis(),
+                    "【节点管理流程】Redis 心跳成功（TTL 已刷新，Pool 已自动分配）"
+                );
+            }
+            Err(e) => {
+                tracing::warn!(
+                    step = "heartbeat_redis_failed",
+                    node_id = %node_id,
+                    error = %e,
+                    elapsed_ms = t0.elapsed().as_millis(),
+                    "【节点管理流程】Redis 心跳失败"
+                );
+            }
         }
-    }
-
-    // 2. 同步节点能力到 Redis（如果提供了能力信息）
-    // 服务热插拔：当节点启动/停止服务时，能力会变化，需要同步到 Redis
-    if let Some(phase2_runtime) = state.phase2.as_ref() {
-        if !capability_by_type.is_empty() {
-            phase2_runtime.sync_node_capabilities_to_redis(node_id, &capability_by_type).await;
-            tracing::debug!(
-                node_id = %node_id,
-                capability_count = capability_by_type.len(),
-                "节点能力已同步到 Redis"
-            );
-        }
-    }
-
-    // 3. 触发 Pool 重新分配（如果服务能力变化）
-    // 服务热插拔：当节点服务能力变化时，需要重新分配 Pool
-    if let Some(phase2_runtime) = state.phase2.as_ref() {
-        let phase2_ref = phase2_runtime.as_ref();
-        state.node_registry.phase3_upsert_node_to_pool_index_with_runtime(node_id, Some(phase2_ref)).await;
-        tracing::debug!(
+    } else {
+        tracing::warn!(
+            step = "heartbeat_no_pool_service",
             node_id = %node_id,
-            "已触发 Pool 重新分配检查"
+            "【节点管理流程】PoolService 未初始化"
         );
     }
+    
+    // 流程日志 4: 心跳流程完成
+    debug!(
+        step = "heartbeat_complete",
+        node_id = %node_id,
+        "【节点管理流程】心跳流程完成✅"
+    );
 }

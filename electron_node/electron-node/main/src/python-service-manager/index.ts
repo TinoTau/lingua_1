@@ -1,8 +1,10 @@
 import { ChildProcess } from 'child_process';
+import * as path from 'path';
+import * as fs from 'fs';
 import logger from '../logger';
 import { GpuUsageTracker } from '../utils/gpu-tracker';
 import { verifyPortReleased } from '../utils/port-manager';
-import { getPythonServiceConfig } from '../utils/python-service-config';
+import { setupCudaEnvironment } from '../utils/cuda-env';
 import { PythonServiceStatus, PythonServiceName, PythonServiceConfig } from './types';
 import { findProjectRoot } from './project-root';
 import {
@@ -10,8 +12,7 @@ import {
   stopServiceProcess,
   waitForServiceReadyWithProcessCheck,
 } from './service-process';
-import { loadServiceConfigFromJson, convertToPythonServiceConfig } from '../utils/service-config-loader';
-import * as path from 'path';
+import { getServiceRegistry } from '../service-layer';
 
 export type { PythonServiceConfig, PythonServiceStatus, PythonServiceName };
 export { PythonServiceManager };
@@ -37,10 +38,9 @@ class PythonServiceManager {
   }
 
   /**
-   * 获取服务配置（优先从 service.json 读取，否则使用硬编码配置）
+   * 映射服务名称到 service_id（用于服务发现）
    */
-  private async getServiceConfig(serviceName: PythonServiceName): Promise<PythonServiceConfig | null> {
-    // 映射服务名称到 service_id
+  private getServiceId(serviceName: PythonServiceName): string {
     const serviceIdMap: Record<PythonServiceName, string> = {
       nmt: 'nmt-m2m100',
       tts: 'piper-tts',
@@ -48,62 +48,67 @@ class PythonServiceManager {
       speaker_embedding: 'speaker-embedding',
       faster_whisper_vad: 'faster-whisper-vad',
     };
+    return serviceIdMap[serviceName];
+  }
 
-    const serviceId = serviceIdMap[serviceName];
-
-    // 尝试从 service.json 加载配置
-    try {
-      // 获取服务目录（userData/services 或项目目录）
-      let servicesDir: string;
-      try {
-        // 尝试使用 electron app（如果可用）
-        const { app } = require('electron');
-        if (app && app.getPath) {
-          const userData = app.getPath('userData');
-          servicesDir = path.join(userData, 'services');
-        } else {
-          // 如果没有 app，使用项目目录下的 services
-          servicesDir = path.join(this.projectRoot, 'electron_node', 'services');
-        }
-      } catch {
-        // 如果 electron 不可用，使用项目目录
-        servicesDir = path.join(this.projectRoot, 'electron_node', 'services');
-      }
-
-      const serviceConfig = await loadServiceConfigFromJson(serviceId, servicesDir);
-
-      if (serviceConfig) {
-        logger.info({ serviceName, serviceId }, 'Using service.json configuration');
-
-        // 转换为 PythonServiceConfig 格式
-        const converted = convertToPythonServiceConfig(
-          serviceId,
-          serviceConfig.platformConfig,
-          serviceConfig.installPath,
-          this.projectRoot
-        );
-
-        // 获取硬编码配置以补充缺失的字段（如 env、logDir 等）
-        const fallbackConfig = getPythonServiceConfig(serviceName, this.projectRoot);
-
-        if (fallbackConfig) {
-          // 合并配置：使用 service.json 的配置，但保留硬编码配置的其他字段
-          return {
-            ...fallbackConfig,
-            name: converted.name,
-            port: converted.port,
-            servicePath: converted.servicePath,
-            scriptPath: converted.scriptPath,
-            workingDir: converted.workingDir,
-          };
-        }
-      }
-    } catch (error) {
-      logger.debug({ error, serviceName }, 'Failed to load service.json, using fallback config');
+  /**
+   * 从服务发现机制获取服务配置
+   */
+  private async getServiceConfig(serviceName: PythonServiceName): Promise<PythonServiceConfig | null> {
+    const serviceId = this.getServiceId(serviceName);
+    const registry = getServiceRegistry();
+    
+    if (!registry || !registry.has(serviceId)) {
+      logger.error({ serviceName, serviceId }, 'Service not found in registry');
+      return null;
     }
 
-    // 回退到硬编码配置
-    return getPythonServiceConfig(serviceName, this.projectRoot);
+    const serviceEntry = registry.get(serviceId)!;
+    const serviceConfig = serviceEntry.def;
+    
+    logger.info({ serviceName, serviceId }, 'Loading service configuration from service discovery');
+
+    if (!serviceConfig.exec) {
+      logger.error({ serviceName, serviceId }, 'Service config missing exec definition');
+      return null;
+    }
+
+    // 构建完整的配置
+    const servicePath = serviceEntry.installPath;
+    const venvPath = path.join(servicePath, 'venv');
+    const venvScripts = path.join(venvPath, 'Scripts');
+    const logDir = path.join(servicePath, 'logs');
+    const logFile = path.join(logDir, `${serviceId}.log`);
+
+    // 确保日志目录存在
+    if (!fs.existsSync(logDir)) {
+      fs.mkdirSync(logDir, { recursive: true });
+    }
+
+    // 解析脚本路径
+    const scriptPath = path.isAbsolute(serviceConfig.exec.args[0])
+      ? serviceConfig.exec.args[0]
+      : path.join(servicePath, serviceConfig.exec.args[0]);
+
+    // 构建环境变量
+    const baseEnv: Record<string, string> = {
+      ...process.env,
+      ...setupCudaEnvironment(),
+      PYTHONIOENCODING: 'utf-8',
+      PATH: `${venvScripts};${process.env.PATH || ''}`,
+    };
+
+    return {
+      name: serviceConfig.name,
+      port: serviceConfig.port || 8000,
+      servicePath,
+      venvPath,
+      scriptPath,
+      workingDir: serviceConfig.exec.cwd || servicePath,
+      logDir,
+      logFile,
+      env: baseEnv,
+    };
   }
 
   async startService(serviceName: PythonServiceName): Promise<void> {

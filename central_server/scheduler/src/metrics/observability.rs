@@ -21,18 +21,6 @@ pub fn thresholds() -> (u64, u64) {
     )
 }
 
-pub fn record_lock_wait(lock_name: &'static str, wait_ms: u64) {
-    let threshold = LOCK_WAIT_WARN_MS.load(Ordering::Relaxed);
-    if wait_ms >= threshold {
-        crate::metrics::on_slow_lock_wait(lock_name);
-        tracing::warn!(
-            lock = lock_name,
-            wait_ms = wait_ms,
-            threshold_ms = threshold,
-            "锁等待超过阈值（可能存在 contention）"
-        );
-    }
-}
 
 pub fn record_path_latency(path_name: &'static str, elapsed_ms: u64) {
     let threshold = PATH_WARN_MS.load(Ordering::Relaxed);

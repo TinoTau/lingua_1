@@ -40,7 +40,7 @@ ASR 推理在独立子进程中执行，通过进程间队列通信：
 - `ASR_MODEL_PATH`: Faster Whisper 模型路径（默认：`Systran/faster-whisper-large-v3`）
 - `ASR_DEVICE`: 设备类型（`cpu` 或 `cuda`，自动检测）
 - `ASR_COMPUTE_TYPE`: 计算类型（`float32`、`float16`、`int8`，自动选择）
-- `ASR_BEAM_SIZE`: Beam search 宽度（默认：10）
+- `ASR_BEAM_SIZE`: Beam search 宽度（默认：5，OpenAI Whisper 标准值）
 - `ASR_TEMPERATURE`: 采样温度（默认：0.0）
 - `ASR_PATIENCE`: Beam search 耐心值（默认：1.0）
 - `ASR_COMPRESSION_RATIO_THRESHOLD`: 压缩比阈值（默认：2.4）
@@ -103,7 +103,7 @@ ASR 推理在独立子进程中执行，通过进程间队列通信：
   "sample_rate": 16000,
   "language": "zh",
   "task": "transcribe",
-  "beam_size": 10,
+  "beam_size": 5,
   "condition_on_previous_text": false,
   "use_context_buffer": true,
   "use_text_context": true
@@ -209,7 +209,7 @@ python faster_whisper_vad_service.py
 
 ### 性能配置
 
-- **Beam Size**：默认 10（提高准确度，减少同音字错误）
+- **Beam Size**：默认 5（OpenAI Whisper 标准值，平衡准确度和速度）
 - **Temperature**：默认 0.0（更确定，减少随机性）
 - **GPU 加速**：自动检测，详见 [GPU.md](./GPU.md)
 

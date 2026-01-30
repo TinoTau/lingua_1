@@ -29,12 +29,9 @@ pub struct Participant {
 /// 房间信息
 #[derive(Debug, Clone)]
 pub struct Room {
-    #[allow(dead_code)]
     pub room_code: String, // 6位数字房间码
     pub room_id: String, // 服务器内部唯一 ID
     pub participants: HashMap<String, Participant>, // key: session_id
-    #[allow(dead_code)]
-    pub created_at: DateTime<Utc>,
     pub last_speaking_at: DateTime<Utc>, // 用于房间过期检测
 }
 
@@ -45,7 +42,6 @@ impl Room {
             room_code,
             room_id,
             participants: HashMap::new(),
-            created_at: now,
             last_speaking_at: now,
         }
     }
@@ -358,8 +354,6 @@ impl RoomManager {
 pub enum RoomError {
     RoomNotFound,
     AlreadyInRoom,
-    #[allow(dead_code)]
-    InvalidRoomCode,
 }
 
 impl std::fmt::Display for RoomError {
@@ -367,7 +361,6 @@ impl std::fmt::Display for RoomError {
         match self {
             RoomError::RoomNotFound => write!(f, "房间不存在"),
             RoomError::AlreadyInRoom => write!(f, "已在房间中"),
-            RoomError::InvalidRoomCode => write!(f, "无效的房间码"),
         }
     }
 }

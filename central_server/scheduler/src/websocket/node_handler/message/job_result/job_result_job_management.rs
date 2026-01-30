@@ -1,7 +1,7 @@
 use crate::core::AppState;
 use crate::core::dispatcher::{Job, JobStatus};
-use crate::services::minimal_scheduler::CompleteTaskRequest;
 use tracing::warn;
+// CompleteTaskRequest 已删除（complete_task() 调用已废弃）
 
 /// 检查是否应该处理 Job（基于 Job 状态和节点匹配）
 /// 返回 (should_process_job, job)
@@ -65,28 +65,10 @@ pub(crate) async fn check_should_process_job(
 pub(crate) async fn process_job_operations(
     state: &AppState,
     job_id: &str,
-    node_id: &str,
+    _node_id: &str,
     _attempt_id: u32,
     success: bool,
 ) {
-    // 使用新的极简无锁调度服务
-    if let Some(scheduler) = state.minimal_scheduler.as_ref() {
-        let status = if success { "finished" } else { "failed" };
-        
-        if let Err(e) = scheduler.complete_task(CompleteTaskRequest {
-            job_id: job_id.to_string(),
-            node_id: node_id.to_string(),
-            status: status.to_string(),
-        }).await {
-            warn!(
-                job_id = %job_id,
-                node_id = %node_id,
-                error = %e,
-                "任务完成失败（极简无锁调度服务）"
-            );
-        }
-    }
-
     // Update job status (本地状态，用于其他模块查询)
     if success {
         state

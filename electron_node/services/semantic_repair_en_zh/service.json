@@ -1,9 +1,9 @@
 {
-  "service_id": "semantic-repair-en-zh",
+  "id": "semantic-repair-en-zh",
   "name": "Unified Semantic Repair Service (EN/ZH + Normalize)",
   "name_zh": "统一语义修复服务（中英文+标准化）",
   "version": "1.0.0",
-  "type": "semantic-repair",
+  "type": "semantic",
   "language": "multi",
   "languages": ["zh", "en"],
   "port": 5015,
@@ -12,10 +12,13 @@
   "gpu_required": true,
   "vram_estimate": 2048,
   "max_concurrency": 1,
-  "startup_command": "python",
-  "startup_args": [
-    "service.py"
-  ],
+  "exec": {
+    "command": "python",
+    "args": [
+      "service.py"
+    ],
+    "cwd": "."
+  },
   "health_check": {
     "endpoint": "/health",
     "timeout_ms": 5000

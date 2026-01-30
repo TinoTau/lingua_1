@@ -20,7 +20,7 @@ pub enum SessionEvent {
     },
     // 已删除未使用的枚举变体：IsFinalReceived
     // 此变体从未被构造，is_final 的处理已在 handle_audio_chunk 中完成
-    /// 重启计时器（用于播放完成后重置 pause 检测计时器）
+    /// 重启计时器（用于播放完成后重置 timeout 检测计时器）
     RestartTimer {
         timestamp_ms: i64, // 重启计时器的时间戳
     },

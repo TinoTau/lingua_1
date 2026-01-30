@@ -1,16 +1,17 @@
-use crate::core::{AppState, Config, JobDispatcher, SessionManager};
+use crate::core::{AppState, Config, JobDispatcher, PendingJobDispatches, SessionManager};
 use crate::managers::{
-    AudioBufferManager, GroupManager, GroupConfig, NodeStatusManager,
+    AudioBufferManager, GroupManager, GroupConfig,
     ResultQueueManager, RoomManager, SessionConnectionManager, NodeConnectionManager,
 };
-use crate::services::{ModelHub, PairingService, ServiceCatalogCache};
+use crate::services::{PairingService, ServiceCatalogCache};
 use crate::metrics::DashboardSnapshotCache;
 use crate::timeout::start_job_timeout_manager;
 use crate::model_not_available::start_worker;
 use crate::node_registry::NodeRegistry;
-use crate::phase2::Phase2Runtime;
+use crate::redis_runtime::Phase2Runtime;
+use std::sync::Arc;
 use std::time::Duration;
-use tracing::{debug, info};
+use tracing::info;
 
 pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
     info!("启动 Lingua 调度服务器...");
@@ -32,7 +33,7 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
     info!("  HTTP 服务 URL: {}", http_url);
     info!("  会话 WebSocket: {}", session_ws_url);
     info!("  节点 WebSocket: {}", node_ws_url);
-    info!("  模型中心: {} (存储路径: {})", config.model_hub.base_url, config.model_hub.storage_path.display());
+    // ModelHub 已删除（未实现）
     info!(
         "  调度器: 每节点最大并发任务={}, dispatched 超时={}秒, pending 超时={}秒, failover_max_attempts={}, 心跳间隔={}秒",
         config.scheduler.max_concurrent_jobs_per_node,
@@ -52,25 +53,19 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
     // 初始化各个模块
     let session_manager = SessionManager::new();
     let resource_threshold = config.scheduler.load_balancer.resource_threshold;
-    let node_registry = std::sync::Arc::new(NodeRegistry::with_resource_threshold(resource_threshold));
-    // 核心服务包映射（用于 Phase3 pool 核心能力缓存/快速跳过）
-    node_registry
-        .set_core_services_config(config.scheduler.core_services.clone())
-        .await;
-    // Phase 3：两级调度配置（pool_count/hash_seed 等）
-    node_registry.set_phase3_config(config.scheduler.phase3.clone()).await;
-    let mut dispatcher = JobDispatcher::new_with_config(
-        node_registry.clone(),
-        config.scheduler.task_binding.clone(),
-        config.scheduler.core_services.clone(),
-    );
+    
+    // 阶段3：NodeRegistry 将在 Phase2 初始化后创建（需要 RedisHandle）
+    // 临时：先创建其他不依赖 NodeRegistry 的组件
+    
     let pairing_service = PairingService::new();
-    let model_hub = ModelHub::new(&config.model_hub)?;
+    // ModelHub 已删除（未实现）
     // ServiceCatalog：优先走 ModelHub HTTP；若失败则可用本地 services_index.json 兜底（单机冷启动/离线）
     let local_services_index = config.model_hub.storage_path.join("services_index.json");
     let service_catalog = ServiceCatalogCache::new(config.model_hub.base_url.clone())
         .with_local_services_index_path(local_services_index);
-    let dashboard_snapshot = DashboardSnapshotCache::new(Duration::from_secs(5));
+    let dashboard_snapshot = DashboardSnapshotCache::new(Duration::from_secs(
+        config.scheduler.background_tasks.dashboard_snapshot_cache_ttl_seconds
+    ));
     let (model_na_tx, model_na_rx) = tokio::sync::mpsc::unbounded_channel();
     let model_not_available_bus = crate::model_not_available::ModelNotAvailableBus::new(model_na_tx);
     let session_connections = SessionConnectionManager::new();
@@ -82,16 +77,8 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
     let group_config = GroupConfig::default();
     let group_manager = GroupManager::new(group_config);
     
-    // 初始化 NodeStatusManager
-    let node_status_manager = NodeStatusManager::new(
-        node_registry.clone(),
-        std::sync::Arc::new(node_connections.clone()),
-        config.scheduler.node_health.clone(),
-    );
+    // NodeStatusManager 将在创建 NodeRegistry 后初始化
     
-    // 启动定期扫描任务
-    node_status_manager.start_periodic_scan();
-
     // 初始化 RoomManager
     let room_manager = RoomManager::new();
 
@@ -99,67 +86,89 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
     let phase2_runtime = Phase2Runtime::new(
         config.scheduler.phase2.clone(),
         config.scheduler.heartbeat_interval_seconds,
+        &config.scheduler,
     )
     .await?
     .map(std::sync::Arc::new);
 
-    // Phase 2：将 runtime 注入 dispatcher（用于 request_id bind/lock + node reserved）
-    dispatcher.set_phase2(phase2_runtime.clone());
-
-    // 初始化极简无锁调度服务（需要 Phase2 启用）
-    let minimal_scheduler = if let Some(ref _rt) = phase2_runtime {
-        // 从 Phase2 配置创建 RedisHandle（使用相同的配置）
-        use crate::phase2::RedisHandle;
-        match RedisHandle::connect(&config.scheduler.phase2.redis).await {
-            Ok(redis) => {
-                match crate::services::MinimalSchedulerService::new(std::sync::Arc::new(redis)).await {
-                    Ok(scheduler) => {
-                        info!("极简无锁调度服务已初始化");
-                        Some(std::sync::Arc::new(scheduler))
-                    }
-                    Err(e) => {
-                        tracing::warn!(error = %e, "极简无锁调度服务初始化失败");
-                        None
-                    }
-                }
-            }
+    // 阶段3：初始化 Redis 连接（Phase2 启用或降级到本地连接）
+    use crate::redis_runtime::RedisHandle;
+    let redis_arc = if phase2_runtime.is_some() {
+        // Phase2 启用：使用配置的 Redis
+        match RedisHandle::connect(&config.scheduler.phase2.redis, &config.scheduler).await {
+            Ok(redis) => Arc::new(redis),
             Err(e) => {
-                tracing::warn!(error = %e, "创建 RedisHandle 失败，无法初始化极简无锁调度服务");
-                None
+                tracing::error!(error = %e, "连接 Phase2 Redis 失败");
+                return Err(e.into());
             }
         }
     } else {
-        None
-    };
-
-    // 如果极简调度服务已初始化，启动时检查是否是 Leader 并清理 pool 中的离线节点
-    if let Some(ref scheduler) = minimal_scheduler {
-        info!("已初始化极简调度服务，将在启动后执行 pool 清理检查");
-        let scheduler_clone = scheduler.clone();
-        let node_connections_clone = node_connections.clone();
-        tokio::spawn(async move {
-            // 延迟 2 秒后执行清理，给系统一些时间初始化
-            info!("等待 2 秒后执行 pool 清理检查");
-            tokio::time::sleep(std::time::Duration::from_secs(2)).await;
-            
-            info!("开始执行 pool 清理检查");
-            match scheduler_clone.check_and_cleanup_pools_if_leader(&node_connections_clone).await {
-                Ok(is_leader) => {
-                    if is_leader {
-                        info!("当前实例作为 Leader 已执行 pool 清理");
-                    } else {
-                        debug!("当前实例不是 Leader，其他实例正在清理 pool，已跳过");
-                    }
-                }
-                Err(e) => {
-                    tracing::warn!(
-                        error = %e,
-                        "Pool 清理检查失败"
-                    );
-                }
+        // Phase2 未启用：使用本地 Redis（降级模式）
+        tracing::warn!("Phase2 未启用，使用本地 Redis 连接（降级模式）");
+        match RedisHandle::connect(&config.scheduler.phase2.redis, &config.scheduler).await {
+            Ok(redis) => Arc::new(redis),
+            Err(e) => {
+                tracing::error!(error = %e, "连接本地 Redis 失败");
+                return Err(e.into());
             }
-        });
-    }
+        }
+    };
+    
+    // 阶段3：创建 NodeRegistry（使用 Redis 直查架构）
+    let mut node_registry = NodeRegistry::new(redis_arc.clone());
+    node_registry.set_resource_threshold(resource_threshold);
+    let node_registry = Arc::new(node_registry);
+    // NodeRegistry::new() 内部已打印初始化日志，无需重复
+    
+    // NodeStatusManager 已删除（与Redis直查架构冲突）
+    
+    // 初始化极简无锁调度服务和 Pool 服务（需要 Phase2 启用）
+    let (minimal_scheduler, pool_service) = if phase2_runtime.is_some() {
+        // 初始化 MinimalScheduler
+        let scheduler = match crate::services::MinimalSchedulerService::new(redis_arc.clone()).await {
+            Ok(s) => {
+                info!("极简无锁调度服务已初始化");
+                Some(std::sync::Arc::new(s))
+            }
+            Err(e) => {
+                tracing::warn!(error = %e, "极简无锁调度服务初始化失败");
+                None
+            }
+        };
+        
+        // 初始化 PoolService（TTL = 3 × 心跳周期，用于被动清理）
+        let pool_svc = match crate::pool::PoolService::new(
+            redis_arc.clone(),
+            config.scheduler.node_health.heartbeat_interval_seconds,
+        ).await {
+            Ok(ps) => {
+                info!("Pool 服务已初始化");
+                Some(std::sync::Arc::new(ps))
+            }
+            Err(e) => {
+                tracing::warn!(error = %e, "Pool 服务初始化失败");
+                None
+            }
+        };
+        
+        // 阶段3：关联 PoolService 到 NodeRegistry
+        if let Some(ref ps) = pool_svc {
+            node_registry.set_pool_service(ps.clone()).await;
+            info!("NodeRegistry 已关联 PoolService");
+        }
+        
+        (scheduler, pool_svc)
+    } else {
+        (None, None)
+    };
+    
+    // 创建 dispatcher（使用Redis存储Job状态，SSOT）
+    let mut dispatcher = JobDispatcher::new_with_task_binding_config(
+        node_registry.clone(),
+        redis_arc.clone(),
+        config.scheduler.task_binding.clone(),
+    );
+    dispatcher.set_phase2(phase2_runtime.clone());
 
     // 初始化 Job 幂等键管理器
     let mut job_idempotency = crate::core::JobIdempotencyManager::new();
@@ -168,6 +177,8 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
 
     // 初始化 JobResult 去重管理器
     let job_result_deduplicator = crate::core::JobResultDeduplicator::new();
+    // Utterance 路径：按 utterance_index 顺序派发
+    let pending_job_dispatches = PendingJobDispatches::new();
 
     // 创建应用状态
     let app_state = AppState {
@@ -175,23 +186,22 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
         dispatcher,
         node_registry,
         pairing_service,
-        model_hub,
         service_catalog,
         dashboard_snapshot,
         model_not_available_bus,
-        core_services: config.scheduler.core_services.clone(),
         web_task_segmentation: config.scheduler.web_task_segmentation.clone(),
         session_connections: session_connections.clone(),
         node_connections,
         result_queue,
         audio_buffer,
         group_manager,
-        node_status_manager,
         room_manager: room_manager.clone(),
         job_idempotency,
         job_result_deduplicator,
+        pending_job_dispatches,
         phase2: phase2_runtime.clone(),
         minimal_scheduler,
+        pool_service,
     };
 
     // Phase 2：启动后台任务（presence + owner 续约 + Streams inbox）
@@ -204,9 +214,10 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
         // 启动时加载全体节点、全体 pool、全体 lang-index，避免启动后 100-300ms 的抖动
         let rt_for_preload = rt.clone();
         let app_state_for_preload = app_state.clone();
+        let preload_delay_secs = config.scheduler.background_tasks.preload_delay_seconds;
         tokio::spawn(async move {
-            // 延迟 1 秒后执行预加载，给后台任务一些时间初始化
-            tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+            // 延迟后执行预加载，给后台任务一些时间初始化
+            tokio::time::sleep(std::time::Duration::from_secs(preload_delay_secs)).await;
             
             if let Err(e) = rt_for_preload.cold_start_preload(&app_state_for_preload).await {
                 tracing::warn!(error = %e, "冷启动预加载失败，但继续运行");
@@ -225,11 +236,6 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
     // 启动后台缓存刷新：服务目录缓存 + Dashboard stats 快照缓存
     app_state.service_catalog.start_background_refresh();
     app_state.dashboard_snapshot.start_background_refresh(app_state.clone());
-    
-    // 启动 Pool 定期清理任务（自动生成模式）
-    if config.scheduler.phase3.auto_generate_language_pools {
-        app_state.node_registry.start_pool_cleanup_task(phase2_runtime.clone());
-    }
 
     // 启动 MODEL_NOT_AVAILABLE 后台处理（主路径只入队）
     start_worker(
@@ -239,20 +245,22 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
         app_state.phase2.clone(),
     );
     
-    // 启动JobResult去重管理器清理任务（每30秒清理一次过期记录）
+    // 启动JobResult去重管理器清理任务
     let job_result_deduplicator_for_cleanup = app_state.job_result_deduplicator.clone();
+    let job_dedup_interval_secs = config.scheduler.background_tasks.job_result_dedup_cleanup_interval_seconds;
     tokio::spawn(async move {
-        let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(30));
+        let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(job_dedup_interval_secs));
         loop {
             interval.tick().await;
             job_result_deduplicator_for_cleanup.cleanup_expired().await;
         }
     });
 
-    // 启动房间过期清理任务（每1分钟扫描一次）
+    // 启动房间过期清理任务
     let app_state_for_cleanup = app_state.clone();
+    let session_cleanup_interval_secs = config.scheduler.background_tasks.session_cleanup_interval_seconds;
     tokio::spawn(async move {
-        let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(60));
+        let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(session_cleanup_interval_secs));
         loop {
             interval.tick().await;
             let expired_rooms = app_state_for_cleanup.room_manager.cleanup_expired_rooms().await;
@@ -277,11 +285,26 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
         }
     });
 
-    // 启动结果队列超时检查任务（每10秒检查一次）
-    let app_state_for_result_check = app_state.clone();
+    // 启动已完成 Job 清理任务
+    let dispatcher_for_cleanup = app_state.dispatcher.clone();
+    let job_cleanup_interval_secs = config.scheduler.background_tasks.job_cleanup_interval_seconds;
     tokio::spawn(async move {
-        // 优化：缩短结果检查间隔，从10秒降到1秒，减少延迟
-        let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(1));
+        let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(job_cleanup_interval_secs));
+        loop {
+            interval.tick().await;
+            // 清理 5 分钟前完成的任务
+            let cleaned_count = dispatcher_for_cleanup.cleanup_completed_jobs(300).await;
+            if cleaned_count > 0 {
+                info!(cleaned_count = cleaned_count, "已清理完成的 Job");
+            }
+        }
+    });
+
+    // 启动结果队列超时检查任务
+    let app_state_for_result_check = app_state.clone();
+    let result_check_interval_secs = config.scheduler.background_tasks.session_active_result_check_interval_seconds;
+    tokio::spawn(async move {
+        let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(result_check_interval_secs));
         // 跳过第一次立即触发
         interval.tick().await;
         

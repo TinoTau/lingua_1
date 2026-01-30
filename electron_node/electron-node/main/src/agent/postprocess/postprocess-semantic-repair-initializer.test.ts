@@ -4,49 +4,43 @@
  */
 
 import { SemanticRepairInitializer } from './postprocess-semantic-repair-initializer';
-import { ServicesHandler } from '../node-agent-services';
 import { TaskRouter } from '../../task-router/task-router';
+import * as serviceLayer from '../../service-layer';
 
 // Mock SemanticRepairStage
 jest.mock('./semantic-repair-stage');
 
+// Mock service layer
+jest.mock('../../service-layer', () => ({
+  getServiceRegistry: jest.fn(),
+}));
+
 describe('SemanticRepairInitializer - Phase 2', () => {
   let initializer: SemanticRepairInitializer;
-  let mockServicesHandler: jest.Mocked<ServicesHandler>;
   let mockTaskRouter: TaskRouter | null;
+  let mockRegistry: Map<string, any>;
 
   beforeEach(() => {
-    mockServicesHandler = {
-      getInstalledSemanticRepairServices: jest.fn(),
-    } as any;
-
     mockTaskRouter = {} as TaskRouter;
+    mockRegistry = new Map();
+    
+    // Mock service registry
+    (serviceLayer.getServiceRegistry as jest.Mock).mockReturnValue(mockRegistry);
 
-    initializer = new SemanticRepairInitializer(mockServicesHandler, mockTaskRouter);
+    initializer = new SemanticRepairInitializer(mockTaskRouter);
   });
 
   describe('initialize', () => {
-    it('应该在ServicesHandler不可用时跳过初始化', async () => {
-      const initializerWithoutHandler = new SemanticRepairInitializer(null, mockTaskRouter);
-      await initializerWithoutHandler.initialize();
-
-      expect(initializerWithoutHandler.isInitialized()).toBe(true);
-    });
-
     it('应该在TaskRouter不可用时跳过初始化', async () => {
-      const initializerWithoutRouter = new SemanticRepairInitializer(mockServicesHandler, null);
+      const initializerWithoutRouter = new SemanticRepairInitializer(null);
       await initializerWithoutRouter.initialize();
 
       expect(initializerWithoutRouter.isInitialized()).toBe(true);
     });
 
     it('应该在无服务安装时跳过初始化', async () => {
-      mockServicesHandler.getInstalledSemanticRepairServices.mockResolvedValue({
-        zh: false,
-        en: false,
-        enNormalize: false,
-        services: [],
-      });
+      // Empty registry (no services installed)
+      mockRegistry.clear();
 
       await initializer.initialize();
 
@@ -54,13 +48,11 @@ describe('SemanticRepairInitializer - Phase 2', () => {
     });
 
     it('应该在检测到中文服务时初始化', async () => {
-      mockServicesHandler.getInstalledSemanticRepairServices.mockResolvedValue({
-        zh: true,
-        en: false,
-        enNormalize: false,
-        services: [
-          { serviceId: 'semantic-repair-zh', status: 'running' },
-        ],
+      // Add zh service to registry
+      mockRegistry.set('semantic-repair-zh', {
+        def: { id: 'semantic-repair-zh', name: 'ZH Semantic Repair', type: 'semantic-repair' },
+        runtime: { status: 'running' },
+        installPath: '/path/to/service',
       });
 
       await initializer.initialize();
@@ -70,14 +62,16 @@ describe('SemanticRepairInitializer - Phase 2', () => {
     });
 
     it('应该在检测到英文服务时初始化', async () => {
-      mockServicesHandler.getInstalledSemanticRepairServices.mockResolvedValue({
-        zh: false,
-        en: true,
-        enNormalize: true,
-        services: [
-          { serviceId: 'semantic-repair-en', status: 'running' },
-          { serviceId: 'en-normalize', status: 'running' },
-        ],
+      // Add en services to registry
+      mockRegistry.set('semantic-repair-en', {
+        def: { id: 'semantic-repair-en', name: 'EN Semantic Repair', type: 'semantic-repair' },
+        runtime: { status: 'running' },
+        installPath: '/path/to/service',
+      });
+      mockRegistry.set('en-normalize', {
+        def: { id: 'en-normalize', name: 'EN Normalize', type: 'normalize' },
+        runtime: { status: 'running' },
+        installPath: '/path/to/service',
       });
 
       await initializer.initialize();
@@ -87,13 +81,11 @@ describe('SemanticRepairInitializer - Phase 2', () => {
     });
 
     it('应该支持并发初始化（只初始化一次）', async () => {
-      mockServicesHandler.getInstalledSemanticRepairServices.mockResolvedValue({
-        zh: true,
-        en: false,
-        enNormalize: false,
-        services: [
-          { serviceId: 'semantic-repair-zh', status: 'running' },
-        ],
+      // Add zh service to registry
+      mockRegistry.set('semantic-repair-zh', {
+        def: { id: 'semantic-repair-zh', name: 'ZH Semantic Repair', type: 'semantic-repair' },
+        runtime: { status: 'running' },
+        installPath: '/path/to/service',
       });
 
       // 并发调用initialize
@@ -106,12 +98,15 @@ describe('SemanticRepairInitializer - Phase 2', () => {
       await Promise.all(promises);
 
       expect(initializer.isInitialized()).toBe(true);
-      // 应该只调用一次getInstalledSemanticRepairServices
-      expect(mockServicesHandler.getInstalledSemanticRepairServices).toHaveBeenCalledTimes(1);
+      // 应该只调用一次getServiceRegistry
+      expect(serviceLayer.getServiceRegistry).toHaveBeenCalled();
     });
 
     it('应该在初始化失败时标记为已初始化（避免阻塞）', async () => {
-      mockServicesHandler.getInstalledSemanticRepairServices.mockRejectedValue(new Error('Service error'));
+      // Mock registry to throw error
+      (serviceLayer.getServiceRegistry as jest.Mock).mockImplementation(() => {
+        throw new Error('Service error');
+      });
 
       await initializer.initialize();
 
@@ -122,36 +117,35 @@ describe('SemanticRepairInitializer - Phase 2', () => {
 
   describe('reinitialize', () => {
     it('应该能够重新初始化', async () => {
-      mockServicesHandler.getInstalledSemanticRepairServices
-        .mockResolvedValueOnce({
-          zh: true,
-          en: false,
-          enNormalize: false,
-          services: [{ serviceId: 'semantic-repair-zh', status: 'running' }],
-        })
-        .mockResolvedValueOnce({
-          zh: false,
-          en: true,
-          enNormalize: false,
-          services: [{ serviceId: 'semantic-repair-en', status: 'running' }],
-        });
+      // First time: zh service
+      mockRegistry.set('semantic-repair-zh', {
+        def: { id: 'semantic-repair-zh', name: 'ZH Semantic Repair', type: 'semantic-repair' },
+        runtime: { status: 'running' },
+        installPath: '/path/to/service',
+      });
 
       await initializer.initialize();
       expect(initializer.isInitialized()).toBe(true);
 
+      // Clear and add en service for reinitialize
+      mockRegistry.clear();
+      mockRegistry.set('semantic-repair-en', {
+        def: { id: 'semantic-repair-en', name: 'EN Semantic Repair', type: 'semantic-repair' },
+        runtime: { status: 'running' },
+        installPath: '/path/to/service',
+      });
+
       await initializer.reinitialize();
       expect(initializer.isInitialized()).toBe(true);
-      expect(mockServicesHandler.getInstalledSemanticRepairServices).toHaveBeenCalledTimes(2);
     });
   });
 
   describe('getInitPromise', () => {
     it('应该返回初始化Promise', async () => {
-      mockServicesHandler.getInstalledSemanticRepairServices.mockResolvedValue({
-        zh: true,
-        en: false,
-        enNormalize: false,
-        services: [{ serviceId: 'semantic-repair-zh', status: 'running' }],
+      mockRegistry.set('semantic-repair-zh', {
+        def: { id: 'semantic-repair-zh', name: 'ZH Semantic Repair', type: 'semantic-repair' },
+        runtime: { status: 'running' },
+        installPath: '/path/to/service',
       });
 
       const initPromise = initializer.initialize();

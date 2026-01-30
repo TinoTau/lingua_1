@@ -70,43 +70,30 @@ async def test_handle_request_success():
 
 @pytest.mark.asyncio
 async def test_handle_request_timeout():
-    """测试超时处理（返回原文）"""
-    # 处理器需要2秒，但超时设置为1秒
+    """测试超时处理（fail-fast：raise 504）"""
     processor = MockProcessor("test", delay=2)
     wrapper = ProcessorWrapper({"test": processor}, timeout=1)
-    
-    request = RepairRequest(
-        job_id="test-002",
-        session_id="session-001",
-        text_in="hello"
-    )
-    
-    response = await wrapper.handle_request("test", request)
-    
-    # 应该返回 PASS（原文）
-    assert response.decision == "PASS"
-    assert response.text_out == "hello"
-    assert "TIMEOUT" in response.reason_codes
+    request = RepairRequest(job_id="test-002", session_id="session-001", text_in="hello")
+
+    with pytest.raises(HTTPException) as exc_info:
+        await wrapper.handle_request("test", request)
+
+    assert exc_info.value.status_code == 504
+    assert exc_info.value.detail.get("code") == "SEM_REPAIR_TIMEOUT"
 
 
 @pytest.mark.asyncio
 async def test_handle_request_error():
-    """测试错误处理（返回原文）"""
+    """测试错误处理（fail-fast：raise 503）"""
     processor = MockProcessor("test", should_fail=True)
     wrapper = ProcessorWrapper({"test": processor})
-    
-    request = RepairRequest(
-        job_id="test-003",
-        session_id="session-001",
-        text_in="hello"
-    )
-    
-    response = await wrapper.handle_request("test", request)
-    
-    # 应该返回 PASS（原文）
-    assert response.decision == "PASS"
-    assert response.text_out == "hello"
-    assert "ERROR" in response.reason_codes
+    request = RepairRequest(job_id="test-003", session_id="session-001", text_in="hello")
+
+    with pytest.raises(HTTPException) as exc_info:
+        await wrapper.handle_request("test", request)
+
+    assert exc_info.value.status_code == 503
+    assert exc_info.value.detail.get("code") == "SEM_REPAIR_ERROR"
 
 
 @pytest.mark.asyncio

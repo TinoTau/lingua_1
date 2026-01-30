@@ -1,6 +1,6 @@
 use crate::core::AppState;
 use crate::messages::{SessionMessage, UiEventStatus, UiEventType};
-use crate::phase2::InterInstanceEvent;
+use crate::redis_runtime::InterInstanceEvent;
 use tracing::{debug, warn};
 
 async fn forward_if_job_missing(state: &AppState, session_id: &str, msg: crate::messages::NodeMessage) -> bool {
@@ -89,7 +89,7 @@ pub(super) async fn handle_job_ack(
         error_code: None,
         hint: None,
     };
-    let _ = crate::phase2::send_session_message_routed(state, &session_id, ui_event).await;
+    let _ = crate::redis_runtime::send_session_message_routed(state, &session_id, ui_event).await;
 }
 
 pub(super) async fn handle_job_started(
@@ -204,7 +204,7 @@ pub(super) async fn handle_asr_partial(
         is_final,
         trace_id: trace_id.clone(),
     };
-    if !crate::phase2::send_session_message_routed(state, &session_id, partial_msg).await {
+    if !crate::redis_runtime::send_session_message_routed(state, &session_id, partial_msg).await {
         warn!(trace_id = %trace_id, session_id = %session_id, "Failed to send ASR partial result to session");
     }
 
@@ -220,5 +220,5 @@ pub(super) async fn handle_asr_partial(
         error_code: None,
         hint: None,
     };
-    let _ = crate::phase2::send_session_message_routed(state, &session_id, ui_event).await;
+    let _ = crate::redis_runtime::send_session_message_routed(state, &session_id, ui_event).await;
 }

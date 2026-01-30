@@ -10,7 +10,7 @@ from typing import Dict, List, Optional, Tuple
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from prompt_templates import PromptTemplate
+from .prompt_templates import PromptTemplate
 
 
 class RepairEngine:

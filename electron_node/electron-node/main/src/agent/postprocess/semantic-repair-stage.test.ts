@@ -110,16 +110,12 @@ describe('SemanticRepairStage - Phase 2', () => {
       expect(result.semanticRepairApplied).toBe(true);
     });
 
-    it('应该在不支持的语言时返回PASS', async () => {
+    it('应该在不支持的语言时抛出 SEM_REPAIR_UNSUPPORTED_LANG', async () => {
       const job = createJob('fr');
-      const result = await stage.process(job, 'Bonjour', 0.8);
-
-      expect(result.textOut).toBe('Bonjour');
-      expect(result.decision).toBe('PASS');
-      expect(result.reasonCodes).toContain('UNSUPPORTED_LANGUAGE');
+      await expect(stage.process(job, 'Bonjour', 0.8)).rejects.toThrow('SEM_REPAIR_UNSUPPORTED_LANG');
     });
 
-    it('应该在中文Stage不可用时返回PASS', async () => {
+    it('应该在中文Stage不可用时抛出 SEM_REPAIR_UNAVAILABLE', async () => {
       const servicesWithoutZH: SemanticRepairServiceInfo = {
         ...mockInstalledServices,
         zh: false,
@@ -127,15 +123,10 @@ describe('SemanticRepairStage - Phase 2', () => {
       const stageWithoutZH = new SemanticRepairStage(mockTaskRouter, servicesWithoutZH, mockConfig);
 
       const job = createJob('zh');
-      const result = await stageWithoutZH.process(job, '测试文本', 0.65);
-
-      expect(result.textOut).toBe('测试文本');
-      expect(result.decision).toBe('PASS');
-      expect(result.reasonCodes).toContain('ZH_STAGE_NOT_AVAILABLE');
+      await expect(stageWithoutZH.process(job, '测试文本', 0.65)).rejects.toThrow('SEM_REPAIR_UNAVAILABLE');
     });
 
-    it('应该在错误时返回PASS', async () => {
-      // Mock一个会抛出错误的Stage
+    it('应该在 ZH stage 错误时抛出（不降级为 PASS）', async () => {
       (SemanticRepairStageZH as jest.MockedClass<typeof SemanticRepairStageZH>).mockImplementation(() => ({
         process: jest.fn().mockRejectedValue(new Error('Service error')),
       } as any));
@@ -147,11 +138,7 @@ describe('SemanticRepairStage - Phase 2', () => {
       const stageWithError = new SemanticRepairStage(mockTaskRouter, servicesWithError, mockConfig);
 
       const job = createJob('zh');
-      const result = await stageWithError.process(job, '测试文本', 0.65);
-
-      expect(result.textOut).toBe('测试文本');
-      expect(result.decision).toBe('PASS');
-      expect(result.reasonCodes).toContain('ZH_STAGE_ERROR');
+      await expect(stageWithError.process(job, '测试文本', 0.65)).rejects.toThrow('Service error');
     });
   });
 });

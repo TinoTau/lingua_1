@@ -68,7 +68,7 @@ describe('OriginalJobResultDispatcher', () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
       const now = Date.now();
 
-      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback);
+      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback, false);
 
       // 验证注册信息（通过addASRSegment来间接验证）
       const asrData = createASRData('job-1', 'test', 0);
@@ -100,7 +100,7 @@ describe('OriginalJobResultDispatcher', () => {
   describe('添加ASR片段', () => {
     it('应该累积ASR片段并更新lastActivityAt', async () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
-      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback);
+      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback, false);
 
       const asrData1 = createASRData('job-1', 'Hello', 0);
       const asrData2 = createASRData('job-1', 'World', 1);
@@ -124,7 +124,7 @@ describe('OriginalJobResultDispatcher', () => {
 
     it('应该按batchIndex排序后合并文本', async () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
-      dispatcher.registerOriginalJob('session-1', 'job-1', 3, job, mockCallback); // 等待3个片段
+      dispatcher.registerOriginalJob('session-1', 'job-1', 3, job, mockCallback, false); // 等待3个片段
 
       // 故意乱序添加
       const asrData1 = createASRData('job-1', 'Third', 2);
@@ -160,7 +160,7 @@ describe('OriginalJobResultDispatcher', () => {
 
     it('应该在expectedSegmentCount为undefined时累积等待', async () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
-      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback);
+      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback, false);
 
       const asrData1 = createASRData('job-1', 'First', 0);
       const asrData2 = createASRData('job-1', 'Second', 1);
@@ -176,7 +176,7 @@ describe('OriginalJobResultDispatcher', () => {
   describe('forceComplete', () => {
     it('应该在forceComplete时立即处理累积的片段', async () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
-      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback);
+      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback, false);
 
       const asrData1 = createASRData('job-1', 'First', 0);
       const asrData2 = createASRData('job-1', 'Second', 1);
@@ -192,7 +192,7 @@ describe('OriginalJobResultDispatcher', () => {
 
     it('应该在forceComplete时设置isFinalized标志', async () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
-      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback);
+      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback, false);
 
       const asrData = createASRData('job-1', 'Test', 0);
       await dispatcher.addASRSegment('session-1', 'job-1', asrData);
@@ -204,7 +204,7 @@ describe('OriginalJobResultDispatcher', () => {
 
     it('应该处理空累积的情况', async () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
-      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback);
+      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback, false);
 
       // 不添加任何片段，直接forceComplete
       await dispatcher.forceComplete('session-1', 'job-1');
@@ -217,7 +217,7 @@ describe('OriginalJobResultDispatcher', () => {
   describe('20秒超时清理机制', () => {
     it('应该清理超过20秒没有活动的注册信息', async () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
-      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback);
+      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback, false);
 
       const asrData = createASRData('job-1', 'Test', 0);
       await dispatcher.addASRSegment('session-1', 'job-1', asrData);
@@ -238,7 +238,7 @@ describe('OriginalJobResultDispatcher', () => {
 
     it('不应该清理在20秒内有活动的注册信息', async () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
-      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback);
+      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback, false);
 
       const asrData1 = createASRData('job-1', 'Test1', 0);
       await dispatcher.addASRSegment('session-1', 'job-1', asrData1);
@@ -266,7 +266,7 @@ describe('OriginalJobResultDispatcher', () => {
 
     it('不应该清理已finalized的注册信息', async () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
-      dispatcher.registerOriginalJob('session-1', 'job-1', 1, job, mockCallback);
+      dispatcher.registerOriginalJob('session-1', 'job-1', 1, job, mockCallback, false);
 
       const asrData = createASRData('job-1', 'Test', 0);
       await dispatcher.addASRSegment('session-1', 'job-1', asrData);
@@ -295,7 +295,7 @@ describe('OriginalJobResultDispatcher', () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
       const beforeRegister = Date.now();
       
-      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback);
+      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback, false);
       
       const afterRegister = Date.now();
 
@@ -309,7 +309,7 @@ describe('OriginalJobResultDispatcher', () => {
 
     it('应该在addASRSegment时更新lastActivityAt', async () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
-      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback);
+      dispatcher.registerOriginalJob('session-1', 'job-1', undefined, job, mockCallback, false);
 
       const asrData1 = createASRData('job-1', 'Test1', 0);
       await dispatcher.addASRSegment('session-1', 'job-1', asrData1);
@@ -336,7 +336,7 @@ describe('OriginalJobResultDispatcher', () => {
 
     it('应该在处理时设置isFinalized标志', async () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
-      dispatcher.registerOriginalJob('session-1', 'job-1', 1, job, mockCallback);
+      dispatcher.registerOriginalJob('session-1', 'job-1', 1, job, mockCallback, false);
 
       const asrData = createASRData('job-1', 'Test', 0);
       await dispatcher.addASRSegment('session-1', 'job-1', asrData);
@@ -349,6 +349,108 @@ describe('OriginalJobResultDispatcher', () => {
       await dispatcher.addASRSegment('session-1', 'job-1', asrData2);
 
       // callback不应该再次被调用
+      expect(mockCallback).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('pendingMaxDurationAudio 延迟 finalize', () => {
+    it('应该在有 pendingMaxDurationAudio 时不立即 finalize', async () => {
+      const job = createJobAssignMessage('job-1', 'session-1', 0);
+      // 注册时标记为有 pendingMaxDurationAudio
+      dispatcher.registerOriginalJob('session-1', 'job-1', 2, job, mockCallback, true);
+
+      const asrData1 = createASRData('job-1', 'First', 0);
+      const asrData2 = createASRData('job-1', 'Second', 1);
+
+      await dispatcher.addASRSegment('session-1', 'job-1', asrData1);
+      expect(mockCallback).not.toHaveBeenCalled();
+
+      // 达到 expectedSegmentCount，但因为 hasPendingMaxDurationAudio，不立即 finalize
+      await dispatcher.addASRSegment('session-1', 'job-1', asrData2);
+      expect(mockCallback).not.toHaveBeenCalled(); // 应该等待 TTL 或后续 batch
+    });
+
+    it('应该在后续 batch 到达时清除 pendingMaxDurationAudio 标记并 finalize', async () => {
+      const job = createJobAssignMessage('job-1', 'session-1', 0);
+      // 注册时标记为有 pendingMaxDurationAudio
+      dispatcher.registerOriginalJob('session-1', 'job-1', 2, job, mockCallback, true);
+
+      const asrData1 = createASRData('job-1', 'First', 0);
+      const asrData2 = createASRData('job-1', 'Second', 1);
+
+      await dispatcher.addASRSegment('session-1', 'job-1', asrData1);
+      await dispatcher.addASRSegment('session-1', 'job-1', asrData2);
+      expect(mockCallback).not.toHaveBeenCalled(); // 等待中
+
+      // 后续 batch 到达，追加到 existing registration
+      dispatcher.registerOriginalJob('session-1', 'job-1', 1, job, mockCallback, false);
+      const asrData3 = createASRData('job-1', 'Third', 2);
+      await dispatcher.addASRSegment('session-1', 'job-1', asrData3);
+
+      // 现在应该触发 finalize（因为后续 batch 到达，清除了 pendingMaxDurationAudio 标记）
+      expect(mockCallback).toHaveBeenCalledTimes(1);
+      const callArgs = mockCallback.mock.calls[0][0];
+      expect(callArgs.asrText).toContain('First');
+      expect(callArgs.asrText).toContain('Second');
+      expect(callArgs.asrText).toContain('Third');
+    });
+
+    it('应该在 TTL 超时时强制 finalize（即使有 pendingMaxDurationAudio）', async () => {
+      const job = createJobAssignMessage('job-1', 'session-1', 0);
+      // 注册时标记为有 pendingMaxDurationAudio
+      dispatcher.registerOriginalJob('session-1', 'job-1', 2, job, mockCallback, true);
+
+      const asrData1 = createASRData('job-1', 'First', 0);
+      const asrData2 = createASRData('job-1', 'Second', 1);
+
+      await dispatcher.addASRSegment('session-1', 'job-1', asrData1);
+      await dispatcher.addASRSegment('session-1', 'job-1', asrData2);
+      expect(mockCallback).not.toHaveBeenCalled(); // 等待中
+
+      // 前进 10 秒（TTL 超时）
+      jest.advanceTimersByTime(10000);
+
+      // TTL 超时应该触发 forceFinalizePartial
+      expect(mockCallback).toHaveBeenCalledTimes(1);
+      const callArgs = mockCallback.mock.calls[0][0];
+      expect(callArgs.asrText).toContain('First');
+      expect(callArgs.asrText).toContain('Second');
+    });
+
+    it('应该在没有 pendingMaxDurationAudio 时正常 finalize', async () => {
+      const job = createJobAssignMessage('job-1', 'session-1', 0);
+      // 注册时没有 pendingMaxDurationAudio
+      dispatcher.registerOriginalJob('session-1', 'job-1', 2, job, mockCallback, false);
+
+      const asrData1 = createASRData('job-1', 'First', 0);
+      const asrData2 = createASRData('job-1', 'Second', 1);
+
+      await dispatcher.addASRSegment('session-1', 'job-1', asrData1);
+      expect(mockCallback).not.toHaveBeenCalled();
+
+      // 达到 expectedSegmentCount，没有 pendingMaxDurationAudio，应该立即 finalize
+      await dispatcher.addASRSegment('session-1', 'job-1', asrData2);
+      expect(mockCallback).toHaveBeenCalledTimes(1);
+    });
+
+    it('应该在追加 batch 时清除 pendingMaxDurationAudio 标记', async () => {
+      const job = createJobAssignMessage('job-1', 'session-1', 0);
+      // 注册时标记为有 pendingMaxDurationAudio
+      dispatcher.registerOriginalJob('session-1', 'job-1', 2, job, mockCallback, true);
+
+      const asrData1 = createASRData('job-1', 'First', 0);
+      const asrData2 = createASRData('job-1', 'Second', 1);
+
+      await dispatcher.addASRSegment('session-1', 'job-1', asrData1);
+      await dispatcher.addASRSegment('session-1', 'job-1', asrData2);
+      expect(mockCallback).not.toHaveBeenCalled(); // 等待中
+
+      // 后续 batch 到达，追加到 existing registration（hasPendingMaxDurationAudio 应该被清除）
+      dispatcher.registerOriginalJob('session-1', 'job-1', 1, job, mockCallback, false);
+      const asrData3 = createASRData('job-1', 'Third', 2);
+      
+      // 添加第三个 batch 后，应该触发 finalize（因为 pendingMaxDurationAudio 标记已清除）
+      await dispatcher.addASRSegment('session-1', 'job-1', asrData3);
       expect(mockCallback).toHaveBeenCalledTimes(1);
     });
   });

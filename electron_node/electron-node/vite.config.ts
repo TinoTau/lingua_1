@@ -5,6 +5,7 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   root: './renderer',
+  base: './', // 使用相对路径，确保在 Electron 中使用 file:// 协议时资源能正确加载
   build: {
     outDir: '../renderer/dist',
   },

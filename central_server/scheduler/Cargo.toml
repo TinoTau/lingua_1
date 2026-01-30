@@ -65,13 +65,18 @@ rand = "0.8"
 prometheus = "0.13"
 
 # Phase 2：Redis（Cluster-ready + Streams）
-redis = { version = "0.25", features = ["tokio-comp", "cluster-async"] }
+# 锁定到 0.25.4：更高版本有破坏性 API 变更（Value::Bulk/Status/Data 枚举变体改名）
+# 未来兼容性警告可以忽略，不影响当前功能（等待 redis crate API 稳定后再升级）
+redis = { version = "=0.25.4", features = ["tokio-comp", "cluster-async"] }
 
 # 并发HashMap（用于SessionManager）
 dashmap = "5.5"
 
 # 小向量优化（用于RuntimeSnapshot）
 smallvec = "1.11"
+
+# 快速哈希（用于Pool分片）
+fxhash = "0.2"
 
 [features]
 default = []

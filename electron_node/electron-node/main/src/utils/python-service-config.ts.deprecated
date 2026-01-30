@@ -1,0 +1,22 @@
+/**
+ * 此文件已废弃
+ * 
+ * @deprecated 不再使用硬编码配置，所有服务配置现在通过服务发现机制 (ServiceRegistry) 获取
+ * 
+ * 迁移说明：
+ * - 所有服务配置现在存储在 services/<service-id>/service.json
+ * - 使用 getServiceRegistry() 获取服务信息
+ * - 环境变量等通用配置在 python-service-manager 中动态构建
+ * 
+ * 相关文件：
+ * - electron_node/electron-node/main/src/service-layer/ServiceDiscovery.ts
+ * - electron_node/electron-node/main/src/service-layer/ServiceTypes.ts
+ * - electron_node/electron-node/main/src/python-service-manager/index.ts
+ * 
+ * 废弃时间: 2026-01-20
+ */
+
+// This file is deprecated and should not be used.
+// All service configuration is now managed through the service discovery mechanism.
+
+export {};

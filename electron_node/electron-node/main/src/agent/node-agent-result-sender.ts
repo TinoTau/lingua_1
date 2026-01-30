@@ -1,6 +1,6 @@
 /**
  * Node Agent Result Sender
- * 处理结果发送相关的逻辑
+ * 处理结果发送相关的逻辑。
  */
 
 import WebSocket from 'ws';
@@ -15,6 +15,8 @@ export class ResultSender {
   private ws: WebSocket | null = null;
   private nodeId: string | null = null;
   private dedupStage: any = null;  // 用于在成功发送后记录job_id（新架构中不再使用）
+  /** 实际发送 job_result 的递增序号，用于 DUP_SEND 定位 */
+  private sendSeq = 0;
 
   constructor(
     private aggregatorMiddleware: AggregatorMiddleware,
@@ -44,18 +46,18 @@ export class ResultSender {
   ): void {
     // 详细检查连接状态
     const wsState = this.ws?.readyState;
-    const wsStateName = wsState === WebSocket.OPEN ? 'OPEN' : 
-                        wsState === WebSocket.CLOSING ? 'CLOSING' : 
-                        wsState === WebSocket.CLOSED ? 'CLOSED' : 
-                        wsState === WebSocket.CONNECTING ? 'CONNECTING' : 'UNKNOWN';
-    
+    const wsStateName = wsState === WebSocket.OPEN ? 'OPEN' :
+      wsState === WebSocket.CLOSING ? 'CLOSING' :
+        wsState === WebSocket.CLOSED ? 'CLOSED' :
+          wsState === WebSocket.CONNECTING ? 'CONNECTING' : 'UNKNOWN';
+
     if (!this.ws || wsState !== WebSocket.OPEN || !this.nodeId) {
-      logger.warn({ 
-        jobId: job.job_id, 
+      logger.warn({
+        jobId: job.job_id,
         traceId: job.trace_id,
         sessionId: job.session_id,
         utteranceIndex: job.utterance_index,
-        wsState, 
+        wsState,
         wsStateName,
         nodeId: this.nodeId,
         hasWs: !!this.ws,
@@ -64,53 +66,32 @@ export class ResultSender {
       return;
     }
 
-    // 检查ASR结果是否为空
     const asrTextTrimmed = (finalResult.text_asr || '').trim();
-    const isEmpty = !asrTextTrimmed || asrTextTrimmed.length === 0;
-
-    // 检查是否是"核销"情况：所有结果都归并到其他job
-    const isConsolidated = (finalResult.extra as any)?.is_consolidated === true;
-    const consolidatedToJobIds = (finalResult.extra as any)?.consolidated_to_job_ids as string[] | undefined;
-    
-    // 检查是否是"空容器核销"情况：NO_TEXT_ASSIGNED
+    const isEmpty = asrTextTrimmed.length === 0;
     const extraReason = (finalResult.extra as any)?.reason;
     const isNoTextAssigned = extraReason === 'NO_TEXT_ASSIGNED';
 
-    // 决策：移除空结果保活机制 - 只在有实际结果时发送
-    // 例外1：如果是"核销"情况（所有结果都归并到其他job），发送空结果核销当前job
-    // 例外2：如果是"空容器核销"情况（NO_TEXT_ASSIGNED），发送空结果核销当前job
-    if (isEmpty && !isConsolidated && !isNoTextAssigned) {
-      logger.info(
-        { 
-          jobId: job.job_id, 
-          traceId: job.trace_id,
-          sessionId: job.session_id,
-          utteranceIndex: job.utterance_index,
-          reason: 'ASR result is empty, not sending job_result (audio may be cached for streaming merge)',
-        },
-        'NodeAgent: ASR result is empty, skipping job_result send (will send when actual result is ready)'
-      );
-      return;
-    }
-
-    // 如果是"核销"情况，发送空结果核销当前job
-    if (isEmpty && (isConsolidated || isNoTextAssigned)) {
+    // 检查是否是音频被缓冲的情况（不应该发送任何结果）
+    const isAudioBuffered = (finalResult.extra as any)?.audioBuffered === true;
+    if (isAudioBuffered) {
       logger.info(
         {
           jobId: job.job_id,
           traceId: job.trace_id,
           sessionId: job.session_id,
           utteranceIndex: job.utterance_index,
-          consolidatedToJobIds,
-          reason: isNoTextAssigned 
-            ? 'Empty container detected (NO_TEXT_ASSIGNED), sending empty result to acknowledge job'
-            : 'All ASR results consolidated to other jobs, sending empty result to acknowledge current job',
+          reason: 'Audio buffered, not sending job_result (will send when actual result is ready)',
         },
-        isNoTextAssigned
-          ? 'NodeAgent: Sending empty job_result to acknowledge empty container job (NO_TEXT_ASSIGNED)'
-          : 'NodeAgent: Sending empty job_result to acknowledge job (all results consolidated to other jobs)'
+        'NodeAgent: Audio buffered, skipping job_result send (will send when actual result is ready)'
       );
-      // 继续执行，发送空结果（不记录到去重逻辑，因为这是正常的核销）
+      return;
+    }
+
+    if (isEmpty) {
+      if (!isNoTextAssigned) {
+        if (!(finalResult.extra as any)) (finalResult.extra as any) = {};
+        (finalResult.extra as any).reason = 'ASR_EMPTY';
+      }
     }
 
     // 如果 JobPipeline 决定不发送（去重检查失败），不发送任何结果
@@ -142,36 +123,6 @@ export class ResultSender {
       'Job processing completed successfully'
     );
 
-    // 对齐协议规范：job_result 消息格式
-    // 关键修复：如果extraReason是NO_TEXT_ASSIGNED，确保extra中包含reason字段
-    const extra = finalResult.extra || {};
-    if (isNoTextAssigned && !extra.reason) {
-      extra.reason = 'NO_TEXT_ASSIGNED';
-    }
-    
-    const response: JobResultMessage = {
-      type: 'job_result',
-      job_id: job.job_id,
-      attempt_id: job.attempt_id,
-      node_id: this.nodeId,
-      session_id: job.session_id,
-      utterance_index: job.utterance_index,
-      success: true,
-      text_asr: finalResult.text_asr,
-      text_translated: finalResult.text_translated,
-      tts_audio: finalResult.tts_audio,
-      tts_format: finalResult.tts_format || 'opus',  // 强制使用 opus 格式
-      extra: extra,
-      processing_time_ms: Date.now() - startTime,
-      trace_id: job.trace_id, // Added: propagate trace_id
-      // OBS-2: 透传 ASR 质量信息
-      asr_quality_level: finalResult.asr_quality_level,
-      reason_codes: finalResult.reason_codes,
-      quality_score: finalResult.quality_score,
-      rerun_count: finalResult.rerun_count,
-      segments_meta: finalResult.segments_meta,
-    };
-
     // 检查是否与上次发送的文本完全相同（防止重复发送）
     // 优化：使用更严格的文本比较
     const lastSentText = this.aggregatorMiddleware.getLastSentText(job.session_id);
@@ -193,7 +144,7 @@ export class ResultSender {
           },
           'Skipping duplicate job result (same as last sent after normalization)'
         );
-        
+
         // 修复：即使因为文本重复而不发送，也要记录job_id，确保后续的重复job能被正确过滤
         // 这样可以防止调度服务器重试时导致重复发送
         if (this.dedupStage && typeof this.dedupStage.markJobIdAsSent === 'function') {
@@ -206,79 +157,80 @@ export class ResultSender {
             'ResultSender: Job_id marked as sent (text duplicate, but recorded for deduplication)'
           );
         }
-        
+
         return;  // 不发送重复的结果
       }
     }
 
+    // 构建并发送（发送顺序 = handleJob 完成顺序 = job_assign 接收顺序）
+    const extra = finalResult.extra || {};
+    if (isNoTextAssigned && !extra.reason) {
+      extra.reason = 'NO_TEXT_ASSIGNED';
+    }
+    const response: JobResultMessage = {
+      type: 'job_result',
+      job_id: job.job_id,
+      attempt_id: job.attempt_id,
+      node_id: this.nodeId,
+      session_id: job.session_id,
+      utterance_index: job.utterance_index,
+      success: true,
+      text_asr: finalResult.text_asr,
+      text_translated: finalResult.text_translated,
+      tts_audio: finalResult.tts_audio,
+      tts_format: finalResult.tts_format || 'opus',
+      extra,
+      processing_time_ms: Date.now() - startTime,
+      trace_id: job.trace_id,
+      asr_quality_level: finalResult.asr_quality_level,
+      reason_codes: finalResult.reason_codes,
+      quality_score: finalResult.quality_score,
+      rerun_count: finalResult.rerun_count,
+      segments_meta: finalResult.segments_meta,
+    };
+
+    this.sendSeq += 1;
     logger.info(
       {
         jobId: job.job_id,
         sessionId: job.session_id,
         utteranceIndex: job.utterance_index,
         responseLength: JSON.stringify(response).length,
-        textAsrLength: finalResult.text_asr?.length || 0,
-        ttsAudioLength: finalResult.tts_audio?.length || 0,
+        sendSeq: this.sendSeq,
+        reason: reason ?? 'ok',
+        isEmptyJob: isEmpty,
+        shouldSend,
       },
       'Sending job_result to scheduler'
     );
-    this.ws.send(JSON.stringify(response));
-    logger.info(
-      {
-        jobId: job.job_id,
-        sessionId: job.session_id,
-        utteranceIndex: job.utterance_index,
-        processingTimeMs: Date.now() - startTime,
-      },
-      'Job result sent successfully'
-    );
 
-    // 更新最后发送的文本（在成功发送后）
-    // 使用 AggregatorMiddleware 记录最后发送的文本
-    if (finalResult.text_asr && this.aggregatorMiddleware) {
-      const textToRecord = finalResult.text_asr.trim();
-      this.aggregatorMiddleware.setLastSentText(job.session_id, textToRecord);
-      logger.debug(
-        {
-          jobId: job.job_id,
-          sessionId: job.session_id,
-          utteranceIndex: job.utterance_index,
-          textLength: textToRecord.length,
-          textPreview: textToRecord.substring(0, 50),
-          source: 'AggregatorMiddleware',
-        },
-        'ResultSender: Updated lastSentText via AggregatorMiddleware'
+    let sendSuccess = false;
+    try {
+      if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+        this.ws.send(JSON.stringify(response));
+        sendSuccess = true;
+        logger.info(
+          { jobId: job.job_id, sessionId: job.session_id, utteranceIndex: job.utterance_index, processingTimeMs: Date.now() - startTime },
+          'Job result sent successfully'
+        );
+      } else {
+        logger.error(
+          { jobId: job.job_id, sessionId: job.session_id, utteranceIndex: job.utterance_index, wsState: this.ws?.readyState },
+          'ResultSender: Failed to send job result - WebSocket not open'
+        );
+      }
+    } catch (error: any) {
+      logger.error(
+        { jobId: job.job_id, sessionId: job.session_id, utteranceIndex: job.utterance_index, error: error?.message || error },
+        'ResultSender: Exception while sending job result'
       );
     }
-    
-    // 在成功发送后记录job_id，避免发送失败后重试时被误判为重复
-    // 决策：移除空结果保活机制
-    // - 实际结果（有ASR文本）：记录job_id
-    // - 核销空结果（所有结果归并到其他job）：不记录job_id（因为这是正常的核销，不是重复）
+
+    if (sendSuccess && finalResult.text_asr && this.aggregatorMiddleware) {
+      this.aggregatorMiddleware.setLastSentText(job.session_id, finalResult.text_asr.trim());
+    }
     if (!isEmpty && this.dedupStage && typeof this.dedupStage.markJobIdAsSent === 'function') {
-      // 只有实际结果才记录job_id
       this.dedupStage.markJobIdAsSent(job.session_id, job.job_id);
-      logger.debug(
-        {
-          jobId: job.job_id,
-          sessionId: job.session_id,
-          utteranceIndex: job.utterance_index,
-          textAsrLength: finalResult.text_asr?.length || 0,
-        },
-        'ResultSender: Job_id marked as sent (actual result)'
-      );
-    } else if (isEmpty && isConsolidated) {
-      // 核销空结果不记录job_id（这是正常的核销，不是重复）
-      logger.debug(
-        {
-          jobId: job.job_id,
-          sessionId: job.session_id,
-          utteranceIndex: job.utterance_index,
-          consolidatedToJobIds,
-          reason: 'Empty result sent for consolidation acknowledgment, not marking job_id (normal acknowledgment)',
-        },
-        'ResultSender: Empty result sent for consolidation, job_id not marked'
-      );
     }
   }
 
@@ -304,7 +256,7 @@ export class ResultSender {
       errorName: error instanceof Error ? error.name : typeof error,
       errorStack: error instanceof Error ? error.stack : undefined,
     };
-    
+
     // 检查是否是 GPU lease 相关错误
     if (error instanceof Error) {
       if (error.message.includes('GPU lease')) {
@@ -318,7 +270,7 @@ export class ResultSender {
         }
       }
     }
-    
+
     logger.error(errorDetails, 'Failed to process job - detailed error information');
 
     // 检查是否是 ModelNotAvailableError
@@ -350,7 +302,7 @@ export class ResultSender {
       return;
     }
 
-    // 其他错误
+    // 其他错误：统一 PROCESSING_ERROR，message 即抛错内容（语义修复等已含 SEM_REPAIR_* 前缀，调度可按需解析）
     const errorResponse: JobResultMessage = {
       type: 'job_result',
       job_id: job.job_id,
@@ -364,7 +316,7 @@ export class ResultSender {
         code: 'PROCESSING_ERROR',
         message: error instanceof Error ? error.message : String(error),
       },
-      trace_id: job.trace_id, // Added: propagate trace_id
+      trace_id: job.trace_id,
     };
 
     this.ws.send(JSON.stringify(errorResponse));

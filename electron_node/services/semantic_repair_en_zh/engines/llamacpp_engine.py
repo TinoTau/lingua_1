@@ -11,7 +11,7 @@ import os
 from typing import Dict, Optional
 from llama_cpp import Llama
 
-from prompt_templates import PromptTemplate
+from .prompt_templates import PromptTemplate
 
 
 class LlamaCppEngine:

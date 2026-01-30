@@ -13,11 +13,9 @@ pub enum DegradeMode {
     /// 正常模式：使用 Redis + 本地缓存
     Normal,
     /// 降级模式 1：只使用 L2 缓存（延迟缓存）
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    L2Only,
+        L2Only,
     /// 降级模式 2：只使用本地缓存（local-only）
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    LocalOnly,
+        LocalOnly,
 }
 
 impl Default for DegradeMode {
@@ -31,16 +29,11 @@ impl Default for DegradeMode {
 /// 负责监控 Redis 健康状态，自动切换到降级模式
 #[derive(Clone)]
 pub struct DegradationManager {
-    #[allow(dead_code)] // 用于记录当前降级模式，在 get_mode, should_degrade 等方法中使用
-    mode: Arc<RwLock<DegradeMode>>,
-    #[allow(dead_code)] // 用于配置检查，在 record_redis_error 中使用
-    redis_timeout_threshold_ms: u64,
-    #[allow(dead_code)] // 用于错误计数，在 record_redis_error 和 record_redis_success 中使用
-    redis_error_count: Arc<RwLock<u64>>,
-    #[allow(dead_code)] // 用于记录最后一次成功时间，可能在监控功能中使用
-    last_redis_success: Arc<RwLock<Option<Instant>>>,
-    #[allow(dead_code)] // 用于监控降级持续时间，在 get_degrade_duration 中使用
-    degrade_start_time: Arc<RwLock<Option<Instant>>>,
+        mode: Arc<RwLock<DegradeMode>>,
+        redis_timeout_threshold_ms: u64,
+        redis_error_count: Arc<RwLock<u64>>,
+        last_redis_success: Arc<RwLock<Option<Instant>>>,
+        degrade_start_time: Arc<RwLock<Option<Instant>>>,
 }
 
 impl DegradationManager {
@@ -55,14 +48,12 @@ impl DegradationManager {
     }
 
     /// 获取当前降级模式
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub async fn get_mode(&self) -> DegradeMode {
+        pub async fn get_mode(&self) -> DegradeMode {
         *self.mode.read().await
     }
 
     /// 记录 Redis 操作成功
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub async fn record_redis_success(&self) {
+        pub async fn record_redis_success(&self) {
         let mut count = self.redis_error_count.write().await;
         *count = 0; // 重置错误计数
         let mut last_success = self.last_redis_success.write().await;
@@ -80,8 +71,7 @@ impl DegradationManager {
     }
 
     /// 记录 Redis 操作失败
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub async fn record_redis_error(&self, error_duration_ms: u64) {
+        pub async fn record_redis_error(&self, error_duration_ms: u64) {
         let mut count = self.redis_error_count.write().await;
         *count += 1;
         
@@ -116,22 +106,19 @@ impl DegradationManager {
     }
 
     /// 检查是否应该降级
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub async fn should_degrade(&self) -> bool {
+        pub async fn should_degrade(&self) -> bool {
         let mode = self.mode.read().await;
         *mode != DegradeMode::Normal
     }
 
     /// 获取降级开始时间（用于监控）
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub async fn get_degrade_duration(&self) -> Option<Duration> {
+        pub async fn get_degrade_duration(&self) -> Option<Duration> {
         let degrade_time = self.degrade_start_time.read().await;
         degrade_time.map(|t| t.elapsed())
     }
 
     /// 手动设置降级模式（用于测试或手动降级）
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub async fn set_mode(&self, mode: DegradeMode) {
+        pub async fn set_mode(&self, mode: DegradeMode) {
         let mut current_mode = self.mode.write().await;
         if *current_mode != mode {
             info!(from_mode = ?*current_mode, to_mode = ?mode, "手动切换降级模式");

@@ -8,4 +8,7 @@ module.exports = {
   transform: {
     ...tsJestTransformCfg,
   },
+  moduleNameMapper: {
+    "^@shared/(.*)$": "<rootDir>/../shared/$1",
+  },
 };

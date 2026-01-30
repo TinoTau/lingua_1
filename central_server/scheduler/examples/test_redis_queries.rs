@@ -1,0 +1,191 @@
+//! 独立测试程序 - 验证 Redis 查询功能
+//!
+//! 运行方式：
+//! ```bash
+//! cargo run --example test_redis_queries
+//! ```
+
+use lingua_scheduler::node_registry::{NodeData, NodeRedisRepository};
+use lingua_scheduler::phase2::RedisHandle;
+use lingua_scheduler::core::config::Phase2RedisConfig;
+use std::sync::Arc;
+
+#[tokio::main]
+async fn main() {
+    println!("🧪 开始测试 Redis 查询功能...\n");
+    
+    // 1. 连接 Redis
+    println!("📡 步骤 1: 连接 Redis...");
+    let redis_config = Phase2RedisConfig {
+        mode: "single".to_string(),
+        url: "redis://127.0.0.1:6379".to_string(),
+        cluster_urls: vec![],
+        key_prefix: "lingua".to_string(),
+    };
+    
+    let redis = match RedisHandle::connect(&redis_config).await {
+        Ok(r) => {
+            println!("✅ Redis 连接成功！\n");
+            r
+        }
+        Err(e) => {
+            eprintln!("❌ Redis 连接失败: {}", e);
+            eprintln!("请确保 Redis 运行在 localhost:6379");
+            std::process::exit(1);
+        }
+    };
+    
+    let repo = NodeRedisRepository::new(Arc::new(redis));
+    let test_node_id = "test_node_redis_query";
+    
+    // 2. 清理旧数据
+    println!("🧹 步骤 2: 清理旧测试数据...");
+    let _ = repo.delete_node(test_node_id).await;
+    println!("✅ 清理完成\n");
+    
+    // 3. 测试节点写入
+    println!("📝 步骤 3: 测试节点写入...");
+    let node = NodeData::new(
+        test_node_id.to_string(),
+        vec![
+            vec!["en".to_string(), "zh".to_string()],
+            vec!["ja".to_string(), "zh".to_string()],
+        ],
+        NodeRedisRepository::current_ts(),
+        "online".to_string(),
+    );
+    
+    match repo.upsert_node(&node).await {
+        Ok(_) => println!("✅ 节点写入成功！"),
+        Err(e) => {
+            eprintln!("❌ 节点写入失败: {}", e);
+            std::process::exit(1);
+        }
+    }
+    println!();
+    
+    // 4. 测试节点读取
+    println!("🔍 步骤 4: 测试节点读取...");
+    match repo.get_node(test_node_id).await {
+        Ok(Some(retrieved)) => {
+            println!("✅ 节点读取成功！");
+            println!("   节点 ID: {}", retrieved.node_id);
+            println!("   状态: {}", retrieved.status);
+            println!("   语言集合: {:?}", retrieved.lang_sets);
+        }
+        Ok(None) => {
+            eprintln!("❌ 节点不存在");
+            std::process::exit(1);
+        }
+        Err(e) => {
+            eprintln!("❌ 节点读取失败: {}", e);
+            std::process::exit(1);
+        }
+    }
+    println!();
+    
+    // 5. 测试在线节点列表
+    println!("📋 步骤 5: 测试在线节点列表...");
+    match repo.list_online_node_ids().await {
+        Ok(ids) => {
+            println!("✅ 在线节点列表查询成功！");
+            println!("   总数: {}", ids.len());
+            if ids.contains(&test_node_id.to_string()) {
+                println!("   ✅ 包含测试节点");
+            } else {
+                eprintln!("   ❌ 未找到测试节点");
+            }
+        }
+        Err(e) => {
+            eprintln!("❌ 查询失败: {}", e);
+            std::process::exit(1);
+        }
+    }
+    println!();
+    
+    // 6. 测试语言集合查询
+    println!("🌍 步骤 6: 测试语言集合查询...");
+    let langset = vec!["en".to_string(), "zh".to_string()];
+    match repo.list_nodes_for_langset(&langset).await {
+        Ok(nodes) => {
+            println!("✅ 语言集合查询成功！");
+            println!("   查询: {:?}", langset);
+            println!("   匹配节点数: {}", nodes.len());
+            if nodes.contains(&test_node_id.to_string()) {
+                println!("   ✅ 包含测试节点");
+            } else {
+                eprintln!("   ❌ 未找到测试节点");
+            }
+        }
+        Err(e) => {
+            eprintln!("❌ 查询失败: {}", e);
+            std::process::exit(1);
+        }
+    }
+    println!();
+    
+    // 7. 测试服务不可用标记
+    println!("🚫 步骤 7: 测试服务不可用标记...");
+    match repo.mark_service_unavailable(
+        test_node_id,
+        "asr_whisper",
+        Some("v1.0"),
+        Some("测试标记"),
+        60,
+    ).await {
+        Ok(_) => println!("✅ 服务标记成功！"),
+        Err(e) => {
+            eprintln!("❌ 标记失败: {}", e);
+            std::process::exit(1);
+        }
+    }
+    
+    match repo.is_service_unavailable(test_node_id, "asr_whisper").await {
+        Ok(true) => println!("✅ 服务不可用检查正确（不可用）"),
+        Ok(false) => {
+            eprintln!("❌ 服务不可用检查错误（应该不可用）");
+            std::process::exit(1);
+        }
+        Err(e) => {
+            eprintln!("❌ 检查失败: {}", e);
+            std::process::exit(1);
+        }
+    }
+    
+    match repo.is_service_unavailable(test_node_id, "tts_coqui").await {
+        Ok(false) => println!("✅ 服务可用检查正确（可用）"),
+        Ok(true) => {
+            eprintln!("❌ 服务可用检查错误（应该可用）");
+            std::process::exit(1);
+        }
+        Err(e) => {
+            eprintln!("❌ 检查失败: {}", e);
+            std::process::exit(1);
+        }
+    }
+    println!();
+    
+    // 8. 测试排除统计
+    println!("📊 步骤 8: 测试排除统计...");
+    match repo.record_exclude_reason("ModelNotAvailable", test_node_id).await {
+        Ok(_) => println!("✅ 排除统计记录成功！"),
+        Err(e) => {
+            eprintln!("❌ 记录失败: {}", e);
+            std::process::exit(1);
+        }
+    }
+    println!();
+    
+    // 9. 清理测试数据
+    println!("🧹 步骤 9: 清理测试数据...");
+    match repo.delete_node(test_node_id).await {
+        Ok(_) => println!("✅ 清理成功！"),
+        Err(e) => {
+            eprintln!("❌ 清理失败: {}", e);
+            std::process::exit(1);
+        }
+    }
+    println!();
+    
+    println!("🎉 所有测试通过！Redis 查询功能正常工作。");
+}

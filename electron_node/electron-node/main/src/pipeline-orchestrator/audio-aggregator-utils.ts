@@ -268,7 +268,7 @@ export class AudioAggregatorUtils {
    * 按能量切分音频为多段（递归切分，直到每段都足够短）
    * 
    * @param audio PCM16音频数据
-   * @param maxSegmentDurationMs 单段最大时长（默认10秒）
+   * @param maxSegmentDurationMs 单段最大时长（默认5秒，已优化以便识别自然停顿）
    * @param minSegmentDurationMs 单段最小时长（默认2秒，避免切得太碎）
    * @param splitHangoverMs 切分点hangover（默认600ms）
    * @param depth 递归深度（防止栈溢出，默认最大10层）

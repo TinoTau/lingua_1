@@ -11,8 +11,6 @@ use anyhow::{Result, anyhow};
 /// 这里只包含调度服务器需要的字段
 #[derive(Debug, Clone)]
 pub struct ModuleMetadata {
-    #[allow(dead_code)]
-    pub module_name: String,
     pub required_models: Vec<String>,  // 简化为模型 ID 列表
 }
 
@@ -26,37 +24,31 @@ lazy_static::lazy_static! {
         
         // 可选模块：情感检测
         m.insert("emotion_detection", ModuleMetadata {
-            module_name: "emotion_detection".to_string(),
             required_models: vec!["emotion-xlm-r".to_string()],
         });
         
         // 可选模块：音色识别
         m.insert("speaker_identification", ModuleMetadata {
-            module_name: "speaker_identification".to_string(),
             required_models: vec!["speaker-id-ecapa".to_string()],
         });
         
         // 可选模块：音色生成/克隆
         m.insert("voice_cloning", ModuleMetadata {
-            module_name: "voice_cloning".to_string(),
             required_models: vec!["vc-model-v1".to_string()],
         });
         
         // 可选模块：语速识别
         m.insert("speech_rate_detection", ModuleMetadata {
-            module_name: "speech_rate_detection".to_string(),
             required_models: vec!["sr-d-v1".to_string()],
         });
         
         // 可选模块：语速控制
         m.insert("speech_rate_control", ModuleMetadata {
-            module_name: "speech_rate_control".to_string(),
             required_models: vec!["tts-vocoder-v1".to_string()],
         });
         
         // 可选模块：个性化适配
         m.insert("persona_adaptation", ModuleMetadata {
-            module_name: "persona_adaptation".to_string(),
             required_models: vec!["persona-style-transformer".to_string()],
         });
         

@@ -3,8 +3,8 @@
  * 管理超时finalize的sessionId->nodeId映射，确保长语音的后续job发送到同一个节点
  * 
  * 策略：
- * 1. 手动finalize或pause finalize：可以随机分配（不需要session affinity）
- * 2. 超时finalize：记录sessionId->nodeId的映射，确保后续job发送到同一个节点
+ * 1. 手动finalize或timeout finalize：可以随机分配（不需要session affinity）
+ * 2. MaxDuration finalize：记录sessionId->nodeId的映射，确保后续job发送到同一个节点
  */
 
 import logger from '../logger';
@@ -17,6 +17,13 @@ export class SessionAffinityManager {
   
   // 存储超时finalize的sessionId->nodeId映射
   private timeoutFinalizeSessions: Map<string, {
+    nodeId: string;
+    createdAt: number;
+    lastAccessAt: number;
+  }> = new Map();
+  
+  // 存储MaxDuration finalize的sessionId->nodeId映射
+  private maxDurationFinalizeSessions: Map<string, {
     nodeId: string;
     createdAt: number;
     lastAccessAt: number;
@@ -85,9 +92,43 @@ export class SessionAffinityManager {
         totalSessions: this.timeoutFinalizeSessions.size,
         createdAt: new Date(nowMs).toISOString(),
         ttlMs: this.SESSION_TTL_MS,
-        reason: 'Timeout/MaxDuration finalize - recording sessionId->nodeId mapping for session affinity',
+        reason: 'Timeout finalize - recording sessionId->nodeId mapping for session affinity',
       },
       'SessionAffinityManager: [SessionAffinity] Recorded timeout finalize session mapping - subsequent jobs should route to this node'
+    );
+  }
+
+  /**
+   * 记录MaxDuration finalize的sessionId->nodeId映射
+   * @param sessionId 会话ID
+   * @param nodeId 节点ID（如果未提供，使用当前节点ID）
+   */
+  recordMaxDurationFinalize(sessionId: string, nodeId?: string): void {
+    const targetNodeId = nodeId || this.nodeId;
+    if (!targetNodeId) {
+      logger.warn(
+        { sessionId },
+        'SessionAffinityManager: Cannot record MaxDuration finalize, nodeId not set'
+      );
+      return;
+    }
+    const nowMs = Date.now();
+    this.maxDurationFinalizeSessions.set(sessionId, {
+      nodeId: targetNodeId,
+      createdAt: nowMs,
+      lastAccessAt: nowMs,
+    });
+    
+    logger.info(
+      {
+        sessionId,
+        nodeId: targetNodeId,
+        totalSessions: this.maxDurationFinalizeSessions.size,
+        createdAt: new Date(nowMs).toISOString(),
+        ttlMs: this.SESSION_TTL_MS,
+        reason: 'MaxDuration finalize - recording sessionId->nodeId mapping for session affinity',
+      },
+      'SessionAffinityManager: [SessionAffinity] Recorded MaxDuration finalize session mapping - subsequent jobs should route to this node'
     );
   }
 
@@ -118,12 +159,38 @@ export class SessionAffinityManager {
   }
 
   /**
-   * 检查session是否应该使用session affinity
+   * 获取MaxDuration finalize的节点ID
+   * @param sessionId 会话ID
+   * @returns 节点ID，如果不存在则返回null
+   */
+  getNodeIdForMaxDurationFinalize(sessionId: string): string | null {
+    const mapping = this.maxDurationFinalizeSessions.get(sessionId);
+    if (!mapping) {
+      return null;
+    }
+    
+    // 更新最后访问时间
+    mapping.lastAccessAt = Date.now();
+    
+    logger.debug(
+      {
+        sessionId,
+        nodeId: mapping.nodeId,
+        ageMs: Date.now() - mapping.createdAt,
+      },
+      'SessionAffinityManager: Retrieved nodeId for MaxDuration finalize session'
+    );
+    
+    return mapping.nodeId;
+  }
+
+  /**
+   * 检查session是否应该使用session affinity（timeout或MaxDuration）
    * @param sessionId 会话ID
    * @returns 是否应该使用session affinity
    */
   shouldUseSessionAffinity(sessionId: string): boolean {
-    return this.timeoutFinalizeSessions.has(sessionId);
+    return this.timeoutFinalizeSessions.has(sessionId) || this.maxDurationFinalizeSessions.has(sessionId);
   }
 
   /**
@@ -131,14 +198,40 @@ export class SessionAffinityManager {
    * @param sessionId 会话ID
    */
   clearSessionMapping(sessionId: string): void {
+    let cleared = false;
     if (this.timeoutFinalizeSessions.delete(sessionId)) {
+      cleared = true;
+    }
+    if (this.maxDurationFinalizeSessions.delete(sessionId)) {
+      cleared = true;
+    }
+    
+    if (cleared) {
       logger.info(
         {
           sessionId,
-          remainingSessions: this.timeoutFinalizeSessions.size,
+          remainingTimeoutSessions: this.timeoutFinalizeSessions.size,
+          remainingMaxDurationSessions: this.maxDurationFinalizeSessions.size,
           reason: 'Manual/pause finalize - cleared session mapping, subsequent jobs can use random assignment',
         },
         'SessionAffinityManager: [SessionAffinity] Cleared session mapping (manual/pause finalize)'
+      );
+    }
+  }
+
+  /**
+   * 清除MaxDuration session映射（用于手动finalize或timeout finalize合并MaxDuration音频后）
+   * @param sessionId 会话ID
+   */
+  clearMaxDurationSessionMapping(sessionId: string): void {
+    if (this.maxDurationFinalizeSessions.delete(sessionId)) {
+      logger.info(
+        {
+          sessionId,
+          remainingMaxDurationSessions: this.maxDurationFinalizeSessions.size,
+          reason: 'Manual/timeout finalize merged MaxDuration audio - cleared MaxDuration session mapping',
+        },
+        'SessionAffinityManager: [SessionAffinity] Cleared MaxDuration session mapping'
       );
     }
   }
@@ -205,8 +298,15 @@ export class SessionAffinityManager {
    * 获取统计信息
    */
   getStats(): {
-    totalSessions: number;
-    sessions: Array<{
+    totalTimeoutSessions: number;
+    totalMaxDurationSessions: number;
+    timeoutSessions: Array<{
+      sessionId: string;
+      nodeId: string;
+      ageMs: number;
+      lastAccessAgeMs: number;
+    }>;
+    maxDurationSessions: Array<{
       sessionId: string;
       nodeId: string;
       ageMs: number;
@@ -214,7 +314,14 @@ export class SessionAffinityManager {
     }>;
   } {
     const nowMs = Date.now();
-    const sessions = Array.from(this.timeoutFinalizeSessions.entries()).map(([sessionId, mapping]) => ({
+    const timeoutSessions = Array.from(this.timeoutFinalizeSessions.entries()).map(([sessionId, mapping]) => ({
+      sessionId,
+      nodeId: mapping.nodeId,
+      ageMs: nowMs - mapping.createdAt,
+      lastAccessAgeMs: nowMs - mapping.lastAccessAt,
+    }));
+    
+    const maxDurationSessions = Array.from(this.maxDurationFinalizeSessions.entries()).map(([sessionId, mapping]) => ({
       sessionId,
       nodeId: mapping.nodeId,
       ageMs: nowMs - mapping.createdAt,
@@ -222,8 +329,10 @@ export class SessionAffinityManager {
     }));
     
     return {
-      totalSessions: this.timeoutFinalizeSessions.size,
-      sessions,
+      totalTimeoutSessions: this.timeoutFinalizeSessions.size,
+      totalMaxDurationSessions: this.maxDurationFinalizeSessions.size,
+      timeoutSessions,
+      maxDurationSessions,
     };
   }
 }

@@ -12,21 +12,13 @@ pub type GroupId = String;
 
 #[derive(Clone, Debug)]
 pub struct GroupPart {
-    #[allow(dead_code)]
-    pub utterance_index: u64,
     pub asr_text: String,
     pub translated_text: Option<String>, // 允许为空（NMT 失败场景）
-    #[allow(dead_code)]
-    pub created_at_ms: u64,
 }
 
 #[derive(Clone, Debug)]
 pub struct UtteranceGroup {
-    #[allow(dead_code)]
-    pub group_id: GroupId,
     pub session_id: SessionId,
-    #[allow(dead_code)]
-    pub created_at_ms: u64,
     pub last_tts_start_at_ms: Option<u64>,  // TTS播放开始时间（用于pause检测）
     pub last_tts_end_at_ms: u64,
     pub next_part_index: u64,
@@ -95,10 +87,8 @@ impl GroupManager {
         group.next_part_index += 1;
 
         let part = GroupPart {
-            utterance_index,
             asr_text: asr_text.clone(),
             translated_text: translated_text.clone(),
-            created_at_ms: now_ms,
         };
 
         group.parts.push_back(part);
@@ -166,30 +156,6 @@ impl GroupManager {
         }
     }
 
-    /// 获取session的活跃group_id
-    pub async fn get_active_group_id(&self, session_id: &str) -> Option<GroupId> {
-        let active = self.active.read().await;
-        active.get(session_id).cloned()
-    }
-    
-    
-    /// 检查是否在TTS播放期间（用于pause检测）
-    /// 从播放开始到播放结束期间，都不进行pause计时
-    pub async fn is_tts_playing(&self, group_id: &str, current_time_ms: i64) -> bool {
-        let groups = self.groups.read().await;
-        if let Some(group) = groups.get(group_id) {
-            if let Some(tts_start_ms) = group.last_tts_start_at_ms {
-                let tts_end_ms = group.last_tts_end_at_ms as i64;
-                let tts_start_ms_i64 = tts_start_ms as i64;
-                // 从播放开始到播放结束期间，都不进行pause计时
-                current_time_ms >= tts_start_ms_i64 && current_time_ms <= tts_end_ms
-            } else {
-                false
-            }
-        } else {
-            false
-        }
-    }
 
     /// 处理 Session 结束
     pub async fn on_session_end(&self, session_id: &str, reason: &str) {
@@ -280,9 +246,7 @@ impl GroupManager {
     async fn create_new_group(&self, session_id: &str, now_ms: u64) -> GroupId {
         let gid = format!("group_{}_{}", session_id, now_ms);
         let group = UtteranceGroup {
-            group_id: gid.clone(),
             session_id: session_id.to_string(),
-            created_at_ms: now_ms,
             last_tts_start_at_ms: None,  // 初始值：无播放记录
             last_tts_end_at_ms: now_ms, // 初始值：以创建时刻作为锚
             next_part_index: 0,

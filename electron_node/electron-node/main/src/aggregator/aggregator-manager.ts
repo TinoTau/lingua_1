@@ -81,7 +81,6 @@ export class AggregatorManager {
     isFinal: boolean = false,
     isManualCut: boolean = false,
     mode: Mode = 'offline',
-    isPauseTriggered: boolean = false,
     isTimeoutTriggered: boolean = false
   ): AggregatorCommitResult {
     const state = this.getOrCreateState(sessionId, mode);
@@ -92,7 +91,6 @@ export class AggregatorManager {
       qualityScore,
       isFinal,
       isManualCut,
-      isPauseTriggered,
       isTimeoutTriggered
     );
   }

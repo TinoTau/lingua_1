@@ -1,8 +1,8 @@
 {
-  "service_id": "en-normalize",
+  "id": "en-normalize",
   "name": "EN Normalize Service",
   "version": "1.0.0",
-  "type": "semantic-repair",
+  "type": "semantic",
   "language": "en",
   "port": 5012,
   "enabled": false,
@@ -11,10 +11,11 @@
   "gpu_required": false,
   "vram_estimate": 0,
   "max_concurrency": 10,
-  "startup_command": "python",
-  "startup_args": [
-    "en_normalize_service.py"
-  ],
+  "exec": {
+    "command": "python",
+    "args": ["en_normalize_service.py"],
+    "cwd": "."
+  },
   "health_check": {
     "endpoint": "/health",
     "timeout_ms": 500

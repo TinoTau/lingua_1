@@ -19,11 +19,21 @@ export async function runTranslationStep(
     return;
   }
 
-  // 获取要翻译的文本（优先使用修复后的文本，然后是聚合后的文本）
-  const textToTranslate = ctx.repairedText || ctx.aggregatedText || ctx.asrText || '';
+  // 未走语义修复（HOLD 等）的 job 不调用 NMT/TTS，保证只有「合并长句」才进入翻译
+  if (ctx.shouldSendToSemanticRepair === false) {
+    ctx.translatedText = '';
+    return;
+  }
 
-  // 如果文本为空，跳过翻译
-  if (!textToTranslate || textToTranslate.trim().length === 0) {
+  // 翻译只用语义修复/聚合产出的 repairedText（不兼容回退；未送语义修复时由 aggregation-step 写入 repairedText）
+  const textToTranslate = (ctx.repairedText ?? '').trim();
+  if (!textToTranslate && (ctx.segmentForJobResult ?? '').trim().length > 0) {
+    logger.warn(
+      { jobId: job.job_id, sessionId: job.session_id },
+      'runTranslationStep: ctx.repairedText empty but segmentForJobResult set, aggregation/semantic-repair should set repairedText'
+    );
+  }
+  if (textToTranslate.trim().length === 0) {
     ctx.translatedText = '';
     return;
   }
@@ -39,15 +49,19 @@ export async function runTranslationStep(
   }
 
   // 双向模式：使用动态确定的源语言和目标语言（如果已确定）
-  // 如果 src_lang 是 "auto"，使用检测到的源语言
+  // NMT（M2M100）只支持 ISO 639-1 语言代码（如 zh、en），不支持 "auto"，必须在此处落定具体语言
   let sourceLang = job.src_lang;
   if (job.src_lang === 'auto' && ctx.detectedSourceLang) {
     sourceLang = ctx.detectedSourceLang;
+  } else if (job.src_lang === 'auto' && job.lang_a) {
+    sourceLang = job.lang_a;
   }
-  
-  // 使用动态确定的目标语言
+
   let targetLang = ctx.detectedTargetLang || job.tgt_lang;
-  
+  if (targetLang === 'auto' && job.lang_b) {
+    targetLang = job.lang_b;
+  }
+
   if (ctx.detectedSourceLang || ctx.detectedTargetLang) {
     logger.info(
       {

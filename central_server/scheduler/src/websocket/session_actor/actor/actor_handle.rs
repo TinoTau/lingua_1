@@ -12,10 +12,5 @@ impl SessionActorHandle {
         self.sender.send(event)
     }
 
-    /// 检查 Actor 是否仍然活跃
-    #[allow(dead_code)]
-    pub fn is_closed(&self) -> bool {
-        self.sender.is_closed()
-    }
 }
 

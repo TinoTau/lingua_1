@@ -5,7 +5,7 @@
     "lib": [
       "ES2020"
     ],
-    "outDir": "./main",
+    "outDir": "./dist/main",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -35,5 +35,8 @@
     "node_modules",
     "renderer",
     "main/src/**/*.test.ts"
-  ]
+  ],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  }
 }

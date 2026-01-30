@@ -120,14 +120,14 @@ pub enum NodeMessage {
         #[serde(skip_serializing_if = "Option::is_none")]
         padding_ms: Option<u64>,
         /// 是否由用户手动发送（is_final=true）
-        #[serde(skip_serializing_if = "std::ops::Not::not")]
+        #[serde(skip_serializing_if = "std::ops::Not::not", default)]
         is_manual_cut: bool,
-        /// 是否由3秒静音触发（pause触发）
-        #[serde(skip_serializing_if = "std::ops::Not::not")]
-        is_pause_triggered: bool,
-        /// 是否由10秒超时触发（timeout触发）
-        #[serde(skip_serializing_if = "std::ops::Not::not")]
+        /// 是否由 Timeout（超时）触发；节点端缓存到 pendingTimeoutAudio
+        #[serde(skip_serializing_if = "std::ops::Not::not", default)]
         is_timeout_triggered: bool,
+        /// 是否由 MaxDuration（持续说话超长）触发；节点端按切片送 ASR
+        #[serde(skip_serializing_if = "std::ops::Not::not", default)]
+        is_max_duration_triggered: bool,
     },
     /// Scheduler -> Node：取消一个正在处理/排队的 job（best-effort）
     #[serde(rename = "job_cancel")]

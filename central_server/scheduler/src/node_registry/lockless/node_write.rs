@@ -15,8 +15,7 @@ impl LocklessCache {
     /// 3. 设置 TTL（30 秒，心跳超时自动过期）
     /// 4. 更新节点索引（在线节点集合）
     /// 5. 返回新版本号
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub async fn update_node_heartbeat(
+        pub async fn update_node_heartbeat(
         &self,
         node_id: &str,
         heartbeat_data: &NodeHeartbeatData,
@@ -31,16 +30,16 @@ local version = redis.call('HGET', KEYS[1], 'version') or 0
 version = tonumber(version) + 1
 
 -- 更新节点数据（Hash）
+-- 注意：pool_ids 已删除，Pool 归属由 PoolService 管理
 redis.call('HSET', KEYS[1],
     'node_id', ARGV[1],
     'status', ARGV[2],
     'health', ARGV[3],
     'capabilities', ARGV[4],
     'resources', ARGV[5],
-    'pool_ids', ARGV[6],
-    'installed_services', ARGV[7],
-    'features_supported', ARGV[8],
-    'last_heartbeat_ms', ARGV[9],
+    'installed_services', ARGV[6],
+    'features_supported', ARGV[7],
+    'last_heartbeat_ms', ARGV[8],
     'version', version
 )
 
@@ -71,12 +70,7 @@ return version
                 "序列化失败",
                 format!("{}", e)
             )))?;
-        let pool_ids_json = serde_json::to_string(&heartbeat_data.pool_ids)
-            .map_err(|e| redis::RedisError::from((
-                redis::ErrorKind::TypeError,
-                "序列化失败",
-                format!("{}", e)
-            )))?;
+        // pool_ids 已删除，不再序列化
         let services_json = serde_json::to_string(&heartbeat_data.installed_services)
             .map_err(|e| redis::RedisError::from((
                 redis::ErrorKind::TypeError,
@@ -101,7 +95,6 @@ return version
                 "Online",
                 &capabilities_json,
                 &resources_json,
-                &pool_ids_json,
                 &services_json,
                 &features_json,
                 &timestamp_ms.to_string(),
@@ -152,8 +145,7 @@ return version
     /// 1. 从节点数据 Hash 中删除
     /// 2. 从在线节点索引中移除
     /// 3. 从 Pool 成员索引中移除（如果节点在 Pool 中）
-    #[allow(dead_code)] // 当前未使用，保留用于未来扩展
-    pub async fn remove_node(&self, node_id: &str) -> Result<(), redis::RedisError> {
+        pub async fn remove_node(&self, node_id: &str) -> Result<(), redis::RedisError> {
         let node_key = format!("scheduler:nodes:{{node:{}}}", node_id);
         let online_index_key = "scheduler:nodes:index:online";
         
@@ -214,23 +206,23 @@ return 1
 }
 
 /// 节点心跳数据
+/// 
+/// 注意：pool_ids 已删除，Pool 归属由 PoolService 管理
 #[derive(Debug, Clone)]
-#[allow(dead_code)] // 将在后续实现中使用
 pub struct NodeHeartbeatData {
     pub capabilities: super::serialization::RedisNodeCapabilities,
     pub resources: super::serialization::RedisNodeResources,
-    pub pool_ids: Vec<u16>,
     pub installed_services: Vec<String>, // JSON 字符串数组
     pub features_supported: serde_json::Value,
 }
 
 /// 节点注册数据
+/// 
+/// 注意：pool_ids 已删除，Pool 归属由 PoolService 管理
 #[derive(Debug, Clone)]
-#[allow(dead_code)] // 将在后续实现中使用
 pub struct NodeRegistrationData {
     pub capabilities: super::serialization::RedisNodeCapabilities,
     pub resources: super::serialization::RedisNodeResources,
-    pub pool_ids: Vec<u16>,
     pub installed_services: Vec<String>, // JSON 字符串数组
     pub features_supported: serde_json::Value,
 }

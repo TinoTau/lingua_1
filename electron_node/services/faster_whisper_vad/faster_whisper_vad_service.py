@@ -18,12 +18,18 @@ log_dir = 'logs'
 if not os.path.exists(log_dir):
     os.makedirs(log_dir, exist_ok=True)
 
+log_file = os.path.join(log_dir, 'faster-whisper-vad-service.log')
+# 输出日志文件路径（用于调试）
+print(f'[ASR Service] Log file path: {os.path.abspath(log_file)}')
+print(f'[ASR Service] Log directory: {os.path.abspath(log_dir)}')
+print(f'[ASR Service] Current working directory: {os.getcwd()}')
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler(os.path.join(log_dir, 'faster-whisper-vad-service.log'), encoding='utf-8')
+        logging.FileHandler(log_file, encoding='utf-8')
     ]
 )
 logger = logging.getLogger(__name__)
@@ -49,24 +55,85 @@ def handle_exception(exc_type, exc_value, exc_traceback):
 
 sys.excepthook = handle_exception
 
-# 信号处理（用于记录主进程退出）
+# ==================== 进程清理逻辑 ====================
+import atexit
+import asyncio
+
+_shutdown_initiated = False
+
+def cleanup_worker_manager():
+    """清理ASR Worker Manager - 确保子进程正确停止"""
+    global _shutdown_initiated
+    
+    if _shutdown_initiated:
+        return
+    
+    _shutdown_initiated = True
+    
+    logger.info("=" * 80)
+    logger.info("🛑 Cleaning up ASR Worker Manager (signal/atexit handler)")
+    logger.info(f"   Main process PID: {os.getpid()}")
+    logger.info("=" * 80)
+    
+    try:
+        # 延迟导入，避免循环依赖
+        from api_routes import get_asr_worker_manager
+        manager = get_asr_worker_manager()
+        
+        # 检查是否已有运行中的event loop
+        try:
+            running_loop = asyncio.get_running_loop()
+            # 如果有运行中的loop，说明FastAPI正在处理shutdown
+            # 跳过cleanup，让FastAPI的shutdown事件处理
+            logger.info("⏭️  Detected running event loop, skipping cleanup (handled by FastAPI shutdown)")
+            return
+        except RuntimeError:
+            # 没有运行中的loop，安全创建新loop
+            pass
+        
+        # 在信号处理器中运行async代码
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(manager.stop())
+        loop.close()
+        
+        logger.info("✅ ASR Worker Manager cleaned up successfully")
+    except Exception as e:
+        logger.error(f"❌ Failed to cleanup ASR Worker Manager: {e}", exc_info=True)
+
 def signal_handler(signum, frame):
-    """信号处理器"""
-    logger.warning(f"Received signal {signum}, preparing to shutdown...")
-    if signum == signal.SIGTERM:
-        logger.info("SIGTERM received, graceful shutdown")
-    elif signum == signal.SIGINT:
-        logger.info("SIGINT received (Ctrl+C), graceful shutdown")
-    else:
-        logger.warning(f"Unexpected signal {signum} received")
+    """信号处理器 - 优雅关闭并清理子进程"""
+    logger.warning(f"Received signal {signum}, initiating graceful shutdown...")
+    cleanup_worker_manager()
+    logger.info("Exiting main process after cleanup...")
+    sys.exit(0)
+
+def atexit_handler():
+    """退出时清理 - 确保异常退出时也能清理子进程"""
+    logger.info("Python process exiting, cleaning up resources via atexit...")
+    cleanup_worker_manager()
 
 # 注册信号处理器（Windows 上可能不支持所有信号）
 try:
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
-except (AttributeError, ValueError):
+    logger.info("✅ Signal handlers registered (SIGTERM, SIGINT)")
+except (AttributeError, ValueError) as e:
     # Windows 可能不支持某些信号
-    logger.debug("Some signals not available on this platform")
+    logger.warning(f"Failed to register some signal handlers: {e}")
+
+# Windows特殊信号：SIGBREAK (Ctrl+Break)
+try:
+    if hasattr(signal, 'SIGBREAK'):
+        signal.signal(signal.SIGBREAK, signal_handler)
+        logger.info("✅ SIGBREAK handler registered (Windows)")
+except Exception as e:
+    logger.debug(f"Failed to register SIGBREAK: {e}")
+
+# 注册退出清理函数（多层保护）
+atexit.register(atexit_handler)
+logger.info("✅ atexit cleanup handler registered")
+# ==================== 进程清理逻辑结束 ====================
 
 # 导入配置和模块
 from config import PORT

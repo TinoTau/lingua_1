@@ -59,14 +59,6 @@ lazy_static::lazy_static! {
     .expect("metric");
 
     // —— observability —— //
-    static ref SLOW_LOCK_WAIT_TOTAL: IntCounterVec = IntCounterVec::new(
-        Opts::new(
-            "slow_lock_wait_total",
-            "Slow lock wait events over threshold"
-        ),
-        &["lock"]
-    )
-    .expect("metric");
     static ref SLOW_PATH_TOTAL: IntCounterVec = IntCounterVec::new(
         Opts::new(
             "slow_path_total",
@@ -82,7 +74,7 @@ lazy_static::lazy_static! {
             "web_task_finalized_total",
             "Web task finalized count by reason"
         ),
-        &["reason"] // send|pause
+        &["reason"] // send|timeout
     )
     .expect("metric");
 
@@ -204,14 +196,6 @@ lazy_static::lazy_static! {
     )
     .expect("metric");
 
-    static ref POOL_QUERY_TOTAL: IntCounterVec = IntCounterVec::new(
-        Opts::new(
-            "pool_query_total",
-            "Pool query total (by result)"
-        ),
-        &["result"] // result=found|empty
-    )
-    .expect("metric");
 
     static ref DISPATCH_LATENCY_SECONDS: Histogram = Histogram::with_opts(
         HistogramOpts::new(
@@ -259,7 +243,6 @@ pub fn init() {
     let _ = REGISTRY.register(Box::new(SERVICE_CATALOG_LAST_SUCCESS_AGE_SECONDS.clone()));
     let _ = REGISTRY.register(Box::new(WEB_TASK_PAUSE_MS.clone()));
 
-    let _ = REGISTRY.register(Box::new(SLOW_LOCK_WAIT_TOTAL.clone()));
     let _ = REGISTRY.register(Box::new(SLOW_PATH_TOTAL.clone()));
     let _ = REGISTRY.register(Box::new(WEB_TASK_FINALIZED_TOTAL.clone()));
     let _ = REGISTRY.register(Box::new(NO_AVAILABLE_NODE_TOTAL.clone()));
@@ -283,7 +266,6 @@ pub fn init() {
     let _ = REGISTRY.register(Box::new(PHASE2_DLQ_MOVED_TOTAL.clone()));
 
     let _ = REGISTRY.register(Box::new(RESERVE_ATTEMPT_TOTAL.clone()));
-    let _ = REGISTRY.register(Box::new(POOL_QUERY_TOTAL.clone()));
     let _ = REGISTRY.register(Box::new(DISPATCH_LATENCY_SECONDS.clone()));
     let _ = REGISTRY.register(Box::new(ACK_TIMEOUT_TOTAL.clone()));
     let _ = REGISTRY.register(Box::new(NODE_OVERLOAD_REJECT_TOTAL.clone()));
@@ -300,9 +282,6 @@ pub fn on_stats_response(is_stale: bool) {
     }
 }
 
-pub fn on_slow_lock_wait(lock_name: &'static str) {
-    SLOW_LOCK_WAIT_TOTAL.with_label_values(&[lock_name]).inc();
-}
 
 pub fn on_slow_path(path_name: &'static str) {
     SLOW_PATH_TOTAL.with_label_values(&[path_name]).inc();
@@ -312,14 +291,6 @@ pub fn on_web_task_finalized(reason: &'static str) {
     WEB_TASK_FINALIZED_TOTAL.with_label_values(&[reason]).inc();
 }
 
-
-pub fn on_phase3_pool_attempt(pool_id: u16, success: bool, reason: &'static str) {
-    let pool = pool_id.to_string();
-    let result = if success { "success" } else { "fail" };
-    PHASE3_POOL_ATTEMPT_TOTAL
-        .with_label_values(&[pool.as_str(), result, reason])
-        .inc();
-}
 
 pub fn on_model_na_received() {
     MODEL_NA_RECEIVED_TOTAL.inc();
@@ -449,11 +420,6 @@ pub fn on_reserve_error() {
     RESERVE_ATTEMPT_TOTAL.with_label_values(&["error"]).inc();
 }
 
-/// 记录 Pool 查询结果（找到节点/空池）
-pub fn on_pool_query(found: bool) {
-    let result = if found { "found" } else { "empty" };
-    POOL_QUERY_TOTAL.with_label_values(&[result]).inc();
-}
 
 /// 记录派发延迟（从 reserve 到 send 的耗时）
 pub fn observe_dispatch_latency(seconds: f64) {

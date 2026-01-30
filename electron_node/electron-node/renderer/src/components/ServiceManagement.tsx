@@ -34,13 +34,26 @@ interface SemanticRepairServiceStatus {
   lastError: string | null;
 }
 
+interface DiscoveredService {
+  id: string;
+  name: string;
+  type: string;
+  status: 'stopped' | 'starting' | 'running' | 'stopping' | 'error';
+  pid?: number;
+  port?: number;
+  lastError?: string;
+  installPath: string;
+}
+
 export function ServiceManagement() {
   const [rustStatus, setRustStatus] = useState<RustServiceStatus | null>(null);
   const [pythonStatuses, setPythonStatuses] = useState<ServiceStatus[]>([]);
   const [semanticRepairStatuses, setSemanticRepairStatuses] = useState<SemanticRepairServiceStatus[]>([]);
+  const [discoveredServices, setDiscoveredServices] = useState<DiscoveredService[]>([]);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [processingMetrics, setProcessingMetrics] = useState<Record<string, number>>({});
   const [serviceMetadata, setServiceMetadata] = useState<Record<string, any>>({});
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     // 加载服务偏好和当前状态
@@ -51,6 +64,9 @@ export function ServiceManagement() {
         const metadata = await window.electronAPI.getAllServiceMetadata();
         setServiceMetadata(metadata);
         console.log('Loaded service metadata:', metadata);
+        
+        // 加载服务发现列表
+        await loadDiscoveredServices();
       } catch (e) {
         console.error('加载服务偏好失败:', e);
       }
@@ -62,10 +78,41 @@ export function ServiceManagement() {
     // 定期更新服务状态
     const interval = setInterval(async () => {
       await updateStatuses();
+      // 也定期更新服务发现列表
+      await loadDiscoveredServices();
     }, 2000);
 
     return () => clearInterval(interval);
   }, []);
+
+  // 加载服务发现列表
+  const loadDiscoveredServices = async () => {
+    try {
+      if (window.electronAPI.serviceDiscovery) {
+        const services = await window.electronAPI.serviceDiscovery.list();
+        setDiscoveredServices(services);
+      }
+    } catch (error) {
+      console.error('加载服务列表失败:', error);
+    }
+  };
+
+  // 刷新服务列表
+  const handleRefreshServices = async () => {
+    setIsRefreshing(true);
+    try {
+      if (window.electronAPI.serviceDiscovery) {
+        const services = await window.electronAPI.serviceDiscovery.refresh();
+        setDiscoveredServices(services);
+        console.log('服务列表已刷新:', services);
+      }
+    } catch (error) {
+      console.error('刷新服务列表失败:', error);
+      alert(`刷新服务列表失败: ${error}`);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const updateStatuses = async () => {
     try {
@@ -315,6 +362,14 @@ export function ServiceManagement() {
     <div className="lsm-root">
       <div className="lsm-header">
         <h2>服务管理</h2>
+        <button 
+          className="lsm-refresh-button" 
+          onClick={handleRefreshServices}
+          disabled={isRefreshing}
+          title="重新扫描服务目录，发现新添加的服务"
+        >
+          {isRefreshing ? '刷新中...' : '🔄 刷新服务'}
+        </button>
       </div>
 
       <div className="lsm-list">
@@ -351,12 +406,28 @@ export function ServiceManagement() {
                 })()}
               </div>
             )}
-            {rustStatus?.lastError && (
-              <div className="lsm-error">
-                <span className="lsm-error-icon">⚠️</span>
-                <span>{rustStatus.lastError}</span>
-              </div>
-            )}
+            {(() => {
+              // 只显示真正的错误，过滤掉警告信息
+              if (!rustStatus?.lastError) return null;
+              const errorLines = rustStatus.lastError
+                .split('\n')
+                .filter(line => {
+                  const lowerLine = line.toLowerCase();
+                  // 只保留包含error的行，过滤warning/info
+                  return lowerLine.includes('error') && !lowerLine.includes('warning');
+                })
+                .join('\n')
+                .trim();
+              
+              if (!errorLines) return null;
+              
+              return (
+                <div className="lsm-error">
+                  <span className="lsm-error-icon">❌</span>
+                  <span>{errorLines}</span>
+                </div>
+              );
+            })()}
           </div>
           <div className="lsm-actions">
             <label className="lsm-switch">
@@ -407,12 +478,28 @@ export function ServiceManagement() {
                     )}
                   </div>
                 )}
-                {status.lastError && (
-                  <div className="lsm-error">
-                    <span className="lsm-error-icon">⚠️</span>
-                    <span>{status.lastError}</span>
-                  </div>
-                )}
+                {(() => {
+                  // 只显示真正的错误，过滤掉警告信息
+                  if (!status.lastError) return null;
+                  const errorLines = status.lastError
+                    .split('\n')
+                    .filter(line => {
+                      const lowerLine = line.toLowerCase();
+                      // 只保留包含error的行，过滤warning/info
+                      return lowerLine.includes('error') && !lowerLine.includes('warning');
+                    })
+                    .join('\n')
+                    .trim();
+                  
+                  if (!errorLines) return null;
+                  
+                  return (
+                    <div className="lsm-error">
+                      <span className="lsm-error-icon">❌</span>
+                      <span>{errorLines}</span>
+                    </div>
+                  );
+                })()}
               </div>
               <div className="lsm-actions">
                 <label className="lsm-switch">
@@ -517,12 +604,28 @@ export function ServiceManagement() {
                     })()}
                   </div>
                 )}
-                {status?.lastError && (
-                  <div className="lsm-error">
-                    <span className="lsm-error-icon">⚠️</span>
-                    <span>{status.lastError}</span>
-                  </div>
-                )}
+                {(() => {
+                  // 只显示真正的错误，过滤掉警告信息
+                  if (!status?.lastError) return null;
+                  const errorLines = status.lastError
+                    .split('\n')
+                    .filter(line => {
+                      const lowerLine = line.toLowerCase();
+                      // 只保留包含error的行，过滤warning/info
+                      return lowerLine.includes('error') && !lowerLine.includes('warning');
+                    })
+                    .join('\n')
+                    .trim();
+                  
+                  if (!errorLines) return null;
+                  
+                  return (
+                    <div className="lsm-error">
+                      <span className="lsm-error-icon">❌</span>
+                      <span>{errorLines}</span>
+                    </div>
+                  );
+                })()}
               </div>
               <div className="lsm-actions">
                 <label className="lsm-switch">

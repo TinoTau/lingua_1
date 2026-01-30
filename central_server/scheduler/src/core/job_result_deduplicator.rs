@@ -13,6 +13,8 @@ struct DeduplicationRecord {
     received_at_ms: i64,
     /// 保留时间（毫秒），默认30秒
     ttl_ms: i64,
+    /// 是否是空结果（ASR_EMPTY 或 NO_TEXT_ASSIGNED）
+    is_empty: bool,
 }
 
 /// JobResult 去重管理器
@@ -36,7 +38,12 @@ impl JobResultDeduplicator {
     /// 检查并记录job_result
     /// 返回true表示这是重复的结果，应该被过滤
     /// 返回false表示这是新的结果，应该被处理
-    pub async fn check_and_record(&self, session_id: &str, job_id: &str) -> bool {
+    /// 
+    /// 特殊处理：
+    /// - 如果第一次是空结果（ASR_EMPTY/NO_TEXT_ASSIGNED），第二次是完整结果，允许处理第二次结果（更新记录）
+    /// - 如果第一次是完整结果，第二次也是完整结果，过滤第二次（正常去重）
+    /// - 如果第一次是完整结果，第二次是空结果，过滤第二次（避免空结果覆盖完整结果）
+    pub async fn check_and_record(&self, session_id: &str, job_id: &str, is_empty: bool) -> bool {
         let now_ms = Utc::now().timestamp_millis();
         let mut records = self.records.write().await;
 
@@ -47,15 +54,40 @@ impl JobResultDeduplicator {
         if let Some(record) = session_records.get(job_id) {
             let elapsed_ms = now_ms - record.received_at_ms;
             if elapsed_ms < record.ttl_ms {
-                // 在TTL内，这是重复的结果
-                tracing::info!(
-                    session_id = %session_id,
-                    job_id = %job_id,
-                    elapsed_ms = elapsed_ms,
-                    ttl_ms = record.ttl_ms,
-                    "Duplicate job_result detected (within TTL), filtering"
-                );
-                return true; // 重复，应该被过滤
+                // 在TTL内，检查结果类型
+                // 如果旧记录是空结果，新结果是完整结果，允许处理（更新记录）
+                if record.is_empty && !is_empty {
+                    tracing::info!(
+                        session_id = %session_id,
+                        job_id = %job_id,
+                        elapsed_ms = elapsed_ms,
+                        old_result_type = "empty",
+                        new_result_type = "complete",
+                        "Allowing complete result to override empty result (within TTL)"
+                    );
+                    // 更新记录为完整结果
+                    session_records.insert(
+                        job_id.to_string(),
+                        DeduplicationRecord {
+                            received_at_ms: now_ms,
+                            ttl_ms: self.default_ttl_ms,
+                            is_empty: false,
+                        },
+                    );
+                    return false; // 允许处理
+                } else {
+                    // 其他情况：正常去重（完整结果重复，或空结果覆盖完整结果）
+                    tracing::info!(
+                        session_id = %session_id,
+                        job_id = %job_id,
+                        elapsed_ms = elapsed_ms,
+                        ttl_ms = record.ttl_ms,
+                        old_result_type = if record.is_empty { "empty" } else { "complete" },
+                        new_result_type = if is_empty { "empty" } else { "complete" },
+                        "Duplicate job_result detected (within TTL), filtering"
+                    );
+                    return true; // 重复，应该被过滤
+                }
             } else {
                 // 已超过TTL，移除旧记录
                 session_records.remove(job_id);
@@ -68,6 +100,7 @@ impl JobResultDeduplicator {
             DeduplicationRecord {
                 received_at_ms: now_ms,
                 ttl_ms: self.default_ttl_ms,
+                is_empty,
             },
         );
 
@@ -75,6 +108,7 @@ impl JobResultDeduplicator {
             session_id = %session_id,
             job_id = %job_id,
             ttl_ms = self.default_ttl_ms,
+            result_type = if is_empty { "empty" } else { "complete" },
             "New job_result recorded, will be deduplicated for 30 seconds"
         );
 

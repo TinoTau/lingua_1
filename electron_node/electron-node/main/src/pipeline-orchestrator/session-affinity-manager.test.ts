@@ -3,7 +3,7 @@
  * 
  * 测试超时finalize的sessionId->nodeId映射管理：
  * 1. recordTimeoutFinalize - 记录超时finalize的映射
- * 2. clearSessionMapping - 清除映射（手动/pause finalize）
+ * 2. clearSessionMapping - 清除映射（手动/timeout finalize）
  * 3. getNodeIdForTimeoutFinalize - 获取节点ID
  * 4. shouldUseSessionAffinity - 检查是否应该使用session affinity
  * 5. TTL清理 - 清理过期的session映射
@@ -95,7 +95,7 @@ describe('SessionAffinityManager', () => {
   });
 
   describe('清除session映射', () => {
-    it('应该清除手动/pause finalize的映射', () => {
+    it('应该清除手动/timeout finalize的映射', () => {
       const sessionId = 'test-session-4';
       
       // 先记录映射

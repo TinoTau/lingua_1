@@ -3,11 +3,9 @@ import * as path from 'path';
 import * as fs from 'fs';
 import logger from '../logger';
 import { cleanupPortProcesses, verifyPortReleased } from '../utils/port-manager';
-import { PythonServiceConfig } from './types';
-import { PythonServiceName } from './types';
+import { PythonServiceConfig, PythonServiceName } from './types';
 import { createLogStream, flushLogBuffer, detectLogLevel } from './service-logging';
 import { waitForServiceReady } from './service-health';
-import { PythonServiceConfig as PythonServiceConfigType } from '../utils/python-service-config';
 import { ensureVenvSetup } from './venv-setup';
 
 export interface ServiceProcessHandlers {
@@ -504,7 +502,13 @@ export async function waitForServiceReadyWithProcessCheck(
   serviceName: PythonServiceName
 ): Promise<void> {
   // YourTTS 服务需要更长的启动时间（模型加载需要 30-60 秒）
-  const timeout = serviceName === 'yourtts' ? 90000 : 30000;
+  // faster_whisper_vad 启动时有模型预加载+预热（MODEL_READY_WAIT_SECONDS=120s），
+  // 必须给予足够时间，否则节点会提前标记 running，首请求仍撞上未加载完的 worker
+  const timeout = serviceName === 'yourtts'
+    ? 90000
+    : serviceName === 'faster_whisper_vad'
+      ? 120000  // 120s，与 asr_worker_manager.MODEL_READY_WAIT_SECONDS 对齐
+      : 30000;
 
   // 检查进程是否在等待期间退出
   let processExited = false;

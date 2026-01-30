@@ -11,23 +11,30 @@ logger = logging.getLogger(__name__)
 # Faster Whisper Configuration
 # ---------------------
 # 模型路径：支持 HuggingFace 模型标识符或本地路径
-# 优先使用本地模型路径（如果存在），否则使用 HuggingFace 模型标识符
-# 使用 large-v3 大模型以获得最高识别准确度（与原项目一致）
-_default_model_path = "Systran/faster-whisper-large-v3"
-_local_model_path = os.path.join(os.path.dirname(__file__), "models", "asr", "faster-whisper-large-v3")
-# 如果本地模型目录存在，使用本地路径；否则使用 HuggingFace 标识符
-if os.path.exists(_local_model_path) and os.path.isdir(_local_model_path):
-    ASR_MODEL_PATH = os.getenv("ASR_MODEL_PATH", _local_model_path)
-    logger.info(f"Using local model path: {ASR_MODEL_PATH}")
+# 使用 base 模型以获得更好的性能（与备份代码一致）
+# 注意：即使whisper-base-ct2目录存在，也使用HuggingFace标识符，让Faster Whisper自动下载和转换
+# 缓存目录设置为whisper-base-ct2，这样转换后的模型会保存到这个目录
+_default_model_path = "Systran/faster-whisper-base"
+_local_model_path = os.path.join(os.path.dirname(__file__), "models", "asr", "whisper-base-ct2")
+
+# 如果环境变量设置了ASR_MODEL_PATH，优先使用环境变量
+if os.getenv("ASR_MODEL_PATH"):
+    ASR_MODEL_PATH = os.getenv("ASR_MODEL_PATH")
+    logger.info(f"Using ASR_MODEL_PATH from environment: {ASR_MODEL_PATH}")
 else:
-    ASR_MODEL_PATH = os.getenv("ASR_MODEL_PATH", _default_model_path)
+    # 始终使用HuggingFace标识符，Faster Whisper会自动下载和转换为CTranslate2格式
+    ASR_MODEL_PATH = _default_model_path
     logger.info(f"Using HuggingFace model identifier: {ASR_MODEL_PATH}")
-    logger.info(f"To use local model, download it first: python download_model.py")
-# 缓存目录：如果设置了 WHISPER_CACHE_DIR，Faster Whisper 会使用该目录作为模型缓存
-# 默认使用服务目录下的 models/asr 作为缓存目录，这样模型会下载到本地
-_default_cache_dir = os.path.join(os.path.dirname(__file__), "models", "asr")
-WHISPER_CACHE_DIR = os.getenv("WHISPER_CACHE_DIR", _default_cache_dir)
-logger.info(f"Using model cache directory: {WHISPER_CACHE_DIR}")
+
+# 缓存目录：如果whisper-base-ct2目录存在，使用它作为缓存目录
+# 这样Faster Whisper会将转换后的CTranslate2模型保存到这个目录
+if os.path.exists(_local_model_path) and os.path.isdir(_local_model_path):
+    WHISPER_CACHE_DIR = os.getenv("WHISPER_CACHE_DIR", _local_model_path)
+    logger.info(f"Using local cache directory: {WHISPER_CACHE_DIR} (Faster Whisper will convert and save CTranslate2 model here)")
+else:
+    _default_cache_dir = os.path.join(os.path.dirname(__file__), "models", "asr")
+    WHISPER_CACHE_DIR = os.getenv("WHISPER_CACHE_DIR", _default_cache_dir)
+    logger.info(f"Using model cache directory: {WHISPER_CACHE_DIR}")
 # 注意：如果将来需要从 HuggingFace 下载模型，可以通过环境变量 HF_TOKEN 设置 token
 # 当前模型已下载到本地，无需 token
 
@@ -146,7 +153,7 @@ CONTEXT_MAX_SAMPLES = int(CONTEXT_DURATION_SEC * CONTEXT_SAMPLE_RATE)
 # ASR Parameters Configuration
 # ---------------------
 # ASR 参数配置：支持从环境变量读取，用于提高识别准确度
-BEAM_SIZE = int(os.getenv("ASR_BEAM_SIZE", "10"))  # Beam search 宽度，默认 10（提高准确度，减少同音字错误）
+BEAM_SIZE = int(os.getenv("ASR_BEAM_SIZE", "5"))  # Beam search 宽度，默认 5（与备份代码一致）
 TEMPERATURE = float(os.getenv("ASR_TEMPERATURE", "0.0"))  # 采样温度，默认 0.0（更确定，减少随机性）
 PATIENCE = float(os.getenv("ASR_PATIENCE", "1.0"))  # Beam search 耐心值，默认 1.0
 COMPRESSION_RATIO_THRESHOLD = float(os.getenv("ASR_COMPRESSION_RATIO_THRESHOLD", "2.4"))  # 压缩比阈值，默认 2.4

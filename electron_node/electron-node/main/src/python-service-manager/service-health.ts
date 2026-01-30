@@ -32,9 +32,22 @@ export async function waitForServiceReady(
         });
 
         if (response.status < 400) {
-          logger.info({ port, elapsed: Date.now() - startTime }, 'Service health check passed');
-          resolve();
-          return;
+          // 检查响应体中的 status 字段，只有 status === "ok" 才认为真正就绪
+          const healthData = response.data;
+          const serviceStatus = healthData?.status;
+          
+          if (serviceStatus === 'ok') {
+            logger.info({ port, elapsed: Date.now() - startTime }, 'Service health check passed (model loaded)');
+            resolve();
+            return;
+          } else {
+            // status 不是 "ok"（可能是 "not_ready"），继续等待
+            logger.debug(
+              { port, serviceStatus, elapsed: Date.now() - startTime },
+              'Service health check returned but model not ready yet, continuing to wait...'
+            );
+            // 继续等待，不 resolve
+          }
         }
       } catch (error: any) {
         const elapsed = Date.now() - startTime;

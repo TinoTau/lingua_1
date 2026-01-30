@@ -15,10 +15,19 @@ function App() {
   useEffect(() => {
     // 定期获取节点状态和系统资源
     const interval = setInterval(async () => {
-      const status = await window.electronAPI.getNodeStatus();
-      const resources = await window.electronAPI.getSystemResources();
-      setNodeStatus(status);
-      setSystemResources(resources);
+      try {
+        const status = await window.electronAPI.getNodeStatus();
+        setNodeStatus(status);
+      } catch (error) {
+        console.error('Failed to fetch node status:', error);
+      }
+      
+      try {
+        const resources = await window.electronAPI.getSystemResources();
+        setSystemResources(resources);
+      } catch (error) {
+        console.error('Failed to fetch system resources:', error);
+      }
     }, 2000);
 
     return () => clearInterval(interval);
@@ -65,4 +74,3 @@ function App() {
 }
 
 export default App;
-

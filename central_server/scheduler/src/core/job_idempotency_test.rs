@@ -4,7 +4,7 @@
 #[cfg(test)]
 mod tests {
     use super::super::job_idempotency::{JobIdempotencyManager, make_job_key, JobType};
-    use crate::phase2::Phase2Runtime;
+    use crate::redis_runtime::Phase2Runtime;
     use crate::core::config::Phase2Config;
     use std::sync::Arc;
 
@@ -154,7 +154,8 @@ mod tests {
         cfg.instance_id = format!("test-idempotency-{}", uuid::Uuid::new_v4());
         cfg.redis = redis_cfg;
         
-        let rt = Phase2Runtime::new(cfg.clone(), 5).await.unwrap().unwrap();
+        let scheduler_cfg = crate::core::config::SchedulerConfig::default();
+        let rt = Phase2Runtime::new(cfg.clone(), 5, &scheduler_cfg).await.unwrap().unwrap();
         let rt = Arc::new(rt);
         
         // 清理测试键
@@ -218,7 +219,8 @@ mod tests {
         cfg.instance_id = format!("test-ttl-{}", uuid::Uuid::new_v4());
         cfg.redis = redis_cfg;
         
-        let rt = Phase2Runtime::new(cfg.clone(), 5).await.unwrap().unwrap();
+        let scheduler_cfg = crate::core::config::SchedulerConfig::default();
+        let rt = Phase2Runtime::new(cfg.clone(), 5, &scheduler_cfg).await.unwrap().unwrap();
         let rt = Arc::new(rt);
         
         // 清理测试键

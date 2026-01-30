@@ -110,13 +110,5 @@ impl SessionActorInternalState {
         generation == self.timer_generation
     }
 
-    /// 更新 utterance_index（用于同步 Web 端发送的 utterance 消息中的 utterance_index）
-    #[allow(dead_code)] // 目前未使用，utterance_index 在创建时设置
-    pub fn update_utterance_index(&mut self, new_index: u64) {
-        // 只有当新索引大于等于当前索引时才更新（防止回退）
-        if new_index >= self.current_utterance_index {
-            self.current_utterance_index = new_index;
-        }
-    }
 }
 

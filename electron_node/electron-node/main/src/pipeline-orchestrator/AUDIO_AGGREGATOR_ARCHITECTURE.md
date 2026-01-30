@@ -2,7 +2,7 @@
 
 ## 概述
 
-`AudioAggregator` 负责在 ASR 之前聚合音频，根据不同的 finalize 标识（`is_manual_cut`、`is_pause_triggered`、`is_timeout_triggered`）决定何时将音频发送给 ASR 处理。
+`AudioAggregator` 负责在 ASR 之前聚合音频，根据不同的 finalize 标识（`is_manual_cut`、`is_timeout_triggered`）决定何时将音频发送给 ASR 处理。
 
 ## 核心功能
 
@@ -70,10 +70,10 @@ let buffer = this.buffers.get(sessionId);
 音频块 → 缓存到 pendingTimeoutAudio → 等待下一个 job 合并
 ```
 
-- 如果 10 秒内没有手动/pause cut，强制处理
+- 如果 10 秒内没有手动 cut，强制处理
 - 记录 `sessionId->nodeId` 映射（用于 session affinity）
 
-### 2. 手动/Pause Finalize (`is_manual_cut` 或 `is_pause_triggered`)
+### 2. 手动/Timeout Finalize (`is_manual_cut` 或 `is_timeout_triggered`)
 
 ```
 音频块 → 合并 pendingTimeoutAudio（如果有）→ 按能量切分 → 发送给 ASR

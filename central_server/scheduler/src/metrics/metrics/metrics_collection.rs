@@ -214,7 +214,6 @@ fn format_dispatch_exclude_reason(r: &DispatchExcludeReason) -> String {
         DispatchExcludeReason::LangPairUnsupported => "LangPairUnsupported",
         DispatchExcludeReason::AsrLangUnsupported => "AsrLangUnsupported",
         DispatchExcludeReason::TtsLangUnsupported => "TtsLangUnsupported",
-        DispatchExcludeReason::SrcAutoNoCandidate => "SrcAutoNoCandidate",
     }
     .to_string()
 }

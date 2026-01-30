@@ -30,18 +30,17 @@ export class PipelineOrchestratorAudioProcessor {
   async processAudio(
     job: JobAssignMessage
   ): Promise<AudioProcessorResult | null> {
-    // 音频聚合：在ASR之前根据 is_manual_cut 和 is_pause_triggered 标识聚合音频
+    // 音频聚合：在ASR之前根据 is_manual_cut 和 is_timeout_triggered 标识聚合音频
     const chunkResult = await this.audioAggregator.processAudioChunk(job);
     
-    // 如果应该返回空，说明音频被缓冲，等待更多音频块或触发标识
+    // 如果应该返回空，说明音频被缓冲，等待更多音频块或触发标识（热路径不取 getBufferStatus，仅 debug 时可选）
     if (chunkResult.shouldReturnEmpty) {
-      logger.info(
+      logger.debug(
         {
           jobId: job.job_id,
           sessionId: job.session_id,
           utteranceIndex: job.utterance_index,
           isTimeoutPending: chunkResult.isTimeoutPending,
-          bufferStatus: this.audioAggregator.getBufferStatus(job.session_id),
         },
         'PipelineOrchestrator: Audio chunk buffered, waiting for more chunks or trigger. Returning empty result.'
       );
@@ -88,47 +87,11 @@ export class PipelineOrchestratorAudioProcessor {
       'PipelineOrchestrator: Audio processed with streaming split, proceeding to ASR'
     );
     
-    // Opus 解码：强制要求输入格式必须是 Opus，在 Pipeline 中解码为 PCM16
-    // 注意：AudioAggregator已经返回了base64编码的PCM16字符串数组
-    const audioFormat = job.audio_format || 'opus';
-    
-    if (audioFormat !== 'opus') {
-      const errorMessage = `Audio format must be 'opus', but received '${audioFormat}'. Three-end communication only uses Opus format.`;
-      logger.error(
-        {
-          jobId: job.job_id,
-          sessionId: job.session_id,
-          utteranceIndex: job.utterance_index,
-          receivedFormat: audioFormat,
-        },
-        errorMessage
-      );
-      throw new Error(errorMessage);
-    }
-    
-    // 验证每个音频段的长度是否为2的倍数（PCM16要求）
-    const validatedSegments = audioSegments.map((seg, idx) => {
-      const buffer = Buffer.from(seg, 'base64');
-      if (buffer.length % 2 !== 0) {
-        logger.error(
-          {
-            jobId: job.job_id,
-            sessionId: job.session_id,
-            segmentIndex: idx,
-            segmentLength: buffer.length,
-            isOdd: buffer.length % 2 !== 0,
-          },
-          '🚨 CRITICAL: Audio segment length is not a multiple of 2!'
-        );
-        // 修复：截断最后一个字节
-        const fixedLength = buffer.length - (buffer.length % 2);
-        return buffer.slice(0, fixedLength).toString('base64');
-      }
-      return seg;
-    });
+    // 注意：音频格式验证已在 decodeAudioChunk 中完成（统一使用位置1的代码）
+    // AudioAggregator 已经返回了 base64 编码的 PCM16 字符串数组，无需再次验证
     
     // 使用第一个段作为audioForASR（向后兼容，但实际应该使用audioSegments）
-    const audioForASR = validatedSegments[0] || '';
+    const audioForASR = audioSegments[0] || '';
     const audioFormatForASR = 'pcm16';
     
     logger.info(
@@ -136,7 +99,7 @@ export class PipelineOrchestratorAudioProcessor {
         jobId: job.job_id,
         sessionId: job.session_id,
         utteranceIndex: job.utterance_index,
-        segmentCount: validatedSegments.length,
+        segmentCount: audioSegments.length,
         originalJobIds: chunkResult.originalJobIds,
       },
       'PipelineOrchestrator: Audio segments ready for ASR (PCM16 format)'
@@ -146,7 +109,7 @@ export class PipelineOrchestratorAudioProcessor {
       audioForASR,
       audioFormatForASR,
       shouldReturnEmpty: false,
-      audioSegments: validatedSegments,
+      audioSegments: audioSegments,
       originalJobIds: chunkResult.originalJobIds,
       originalJobInfo: chunkResult.originalJobInfo,
     };

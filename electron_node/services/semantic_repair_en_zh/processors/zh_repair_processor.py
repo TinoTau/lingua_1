@@ -67,27 +67,23 @@ class ZhRepairProcessor(BaseProcessor):
         if not self.engine:
             raise RuntimeError("Engine not initialized")
         
-        # 调用引擎
+        # 调用引擎（成功即视为 REPAIR；失败由 wrapper raise，无 PASS 降级）
         result = self.engine.repair(
             text_in=text_in,
             micro_context=micro_context,
             quality_score=quality_score
         )
-        
-        # 决策逻辑
-        decision = "REPAIR" if result['text_out'] != text_in else "PASS"
+        text_changed = result['text_out'] != text_in
         reason_codes = []
-        
-        quality_threshold = self.config.get('quality_threshold', 0.85)
-        if quality_score is not None and quality_score < quality_threshold:
+        if quality_score is not None and quality_score < self.config.get('quality_threshold', 0.85):
             reason_codes.append("LOW_QUALITY_SCORE")
-        
-        if decision == "REPAIR":
+        if text_changed:
             reason_codes.append("REPAIR_APPLIED")
-        
+        else:
+            reason_codes.append("NO_CHANGE")
         return ProcessorResult(
             text_out=result['text_out'],
-            decision=decision,
+            decision="REPAIR",
             confidence=result['confidence'],
             diff=result.get('diff', []),
             reason_codes=reason_codes

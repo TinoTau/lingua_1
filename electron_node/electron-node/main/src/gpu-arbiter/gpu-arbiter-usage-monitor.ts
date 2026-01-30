@@ -98,11 +98,11 @@ export class GpuUsageMonitor {
     if (this.state.monitorInterval) {
       return; // 已经启动
     }
-    
+
     this.state.monitorInterval = setInterval(() => {
       this.sampleGpuUsage();
     }, this.config.sampleIntervalMs);
-    
+
     logger.debug(
       { sampleIntervalMs: this.config.sampleIntervalMs },
       'GpuArbiter: GPU usage monitoring started'
@@ -129,27 +129,27 @@ export class GpuUsageMonitor {
       if (!gpuInfo || gpuInfo.usage === null || gpuInfo.usage === undefined) {
         return; // 无法获取GPU使用率，跳过
       }
-      
+
       const gpuUsage = gpuInfo.usage;
       const now = Date.now();
-      
+
       // 更新所有GPU的缓存
       for (const gpuKey of this.state.gpuAdmissionStates.keys()) {
         this.state.gpuUsageCache.set(gpuKey, {
           usagePercent: gpuUsage,
           sampledAt: now,
         });
-        
+
         // 更新滞回线状态
         this.updateAdmissionState(gpuKey, gpuUsage);
       }
-      
+
       // 如果GPU使用率超过阈值，记录详细日志（向后兼容）
       if (gpuUsage > this.config.gpuUsageThreshold) {
         const timeSinceLastLog = now - this.state.lastLogTime;
-        const usageChanged = this.state.lastLoggedGpuUsage === null || 
-                            Math.abs(this.state.lastLoggedGpuUsage - gpuUsage) > 5;
-        
+        const usageChanged = this.state.lastLoggedGpuUsage === null ||
+          Math.abs(this.state.lastLoggedGpuUsage - gpuUsage) > 5;
+
         if (timeSinceLastLog > 30000 || usageChanged) {
           this.logGpuUsageExceeded(gpuUsage, gpuInfo.memory);
           this.state.lastLoggedGpuUsage = gpuUsage;
@@ -175,12 +175,12 @@ export class GpuUsageMonitor {
     if (!currentState) {
       return;
     }
-    
+
     // 获取当前有效的阈值（考虑动态调整）
     const { highWater, lowWater } = this.getEffectiveThresholds(gpuKey);
-    
+
     let newState = currentState;
-    
+
     if (currentState === GpuAdmissionState.NORMAL) {
       // NORMAL → HIGH_PRESSURE：usage >= highWater
       if (gpuUsage >= highWater) {
@@ -208,18 +208,18 @@ export class GpuUsageMonitor {
           },
           'GpuArbiter: GPU admission state changed to NORMAL'
         );
-        
+
         // 状态恢复正常，触发回调处理等待队列
         if (this.onStateChangeToNormal) {
           this.onStateChangeToNormal(gpuKey);
         }
       }
     }
-    
+
     if (newState !== currentState) {
       this.state.gpuAdmissionStates.set(gpuKey, newState);
     }
-    
+
     // 清理过期的动态调整
     this.cleanupExpiredAdjustments(gpuKey);
   }
@@ -230,14 +230,14 @@ export class GpuUsageMonitor {
   private getEffectiveThresholds(gpuKey: string): { highWater: number; lowWater: number } {
     const adjustment = this.state.dynamicAdjustments.get(gpuKey);
     const now = Date.now();
-    
+
     if (adjustment && adjustment.expiresAt > now) {
       return {
         highWater: adjustment.highWater,
         lowWater: adjustment.lowWater,
       };
     }
-    
+
     return {
       highWater: this.config.baseHighWater,
       lowWater: this.config.baseLowWater,
@@ -266,15 +266,15 @@ export class GpuUsageMonitor {
     if (!cache) {
       return null;
     }
-    
+
     const now = Date.now();
     const age = now - cache.sampledAt;
-    
+
     // 如果缓存过期，返回null（视为不可靠数据）
     if (age > this.config.cacheTtlMs) {
       return null;
     }
-    
+
     return cache;
   }
 
@@ -292,22 +292,22 @@ export class GpuUsageMonitor {
     if (!this.config.dynamicAdjustmentEnabled) {
       return;
     }
-    
+
     // 检查是否为长音频
     if (hint.estimatedAudioMs >= this.config.longAudioThresholdMs) {
       const now = Date.now();
       const expiresAt = now + this.config.adjustmentTtlMs;
-      
+
       // 临时提高阈值
       const adjustedHighWater = this.config.baseHighWater + this.config.highWaterBoost;
       const adjustedLowWater = this.config.baseLowWater + this.config.lowWaterBoost;
-      
+
       this.state.dynamicAdjustments.set(gpuKey, {
         highWater: adjustedHighWater,
         lowWater: adjustedLowWater,
         expiresAt,
       });
-      
+
       logger.info(
         {
           gpuKey,
@@ -358,7 +358,7 @@ export class GpuUsageMonitor {
     if (configPatch.gpuUsageThreshold !== undefined) {
       this.config.gpuUsageThreshold = configPatch.gpuUsageThreshold;
     }
-    
+
     // 如果采样间隔改变，重启监控
     const wasMonitoring = this.state.monitorInterval !== null;
     if (wasMonitoring && configPatch.sampleIntervalMs !== undefined) {
@@ -382,7 +382,7 @@ export class GpuUsageMonitor {
       utteranceIndex?: number;
       stage?: string;
     }> = [];
-    
+
     for (const [leaseId, lease] of this.activeLeases.entries()) {
       const holdTimeMs = Date.now() - lease.acquiredAt;
       activeLeasesInfo.push({
@@ -396,13 +396,13 @@ export class GpuUsageMonitor {
         stage: lease.trace?.stage,
       });
     }
-    
+
     // 按服务类型分组统计
     const serviceStats: Record<string, number> = {};
     for (const lease of activeLeasesInfo) {
       serviceStats[lease.taskType] = (serviceStats[lease.taskType] || 0) + 1;
     }
-    
+
     logger.warn(
       {
         gpuUsage,

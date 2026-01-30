@@ -1,72 +1,7 @@
 use super::config_types::*;
 use std::path::PathBuf;
 
-// Phase 3 默认值函数
-pub fn default_phase3_mode() -> String {
-    "two_level".to_string()
-}
-
-pub fn default_phase3_pool_count() -> u16 {
-    16
-}
-
-pub fn default_phase3_hash_seed() -> u64 {
-    0
-}
-
-pub fn default_phase3_fallback_scan_all_pools() -> bool {
-    true
-}
-
-pub fn default_phase3_pool_match_scope() -> String {
-    "core_only".to_string()
-}
-
-pub fn default_phase3_pool_match_mode() -> String {
-    "contains".to_string()
-}
-
-pub fn default_phase3_random_sample_size() -> usize {
-    20
-}
-
-pub fn default_phase3_enable_session_affinity() -> bool {
-    false
-}
-
-impl Default for Phase3Config {
-    fn default() -> Self {
-        Self {
-            enabled: false,
-            mode: default_phase3_mode(),
-            pool_count: default_phase3_pool_count(),
-            hash_seed: default_phase3_hash_seed(),
-            fallback_scan_all_pools: default_phase3_fallback_scan_all_pools(),
-            pools: vec![],
-            tenant_overrides: vec![],
-            pool_match_scope: default_phase3_pool_match_scope(),
-            pool_match_mode: default_phase3_pool_match_mode(),
-            strict_pool_eligibility: false,
-            auto_generate_language_pools: false,
-            auto_pool_config: None,
-            random_sample_size: default_phase3_random_sample_size(),
-            enable_session_affinity: default_phase3_enable_session_affinity(),
-        }
-    }
-}
-
-// AutoLanguagePoolConfig 默认值函数
-pub fn default_min_nodes_per_pool() -> usize {
-    1  // 允许单个节点创建 Pool，适合小规模部署
-}
-
-pub fn default_max_pools() -> usize {
-    50
-}
-
-pub fn default_pool_naming() -> String {
-    "pair".to_string()
-}
+// Phase3 所有默认值函数已删除
 
 pub fn default_true() -> bool {
     true
@@ -487,25 +422,193 @@ impl Default for Config {
                 // 期望存在 services_index.json（用于 Scheduler 单机冷启动/离线兜底）
                 storage_path: PathBuf::from("../model-hub/models/services"),
             },
-            scheduler: SchedulerConfig {
-                max_concurrent_jobs_per_node: 4,
-                job_timeout_seconds: 30,
-                heartbeat_interval_seconds: 15,
-                job_timeout: JobTimeoutPolicyConfig::default(),
-                load_balancer: LoadBalancerConfig {
-                    strategy: "least_connections".to_string(),
-                    resource_threshold: default_resource_threshold(),
-                },
-                node_health: NodeHealthConfig::default(),
-                model_not_available: ModelNotAvailableConfig::default(),
-                task_binding: TaskBindingConfig::default(),
-                web_task_segmentation: WebTaskSegmentationConfig::default(),
-                observability: ObservabilityConfig::default(),
-                core_services: CoreServicesConfig::default(),
-                phase2: Phase2Config::default(),
-                phase3: Phase3Config::default(),
-                asr_rerun: AsrRerunConfig::default(),
-            },
+            scheduler: SchedulerConfig::default(),
+        }
+    }
+}
+
+// SchedulerConfig 默认值
+impl Default for SchedulerConfig {
+    fn default() -> Self {
+        Self {
+            max_concurrent_jobs_per_node: 4,
+            job_timeout_seconds: 30,
+            heartbeat_interval_seconds: 15,
+            job_timeout: JobTimeoutPolicyConfig::default(),
+            load_balancer: LoadBalancerConfig::default(),
+            node_health: NodeHealthConfig::default(),
+            model_not_available: ModelNotAvailableConfig::default(),
+            task_binding: TaskBindingConfig::default(),
+            web_task_segmentation: WebTaskSegmentationConfig::default(),
+            observability: ObservabilityConfig::default(),
+            core_services: CoreServicesConfig::default(),
+            phase2: Phase2Config::default(),
+            // phase3: 已删除
+            asr_rerun: AsrRerunConfig::default(),
+            background_tasks: BackgroundTasksConfig::default(),
+            timeouts: TimeoutsConfig::default(),
+            retry: RetryConfig::default(),
+            limits: LimitsConfig::default(),
+            testing: TestingConfig::default(),
+            performance: PerformanceConfig::default(),
+            developer: DeveloperConfig::default(),
+        }
+    }
+}
+
+// ========================================
+// 新增默认值函数（消除硬编码）
+// ========================================
+
+// BackgroundTasksConfig 默认值函数
+pub fn default_preload_delay_seconds() -> u64 { 1 }
+pub fn default_job_result_dedup_cleanup_interval_seconds() -> u64 { 30 }
+pub fn default_session_cleanup_interval_seconds() -> u64 { 60 }
+pub fn default_job_cleanup_interval_seconds() -> u64 { 60 }
+pub fn default_session_active_result_check_interval_seconds() -> u64 { 1 }
+pub fn default_node_status_scan_interval_seconds() -> u64 { 60 }
+pub fn default_dashboard_snapshot_cache_ttl_seconds() -> u64 { 5 }
+
+impl Default for BackgroundTasksConfig {
+    fn default() -> Self {
+        Self {
+            preload_delay_seconds: default_preload_delay_seconds(),
+            job_result_dedup_cleanup_interval_seconds: default_job_result_dedup_cleanup_interval_seconds(),
+            session_cleanup_interval_seconds: default_session_cleanup_interval_seconds(),
+            job_cleanup_interval_seconds: default_job_cleanup_interval_seconds(),
+            session_active_result_check_interval_seconds: default_session_active_result_check_interval_seconds(),
+            node_status_scan_interval_seconds: default_node_status_scan_interval_seconds(),
+            dashboard_snapshot_cache_ttl_seconds: default_dashboard_snapshot_cache_ttl_seconds(),
+        }
+    }
+}
+
+// TimeoutsConfig 默认值函数
+pub fn default_ws_message_preview_max_chars() -> usize { 500 }
+pub fn default_phase2_presence_wait_timeout_seconds() -> u64 { 3 }
+pub fn default_phase2_presence_check_interval_ms() -> u64 { 50 }
+pub fn default_phase2_node_registration_timeout_seconds() -> u64 { 2 }
+pub fn default_phase2_node_snapshot_sync_timeout_seconds() -> u64 { 3 }
+pub fn default_phase2_pool_config_sync_timeout_seconds() -> u64 { 5 }
+pub fn default_phase2_pool_config_check_interval_ms() -> u64 { 100 }
+pub fn default_ws_ack_timeout_seconds() -> u64 { 3 }
+pub fn default_ws_translation_result_timeout_seconds() -> u64 { 5 }
+
+impl Default for TimeoutsConfig {
+    fn default() -> Self {
+        Self {
+            ws_message_preview_max_chars: default_ws_message_preview_max_chars(),
+            phase2_presence_wait_timeout_seconds: default_phase2_presence_wait_timeout_seconds(),
+            phase2_presence_check_interval_ms: default_phase2_presence_check_interval_ms(),
+            phase2_node_registration_timeout_seconds: default_phase2_node_registration_timeout_seconds(),
+            phase2_node_snapshot_sync_timeout_seconds: default_phase2_node_snapshot_sync_timeout_seconds(),
+            phase2_pool_config_sync_timeout_seconds: default_phase2_pool_config_sync_timeout_seconds(),
+            phase2_pool_config_check_interval_ms: default_phase2_pool_config_check_interval_ms(),
+            ws_ack_timeout_seconds: default_ws_ack_timeout_seconds(),
+            ws_translation_result_timeout_seconds: default_ws_translation_result_timeout_seconds(),
+        }
+    }
+}
+
+// RetryConfig 默认值函数
+pub fn default_min_ttl_seconds() -> u64 { 1 }
+pub fn default_min_ttl_ms() -> u64 { 1 }
+pub fn default_redis_stream_min_maxlen() -> usize { 100 }
+pub fn default_pubsub_reconnect_delay_seconds() -> u64 { 5 }
+pub fn default_pubsub_keepalive_timeout_seconds() -> u64 { 3600 }
+pub fn default_node_cache_version_check_timeout_ms() -> u64 { 100 }
+pub fn default_node_cache_miss_ttl_ms() -> i64 { 10 }
+pub fn default_job_min_attempt_id() -> u32 { 1 }
+pub fn default_phase2_group_create_retry_delay_ms() -> u64 { 500 }
+pub fn default_phase2_xreadgroup_retry_delay_ms() -> u64 { 300 }
+
+impl Default for RetryConfig {
+    fn default() -> Self {
+        Self {
+            min_ttl_seconds: default_min_ttl_seconds(),
+            min_ttl_ms: default_min_ttl_ms(),
+            redis_stream_min_maxlen: default_redis_stream_min_maxlen(),
+            pubsub_reconnect_delay_seconds: default_pubsub_reconnect_delay_seconds(),
+            pubsub_keepalive_timeout_seconds: default_pubsub_keepalive_timeout_seconds(),
+            node_cache_version_check_timeout_ms: default_node_cache_version_check_timeout_ms(),
+            node_cache_miss_ttl_ms: default_node_cache_miss_ttl_ms(),
+            job_min_attempt_id: default_job_min_attempt_id(),
+            phase2_group_create_retry_delay_ms: default_phase2_group_create_retry_delay_ms(),
+            phase2_xreadgroup_retry_delay_ms: default_phase2_xreadgroup_retry_delay_ms(),
+        }
+    }
+}
+
+// LimitsConfig 默认值函数
+pub fn default_phase2_owner_ttl_base_seconds() -> u64 { 10 }
+pub fn default_phase2_owner_ttl_divisor() -> u64 { 2 }
+pub fn default_phase2_owner_ttl_min_seconds() -> u64 { 5 }
+pub fn default_phase2_presence_ttl_min_seconds() -> u64 { 2 }
+pub fn default_phase2_presence_ttl_divisor() -> u64 { 2 }
+pub fn default_phase2_presence_ttl_absolute_min_seconds() -> u64 { 1 }
+pub fn default_redis_min_count() -> usize { 1 }
+pub fn default_pool_min_count() -> u16 { 1 }
+pub fn default_phase2_reclaim_interval_seconds() -> u64 { 5 }
+pub fn default_phase2_dlq_scan_interval_min_ms() -> u64 { 1000 }
+
+impl Default for LimitsConfig {
+    fn default() -> Self {
+        Self {
+            phase2_owner_ttl_base_seconds: default_phase2_owner_ttl_base_seconds(),
+            phase2_owner_ttl_divisor: default_phase2_owner_ttl_divisor(),
+            phase2_owner_ttl_min_seconds: default_phase2_owner_ttl_min_seconds(),
+            phase2_presence_ttl_min_seconds: default_phase2_presence_ttl_min_seconds(),
+            phase2_presence_ttl_divisor: default_phase2_presence_ttl_divisor(),
+            phase2_presence_ttl_absolute_min_seconds: default_phase2_presence_ttl_absolute_min_seconds(),
+            redis_min_count: default_redis_min_count(),
+            pool_min_count: default_pool_min_count(),
+            phase2_reclaim_interval_seconds: default_phase2_reclaim_interval_seconds(),
+            phase2_dlq_scan_interval_min_ms: default_phase2_dlq_scan_interval_min_ms(),
+        }
+    }
+}
+
+// TestingConfig 默认值函数
+pub fn default_test_redis_url() -> String { "redis://127.0.0.1:6379".to_string() }
+pub fn default_test_service_catalog_url() -> String { "http://127.0.0.1:0".to_string() }
+pub fn default_test_server_bind() -> String { "127.0.0.1:0".to_string() }
+pub fn default_test_dashboard_snapshot_ttl_seconds() -> u64 { 3600 }
+
+impl Default for TestingConfig {
+    fn default() -> Self {
+        Self {
+            redis_url: default_test_redis_url(),
+            service_catalog_url: default_test_service_catalog_url(),
+            test_server_bind: default_test_server_bind(),
+            dashboard_snapshot_ttl_seconds: default_test_dashboard_snapshot_ttl_seconds(),
+        }
+    }
+}
+
+// PerformanceConfig 默认值函数
+pub fn default_async_task_channel_capacity() -> usize { 1000 }
+pub fn default_ws_connection_pool_initial_capacity() -> usize { 100 }
+pub fn default_job_cache_initial_capacity() -> usize { 1000 }
+pub fn default_session_cache_initial_capacity() -> usize { 500 }
+
+impl Default for PerformanceConfig {
+    fn default() -> Self {
+        Self {
+            async_task_channel_capacity: default_async_task_channel_capacity(),
+            ws_connection_pool_initial_capacity: default_ws_connection_pool_initial_capacity(),
+            job_cache_initial_capacity: default_job_cache_initial_capacity(),
+            session_cache_initial_capacity: default_session_cache_initial_capacity(),
+        }
+    }
+}
+
+// DeveloperConfig 默认值函数
+impl Default for DeveloperConfig {
+    fn default() -> Self {
+        Self {
+            dev_mode: false,
+            print_config_on_startup: true,
+            enable_config_hot_reload: false,
         }
     }
 }

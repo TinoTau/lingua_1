@@ -97,6 +97,8 @@ async def load_model():
         model = move_model_to_device(model, DEVICE)
         
         print(f"[NMT Service] Model loaded successfully on {DEVICE}", flush=True)
+        # 输出服务就绪信号，通知节点端立即标记为 running（避免轮询等待）
+        print("[SERVICE_READY]", flush=True)
     except Exception as e:
         print(f"[NMT Service] [CRITICAL ERROR] Failed to load model: {e}", flush=True)
         traceback.print_exc()

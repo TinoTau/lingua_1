@@ -2,6 +2,10 @@
 """
 ProcessorWrapper - 统一处理器调用包装器
 消除所有路由中的重复代码
+
+设计契约（强制语义修复，失败即失败）：
+- 对每个请求必须调用处理器并成功返回；超时/异常一律 raise，由节点端 job 失败并回传调度重分配。
+- 不再存在 PASS 作为降级策略。
 """
 
 import time
@@ -130,48 +134,29 @@ class ProcessorWrapper:
             )
         
         except asyncio.TimeoutError:
-            # 超时：返回原文（PASS）
             elapsed_ms = int((time.time() - start_time) * 1000)
             timeout_log = (
                 f"{processor_name.upper()} TIMEOUT: Request timeout | "
-                f"job_id={request_id} | "
-                f"elapsed_ms={elapsed_ms} | "
-                f"timeout_limit={self.timeout}s | "
-                f"fallback=PASS"
+                f"job_id={request_id} | elapsed_ms={elapsed_ms} | timeout_limit={self.timeout}s | failing job"
             )
             logger.warning(timeout_log)
             print(f"[Unified SR] {timeout_log}", flush=True)
-            return RepairResponse(
-                request_id=request_id,
-                decision="PASS",
-                text_out=request.text_in,
-                confidence=0.5,
-                diff=[],
-                reason_codes=["TIMEOUT"],
-                process_time_ms=elapsed_ms,
-                processor_name=processor_name
+            raise HTTPException(
+                status_code=504,
+                detail={"code": "SEM_REPAIR_TIMEOUT", "reason": "TIMEOUT", "elapsed_ms": elapsed_ms},
             )
         
         except Exception as e:
-            # 错误：返回原文（PASS）
             elapsed_ms = int((time.time() - start_time) * 1000)
             error_log = (
                 f"{processor_name.upper()} ERROR: Processing error | "
-                f"job_id={request_id} | "
-                f"error={str(e)} | "
-                f"fallback=PASS"
+                f"job_id={request_id} | error={str(e)} | failing job"
             )
             logger.error(error_log, exc_info=True)
             print(f"[Unified SR] {error_log}", flush=True)
             import traceback
             traceback.print_exc()
-            return RepairResponse(
-                request_id=request_id,
-                decision="PASS",
-                text_out=request.text_in,
-                confidence=0.5,
-                diff=[],
-                reason_codes=["ERROR"],
-                process_time_ms=elapsed_ms,
-                processor_name=processor_name
+            raise HTTPException(
+                status_code=503,
+                detail={"code": "SEM_REPAIR_ERROR", "reason": "ERROR", "message": str(e), "elapsed_ms": elapsed_ms},
             )

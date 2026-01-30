@@ -43,7 +43,7 @@ pub(crate) async fn send_results_to_clients(
                 }
 
                 for target_session_id in target_session_ids {
-                    if !crate::phase2::send_session_message_routed(state, target_session_id, result.clone()).await {
+                    if !crate::redis_runtime::send_session_message_routed(state, target_session_id, result.clone()).await {
                         warn!(
                             trace_id = %trace_id,
                             session_id = %target_session_id,
@@ -125,7 +125,7 @@ async fn send_missing_result(
         if let Some(target_session_ids) = &job_info.target_session_ids {
             // Room mode: send to all target sessions
             for target_session_id in target_session_ids {
-                if !crate::phase2::send_session_message_routed(state, target_session_id, missing_result.clone()).await {
+                if !crate::redis_runtime::send_session_message_routed(state, target_session_id, missing_result.clone()).await {
                     tracing::warn!(
                         trace_id = %trace_id,
                         session_id = %target_session_id,
@@ -135,7 +135,7 @@ async fn send_missing_result(
             }
         } else {
             // Single session mode: send to sender
-            if !crate::phase2::send_session_message_routed(state, session_id, missing_result).await {
+            if !crate::redis_runtime::send_session_message_routed(state, session_id, missing_result).await {
                 tracing::warn!(
                     trace_id = %trace_id,
                     session_id = %session_id,
@@ -145,7 +145,7 @@ async fn send_missing_result(
         }
     } else {
         // Job does not exist, fallback to single session mode
-        if !crate::phase2::send_session_message_routed(state, session_id, missing_result).await {
+        if !crate::redis_runtime::send_session_message_routed(state, session_id, missing_result).await {
             tracing::warn!(
                 trace_id = %trace_id,
                 session_id = %session_id,
@@ -178,7 +178,7 @@ async fn send_result_single_session(
             "Sending translation result to session"
         );
     }
-    if !crate::phase2::send_session_message_routed(state, session_id, result.clone()).await {
+    if !crate::redis_runtime::send_session_message_routed(state, session_id, result.clone()).await {
         warn!(trace_id = %trace_id, session_id = %session_id, "Failed to send result to session");
     } else {
         info!(
