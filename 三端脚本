@@ -72,7 +72,8 @@ npm run build:main
 
 请将D:\Programs\github\lingua_1\central_server\docs和D:\Programs\github\lingua_1\central_server\scheduler\docs的docs文档进行合并整理，按每个模块的docs只放在自己模块里，根据实际代码补充新增功能，移除过期（与当前代码不符）和废弃的内容，并能合并的就合并，文档大小最好不要超过500行。测试报告之类的文件全都移除
 
-现在请对D:\Programs\github\lingua_1\electron_node\services\faster_whisper_vad的代码文件进行整理，拆分超过500行的大文件，合并重复的逻辑，只对代码进行迁移，不要改变任何接口，参数和返回结果，也不要改动任何代码逻辑。异步方法之间如果有必要的话采用状态机进行管理，然后把Import都移动到文件头部
+现在请对D:\Programs\github\lingua_1\electron_node\services\faster_whisper_vad的代码文件进行整理，拆分超过500行的大文件，合并重复的逻辑，只对代码进行迁移，不要改变任何接口，参数和返回结果，也不要改动任何代码逻辑。异步方法之间如果有必要的话采用状态机进行管理，然后把Import都移动到文件头部,然后进行单元测试，修复单元测试时，不要考虑兼容，不要打补丁或新增代码逻辑来添加保险或者兜底机制，并避免错误调用旧路径旧方法
+
 
 请实现这个功能，添加流程日志，进行单元测试，并更新文档。
 

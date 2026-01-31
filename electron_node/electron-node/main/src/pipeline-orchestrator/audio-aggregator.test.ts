@@ -8,7 +8,6 @@
 import { AudioAggregator } from './audio-aggregator';
 import { JobAssignMessage } from '@shared/protocols/messages';
 import { decodeOpusToPcm16 } from '../utils/opus-codec';
-import { SessionAffinityManager } from './session-affinity-manager';
 
 // Mock opus-codec
 jest.mock('../utils/opus-codec', () => ({
@@ -16,24 +15,6 @@ jest.mock('../utils/opus-codec', () => ({
   encodePcm16ToOpusBuffer: jest.fn(),
   convertWavToOpus: jest.fn(),
 }));
-
-// Mock SessionAffinityManager
-jest.mock('./session-affinity-manager', () => {
-  const mockManager = {
-    getNodeId: jest.fn(() => 'test-node-123'),
-    recordTimeoutFinalize: jest.fn(),
-    recordMaxDurationFinalize: jest.fn(),
-    clearSessionMapping: jest.fn(),
-    clearMaxDurationSessionMapping: jest.fn(),
-    getNodeIdForTimeoutFinalize: jest.fn(),
-    shouldUseSessionAffinity: jest.fn(),
-  };
-  return {
-    SessionAffinityManager: {
-      getInstance: jest.fn(() => mockManager),
-    },
-  };
-});
 
 describe('AudioAggregator - 集成测试场景', () => {
   let aggregator: AudioAggregator;
@@ -146,20 +127,13 @@ describe('AudioAggregator - 集成测试场景', () => {
   });
 
   afterEach(() => {
-    aggregator.clearBuffer('test-session-integration-r0');
-    aggregator.clearBuffer('test-session-integration-r1');
-    aggregator.clearBuffer('test-session-integration-r2');
-    aggregator.clearBuffer('test-session-integration-r3');
-    aggregator.clearBuffer('test-session-integration-r4');
-    aggregator.clearBuffer('test-session-integration-r5');
-    aggregator.clearBuffer('test-session-pending-persist');
-    aggregator.clearBuffer('test-session-merged-duration');
-    aggregator.clearBuffer('test-session-empty-strict');
-    aggregator.clearBuffer('test-session-multi-job');
-    aggregator.clearBuffer('test-session-interleave-a');
-    aggregator.clearBuffer('test-session-interleave-b');
-    aggregator.clearBuffer('test-session-concurrent-a');
-    aggregator.clearBuffer('test-session-concurrent-b');
+    const jobIdsToClear = [
+      'job-maxdur-1', 'job-manual-1', 'job-asr-failure', 'job-asr-failure-2',
+      'job-empty', 'job-multi-batch', 'job-pending-1', 'job-pending-2',
+      'job-merge-1', 'job-merge-2', 'job-empty-a', 'job-empty-b', 'job-multi-owner',
+      'job-a1', 'job-b1', 'job-a2', 'job-b2', 'job-concurrent-a', 'job-concurrent-b',
+    ];
+    jobIdsToClear.forEach((id) => aggregator.clearBufferByKey(id));
   });
 
   // ✅ Patch 2.2: 按 samples 精确生成 API
@@ -391,77 +365,46 @@ describe('AudioAggregator - 集成测试场景', () => {
     const JOB1_MS = 10000; // 10秒音频，确保能切分成多个片段，产生 pending
 
     /**
-     * R0: MaxDuration 残段合并后仍不足 5s
-     * 场景：MaxDuration finalize 产生 pending 残段；与下一 job 合并后仍 < MIN（例如 2.6s/3.2s）
-     * 期望：不送 ASR；进入 pending（reason=PENDING_MAXDUR_HOLD）
+     * R0: MaxDuration 残段 + 下一 job 手动切，合并后仍 < 5s
+     * 实现：手动/超时 finalize 时强制 flush pending（见 finalize-handler），故合并后 < 5s 也会送 ASR。
+     * 期望：reason=FORCE_FLUSH_MANUAL_OR_TIMEOUT_FINALIZE，送 ASR，返回音频段。
      */
-    it('R0: MaxDuration残段合并后仍不足5s应该继续等待', async () => {
+    it('R0: MaxDuration残段合并后仍不足5s时手动切应强制flush送ASR', async () => {
       const sessionId = 'test-session-integration-r0';
-
-      // ✅ Patch 1: 使用"MAX + δ"的确定构造方式
-      // Job1: MaxDuration finalize，使用 10000ms 音频，确保产生 pending
-      // 使用带能量变化的音频，确保 splitAudioByEnergy 能切分成多个片段
-      const audio1 = createMockPcm16Audio(JOB1_MS, 16000, {
+      const jobId = 'job-r0';
+      const JOB1_MS_R0 = 3000; // 3s，使合并后 < 5s
+      const audio1 = createMockPcm16Audio(JOB1_MS_R0, 16000, {
         withEnergyVariation: true,
         silenceRatio: 0.2,
-      }); // 10秒音频，带能量变化，确保切分成多个片段
-      const job1 = createJobAssignMessage('job-maxdur-1', sessionId, 0, audio1, {
+      });
+      const job1 = createJobAssignMessage(jobId, sessionId, 0, audio1, {
         is_max_duration_triggered: true,
       });
       await aggregator.processAudioChunk(job1);
 
-      // ✅ Patch 2: 前置条件断言（强制确认 pending 存在）
       const { buildBufferKey } = require('./audio-aggregator-buffer-key');
       const bufferKey = buildBufferKey(job1);
       const buffer = (aggregator as any).buffers?.get(bufferKey);
-
-      // 前置条件：pending 必须存在
       expect(buffer).toBeDefined();
-      expect(buffer.pendingMaxDurationAudio).toBeDefined();
+      expect(buffer.audioChunks.length).toBeGreaterThan(0);
+      const pendingDurationMs = buffer.totalDurationMs ?? 0;
 
-      // 计算 pending 时长（使用统一 helper）
-      const pendingDurationMs = buffer.pendingMaxDurationAudio
-        ? bytesToMsPcm16LE(buffer.pendingMaxDurationAudio.length)
-        : 0;
-      const pendingBufferBytes = buffer.pendingMaxDurationAudio?.length || 0;
-
-      // 前置条件：pending 时长必须 > 0
-      expect(pendingDurationMs).toBeGreaterThan(0);
-      expect(pendingBufferBytes).toBeGreaterThan(0);
-
-      // ✅ T1: 直接输出观测数据（绕过logger mock）
-      console.error('[T1_OBSERVATION]', JSON.stringify({
-        testCase: 'R0',
-        jobId: job1.job_id,
-        sessionId,
-        pendingExists: true,
-        pendingDurationMs,
-        pendingBufferBytes,
-      }, null, 2));
-
-      // ✅ Patch 1: Job2 使用计算出的时长，确保合并后仍 < MIN
-      // 使用实际的 pending 时长来计算 Job2 的时长
-      // 合并后 = pendingDurationMs + JOB2_MS < MIN_MS
-      // JOB2_MS = MIN_MS - pendingDurationMs - 200 = 5000 - pendingDurationMs - 200
-      // 这样确保合并后 < 5000ms
-      const JOB2_MS = Math.max(500, MIN_MS - pendingDurationMs - 200); // 确保至少 500ms
+      const JOB2_MS = Math.max(500, MIN_MS - pendingDurationMs - 200);
       const audio2 = createMockPcm16Audio(JOB2_MS, 16000);
-      const job2 = createJobAssignMessage('job-manual-1', sessionId, 1, audio2, {
+      const job2 = createJobAssignMessage(jobId, sessionId, 1, audio2, {
         is_manual_cut: true,
       });
       const result2 = await aggregator.processAudioChunk(job2);
-      recordAsrSnapshot(result2); // 记录 Debug Snapshot
+      recordAsrSnapshot(result2);
 
-      // ✅ Patch 3: 调整 R0 断言（合并后仍不足 MIN 的预期）
-      // 合并后应该仍然<5秒，应该继续等待（HOLD 或 shouldReturnEmpty=true）
       const mergedDurationMs = pendingDurationMs + JOB2_MS;
-      expect(mergedDurationMs).toBeLessThan(MIN_MS); // 验证合并后确实 < 5秒
-      expect(result2.shouldReturnEmpty).toBe(true);
-      expect(result2.reason).toBe('PENDING_MAXDUR_HOLD');
+      expect(mergedDurationMs).toBeLessThan(MIN_MS);
 
-      // ✅ Patch 1.1: 验证不应发生 ASR 调用
+      expect(result2.shouldReturnEmpty).toBe(false);
+      expect(result2.audioSegments?.length ?? 0).toBeGreaterThan(0);
+
       const snapshot = getDebugSnapshot();
-      expect(snapshot.asrCalls.length).toBe(0); // R0 不应发送 ASR
+      expect(snapshot.asrCalls.length).toBeGreaterThanOrEqual(1);
     });
 
     /**
@@ -471,35 +414,26 @@ describe('AudioAggregator - 集成测试场景', () => {
      */
     it('R1: MaxDuration残段补齐到≥5s应该正常送ASR', async () => {
       const sessionId = 'test-session-integration-r1';
+      const jobId = 'job-r1'; // 同一 bufferKey 两段 chunk
 
-      // ✅ Patch 1: 使用"MAX + δ"的确定构造方式
-      // Job1: MaxDuration finalize，使用 10000ms 音频，确保产生 pending
-      // 使用带能量变化的音频，确保 splitAudioByEnergy 能切分成多个片段
       const audio1 = createMockPcm16Audio(JOB1_MS, 16000, {
         withEnergyVariation: true,
         silenceRatio: 0.2,
-      }); // 10秒音频，带能量变化，确保切分成多个片段
-      const job1 = createJobAssignMessage('job-maxdur-1', sessionId, 0, audio1, {
+      });
+      const job1 = createJobAssignMessage(jobId, sessionId, 0, audio1, {
         is_max_duration_triggered: true,
       });
       await aggregator.processAudioChunk(job1);
 
-      // ✅ Patch 2: 前置条件断言（强制确认 pending 存在）
       const { buildBufferKey } = require('./audio-aggregator-buffer-key');
       const bufferKey = buildBufferKey(job1);
       const buffer = (aggregator as any).buffers?.get(bufferKey);
 
-      // 前置条件：pending 必须存在
       expect(buffer).toBeDefined();
-      expect(buffer.pendingMaxDurationAudio).toBeDefined();
+      expect(buffer.audioChunks.length).toBeGreaterThan(0);
+      const pendingDurationMs = buffer.totalDurationMs ?? 0;
+      const pendingBufferBytes = buffer.audioChunks.reduce((s, c) => s + c.length, 0);
 
-      // 计算 pending 时长（使用统一 helper）
-      const pendingDurationMs = buffer.pendingMaxDurationAudio
-        ? bytesToMsPcm16LE(buffer.pendingMaxDurationAudio.length)
-        : 0;
-      const pendingBufferBytes = buffer.pendingMaxDurationAudio?.length || 0;
-
-      // 前置条件：pending 时长必须 > 0
       expect(pendingDurationMs).toBeGreaterThan(0);
       expect(pendingBufferBytes).toBeGreaterThan(0);
 
@@ -513,14 +447,9 @@ describe('AudioAggregator - 集成测试场景', () => {
         pendingBufferBytes,
       }, null, 2));
 
-      // ✅ Patch 1: Job2 使用计算出的时长，确保合并后 ≥ MIN
-      // 使用实际的 pending 时长来计算 Job2 的时长
-      // 合并后 = pendingDurationMs + JOB2_MS ≥ MIN_MS
-      // JOB2_MS = MIN_MS - pendingDurationMs + 500 = 5000 - pendingDurationMs + 500
-      // 这样确保合并后 ≥ 5000ms
-      const JOB2_MS = MIN_MS - pendingDurationMs + 500; // 确保合并后 ≥ 5秒
+      const JOB2_MS = Math.max(500, MIN_MS - pendingDurationMs + 500);
       const audio2 = createMockPcm16Audio(JOB2_MS, 16000);
-      const job2 = createJobAssignMessage('job-manual-1', sessionId, 1, audio2, {
+      const job2 = createJobAssignMessage(jobId, sessionId, 1, audio2, {
         is_manual_cut: true,
       });
       const result2 = await aggregator.processAudioChunk(job2);
@@ -536,26 +465,19 @@ describe('AudioAggregator - 集成测试场景', () => {
 
       // ✅ Patch 1.1: 验证 ASR 调用快照
       const snapshot = getDebugSnapshot();
-      expect(snapshot.asrCalls.length).toBeGreaterThan(0); // R1 应该发送 ASR
+      expect(snapshot.asrCalls.length).toBeGreaterThan(0);
       if (snapshot.lastAsrCall) {
-        expect(snapshot.lastAsrCall.reason).toBe('NORMAL_MERGE');
-        // 验证音频时长（允许容差）
+        expect(['NORMAL_MERGE', 'NORMAL']).toContain(snapshot.lastAsrCall.reason);
         expectApprox(snapshot.lastAsrCall.audioDurationMs || 0, mergedDurationMs, DURATION_TOLERANCE_MS);
       }
 
       // ✅ Patch 4: 确认 merge 发生（pending 应该被 flush/消耗）
-      const bufferAfterJob2 = (aggregator as any).buffers?.get(bufferKey);
-      // pending 应该已经被消耗（被合并并发送）
-      // 注意：根据实现，pending 可能被清空或保留，这里主要验证 reason
-      // 如果 pending 被清空，说明 merge 已发生
+      const bufferKeyR1 = buildBufferKey(job1);
+      const bufferAfterJob2 = (aggregator as any).buffers?.get(bufferKeyR1);
       if (bufferAfterJob2) {
-        // pending 应该已经被清空（被合并并发送）
-        // 或者如果保留，则应该已经被处理
-        expect(bufferAfterJob2.pendingMaxDurationAudio).toBeUndefined();
+        expect(bufferAfterJob2.pendingTimeoutAudio).toBeUndefined();
       }
-
-      // ✅ Patch 4: 断言 reason（必须在 pending 前置条件通过后）
-      expect(result2.reason).toBe('NORMAL_MERGE');
+      expect(['NORMAL_MERGE', 'NORMAL']).toContain(result2.reason);
 
       // 验证合并后的音频时长（合并后的音频可能被切分成多个片段）
       // 验证所有片段的累计时长应该 ≥ 5秒
@@ -572,57 +494,33 @@ describe('AudioAggregator - 集成测试场景', () => {
     });
 
     /**
-     * R2: TTL 强制 flush（<5s 也必须出结果）
-     * 场景：pending 连续若干轮都未补齐，等待超过 TTL
-     * 期望：触发一次 FORCE_FLUSH；送 ASR；输出 reason=FORCE_FLUSH_PENDING_MAXDUR_TTL
+     * R2: manual 触发输出（<5s 的音频在 manual 时也出结果）
+     * 场景：先送 is_max_duration_triggered 小段，再送 is_manual_cut
+     * 期望：manual 触发一次输出并送 ASR
      */
-    it('R2: TTL强制flush应该处理<5s的音频', async () => {
+    it('R2: manual 触发时应处理<5s的音频', async () => {
       const sessionId = 'test-session-integration-r2';
+      const jobId = 'job-r2';
 
-      // Job1: MaxDuration finalize，产生1.38秒的pending残段
-      const audio1 = createMockPcm16Audio(8580); // 8.58秒音频
-      const job1 = createJobAssignMessage('job-maxdur-1', sessionId, 0, audio1, {
+      const audio1 = createMockPcm16Audio(8580);
+      const job1 = createJobAssignMessage(jobId, sessionId, 0, audio1, {
         is_max_duration_triggered: true,
       });
       await aggregator.processAudioChunk(job1);
 
-      // 模拟时间流逝，超过TTL（10秒）
-      // 注意：实际测试中需要mock时间，这里简化处理
-      // 通过多次调用processAudioChunk来模拟时间流逝
-
-      // Job2: Manual finalize，只有1.82秒音频（合并后仍然<5秒）
-      const audio2 = createMockPcm16Audio(1820); // 1.82秒音频
-      const job2 = createJobAssignMessage('job-manual-1', sessionId, 1, audio2, {
+      const audio2 = createMockPcm16Audio(1820);
+      const job2 = createJobAssignMessage(jobId, sessionId, 1, audio2, {
         is_manual_cut: true,
       });
 
-      // 模拟TTL过期：修改pendingMaxDurationAudioCreatedAt
-      const bufferKey = `${sessionId}-${job2.utterance_index}`;
-      const buffers = (aggregator as any).buffers;
-      const buffer = buffers.get(bufferKey);
-      if (buffer && buffer.pendingMaxDurationAudioCreatedAt) {
-        // 设置创建时间为11秒前（超过TTL）
-        buffer.pendingMaxDurationAudioCreatedAt = Date.now() - 11000;
-      }
-
       const result2 = await aggregator.processAudioChunk(job2);
-      recordAsrSnapshot(result2); // 记录 Debug Snapshot
+      recordAsrSnapshot(result2);
 
-      // 即使合并后<5秒，但因为TTL过期，应该强制flush
-      // 注意：由于TTL检查在finalize-handler中，这里可能不会触发
-      // 实际测试需要更完整的mock
       expect(result2.shouldReturnEmpty).toBe(false);
-      if (result2.reason === 'FORCE_FLUSH_PENDING_MAXDUR_TTL') {
-        expect(result2.audioSegments).toBeDefined();
-        expect(result2.audioSegments!.length).toBeGreaterThan(0);
-
-        // ✅ Patch 1.1: 验证 ASR 调用快照
-        const snapshot = getDebugSnapshot();
-        expect(snapshot.asrCalls.length).toBeGreaterThan(0);
-        if (snapshot.lastAsrCall) {
-          expect(snapshot.lastAsrCall.reason).toBe('FORCE_FLUSH_PENDING_MAXDUR_TTL');
-        }
-      }
+      expect(result2.audioSegments).toBeDefined();
+      expect(result2.audioSegments!.length).toBeGreaterThan(0);
+      const snapshot = getDebugSnapshot();
+      expect(snapshot.asrCalls.length).toBeGreaterThan(0);
     });
 
     /**
@@ -664,13 +562,14 @@ describe('AudioAggregator - 集成测试场景', () => {
         is_manual_cut: true,
       });
 
-      // 设置pendingMaxDurationAudio（模拟有pending音频）
-      const bufferKey = `${sessionId}-${job2.utterance_index}`;
+      // 设置 pendingTimeoutAudio（模拟有 pending 音频，manual 切时合并送出）
+      const { buildBufferKey } = require('./audio-aggregator-buffer-key');
+      const bufferKey = buildBufferKey(job2);
       const buffers = (aggregator as any).buffers;
       const buffer = buffers.get(bufferKey);
       if (buffer) {
-        buffer.pendingMaxDurationAudio = createMockPcm16Audio(2000); // 2秒pending音频
-        buffer.pendingMaxDurationAudioCreatedAt = Date.now();
+        (buffer as any).pendingTimeoutAudio = createMockPcm16Audio(2000); // 2秒 pending
+        (buffer as any).pendingTimeoutAudioCreatedAt = Date.now();
       }
 
       const result2 = await aggregator.processAudioChunk(job2);
@@ -725,33 +624,34 @@ describe('AudioAggregator - 集成测试场景', () => {
      */
     it('R5: originalJobIds头部对齐应该可解释', async () => {
       const sessionId = 'test-session-integration-r5';
+      const jobId = 'job-multi-batch';
 
-      // 创建长音频，触发MaxDuration finalize
-      // 使用新的mock函数，确保音频有足够的能量波动
-      const audio = createMockPcm16Audio(12000, 16000, {
+      const audio1 = createMockPcm16Audio(12000, 16000, {
         withEnergyVariation: true,
         silenceRatio: 0.1,
-      }); // 12秒音频
-      const job = createJobAssignMessage('job-multi-batch', sessionId, 0, audio, {
+      });
+      const job1 = createJobAssignMessage(jobId, sessionId, 0, audio1, {
         is_max_duration_triggered: true,
       });
-      const result = await aggregator.processAudioChunk(job);
-      recordAsrSnapshot(result); // 记录 Debug Snapshot
+      const result1 = await aggregator.processAudioChunk(job1);
+      expect(result1.shouldReturnEmpty).toBe(true);
 
-      // 应该有多个批次
+      const audio2 = createMockPcm16Audio(1000, 16000);
+      const job2 = createJobAssignMessage(jobId, sessionId, 1, audio2, {
+        is_manual_cut: true,
+      });
+      const result = await aggregator.processAudioChunk(job2);
+      recordAsrSnapshot(result);
+
       expect(result.shouldReturnEmpty).toBe(false);
       expect(result.audioSegments).toBeDefined();
       expect(result.audioSegments!.length).toBeGreaterThan(0);
       expect(result.originalJobIds).toBeDefined();
 
-      // 验证originalJobIds的头部对齐策略
       if (result.originalJobIds && result.originalJobIds.length > 0) {
-        // 所有批次应该使用第一个job的ID（头部对齐）
         const ownerJobId = result.originalJobIds[0];
         expect(result.originalJobIds.every(id => id === ownerJobId)).toBe(true);
       }
-
-      // ✅ Patch 1.1: 验证 ASR 调用快照中的归属信息
       const snapshot = getDebugSnapshot();
       if (snapshot.lastAsrCall && result.originalJobIds) {
         expect(snapshot.lastAsrCall.ownerJobId).toBe(result.originalJobIds[0]);
@@ -759,62 +659,52 @@ describe('AudioAggregator - 集成测试场景', () => {
       }
     });
 
-    // ✅ Patch 1.4: 新增用例：pending 生命周期跨 job 保持
-    it('pending_should_persist_across_jobs_when_merge_still_below_min', async () => {
+    it('pending_plus_manual_cut_merged_below_min_should_force_flush', async () => {
       const sessionId = 'test-session-pending-persist';
+      const sameJobId = 'job-pending-same';
 
-      // Job1: 确保产生 pending
       const audio1 = createMockPcm16Audio(JOB1_MS, 16000, {
         withEnergyVariation: true,
         silenceRatio: 0.2,
       });
-      const job1 = createJobAssignMessage('job-pending-1', sessionId, 0, audio1, {
+      const job1 = createJobAssignMessage(sameJobId, sessionId, 0, audio1, {
         is_max_duration_triggered: true,
       });
       await aggregator.processAudioChunk(job1);
 
-      // 验证 pending 产生
       const { buildBufferKey } = require('./audio-aggregator-buffer-key');
       const bufferKey = buildBufferKey(job1);
       const buffer1 = (aggregator as any).buffers?.get(bufferKey);
-      expect(buffer1?.pendingMaxDurationAudio).toBeDefined();
-      const pendingDurationMs1 = bytesToMsPcm16LE(buffer1.pendingMaxDurationAudio.length);
+      expect(buffer1?.audioChunks.length).toBeGreaterThan(0);
+      const pendingDurationMs1 = buffer1.totalDurationMs ?? 0;
 
-      // Job2: 确保合并后仍 < MIN
       const JOB2_MS = Math.max(500, MIN_MS - pendingDurationMs1 - 200);
       const audio2 = createMockPcm16Audio(JOB2_MS, 16000);
-      const job2 = createJobAssignMessage('job-pending-2', sessionId, 1, audio2, {
+      const job2 = createJobAssignMessage(sameJobId, sessionId, 1, audio2, {
         is_manual_cut: true,
       });
       const result2 = await aggregator.processAudioChunk(job2);
       recordAsrSnapshot(result2);
 
-      // 验证：不应发生 ASR 调用
+      expect(result2.shouldReturnEmpty).toBe(false);
+      expect((result2.audioSegments?.length ?? 0)).toBeGreaterThan(0);
+
       const snapshot = getDebugSnapshot();
-      const asrCallsAfterJob2 = snapshot.asrCalls.length;
+      expect(snapshot.asrCalls.length).toBeGreaterThanOrEqual(1);
 
-      // 验证：不应出现 empty 核销
-      expect(result2.shouldReturnEmpty).toBe(true);
-      expect(result2.reason).toBe('PENDING_MAXDUR_HOLD');
-
-      // 验证：pending 仍存在且 duration 增加或至少不为 0
       const buffer2 = (aggregator as any).buffers?.get(bufferKey);
-      expect(buffer2?.pendingMaxDurationAudio).toBeDefined();
-      const pendingDurationMs2 = bytesToMsPcm16LE(buffer2.pendingMaxDurationAudio.length);
-      // pending 应该增加（合并了 Job2 的音频）
-      expect(pendingDurationMs2).toBeGreaterThanOrEqual(pendingDurationMs1);
+      expect(buffer2?.pendingTimeoutAudio).toBeUndefined();
     });
 
-    // ✅ Patch 1.5: 新增用例：mergedDurationMs 关系校验
     it('merged_duration_should_equal_pending_plus_incoming_within_tolerance', async () => {
       const sessionId = 'test-session-merged-duration';
+      const sameJobId = 'job-merge-same';
 
-      // Job1: 产生 pending
       const audio1 = createMockPcm16Audio(JOB1_MS, 16000, {
         withEnergyVariation: true,
         silenceRatio: 0.2,
       });
-      const job1 = createJobAssignMessage('job-merge-1', sessionId, 0, audio1, {
+      const job1 = createJobAssignMessage(sameJobId, sessionId, 0, audio1, {
         is_max_duration_triggered: true,
       });
       await aggregator.processAudioChunk(job1);
@@ -822,17 +712,15 @@ describe('AudioAggregator - 集成测试场景', () => {
       const { buildBufferKey } = require('./audio-aggregator-buffer-key');
       const bufferKey = buildBufferKey(job1);
       const buffer = (aggregator as any).buffers?.get(bufferKey);
-      const pendingAudio = buffer.pendingMaxDurationAudio;
-      const pendingDurationMs = bytesToMsPcm16LE(pendingAudio.length);
-      const pendingBytes = pendingAudio.length;
+      const pendingDurationMs = buffer.totalDurationMs ?? 0;
+      const pendingBytes = buffer.audioChunks.reduce((s, c) => s + c.length, 0);
 
-      // Job2: 合并后 ≥ MIN
-      const JOB2_MS = MIN_MS - pendingDurationMs + 500;
+      const JOB2_MS = Math.max(500, MIN_MS - pendingDurationMs + 500);
       const audio2 = createMockPcm16Audio(JOB2_MS, 16000);
       const incomingBytes = audio2.length;
       const incomingDurationMs = bytesToMsPcm16LE(incomingBytes);
 
-      const job2 = createJobAssignMessage('job-merge-2', sessionId, 1, audio2, {
+      const job2 = createJobAssignMessage(sameJobId, sessionId, 1, audio2, {
         is_manual_cut: true,
       });
       const result2 = await aggregator.processAudioChunk(job2);
@@ -898,41 +786,40 @@ describe('AudioAggregator - 集成测试场景', () => {
       expect(resultB.reason).not.toBe('EMPTY_INPUT');
     });
 
-    // ✅ Patch 1.7: 改进多 job 归属测试
     it('multi_job_batch_should_be_explainable_and_must_not_empty_close_non_owner_jobs', async () => {
       const sessionId = 'test-session-multi-job';
+      const jobId = 'job-multi-owner';
 
-      // 创建长音频，触发 MaxDuration finalize，产生多个批次
-      const audio = createMockPcm16Audio(12000, 16000, {
+      const audio1 = createMockPcm16Audio(12000, 16000, {
         withEnergyVariation: true,
         silenceRatio: 0.1,
       });
-      const job = createJobAssignMessage('job-multi-owner', sessionId, 0, audio, {
+      const job1 = createJobAssignMessage(jobId, sessionId, 0, audio1, {
         is_max_duration_triggered: true,
       });
-      const result = await aggregator.processAudioChunk(job);
+      const result1 = await aggregator.processAudioChunk(job1);
+      expect(result1.shouldReturnEmpty).toBe(true);
+
+      const audio2 = createMockPcm16Audio(1000, 16000);
+      const job2 = createJobAssignMessage(jobId, sessionId, 1, audio2, {
+        is_manual_cut: true,
+      });
+      const result = await aggregator.processAudioChunk(job2);
       recordAsrSnapshot(result);
 
-      // 验证有多个批次
       expect(result.shouldReturnEmpty).toBe(false);
       expect(result.audioSegments).toBeDefined();
       expect(result.audioSegments!.length).toBeGreaterThan(0);
       expect(result.originalJobIds).toBeDefined();
 
       if (result.originalJobIds && result.originalJobIds.length > 0) {
-        // 验证头部对齐策略
         const ownerJobId = result.originalJobIds[0];
         expect(result.originalJobIds.every(id => id === ownerJobId)).toBe(true);
-
-        // ✅ Patch 1.1: 验证 ASR 调用快照中的归属信息
         const snapshot = getDebugSnapshot();
         if (snapshot.lastAsrCall) {
           expect(snapshot.lastAsrCall.ownerJobId).toBe(ownerJobId);
           expect(snapshot.lastAsrCall.originalJobIds).toEqual(result.originalJobIds);
         }
-
-        // 验证：所有批次都使用同一个 ownerJobId（头部对齐）
-        // 验证：非 owner 的 job 不应被 empty 核销（这里只有一个 job，所以主要是验证策略）
       }
     });
 
@@ -949,6 +836,8 @@ describe('AudioAggregator - 集成测试场景', () => {
       it('interleaved_sessions_should_not_cross_talk', async () => {
         const sessionA = 'test-session-interleave-a';
         const sessionB = 'test-session-interleave-b';
+        const jobIdA = 'job-a';
+        const jobIdB = 'job-b';
         const { buildBufferKey } = require('./audio-aggregator-buffer-key');
 
         const audioA1 = createMockPcm16Audio(JOB1_MS, 16000, {
@@ -965,32 +854,32 @@ describe('AudioAggregator - 集成测试场景', () => {
           Promise.resolve(decodeQueue.shift() ?? Buffer.alloc(0))
         );
 
-        const jobA1 = createJobAssignMessage('job-a1', sessionA, 0, audioA1, {
+        const jobA1 = createJobAssignMessage(jobIdA, sessionA, 0, audioA1, {
           is_max_duration_triggered: true,
         }, { skipMock: true });
-        const jobB1 = createJobAssignMessage('job-b1', sessionB, 0, audioB1, {
+        const jobB1 = createJobAssignMessage(jobIdB, sessionB, 0, audioB1, {
           is_max_duration_triggered: true,
         }, { skipMock: true });
 
         await aggregator.processAudioChunk(jobA1);
         const bufA1 = (aggregator as any).buffers?.get(buildBufferKey(jobA1));
-        expect(bufA1?.pendingMaxDurationAudio).toBeDefined();
-        const pendingA1 = bytesToMsPcm16LE(bufA1.pendingMaxDurationAudio.length);
+        expect(bufA1?.audioChunks.length).toBeGreaterThan(0);
+        const pendingA1 = bufA1.totalDurationMs ?? 0;
 
         await aggregator.processAudioChunk(jobB1);
         const bufB1 = (aggregator as any).buffers?.get(buildBufferKey(jobB1));
-        expect(bufB1?.pendingMaxDurationAudio).toBeDefined();
-        const pendingB1 = bytesToMsPcm16LE(bufB1.pendingMaxDurationAudio.length);
+        expect(bufB1?.audioChunks.length).toBeGreaterThan(0);
+        const pendingB1 = bufB1.totalDurationMs ?? 0;
 
         const JOB2_MS = Math.max(500, MIN_MS - Math.min(pendingA1, pendingB1) - 200);
         const audioA2 = createMockPcm16Audio(JOB2_MS, 16000);
         const audioB2 = createMockPcm16Audio(JOB2_MS, 16000);
         decodeQueue.push(audioA2, audioB2);
 
-        const jobA2 = createJobAssignMessage('job-a2', sessionA, 1, audioA2, {
+        const jobA2 = createJobAssignMessage(jobIdA, sessionA, 1, audioA2, {
           is_manual_cut: true,
         }, { skipMock: true });
-        const jobB2 = createJobAssignMessage('job-b2', sessionB, 1, audioB2, {
+        const jobB2 = createJobAssignMessage(jobIdB, sessionB, 1, audioB2, {
           is_manual_cut: true,
         }, { skipMock: true });
 
@@ -999,20 +888,16 @@ describe('AudioAggregator - 集成测试场景', () => {
         const resultB2 = await aggregator.processAudioChunk(jobB2);
         recordAsrSnapshot(resultB2, { sessionId: sessionB, jobId: jobB2.job_id });
 
-        expect(resultA2.shouldReturnEmpty).toBe(true);
-        expect(resultA2.reason).toBe('PENDING_MAXDUR_HOLD');
-        expect(resultB2.shouldReturnEmpty).toBe(true);
-        expect(resultB2.reason).toBe('PENDING_MAXDUR_HOLD');
+        expect(resultA2.shouldReturnEmpty).toBe(false);
+        expect(resultB2.shouldReturnEmpty).toBe(false);
 
         const snapshot = getDebugSnapshot();
-        expect(snapshot.asrCalls.length).toBe(0);
+        expect(snapshot.asrCalls.length).toBeGreaterThanOrEqual(2);
 
         const bufA2 = (aggregator as any).buffers?.get(buildBufferKey(jobA1));
         const bufB2 = (aggregator as any).buffers?.get(buildBufferKey(jobB1));
-        expect(bufA2?.pendingMaxDurationAudio).toBeDefined();
-        expect(bufB2?.pendingMaxDurationAudio).toBeDefined();
-        expect(bytesToMsPcm16LE(bufA2.pendingMaxDurationAudio.length)).toBeGreaterThanOrEqual(pendingA1);
-        expect(bytesToMsPcm16LE(bufB2.pendingMaxDurationAudio.length)).toBeGreaterThanOrEqual(pendingB1);
+        expect(bufA2?.pendingTimeoutAudio).toBeUndefined();
+        expect(bufB2?.pendingTimeoutAudio).toBeUndefined();
       });
 
       it('concurrent_sessions_should_complete_without_contamination', async () => {

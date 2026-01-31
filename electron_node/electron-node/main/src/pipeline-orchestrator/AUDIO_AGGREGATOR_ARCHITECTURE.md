@@ -33,18 +33,24 @@ this.servicesBundle = {
 const audioAggregator = services.audioAggregator;
 ```
 
-## Session 隔离机制
+## Buffer Key 与隔离机制（与 turn_id 合并方案一致）
 
-每个 session 的缓冲区通过 `Map<string, AudioBuffer>` 存储，key 是 `sessionId`：
+缓冲区的 key **不是** sessionId，而是由 `buildBufferKey(job)` 决定：
+
+- **有 turn_id 时**：`mergeKey = turnId + targetLang`（同一 turn、同一目标语言共用一个 buffer）
+- **无 turn_id 时**：退化为 `job_id`（与原先「每 job 独立」一致）
 
 ```typescript
-private buffers: Map<string, AudioBuffer> = new Map();
-
-// 通过 sessionId 获取对应的缓冲区
-let buffer = this.buffers.get(sessionId);
+// audio-aggregator-buffer-key.ts
+export function buildBufferKey(job: JobAssignMessage): string {
+  if (job.turn_id && job.tgt_lang) {
+    return `${job.turn_id}|${job.tgt_lang}`;
+  }
+  return job.job_id;
+}
 ```
 
-**重要**：即使使用依赖注入，不同 session 的缓冲区仍然完全隔离，不会混淆。
+**与原先文档的差异**：原先本文档描述为「按 sessionId 隔离」；当前实现按 **turn_id + tgt_lang** 合并，同一 session 内不同 turn 的 buffer 相互隔离，同一 turn 内多 job 共享同一 buffer。详见《节点端 turnId 合并技术方案（补充冻结版）》。
 
 ## 缓冲区管理
 
@@ -93,7 +99,7 @@ let buffer = this.buffers.get(sessionId);
 ### 防止内存泄漏
 
 1. **定期清理**：建议在应用启动时启动定期清理任务
-2. **Session 结束清理**：在 session 结束时调用 `clearBuffer(sessionId)`
+2. **Turn 失败 / 会话结束清理**：按 `clearBufferByKey(bufferKey)` 清理对应 buffer（同一 session 下可有多个 bufferKey，即多个 turn）
 3. **TTL 机制**：`pendingTimeoutAudio` 有 10 秒 TTL，超时自动处理
 
 ### 清理示例
@@ -117,8 +123,9 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  aggregator.clearBuffer('test-session-1');
-  aggregator.clearBuffer('test-session-2');
+  // 按 bufferKey 清理（测试中可用 buildBufferKey(job) 或任意 key）
+  aggregator.clearBufferByKey('test-turn-1|en');
+  aggregator.clearBufferByKey('test-turn-2|en');
 });
 ```
 

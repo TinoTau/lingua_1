@@ -425,6 +425,8 @@ export interface JobAssignMessage {
   trace_id: string;
   /** EDGE-4: Padding 配置（毫秒），用于在音频末尾添加静音 */
   padding_ms?: number;
+  /** 当前 turn 的 ID；节点端用做 bufferKey，同一 turn 内多 job 共用同一 buffer（MaxDuration 续句合并） */
+  turn_id?: string;
 }
 
 export interface JobCancelMessage {

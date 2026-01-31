@@ -20,6 +20,8 @@ const DEFAULT_CONFIG: AggregatorManagerConfig = {
 export class AggregatorManager {
   private states: Map<string, AggregatorState> = new Map();
   private lastAccessTime: Map<string, number> = new Map();
+  /** 同 turn 文本累积：key = sessionId|turnId，仅在有 turn_id 且非 finalize 时累积，finalize 时取走并清空 */
+  private turnAccumulator: Map<string, string> = new Map();
   private config: AggregatorManagerConfig;
 
   constructor(config: Partial<AggregatorManagerConfig> = {}) {
@@ -126,6 +128,11 @@ export class AggregatorManager {
       
       this.states.delete(sessionId);
       this.lastAccessTime.delete(sessionId);
+      // 清理该 session 下所有 turn 累积
+      const prefix = `${sessionId}|`;
+      for (const key of this.turnAccumulator.keys()) {
+        if (key.startsWith(prefix)) this.turnAccumulator.delete(key);
+      }
       logger.debug({ sessionId }, 'Removed AggregatorState and cleared context cache');
     }
   }
@@ -229,6 +236,27 @@ export class AggregatorManager {
     if (state) {
       (state as any).clearLastTranslatedText();
     }
+  }
+
+  /**
+   * 同 turn 文本累积：非 finalize job 时追加本段，供 finalize job 一次性送入语义修复
+   */
+  appendTurnSegment(sessionId: string, turnId: string, text: string): void {
+    if (!sessionId || !turnId || !text?.trim()) return;
+    const key = `${sessionId}|${turnId}`;
+    const existing = this.turnAccumulator.get(key) || '';
+    this.turnAccumulator.set(key, existing ? `${existing} ${text.trim()}` : text.trim());
+  }
+
+  /**
+   * 取走并清空该 turn 的累积文本（finalize job 时调用，将整段送入语义修复）
+   */
+  getAndClearTurnAccumulator(sessionId: string, turnId: string): string {
+    if (!sessionId || !turnId) return '';
+    const key = `${sessionId}|${turnId}`;
+    const text = this.turnAccumulator.get(key) || '';
+    this.turnAccumulator.delete(key);
+    return text.trim();
   }
 
   /**

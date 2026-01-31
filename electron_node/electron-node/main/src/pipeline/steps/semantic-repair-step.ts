@@ -77,7 +77,6 @@ export async function runSemanticRepairStep(
   }
 
   // 双向模式：使用动态确定的源语言
-  // 创建修改后的 job 对象（使用检测到的源语言）
   let sourceLang = job.src_lang;
   if (job.src_lang === 'auto' && ctx.detectedSourceLang) {
     sourceLang = ctx.detectedSourceLang;

@@ -76,9 +76,40 @@ impl SessionActor {
         // 累积音频时长（用于最大时长限制检查）
         self.internal_state.accumulated_audio_duration_ms += chunk_duration_ms;
         
+        // 与备份一致：收到 chunk 时检查“间隔超过 pause_ms”并更新 last_chunk_at，以便正常音频聚合为一句
+        let pause_exceeded = if chunk_size > 0 {
+            self.state
+                .audio_buffer
+                .record_chunk_and_check_pause(&self.session_id, timestamp_ms, self.pause_ms)
+                .await
+        } else {
+            false
+        };
+        
         // 检查是否需要 finalize
         let mut should_finalize = false;
         let mut finalize_reason = "";
+        
+        // 与备份一致：间隔超过 pause_ms 时先 finalize 当前句（当前 buffer 已含本 chunk）；统一用 Timeout 类型，只产生 3 种 finalize
+        if pause_exceeded {
+            let is_tts_playing = if let Some(group_id) = self.state.group_manager.get_active_group_id(&self.session_id).await {
+                self.state.group_manager.is_tts_playing(&group_id, timestamp_ms).await
+            } else {
+                false
+            };
+            if !is_tts_playing {
+                should_finalize = true;
+                finalize_reason = "Timeout";
+                info!(
+                    session_id = %self.session_id,
+                    utterance_index = utterance_index,
+                    chunk_size = chunk_size,
+                    timestamp_ms = timestamp_ms,
+                    pause_ms = self.pause_ms,
+                    "AudioChunk: 间隔超过 pause 阈值，触发 Timeout finalize（与备份一致，聚合正常音频）"
+                );
+            }
+        }
         
         // 检查最大时长限制
         if self.max_duration_ms > 0 && self.internal_state.accumulated_audio_duration_ms >= self.max_duration_ms {

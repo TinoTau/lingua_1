@@ -145,54 +145,25 @@ impl SessionActor {
             "Finalizing audio utterance"
         );
 
-        // 根据 finalize 原因设置标识
+        // 只产生 3 种 finalize：手动、Timeout、MaxDuration（与备份语义对齐）
         let is_manual_cut = reason == "IsFinal";
-        // ✅ 修复：MaxDuration 使用独立的标签，不与 timeout 混用
-        let is_timeout_triggered = reason == "Timeout";
-        // MaxDuration：用户持续说话超过最大时长，产生多 job；节点端按切片处理
+        let is_timeout_triggered = reason == "Timeout";  // 定时器或间隔>pause_ms 均传 "Timeout"
         let is_max_duration_triggered = reason == "MaxDuration";
 
         // ============================================================
-        // Session Affinity：手动/timeout finalize时立即清除timeout_node_id映射
-        // 必须在jobs创建之前清除，确保当前job不会使用旧的timeout_node_id
+        // Turn 内亲和：复用 session 的 current_turn_id，使同 turn 内（多个 MaxDuration + 最后一个手动/Timeout）选到同一节点
+        // 先读再创建 job，不在创建前清除；手动/Timeout 在创建并派发后再清除，保证最后一 job 仍走 affinity
         // ============================================================
-        if is_manual_cut || is_timeout_triggered {
-            if let Some(ref rt) = self.state.phase2 {
-                let session_key = format!("scheduler:session:{}", self.session_id);
-                
-                // 使用Lua脚本原子性地清除timeout_node_id
-                let script = r#"
-redis.call('HDEL', KEYS[1], 'timeout_node_id')
-return 1
-"#;
-                let mut cmd = redis::cmd("EVAL");
-                cmd.arg(script).arg(1).arg(&session_key);
-                
-                match rt.redis_query::<i64>(cmd).await {
-                    Ok(_) => {
-                        info!(
-                            session_id = %self.session_id,
-                            utterance_index = utterance_index,
-                            reason = reason,
-                            is_manual_cut = is_manual_cut,
-                            is_timeout_triggered = is_timeout_triggered,
-                            "Session affinity: Cleared timeout_node_id mapping (manual/timeout finalize) - cleared before job creation, subsequent jobs can use random assignment"
-                        );
-                    }
-                    Err(e) => {
-                        warn!(
-                            session_id = %self.session_id,
-                            utterance_index = utterance_index,
-                            reason = reason,
-                            is_manual_cut = is_manual_cut,
-                            is_timeout_triggered = is_timeout_triggered,
-                            error = %e,
-                            "Session affinity: Failed to clear timeout_node_id mapping (will retry after job creation)"
-                        );
-                    }
-                }
-            }
-        }
+        let session_key = format!("scheduler:session:{}", self.session_id);
+        let turn_id = if let Some(ref rt) = self.state.phase2 {
+            let get_script = r#"return redis.call('HGET', KEYS[1], 'current_turn_id') or ''"#;
+            let mut get_cmd = redis::cmd("EVAL");
+            get_cmd.arg(get_script).arg(1).arg(&session_key);
+            let existing: Option<String> = rt.redis_query(get_cmd).await.ok().and_then(|s: String| if s.is_empty() { None } else { Some(s) });
+            existing.unwrap_or_else(|| uuid::Uuid::new_v4().to_string())
+        } else {
+            uuid::Uuid::new_v4().to_string()
+        };
 
         // 创建翻译任务
         info!(
@@ -218,6 +189,7 @@ return 1
 
         let jobs = match create_translation_jobs(
             &self.state,
+            &turn_id,
             &self.session_id,
             utterance_index,
             session.src_lang.clone(),
@@ -266,54 +238,37 @@ return 1
         };
 
         // ============================================================
-        // Session Affinity：MaxDuration finalize 时记录 sessionId->nodeId 映射
-        // 连续长语音产生多 job，需路由到同一节点
+        // Turn 内亲和：MaxDuration finalize 时写入 affinity_node_id（只写一次，无 TTL）
+        // 并记录 current_turn_id 供 manual/timeout 清除时使用
         // ============================================================
         if is_max_duration_triggered {
-            // 获取第一个job的node_id（如果有）
             if let Some(first_job) = jobs.first() {
                 if let Some(ref node_id) = first_job.assigned_node_id {
-                    // 记录sessionId->nodeId映射到Redis
                     if let Some(ref rt) = self.state.phase2 {
+                        let turn_key = format!("scheduler:turn:{}", turn_id);
                         let session_key = format!("scheduler:session:{}", self.session_id);
-                        let ttl_seconds = 5 * 60; // 5分钟TTL（优化：符合业务逻辑，避免长期缓存）
-                        
-                        // ✅ 修复：MaxDuration 使用独立的 Redis key，不与 timeout 混用
-                        // 使用Lua脚本原子性地设置max_duration_node_id
                         let script = r#"
-redis.call('HSET', KEYS[1], 'max_duration_node_id', ARGV[1])
-redis.call('EXPIRE', KEYS[1], ARGV[2])
+redis.call('HSET', KEYS[1], 'affinity_node_id', ARGV[1])
+redis.call('HSET', KEYS[2], 'current_turn_id', ARGV[2])
 return 1
 "#;
                         let mut cmd = redis::cmd("EVAL");
-                        cmd.arg(script)
-                            .arg(1)
-                            .arg(&session_key)
-                            .arg(node_id)
-                            .arg(ttl_seconds);
-                        
+                        cmd.arg(script).arg(2).arg(&turn_key).arg(&session_key).arg(node_id).arg(&turn_id);
                         match rt.redis_query::<i64>(cmd).await {
                             Ok(_) => {
                                 info!(
                                     session_id = %self.session_id,
-                                    utterance_index = utterance_index,
-                                    reason = reason,
+                                    turn_id = %turn_id,
                                     node_id = %node_id,
-                                    ttl_seconds = ttl_seconds,
-                                    job_count = jobs.len(),
-                                    first_job_id = ?jobs.first().map(|j| &j.job_id),
-                                    "Session affinity: Recorded MaxDuration finalize session mapping - subsequent jobs will route to same node"
+                                    "Turn affinity: Recorded (MaxDuration finalize)"
                                 );
                             }
                             Err(e) => {
                                 warn!(
                                     session_id = %self.session_id,
-                                    utterance_index = utterance_index,
-                                    reason = reason,
-                                    node_id = %node_id,
-                                    ttl_seconds = ttl_seconds,
+                                    turn_id = %turn_id,
                                     error = %e,
-                                    "Session affinity: Failed to record MaxDuration finalize session mapping"
+                                    "Turn affinity: Failed to record"
                                 );
                             }
                         }
@@ -321,39 +276,30 @@ return 1
                 }
             }
         } else if is_manual_cut || is_timeout_triggered {
-            // 手动/timeout finalize：如果之前清除失败，再次尝试清除（兜底）
-            // 注意：主要清除已在jobs创建之前完成，这里是兜底逻辑
+            // 手动/Timeout：在创建并派发本 job 之后清除 turn affinity，下一轮发言用新 turn_id（本 job 已用当前 turn 的 affinity 选到同一节点）
             if let Some(ref rt) = self.state.phase2 {
-                let session_key = format!("scheduler:session:{}", self.session_id);
-                
-                // 使用Lua脚本原子性地清除timeout_node_id
-                let script = r#"
-redis.call('HDEL', KEYS[1], 'timeout_node_id')
+                let turn_key = format!("scheduler:turn:{}", turn_id);
+                let del_script = r#"
+redis.call('HDEL', KEYS[1], 'affinity_node_id')
+redis.call('HDEL', KEYS[2], 'current_turn_id')
 return 1
 "#;
-                let mut cmd = redis::cmd("EVAL");
-                cmd.arg(script).arg(1).arg(&session_key);
-                
-                match rt.redis_query::<i64>(cmd).await {
+                let mut del_cmd = redis::cmd("EVAL");
+                del_cmd.arg(del_script).arg(2).arg(&turn_key).arg(&session_key);
+                match rt.redis_query::<i64>(del_cmd).await {
                     Ok(_) => {
-                        debug!(
+                        info!(
                             session_id = %self.session_id,
-                            utterance_index = utterance_index,
-                            reason = reason,
-                            is_manual_cut = is_manual_cut,
-                            is_timeout_triggered = is_timeout_triggered,
-                            "Session affinity: Cleared timeout_node_id mapping (fallback cleanup after job creation)"
+                            turn_id = %turn_id,
+                            "Turn affinity: Cleared after job (manual/timeout finalize)"
                         );
                     }
                     Err(e) => {
                         warn!(
                             session_id = %self.session_id,
-                            utterance_index = utterance_index,
-                            reason = reason,
-                            is_manual_cut = is_manual_cut,
-                            is_timeout_triggered = is_timeout_triggered,
+                            turn_id = %turn_id,
                             error = %e,
-                            "Session affinity: Failed to clear timeout_node_id mapping (fallback cleanup also failed)"
+                            "Turn affinity: Failed to clear after job"
                         );
                     }
                 }
@@ -471,15 +417,11 @@ return 1
             }
         }
 
-        // 更新指标
+        // 更新指标（仅 3 种 finalize）
         match reason {
             "IsFinal" => crate::metrics::on_web_task_finalized_by_send(),
             "Timeout" => crate::metrics::on_web_task_finalized_by_timeout(),
-            "MaxDuration" => {
-                // ✅ 修复：MaxDuration 使用独立的 metrics，但如果没有则使用 timeout（向后兼容）
-                // 注意：这里暂时使用 timeout metrics，因为 MaxDuration 和 timeout 都是自动 finalize
-                crate::metrics::on_web_task_finalized_by_timeout()
-            },
+            "MaxDuration" => crate::metrics::on_web_task_finalized_by_timeout(),
             _ => {}
         }
 

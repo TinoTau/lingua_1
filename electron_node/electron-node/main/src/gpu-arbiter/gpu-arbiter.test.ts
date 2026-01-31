@@ -63,6 +63,7 @@ describe('GpuArbiter', () => {
       });
 
       expect(result.status).toBe('ACQUIRED');
+      if (result.status !== 'ACQUIRED') return;
       expect(result.leaseId).toBeDefined();
       expect(result.queueWaitMs).toBe(0);
     });
@@ -81,6 +82,7 @@ describe('GpuArbiter', () => {
       });
 
       expect(result1.status).toBe('ACQUIRED');
+      if (result1.status !== 'ACQUIRED') return;
 
       // 第二个请求应该加入队列
       const acquirePromise = arbiter.acquire({
@@ -120,6 +122,7 @@ describe('GpuArbiter', () => {
       });
 
       expect(result1.status).toBe('ACQUIRED');
+      if (result1.status !== 'ACQUIRED') return;
 
       // 第二个请求使用SKIP策略
       const result2 = await arbiter.acquire({
@@ -134,6 +137,7 @@ describe('GpuArbiter', () => {
       });
 
       expect(result2.status).toBe('SKIPPED');
+      if (result2.status !== 'SKIPPED') return;
       expect(result2.reason).toBe('GPU_BUSY');
 
       // 清理
@@ -152,6 +156,7 @@ describe('GpuArbiter', () => {
         busyPolicy: 'WAIT',
         trace: { jobId: 'job-1' },
       });
+      if (firstRequest.status !== 'ACQUIRED') return;
 
       // 添加两个请求到队列
       const request2 = arbiter.acquire({
@@ -192,6 +197,7 @@ describe('GpuArbiter', () => {
       });
 
       expect(result4.status).toBe('SKIPPED');
+      if (result4.status !== 'SKIPPED') return;
       expect(result4.reason).toBe('QUEUE_FULL');
 
       // 清理
@@ -212,6 +218,7 @@ describe('GpuArbiter', () => {
         busyPolicy: 'WAIT',
         trace: { jobId: 'job-1' },
       });
+      if (result1.status !== 'ACQUIRED') return;
 
       // 第二个请求使用很短的超时时间
       const result2Promise = arbiter.acquire({
@@ -227,6 +234,7 @@ describe('GpuArbiter', () => {
 
       const result2 = await result2Promise;
       expect(result2.status).toBe('SKIPPED');
+      if (result2.status !== 'SKIPPED') return;
       expect(result2.reason).toBe('TIMEOUT');
 
       // 清理
@@ -245,6 +253,7 @@ describe('GpuArbiter', () => {
         busyPolicy: 'WAIT',
         trace: { jobId: 'job-1' },
       });
+      if (result1.status !== 'ACQUIRED') return;
 
       // 添加不同优先级的请求
       const request2 = arbiter.acquire({
@@ -298,6 +307,7 @@ describe('GpuArbiter', () => {
         busyPolicy: 'WAIT',
         trace: { jobId: 'job-1' },
       });
+      if (result1.status !== 'ACQUIRED') return;
 
       // 第二个请求加入队列
       const request2Promise = arbiter.acquire({
@@ -320,6 +330,7 @@ describe('GpuArbiter', () => {
       // 第二个请求应该获取到租约
       const result2 = await request2Promise;
       expect(result2.status).toBe('ACQUIRED');
+      if (result2.status !== 'ACQUIRED') return;
 
       // 清理
       arbiter.release(result2.leaseId);
@@ -344,6 +355,7 @@ describe('GpuArbiter', () => {
         busyPolicy: 'WAIT',
         trace: { jobId: 'job-1' },
       });
+      if (result.status !== 'ACQUIRED') return;
 
       const snapshot = arbiter.snapshot('gpu:0');
       expect(snapshot).not.toBeNull();
@@ -381,6 +393,7 @@ describe('GpuArbiter', () => {
       });
 
       expect(result.status).toBe('ACQUIRED');
+      if (result.status !== 'ACQUIRED') return;
       // 禁用时仍然会生成leaseId，但不会进行实际的仲裁
       expect(result.leaseId).toBeDefined();
       expect(result.queueWaitMs).toBe(0);
@@ -401,6 +414,7 @@ describe('GpuArbiter', () => {
         busyPolicy: 'WAIT',
         trace: { jobId: 'job-1' },
       });
+      if (result.status !== 'ACQUIRED') return;
 
       // 快进时间超过holdMaxMs
       jest.advanceTimersByTime(1100);

@@ -76,6 +76,9 @@ pub struct Job {
     /// 是否由 MaxDuration（持续说话超长）触发；节点端按切片送 ASR
     #[serde(skip_serializing_if = "std::ops::Not::not", default)]
     pub is_max_duration_triggered: bool,
+    /// 当前 turn 的 ID；节点端用做 bufferKey，同一 turn 内多 job 共用同一 buffer（MaxDuration 续句合并）
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub turn_id: Option<String>,
     /// 预计处理时长（毫秒），用于动态计算 timeout
     #[serde(skip_serializing_if = "Option::is_none")]
     pub expected_duration_ms: Option<u64>,

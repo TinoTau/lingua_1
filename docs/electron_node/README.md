@@ -308,7 +308,7 @@ if (hasMergedPendingAudio) {
 核心模块都有完整的单元测试：
 - `audio-aggregator.test.ts`: 39个测试用例（100%通过）
 - `original-job-result-dispatcher.test.ts`: 完整的分发逻辑测试
-- `session-affinity-manager.test.ts`: Session Affinity测试
+- Session 亲和由调度端实现，节点端无独立亲和测试
 
 ### 集成测试
 

@@ -157,6 +157,28 @@ impl GroupManager {
     }
 
 
+    /// 获取 session 的活跃 group_id（与备份一致，用于 pause 检测时判断是否在 TTS 播放中）
+    pub async fn get_active_group_id(&self, session_id: &str) -> Option<GroupId> {
+        let active = self.active.read().await;
+        active.get(session_id).cloned()
+    }
+
+    /// 检查是否在 TTS 播放期间（用于 pause 检测：播放期间不触发 pause finalize，与备份一致）
+    pub async fn is_tts_playing(&self, group_id: &str, current_time_ms: i64) -> bool {
+        let groups = self.groups.read().await;
+        if let Some(group) = groups.get(group_id) {
+            if let Some(tts_start_ms) = group.last_tts_start_at_ms {
+                let tts_end_ms = group.last_tts_end_at_ms as i64;
+                let tts_start_ms_i64 = tts_start_ms as i64;
+                current_time_ms >= tts_start_ms_i64 && current_time_ms <= tts_end_ms
+            } else {
+                false
+            }
+        } else {
+            false
+        }
+    }
+
     /// 处理 Session 结束
     pub async fn on_session_end(&self, session_id: &str, reason: &str) {
         let active_gid = {

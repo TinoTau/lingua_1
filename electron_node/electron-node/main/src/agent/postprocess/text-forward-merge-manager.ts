@@ -189,7 +189,12 @@ export class TextForwardMergeManager {
         if (gateDecision.pendingEntry) {
           this.pendingTexts.set(sessionId, gateDecision.pendingEntry);
         }
-        return { ...gateDecision.result, segmentForCurrentJob: mergeResult.deltaForCurrent };
+        // 与备份一致：合并后 SEND 时当前 job 带出完整合并句，避免 [4][5] 扣留后 [6] 只带增量导致大段丢失
+        const segmentForCurrentJob =
+          gateDecision.action === 'SEND' && gateDecision.result.processedText
+            ? gateDecision.result.processedText
+            : mergeResult.deltaForCurrent;
+        return { ...gateDecision.result, segmentForCurrentJob };
       } else {
         // 没有currentText，直接处理pendingText
         this.pendingTexts.delete(sessionId);
@@ -263,7 +268,12 @@ export class TextForwardMergeManager {
       if (gateDecisionPending.pendingEntry) {
         this.pendingTexts.set(sessionId, gateDecisionPending.pendingEntry);
       }
-      return { ...gateDecisionPending.result, segmentForCurrentJob: mergeResult.deltaForCurrent };
+      // 与备份一致：合并后 SEND 时当前 job 带出完整合并句，避免大段丢失
+      const segmentForCurrentJob =
+        gateDecisionPending.action === 'SEND' && gateDecisionPending.result.processedText
+          ? gateDecisionPending.result.processedText
+          : mergeResult.deltaForCurrent;
+      return { ...gateDecisionPending.result, segmentForCurrentJob };
     }
 
     // 没有待合并的文本，处理当前文本

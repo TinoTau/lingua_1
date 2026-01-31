@@ -1,5 +1,10 @@
 # Clear Node Client Cache Script
 # Usage: powershell -ExecutionPolicy Bypass -File scripts/clear-cache.ps1
+#        powershell -ExecutionPolicy Bypass -File scripts/clear-cache.ps1 -ClearLogs   # 同时删除 logs/*.log（默认不删，避免集成测试后找不到日志）
+
+param(
+    [switch]$ClearLogs = $false
+)
 
 Write-Host "============================================================"
 Write-Host "Clearing Node Client Cache"
@@ -48,8 +53,8 @@ if (-not $cleared) {
     Write-Host "  Info: No Electron app data cache found"
 }
 
-# 4. Clear log files (optional)
-Write-Host "[4/5] Clearing log files (optional)..."
+# 4. Clear log files（与清缓存一起执行，集成测试前统一清理，确保结果不受干扰）
+Write-Host "[4/5] Clearing log files..."
 if (Test-Path "logs") {
     $logFiles = Get-ChildItem "logs" -Filter "*.log" -ErrorAction SilentlyContinue
     if ($logFiles) {

@@ -2,11 +2,11 @@
 -- 被动清理：从池取出节点后 EXISTS 校验；若 node key 已过期则 SREM 并重试，避免派发到已断开节点。
 -- ARGV[1]: pair_key (格式: "zh:en")
 -- ARGV[2]: job_id (optional, 用于 timeout finalize 绑定)
--- ARGV[3]: session_id (optional, 用于读取 timeout_node_id)
+-- ARGV[3]: turn_id (optional, 用于读取 affinity_node_id，key = scheduler:turn:{turn_id})
 
 local pair_key = ARGV[1]
 local job_id = ARGV[2]
-local session_id = ARGV[3]
+local turn_id = ARGV[3]
 local MAX_POOL_ID = 999
 local MAX_TRIES = 64
 
@@ -24,26 +24,23 @@ if job_id and job_id ~= "" then
     end
 end
 
--- 2. Session Affinity：优先查找 timeout_node_id 映射（用于 AudioAggregator 连续性）
--- 如果存在 timeout_node_id，说明之前有超时/MaxDuration finalize，需要将后续 job 路由到同一节点
+-- 2. Turn 内亲和：优先查找 affinity_node_id（同一 turn 内连续 job 路由到同一节点）
 local chosen_node_id = nil
-if session_id and session_id ~= "" then
-    local session_key = "scheduler:session:" .. session_id
-    local timeout_node_id = redis.call("HGET", session_key, "timeout_node_id")
+if turn_id and turn_id ~= "" then
+    local turn_key = "scheduler:turn:" .. turn_id
+    local affinity_node_id = redis.call("HGET", turn_key, "affinity_node_id")
     
-    if timeout_node_id and timeout_node_id ~= "" then
-        local node_key = "lingua:v1:node:" .. timeout_node_id
+    if affinity_node_id and affinity_node_id ~= "" then
+        local node_key = "lingua:v1:node:" .. affinity_node_id
         local online = redis.call("EXISTS", node_key)
         
         if online == 1 then
-            -- timeout_node_id 指定的节点在线，检查该节点是否在候选 pools 中
             for pool_id = 0, MAX_POOL_ID do
                 local pool_key = "lingua:v1:pool:" .. pair_key .. ":" .. pool_id .. ":nodes"
-                local is_member = redis.call("SISMEMBER", pool_key, timeout_node_id)
+                local is_member = redis.call("SISMEMBER", pool_key, affinity_node_id)
                 
                 if is_member == 1 then
-                    -- 节点在 pool 中，选择该节点（Session Affinity 匹配成功）
-                    chosen_node_id = timeout_node_id
+                    chosen_node_id = affinity_node_id
                     break
                 end
             end
@@ -51,7 +48,7 @@ if session_id and session_id ~= "" then
     end
 end
 
--- 如果通过 timeout_node_id 选择了节点，直接返回
+-- 如果通过 affinity_node_id 选择了节点，直接返回
 if chosen_node_id then
     return chosen_node_id
 end

@@ -252,6 +252,21 @@ app = FastAPI(
 )
 
 
+# ==================== 辅助：是否确有改善 ====================
+
+def _output_actually_improved(text_in: str, text_out: str) -> bool:
+    """仅当输出相对输入确有改善时返回 True（如繁→简、同音字修正），避免未修复也标 REPAIR。"""
+    if text_out == text_in:
+        return False
+    # 常见繁体字（与简体对应），用于判断是否做了繁→简
+    trad = set("我們會來說這個們時動識讀語過長斷節練習頂經營解環給誌與於為")
+    n_in = sum(1 for c in text_in if c in trad)
+    n_out = sum(1 for c in text_out if c in trad)
+    if n_in > 0 and n_out >= n_in:
+        return False
+    return True
+
+
 # ==================== 请求/响应模型 ====================
 
 class RepairRequest(BaseModel):
@@ -343,15 +358,22 @@ async def repair_text(request: RepairRequest):
         )
         
         elapsed_ms = int((time.time() - start_time) * 1000)
-        
-        # 构建响应
-        decision = "REPAIR" if result['text_out'] != request.text_in else "PASS"
+
+        # 仅当输出与输入不同且确有改善时才标 REPAIR，避免未修复内容被标为已修复
+        text_out = result['text_out']
+        decision = "PASS"
+        if text_out != request.text_in:
+            if _output_actually_improved(request.text_in, text_out):
+                decision = "REPAIR"
+            else:
+                text_out = request.text_in
+                logger.info(
+                    "[Semantic Repair ZH] Output unchanged or not improved (e.g. still traditional), using PASS and original text"
+                )
         reason_codes = []
-        
-        # 降低质量分数阈值，提高敏感度：从0.7降到0.85
+
         if request.quality_score is not None and request.quality_score < 0.85:
             reason_codes.append("LOW_QUALITY_SCORE")
-        
         if decision == "REPAIR":
             reason_codes.append("REPAIR_APPLIED")
         
@@ -362,19 +384,19 @@ async def repair_text(request: RepairRequest):
             f"session_id={request.session_id} | "
             f"utterance_index={request.utterance_index} | "
             f"decision={decision} | "
-            f"text_out={result['text_out']!r} | "
-            f"text_out_length={len(result['text_out'])} | "
+            f"text_out={text_out!r} | "
+            f"text_out_length={len(text_out)} | "
             f"confidence={result['confidence']:.2f} | "
             f"reason_codes={reason_codes} | "
             f"repair_time_ms={elapsed_ms} | "
-            f"changed={result['text_out'] != request.text_in}"
+            f"changed={text_out != request.text_in}"
         )
         logger.info(output_log)
         print(f"[Semantic Repair ZH] {output_log}", flush=True)
-        
+
         return RepairResponse(
             decision=decision,
-            text_out=result['text_out'],
+            text_out=text_out,
             confidence=result['confidence'],
             diff=result['diff'],
             reason_codes=reason_codes,

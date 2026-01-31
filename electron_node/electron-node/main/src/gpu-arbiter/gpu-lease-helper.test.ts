@@ -161,7 +161,7 @@ describe('GPU租约辅助函数', () => {
       expect(fn).not.toHaveBeenCalled();
 
       // 清理
-      mockArbiter.release(result1.leaseId);
+      if (result1.status === 'ACQUIRED') mockArbiter.release(result1.leaseId);
     });
   });
 
@@ -219,7 +219,7 @@ describe('GPU租约辅助函数', () => {
       expect(lease).toBeNull();
 
       // 清理
-      mockArbiter.release(result1.leaseId);
+      if (result1.status === 'ACQUIRED') mockArbiter.release(result1.leaseId);
     });
 
     it('应该在GPU仲裁器未启用时返回虚拟租约', async () => {

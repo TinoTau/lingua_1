@@ -99,9 +99,19 @@ export class InferenceService {
     const dedupStage = new DedupStage();
 
     // 初始化 AudioAggregator（用于在job之间共享音频缓冲区）
-    // 通过依赖注入方式创建，支持热插拔场景：每次 InferenceService 创建时都有新的干净实例
     const { AudioAggregator } = require('../pipeline-orchestrator/audio-aggregator');
     const audioAggregator = new AudioAggregator();
+
+    // 兜底清理：仅用于用户断线导致 turn 永远收不到 manual/timeout finalize 的孤儿 buffer。
+    // cleanupExpiredBuffers 内部按空闲 > 5 分钟清理并打日志，每 1 分钟检查一次。
+    const CLEANUP_INTERVAL_MS = 60 * 1000;
+    setInterval(() => {
+      try {
+        audioAggregator.cleanupExpiredBuffers();
+      } catch (err) {
+        logger.warn({ err }, 'AudioAggregator cleanupExpiredBuffers error');
+      }
+    }, CLEANUP_INTERVAL_MS);
 
     // 初始化 servicesBundle
     // 初始化SemanticRepairInitializer（如果servicesHandler可用）

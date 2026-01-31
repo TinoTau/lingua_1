@@ -11,6 +11,11 @@
 
 import logger from '../logger';
 import { ServiceType, SequentialTask, SequentialExecutorConfig, SequentialExecutorState } from './types';
+import {
+  enqueueTaskOrdered,
+  collectExpiredAndRemove,
+  findNextRunnableAndRemoveExpired,
+} from './sequential-executor-queue';
 
 const DEFAULT_CONFIG: Required<SequentialExecutorConfig> = {
   enabled: true,
@@ -174,18 +179,7 @@ export class SequentialExecutor {
       sessionQueues.set(task.taskType, queue);
     }
 
-    // 按utterance_index排序插入
-    let inserted = false;
-    for (let i = 0; i < queue.length; i++) {
-      if (queue[i].utteranceIndex > task.utteranceIndex) {
-        queue.splice(i, 0, task);
-        inserted = true;
-        break;
-      }
-    }
-    if (!inserted) {
-      queue.push(task);
-    }
+    enqueueTaskOrdered(queue, task);
 
     const sessionState = this.state.currentIndex.get(task.sessionId);
     const currentIndex = sessionState?.get(task.taskType) ?? -1;
@@ -327,53 +321,38 @@ export class SequentialExecutor {
 
     const sessionState = this.state.currentIndex.get(sessionId);
     const currentIndex = sessionState?.get(taskType) ?? -1;
-    
-    // 查找队列中第一个可以执行的任务（索引等于当前索引+1）
-    let foundIndex = -1;
-    for (let i = 0; i < queue.length; i++) {
-      const task = queue[i];
-      if (task.utteranceIndex === currentIndex + 1) {
-        foundIndex = i;
-        break;
-      } else if (task.utteranceIndex <= currentIndex) {
-        // 如果任务的索引小于等于当前索引，说明这个任务已经"过期"了，跳过
-        logger.warn(
-          {
-            sessionId,
-            currentIndex,
-            taskIndex: task.utteranceIndex,
-            taskType: task.taskType,
-            jobId: task.jobId,
-            queuePosition: i,
-          },
-          'SequentialExecutor: Task index is less than or equal to current index, skipping expired task'
-        );
-        queue.splice(i, 1);
-        task.reject(new Error(`SequentialExecutor: Task index ${task.utteranceIndex} is less than or equal to current index ${currentIndex}, task expired`));
-        // 继续查找下一个
-        i--;
-        continue;
-      }
+
+    const { nextTask, expired } = findNextRunnableAndRemoveExpired(queue, currentIndex);
+    for (const task of expired) {
+      logger.warn(
+        {
+          sessionId,
+          currentIndex,
+          taskIndex: task.utteranceIndex,
+          taskType: task.taskType,
+          jobId: task.jobId,
+        },
+        'SequentialExecutor: Task index is less than or equal to current index, skipping expired task'
+      );
+      task.reject(new Error(`SequentialExecutor: Task index ${task.utteranceIndex} is less than or equal to current index ${currentIndex}, task expired`));
     }
 
-    if (foundIndex !== -1) {
-      // 找到可以执行的任务
-      const nextTask = queue.splice(foundIndex, 1)[0];
+    if (nextTask) {
       this.processTask(nextTask);
     } else {
       // 没有找到可以执行的任务，等待
-      const nextTask = queue[0];
-      if (nextTask) {
-        const waitTime = Date.now() - nextTask.timestamp;
+      const firstInQueue = queue[0];
+      if (firstInQueue) {
+        const waitTime = Date.now() - firstInQueue.timestamp;
         // 如果等待时间超过10秒，记录警告
         if (waitTime > 10000) {
           logger.warn(
             {
               sessionId,
               currentIndex,
-              nextIndex: nextTask.utteranceIndex,
-              taskType: nextTask.taskType,
-              jobId: nextTask.jobId,
+              nextIndex: firstInQueue.utteranceIndex,
+              taskType: firstInQueue.taskType,
+              jobId: firstInQueue.jobId,
               queueLength: queue.length,
               waitTimeMs: waitTime,
               maxWaitMs: this.config.maxWaitMs,
@@ -386,9 +365,9 @@ export class SequentialExecutor {
             {
               sessionId,
               currentIndex,
-              nextIndex: nextTask.utteranceIndex,
-              taskType: nextTask.taskType,
-              jobId: nextTask.jobId,
+              nextIndex: firstInQueue.utteranceIndex,
+              taskType: firstInQueue.taskType,
+              jobId: firstInQueue.jobId,
               queueLength: queue.length,
               waitTimeMs: waitTime,
             },

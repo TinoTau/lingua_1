@@ -10,6 +10,7 @@ import logger from '../logger';
 import { buildJobResult } from './result-builder';
 import { inferPipelineMode, shouldExecuteStep, PipelineMode } from './pipeline-mode-config';
 import { executeStep, PipelineStepType } from './pipeline-step-registry';
+import { buildBufferKey } from '../pipeline-orchestrator/audio-aggregator-buffer-key';
 
 export interface ServicesBundle {
   taskRouter: any;
@@ -128,6 +129,15 @@ export async function runJobPipeline(options: JobPipelineOptions): Promise<JobRe
 
         // 根据步骤的重要性决定是否继续（语义修复为必经且必须成功，失败即 job 失败）
         if (step === 'ASR' || step === 'TRANSLATION' || step === 'SEMANTIC_REPAIR') {
+          // turn 内任一 segment 失败 → 清理该 turn 的合并 buffer（技术方案 6.1）
+          if ((job as any).turn_id && services.audioAggregator) {
+            const bufferKey = buildBufferKey(job);
+            services.audioAggregator.clearBufferByKey(bufferKey);
+            logger.info(
+              { jobId: job.job_id, bufferKey, step },
+              'JobPipeline: Turn segment failed, cleared merge buffer'
+            );
+          }
           throw error;
         } else {
           // 非关键步骤失败，记录错误但继续执行
@@ -144,6 +154,14 @@ export async function runJobPipeline(options: JobPipelineOptions): Promise<JobRe
   } finally {
     // 任务结束回调
     callbacks?.onTaskEnd?.();
+  }
+
+  // turn 的最后一个 job 结果返回后，直接清理该 turn 的 audioBuffer（唯一清理路径，不做 session 清理和定时清理）
+  const isTurnEnd = (job as any).is_manual_cut || (job as any).is_timeout_triggered;
+  if (isTurnEnd && (job as any).turn_id && services.audioAggregator) {
+    const bufferKey = buildBufferKey(job);
+    services.audioAggregator.clearBufferByKey(bufferKey);
+    logger.debug({ jobId: job.job_id, bufferKey }, 'JobPipeline: Turn ended, cleared audio buffer');
   }
 
   return buildJobResult(job, ctx);

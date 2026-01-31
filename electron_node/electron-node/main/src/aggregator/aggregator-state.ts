@@ -25,6 +25,7 @@ import { AggregatorStateUtteranceProcessor } from './aggregator-state-utterance-
 import { AggregatorStateActionDecider } from './aggregator-state-action-decider';
 import { AggregatorStatePendingManager } from './aggregator-state-pending-manager';
 import { AggregatorStateCommitExecutor } from './aggregator-state-commit-executor';
+import { runCommitAndGetStateUpdate } from './aggregator-state-transitions';
 
 export interface AggregatorMetrics {
   commitCount: number;
@@ -58,19 +59,19 @@ export class AggregatorState {
   private lastUtterance: UtteranceInfo | null = null;
   private lastCommitTsMs: number = 0;
   private tailBuffer: string = '';
-  
+
   // 会话时间轴
   private sessionStartTimeMs: number = 0;
   private lastUtteranceEndTimeMs: number = 0;
-  
+
   // 合并组状态（由 mergeGroupManager 管理，这里保留用于向后兼容和状态同步）
   private mergeGroupStartUtterance: UtteranceInfo | null = null;
   private mergeGroupStartTimeMs: number = 0;
   private accumulatedAudioDurationMs: number = 0;
-  
+
   // 上下文管理器
   private contextManager: AggregatorStateContextManager;
-  
+
   // 处理器
   private textProcessor: AggregatorStateTextProcessor;
   private mergeGroupManager: AggregatorStateMergeGroupManager;
@@ -79,7 +80,7 @@ export class AggregatorState {
   private actionDecider: AggregatorStateActionDecider;
   private pendingManager: AggregatorStatePendingManager;
   private commitExecutor: AggregatorStateCommitExecutor;
-  
+
   // 指标
   private metrics: AggregatorMetrics = {
     commitCount: 0,
@@ -151,7 +152,7 @@ export class AggregatorState {
     isTimeoutTriggered: boolean = false
   ): AggregatorCommitResult {
     const nowMs = Date.now();
-    
+
     // 使用 utterance 处理器进行预处理
     const utteranceResult = this.utteranceProcessor.processUtterance(
       text,
@@ -164,17 +165,17 @@ export class AggregatorState {
       this.sessionStartTimeMs,
       this.lastUtteranceEndTimeMs
     );
-    
+
     const curr = utteranceResult.utteranceInfo;
     const startMs = utteranceResult.utteranceTime.startMs;
     const endMs = utteranceResult.utteranceTime.endMs;
     const gapMs = utteranceResult.utteranceTime.gapMs;
-    
+
     // 更新会话开始时间
     if (utteranceResult.utteranceTime.newSessionStartTimeMs !== this.sessionStartTimeMs) {
       this.sessionStartTimeMs = utteranceResult.utteranceTime.newSessionStartTimeMs;
     }
-    
+
     // 更新指标
     if (utteranceResult.hasMissingSegments) {
       this.metrics.missingGapCount++;
@@ -182,7 +183,7 @@ export class AggregatorState {
 
     // 使用动作决策器决定流动作
     const action = this.actionDecider.decideAction(this.lastUtterance, curr);
-    
+
     // 更新指标
     if (action === 'MERGE') {
       this.metrics.mergeCount++;
@@ -197,7 +198,7 @@ export class AggregatorState {
       this.pendingText,
       this.lastUtterance
     );
-    
+
     // 添加调试日志
     if (action === 'MERGE') {
       logger.info(
@@ -212,7 +213,7 @@ export class AggregatorState {
         'AggregatorState: MERGE action, checking isFirstInMergedGroup'
       );
     }
-    
+
     // 使用文本处理器处理文本合并和去重
     const textProcessResult = this.textProcessor.processText(
       action,
@@ -223,7 +224,7 @@ export class AggregatorState {
     const processedText = textProcessResult.processedText;
     let deduped = textProcessResult.deduped;
     let dedupChars = textProcessResult.dedupChars;
-    
+
     // 更新指标
     if (deduped) {
       this.metrics.dedupCount++;
@@ -233,11 +234,11 @@ export class AggregatorState {
       this.tailBuffer = '';
       this.metrics.tailCarryUsage++;
     }
-    
+
     // 使用 pending manager 处理文本合并和状态管理
     // 修复：在NEW_STREAM时，先保存之前的pendingText，用于提交
     const previousPendingText = action === 'NEW_STREAM' ? this.pendingText : '';
-    
+
     let pendingUpdateResult: { newPendingText: string; newTailBuffer: string; mergeGroupStateSynced: boolean };
     if (action === 'MERGE' && this.lastUtterance) {
       pendingUpdateResult = this.pendingManager.handleMerge(
@@ -254,7 +255,7 @@ export class AggregatorState {
         this.pendingText,
         this.tailBuffer
       );
-      
+
       // 修复：在NEW_STREAM时，如果之前的pendingText存在，先提交之前的文本
       // 这样可以确保之前的文本被记录到recentCommittedText中，用于去重
       if (previousPendingText && previousPendingText.trim().length > 0) {
@@ -270,9 +271,9 @@ export class AggregatorState {
           isManualCut,
           isTimeoutTriggered
         );
-        
+
         // 如果之前的文本应该提交（手动发送、超时、或最终结果），先提交它
-        const shouldCommitPrevious = previousCommitDecision.commitByManualCut || 
+        const shouldCommitPrevious = previousCommitDecision.commitByManualCut ||
           previousCommitDecision.commitByTimeout || isFinal;
         if (shouldCommitPrevious) {
           const previousCommitResult = this.commitExecutor.executeCommit(
@@ -302,11 +303,11 @@ export class AggregatorState {
         }
       }
     }
-    
+
     // 更新 pending text 和 tail buffer
     this.pendingText = pendingUpdateResult.newPendingText;
     this.tailBuffer = pendingUpdateResult.newTailBuffer;
-    
+
     // 同步合并组状态
     if (pendingUpdateResult.mergeGroupStateSynced) {
       const syncedState = this.pendingManager.syncMergeGroupState();
@@ -334,13 +335,13 @@ export class AggregatorState {
       isManualCut,
       isTimeoutTriggered
     );
-    
+
     const isLastInMergedGroup = commitDecision.isLastInMergedGroup;
     const commitByManualCut = commitDecision.commitByManualCut;
     const commitByTimeout = commitDecision.commitByTimeout;
     // 判断是否需要提交：手动发送、10秒超时、或最终结果
     const shouldCommitNow = commitByManualCut || commitByTimeout || isFinal;
-    
+
     // 如果收到手动发送标识，清空合并组状态
     if (commitByManualCut && action === 'MERGE') {
       this.mergeGroupManager.clearMergeGroup();
@@ -350,7 +351,7 @@ export class AggregatorState {
       this.mergeGroupStartTimeMs = newState.mergeGroupStartTimeMs;
       this.accumulatedAudioDurationMs = newState.accumulatedAudioDurationMs;
     }
-    
+
     // 记录提交条件的判断（用于调试）
     this.commitHandler.logCommitDecision(
       action,
@@ -371,10 +372,11 @@ export class AggregatorState {
       this.metrics.commitLatencyMs = nowMs - this.sessionStartTimeMs;
     }
 
-    // 如果需要 commit，使用提交执行器执行提交
+    // 如果需要 commit，使用提交执行器执行提交（委托 transitions 执行，再写回 state）
     let commitText = '';
     if (shouldCommitNow && this.pendingText) {
-      const commitResult = this.commitExecutor.executeCommit(
+      const update = runCommitAndGetStateUpdate(
+        this.commitExecutor,
         this.pendingText,
         this.tailBuffer,
         isFinal,
@@ -384,49 +386,41 @@ export class AggregatorState {
         commitByManualCut,
         commitByTimeout
       );
-      commitText = commitResult.commitText;
-      this.tailBuffer = commitResult.newTailBuffer;
-      if (commitResult.tailCarryUsed) {
+      commitText = update.commitText;
+      this.tailBuffer = update.newTailBuffer;
+      if (update.tailCarryUsed) {
         this.metrics.tailCarryUsage++;
       }
-      
       this.pendingText = '';
       this.lastCommitTsMs = nowMs;
       this.metrics.commitCount++;
-      
-      // 同步合并组状态
-      const syncedState = this.commitExecutor.syncMergeGroupState();
-      this.mergeGroupStartUtterance = syncedState.mergeGroupStartUtterance;
-      this.mergeGroupStartTimeMs = syncedState.mergeGroupStartTimeMs;
-      this.accumulatedAudioDurationMs = syncedState.accumulatedAudioDurationMs;
+      this.mergeGroupStartUtterance = update.syncedState.mergeGroupStartUtterance;
+      this.mergeGroupStartTimeMs = update.syncedState.mergeGroupStartTimeMs;
+      this.accumulatedAudioDurationMs = update.syncedState.accumulatedAudioDurationMs;
     } else if (isFinal && this.pendingText) {
       // 如果是 final 但没有触发 commit（可能是因为 pending 文本太短），强制提交
-      // 确保 final 时所有文本都被提交
-      const commitResult = this.commitExecutor.executeCommit(
+      const update = runCommitAndGetStateUpdate(
+        this.commitExecutor,
         this.pendingText,
         this.tailBuffer,
-        true, // isFinal
+        true,
         isManualCut,
         qualityScore,
         gapMs,
         commitByManualCut,
         commitByTimeout
       );
-      commitText = commitResult.commitText;
-      this.tailBuffer = commitResult.newTailBuffer;
-      if (commitResult.tailCarryUsed) {
+      commitText = update.commitText;
+      this.tailBuffer = update.newTailBuffer;
+      if (update.tailCarryUsed) {
         this.metrics.tailCarryUsage++;
       }
-      
       this.pendingText = '';
       this.lastCommitTsMs = nowMs;
       this.metrics.commitCount++;
-      
-      // 同步合并组状态
-      const syncedState = this.commitExecutor.syncMergeGroupState();
-      this.mergeGroupStartUtterance = syncedState.mergeGroupStartUtterance;
-      this.mergeGroupStartTimeMs = syncedState.mergeGroupStartTimeMs;
-      this.accumulatedAudioDurationMs = syncedState.accumulatedAudioDurationMs;
+      this.mergeGroupStartUtterance = update.syncedState.mergeGroupStartUtterance;
+      this.mergeGroupStartTimeMs = update.syncedState.mergeGroupStartTimeMs;
+      this.accumulatedAudioDurationMs = update.syncedState.accumulatedAudioDurationMs;
     }
 
     // 新逻辑：判断是否是合并组中的最后一个
@@ -437,7 +431,7 @@ export class AggregatorState {
     // 3. isFinal（最终结果）
     // 注意：已移除基于字符数量的提交逻辑，避免与shouldWaitForMerge矛盾
     // isLastInMergedGroup 已经在上面根据 shouldCommitNow 设置
-    
+
     // 添加调试日志
     if (action === 'MERGE') {
       logger.info(  // 改为 info 级别，确保日志输出
@@ -453,7 +447,7 @@ export class AggregatorState {
         'AggregatorState: MERGE action, isLastInMergedGroup determination'
       );
     }
-    
+
     return {
       text: commitText,
       action,
@@ -471,7 +465,7 @@ export class AggregatorState {
    */
   flush(): string {
     let textToFlush = '';
-    
+
     if (this.pendingText) {
       // flush 时不保留 tail，全部输出
       textToFlush = this.pendingText;
@@ -531,21 +525,21 @@ export class AggregatorState {
     this.mergeGroupStartTimeMs = newState.mergeGroupStartTimeMs;
     this.accumulatedAudioDurationMs = newState.accumulatedAudioDurationMs;
   }
-  
+
   /**
    * 获取上一个 utterance 的翻译文本（检查是否过期）
    */
   getLastTranslatedText(): string | null {
     return this.contextManager.getLastTranslatedText();
   }
-  
+
   /**
    * 设置上一个 utterance 的翻译文本
    */
   setLastTranslatedText(translatedText: string): void {
     this.contextManager.setLastTranslatedText(translatedText);
   }
-  
+
   /**
    * 清理翻译文本（NEW_STREAM 时可选调用）
    */

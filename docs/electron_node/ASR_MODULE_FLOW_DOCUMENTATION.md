@@ -39,8 +39,7 @@ ASR模块由以下核心组件组成：
 5. **`PipelineOrchestratorASRHandler`** (`pipeline-orchestrator/pipeline-orchestrator-asr.ts`)
    - ASR任务路由和处理，调用TaskRouter执行ASR识别
 
-6. **`SessionAffinityManager`** (`pipeline-orchestrator/session-affinity-manager.ts`)
-   - Session亲和性管理，记录sessionId到nodeId的映射
+6. **Session 亲和**：由调度端 Redis + select_node 实现，节点端不再维护 SessionAffinityManager。
 
 ---
 

@@ -7,15 +7,13 @@ import { SemanticRepairStage } from './semantic-repair-stage';
 import { SemanticRepairServiceInfo } from '../node-agent-services-semantic-repair';
 import { JobAssignMessage } from '@shared/protocols/messages';
 import { TaskRouter } from '../../task-router/task-router';
-
-// Mock子Stage
-jest.mock('./semantic-repair-stage-zh');
-jest.mock('./semantic-repair-stage-en');
-jest.mock('./en-normalize-stage');
-
 import { SemanticRepairStageZH } from './semantic-repair-stage-zh';
 import { SemanticRepairStageEN } from './semantic-repair-stage-en';
 import { EnNormalizeStage } from './en-normalize-stage';
+
+jest.mock('./semantic-repair-stage-zh');
+jest.mock('./semantic-repair-stage-en');
+jest.mock('./en-normalize-stage');
 
 describe('SemanticRepairStage - Phase 2', () => {
   let stage: SemanticRepairStage;

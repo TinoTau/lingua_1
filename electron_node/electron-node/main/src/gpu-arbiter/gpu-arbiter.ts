@@ -17,16 +17,7 @@ import {
 import { GpuUsageMonitor, GpuUsageMonitorConfig } from './gpu-arbiter-usage-monitor';
 import { GpuArbiterQueueManager, PendingRequest } from './gpu-arbiter-queue-manager';
 import { GpuArbiterMetricsManager } from './gpu-arbiter-metrics';
-
-interface ActiveLease {
-  leaseId: string;
-  gpuKey: string;
-  taskType: GpuTaskType;
-  acquiredAt: number;
-  holdMaxMs: number;
-  watchdogHandle?: NodeJS.Timeout;
-  trace?: GpuLeaseRequest['trace'];
-}
+import { ActiveLease, buildActiveLeaseWithWatchdog } from './gpu-arbiter-lease';
 
 export class GpuArbiter {
   private config: GpuArbiterConfig;
@@ -291,29 +282,18 @@ export class GpuArbiter {
 
     this.mutexes.set(gpuKey, true);
 
-    const lease: ActiveLease = {
+    const recordMetric = (k: string, name: string, value: number | string, inc?: number) => {
+      this.metricsManager.recordMetric(k, name, value, inc);
+    };
+    const lease = buildActiveLeaseWithWatchdog(
       leaseId,
       gpuKey,
       taskType,
-      acquiredAt,
       holdMaxMs,
       trace,
-    };
-
-    lease.watchdogHandle = setTimeout(() => {
-      this.metricsManager.recordMetric(gpuKey, 'watchdogExceededTotal', 1);
-      logger.warn(
-        {
-          gpuKey,
-          taskType,
-          leaseId,
-          holdTimeMs: Date.now() - acquiredAt,
-          holdMaxMs,
-          ...trace,
-        },
-        'GpuArbiter: Lease hold time exceeded holdMaxMs (watchdog)'
-      );
-    }, holdMaxMs);
+      acquiredAt,
+      recordMetric
+    );
 
     this.activeLeases.set(leaseId, lease);
     this.metricsManager.recordMetric(gpuKey, 'acquireTotal', 'ACQUIRED', 1);
@@ -373,9 +353,7 @@ export class GpuArbiter {
 
     const { gpuKey, taskType, acquiredAt } = lease;
 
-    if (lease.watchdogHandle) {
-      clearTimeout(lease.watchdogHandle);
-    }
+    lease.clearWatchdog?.();
 
     const holdMs = Date.now() - acquiredAt;
     this.metricsManager.recordMetric(gpuKey, 'holdMs', holdMs);

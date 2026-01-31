@@ -8,7 +8,7 @@ import * as fs from 'fs';
 import { 
   initServiceLayer, 
   getServiceRegistry, 
-  getServiceSupervisor 
+  getServiceRunner 
 } from './service-ipc-handlers';
 
 describe('Service IPC Handlers Integration Tests', () => {
@@ -31,10 +31,10 @@ describe('Service IPC Handlers Integration Tests', () => {
 
   describe('initServiceLayer', () => {
     it('should initialize service layer successfully', async () => {
-      const { registry, supervisor } = await initServiceLayer(testServicesDir);
+      const { registry, runner } = await initServiceLayer(testServicesDir);
       
       expect(registry).toBeDefined();
-      expect(supervisor).toBeDefined();
+      expect(runner).toBeDefined();
       expect(registry instanceof Map).toBe(true);
     });
 
@@ -83,8 +83,13 @@ describe('Service IPC Handlers Integration Tests', () => {
       );
     });
 
-    afterEach(() => {
-      // 清理测试服务
+    afterEach(async () => {
+      try {
+        getServiceRunner().stop('test-service-1');
+        await new Promise(r => setTimeout(r, 1500));
+      } catch {
+        // 服务未启动或已停止
+      }
       if (fs.existsSync(testServiceDir)) {
         fs.rmSync(testServiceDir, { recursive: true, force: true });
       }
@@ -104,52 +109,40 @@ describe('Service IPC Handlers Integration Tests', () => {
     });
 
     it('should start and stop service', async () => {
-      const { supervisor } = await initServiceLayer(testServicesDir);
-      
-      // 启动服务
-      await supervisor.startService('test-service-1');
-      
-      // 等待启动
+      const { registry, runner } = await initServiceLayer(testServicesDir);
+      await runner.start('test-service-1');
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const runningService = supervisor.getService('test-service-1');
-      expect(runningService?.runtime.status).toBe('running');
-      expect(runningService?.runtime.pid).toBeDefined();
-      
-      // 停止服务
-      await supervisor.stopService('test-service-1');
-      
-      // 等待停止
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      const stoppedService = supervisor.getService('test-service-1');
-      expect(stoppedService?.runtime.status).toBe('stopped');
+      const runningEntry = registry.get('test-service-1');
+      // 无真实 /health 时状态可能仍为 starting，仅校验已启动且有 pid
+      expect(['starting', 'running']).toContain(runningEntry?.runtime.status);
+      expect(runningEntry?.runtime.pid).toBeDefined();
+      await runner.stop('test-service-1');
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      const stoppedEntry = registry.get('test-service-1');
+      expect(stoppedEntry?.runtime.status).toBe('stopped');
     });
 
     it('should list all services', async () => {
-      const { supervisor } = await initServiceLayer(testServicesDir);
+      const { registry } = await initServiceLayer(testServicesDir);
       
-      const services = supervisor.listServices();
-      expect(Array.isArray(services)).toBe(true);
+      const services = Array.from(registry.values());
       expect(services.length).toBeGreaterThan(0);
       
-      const testService = services.find(s => s.def.id === 'test-service-1');
+      const testService = services.find((s: { def: { id: string } }) => s.def.id === 'test-service-1');
       expect(testService).toBeDefined();
     });
 
     it('should get service by id', async () => {
-      const { supervisor } = await initServiceLayer(testServicesDir);
-      
-      const service = supervisor.getService('test-service-1');
+      const { registry } = await initServiceLayer(testServicesDir);
+      const service = registry.get('test-service-1');
       expect(service).toBeDefined();
       expect(service?.def.id).toBe('test-service-1');
       expect(service?.def.name).toBe('Test Service 1');
     });
 
     it('should return undefined for non-existent service', async () => {
-      const { supervisor } = await initServiceLayer(testServicesDir);
-      
-      const service = supervisor.getService('non-existent-service');
+      const { registry } = await initServiceLayer(testServicesDir);
+      const service = registry.get('non-existent-service');
       expect(service).toBeUndefined();
     });
 
@@ -235,27 +228,20 @@ describe('Service IPC Handlers Integration Tests', () => {
     });
 
     it('should stop all services', async () => {
-      const { supervisor } = await initServiceLayer(testServicesDir);
+      const { registry, runner } = await initServiceLayer(testServicesDir);
       
-      // 启动所有服务
       await Promise.all([
-        supervisor.startService('multi-test-1'),
-        supervisor.startService('multi-test-2'),
-        supervisor.startService('multi-test-3'),
+        runner.start('multi-test-1'),
+        runner.start('multi-test-2'),
+        runner.start('multi-test-3'),
       ]);
-      
-      // 等待启动
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // 停止所有服务
-      await supervisor.stopAllServices();
-      
-      // 等待停止
+      await runner.stopAll();
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // 验证所有服务已停止
-      const services = supervisor.listServices();
-      services.forEach(service => {
+      const services = Array.from(registry.values());
+      services.forEach((service: { runtime: { status: string } }) => {
         expect(service.runtime.status).toBe('stopped');
       });
     });
@@ -263,11 +249,8 @@ describe('Service IPC Handlers Integration Tests', () => {
 
   describe('Service Refresh', () => {
     it('should refresh service list when new service added', async () => {
-      const { supervisor } = await initServiceLayer(testServicesDir);
-      
-      const initialCount = supervisor.listServices().length;
-      
-      // 添加新服务
+      const { registry } = await initServiceLayer(testServicesDir);
+      const initialCount = registry.size;
       const newServiceDir = path.join(testServicesDir, 'refresh-test');
       fs.mkdirSync(newServiceDir, { recursive: true });
       const config = {
@@ -286,34 +269,22 @@ describe('Service IPC Handlers Integration Tests', () => {
         path.join(newServiceDir, 'service.json'),
         JSON.stringify(config, null, 2)
       );
-      
-      // 重新初始化以刷新
-      const { supervisor: refreshedSupervisor } = await initServiceLayer(testServicesDir);
-      
-      const newCount = refreshedSupervisor.listServices().length;
-      expect(newCount).toBeGreaterThan(initialCount);
-      expect(refreshedSupervisor.getService('refresh-test')).toBeDefined();
-      
-      // 清理
+      const { registry: refreshedRegistry } = await initServiceLayer(testServicesDir);
+      expect(refreshedRegistry.size).toBeGreaterThan(initialCount);
+      expect(refreshedRegistry.get('refresh-test')).toBeDefined();
       fs.rmSync(newServiceDir, { recursive: true, force: true });
     });
   });
 
   describe('Error Handling', () => {
     it('should handle start non-existent service', async () => {
-      const { supervisor } = await initServiceLayer(testServicesDir);
-      
-      await expect(
-        supervisor.startService('non-existent')
-      ).rejects.toThrow();
+      const { runner } = await initServiceLayer(testServicesDir);
+      await expect(runner.start('non-existent')).rejects.toThrow();
     });
 
     it('should handle stop non-existent service', async () => {
-      const { supervisor } = await initServiceLayer(testServicesDir);
-      
-      await expect(
-        supervisor.stopService('non-existent')
-      ).rejects.toThrow();
+      const { runner } = await initServiceLayer(testServicesDir);
+      await expect(runner.stop('non-existent')).rejects.toThrow();
     });
   });
 });

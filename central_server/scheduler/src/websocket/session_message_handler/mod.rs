@@ -71,7 +71,7 @@ pub(crate) async fn handle_session_message(
         SessionMessage::Utterance {
             session_id: sess_id,
             utterance_index,
-            manual_cut: _,
+            manual_cut,
             src_lang,
             tgt_lang,
             dialect,
@@ -93,6 +93,7 @@ pub(crate) async fn handle_session_message(
                 tx,
                 sess_id,
                 utterance_index,
+                manual_cut,
                 src_lang,
                 tgt_lang,
                 dialect,

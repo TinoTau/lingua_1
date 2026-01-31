@@ -15,7 +15,6 @@ import logger from '../logger';
 import { AudioAggregatorUtils } from './audio-aggregator-utils';
 import { OriginalJobInfo, AudioBuffer } from './audio-aggregator-types';
 import { JobAssignMessage } from '../../../../shared/protocols/messages';
-import { SessionAffinityManager } from './session-affinity-manager';
 
 interface TimeoutTTLCheckResult {
   shouldProcess: boolean;
@@ -36,7 +35,6 @@ export class AudioAggregatorTimeoutHandler {
   private readonly SPLIT_HANGOVER_MS = 600;
   
   private readonly audioUtils = new AudioAggregatorUtils();
-  private readonly sessionAffinityManager = SessionAffinityManager.getInstance();
 
   /**
    * 检查pendingTimeoutAudio是否超过TTL
@@ -262,18 +260,13 @@ export class AudioAggregatorTimeoutHandler {
       'AudioAggregatorTimeoutHandler: Caching audio to pendingTimeoutAudio'
     );
 
-    // 记录session affinity
-    const currentNodeId = this.sessionAffinityManager.getNodeId();
-    this.sessionAffinityManager.recordTimeoutFinalize(job.session_id);
-    
     logger.info(
       {
         sessionId: job.session_id,
-        nodeId: currentNodeId,
         jobId: job.job_id,
         utteranceIndex: job.utterance_index,
       },
-      'AudioAggregatorTimeoutHandler: Recorded timeout finalize session mapping'
+      'AudioAggregatorTimeoutHandler: Caching to pendingTimeoutAudio'
     );
 
     // 缓存到pendingTimeoutAudio

@@ -808,7 +808,7 @@ end
 - 不会产生不必要的长期缓存
 
 **当前实现**：
-- TTL设置为30分钟，与节点端SessionAffinityManager一致
+- TTL由调度端 Redis turn 亲和与业务策略决定；节点端已移除 SessionAffinityManager
 - 未来可根据实际业务需求调整
 
 ---

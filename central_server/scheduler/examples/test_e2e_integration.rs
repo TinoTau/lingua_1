@@ -135,7 +135,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut pool_success = 0;
     for (src, tgt) in pool_test_cases {
         print!("语言对 {}:{} ... ", src, tgt);
-        match pool_service.select_node(src, tgt, None).await {
+        match pool_service.select_node(src, tgt, None, None).await {
             Ok(node_id) => {
                 println!("✅ 成功: {}", node_id);
                 pool_success += 1;

@@ -5,7 +5,7 @@ use crate::core::AppState;
 use crate::core::job_idempotency::{make_job_key, JobType};
 use crate::core::dispatcher::{Job, JobStatus};
 use crate::messages::FeatureFlags;
-use tracing::info;
+use tracing::{info, warn};
 
 /// 检查 Job 是否已存在（幂等性检查）
 /// 
@@ -40,8 +40,10 @@ async fn check_and_get_existing_job(
 
 /// 创建翻译任务（支持房间模式多语言）
 /// 与备份一致：音频随 Job 存储，支持房间多 Job 与 failover 重派
+/// turn_id：当前 turn 的 ID，用于 select_node 读 affinity（同一 turn 内连续 job 路由到同一节点）
 pub(crate) async fn create_translation_jobs(
     state: &AppState,
+    turn_id: &str,
     session_id: &str,
     utterance_index: u64,
     src_lang: String,
@@ -96,6 +98,7 @@ pub(crate) async fn create_translation_jobs(
             let audio_base64 = general_purpose::STANDARD.encode(&audio_data);
             let job = create_job_with_minimal_scheduler(
                 state,
+                Some(turn_id),
                 session_id,
                 utterance_index,
                 src_lang,
@@ -164,6 +167,7 @@ pub(crate) async fn create_translation_jobs(
             
             let job = create_job_with_minimal_scheduler(
                 state,
+                Some(turn_id),
                 session_id,
                 utterance_index,
                 src_lang.clone(),
@@ -202,6 +206,12 @@ pub(crate) async fn create_translation_jobs(
             state.job_idempotency.get_or_create_job_id(&job_key, job.job_id.clone()).await;
             
             jobs.push(job);
+            // 关键：第一个 job 分配后立即写入 turn 亲和，使本 turn 内后续 job 的 select_node 能命中同一节点
+            if is_max_duration_triggered && jobs.len() == 1 {
+                if let Some(ref node_id) = jobs.first().and_then(|j| j.assigned_node_id.as_ref()) {
+                    write_turn_affinity_after_first_job(state, turn_id, session_id, node_id).await;
+                }
+            }
         }
         
         Ok(jobs)
@@ -229,6 +239,7 @@ pub(crate) async fn create_translation_jobs(
         let audio_base64 = general_purpose::STANDARD.encode(&audio_data);
         let job = create_job_with_minimal_scheduler(
             state,
+            Some(turn_id),
             session_id,
             utterance_index,
             src_lang,
@@ -277,6 +288,44 @@ pub(crate) async fn create_translation_jobs(
     }
 }
 
+/// MaxDuration 时在第一个 job 分配后立即写入 turn 亲和，使同 turn 内后续 job 的 select_node 能命中同一节点。
+async fn write_turn_affinity_after_first_job(
+    state: &AppState,
+    turn_id: &str,
+    session_id: &str,
+    node_id: &str,
+) {
+    if let Some(ref rt) = state.phase2 {
+        let turn_key = format!("scheduler:turn:{}", turn_id);
+        let session_key = format!("scheduler:session:{}", session_id);
+        let script = r#"
+redis.call('HSET', KEYS[1], 'affinity_node_id', ARGV[1])
+redis.call('HSET', KEYS[2], 'current_turn_id', ARGV[2])
+return 1
+"#;
+        let mut cmd = redis::cmd("EVAL");
+        cmd.arg(script).arg(2).arg(&turn_key).arg(&session_key).arg(node_id).arg(turn_id);
+        match rt.redis_query::<i64>(cmd).await {
+            Ok(_) => {
+                info!(
+                    session_id = %session_id,
+                    turn_id = %turn_id,
+                    node_id = %node_id,
+                    "Turn affinity: Recorded after first job (MaxDuration)"
+                );
+            }
+            Err(e) => {
+                warn!(
+                    session_id = %session_id,
+                    turn_id = %turn_id,
+                    error = %e,
+                    "Turn affinity: Failed to record after first job"
+                );
+            }
+        }
+    }
+}
+
 fn make_request_id(session_id: &str, utterance_index: u64, tgt_lang: &str, trace_id: &str) -> String {
     // Phase 1：任务级绑定（会话打散）。request_id 的目标是"同一任务重试幂等"，不做会话级粘滞
     // 选择稳定字段组合：session_id + utterance_index + tgt_lang + trace_id
@@ -292,8 +341,10 @@ fn should_bind_job_to_node(is_manual_cut: bool, is_max_duration_triggered: bool)
 }
 
 /// 使用极简无锁调度服务创建任务
+/// turn_id: 当前 turn 的 ID，用于 select_node 读 affinity；None 时不使用 turn 亲和
 async fn create_job_with_minimal_scheduler(
     state: &AppState,
+    turn_id: Option<&str>,
     session_id: &str,
     utterance_index: u64,
     src_lang: String,
@@ -353,7 +404,7 @@ async fn create_job_with_minimal_scheduler(
 
     let pool_service = state.pool_service.as_ref()
         .ok_or_else(|| anyhow::anyhow!("PoolService not initialized"))?;
-    let node_id_str = pool_service.select_node(pool_src, pool_tgt, job_id_for_binding, Some(session_id)).await?;
+    let node_id_str = pool_service.select_node(pool_src, pool_tgt, job_id_for_binding, turn_id).await?;
     
     let node_id = Some(node_id_str);
 
@@ -406,6 +457,7 @@ async fn create_job_with_minimal_scheduler(
         is_manual_cut,
         is_timeout_triggered,
         is_max_duration_triggered,
+        turn_id: turn_id.map(String::from),
         expected_duration_ms: None, // 默认不设置预计时长
     };
 
@@ -413,4 +465,28 @@ async fn create_job_with_minimal_scheduler(
     state.dispatcher.save_job(&job).await?;
 
     Ok(job)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::should_bind_job_to_node;
+
+    /// Turn 内亲和：手动 finalize 不绑定 job 到节点
+    #[test]
+    fn test_should_bind_job_to_node_manual_no_bind() {
+        assert!(!should_bind_job_to_node(true, false));
+        assert!(!should_bind_job_to_node(true, true));
+    }
+
+    /// Turn 内亲和：MaxDuration finalize 需绑定（同一 turn 内连续 job 路由到同一节点）
+    #[test]
+    fn test_should_bind_job_to_node_max_duration_bind() {
+        assert!(should_bind_job_to_node(false, true));
+    }
+
+    /// Turn 内亲和：Timeout finalize 不绑定
+    #[test]
+    fn test_should_bind_job_to_node_timeout_no_bind() {
+        assert!(!should_bind_job_to_node(false, false));
+    }
 }

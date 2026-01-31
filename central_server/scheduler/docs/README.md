@@ -201,6 +201,9 @@ redis-cli SMEMBERS lingua:v1:nodes:all
 - **手动/Timeout**: 立即处理，合并 pending 音频
 参考: [Finalize 处理机制](./finalize/README.md)
 
+### Q10: 如何运行调度器单元测试？
+**A**: 在 `central_server/scheduler` 目录下执行 `cargo test --lib`。当前约 36 例通过（含 job_creator、pool_service、audio_duration、job_idempotency、node_data 等）。依赖 Redis 的集成测试在 `tests.disabled` 或需单独环境。Finalize / Turn 亲和相关逻辑由 lib 内单元测试覆盖；详细验证见 [调度器 finalize 聚合修复与备份对齐](../../troubleshooting/调度器_finalize聚合修复_与备份对齐_2026_01.md#4-测试验证2026-01)。
+
 ---
 
 ## 🔄 最近更新

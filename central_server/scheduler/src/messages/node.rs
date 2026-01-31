@@ -128,6 +128,9 @@ pub enum NodeMessage {
         /// 是否由 MaxDuration（持续说话超长）触发；节点端按切片送 ASR
         #[serde(skip_serializing_if = "std::ops::Not::not", default)]
         is_max_duration_triggered: bool,
+        /// 当前 turn 的 ID；节点端用做 bufferKey，同一 turn 内多 job 共用同一 buffer
+        #[serde(skip_serializing_if = "Option::is_none")]
+        turn_id: Option<String>,
     },
     /// Scheduler -> Node：取消一个正在处理/排队的 job（best-effort）
     #[serde(rename = "job_cancel")]

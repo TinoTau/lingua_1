@@ -55,6 +55,19 @@ impl AudioBufferManager {
         self.last_chunk_at_ms.read().await.get(session_id).copied()
     }
 
+    /// 记录收到音频块的时间，并判断是否超过停顿阈值（与备份一致）。
+    /// 返回 true 表示：本次与上次间隔 > pause_ms，应视为“新句开始”（需先 finalize 上一句）。
+    /// 会更新 last_chunk_at_ms 为 now_ms。
+    pub async fn record_chunk_and_check_pause(&self, session_id: &str, now_ms: i64, pause_ms: u64) -> bool {
+        let mut map = self.last_chunk_at_ms.write().await;
+        let exceeded = map
+            .get(session_id)
+            .map(|prev| now_ms.saturating_sub(*prev) > pause_ms as i64)
+            .unwrap_or(false);
+        map.insert(session_id.to_string(), now_ms);
+        exceeded
+    }
+
     /// 更新 last_chunk_at_ms
     /// 用于空的 is_final=true 消息或 RestartTimer 事件，重置 timeout 检测的基准时间
     pub async fn update_last_chunk_at_ms(&self, session_id: &str, now_ms: i64) {

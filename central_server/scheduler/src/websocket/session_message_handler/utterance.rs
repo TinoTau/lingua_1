@@ -12,6 +12,7 @@ pub(super) async fn handle_utterance(
     tx: &mpsc::UnboundedSender<Message>,
     sess_id: String,
     utterance_index: u64,
+    manual_cut: bool,
     src_lang: String,
     tgt_lang: String,
     dialect: Option<String>,
@@ -64,8 +65,10 @@ pub(super) async fn handle_utterance(
         "【Utterance】开始创建翻译任务"
     );
 
+    let turn_id = uuid::Uuid::new_v4().to_string();
     let jobs = create_translation_jobs(
         state,
+        &turn_id,
         &sess_id,
         utterance_index,
         src_lang.clone(),
@@ -87,9 +90,9 @@ pub(super) async fn handle_utterance(
         trace_id.clone(), // Use trace_id from Utterance or Session
         None, // Utterance 消息没有客户端时间戳
         None, // EDGE-4: Padding 配置（Utterance 消息不传递 padding_ms，由 finalize 时计算）
-        false, // is_manual_cut: Utterance 消息不是手动发送（由 finalize 时确定）
-        false, // is_timeout_triggered: Utterance 消息不是 Timeout 触发
-        false, // is_max_duration_triggered: Utterance 消息不是 MaxDuration 触发
+        manual_cut,
+        false,
+        false,
     )
     .await?;
 

@@ -22,7 +22,6 @@ import { ResourceUsage } from '../service-layer/ServiceSnapshots';
 import { ResultSender } from './node-agent-result-sender';
 import { AggregatorMiddleware, type AggregatorMiddlewareConfig } from './aggregator-middleware';
 import { JobProcessor } from './node-agent-job-processor';
-import { SessionAffinityManager } from '../pipeline-orchestrator/session-affinity-manager';
 
 export interface NodeStatus {
   online: boolean;
@@ -303,9 +302,6 @@ export class NodeAgent {
           this.registrationHandler.updateConnection(this.ws, this.nodeId);
           this.jobProcessor.updateConnection(this.ws, this.nodeId);
           this.resultSender.updateConnection(this.ws, this.nodeId);
-          
-          // ✅ 关键修复：更新SessionAffinityManager的nodeId（用于超时finalize的session affinity）
-          SessionAffinityManager.getInstance().setNodeId(this.nodeId);
           
           logger.info({ nodeId: this.nodeId }, 'Node registered successfully');
           

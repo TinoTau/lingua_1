@@ -7,13 +7,12 @@ import { TranslationStage } from './translation-stage';
 import { JobAssignMessage } from '@shared/protocols/messages';
 import { TaskRouter } from '../../task-router/task-router';
 import { AggregatorManager } from '../../aggregator/aggregator-manager';
+import { getSequentialExecutor } from '../../sequential-executor/sequential-executor-factory';
+import { withGpuLease } from '../../gpu-arbiter';
 
 jest.mock('../../task-router/task-router');
 jest.mock('../../sequential-executor/sequential-executor-factory');
 jest.mock('../../gpu-arbiter');
-
-import { getSequentialExecutor } from '../../sequential-executor/sequential-executor-factory';
-import { withGpuLease } from '../../gpu-arbiter';
 
 describe('TranslationStage - context_text（节点端不传）', () => {
   let mockTaskRouter: jest.Mocked<TaskRouter>;

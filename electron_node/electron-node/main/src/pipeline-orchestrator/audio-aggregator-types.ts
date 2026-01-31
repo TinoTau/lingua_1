@@ -33,7 +33,6 @@ export interface JobContainer {
 export type BufferState = 
   | 'OPEN'                    // 正常接收音频块
   | 'PENDING_TIMEOUT'         // 超时 finalize，pendingTimeoutAudio 已设置
-  | 'PENDING_MAXDUR'          // MaxDuration finalize，pendingMaxDurationAudio 已设置
   | 'FINALIZING'              // 正在 finalize，冻结写入
   | 'CLOSED';                 // 已关闭，清理完成
 
@@ -65,12 +64,6 @@ export interface AudioBuffer {
   pendingTimeoutAudioCreatedAt?: number;
   /** 超时finalize的job信息（用于originalJobIds分配） */
   pendingTimeoutJobInfo?: OriginalJobInfo[];
-  /** MaxDuration finalize的音频缓存，等待下一个job合并 */
-  pendingMaxDurationAudio?: Buffer;
-  /** pendingMaxDurationAudio创建时间（用于TTL检查） */
-  pendingMaxDurationAudioCreatedAt?: number;
-  /** MaxDuration finalize的job信息（用于originalJobIds分配） */
-  pendingMaxDurationJobInfo?: OriginalJobInfo[];
   /** 小片段缓存（<5秒），等待合并成≥5秒批次 */
   pendingSmallSegments: Buffer[];
   /** 小片段对应的job信息（用于originalJobIds分配） */
@@ -94,5 +87,5 @@ export interface AudioChunkResult {
   /** 是否是超时截断，需要等待下一个job */
   isTimeoutPending?: boolean;
   /** 处理原因（用于可观测性） */
-  reason?: 'NORMAL' | 'EMPTY_INPUT' | 'EMPTY_BUFFER' | 'PENDING_MAXDUR_HOLD' | 'FORCE_FLUSH_PENDING_MAXDUR_TTL' | 'ASR_FAILURE_PARTIAL' | 'NORMAL_MERGE' | 'FORCE_FLUSH_MANUAL_OR_TIMEOUT_FINALIZE';
+  reason?: 'NORMAL' | 'EMPTY_INPUT' | 'EMPTY_BUFFER' | 'NORMAL_MERGE' | 'FORCE_FLUSH_MANUAL_OR_TIMEOUT_FINALIZE';
 }

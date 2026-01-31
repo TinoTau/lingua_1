@@ -8,6 +8,7 @@ use lingua_scheduler::phase2::RedisHandle;
 use lingua_scheduler::pool::PoolService;
 use lingua_scheduler::messages::ServiceType;
 use lingua_scheduler::core::config::Phase2RedisConfig;
+use lingua_scheduler::Config;
 
 #[tokio::main]
 async fn main() {
@@ -25,8 +26,9 @@ async fn main() {
         cluster_urls: Vec::new(),
         key_prefix: "lingua:v1".to_string(),
     };
-    
-    let redis = match RedisHandle::connect(&redis_config).await {
+    let scheduler_config = Config::default().scheduler;
+
+    let redis = match RedisHandle::connect(&redis_config, &scheduler_config).await {
         Ok(r) => {
             println!("✅ Redis 连接成功");
             Arc::new(r)
@@ -51,8 +53,8 @@ async fn main() {
     };
     
     // 创建 NodeRegistry 并关联 PoolService
-    let mut registry = NodeRegistry::new(redis.clone());
-    registry.set_pool_service(pool_service.clone());
+    let registry = NodeRegistry::new(redis.clone());
+    registry.set_pool_service(pool_service.clone()).await;
     println!("✅ NodeRegistry 初始化完成（已关联 PoolService）\n");
     
     // 测试1: 查询在线节点
@@ -73,7 +75,7 @@ async fn main() {
                     println!("节点 {}: {}", i + 1, node.node_id);
                     println!("  状态: {}", node.status);
                     println!("  在线: {}", if node.online { "是" } else { "否" });
-                    println!("  语言集合: {:?}", node.lang_sets);
+                    println!("  已安装服务: {:?}", node.installed_services);
                     println!("  GPU: {}", if node.has_gpu { "有" } else { "无" });
                     println!("  容量: {}/{}", node.current_jobs, node.max_concurrency);
                     println!("  资源使用:");
@@ -169,7 +171,7 @@ async fn main() {
     
     for (src, tgt) in pool_test_pairs {
         print!("语言对 {}:{} => ", src, tgt);
-        match pool_service.select_node(src, tgt, None).await {
+        match pool_service.select_node(src, tgt, None, None).await {
             Ok(node_id) => {
                 println!("✅ 找到节点: {}", node_id);
             }

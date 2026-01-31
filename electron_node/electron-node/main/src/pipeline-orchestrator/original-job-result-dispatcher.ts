@@ -11,6 +11,7 @@
 import { JobAssignMessage } from '@shared/protocols/messages';
 import { ASRResult, SegmentInfo } from '../task-router/types';
 import logger from '../logger';
+import { buildFinalAsrDataFromSorted } from './original-job-result-dispatcher-internal';
 
 /**
  * 原始Job的ASR数据
@@ -60,8 +61,6 @@ interface OriginalJobRegistration {
   isFinalized: boolean;
   /** TTL 定时器句柄（用于超时强制 finalize） */
   ttlTimerHandle?: NodeJS.Timeout;
-  /** 是否有 pendingMaxDurationAudio（等待后续 batch 到达） */
-  hasPendingMaxDurationAudio: boolean;
 }
 
 /**
@@ -124,7 +123,7 @@ export class OriginalJobResultDispatcher {
   cleanupAllTimers(): void {
     // 停止清理定时器
     this.stopCleanupTimer();
-    
+
     // 清理所有 registration 的 TTL 定时器
     for (const [sessionId, sessionRegistrations] of this.registrations.entries()) {
       for (const [originalJobId, registration] of sessionRegistrations.entries()) {
@@ -205,21 +204,19 @@ export class OriginalJobResultDispatcher {
 
   /**
    * 注册原始job
-   * 
+   *
    * @param sessionId 会话ID
    * @param originalJobId 原始job ID
    * @param expectedSegmentCount 期望的片段数量（必须等于 audioSegments.length，强制一致）
    * @param originalJob 原始job消息
    * @param callback 处理回调
-   * @param hasPendingMaxDurationAudio 是否有 pendingMaxDurationAudio（等待后续 batch 到达）
    */
   registerOriginalJob(
     sessionId: string,
     originalJobId: string,
     expectedSegmentCount: number,
     originalJob: JobAssignMessage,
-    callback: OriginalJobCallback,
-    hasPendingMaxDurationAudio: boolean
+    callback: OriginalJobCallback
   ): void {
     let sessionRegistrations = this.registrations.get(sessionId);
     if (!sessionRegistrations) {
@@ -228,26 +225,13 @@ export class OriginalJobResultDispatcher {
     }
 
     const existingRegistration = sessionRegistrations.get(originalJobId);
-    
+
     // ✅ 架构修复：如果已存在且未 finalized，追加 batch 而不是覆盖
     if (existingRegistration && !existingRegistration.isFinalized) {
       // 追加 batch：增加 expectedSegmentCount，保留 accumulatedSegments
       existingRegistration.expectedSegmentCount += expectedSegmentCount;
       existingRegistration.lastActivityAt = Date.now();
-      
-      // 如果后续 batch 到达，清除 pendingMaxDurationAudio 标记（说明 pending 已被处理）
-      if (existingRegistration.hasPendingMaxDurationAudio) {
-        existingRegistration.hasPendingMaxDurationAudio = false;
-        logger.info(
-          {
-            sessionId,
-            originalJobId,
-            note: 'Subsequent batch arrived, pendingMaxDurationAudio flag cleared',
-          },
-          'OriginalJobResultDispatcher: Subsequent batch arrived, pendingMaxDurationAudio processed'
-        );
-      }
-      
+
       // 重置 TTL 定时器（延长等待时间）
       if (existingRegistration.ttlTimerHandle) {
         clearTimeout(existingRegistration.ttlTimerHandle);
@@ -255,7 +239,7 @@ export class OriginalJobResultDispatcher {
       existingRegistration.ttlTimerHandle = setTimeout(() => {
         this.forceFinalizePartial(sessionId, originalJobId, 'registration_ttl');
       }, this.REGISTRATION_TTL_MS);
-      
+
       logger.info(
         {
           sessionId,
@@ -284,14 +268,13 @@ export class OriginalJobResultDispatcher {
       startedAt: now,
       lastActivityAt: now,
       isFinalized: false,
-      hasPendingMaxDurationAudio,
     };
-    
+
     // ✅ 启动 TTL 定时器（超时强制 finalize partial）
     registration.ttlTimerHandle = setTimeout(() => {
       this.forceFinalizePartial(sessionId, originalJobId, 'registration_ttl');
     }, this.REGISTRATION_TTL_MS);
-    
+
     sessionRegistrations.set(originalJobId, registration);
 
     logger.info(
@@ -358,7 +341,7 @@ export class OriginalJobResultDispatcher {
       // 只有非 missing 的 segment 才添加到 segmentsList
       registration.accumulatedSegmentsList.push(...asrData.asrSegments);
     }
-    
+
     // ✅ 更新计数（missing segment 也计入 receivedCount）
     registration.receivedCount++;
     if (asrData.missing) {
@@ -378,8 +361,8 @@ export class OriginalJobResultDispatcher {
         asrTextLength: asrData.asrText.length,
         asrTextPreview: asrData.asrText.substring(0, 50),
         asrSegmentsCount: asrData.asrSegments.length,
-        note: asrData.missing 
-          ? 'Missing segment (ASR failed/timeout)' 
+        note: asrData.missing
+          ? 'Missing segment (ASR failed/timeout)'
           : 'Normal segment - batchIndex assigned by dispatcher (relative to originalJobId)',
       },
       'OriginalJobResultDispatcher: [Accumulate] Added ASR segment to accumulation'
@@ -389,30 +372,23 @@ export class OriginalJobResultDispatcher {
     const shouldProcess = registration.receivedCount >= registration.expectedSegmentCount;
 
     if (shouldProcess) {
-      // ✅ 架构设计：如果所有batch都已经收到，立即处理
-      // pendingMaxDurationAudio只影响后续的batch，不应该影响当前已经收到的batch的处理
-      // 如果所有batch都已收到，应该立即处理，不需要等待pending音频
-      
-      // ✅ 清除 TTL 定时器
+      // 清除 TTL 定时器
       if (registration.ttlTimerHandle) {
         clearTimeout(registration.ttlTimerHandle);
         registration.ttlTimerHandle = undefined;
       }
-      
+
       // ✅ 标记为已finalize
       registration.isFinalized = true;
 
-      // ✅ 按batchIndex排序，保证顺序（如果batchIndex存在）
       const sortedSegments = [...registration.accumulatedSegments].sort((a, b) => {
         const aIndex = a.batchIndex ?? 0;
         const bIndex = b.batchIndex ?? 0;
         return aIndex - bIndex;
       });
-
-      // ✅ 按排序后的顺序合并文本（跳过 missing segment）
-      const nonMissingSegments = sortedSegments.filter(s => !s.missing);
-      const fullText = nonMissingSegments.map(s => s.asrText).join(' ');
       const isPartial = registration.missingCount > 0;
+      const finalAsrData = buildFinalAsrDataFromSorted(registration, originalJobId, sortedSegments);
+      const fullText = finalAsrData.asrText;
 
       logger.info(
         {
@@ -429,29 +405,20 @@ export class OriginalJobResultDispatcher {
             isMissing: s.missing || false,
             textLength: s.asrText.length,
             textPreview: s.asrText.substring(0, 50),
-            note: s.missing 
+            note: s.missing
               ? 'Missing segment (ASR failed/timeout) - excluded from final text'
-              : (s.asrText.length === 0 
+              : (s.asrText.length === 0
                 ? 'Empty result (audio quality rejection or ASR returned empty) - included in final text but will be empty'
                 : 'Normal segment with text'),
           })),
           mergedTextLength: fullText.length,
           mergedTextPreview: fullText.substring(0, 100),
-          note: registration.missingCount > 0 
+          note: registration.missingCount > 0
             ? `Has ${registration.missingCount} missing segment(s) - these were excluded from final text merge`
             : 'No missing segments - all batches processed successfully',
         },
         'OriginalJobResultDispatcher: [TextMerge] Merged ASR batches text'
       );
-
-      // 触发处理回调
-      const finalAsrData: OriginalJobASRData = {
-        originalJobId,
-        asrText: fullText,
-        asrSegments: registration.accumulatedSegmentsList,
-        languageProbabilities: this.mergeLanguageProbabilities(nonMissingSegments),
-      };
-
       await registration.callback(finalAsrData, registration.originalJob);
 
       // 清除注册信息
@@ -502,16 +469,13 @@ export class OriginalJobResultDispatcher {
 
     // 如果有累积的ASR结果，立即处理（partial）
     if (registration.accumulatedSegments.length > 0) {
-      // ✅ 按batchIndex排序，保证顺序（如果batchIndex存在）
       const sortedSegments = [...registration.accumulatedSegments].sort((a, b) => {
         const aIndex = a.batchIndex ?? 0;
         const bIndex = b.batchIndex ?? 0;
         return aIndex - bIndex;
       });
-
-      // ✅ 按排序后的顺序合并文本（跳过 missing segment）
-      const nonMissingSegments = sortedSegments.filter(s => !s.missing);
-      const fullText = nonMissingSegments.map(s => s.asrText).join(' ');
+      const finalAsrData = buildFinalAsrDataFromSorted(registration, originalJobId, sortedSegments);
+      const fullText = finalAsrData.asrText;
 
       logger.info(
         {
@@ -536,13 +500,6 @@ export class OriginalJobResultDispatcher {
         },
         'OriginalJobResultDispatcher: [TextMerge] Merged ASR batches text (forceFinalizePartial path)'
       );
-
-      const finalAsrData: OriginalJobASRData = {
-        originalJobId,
-        asrText: fullText,
-        asrSegments: registration.accumulatedSegmentsList,
-        languageProbabilities: this.mergeLanguageProbabilities(nonMissingSegments),
-      };
 
       logger.info(
         {
@@ -585,18 +542,4 @@ export class OriginalJobResultDispatcher {
   }
 
 
-  /**
-   * 合并语言概率
-   */
-  private mergeLanguageProbabilities(
-    segments: OriginalJobASRData[]
-  ): Record<string, number> | undefined {
-    if (segments.length === 0) {
-      return undefined;
-    }
-
-    // 使用最后一个片段的语言概率（或合并所有片段的概率）
-    const lastSegment = segments[segments.length - 1];
-    return lastSegment.languageProbabilities;
-  }
 }

@@ -2,8 +2,8 @@
  * 应用生命周期管理单元测试
  */
 
-import { loadNodeConfig, saveNodeConfig, ServicePreferences } from '../node-config';
-import { getServiceSupervisor } from '../service-layer';
+import { loadNodeConfig, saveNodeConfig } from '../node-config';
+import { getServiceRunner } from '../service-layer';
 import logger from '../logger';
 
 // Mock dependencies
@@ -18,12 +18,11 @@ describe('Application Lifecycle Management', () => {
   let mockRustServiceManager: any;
   let mockPythonServiceManager: any;
   let mockNodeAgent: any;
-  let mockSupervisor: any;
+  let mockRunner: any;
 
   beforeEach(() => {
     jest.clearAllMocks();
 
-    // Mock managers
     mockRustServiceManager = {
       getStatus: jest.fn().mockReturnValue({ running: true, pid: 1234 }),
       stop: jest.fn().mockResolvedValue(undefined),
@@ -41,21 +40,15 @@ describe('Application Lifecycle Management', () => {
       stop: jest.fn(),
     };
 
-    mockSupervisor = {
-      listServices: jest.fn().mockReturnValue([
-        {
-          def: { id: 'semantic-repair-zh', type: 'semantic' },
-          runtime: { status: 'running' },
-        },
-        {
-          def: { id: 'semantic-repair-en', type: 'semantic' },
-          runtime: { status: 'stopped' },
-        },
+    mockRunner = {
+      getAllStatuses: jest.fn().mockReturnValue([
+        { serviceId: 'semantic-repair-zh', type: 'semantic', status: 'running' },
+        { serviceId: 'semantic-repair-en', type: 'semantic', status: 'stopped' },
       ]),
-      stopAllServices: jest.fn().mockResolvedValue(undefined),
+      stopAll: jest.fn().mockResolvedValue(undefined),
     };
 
-    (getServiceSupervisor as jest.Mock).mockReturnValue(mockSupervisor);
+    (getServiceRunner as jest.Mock).mockReturnValue(mockRunner);
 
     // Mock config
     (loadNodeConfig as jest.Mock).mockReturnValue({
@@ -89,37 +82,33 @@ describe('Application Lifecycle Management', () => {
     });
 
     it('should save semantic repair service states', () => {
-      const services = mockSupervisor.listServices();
-      const semanticServices = services.filter((s: any) => s.def.type === 'semantic');
+      const services = mockRunner.getAllStatuses();
+      const semanticServices = services.filter((s: any) => s.type === 'semantic');
       expect(semanticServices).toHaveLength(2);
-      expect(semanticServices[0].def.id).toBe('semantic-repair-zh');
+      expect(semanticServices[0].serviceId).toBe('semantic-repair-zh');
     });
   });
 
   describe('stopAllServices', () => {
     it('should stop services in correct order', async () => {
-      // Verify supervisor can stop services
-      await mockSupervisor.stopAllServices();
-      expect(mockSupervisor.stopAllServices).toHaveBeenCalled();
+      await mockRunner.stopAll();
+      expect(mockRunner.stopAll).toHaveBeenCalled();
 
-      // Verify Python manager can stop services
       await mockPythonServiceManager.stopAllServices();
       expect(mockPythonServiceManager.stopAllServices).toHaveBeenCalled();
 
-      // Verify Rust manager can stop service
       await mockRustServiceManager.stop();
       expect(mockRustServiceManager.stop).toHaveBeenCalled();
 
-      // Verify NodeAgent can be stopped
       mockNodeAgent.stop();
       expect(mockNodeAgent.stop).toHaveBeenCalled();
     });
 
     it('should handle errors during service stop', async () => {
-      mockSupervisor.stopAllServices.mockRejectedValue(new Error('Stop failed'));
+      mockRunner.stopAll.mockRejectedValue(new Error('Stop failed'));
 
       try {
-        await mockSupervisor.stopAllServices();
+        await mockRunner.stopAll();
         fail('Should have thrown error');
       } catch (error) {
         expect((error as Error).message).toBe('Stop failed');
@@ -192,9 +181,9 @@ describe('Application Lifecycle Management', () => {
       expect(mockNodeAgent.stop).toBeDefined();
     });
 
-    it('ServiceSupervisor should have required methods', () => {
-      expect(mockSupervisor.listServices).toBeDefined();
-      expect(mockSupervisor.stopAllServices).toBeDefined();
+    it('ServiceRunner should have required methods', () => {
+      expect(mockRunner.getAllStatuses).toBeDefined();
+      expect(mockRunner.stopAll).toBeDefined();
     });
   });
 });

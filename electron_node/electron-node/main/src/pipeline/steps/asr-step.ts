@@ -32,7 +32,7 @@ export async function runAsrStep(
     throw new Error('AudioAggregator must be provided in services bundle');
   }
   const audioAggregator = services.audioAggregator;
-  // 注意：nodeId已通过SessionAffinityManager管理，不需要单独设置
+  // 注意：节点由调度端亲和路由决策，此处无需设置 nodeId
   
   const audioProcessor = new PipelineOrchestratorAudioProcessor(audioAggregator);
   const asrResultProcessor = new PipelineOrchestratorASRResultProcessor();
@@ -257,8 +257,10 @@ export async function runAsrStep(
     }
   }
 
-  // 双向模式：根据检测到的语言自动确定目标语言
-  if (ctx.languageProbabilities && job.lang_a && job.lang_b) {
+  // 双向/自动模式：在 src_lang === 'auto' 时设置 ctx.detectedSourceLang，供聚合/语义修复/翻译使用
+  if (job.src_lang !== 'auto') {
+    // 非 auto，无需检测
+  } else if (ctx.languageProbabilities && job.lang_a && job.lang_b) {
     const detectedLang = determineDetectedLanguage(ctx.languageProbabilities, job.lang_a, job.lang_b);
     if (detectedLang) {
       ctx.detectedSourceLang = detectedLang;
@@ -267,6 +269,65 @@ export async function runAsrStep(
       ctx.detectedSourceLang = job.lang_a;
       ctx.detectedTargetLang = job.lang_b;
     }
+  } else if (ctx.languageProbabilities && Object.keys(ctx.languageProbabilities).length > 0) {
+    // job 未带 lang_a/lang_b 时，用 ASR 返回的最高概率语言；规范化为 Stage 可识别的 zh/en
+    const topLang = getTopLanguageFromProbabilities(ctx.languageProbabilities);
+    ctx.detectedSourceLang = normalizeToStageSourceLang(topLang);
+    if (ctx.detectedSourceLang) {
+      logger.info(
+        { jobId: job.job_id, topLang, detectedSourceLang: ctx.detectedSourceLang, hasLangA: !!job.lang_a, hasLangB: !!job.lang_b },
+        'runAsrStep: src_lang=auto, set detectedSourceLang from ASR (no lang_a/lang_b on job)'
+      );
+    }
+  }
+
+  // 回退：ASR 未返回 language_probabilities 时，用 job.lang_a / job.lang_b 作为源/目标，避免下游 SEM_REPAIR 收到 src_lang=auto
+  if (job.src_lang === 'auto' && !ctx.detectedSourceLang && (job.lang_a || job.lang_b)) {
+    const normA = job.lang_a ? normalizeToStageSourceLang(job.lang_a) : undefined;
+    const normB = job.lang_b ? normalizeToStageSourceLang(job.lang_b) : undefined;
+    if (normA) {
+      ctx.detectedSourceLang = normA;
+      ctx.detectedTargetLang = normB || (job.lang_b ?? job.lang_a);
+      logger.info(
+        { jobId: job.job_id, detectedSourceLang: ctx.detectedSourceLang, detectedTargetLang: ctx.detectedTargetLang, fallback: 'job.lang_a' },
+        'runAsrStep: src_lang=auto, set detectedSourceLang from job.lang_a (ASR did not return language_probabilities)'
+      );
+    } else if (normB) {
+      ctx.detectedSourceLang = normB;
+      ctx.detectedTargetLang = normA || (job.lang_a ?? job.lang_b);
+      logger.info(
+        { jobId: job.job_id, detectedSourceLang: ctx.detectedSourceLang, detectedTargetLang: ctx.detectedTargetLang, fallback: 'job.lang_b' },
+        'runAsrStep: src_lang=auto, set detectedSourceLang from job.lang_b (ASR did not return language_probabilities)'
+      );
+    }
+  }
+
+  // src_lang=auto 且仍未设置 detectedSourceLang 时，输出警告
+  if (job.src_lang === 'auto' && !ctx.detectedSourceLang) {
+    const reasons: string[] = [];
+    if (!ctx.languageProbabilities || Object.keys(ctx.languageProbabilities).length === 0) {
+      reasons.push('ASR 未返回 language_probabilities');
+    }
+    if (!job.lang_a && !job.lang_b) {
+      reasons.push('job 未带 lang_a/lang_b（上游未在双向/自动场景下提供）');
+    } else if (job.lang_a && job.lang_b) {
+      const nA = normalizeToStageSourceLang(job.lang_a);
+      const nB = normalizeToStageSourceLang(job.lang_b);
+      if (!nA && !nB) {
+        reasons.push(`job.lang_a/lang_b 无法规范化为 zh/en（lang_a=${job.lang_a}, lang_b=${job.lang_b}）`);
+      }
+    }
+    if (ctx.languageProbabilities && Object.keys(ctx.languageProbabilities).length > 0) {
+      const topLang = getTopLanguageFromProbabilities(ctx.languageProbabilities);
+      const normalized = normalizeToStageSourceLang(topLang);
+      if (!normalized) {
+        reasons.push(`ASR 返回的最高语言无法规范化为 zh/en（topLang=${topLang ?? 'undefined'}）`);
+      }
+    }
+    logger.warn(
+      { jobId: job.job_id, sessionId: job.session_id, reasons },
+      'runAsrStep: src_lang=auto 时未设置 detectedSourceLang，下游可能报错'
+    );
   }
 
   logger.info(
@@ -284,6 +345,33 @@ export async function runAsrStep(
 
   // ASR 完成回调
   options?.asrCompletedCallback?.(true);
+}
+
+/**
+ * 从语言概率对象中取概率最高的语言代码
+ */
+function getTopLanguageFromProbabilities(record: Record<string, number>): string | undefined {
+  if (!record || Object.keys(record).length === 0) return undefined;
+  let maxProb = -1;
+  let topLang: string | undefined;
+  for (const [lang, prob] of Object.entries(record)) {
+    if (prob > maxProb) {
+      maxProb = prob;
+      topLang = lang;
+    }
+  }
+  return topLang;
+}
+
+/**
+ * 将 ASR 返回的语言代码规范化为语义修复/翻译 Stage 可识别的 'zh' | 'en'
+ */
+function normalizeToStageSourceLang(lang: string | undefined): 'zh' | 'en' | undefined {
+  if (!lang || typeof lang !== 'string') return undefined;
+  const base = lang.split('-')[0].toLowerCase();
+  if (base === 'zh') return 'zh';
+  if (base === 'en') return 'en';
+  return undefined;
 }
 
 /**

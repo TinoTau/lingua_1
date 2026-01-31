@@ -30,6 +30,23 @@ export async function runAggregationStep(
     return;
   }
 
+  const turnId = (job as any).turn_id as string | undefined;
+  const isTurnFinalize = !!(job as any).is_manual_cut || (job as any).is_timeout_triggered;
+
+  // 有 turn_id 且非 finalize：仅累积本段，不送语义修复；不跑 AggregationStage，避免重复逻辑
+  if (turnId && !isTurnFinalize) {
+    services.aggregatorManager.appendTurnSegment(job.session_id, turnId, ctx.asrText || '');
+    ctx.segmentForJobResult = ctx.asrText || '';
+    ctx.lastCommittedText = null;
+    ctx.shouldSendToSemanticRepair = false;
+    ctx.repairedText = '';
+    logger.info(
+      { jobId: job.job_id, sessionId: job.session_id, turnId },
+      'runAggregationStep: Turn segment accumulated, waiting for finalize'
+    );
+    return;
+  }
+
   // 创建临时 JobResult 用于聚合
   const tempResult: JobResult = {
     text_asr: ctx.asrText || '',
@@ -83,17 +100,25 @@ export async function runAggregationStep(
     services.deduplicationHandler || null
   );
 
-  // 执行聚合（传递缓存的 lastCommittedText，避免重复获取）
   const aggregationResult = aggregationStage.process(jobWithDetectedLang as any, tempResult, lastCommittedText);
 
-  // 更新 JobContext
-  ctx.segmentForJobResult = aggregationResult.segmentForJobResult;
   ctx.aggregationAction = aggregationResult.action;
   ctx.aggregationChanged = aggregationResult.aggregationChanged;
   ctx.isLastInMergedGroup = aggregationResult.isLastInMergedGroup;
-  ctx.shouldSendToSemanticRepair = aggregationResult.shouldSendToSemanticRepair;
   ctx.aggregationMetrics = aggregationResult.metrics;
-  if (aggregationResult.shouldSendToSemanticRepair === false) {
+
+  if (turnId && isTurnFinalize) {
+    const accumulated = services.aggregatorManager.getAndClearTurnAccumulator(job.session_id, turnId);
+    const fullTurnText = accumulated
+      ? `${accumulated} ${(aggregationResult.segmentForJobResult || ctx.asrText || '').trim()}`.trim()
+      : (aggregationResult.segmentForJobResult || ctx.asrText || '').trim();
+    ctx.segmentForJobResult = fullTurnText;
+    ctx.shouldSendToSemanticRepair = fullTurnText.length > 0;
+  } else {
+    ctx.segmentForJobResult = aggregationResult.segmentForJobResult;
+    ctx.shouldSendToSemanticRepair = aggregationResult.shouldSendToSemanticRepair;
+  }
+  if (!ctx.shouldSendToSemanticRepair) {
     ctx.repairedText = '';
   }
 
@@ -102,7 +127,7 @@ export async function runAggregationStep(
       jobId: job.job_id,
       sessionId: job.session_id,
       utteranceIndex: job.utterance_index,
-      segmentLength: aggregationResult.aggregatedText.length,
+      segmentLength: (ctx.segmentForJobResult || '').length,
       originalTextLength: ctx.asrText?.length || 0,
       action: ctx.aggregationAction,
       aggregationChanged: ctx.aggregationChanged,

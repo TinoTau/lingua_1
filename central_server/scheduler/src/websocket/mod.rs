@@ -90,6 +90,7 @@ pub(crate) async fn create_job_assign_message(
         is_manual_cut: job.is_manual_cut,
         is_timeout_triggered: job.is_timeout_triggered,
         is_max_duration_triggered: job.is_max_duration_triggered,
+        turn_id: job.turn_id.clone(),
     })
 }
 

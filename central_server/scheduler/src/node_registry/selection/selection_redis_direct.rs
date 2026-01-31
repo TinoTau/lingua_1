@@ -53,7 +53,7 @@ impl NodeRegistry {
             );
             
             // 调用 PoolService（基于语言对的快速选择）
-            // 注意：此路径没有 session_id 上下文，传递 None（不会使用 timeout_node_id）
+            // 注意：此路径没有 turn_id 上下文，传递 None（不会使用 turn 亲和）
             match pool_svc.select_node(src_lang, tgt_lang, None, None).await {
                 Ok(candidate_node_id) => {
                     debug!(

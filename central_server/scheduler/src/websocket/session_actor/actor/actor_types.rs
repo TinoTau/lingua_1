@@ -10,13 +10,14 @@ pub(crate) enum FinalizeType {
 }
 
 impl FinalizeType {
-    /// 判断 finalize 类型（自动/手动/异常）
+    /// 判断 finalize 类型。调度器只产生 3 种 finalize：手动、Timeout、MaxDuration。
     pub(crate) fn from_reason(reason: &str) -> Self {
         match reason {
-            "IsFinal" => FinalizeType::Manual,  // 手动截断
-            "Timeout" => FinalizeType::Auto,    // 自动 finalize（超时）
-            "MaxDuration" => FinalizeType::Auto,  // 超长语音自动截断，节点端会重新拼接（正常业务逻辑）
-            "MaxLength" => FinalizeType::Exception,    // 异常保护（500KB限制，正常情况下不应该触发）
+            "IsFinal" => FinalizeType::Manual,        // 手动 finalize
+            "Timeout" => FinalizeType::Auto,         // Timeout finalize（定时器或间隔>pause_ms）
+            "MaxDuration" => FinalizeType::Auto,     // MaxDuration finalize
+            "MaxLength" => FinalizeType::Exception,  // 异常保护（500KB）
+            "SessionClose" => FinalizeType::Auto,    // 会话关闭时 flush，按 Auto 处理
             _ => FinalizeType::Auto,
         }
     }

@@ -92,8 +92,9 @@ mod tests {
             first_chunk_client_timestamp_ms: None,
             padding_ms: None,
             is_manual_cut: false,
-            is_pause_triggered: false,
             is_timeout_triggered: false,
+            is_max_duration_triggered: false,
+            turn_id: None,
             expected_duration_ms: None,
         }
     }

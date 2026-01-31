@@ -78,20 +78,18 @@ export class TaskRouterSemanticRepairHandler {
    * 路由语义修复任务
    */
   async routeSemanticRepairTask(task: SemanticRepairTask): Promise<SemanticRepairResult> {
-    // P2-1: 检查缓存
     const cachedResult = this.cache.get(task.lang, task.text_in);
     if (cachedResult) {
-      logger.debug(
-        {
-          jobId: task.job_id,
-          lang: task.lang,
-          textInPreview: task.text_in.substring(0, 50),
-          decision: cachedResult.decision,
-          confidence: cachedResult.confidence,
-        },
-        'Semantic repair result from cache'
-      );
-      return cachedResult;
+      // REPAIR 但 output === input 视为旧逻辑下的无效缓存，跳过
+      if (cachedResult.decision === 'REPAIR' && cachedResult.text_out === task.text_in) {
+        // skip cache, call service
+      } else {
+        logger.debug(
+          { jobId: task.job_id, lang: task.lang, decision: cachedResult.decision },
+          'Semantic repair result from cache'
+        );
+        return cachedResult;
+      }
     }
 
     // 统一处理服务端点查找：先尝试统一服务，再回退到独立服务
@@ -227,9 +225,9 @@ export class TaskRouterSemanticRepairHandler {
       );
       const result = await this.callSemanticRepairService(endpoint, task);
       const serviceCallDuration = Date.now() - serviceCallStartTime;
-      
-      // P2-1: 缓存结果（只缓存REPAIR决策）
-      this.cache.set(task.lang, task.text_in, result);
+      if (result.decision === 'REPAIR') {
+        this.cache.set(task.lang, task.text_in, result);
+      }
       
       logger.info(
         {

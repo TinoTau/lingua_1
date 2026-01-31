@@ -56,11 +56,11 @@ class LlamaCppEngine:
         load_time = time.time() - load_start
         print(f"[LlamaCpp Engine] Model loaded in {load_time:.2f}s", flush=True)
         
-        # 生成参数（优化以提高修复敏感度）
-        self.max_new_tokens = 128  # 增加最大token数，确保有足够空间生成修复后的文本
-        self.temperature = 0.6  # 进一步提高温度，让模型更主动修复（从0.35提高到0.6）
-        self.top_p = 0.85  # 降低top_p，增加生成多样性
-        self.top_k = 30  # 降低top_k，增加生成多样性
+        # 生成参数（保守以降低误修：如「余英」被误改为「英文」）
+        self.max_new_tokens = 128  # 足够空间生成修复后的文本
+        self.temperature = 0.25  # 降低温度，减少随机替换、避免扭曲原意
+        self.top_p = 0.92  # 略高 top_p 保持高概率候选，减少乱改
+        self.top_k = 40   # 适度 top_k，兼顾稳定与少量多样性
         
         # 记录模型信息
         self.model_loaded = True
@@ -138,27 +138,29 @@ class LlamaCppEngine:
             print(f"[LlamaCpp Engine] Generation completed (took {generate_time:.2f}s)", flush=True)
             
             # 提取生成的文本（chat completion 格式）
-            generated_text = output['choices'][0]['message']['content'].strip()
-            print(f"[LlamaCpp Engine] Generated: {generated_text[:50]}...", flush=True)
-            print(f"[LlamaCpp Engine] Full generated text: {generated_text!r}", flush=True)
-            print(f"[LlamaCpp Engine] Input text: {text_in!r}", flush=True)
-            print(f"[LlamaCpp Engine] Text changed: {generated_text != text_in}", flush=True)
-            
+            raw_generated = output['choices'][0]['message']['content'].strip()
+            print(f"[LlamaCpp Engine] Raw generated: {raw_generated[:80]}...", flush=True)
+
+            # 从模型输出中提取“仅修正后正文”，去掉解释性前缀；无效时回退原文
+            text_out = self._extract_repaired_text(raw_generated, text_in)
+            if not text_out or len(text_out) > len(text_in) * 2:
+                text_out = text_in
+                print(f"[LlamaCpp Engine] Fallback to original (empty or too long)", flush=True)
+            print(f"[LlamaCpp Engine] Input: {text_in!r}", flush=True)
+            print(f"[LlamaCpp Engine] Output: {text_out!r}", flush=True)
+
             # 计算置信度（简单实现：基于生成概率）
-            # llama.cpp 不直接提供概率，使用简单的启发式方法
-            confidence = 0.85  # 默认置信度
-            
+            confidence = 0.85
+
             # 计算 diff（简化实现）
             diff = []
-            if generated_text != text_in:
-                # 简单的 diff 计算
-                # 这里可以后续优化
-                diff = [{"from": text_in, "to": generated_text, "position": 0}]
-            
+            if text_out != text_in:
+                diff = [{"from": text_in, "to": text_out, "position": 0}]
+
             repair_time_ms = int((time.time() - start_time) * 1000)
-            
+
             return {
-                'text_out': generated_text,
+                'text_out': text_out,
                 'confidence': confidence,
                 'diff': diff,
                 'repair_time_ms': repair_time_ms
@@ -176,6 +178,21 @@ class LlamaCppEngine:
                 'repair_time_ms': int((time.time() - start_time) * 1000)
             }
     
+    def _extract_repaired_text(self, generated: str, original: str) -> str:
+        """从模型输出中提取修正后正文，去掉常见解释性前缀。"""
+        prefixes = (
+            "修复后的文本：", "修正后的文本：", "修复：", "修正：", "输出：",
+            "修复后的文本:", "修正后的文本:", "修复:", "修正:", "输出:",
+        )
+        text = generated.strip()
+        for p in prefixes:
+            if text.startswith(p):
+                text = text[len(p):].strip()
+                break
+        if not text or len(text) > len(original) * 2:
+            return original
+        return text
+
     def health(self) -> Dict:
         """健康检查"""
         return {

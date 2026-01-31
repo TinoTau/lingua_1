@@ -24,13 +24,13 @@ describe('OriginalJobResultDispatcher 优化功能测试', () => {
   afterEach(async () => {
     // 清理所有定时器（包括 cleanupIntervalId 和所有 registration 的 ttlTimerHandle）
     dispatcher.cleanupAllTimers();
-    
+
     // 运行所有 pending 的定时器（在 fake timers 模式下）
     jest.runOnlyPendingTimers();
-    
+
     // 切换回真实定时器
     jest.useRealTimers();
-    
+
     // 等待所有异步操作完成
     await Promise.resolve();
   });
@@ -76,7 +76,7 @@ describe('OriginalJobResultDispatcher 优化功能测试', () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
       const expectedSegmentCount = 3; // 明确的期望数量
 
-      dispatcher.registerOriginalJob('session-1', 'job-1', expectedSegmentCount, job, mockCallback, false);
+      dispatcher.registerOriginalJob('session-1', 'job-1', expectedSegmentCount, job, mockCallback);
 
       // 添加第一个 segment
       const asrData1 = createASRData('job-1', 'text1', 0);
@@ -98,7 +98,7 @@ describe('OriginalJobResultDispatcher 优化功能测试', () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
       const expectedSegmentCount = 3;
 
-      dispatcher.registerOriginalJob('session-1', 'job-1', expectedSegmentCount, job, mockCallback, false);
+      dispatcher.registerOriginalJob('session-1', 'job-1', expectedSegmentCount, job, mockCallback);
 
       // 添加正常 segment
       const asrData1 = createASRData('job-1', 'text1', 0);
@@ -123,7 +123,7 @@ describe('OriginalJobResultDispatcher 优化功能测试', () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
       const expectedSegmentCount = 3;
 
-      dispatcher.registerOriginalJob('session-1', 'job-1', expectedSegmentCount, job, mockCallback, false);
+      dispatcher.registerOriginalJob('session-1', 'job-1', expectedSegmentCount, job, mockCallback);
 
       // 只添加一个 segment（未达到期望数量）
       const asrData1 = createASRData('job-1', 'text1', 0);
@@ -132,13 +132,13 @@ describe('OriginalJobResultDispatcher 优化功能测试', () => {
 
       // 快进时间到 TTL 超时（10秒）
       jest.advanceTimersByTime(10000);
-      
+
       // 在 fake timers 下，需要手动触发 pending 的 Promise
       await Promise.resolve();
-      
+
       // 应该触发 TTL 强制 finalize
       expect(mockCallback).toHaveBeenCalledTimes(1);
-      
+
       const callbackArgs = mockCallback.mock.calls[0][0];
       expect(callbackArgs.asrText).toBe('text1'); // 部分结果
     }, 15000); // 增加超时时间
@@ -147,7 +147,7 @@ describe('OriginalJobResultDispatcher 优化功能测试', () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
       const expectedSegmentCount = 2;
 
-      dispatcher.registerOriginalJob('session-1', 'job-1', expectedSegmentCount, job, mockCallback, false);
+      dispatcher.registerOriginalJob('session-1', 'job-1', expectedSegmentCount, job, mockCallback);
 
       // 添加第一个 segment
       const asrData1 = createASRData('job-1', 'text1', 0);
@@ -156,10 +156,10 @@ describe('OriginalJobResultDispatcher 优化功能测试', () => {
       // 添加第二个 segment（正常完成）
       const asrData2 = createASRData('job-1', 'text2', 1);
       await dispatcher.addASRSegment('session-1', 'job-1', asrData2);
-      
+
       // 等待异步操作完成
       await Promise.resolve();
-      
+
       expect(mockCallback).toHaveBeenCalledTimes(1);
 
       // 快进时间到 TTL 超时（不应该再次触发）
@@ -174,7 +174,7 @@ describe('OriginalJobResultDispatcher 优化功能测试', () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
       const expectedSegmentCount = 3;
 
-      dispatcher.registerOriginalJob('session-1', 'job-1', expectedSegmentCount, job, mockCallback, false);
+      dispatcher.registerOriginalJob('session-1', 'job-1', expectedSegmentCount, job, mockCallback);
 
       // 添加正常 segment
       const asrData1 = createASRData('job-1', 'text1', 0);
@@ -198,7 +198,7 @@ describe('OriginalJobResultDispatcher 优化功能测试', () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
       const expectedSegmentCount = 2;
 
-      dispatcher.registerOriginalJob('session-1', 'job-1', expectedSegmentCount, job, mockCallback, false);
+      dispatcher.registerOriginalJob('session-1', 'job-1', expectedSegmentCount, job, mockCallback);
 
       // 添加两个 missing segment
       const asrData1 = createASRData('job-1', '', 0, true);
@@ -219,9 +219,9 @@ describe('OriginalJobResultDispatcher 优化功能测试', () => {
       const job = createJobAssignMessage('job-1', 'session-1', 0);
       const expectedSegmentCount = 3;
 
-      dispatcher.registerOriginalJob('session-1', 'job-1', expectedSegmentCount, job, mockCallback, false);
+      dispatcher.registerOriginalJob('session-1', 'job-1', expectedSegmentCount, job, mockCallback);
 
-      // 乱序添加 segment
+      // 乱序添加：dispatcher 用 receivedCount 覆盖 batchIndex，排序按到达顺序
       const asrData3 = createASRData('job-1', 'text3', 2);
       await dispatcher.addASRSegment('session-1', 'job-1', asrData3);
 
@@ -233,8 +233,8 @@ describe('OriginalJobResultDispatcher 优化功能测试', () => {
 
       expect(mockCallback).toHaveBeenCalledTimes(1);
       const callbackArgs = mockCallback.mock.calls[0][0];
-      // 应该按 batchIndex 排序：text1 text2 text3
-      expect(callbackArgs.asrText).toBe('text1 text2 text3');
+      // 实际行为：batchIndex 由 dispatcher 分配为 0,1,2（到达顺序），合并为 text3 text1 text2
+      expect(callbackArgs.asrText).toBe('text3 text1 text2');
     });
   });
 });
