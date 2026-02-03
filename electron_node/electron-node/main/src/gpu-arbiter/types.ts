@@ -2,7 +2,7 @@
  * GPU 仲裁器类型定义
  */
 
-export type GpuTaskType = "ASR" | "NMT" | "TTS" | "SEMANTIC_REPAIR" | "OTHER";
+export type GpuTaskType = "ASR" | "NMT" | "TTS" | "SEMANTIC_REPAIR" | "PHONETIC_CORRECTION" | "OTHER";
 
 export type BusyPolicy = "WAIT" | "SKIP" | "FALLBACK_CPU";
 

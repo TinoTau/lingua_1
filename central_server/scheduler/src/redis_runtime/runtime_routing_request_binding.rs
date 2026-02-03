@@ -1,6 +1,6 @@
 // Phase 2 Request 绑定管理
 
-impl Phase2Runtime {
+impl RedisRuntime {
     /// Phase 2：获取 request_id 绑定（跨实例幂等）
     pub async fn get_request_binding(&self, request_id: &str) -> Option<RequestBinding> {
         let key = self.request_binding_key(request_id);

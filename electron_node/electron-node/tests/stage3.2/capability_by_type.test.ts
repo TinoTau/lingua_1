@@ -81,7 +81,7 @@ describe('capability_by_type aggregation', () => {
   it('Multiple types: ASR ready, TTS not ready', async () => {
     const agent = createAgent() as any;
     const installed: InstalledServiceLite[] = [
-      { service_id: 'node-inference', type: ServiceType.ASR, device: 'gpu', status: 'running' },
+      { service_id: 'faster-whisper-vad', type: ServiceType.ASR, device: 'gpu', status: 'running' },
       { service_id: 'piper-tts', type: ServiceType.TTS, device: 'gpu', status: 'stopped' },
     ];
     const res = await agent.getCapabilityByType(installed);

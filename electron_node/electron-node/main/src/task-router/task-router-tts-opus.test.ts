@@ -14,10 +14,11 @@ import { isOpusEncoderAvailable } from '../utils/opus-encoder';
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-// 类型辅助函数
+// 类型辅助函数（产品代码会访问 httpClient.defaults.timeout，mock 需带上 defaults）
 function createMockAxiosInstance(mockPost: jest.Mock) {
   return {
     post: mockPost,
+    defaults: { timeout: 60000 },
   } as any;
 }
 
@@ -30,7 +31,7 @@ describe('TaskRouter TTS Opus Encoding', () => {
   function createTestWavBuffer(durationSeconds: number = 1.0, sampleRate: number = 16000): Buffer {
     const numSamples = Math.floor(sampleRate * durationSeconds);
     const samples = new Int16Array(numSamples);
-    
+
     // 生成简单的测试音频（正弦波）
     for (let i = 0; i < numSamples; i++) {
       const t = i / sampleRate;
@@ -71,19 +72,16 @@ describe('TaskRouter TTS Opus Encoding', () => {
   }
 
   beforeEach(() => {
-    // 创建 TaskRouter 实例（需要 mock 依赖）
-    taskRouter = new TaskRouter(
-      null as any, // pythonServiceManager
-      null as any, // rustServiceManager
-      null as any  // serviceRegistryManager
-    );
+    // 创建 TaskRouter 实例（仅需 registry，服务端点由 TaskRouterServiceManagerNew 从 registry 读取）
+    taskRouter = new TaskRouter(new Map() as any);
 
-    // Mock service endpoints
+    // Mock service endpoints（selectServiceEndpoint 会过滤 status === 'running'，必须带上 status）
     (taskRouter as any).serviceEndpoints = new Map([
       [ServiceType.TTS, [{
         serviceId: 'test-tts-service',
         baseUrl: 'http://localhost:5001',
         serviceType: ServiceType.TTS,
+        status: 'running',
       }]],
     ]);
 
@@ -115,6 +113,7 @@ describe('TaskRouter TTS Opus Encoding', () => {
 
       mockedAxios.create = jest.fn().mockReturnValue({
         post: mockPost,
+        defaults: { timeout: 60000 },
       } as any);
 
       // 执行 TTS 任务
@@ -124,23 +123,17 @@ describe('TaskRouter TTS Opus Encoding', () => {
       expect(result).toBeDefined();
       expect(result.audio).toBeDefined();
       expect(result.audio.length).toBeGreaterThan(0);
-      expect(result.audio_format).toBe('opus');
+      // TaskRouter 当前返回 WAV，由 Pipeline 负责编码为 Opus（见 task-router-tts.ts 注释）
+      expect(result.audio_format).toBe('wav');
       expect(result.sample_rate).toBe(16000);
 
       // 验证 Base64 编码
       const decodedAudio = Buffer.from(result.audio, 'base64');
       expect(decodedAudio.length).toBeGreaterThan(0);
-      expect(decodedAudio.length).toBeLessThan(testWavBuffer.length); // Opus 应该比 WAV 小
+      expect(decodedAudio.length).toBe(testWavBuffer.length); // 未编码，与 WAV 等长
 
-      // 验证压缩比
-      const compressionRatio = testWavBuffer.length / decodedAudio.length;
-      expect(compressionRatio).toBeGreaterThan(3); // 至少 3x 压缩
-      expect(compressionRatio).toBeLessThan(20); // 不超过 20x 压缩
-
-      console.log('✅ TTS Opus 编码测试通过:');
+      console.log('✅ TTS WAV 测试通过:');
       console.log(`   WAV size: ${testWavBuffer.length} bytes`);
-      console.log(`   Opus size: ${decodedAudio.length} bytes`);
-      console.log(`   Compression: ${compressionRatio.toFixed(2)}x`);
       console.log(`   Format: ${result.audio_format}`);
     });
 
@@ -161,6 +154,7 @@ describe('TaskRouter TTS Opus Encoding', () => {
 
       mockedAxios.create = jest.fn().mockReturnValue({
         post: mockPost,
+        defaults: { timeout: 60000 },
       } as any);
 
       // 如果 Opus 编码器不可用，应该回退到 PCM16
@@ -169,9 +163,9 @@ describe('TaskRouter TTS Opus Encoding', () => {
       expect(result).toBeDefined();
       expect(result.audio).toBeDefined();
       expect(result.audio.length).toBeGreaterThan(0);
-      
-      // 格式应该是 opus（如果编码器可用）或 pcm16（如果不可用）
-      expect(['opus', 'pcm16']).toContain(result.audio_format);
+
+      // TaskRouter 当前返回 WAV；格式可能是 wav / opus / pcm16 取决于实现
+      expect(['opus', 'pcm16', 'wav']).toContain(result.audio_format);
       expect(result.sample_rate).toBe(16000);
 
       console.log(`✅ TTS 回退测试通过，格式: ${result.audio_format}`);
@@ -201,13 +195,14 @@ describe('TaskRouter TTS Opus Encoding', () => {
 
         mockedAxios.create = jest.fn().mockReturnValue({
           post: mockPost,
+          defaults: { timeout: 60000 },
         } as any);
 
         const result: TTSResult = await taskRouter.routeTTSTask(task);
 
         expect(result.audio.length).toBeGreaterThan(0);
-        expect(['opus', 'pcm16']).toContain(result.audio_format);
-        
+        expect(['opus', 'pcm16', 'wav']).toContain(result.audio_format);
+
         console.log(`✅ 采样率 ${sampleRate}Hz 测试通过，格式: ${result.audio_format}`);
       }
     });
@@ -236,16 +231,17 @@ describe('TaskRouter TTS Opus Encoding', () => {
 
         mockedAxios.create = jest.fn().mockReturnValue({
           post: mockPost,
+          defaults: { timeout: 60000 },
         } as any);
 
         const result: TTSResult = await taskRouter.routeTTSTask(task);
 
         expect(result.audio.length).toBeGreaterThan(0);
-        expect(['opus', 'pcm16']).toContain(result.audio_format);
+        expect(['opus', 'pcm16', 'wav']).toContain(result.audio_format);
 
         const decodedAudio = Buffer.from(result.audio, 'base64');
         const compressionRatio = testWavBuffer.length / decodedAudio.length;
-        
+
         console.log(`✅ 时长 ${duration}s 测试通过，压缩比: ${compressionRatio.toFixed(2)}x`);
       }
     });
@@ -282,6 +278,7 @@ describe('TaskRouter TTS Opus Encoding', () => {
 
       mockedAxios.create = jest.fn().mockReturnValue({
         post: mockPost,
+        defaults: { timeout: 60000 },
       } as any);
 
       // 应该能够处理空文件（可能抛出错误或返回空结果）
@@ -314,6 +311,7 @@ describe('TaskRouter TTS Opus Encoding', () => {
 
       mockedAxios.create = jest.fn().mockReturnValue({
         post: mockPost,
+        defaults: { timeout: 60000 },
       } as any);
 
       // 应该抛出错误或回退到 PCM16
@@ -352,6 +350,7 @@ describe('TaskRouter TTS Opus Encoding', () => {
 
       mockedAxios.create = jest.fn().mockReturnValue({
         post: mockPost,
+        defaults: { timeout: 60000 },
       } as any);
 
       // 执行完整流程
@@ -360,31 +359,25 @@ describe('TaskRouter TTS Opus Encoding', () => {
       // 验证每个步骤
       // 1. 结果存在
       expect(result).toBeDefined();
-      
+
       // 2. 音频数据存在且不为空
       expect(result.audio).toBeDefined();
       expect(result.audio.length).toBeGreaterThan(0);
-      
-      // 3. 格式为 Opus
-      expect(result.audio_format).toBe('opus');
-      
+
+      // 3. TaskRouter 当前返回 WAV（Opus 由 Pipeline 编码）
+      expect(result.audio_format).toBe('wav');
+
       // 4. Base64 可以解码
       const decodedAudio = Buffer.from(result.audio, 'base64');
       expect(decodedAudio.length).toBeGreaterThan(0);
-      
-      // 5. Opus 数据有效（不是全零）
+
+      // 5. WAV 数据有效（不是全零）
       const hasNonZero = decodedAudio.some(byte => byte !== 0);
       expect(hasNonZero).toBe(true);
-      
-      // 6. 压缩效果合理
-      const compressionRatio = testWavBuffer.length / decodedAudio.length;
-      expect(compressionRatio).toBeGreaterThan(3);
-      expect(compressionRatio).toBeLessThan(20);
 
       console.log('\n✅ 完整流程测试通过:');
       console.log(`   原始 WAV: ${testWavBuffer.length} bytes`);
-      console.log(`   Opus 数据: ${decodedAudio.length} bytes`);
-      console.log(`   压缩比: ${compressionRatio.toFixed(2)}x`);
+      console.log(`   Base64 解码后: ${decodedAudio.length} bytes`);
       console.log(`   格式: ${result.audio_format}`);
       console.log(`   采样率: ${result.sample_rate}Hz`);
       console.log(`   Base64 长度: ${result.audio.length} characters`);

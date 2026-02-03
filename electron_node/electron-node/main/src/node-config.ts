@@ -4,17 +4,13 @@ import * as fsPromises from 'fs/promises';
 import * as path from 'path';
 
 export interface ServicePreferences {
-  rustEnabled: boolean;
   nmtEnabled: boolean;
   ttsEnabled: boolean;
   yourttsEnabled: boolean;
   fasterWhisperVadEnabled: boolean;
   speakerEmbeddingEnabled: boolean;
-  // 语义修复服务自动启动配置
-  semanticRepairZhEnabled?: boolean;    // semantic-repair-zh 自动启动（已弃用）
-  semanticRepairEnEnabled?: boolean;    // semantic-repair-en 自动启动（已弃用）
-  enNormalizeEnabled?: boolean;         // en-normalize 自动启动（已弃用）
-  semanticRepairEnZhEnabled?: boolean;  // semantic-repair-en-zh 自动启动（推荐）
+  semanticRepairEnZhEnabled?: boolean;  // 合并语义修复服务 semantic-repair-en-zh 自动启动
+  phoneticCorrectionEnabled?: boolean;  // 同音纠错服务 phonetic-correction-zh 自动启动
 }
 
 // ASR配置已移除：各服务的参数应该随着服务走，避免节点端与服务强制绑定
@@ -49,6 +45,11 @@ export interface NodeConfig {
   };
   modelHub?: {
     url?: string;  // Model Hub HTTP URL，例如: http://model-hub.example.com:5000
+  };
+  /** 本机/远程服务 base URL 与可选覆盖（用于拼接端口，避免硬编码） */
+  services?: {
+    baseUrl?: string;  // 本机服务 base，如 http://127.0.0.1，用于 ASR/NMT/TTS/语义修复等端点拼接
+    phoneticCorrectionUrl?: string;  // 同音纠错服务完整 URL，如 http://127.0.0.1:5016；不填则用 baseUrl + 服务发现端口
   };
   // ASR配置已移除：各服务的参数应该随着服务走，避免节点端与服务强制绑定
   /** 指标收集配置（支持热插拔） */
@@ -125,6 +126,11 @@ export interface NodeConfig {
         maxWaitMs?: number;
         busyPolicy?: "WAIT" | "SKIP" | "FALLBACK_CPU";
       };
+      PHONETIC_CORRECTION?: {
+        priority?: number;
+        maxWaitMs?: number;
+        busyPolicy?: "WAIT" | "SKIP" | "FALLBACK_CPU";
+      };
     };
   };
   /** 顺序执行管理器配置 */
@@ -146,20 +152,26 @@ export interface NodeConfig {
   };
 }
 
+/** 默认配置：所有 URL 等默认值仅在此定义，运行时由 electron-node-config.json 覆盖，业务代码中不再硬编码 URL。 */
 const DEFAULT_CONFIG: NodeConfig = {
   servicePreferences: {
-    rustEnabled: false,           // 默认关闭节点推理服务（Rust）
-    nmtEnabled: true,             // 默认启用 NMT
-    ttsEnabled: true,             // 默认启用 Piper TTS
-    yourttsEnabled: false,         // 默认关闭 YourTTS（资源较重）
-    fasterWhisperVadEnabled: true, // 默认启用 Faster Whisper VAD 语音识别服务
-    speakerEmbeddingEnabled: false, // 默认关闭 Speaker Embedding
+    nmtEnabled: true,
+    ttsEnabled: true,
+    yourttsEnabled: false,
+    fasterWhisperVadEnabled: true,
+    speakerEmbeddingEnabled: false,
+    semanticRepairEnZhEnabled: true,
+    phoneticCorrectionEnabled: true,
   },
   scheduler: {
     url: 'ws://127.0.0.1:5010/ws/node',  // 默认本地地址，使用 127.0.0.1 避免 IPv6 解析问题
   },
   modelHub: {
     url: 'http://127.0.0.1:5000',  // 默认本地地址，使用 127.0.0.1 避免 IPv6 解析问题
+  },
+  services: {
+    baseUrl: 'http://127.0.0.1',   // 本机服务 base，用于与 service.json 的 port 拼接
+    phoneticCorrectionUrl: 'http://127.0.0.1:5016',  // 同音纠错服务默认 URL
   },
   // ASR配置已移除：各服务的参数应该随着服务走，避免节点端与服务强制绑定
   metrics: {
@@ -188,6 +200,33 @@ function getConfigPath(): string {
   return path.join(userData, 'electron-node-config.json');
 }
 
+/** 本机服务 base URL（从配置读），用于 ASR/NMT/TTS/语义修复等端点拼接及健康检查。 */
+export function getServicesBaseUrl(): string {
+  const c = loadNodeConfig();
+  const url = c.services?.baseUrl ?? DEFAULT_CONFIG.services?.baseUrl ?? '';
+  return url.replace(/localhost/g, '127.0.0.1').replace(/\/$/, '');
+}
+
+/** 同音纠错服务 base URL（从配置读）。默认值仅来自 DEFAULT_CONFIG。 */
+export function getPhoneticCorrectionUrl(): string {
+  const c = loadNodeConfig();
+  return c.services?.phoneticCorrectionUrl ?? DEFAULT_CONFIG.services?.phoneticCorrectionUrl ?? '';
+}
+
+/** 调度服务器 WebSocket URL。从 electron-node-config.json 读 scheduler.url，localhost 规范为 127.0.0.1。 */
+export function getSchedulerUrl(): string {
+  const c = loadNodeConfig();
+  const url = c.scheduler?.url ?? DEFAULT_CONFIG.scheduler?.url ?? '';
+  return url.replace(/localhost/g, '127.0.0.1');
+}
+
+/** Model Hub HTTP URL。从 electron-node-config.json 读 modelHub.url。 */
+export function getModelHubUrl(): string {
+  const c = loadNodeConfig();
+  const url = c.modelHub?.url ?? DEFAULT_CONFIG.modelHub?.url ?? '';
+  return url.replace(/localhost/g, '127.0.0.1');
+}
+
 // 同步版本（用于向后兼容，但尽量使用异步版本）
 export function loadNodeConfig(): NodeConfig {
   try {
@@ -212,11 +251,13 @@ export function loadNodeConfig(): NodeConfig {
         ...DEFAULT_CONFIG.modelHub,
         ...(parsed.modelHub || {}),
       },
-      // ASR配置已移除：各服务的参数应该随着服务走
+      services: {
+        ...DEFAULT_CONFIG.services,
+        ...(parsed.services || {}),
+      },
       metrics: {
         ...DEFAULT_CONFIG.metrics,
         ...(parsed.metrics || {}),
-        // 深度合并 metrics.metrics 对象
         metrics: {
           ...DEFAULT_CONFIG.metrics?.metrics,
           ...(parsed.metrics?.metrics || {}),
@@ -236,10 +277,7 @@ export function loadNodeConfig(): NodeConfig {
         ...(parsed.textLength || {}),
       },
     };
-  } catch (error) {
-    // 读取失败时使用默认配置
-    // 注意：这里不应该保存默认配置，因为可能是文件格式错误，保存会覆盖用户之前的配置
-    // 保存操作应该在调用方明确知道需要保存时才执行
+  } catch {
     return { ...DEFAULT_CONFIG };
   }
 }
@@ -270,11 +308,13 @@ export async function loadNodeConfigAsync(): Promise<NodeConfig> {
         ...DEFAULT_CONFIG.modelHub,
         ...(parsed.modelHub || {}),
       },
-      // ASR配置已移除：各服务的参数应该随着服务走
+      services: {
+        ...DEFAULT_CONFIG.services,
+        ...(parsed.services || {}),
+      },
       metrics: {
         ...DEFAULT_CONFIG.metrics,
         ...(parsed.metrics || {}),
-        // 深度合并 metrics.metrics 对象
         metrics: {
           ...DEFAULT_CONFIG.metrics?.metrics,
           ...(parsed.metrics?.metrics || {}),
@@ -294,8 +334,7 @@ export async function loadNodeConfigAsync(): Promise<NodeConfig> {
         ...(parsed.textLength || {}),
       },
     };
-  } catch (error) {
-    // 读取失败时使用默认配置
+  } catch {
     return { ...DEFAULT_CONFIG };
   }
 }
@@ -306,7 +345,7 @@ export function saveNodeConfig(config: NodeConfig): void {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
-  
+
   // 确保所有必需字段都存在（合并默认配置，避免丢失字段）
   const configToSave: NodeConfig = {
     servicePreferences: {
@@ -320,6 +359,10 @@ export function saveNodeConfig(config: NodeConfig): void {
     modelHub: {
       ...DEFAULT_CONFIG.modelHub,
       ...(config.modelHub || {}),
+    },
+    services: {
+      ...DEFAULT_CONFIG.services,
+      ...(config.services || {}),
     },
     metrics: {
       ...DEFAULT_CONFIG.metrics,
@@ -343,7 +386,7 @@ export function saveNodeConfig(config: NodeConfig): void {
       ...(config.textLength || {}),
     },
   };
-  
+
   fs.writeFileSync(configPath, JSON.stringify(configToSave, null, 2), 'utf-8');
 }
 

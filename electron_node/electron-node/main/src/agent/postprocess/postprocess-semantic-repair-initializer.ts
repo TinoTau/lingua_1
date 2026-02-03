@@ -4,7 +4,7 @@
  */
 
 import { TaskRouter } from '../../task-router/task-router';
-import { SemanticRepairStage, SemanticRepairStageConfig, SemanticRepairServiceInfo } from './semantic-repair-stage';
+import { SemanticRepairStage, SemanticRepairStageConfig } from './semantic-repair-stage';
 import { loadNodeConfig } from '../../node-config';
 import logger from '../../logger';
 import { getServiceRegistry } from '../../service-layer';
@@ -41,57 +41,32 @@ export class SemanticRepairInitializer {
           return;
         }
 
-        // 通过新的服务发现机制获取已安装的语义修复服务
         const registry = getServiceRegistry();
-        const installedServices: SemanticRepairServiceInfo = {
-          zh: registry?.has('semantic-repair-zh') ?? false,
-          en: registry?.has('semantic-repair-en') ?? false,
-          enNormalize: registry?.has('en-normalize') ?? false,
-        };
-
-        if (!installedServices.zh && !installedServices.en && !installedServices.enNormalize) {
-          logger.info(
-            {},
-            'SemanticRepairInitializer: No semantic repair services installed, skipping initialization'
-          );
+        const available = registry?.has('semantic-repair-en-zh') ?? false;
+        if (!available) {
+          logger.info({}, 'SemanticRepairInitializer: semantic-repair-en-zh not found, skipping');
           this.initialized = true;
           return;
         }
 
-        // 读取配置
         const nodeConfig = loadNodeConfig();
-        const semanticRepairConfig = nodeConfig.features?.semanticRepair || {};
-
-        // 构建Stage配置
+        const srConfig = nodeConfig.features?.semanticRepair || {};
         const stageConfig: SemanticRepairStageConfig = {
           zh: {
-            enabled: installedServices.zh,
-            qualityThreshold: semanticRepairConfig.zh?.qualityThreshold || 0.70,
-            forceForShortSentence: semanticRepairConfig.zh?.forceForShortSentence || false,
+            enabled: true,
+            qualityThreshold: srConfig.zh?.qualityThreshold ?? 0.70,
+            forceForShortSentence: srConfig.zh?.forceForShortSentence ?? false,
           },
           en: {
-            normalizeEnabled: installedServices.enNormalize,
-            repairEnabled: installedServices.en,
-            qualityThreshold: semanticRepairConfig.en?.qualityThreshold || 0.70,
+            normalizeEnabled: true,
+            repairEnabled: true,
+            qualityThreshold: srConfig.en?.qualityThreshold ?? 0.70,
           },
         };
 
-        // 初始化SemanticRepairStage
-        this.semanticRepairStage = new SemanticRepairStage(
-          this.taskRouter,
-          installedServices,
-          stageConfig
-        );
-
+        this.semanticRepairStage = new SemanticRepairStage(this.taskRouter, stageConfig);
         this.initialized = true;
-        logger.info(
-          {
-            zh: installedServices.zh,
-            en: installedServices.en,
-            enNormalize: installedServices.enNormalize,
-          },
-          'SemanticRepairInitializer: SemanticRepairStage initialized successfully'
-        );
+        logger.info({}, 'SemanticRepairInitializer: SemanticRepairStage initialized');
       } catch (error: any) {
         logger.error(
           { error: error.message, stack: error.stack },

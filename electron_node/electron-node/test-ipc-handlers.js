@@ -18,13 +18,13 @@ app.whenReady().then(async () => {
     // 加载主进程代码
     const indexPath = path.join(__dirname, 'main', 'electron-node', 'main', 'src', 'index.js');
     console.log(`Loading main process from: ${indexPath}`);
-    
+
     // 等待一下，让主进程初始化
     await new Promise(resolve => setTimeout(resolve, 3000));
-    
+
     // 检查所有IPC handlers
     console.log('\n检查已注册的 IPC Handlers:\n');
-    
+
     const requiredHandlers = [
       'get-system-resources',
       'get-all-service-metadata',
@@ -40,10 +40,8 @@ app.whenReady().then(async () => {
       'set-service-preferences',
       'get-processing-metrics',
       'get-semantic-repair-service-status',
-      'get-all-semantic-repair-service-statuses',
-      'start-semantic-repair-service',
-      'stop-semantic-repair-service',
       'services:list',
+      'services:statuses',
       'services:refresh',
       'services:start',
       'services:stop',
@@ -55,17 +53,17 @@ app.whenReady().then(async () => {
       'get-model-path',
       'get-model-ranking',
     ];
-    
+
     let registeredCount = 0;
     let missingCount = 0;
-    
+
     for (const handler of requiredHandlers) {
       try {
         // 尝试调用handler（可能会失败，但至少能知道它是否注册）
         const result = await ipcMain.handle(handler, async () => {
           return { __test: true };
         });
-        
+
         console.log(`✅ ${handler}`);
         registeredCount++;
       } catch (error) {
@@ -73,13 +71,13 @@ app.whenReady().then(async () => {
         missingCount++;
       }
     }
-    
+
     console.log('\n======================================');
     console.log(`总计: ${requiredHandlers.length} 个 handlers`);
     console.log(`已注册: ${registeredCount} 个`);
     console.log(`缺失: ${missingCount} 个`);
     console.log('======================================\n');
-    
+
     if (missingCount > 0) {
       console.error('⚠️ 存在未注册的 IPC handlers！');
       console.error('可能原因:');
@@ -89,7 +87,7 @@ app.whenReady().then(async () => {
     } else {
       console.log('✅ 所有 IPC handlers 已正确注册！');
     }
-    
+
     process.exit(missingCount > 0 ? 1 : 0);
   } catch (error) {
     console.error('❌ 诊断脚本执行失败:', error);

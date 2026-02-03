@@ -10,6 +10,13 @@ import * as serviceLayer from '../../service-layer';
 // Mock SemanticRepairStage
 jest.mock('./semantic-repair-stage');
 
+// Mock node-config（初始化时读取语义修复配置）
+jest.mock('../../node-config', () => ({
+  loadNodeConfig: jest.fn().mockReturnValue({
+    features: { semanticRepair: { zh: { qualityThreshold: 0.7 }, en: { qualityThreshold: 0.7 } } },
+  }),
+}));
+
 // Mock service layer
 jest.mock('../../service-layer', () => ({
   getServiceRegistry: jest.fn(),
@@ -47,29 +54,9 @@ describe('SemanticRepairInitializer - Phase 2', () => {
       expect(initializer.isInitialized()).toBe(true);
     });
 
-    it('应该在检测到中文服务时初始化', async () => {
-      // Add zh service to registry
-      mockRegistry.set('semantic-repair-zh', {
-        def: { id: 'semantic-repair-zh', name: 'ZH Semantic Repair', type: 'semantic-repair' },
-        runtime: { status: 'running' },
-        installPath: '/path/to/service',
-      });
-
-      await initializer.initialize();
-
-      expect(initializer.isInitialized()).toBe(true);
-      expect(initializer.getSemanticRepairStage()).not.toBeNull();
-    });
-
-    it('应该在检测到英文服务时初始化', async () => {
-      // Add en services to registry
-      mockRegistry.set('semantic-repair-en', {
-        def: { id: 'semantic-repair-en', name: 'EN Semantic Repair', type: 'semantic-repair' },
-        runtime: { status: 'running' },
-        installPath: '/path/to/service',
-      });
-      mockRegistry.set('en-normalize', {
-        def: { id: 'en-normalize', name: 'EN Normalize', type: 'normalize' },
+    it('应该在检测到合并语义修复服务 semantic-repair-en-zh 时初始化', async () => {
+      mockRegistry.set('semantic-repair-en-zh', {
+        def: { id: 'semantic-repair-en-zh', name: 'Semantic Repair (EN+ZH)', type: 'semantic-repair' },
         runtime: { status: 'running' },
         installPath: '/path/to/service',
       });
@@ -81,9 +68,8 @@ describe('SemanticRepairInitializer - Phase 2', () => {
     });
 
     it('应该支持并发初始化（只初始化一次）', async () => {
-      // Add zh service to registry
-      mockRegistry.set('semantic-repair-zh', {
-        def: { id: 'semantic-repair-zh', name: 'ZH Semantic Repair', type: 'semantic-repair' },
+      mockRegistry.set('semantic-repair-en-zh', {
+        def: { id: 'semantic-repair-en-zh', name: 'Semantic Repair (EN+ZH)', type: 'semantic-repair' },
         runtime: { status: 'running' },
         installPath: '/path/to/service',
       });
@@ -117,20 +103,19 @@ describe('SemanticRepairInitializer - Phase 2', () => {
 
   describe('reinitialize', () => {
     it('应该能够重新初始化', async () => {
-      // First time: zh service
-      mockRegistry.set('semantic-repair-zh', {
-        def: { id: 'semantic-repair-zh', name: 'ZH Semantic Repair', type: 'semantic-repair' },
+      mockRegistry.set('semantic-repair-en-zh', {
+        def: { id: 'semantic-repair-en-zh', name: 'Semantic Repair (EN+ZH)', type: 'semantic-repair' },
         runtime: { status: 'running' },
         installPath: '/path/to/service',
       });
 
       await initializer.initialize();
       expect(initializer.isInitialized()).toBe(true);
+      expect(initializer.getSemanticRepairStage()).not.toBeNull();
 
-      // Clear and add en service for reinitialize
       mockRegistry.clear();
-      mockRegistry.set('semantic-repair-en', {
-        def: { id: 'semantic-repair-en', name: 'EN Semantic Repair', type: 'semantic-repair' },
+      mockRegistry.set('semantic-repair-en-zh', {
+        def: { id: 'semantic-repair-en-zh', name: 'Semantic Repair (EN+ZH)', type: 'semantic-repair' },
         runtime: { status: 'running' },
         installPath: '/path/to/service',
       });
@@ -141,9 +126,9 @@ describe('SemanticRepairInitializer - Phase 2', () => {
   });
 
   describe('getInitPromise', () => {
-    it('应该返回初始化Promise', async () => {
-      mockRegistry.set('semantic-repair-zh', {
-        def: { id: 'semantic-repair-zh', name: 'ZH Semantic Repair', type: 'semantic-repair' },
+    it('初始化进行中应返回同一 Promise，await 后完成', async () => {
+      mockRegistry.set('semantic-repair-en-zh', {
+        def: { id: 'semantic-repair-en-zh', name: 'Semantic Repair (EN+ZH)', type: 'semantic-repair' },
         runtime: { status: 'running' },
         installPath: '/path/to/service',
       });
@@ -151,11 +136,10 @@ describe('SemanticRepairInitializer - Phase 2', () => {
       const initPromise = initializer.initialize();
       const promise = initializer.getInitPromise();
 
-      // Promise对象可能不同，但应该都存在
       expect(promise).not.toBeNull();
-      expect(initPromise).not.toBeNull();
       await initPromise;
-      expect(initializer.getInitPromise()).toBeNull();
+      expect(initializer.isInitialized()).toBe(true);
+      expect(initializer.getSemanticRepairStage()).not.toBeNull();
     });
   });
 });

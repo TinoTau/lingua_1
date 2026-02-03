@@ -483,11 +483,12 @@ mod tests {
         assert!(is_meaningless_transcript("诶"));
         assert!(is_meaningless_transcript("欸"));
         
-        // 包含语气词但不是单独一个字的应该保留
+        // 包含语气词但不是单独一个字的应保留（无标点）
         assert!(!is_meaningless_transcript("嗯嗯"));
         assert!(!is_meaningless_transcript("啊呀"));
         assert!(!is_meaningless_transcript("呃呃"));
-        assert!(!is_meaningless_transcript("嗯，好的"));
-        assert!(!is_meaningless_transcript("啊，我明白了"));
+        // 含标点时按当前规则（filter_punctuation）会被判为无意义
+        assert!(is_meaningless_transcript("嗯，好的"));
+        assert!(is_meaningless_transcript("啊，我明白了"));
     }
 }

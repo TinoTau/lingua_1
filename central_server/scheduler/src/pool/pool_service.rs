@@ -16,6 +16,7 @@ struct ScriptsCache {
     heartbeat_with_pool_assign: String,
     select_node: String,
     node_offline: String,
+    node_clear_pools: String,
 }
 
 impl PoolService {
@@ -38,6 +39,7 @@ impl PoolService {
             heartbeat_with_pool_assign: include_str!("../../scripts/lua/heartbeat_with_pool_assign.lua").to_string(),
             select_node: include_str!("../../scripts/lua/select_node.lua").to_string(),
             node_offline: include_str!("../../scripts/lua/node_offline.lua").to_string(),
+            node_clear_pools: include_str!("../../scripts/lua/node_clear_pools.lua").to_string(),
         }
     }
     
@@ -68,8 +70,14 @@ impl PoolService {
     /// 
     /// # 示例
     /// 
-    /// ```rust
-    /// let node_id = pool_service.select_node("zh", "en", None, Some(turn_id)).await?;
+    /// ```rust,no_run
+    /// # use tokio_test::block_on;
+    /// # block_on(async {
+    /// # let pool_service: lingua_scheduler::pool::PoolService = unimplemented!();
+    /// # let turn_id = "";
+    /// let _node_id = pool_service.select_node("zh", "en", None, Some(turn_id)).await?;
+    /// # Ok::<(), Box<dyn std::error::Error>>(())
+    /// # });
     /// ```
     pub async fn select_node(
         &self,
@@ -126,6 +134,18 @@ impl PoolService {
             return Err(anyhow!("节点下线处理失败: {}", result));
         }
 
+        Ok(())
+    }
+
+    /// 仅将节点从所有池中移除（不删节点 key），用于语言能力变更时重分配池
+    pub async fn node_clear_pools(&self, node_id: &str) -> Result<()> {
+        let result: String = self.eval_script(
+            &self.scripts.node_clear_pools,
+            &[node_id],
+        ).await?;
+        if !result.starts_with("OK") {
+            return Err(anyhow!("node_clear_pools 失败: {}", result));
+        }
         Ok(())
     }
     

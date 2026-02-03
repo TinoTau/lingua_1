@@ -58,8 +58,13 @@ export function loadGpuArbiterConfig(): GpuArbiterConfig {
       },
       SEMANTIC_REPAIR: {
         priority: 20,
-        maxWaitMs: 8000, // 增加到8秒，确保语义修复有足够时间等待GPU
-        busyPolicy: "WAIT", // 必须等待，不能跳过
+        maxWaitMs: 8000,
+        busyPolicy: "WAIT",
+      },
+      PHONETIC_CORRECTION: {
+        priority: 60,
+        maxWaitMs: 8000,
+        busyPolicy: "WAIT",
       },
     },
   };
@@ -75,7 +80,7 @@ export function loadGpuArbiterConfig(): GpuArbiterConfig {
       const taskType = key as GpuTaskType;
       // 跳过OTHER类型，因为它不在默认配置中
       if (taskType === 'OTHER') continue;
-      
+
       const userPolicy = gpuArbiterConfig.policies?.[taskType];
       if (userPolicy) {
         mergedPolicies[taskType] = {
@@ -93,7 +98,7 @@ export function loadGpuArbiterConfig(): GpuArbiterConfig {
       const taskType = key as GpuTaskType;
       // 跳过OTHER类型
       if (taskType === 'OTHER') continue;
-      
+
       if (!mergedPolicies[taskType]) {
         // 如果默认配置中没有，使用用户配置（需要确保所有字段都有值）
         const defaultPolicy = defaultConfig.policies?.[taskType];

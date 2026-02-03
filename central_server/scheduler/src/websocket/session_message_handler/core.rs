@@ -72,7 +72,7 @@ pub(super) async fn handle_session_init(
         .await;
 
     // Phase 2: Write session owner (with TTL; for cross-instance delivery)
-    if let Some(rt) = state.phase2.as_ref() {
+    if let Some(rt) = state.redis_runtime.as_ref() {
         rt.set_session_owner(&session.session_id).await;
         // Schema compat: If "paired node" mode, write v1:sessions:bind (default off)
         if let Some(ref node_id) = paired_node_id {
@@ -316,7 +316,7 @@ pub(super) async fn handle_session_close(
     state.session_connections.unregister(&sess_id).await;
     state.session_manager.remove_session(&sess_id).await;
     // Schema compat: Clear v1:sessions:bind (default off)
-    if let Some(rt) = state.phase2.as_ref() {
+    if let Some(rt) = state.redis_runtime.as_ref() {
         rt.schema_clear_session_bind(&sess_id).await;
     }
 

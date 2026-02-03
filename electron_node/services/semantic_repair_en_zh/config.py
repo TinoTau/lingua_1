@@ -24,7 +24,7 @@ class Config:
         # 服务基础目录
         self.service_dir = os.path.dirname(os.path.abspath(__file__))
         
-        # 中文语义修复配置
+        # 中文语义修复配置（同音纠错已拆至 phonetic_correction_zh，本服务不调用）
         self.zh_config = {
             'model_path': self._find_model('zh'),
             'n_ctx': 2048,

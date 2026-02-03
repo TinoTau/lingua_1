@@ -11,8 +11,7 @@ import {
   JobCancelMessage,
   InstalledService,
 } from '../../../../shared/protocols/messages';
-import { ModelNotAvailableError } from '../model-manager/model-manager';
-import { loadNodeConfig, type NodeConfig } from '../node-config';
+import { loadNodeConfig, getSchedulerUrl, type NodeConfig } from '../node-config';
 import logger from '../logger';
 import { ServicesHandlerSimple } from './node-agent-services-simple';
 import { HeartbeatHandler } from './node-agent-heartbeat';
@@ -22,6 +21,7 @@ import { ResourceUsage } from '../service-layer/ServiceSnapshots';
 import { ResultSender } from './node-agent-result-sender';
 import { AggregatorMiddleware, type AggregatorMiddlewareConfig } from './aggregator-middleware';
 import { JobProcessor } from './node-agent-job-processor';
+import { buildResultsToSend, sendJobResultPlan, type ResultToSendItem } from './node-agent-result-builder';
 
 export interface NodeStatus {
   online: boolean;
@@ -30,55 +30,13 @@ export interface NodeStatus {
   lastHeartbeat: Date | null;
 }
 
-/** 单次发送项：job + result + shouldSend + reason */
-export type ResultToSendItem = {
-  job: JobAssignMessage;
-  result: JobResult;
-  shouldSend: boolean;
-  reason?: string;
-};
+export type { ResultToSendItem };
+export { buildResultsToSend };
 
-/**
- * 构建待发送结果列表：主结果 + 空容器核销（NO_TEXT_ASSIGNED）。
- * 同一 job_id 只出现一次；pendingEmptyJobs 中与主 job 重复或彼此重复的项会被跳过。
- */
-export function buildResultsToSend(
-  job: JobAssignMessage,
-  processResult: { finalResult: JobResult; shouldSend: boolean; reason?: string }
-): ResultToSendItem[] {
-  const list: ResultToSendItem[] = [
-    {
-      job,
-      result: processResult.finalResult,
-      shouldSend: processResult.shouldSend,
-      reason: processResult.reason,
-    },
-  ];
-  const seenJobIds = new Set<string>([job.job_id]);
-  const pendingEmptyJobs = (processResult.finalResult.extra as any)?.pendingEmptyJobs as
-    | { job_id: string; utterance_index: number }[]
-    | undefined;
-  if (processResult.shouldSend && pendingEmptyJobs?.length) {
-    const emptyResult: JobResult = {
-      text_asr: '',
-      text_translated: '',
-      tts_audio: '',
-      should_send: true,
-      extra: { reason: 'NO_TEXT_ASSIGNED' },
-    };
-    for (const empty of pendingEmptyJobs) {
-      if (seenJobIds.has(empty.job_id)) continue;
-      seenJobIds.add(empty.job_id);
-      list.push({
-        job: { ...job, job_id: empty.job_id, utterance_index: empty.utterance_index },
-        result: emptyResult,
-        shouldSend: true,
-        reason: 'NO_TEXT_ASSIGNED',
-      });
-    }
-  }
-  return list;
-}
+/** 重连退避：初始间隔（毫秒） */
+const RECONNECT_INITIAL_MS = 5000;
+/** 重连退避：最大间隔（毫秒） */
+const RECONNECT_MAX_MS = 60000;
 
 export class NodeAgent {
   private ws: WebSocket | null = null;
@@ -87,7 +45,12 @@ export class NodeAgent {
   private inferenceService: InferenceService;
   private modelManager: any; // ModelManager 实例
   private nodeConfig: NodeConfig;
-  
+
+  /** 下次重连间隔（指数退避），连接成功后重置 */
+  private reconnectDelayMs = RECONNECT_INITIAL_MS;
+  /** 重连定时器，stop 时清除 */
+  private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+
   /** 已处理过的 job_id，每个 job_id 只处理一次，杜绝 DUP_SEND */
   private processedJobIds: Set<string> = new Set();
   /** 同一 (session_id, utterance_index) 只接受一个 job，杜绝同一 ui 双 Job */
@@ -116,16 +79,12 @@ export class NodeAgent {
     getServiceSnapshot: () => InstalledService[],
     getResourceSnapshot: () => ResourceUsage
   ) {
-    // 加载配置
     this.nodeConfig = loadNodeConfig();
-    this.schedulerUrl =
-      this.nodeConfig.scheduler?.url ||
-      process.env.SCHEDULER_URL ||
-      'ws://127.0.0.1:5010/ws/node';
-    
+    this.schedulerUrl = getSchedulerUrl();
+
     this.inferenceService = inferenceService;
     this.modelManager = modelManager || (inferenceService as any).modelManager;
-    
+
     // ✅ Day 2: 保存快照函数
     this.getServiceSnapshot = getServiceSnapshot;
     this.getResourceSnapshot = getResourceSnapshot;
@@ -208,9 +167,11 @@ export class NodeAgent {
         this.stop();
       }
 
+      logger.info({ schedulerUrl: this.schedulerUrl }, 'Connecting to scheduler...');
       this.ws = new WebSocket(this.schedulerUrl);
 
       this.ws.on('open', () => {
+        this.reconnectDelayMs = RECONNECT_INITIAL_MS;
         logger.info(
           { schedulerUrl: this.schedulerUrl, nodeId: this.nodeId },
           'Connected to scheduler server'
@@ -257,11 +218,16 @@ export class NodeAgent {
         this.jobProcessor.updateConnection(null, this.nodeId);
         this.resultSender.updateConnection(null, this.nodeId);
 
-        // 尝试重连
-        setTimeout(() => {
-          logger.info({ nodeId: this.nodeId }, 'Attempting to reconnect to scheduler');
+        const delayMs = this.reconnectDelayMs;
+        this.reconnectDelayMs = Math.min(this.reconnectDelayMs * 2, RECONNECT_MAX_MS);
+        this.reconnectTimer = setTimeout(() => {
+          this.reconnectTimer = null;
+          logger.info(
+            { nodeId: this.nodeId, nextRetryMs: delayMs },
+            'Attempting to reconnect to scheduler'
+          );
           this.start();
-        }, 5000);
+        }, delayMs);
       });
 
       // 监听模型状态变化
@@ -282,6 +248,11 @@ export class NodeAgent {
 
   stop(): void {
     this.heartbeatHandler.stopHeartbeat();
+    if (this.reconnectTimer !== null) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = null;
+    }
+    this.reconnectDelayMs = RECONNECT_INITIAL_MS;
     if (this.ws) {
       this.ws.close();
       this.ws = null;
@@ -296,15 +267,15 @@ export class NodeAgent {
         case 'node_register_ack': {
           const ack = message as NodeRegisterAckMessage;
           this.nodeId = ack.node_id;
-          
+
           // 更新所有handler的nodeId
           this.heartbeatHandler.updateConnection(this.ws, this.nodeId);
           this.registrationHandler.updateConnection(this.ws, this.nodeId);
           this.jobProcessor.updateConnection(this.ws, this.nodeId);
           this.resultSender.updateConnection(this.ws, this.nodeId);
-          
+
           logger.info({ nodeId: this.nodeId }, 'Node registered successfully');
-          
+
           // 立即发送一次心跳
           this.heartbeatHandler.sendHeartbeatOnce().catch((error) => {
             logger.warn({ error }, 'Failed to send immediate heartbeat after registration');
@@ -416,47 +387,13 @@ export class NodeAgent {
         }, 'Long job processing time detected');
       }
 
-      // 唯一发送路径：processJob → buildResultsToSend → send loop（直线型，无分支语义）
       const resultsToSend = buildResultsToSend(job, processResult);
-      const planId = String(Date.now() % 1e6);
-      const planItems = resultsToSend.map((item, idx) => ({
-        idx,
-        job_id: item.job.job_id,
-        reason: item.reason ?? (item.result.extra as any)?.reason ?? (item.result as any).dedup_reason ?? '',
-        shouldSend: item.shouldSend,
-        isEmptyJob: !(item.result.text_asr || '').trim().length || (item.result.extra as any)?.reason === 'NO_TEXT_ASSIGNED',
-      }));
-      const planFingerprint = planItems.map((i) => `${i.job_id}|${i.reason}|${i.isEmptyJob}`).join(',');
-      logger.info(
-        { tag: 'SEND_PLAN', job_id: job.job_id, planId, items: planItems, planFingerprint },
-        'SEND_PLAN'
+      sendJobResultPlan(
+        job,
+        resultsToSend,
+        (j, r, t, s, reason) => this.resultSender.sendJobResult(j, r, t, s, reason),
+        startTime
       );
-
-      let attemptSeq = 0;
-      const total = resultsToSend.length;
-      for (let idx = 0; idx < resultsToSend.length; idx++) {
-        const { job: j, result: r, shouldSend: s, reason } = resultsToSend[idx];
-        const attemptReason = reason ?? (r.extra as any)?.reason ?? (r as any).dedup_reason;
-        attemptSeq += 1;
-        logger.info(
-          {
-            tag: 'SEND_ATTEMPT',
-            planId,
-            idx,
-            total,
-            job_id: j.job_id,
-            reason: attemptReason,
-            attemptSeq,
-            callSite: 'node-agent.handleJob.loop',
-          },
-          'SEND_ATTEMPT'
-        );
-        this.resultSender.sendJobResult(j, r, startTime, s, reason ?? (r.extra as any)?.reason ?? (r as any).dedup_reason);
-        logger.info(
-          { tag: 'SEND_DONE', planId, attemptSeq, ok: true },
-          'SEND_DONE'
-        );
-      }
     } catch (error) {
       this.resultSender.sendErrorResult(job, error, startTime);
     }

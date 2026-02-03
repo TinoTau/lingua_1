@@ -37,7 +37,8 @@ interface Window {
     removeModelProgressListener: () => void;
     removeModelErrorListener: () => void;
 
-    // 节点管理
+    // 节点管理（调度器地址来自配置）
+    getSchedulerUrl: () => Promise<string>;
     getNodeStatus: () => Promise<any>;
     reconnectNode: () => Promise<{ success: boolean; error?: string }>;
     generatePairingCode: () => Promise<string | null>;
@@ -109,17 +110,23 @@ interface Window {
       startedAt: Date | null;
       lastError: string | null;
     }>;
-    getAllSemanticRepairServiceStatuses: () => Promise<Array<{
-      serviceId: string;
-      running: boolean;
-      starting: boolean;
-      pid: number | null;
-      port: number | null;
-      startedAt: Date | null;
-      lastError: string | null;
-    }>>;
-    startSemanticRepairService: (serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => Promise<{ success: boolean; error?: string }>;
-    stopSemanticRepairService: (serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => Promise<{ success: boolean; error?: string }>;
+    serviceDiscovery: {
+      list: () => Promise<unknown>;
+      statuses: () => Promise<Array<{
+        serviceId: string;
+        type: string;
+        running: boolean;
+        starting: boolean;
+        pid: number | null;
+        port: number | null;
+        startedAt: Date | null;
+        lastError: string | null;
+      }>>;
+      refresh: () => Promise<unknown>;
+      start: (serviceId: string) => Promise<void>;
+      stop: (serviceId: string) => Promise<void>;
+      get: (serviceId: string) => Promise<unknown>;
+    };
   };
 }
 

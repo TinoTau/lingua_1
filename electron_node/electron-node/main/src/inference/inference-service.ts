@@ -1,11 +1,13 @@
 import { ModelManager } from '../model-manager/model-manager';
 import type { JobAssignMessage, InstalledModel, FeatureFlags } from '@shared/protocols/messages';
-import { ServiceType } from '@shared/protocols/messages';
 import logger from '../logger';
 import { TaskRouter } from '../task-router/task-router';
 import { runJobPipeline, ServicesBundle } from '../pipeline/job-pipeline';
+import { initJobContext } from '../pipeline/context/job-context';
 import { SessionContextManager } from '../pipeline-orchestrator/session-context-manager';
 import { ServiceRegistry } from '../service-layer/ServiceTypes';
+import { getInstalledModelsAsProtocol } from './inference-service-models';
+import { waitForServicesReady } from './inference-service-ready';
 
 export interface JobResult {
   text_asr: string;
@@ -276,7 +278,7 @@ export class InferenceService {
     if (wasFirstJob) {
       this.hasProcessedFirstJob = true;
       logger.info({ jobId: job.job_id }, 'First job detected, waiting for services to be ready');
-      await this.waitForServicesReady();
+      await waitForServicesReady(this.taskRouter, 5000);
     }
 
     // 如果是第一个任务，通知任务开始（用于启动GPU跟踪）
@@ -331,6 +333,38 @@ export class InferenceService {
   }
 
   /**
+   * 使用模拟 ASR 文本跑完整 pipeline（聚合 → 语义修复 → 去重 → NMT），用于联调与测试。
+   * 跳过 ASR 步骤，直接以 asrText 作为本段输入。
+   */
+  async runPipelineWithMockAsr(
+    asrText: string,
+    srcLang: string = 'zh',
+    tgtLang: string = 'en'
+  ): Promise<JobResult> {
+    const job: JobAssignMessage = {
+      job_id: `mock-asr-${Date.now()}`,
+      session_id: 'mock-session',
+      utterance_index: 0,
+      src_lang: srcLang,
+      tgt_lang: tgtLang,
+      lang_a: srcLang,
+      lang_b: tgtLang,
+      pipeline: { use_asr: true, use_nmt: true, use_tts: false },
+    } as JobAssignMessage;
+
+    const ctx = initJobContext(job);
+    ctx.asrText = asrText;
+
+    await this.taskRouter.refreshServiceEndpoints();
+
+    return runJobPipeline({
+      job,
+      services: this.servicesBundle,
+      ctx,
+    });
+  }
+
+  /**
    * 取消任务
    * 注意：取消不保证推理服务一定立刻停止（取决于下游实现）
    */
@@ -354,136 +388,7 @@ export class InferenceService {
   }
 
   async getInstalledModels(): Promise<InstalledModel[]> {
-    // 从 ModelManager 获取已安装的模型，转换为协议格式
-    // 注意：返回的 InstalledModel 接口包含 model_id 字段，这是协议定义的一部分
-    const installed = this.modelManager.getInstalledModels();
-
-    // 获取可用模型列表以获取完整元数据
-    // 如果 Model Hub 连接失败，使用空数组，避免阻止节点注册
-    let availableModels: any[] = [];
-    try {
-      availableModels = await this.modelManager.getAvailableModels();
-    } catch (error: any) {
-      logger.warn({
-        error: error.message,
-        errorCode: error.code
-      }, 'Failed to get available models from Model Hub, using empty list (node registration will continue)');
-      // 继续执行，使用空数组，这样节点仍然可以注册
-    }
-
-    return installed.map(m => {
-      // 从可用模型列表中查找完整信息
-      const modelInfo = availableModels.find(am => am.id === m.modelId);
-
-      // 从 model_id 推断模型类型（临时方案，实际应该从元数据获取）
-      let kind: 'asr' | 'nmt' | 'tts' | 'emotion' | 'other' = 'other';
-      if (modelInfo) {
-        if (modelInfo.task === 'asr') kind = 'asr';
-        else if (modelInfo.task === 'nmt') kind = 'nmt';
-        else if (modelInfo.task === 'tts') kind = 'tts';
-        else if (modelInfo.task === 'emotion') kind = 'emotion';
-      } else {
-        // 回退到名称推断
-        if (m.modelId.includes('asr') || m.modelId.includes('whisper')) {
-          kind = 'asr';
-        } else if (m.modelId.includes('nmt') || m.modelId.includes('m2m')) {
-          kind = 'nmt';
-        } else if (m.modelId.includes('tts') || m.modelId.includes('piper')) {
-          kind = 'tts';
-        } else if (m.modelId.includes('emotion')) {
-          kind = 'emotion';
-        }
-      }
-
-      return {
-        model_id: m.modelId,
-        kind: kind,
-        src_lang: modelInfo?.languages?.[0] || null,
-        tgt_lang: modelInfo?.languages?.[1] || null,
-        dialect: null, // TODO: 从元数据获取
-        version: m.version || '1.0.0',
-        enabled: m.info.status === 'ready', // 只有 ready 状态才启用
-      };
-    });
-  }
-
-  /**
-   * 等待服务就绪（用于第一次任务）
-   * 检查ASR、NMT、TTS服务是否都有可用的端点
-   */
-  private async waitForServicesReady(maxWaitMs: number = 5000): Promise<void> {
-    const startTime = Date.now();
-    const checkInterval = 200; // 每200ms检查一次（更频繁的检查）
-
-    logger.info({ maxWaitMs }, 'Waiting for services to be ready');
-
-    // 先强制刷新一次服务端点列表（确保获取最新状态）
-    await this.taskRouter.forceRefreshServiceEndpoints();
-
-    while (Date.now() - startTime < maxWaitMs) {
-      try {
-        // 循环中强制刷新服务端点列表（需要实时检测服务状态）
-        await this.taskRouter.forceRefreshServiceEndpoints();
-
-        // 检查是否有可用的服务端点
-        const hasASR = await this.checkServiceTypeReady(ServiceType.ASR);
-        const hasNMT = await this.checkServiceTypeReady(ServiceType.NMT);
-        const hasTTS = await this.checkServiceTypeReady(ServiceType.TTS);
-
-        if (hasASR && hasNMT && hasTTS) {
-          logger.info({ elapsedMs: Date.now() - startTime }, 'All services are ready');
-          return;
-        }
-
-        logger.debug(
-          {
-            elapsedMs: Date.now() - startTime,
-            hasASR,
-            hasNMT,
-            hasTTS,
-          },
-          'Services not all ready yet, waiting...'
-        );
-      } catch (error) {
-        logger.warn({ error, elapsedMs: Date.now() - startTime }, 'Error checking service readiness');
-      }
-
-      // 等待后重试
-      await new Promise(resolve => setTimeout(resolve, checkInterval));
-    }
-
-    logger.warn(
-      {
-        elapsedMs: Date.now() - startTime,
-        maxWaitMs,
-      },
-      'Services not ready after timeout, proceeding anyway (may fail)'
-    );
-  }
-
-  /**
-   * 检查指定服务类型是否有可用的端点
-   */
-  private async checkServiceTypeReady(serviceType: ServiceType): Promise<boolean> {
-    try {
-      // 通过TaskRouter的公共方法检查（需要添加）
-      // 暂时通过反射或类型断言访问（不推荐，但可以工作）
-      const router = this.taskRouter as any;
-      // ServiceType是枚举，值应该是 'asr', 'nmt', 'tts', 'tone'（小写）
-      const endpoints = router.serviceEndpoints?.get(serviceType) || [];
-      // 注意：refreshServiceEndpoints 只会添加 status === 'running' 的服务
-      // 所以这里只需要检查端点数量即可
-      const hasEndpoints = endpoints.length > 0;
-
-      if (!hasEndpoints) {
-        logger.debug({ serviceType, endpointCount: endpoints.length }, 'No endpoints available for service type');
-      }
-
-      return hasEndpoints;
-    } catch (error) {
-      logger.warn({ error, serviceType }, 'Error checking service type readiness');
-      return false;
-    }
+    return getInstalledModelsAsProtocol(this.modelManager);
   }
 
   getFeaturesSupported(): FeatureFlags {

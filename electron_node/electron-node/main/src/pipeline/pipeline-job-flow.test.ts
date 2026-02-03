@@ -16,6 +16,10 @@ jest.mock('../gpu-arbiter', () => ({
   withGpuLease: jest.fn((_serviceType: string, fn: () => Promise<any>) => fn()),
 }));
 
+jest.mock('./steps/phonetic-correction-step', () => ({
+  runPhoneticCorrectionStep: jest.fn().mockResolvedValue(undefined),
+}));
+
 function createJob(overrides?: Partial<JobAssignMessage>): JobAssignMessage {
   return {
     job_id: 'job-flow-1',

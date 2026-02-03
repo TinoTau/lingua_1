@@ -38,42 +38,6 @@ app.whenReady().then(async () => {
   console.log('========================================\n');
 
   console.log('📍 Debug: Checking if packaged:', app.isPackaged);
-  console.log('📍 Debug: NODE_ENV:', process.env.NODE_ENV || 'not set');
-
-  // ✅ 开发模式：检查Vite是否运行（简单直接）
-  // 如果 renderer/dist 已构建，或者 NODE_ENV=production，则跳过 Vite 检查（生产构建模式）
-  const path = require('path');
-  const fs = require('fs');
-  const rendererDistPath = path.join(__dirname, '../../../renderer/dist');
-  const rendererBuilt = fs.existsSync(rendererDistPath);
-  const isProduction = process.env.NODE_ENV === 'production';
-
-  // 只在开发环境且未构建时检查Vite
-  // 生产环境（NODE_ENV=production）或已构建的renderer都不需要Vite
-  if (!app.isPackaged && !rendererBuilt && !isProduction) {
-    console.log('📍 Debug: Development mode, checking Vite...');
-    try {
-      await fetch('http://localhost:5173', { signal: AbortSignal.timeout(2000) });
-      console.log('✅ Vite dev server is running');
-    } catch (error) {
-      console.error('📍 Debug: Vite check failed:', error);
-      const { dialog } = require('electron');
-      dialog.showErrorBox(
-        '❌ 开发环境未就绪',
-        '请先在另一个终端运行:\n\nnpm run dev\n\n等待Vite启动后，再运行 npm start'
-      );
-      app.quit();
-      return;
-    }
-  } else {
-    if (isProduction) {
-      console.log('✅ Production mode (NODE_ENV=production), skipping Vite check');
-    } else if (rendererBuilt) {
-      console.log('✅ Renderer already built, skipping Vite check');
-    } else if (app.isPackaged) {
-      console.log('✅ App is packaged, skipping Vite check');
-    }
-  }
 
   console.log('📍 Debug: Proceeding to IPC handler registration...');
 
@@ -140,11 +104,14 @@ app.whenReady().then(async () => {
       nodeAgent: !!managers.nodeAgent,
     }, 'Managers status');
 
-    // 启动 Node Agent（简化版）
+    // 启动 NodeAgent（唯一入口，调度器地址见配置 scheduler.url）
     if (managers.nodeAgent) {
+      logger.info({}, 'NodeAgent.start() 被调用（自动连接调度器）');
       managers.nodeAgent.start().catch((error) => {
         logger.error({ error }, 'Failed to start NodeAgent');
       });
+    } else {
+      logger.warn({}, 'NodeAgent 未创建，无法连接调度器');
     }
 
     logger.info({}, '========================================');
@@ -165,34 +132,14 @@ app.whenReady().then(async () => {
       createWindow();
     }
   });
-
-  // Day 5: 简化lifecycle，删除空的registerWindowCloseHandler
 });
 
-// 注册应用级生命周期事件处理器（使用新架构）
-registerWindowAllClosedHandler(
-  managers.nodeAgent,
-  null, // rustServiceManager - 不再使用
-  null  // pythonServiceManager - 不再使用
-);
-
-registerBeforeQuitHandler(
-  managers.nodeAgent,
-  null, // rustServiceManager - 不再使用
-  null  // pythonServiceManager - 不再使用
-);
-
-registerProcessSignalHandlers(
-  managers.nodeAgent,
-  null, // rustServiceManager - 不再使用
-  null  // pythonServiceManager - 不再使用
-);
-
-registerExceptionHandlers(
-  managers.nodeAgent,
-  null, // rustServiceManager - 不再使用
-  null  // pythonServiceManager - 不再使用
-);
+// 生命周期用 getter 取当前 nodeAgent，避免模块加载时 managers 尚未赋值
+const getNodeAgent = () => managers.nodeAgent;
+registerWindowAllClosedHandler(getNodeAgent);
+registerBeforeQuitHandler(getNodeAgent);
+registerProcessSignalHandlers(getNodeAgent);
+registerExceptionHandlers(getNodeAgent);
 
 // 注意：模块管理 IPC 已移除
 // 模块现在根据任务请求中的 features 自动启用/禁用，不需要手动管理

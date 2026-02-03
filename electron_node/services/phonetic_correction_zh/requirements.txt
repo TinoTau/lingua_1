@@ -1,0 +1,8 @@
+# 中文同音纠错服务
+
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.0.0
+kenlm>=0.3.0
+# 同音混淆集仅简体；ASR 若出繁体需先转简体再纠错
+opencc-python-reimplemented>=0.1.7

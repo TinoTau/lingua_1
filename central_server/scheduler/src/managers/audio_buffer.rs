@@ -125,14 +125,4 @@ impl AudioBufferManager {
         }
     }
     
-    /// 获取音频数据（不移除，用于读取）
-    pub async fn get_combined(&self, session_id: &str, utterance_index: u64) -> Option<Vec<u8>> {
-        let key = format!("{}:{}", session_id, utterance_index);
-        let buffers = self.buffers.read().await;
-        if let Some(buffer) = buffers.get(&key) {
-            Some(buffer.get_combined())
-        } else {
-            None
-        }
-    }
 }

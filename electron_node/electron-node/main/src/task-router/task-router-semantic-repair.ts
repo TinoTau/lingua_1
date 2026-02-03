@@ -31,7 +31,6 @@ export class TaskRouterSemanticRepairHandler {
   private isServiceRunningCallback: ((serviceId: string) => boolean) | null = null;
   private getServicePathCallback: ((serviceId: string) => string | null) | null = null;  // P2-2: 获取服务包路径的回调
   private getServiceEndpointById: ((serviceId: string) => ServiceEndpoint | null) | null = null;  // 直接根据服务ID查找端点
-  private endpointCache: Map<string, ServiceEndpoint | null> = new Map();  // 按语言缓存服务端点
 
   constructor(
     private selectServiceEndpoint: (serviceType: ServiceType) => ServiceEndpoint | null,
@@ -55,7 +54,7 @@ export class TaskRouterSemanticRepairHandler {
     });
     this.isServiceRunningCallback = isServiceRunningCallback || null;
     this.getServicePathCallback = getServicePathCallback || null;
-    
+
     // P2-1: 初始化缓存
     this.cache = new SemanticRepairCache({
       maxSize: cacheConfig?.maxSize || 200,
@@ -92,47 +91,10 @@ export class TaskRouterSemanticRepairHandler {
       }
     }
 
-    // 统一处理服务端点查找：先尝试统一服务，再回退到独立服务
-    let serviceId: string = this.getServiceIdForLanguage(task.lang);  // 默认使用独立服务
-    let endpoint: ServiceEndpoint | null = null;
-    
-    // 优先尝试统一服务（如果可用）
-    if (this.getServiceEndpointById) {
-      const unifiedEndpoint = this.getServiceEndpointById('semantic-repair-en-zh');
-      if (unifiedEndpoint && unifiedEndpoint.status === 'running') {
-        serviceId = 'semantic-repair-en-zh';
-        endpoint = unifiedEndpoint;
-      }
-    }
-    
-    // 如果统一服务不可用，使用独立服务
-    if (!endpoint) {
-      serviceId = this.getServiceIdForLanguage(task.lang);
-      
-      // 检查缓存（按语言缓存服务端点，避免重复查找）
-      if (this.endpointCache.has(task.lang)) {
-        endpoint = this.endpointCache.get(task.lang)!;
-      } else {
-        // 缓存未命中，查找服务端点
-        // 优先使用直接查找方法（如果提供）
-        if (this.getServiceEndpointById) {
-          endpoint = this.getServiceEndpointById(serviceId);
-        }
-        
-        // 如果没有直接查找方法或找不到，尝试通过selectServiceEndpoint查找SEMANTIC类型的服务
-        if (!endpoint) {
-          endpoint = this.selectServiceEndpoint(ServiceType.SEMANTIC);
-          // 验证返回的端点是否匹配我们需要的服务ID
-          if (endpoint && endpoint.serviceId !== serviceId) {
-            endpoint = null;
-          }
-        }
-        
-        // 缓存结果（即使是null也缓存，避免重复查找）
-        this.endpointCache.set(task.lang, endpoint);
-      }
-    }
-    
+    // 仅使用合并语义修复服务 semantic-repair-en-zh（与备份一致：单一服务 ID，直接查端点）
+    const serviceId = 'semantic-repair-en-zh';
+    const endpoint = this.getServiceEndpointById?.(serviceId) ?? null;
+
     if (!endpoint) {
       logger.warn(
         { lang: task.lang, serviceId, message: 'Semantic repair service not found' },
@@ -145,7 +107,7 @@ export class TaskRouterSemanticRepairHandler {
     // 注意：在测试环境中，如果没有提供isServiceRunningCallback，跳过健康检查
     if (this.isServiceRunningCallback) {
       const isProcessRunning = this.isServiceRunningCallback(endpoint.serviceId);
-      
+
       const healthResult = await this.healthChecker.checkServiceHealth(
         endpoint.serviceId,
         endpoint.baseUrl,
@@ -228,7 +190,7 @@ export class TaskRouterSemanticRepairHandler {
       if (result.decision === 'REPAIR') {
         this.cache.set(task.lang, task.text_in, result);
       }
-      
+
       logger.info(
         {
           jobId: task.job_id,
@@ -280,37 +242,6 @@ export class TaskRouterSemanticRepairHandler {
   }
 
   /**
-   * 根据语言获取服务ID
-   * 优先使用新的统一服务 semantic-repair-en-zh
-   */
-  /**
-   * 清除服务端点缓存（当服务状态改变时调用）
-   */
-  clearEndpointCache(): void {
-    this.endpointCache.clear();
-  }
-
-  /**
-   * 清除特定语言的服务端点缓存
-   */
-  clearEndpointCacheForLanguage(lang: 'zh' | 'en'): void {
-    this.endpointCache.delete(lang);
-  }
-
-  /**
-   * 根据语言选择服务ID
-   * 职责：只返回服务ID，不检查服务可用性
-   * 服务可用性检查在 routeSemanticRepairTask() 中统一处理
-   */
-  private getServiceIdForLanguage(lang: 'zh' | 'en'): string {
-    if (lang === 'zh') {
-      return 'semantic-repair-zh';
-    } else {
-      return 'semantic-repair-en';
-    }
-  }
-
-  /**
    * 调用语义修复服务
    */
   private async callSemanticRepairService(
@@ -318,7 +249,20 @@ export class TaskRouterSemanticRepairHandler {
     task: SemanticRepairTask
   ): Promise<SemanticRepairResult> {
     const url = `${endpoint.baseUrl}/repair`;
-    const timeout = 10000; // 增加到10秒超时（模型生成可能需要更长时间）
+    // 长句或大模型生成可能超过 10s，使用 30s 降低 SERVICE_TIMEOUT（与 GPU 仲裁无关，语义修复为 HTTP 调独立服务）
+    const timeout = 30000;
+
+    // 合并语义修复 job 输入日志：便于排查请求内容
+    const textInPreview = task.text_in.length > 80 ? `${task.text_in.slice(0, 80)}…` : task.text_in;
+    logger.info(
+      {
+        job_id: task.job_id,
+        lang: task.lang,
+        text_in_len: task.text_in.length,
+        text_in_preview: textInPreview,
+      },
+      'Semantic repair job input (sending to service)'
+    );
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -349,11 +293,26 @@ export class TaskRouterSemanticRepairHandler {
       }
 
       const data = await response.json() as any;
-      
+
       // 验证响应格式
       if (!data.decision || !data.text_out || typeof data.confidence !== 'number') {
         throw new Error('Invalid response format from semantic repair service');
       }
+
+      // 合并语义修复 job 输出日志：便于排查返回结果与耗时
+      const textOutPreview = (data.text_out || '').length > 80
+        ? `${String(data.text_out).slice(0, 80)}…`
+        : (data.text_out || '');
+      logger.info(
+        {
+          job_id: task.job_id,
+          decision: data.decision,
+          text_out_len: (data.text_out || '').length,
+          text_out_preview: textOutPreview,
+          process_time_ms: data.process_time_ms,
+        },
+        'Semantic repair job output (received from service)'
+      );
 
       return {
         decision: data.decision,
@@ -361,11 +320,11 @@ export class TaskRouterSemanticRepairHandler {
         confidence: data.confidence,
         diff: data.diff,
         reason_codes: data.reason_codes || [],
-        repair_time_ms: data.repair_time_ms,
+        process_time_ms: data.process_time_ms,
       };
     } catch (error: any) {
       clearTimeout(timeoutId);
-      
+
       if (error.name === 'AbortError') {
         throw new Error('Semantic repair service timeout');
       }
@@ -381,7 +340,7 @@ export class TaskRouterSemanticRepairHandler {
     const isProcessRunning = this.isServiceRunningCallback
       ? this.isServiceRunningCallback(serviceId)
       : false;
-    
+
     const healthResult = await this.healthChecker.checkServiceHealth(
       serviceId,
       baseUrl,
@@ -402,7 +361,7 @@ export class TaskRouterSemanticRepairHandler {
     const isProcessRunning = this.isServiceRunningCallback
       ? this.isServiceRunningCallback(serviceId)
       : false;
-    
+
     return await this.healthChecker.checkServiceHealth(
       serviceId,
       baseUrl,

@@ -196,7 +196,8 @@ export class TextForwardMergeManager {
             : mergeResult.deltaForCurrent;
         return { ...gateDecision.result, segmentForCurrentJob };
       } else {
-        // 没有currentText，直接处理pendingText
+        // 没有 currentText：pending 属于上一句（pending.utteranceIndex），不应归属到当前 job，
+        // 否则当前 job 会错误展示上一句内容（如 Job13 混入 Job12 的「语义切分」等）。当前 job 的 segment 置空。
         this.pendingTexts.delete(sessionId);
 
         logger.info(
@@ -204,18 +205,20 @@ export class TextForwardMergeManager {
             sessionId,
             pendingText: pending.text.substring(0, 50),
             pendingLength: pending.text.length,
-            reason: 'Pending text wait timeout, no current text, sending to semantic repair regardless of length',
+            pendingUtteranceIndex: pending.utteranceIndex,
+            currentUtteranceIndex: utteranceIndex,
+            reason: 'Pending text wait timeout, no current text; segmentForCurrentJob set to empty to avoid wrong job attribution',
           },
-          'TextForwardMergeManager: Pending text wait timeout, no current text, sending to semantic repair regardless of length'
+          'TextForwardMergeManager: Pending text wait timeout, no current text, not attributing pending to current job'
         );
         return {
-          processedText: pending.text,
-          shouldDiscard: false,
+          processedText: '',
+          shouldDiscard: true,
           shouldWaitForMerge: false,
-          shouldSendToSemanticRepair: true,
+          shouldSendToSemanticRepair: false,
           deduped: false,
           dedupChars: 0,
-          segmentForCurrentJob: pending.text,  // 修复 Job9~11：仅 flush pending 时也写本 job 原文，避免长句前半丢失
+          segmentForCurrentJob: '',
         };
       }
     }

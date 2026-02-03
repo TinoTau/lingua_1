@@ -13,8 +13,7 @@ electron-node/tests/
 └── stage3.1/              # 阶段 3.1：模型管理功能测试
     ├── README.md          # 阶段 3.1 测试说明
     ├── TEST_REPORT.md     # 测试结果报告
-    ├── model-manager.test.ts      # ModelManager 单元测试
-    └── model-hub-api.test.ts      # 模型库服务 API 测试
+    └── model-manager.test.ts      # ModelManager 单元测试
 └── stage3.2/              # 阶段 3.2：模块化功能实现测试
     ├── README.md          # 阶段 3.2 测试说明
     └── TEST_REPORT.md     # 测试结果报告
@@ -60,7 +59,7 @@ electron-node/tests/
 
 - **构建**：`npm run build:main`
 - **TextForwardMergeManager**（forward merge 逻辑）：`npx jest main/src/agent/postprocess/text-forward-merge-manager.test.ts --config jest.config.js`（约 34 例）
-- **stage3.1**：`npm run test:stage3.1`（约 94 例；其中 model-hub-api 的 Range 请求用例依赖外部 API）
+- **stage3.1**：`npm run test:stage3.1`
 - **stage3.2**：`npm run test:stage3.2`（部分用例需 Opus/VM 或外部服务，见各 stage 的 README）
 - **聚合相关**：`powershell -ExecutionPolicy Bypass -File run-aggregation-tests.ps1`（编译 + TextForwardMergeManager + 聚合相关用例）
 

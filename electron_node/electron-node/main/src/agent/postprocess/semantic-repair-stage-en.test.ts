@@ -47,12 +47,18 @@ describe('SemanticRepairStageEN - Phase 2', () => {
 
     it('应该在质量分高于阈值时返回PASS', async () => {
       const job = createJob();
-      // 使用较长的文本，避免触发结构异常检测
-      const result = await stage.process(job, 'This is a longer test sentence that should pass the quality threshold check without triggering structural issues detection', 0.80);
+      const textIn = 'This is a longer test sentence that should pass the quality threshold check without triggering structural issues detection';
+      mockTaskRouter.routeSemanticRepairTask.mockResolvedValue({
+        decision: 'PASS',
+        text_out: textIn,
+        confidence: 0.8,
+        reason_codes: ['LENGTH_MEETS_THRESHOLD'],
+      });
+      const result = await stage.process(job, textIn, 0.80);
 
       expect(result.decision).toBe('PASS');
-      expect(result.textOut).toBe('This is a longer test sentence that should pass the quality threshold check without triggering structural issues detection');
-      expect(mockTaskRouter.routeSemanticRepairTask).not.toHaveBeenCalled();
+      expect(result.textOut).toBe(textIn);
+      expect(mockTaskRouter.routeSemanticRepairTask).toHaveBeenCalled();
     });
 
     it('应该在质量分低于阈值时触发修复', async () => {

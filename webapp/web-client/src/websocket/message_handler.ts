@@ -68,56 +68,72 @@ export class MessageHandler {
   }
 
   /**
-   * 处理消息
+   * 将 MessageEvent.data 转为 JSON 可解析的字符串（支持 string / Blob / ArrayBuffer）
    */
-  handleMessage(
+  private static async dataToString(data: string | ArrayBuffer | Blob): Promise<string> {
+    if (typeof data === 'string') return data;
+    if (data instanceof ArrayBuffer) return new TextDecoder().decode(data);
+    if (data instanceof Blob) return data.text();
+    return String(data);
+  }
+
+  /**
+   * 处理消息（支持文本与二进制 body，避免大 payload 被以 Blob 发送时解析失败）
+   */
+  async handleMessage(
     event: MessageEvent,
     onBackpressure?: (message: BackpressureMessage) => void,
     onSessionCreated?: (sessionId: string) => void
-  ): void {
+  ): Promise<void> {
+    let raw: string;
     try {
-      const message = JSON.parse(event.data);
+      raw = await MessageHandler.dataToString(event.data);
+    } catch (e) {
+      logger.error('MessageHandler', '消息体转字符串失败', { error: String(e), data_type: typeof event.data });
+      return;
+    }
+    try {
+      const message = JSON.parse(raw);
       
-      // 记录所有收到的消息（用于调试）
-      logger.debug('MessageHandler', '📨 收到服务器消息', {
+      logger.info('MessageHandler', '收到服务器消息', {
         type: message.type,
         session_id: message.session_id || this.sessionId,
         has_callback: !!this.messageCallback,
       });
 
-      // 处理会话初始化确认
       if (message.type === 'session_init_ack') {
-        logger.debug('MessageHandler', '处理 session_init_ack');
+        logger.info('MessageHandler', '处理 session_init_ack');
         this.handleSessionInitAck(message as SessionInitAckMessage, onSessionCreated);
         return;
       }
 
       // 处理背压消息
       if (message.type === 'backpressure' && onBackpressure) {
-        logger.debug('MessageHandler', '处理 backpressure');
+        logger.info('MessageHandler', '处理 backpressure');
         onBackpressure(message as BackpressureMessage);
         return;
       }
 
-      // 处理其他服务器消息
       if (this.messageCallback) {
-        // 对于 translation_result 消息，记录详细信息
         if (message.type === 'translation_result') {
-          logger.debug('MessageHandler', '📨 收到 translation_result 消息，准备转发', {
-            utterance_index: message.utterance_index,
-            has_tts_audio: !!(message as any).tts_audio,
-            tts_audio_length: (message as any).tts_audio?.length || 0,
-            trace_id: (message as any).trace_id,
-            job_id: (message as any).job_id
+          logger.info('MessageHandler', '收到 translation_result，即将转发给 App', {
+            utterance_index: (message as any).utterance_index,
+            job_id: (message as any).job_id,
+            has_text_asr: !!((message as any).text_asr),
+            has_text_translated: !!((message as any).text_translated),
           });
         }
-        logger.debug('MessageHandler', `转发消息到 callback: ${message.type}`);
+        logger.info('MessageHandler', '转发消息到 App 回调', { type: message.type });
         this.messageCallback(message as ServerMessage);
       } else {
-        logger.warn('MessageHandler', `⚠️ 收到消息但无 callback: ${message.type}`);
+        logger.warn('MessageHandler', '收到消息但无 callback，消息被丢弃', { type: message.type });
       }
     } catch (error) {
-      logger.error('MessageHandler', '❌ 解析消息失败', { error, data: event.data, data_type: typeof event.data, data_length: event.data?.length });
+      logger.error('MessageHandler', '解析消息失败', {
+        error: String(error),
+        raw_length: raw?.length,
+        raw_preview: typeof raw === 'string' ? raw.substring(0, 200) : '',
+      });
     }
   }
 

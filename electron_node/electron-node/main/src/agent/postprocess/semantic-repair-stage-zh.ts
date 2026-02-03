@@ -10,7 +10,7 @@ import { SemanticRepairScorer, SemanticRepairScorerConfig } from './semantic-rep
 import { SemanticRepairValidator, SemanticRepairValidatorConfig } from './semantic-repair-validator';
 import logger from '../../logger';
 import { getSequentialExecutor } from '../../sequential-executor/sequential-executor-factory';
-import { tryAcquireGpuLease } from '../../gpu-arbiter';
+import { withGpuLease } from '../../gpu-arbiter';
 import { loadNodeConfig } from '../../node-config';
 
 export interface SemanticRepairStageZHConfig {
@@ -47,7 +47,7 @@ export class SemanticRepairStageZH {
     // 从配置文件加载文本长度配置
     const nodeConfig = loadNodeConfig();
     this.SHORT_SENTENCE_LENGTH = nodeConfig.textLength?.minLengthToSend ?? 20;
-    
+
     // P1-1: 初始化打分器
     this.scorer = new SemanticRepairScorer({
       qualityThreshold: config.qualityThreshold || this.DEFAULT_QUALITY_THRESHOLD,
@@ -97,163 +97,99 @@ export class SemanticRepairStageZH {
 
     const startTime = Date.now();
 
-    try {
-      // 获取微上下文（上一句尾部）
-      const microContext = this.getMicroContext(job, meta);
+    // 获取微上下文（上一句尾部）
+    const microContext = this.getMicroContext(job, meta);
 
-      // 构建修复任务
-      const repairTask: SemanticRepairTask = {
-        job_id: job.job_id,
-        session_id: job.session_id || '',
-        utterance_index: job.utterance_index || 0,
-        lang: 'zh',
-        text_in: text,
-        quality_score: qualityScore,
-        micro_context: microContext,
-        meta: {
-          segments: meta?.segments,
-          language_probability: meta?.language_probability,
-          reason_codes: scoreResult.reasonCodes,
-          score: scoreResult.score,  // P1-1: 传递综合评分
-          score_details: scoreResult.details,  // P1-1: 传递评分详情
-        },
-      };
+    // 构建修复任务
+    const repairTask: SemanticRepairTask = {
+      job_id: job.job_id,
+      session_id: job.session_id || '',
+      utterance_index: job.utterance_index || 0,
+      lang: 'zh',
+      text_in: text,
+      quality_score: qualityScore,
+      micro_context: microContext,
+      meta: {
+        segments: meta?.segments,
+        language_probability: meta?.language_probability,
+        reason_codes: scoreResult.reasonCodes,
+        score: scoreResult.score,  // P1-1: 传递综合评分
+        score_details: scoreResult.details,  // P1-1: 传递评分详情
+      },
+    };
 
-      // 顺序执行：确保Semantic Repair按utterance_index顺序执行
-      const sequentialExecutor = getSequentialExecutor();
-      const sessionId = job.session_id || '';
-      const utteranceIndex = job.utterance_index || 0;
+    // 顺序执行：确保Semantic Repair按utterance_index顺序执行
+    const sequentialExecutor = getSequentialExecutor();
+    const sessionId = job.session_id || '';
+    const utteranceIndex = job.utterance_index || 0;
 
-      // 使用顺序执行管理器包装Semantic Repair调用
-      const repairResult = await sequentialExecutor.execute(
-        sessionId,
-        utteranceIndex,
-        'SEMANTIC_REPAIR',
-        async () => {
-          // GPU仲裁：获取GPU租约（支持忙时降级）
-          let result: any;
-          
-          try {
-            const lease = await tryAcquireGpuLease(
-              'SEMANTIC_REPAIR',
-              {
-                jobId: job.job_id,
-                sessionId: job.session_id,
-                utteranceIndex: job.utterance_index,
-                stage: 'SemanticRepair',
-              }
-            );
+    const trace = {
+      jobId: job.job_id,
+      sessionId: job.session_id,
+      utteranceIndex: job.utterance_index,
+      stage: 'SemanticRepair' as const,
+    };
+    const repairResult = await sequentialExecutor.execute(
+      sessionId,
+      utteranceIndex,
+      'SEMANTIC_REPAIR',
+      () =>
+        withGpuLease(
+          'SEMANTIC_REPAIR',
+          () => this.taskRouter!.routeSemanticRepairTask(repairTask),
+          trace
+        ),
+      job.job_id
+    );
 
-            if (lease) {
-              // 成功获取GPU租约，使用GPU执行
-              try {
-                result = await this.taskRouter!.routeSemanticRepairTask(repairTask);
-              } finally {
-                lease.release();
-              }
-            } else {
-              // GPU租约获取失败（超时或队列满），这不应该发生（因为busyPolicy是WAIT）
-              // 如果发生，说明配置错误或系统异常
-              logger.error(
-                {
-                  jobId: job.job_id,
-                  sessionId: job.session_id,
-                  utteranceIndex: job.utterance_index,
-                  note: 'GPU lease acquisition failed unexpectedly. This should not happen with WAIT policy. Check GPU arbiter configuration.',
-                },
-                'SemanticRepairStageZH: GPU lease acquisition failed unexpectedly'
-              );
-              // 抛出错误，让上层处理
-              throw new Error('SemanticRepairStageZH: GPU lease acquisition failed unexpectedly');
-            }
-          } catch (error: any) {
-            // GPU租约获取异常，这不应该发生（因为busyPolicy是WAIT，应该等待）
-            // 如果发生，说明系统异常，抛出错误让上层处理
-            logger.error(
-              {
-                error: error.message,
-                stack: error.stack,
-                jobId: job.job_id,
-                sessionId: job.session_id,
-                utteranceIndex: job.utterance_index,
-                note: 'GPU lease acquisition error. This should not happen with WAIT policy. Check GPU arbiter configuration and system status.',
-              },
-              'SemanticRepairStageZH: GPU lease acquisition error'
-            );
-            // 抛出错误，让上层处理
-            throw error;
-          }
-          
-          return result;
-        },
-        job.job_id
-      );
-      
-      const repairTimeMs = Date.now() - startTime;
+    const repairTimeMs = Date.now() - startTime;
 
-      // P1-2: 输出校验
-      let finalTextOut = repairResult.text_out;
-      let finalDecision = repairResult.decision;
-      let finalConfidence = repairResult.confidence;
-      let finalReasonCodes = [...repairResult.reason_codes];
+    // P1-2: 输出校验
+    let finalTextOut = repairResult.text_out;
+    let finalDecision = repairResult.decision;
+    let finalConfidence = repairResult.confidence;
+    let finalReasonCodes = [...repairResult.reason_codes];
 
-      if (repairResult.decision === 'REPAIR') {
-        const validationResult = this.validator.validate(text, repairResult.text_out);
-        
-        if (!validationResult.isValid) {
-          // 校验失败，回退到PASS
-          logger.warn(
-            {
-              jobId: job.job_id,
-              validationReasonCodes: validationResult.reasonCodes,
-              originalText: text.substring(0, 50),
-              repairedText: repairResult.text_out.substring(0, 50),
-            },
-            'SemanticRepairStageZH: Validation failed, reverting to PASS'
-          );
-          finalTextOut = text;
-          finalDecision = 'PASS';
-          finalConfidence = 1.0;
-          finalReasonCodes = [...repairResult.reason_codes, ...validationResult.reasonCodes];
-        }
+    if (repairResult.decision === 'REPAIR') {
+      const validationResult = this.validator.validate(text, repairResult.text_out);
+
+      if (!validationResult.isValid) {
+        // 校验失败，回退到PASS
+        logger.warn(
+          {
+            jobId: job.job_id,
+            validationReasonCodes: validationResult.reasonCodes,
+            originalText: text.substring(0, 50),
+            repairedText: repairResult.text_out.substring(0, 50),
+          },
+          'SemanticRepairStageZH: Validation failed, reverting to PASS'
+        );
+        finalTextOut = text;
+        finalDecision = 'PASS';
+        finalConfidence = 1.0;
+        finalReasonCodes = [...repairResult.reason_codes, ...validationResult.reasonCodes];
       }
+    }
 
-      logger.debug(
-        {
-          jobId: job.job_id,
-          decision: finalDecision,
-          confidence: finalConfidence,
-          reasonCodes: finalReasonCodes,
-          repairTimeMs,
-        },
-        'SemanticRepairStageZH: Repair completed'
-      );
-
-      return {
-        textOut: finalTextOut,
+    logger.debug(
+      {
+        jobId: job.job_id,
         decision: finalDecision,
         confidence: finalConfidence,
-        diff: repairResult.diff,
         reasonCodes: finalReasonCodes,
         repairTimeMs,
-      };
-    } catch (error: any) {
-      logger.error(
-        {
-          error: error.message,
-          stack: error.stack,
-          jobId: job.job_id,
-        },
-        'SemanticRepairStageZH: Repair service error, returning PASS'
-      );
-      return {
-        textOut: text,
-        decision: 'PASS',
-        confidence: 1.0,
-        reasonCodes: ['SERVICE_ERROR'],
-        repairTimeMs: Date.now() - startTime,
-      };
-    }
+      },
+      'SemanticRepairStageZH: Repair completed'
+    );
+
+    return {
+      textOut: finalTextOut,
+      decision: finalDecision,
+      confidence: finalConfidence,
+      diff: repairResult.diff,
+      reasonCodes: finalReasonCodes,
+      repairTimeMs,
+    };
   }
 
   // P1-1: 已移除shouldTriggerRepair、countNonChineseChars、hasBasicSyntax方法

@@ -93,6 +93,17 @@ export async function withGpuLease<T>(
     throw new Error(`Unexpected GPU lease status: ${(result as any).status}`);
   }
 
+  logger.info(
+    {
+      taskType,
+      gpuKey: request.gpuKey,
+      leaseId: result.leaseId,
+      queueWaitMs: result.queueWaitMs ?? 0,
+      ...trace,
+    },
+    'GPU lease acquired (task will run on GPU)'
+  );
+
   const lease: GpuLease = {
     leaseId: result.leaseId,
     gpuKey: request.gpuKey,

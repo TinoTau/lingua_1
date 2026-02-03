@@ -1,10 +1,10 @@
     async fn build_test_state(
         instance_id: &str,
-        redis_cfg: crate::core::config::Phase2RedisConfig,
+        redis_cfg: crate::core::config::RedisConnectionConfig,
         key_prefix: String,
-    ) -> (crate::core::AppState, Arc<Phase2Runtime>) {
+    ) -> (crate::core::AppState, Arc<crate::redis_runtime::RedisRuntime>) {
         use crate::core::{AppState, JobDispatcher, SessionManager};
-        use crate::core::config::{CoreServicesConfig, TaskBindingConfig, WebTaskSegmentationConfig};
+        use crate::core::config::{TaskBindingConfig, WebTaskSegmentationConfig};
         use crate::managers::{AudioBufferManager, GroupConfig, GroupManager, ResultQueueManager, RoomManager, NodeConnectionManager, SessionConnectionManager};
         use crate::metrics::DashboardSnapshotCache;
         use crate::services::{PairingService, ServiceCatalogCache};
@@ -12,7 +12,7 @@
         use crate::node_registry::NodeRegistry;
         use std::time::Duration;
 
-        let mut p2 = crate::core::config::Phase2Config::default();
+        let mut p2 = crate::core::config::RedisRuntimeConfig::default();
         p2.enabled = true;
         p2.instance_id = instance_id.to_string();
         p2.redis = redis_cfg;
@@ -29,7 +29,7 @@
         p2.node_snapshot.remove_stale_after_seconds = 0;
 
         let scheduler_cfg = create_test_scheduler_config();
-        let rt = Phase2Runtime::new(p2.clone(), 5, &scheduler_cfg).await.unwrap().unwrap();
+        let rt = crate::redis_runtime::RedisRuntime::new(p2.clone(), 5, &scheduler_cfg).await.unwrap().unwrap();
         let rt = Arc::new(rt);
 
         let session_manager = SessionManager::new();
@@ -40,13 +40,12 @@
         
         // Phase3 Pool配置已废弃，现在使用MinimalScheduler + PoolService（Lua脚本自动管理）
         
-        let mut dispatcher = JobDispatcher::new_with_config(
+        let mut dispatcher = JobDispatcher::new_with_task_binding_config(
             node_registry.clone(),
             redis_handle,
             TaskBindingConfig::default(),
-            CoreServicesConfig::default(),
         );
-        dispatcher.set_phase2(Some(rt.clone()));
+        dispatcher.set_redis_runtime(Some(rt.clone()));
 
         let pairing_service = PairingService::new();
 
@@ -63,39 +62,32 @@
 
         let group_manager = GroupManager::new(GroupConfig::default());
 
-        let node_status_manager = NodeStatusManager::new(
-            node_registry.clone(),
-            std::sync::Arc::new(node_connections.clone()),
-            NodeHealthConfig::default(),
-        );
-
         let room_manager = RoomManager::new();
 
         let state = AppState {
-            minimal_scheduler: None,
             session_manager,
             dispatcher,
             node_registry: node_registry.clone(),
             pairing_service,
-            // model_hub 已删除
             service_catalog,
             dashboard_snapshot,
             model_not_available_bus,
-            core_services: CoreServicesConfig::default(),
             web_task_segmentation: WebTaskSegmentationConfig::default(),
             session_connections: session_connections.clone(),
             node_connections,
             result_queue,
             audio_buffer,
             group_manager,
-            node_status_manager,
             room_manager,
             job_idempotency: crate::core::JobIdempotencyManager::default(),
             job_result_deduplicator: crate::core::JobResultDeduplicator::new(),
-            phase2: Some(rt.clone()),
+            pending_job_dispatches: crate::core::PendingJobDispatches::new(),
+            redis_runtime: Some(rt.clone()),
+            minimal_scheduler: None,
+            pool_service: None,
         };
 
-        // 启动 Phase2 后台任务（presence + owner 续约 + Streams inbox + snapshot refresh）
+        // 启动 Redis 运行时后台任务（presence + owner 续约 + Streams inbox + snapshot refresh）
         rt.clone().spawn_background_tasks(state.clone());
 
         // Phase3自动Pool生成已废弃，现在由PoolService通过Lua脚本自动管理
@@ -151,30 +143,11 @@
             CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(vec!["piper-tts".into()]) },
         ];
 
-        // 添加语言能力，支持 en→zh 翻译
-        use crate::messages::common::{NodeLanguageCapabilities, NmtCapability, LanguagePair};
+        use crate::messages::common::NodeLanguageCapabilities;
         let language_capabilities = Some(NodeLanguageCapabilities {
-            semantic_languages: Some(vec!["en".to_string(), "zh".to_string()]),
             asr_languages: Some(vec!["en".to_string()]),
             tts_languages: Some(vec!["zh".to_string()]),
-            nmt_capabilities: Some(vec![NmtCapability {
-                model_id: "nmt-m2m100".to_string(),
-                languages: vec!["en".to_string(), "zh".to_string()],
-                rule: "any_to_any".to_string(),
-                blocked_pairs: None,
-                supported_pairs: Some(vec![LanguagePair { 
-                    src: "en".to_string(), 
-                    tgt: "zh".to_string(),
-                    semantic_on_src: Some(true),
-                    semantic_on_tgt: Some(true),
-                }]),
-            }]),
-            supported_language_pairs: Some(vec![LanguagePair { 
-                src: "en".to_string(), 
-                tgt: "zh".to_string(),
-                semantic_on_src: Some(true),
-                semantic_on_tgt: Some(true),
-            }]),
+            semantic_languages: Some(vec!["en".to_string(), "zh".to_string()]),
             semantic_core_ready: Some(true),
         });
 
@@ -224,30 +197,11 @@
             CapabilityByType { r#type: ServiceType::Tts, ready: true, reason: None, ready_impl_ids: Some(vec!["piper-tts".into()]) },
         ];
 
-        // 添加语言能力，支持 en→zh 翻译
-        use crate::messages::common::{NodeLanguageCapabilities, NmtCapability, LanguagePair};
+        use crate::messages::common::NodeLanguageCapabilities;
         let language_capabilities = Some(NodeLanguageCapabilities {
-            semantic_languages: Some(vec!["en".to_string(), "zh".to_string()]),
             asr_languages: Some(vec!["en".to_string()]),
             tts_languages: Some(vec!["zh".to_string()]),
-            nmt_capabilities: Some(vec![NmtCapability {
-                model_id: "nmt-m2m100".to_string(),
-                languages: vec!["en".to_string(), "zh".to_string()],
-                rule: "any_to_any".to_string(),
-                blocked_pairs: None,
-                supported_pairs: Some(vec![LanguagePair { 
-                    src: "en".to_string(), 
-                    tgt: "zh".to_string(),
-                    semantic_on_src: Some(true),
-                    semantic_on_tgt: Some(true),
-                }]),
-            }]),
-            supported_language_pairs: Some(vec![LanguagePair { 
-                src: "en".to_string(), 
-                tgt: "zh".to_string(),
-                semantic_on_src: Some(true),
-                semantic_on_tgt: Some(true),
-            }]),
+            semantic_languages: Some(vec!["en".to_string(), "zh".to_string()]),
             semantic_core_ready: Some(true),
         });
 

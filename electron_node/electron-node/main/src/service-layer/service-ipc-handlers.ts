@@ -32,15 +32,15 @@ export async function initServiceLayer(servicesRootPath: string): Promise<{
 
   // 扫描服务目录（只从 service.json 读取）
   const registry = await scanServices(servicesRoot);
-  
+
   // 设置为全局单例（确保所有模块使用同一个registry）
   setServiceRegistry(registry);
-  
+
   // 使用全局registry创建 ServiceProcessRunner
   serviceRunner = new ServiceProcessRunner(getServiceRegistry());
 
   logger.info(
-    { 
+    {
       serviceCount: registry.size,
       services: Array.from(registry.keys())
     },
@@ -58,7 +58,7 @@ export async function initServiceLayer(servicesRootPath: string): Promise<{
  */
 export function registerServiceIpcHandlers(): void {
   /**
-   * 列出所有服务
+   * 列出所有服务（原始条目，供 list/refresh 等用）
    */
   ipcMain.handle('services:list', () => {
     try {
@@ -69,6 +69,29 @@ export function registerServiceIpcHandlers(): void {
     } catch (error) {
       logger.error({ error }, 'IPC: services:list failed');
       throw error;
+    }
+  });
+
+  /**
+   * 所有服务统一状态（按 type 在 UI 侧过滤，语义修复/同音纠错等共用）
+   */
+  ipcMain.handle('services:statuses', () => {
+    try {
+      const registry = getServiceRegistry();
+      if (!registry) return [];
+      return Array.from(registry.values()).map((entry) => ({
+        serviceId: entry.def.id,
+        type: entry.def.type,
+        running: entry.runtime.status === 'running',
+        starting: entry.runtime.status === 'starting',
+        pid: entry.runtime.pid ?? null,
+        port: entry.def.port ?? null,
+        startedAt: entry.runtime.startedAt ?? null,
+        lastError: entry.runtime.lastError ?? null,
+      }));
+    } catch (error) {
+      logger.error({ error }, 'IPC: services:statuses failed');
+      return [];
     }
   });
 
@@ -86,18 +109,18 @@ export function registerServiceIpcHandlers(): void {
 
       // ✅ 1. 重新扫描，获取最新的service.json定义
       const freshRegistry = await scanServices(servicesRoot);
-      
+
       // ✅ 2. 获取全局registry（当前运行中的状态）
       const currentRegistry = getServiceRegistry();
-      
+
       let addedCount = 0;
       let updatedCount = 0;
       let removedCount = 0;
-      
+
       // ✅ 3. 合并新扫描的服务到当前registry
       for (const [serviceId, freshEntry] of freshRegistry.entries()) {
         const currentEntry = currentRegistry.get(serviceId);
-        
+
         if (currentEntry) {
           // 服务已存在：更新定义，保留runtime状态
           currentEntry.def = freshEntry.def;
@@ -105,11 +128,11 @@ export function registerServiceIpcHandlers(): void {
           // ✅ 保持 currentEntry.runtime 不变！
           updatedCount++;
           logger.debug(
-            { 
-              serviceId, 
+            {
+              serviceId,
               status: currentEntry.runtime.status,
-              pid: currentEntry.runtime.pid 
-            }, 
+              pid: currentEntry.runtime.pid
+            },
             '✅ Updated service definition, preserved runtime state'
           );
         } else {
@@ -119,7 +142,7 @@ export function registerServiceIpcHandlers(): void {
           logger.info({ serviceId, name: freshEntry.def.name }, '✅ Added new service');
         }
       }
-      
+
       // ✅ 4. 检查已删除的服务
       for (const [serviceId, currentEntry] of currentRegistry.entries()) {
         if (!freshRegistry.has(serviceId)) {
@@ -127,7 +150,7 @@ export function registerServiceIpcHandlers(): void {
           if (currentEntry.runtime.status === 'running') {
             // ✅ 保留运行中的服务，不删除
             logger.warn(
-              { serviceId, pid: currentEntry.runtime.pid }, 
+              { serviceId, pid: currentEntry.runtime.pid },
               '⚠️  Service removed from disk but still running, keeping it'
             );
           } else {
@@ -138,13 +161,13 @@ export function registerServiceIpcHandlers(): void {
           }
         }
       }
-      
+
       // ✅ 5. 不需要重建runner，因为它已经引用同一个registry对象
       //      registry的变化会自动反映到runner
-      
+
       const services = Array.from(currentRegistry.values());
       logger.info(
-        { 
+        {
           total: services.length,
           added: addedCount,
           updated: updatedCount,

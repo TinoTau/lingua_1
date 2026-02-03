@@ -10,7 +10,7 @@ async fn test_nmt_engine_http() {
         .expect("Failed to create NMT engine");
 
     // 测试英文到中文翻译
-    let result = engine.translate("Hello", "en", "zh").await;
+    let result = engine.translate("Hello", "en", "zh", None).await;
     match result {
         Ok(text) => {
             println!("✓ NMT 翻译成功: Hello -> {}", text);
@@ -29,7 +29,7 @@ async fn test_nmt_engine_zh_en() {
         .expect("Failed to create NMT engine");
 
     // 测试中文到英文翻译
-    let result = engine.translate("你好", "zh", "en").await;
+    let result = engine.translate("你好", "zh", "en", None).await;
     match result {
         Ok(text) => {
             println!("✓ NMT 翻译成功: 你好 -> {}", text);
@@ -48,7 +48,7 @@ async fn test_nmt_engine_custom_url() {
     let engine = NMTEngine::new_with_http_client(Some("http://127.0.0.1:5008".to_string()))
         .expect("Failed to create NMT engine");
 
-    let result = engine.translate("Test", "en", "zh").await;
+    let result = engine.translate("Test", "en", "zh", None).await;
     match result {
         Ok(_) => {
             println!("✓ NMT 自定义 URL 测试通过");

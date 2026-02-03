@@ -4,7 +4,7 @@ use crate::redis_runtime::InterInstanceEvent;
 use tracing::{debug, warn};
 
 async fn forward_if_job_missing(state: &AppState, session_id: &str, msg: crate::messages::NodeMessage) -> bool {
-    let Some(rt) = state.phase2.as_ref() else { return false };
+    let Some(rt) = state.redis_runtime.as_ref() else { return false };
     let Some(owner) = rt.resolve_session_owner(session_id).await else { return false };
     if owner == rt.instance_id {
         return false;
@@ -71,7 +71,7 @@ pub(super) async fn handle_job_ack(
         .await;
 
     // Phase 2: FSM -> ACCEPTED (idempotent) 并 COMMIT reservation (reserved -> running)
-    if let Some(rt) = state.phase2.as_ref() {
+    if let Some(rt) = state.redis_runtime.as_ref() {
         let _ = rt.job_fsm_to_accepted(&job_id, attempt_id).await;
         // COMMIT: reserved -> running
         let _ = rt.commit_node_reservation(&node_id, &job_id, attempt_id).await;
@@ -148,7 +148,7 @@ pub(super) async fn handle_job_started(
         .await;
 
     // Phase 2: FSM -> RUNNING (strict)
-    if let Some(rt) = state.phase2.as_ref() {
+    if let Some(rt) = state.redis_runtime.as_ref() {
         let _ = rt.job_fsm_to_running(&job_id).await;
     }
 }
@@ -164,7 +164,7 @@ pub(super) async fn handle_asr_partial(
     trace_id: String,
 ) {
     // Phase 2: If local job missing, forward partial result to session owner (result_queue on owner)
-    if state.phase2.is_some() && state.dispatcher.get_job(&job_id).await.is_none() {
+    if state.redis_runtime.is_some() && state.dispatcher.get_job(&job_id).await.is_none() {
         let forwarded = crate::messages::NodeMessage::AsrPartial {
             job_id: job_id.clone(),
             node_id: node_id.clone(),
@@ -189,7 +189,7 @@ pub(super) async fn handle_asr_partial(
     // Phase 2: Receiving partial result can be considered RUNNING (ignore if job_id doesn't match current assigned node)
     if let Some(ref j) = state.dispatcher.get_job(&job_id).await {
         if j.assigned_node_id.as_deref() == Some(&node_id) {
-            if let Some(rt) = state.phase2.as_ref() {
+            if let Some(rt) = state.redis_runtime.as_ref() {
                 let _ = rt.job_fsm_to_running(&job_id).await;
             }
         }

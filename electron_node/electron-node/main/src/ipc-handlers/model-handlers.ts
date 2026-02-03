@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron';
-import { loadNodeConfig } from '../node-config';
+import { getModelHubUrl } from '../node-config';
 import logger from '../logger';
 import type { ModelManager } from '../model-manager/model-manager';
 
@@ -49,22 +49,7 @@ export function registerModelHandlers(modelManager: ModelManager | null): void {
   ipcMain.handle('get-model-ranking', async () => {
     try {
       const axios = require('axios');
-      // 优先从配置文件读取，其次从环境变量，最后使用默认值
-      const config = loadNodeConfig();
-      const configUrl = config.modelHub?.url;
-      const envUrl = process.env.MODEL_HUB_URL;
-
-      let urlToUse: string;
-      if (configUrl) {
-        urlToUse = configUrl;
-      } else if (envUrl) {
-        urlToUse = envUrl;
-      } else {
-        urlToUse = 'http://127.0.0.1:5000';
-      }
-
-      // 如果 URL 包含 localhost，替换为 127.0.0.1 以避免 IPv6 解析问题
-      const modelHubUrl = urlToUse.replace(/localhost/g, '127.0.0.1');
+      const modelHubUrl = getModelHubUrl();
       const response = await axios.get(`${modelHubUrl}/api/model-usage/ranking`);
       return response.data || [];
     } catch (error) {

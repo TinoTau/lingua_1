@@ -1,0 +1,14 @@
+{
+  "id": "phonetic-correction-zh",
+  "name": "Phonetic Correction ZH",
+  "type": "phonetic",
+  "version": "1.0.0",
+  "port": 5016,
+  "health_path": "/health",
+  "capabilities": ["zh_phonetic_correct"],
+  "exec": {
+    "command": "python",
+    "args": ["service.py"],
+    "cwd": "."
+  }
+}

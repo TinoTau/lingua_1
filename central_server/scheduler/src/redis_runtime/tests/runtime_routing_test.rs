@@ -30,7 +30,7 @@ async fn test_sync_node_capabilities_to_redis() {
         return;
     }
 
-    let mut cfg = Phase2Config::default();
+    let mut cfg = RedisRuntimeConfig::default();
     cfg.enabled = true;
     cfg.instance_id = "test-capabilities".to_string();
     cfg.redis = redis_cfg;
@@ -86,7 +86,7 @@ async fn test_get_node_capabilities_from_redis() {
         return;
     }
 
-    let mut cfg = Phase2Config::default();
+    let mut cfg = RedisRuntimeConfig::default();
     cfg.enabled = true;
     cfg.instance_id = "test-capabilities-read".to_string();
     cfg.redis = redis_cfg;

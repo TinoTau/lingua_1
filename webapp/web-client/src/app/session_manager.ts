@@ -12,6 +12,7 @@ import { AsrSubtitle } from '../asr_subtitle';
 import { FeatureFlags } from '../types';
 import { TranslationDisplayManager } from './translation_display';
 import { logger } from '../logger';
+import { processAudioFrame, type ISessionManagerAudioFrameContext } from './session_manager_audio_frame';
 
 /**
  * 会话管理器
@@ -135,6 +136,11 @@ export class SessionManager {
       this.translationDisplay.clear();
       this.translationDisplay.clearDisplayedTranslationResults();
 
+      // 在用户手势下预初始化 TTS 的 AudioContext，避免后续自动播放因浏览器策略无法 resume
+      this.ttsPlayer.prepareAudioContext().catch((err) => {
+        logger.warn('SessionManager', 'TTS AudioContext 预初始化失败（可能影响后续播放）', { error: String(err) });
+      });
+
       // 开始会话（状态机会自动进入 INPUT_RECORDING）
       this.stateMachine.startSession();
 
@@ -151,6 +157,7 @@ export class SessionManager {
    * 结束整个会话
    */
   async endSession(): Promise<void> {
+    logger.info('SessionManager', 'endSession 被调用，会话结束', { current_utterance_index: this.currentUtteranceIndex });
     this.isSessionActive = false;
 
     // 停止录音
@@ -259,254 +266,49 @@ export class SessionManager {
   }
 
   /**
+   * 供 processAudioFrame 使用的上下文（不对外暴露）
+   */
+  private getAudioFrameContext(): ISessionManagerAudioFrameContext {
+    const self = this;
+    return {
+      get stateMachine() { return self.stateMachine; },
+      get wsClient() { return self.wsClient; },
+      getState: () => self.stateMachine.getState(),
+      getIsSessionActive: () => self.isSessionActive,
+      getAudioFrameSkipCount: () => self.audioFrameSkipCount,
+      setAudioFrameSkipCount: (v) => { self.audioFrameSkipCount = v; },
+      getPlaybackFinishedTimestamp: () => self.playbackFinishedTimestamp,
+      setPlaybackFinishedTimestamp: (v) => { self.playbackFinishedTimestamp = v; },
+      getAudioBuffer: () => self.audioBuffer,
+      getFirstAudioFrameAfterPlaybackCallback: () => self.firstAudioFrameAfterPlaybackCallback,
+      setFirstAudioFrameAfterPlaybackCallback: (cb) => { self.firstAudioFrameAfterPlaybackCallback = cb; },
+      get PLAYBACK_FINISHED_DELAY_MS() { return self.PLAYBACK_FINISHED_DELAY_MS; },
+      getCurrentUtteranceIndex: () => self.currentUtteranceIndex,
+      getHasSentAudioChunksForCurrentUtterance: () => self.hasSentAudioChunksForCurrentUtterance,
+      getPlaybackFinishedDelayBuffer: () => self.playbackFinishedDelayBuffer,
+      getPlaybackFinishedDelayEndTime: () => self.playbackFinishedDelayEndTime,
+      setPlaybackFinishedDelayEndTime: (v) => { self.playbackFinishedDelayEndTime = v; },
+      getPlaybackFinishedDelayStartTime: () => self.playbackFinishedDelayStartTime,
+      setPlaybackFinishedDelayStartTime: (v) => { self.playbackFinishedDelayStartTime = v; },
+      getCanSendChunks: () => self.canSendChunks,
+      get TARGET_CHUNK_DURATION_MS() { return self.TARGET_CHUNK_DURATION_MS; },
+      getSamplesPerFrame: () => self.samplesPerFrame,
+      setSamplesPerFrame: (v) => { self.samplesPerFrame = v; },
+      getFramesPerChunk: () => self.framesPerChunk,
+      setFramesPerChunk: (v) => { self.framesPerChunk = v; },
+      concatAudioBuffers: (buffers) => self.concatAudioBuffers(buffers),
+      sendAudioChunk: (data, isFinal) => self.wsClient.sendAudioChunk(data, isFinal),
+      getSentChunkCountForCurrentUtterance: () => self.sentChunkCountForCurrentUtterance,
+      setSentChunkCountForCurrentUtterance: (v) => { self.sentChunkCountForCurrentUtterance = v; },
+      setHasSentAudioChunksForCurrentUtterance: (v) => { self.hasSentAudioChunksForCurrentUtterance = v; },
+    };
+  }
+
+  /**
    * 处理音频帧
    */
   onAudioFrame(audioData: Float32Array): void {
-    const audioFrameTimestamp = Date.now();
-    const currentState = this.stateMachine.getState();
-    
-    // 只在输入状态下处理音频
-    if (currentState !== SessionState.INPUT_RECORDING) {
-      // 记录被跳过的音频帧（用于诊断）
-      this.audioFrameSkipCount++;
-      if (this.audioFrameSkipCount === 1 || this.audioFrameSkipCount % 100 === 0) {
-        logger.warn('SessionManager', '收到音频帧，但状态不是 INPUT_RECORDING，跳过处理', {
-          timestamp: audioFrameTimestamp,
-          timestampIso: new Date(audioFrameTimestamp).toISOString(),
-          currentState,
-          isSessionActive: this.isSessionActive,
-          skippedFrames: this.audioFrameSkipCount,
-        });
-      }
-      return;
-    }
-    
-    // 重置跳过计数（如果之前有跳过）
-    if (this.audioFrameSkipCount > 0) {
-      logger.info('SessionManager', '状态已恢复为 INPUT_RECORDING，开始处理音频帧', {
-        timestamp: audioFrameTimestamp,
-        timestampIso: new Date(audioFrameTimestamp).toISOString(),
-        previouslySkippedFrames: this.audioFrameSkipCount,
-        playbackFinishedTimestamp: this.playbackFinishedTimestamp,
-        playbackFinishedTimestampIso: this.playbackFinishedTimestamp ? new Date(this.playbackFinishedTimestamp).toISOString() : null,
-        timeSincePlaybackFinishedMs: this.playbackFinishedTimestamp ? audioFrameTimestamp - this.playbackFinishedTimestamp : null,
-      });
-      this.audioFrameSkipCount = 0;
-    }
-    
-    // 如果是播放完成后首次接收到的音频帧，记录详细信息并触发回调
-    if (this.playbackFinishedTimestamp !== null && this.audioFrameSkipCount === 0 && this.audioBuffer.length === 0) {
-      const timeSincePlaybackFinishedMs = audioFrameTimestamp - this.playbackFinishedTimestamp;
-      logger.info('SessionManager', '🎙️ 播放完成后首次接收到音频帧', {
-        audioFrameTimestamp,
-        audioFrameTimestampIso: new Date(audioFrameTimestamp).toISOString(),
-        playbackFinishedTimestamp: this.playbackFinishedTimestamp,
-        playbackFinishedTimestampIso: new Date(this.playbackFinishedTimestamp).toISOString(),
-        timeSincePlaybackFinishedMs,
-        timeSincePlaybackFinishedSeconds: (timeSincePlaybackFinishedMs / 1000).toFixed(2),
-        expectedDelayMs: this.PLAYBACK_FINISHED_DELAY_MS,
-        currentUtteranceIndex: this.currentUtteranceIndex,
-        hasSentAudioChunks: this.hasSentAudioChunksForCurrentUtterance,
-      });
-      
-      // 触发回调，通知 App 已收到第一帧音频
-      if (this.firstAudioFrameAfterPlaybackCallback) {
-        try {
-          this.firstAudioFrameAfterPlaybackCallback(audioFrameTimestamp);
-        } catch (error) {
-          logger.error('SessionManager', '首次音频帧回调执行失败', { error });
-        }
-        // 清除回调（只触发一次）
-        this.firstAudioFrameAfterPlaybackCallback = null;
-      }
-    }
-
-
-    // 计算音频数据的 RMS（用于日志）
-    let sum = 0;
-    for (let i = 0; i < audioData.length; i++) {
-      sum += audioData[i] * audioData[i];
-    }
-    const rms = Math.sqrt(sum / audioData.length);
-
-    // 缓存有效音频数据
-    this.audioBuffer.push(new Float32Array(audioData));
-
-    // 初始化帧与 chunk 配置（基于首帧推算）
-    if (this.samplesPerFrame === null) {
-      this.samplesPerFrame = audioData.length;
-      const frameDurationMs = this.samplesPerFrame / 16; // 16kHz -> 每毫秒16个采样点
-      const framesPerChunk = Math.max(
-        1,
-        Math.round(this.TARGET_CHUNK_DURATION_MS / frameDurationMs)
-      );
-      this.framesPerChunk = framesPerChunk;
-      logger.info('SessionManager', '初始化chunk切分参数', {
-        samplesPerFrame: this.samplesPerFrame,
-        frameDurationMs: frameDurationMs.toFixed(2),
-        targetChunkDurationMs: this.TARGET_CHUNK_DURATION_MS,
-        framesPerChunk: this.framesPerChunk,
-      });
-    }
-
-    // 定期记录音频输入日志（每 50 帧记录一次，约 0.5 秒）
-    if (this.audioBuffer.length % 50 === 0) {
-      logger.debug('SessionManager', '音频输入统计', {
-        bufferLength: this.audioBuffer.length,
-        totalSamples: this.audioBuffer.reduce((sum, buf) => sum + buf.length, 0),
-        estimatedDurationMs: Math.round(this.audioBuffer.reduce((sum, buf) => sum + buf.length, 0) / 16), // 假设 16kHz
-        currentFrameRms: rms.toFixed(4),
-        utteranceIndex: this.currentUtteranceIndex,
-      });
-    }
-
-    // 检查是否在播放完成延迟期间
-    const now = Date.now();
-    if (this.playbackFinishedDelayEndTime !== null && now < this.playbackFinishedDelayEndTime) {
-      // 在延迟期间，缓存音频数据，不发送
-      this.playbackFinishedDelayBuffer.push(new Float32Array(audioData));
-      
-      // 只在第一次进入延迟时打印日志
-      if (this.playbackFinishedDelayStartTime === null) {
-        this.playbackFinishedDelayStartTime = now;
-        const remainingDelayMs = this.playbackFinishedDelayEndTime - now;
-        logger.info('SessionManager', '开始播放完成延迟期间，缓存音频数据', {
-          delayStartTime: now,
-          delayStartTimeIso: new Date(now).toISOString(),
-          delayEndTime: this.playbackFinishedDelayEndTime,
-          delayEndTimeIso: new Date(this.playbackFinishedDelayEndTime).toISOString(),
-          delayMs: this.PLAYBACK_FINISHED_DELAY_MS,
-          remainingDelayMs,
-          playbackFinishedTimestamp: this.playbackFinishedTimestamp,
-          playbackFinishedTimestampIso: this.playbackFinishedTimestamp ? new Date(this.playbackFinishedTimestamp).toISOString() : null,
-          currentUtteranceIndex: this.currentUtteranceIndex,
-          hasSentAudioChunks: this.hasSentAudioChunksForCurrentUtterance,
-        });
-      }
-      return;
-    }
-
-    // 延迟期间结束，先发送缓存的音频数据
-    if (this.playbackFinishedDelayBuffer.length > 0) {
-      const actualDelayMs = now - (this.playbackFinishedDelayStartTime || now);
-      const totalCachedSamples = this.playbackFinishedDelayBuffer.reduce((sum, buf) => sum + buf.length, 0);
-      const estimatedCachedDurationMs = Math.round(totalCachedSamples / 16); // 假设 16kHz
-      
-      logger.info('SessionManager', '播放完成延迟结束，发送缓存的音频数据', {
-        delayStartTime: this.playbackFinishedDelayStartTime,
-        delayStartTimeIso: this.playbackFinishedDelayStartTime ? new Date(this.playbackFinishedDelayStartTime).toISOString() : null,
-        delayEndTime: now,
-        delayEndTimeIso: new Date(now).toISOString(),
-        expectedDelayMs: this.PLAYBACK_FINISHED_DELAY_MS,
-        actualDelayMs,
-        cachedFrames: this.playbackFinishedDelayBuffer.length,
-        cachedSamples: totalCachedSamples,
-        estimatedCachedDurationMs,
-        audioBufferLengthBefore: this.audioBuffer.length,
-        playbackFinishedTimestamp: this.playbackFinishedTimestamp,
-        playbackFinishedTimestampIso: this.playbackFinishedTimestamp ? new Date(this.playbackFinishedTimestamp).toISOString() : null,
-        timeSincePlaybackFinishedMs: this.playbackFinishedTimestamp ? now - this.playbackFinishedTimestamp : null,
-        currentUtteranceIndex: this.currentUtteranceIndex,
-        hasSentAudioChunks: this.hasSentAudioChunksForCurrentUtterance,
-      });
-      
-      // 将缓存的音频数据合并到 audioBuffer 中
-      this.audioBuffer.unshift(...this.playbackFinishedDelayBuffer);
-      
-      logger.debug('SessionManager', '缓存音频数据已合并到audioBuffer', {
-        audioBufferLengthAfter: this.audioBuffer.length,
-        mergedFrames: this.playbackFinishedDelayBuffer.length,
-      });
-      
-      this.playbackFinishedDelayBuffer = [];
-      this.playbackFinishedDelayEndTime = null;
-      this.playbackFinishedDelayStartTime = null;
-    }
-
-    // 如果当前不允许发送chunk（例如 TTS 播放期间或 RestartTimer 之前），仅缓存音频数据，不发送
-    if (!this.canSendChunks) {
-      return;
-    }
-
-    // 自动发送音频块（目标约 200ms 一包，使用 opus 编码）
-    // 基于首帧推算的 framesPerChunk 进行切分
-    if (this.audioBuffer.length >= this.framesPerChunk) {
-      // 当缓冲区达到目标帧数时，发送前 framesPerChunk 帧
-      const chunk = this.concatAudioBuffers(this.audioBuffer.splice(0, this.framesPerChunk));
-      const chunkSamples = chunk.length;
-      const chunkEstimatedDurationMs = Math.round(chunkSamples / 16); // 16kHz -> 每毫秒16个采样点
-
-      // 递增当前 utterance 内的 chunk 计数（从 1 开始）
-      this.sentChunkCountForCurrentUtterance += 1;
-      
-      // 如果是首次发送音频chunk，且之前有播放结束的时间戳，记录延迟
-      const isFirstChunkAfterPlayback = !this.hasSentAudioChunksForCurrentUtterance && this.playbackFinishedTimestamp !== null;
-      if (isFirstChunkAfterPlayback && this.playbackFinishedTimestamp !== null) {
-        const delayFromPlaybackEndMs = now - this.playbackFinishedTimestamp;
-        // 检查延迟是否异常（超过预期延迟太多，说明可能是旧的 playbackFinishedTimestamp）
-        const isAbnormalDelay = delayFromPlaybackEndMs > this.PLAYBACK_FINISHED_DELAY_MS * 2; // 超过预期延迟的2倍视为异常
-        logger.info('SessionManager', '🎤 首次发送音频chunk（播放结束后）', {
-          playbackFinishedTimestamp: this.playbackFinishedTimestamp,
-          playbackFinishedTimestampIso: new Date(this.playbackFinishedTimestamp).toISOString(),
-          firstChunkSentTimestamp: now,
-          firstChunkSentTimestampIso: new Date(now).toISOString(),
-          delayFromPlaybackEndMs,
-          delayFromPlaybackEndSeconds: (delayFromPlaybackEndMs / 1000).toFixed(2),
-          chunkSize: chunk.length,
-          chunkSamples,
-          chunkEstimatedDurationMs,
-          utteranceIndex: this.currentUtteranceIndex,
-          chunkIndexInUtterance: this.sentChunkCountForCurrentUtterance,
-          expectedDelayMs: this.PLAYBACK_FINISHED_DELAY_MS,
-          isAbnormalDelay,
-          warning: isAbnormalDelay ? '⚠️ 延迟异常，可能是旧的 playbackFinishedTimestamp' : undefined,
-        });
-        // 清除播放结束时间戳（只记录首次发送的延迟）
-        this.playbackFinishedTimestamp = null;
-      }
-      
-      // 记录每次发送音频chunk的详细信息（特别是第一批chunk）
-      if (isFirstChunkAfterPlayback) {
-        logger.info('SessionManager', '📤 发送第一批音频chunk到调度服务器', {
-          chunkSize: chunk.length,
-          chunkSamples,
-          chunkEstimatedDurationMs,
-          utteranceIndex: this.currentUtteranceIndex,
-          timestamp: now,
-          timestampIso: new Date(now).toISOString(),
-          isFirstChunk: true,
-          chunkIndexInUtterance: this.sentChunkCountForCurrentUtterance,
-          playbackFinishedTimestamp: this.playbackFinishedTimestamp,
-          playbackFinishedTimestampIso: this.playbackFinishedTimestamp ? new Date(this.playbackFinishedTimestamp).toISOString() : null,
-          timeSincePlaybackFinishedMs: this.playbackFinishedTimestamp ? now - this.playbackFinishedTimestamp : null,
-        });
-      } else {
-        // 记录每一个非首个 chunk 的发送，用于完整追踪“web 端实际发出了哪些音频”
-        logger.debug('SessionManager', '发送音频chunk', {
-          chunkSize: chunk.length,
-          chunkSamples,
-          chunkEstimatedDurationMs,
-          utteranceIndex: this.currentUtteranceIndex,
-          chunkIndexInUtterance: this.sentChunkCountForCurrentUtterance,
-          timestamp: now,
-          timestampIso: new Date(now).toISOString(),
-          remainingFramesInBuffer: this.audioBuffer.length,
-        });
-      }
-      
-      const sendChunkStartTimestamp = Date.now();
-      this.wsClient.sendAudioChunk(chunk, false);
-      const sendChunkEndTimestamp = Date.now();
-      if (isFirstChunkAfterPlayback) {
-        logger.info('SessionManager', '✅ 第一批音频chunk已调用sendAudioChunk', {
-          sendStartTimestamp: sendChunkStartTimestamp,
-          sendEndTimestamp: sendChunkEndTimestamp,
-          sendDurationMs: sendChunkEndTimestamp - sendChunkStartTimestamp,
-          timestampIso: new Date(sendChunkEndTimestamp).toISOString(),
-        });
-      }
-      this.hasSentAudioChunksForCurrentUtterance = true; // 标记已发送过音频块
-    }
+    processAudioFrame(this.getAudioFrameContext(), audioData);
   }
 
   /**

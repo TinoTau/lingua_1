@@ -11,9 +11,9 @@ pub struct JobDispatcher {
     pub(crate) reserved_ttl_seconds: u64,
     pub(crate) spread_enabled: bool,
     pub(crate) spread_window_ms: i64,
-    /// Phase 2：Redis 运行时（request_id bind/lock + node reserved）
+    /// Redis 运行时（request_id bind/lock + node reserved）
     #[doc(hidden)]
-    pub phase2: Option<Arc<crate::redis_runtime::Phase2Runtime>>,
+    pub redis_runtime: Option<Arc<crate::redis_runtime::RedisRuntime>>,
 }
 
 impl JobDispatcher {
@@ -25,7 +25,7 @@ impl JobDispatcher {
             reserved_ttl_seconds: 90,
             spread_enabled: false,
             spread_window_ms: 30_000,
-            phase2: None,
+            redis_runtime: None,
         }
     }
 
@@ -42,8 +42,8 @@ impl JobDispatcher {
         s
     }
 
-    pub fn set_phase2(&mut self, phase2: Option<Arc<crate::redis_runtime::Phase2Runtime>>) {
-        self.phase2 = phase2;
+    pub fn set_redis_runtime(&mut self, redis_runtime: Option<Arc<crate::redis_runtime::RedisRuntime>>) {
+        self.redis_runtime = redis_runtime;
     }
 }
 

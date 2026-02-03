@@ -71,22 +71,22 @@ class EnRepairProcessor(BaseProcessor):
         result = self.engine.repair(
             text_in=text_in,
             micro_context=micro_context,
-            quality_score=quality_score
+            quality_score=quality_score,
+            lang="en",
         )
-        text_changed = result['text_out'] != text_in
+        text_out = result["text_out"]
+        decision = "REPAIR" if text_out != text_in else "PASS"
         reason_codes = []
-        if quality_score is not None and quality_score < self.config.get('quality_threshold', 0.85):
+        if quality_score is not None and quality_score < self.config.get("quality_threshold", 0.85):
             reason_codes.append("LOW_QUALITY_SCORE")
-        if text_changed:
+        if decision == "REPAIR":
             reason_codes.append("REPAIR_APPLIED")
-        else:
-            reason_codes.append("NO_CHANGE")
         return ProcessorResult(
-            text_out=result['text_out'],
-            decision="REPAIR",
-            confidence=result['confidence'],
-            diff=result.get('diff', []),
-            reason_codes=reason_codes
+            text_out=text_out,
+            decision=decision,
+            confidence=result["confidence"],
+            diff=result.get("diff", []),
+            reason_codes=reason_codes,
         )
     
     async def get_health(self) -> HealthResponse:

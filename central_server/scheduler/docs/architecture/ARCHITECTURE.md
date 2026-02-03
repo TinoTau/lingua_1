@@ -216,7 +216,7 @@ Node定期心跳（30-60秒）
 - 分片: 每个语言对0-999个Pool
 - 容量: 每个Pool最多100个节点
 
-**详细说明**: 参考 [POOL_ARCHITECTURE.md](./POOL_ARCHITECTURE.md)
+**详细说明**: 参考 [POOL.md](./POOL.md)
 
 ### 4.2 自动分配
 
@@ -262,7 +262,7 @@ owner_ttl_seconds = 300
 stream_block_ms = 1000
 ```
 
-**详细说明**: 参考 [MULTI_INSTANCE_DEPLOYMENT.md](./MULTI_INSTANCE_DEPLOYMENT.md)
+**详细说明**: 见 `config.toml` 中 `[scheduler.redis_runtime]` 或 `[scheduler.phase2]`
 
 ---
 
@@ -274,7 +274,7 @@ stream_block_ms = 1000
 
 **Key前缀**: `lingua:v1:*`
 
-**详细说明**: 参考 [REDIS_DATA_MODEL.md](./REDIS_DATA_MODEL.md)
+**详细说明**: Redis Key 见 [POOL.md](./POOL.md)；Job/FSM 等见 `src/redis_runtime/`、`src/core/dispatcher/`
 
 ### 6.2 本地状态（极少）
 
@@ -426,7 +426,5 @@ warn!(error = %e, "Pool选择失败");
 ---
 
 **参考文档**:
-- [Pool架构](./POOL_ARCHITECTURE.md)
-- [节点注册](../node_registry/node_registration.md)
-- [Redis数据模型](./REDIS_DATA_MODEL.md)
-- [多实例部署](./MULTI_INSTANCE_DEPLOYMENT.md)
+- [Pool 架构](./POOL.md)
+- [节点注册与节点管理](../node_registry/NODE_REGISTRY.md)

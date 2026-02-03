@@ -13,6 +13,7 @@ export enum ServiceType {
   TTS = 'tts',
   TONE = 'tone',
   SEMANTIC = 'semantic',  // 语义修复服务类型
+  PHONETIC = 'phonetic',  // 同音纠错服务类型
 }
 
 /** 服务运行设备 */
@@ -89,19 +90,12 @@ export interface NmtCapability {
   supported_pairs?: Array<{ src: string; tgt: string }>;
 }
 
-/** 节点语言能力 */
+/** 节点语言能力：asr/semantic/tts 均为运行中服务语言的交集 */
 export interface NodeLanguageCapabilities {
-  /** @deprecated 保留用于向后兼容，优先使用 supported_language_pairs */
   asr_languages?: string[];
-  /** @deprecated 保留用于向后兼容，优先使用 supported_language_pairs */
   tts_languages?: string[];
-  /** @deprecated 保留用于向后兼容，优先使用 supported_language_pairs */
-  nmt_capabilities?: NmtCapability[];
-  /** @deprecated 保留用于向后兼容，优先使用 supported_language_pairs */
-  semantic_languages?: string[];  // 语义修复服务支持的语言
-  
-  /** 节点支持的语言对列表（所有服务的交集，节点端计算） */
-  supported_language_pairs?: Array<{ src: string; tgt: string }>;
+  semantic_languages?: string[];
+  semantic_core_ready?: boolean;
 }
 
 // ===== 移动端 ↔ 调度服务器 =====

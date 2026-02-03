@@ -4,28 +4,24 @@
  */
 
 import { StateMachine } from './state_machine';
-import { 
-  ServerMessage, 
-  FeatureFlags, 
-  RoomCreateMessage, 
-  RoomJoinMessage, 
-  RoomLeaveMessage, 
+import {
+  ServerMessage,
+  FeatureFlags,
+  RoomCreateMessage,
+  RoomJoinMessage,
+  RoomLeaveMessage,
   RoomRawVoicePreferenceMessage,
-  SessionInitMessage,
-  BackpressureMessage,
   ReconnectConfig,
-  DEFAULT_RECONNECT_CONFIG,
-  SessionInitAckMessage
 } from './types';
 import { AudioCodecConfig } from './audio_codec';
 import { v4 as uuidv4 } from 'uuid';
 import { logger } from './logger';
 
-// 导入模块
 import { ConnectionManager } from './websocket/connection_manager';
 import { MessageHandler } from './websocket/message_handler';
 import { BackpressureManager, BackpressureState, BackpressureStateCallback } from './websocket/backpressure_manager';
 import { AudioSender } from './websocket/audio_sender';
+import { createOnOpenCallback, createOnMessageCallback, createOnCloseCallback } from './websocket/connect_handlers';
 
 export type MessageCallback = (message: ServerMessage) => void;
 export type ReconnectCallback = () => void;
@@ -179,119 +175,32 @@ export class WebSocketClient {
     if (!this.pendingConnectParams) {
       throw new Error('No pending connect parameters');
     }
-
     const params = this.pendingConnectParams;
     const traceId = uuidv4();
     logger.info('WebSocketClient', `doConnect: mode=${params.mode}, traceId=${traceId}`);
 
-    // 创建连接
+    const onOpen = createOnOpenCallback(
+      params,
+      () => this.connectionManager.getClientVersion(),
+      () => this.connectionManager.getTenantId(),
+      traceId
+    );
+    const onMessage = createOnMessageCallback(
+      this.connectionManager,
+      this.messageHandler,
+      this.backpressureManager,
+      this.messageCallback,
+      this.audioSender
+    );
+    const onClose = createOnCloseCallback(this.messageHandler, this.audioSender, this.backpressureManager);
+
     await this.connectionManager.createConnection(
-      async (ws) => {
-        // 发送会话初始化消息
-        let initMessage: SessionInitMessage;
-
-        if (params.mode === 'one_way') {
-          initMessage = {
-            type: 'session_init',
-            client_version: this.connectionManager.getClientVersion(),
-            platform: 'web',
-            src_lang: params.srcLang!,
-            tgt_lang: params.tgtLang!,
-            dialect: null,
-            features: params.features || {},
-            pairing_code: null,
-            mode: 'one_way',
-            trace_id: traceId,
-            tenant_id: this.connectionManager.getTenantId(),
-          };
-        } else {
-          initMessage = {
-            type: 'session_init',
-            client_version: this.connectionManager.getClientVersion(),
-            platform: 'web',
-            src_lang: 'auto',
-            tgt_lang: params.langB!,
-            dialect: null,
-            features: params.features || {},
-            pairing_code: null,
-            mode: 'two_way_auto',
-            lang_a: params.langA!,
-            lang_b: params.langB!,
-            auto_langs: [params.langA!, params.langB!],
-            trace_id: traceId,
-            tenant_id: this.connectionManager.getTenantId(),
-          };
-        }
-
-        ws.send(JSON.stringify(initMessage));
-      },
-      (event) => {
-        // 重置心跳超时
-        this.connectionManager.resetHeartbeatTimeout();
-
-        // 记录原始消息（用于调试）
-        const dataLength = event.data instanceof Blob ? event.data.size : (typeof event.data === 'string' ? event.data.length : 'unknown');
-        const dataPreview = typeof event.data === 'string' ? (event.data.length > 200 ? event.data.substring(0, 200) + '...' : event.data) : 'binary';
-        
-        // 尝试解析消息类型（如果是JSON）
-        let messageType = 'unknown';
-        if (typeof event.data === 'string') {
-          try {
-            const parsed = JSON.parse(event.data);
-            messageType = parsed.type || 'unknown';
-          } catch (e) {
-            // 不是JSON，忽略
-          }
-        }
-        
-        logger.debug('WebSocketClient', '📥 收到 WebSocket 消息', {
-          message_type: messageType,
-          data_type: typeof event.data,
-          data_length: dataLength,
-          is_binary: event.data instanceof ArrayBuffer || event.data instanceof Blob,
-          data_preview: messageType === 'translation_result' ? dataPreview.substring(0, 100) : '...'
-        });
-
-        // 处理消息
-        this.messageHandler.handleMessage(
-          event,
-          (message: BackpressureMessage) => {
-            // 处理背压消息
-            logger.debug('WebSocketClient', '处理背压消息');
-            this.backpressureManager.handleBackpressure(message);
-            // 通知消息回调
-            if (this.messageCallback) {
-              this.messageCallback(message);
-            }
-          },
-          (sessionId: string) => {
-            // 会话创建后，设置 sessionId 并启动心跳
-            logger.info('WebSocketClient', `会话已创建: ${sessionId}`);
-            this.connectionManager.setSessionId(sessionId);
-            this.audioSender.setSessionId(sessionId);
-            this.connectionManager.startHeartbeat();
-            
-            // 更新协议配置和编码器（延迟执行，确保 messageHandler 已处理完 session_init_ack）
-            setTimeout(() => {
-              this.audioSender.setProtocolConfig(
-                this.messageHandler.getProtocolVersion() === '2.0',
-                this.messageHandler.getNegotiatedCodec()
-              );
-              // 同步编码器
-              this.audioSender.setAudioEncoder(this.messageHandler.getAudioEncoder());
-            }, 0);
-          }
-        );
-      },
+      onOpen,
+      onMessage,
       (error) => {
         logger.error('WebSocketClient', 'WebSocket error', error);
       },
-      () => {
-        // 连接关闭
-        this.messageHandler.reset();
-        this.audioSender.setSessionId(null);
-        this.backpressureManager.clearSendQueue();
-      }
+      onClose
     );
   }
 

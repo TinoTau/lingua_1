@@ -1,6 +1,6 @@
 // Phase 2 实例间通信
 
-impl Phase2Runtime {
+impl RedisRuntime {
     pub async fn enqueue_to_instance(&self, target_instance_id: &str, event: &InterInstanceEvent) -> bool {
         let stream = self.instance_inbox_stream_key(target_instance_id);
         let payload = match serde_json::to_string(event) {
@@ -15,7 +15,7 @@ impl Phase2Runtime {
             .xadd_payload_maxlen(&stream, &payload, self.cfg.stream_maxlen.max(100))
             .await
             .is_ok();
-        crate::metrics::prometheus_metrics::phase2_redis_op("xadd", ok);
+        crate::metrics::prometheus_metrics::redis_runtime_redis_op("xadd", ok);
         ok
     }
 

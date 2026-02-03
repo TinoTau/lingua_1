@@ -31,11 +31,6 @@ impl JobDispatcher {
         self.job_repo.save_job(job).await
     }
     
-    /// 更新 Job 状态（使用已有Job对象，避免重复查询）
-    pub async fn update_job_status_with_job(&self, job: &mut Job, status: crate::core::dispatcher::JobStatus) -> Result<()> {
-        self.job_repo.update_job_status_with_job(job, status).await
-    }
-
     /// Phase 1：用于超时/重派的内部状态更新（使用 Lua 脚本原子化）
     /// - 设置新节点
     /// - 递增 dispatch_attempt_id（原子性抢占）
@@ -97,7 +92,7 @@ impl JobDispatcher {
                 );
                 
                 // Phase 2：更新 bind 的 node_id，并清理 dispatched 标记
-                if let Some(ref rt) = self.phase2 {
+                if let Some(ref rt) = self.redis_runtime {
                     if !request_id.is_empty() {
                         rt.update_request_binding_node(&request_id, &new_node_id).await;
                     }
@@ -198,7 +193,7 @@ impl JobDispatcher {
                 
                 // Phase 2：同步更新 request_id bind 的 dispatched 标记和 Job FSM
                 // 优化：使用传入的参数，避免重复查询
-                if let Some(ref rt) = self.phase2 {
+                if let Some(ref rt) = self.redis_runtime {
                     if let (Some(request_id), Some(dispatch_attempt_id)) = (request_id, dispatch_attempt_id) {
                         info!(
                             job_id = %job_id,
@@ -234,21 +229,6 @@ impl JobDispatcher {
         }
     }
     
-    /// 标记任务已派发（使用已有 job 对象，快路径）
-    /// 优化：直接使用 job 对象的字段，避免重复查询
-    pub async fn mark_job_dispatched_with_job(&self, job: &Job) -> bool {
-        
-        // 快速路径：如果本地对象显示已派发，直接返回（但仍需验证）
-        if job.dispatched_to_node {
-            // 即使本地显示已派发，仍需要调用 Lua 脚本验证（多实例环境下可能不一致）
-            // 但可以期望返回 AlreadyDispatched，减少日志
-            return self.mark_job_dispatched(&job.job_id, Some(&job.request_id), Some(job.dispatch_attempt_id)).await;
-        }
-        
-        // 否则调用 Lua 脚本原子性更新，传入参数避免重复查询
-        self.mark_job_dispatched(&job.job_id, Some(&job.request_id), Some(job.dispatch_attempt_id)).await
-    }
-
     /// 清理已完成的任务（防止内存泄漏）
     /// 
     /// 定期调用此方法以清理已完成或失败的任务。

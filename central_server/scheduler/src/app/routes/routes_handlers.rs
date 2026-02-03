@@ -90,7 +90,7 @@ pub async fn start_server(
         };
         if !node_ids.is_empty() {
             info!("清理 {} 个节点连接", node_ids.len());
-            let _phase2_runtime = app_state_for_shutdown.phase2.as_ref().map(|rt| rt.as_ref());
+            let _redis_runtime = app_state_for_shutdown.redis_runtime.as_ref().map(|rt| rt.as_ref());
             for node_id in node_ids {
                 app_state_for_shutdown.node_connections.unregister(&node_id).await;
                 // 节点下线由 Redis TTL 自动处理，无需手动标记
@@ -99,10 +99,10 @@ pub async fn start_server(
         }
         
         // 清理 Phase2 资源（如果有）
-        if let Some(ref _rt) = app_state_for_shutdown.phase2 {
+        if let Some(ref _rt) = app_state_for_shutdown.redis_runtime {
             info!("清理 Phase2 资源...");
-            // Phase2Runtime 应该有自己的清理逻辑（如果有）
-            // 这里只是记录日志，实际的清理可能在 Phase2Runtime 的 Drop 实现中
+            // RedisRuntime 应该有自己的清理逻辑（如果有）
+            // 这里只是记录日志，实际的清理可能在 RedisRuntime 的 Drop 实现中
         }
         
         info!("资源清理完成，等待 axum 优雅关闭连接...");

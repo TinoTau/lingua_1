@@ -2,11 +2,12 @@
 //! 
 //! 测试完整的节点注册 → 选择 → 更新流程
 
-use lingua_scheduler::phase2::RedisHandle;
-use lingua_scheduler::core::config::Phase2RedisConfig;
-use lingua_scheduler::node_registry::{NodeRegistry, NodeData};
+use lingua_scheduler::redis_runtime::RedisHandle;
+use lingua_scheduler::core::config::RedisConnectionConfig;
+use lingua_scheduler::node_registry::NodeRegistry;
 use lingua_scheduler::pool::PoolService;
 use lingua_scheduler::messages::ServiceType;
+use lingua_scheduler::Config;
 use std::sync::Arc;
 
 #[tokio::main]
@@ -16,12 +17,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 1. 初始化 Redis 连接
     println!("📡 步骤1: 初始化 Redis 连接");
     let redis_url = "redis://127.0.0.1:6379";
-    let redis = match RedisHandle::connect(&lingua_scheduler::core::config::Phase2RedisConfig {
+    let scheduler_config = Config::default().scheduler;
+    let redis = match RedisHandle::connect(&RedisConnectionConfig {
         mode: "single".to_string(),
         url: redis_url.to_string(),
         cluster_urls: vec![],
         key_prefix: "scheduler:".to_string(),
-    }).await {
+    }, &scheduler_config).await {
         Ok(r) => {
             println!("✅ Redis 连接成功");
             Arc::new(r)
@@ -67,7 +69,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Ok(nodes) => {
             println!("✅ 查询成功，找到 {} 个在线节点", nodes.len());
             for (i, node) in nodes.iter().enumerate().take(5) {
-                println!("   {}. {} (lang_sets: {} 组)", i + 1, node.node_id, node.lang_sets.len());
+                println!("   {}. {} (services: {} 个)", i + 1, node.node_id, node.installed_services.len());
             }
             if nodes.len() > 5 {
                 println!("   ... 还有 {} 个节点", nodes.len() - 5);
@@ -153,8 +155,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("📈 测试场景4: 统计查询");
     println!("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
     
-    match node_registry.count_online_nodes().await {
-        Ok(count) => println!("✅ 在线节点总数: {}", count),
+    match node_registry.list_sched_nodes().await {
+        Ok(nodes) => println!("✅ 在线节点总数: {}", nodes.len()),
         Err(e) => println!("⚠️ 统计失败: {}", e),
     }
     

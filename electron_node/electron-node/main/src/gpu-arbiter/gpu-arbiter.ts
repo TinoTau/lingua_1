@@ -15,9 +15,11 @@ import {
   AsrGpuHint,
 } from './types';
 import { GpuUsageMonitor, GpuUsageMonitorConfig } from './gpu-arbiter-usage-monitor';
-import { GpuArbiterQueueManager, PendingRequest } from './gpu-arbiter-queue-manager';
+import { GpuArbiterQueueManager } from './gpu-arbiter-queue-manager';
 import { GpuArbiterMetricsManager } from './gpu-arbiter-metrics';
 import { ActiveLease, buildActiveLeaseWithWatchdog } from './gpu-arbiter-lease';
+import { getAcquireDecision } from './gpu-arbiter-acquire-admission';
+import { buildUsageConfigPatch } from './gpu-arbiter-config-patch';
 
 export class GpuArbiter {
   private config: GpuArbiterConfig;
@@ -189,82 +191,52 @@ export class GpuArbiter {
       );
     }
 
-    // 检查GPU使用率状态
     const gpuUsageInfo = this.usageMonitor.getGpuUsageFromCache(gpuKey);
     const isHighPressure = admissionState === GpuAdmissionState.HIGH_PRESSURE;
+    const decision = getAcquireDecision(admissionState, isLocked, queue.length, taskType, priority);
 
-    // Admission兜底规则
-    if (isHighPressure && !isLocked && queue.length === 0 && taskType === "ASR" && priority >= 90) {
-      logger.debug(
+    if (decision === 'ACQUIRE_NOW') {
+      if (isHighPressure && !isLocked && queue.length === 0 && taskType === 'ASR' && priority >= 90) {
+        logger.debug(
+          { gpuKey, taskType, priority, admissionState, ...trace },
+          'GpuArbiter: Admission fallback rule applied for high-priority ASR task'
+        );
+      } else if (isHighPressure && priority >= 70 && !isLocked) {
+        logger.debug(
+          { gpuKey, taskType, priority, admissionState, gpuUsage: gpuUsageInfo?.usagePercent, ...trace },
+          'GpuArbiter: GPU idle but in HIGH_PRESSURE state, allowing immediate acquire for high-priority task'
+        );
+      }
+      return this.acquireImmediately(gpuKey, taskType, holdMaxMs, trace);
+    }
+
+    if (isHighPressure && priority < 70) {
+      logger.info(
         {
           gpuKey,
           taskType,
           priority,
           admissionState,
+          gpuUsage: gpuUsageInfo?.usagePercent,
+          queueLength: queue.length,
+          note: 'Low-priority task will wait in queue. Scheduler should stop assigning new tasks based on heartbeat resource usage.',
           ...trace,
         },
-        'GpuArbiter: Admission fallback rule applied for high-priority ASR task'
+        'GpuArbiter: GPU usage high, low-priority task will wait in queue (scheduler should be notified via heartbeat)'
       );
-      return this.acquireImmediately(gpuKey, taskType, holdMaxMs, trace);
+    } else if (!isHighPressure && isLocked) {
+      logger.info(
+        {
+          gpuKey,
+          taskType,
+          queueLength: queue.length,
+          note: 'GPU busy, task will wait in queue. Scheduler should stop assigning new tasks based on heartbeat resource usage.',
+          ...trace,
+        },
+        'GpuArbiter: GPU busy, task will wait in queue (scheduler should be notified via heartbeat)'
+      );
     }
 
-    // 如果GPU使用率高，根据任务类型和策略处理
-    if (isHighPressure) {
-      if (priority >= 70) {
-        if (!isLocked) {
-          logger.debug(
-            {
-              gpuKey,
-              taskType,
-              priority,
-              admissionState,
-              gpuUsage: gpuUsageInfo?.usagePercent,
-              ...trace,
-            },
-            'GpuArbiter: GPU idle but in HIGH_PRESSURE state, allowing immediate acquire for high-priority task'
-          );
-          return this.acquireImmediately(gpuKey, taskType, holdMaxMs, trace);
-        }
-        return this.enqueueRequest(gpuKey, request, maxWaitMs);
-      } else {
-        // 低优任务：必须等待，不能跳过
-        // 资源耗尽应该通过心跳通知调度服务器停止分配任务，而不是直接拒绝已分配的任务
-        logger.info(
-          {
-            gpuKey,
-            taskType,
-            priority,
-            admissionState,
-            gpuUsage: gpuUsageInfo?.usagePercent,
-            queueLength: queue.length,
-            note: 'Low-priority task will wait in queue. Scheduler should stop assigning new tasks based on heartbeat resource usage.',
-            ...trace,
-          },
-          'GpuArbiter: GPU usage high, low-priority task will wait in queue (scheduler should be notified via heartbeat)'
-        );
-        return this.enqueueRequest(gpuKey, request, maxWaitMs);
-      }
-    }
-
-    // GPU使用率正常，继续原有逻辑
-    if (!isLocked) {
-      return this.acquireImmediately(gpuKey, taskType, holdMaxMs, trace);
-    }
-
-    // GPU被占用，必须等待，不能跳过
-    // 资源耗尽应该通过心跳通知调度服务器停止分配任务，而不是直接拒绝已分配的任务
-    logger.info(
-      {
-        gpuKey,
-        taskType,
-        queueLength: queue.length,
-        note: 'GPU busy, task will wait in queue. Scheduler should stop assigning new tasks based on heartbeat resource usage.',
-        ...trace,
-      },
-      'GpuArbiter: GPU busy, task will wait in queue (scheduler should be notified via heartbeat)'
-    );
-
-    // WAIT策略：加入队列等待
     return this.enqueueRequest(gpuKey, request, maxWaitMs);
   }
 
@@ -429,44 +401,11 @@ export class GpuArbiter {
 
     const gpuUsageThreshold = configPatch.gpuUsageThreshold ?? this.config.gpuUsageThreshold ?? 85.0;
 
-    // 更新GPU使用率监控配置
     if (configPatch.gpuUsage || configPatch.gpuUsageThreshold !== undefined) {
-      const usageConfigPatch: Partial<GpuUsageMonitorConfig> = {};
-      if (configPatch.gpuUsageThreshold !== undefined) {
-        usageConfigPatch.gpuUsageThreshold = configPatch.gpuUsageThreshold;
+      const usageConfigPatch = buildUsageConfigPatch(configPatch);
+      if (Object.keys(usageConfigPatch).length > 0) {
+        this.usageMonitor.updateConfig(usageConfigPatch);
       }
-      if (configPatch.gpuUsage) {
-        if (configPatch.gpuUsage.sampleIntervalMs !== undefined) {
-          usageConfigPatch.sampleIntervalMs = configPatch.gpuUsage.sampleIntervalMs;
-        }
-        if (configPatch.gpuUsage.cacheTtlMs !== undefined) {
-          usageConfigPatch.cacheTtlMs = configPatch.gpuUsage.cacheTtlMs;
-        }
-        if (configPatch.gpuUsage.baseHighWater !== undefined) {
-          usageConfigPatch.baseHighWater = configPatch.gpuUsage.baseHighWater;
-        }
-        if (configPatch.gpuUsage.baseLowWater !== undefined) {
-          usageConfigPatch.baseLowWater = configPatch.gpuUsage.baseLowWater;
-        }
-        if (configPatch.gpuUsage.dynamicAdjustment) {
-          if (configPatch.gpuUsage.dynamicAdjustment.enabled !== undefined) {
-            usageConfigPatch.dynamicAdjustmentEnabled = configPatch.gpuUsage.dynamicAdjustment.enabled;
-          }
-          if (configPatch.gpuUsage.dynamicAdjustment.longAudioThresholdMs !== undefined) {
-            usageConfigPatch.longAudioThresholdMs = configPatch.gpuUsage.dynamicAdjustment.longAudioThresholdMs;
-          }
-          if (configPatch.gpuUsage.dynamicAdjustment.highWaterBoost !== undefined) {
-            usageConfigPatch.highWaterBoost = configPatch.gpuUsage.dynamicAdjustment.highWaterBoost;
-          }
-          if (configPatch.gpuUsage.dynamicAdjustment.lowWaterBoost !== undefined) {
-            usageConfigPatch.lowWaterBoost = configPatch.gpuUsage.dynamicAdjustment.lowWaterBoost;
-          }
-          if (configPatch.gpuUsage.dynamicAdjustment.adjustmentTtlMs !== undefined) {
-            usageConfigPatch.adjustmentTtlMs = configPatch.gpuUsage.dynamicAdjustment.adjustmentTtlMs;
-          }
-        }
-      }
-      this.usageMonitor.updateConfig(usageConfigPatch);
     }
 
     // 如果启用状态改变，重新启动或停止监控

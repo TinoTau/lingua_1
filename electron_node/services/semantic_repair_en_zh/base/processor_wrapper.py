@@ -9,7 +9,6 @@ ProcessorWrapper - 统一处理器调用包装器
 """
 
 import time
-import uuid
 import logging
 import asyncio
 from typing import Dict
@@ -71,8 +70,8 @@ class ProcessorWrapper:
                 detail=f"Processor '{processor_name}' initialization failed"
             )
         
-        # 3. 生成 Request ID（如果没有 job_id 则生成 UUID）
-        request_id = request.job_id or str(uuid.uuid4())
+        # 3. Request ID 使用 job_id（请求必填）
+        request_id = request.job_id
         
         # 4. 记录输入日志（任务链日志）
         input_log = (
@@ -115,7 +114,7 @@ class ProcessorWrapper:
                 f"text_out_length={len(result.text_out)} | "
                 f"confidence={result.confidence:.2f} | "
                 f"reason_codes={result.reason_codes} | "
-                f"repair_time_ms={elapsed_ms} | "
+                f"process_time_ms={elapsed_ms} | "
                 f"changed={result.text_out != request.text_in}"
             )
             logger.info(output_log)

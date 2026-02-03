@@ -24,7 +24,7 @@
 2. **RegisterNodeRequest**
    - ❌ `cap_json` - 已删除
    - ❌ `pool_names_json` - 已删除
-   - ✅ 改用 `asr_langs_json`、`semantic_langs_json`、`tts_langs_json`（池分配用 asr×tts）
+   - ✅ 改用 `asr_langs_json`、`semantic_langs_json`、`tts_langs_json`（池分配用 asr×semantic）
 
 3. **Job**
    - ❌ `calculate_dynamic_timeout_seconds()` - 已删除

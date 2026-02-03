@@ -30,10 +30,10 @@ pub struct RequestBinding {
 // 注意：JobFsmState 和 JobFsmSnapshot 已删除（测试代码被注释，不再需要）
 
 #[derive(Clone)]
-pub struct Phase2Runtime {
+pub struct RedisRuntime {
     pub instance_id: String,
     heartbeat_ttl_seconds: u64,
-    cfg: crate::core::config::Phase2Config,
+    cfg: crate::core::config::RedisRuntimeConfig,
     pub redis: RedisHandle,  // 公开，供JobDispatcher使用
     // 配置：用于替代 runtime_background 中的硬编码
     owner_ttl_base_seconds: u64,
@@ -108,8 +108,9 @@ include!("redis_runtime/redis_handle.rs");
 include!("redis_runtime/helpers.rs");
 include!("redis_runtime/routed_send.rs");
 
-// 暂时屏蔽所有测试（依赖旧的 API）
-// TODO: 更新测试以匹配新架构
+// redis_runtime 集成测试（依赖 Redis 与旧 API）暂不包含。
+// reservation_redis 已拆分为 reservation_redis_try_reserve / commit_release / dec_lifecycle，
+// 启用后需适配当前 API：resv_key(resv_id)、节点容量写入、dec_running 等。
 /*
 #[cfg(test)]
 mod tests {
@@ -120,7 +121,7 @@ mod tests {
     include!("redis_runtime/tests/cross_instance.rs");
     include!("redis_runtime/tests/ws_helpers.rs");
     include!("redis_runtime/tests/ws_e2e.rs");
-    // include!("redis_runtime/tests/cluster_acceptance.rs"); // 文件已删除
+    include!("redis_runtime/tests/reservation_redis.rs");
     include!("redis_runtime/tests/runtime_routing_test.rs");
 }
 */

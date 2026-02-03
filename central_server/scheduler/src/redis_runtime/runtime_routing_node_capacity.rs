@@ -2,7 +2,7 @@
 
 use crate::messages::ErrorCode;
 
-impl Phase2Runtime {
+impl RedisRuntime {
     /// Phase 2：节点并发占用（从 Redis Hash 读取）
     pub async fn node_reserved_count(&self, node_id: &str) -> u64 {
         let key = self.node_cap_key(node_id);

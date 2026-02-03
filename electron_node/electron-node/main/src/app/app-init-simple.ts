@@ -9,7 +9,7 @@ import { app } from 'electron';
 import { NodeAgent } from '../agent/node-agent-simple';
 import { ModelManager } from '../model-manager/model-manager';
 import { InferenceService } from '../inference/inference-service';
-import { loadNodeConfig, saveNodeConfig } from '../node-config';
+import { loadNodeConfig, saveNodeConfig, getServicesBaseUrl } from '../node-config';
 import { registerModelHandlers } from '../ipc-handlers/model-handlers';
 import {
   initServiceLayer,
@@ -18,10 +18,11 @@ import {
   ServiceProcessRunner,
   ServiceEndpointResolver,
 } from '../service-layer';
+import { cleanupOrphanedProcessesOnStartup } from '../service-layer/port-cleanup';
 import { getServiceRegistry } from '../service-layer/ServiceRegistrySingleton';
-import { 
-  createServiceSnapshotGetter, 
-  createResourceSnapshotGetter 
+import {
+  createServiceSnapshotGetter,
+  createResourceSnapshotGetter
 } from '../service-layer/ServiceSnapshots';
 import logger from '../logger';
 
@@ -51,7 +52,7 @@ function initializeServicesDirectory(): string {
     let currentDir = __dirname;
     for (let i = 0; i < 15; i++) {  // 增加查找深度
       const servicesPath = path.join(currentDir, 'services');
-      
+
       // 检查是否存在，并且至少包含一个 service.json 文件
       if (fs.existsSync(servicesPath)) {
         try {
@@ -60,7 +61,7 @@ function initializeServicesDirectory(): string {
             const serviceJsonPath = path.join(servicesPath, entry, 'service.json');
             return fs.existsSync(serviceJsonPath);
           });
-          
+
           if (hasServiceJson) {
             logger.info({ servicesDir: servicesPath }, 'Using project services directory (development mode)');
             return servicesPath;
@@ -69,27 +70,27 @@ function initializeServicesDirectory(): string {
           // 忽略读取错误，继续向上查找
         }
       }
-      
+
       const parentDir = path.dirname(currentDir);
       if (parentDir === currentDir) {
         break;
       }
       currentDir = parentDir;
     }
-    
+
     logger.warn({}, 'Could not find services directory in project, falling back to userData');
   }
 
   // 回退到 userData/services
   const userData = app.getPath('userData');
   const servicesDir = path.join(userData, 'services');
-  
+
   // 确保目录存在
   if (!fs.existsSync(servicesDir)) {
     fs.mkdirSync(servicesDir, { recursive: true });
     logger.info({ servicesDir }, 'Created services directory');
   }
-  
+
   return servicesDir;
 }
 
@@ -98,7 +99,7 @@ function initializeServicesDirectory(): string {
  */
 export async function initializeServicesSimple(): Promise<ServiceManagers> {
   console.log('\n🔥 使用新架构初始化...\n');
-  
+
   const managers: ServiceManagers = {
     nodeAgent: null,
     modelManager: null,
@@ -110,25 +111,26 @@ export async function initializeServicesSimple(): Promise<ServiceManagers> {
   // 1. 初始化服务层（扫描 services 目录，构建 ServiceRegistry）
   const servicesDir = initializeServicesDirectory();
   logger.info({ servicesDir }, '🔧 Initializing service layer');
-  
+
   // initServiceLayer会设置全局ServiceRegistry单例
   const { registry, runner } = await initServiceLayer(servicesDir);
   logger.info(
-    { 
+    {
       serviceCount: registry.size,
       serviceIds: Array.from(registry.keys())
     },
     '✅ Service layer initialized'
   );
 
-  // 2. 创建统一的进程启动器（取代旧的PythonServiceManager和RustServiceManager）
-  // ✅ 从全局单例获取registry，确保使用同一个实例
-  managers.serviceRunner = new ServiceProcessRunner(getServiceRegistry());
-  logger.info({}, '✅ ServiceProcessRunner created');
+  // 启动前清理：扫描 registry 预期端口，终止断电/崩溃后的遗留进程
+  await cleanupOrphanedProcessesOnStartup(registry);
 
-  // 3. 创建endpoint解析器（用于InferenceService查找服务）
-  // ✅ 从全局单例获取registry，确保使用同一个实例
-  managers.endpointResolver = new ServiceEndpointResolver(getServiceRegistry());
+  // 2. 复用 initServiceLayer 创建的 ServiceProcessRunner（getServiceRunner 与 managers.serviceRunner 指向同一实例）
+  managers.serviceRunner = runner;
+  logger.info({}, '✅ ServiceProcessRunner ready');
+
+  // 3. 创建endpoint解析器（用于InferenceService查找服务）；baseUrl 来自配置
+  managers.endpointResolver = new ServiceEndpointResolver(getServiceRegistry(), getServicesBaseUrl);
   logger.info({}, '✅ ServiceEndpointResolver created');
 
   // 4. 注册服务相关的 IPC handlers
@@ -166,7 +168,7 @@ export async function initializeServicesSimple(): Promise<ServiceManagers> {
   // 8. 初始化 NodeAgent (✅ Day 2 Refactor: 使用快照函数)
   const getServiceSnapshot = createServiceSnapshotGetter(getServiceRegistry());
   const getResourceSnapshot = createResourceSnapshotGetter();
-  
+
   managers.nodeAgent = new NodeAgent(
     managers.inferenceService,
     managers.modelManager,
@@ -233,7 +235,6 @@ export async function startServicesByPreference(
     {
       servicePreferences: prefs,
       autoStartServices: {
-        rust: prefs.rustEnabled,
         nmt: prefs.nmtEnabled,
         tts: prefs.ttsEnabled,
         yourtts: prefs.yourttsEnabled,
@@ -244,25 +245,9 @@ export async function startServicesByPreference(
     'Auto-starting services based on user preferences'
   );
 
-  // 使用新架构启动服务
   if (!managers.serviceRunner) {
     logger.warn({}, 'Service runner not initialized, skipping auto-start');
     return;
-  }
-
-  // 启动 Rust 推理服务
-  if (prefs.rustEnabled) {
-    const registry = getServiceRegistry();
-    const rustService = registry ? Array.from(registry.values()).find(e => e.def.type === 'rust') : null;
-    if (rustService) {
-      logger.info({ serviceId: rustService.def.id }, 'Auto-starting Rust inference service...');
-      managers.serviceRunner.start(rustService.def.id).catch((error: unknown) => {
-        logger.error({ 
-          error: error instanceof Error ? error.message : String(error), 
-          serviceId: rustService.def.id 
-        }, 'Failed to auto-start Rust inference service');
-      });
-    }
   }
 
   // 启动 Python 服务（串行启动，避免GPU内存过载）
@@ -299,46 +284,30 @@ export async function startServicesByPreference(
     });
   }
 
-  // 语义修复服务等其他服务通过新的 ServiceSupervisor 管理
-  // 用户可以在 UI 中点击「刷新服务」并手动启动
   const registry = getServiceRegistry();
-  const semanticServices = Array.from(registry.values()).filter(
-    (entry) => entry.def.type === 'semantic'
-  );
+  if (!registry) return;
 
-  if (semanticServices.length > 0) {
-    logger.info(
-      {
-        count: semanticServices.length,
-        serviceIds: semanticServices.map((s) => s.def.id),
-      },
-      'Semantic repair services found (can be started from UI)'
-    );
+  const semanticServices = Array.from(registry.values()).filter((e) => e.def.type === 'semantic');
+  for (const entry of semanticServices) {
+    const shouldStart =
+      entry.def.id === 'semantic-repair-en-zh' && prefs.semanticRepairEnZhEnabled !== false;
+    if (shouldStart) {
+      logger.info({ serviceId: entry.def.id }, 'Auto-starting semantic repair service...');
+      managers.serviceRunner!.start(entry.def.id).catch((e: Error) =>
+        logger.error({ error: e.message, serviceId: entry.def.id }, 'Failed to auto-start semantic repair')
+      );
+    }
+  }
 
-    // ✅ 统一使用 ServiceProcessRunner 启动语义修复服务
-    // 避免双管理器导致进程丢失追踪
-    for (const entry of semanticServices) {
-      let shouldStart = false;
-      
-      if (entry.def.id === 'semantic-repair-zh') {
-        shouldStart = prefs.semanticRepairZhEnabled !== false;
-      } else if (entry.def.id === 'semantic-repair-en') {
-        shouldStart = prefs.semanticRepairEnEnabled !== false;
-      } else if (entry.def.id === 'en-normalize') {
-        shouldStart = prefs.enNormalizeEnabled !== false;
-      } else if (entry.def.id === 'semantic-repair-en-zh') {
-        shouldStart = prefs.semanticRepairEnZhEnabled !== false;
-      }
-
-      if (shouldStart) {
-        logger.info({ serviceId: entry.def.id }, 'Auto-starting semantic repair service...');
-        managers.serviceRunner!.start(entry.def.id).catch((error) => {
-          logger.error(
-            { error, serviceId: entry.def.id },
-            'Failed to auto-start semantic repair service'
-          );
-        });
-      }
+  const phoneticServices = Array.from(registry.values()).filter((e) => e.def.type === 'phonetic');
+  for (const entry of phoneticServices) {
+    const shouldStart =
+      entry.def.id === 'phonetic-correction-zh' && prefs.phoneticCorrectionEnabled !== false;
+    if (shouldStart) {
+      logger.info({ serviceId: entry.def.id }, 'Auto-starting phonetic correction service...');
+      managers.serviceRunner!.start(entry.def.id).catch((e: Error) =>
+        logger.error({ error: e.message, serviceId: entry.def.id }, 'Failed to auto-start phonetic correction')
+      );
     }
   }
 }
@@ -359,21 +328,12 @@ export async function startAppSimple(): Promise<ServiceManagers> {
 
   // 3. 注册 IPC handlers
   registerModelHandlers(managers.modelManager);
-  // 注：runtime handlers已在index.ts的app.whenReady()中立即注册
+  // 注：runtime handlers 已在 index.ts 的 app.whenReady() 中注册
 
   // 4. 根据用户偏好启动服务
   await startServicesByPreference(managers);
 
-  // 5. 启动 NodeAgent（可选，需要调度服务器在5010端口）
-  // 临时禁用：调度服务器未运行时NodeAgent会导致应用退出
-  if (managers.nodeAgent && process.env.ENABLE_NODE_AGENT === 'true') {
-    managers.nodeAgent.start().catch((error) => {
-      logger.error({ error }, 'Failed to start NodeAgent');
-    });
-  } else {
-    logger.info({}, '⚠️  NodeAgent disabled (set ENABLE_NODE_AGENT=true to enable)');
-  }
-
+  // NodeAgent 的 start() 由 index.ts 在 initializeServices() 返回后统一调用，此处不再重复
   logger.info({}, '========================================');
   logger.info({}, '   Node Application Started');
   logger.info({}, '========================================');

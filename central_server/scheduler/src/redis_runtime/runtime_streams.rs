@@ -1,4 +1,4 @@
-impl Phase2Runtime {
+impl RedisRuntime {
     async fn ensure_group(&self, stream: &str) -> bool {
         let mut cmd = redis::cmd("XGROUP");
         cmd.arg("CREATE")
@@ -107,12 +107,12 @@ impl Phase2Runtime {
             Ok(v) => v,
             Err(e) => {
                 // Redis 版本不支持/命令被禁用时，直接忽略
-                crate::metrics::prometheus_metrics::phase2_redis_op("xautoclaim", false);
+                crate::metrics::prometheus_metrics::redis_runtime_redis_op("xautoclaim", false);
                 debug!(error = %e, "Phase2 XAUTOCLAIM 不可用或失败，忽略");
                 return Ok(());
             }
         };
-        crate::metrics::prometheus_metrics::phase2_redis_op("xautoclaim", true);
+        crate::metrics::prometheus_metrics::redis_runtime_redis_op("xautoclaim", true);
 
         let items = parse_xautoclaim_payloads(value);
         for (id, payload) in items {
@@ -127,7 +127,7 @@ impl Phase2Runtime {
     async fn scan_pending_to_dlq(&self, stream: &str) -> anyhow::Result<()> {
         // 先读 summary（total pending）用于 gauge
         if let Ok(total) = self.xpending_total(stream).await {
-            crate::metrics::prometheus_metrics::set_phase2_inbox_pending(total as i64);
+            crate::metrics::prometheus_metrics::set_redis_runtime_inbox_pending(total as i64);
         }
 
         // XPENDING <stream> <group> - + <count>
@@ -140,11 +140,11 @@ impl Phase2Runtime {
 
         let value: redis::Value = match self.redis.query(cmd).await {
             Ok(v) => {
-                crate::metrics::prometheus_metrics::phase2_redis_op("xpending", true);
+                crate::metrics::prometheus_metrics::redis_runtime_redis_op("xpending", true);
                 v
             }
             Err(e) => {
-                crate::metrics::prometheus_metrics::phase2_redis_op("xpending", false);
+                crate::metrics::prometheus_metrics::redis_runtime_redis_op("xpending", false);
                 debug!(error = %e, "Phase2 XPENDING 失败，跳过 DLQ 扫描");
                 return Ok(());
             }
@@ -178,11 +178,11 @@ impl Phase2Runtime {
                 )
                 .await
                 .is_ok();
-            crate::metrics::prometheus_metrics::phase2_redis_op("dlq_move", ok);
+            crate::metrics::prometheus_metrics::redis_runtime_redis_op("dlq_move", ok);
             if ok {
                 let _ = self.xack(stream, &e.id).await;
                 let _ = self.xdel(stream, &e.id).await;
-                crate::metrics::prometheus_metrics::on_phase2_dlq_moved();
+                crate::metrics::prometheus_metrics::on_redis_runtime_dlq_moved();
             }
         }
         Ok(())
@@ -194,11 +194,11 @@ impl Phase2Runtime {
         cmd.arg(stream).arg(&self.cfg.stream_group);
         let value: redis::Value = match self.redis.query(cmd).await {
             Ok(v) => {
-                crate::metrics::prometheus_metrics::phase2_redis_op("xpending_summary", true);
+                crate::metrics::prometheus_metrics::redis_runtime_redis_op("xpending_summary", true);
                 v
             }
             Err(e) => {
-                crate::metrics::prometheus_metrics::phase2_redis_op("xpending_summary", false);
+                crate::metrics::prometheus_metrics::redis_runtime_redis_op("xpending_summary", false);
                 return Err(e);
             }
         };
@@ -218,11 +218,11 @@ impl Phase2Runtime {
 
         let value: redis::Value = match self.redis.query(cmd).await {
             Ok(v) => {
-                crate::metrics::prometheus_metrics::phase2_redis_op("xclaim", true);
+                crate::metrics::prometheus_metrics::redis_runtime_redis_op("xclaim", true);
                 v
             }
             Err(_) => {
-                crate::metrics::prometheus_metrics::phase2_redis_op("xclaim", false);
+                crate::metrics::prometheus_metrics::redis_runtime_redis_op("xclaim", false);
                 return None;
             }
         };
@@ -268,6 +268,10 @@ impl Phase2Runtime {
                     .send(&session_id, WsMessage::Text(json))
                     .await;
                 if !ok {
+                    warn!(
+                        session_id = %session_id,
+                        "SendToSession 失败：本地 session 不在线（连接已断开或未注册），Web 端将收不到该消息"
+                    );
                     debug!(session_id = %session_id, stream = %stream, id = %id, "本地 session 不在线，保留 pending");
                 }
                 ok
@@ -302,11 +306,11 @@ impl Phase2Runtime {
 
         let reply: redis::streams::StreamReadReply = match self.redis.query(cmd).await {
             Ok(v) => {
-                crate::metrics::prometheus_metrics::phase2_redis_op("xreadgroup", true);
+                crate::metrics::prometheus_metrics::redis_runtime_redis_op("xreadgroup", true);
                 v
             }
             Err(e) => {
-                crate::metrics::prometheus_metrics::phase2_redis_op("xreadgroup", false);
+                crate::metrics::prometheus_metrics::redis_runtime_redis_op("xreadgroup", false);
                 return Err(e);
             }
         };
@@ -317,7 +321,7 @@ impl Phase2Runtime {
         let mut cmd = redis::cmd("XACK");
         cmd.arg(stream).arg(&self.cfg.stream_group).arg(id);
         let r = self.redis.query(cmd).await;
-        crate::metrics::prometheus_metrics::phase2_redis_op("xack", r.is_ok());
+        crate::metrics::prometheus_metrics::redis_runtime_redis_op("xack", r.is_ok());
         r
     }
 
@@ -325,7 +329,7 @@ impl Phase2Runtime {
         let mut cmd = redis::cmd("XDEL");
         cmd.arg(stream).arg(id);
         let r = self.redis.query(cmd).await;
-        crate::metrics::prometheus_metrics::phase2_redis_op("xdel", r.is_ok());
+        crate::metrics::prometheus_metrics::redis_runtime_redis_op("xdel", r.is_ok());
         r
     }
 }

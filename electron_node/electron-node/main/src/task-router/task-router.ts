@@ -2,7 +2,7 @@
 
 import logger from '../logger';
 import { ServiceType, InstalledService } from '../../../../shared/protocols/messages';
-import { loadNodeConfig, NodeConfig } from '../node-config';
+import { loadNodeConfig, NodeConfig, getServicesBaseUrl } from '../node-config';
 import {
   ServiceEndpoint,
   ASRTask,
@@ -59,8 +59,8 @@ export class TaskRouter {
   constructor(
     private registry: ServiceRegistry
   ) {
-    // 初始化服务管理器和选择器
-    this.serviceManager = new TaskRouterServiceManagerNew(this.registry);
+    // 初始化服务管理器和选择器（baseUrl 来自配置）
+    this.serviceManager = new TaskRouterServiceManagerNew(this.registry, getServicesBaseUrl);
     this.serviceSelector = new TaskRouterServiceSelector();
 
     // 初始化SEMANTIC类型的端点列表（用于语义修复服务）

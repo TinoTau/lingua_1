@@ -2,9 +2,9 @@ impl RedisHandle {
     /// 创建新的 RedisHandle（用于测试和内部使用）
     /// 
     /// # 注意
-    /// 此方法主要用于测试。在生产代码中，应通过 Phase2Runtime 来获取 RedisHandle。
+    /// 此方法主要用于测试。在生产代码中，应通过 RedisRuntime 来获取 RedisHandle。
         pub async fn connect(
-        cfg: &crate::core::config::Phase2RedisConfig,
+        cfg: &crate::core::config::RedisConnectionConfig,
         scheduler_cfg: &crate::core::config::SchedulerConfig,
     ) -> anyhow::Result<Self> {
         let inner = match cfg.mode.as_str() {
@@ -122,12 +122,14 @@ impl RedisHandle {
         cmd.arg(key);
         self.query(cmd).await
     }
-    
-    /// SREM - 从集合中移除成员（用于测试）
-    #[cfg(test)]
-    pub async fn srem(&self, key: &str, member: &str) -> redis::RedisResult<u64> {
-        let mut cmd = redis::cmd("SREM");
-        cmd.arg(key).arg(member);
+
+    /// HSET 多字段（用于更新节点语言能力）
+    pub async fn hset_multi(&self, key: &str, pairs: &[(&str, &str)]) -> redis::RedisResult<()> {
+        let mut cmd = redis::cmd("HSET");
+        cmd.arg(key);
+        for (f, v) in pairs {
+            cmd.arg(f).arg(v);
+        }
         self.query(cmd).await
     }
     

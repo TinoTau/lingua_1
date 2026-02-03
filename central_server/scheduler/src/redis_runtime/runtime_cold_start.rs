@@ -1,7 +1,7 @@
 // Phase 2 冷启动预加载（按照 NODE_JOB_FLOW_MERGED_TECH_SPEC_v1.0.md 规范）
 // 注意：此文件通过 include! 包含到 phase2.rs 中，不需要单独的 use 语句
 
-impl Phase2Runtime {
+impl RedisRuntime {
     /// 冷启动预加载（按照文档规范：启动时加载全体节点、全体 pool、全体 lang-index）
     /// 避免启动后 100-300ms 的抖动
     pub async fn cold_start_preload(

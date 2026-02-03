@@ -18,8 +18,8 @@ use tracing::{debug, info};
 pub struct RegisterNodeRequest {
     pub node_id: String,
     pub asr_langs_json: String,       // ASR 语言 JSON
-    pub semantic_langs_json: String,  // Semantic 语言 JSON（能力校验用）
-    pub tts_langs_json: String,       // TTS 语言 JSON（池分配用 asr×tts）
+    pub semantic_langs_json: String,  // Semantic 语言 JSON（能力校验 + 池分配用 asr×semantic）
+    pub tts_langs_json: String,       // TTS 语言 JSON（注册校验用）
 }
 
 // HeartbeatRequest 已删除（心跳已由 PoolService 处理）
@@ -106,6 +106,40 @@ impl MinimalSchedulerService {
 
         info!(node_id = %req.node_id, "节点注册成功");
         Ok(())
+    }
+
+    /// 更新节点语言能力（心跳时写入，供池分配使用）
+    pub async fn update_node_languages(
+        &self,
+        node_id: &str,
+        asr_langs_json: &str,
+        semantic_langs_json: &str,
+        tts_langs_json: &str,
+    ) -> Result<()> {
+        let key = format!("lingua:v1:node:{}", node_id);
+        self.redis
+            .hset_multi(
+                &key,
+                &[
+                    ("asr_langs", asr_langs_json),
+                    ("semantic_langs", semantic_langs_json),
+                    ("tts_langs", tts_langs_json),
+                ],
+            )
+            .await
+            .map_err(Into::into)
+    }
+
+    /// 读取节点当前语言能力（用于心跳时判断是否需重分配池）
+    pub async fn get_node_languages(&self, node_id: &str) -> Result<Option<(String, String)>> {
+        let key = format!("lingua:v1:node:{}", node_id);
+        let hash = self.redis.hgetall(&key).await.map_err(anyhow::Error::from)?;
+        let asr = hash.get("asr_langs").cloned();
+        let semantic = hash.get("semantic_langs").cloned();
+        Ok(match (asr, semantic) {
+            (Some(a), Some(s)) => Some((a, s)),
+            _ => None,
+        })
     }
 
     // heartbeat() 方法已删除（已由 PoolService.heartbeat() 接管）

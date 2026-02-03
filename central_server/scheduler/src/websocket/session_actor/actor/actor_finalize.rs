@@ -155,7 +155,7 @@ impl SessionActor {
         // 先读再创建 job，不在创建前清除；手动/Timeout 在创建并派发后再清除，保证最后一 job 仍走 affinity
         // ============================================================
         let session_key = format!("scheduler:session:{}", self.session_id);
-        let turn_id = if let Some(ref rt) = self.state.phase2 {
+        let turn_id = if let Some(ref rt) = self.state.redis_runtime {
             let get_script = r#"return redis.call('HGET', KEYS[1], 'current_turn_id') or ''"#;
             let mut get_cmd = redis::cmd("EVAL");
             get_cmd.arg(get_script).arg(1).arg(&session_key);
@@ -244,7 +244,7 @@ impl SessionActor {
         if is_max_duration_triggered {
             if let Some(first_job) = jobs.first() {
                 if let Some(ref node_id) = first_job.assigned_node_id {
-                    if let Some(ref rt) = self.state.phase2 {
+                    if let Some(ref rt) = self.state.redis_runtime {
                         let turn_key = format!("scheduler:turn:{}", turn_id);
                         let session_key = format!("scheduler:session:{}", self.session_id);
                         let script = r#"
@@ -277,7 +277,7 @@ return 1
             }
         } else if is_manual_cut || is_timeout_triggered {
             // 手动/Timeout：在创建并派发本 job 之后清除 turn affinity，下一轮发言用新 turn_id（本 job 已用当前 turn 的 affinity 选到同一节点）
-            if let Some(ref rt) = self.state.phase2 {
+            if let Some(ref rt) = self.state.redis_runtime {
                 let turn_key = format!("scheduler:turn:{}", turn_id);
                 let del_script = r#"
 redis.call('HDEL', KEYS[1], 'affinity_node_id')
@@ -382,7 +382,7 @@ return 1
                             "【派发】发往节点失败"
                         );
                         // 发送失败，释放资源
-                        if let Some(rt) = self.state.phase2.as_ref() {
+                        if let Some(rt) = self.state.redis_runtime.as_ref() {
                             rt.release_node_slot(node_id, &job.job_id, job.dispatch_attempt_id).await;
                             let _ = rt
                                 .job_fsm_to_finished(&job.job_id, job.dispatch_attempt_id.max(1), false)

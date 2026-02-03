@@ -15,7 +15,7 @@ import uuid
 from contextlib import asynccontextmanager
 from typing import Dict
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import torch
 import gc
@@ -139,11 +139,12 @@ async def lifespan(app: FastAPI):
         
         enabled = config.get_enabled_processors()
         
-        # 初始化中文语义修复处理器
+        # 初始化中文语义修复处理器（与备份 semantic_repair_zh 一致：启动时加载模型并 warmup）
         if 'zh_repair' in enabled:
             print(f"[Unified SR]     - zh_repair (Chinese Semantic Repair)", flush=True)
             zh_processor = ZhRepairProcessor(enabled['zh_repair'])
             processors['zh_repair'] = zh_processor
+            await zh_processor.ensure_initialized()
             log_resource_usage("AFTER_ZH_INIT")
         
         # 初始化英文语义修复处理器
@@ -151,6 +152,7 @@ async def lifespan(app: FastAPI):
             print(f"[Unified SR]     - en_repair (English Semantic Repair)", flush=True)
             en_processor = EnRepairProcessor(enabled['en_repair'])
             processors['en_repair'] = en_processor
+            await en_processor.ensure_initialized()
             log_resource_usage("AFTER_EN_INIT")
         
         # 初始化英文标准化处理器
@@ -158,6 +160,7 @@ async def lifespan(app: FastAPI):
             print(f"[Unified SR]     - en_normalize (English Normalize)", flush=True)
             norm_processor = EnNormalizeProcessor(enabled['en_normalize'])
             processors['en_normalize'] = norm_processor
+            await norm_processor.ensure_initialized()
             log_resource_usage("AFTER_NORM_INIT")
         
         # 创建处理器包装器
@@ -229,29 +232,18 @@ async def en_normalize(request: RepairRequest):
     return await processor_wrapper.handle_request("en_normalize", request)
 
 
-# ==================== 兼容旧ASR模块的统一端点 ====================
+# ==================== 按 lang 路由的统一端点（节点端调用） ====================
 
 @app.post("/repair", response_model=RepairResponse)
 async def repair_unified(request: RepairRequest):
-    """
-    统一修复端点（向后兼容）
-    
-    根据请求中的 lang 参数路由到相应的处理器：
-    - lang='zh' → ZhRepairProcessor
-    - lang='en' → EnRepairProcessor
-    
-    这个端点是为了兼容旧的ASR模块调用方式。
-    新的调用应该使用路径隔离的端点：/zh/repair, /en/repair, /en/normalize
-    """
-    # 根据 lang 参数选择处理器
-    lang = request.lang if hasattr(request, 'lang') and request.lang else 'en'
+    """按请求中的 lang 路由：zh → zh_repair，en → en_repair。"""
+    lang = getattr(request, 'lang', None) or 'zh'
     
     if lang == 'zh':
         return await processor_wrapper.handle_request("zh_repair", request)
     elif lang == 'en':
         return await processor_wrapper.handle_request("en_repair", request)
     else:
-        # 不支持的语言：返回 400，由节点端 job 失败并回传调度重分配
         raise HTTPException(
             status_code=400,
             detail={"code": "SEM_REPAIR_UNSUPPORTED_LANG", "reason": "UNSUPPORTED_LANGUAGE"},
@@ -259,11 +251,14 @@ async def repair_unified(request: RepairRequest):
 
 
 # ==================== 健康检查端点 ====================
+# 节点端要求 /health 顶层含 warmed 或 model_warmed（与备份中文服务 semantic_repair_zh 一致），
+# 否则 Task Router 认为服务未 warmed，抛错后 stage 降级为 PASS，语义修复不生效。
 
 class GlobalHealthResponse(BaseModel):
     """全局健康检查响应"""
     status: str
     processors: Dict[str, HealthResponse]
+    warmed: bool = False  # 顶层 warmed：至少一个修复处理器已预热，节点端据此判定是否可发 /repair
 
 
 @app.get("/health", response_model=GlobalHealthResponse)
@@ -271,7 +266,7 @@ async def global_health():
     """全局健康检查"""
     health_status = {}
     overall_healthy = True
-    
+
     for name, processor in processors.items():
         try:
             status = await processor.get_health()
@@ -286,10 +281,25 @@ async def global_health():
                 initialized=False
             )
             overall_healthy = False
-    
+
+    # 至少一个修复处理器 warmed 时，节点端才认为服务可处理请求（与备份 semantic_repair_zh 的 model_warmed 一致）
+    repair_processors = ('zh_repair', 'en_repair')
+    warmed = any(
+        health_status.get(p) and getattr(health_status[p], 'warmed', False)
+        for p in repair_processors
+        if p in health_status
+    )
+    # 至少一个修复处理器 healthy 且 warmed 时，整体 status 为 healthy，否则节点端 checkHealthEndpoint 不通过
+    ready_for_requests = any(
+        health_status.get(p) and health_status[p].status == 'healthy' and getattr(health_status[p], 'warmed', False)
+        for p in repair_processors
+        if p in health_status
+    )
+
     return GlobalHealthResponse(
-        status='healthy' if overall_healthy else 'degraded',
-        processors=health_status
+        status='healthy' if ready_for_requests else 'degraded',
+        processors=health_status,
+        warmed=warmed,
     )
 
 

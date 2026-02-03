@@ -70,7 +70,7 @@ mod tests {
         assert_eq!(pairs.len(), 0);
     }
 
-    /// 池分配使用 (asr_langs × tts_langs)，与任务查找 (src, tgt) 一致；helper 通用为 (asr × tgt_set)。
+    /// 池分配使用 (asr_langs × semantic_langs)；helper 通用为 (asr × tgt_set)。
     #[test]
     fn test_extract_directed_pairs_asr_x_tts_pool_allocation() {
         let asr_langs = vec!["zh".to_string(), "en".to_string()];

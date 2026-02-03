@@ -222,15 +222,6 @@ return 1
         self.save_job(&job).await
     }
     
-    /// 更新 Job 状态（使用已有Job对象，避免重复查询）
-    pub async fn update_job_status_with_job(&self, job: &mut Job, status: JobStatus) -> Result<()> {
-        // 更新状态
-        job.status = status;
-        
-        // 保存回 Redis
-        self.save_job(job).await
-    }
-    
     // update_job_field 已删除（不需要，直接使用save_job）
     
     /// 列出所有 Job（用于超时检查）

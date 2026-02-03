@@ -3,8 +3,79 @@
  * 从 audio-aggregator.ts 抽离，不改变任何逻辑与返回值。
  */
 
+import type { JobAssignMessage } from '@shared/protocols/messages';
 import logger from '../logger';
 import { AudioBuffer } from './audio-aggregator-types';
+
+/**
+ * 获取或创建缓冲区（从 audio-aggregator.processAudioChunk 迁出）
+ * 若 buffer 处于 FINALIZING/CLOSED 则创建新 epoch 的 buffer。
+ */
+export function getOrCreateBuffer(
+  buffers: Map<string, AudioBuffer>,
+  bufferKey: string,
+  job: JobAssignMessage,
+  nowMs: number
+): AudioBuffer {
+  const sessionId = job.session_id;
+  const utteranceIndex = job.utterance_index ?? 0;
+  let buffer = buffers.get(bufferKey);
+
+  if (!buffer) {
+    logger.info(
+      {
+        jobId: job.job_id,
+        bufferKey,
+        sessionId,
+        utteranceIndex,
+        epoch: 0,
+        state: 'OPEN',
+        reason: 'Buffer not found, creating new buffer',
+      },
+      'AudioAggregator: Creating new buffer'
+    );
+    buffer = createEmptyBuffer(bufferKey, sessionId, utteranceIndex, nowMs, 0);
+    buffers.set(bufferKey, buffer);
+    return buffer;
+  }
+
+  if (buffer.state === 'FINALIZING' || buffer.state === 'CLOSED') {
+    const newEpoch = buffer.epoch + 1;
+    logger.warn(
+      {
+        jobId: job.job_id,
+        bufferKey,
+        oldEpoch: buffer.epoch,
+        newEpoch,
+        oldState: buffer.state,
+        reason: 'Buffer in FINALIZING/CLOSED state, switching to new epoch',
+      },
+      'AudioAggregator: [StateMachine] Buffer in finalizing/closed state, switching epoch'
+    );
+    buffer = createEmptyBuffer(bufferKey, sessionId, utteranceIndex, nowMs, newEpoch);
+    buffers.set(bufferKey, buffer);
+    return buffer;
+  }
+
+  buffer.lastWriteAt = nowMs;
+  logger.debug(
+    {
+      jobId: job.job_id,
+      bufferKey,
+      epoch: buffer.epoch,
+      state: buffer.state,
+      sessionId,
+      utteranceIndex,
+      hasPendingTimeoutAudio: !!buffer.pendingTimeoutAudio,
+      hasPendingSmallSegments: buffer.pendingSmallSegments.length > 0,
+      chunkCount: buffer.audioChunks.length,
+      totalDurationMs: buffer.totalDurationMs,
+      reason: 'Buffer found, checking state',
+    },
+    'AudioAggregator: [Debug] Buffer found, checking state'
+  );
+  return buffer;
+}
 
 /** 创建空 buffer（新建或新 epoch）的统一样式 */
 export function createEmptyBuffer(

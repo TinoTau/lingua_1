@@ -29,6 +29,7 @@ pub struct Participant {
 /// 房间信息
 #[derive(Debug, Clone)]
 pub struct Room {
+    #[allow(dead_code)]
     pub room_code: String, // 6位数字房间码
     pub room_id: String, // 服务器内部唯一 ID
     pub participants: HashMap<String, Participant>, // key: session_id

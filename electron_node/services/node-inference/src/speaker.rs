@@ -142,7 +142,7 @@ impl SpeakerIdentifier {
         let extract_result = client.extract_embedding(audio_data).await?;
 
         // 3. 更新或保存 embedding
-        if let Some(embedding) = extract_result.embedding {
+        if let Some(ref embedding) = extract_result.embedding {
             let mut embeddings = self.speaker_embeddings.write().await;
             if let Some(existing_emb) = embeddings.get_mut(&speaker_id) {
                 // 使用加权平均更新 embedding（持续优化音色）

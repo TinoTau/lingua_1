@@ -3,7 +3,7 @@
  * 从 original-job-result-dispatcher.ts 迁出，仅迁移实现，不新增逻辑与调用路径。
  */
 
-import type { OriginalJobASRData } from './original-job-result-dispatcher';
+import type { OriginalJobASRData } from './original-job-result-dispatcher-types';
 import type { SegmentInfo } from '../task-router/types';
 
 /** 用于构建 finalAsrData 的最小 registration 形状 */

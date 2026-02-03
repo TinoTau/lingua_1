@@ -1,4 +1,4 @@
-impl Phase2Runtime {
+impl RedisRuntime {
     pub async fn job_fsm_reset_created(
         &self,
         job_id: &str,

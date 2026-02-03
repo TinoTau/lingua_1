@@ -11,15 +11,14 @@ max_concurrent_jobs_per_node = 4
 job_timeout_seconds = 60  # 调整为60秒以容纳流式ASR聚合的额外等待时间（从30秒延长）
 heartbeat_interval_seconds = 15
 
-[scheduler.phase2]
-# Phase 2（决策版 + v1.1 补充）：Redis / 多实例基础能力
+[scheduler.redis_runtime]
+# Redis 运行时（多实例 presence、Streams inbox 等）
 # - instance presence（schedulers:presence:<instance_id>，TTL=2*heartbeat_interval_seconds）
 # - node/session owner（nodes:owner / sessions:owner，带 TTL）
 # - 跨实例投递（Redis Streams per-instance inbox；Job 指令/结果走 Streams，避免 Pub/Sub 丢消息）
 # 
-# 注意：Phase2 需要 Redis 5.0+ (支持 Streams)
-# Redis 已升级到 7.x (Docker)，现已启用 Phase2
-enabled = true  # 启用 Phase2（多实例模式）
+# 需要 Redis 5.0+ (支持 Streams)
+enabled = true
 # 留空或 "auto" 将在启动时生成：hostname + pid + 短 uuid
 instance_id = "auto"
 # owner key TTL（秒）
@@ -41,8 +40,8 @@ dlq_min_idle_ms = 60000
 dlq_scan_interval_ms = 5000
 dlq_scan_count = 100
 
-[scheduler.phase2.schema_compat]
-# Phase2：Redis schema 对齐兼容层（默认关闭）
+[scheduler.redis_runtime.schema_compat]
+# Redis schema 对齐兼容层（默认关闭）
 # 用途：补写文档建议的 v1 keys（不会替换现有实现，只是额外写入，便于对齐/观察/迁移）
 enabled = false
 
@@ -60,7 +59,7 @@ node_caps_ttl_seconds = 0
 session_bind_enabled = false
 session_bind_ttl_seconds = 3600
 
-[scheduler.phase2.redis]
+[scheduler.redis_runtime.redis]
 # "single" | "cluster"
 mode = "single"
 # 单实例 Redis URL（mode=single）
@@ -71,7 +70,7 @@ url = "redis://127.0.0.1:6379"
 # key 前缀（多环境隔离）
 key_prefix = "lingua"
 
-[scheduler.phase2.node_snapshot]
+[scheduler.redis_runtime.node_snapshot]
 # 是否启用“节点快照同步”（使任意 Scheduler 实例都拥有全量节点视图）
 enabled = true
 # 节点 presence TTL（秒）：redis key 过期即视为离线

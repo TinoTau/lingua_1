@@ -1,19 +1,18 @@
-# 启动统一语义修复服务
+# 启动统一语义修复服务（优先使用本目录下 venv 的 Python，保证在虚拟环境中运行）
 
 Write-Host "Starting Unified Semantic Repair Service..." -ForegroundColor Green
 
-# 切换到服务目录
-$ServiceDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+# 服务根目录 = 脚本所在目录的上两级（scripts/service -> 服务根）
+$ServiceDir = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $ServiceDir
 
-# 检查虚拟环境
-if (Test-Path "venv\Scripts\Activate.ps1") {
-    Write-Host "Activating virtual environment..." -ForegroundColor Yellow
-    & "venv\Scripts\Activate.ps1"
+$pythonExe = "python"
+if (Test-Path "venv\Scripts\python.exe") {
+    $pythonExe = "venv\Scripts\python.exe"
+    Write-Host "Using venv Python: $pythonExe" -ForegroundColor Yellow
 } else {
-    Write-Host "Warning: Virtual environment not found. Using global Python." -ForegroundColor Yellow
+    Write-Host "Warning: venv not found, using system Python." -ForegroundColor Yellow
 }
 
-# 启动服务
 Write-Host "Starting service on port 5015..." -ForegroundColor Green
-python service.py
+& $pythonExe service.py

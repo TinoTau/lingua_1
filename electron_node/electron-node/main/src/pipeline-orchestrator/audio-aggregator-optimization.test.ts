@@ -195,15 +195,17 @@ describe('AudioAggregator 优化功能测试', () => {
 
   describe('场景2：长音频（timeout finalize）', () => {
     it('应该正确处理 timeout finalize 并缓存短音频', async () => {
-      const audio = createMockPcm16Audio(800); // 0.8秒，小于1秒阈值，会缓存到 pending
+      const audio = createMockPcm16Audio(800); // 0.8秒，is_timeout_triggered 时立即 finalize 并输出
       const job = createJobAssignMessage('job-1', 'test-session-1', 0, audio, {
         is_timeout_triggered: true,
       });
 
-      await aggregator.processAudioChunk(job);
-      const status = aggregator.getBufferStatusByKey('job-1');
-      expect(status).not.toBeNull();
-      expect(status?.hasPendingTimeoutAudio).toBe(true);
+      const result = await aggregator.processAudioChunk(job);
+      expect(result).not.toBeNull();
+      expect(result.reason).toBeDefined();
+      // 当前逻辑：is_timeout_triggered 时直接 finalize，不缓存到 pending
+      expect(result.shouldReturnEmpty).toBe(false);
+      expect(result.audioSegments).toBeDefined();
     });
 
     it('应该合并 pendingTimeoutAudio 到下一个 job', async () => {

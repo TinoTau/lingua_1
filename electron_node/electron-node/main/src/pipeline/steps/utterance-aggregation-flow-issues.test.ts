@@ -166,11 +166,11 @@ describe('Utterance聚合流程潜在问题验证', () => {
   describe('问题3: getServiceIdForLanguage() 和 selectServiceEndpoint() 是否重复查找', () => {
     it('每次调用routeSemanticRepairTask都会查找服务端点（没有缓存）', async () => {
       const mockGetServiceEndpointById = jest.fn().mockReturnValue({
-        serviceId: 'semantic-repair-zh',
+        serviceId: 'semantic-repair-en-zh',
         baseUrl: 'http://localhost:8000',
       });
       const mockSelectServiceEndpoint = jest.fn().mockReturnValue({
-        serviceId: 'semantic-repair-zh',
+        serviceId: 'semantic-repair-en-zh',
         baseUrl: 'http://localhost:8000',
       });
 
@@ -237,12 +237,9 @@ describe('Utterance聚合流程潜在问题验证', () => {
         meta: {},
       });
 
-      // 验证每次 route 都会查找服务端点（当前实现可能有多处调用，至少 2 次）
-      expect(mockGetServiceEndpointById).toHaveBeenCalledWith('semantic-repair-zh');
-      expect(mockGetServiceEndpointById.mock.calls.length).toBeGreaterThanOrEqual(2);
-      
-      // 结论：当前实现没有缓存服务端点，每次调用都会查找
-      // 这是潜在的性能问题，建议添加缓存
+      // 当前实现每次 route 都会调用 getServiceEndpointById 解析端点（无按 lang 缓存）
+      expect(mockGetServiceEndpointById).toHaveBeenCalledWith('semantic-repair-en-zh');
+      expect(mockGetServiceEndpointById).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -257,7 +254,7 @@ describe('Utterance聚合流程潜在问题验证', () => {
       };
 
       const mockGetServiceEndpointById = jest.fn().mockReturnValue({
-        serviceId: 'semantic-repair-zh',
+        serviceId: 'semantic-repair-en-zh',
         baseUrl: 'http://localhost:8000',
       });
 

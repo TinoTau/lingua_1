@@ -4,8 +4,9 @@
 
 use std::sync::Arc;
 use lingua_scheduler::node_registry::NodeRegistry;
-use lingua_scheduler::phase2::RedisHandle;
+use lingua_scheduler::redis_runtime::RedisHandle;
 use lingua_scheduler::messages::ServiceType;
+use lingua_scheduler::Config;
 
 #[tokio::main]
 async fn main() {
@@ -17,16 +18,17 @@ async fn main() {
     println!("🚀 开始测试 Redis 直查节点选择功能...\n");
     
     // 连接 Redis
-    use lingua_scheduler::core::config::Phase2RedisConfig;
+    use lingua_scheduler::core::config::RedisConnectionConfig;
     
-    let redis_config = Phase2RedisConfig {
+    let redis_config = RedisConnectionConfig {
         mode: "single".to_string(),
         url: "redis://127.0.0.1:6379".to_string(),
         cluster_urls: Vec::new(),
         key_prefix: "lingua:v1".to_string(),
     };
     
-    let redis = match RedisHandle::connect(&redis_config).await {
+    let scheduler_config = Config::default().scheduler;
+    let redis: Arc<RedisHandle> = match RedisHandle::connect(&redis_config, &scheduler_config).await {
         Ok(r) => {
             println!("✅ Redis 连接成功");
             Arc::new(r)
@@ -60,7 +62,7 @@ async fn main() {
                     println!("节点 {}: {}", i + 1, node.node_id);
                     println!("  状态: {}", node.status);
                     println!("  在线: {}", if node.online { "是" } else { "否" });
-                    println!("  语言集合: {:?}", node.lang_sets);
+                    println!("  已安装服务: {} 个", node.installed_services.len());
                     println!("  GPU: {}", if node.has_gpu { "有" } else { "无" });
                     println!("  容量: {}/{}", node.current_jobs, node.max_concurrency);
                     println!("  资源使用:");

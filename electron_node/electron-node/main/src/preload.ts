@@ -46,7 +46,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.removeAllListeners('models:error');
   },
 
-  // 节点管理
+  // 节点管理（调度器地址来自配置，供 UI 显示）
+  getSchedulerUrl: () => ipcRenderer.invoke('get-scheduler-url'),
   getNodeStatus: () => ipcRenderer.invoke('get-node-status'),
   reconnectNode: () => ipcRenderer.invoke('reconnect-node'),
   generatePairingCode: () => ipcRenderer.invoke('generate-pairing-code'),
@@ -68,7 +69,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // 服务偏好（记住用户上一次选择的功能）
   getServicePreferences: () => ipcRenderer.invoke('get-service-preferences'),
   setServicePreferences: (prefs: {
-    rustEnabled: boolean;
     nmtEnabled: boolean;
     ttsEnabled: boolean;
     yourttsEnabled: boolean;
@@ -79,18 +79,19 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // 处理效率指标（OBS-1）
   getProcessingMetrics: () => ipcRenderer.invoke('get-processing-metrics'),
 
-  // 语义修复服务管理（使用 string 类型支持动态服务）
   getSemanticRepairServiceStatus: (serviceId: string) => ipcRenderer.invoke('get-semantic-repair-service-status', serviceId),
-  getAllSemanticRepairServiceStatuses: () => ipcRenderer.invoke('get-all-semantic-repair-service-statuses'),
-  startSemanticRepairService: (serviceId: string) => ipcRenderer.invoke('start-semantic-repair-service', serviceId),
-  stopSemanticRepairService: (serviceId: string) => ipcRenderer.invoke('stop-semantic-repair-service', serviceId),
-  
+
+  /** 联调/测试：用模拟 ASR 文本跑完整 pipeline（聚合 → 语义修复 → 去重 → NMT） */
+  runPipelineWithMockAsr: (asrText: string, srcLang?: string, tgtLang?: string) =>
+    ipcRenderer.invoke('run-pipeline-with-mock-asr', asrText, srcLang, tgtLang),
+
   // 获取所有服务的元数据（用于动态显示服务信息）
   getAllServiceMetadata: () => ipcRenderer.invoke('get-all-service-metadata'),
 
-  // 新的统一服务管理 API（使用服务发现）
+  // 服务发现与启停（统一入口：statuses 一次拉取，start/stop 通用）
   serviceDiscovery: {
     list: () => ipcRenderer.invoke('services:list'),
+    statuses: () => ipcRenderer.invoke('services:statuses'),
     refresh: () => ipcRenderer.invoke('services:refresh'),
     start: (serviceId: string) => ipcRenderer.invoke('services:start', serviceId),
     stop: (serviceId: string) => ipcRenderer.invoke('services:stop', serviceId),

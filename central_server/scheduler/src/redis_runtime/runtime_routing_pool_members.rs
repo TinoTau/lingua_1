@@ -2,7 +2,7 @@
 
 use std::collections::HashSet;
 
-impl Phase2Runtime {
+impl RedisRuntime {
     // 以下方法已废弃，未在生产代码中使用
     #[allow(dead_code)]
     /// 同步单个 Pool 的成员索引到 Redis Set

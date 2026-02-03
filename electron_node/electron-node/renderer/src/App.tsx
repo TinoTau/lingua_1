@@ -21,7 +21,7 @@ function App() {
       } catch (error) {
         console.error('Failed to fetch node status:', error);
       }
-      
+
       try {
         const resources = await window.electronAPI.getSystemResources();
         setSystemResources(resources);
@@ -41,12 +41,21 @@ function App() {
     setCurrentPage('main');
   };
 
+  const refreshNodeStatus = async () => {
+    try {
+      const status = await window.electronAPI.getNodeStatus();
+      setNodeStatus(status);
+    } catch (error) {
+      console.error('Failed to fetch node status:', error);
+    }
+  };
+
   return (
     <div className="lap-root">
       <header className="lap-header">
         <h1>Lingua Node 客户端</h1>
         <div className="lap-header-status">
-          <NodeStatus status={nodeStatus} />
+          <NodeStatus status={nodeStatus} onRefreshStatus={refreshNodeStatus} />
         </div>
       </header>
 
@@ -54,8 +63,8 @@ function App() {
         {currentPage === 'main' ? (
           <>
             <div className="lap-left-panel">
-              <SystemResources 
-                resources={systemResources} 
+              <SystemResources
+                resources={systemResources}
                 onOpenModelManagement={handleOpenModelManagement}
               />
             </div>

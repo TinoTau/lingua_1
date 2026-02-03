@@ -1,6 +1,6 @@
-impl Phase2Runtime {
+impl RedisRuntime {
     pub async fn new(
-        cfg: crate::core::config::Phase2Config,
+        cfg: crate::core::config::RedisRuntimeConfig,
         scheduler_heartbeat_interval_seconds: u64,
         scheduler_cfg: &crate::core::config::SchedulerConfig,
     ) -> anyhow::Result<Option<Self>> {
@@ -19,12 +19,12 @@ impl Phase2Runtime {
             cfg,
             redis,
             // 从 scheduler_cfg 中读取配置值
-            owner_ttl_base_seconds: scheduler_cfg.limits.phase2_owner_ttl_base_seconds,
-            owner_ttl_divisor: scheduler_cfg.limits.phase2_owner_ttl_divisor,
-            owner_ttl_min_seconds: scheduler_cfg.limits.phase2_owner_ttl_min_seconds,
-            presence_ttl_min_seconds: scheduler_cfg.limits.phase2_presence_ttl_min_seconds,
-            presence_ttl_divisor: scheduler_cfg.limits.phase2_presence_ttl_divisor,
-            presence_ttl_absolute_min_seconds: scheduler_cfg.limits.phase2_presence_ttl_absolute_min_seconds,
+            owner_ttl_base_seconds: scheduler_cfg.limits.redis_owner_ttl_base_seconds,
+            owner_ttl_divisor: scheduler_cfg.limits.redis_owner_ttl_divisor,
+            owner_ttl_min_seconds: scheduler_cfg.limits.redis_owner_ttl_min_seconds,
+            presence_ttl_min_seconds: scheduler_cfg.limits.redis_presence_ttl_min_seconds,
+            presence_ttl_divisor: scheduler_cfg.limits.redis_presence_ttl_divisor,
+            presence_ttl_absolute_min_seconds: scheduler_cfg.limits.redis_presence_ttl_absolute_min_seconds,
         };
 
         // 关键：在真正对外提供路由/投递之前，先确保 inbox stream 的 consumer group 已创建。
@@ -32,7 +32,7 @@ impl Phase2Runtime {
         // 会导致这些"早到消息"被 group 起点跳过，从而出现跨实例链路偶发丢投递（非常难排查）。
         let inbox = rt.instance_inbox_stream_key(&rt.instance_id);
         if !rt.ensure_group(&inbox).await {
-            warn!(instance_id = %rt.instance_id, stream = %inbox, "Phase2 consumer group 初始化失败，将在 worker 启动时重试");
+            warn!(instance_id = %rt.instance_id, stream = %inbox, "Redis consumer group 初始化失败，将在 worker 启动时重试");
         }
 
         Ok(Some(rt))

@@ -16,7 +16,6 @@ import {
 import { DEFAULT_DEDUP_CONFIG, DedupConfig } from './dedup';
 import { DEFAULT_TAIL_CARRY_CONFIG, TailCarryConfig } from './tail-carry';
 import { SegmentInfo } from '../task-router/types';
-import logger from '../logger';
 import { AggregatorStateContextManager } from './aggregator-state-context';
 import { AggregatorStateTextProcessor } from './aggregator-state-text-processor';
 import { AggregatorStateMergeGroupManager } from './aggregator-state-merge-group-manager';
@@ -25,7 +24,7 @@ import { AggregatorStateUtteranceProcessor } from './aggregator-state-utterance-
 import { AggregatorStateActionDecider } from './aggregator-state-action-decider';
 import { AggregatorStatePendingManager } from './aggregator-state-pending-manager';
 import { AggregatorStateCommitExecutor } from './aggregator-state-commit-executor';
-import { runCommitAndGetStateUpdate } from './aggregator-state-transitions';
+import { processOneUtterance } from './aggregator-state-process-utterance';
 
 export interface AggregatorMetrics {
   commitCount: number;
@@ -151,10 +150,7 @@ export class AggregatorState {
     isManualCut: boolean = false,
     isTimeoutTriggered: boolean = false
   ): AggregatorCommitResult {
-    const nowMs = Date.now();
-
-    // 使用 utterance 处理器进行预处理
-    const utteranceResult = this.utteranceProcessor.processUtterance(
+    const { result, stateUpdate } = processOneUtterance(
       text,
       segments,
       langProbs,
@@ -162,302 +158,39 @@ export class AggregatorState {
       isFinal,
       isManualCut,
       isTimeoutTriggered,
-      this.sessionStartTimeMs,
-      this.lastUtteranceEndTimeMs
-    );
-
-    const curr = utteranceResult.utteranceInfo;
-    const startMs = utteranceResult.utteranceTime.startMs;
-    const endMs = utteranceResult.utteranceTime.endMs;
-    const gapMs = utteranceResult.utteranceTime.gapMs;
-
-    // 更新会话开始时间
-    if (utteranceResult.utteranceTime.newSessionStartTimeMs !== this.sessionStartTimeMs) {
-      this.sessionStartTimeMs = utteranceResult.utteranceTime.newSessionStartTimeMs;
-    }
-
-    // 更新指标
-    if (utteranceResult.hasMissingSegments) {
-      this.metrics.missingGapCount++;
-    }
-
-    // 使用动作决策器决定流动作
-    const action = this.actionDecider.decideAction(this.lastUtterance, curr);
-
-    // 更新指标
-    if (action === 'MERGE') {
-      this.metrics.mergeCount++;
-    } else {
-      this.metrics.newStreamCount++;
-    }
-
-    // 使用合并组管理器判断是否是合并组的第一个
-    const currentMergeGroupState = this.mergeGroupManager.getState();
-    const isFirstInMergedGroup = this.mergeGroupManager.checkIsFirstInMergedGroup(
-      action,
-      this.pendingText,
-      this.lastUtterance
-    );
-
-    // 添加调试日志
-    if (action === 'MERGE') {
-      logger.info(
-        {
-          text: text.substring(0, 50),
-          pendingText: this.pendingText.substring(0, 50),
-          hasMergeGroupStart: currentMergeGroupState.mergeGroupStartUtterance !== null,
-          hasLastUtterance: this.lastUtterance !== null,
-          lastUtteranceText: this.lastUtterance?.text.substring(0, 50),
-          isFirstInMergedGroup,
-        },
-        'AggregatorState: MERGE action, checking isFirstInMergedGroup'
-      );
-    }
-
-    // 使用文本处理器处理文本合并和去重
-    const textProcessResult = this.textProcessor.processText(
-      action,
-      utteranceResult.processedText,
-      this.lastUtterance,
-      this.tailBuffer
-    );
-    const processedText = textProcessResult.processedText;
-    let deduped = textProcessResult.deduped;
-    let dedupChars = textProcessResult.dedupChars;
-
-    // 更新指标
-    if (deduped) {
-      this.metrics.dedupCount++;
-      this.metrics.dedupCharsRemoved += dedupChars;
-    }
-    if (textProcessResult.tailBufferCleared) {
-      this.tailBuffer = '';
-      this.metrics.tailCarryUsage++;
-    }
-
-    // 使用 pending manager 处理文本合并和状态管理
-    // 修复：在NEW_STREAM时，先保存之前的pendingText，用于提交
-    const previousPendingText = action === 'NEW_STREAM' ? this.pendingText : '';
-
-    let pendingUpdateResult: { newPendingText: string; newTailBuffer: string; mergeGroupStateSynced: boolean };
-    if (action === 'MERGE' && this.lastUtterance) {
-      pendingUpdateResult = this.pendingManager.handleMerge(
-        processedText,
-        this.pendingText,
-        curr,
-        startMs,
-        endMs,
-        isFirstInMergedGroup
-      );
-    } else {
-      pendingUpdateResult = this.pendingManager.handleNewStream(
-        processedText,
-        this.pendingText,
-        this.tailBuffer
-      );
-
-      // 修复：在NEW_STREAM时，如果之前的pendingText存在，先提交之前的文本
-      // 这样可以确保之前的文本被记录到recentCommittedText中，用于去重
-      if (previousPendingText && previousPendingText.trim().length > 0) {
-        // 使用临时提交处理器判断是否需要提交之前的文本
-        const previousMergeGroupState = this.mergeGroupManager.getState();
-        const previousCommitDecision = this.commitHandler.decideCommit(
-          'NEW_STREAM',
-          previousPendingText,
-          this.lastCommitTsMs,
-          nowMs,
-          previousMergeGroupState.mergeGroupStartTimeMs,
-          isFinal,
-          isManualCut,
-          isTimeoutTriggered
-        );
-
-        // 如果之前的文本应该提交（手动发送、超时、或最终结果），先提交它
-        const shouldCommitPrevious = previousCommitDecision.commitByManualCut ||
-          previousCommitDecision.commitByTimeout || isFinal;
-        if (shouldCommitPrevious) {
-          const previousCommitResult = this.commitExecutor.executeCommit(
-            previousPendingText,
-            this.tailBuffer,
-            isFinal,
-            isManualCut,
-            qualityScore,
-            gapMs,
-            previousCommitDecision.commitByManualCut,
-            previousCommitDecision.commitByTimeout
-          );
-          const previousCommitText = previousCommitResult.commitText;
-          if (previousCommitText && previousCommitText.trim().length > 0) {
-            // 注意：不再在聚合阶段更新recentCommittedText
-            // 只在语义修复后更新，确保recentCommittedText中只包含最终提交的文本
-            logger.info(
-              {
-                text: previousCommitText.substring(0, 50),
-                textLength: previousCommitText.length,
-                action: 'NEW_STREAM',
-                reason: 'Committed previous pendingText before starting new stream, for deduplication',
-              },
-              'AggregatorState: Committed previous pendingText in NEW_STREAM for deduplication'
-            );
-          }
-        }
-      }
-    }
-
-    // 更新 pending text 和 tail buffer
-    this.pendingText = pendingUpdateResult.newPendingText;
-    this.tailBuffer = pendingUpdateResult.newTailBuffer;
-
-    // 同步合并组状态
-    if (pendingUpdateResult.mergeGroupStateSynced) {
-      const syncedState = this.pendingManager.syncMergeGroupState();
-      this.mergeGroupStartUtterance = syncedState.mergeGroupStartUtterance;
-      this.mergeGroupStartTimeMs = syncedState.mergeGroupStartTimeMs;
-      this.accumulatedAudioDurationMs = syncedState.accumulatedAudioDurationMs;
-    }
-
-    // 更新状态
-    this.lastUtterance = curr;
-    this.lastUtteranceEndTimeMs = endMs;
-    if (this.sessionStartTimeMs === 0) {
-      this.sessionStartTimeMs = startMs;
-    }
-
-    // 使用提交处理器判断是否需要提交
-    const mergeGroupState = this.mergeGroupManager.getState();
-    const commitDecision = this.commitHandler.decideCommit(
-      action,
-      this.pendingText,
-      this.lastCommitTsMs,
-      nowMs,
-      mergeGroupState.mergeGroupStartTimeMs,
-      isFinal,
-      isManualCut,
-      isTimeoutTriggered
-    );
-
-    const isLastInMergedGroup = commitDecision.isLastInMergedGroup;
-    const commitByManualCut = commitDecision.commitByManualCut;
-    const commitByTimeout = commitDecision.commitByTimeout;
-    // 判断是否需要提交：手动发送、10秒超时、或最终结果
-    const shouldCommitNow = commitByManualCut || commitByTimeout || isFinal;
-
-    // 如果收到手动发送标识，清空合并组状态
-    if (commitByManualCut && action === 'MERGE') {
-      this.mergeGroupManager.clearMergeGroup();
-      // 同步状态
-      const newState = this.mergeGroupManager.getState();
-      this.mergeGroupStartUtterance = newState.mergeGroupStartUtterance;
-      this.mergeGroupStartTimeMs = newState.mergeGroupStartTimeMs;
-      this.accumulatedAudioDurationMs = newState.accumulatedAudioDurationMs;
-    }
-
-    // 记录提交条件的判断（用于调试）
-    this.commitHandler.logCommitDecision(
-      action,
-      text,
-      commitDecision,
-      gapMs,
-      this.accumulatedAudioDurationMs,
-      mergeGroupState.mergeGroupStartTimeMs,
-      this.pendingText.length,
-      this.lastCommitTsMs,
-      nowMs,
-      isFinal,
-      isManualCut
-    );
-
-    // 计算首次输出延迟
-    if (this.metrics.commitCount === 0 && shouldCommitNow) {
-      this.metrics.commitLatencyMs = nowMs - this.sessionStartTimeMs;
-    }
-
-    // 如果需要 commit，使用提交执行器执行提交（委托 transitions 执行，再写回 state）
-    let commitText = '';
-    if (shouldCommitNow && this.pendingText) {
-      const update = runCommitAndGetStateUpdate(
-        this.commitExecutor,
-        this.pendingText,
-        this.tailBuffer,
-        isFinal,
-        isManualCut,
-        qualityScore,
-        gapMs,
-        commitByManualCut,
-        commitByTimeout
-      );
-      commitText = update.commitText;
-      this.tailBuffer = update.newTailBuffer;
-      if (update.tailCarryUsed) {
-        this.metrics.tailCarryUsage++;
-      }
-      this.pendingText = '';
-      this.lastCommitTsMs = nowMs;
-      this.metrics.commitCount++;
-      this.mergeGroupStartUtterance = update.syncedState.mergeGroupStartUtterance;
-      this.mergeGroupStartTimeMs = update.syncedState.mergeGroupStartTimeMs;
-      this.accumulatedAudioDurationMs = update.syncedState.accumulatedAudioDurationMs;
-    } else if (isFinal && this.pendingText) {
-      // 如果是 final 但没有触发 commit（可能是因为 pending 文本太短），强制提交
-      const update = runCommitAndGetStateUpdate(
-        this.commitExecutor,
-        this.pendingText,
-        this.tailBuffer,
-        true,
-        isManualCut,
-        qualityScore,
-        gapMs,
-        commitByManualCut,
-        commitByTimeout
-      );
-      commitText = update.commitText;
-      this.tailBuffer = update.newTailBuffer;
-      if (update.tailCarryUsed) {
-        this.metrics.tailCarryUsage++;
-      }
-      this.pendingText = '';
-      this.lastCommitTsMs = nowMs;
-      this.metrics.commitCount++;
-      this.mergeGroupStartUtterance = update.syncedState.mergeGroupStartUtterance;
-      this.mergeGroupStartTimeMs = update.syncedState.mergeGroupStartTimeMs;
-      this.accumulatedAudioDurationMs = update.syncedState.accumulatedAudioDurationMs;
-    }
-
-    // 新逻辑：判断是否是合并组中的最后一个
-    // 如果是 MERGE 且触发提交，则当前 utterance 是最后一个
-    // 提交可能由以下条件触发：
-    // 1. 手动发送（commitByManualCut）
-    // 2. 10秒超时（commitByTimeout）
-    // 3. isFinal（最终结果）
-    // 注意：已移除基于字符数量的提交逻辑，避免与shouldWaitForMerge矛盾
-    // isLastInMergedGroup 已经在上面根据 shouldCommitNow 设置
-
-    // 添加调试日志
-    if (action === 'MERGE') {
-      logger.info(  // 改为 info 级别，确保日志输出
-        {
-          text: text.substring(0, 50),
-          isLastInMergedGroup,
-          commitByManualCut,
-          commitByTimeout,
-          isFinal,
-          hasCommitText: !!commitText,
-          commitTextLength: commitText.length,
-        },
-        'AggregatorState: MERGE action, isLastInMergedGroup determination'
-      );
-    }
-
-    return {
-      text: commitText,
-      action,
-      isFirstInMergedGroup: action === 'MERGE' ? isFirstInMergedGroup : undefined,  // 保留用于兼容
-      isLastInMergedGroup: action === 'MERGE' ? isLastInMergedGroup : undefined,  // 新逻辑
-      metrics: {
-        dedupCount: deduped ? 1 : 0,
-        dedupCharsRemoved: dedupChars,
+      {
+        sessionStartTimeMs: this.sessionStartTimeMs,
+        lastUtteranceEndTimeMs: this.lastUtteranceEndTimeMs,
+        lastUtterance: this.lastUtterance,
+        pendingText: this.pendingText,
+        tailBuffer: this.tailBuffer,
+        lastCommitTsMs: this.lastCommitTsMs,
+        mergeGroupStartUtterance: this.mergeGroupStartUtterance,
+        mergeGroupStartTimeMs: this.mergeGroupStartTimeMs,
+        accumulatedAudioDurationMs: this.accumulatedAudioDurationMs,
+        metrics: this.metrics,
       },
-    };
+      {
+        utteranceProcessor: this.utteranceProcessor,
+        actionDecider: this.actionDecider,
+        mergeGroupManager: this.mergeGroupManager,
+        textProcessor: this.textProcessor,
+        pendingManager: this.pendingManager,
+        commitHandler: this.commitHandler,
+        commitExecutor: this.commitExecutor,
+      }
+    );
+    this.sessionStartTimeMs = stateUpdate.sessionStartTimeMs;
+    this.lastUtteranceEndTimeMs = stateUpdate.lastUtteranceEndTimeMs;
+    this.lastUtterance = stateUpdate.lastUtterance;
+    this.pendingText = stateUpdate.pendingText;
+    this.tailBuffer = stateUpdate.tailBuffer;
+    this.lastCommitTsMs = stateUpdate.lastCommitTsMs;
+    this.mergeGroupStartUtterance = stateUpdate.mergeGroupStartUtterance;
+    this.mergeGroupStartTimeMs = stateUpdate.mergeGroupStartTimeMs;
+    this.accumulatedAudioDurationMs = stateUpdate.accumulatedAudioDurationMs;
+    this.metrics = stateUpdate.metrics;
+    return result;
   }
 
   /**

@@ -4,7 +4,6 @@
  */
 
 import { SemanticRepairStage } from './semantic-repair-stage';
-import { SemanticRepairServiceInfo } from '../node-agent-services-semantic-repair';
 import { JobAssignMessage } from '@shared/protocols/messages';
 import { TaskRouter } from '../../task-router/task-router';
 import { SemanticRepairStageZH } from './semantic-repair-stage-zh';
@@ -18,27 +17,15 @@ jest.mock('./en-normalize-stage');
 describe('SemanticRepairStage - Phase 2', () => {
   let stage: SemanticRepairStage;
   let mockTaskRouter: TaskRouter | null;
-  let mockInstalledServices: SemanticRepairServiceInfo;
-  let mockConfig: any;
+  let mockConfig: { zh: { enabled: boolean; qualityThreshold: number }; en: { normalizeEnabled: boolean; repairEnabled: boolean; qualityThreshold: number } };
 
   beforeEach(() => {
     mockTaskRouter = {} as TaskRouter;
-    mockInstalledServices = {
-      zh: true,
-      en: true,
-      enNormalize: true,
-      services: [
-        { serviceId: 'semantic-repair-zh', status: 'running' },
-        { serviceId: 'semantic-repair-en', status: 'running' },
-        { serviceId: 'en-normalize', status: 'running' },
-      ],
-    };
     mockConfig = {
       zh: { enabled: true, qualityThreshold: 0.70 },
       en: { normalizeEnabled: true, repairEnabled: true, qualityThreshold: 0.70 },
     };
 
-    // Mock子Stage的process方法
     (SemanticRepairStageZH as jest.MockedClass<typeof SemanticRepairStageZH>).mockImplementation(() => ({
       process: jest.fn().mockResolvedValue({
         textOut: '修复后的中文文本',
@@ -65,7 +52,7 @@ describe('SemanticRepairStage - Phase 2', () => {
       }),
     } as any));
 
-    stage = new SemanticRepairStage(mockTaskRouter, mockInstalledServices, mockConfig);
+    stage = new SemanticRepairStage(mockTaskRouter, mockConfig);
   });
 
   const createJob = (srcLang: string = 'zh'): JobAssignMessage => ({
@@ -114,11 +101,11 @@ describe('SemanticRepairStage - Phase 2', () => {
     });
 
     it('应该在中文Stage不可用时抛出 SEM_REPAIR_UNAVAILABLE', async () => {
-      const servicesWithoutZH: SemanticRepairServiceInfo = {
-        ...mockInstalledServices,
-        zh: false,
+      const configNoZh = {
+        zh: { enabled: false, qualityThreshold: 0.70 },
+        en: { normalizeEnabled: true, repairEnabled: true, qualityThreshold: 0.70 },
       };
-      const stageWithoutZH = new SemanticRepairStage(mockTaskRouter, servicesWithoutZH, mockConfig);
+      const stageWithoutZH = new SemanticRepairStage(mockTaskRouter, configNoZh);
 
       const job = createJob('zh');
       await expect(stageWithoutZH.process(job, '测试文本', 0.65)).rejects.toThrow('SEM_REPAIR_UNAVAILABLE');
@@ -129,12 +116,7 @@ describe('SemanticRepairStage - Phase 2', () => {
         process: jest.fn().mockRejectedValue(new Error('Service error')),
       } as any));
 
-      const servicesWithError: SemanticRepairServiceInfo = {
-        ...mockInstalledServices,
-        zh: true,
-      };
-      const stageWithError = new SemanticRepairStage(mockTaskRouter, servicesWithError, mockConfig);
-
+      const stageWithError = new SemanticRepairStage(mockTaskRouter, mockConfig);
       const job = createJob('zh');
       await expect(stageWithError.process(job, '测试文本', 0.65)).rejects.toThrow('Service error');
     });

@@ -93,7 +93,7 @@ describe('LanguageCapabilityDetector', () => {
       expect(capabilities.tts_languages?.length).toBeGreaterThan(0);
     });
 
-    it('应该检测 NMT 服务的能力', async () => {
+    it('应该从 NMT 服务得到语言交集', async () => {
       const installedServices: InstalledService[] = [
         {
           service_id: 'nmt-m2m100',
@@ -117,10 +117,7 @@ describe('LanguageCapabilityDetector', () => {
       ];
 
       const capabilityByType: CapabilityByType[] = [
-        {
-          type: ServiceType.NMT,
-          ready: true,
-        },
+        { type: ServiceType.NMT, ready: true },
       ];
 
       const capabilities = await detector.detectLanguageCapabilities(
@@ -129,8 +126,10 @@ describe('LanguageCapabilityDetector', () => {
         capabilityByType
       );
 
-      expect(capabilities.nmt_capabilities).toBeDefined();
-      expect(capabilities.nmt_capabilities?.length).toBeGreaterThan(0);
+      expect(capabilities.asr_languages).toBeDefined();
+      expect(capabilities.semantic_languages).toBeDefined();
+      expect(capabilities.tts_languages).toBeDefined();
+      expect(capabilities.asr_languages?.length).toBeGreaterThan(0);
     });
 
     it('应该检测语义修复服务的语言', async () => {
@@ -164,32 +163,13 @@ describe('LanguageCapabilityDetector', () => {
       expect(capabilities.semantic_languages).toContain('zh');
     });
 
-    it('应该只统计 READY 状态的服务', async () => {
+    it('应该只统计 running 状态的服务', async () => {
       const installedServices: InstalledService[] = [
-        {
-          service_id: 'asr-ready',
-          model_id: 'faster-whisper',
-          type: ServiceType.ASR,
-          status: 'running',
-          version: '1.0.0',
-        },
-        {
-          service_id: 'asr-not-ready',
-          model_id: 'faster-whisper',
-          type: ServiceType.ASR,
-          status: 'running',
-          version: '1.0.0',
-        },
+        { service_id: 'asr-1', model_id: 'faster-whisper', type: ServiceType.ASR, status: 'running', version: '1.0.0' },
+        { service_id: 'asr-2', model_id: 'faster-whisper', type: ServiceType.ASR, status: 'stopped', version: '1.0.0' },
       ];
-
       const installedModels: InstalledModel[] = [];
-
-      const capabilityByType: CapabilityByType[] = [
-        {
-          type: ServiceType.ASR,
-          ready: true,  // 只有第一个服务是 ready
-        },
-      ];
+      const capabilityByType: CapabilityByType[] = [{ type: ServiceType.ASR, ready: true }];
 
       const capabilities = await detector.detectLanguageCapabilities(
         installedServices,
@@ -197,8 +177,8 @@ describe('LanguageCapabilityDetector', () => {
         capabilityByType
       );
 
-      // 应该只统计 ready 的服务
       expect(capabilities.asr_languages).toBeDefined();
+      expect(capabilities.asr_languages?.length).toBeGreaterThan(0);
     });
 
     it('应该规范化语言代码', async () => {
@@ -302,6 +282,15 @@ describe('LanguageCapabilityDetector', () => {
           version: '1.0.0',
           enabled: true,
         },
+        {
+          model_id: 'piper-tts-zh',
+          kind: 'tts',
+          src_lang: 'zh',
+          tgt_lang: null,
+          dialect: null,
+          version: '1.0.0',
+          enabled: true,
+        },
       ];
 
       const capabilityByType: CapabilityByType[] = [
@@ -329,14 +318,12 @@ describe('LanguageCapabilityDetector', () => {
         capabilityByType
       );
 
+      // ASR [zh]、SEMANTIC [zh]、NMT [zh,en]、TTS [zh,en] 交集为 [zh]
       expect(capabilities.asr_languages).toBeDefined();
-      expect(capabilities.asr_languages?.length).toBeGreaterThan(0);
       expect(capabilities.semantic_languages).toBeDefined();
-      expect(capabilities.semantic_languages?.length).toBeGreaterThan(0);
-      expect(capabilities.nmt_capabilities).toBeDefined();
-      expect(capabilities.nmt_capabilities?.length).toBeGreaterThan(0);
       expect(capabilities.tts_languages).toBeDefined();
-      expect(capabilities.tts_languages?.length).toBeGreaterThan(0);
+      expect(capabilities.asr_languages).toContain('zh');
+      expect(capabilities.asr_languages?.length).toBeGreaterThan(0);
     });
   });
 
@@ -363,7 +350,7 @@ describe('LanguageCapabilityDetector', () => {
       expect(capabilities.semantic_languages).toContain('zh');
     });
 
-    it('应该从服务ID推断多种语言', async () => {
+    it('多语义服务不同语言时交为空', async () => {
       const services: InstalledService[] = [
         {
           service_id: 'semantic-repair-zh',
@@ -390,91 +377,23 @@ describe('LanguageCapabilityDetector', () => {
         [{ type: ServiceType.SEMANTIC, ready: true }]
       );
 
-      expect(capabilities.semantic_languages).toContain('zh');
-      expect(capabilities.semantic_languages).toContain('en');
+      // 交集：[zh] ∩ [en] = []
+      expect(capabilities.semantic_languages).toEqual([]);
     });
   });
 
-  describe('语言对计算基于语义修复服务能力', () => {
-    it('应该只包含源语言和目标语言都在语义修复服务支持列表中的语言对', async () => {
+  describe('运行中服务语言交集', () => {
+    it('多服务时 asr/semantic/tts 均为交集', async () => {
       const installedServices: InstalledService[] = [
-        {
-          service_id: 'asr-whisper',
-          model_id: 'faster-whisper',
-          type: ServiceType.ASR,
-          status: 'running',
-          version: '1.0.0',
-        },
-        {
-          service_id: 'semantic-repair-zh',
-          model_id: 'semantic-repair-zh',
-          type: ServiceType.SEMANTIC,
-          status: 'running',
-          version: '1.0.0',
-        },
-        {
-          service_id: 'nmt-m2m100',
-          model_id: 'm2m100',
-          type: ServiceType.NMT,
-          status: 'running',
-          version: '1.0.0',
-        },
-        {
-          service_id: 'tts-piper',
-          model_id: 'piper-tts',
-          type: ServiceType.TTS,
-          status: 'running',
-          version: '1.0.0',
-        },
+        { service_id: 'asr-1', model_id: 'asr', type: ServiceType.ASR, status: 'running', version: '1.0.0' },
+        { service_id: 'semantic-1', model_id: 'sem', type: ServiceType.SEMANTIC, status: 'running', version: '1.0.0' },
+        { service_id: 'tts-1', model_id: 'tts', type: ServiceType.TTS, status: 'running', version: '1.0.0' },
       ];
-
-      const installedModels: InstalledModel[] = [
-        {
-          model_id: 'faster-whisper',
-          kind: 'asr',
-          src_lang: 'zh',
-          tgt_lang: null,
-          dialect: null,
-          version: '1.0.0',
-          enabled: true,
-        },
-        {
-          model_id: 'm2m100',
-          kind: 'nmt',
-          src_lang: 'zh',
-          tgt_lang: 'en',
-          dialect: null,
-          version: '1.0.0',
-          enabled: true,
-        },
-        {
-          model_id: 'piper-tts',
-          kind: 'tts',
-          src_lang: null,
-          tgt_lang: 'en',
-          dialect: null,
-          version: '1.0.0',
-          enabled: true,
-        },
-      ];
-
+      const installedModels: InstalledModel[] = [];
       const capabilityByType: CapabilityByType[] = [
-        {
-          type: ServiceType.ASR,
-          ready: true,
-        },
-        {
-          type: ServiceType.SEMANTIC,
-          ready: true,
-        },
-        {
-          type: ServiceType.NMT,
-          ready: true,
-        },
-        {
-          type: ServiceType.TTS,
-          ready: true,
-        },
+        { type: ServiceType.ASR, ready: true },
+        { type: ServiceType.SEMANTIC, ready: true },
+        { type: ServiceType.TTS, ready: true },
       ];
 
       const capabilities = await detector.detectLanguageCapabilities(
@@ -483,204 +402,22 @@ describe('LanguageCapabilityDetector', () => {
         capabilityByType
       );
 
-      // 语义修复服务只支持 zh，所以 zh-en 应该被包含（zh 和 en 都在语义修复服务支持列表中）
-      // 但这里语义修复服务只支持 zh，不支持 en，所以 zh-en 不应该被包含
-      expect(capabilities.supported_language_pairs).toBeDefined();
-      if (capabilities.supported_language_pairs) {
-        // 由于语义修复服务只支持 zh，不支持 en，所以 zh-en 不应该在语言对列表中
-        const zhEnPair = capabilities.supported_language_pairs.find(
-          p => p.src === 'zh' && p.tgt === 'en'
-        );
-        // 如果没有语义修复服务支持 en，zh-en 应该被过滤掉
-        expect(zhEnPair).toBeUndefined();
-      }
+      expect(capabilities.asr_languages).toEqual(capabilities.semantic_languages);
+      expect(capabilities.asr_languages).toEqual(capabilities.tts_languages);
+      expect(capabilities.semantic_core_ready).toBe(capabilities.asr_languages && capabilities.asr_languages.length > 0);
     });
 
-    it('应该包含源语言和目标语言都在语义修复服务支持列表中的语言对', async () => {
+    it('无运行中服务时返回空', async () => {
       const installedServices: InstalledService[] = [
-        {
-          service_id: 'asr-whisper',
-          model_id: 'faster-whisper',
-          type: ServiceType.ASR,
-          status: 'running',
-          version: '1.0.0',
-        },
-        {
-          service_id: 'semantic-repair-zh',
-          model_id: 'semantic-repair-zh',
-          type: ServiceType.SEMANTIC,
-          status: 'running',
-          version: '1.0.0',
-        },
-        {
-          service_id: 'semantic-repair-en',
-          model_id: 'semantic-repair-en',
-          type: ServiceType.SEMANTIC,
-          status: 'running',
-          version: '1.0.0',
-        },
-        {
-          service_id: 'nmt-m2m100',
-          model_id: 'm2m100',
-          type: ServiceType.NMT,
-          status: 'running',
-          version: '1.0.0',
-        },
-        {
-          service_id: 'tts-piper',
-          model_id: 'piper-tts',
-          type: ServiceType.TTS,
-          status: 'running',
-          version: '1.0.0',
-        },
+        { service_id: 'asr-1', model_id: 'asr', type: ServiceType.ASR, status: 'stopped', version: '1.0.0' },
       ];
-
-      const installedModels: InstalledModel[] = [
-        {
-          model_id: 'faster-whisper',
-          kind: 'asr',
-          src_lang: 'zh',
-          tgt_lang: null,
-          dialect: null,
-          version: '1.0.0',
-          enabled: true,
-        },
-        {
-          model_id: 'm2m100',
-          kind: 'nmt',
-          src_lang: 'zh',
-          tgt_lang: 'en',
-          dialect: null,
-          version: '1.0.0',
-          enabled: true,
-        },
-        {
-          model_id: 'piper-tts',
-          kind: 'tts',
-          src_lang: null,
-          tgt_lang: 'en',
-          dialect: null,
-          version: '1.0.0',
-          enabled: true,
-        },
-      ];
-
-      const capabilityByType: CapabilityByType[] = [
-        {
-          type: ServiceType.ASR,
-          ready: true,
-        },
-        {
-          type: ServiceType.SEMANTIC,
-          ready: true,
-        },
-        {
-          type: ServiceType.NMT,
-          ready: true,
-        },
-        {
-          type: ServiceType.TTS,
-          ready: true,
-        },
-      ];
-
       const capabilities = await detector.detectLanguageCapabilities(
         installedServices,
-        installedModels,
-        capabilityByType
+        [],
+        [{ type: ServiceType.ASR, ready: false }]
       );
-
-      // 语义修复服务支持 zh 和 en，所以 zh-en 应该被包含
-      expect(capabilities.supported_language_pairs).toBeDefined();
-      if (capabilities.supported_language_pairs) {
-        const zhEnPair = capabilities.supported_language_pairs.find(
-          p => p.src === 'zh' && p.tgt === 'en'
-        );
-        expect(zhEnPair).toBeDefined();
-      }
-    });
-
-    it('如果没有语义修复服务，应该返回空语言对列表', async () => {
-      const installedServices: InstalledService[] = [
-        {
-          service_id: 'asr-whisper',
-          model_id: 'faster-whisper',
-          type: ServiceType.ASR,
-          status: 'running',
-          version: '1.0.0',
-        },
-        {
-          service_id: 'nmt-m2m100',
-          model_id: 'm2m100',
-          type: ServiceType.NMT,
-          status: 'running',
-          version: '1.0.0',
-        },
-        {
-          service_id: 'tts-piper',
-          model_id: 'piper-tts',
-          type: ServiceType.TTS,
-          status: 'running',
-          version: '1.0.0',
-        },
-      ];
-
-      const installedModels: InstalledModel[] = [
-        {
-          model_id: 'faster-whisper',
-          kind: 'asr',
-          src_lang: 'zh',
-          tgt_lang: null,
-          dialect: null,
-          version: '1.0.0',
-          enabled: true,
-        },
-        {
-          model_id: 'm2m100',
-          kind: 'nmt',
-          src_lang: 'zh',
-          tgt_lang: 'en',
-          dialect: null,
-          version: '1.0.0',
-          enabled: true,
-        },
-        {
-          model_id: 'piper-tts',
-          kind: 'tts',
-          src_lang: null,
-          tgt_lang: 'en',
-          dialect: null,
-          version: '1.0.0',
-          enabled: true,
-        },
-      ];
-
-      const capabilityByType: CapabilityByType[] = [
-        {
-          type: ServiceType.ASR,
-          ready: true,
-        },
-        {
-          type: ServiceType.NMT,
-          ready: true,
-        },
-        {
-          type: ServiceType.TTS,
-          ready: true,
-        },
-      ];
-
-      const capabilities = await detector.detectLanguageCapabilities(
-        installedServices,
-        installedModels,
-        capabilityByType
-      );
-
-      // 没有语义修复服务，应该返回空语言对列表
-      expect(capabilities.supported_language_pairs).toBeDefined();
-      if (capabilities.supported_language_pairs) {
-        expect(capabilities.supported_language_pairs.length).toBe(0);
-      }
+      expect(capabilities.asr_languages?.length ?? 0).toBe(0);
+      expect(capabilities.semantic_core_ready).toBeFalsy();
     });
   });
 });

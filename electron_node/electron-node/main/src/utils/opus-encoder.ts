@@ -2,11 +2,14 @@
  * Opus 音频编码工具
  * 使用 @minceraftmc/opus-encoder (WebAssembly) 进行编码
  * 不会修改环境变量，不会影响其他服务（如 NMT）
- * 
+ *
  * 注意：使用延迟导入，避免在模块加载时初始化，确保不影响其他服务（如 NMT）的启动
  */
 
 import logger from '../logger';
+import { pcm16ToFloat32 } from './opus-encoder-wav';
+
+export { parseWavFile } from './opus-encoder-wav';
 
 // 延迟导入 @minceraftmc/opus-encoder，避免在模块加载时初始化
 // 这样可以确保不会影响其他服务（如 NMT）的启动
@@ -125,125 +128,6 @@ export function isOpusEncoderAvailable(): boolean {
     opusAvailable = true;
   }
   return opusAvailable;
-}
-
-/**
- * 将 PCM16 (Int16Array) 转换为 Float32Array
- * @param pcm16Data PCM16 音频数据（Buffer）
- * @returns Float32Array 音频数据（范围 [-1.0, 1.0]）
- */
-function pcm16ToFloat32(pcm16Data: Buffer): Float32Array {
-  const int16Array = new Int16Array(
-    pcm16Data.buffer,
-    pcm16Data.byteOffset,
-    pcm16Data.length / 2
-  );
-  const float32Array = new Float32Array(int16Array.length);
-  for (let i = 0; i < int16Array.length; i++) {
-    // 将 int16 [-32768, 32767] 转换为 float32 [-1.0, 1.0]
-    float32Array[i] = Math.max(-1.0, Math.min(1.0, int16Array[i] / 32768.0));
-  }
-  return float32Array;
-}
-
-/**
- * 解析 WAV 文件，提取 PCM16 音频数据
- */
-export function parseWavFile(wavBuffer: Buffer): { pcm16Data: Buffer; sampleRate: number; channels: number } {
-  // WAV 文件格式：
-  // - 0-3: "RIFF"
-  // - 4-7: 文件大小
-  // - 8-11: "WAVE"
-  // - 12-15: "fmt "
-  // - 16-19: fmt chunk size
-  // - 20-21: audio format (1 = PCM)
-  // - 22-23: num channels
-  // - 24-27: sample rate
-  // - 28-31: byte rate
-  // - 32-33: block align
-  // - 34-35: bits per sample
-  // - 36-39: "data"
-  // - 40-43: data chunk size
-  // - 44+: audio data
-
-  if (wavBuffer.length < 44) {
-    throw new Error('Invalid WAV file: too short');
-  }
-
-  // 检查 RIFF header
-  const riffHeader = wavBuffer.toString('ascii', 0, 4);
-  if (riffHeader !== 'RIFF') {
-    throw new Error('Invalid WAV file: missing RIFF header');
-  }
-
-  // 检查 WAVE header
-  const waveHeader = wavBuffer.toString('ascii', 8, 12);
-  if (waveHeader !== 'WAVE') {
-    throw new Error('Invalid WAV file: missing WAVE header');
-  }
-
-  // 查找 fmt chunk
-  let offset = 12;
-  let fmtChunkFound = false;
-  let sampleRate = 16000;
-  let channels = 1;
-  let bitsPerSample = 16;
-
-  while (offset < wavBuffer.length - 8) {
-    const chunkId = wavBuffer.toString('ascii', offset, offset + 4);
-    const chunkSize = wavBuffer.readUInt32LE(offset + 4);
-
-    if (chunkId === 'fmt ') {
-      fmtChunkFound = true;
-      const audioFormat = wavBuffer.readUInt16LE(offset + 8);
-      if (audioFormat !== 1) {
-        throw new Error(`Unsupported audio format: ${audioFormat} (only PCM format 1 is supported)`);
-      }
-      channels = wavBuffer.readUInt16LE(offset + 10);
-      sampleRate = wavBuffer.readUInt32LE(offset + 12);
-      bitsPerSample = wavBuffer.readUInt16LE(offset + 22);
-      break;
-    }
-
-    offset += 8 + chunkSize;
-  }
-
-  if (!fmtChunkFound) {
-    throw new Error('Invalid WAV file: fmt chunk not found');
-  }
-
-  // 查找 data chunk
-  offset = 12;
-  let dataChunkFound = false;
-  let dataOffset = 0;
-  let dataSize = 0;
-
-  while (offset < wavBuffer.length - 8) {
-    const chunkId = wavBuffer.toString('ascii', offset, offset + 4);
-    const chunkSize = wavBuffer.readUInt32LE(offset + 4);
-
-    if (chunkId === 'data') {
-      dataChunkFound = true;
-      dataOffset = offset + 8;
-      dataSize = chunkSize;
-      break;
-    }
-
-    offset += 8 + chunkSize;
-  }
-
-  if (!dataChunkFound) {
-    throw new Error('Invalid WAV file: data chunk not found');
-  }
-
-  // 提取 PCM16 数据
-  const pcm16Data = wavBuffer.subarray(dataOffset, dataOffset + dataSize);
-
-  return {
-    pcm16Data,
-    sampleRate,
-    channels,
-  };
 }
 
 /**

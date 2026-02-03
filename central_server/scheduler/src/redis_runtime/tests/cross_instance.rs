@@ -6,7 +6,7 @@
             return;
         }
 
-        let mut cfg = crate::core::config::Phase2Config::default();
+        let mut cfg = crate::core::config::RedisRuntimeConfig::default();
         cfg.enabled = true;
         cfg.redis = redis_cfg.clone();
         cfg.redis.key_prefix = format!("lingua_test_{}", uuid::Uuid::new_v4().to_string().replace('-', ""));

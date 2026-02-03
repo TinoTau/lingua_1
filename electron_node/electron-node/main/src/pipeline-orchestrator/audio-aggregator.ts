@@ -26,11 +26,12 @@ import { AudioAggregatorTimeoutHandler } from './audio-aggregator-timeout-handle
 import { AudioAggregatorFinalizeHandler } from './audio-aggregator-finalize-handler';
 import { buildBufferKey } from './audio-aggregator-buffer-key';
 import {
-  createEmptyBuffer,
+  getOrCreateBuffer,
   shouldReturnEmptyInput,
   deleteBufferFromMap,
   cleanupExpiredBuffersFromMap,
 } from './audio-aggregator-buffer-lifecycle';
+import { executeFinalizeAndReturn } from './audio-aggregator-process-finalize';
 
 
 export class AudioAggregator {
@@ -101,121 +102,7 @@ export class AudioAggregator {
     let currentAudio = decodeResult.audio;
     let currentDurationMs = decodeResult.durationMs;
 
-    // 获取或创建缓冲区
-    let buffer = this.buffers.get(bufferKey);
-
-    if (!buffer) {
-      // 如果缓冲区不存在，创建一个新的
-      logger.info(
-        {
-          jobId: job.job_id,
-          bufferKey,
-          sessionId,
-          utteranceIndex: job.utterance_index,
-          epoch: 0,
-          state: 'OPEN',
-          reason: 'Buffer not found, creating new buffer',
-        },
-        'AudioAggregator: Creating new buffer'
-      );
-      buffer = {
-        state: 'OPEN',
-        epoch: 0,
-        bufferKey,
-        audioChunks: [],
-        totalDurationMs: 0,
-        startTimeMs: nowMs,
-        lastChunkTimeMs: nowMs,
-        lastWriteAt: nowMs,
-        isManualCut: false,
-        isTimeoutTriggered: false,
-        sessionId,
-        utteranceIndex: job.utterance_index,
-        pendingSmallSegments: [],
-        pendingSmallSegmentsJobInfo: [],
-        originalJobInfo: [],
-      };
-      this.buffers.set(bufferKey, buffer);
-    } else {
-      // ✅ 状态机检查：如果 buffer 处于 FINALIZING 或 CLOSED 状态，切换到新 epoch
-      if (buffer.state === 'FINALIZING' || buffer.state === 'CLOSED') {
-        const newEpoch = buffer.epoch + 1;
-        logger.warn(
-          {
-            jobId: job.job_id,
-            bufferKey,
-            oldEpoch: buffer.epoch,
-            newEpoch,
-            oldState: buffer.state,
-            reason: 'Buffer in FINALIZING/CLOSED state, switching to new epoch',
-          },
-          'AudioAggregator: [StateMachine] Buffer in finalizing/closed state, switching epoch'
-        );
-
-        // 创建新 epoch 的 buffer
-        buffer = {
-          state: 'OPEN',
-          epoch: newEpoch,
-          bufferKey,
-          audioChunks: [],
-          totalDurationMs: 0,
-          startTimeMs: nowMs,
-          lastChunkTimeMs: nowMs,
-          lastWriteAt: nowMs,
-          isManualCut: false,
-          isTimeoutTriggered: false,
-          sessionId,
-          utteranceIndex: job.utterance_index,
-          pendingSmallSegments: [],
-          pendingSmallSegmentsJobInfo: [],
-          originalJobInfo: [],
-        };
-        this.buffers.set(bufferKey, buffer);
-      } else {
-        // 更新最后写入时间
-        buffer.lastWriteAt = nowMs;
-
-        // 调试日志：检查缓冲区状态
-        logger.debug(
-          {
-            jobId: job.job_id,
-            bufferKey,
-            epoch: buffer.epoch,
-            state: buffer.state,
-            sessionId,
-            utteranceIndex: job.utterance_index,
-            hasPendingTimeoutAudio: !!buffer.pendingTimeoutAudio,
-            hasPendingSmallSegments: buffer.pendingSmallSegments.length > 0,
-            chunkCount: buffer.audioChunks.length,
-            totalDurationMs: buffer.totalDurationMs,
-            reason: 'Buffer found, checking state',
-          },
-          'AudioAggregator: [Debug] Buffer found, checking state'
-        );
-      }
-    }
-
-    // 确保 buffer 不是 undefined（TypeScript 类型检查）
-    // 注意：在 currentBuffer 定义之前，buffer 可能为 undefined，所以需要检查
-    if (!buffer) {
-      logger.error(
-        {
-          jobId: job.job_id,
-          bufferKey,
-          sessionId,
-          utteranceIndex: job.utterance_index,
-        },
-        'AudioAggregator: Buffer is undefined after creation/retrieval, this should not happen'
-      );
-      return {
-        audioSegments: [],
-        shouldReturnEmpty: true,
-        reason: 'EMPTY_BUFFER',
-      };
-    }
-
-    // 确保 buffer 不是 undefined（TypeScript 类型检查）
-    const currentBuffer: AudioBuffer = buffer;
+    const currentBuffer = getOrCreateBuffer(this.buffers, bufferKey, job, nowMs);
 
     // ✅ R4修复：检查是否为空音频（在更新缓冲区之前）
     if (shouldReturnEmptyInput(currentBuffer, currentAudio, currentDurationMs)) {
@@ -316,209 +203,25 @@ export class AudioAggregator {
       currentBuffer.totalDurationMs >= this.MAX_BUFFER_DURATION_MS ||
       (currentBuffer.totalDurationMs >= this.MIN_AUTO_PROCESS_DURATION_MS && !isTimeoutTriggered);
 
-    // ============================================================
-    // 手动/timeout finalize：立即按能量切分，发送给ASR
-    // ============================================================
     if (shouldProcessNow) {
-      // ✅ 状态机：进入 FINALIZING 状态（冻结写入）
-      currentBuffer.state = 'FINALIZING';
-      currentBuffer.lastFinalizeAt = nowMs;
-      logger.info(
+      return executeFinalizeAndReturn(
         {
-          jobId: job.job_id,
-          bufferKey,
-          epoch: currentBuffer.epoch,
-          state: currentBuffer.state,
-          reason: 'Starting finalize process (manual/timeout)',
+          audioUtils: this.audioUtils,
+          streamBatcher: this.streamBatcher,
+          finalizeHandler: this.finalizeHandler,
+          audioMerger: this.audioMerger,
+          BYTES_PER_SAMPLE: this.BYTES_PER_SAMPLE,
+          SAMPLE_RATE: this.SAMPLE_RATE,
+          SPLIT_HANGOVER_MS: this.SPLIT_HANGOVER_MS,
+          deleteBuffer: (key, buf, reason, t) => this.deleteBuffer(key, buf, reason, t),
         },
-        'AudioAggregator: [StateMachine] Buffer state -> FINALIZING'
-      );
-
-      // 聚合当前音频
-      const currentAggregated = this.aggregateAudioChunks(currentBuffer.audioChunks);
-
-      // 使用finalizeHandler处理合并逻辑
-      const finalizeResult = this.finalizeHandler.handleFinalize(
+        bufferKey,
         currentBuffer,
         job,
-        currentAggregated,
-        nowMs,
         isManualCut,
-        isTimeoutTriggered,  // 传递 isTimeoutTriggered 参数
+        isTimeoutTriggered,
+        nowMs
       );
-
-      // manual/timeout 必合并并输出，不再有 shouldHoldPendingMaxDur 前向补丁
-      let audioToProcess = finalizeResult.audioToProcess;
-      let jobInfoToProcess = finalizeResult.jobInfoToProcess;
-      const hasMergedPendingAudio = finalizeResult.hasMergedPendingAudio;
-
-      if (hasMergedPendingAudio) {
-        currentBuffer.pendingTimeoutAudio = undefined;
-        currentBuffer.pendingTimeoutAudioCreatedAt = undefined;
-        currentBuffer.pendingTimeoutJobInfo = undefined;
-      }
-
-      // 清空 pendingSmallSegments（已在 finalizeHandler 中处理）
-      currentBuffer.pendingSmallSegments = [];
-      currentBuffer.pendingSmallSegmentsJobInfo = [];
-
-      const audioToProcessDurationMs = (audioToProcess.length / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000;
-
-      // 统一按能量切分：合并后的音频也切分，避免单 batch 导致两 job 中一个必为空容器（参见诊断文档 §2.4）
-      // 优化：降低maxSegmentDurationMs从10秒到5秒，以便在长音频中识别自然停顿并切分
-      // 这样9秒的音频如果有自然停顿（如呼吸），就能被切分成多个段，最大化利用audio-aggregator的功能
-      const audioSegments = this.audioUtils.splitAudioByEnergy(
-        audioToProcess,
-        5000, // maxSegmentDurationMs: 5秒（从10秒降低，以便识别自然停顿）
-        2000,  // minSegmentDurationMs: 2秒
-        this.SPLIT_HANGOVER_MS
-      );
-
-      logger.info(
-        {
-          jobId: job.job_id,
-          bufferKey,
-          epoch: currentBuffer.epoch,
-          state: currentBuffer.state,
-          sessionId,
-          utteranceIndex: job.utterance_index,
-          hasMergedPendingAudio,
-          inputAudioDurationMs: audioToProcessDurationMs,
-          outputSegmentCount: audioSegments.length,
-        },
-        hasMergedPendingAudio
-          ? 'AudioAggregator: Merged pending audio, split by energy'
-          : 'AudioAggregator: Audio split by energy completed'
-      );
-
-      // 流式切分：组合成~5秒批次，处理pendingSmallSegments
-      // 独立 utterance（手动/timeout finalize）时，不缓存剩余片段，全部输出并清理
-      const isIndependentUtterance = isManualCut || isTimeoutTriggered;
-      const shouldCacheRemaining = !isIndependentUtterance;
-
-      // 合并 pendingTimeoutAudio 时，batch 归属当前 job
-      if (hasMergedPendingAudio) {
-        const currentJobInfo: OriginalJobInfo = {
-          jobId: job.job_id,
-          utteranceIndex: job.utterance_index,
-          startOffset: 0,
-          endOffset: audioToProcess.length,
-        };
-        jobInfoToProcess = [currentJobInfo];
-      }
-
-      const { batches: initialBatches, batchJobInfo: initialBatchJobInfo, remainingSmallSegments, remainingSmallSegmentsJobInfo } =
-        this.createStreamingBatchesWithPending(audioSegments, jobInfoToProcess, shouldCacheRemaining);
-
-      // 手动发送时，将剩余片段也加入到batches中（确保完整处理）
-      let batches = initialBatches;
-      let batchJobInfo = initialBatchJobInfo;
-      if (isIndependentUtterance && remainingSmallSegments.length > 0) {
-        const remainingBatch = Buffer.concat(remainingSmallSegments);
-        batches = [...initialBatches, remainingBatch];
-        // 为剩余 batch 添加 jobInfo（使用最后一个 job 的容器）
-        if (remainingSmallSegmentsJobInfo.length > 0) {
-          batchJobInfo = [...initialBatchJobInfo, remainingSmallSegmentsJobInfo[remainingSmallSegmentsJobInfo.length - 1]];
-        } else if (jobInfoToProcess.length > 0) {
-          batchJobInfo = [...initialBatchJobInfo, jobInfoToProcess[jobInfoToProcess.length - 1]];
-        }
-      }
-
-      // 如果有剩余的小片段，缓存到pendingSmallSegments（等待下一个job合并）
-      if (remainingSmallSegments.length > 0 && !isIndependentUtterance) {
-        currentBuffer.pendingSmallSegments = remainingSmallSegments;
-        currentBuffer.pendingSmallSegmentsJobInfo = remainingSmallSegmentsJobInfo;
-      }
-
-      // ✅ 架构设计：合并pending音频时，batch归属当前job（后一个job容器）
-      // 原因：合并pending音频时，batch应该属于当前job（合并pending的job），而不是原始job（产生pending的job）
-      // 设计：不修改createStreamingBatchesWithPending的逻辑，保持头部对齐策略的通用性
-      // 只在合并pending音频时特殊处理：强制使用当前job的jobId
-      const originalJobIds = hasMergedPendingAudio
-        ? batches.map(() => job.job_id)  // 合并pending：归属当前job
-        : batchJobInfo.map(info => info.jobId);  // 正常场景：头部对齐策略
-
-      logger.info(
-        {
-          jobId: job.job_id,
-          bufferKey,
-          epoch: currentBuffer.epoch,
-          batchesCount: batches.length,
-          originalJobIds,
-          assignStrategy: hasMergedPendingAudio ? 'force_current_job' : 'head_alignment',
-          hasMergedPendingAudio,
-        },
-        hasMergedPendingAudio
-          ? 'AudioAggregator: Batches assigned to current job (merged pendingTimeoutAudio)'
-          : 'AudioAggregator: Batches assigned using head alignment'
-      );
-
-      // 转换为base64字符串数组
-      const audioSegmentsBase64 = batches.map(batch => batch.toString('base64'));
-
-      // ✅ P2增强：记录详细的日志信息
-      const ownerJobId = originalJobIds[0] || job.job_id;
-      const audioDurationMs = batches.reduce((total, batch) => {
-        return total + (batch.length / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000;
-      }, 0);
-
-      logger.info(
-        {
-          jobId: job.job_id,
-          bufferKey,
-          sessionId,
-          utteranceIndex: job.utterance_index,
-          ownerJobId,
-          originalJobIds,
-          originalJobIdsCount: originalJobIds.length,
-          audioDurationMs,
-          segmentsCount: batches.length,
-        },
-        'AudioAggregator: Sending audio segments to ASR'
-      );
-
-      if (batches.length === 0) {
-        return {
-          audioSegments: [],
-          shouldReturnEmpty: true,
-          reason: 'EMPTY_INPUT',
-        };
-      }
-
-      // 若有 pendingTimeoutAudio 则保留 buffer，否则删除
-      const pendingTimeoutAudioLength = currentBuffer.pendingTimeoutAudio?.length || 0;
-      const pendingSmallSegmentsCount = currentBuffer.pendingSmallSegments.length;
-
-      if (currentBuffer.pendingTimeoutAudio) {
-        currentBuffer.audioChunks = [];
-        currentBuffer.totalDurationMs = 0;
-        currentBuffer.originalJobInfo = [];
-        currentBuffer.isManualCut = false;
-        currentBuffer.isTimeoutTriggered = false;
-        currentBuffer.state = 'PENDING_TIMEOUT';
-        logger.info(
-          {
-            jobId: job.job_id,
-            bufferKey,
-            epoch: currentBuffer.epoch,
-            state: currentBuffer.state,
-            utteranceIndex: job.utterance_index,
-            pendingTimeoutAudioLength,
-            pendingSmallSegmentsCount,
-          },
-          'AudioAggregator: Buffer retained (pendingTimeoutAudio)'
-        );
-      } else {
-        this.deleteBuffer(bufferKey, currentBuffer, 'No pending audio after finalize', nowMs);
-      }
-
-      return {
-        audioSegments: audioSegmentsBase64,
-        originalJobIds,
-        originalJobInfo: jobInfoToProcess,
-        shouldReturnEmpty: false,
-        reason: 'NORMAL',
-      };
     }
 
     // 继续缓冲

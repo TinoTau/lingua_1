@@ -114,12 +114,11 @@ async def test_handle_request_processor_not_found():
 
 
 @pytest.mark.asyncio
-async def test_request_id_generation():
-    """测试 Request ID 自动生成"""
+async def test_request_id_from_job_id():
+    """测试 request_id 使用请求的 job_id（空则为空，不自动生成）"""
     processor = MockProcessor("test")
     wrapper = ProcessorWrapper({"test": processor})
     
-    # 不提供 job_id，应该自动生成 UUID
     request = RepairRequest(
         job_id="",
         session_id="session-001",
@@ -128,6 +127,7 @@ async def test_request_id_generation():
     
     response = await wrapper.handle_request("test", request)
     
-    # 应该生成一个 UUID（不为空）
-    assert response.request_id != ""
-    assert len(response.request_id) > 0
+    # request_id 与 job_id 一致，空则为空
+    assert response.request_id == ""
+    assert response.decision == "REPAIR"
+    assert response.text_out == "HELLO"

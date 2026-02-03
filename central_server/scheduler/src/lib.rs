@@ -11,8 +11,6 @@ pub mod metrics;
 pub mod timeout;
 pub mod model_not_available;
 pub mod redis_runtime;
-/// 兼容别名：examples 与旧代码使用 phase2 引用 Redis 运行时
-pub use redis_runtime as phase2;
 pub mod pool_hashing;
 pub mod pool;
 

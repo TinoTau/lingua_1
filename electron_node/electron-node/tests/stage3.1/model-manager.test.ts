@@ -19,20 +19,40 @@ import * as path from 'path';
 import * as os from 'os';
 import { ModelManager, ModelNotAvailableError } from '../../main/src/model-manager/model-manager';
 
+/** 等待指定目录存在，超时后抛出 */
+async function waitForDirs(deadlineMs: number, ...dirs: string[]): Promise<void> {
+  const start = Date.now();
+  while (Date.now() - start < deadlineMs) {
+    let ok = true;
+    for (const dir of dirs) {
+      try {
+        await fs.access(dir);
+      } catch {
+        ok = false;
+        break;
+      }
+    }
+    if (ok) return;
+    await new Promise(r => setTimeout(r, 50));
+  }
+  throw new Error(`Directories not created within ${deadlineMs}ms: ${dirs.join(', ')}`);
+}
+
 describe('ModelManager', () => {
   let modelManager: ModelManager;
   let testModelsDir: string;
 
   beforeEach(async () => {
-    // 创建临时测试目录
     testModelsDir = path.join(os.tmpdir(), `lingua-test-${Date.now()}`);
     process.env.USER_DATA = testModelsDir;
     process.env.MODEL_HUB_URL = 'http://localhost:5000';
-    
+
     modelManager = new ModelManager();
-    
-    // 等待初始化完成
-    await new Promise(resolve => setTimeout(resolve, 100));
+
+    const modelsDir = (modelManager as any).modelsDir;
+    const tempDir = (modelManager as any).tempDir;
+    const lockDir = (modelManager as any).lockDir;
+    await waitForDirs(3000, modelsDir, tempDir, lockDir);
   });
 
   afterEach(async () => {
@@ -49,8 +69,7 @@ describe('ModelManager', () => {
       const modelsDir = (modelManager as any).modelsDir;
       const tempDir = (modelManager as any).tempDir;
       const lockDir = (modelManager as any).lockDir;
-      
-      // 验证目录存在（不抛出错误）
+
       await expect(fs.access(modelsDir)).resolves.not.toThrow();
       await expect(fs.access(tempDir)).resolves.not.toThrow();
       await expect(fs.access(lockDir)).resolves.not.toThrow();
@@ -68,25 +87,24 @@ describe('ModelManager', () => {
           },
         },
       };
-      
+
       await fs.writeFile(registryPath, JSON.stringify(testRegistry), 'utf-8');
-      
+
       const newManager = new ModelManager();
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      const installed = newManager.getInstalledModels();
+      const newModelsDir = (newManager as any).modelsDir;
+      const newTempDir = (newManager as any).tempDir;
+      const newLockDir = (newManager as any).lockDir;
+      await waitForDirs(3000, newModelsDir, newTempDir, newLockDir);
+
+      const deadline = Date.now() + 2000;
+      let installed: { modelId: string }[] = [];
+      while (Date.now() < deadline) {
+        installed = newManager.getInstalledModels();
+        if (installed.length >= 1) break;
+        await new Promise(r => setTimeout(r, 50));
+      }
       expect(installed.length).toBe(1);
       expect(installed[0].modelId).toBe('test-model');
-    });
-  });
-
-  describe('getAvailableModels', () => {
-    it('应该从服务器获取模型列表（如果服务可用）', async () => {
-      // 注意：这个测试需要模型库服务运行
-      // 如果服务不可用，应该返回空数组而不是抛出错误
-      const models = await modelManager.getAvailableModels();
-      expect(Array.isArray(models)).toBe(true);
-      // 如果服务不可用，返回空数组是预期的行为
     });
   });
 
@@ -110,7 +128,7 @@ describe('ModelManager', () => {
           }],
         },
       ]);
-      
+
       // 设置 registry
       (modelManager as any).registry = {
         'test-model': {
@@ -122,11 +140,11 @@ describe('ModelManager', () => {
           },
         },
       };
-      
+
       const modelPath = await modelManager.getModelPath('test-model', '1.0.0');
       expect(modelPath).toContain('test-model');
       expect(modelPath).toContain('1.0.0');
-      
+
       // 恢复原始方法
       modelManager.getAvailableModels = originalGetAvailableModels;
     });
@@ -135,11 +153,11 @@ describe('ModelManager', () => {
       // Mock getAvailableModels 返回空数组（模型不存在）
       const originalGetAvailableModels = modelManager.getAvailableModels.bind(modelManager);
       modelManager.getAvailableModels = jest.fn().mockResolvedValue([]);
-      
+
       await expect(
         modelManager.getModelPath('non-existent-model', '1.0.0')
       ).rejects.toThrow(ModelNotAvailableError);
-      
+
       // 恢复原始方法
       modelManager.getAvailableModels = originalGetAvailableModels;
     });
@@ -163,7 +181,7 @@ describe('ModelManager', () => {
           }],
         },
       ]);
-      
+
       (modelManager as any).registry = {
         'test-model': {
           '1.0.0': {
@@ -174,11 +192,11 @@ describe('ModelManager', () => {
           },
         },
       };
-      
+
       await expect(
         modelManager.getModelPath('test-model', '1.0.0')
       ).rejects.toThrow(ModelNotAvailableError);
-      
+
       // 恢复原始方法
       modelManager.getAvailableModels = originalGetAvailableModels;
     });

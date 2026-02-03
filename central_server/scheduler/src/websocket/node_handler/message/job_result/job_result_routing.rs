@@ -31,7 +31,7 @@ pub(crate) async fn forward_job_result_if_needed(
 ) -> bool {
     // Phase 2: Cross-instance (node on A, job/session on B), local dispatcher may not have job
     // In this case, forward result to session owner, let owner instance complete result queue and downstream push
-    if let Some(rt) = state.phase2.as_ref() {
+    if let Some(rt) = state.redis_runtime.as_ref() {
         if let Some(owner) = rt.resolve_session_owner(session_id).await {
             if owner != rt.instance_id {
                 let forwarded = NodeMessage::JobResult {

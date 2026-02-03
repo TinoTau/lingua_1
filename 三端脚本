@@ -17,6 +17,8 @@ cd D:\Programs\github\lingua_1
 
 
 # 2. 调度服务器（在新窗口）
+cd d:\Programs\github\lingua_1\electron_node\scripts
+.\kill_residual_processes.ps1
 cd D:\Programs\github\lingua_1\central_server\scheduler
 cargo clean
 powershell -ExecutionPolicy Bypass -File .\scripts\redis_clear_lingua.ps1
@@ -72,7 +74,7 @@ npm run build:main
 
 请将D:\Programs\github\lingua_1\central_server\docs和D:\Programs\github\lingua_1\central_server\scheduler\docs的docs文档进行合并整理，按每个模块的docs只放在自己模块里，根据实际代码补充新增功能，移除过期（与当前代码不符）和废弃的内容，并能合并的就合并，文档大小最好不要超过500行。测试报告之类的文件全都移除
 
-现在请对D:\Programs\github\lingua_1\electron_node\services\faster_whisper_vad的代码文件进行整理，拆分超过500行的大文件，合并重复的逻辑，只对代码进行迁移，不要改变任何接口，参数和返回结果，也不要改动任何代码逻辑。异步方法之间如果有必要的话采用状态机进行管理，然后把Import都移动到文件头部,然后进行单元测试，修复单元测试时，不要考虑兼容，不要打补丁或新增代码逻辑来添加保险或者兜底机制，并避免错误调用旧路径旧方法
+现在请对D:\Programs\github\lingua_1\electron_node\services\faster_whisper_vad的代码文件和测试文件进行整理，拆分超过500行的大文件，合并重复的逻辑，只对代码进行迁移，不要改变任何接口，参数和返回结果，也不要改动任何代码逻辑。异步方法之间如果有必要的话采用状态机进行管理，然后把Import都移动到文件头部,然后进行单元测试，修复单元测试时，不要考虑兼容，不要打补丁或新增代码逻辑来添加保险或者兜底机制，并避免错误调用旧路径旧方法
 
 
 请实现这个功能，添加流程日志，进行单元测试，并更新文档。
@@ -113,7 +115,7 @@ npm run build:main
 接下来这一句我会尽量连续地说得长一些，中间只保留自然的呼吸节奏，不做刻意的停顿，看看在超过十秒钟之后，系统会不会因为超时或者静音判定而强行把这句话截断，从而导致前半句和后半句在节点端被拆成两个不同的 job，甚至出现语义上不完整、读起来前后不连贯的情况。
 
 如果这次的长句能够被完整地识别出来，而且不会出现半句话被提前发送或者直接丢失的现象，那就说明我们当前的切分策略和超时规则是基本可用的。
-否则，我们还需要继续分析日志，找出到底是在哪一个环节把我的语音吃掉了。"，返回结果是："",请检查节点端日志，看看每个job在各服务里的处理过程，输入是什么输出是什么
+否则，我们还需要继续分析日志，找出到底是在哪一个环节把我的语音吃掉了。"，返回结果是："",请检查节点端日志D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.log，看看每个job在各服务里的处理过程，输入是什么输出是什么
 
 
 

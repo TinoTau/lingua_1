@@ -102,6 +102,21 @@ pub enum ServiceType {
     Tts,
     Tone,
     Semantic,  // 语义修复服务类型
+    Phonetic,  // 同音纠错，节点可上报；调度选节点/建池不依赖
+}
+
+impl ServiceType {
+    /// 所有服务类型（用于统计/展示，单源维护）
+    pub const fn all() -> [ServiceType; 6] {
+        [
+            ServiceType::Asr,
+            ServiceType::Nmt,
+            ServiceType::Tts,
+            ServiceType::Tone,
+            ServiceType::Semantic,
+            ServiceType::Phonetic,
+        ]
+    }
 }
 
 impl std::str::FromStr for ServiceType {
@@ -113,6 +128,7 @@ impl std::str::FromStr for ServiceType {
             "tts" => Ok(ServiceType::Tts),
             "tone" => Ok(ServiceType::Tone),
             "semantic" => Ok(ServiceType::Semantic),
+            "phonetic" => Ok(ServiceType::Phonetic),
             _ => Err(()),
         }
     }
@@ -167,52 +183,15 @@ pub struct CapabilityByType {
     pub ready_impl_ids: Option<Vec<String>>,
 }
 
-/// NMT 能力（避免语言对爆炸）
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct NmtCapability {
-    pub model_id: String,
-    pub languages: Vec<String>,
-    pub rule: String, // "any_to_any" | "any_to_en" | "en_to_any" | "specific_pairs"
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub blocked_pairs: Option<Vec<LanguagePair>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub supported_pairs: Option<Vec<LanguagePair>>,
-}
-
-/// 语言对（以语义修复为中心）
-/// 重构日期：2026-01-20
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
-pub struct LanguagePair {
-    pub src: String,
-    pub tgt: String,
-    /// 源语言是否具备语义修复（必然为 true）
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub semantic_on_src: Option<bool>,
-    /// 目标语言是否具备语义修复（可选增强）
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub semantic_on_tgt: Option<bool>,
-}
-
-/// 节点语言能力（以语义修复为中心）
-/// 重构日期：2026-01-20
+/// 节点语言能力：asr/semantic/tts 均为运行中服务语言的交集
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NodeLanguageCapabilities {
-    /// @deprecated 保留用于向后兼容，优先使用 supported_language_pairs
     #[serde(skip_serializing_if = "Option::is_none")]
     pub asr_languages: Option<Vec<String>>,
-    /// @deprecated 保留用于向后兼容，优先使用 supported_language_pairs
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tts_languages: Option<Vec<String>>,
-    /// @deprecated 保留用于向后兼容，优先使用 supported_language_pairs
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub nmt_capabilities: Option<Vec<NmtCapability>>,
-    /// @deprecated 保留用于向后兼容，优先使用 supported_language_pairs
     #[serde(skip_serializing_if = "Option::is_none")]
     pub semantic_languages: Option<Vec<String>>,
-    /// 节点支持的语言对列表（带语义修复标记）
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub supported_language_pairs: Option<Vec<LanguagePair>>,
-    /// 语义修复核心就绪标记（是否有语义服务）
     #[serde(skip_serializing_if = "Option::is_none")]
     pub semantic_core_ready: Option<bool>,
 }

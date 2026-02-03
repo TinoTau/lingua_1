@@ -295,7 +295,7 @@ async fn write_turn_affinity_after_first_job(
     session_id: &str,
     node_id: &str,
 ) {
-    if let Some(ref rt) = state.phase2 {
+    if let Some(ref rt) = state.redis_runtime {
         let turn_key = format!("scheduler:turn:{}", turn_id);
         let session_key = format!("scheduler:session:{}", session_id);
         let script = r#"

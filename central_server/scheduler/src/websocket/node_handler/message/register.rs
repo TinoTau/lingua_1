@@ -4,45 +4,20 @@ use crate::services::minimal_scheduler::RegisterNodeRequest;
 use axum::extract::ws::Message;
 use tokio::sync::mpsc;
 use tracing::{debug, info, warn};
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 
-/// 从节点语言能力中提取 ASR 和 Semantic 语言
-/// 
-/// # 核心规则
-/// 
-/// - ASR 语言作为源语言（用户说的语言）
-/// - Semantic 语言作为目标语言（系统输出的语言）
-/// - Semantic 服务是必需的，semantic_languages 不能为空
-/// 
-/// # 返回
-/// 提取 ASR、Semantic、TTS 语言。
-/// Semantic 用于能力校验（必填）；池分配使用 (asr × tts)，与任务查找 (src, tgt) 一致。
-fn extract_langs(
+/// 从节点语言能力中提取 ASR、Semantic、TTS 语言；允许空（注册时可为空，心跳再更新池）。
+fn extract_langs_optional(
     lang_caps: &Option<crate::messages::common::NodeLanguageCapabilities>,
-) -> Result<(Vec<String>, Vec<String>, Vec<String>)> {
-    let caps = lang_caps.as_ref()
-        .ok_or_else(|| anyhow!("language_capabilities is required"))?;
-    
-    let asr_langs = caps.asr_languages.clone()
-        .ok_or_else(|| anyhow!("asr_languages is required"))?;
-    let semantic_langs = caps.semantic_languages.clone()
-        .ok_or_else(|| anyhow!("semantic_languages is required"))?;
-    let tts_langs = caps.tts_languages.clone()
-        .ok_or_else(|| anyhow!("tts_languages is required"))?;
-    
-    if asr_langs.is_empty() {
-        return Err(anyhow!("asr_languages cannot be empty"));
-    }
-    if semantic_langs.is_empty() {
-        return Err(anyhow!(
-            "semantic_languages cannot be empty. Semantic service is mandatory for all nodes."
-        ));
-    }
-    if tts_langs.is_empty() {
-        return Err(anyhow!("tts_languages cannot be empty"));
-    }
-    
-    Ok((asr_langs, semantic_langs, tts_langs))
+) -> (Vec<String>, Vec<String>, Vec<String>) {
+    let caps = match lang_caps.as_ref() {
+        Some(c) => c,
+        None => return (vec![], vec![], vec![]),
+    };
+    let asr = caps.asr_languages.clone().unwrap_or_default();
+    let semantic = caps.semantic_languages.clone().unwrap_or_default();
+    let tts = caps.tts_languages.clone().unwrap_or_default();
+    (asr, semantic, tts)
 }
 
 /// 节点注册处理（极简版）
@@ -59,7 +34,7 @@ pub(super) async fn handle_node_register(
     _installed_services: Option<Vec<InstalledService>>,
     _features_supported: FeatureFlags,
     _accept_public_jobs: bool,
-    capability_by_type: Vec<CapabilityByType>,
+    _capability_by_type: Vec<CapabilityByType>,
     language_capabilities: Option<crate::messages::common::NodeLanguageCapabilities>,
 ) -> Result<(), anyhow::Error> {
     // 流程日志 1: 注册流程开始
@@ -84,21 +59,16 @@ pub(super) async fn handle_node_register(
         "【节点管理流程】节点 ID 已生成"
     );
 
-    // 将能力信息序列化为 JSON
-    let _cap_json = serde_json::to_string(&capability_by_type)?;
-
-    // 从语言能力提取 ASR、Semantic、TTS 语言
-    let (asr_langs, semantic_langs, tts_langs) = extract_langs(&language_capabilities)?;
-    
+    // 从语言能力提取 ASR、Semantic、TTS（允许空，心跳再更新池）
+    let (asr_langs, semantic_langs, tts_langs) = extract_langs_optional(&language_capabilities);
     info!(
-        step = "register_langs_validated",
+        step = "register_langs",
         node_id = %final_node_id,
-        asr_langs = ?asr_langs,
-        semantic_langs = ?semantic_langs,
-        tts_langs = ?tts_langs,
-        "【节点管理流程】语言能力验证通过（Semantic 必需✅，池分配用 asr×tts）"
+        asr_len = asr_langs.len(),
+        semantic_len = semantic_langs.len(),
+        tts_len = tts_langs.len(),
+        "【节点管理流程】注册语言能力（可为空，池在心跳时分配）"
     );
-    
     let asr_langs_json = serde_json::to_string(&asr_langs)?;
     let semantic_langs_json = serde_json::to_string(&semantic_langs)?;
     let tts_langs_json = serde_json::to_string(&tts_langs)?;
@@ -179,7 +149,7 @@ pub(super) async fn handle_node_register(
     Ok(())
 }
 
-/// 节点心跳处理
+/// 节点心跳处理：更新节点语言能力，若变更则清池再分配，再刷新 TTL 并分配池
 pub(super) async fn handle_node_heartbeat(
     state: &AppState,
     node_id: &str,
@@ -190,51 +160,59 @@ pub(super) async fn handle_node_heartbeat(
     _rerun_metrics: Option<crate::messages::common::RerunMetrics>,
     _asr_metrics: Option<crate::messages::common::ASRMetrics>,
     _processing_metrics: Option<crate::messages::common::ProcessingMetrics>,
-    _language_capabilities: Option<crate::messages::common::NodeLanguageCapabilities>,
+    language_capabilities: Option<crate::messages::common::NodeLanguageCapabilities>,
 ) {
-    // 流程日志 1: 心跳流程开始
-    debug!(
-        step = "heartbeat_start",
-        node_id = %node_id,
-        "【节点管理流程】心跳流程开始"
-    );
+    info!(step = "heartbeat_start", node_id = %node_id, "【节点管理流程】收到节点心跳");
 
-    // 使用 PoolService 处理心跳（自动分配池）
-    if let Some(pool_service) = state.pool_service.as_ref() {
-        // 流程日志 2: 调用 Redis Lua
-        let t0 = std::time::Instant::now();
-        match pool_service.as_ref().heartbeat(node_id).await {
-            Ok(_) => {
-                // 流程日志 3: Redis 心跳成功
-                debug!(
-                    step = "heartbeat_redis_success",
-                    node_id = %node_id,
-                    elapsed_ms = t0.elapsed().as_millis(),
-                    "【节点管理流程】Redis 心跳成功（TTL 已刷新，Pool 已自动分配）"
-                );
+    let (asr_langs, semantic_langs, tts_langs) = extract_langs_optional(&language_capabilities);
+    let asr_json = serde_json::to_string(&asr_langs).unwrap_or_else(|_| "[]".to_string());
+    let semantic_json = serde_json::to_string(&semantic_langs).unwrap_or_else(|_| "[]".to_string());
+    let tts_json = serde_json::to_string(&tts_langs).unwrap_or_else(|_| "[]".to_string());
+
+    if let (Some(scheduler), Some(pool_service)) = (state.minimal_scheduler.as_ref(), state.pool_service.as_ref()) {
+        let need_pool = !asr_langs.is_empty() && !semantic_langs.is_empty();
+        if need_pool {
+            let cur = scheduler.get_node_languages(node_id).await.ok().flatten();
+            if let Some((cur_asr, cur_semantic)) = cur {
+                if cur_asr != asr_json || cur_semantic != semantic_json {
+                    if let Err(e) = pool_service.node_clear_pools(node_id).await {
+                        tracing::warn!(node_id = %node_id, error = %e, "心跳语言变更时清池失败");
+                    }
+                }
             }
-            Err(e) => {
-                tracing::warn!(
-                    step = "heartbeat_redis_failed",
-                    node_id = %node_id,
-                    error = %e,
-                    elapsed_ms = t0.elapsed().as_millis(),
-                    "【节点管理流程】Redis 心跳失败"
-                );
+        }
+        if let Err(e) = scheduler.update_node_languages(node_id, &asr_json, &semantic_json, &tts_json).await {
+            tracing::warn!(node_id = %node_id, error = %e, "心跳更新节点语言失败");
+        }
+        if need_pool {
+            let t0 = std::time::Instant::now();
+            match pool_service.heartbeat(node_id).await {
+                Ok(_) => {
+                    info!(
+                        step = "heartbeat_redis_success",
+                        node_id = %node_id,
+                        elapsed_ms = t0.elapsed().as_millis(),
+                        "【节点管理流程】Redis 心跳成功（TTL 已刷新，节点池已分配）"
+                    );
+                }
+                Err(e) => {
+                    tracing::warn!(
+                        step = "heartbeat_redis_failed",
+                        node_id = %node_id,
+                        error = %e,
+                        elapsed_ms = t0.elapsed().as_millis(),
+                        "【节点管理流程】Redis 心跳失败"
+                    );
+                }
             }
         }
     } else {
         tracing::warn!(
-            step = "heartbeat_no_pool_service",
+            step = "heartbeat_no_services",
             node_id = %node_id,
-            "【节点管理流程】PoolService 未初始化"
+            "【节点管理流程】MinimalScheduler 或 PoolService 未初始化"
         );
     }
-    
-    // 流程日志 4: 心跳流程完成
-    debug!(
-        step = "heartbeat_complete",
-        node_id = %node_id,
-        "【节点管理流程】心跳流程完成✅"
-    );
+
+    debug!(step = "heartbeat_complete", node_id = %node_id, "【节点管理流程】心跳流程完成✅");
 }

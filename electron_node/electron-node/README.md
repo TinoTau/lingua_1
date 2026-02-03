@@ -2,7 +2,7 @@
 
 这是 Lingua 分布式语音翻译系统的 **Electron 节点客户端应用**（主进程 + 渲染进程）。
 
-更完整、与代码对齐的文档请看：`../docs/electron_node/README.md`。
+更完整的开发、配置与架构说明见本目录下 [docs/](docs/)（如 `docs/ARCHITECTURE.md`、`docs/CONFIGURATION.md`、`docs/TROUBLESHOOTING.md`）。
 
 ## 功能特性
 

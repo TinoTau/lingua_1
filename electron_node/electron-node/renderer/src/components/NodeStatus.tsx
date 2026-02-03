@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './NodeStatus.css';
 
 interface NodeStatusProps {
@@ -7,10 +7,17 @@ interface NodeStatusProps {
     nodeId: string | null;
     connected: boolean;
   } | null;
+  /** 重连后立即刷新状态（由父组件传入，避免等 2s 轮询） */
+  onRefreshStatus?: () => Promise<void>;
 }
 
-export function NodeStatus({ status }: NodeStatusProps) {
+export function NodeStatus({ status, onRefreshStatus }: NodeStatusProps) {
   const [isReconnecting, setIsReconnecting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (status?.connected) setErrorMessage(null);
+  }, [status?.connected]);
 
   if (!status) {
     return <div className="lns-root">加载中...</div>;
@@ -22,24 +29,33 @@ export function NodeStatus({ status }: NodeStatusProps) {
     }
 
     setIsReconnecting(true);
+    setErrorMessage(null);
     try {
       const result = await window.electronAPI.reconnectNode();
       if (!result.success) {
+        const msg = result.error || '重连失败';
+        setErrorMessage(msg);
         console.error('重连失败:', result.error);
+      } else {
+        await onRefreshStatus?.();
       }
     } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      setErrorMessage(msg);
       console.error('重连失败:', error);
     } finally {
       setIsReconnecting(false);
     }
   };
 
+  const title = errorMessage ? errorMessage : (!status.connected ? '点击重连' : undefined);
+
   return (
-    <div 
+    <div
       className={`lns-root ${status.connected ? 'is-connected' : 'is-disconnected'} ${!status.connected ? 'is-clickable' : ''}`}
       onClick={handleReconnect}
       style={!status.connected ? { cursor: 'pointer' } : undefined}
-      title={!status.connected ? '点击重连' : undefined}
+      title={title}
     >
       <span className="lns-indicator"></span>
       <span className="lns-text">
@@ -47,6 +63,11 @@ export function NodeStatus({ status }: NodeStatusProps) {
       </span>
       {status.nodeId && (
         <span className="lns-node-id">节点ID: {status.nodeId}</span>
+      )}
+      {errorMessage && (
+        <span className="lns-error" title={errorMessage}>
+          （{errorMessage}）
+        </span>
       )}
     </div>
   );

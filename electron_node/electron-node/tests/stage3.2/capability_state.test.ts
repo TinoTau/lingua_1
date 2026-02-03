@@ -6,17 +6,6 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 
 // Mock 服务管理器
-interface MockRustServiceStatus {
-  running: boolean;
-  starting: boolean;
-  pid: number | null;
-  port: number | null;
-  startedAt: Date | null;
-  lastError: string | null;
-  taskCount: number;
-  gpuUsageMs: number;
-}
-
 interface MockPythonServiceStatus {
   name: string;
   running: boolean;
@@ -29,38 +18,19 @@ interface MockPythonServiceStatus {
   gpuUsageMs: number;
 }
 
-class MockRustServiceManager {
-  private status: MockRustServiceStatus = {
-    running: false,
-    starting: false,
-    pid: null,
-    port: null,
-    startedAt: null,
-    lastError: null,
-    taskCount: 0,
-    gpuUsageMs: 0,
-  };
-
-  getStatus(): MockRustServiceStatus {
-    return { ...this.status };
-  }
-
-  setRunning(running: boolean) {
-    this.status.running = running;
-    if (running) {
-      this.status.pid = 12345;
-      this.status.port = 5009;
-      this.status.startedAt = new Date();
-    } else {
-      this.status.pid = null;
-      this.status.port = null;
-      this.status.startedAt = null;
-    }
-  }
-}
-
 class MockPythonServiceManager {
   private statuses: Map<string, MockPythonServiceStatus> = new Map([
+    ['faster-whisper-vad', {
+      name: 'faster-whisper-vad',
+      running: false,
+      starting: false,
+      pid: null,
+      port: null,
+      startedAt: null,
+      lastError: null,
+      taskCount: 0,
+      gpuUsageMs: 0,
+    }],
     ['nmt', {
       name: 'nmt',
       running: false,
@@ -96,7 +66,7 @@ class MockPythonServiceManager {
     }],
   ]);
 
-  getServiceStatus(serviceName: 'nmt' | 'tts' | 'yourtts'): MockPythonServiceStatus {
+  getServiceStatus(serviceName: 'faster-whisper-vad' | 'nmt' | 'tts' | 'yourtts'): MockPythonServiceStatus {
     const status = this.statuses.get(serviceName);
     return status ? { ...status } : {
       name: serviceName,
@@ -111,13 +81,13 @@ class MockPythonServiceManager {
     };
   }
 
-  setRunning(serviceName: 'nmt' | 'tts' | 'yourtts', running: boolean) {
+  setRunning(serviceName: 'faster-whisper-vad' | 'nmt' | 'tts' | 'yourtts', running: boolean) {
     const status = this.statuses.get(serviceName);
     if (status) {
       status.running = running;
       if (running) {
-        status.pid = 10000 + serviceName.charCodeAt(0);
-        status.port = serviceName === 'nmt' ? 5008 : serviceName === 'tts' ? 5007 : 5006;
+        status.pid = 10000 + (serviceName === 'faster-whisper-vad' ? 0 : serviceName.charCodeAt(0));
+        status.port = serviceName === 'faster-whisper-vad' ? 5009 : serviceName === 'nmt' ? 5008 : serviceName === 'tts' ? 5007 : 5006;
         status.startedAt = new Date();
       } else {
         status.pid = null;
@@ -130,13 +100,13 @@ class MockPythonServiceManager {
 
 class MockServiceRegistryManager {
   private installed: any = {
-    'node-inference': {
+    'faster-whisper-vad': {
       '1.0.0::windows-x64': {
-        service_id: 'node-inference',
+        service_id: 'faster-whisper-vad',
         version: '1.0.0',
         platform: 'windows-x64',
         installed_at: new Date().toISOString(),
-        install_path: '/path/to/node-inference',
+        install_path: '/path/to/faster-whisper-vad',
       },
     },
     'nmt-m2m100': {
@@ -186,7 +156,6 @@ class MockServiceRegistryManager {
 // 简化版的 capability_state 构建逻辑（模拟 NodeAgent.getCapabilityState 的核心逻辑）
 async function buildCapabilityState(
   serviceRegistryManager: MockServiceRegistryManager,
-  rustServiceManager: MockRustServiceManager,
   pythonServiceManager: MockPythonServiceManager
 ): Promise<Record<string, string>> {
   const capabilityState: Record<string, string> = {};
@@ -200,9 +169,9 @@ async function buildCapabilityState(
 
   for (const serviceId of serviceIds) {
     let isRunning = false;
-    
-    if (serviceId === 'node-inference') {
-      const status = rustServiceManager.getStatus();
+
+    if (serviceId === 'faster-whisper-vad') {
+      const status = pythonServiceManager.getServiceStatus('faster-whisper-vad');
       isRunning = status?.running === true;
     } else if (serviceId === 'nmt-m2m100') {
       const status = pythonServiceManager.getServiceStatus('nmt');
@@ -222,25 +191,21 @@ async function buildCapabilityState(
 }
 
 describe('CapabilityState - Service Running Status', () => {
-  let rustServiceManager: MockRustServiceManager;
   let pythonServiceManager: MockPythonServiceManager;
   let serviceRegistryManager: MockServiceRegistryManager;
 
   beforeEach(() => {
-    rustServiceManager = new MockRustServiceManager();
     pythonServiceManager = new MockPythonServiceManager();
     serviceRegistryManager = new MockServiceRegistryManager();
   });
 
   it('should return all services as not_installed when no services are running', async () => {
-    // 所有服务都未运行
     const capabilityState = await buildCapabilityState(
       serviceRegistryManager,
-      rustServiceManager,
       pythonServiceManager
     );
 
-    expect(capabilityState['node-inference']).toBe('not_installed');
+    expect(capabilityState['faster-whisper-vad']).toBe('not_installed');
     expect(capabilityState['nmt-m2m100']).toBe('not_installed');
     expect(capabilityState['piper-tts']).toBe('not_installed');
     expect(capabilityState['your-tts']).toBe('not_installed');
@@ -250,17 +215,15 @@ describe('CapabilityState - Service Running Status', () => {
   });
 
   it('should return correct ready count when some services are running', async () => {
-    // 只启动 node-inference 和 nmt-m2m100
-    rustServiceManager.setRunning(true);
+    pythonServiceManager.setRunning('faster-whisper-vad', true);
     pythonServiceManager.setRunning('nmt', true);
 
     const capabilityState = await buildCapabilityState(
       serviceRegistryManager,
-      rustServiceManager,
       pythonServiceManager
     );
 
-    expect(capabilityState['node-inference']).toBe('ready');
+    expect(capabilityState['faster-whisper-vad']).toBe('ready');
     expect(capabilityState['nmt-m2m100']).toBe('ready');
     expect(capabilityState['piper-tts']).toBe('not_installed');
     expect(capabilityState['your-tts']).toBe('not_installed');
@@ -270,19 +233,17 @@ describe('CapabilityState - Service Running Status', () => {
   });
 
   it('should return all services as ready when all services are running', async () => {
-    // 启动所有服务
-    rustServiceManager.setRunning(true);
+    pythonServiceManager.setRunning('faster-whisper-vad', true);
     pythonServiceManager.setRunning('nmt', true);
     pythonServiceManager.setRunning('tts', true);
     pythonServiceManager.setRunning('yourtts', true);
 
     const capabilityState = await buildCapabilityState(
       serviceRegistryManager,
-      rustServiceManager,
       pythonServiceManager
     );
 
-    expect(capabilityState['node-inference']).toBe('ready');
+    expect(capabilityState['faster-whisper-vad']).toBe('ready');
     expect(capabilityState['nmt-m2m100']).toBe('ready');
     expect(capabilityState['piper-tts']).toBe('ready');
     expect(capabilityState['your-tts']).toBe('ready');
@@ -292,50 +253,40 @@ describe('CapabilityState - Service Running Status', () => {
   });
 
   it('should correctly reflect status changes when services start/stop', async () => {
-    // 初始状态：所有服务都未运行
     let capabilityState = await buildCapabilityState(
       serviceRegistryManager,
-      rustServiceManager,
       pythonServiceManager
     );
     expect(Object.values(capabilityState).filter(s => s === 'ready').length).toBe(0);
 
-    // 启动 node-inference
-    rustServiceManager.setRunning(true);
+    pythonServiceManager.setRunning('faster-whisper-vad', true);
     capabilityState = await buildCapabilityState(
       serviceRegistryManager,
-      rustServiceManager,
       pythonServiceManager
     );
-    expect(capabilityState['node-inference']).toBe('ready');
+    expect(capabilityState['faster-whisper-vad']).toBe('ready');
     expect(Object.values(capabilityState).filter(s => s === 'ready').length).toBe(1);
 
-    // 再启动 nmt-m2m100
     pythonServiceManager.setRunning('nmt', true);
     capabilityState = await buildCapabilityState(
       serviceRegistryManager,
-      rustServiceManager,
       pythonServiceManager
     );
-    expect(capabilityState['node-inference']).toBe('ready');
+    expect(capabilityState['faster-whisper-vad']).toBe('ready');
     expect(capabilityState['nmt-m2m100']).toBe('ready');
     expect(Object.values(capabilityState).filter(s => s === 'ready').length).toBe(2);
 
-    // 停止 node-inference
-    rustServiceManager.setRunning(false);
+    pythonServiceManager.setRunning('faster-whisper-vad', false);
     capabilityState = await buildCapabilityState(
       serviceRegistryManager,
-      rustServiceManager,
       pythonServiceManager
     );
-    expect(capabilityState['node-inference']).toBe('not_installed');
+    expect(capabilityState['faster-whisper-vad']).toBe('not_installed');
     expect(capabilityState['nmt-m2m100']).toBe('ready');
     expect(Object.values(capabilityState).filter(s => s === 'ready').length).toBe(1);
   });
 
   it('should handle unknown service IDs gracefully', async () => {
-    // 添加一个未知的服务包（不在映射表中的）
-    // 注意：由于我们修改了 MockServiceRegistryManager，需要直接修改其内部状态
     const installed = (serviceRegistryManager as any).installed;
     installed['unknown-service'] = {
       '1.0.0::windows-x64': {
@@ -349,11 +300,9 @@ describe('CapabilityState - Service Running Status', () => {
 
     const capabilityState = await buildCapabilityState(
       serviceRegistryManager,
-      rustServiceManager,
       pythonServiceManager
     );
 
-    // 未知服务应该被标记为 not_installed（因为 isServiceRunning 返回 false）
     expect(capabilityState['unknown-service']).toBe('not_installed');
   });
 });

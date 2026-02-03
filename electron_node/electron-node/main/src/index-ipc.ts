@@ -5,7 +5,7 @@
 import { ipcMain } from 'electron';
 import * as os from 'os';
 import { getServiceRegistry } from './service-layer';
-import { loadNodeConfig } from './node-config';
+import { loadNodeConfig, getSchedulerUrl } from './node-config';
 import logger from './logger';
 import type { ServiceManagers } from './app/app-init-simple';
 
@@ -44,7 +44,23 @@ export function registerIpcHandlers(getManagers: () => ServiceManagers): void {
   ipcMain.handle('get-node-status', async () => {
     const managers = getManagers();
     if (managers.nodeAgent) return managers.nodeAgent.getStatus();
-    return { isOnline: false, schedulerConnected: false, nodeId: null };
+    return { online: false, nodeId: null, connected: false, lastHeartbeat: new Date() };
+  });
+
+  /** 供渲染进程显示用：返回当前配置的调度器 URL（来自 electron-node-config.json） */
+  ipcMain.handle('get-scheduler-url', async () => getSchedulerUrl());
+
+  ipcMain.handle('reconnect-node', async () => {
+    logger.info({}, 'reconnect-node IPC 被调用');
+    const managers = getManagers();
+    if (!managers.nodeAgent) {
+      logger.warn({}, 'reconnect-node: NodeAgent 未初始化');
+      return { success: false, error: 'NodeAgent 未初始化' };
+    }
+    managers.nodeAgent.stop();
+    await managers.nodeAgent.start();
+    logger.info({}, 'reconnect-node: 已执行 stop + start');
+    return { success: true };
   });
 
   ipcMain.handle('get-all-service-metadata', async () => {
@@ -193,40 +209,20 @@ export function registerIpcHandlers(getManagers: () => ServiceManagers): void {
 
   ipcMain.handle('get-processing-metrics', async () => ({ currentJobs: 0, totalProcessed: 0, averageTime: 0, queueLength: 0 }));
 
-  ipcMain.handle('get-all-semantic-repair-service-statuses', async () => {
-    try {
-      const registry = getServiceRegistry();
-      if (!registry) return [];
-      const semanticServices = Array.from(registry.values()).filter(e => e.def.type === 'semantic');
-      return semanticServices.map(entry => ({
-        serviceId: entry.def.id,
-        running: entry.runtime.status === 'running',
-        starting: entry.runtime.status === 'starting',
-        pid: entry.runtime.pid || null,
-        port: entry.def.port || null,
-        startedAt: entry.runtime.startedAt || null,
-        lastError: entry.runtime.lastError || null,
-      }));
-    } catch (error) {
-      logger.error({ error }, 'Failed to get all semantic repair service statuses');
-      return [];
-    }
-  });
-
-  ipcMain.handle('start-semantic-repair-service', async (_event, serviceId: string) => {
+  /** 联调/测试：用模拟 ASR 文本跑完整 pipeline（聚合 → 语义修复 → 去重 → NMT） */
+  ipcMain.handle('run-pipeline-with-mock-asr', async (
+    _event,
+    asrText: string,
+    srcLang?: string,
+    tgtLang?: string
+  ) => {
     const managers = getManagers();
-    if (!managers.serviceRunner) throw new Error('Service runner not initialized');
-    logger.info({ serviceId }, 'IPC: Starting semantic repair service');
-    await managers.serviceRunner.start(serviceId);
-    return { success: true };
-  });
-
-  ipcMain.handle('stop-semantic-repair-service', async (_event, serviceId: string) => {
-    const managers = getManagers();
-    if (!managers.serviceRunner) throw new Error('Service runner not initialized');
-    logger.info({ serviceId }, 'IPC: Stopping semantic repair service');
-    await managers.serviceRunner.stop(serviceId);
-    return { success: true };
+    if (!managers.inferenceService) throw new Error('InferenceService not available');
+    return managers.inferenceService.runPipelineWithMockAsr(
+      asrText,
+      srcLang ?? 'zh',
+      tgtLang ?? 'en'
+    );
   });
 
   logger.info({}, '✅ All IPC handlers registered!');

@@ -8,7 +8,7 @@ mod tests {
     #[tokio::test]
     async fn test_redis_unavailable_fail_closed() {
         // 使用一个无效的 Redis URL 来模拟 Redis 不可用
-        let mut cfg = crate::core::config::Phase2Config::default();
+        let mut cfg = crate::core::config::RedisRuntimeConfig::default();
         cfg.enabled = true;
         cfg.redis.url = "redis://127.0.0.1:9999".to_string(); // 无效端口
         cfg.redis.key_prefix = format!(
@@ -56,7 +56,7 @@ mod tests {
             "lingua_test_connection_error_{}",
             uuid::Uuid::new_v4().to_string().replace('-', "")
         );
-        let mut cfg = crate::core::config::Phase2Config::default();
+        let mut cfg = crate::core::config::RedisRuntimeConfig::default();
         cfg.enabled = true;
         cfg.redis = redis_cfg;
         cfg.redis.key_prefix = key_prefix;

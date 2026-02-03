@@ -22,7 +22,7 @@ src/pool/
 ### 关键操作
 
 1. **注册**：写入节点信息（`asr_langs`、`semantic_langs`、`tts_langs`），不分配池
-2. **心跳**：按 **（asr_langs × tts_langs）** 生成有向语言对，自动分配到未满的池；仅刷新 **node** 的 **TTL（3×心跳周期）**；**node:pools 不 EXPIRE**，供多池懒清理
+2. **心跳**：按 **（asr_langs × semantic_langs）** 生成有向语言对（根据语义修复能力建池），自动分配到未满的池；仅刷新 **node** 的 **TTL（3×心跳周期）**；**node:pools 不 EXPIRE**，供多池懒清理
 3. **选择**：按 `pair_key` 查池，随机池 → 随机节点；**EXISTS** 校验；死节点则 **HGETALL node:pools**，从**所有**池 **SREM** 并 **DEL** node:pools，再重试
 4. **下线**：从池中移除，池空则删除
 
@@ -49,7 +49,7 @@ pool_service.node_offline(node_id).await?;
 
 ### 节点信息
 - `lingua:v1:node:{id}` - 基础信息（含 `asr_langs`、`semantic_langs`、`tts_langs`）
-- `lingua:v1:node:{id}:pools` - 节点所在的池（映射表）；池分配用 asr×tts
+- `lingua:v1:node:{id}:pools` - 节点所在的池（映射表）；池分配用 asr×semantic（根据语义修复能力建池）
 
 ### 池信息
 - `lingua:v1:pool:{lang}:{id}:nodes` - 池的节点集合（Set）

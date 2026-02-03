@@ -274,6 +274,43 @@ Write-Host ""
 Write-Host "Tip: Set environment variable LOG_FORMAT=json to use JSON log format" -ForegroundColor Cyan
 Write-Host ""
 
+# Parse server.port from config.toml
+$port = 5010
+$configPath = Join-Path $schedulerPath "config.toml"
+if (Test-Path $configPath) {
+    $inServer = $false
+    foreach ($line in (Get-Content $configPath -ErrorAction SilentlyContinue)) {
+        if ($line -match '^\s*\[server\]\s*$') { $inServer = $true }
+        elseif ($inServer -and $line -match '^\s*port\s*=\s*(\d+)') {
+            $port = [int]$matches[1]
+            break
+        }
+        elseif ($line -match '^\s*\[') { $inServer = $false }
+    }
+}
+
+# Startup cleanup: kill orphaned processes on expected port
+$netstatLines = netstat -ano 2>$null | Select-String ":$port\s+.*LISTENING"
+if ($netstatLines) {
+    foreach ($line in $netstatLines) {
+        $parts = $line.Line.Trim() -split '\s+'
+        $pidVal = [int]$parts[-1]
+        if ($pidVal -gt 0) {
+            Write-Host "Killing orphaned process on port $port (PID $pidVal)..." -ForegroundColor Yellow
+            taskkill /F /T /PID $pidVal 2>$null | Out-Null
+        }
+    }
+    Start-Sleep -Seconds 1
+}
+
+# Stop existing scheduler process
+$existing = Get-Process -Name "scheduler" -ErrorAction SilentlyContinue
+if ($existing) {
+    Write-Host "Stopping existing scheduler (pid $($existing.Id -join ', '))..." -ForegroundColor Yellow
+    $existing | Stop-Process -Force
+    Start-Sleep -Seconds 2
+}
+
 # Build and run
 Write-Host "Building and starting scheduler server..." -ForegroundColor Yellow
 Write-Host "Logs will be saved to: $logFile" -ForegroundColor Gray
@@ -281,13 +318,8 @@ Write-Host "Errors will be displayed in this terminal" -ForegroundColor Gray
 Write-Host ""
 
 try {
-    # cargo run --release will automatically build if needed
     cargo run --release
     
-    # Check exit code
-    # 0 = success
-    # 0xc000013a (3221225786) = STATUS_CONTROL_C_EXIT (Ctrl+C interrupt, normal exit)
-    # Other non-zero codes = actual errors
     $exitCode = $LASTEXITCODE
     if ($exitCode -ne 0 -and $exitCode -ne 3221225786) {
         Write-Host "Scheduler server failed (exit code: $exitCode)" -ForegroundColor Red

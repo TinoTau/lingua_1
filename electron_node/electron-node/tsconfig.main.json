@@ -34,9 +34,12 @@
   "exclude": [
     "node_modules",
     "renderer",
-    "main/src/**/*.test.ts"
+    "main/src/**/*.test.ts",
+    "main/src/**/*.test.helpers.ts"
   ],
   "ts-node": {
-    "require": ["tsconfig-paths/register"]
+    "require": [
+      "tsconfig-paths/register"
+    ]
   }
 }

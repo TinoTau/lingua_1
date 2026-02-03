@@ -8,7 +8,7 @@ use crate::metrics::DashboardSnapshotCache;
 use crate::timeout::start_job_timeout_manager;
 use crate::model_not_available::start_worker;
 use crate::node_registry::NodeRegistry;
-use crate::redis_runtime::Phase2Runtime;
+use crate::redis_runtime::RedisRuntime;
 use std::sync::Arc;
 use std::time::Duration;
 use tracing::info;
@@ -83,8 +83,8 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
     let room_manager = RoomManager::new();
 
     // Phase 2：Redis/多实例运行时（可选）
-    let phase2_runtime = Phase2Runtime::new(
-        config.scheduler.phase2.clone(),
+    let redis_runtime = RedisRuntime::new(
+        config.scheduler.redis_runtime.clone(),
         config.scheduler.heartbeat_interval_seconds,
         &config.scheduler,
     )
@@ -93,19 +93,18 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
 
     // 阶段3：初始化 Redis 连接（Phase2 启用或降级到本地连接）
     use crate::redis_runtime::RedisHandle;
-    let redis_arc = if phase2_runtime.is_some() {
-        // Phase2 启用：使用配置的 Redis
-        match RedisHandle::connect(&config.scheduler.phase2.redis, &config.scheduler).await {
+    let redis_arc = if redis_runtime.is_some() {
+        match RedisHandle::connect(&config.scheduler.redis_runtime.redis, &config.scheduler).await {
             Ok(redis) => Arc::new(redis),
             Err(e) => {
-                tracing::error!(error = %e, "连接 Phase2 Redis 失败");
+                tracing::error!(error = %e, "连接 Redis 失败");
                 return Err(e.into());
             }
         }
     } else {
-        // Phase2 未启用：使用本地 Redis（降级模式）
-        tracing::warn!("Phase2 未启用，使用本地 Redis 连接（降级模式）");
-        match RedisHandle::connect(&config.scheduler.phase2.redis, &config.scheduler).await {
+        // Redis 运行时未启用：使用本地 Redis（降级模式）
+        tracing::warn!("Redis 运行时未启用，使用本地 Redis 连接（降级模式）");
+        match RedisHandle::connect(&config.scheduler.redis_runtime.redis, &config.scheduler).await {
             Ok(redis) => Arc::new(redis),
             Err(e) => {
                 tracing::error!(error = %e, "连接本地 Redis 失败");
@@ -122,8 +121,7 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
     
     // NodeStatusManager 已删除（与Redis直查架构冲突）
     
-    // 初始化极简无锁调度服务和 Pool 服务（需要 Phase2 启用）
-    let (minimal_scheduler, pool_service) = if phase2_runtime.is_some() {
+    let (minimal_scheduler, pool_service) = if redis_runtime.is_some() {
         // 初始化 MinimalScheduler
         let scheduler = match crate::services::MinimalSchedulerService::new(redis_arc.clone()).await {
             Ok(s) => {
@@ -168,12 +166,12 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
         redis_arc.clone(),
         config.scheduler.task_binding.clone(),
     );
-    dispatcher.set_phase2(phase2_runtime.clone());
+    dispatcher.set_redis_runtime(redis_runtime.clone());
 
     // 初始化 Job 幂等键管理器
     let mut job_idempotency = crate::core::JobIdempotencyManager::new();
     // 设置 Phase2 运行时（如果可用）
-    job_idempotency.set_phase2(phase2_runtime.clone());
+    job_idempotency.set_redis_runtime(redis_runtime.clone());
 
     // 初始化 JobResult 去重管理器
     let job_result_deduplicator = crate::core::JobResultDeduplicator::new();
@@ -199,18 +197,17 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
         job_idempotency,
         job_result_deduplicator,
         pending_job_dispatches,
-        phase2: phase2_runtime.clone(),
+        redis_runtime: redis_runtime.clone(),
         minimal_scheduler,
         pool_service,
     };
 
-    // Phase 2：启动后台任务（presence + owner 续约 + Streams inbox）
-    if let Some(ref rt) = phase2_runtime {
+    if let Some(ref rt) = redis_runtime {
         let rt_for_log = rt.clone();
         rt.clone().spawn_background_tasks(app_state.clone());
-        info!(instance_id = %rt_for_log.instance_id, key_prefix = %rt_for_log.key_prefix(), "Phase2 已启用");
+        info!(instance_id = %rt_for_log.instance_id, key_prefix = %rt_for_log.key_prefix(), "Redis 运行时已启用");
         
-        // Phase 2：冷启动预加载（按照 NODE_JOB_FLOW_MERGED_TECH_SPEC_v1.0.md 规范）
+        // 冷启动预加载
         // 启动时加载全体节点、全体 pool、全体 lang-index，避免启动后 100-300ms 的抖动
         let rt_for_preload = rt.clone();
         let app_state_for_preload = app_state.clone();
@@ -242,7 +239,7 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
         model_na_rx,
         app_state.node_registry.clone(),
         config.scheduler.model_not_available.clone(),
-        app_state.phase2.clone(),
+        app_state.redis_runtime.clone(),
     );
     
     // 启动JobResult去重管理器清理任务

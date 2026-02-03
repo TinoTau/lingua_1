@@ -9,7 +9,7 @@ use std::time::Duration;
 use tokio::sync::mpsc;
 use std::sync::Arc;
 
-use crate::redis_runtime::Phase2Runtime;
+use crate::redis_runtime::RedisRuntime;
 
 #[derive(Debug, Clone)]
 pub struct ModelNotAvailableEvent {
@@ -41,7 +41,7 @@ pub fn start_worker(
     mut rx: mpsc::UnboundedReceiver<ModelNotAvailableEvent>,
     node_registry: std::sync::Arc<crate::node_registry::NodeRegistry>,
     config: crate::core::config::ModelNotAvailableConfig,
-    phase2: Option<Arc<Phase2Runtime>>,
+    redis_runtime: Option<Arc<RedisRuntime>>,
 ) {
     tokio::spawn(async move {
         // Phase 1：TTL（推荐 30–120s，支持配置）
@@ -67,7 +67,7 @@ pub fn start_worker(
 
             // 节点级限流（防止单节点异常刷屏/风暴）
             // Phase 2：使用 Redis key，保证跨实例一致
-            if let Some(ref rt) = phase2 {
+            if let Some(ref rt) = redis_runtime {
                 let allowed = rt
                     .model_na_node_ratelimit_allow(
                         &ev.node_id,
@@ -113,7 +113,7 @@ pub fn start_worker(
                 ev.service_id,
                 ev.service_version.clone().unwrap_or_else(|| "any".to_string())
             );
-            if let Some(ref rt) = phase2 {
+            if let Some(ref rt) = redis_runtime {
                 // Phase 2：Redis 去抖（SET NX PX window）
                 let first = rt
                     .model_na_debounce_first_hit(&ev.service_id, ev.service_version.as_deref(), debounce_window.as_millis() as u64)

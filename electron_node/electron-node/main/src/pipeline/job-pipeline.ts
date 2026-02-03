@@ -127,8 +127,8 @@ export async function runJobPipeline(options: JobPipelineOptions): Promise<JobRe
           `Step ${step} failed`
         );
 
-        // 根据步骤的重要性决定是否继续（语义修复为必经且必须成功，失败即 job 失败）
-        if (step === 'ASR' || step === 'TRANSLATION' || step === 'SEMANTIC_REPAIR') {
+        // 根据步骤的重要性决定是否继续（ASR/同音纠错/翻译/语义修复为必经且必须成功，失败即 job 失败）
+        if (step === 'ASR' || step === 'PHONETIC_CORRECTION' || step === 'TRANSLATION' || step === 'SEMANTIC_REPAIR') {
           // turn 内任一 segment 失败 → 清理该 turn 的合并 buffer（技术方案 6.1）
           if ((job as any).turn_id && services.audioAggregator) {
             const bufferKey = buildBufferKey(job);

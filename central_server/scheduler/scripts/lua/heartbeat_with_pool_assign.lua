@@ -23,21 +23,21 @@ end
 redis.call("HSET", node_key, "last_heartbeat_ts", tostring(now_ts))
 redis.call("EXPIRE", node_key, ttl_sec)
 
--- 获取节点的语言能力（池分配用 asr×tts，与任务查找 src:tgt 一致）
+-- 获取节点的语言能力（池分配按语义修复能力：asr_langs × semantic_langs，建立两个单向池 zh:en / en:zh 等）
 local asr_langs_json = redis.call("HGET", node_key, "asr_langs")
-local tts_langs_json = redis.call("HGET", node_key, "tts_langs")
+local semantic_langs_json = redis.call("HGET", node_key, "semantic_langs")
 
-if not asr_langs_json or not tts_langs_json then
+if not asr_langs_json or not semantic_langs_json then
     return "ERROR:MISSING_LANG_CAPABILITIES"
 end
 
 local asr_langs = cjson.decode(asr_langs_json)
-local tts_langs = cjson.decode(tts_langs_json)
+local semantic_langs = cjson.decode(semantic_langs_json)
 
--- 生成所有有向语言对 (src ∈ asr_langs, tgt ∈ tts_langs)
+-- 生成所有有向语言对 (src ∈ asr_langs, tgt ∈ semantic_langs)，目标侧由语义修复能力决定
 local directed_pairs = {}
 for _, src in ipairs(asr_langs) do
-    for _, tgt in ipairs(tts_langs) do
+    for _, tgt in ipairs(semantic_langs) do
         table.insert(directed_pairs, src .. ":" .. tgt)
     end
 end

@@ -166,23 +166,23 @@ lazy_static::lazy_static! {
         IntCounter::with_opts(Opts::new("model_na_other_marked_node_total", "MODEL_NOT_AVAILABLE other marked node bucket"))
             .expect("metric");
 
-    // —— Phase2 streams —— //
-    static ref PHASE2_REDIS_OP_TOTAL: IntCounterVec = IntCounterVec::new(
+    // —— Redis runtime streams —— //
+    static ref REDIS_RUNTIME_REDIS_OP_TOTAL: IntCounterVec = IntCounterVec::new(
         Opts::new(
-            "phase2_redis_op_total",
-            "Phase2 redis operations total by op and result"
+            "redis_runtime_redis_op_total",
+            "Redis runtime redis operations total by op and result"
         ),
         &["op", "result"]
     )
     .expect("metric");
-    static ref PHASE2_INBOX_PENDING: IntGauge = IntGauge::with_opts(Opts::new(
-        "phase2_inbox_pending",
-        "Phase2 inbox pending count (for this instance)"
+    static ref REDIS_RUNTIME_INBOX_PENDING: IntGauge = IntGauge::with_opts(Opts::new(
+        "redis_runtime_inbox_pending",
+        "Redis runtime inbox pending count (for this instance)"
     ))
     .expect("metric");
-    static ref PHASE2_DLQ_MOVED_TOTAL: IntCounter = IntCounter::with_opts(Opts::new(
-        "phase2_dlq_moved_total",
-        "Phase2 moved messages to DLQ total"
+    static ref REDIS_RUNTIME_DLQ_MOVED_TOTAL: IntCounter = IntCounter::with_opts(Opts::new(
+        "redis_runtime_dlq_moved_total",
+        "Redis runtime moved messages to DLQ total"
     ))
     .expect("metric");
 
@@ -261,9 +261,9 @@ pub fn init() {
     let _ = REGISTRY.register(Box::new(MODEL_NA_OTHER_RATE_LIMITED_NODE_TOTAL.clone()));
     let _ = REGISTRY.register(Box::new(MODEL_NA_OTHER_MARKED_NODE_TOTAL.clone()));
 
-    let _ = REGISTRY.register(Box::new(PHASE2_REDIS_OP_TOTAL.clone()));
-    let _ = REGISTRY.register(Box::new(PHASE2_INBOX_PENDING.clone()));
-    let _ = REGISTRY.register(Box::new(PHASE2_DLQ_MOVED_TOTAL.clone()));
+    let _ = REGISTRY.register(Box::new(REDIS_RUNTIME_REDIS_OP_TOTAL.clone()));
+    let _ = REGISTRY.register(Box::new(REDIS_RUNTIME_INBOX_PENDING.clone()));
+    let _ = REGISTRY.register(Box::new(REDIS_RUNTIME_DLQ_MOVED_TOTAL.clone()));
 
     let _ = REGISTRY.register(Box::new(RESERVE_ATTEMPT_TOTAL.clone()));
     let _ = REGISTRY.register(Box::new(DISPATCH_LATENCY_SECONDS.clone()));
@@ -339,18 +339,18 @@ pub fn on_model_na_received_detail(service_id: &str, reason: &str) {
     );
 }
 
-// ===== Phase2 helpers =====
-pub fn phase2_redis_op(op: &'static str, ok: bool) {
+// ===== Redis runtime helpers =====
+pub fn redis_runtime_redis_op(op: &'static str, ok: bool) {
     let result = if ok { "ok" } else { "err" };
-    PHASE2_REDIS_OP_TOTAL.with_label_values(&[op, result]).inc();
+    REDIS_RUNTIME_REDIS_OP_TOTAL.with_label_values(&[op, result]).inc();
 }
 
-pub fn set_phase2_inbox_pending(v: i64) {
-    PHASE2_INBOX_PENDING.set(v);
+pub fn set_redis_runtime_inbox_pending(v: i64) {
+    REDIS_RUNTIME_INBOX_PENDING.set(v);
 }
 
-pub fn on_phase2_dlq_moved() {
-    PHASE2_DLQ_MOVED_TOTAL.inc();
+pub fn on_redis_runtime_dlq_moved() {
+    REDIS_RUNTIME_DLQ_MOVED_TOTAL.inc();
 }
 
 fn inc_bounded(

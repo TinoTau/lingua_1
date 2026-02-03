@@ -6,7 +6,7 @@
  * 1. 服务信息全部来自 ServiceRegistry
  * 2. 端口来自 service.json 的 port 字段
  * 3. 运行状态来自 entry.runtime.status
- * 4. 不做任何兼容层、fallback、映射表
+ * 4. baseUrl 来自配置（getServicesBaseUrl），不再硬编码
  */
 
 import logger from '../logger';
@@ -15,7 +15,10 @@ import { ServiceEndpoint } from './types';
 import { ServiceRegistry } from '../service-layer/ServiceTypes';
 
 export class TaskRouterServiceManagerNew {
-  constructor(private registry: ServiceRegistry) {}
+  constructor(
+    private registry: ServiceRegistry,
+    private getServicesBaseUrl: () => string
+  ) { }
 
   /**
    * 刷新服务端点列表
@@ -41,11 +44,17 @@ export class TaskRouterServiceManagerNew {
         continue;
       }
 
-      // 创建端点
+      const serviceType = this.mapTypeToServiceType(entry.def.type);
+      // 未知类型（如 phonetic）不加入 ASR/NMT/TTS 等列表，避免 ASR 路由误选同音纠错服务导致整段失败
+      if (serviceType === null) {
+        continue;
+      }
+
+      const base = this.getServicesBaseUrl().replace(/\/$/, '');
       const endpoint: ServiceEndpoint = {
         serviceId: entry.def.id,
-        serviceType: this.mapTypeToServiceType(entry.def.type),
-        baseUrl: `http://127.0.0.1:${entry.def.port}`,
+        serviceType,
+        baseUrl: `${base}:${entry.def.port}`,
         port: entry.def.port,
         status: 'running',
       };
@@ -81,9 +90,10 @@ export class TaskRouterServiceManagerNew {
   }
 
   /**
-   * 映射 service.json 的 type 到 ServiceType 枚举
+   * 映射 service.json 的 type 到 ServiceType 枚举。
+   * 未知类型（如 phonetic）返回 null，调用方不得将其加入 ASR 等列表，否则 ASR 会误选同音纠错服务导致整段失败。
    */
-  private mapTypeToServiceType(type: string): ServiceType {
+  private mapTypeToServiceType(type: string): ServiceType | null {
     const typeMap: Record<string, ServiceType> = {
       'asr': ServiceType.ASR,
       'nmt': ServiceType.NMT,
@@ -94,8 +104,8 @@ export class TaskRouterServiceManagerNew {
 
     const mapped = typeMap[type.toLowerCase()];
     if (!mapped) {
-      logger.warn({ type }, `Unknown service type, defaulting to ASR`);
-      return ServiceType.ASR;
+      logger.warn({ type }, 'Unknown service type, skipping for task-router endpoint list (e.g. phonetic is not ASR)');
+      return null;
     }
 
     return mapped;
@@ -108,10 +118,12 @@ export class TaskRouterServiceManagerNew {
     const result: InstalledService[] = [];
 
     for (const entry of this.registry.values()) {
+      const serviceType = this.mapTypeToServiceType(entry.def.type);
+      if (serviceType === null) continue;
       const serviceStatus = entry.runtime.status === 'stopped' ? 'stopped' : 'running';
       result.push({
         service_id: entry.def.id,
-        type: this.mapTypeToServiceType(entry.def.type),
+        type: serviceType,
         device: 'gpu', // 简化：所有服务都标记为GPU
         status: serviceStatus,
         version: entry.def.version || '2.0.0',

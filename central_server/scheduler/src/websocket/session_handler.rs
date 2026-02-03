@@ -133,7 +133,7 @@ pub async fn handle_session(socket: WebSocket, state: AppState) {
         );
         
         // Phase 2: 清除会话所有者
-        if let Some(rt) = state.phase2.as_ref() {
+        if let Some(rt) = state.redis_runtime.as_ref() {
             rt.clear_session_owner(sess_id).await;
         }
         

@@ -158,23 +158,9 @@ export class HeartbeatHandler {
       ),
     };
 
-    // 记录语言对列表上报信息（用于调试）
-    if (message.language_capabilities?.supported_language_pairs) {
-      const pairs = message.language_capabilities.supported_language_pairs;
-      logger.info({
-        nodeId: this.nodeId,
-        pair_count: pairs.length,
-        pairs: pairs.map(p => `${p.src}-${p.tgt}`).join(', ')
-      }, '上报语言对列表到调度服务器');
-    } else {
-      logger.warn({
-        nodeId: this.nodeId
-      }, '未生成语言对列表，将使用向后兼容模式');
-    }
-
-    // 方案1+方案2：基于配置和服务状态的动态指标收集（支持热插拔）
+    // 基于配置和服务状态的动态指标收集
     const metricsConfig = this.nodeConfig.metrics;
-    const metricsEnabled = metricsConfig?.enabled !== false; // 默认启用（向后兼容）
+    const metricsEnabled = metricsConfig?.enabled !== false;
 
     if (metricsEnabled) {
       // 检查 Rerun 指标（Gate-B）

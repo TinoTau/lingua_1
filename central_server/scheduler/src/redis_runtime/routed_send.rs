@@ -7,7 +7,7 @@ pub async fn send_node_message_routed(state: &AppState, node_id: &str, msg: Node
         _ => format!("{:?}", msg),
     };
     
-    let Some(rt) = state.phase2.as_ref() else {
+    let Some(rt) = state.redis_runtime.as_ref() else {
         tracing::warn!(node_id = %node_id, msg_type = %msg_type, "消息发送失败：Phase2 未启用");
         return false;
     };
@@ -31,7 +31,7 @@ pub async fn send_node_message_routed(state: &AppState, node_id: &str, msg: Node
 
 /// 发送 SessionMessage 到会话（生产环境：会话与调度器不在同一设备，本地直发已移除，统一走跨实例投递）
 pub async fn send_session_message_routed(state: &AppState, session_id: &str, msg: SessionMessage) -> bool {
-    let Some(rt) = state.phase2.as_ref() else {
+    let Some(rt) = state.redis_runtime.as_ref() else {
         warn!(session_id = %session_id, "Failed to send session message: Phase2 not enabled");
         return false;
     };

@@ -11,11 +11,9 @@
 
 import logger from '../logger';
 import { ServiceType, SequentialTask, SequentialExecutorConfig, SequentialExecutorState } from './types';
-import {
-  enqueueTaskOrdered,
-  collectExpiredAndRemove,
-  findNextRunnableAndRemoveExpired,
-} from './sequential-executor-queue';
+import { enqueueTaskOrdered } from './sequential-executor-queue';
+import { runTimeoutCheck } from './sequential-executor-timeout';
+import { processNextTaskFromState } from './sequential-executor-next-task';
 
 const DEFAULT_CONFIG: Required<SequentialExecutorConfig> = {
   enabled: true,
@@ -63,40 +61,7 @@ export class SequentialExecutor {
    * 检查超时任务
    */
   private checkTimeouts(): void {
-    const now = Date.now();
-    for (const [sessionId, sessionQueues] of this.state.waitingQueue.entries()) {
-      for (const [taskType, queue] of sessionQueues.entries()) {
-        const expiredTasks: SequentialTask[] = [];
-        for (const task of queue) {
-          const waitTime = now - task.timestamp;
-          if (waitTime > this.config.maxWaitMs) {
-            expiredTasks.push(task);
-          }
-        }
-
-        // 移除超时任务并拒绝
-        for (const task of expiredTasks) {
-          const index = queue.indexOf(task);
-          if (index !== -1) {
-            queue.splice(index, 1);
-          }
-          // 重新计算waitTime，因为它在第二个循环中不在作用域内
-          const waitTime = now - task.timestamp;
-          logger.warn(
-            {
-              sessionId: task.sessionId,
-              utteranceIndex: task.utteranceIndex,
-              jobId: task.jobId,
-              taskType: task.taskType,
-              waitTimeMs: waitTime,
-              maxWaitMs: this.config.maxWaitMs,
-            },
-            'SequentialExecutor: Task timeout, rejecting'
-          );
-          task.reject(new Error(`SequentialExecutor: Task timeout after ${waitTime}ms`));
-        }
-      }
-    }
+    runTimeoutCheck(this.state, this.config);
   }
 
   /**
@@ -309,73 +274,7 @@ export class SequentialExecutor {
    * 处理下一个任务（按服务类型）
    */
   private processNextTask(sessionId: string, taskType: ServiceType): void {
-    const sessionQueues = this.state.waitingQueue.get(sessionId);
-    if (!sessionQueues) {
-      return;
-    }
-
-    const queue = sessionQueues.get(taskType);
-    if (!queue || queue.length === 0) {
-      return;
-    }
-
-    const sessionState = this.state.currentIndex.get(sessionId);
-    const currentIndex = sessionState?.get(taskType) ?? -1;
-
-    const { nextTask, expired } = findNextRunnableAndRemoveExpired(queue, currentIndex);
-    for (const task of expired) {
-      logger.warn(
-        {
-          sessionId,
-          currentIndex,
-          taskIndex: task.utteranceIndex,
-          taskType: task.taskType,
-          jobId: task.jobId,
-        },
-        'SequentialExecutor: Task index is less than or equal to current index, skipping expired task'
-      );
-      task.reject(new Error(`SequentialExecutor: Task index ${task.utteranceIndex} is less than or equal to current index ${currentIndex}, task expired`));
-    }
-
-    if (nextTask) {
-      this.processTask(nextTask);
-    } else {
-      // 没有找到可以执行的任务，等待
-      const firstInQueue = queue[0];
-      if (firstInQueue) {
-        const waitTime = Date.now() - firstInQueue.timestamp;
-        // 如果等待时间超过10秒，记录警告
-        if (waitTime > 10000) {
-          logger.warn(
-            {
-              sessionId,
-              currentIndex,
-              nextIndex: firstInQueue.utteranceIndex,
-              taskType: firstInQueue.taskType,
-              jobId: firstInQueue.jobId,
-              queueLength: queue.length,
-              waitTimeMs: waitTime,
-              maxWaitMs: this.config.maxWaitMs,
-              note: 'Task has been waiting in queue for a long time, may be blocked',
-            },
-            'SequentialExecutor: Next task index is not consecutive, waiting (long wait detected)'
-          );
-        } else {
-          logger.debug(
-            {
-              sessionId,
-              currentIndex,
-              nextIndex: firstInQueue.utteranceIndex,
-              taskType: firstInQueue.taskType,
-              jobId: firstInQueue.jobId,
-              queueLength: queue.length,
-              waitTimeMs: waitTime,
-            },
-            'SequentialExecutor: Next task index is not consecutive, waiting'
-          );
-        }
-      }
-    }
+    processNextTaskFromState(this.state, sessionId, taskType, this.config, (task) => this.processTask(task));
   }
 
   /**

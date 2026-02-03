@@ -169,7 +169,7 @@ pub(super) async fn handle_utterance(
                         "【派发】发往节点失败"
                     );
                     // 发送失败：释放 reserved 并发槽（幂等）
-                    if let Some(rt) = state.phase2.as_ref() {
+                    if let Some(rt) = state.redis_runtime.as_ref() {
                         rt.release_node_slot(node_id, &job.job_id, job.dispatch_attempt_id).await;
                         let _ = rt
                             .job_fsm_to_finished(&job.job_id, job.dispatch_attempt_id.max(1), false)

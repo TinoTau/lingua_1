@@ -60,7 +60,7 @@ class RepairEngine:
                 'text_out': str,
                 'confidence': float,
                 'diff': List[Dict],
-                'repair_time_ms': int
+                'process_time_ms': int
             }
         """
         start_time = time.time()
@@ -197,7 +197,7 @@ class RepairEngine:
                 'text_out': text_out,
                 'confidence': confidence,
                 'diff': diff,
-                'repair_time_ms': elapsed_ms,
+                'process_time_ms': elapsed_ms,
             }
         except Exception as e:
             elapsed_ms = int((time.time() - start_time) * 1000)
@@ -215,7 +215,7 @@ class RepairEngine:
                 'text_out': text_in,
                 'confidence': 0.5,
                 'diff': [],
-                'repair_time_ms': elapsed_ms,
+                'process_time_ms': elapsed_ms,
             }
     
     def _extract_repaired_text(self, generated_text: str, original_text: str) -> str:

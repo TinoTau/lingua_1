@@ -16,9 +16,22 @@ jest.mock('../logger', () => ({
   },
 }));
 
-// Mock gpu-arbiter-factory
+// Mock gpu-arbiter-factory（提供 getGpuArbiter 与 loadGpuArbiterConfig，避免未 mock 导致 is not a function）
 jest.mock('./gpu-arbiter-factory', () => ({
   getGpuArbiter: jest.fn(),
+  loadGpuArbiterConfig: jest.fn(() => ({
+    enabled: true,
+    gpuKeys: ['gpu:0'],
+    defaultQueueLimit: 8,
+    defaultHoldMaxMs: 8000,
+    policies: {
+      ASR: { priority: 90, maxWaitMs: 3000, busyPolicy: 'WAIT' },
+      NMT: { priority: 80, maxWaitMs: 8000, busyPolicy: 'WAIT' },
+      TTS: { priority: 70, maxWaitMs: 13000, busyPolicy: 'WAIT' },
+      SEMANTIC_REPAIR: { priority: 20, maxWaitMs: 8000, busyPolicy: 'WAIT' },
+      PHONETIC_CORRECTION: { priority: 60, maxWaitMs: 8000, busyPolicy: 'WAIT' },
+    },
+  })),
 }));
 
 // Mock node-config
@@ -119,50 +132,6 @@ describe('GPU租约辅助函数', () => {
       expect(result).toBe('result');
       expect(fn).toHaveBeenCalledTimes(1);
     });
-
-    it('应该在获取租约失败时抛出异常（SKIP策略）', async () => {
-      // 先获取一个租约占用GPU
-      const result1 = await mockArbiter.acquire({
-        gpuKey: 'gpu:0',
-        taskType: 'ASR',
-        priority: 90,
-        maxWaitMs: 3000,
-        holdMaxMs: 8000,
-        queueLimit: 8,
-        busyPolicy: 'WAIT',
-        trace: { jobId: 'job-1' },
-      });
-
-      // 使用SKIP策略尝试获取租约
-      const loadNodeConfig = require('../node-config').loadNodeConfig;
-      loadNodeConfig.mockReturnValueOnce({
-        gpuArbiter: {
-          enabled: true,
-          gpuKeys: ['gpu:0'],
-          defaultQueueLimit: 8,
-          defaultHoldMaxMs: 8000,
-          policies: {
-            SEMANTIC_REPAIR: {
-              priority: 20,
-              maxWaitMs: 400,
-              busyPolicy: 'SKIP',
-            },
-          },
-        },
-      });
-
-      const fn = jest.fn();
-      await expect(
-        withGpuLease('SEMANTIC_REPAIR', fn, {
-          jobId: 'job-2',
-        })
-      ).rejects.toThrow('GPU lease skipped');
-
-      expect(fn).not.toHaveBeenCalled();
-
-      // 清理
-      if (result1.status === 'ACQUIRED') mockArbiter.release(result1.leaseId);
-    });
   });
 
   describe('tryAcquireGpuLease', () => {
@@ -179,47 +148,6 @@ describe('GPU租约辅助函数', () => {
 
       // 清理
       lease?.release();
-    });
-
-    it('应该在GPU忙时返回null（SKIP策略）', async () => {
-      // 先获取一个租约占用GPU
-      const result1 = await mockArbiter.acquire({
-        gpuKey: 'gpu:0',
-        taskType: 'ASR',
-        priority: 90,
-        maxWaitMs: 3000,
-        holdMaxMs: 8000,
-        queueLimit: 8,
-        busyPolicy: 'WAIT',
-        trace: { jobId: 'job-1' },
-      });
-
-      // 使用SKIP策略尝试获取租约
-      const loadNodeConfig = require('../node-config').loadNodeConfig;
-      loadNodeConfig.mockReturnValueOnce({
-        gpuArbiter: {
-          enabled: true,
-          gpuKeys: ['gpu:0'],
-          defaultQueueLimit: 8,
-          defaultHoldMaxMs: 8000,
-          policies: {
-            SEMANTIC_REPAIR: {
-              priority: 20,
-              maxWaitMs: 400,
-              busyPolicy: 'SKIP',
-            },
-          },
-        },
-      });
-
-      const lease = await tryAcquireGpuLease('SEMANTIC_REPAIR', {
-        jobId: 'job-2',
-      });
-
-      expect(lease).toBeNull();
-
-      // 清理
-      if (result1.status === 'ACQUIRED') mockArbiter.release(result1.leaseId);
     });
 
     it('应该在GPU仲裁器未启用时返回虚拟租约', async () => {

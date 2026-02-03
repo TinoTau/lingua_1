@@ -8,6 +8,9 @@ pydantic>=2.0.0
 # LLM Engine
 llama-cpp-python>=0.2.0
 
+# 繁→简：保证同音纠错与 LLM 收到简体，输出统一简体
+opencc-python-reimplemented>=0.1.7
+
 # PyTorch (for device management)
 torch>=2.0.0
 

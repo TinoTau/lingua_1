@@ -11,11 +11,8 @@ import { detectASRLanguages } from './language-capability/language-capability-as
 import { detectTTSLanguages } from './language-capability/language-capability-tts';
 import { detectNMTLanguagePairs } from './language-capability/language-capability-nmt';
 import { detectSemanticLanguages } from './language-capability/language-capability-semantic';
-import { computeSemanticCentricLanguagePairs, LanguagePair } from './language-capability/language-capability-pairs';
 
-/**
- * NMT 能力
- */
+/** NMT 服务返回的语言集合（用于求交集） */
 export interface NmtCapability {
   model_id: string;
   languages: string[];
@@ -24,26 +21,64 @@ export interface NmtCapability {
   supported_pairs?: Array<{ src: string; tgt: string }>;
 }
 
-/**
- * 节点语言能力
- * 重构日期：2026-01-20
- * 以语义修复为中心的架构
- */
+/** 节点语言能力：asr/semantic/tts 均为运行中服务语言的交集，供心跳与注册上报 */
 export interface NodeLanguageCapabilities {
-  /** @deprecated 保留用于向后兼容，优先使用 supported_language_pairs */
   asr_languages?: string[];
-  /** @deprecated 保留用于向后兼容，优先使用 supported_language_pairs */
   tts_languages?: string[];
-  /** @deprecated 保留用于向后兼容，优先使用 supported_language_pairs */
-  nmt_capabilities?: NmtCapability[];
-  /** @deprecated 保留用于向后兼容，优先使用 supported_language_pairs */
-  semantic_languages?: string[];  // 语义修复服务支持的语言
-  
-  /** 节点支持的语言对列表（带语义修复标记） */
-  supported_language_pairs?: LanguagePair[];
-  
-  /** 语义修复核心就绪标记（是否有语义服务） */
+  semantic_languages?: string[];
   semantic_core_ready?: boolean;
+}
+
+/**
+ * 按服务类型获取该服务支持的语言集合（用于求交集）
+ */
+async function getServiceSupportedLanguages(
+  service: InstalledService,
+  installedModels: InstalledModel[],
+  metadataManager: ModelMetadataManager
+): Promise<string[]> {
+  switch (service.type) {
+    case ServiceType.ASR:
+      return detectASRLanguages(service, installedModels, metadataManager);
+    case ServiceType.TTS:
+      return detectTTSLanguages(service, installedModels, metadataManager);
+    case ServiceType.SEMANTIC:
+      return detectSemanticLanguages(service, installedModels, metadataManager);
+    case ServiceType.NMT: {
+      const cap = await detectNMTLanguagePairs(service, installedModels, metadataManager);
+      return cap?.languages ?? [];
+    }
+    default:
+      return [];
+  }
+}
+
+/**
+ * 节点支持语言 = 所有已运行服务支持语言的交集（最大公约数）。
+ * 各服务启动/停止后，心跳时重新计算，调度端据此更新节点池。
+ */
+export async function detectNodeSupportedLanguagesIntersection(
+  installedServices: InstalledService[],
+  installedModels: InstalledModel[],
+  metadataManager: ModelMetadataManager
+): Promise<string[]> {
+  const running = installedServices.filter(s => s.status === 'running');
+  if (running.length === 0) return [];
+
+  const langSets: string[][] = [];
+  for (const service of running) {
+    const langs = await getServiceSupportedLanguages(service, installedModels, metadataManager);
+    if (langs.length > 0) {
+      langSets.push(normalizeLanguages([...new Set(langs)]));
+    }
+  }
+  if (langSets.length === 0) return [];
+
+  let intersection = new Set(langSets[0]);
+  for (let i = 1; i < langSets.length; i++) {
+    intersection = new Set(langSets[i].filter(l => intersection.has(l)));
+  }
+  return normalizeLanguages([...intersection]);
 }
 
 /**
@@ -58,109 +93,35 @@ export class LanguageCapabilityDetector {
   }
 
   /**
-   * 检测节点的语言能力
-   * P0-3: 仅统计 READY 状态的服务
+   * 检测节点语言能力：用所有已运行服务语言的交集作为 asr/semantic/tts 能力，
+   * 供心跳与注册上报；调度端按心跳更新节点池。
    */
   async detectLanguageCapabilities(
     installedServices: InstalledService[],
     installedModels: InstalledModel[],
-    capability_by_type: CapabilityByType[]
+    _capability_by_type: CapabilityByType[]
   ): Promise<NodeLanguageCapabilities> {
-    const capabilities: NodeLanguageCapabilities = {
-      asr_languages: [],
-      tts_languages: [],
-      nmt_capabilities: [],
-      semantic_languages: [],
-    };
-
-    // P0-3: 只处理 READY 状态的服务
-    const readyServices = installedServices.filter(s => {
-      // 检查服务状态为 running
-      if (s.status !== 'running') return false;
-      // 检查 capability_by_type 中对应类型为 ready
-      const capability = capability_by_type.find(c => c.type === s.type);
-      return capability?.ready === true;
-    });
-
-    // 1. 处理 ASR 服务
-    const asrServices = readyServices.filter(s => s.type === ServiceType.ASR);
-    for (const service of asrServices) {
-      const langs = await detectASRLanguages(service, installedModels, this.metadataManager);
-      capabilities.asr_languages!.push(...langs);
-    }
-
-    // 2. 处理 TTS 服务
-    const ttsServices = readyServices.filter(s => s.type === ServiceType.TTS);
-    for (const service of ttsServices) {
-      const langs = await detectTTSLanguages(service, installedModels, this.metadataManager);
-      capabilities.tts_languages!.push(...langs);
-    }
-
-    // 3. 处理 NMT 服务
-    const nmtServices = readyServices.filter(s => s.type === ServiceType.NMT);
-    for (const service of nmtServices) {
-      const nmtCap = await detectNMTLanguagePairs(service, installedModels, this.metadataManager);
-      if (nmtCap) {
-        capabilities.nmt_capabilities!.push(nmtCap);
-      }
-    }
-
-    // 4. 处理语义修复服务（SEMANTIC）
-    const semanticServices = readyServices.filter(s => s.type === ServiceType.SEMANTIC);
-    logger.debug({ 
-      semantic_service_count: semanticServices.length 
-    }, '检测到语义修复服务');
-    
-    for (const service of semanticServices) {
-      const langs = await detectSemanticLanguages(service, installedModels, this.metadataManager);
-      if (langs.length > 0) {
-        logger.debug({ 
-          service_id: service.service_id,
-          model_id: service.model_id,
-          languages: langs,
-          language_count: langs.length
-        }, '语义修复服务支持的语言');
-      } else {
-        logger.warn({ 
-          service_id: service.service_id,
-          model_id: service.model_id
-        }, '语义修复服务未检测到支持的语言');
-      }
-      capabilities.semantic_languages!.push(...langs);
-    }
-
-    // 去重和规范化
-    capabilities.asr_languages = normalizeLanguages([...new Set(capabilities.asr_languages!)]);
-    capabilities.tts_languages = normalizeLanguages([...new Set(capabilities.tts_languages!)]);
-    capabilities.semantic_languages = normalizeLanguages([...new Set(capabilities.semantic_languages!)]);
-
-    // 5. 以语义修复为中心计算语言对（纯函数，不依赖时序）
-    capabilities.supported_language_pairs = computeSemanticCentricLanguagePairs(
-      capabilities.asr_languages!,
-      capabilities.tts_languages!,
-      capabilities.nmt_capabilities!,
-      capabilities.semantic_languages!
+    const intersection = await detectNodeSupportedLanguagesIntersection(
+      installedServices,
+      installedModels,
+      this.metadataManager
     );
 
-    // 6. 标记语义修复核心状态
-    capabilities.semantic_core_ready = capabilities.semantic_languages!.length > 0;
+    const asr_languages = intersection;
+    const semantic_languages = intersection;
+    const tts_languages = intersection;
 
-    // 记录语言能力检测结果（增强版日志）
-    const semanticOnTgtCount = capabilities.supported_language_pairs?.filter(p => p.semantic_on_tgt).length || 0;
-    logger.info({ 
-      asr_languages: capabilities.asr_languages!.length,
-      tts_languages: capabilities.tts_languages!.length,
-      nmt_capabilities: capabilities.nmt_capabilities!.length,
-      semantic_languages: capabilities.semantic_languages!.length,
-      semantic_core_ready: capabilities.semantic_core_ready,
-      supported_language_pairs: capabilities.supported_language_pairs!.length,
-      semantic_on_src: capabilities.supported_language_pairs!.length,  // 全部都有源语言语义修复
-      semantic_on_tgt: semanticOnTgtCount,
-      language_pairs_detail: capabilities.supported_language_pairs?.slice(0, 10).map(p => 
-        `${p.src}-${p.tgt}${p.semantic_on_tgt ? '(+tgt)' : ''}`
-      ).join(', ') || 'none'
-    }, '✅ Language capabilities detected (semantic-centric)');
+    const capabilities: NodeLanguageCapabilities = {
+      asr_languages,
+      tts_languages,
+      semantic_languages,
+      semantic_core_ready: intersection.length > 0,
+    };
 
+    logger.info(
+      { supported_languages: intersection, count: intersection.length },
+      '节点语言能力（运行中服务交集）'
+    );
     return capabilities;
   }
 }

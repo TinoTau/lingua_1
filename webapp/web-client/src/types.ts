@@ -98,11 +98,19 @@ export const DEFAULT_RECONNECT_CONFIG: ReconnectConfig = {
   heartbeatTimeoutMs: 60000, // 60秒
 };
 
+/** 从环境变量读取调度 URL（Vite 构建时注入 VITE_SCHEDULER_URL），无硬编码 */
+function getDefaultSchedulerUrl(): string {
+  if (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_SCHEDULER_URL) {
+    return (import.meta as any).env.VITE_SCHEDULER_URL as string;
+  }
+  return 'ws://127.0.0.1:5010/ws/session';
+}
+
 export const DEFAULT_CONFIG: Config = {
   silenceTimeoutMs: 3000, // 3秒（已修复：从5秒减少到3秒，与调度服务器 pause_ms 保持一致）
   tailBufferMs: 250,
   groupTimeoutSec: 30,
-  schedulerUrl: 'ws://localhost:5010/ws/session',
+  schedulerUrl: getDefaultSchedulerUrl(),
   silenceFilter: DEFAULT_SILENCE_FILTER_CONFIG,
   reconnectConfig: DEFAULT_RECONNECT_CONFIG,
   clientVersion: 'web-client-v1.0',

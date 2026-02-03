@@ -1,10 +1,12 @@
 /**
  * ServiceProcessRunner 内部实现：常量、端口检查、健康检查、就绪标记
  * Runner 类只做委托，不新增对外接口。
+ * 健康检查 / 端口检查的 host 来自配置 getServicesBaseUrl，无硬编码 URL。
  */
 
 import { ServiceEntry } from './ServiceTypes';
 import logger from '../logger';
+import { getServicesBaseUrl } from '../node-config';
 
 /**
  * 服务进程管理常量
@@ -34,12 +36,16 @@ export const PROCESS_CONSTANTS = {
   MAX_ERROR_LOG_LENGTH: 5000,
 } as const;
 
+function healthCheckUrl(port: number): string {
+  return `${getServicesBaseUrl()}:${port}/health`;
+}
+
 /**
  * 检查端口是否空闲
  */
 export async function isPortFree(port: number): Promise<boolean> {
   try {
-    await fetch(`http://localhost:${port}/health`, {
+    await fetch(healthCheckUrl(port), {
       signal: AbortSignal.timeout(PROCESS_CONSTANTS.PORT_CHECK_TIMEOUT_MS)
     });
     return false; // 端口被占用
@@ -56,7 +62,7 @@ export async function waitForPortRelease(port: number, maxWaitMs: number): Promi
 
   while (Date.now() - startTime < maxWaitMs) {
     try {
-      await fetch(`http://localhost:${port}/health`, {
+      await fetch(healthCheckUrl(port), {
         signal: AbortSignal.timeout(PROCESS_CONSTANTS.PORT_RELEASE_CHECK_TIMEOUT_MS)
       });
       await new Promise(resolve => setTimeout(resolve, PROCESS_CONSTANTS.PORT_RELEASE_CHECK_INTERVAL_MS));
@@ -130,7 +136,7 @@ export async function runHealthCheck(
         ? AbortSignal.abort()
         : AbortSignal.timeout(PROCESS_CONSTANTS.HEALTH_CHECK_TIMEOUT_MS);
 
-      const response = await fetch(`http://127.0.0.1:${port}/health`, {
+      const response = await fetch(healthCheckUrl(port), {
         signal: fetchSignal
       });
 

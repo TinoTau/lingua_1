@@ -4,10 +4,10 @@
 
 use std::sync::Arc;
 use lingua_scheduler::node_registry::NodeRegistry;
-use lingua_scheduler::phase2::RedisHandle;
+use lingua_scheduler::redis_runtime::RedisHandle;
 use lingua_scheduler::pool::PoolService;
 use lingua_scheduler::messages::ServiceType;
-use lingua_scheduler::core::config::Phase2RedisConfig;
+use lingua_scheduler::core::config::RedisConnectionConfig;
 use lingua_scheduler::Config;
 
 #[tokio::main]
@@ -20,7 +20,7 @@ async fn main() {
     println!("🚀 开始测试 Redis 直查 + PoolService 集成...\n");
     
     // 连接 Redis
-    let redis_config = Phase2RedisConfig {
+    let redis_config = RedisConnectionConfig {
         mode: "single".to_string(),
         url: "redis://127.0.0.1:6379".to_string(),
         cluster_urls: Vec::new(),
@@ -28,7 +28,7 @@ async fn main() {
     };
     let scheduler_config = Config::default().scheduler;
 
-    let redis = match RedisHandle::connect(&redis_config, &scheduler_config).await {
+    let redis: Arc<RedisHandle> = match RedisHandle::connect(&redis_config, &scheduler_config).await {
         Ok(r) => {
             println!("✅ Redis 连接成功");
             Arc::new(r)
@@ -112,9 +112,6 @@ async fn main() {
     
     let mut success_count = 0;
     let mut fail_count = 0;
-    let mut pool_used = 0;
-    let mut fallback_used = 0;
-    
     for (src, tgt, types, accept_pub, desc) in test_cases {
         println!("场景: {}", desc);
         println!("  参数: src={}, tgt={}, types={:?}, public={}", 
@@ -134,7 +131,6 @@ async fn main() {
                 println!("  ✅ 成功选择节点: {}", node_id);
                 // 注意：实际日志会显示是否使用了 PoolService
                 success_count += 1;
-                pool_used += 1;
                 println!();
             }
             None => {
@@ -152,7 +148,6 @@ async fn main() {
                 println!("    资源超阈值: {}", breakdown.resource_threshold_exceeded);
                 println!("    最可能原因: {}\n", breakdown.best_reason_label());
                 fail_count += 1;
-                fallback_used += 1;
             }
         }
     }

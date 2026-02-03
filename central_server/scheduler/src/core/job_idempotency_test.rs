@@ -4,13 +4,13 @@
 #[cfg(test)]
 mod tests {
     use super::super::job_idempotency::{JobIdempotencyManager, make_job_key, JobType};
-    use crate::redis_runtime::Phase2Runtime;
-    use crate::core::config::Phase2Config;
+    use crate::redis_runtime::RedisRuntime;
+    use crate::core::config::RedisRuntimeConfig;
     use std::sync::Arc;
 
     /// 测试 Redis 配置（从环境变量读取，或使用默认值）
-    fn test_redis_config() -> crate::core::config::Phase2RedisConfig {
-        let mut cfg = crate::core::config::Phase2RedisConfig::default();
+    fn test_redis_config() -> crate::core::config::RedisConnectionConfig {
+        let mut cfg = crate::core::config::RedisConnectionConfig::default();
         let mode = std::env::var("LINGUA_TEST_REDIS_MODE").unwrap_or_else(|_| "single".to_string());
         if mode == "cluster" {
             cfg.mode = "cluster".to_string();
@@ -34,7 +34,7 @@ mod tests {
     }
 
     /// 检查是否可以连接到 Redis
-    async fn can_connect_redis(cfg: &crate::core::config::Phase2RedisConfig) -> bool {
+    async fn can_connect_redis(cfg: &crate::core::config::RedisConnectionConfig) -> bool {
         match cfg.mode.as_str() {
             "cluster" => {
                 let urls = if cfg.cluster_urls.is_empty() {
@@ -69,7 +69,7 @@ mod tests {
     }
 
     /// 清理测试 Redis 键
-    async fn cleanup_test_keys(rt: &Phase2Runtime) {
+    async fn cleanup_test_keys(rt: &RedisRuntime) {
         let key_prefix = rt.key_prefix();
         let cfg = test_redis_config();
         match cfg.mode.as_str() {
@@ -148,14 +148,14 @@ mod tests {
             return;
         }
 
-        // 创建 Phase2Runtime
-        let mut cfg = Phase2Config::default();
+        // 创建 RedisRuntime
+        let mut cfg = RedisRuntimeConfig::default();
         cfg.enabled = true;
         cfg.instance_id = format!("test-idempotency-{}", uuid::Uuid::new_v4());
         cfg.redis = redis_cfg;
         
         let scheduler_cfg = crate::core::config::SchedulerConfig::default();
-        let rt = Phase2Runtime::new(cfg.clone(), 5, &scheduler_cfg).await.unwrap().unwrap();
+        let rt = RedisRuntime::new(cfg.clone(), 5, &scheduler_cfg).await.unwrap().unwrap();
         let rt = Arc::new(rt);
         
         // 清理测试键
@@ -163,7 +163,7 @@ mod tests {
 
         // 创建 JobIdempotencyManager 并设置 Phase2
         let mut manager = JobIdempotencyManager::new();
-        manager.set_phase2(Some(rt.clone()));
+        manager.set_redis_runtime(Some(rt.clone()));
 
         let job_key = make_job_key(
             None,
@@ -213,14 +213,14 @@ mod tests {
             return;
         }
 
-        // 创建 Phase2Runtime
-        let mut cfg = Phase2Config::default();
+        // 创建 RedisRuntime
+        let mut cfg = RedisRuntimeConfig::default();
         cfg.enabled = true;
         cfg.instance_id = format!("test-ttl-{}", uuid::Uuid::new_v4());
         cfg.redis = redis_cfg;
         
         let scheduler_cfg = crate::core::config::SchedulerConfig::default();
-        let rt = Phase2Runtime::new(cfg.clone(), 5, &scheduler_cfg).await.unwrap().unwrap();
+        let rt = RedisRuntime::new(cfg.clone(), 5, &scheduler_cfg).await.unwrap().unwrap();
         let rt = Arc::new(rt);
         
         // 清理测试键
@@ -228,7 +228,7 @@ mod tests {
 
         // 创建 JobIdempotencyManager 并设置 Phase2
         let mut manager = JobIdempotencyManager::new();
-        manager.set_phase2(Some(rt.clone()));
+        manager.set_redis_runtime(Some(rt.clone()));
 
         let job_key = make_job_key(
             None,

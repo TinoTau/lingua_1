@@ -4,10 +4,14 @@
 //! ```bash
 //! cargo run --example test_redis_queries
 //! ```
+//!
+//! 仅测试现有 API：delete_node、list_online_node_ids、get_node、
+//! mark_service_unavailable、is_service_unavailable、record_exclude_reason、get_exclude_stats
 
-use lingua_scheduler::node_registry::{NodeData, NodeRedisRepository};
-use lingua_scheduler::phase2::RedisHandle;
-use lingua_scheduler::core::config::Phase2RedisConfig;
+use lingua_scheduler::node_registry::NodeRedisRepository;
+use lingua_scheduler::redis_runtime::RedisHandle;
+use lingua_scheduler::core::config::RedisConnectionConfig;
+use lingua_scheduler::Config;
 use std::sync::Arc;
 
 #[tokio::main]
@@ -16,14 +20,15 @@ async fn main() {
     
     // 1. 连接 Redis
     println!("📡 步骤 1: 连接 Redis...");
-    let redis_config = Phase2RedisConfig {
+    let redis_config = RedisConnectionConfig {
         mode: "single".to_string(),
         url: "redis://127.0.0.1:6379".to_string(),
         cluster_urls: vec![],
         key_prefix: "lingua".to_string(),
     };
     
-    let redis = match RedisHandle::connect(&redis_config).await {
+    let scheduler_config = Config::default().scheduler;
+    let redis = match RedisHandle::connect(&redis_config, &scheduler_config).await {
         Ok(r) => {
             println!("✅ Redis 连接成功！\n");
             r
@@ -43,58 +48,27 @@ async fn main() {
     let _ = repo.delete_node(test_node_id).await;
     println!("✅ 清理完成\n");
     
-    // 3. 测试节点写入
-    println!("📝 步骤 3: 测试节点写入...");
-    let node = NodeData::new(
-        test_node_id.to_string(),
-        vec![
-            vec!["en".to_string(), "zh".to_string()],
-            vec!["ja".to_string(), "zh".to_string()],
-        ],
-        NodeRedisRepository::current_ts(),
-        "online".to_string(),
-    );
-    
-    match repo.upsert_node(&node).await {
-        Ok(_) => println!("✅ 节点写入成功！"),
-        Err(e) => {
-            eprintln!("❌ 节点写入失败: {}", e);
-            std::process::exit(1);
-        }
-    }
-    println!();
-    
-    // 4. 测试节点读取
-    println!("🔍 步骤 4: 测试节点读取...");
+    // 3. 测试节点读取（不存在时应为 None）
+    println!("🔍 步骤 3: 测试节点读取（预期不存在）...");
     match repo.get_node(test_node_id).await {
+        Ok(None) => println!("✅ 节点不存在（符合预期）"),
         Ok(Some(retrieved)) => {
-            println!("✅ 节点读取成功！");
             println!("   节点 ID: {}", retrieved.node_id);
             println!("   状态: {}", retrieved.status);
             println!("   语言集合: {:?}", retrieved.lang_sets);
         }
-        Ok(None) => {
-            eprintln!("❌ 节点不存在");
-            std::process::exit(1);
-        }
         Err(e) => {
-            eprintln!("❌ 节点读取失败: {}", e);
+            eprintln!("❌ 读取失败: {}", e);
             std::process::exit(1);
         }
     }
     println!();
     
-    // 5. 测试在线节点列表
-    println!("📋 步骤 5: 测试在线节点列表...");
+    // 4. 测试在线节点列表
+    println!("📋 步骤 4: 测试在线节点列表...");
     match repo.list_online_node_ids().await {
         Ok(ids) => {
-            println!("✅ 在线节点列表查询成功！");
-            println!("   总数: {}", ids.len());
-            if ids.contains(&test_node_id.to_string()) {
-                println!("   ✅ 包含测试节点");
-            } else {
-                eprintln!("   ❌ 未找到测试节点");
-            }
+            println!("✅ 在线节点列表查询成功，总数: {}", ids.len());
         }
         Err(e) => {
             eprintln!("❌ 查询失败: {}", e);
@@ -103,29 +77,8 @@ async fn main() {
     }
     println!();
     
-    // 6. 测试语言集合查询
-    println!("🌍 步骤 6: 测试语言集合查询...");
-    let langset = vec!["en".to_string(), "zh".to_string()];
-    match repo.list_nodes_for_langset(&langset).await {
-        Ok(nodes) => {
-            println!("✅ 语言集合查询成功！");
-            println!("   查询: {:?}", langset);
-            println!("   匹配节点数: {}", nodes.len());
-            if nodes.contains(&test_node_id.to_string()) {
-                println!("   ✅ 包含测试节点");
-            } else {
-                eprintln!("   ❌ 未找到测试节点");
-            }
-        }
-        Err(e) => {
-            eprintln!("❌ 查询失败: {}", e);
-            std::process::exit(1);
-        }
-    }
-    println!();
-    
-    // 7. 测试服务不可用标记
-    println!("🚫 步骤 7: 测试服务不可用标记...");
+    // 5. 测试服务不可用标记
+    println!("🚫 步骤 5: 测试服务不可用标记...");
     match repo.mark_service_unavailable(
         test_node_id,
         "asr_whisper",
@@ -165,8 +118,8 @@ async fn main() {
     }
     println!();
     
-    // 8. 测试排除统计
-    println!("📊 步骤 8: 测试排除统计...");
+    // 6. 测试排除统计
+    println!("📊 步骤 6: 测试排除统计...");
     match repo.record_exclude_reason("ModelNotAvailable", test_node_id).await {
         Ok(_) => println!("✅ 排除统计记录成功！"),
         Err(e) => {
@@ -174,10 +127,15 @@ async fn main() {
             std::process::exit(1);
         }
     }
+    
+    match repo.get_exclude_stats().await {
+        Ok(stats) => println!("✅ 排除统计: {:?}", stats),
+        Err(e) => eprintln!("⚠️ 获取排除统计失败: {}", e),
+    }
     println!();
     
-    // 9. 清理测试数据
-    println!("🧹 步骤 9: 清理测试数据...");
+    // 7. 清理测试数据
+    println!("🧹 步骤 7: 清理测试数据...");
     match repo.delete_node(test_node_id).await {
         Ok(_) => println!("✅ 清理成功！"),
         Err(e) => {

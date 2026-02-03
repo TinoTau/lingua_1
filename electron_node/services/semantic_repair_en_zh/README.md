@@ -1,6 +1,6 @@
 # Unified Semantic Repair Service
 
-统一语义修复服务 - 使用路径隔离架构合并中文/英文语义修复和英文标准化服务。
+统一语义修复服务：**合并原中文与英文语义修复**，在同一服务内提供中英文修复与英文标准化。**同音/近音纠错**已拆分为独立服务 `phonetic_correction_zh`（端口 5016）；本服务可通过环境变量 `PHONETIC_SERVICE_URL` 可选调用该服务，未配置时仅做繁→简 + LLM 修复。
 
 ## 特性
 
@@ -50,12 +50,16 @@ semantic_repair_en_zh/
 
 ## 安装
 
-### 1. 安装 Python 依赖
+### 1. 虚拟环境与依赖（自动执行）
 
-```bash
+**应用在启动本服务时**，若检测到服务目录下无 `venv`，会**自动执行** `scripts\service\setup_venv.ps1`，创建虚拟环境并安装依赖，无需用户手动运行。之后启动均使用 `venv\Scripts\python.exe`，保证在虚拟环境中运行。
+
+若需手动创建或更新依赖（例如离线安装后）：
+```powershell
 cd electron_node/services/semantic_repair_en_zh
-pip install -r requirements.txt
+.\scripts\service\setup_venv.ps1
 ```
+若已存在 venv，脚本仅会执行 `pip install -r requirements.txt` 更新依赖。
 
 ### 2. 安装模型文件
 
@@ -91,13 +95,19 @@ TIMEOUT=30
 ENABLE_ZH_REPAIR=true
 ENABLE_EN_REPAIR=true
 ENABLE_EN_NORMALIZE=true
+
+# 可选：同音纠错服务 URL（如 http://127.0.0.1:5016），不设则中文修复仅做繁→简 + LLM
+# PHONETIC_SERVICE_URL=http://127.0.0.1:5016
 ```
 
 ## 启动
 
-```bash
-python service.py
-```
+- **由应用自动启动**：应用启动本服务时，若无 venv 会先自动执行 `setup_venv.ps1` 创建虚拟环境，再使用 `venv\Scripts\python.exe` 启动，保证在虚拟环境中运行。
+- **手动启动**（优先使用 venv）：
+  ```powershell
+  .\scripts\service\start_service.ps1
+  ```
+  或直接：`python service.py`（使用当前 PATH 下的 Python）。
 
 服务将在 `http://localhost:5015` 启动。
 
@@ -172,6 +182,8 @@ curl http://localhost:5015/health
 
 ## 响应格式
 
+节点端读取 `decision`、`text_out`、`confidence`、`repair_time_ms`：
+
 ```json
 {
   "request_id": "test-001",
@@ -181,9 +193,15 @@ curl http://localhost:5015/health
   "diff": [],
   "reason_codes": ["LOW_QUALITY_SCORE", "REPAIR_APPLIED"],
   "process_time_ms": 245,
+  "repair_time_ms": 245,
   "processor_name": "zh_repair"
 }
 ```
+
+## 模型与 ASR 准确度
+
+- **语义修复**：使用本目录 `models/` 下 GGUF 模型（中文/英文），行为与原 semantic_repair_zh、semantic_repair_en 一致。
+- **同音/近音纠错**：`models/` 下提供字符级 KenLM 模型 `zh_char_3gram.trie.bin`，供**节点端**流水线使用（`CHAR_LM_PATH` 指向该文件），在语义修复前对 ASR 文本做候选选优，提高识别准确度。详见 `models/README.md`。
 
 ## 测试
 

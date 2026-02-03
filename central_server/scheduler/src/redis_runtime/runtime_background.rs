@@ -1,4 +1,4 @@
-impl Phase2Runtime {
+impl RedisRuntime {
     pub fn spawn_background_tasks(self: Arc<Self>, state: AppState) {
         // 1) presence + owner 续约
         let rt = self.clone();

@@ -7,16 +7,13 @@ import axios, { AxiosInstance } from 'axios';
 import logger from '../logger';
 import { ServiceType, InstalledService } from '../../../../shared/protocols/messages';
 import { NodeConfig } from '../node-config';
-import {
-  ServiceEndpoint,
-  ASRTask,
-  ASRResult,
-} from './types';
+import { ServiceEndpoint, ASRTask, ASRResult } from './types';
 import { detectBadSegment, BadSegmentDetectionResult } from './bad-segment-detector';
 import { parseWavFile } from '../utils/opus-encoder';
 import { checkAudioQuality } from './task-router-asr-audio-quality';
 import { ASRRerunHandler } from './task-router-asr-rerun';
 import { ASRMetricsHandler } from './task-router-asr-metrics';
+import { postASRUtteranceRequest } from './task-router-asr-http';
 
 export class TaskRouterASRHandler {
   // ASR配置已移除：各服务的参数应该随着服务走，避免节点端与服务强制绑定
@@ -134,33 +131,31 @@ export class TaskRouterASRHandler {
         audio_format: audioFormat,
         sample_rate: task.sample_rate || 16000,
         task: 'transcribe',
-        // 如果任务中指定了beam_size，使用任务中的值；否则不传递，让服务使用自己的默认值
-        // 这样避免节点端与服务强制绑定，支持服务热插拔
         ...(task.beam_size !== undefined ? { beam_size: task.beam_size } : {}),
         condition_on_previous_text: false,
         use_context_buffer: false,
         use_text_context: true,
         enable_streaming_asr: task.enable_streaming || false,
         context_text: task.context_text,
-        // 如果任务中指定了这些参数，使用任务中的值；否则不传递，让服务使用自己的默认值
         ...(task.best_of !== undefined ? { best_of: task.best_of } : {}),
         ...(task.temperature !== undefined ? { temperature: task.temperature } : {}),
         ...(task.patience !== undefined ? { patience: task.patience } : {}),
         padding_ms: task.padding_ms,
       };
 
-      let response;
-      const requestStartTime = Date.now();
-      try {
-        // 详细记录ASR输入
-        logger.info({
+      const { response } = await postASRUtteranceRequest(
+        httpClient,
+        requestBody,
+        abortController.signal,
+        {
           serviceId: endpoint.serviceId,
           requestUrl,
+          baseUrl: endpoint.baseUrl,
           jobId: task.job_id,
           sessionId: (task as any).session_id,
           utteranceIndex: (task as any).utterance_index,
           audioLength: task.audio?.length || 0,
-          audioFormat: audioFormat,
+          audioFormat,
           srcLang: task.src_lang,
           sampleRate: task.sample_rate || 16000,
           contextText: task.context_text,
@@ -169,58 +164,8 @@ export class TaskRouterASRHandler {
           beamSize: requestBody.beam_size,
           timeout: httpClient.defaults?.timeout ?? 60000,
           requestBodySize: JSON.stringify(requestBody).length,
-        }, 'ASR INPUT: Sending ASR request to faster-whisper-vad');
-        
-        response = await httpClient.post('/utterance', requestBody, {
-          signal: abortController.signal,
-        });
-        
-        const requestDuration = Date.now() - requestStartTime;
-        
-        // 详细记录ASR输出
-        const asrText = response.data?.text || '';
-        const segments = response.data?.segments || [];
-        const qualityScore = response.data?.badSegmentDetection?.qualityScore;
-        const languageProbability = response.data?.language_probability;
-        
-        logger.info({
-          serviceId: endpoint.serviceId,
-          requestUrl,
-          status: response.status,
-          jobId: task.job_id,
-          sessionId: (task as any).session_id,
-          utteranceIndex: (task as any).utterance_index,
-          requestDurationMs: requestDuration,
-          asrText: asrText,
-          asrTextLength: asrText.length,
-          asrTextPreview: asrText.substring(0, 100),
-          segmentsCount: segments.length,
-          qualityScore: qualityScore,
-          languageProbability: languageProbability,
-          hasLanguageProbabilities: !!response.data?.language_probabilities,
-        }, 'ASR OUTPUT: faster-whisper-vad request succeeded');
-      } catch (axiosError: any) {
-        const requestDuration = Date.now() - requestStartTime;
-        const isTimeout = axiosError.code === 'ECONNABORTED' || axiosError.message?.includes('timeout');
-        logger.error({
-          serviceId: endpoint.serviceId,
-          requestUrl,
-          baseUrl: endpoint.baseUrl,
-          status: axiosError.response?.status,
-          statusText: axiosError.response?.statusText,
-          errorMessage: axiosError.message,
-          errorCode: axiosError.code,
-          jobId: task.job_id,
-          sessionId: (task as any).session_id,
-          utteranceIndex: (task as any).utterance_index,
-          responseData: axiosError.response?.data,
-          requestDurationMs: requestDuration,
-          isTimeout,
-          timeout: httpClient.defaults?.timeout ?? 60000,
-          note: isTimeout ? 'ASR service timeout - this should be marked as missing segment' : 'ASR service error - this should be marked as missing segment',
-        }, `faster-whisper-vad request failed${isTimeout ? ' (TIMEOUT)' : ''}`);
-        throw axiosError;
-      }
+        }
+      );
 
       const langProb = response.data.language_probability ?? 0;
       let useTextContext = false;

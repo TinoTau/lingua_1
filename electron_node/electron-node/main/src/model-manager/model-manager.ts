@@ -16,7 +16,7 @@ import {
   ModelDownloadError,
 } from './types';
 import { ModelNotAvailableError } from './errors';
-import type { ModelStatus } from '@shared/protocols/messages';
+import type { ModelStatus } from '../../../../shared/protocols/messages';
 export { ModelFileInfo, ModelVersion, ModelInfo, InstalledModelVersion, Registry, ModelDownloadProgress, ModelDownloadError } from './types';
 export { ModelNotAvailableError } from './errors';
 
@@ -27,8 +27,9 @@ import { LockManager } from './lock-manager';
 import { ModelDownloader } from './downloader';
 import { ModelVerifier } from './verifier';
 import { ModelInstaller } from './installer';
-import { loadNodeConfig } from '../node-config';
+import { loadNodeConfig, getModelHubUrl } from '../node-config';
 import logger from '../logger';
+import { buildCapabilityState } from './model-manager-capability';
 
 /**
  * ModelManager 类 - 模型管理器
@@ -56,23 +57,7 @@ export class ModelManager extends EventEmitter {
 
   constructor() {
     super();
-    // 优先从配置文件读取，其次从环境变量，最后使用默认值
-    const config = loadNodeConfig();
-    const configUrl = config.modelHub?.url;
-    const envUrl = process.env.MODEL_HUB_URL;
-    
-    // 确定使用的 URL，优先级：配置文件 > 环境变量 > 默认值
-    let urlToUse: string;
-    if (configUrl) {
-      urlToUse = configUrl;
-    } else if (envUrl) {
-      urlToUse = envUrl;
-    } else {
-      urlToUse = 'http://127.0.0.1:5000';
-    }
-    
-    // 如果 URL 包含 localhost，替换为 127.0.0.1 以避免 IPv6 解析问题
-    this.modelHubUrl = urlToUse.replace(/localhost/g, '127.0.0.1');
+    this.modelHubUrl = getModelHubUrl();
 
     // 优先使用非 C 盘路径
     let userData: string;
@@ -114,10 +99,7 @@ export class ModelManager extends EventEmitter {
     // 记录使用的 Model Hub URL
     const logger = (await import('../logger')).default;
     const config = loadNodeConfig();
-    logger.info({ 
-      modelHubUrl: this.modelHubUrl,
-      source: config.modelHub?.url ? 'config' : process.env.MODEL_HUB_URL ? 'environment' : 'default'
-    }, 'Model Hub URL configured');
+    logger.info({ modelHubUrl: this.modelHubUrl }, 'Model Hub URL configured');
     
     try {
       // 创建必要的目录
@@ -197,41 +179,13 @@ export class ModelManager extends EventEmitter {
     const capabilityState: Record<string, ModelStatus> = {};
 
     try {
-      // 获取所有可用模型
       const availableModels = await this.getAvailableModels();
       logger.debug({ modelCount: availableModels.length }, 'Building capability_state from available models');
 
-      // 遍历所有可用模型，检查其状态
-      for (const model of availableModels) {
-        const defaultVersion = model.default_version;
-        const installedVersion = this.registry[model.id]?.[defaultVersion];
-
-        if (!installedVersion) {
-          // 模型未安装
-          capabilityState[model.id] = 'not_installed';
-        } else {
-          // 将 InstalledModelVersion['status'] 映射到 ModelStatus
-          const status = installedVersion.status;
-          switch (status) {
-            case 'ready':
-              capabilityState[model.id] = 'ready';
-              break;
-            case 'downloading':
-            case 'verifying':
-            case 'installing':
-              capabilityState[model.id] = 'downloading';
-              break;
-            case 'error':
-              capabilityState[model.id] = 'error';
-              break;
-            default:
-              capabilityState[model.id] = 'not_installed';
-          }
-        }
-      }
+      Object.assign(capabilityState, buildCapabilityState(this.registry, availableModels));
 
       const readyCount = Object.values(capabilityState).filter(s => s === 'ready').length;
-      logger.info({ 
+      logger.info({
         totalModels: Object.keys(capabilityState).length,
         readyModels: readyCount,
         notInstalledModels: Object.values(capabilityState).filter(s => s === 'not_installed').length
@@ -241,24 +195,6 @@ export class ModelManager extends EventEmitter {
     }
 
     return capabilityState;
-  }
-
-  /**
-   * 将内部状态转换为 ModelStatus
-   */
-  private mapToModelStatus(status: InstalledModelVersion['status']): ModelStatus {
-    switch (status) {
-      case 'ready':
-        return 'ready';
-      case 'downloading':
-      case 'verifying':
-      case 'installing':
-        return 'downloading';
-      case 'error':
-        return 'error';
-      default:
-        return 'not_installed';
-    }
   }
 
   // ===== 模型路径获取 =====

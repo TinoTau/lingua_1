@@ -1,6 +1,8 @@
 import { StateMachine } from './state_machine';
-import { createAudioDecoder, AudioCodecConfig, AudioDecoder } from './audio_codec';
+import { AudioDecoder } from './audio_codec';
 import { MemoryManager, getMaxBufferDuration, getDeviceType, MemoryPressureCallback } from './tts_player/memory_manager';
+import { decodeBase64TtsChunk } from './tts_player/decode_chunk';
+import { logger } from './logger';
 
 export type PlaybackFinishedCallback = () => void;
 export type PlaybackStartedCallback = () => void;
@@ -110,16 +112,26 @@ export class TtsPlayer {
   }
 
   /**
-   * 初始化音频上下文
+   * 初始化音频上下文（创建并 resume，满足浏览器“用户手势”策略）
    */
   private async ensureAudioContext(): Promise<void> {
     if (!this.audioContext) {
       this.audioContext = new AudioContext({ sampleRate: 16000 });
+      logger.info('TtsPlayer', 'AudioContext 已创建', { state: this.audioContext.state });
     }
 
     if (this.audioContext.state === 'suspended') {
       await this.audioContext.resume();
+      logger.info('TtsPlayer', 'AudioContext 已 resume', { state: this.audioContext.state });
     }
+  }
+
+  /**
+   * 在用户手势下预初始化 AudioContext（建议在“开始”会话时调用）。
+   * 否则首次 TTS 到达时再 resume 可能因非用户手势而失败，导致无法播放。
+   */
+  async prepareAudioContext(): Promise<void> {
+    await this.ensureAudioContext();
   }
 
   /**
@@ -130,10 +142,16 @@ export class TtsPlayer {
    */
   async addAudioChunk(base64Data: string, utteranceIndex: number, ttsFormat: string = 'pcm16'): Promise<void> {
     if (!base64Data || base64Data.length === 0) {
-      console.warn(`[TtsPlayer] ⚠️ 收到空的音频数据，跳过 (utterance_index=${utteranceIndex})`);
+      logger.warn('TtsPlayer', '收到空音频数据，跳过', { utterance_index: utteranceIndex });
       return;
     }
 
+    logger.info('TtsPlayer', '开始添加音频块', {
+      utterance_index: utteranceIndex,
+      base64_length: base64Data.length,
+      format: ttsFormat,
+      buffer_count_before: this.audioBuffers.length,
+    });
     console.log(`[TtsPlayer] 🎵 开始添加音频块 (utterance_index=${utteranceIndex}):`, {
       utterance_index: utteranceIndex,
       base64_length: base64Data.length,
@@ -146,60 +164,21 @@ export class TtsPlayer {
     try {
       await this.ensureAudioContext();
 
-      // 如果格式变化，需要重新初始化解码器
-      if (ttsFormat !== this.currentTtsFormat || !this.audioDecoder) {
-        this.currentTtsFormat = ttsFormat;
-        const codecConfig: AudioCodecConfig = {
-          codec: ttsFormat === 'opus' ? 'opus' : 'pcm16',
-          sampleRate: this.sampleRate,
-          channelCount: 1, // 单声道
-        };
-        this.audioDecoder = createAudioDecoder(codecConfig);
-        console.log('TtsPlayer: 初始化音频解码器，格式:', ttsFormat);
-      }
-
-      // 解码 base64
       console.log(`[TtsPlayer] 🔄 [utterance_index=${utteranceIndex}] 开始解码音频数据 (format=${ttsFormat})`);
-      const binaryString = atob(base64Data);
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-      console.log(`[TtsPlayer] 🔄 [utterance_index=${utteranceIndex}] Base64解码完成:`, {
+      const { float32: float32Array, decoder: nextDecoder } = await decodeBase64TtsChunk(
+        base64Data,
+        ttsFormat,
+        this.sampleRate,
+        this.currentTtsFormat,
+        this.audioDecoder
+      );
+      this.currentTtsFormat = ttsFormat;
+      this.audioDecoder = nextDecoder;
+      console.log(`[TtsPlayer] 🔄 [utterance_index=${utteranceIndex}] 解码完成:`, {
         utterance_index: utteranceIndex,
-        base64_length: base64Data.length,
-        binary_length: bytes.length,
-        format: ttsFormat
+        decoded_samples: float32Array.length,
+        duration_seconds: (float32Array.length / this.sampleRate).toFixed(2) + '秒',
       });
-
-      // 根据格式解码音频
-      let float32Array: Float32Array;
-      if (ttsFormat === 'opus') {
-        // Opus 格式：使用解码器解码
-        if (!this.audioDecoder) {
-          throw new Error('Opus decoder not initialized');
-        }
-        console.log(`[TtsPlayer] 🔄 [utterance_index=${utteranceIndex}] 开始Opus解码`);
-        float32Array = await this.audioDecoder.decode(bytes);
-        console.log(`[TtsPlayer] 🔄 [utterance_index=${utteranceIndex}] Opus解码完成:`, {
-          utterance_index: utteranceIndex,
-          decoded_samples: float32Array.length,
-          duration_seconds: (float32Array.length / this.sampleRate).toFixed(2) + '秒'
-        });
-      } else {
-        // PCM16 格式：直接转换
-        console.log(`[TtsPlayer] 🔄 [utterance_index=${utteranceIndex}] 开始PCM16转换`);
-        const int16Array = new Int16Array(bytes.buffer);
-        float32Array = new Float32Array(int16Array.length);
-        for (let i = 0; i < int16Array.length; i++) {
-          float32Array[i] = int16Array[i] / 32768.0;
-        }
-        console.log(`[TtsPlayer] 🔄 [utterance_index=${utteranceIndex}] PCM16转换完成:`, {
-          utterance_index: utteranceIndex,
-          decoded_samples: float32Array.length,
-          duration_seconds: (float32Array.length / this.sampleRate).toFixed(2) + '秒'
-        });
-      }
 
       // 将音频块与 utteranceIndex 关联
       // 按照 utteranceIndex 排序插入，确保播放顺序正确
@@ -305,7 +284,7 @@ export class TtsPlayer {
 
       // 不再自动播放，等待用户手动触发
     } catch (error) {
-      console.error('TtsPlayer: 添加音频块时出错:', error);
+      logger.error('TtsPlayer', '添加音频块失败', { utterance_index: utteranceIndex, error: String(error) });
       throw error;
     }
   }
@@ -315,23 +294,26 @@ export class TtsPlayer {
    */
   async startPlayback(): Promise<void> {
     if (this.isPaused) {
-      // 如果已暂停，恢复播放
       this.isPaused = false;
-      console.log('TtsPlayer: 恢复播放');
+      logger.info('TtsPlayer', '恢复播放（原已暂停）');
       return;
     }
 
     if (this.isPlaying || this.audioBuffers.length === 0) {
-      console.log('TtsPlayer: 跳过播放，isPlaying:', this.isPlaying, 'buffers:', this.audioBuffers.length);
+      logger.info('TtsPlayer', '跳过播放', { is_playing: this.isPlaying, buffer_count: this.audioBuffers.length });
       return;
     }
 
     await this.ensureAudioContext();
     if (!this.audioContext) {
-      console.error('TtsPlayer: AudioContext 不可用');
+      logger.error('TtsPlayer', 'AudioContext 不可用，无法播放');
       return;
     }
-
+    logger.info('TtsPlayer', '开始播放', {
+      state: this.stateMachine.getState(),
+      buffer_count: this.audioBuffers.length,
+      audio_context_state: this.audioContext.state,
+    });
     console.log('TtsPlayer: 开始播放，当前状态机状态:', this.stateMachine.getState(), '缓冲区大小:', this.audioBuffers.length);
     this.isPlaying = true;
     this.isPaused = false;

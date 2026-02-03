@@ -1,16 +1,21 @@
 /**
  * NodeAgent 服务处理模块（简化版 - Day 2 Refactor）
  * 使用快照函数而不是直接访问 ServiceRegistry
+ *
+ * 语义修复：与备份一致，用「单一映射 + 单循环」—— 哪些 service_id 算语义修复、各提供 zh/en/enNormalize 由本表定义。
  */
-
 import logger from '../logger';
-import { buildCapabilityByType } from '../service-layer/ServiceDiscovery';
+
+/** 语义修复相关 service_id 及其提供的能力（与备份 node-agent-services-semantic-repair 同构，现仅合并服务） */
+const SEMANTIC_REPAIR_SERVICE_CAPS: Record<string, { zh: boolean; en: boolean; enNormalize: boolean }> = {
+  'semantic-repair-en-zh': { zh: true, en: true, enNormalize: true },
+};
 
 export class ServicesHandlerSimple {
   /**
    * ✅ Day 2: 使用快照函数代替Registry getter
    */
-  constructor(private getServiceSnapshot: () => any[]) {}
+  constructor(private getServiceSnapshot: () => any[]) { }
 
   /**
    * 获取已安装的服务列表（用于心跳和注册）
@@ -87,8 +92,7 @@ export class ServicesHandlerSimple {
   }
 
   /**
-   * 获取语义修复服务列表
-   * ✅ Day 2: 基于快照实现
+   * 获取语义修复服务列表（与备份一致：按「语义修复 service_id 映射」单循环）
    */
   async getInstalledSemanticRepairServices(): Promise<{
     zh: boolean;
@@ -105,53 +109,37 @@ export class ServicesHandlerSimple {
       zh: false,
       en: false,
       enNormalize: false,
-      services: [] as Array<{
-        serviceId: string;
-        status: string;
-        version?: string;
-      }>,
+      services: [] as Array<{ serviceId: string; status: string; version?: string }>,
     };
 
-    // 从快照中筛选语义修复服务
     for (const svc of allServices) {
-      if (svc.type === 'semantic') {
-        result.services.push({
-          serviceId: svc.service_id,
-          status: svc.status,
-          version: svc.version,
-        });
+      const cap = SEMANTIC_REPAIR_SERVICE_CAPS[svc.service_id];
+      if (svc.type !== 'semantic' || !cap) continue;
 
-        // 更新对应语言的状态
-        if (svc.service_id === 'semantic-repair-zh') {
-          result.zh = svc.status === 'running';
-        } else if (svc.service_id === 'semantic-repair-en') {
-          result.en = svc.status === 'running';
-        } else if (svc.service_id === 'en-normalize') {
-          result.enNormalize = svc.status === 'running';
-        }
-      }
+      const running = svc.status === 'running';
+      result.services.push({
+        serviceId: svc.service_id,
+        status: svc.status,
+        version: svc.version,
+      });
+      if (cap.zh) result.zh = result.zh || running;
+      if (cap.en) result.en = result.en || running;
+      if (cap.enNormalize) result.enNormalize = result.enNormalize || running;
     }
 
     logger.debug(
-      {
-        zh: result.zh,
-        en: result.en,
-        enNormalize: result.enNormalize,
-        services: result.services,
-      },
+      { zh: result.zh, en: result.en, enNormalize: result.enNormalize, services: result.services },
       'Getting installed semantic repair services from snapshot'
     );
-
     return result;
   }
 
   /**
-   * 检查语义修复服务是否运行
-   * ✅ Day 2: 基于快照实现
+   * 检查语义修复服务是否运行（仅对「语义修复映射表」内的 service_id 有效，与备份一致）
    */
   isSemanticRepairServiceRunning(serviceId: string): boolean {
-    const services = this.getServiceSnapshot();
-    const svc = services.find(s => s.service_id === serviceId && s.type === 'semantic');
-    return svc?.status === 'running' || false;
+    if (!(serviceId in SEMANTIC_REPAIR_SERVICE_CAPS)) return false;
+    const svc = this.getServiceSnapshot().find(s => s.service_id === serviceId && s.type === 'semantic');
+    return svc?.status === 'running';
   }
 }

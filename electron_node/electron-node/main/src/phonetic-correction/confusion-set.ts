@@ -81,8 +81,71 @@ function buildConfusionMap(): Map<string, string[]> {
 }
 
 /**
- * 同音/近音纠错：仅在同音字组内可替换。因不采用词表，多候选时无法选优，一律保留原字。
- * 当前效果：不修改文本，仅占位。
+ * 可替换位点：存在同音候选且候选数≥2 的字符位置，最多取 maxPositions 个（从句尾往前取）。
+ */
+export function getReplaceablePositions(text: string, maxPositions: number): number[] {
+  const map = buildConfusionMap();
+  const chars = [...text];
+  const indices: number[] = [];
+  for (let i = 0; i < chars.length; i++) {
+    const group = map.get(chars[i]);
+    if (group && group.length >= 2) indices.push(i);
+  }
+  if (indices.length <= maxPositions) return indices;
+  return indices.slice(-maxPositions);
+}
+
+/**
+ * 候选句：原句 + 在指定位置用同音字替换的变体，总数不超过 maxCandidates。
+ */
+export function generateCandidates(text: string, positions: number[], maxCandidates: number): string[] {
+  const map = buildConfusionMap();
+  const chars = [...text];
+  const out = [text];
+  if (positions.length === 0) return out;
+
+  const addAt = (pos: number) => {
+    const group = map.get(chars[pos]);
+    if (!group) return;
+    for (const c of group) {
+      if (c === chars[pos]) continue;
+      const t = [...chars];
+      t[pos] = c;
+      const s = t.join('');
+      if (!out.includes(s)) out.push(s);
+      if (out.length >= maxCandidates) return;
+    }
+  };
+
+  for (const pos of positions) {
+    addAt(pos);
+    if (out.length >= maxCandidates) break;
+  }
+  if (positions.length >= 2) {
+    for (let i = 0; i < positions.length && out.length < maxCandidates; i++) {
+      for (let j = i + 1; j < positions.length && out.length < maxCandidates; j++) {
+        const g1 = map.get(chars[positions[i]]);
+        const g2 = map.get(chars[positions[j]]);
+        if (!g1 || !g2) continue;
+        for (const c1 of g1) {
+          for (const c2 of g2) {
+            const t = [...chars];
+            t[positions[i]] = c1;
+            t[positions[j]] = c2;
+            const s = t.join('');
+            if (!out.includes(s)) out.push(s);
+            if (out.length >= maxCandidates) break;
+          }
+          if (out.length >= maxCandidates) break;
+        }
+      }
+    }
+  }
+  return out.slice(0, maxCandidates);
+}
+
+/**
+ * 无 LM 时恒返回原文；有 LM 时由 rescore 模块接管。
  */
 export function correct(text: string): string {
   if (!text || text.trim().length === 0) return text;

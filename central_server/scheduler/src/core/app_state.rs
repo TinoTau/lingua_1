@@ -10,7 +10,7 @@ use crate::managers::{
 use crate::metrics::DashboardSnapshotCache;
 use crate::model_not_available::ModelNotAvailableBus;
 use super::config::WebTaskSegmentationConfig;
-use crate::redis_runtime::Phase2Runtime;
+use crate::redis_runtime::RedisRuntime;
 use crate::pool::PoolService;
 
 #[derive(Clone)]
@@ -41,9 +41,9 @@ pub struct AppState {
     pub job_result_deduplicator: JobResultDeduplicator,
     /// Utterance 消息路径：按 utterance_index 顺序派发（客户端可能乱序发送 Utterance）
     pub pending_job_dispatches: PendingJobDispatches,
-    /// Phase 2：Redis/多实例运行时（可选，默认 None）
-    pub phase2: Option<std::sync::Arc<Phase2Runtime>>,
-    /// 极简无锁调度服务（可选，需要 Phase2 启用）
+    /// Redis 运行时（多实例 presence、Streams inbox 等，可选）
+    pub redis_runtime: Option<std::sync::Arc<RedisRuntime>>,
+    /// 极简无锁调度服务（可选，需要 Redis 运行时启用）
     pub minimal_scheduler: Option<std::sync::Arc<MinimalSchedulerService>>,
     /// Pool 服务（自动分配池，节点选择）
     pub pool_service: Option<std::sync::Arc<PoolService>>,

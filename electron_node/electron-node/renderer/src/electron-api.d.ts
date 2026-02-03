@@ -33,7 +33,8 @@ export interface ElectronAPI {
   removeModelProgressListener: () => void;
   removeModelErrorListener: () => void;
 
-  // 节点管理
+  // 节点管理（调度器地址来自配置，供 UI 显示）
+  getSchedulerUrl: () => Promise<string>;
   getNodeStatus: () => Promise<{
     online: boolean;
     nodeId: string | null;
@@ -94,6 +95,8 @@ export interface ElectronAPI {
     yourttsEnabled: boolean;
     fasterWhisperVadEnabled: boolean;
     speakerEmbeddingEnabled: boolean;
+    semanticRepairEnZhEnabled?: boolean;
+    phoneticCorrectionEnabled?: boolean;
   }>;
   setServicePreferences: (prefs: {
     rustEnabled: boolean;
@@ -102,6 +105,8 @@ export interface ElectronAPI {
     yourttsEnabled: boolean;
     fasterWhisperVadEnabled: boolean;
     speakerEmbeddingEnabled: boolean;
+    semanticRepairEnZhEnabled?: boolean;
+    phoneticCorrectionEnabled?: boolean;
   }) => Promise<{ success: boolean; error?: string }>;
 
   // 处理效率指标（OBS-1，按服务ID分组）
@@ -117,19 +122,7 @@ export interface ElectronAPI {
     startedAt: Date | null;
     lastError: string | null;
   }>;
-  getAllSemanticRepairServiceStatuses: () => Promise<Array<{
-    serviceId: string;
-    running: boolean;
-    starting: boolean;
-    pid: number | null;
-    port: number | null;
-    startedAt: Date | null;
-    lastError: string | null;
-  }>>;
-  startSemanticRepairService: (serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => Promise<{ success: boolean; error?: string }>;
-  stopSemanticRepairService: (serviceId: 'en-normalize' | 'semantic-repair-zh' | 'semantic-repair-en') => Promise<{ success: boolean; error?: string }>;
-
-  // 新的统一服务管理 API（使用服务发现）
+  // 服务发现与启停（统一：statuses 一次拉取，start/stop 通用）
   serviceDiscovery: {
     list: () => Promise<Array<{
       id: string;
@@ -140,6 +133,16 @@ export interface ElectronAPI {
       port?: number;
       lastError?: string;
       installPath: string;
+    }>>;
+    statuses: () => Promise<Array<{
+      serviceId: string;
+      type: string;
+      running: boolean;
+      starting: boolean;
+      pid: number | null;
+      port: number | null;
+      startedAt: Date | null;
+      lastError: string | null;
     }>>;
     refresh: () => Promise<Array<{
       id: string;

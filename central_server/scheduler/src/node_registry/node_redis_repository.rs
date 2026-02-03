@@ -316,8 +316,8 @@ impl NodeRedisRepository {
     
     // ==================== 管理接口 ====================
     
-    /// 删除节点数据（用于测试清理）
-    #[cfg(test)]
+    /// 删除节点数据（用于测试/示例清理）
+    #[allow(dead_code)]
     pub async fn delete_node(&self, node_id: &str) -> Result<()> {
         let key = Self::node_key(node_id);
         let nodes_key = Self::nodes_all_key();
@@ -327,7 +327,9 @@ impl NodeRedisRepository {
             .map_err(|e| anyhow!("Redis DEL 失败: {}", e))?;
         
         // 从节点集合中移除
-        self.redis.srem(&nodes_key, node_id).await
+        let mut cmd = redis::cmd("SREM");
+        cmd.arg(&nodes_key).arg(node_id);
+        let _: u64 = self.redis.query(cmd).await
             .map_err(|e| anyhow!("Redis SREM 失败: {}", e))?;
         
         debug!(node_id = %node_id, "删除节点数据");

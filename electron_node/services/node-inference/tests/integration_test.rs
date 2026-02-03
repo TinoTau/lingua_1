@@ -31,7 +31,7 @@ async fn test_nmt_engine_http() {
         .expect("Failed to create NMT engine");
 
     // 测试翻译（如果服务可用）
-    let result = engine.translate("Hello", "en", "zh").await;
+    let result = engine.translate("Hello", "en", "zh", None).await;
     match result {
         Ok(text) => {
             println!("✓ NMT 翻译成功: {}", text);
@@ -87,6 +87,7 @@ async fn test_inference_service_full_pipeline() {
         enable_streaming_asr: None,
         partial_update_interval_ms: None,
         trace_id: Some("test-trace-1".to_string()),
+        context_text: None,
     };
 
     // 运行推理（可能会失败，因为需要实际模型）

@@ -6,19 +6,22 @@
  * 设计原则：
  * 1. 只返回正在运行的服务的endpoint
  * 2. 服务不可用时返回null，让调用方决定如何处理
- * 3. 简单直接，不做复杂的负载均衡或重试
+ * 3. baseUrl 来自配置（getServicesBaseUrl），不再硬编码
  */
 
 import { ServiceRegistry } from './ServiceTypes';
 import logger from '../logger';
 
 export class ServiceEndpointResolver {
-  constructor(private registry: ServiceRegistry) {}
+  constructor(
+    private registry: ServiceRegistry,
+    private getServicesBaseUrl: () => string
+  ) {}
 
   /**
    * 根据能力查找服务endpoint
    * @param capability 能力名称，如 "nmt", "tts", "asr" 等
-   * @returns 服务的HTTP endpoint URL，如 "http://localhost:8002"，如果服务不可用则返回null
+   * @returns 服务的 HTTP endpoint URL（由配置 baseUrl 与端口拼接），如果服务不可用则返回 null
    */
   resolve(capability: string): string | null {
     // 遍历所有服务，查找匹配的capability
@@ -33,7 +36,8 @@ export class ServiceEndpointResolver {
         entry.runtime.status === 'running' &&
         entry.def.port
       ) {
-        const endpoint = `http://localhost:${entry.def.port}`;
+        const base = this.getServicesBaseUrl().replace(/\/$/, '');
+        const endpoint = `${base}:${entry.def.port}`;
 
         logger.debug(
           {
@@ -75,7 +79,8 @@ export class ServiceEndpointResolver {
       return null;
     }
 
-    const endpoint = `http://localhost:${entry.def.port}`;
+    const base = this.getServicesBaseUrl().replace(/\/$/, '');
+    const endpoint = `${base}:${entry.def.port}`;
 
     logger.debug(
       {
@@ -95,9 +100,10 @@ export class ServiceEndpointResolver {
   getAllAvailable(): Map<string, string> {
     const endpoints = new Map<string, string>();
 
+    const base = this.getServicesBaseUrl().replace(/\/$/, '');
     for (const entry of this.registry.values()) {
       if (entry.runtime.status === 'running' && entry.def.port) {
-        endpoints.set(entry.def.id, `http://localhost:${entry.def.port}`);
+        endpoints.set(entry.def.id, `${base}:${entry.def.port}`);
       }
     }
 

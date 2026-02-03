@@ -73,10 +73,10 @@ export class RegistrationHandler {
         installedModels,
         capabilityByType
       );
-      logger.debug({ 
-        asr_languages: languageCapabilities.asr_languages?.length || 0,
-        tts_languages: languageCapabilities.tts_languages?.length || 0,
-        nmt_capabilities: languageCapabilities.nmt_capabilities?.length || 0
+      logger.debug({
+        asr_languages: languageCapabilities.asr_languages?.length ?? 0,
+        semantic_languages: languageCapabilities.semantic_languages?.length ?? 0,
+        tts_languages: languageCapabilities.tts_languages?.length ?? 0,
       }, 'Language capabilities detected');
 
       // 获取支持的功能

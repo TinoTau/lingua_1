@@ -15,15 +15,6 @@ import { SemanticRepairStageZH } from './semantic-repair-stage-zh';
 import { SemanticRepairStageEN } from './semantic-repair-stage-en';
 import logger from '../../logger';
 
-/**
- * 语义修复服务信息
- */
-export interface SemanticRepairServiceInfo {
-  zh: boolean;           // 是否安装中文语义修复服务
-  en: boolean;           // 是否安装英文语义修复服务
-  enNormalize: boolean;  // 是否安装英文规范化服务
-}
-
 export interface SemanticRepairStageResult {
   textOut: string;
   decision: 'PASS' | 'REPAIR' | 'REJECT';
@@ -58,25 +49,16 @@ export class SemanticRepairStage {
 
   constructor(
     private taskRouter: TaskRouter | null,
-    private installedServices: SemanticRepairServiceInfo,
     private config: SemanticRepairStageConfig
   ) {
-    // 初始化中文修复Stage
-    if (installedServices.zh && config.zh?.enabled && taskRouter) {
+    if (config.zh?.enabled && taskRouter) {
       this.zhStage = new SemanticRepairStageZH(taskRouter, config.zh || {});
-      logger.info({}, 'SemanticRepairStage: ZH stage initialized');
     }
-
-    // 初始化英文修复Stage
-    if (installedServices.en && config.en?.repairEnabled && taskRouter) {
+    if (config.en?.repairEnabled && taskRouter) {
       this.enStage = new SemanticRepairStageEN(taskRouter, config.en || {});
-      logger.info({}, 'SemanticRepairStage: EN repair stage initialized');
     }
-
-    // 初始化英文标准化Stage
-    if (installedServices.enNormalize && config.en?.normalizeEnabled && taskRouter) {
+    if (config.en?.normalizeEnabled && taskRouter) {
       this.enNormalizeStage = new EnNormalizeStage(taskRouter);
-      logger.info({}, 'SemanticRepairStage: EN normalize stage initialized');
     }
   }
 

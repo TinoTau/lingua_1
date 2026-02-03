@@ -96,7 +96,7 @@ export async function runSemanticRepairStep(
     src_lang: sourceLang,
   };
 
-  // 执行语义修复
+  // 语义修复 GPU 租约由 SemanticRepairStageZH 内部 withGpuLease 统一管理
   try {
     const repairResult = await semanticRepairStage.process(
       jobWithDetectedLang as any,

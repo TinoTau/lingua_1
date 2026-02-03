@@ -104,20 +104,20 @@ pub struct InstanceInfo {
 pub async fn get_cluster_stats(
     axum::extract::State(state): axum::extract::State<AppState>,
 ) -> axum::response::Response {
-    let phase2 = match &state.phase2 {
+    let redis_rt = match &state.redis_runtime {
         Some(rt) => rt,
         None => {
-            tracing::warn!("Cluster stats API called but Phase2 is not enabled");
+            tracing::warn!("Cluster stats API called but Redis runtime is not enabled");
             return (
                 axum::http::StatusCode::SERVICE_UNAVAILABLE,
                 [(axum::http::header::CONTENT_TYPE, "application/json")],
-                r#"{"error":"Phase2 not enabled","message":"Please enable Phase2 in config.toml: [scheduler.phase2] enabled = true"}"#,
+                r#"{"error":"Redis runtime not enabled","message":"Please enable in config.toml: [scheduler.redis_runtime] enabled = true"}"#,
             )
                 .into_response();
         }
     };
 
-    let key_prefix = phase2.key_prefix();
+    let key_prefix = redis_rt.key_prefix();
     let now_ms = chrono::Utc::now().timestamp_millis();
 
     // 获取所有实例的 presence keys
@@ -125,7 +125,7 @@ pub async fn get_cluster_stats(
     let mut cmd = redis::cmd("KEYS");
     cmd.arg(&presence_pattern);
     
-    let instance_keys: Vec<String> = match phase2.redis_query::<Vec<String>>(cmd).await {
+    let instance_keys: Vec<String> = match redis_rt.redis_query::<Vec<String>>(cmd).await {
         Ok(keys) => {
             tracing::debug!("Found {} instance keys from Redis", keys.len());
             keys
@@ -156,7 +156,7 @@ pub async fn get_cluster_stats(
             .to_string();
 
         // 读取 presence 信息
-        let presence_json: Option<String> = phase2.redis_get_string(&key).await.ok().flatten();
+        let presence_json: Option<String> = redis_rt.redis_get_string(&key).await.ok().flatten();
 
         #[derive(serde::Deserialize)]
         struct SchedulerPresence {
@@ -185,16 +185,16 @@ pub async fn get_cluster_stats(
         let inbox_key = format!("{}:streams:{{instance:{}}}:inbox", key_prefix, instance_id);
         let mut xlen_cmd = redis::cmd("XLEN");
         xlen_cmd.arg(&inbox_key);
-        let inbox_length: u64 = match phase2.redis_query::<u64>(xlen_cmd).await {
+        let inbox_length: u64 = match redis_rt.redis_query::<u64>(xlen_cmd).await {
             Ok(v) => v,
             Err(_) => 0,
         };
 
         // 获取 pending 信息
-        let stream_group = phase2.stream_group();
+        let stream_group = redis_rt.stream_group();
         let mut xpending_cmd = redis::cmd("XPENDING");
         xpending_cmd.arg(&inbox_key).arg(stream_group);
-        let pending_summary: Option<Vec<redis::Value>> = match phase2.redis_query::<Vec<redis::Value>>(xpending_cmd).await {
+        let pending_summary: Option<Vec<redis::Value>> = match redis_rt.redis_query::<Vec<redis::Value>>(xpending_cmd).await {
             Ok(v) => Some(v),
             Err(_) => None,
         };
@@ -207,7 +207,7 @@ pub async fn get_cluster_stats(
         let dlq_key = format!("{}:streams:{{instance:{}}}:dlq", key_prefix, instance_id);
         let mut dlq_xlen_cmd = redis::cmd("XLEN");
         dlq_xlen_cmd.arg(&dlq_key);
-        let dlq_length: u64 = match phase2.redis_query::<u64>(dlq_xlen_cmd).await {
+        let dlq_length: u64 = match redis_rt.redis_query::<u64>(dlq_xlen_cmd).await {
             Ok(v) => v,
             Err(_) => 0,
         };
@@ -270,22 +270,19 @@ pub async fn get_cluster_stats(
                     }
                 }).collect();
                 
-                // 构建能力状态列表（基于 installed_services）
-                let capabilities: Vec<CapabilityStatusInfo> = [
-                    crate::messages::ServiceType::Asr,
-                    crate::messages::ServiceType::Nmt,
-                    crate::messages::ServiceType::Tts,
-                    crate::messages::ServiceType::Tone,
-                    crate::messages::ServiceType::Semantic,
-                ].iter().map(|service_type| {
-                    let ready = node.installed_services.iter().any(|s| &s.service_id == &format!("{:?}", service_type));
-                    CapabilityStatusInfo {
-                        service_type: format!("{:?}", service_type),
-                        ready,
-                        reason: None,
-                        ready_impl_ids: None,
-                    }
-                }).collect();
+                // 构建能力状态列表（基于 installed_services，按 ServiceType 单源）
+                let capabilities: Vec<CapabilityStatusInfo> = crate::messages::ServiceType::all()
+                    .iter()
+                    .map(|service_type| {
+                        let ready = node.installed_services.iter().any(|s| s.r#type == *service_type);
+                        CapabilityStatusInfo {
+                            service_type: format!("{:?}", service_type),
+                            ready,
+                            reason: None,
+                            ready_impl_ids: None,
+                        }
+                    })
+                    .collect();
             
                 result.push(NodeInfo {
                     node_id: node.node_id.clone(),

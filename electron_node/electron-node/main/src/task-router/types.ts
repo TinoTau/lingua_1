@@ -8,7 +8,7 @@ import { ServiceType } from '@shared/protocols/messages';
 export interface ServiceEndpoint {
   serviceId: string;
   serviceType: ServiceType;
-  baseUrl: string; // 例如: http://127.0.0.1:5008
+  baseUrl: string; // 来自配置 services.baseUrl 与端口拼接，勿在代码中硬编码
   port: number;
   status: 'running' | 'stopped' | 'error';
 }
@@ -161,7 +161,7 @@ export interface SemanticRepairResult {
     position: number;
   }>;
   reason_codes: string[];              // 触发原因
-  repair_time_ms?: number;              // 修复耗时
+  process_time_ms?: number;            // 处理耗时（毫秒）
 }
 
 /**

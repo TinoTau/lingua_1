@@ -48,7 +48,7 @@ pub fn start_job_timeout_manager(
                             "Job pending 超时，标记失败"
                         );
                         state.dispatcher.update_job_status(&job.job_id, crate::core::dispatcher::JobStatus::Failed).await;
-                        if let Some(rt) = state.phase2.as_ref() {
+                        if let Some(rt) = state.redis_runtime.as_ref() {
                             let _ = rt
                                 .job_fsm_to_finished(&job.job_id, job.dispatch_attempt_id.max(1), false)
                                 .await;
@@ -93,7 +93,7 @@ pub fn start_job_timeout_manager(
                 }
 
                 // 释放旧节点 reserved（幂等）- 统一使用Phase2 Redis实现
-                if let Some(rt) = state.phase2.as_ref() {
+                if let Some(rt) = state.redis_runtime.as_ref() {
                     rt.release_node_slot(current_node_id, &job.job_id, job.dispatch_attempt_id).await;
                         let _ = rt
                             .job_fsm_to_finished(&job.job_id, job.dispatch_attempt_id.max(1), false)
@@ -103,7 +103,7 @@ pub fn start_job_timeout_manager(
 
                 if job.failover_attempts >= policy.failover_max_attempts {
                     state.dispatcher.update_job_status(&job.job_id, crate::core::dispatcher::JobStatus::Failed).await;
-                    if let Some(rt) = state.phase2.as_ref() {
+                    if let Some(rt) = state.redis_runtime.as_ref() {
                         let _ = rt
                             .job_fsm_to_finished(&job.job_id, job.dispatch_attempt_id.max(1), false)
                             .await;
@@ -158,7 +158,7 @@ pub fn start_job_timeout_manager(
 
                 // 预占位（reserve）- 统一使用Phase2 Redis实现
                 let new_attempt_id = job.dispatch_attempt_id + 1;
-                let reserved = if let Some(rt) = state.phase2.as_ref() {
+                let reserved = if let Some(rt) = state.redis_runtime.as_ref() {
                     match rt.reserve_node_slot(&new_node_id, &job.job_id, new_attempt_id, reserved_ttl_seconds).await {
                         Ok(true) => true,
                         Ok(false) => false,
@@ -186,7 +186,7 @@ pub fn start_job_timeout_manager(
                 };
                 if !reserved {
                     state.dispatcher.update_job_status(&job.job_id, crate::core::dispatcher::JobStatus::Failed).await;
-                    if let Some(rt) = state.phase2.as_ref() {
+                    if let Some(rt) = state.redis_runtime.as_ref() {
                         let _ = rt
                             .job_fsm_to_finished(&job.job_id, job.dispatch_attempt_id.max(1), false)
                             .await;
@@ -204,7 +204,7 @@ pub fn start_job_timeout_manager(
                     .await
                 else {
                     // 重派失败（Job不存在、已终止、或其他实例已抢占）
-                    if let Some(rt) = state.phase2.as_ref() {
+                    if let Some(rt) = state.redis_runtime.as_ref() {
                         rt.release_node_slot(&new_node_id, &job.job_id, new_attempt_id).await;
                     }
                     continue;
@@ -235,7 +235,7 @@ pub fn start_job_timeout_manager(
                         );
                     } else {
                         // 发送失败：释放 reserved 并发槽并标记失败（避免泄漏）
-                        if let Some(rt) = state.phase2.as_ref() {
+                        if let Some(rt) = state.redis_runtime.as_ref() {
                             rt.release_node_slot(&new_node_id, &job.job_id, actual_new_attempt_id).await;
                         }
                         state.dispatcher.update_job_status(&job.job_id, crate::core::dispatcher::JobStatus::Failed).await;

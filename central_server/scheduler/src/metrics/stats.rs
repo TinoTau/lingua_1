@@ -237,14 +237,8 @@ impl DashboardStats {
                 continue;
             }
             
-            // 基于 installed_services 统计
-            for service_type in &[
-                crate::messages::ServiceType::Asr,
-                crate::messages::ServiceType::Nmt,
-                crate::messages::ServiceType::Tts,
-                crate::messages::ServiceType::Tone,
-                crate::messages::ServiceType::Semantic,
-            ] {
+            // 基于 installed_services 统计（ServiceType::all() 单源）
+            for service_type in &crate::messages::ServiceType::all() {
                 let has_service = node.installed_services.iter().any(|s| &s.r#type == service_type);
                 if has_service {
                     let type_str = format!("{:?}", service_type);

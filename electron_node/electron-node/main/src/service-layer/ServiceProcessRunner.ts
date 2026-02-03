@@ -11,7 +11,9 @@
  * 4. 使用常量代替魔法数字
  */
 
-import { spawn, ChildProcess } from 'child_process';
+import { spawn, execSync, ChildProcess } from 'child_process';
+import * as path from 'path';
+import * as fs from 'fs';
 import { ServiceRegistry, ServiceEntry } from './ServiceTypes';
 import logger from '../logger';
 import {
@@ -45,6 +47,9 @@ export class ServiceProcessRunner {
       throw new Error(`Service already running: ${serviceId} (pid: ${entry.runtime.pid})`);
     }
 
+    // 2.1 新一轮启动前清除上次的 lastError，避免卡片上仍显示旧错误
+    entry.runtime.lastError = undefined;
+
     // ✅ 3. 检查端口是否可用
     const port = entry.def.port;
     if (port) {
@@ -66,8 +71,18 @@ export class ServiceProcessRunner {
       );
     }
 
-    const { command: executable, args } = exec;
+    let executable = exec.command;
+    const args = exec.args || [];
     const workingDir = exec.cwd || entry.installPath;
+
+    // Python 类服务（如 semantic-repair-en-zh）：优先使用服务目录下 venv 的 Python，保证在虚拟环境中运行
+    if (entry.def.type === 'semantic' && (exec.command === 'python' || exec.command.endsWith('python.exe') || exec.command.endsWith('python'))) {
+      const venvPython = path.join(entry.installPath, process.platform === 'win32' ? 'venv\\Scripts\\python.exe' : 'venv/bin/python');
+      if (fs.existsSync(venvPython)) {
+        executable = venvPython;
+        logger.info({ serviceId, venvPython }, 'Using venv Python for semantic repair service');
+      }
+    }
 
     logger.info(
       {
@@ -79,7 +94,7 @@ export class ServiceProcessRunner {
       '🚀 Starting service process'
     );
 
-    // 4. 准备环境变量
+    // 6. 准备环境变量
     const serviceEnv: Record<string, string> = {
       ...process.env as Record<string, string>,
       PYTHONIOENCODING: 'utf-8',  // 解决Windows GBK编码问题
@@ -95,7 +110,7 @@ export class ServiceProcessRunner {
 
     // 5. 启动进程
     try {
-      const proc = spawn(executable, args || [], {
+      const proc = spawn(executable, args, {
         cwd: workingDir,
         env: serviceEnv,
         stdio: ['ignore', 'pipe', 'pipe'], // 🔍 改为pipe以捕获stderr
@@ -111,46 +126,19 @@ export class ServiceProcessRunner {
       entry.runtime.pid = proc.pid;
       entry.runtime.startedAt = new Date();
 
-      // 5. 监听进程输出（stdout）
-      proc.stdout?.on('data', (data) => {
+      // 8/9. 统一处理 stdout/stderr：仅打日志 + 检测 [SERVICE_READY]，不写入 lastError
+      const onOutput = (stream: 'stdout' | 'stderr') => (data: Buffer) => {
         const output = data.toString().trim();
-        if (output) {
-          logger.debug({ serviceId, pid: proc.pid }, `[stdout] ${output}`);
-
-          // 检测服务就绪信号 [SERVICE_READY]
-          if (output.includes('[SERVICE_READY]')) {
-            this.handleServiceReady(serviceId, entry, entry.def.port);
-          }
+        if (!output) return;
+        logger.debug({ serviceId }, `[${stream}] ${output}`);
+        if (output.includes('[SERVICE_READY]')) {
+          this.handleServiceReady(serviceId, entry, entry.def.port);
         }
-      });
+      };
+      proc.stdout?.on('data', onOutput('stdout'));
+      proc.stderr?.on('data', onOutput('stderr'));
 
-      // 6. 监听进程错误输出（stderr）
-      proc.stderr?.on('data', (data) => {
-        const output = data.toString().trim();
-        if (output) {
-          logger.error({ serviceId, pid: proc.pid }, `[stderr] ${output}`);
-
-          // 检测服务就绪信号 [SERVICE_READY]（某些服务可能输出到 stderr）
-          if (output.includes('[SERVICE_READY]')) {
-            this.handleServiceReady(serviceId, entry, entry.def.port);
-          }
-
-          // 保存stderr到runtime.lastError（追加）
-          if (!entry.runtime.lastError) {
-            entry.runtime.lastError = output;
-          } else {
-            entry.runtime.lastError += '\n' + output;
-          }
-
-          // 限制总长度，避免内存溢出
-          const errorLength = entry.runtime.lastError?.length || 0;
-          if (errorLength > PROCESS_CONSTANTS.MAX_ERROR_LOG_LENGTH && entry.runtime.lastError) {
-            entry.runtime.lastError = entry.runtime.lastError.slice(-PROCESS_CONSTANTS.MAX_ERROR_LOG_LENGTH);
-          }
-        }
-      });
-
-      // 7. 监听进程退出
+      // 10. 监听进程退出
       proc.on('exit', (code, signal) => {
         const exitInfo = {
           serviceId,
@@ -178,7 +166,7 @@ export class ServiceProcessRunner {
           code !== 0 ? `Process exited with code ${code} (signal: ${signal})` : undefined;
       });
 
-      // 8. 监听进程错误（spawn失败）
+      // 11. 监听进程错误（spawn失败）
       proc.on('error', (error) => {
         logger.error(
           {
@@ -198,7 +186,7 @@ export class ServiceProcessRunner {
         throw error;
       });
 
-      // 9. 等待确认进程没有立即退出
+      // 12. 等待确认进程没有立即退出
       await new Promise<void>((resolve, reject) => {
         const checkTimeout = setTimeout(() => {
           if (!proc.pid) {
@@ -234,7 +222,7 @@ export class ServiceProcessRunner {
         });
       });
 
-      // 10. 保持starting状态（不立即设置为running）
+      // 13. 保持starting状态（不立即设置为running）
       entry.runtime.status = 'starting';
       entry.runtime.pid = proc.pid;
       entry.runtime.lastError = undefined;
@@ -245,7 +233,7 @@ export class ServiceProcessRunner {
       const healthCheckAbortController = new AbortController();
       this.healthCheckAbortControllers.set(serviceId, healthCheckAbortController);
 
-      // 12. 启动健康检查（后台异步，不阻塞）
+      // 15. 启动健康检查（后台异步，不阻塞）
       this.checkServiceHealth(serviceId, healthCheckAbortController.signal).catch((error) => {
         if (error.name !== 'AbortError') {
           logger.warn({ serviceId, error: error.message }, '⚠️ Health check failed, but service may still work');
@@ -298,14 +286,37 @@ export class ServiceProcessRunner {
 
     entry.runtime.status = 'stopping';
 
-    // 尝试优雅关闭
-    proc.kill('SIGTERM');
+    const pid = proc.pid;
+    const killProcess = () => {
+      if (process.platform === 'win32' && pid) {
+        try {
+          execSync(`taskkill /F /T /PID ${pid}`, { stdio: 'ignore', windowsHide: true });
+        } catch {
+          // 进程可能已退出
+        }
+      } else {
+        proc.kill('SIGTERM');
+      }
+    };
 
-    // 等待优雅关闭
+    const forceKillProcess = () => {
+      if (process.platform === 'win32' && pid) {
+        try {
+          execSync(`taskkill /F /T /PID ${pid}`, { stdio: 'ignore', windowsHide: true });
+        } catch {
+          // 进程可能已退出
+        }
+      } else {
+        proc.kill('SIGKILL');
+      }
+    };
+
+    killProcess();
+
     await new Promise<void>((resolve) => {
       const timeout = setTimeout(() => {
-        logger.warn({ serviceId, pid: proc.pid }, 'Service did not stop gracefully, force killing');
-        proc.kill('SIGKILL');
+        logger.warn({ serviceId, pid }, 'Service did not stop gracefully, force killing');
+        forceKillProcess();
         resolve();
       }, PROCESS_CONSTANTS.GRACEFUL_STOP_TIMEOUT_MS);
 

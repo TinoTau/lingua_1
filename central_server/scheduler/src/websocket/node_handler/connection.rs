@@ -70,13 +70,13 @@ pub async fn handle_node(socket: WebSocket, state: AppState) {
             "【节点管理流程】节点下线流程开始"
         );
 
-        if let Some(rt) = state.phase2.as_ref() {
+        if let Some(rt) = state.redis_runtime.as_ref() {
             rt.clear_node_owner(nid).await;
             // clear_node_presence 已废弃（Redis 直查架构不再需要）
             
             // 流程日志 2: Phase2 清理完成
             debug!(
-                step = "offline_phase2_cleared",
+                step = "offline_redis_runtime_cleared",
                 node_id = %nid,
                 "【节点管理流程】Phase2 状态已清理"
             );
@@ -108,7 +108,7 @@ pub async fn handle_node(socket: WebSocket, state: AppState) {
         }
         
         // Pool 管理已由 PoolService 处理，不需要手动从 pool index 移除
-        let _phase2_runtime = state.phase2.as_ref().map(|rt| rt.as_ref());
+        let _redis_runtime = state.redis_runtime.as_ref().map(|rt| rt.as_ref());
         
         // 流程日志 5: 注销 WebSocket 连接
         state.node_connections.unregister(nid).await;

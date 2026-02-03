@@ -1,0 +1,1737 @@
+﻿node.exe : ts-jest[config] (WARN) [94mmessage[0m[90m TS151001: [0mIf you have issues related to imports, you should
+ consider setting `esModuleInterop` to `true` in your TypeScript configuration file (usually `tsconfig.json`). See http
+s://blogs.msdn.microsoft.com/typescript/2018/01/31/announcing-typescript-2-7/#easier-ecmascript-module-interoperability
+ for more information.
+所在位置 D:\Program Files\nodejs\npx.ps1:29 字符: 3
++   & $NODE_EXE $NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ts-jest[config]...re information.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151001: [0mIf you have issues related to imports, you should consider s
+etting `esModuleInterop` to `true` in your TypeScript configuration file (usually `tsconfig.json`). See https://blogs.m
+sdn.microsoft.com/typescript/2018/01/31/announcing-typescript-2-7/#easier-ecmascript-module-interoperability for more i
+nformation.
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151001: [0mIf you have issues related to imports, you should consider s
+etting `esModuleInterop` to `true` in your TypeScript configuration file (usually `tsconfig.json`). See https://blogs.m
+sdn.microsoft.com/typescript/2018/01/31/announcing-typescript-2-7/#easier-ecmascript-module-interoperability for more i
+nformation.
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151001: [0mIf you have issues related to imports, you should consider s
+etting `esModuleInterop` to `true` in your TypeScript configuration file (usually `tsconfig.json`). See https://blogs.m
+sdn.microsoft.com/typescript/2018/01/31/announcing-typescript-2-7/#easier-ecmascript-module-interoperability for more i
+nformation.
+FAIL ../tests/stage3.2/asr-metrics.test.ts
+  鈼?OBS-1: ASR Metrics 鈥?getASRMetrics 鈥?搴旇杩斿洖鍒濆鐨?ASR 鎸囨爣
+
+    TypeError: taskRouter.getASRMetrics is not a function
+
+       95 |   describe('getASRMetrics', () => {
+       96 |     it('搴旇杩斿洖鍒濆鐨?ASR 鎸囨爣', () => {
+    >  97 |       const metrics = taskRouter.getASRMetrics();
+          |                                  ^
+       98 |
+       99 |       expect(metrics).toEqual({
+      100 |         latency: {
+
+      at Object.<anonymous> (tests/stage3.2/asr-metrics.test.ts:97:34)
+
+  鈼?OBS-1: ASR Metrics 鈥?getASRMetrics 鈥?搴旇杩斿洖鎸囨爣鐨勫壇鏈紙涓嶆槸寮曠敤锛?
+    TypeError: taskRouter.getASRMetrics is not a function
+
+      139 |
+      140 |     it('搴旇杩斿洖鎸囨爣鐨勫壇鏈紙涓嶆槸寮曠敤锛?, () => {
+    > 141 |       const metrics1 = taskRouter.getASRMetrics();
+          |                                   ^
+      142 |       const metrics2 = taskRouter.getASRMetrics();
+      143 |
+      144 |       expect(metrics1).not.toBe(metrics2);
+
+      at Object.<anonymous> (tests/stage3.2/asr-metrics.test.ts:141:35)
+
+  鈼?OBS-1: ASR Metrics 鈥?寤惰繜缁熻 鈥?搴旇璁板綍 ASR 浠诲姟寤惰繜
+
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/asr-metrics.test.ts:151:24)
+
+  鈼?OBS-1: ASR Metrics 鈥?寤惰繜缁熻 鈥?搴旇璁＄畻寤惰繜鍒嗕綅鏁帮紙p50/p95/p99锛?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/asr-metrics.test.ts:151:24)
+
+  鈼?OBS-1: ASR Metrics 鈥?璇█缃俊搴﹀垎甯冪粺璁?鈥?搴旇璁板綍璇█缃俊搴﹀垎甯?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/asr-metrics.test.ts:251:24)
+
+  鈼?OBS-1: ASR Metrics 鈥?璇█缃俊搴﹀垎甯冪粺璁?鈥?搴旇蹇界暐 undefined 鎴?null 鐨勮瑷€缃俊搴?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/asr-metrics.test.ts:251:24)
+
+  鈼?OBS-1: ASR Metrics 鈥?鍧忔妫€娴嬬巼缁熻 鈥?搴旇璁板綍鍧忔妫€娴?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/asr-metrics.test.ts:347:24)
+
+  鈼?OBS-1: ASR Metrics 鈥?閲嶈窇瑙﹀彂鐜囩粺璁?鈥?搴旇璁板綍閲嶈窇瑙﹀彂
+
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/asr-metrics.test.ts:425:24)
+
+  鈼?OBS-1: ASR Metrics 鈥?缁煎悎娴嬭瘯 鈥?搴旇鍚屾椂璁板綍鎵€鏈夋寚鏍?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/asr-metrics.test.ts:482:24)
+
+FAIL src/agent/postprocess/text-forward-merge-manager.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+  鈼?TextForwardMergeManager 鈥?shouldWaitForMerge 閫昏緫 鈥?涓瓑闀垮害鏂囨湰澶勭悊 (6-20瀛楃) 鈥?搴旇瓒呮椂鍚庡彂閫?6-20瀛楃鐨勬枃鏈紙娌℃湁鍚庣画杈撳叆锛?
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      195 |
+      196 |         expect(result2.shouldWaitForMerge).toBe(false);
+    > 197 |         expect(result2.shouldSendToSemanticRepair).toBe(true);
+          |                                                    ^
+      198 |         expect(result2.processedText).toBe('杩欐槸绗竴鍙ヨ瘽');
+      199 |
+      200 |         jest.useRealTimers();
+
+      at Object.<anonymous> (main/src/agent/postprocess/text-forward-merge-manager.test.ts:197:52)
+
+  鈼?TextForwardMergeManager 鈥?shouldWaitForMerge 閫昏緫 鈥?杈冮暱鏂囨湰澶勭悊 (20-40瀛楃) 鈥?搴旇瓒呮椂鍚庡彂閫?20-40瀛楃鐨勬枃鏈紙娌℃湁鍚庣画杈撳叆锛?
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      270 |         );
+      271 |
+    > 272 |         expect(result2.shouldWaitForMerge).toBe(false);
+          |                                            ^
+      273 |         expect(result2.shouldSendToSemanticRepair).toBe(true);
+      274 |         expect(result2.processedText).toBe('杩欐槸涓€鍙ユ瘮杈冮暱鐨勮瘽锛岀敤鏉ユ祴璇曠瓑寰呯‘璁ょ殑閫昏緫');
+      275 |
+
+      at Object.<anonymous> (main/src/agent/postprocess/text-forward-merge-manager.test.ts:272:44)
+
+  鈼?TextForwardMergeManager 鈥?shouldWaitForMerge 閫昏緫 鈥?杈冮暱鏂囨湰澶勭悊 (20-40瀛楃) 鈥?銆愯ˉ鍏呭姩浣?A1-1銆?0鈥?0 瀛楃煭鍙?+ 瓒呮椂鍙戦€侊紙B1-3锛?
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      314 |         
+      315 |         expect(result2.shouldWaitForMerge).toBe(false);
+    > 316 |         expect(result2.shouldSendToSemanticRepair).toBe(true);
+          |                                                    ^
+      317 |         expect(result2.processedText).toBe(text25);
+      318 |         
+      319 |         jest.useRealTimers();
+
+      at Object.<anonymous> (main/src/agent/postprocess/text-forward-merge-manager.test.ts:316:52)
+
+  鈼?TextForwardMergeManager 鈥?utterance 娴佺▼瀹屾暣鎬?鈥?搴旇姝ｇ‘澶勭悊瀹屾暣鐨?utterance 娴佺▼锛氫腑绛夋枃鏈?-> 瓒呮椂 -> 鍙戦€?
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      435 |         false
+      436 |       );
+    > 437 |       expect(result2.shouldWaitForMerge).toBe(false);
+          |                                          ^
+      438 |       expect(result2.shouldSendToSemanticRepair).toBe(true);
+      439 |       expect(result2.processedText).toBe('杩欐槸绗竴鍙ヨ瘽');
+      440 |
+
+      at Object.<anonymous> (main/src/agent/postprocess/text-forward-merge-manager.test.ts:437:42)
+
+FAIL ../tests/stage3.2/task-router-padding.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+  鈼?TaskRouter - EDGE-4: Padding 鍙傛暟浼犻€?鈥?EDGE-4: padding_ms 鍙傛暟浼犻€?鈥?搴旇姝ｇ‘浼犻€?padding_ms 鍙傛暟鍒?ASR 鏈嶅姟锛堟墜鍔ㄦ埅鏂細280ms锛?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-padding.test.ts:45:24)
+
+  鈼?TaskRouter - EDGE-4: Padding 鍙傛暟浼犻€?鈥?EDGE-4: padding_ms 鍙傛暟浼犻€?鈥?搴旇姝ｇ‘浼犻€?padding_ms 鍙傛暟鍒?ASR 鏈嶅姟锛堣嚜鍔?finalize锛?2
+0ms锛?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-padding.test.ts:45:24)
+
+  鈼?TaskRouter - EDGE-4: Padding 鍙傛暟浼犻€?鈥?EDGE-4: padding_ms 鍙傛暟浼犻€?鈥?搴旇澶勭悊 padding_ms 鏈彁渚涚殑鎯呭喌锛坲ndefined锛?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-padding.test.ts:45:24)
+
+  鈼?TaskRouter - EDGE-4: Padding 鍙傛暟浼犻€?鈥?EDGE-4: padding_ms 鍙傛暟浼犻€?鈥?搴旇澶勭悊 padding_ms = 0 鐨勬儏鍐碉紙涓嶆坊鍔?padding锛?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-padding.test.ts:45:24)
+
+  鈼?TaskRouter - EDGE-4: Padding 鍙傛暟浼犻€?鈥?EDGE-4: padding_ms 鍙傛暟浼犻€?鈥?搴旇鍚屾椂鏀寔 padding_ms 鍜?segments 鍙傛暟
+
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-padding.test.ts:45:24)
+
+FAIL src/agent/postprocess/semantic-repair-stage-en.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+  鈼?SemanticRepairStageEN - Phase 2 鈥?process 鈥?搴旇鍦ㄨ川閲忓垎楂樹簬闃堝€兼椂杩斿洖PASS
+
+    expect(jest.fn()).not.toHaveBeenCalled()
+
+    Expected number of calls: 0
+    Received number of calls: 1
+
+    1: {"job_id": "job_123", "lang": "en", "meta": {"language_probability": undefined, "reason_codes": ["LENGTH_MEETS_T
+HRESHOLD"], "segments": undefined}, "micro_context": undefined, "quality_score": 0.8, "session_id": "session_456", "tex
+t_in": "This is a longer test sentence that should pass the quality threshold check without triggering structural issue
+s detection", "utterance_index": 0}
+
+      53 |       expect(result.decision).toBe('PASS');
+      54 |       expect(result.textOut).toBe('This is a longer test sentence that should pass the quality threshold che
+ck without triggering structural issues detection');
+    > 55 |       expect(mockTaskRouter.routeSemanticRepairTask).not.toHaveBeenCalled();
+         |                                                          ^
+      56 |     });
+      57 |
+      58 |     it('搴旇鍦ㄨ川閲忓垎浣庝簬闃堝€兼椂瑙﹀彂淇', async () => {
+
+      at Object.<anonymous> (main/src/agent/postprocess/semantic-repair-stage-en.test.ts:55:58)
+
+FAIL ../tests/stage3.2/task-router-segments.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+  鈼?TaskRouter - Segments and Language Confidence 鈥?CONF-2: Segment 鏃堕棿鎴虫彁鍙?鈥?搴旇姝ｇ‘浼犻€?segments 淇℃伅锛堝寘鍚椂闂存埑锛?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-segments.test.ts:45:24)
+
+  鈼?TaskRouter - Segments and Language Confidence 鈥?CONF-2: Segment 鏃堕棿鎴虫彁鍙?鈥?搴旇澶勭悊娌℃湁 segments 鐨勬儏鍐碉紙鍚戝悗鍏煎锛?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-segments.test.ts:45:24)
+
+  鈼?TaskRouter - Segments and Language Confidence 鈥?CONF-1: 璇█缃俊搴﹀垎绾ч€昏緫 鈥?搴旇鍦ㄩ珮缃俊搴︼紙鈮?.90锛夋椂淇濇寔榛樿鍏抽棴涓婁笅鏂?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-segments.test.ts:141:24)
+
+  鈼?TaskRouter - Segments and Language Confidence 鈥?CONF-1: 璇█缃俊搴﹀垎绾ч€昏緫 鈥?搴旇鍦ㄤ綆缃俊搴︼紙<0.70锛夋椂寮哄埗鍏抽棴涓婁笅鏂?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-segments.test.ts:141:24)
+
+  鈼?TaskRouter - Segments and Language Confidence 鈥?CONF-1: 璇█缃俊搴﹀垎绾ч€昏緫 鈥?搴旇澶勭悊娌℃湁璇█姒傜巼淇℃伅鐨勬儏鍐?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-segments.test.ts:141:24)
+
+  鈼?TaskRouter - Segments and Language Confidence 鈥?缁煎悎娴嬭瘯锛歋egments + 璇█缃俊搴?鈥?搴旇鍚屾椂鏀寔 segments 鏃堕棿鎴冲拰璇█缃俊搴?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-segments.test.ts:258:24)
+
+FAIL src/agent/postprocess/translation-stage-nmt-coordination.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+  鈼?TranslationStage - NMT Repair Coordination (Phase 2) 鈥?涓庤涔変慨澶嶇殑鍗忚皟 鈥?搴旇鍦ㄨ涔変慨澶嶅凡搴旂敤浣嗙疆淇″害浣庢椂鍚敤NMT Repair
+
+    SequentialExecutor: Task index 0 is less than or equal to current index 0, task may have arrived too late
+
+      121 |           'SequentialExecutor: Task index is less than or equal to current index, task may have arrived too
+ late'
+      122 |         );
+    > 123 |         task.reject(new Error(`SequentialExecutor: Task index ${task.utteranceIndex} is less than or equal 
+to current index ${currentIndex}, task may have arrived too late`));
+          |                     ^
+      124 |       } else {
+      125 |         // 鍚﹀垯鍔犲叆绛夊緟闃熷垪锛堟湁浠诲姟姝ｅ湪澶勭悊锛屾垨绱㈠紩涓嶈繛缁級
+      126 |         this.enqueueTask(task);
+
+      at main/src/sequential-executor/sequential-executor.ts:123:21
+      at SequentialExecutor.execute (main/src/sequential-executor/sequential-executor.ts:87:12)
+      at TranslationStage.process (main/src/agent/postprocess/translation-stage.ts:159:37)
+      at Object.<anonymous> (main/src/agent/postprocess/translation-stage-nmt-coordination.test.ts:78:34)
+
+  鈼?TranslationStage - NMT Repair Coordination (Phase 2) 鈥?涓庤涔変慨澶嶇殑鍗忚皟 鈥?搴旇鍦ㄨ涔変慨澶嶆湭搴旂敤鏃跺惎鐢∟MT Repair
+
+    SequentialExecutor: Task index 0 is less than or equal to current index 0, task may have arrived too late
+
+      121 |           'SequentialExecutor: Task index is less than or equal to current index, task may have arrived too
+ late'
+      122 |         );
+    > 123 |         task.reject(new Error(`SequentialExecutor: Task index ${task.utteranceIndex} is less than or equal 
+to current index ${currentIndex}, task may have arrived too late`));
+          |                     ^
+      124 |       } else {
+      125 |         // 鍚﹀垯鍔犲叆绛夊緟闃熷垪锛堟湁浠诲姟姝ｅ湪澶勭悊锛屾垨绱㈠紩涓嶈繛缁級
+      126 |         this.enqueueTask(task);
+
+      at main/src/sequential-executor/sequential-executor.ts:123:21
+      at SequentialExecutor.execute (main/src/sequential-executor/sequential-executor.ts:87:12)
+      at TranslationStage.process (main/src/agent/postprocess/translation-stage.ts:159:37)
+      at Object.<anonymous> (main/src/agent/postprocess/translation-stage-nmt-coordination.test.ts:104:34)
+
+  鈼?TranslationStage - NMT Repair Coordination (Phase 2) 鈥?涓庤涔変慨澶嶇殑鍗忚皟 鈥?搴旇鍦ㄨ涔変慨澶嶅凡搴旂敤鏃跺噺灏慛MT Repair鍊欓€夋暟
+
+    SequentialExecutor: Task index 0 is less than or equal to current index 0, task may have arrived too late
+
+      121 |           'SequentialExecutor: Task index is less than or equal to current index, task may have arrived too
+ late'
+      122 |         );
+    > 123 |         task.reject(new Error(`SequentialExecutor: Task index ${task.utteranceIndex} is less than or equal 
+to current index ${currentIndex}, task may have arrived too late`));
+          |                     ^
+      124 |       } else {
+      125 |         // 鍚﹀垯鍔犲叆绛夊緟闃熷垪锛堟湁浠诲姟姝ｅ湪澶勭悊锛屾垨绱㈠紩涓嶈繛缁級
+      126 |         this.enqueueTask(task);
+
+      at main/src/sequential-executor/sequential-executor.ts:123:21
+      at SequentialExecutor.execute (main/src/sequential-executor/sequential-executor.ts:87:12)
+      at TranslationStage.process (main/src/agent/postprocess/translation-stage.ts:159:37)
+      at Object.<anonymous> (main/src/agent/postprocess/translation-stage-nmt-coordination.test.ts:131:19)
+
+PASS src/asr/secondary-decode-worker.test.ts (5.109 s)
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/gpu-arbiter/gpu-arbiter.test.ts (6.668 s)
+PASS src/pipeline-orchestrator/audio-aggregator-finalize.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/pipeline-orchestrator/audio-aggregator.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/pipeline-orchestrator/audio-aggregator-optimization.test.ts
+PASS src/pipeline-orchestrator/original-job-result-dispatcher.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/agent/node-agent-simple.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS ../tests/stage3.1/model-manager.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS ../tests/stage3.2/bad-segment-detector.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/pipeline/pipeline-job-flow.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/task-router/task-router-tts-opus.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+    console.log
+      鉁?TTS WAV 娴嬭瘯閫氳繃:
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:135:15)
+
+    console.log
+         WAV size: 32044 bytes
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:136:15)
+
+    console.log
+         Format: wav
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:137:15)
+
+    console.log
+      鉁?TTS 鍥為€€娴嬭瘯閫氳繃锛屾牸寮? wav
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:171:15)
+
+    console.log
+      鉁?閲囨牱鐜?16000Hz 娴嬭瘯閫氳繃锛屾牸寮? wav
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:206:17)
+
+    console.log
+      鉁?閲囨牱鐜?22050Hz 娴嬭瘯閫氳繃锛屾牸寮? wav
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:206:17)
+
+    console.log
+      鉁?閲囨牱鐜?24000Hz 娴嬭瘯閫氳繃锛屾牸寮? wav
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:206:17)
+
+    console.log
+      鉁?鏃堕暱 0.1s 娴嬭瘯閫氳繃锛屽帇缂╂瘮: 1.00x
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:245:17)
+
+    console.log
+      鉁?鏃堕暱 0.5s 娴嬭瘯閫氳繃锛屽帇缂╂瘮: 1.00x
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:245:17)
+
+    console.log
+      鉁?鏃堕暱 1s 娴嬭瘯閫氳繃锛屽帇缂╂瘮: 1.00x
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:245:17)
+
+    console.log
+      鉁?鏃堕暱 2s 娴嬭瘯閫氳繃锛屽帇缂╂瘮: 1.00x
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:245:17)
+
+    console.log
+      鉁?绌?WAV 鏂囦欢澶勭悊娴嬭瘯閫氳繃
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:289:17)
+
+    console.log
+      鉁?鏃犳晥 WAV 鏂囦欢姝ｇ‘鎶涘嚭閿欒
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:326:17)
+
+    console.log
+      
+      鉁?瀹屾暣娴佺▼娴嬭瘯閫氳繃:
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:378:15)
+
+    console.log
+         鍘熷 WAV: 64044 bytes
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:379:15)
+
+    console.log
+         Base64 瑙ｇ爜鍚? 64044 bytes
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:380:15)
+
+    console.log
+         鏍煎紡: wav
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:381:15)
+
+    console.log
+         閲囨牱鐜? 16000Hz
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:382:15)
+
+    console.log
+         Base64 闀垮害: 85392 characters
+
+      at Object.<anonymous> (main/src/task-router/task-router-tts-opus.test.ts:383:15)
+
+PASS ../tests/stage3.1/utils-gpu-tracker.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/task-router/task-router-semantic-repair-concurrency.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS ../tests/stage3.1/lock-manager.test.ts
+PASS src/pipeline/steps/asr-step.test.ts
+PASS ../tests/stage3.1/utils-python-service-config.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/task-router/semantic-repair-cache.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/service-layer/ServiceDiscovery.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/agent/postprocess/postprocess-semantic-repair-initializer.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/agent/postprocess/tone-stage.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/agent/node-agent-language-capability.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/agent/postprocess/translation-stage.context.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/agent/postprocess/semantic-repair-stage.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS ../tests/stage3.2/platform-adapter.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/utils/opus-codec.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/aggregator/aggregator-state-text-processor.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/app/app-lifecycle-simple.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/pipeline/steps/utterance-aggregation-flow-issues.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/agent/postprocess/postprocess-merge-handler.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/agent/postprocess/semantic-repair-stage-zh.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/agent/postprocess/postprocess-text-filter.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/agent/postprocess/tts-stage.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/pipeline-scheduler/pipeline-scheduler.test.ts
+PASS src/asr/candidate-provider.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS ../tests/aggregator-state-context.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/agent/postprocess/semantic-repair-scorer.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/pipeline-orchestrator/original-job-result-dispatcher-optimization.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/task-router/semantic-repair-model-integrity.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/agent/postprocess/semantic-repair-validator.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/task-router/task-router-semantic-repair.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/pipeline/steps/phonetic-correction-step.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS ../tests/stage3.1/model-verification.test.ts
+PASS src/pipeline/steps/semantic-repair-step.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/service-layer/ServiceArchitecture.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS ../tests/stage3.1/registry-manager.test.ts
+PASS ../tests/stage3.2/capability_state.test.ts
+PASS src/pipeline/steps/translation-step.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/pipeline-orchestrator/audio-aggregator.legacy.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/pipeline/steps/aggregation-step.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/task-router/task-router-semantic-repair-health.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/asr/rescorer.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/agent/postprocess/en-normalize-stage.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/pipeline/result-builder.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/agent/postprocess/dedup-stage.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/gpu-arbiter/gpu-lease-helper.test.ts
+PASS src/asr/need-rescore.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS ../tests/stage3.1/model-error-handling.test.ts
+PASS ../tests/stage3.2/rerun-trigger.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/agent/postprocess/aggregation-stage.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/asr/prompt-builder.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS ../tests/stage3.1/utils.test.ts
+PASS ../tests/stage3.1/utils-cuda-env.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS ../tests/stage3.1/model-download-progress.test.ts
+PASS src/pipeline/steps/asr-step-verification.test.ts
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+FAIL ../tests/stage3.2/session-context-manager.test.ts
+  鈼?Test suite failed to run
+
+    Cannot find module '../../../main/src/logger' from 'tests/stage3.2/session-context-manager.test.ts'
+
+      4 |
+      5 | // Mock logger before imports
+    > 6 | jest.mock('../../../main/src/logger', () => {
+        |      ^
+      7 |   const mockLogger = {
+      8 |     info: jest.fn(),
+      9 |     warn: jest.fn(),
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.<anonymous> (tests/stage3.2/session-context-manager.test.ts:6:6)
+
+PASS src/pipeline/pipeline-mode-config.semantic-repair.test.ts
+FAIL ../tests/stage3.2/service-registry.test.ts
+  鈼?Test suite failed to run
+
+    Cannot find module '../../main/src/service-registry' from 'tests/stage3.2/service-registry.test.ts'
+
+      13 | import * as path from 'path';
+      14 | import * as os from 'os';
+    > 15 | import { ServiceRegistryManager } from '../../main/src/service-registry';
+         | ^
+      16 |
+      17 | describe('ServiceRegistryManager', () => {
+      18 |   let registryManager: ServiceRegistryManager;
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.<anonymous> (tests/stage3.2/service-registry.test.ts:15:1)
+
+FAIL ../tests/stage3.2/rerun-metrics.test.ts
+  鈼?Test suite failed to run
+
+    Cannot find module '../../../main/src/logger' from 'tests/stage3.2/rerun-metrics.test.ts'
+
+      4 |
+      5 | // Mock logger before imports
+    > 6 | jest.mock('../../../main/src/logger', () => ({
+        |      ^
+      7 |   default: {
+      8 |     info: jest.fn(),
+      9 |     warn: jest.fn(),
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.<anonymous> (tests/stage3.2/rerun-metrics.test.ts:6:6)
+
+FAIL ../tests/stage3.2/service-package-manager.test.ts
+  鈼?Test suite failed to run
+
+    Cannot find module '../../main/src/service-package-manager' from 'tests/stage3.2/service-package-manager.test.ts'
+
+      15 | import * as crypto from 'crypto';
+      16 | import axios from 'axios';
+    > 17 | import { ServicePackageManager } from '../../main/src/service-package-manager';
+         | ^
+      18 | import { ServiceInfo } from '../../main/src/service-package-manager/types';
+      19 |
+      20 | // Mock axios
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.<anonymous> (tests/stage3.2/service-package-manager.test.ts:17:1)
+
+FAIL ../tests/stage3.2/capability_by_type.test.ts
+  鈼?Test suite failed to run
+
+    Cannot find module '../../main/src/agent/node-agent' from 'tests/stage3.2/capability_by_type.test.ts'
+
+      4 | import { describe, it, expect, jest } from '@jest/globals';
+      5 | import { ServiceType, ServiceStatus, DeviceType } from '../../../shared/protocols/messages';
+    > 6 | import { NodeAgent } from '../../main/src/agent/node-agent';
+        | ^
+      7 |
+      8 | // 杞婚噺绾?logger mock锛坖est.config 宸叉槧灏勫埌 __mocks__/logger.ts锛岃繖閲屼粎纭繚绫诲瀷瀛樺湪锛?      9 | jest.mock('../../main/sr
+c/logger', () => ({
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.<anonymous> (tests/stage3.2/capability_by_type.test.ts:6:1)
+
+PASS src/service-layer/service-ipc-handlers.test.ts (16.315 s)
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+PASS src/asr/audio-ring-buffer.test.ts (22.167 s)
+  鈼?Console
+
+    console.log
+      [Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.test.log
+
+      at Object.<anonymous> (main/src/logger.ts:45:9)
+
+A worker process has failed to exit gracefully and has been force exited. This is likely caused by tests leaking due to
+ improper teardown. Try running with --detectOpenHandles to find leaks. Active timers can also cause this, ensure that 
+.unref() was called on them.
+
+Summary of all failing tests
+FAIL tests/stage3.2/asr-metrics.test.ts
+  鈼?OBS-1: ASR Metrics 鈥?getASRMetrics 鈥?搴旇杩斿洖鍒濆鐨?ASR 鎸囨爣
+
+    TypeError: taskRouter.getASRMetrics is not a function
+
+       95 |   describe('getASRMetrics', () => {
+       96 |     it('搴旇杩斿洖鍒濆鐨?ASR 鎸囨爣', () => {
+    >  97 |       const metrics = taskRouter.getASRMetrics();
+          |                                  ^
+       98 |
+       99 |       expect(metrics).toEqual({
+      100 |         latency: {
+
+      at Object.<anonymous> (tests/stage3.2/asr-metrics.test.ts:97:34)
+
+  鈼?OBS-1: ASR Metrics 鈥?getASRMetrics 鈥?搴旇杩斿洖鎸囨爣鐨勫壇鏈紙涓嶆槸寮曠敤锛?
+    TypeError: taskRouter.getASRMetrics is not a function
+
+      139 |
+      140 |     it('搴旇杩斿洖鎸囨爣鐨勫壇鏈紙涓嶆槸寮曠敤锛?, () => {
+    > 141 |       const metrics1 = taskRouter.getASRMetrics();
+          |                                   ^
+      142 |       const metrics2 = taskRouter.getASRMetrics();
+      143 |
+      144 |       expect(metrics1).not.toBe(metrics2);
+
+      at Object.<anonymous> (tests/stage3.2/asr-metrics.test.ts:141:35)
+
+  鈼?OBS-1: ASR Metrics 鈥?寤惰繜缁熻 鈥?搴旇璁板綍 ASR 浠诲姟寤惰繜
+
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/asr-metrics.test.ts:151:24)
+
+  鈼?OBS-1: ASR Metrics 鈥?寤惰繜缁熻 鈥?搴旇璁＄畻寤惰繜鍒嗕綅鏁帮紙p50/p95/p99锛?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/asr-metrics.test.ts:151:24)
+
+  鈼?OBS-1: ASR Metrics 鈥?璇█缃俊搴﹀垎甯冪粺璁?鈥?搴旇璁板綍璇█缃俊搴﹀垎甯?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/asr-metrics.test.ts:251:24)
+
+  鈼?OBS-1: ASR Metrics 鈥?璇█缃俊搴﹀垎甯冪粺璁?鈥?搴旇蹇界暐 undefined 鎴?null 鐨勮瑷€缃俊搴?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/asr-metrics.test.ts:251:24)
+
+  鈼?OBS-1: ASR Metrics 鈥?鍧忔妫€娴嬬巼缁熻 鈥?搴旇璁板綍鍧忔妫€娴?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/asr-metrics.test.ts:347:24)
+
+  鈼?OBS-1: ASR Metrics 鈥?閲嶈窇瑙﹀彂鐜囩粺璁?鈥?搴旇璁板綍閲嶈窇瑙﹀彂
+
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/asr-metrics.test.ts:425:24)
+
+  鈼?OBS-1: ASR Metrics 鈥?缁煎悎娴嬭瘯 鈥?搴旇鍚屾椂璁板綍鎵€鏈夋寚鏍?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/asr-metrics.test.ts:482:24)
+
+FAIL main/src/agent/postprocess/text-forward-merge-manager.test.ts
+  鈼?TextForwardMergeManager 鈥?shouldWaitForMerge 閫昏緫 鈥?涓瓑闀垮害鏂囨湰澶勭悊 (6-20瀛楃) 鈥?搴旇瓒呮椂鍚庡彂閫?6-20瀛楃鐨勬枃鏈紙娌℃湁鍚庣画杈撳叆锛?
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      195 |
+      196 |         expect(result2.shouldWaitForMerge).toBe(false);
+    > 197 |         expect(result2.shouldSendToSemanticRepair).toBe(true);
+          |                                                    ^
+      198 |         expect(result2.processedText).toBe('杩欐槸绗竴鍙ヨ瘽');
+      199 |
+      200 |         jest.useRealTimers();
+
+      at Object.<anonymous> (main/src/agent/postprocess/text-forward-merge-manager.test.ts:197:52)
+
+  鈼?TextForwardMergeManager 鈥?shouldWaitForMerge 閫昏緫 鈥?杈冮暱鏂囨湰澶勭悊 (20-40瀛楃) 鈥?搴旇瓒呮椂鍚庡彂閫?20-40瀛楃鐨勬枃鏈紙娌℃湁鍚庣画杈撳叆锛?
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      270 |         );
+      271 |
+    > 272 |         expect(result2.shouldWaitForMerge).toBe(false);
+          |                                            ^
+      273 |         expect(result2.shouldSendToSemanticRepair).toBe(true);
+      274 |         expect(result2.processedText).toBe('杩欐槸涓€鍙ユ瘮杈冮暱鐨勮瘽锛岀敤鏉ユ祴璇曠瓑寰呯‘璁ょ殑閫昏緫');
+      275 |
+
+      at Object.<anonymous> (main/src/agent/postprocess/text-forward-merge-manager.test.ts:272:44)
+
+  鈼?TextForwardMergeManager 鈥?shouldWaitForMerge 閫昏緫 鈥?杈冮暱鏂囨湰澶勭悊 (20-40瀛楃) 鈥?銆愯ˉ鍏呭姩浣?A1-1銆?0鈥?0 瀛楃煭鍙?+ 瓒呮椂鍙戦€侊紙B1-3锛?
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      314 |         
+      315 |         expect(result2.shouldWaitForMerge).toBe(false);
+    > 316 |         expect(result2.shouldSendToSemanticRepair).toBe(true);
+          |                                                    ^
+      317 |         expect(result2.processedText).toBe(text25);
+      318 |         
+      319 |         jest.useRealTimers();
+
+      at Object.<anonymous> (main/src/agent/postprocess/text-forward-merge-manager.test.ts:316:52)
+
+  鈼?TextForwardMergeManager 鈥?utterance 娴佺▼瀹屾暣鎬?鈥?搴旇姝ｇ‘澶勭悊瀹屾暣鐨?utterance 娴佺▼锛氫腑绛夋枃鏈?-> 瓒呮椂 -> 鍙戦€?
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      435 |         false
+      436 |       );
+    > 437 |       expect(result2.shouldWaitForMerge).toBe(false);
+          |                                          ^
+      438 |       expect(result2.shouldSendToSemanticRepair).toBe(true);
+      439 |       expect(result2.processedText).toBe('杩欐槸绗竴鍙ヨ瘽');
+      440 |
+
+      at Object.<anonymous> (main/src/agent/postprocess/text-forward-merge-manager.test.ts:437:42)
+
+FAIL tests/stage3.2/task-router-padding.test.ts
+  鈼?TaskRouter - EDGE-4: Padding 鍙傛暟浼犻€?鈥?EDGE-4: padding_ms 鍙傛暟浼犻€?鈥?搴旇姝ｇ‘浼犻€?padding_ms 鍙傛暟鍒?ASR 鏈嶅姟锛堟墜鍔ㄦ埅鏂細280ms锛?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-padding.test.ts:45:24)
+
+  鈼?TaskRouter - EDGE-4: Padding 鍙傛暟浼犻€?鈥?EDGE-4: padding_ms 鍙傛暟浼犻€?鈥?搴旇姝ｇ‘浼犻€?padding_ms 鍙傛暟鍒?ASR 鏈嶅姟锛堣嚜鍔?finalize锛?2
+0ms锛?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-padding.test.ts:45:24)
+
+  鈼?TaskRouter - EDGE-4: Padding 鍙傛暟浼犻€?鈥?EDGE-4: padding_ms 鍙傛暟浼犻€?鈥?搴旇澶勭悊 padding_ms 鏈彁渚涚殑鎯呭喌锛坲ndefined锛?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-padding.test.ts:45:24)
+
+  鈼?TaskRouter - EDGE-4: Padding 鍙傛暟浼犻€?鈥?EDGE-4: padding_ms 鍙傛暟浼犻€?鈥?搴旇澶勭悊 padding_ms = 0 鐨勬儏鍐碉紙涓嶆坊鍔?padding锛?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-padding.test.ts:45:24)
+
+  鈼?TaskRouter - EDGE-4: Padding 鍙傛暟浼犻€?鈥?EDGE-4: padding_ms 鍙傛暟浼犻€?鈥?搴旇鍚屾椂鏀寔 padding_ms 鍜?segments 鍙傛暟
+
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-padding.test.ts:45:24)
+
+FAIL main/src/agent/postprocess/semantic-repair-stage-en.test.ts
+  鈼?SemanticRepairStageEN - Phase 2 鈥?process 鈥?搴旇鍦ㄨ川閲忓垎楂樹簬闃堝€兼椂杩斿洖PASS
+
+    expect(jest.fn()).not.toHaveBeenCalled()
+
+    Expected number of calls: 0
+    Received number of calls: 1
+
+    1: {"job_id": "job_123", "lang": "en", "meta": {"language_probability": undefined, "reason_codes": ["LENGTH_MEETS_T
+HRESHOLD"], "segments": undefined}, "micro_context": undefined, "quality_score": 0.8, "session_id": "session_456", "tex
+t_in": "This is a longer test sentence that should pass the quality threshold check without triggering structural issue
+s detection", "utterance_index": 0}
+
+      53 |       expect(result.decision).toBe('PASS');
+      54 |       expect(result.textOut).toBe('This is a longer test sentence that should pass the quality threshold che
+ck without triggering structural issues detection');
+    > 55 |       expect(mockTaskRouter.routeSemanticRepairTask).not.toHaveBeenCalled();
+         |                                                          ^
+      56 |     });
+      57 |
+      58 |     it('搴旇鍦ㄨ川閲忓垎浣庝簬闃堝€兼椂瑙﹀彂淇', async () => {
+
+      at Object.<anonymous> (main/src/agent/postprocess/semantic-repair-stage-en.test.ts:55:58)
+
+FAIL tests/stage3.2/task-router-segments.test.ts
+  鈼?TaskRouter - Segments and Language Confidence 鈥?CONF-2: Segment 鏃堕棿鎴虫彁鍙?鈥?搴旇姝ｇ‘浼犻€?segments 淇℃伅锛堝寘鍚椂闂存埑锛?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-segments.test.ts:45:24)
+
+  鈼?TaskRouter - Segments and Language Confidence 鈥?CONF-2: Segment 鏃堕棿鎴虫彁鍙?鈥?搴旇澶勭悊娌℃湁 segments 鐨勬儏鍐碉紙鍚戝悗鍏煎锛?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-segments.test.ts:45:24)
+
+  鈼?TaskRouter - Segments and Language Confidence 鈥?CONF-1: 璇█缃俊搴﹀垎绾ч€昏緫 鈥?搴旇鍦ㄩ珮缃俊搴︼紙鈮?.90锛夋椂淇濇寔榛樿鍏抽棴涓婁笅鏂?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-segments.test.ts:141:24)
+
+  鈼?TaskRouter - Segments and Language Confidence 鈥?CONF-1: 璇█缃俊搴﹀垎绾ч€昏緫 鈥?搴旇鍦ㄤ綆缃俊搴︼紙<0.70锛夋椂寮哄埗鍏抽棴涓婁笅鏂?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-segments.test.ts:141:24)
+
+  鈼?TaskRouter - Segments and Language Confidence 鈥?CONF-1: 璇█缃俊搴﹀垎绾ч€昏緫 鈥?搴旇澶勭悊娌℃湁璇█姒傜巼淇℃伅鐨勬儏鍐?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-segments.test.ts:141:24)
+
+  鈼?TaskRouter - Segments and Language Confidence 鈥?缁煎悎娴嬭瘯锛歋egments + 璇█缃俊搴?鈥?搴旇鍚屾椂鏀寔 segments 鏃堕棿鎴冲拰璇█缃俊搴?
+    TypeError: this.registry.values is not a function or its return value is not iterable
+
+      33 |
+      34 |     // 閬嶅巻 ServiceRegistry
+    > 35 |     for (const entry of this.registry.values()) {
+         |                                       ^
+      36 |       // 鍙鐞嗚繍琛屼腑鐨勬湇鍔?      37 |       if (entry.runtime.status !== 'running') {
+      38 |         continue;
+
+      at TaskRouterServiceManagerNew.refreshServiceEndpoints (main/src/task-router/task-router-service-manager-new.ts:3
+5:39)
+      at TaskRouter.refreshServiceEndpoints (main/src/task-router/task-router.ts:158:57)
+      at TaskRouter.initialize (main/src/task-router/task-router.ts:145:16)
+      at Object.<anonymous> (tests/stage3.2/task-router-segments.test.ts:258:24)
+
+FAIL main/src/agent/postprocess/translation-stage-nmt-coordination.test.ts
+  鈼?TranslationStage - NMT Repair Coordination (Phase 2) 鈥?涓庤涔変慨澶嶇殑鍗忚皟 鈥?搴旇鍦ㄨ涔変慨澶嶅凡搴旂敤浣嗙疆淇″害浣庢椂鍚敤NMT Repair
+
+    SequentialExecutor: Task index 0 is less than or equal to current index 0, task may have arrived too late
+
+      121 |           'SequentialExecutor: Task index is less than or equal to current index, task may have arrived too
+ late'
+      122 |         );
+    > 123 |         task.reject(new Error(`SequentialExecutor: Task index ${task.utteranceIndex} is less than or equal 
+to current index ${currentIndex}, task may have arrived too late`));
+          |                     ^
+      124 |       } else {
+      125 |         // 鍚﹀垯鍔犲叆绛夊緟闃熷垪锛堟湁浠诲姟姝ｅ湪澶勭悊锛屾垨绱㈠紩涓嶈繛缁級
+      126 |         this.enqueueTask(task);
+
+      at main/src/sequential-executor/sequential-executor.ts:123:21
+      at SequentialExecutor.execute (main/src/sequential-executor/sequential-executor.ts:87:12)
+      at TranslationStage.process (main/src/agent/postprocess/translation-stage.ts:159:37)
+      at Object.<anonymous> (main/src/agent/postprocess/translation-stage-nmt-coordination.test.ts:78:34)
+
+  鈼?TranslationStage - NMT Repair Coordination (Phase 2) 鈥?涓庤涔変慨澶嶇殑鍗忚皟 鈥?搴旇鍦ㄨ涔変慨澶嶆湭搴旂敤鏃跺惎鐢∟MT Repair
+
+    SequentialExecutor: Task index 0 is less than or equal to current index 0, task may have arrived too late
+
+      121 |           'SequentialExecutor: Task index is less than or equal to current index, task may have arrived too
+ late'
+      122 |         );
+    > 123 |         task.reject(new Error(`SequentialExecutor: Task index ${task.utteranceIndex} is less than or equal 
+to current index ${currentIndex}, task may have arrived too late`));
+          |                     ^
+      124 |       } else {
+      125 |         // 鍚﹀垯鍔犲叆绛夊緟闃熷垪锛堟湁浠诲姟姝ｅ湪澶勭悊锛屾垨绱㈠紩涓嶈繛缁級
+      126 |         this.enqueueTask(task);
+
+      at main/src/sequential-executor/sequential-executor.ts:123:21
+      at SequentialExecutor.execute (main/src/sequential-executor/sequential-executor.ts:87:12)
+      at TranslationStage.process (main/src/agent/postprocess/translation-stage.ts:159:37)
+      at Object.<anonymous> (main/src/agent/postprocess/translation-stage-nmt-coordination.test.ts:104:34)
+
+  鈼?TranslationStage - NMT Repair Coordination (Phase 2) 鈥?涓庤涔変慨澶嶇殑鍗忚皟 鈥?搴旇鍦ㄨ涔変慨澶嶅凡搴旂敤鏃跺噺灏慛MT Repair鍊欓€夋暟
+
+    SequentialExecutor: Task index 0 is less than or equal to current index 0, task may have arrived too late
+
+      121 |           'SequentialExecutor: Task index is less than or equal to current index, task may have arrived too
+ late'
+      122 |         );
+    > 123 |         task.reject(new Error(`SequentialExecutor: Task index ${task.utteranceIndex} is less than or equal 
+to current index ${currentIndex}, task may have arrived too late`));
+          |                     ^
+      124 |       } else {
+      125 |         // 鍚﹀垯鍔犲叆绛夊緟闃熷垪锛堟湁浠诲姟姝ｅ湪澶勭悊锛屾垨绱㈠紩涓嶈繛缁級
+      126 |         this.enqueueTask(task);
+
+      at main/src/sequential-executor/sequential-executor.ts:123:21
+      at SequentialExecutor.execute (main/src/sequential-executor/sequential-executor.ts:87:12)
+      at TranslationStage.process (main/src/agent/postprocess/translation-stage.ts:159:37)
+      at Object.<anonymous> (main/src/agent/postprocess/translation-stage-nmt-coordination.test.ts:131:19)
+
+FAIL tests/stage3.2/session-context-manager.test.ts
+  鈼?Test suite failed to run
+
+    Cannot find module '../../../main/src/logger' from 'tests/stage3.2/session-context-manager.test.ts'
+
+      4 |
+      5 | // Mock logger before imports
+    > 6 | jest.mock('../../../main/src/logger', () => {
+        |      ^
+      7 |   const mockLogger = {
+      8 |     info: jest.fn(),
+      9 |     warn: jest.fn(),
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.<anonymous> (tests/stage3.2/session-context-manager.test.ts:6:6)
+
+FAIL tests/stage3.2/service-registry.test.ts
+  鈼?Test suite failed to run
+
+    Cannot find module '../../main/src/service-registry' from 'tests/stage3.2/service-registry.test.ts'
+
+      13 | import * as path from 'path';
+      14 | import * as os from 'os';
+    > 15 | import { ServiceRegistryManager } from '../../main/src/service-registry';
+         | ^
+      16 |
+      17 | describe('ServiceRegistryManager', () => {
+      18 |   let registryManager: ServiceRegistryManager;
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.<anonymous> (tests/stage3.2/service-registry.test.ts:15:1)
+
+FAIL tests/stage3.2/rerun-metrics.test.ts
+  鈼?Test suite failed to run
+
+    Cannot find module '../../../main/src/logger' from 'tests/stage3.2/rerun-metrics.test.ts'
+
+      4 |
+      5 | // Mock logger before imports
+    > 6 | jest.mock('../../../main/src/logger', () => ({
+        |      ^
+      7 |   default: {
+      8 |     info: jest.fn(),
+      9 |     warn: jest.fn(),
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.<anonymous> (tests/stage3.2/rerun-metrics.test.ts:6:6)
+
+FAIL tests/stage3.2/service-package-manager.test.ts
+  鈼?Test suite failed to run
+
+    Cannot find module '../../main/src/service-package-manager' from 'tests/stage3.2/service-package-manager.test.ts'
+
+      15 | import * as crypto from 'crypto';
+      16 | import axios from 'axios';
+    > 17 | import { ServicePackageManager } from '../../main/src/service-package-manager';
+         | ^
+      18 | import { ServiceInfo } from '../../main/src/service-package-manager/types';
+      19 |
+      20 | // Mock axios
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.<anonymous> (tests/stage3.2/service-package-manager.test.ts:17:1)
+
+FAIL tests/stage3.2/capability_by_type.test.ts
+  鈼?Test suite failed to run
+
+    Cannot find module '../../main/src/agent/node-agent' from 'tests/stage3.2/capability_by_type.test.ts'
+
+      4 | import { describe, it, expect, jest } from '@jest/globals';
+      5 | import { ServiceType, ServiceStatus, DeviceType } from '../../../shared/protocols/messages';
+    > 6 | import { NodeAgent } from '../../main/src/agent/node-agent';
+        | ^
+      7 |
+      8 | // 杞婚噺绾?logger mock锛坖est.config 宸叉槧灏勫埌 __mocks__/logger.ts锛岃繖閲屼粎纭繚绫诲瀷瀛樺湪锛?      9 | jest.mock('../../main/sr
+c/logger', () => ({
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.<anonymous> (tests/stage3.2/capability_by_type.test.ts:6:1)
+
+
+Test Suites: 11 failed, 67 passed, 78 total
+Tests:       28 failed, 609 passed, 637 total
+Snapshots:   0 total
+Time:        24.312 s
+Ran all test suites.

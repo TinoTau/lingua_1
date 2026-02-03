@@ -3,6 +3,8 @@
  * 验证优化后的lastCommittedText处理
  */
 
+jest.mock('../../gpu-arbiter', () => ({ withGpuLease: (_: string, fn: () => Promise<any>) => fn() }));
+
 import { runSemanticRepairStep } from './semantic-repair-step';
 import { JobAssignMessage } from '@shared/protocols/messages';
 import { JobContext, initJobContext } from '../context/job-context';

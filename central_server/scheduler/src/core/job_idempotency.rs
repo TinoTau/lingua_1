@@ -56,11 +56,10 @@ pub fn make_job_key(
 }
 
 /// Job Key 到 Job ID 的映射管理器
-/// 已移除本地锁，改用 Phase2 的 Redis 实现
+/// 已移除本地锁，改用 Redis 实现
 #[derive(Clone)]
 pub struct JobIdempotencyManager {
-    /// Phase2 运行时（可选）
-    phase2: Option<std::sync::Arc<crate::redis_runtime::Phase2Runtime>>,
+    redis_runtime: Option<std::sync::Arc<crate::redis_runtime::RedisRuntime>>,
     /// TTL（毫秒），默认 5 分钟
     ttl_ms: i64,
 }
@@ -68,13 +67,13 @@ pub struct JobIdempotencyManager {
 impl JobIdempotencyManager {
     pub fn new() -> Self {
         Self {
-            phase2: None,
+            redis_runtime: None,
             ttl_ms: 5 * 60 * 1000, // 5 分钟
         }
     }
 
-    pub fn set_phase2(&mut self, phase2: Option<std::sync::Arc<crate::redis_runtime::Phase2Runtime>>) {
-        self.phase2 = phase2;
+    pub fn set_redis_runtime(&mut self, redis_runtime: Option<std::sync::Arc<crate::redis_runtime::RedisRuntime>>) {
+        self.redis_runtime = redis_runtime;
     }
 
     /// 获取或创建 job_id（幂等）
@@ -82,8 +81,7 @@ impl JobIdempotencyManager {
     /// 如果不存在，创建新的映射并返回 job_id
     /// 使用 Redis 简单 key-value 存储，不再依赖 request_binding
     pub async fn get_or_create_job_id(&self, job_key: &JobKey, job_id: String) -> String {
-        // 如果 Phase2 可用，使用 Redis 存储
-        if let Some(ref rt) = self.phase2 {
+        if let Some(ref rt) = self.redis_runtime {
             // 直接使用 Redis key-value 存储，key 格式：scheduler:job_key:{job_key}
             let key = format!("scheduler:job_key:{}", job_key);
             
@@ -113,7 +111,7 @@ impl JobIdempotencyManager {
     /// 获取 job_id（如果存在）
     pub async fn get_job_id(&self, job_key: &JobKey) -> Option<String> {
         // 如果 Phase2 可用，从 Redis 读取
-        if let Some(ref rt) = self.phase2 {
+        if let Some(ref rt) = self.redis_runtime {
             let key = format!("scheduler:job_key:{}", job_key);
             return rt.redis_get_string(&key).await.ok().flatten();
         }

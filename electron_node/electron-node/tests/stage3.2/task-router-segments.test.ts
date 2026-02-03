@@ -11,33 +11,34 @@ import axios from 'axios';
 jest.mock('axios');
 const mockedAxios = axios as any;
 
-// Mock service managers
-const mockPythonServiceManager = {
-  getServiceStatus: jest.fn(),
-  startService: jest.fn(),
-  stopService: jest.fn(),
-};
+import type { ServiceRegistry, ServiceEntry } from '../../main/src/service-layer/ServiceTypes';
 
-const mockRustServiceManager = {
-  getStatus: jest.fn(),
-  start: jest.fn(),
-  stop: jest.fn(),
-};
+// TaskRouter ASR 目前只支持 faster-whisper-vad，测试用同 id 避免 routeASRTask 抛错
+const FAKE_ASR_SERVICE_ID = 'faster-whisper-vad';
 
-const mockServiceRegistryManager = {
-  getServiceEndpoints: jest.fn(),
-};
+function addFakeAsrToRegistry(registry: ServiceRegistry, port: number = 6007): void {
+  registry.set(FAKE_ASR_SERVICE_ID, {
+    def: {
+      id: FAKE_ASR_SERVICE_ID,
+      name: 'ASR Fake',
+      type: 'asr',
+      port,
+      exec: { command: 'python', args: [], cwd: '.' },
+    },
+    runtime: { status: 'running', port },
+    installPath: '/fake',
+  } as ServiceEntry);
+}
 
 describe('TaskRouter - Segments and Language Confidence', () => {
   let taskRouter: TaskRouter;
+  let mockRegistry: ServiceRegistry;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    taskRouter = new TaskRouter(
-      mockPythonServiceManager as any,
-      mockRustServiceManager as any,
-      mockServiceRegistryManager as any
-    );
+    mockRegistry = new Map();
+    addFakeAsrToRegistry(mockRegistry);
+    taskRouter = new TaskRouter(mockRegistry);
   });
 
   describe('CONF-2: Segment 时间戳提取', () => {
@@ -85,7 +86,6 @@ describe('TaskRouter - Segments and Language Confidence', () => {
         post: mockPost,
       } as any);
 
-      mockPythonServiceManager.getServiceStatus = jest.fn().mockReturnValue({ running: true });
       await taskRouter.refreshServiceEndpoints();
 
       const result = await taskRouter.routeASRTask(task);
@@ -125,7 +125,6 @@ describe('TaskRouter - Segments and Language Confidence', () => {
         post: mockPost,
       } as any);
 
-      mockPythonServiceManager.getServiceStatus = jest.fn().mockReturnValue({ running: true });
       await taskRouter.refreshServiceEndpoints();
 
       const result = await taskRouter.routeASRTask(task);
@@ -166,7 +165,6 @@ describe('TaskRouter - Segments and Language Confidence', () => {
         post: mockPost,
       } as any);
 
-      mockPythonServiceManager.getServiceStatus = jest.fn().mockReturnValue({ running: true });
       await taskRouter.refreshServiceEndpoints();
 
       const result = await taskRouter.routeASRTask(task);
@@ -204,7 +202,6 @@ describe('TaskRouter - Segments and Language Confidence', () => {
         post: mockPost,
       } as any);
 
-      mockPythonServiceManager.getServiceStatus = jest.fn().mockReturnValue({ running: true });
       await taskRouter.refreshServiceEndpoints();
 
       const result = await taskRouter.routeASRTask(task);
@@ -241,7 +238,6 @@ describe('TaskRouter - Segments and Language Confidence', () => {
         post: mockPost,
       } as any);
 
-      mockPythonServiceManager.getServiceStatus = jest.fn().mockReturnValue({ running: true });
       await taskRouter.refreshServiceEndpoints();
 
       const result = await taskRouter.routeASRTask(task);
@@ -288,7 +284,6 @@ describe('TaskRouter - Segments and Language Confidence', () => {
         post: mockPost,
       } as any);
 
-      mockPythonServiceManager.getServiceStatus = jest.fn().mockReturnValue({ running: true });
       await taskRouter.refreshServiceEndpoints();
 
       const result = await taskRouter.routeASRTask(task);

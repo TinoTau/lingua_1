@@ -1,10 +1,16 @@
 /**
  * 语言能力检测 - 语义修复语言检测
+ *
+ * 合并语义修复服务 semantic-repair-en-zh 完全取代原中文/英文独立服务，
+ * 上报 [zh, en] 供调度端校验并按 asr×semantic 建立两个单向节点池（zh:en、en:zh）。
  */
 
 import { InstalledService, InstalledModel } from '@shared/protocols/messages';
 import { ModelMetadataManager } from './language-capability-metadata';
 import logger from '../../logger';
+
+/** 合并语义修复服务 ID，提供 zh+en，供调度建立 zh:en / en:zh 池 */
+const MERGED_SEMANTIC_SERVICE_ID = 'semantic-repair-en-zh';
 
 /**
  * 检测语义修复服务的语言
@@ -16,13 +22,17 @@ export async function detectSemanticLanguages(
 ): Promise<string[]> {
   const languages: string[] = [];
 
+  // 优先级0：合并语义修复服务明确返回 [zh, en]（完全取代原 semantic-repair-zh / semantic-repair-en）
+  if (service.service_id === MERGED_SEMANTIC_SERVICE_ID) {
+    logger.debug({ service_id: service.service_id }, '合并语义修复服务，上报 zh+en');
+    return ['zh', 'en'];
+  }
+
   // 优先级1：从服务ID推断（如 semantic-repair-zh, semantic-repair-en）
   if (service.service_id) {
     const serviceId = service.service_id.toLowerCase();
-    logger.debug({ 
-      service_id: service.service_id 
-    }, '从服务ID推断语义修复语言');
-    
+    logger.debug({ service_id: service.service_id }, '从服务ID推断语义修复语言');
+
     if (serviceId.includes('zh') || serviceId.includes('chinese')) {
       languages.push('zh');
     }
@@ -35,9 +45,9 @@ export async function detectSemanticLanguages(
     if (serviceId.includes('ko') || serviceId.includes('korean')) {
       languages.push('ko');
     }
-    
+
     if (languages.length > 0) {
-      logger.debug({ 
+      logger.debug({
         service_id: service.service_id,
         languages: languages,
         method: 'service_id'
@@ -47,21 +57,21 @@ export async function detectSemanticLanguages(
 
   // 优先级2：从模型元数据获取
   if (languages.length === 0) {
-    logger.debug({ 
-      model_id: service.model_id 
+    logger.debug({
+      model_id: service.model_id
     }, '从模型元数据获取语义修复语言');
-    
+
     const modelMeta = metadataManager.findModelMetadata(service.model_id, 'semantic');
     if (modelMeta) {
       languages.push(...modelMeta.supported_languages);
-      logger.debug({ 
+      logger.debug({
         model_id: service.model_id,
         languages: modelMeta.supported_languages,
         method: 'metadata'
       }, '从模型元数据获取到语言');
     } else {
-      logger.debug({ 
-        model_id: service.model_id 
+      logger.debug({
+        model_id: service.model_id
       }, '未找到模型元数据');
     }
   }

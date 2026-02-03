@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 /// # 示例
 /// 
 /// ```
-/// use scheduler::pool::types::DirectedLangPair;
+/// use lingua_scheduler::pool::types::DirectedLangPair;
 /// 
 /// let pair = DirectedLangPair::new("zh", "en");
 /// assert_eq!(pair.to_key(), "zh:en");
@@ -42,24 +42,23 @@ impl DirectedLangPair {
 }
 
 /// 从节点能力提取所有有向语言对
-/// 
+///
 /// # 核心规则
-/// 
-/// - ASR 语言作为源语言（src）
-/// - Semantic 语言作为目标语言（tgt）
-/// - 生成所有 (src ∈ asr_langs, tgt ∈ tgt_langs) 的笛卡尔积。
-/// - **池分配**使用 (asr_langs × tts_langs)，与任务查找 (src, tgt) 一致；Semantic 仅能力校验。
-/// 
+///
+/// - ASR 语言作为源语言（src），目标语言（tgt）由**语义修复能力**决定（semantic_langs）。
+/// - **池分配**使用 (asr_langs × semantic_langs)，与任务查找 (src, tgt) 一致；调度根据语义修复能力建池。
+/// - 本函数通用为 (src_langs × tgt_langs)，池分配时 tgt_langs = semantic_langs。
+///
 /// # 示例
-/// 
+///
 /// ```
-/// use scheduler::pool::types::extract_directed_pairs;
-/// 
+/// use lingua_scheduler::pool::types::extract_directed_pairs;
+///
 /// let asr_langs = vec!["zh".to_string(), "en".to_string(), "de".to_string()];
-/// let tts_langs = vec!["zh".to_string(), "en".to_string()];
-/// 
-/// let pairs = extract_directed_pairs(&asr_langs, &tts_langs);
-/// 
+/// let tgt_langs = vec!["zh".to_string(), "en".to_string()];  // 池分配时即 semantic_langs
+///
+/// let pairs = extract_directed_pairs(&asr_langs, &tgt_langs);
+///
 /// // 生成 6 个有向语言对：zh→zh, zh→en, en→zh, en→en, de→zh, de→en
 /// assert_eq!(pairs.len(), 6);
 /// ```

@@ -36,59 +36,20 @@ describe('TaskRouterSemanticRepairHandler - 服务端点查找优化', () => {
     );
   });
 
-  describe('getServiceIdForLanguage 职责简化', () => {
-    it('应该只返回服务ID，不检查服务可用性', () => {
-      // 使用反射访问私有方法进行测试
-      const getServiceIdForLanguage = (handler as any).getServiceIdForLanguage.bind(handler);
-
-      // 测试中文
-      const zhServiceId = getServiceIdForLanguage('zh');
-      expect(zhServiceId).toBe('semantic-repair-zh');
-      expect(mockGetServiceEndpointById).not.toHaveBeenCalled();
-
-      // 测试英文
-      const enServiceId = getServiceIdForLanguage('en');
-      expect(enServiceId).toBe('semantic-repair-en');
-      expect(mockGetServiceEndpointById).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('routeSemanticRepairTask 统一服务端点查找', () => {
-    const createTask = (lang: 'zh' | 'en' = 'en'): SemanticRepairTask => ({
-      job_id: 'job-1',
-      session_id: 'session-1',
-      utterance_index: 0,
-      lang,
-      text_in: 'test text',
-      quality_score: 0.9,
-    });
-
-    afterEach(() => {
-      handler.clearEndpointCache();
-    });
-
-    it('应该优先尝试统一服务', () => {
-      const unifiedEndpoint: ServiceEndpoint = {
-        serviceId: 'semantic-repair-en-zh',
-        baseUrl: 'http://localhost:8001',
-        status: 'running',
-      };
-
-      mockGetServiceEndpointById.mockReturnValue(unifiedEndpoint);
-
-      // 验证：getServiceIdForLanguage只返回服务ID，不检查可用性
-      const getServiceIdForLanguage = (handler as any).getServiceIdForLanguage.bind(handler);
-      const serviceId = getServiceIdForLanguage('en');
-      expect(serviceId).toBe('semantic-repair-en');
-      expect(mockGetServiceEndpointById).not.toHaveBeenCalled();
-    });
-
-    it('getServiceIdForLanguage应该只返回服务ID，不调用getServiceEndpointById', () => {
-      const getServiceIdForLanguage = (handler as any).getServiceIdForLanguage.bind(handler);
-
-      expect(getServiceIdForLanguage('zh')).toBe('semantic-repair-zh');
-      expect(getServiceIdForLanguage('en')).toBe('semantic-repair-en');
-      expect(mockGetServiceEndpointById).not.toHaveBeenCalled();
+  describe('routeSemanticRepairTask', () => {
+    it('只查 semantic-repair-en-zh 端点', async () => {
+      mockGetServiceEndpointById.mockReturnValue(null);
+      await expect(
+        handler.routeSemanticRepairTask({
+          job_id: 'job-1',
+          session_id: 'session-1',
+          utterance_index: 0,
+          lang: 'zh',
+          text_in: 'test',
+          quality_score: 0.9,
+        })
+      ).rejects.toThrow('SEM_REPAIR_UNAVAILABLE');
+      expect(mockGetServiceEndpointById).toHaveBeenCalledWith('semantic-repair-en-zh');
     });
   });
 });

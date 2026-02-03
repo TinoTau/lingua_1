@@ -2,11 +2,12 @@
 //! 
 //! 测试在高并发场景下的性能和稳定性
 
-use lingua_scheduler::phase2::RedisHandle;
-use lingua_scheduler::core::config::Phase2RedisConfig;
+use lingua_scheduler::redis_runtime::RedisHandle;
+use lingua_scheduler::core::config::RedisConnectionConfig;
 use lingua_scheduler::node_registry::NodeRegistry;
 use lingua_scheduler::pool::PoolService;
 use lingua_scheduler::messages::ServiceType;
+use lingua_scheduler::Config;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
@@ -17,12 +18,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 初始化
     println!("📡 初始化系统...");
     let redis_url = "redis://127.0.0.1:6379";
-    let redis = match RedisHandle::connect(&lingua_scheduler::core::config::Phase2RedisConfig {
+    let scheduler_config = Config::default().scheduler;
+    let redis = match RedisHandle::connect(&RedisConnectionConfig {
         mode: "single".to_string(),
         url: redis_url.to_string(),
         cluster_urls: vec![],
         key_prefix: "scheduler:".to_string(),
-    }).await {
+    }, &scheduler_config).await {
         Ok(r) => Arc::new(r),
         Err(e) => {
             println!("❌ Redis 连接失败: {}", e);

@@ -3,6 +3,8 @@
  * 负责管理翻译结果的显示和去重
  */
 
+import { logger } from '../logger';
+
 export interface TranslationResult {
   originalText: string;
   translatedText: string;
@@ -206,7 +208,7 @@ export class TranslationDisplayManager {
     const originalTextStr = typeof originalText === 'string' ? originalText : (originalText || '');
     const translatedTextStr = typeof translatedText === 'string' ? translatedText : (translatedText || '');
     if ((!originalTextStr || originalTextStr.trim() === '') && (!translatedTextStr || translatedTextStr.trim() === '')) {
-      console.log('[TranslationDisplay] 文本为空，跳过显示');
+      logger.info('TranslationDisplay', '文本为空，跳过显示', { utterance_index: utteranceIndex });
       return false;
     }
 
@@ -217,6 +219,7 @@ export class TranslationDisplayManager {
     // 查找或创建翻译结果显示容器
     let resultContainer = document.getElementById('translation-result-container');
     if (!resultContainer) {
+      logger.info('TranslationDisplay', '创建翻译结果容器（DOM 中不存在）');
       resultContainer = document.createElement('div');
       resultContainer.id = 'translation-result-container';
       resultContainer.style.cssText = `
@@ -261,7 +264,7 @@ export class TranslationDisplayManager {
     const translatedDiv = document.getElementById('translation-translated');
 
     if (!originalDiv || !translatedDiv) {
-      console.error('无法找到翻译结果文本框');
+      logger.error('TranslationDisplay', '无法找到翻译结果文本框（translation-original/translation-translated）', { utterance_index: utteranceIndex });
       return false;
     }
 
@@ -284,14 +287,12 @@ export class TranslationDisplayManager {
 
     // 如果原文和译文都已存在，跳过追加（避免重复）
     if (originalAlreadyExists && translatedAlreadyExists) {
-      console.log('[TranslationDisplay] 文本已存在（完整段落匹配），跳过重复追加:', {
-        utterance_index: 'N/A',
-        originalText: origText?.substring(0, 50),
-        translatedText: transText?.substring(0, 50),
-        currentOriginalLength: currentOriginal.length,
-        currentTranslatedLength: currentTranslated.length
+      logger.info('TranslationDisplay', '文本已存在（完整段落匹配），跳过重复追加', {
+        utterance_index: utteranceIndex,
+        original_preview: origText?.substring(0, 50),
+        translated_preview: transText?.substring(0, 50),
       });
-      return false; // 返回 false 表示未成功显示
+      return false;
     }
 
     // 追加新文本（如果当前有内容，先添加换行和分隔符）
@@ -328,11 +329,10 @@ export class TranslationDisplayManager {
       this.updateHighlight();
     }
 
-    // 自动滚动到底部，显示最新内容
     originalDiv.scrollTop = originalDiv.scrollHeight;
     translatedDiv.scrollTop = translatedDiv.scrollHeight;
 
-    // 返回 true 表示成功显示
+    logger.info('TranslationDisplay', '翻译结果已追加到 UI', { utterance_index: utteranceIndex, original_len: newOriginal.length, translated_len: newTranslated.length });
     return true;
   }
 
@@ -356,7 +356,7 @@ export class TranslationDisplayManager {
       resultContainer.style.display = 'none';
     }
 
-    console.log('[TranslationDisplay] 已清空显示的翻译结果');
+    logger.info('TranslationDisplay', '已清空显示的翻译结果');
   }
 
   /**
@@ -404,7 +404,7 @@ export class TranslationDisplayManager {
       }
     }
 
-    console.log('[TranslationDisplay] 已显示所有待显示的翻译结果，已显示总数:', this.displayedTranslationCount, '本次新增:', displayedCount);
+    logger.info('TranslationDisplay', '已显示所有待显示的翻译结果', { total_displayed: this.displayedTranslationCount, displayed_this_time: displayedCount });
   }
 }
 

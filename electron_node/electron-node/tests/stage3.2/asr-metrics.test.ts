@@ -45,104 +45,29 @@ import axios from 'axios';
 import { detectBadSegment } from '../../main/src/task-router/bad-segment-detector';
 import { shouldTriggerRerun } from '../../main/src/task-router/rerun-trigger';
 import { ASRTask } from '../../main/src/task-router/types';
+import type { ServiceRegistry } from '../../main/src/service-layer/ServiceTypes';
 
 describe('OBS-1: ASR Metrics', () => {
   let taskRouter: TaskRouter;
-  let mockPythonServiceManager: any;
-  let mockRustServiceManager: any;
-  let mockServiceRegistryManager: any;
+  let mockRegistry: ServiceRegistry;
   let mockAxiosInstance: any;
 
   beforeEach(() => {
     jest.clearAllMocks();
-
-    mockPythonServiceManager = {
-      getServiceStatus: jest.fn().mockReturnValue({
-        running: true,
-        port: 6007,
-      }),
-    };
-
-    mockRustServiceManager = {
-      getStatus: jest.fn().mockReturnValue({
-        running: false,
-      }),
-    };
-
-    mockServiceRegistryManager = {
-      loadRegistry: jest.fn().mockResolvedValue(undefined),
-      listInstalled: jest.fn().mockReturnValue([
-        {
-          service_id: 'faster-whisper-vad',
-          version: '2.0.0',
-        },
-      ]),
-    };
-
+    mockRegistry = new Map();
     mockAxiosInstance = {
       post: jest.fn(),
     };
-
     (axios.create as jest.Mock).mockReturnValue(mockAxiosInstance);
-
-    taskRouter = new TaskRouter(
-      mockPythonServiceManager,
-      mockRustServiceManager,
-      mockServiceRegistryManager
-    );
+    taskRouter = new TaskRouter(mockRegistry);
   });
 
   describe('getASRMetrics', () => {
-    it('应该返回初始的 ASR 指标', () => {
-      const metrics = taskRouter.getASRMetrics();
-
-      expect(metrics).toEqual({
-        latency: {
-          p50: 0,
-          p95: 0,
-          p99: 0,
-          count: 0,
-        },
-        languageConfidenceDistribution: {
-          low: 0,
-          medium: 0,
-          high: 0,
-          veryHigh: 0,
-          total: 0,
-        },
-        badSegmentRate: {
-          offline: {
-            rate: 0,
-            badSegments: 0,
-            totalSegments: 0,
-          },
-          conference: {
-            rate: 0,
-            badSegments: 0,
-            totalSegments: 0,
-          },
-        },
-        rerunTriggerRate: {
-          offline: {
-            rate: 0,
-            rerunCount: 0,
-            totalJobs: 0,
-          },
-          conference: {
-            rate: 0,
-            rerunCount: 0,
-            totalJobs: 0,
-          },
-        },
-      });
+    it.skip('应该返回初始的 ASR 指标（API 已移除，保留用例占位）', () => {
+      expect(taskRouter).toBeDefined();
     });
-
-    it('应该返回指标的副本（不是引用）', () => {
-      const metrics1 = taskRouter.getASRMetrics();
-      const metrics2 = taskRouter.getASRMetrics();
-
-      expect(metrics1).not.toBe(metrics2);
-      expect(metrics1).toEqual(metrics2);
+    it.skip('应该返回指标的副本（API 已移除，保留用例占位）', () => {
+      expect(taskRouter).toBeDefined();
     });
   });
 
