@@ -12,7 +12,7 @@
 
 - **Buffer**：以 `bufferKey` 唯一标识的一条输入音频连续流的缓存对象（包含 pending / segments / timers / epoch 等）。
 - **Epoch**：同一 bufferKey 下，当进入 FINALIZING 或遇到关键边界后递增的“代次”，用于避免“旧 buffer 被 finalize 后又被写入”。
-- **Registration**：OriginalJobResultDispatcher 为某个 originalJob 注册的聚合上下文，等待 segment 返回并触发回调。
+- **Registration**：~~OriginalJobResultDispatcher~~（已移除）曾为某个 originalJob 注册的聚合上下文；当前结果发送经 ResultSender + buildResultsToSend 单路径，无独立 Dispatcher。
 
 ---
 
@@ -119,7 +119,7 @@
 
 ---
 
-### D. `main/src/pipeline-orchestrator/original-job-result-dispatcher.ts`
+### D. ~~`main/src/pipeline-orchestrator/original-job-result-dispatcher.ts`~~（已移除）
 **目标**：registration TTL 兜底；segment-level 计数一致；防内存泄露。
 
 最小改动：
@@ -326,6 +326,6 @@ sequenceDiagram
 
 ## 7) 附：开发拆分建议（便于并行）
 - 人员 A：BufferKey + 状态机（audio-aggregator.ts）
-- 人员 B：Dispatcher TTL + missing 核销（original-job-result-dispatcher.ts）
+- 人员 B：~~Dispatcher TTL + missing 核销~~（original-job-result-dispatcher 已移除；当前由 ResultSender/buildResultsToSend 处理空容器）
 - 人员 C：runAsrStep expectedCount + 失败策略（runAsrStep.ts）
 - 人员 D：统一归属策略 + 拼接器（assignOriginalJobIdsForBatches.ts / text-merge.ts）

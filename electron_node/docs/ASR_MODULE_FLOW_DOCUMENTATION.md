@@ -4,9 +4,10 @@
 本文档详细描述ASR模块的完整流程和代码逻辑，包括每个方法的调用关系，用于决策部门审议。
 
 ## 文档版本
-- **版本**: v2.0（精简版）
-- **更新日期**: 2026年1月18日
-- **适用范围**: 节点端ASR处理流程
+- **版本**: v2.1
+- **更新日期**: 2026年2月
+- **适用范围**: 节点端 ASR 处理流程
+- **变更说明**: v2.1 移除对已删除组件 OriginalJobResultDispatcher 的描述，统一为当前单 pipeline + ResultSender/buildResultsToSend 结果发送路径。
 
 ---
 
@@ -33,11 +34,10 @@ ASR模块由以下核心组件组成：
      - `AudioAggregatorTimeoutHandler`: 超时处理
      - `AudioAggregatorFinalizeHandler`: Finalize处理
 
-4. **`OriginalJobResultDispatcher`** (`pipeline-orchestrator/original-job-result-dispatcher.ts`)
-   - 按原始job_id分发ASR结果，累积多个ASR批次，触发后续处理
-
-5. **`PipelineOrchestratorASRHandler`** (`pipeline-orchestrator/pipeline-orchestrator-asr.ts`)
+4. **`PipelineOrchestratorASRHandler`** (`pipeline-orchestrator/pipeline-orchestrator-asr.ts`)
    - ASR任务路由和处理，调用TaskRouter执行ASR识别
+
+5. **结果发送**：主流程不经过独立 Dispatcher；ASR 及后续步骤在 `runJobPipeline` 内顺序执行，结果经 `buildJobResult` → `buildResultsToSend`（含 `pendingEmptyJobs` 空容器）→ `ResultSender.sendJobResult` 发送。**说明**：`OriginalJobResultDispatcher` 已移除（死代码清理），当前仅保留上述单一路径。
 
 6. **Session 亲和**：由调度端 Redis + select_node 实现，节点端不再维护 SessionAffinityManager。
 
@@ -53,18 +53,17 @@ ASR模块由以下核心组件组成：
 ```
 runAsrStep(job, ctx, services, options?)
   ↓
-  1. 创建PipelineOrchestratorAudioProcessor
-  2. 调用audioProcessor.processAudio(job)
-  3. 如果存在originalJobIds，注册到dispatcher
-  4. 遍历audioSegments，调用ASR服务
-  5. 通过dispatcher分发ASR结果
+  1. 创建 PipelineOrchestratorAudioProcessor
+  2. 调用 audioProcessor.processAudio(job)
+  3. 若有 originalJobInfo，将空容器记入 ctx.pendingEmptyJobs（由 node-agent 统一发送）
+  4. 遍历 audioSegments，调用 ASR 服务，结果写入 ctx（asrText、asrSegments 等）
+  5. 后续步骤（聚合→同音纠错→语义修复→去重→翻译→TTS）在同一 pipeline 内顺序执行，最终经 buildJobResult → buildResultsToSend → ResultSender 发送
 ```
 
 **关键逻辑**:
 - 处理音频聚合结果（`audioProcessResult`）
-- 如果存在`originalJobIds`，按`originalJobId`分组注册
-- 设置`expectedSegmentCount`（finalize时为batchCount，否则为undefined）
-- 遍历音频段，调用ASR服务，通过dispatcher累积结果
+- 空容器（无 ASR 批次的 originalJob）记入 `ctx.pendingEmptyJobs`，由 `buildResultsToSend` 展开为 NO_TEXT_ASSIGNED 条目不单独走 Dispatcher
+- 遍历音频段调用 ASR 服务，结果直接写回 `ctx`，单 job 单 pipeline 路径
 
 ---
 
@@ -141,67 +140,17 @@ processAudio(job)
 
 ---
 
-### 2.4 注册原始Job：runAsrStep中的注册逻辑
+### 2.4 ASR 批次处理：runAsrStep 中的 ASR 调用
 
 **逻辑**:
-- 遍历`uniqueOriginalJobIds`
-- 计算每个`originalJobId`对应的batch数量
-- 设置`expectedSegmentCount`：
-  - `isFinalize`时：`batchCountForThisJob`
-  - 非finalize时：`undefined`（累积等待）
-- 调用`dispatcher.registerOriginalJob()`
-
----
-
-### 2.5 ASR批次处理：runAsrStep中的ASR调用
-
-**逻辑**:
-- 遍历`audioSegments`
+- 遍历 `audioSegments`
 - 对每个音频段：
-  1. 构建ASRTask（包含context_text、流式标志等）
-  2. 调用ASR服务（流式或非流式，使用GPU租约）
-  3. 如果存在`originalJobIds`，调用`dispatcher.addASRSegment()`（包含`batchIndex`）
-  4. 否则，更新JobContext
+  1. 构建 ASRTask（包含 context_text、流式标志等）
+  2. 调用 ASR 服务（流式或非流式，使用 GPU 租约）
+  3. 将结果写回 `ctx`（asrText、asrSegments 等；多段时拼接）
+- 空容器（originalJobInfo 中无对应批次的 job）已记入 `ctx.pendingEmptyJobs`，由 node-agent 在发送主结果时一并发送（NO_TEXT_ASSIGNED）
 
----
-
-### 2.6 ASR结果分发：OriginalJobResultDispatcher.addASRSegment
-
-**逻辑**:
-1. 获取registration，更新`lastActivityAt`
-2. 累积ASR结果到`accumulatedSegments`和`accumulatedSegmentsList`
-3. 检查是否应该立即处理：
-   - `expectedSegmentCount != null && accumulatedSegments.length >= expectedSegmentCount`
-4. 如果应该处理：
-   - 标记`isFinalized=true`
-   - 按`batchIndex`排序`accumulatedSegments`
-   - 合并文本：`sortedSegments.map(s => s.asrText).join(' ')`
-   - 调用callback（触发SR、NMT、TTS）
-   - 清除注册信息
-
----
-
-### 2.7 强制完成：OriginalJobResultDispatcher.forceComplete
-
-**设计说明**:
-- 仅作为异常兜底路径（例如少数batch丢失的极端情况）
-- 正常业务不依赖此函数触发SR，主流程通过`addASRSegment`触发
-- 调用方只在finalize后的"最后安全点"调用一次
-
-**逻辑**:
-- 早期返回：如果`registration.isFinalized`，直接返回（避免双回调）
-- 如果有累积的ASR结果，立即处理（按`batchIndex`排序后合并文本）
-- 触发callback（SR、NMT、TTS）
-- 清除注册信息
-
----
-
-### 2.8 超时清理：OriginalJobResultDispatcher.cleanupExpiredRegistrations
-
-**逻辑**:
-- 构造函数中启动定时器（每5秒检查一次）
-- 清理`!isFinalized && idleMs > 20秒`的注册信息
-- **不触发SR**，只清理内存，记录警告日志
+**说明**：原 “OriginalJobResultDispatcher” 注册/分发/forceComplete/超时清理 已移除，当前为单 job 单 pipeline 路径，无独立 dispatcher。
 
 ---
 
@@ -216,14 +165,13 @@ processAudio(job)
 | `shouldProcessNow`（手动/pause finalize） | 合并pending音频，按能量切分或整段发送（Hotfix），创建流式批次 | `audioSegments`数组 |
 | 不满足`shouldProcessNow` | 累积到缓冲区 | `shouldReturnEmpty=true` |
 
-### 3.2 ASR结果分发分支
+### 3.2 结果与空容器发送分支
 
 | 条件 | 行为 | 触发时机 |
 |------|------|---------|
-| `originalJobIds.length > 0` | 注册到dispatcher，按originalJobId分组处理 | 在`runAsrStep`中，处理audioSegments之前 |
-| `expectedSegmentCount`已设置且达到 | 立即触发callback（SR、NMT、TTS） | 在`addASRSegment`中 |
-| `isFinalize` | 调用`forceComplete`强制完成所有累积的job | 在`runAsrStep`中，所有ASR批次处理完成后 |
-| `!isFinalized && idleMs > 20秒` | 清理注册信息（不触发SR） | 在`cleanupExpiredRegistrations`中，每5秒检查一次 |
+| 本 job 有 ASR 结果并走完 pipeline | 主结果经 `buildJobResult` 写入 result，`should_send` 由去重步骤决定 | `runJobPipeline` 结束后，`buildResultsToSend` 构建列表 |
+| `ctx.pendingEmptyJobs` 非空 | 主结果发送时追加 NO_TEXT_ASSIGNED 条目，每条对应一空容器 job_id | `sendJobResultPlan` 循环中，与主结果同一次计划 |
+| 去重未通过 | 不发送该 job 结果 | `ResultSender.sendJobResult` 内根据 `shouldSend` 跳过 |
 
 ---
 
@@ -235,20 +183,15 @@ processAudio(job)
 
 **分析**:
 - 音频处理分支：每个分支都有明确的触发条件，互不重叠
-- ASR结果分发：逻辑清晰，无重复
-  - `addASRSegment` → 累积并检查是否达到expectedSegmentCount
-  - `forceComplete` → 强制完成（仅在finalize时调用，有早期返回防御）
-  - `cleanupExpiredRegistrations` → 超时清理（不触发SR）
+- 结果发送：单路径，主结果 + pendingEmptyJobs 由 buildResultsToSend 构建，ResultSender 按 SEND_PLAN 顺序发送，无重复分发逻辑
 
 ### 4.2 矛盾逻辑检查
 
 **检查结果**: ✅ **未发现矛盾逻辑**
 
 **分析**:
-- **Hotfix逻辑**: `hasMergedPendingAudio`标志在合并pending音频时设置，在切分后清除，逻辑一致
-- **expectedSegmentCount设置**: `isFinalize`时设置为batchCount，非finalize时为undefined，逻辑一致
-- **forceComplete调用**: 仅在`isFinalize`时调用，有早期返回防御，不会与`addASRSegment`冲突
-- **超时清理**: 只清理`!isFinalized`的注册，不触发SR，逻辑一致
+- **Hotfix逻辑**: `hasMergedPendingAudio` 标志在合并 pending 音频时设置，在切分后清除，逻辑一致
+- **结果发送**: 仅 buildResultsToSend → sendJobResultPlan → ResultSender 一条路径，无多路触发
 
 ### 4.3 边界情况检查
 
@@ -256,9 +199,9 @@ processAudio(job)
 
 **分析**:
 - 空音频处理：`isTimeoutTriggered && currentAudio.length === 0` → 返回空结果
-- 空容器处理：在`runAsrStep`中检测空容器，发送空结果核销
-- 音频格式验证：验证必须是opus格式，PCM16长度必须是2的倍数
-- 注册信息清理：正常完成时清理，超时清理（20秒），session下无注册信息时清理session
+- 空容器处理：在 runAsrStep 中记入 `ctx.pendingEmptyJobs`，由 buildResultsToSend 展开为 NO_TEXT_ASSIGNED 并随主结果一并发送
+- 音频格式验证：验证必须是 opus 格式，PCM16 长度必须是 2 的倍数
+- Session 清理：removeSession 时由 InferenceService 统一清理各组件；AudioAggregator 另有 cleanupExpiredBuffers 兜底
 
 ---
 
@@ -299,14 +242,14 @@ processAudio(job)
 - 在触发callback前，按`batchIndex`排序`accumulatedSegments`
 - 按排序后的顺序合并文本
 
-### 5.5 20秒超时清理
+### 5.5 超时与清理（当前实现）
 
-**目的**: 防止极端异常场景下utteranceState永久占用内存
+**目的**: 防止缓冲区与 session 状态长期占用内存
 
 **实现**: 
-- 在`OriginalJobResultDispatcher`构造函数中启动定时器（每5秒检查一次）
-- 清理`!isFinalized && idleMs > 20秒`的注册信息
-- 不触发SR，只清理内存
+- **AudioAggregator**：`cleanupExpiredBuffers()` 按空闲时长清理孤儿 buffer（约 1 分钟间隔）
+- **Session**：断线或显式 `removeSession` 时由 InferenceService 统一清理各组件
+- 原 OriginalJobResultDispatcher 的 20 秒注册清理已随该组件移除而不再存在
 
 ---
 
@@ -321,13 +264,6 @@ processAudio(job)
 | `SPLIT_HANGOVER_MS` | 600 | 分割点Hangover：600ms |
 | `MIN_ACCUMULATED_DURATION_FOR_ASR_MS` | 5000 | 最小累积时长：5秒（用于ASR流式批次） |
 | `PENDING_TIMEOUT_AUDIO_TTL_MS` | 10000 | pendingTimeoutAudio TTL：10秒 |
-
-### OriginalJobResultDispatcher参数
-
-| 参数 | 值 | 说明 |
-|------|-----|------|
-| `UTT_TIMEOUT_MS` | 20000 | Utterance超时：20秒 |
-| `cleanupInterval` | 5000 | 清理检查间隔：5秒 |
 
 ### 流式切分参数
 
@@ -349,14 +285,13 @@ processAudio(job)
 - **流式切分** (`splitAudioByEnergy`): 记录输入输出段数量、每段时长
 - **批次创建** (`createStreamingBatchesWithPending`): 记录批次数量、剩余段数量
 
-### OriginalJobResultDispatcher关键日志点
+### 结果发送关键日志点（ResultSender / node-agent-result-builder）
 
-- **ASR批次累积** (`accumulateASRSegment`): Debug级别，记录批次索引、累积数量
-- **文本合并** (`mergeASRText`): 记录批次数量、每批次文本预览、合并后文本预览
-- **强制完成** (`forceComplete`): 记录触发原因、批次数量
-- **超时清理** (`cleanupExpiredRegistrations`): 警告级别，记录过期数量、空闲时长
+- **SEND_PLAN**: 记录本次发送计划（job_id、reason、isEmptyJob、planFingerprint）
+- **SEND_ATTEMPT**: 每条发送项尝试发送时的 job_id、reason、attemptSeq
+- **SEND_DONE**: 单条发送完成
 
-**日志字段规范**: 所有日志包含`operation`字段，便于过滤和搜索
+**说明**：原 OriginalJobResultDispatcher 相关日志已随该组件移除而不再存在。
 
 ---
 

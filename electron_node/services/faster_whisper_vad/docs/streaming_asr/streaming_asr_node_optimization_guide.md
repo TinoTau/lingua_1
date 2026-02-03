@@ -60,7 +60,7 @@ bufferKey = session_id
 
 ---
 
-### 2. OriginalJobResultDispatcher 增加兜底机制（防止永远等不齐）
+### 2. ~~OriginalJobResultDispatcher 增加兜底机制~~（组件已移除，当前结果经 ResultSender + buildResultsToSend 单路径）
 
 #### 问题
 当前回调触发条件：

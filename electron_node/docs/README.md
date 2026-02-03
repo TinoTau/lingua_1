@@ -258,9 +258,9 @@ if (hasMergedPendingAudio) {
    - 查看日志：`AudioAggregator: 连续utteranceIndex，允许合并`
 
 2. **ASR结果重复/丢失**
-   - 检查 isFinalized 标志
-   - 检查 expectedSegmentCount 设置
-   - 查看日志：`OriginalJobResultDispatcher: Merged ASR batches text`
+   - 检查聚合与 finalize 逻辑（AudioAggregator）
+   - 检查空容器与主结果发送顺序
+   - 查看日志：`SEND_PLAN`、`SEND_ATTEMPT`（node-agent-result-builder / ResultSender）
 
 3. **Session混淆**
    - 检查 sessionId 是否正确传递
@@ -275,8 +275,8 @@ if (hasMergedPendingAudio) {
 
 每个模块只负责一个职责：
 - `AudioAggregator`: 音频聚合
-- `OriginalJobResultDispatcher`: 结果分发
-- `PipelineOrchestratorASRHandler`: ASR处理
+- `ResultSender` / `buildResultsToSend`: 结果发送（含主结果与空容器 NO_TEXT_ASSIGNED）
+- `PipelineOrchestratorASRHandler`: ASR 处理
 
 ### 2. 依赖注入
 
@@ -306,8 +306,8 @@ if (hasMergedPendingAudio) {
 ### 单元测试
 
 核心模块都有完整的单元测试：
-- `audio-aggregator.test.ts`: 39个测试用例（100%通过）
-- `original-job-result-dispatcher.test.ts`: 完整的分发逻辑测试
+- `audio-aggregator.test.ts`: 音频聚合测试
+- `node-agent-result-builder.ts` / `ResultSender`: 结果构建与发送逻辑（buildResultsToSend、sendJobResultPlan）
 - Session 亲和由调度端实现，节点端无独立亲和测试
 
 ### 集成测试

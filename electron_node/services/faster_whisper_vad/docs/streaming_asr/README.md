@@ -1,6 +1,8 @@
 # 节点端流式 ASR 文档索引
 
-**最后更新**: 2026-01-24
+**最后更新**: 2026-02
+
+**架构变更说明（2026-02）**：节点端已移除 **OriginalJobResultDispatcher**（死代码清理）。当前结果发送统一经 **ResultSender** + **buildResultsToSend**（含 `pendingEmptyJobs` 空容器 NO_TEXT_ASSIGNED）单路径完成。本目录下部分文档仍保留对 Dispatcher 的历史描述，仅作参考。
 
 ---
 
@@ -74,6 +76,6 @@
 
 - AudioAggregator: `electron_node/electron-node/main/src/pipeline-orchestrator/audio-aggregator.ts`
 - FinalizeHandler: `electron_node/electron-node/main/src/pipeline-orchestrator/audio-aggregator-finalize-handler.ts`
-- MaxDurationHandler: `electron_node/electron-node/main/src/pipeline-orchestrator/audio-aggregator-maxduration-handler.ts`
-- OriginalJobResultDispatcher: `electron_node/electron-node/main/src/pipeline-orchestrator/original-job-result-dispatcher.ts`
-- 单元测试: `electron_node/electron-node/main/src/pipeline-orchestrator/*-optimization.test.ts`
+- MaxDurationHandler: `electron_node/electron-node/main/src/pipeline-orchestrator/audio-aggregator-maxduration-handler.ts`（若仍存在）
+- 结果发送: `node-agent-result-builder.ts`（buildResultsToSend、sendJobResultPlan）、`node-agent-result-sender.ts`（ResultSender）；**OriginalJobResultDispatcher 已移除**
+- 单元测试: `electron_node/electron-node/main/src/pipeline-orchestrator/audio-aggregator*.test.ts` 等

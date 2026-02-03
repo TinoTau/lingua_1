@@ -1,8 +1,10 @@
 # 节点端流式 ASR 优化实施总结
 
-**日期**: 2026-01-24  
+**日期**: 2026-01-24；2026-02 更新  
 **依据**: 决策部门反馈（[streaming_asr_node_optimization_guide.md](streaming_asr_node_optimization_guide.md)）  
 **原则**: 不考虑兼容，保持代码简洁，做好单元测试
+
+**架构变更（2026-02）**：**OriginalJobResultDispatcher** 已移除，相关实现与单测已删除。结果发送现由 ResultSender + buildResultsToSend 单路径完成。下文提及 Dispatcher 的条目为历史记录。
 
 ---
 
@@ -72,7 +74,7 @@ const batchCountForThisJob = originalJobIds.filter(id => id === originalJobId).l
 const expectedSegmentCount = batchCountForThisJob;  // 强制一致
 ```
 
-### 4. OriginalJobResultDispatcher 增加 registration TTL 兜底 ✅
+### 4. ~~OriginalJobResultDispatcher 增加 registration TTL 兜底~~（组件已移除）
 
 **实现**:
 - 每个 registration 记录 `startedAt` 和 `ttlTimerHandle`
@@ -289,7 +291,7 @@ export interface OriginalJobASRData {
 3. `audio-aggregator-finalize-handler.ts`：
    - utteranceIndex 超界处理策略（差值>2时强制 finalize pending）
 
-4. `original-job-result-dispatcher.ts`：
+4. ~~`original-job-result-dispatcher.ts`~~（已移除）：
    - 添加 registration TTL 机制
    - 添加 `forceFinalizePartial()` 方法
    - 支持 missing segment 核销

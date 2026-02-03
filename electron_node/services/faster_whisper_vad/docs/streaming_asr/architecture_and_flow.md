@@ -1,8 +1,10 @@
 # 节点端音频处理和ASR结果聚合架构与流程
 
-**日期**: 2026-01-24  
+**日期**: 2026-01-24（架构说明）；2026-02 更新  
 **目的**: 详细描述业务需求，并整理实际代码的架构和流程（具体到每个方法的调用）  
 **更新**: 已根据决策部门反馈完成 P0 优化（见 [implementation_summary.md](implementation_summary.md)）
+
+**架构变更（2026-02）**：**OriginalJobResultDispatcher** 已移除。当前节点端结果发送统一经 **ResultSender** + **buildResultsToSend**（含 `pendingEmptyJobs`）单路径完成。本文中涉及 Dispatcher 的流程图与调用关系为**历史架构**，仅作参考。
 
 ---
 

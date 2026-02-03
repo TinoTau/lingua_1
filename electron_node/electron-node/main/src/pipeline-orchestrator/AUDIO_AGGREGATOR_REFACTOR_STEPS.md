@@ -97,10 +97,10 @@
   - `BufferState` 中的 `'PENDING_MAXDUR'`
   - `AudioBuffer` 中的 `pendingMaxDurationAudio?`、`pendingMaxDurationAudioCreatedAt?`、`pendingMaxDurationJobInfo?`
   - `AudioChunkResult.reason` 中与 MaxDuration 相关的取值。
-- 在 `original-job-result-dispatcher.ts` 中去掉 `hasPendingMaxDurationAudio` 及相关逻辑。
+- ~~在 `original-job-result-dispatcher.ts` 中去掉 `hasPendingMaxDurationAudio` 及相关逻辑~~（**该文件已移除**：OriginalJobResultDispatcher 已作为死代码删除，无需修改。）
 - 删除或停用 `audio-aggregator-maxduration-handler.ts`（若已无引用可删文件）。
 - `job-pipeline.ts` 中保持 `clearBufferByKey(buildBufferKey(job))`，不改为 sessionId。
-- 更新或删除依赖 MaxDuration / pendingMaxDuration 的测试（如 `audio-aggregator.test.ts`、`original-job-result-dispatcher.test.ts` 中的相关用例）。
+- 更新或删除依赖 MaxDuration / pendingMaxDuration 的测试（如 `audio-aggregator.test.ts` 中的相关用例；`original-job-result-dispatcher.test.ts` 已随组件移除而删除）。
 
 **验证**：全量编译与测试通过；跑一次完整流程确认无 OOM、无重复 job。
 

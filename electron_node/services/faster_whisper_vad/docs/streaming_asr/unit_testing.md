@@ -1,9 +1,11 @@
 # 节点端流式 ASR 优化单元测试说明
 
-**日期**: 2026-01-24  
+**日期**: 2026-01-24；2026-02 更新  
 **测试文件**: 
 - `audio-aggregator-optimization.test.ts`
-- `original-job-result-dispatcher-optimization.test.ts`
+- ~~`original-job-result-dispatcher-optimization.test.ts`~~（**已移除**：OriginalJobResultDispatcher 及对应单测已删除）
+
+**说明**：涉及 OriginalJobResultDispatcher 的测试与验证点已随该组件移除而失效；当前结果发送逻辑见 `node-agent-result-builder` / `ResultSender` 相关测试。
 
 ---
 
@@ -37,7 +39,7 @@
 - ✅ OPEN → PENDING_TIMEOUT
 - ✅ OPEN → PENDING_MAXDUR
 
-### 2. OriginalJobResultDispatcher 优化功能测试
+### 2. ~~OriginalJobResultDispatcher 优化功能测试~~（已移除）
 
 #### expectedSegmentCount 一致性
 - ✅ 强制使用明确的 expectedSegmentCount（不允许 undefined）
@@ -190,9 +192,9 @@ it('应该正确处理 MaxDuration finalize：处理前5秒，缓存剩余部分
 ### 运行所有优化测试
 
 ```bash
-cd electron_node/electron-node/main
+cd electron_node/electron-node
 npm test -- audio-aggregator-optimization.test.ts
-npm test -- original-job-result-dispatcher-optimization.test.ts
+# original-job-result-dispatcher-optimization.test.ts 已随组件移除而删除
 ```
 
 ### 运行特定测试用例
@@ -236,9 +238,9 @@ npm test -- --coverage audio-aggregator-optimization.test.ts
 5. **utteranceIndex 超界处理**
    - ✅ 差值>2时强制 finalize pending（丢弃 pending，不合并）
 
-### OriginalJobResultDispatcher 测试验证点
+### ~~OriginalJobResultDispatcher 测试验证点~~（已移除）
 
-1. **expectedSegmentCount 一致性**
+1. ~~**expectedSegmentCount 一致性**~~
    - ✅ 强制使用明确的 expectedSegmentCount
    - ✅ 正确计算 receivedCount 和 missingCount
 
