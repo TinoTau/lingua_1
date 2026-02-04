@@ -13,6 +13,7 @@ export type PipelineStepType =
     | 'ASR'
     | 'AGGREGATION'
     | 'PHONETIC_CORRECTION'
+    | 'PUNCTUATION_RESTORE'
     | 'SEMANTIC_REPAIR'
     | 'DEDUP'
     | 'TRANSLATION'
@@ -47,11 +48,12 @@ export const PIPELINE_MODES: Record<string, PipelineMode> = {
      */
     PERSONAL_VOICE_TRANSLATION: {
         name: '个人特色语音转译',
-        steps: ['ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'SEMANTIC_REPAIR', 'DEDUP', 'TRANSLATION', 'YOURTTS'],
+        steps: ['ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP', 'TRANSLATION', 'YOURTTS'],
         dependencies: {
             AGGREGATION: ['ASR'],
             PHONETIC_CORRECTION: ['AGGREGATION'],
-            SEMANTIC_REPAIR: ['PHONETIC_CORRECTION'],
+            PUNCTUATION_RESTORE: ['PHONETIC_CORRECTION'],
+            SEMANTIC_REPAIR: ['PUNCTUATION_RESTORE'],
             DEDUP: ['SEMANTIC_REPAIR'],
             TRANSLATION: ['DEDUP'],
             YOURTTS: ['TRANSLATION'],
@@ -67,11 +69,12 @@ export const PIPELINE_MODES: Record<string, PipelineMode> = {
      */
     GENERAL_VOICE_TRANSLATION: {
         name: '通用语音转译',
-        steps: ['ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'SEMANTIC_REPAIR', 'DEDUP', 'TRANSLATION', 'TTS'],
+        steps: ['ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP', 'TRANSLATION', 'TTS'],
         dependencies: {
             AGGREGATION: ['ASR'],
             PHONETIC_CORRECTION: ['AGGREGATION'],
-            SEMANTIC_REPAIR: ['PHONETIC_CORRECTION'],
+            PUNCTUATION_RESTORE: ['PHONETIC_CORRECTION'],
+            SEMANTIC_REPAIR: ['PUNCTUATION_RESTORE'],
             DEDUP: ['SEMANTIC_REPAIR'],
             TRANSLATION: ['DEDUP'],
             TTS: ['TRANSLATION'],
@@ -84,11 +87,12 @@ export const PIPELINE_MODES: Record<string, PipelineMode> = {
      */
     SUBTITLE_MODE: {
         name: '字幕模式',
-        steps: ['ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'SEMANTIC_REPAIR', 'DEDUP', 'TRANSLATION'],
+        steps: ['ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP', 'TRANSLATION'],
         dependencies: {
             AGGREGATION: ['ASR'],
             PHONETIC_CORRECTION: ['AGGREGATION'],
-            SEMANTIC_REPAIR: ['PHONETIC_CORRECTION'],
+            PUNCTUATION_RESTORE: ['PHONETIC_CORRECTION'],
+            SEMANTIC_REPAIR: ['PUNCTUATION_RESTORE'],
             DEDUP: ['SEMANTIC_REPAIR'],
             TRANSLATION: ['DEDUP'],
         },
@@ -100,11 +104,12 @@ export const PIPELINE_MODES: Record<string, PipelineMode> = {
      */
     ASR_ONLY: {
         name: '只执行 ASR',
-        steps: ['ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'SEMANTIC_REPAIR', 'DEDUP'],
+        steps: ['ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP'],
         dependencies: {
             AGGREGATION: ['ASR'],
             PHONETIC_CORRECTION: ['AGGREGATION'],
-            SEMANTIC_REPAIR: ['PHONETIC_CORRECTION'],
+            PUNCTUATION_RESTORE: ['PHONETIC_CORRECTION'],
+            SEMANTIC_REPAIR: ['PUNCTUATION_RESTORE'],
             DEDUP: ['SEMANTIC_REPAIR'],
         },
     },
@@ -164,7 +169,7 @@ function buildDynamicMode(job: JobAssignMessage): PipelineMode {
 
     // ASR 相关步骤（如果启用 ASR）
     if (use_asr) {
-        steps.push('ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'SEMANTIC_REPAIR', 'DEDUP');
+        steps.push('ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP');
     }
 
     // 翻译步骤（如果启用 NMT）
@@ -227,6 +232,11 @@ export function shouldExecuteStep(
             return use_asr !== false;
         case 'PHONETIC_CORRECTION':
             return ctx?.shouldSendToSemanticRepair === true && (job.src_lang === 'zh' || (ctx?.detectedSourceLang ?? '') === 'zh');
+        case 'PUNCTUATION_RESTORE': {
+            if (ctx?.shouldSendToSemanticRepair !== true) return false;
+            const srcLang = job.src_lang === 'auto' ? (ctx?.detectedSourceLang ?? 'zh') : job.src_lang;
+            return srcLang === 'zh' || srcLang === 'en';
+        }
         case 'SEMANTIC_REPAIR':
             return ctx?.shouldSendToSemanticRepair === true;
         case 'TRANSLATION':

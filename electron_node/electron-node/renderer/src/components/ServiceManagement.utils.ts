@@ -32,6 +32,7 @@ export function getServiceDisplayName(
     speaker_embedding: 'Speaker Embedding 服务',
     rust: '节点推理服务 (Rust)',
     'phonetic-correction-zh': '同音纠错服务 (ZH)',
+    'punctuation-restore': '断句服务 (中英)',
   };
   return fallbackMap[serviceId] || serviceId;
 }

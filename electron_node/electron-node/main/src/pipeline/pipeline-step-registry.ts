@@ -11,6 +11,7 @@ export type { PipelineStepType };
 import { runAsrStep } from './steps/asr-step';
 import { runAggregationStep } from './steps/aggregation-step';
 import { runPhoneticCorrectionStep } from './steps/phonetic-correction-step';
+import { runPunctuationRestoreStep } from './steps/punctuation-restore-step';
 import { runSemanticRepairStep } from './steps/semantic-repair-step';
 import { runDedupStep } from './steps/dedup-step';
 import { runTranslationStep } from './steps/translation-step';
@@ -44,6 +45,10 @@ export const STEP_REGISTRY: Record<PipelineStepType, StepExecutor> = {
 
   PHONETIC_CORRECTION: async (job, ctx, services) => {
     await runPhoneticCorrectionStep(job, ctx, services);
+  },
+
+  PUNCTUATION_RESTORE: async (job, ctx, services) => {
+    await runPunctuationRestoreStep(job, ctx, services);
   },
 
   SEMANTIC_REPAIR: async (job, ctx, services) => {

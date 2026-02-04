@@ -1,0 +1,17 @@
+{
+  "id": "punctuation-restore",
+  "name": "Punctuation Restore (ZH/EN)",
+  "name_zh": "断句服务 (中英)",
+  "type": "punctuation",
+  "version": "1.0.0",
+  "port": 5017,
+  "health_path": "/health",
+  "gpu_required": true,
+  "exec": {
+    "command": "python",
+    "args": [
+      "service.py"
+    ],
+    "cwd": "."
+  }
+}

@@ -41,6 +41,16 @@ export interface PhoneticServiceStatus {
   lastError: string | null;
 }
 
+export interface PunctuationServiceStatus {
+  serviceId: string;
+  running: boolean;
+  starting: boolean;
+  pid: number | null;
+  port: number | null;
+  startedAt: Date | null;
+  lastError: string | null;
+}
+
 export interface DiscoveredService {
   id: string;
   name: string;

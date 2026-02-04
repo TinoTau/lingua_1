@@ -66,6 +66,11 @@ export function loadGpuArbiterConfig(): GpuArbiterConfig {
         maxWaitMs: 8000,
         busyPolicy: "WAIT",
       },
+      PUNCTUATION_RESTORE: {
+        priority: 55,
+        maxWaitMs: 8000,
+        busyPolicy: "WAIT",
+      },
     },
   };
 

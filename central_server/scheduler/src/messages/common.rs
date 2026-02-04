@@ -103,11 +103,12 @@ pub enum ServiceType {
     Tone,
     Semantic,  // 语义修复服务类型
     Phonetic,  // 同音纠错，节点可上报；调度选节点/建池不依赖
+    Punctuation,  // 断句服务，节点可上报；调度选节点/建池不依赖
 }
 
 impl ServiceType {
     /// 所有服务类型（用于统计/展示，单源维护）
-    pub const fn all() -> [ServiceType; 6] {
+    pub const fn all() -> [ServiceType; 7] {
         [
             ServiceType::Asr,
             ServiceType::Nmt,
@@ -115,6 +116,7 @@ impl ServiceType {
             ServiceType::Tone,
             ServiceType::Semantic,
             ServiceType::Phonetic,
+            ServiceType::Punctuation,
         ]
     }
 }
@@ -129,6 +131,7 @@ impl std::str::FromStr for ServiceType {
             "tone" => Ok(ServiceType::Tone),
             "semantic" => Ok(ServiceType::Semantic),
             "phonetic" => Ok(ServiceType::Phonetic),
+            "punctuation" => Ok(ServiceType::Punctuation),
             _ => Err(()),
         }
     }

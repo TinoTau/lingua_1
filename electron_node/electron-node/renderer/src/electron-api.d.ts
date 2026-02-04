@@ -97,6 +97,7 @@ export interface ElectronAPI {
     speakerEmbeddingEnabled: boolean;
     semanticRepairEnZhEnabled?: boolean;
     phoneticCorrectionEnabled?: boolean;
+    punctuationRestoreEnabled?: boolean;
   }>;
   setServicePreferences: (prefs: {
     rustEnabled: boolean;
@@ -107,6 +108,7 @@ export interface ElectronAPI {
     speakerEmbeddingEnabled: boolean;
     semanticRepairEnZhEnabled?: boolean;
     phoneticCorrectionEnabled?: boolean;
+    punctuationRestoreEnabled?: boolean;
   }) => Promise<{ success: boolean; error?: string }>;
 
   // 处理效率指标（OBS-1，按服务ID分组）

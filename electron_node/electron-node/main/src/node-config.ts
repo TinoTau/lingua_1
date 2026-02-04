@@ -11,6 +11,7 @@ export interface ServicePreferences {
   speakerEmbeddingEnabled: boolean;
   semanticRepairEnZhEnabled?: boolean;  // 合并语义修复服务 semantic-repair-en-zh 自动启动
   phoneticCorrectionEnabled?: boolean;  // 同音纠错服务 phonetic-correction-zh 自动启动
+  punctuationRestoreEnabled?: boolean;  // 断句服务 punctuation-restore 自动启动
 }
 
 // ASR配置已移除：各服务的参数应该随着服务走，避免节点端与服务强制绑定
@@ -50,6 +51,7 @@ export interface NodeConfig {
   services?: {
     baseUrl?: string;  // 本机服务 base，如 http://127.0.0.1，用于 ASR/NMT/TTS/语义修复等端点拼接
     phoneticCorrectionUrl?: string;  // 同音纠错服务完整 URL，如 http://127.0.0.1:5016；不填则用 baseUrl + 服务发现端口
+    punctuationRestoreUrl?: string;  // 断句服务完整 URL，如 http://127.0.0.1:5017
   };
   // ASR配置已移除：各服务的参数应该随着服务走，避免节点端与服务强制绑定
   /** 指标收集配置（支持热插拔） */
@@ -131,6 +133,11 @@ export interface NodeConfig {
         maxWaitMs?: number;
         busyPolicy?: "WAIT" | "SKIP" | "FALLBACK_CPU";
       };
+      PUNCTUATION_RESTORE?: {
+        priority?: number;
+        maxWaitMs?: number;
+        busyPolicy?: "WAIT" | "SKIP" | "FALLBACK_CPU";
+      };
     };
   };
   /** 顺序执行管理器配置 */
@@ -162,6 +169,7 @@ const DEFAULT_CONFIG: NodeConfig = {
     speakerEmbeddingEnabled: false,
     semanticRepairEnZhEnabled: true,
     phoneticCorrectionEnabled: true,
+    punctuationRestoreEnabled: false,
   },
   scheduler: {
     url: 'ws://127.0.0.1:5010/ws/node',  // 默认本地地址，使用 127.0.0.1 避免 IPv6 解析问题
@@ -172,6 +180,7 @@ const DEFAULT_CONFIG: NodeConfig = {
   services: {
     baseUrl: 'http://127.0.0.1',   // 本机服务 base，用于与 service.json 的 port 拼接
     phoneticCorrectionUrl: 'http://127.0.0.1:5016',  // 同音纠错服务默认 URL
+    punctuationRestoreUrl: 'http://127.0.0.1:5017',  // 断句服务默认 URL
   },
   // ASR配置已移除：各服务的参数应该随着服务走，避免节点端与服务强制绑定
   metrics: {
@@ -211,6 +220,12 @@ export function getServicesBaseUrl(): string {
 export function getPhoneticCorrectionUrl(): string {
   const c = loadNodeConfig();
   return c.services?.phoneticCorrectionUrl ?? DEFAULT_CONFIG.services?.phoneticCorrectionUrl ?? '';
+}
+
+/** 断句服务 base URL（从配置读）。默认值仅来自 DEFAULT_CONFIG。 */
+export function getPunctuationRestoreUrl(): string {
+  const c = loadNodeConfig();
+  return c.services?.punctuationRestoreUrl ?? DEFAULT_CONFIG.services?.punctuationRestoreUrl ?? '';
 }
 
 /** 调度服务器 WebSocket URL。从 electron-node-config.json 读 scheduler.url，localhost 规范为 127.0.0.1。 */

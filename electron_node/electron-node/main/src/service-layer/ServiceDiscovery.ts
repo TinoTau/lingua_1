@@ -122,6 +122,8 @@ export async function scanServices(servicesRoot: string): Promise<ServiceRegistr
         tts: Array.from(registry.values()).filter(e => e.def.type === 'tts').length,
         tone: Array.from(registry.values()).filter(e => e.def.type === 'tone').length,
         semantic: Array.from(registry.values()).filter(e => e.def.type === 'semantic').length,
+        phonetic: Array.from(registry.values()).filter(e => e.def.type === 'phonetic').length,
+        punctuation: Array.from(registry.values()).filter(e => e.def.type === 'punctuation').length,
       }
     },
     '[ServiceDiscovery] ✅ Service discovery completed successfully'
@@ -202,7 +204,7 @@ export function buildInstalledServices(registry: ServiceRegistry): any[] {
  * @returns CapabilityByType[] 格式
  */
 export function buildCapabilityByType(registry: ServiceRegistry): any[] {
-  const types = ['asr', 'nmt', 'tts', 'tone', 'semantic'];
+  const types = ['asr', 'nmt', 'tts', 'tone', 'semantic', 'phonetic', 'punctuation'];
   const capability: any[] = [];
 
   for (const type of types) {

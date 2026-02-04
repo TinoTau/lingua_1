@@ -310,6 +310,18 @@ export async function startServicesByPreference(
       );
     }
   }
+
+  const punctuationServices = Array.from(registry.values()).filter((e) => e.def.type === 'punctuation');
+  for (const entry of punctuationServices) {
+    const shouldStart =
+      entry.def.id === 'punctuation-restore' && prefs.punctuationRestoreEnabled !== false;
+    if (shouldStart) {
+      logger.info({ serviceId: entry.def.id }, 'Auto-starting punctuation restore service...');
+      managers.serviceRunner!.start(entry.def.id).catch((e: Error) =>
+        logger.error({ error: e.message, serviceId: entry.def.id }, 'Failed to auto-start punctuation restore')
+      );
+    }
+  }
 }
 
 /**

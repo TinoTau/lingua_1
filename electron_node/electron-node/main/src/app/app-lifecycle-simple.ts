@@ -19,6 +19,7 @@ const SERVICE_ID_TO_PREF: Record<string, keyof ServicePreferences> = {
   'speaker-embedding': 'speakerEmbeddingEnabled',
   'semantic-repair-en-zh': 'semanticRepairEnZhEnabled',
   'phonetic-correction-zh': 'phoneticCorrectionEnabled',
+  'punctuation-restore': 'punctuationRestoreEnabled',
 };
 
 function saveCurrentServiceState(): void {

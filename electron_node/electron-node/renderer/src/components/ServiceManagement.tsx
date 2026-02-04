@@ -12,6 +12,7 @@ export function ServiceManagement() {
     pythonStatuses,
     semanticRepairStatuses,
     phoneticStatuses,
+    punctuationStatuses,
     loading,
     processingMetrics,
     isRefreshing,
@@ -58,6 +59,17 @@ export function ServiceManagement() {
         ))}
 
         {phoneticStatuses.map((status) => (
+          <ServiceManagementDiscoveredItem
+            key={status.serviceId}
+            status={status}
+            loading={loading}
+            getDisplayName={getServiceDisplayName}
+            onToggle={handleToggleService}
+            filterError={false}
+          />
+        ))}
+
+        {punctuationStatuses.map((status) => (
           <ServiceManagementDiscoveredItem
             key={status.serviceId}
             status={status}

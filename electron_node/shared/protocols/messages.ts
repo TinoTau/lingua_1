@@ -14,6 +14,7 @@ export enum ServiceType {
   TONE = 'tone',
   SEMANTIC = 'semantic',  // 语义修复服务类型
   PHONETIC = 'phonetic',  // 同音纠错服务类型
+  PUNCTUATION = 'punctuation',  // 断句服务类型
 }
 
 /** 服务运行设备 */

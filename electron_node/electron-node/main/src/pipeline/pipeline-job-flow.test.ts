@@ -20,6 +20,10 @@ jest.mock('./steps/phonetic-correction-step', () => ({
   runPhoneticCorrectionStep: jest.fn().mockResolvedValue(undefined),
 }));
 
+jest.mock('./steps/punctuation-restore-step', () => ({
+  runPunctuationRestoreStep: jest.fn().mockResolvedValue(undefined),
+}));
+
 function createJob(overrides?: Partial<JobAssignMessage>): JobAssignMessage {
   return {
     job_id: 'job-flow-1',

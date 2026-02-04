@@ -4,6 +4,7 @@ import type {
   RustServiceStatus,
   SemanticRepairServiceStatus,
   PhoneticServiceStatus,
+  PunctuationServiceStatus,
   DiscoveredService,
 } from './ServiceManagement.types';
 import { getServiceDisplayName, getServiceId, formatGpuUsageMs } from './ServiceManagement.utils';
@@ -15,6 +16,7 @@ export function useServiceManagement() {
   const [pythonStatuses, setPythonStatuses] = useState<ServiceStatus[]>([]);
   const [semanticRepairStatuses, setSemanticRepairStatuses] = useState<SemanticRepairServiceStatus[]>([]);
   const [phoneticStatuses, setPhoneticStatuses] = useState<PhoneticServiceStatus[]>([]);
+  const [punctuationStatuses, setPunctuationStatuses] = useState<PunctuationServiceStatus[]>([]);
   const [discoveredServices, setDiscoveredServices] = useState<DiscoveredService[]>([]);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [processingMetrics, setProcessingMetrics] = useState<Record<string, number>>({});
@@ -46,6 +48,7 @@ export function useServiceManagement() {
       const statuses = allStatuses || [];
       setSemanticRepairStatuses(statuses.filter((s: { type: string }) => s.type === 'semantic'));
       setPhoneticStatuses(statuses.filter((s: { type: string }) => s.type === 'phonetic'));
+      setPunctuationStatuses(statuses.filter((s: { type: string }) => s.type === 'punctuation'));
     } catch (error) {
       console.error('获取服务状态失败:', error);
     }
@@ -64,6 +67,7 @@ export function useServiceManagement() {
       const enNormalizeEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'en-normalize')?.running;
       const semanticRepairEnZhEnabled = !!semanticRepairStatuses.find(s => s.serviceId === 'semantic-repair-en-zh')?.running;
       const phoneticCorrectionEnabled = !!phoneticStatuses.find(s => s.serviceId === 'phonetic-correction-zh')?.running;
+      const punctuationRestoreEnabled = !!punctuationStatuses.find(s => s.serviceId === 'punctuation-restore')?.running;
       const newPrefs = {
         rustEnabled,
         nmtEnabled,
@@ -76,6 +80,7 @@ export function useServiceManagement() {
         enNormalizeEnabled,
         semanticRepairEnZhEnabled,
         phoneticCorrectionEnabled,
+        punctuationRestoreEnabled,
       };
       await window.electronAPI.setServicePreferences(newPrefs);
     } catch (error) {
@@ -224,6 +229,7 @@ export function useServiceManagement() {
     pythonStatuses,
     semanticRepairStatuses,
     phoneticStatuses,
+    punctuationStatuses,
     discoveredServices,
     loading,
     processingMetrics,

@@ -1,5 +1,5 @@
 import React from 'react';
-import type { RustServiceStatus, SemanticRepairServiceStatus, PhoneticServiceStatus, ServiceStatus } from './ServiceManagement.types';
+import type { RustServiceStatus, SemanticRepairServiceStatus, PhoneticServiceStatus, PunctuationServiceStatus, ServiceStatus } from './ServiceManagement.types';
 import { filterErrorLines } from './ServiceManagement.utils';
 
 type PythonServiceName = 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding';
@@ -57,7 +57,7 @@ export function ServiceManagementRustSection({ rustStatus, loading, onToggle, fo
 }
 
 interface DiscoveredItemProps {
-  status: SemanticRepairServiceStatus | PhoneticServiceStatus;
+  status: SemanticRepairServiceStatus | PhoneticServiceStatus | PunctuationServiceStatus;
   loading: Record<string, boolean>;
   getDisplayName: (id: string) => string;
   onToggle: (serviceId: string, checked: boolean) => void;
