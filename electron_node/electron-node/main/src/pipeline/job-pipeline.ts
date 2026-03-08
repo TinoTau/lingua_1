@@ -23,6 +23,10 @@ export interface ServicesBundle {
   resultSender?: any;  // ResultSender 实例（用于发送原始job的结果）
   audioAggregator?: any;  // AudioAggregator 实例（用于在job之间共享音频缓冲区）
   semanticRepairInitializer?: any;  // SemanticRepairInitializer 实例（复用，避免重复创建）
+  /** LID v1：二选一引擎（ORT 内嵌），进程启动时加载 */
+  lidEngine?: any;
+  /** LID Router：RoomStateStore + selectSrcLang */
+  lidRouter?: { store: any; select: any };
 }
 
 export interface JobPipelineOptions {

@@ -4,6 +4,7 @@
 
 import { AudioAggregator } from './audio-aggregator';
 import { decodeOpusToPcm16 } from '../utils/opus-codec';
+import { buildBufferKey } from './audio-aggregator-buffer-key';
 import {
   DURATION_TOLERANCE_MS,
   bytesToMsPcm16LE,
@@ -41,6 +42,19 @@ describe('AudioAggregator - finalize 与多 session', () => {
 
   afterEach(() => {
     JOB_IDS_TO_CLEAR.forEach((id) => aggregator.clearBufferByKey(id));
+  });
+
+  it('同一段 8s 带能量变化音频可产生多段', async () => {
+    const sessionId = 'test-session-vad';
+    const jobId = 'job-vad-1';
+    const audio = createMockPcm16Audio(8000, 16000, { withEnergyVariation: true, silenceRatio: 0.2 });
+    const job = createJobAssignMessage(mockDecodeOpusToPcm16, jobId, sessionId, 0, audio, {
+      is_manual_cut: true,
+    });
+    const result = await aggregator.processAudioChunk(job);
+    expect(result.shouldReturnEmpty).toBe(false);
+    expect(result.audioSegments).toBeDefined();
+    expect(result.audioSegments!.length).toBeGreaterThan(1);
   });
 
   it('R5: originalJobIds头部对齐应该可解释', async () => {
@@ -83,7 +97,6 @@ describe('AudioAggregator - finalize 与多 session', () => {
     });
     await aggregator.processAudioChunk(job1);
 
-    const { buildBufferKey } = require('./audio-aggregator-buffer-key');
     const bufferKey = buildBufferKey(job1);
     const buffer1 = (aggregator as any).buffers?.get(bufferKey);
     expect(buffer1).toBeDefined();
@@ -114,7 +127,6 @@ describe('AudioAggregator - finalize 与多 session', () => {
     });
     await aggregator.processAudioChunk(job1);
 
-    const { buildBufferKey } = require('./audio-aggregator-buffer-key');
     const bufferKey = buildBufferKey(job1);
     const buffer = (aggregator as any).buffers?.get(bufferKey);
     expect(buffer).toBeDefined();
@@ -208,7 +220,6 @@ describe('AudioAggregator - finalize 与多 session', () => {
       const sessionB = 'test-session-interleave-b';
       const jobIdA = 'job-a';
       const jobIdB = 'job-b';
-      const { buildBufferKey } = require('./audio-aggregator-buffer-key');
 
       const audioA1 = createMockPcm16Audio(JOB1_MS, 16000, { withEnergyVariation: true, silenceRatio: 0.2 });
       const audioB1 = createMockPcm16Audio(JOB1_MS, 16000, { withEnergyVariation: true, silenceRatio: 0.2 });

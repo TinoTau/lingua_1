@@ -53,8 +53,7 @@ export class PipelineOrchestratorAudioProcessor {
         originalJobInfo: chunkResult.originalJobInfo,
       };
     }
-    
-    // 音频已聚合并切分，继续处理
+
     const audioSegments = chunkResult.audioSegments;
     if (!audioSegments || audioSegments.length === 0) {
       logger.warn(
@@ -109,7 +108,7 @@ export class PipelineOrchestratorAudioProcessor {
       audioForASR,
       audioFormatForASR,
       shouldReturnEmpty: false,
-      audioSegments: audioSegments,
+      audioSegments,
       originalJobIds: chunkResult.originalJobIds,
       originalJobInfo: chunkResult.originalJobInfo,
     };

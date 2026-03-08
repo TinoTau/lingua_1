@@ -26,14 +26,7 @@ describe('Application Lifecycle Management', () => {
     mockNodeAgent = { stop: jest.fn() };
     (getServiceRunner as jest.Mock).mockReturnValue(mockRunner);
     (loadNodeConfig as jest.Mock).mockReturnValue({
-      servicePreferences: {
-        nmtEnabled: false,
-        ttsEnabled: false,
-        yourttsEnabled: false,
-        fasterWhisperVadEnabled: false,
-        speakerEmbeddingEnabled: false,
-        semanticRepairEnZhEnabled: false,
-      },
+      servicePreferences: { 'semantic-repair-en-zh': true, 'faster-whisper-vad': true },
     });
   });
 

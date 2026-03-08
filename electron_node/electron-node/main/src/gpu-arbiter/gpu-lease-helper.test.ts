@@ -2,6 +2,7 @@
  * GPU 租约辅助函数单元测试
  */
 
+import { getGpuArbiter } from './gpu-arbiter-factory';
 import { withGpuLease, tryAcquireGpuLease } from './gpu-lease-helper';
 import { GpuArbiter } from './gpu-arbiter';
 import { GpuArbiterConfig } from './types';
@@ -55,7 +56,6 @@ jest.mock('../node-config', () => ({
 
 describe('GPU租约辅助函数', () => {
   let mockArbiter: GpuArbiter;
-  const { getGpuArbiter } = require('./gpu-arbiter-factory');
 
   beforeEach(() => {
     const config: GpuArbiterConfig = {

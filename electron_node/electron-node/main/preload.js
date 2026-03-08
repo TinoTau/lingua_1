@@ -49,11 +49,6 @@ electron_1.contextBridge.exposeInMainWorld('electronAPI', {
     getRustServiceStatus: () => electron_1.ipcRenderer.invoke('get-rust-service-status'),
     startRustService: () => electron_1.ipcRenderer.invoke('start-rust-service'),
     stopRustService: () => electron_1.ipcRenderer.invoke('stop-rust-service'),
-    // Python 服务管理
-    getPythonServiceStatus: (serviceName) => electron_1.ipcRenderer.invoke('get-python-service-status', serviceName),
-    getAllPythonServiceStatuses: () => electron_1.ipcRenderer.invoke('get-all-python-service-statuses'),
-    startPythonService: (serviceName) => electron_1.ipcRenderer.invoke('start-python-service', serviceName),
-    stopPythonService: (serviceName) => electron_1.ipcRenderer.invoke('stop-python-service', serviceName),
     // 自动启动服务（根据已安装的模型）
     autoStartServicesByModels: () => electron_1.ipcRenderer.invoke('auto-start-services-by-models'),
     // 服务偏好（记住用户上一次选择的功能）

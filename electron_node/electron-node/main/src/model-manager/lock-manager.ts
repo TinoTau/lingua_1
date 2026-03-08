@@ -1,8 +1,10 @@
 // ===== 锁管理 =====
 
+import { exec } from 'child_process';
 import * as fs from 'fs/promises';
-import * as path from 'path';
 import * as os from 'os';
+import * as path from 'path';
+import logger from '../logger';
 import { LockFile } from './types';
 import { fileExists } from './utils';
 
@@ -87,7 +89,6 @@ export class LockManager {
     try {
       // Windows 使用 tasklist，Linux/Mac 使用 kill -0
       if (os.platform() === 'win32') {
-        const { exec } = require('child_process');
         return new Promise((resolve) => {
           exec(`tasklist /FI "PID eq ${pid}"`, (error: any, stdout: string) => {
             resolve(stdout.includes(String(pid)));
@@ -131,8 +132,6 @@ export class LockManager {
         }
       }
     } catch (error) {
-      // 使用动态导入避免循环依赖
-      const logger = (await import('../logger')).default;
       logger.error({ error }, 'Failed to cleanup orphan locks');
     }
   }

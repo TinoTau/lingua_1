@@ -18,7 +18,7 @@ export function useModelManagement() {
   const [error, setError] = useState<string | null>(null);
 
   const [rustStatus, setRustStatus] = useState<{ running: boolean } | null>(null);
-  const [pythonStatuses, setPythonStatuses] = useState<Array<{ name: string; running: boolean }>>([]);
+  const [serviceStatuses, setServiceStatuses] = useState<Array<{ serviceId: string; running: boolean }>>([]);
   const [schedulerDisplayUrl, setSchedulerDisplayUrl] = useState<string>('');
 
   const loadingRef = useRef(false);
@@ -87,12 +87,12 @@ export function useModelManagement() {
   useEffect(() => {
     const updateServiceStatuses = async () => {
       try {
-        const [rust, python] = await Promise.all([
+        const [rust, statuses] = await Promise.all([
           window.electronAPI.getRustServiceStatus(),
-          window.electronAPI.getAllPythonServiceStatuses(),
+          window.electronAPI.serviceDiscovery?.statuses() ?? Promise.resolve([]),
         ]);
         setRustStatus(rust);
-        setPythonStatuses(python);
+        setServiceStatuses((statuses || []).map((s: { serviceId: string; running: boolean }) => ({ serviceId: s.serviceId, running: s.running })));
       } catch (err) {
         console.error('获取服务状态失败:', err);
       }
@@ -237,7 +237,7 @@ export function useModelManagement() {
     loadingAvailable,
     error,
     rustStatus,
-    pythonStatuses,
+    serviceStatuses,
     schedulerDisplayUrl,
     loadServices,
     loadRanking,

@@ -2,8 +2,9 @@
  * 主进程入口：路径别名、诊断钩子、CUDA 路径、Electron 启动与 IPC 编排
  * 路径别名与诊断钩子由子模块负责，本文件只做顺序调用与导出。
  */
-require('./index-path-alias');
+import './index-path-alias';
 import { installDiagnosticHooks } from './index-diagnostic-hooks';
+import { startTestServer } from './test-server';
 import { setupCudaPath } from './index-cuda-path';
 import { registerIpcHandlers } from './index-ipc';
 import { app, BrowserWindow } from 'electron';
@@ -87,8 +88,38 @@ app.whenReady().then(async () => {
     // 加载并验证配置
     loadAndValidateConfig();
 
+    // ========== 可移除：本地测试服务 (5020) ==========
+    // 提前启动，避免在 startServicesByPreference（可能耗时很久）期间无法连接 5020
+    startTestServer(managers);
+    // ========== 可移除结束 ==========
+
     // 启动服务（根据用户偏好）
     await startServicesByPreference(managers);
+
+    // 功能测试：命令行 --run-pipeline-with-audio=<path> 时跑完整 pipeline 后退出
+    const audioTestArg = process.argv.find((arg) => arg.startsWith('--run-pipeline-with-audio='));
+    if (audioTestArg && managers.inferenceService) {
+      const wavPath = audioTestArg.slice('--run-pipeline-with-audio='.length).trim();
+      if (wavPath) {
+        logger.info({ wavPath }, 'Running pipeline with audio (test mode), then exiting');
+        try {
+          const result = await managers.inferenceService.runPipelineWithAudio(wavPath);
+          console.log('\n[run-pipeline-with-audio] result:', JSON.stringify({
+            text_asr: result.text_asr,
+            text_translated: result.text_translated,
+            tts_audio_length: result.tts_audio?.length ?? 0,
+            tts_format: result.tts_format,
+          }, null, 2));
+          logger.info({ textAsr: result.text_asr, textTranslated: result.text_translated }, 'Pipeline with audio completed');
+        } catch (err) {
+          console.error('[run-pipeline-with-audio] error:', err);
+          logger.error({ error: err }, 'Pipeline with audio failed');
+          process.exitCode = 1;
+        }
+        app.quit();
+        return;
+      }
+    }
 
     // 注册 Model IPC 处理器
     registerModelHandlers(managers.modelManager);

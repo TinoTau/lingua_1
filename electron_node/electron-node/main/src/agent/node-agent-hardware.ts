@@ -3,8 +3,9 @@
  * 处理硬件信息获取相关的逻辑
  */
 
-import * as si from 'systeminformation';
+import { spawn } from 'child_process';
 import * as os from 'os';
+import * as si from 'systeminformation';
 import logger from '../logger';
 
 export class HardwareInfoHandler {
@@ -74,7 +75,6 @@ export class HardwareInfoHandler {
    */
   async getGpuHardwareInfo(): Promise<Array<{ name: string; memory_gb: number }>> {
     return new Promise((resolve) => {
-      const { spawn } = require('child_process');
       // nvidia-smi 命令：获取GPU名称和显存大小
       const nvidiaSmi = spawn('nvidia-smi', [
         '--query-gpu=name,memory.total',

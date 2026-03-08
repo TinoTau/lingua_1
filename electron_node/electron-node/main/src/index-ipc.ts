@@ -119,43 +119,6 @@ export function registerIpcHandlers(getManagers: () => ServiceManagers): void {
     }
   });
 
-  ipcMain.handle('get-python-service-status', async (_event, serviceName: string) => {
-    const managers = getManagers();
-    if (!managers.serviceRunner) return { name: serviceName, running: false, starting: false, pid: null, port: null };
-    try {
-      const serviceId = serviceName;
-      const status = managers.serviceRunner.getStatus(serviceId);
-      return { name: status.name, running: status.status === 'running', starting: status.status === 'starting', pid: status.pid, port: status.port };
-    } catch (error) {
-      logger.debug({ serviceName, error }, 'Service not found or error');
-      return { name: serviceName, running: false, starting: false, pid: null, port: null };
-    }
-  });
-
-  ipcMain.handle('get-all-python-service-statuses', async () => {
-    const managers = getManagers();
-    if (!managers.serviceRunner) return [];
-    try {
-      const registry = getServiceRegistry();
-      if (!registry) return [];
-      const pythonServices = Array.from(registry.values()).filter(e => e.def.type !== 'rust' && e.def.type !== 'semantic-repair');
-      const serviceIdToName: Record<string, string> = {
-        'faster-whisper-vad': 'faster_whisper_vad',
-        'nmt-m2m100': 'nmt',
-        'piper-tts': 'tts',
-        'your-tts': 'yourtts',
-        'speaker-embedding': 'speaker_embedding',
-      };
-      return pythonServices.map(entry => {
-        const status = managers.serviceRunner!.getStatus(entry.def.id);
-        return { name: serviceIdToName[entry.def.id] || entry.def.id, running: status.status === 'running', starting: status.status === 'starting', pid: status.pid, port: status.port };
-      });
-    } catch (error) {
-      logger.error({ error }, 'Failed to get all Python service statuses');
-      return [];
-    }
-  });
-
   ipcMain.handle('start-rust-service', async () => {
     const managers = getManagers();
     if (!managers.serviceRunner) throw new Error('Service runner not initialized');
@@ -180,33 +143,6 @@ export function registerIpcHandlers(getManagers: () => ServiceManagers): void {
     return { success: true };
   });
 
-  const pythonServiceIdMap: Record<string, string> = {
-    'nmt': 'nmt-m2m100', 'tts': 'piper-tts', 'yourtts': 'your-tts', 'faster_whisper_vad': 'faster-whisper-vad', 'speaker_embedding': 'speaker-embedding',
-    'nmt-m2m100': 'nmt-m2m100', 'piper-tts': 'piper-tts', 'your-tts': 'your-tts', 'faster-whisper-vad': 'faster-whisper-vad', 'speaker-embedding': 'speaker-embedding',
-  };
-
-  ipcMain.handle('start-python-service', async (_event, serviceName: string) => {
-    const managers = getManagers();
-    if (!managers.serviceRunner) throw new Error('Service runner not initialized');
-    const serviceId = pythonServiceIdMap[serviceName] || serviceName;
-    const registry = getServiceRegistry();
-    if (registry && !registry.has(serviceId)) throw new Error(`Service not found: ${serviceName}`);
-    logger.info({ serviceId }, 'IPC: Starting Python service');
-    await managers.serviceRunner.start(serviceId);
-    return { success: true };
-  });
-
-  ipcMain.handle('stop-python-service', async (_event, serviceName: string) => {
-    const managers = getManagers();
-    if (!managers.serviceRunner) throw new Error('Service runner not initialized');
-    const serviceId = pythonServiceIdMap[serviceName] || serviceName;
-    const registry = getServiceRegistry();
-    if (registry && !registry.has(serviceId)) throw new Error(`Service not found: ${serviceName}`);
-    logger.info({ serviceId }, 'IPC: Stopping Python service');
-    await managers.serviceRunner.stop(serviceId);
-    return { success: true };
-  });
-
   ipcMain.handle('get-processing-metrics', async () => ({ currentJobs: 0, totalProcessed: 0, averageTime: 0, queueLength: 0 }));
 
   /** 联调/测试：用模拟 ASR 文本跑完整 pipeline（聚合 → 语义修复 → 去重 → NMT） */
@@ -223,6 +159,17 @@ export function registerIpcHandlers(getManagers: () => ServiceManagers): void {
       srcLang ?? 'zh',
       tgtLang ?? 'en'
     );
+  });
+
+  /** 功能测试：用本地 WAV 跑完整 pipeline（ASR → 语义修复 → NMT → TTS） */
+  ipcMain.handle('run-pipeline-with-audio', async (
+    _event,
+    wavPath: string,
+    options?: { srcLang?: string; tgtLang?: string }
+  ) => {
+    const managers = getManagers();
+    if (!managers.inferenceService) throw new Error('InferenceService not available');
+    return managers.inferenceService.runPipelineWithAudio(wavPath, options);
   });
 
   logger.info({}, '✅ All IPC handlers registered!');

@@ -8,9 +8,10 @@ ProcessorWrapper - 统一处理器调用包装器
 - 不再存在 PASS 作为降级策略。
 """
 
-import time
-import logging
 import asyncio
+import logging
+import time
+import traceback
 from typing import Dict
 from fastapi import HTTPException
 
@@ -153,7 +154,6 @@ class ProcessorWrapper:
             )
             logger.error(error_log, exc_info=True)
             print(f"[Unified SR] {error_log}", flush=True)
-            import traceback
             traceback.print_exc()
             raise HTTPException(
                 status_code=503,

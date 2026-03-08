@@ -45,6 +45,8 @@ export interface JobContext {
   detectedTargetLang?: string;
   /** 动态检测到的源语言（双向模式使用） */
   detectedSourceLang?: string;
+  /** src_lang=auto 时的解析来源：'detected' | 'fallback_candidate_pair' */
+  sourceLangResolution?: string;
 
   // TTS 相关
   ttsAudio?: string; // base64
@@ -54,6 +56,10 @@ export interface JobContext {
   toneResult?: any;
   toneAudio?: string;
   toneFormat?: string;
+
+  // LID / Router（Face2Face 二选一）
+  lidMeta?: { lid_ms: number; p: number; lang_pred: string; strategy: string };
+  routerMeta?: { selected_src_lang: string; current_src_lang: string; switched: boolean; reason: string };
 
   // 其他
   rerunCount?: number;

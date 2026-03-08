@@ -4,11 +4,17 @@ Semantic Repair Service - Chinese - Repair Engine
 中文语义修复服务 - 修复引擎
 """
 
-import time
 import gc
+import time
+import traceback
 from typing import Dict, List, Optional, Tuple
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
+
+try:
+    import psutil
+except ImportError:
+    psutil = None
 
 from .prompt_templates import PromptTemplate
 
@@ -101,15 +107,15 @@ class RepairEngine:
             # 记录生成前资源使用
             before_memory = None
             before_gpu = None
-            try:
-                import psutil
-                process = psutil.Process()
-                before_memory = process.memory_info().rss / 1024 / 1024
-                if self.device.type == "cuda":
-                    before_gpu = torch.cuda.memory_allocated() / 1024**3
+            if psutil is not None:
+                try:
+                    process = psutil.Process()
+                    before_memory = process.memory_info().rss / 1024 / 1024
+                    if self.device.type == "cuda":
+                        before_gpu = torch.cuda.memory_allocated() / 1024**3
                     print(f"[Repair Engine] Before generation - Memory: {before_memory:.2f} MB | GPU: {before_gpu:.2f} GB", flush=True)
-            except:
-                pass
+                except Exception:
+                    pass
             
             # 生成修复文本
             # 使用torch.inference_mode()代替torch.no_grad()以进一步减少内存占用
@@ -143,19 +149,19 @@ class RepairEngine:
                 torch.cuda.empty_cache()
             
             # 记录生成后资源使用
-            try:
-                import psutil
-                process = psutil.Process()
-                after_memory = process.memory_info().rss / 1024 / 1024
-                if self.device.type == "cuda" and before_gpu is not None:
-                    after_gpu = torch.cuda.memory_allocated() / 1024**3
-                    print(f"[Repair Engine] After generation - Memory: {after_memory:.2f} MB (+{after_memory - before_memory:.2f} MB if before available) | GPU: {after_gpu:.2f} GB (+{after_gpu - before_gpu:.2f} GB)", flush=True)
-                elif before_memory is not None:
-                    print(f"[Repair Engine] After generation - Memory: {after_memory:.2f} MB (+{after_memory - before_memory:.2f} MB)", flush=True)
-                else:
-                    print(f"[Repair Engine] After generation - Memory: {after_memory:.2f} MB", flush=True)
-            except:
-                pass
+            if psutil is not None:
+                try:
+                    process = psutil.Process()
+                    after_memory = process.memory_info().rss / 1024 / 1024
+                    if self.device.type == "cuda" and before_gpu is not None:
+                        after_gpu = torch.cuda.memory_allocated() / 1024**3
+                        print(f"[Repair Engine] After generation - Memory: {after_memory:.2f} MB (+{after_memory - before_memory:.2f} MB if before available) | GPU: {after_gpu:.2f} GB (+{after_gpu - before_gpu:.2f} GB)", flush=True)
+                    elif before_memory is not None:
+                        print(f"[Repair Engine] After generation - Memory: {after_memory:.2f} MB (+{after_memory - before_memory:.2f} MB)", flush=True)
+                    else:
+                        print(f"[Repair Engine] After generation - Memory: {after_memory:.2f} MB", flush=True)
+                except Exception:
+                    pass
             
             # 提取修复后的文本（去除可能的解释性文字）
             text_out = self._extract_repaired_text(generated_text, text_in)
@@ -202,7 +208,6 @@ class RepairEngine:
         except Exception as e:
             elapsed_ms = int((time.time() - start_time) * 1000)
             print(f"[Repair Engine] ❌ Error during repair after {elapsed_ms}ms: {e}", flush=True)
-            import traceback
             traceback.print_exc()
             
             # 清理资源（即使出错也要清理）

@@ -1,6 +1,11 @@
+import * as path from 'path';
+import * as fs from 'fs/promises';
 import { ModelManager } from '../model-manager/model-manager';
 import type { JobAssignMessage, InstalledModel, FeatureFlags } from '@shared/protocols/messages';
 import logger from '../logger';
+import { getLidConfig, getConfigPath } from '../node-config';
+import { convertWavToOpus } from '../utils/opus-codec';
+import { parseWavFile } from '../utils/opus-encoder';
 import { TaskRouter } from '../task-router/task-router';
 import { runJobPipeline, ServicesBundle } from '../pipeline/job-pipeline';
 import { initJobContext } from '../pipeline/context/job-context';
@@ -8,6 +13,12 @@ import { SessionContextManager } from '../pipeline-orchestrator/session-context-
 import { ServiceRegistry } from '../service-layer/ServiceTypes';
 import { getInstalledModelsAsProtocol } from './inference-service-models';
 import { waitForServicesReady } from './inference-service-ready';
+import { DedupStage } from '../agent/postprocess/dedup-stage';
+import { AudioAggregator } from '../pipeline-orchestrator/audio-aggregator';
+import { SemanticRepairInitializer } from '../agent/postprocess/postprocess-semantic-repair-initializer';
+import { RoomStateStore } from '../lid/router-state';
+import { selectSrcLang } from '../lid/router';
+import { LidEngine } from '../lid/lid-engine';
 
 export interface JobResult {
   text_asr: string;
@@ -18,8 +29,10 @@ export interface JobResult {
     emotion?: string | null;
     speech_rate?: number | null;
     voice_style?: string | null;
-    language_probability?: number | null;  // 新增：检测到的语言的概率（0.0-1.0）
-    language_probabilities?: Record<string, number> | null;  // 新增：所有语言的概率信息（字典：语言代码 -> 概率）
+    language_probability?: number | null;  // 检测到的语言的概率（0.0-1.0）
+    language_probabilities?: Record<string, number> | null;  // 所有语言的概率信息（字典：语言代码 -> 概率）
+    /** 面对面模式下 FW 识别出的源语言（job.src_lang=auto 时由 ASR 步骤写入，供下游/会议模式等使用） */
+    detected_src_lang?: string;
     [key: string]: unknown;
   };
   /** OBS-2: ASR 质量信息 */
@@ -97,11 +110,9 @@ export class InferenceService {
     this.sessionContextManager.setTaskRouter(this.taskRouter);
 
     // 初始化 DedupStage（全局实例，用于维护 job_id 去重状态）
-    const { DedupStage } = require('../agent/postprocess/dedup-stage');
     const dedupStage = new DedupStage();
 
-    // 初始化 AudioAggregator（用于在job之间共享音频缓冲区）
-    const { AudioAggregator } = require('../pipeline-orchestrator/audio-aggregator');
+    // 初始化 AudioAggregator（用于在job之间共享音频缓冲区，统一出 5s 段给 FW/CTC）
     const audioAggregator = new AudioAggregator();
 
     // 兜底清理：仅用于用户断线导致 turn 永远收不到 manual/timeout finalize 的孤儿 buffer。
@@ -119,12 +130,30 @@ export class InferenceService {
     // 初始化SemanticRepairInitializer（如果servicesHandler可用）
     let semanticRepairInitializer: any = null;
     if (servicesHandler) {
-      const { SemanticRepairInitializer } = require('../agent/postprocess/postprocess-semantic-repair-initializer');
       semanticRepairInitializer = new SemanticRepairInitializer(this.taskRouter);
       // 异步初始化（不等待完成，让第一次使用时再等待）
       semanticRepairInitializer.initialize().catch((error: any) => {
         logger.error({ error: error.message }, 'Failed to initialize SemanticRepairInitializer');
       });
+    }
+
+    // LID：Sherpa-ONNX，从 getLidConfig() 读取 modelPath
+    let lidEngine: any = null;
+    let lidRouter: any = null;
+    const lidConfig = getLidConfig();
+    logger.info({ configPath: getConfigPath(), lidModelPath: lidConfig.modelPath, pid: process.pid }, 'LID: config loaded');
+    if (lidConfig.enabled && lidConfig.modelPath) {
+      const resolvedPath = path.isAbsolute(lidConfig.modelPath) ? lidConfig.modelPath : path.resolve(process.cwd(), lidConfig.modelPath);
+      logger.info({ path: resolvedPath }, 'LID: starting load');
+      lidRouter = { store: new RoomStateStore(), select: selectSrcLang };
+      lidEngine = new LidEngine();
+      lidEngine.loadModel(resolvedPath).then(() => {
+        logger.info({ path: resolvedPath }, 'LID model loaded');
+      }).catch((err: any) => {
+        logger.error({ err: err.message, path: resolvedPath }, 'LID model load failed');
+      });
+    } else if (lidConfig.enabled && !lidConfig.modelPath) {
+      logger.warn({}, 'LID 已启用但未配置 modelPath，请在配置中设置 lid.modelPath');
     }
 
     this.servicesBundle = {
@@ -137,6 +166,8 @@ export class InferenceService {
       dedupStage: dedupStage,
       audioAggregator: audioAggregator,
       semanticRepairInitializer: semanticRepairInitializer,
+      lidEngine: lidEngine || undefined,
+      lidRouter: lidRouter || undefined,
     };
 
     // 异步初始化服务端点
@@ -162,7 +193,6 @@ export class InferenceService {
     
     // 创建SemanticRepairInitializer（如果servicesHandler可用）
     if (servicesHandler && !this.servicesBundle.semanticRepairInitializer) {
-      const { SemanticRepairInitializer } = require('../agent/postprocess/postprocess-semantic-repair-initializer');
       const semanticRepairInitializer = new SemanticRepairInitializer(this.taskRouter);
       // 异步初始化（不等待完成，让第一次使用时再等待）
       semanticRepairInitializer.initialize().catch((error: any) => {
@@ -330,6 +360,63 @@ export class InferenceService {
         }
       }
     }
+  }
+
+  /**
+   * 使用本地 WAV 文件跑完整 pipeline：ASR → 语义修复 → NMT → TTS，用于联调与功能测试。
+   * 读取 WAV、转为 Opus，构造单条 job 后走 processJob（与节点收到调度器下发 job 一致）。
+   */
+  async runPipelineWithAudio(
+    wavPath: string,
+    options?: {
+      srcLang?: string;
+      tgtLang?: string;
+      useLid?: boolean;
+      lidCandidates?: [string, string];
+      room_id?: string;
+    }
+  ): Promise<JobResult> {
+    const tgtLang = options?.tgtLang ?? 'en';
+    const wavBuffer = await fs.readFile(wavPath);
+    const { sampleRate } = parseWavFile(wavBuffer);
+    const opusBuffer = await convertWavToOpus(wavBuffer);
+    const audioBase64 = opusBuffer.toString('base64');
+    const jobId = `audio-test-${Date.now()}`;
+    const traceId = jobId;
+    const useLid = options?.useLid === true;
+    const srcLang = useLid ? 'auto' : (options?.srcLang ?? 'zh');
+    const job: JobAssignMessage = {
+      type: 'job_assign',
+      job_id: jobId,
+      attempt_id: 1,
+      session_id: 'audio-test-session',
+      utterance_index: 0,
+      src_lang: srcLang,
+      tgt_lang: tgtLang,
+      dialect: null,
+      pipeline: { use_asr: true, use_nmt: true, use_tts: true },
+      audio: audioBase64,
+      audio_format: 'opus',
+      sample_rate: sampleRate,
+      trace_id: traceId,
+      turn_id: 'audio-test-turn',
+    } as JobAssignMessage & { is_manual_cut?: boolean };
+    (job as any).is_manual_cut = true;
+    if (useLid) {
+      const candidates = options?.lidCandidates;
+      if (!candidates || candidates.length !== 2) {
+        throw new Error('runPipelineWithAudio: useLid requires lidCandidates of length 2 (from scheduler / caller)');
+      }
+      (job as any).lid = { candidates };
+      (job as any).room_id = options?.room_id ?? 'audio-test-room';
+      (job as any).lang_a = candidates[0];
+      (job as any).lang_b = candidates[1];
+    }
+    logger.info(
+      { wavPath, jobId, sampleRate, srcLang: useLid ? 'auto(lid)' : srcLang, tgtLang, useLid, opusBytes: opusBuffer.length },
+      'runPipelineWithAudio: running full pipeline'
+    );
+    return this.processJob(job);
   }
 
   /**

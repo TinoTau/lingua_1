@@ -1,3 +1,4 @@
+import { spawn } from 'child_process';
 import logger from './logger';
 
 // 获取 GPU 使用率（多种方法尝试，带超时保护）
@@ -50,7 +51,6 @@ export async function getGpuUsage(): Promise<{ usage: number; memory: number } |
 // 方法1: 使用 nvidia-smi 命令获取 GPU 信息（带超时保护）
 async function getGpuUsageViaNvidiaSmi(): Promise<{ usage: number; memory: number } | null> {
   return new Promise((resolve) => {
-    const { spawn } = require('child_process');
     // nvidia-smi 命令：获取GPU利用率和内存使用率
     const nvidiaSmi = spawn('nvidia-smi', [
       '--query-gpu=utilization.gpu,memory.used,memory.total',
@@ -122,7 +122,6 @@ async function getGpuUsageViaNvidiaSmi(): Promise<{ usage: number; memory: numbe
 // 方法2: 使用 Python + pynvml 获取 GPU 信息（带超时保护）
 async function getGpuUsageViaPython(): Promise<{ usage: number; memory: number } | null> {
   return new Promise((resolve) => {
-    const { spawn } = require('child_process');
     const pythonScript = `
 import pynvml
 try:

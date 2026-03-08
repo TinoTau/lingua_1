@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
 """中文同音纠错服务：KenLM + 同音混淆集，HTTP API。混淆集仅简体，入口先繁→简再纠错。"""
 
+import logging
 import os
 import time
-import logging
 from contextlib import asynccontextmanager
 
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+
+try:
+    from opencc import OpenCC
+except ImportError:
+    OpenCC = None
 
 from config import SERVICE_DIR, get_host, get_port, get_model_path
 from core import phonetic_correct
@@ -33,12 +39,15 @@ def _to_simplified(text: str) -> str:
         return text
     global _opencc_t2s
     if _opencc_t2s is None:
-        try:
-            from opencc import OpenCC
-            _opencc_t2s = OpenCC("t2s")
-        except Exception as e:
-            logger.debug("OpenCC not available, skipping t2s: %s", e)
+        if OpenCC is None:
+            logger.debug("OpenCC not available, skipping t2s")
             _opencc_t2s = False
+        else:
+            try:
+                _opencc_t2s = OpenCC("t2s")
+            except Exception as e:
+                logger.debug("OpenCC t2s init failed: %s", e)
+                _opencc_t2s = False
     if _opencc_t2s is False:
         return text
     try:
@@ -102,7 +111,6 @@ def correct(req: CorrectRequest):
 
 
 if __name__ == "__main__":
-    import uvicorn
     host = get_host()
     port = get_port()
     logger.info("Starting on %s:%s", host, port)

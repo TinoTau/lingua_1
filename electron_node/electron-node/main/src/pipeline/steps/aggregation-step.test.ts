@@ -52,4 +52,21 @@ describe('aggregation-step', () => {
       expect(ctx.shouldSendToSemanticRepair).toBeUndefined();
     });
   });
+
+  describe('CTC 兼容：单次 final 与 utterance 聚合', () => {
+    it('单段 ASR 文本（如 CTC POST /utterance 单次返回）走聚合步骤与多段路径一致', async () => {
+      const job = createJob();
+      const ctx = initJobContext(job);
+      ctx.asrText = 'CTC 单次识别结果文本'; // 模拟 CTC 仅返回一次 final，无 partial
+
+      const services: ServicesBundle = {
+        taskRouter: {},
+      } as any;
+
+      await runAggregationStep(job, ctx, services);
+
+      expect(ctx.segmentForJobResult).toBe('CTC 单次识别结果文本');
+      expect(ctx.shouldSendToSemanticRepair).toBe(true);
+    });
+  });
 });

@@ -1,14 +1,15 @@
 // ===== 工具方法 =====
 
+import * as fs from 'fs';
+import * as fsPromises from 'fs/promises';
 import * as os from 'os';
-import * as fs from 'fs/promises';
 
 /**
  * 检查文件是否存在
  */
 export async function fileExists(filePath: string): Promise<boolean> {
   try {
-    await fs.access(filePath);
+    await fsPromises.access(filePath);
     return true;
   } catch {
     return false;
@@ -20,7 +21,6 @@ export async function fileExists(filePath: string): Promise<boolean> {
  */
 export function findAlternativePath(): string | null {
   if (os.platform() === 'win32') {
-    const fs = require('fs');
     const drives = ['D', 'E', 'F', 'G', 'H'];
     for (const drive of drives) {
       const testPath = `${drive}:\\LinguaNode`;

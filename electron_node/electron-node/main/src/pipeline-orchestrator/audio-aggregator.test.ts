@@ -5,6 +5,7 @@
 
 import { AudioAggregator } from './audio-aggregator';
 import { decodeOpusToPcm16 } from '../utils/opus-codec';
+import { buildBufferKey } from './audio-aggregator-buffer-key';
 import {
   SAMPLE_RATE,
   DURATION_TOLERANCE_MS,
@@ -56,7 +57,6 @@ describe('AudioAggregator - 集成测试场景', () => {
       });
       await aggregator.processAudioChunk(job1);
 
-      const { buildBufferKey } = require('./audio-aggregator-buffer-key');
       const bufferKey = buildBufferKey(job1);
       const buffer = (aggregator as any).buffers?.get(bufferKey);
       expect(buffer).toBeDefined();
@@ -88,7 +88,6 @@ describe('AudioAggregator - 集成测试场景', () => {
       });
       await aggregator.processAudioChunk(job1);
 
-      const { buildBufferKey } = require('./audio-aggregator-buffer-key');
       const bufferKey = buildBufferKey(job1);
       const buffer = (aggregator as any).buffers?.get(bufferKey);
       expect(buffer).toBeDefined();
@@ -171,7 +170,6 @@ describe('AudioAggregator - 集成测试场景', () => {
       const job2 = createJobAssignMessage(mockDecodeOpusToPcm16, 'job-asr-failure-2', sessionId, 1, audio2, {
         is_manual_cut: true,
       });
-      const { buildBufferKey } = require('./audio-aggregator-buffer-key');
       const bufferKey = buildBufferKey(job2);
       const buffers = (aggregator as any).buffers;
       const buffer = buffers.get(bufferKey);

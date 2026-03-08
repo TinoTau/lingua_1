@@ -5,6 +5,7 @@
 """
 
 import time
+import traceback
 from typing import Dict, Optional
 from llama_cpp import Llama
 
@@ -90,7 +91,6 @@ class LlamaCppEngine:
             }
         except Exception as e:
             print(f"[LlamaCpp Engine] Error during repair: {e}", flush=True)
-            import traceback
             traceback.print_exc()
             return {
                 "text_out": text_in,

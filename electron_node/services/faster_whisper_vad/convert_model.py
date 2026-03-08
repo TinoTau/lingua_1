@@ -42,7 +42,7 @@ def convert_from_huggingface(model_name: str, output_dir: str, device: str = "cp
         
         model = WhisperModel(model_name, device=device, compute_type=compute_type, download_root=cache_dir)
         
-        print(f"\n✅ 模型已下载并转换完成！")
+        print("\n[OK] 模型已下载并转换完成!")
         print(f"模型位置: {output_dir}")
         
         # 验证模型文件是否存在
@@ -60,7 +60,7 @@ def convert_from_huggingface(model_name: str, output_dir: str, device: str = "cp
         return True
         
     except Exception as e:
-        print(f"\n❌ 转换失败: {e}")
+        print(f"\n[FAIL] 转换失败: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -77,13 +77,13 @@ def convert_local_model(input_dir: str, output_dir: str, device: str = "cpu", co
     
     input_path = Path(input_dir)
     if not input_path.exists():
-        print(f"❌ 输入目录不存在: {input_dir}")
+        print(f"[FAIL] 输入目录不存在: {input_dir}")
         return False
     
     # 检查是否是 HuggingFace 格式的模型
     config_file = input_path / "config.json"
     if not config_file.exists():
-        print(f"❌ 未找到 config.json，可能不是 HuggingFace 格式的模型")
+        print("[FAIL] 未找到 config.json，可能不是 HuggingFace 格式的模型")
         print("建议: 使用 convert_from_huggingface 从 HuggingFace 下载模型")
         return False
     
@@ -91,11 +91,11 @@ def convert_local_model(input_dir: str, output_dir: str, device: str = "cpu", co
     try:
         print("\n尝试加载本地模型...")
         model = WhisperModel(str(input_path), device=device, compute_type=compute_type)
-        print("✅ 模型加载成功！")
+        print("[OK] 模型加载成功!")
         print("注意: Faster Whisper 会自动管理模型，无需手动复制")
         return True
     except Exception as e:
-        print(f"❌ 加载失败: {e}")
+        print(f"[FAIL] 加载失败: {e}")
         print("可能原因: 模型格式不兼容（需要 CTranslate2 格式）")
         return False
 
@@ -142,13 +142,13 @@ def main():
         success = convert_from_huggingface(args.model, args.output, args.device, args.compute_type)
     
     if success:
-        print("\n✅ 转换完成！")
+        print("\n[OK] 转换完成!")
         print(f"\n使用方法:")
         print(f"  设置环境变量 ASR_MODEL_PATH={args.output}")
         print(f"  或修改配置指向: {args.output}")
         sys.exit(0)
     else:
-        print("\n❌ 转换失败")
+        print("\n[FAIL] 转换失败")
         sys.exit(1)
 
 if __name__ == "__main__":

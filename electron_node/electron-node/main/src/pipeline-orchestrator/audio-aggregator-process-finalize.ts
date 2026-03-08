@@ -26,7 +26,7 @@ export interface AudioAggregatorFinalizeContext {
  * 执行 finalize 路径：进入 FINALIZING、合并、按能量切分、流式批次、返回结果。
  * 会修改 currentBuffer 的状态与字段。
  */
-export function executeFinalizeAndReturn(
+export async function executeFinalizeAndReturn(
   context: AudioAggregatorFinalizeContext,
   bufferKey: string,
   currentBuffer: AudioBuffer,
@@ -34,7 +34,7 @@ export function executeFinalizeAndReturn(
   isManualCut: boolean,
   isTimeoutTriggered: boolean,
   nowMs: number
-): AudioChunkResult {
+): Promise<AudioChunkResult> {
   const sessionId = job.session_id;
   const {
     audioUtils,
@@ -84,12 +84,7 @@ export function executeFinalizeAndReturn(
   currentBuffer.pendingSmallSegmentsJobInfo = [];
 
   const audioToProcessDurationMs = (audioToProcess.length / BYTES_PER_SAMPLE / SAMPLE_RATE) * 1000;
-  const audioSegments = audioUtils.splitAudioByEnergy(
-    audioToProcess,
-    5000,
-    2000,
-    SPLIT_HANGOVER_MS
-  );
+  const audioSegments = audioUtils.splitAudioByEnergy(audioToProcess, 5000, 2000, SPLIT_HANGOVER_MS);
 
   logger.info(
     {

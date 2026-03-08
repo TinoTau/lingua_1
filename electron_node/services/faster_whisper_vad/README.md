@@ -39,8 +39,8 @@ ASR 推理在独立子进程中执行，通过进程间队列通信：
 
 - `ASR_MODEL_PATH`: Faster Whisper 模型路径（默认：`Systran/faster-whisper-large-v3`）
 - `ASR_DEVICE`: 设备类型（`cpu` 或 `cuda`，自动检测）
-- `ASR_COMPUTE_TYPE`: 计算类型（`float32`、`float16`、`int8`，自动选择）
-- `ASR_BEAM_SIZE`: Beam search 宽度（默认：5，OpenAI Whisper 标准值）
+- `ASR_COMPUTE_TYPE`: 计算类型（`float32`、`float16`、`int8`；CUDA 下默认 `float16`，提速优先 float16）
+- `ASR_BEAM_SIZE`: Beam search 宽度（默认：5；设为 1～3 可明显提速）
 - `ASR_TEMPERATURE`: 采样温度（默认：0.0）
 - `ASR_PATIENCE`: Beam search 耐心值（默认：1.0）
 - `ASR_COMPRESSION_RATIO_THRESHOLD`: 压缩比阈值（默认：2.4）
@@ -50,6 +50,7 @@ ASR 推理在独立子进程中执行，通过进程间队列通信：
 ### Silero VAD
 
 - `VAD_MODEL_PATH`: Silero VAD 模型路径（默认：`models/vad/silero/silero_vad_official.onnx`）
+- 本服务先做 Silero VAD 再送 Whisper，静音已被过滤；需确认 VAD 生效（日志有「VAD检测到 N 个语音段」）
 
 ### 服务
 
@@ -235,8 +236,8 @@ python faster_whisper_vad_service.py
 
 ## 相关文档
 
-- [GPU 配置与性能优化](./GPU.md)：详细的 GPU 配置说明
-- [配置说明](./config.py)：配置文件说明
+- [GPU 配置与性能](GPU.md)：同目录下 GPU 配置说明
+- [服务参考](docs/Reference.md)：API、配置项与处理流程汇总
 
 ## 注意事项
 

@@ -25,7 +25,6 @@ export async function runDedupStep(
 
   // 使用全局 DedupStage 实例（应该已经在 InferenceService 中初始化）
   if (!services.dedupStage) {
-    const { DedupStage } = require('../../agent/postprocess/dedup-stage');
     services.dedupStage = new DedupStage();
   }
 

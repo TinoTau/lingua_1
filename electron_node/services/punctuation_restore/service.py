@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """断句服务：中文/英文标点恢复，GPU 模式。"""
 
-import time
 import logging
+import time
 from contextlib import asynccontextmanager
 
+import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
 
@@ -57,8 +58,6 @@ def punc(req: PuncRequest):
 
 
 if __name__ == "__main__":
-    import uvicorn
-
     host = get_host()
     port = get_port()
     logger.info("Starting on %s:%s", host, port)

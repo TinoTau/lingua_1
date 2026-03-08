@@ -5,7 +5,7 @@
  * 1. 根据 is_manual_cut 和 is_timeout_triggered 标识，将多个音频块聚合成完整句子
  * 2. 避免ASR识别不完整的短句，提高识别准确率
  * 3. 减少NMT翻译次数，提高处理效率
- * 4. 流式切分：长音频按能量切分，组合成~5秒批次发送给ASR
+ * 4. 流式切分：长音频按能量切分，组合成~5秒批次发送给 FW/CTC
  * 
  * 设计：
  * - 使用依赖注入方式创建实例（通过 ServicesBundle 传递）
@@ -33,6 +33,8 @@ import {
 } from './audio-aggregator-buffer-lifecycle';
 import { executeFinalizeAndReturn } from './audio-aggregator-process-finalize';
 
+
+export interface AudioAggregatorOptions {}
 
 export class AudioAggregator {
   private buffers: Map<string, AudioBuffer> = new Map();
@@ -66,6 +68,8 @@ export class AudioAggregator {
 
   // Finalize 处理器（manual/timeout 时合并并输出）
   private readonly finalizeHandler = new AudioAggregatorFinalizeHandler();
+
+  constructor(_options?: AudioAggregatorOptions) {}
 
   /**
    * 处理音频块，根据标识决定是否聚合
@@ -204,7 +208,7 @@ export class AudioAggregator {
       (currentBuffer.totalDurationMs >= this.MIN_AUTO_PROCESS_DURATION_MS && !isTimeoutTriggered);
 
     if (shouldProcessNow) {
-      return executeFinalizeAndReturn(
+      return await executeFinalizeAndReturn(
         {
           audioUtils: this.audioUtils,
           streamBatcher: this.streamBatcher,
@@ -273,28 +277,6 @@ export class AudioAggregator {
       maxIdleMs: 5 * 60 * 1000,
     });
   }
-
-  /**
-   * 创建流式批次：将音频段组合成~5秒批次
-   * 
-   * @param audioSegments 切分后的音频段数组
-   * @param jobInfo 原始job信息映射
-   * @param shouldCacheRemaining 是否缓存剩余小片段（手动发送时应该为false）
-   * @returns 批次数组和剩余小片段
-   */
-  private createStreamingBatchesWithPending(
-    audioSegments: Buffer[],
-    jobInfo: OriginalJobInfo[],
-    shouldCacheRemaining: boolean = true
-  ): {
-    batches: Buffer[];
-    batchJobInfo: OriginalJobInfo[];
-    remainingSmallSegments: Buffer[];
-    remainingSmallSegmentsJobInfo: OriginalJobInfo[];
-  } {
-    return this.streamBatcher.createStreamingBatchesWithPending(audioSegments, jobInfo, shouldCacheRemaining);
-  }
-
 
   /**
    * 获取缓冲区（bufferKey = buildBufferKey(job)）

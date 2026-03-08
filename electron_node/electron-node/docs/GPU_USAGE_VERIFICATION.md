@@ -11,7 +11,7 @@
 | **ASR (faster_whisper_vad)** | ✅ 是 | 强制 GPU（ASR_DEVICE=cuda），不允许 CPU 回退 |
 | **NMT (nmt_m2m100)** | ✅ 是 | 强制 GPU，不允许 CPU 回退 |
 | **语义修复 (semantic_repair_en_zh)** | ✅ 是 | LlamaCpp/LLM 使用 n_gpu_layers=-1，Torch 推理走 CUDA |
-| **TTS (Piper)** | ✅ 是（可配置） | 需设置 PIPER_USE_GPU=true，否则服务会拒绝启动（若配置为强制 GPU） |
+| **TTS (Piper)** | ✅ 是 | 服务内默认 GPU（PIPER_USE_GPU 默认 "true"），不依赖节点注入 |
 | **同音纠错 (phonetic_correction_zh)** | ❌ 否 | 纯 CPU（KenLM + 混淆集），无 GPU 依赖 |
 
 节点端对 **ASR、NMT、TTS** 会通过 **GPU 仲裁器** 获取 GPU 租约后再调用对应服务；语义修复由独立 Python 服务内部使用 GPU，节点只发 HTTP 请求。
@@ -77,9 +77,9 @@ grep -E "JOB_ID|GPU lease acquired" logs/electron-main.log
 
 ### 3.4 TTS (Piper)
 
-- 搜索：`PIPER_USE_GPU`、`GPU`、`CUDA`、`Execution Provider`  
+- 搜索：`GPU`、`CUDA`、`Execution Provider`  
   - 典型：`GPU Acceleration: Enabled (required)`、`✓ GPU acceleration will be used`。  
-  - 若配置为强制 GPU 但未设置 `PIPER_USE_GPU=true`，服务会直接报错退出。
+  - 默认使用 GPU（服务内配置）；若设 `PIPER_USE_GPU=false` 会拒绝启动（当前策略要求 GPU）。
 
 ### 3.5 同音纠错 (phonetic_correction_zh)
 

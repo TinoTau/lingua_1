@@ -14,6 +14,9 @@ import { PipelineOrchestratorASRResultProcessor } from '../../pipeline-orchestra
 import { PipelineOrchestratorASRHandler } from '../../pipeline-orchestrator/pipeline-orchestrator-asr';
 import { OriginalJobInfo } from '../../pipeline-orchestrator/audio-aggregator-types';
 import { withGpuLease } from '../../gpu-arbiter';
+import { validateLidCandidates, normalizeLidCandidates } from '../../lid/lid-validate';
+import { selectSrcLang } from '../../lid/router';
+import { LID_WINDOW_MS } from '../../lid/lid-constants';
 import logger from '../../logger';
 
 export interface AsrStepOptions {
@@ -59,13 +62,46 @@ export async function runAsrStep(
     throw new Error('Failed to process audio');
   }
 
-  // ============================================================
-  // 流式批次处理：支持多个audioSegments和originalJobIds
-  // ============================================================
   const audioSegments = audioProcessResult.audioSegments || [audioProcessResult.audioForASR];
   const originalJobIds = audioProcessResult.originalJobIds || [];
   const originalJobInfo = audioProcessResult.originalJobInfo || [];
-  
+
+  let lidSelectedSrcLang: string | null = null;
+  let useLidPath = false;
+  const lidJob = (job as any).lid;
+  if (
+    lidJob?.candidates &&
+    Array.isArray(lidJob.candidates) &&
+    lidJob.candidates.length === 2 &&
+    (services as any).lidEngine &&
+    (services as any).lidRouter
+  ) {
+    validateLidCandidates(lidJob.candidates);
+    const candidates = normalizeLidCandidates(lidJob.candidates as [string, string]);
+    const room_id = (job as any).room_id || job.session_id || '';
+    const firstSegment = Buffer.from(audioSegments[0], 'base64');
+    const sampleRate = job.sample_rate || 16000;
+    const audioMs = (firstSegment.length / 2 / sampleRate) * 1000;
+    const store = (services as any).lidRouter.store;
+    const prior = store.get(room_id, candidates[0]).current_lang;
+    logger.info(
+      { jobId: job.job_id, room_id, candidates, prior, segmentBytes: firstSegment.length, audioMs },
+      'runAsrStep: LID infer start'
+    );
+    const lidResult = await (services as any).lidEngine.infer(firstSegment, LID_WINDOW_MS, candidates, prior);
+    const routerResult = selectSrcLang(store, room_id, audioMs, lidResult.lang_pred, lidResult.p, lidResult.strategy);
+    lidSelectedSrcLang = routerResult.selected_src_lang;
+    ctx.lidMeta = { lid_ms: lidResult.lid_ms, p: lidResult.p, lang_pred: lidResult.lang_pred, strategy: lidResult.strategy };
+    ctx.routerMeta = { selected_src_lang: routerResult.selected_src_lang, current_src_lang: routerResult.current_src_lang, switched: routerResult.switched, reason: routerResult.reason };
+    ctx.detectedSourceLang = lidSelectedSrcLang;
+    ctx.detectedTargetLang = (job as any).tgt_lang || (candidates[0] === lidSelectedSrcLang ? candidates[1] : candidates[0]);
+    useLidPath = true;
+    logger.info(
+      { jobId: job.job_id, room_id, lid_ms: lidResult.lid_ms, p: lidResult.p, lang_pred: lidResult.lang_pred, selected_src_lang: lidSelectedSrcLang, switched: routerResult.switched, reason: routerResult.reason },
+      'runAsrStep: LID path, selected_src_lang'
+    );
+  }
+
   // 将所有段合并后的音频存储到 JobContext（供后续步骤使用，如 Embedding）
   const allAudioBuffers = audioSegments.map(seg => Buffer.from(seg, 'base64'));
   const allAudio = Buffer.concat(allAudioBuffers);
@@ -93,6 +129,17 @@ export async function runAsrStep(
     }
   }
 
+  // 按有效源语言选 ASR 服务（LID 或 job）：en → asr-sherpa-en（唯一英文 CTC），其他明确语言 → asr-sherpa-lm；无明确语言不设偏好
+  const effectiveSrcLang =
+    useLidPath ? (lidSelectedSrcLang ?? undefined) : (job.src_lang && job.src_lang !== 'auto' ? job.src_lang : undefined);
+  const preferredServiceId =
+    effectiveSrcLang === 'en' ? 'asr-sherpa-en' : (effectiveSrcLang ? 'asr-sherpa-lm' : undefined);
+  const asrRouteOptions = preferredServiceId ? { preferredServiceId } : undefined;
+  logger.info(
+    { jobId: job.job_id, effectiveSrcLang, preferredServiceId },
+    'runAsrStep: ASR service preference (en=asr-sherpa-en only)'
+  );
+
   // 处理每个ASR批次
   const asrStartTime = Date.now();
   
@@ -100,12 +147,12 @@ export async function runAsrStep(
     const audioSegment = audioSegments[i];
     
     try {
-      // 构建ASR任务
+      // 构建ASR任务（LID 路径下 src_lang 由 Router 输出决定）
       const asrTask: ASRTask = {
         audio: audioSegment,
         audio_format: 'pcm16',
         sample_rate: job.sample_rate || 16000,
-        src_lang: job.src_lang,
+        src_lang: useLidPath ? lidSelectedSrcLang! : job.src_lang,
         enable_streaming: job.enable_streaming_asr || false,
         context_text: contextText,
         job_id: job.job_id,
@@ -152,7 +199,7 @@ export async function runAsrStep(
           },
           'runAsrStep: [ASRService] Using streaming ASR'
         );
-        asrResult = await asrHandler.processASRStreaming(asrTask, options.partialCallback);
+        asrResult = await asrHandler.processASRStreaming(asrTask, options.partialCallback, asrRouteOptions);
       } else {
         // 非流式ASR（使用GPU租约）
         logger.info(
@@ -166,9 +213,7 @@ export async function runAsrStep(
         );
         asrResult = await withGpuLease(
           'ASR',
-          async () => {
-            return await services.taskRouter.routeASRTask(asrTask);
-          },
+          async () => services.taskRouter.routeASRTask(asrTask, asrRouteOptions),
           {
             jobId: job.job_id,
             sessionId: job.session_id,
@@ -251,83 +296,46 @@ export async function runAsrStep(
         },
         `runAsrStep: ASR batch ${i + 1} failed`
       );
-      // 单一路径：失败 segment 记空，继续后续 segment，不抛错
-      ctx.asrText = (ctx.asrText || '') + (ctx.asrText ? ' ' : '');
-      ctx.asrSegments = [...(ctx.asrSegments || [])];
+      // ASR 为关键步骤，失败即抛出
+      throw error;
     }
   }
 
-  // 双向/自动模式：在 src_lang === 'auto' 时设置 ctx.detectedSourceLang，供聚合/语义修复/翻译使用
-  if (job.src_lang !== 'auto') {
-    // 非 auto，无需检测
-  } else if (ctx.languageProbabilities && job.lang_a && job.lang_b) {
-    const detectedLang = determineDetectedLanguage(ctx.languageProbabilities, job.lang_a, job.lang_b);
-    if (detectedLang) {
-      ctx.detectedSourceLang = detectedLang;
-      ctx.detectedTargetLang = detectedLang === job.lang_a ? job.lang_b : job.lang_a;
-    } else {
-      ctx.detectedSourceLang = job.lang_a;
-      ctx.detectedTargetLang = job.lang_b;
-    }
-  } else if (ctx.languageProbabilities && Object.keys(ctx.languageProbabilities).length > 0) {
-    // job 未带 lang_a/lang_b 时，用 ASR 返回的最高概率语言；规范化为 Stage 可识别的 zh/en
-    const topLang = getTopLanguageFromProbabilities(ctx.languageProbabilities);
-    ctx.detectedSourceLang = normalizeToStageSourceLang(topLang);
-    if (ctx.detectedSourceLang) {
-      logger.info(
-        { jobId: job.job_id, topLang, detectedSourceLang: ctx.detectedSourceLang, hasLangA: !!job.lang_a, hasLangB: !!job.lang_b },
-        'runAsrStep: src_lang=auto, set detectedSourceLang from ASR (no lang_a/lang_b on job)'
-      );
-    }
-  }
+  // src_lang=auto：契约 C（两层）；LID 路径下已由 Router 写出 detectedSourceLang，不再用 ASR 覆盖
+  if (job.src_lang === 'auto' && !useLidPath) {
+    const hasProbs = ctx.languageProbabilities && Object.keys(ctx.languageProbabilities).length > 0;
 
-  // 回退：ASR 未返回 language_probabilities 时，用 job.lang_a / job.lang_b 作为源/目标，避免下游 SEM_REPAIR 收到 src_lang=auto
-  if (job.src_lang === 'auto' && !ctx.detectedSourceLang && (job.lang_a || job.lang_b)) {
-    const normA = job.lang_a ? normalizeToStageSourceLang(job.lang_a) : undefined;
-    const normB = job.lang_b ? normalizeToStageSourceLang(job.lang_b) : undefined;
-    if (normA) {
-      ctx.detectedSourceLang = normA;
-      ctx.detectedTargetLang = normB || (job.lang_b ?? job.lang_a);
-      logger.info(
-        { jobId: job.job_id, detectedSourceLang: ctx.detectedSourceLang, detectedTargetLang: ctx.detectedTargetLang, fallback: 'job.lang_a' },
-        'runAsrStep: src_lang=auto, set detectedSourceLang from job.lang_a (ASR did not return language_probabilities)'
-      );
-    } else if (normB) {
-      ctx.detectedSourceLang = normB;
-      ctx.detectedTargetLang = normA || (job.lang_a ?? job.lang_b);
-      logger.info(
-        { jobId: job.job_id, detectedSourceLang: ctx.detectedSourceLang, detectedTargetLang: ctx.detectedTargetLang, fallback: 'job.lang_b' },
-        'runAsrStep: src_lang=auto, set detectedSourceLang from job.lang_b (ASR did not return language_probabilities)'
-      );
-    }
-  }
-
-  // src_lang=auto 且仍未设置 detectedSourceLang 时，输出警告
-  if (job.src_lang === 'auto' && !ctx.detectedSourceLang) {
-    const reasons: string[] = [];
-    if (!ctx.languageProbabilities || Object.keys(ctx.languageProbabilities).length === 0) {
-      reasons.push('ASR 未返回 language_probabilities');
-    }
-    if (!job.lang_a && !job.lang_b) {
-      reasons.push('job 未带 lang_a/lang_b（上游未在双向/自动场景下提供）');
+    if (hasProbs) {
+      if (job.lang_a && job.lang_b) {
+        const detectedLang = determineDetectedLanguage(ctx.languageProbabilities, job.lang_a, job.lang_b);
+        const src = (detectedLang ? normalizeToStageSourceLang(detectedLang) : null) ?? normalizeToStageSourceLang(job.lang_a);
+        ctx.detectedSourceLang = src;
+        ctx.detectedTargetLang = src === normalizeToStageSourceLang(job.lang_a) ? job.lang_b : job.lang_a;
+      } else {
+        const topLang = getTopLanguageFromProbabilities(ctx.languageProbabilities!);
+        ctx.detectedSourceLang = normalizeToStageSourceLang(topLang);
+      }
     } else if (job.lang_a && job.lang_b) {
-      const nA = normalizeToStageSourceLang(job.lang_a);
-      const nB = normalizeToStageSourceLang(job.lang_b);
-      if (!nA && !nB) {
-        reasons.push(`job.lang_a/lang_b 无法规范化为 zh/en（lang_a=${job.lang_a}, lang_b=${job.lang_b}）`);
+      const normA = normalizeToStageSourceLang(job.lang_a);
+      const normB = normalizeToStageSourceLang(job.lang_b);
+      if (normA) {
+        ctx.detectedSourceLang = normA;
+        ctx.detectedTargetLang = job.lang_b;
+        ctx.sourceLangResolution = 'fallback_candidate_pair';
+      } else if (normB) {
+        ctx.detectedSourceLang = normB;
+        ctx.detectedTargetLang = job.lang_a;
+        ctx.sourceLangResolution = 'fallback_candidate_pair';
       }
     }
-    if (ctx.languageProbabilities && Object.keys(ctx.languageProbabilities).length > 0) {
-      const topLang = getTopLanguageFromProbabilities(ctx.languageProbabilities);
-      const normalized = normalizeToStageSourceLang(topLang);
-      if (!normalized) {
-        reasons.push(`ASR 返回的最高语言无法规范化为 zh/en（topLang=${topLang ?? 'undefined'}）`);
-      }
+
+    if (!ctx.detectedSourceLang) {
+      const err = new Error(
+        `ASR_STEP_INVALID_LANG_CONTRACT: src_lang=auto 需要 ASR 返回 language_probabilities 或 job 提供 lang_a 与 lang_b（均需可规范化为 zh/en）`
+      );
+      (err as any).code = 'ASR_STEP_INVALID_LANG_CONTRACT';
+      throw err;
     }
-    logger.warn(
-      { jobId: job.job_id, sessionId: job.session_id, reasons },
-      'runAsrStep: src_lang=auto 时未设置 detectedSourceLang，下游可能报错'
-    );
   }
 
   logger.info(

@@ -298,4 +298,48 @@ describe('ASR Step - 单容器架构', () => {
     expect(ctx.asrText).toBeUndefined();
     expect(mockResultSender.sendJobResult).not.toHaveBeenCalled();
   });
+
+  describe('5s 段单路 ASR：每段只发一遍', () => {
+    const seg1 = 'c2VnNWF1ZGlvMQ==';
+    const seg2 = 'c2VnNWF1ZGlvMg==';
+
+    it('每段 5s 只发一遍，routeASRTask 收到与 audioSegments 一致的段', async () => {
+      mockAudioProcessor.processAudio.mockResolvedValue({
+        audioForASR: seg1,
+        audioFormatForASR: 'pcm16',
+        shouldReturnEmpty: false,
+        audioSegments: [seg1, seg2],
+        originalJobIds: ['job-1'],
+        originalJobInfo: [{ jobId: 'job-1', startOffset: 0, endOffset: 1, utteranceIndex: 0 }],
+      });
+
+      const ctx = initJobContext({
+        job_id: 'job-1',
+        session_id: 's1',
+        utterance_index: 0,
+        audio: Buffer.from('x'),
+        audio_format: 'opus',
+        src_lang: 'zh',
+        tgt_lang: 'en',
+      } as JobAssignMessage);
+      await runAsrStep(
+        {
+          job_id: 'job-1',
+          session_id: 's1',
+          utterance_index: 0,
+          audio: Buffer.from('x'),
+          audio_format: 'opus',
+          src_lang: 'zh',
+          tgt_lang: 'en',
+        } as JobAssignMessage,
+        ctx,
+        mockServices
+      );
+
+      const routeASRTask = (mockServices.taskRouter as any).routeASRTask;
+      expect(routeASRTask).toHaveBeenCalledTimes(2);
+      expect(routeASRTask.mock.calls[0][0].audio).toBe(seg1);
+      expect(routeASRTask.mock.calls[1][0].audio).toBe(seg2);
+    });
+  });
 });

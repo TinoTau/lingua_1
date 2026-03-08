@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from 'electron';
+import * as fs from 'fs';
 import * as path from 'path';
 import logger from './logger';
 
@@ -25,7 +26,6 @@ export function createWindow(): void {
   // 仅加载已构建的 renderer（renderer/dist），不依赖 Vite
   // 编译后 __dirname = dist/main/electron-node/main/src，上溯 5 层到项目根
   const distPath = path.join(__dirname, '../../../../../renderer/dist/index.html');
-  const fs = require('fs');
   const distExists = fs.existsSync(distPath);
 
   logger.info({ distExists, distPath }, 'Window load: renderer/dist');

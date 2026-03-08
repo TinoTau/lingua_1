@@ -7,7 +7,7 @@ import os
 from fastapi import HTTPException
 from typing import Optional
 
-from config import PORT
+from config import PORT, ASR_DEVICE, ASR_COMPUTE_TYPE, ASR_MODEL_PATH
 from vad import vad_state
 from context import reset_context_buffer, reset_text_context
 from asr_worker_manager import ASRWorkerManager
@@ -50,11 +50,14 @@ def get_asr_worker_manager() -> ASRWorkerManager:
 
 
 async def health_check():
-    """健康检查端点，包含ASR Worker状态"""
+    """健康检查端点，包含ASR Worker状态与运行设备（便于确认是否使用 GPU）"""
     manager = get_asr_worker_manager()
     stats = manager.get_stats()
     return {
         "status": "ok",
+        "device": ASR_DEVICE,
+        "compute_type": ASR_COMPUTE_TYPE,
+        "asr_model_path": ASR_MODEL_PATH,
         "asr_model_loaded": stats.get("worker_pid") is not None,
         "vad_model_loaded": True,
         "asr_worker": {

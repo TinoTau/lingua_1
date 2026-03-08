@@ -8,6 +8,7 @@ from typing import Optional, Tuple
 import torch
 from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
 
+from config import SEPARATOR_TRANSLATIONS, SEP_MARKER_VARIANTS
 from translation_sentinel import cleanup_sentinel_sequences
 
 # 兜底路径统一日志前缀，便于 grep 定位异常
@@ -63,8 +64,6 @@ def try_extract_last_segment_from_full(out: str) -> Optional[str]:
     取最后一段作为当前句译文，避免合并译文返回给客户端。
     若找不到分隔符或最后一段为空，返回 None。
     """
-    from config import SEPARATOR_TRANSLATIONS, SEP_MARKER_VARIANTS
-
     if not out or not out.strip():
         print(f"{_EXTRACTION_FALLBACK_PREFIX} last_segment_from_full=skip reason=empty_out", flush=True)
         return None

@@ -34,6 +34,7 @@ export interface ASRTask {
   enable_streaming?: boolean;
   context_text?: string;
   job_id?: string; // 任务 ID（用于取消任务）
+  trace_id?: string; // 全链路追踪 ID，用于最小定位实验（如 EN CTC「数字 4」）日志关联
   utterance_index?: number; // 新增：utterance 索引（用于日志和调试）
   padding_ms?: number; // EDGE-4: 尾部静音 padding（毫秒），None 表示不添加 padding
   rerun_count?: number; // P0.5-SH-4: 当前重跑次数（用于限频）

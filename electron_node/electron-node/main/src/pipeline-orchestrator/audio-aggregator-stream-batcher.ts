@@ -24,7 +24,7 @@ export class AudioAggregatorStreamBatcher {
 
   /**
    * 创建流式批次：将音频段组合成~5秒批次
-   * 
+   *
    * @param audioSegments 切分后的音频段数组
    * @param jobInfo 原始job信息映射
    * @param shouldCacheRemaining 是否缓存剩余小片段（手动发送时应该为false）
@@ -36,18 +36,17 @@ export class AudioAggregatorStreamBatcher {
     shouldCacheRemaining: boolean = true
   ): StreamingBatchResult {
     const batches: Buffer[] = [];
-    const batchJobInfo: OriginalJobInfo[] = [];  // 每个 batch 的第一个片段对应的 jobInfo
+    const batchJobInfo: OriginalJobInfo[] = [];
     let currentBatch: Buffer[] = [];
     let currentBatchDurationMs = 0;
-    let segmentOffset = 0; // 当前音频段的累计偏移量（在聚合音频中的位置）
-    let currentBatchFirstSegmentOffset: number | undefined = undefined;  // 当前 batch 的第一个片段的偏移量
+    let segmentOffset = 0;
+    let currentBatchFirstSegmentOffset: number | undefined = undefined;
 
     for (let i = 0; i < audioSegments.length; i++) {
       const segment = audioSegments[i];
       const segmentDurationMs = (segment.length / this.BYTES_PER_SAMPLE / this.SAMPLE_RATE) * 1000;
 
       if (currentBatchDurationMs + segmentDurationMs >= this.MIN_ACCUMULATED_DURATION_FOR_ASR_MS) {
-        // 当前批次已达到5秒，创建新批次
         if (currentBatch.length > 0) {
           batches.push(Buffer.concat(currentBatch));
           

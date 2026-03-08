@@ -296,9 +296,7 @@ Get-ChildItem logs\ -Filter "startup_*.log" | Sort-Object LastWriteTime -Descend
 
 ### 🏗️ 设计文档
 
-- [设计方案](../../../docs/architecture/SEMANTIC_REPAIR_SERVICE_UNIFICATION_DESIGN.md)
-- [审阅和任务列表](../../../docs/architecture/UNIFIED_SEMANTIC_REPAIR_REVIEW_AND_TASKLIST.md)
-- [实施总结](../../../docs/architecture/UNIFIED_SEMANTIC_REPAIR_IMPLEMENTATION_SUMMARY.md)
+- 架构与 API 详见本服务 [docs/Reference.md](docs/Reference.md)，运维与排错见 [docs/Operations.md](docs/Operations.md)。
 
 ## 对比旧服务
 

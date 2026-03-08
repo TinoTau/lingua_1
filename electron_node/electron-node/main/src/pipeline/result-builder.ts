@@ -29,8 +29,12 @@ export function buildJobResult(job: JobAssignMessage, ctx: JobContext): JobResul
     extra: {
       language_probability: ctx.asrResult?.language_probability || null,
       language_probabilities: ctx.languageProbabilities || null,
+      /** 面对面模式下 FW 识别出的源语言（job.src_lang=auto 时由 ASR 步骤写入 ctx.detectedSourceLang） */
+      detected_src_lang: ctx.detectedSourceLang || undefined,
       audioBuffered: (ctx as any).audioBuffered || false,
       pendingEmptyJobs: (ctx as any).pendingEmptyJobs || undefined,
+      lid: ctx.lidMeta || undefined,
+      router: ctx.routerMeta || undefined,
     },
     asr_quality_level: ctx.asrResult?.badSegmentDetection?.isBad ? 'bad' : 'good',
     quality_score: ctx.qualityScore || ctx.asrResult?.badSegmentDetection?.qualityScore,

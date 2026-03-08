@@ -32,9 +32,6 @@ export class TaskRouter {
   private selectionStrategy: ServiceSelectionStrategy = 'round_robin';
   // best-effort cancel 支持：HTTP AbortController（用于中断 HTTP 请求）
   private jobAbortControllers: Map<string, AbortController> = new Map();
-  // Service Endpoints 刷新缓存：避免频繁刷新服务端点列表
-  private lastRefreshTime: number = 0;
-  private refreshCacheTTL: number = 1000; // 默认 1 秒缓存（可配置，500ms-1000ms）
   // 路由处理器
   private asrHandler: TaskRouterASRHandler;
   private nmtHandler: TaskRouterNMTHandler;
@@ -56,6 +53,12 @@ export class TaskRouter {
     this.asrHandler.resetConsecutiveLowQualityCount(sessionId);
   }
 
+  /** 按 serviceId 取运行中的 ASR 端点，供 LID 路由使用 */
+  getASREndpointForService(serviceId: string): ServiceEndpoint | null {
+    const endpoints = this.serviceEndpoints.get(ServiceType.ASR) || [];
+    return endpoints.find(e => e.serviceId === serviceId && e.status === 'running') || null;
+  }
+
   constructor(
     private registry: ServiceRegistry
   ) {
@@ -74,6 +77,7 @@ export class TaskRouter {
 
     this.asrHandler = new TaskRouterASRHandler(
       (serviceType) => this.selectServiceEndpoint(serviceType),
+      (serviceId) => this.getASREndpointForService(serviceId),
       (serviceId) => this.startGpuTrackingForService(serviceId),
       this.serviceConnections,
       updateConnections
@@ -145,43 +149,14 @@ export class TaskRouter {
     await this.refreshServiceEndpoints();
   }
 
-  /**
-   * 刷新服务端点列表（带缓存机制）
-   * @param forceRefresh 是否强制刷新（忽略缓存）
-   */
-  async refreshServiceEndpoints(forceRefresh: boolean = false): Promise<void> {
-    const now = Date.now();
-    const cacheAge = now - this.lastRefreshTime;
-
-    // 如果强制刷新或缓存已过期，则刷新
-    if (forceRefresh || cacheAge >= this.refreshCacheTTL) {
-      this.serviceEndpoints = await this.serviceManager.refreshServiceEndpoints();
-      this.lastRefreshTime = now;
-      logger.debug(
-        {
-          forceRefresh,
-          cacheAge,
-          ttl: this.refreshCacheTTL
-        },
-        'Service endpoints refreshed'
-      );
-    } else {
-      logger.debug(
-        {
-          cacheAge,
-          ttl: this.refreshCacheTTL
-        },
-        'Service endpoints refresh skipped (using cache)'
-      );
-    }
+  /** 从 registry 刷新服务端点列表（每次调用都读当前状态，无缓存） */
+  async refreshServiceEndpoints(): Promise<void> {
+    this.serviceEndpoints = await this.serviceManager.refreshServiceEndpoints();
   }
 
-  /**
-   * 强制刷新服务端点列表（忽略缓存）
-   * 用于 waitForServicesReady 等需要实时状态的场景
-   */
+  /** 与 refreshServiceEndpoints 相同（无缓存后无区别，保留调用处兼容） */
   async forceRefreshServiceEndpoints(): Promise<void> {
-    await this.refreshServiceEndpoints(true);
+    await this.refreshServiceEndpoints();
   }
 
   /**
@@ -347,11 +322,9 @@ export class TaskRouter {
     }
   }
 
-  /**
-   * 路由 ASR 任务
-   */
-  async routeASRTask(task: ASRTask): Promise<ASRResult> {
-    return await this.asrHandler.routeASRTask(task);
+  /** 路由 ASR 任务；调用方可传 preferredServiceId（按 LID/job 有效源语言选定），未传或该服务不可用时 fallback 到通用端点选择 */
+  async routeASRTask(task: ASRTask, options?: { preferredServiceId?: string }): Promise<ASRResult> {
+    return await this.asrHandler.routeASRTask(task, options);
   }
 
   /**

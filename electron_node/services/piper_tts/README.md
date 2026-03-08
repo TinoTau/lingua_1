@@ -131,7 +131,7 @@ Content-Type: application/json
 
 - `PIPER_MODEL_DIR`: 模型目录路径（默认: `~/piper_models`）
 - `PIPER_CMD`: piper 命令行工具路径（如果不在 PATH 中）
-- `PIPER_USE_GPU`: 是否启用 GPU 加速（默认: "false"）
+- `PIPER_USE_GPU`: 是否启用 GPU 加速（默认: "true"，由本服务配置决定；可设为 "false" 做 CPU 调试）
 
 ### 模型目录结构
 
@@ -213,7 +213,7 @@ models/
 
 ## 故障排除
 
-详见 [故障排除指南](./docs/TROUBLESHOOTING.md)
+详见 [故障排除](docs/TROUBLESHOOTING.md)
 
 常见问题：
 - 模型找不到

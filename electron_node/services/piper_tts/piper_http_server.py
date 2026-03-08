@@ -42,6 +42,7 @@ except ImportError:
     CHINESE_PHONEMIZER_AVAILABLE = False
     print("WARNING: ChinesePhonemizer not available, Chinese TTS may not work correctly.")
 
+import utils
 from models import TtsRequest
 from synthesis import synthesize_with_python_api, synthesize_with_command_line
 from utils import find_model_path, find_piper_command, get_or_load_voice
@@ -74,7 +75,7 @@ async def startup_preload():
     
     model_dir_path = get_model_dir()
     model_dir = str(model_dir_path)
-    use_gpu = os.environ.get("PIPER_USE_GPU", "false").lower() == "true"
+    use_gpu = os.environ.get("PIPER_USE_GPU", "true").lower() == "true"
     
     if not model_dir_path.exists():
         logger.info("Piper model dir does not exist, skipping preload: %s", model_dir)
@@ -121,7 +122,7 @@ async def synthesize_tts(request: TtsRequest):
         )
     
     # 检查是否启用 GPU
-    use_gpu = os.environ.get("PIPER_USE_GPU", "false").lower() == "true"
+    use_gpu = os.environ.get("PIPER_USE_GPU", "true").lower() == "true"
     
     # 优先使用 Python API（如果可用）
     if PIPER_PYTHON_API_AVAILABLE:
@@ -158,8 +159,6 @@ async def health_check():
     只有在模型真正预加载完成后才返回 status: "ok"，
     确保节点端不会在模型加载完成前标记服务为 ready。
     """
-    import utils
-    
     # 检查是否有预加载的模型（使用 Python API 时）
     if PIPER_PYTHON_API_AVAILABLE:
         # 如果有缓存的模型，说明预加载已完成
@@ -241,8 +240,8 @@ def main():
     print(f"  Model Directory: {model_dir}")
     print(f"  Piper Command: {find_piper_command()}")
     
-    # 强制使用GPU：检查PIPER_USE_GPU环境变量
-    use_gpu = os.environ.get("PIPER_USE_GPU", "false").lower() == "true"
+    # 默认使用 GPU；可通过 PIPER_USE_GPU=false 覆盖（如调试）
+    use_gpu = os.environ.get("PIPER_USE_GPU", "true").lower() == "true"
     
     if not use_gpu:
         error_msg = (

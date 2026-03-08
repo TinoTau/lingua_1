@@ -119,7 +119,6 @@ export function getPythonServiceConfig(
           ...baseEnv,
           VIRTUAL_ENV: venvPath,
           PATH: venvPathEnv,
-          PIPER_USE_GPU: (baseEnv as any).CUDA_PATH ? 'true' : 'false',
           PIPER_MODEL_DIR: modelDir,
         },
       };

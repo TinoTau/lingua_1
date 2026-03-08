@@ -6,32 +6,23 @@
 import { app } from 'electron';
 import { loadNodeConfig, saveNodeConfig, type ServicePreferences } from '../node-config';
 import { getServiceRunner } from '../service-layer';
+import { stopTestServer } from '../test-server';
 import { cleanupEsbuild } from '../utils/esbuild-cleanup';
 
 let isCleaningUp = false;
 let cleanupCompleted = false;
 
-const SERVICE_ID_TO_PREF: Record<string, keyof ServicePreferences> = {
-  'nmt-m2m100': 'nmtEnabled',
-  'piper-tts': 'ttsEnabled',
-  'your-tts': 'yourttsEnabled',
-  'faster-whisper-vad': 'fasterWhisperVadEnabled',
-  'speaker-embedding': 'speakerEmbeddingEnabled',
-  'semantic-repair-en-zh': 'semanticRepairEnZhEnabled',
-  'phonetic-correction-zh': 'phoneticCorrectionEnabled',
-  'punctuation-restore': 'punctuationRestoreEnabled',
-};
-
 function saveCurrentServiceState(): void {
   const config = loadNodeConfig();
   const runner = getServiceRunner();
   if (runner) {
+    const prefs: ServicePreferences = { ...config.servicePreferences };
     for (const s of runner.getAllStatuses()) {
-      const key = SERVICE_ID_TO_PREF[s.serviceId];
-      if (key) (config.servicePreferences as unknown as Record<string, boolean>)[key] = s.status === 'running';
+      prefs[s.serviceId] = s.status === 'running';
     }
+    config.servicePreferences = prefs;
+    saveNodeConfig(config);
   }
-  saveNodeConfig(config);
 }
 
 async function stopAllServices(nodeAgent: any | null): Promise<void> {
@@ -44,6 +35,7 @@ async function cleanupAppResources(getNodeAgent: () => any): Promise<void> {
   if (isCleaningUp || cleanupCompleted) return;
   isCleaningUp = true;
   try {
+    await stopTestServer();
     saveCurrentServiceState();
     await stopAllServices(getNodeAgent());
     cleanupEsbuild();

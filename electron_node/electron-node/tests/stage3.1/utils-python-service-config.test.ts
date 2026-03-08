@@ -153,12 +153,10 @@ describe('Python Service Config', () => {
       expect(config!.env.PYTHONIOENCODING).toBe('utf-8');
     });
 
-    it('应该配置 GPU 使用标志', () => {
+    it('TTS 配置不注入 PIPER_USE_GPU，由 Piper 服务内默认决定', () => {
       const config = getPythonServiceConfig('tts', testProjectRoot);
-      
       expect(config).not.toBeNull();
-      expect(config!.env).toHaveProperty('PIPER_USE_GPU');
-      expect(['true', 'false']).toContain(config!.env.PIPER_USE_GPU);
+      expect(config!.env).not.toHaveProperty('PIPER_USE_GPU');
     });
 
     it('应该为所有服务类型生成正确的端口', () => {

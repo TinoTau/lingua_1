@@ -19,7 +19,7 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
     loadingAvailable,
     error,
     rustStatus,
-    pythonStatuses,
+    serviceStatuses,
     schedulerDisplayUrl,
     loadServices,
     handleDownload,
@@ -78,7 +78,7 @@ export function ModelManagement({ onBack }: ModelManagementProps) {
         <ModelManagementInstalledTab
           installedServices={installedServices}
           rustStatus={rustStatus}
-          pythonStatuses={pythonStatuses}
+          serviceStatuses={serviceStatuses}
           onUninstall={handleUninstall}
         />
       )}

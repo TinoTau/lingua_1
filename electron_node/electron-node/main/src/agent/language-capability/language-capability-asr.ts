@@ -15,6 +15,10 @@ export async function detectASRLanguages(
 ): Promise<string[]> {
   const languages: string[] = [];
 
+  if (service.service_id === 'asr-sherpa-en') {
+    return ['en'];
+  }
+
   // 优先级1：从服务查询（如果服务提供能力接口）
   // TODO: 实现服务能力查询接口
 

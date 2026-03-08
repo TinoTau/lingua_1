@@ -58,58 +58,12 @@ export interface ElectronAPI {
   startRustService: () => Promise<{ success: boolean; error?: string }>;
   stopRustService: () => Promise<{ success: boolean; error?: string }>;
 
-  // Python 服务管理
-  getPythonServiceStatus: (serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => Promise<{
-    name: string;
-    running: boolean;
-    starting: boolean;
-    pid: number | null;
-    port: number | null;
-    startedAt: Date | null;
-    lastError: string | null;
-    taskCount: number;
-    gpuUsageMs: number;
-  }>;
-  getAllPythonServiceStatuses: () => Promise<Array<{
-    name: string;
-    running: boolean;
-    starting: boolean;
-    pid: number | null;
-    port: number | null;
-    startedAt: Date | null;
-    lastError: string | null;
-    taskCount: number;
-    gpuUsageMs: number;
-  }>>;
-  startPythonService: (serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => Promise<{ success: boolean; error?: string }>;
-  stopPythonService: (serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => Promise<{ success: boolean; error?: string }>;
-
   // 自动启动服务（根据已安装的模型）
   autoStartServicesByModels: () => Promise<{ success: boolean; results?: Record<string, boolean>; error?: string }>;
 
-  // 服务偏好（记住用户上一次选择的功能）
-  getServicePreferences: () => Promise<{
-    rustEnabled: boolean;
-    nmtEnabled: boolean;
-    ttsEnabled: boolean;
-    yourttsEnabled: boolean;
-    fasterWhisperVadEnabled: boolean;
-    speakerEmbeddingEnabled: boolean;
-    semanticRepairEnZhEnabled?: boolean;
-    phoneticCorrectionEnabled?: boolean;
-    punctuationRestoreEnabled?: boolean;
-  }>;
-  setServicePreferences: (prefs: {
-    rustEnabled: boolean;
-    nmtEnabled: boolean;
-    ttsEnabled: boolean;
-    yourttsEnabled: boolean;
-    fasterWhisperVadEnabled: boolean;
-    speakerEmbeddingEnabled: boolean;
-    semanticRepairEnZhEnabled?: boolean;
-    phoneticCorrectionEnabled?: boolean;
-    punctuationRestoreEnabled?: boolean;
-  }) => Promise<{ success: boolean; error?: string }>;
+  // 服务偏好（按 serviceId 存储运行状态，由用户安装的服务动态决定）
+  getServicePreferences: () => Promise<Record<string, boolean>>;
+  setServicePreferences: (prefs: Record<string, boolean>) => Promise<{ success: boolean; error?: string }>;
 
   // 处理效率指标（OBS-1，按服务ID分组）
   getProcessingMetrics: () => Promise<Record<string, number>>;
@@ -172,6 +126,10 @@ export interface ElectronAPI {
 
   // 获取所有服务的元数据
   getAllServiceMetadata: () => Promise<Record<string, any>>;
+
+  // 联调/功能测试（完整 pipeline）
+  runPipelineWithMockAsr: (asrText: string, srcLang?: string, tgtLang?: string) => Promise<Record<string, unknown>>;
+  runPipelineWithAudio: (wavPath: string, options?: { srcLang?: string; tgtLang?: string }) => Promise<Record<string, unknown>>;
 }
 
 declare global {

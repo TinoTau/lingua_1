@@ -142,7 +142,8 @@ export class PipelineOrchestratorASRHandler {
    */
   async processASRStreaming(
     task: ASRTask,
-    partialCallback: PartialResultCallback
+    partialCallback: PartialResultCallback,
+    routeOptions?: { preferredServiceId?: string }
   ): Promise<ASRResult> {
     // 对于流式 ASR，我们需要通过 WebSocket 连接
     // 这里简化处理，实际应该使用 WebSocket 客户端
@@ -153,10 +154,10 @@ export class PipelineOrchestratorASRHandler {
     return await withGpuLease(
       'ASR',
       async () => {
-        return await this.taskRouter.routeASRTask({
-          ...task,
-          enable_streaming: false,
-        });
+        return await this.taskRouter.routeASRTask(
+          { ...task, enable_streaming: false },
+          routeOptions
+        );
       },
       {
         jobId: task.job_id,
@@ -278,6 +279,7 @@ export class PipelineOrchestratorASRHandler {
       enable_streaming: job.enable_streaming_asr || false,
       context_text: contextText,  // S1: 使用构建的prompt或原始context_text
       job_id: job.job_id, // 传递 job_id 用于任务取消
+      trace_id: (job as { trace_id?: string }).trace_id ?? job.job_id, // 全链路贯穿，用于 EN_CTC_DIAG 等定位
     };
 
     // 顺序执行：确保ASR按utterance_index顺序执行

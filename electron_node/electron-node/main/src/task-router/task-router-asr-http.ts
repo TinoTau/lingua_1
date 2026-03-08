@@ -53,7 +53,7 @@ export async function postASRUtteranceRequest(
         timeout: logContext.timeout ?? 60000,
         requestBodySize: logContext.requestBodySize,
       },
-      'ASR INPUT: Sending ASR request to faster-whisper-vad'
+      'ASR INPUT: Sending ASR request'
     );
 
     const response = await httpClient.post('/utterance', requestBody, { signal });
@@ -81,7 +81,7 @@ export async function postASRUtteranceRequest(
         languageProbability,
         hasLanguageProbabilities: !!response.data?.language_probabilities,
       },
-      'ASR OUTPUT: faster-whisper-vad request succeeded'
+      'ASR OUTPUT: Request succeeded'
     );
 
     return { response, requestDurationMs };
@@ -109,7 +109,7 @@ export async function postASRUtteranceRequest(
           ? 'ASR service timeout - this should be marked as missing segment'
           : 'ASR service error - this should be marked as missing segment',
       },
-      `faster-whisper-vad request failed${isTimeout ? ' (TIMEOUT)' : ''}`
+      `ASR request failed${isTimeout ? ' (TIMEOUT)' : ''}`
     );
     throw axiosError;
   }

@@ -5,6 +5,11 @@ import os
 import sys
 from typing import Optional, Tuple, Callable
 
+try:
+    import kenlm
+except ImportError:
+    kenlm = None
+
 from .char_tokenize import tokenize_for_lm
 
 DEFAULT_MODEL_NAME = "zh_char_3gram.trie.bin"
@@ -22,7 +27,8 @@ class LmScorer:
     """KenLM 打分器，字符级中文。"""
 
     def __init__(self, model_path: str, tokenize_fn: Callable[[str], str]):
-        import kenlm
+        if kenlm is None:
+            raise RuntimeError("kenlm not installed")
         self._model = kenlm.LanguageModel(model_path)
         self.model_path = model_path
         self._tokenize = tokenize_fn

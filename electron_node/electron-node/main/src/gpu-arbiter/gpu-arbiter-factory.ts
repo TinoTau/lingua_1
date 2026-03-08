@@ -39,11 +39,11 @@ export function loadGpuArbiterConfig(): GpuArbiterConfig {
     enabled: true, // GPU 仲裁器必须启用，用于控制 GPU 并发
     gpuKeys: ["gpu:0"],
     defaultQueueLimit: 8,
-    defaultHoldMaxMs: 8000,
+    defaultHoldMaxMs: 60000, // 60s：FW large-v3 在 8GB GPU 上单段推理可达 20–30s
     policies: {
       ASR: {
         priority: 90,
-        maxWaitMs: 10000, // 增加到10秒，避免GPU lease timeout导致ASR失败
+        maxWaitMs: 60000, // 60s：FW 推理慢，排队任务需等待前一任务完成（实测 3.6s 音频 ~21s）
         busyPolicy: "WAIT",
       },
       NMT: {
@@ -63,12 +63,12 @@ export function loadGpuArbiterConfig(): GpuArbiterConfig {
       },
       PHONETIC_CORRECTION: {
         priority: 60,
-        maxWaitMs: 8000,
+        maxWaitMs: 20000, // 20秒，适配 large-v3 ASR 占用 GPU 更久时的等待
         busyPolicy: "WAIT",
       },
       PUNCTUATION_RESTORE: {
         priority: 55,
-        maxWaitMs: 8000,
+        maxWaitMs: 20000, // 20秒，同上
         busyPolicy: "WAIT",
       },
     },

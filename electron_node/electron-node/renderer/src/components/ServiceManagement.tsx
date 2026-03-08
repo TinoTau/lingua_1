@@ -3,25 +3,18 @@ import { useServiceManagement } from './useServiceManagement';
 import {
   ServiceManagementRustSection,
   ServiceManagementDiscoveredItem,
-  ServiceManagementPythonSection,
 } from './ServiceManagement.Sections';
 
 export function ServiceManagement() {
   const {
     rustStatus,
-    pythonStatuses,
-    semanticRepairStatuses,
-    phoneticStatuses,
-    punctuationStatuses,
+    nonRustStatuses,
     loading,
-    processingMetrics,
     isRefreshing,
     handleRefreshServices,
     handleToggleRust,
-    handleTogglePython,
     handleToggleService,
     getServiceDisplayName,
-    getServiceId,
     formatGpuUsageMs,
   } = useServiceManagement();
 
@@ -47,7 +40,7 @@ export function ServiceManagement() {
           formatGpuUsageMs={formatGpuUsageMs}
         />
 
-        {semanticRepairStatuses.map((status) => (
+        {nonRustStatuses.map((status) => (
           <ServiceManagementDiscoveredItem
             key={status.serviceId}
             status={status}
@@ -57,38 +50,6 @@ export function ServiceManagement() {
             filterError={true}
           />
         ))}
-
-        {phoneticStatuses.map((status) => (
-          <ServiceManagementDiscoveredItem
-            key={status.serviceId}
-            status={status}
-            loading={loading}
-            getDisplayName={getServiceDisplayName}
-            onToggle={handleToggleService}
-            filterError={false}
-          />
-        ))}
-
-        {punctuationStatuses.map((status) => (
-          <ServiceManagementDiscoveredItem
-            key={status.serviceId}
-            status={status}
-            loading={loading}
-            getDisplayName={getServiceDisplayName}
-            onToggle={handleToggleService}
-            filterError={false}
-          />
-        ))}
-
-        <ServiceManagementPythonSection
-          pythonStatuses={pythonStatuses}
-          loading={loading}
-          processingMetrics={processingMetrics}
-          getServiceDisplayName={getServiceDisplayName}
-          getServiceId={getServiceId}
-          formatGpuUsageMs={formatGpuUsageMs}
-          onToggle={handleTogglePython}
-        />
       </div>
     </div>
   );

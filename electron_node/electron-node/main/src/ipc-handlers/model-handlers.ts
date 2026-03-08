@@ -1,4 +1,5 @@
 import { ipcMain } from 'electron';
+import axios from 'axios';
 import { getModelHubUrl } from '../node-config';
 import logger from '../logger';
 import type { ModelManager } from '../model-manager/model-manager';
@@ -48,7 +49,6 @@ export function registerModelHandlers(modelManager: ModelManager | null): void {
 
   ipcMain.handle('get-model-ranking', async () => {
     try {
-      const axios = require('axios');
       const modelHubUrl = getModelHubUrl();
       const response = await axios.get(`${modelHubUrl}/api/model-usage/ranking`);
       return response.data || [];

@@ -57,24 +57,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   startRustService: () => ipcRenderer.invoke('start-rust-service'),
   stopRustService: () => ipcRenderer.invoke('stop-rust-service'),
 
-  // Python 服务管理
-  getPythonServiceStatus: (serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => ipcRenderer.invoke('get-python-service-status', serviceName),
-  getAllPythonServiceStatuses: () => ipcRenderer.invoke('get-all-python-service-statuses'),
-  startPythonService: (serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => ipcRenderer.invoke('start-python-service', serviceName),
-  stopPythonService: (serviceName: 'nmt' | 'tts' | 'yourtts' | 'faster_whisper_vad' | 'speaker_embedding') => ipcRenderer.invoke('stop-python-service', serviceName),
-
   // 自动启动服务（根据已安装的模型）
   autoStartServicesByModels: () => ipcRenderer.invoke('auto-start-services-by-models'),
 
-  // 服务偏好（记住用户上一次选择的功能）
+  // 服务偏好（按 serviceId 存储运行状态）
   getServicePreferences: () => ipcRenderer.invoke('get-service-preferences'),
-  setServicePreferences: (prefs: {
-    nmtEnabled: boolean;
-    ttsEnabled: boolean;
-    yourttsEnabled: boolean;
-    fasterWhisperVadEnabled: boolean;
-    speakerEmbeddingEnabled: boolean;
-  }) => ipcRenderer.invoke('set-service-preferences', prefs),
+  setServicePreferences: (prefs: Record<string, boolean>) => ipcRenderer.invoke('set-service-preferences', prefs),
 
   // 处理效率指标（OBS-1）
   getProcessingMetrics: () => ipcRenderer.invoke('get-processing-metrics'),
@@ -84,6 +72,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   /** 联调/测试：用模拟 ASR 文本跑完整 pipeline（聚合 → 语义修复 → 去重 → NMT） */
   runPipelineWithMockAsr: (asrText: string, srcLang?: string, tgtLang?: string) =>
     ipcRenderer.invoke('run-pipeline-with-mock-asr', asrText, srcLang, tgtLang),
+  /** 功能测试：用本地 WAV 跑完整 pipeline（ASR → 语义修复 → NMT → TTS） */
+  runPipelineWithAudio: (wavPath: string, options?: { srcLang?: string; tgtLang?: string }) =>
+    ipcRenderer.invoke('run-pipeline-with-audio', wavPath, options),
 
   // 获取所有服务的元数据（用于动态显示服务信息）
   getAllServiceMetadata: () => ipcRenderer.invoke('get-all-service-metadata'),

@@ -76,8 +76,6 @@ def cleanup_worker_manager():
     logger.info("=" * 80)
     
     try:
-        # 延迟导入，避免循环依赖
-        from api_routes import get_asr_worker_manager
         manager = get_asr_worker_manager()
         
         # 检查是否已有运行中的event loop
@@ -139,6 +137,7 @@ logger.info("✅ atexit cleanup handler registered")
 from config import PORT
 from api_models import UtteranceRequest, UtteranceResponse, ResetRequest
 from api_routes import (
+    get_asr_worker_manager,
     health_check,
     reset_state,
     startup,

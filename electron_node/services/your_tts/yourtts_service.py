@@ -13,15 +13,17 @@ API 端点：
     GET  /health
 """
 
-import sys
-import os
 import argparse
+import io
+import os
+import socket
+import sys
 import tempfile
 import threading
+import traceback
 from pathlib import Path
 
 if sys.platform == 'win32':
-    import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
@@ -49,7 +51,6 @@ speaker_cache_lock = threading.Lock()
 def handle_exception(e):
     """Handle all unhandled exceptions"""
     print(f"[ERROR] Unhandled exception in Flask app: {e}")
-    import traceback
     traceback.print_exc()
     return jsonify({"error": str(e)}), 500
 
@@ -117,7 +118,6 @@ def register_speaker():
 
     except Exception as e:
         print(f"[YourTTS Service] [ERROR] Failed to register speaker: {e}")
-        import traceback
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
@@ -206,7 +206,6 @@ def synthesize():
                     print(f"Warning: Failed to delete temp file {speaker_wav}: {e}")
 
     except Exception as e:
-        import traceback
         error_msg = str(e)
         traceback.print_exc()
         return jsonify({
@@ -252,7 +251,6 @@ if __name__ == '__main__':
         tts_model = load_model(model_path, device)
     except Exception as e:
         print(f"\n[ERROR] Failed to start service: {e}")
-        import traceback
         traceback.print_exc()
         sys.exit(1)
 
@@ -265,7 +263,6 @@ if __name__ == '__main__':
     print("\n   Press Ctrl+C to stop")
     print("=" * 60)
 
-    import socket
     try:
         test_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         test_socket.settimeout(1)
@@ -288,7 +285,6 @@ if __name__ == '__main__':
             sys.exit(1)
         else:
             print(f"[ERROR] Failed to start Flask server: {e}")
-            import traceback
             traceback.print_exc()
             sys.exit(1)
     except KeyboardInterrupt:
@@ -296,6 +292,5 @@ if __name__ == '__main__':
         sys.exit(0)
     except Exception as e:
         print(f"[ERROR] Unexpected error starting server: {e}")
-        import traceback
         traceback.print_exc()
         sys.exit(1)

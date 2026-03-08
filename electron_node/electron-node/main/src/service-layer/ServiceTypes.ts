@@ -17,6 +17,8 @@ export interface ServiceDefinition {
     args: string[];     // 启动参数列表
     cwd: string;        // 服务工作目录（相对路径，相对于 service.json 所在目录）
   };
+  /** 可选：启动时注入的环境变量，会覆盖/追加到进程 env（如 ASR_SHERPA_LM_MODEL_DIR） */
+  env?: Record<string, string>;
   version?: string;     // 版本号，例如 "1.0.0"
   tags?: string[];      // 标签，用于能力聚合与过滤
   description?: string; // 服务描述

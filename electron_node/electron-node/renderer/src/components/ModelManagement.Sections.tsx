@@ -7,28 +7,12 @@ const currentPlatform = navigator.platform.includes('Win') ? 'windows-x64' :
 function getServiceRunningStatus(
   service: InstalledService,
   rustStatus: { running: boolean } | null,
-  pythonStatuses: Array<{ name: string; running: boolean }>
+  serviceStatuses: Array<{ serviceId: string; running: boolean }>
 ): boolean {
   if (service.serviceId === 'node-inference') {
     return rustStatus?.running ?? false;
   }
-  if (service.serviceId === 'nmt-m2m100') {
-    return pythonStatuses.find(s => s.name === 'nmt')?.running ?? false;
-  }
-  if (service.serviceId === 'piper-tts') {
-    return pythonStatuses.find(s => s.name === 'tts')?.running ?? false;
-  }
-  if (service.serviceId === 'your-tts') {
-    return pythonStatuses.find(s => s.name === 'yourtts')?.running ?? false;
-  }
-  if (
-    service.serviceId === 'en-normalize' ||
-    service.serviceId === 'semantic-repair-zh' ||
-    service.serviceId === 'semantic-repair-en'
-  ) {
-    return false;
-  }
-  return false;
+  return serviceStatuses.find(s => s.serviceId === service.serviceId)?.running ?? false;
 }
 
 export interface ModelManagementAvailableTabProps {
@@ -208,14 +192,14 @@ export function ModelManagementAvailableTab({
 export interface ModelManagementInstalledTabProps {
   installedServices: InstalledService[];
   rustStatus: { running: boolean } | null;
-  pythonStatuses: Array<{ name: string; running: boolean }>;
+  serviceStatuses: Array<{ serviceId: string; running: boolean }>;
   onUninstall: (serviceId: string, version?: string) => Promise<void>;
 }
 
 export function ModelManagementInstalledTab({
   installedServices,
   rustStatus,
-  pythonStatuses,
+  serviceStatuses,
   onUninstall,
 }: ModelManagementInstalledTabProps) {
   return (
@@ -224,7 +208,7 @@ export function ModelManagementInstalledTab({
         <div className="lmm-empty">暂无已安装的服务</div>
       ) : (
         installedServices.map((service) => {
-          const isRunning = getServiceRunningStatus(service, rustStatus, pythonStatuses);
+          const isRunning = getServiceRunningStatus(service, rustStatus, serviceStatuses);
           const statusText = isRunning ? '运行中' : '已停止';
 
           return (

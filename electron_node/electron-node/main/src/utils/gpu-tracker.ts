@@ -2,6 +2,7 @@
 //! 
 //! 提供 GPU 使用率监控和累计使用时间跟踪功能
 
+import { spawn } from 'child_process';
 import logger from '../logger';
 
 export interface GpuUsageInfo {
@@ -14,7 +15,6 @@ export interface GpuUsageInfo {
  */
 export async function getGpuUsage(): Promise<GpuUsageInfo | null> {
   try {
-    const { spawn } = require('child_process');
     const pythonScript = `
 import pynvml
 try:

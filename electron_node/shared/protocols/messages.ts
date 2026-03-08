@@ -422,6 +422,10 @@ export interface JobAssignMessage {
   padding_ms?: number;
   /** 当前 turn 的 ID；节点端用做 bufferKey，同一 turn 内多 job 共用同一 buffer（MaxDuration 续句合并） */
   turn_id?: string;
+  /** 面对面模式：LID 二选一候选，由调度根据 Web 端用户选择的 my_lang/peer_lang 下发 */
+  lid?: { candidates: [string, string] };
+  /** 面对面模式：房间 ID，用于 Router 状态按房间维护 */
+  room_id?: string;
 }
 
 export interface JobCancelMessage {

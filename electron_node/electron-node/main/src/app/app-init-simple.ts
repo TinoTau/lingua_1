@@ -230,98 +230,28 @@ export async function startServicesByPreference(
 ): Promise<void> {
   const config = loadNodeConfig();
   const prefs = config.servicePreferences;
-
-  logger.info(
-    {
-      servicePreferences: prefs,
-      autoStartServices: {
-        nmt: prefs.nmtEnabled,
-        tts: prefs.ttsEnabled,
-        yourtts: prefs.yourttsEnabled,
-        fasterWhisperVad: prefs.fasterWhisperVadEnabled,
-        speakerEmbedding: prefs.speakerEmbeddingEnabled,
-      },
-    },
-    'Auto-starting services based on user preferences'
-  );
-
-  if (!managers.serviceRunner) {
-    logger.warn({}, 'Service runner not initialized, skipping auto-start');
+  const registry = getServiceRegistry();
+  if (!registry || !managers.serviceRunner) {
+    if (!managers.serviceRunner) logger.warn({}, 'Service runner not initialized, skipping auto-start');
     return;
   }
 
-  // 启动 Python 服务（串行启动，避免GPU内存过载）
-  const pythonRegistry = getServiceRegistry();
-  if (pythonRegistry) {
-    // Day 4: 修复服务ID，与service.json保持一致（使用短横线）
-    const serviceMapping: Record<string, string> = {
-      fasterWhisperVad: 'faster-whisper-vad',
-      nmt: 'nmt-m2m100',
-      tts: 'piper-tts',
-      yourtts: 'your-tts',
-      speakerEmbedding: 'speaker-embedding',
-    };
+  logger.info({ servicePreferences: prefs }, 'Auto-starting services by preference');
 
-    const toStart: string[] = [];
-    if (prefs.fasterWhisperVadEnabled && serviceMapping.fasterWhisperVad) toStart.push(serviceMapping.fasterWhisperVad);
-    if (prefs.nmtEnabled && serviceMapping.nmt) toStart.push(serviceMapping.nmt);
-    if (prefs.ttsEnabled && serviceMapping.tts) toStart.push(serviceMapping.tts);
-    if (prefs.yourttsEnabled && serviceMapping.yourtts) toStart.push(serviceMapping.yourtts);
-    if (prefs.speakerEmbeddingEnabled && serviceMapping.speakerEmbedding) toStart.push(serviceMapping.speakerEmbedding);
-
-    (async () => {
-      for (const serviceId of toStart) {
-        logger.info({ serviceId }, 'Auto-starting Python service...');
-        try {
-          await managers.serviceRunner!.start(serviceId);
-          logger.info({ serviceId }, 'Python service started successfully');
-        } catch (error) {
-          logger.error({ error: error instanceof Error ? error.message : 'Unknown', serviceId }, 'Failed to auto-start Python service');
-        }
+  (async () => {
+    for (const entry of registry.values()) {
+      if (prefs[entry.def.id] !== true) continue;
+      try {
+        logger.info({ serviceId: entry.def.id }, 'Auto-starting service...');
+        await managers.serviceRunner!.start(entry.def.id);
+        logger.info({ serviceId: entry.def.id }, 'Service started');
+      } catch (error) {
+        logger.error({ error: error instanceof Error ? error.message : 'Unknown', serviceId: entry.def.id }, 'Failed to auto-start service');
       }
-    })().catch((error: Error) => {
-      logger.error({ error: error.message }, 'Failed to start Python services');
-    });
-  }
-
-  const registry = getServiceRegistry();
-  if (!registry) return;
-
-  const semanticServices = Array.from(registry.values()).filter((e) => e.def.type === 'semantic');
-  for (const entry of semanticServices) {
-    const shouldStart =
-      entry.def.id === 'semantic-repair-en-zh' && prefs.semanticRepairEnZhEnabled !== false;
-    if (shouldStart) {
-      logger.info({ serviceId: entry.def.id }, 'Auto-starting semantic repair service...');
-      managers.serviceRunner!.start(entry.def.id).catch((e: Error) =>
-        logger.error({ error: e.message, serviceId: entry.def.id }, 'Failed to auto-start semantic repair')
-      );
     }
-  }
-
-  const phoneticServices = Array.from(registry.values()).filter((e) => e.def.type === 'phonetic');
-  for (const entry of phoneticServices) {
-    const shouldStart =
-      entry.def.id === 'phonetic-correction-zh' && prefs.phoneticCorrectionEnabled !== false;
-    if (shouldStart) {
-      logger.info({ serviceId: entry.def.id }, 'Auto-starting phonetic correction service...');
-      managers.serviceRunner!.start(entry.def.id).catch((e: Error) =>
-        logger.error({ error: e.message, serviceId: entry.def.id }, 'Failed to auto-start phonetic correction')
-      );
-    }
-  }
-
-  const punctuationServices = Array.from(registry.values()).filter((e) => e.def.type === 'punctuation');
-  for (const entry of punctuationServices) {
-    const shouldStart =
-      entry.def.id === 'punctuation-restore' && prefs.punctuationRestoreEnabled !== false;
-    if (shouldStart) {
-      logger.info({ serviceId: entry.def.id }, 'Auto-starting punctuation restore service...');
-      managers.serviceRunner!.start(entry.def.id).catch((e: Error) =>
-        logger.error({ error: e.message, serviceId: entry.def.id }, 'Failed to auto-start punctuation restore')
-      );
-    }
-  }
+  })().catch((error: Error) => {
+    logger.error({ error: error.message }, 'Failed to start services by preference');
+  });
 }
 
 /**

@@ -24,28 +24,20 @@ export function getServiceDisplayName(
     }
     return name;
   }
+  // 仅当元数据缺失时用 serviceId 友好名回退（用户安装的服务以 registry 元数据为准）
   const fallbackMap: Record<string, string> = {
-    nmt: 'NMT 翻译服务',
-    tts: 'TTS 语音合成 (Piper)',
-    yourtts: 'YourTTS 语音克隆',
-    faster_whisper_vad: 'FastWhisperVad语音识别服务',
-    speaker_embedding: 'Speaker Embedding 服务',
-    rust: '节点推理服务 (Rust)',
+    'nmt-m2m100': 'NMT 翻译服务',
+    'piper-tts': 'TTS 语音合成 (Piper)',
+    'your-tts': 'YourTTS 语音克隆',
+    'faster-whisper-vad': 'FastWhisperVad 语音识别',
+    'asr-sherpa-lm': 'ASR Sherpa-LM (多语言 CTC)',
+    'asr-sherpa-en': 'ASR Sherpa English CTC',
+    'speaker-embedding': 'Speaker Embedding 服务',
     'phonetic-correction-zh': '同音纠错服务 (ZH)',
     'punctuation-restore': '断句服务 (中英)',
+    'semantic-repair-en-zh': '语义修复 (中英)',
   };
   return fallbackMap[serviceId] || serviceId;
-}
-
-export function getServiceId(serviceName: string): string {
-  const map: Record<string, string> = {
-    faster_whisper_vad: 'faster-whisper-vad',
-    nmt: 'nmt-m2m100',
-    tts: 'piper-tts',
-    yourtts: 'your-tts',
-    speaker_embedding: 'speaker-embedding',
-  };
-  return map[serviceName] || serviceName;
 }
 
 export function formatGpuUsageMs(ms: number): string {

@@ -53,3 +53,27 @@
 若语义修复服务未就绪或未注册，`runPipelineWithMockAsr` 会抛错，请先确认服务已启动且节点能发现 `semantic-repair-en-zh`。
 
 **说明**：中文修复（zh_repair）依赖 GGUF 模型；若服务返回 503，多为模型未放置或未加载，请参考 `electron_node/services/semantic_repair_en_zh/MODELS_SETUP_GUIDE.md` 配置模型。
+
+---
+
+## 三、WAV 完整 Pipeline（ASR 识别 + 语义修复 + NMT + TTS）+ 中英文耗时测试
+
+用于验证 **真实音频** 经 LID → ASR 路由 → 识别为文本，并确认中英文各自耗时。
+
+1. **编译并启动节点**
+   ```powershell
+   cd electron-node
+   npm run build:main
+   npm start
+   ```
+2. 在界面中启动 **ASR 服务**（如 asr-sherpa-lm、asr-sherpa-en、faster-whisper-vad 等，可多选；LID 路由会按语言选服务）。若使用 **LID 二选一**，需配置 `lid.modelPath` 并重启节点。
+3. 在**另一个终端**执行（测试中文 + 英文，带 LID 路由与耗时）：
+   ```powershell
+   cd electron_node\electron-node
+   node tests/run-mock-asr-pipeline.js --both --lid
+   ```
+4. 脚本会依次请求 `expired/chinese.wav`、`expired/english.wav`，输出每条 ASR 识别文本和 **整条 pipeline 耗时（ms）**，最后打印汇总。
+5. 单条测试或自定义 WAV：
+   - 仅中文：`node tests/run-mock-asr-pipeline.js --wav --lid`
+   - 仅英文：`node tests/run-mock-asr-pipeline.js --wav ..\..\..\expired\english.wav --lid`
+   - 不带 LID：去掉 `--lid` 即可（按 job 的 src_lang 选 ASR）。

@@ -15,10 +15,16 @@ import uuid
 from contextlib import asynccontextmanager
 from typing import Dict
 
+import gc
+import uvicorn
+import torch
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import torch
-import gc
+
+try:
+    import psutil
+except ImportError:
+    psutil = None
 
 # 强制设置标准输出和错误输出为 UTF-8 编码（Windows 兼容性）
 if sys.platform == 'win32':
@@ -80,8 +86,9 @@ except (ValueError, OSError) as e:
 
 def log_resource_usage(stage: str, device=None):
     """记录资源使用情况"""
+    if psutil is None:
+        return
     try:
-        import psutil
         process = psutil.Process()
         memory_mb = process.memory_info().rss / 1024 / 1024
         cpu_percent = process.cpu_percent(interval=0.1)
@@ -172,7 +179,6 @@ async def lifespan(app: FastAPI):
     
     except Exception as e:
         print(f"[Unified SR] [CRITICAL ERROR] Failed to initialize: {e}", flush=True)
-        import traceback
         traceback.print_exc()
         raise
     
@@ -338,8 +344,6 @@ async def en_health():
 # ==================== 主程序入口 ====================
 
 if __name__ == "__main__":
-    import uvicorn
-    
     # 加载配置
     cfg = Config()
     

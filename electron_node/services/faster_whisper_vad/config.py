@@ -2,8 +2,13 @@
 Faster Whisper + Silero VAD Service Configuration
 配置和常量定义
 """
-import os
 import logging
+import os
+
+try:
+    import ctranslate2
+except ImportError:
+    ctranslate2 = None
 
 logger = logging.getLogger(__name__)
 
@@ -11,30 +16,27 @@ logger = logging.getLogger(__name__)
 # Faster Whisper Configuration
 # ---------------------
 # 模型路径：支持 HuggingFace 模型标识符或本地路径
-# 使用 base 模型以获得更好的性能（与备份代码一致）
-# 注意：即使whisper-base-ct2目录存在，也使用HuggingFace标识符，让Faster Whisper自动下载和转换
-# 缓存目录设置为whisper-base-ct2，这样转换后的模型会保存到这个目录
+# 使用 base 模型：更轻量，推理更快，降低 GPU 占用；识别准确度略低于 large-v3
+# 注意：Faster Whisper 会自动下载并转换为 CTranslate2 格式
 _default_model_path = "Systran/faster-whisper-base"
 _local_model_path = os.path.join(os.path.dirname(__file__), "models", "asr", "whisper-base-ct2")
 
-# 如果环境变量设置了ASR_MODEL_PATH，优先使用环境变量
+# 模型路径：优先环境变量，其次本地缓存目录（用 HF 标识符 + 缓存路径），否则用 HuggingFace 标识符
+# 本地 whisper-base-ct2 使用 HuggingFace 缓存结构，需用 Systran/faster-whisper-base + WHISPER_CACHE_DIR 加载
 if os.getenv("ASR_MODEL_PATH"):
     ASR_MODEL_PATH = os.getenv("ASR_MODEL_PATH")
     logger.info(f"Using ASR_MODEL_PATH from environment: {ASR_MODEL_PATH}")
-else:
-    # 始终使用HuggingFace标识符，Faster Whisper会自动下载和转换为CTranslate2格式
-    ASR_MODEL_PATH = _default_model_path
-    logger.info(f"Using HuggingFace model identifier: {ASR_MODEL_PATH}")
-
-# 缓存目录：如果whisper-base-ct2目录存在，使用它作为缓存目录
-# 这样Faster Whisper会将转换后的CTranslate2模型保存到这个目录
-if os.path.exists(_local_model_path) and os.path.isdir(_local_model_path):
-    WHISPER_CACHE_DIR = os.getenv("WHISPER_CACHE_DIR", _local_model_path)
-    logger.info(f"Using local cache directory: {WHISPER_CACHE_DIR} (Faster Whisper will convert and save CTranslate2 model here)")
-else:
     _default_cache_dir = os.path.join(os.path.dirname(__file__), "models", "asr")
     WHISPER_CACHE_DIR = os.getenv("WHISPER_CACHE_DIR", _default_cache_dir)
-    logger.info(f"Using model cache directory: {WHISPER_CACHE_DIR}")
+elif os.path.exists(_local_model_path) and os.path.isdir(_local_model_path):
+    ASR_MODEL_PATH = _default_model_path  # Systran/faster-whisper-base
+    WHISPER_CACHE_DIR = os.path.abspath(_local_model_path)
+    logger.info(f"Using local CTranslate2 model cache: {WHISPER_CACHE_DIR}")
+else:
+    ASR_MODEL_PATH = _default_model_path
+    logger.info(f"Using HuggingFace model identifier (will download if needed): {ASR_MODEL_PATH}")
+    _default_cache_dir = os.path.join(os.path.dirname(__file__), "models", "asr")
+    WHISPER_CACHE_DIR = os.getenv("WHISPER_CACHE_DIR", _default_cache_dir)
 # 注意：如果将来需要从 HuggingFace 下载模型，可以通过环境变量 HF_TOKEN 设置 token
 # 当前模型已下载到本地，无需 token
 
@@ -46,24 +48,17 @@ def check_cuda_available():
     cuda_path = os.getenv("CUDA_PATH")
     if cuda_path:
         logger.info(f"CUDA_PATH environment variable found: {cuda_path}")
-        # 方法2：尝试导入 ctranslate2 并检查 CUDA 支持（更可靠）
-        try:
-            import ctranslate2
-            # 检查 CUDA 设备是否支持
-            # 如果 ctranslate2 安装了 CUDA 版本，get_supported_compute_types 会返回支持的 compute types
+        if ctranslate2 is not None:
             try:
                 compute_types = ctranslate2.get_supported_compute_types("cuda")
                 if compute_types:
                     logger.info(f"CTranslate2 CUDA support confirmed. Available compute types: {compute_types}")
                     return True
-                else:
-                    logger.warning("CTranslate2 installed but CUDA compute types not available")
+                logger.warning("CTranslate2 installed but CUDA compute types not available")
             except Exception as e:
                 logger.warning(f"CTranslate2 CUDA check failed: {e}, will try CUDA anyway")
-        except ImportError:
+        else:
             logger.warning("ctranslate2 not available, cannot verify CUDA support")
-        except Exception as e:
-            logger.warning(f"Error checking CTranslate2 CUDA support: {e}")
         # 如果环境变量设置了 CUDA_PATH，假设 CUDA 可用（让实际加载时验证）
         return True
     else:
@@ -95,6 +90,7 @@ else:
     ASR_DEVICE = "cuda"
     logger.info(f"GPU is required: forcing ASR_DEVICE=cuda (CUDA available: {_cuda_available})")
 
+# compute_type：提速优先用 float16（或 int8_float16），避免 float32
 # CPU 不支持 float16，必须使用 float32；CUDA 可以使用 float16
 # 如果环境变量设置了 compute_type，使用环境变量的值；否则根据设备自动选择
 # 重要：即使环境变量设置了 float16，如果设备是 CPU，也必须强制使用 float32
@@ -152,8 +148,9 @@ CONTEXT_MAX_SAMPLES = int(CONTEXT_DURATION_SEC * CONTEXT_SAMPLE_RATE)
 # ---------------------
 # ASR Parameters Configuration
 # ---------------------
-# ASR 参数配置：支持从环境变量读取，用于提高识别准确度
-BEAM_SIZE = int(os.getenv("ASR_BEAM_SIZE", "5"))  # Beam search 宽度，默认 5（与备份代码一致）
+# ASR 参数配置：支持从环境变量读取
+# beam_size：Whisper beam 大会明显拖慢；不依赖 beam 时可设为 1～3 提速，默认 5 偏重准确度
+BEAM_SIZE = int(os.getenv("ASR_BEAM_SIZE", "5"))
 TEMPERATURE = float(os.getenv("ASR_TEMPERATURE", "0.0"))  # 采样温度，默认 0.0（更确定，减少随机性）
 PATIENCE = float(os.getenv("ASR_PATIENCE", "1.0"))  # Beam search 耐心值，默认 1.0
 COMPRESSION_RATIO_THRESHOLD = float(os.getenv("ASR_COMPRESSION_RATIO_THRESHOLD", "2.4"))  # 压缩比阈值，默认 2.4

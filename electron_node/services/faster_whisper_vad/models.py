@@ -2,8 +2,9 @@
 Faster Whisper + Silero VAD Service Models
 模型加载和管理
 """
-import os
 import logging
+import os
+import traceback
 import onnxruntime as ort
 from faster_whisper import WhisperModel
 from config import (
@@ -72,7 +73,6 @@ try:
             raise
 except Exception as e:
     logger.error(f"❌ Failed to load Faster Whisper model: {e}")
-    import traceback
     logger.error(traceback.format_exc())
     raise
 
@@ -220,7 +220,6 @@ except RuntimeError:
     raise
 except Exception as e:
     logger.error(f"❌ Failed to load Silero VAD model: {e}")
-    import traceback
     logger.error(traceback.format_exc())
     raise
 

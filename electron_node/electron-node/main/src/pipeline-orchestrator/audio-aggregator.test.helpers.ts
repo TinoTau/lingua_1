@@ -211,4 +211,5 @@ export const JOB_IDS_TO_CLEAR = [
   'job-merge-1', 'job-merge-2', 'job-empty-a', 'job-empty-b', 'job-multi-owner',
   'job-a1', 'job-b1', 'job-a2', 'job-b2', 'job-concurrent-a', 'job-concurrent-b',
   'job-r0', 'job-r1', 'job-r2', 'job-r3', 'job-r5', 'job-pending-same', 'job-merge-same',
+  'job-ctc-1', 'job-vad-1',
 ];

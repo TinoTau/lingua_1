@@ -23,6 +23,7 @@ import {
   runHealthCheck,
   applyServiceReady,
 } from './ServiceProcessRunner-internal';
+import { setupCudaEnvironment } from '../utils/cuda-env';
 
 export class ServiceProcessRunner {
   private processes = new Map<string, ChildProcess>();
@@ -75,12 +76,12 @@ export class ServiceProcessRunner {
     const args = exec.args || [];
     const workingDir = exec.cwd || entry.installPath;
 
-    // Python 类服务（如 semantic-repair-en-zh）：优先使用服务目录下 venv 的 Python，保证在虚拟环境中运行
-    if (entry.def.type === 'semantic' && (exec.command === 'python' || exec.command.endsWith('python.exe') || exec.command.endsWith('python'))) {
+    // Python 类服务：优先使用服务目录下 venv 的 Python（semantic、ASR CTC 等），保证在虚拟环境中运行
+    if ((entry.def.type === 'semantic' || entry.def.type === 'asr') && (exec.command === 'python' || exec.command.endsWith('python.exe') || exec.command.endsWith('python'))) {
       const venvPython = path.join(entry.installPath, process.platform === 'win32' ? 'venv\\Scripts\\python.exe' : 'venv/bin/python');
       if (fs.existsSync(venvPython)) {
         executable = venvPython;
-        logger.info({ serviceId, venvPython }, 'Using venv Python for semantic repair service');
+        logger.info({ serviceId, venvPython }, 'Using venv Python for service');
       }
     }
 
@@ -94,14 +95,19 @@ export class ServiceProcessRunner {
       '🚀 Starting service process'
     );
 
-    // 6. 准备环境变量
+    // 6. 环境变量：继承进程 env + CUDA 环境（与其它 GPU 服务一致），再合并 service.json 的 env
     const serviceEnv: Record<string, string> = {
       ...process.env as Record<string, string>,
-      PYTHONIOENCODING: 'utf-8',  // 解决Windows GBK编码问题
-      PIPER_USE_GPU: 'true',       // 启用Piper TTS的GPU模式
+      ...setupCudaEnvironment(),
+      PYTHONIOENCODING: 'utf-8',
     };
+    if (entry.def.env && typeof entry.def.env === 'object') {
+      for (const [k, v] of Object.entries(entry.def.env)) {
+        if (v !== undefined && v !== null) serviceEnv[k] = String(v);
+      }
+    }
 
-    // Windows PATH环境变量兼容处理
+    // Windows PATH 归一
     const pathValue = serviceEnv.PATH || serviceEnv.Path || process.env.PATH || process.env.Path;
     if (pathValue) {
       serviceEnv.PATH = pathValue;
@@ -126,11 +132,16 @@ export class ServiceProcessRunner {
       entry.runtime.pid = proc.pid;
       entry.runtime.startedAt = new Date();
 
-      // 8/9. 统一处理 stdout/stderr：仅打日志 + 检测 [SERVICE_READY]，不写入 lastError
+      // 8/9. 统一处理 stdout/stderr：打日志 + 检测 [SERVICE_READY]。ASR 服务用 info 便于排查识别结果
+      const isAsr = serviceId.startsWith('asr-');
       const onOutput = (stream: 'stdout' | 'stderr') => (data: Buffer) => {
         const output = data.toString().trim();
         if (!output) return;
-        logger.debug({ serviceId }, `[${stream}] ${output}`);
+        if (isAsr) {
+          logger.info({ serviceId }, `[${stream}] ${output}`);
+        } else {
+          logger.debug({ serviceId }, `[${stream}] ${output}`);
+        }
         if (output.includes('[SERVICE_READY]')) {
           this.handleServiceReady(serviceId, entry, entry.def.port);
         }

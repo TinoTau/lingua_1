@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
 """FunASR ct-punc 断句推理（GPU）"""
 
+try:
+    from funasr import AutoModel
+except ImportError:
+    AutoModel = None
+
 _model = None
 
 
 def load_model():
     global _model
     if _model is None:
-        from funasr import AutoModel
+        if AutoModel is None:
+            raise RuntimeError("funasr not installed; cannot load ct-punc model")
         _model = AutoModel(
             model="ct-punc",
             model_revision="v2.0.4",
