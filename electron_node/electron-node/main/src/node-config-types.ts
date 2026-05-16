@@ -37,11 +37,21 @@ export interface NodeConfig {
     enablePostProcessTranslation?: boolean;
     enableS1PromptBias?: boolean;
     enableS2Rescoring?: boolean;
+    phoneticCorrection?: {
+      /** 节点级是否启用 5016 同音纠错（默认 false） */
+      enabled?: boolean;
+    };
     semanticRepair?: {
+      /** 节点级是否启用 5015 语义修复 HTTP（默认 false） */
+      enabled?: boolean;
       zh?: { qualityThreshold?: number; forceForShortSentence?: boolean };
       en?: { qualityThreshold?: number };
       cache?: { maxSize?: number; ttlMs?: number; modelVersion?: string };
       modelIntegrityCheck?: { enabled?: boolean; checkInterval?: number };
+    };
+    punctuationRestore?: {
+      /** 节点级是否启用 5017 断句（默认 false，不扩大强制主链） */
+      enabled?: boolean;
     };
   };
   gpuArbiter?: {

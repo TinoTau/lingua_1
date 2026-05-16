@@ -76,12 +76,22 @@ export class ServiceProcessRunner {
     const args = exec.args || [];
     const workingDir = exec.cwd || entry.installPath;
 
-    // Python 类服务：优先使用服务目录下 venv 的 Python（semantic、ASR CTC 等），保证在虚拟环境中运行
-    if ((entry.def.type === 'semantic' || entry.def.type === 'asr') && (exec.command === 'python' || exec.command.endsWith('python.exe') || exec.command.endsWith('python'))) {
-      const venvPython = path.join(entry.installPath, process.platform === 'win32' ? 'venv\\Scripts\\python.exe' : 'venv/bin/python');
-      if (fs.existsSync(venvPython)) {
-        executable = venvPython;
-        logger.info({ serviceId, venvPython }, 'Using venv Python for service');
+    // Python 类服务：使用 installPath 下 .venv 或 venv 的 Python（与现有 service.json 启动链一致）
+    const isPythonCmd =
+      exec.command === 'python' ||
+      exec.command.endsWith('python.exe') ||
+      exec.command.endsWith('python');
+    if (isPythonCmd) {
+      for (const venvDir of ['.venv', 'venv'] as const) {
+        const venvPython = path.join(
+          entry.installPath,
+          process.platform === 'win32' ? `${venvDir}\\Scripts\\python.exe` : `${venvDir}/bin/python`
+        );
+        if (fs.existsSync(venvPython)) {
+          executable = venvPython;
+          logger.info({ serviceId, venvPython }, 'Using venv Python for service');
+          break;
+        }
       }
     }
 

@@ -60,9 +60,30 @@ export interface JobResult {
     dedupCharsRemoved?: number;
   };
   /** 语义修复相关字段 */
-  semantic_repair_applied?: boolean;  // 是否应用了语义修复
-  semantic_repair_confidence?: number;  // 语义修复置信度
-  text_asr_repaired?: string;  // 语义修复后的 ASR 文本（如果应用了修复）
+  semantic_repair_applied?: boolean;
+  semantic_repair_confidence?: number;
+  semantic_repair_http_called?: boolean;
+  semantic_repair_http_applied?: boolean;
+  semantic_repair_skipped?: boolean;
+  semantic_repair_skip_reason?: string;
+  semantic_repair_degraded?: boolean;
+  en_normalize_applied?: boolean;
+  text_asr_repaired?: string;
+  phonetic_correction_skipped?: boolean;
+  phonetic_correction_skip_reason?: string;
+  phonetic_correction_degraded?: boolean;
+  phonetic_correction_http_called?: boolean;
+  phonetic_correction_applied?: boolean;
+  phonetic_correction_step_ms?: number;
+  phonetic_correction_http_ms?: number;
+  punctuation_restore_skipped?: boolean;
+  punctuation_restore_skip_reason?: string;
+  punctuation_restore_degraded?: boolean;
+  punctuation_restore_http_called?: boolean;
+  punctuation_restore_applied?: boolean;
+  punctuation_restore_calls?: number;
+  punctuation_restore_step_ms?: number;
+  punctuation_restore_http_ms?: number;
   /** 去重相关字段 */
   should_send?: boolean;  // 是否应该发送（去重检查结果）
   dedup_reason?: string;  // 去重原因（如果 should_send=false）
@@ -308,7 +329,7 @@ export class InferenceService {
     if (wasFirstJob) {
       this.hasProcessedFirstJob = true;
       logger.info({ jobId: job.job_id }, 'First job detected, waiting for services to be ready');
-      await waitForServicesReady(this.taskRouter, 5000);
+      await waitForServicesReady(this.taskRouter, 5000, job);
     }
 
     // 如果是第一个任务，通知任务开始（用于启动GPU跟踪）

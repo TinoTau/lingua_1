@@ -5,6 +5,11 @@
 
 import { JobAssignMessage } from '@shared/protocols/messages';
 import { JobContext } from './context/job-context';
+import {
+    isPhoneticCorrectionEnabled,
+    isPunctuationRestoreEnabled,
+    isSemanticRepairEnabled,
+} from '../node-config';
 
 /**
  * Pipeline 步骤类型
@@ -222,8 +227,6 @@ export function shouldExecuteStep(
     const use_nmt = pipeline.use_nmt ?? true;
     const use_tts = pipeline.use_tts ?? true;
     const use_tone = pipeline.use_tone ?? false;
-    // use_semantic 是可选字段，需要类型断言
-    const use_semantic = 'use_semantic' in pipeline ? (pipeline as any).use_semantic : false;
 
     switch (step) {
         case 'ASR':
@@ -231,16 +234,16 @@ export function shouldExecuteStep(
         case 'DEDUP':
             return use_asr !== false;
         case 'PHONETIC_CORRECTION':
-            return ctx?.shouldSendToSemanticRepair === true && (job.src_lang === 'zh' || (ctx?.detectedSourceLang ?? '') === 'zh');
-        case 'PUNCTUATION_RESTORE': {
-            if (ctx?.shouldSendToSemanticRepair !== true) return false;
-            const srcLang = job.src_lang === 'auto' ? (ctx?.detectedSourceLang ?? 'zh') : job.src_lang;
-            return srcLang === 'zh' || srcLang === 'en';
-        }
+            return ctx?.shouldRunPhoneticCorrection === true
+                && isPhoneticCorrectionEnabled(job);
+        case 'PUNCTUATION_RESTORE':
+            return ctx?.shouldRunPunctuationRestore === true
+                && isPunctuationRestoreEnabled();
         case 'SEMANTIC_REPAIR':
-            return ctx?.shouldSendToSemanticRepair === true;
+            return ctx?.shouldRunSemanticRepairHttp === true
+                && isSemanticRepairEnabled(job);
         case 'TRANSLATION':
-            return use_nmt !== false;
+            return use_nmt !== false && ctx?.shouldAllowTranslation === true;
         case 'TTS':
             return use_tts !== false && use_tone !== true; // 如果启用 TONE，则跳过 TTS
         case 'YOURTTS':

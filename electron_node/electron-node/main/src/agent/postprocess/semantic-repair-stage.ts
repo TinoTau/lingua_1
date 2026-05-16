@@ -1,10 +1,6 @@
 /**
- * SemanticRepairStage - 语义修复Stage（统一入口，语言路由）
- * 职责：根据源语言路由到对应的修复Stage
- *
- * 设计契约（强制语义修复，失败即失败）：
- * - 必须调用语义修复并成功返回；不可用/不支持语言/异常一律 throw，由调度重分配。
- * - 空文本允许直通（非服务失败，仅为输入为空）。
+ * SemanticRepairStage - 语义修复 Stage（语言路由）
+ * 5015 不可用或失败时返回 skipped，由 pipeline step 回退原文并继续 NMT/TTS。
  */
 
 import { JobAssignMessage } from '@shared/protocols/messages';
@@ -26,7 +22,14 @@ export interface SemanticRepairStageResult {
   }>;
   reasonCodes: string[];
   repairTimeMs?: number;
-  semanticRepairApplied?: boolean;  // 是否应用了语义修复
+  /** @deprecated 使用 semanticRepairHttpApplied */
+  semanticRepairApplied?: boolean;
+  semanticRepairHttpCalled?: boolean;
+  semanticRepairHttpApplied?: boolean;
+  enNormalizeApplied?: boolean;
+  skipped?: boolean;
+  skipReason?: string;
+  degraded?: boolean;
 }
 
 export interface SemanticRepairStageConfig {
@@ -88,13 +91,15 @@ export class SemanticRepairStage {
       return await this.processChinese(job, text, qualityScore, meta);
     } else if (srcLang === 'en') {
       return await this.processEnglish(job, text, qualityScore, meta);
-    } else {
-      logger.warn(
-        { jobId: job.job_id, srcLang },
-        'SemanticRepairStage: Unsupported language, failing job'
-      );
-      throw new Error('SEM_REPAIR_UNSUPPORTED_LANG: UNSUPPORTED_LANGUAGE');
     }
+    return {
+      textOut: text,
+      decision: 'PASS',
+      confidence: 1.0,
+      reasonCodes: ['UNSUPPORTED_LANGUAGE'],
+      skipped: true,
+      skipReason: 'UNSUPPORTED_LANGUAGE',
+    };
   }
 
   /**
@@ -107,11 +112,30 @@ export class SemanticRepairStage {
     meta?: any
   ): Promise<SemanticRepairStageResult> {
     if (!this.zhStage) {
-      logger.warn({ jobId: job.job_id }, 'SemanticRepairStage: ZH stage not available, failing job');
-      throw new Error('SEM_REPAIR_UNAVAILABLE: ZH_STAGE_NOT_AVAILABLE');
+      return {
+        textOut: text,
+        decision: 'PASS',
+        confidence: 1.0,
+        reasonCodes: ['ZH_STAGE_NOT_AVAILABLE'],
+        skipped: true,
+        skipReason: 'ZH_STAGE_NOT_AVAILABLE',
+      };
     }
 
     const result = await this.zhStage.process(job, text, qualityScore, meta);
+    if (result.skipped) {
+      return {
+        textOut: result.textOut,
+        decision: 'PASS',
+        confidence: result.confidence,
+        reasonCodes: result.reasonCodes,
+        repairTimeMs: result.repairTimeMs,
+        skipped: true,
+        skipReason: result.skipReason,
+        degraded: result.degraded,
+      };
+    }
+    const httpApplied = result.semanticRepairHttpApplied === true;
     return {
       textOut: result.textOut,
       decision: result.decision,
@@ -119,7 +143,9 @@ export class SemanticRepairStage {
       diff: result.diff,
       reasonCodes: result.reasonCodes,
       repairTimeMs: result.repairTimeMs,
-      semanticRepairApplied: result.decision === 'REPAIR',
+      semanticRepairHttpCalled: true,
+      semanticRepairHttpApplied: httpApplied,
+      semanticRepairApplied: httpApplied,
     };
   }
 
@@ -159,6 +185,20 @@ export class SemanticRepairStage {
     // Step 2: 英文语义修复（如果启用且需要）
     if (this.enStage) {
       const repairResult = await this.enStage.process(job, currentText, qualityScore, meta);
+      if (repairResult.skipped) {
+        return {
+          textOut: repairResult.textOut,
+          decision: 'PASS',
+          confidence: repairResult.confidence,
+          reasonCodes: [...reasonCodes, ...repairResult.reasonCodes],
+          repairTimeMs: repairResult.repairTimeMs,
+          skipped: true,
+          skipReason: repairResult.skipReason,
+          degraded: repairResult.degraded,
+          enNormalizeApplied: normalized,
+        };
+      }
+      const httpApplied = repairResult.semanticRepairHttpApplied === true;
       return {
         textOut: repairResult.textOut,
         decision: repairResult.decision,
@@ -166,17 +206,21 @@ export class SemanticRepairStage {
         diff: repairResult.diff,
         reasonCodes: [...reasonCodes, ...repairResult.reasonCodes],
         repairTimeMs: repairResult.repairTimeMs,
-        semanticRepairApplied: repairResult.decision === 'REPAIR',
+        semanticRepairHttpCalled: true,
+        semanticRepairHttpApplied: httpApplied,
+        semanticRepairApplied: httpApplied,
+        enNormalizeApplied: normalized,
       };
     }
 
-    // 如果只有标准化，返回标准化结果
     return {
       textOut: currentText,
-      decision: normalized ? 'REPAIR' : 'PASS',
+      decision: 'PASS',
       confidence: normalized ? 0.9 : 1.0,
       reasonCodes,
-      semanticRepairApplied: normalized,
+      enNormalizeApplied: normalized,
+      semanticRepairHttpApplied: false,
+      semanticRepairApplied: false,
     };
   }
 }

@@ -32,6 +32,10 @@ export interface SemanticRepairStageZHResult {
   }>;
   reasonCodes: string[];
   repairTimeMs?: number;
+  semanticRepairHttpApplied?: boolean;
+  skipped?: boolean;
+  skipReason?: string;
+  degraded?: boolean;
 }
 
 export class SemanticRepairStageZH {
@@ -79,15 +83,13 @@ export class SemanticRepairStageZH {
 
     // 调用语义修复服务
     if (!this.taskRouter) {
-      logger.warn(
-        { jobId: job.job_id },
-        'SemanticRepairStageZH: TaskRouter not available, returning PASS'
-      );
       return {
         textOut: text,
         decision: 'PASS',
         confidence: 1.0,
         reasonCodes: ['TASK_ROUTER_NOT_AVAILABLE'],
+        skipped: true,
+        skipReason: 'TASK_ROUTER_NOT_AVAILABLE',
       };
     }
 
@@ -129,18 +131,37 @@ export class SemanticRepairStageZH {
       utteranceIndex: job.utterance_index,
       stage: 'SemanticRepair' as const,
     };
-    const repairResult = await sequentialExecutor.execute(
-      sessionId,
-      utteranceIndex,
-      'SEMANTIC_REPAIR',
-      () =>
-        withGpuLease(
-          'SEMANTIC_REPAIR',
-          () => this.taskRouter!.routeSemanticRepairTask(repairTask),
-          trace
-        ),
-      job.job_id
-    );
+    let repairResult;
+    try {
+      repairResult = await sequentialExecutor.execute(
+        sessionId,
+        utteranceIndex,
+        'SEMANTIC_REPAIR',
+        () =>
+          withGpuLease(
+            'SEMANTIC_REPAIR',
+            () => this.taskRouter!.routeSemanticRepairTask(repairTask),
+            trace
+          ),
+        job.job_id
+      );
+    } catch (error: any) {
+      const repairTimeMs = Date.now() - startTime;
+      logger.warn(
+        { error: error.message, jobId: job.job_id },
+        'SemanticRepairStageZH: HTTP repair failed, skipped'
+      );
+      return {
+        textOut: text,
+        decision: 'PASS',
+        confidence: 1.0,
+        reasonCodes: ['SERVICE_ERROR'],
+        repairTimeMs,
+        skipped: true,
+        skipReason: 'SERVICE_ERROR',
+        degraded: true,
+      };
+    }
 
     const repairTimeMs = Date.now() - startTime;
 
@@ -182,6 +203,7 @@ export class SemanticRepairStageZH {
       'SemanticRepairStageZH: Repair completed'
     );
 
+    const httpApplied = finalDecision === 'REPAIR' && finalTextOut !== text;
     return {
       textOut: finalTextOut,
       decision: finalDecision,
@@ -189,6 +211,7 @@ export class SemanticRepairStageZH {
       diff: repairResult.diff,
       reasonCodes: finalReasonCodes,
       repairTimeMs,
+      semanticRepairHttpApplied: httpApplied,
     };
   }
 

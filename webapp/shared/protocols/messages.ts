@@ -132,7 +132,8 @@ export interface UtteranceMessage {
     use_nmt?: boolean;
     use_tts?: boolean;
     use_tone?: boolean; // 是否使用 TONE 服务（音色克隆）
-    use_semantic?: boolean; // 是否使用语义修复服务
+    use_semantic?: boolean; // 是否使用语义修复 5015（节点缺省 false，且需 features.semanticRepair.enabled）
+    use_phonetic?: boolean; // 是否使用同音纠错 5016（节点缺省 false，且需 features.phoneticCorrection.enabled）
   };
 }
 

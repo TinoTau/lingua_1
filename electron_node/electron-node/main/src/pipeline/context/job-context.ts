@@ -22,7 +22,13 @@ export interface JobContext {
   aggregationAction?: 'MERGE' | 'NEW_STREAM' | 'COMMIT';
   aggregationChanged?: boolean;
   isLastInMergedGroup?: boolean;
-  shouldSendToSemanticRepair?: boolean;  // 是否应该发送给语义修复
+  /** @deprecated 请用 shouldRunSemanticRepairHttp；保留供旧测试/日志 */
+  shouldSendToSemanticRepair?: boolean;
+  shouldDeferTranslation?: boolean;
+  shouldAllowTranslation?: boolean;
+  shouldRunPhoneticCorrection?: boolean;
+  shouldRunPunctuationRestore?: boolean;
+  shouldRunSemanticRepairHttp?: boolean;
   aggregationMetrics?: {
     dedupCount?: number;
     dedupCharsRemoved?: number;
@@ -32,8 +38,34 @@ export interface JobContext {
   // 语义修复相关
   repairedText?: string;
   semanticDecision?: 'PASS' | 'REPAIR' | 'REJECT';
+  /** 仅当 5015 HTTP 修复成功时为 true */
   semanticRepairApplied?: boolean;
   semanticRepairConfidence?: number;
+  semanticRepairHttpCalled?: boolean;
+  semanticRepairHttpApplied?: boolean;
+  semanticRepairSkipped?: boolean;
+  semanticRepairSkipReason?: string;
+  semanticRepairDegraded?: boolean;
+  enNormalizeApplied?: boolean;
+
+  // 同音纠错 5016
+  phoneticCorrectionSkipped?: boolean;
+  phoneticCorrectionSkipReason?: string;
+  phoneticCorrectionDegraded?: boolean;
+  phoneticCorrectionHttpCalled?: boolean;
+  phoneticCorrectionApplied?: boolean;
+  phoneticCorrectionStepMs?: number;
+  phoneticCorrectionHttpMs?: number;
+
+  // 断句 5017
+  punctuationRestoreSkipped?: boolean;
+  punctuationRestoreSkipReason?: string;
+  punctuationRestoreDegraded?: boolean;
+  punctuationRestoreHttpCalled?: boolean;
+  punctuationRestoreApplied?: boolean;
+  punctuationRestoreCalls?: number;
+  punctuationRestoreStepMs?: number;
+  punctuationRestoreHttpMs?: number;
 
   // 去重相关
   shouldSend?: boolean;

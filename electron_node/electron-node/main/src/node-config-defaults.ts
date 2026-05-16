@@ -25,6 +25,9 @@ export const DEFAULT_CONFIG: NodeConfig = {
     enablePostProcessTranslation: true,
     enableS1PromptBias: false,
     enableS2Rescoring: false,
+    phoneticCorrection: { enabled: false },
+    semanticRepair: { enabled: false },
+    punctuationRestore: { enabled: false },
   },
   textLength: {
     minLengthToKeep: 6,

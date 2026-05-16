@@ -4,6 +4,13 @@
  */
 
 jest.mock('../../gpu-arbiter', () => ({ withGpuLease: (_: string, fn: () => Promise<any>) => fn() }));
+jest.mock('../enhancement-gate', () => {
+  const actual = jest.requireActual('../enhancement-gate');
+  return {
+    ...actual,
+    checkEnhancementService: jest.fn(() => ({ shouldRun: true })),
+  };
+});
 
 import { runSemanticRepairStep } from './semantic-repair-step';
 import { JobAssignMessage } from '@shared/protocols/messages';
@@ -57,6 +64,7 @@ describe('semantic-repair-step 优化验证', () => {
     const ctx = initJobContext(job);
     ctx.segmentForJobResult = 'test text';
     ctx.lastCommittedText = 'previous text';
+    ctx.shouldRunSemanticRepairHttp = true;
 
     await runSemanticRepairStep(job, ctx, mockServices);
 
@@ -71,6 +79,7 @@ describe('semantic-repair-step 优化验证', () => {
     const ctx = initJobContext(job);
     ctx.segmentForJobResult = 'test text';
     ctx.lastCommittedText = null;
+    ctx.shouldRunSemanticRepairHttp = true;
 
     await runSemanticRepairStep(job, ctx, mockServices);
 
@@ -88,8 +97,8 @@ describe('semantic-repair-step 优化验证', () => {
     expect(ctx.repairedText).toBe('');
   });
 
-  describe('语义修复不可用时不得透传原文（设计：所有 ASR 必须经语义修复）', () => {
-    it('无 initializer 时 repairedText 为空且 shouldSend 为 false', async () => {
+  describe('语义修复不可用（热插拔 skip，保留原文继续主链）', () => {
+    it('无 initializer 时 skip 并回退 segment 文本', async () => {
       const job = createJob();
       const ctx = initJobContext(job);
       ctx.segmentForJobResult = 'asr text';
@@ -97,25 +106,13 @@ describe('semantic-repair-step 优化验证', () => {
 
       await runSemanticRepairStep(job, ctx, servicesNoInit);
 
-      expect(ctx.repairedText).toBe('');
-      expect(ctx.shouldSend).toBe(false);
+      expect(ctx.repairedText).toBe('asr text');
+      expect(ctx.semanticRepairSkipped).toBe(true);
+      expect(ctx.semanticRepairHttpApplied).toBe(false);
       expect(mockSemanticRepairStage.process).not.toHaveBeenCalled();
     });
 
-    it('无 servicesHandler 时 repairedText 为空且 shouldSend 为 false', async () => {
-      const job = createJob();
-      const ctx = initJobContext(job);
-      ctx.segmentForJobResult = 'asr text';
-      const servicesNoHandler = { ...mockServices, servicesHandler: null };
-
-      await runSemanticRepairStep(job, ctx, servicesNoHandler);
-
-      expect(ctx.repairedText).toBe('');
-      expect(ctx.shouldSend).toBe(false);
-      expect(mockSemanticRepairStage.process).not.toHaveBeenCalled();
-    });
-
-    it('initialize 失败时 repairedText 为空且 shouldSend 为 false', async () => {
+    it('initialize 失败时 skip 并回退原文', async () => {
       const job = createJob();
       const ctx = initJobContext(job);
       ctx.segmentForJobResult = 'asr text';
@@ -124,12 +121,12 @@ describe('semantic-repair-step 优化验证', () => {
 
       await runSemanticRepairStep(job, ctx, mockServices);
 
-      expect(ctx.repairedText).toBe('');
-      expect(ctx.shouldSend).toBe(false);
+      expect(ctx.repairedText).toBe('asr text');
+      expect(ctx.semanticRepairSkipped).toBe(true);
       expect(mockSemanticRepairStage.process).not.toHaveBeenCalled();
     });
 
-    it('getSemanticRepairStage 返回 null 时 repairedText 为空且 shouldSend 为 false', async () => {
+    it('getSemanticRepairStage 返回 null 时 skip', async () => {
       const job = createJob();
       const ctx = initJobContext(job);
       ctx.segmentForJobResult = 'asr text';
@@ -137,8 +134,8 @@ describe('semantic-repair-step 优化验证', () => {
 
       await runSemanticRepairStep(job, ctx, mockServices);
 
-      expect(ctx.repairedText).toBe('');
-      expect(ctx.shouldSend).toBe(false);
+      expect(ctx.repairedText).toBe('asr text');
+      expect(ctx.semanticRepairSkipped).toBe(true);
       expect(mockSemanticRepairStage.process).not.toHaveBeenCalled();
     });
   });

@@ -400,6 +400,8 @@ export interface JobAssignMessage {
     use_nmt: boolean;
     use_tts: boolean;
     use_tone?: boolean;  // 是否使用 TONE 服务（音色配音）
+    use_semantic?: boolean;  // 5015 语义修复（节点缺省 false）
+    use_phonetic?: boolean;  // 5016 同音纠错（节点缺省 false）
   };
   audio: string; // base64
   audio_format: string;

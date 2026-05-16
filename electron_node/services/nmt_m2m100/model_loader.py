@@ -16,8 +16,10 @@ def check_model_complete(model_path: str) -> Tuple[bool, Optional[str]]:
     """检查模型目录是否完整（包含 tokenizer 和 PyTorch 模型文件）"""
     if not os.path.exists(model_path):
         return False, "Directory does not exist"
-    if not os.path.exists(os.path.join(model_path, "tokenizer.json")):
-        return False, "Missing tokenizer.json"
+    tokenizer_json = os.path.join(model_path, "tokenizer.json")
+    sentencepiece_model = os.path.join(model_path, "sentencepiece.bpe.model")
+    if not os.path.exists(tokenizer_json) and not os.path.exists(sentencepiece_model):
+        return False, "Missing tokenizer.json or sentencepiece.bpe.model"
     
     # 检查是否有 PyTorch 模型文件
     pytorch_files = [

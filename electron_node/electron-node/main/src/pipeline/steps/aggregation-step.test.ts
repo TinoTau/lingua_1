@@ -1,6 +1,6 @@
 /**
  * aggregation-step 单元测试
- * 验证无 aggregatorManager 时仍设置 shouldSendToSemanticRepair，保证 SEMANTIC_REPAIR 步骤被执行
+ * 无 aggregatorManager 时写入 segment 与翻译门控；语义修复默认关闭（需显式开启 job+节点配置）
  */
 
 import { runAggregationStep } from './aggregation-step';
@@ -19,7 +19,7 @@ describe('aggregation-step', () => {
   } as any);
 
   describe('无 aggregatorManager 时', () => {
-    it('应设置 ctx.shouldSendToSemanticRepair = true，以便 SEMANTIC_REPAIR 步骤执行', async () => {
+    it('应设置 segment 与 shouldAllowTranslation，语义修复默认不开启', async () => {
       const job = createJob();
       const ctx = initJobContext(job);
       ctx.asrText = '超市日治关节云'; // 模拟 ASR 原文
@@ -33,7 +33,9 @@ describe('aggregation-step', () => {
 
       expect(ctx.segmentForJobResult).toBe('超市日治关节云');
       expect(ctx.aggregationChanged).toBe(false);
-      expect(ctx.shouldSendToSemanticRepair).toBe(true);
+      expect(ctx.shouldSendToSemanticRepair).toBe(false);
+      expect(ctx.shouldRunSemanticRepairHttp).toBe(false);
+      expect(ctx.shouldAllowTranslation).toBe(true);
     });
 
     it('ASR 文本为空时应设置 segmentForJobResult、repairedText 均为空', async () => {
@@ -49,7 +51,8 @@ describe('aggregation-step', () => {
 
       expect(ctx.segmentForJobResult).toBe('');
       expect(ctx.repairedText).toBe('');
-      expect(ctx.shouldSendToSemanticRepair).toBeUndefined();
+      expect(ctx.shouldDeferTranslation).toBe(true);
+      expect(ctx.shouldRunSemanticRepairHttp).toBe(false);
     });
   });
 
@@ -66,7 +69,9 @@ describe('aggregation-step', () => {
       await runAggregationStep(job, ctx, services);
 
       expect(ctx.segmentForJobResult).toBe('CTC 单次识别结果文本');
-      expect(ctx.shouldSendToSemanticRepair).toBe(true);
+      expect(ctx.shouldSendToSemanticRepair).toBe(false);
+      expect(ctx.shouldRunSemanticRepairHttp).toBe(false);
+      expect(ctx.shouldAllowTranslation).toBe(true);
     });
   });
 });

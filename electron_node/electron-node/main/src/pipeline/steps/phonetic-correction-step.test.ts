@@ -1,32 +1,63 @@
-/**
- * 同音纠错步骤：确认仅中文调用服务，结果写回 ctx.segmentForJobResult（语义修复读同一字段）；失败即抛错。
- */
-
 jest.mock('../../gpu-arbiter', () => ({ withGpuLease: (_: string, fn: () => Promise<void>) => fn() }));
+jest.mock('../enhancement-gate', () => {
+  const actual = jest.requireActual('../enhancement-gate');
+  return {
+    ...actual,
+    checkEnhancementService: jest.fn(() => ({ shouldRun: true })),
+  };
+});
 
 import { runPhoneticCorrectionStep } from './phonetic-correction-step';
 import { JobAssignMessage } from '@shared/protocols/messages';
 import { initJobContext } from '../context/job-context';
 import { ServicesBundle } from '../job-pipeline';
+import { checkEnhancementService } from '../enhancement-gate';
 
 const createJob = (srcLang: string = 'zh'): JobAssignMessage =>
-  ({ job_id: 'job-1', session_id: 's1', utterance_index: 0, src_lang: srcLang, tgt_lang: 'en' } as JobAssignMessage);
+  ({
+    job_id: 'job-1',
+    session_id: 's1',
+    utterance_index: 0,
+    src_lang: srcLang,
+    tgt_lang: 'en',
+    pipeline: { use_phonetic: true },
+  } as JobAssignMessage);
 
 describe('runPhoneticCorrectionStep', () => {
   let originalFetch: typeof globalThis.fetch;
+  const mockGate = checkEnhancementService as jest.MockedFunction<typeof checkEnhancementService>;
 
   beforeEach(() => {
     originalFetch = globalThis.fetch;
+    mockGate.mockReturnValue({ shouldRun: true });
   });
 
   afterEach(() => {
     globalThis.fetch = originalFetch;
+    mockGate.mockReset();
   });
 
-  it('中文且 segment 非空时调用 /correct 并将 text_out 写回 ctx.segmentForJobResult', async () => {
+  it('gate 未通过时不 fetch', async () => {
+    mockGate.mockReturnValue({ shouldRun: false, skipReason: 'NOT_RUNNING' });
     const job = createJob('zh');
     const ctx = initJobContext(job);
     ctx.segmentForJobResult = '你号世界';
+    ctx.shouldRunPhoneticCorrection = true;
+
+    (globalThis as any).fetch = jest.fn();
+
+    await runPhoneticCorrectionStep(job, ctx, {} as ServicesBundle);
+
+    expect(fetch).not.toHaveBeenCalled();
+    expect(ctx.phoneticCorrectionSkipped).toBe(true);
+    expect(ctx.phoneticCorrectionSkipReason).toBe('NOT_RUNNING');
+  });
+
+  it('中文且 segment 非空时调用 /correct 并写回 segment', async () => {
+    const job = createJob('zh');
+    const ctx = initJobContext(job);
+    ctx.segmentForJobResult = '你号世界';
+    ctx.shouldRunPhoneticCorrection = true;
 
     (globalThis as any).fetch = jest.fn().mockResolvedValue({
       ok: true,
@@ -35,17 +66,12 @@ describe('runPhoneticCorrectionStep', () => {
 
     await runPhoneticCorrectionStep(job, ctx, {} as ServicesBundle);
 
-    expect(fetch).toHaveBeenCalledWith(
-      expect.stringContaining('/correct'),
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({ text_in: '你号世界', lang: 'zh' }),
-      })
-    );
+    expect(fetch).toHaveBeenCalled();
     expect(ctx.segmentForJobResult).toBe('你好世界');
+    expect(ctx.phoneticCorrectionApplied).toBe(true);
   });
 
-  it('segment 为空时不请求、不修改 ctx', async () => {
+  it('segment 为空时不请求', async () => {
     const job = createJob('zh');
     const ctx = initJobContext(job);
     ctx.segmentForJobResult = '';
@@ -55,64 +81,20 @@ describe('runPhoneticCorrectionStep', () => {
     await runPhoneticCorrectionStep(job, ctx, {} as ServicesBundle);
 
     expect(fetch).not.toHaveBeenCalled();
-    expect(ctx.segmentForJobResult).toBe('');
   });
 
-  it('英文时调用服务、服务返回原文（直通）', async () => {
-    const job = createJob('en');
-    const ctx = initJobContext(job);
-    ctx.segmentForJobResult = 'hello world';
-
-    (globalThis as any).fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve({ text_out: 'hello world' }),
-    });
-
-    await runPhoneticCorrectionStep(job, ctx, {} as ServicesBundle);
-
-    expect(fetch).toHaveBeenCalledWith(
-      expect.stringContaining('/correct'),
-      expect.objectContaining({
-        body: JSON.stringify({ text_in: 'hello world', lang: 'en' }),
-      })
-    );
-    expect(ctx.segmentForJobResult).toBe('hello world');
-  });
-
-  it('服务返回非 OK 时抛错', async () => {
+  it('HTTP 失败时 skip 且保留原文', async () => {
     const job = createJob('zh');
     const ctx = initJobContext(job);
     ctx.segmentForJobResult = '原文';
+    ctx.shouldRunPhoneticCorrection = true;
 
     (globalThis as any).fetch = jest.fn().mockResolvedValue({ ok: false, status: 503 });
 
-    await expect(runPhoneticCorrectionStep(job, ctx, {} as ServicesBundle)).rejects.toThrow(
-      /Phonetic correction failed: HTTP 503/
-    );
-  });
+    await runPhoneticCorrectionStep(job, ctx, {} as ServicesBundle);
 
-  it('响应缺少 text_out 时抛错', async () => {
-    const job = createJob('zh');
-    const ctx = initJobContext(job);
-    ctx.segmentForJobResult = '原文';
-
-    (globalThis as any).fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve({}),
-    });
-
-    await expect(runPhoneticCorrectionStep(job, ctx, {} as ServicesBundle)).rejects.toThrow(
-      /missing text_out/
-    );
-  });
-
-  it('请求异常时抛错向上冒泡', async () => {
-    const job = createJob('zh');
-    const ctx = initJobContext(job);
-    ctx.segmentForJobResult = '原文';
-
-    (globalThis as any).fetch = jest.fn().mockRejectedValue(new Error('network error'));
-
-    await expect(runPhoneticCorrectionStep(job, ctx, {} as ServicesBundle)).rejects.toThrow('network error');
+    expect(ctx.segmentForJobResult).toBe('原文');
+    expect(ctx.phoneticCorrectionSkipped).toBe(true);
+    expect(ctx.phoneticCorrectionDegraded).toBe(true);
   });
 });

@@ -31,6 +31,50 @@ export function getPunctuationRestoreUrl(): string {
   return c.services?.punctuationRestoreUrl ?? DEFAULT_CONFIG.services?.punctuationRestoreUrl ?? '';
 }
 
+/** job.pipeline.use_semantic 缺省为 false（增强服务默认关闭） */
+export function resolveJobUseSemantic(job: { pipeline?: { use_semantic?: boolean } }): boolean {
+  const p = job.pipeline;
+  if (!p || !('use_semantic' in p)) {
+    return false;
+  }
+  return p.use_semantic === true;
+}
+
+/** 节点 features.semanticRepair.enabled 缺省为 false */
+export function isSemanticRepairFeatureEnabled(): boolean {
+  const c = loadNodeConfig();
+  return c.features?.semanticRepair?.enabled === true;
+}
+
+export function isSemanticRepairEnabled(job: { pipeline?: { use_semantic?: boolean } }): boolean {
+  return resolveJobUseSemantic(job) && isSemanticRepairFeatureEnabled();
+}
+
+/** job.pipeline.use_phonetic 缺省为 false */
+export function resolveJobUsePhonetic(job: { pipeline?: { use_phonetic?: boolean } }): boolean {
+  const p = job.pipeline;
+  if (!p || !('use_phonetic' in p)) {
+    return false;
+  }
+  return (p as { use_phonetic?: boolean }).use_phonetic === true;
+}
+
+/** 节点 features.phoneticCorrection.enabled 缺省为 false */
+export function isPhoneticCorrectionFeatureEnabled(): boolean {
+  const c = loadNodeConfig();
+  return c.features?.phoneticCorrection?.enabled === true;
+}
+
+export function isPhoneticCorrectionEnabled(job: { pipeline?: { use_phonetic?: boolean } }): boolean {
+  return resolveJobUsePhonetic(job) && isPhoneticCorrectionFeatureEnabled();
+}
+
+/** 节点 features.punctuationRestore.enabled 缺省为 false */
+export function isPunctuationRestoreEnabled(): boolean {
+  const c = loadNodeConfig();
+  return c.features?.punctuationRestore?.enabled === true;
+}
+
 /** 调度服务器 WebSocket URL。从 electron-node-config.json 读 scheduler.url，localhost 规范为 127.0.0.1。 */
 export function getSchedulerUrl(): string {
   const c = loadNodeConfig();

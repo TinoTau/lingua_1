@@ -2,10 +2,8 @@
  * Task Router Semantic Repair Handler
  * 处理语义修复任务路由相关的逻辑
  *
- * 设计契约（强制语义修复，失败即失败）：
- * - 对每个 utterance 必须调用语义修复并成功返回。
- * - 若语义修复不可用/超时/异常：job 直接失败，由上层将错误回传调度服务器（调度重试/重分配）。
- * - 不再存在 PASS 作为降级策略；不可用/超时/异常一律 throw。
+ * 路由层契约：不可用/未 WARMED 时 throw（由 SemanticRepairStage / pipeline step catch 后 skip）。
+ * 主链 NMT/TTS 不依赖本服务；调用前应由 enhancement-gate 确认 running。
  */
 
 import logger from '../logger';
@@ -103,8 +101,15 @@ export class TaskRouterSemanticRepairHandler {
       throw new Error('SEM_REPAIR_UNAVAILABLE: SERVICE_NOT_AVAILABLE');
     }
 
+    if (!this.isServiceRunningCallback) {
+      logger.warn(
+        { serviceId: endpoint.serviceId },
+        'Semantic repair: no isServiceRunningCallback, refusing HTTP (fail-closed)'
+      );
+      throw new Error('SEM_REPAIR_UNAVAILABLE: NO_RUNNING_CALLBACK');
+    }
+
     // P0-1: 检查服务健康状态（只有WARMED状态才可用）
-    // 注意：在测试环境中，如果没有提供isServiceRunningCallback，跳过健康检查
     if (this.isServiceRunningCallback) {
       const isProcessRunning = this.isServiceRunningCallback(endpoint.serviceId);
 

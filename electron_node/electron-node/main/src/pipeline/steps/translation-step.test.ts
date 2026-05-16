@@ -1,6 +1,5 @@
 /**
  * runTranslationStep 单元测试
- * 验证：未走语义修复时跳过 NMT（ctx.translatedText = '' 并 return）
  */
 
 import { runTranslationStep } from './translation-step';
@@ -19,10 +18,22 @@ describe('runTranslationStep', () => {
 
   const services: ServicesBundle = { taskRouter: {} } as ServicesBundle;
 
-  it('shouldSendToSemanticRepair 为 false 时跳过翻译，ctx.translatedText 置空', async () => {
+  it('shouldDeferTranslation 为 true 时跳过翻译', async () => {
     const ctx: JobContext = {
       segmentForJobResult: '有内容',
-      shouldSendToSemanticRepair: false,
+      repairedText: '有内容',
+      shouldDeferTranslation: true,
+      shouldAllowTranslation: false,
+    };
+    await runTranslationStep(job, ctx, services);
+    expect(ctx.translatedText).toBe('');
+  });
+
+  it('shouldAllowTranslation 且有文本时尝试翻译（无 mock stage 则失败置空）', async () => {
+    const ctx: JobContext = {
+      repairedText: '你好',
+      shouldAllowTranslation: true,
+      shouldDeferTranslation: false,
     };
     await runTranslationStep(job, ctx, services);
     expect(ctx.translatedText).toBe('');

@@ -27,11 +27,11 @@ describe('TaskRouterSemanticRepairHandler - 服务端点查找优化', () => {
       mockStartGpuTracking,
       serviceConnections,
       mockUpdateConnections,
-      2, // maxConcurrency
-      undefined, // isServiceRunningCallback
-      undefined, // cacheConfig
-      false, // enableModelIntegrityCheck
-      undefined, // getServicePathCallback
+      2,
+      () => true,
+      undefined,
+      false,
+      undefined,
       mockGetServiceEndpointById
     );
   });

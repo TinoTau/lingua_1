@@ -25,6 +25,10 @@ export interface SemanticRepairStageENResult {
   }>;
   reasonCodes: string[];
   repairTimeMs?: number;
+  semanticRepairHttpApplied?: boolean;
+  skipped?: boolean;
+  skipReason?: string;
+  degraded?: boolean;
 }
 
 export class SemanticRepairStageEN {
@@ -59,15 +63,13 @@ export class SemanticRepairStageEN {
 
     // 调用语义修复服务
     if (!this.taskRouter) {
-      logger.warn(
-        { jobId: job.job_id },
-        'SemanticRepairStageEN: TaskRouter not available, returning PASS'
-      );
       return {
         textOut: text,
         decision: 'PASS',
         confidence: 1.0,
         reasonCodes: ['TASK_ROUTER_NOT_AVAILABLE'],
+        skipped: true,
+        skipReason: 'TASK_ROUTER_NOT_AVAILABLE',
       };
     }
 
@@ -108,6 +110,8 @@ export class SemanticRepairStageEN {
         'SemanticRepairStageEN: Repair completed'
       );
 
+      const httpApplied =
+        repairResult.decision === 'REPAIR' && repairResult.text_out !== text;
       return {
         textOut: repairResult.text_out,
         decision: repairResult.decision,
@@ -115,15 +119,12 @@ export class SemanticRepairStageEN {
         diff: repairResult.diff,
         reasonCodes: repairResult.reason_codes,
         repairTimeMs,
+        semanticRepairHttpApplied: httpApplied,
       };
     } catch (error: any) {
-      logger.error(
-        {
-          error: error.message,
-          stack: error.stack,
-          jobId: job.job_id,
-        },
-        'SemanticRepairStageEN: Repair service error, returning PASS'
+      logger.warn(
+        { error: error.message, jobId: job.job_id },
+        'SemanticRepairStageEN: HTTP repair failed, skipped'
       );
       return {
         textOut: text,
@@ -131,6 +132,9 @@ export class SemanticRepairStageEN {
         confidence: 1.0,
         reasonCodes: ['SERVICE_ERROR'],
         repairTimeMs: Date.now() - startTime,
+        skipped: true,
+        skipReason: 'SERVICE_ERROR',
+        degraded: true,
       };
     }
   }
