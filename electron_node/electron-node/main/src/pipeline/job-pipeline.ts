@@ -9,6 +9,8 @@ import { JobContext, initJobContext } from './context/job-context';
 import logger from '../logger';
 import { buildJobResult } from './result-builder';
 import { inferPipelineMode, shouldExecuteStep, PipelineMode } from './pipeline-mode-config';
+import { getLexiconRecallSkipReason } from '../node-config';
+import { stampRecoverPipelineSkip } from './recover-contract';
 import { executeStep, PipelineStepType } from './pipeline-step-registry';
 import { buildBufferKey } from '../pipeline-orchestrator/audio-aggregator-buffer-key';
 
@@ -90,10 +92,19 @@ export async function runJobPipeline(options: JobPipelineOptions): Promise<JobRe
       
       // 检查步骤是否应该执行（支持动态条件判断，如 SEMANTIC_REPAIR 依赖 ctx.shouldSendToSemanticRepair）
       if (!shouldExecuteStep(step, mode, job, ctx)) {
-        logger.debug(
-          { jobId: job.job_id, step, modeName: mode.name },
-          `Skipping step ${step} (condition not met)`
-        );
+        if (step === 'LEXICON_RECALL' || step === 'SENTENCE_REPAIR') {
+          const reason = getLexiconRecallSkipReason(job, ctx) ?? 'condition_not_met';
+          stampRecoverPipelineSkip(job, ctx, reason);
+          logger.info(
+            { jobId: job.job_id, step, reason },
+            `[${step}] skipped reason=${reason}`
+          );
+        } else {
+          logger.debug(
+            { jobId: job.job_id, step, modeName: mode.name },
+            `Skipping step ${step} (condition not met)`
+          );
+        }
         continue;
       }
 

@@ -5,14 +5,28 @@
 
 import { JobAssignMessage } from '@shared/protocols/messages';
 import { JobResult } from '../inference/inference-service';
+import { AsrKenlmMeta } from '../task-router/asr-evidence-types';
 import { JobContext } from './context/job-context';
+import { buildRecoverContractExtra } from './recover-contract';
+import { getRecoverQualityConfig } from '../recover-quality/quality-config';
 import logger from '../logger';
+
+function hasKenlmMetaForExtra(meta: AsrKenlmMeta): boolean {
+  return (
+    meta.kenlm_available !== undefined ||
+    meta.kenlm_called_count !== undefined ||
+    meta.kenlm_veto_count !== undefined ||
+    meta.kenlm_vote_boost_count !== undefined ||
+    meta.kenlm_decision !== undefined ||
+    meta.lm_score_raw !== undefined ||
+    meta.lm_score_candidate !== undefined
+  );
+}
 
 /**
  * 构建 JobResult
  */
 export function buildJobResult(job: JobAssignMessage, ctx: JobContext): JobResult {
-  // job_result.text_asr：仅用语义修复/聚合产出的 repairedText（不兼容回退；未送语义修复时由 aggregation-step 写入 repairedText）
   const finalAsrText = (ctx.repairedText ?? '').trim();
   if (!finalAsrText && (ctx.segmentForJobResult ?? '').trim().length > 0) {
     logger.warn(
@@ -20,6 +34,8 @@ export function buildJobResult(job: JobAssignMessage, ctx: JobContext): JobResul
       'ctx.repairedText empty but segmentForJobResult set, aggregation/semantic-repair should set repairedText'
     );
   }
+
+  const recoverContract = buildRecoverContractExtra(job, ctx);
 
   const result: JobResult = {
     text_asr: finalAsrText,
@@ -29,12 +45,77 @@ export function buildJobResult(job: JobAssignMessage, ctx: JobContext): JobResul
     extra: {
       language_probability: ctx.asrResult?.language_probability || null,
       language_probabilities: ctx.languageProbabilities || null,
-      /** 面对面模式下 FW 识别出的源语言（job.src_lang=auto 时由 ASR 步骤写入 ctx.detectedSourceLang） */
       detected_src_lang: ctx.detectedSourceLang || undefined,
       audioBuffered: (ctx as any).audioBuffered || false,
       pendingEmptyJobs: (ctx as any).pendingEmptyJobs || undefined,
       lid: ctx.lidMeta || undefined,
       router: ctx.routerMeta || undefined,
+      ...(ctx.asrServiceId ? { asr_service_id: ctx.asrServiceId } : {}),
+      ...(ctx.asrNbest && ctx.asrNbest.length > 0
+        ? { asr_nbest: ctx.asrNbest, asr_nbest_count: ctx.asrNbest.length }
+        : {}),
+      ...(ctx.asrHypotheses && ctx.asrHypotheses.length > 0
+        ? {
+            asr_hypotheses: ctx.asrHypotheses,
+            recall_hypothesis_text: ctx.asrHypotheses[0]?.text,
+          }
+        : {}),
+      lexicon_runtime_status: recoverContract.lexicon_runtime_status,
+      lexicon_manifest_version: recoverContract.lexicon_manifest_version,
+      ...(recoverContract.lexicon_runtime_error
+        ? { lexicon_runtime_error: recoverContract.lexicon_runtime_error }
+        : {}),
+      ...(recoverContract.lexicon_disabled_reason
+        ? { lexicon_disabled_reason: recoverContract.lexicon_disabled_reason }
+        : {}),
+      recover_contract_version: recoverContract.recover_contract_version,
+      recover_lifecycle: recoverContract.recover_lifecycle,
+      nbest_synthetic: recoverContract.nbest_synthetic,
+      segment_synthetic: recoverContract.segment_synthetic,
+      ctc_nbest_preserved: recoverContract.ctc_nbest_preserved,
+      aggregation_resync_reason: recoverContract.aggregation_resync_reason,
+      sentence_repair: recoverContract.sentence_repair,
+      ...(recoverContract.restore_metrics
+        ? { restore_metrics: recoverContract.restore_metrics }
+        : {}),
+      ...(recoverContract.recover_skipped === true
+        ? { recover_skipped: true }
+        : {}),
+      ...(recoverContract.repair_skip_reason != null
+        ? { repair_skip_reason: recoverContract.repair_skip_reason }
+        : {}),
+      ...(ctx.asrKenlmMeta && hasKenlmMetaForExtra(ctx.asrKenlmMeta)
+        ? { asr_kenlm_meta: ctx.asrKenlmMeta }
+        : {}),
+      ...(ctx.lexiconRecallTruncated === true ? { lexicon_recall_truncated: true } : {}),
+      ...(ctx.windowCandidates && ctx.windowCandidates.length > 0
+        ? { window_candidates: ctx.windowCandidates }
+        : {}),
+      ...(ctx.windowRecallDiagnostics
+        ? { window_recall_diagnostics: ctx.windowRecallDiagnostics }
+        : {}),
+      ...(ctx.segmentAlignmentDiagnostics
+        ? { segment_alignment_diagnostics: ctx.segmentAlignmentDiagnostics }
+        : {}),
+      ...(ctx.crossBoundaryRiskReport
+        ? { cross_boundary_risk: ctx.crossBoundaryRiskReport }
+        : {}),
+      ...(ctx.windowRecallDiagnostics?.nbestAugment
+        ? { nbest_augment_diagnostics: ctx.windowRecallDiagnostics.nbestAugment }
+        : {}),
+      ...(ctx.recallCoverageDiagnostics
+        ? { recall_coverage_diagnostics: ctx.recallCoverageDiagnostics }
+        : {}),
+      ...(ctx.expansionDiagnostics
+        ? {
+            expansion_funnel: ctx.expansionDiagnostics.expansionFunnel,
+            expansion_selector_reject: ctx.expansionDiagnostics.selectorRejectByMaxReplacements,
+          }
+        : {}),
+      qualityConfig: getRecoverQualityConfig(),
+      ...(ctx.sentenceCandidates && ctx.sentenceCandidates.length > 0
+        ? { sentence_candidates: ctx.sentenceCandidates }
+        : {}),
     },
     asr_quality_level: ctx.asrResult?.badSegmentDetection?.isBad ? 'bad' : 'good',
     quality_score: ctx.qualityScore || ctx.asrResult?.badSegmentDetection?.qualityScore,
@@ -83,9 +164,6 @@ export function buildJobResult(job: JobAssignMessage, ctx: JobContext): JobResul
   return result;
 }
 
-/**
- * 计算最大间隔
- */
 function calculateMaxGap(segments: Array<{ start?: number; end?: number }>): number {
   if (!segments || segments.length < 2) {
     return 0;
@@ -104,9 +182,6 @@ function calculateMaxGap(segments: Array<{ start?: number; end?: number }>): num
   return maxGap;
 }
 
-/**
- * 计算平均时长
- */
 function calculateAvgDuration(segments: Array<{ start?: number; end?: number }>): number {
   if (!segments || segments.length === 0) {
     return 0;

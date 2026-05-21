@@ -4,6 +4,7 @@ import * as fsPromises from 'fs/promises';
 import * as path from 'path';
 import type { NodeConfig, ServicePreferences, MetricsConfig } from './node-config-types';
 import { DEFAULT_CONFIG } from './node-config-defaults';
+import { getRecoverQualityConfig } from './recover-quality/quality-config';
 
 export type { NodeConfig, ServicePreferences, MetricsConfig } from './node-config-types';
 
@@ -75,6 +76,68 @@ export function isPunctuationRestoreEnabled(): boolean {
   return c.features?.punctuationRestore?.enabled === true;
 }
 
+/** job.pipeline.use_lexicon 缺省为 false */
+export function resolveJobUseLexicon(job: { pipeline?: { use_lexicon?: boolean } }): boolean {
+  const p = job.pipeline;
+  if (!p || !('use_lexicon' in p)) {
+    return false;
+  }
+  return p.use_lexicon === true;
+}
+
+/** 节点 features.lexiconRecall.enabled 缺省为 false */
+export function isLexiconRecallFeatureEnabled(): boolean {
+  const c = loadNodeConfig();
+  return c.features?.lexiconRecall?.enabled === true;
+}
+
+export function isLexiconRecallEnabled(job: { pipeline?: { use_lexicon?: boolean } }): boolean {
+  return resolveJobUseLexicon(job) && isLexiconRecallFeatureEnabled();
+}
+
+/** 供 pipeline / 日志：说明 LEXICON_RECALL 被跳过的原因 */
+export function getLexiconRecallSkipReason(
+  job: { pipeline?: { use_lexicon?: boolean }; src_lang?: string },
+  ctx: { detectedSourceLang?: string }
+): string | null {
+  if (!resolveJobUseLexicon(job)) {
+    return 'job_use_lexicon_false';
+  }
+  if (!isLexiconRecallFeatureEnabled()) {
+    return 'feature_lexicon_recall_disabled';
+  }
+  if (!isLexiconRecallLanguage(job, ctx)) {
+    return 'unsupported_source_language';
+  }
+  return null;
+}
+
+/** P1 recall 仅中文源语言 */
+export function isLexiconRecallLanguage(
+  job: { src_lang?: string },
+  ctx: { detectedSourceLang?: string }
+): boolean {
+  const lang =
+    job.src_lang === 'auto' ? (ctx.detectedSourceLang ?? '') : (job.src_lang ?? '');
+  if (!lang) {
+    return false;
+  }
+  const base = lang.toLowerCase().split('-')[0];
+  return base === 'zh' || base === 'yue';
+}
+
+/** P3 selector：maxReplacements / minPhoneticScore（节点配置，与 job 无关） */
+export function getLexiconRecallSelectorConfig(): {
+  maxReplacements: number;
+  minPhoneticScore: number;
+} {
+  const q = getRecoverQualityConfig();
+  return {
+    maxReplacements: q.maxReplacements,
+    minPhoneticScore: q.selectionMinPhoneticScore,
+  };
+}
+
 /** 调度服务器 WebSocket URL。从 electron-node-config.json 读 scheduler.url，localhost 规范为 127.0.0.1。 */
 export function getSchedulerUrl(): string {
   const c = loadNodeConfig();
@@ -110,6 +173,21 @@ export function getLidConfig(): {
     modelPath: base.modelPath ?? def.modelPath ?? 'models/sherpa-onnx-lid',
     encoderFile: base.encoderFile ?? def.encoderFile ?? 'tiny-encoder.int8.onnx',
     decoderFile: base.decoderFile ?? def.decoderFile ?? 'tiny-decoder.int8.onnx',
+  };
+}
+
+function mergeFeatures(
+  parsed: NodeConfig['features'] | undefined
+): NodeConfig['features'] {
+  const base = DEFAULT_CONFIG.features!;
+  const p = parsed || {};
+  return {
+    ...base,
+    ...p,
+    phoneticCorrection: { ...base.phoneticCorrection, ...p.phoneticCorrection },
+    semanticRepair: { ...base.semanticRepair, ...p.semanticRepair },
+    punctuationRestore: { ...base.punctuationRestore, ...p.punctuationRestore },
+    lexiconRecall: { ...base.lexiconRecall, ...p.lexiconRecall },
   };
 }
 
@@ -157,10 +235,7 @@ export function loadNodeConfig(): NodeConfig {
           ...(parsed.metrics?.metrics || {}),
         },
       },
-      features: {
-        ...DEFAULT_CONFIG.features,
-        ...(parsed.features || {}),
-      },
+      features: mergeFeatures(parsed.features),
       gpuArbiter: parsed.gpuArbiter || DEFAULT_CONFIG.gpuArbiter,
       sequentialExecutor: {
         ...(DEFAULT_CONFIG.sequentialExecutor || {}),
@@ -222,10 +297,7 @@ export async function loadNodeConfigAsync(): Promise<NodeConfig> {
           ...(parsed.metrics?.metrics || {}),
         },
       },
-      features: {
-        ...DEFAULT_CONFIG.features,
-        ...(parsed.features || {}),
-      },
+      features: mergeFeatures(parsed.features),
       gpuArbiter: parsed.gpuArbiter || DEFAULT_CONFIG.gpuArbiter,
       sequentialExecutor: {
         ...(DEFAULT_CONFIG.sequentialExecutor || {}),
@@ -282,10 +354,7 @@ export function saveNodeConfig(config: NodeConfig): void {
         ...(config.metrics?.metrics || {}),
       },
     },
-    features: {
-      ...DEFAULT_CONFIG.features,
-      ...(config.features || {}),
-    },
+    features: mergeFeatures(config.features),
     gpuArbiter: config.gpuArbiter || DEFAULT_CONFIG.gpuArbiter,
     sequentialExecutor: {
       ...(DEFAULT_CONFIG.sequentialExecutor || {}),

@@ -88,13 +88,17 @@ export class TaskRouterASRHandler {
       };
 
       if (endpoint.serviceId === 'asr-sherpa-lm' || endpoint.serviceId === 'asr-sherpa-en') {
-        return await executeCTCASR(task, endpoint, strategyCtx);
+        const result = await executeCTCASR(task, endpoint, strategyCtx);
+        result.routedServiceId = endpoint.serviceId;
+        return result;
       }
 
-      return await executeFasterWhisperASR(task, endpoint, {
+      const result = await executeFasterWhisperASR(task, endpoint, {
         ...strategyCtx,
         rerunHandler: this.rerunHandler,
       });
+      result.routedServiceId = endpoint.serviceId;
+      return result;
     } catch (error: any) {
       logger.error(
         {

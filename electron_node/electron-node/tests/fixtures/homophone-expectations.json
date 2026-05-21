@@ -1,0 +1,43 @@
+[
+  {
+    "id": "d043",
+    "scenario": "lexicon_homophone",
+    "wrong": "后选生城",
+    "right": "候选生成",
+    "mustRecall": ["候选生成"],
+    "mustNotPick": ["后选生城"]
+  },
+  {
+    "id": "d044",
+    "scenario": "lexicon_homophone",
+    "wrong": "上线计花",
+    "right": "上线计划",
+    "mustRecall": ["上线计划"],
+    "mustNotPick": []
+  },
+  {
+    "id": "d088",
+    "scenario": "lexicon_homophone",
+    "wrong": "后选生城",
+    "right": "候选生成",
+    "mustRecall": ["候选生成"],
+    "mustNotPick": []
+  },
+  {
+    "id": "d090",
+    "scenario": "lexicon_homophone",
+    "wrong": "后选生城",
+    "right": "候选生成",
+    "mustRecall": ["候选生成"],
+    "mustNotPick": []
+  },
+  {
+    "id": "d020",
+    "scenario": "tech_deploy",
+    "wrong": "候选生成",
+    "right": "候选生成",
+    "mustRecall": ["候选生成"],
+    "mustNotPick": [],
+    "note": "tech_deploy 场景，验证双热词可写回"
+  }
+]

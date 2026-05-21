@@ -8,6 +8,7 @@ import { ServicesBundle } from '../job-pipeline';
 import logger from '../../logger';
 import { getPhoneticCorrectionUrl, isPhoneticCorrectionEnabled } from '../../node-config';
 import { withGpuLease } from '../../gpu-arbiter';
+import { isRecoverWriteLocked } from '../post-asr-routing';
 import {
   checkEnhancementService,
   ENHANCEMENT_SERVICE_IDS,
@@ -24,6 +25,15 @@ export async function runPhoneticCorrectionStep(
 ): Promise<void> {
   const segment = (ctx.segmentForJobResult ?? '').trim();
   if (segment.length === 0) {
+    return;
+  }
+
+  if (isRecoverWriteLocked(ctx)) {
+    markPhoneticCorrectionSkipped(ctx, 'RECOVER_WRITE_LOCKED');
+    logger.info(
+      { jobId: job.job_id },
+      'Phonetic correction skipped: Recover write lock'
+    );
     return;
   }
 

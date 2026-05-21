@@ -1,0 +1,33 @@
+P1:只读审计
+
+请做只读代码审计。
+
+不要修改代码。
+
+目标：
+确认当前仓库是否已经具备：
+- 可复用能力
+- integration point
+- existing types
+- existing flow
+- existing tests
+
+请重点回答：
+1. 当前真实调用链是什么
+2. 哪些文件是真实入口
+3. 哪些历史模块已经不存在
+4. 哪些 proposal 与真实代码不一致
+5. 哪些 ctx 字段是真正 translation 使用的
+6. 哪些 helper 已有
+7. 哪些功能已经实现
+8. 哪些功能是假接口/残留
+
+输出：
+# Readonly Audit Report
+## 当前真实链路
+## 可复用能力
+## 缺失模块
+## 错误 proposal
+## 风险
+## 工程量
+## 是否可开发

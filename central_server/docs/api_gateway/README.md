@@ -1,32 +1,32 @@
-# API Gateway 文档
+# API Gateway
 
-本目录包含对外 API 网关（API Gateway）相关的设计文档和实现说明。
+对外 REST / WebSocket 网关：鉴权、限流、转发至 Scheduler。
 
-## 文档列表
+## 运行
 
-- [对外开放 API 设计与实现](./PUBLIC_API.md) - 完整的 API 设计文档，包含 REST API 和 WebSocket API
+```bash
+cd central_server/api-gateway
+cargo run --release
+```
 
-## 相关文档
+- 默认端口：**8081**（`config.toml`）
+- 健康检查：`GET /health`（无需鉴权）
+- Scheduler 地址：`config.toml` → `[scheduler].url`
 
-- `OVERVIEW.md` - 运行方式、配置项与开发/测试说明
-- `../OVERVIEW.md` - central_server 总览与启动入口
-- `../README.md` - 文档索引
+## API Key（开发）
 
-## 功能说明
+- 环境变量 `LINGUA_API_KEY`：启动时绑定默认租户
+- 未设置：启动日志打印随机 key（仅开发）
 
-API Gateway 提供以下功能：
-- 租户管理
-- API Key 鉴权
-- 限流机制
-- REST API 端点
-- WebSocket API 端点
-- Scheduler 客户端
+## 文档
 
-## 实现状态
+- [PUBLIC_API.md](./PUBLIC_API.md) — 端点、鉴权、与 Scheduler 关系
 
-- ✅ 项目框架已创建
-- ✅ 核心模块已实现
-- ✅ `/health` 健康检查（无需鉴权）
-- ⏸️ 单元测试和集成测试（待完成）
-- ⏸️ 数据库集成（待完成）
+## 代码
 
+| 文件 | 职责 |
+|------|------|
+| `src/main.rs` | 路由挂载、`/health`、`/v1/stream` |
+| `src/rest_api.rs` | `POST /v1/speech/translate` |
+| `src/auth.rs` | Bearer API Key |
+| `src/scheduler_client.rs` | 转发会话/任务 |

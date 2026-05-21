@@ -1,5 +1,6 @@
 /* S2: Candidate Provider - 候选生成
    优先使用N-best，其次二次解码
+   @deprecated Recover V2 中文主链使用 CTC n-best + SentenceCandidate rerank，不经过本 Provider。
 */
 
 import { ASRTask, ASRResult } from '../task-router/types';

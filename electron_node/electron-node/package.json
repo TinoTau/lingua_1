@@ -29,7 +29,12 @@
     "test:aggregator": "npm run build:main && node tests/run-aggregator-test.js",
     "test:aggregator:vectors": "npm run build:main && node tests/run-aggregator-test-vectors.js",
     "test:aggregator:ts": "npx ts-node --project tsconfig.main.json tests/aggregator-test.ts",
-    "clear-cache": "powershell -ExecutionPolicy Bypass -File scripts/clear-cache.ps1"
+    "clear-cache": "powershell -ExecutionPolicy Bypass -File scripts/clear-cache.ps1",
+    "init:lexicon-bundle": "node scripts/init-lexicon-bundle.mjs",
+    "build:lexicon-bundle": "node scripts/build-lexicon-bundle.mjs",
+    "prepare:recover-test": "node scripts/prepare-recover-test.mjs",
+    "test:sentence-kenlm": "jest --testPathPattern=\"sentence-kenlm|lm-scorer|char-tokenize\"",
+    "test:contract": "npm run build:main && jest --testPathPattern=\"recover-contract|result-builder\" && jest tests/recover-contract-batch-assess.test.js"
   },
   "keywords": [
     "electron",
@@ -40,6 +45,7 @@
   "license": "MIT",
   "devDependencies": {
     "@jest/globals": "^29.7.0",
+    "@types/better-sqlite3": "^7.6.12",
     "@types/jest": "^29.5.0",
     "@types/node": "^20.0.0",
     "@types/react": "^18.0.0",
@@ -59,12 +65,14 @@
     "@minceraftmc/opus-encoder": "^0.0.7-rc.1",
     "adm-zip": "^0.5.10",
     "axios": "^1.0.0",
+    "better-sqlite3": "^11.7.0",
     "fft.js": "^4.0.4",
     "lru-cache": "10.4.3",
     "module-alias": "^2.2.3",
     "opus-decoder": "^0.7.11",
     "pino": "^8.17.0",
     "pino-pretty": "^10.3.0",
+    "pinyin-pro": "^3.26.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "systeminformation": "^5.0.0",

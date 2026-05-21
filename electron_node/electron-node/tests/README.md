@@ -55,13 +55,15 @@ electron-node/tests/
 
 详细说明请参考 [阶段 3.2 测试文档](./stage3.2/README.md)
 
-## 快速运行（与 finalize/聚合 相关验证）
+## 快速运行
 
 - **构建**：`npm run build:main`
-- **TextForwardMergeManager**（forward merge 逻辑）：`npx jest main/src/agent/postprocess/text-forward-merge-manager.test.ts --config jest.config.js`（约 34 例）
-- **stage3.1**：`npm run test:stage3.1`
-- **stage3.2**：`npm run test:stage3.2`（部分用例需 Opus/VM 或外部服务，见各 stage 的 README）
-- **聚合相关**：`powershell -ExecutionPolicy Bypass -File run-aggregation-tests.ps1`（编译 + TextForwardMergeManager + 聚合相关用例）
+- **Recover 契约**：`npm run test:contract`
+- **dialog_200 批测**（需 `npm run start` + `PROJECT_ROOT`）：`node tests/run-dialog-200-batch.js`
+- **Homophone**：`node tests/run-homophone-expectation.js tests/dialog-200-batch-result.json`
+- **聚合**：`powershell -ExecutionPolicy Bypass -File run-aggregation-tests.ps1`
+- **stage3.1 / 3.2**：`npm run test:stage3.1`、`npm run test:stage3.2`
+- **E2E pipeline**：`npm run test:pipeline`
 
 ## 注意事项
 

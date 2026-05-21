@@ -8,7 +8,7 @@ import { JobContext } from '../context/job-context';
 import { ServicesBundle } from '../job-pipeline';
 import { AggregationStage } from '../../agent/postprocess/aggregation-stage';
 import { JobResult } from '../../inference/inference-service';
-import { applyPostAggregationRouting } from '../post-asr-routing';
+import { completeAggregation } from '../complete-aggregation';
 import logger from '../../logger';
 
 export async function runAggregationStep(
@@ -19,7 +19,7 @@ export async function runAggregationStep(
   if (!ctx.asrText || ctx.asrText.trim().length === 0) {
     ctx.segmentForJobResult = '';
     ctx.repairedText = '';
-    applyPostAggregationRouting(job, ctx, {
+    completeAggregation(job, ctx, {
       segmentReady: false,
       wantsPostAsrPipeline: false,
       deferTranslation: true,
@@ -30,7 +30,7 @@ export async function runAggregationStep(
   if (!services.aggregatorManager) {
     ctx.segmentForJobResult = ctx.asrText;
     ctx.aggregationChanged = false;
-    applyPostAggregationRouting(job, ctx, {
+    completeAggregation(job, ctx, {
       segmentReady: true,
       wantsPostAsrPipeline: true,
     });
@@ -44,7 +44,7 @@ export async function runAggregationStep(
     services.aggregatorManager.appendTurnSegment(job.session_id, turnId, ctx.asrText || '');
     ctx.segmentForJobResult = ctx.asrText || '';
     ctx.lastCommittedText = null;
-    applyPostAggregationRouting(job, ctx, {
+    completeAggregation(job, ctx, {
       segmentReady: true,
       wantsPostAsrPipeline: false,
       deferTranslation: true,
@@ -113,13 +113,13 @@ export async function runAggregationStep(
       ? `${accumulated} ${(aggregationResult.segmentForJobResult || ctx.asrText || '').trim()}`.trim()
       : (aggregationResult.segmentForJobResult || ctx.asrText || '').trim();
     ctx.segmentForJobResult = fullTurnText;
-    applyPostAggregationRouting(job, ctx, {
+    completeAggregation(job, ctx, {
       segmentReady: fullTurnText.length > 0,
       wantsPostAsrPipeline: aggregationResult.shouldSendToSemanticRepair === true,
     });
   } else {
     ctx.segmentForJobResult = aggregationResult.segmentForJobResult;
-    applyPostAggregationRouting(job, ctx, {
+    completeAggregation(job, ctx, {
       segmentReady: (aggregationResult.segmentForJobResult ?? '').trim().length > 0,
       wantsPostAsrPipeline: aggregationResult.shouldSendToSemanticRepair === true,
     });

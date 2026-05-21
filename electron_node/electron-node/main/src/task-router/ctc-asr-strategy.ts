@@ -6,6 +6,7 @@
 import { AxiosInstance } from 'axios';
 import logger from '../logger';
 import { ASRTask, ASRResult, ServiceEndpoint } from './types';
+import { mapCtcUtteranceResponse } from './asr-response-mapper';
 import { postASRUtteranceRequest } from './task-router-asr-http';
 import { ASRMetricsHandler } from './task-router-asr-metrics';
 
@@ -57,6 +58,7 @@ export async function executeCTCASR(
   );
 
   const data = response.data;
+  const evidence = mapCtcUtteranceResponse(data);
   const asrResult: ASRResult = {
     text: data.text || '',
     confidence: 1.0,
@@ -65,6 +67,8 @@ export async function executeCTCASR(
     language_probabilities: data.language_probabilities,
     segments: data.segments,
     is_final: true,
+    ...(evidence.nbest ? { nbest: evidence.nbest } : {}),
+    ...(evidence.kenlmMeta ? { kenlmMeta: evidence.kenlmMeta } : {}),
   };
   if (data.text_zh != null || data.text_en != null) {
     (asrResult as any).text_zh = data.text_zh ?? '';

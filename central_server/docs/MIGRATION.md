@@ -129,8 +129,8 @@ central_server/
 
 ## 相关文档
 
-- **项目完整性**: `project/PROJECT_COMPLETENESS.md`
-- **测试指南**: `testing/TEST_GUIDE.md`
+- **文档索引**: [README.md](./README.md)
+- **Scheduler 文档**: [../scheduler/docs/README.md](../scheduler/docs/README.md)
 - **测试状态**: `testing/TEST_STATUS.md`
 - **快速开始**: `QUICK_START.md`
 - **文档索引**: `README.md`

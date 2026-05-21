@@ -14,7 +14,7 @@ export async function runDedupStep(
   ctx: JobContext,
   services: ServicesBundle
 ): Promise<void> {
-  // 去重只读 repairedText（由聚合步骤或语义修复步骤写入，无回退）
+  // 去重只读 repairedText（由 sentence repair / 语义修复 写入，无 lexicon fallback）
   const finalText = ctx.repairedText ?? '';
   if (ctx.repairedText === undefined) {
     logger.warn(

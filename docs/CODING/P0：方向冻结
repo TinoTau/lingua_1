@@ -1,0 +1,35 @@
+P0：方向冻结
+
+请不要直接开发。
+
+先根据当前项目架构和历史方向，分析：
+
+这个功能在整个 pipeline 中属于哪一层？
+
+是：
+- evidence layer
+- candidate layer
+- selector layer
+- legality layer
+- rewrite layer
+- observability layer
+- scheduler layer
+
+请说明：
+1. 它应该放在哪个阶段
+2. 它不应该做什么
+3. 它与已有模块（ASR/n-best/lexicon/phonetic/NMT/TTS/semantic repair）的边界
+4. 是否符合当前 frozen architecture
+5. 是否会引入新的 rewrite authority
+6. 是否应该新增 pipeline step
+7. 是否应该是 local helper 而不是 service
+8. 当前阶段最小目标是什么
+
+输出：
+# Direction Freeze Report
+## 正确层级
+## 必须边界
+## Non-goals
+## 推荐阶段
+## 风险
+## 是否值得开发

@@ -3,7 +3,19 @@
  * 存放所有中间结果
  */
 
-import { ASRResult } from '../../task-router/types';
+import { ASRResult, AsrKenlmMeta, AsrNBestItem } from '../../task-router/types';
+import type { ASRHypothesis } from '../../asr/types';
+import type { LexiconRuntimeStatus } from '../../lexicon/lexicon-types';
+import type { WindowCandidate } from '../../lexicon/hotword-types';
+import type { WindowRecallDiagnostics } from '../../lexicon/window-recall-diagnostics';
+import type { SentenceCandidate } from '../../asr-repair/sentence-expansion/types';
+import type { ExpansionDiagnostics } from '../../asr-repair/sentence-expansion/expansion-diagnostics';
+import type { SegmentAlignmentDiagnostics } from '../../asr/segment-alignment-diagnostics';
+import type { CrossBoundaryRiskReport } from '../../asr/cross-boundary-risk';
+import type { RecallCoverageDiagnostics } from '../../lexicon/recall-coverage-diagnostics';
+import type { RestoreMetrics } from '../../asr-repair/restore-metrics';
+import type { SentenceRepairExtra } from '../../asr-repair/sentence-rerank/sentence-repair-observability';
+import type { RecoverLifecycle } from '../recover-contract-types';
 
 export interface JobContext {
   // 音频相关
@@ -14,6 +26,47 @@ export interface JobContext {
   asrText?: string;
   asrSegments?: any[];
   asrResult?: ASRResult;
+  /** 本 job 实际 ASR 服务 id（如 asr-sherpa-lm）。 */
+  asrServiceId?: string;
+  /** CTC n-best from ASR HTTP (observability). */
+  asrNbest?: AsrNBestItem[];
+  /** Recover main-chain ASR hypotheses (includes synthetic top1 when no n-best). */
+  asrHypotheses?: ASRHypothesis[];
+  nbestSynthetic?: boolean;
+  /** aggregation segment 与 CTC rank0 不一致时为 true（CTC n-best 仍可保留）。 */
+  segmentSynthetic?: boolean;
+  /** aggregation 后仍保留 ctx.asrNbest 多假设证据。 */
+  ctcNbestPreserved?: boolean;
+  aggregationResyncReason?: string;
+  /** Utterance-level KenLM meta when ASR HTTP provides it. */
+  asrKenlmMeta?: AsrKenlmMeta;
+  lexiconRuntimeStatus?: LexiconRuntimeStatus;
+  lexiconManifestVersion?: string;
+  lexiconRuntimeError?: string;
+  lexiconDisabledReason?: string;
+  lexiconRecallTruncated?: boolean;
+  recoverLifecycle?: RecoverLifecycle;
+  /** sentence-repair-step 早退原因（未写 sentenceRepairExtra 时） */
+  recoverLifecycleSkipReason?: string;
+  /** V3：本轮句修复是否因无窗扩展而跳过写回 */
+  recoverSkipped?: boolean;
+  repairSkipReason?: string | null;
+  restoreMetrics?: RestoreMetrics;
+  windowCandidates?: WindowCandidate[];
+  /** V3 Phase B: segment-first window recall stats. */
+  windowRecallDiagnostics?: WindowRecallDiagnostics;
+  segmentAlignmentDiagnostics?: SegmentAlignmentDiagnostics;
+  /** Q1.8-03：跨 chunk 边界 observed 风险（只报告） */
+  crossBoundaryRiskReport?: CrossBoundaryRiskReport | null;
+  /** Q1.7：无 WindowCandidate 时的 recall coverage 诊断 */
+  recallCoverageDiagnostics?: RecallCoverageDiagnostics | null;
+  expansionDiagnostics?: ExpansionDiagnostics;
+  sentenceCandidates?: SentenceCandidate[];
+  /** Recover v1 final sentence repair pick (observability + result extra). */
+  sentenceRepairDecision?: SentenceCandidate;
+  /** 句级修复可观测性（result extra.sentence_repair）。 */
+  sentenceRepairExtra?: SentenceRepairExtra;
+  asrRepairApplied?: boolean;
   languageProbabilities?: Record<string, number>;
   qualityScore?: number;
 

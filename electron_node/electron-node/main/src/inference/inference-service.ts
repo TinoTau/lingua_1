@@ -19,6 +19,7 @@ import { SemanticRepairInitializer } from '../agent/postprocess/postprocess-sema
 import { RoomStateStore } from '../lid/router-state';
 import { selectSrcLang } from '../lid/router';
 import { LidEngine } from '../lid/lid-engine';
+import { buildAsrHypotheses } from '../asr/build-asr-hypotheses';
 
 export interface JobResult {
   text_asr: string;
@@ -395,6 +396,9 @@ export class InferenceService {
       useLid?: boolean;
       lidCandidates?: [string, string];
       room_id?: string;
+      useLexicon?: boolean;
+      sessionId?: string;
+      isManualCut?: boolean;
     }
   ): Promise<JobResult> {
     const tgtLang = options?.tgtLang ?? 'en';
@@ -406,23 +410,30 @@ export class InferenceService {
     const traceId = jobId;
     const useLid = options?.useLid === true;
     const srcLang = useLid ? 'auto' : (options?.srcLang ?? 'zh');
+    // 每次 WAV 测试使用独立 session，避免 SequentialExecutor 在 utterance_index=0 时拒绝后续 NMT
+    const sessionId = options?.sessionId?.trim() || `audio-test-session-${jobId}`;
     const job: JobAssignMessage = {
       type: 'job_assign',
       job_id: jobId,
       attempt_id: 1,
-      session_id: 'audio-test-session',
+      session_id: sessionId,
       utterance_index: 0,
       src_lang: srcLang,
       tgt_lang: tgtLang,
       dialect: null,
-      pipeline: { use_asr: true, use_nmt: true, use_tts: true },
+      pipeline: {
+        use_asr: true,
+        use_nmt: true,
+        use_tts: true,
+        ...(options?.useLexicon === true ? { use_lexicon: true } : {}),
+      },
       audio: audioBase64,
       audio_format: 'opus',
       sample_rate: sampleRate,
       trace_id: traceId,
-      turn_id: 'audio-test-turn',
+      turn_id: `audio-test-turn-${jobId}`,
     } as JobAssignMessage & { is_manual_cut?: boolean };
-    (job as any).is_manual_cut = true;
+    (job as any).is_manual_cut = options?.isManualCut !== false;
     if (useLid) {
       const candidates = options?.lidCandidates;
       if (!candidates || candidates.length !== 2) {
@@ -447,8 +458,11 @@ export class InferenceService {
   async runPipelineWithMockAsr(
     asrText: string,
     srcLang: string = 'zh',
-    tgtLang: string = 'en'
+    tgtLang: string = 'en',
+    options?: { useLexicon?: boolean; useNmt?: boolean }
   ): Promise<JobResult> {
+    const useLexicon = options?.useLexicon === true;
+    const useNmt = options?.useNmt !== false;
     const job: JobAssignMessage = {
       job_id: `mock-asr-${Date.now()}`,
       session_id: 'mock-session',
@@ -457,11 +471,19 @@ export class InferenceService {
       tgt_lang: tgtLang,
       lang_a: srcLang,
       lang_b: tgtLang,
-      pipeline: { use_asr: true, use_nmt: true, use_tts: false },
+      pipeline: {
+        use_asr: true,
+        use_nmt: useNmt,
+        use_tts: false,
+        ...(useLexicon ? { use_lexicon: true } : {}),
+      },
     } as JobAssignMessage;
 
     const ctx = initJobContext(job);
     ctx.asrText = asrText;
+    const decoded = buildAsrHypotheses(asrText.trim());
+    ctx.asrHypotheses = decoded.hypotheses;
+    ctx.nbestSynthetic = decoded.nbestSynthetic;
 
     await this.taskRouter.refreshServiceEndpoints();
 

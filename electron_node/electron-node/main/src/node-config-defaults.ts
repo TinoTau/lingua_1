@@ -28,6 +28,16 @@ export const DEFAULT_CONFIG: NodeConfig = {
     phoneticCorrection: { enabled: false },
     semanticRepair: { enabled: false },
     punctuationRestore: { enabled: false },
+    lexiconRecall: {
+      enabled: false,
+      maxReplacements: 2,
+      recallMinPhoneticScore: 0.5,
+      recallFuzzyPinyinMaxSyllableDelta: 2,
+      expansionMinPhoneticScore: 0.5,
+      selectionMinPhoneticScore: 0.85,
+      maxSentenceCandidates: 16,
+      multiWindowScoreEpsilon: 0.005,
+    },
   },
   textLength: {
     minLengthToKeep: 6,

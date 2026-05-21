@@ -10,6 +10,8 @@ import { PipelineStepType } from './pipeline-mode-config';
 export type { PipelineStepType };
 import { runAsrStep } from './steps/asr-step';
 import { runAggregationStep } from './steps/aggregation-step';
+import { runLexiconRecallStep } from './steps/lexicon-recall-step';
+import { runSentenceRepairStep } from './steps/sentence-repair-step';
 import { runPhoneticCorrectionStep } from './steps/phonetic-correction-step';
 import { runPunctuationRestoreStep } from './steps/punctuation-restore-step';
 import { runSemanticRepairStep } from './steps/semantic-repair-step';
@@ -41,6 +43,14 @@ export const STEP_REGISTRY: Record<PipelineStepType, StepExecutor> = {
 
   AGGREGATION: async (job, ctx, services) => {
     await runAggregationStep(job, ctx, services);
+  },
+
+  LEXICON_RECALL: async (job, ctx, services) => {
+    await runLexiconRecallStep(job, ctx, services);
+  },
+
+  SENTENCE_REPAIR: async (job, ctx, services) => {
+    await runSentenceRepairStep(job, ctx, services);
   },
 
   PHONETIC_CORRECTION: async (job, ctx, services) => {

@@ -68,6 +68,11 @@ export function applyPostAggregationRouting(
   syncRepairedTextBaseline(ctx);
 }
 
+/** Recover 句级修复已写回时，5015/5016 不得再改 repairedText。 */
+export function isRecoverWriteLocked(ctx: JobContext): boolean {
+  return ctx.asrRepairApplied === true;
+}
+
 /** 后处理步骤之后、语义修复之前：用当前 segment 作为 NMT 输入基线 */
 export function syncRepairedTextBaseline(ctx: JobContext): void {
   const text = (ctx.segmentForJobResult ?? '').trim();
@@ -96,7 +101,9 @@ export function markSemanticRepairSkipped(
   ctx.semanticRepairHttpCalled = false;
   ctx.semanticRepairHttpApplied = false;
   ctx.semanticRepairApplied = false;
-  ctx.repairedText = (options?.fallbackText ?? ctx.segmentForJobResult ?? '').trim();
+  if (!isRecoverWriteLocked(ctx)) {
+    ctx.repairedText = (options?.fallbackText ?? ctx.segmentForJobResult ?? '').trim();
+  }
 }
 
 export function markSemanticRepairHttpSuccess(
@@ -104,6 +111,14 @@ export function markSemanticRepairHttpSuccess(
   textOut: string,
   confidence?: number
 ): void {
+  if (isRecoverWriteLocked(ctx)) {
+    ctx.semanticRepairSkipped = true;
+    ctx.semanticRepairSkipReason = 'RECOVER_WRITE_LOCKED';
+    ctx.semanticRepairHttpCalled = true;
+    ctx.semanticRepairHttpApplied = false;
+    ctx.semanticRepairApplied = false;
+    return;
+  }
   ctx.semanticRepairSkipped = false;
   ctx.semanticRepairSkipReason = undefined;
   ctx.semanticRepairDegraded = false;

@@ -6,6 +6,8 @@
 import { JobAssignMessage } from '@shared/protocols/messages';
 import { JobContext } from './context/job-context';
 import {
+    isLexiconRecallEnabled,
+    isLexiconRecallLanguage,
     isPhoneticCorrectionEnabled,
     isPunctuationRestoreEnabled,
     isSemanticRepairEnabled,
@@ -17,6 +19,8 @@ import {
 export type PipelineStepType =
     | 'ASR'
     | 'AGGREGATION'
+    | 'LEXICON_RECALL'
+    | 'SENTENCE_REPAIR'
     | 'PHONETIC_CORRECTION'
     | 'PUNCTUATION_RESTORE'
     | 'SEMANTIC_REPAIR'
@@ -53,10 +57,12 @@ export const PIPELINE_MODES: Record<string, PipelineMode> = {
      */
     PERSONAL_VOICE_TRANSLATION: {
         name: '个人特色语音转译',
-        steps: ['ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP', 'TRANSLATION', 'YOURTTS'],
+        steps: ['ASR', 'AGGREGATION', 'LEXICON_RECALL', 'SENTENCE_REPAIR', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP', 'TRANSLATION', 'YOURTTS'],
         dependencies: {
             AGGREGATION: ['ASR'],
-            PHONETIC_CORRECTION: ['AGGREGATION'],
+            LEXICON_RECALL: ['AGGREGATION'],
+            SENTENCE_REPAIR: ['LEXICON_RECALL'],
+            PHONETIC_CORRECTION: ['SENTENCE_REPAIR'],
             PUNCTUATION_RESTORE: ['PHONETIC_CORRECTION'],
             SEMANTIC_REPAIR: ['PUNCTUATION_RESTORE'],
             DEDUP: ['SEMANTIC_REPAIR'],
@@ -74,10 +80,12 @@ export const PIPELINE_MODES: Record<string, PipelineMode> = {
      */
     GENERAL_VOICE_TRANSLATION: {
         name: '通用语音转译',
-        steps: ['ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP', 'TRANSLATION', 'TTS'],
+        steps: ['ASR', 'AGGREGATION', 'LEXICON_RECALL', 'SENTENCE_REPAIR', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP', 'TRANSLATION', 'TTS'],
         dependencies: {
             AGGREGATION: ['ASR'],
-            PHONETIC_CORRECTION: ['AGGREGATION'],
+            LEXICON_RECALL: ['AGGREGATION'],
+            SENTENCE_REPAIR: ['LEXICON_RECALL'],
+            PHONETIC_CORRECTION: ['SENTENCE_REPAIR'],
             PUNCTUATION_RESTORE: ['PHONETIC_CORRECTION'],
             SEMANTIC_REPAIR: ['PUNCTUATION_RESTORE'],
             DEDUP: ['SEMANTIC_REPAIR'],
@@ -92,10 +100,12 @@ export const PIPELINE_MODES: Record<string, PipelineMode> = {
      */
     SUBTITLE_MODE: {
         name: '字幕模式',
-        steps: ['ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP', 'TRANSLATION'],
+        steps: ['ASR', 'AGGREGATION', 'LEXICON_RECALL', 'SENTENCE_REPAIR', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP', 'TRANSLATION'],
         dependencies: {
             AGGREGATION: ['ASR'],
-            PHONETIC_CORRECTION: ['AGGREGATION'],
+            LEXICON_RECALL: ['AGGREGATION'],
+            SENTENCE_REPAIR: ['LEXICON_RECALL'],
+            PHONETIC_CORRECTION: ['SENTENCE_REPAIR'],
             PUNCTUATION_RESTORE: ['PHONETIC_CORRECTION'],
             SEMANTIC_REPAIR: ['PUNCTUATION_RESTORE'],
             DEDUP: ['SEMANTIC_REPAIR'],
@@ -109,10 +119,12 @@ export const PIPELINE_MODES: Record<string, PipelineMode> = {
      */
     ASR_ONLY: {
         name: '只执行 ASR',
-        steps: ['ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP'],
+        steps: ['ASR', 'AGGREGATION', 'LEXICON_RECALL', 'SENTENCE_REPAIR', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP'],
         dependencies: {
             AGGREGATION: ['ASR'],
-            PHONETIC_CORRECTION: ['AGGREGATION'],
+            LEXICON_RECALL: ['AGGREGATION'],
+            SENTENCE_REPAIR: ['LEXICON_RECALL'],
+            PHONETIC_CORRECTION: ['SENTENCE_REPAIR'],
             PUNCTUATION_RESTORE: ['PHONETIC_CORRECTION'],
             SEMANTIC_REPAIR: ['PUNCTUATION_RESTORE'],
             DEDUP: ['SEMANTIC_REPAIR'],
@@ -174,7 +186,7 @@ function buildDynamicMode(job: JobAssignMessage): PipelineMode {
 
     // ASR 相关步骤（如果启用 ASR）
     if (use_asr) {
-        steps.push('ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP');
+        steps.push('ASR', 'AGGREGATION', 'LEXICON_RECALL', 'SENTENCE_REPAIR', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP');
     }
 
     // 翻译步骤（如果启用 NMT）
@@ -233,6 +245,13 @@ export function shouldExecuteStep(
         case 'AGGREGATION':
         case 'DEDUP':
             return use_asr !== false;
+        case 'LEXICON_RECALL':
+        case 'SENTENCE_REPAIR':
+            return (
+                use_asr !== false
+                && isLexiconRecallEnabled(job)
+                && isLexiconRecallLanguage(job, ctx ?? {})
+            );
         case 'PHONETIC_CORRECTION':
             return ctx?.shouldRunPhoneticCorrection === true
                 && isPhoneticCorrectionEnabled(job);

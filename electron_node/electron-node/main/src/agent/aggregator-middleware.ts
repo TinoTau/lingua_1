@@ -1,6 +1,9 @@
 /**
  * Aggregator Middleware: 作为中间件处理 ASR 结果
  * 在 NodeAgent 中集成，不依赖 PipelineOrchestrator 的具体实现
+ *
+ * @deprecated Recover V2 主链为 job-pipeline（ASR → AGGREGATION → LEXICON_RECALL → SENTENCE_REPAIR）。
+ * 本模块用于 node-agent 预聚合/NMT 旁路，勿与 Recover hypothesis rerank 混用。
  */
 
 import { AggregatorManager, Mode } from '../aggregator';
@@ -10,16 +13,7 @@ import { SegmentInfo, NMTTask } from '../task-router/types';
 import { TaskRouter } from '../task-router/task-router';
 import logger from '../logger';
 import { LRUCache } from 'lru-cache';
-import { scoreCandidates, selectBestCandidate } from '../aggregator/candidate-scorer';
-import { detectHomophoneErrors, hasPossibleHomophoneErrors } from '../aggregator/homophone-detector';
-import { learnHomophonePattern } from '../aggregator/homophone-learner';
-import { generateCacheKey, shouldCache } from '../aggregator/cache-key-generator';
-import { PromptBuilder, PromptBuilderContext } from '../asr/prompt-builder';
-import { NeedRescoreDetector, NeedRescoreContext } from '../asr/need-rescore';
-import { Rescorer, RescoreContext, Candidate } from '../asr/rescorer';
-import { CandidateProvider, CandidateProviderContext } from '../asr/candidate-provider';
-import { AudioRingBuffer } from '../asr/audio-ring-buffer';
-import { SecondaryDecodeWorker } from '../asr/secondary-decode-worker';
+import { PromptBuilder } from '../asr/prompt-builder';
 import { TranslationHandler } from './aggregator-middleware-translation';
 import { AudioHandler } from './aggregator-middleware-audio';
 import { DeduplicationHandler } from './aggregator-middleware-deduplication';
@@ -57,15 +51,9 @@ export class AggregatorMiddleware {
   private taskRouter: TaskRouter | null = null;
   private translationCache: LRUCache<string, string>;
   
-  // S1/S2: 短句准确率提升组件
+  // S1: prompt（仅聚合旁路；中文 Recover 走 job-pipeline，不经 hypothesis rerank）
   private promptBuilder: PromptBuilder | null = null;
-  private needRescoreDetector: NeedRescoreDetector | null = null;
-  private rescorer: Rescorer | null = null;
-  private candidateProvider: CandidateProvider | null = null;
-  
-  // S2-6: 二次解码 worker
-  private secondaryDecodeWorker: SecondaryDecodeWorker | null = null;
-  
+
   // 模块化处理器
   private translationHandler: TranslationHandler;
   private audioHandler: AudioHandler;
@@ -103,24 +91,15 @@ export class AggregatorMiddleware {
       // PromptBuilder 只支持 'offline' 和 'room'，将 'two_way' 映射到 'room'
       const promptBuilderMode = mode === 'two_way' ? 'room' : (mode === 'room' ? 'room' : 'offline');
       this.promptBuilder = new PromptBuilder(promptBuilderMode);
-      this.needRescoreDetector = new NeedRescoreDetector();
-      this.rescorer = new Rescorer();
-      this.candidateProvider = new CandidateProvider();
-      
-      // S2-6: 二次解码已禁用（GPU占用过高）
-      this.secondaryDecodeWorker = null;
-      logger.info({}, 'S2-6: Secondary decode worker disabled (GPU optimization)');
-      
+
       logger.info(
-        { 
-          mode: config.mode, 
+        {
+          mode: config.mode,
           hasTaskRouter: !!taskRouter,
           cacheSize: config.translationCacheSize || 200,
           cacheTtlMs: config.translationCacheTtlMs || 10 * 60 * 1000,
-          s1S2Enabled: true,
-          s2SecondaryDecodeEnabled: !!this.secondaryDecodeWorker,
         },
-        'Aggregator middleware initialized with S1/S2 support'
+        'Aggregator middleware initialized (dedup/aggregation only; Recover uses job-pipeline)'
       );
     } else {
       // 即使未启用，也需要初始化处理器（用于兼容）

@@ -17,6 +17,8 @@ import { withGpuLease } from '../../gpu-arbiter';
 import { validateLidCandidates, normalizeLidCandidates } from '../../lid/lid-validate';
 import { selectSrcLang } from '../../lid/router';
 import { LID_WINDOW_MS } from '../../lid/lid-constants';
+import { buildAsrHypotheses } from '../../asr/build-asr-hypotheses';
+import { resolvePreferredAsrServiceId } from '../../asr/resolve-preferred-asr-service';
 import logger from '../../logger';
 
 export interface AsrStepOptions {
@@ -129,15 +131,13 @@ export async function runAsrStep(
     }
   }
 
-  // 按有效源语言选 ASR 服务（LID 或 job）：en → asr-sherpa-en（唯一英文 CTC），其他明确语言 → asr-sherpa-lm；无明确语言不设偏好
   const effectiveSrcLang =
     useLidPath ? (lidSelectedSrcLang ?? undefined) : (job.src_lang && job.src_lang !== 'auto' ? job.src_lang : undefined);
-  const preferredServiceId =
-    effectiveSrcLang === 'en' ? 'asr-sherpa-en' : (effectiveSrcLang ? 'asr-sherpa-lm' : undefined);
+  const preferredServiceId = resolvePreferredAsrServiceId(effectiveSrcLang);
   const asrRouteOptions = preferredServiceId ? { preferredServiceId } : undefined;
   logger.info(
     { jobId: job.job_id, effectiveSrcLang, preferredServiceId },
-    'runAsrStep: ASR service preference (en=asr-sherpa-en only)'
+    'runAsrStep: ASR service preference (Recover V2 CTC freeze)'
   );
 
   // 处理每个ASR批次
@@ -248,6 +248,12 @@ export async function runAsrStep(
       if (i === 0) {
         ctx.asrText = asrResult.text;
         ctx.asrResult = asrResult;
+        ctx.asrServiceId = asrResult.routedServiceId;
+        ctx.asrNbest = asrResult.nbest;
+        const decoded = buildAsrHypotheses(asrResult.text ?? '', asrResult.nbest);
+        ctx.asrHypotheses = decoded.hypotheses;
+        ctx.nbestSynthetic = decoded.nbestSynthetic;
+        ctx.asrKenlmMeta = asrResult.kenlmMeta;
         ctx.asrSegments = asrResult.segments;
         ctx.languageProbabilities = asrResult.language_probabilities;
         ctx.qualityScore = asrResult.badSegmentDetection?.qualityScore;

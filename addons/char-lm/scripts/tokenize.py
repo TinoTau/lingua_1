@@ -1,41 +1,28 @@
 # -*- coding: utf-8 -*-
 """
-字符级 tokenize：与 KenLM 训练/推理一致。汉字、字母数字、保留标点，空格分隔。
+字符级 tokenize：委托仓库根 scripts/kenlm/lib（与 Node char-tokenize.ts 一致）。
 """
-import sys
 import os
+import sys
 
-# 保留标点（与节点端 char-tokenize.ts 一致）
-KEEP_PUNCT = set('，。！？；：、""\'\'（）()《》<>【】[]—-…·,.!?;:"\'')
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, '..', '..', '..'))
+sys.path.insert(0, os.path.join(REPO_ROOT, 'scripts', 'kenlm'))
 
-
-def tokenize(line: str) -> str:
-    line = line.strip()
-    if not line:
-        return ''
-    out = []
-    for ch in line:
-        if '\u4e00' <= ch <= '\u9fff':
-            out.append(ch)
-        elif ch.isalnum():
-            out.append(ch)
-        elif ch in KEEP_PUNCT:
-            out.append(ch)
-    return ' '.join(out)
+from lib.tokenize_char import tokenize_line  # noqa: E402
 
 
 def main():
     base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    # 支持可选参数：tokenize.py [src文件名] [dst文件名]，均在 data/ 下
-    src = os.path.join(base, "data", sys.argv[1] if len(sys.argv) > 1 else "zh_sentences.txt")
-    dst = os.path.join(base, "data", sys.argv[2] if len(sys.argv) > 2 else "zh_char_tokenized.txt")
+    src = os.path.join(base, 'data', sys.argv[1] if len(sys.argv) > 1 else 'zh_sentences.txt')
+    dst = os.path.join(base, 'data', sys.argv[2] if len(sys.argv) > 2 else 'zh_char_tokenized.txt')
     if not os.path.exists(src):
         print(f'Error: {src} not found', file=sys.stderr)
         sys.exit(1)
     count = 0
     with open(src, 'r', encoding='utf-8') as f_in, open(dst, 'w', encoding='utf-8') as f_out:
         for line in f_in:
-            t = tokenize(line)
+            t = tokenize_line(line)
             if t:
                 f_out.write(t + '\n')
                 count += 1

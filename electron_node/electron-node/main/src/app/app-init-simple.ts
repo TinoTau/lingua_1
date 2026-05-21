@@ -10,6 +10,8 @@ import { NodeAgent } from '../agent/node-agent-simple';
 import { ModelManager } from '../model-manager/model-manager';
 import { InferenceService } from '../inference/inference-service';
 import { loadNodeConfig, saveNodeConfig, getServicesBaseUrl } from '../node-config';
+import { logLexiconStartupContract } from '../lexicon/lexicon-startup';
+import { logSentenceKenlmStartupStatus } from '../phonetic-correction/sentence-kenlm-startup';
 import { registerModelHandlers } from '../ipc-handlers/model-handlers';
 import {
   initServiceLayer,
@@ -212,6 +214,9 @@ export function loadAndValidateConfig(): void {
     },
     'User service preferences loaded successfully'
   );
+
+  logLexiconStartupContract();
+  logSentenceKenlmStartupStatus();
 
   // 确保配置文件存在
   if (!configExists) {

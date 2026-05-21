@@ -6,6 +6,7 @@ import { JobAssignMessage } from '@shared/protocols/messages';
 import { JobContext } from '../context/job-context';
 import { ServicesBundle } from '../job-pipeline';
 import {
+  isRecoverWriteLocked,
   markSemanticRepairHttpSuccess,
   markSemanticRepairSkipped,
   syncRepairedTextBaseline,
@@ -115,16 +116,22 @@ export async function runSemanticRepairStep(
     if (repairResult.decision === 'REPAIR' || repairResult.decision === 'PASS') {
       if (repairResult.semanticRepairHttpApplied) {
         markSemanticRepairHttpSuccess(ctx, repairResult.textOut, repairResult.confidence);
-      } else {
+      } else if (!isRecoverWriteLocked(ctx)) {
         ctx.repairedText = repairResult.textOut;
         ctx.semanticRepairApplied = false;
         ctx.semanticRepairHttpApplied = false;
         ctx.semanticRepairHttpCalled = repairResult.semanticRepairHttpCalled === true;
         ctx.enNormalizeApplied = repairResult.enNormalizeApplied === true;
+      } else {
+        ctx.semanticRepairSkipped = true;
+        ctx.semanticRepairSkipReason = 'RECOVER_WRITE_LOCKED';
+        ctx.semanticRepairHttpCalled = repairResult.semanticRepairHttpCalled === true;
+        ctx.semanticRepairHttpApplied = false;
+        ctx.semanticRepairApplied = false;
       }
       ctx.semanticDecision = repairResult.decision;
 
-      if (services.aggregatorManager && ctx.repairedText) {
+      if (services.aggregatorManager && ctx.repairedText && !isRecoverWriteLocked(ctx)) {
         services.aggregatorManager.updateLastCommittedTextAfterRepair(
           job.session_id,
           job.utterance_index,
@@ -133,10 +140,12 @@ export async function runSemanticRepairStep(
         );
       }
     } else if (repairResult.decision === 'REJECT') {
-      ctx.repairedText = textToRepair;
+      if (!isRecoverWriteLocked(ctx)) {
+        ctx.repairedText = textToRepair;
+      }
       ctx.semanticDecision = 'REJECT';
       ctx.semanticRepairApplied = false;
-    } else {
+    } else if (!isRecoverWriteLocked(ctx)) {
       syncRepairedTextBaseline(ctx);
     }
   } catch (error: any) {

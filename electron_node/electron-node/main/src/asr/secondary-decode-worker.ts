@@ -1,5 +1,6 @@
 /* S2-6: Secondary Decode Worker - 二次解码工作器
    使用更保守的配置进行二次解码，生成候选
+   @deprecated AggregatorMiddleware 已置 secondaryDecodeWorker=null；Recover V2 不使用。
 */
 
 import { TaskRouter } from '../task-router/task-router';

@@ -1,55 +1,59 @@
-# 对外开放 API 设计与实现
+# API Gateway 对外 API
 
-版本：v1.0  
-适用对象：后端开发、架构师、移动端/SDK 开发团队
+版本：与当前 `api-gateway` 源码一致。
 
-本文档描述了如何将 Lingua 实时语音翻译平台对外开放，包括设计思路、架构方案、实现细节和开发指南。
+## 架构
 
----
+```
+Client → API Gateway (8081) → Scheduler (5010) → Electron Node
+```
 
-## 📋 文档导航
+Gateway 不执行 ASR/翻译推理，只做鉴权、限流与协议适配。
 
-本文档已拆分为多个子文档以便阅读：
+## 鉴权
 
-- **[API 设计与架构](./PUBLIC_API_DESIGN.md)** - 背景、目标、架构设计和实现方案
-- **[API 规范与使用](./PUBLIC_API_SPEC.md)** - 外部 API 规范、使用示例和快速开始
-- **[实现状态与部署](./PUBLIC_API_STATUS.md)** - 实现状态、安全考虑和部署建议
+- Header：`Authorization: Bearer <API_KEY>`
+- `/health` 无需鉴权
+- 未带或错误 key → 401
 
----
+## REST
 
-## 快速开始
+### `POST /v1/speech/translate`
 
-### 背景与目标
+上传音频并请求翻译（实现见 `rest_api.rs`）。
 
-**扩展为一个可对外开放的语音翻译服务平台，使外部 APP / 网站 / 即时通信工具也可调用本系统。**
+- 需鉴权
+- 表单字段以当前 handler 为准（常见：`audio`、`src_lang`、`tgt_lang`）
+- 由 Gateway 创建/转发 Scheduler 会话与任务
 
-此扩展不改变核心推理与调度逻辑，只添加面向第三方使用的外壳、鉴权与多租户能力。
+## WebSocket
 
-### 核心能力
+### `GET /v1/stream`
 
-- ✅ Public API Gateway（对外 API 网关）
-- ✅ 多租户系统 (Multi-Tenant)
-- ✅ REST API + WebSocket API
-- ✅ API Key 鉴权
-- ✅ 限流机制
+流式会话（实现见 `main.rs` + stream handler）。
 
-### 实施状态
+- 需鉴权（`route_layer` + `auth_middleware`）
+- 与 Scheduler 会话通道对接，用于实时音频/结果推送
 
-✅ **核心功能已完成**：
-- ✅ API Gateway 项目框架
-- ✅ 核心模块实现（租户管理、鉴权、限流等）
-- ✅ Scheduler 扩展（tenant_id 支持）
+## 配置示例
 
-详细内容请参考子文档。
+`api-gateway/config.toml`：
 
----
+```toml
+[server]
+port = 8081
+host = "0.0.0.0"
 
-## 📚 相关文档
+[scheduler]
+url = "ws://localhost:5010/ws/session"
+```
 
-- [API 设计与架构](./PUBLIC_API_DESIGN.md)
-- [API 规范与使用](./PUBLIC_API_SPEC.md)
-- [实现状态与部署](./PUBLIC_API_STATUS.md)
-- `OVERVIEW.md` - API Gateway 运行/配置说明
-- `../OVERVIEW.md` - central_server 总览与启动入口
+## 租户与限流
 
-> 注：历史版本曾引用 `ARCHITECTURE.md` / `PROTOCOLS.md`，但这些文件并不在 `central_server/docs/` 中。
+- 租户模型与 API Key 存储：见 `src/tenant.rs`、启动时默认租户逻辑
+- 限流：见 `src/rate_limit.rs`（若启用）
+
+## 相关
+
+- 启动与 curl 示例：`../QUICK_START.md`
+- Scheduler 协议与任务：`../../scheduler/docs/job/JOB.md`

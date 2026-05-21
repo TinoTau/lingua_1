@@ -1,0 +1,1058 @@
+{
+  "timestamp": "2026-05-18T16:06:06.117Z",
+  "port": 5020,
+  "p3Dir": "D:\\Programs\\github\\lingua_1\\test wav\\p3_multi",
+  "config": {
+    "cfgPath": "C:\\Users\\tinot\\AppData\\Roaming\\lingua-electron-node\\electron-node-config.json",
+    "raw": {
+      "enabled": true,
+      "maxReplacements": 2,
+      "minPhoneticScore": 0.85
+    }
+  },
+  "projectRoot": "D:\\Programs\\github\\lingua_1",
+  "cases": [
+    {
+      "id": "p3_single_01",
+      "type": "single",
+      "utterance": "今天我们团队要讨论后选生城相关的流程安排",
+      "pass": true,
+      "text_asr": "今天我们团队要讨论候选生成相罐的流程安排",
+      "text_translated": "Today our team will discuss the process arrangement of candidates to produce a foam container.",
+      "session_id": "p3-p3_single_01-1779120366126",
+      "lexicon_runtime_status": "ok",
+      "lexicon_recall_preview": [
+        {
+          "term": "后选生成",
+          "replacement": "候选生成",
+          "source": "confusion",
+          "priority": 10,
+          "raw": {
+            "id": "conf-0003",
+            "term": "后选生成",
+            "replacement": "候选生成",
+            "pinyin": "hou xuan sheng cheng",
+            "source": "confusion",
+            "priority": 10
+          },
+          "start": 0,
+          "end": 20
+        }
+      ],
+      "window_phonetic_preview": [
+        {
+          "spanText": "后选生成",
+          "spanStart": 9,
+          "spanEnd": 13,
+          "candidateText": "候选生成",
+          "candidateSource": "confusion",
+          "phoneticScore": 1,
+          "lexiconCandidate": {
+            "term": "后选生成",
+            "replacement": "候选生成",
+            "source": "confusion",
+            "priority": 10,
+            "raw": {
+              "id": "conf-0003",
+              "term": "后选生成",
+              "replacement": "候选生成",
+              "pinyin": "hou xuan sheng cheng",
+              "source": "confusion",
+              "priority": 10
+            },
+            "start": 0,
+            "end": 20
+          },
+          "spanPinyin": [
+            "hou",
+            "xuan",
+            "sheng",
+            "cheng"
+          ],
+          "candidatePinyin": [
+            "hou",
+            "xuan",
+            "sheng",
+            "cheng"
+          ]
+        }
+      ],
+      "asr_lexicon_selection": {
+        "applied": true,
+        "selectedReason": "phonetic_candidate_selected",
+        "selectedText": "今天我们团队要讨论候选生成相罐的流程安排",
+        "selections": [
+          {
+            "from": "后选生成",
+            "to": "候选生成",
+            "phoneticScore": 1,
+            "start": 9,
+            "end": 13
+          }
+        ],
+        "replacement": {
+          "from": "后选生成",
+          "to": "候选生成",
+          "phoneticScore": 1,
+          "start": 9,
+          "end": 13
+        },
+        "windows": [
+          {
+            "windowId": "w-9-13-b7bq30",
+            "span": {
+              "start": 9,
+              "end": 13,
+              "text": "后选生成"
+            },
+            "candidateCount": 1,
+            "selected": true,
+            "selectedReplacement": {
+              "from": "后选生成",
+              "to": "候选生成",
+              "phoneticScore": 1,
+              "start": 9,
+              "end": 13
+            }
+          }
+        ]
+      },
+      "recall_count": 1,
+      "phonetic_count": 1,
+      "selections_count": 1,
+      "selections": [
+        {
+          "from": "后选生成",
+          "to": "候选生成",
+          "phoneticScore": 1,
+          "start": 9,
+          "end": 13
+        }
+      ],
+      "replacement": {
+        "from": "后选生成",
+        "to": "候选生成",
+        "phoneticScore": 1,
+        "start": 9,
+        "end": 13
+      },
+      "selectedReason": "phonetic_candidate_selected",
+      "applied": true,
+      "windows_count": 1,
+      "selected_windows_count": 1,
+      "windows": [
+        {
+          "windowId": "w-9-13-b7bq30",
+          "span": {
+            "start": 9,
+            "end": 13,
+            "text": "后选生成"
+          },
+          "candidateCount": 1,
+          "selected": true,
+          "selectedReplacement": {
+            "from": "后选生成",
+            "to": "候选生成",
+            "phoneticScore": 1,
+            "start": 9,
+            "end": 13
+          }
+        }
+      ],
+      "contract": {
+        "runtime_ok": true,
+        "recall_ok": true,
+        "phonetic_ok": true,
+        "selector_ran": true,
+        "repaired_text_ok": true,
+        "windows_ok": true,
+        "windows_selected_ok": true,
+        "reason_ok": true,
+        "replacements_ok": true,
+        "multi_ok": true
+      },
+      "fixes": [
+        {
+          "wrong": "后选生城",
+          "right": "候选生成",
+          "hasRight": true,
+          "stillWrong": false
+        }
+      ],
+      "pipeline_ms": 1858
+    },
+    {
+      "id": "p3_single_02",
+      "type": "single",
+      "utterance": "今天我们团队要讨论上线计化相关的流程安排",
+      "pass": false,
+      "text_asr": "今天我们团队要讨论上线计花向关的流程案排",
+      "text_translated": "Today our team will discuss the line-up process.",
+      "session_id": "p3-p3_single_02-1779120367999",
+      "lexicon_runtime_status": "ok",
+      "asr_lexicon_selection": {},
+      "recall_count": 0,
+      "phonetic_count": 0,
+      "selections_count": 0,
+      "windows_count": 0,
+      "selected_windows_count": 0,
+      "windows": [],
+      "contract": {
+        "runtime_ok": true,
+        "recall_ok": false,
+        "phonetic_ok": false,
+        "repaired_text_ok": true,
+        "windows_ok": false,
+        "windows_selected_ok": true,
+        "reason_ok": true,
+        "replacements_ok": false,
+        "multi_ok": false
+      },
+      "fixes": [
+        {
+          "wrong": "上线计化",
+          "right": "上线计划",
+          "hasRight": false,
+          "stillWrong": false
+        }
+      ],
+      "pipeline_ms": 1277
+    },
+    {
+      "id": "p3_multi_01",
+      "type": "multi",
+      "utterance": "今天我们团队要讨论后选生城和上线计化相关的候选生成流程和上线计划安排",
+      "pass": false,
+      "text_asr": "今天我们团队要讨论候选生成和上线节 向关的后选生称流成和伤线计划案排",
+      "text_translated": "Today our team will discuss the candidate generation and upline festivals to turn after-elect names flow and wound line plans.",
+      "session_id": "p3-p3_multi_01-1779120369281",
+      "lexicon_runtime_status": "ok",
+      "lexicon_recall_preview": [
+        {
+          "term": "后选生成",
+          "replacement": "候选生成",
+          "source": "confusion",
+          "priority": 10,
+          "raw": {
+            "id": "conf-0003",
+            "term": "后选生成",
+            "replacement": "候选生成",
+            "pinyin": "hou xuan sheng cheng",
+            "source": "confusion",
+            "priority": 10
+          },
+          "start": 0,
+          "end": 17
+        }
+      ],
+      "window_phonetic_preview": [
+        {
+          "spanText": "后选生成",
+          "spanStart": 9,
+          "spanEnd": 13,
+          "candidateText": "候选生成",
+          "candidateSource": "confusion",
+          "phoneticScore": 1,
+          "lexiconCandidate": {
+            "term": "后选生成",
+            "replacement": "候选生成",
+            "source": "confusion",
+            "priority": 10,
+            "raw": {
+              "id": "conf-0003",
+              "term": "后选生成",
+              "replacement": "候选生成",
+              "pinyin": "hou xuan sheng cheng",
+              "source": "confusion",
+              "priority": 10
+            },
+            "start": 0,
+            "end": 17
+          },
+          "spanPinyin": [
+            "hou",
+            "xuan",
+            "sheng",
+            "cheng"
+          ],
+          "candidatePinyin": [
+            "hou",
+            "xuan",
+            "sheng",
+            "cheng"
+          ]
+        }
+      ],
+      "asr_lexicon_selection": {
+        "applied": true,
+        "selectedReason": "phonetic_candidate_selected",
+        "selectedText": "今天我们团队要讨论候选生成和上线节 向关的后选生称流成和伤线计划案排",
+        "selections": [
+          {
+            "from": "后选生成",
+            "to": "候选生成",
+            "phoneticScore": 1,
+            "start": 9,
+            "end": 13
+          }
+        ],
+        "replacement": {
+          "from": "后选生成",
+          "to": "候选生成",
+          "phoneticScore": 1,
+          "start": 9,
+          "end": 13
+        },
+        "windows": [
+          {
+            "windowId": "w-9-13-b7bq30",
+            "span": {
+              "start": 9,
+              "end": 13,
+              "text": "后选生成"
+            },
+            "candidateCount": 1,
+            "selected": true,
+            "selectedReplacement": {
+              "from": "后选生成",
+              "to": "候选生成",
+              "phoneticScore": 1,
+              "start": 9,
+              "end": 13
+            }
+          }
+        ]
+      },
+      "recall_count": 1,
+      "phonetic_count": 1,
+      "selections_count": 1,
+      "selections": [
+        {
+          "from": "后选生成",
+          "to": "候选生成",
+          "phoneticScore": 1,
+          "start": 9,
+          "end": 13
+        }
+      ],
+      "replacement": {
+        "from": "后选生成",
+        "to": "候选生成",
+        "phoneticScore": 1,
+        "start": 9,
+        "end": 13
+      },
+      "selectedReason": "phonetic_candidate_selected",
+      "applied": true,
+      "windows_count": 1,
+      "selected_windows_count": 1,
+      "windows": [
+        {
+          "windowId": "w-9-13-b7bq30",
+          "span": {
+            "start": 9,
+            "end": 13,
+            "text": "后选生成"
+          },
+          "candidateCount": 1,
+          "selected": true,
+          "selectedReplacement": {
+            "from": "后选生成",
+            "to": "候选生成",
+            "phoneticScore": 1,
+            "start": 9,
+            "end": 13
+          }
+        }
+      ],
+      "contract": {
+        "runtime_ok": true,
+        "recall_ok": true,
+        "phonetic_ok": true,
+        "selector_ran": true,
+        "repaired_text_ok": true,
+        "windows_ok": true,
+        "windows_selected_ok": true,
+        "reason_ok": true,
+        "replacements_ok": false,
+        "multi_ok": false
+      },
+      "fixes": [
+        {
+          "wrong": "后选生城",
+          "right": "候选生成",
+          "hasRight": true,
+          "stillWrong": false
+        },
+        {
+          "wrong": "上线计化",
+          "right": "上线计划",
+          "hasRight": false,
+          "stillWrong": false
+        }
+      ],
+      "pipeline_ms": 2658
+    },
+    {
+      "id": "p3_multi_02",
+      "type": "multi",
+      "utterance": "今天我们团队要讨论词裤召回和拼音后选相关的词库召回与拼音候选逻辑",
+      "pass": false,
+      "text_asr": "今天我们团对要讨论此酷招回和拼音后选相关的 此库召回与拼音后选逻辑",
+      "text_translated": "Today we are going to discuss this cool recall and post-song selection related this book call back with post-Song choice logic.",
+      "session_id": "p3-p3_multi_02-1779120371944",
+      "lexicon_runtime_status": "ok",
+      "lexicon_recall_preview": [
+        {
+          "term": "拼音后选",
+          "replacement": "拼音候选",
+          "source": "confusion",
+          "priority": 10,
+          "raw": {
+            "id": "conf-0022",
+            "term": "拼音后选",
+            "replacement": "拼音候选",
+            "pinyin": "pin yin hou xuan",
+            "source": "confusion",
+            "priority": 10
+          },
+          "start": 0,
+          "end": 21
+        }
+      ],
+      "window_phonetic_preview": [
+        {
+          "spanText": "拼音后选",
+          "spanStart": 14,
+          "spanEnd": 18,
+          "candidateText": "拼音候选",
+          "candidateSource": "confusion",
+          "phoneticScore": 1,
+          "lexiconCandidate": {
+            "term": "拼音后选",
+            "replacement": "拼音候选",
+            "source": "confusion",
+            "priority": 10,
+            "raw": {
+              "id": "conf-0022",
+              "term": "拼音后选",
+              "replacement": "拼音候选",
+              "pinyin": "pin yin hou xuan",
+              "source": "confusion",
+              "priority": 10
+            },
+            "start": 0,
+            "end": 21
+          },
+          "spanPinyin": [
+            "pin",
+            "yin",
+            "hou",
+            "xuan"
+          ],
+          "candidatePinyin": [
+            "pin",
+            "yin",
+            "hou",
+            "xuan"
+          ]
+        }
+      ],
+      "asr_lexicon_selection": {
+        "applied": false,
+        "selectedReason": "no_candidate",
+        "selectedText": "今天我们团对要讨论此酷招回和拼音后选相关的 此库召回与拼音后选逻辑",
+        "windows": [
+          {
+            "windowId": "w-14-18-d44iuq",
+            "span": {
+              "start": 14,
+              "end": 18,
+              "text": "拼音后选"
+            },
+            "candidateCount": 0,
+            "selected": false,
+            "rejectedReason": "no_candidate"
+          }
+        ]
+      },
+      "recall_count": 1,
+      "phonetic_count": 1,
+      "selections_count": 0,
+      "selectedReason": "no_candidate",
+      "applied": false,
+      "windows_count": 1,
+      "selected_windows_count": 0,
+      "windows": [
+        {
+          "windowId": "w-14-18-d44iuq",
+          "span": {
+            "start": 14,
+            "end": 18,
+            "text": "拼音后选"
+          },
+          "candidateCount": 0,
+          "selected": false,
+          "rejectedReason": "no_candidate"
+        }
+      ],
+      "contract": {
+        "runtime_ok": true,
+        "recall_ok": true,
+        "phonetic_ok": true,
+        "selector_ran": "no_candidate",
+        "repaired_text_ok": true,
+        "windows_ok": true,
+        "windows_selected_ok": true,
+        "reason_ok": true,
+        "replacements_ok": false,
+        "multi_ok": false
+      },
+      "fixes": [
+        {
+          "wrong": "词裤召回",
+          "right": "词库召回",
+          "hasRight": false,
+          "stillWrong": false
+        },
+        {
+          "wrong": "拼音后选",
+          "right": "拼音候选",
+          "hasRight": false,
+          "stillWrong": true
+        }
+      ],
+      "pipeline_ms": 2649
+    },
+    {
+      "id": "p3_multi_03",
+      "type": "multi",
+      "utterance": "今天我们团队要讨论语意修复和实时番译相关的语义修复与实时翻译问题",
+      "pass": false,
+      "text_asr": "今天我们团队要讨论语意修复和 十饭亿像关的语意修复与时实范亿问题",
+      "text_translated": "Today our team will discuss the word-intention repair and the 10 million-minded word-tention repairs and time-reforming issues.",
+      "session_id": "p3-p3_multi_03-1779120374598",
+      "lexicon_runtime_status": "ok",
+      "lexicon_recall_preview": [
+        {
+          "term": "语意修复",
+          "replacement": "语义修复",
+          "source": "confusion",
+          "priority": 10,
+          "raw": {
+            "id": "conf-0028",
+            "term": "语意修复",
+            "replacement": "语义修复",
+            "pinyin": "yu yi xiu fu",
+            "source": "confusion",
+            "priority": 10
+          },
+          "start": 0,
+          "end": 14
+        }
+      ],
+      "window_phonetic_preview": [
+        {
+          "spanText": "语意修复",
+          "spanStart": 9,
+          "spanEnd": 13,
+          "candidateText": "语义修复",
+          "candidateSource": "confusion",
+          "phoneticScore": 1,
+          "lexiconCandidate": {
+            "term": "语意修复",
+            "replacement": "语义修复",
+            "source": "confusion",
+            "priority": 10,
+            "raw": {
+              "id": "conf-0028",
+              "term": "语意修复",
+              "replacement": "语义修复",
+              "pinyin": "yu yi xiu fu",
+              "source": "confusion",
+              "priority": 10
+            },
+            "start": 0,
+            "end": 14
+          },
+          "spanPinyin": [
+            "yu",
+            "yi",
+            "xiu",
+            "fu"
+          ],
+          "candidatePinyin": [
+            "yu",
+            "yi",
+            "xiu",
+            "fu"
+          ]
+        }
+      ],
+      "asr_lexicon_selection": {
+        "applied": false,
+        "selectedReason": "no_candidate",
+        "selectedText": "今天我们团队要讨论语意修复和 十饭亿像关的语意修复与时实范亿问题",
+        "windows": [
+          {
+            "windowId": "w-9-13-i1ygip",
+            "span": {
+              "start": 9,
+              "end": 13,
+              "text": "语意修复"
+            },
+            "candidateCount": 0,
+            "selected": false,
+            "rejectedReason": "no_candidate"
+          }
+        ]
+      },
+      "recall_count": 1,
+      "phonetic_count": 1,
+      "selections_count": 0,
+      "selectedReason": "no_candidate",
+      "applied": false,
+      "windows_count": 1,
+      "selected_windows_count": 0,
+      "windows": [
+        {
+          "windowId": "w-9-13-i1ygip",
+          "span": {
+            "start": 9,
+            "end": 13,
+            "text": "语意修复"
+          },
+          "candidateCount": 0,
+          "selected": false,
+          "rejectedReason": "no_candidate"
+        }
+      ],
+      "contract": {
+        "runtime_ok": true,
+        "recall_ok": true,
+        "phonetic_ok": true,
+        "selector_ran": "no_candidate",
+        "repaired_text_ok": true,
+        "windows_ok": true,
+        "windows_selected_ok": true,
+        "reason_ok": true,
+        "replacements_ok": false,
+        "multi_ok": false
+      },
+      "fixes": [
+        {
+          "wrong": "语意修复",
+          "right": "语义修复",
+          "hasRight": false,
+          "stillWrong": true
+        },
+        {
+          "wrong": "实时番译",
+          "right": "实时翻译",
+          "hasRight": false,
+          "stillWrong": false
+        }
+      ],
+      "pipeline_ms": 2638
+    },
+    {
+      "id": "p3_multi_04",
+      "type": "multi",
+      "utterance": "今天我们团队要讨论上下文带理和后处理连路相关的上下文代理与后处理链路",
+      "pass": false,
+      "text_asr": "今天我们团队要讨论上下文带里合后出 连路向关的上下文带里与后处理练路",
+      "text_translated": "Today our team will discuss the upper line in the bottom line and the subsequent line in it.",
+      "session_id": "p3-p3_multi_04-1779120377243",
+      "lexicon_runtime_status": "ok",
+      "asr_lexicon_selection": {},
+      "recall_count": 0,
+      "phonetic_count": 0,
+      "selections_count": 0,
+      "windows_count": 0,
+      "selected_windows_count": 0,
+      "windows": [],
+      "contract": {
+        "runtime_ok": true,
+        "recall_ok": false,
+        "phonetic_ok": false,
+        "repaired_text_ok": true,
+        "windows_ok": false,
+        "windows_selected_ok": true,
+        "reason_ok": true,
+        "replacements_ok": false,
+        "multi_ok": false
+      },
+      "fixes": [
+        {
+          "wrong": "上下文带理",
+          "right": "上下文代理",
+          "hasRight": false,
+          "stillWrong": false
+        },
+        {
+          "wrong": "后处理连路",
+          "right": "后处理链路",
+          "hasRight": false,
+          "stillWrong": false
+        }
+      ],
+      "pipeline_ms": 2508
+    },
+    {
+      "id": "p3_multi_05",
+      "type": "multi",
+      "utterance": "今天我们团队要讨论语音实别和评生流程相关的语音识别与评审流程",
+      "pass": false,
+      "text_asr": "近天我们团队要讨伦语印识别和平盛流成相关的语印识别与平神流成",
+      "text_translated": "In recent days, our team will discuss the Russian language printing recognition and peace flow into related language printed recognition with peace flow.",
+      "session_id": "p3-p3_multi_05-1779120379757",
+      "lexicon_runtime_status": "ok",
+      "asr_lexicon_selection": {},
+      "recall_count": 0,
+      "phonetic_count": 0,
+      "selections_count": 0,
+      "windows_count": 0,
+      "selected_windows_count": 0,
+      "windows": [],
+      "contract": {
+        "runtime_ok": true,
+        "recall_ok": false,
+        "phonetic_ok": false,
+        "repaired_text_ok": true,
+        "windows_ok": false,
+        "windows_selected_ok": true,
+        "reason_ok": true,
+        "replacements_ok": false,
+        "multi_ok": false
+      },
+      "fixes": [
+        {
+          "wrong": "语音实别",
+          "right": "语音识别",
+          "hasRight": false,
+          "stillWrong": false
+        },
+        {
+          "wrong": "评生流程",
+          "right": "评审流程",
+          "hasRight": false,
+          "stillWrong": false
+        }
+      ],
+      "pipeline_ms": 2540
+    },
+    {
+      "id": "p3_overlap_01",
+      "type": "overlap",
+      "utterance": "后选生城和上线计化两项都需要在本周完成评审",
+      "pass": false,
+      "text_asr": "候选生成和尚现记画两项都需要在本周完成平审",
+      "text_translated": "The two candidates to be a monk must be completed in this week.",
+      "session_id": "p3-p3_overlap_01-1779120382302",
+      "lexicon_runtime_status": "ok",
+      "lexicon_recall_preview": [
+        {
+          "term": "后选生成",
+          "replacement": "候选生成",
+          "source": "confusion",
+          "priority": 10,
+          "raw": {
+            "id": "conf-0003",
+            "term": "后选生成",
+            "replacement": "候选生成",
+            "pinyin": "hou xuan sheng cheng",
+            "source": "confusion",
+            "priority": 10
+          },
+          "start": 0,
+          "end": 21
+        }
+      ],
+      "window_phonetic_preview": [
+        {
+          "spanText": "后选生成",
+          "spanStart": 0,
+          "spanEnd": 4,
+          "candidateText": "候选生成",
+          "candidateSource": "confusion",
+          "phoneticScore": 1,
+          "lexiconCandidate": {
+            "term": "后选生成",
+            "replacement": "候选生成",
+            "source": "confusion",
+            "priority": 10,
+            "raw": {
+              "id": "conf-0003",
+              "term": "后选生成",
+              "replacement": "候选生成",
+              "pinyin": "hou xuan sheng cheng",
+              "source": "confusion",
+              "priority": 10
+            },
+            "start": 0,
+            "end": 21
+          },
+          "spanPinyin": [
+            "hou",
+            "xuan",
+            "sheng",
+            "cheng"
+          ],
+          "candidatePinyin": [
+            "hou",
+            "xuan",
+            "sheng",
+            "cheng"
+          ]
+        }
+      ],
+      "asr_lexicon_selection": {
+        "applied": true,
+        "selectedReason": "phonetic_candidate_selected",
+        "selectedText": "候选生成和尚现记画两项都需要在本周完成平审",
+        "selections": [
+          {
+            "from": "后选生成",
+            "to": "候选生成",
+            "phoneticScore": 1,
+            "start": 0,
+            "end": 4
+          }
+        ],
+        "replacement": {
+          "from": "后选生成",
+          "to": "候选生成",
+          "phoneticScore": 1,
+          "start": 0,
+          "end": 4
+        },
+        "windows": [
+          {
+            "windowId": "w-0-4-b7bq30",
+            "span": {
+              "start": 0,
+              "end": 4,
+              "text": "后选生成"
+            },
+            "candidateCount": 1,
+            "selected": true,
+            "selectedReplacement": {
+              "from": "后选生成",
+              "to": "候选生成",
+              "phoneticScore": 1,
+              "start": 0,
+              "end": 4
+            }
+          }
+        ]
+      },
+      "recall_count": 1,
+      "phonetic_count": 1,
+      "selections_count": 1,
+      "selections": [
+        {
+          "from": "后选生成",
+          "to": "候选生成",
+          "phoneticScore": 1,
+          "start": 0,
+          "end": 4
+        }
+      ],
+      "replacement": {
+        "from": "后选生成",
+        "to": "候选生成",
+        "phoneticScore": 1,
+        "start": 0,
+        "end": 4
+      },
+      "selectedReason": "phonetic_candidate_selected",
+      "applied": true,
+      "windows_count": 1,
+      "selected_windows_count": 1,
+      "windows": [
+        {
+          "windowId": "w-0-4-b7bq30",
+          "span": {
+            "start": 0,
+            "end": 4,
+            "text": "后选生成"
+          },
+          "candidateCount": 1,
+          "selected": true,
+          "selectedReplacement": {
+            "from": "后选生成",
+            "to": "候选生成",
+            "phoneticScore": 1,
+            "start": 0,
+            "end": 4
+          }
+        }
+      ],
+      "contract": {
+        "runtime_ok": true,
+        "recall_ok": true,
+        "phonetic_ok": true,
+        "selector_ran": true,
+        "repaired_text_ok": true,
+        "windows_ok": true,
+        "windows_selected_ok": true,
+        "reason_ok": true,
+        "replacements_ok": false,
+        "multi_ok": false
+      },
+      "fixes": [
+        {
+          "wrong": "后选生城",
+          "right": "候选生成",
+          "hasRight": true,
+          "stillWrong": false
+        },
+        {
+          "wrong": "上线计化",
+          "right": "上线计划",
+          "hasRight": false,
+          "stillWrong": false
+        }
+      ],
+      "pipeline_ms": 1756
+    },
+    {
+      "id": "p3_duplicate_01",
+      "type": "duplicate",
+      "utterance": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排",
+      "pass": false,
+      "text_asr": "今天我们团队要逃论后选生城向关的后选生城流成和上线机花案排",
+      "text_translated": "Today our team will escape after the election of the city to the closure of the post-election of the town and on line flower case.",
+      "session_id": "p3-p3_duplicate_01-1779120384064",
+      "lexicon_runtime_status": "ok",
+      "lexicon_recall_preview": [
+        {
+          "term": "后选生城",
+          "replacement": "候选生成",
+          "source": "confusion",
+          "priority": 10,
+          "raw": {
+            "id": "term-1",
+            "term": "后选生城",
+            "replacement": "候选生成",
+            "pinyin": "hou xuan sheng cheng",
+            "source": "confusion",
+            "priority": 10
+          },
+          "start": 0,
+          "end": 29
+        }
+      ],
+      "window_phonetic_preview": [
+        {
+          "spanText": "后选生城",
+          "spanStart": 9,
+          "spanEnd": 13,
+          "candidateText": "候选生成",
+          "candidateSource": "confusion",
+          "phoneticScore": 1,
+          "lexiconCandidate": {
+            "term": "后选生城",
+            "replacement": "候选生成",
+            "source": "confusion",
+            "priority": 10,
+            "raw": {
+              "id": "term-1",
+              "term": "后选生城",
+              "replacement": "候选生成",
+              "pinyin": "hou xuan sheng cheng",
+              "source": "confusion",
+              "priority": 10
+            },
+            "start": 0,
+            "end": 29
+          },
+          "spanPinyin": [
+            "hou",
+            "xuan",
+            "sheng",
+            "cheng"
+          ],
+          "candidatePinyin": [
+            "hou",
+            "xuan",
+            "sheng",
+            "cheng"
+          ]
+        }
+      ],
+      "asr_lexicon_selection": {
+        "applied": false,
+        "selectedReason": "no_candidate",
+        "selectedText": "今天我们团队要逃论后选生城向关的后选生城流成和上线机花案排",
+        "windows": [
+          {
+            "windowId": "w-9-13-b7bo22",
+            "span": {
+              "start": 9,
+              "end": 13,
+              "text": "后选生城"
+            },
+            "candidateCount": 0,
+            "selected": false,
+            "rejectedReason": "no_candidate"
+          }
+        ]
+      },
+      "recall_count": 1,
+      "phonetic_count": 1,
+      "selections_count": 0,
+      "selectedReason": "no_candidate",
+      "applied": false,
+      "windows_count": 1,
+      "selected_windows_count": 0,
+      "windows": [
+        {
+          "windowId": "w-9-13-b7bo22",
+          "span": {
+            "start": 9,
+            "end": 13,
+            "text": "后选生城"
+          },
+          "candidateCount": 0,
+          "selected": false,
+          "rejectedReason": "no_candidate"
+        }
+      ],
+      "contract": {
+        "runtime_ok": true,
+        "recall_ok": true,
+        "phonetic_ok": true,
+        "selector_ran": "no_candidate",
+        "repaired_text_ok": true,
+        "windows_ok": true,
+        "windows_selected_ok": true,
+        "reason_ok": true,
+        "replacements_ok": false,
+        "multi_ok": false
+      },
+      "fixes": [
+        {
+          "wrong": "后选生城",
+          "right": "候选生成",
+          "hasRight": false,
+          "stillWrong": true
+        },
+        {
+          "wrong": "上线计化",
+          "right": "上线计划",
+          "hasRight": false,
+          "stillWrong": false
+        }
+      ],
+      "pipeline_ms": 2546
+    }
+  ],
+  "summary": {
+    "total": 9,
+    "pass": 1,
+    "fail": 8,
+    "single_pass": 1,
+    "multi_pass": 0
+  }
+}

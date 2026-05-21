@@ -1,0 +1,35 @@
+P2:缺口与契约
+
+请审查当前开发方案。
+
+不要开发。
+
+目标：
+找出：
+- integration conflict
+- ctx ownership conflict
+- rewrite authority conflict
+- pipeline ordering issue
+- state duplication
+- inconsistent examples
+- hidden blockers
+- missing contracts
+
+重点检查：
+1. repairedText ownership
+2. translation input ownership
+3. 是否新增第二写回入口
+4. 是否新增 pipeline complexity
+5. 是否与历史 frozen direction 冲突
+6. examples 是否与真实代码一致
+7. top1/source order 是否一致
+8. start/end 规则是否一致
+
+输出：
+# Pre-Development Gap Report
+## 必须修正
+## 推荐补充
+## Integration Contract
+## Blockers
+## Non-blockers
+## 是否能进入开发

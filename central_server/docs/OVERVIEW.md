@@ -103,7 +103,7 @@ cargo test --test stage3_2   # 运行阶段 3.2 测试
 
 **测试策略**：在测试 central_server 时，默认节点已经启动了 GPU（在测试中模拟），但不需要真的启动 GPU 或节点端服务。详细说明请参考 `testing/scheduler/TEST_STRATEGY.md`。
 
-详细测试指南请参考 `testing/TEST_GUIDE.md`。
+测试：`cd scheduler && cargo test`。
 
 ### 测试覆盖
 
@@ -123,7 +123,6 @@ cargo test --test stage3_2   # 运行阶段 3.2 测试
 
 ### 快速参考
 
-- **项目完整性**: `project/PROJECT_COMPLETENESS.md`
-- **测试指南**: `testing/TEST_GUIDE.md`
-- **文档索引**: `README.md`
-- **迁移文档**: `MIGRATION.md` - 迁移内容和路径调整说明
+- **文档索引**: [README.md](./README.md)
+- **迁移说明**: [MIGRATION.md](./MIGRATION.md)
+- **Scheduler**: [../scheduler/docs/README.md](../scheduler/docs/README.md)

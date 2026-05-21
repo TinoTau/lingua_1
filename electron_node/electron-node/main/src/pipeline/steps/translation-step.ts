@@ -30,6 +30,24 @@ export async function runTranslationStep(
     return;
   }
 
+  const repaired = (ctx.repairedText ?? '').trim();
+  const translationSource =
+    repaired.length > 0 && textToTranslate === repaired
+      ? 'repairedText'
+      : (ctx.segmentForJobResult ?? '').trim() === textToTranslate
+        ? 'segmentForJobResult'
+        : 'asrText';
+  logger.info(
+    {
+      jobId: job.job_id,
+      sessionId: job.session_id,
+      source: translationSource,
+      textLength: textToTranslate.length,
+      textPreview: textToTranslate.slice(0, 80),
+    },
+    `[TRANSLATION_INPUT] source=${translationSource}`
+  );
+
   if (!services.taskRouter) {
     logger.error({ jobId: job.job_id }, 'runTranslationStep: TaskRouter not available');
     ctx.translatedText = '';

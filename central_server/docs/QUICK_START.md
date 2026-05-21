@@ -69,7 +69,7 @@ cargo test --test stage1_1   # 运行阶段 1.1 测试
 cargo test --test stage3_2   # 运行阶段 3.2 测试
 ```
 
-详细测试指南请参考 `testing/TEST_GUIDE.md`。
+单元测试：`cd central_server/scheduler && cargo test`。
 
 ## 验证服务
 
@@ -197,6 +197,5 @@ pip install -r requirements.txt --upgrade
 
 ## 相关文档
 
-- **项目完整性**: `project/PROJECT_COMPLETENESS.md`
-- **测试指南**: `testing/TEST_GUIDE.md`
-- **文档索引**: `README.md`
+- **文档索引**: [README.md](./README.md)
+- **Scheduler**: [../scheduler/docs/README.md](../scheduler/docs/README.md)

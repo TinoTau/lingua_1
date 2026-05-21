@@ -1,6 +1,9 @@
 // 任务路由相关的类型定义
 
 import { ServiceType } from '@shared/protocols/messages';
+import type { AsrKenlmMeta, AsrNBestItem } from './asr-evidence-types';
+
+export type { AsrKenlmMeta, AsrNBestItem } from './asr-evidence-types';
 
 /**
  * 服务端点信息
@@ -64,6 +67,12 @@ export interface ASRResult {
     reasonCodes: string[];
     qualityScore: number;
   };
+  /** CTC n-best evidence (observability only; does not replace top1 text). */
+  nbest?: AsrNBestItem[];
+  /** Utterance-level KenLM diagnostics when ASR HTTP provides them. */
+  kenlmMeta?: AsrKenlmMeta;
+  /** 实际路由到的 ASR service_id（可观测）。 */
+  routedServiceId?: string;
 }
 
 /**
