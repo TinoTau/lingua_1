@@ -28,7 +28,11 @@ export type ExpansionFunnel = {
 
 export type ExpansionDiagnostics = {
   expansionFunnel: ExpansionFunnel;
-  selectorRejectByMaxReplacements: Record<string, number>;
+  /** @deprecated 使用 selectorRejectByMaxActiveWindows */
+  selectorRejectByMaxReplacements?: Record<string, number>;
+  selectorRejectByMaxActiveWindows: Record<string, number>;
+  maxActiveWindowsPerSentence: number;
+  sentenceCandidateBudget: number;
 };
 
 function countCandidateSources(candidates: SentenceCandidate[]): Pick<
@@ -90,6 +94,9 @@ export function buildExpansionDiagnostics(input: {
       ...sourceCounts,
     },
     selectorRejectByMaxReplacements: {},
+    selectorRejectByMaxActiveWindows: {},
+    maxActiveWindowsPerSentence: 2,
+    sentenceCandidateBudget: 32,
   };
 }
 

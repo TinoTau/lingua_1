@@ -5,7 +5,7 @@
 
 import { ASRResult, AsrKenlmMeta, AsrNBestItem } from '../../task-router/types';
 import type { ASRHypothesis } from '../../asr/types';
-import type { LexiconRuntimeStatus } from '../../lexicon/lexicon-types';
+import type { LexiconManifestReadyInfo, LexiconRuntimeStatus } from '../../lexicon/lexicon-types';
 import type { WindowCandidate } from '../../lexicon/hotword-types';
 import type { WindowRecallDiagnostics } from '../../lexicon/window-recall-diagnostics';
 import type { SentenceCandidate } from '../../asr-repair/sentence-expansion/types';
@@ -16,6 +16,7 @@ import type { RecallCoverageDiagnostics } from '../../lexicon/recall-coverage-di
 import type { RestoreMetrics } from '../../asr-repair/restore-metrics';
 import type { SentenceRepairExtra } from '../../asr-repair/sentence-rerank/sentence-repair-observability';
 import type { RecoverLifecycle } from '../recover-contract-types';
+import type { SentenceCandidateTraceItem, V5Metrics } from '../v5-metrics';
 
 export interface JobContext {
   // 音频相关
@@ -42,6 +43,7 @@ export interface JobContext {
   asrKenlmMeta?: AsrKenlmMeta;
   lexiconRuntimeStatus?: LexiconRuntimeStatus;
   lexiconManifestVersion?: string;
+  lexiconManifestReady?: LexiconManifestReadyInfo;
   lexiconRuntimeError?: string;
   lexiconDisabledReason?: string;
   lexiconRecallTruncated?: boolean;
@@ -55,6 +57,7 @@ export interface JobContext {
   windowCandidates?: WindowCandidate[];
   /** V3 Phase B: segment-first window recall stats. */
   windowRecallDiagnostics?: WindowRecallDiagnostics;
+  v5Metrics?: V5Metrics;
   segmentAlignmentDiagnostics?: SegmentAlignmentDiagnostics;
   /** Q1.8-03：跨 chunk 边界 observed 风险（只报告） */
   crossBoundaryRiskReport?: CrossBoundaryRiskReport | null;
@@ -62,6 +65,7 @@ export interface JobContext {
   recallCoverageDiagnostics?: RecallCoverageDiagnostics | null;
   expansionDiagnostics?: ExpansionDiagnostics;
   sentenceCandidates?: SentenceCandidate[];
+  sentenceCandidateTrace?: SentenceCandidateTraceItem[];
   /** Recover v1 final sentence repair pick (observability + result extra). */
   sentenceRepairDecision?: SentenceCandidate;
   /** 句级修复可观测性（result extra.sentence_repair）。 */

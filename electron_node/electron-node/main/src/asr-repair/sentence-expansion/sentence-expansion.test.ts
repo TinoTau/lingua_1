@@ -81,7 +81,7 @@ describe('expandSentenceCandidates (windowSelector path)', () => {
           source: 'hotword',
         },
       ],
-      limits: { maxWindowsPerSentence: 4 },
+      limits: { maxActiveWindowsPerSentence: 4 },
     });
     expect(candidates.some((c) => c.candidateSource === 'window_multi')).toBe(true);
   });
@@ -118,7 +118,7 @@ describe('expandSentenceCandidates (windowSelector path)', () => {
           source: 'confusion_evidence',
         },
       ],
-      limits: { maxWindowsPerSentence: 4 },
+      limits: { maxActiveWindowsPerSentence: 4 },
     });
     expect(candidates.some((c) => c.candidateSource === 'window_pair')).toBe(true);
     const pair = candidates.find((c) => c.candidateSource === 'window_pair');

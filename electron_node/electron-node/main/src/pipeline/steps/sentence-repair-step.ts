@@ -12,10 +12,17 @@ import {
 } from '../../node-config';
 import { filterRerankEligibleCandidates, isRerankEligible } from '../../asr-repair/candidate-source';
 import { expandSentenceCandidates } from '../../asr-repair/sentence-expansion/sentence-expansion';
+import type { SentenceCandidate } from '../../asr-repair/sentence-expansion/types';
 import { computeRestoreMetrics } from '../../asr-repair/restore-metrics';
 import { applySentenceRepair } from '../../asr-repair/sentence-rerank/apply-sentence-repair';
 import { rerankSentenceCandidates } from '../../asr-repair/sentence-rerank/rerank';
 import { buildSentenceRepairExtra } from '../../asr-repair/sentence-rerank/sentence-repair-observability';
+import {
+  evaluateKenlmBaselineGate,
+  evaluateReplacementCountExceeded,
+} from '../../asr-repair/recover-safety-gates';
+import { buildSentenceCandidateTrace, buildV5Metrics } from '../v5-metrics';
+import { createKenlmBatchScorer } from '../../asr-repair/sentence-rerank/kenlm-scorer';
 import logger from '../../logger';
 
 export const REPAIR_SKIP_NO_HYPOTHESES = 'no_hypotheses';
@@ -32,6 +39,32 @@ function markSentenceRepairSkipped(ctx: JobContext, skipReason: string): void {
     skipped: true,
     skipReason,
   };
+  ctx.v5Metrics = buildV5Metrics(ctx);
+}
+
+async function annotateKenlmBaselineDelta(
+  candidates: SentenceCandidate[],
+  baselineText: string,
+  kenlmAvailable: boolean
+): Promise<number | undefined> {
+  if (!kenlmAvailable || !baselineText.trim()) {
+    return undefined;
+  }
+  const kenlm = createKenlmBatchScorer();
+  if (!kenlm) {
+    return undefined;
+  }
+  const batch = await kenlm.scoreBatch([baselineText.trim()]);
+  const baselineNorm = batch.scores[0]?.normalizedScore;
+  if (baselineNorm === undefined) {
+    return undefined;
+  }
+  for (const c of candidates) {
+    if (c.kenlmNormalizedScore !== undefined) {
+      c.kenlmBaselineDelta = c.kenlmNormalizedScore - baselineNorm;
+    }
+  }
+  return baselineNorm;
 }
 
 export async function runSentenceRepairStep(
@@ -78,7 +111,35 @@ export async function runSentenceRepairStep(
 
   const baselineText = (ctx.segmentForJobResult ?? ctx.asrText ?? '').trim();
   const rerank = await rerankSentenceCandidates(rerankPool);
+  const baselineNorm = await annotateKenlmBaselineDelta(
+    rerank.candidates,
+    baselineText,
+    rerank.kenlmAvailable
+  );
   ctx.sentenceCandidates = rerank.candidates;
+  ctx.sentenceCandidateTrace = buildSentenceCandidateTrace(
+    rerank.candidates,
+    rerank.picked,
+    baselineNorm
+  );
+
+  const replacementSkip = evaluateReplacementCountExceeded(rerank.picked.replacements.length);
+  if (replacementSkip) {
+    markSentenceRepairSkipped(ctx, replacementSkip);
+    logger.info({ jobId: job.job_id }, `[SENTENCE_REPAIR] skipped reason=${replacementSkip}`);
+    return;
+  }
+
+  const kenlmGate = await evaluateKenlmBaselineGate(
+    baselineText,
+    rerank.picked.kenlmNormalizedScore,
+    rerank.kenlmAvailable
+  );
+  if (kenlmGate.skip && kenlmGate.reason) {
+    markSentenceRepairSkipped(ctx, kenlmGate.reason);
+    logger.info({ jobId: job.job_id }, `[SENTENCE_REPAIR] skipped reason=${kenlmGate.reason}`);
+    return;
+  }
 
   if (!isRerankEligible(rerank.picked)) {
     markSentenceRepairSkipped(ctx, REPAIR_SKIP_NO_WINDOW_EXPANSION);
@@ -107,6 +168,7 @@ export async function runSentenceRepairStep(
     skipped: false,
     skipReason: null,
   };
+  ctx.v5Metrics = buildV5Metrics(ctx);
 
   logger.info(
     {

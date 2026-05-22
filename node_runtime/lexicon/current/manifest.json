@@ -1,10 +1,20 @@
 {
-  "version": "recover-v2-hotword-seed-v1",
-  "checksum": "548ea6d74a1a211e128d7627b35460c8c63dc9d674a459a5b7eb341afb1a59fb",
-  "createdAt": "2026-05-20T23:42:07.116Z",
+  "version": "recover-v5-scored-lexicon",
+  "checksum": "9606d9c04b95be829cbc632a5a0f22bc41b4ad19b9361d1230c5191a791b169e",
+  "createdAt": "2026-05-22T12:38:18.391Z",
   "backend": "sqlite",
-  "bundle_tag": "staging-from-seed-v1",
+  "bundle_tag": "v5-from-seed",
   "hotword_count": 67,
   "confusion_count": 194,
-  "seed_path": "electron_node\\electron-node\\data\\lexicon\\zh_asr_confusions_seed_high_quality.jsonl"
+  "seed_path": "electron_node\\electron-node\\data\\lexicon\\zh_asr_confusions_seed_high_quality.jsonl",
+  "scored_lexicon_version": "v5",
+  "term_count": 67,
+  "enabled_term_count": 67,
+  "terms_with_prior_count": 67,
+  "terms_without_prior_count": 0,
+  "pinyin_index_count": 67,
+  "same_pinyin_key_count": 67,
+  "indexed_term_count": 67,
+  "mixed_token_count": 0,
+  "prior_score_migration": "frequency_log1p_v1"
 }

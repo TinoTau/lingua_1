@@ -6,7 +6,7 @@ import { JobAssignMessage } from '@shared/protocols/messages';
 import { JobContext } from './context/job-context';
 import { buildJobResult } from './result-builder';
 import {
-  RECOVER_CONTRACT_VERSION,
+  RECOVER_CONTRACT_VERSION_V5,
   buildRecoverContractExtra,
   buildRecoverLifecycleFromCtx,
   buildCtcContract,
@@ -47,7 +47,7 @@ describe('recover-contract', () => {
     };
 
     const result = buildJobResult(baseJob, ctx);
-    expect(result.extra?.recover_contract_version).toBe(RECOVER_CONTRACT_VERSION);
+    expect(result.extra?.recover_contract_version).toBe(RECOVER_CONTRACT_VERSION_V5);
     expect(result.extra?.lexicon_runtime_status).toBe('ok');
     expect(result.extra?.recover_lifecycle?.executed).toBe(true);
     expect(result.extra?.sentence_repair).toBeDefined();

@@ -73,6 +73,8 @@ function boundReplacementsToWindowCandidates(
     if (matched) {
       return matched;
     }
+    const poolPrior = pool.reduce((m, c) => Math.max(m, c.priorScore), 0);
+    const poolScore = pool.reduce((m, c) => Math.max(m, c.candidateScore ?? 0), 0);
     return {
       windowId: `sel-${start}-${end}`,
       hypothesisIndex: SEGMENT_HYPOTHESIS_INDEX,
@@ -82,8 +84,11 @@ function boundReplacementsToWindowCandidates(
       end,
       hotwordId: 'selector-bound',
       phoneticScore: b.replacement.phoneticScore ?? 0,
-      priorScore: 0,
-      source: 'hotword',
+      priorScore: poolPrior,
+      candidateScore: poolScore,
+      rankInTopK: 1,
+      termLength: (to || from).length,
+      source: 'lexicon_pinyin_topk',
     };
   });
 }
@@ -122,7 +127,7 @@ export function expandSentenceCandidates(
   const quality = getRecoverQualityConfig();
   const limits = {
     ...DEFAULT_SENTENCE_EXPANSION_LIMITS,
-    maxWindowsPerSentence: quality.maxReplacements,
+    maxActiveWindowsPerSentence: quality.maxActiveWindows,
     maxSentenceCandidates: quality.maxSentenceCandidates,
     ...input.limits,
   };
@@ -159,21 +164,25 @@ export function expandSentenceCandidates(
   const seenKeys = new Set<string>();
   let duplicateSentenceRejectedCount = 0;
   const decisions: ReturnType<typeof selectActiveUtteranceTextWindowBased>[] = [];
-  const selectorRejectByMaxReplacements: Record<string, number> = {};
+  const selectorRejectByMaxActiveWindows: Record<string, number> = {};
 
-  for (let maxReplacements = 1; maxReplacements <= limits.maxWindowsPerSentence; maxReplacements++) {
+  for (
+    let activeWindowCount = 1;
+    activeWindowCount <= limits.maxActiveWindowsPerSentence;
+    activeWindowCount++
+  ) {
     const decision = selectActiveUtteranceTextWindowBased({
       originalText: baseText,
       preview,
       minPhoneticScore: quality.expansionMinPhoneticScore,
-      maxReplacements,
+      maxReplacements: activeWindowCount,
     });
     decisions.push(decision);
 
     for (const w of decision.windows ?? []) {
       if (w.rejectedReason) {
-        const key = `mr${maxReplacements}:${w.rejectedReason}`;
-        selectorRejectByMaxReplacements[key] = (selectorRejectByMaxReplacements[key] ?? 0) + 1;
+        const key = `aw${activeWindowCount}:${w.rejectedReason}`;
+        selectorRejectByMaxActiveWindows[key] = (selectorRejectByMaxActiveWindows[key] ?? 0) + 1;
       }
     }
 
@@ -201,7 +210,9 @@ export function expandSentenceCandidates(
     candidates: out,
     duplicateSentenceRejectedCount,
   });
-  diagnostics.selectorRejectByMaxReplacements = selectorRejectByMaxReplacements;
+  diagnostics.selectorRejectByMaxActiveWindows = selectorRejectByMaxActiveWindows;
+  diagnostics.maxActiveWindowsPerSentence = limits.maxActiveWindowsPerSentence;
+  diagnostics.sentenceCandidateBudget = limits.maxSentenceCandidates;
 
   return {
     candidates: out.slice(0, limits.maxSentenceCandidates),

@@ -6,6 +6,8 @@ import {
 } from './confusion-observed-spans';
 import { classifyNoWindowBucket } from './no-window-bucket';
 import { enumerateAsrWindows } from './enumerate-asr-windows';
+import { buildDiffContextWindows } from './diff-context-windows';
+import { detectNbestDiffSpans } from './nbest-diff-span';
 import {
   emptyHotwordRecallStats,
   recallHotwordsForWindow,
@@ -16,36 +18,14 @@ import type { AsrWindow } from './lexicon-types';
 import type { TextSpan } from './suspicious-span-detector';
 import type { WindowCandidate } from './hotword-types';
 import type { LexiconRuntime } from './lexicon-runtime';
-import { buildNbestAugmentDiagnostics } from '../asr/segment-alignment-diagnostics';
+import { resolveRecoverQualityConfig } from '../recover-quality/quality-config';
 import {
   emptyWindowRecallDiagnostics,
-  type NbestAugmentDropEvent,
   type WindowRecallDiagnostics,
 } from './window-recall-diagnostics';
 
-const MAX_NBEST_AUGMENT_DROP_EVENTS = 32;
-
-function recordNbestAugmentDrop(
-  diagnostics: WindowRecallDiagnostics,
-  dropReason: string,
-  coords?: { windowStart?: number; windowEnd?: number; hypothesisRank?: number }
-): void {
-  diagnostics.nbestAugmentDroppedSlices = (diagnostics.nbestAugmentDroppedSlices ?? 0) + 1;
-  diagnostics.nbestAugmentDropReason = dropReason;
-  const events = diagnostics.nbestAugmentDropEvents ?? [];
-  if (events.length < MAX_NBEST_AUGMENT_DROP_EVENTS) {
-    const event: NbestAugmentDropEvent = {
-      augmentSliceDropped: true,
-      dropReason,
-      windowStart: coords?.windowStart,
-      windowEnd: coords?.windowEnd,
-      hypothesisRank: coords?.hypothesisRank,
-    };
-    diagnostics.nbestAugmentDropEvents = [...events, event];
-  }
-}
-
 export const DEFAULT_MAX_WINDOW_CANDIDATES = 192;
+export const DEFAULT_MAX_DIFF_WINDOWS = 64;
 /** Segment-first: all window spans use rank 0 coordinates on segment text. */
 export const SEGMENT_HYPOTHESIS_INDEX = 0;
 
@@ -54,7 +34,12 @@ export type SegmentWindowRecallResult = {
   truncated: boolean;
   windowCount: number;
   diagnostics: WindowRecallDiagnostics;
+  noDiffSpan?: boolean;
 };
+
+function legacySlidingEnabled(): boolean {
+  return process.env.LEXICON_LEGACY_SLIDING_WINDOW === '1';
+}
 
 function hashShort(text: string): string {
   let h = 0;
@@ -102,24 +87,99 @@ function confusionSpansToWindows(
   hypothesisIndex: number,
   tag: string
 ): AsrWindow[] {
-  return findConfusionObservedSpans(text, observedStrings).map((span) =>
-    spanToAsrWindow(span, hypothesisIndex, tag)
+  const spans = findConfusionObservedSpans(text, observedStrings);
+  return spans.map((span) => spanToAsrWindow(span, hypothesisIndex, tag));
+}
+
+/** V5 diff-first window enumeration (no sliding / observed fallback). */
+function buildV5DiffWindows(
+  segmentText: string,
+  hypotheses: ASRHypothesis[],
+  diagnostics: WindowRecallDiagnostics
+): { windows: AsrWindow[]; noDiffSpan: boolean } {
+  const diffSpans = detectNbestDiffSpans(segmentText, hypotheses);
+  diagnostics.diffSpanCount = diffSpans.length;
+
+  if (diffSpans.length === 0) {
+    diagnostics.noDiffSpan = true;
+    diagnostics.slidingWindowCount = 0;
+    diagnostics.windowsFromNbestDiffCount = 0;
+    diagnostics.fullChunkDualScaleCount = 0;
+    return { windows: [], noDiffSpan: true };
+  }
+
+  const cfg = resolveRecoverQualityConfig();
+  const built = buildDiffContextWindows(segmentText, diffSpans, {
+    allowedWindowLengths: cfg.allowedWindowLengths,
+    fineLengths: [2, 3],
+    coarseLengths: [4, 5],
+    diffContextLeft: cfg.diffContextLeft,
+    diffContextRight: cfg.diffContextRight,
+    maxWindows: DEFAULT_MAX_DIFF_WINDOWS,
+    hypothesisIndex: SEGMENT_HYPOTHESIS_INDEX,
+  });
+
+  diagnostics.noDiffSpan = false;
+  diagnostics.slidingWindowCount = 0;
+  diagnostics.windowsFromNbestDiffCount = built.windows.length;
+  diagnostics.windowLengthDistribution = built.windowLengthDistribution;
+  diagnostics.fullChunkDualScaleCount = built.fullChunkDualScaleCount;
+  return { windows: built.windows, noDiffSpan: false };
+}
+
+/** Legacy V3/V4 path — debug only (`LEXICON_LEGACY_SLIDING_WINDOW=1`). */
+function buildLegacySegmentWindows(
+  segmentText: string,
+  hypotheses: ASRHypothesis[],
+  observedStrings: readonly string[],
+  diagnostics: WindowRecallDiagnostics
+): AsrWindow[] {
+  const sliding = enumerateAsrWindows(segmentText, {
+    hypothesisIndex: SEGMENT_HYPOTHESIS_INDEX,
+  });
+  diagnostics.slidingWindowCount = sliding.length;
+  const confusionOnSegment = confusionSpansToWindows(
+    segmentText,
+    observedStrings,
+    SEGMENT_HYPOTHESIS_INDEX,
+    'cf'
   );
+  diagnostics.confusionSpansOnSegment = confusionOnSegment.length;
+  const fuzzySpans = findFuzzyConfusionObservedSpans(segmentText, observedStrings);
+  const chunkPinyinSpans = findChunkPinyinAlignedObservedSpans(segmentText, observedStrings);
+  diagnostics.confusionSpansFuzzyOnSegment = fuzzySpans.length;
+  diagnostics.confusionSpansChunkPinyinOnSegment = chunkPinyinSpans.length;
+  const fuzzyOnSegment = [
+    ...fuzzySpans.map((span) => spanToAsrWindow(span, SEGMENT_HYPOTHESIS_INDEX, 'cffz')),
+    ...chunkPinyinSpans.map((span) => spanToAsrWindow(span, SEGMENT_HYPOTHESIS_INDEX, 'cfpy')),
+  ];
+  return mergeAsrWindows(sliding, [...confusionOnSegment, ...fuzzyOnSegment]);
 }
 
 function hitToWindowCandidate(
   hit: ReturnType<typeof recallHotwordsForWindow>[number],
-  window: { windowId: string; text: string; start: number; end: number },
+  window: {
+    windowId: string;
+    text: string;
+    start: number;
+    end: number;
+    syllables: string[];
+    meta?: { diffSpanId?: string; windowTrigger?: string; hypothesisRank?: number };
+  },
   fromText: string
 ): WindowCandidate {
   const source =
-    hit.recallPath === 'fuzzy_observed'
-      ? 'fuzzy_observed'
-      : hit.recallPath === 'confusion_evidence'
-        ? 'confusion_evidence'
-        : hit.recallPath === 'exact'
-          ? 'exact'
-          : 'hotword';
+    hit.recallPath === 'lexicon_pinyin_topk'
+      ? 'lexicon_pinyin_topk'
+      : hit.recallPath === 'fuzzy_observed'
+        ? 'fuzzy_observed'
+        : hit.recallPath === 'confusion_evidence'
+          ? 'confusion_evidence'
+          : hit.recallPath === 'exact'
+            ? 'exact'
+            : 'hotword';
+  const termLength = hit.termLength ?? window.text.length;
+  const candidateScore = hit.candidateScore ?? hit.priorScore + hit.phoneticScore;
   return {
     windowId: window.windowId,
     hypothesisIndex: SEGMENT_HYPOTHESIS_INDEX,
@@ -130,8 +190,29 @@ function hitToWindowCandidate(
     hotwordId: hit.hotword.id,
     phoneticScore: hit.phoneticScore,
     priorScore: hit.priorScore,
+    candidateScore,
+    rankInTopK: hit.rankInTopK ?? 1,
+    termLength,
     source,
+    matchType: hit.matchType,
+    windowPinyin: [...window.syllables],
+    candidatePinyin: [...hit.hotword.pinyin],
+    diffSpanId: window.meta?.diffSpanId,
+    windowTrigger: window.meta?.windowTrigger,
+    sourceHypothesisRank: window.meta?.hypothesisRank,
+    candidateScoreBreakdown: hit.candidateScoreBreakdown,
   };
+}
+
+function mergeCountMaps(
+  a: Record<string, number> | undefined,
+  b: Record<string, number>
+): Record<string, number> {
+  const out = { ...a };
+  for (const [k, v] of Object.entries(b)) {
+    out[k] = (out[k] ?? 0) + v;
+  }
+  return out;
 }
 
 function candidateKey(c: WindowCandidate): string {
@@ -143,6 +224,17 @@ function mergeStats(target: WindowRecallDiagnostics, win: HotwordRecallStats): v
   target.hitsPinyin += win.hitsPinyin;
   target.hitsConfusion += win.hitsConfusion;
   target.hitsFuzzyObserved += win.hitsFuzzyObserved;
+  target.lexiconPinyinTopkCandidateCount =
+    (target.lexiconPinyinTopkCandidateCount ?? 0) + win.hitsLexiconPinyinTopk;
+  target.topkDroppedBelowMinScore =
+    (target.topkDroppedBelowMinScore ?? 0) + win.topkDroppedBelowMinScore;
+  target.outOfBundleCandidateCount =
+    (target.outOfBundleCandidateCount ?? 0) + win.outOfBundleCandidateCount;
+  target.topkAttemptsByTermLength = mergeCountMaps(
+    target.topkAttemptsByTermLength,
+    win.topkAttemptsByTermLength
+  );
+  target.topkHitsByTermLength = mergeCountMaps(target.topkHitsByTermLength, win.topkHitsByTermLength);
   target.droppedBelowPinyinThreshold += win.droppedBelowPinyinThreshold;
   target.fuzzyObservedAttemptCount =
     (target.fuzzyObservedAttemptCount ?? 0) + win.fuzzyObservedAttemptCount;
@@ -152,6 +244,8 @@ function mergeStats(target: WindowRecallDiagnostics, win: HotwordRecallStats): v
   target.pinyinAttemptCount = (target.pinyinAttemptCount ?? 0) + win.pinyinAttemptCount;
   target.pinyinHitCount = (target.pinyinHitCount ?? 0) + win.pinyinHitCount;
   target.pinyinNoHitCount = (target.pinyinNoHitCount ?? 0) + win.pinyinNoHitCount;
+  target.nearPinyinAttemptCount =
+    (target.nearPinyinAttemptCount ?? 0) + (win.nearPinyinAttemptCount ?? 0);
 }
 
 function pushHits(
@@ -194,9 +288,12 @@ function recallOnWindows(
   diagnostics: WindowRecallDiagnostics
 ): boolean {
   for (const window of windows) {
+    if (out.length >= maxCandidates) {
+      return true;
+    }
+    const before = out.length;
     const winStats = emptyHotwordRecallStats();
     const hits = recallHotwordsForWindow(window, runtime, undefined, winStats);
-    const before = out.length;
     if (hits.length > 0) {
       diagnostics.windowsWithRecallTriggered += 1;
     }
@@ -213,135 +310,7 @@ function recallOnWindows(
 }
 
 /**
- * Map confusion span in n-best text to segment coordinates when possible.
- */
-function mapHypothesisSpanToSegment(
-  segmentText: string,
-  hypText: string,
-  span: TextSpan
-): TextSpan | null {
-  if (hypText.length === segmentText.length) {
-    return { text: span.text, start: span.start, end: span.end };
-  }
-  const at = segmentText.indexOf(span.text);
-  if (at < 0) {
-    return null;
-  }
-  return { text: span.text, start: at, end: at + span.text.length };
-}
-
-function buildSegmentWindows(
-  segmentText: string,
-  hypotheses: ASRHypothesis[],
-  observedStrings: readonly string[],
-  diagnostics: WindowRecallDiagnostics
-): AsrWindow[] {
-  const sliding = enumerateAsrWindows(segmentText, {
-    hypothesisIndex: SEGMENT_HYPOTHESIS_INDEX,
-  });
-  const confusionOnSegment = confusionSpansToWindows(
-    segmentText,
-    observedStrings,
-    SEGMENT_HYPOTHESIS_INDEX,
-    'cf'
-  );
-  diagnostics.confusionSpansOnSegment = confusionOnSegment.length;
-  const fuzzySpans = findFuzzyConfusionObservedSpans(segmentText, observedStrings);
-  const chunkPinyinSpans = findChunkPinyinAlignedObservedSpans(segmentText, observedStrings);
-  diagnostics.confusionSpansFuzzyOnSegment = fuzzySpans.length;
-  diagnostics.confusionSpansChunkPinyinOnSegment = chunkPinyinSpans.length;
-  const fuzzyOnSegment = [
-    ...fuzzySpans.map((span) => spanToAsrWindow(span, SEGMENT_HYPOTHESIS_INDEX, 'cffz')),
-    ...chunkPinyinSpans.map((span) => spanToAsrWindow(span, SEGMENT_HYPOTHESIS_INDEX, 'cfpy')),
-  ];
-
-  const fromNbest: AsrWindow[] = [];
-  for (const hypothesis of hypotheses) {
-    if (hypothesis.rank === SEGMENT_HYPOTHESIS_INDEX) {
-      continue;
-    }
-    const hypText = hypothesis.text.trim();
-    if (!hypText) {
-      continue;
-    }
-    const hypSpans = findConfusionObservedSpans(hypText, observedStrings);
-    for (const span of hypSpans) {
-      const mapped = mapHypothesisSpanToSegment(segmentText, hypText, span);
-      if (!mapped) {
-        recordNbestAugmentDrop(diagnostics, 'span_out_of_range', {
-          windowStart: span.start,
-          windowEnd: span.end,
-          hypothesisRank: hypothesis.rank,
-        });
-        continue;
-      }
-      diagnostics.nbestConfusionSpansMapped += 1;
-      fromNbest.push(spanToAsrWindow(mapped, SEGMENT_HYPOTHESIS_INDEX, `nb${hypothesis.rank}cf`));
-    }
-  }
-
-  return mergeAsrWindows(sliding, [...confusionOnSegment, ...fuzzyOnSegment, ...fromNbest]);
-}
-
-/**
- * N-best phonetic evidence at segment coordinates (same length only).
- */
-function augmentFromNbestSlices(
-  segmentText: string,
-  windows: AsrWindow[],
-  hypotheses: ASRHypothesis[],
-  runtime: LexiconRuntime,
-  seen: Set<string>,
-  out: WindowCandidate[],
-  maxCandidates: number,
-  diagnostics: WindowRecallDiagnostics
-): void {
-  for (const hypothesis of hypotheses) {
-    if (hypothesis.rank === SEGMENT_HYPOTHESIS_INDEX) {
-      continue;
-    }
-    const hypText = hypothesis.text.trim();
-    if (hypText.length !== segmentText.length) {
-      for (let i = 0; i < windows.length; i++) {
-        recordNbestAugmentDrop(diagnostics, 'segment_hypothesis_mismatch', {
-          windowStart: windows[i]?.start,
-          windowEnd: windows[i]?.end,
-          hypothesisRank: hypothesis.rank,
-        });
-      }
-      continue;
-    }
-
-    for (const window of windows) {
-      const fromText = segmentText.slice(window.start, window.end);
-      const hypSlice = hypText.slice(window.start, window.end);
-      if (hypSlice === fromText) {
-        continue;
-      }
-      diagnostics.nbestAugmentSlices += 1;
-
-      const hypWindow: AsrWindow = {
-        windowId: `${window.windowId}-nb${hypothesis.rank}`,
-        text: hypSlice,
-        start: window.start,
-        end: window.end,
-        syllables: textToSyllables(hypSlice),
-      };
-      const winStats = emptyHotwordRecallStats();
-      const hits = recallHotwordsForWindow(hypWindow, runtime, undefined, winStats);
-      if (hits.length > 0) {
-        diagnostics.windowsWithRecallTriggered += 1;
-      }
-      mergeStats(diagnostics, winStats);
-      if (pushHits(segmentText, window, hits, seen, out, maxCandidates, diagnostics)) {
-        return;
-      }
-    }
-  }
-}
-
-/**
- * Segment-first window recall (V3 Phase B / GB-1).
+ * Segment-first window recall (V5: n-best diff → diff context dual-scale).
  */
 export function recallSegmentWindowCandidates(
   segmentText: string,
@@ -361,47 +330,69 @@ export function recallSegmentWindowCandidates(
     return { candidates: [], truncated: false, windowCount: 0, diagnostics };
   }
 
-  const observedStrings = runtime.getConfusionObservedStrings();
-  const windows = buildSegmentWindows(trimmed, hypotheses, observedStrings, diagnostics);
+  let windows: AsrWindow[];
+  let noDiffSpan = false;
+
+  if (legacySlidingEnabled()) {
+    const observedStrings = runtime.getConfusionObservedStrings();
+    windows = buildLegacySegmentWindows(trimmed, hypotheses, observedStrings, diagnostics);
+    diagnostics.windowsFromNbestDiffCount = 0;
+    diagnostics.noDiffSpan = false;
+  } else {
+    const built = buildV5DiffWindows(trimmed, hypotheses, diagnostics);
+    windows = built.windows;
+    noDiffSpan = built.noDiffSpan;
+    if (noDiffSpan) {
+      diagnostics.windowsEnumerated = 0;
+      diagnostics.windowCandidateCount = 0;
+      diagnostics.noWindowBucket = 'no_diff_span';
+      return {
+        candidates: [],
+        truncated: false,
+        windowCount: 0,
+        diagnostics,
+        noDiffSpan: true,
+      };
+    }
+  }
+
   diagnostics.windowsEnumerated = windows.length;
 
   const seen = new Set<string>();
   const out: WindowCandidate[] = [];
-
-  let truncated = recallOnWindows(trimmed, windows, runtime, seen, out, maxCandidates, diagnostics);
-  if (!truncated) {
-    augmentFromNbestSlices(trimmed, windows, hypotheses, runtime, seen, out, maxCandidates, diagnostics);
-    truncated = out.length >= maxCandidates;
-  }
+  const truncated = recallOnWindows(trimmed, windows, runtime, seen, out, maxCandidates, diagnostics);
 
   out.sort((a, b) => {
-    if (b.phoneticScore !== a.phoneticScore) {
-      return b.phoneticScore - a.phoneticScore;
+    const scoreA = a.candidateScore ?? 0;
+    const scoreB = b.candidateScore ?? 0;
+    if (scoreB !== scoreA) {
+      return scoreB - scoreA;
     }
-    return b.priorScore - a.priorScore;
+    return (a.rankInTopK ?? 99) - (b.rankInTopK ?? 99);
   });
+
+  const outOfBundle = out.filter((c) => c.source !== 'lexicon_pinyin_topk').length;
+  diagnostics.outOfBundleCandidateCount = outOfBundle;
+  diagnostics.lexiconPinyinTopkCandidateCount = out.filter(
+    (c) => c.source === 'lexicon_pinyin_topk'
+  ).length;
 
   diagnostics.windowCandidateCount = out.length;
   diagnostics.truncated = truncated;
 
-  if (out.length === 0) {
+  if (out.length === 0 && !noDiffSpan) {
     diagnostics.noWindowBucket = classifyNoWindowBucket({
       segmentTextLength: trimmed.length,
       diagnostics,
-      confusionObservedCount: observedStrings.length,
+      confusionObservedCount: runtime.getConfusionObservedStrings().length,
     });
   }
-
-  diagnostics.nbestAugment = buildNbestAugmentDiagnostics({
-    nbestAugmentSlices: diagnostics.nbestAugmentSlices,
-    nbestAugmentDroppedSlices: diagnostics.nbestAugmentDroppedSlices ?? 0,
-    nbestAugmentDropReason: diagnostics.nbestAugmentDropReason,
-  });
 
   return {
     candidates: out,
     truncated,
     windowCount: windows.length,
     diagnostics,
+    noDiffSpan: noDiffSpan || undefined,
   };
 }

@@ -14,10 +14,21 @@ import { markLexiconDisabled } from '../lexicon/lexicon-runtime';
 import type { LexiconRuntimeStatus } from '../lexicon/lexicon-types';
 import type { RestoreMetrics } from '../asr-repair/restore-metrics';
 import type { SentenceRepairExtra } from '../asr-repair/sentence-rerank/sentence-repair-observability';
+import { loadNodeConfig } from '../node-config';
 import type { RecoverLifecycle } from './recover-contract-types';
+import type { V5Metrics } from './v5-metrics';
 
 export type { RecoverLifecycle } from './recover-contract-types';
 export const RECOVER_CONTRACT_VERSION = 'historical-restore-v1';
+export const RECOVER_CONTRACT_VERSION_V5 = 'v5-scored-lexicon-topk';
+
+export function resolveRecoverContractVersion(): string {
+  const v = loadNodeConfig().features?.lexiconRecall?.contractVersion;
+  if (v === 'historical-restore-v1') {
+    return RECOVER_CONTRACT_VERSION;
+  }
+  return RECOVER_CONTRACT_VERSION_V5;
+}
 
 export type SentenceRepairContract = {
   executed: boolean;
@@ -48,6 +59,7 @@ export type RecoverContractExtra = {
   aggregation_resync_reason: string | null;
   nbest_synthetic: boolean;
   sentence_repair: SentenceRepairContract;
+  v5_metrics?: V5Metrics;
 };
 
 export function stampRecoverPipelineSkip(
@@ -264,10 +276,14 @@ export function buildRecoverContractExtra(
   const ctc = buildCtcContract(ctx);
   const sentence_repair = buildSentenceRepairContract(job, ctx, lifecycle);
 
+  const version = resolveRecoverContractVersion();
   return {
     ...lexicon,
-    recover_contract_version: RECOVER_CONTRACT_VERSION,
+    recover_contract_version: version,
     recover_lifecycle: lifecycle,
+    ...(version === RECOVER_CONTRACT_VERSION_V5 && ctx.v5Metrics
+      ? { v5_metrics: ctx.v5Metrics }
+      : {}),
     ...(ctx.recoverSkipped === true ? { recover_skipped: true } : {}),
     ...(ctx.repairSkipReason != null ? { repair_skip_reason: ctx.repairSkipReason } : {}),
     ...(ctx.restoreMetrics ? { restore_metrics: ctx.restoreMetrics } : {}),

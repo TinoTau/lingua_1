@@ -15,8 +15,10 @@ function seedBundle(tmpDir: string): void {
       id TEXT PRIMARY KEY,
       word TEXT NOT NULL,
       pinyin TEXT NOT NULL,
+      prior_score REAL NOT NULL,
       frequency INTEGER DEFAULT 1,
       domain TEXT,
+      tags TEXT,
       enabled INTEGER DEFAULT 1
     );
     CREATE TABLE lexicon_confusions (
@@ -29,10 +31,10 @@ function seedBundle(tmpDir: string): void {
     );
   `);
   const insertHw = db.prepare(
-    `INSERT INTO lexicon_terms (id, word, pinyin, frequency, enabled)
-     VALUES (?, ?, ?, ?, 1)`
+    `INSERT INTO lexicon_terms (id, word, pinyin, prior_score, frequency, enabled)
+     VALUES (?, ?, ?, ?, ?, 1)`
   );
-  insertHw.run('hw-1', '候选生成', 'hou xuan sheng cheng', 10);
+  insertHw.run('hw-1', '候选生成', 'hou xuan sheng cheng', 8.5, 10);
   const insertCf = db.prepare(
     `INSERT INTO lexicon_confusions (id, observed, hotword_id, enabled)
      VALUES (?, ?, ?, 1)`
@@ -44,10 +46,12 @@ function seedBundle(tmpDir: string): void {
   fs.writeFileSync(
     path.join(tmpDir, 'manifest.json'),
     JSON.stringify({
-      version: 'test',
+      version: 'test-v5',
       checksum,
       createdAt: '2026-05-17T00:00:00Z',
       backend: 'sqlite',
+      scored_lexicon_version: 'v5',
+      terms_without_prior_count: 0,
     })
   );
 }
@@ -70,32 +74,19 @@ describe('recallSegmentWindowCandidates', () => {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
 
-  it('recalls 候选生成 for observed 后选生城', () => {
+  it('no_diff_span when only rank0', () => {
     const segment = '我们要做后选生城';
-    const { candidates, diagnostics } = recallSegmentWindowCandidates(
+    const { candidates, diagnostics, noDiffSpan } = recallSegmentWindowCandidates(
       segment,
       [{ text: segment, rank: 0 }],
       runtime
     );
-    const hit = candidates.find((c) => c.to === '候选生成' && c.from === '后选生城');
-    expect(hit).toBeDefined();
-    expect(hit!.hypothesisIndex).toBe(0);
-    expect(diagnostics.windowsEnumerated).toBeGreaterThan(0);
+    expect(candidates).toEqual([]);
+    expect(noDiffSpan).toBe(true);
+    expect(diagnostics.slidingWindowCount).toBe(0);
   });
 
-  it('recalls 候选生成 for homophone ASR 后选声城', () => {
-    const segment = '我们要做后选声城';
-    const { candidates } = recallSegmentWindowCandidates(
-      segment,
-      [{ text: segment, rank: 0 }],
-      runtime
-    );
-    const hit = candidates.find((c) => c.to === '候选生成' && c.from === '后选声城');
-    expect(hit).toBeDefined();
-    expect(hit!.source).toBe('confusion_evidence');
-  });
-
-  it('nbest augment: rank1 slice differs at segment coordinates', () => {
+  it('recalls 候选生成 via diff windows when rank1 differs', () => {
     const segment = '我们要做后选生城';
     const { candidates, diagnostics } = recallSegmentWindowCandidates(
       segment,
@@ -105,9 +96,23 @@ describe('recallSegmentWindowCandidates', () => {
       ],
       runtime
     );
-    expect(diagnostics.nbestAugmentSlices).toBeGreaterThan(0);
+    expect(diagnostics.windowsFromNbestDiffCount).toBeGreaterThan(0);
+    expect(diagnostics.slidingWindowCount).toBe(0);
     const hit = candidates.find((c) => c.to === '候选生成');
     expect(hit).toBeDefined();
-    expect(hit!.from).toBe('后选生城');
+  });
+
+  it('recalls for homophone segment when n-best provides diff', () => {
+    const segment = '我们要做后选声城';
+    const { candidates } = recallSegmentWindowCandidates(
+      segment,
+      [
+        { text: segment, rank: 0 },
+        { text: '我们要做后选生城', rank: 1 },
+      ],
+      runtime
+    );
+    const hit = candidates.find((c) => c.to === '候选生成');
+    expect(hit).toBeDefined();
   });
 });

@@ -42,6 +42,7 @@ export async function rerankSentenceCandidates(
     return {
       ...candidate,
       kenlmScore: lmScores[i]?.score,
+      kenlmNormalizedScore: lmScores[i]?.normalizedScore,
       combinedScore,
     };
   });

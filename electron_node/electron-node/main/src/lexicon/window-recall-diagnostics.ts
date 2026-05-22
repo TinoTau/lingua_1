@@ -44,6 +44,19 @@ export type WindowRecallDiagnostics = {
   nbestAugment?: NbestAugmentDiagnostics;
   /** Q1.8：逐条 drop 事件（上限 32，避免 extra 膨胀） */
   nbestAugmentDropEvents?: NbestAugmentDropEvent[];
+  /** V5 Phase B */
+  diffSpanCount?: number;
+  windowsFromNbestDiffCount?: number;
+  slidingWindowCount?: number;
+  noDiffSpan?: boolean;
+  windowLengthDistribution?: Record<number, number>;
+  fullChunkDualScaleCount?: number;
+  lexiconPinyinTopkCandidateCount?: number;
+  outOfBundleCandidateCount?: number;
+  topkDroppedBelowMinScore?: number;
+  topkAttemptsByTermLength?: Record<string, number>;
+  topkHitsByTermLength?: Record<string, number>;
+  nearPinyinAttemptCount?: number;
 };
 
 export function emptyWindowRecallDiagnostics(): WindowRecallDiagnostics {
@@ -67,5 +80,10 @@ export function emptyWindowRecallDiagnostics(): WindowRecallDiagnostics {
     hitsFuzzyObserved: 0,
     candidateDedupDropped: 0,
     nbestAugmentDroppedSlices: 0,
+    diffSpanCount: 0,
+    windowsFromNbestDiffCount: 0,
+    slidingWindowCount: 0,
+    noDiffSpan: false,
+    fullChunkDualScaleCount: 0,
   };
 }

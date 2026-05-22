@@ -7,6 +7,7 @@ describe('recallHotwordsByFuzzyPinyin', () => {
     id: 'hw-1',
     word: '候选生成',
     pinyin: ['hou', 'xuan', 'sheng', 'cheng'],
+    priorScore: 8,
     frequency: 10,
     enabled: true,
   };

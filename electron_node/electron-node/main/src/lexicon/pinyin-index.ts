@@ -1,4 +1,5 @@
 import { normalizeSyllable, textToSyllables } from './phonetic/pinyin';
+import { isIndexableHotwordEntry } from './scored-lexicon';
 import type { HotwordEntry } from './hotword-types';
 
 export { normalizeSyllable };
@@ -13,14 +14,10 @@ export function buildHotwordPinyinIndex(entries: HotwordEntry[]): HotwordPinyinI
   const index: HotwordPinyinIndex = new Map();
 
   for (const entry of entries) {
-    if (!entry.enabled || !entry.word.trim()) {
+    if (!isIndexableHotwordEntry(entry)) {
       continue;
     }
-    const syllables =
-      entry.pinyin.length > 0 ? entry.pinyin : textToSyllables(entry.word);
-    if (!syllables.length) {
-      continue;
-    }
+    const syllables = entry.pinyin;
     const key = syllablesKey(syllables);
     const bucket = index.get(key) ?? [];
     bucket.push(entry);
@@ -28,13 +25,16 @@ export function buildHotwordPinyinIndex(entries: HotwordEntry[]): HotwordPinyinI
   }
 
   for (const bucket of index.values()) {
-    bucket.sort((a, b) => b.frequency - a.frequency);
+    bucket.sort((a, b) => b.priorScore - a.priorScore);
   }
 
   return index;
 }
 
-/** Recover V2：prior 与 frequency 单调，使用 log1p */
+/**
+ * @deprecated 仅 build 脚本迁移 seed 用；runtime 索引禁止调用。
+ * 见 scored-lexicon.ts `initialPriorScoreFromFrequency`。
+ */
 export function priorScoreFromFrequency(frequency: number): number {
   return Math.log1p(Math.max(1, frequency));
 }

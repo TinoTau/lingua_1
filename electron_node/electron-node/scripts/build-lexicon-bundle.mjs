@@ -1,16 +1,11 @@
 #!/usr/bin/env node
 /**
- * Recover V2 — 从 seed jsonl 构建 hotword bundle（hotwords.jsonl + confusions.jsonl + sqlite）
+ * Recover V5 — 从 seed jsonl 构建 scored lexicon bundle
  *
- * 迁移规则（与 Recover_V2_Additional_Critical_Decisions）：
- * - term === replacement → hotword
- * - term !== replacement → confusion(observed=term → hotword_id)
- * - replacement 为空 → 跳过
- * - 同 word 去重，frequency 取 max
- *
- * 用法：
- *   node scripts/build-lexicon-bundle.mjs
- *   SEED_PATH=... BUNDLE_TAG=staging node scripts/build-lexicon-bundle.mjs
+ * 迁移规则：
+ * - term === replacement → hotword（必填 pinyin + priorScore）
+ * - term !== replacement → confusion
+ * - priorScore：seed.priorScore ?? log1p(frequency)，写入 manifest.prior_score_migration
  */
 import crypto from 'crypto';
 import fs from 'fs';
@@ -35,7 +30,8 @@ const bundleDir = path.join(repoRoot, 'node_runtime', 'lexicon', 'current');
 const sqlitePath = path.join(bundleDir, 'lexicon.sqlite');
 
 const MAX_WORD_LEN = 8;
-const BUNDLE_TAG = process.env.BUNDLE_TAG?.trim() || 'staging-from-seed-v1';
+const SCORED_LEXICON_VERSION = 'v5';
+const BUNDLE_TAG = process.env.BUNDLE_TAG?.trim() || 'v5-from-seed';
 const SEED_PATH = process.env.SEED_PATH?.trim() || DEFAULT_SEED;
 
 function frequencyFromPriority(priority) {
@@ -43,6 +39,18 @@ function frequencyFromPriority(priority) {
   if (p >= 10) return 100;
   if (p >= 5) return 50;
   return 10;
+}
+
+function initialPriorScoreFromFrequency(frequency) {
+  return Math.log1p(Math.max(1, frequency));
+}
+
+function resolvePriorScore(row, frequency) {
+  const raw = row.priorScore ?? row.prior_score;
+  if (raw !== undefined && raw !== null && Number.isFinite(Number(raw))) {
+    return Number(raw);
+  }
+  return initialPriorScoreFromFrequency(frequency);
 }
 
 function slugId(prefix, word) {
@@ -54,9 +62,24 @@ function normalizePinyin(raw) {
   return raw.trim().toLowerCase();
 }
 
+function normalizeTags(raw) {
+  if (!raw) return [];
+  if (Array.isArray(raw)) {
+    return raw.filter((t) => typeof t === 'string' && t.trim());
+  }
+  return [];
+}
+
 function isValidHotwordWord(word) {
   if (!word || word.length < 1 || word.length > MAX_WORD_LEN) return false;
   return true;
+}
+
+const CJK_RE = /[\u4e00-\u9fff\u3400-\u4dbf]/;
+const LATIN_RE = /[A-Za-z0-9]/;
+
+function isMixedLatinToken(word) {
+  return LATIN_RE.test(word) && !CJK_RE.test(word);
 }
 
 function loadSeedLines(seedPath) {
@@ -68,7 +91,7 @@ function loadSeedLines(seedPath) {
   for (const line of lines) {
     try {
       rows.push(JSON.parse(line));
-    } catch (e) {
+    } catch {
       console.warn('Skip invalid jsonl line:', line.slice(0, 80));
     }
   }
@@ -76,11 +99,10 @@ function loadSeedLines(seedPath) {
 }
 
 function migrateSeed(rows) {
-  /** @type {Map<string, {id:string,word:string,pinyin:string,frequency:number,domain:string,enabled:number}>} */
   const hotwordsByWord = new Map();
-  /** @type {Array<{id:string,observed:string,hotword_id:string,pinyin:string|null,source:string,enabled:number}>} */
   const confusions = [];
   const warnings = [];
+  let usedFrequencyMigration = false;
 
   for (const row of rows) {
     if (row.enabled === 0 || row.enabled === false) continue;
@@ -90,6 +112,12 @@ function migrateSeed(rows) {
     const pinyin = normalizePinyin(row.pinyin);
     const source = row.source ?? 'seed';
     const freq = frequencyFromPriority(row.priority);
+    const priorScore = resolvePriorScore(row, freq);
+    if (row.priorScore === undefined && row.prior_score === undefined) {
+      usedFrequencyMigration = true;
+    }
+    const tags = normalizeTags(row.tags);
+    const domain = (row.domain ?? 'asr').trim() || 'asr';
 
     if (!replacement) {
       warnings.push(`skip empty replacement: ${row.id}`);
@@ -105,14 +133,21 @@ function migrateSeed(rows) {
         warnings.push(`skip hotword no pinyin: ${term}`);
         continue;
       }
+      if (!Number.isFinite(priorScore) || priorScore <= 0) {
+        warnings.push(`skip hotword no priorScore: ${term}`);
+        continue;
+      }
       const existing = hotwordsByWord.get(term);
       const id = existing?.id ?? row.id ?? slugId('hw', term);
+      const mergedPrior = Math.max(existing?.prior_score ?? 0, priorScore);
       hotwordsByWord.set(term, {
         id,
         word: term,
         pinyin,
+        prior_score: mergedPrior,
         frequency: Math.max(existing?.frequency ?? 0, freq),
-        domain: 'asr',
+        domain,
+        tags: JSON.stringify(tags.length ? tags : existing?.tags ? JSON.parse(existing.tags) : []),
         enabled: 1,
       });
     } else {
@@ -128,7 +163,6 @@ function migrateSeed(rows) {
     }
   }
 
-  // 确保 confusion 的 replacement 均有 hotword
   for (const cf of confusions) {
     if (hotwordsByWord.has(cf.replacement)) continue;
     const pinyin = cf.pinyin;
@@ -137,18 +171,26 @@ function migrateSeed(rows) {
       continue;
     }
     if (!isValidHotwordWord(cf.replacement)) continue;
+    const priorScore = initialPriorScoreFromFrequency(50);
+    usedFrequencyMigration = true;
     hotwordsByWord.set(cf.replacement, {
       id: slugId('hw', cf.replacement),
       word: cf.replacement,
       pinyin,
+      prior_score: priorScore,
       frequency: 50,
       domain: 'asr',
+      tags: '[]',
       enabled: 1,
     });
   }
 
+  const hotwords = [...hotwordsByWord.values()];
+  const enabled = hotwords.filter((h) => h.enabled === 1);
+  const withoutPrior = enabled.filter((h) => !h.prior_score || h.prior_score <= 0);
+
   const hotwordIdByWord = new Map();
-  for (const hw of hotwordsByWord.values()) {
+  for (const hw of hotwords) {
     hotwordIdByWord.set(hw.word, hw.id);
   }
 
@@ -171,9 +213,12 @@ function migrateSeed(rows) {
   }
 
   return {
-    hotwords: [...hotwordsByWord.values()],
+    hotwords,
     confusions: resolvedConfusions,
     warnings,
+    usedFrequencyMigration,
+    termsWithoutPriorCount: withoutPrior.length,
+    mixedTokenCount: enabled.filter((h) => isMixedLatinToken(h.word)).length,
   };
 }
 
@@ -189,7 +234,7 @@ function buildSqlite(hotwords, confusions) {
   if (fs.existsSync(tmpPath)) {
     try {
       fs.unlinkSync(tmpPath);
-    } catch (_) {
+    } catch {
       /* ignore */
     }
   }
@@ -200,8 +245,10 @@ CREATE TABLE lexicon_terms (
   id TEXT PRIMARY KEY,
   word TEXT NOT NULL,
   pinyin TEXT NOT NULL,
+  prior_score REAL NOT NULL,
   frequency INTEGER DEFAULT 1,
   domain TEXT,
+  tags TEXT,
   enabled INTEGER DEFAULT 1
 );
 CREATE TABLE lexicon_confusions (
@@ -217,8 +264,8 @@ CREATE INDEX idx_lexicon_confusions_observed ON lexicon_confusions(observed);
 `);
 
   const insertHw = db.prepare(
-    `INSERT INTO lexicon_terms (id, word, pinyin, frequency, domain, enabled)
-     VALUES (@id, @word, @pinyin, @frequency, @domain, @enabled)`
+    `INSERT INTO lexicon_terms (id, word, pinyin, prior_score, frequency, domain, tags, enabled)
+     VALUES (@id, @word, @pinyin, @prior_score, @frequency, @domain, @tags, @enabled)`
   );
   const insertCf = db.prepare(
     `INSERT INTO lexicon_confusions (id, observed, hotword_id, pinyin, source, enabled)
@@ -252,10 +299,20 @@ CREATE INDEX idx_lexicon_confusions_observed ON lexicon_confusions(observed);
 function main() {
   console.log('[build-lexicon-bundle] seed:', SEED_PATH);
   const rows = loadSeedLines(SEED_PATH);
-  const { hotwords, confusions, warnings } = migrateSeed(rows);
+  const {
+    hotwords,
+    confusions,
+    warnings,
+    usedFrequencyMigration,
+    termsWithoutPriorCount,
+    mixedTokenCount,
+  } = migrateSeed(rows);
 
   if (!hotwords.length) {
     throw new Error('No hotwords after migration');
+  }
+  if (termsWithoutPriorCount > 0) {
+    throw new Error(`terms_without_prior_count=${termsWithoutPriorCount}, must be 0`);
   }
 
   writeJsonl(
@@ -264,9 +321,11 @@ function main() {
       id: h.id,
       word: h.word,
       pinyin: h.pinyin,
+      priorScore: h.prior_score,
       frequency: h.frequency,
       domain: h.domain,
       enabled: h.enabled,
+      tags: JSON.parse(h.tags || '[]'),
     }))
   );
   writeJsonl(
@@ -284,8 +343,18 @@ function main() {
   buildSqlite(hotwords, confusions);
 
   const checksum = crypto.createHash('sha256').update(fs.readFileSync(sqlitePath)).digest('hex');
+  const enabledCount = hotwords.filter((h) => h.enabled === 1).length;
+  const pinyinKeys = new Set();
+  let indexedTermCount = 0;
+  for (const hw of hotwords) {
+    if (hw.enabled !== 1 || !(hw.prior_score > 0)) continue;
+    const syllables = (hw.pinyin || '').trim().split(/\s+/).filter(Boolean);
+    if (!syllables.length) continue;
+    pinyinKeys.add(syllables.join('|'));
+    indexedTermCount += 1;
+  }
   const manifest = {
-    version: 'recover-v2-hotword-seed-v1',
+    version: 'recover-v5-scored-lexicon',
     checksum,
     createdAt: new Date().toISOString(),
     backend: 'sqlite',
@@ -293,6 +362,16 @@ function main() {
     hotword_count: hotwords.length,
     confusion_count: confusions.length,
     seed_path: path.relative(repoRoot, SEED_PATH),
+    scored_lexicon_version: SCORED_LEXICON_VERSION,
+    term_count: hotwords.length,
+    enabled_term_count: enabledCount,
+    terms_with_prior_count: enabledCount,
+    terms_without_prior_count: 0,
+    pinyin_index_count: pinyinKeys.size,
+    same_pinyin_key_count: pinyinKeys.size,
+    indexed_term_count: indexedTermCount,
+    mixed_token_count: mixedTokenCount,
+    ...(usedFrequencyMigration ? { prior_score_migration: 'frequency_log1p_v1' } : {}),
   };
   fs.writeFileSync(path.join(bundleDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
   fs.writeFileSync(path.join(bundleDir, 'checksum.txt'), checksum);
@@ -300,7 +379,7 @@ function main() {
   console.log('[build-lexicon-bundle] hotwords.jsonl →', HOTWORDS_JSONL);
   console.log('[build-lexicon-bundle] confusions.jsonl →', CONFUSIONS_JSONL);
   console.log('[build-lexicon-bundle] sqlite →', sqlitePath);
-  console.log(`  hotwords=${hotwords.length} confusions=${confusions.length}`);
+  console.log(`  hotwords=${hotwords.length} confusions=${confusions.length} mixed_token=${mixedTokenCount}`);
   if (warnings.length) {
     console.log(`  warnings=${warnings.length} (first 5):`);
     warnings.slice(0, 5).forEach((w) => console.log('   ', w));

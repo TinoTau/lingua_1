@@ -9,13 +9,23 @@
 | [RECOVER.md](./RECOVER.md) | ASR 后修复主链：词库 recall → 句候选 → KenLM 写回 |
 | [LEXICON.md](./LEXICON.md) | 词库运行时、窗召回、诊断字段 |
 
-### Recover V5（规划中）
+### Recover V5（已落地 Phase A–E）
+
+| 报告 | 说明 |
+|------|------|
+| [v5/Recover_V5_Development_Report_2026-05-22.md](./v5/Recover_V5_Development_Report_2026-05-22.md) | 开发交付说明 |
+| [v5/Recover_V5_Test_Report_2026-05-22.md](./v5/Recover_V5_Test_Report_2026-05-22.md) | 单测 + dialog_200 批测结果 |
+| [v5/Recover_V5_PostImplementation_Readonly_Audit_2026-05-22.md](./v5/Recover_V5_PostImplementation_Readonly_Audit_2026-05-22.md) | **实施后**只读代码审计（18 维 + dialog_200 证据） |
+| [v5/Recover_V5_PostImplementation_Alignment_Report_2026-05-22.md](./v5/Recover_V5_PostImplementation_Alignment_Report_2026-05-22.md) | V5 冻结对齐修正（P1/P2）+ dialog_200 复测 |
+| [v5/Recover_V5_Quality_Audit_Report_2026-05-22.md](./v5/Recover_V5_Quality_Audit_Report_2026-05-22.md) | **识别质量只读审计**（真实修复率、瓶颈、Lexicon coverage） |
+
+### Recover V5（方案与约束）
 
 | 文档 | 说明 |
 |------|------|
 | [v5/Recover V5 冻结方案.md](./v5/Recover%20V5%20冻结方案.md) | V5 冻结架构：diff 窗 + Scored Lexicon TopK |
 | [v5/Recover_V5_Frozen_Decisions_2026-05-22.md](./v5/Recover_V5_Frozen_Decisions_2026-05-22.md) | **已确认决策**（替换 V4、near 限额、2 窗、双尺度、KenLM 0.15 等） |
-| [v5/Recover_V5_Readonly_Code_Audit_2026-05-22.md](./v5/Recover_V5_Readonly_Code_Audit_2026-05-22.md) | V5 相对当前代码的只读审计与开发方案 |
+| [v5/Recover_V5_Readonly_Code_Audit_2026-05-22.md](./v5/Recover_V5_Readonly_Code_Audit_2026-05-22.md) | **开发前**缺口审计（部分条目已被实施后审计取代） |
 
 **阶段技术方案**
 

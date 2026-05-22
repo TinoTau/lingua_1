@@ -287,6 +287,63 @@ function summarizeAlignmentMetrics(rows) {
   };
 }
 
+function summarizeV5Metrics(rows) {
+  let diffWindows = 0;
+  let enumerated = 0;
+  let sliding = 0;
+  let topkCandidates = 0;
+  let outOfBundle = 0;
+  let nearPinyinAttempts = 0;
+  let modifiedWithoutReplacement = 0;
+  let editPenaltySum = 0;
+  let editPenaltySamples = 0;
+  const skipV5 = {};
+  const topkByLen = { '2': 0, '3': 0, '4': 0, '5': 0 };
+  let v5Jobs = 0;
+  let sentenceCandidateBudget = null;
+
+  for (const row of rows) {
+    if (row.extra?.recover_contract_version !== 'v5-scored-lexicon-topk') continue;
+    v5Jobs += 1;
+    const m = row.extra?.v5_metrics || {};
+    diffWindows += m.windows_from_nbest_diff_count ?? 0;
+    enumerated += m.windows_enumerated ?? 0;
+    sliding += m.sliding_window_count ?? 0;
+    topkCandidates += m.lexicon_pinyin_topk_candidate_count ?? 0;
+    outOfBundle += m.out_of_bundle_candidate_count ?? 0;
+    nearPinyinAttempts += m.near_pinyin_attempt_count ?? 0;
+    modifiedWithoutReplacement += m.modified_without_replacement_count ?? 0;
+    editPenaltySum += m.edit_distance_penalty_sum ?? 0;
+    editPenaltySamples += m.edit_distance_penalty_samples ?? 0;
+    if (sentenceCandidateBudget === null && m.sentence_candidate_budget != null) {
+      sentenceCandidateBudget = m.sentence_candidate_budget;
+    }
+    const sr = m.skip_reason_v5 || {};
+    for (const [k, v] of Object.entries(sr)) {
+      skipV5[k] = (skipV5[k] || 0) + (v || 0);
+    }
+    const rates = m.topk_hit_rate_by_term_length || {};
+    for (const len of ['2', '3', '4', '5']) {
+      if ((rates[len] ?? 0) > 0) topkByLen[len] += 1;
+    }
+  }
+
+  return {
+    v5_job_count: v5Jobs,
+    windows_from_nbest_diff_ratio: enumerated > 0 ? diffWindows / enumerated : 0,
+    sliding_window_count_total: sliding,
+    lexicon_pinyin_topk_candidate_total: topkCandidates,
+    out_of_bundle_total: outOfBundle,
+    near_pinyin_attempt_count: nearPinyinAttempts,
+    modified_without_replacement_count_total: modifiedWithoutReplacement,
+    edit_distance_penalty_sum: editPenaltySum,
+    edit_distance_penalty_samples: editPenaltySamples,
+    sentence_candidate_budget: sentenceCandidateBudget,
+    skip_reason_v5_distribution: skipV5,
+    topk_hit_jobs_by_term_length: topkByLen,
+  };
+}
+
 function summarizeRecallCoverageMetrics(rows) {
   let fuzzyAttempt = 0;
   let fuzzyHit = 0;
@@ -458,6 +515,7 @@ async function main() {
     ...summarizeQualityMetrics(evaluated),
     ...summarizeAlignmentMetrics(evaluated),
     ...summarizeRecallCoverageMetrics(evaluated),
+    v5_summary: summarizeV5Metrics(evaluated),
     by_scenario: {},
   };
   for (const row of report.cases) {

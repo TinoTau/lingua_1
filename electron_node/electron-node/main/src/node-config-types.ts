@@ -68,10 +68,21 @@ export interface NodeConfig {
       expansionMinPhoneticScore?: number;
       /** final selection 最低音近分（默认 0.85） */
       selectionMinPhoneticScore?: number;
-      /** sentence expansion 池上限（默认 16） */
+      /** sentence expansion 池上限（V5 冻结默认 32） */
       maxSentenceCandidates?: number;
       /** near-tie multi-window guardrail epsilon（默认 0.005） */
       multiWindowScoreEpsilon?: number;
+      allowedWindowLengths?: number[];
+      diffContextLeft?: number;
+      diffContextRight?: number;
+      topKByTermLength?: Record<string, number>;
+      maxActiveWindows?: number;
+      minCandidateScore?: number;
+      kenlmBaselineTolerance?: number;
+      observedRecallEnabled?: boolean;
+      nearPinyinEnabled?: boolean;
+      crossSegmentRecallEnabled?: boolean;
+      contractVersion?: 'v5-scored-lexicon-topk' | 'historical-restore-v1';
     };
   };
   gpuArbiter?: {

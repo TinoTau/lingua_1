@@ -17,6 +17,12 @@ import { buildAsrHypotheses } from '../../asr/build-asr-hypotheses';
 import { buildSegmentAlignmentDiagnostics } from '../../asr/segment-alignment-diagnostics';
 import { buildCrossBoundaryRiskReport } from '../../asr/cross-boundary-risk';
 import { buildRecallCoverageDiagnostics } from '../../lexicon/recall-coverage-diagnostics';
+import {
+  evaluateCandidateBudgetExceeded,
+  evaluateLowCandidateScore,
+  evaluateNoTopkCandidate,
+} from '../../asr-repair/recover-safety-gates';
+import { buildV5Metrics } from '../v5-metrics';
 import logger from '../../logger';
 
 export async function runLexiconRecallStep(
@@ -81,6 +87,17 @@ export async function runLexiconRecallStep(
   const runtimeState = ensureLexiconRuntimeLoaded();
   ctx.lexiconRuntimeStatus = runtimeState.status;
   ctx.lexiconManifestVersion = runtimeState.manifestVersion;
+  if (runtimeState.status === 'ok' && runtimeState.manifestReady) {
+    ctx.lexiconManifestReady = {
+      manifestReady: true,
+      manifestChecksum: runtimeState.manifestChecksum,
+      lexiconCount: runtimeState.lexiconCount,
+      scoredCount: runtimeState.scoredCount,
+      pinyinIndexCount: runtimeState.scoredLexicon?.pinyinIndexCount,
+      samePinyinKeyCount: runtimeState.scoredLexicon?.pinyinIndexCount,
+      indexedTermCount: runtimeState.scoredLexicon?.termsWithPriorCount,
+    };
+  }
   if (runtimeState.errorMessage) {
     ctx.lexiconRuntimeError = runtimeState.errorMessage;
   }
@@ -104,13 +121,27 @@ export async function runLexiconRecallStep(
     runtime.getConfusionObservedStrings()
   );
 
-  const { candidates, truncated, windowCount, diagnostics } = recallSegmentWindowCandidates(
-    segmentText,
-    ctx.asrHypotheses,
-    runtime
-  );
+  const { candidates, truncated, windowCount, diagnostics, noDiffSpan } =
+    recallSegmentWindowCandidates(segmentText, ctx.asrHypotheses, runtime);
   ctx.windowCandidates = candidates;
+
+  if (noDiffSpan) {
+    ctx.recoverSkipped = true;
+    ctx.recoverLifecycleSkipReason = 'no_diff_span';
+    ctx.repairSkipReason = 'no_diff_span';
+  } else {
+    const budgetSkip = evaluateCandidateBudgetExceeded(truncated);
+    const topkSkip = evaluateNoTopkCandidate(candidates);
+    const lowSkip = topkSkip ? null : evaluateLowCandidateScore(candidates);
+    const v5Skip = budgetSkip ?? topkSkip ?? lowSkip;
+    if (v5Skip) {
+      ctx.recoverSkipped = true;
+      ctx.recoverLifecycleSkipReason = v5Skip;
+      ctx.repairSkipReason = v5Skip;
+    }
+  }
   ctx.lexiconRecallTruncated = truncated;
+  ctx.v5Metrics = buildV5Metrics(ctx);
   ctx.windowRecallDiagnostics = diagnostics;
   ctx.recallCoverageDiagnostics =
     candidates.length === 0

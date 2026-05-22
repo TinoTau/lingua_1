@@ -8,8 +8,13 @@ import {
 } from './lexicon-bundle-path';
 import { readManifest, verifySqliteChecksum } from './lexicon-manifest';
 import { buildHotwordPinyinIndex, syllablesKey, type HotwordPinyinIndex } from './pinyin-index';
-import { textToSyllables } from './phonetic/pinyin';
 import { normalizeSegmentTextForMatch } from './segment-text-normalize';
+import {
+  assertV5ManifestReady,
+  countMixedTokens,
+  parseTagsField,
+  SCORED_LEXICON_VERSION,
+} from './scored-lexicon';
 import type { HotwordEntry } from './hotword-types';
 import { LexiconManifest, LexiconRuntimeState } from './lexicon-types';
 
@@ -17,8 +22,10 @@ type HotwordRow = {
   id: string;
   word: string;
   pinyin: string;
+  prior_score: number | null;
   frequency: number | null;
   domain: string | null;
+  tags: string | null;
   enabled: number;
 };
 
@@ -39,15 +46,26 @@ function parsePinyinField(raw: string | null): string[] {
     .filter(Boolean);
 }
 
+function assertLexiconTermsV5Schema(db: Database.Database): void {
+  const cols = db.prepare('PRAGMA table_info(lexicon_terms)').all() as { name: string }[];
+  const names = new Set(cols.map((c) => c.name));
+  if (!names.has('prior_score')) {
+    throw new Error(
+      '[LEXICON_RUNTIME] lexicon.sqlite missing prior_score column; rebuild with build-lexicon-bundle'
+    );
+  }
+}
+
 function mapHotwordRow(row: HotwordRow): HotwordEntry {
-  const pinyin = parsePinyinField(row.pinyin);
   return {
     id: row.id,
     word: row.word,
-    pinyin: pinyin.length > 0 ? pinyin : textToSyllables(row.word),
+    pinyin: parsePinyinField(row.pinyin),
+    priorScore: row.prior_score ?? Number.NaN,
     frequency: row.frequency ?? 1,
     domain: row.domain ?? undefined,
     enabled: row.enabled === 1,
+    tags: parseTagsField(row.tags),
   };
 }
 
@@ -105,26 +123,37 @@ export class LexiconRuntime {
       verifySqliteChecksum(sqlitePath, manifest, checksumPath);
       this.db = new Database(sqlitePath, { readonly: true });
       this.manifest = manifest;
+      assertLexiconTermsV5Schema(this.db);
 
       const hotwordRows = this.db
         .prepare(
-          `SELECT id, word, pinyin, frequency, domain, enabled
-           FROM lexicon_terms
-           WHERE enabled = 1`
+          `SELECT id, word, pinyin, prior_score, frequency, domain, tags, enabled
+           FROM lexicon_terms`
         )
         .all() as HotwordRow[];
 
-      const entries: HotwordEntry[] = [];
+      const allEntries: HotwordEntry[] = [];
+      const indexable: HotwordEntry[] = [];
+      let termsWithoutPriorSkipped = 0;
+
       for (const row of hotwordRows) {
         const entry = mapHotwordRow(row);
         if (!entry.word.trim()) {
           continue;
         }
-        entries.push(entry);
+        allEntries.push(entry);
+        if (!entry.enabled) {
+          continue;
+        }
         this.hotwordsById.set(entry.id, entry);
+        if (entry.pinyin.length === 0 || !Number.isFinite(entry.priorScore) || entry.priorScore <= 0) {
+          termsWithoutPriorSkipped += 1;
+          continue;
+        }
+        indexable.push(entry);
       }
 
-      this.pinyinIndex = buildHotwordPinyinIndex(entries);
+      this.pinyinIndex = buildHotwordPinyinIndex(indexable);
 
       if (this.tableExists('lexicon_confusions')) {
         const confusionRows = this.db
@@ -155,15 +184,34 @@ export class LexiconRuntime {
         }
       }
 
-      this.state = { status: 'ok', manifestVersion: manifest.version };
+      const scoredLexicon = {
+        termCount: allEntries.length,
+        enabledTermCount: allEntries.filter((e) => e.enabled).length,
+        termsWithPriorCount: indexable.length,
+        termsWithoutPriorSkipped,
+        pinyinIndexCount: this.pinyinIndex.size,
+        mixedTokenCount: countMixedTokens(allEntries),
+      };
+
+      this.state = {
+        status: 'ok',
+        manifestVersion: manifest.version,
+        scoredLexicon,
+        manifestReady: true,
+        manifestChecksum: manifest.checksum,
+        lexiconCount: manifest.term_count ?? allEntries.length,
+        scoredCount: manifest.terms_with_prior_count ?? indexable.length,
+      };
       logger.info(
         {
           bundleDir,
           version: manifest.version,
+          scored_lexicon_version: manifest.scored_lexicon_version ?? SCORED_LEXICON_VERSION,
           pinyin_index_size: this.pinyinIndex.size,
-          hotword_count: entries.length,
+          hotword_count: indexable.length,
+          terms_without_prior_skipped: termsWithoutPriorSkipped,
         },
-        `[LEXICON_RUNTIME] loaded hotwords=${entries.length} pinyin_index_size=${this.pinyinIndex.size}`
+        `[LEXICON_RUNTIME] loaded hotwords=${indexable.length} pinyin_index_size=${this.pinyinIndex.size}`
       );
       return this.getState();
     } catch (err) {
@@ -182,7 +230,34 @@ export class LexiconRuntime {
       return [];
     }
     const key = syllablesKey(syllables);
-    return (this.pinyinIndex.get(key) ?? []).slice(0, maxCandidates);
+    return this.getPinyinBucket(key).slice(0, maxCandidates);
+  }
+
+  getPinyinBucket(key: string): HotwordEntry[] {
+    if (this.state.status !== 'ok') {
+      return [];
+    }
+    return this.pinyinIndex.get(key) ?? [];
+  }
+
+  forEachPinyinBucket(fn: (key: string, bucket: readonly HotwordEntry[]) => void): void {
+    if (this.state.status !== 'ok') {
+      return;
+    }
+    for (const [key, bucket] of this.pinyinIndex) {
+      fn(key, bucket);
+    }
+  }
+
+  lookupHotwordsByExactWord(word: string): HotwordEntry[] {
+    if (this.state.status !== 'ok') {
+      return [];
+    }
+    const trimmed = word.trim();
+    if (!trimmed) {
+      return [];
+    }
+    return [...this.hotwordsById.values()].filter((h) => h.enabled && h.word === trimmed);
   }
 
   getConfusionObservedStrings(): string[] {

@@ -8,7 +8,9 @@ import { JobResult } from '../inference/inference-service';
 import { AsrKenlmMeta } from '../task-router/asr-evidence-types';
 import { JobContext } from './context/job-context';
 import { buildRecoverContractExtra } from './recover-contract';
-import { getRecoverQualityConfig } from '../recover-quality/quality-config';
+import { RECOVER_CONTRACT_VERSION_V5, resolveRecoverContractVersion } from './recover-contract';
+import { buildRecoverQualityConfigSnapshot } from '../recover-quality/quality-config';
+import { buildLexiconRecallTrace } from './v5-metrics';
 import logger from '../logger';
 
 function hasKenlmMetaForExtra(meta: AsrKenlmMeta): boolean {
@@ -112,9 +114,29 @@ export function buildJobResult(job: JobAssignMessage, ctx: JobContext): JobResul
             expansion_selector_reject: ctx.expansionDiagnostics.selectorRejectByMaxReplacements,
           }
         : {}),
-      qualityConfig: getRecoverQualityConfig(),
+      qualityConfig: buildRecoverQualityConfigSnapshot(),
+      ...(ctx.lexiconManifestReady ? { lexicon_manifest_ready: ctx.lexiconManifestReady } : {}),
+      ...(resolveRecoverContractVersion() === RECOVER_CONTRACT_VERSION_V5 && ctx.v5Metrics
+        ? { v5_metrics: ctx.v5Metrics }
+        : {}),
+      ...(resolveRecoverContractVersion() === RECOVER_CONTRACT_VERSION_V5 &&
+      ctx.windowCandidates?.length
+        ? (() => {
+            const { trace, trace_truncated } = buildLexiconRecallTrace(
+              ctx.windowCandidates!,
+              ctx.sentenceRepairDecision?.replacements
+            );
+            return {
+              lexicon_recall_trace: trace,
+              ...(trace_truncated ? { lexicon_recall_trace_truncated: true } : {}),
+            };
+          })()
+        : {}),
       ...(ctx.sentenceCandidates && ctx.sentenceCandidates.length > 0
         ? { sentence_candidates: ctx.sentenceCandidates }
+        : {}),
+      ...(ctx.sentenceCandidateTrace && ctx.sentenceCandidateTrace.length > 0
+        ? { sentence_candidate_trace: ctx.sentenceCandidateTrace }
         : {}),
     },
     asr_quality_level: ctx.asrResult?.badSegmentDetection?.isBad ? 'bad' : 'good',

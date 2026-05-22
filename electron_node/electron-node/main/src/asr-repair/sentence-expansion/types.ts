@@ -11,16 +11,18 @@ export type SentenceCandidate = {
   phoneticScore: number;
   hotwordPrior: number;
   kenlmScore?: number;
+  kenlmNormalizedScore?: number;
+  kenlmBaselineDelta?: number;
   combinedScore?: number;
 };
 
 export type SentenceExpansionLimits = {
-  /** windowSelector maxReplacements 上限（1=single … 4=multi） */
-  maxWindowsPerSentence: number;
+  /** windowSelector：active diff windows 上限（= maxActiveWindows） */
+  maxActiveWindowsPerSentence: number;
   maxSentenceCandidates: number;
 };
 
 export const DEFAULT_SENTENCE_EXPANSION_LIMITS: SentenceExpansionLimits = {
-  maxWindowsPerSentence: 4,
-  maxSentenceCandidates: 16,
+  maxActiveWindowsPerSentence: 2,
+  maxSentenceCandidates: 32,
 };
