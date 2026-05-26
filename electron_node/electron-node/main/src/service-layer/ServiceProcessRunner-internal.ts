@@ -7,6 +7,7 @@
 import { ServiceEntry } from './ServiceTypes';
 import logger from '../logger';
 import { getServicesBaseUrl } from '../node-config';
+import { scheduleIntentRuntimeWarmup } from '../lexicon-v2/intent-warmup';
 
 /**
  * 服务进程管理常量
@@ -29,7 +30,7 @@ export const PROCESS_CONSTANTS = {
   HEALTH_CHECK_INTERVAL_MS: 1000,
   HEALTH_CHECK_TIMEOUT_MS: 1000,
   NO_PORT_SERVICE_WAIT_MS: 2000,
-  MODEL_PRELOAD_SERVICES: ['faster-whisper-vad', 'nmt-m2m100', 'piper-tts'],
+  MODEL_PRELOAD_SERVICES: ['faster-whisper-vad', 'nmt-m2m100', 'piper-tts', 'lexicon-intent-cpu'],
   MODEL_PRELOAD_HEALTH_CHECK_MAX_ATTEMPTS: 180,
 
   // 错误日志
@@ -162,6 +163,9 @@ export async function runHealthCheck(
             entry.runtime.status = 'running';
             entry.runtime.port = port;
             logger.info({ serviceId, port, attempts: i + 1 }, '✅ Service is now running (model loaded, health check passed)');
+            if (serviceId === 'lexicon-intent-cpu') {
+              scheduleIntentRuntimeWarmup();
+            }
             return;
           }
           const logLevel = isPreloadService ? 'info' : 'debug';

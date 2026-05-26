@@ -19,6 +19,7 @@ jest.mock('../../node-config', () => ({
   isLexiconRecallEnabled: () => true,
   isLexiconRecallLanguage: () => true,
   getLexiconRecallSkipReason: () => null,
+  loadNodeConfig: () => ({}),
 }));
 
 import { runLexiconRecallStep } from './lexicon-recall-step';
@@ -37,7 +38,7 @@ describe('runLexiconRecallStep', () => {
     mockEnsureLoaded.mockReturnValue({ status: 'ok', manifestVersion: 'test' });
     mockGetRuntime.mockReturnValue({
       getPinyinIndexSize: () => 1,
-      getConfusionObservedStrings: () => [],
+      getEnabledHotwords: () => [],
     });
   });
 
@@ -54,12 +55,13 @@ describe('runLexiconRecallStep', () => {
           hotwordId: 'hw-1',
           phoneticScore: 0.9,
           priorScore: 1,
-          source: 'confusion_evidence',
+          source: 'lexicon_pinyin_topk',
         },
       ],
       truncated: false,
       windowCount: 1,
       diagnostics: { windowCandidateCount: 1, windowsEnumerated: 1 },
+      maxDomainBoostApplied: 0,
     });
 
     const ctx: JobContext = {
@@ -82,6 +84,7 @@ describe('runLexiconRecallStep', () => {
         truncated: false,
         windowCount: 0,
         diagnostics: { windowCandidateCount: 0 },
+        maxDomainBoostApplied: 0,
       };
     });
 

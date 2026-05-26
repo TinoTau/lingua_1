@@ -11,6 +11,8 @@ import * as http from 'http';
 import type { ServiceManagers } from './app/app-init-simple';
 import { getTestServerPort, getLidConfig } from './node-config';
 import logger from './logger';
+import { handleSessionMigrationHttp } from './session-runtime/session-migration-http';
+import { buildIntentRuntimeDiagnosticsReport } from './lexicon-v2/intent-runtime-metrics';
 
 let testServerInstance: http.Server | null = null;
 
@@ -28,6 +30,15 @@ export function startTestServer(managers: ServiceManagers): void {
       res.end('ok');
       return;
     }
+    if (
+      req.method === 'GET' &&
+      (path === '/service-diagnostics/intent-runtime' ||
+        path === '/service-diagnostics/intent-runtime/')
+    ) {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(buildIntentRuntimeDiagnosticsReport()));
+      return;
+    }
     if (req.method === 'GET' && (path === '/lid-status' || path === '/lid-status/')) {
       try {
         const lidConfig = getLidConfig();
@@ -41,8 +52,27 @@ export function startTestServer(managers: ServiceManagers): void {
     }
     const isLexiconMock =
       req.method === 'POST' && (path === '/run-lexicon-mock' || path === '/run-lexicon-mock/');
+    const isSessionMigration =
+      (req.method === 'POST' && path.startsWith('/session-migration')) ||
+      path.replace(/\/$/, '').startsWith('/session-migration');
     const isRunAudio =
       req.method === 'POST' && (path === '/run-pipeline-with-audio' || path === '/run-pipeline-with-audio/');
+    if (isSessionMigration) {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        const routePath = path.split('?')[0];
+        const handled = handleSessionMigrationHttp(req.method || 'POST', routePath, body);
+        if (!handled) {
+          res.writeHead(404, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Not found' }));
+          return;
+        }
+        res.writeHead(handled.status, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(handled.body));
+      });
+      return;
+    }
     if (isLexiconMock) {
       let body = '';
       req.on('data', (chunk) => { body += chunk; });
@@ -56,6 +86,13 @@ export function startTestServer(managers: ServiceManagers): void {
           const parsed = JSON.parse(body || '{}');
           const asrText = typeof parsed.asrText === 'string' ? parsed.asrText : '';
           const srcLang = typeof parsed.srcLang === 'string' ? parsed.srcLang : 'zh';
+          const sessionId =
+            typeof parsed.session_id === 'string' && parsed.session_id.trim()
+              ? parsed.session_id.trim()
+              : undefined;
+          const utteranceIndex =
+            typeof parsed.utterance_index === 'number' ? parsed.utterance_index : undefined;
+          const isManualCut = parsed.is_manual_cut !== false;
           if (!asrText.trim()) {
             res.writeHead(400, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Missing asrText' }));
@@ -65,6 +102,9 @@ export function startTestServer(managers: ServiceManagers): void {
           const result = await managers.inferenceService.runPipelineWithMockAsr(asrText, srcLang, 'en', {
             useLexicon: true,
             useNmt: false,
+            sessionId,
+            utteranceIndex,
+            isManualCut,
           });
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(
@@ -116,7 +156,7 @@ export function startTestServer(managers: ServiceManagers): void {
         const parsed = JSON.parse(body || '{}');
         const pipelineStartMs = Date.now();
 
-        const { wavPath, srcLang, tgtLang, useLid, lidCandidates, room_id, use_lexicon, session_id, is_manual_cut } =
+        const { wavPath, srcLang, tgtLang, useLid, lidCandidates, room_id, use_lexicon, session_id, is_manual_cut, lexicon_v2_intent_enabled } =
           parsed;
         if (!wavPath || typeof wavPath !== 'string') {
           safeSend(400, JSON.stringify({ error: 'Missing or invalid wavPath' }));
@@ -142,6 +182,7 @@ export function startTestServer(managers: ServiceManagers): void {
           useLexicon: use_lexicon !== false,
           sessionId,
           isManualCut: is_manual_cut !== false,
+          lexiconV2IntentEnabled: lexicon_v2_intent_enabled !== false,
         });
         const pipelineMs = Date.now() - pipelineStartMs;
         clearTimeout(timeoutId);

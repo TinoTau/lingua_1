@@ -4,6 +4,7 @@
 
 import type { JobContext } from './context/job-context';
 import type { WindowCandidate } from '../lexicon/hotword-types';
+import { isV3WindowCandidateSource, type WindowCandidateSource } from '../lexicon/window-candidate-source';
 import { isV5SkipReason, type V5SkipReason } from '../asr-repair/recover-safety-gates';
 import { getRecoverQualityConfig } from '../recover-quality/quality-config';
 import type { SentenceCandidate } from '../asr-repair/sentence-expansion/types';
@@ -24,6 +25,12 @@ export type V5Metrics = {
   sentence_candidate_budget: number;
   edit_distance_penalty_sum: number;
   edit_distance_penalty_samples: number;
+  alias_hit_count: number;
+  exact_lookup_hit_count: number;
+  top1_hit_count: number;
+  no_op_repair_count: number;
+  pinyin_attempt_count: number;
+  pinyin_hit_count: number;
 };
 
 const TRACE_MAX = 128;
@@ -41,7 +48,8 @@ export type LexiconRecallTraceItem = {
   phoneticScore: number;
   termLength: number;
   rankInTopK: number;
-  source: 'lexicon_pinyin_topk';
+  source: WindowCandidateSource;
+  matchedAlias?: string;
   candidateScoreBreakdown?: {
     priorScore: number;
     phoneticSimilarity: number;
@@ -63,6 +71,38 @@ export type SentenceCandidateTraceItem = {
   replacementCount: number;
   picked?: boolean;
 };
+
+function computeNoOpRepair(ctx: JobContext): number {
+  const repair = ctx.sentenceRepairExtra;
+  if (repair?.modified !== true) {
+    return 0;
+  }
+  const baseline = (ctx.segmentForJobResult ?? ctx.asrText ?? '').trim();
+  const finalText = (ctx.repairedText ?? '').trim();
+  return baseline === finalText ? 1 : 0;
+}
+
+function countCandidateMetrics(candidates: WindowCandidate[]): {
+  alias_hit_count: number;
+  exact_lookup_hit_count: number;
+  top1_hit_count: number;
+} {
+  let alias_hit_count = 0;
+  let exact_lookup_hit_count = 0;
+  let top1_hit_count = 0;
+  for (const c of candidates) {
+    if (c.source === 'alias_exact' || c.source === 'alias_pinyin' || c.matchedAlias?.trim()) {
+      alias_hit_count += 1;
+    }
+    if (c.source === 'canonical_exact' || c.source === 'alias_exact') {
+      exact_lookup_hit_count += 1;
+    }
+    if (c.rankInTopK === 1) {
+      top1_hit_count += 1;
+    }
+  }
+  return { alias_hit_count, exact_lookup_hit_count, top1_hit_count };
+}
 
 function computeModifiedWithoutReplacement(ctx: JobContext): number {
   const baseline = (ctx.segmentForJobResult ?? ctx.asrText ?? '').trim();
@@ -98,7 +138,7 @@ function tallyEditDistancePenalty(candidates: WindowCandidate[]): {
 export function buildV5Metrics(ctx: JobContext): V5Metrics {
   const diag = ctx.windowRecallDiagnostics;
   const candidates = ctx.windowCandidates ?? [];
-  const topk = candidates.filter((c) => c.source === 'lexicon_pinyin_topk');
+  const topk = candidates.filter((c) => isV3WindowCandidateSource(c.source));
   const skipReason = ctx.repairSkipReason ?? ctx.recoverLifecycleSkipReason;
   const skipV5: Partial<Record<V5SkipReason, number>> = {};
   if (skipReason && isV5SkipReason(skipReason)) {
@@ -116,6 +156,9 @@ export function buildV5Metrics(ctx: JobContext): V5Metrics {
   const restore = ctx.restoreMetrics;
   const penalty = tallyEditDistancePenalty(topk);
   const quality = getRecoverQualityConfig();
+  const candidateMetrics = countCandidateMetrics(topk);
+  const pinyinAttempt = diag?.pinyinAttemptCount ?? 0;
+  const pinyinHit = diag?.pinyinHitCount ?? 0;
 
   return {
     windows_from_nbest_diff_count: diag?.windowsFromNbestDiffCount ?? 0,
@@ -129,10 +172,16 @@ export function buildV5Metrics(ctx: JobContext): V5Metrics {
     skip_reason_v5: skipV5,
     topk_hit_rate_by_term_length: topkHitRate,
     window_length_distribution: diag?.windowLengthDistribution ?? {},
-    near_pinyin_attempt_count: diag?.nearPinyinAttemptCount ?? 0,
+    near_pinyin_attempt_count: 0,
     sentence_candidate_budget: quality.maxSentenceCandidates,
     edit_distance_penalty_sum: penalty.sum,
     edit_distance_penalty_samples: penalty.samples,
+    alias_hit_count: candidateMetrics.alias_hit_count,
+    exact_lookup_hit_count: candidateMetrics.exact_lookup_hit_count,
+    top1_hit_count: candidateMetrics.top1_hit_count,
+    no_op_repair_count: computeNoOpRepair(ctx),
+    pinyin_attempt_count: pinyinAttempt,
+    pinyin_hit_count: pinyinHit,
   };
 }
 
@@ -146,7 +195,7 @@ export function buildLexiconRecallTrace(
   const trace: LexiconRecallTraceItem[] = [];
   let truncated = false;
   for (const c of candidates) {
-    if (c.source !== 'lexicon_pinyin_topk') {
+    if (!isV3WindowCandidateSource(c.source)) {
       continue;
     }
     if (trace.length >= TRACE_MAX) {
@@ -166,7 +215,8 @@ export function buildLexiconRecallTrace(
       phoneticScore: c.phoneticScore,
       termLength: c.termLength ?? c.from.length,
       rankInTopK: c.rankInTopK ?? 0,
-      source: 'lexicon_pinyin_topk',
+      source: c.source,
+      matchedAlias: c.matchedAlias,
       candidateScoreBreakdown: c.candidateScoreBreakdown,
       picked: pickedSet.has(`${c.start}:${c.end}:${c.to}`),
     });

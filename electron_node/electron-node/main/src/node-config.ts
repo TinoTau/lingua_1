@@ -5,8 +5,17 @@ import * as path from 'path';
 import type { NodeConfig, ServicePreferences, MetricsConfig } from './node-config-types';
 import { DEFAULT_CONFIG } from './node-config-defaults';
 import { getRecoverQualityConfig } from './recover-quality/quality-config';
+import {
+  createMissingFileDiagnostics,
+  createParseFailedDiagnostics,
+  createSuccessDiagnostics,
+  getConfigLoadDiagnostics,
+  logConfigLoadFailure,
+  setConfigLoadDiagnostics,
+} from './config-load-diagnostics';
+import { parseConfigJson } from './config-file-reader';
 
-export type { NodeConfig, ServicePreferences, MetricsConfig } from './node-config-types';
+export type { NodeConfig, ServicePreferences, ServiceLastRuntimeState, MetricsConfig } from './node-config-types';
 
 export function getConfigPath(): string {
   const userData = app.getPath('userData');
@@ -87,6 +96,9 @@ export function resolveJobUseLexicon(job: { pipeline?: { use_lexicon?: boolean }
 
 /** 节点 features.lexiconRecall.enabled 缺省为 false */
 export function isLexiconRecallFeatureEnabled(): boolean {
+  if (getConfigLoadDiagnostics().runtimeFeatureDowngrade) {
+    return false;
+  }
   const c = loadNodeConfig();
   return c.features?.lexiconRecall?.enabled === true;
 }
@@ -188,127 +200,105 @@ function mergeFeatures(
     semanticRepair: { ...base.semanticRepair, ...p.semanticRepair },
     punctuationRestore: { ...base.punctuationRestore, ...p.punctuationRestore },
     lexiconRecall: { ...base.lexiconRecall, ...p.lexiconRecall },
+    lexiconV2: { ...base.lexiconV2, ...p.lexiconV2, cpuWorker: { ...base.lexiconV2?.cpuWorker, ...p.lexiconV2?.cpuWorker } },
+    sessionAffinity: { ...base.sessionAffinity, ...p.sessionAffinity },
   };
+}
+
+function mergeConfigFromParsed(parsed: Record<string, unknown>): NodeConfig {
+  return {
+    servicePreferences: {
+      ...DEFAULT_CONFIG.servicePreferences,
+      ...(parsed.servicePreferences as ServicePreferences | undefined || {}),
+    },
+    serviceLastRuntimeState: parsed.serviceLastRuntimeState as NodeConfig['serviceLastRuntimeState'],
+    scheduler: {
+      ...DEFAULT_CONFIG.scheduler,
+      ...(parsed.scheduler as NodeConfig['scheduler'] | undefined || {}),
+    },
+    modelHub: {
+      ...DEFAULT_CONFIG.modelHub,
+      ...(parsed.modelHub as NodeConfig['modelHub'] | undefined || {}),
+    },
+    services: {
+      ...DEFAULT_CONFIG.services,
+      ...(parsed.services as NodeConfig['services'] | undefined || {}),
+    },
+    testServer: {
+      ...DEFAULT_CONFIG.testServer,
+      ...(parsed.testServer as NodeConfig['testServer'] | undefined || {}),
+    },
+    lid: {
+      ...DEFAULT_CONFIG.lid,
+      ...(parsed.lid as NodeConfig['lid'] | undefined || {}),
+    },
+    metrics: {
+      ...DEFAULT_CONFIG.metrics,
+      ...(parsed.metrics as NodeConfig['metrics'] | undefined || {}),
+      metrics: {
+        ...DEFAULT_CONFIG.metrics?.metrics,
+        ...((parsed.metrics as NodeConfig['metrics'] | undefined)?.metrics || {}),
+      },
+    },
+    features: mergeFeatures(parsed.features as NodeConfig['features']),
+    gpuArbiter: (parsed.gpuArbiter as NodeConfig['gpuArbiter']) || DEFAULT_CONFIG.gpuArbiter,
+    sequentialExecutor: {
+      ...(DEFAULT_CONFIG.sequentialExecutor || {}),
+      ...(parsed.sequentialExecutor as NodeConfig['sequentialExecutor'] | undefined || {}),
+    },
+    textLength: {
+      ...(DEFAULT_CONFIG.textLength || {}),
+      ...(parsed.textLength as NodeConfig['textLength'] | undefined || {}),
+    },
+  };
+}
+
+function readAndMergeConfigFile(raw: string): NodeConfig {
+  const { parsed, hadBom } = parseConfigJson(raw);
+  setConfigLoadDiagnostics(createSuccessDiagnostics(hadBom));
+  return mergeConfigFromParsed(parsed as Record<string, unknown>);
 }
 
 // 同步版本（用于向后兼容，但尽量使用异步版本）
 export function loadNodeConfig(): NodeConfig {
+  const configPath = getConfigPath();
+  if (!fs.existsSync(configPath)) {
+    setConfigLoadDiagnostics(createMissingFileDiagnostics());
+    return { ...DEFAULT_CONFIG };
+  }
+
+  const raw = fs.readFileSync(configPath, 'utf-8');
   try {
-    const configPath = getConfigPath();
-    if (!fs.existsSync(configPath)) {
-      return { ...DEFAULT_CONFIG };
-    }
-    const raw = fs.readFileSync(configPath, 'utf-8');
-    const parsed = JSON.parse(raw);
-    // 简单合并，避免缺字段
-    // 注意：先展开默认配置，然后用用户配置覆盖，确保用户保存的值优先
-    return {
-      servicePreferences: {
-        ...DEFAULT_CONFIG.servicePreferences,
-        ...(parsed.servicePreferences || {}),
-      },
-      scheduler: {
-        ...DEFAULT_CONFIG.scheduler,
-        ...(parsed.scheduler || {}),
-      },
-      modelHub: {
-        ...DEFAULT_CONFIG.modelHub,
-        ...(parsed.modelHub || {}),
-      },
-      services: {
-        ...DEFAULT_CONFIG.services,
-        ...(parsed.services || {}),
-      },
-      testServer: {
-        ...DEFAULT_CONFIG.testServer,
-        ...(parsed.testServer || {}),
-      },
-      lid: {
-        ...DEFAULT_CONFIG.lid,
-        ...(parsed.lid || {}),
-      },
-      metrics: {
-        ...DEFAULT_CONFIG.metrics,
-        ...(parsed.metrics || {}),
-        metrics: {
-          ...DEFAULT_CONFIG.metrics?.metrics,
-          ...(parsed.metrics?.metrics || {}),
-        },
-      },
-      features: mergeFeatures(parsed.features),
-      gpuArbiter: parsed.gpuArbiter || DEFAULT_CONFIG.gpuArbiter,
-      sequentialExecutor: {
-        ...(DEFAULT_CONFIG.sequentialExecutor || {}),
-        ...(parsed.sequentialExecutor || {}),
-      },
-      textLength: {
-        ...(DEFAULT_CONFIG.textLength || {}),
-        ...(parsed.textLength || {}),
-      },
-    };
-  } catch {
+    return readAndMergeConfigFile(raw);
+  } catch (err) {
+    const diagnostics = createParseFailedDiagnostics(err, rawStartsWithBom(raw));
+    setConfigLoadDiagnostics(diagnostics);
+    logConfigLoadFailure(diagnostics);
     return { ...DEFAULT_CONFIG };
   }
 }
 
+function rawStartsWithBom(raw: string): boolean {
+  return raw.charCodeAt(0) === 0xfeff;
+}
+
 // 异步版本（推荐使用，不阻塞）
 export async function loadNodeConfigAsync(): Promise<NodeConfig> {
+  const configPath = getConfigPath();
   try {
-    const configPath = getConfigPath();
-    try {
-      await fsPromises.access(configPath);
-    } catch {
-      // 文件不存在，返回默认配置
-      return { ...DEFAULT_CONFIG };
-    }
-    const raw = await fsPromises.readFile(configPath, 'utf-8');
-    const parsed = JSON.parse(raw);
-    // 简单合并，避免缺字段
-    return {
-      servicePreferences: {
-        ...DEFAULT_CONFIG.servicePreferences,
-        ...(parsed.servicePreferences || {}),
-      },
-      scheduler: {
-        ...DEFAULT_CONFIG.scheduler,
-        ...(parsed.scheduler || {}),
-      },
-      modelHub: {
-        ...DEFAULT_CONFIG.modelHub,
-        ...(parsed.modelHub || {}),
-      },
-      services: {
-        ...DEFAULT_CONFIG.services,
-        ...(parsed.services || {}),
-      },
-      testServer: {
-        ...DEFAULT_CONFIG.testServer,
-        ...(parsed.testServer || {}),
-      },
-      lid: {
-        ...DEFAULT_CONFIG.lid,
-        ...(parsed.lid || {}),
-      },
-      metrics: {
-        ...DEFAULT_CONFIG.metrics,
-        ...(parsed.metrics || {}),
-        metrics: {
-          ...DEFAULT_CONFIG.metrics?.metrics,
-          ...(parsed.metrics?.metrics || {}),
-        },
-      },
-      features: mergeFeatures(parsed.features),
-      gpuArbiter: parsed.gpuArbiter || DEFAULT_CONFIG.gpuArbiter,
-      sequentialExecutor: {
-        ...(DEFAULT_CONFIG.sequentialExecutor || {}),
-        ...(parsed.sequentialExecutor || {}),
-      },
-      textLength: {
-        ...(DEFAULT_CONFIG.textLength || {}),
-        ...(parsed.textLength || {}),
-      },
-    };
+    await fsPromises.access(configPath);
   } catch {
+    setConfigLoadDiagnostics(createMissingFileDiagnostics());
+    return { ...DEFAULT_CONFIG };
+  }
+
+  const raw = await fsPromises.readFile(configPath, 'utf-8');
+  try {
+    return readAndMergeConfigFile(raw);
+  } catch (err) {
+    const diagnostics = createParseFailedDiagnostics(err, rawStartsWithBom(raw));
+    setConfigLoadDiagnostics(diagnostics);
+    logConfigLoadFailure(diagnostics);
     return { ...DEFAULT_CONFIG };
   }
 }
@@ -326,6 +316,7 @@ export function saveNodeConfig(config: NodeConfig): void {
       ...DEFAULT_CONFIG.servicePreferences,
       ...(config.servicePreferences || {}),
     },
+    serviceLastRuntimeState: config.serviceLastRuntimeState,
     scheduler: {
       ...DEFAULT_CONFIG.scheduler,
       ...(config.scheduler || {}),

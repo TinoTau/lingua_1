@@ -14,7 +14,7 @@ describe('expandSentenceCandidates (windowSelector path)', () => {
     hotwordId: 'hw-1',
     phoneticScore: 0.9,
     priorScore: 1,
-    source: 'confusion_evidence',
+    source: 'lexicon_pinyin_topk',
   };
 
   it('emits only window expansion candidates (no raw CTC baseline)', () => {
@@ -54,7 +54,7 @@ describe('expandSentenceCandidates (windowSelector path)', () => {
           hotwordId: 'hw-1',
           phoneticScore: 0.95,
           priorScore: 1,
-          source: 'confusion_evidence',
+          source: 'lexicon_pinyin_topk',
         },
         {
           windowId: 'w2',
@@ -66,7 +66,7 @@ describe('expandSentenceCandidates (windowSelector path)', () => {
           hotwordId: 'hw-2',
           phoneticScore: 0.9,
           priorScore: 1,
-          source: 'confusion_evidence',
+          source: 'lexicon_pinyin_topk',
         },
         {
           windowId: 'w3',
@@ -103,7 +103,7 @@ describe('expandSentenceCandidates (windowSelector path)', () => {
           hotwordId: 'hw-a',
           phoneticScore: 0.95,
           priorScore: 1,
-          source: 'confusion_evidence',
+          source: 'lexicon_pinyin_topk',
         },
         {
           windowId: 'w-b',
@@ -115,7 +115,7 @@ describe('expandSentenceCandidates (windowSelector path)', () => {
           hotwordId: 'hw-b',
           phoneticScore: 0.9,
           priorScore: 1,
-          source: 'confusion_evidence',
+          source: 'lexicon_pinyin_topk',
         },
       ],
       limits: { maxActiveWindowsPerSentence: 4 },

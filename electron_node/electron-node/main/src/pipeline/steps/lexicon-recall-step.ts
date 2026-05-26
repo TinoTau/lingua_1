@@ -24,11 +24,14 @@ import {
 } from '../../asr-repair/recover-safety-gates';
 import { buildV5Metrics } from '../v5-metrics';
 import logger from '../../logger';
+import { getProfileSnapshotFromContext } from '../../session-runtime/turn-profile-binding';
+import { defaultGeneralProfile } from '../../lexicon-v2/profile-registry';
 
 export async function runLexiconRecallStep(
   job: JobAssignMessage,
   ctx: JobContext,
-  _services: ServicesBundle
+  _services: ServicesBundle,
+  options?: { nodeId?: string }
 ): Promise<void> {
   const skipReason = getLexiconRecallSkipReason(job, ctx);
   if (skipReason) {
@@ -116,14 +119,14 @@ export async function runLexiconRecallStep(
   }
 
   const runtime = getLexiconRuntime();
-  ctx.crossBoundaryRiskReport = buildCrossBoundaryRiskReport(
-    segmentText,
-    runtime.getConfusionObservedStrings()
-  );
 
-  const { candidates, truncated, windowCount, diagnostics, noDiffSpan } =
-    recallSegmentWindowCandidates(segmentText, ctx.asrHypotheses, runtime);
+  const profile = getProfileSnapshotFromContext(ctx) ?? defaultGeneralProfile();
+
+  ctx.crossBoundaryRiskReport = buildCrossBoundaryRiskReport(segmentText, []);
+  const { candidates, truncated, windowCount, diagnostics, noDiffSpan, maxDomainBoostApplied } =
+    recallSegmentWindowCandidates(segmentText, ctx.asrHypotheses, runtime, profile);
   ctx.windowCandidates = candidates;
+  ctx.domainBoostApplied = maxDomainBoostApplied;
 
   if (noDiffSpan) {
     ctx.recoverSkipped = true;

@@ -12,6 +12,7 @@ use crate::model_not_available::ModelNotAvailableBus;
 use super::config::WebTaskSegmentationConfig;
 use crate::redis_runtime::RedisRuntime;
 use crate::pool::PoolService;
+use crate::services::SessionMigrationOrchestrator;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -47,5 +48,7 @@ pub struct AppState {
     pub minimal_scheduler: Option<std::sync::Arc<MinimalSchedulerService>>,
     /// Pool 服务（自动分配池，节点选择）
     pub pool_service: Option<std::sync::Arc<PoolService>>,
+    /// Session HTTP migration orchestrator（Redis + NODE_MIGRATION_BASE_URL_*）
+    pub session_migration_orchestrator: Option<std::sync::Arc<SessionMigrationOrchestrator>>,
 }
 

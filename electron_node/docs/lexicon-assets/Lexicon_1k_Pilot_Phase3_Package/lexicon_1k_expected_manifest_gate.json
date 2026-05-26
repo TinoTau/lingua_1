@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "final-v1",
+  "expectedSeed": "lexicon_1k_pilot_v1.jsonl",
+  "expectedEnabledCount": 1000,
+  "expectedEnabledRange": [950, 1050],
+  "expectedDomainDistribution": {
+    "travel": 253,
+    "transport": 259,
+    "restaurant": 250,
+    "tech_ai": 250
+  },
+  "expectedBuildStats": {
+    "pinyinIndexCountMin": 900,
+    "exactIndexCountMin": 50,
+    "aliasIndexCountMin": 100
+  },
+  "builtManifest": {
+    "checksum": "sha256:cd18b293c7a4703dae2f968ec92b5ab2aaf764bee33be04f14738296a793eb58",
+    "pinyinIndexCount": 952,
+    "exactIndexCount": 83,
+    "aliasIndexCount": 142
+  },
+  "dialog200Baseline": {
+    "date": "2026-05-25",
+    "pass": 200,
+    "total": 200,
+    "lexicon_runtime_ok_count": 200,
+    "replacements_applied_count": 52,
+    "lexicon_pinyin_topk_candidate_total": 83
+  },
+  "prior_score_scale": "0-1",
+  "generatedAt": "2026-05-25",
+  "notes": [
+    "dialog_200 full run with PROJECT_ROOT; intent disabled in batch script.",
+    "Pilot seed has no confusion rows; bundle_missing_observed in batch is expected."
+  ]
+}

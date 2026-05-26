@@ -10,7 +10,9 @@ import { NodeAgent } from '../agent/node-agent-simple';
 import { ModelManager } from '../model-manager/model-manager';
 import { InferenceService } from '../inference/inference-service';
 import { loadNodeConfig, saveNodeConfig, getServicesBaseUrl } from '../node-config';
+import { getConfigLoadDiagnostics } from '../config-load-diagnostics';
 import { logLexiconStartupContract } from '../lexicon/lexicon-startup';
+import { logLexiconV2StartupContract } from '../lexicon-v2/lexicon-v2-startup';
 import { logSentenceKenlmStartupStatus } from '../phonetic-correction/sentence-kenlm-startup';
 import { registerModelHandlers } from '../ipc-handlers/model-handlers';
 import {
@@ -205,17 +207,36 @@ export function loadAndValidateConfig(): void {
   );
 
   const config = loadNodeConfig();
+  const loadDiagnostics = getConfigLoadDiagnostics();
   const prefs = config.servicePreferences;
+
+  if (!loadDiagnostics.configLoadSucceeded) {
+    logger.error(
+      {
+        configPath,
+        configParseError: loadDiagnostics.configParseError,
+        downgradeReason: loadDiagnostics.downgradeReason,
+        downgradedFeatures: loadDiagnostics.downgradedFeatures,
+      },
+      '[CONFIG_LOAD_FAILED] Lexicon runtime downgraded due to invalid config'
+    );
+  }
 
   logger.info(
     {
       configPath,
+      configExists,
+      configLoadSucceeded: loadDiagnostics.configLoadSucceeded,
+      runtimeFeatureDowngrade: loadDiagnostics.runtimeFeatureDowngrade,
       servicePreferences: prefs,
     },
-    'User service preferences loaded successfully'
+    loadDiagnostics.configLoadSucceeded
+      ? 'User service preferences loaded successfully'
+      : 'Config parse failed — runtime features downgraded'
   );
 
   logLexiconStartupContract();
+  logLexiconV2StartupContract();
   logSentenceKenlmStartupStatus();
 
   // 确保配置文件存在

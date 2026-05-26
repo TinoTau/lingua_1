@@ -39,7 +39,7 @@ describe('picked-reason (historical-restore)', () => {
       hotwordId: 'hw',
       phoneticScore: 0.9,
       priorScore: 1,
-      source: 'confusion_evidence',
+      source: 'lexicon_pinyin_topk',
     };
     const picked = candidate({ text: '候选', replacements: [replacement] });
     expect(computeHistoricalPickedReason(picked)).toBe('hotword_recall');

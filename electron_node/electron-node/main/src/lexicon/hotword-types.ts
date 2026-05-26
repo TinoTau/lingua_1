@@ -3,25 +3,26 @@
  */
 
 import type { CandidateScoreBreakdown } from './candidate-score';
+import type { HotwordRecallPath, WindowCandidateSource } from './window-candidate-source';
+
+export type { HotwordRecallPath, WindowCandidateSource } from './window-candidate-source';
+export { isV3WindowCandidateSource, V3_WINDOW_CANDIDATE_SOURCES } from './window-candidate-source';
 
 export type HotwordEntry = {
   id: string;
   word: string;
+  normalized?: string;
   pinyin: string[];
-  /** V5：运营/build 维护，runtime 索引必填 */
   priorScore: number;
   frequency: number;
   domain?: string;
+  domains?: string[];
+  aliases?: string[];
+  source?: string;
+  updatedAt?: number;
   enabled: boolean;
   tags?: string[];
 };
-
-export type HotwordRecallPath =
-  | 'lexicon_pinyin_topk'
-  | 'pinyin'
-  | 'exact'
-  | 'confusion_evidence'
-  | 'fuzzy_observed';
 
 export type HotwordRecallHit = {
   hotword: HotwordEntry;
@@ -34,15 +35,9 @@ export type HotwordRecallHit = {
   rankInTopK?: number;
   termLength?: number;
   matchType?: 'exact' | 'near';
+  matchedAlias?: string;
   evidence?: unknown[];
 };
-
-export type WindowCandidateSource =
-  | 'lexicon_pinyin_topk'
-  | 'hotword'
-  | 'exact'
-  | 'confusion_evidence'
-  | 'fuzzy_observed';
 
 export type WindowCandidate = {
   windowId: string;
@@ -65,4 +60,5 @@ export type WindowCandidate = {
   windowTrigger?: string;
   sourceHypothesisRank?: number;
   candidateScoreBreakdown?: CandidateScoreBreakdown;
+  matchedAlias?: string;
 };

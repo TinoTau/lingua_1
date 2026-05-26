@@ -267,8 +267,7 @@ export class NodeAgent {
         case 'node_register_ack': {
           const ack = message as NodeRegisterAckMessage;
           this.nodeId = ack.node_id;
-
-          // 更新所有handler的nodeId
+          this.inferenceService.setNodeId(this.nodeId);
           this.heartbeatHandler.updateConnection(this.ws, this.nodeId);
           this.registrationHandler.updateConnection(this.ws, this.nodeId);
           this.jobProcessor.updateConnection(this.ws, this.nodeId);

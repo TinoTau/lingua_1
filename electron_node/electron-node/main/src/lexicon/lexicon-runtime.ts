@@ -8,31 +8,38 @@ import {
 } from './lexicon-bundle-path';
 import { readManifest, verifySqliteChecksum } from './lexicon-manifest';
 import { buildHotwordPinyinIndex, syllablesKey, type HotwordPinyinIndex } from './pinyin-index';
-import { normalizeSegmentTextForMatch } from './segment-text-normalize';
 import {
-  assertV5ManifestReady,
+  buildAliasIndexes,
+  lookupAliasExact,
+  lookupAliasPinyin,
+  type AliasExactIndex,
+  type AliasPinyinIndex,
+} from './alias-index';
+import {
+  assertLexiconManifestReady,
   countMixedTokens,
+  isIndexableHotwordEntry,
+  parseAliasesField,
   parseTagsField,
-  SCORED_LEXICON_VERSION,
+  LEXICON_SCHEMA_VERSION,
 } from './scored-lexicon';
+import { buildExactWordIndex, lookupExactWord, type ExactWordIndex } from './exact-index';
 import type { HotwordEntry } from './hotword-types';
 import { LexiconManifest, LexiconRuntimeState } from './lexicon-types';
 
 type HotwordRow = {
   id: string;
   word: string;
+  normalized?: string | null;
   pinyin: string;
   prior_score: number | null;
   frequency: number | null;
   domain: string | null;
+  domains: string | null;
+  aliases?: string | null;
+  source?: string | null;
+  updated_at?: number | null;
   tags: string | null;
-  enabled: number;
-};
-
-type ConfusionRow = {
-  id: string;
-  observed: string;
-  hotword_id: string;
   enabled: number;
 };
 
@@ -46,7 +53,7 @@ function parsePinyinField(raw: string | null): string[] {
     .filter(Boolean);
 }
 
-function assertLexiconTermsV5Schema(db: Database.Database): void {
+function assertLexiconTermsSchema(db: Database.Database): void {
   const cols = db.prepare('PRAGMA table_info(lexicon_terms)').all() as { name: string }[];
   const names = new Set(cols.map((c) => c.name));
   if (!names.has('prior_score')) {
@@ -54,16 +61,39 @@ function assertLexiconTermsV5Schema(db: Database.Database): void {
       '[LEXICON_RUNTIME] lexicon.sqlite missing prior_score column; rebuild with build-lexicon-bundle'
     );
   }
+  if (!names.has('normalized')) {
+    throw new Error(
+      '[LEXICON_RUNTIME] lexicon.sqlite missing normalized column; rebuild with build-lexicon-bundle (final-v1)'
+    );
+  }
 }
 
 function mapHotwordRow(row: HotwordRow): HotwordEntry {
+  let domains: string[] = ['general'];
+  if (row.domains?.trim()) {
+    try {
+      const parsed = JSON.parse(row.domains) as unknown;
+      if (Array.isArray(parsed)) {
+        domains = parsed.filter((d): d is string => typeof d === 'string' && d.length > 0);
+      }
+    } catch {
+      domains = [row.domains.trim()];
+    }
+  } else if (row.domain?.trim()) {
+    domains = [row.domain.trim()];
+  }
   return {
     id: row.id,
     word: row.word,
+    normalized: row.normalized?.trim() || row.word.trim(),
     pinyin: parsePinyinField(row.pinyin),
     priorScore: row.prior_score ?? Number.NaN,
     frequency: row.frequency ?? 1,
-    domain: row.domain ?? undefined,
+    domain: domains[0],
+    domains,
+    aliases: parseAliasesField(row.aliases),
+    source: row.source?.trim() || undefined,
+    updatedAt: row.updated_at ?? undefined,
     enabled: row.enabled === 1,
     tags: parseTagsField(row.tags),
   };
@@ -74,10 +104,10 @@ export class LexiconRuntime {
   private manifest: LexiconManifest | null = null;
   private state: LexiconRuntimeState = { status: 'missing' };
   private pinyinIndex: HotwordPinyinIndex = new Map();
+  private aliasExactIndex: AliasExactIndex = new Map();
+  private aliasPinyinIndex: AliasPinyinIndex = new Map();
+  private exactWordIndex: ExactWordIndex = new Map();
   private hotwordsById: Map<string, HotwordEntry> = new Map();
-  private observedToHotwordIds: Map<string, string[]> = new Map();
-  /** normalized observed → original observed keys */
-  private normalizedObservedIndex: Map<string, string[]> = new Map();
 
   getState(): LexiconRuntimeState {
     return { ...this.state };
@@ -91,12 +121,17 @@ export class LexiconRuntime {
     return this.pinyinIndex.size;
   }
 
+  getExactIndexSize(): number {
+    return this.exactWordIndex.size;
+  }
+
   load(): LexiconRuntimeState {
     this.close();
     this.pinyinIndex = new Map();
+    this.aliasExactIndex = new Map();
+    this.aliasPinyinIndex = new Map();
+    this.exactWordIndex = new Map();
     this.hotwordsById = new Map();
-    this.observedToHotwordIds = new Map();
-    this.normalizedObservedIndex = new Map();
 
     if (!process.env.LEXICON_BUNDLE_PATH?.trim() && !process.env.PROJECT_ROOT?.trim()) {
       this.state = { status: 'error', errorMessage: LEXICON_RUNTIME_PROJECT_ROOT_MSG };
@@ -123,11 +158,27 @@ export class LexiconRuntime {
       verifySqliteChecksum(sqlitePath, manifest, checksumPath);
       this.db = new Database(sqlitePath, { readonly: true });
       this.manifest = manifest;
-      assertLexiconTermsV5Schema(this.db);
+      assertLexiconTermsSchema(this.db);
+      assertLexiconManifestReady(manifest);
+
+      const colNames = new Set(
+        (this.db.prepare('PRAGMA table_info(lexicon_terms)').all() as { name: string }[]).map(
+          (c) => c.name
+        )
+      );
+      const optionalCols = [
+        colNames.has('normalized') ? 'normalized' : 'word AS normalized',
+        colNames.has('aliases') ? 'aliases' : "NULL AS aliases",
+        colNames.has('source') ? 'source' : 'NULL AS source',
+        colNames.has('updated_at') ? 'updated_at' : 'NULL AS updated_at',
+      ].join(', ');
+      const domainCols = colNames.has('domains')
+        ? 'domain, domains'
+        : 'domain, NULL as domains';
 
       const hotwordRows = this.db
         .prepare(
-          `SELECT id, word, pinyin, prior_score, frequency, domain, tags, enabled
+          `SELECT id, word, ${optionalCols}, pinyin, prior_score, frequency, ${domainCols}, tags, enabled
            FROM lexicon_terms`
         )
         .all() as HotwordRow[];
@@ -146,43 +197,20 @@ export class LexiconRuntime {
           continue;
         }
         this.hotwordsById.set(entry.id, entry);
-        if (entry.pinyin.length === 0 || !Number.isFinite(entry.priorScore) || entry.priorScore <= 0) {
-          termsWithoutPriorSkipped += 1;
+        if (!isIndexableHotwordEntry(entry)) {
+          if (!Number.isFinite(entry.priorScore) || entry.priorScore <= 0) {
+            termsWithoutPriorSkipped += 1;
+          }
           continue;
         }
         indexable.push(entry);
       }
 
       this.pinyinIndex = buildHotwordPinyinIndex(indexable);
-
-      if (this.tableExists('lexicon_confusions')) {
-        const confusionRows = this.db
-          .prepare(
-            `SELECT id, observed, hotword_id, enabled
-             FROM lexicon_confusions
-             WHERE enabled = 1`
-          )
-          .all() as ConfusionRow[];
-        for (const row of confusionRows) {
-          const observed = row.observed.trim();
-          if (!observed || !this.hotwordsById.has(row.hotword_id)) {
-            continue;
-          }
-          const bucket = this.observedToHotwordIds.get(observed) ?? [];
-          if (!bucket.includes(row.hotword_id)) {
-            bucket.push(row.hotword_id);
-          }
-          this.observedToHotwordIds.set(observed, bucket);
-          const normKey = normalizeSegmentTextForMatch(observed);
-          if (normKey.length >= 2) {
-            const normBucket = this.normalizedObservedIndex.get(normKey) ?? [];
-            if (!normBucket.includes(observed)) {
-              normBucket.push(observed);
-            }
-            this.normalizedObservedIndex.set(normKey, normBucket);
-          }
-        }
-      }
+      this.exactWordIndex = buildExactWordIndex(indexable);
+      const aliasIndexes = buildAliasIndexes(indexable);
+      this.aliasExactIndex = aliasIndexes.exactIndex;
+      this.aliasPinyinIndex = aliasIndexes.pinyinIndex;
 
       const scoredLexicon = {
         termCount: allEntries.length,
@@ -190,6 +218,7 @@ export class LexiconRuntime {
         termsWithPriorCount: indexable.length,
         termsWithoutPriorSkipped,
         pinyinIndexCount: this.pinyinIndex.size,
+        exactIndexCount: this.exactWordIndex.size,
         mixedTokenCount: countMixedTokens(allEntries),
       };
 
@@ -205,9 +234,11 @@ export class LexiconRuntime {
       logger.info(
         {
           bundleDir,
+          schemaVersion: manifest.schemaVersion ?? LEXICON_SCHEMA_VERSION,
           version: manifest.version,
-          scored_lexicon_version: manifest.scored_lexicon_version ?? SCORED_LEXICON_VERSION,
+          scored_lexicon_version: manifest.scored_lexicon_version ?? LEXICON_SCHEMA_VERSION,
           pinyin_index_size: this.pinyinIndex.size,
+          exact_index_size: this.exactWordIndex.size,
           hotword_count: indexable.length,
           terms_without_prior_skipped: termsWithoutPriorSkipped,
         },
@@ -218,8 +249,10 @@ export class LexiconRuntime {
       const message = err instanceof Error ? err.message : String(err);
       this.state = { status: 'error', errorMessage: message };
       this.pinyinIndex = new Map();
+      this.aliasExactIndex = new Map();
+      this.aliasPinyinIndex = new Map();
+      this.exactWordIndex = new Map();
       this.hotwordsById = new Map();
-      this.observedToHotwordIds = new Map();
       logger.error({ bundleDir, error: message }, 'Lexicon runtime load failed');
       return this.getState();
     }
@@ -253,19 +286,23 @@ export class LexiconRuntime {
     if (this.state.status !== 'ok') {
       return [];
     }
-    const trimmed = word.trim();
-    if (!trimmed) {
-      return [];
-    }
-    return [...this.hotwordsById.values()].filter((h) => h.enabled && h.word === trimmed);
+    return lookupExactWord(this.exactWordIndex, word);
   }
 
-  getConfusionObservedStrings(): string[] {
+  lookupAliasExactMatches(text: string) {
     if (this.state.status !== 'ok') {
       return [];
     }
-    return [...this.observedToHotwordIds.keys()];
+    return lookupAliasExact(this.aliasExactIndex, text.trim());
   }
+
+  lookupAliasPinyinMatches(key: string) {
+    if (this.state.status !== 'ok') {
+      return [];
+    }
+    return lookupAliasPinyin(this.aliasPinyinIndex, key);
+  }
+
 
   getEnabledHotwords(): HotwordEntry[] {
     if (this.state.status !== 'ok') {
@@ -274,38 +311,6 @@ export class LexiconRuntime {
     return [...this.hotwordsById.values()].filter((h) => h.enabled && h.word.trim());
   }
 
-  recallHotwordsByObserved(
-    observed: string,
-    maxCandidates = 16
-  ): { hotword: HotwordEntry; recallPath: 'exact' | 'confusion_evidence' }[] {
-    if (this.state.status !== 'ok') {
-      return [];
-    }
-    const trimmed = observed.trim();
-    const out: { hotword: HotwordEntry; recallPath: 'exact' | 'confusion_evidence' }[] = [];
-    const seen = new Set<string>();
-
-    for (const hotword of this.hotwordsById.values()) {
-      if (hotword.word === trimmed && !seen.has(hotword.id)) {
-        seen.add(hotword.id);
-        out.push({ hotword, recallPath: 'exact' });
-      }
-    }
-
-    const ids = this.observedToHotwordIds.get(trimmed) ?? [];
-    for (const id of ids) {
-      if (seen.has(id)) {
-        continue;
-      }
-      const hotword = this.hotwordsById.get(id);
-      if (hotword) {
-        seen.add(id);
-        out.push({ hotword, recallPath: 'confusion_evidence' });
-      }
-    }
-
-    return out.slice(0, maxCandidates);
-  }
 
   close(): void {
     if (this.db) {
@@ -314,52 +319,10 @@ export class LexiconRuntime {
     }
     this.manifest = null;
     this.pinyinIndex = new Map();
+    this.aliasExactIndex = new Map();
+    this.aliasPinyinIndex = new Map();
+    this.exactWordIndex = new Map();
     this.hotwordsById = new Map();
-    this.observedToHotwordIds = new Map();
-    this.normalizedObservedIndex = new Map();
-  }
-
-  /**
-   * exact observed 优先；其次 normalized key 命中 confusion 表。
-   */
-  recallHotwordsByObservedLoose(
-    observedText: string,
-    maxCandidates = 16
-  ): { hotword: HotwordEntry; recallPath: 'exact' | 'confusion_evidence' }[] {
-    const direct = this.recallHotwordsByObserved(observedText, maxCandidates);
-    if (direct.length > 0) {
-      return direct;
-    }
-    const norm = normalizeSegmentTextForMatch(observedText);
-    if (norm.length < 2) {
-      return [];
-    }
-    const originals = this.normalizedObservedIndex.get(norm) ?? [];
-    const out: { hotword: HotwordEntry; recallPath: 'exact' | 'confusion_evidence' }[] = [];
-    const seen = new Set<string>();
-    for (const orig of originals) {
-      for (const hit of this.recallHotwordsByObserved(orig, maxCandidates)) {
-        if (seen.has(hit.hotword.id)) {
-          continue;
-        }
-        seen.add(hit.hotword.id);
-        out.push(hit);
-        if (out.length >= maxCandidates) {
-          return out;
-        }
-      }
-    }
-    return out;
-  }
-
-  private tableExists(name: string): boolean {
-    if (!this.db) {
-      return false;
-    }
-    const row = this.db
-      .prepare(`SELECT name FROM sqlite_master WHERE type='table' AND name=?`)
-      .get(name) as { name: string } | undefined;
-    return Boolean(row);
   }
 }
 

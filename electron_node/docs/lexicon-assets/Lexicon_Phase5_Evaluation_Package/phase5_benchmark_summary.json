@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "phase5-benchmark-v1",
+  "generatedAt": "2026-05-26T14:14:28.914Z",
+  "ladder": "2k",
+  "bundleDir": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\current",
+  "manifest": {
+    "checksum": "sha256:38a85d9cdf02ef09f2e434ab93815f4a2d7df5a4b87c48c8b0c0c1e3bc52fbbf",
+    "lexiconCount": 2000,
+    "enabledCount": 2000
+  },
+  "metrics": {
+    "topk_hit_rate": 0.012465598186822082,
+    "top1_hit_rate": 1,
+    "alias_hit_rate": 0,
+    "alias_hit_count": 0,
+    "exact_lookup_hit_count": 77,
+    "pinyin_hit_rate": 0.012465598186822082,
+    "pinyin_attempt_count": 6177,
+    "pinyin_hit_count": 77,
+    "no_op_repair_rate": 0.24,
+    "no_op_repair_count": 48,
+    "lexicon_pinyin_topk_candidate_total": 77,
+    "confusion_evidence_total": 0,
+    "false_repair_count": 0,
+    "false_repair_rate": 0,
+    "repair_precision": 1,
+    "alias_collision_count": 0
+  },
+  "latency": {
+    "sqlite_bundle_bytes": 385024,
+    "runtime_latency_ms": null
+  },
+  "dialog200": {
+    "pass": 200,
+    "total": 200
+  },
+  "baseline_comparison": {
+    "regression_pass": true,
+    "violations": []
+  },
+  "reports": {
+    "canonical_topk_report": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\current\\canonical_topk_report.json",
+    "alias_benchmark_report": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\current\\alias_benchmark_report.json",
+    "domain_distribution_report": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\current\\domain_distribution_report.json"
+  }
+}

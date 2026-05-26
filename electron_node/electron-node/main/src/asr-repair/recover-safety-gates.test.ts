@@ -32,6 +32,9 @@ describe('recover-safety-gates', () => {
       'no_topk_candidate'
     );
     expect(evaluateNoTopkCandidate([candidate(5)])).toBeNull();
+    expect(
+      evaluateNoTopkCandidate([{ ...candidate(5), source: 'lexicon_pinyin_topk' as const }])
+    ).toBeNull();
   });
 
   it('evaluateReplacementCountExceeded uses maxReplacements=2', () => {

@@ -13,9 +13,12 @@ import { getLexiconRecallSkipReason } from '../node-config';
 import { stampRecoverPipelineSkip } from './recover-contract';
 import { executeStep, PipelineStepType } from './pipeline-step-registry';
 import { buildBufferKey } from '../pipeline-orchestrator/audio-aggregator-buffer-key';
+import { finalizeSessionTurn, beginSessionTurnProfile } from '../session-runtime/session-finalize';
+import { collectReplayPatchProposal } from '../lexicon/replay-patch/patch-collector';
 
 export interface ServicesBundle {
   taskRouter: any;
+  nodeId?: string;
   aggregatorManager?: any;
   servicesHandler?: any;
   deduplicationHandler?: any;
@@ -53,6 +56,11 @@ export async function runJobPipeline(options: JobPipelineOptions): Promise<JobRe
 
   // 如果提供了预初始化的 JobContext，使用它；否则创建新的
   const ctx = providedCtx || initJobContext(job);
+
+  if (job.session_id?.trim()) {
+    const intentSchedulingEnabled = (job as { lexicon_v2_intent_enabled?: boolean }).lexicon_v2_intent_enabled !== false;
+    beginSessionTurnProfile(job, ctx, services.nodeId ?? '', { intentSchedulingEnabled });
+  }
 
   // 任务开始回调
   callbacks?.onTaskStart?.();
@@ -178,6 +186,9 @@ export async function runJobPipeline(options: JobPipelineOptions): Promise<JobRe
     services.audioAggregator.clearBufferByKey(bufferKey);
     logger.debug({ jobId: job.job_id, bufferKey }, 'JobPipeline: Turn ended, cleared audio buffer');
   }
+
+  finalizeSessionTurn(job, ctx, services.nodeId ?? '');
+  collectReplayPatchProposal(job, ctx);
 
   return buildJobResult(job, ctx);
 }

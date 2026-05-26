@@ -31,7 +31,7 @@ describe('sentence-repair-observability', () => {
       hotwordId: 'hw',
       phoneticScore: 0.9,
       priorScore: 1,
-      source: 'confusion_evidence',
+      source: 'lexicon_pinyin_topk',
     };
     const picked = candidate('候选生成', {
       replacements: [replacement],

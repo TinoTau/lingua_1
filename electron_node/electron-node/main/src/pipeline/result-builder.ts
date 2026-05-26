@@ -11,6 +11,7 @@ import { buildRecoverContractExtra } from './recover-contract';
 import { RECOVER_CONTRACT_VERSION_V5, resolveRecoverContractVersion } from './recover-contract';
 import { buildRecoverQualityConfigSnapshot } from '../recover-quality/quality-config';
 import { buildLexiconRecallTrace } from './v5-metrics';
+import { buildSessionResultExtra } from '../session-runtime/session-result-extra';
 import logger from '../logger';
 
 function hasKenlmMetaForExtra(meta: AsrKenlmMeta): boolean {
@@ -115,6 +116,7 @@ export function buildJobResult(job: JobAssignMessage, ctx: JobContext): JobResul
           }
         : {}),
       qualityConfig: buildRecoverQualityConfigSnapshot(),
+      ...buildSessionResultExtra(job, ctx),
       ...(ctx.lexiconManifestReady ? { lexicon_manifest_ready: ctx.lexiconManifestReady } : {}),
       ...(resolveRecoverContractVersion() === RECOVER_CONTRACT_VERSION_V5 && ctx.v5Metrics
         ? { v5_metrics: ctx.v5Metrics }

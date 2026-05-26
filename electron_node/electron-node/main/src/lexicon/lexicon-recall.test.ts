@@ -14,46 +14,42 @@ function seedBundle(tmpDir: string): void {
     CREATE TABLE lexicon_terms (
       id TEXT PRIMARY KEY,
       word TEXT NOT NULL,
+      normalized TEXT NOT NULL,
       pinyin TEXT NOT NULL,
       prior_score REAL NOT NULL,
       frequency INTEGER DEFAULT 1,
       domain TEXT,
-      tags TEXT,
-      enabled INTEGER DEFAULT 1
-    );
-    CREATE TABLE lexicon_confusions (
-      id TEXT PRIMARY KEY,
-      observed TEXT NOT NULL,
-      hotword_id TEXT NOT NULL,
-      pinyin TEXT,
+      domains TEXT,
+      aliases TEXT NOT NULL DEFAULT '[]',
       source TEXT,
+      updated_at INTEGER NOT NULL,
+      tags TEXT,
       enabled INTEGER DEFAULT 1
     );
   `);
   const insertHw = db.prepare(
-    `INSERT INTO lexicon_terms (id, word, pinyin, prior_score, frequency, enabled)
-     VALUES (?, ?, ?, ?, ?, 1)`
+    `INSERT INTO lexicon_terms (id, word, normalized, pinyin, prior_score, frequency, domains, source, updated_at, tags, enabled)
+     VALUES (?, ?, ?, ?, ?, 10, '["general"]', 'test', ?, '[]', 1)`
   );
-  insertHw.run('hw-1', '候选生成', 'hou xuan sheng cheng', 8.5, 10);
-  const insertCf = db.prepare(
-    `INSERT INTO lexicon_confusions (id, observed, hotword_id, enabled)
-     VALUES (?, ?, ?, 1)`
-  );
-  insertCf.run('cf-1', '后选生城', 'hw-1');
-  insertCf.run('cf-2', '后选声城', 'hw-1');
+  insertHw.run('hw-1', '候选生成', '候选生成', 'hou xuan sheng cheng', 0.85, Date.now());
   db.close();
   const checksum = sha256File(sqlitePath);
   fs.writeFileSync(
     path.join(tmpDir, 'manifest.json'),
     JSON.stringify({
+      schemaVersion: 'final-v1',
       version: 'test-v5',
-      checksum,
+      checksum: `sha256:${checksum}`,
       createdAt: '2026-05-17T00:00:00Z',
       backend: 'sqlite',
-      scored_lexicon_version: 'v5',
+      scored_lexicon_version: 'final-v1',
       terms_without_prior_count: 0,
+      term_count: 1,
+      enabled_term_count: 1,
+      terms_with_prior_count: 1,
     })
   );
+  fs.writeFileSync(path.join(tmpDir, 'checksum.txt'), `sha256:${checksum}`);
 }
 
 describe('recallSegmentWindowCandidates', () => {

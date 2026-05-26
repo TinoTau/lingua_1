@@ -6,7 +6,7 @@ import Database = require('better-sqlite3');
 import { LexiconRuntime } from './lexicon-runtime';
 import { readManifest, sha256File } from './lexicon-manifest';
 import { resetLexiconRuntimeForTests } from './lexicon-runtime-holder';
-import { SCORED_LEXICON_VERSION } from './scored-lexicon';
+import { LEXICON_SCHEMA_VERSION } from './scored-lexicon';
 
 describe('LexiconRuntime', () => {
   let tmpDir: string;
@@ -28,7 +28,7 @@ describe('LexiconRuntime', () => {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
 
-  function writeV5Bundle(
+  function writeFinalV1Bundle(
     rows: {
       id: string;
       word: string;
@@ -37,6 +37,8 @@ describe('LexiconRuntime', () => {
       frequency?: number;
       enabled?: number;
       tags?: string;
+      domains?: string;
+      aliases?: string;
     }[]
   ) {
     const sqlitePath = path.join(tmpDir, 'lexicon.sqlite');
@@ -45,34 +47,35 @@ describe('LexiconRuntime', () => {
       CREATE TABLE lexicon_terms (
         id TEXT PRIMARY KEY,
         word TEXT NOT NULL,
+        normalized TEXT NOT NULL,
         pinyin TEXT NOT NULL,
         prior_score REAL NOT NULL,
         frequency INTEGER DEFAULT 1,
         domain TEXT,
-        tags TEXT,
-        enabled INTEGER DEFAULT 1
-      );
-      CREATE TABLE lexicon_confusions (
-        id TEXT PRIMARY KEY,
-        observed TEXT NOT NULL,
-        hotword_id TEXT NOT NULL,
-        pinyin TEXT,
+        domains TEXT,
+        aliases TEXT NOT NULL DEFAULT '[]',
         source TEXT,
-        enabled INTEGER DEFAULT 1
-      );
-    `);
+        updated_at INTEGER NOT NULL,
+        tags TEXT,
+      enabled INTEGER DEFAULT 1
+    );
+  `);
     const insert = db.prepare(
-      `INSERT INTO lexicon_terms (id, word, pinyin, prior_score, frequency, tags, enabled)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`
+      `INSERT INTO lexicon_terms (id, word, normalized, pinyin, prior_score, frequency, domain, domains, tags, aliases, source, updated_at, enabled)
+       VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, 'test', ?, ?)`
     );
     for (const row of rows) {
       insert.run(
         row.id,
         row.word,
+        row.word,
         row.pinyin,
         row.prior_score,
         row.frequency ?? 1,
+        row.domains ?? '["general"]',
         row.tags ?? '[]',
+        row.aliases ?? '[]',
+        Date.now(),
         row.enabled ?? 1
       );
     }
@@ -81,11 +84,12 @@ describe('LexiconRuntime', () => {
     fs.writeFileSync(
       path.join(tmpDir, 'manifest.json'),
       JSON.stringify({
-        version: 'test-v5',
+        schemaVersion: LEXICON_SCHEMA_VERSION,
+        version: 'test-final-v1',
         checksum,
         createdAt: '2026-05-22T00:00:00Z',
         backend: 'sqlite',
-        scored_lexicon_version: SCORED_LEXICON_VERSION,
+        scored_lexicon_version: LEXICON_SCHEMA_VERSION,
         term_count: rows.length,
         enabled_term_count: rows.filter((r) => (r.enabled ?? 1) === 1).length,
         terms_with_prior_count: rows.filter((r) => (r.enabled ?? 1) === 1).length,
@@ -97,8 +101,8 @@ describe('LexiconRuntime', () => {
     fs.writeFileSync(path.join(tmpDir, 'checksum.txt'), checksum);
   }
 
-  it('loads V5 bundle, builds pinyin index by priorScore, recalls by pinyin', () => {
-    writeV5Bundle([
+  it('loads final-v1 bundle, builds pinyin index by priorScore, recalls by pinyin', () => {
+    writeFinalV1Bundle([
       {
         id: 'hw-1',
         word: '候选生成',
@@ -120,7 +124,7 @@ describe('LexiconRuntime', () => {
   });
 
   it('skips enabled row without prior_score from index', () => {
-    writeV5Bundle([
+    writeFinalV1Bundle([
       {
         id: 'hw-ok',
         word: '好',
@@ -142,8 +146,27 @@ describe('LexiconRuntime', () => {
     expect(rt.getPinyinIndexSize()).toBe(1);
   });
 
+  it('loads mixed latin without pinyin into exact index', () => {
+    writeFinalV1Bundle([
+      {
+        id: 'hw-gpu',
+        word: 'GPU',
+        pinyin: '',
+        prior_score: 0.9,
+        domains: '["tech_ai"]',
+      },
+    ]);
+    rt = new LexiconRuntime();
+    const state = rt.load();
+    expect(state.status).toBe('ok');
+    expect(state.scoredLexicon?.mixedTokenCount).toBe(1);
+    expect(rt.getExactIndexSize()).toBeGreaterThan(0);
+    expect(rt.getPinyinIndexSize()).toBe(0);
+    expect(rt.lookupHotwordsByExactWord('gpu')[0]?.word).toBe('GPU');
+  });
+
   it('loads mixed latin token with explicit pinyin', () => {
-    writeV5Bundle([
+    writeFinalV1Bundle([
       {
         id: 'hw-gpu',
         word: 'GPU',
@@ -199,7 +222,7 @@ describe('LexiconRuntime', () => {
   });
 
   it('returns error on checksum mismatch', () => {
-    writeV5Bundle([{ id: '1', word: 'a', pinyin: 'a', prior_score: 1 }]);
+    writeFinalV1Bundle([{ id: '1', word: 'a', pinyin: 'a', prior_score: 1 }]);
     const manifest = readManifest(path.join(tmpDir, 'manifest.json'));
     fs.writeFileSync(
       path.join(tmpDir, 'manifest.json'),

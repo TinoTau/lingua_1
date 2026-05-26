@@ -65,41 +65,29 @@ impl PoolService {
     /// # 参数
     /// - `src_lang`: 源语言（ASR 识别的语言）
     /// - `tgt_lang`: 目标语言（TTS + Semantic 输出的语言）
-    /// - `job_id`: 任务 ID（用于 job 级绑定）
-    /// - `turn_id_for_affinity`: 当前 turn 的 ID，用于读 `scheduler:turn:{turn_id}` 的 `affinity_node_id`
-    /// 
-    /// # 示例
-    /// 
-    /// ```rust,no_run
-    /// # use tokio_test::block_on;
-    /// # block_on(async {
-    /// # let pool_service: lingua_scheduler::pool::PoolService = unimplemented!();
-    /// # let turn_id = "";
-    /// let _node_id = pool_service.select_node("zh", "en", None, Some(turn_id)).await?;
-    /// # Ok::<(), Box<dyn std::error::Error>>(())
-    /// # });
-    /// ```
+    /// - `job_id`: 任务 ID（MaxDuration job 级绑定）
+    /// - `session_id`: 会话 ID（session affinity assigned_node_id）
     pub async fn select_node(
         &self,
         src_lang: &str,
         tgt_lang: &str,
         job_id: Option<&str>,
-        turn_id_for_affinity: Option<&str>,
+        session_id: Option<&str>,
     ) -> Result<String> {
         let pair_key = format!("{}:{}", src_lang, tgt_lang);
         let job_id_str = job_id.unwrap_or("");
-        let turn_id_str = turn_id_for_affinity.unwrap_or("");
+        let session_id_str = session_id.unwrap_or("");
         
         info!(
             pair_key = %pair_key,
             job_id = ?job_id,
-            turn_id_for_affinity = ?turn_id_for_affinity,
+            session_id = ?session_id,
             "【节点选择】开始查找 Pool"
         );
         
         let result: Option<String> = self.eval_script(
             &self.scripts.select_node,
-            &[&pair_key, job_id_str, turn_id_str],
+            &[&pair_key, job_id_str, session_id_str],
         ).await?;
         
         match result {
@@ -178,25 +166,25 @@ mod tests {
         assert_eq!(pair_key, "en:zh");
     }
 
-    /// Turn 内亲和：select_node.lua 必须使用 scheduler:turn:{turn_id} 与 affinity_node_id
+    /// Session-only affinity：select_node.lua 不得再使用 turn routing key
     #[test]
-    fn test_select_node_lua_turn_affinity_contract() {
+    fn test_select_node_lua_session_only_affinity_contract() {
         let script = include_str!("../../scripts/lua/select_node.lua");
         assert!(
-            script.contains("scheduler:turn:"),
-            "select_node.lua must use key prefix scheduler:turn: for turn affinity"
+            script.contains("scheduler:session:"),
+            "select_node.lua must use session affinity"
         );
         assert!(
-            script.contains("affinity_node_id"),
-            "select_node.lua must use field affinity_node_id for turn affinity"
+            script.contains("assigned_node_id"),
+            "select_node.lua must read assigned_node_id"
         );
         assert!(
-            !script.contains("timeout_node_id"),
-            "select_node.lua must not use timeout_node_id (replaced by affinity_node_id)"
+            !script.contains("scheduler:turn:"),
+            "select_node.lua must not use turn routing affinity"
         );
         assert!(
-            !script.contains("max_duration_node_id"),
-            "select_node.lua must not use max_duration_node_id (replaced by affinity_node_id)"
+            !script.contains("affinity_node_id"),
+            "select_node.lua must not use affinity_node_id"
         );
     }
 }

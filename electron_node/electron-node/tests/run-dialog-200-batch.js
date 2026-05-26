@@ -66,6 +66,7 @@ async function runWav(port, wavPath, sessionId) {
       use_lexicon: true,
       is_manual_cut: true,
       session_id: sessionId,
+      lexicon_v2_intent_enabled: false,
     }),
     signal: AbortSignal.timeout(300000),
   });
@@ -295,6 +296,13 @@ function summarizeV5Metrics(rows) {
   let outOfBundle = 0;
   let nearPinyinAttempts = 0;
   let modifiedWithoutReplacement = 0;
+  let noOpRepair = 0;
+  let aliasHitTotal = 0;
+  let exactLookupHitTotal = 0;
+  let top1HitTotal = 0;
+  let pinyinAttemptTotal = 0;
+  let pinyinHitTotal = 0;
+  let topkAttemptTotal = 0;
   let editPenaltySum = 0;
   let editPenaltySamples = 0;
   const skipV5 = {};
@@ -313,6 +321,20 @@ function summarizeV5Metrics(rows) {
     outOfBundle += m.out_of_bundle_candidate_count ?? 0;
     nearPinyinAttempts += m.near_pinyin_attempt_count ?? 0;
     modifiedWithoutReplacement += m.modified_without_replacement_count ?? 0;
+    noOpRepair += m.no_op_repair_count ?? 0;
+    aliasHitTotal += m.alias_hit_count ?? 0;
+    exactLookupHitTotal += m.exact_lookup_hit_count ?? 0;
+    top1HitTotal += m.top1_hit_count ?? 0;
+    pinyinAttemptTotal += m.pinyin_attempt_count ?? 0;
+    pinyinHitTotal += m.pinyin_hit_count ?? 0;
+    const wr = row.extra?.window_recall_diagnostics || {};
+    const attemptMap = wr.topkAttemptsByTermLength || {};
+    for (const n of Object.values(attemptMap)) {
+      topkAttemptTotal += n || 0;
+    }
+    if (!Object.keys(attemptMap).length) {
+      topkAttemptTotal += wr.pinyinAttemptCount ?? 0;
+    }
     editPenaltySum += m.edit_distance_penalty_sum ?? 0;
     editPenaltySamples += m.edit_distance_penalty_samples ?? 0;
     if (sentenceCandidateBudget === null && m.sentence_candidate_budget != null) {
@@ -328,6 +350,13 @@ function summarizeV5Metrics(rows) {
     }
   }
 
+  const topkHitRate =
+    topkAttemptTotal > 0 ? Math.min(1, topkCandidates / Math.max(topkAttemptTotal, 1)) : 0;
+  const top1HitRate = topkCandidates > 0 ? top1HitTotal / topkCandidates : 0;
+  const aliasHitRate = topkCandidates > 0 ? aliasHitTotal / topkCandidates : 0;
+  const pinyinHitRate = pinyinAttemptTotal > 0 ? pinyinHitTotal / pinyinAttemptTotal : 0;
+  const noOpRepairRate = v5Jobs > 0 ? noOpRepair / v5Jobs : 0;
+
   return {
     v5_job_count: v5Jobs,
     windows_from_nbest_diff_ratio: enumerated > 0 ? diffWindows / enumerated : 0,
@@ -336,12 +365,36 @@ function summarizeV5Metrics(rows) {
     out_of_bundle_total: outOfBundle,
     near_pinyin_attempt_count: nearPinyinAttempts,
     modified_without_replacement_count_total: modifiedWithoutReplacement,
+    no_op_repair_count_total: noOpRepair,
+    no_op_repair_rate: noOpRepairRate,
+    alias_hit_count_total: aliasHitTotal,
+    alias_hit_rate: aliasHitRate,
+    exact_lookup_hit_count_total: exactLookupHitTotal,
+    top1_hit_count_total: top1HitTotal,
+    top1_hit_rate: top1HitRate,
+    topk_hit_rate: topkHitRate,
+    pinyin_attempt_count_total: pinyinAttemptTotal,
+    pinyin_hit_count_total: pinyinHitTotal,
+    pinyin_hit_rate: pinyinHitRate,
     edit_distance_penalty_sum: editPenaltySum,
     edit_distance_penalty_samples: editPenaltySamples,
     sentence_candidate_budget: sentenceCandidateBudget,
     skip_reason_v5_distribution: skipV5,
     topk_hit_jobs_by_term_length: topkByLen,
   };
+}
+
+function summarizeCanonicalOnly(rows) {
+  let confusionEvidenceTotal = 0;
+  for (const row of rows) {
+    const candidates = row.extra?.window_candidates || [];
+    for (const c of candidates) {
+      if (c.source === 'confusion_evidence') {
+        confusionEvidenceTotal += 1;
+      }
+    }
+  }
+  return { confusion_evidence_total: confusionEvidenceTotal };
 }
 
 function summarizeRecallCoverageMetrics(rows) {
@@ -432,6 +485,10 @@ async function main() {
     port,
     dialogDir: DIALOG_DIR,
     projectRoot: process.env.PROJECT_ROOT || null,
+    testScope: 'Recover V5 single-turn contract test',
+    intentEvaluationScope: 'disabled_or_not_applicable',
+    intentE2EValidated: false,
+    recoverContractValidated: true,
     total: cases.length,
     cases: [],
     summary: {},
@@ -509,6 +566,18 @@ async function main() {
       (r) => (r.picked_from_phonetic_expansion_count ?? 0) > 0
     ).length,
     skip_reason_distribution: skipReasonDist,
+    intentEvaluationScope: 'disabled_or_not_applicable',
+    intentE2EValidated: false,
+    recoverContractValidated: true,
+    ...(evaluated[0]?.extra?.configLoadSucceeded !== undefined
+      ? {
+          configLoadSucceeded: evaluated[0].extra.configLoadSucceeded,
+          configParseError: evaluated[0].extra.configParseError ?? null,
+          runtimeFeatureDowngrade: evaluated[0].extra.runtimeFeatureDowngrade ?? false,
+          downgradeReason: evaluated[0].extra.downgradeReason ?? null,
+          downgradedFeatures: evaluated[0].extra.downgradedFeatures ?? [],
+        }
+      : {}),
     kenlm_timing_summary: summarizeKenlmTiming(evaluated),
     ...summarizeCtcNbest(evaluated),
     ...summarizeAsrServiceId(evaluated),
@@ -516,6 +585,7 @@ async function main() {
     ...summarizeAlignmentMetrics(evaluated),
     ...summarizeRecallCoverageMetrics(evaluated),
     v5_summary: summarizeV5Metrics(evaluated),
+    ...summarizeCanonicalOnly(evaluated),
     by_scenario: {},
   };
   for (const row of report.cases) {

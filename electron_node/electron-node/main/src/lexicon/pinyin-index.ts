@@ -17,8 +17,10 @@ export function buildHotwordPinyinIndex(entries: HotwordEntry[]): HotwordPinyinI
     if (!isIndexableHotwordEntry(entry)) {
       continue;
     }
-    const syllables = entry.pinyin;
-    const key = syllablesKey(syllables);
+    const key = syllablesKey(entry.pinyin);
+    if (!key) {
+      continue;
+    }
     const bucket = index.get(key) ?? [];
     bucket.push(entry);
     index.set(key, bucket);

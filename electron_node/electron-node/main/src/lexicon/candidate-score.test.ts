@@ -13,7 +13,8 @@ const hw: HotwordEntry = {
   priorScore: 8,
   frequency: 10,
   enabled: true,
-  domain: 'asr',
+  domain: 'tech_ai',
+  domains: ['tech_ai'],
 };
 
 describe('computeCandidateScore', () => {

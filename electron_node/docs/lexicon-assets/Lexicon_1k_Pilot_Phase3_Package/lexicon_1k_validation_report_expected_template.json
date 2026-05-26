@@ -1,0 +1,18 @@
+{
+  "ok": true,
+  "strict": true,
+  "expectedInput": "data/lexicon/pilot/lexicon_1k_pilot_v1.jsonl",
+  "expectedRows": 1000,
+  "expectedFatalErrors": 0,
+  "expectedWarnings": 0,
+  "mustCheck": [
+    "no duplicate word",
+    "no asr domain",
+    "no unknown domain",
+    "priorScore 0-1",
+    "source non-empty",
+    "aliases valid",
+    "word length <= 8",
+    "recall preferred length <= 5 under strict"
+  ]
+}

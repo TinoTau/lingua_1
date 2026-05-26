@@ -1,0 +1,65 @@
+{
+  "package": "lexicon_v3_5k_canonical_assets",
+  "importBatch": "2026-05-27-v3-5k-canonical-seed",
+  "canonicalCount": 5000,
+  "domainDistribution": {
+    "restaurant": 1186,
+    "transport": 1195,
+    "tech_ai": 1288,
+    "travel": 1356
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "sha256:93b68c8e3d2667df076072a17e346685414aca0c0bf9dac52e00f2946dca8aab"
+    },
+    {
+      "path": "assets/lexicon_v3_5k_canonical_seed_v1.jsonl",
+      "sha256": "sha256:2830b02d8818e1967b3a6f244627ee2fbad51d0c514300b52aa5c45c8b4e494b"
+    },
+    {
+      "path": "benchmark/alias_calibration_cases.jsonl",
+      "sha256": "sha256:50c4752144a992a001344667a3ed63161cb1ba595b12aee52287cdc0b8076e0d"
+    },
+    {
+      "path": "benchmark/canonical_recall_benchmark_cases.jsonl",
+      "sha256": "sha256:7ae6c25dca91a149354cb8c0a579c6864ca975fa0c2d29dd1824fcd88d5310a9"
+    },
+    {
+      "path": "benchmark/dialog_200_golden_labels.jsonl",
+      "sha256": "sha256:f3e3b21423cafb1518e9e20ed3e031945dbbecc131d952759f58685eac536696"
+    },
+    {
+      "path": "benchmark/false_repair_golden.jsonl",
+      "sha256": "sha256:06fc66c1d79af7f7c1489db5e6b87d1b53737a0e171f4eb92a6ad26ba1fd9dc1"
+    },
+    {
+      "path": "benchmark/mixed_language_canonical_cases.jsonl",
+      "sha256": "sha256:dcf513b402dd36a858cae3fd0c8bd863535304368c1f2ab90bf46b4c4fbc4d81"
+    },
+    {
+      "path": "docs/lexicon_v3_5k_sources_and_provenance.md",
+      "sha256": "sha256:f1fc7569cadcaf681d20189ae3fed6f41da5fde340dc968f0052d622f76fcf3c"
+    },
+    {
+      "path": "gates/phase5_10k_manifest_gate.json",
+      "sha256": "sha256:dc2670a2666ac0060b0461d9cb4002f78568b90fa331773ba2c52e66072695db"
+    },
+    {
+      "path": "gates/phase5_5k_manifest_gate.json",
+      "sha256": "sha256:9210ab8333821f89f0a4ac4deea6b8e25ec5708692138f530edb2416faf0145c"
+    },
+    {
+      "path": "reports/phase5_benchmark_baseline.json",
+      "sha256": "sha256:b7a5bcfe59b4c09d39e862fbca5ecdceed23bb26483baa5ccfa4faace1f63062"
+    },
+    {
+      "path": "reports/phase5_benchmark_summary.schema.json",
+      "sha256": "sha256:cc64c5a03eebe69934e4f0ac48ab31b8777e8c0483825d3e81a1f0f601db55e6"
+    },
+    {
+      "path": "scripts/run-v3-5k-asset-acceptance.mjs",
+      "sha256": "sha256:2466615d3ba727fb5056d4aaf020adef3053a0634e4f7a700b36dfb98f9b48d5"
+    }
+  ]
+}

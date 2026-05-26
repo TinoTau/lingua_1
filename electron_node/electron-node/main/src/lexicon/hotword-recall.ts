@@ -1,53 +1,36 @@
 import { getRecoverQualityConfig } from '../recover-quality/quality-config';
 import { lookupTopKByPinyin } from './pinyin-topk-lookup';
 import type { AsrWindow } from './lexicon-types';
-import type { HotwordEntry, HotwordRecallHit, HotwordRecallPath } from './hotword-types';
+import type { HotwordEntry, HotwordRecallHit } from './hotword-types';
+import { isV3WindowCandidateSource } from './window-candidate-source';
 import type { LexiconRuntime } from './lexicon-runtime';
+import type { ActiveLexiconProfileSnapshot } from '../session-runtime/types';
+import { defaultGeneralProfile } from '../lexicon-v2/profile-registry';
 
 export type HotwordRecallStats = {
-  hitsObserved: number;
-  hitsPinyin: number;
-  hitsConfusion: number;
-  hitsFuzzyObserved: number;
   hitsLexiconPinyinTopk: number;
-  droppedBelowPinyinThreshold: number;
   topkDroppedBelowMinScore: number;
-  fuzzyObservedAttemptCount: number;
-  fuzzyObservedHitCount: number;
-  fuzzyObservedRejectedCount: number;
   pinyinAttemptCount: number;
   pinyinHitCount: number;
   pinyinNoHitCount: number;
   topkAttemptsByTermLength: Record<string, number>;
   topkHitsByTermLength: Record<string, number>;
   outOfBundleCandidateCount: number;
-  nearPinyinAttemptCount: number;
+  maxDomainBoostApplied: number;
 };
 
 export function emptyHotwordRecallStats(): HotwordRecallStats {
   return {
-    hitsObserved: 0,
-    hitsPinyin: 0,
-    hitsConfusion: 0,
-    hitsFuzzyObserved: 0,
     hitsLexiconPinyinTopk: 0,
-    droppedBelowPinyinThreshold: 0,
     topkDroppedBelowMinScore: 0,
-    fuzzyObservedAttemptCount: 0,
-    fuzzyObservedHitCount: 0,
-    fuzzyObservedRejectedCount: 0,
     pinyinAttemptCount: 0,
     pinyinHitCount: 0,
     pinyinNoHitCount: 0,
     topkAttemptsByTermLength: {},
     topkHitsByTermLength: {},
     outOfBundleCandidateCount: 0,
-    nearPinyinAttemptCount: 0,
+    maxDomainBoostApplied: 0,
   };
-}
-
-function observedRecallEnabled(): boolean {
-  return getRecoverQualityConfig().observedRecallEnabled === true;
 }
 
 function topKForTermLength(termLength: number): number {
@@ -55,18 +38,19 @@ function topKForTermLength(termLength: number): number {
   return map[String(termLength)] ?? 0;
 }
 
-function hitDedupeKey(windowId: string, hotwordId: string, path: HotwordRecallPath): string {
-  return `${windowId}\0${hotwordId}\0${path}`;
-}
-
 function toHit(
   window: AsrWindow,
   hotword: HotwordEntry,
-  recallPath: HotwordRecallPath,
   phoneticScore: number,
+  recallPath: HotwordRecallHit['recallPath'],
   extra?: Pick<
     HotwordRecallHit,
-    'candidateScore' | 'candidateScoreBreakdown' | 'rankInTopK' | 'termLength' | 'matchType'
+    | 'candidateScore'
+    | 'candidateScoreBreakdown'
+    | 'rankInTopK'
+    | 'termLength'
+    | 'matchType'
+    | 'matchedAlias'
   >
 ): HotwordRecallHit {
   return {
@@ -79,19 +63,12 @@ function toHit(
   };
 }
 
-/**
- * V5: TopK pinyin lookup only (observed/fuzzy disabled by default).
- */
 export function recallHotwordsForWindow(
   window: AsrWindow,
   runtime: LexiconRuntime,
-  _maxHits?: number,
+  profile: ActiveLexiconProfileSnapshot = defaultGeneralProfile(),
   stats?: HotwordRecallStats
 ): HotwordRecallHit[] {
-  if (observedRecallEnabled()) {
-    return [];
-  }
-
   const cfg = getRecoverQualityConfig();
   const termLength = window.text.length;
   if (!cfg.allowedWindowLengths.includes(termLength)) {
@@ -110,39 +87,43 @@ export function recallHotwordsForWindow(
       (stats.topkAttemptsByTermLength[lenKey] ?? 0) + 1;
   }
 
-  const { hits: topkHits, nearPinyinAttemptCount } = lookupTopKByPinyin(runtime, {
+  const out: HotwordRecallHit[] = [];
+
+  const { hits: topkHits, maxDomainBoostApplied } = lookupTopKByPinyin(runtime, {
     syllables: window.syllables,
     windowText: window.text,
     termLength,
     topK,
+    profile,
   });
 
   if (stats) {
-    stats.nearPinyinAttemptCount += nearPinyinAttemptCount;
+    stats.maxDomainBoostApplied = Math.max(stats.maxDomainBoostApplied, maxDomainBoostApplied);
   }
 
-  const out: HotwordRecallHit[] = [];
   for (const hit of topkHits) {
     if (hit.hotword.word === window.text) {
       continue;
     }
     out.push(
-      toHit(window, hit.hotword, 'lexicon_pinyin_topk', hit.phoneticScore, {
+      toHit(window, hit.hotword, hit.phoneticScore, hit.source, {
         candidateScore: hit.candidateScore,
         candidateScoreBreakdown: hit.candidateScoreBreakdown,
         rankInTopK: hit.rankInTopK,
         termLength: hit.termLength,
         matchType: hit.matchType,
+        matchedAlias: hit.matchedAlias,
       })
     );
   }
 
   if (stats) {
-    if (out.length > 0) {
-      stats.hitsLexiconPinyinTopk += out.length;
-      stats.hitsPinyin += out.length;
-      stats.pinyinHitCount += out.length;
-      stats.topkHitsByTermLength[lenKey] = (stats.topkHitsByTermLength[lenKey] ?? 0) + out.length;
+    const recalled = out.filter((h) => isV3WindowCandidateSource(h.recallPath));
+    if (recalled.length > 0) {
+      stats.hitsLexiconPinyinTopk += recalled.length;
+      stats.pinyinHitCount += recalled.length;
+      stats.topkHitsByTermLength[lenKey] =
+        (stats.topkHitsByTermLength[lenKey] ?? 0) + recalled.length;
     } else if (stats.pinyinAttemptCount > 0) {
       stats.pinyinNoHitCount += 1;
     }

@@ -6,16 +6,19 @@ cd D:\Programs\github\lingua_1
 .\scripts\clear_code_cache_comprehensive.ps1
 .\scripts\maintenance\clear_logs_simple.ps1
 
-# 1. 节点端
+# 1. 节点端（日常启动 — 与以前相同，多一行 sqlite 可选/推荐）
 cd D:\Programs\github\lingua_1\electron_node\electron-node
 npm run clear-cache
 npm run build
+# 保证 Electron 能 load 词库（跑过 lexicon:build / npm rebuild 后必做；纯改 TS 可跳过）
+npm run lexicon:rebuild-sqlite
 cd D:\Programs\github\lingua_1
 .\scripts\start_electron_node.ps1
+# 启动后确认：日志里 lexicon_runtime_status: ok；config 里 lexiconRecall.enabled=true
 
 
 
-我重新编译启动了节点端，请使用D:\Programs\github\lingua_1\expired\test wav子目录的音频文件对本轮开发进行测试，出具开发报告和测试报告
+我重新编译启动了节点端，请使用D:\Programs\github\lingua_1\test wav\dialog_200的音频文件对本轮开发进行测试，出具开发报告和测试报告
 
 
 # 2. 调度服务器（在新窗口）
@@ -149,4 +152,14 @@ cargo test --lib
 # 编译检查
 cargo check --lib
 
+# Lexicon World 数据工程（Phase A）
+# lexicon:build = 建 bundle + 自动 electron-rebuild（节点 runtime 可直接 npm start）
+# 验收用 dialog_200，不必跑依赖 sqlite 的 Jest（见 test:lexicon）
+cd D:\Programs\github\lingua_1\electron_node\electron-node
+npm run lexicon:validate -- --input data/lexicon/zh_asr_confusions_seed_high_quality.jsonl
+npm run lexicon:build
+npm run lexicon:report
+npm run test:lexicon
+# 若词库 load 报 NODE_MODULE_VERSION，仅修复 Electron 侧：
+npm run lexicon:rebuild-sqlite
 

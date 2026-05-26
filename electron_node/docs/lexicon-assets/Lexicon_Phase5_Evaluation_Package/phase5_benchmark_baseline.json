@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "phase5-benchmark-baseline-v1",
+  "frozenAt": "2026-05-26T14:14:28.914Z",
+  "ladder": "2k",
+  "metrics": {
+    "topk_hit_rate": 0.012465598186822082,
+    "top1_hit_rate": 1,
+    "alias_hit_rate": 0,
+    "false_repair_rate": 0,
+    "no_op_repair_rate": 0.24,
+    "runtime_latency_ms": null
+  },
+  "dialog200Baseline": {
+    "date": "2026-05-26",
+    "pass": 200,
+    "total": 200,
+    "lexicon_runtime_ok_count": 200,
+    "replacements_applied_count": 48,
+    "lexicon_pinyin_topk_candidate_total": 77,
+    "confusion_evidence_total": 0,
+    "contract_violation_modified_without_replacement_count": 0,
+    "bundle_checksum": "sha256:38a85d9cdf02ef09f2e434ab93815f4a2d7df5a4b87c48c8b0c0c1e3bc52fbbf"
+  },
+  "notes": "Frozen after Phase 5 E2E on canonical-only 2k bundle."
+}

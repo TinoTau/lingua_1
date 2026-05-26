@@ -19,7 +19,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const electronNodeRoot = path.resolve(__dirname, '..');
-/** lingua_1 仓库根（与 init-lexicon-bundle.mjs 一致） */
+/** lingua_1 仓库根（与 build-lexicon-bundle.mjs 一致） */
 const repoRoot = path.resolve(__dirname, '../../..');
 const bundleDir = path.join(repoRoot, 'node_runtime', 'lexicon', 'current');
 const sqlitePath = path.join(bundleDir, 'lexicon.sqlite');
@@ -73,23 +73,16 @@ async function verifyBundleSchema() {
   const { default: Database } = await import('better-sqlite3');
   const db = new Database(sqlitePath, { readonly: true });
   const cols = db.prepare(`PRAGMA table_info(lexicon_terms)`).all().map((r) => r.name);
-  const required = ['id', 'word', 'pinyin', 'frequency', 'enabled'];
+  const required = ['id', 'word', 'normalized', 'pinyin', 'prior_score', 'frequency', 'enabled'];
   for (const c of required) {
     if (!cols.includes(c)) {
       db.close();
-      throw new Error(`lexicon_terms 缺少列 ${c}，请重新运行 init-lexicon-bundle.mjs`);
+      throw new Error(`lexicon_terms 缺少列 ${c}，请重新运行 build-lexicon-bundle.mjs`);
     }
   }
   const hwCount = db.prepare(`SELECT COUNT(*) AS n FROM lexicon_terms WHERE enabled=1`).get().n;
-  const cfCount = db
-    .prepare(`SELECT COUNT(*) AS n FROM sqlite_master WHERE type='table' AND name='lexicon_confusions'`)
-    .get();
-  let confusionRows = 0;
-  if (cfCount.n) {
-    confusionRows = db.prepare(`SELECT COUNT(*) AS n FROM lexicon_confusions WHERE enabled=1`).get().n;
-  }
   db.close();
-  console.log(`Bundle OK: hotwords=${hwCount} confusions=${confusionRows}`);
+  console.log(`Bundle OK: canonical hotwords=${hwCount}`);
   console.log('  path:', bundleDir);
 }
 
@@ -102,8 +95,7 @@ async function main() {
 
   process.env.PROJECT_ROOT = repoRoot;
 
-  run('npm', ['rebuild', 'better-sqlite3']);
-  run('node', ['scripts/build-lexicon-bundle.mjs']);
+  run('npm', ['run', 'lexicon:build']);
 
   if (!fs.existsSync(sqlitePath)) {
     throw new Error('lexicon.sqlite 未生成: ' + sqlitePath);
@@ -111,6 +103,9 @@ async function main() {
   const checksum = crypto.createHash('sha256').update(fs.readFileSync(sqlitePath)).digest('hex');
   const manifestPath = path.join(bundleDir, 'manifest.json');
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  if (manifest.schemaVersion !== 'final-v1') {
+    throw new Error(`manifest.schemaVersion 必须为 final-v1，当前: ${manifest.schemaVersion ?? 'missing'}`);
+  }
   if (manifest.checksum !== checksum) {
     fs.writeFileSync(path.join(bundleDir, 'checksum.txt'), checksum);
     fs.writeFileSync(
@@ -143,12 +138,6 @@ async function main() {
   }
 
   run('npm', ['run', 'build:main']);
-
-  try {
-    run('npx', ['@electron/rebuild', '-f', '-w', 'better-sqlite3']);
-  } catch (e) {
-    console.warn('@electron/rebuild 失败（启动节点前请手动执行）:', e.message);
-  }
 
   console.log('\n' + '='.repeat(60));
   console.log('准备完成。下一步：');

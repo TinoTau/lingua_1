@@ -23,6 +23,7 @@ import {
   runHealthCheck,
   applyServiceReady,
 } from './ServiceProcessRunner-internal';
+import { resolveLexiconIntentModelPath } from '../lexicon-v2/lexicon-intent-model-path';
 import { setupCudaEnvironment } from '../utils/cuda-env';
 
 export class ServiceProcessRunner {
@@ -115,6 +116,17 @@ export class ServiceProcessRunner {
       for (const [k, v] of Object.entries(entry.def.env)) {
         if (v !== undefined && v !== null) serviceEnv[k] = String(v);
       }
+    }
+
+    if (serviceId === 'lexicon-intent-cpu') {
+      const model = resolveLexiconIntentModelPath();
+      if (model.resolvedPath) {
+        serviceEnv.LEXICON_INTENT_MODEL_PATH = model.resolvedPath;
+      }
+      serviceEnv.LEXICON_INTENT_MODEL_DIR = path.dirname(
+        model.resolvedPath ??
+          path.resolve(process.cwd(), 'models', 'lexicon-intent')
+      );
     }
 
     // Windows PATH 归一

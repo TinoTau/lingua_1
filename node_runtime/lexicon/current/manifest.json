@@ -1,20 +1,214 @@
 {
-  "version": "recover-v5-scored-lexicon",
-  "checksum": "9606d9c04b95be829cbc632a5a0f22bc41b4ad19b9361d1230c5191a791b169e",
-  "createdAt": "2026-05-22T12:38:18.391Z",
+  "schemaVersion": "final-v1",
+  "buildTime": 1779821750642,
+  "version": "recover-final-v1-lexicon",
+  "checksum": "sha256:10b0d2bf3b9658b650b8ed61c457274cab5009eaadd6621c2a748a892762a1b9",
+  "createdAt": "2026-05-26T18:55:50.642Z",
   "backend": "sqlite",
-  "bundle_tag": "v5-from-seed",
-  "hotword_count": 67,
-  "confusion_count": 194,
-  "seed_path": "electron_node\\electron-node\\data\\lexicon\\zh_asr_confusions_seed_high_quality.jsonl",
-  "scored_lexicon_version": "v5",
-  "term_count": 67,
-  "enabled_term_count": 67,
-  "terms_with_prior_count": 67,
+  "bundle_tag": "v3-canonical-asset-5k-4962",
+  "prior_score_scale": "0-1",
+  "lexiconCount": 4962,
+  "enabledCount": 4962,
+  "pinyinIndexCount": 4911,
+  "exactIndexCount": 88,
+  "aliasIndexCount": 2922,
+  "domainDistribution": {
+    "restaurant": 1164,
+    "transport": 1181,
+    "tech_ai": 1287,
+    "travel": 1354
+  },
+  "priorScoreByDomain": {
+    "restaurant": {
+      "count": 1164,
+      "avgPriorScore": 0.6006494845360829,
+      "maxPriorScore": 0.9
+    },
+    "transport": {
+      "count": 1181,
+      "avgPriorScore": 0.6046807790008469,
+      "maxPriorScore": 0.92
+    },
+    "tech_ai": {
+      "count": 1287,
+      "avgPriorScore": 0.5985804195804203,
+      "maxPriorScore": 0.98
+    },
+    "travel": {
+      "count": 1354,
+      "avgPriorScore": 0.5918892171344173,
+      "maxPriorScore": 0.92
+    }
+  },
+  "priorScoreDistribution": {
+    "min": 0.495,
+    "max": 0.98,
+    "avg": 0.5976172914147336,
+    "p50": 0.587,
+    "p95": 0.753
+  },
+  "topPriorTerms": [
+    {
+      "word": "GPU",
+      "priorScore": 0.98,
+      "domains": [
+        "tech_ai"
+      ]
+    },
+    {
+      "word": "CUDA",
+      "priorScore": 0.97,
+      "domains": [
+        "tech_ai"
+      ]
+    },
+    {
+      "word": "KLM",
+      "priorScore": 0.95,
+      "domains": [
+        "tech_ai"
+      ]
+    },
+    {
+      "word": "Wisp",
+      "priorScore": 0.95,
+      "domains": [
+        "tech_ai"
+      ]
+    },
+    {
+      "word": "ASR",
+      "priorScore": 0.94,
+      "domains": [
+        "tech_ai"
+      ]
+    },
+    {
+      "word": "FW",
+      "priorScore": 0.93,
+      "domains": [
+        "tech_ai"
+      ]
+    },
+    {
+      "word": "CT2",
+      "priorScore": 0.92,
+      "domains": [
+        "tech_ai"
+      ]
+    },
+    {
+      "word": "check",
+      "priorScore": 0.92,
+      "domains": [
+        "travel"
+      ]
+    },
+    {
+      "word": "Uber",
+      "priorScore": 0.92,
+      "domains": [
+        "transport"
+      ]
+    },
+    {
+      "word": "机场接送",
+      "priorScore": 0.92,
+      "domains": [
+        "travel",
+        "transport"
+      ]
+    },
+    {
+      "word": "机场接机",
+      "priorScore": 0.917,
+      "domains": [
+        "travel",
+        "transport"
+      ]
+    },
+    {
+      "word": "机场送机",
+      "priorScore": 0.914,
+      "domains": [
+        "travel",
+        "transport"
+      ]
+    },
+    {
+      "word": "航班",
+      "priorScore": 0.911,
+      "domains": [
+        "travel",
+        "transport"
+      ]
+    },
+    {
+      "word": "Qwen",
+      "priorScore": 0.91,
+      "domains": [
+        "tech_ai"
+      ]
+    },
+    {
+      "word": "登机口",
+      "priorScore": 0.908,
+      "domains": [
+        "travel"
+      ]
+    },
+    {
+      "word": "行李托运",
+      "priorScore": 0.905,
+      "domains": [
+        "travel"
+      ]
+    },
+    {
+      "word": "行李领取",
+      "priorScore": 0.902,
+      "domains": [
+        "travel"
+      ]
+    },
+    {
+      "word": "餐厅预订",
+      "priorScore": 0.9,
+      "domains": [
+        "restaurant"
+      ]
+    },
+    {
+      "word": "Qw25",
+      "priorScore": 0.9,
+      "domains": [
+        "tech_ai"
+      ]
+    },
+    {
+      "word": "出租车",
+      "priorScore": 0.9,
+      "domains": [
+        "transport"
+      ]
+    }
+  ],
+  "hotword_count": 4962,
+  "seed_path": "electron_node\\electron-node\\data\\lexicon\\v3\\lexicon_v3_5k_deploy.jsonl",
+  "scored_lexicon_version": "final-v1",
+  "term_count": 4962,
+  "enabled_term_count": 4962,
+  "terms_with_prior_count": 4962,
   "terms_without_prior_count": 0,
-  "pinyin_index_count": 67,
-  "same_pinyin_key_count": 67,
-  "indexed_term_count": 67,
-  "mixed_token_count": 0,
-  "prior_score_migration": "frequency_log1p_v1"
+  "pinyin_index_count": 4911,
+  "indexed_term_count": 4962,
+  "mixed_token_count": 51,
+  "recallPreferredMax": 5,
+  "aliasGroups": {
+    "termCountWithAliases": 1372
+  },
+  "mixedLanguageSupport": {
+    "enabled": true,
+    "termCount": 51
+  }
 }

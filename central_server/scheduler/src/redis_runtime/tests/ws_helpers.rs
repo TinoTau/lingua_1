@@ -85,6 +85,7 @@
             redis_runtime: Some(rt.clone()),
             minimal_scheduler: None,
             pool_service: None,
+            session_migration_orchestrator: None,
         };
 
         // 启动 Redis 运行时后台任务（presence + owner 续约 + Streams inbox + snapshot refresh）

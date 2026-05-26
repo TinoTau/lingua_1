@@ -5,7 +5,7 @@ use crate::core::AppState;
 use crate::core::job_idempotency::{make_job_key, JobType};
 use crate::core::dispatcher::{Job, JobStatus};
 use crate::messages::FeatureFlags;
-use tracing::{info, warn};
+use tracing::info;
 
 /// 检查 Job 是否已存在（幂等性检查）
 /// 
@@ -40,7 +40,7 @@ async fn check_and_get_existing_job(
 
 /// 创建翻译任务（支持房间模式多语言）
 /// 与备份一致：音频随 Job 存储，支持房间多 Job 与 failover 重派
-/// turn_id：当前 turn 的 ID，用于 select_node 读 affinity（同一 turn 内连续 job 路由到同一节点）
+/// turn_id：当前 turn 的 ID（session 内 segment 标识，发往节点；不参与路由）
 pub(crate) async fn create_translation_jobs(
     state: &AppState,
     turn_id: &str,
@@ -206,12 +206,6 @@ pub(crate) async fn create_translation_jobs(
             state.job_idempotency.get_or_create_job_id(&job_key, job.job_id.clone()).await;
             
             jobs.push(job);
-            // 关键：第一个 job 分配后立即写入 turn 亲和，使本 turn 内后续 job 的 select_node 能命中同一节点
-            if is_max_duration_triggered && jobs.len() == 1 {
-                if let Some(ref node_id) = jobs.first().and_then(|j| j.assigned_node_id.as_ref()) {
-                    write_turn_affinity_after_first_job(state, turn_id, session_id, node_id).await;
-                }
-            }
         }
         
         Ok(jobs)
@@ -288,60 +282,17 @@ pub(crate) async fn create_translation_jobs(
     }
 }
 
-/// MaxDuration 时在第一个 job 分配后立即写入 turn 亲和，使同 turn 内后续 job 的 select_node 能命中同一节点。
-async fn write_turn_affinity_after_first_job(
-    state: &AppState,
-    turn_id: &str,
-    session_id: &str,
-    node_id: &str,
-) {
-    if let Some(ref rt) = state.redis_runtime {
-        let turn_key = format!("scheduler:turn:{}", turn_id);
-        let session_key = format!("scheduler:session:{}", session_id);
-        let script = r#"
-redis.call('HSET', KEYS[1], 'affinity_node_id', ARGV[1])
-redis.call('HSET', KEYS[2], 'current_turn_id', ARGV[2])
-return 1
-"#;
-        let mut cmd = redis::cmd("EVAL");
-        cmd.arg(script).arg(2).arg(&turn_key).arg(&session_key).arg(node_id).arg(turn_id);
-        match rt.redis_query::<i64>(cmd).await {
-            Ok(_) => {
-                info!(
-                    session_id = %session_id,
-                    turn_id = %turn_id,
-                    node_id = %node_id,
-                    "Turn affinity: Recorded after first job (MaxDuration)"
-                );
-            }
-            Err(e) => {
-                warn!(
-                    session_id = %session_id,
-                    turn_id = %turn_id,
-                    error = %e,
-                    "Turn affinity: Failed to record after first job"
-                );
-            }
-        }
-    }
-}
-
 fn make_request_id(session_id: &str, utterance_index: u64, tgt_lang: &str, trace_id: &str) -> String {
-    // Phase 1：任务级绑定（会话打散）。request_id 的目标是"同一任务重试幂等"，不做会话级粘滞
-    // 选择稳定字段组合：session_id + utterance_index + tgt_lang + trace_id
     format!("{}:{}:{}:{}", session_id, utterance_index, tgt_lang, trace_id)
 }
 
-/// 判断是否需要绑定 job 到同一节点
-///
-/// - Manual / Timeout：不绑定
-/// - MaxDuration：用户持续说话超长，产生多 job，需绑定同一节点以保证音频连续性
+/// MaxDuration 多 job 链：job 级 Redis 绑定，与 session affinity 互补
 fn should_bind_job_to_node(is_manual_cut: bool, is_max_duration_triggered: bool) -> bool {
     is_max_duration_triggered && !is_manual_cut
 }
 
 /// 使用极简无锁调度服务创建任务
-/// turn_id: 当前 turn 的 ID，用于 select_node 读 affinity；None 时不使用 turn 亲和
+/// turn_id: session 内 segment 标识（发往节点），不参与调度路由
 async fn create_job_with_minimal_scheduler(
     state: &AppState,
     turn_id: Option<&str>,
@@ -404,9 +355,67 @@ async fn create_job_with_minimal_scheduler(
 
     let pool_service = state.pool_service.as_ref()
         .ok_or_else(|| anyhow::anyhow!("PoolService not initialized"))?;
-    let node_id_str = pool_service.select_node(pool_src, pool_tgt, job_id_for_binding, turn_id).await?;
+    let node_id_str = pool_service.select_node(pool_src, pool_tgt, job_id_for_binding, Some(session_id)).await?;
     
-    let node_id = Some(node_id_str);
+    let node_id = Some(node_id_str.clone());
+
+    if let Some(ref rt) = state.redis_runtime {
+        use crate::services::SessionAffinityService;
+        let affinity = SessionAffinityService::new(rt.clone());
+        let previous = affinity.get_assigned_node_id(session_id).await.ok().flatten();
+
+        if let Some(ref migrator) = state.session_migration_orchestrator {
+            if let Some(ref from_node) = previous {
+                if from_node != &node_id_str {
+                    match migrator
+                        .migrate_session(session_id, from_node, &node_id_str, "node_unavailable")
+                        .await
+                    {
+                        Ok(res) if res.ok => {
+                            tracing::info!(
+                                session_id = %session_id,
+                                from_node = %from_node,
+                                to_node = %node_id_str,
+                                attempt = res.migration_attempt,
+                                "Session HTTP migration success; binding updated"
+                            );
+                        }
+                        Ok(res) => {
+                            tracing::warn!(
+                                session_id = %session_id,
+                                from_node = %from_node,
+                                to_node = %node_id_str,
+                                error = ?res.error,
+                                "Session HTTP migration failed; binding not updated (fail-open)"
+                            );
+                        }
+                        Err(err) => {
+                            tracing::warn!(
+                                session_id = %session_id,
+                                error = %err,
+                                "Session HTTP migration error; binding not updated (fail-open)"
+                            );
+                        }
+                    }
+                }
+            } else if let Err(err) = affinity.bind_session_node(session_id, &node_id_str).await {
+                tracing::warn!(
+                    session_id = %session_id,
+                    error = %err,
+                    "Session initial bind failed; continuing with selected node"
+                );
+            }
+        } else if let Err(err) = affinity
+            .reconcile_session_node(session_id, &node_id_str, "initial_bind")
+            .await
+        {
+            tracing::warn!(
+                session_id = %session_id,
+                error = %err,
+                "Session affinity reconcile failed; continuing with selected node"
+            );
+        }
+    }
 
     info!(
         trace_id = %trace_id,

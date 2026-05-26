@@ -282,6 +282,10 @@ export class InferenceService {
     this.onTaskEndCallback = callback;
   }
 
+  setNodeId(nodeId: string | null): void {
+    this.servicesBundle.nodeId = nodeId ?? undefined;
+  }
+
   /**
    * Gate-B: 获取 Rerun 指标（用于上报）
    */
@@ -399,6 +403,7 @@ export class InferenceService {
       useLexicon?: boolean;
       sessionId?: string;
       isManualCut?: boolean;
+      lexiconV2IntentEnabled?: boolean;
     }
   ): Promise<JobResult> {
     const tgtLang = options?.tgtLang ?? 'en';
@@ -432,8 +437,11 @@ export class InferenceService {
       sample_rate: sampleRate,
       trace_id: traceId,
       turn_id: `audio-test-turn-${jobId}`,
-    } as JobAssignMessage & { is_manual_cut?: boolean };
+    } as JobAssignMessage & { is_manual_cut?: boolean; lexicon_v2_intent_enabled?: boolean };
     (job as any).is_manual_cut = options?.isManualCut !== false;
+    if (options?.lexiconV2IntentEnabled === false) {
+      (job as any).lexicon_v2_intent_enabled = false;
+    }
     if (useLid) {
       const candidates = options?.lidCandidates;
       if (!candidates || candidates.length !== 2) {
@@ -459,14 +467,23 @@ export class InferenceService {
     asrText: string,
     srcLang: string = 'zh',
     tgtLang: string = 'en',
-    options?: { useLexicon?: boolean; useNmt?: boolean }
+    options?: {
+      useLexicon?: boolean;
+      useNmt?: boolean;
+      sessionId?: string;
+      utteranceIndex?: number;
+      isManualCut?: boolean;
+    }
   ): Promise<JobResult> {
     const useLexicon = options?.useLexicon === true;
     const useNmt = options?.useNmt !== false;
+    const jobId = `mock-asr-${Date.now()}`;
+    const sessionId = options?.sessionId?.trim() || 'mock-session';
+    const utteranceIndex = options?.utteranceIndex ?? 0;
     const job: JobAssignMessage = {
-      job_id: `mock-asr-${Date.now()}`,
-      session_id: 'mock-session',
-      utterance_index: 0,
+      job_id: jobId,
+      session_id: sessionId,
+      utterance_index: utteranceIndex,
       src_lang: srcLang,
       tgt_lang: tgtLang,
       lang_a: srcLang,
@@ -477,7 +494,9 @@ export class InferenceService {
         use_tts: false,
         ...(useLexicon ? { use_lexicon: true } : {}),
       },
-    } as JobAssignMessage;
+      turn_id: `mock-asr-turn-${jobId}`,
+    } as JobAssignMessage & { is_manual_cut?: boolean };
+    (job as any).is_manual_cut = options?.isManualCut !== false;
 
     const ctx = initJobContext(job);
     ctx.asrText = asrText;

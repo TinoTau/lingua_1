@@ -7,42 +7,31 @@ import type { NodeConfig } from '../node-config-types';
 import { DEFAULT_CONFIG } from '../node-config-defaults';
 
 export type RecoverQualityConfig = {
-  /** Q1.7 / V5 near pinyin：音节长度差上限（near 关闭时不使用） */
   recallFuzzyPinyinMaxSyllableDelta: number;
   recallMinPhoneticScore: number;
   expansionMinPhoneticScore: number;
   selectionMinPhoneticScore: number;
-  /** 最终 apply 写回安全门：replacement 条数上限 */
   maxReplacements: number;
   maxSentenceCandidates: number;
   multiWindowScoreEpsilon: number;
-  /** V5 冻结（Phase A stub，B–D 接线） */
   allowedWindowLengths: number[];
   diffContextLeft: number;
   diffContextRight: number;
   topKByTermLength: Record<string, number>;
-  /** 句级组合：active diff windows 上限（windowSelector） */
   maxActiveWindows: number;
   minCandidateScore: number;
   kenlmBaselineTolerance: number;
-  observedRecallEnabled: boolean;
-  /** V5 默认 false：near 桶不参与 TopK */
-  nearPinyinEnabled: boolean;
-  /** V5 默认 false：禁止跨 segment 召回 */
   crossSegmentRecallEnabled: boolean;
 };
 
-/** 写入 result.extra / batch report 的 V5 配置快照 */
 export type RecoverQualityConfigSnapshot = {
   allowedWindowLengths: number[];
   topKByTermLength: Record<string, number>;
   maxActiveWindows: number;
   maxSentenceCandidates: number;
   maxReplacements: number;
-  nearPinyinEnabled: boolean;
   crossSegmentRecallEnabled: boolean;
   kenlmBaselineTolerance: number;
-  observedRecallEnabled: boolean;
 };
 
 const DEFAULT_RECALL_MIN = 0.5;
@@ -104,9 +93,6 @@ export function resolveRecoverQualityConfig(
     minCandidateScore: lex?.minCandidateScore ?? defaults?.minCandidateScore ?? 0,
     kenlmBaselineTolerance:
       lex?.kenlmBaselineTolerance ?? defaults?.kenlmBaselineTolerance ?? DEFAULT_KENLM_BASELINE_TOLERANCE,
-    observedRecallEnabled:
-      lex?.observedRecallEnabled ?? defaults?.observedRecallEnabled ?? false,
-    nearPinyinEnabled: lex?.nearPinyinEnabled ?? defaults?.nearPinyinEnabled ?? false,
     crossSegmentRecallEnabled:
       lex?.crossSegmentRecallEnabled ?? defaults?.crossSegmentRecallEnabled ?? false,
   };
@@ -125,9 +111,7 @@ export function buildRecoverQualityConfigSnapshot(
     maxActiveWindows: cfg.maxActiveWindows,
     maxSentenceCandidates: cfg.maxSentenceCandidates,
     maxReplacements: cfg.maxReplacements,
-    nearPinyinEnabled: cfg.nearPinyinEnabled,
     crossSegmentRecallEnabled: cfg.crossSegmentRecallEnabled,
     kenlmBaselineTolerance: cfg.kenlmBaselineTolerance,
-    observedRecallEnabled: cfg.observedRecallEnabled,
   };
 }

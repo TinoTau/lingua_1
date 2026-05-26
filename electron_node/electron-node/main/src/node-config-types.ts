@@ -1,5 +1,8 @@
-/** 按 serviceId 存储运行状态，由用户安装的服务动态决定 */
+/** 用户显式选择：是否在启动时自动拉起各 service（仅由 UI / set-service-preferences 写入） */
 export type ServicePreferences = Record<string, boolean>;
+
+/** 上次退出时各 service 的实际运行快照（观测用，不影响下次 auto-start） */
+export type ServiceLastRuntimeState = Record<string, boolean>;
 
 /**
  * 指标收集配置
@@ -17,7 +20,10 @@ export interface MetricsConfig {
 }
 
 export interface NodeConfig {
+  /** 用户选择：启动时是否 auto-start 各 service */
   servicePreferences: ServicePreferences;
+  /** 上次退出时的运行快照（不覆盖 servicePreferences） */
+  serviceLastRuntimeState?: ServiceLastRuntimeState;
   scheduler?: { url?: string };
   modelHub?: { url?: string };
   services?: {
@@ -79,10 +85,37 @@ export interface NodeConfig {
       maxActiveWindows?: number;
       minCandidateScore?: number;
       kenlmBaselineTolerance?: number;
-      observedRecallEnabled?: boolean;
-      nearPinyinEnabled?: boolean;
       crossSegmentRecallEnabled?: boolean;
       contractVersion?: 'v5-scored-lexicon-topk' | 'historical-restore-v1';
+    };
+    lexiconV2?: {
+      enabled?: boolean;
+      /** 是否调度 CPU LLM Intent（Recover 仍可用 lexiconV2.enabled） */
+      intentEnabled?: boolean;
+      /** Final Spec: only cpu_llm is supported */
+      intentMode?: 'cpu_llm';
+      cpuWorker?: {
+        serviceUrl?: string;
+        modelPath?: string;
+        timeoutMs?: number;
+        promptPackVersion?: string;
+        maxContextTurns?: number;
+        maxSummaryChars?: number;
+        metricsEnabled?: boolean;
+        warmupEnabled?: boolean;
+        warmupTimeoutMs?: number;
+        healthRefreshIntervalMs?: number;
+        recoveryEnabled?: boolean;
+        recoveryMaxRetries?: number;
+        recoveryBackoffMs?: number[];
+        recoveryRestartService?: boolean;
+      };
+      /** finalized turn 后 flush patch proposals（jsonl） */
+      patchProposalDir?: string;
+    };
+    sessionAffinity?: {
+      enabled?: boolean;
+      snapshotPath?: string;
     };
   };
   gpuArbiter?: {

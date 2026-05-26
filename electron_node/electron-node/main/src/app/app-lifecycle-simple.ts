@@ -4,7 +4,11 @@
  */
 
 import { app } from 'electron';
-import { loadNodeConfig, saveNodeConfig, type ServicePreferences } from '../node-config';
+import {
+  loadNodeConfig,
+  saveNodeConfig,
+  type ServiceLastRuntimeState,
+} from '../node-config';
 import { getServiceRunner } from '../service-layer';
 import { stopTestServer } from '../test-server';
 import { cleanupEsbuild } from '../utils/esbuild-cleanup';
@@ -12,17 +16,20 @@ import { cleanupEsbuild } from '../utils/esbuild-cleanup';
 let isCleaningUp = false;
 let cleanupCompleted = false;
 
-function saveCurrentServiceState(): void {
+/** 记录退出时运行快照；不修改 servicePreferences（用户选择由 UI 持久化）。 */
+export function saveServiceLastRuntimeState(): void {
   const config = loadNodeConfig();
   const runner = getServiceRunner();
-  if (runner) {
-    const prefs: ServicePreferences = { ...config.servicePreferences };
-    for (const s of runner.getAllStatuses()) {
-      prefs[s.serviceId] = s.status === 'running';
-    }
-    config.servicePreferences = prefs;
-    saveNodeConfig(config);
+  if (!runner) {
+    return;
   }
+
+  const snapshot: ServiceLastRuntimeState = {};
+  for (const s of runner.getAllStatuses()) {
+    snapshot[s.serviceId] = s.status === 'running';
+  }
+  config.serviceLastRuntimeState = snapshot;
+  saveNodeConfig(config);
 }
 
 async function stopAllServices(nodeAgent: any | null): Promise<void> {
@@ -36,7 +43,7 @@ async function cleanupAppResources(getNodeAgent: () => any): Promise<void> {
   isCleaningUp = true;
   try {
     await stopTestServer();
-    saveCurrentServiceState();
+    saveServiceLastRuntimeState();
     await stopAllServices(getNodeAgent());
     cleanupEsbuild();
     cleanupCompleted = true;

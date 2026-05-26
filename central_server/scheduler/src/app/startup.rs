@@ -3,7 +3,9 @@ use crate::managers::{
     AudioBufferManager, GroupManager, GroupConfig,
     ResultQueueManager, RoomManager, SessionConnectionManager, NodeConnectionManager,
 };
-use crate::services::{PairingService, ServiceCatalogCache};
+use crate::services::{
+    PairingService, ServiceCatalogCache, SessionAffinityService, SessionMigrationOrchestrator,
+};
 use crate::metrics::DashboardSnapshotCache;
 use crate::timeout::start_job_timeout_manager;
 use crate::model_not_available::start_worker;
@@ -178,6 +180,14 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
     // Utterance 路径：按 utterance_index 顺序派发
     let pending_job_dispatches = PendingJobDispatches::new();
 
+    let session_migration_orchestrator = redis_runtime.as_ref().map(|rt| {
+        let affinity = std::sync::Arc::new(SessionAffinityService::new(rt.clone()));
+        std::sync::Arc::new(SessionMigrationOrchestrator::new(affinity))
+    });
+    if session_migration_orchestrator.is_some() {
+        info!("SessionMigrationOrchestrator enabled (NODE_MIGRATION_BASE_URL_*)");
+    }
+
     // 创建应用状态
     let app_state = AppState {
         session_manager,
@@ -200,6 +210,7 @@ pub async fn initialize_app(config: &Config) -> anyhow::Result<AppState> {
         redis_runtime: redis_runtime.clone(),
         minimal_scheduler,
         pool_service,
+        session_migration_orchestrator,
     };
 
     if let Some(ref rt) = redis_runtime {

@@ -12,6 +12,7 @@ import { scanServices } from './ServiceDiscovery';
 import { ServiceProcessRunner } from './ServiceProcessRunner';
 import { ServiceRegistry } from './ServiceTypes';
 import { getServiceRegistry, setServiceRegistry } from './ServiceRegistrySingleton';
+import { buildIntentRuntimeDiagnosticsReport } from '../lexicon-v2/intent-runtime-metrics';
 
 let serviceRunner: ServiceProcessRunner;
 let servicesRoot: string;
@@ -224,6 +225,15 @@ export function registerServiceIpcHandlers(): void {
       return service;
     } catch (error) {
       logger.error({ error, serviceId: id }, 'IPC: services:get failed');
+      throw error;
+    }
+  });
+
+  ipcMain.handle('services:intent-runtime-diagnostics', () => {
+    try {
+      return buildIntentRuntimeDiagnosticsReport();
+    } catch (error) {
+      logger.error({ error }, 'IPC: services:intent-runtime-diagnostics failed');
       throw error;
     }
   });

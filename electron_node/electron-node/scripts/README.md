@@ -14,7 +14,10 @@
 | 脚本 | 命令 |
 |------|------|
 | `init-lexicon-bundle.mjs` | `npm run init:lexicon-bundle` |
-| `build-lexicon-bundle.mjs` | `npm run build:lexicon-bundle` |
+| `scripts/lexicon/build-for-electron.mjs` | `npm run lexicon:build`（build + electron-rebuild） |
+| `scripts/lexicon/build-lexicon-bundle.mjs` | `npm run lexicon:build:raw`（仅 build，不 rebuild sqlite） |
+| `scripts/lexicon/rebuild-sqlite-for-electron.mjs` | `npm run lexicon:rebuild-sqlite` |
+| `build-lexicon-bundle.mjs` | `npm run build:lexicon-bundle`（→ build-for-electron） |
 | `prepare-recover-test.mjs` | `npm run prepare:recover-test` |
 | `export-q17-regression-manifest.mjs` | `node scripts/export-q17-regression-manifest.mjs` |
 

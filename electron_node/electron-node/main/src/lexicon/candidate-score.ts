@@ -1,16 +1,19 @@
 /**
- * Recover V5 — window-level TopK score (no KenLM / combinedScore).
+ * Recover V5 — window-level TopK score + DomainBoost (Final Freeze Spec §3).
  */
 
 import { scorePinyinSimilarity } from './phonetic/pinyin';
 import type { HotwordEntry } from './hotword-types';
+import { computeDomainBoost } from './domain-boost-calculator';
+import type { ActiveLexiconProfileSnapshot } from '../session-runtime/types';
+import { defaultGeneralProfile } from '../lexicon-v2/profile-registry';
 
 export type CandidateScoreInput = {
   hotword: HotwordEntry;
   windowSyllables: string[];
   windowText: string;
   phoneticScore?: number;
-  domain?: string;
+  profile?: ActiveLexiconProfileSnapshot;
 };
 
 export type CandidateScoreBreakdown = {
@@ -22,7 +25,6 @@ export type CandidateScoreBreakdown = {
 };
 
 const EXACT_LENGTH_BONUS = 0.5;
-const DOMAIN_BOOST = 0.2;
 
 function charEditDistance(a: string, b: string): number {
   const n = a.length;
@@ -50,7 +52,6 @@ function charEditDistance(a: string, b: string): number {
   return dp[m];
 }
 
-/** V5 冻结：editDistancePenalty ∈ [0, 1] */
 export function computeEditDistancePenalty(windowText: string, word: string): number {
   const a = windowText.trim();
   const b = word.trim();
@@ -62,14 +63,24 @@ export function computeEditDistancePenalty(windowText: string, word: string): nu
   return Math.min(1, distance / maxLen);
 }
 
+export function hotwordDomains(entry: HotwordEntry): string[] {
+  if (entry.domains?.length) {
+    return entry.domains;
+  }
+  if (entry.domain) {
+    return [entry.domain];
+  }
+  return ['general'];
+}
+
 export function computeCandidateScoreBreakdown(input: CandidateScoreInput): CandidateScoreBreakdown {
   const { hotword, windowSyllables, windowText } = input;
+  const profile = input.profile ?? defaultGeneralProfile();
   const phoneticSimilarity =
     input.phoneticScore ?? scorePinyinSimilarity(windowSyllables, hotword.pinyin);
   const exactLengthBonus =
     windowText.length === hotword.word.length && windowText.length > 0 ? EXACT_LENGTH_BONUS : 0;
-  const domainBoost =
-    input.domain && hotword.domain && input.domain === hotword.domain ? DOMAIN_BOOST : 0;
+  const domainBoost = computeDomainBoost(profile, hotwordDomains(hotword));
   const editDistancePenalty = computeEditDistancePenalty(windowText, hotword.word);
   return {
     priorScore: hotword.priorScore,

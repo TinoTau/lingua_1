@@ -56,7 +56,6 @@ export type WindowRecallDiagnostics = {
   topkDroppedBelowMinScore?: number;
   topkAttemptsByTermLength?: Record<string, number>;
   topkHitsByTermLength?: Record<string, number>;
-  nearPinyinAttemptCount?: number;
 };
 
 export function emptyWindowRecallDiagnostics(): WindowRecallDiagnostics {

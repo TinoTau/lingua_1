@@ -1,5 +1,5 @@
 /**
- * Recover V5 — scored legal lexicon TopK (exact bucket only when nearPinyinEnabled=false).
+ * Recover V5 — scored legal lexicon TopK (exact pinyin bucket only).
  */
 
 import { scorePinyinSimilarity } from './phonetic/pinyin';
@@ -12,9 +12,12 @@ import { syllablesKey } from './pinyin-index';
 import { isMixedLatinToken } from './scored-lexicon';
 import { getRecoverQualityConfig } from '../recover-quality/quality-config';
 import type { HotwordEntry } from './hotword-types';
+import { resolveWindowCandidateSource, type WindowCandidateSource } from './window-candidate-source';
 import type { LexiconRuntime } from './lexicon-runtime';
+import type { ActiveLexiconProfileSnapshot } from '../session-runtime/types';
+import { defaultGeneralProfile } from '../lexicon-v2/profile-registry';
 
-export type TopKMatchType = 'exact' | 'near';
+export type TopKMatchType = 'exact';
 
 export type LexiconTopKHit = {
   hotword: HotwordEntry;
@@ -24,20 +27,21 @@ export type LexiconTopKHit = {
   termLength: number;
   rankInTopK: number;
   matchType: TopKMatchType;
-  source: 'lexicon_pinyin_topk';
+  source: WindowCandidateSource;
+  matchedAlias?: string;
 };
 
 export type LookupTopKInput = {
   syllables: string[];
   windowText: string;
   termLength: number;
-  domain?: string;
   topK: number;
+  profile?: ActiveLexiconProfileSnapshot;
 };
 
 export type LookupTopKResult = {
   hits: LexiconTopKHit[];
-  nearPinyinAttemptCount: number;
+  maxDomainBoostApplied: number;
 };
 
 function minCandidateScore(): number {
@@ -48,19 +52,18 @@ function collectScored(
   hotword: HotwordEntry,
   syllables: string[],
   windowText: string,
-  termLength: number,
-  domain: string | undefined,
-  matchType: TopKMatchType,
+  profile: ActiveLexiconProfileSnapshot,
   seen: Set<string>,
   scored: Array<{
     hotword: HotwordEntry;
     phoneticScore: number;
     candidateScore: number;
     candidateScoreBreakdown: CandidateScoreBreakdown;
-    matchType: TopKMatchType;
-  }>
+    matchedAlias?: string;
+  }>,
+  matchedAlias?: string
 ): void {
-  if (!hotword.enabled || hotword.word.length !== termLength) {
+  if (!hotword.enabled || hotword.word.length !== syllables.length) {
     return;
   }
   if (!Number.isFinite(hotword.priorScore) || hotword.priorScore <= 0) {
@@ -75,7 +78,7 @@ function collectScored(
     windowSyllables: syllables,
     windowText,
     phoneticScore,
-    domain,
+    profile,
   });
   const candidateScore =
     candidateScoreBreakdown.priorScore +
@@ -87,120 +90,164 @@ function collectScored(
     return;
   }
   seen.add(hotword.id);
-  scored.push({ hotword, phoneticScore, candidateScore, candidateScoreBreakdown, matchType });
+  scored.push({ hotword, phoneticScore, candidateScore, candidateScoreBreakdown, matchedAlias });
+}
+
+function collectExactLatinScored(
+  hotword: HotwordEntry,
+  windowText: string,
+  profile: ActiveLexiconProfileSnapshot,
+  seen: Set<string>,
+  scored: Array<{
+    hotword: HotwordEntry;
+    phoneticScore: number;
+    candidateScore: number;
+    candidateScoreBreakdown: CandidateScoreBreakdown;
+    matchedAlias?: string;
+  }>,
+  matchedAlias?: string
+): void {
+  if (!hotword.enabled || !Number.isFinite(hotword.priorScore) || hotword.priorScore <= 0) {
+    return;
+  }
+  if (seen.has(hotword.id)) {
+    return;
+  }
+  const windowSyllables = hotword.pinyin.length ? hotword.pinyin : [];
+  const phoneticScore = 1;
+  const candidateScoreBreakdown = computeCandidateScoreBreakdown({
+    hotword,
+    windowSyllables,
+    windowText,
+    phoneticScore,
+    profile,
+  });
+  const candidateScore = computeCandidateScore({
+    hotword,
+    windowSyllables,
+    windowText,
+    phoneticScore,
+    profile,
+  });
+  if (candidateScore < minCandidateScore()) {
+    return;
+  }
+  seen.add(hotword.id);
+  scored.push({ hotword, phoneticScore, candidateScore, candidateScoreBreakdown, matchedAlias });
 }
 
 function lookupExactLatin(
   runtime: LexiconRuntime,
   windowText: string,
-  topK: number
+  topK: number,
+  profile: ActiveLexiconProfileSnapshot
 ): LookupTopKResult {
   const termLength = windowText.length;
   if (termLength < 2 || termLength > 5) {
-    return { hits: [], nearPinyinAttemptCount: 0 };
+    return { hits: [], maxDomainBoostApplied: 0 };
   }
-  const hits = runtime.lookupHotwordsByExactWord(windowText).filter(
-    (h) => h.word.length === termLength
-  );
-  const scored = hits
-    .filter((h) => Number.isFinite(h.priorScore) && h.priorScore > 0)
-    .map((hotword) => {
-      const candidateScoreBreakdown = computeCandidateScoreBreakdown({
-        hotword,
-        windowSyllables: hotword.pinyin,
-        windowText,
-        phoneticScore: 1,
-      });
-      const candidateScore = computeCandidateScore({
-        hotword,
-        windowSyllables: hotword.pinyin,
-        windowText,
-        phoneticScore: 1,
-      });
-      return {
-        hotword,
-        phoneticScore: 1,
-        candidateScore,
-        candidateScoreBreakdown,
-        matchType: 'exact' as const,
-      };
-    })
-    .filter((s) => s.candidateScore >= minCandidateScore())
-    .sort((a, b) => b.candidateScore - a.candidateScore)
-    .slice(0, topK);
-
-  return {
-    hits: scored.map((s, i) => ({
-      ...s,
-      termLength,
-      rankInTopK: i + 1,
-      source: 'lexicon_pinyin_topk' as const,
-    })),
-    nearPinyinAttemptCount: 0,
-  };
-}
-
-/**
- * TopK by pinyin index (CJK exact bucket; near bucket only if nearPinyinEnabled).
- */
-export function lookupTopKByPinyin(
-  runtime: LexiconRuntime,
-  input: LookupTopKInput
-): LookupTopKResult {
-  const { syllables, windowText, termLength, domain, topK } = input;
-  if (topK <= 0 || termLength < 2 || termLength > 5) {
-    return { hits: [], nearPinyinAttemptCount: 0 };
-  }
-
-  if (isMixedLatinToken(windowText)) {
-    return lookupExactLatin(runtime, windowText.trim(), topK);
-  }
-
-  if (!syllables.length) {
-    return { hits: [], nearPinyinAttemptCount: 0 };
-  }
-
-  const cfg = getRecoverQualityConfig();
   const seen = new Set<string>();
   const scored: Array<{
     hotword: HotwordEntry;
     phoneticScore: number;
     candidateScore: number;
     candidateScoreBreakdown: CandidateScoreBreakdown;
-    matchType: TopKMatchType;
+    matchedAlias?: string;
   }> = [];
-  let nearPinyinAttemptCount = 0;
+
+  for (const hotword of runtime.lookupHotwordsByExactWord(windowText)) {
+    if (hotword.word.length !== termLength) {
+      continue;
+    }
+    collectExactLatinScored(hotword, windowText, profile, seen, scored);
+  }
+  for (const aliasMatch of runtime.lookupAliasExactMatches(windowText)) {
+    if (aliasMatch.hotword.word.length !== termLength) {
+      continue;
+    }
+    collectExactLatinScored(
+      aliasMatch.hotword,
+      windowText,
+      profile,
+      seen,
+      scored,
+      aliasMatch.matchedAlias
+    );
+  }
+
+  const ranked = scored
+    .sort((a, b) => b.candidateScore - a.candidateScore)
+    .slice(0, topK);
+
+  const maxDomainBoostApplied = ranked.reduce(
+    (m, s) => Math.max(m, s.candidateScoreBreakdown.domainBoost),
+    0
+  );
+
+  return {
+    hits: ranked.map((s, i) => ({
+      ...s,
+      termLength,
+      rankInTopK: i + 1,
+      matchType: 'exact' as const,
+      source: resolveWindowCandidateSource({
+        matchedAlias: s.matchedAlias,
+        viaPinyin: false,
+      }),
+    })),
+    maxDomainBoostApplied,
+  };
+}
+
+export function lookupTopKByPinyin(
+  runtime: LexiconRuntime,
+  input: LookupTopKInput
+): LookupTopKResult {
+  const { syllables, windowText, termLength, topK } = input;
+  const profile = input.profile ?? defaultGeneralProfile();
+
+  if (topK <= 0 || termLength < 2 || termLength > 5) {
+    return { hits: [], maxDomainBoostApplied: 0 };
+  }
+
+  if (isMixedLatinToken(windowText)) {
+    return lookupExactLatin(runtime, windowText.trim(), topK, profile);
+  }
+
+  if (!syllables.length) {
+    return { hits: [], maxDomainBoostApplied: 0 };
+  }
+
+  const seen = new Set<string>();
+  const scored: Array<{
+    hotword: HotwordEntry;
+    phoneticScore: number;
+    candidateScore: number;
+    candidateScoreBreakdown: CandidateScoreBreakdown;
+    matchedAlias?: string;
+  }> = [];
 
   const exactKey = syllablesKey(syllables);
   for (const hotword of runtime.getPinyinBucket(exactKey)) {
     if (hotword.word.length !== termLength) {
       continue;
     }
-    collectScored(hotword, syllables, windowText, termLength, domain, 'exact', seen, scored);
+    collectScored(hotword, syllables, windowText, profile, seen, scored);
   }
 
-  if (cfg.nearPinyinEnabled) {
-    const maxDelta = cfg.recallFuzzyPinyinMaxSyllableDelta;
-    runtime.forEachPinyinBucket((key, bucket) => {
-      if (key === exactKey) {
-        return;
-      }
-      const keySyllables = key.split('|').filter(Boolean);
-      if (Math.abs(keySyllables.length - syllables.length) > maxDelta) {
-        return;
-      }
-      nearPinyinAttemptCount += 1;
-      for (const hotword of bucket) {
-        if (hotword.word.length !== termLength) {
-          continue;
-        }
-        const phoneticScore = scorePinyinSimilarity(syllables, hotword.pinyin);
-        if (phoneticScore < cfg.recallMinPhoneticScore) {
-          continue;
-        }
-        collectScored(hotword, syllables, windowText, termLength, domain, 'near', seen, scored);
-      }
-    });
+  for (const aliasMatch of runtime.lookupAliasPinyinMatches(exactKey)) {
+    if (aliasMatch.hotword.word.length !== termLength) {
+      continue;
+    }
+    collectScored(
+      aliasMatch.hotword,
+      syllables,
+      windowText,
+      profile,
+      seen,
+      scored,
+      aliasMatch.matchedAlias
+    );
   }
 
   scored.sort((a, b) => b.candidateScore - a.candidateScore);
@@ -211,17 +258,18 @@ export function lookupTopKByPinyin(
     candidateScoreBreakdown: s.candidateScoreBreakdown,
     termLength,
     rankInTopK: i + 1,
-    matchType: s.matchType,
-    source: 'lexicon_pinyin_topk' as const,
+    matchType: 'exact' as const,
+    source: resolveWindowCandidateSource({
+      matchedAlias: s.matchedAlias,
+      viaPinyin: true,
+    }),
+    matchedAlias: s.matchedAlias,
   }));
 
-  return { hits, nearPinyinAttemptCount };
-}
+  const maxDomainBoostApplied = hits.reduce(
+    (m, h) => Math.max(m, h.candidateScoreBreakdown.domainBoost),
+    0
+  );
 
-/** @deprecated 使用 LookupTopKResult.hits */
-export function lookupTopKByPinyinHitsOnly(
-  runtime: LexiconRuntime,
-  input: LookupTopKInput
-): LexiconTopKHit[] {
-  return lookupTopKByPinyin(runtime, input).hits;
+  return { hits, maxDomainBoostApplied };
 }

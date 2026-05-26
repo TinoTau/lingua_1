@@ -1,0 +1,39 @@
+{
+  "id": "lexicon-intent-cpu",
+  "name": "Lexicon V2 CPU Intent Service",
+  "name_zh": "Lexicon V2 CPU 域意图推理服务",
+  "version": "1.0.0",
+  "type": "lexicon",
+  "language": "multi",
+  "port": 5018,
+  "enabled": true,
+  "gpu_required": false,
+  "max_concurrency": 1,
+  "exec": {
+    "command": "python",
+    "args": ["service.py"],
+    "cwd": "."
+  },
+  "env": {
+    "LEXICON_INTENT_MODEL_DIR": "../../electron-node/models/lexicon-intent",
+    "N_GPU_LAYERS": "0"
+  },
+  "health_check": {
+    "endpoint": "/health",
+    "timeout_ms": 5000
+  },
+  "model": {
+    "name": "qwen2.5-3b-instruct-q4_k_m",
+    "type": "llm",
+    "quantization": "q4_k_m",
+    "path": "../../electron-node/models/lexicon-intent"
+  },
+  "endpoints": [
+    {
+      "path": "/intent",
+      "method": "POST",
+      "description": "Infer lexicon domain from rolling context",
+      "description_zh": "根据 rolling context 推断词表域"
+    }
+  ]
+}

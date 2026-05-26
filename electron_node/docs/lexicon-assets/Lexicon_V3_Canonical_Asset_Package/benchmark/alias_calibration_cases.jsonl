@@ -1,0 +1,120 @@
+{"caseId": "alias_0001_0001", "input": "显卡", "expectedCanonical": "GPU", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0001_0002", "input": "图形处理器", "expectedCanonical": "GPU", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0001_0003", "input": "图形处理单元", "expectedCanonical": "GPU", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0001_0004", "input": "gpu", "expectedCanonical": "GPU", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0002_0005", "input": "酷达", "expectedCanonical": "CUDA", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0002_0006", "input": "cuda", "expectedCanonical": "CUDA", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0003_0007", "input": "语言模型", "expectedCanonical": "KenLM", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0003_0008", "input": "ken lm", "expectedCanonical": "KenLM", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0003_0009", "input": "kenlm", "expectedCanonical": "KenLM", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0004_0010", "input": "OpenAI Whisper", "expectedCanonical": "Whisper", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0004_0011", "input": "语音识别模型", "expectedCanonical": "Whisper", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0005_0012", "input": "语音识别", "expectedCanonical": "ASR", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0006_0013", "input": "ctranslate2", "expectedCanonical": "CTranslate2", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0006_0014", "input": "CT2", "expectedCanonical": "CTranslate2", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0007_0015", "input": "faster-whisper", "expectedCanonical": "Faster Whisper", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0007_0016", "input": "快速whisper", "expectedCanonical": "Faster Whisper", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0008_0017", "input": "通义千问", "expectedCanonical": "Qwen", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0008_0018", "input": "千问", "expectedCanonical": "Qwen", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0009_0019", "input": "通义千问2.5", "expectedCanonical": "Qwen2.5", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0009_0020", "input": "千问2.5", "expectedCanonical": "Qwen2.5", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0010_0021", "input": "gguf模型", "expectedCanonical": "GGUF", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0010_0022", "input": "GGUF格式", "expectedCanonical": "GGUF", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0011_0023", "input": "llama cpp", "expectedCanonical": "llama.cpp", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0011_0024", "input": "llamacpp", "expectedCanonical": "llama.cpp", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0012_0025", "input": "ctc解码", "expectedCanonical": "CTC", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0013_0026", "input": "top k", "expectedCanonical": "TopK", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0013_0027", "input": "前K", "expectedCanonical": "TopK", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0014_0028", "input": "嵌入模型", "expectedCanonical": "embedding", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0014_0029", "input": "向量嵌入", "expectedCanonical": "embedding", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0015_0030", "input": "nbest", "expectedCanonical": "n-best", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0015_0031", "input": "多候选", "expectedCanonical": "n-best", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0016_0032", "input": "重排序模型", "expectedCanonical": "reranker", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0016_0033", "input": "rerank模型", "expectedCanonical": "reranker", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0017_0034", "input": "词错误率", "expectedCanonical": "WER", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0018_0035", "input": "束搜索", "expectedCanonical": "beam search", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0018_0036", "input": "beam", "expectedCanonical": "beam search", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0019_0037", "input": "蓝牙", "expectedCanonical": "Bluetooth", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0020_0038", "input": "JSON结构", "expectedCanonical": "JSON schema", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0020_0039", "input": "schema", "expectedCanonical": "JSON schema", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0021_0040", "input": "sqlite数据库", "expectedCanonical": "SQLite", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0022_0041", "input": "语音合成", "expectedCanonical": "TTS", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0023_0042", "input": "上下文窗口", "expectedCanonical": "context window", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0024_0043", "input": "延迟", "expectedCanonical": "latency", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0025_0044", "input": "CPU大模型", "expectedCanonical": "CPU LLM", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0026_0045", "input": "redis缓存", "expectedCanonical": "Redis", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0027_0046", "input": "type c", "expectedCanonical": "Type-C", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0027_0047", "input": "USB-C", "expectedCanonical": "Type-C", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0027_0048", "input": "充电口", "expectedCanonical": "Type-C", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0028_0049", "input": "吞吐量", "expectedCanonical": "throughput", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0029_0050", "input": "隔空投送", "expectedCanonical": "AirDrop", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0030_0051", "input": "electron桌面端", "expectedCanonical": "Electron", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0031_0052", "input": "ffmpeg", "expectedCanonical": "FFmpeg", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0032_0053", "input": "高清接口", "expectedCanonical": "HDMI", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0033_0054", "input": "机器翻译", "expectedCanonical": "NMT", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0034_0055", "input": "nodejs", "expectedCanonical": "Node.js", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0034_0056", "input": "Node", "expectedCanonical": "Node.js", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0035_0057", "input": "python语言", "expectedCanonical": "Python", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0036_0058", "input": "ts", "expectedCanonical": "TypeScript", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0036_0059", "input": "typescript", "expectedCanonical": "TypeScript", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0037_0060", "input": "web socket", "expectedCanonical": "WebSocket", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0037_0061", "input": "长连接", "expectedCanonical": "WebSocket", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0038_0062", "input": "令牌", "expectedCanonical": "token", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0039_0063", "input": "rust语言", "expectedCanonical": "Rust", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0040_0064", "input": "语音活动检测", "expectedCanonical": "VAD", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0041_0065", "input": "显存", "expectedCanonical": "VRAM", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0042_0066", "input": "谷歌会议", "expectedCanonical": "Google Meet", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0043_0067", "input": "PPT", "expectedCanonical": "PowerPoint", "domains": ["tech_ai"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0043_0068", "input": "幻灯片", "expectedCanonical": "PowerPoint", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0044_0069", "input": "视频会议", "expectedCanonical": "Zoom", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0045_0070", "input": "别名索引", "expectedCanonical": "alias index", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0046_0071", "input": "校验和", "expectedCanonical": "checksum", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0047_0072", "input": "清单文件", "expectedCanonical": "manifest", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0048_0073", "input": "拼音索引", "expectedCanonical": "pinyin index", "domains": ["tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0049_0074", "input": "优步", "expectedCanonical": "Uber", "domains": ["transport"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0050_0075", "input": "Uber", "expectedCanonical": "优步", "domains": ["transport"], "lookupType": "alias_exact", "shouldHit": true}
+{"caseId": "alias_0051_0076", "input": "出租车", "expectedCanonical": "taxi", "domains": ["transport"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0052_0077", "input": "入住", "expectedCanonical": "check in", "domains": ["travel"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0052_0078", "input": "办理入住", "expectedCanonical": "check in", "domains": ["travel"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0052_0079", "input": "值机", "expectedCanonical": "check in", "domains": ["travel"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0053_0080", "input": "机场接送", "expectedCanonical": "airport transfer", "domains": ["travel", "transport"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0054_0081", "input": "退房", "expectedCanonical": "check out", "domains": ["travel"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0054_0082", "input": "办理退房", "expectedCanonical": "check out", "domains": ["travel"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0055_0083", "input": "登机口", "expectedCanonical": "boarding gate", "domains": ["travel", "transport"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0056_0084", "input": "登机牌", "expectedCanonical": "boarding pass", "domains": ["travel", "transport"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0057_0085", "input": "无线网络", "expectedCanonical": "WiFi", "domains": ["travel", "tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0057_0086", "input": "无线网", "expectedCanonical": "WiFi", "domains": ["travel", "tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0058_0087", "input": "行李领取", "expectedCanonical": "baggage claim", "domains": ["travel", "transport"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0058_0088", "input": "行李转盘", "expectedCanonical": "baggage claim", "domains": ["travel", "transport"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0059_0089", "input": "接驳车", "expectedCanonical": "shuttle bus", "domains": ["travel", "transport"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0059_0090", "input": "接驳巴士", "expectedCanonical": "shuttle bus", "domains": ["travel", "transport"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0060_0091", "input": "微信", "expectedCanonical": "WeChat", "domains": ["travel", "tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_0061_0092", "input": "瓦次艾普", "expectedCanonical": "WhatsApp", "domains": ["travel", "tech_ai"], "lookupType": "alias_pinyin", "shouldHit": true}
+{"caseId": "alias_auto_0093", "input": "餐厅预订", "expectedCanonical": "餐厅预订", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0094", "input": "预订座位", "expectedCanonical": "预订座位", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0095", "input": "靠窗位置", "expectedCanonical": "靠窗位置", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0096", "input": "菜单", "expectedCanonical": "菜单", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0097", "input": "点餐", "expectedCanonical": "点餐", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0098", "input": "外卖", "expectedCanonical": "外卖", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0099", "input": "打包", "expectedCanonical": "打包", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0100", "input": "堂食", "expectedCanonical": "堂食", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0101", "input": "服务员", "expectedCanonical": "服务员", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0102", "input": "主厨", "expectedCanonical": "主厨", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0103", "input": "今日特餐", "expectedCanonical": "今日特餐", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0104", "input": "套餐", "expectedCanonical": "套餐", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0105", "input": "单点", "expectedCanonical": "单点", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0106", "input": "开胃菜", "expectedCanonical": "开胃菜", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0107", "input": "主菜", "expectedCanonical": "主菜", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0108", "input": "甜点", "expectedCanonical": "甜点", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0109", "input": "饮料", "expectedCanonical": "饮料", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0110", "input": "咖啡", "expectedCanonical": "咖啡", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0111", "input": "拿铁", "expectedCanonical": "拿铁", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0112", "input": "卡布奇诺", "expectedCanonical": "卡布奇诺", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0113", "input": "美式咖啡", "expectedCanonical": "美式咖啡", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0114", "input": "奶茶", "expectedCanonical": "奶茶", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0115", "input": "果汁", "expectedCanonical": "果汁", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0116", "input": "矿泉水", "expectedCanonical": "矿泉水", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0117", "input": "红茶", "expectedCanonical": "红茶", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0118", "input": "绿茶", "expectedCanonical": "绿茶", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0119", "input": "冰淇淋", "expectedCanonical": "冰淇淋", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}
+{"caseId": "alias_auto_0120", "input": "芝士蛋糕", "expectedCanonical": "芝士蛋糕", "domains": ["restaurant"], "lookupType": "canonical_exact", "shouldHit": true}

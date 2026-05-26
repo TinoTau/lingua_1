@@ -1,74 +1,47 @@
-# Electron Node 客户端测试
+# Electron Node 测试
 
-## 测试结构
-
-测试文件按阶段组织在独立路径中：
+## 目录结构
 
 ```
-electron-node/tests/
-├── README.md              # 本文件
-├── stage2.2/              # 阶段 2.2：Electron Node 客户端测试
-│   ├── README.md          # 阶段 2.2 测试说明
-│   └── TEST_REPORT.md     # 测试结果报告
-└── stage3.1/              # 阶段 3.1：模型管理功能测试
-    ├── README.md          # 阶段 3.1 测试说明
-    ├── TEST_REPORT.md     # 测试结果报告
-    └── model-manager.test.ts      # ModelManager 单元测试
-└── stage3.2/              # 阶段 3.2：模块化功能实现测试
-    ├── README.md          # 阶段 3.2 测试说明
-    └── TEST_REPORT.md     # 测试结果报告
+tests/
+├── README.md
+├── run-dialog-200-batch.js      # dialog_200 全量契约批测（需节点 + test server :5020）
+├── run-homophone-expectation.js   # Homophone 期望验收（读 batch result）
+├── run-homophone-quality-check.js
+├── recover-contract-batch-assess.test.js
+├── recover_expectations/          # Homophone 期望数据
+├── fixtures/
+├── session-affinity/              # Session migration E2E（jest）
+├── stage2.2/                      # 阶段 2.2 说明
+├── stage3.1/                      # ModelManager 等单元测试
+├── stage3.2/                      # 模块化功能测试
+└── refactor/                      # 重构相关 jest
 ```
 
-## 测试阶段
+批测输出 `*-result.json` 为本地产物，已加入 `.gitignore`，勿提交。
 
-### 阶段 2.2：Electron Node 客户端功能测试
+## 常用命令
 
-- [x] HTTP 推理服务集成 ✅
-- [x] 系统资源监控 ✅
-- [x] 功能模块管理 UI ✅
-- [x] 流式 ASR 支持 ✅
-- [x] 消息格式对齐 ✅
-- [x] 编译测试 ✅（全部通过）
+| 用途 | 命令 |
+|------|------|
+| 构建主进程 | `npm run build:main` |
+| Recover 契约 | `npm run test:contract` |
+| dialog_200 批测 | `node tests/run-dialog-200-batch.js "<PROJECT_ROOT>/test wav/dialog_200"` |
+| Homophone 验收 | `node tests/run-homophone-expectation.js tests/dialog-200-batch-result.json` |
+| Pipeline E2E | `npm run test:pipeline` |
+| Aggregator | `npm run test:aggregator` / `test:aggregator:vectors` / `test:aggregator:ts` |
+| stage3.1 / 3.2 | `npm run test:stage3.1` / `test:stage3.2` |
+| 聚合测试脚本 | `powershell -File run-aggregation-tests.ps1` |
 
-详细说明请参考 [阶段 2.2 测试文档](./stage2.2/README.md)
+## 前置条件
 
-### 阶段 3.1：模型管理功能测试
+- **dialog_200 / Homophone**：`npm run start`，设置 `PROJECT_ROOT` 指向仓库根；test server 监听 `5020`（单实例）。
+- **stage3.2**：部分测试需 Node `--experimental-vm-modules`（见 stage3.2 README）。
 
-- [ ] 服务器端模型库 API 测试
-- [ ] ModelManager 核心功能测试
-- [ ] 模型下载和安装测试
-- [ ] 断点续传测试
-- [ ] 多文件并发下载测试
-- [ ] 锁机制测试
-- [ ] registry.json 原子写入测试
-- [ ] 错误处理测试
-- [ ] IPC 进度事件推送测试
+## 已移除（V3 收尾）
 
-详细说明请参考 [阶段 3.1 测试文档](./stage3.1/README.md)
+- `run-lexicon-v2-intent-session-test.js`、`lexicon-v2-intent-e2e/`（V2 intent 一次性 E2E）
+- `pipeline-e2e-test.ts`、`aggregator-debug-test.ts`、根目录 `aggregator-test.js`（由 `aggregator-test.ts` + `npm run test:aggregator` 替代）
+- 历史 `*-result.json` 与 `tmp-pilot-bundle/`
 
-### 阶段 3.2：模块化功能实现测试
-
-- [x] 模块管理器测试 ✅（8/8 通过，100%）
-- [x] 模块依赖解析器测试 ✅（10/10 通过，100%）
-- [x] capability_state 测试 ✅（4/4 通过，100%）
-- [x] 总体测试结果 ✅（22/22 通过，100%）
-
-详细说明请参考 [阶段 3.2 测试文档](./stage3.2/README.md)
-
-## 快速运行
-
-- **构建**：`npm run build:main`
-- **Recover 契约**：`npm run test:contract`
-- **dialog_200 批测**（需 `npm run start` + `PROJECT_ROOT`）：`node tests/run-dialog-200-batch.js`
-- **Homophone**：`node tests/run-homophone-expectation.js tests/dialog-200-batch-result.json`
-- **聚合**：`powershell -ExecutionPolicy Bypass -File run-aggregation-tests.ps1`
-- **stage3.1 / 3.2**：`npm run test:stage3.1`、`npm run test:stage3.2`
-- **E2E pipeline**：`npm run test:pipeline`
-
-## 注意事项
-
-- Electron 客户端测试需要 Electron 环境
-- 部分测试需要推理服务运行
-- 系统资源监控测试需要系统权限
-- stage3.2 中 opus-encoder 相关测试需 Node 的 `--experimental-vm-modules`，否则可能报 `ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG`
-
+词库门禁与 Phase5 验收见 `npm run lexicon:v3-gate`、`scripts/lexicon/run-phase5-acceptance.mjs`。

@@ -46,7 +46,7 @@ export const STEP_REGISTRY: Record<PipelineStepType, StepExecutor> = {
   },
 
   LEXICON_RECALL: async (job, ctx, services) => {
-    await runLexiconRecallStep(job, ctx, services);
+    await runLexiconRecallStep(job, ctx, services, { nodeId: services.nodeId });
   },
 
   SENTENCE_REPAIR: async (job, ctx, services) => {

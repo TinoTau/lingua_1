@@ -2,7 +2,7 @@
  * Lexicon runtime types — candidate evidence only (no writeback).
  */
 
-export type LexiconCandidateSource = 'term' | 'phrase' | 'confusion' | 'phonetic';
+export type LexiconCandidateSource = 'term' | 'phrase' | 'phonetic';
 
 export type LexiconRecallPath = 'term' | 'pinyin';
 
@@ -19,8 +19,8 @@ export type PinyinIndexRow = {
 
 export type DiffWindowMeta = {
   windowTrigger: 'nbest_diff';
-  diffSpanId: string;
-  hypothesisRank: number;
+  diffSpanId?: string;
+  hypothesisRank?: number;
 };
 
 export type AsrWindow = {
@@ -81,13 +81,18 @@ export type LexiconRecallCandidate = LexiconRecallEvidence & {
 export type LexiconRuntimeStatus = 'ok' | 'missing' | 'disabled' | 'error';
 
 export type LexiconManifest = {
+  schemaVersion?: string;
+  buildTime?: number;
   version: string;
   checksum: string;
   createdAt: string;
   backend: string;
   bundle_tag?: string;
+  lexiconCount?: number;
+  pinyinIndexCount?: number;
+  domainDistribution?: Record<string, number>;
+  topPriorTerms?: Array<{ word: string; priorScore: number; domain?: string }>;
   hotword_count?: number;
-  confusion_count?: number;
   seed_path?: string;
   scored_lexicon_version?: string;
   term_count?: number;
@@ -97,6 +102,15 @@ export type LexiconManifest = {
   pinyin_index_count?: number;
   mixed_token_count?: number;
   prior_score_migration?: string;
+  prior_score_scale?: string;
+  enabledCount?: number;
+  exactIndexCount?: number;
+  aliasIndexCount?: number;
+  priorScoreDistribution?: { min: number; max: number; avg: number };
+  priorScoreByDomain?: Record<
+    string,
+    { count: number; avgPriorScore: number; maxPriorScore: number }
+  >;
 };
 
 export type ScoredLexiconLoadStats = {
@@ -105,6 +119,7 @@ export type ScoredLexiconLoadStats = {
   termsWithPriorCount: number;
   termsWithoutPriorSkipped: number;
   pinyinIndexCount: number;
+  exactIndexCount?: number;
   mixedTokenCount: number;
 };
 

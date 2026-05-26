@@ -150,10 +150,7 @@ impl SessionActor {
         let is_timeout_triggered = reason == "Timeout";  // 定时器或间隔>pause_ms 均传 "Timeout"
         let is_max_duration_triggered = reason == "MaxDuration";
 
-        // ============================================================
-        // Turn 内亲和：复用 session 的 current_turn_id，使同 turn 内（多个 MaxDuration + 最后一个手动/Timeout）选到同一节点
-        // 先读再创建 job，不在创建前清除；手动/Timeout 在创建并派发后再清除，保证最后一 job 仍走 affinity
-        // ============================================================
+        // Session 内 turn 标识：MaxDuration 复用 current_turn_id；manual/timeout 结束后清除
         let session_key = format!("scheduler:session:{}", self.session_id);
         let turn_id = if let Some(ref rt) = self.state.redis_runtime {
             let get_script = r#"return redis.call('HGET', KEYS[1], 'current_turn_id') or ''"#;
@@ -237,71 +234,31 @@ impl SessionActor {
             }
         };
 
-        // ============================================================
-        // Turn 内亲和：MaxDuration finalize 时写入 affinity_node_id（只写一次，无 TTL）
-        // 并记录 current_turn_id 供 manual/timeout 清除时使用
-        // ============================================================
-        if is_max_duration_triggered {
-            if let Some(first_job) = jobs.first() {
-                if let Some(ref node_id) = first_job.assigned_node_id {
-                    if let Some(ref rt) = self.state.redis_runtime {
-                        let turn_key = format!("scheduler:turn:{}", turn_id);
-                        let session_key = format!("scheduler:session:{}", self.session_id);
-                        let script = r#"
-redis.call('HSET', KEYS[1], 'affinity_node_id', ARGV[1])
-redis.call('HSET', KEYS[2], 'current_turn_id', ARGV[2])
-return 1
-"#;
-                        let mut cmd = redis::cmd("EVAL");
-                        cmd.arg(script).arg(2).arg(&turn_key).arg(&session_key).arg(node_id).arg(&turn_id);
-                        match rt.redis_query::<i64>(cmd).await {
-                            Ok(_) => {
-                                info!(
-                                    session_id = %self.session_id,
-                                    turn_id = %turn_id,
-                                    node_id = %node_id,
-                                    "Turn affinity: Recorded (MaxDuration finalize)"
-                                );
-                            }
-                            Err(e) => {
-                                warn!(
-                                    session_id = %self.session_id,
-                                    turn_id = %turn_id,
-                                    error = %e,
-                                    "Turn affinity: Failed to record"
-                                );
-                            }
-                        }
-                    }
+        // Session 内 turn 生命周期：MaxDuration 记录 current_turn_id；manual/timeout 清除
+        if let Some(ref rt) = self.state.redis_runtime {
+            if is_max_duration_triggered {
+                let script = r#"redis.call('HSET', KEYS[1], 'current_turn_id', ARGV[1]); return 1"#;
+                let mut cmd = redis::cmd("EVAL");
+                cmd.arg(script).arg(1).arg(&session_key).arg(&turn_id);
+                if let Err(e) = rt.redis_query::<i64>(cmd).await {
+                    warn!(
+                        session_id = %self.session_id,
+                        turn_id = %turn_id,
+                        error = %e,
+                        "Session turn: failed to record current_turn_id"
+                    );
                 }
-            }
-        } else if is_manual_cut || is_timeout_triggered {
-            // 手动/Timeout：在创建并派发本 job 之后清除 turn affinity，下一轮发言用新 turn_id（本 job 已用当前 turn 的 affinity 选到同一节点）
-            if let Some(ref rt) = self.state.redis_runtime {
-                let turn_key = format!("scheduler:turn:{}", turn_id);
-                let del_script = r#"
-redis.call('HDEL', KEYS[1], 'affinity_node_id')
-redis.call('HDEL', KEYS[2], 'current_turn_id')
-return 1
-"#;
-                let mut del_cmd = redis::cmd("EVAL");
-                del_cmd.arg(del_script).arg(2).arg(&turn_key).arg(&session_key);
-                match rt.redis_query::<i64>(del_cmd).await {
-                    Ok(_) => {
-                        info!(
-                            session_id = %self.session_id,
-                            turn_id = %turn_id,
-                            "Turn affinity: Cleared after job (manual/timeout finalize)"
-                        );
-                    }
-                    Err(e) => {
-                        warn!(
-                            session_id = %self.session_id,
-                            turn_id = %turn_id,
-                            error = %e,
-                            "Turn affinity: Failed to clear after job"
-                        );
-                    }
+            } else if is_manual_cut || is_timeout_triggered {
+                let script = r#"redis.call('HDEL', KEYS[1], 'current_turn_id'); return 1"#;
+                let mut cmd = redis::cmd("EVAL");
+                cmd.arg(script).arg(1).arg(&session_key);
+                if let Err(e) = rt.redis_query::<i64>(cmd).await {
+                    warn!(
+                        session_id = %self.session_id,
+                        turn_id = %turn_id,
+                        error = %e,
+                        "Session turn: failed to clear current_turn_id"
+                    );
                 }
             }
         }

@@ -16,6 +16,14 @@ export function sha256File(filePath: string): string {
   return crypto.createHash('sha256').update(data).digest('hex');
 }
 
+export function normalizeManifestChecksum(raw: string | undefined): string {
+  if (!raw?.trim()) {
+    return '';
+  }
+  const trimmed = raw.trim();
+  return trimmed.startsWith('sha256:') ? trimmed.slice('sha256:'.length) : trimmed;
+}
+
 /** Verify sqlite checksum against manifest and optional checksum.txt. */
 export function verifySqliteChecksum(
   sqlitePath: string,
@@ -23,14 +31,15 @@ export function verifySqliteChecksum(
   checksumPath?: string
 ): void {
   const actual = sha256File(sqlitePath);
-  if (actual !== manifest.checksum) {
+  const expected = normalizeManifestChecksum(manifest.checksum);
+  if (actual !== expected) {
     throw new Error(
-      `Lexicon sqlite checksum mismatch: manifest=${manifest.checksum} actual=${actual}`
+      `Lexicon sqlite checksum mismatch: manifest=${expected} actual=${actual}`
     );
   }
   if (checksumPath && fs.existsSync(checksumPath)) {
-    const fromFile = fs.readFileSync(checksumPath, 'utf-8').trim();
-    if (fromFile && fromFile !== manifest.checksum) {
+    const fromFile = normalizeManifestChecksum(fs.readFileSync(checksumPath, 'utf-8'));
+    if (fromFile && fromFile !== expected) {
       throw new Error(`Lexicon checksum.txt does not match manifest`);
     }
   }

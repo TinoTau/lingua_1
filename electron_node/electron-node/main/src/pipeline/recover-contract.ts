@@ -1,5 +1,5 @@
 /**
- * Recover historical-restore-v1 — 契约说明见 electron_node/docs/RECOVER.md。
+ * Recover — 契约说明见 electron_node/electron-node/docs/RECOVER.md。
  */
 
 import { JobAssignMessage } from '@shared/protocols/messages';

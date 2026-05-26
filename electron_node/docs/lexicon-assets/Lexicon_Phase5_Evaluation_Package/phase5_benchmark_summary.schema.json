@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Phase5BenchmarkSummary",
+  "type": "object",
+  "required": ["schemaVersion", "metrics", "baseline_comparison"],
+  "properties": {
+    "schemaVersion": { "const": "phase5-benchmark-v1" },
+    "ladder": { "enum": ["2k", "5k", "10k"] },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "topk_hit_rate": { "type": "number" },
+        "top1_hit_rate": { "type": "number" },
+        "alias_hit_rate": { "type": "number" },
+        "false_repair_rate": { "type": "number" },
+        "no_op_repair_rate": { "type": "number" },
+        "confusion_evidence_total": { "const": 0 }
+      }
+    },
+    "baseline_comparison": {
+      "type": "object",
+      "properties": {
+        "regression_pass": { "type": "boolean" },
+        "violations": { "type": "array" }
+      }
+    }
+  }
+}

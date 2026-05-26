@@ -6,6 +6,7 @@ import { createKenlmBatchScorer } from './sentence-rerank/kenlm-scorer';
 import type { KenLMScorer } from './sentence-rerank/types';
 import { getRecoverQualityConfig } from '../recover-quality/quality-config';
 import type { WindowCandidate } from '../lexicon/hotword-types';
+import { isV3WindowCandidateSource } from '../lexicon/window-candidate-source';
 
 export const V5_SKIP_REASONS = [
   'no_diff_span',
@@ -27,8 +28,8 @@ export function evaluateNoTopkCandidate(candidates: WindowCandidate[]): V5SkipRe
   if (candidates.length === 0) {
     return 'no_topk_candidate';
   }
-  const topk = candidates.filter((c) => c.source === 'lexicon_pinyin_topk');
-  if (topk.length === 0) {
+  const recalled = candidates.filter((c) => isV3WindowCandidateSource(c.source));
+  if (recalled.length === 0) {
     return 'no_topk_candidate';
   }
   return null;

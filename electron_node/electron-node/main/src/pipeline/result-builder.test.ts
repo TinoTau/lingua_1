@@ -43,7 +43,7 @@ describe('ResultBuilder - JobResult 容器', () => {
     expect(result.tts_format).toBe('opus');
     expect(result.extra).toBeDefined();
     expect(result.extra?.audioBuffered).toBe(false);
-    expect(result.extra?.recover_contract_version).toBe('historical-restore-v1');
+    expect(result.extra?.recover_contract_version).toBe('v5-scored-lexicon-topk');
     expect(result.extra?.lexicon_runtime_status).toBeDefined();
     expect(result.extra?.recover_lifecycle).toBeDefined();
     expect(result.extra?.sentence_repair).toBeDefined();
@@ -113,7 +113,7 @@ describe('ResultBuilder - JobResult 容器', () => {
             hotwordId: 'hw-1',
             phoneticScore: 0.9,
             priorScore: 1,
-            source: 'confusion_evidence',
+            source: 'lexicon_pinyin_topk',
           },
         ],
         phoneticScore: 0.9,

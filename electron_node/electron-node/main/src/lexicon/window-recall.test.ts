@@ -3,7 +3,6 @@ import { SEGMENT_HYPOTHESIS_INDEX, recallSegmentWindowCandidates } from './windo
 import type { LexiconRuntime } from './lexicon-runtime';
 
 function mockRuntime(
-  observedMap: Record<string, string>,
   pinyinHits: Record<string, { id: string; word: string }> = {}
 ): LexiconRuntime {
   const hotword = {
@@ -15,18 +14,7 @@ function mockRuntime(
     enabled: true,
   };
   return {
-    getConfusionObservedStrings: () => Object.keys(observedMap),
     getEnabledHotwords: () => [hotword],
-    recallHotwordsByObserved(text: string) {
-      const id = observedMap[text];
-      if (!id) {
-        return [];
-      }
-      return [{ hotword, recallPath: 'confusion_evidence' as const }];
-    },
-    recallHotwordsByObservedLoose(text: string) {
-      return this.recallHotwordsByObserved(text);
-    },
     recallHotwordsByPinyin(syllables: string[]) {
       const key = syllables.join('|');
       const hit = pinyinHits[key];
@@ -47,30 +35,15 @@ function mockRuntime(
     lookupHotwordsByExactWord(word: string) {
       return word === hotword.word ? [hotword] : [];
     },
+    lookupAliasExactMatches: () => [],
+    lookupAliasPinyinMatches: () => [],
   } as unknown as LexiconRuntime;
 }
 
 describe('recallSegmentWindowCandidates (V5 diff)', () => {
-  it('returns no_diff_span when only rank0 matches segment', () => {
-    const segment = '我们要做后选生城';
-    const runtime = mockRuntime({ 后选生城: 'hw-1' });
-    const { candidates, diagnostics, noDiffSpan } = recallSegmentWindowCandidates(
-      segment,
-      [{ text: segment, rank: 0 }],
-      runtime
-    );
-    expect(candidates).toEqual([]);
-    expect(noDiffSpan).toBe(true);
-    expect(diagnostics.noDiffSpan).toBe(true);
-    expect(diagnostics.slidingWindowCount).toBe(0);
-  });
-
   it('builds diff-triggered windows when n-best differs', () => {
     const segment = '我们要做后选生城';
-    const runtime = mockRuntime(
-      { 后选生城: 'hw-1', 后选声城: 'hw-1' },
-      { 'hou|xuan|sheng|cheng': { id: 'hw-1', word: '候选生成' } }
-    );
+    const runtime = mockRuntime({ 'hou|xuan|sheng|cheng': { id: 'hw-1', word: '候选生成' } });
     const { candidates, diagnostics } = recallSegmentWindowCandidates(
       segment,
       [
@@ -86,7 +59,7 @@ describe('recallSegmentWindowCandidates (V5 diff)', () => {
   });
 
   it('returns empty diagnostics for empty segment', () => {
-    const runtime = mockRuntime({});
+    const runtime = mockRuntime();
     const { candidates, diagnostics } = recallSegmentWindowCandidates('', [], runtime);
     expect(candidates).toEqual([]);
     expect(diagnostics.windowCandidateCount).toBe(0);

@@ -16,7 +16,7 @@ describe('Recover CTC n-best rerank', () => {
     hotwordId: 'hw-1',
     phoneticScore: 0.92,
     priorScore: 1.2,
-    source: 'confusion_evidence',
+    source: 'lexicon_pinyin_topk',
   };
 
   const hypotheses = [

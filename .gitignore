@@ -270,6 +270,10 @@ hf_token.txt
 *.h5
 *.tflite
 models/
+!electron_node/electron-node/models/
+!electron_node/electron-node/models/**/
+!electron_node/electron-node/models/**/*.md
+electron_node/electron-node/models/**/*.gguf
 core/engine/models/
 node-inference/models/
 scheduler/models/
@@ -304,6 +308,15 @@ temp/
 test_output/
 coverage/
 .nyc_output/
+
+# Electron node：本地批测/导入产物（勿提交）
+electron_node/electron-node/tests/*-result.json
+electron_node/electron-node/tests/*.log
+electron_node/electron-node/tests/tmp-pilot-bundle/
+electron_node/electron-node/data/lexicon/**/*validation-report.json
+electron_node/electron-node/data/lexicon/**/*build-validation-report.json
+electron_node/docs/**/validation-report.json
+electron_node/services/**/benchmark_results_*.json
 
 # 构建输出
 build/

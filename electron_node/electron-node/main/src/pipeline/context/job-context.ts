@@ -29,6 +29,8 @@ export interface JobContext {
   asrResult?: ASRResult;
   /** 本 job 实际 ASR 服务 id（如 asr-sherpa-lm）。 */
   asrServiceId?: string;
+  /** ASR bad-segment 质量分（0–1），供聚合/语义修复/翻译门控。 */
+  qualityScore?: number;
   /** CTC n-best from ASR HTTP (observability). */
   asrNbest?: AsrNBestItem[];
   /** Recover main-chain ASR hypotheses (includes synthetic top1 when no n-best). */
@@ -72,7 +74,10 @@ export interface JobContext {
   sentenceRepairExtra?: SentenceRepairExtra;
   asrRepairApplied?: boolean;
   languageProbabilities?: Record<string, number>;
-  qualityScore?: number;
+  /** 本 job 使用的 lexicon profile（turn 内固定） */
+  activeProfilePrimary?: string;
+  profileVersion?: string;
+  domainBoostApplied?: number;
 
   // 聚合相关
   segmentForJobResult?: string;  // 本 job 的本段；语义修复只读此字段，产出 repairedText → text_asr / NMT
