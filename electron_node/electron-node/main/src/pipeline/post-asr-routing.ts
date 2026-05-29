@@ -73,8 +73,12 @@ export function isRecoverWriteLocked(ctx: JobContext): boolean {
   return ctx.asrRepairApplied === true;
 }
 
-/** 后处理步骤之后、语义修复之前：用当前 segment 作为 NMT 输入基线 */
+/** 后处理步骤之后、语义修复之前：用当前 segment 作为 NMT 输入基线（保留 FW detector 已写回的 repairedText） */
 export function syncRepairedTextBaseline(ctx: JobContext): void {
+  const existing = (ctx.repairedText ?? '').trim();
+  if (existing.length > 0) {
+    return;
+  }
   const text = (ctx.segmentForJobResult ?? '').trim();
   if (text.length > 0) {
     ctx.repairedText = text;

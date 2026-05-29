@@ -20,6 +20,8 @@ import { RoomStateStore } from '../lid/router-state';
 import { selectSrcLang } from '../lid/router';
 import { LidEngine } from '../lid/lid-engine';
 import { buildAsrHypotheses } from '../asr/build-asr-hypotheses';
+import { bindProfileSnapshotToContext } from '../session-runtime/turn-profile-binding';
+import { buildFwDetectorJobPayload } from '../fw-detector/fw-job-overrides';
 
 export interface JobResult {
   text_asr: string;
@@ -404,6 +406,9 @@ export class InferenceService {
       sessionId?: string;
       isManualCut?: boolean;
       lexiconV2IntentEnabled?: boolean;
+      enableKenLMGate?: boolean;
+      kenlmGateMode?: 'hard_gate' | 'weak_veto';
+      kenlmVetoThreshold?: number;
     }
   ): Promise<JobResult> {
     const tgtLang = options?.tgtLang ?? 'en';
@@ -442,6 +447,14 @@ export class InferenceService {
     if (options?.lexiconV2IntentEnabled === false) {
       (job as any).lexicon_v2_intent_enabled = false;
     }
+    const fwOverrides = buildFwDetectorJobPayload({
+      enableKenLMGate: options?.enableKenLMGate,
+      kenlmGateMode: options?.kenlmGateMode,
+      kenlmVetoThreshold: options?.kenlmVetoThreshold,
+    });
+    if (fwOverrides) {
+      (job as JobAssignMessage & { fw_detector?: typeof fwOverrides }).fw_detector = fwOverrides;
+    }
     if (useLid) {
       const candidates = options?.lidCandidates;
       if (!candidates || candidates.length !== 2) {
@@ -473,6 +486,11 @@ export class InferenceService {
       sessionId?: string;
       utteranceIndex?: number;
       isManualCut?: boolean;
+      fwEnabledDomains?: string[];
+      profilePrimaryDomain?: string;
+      enableKenLMGate?: boolean;
+      kenlmGateMode?: 'hard_gate' | 'weak_veto';
+      kenlmVetoThreshold?: number;
     }
   ): Promise<JobResult> {
     const useLexicon = options?.useLexicon === true;
@@ -499,7 +517,31 @@ export class InferenceService {
     (job as any).is_manual_cut = options?.isManualCut !== false;
 
     const ctx = initJobContext(job);
+    if (Array.isArray(options?.fwEnabledDomains) && options!.fwEnabledDomains.length > 0) {
+      ctx.fwDetectorEnabledDomainsOverride = options!.fwEnabledDomains;
+    }
+    if (typeof options?.enableKenLMGate === 'boolean') {
+      ctx.fwDetectorEnableKenLMGateOverride = options.enableKenLMGate;
+    }
+    if (options?.kenlmGateMode === 'hard_gate' || options?.kenlmGateMode === 'weak_veto') {
+      ctx.fwDetectorKenlmGateModeOverride = options.kenlmGateMode;
+    }
+    if (typeof options?.kenlmVetoThreshold === 'number') {
+      ctx.fwDetectorKenlmVetoThresholdOverride = options.kenlmVetoThreshold;
+    }
+    if (typeof options?.profilePrimaryDomain === 'string' && options.profilePrimaryDomain.trim()) {
+      bindProfileSnapshotToContext(ctx, {
+        primaryDomain: options.profilePrimaryDomain.trim(),
+        secondaryDomains: [],
+        boosts: {},
+        profileVersion: 'mock-profile-v1',
+        confidence: 1,
+        effectiveFromTurn: 0,
+      });
+    }
     ctx.asrText = asrText;
+    // FW detector 以 rawAsrText 作为不可变基线；mock pipeline 需显式补齐。
+    ctx.rawAsrText = asrText.trim();
     const decoded = buildAsrHypotheses(asrText.trim());
     ctx.asrHypotheses = decoded.hypotheses;
     ctx.nbestSynthetic = decoded.nbestSynthetic;

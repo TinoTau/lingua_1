@@ -9,7 +9,9 @@ from scipy import signal
 
 from config import CONTEXT_SAMPLE_RATE
 from audio_decoder import decode_audio
+from audio_preprocess import preprocess_pcm_f32
 from vad import detect_speech
+from vad_segment_filter import refine_vad_segments
 from context import get_context_audio
 from audio_validation import truncate_audio_if_needed
 
@@ -22,7 +24,7 @@ def decode_and_preprocess_audio(
     sample_rate: int,
     padding_ms: Optional[int],
     trace_id: str
-) -> Tuple[np.ndarray, int]:
+) -> Tuple[np.ndarray, int, dict]:
     """
     解码和预处理音频
 
@@ -74,7 +76,9 @@ def decode_and_preprocess_audio(
                 f"({padding_samples} samples), total_duration={len(audio)/sr:.3f}s"
             )
 
-    return audio, sr
+    audio, sr, pre_diag = preprocess_pcm_f32(audio, sr, sample_rate)
+
+    return audio, sr, pre_diag
 
 
 def prepare_audio_with_context(
@@ -130,6 +134,11 @@ def prepare_audio_with_context(
 
     try:
         vad_segments = detect_speech(audio_with_context)
+        vad_segments = refine_vad_segments(
+            vad_segments,
+            sample_rate,
+            audio_len=len(audio_with_context),
+        )
     except Exception as e:
         logger.warning(
             f"[{trace_id}] trace_id={trace_id} "

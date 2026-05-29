@@ -4,6 +4,7 @@ FastAPI 路由定义
 """
 import logging
 import os
+import time
 from fastapi import HTTPException
 from typing import Optional
 
@@ -161,9 +162,10 @@ async def process_utterance(req: UtteranceRequest) -> UtteranceResponse:
         # 1. 解码和预处理音频
         audio_format = req.audio_format or "pcm16"
         sample_rate = req.sample_rate or 16000
-        audio, sr = decode_and_preprocess_audio(
+        audio, sr, pre_diag = decode_and_preprocess_audio(
             req.audio, audio_format, sample_rate, req.padding_ms, trace_id
         )
+        input_audio_ms = int(len(audio) / sr * 1000) if sr > 0 else 0
         
         # 2. 确定语言（如果 src_lang == "auto"，则使用 language 或自动检测）
         asr_language = None
@@ -219,6 +221,7 @@ async def process_utterance(req: UtteranceRequest) -> UtteranceResponse:
         # 8. 使用 ASR Worker Manager 进行 ASR（进程隔离架构）
         manager = get_asr_worker_manager()
         
+        asr_started = time.time()
         full_text, detected_language, language_probabilities, segments_info, duration_sec = await perform_asr(
             processed_audio=processed_audio,
             sample_rate=sr,
@@ -236,6 +239,15 @@ async def process_utterance(req: UtteranceRequest) -> UtteranceResponse:
             log_prob_threshold=req.log_prob_threshold,
             no_speech_threshold=req.no_speech_threshold,
         )
+        asr_latency_ms = int((time.time() - asr_started) * 1000)
+        p0_diagnostics = {
+            **(pre_diag or {}),
+            "audio_segmentation": {
+                "fw_vad_segment_count": len(vad_segments),
+                "audio_ms": input_audio_ms,
+                "asr_latency_ms": asr_latency_ms,
+            },
+        }
         
         # 计算检测到的语言的概率
         language_probability = None
@@ -378,6 +390,7 @@ async def process_utterance(req: UtteranceRequest) -> UtteranceResponse:
                 language_probabilities=language_probabilities,
                 duration=info_duration,
                 vad_segments=vad_segments,
+                diagnostics=p0_diagnostics,
             )
             logger.info(f"[{trace_id}] Step 13: Response constructed successfully, returning deduplicated text (len={len(full_text_trimmed)})")
             return response

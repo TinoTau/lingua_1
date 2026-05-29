@@ -54,6 +54,9 @@ export function buildJobResult(job: JobAssignMessage, ctx: JobContext): JobResul
       lid: ctx.lidMeta || undefined,
       router: ctx.routerMeta || undefined,
       ...(ctx.asrServiceId ? { asr_service_id: ctx.asrServiceId } : {}),
+      ...(ctx.rawAsrText ? { raw_asr_text: ctx.rawAsrText } : {}),
+      ...(ctx.asrDiagnostics ? { asr_diagnostics: ctx.asrDiagnostics } : {}),
+      ...(ctx.fwDetectorResult ? { fw_detector: ctx.fwDetectorResult } : {}),
       ...(ctx.asrNbest && ctx.asrNbest.length > 0
         ? { asr_nbest: ctx.asrNbest, asr_nbest_count: ctx.asrNbest.length }
         : {}),

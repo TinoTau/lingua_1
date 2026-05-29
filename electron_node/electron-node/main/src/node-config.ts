@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 import * as path from 'path';
 import type { NodeConfig, ServicePreferences, MetricsConfig } from './node-config-types';
+import { isFwDetectorEngineEnabled } from './fw-detector/fw-mode';
 import { DEFAULT_CONFIG } from './node-config-defaults';
 import { getRecoverQualityConfig } from './recover-quality/quality-config';
 import {
@@ -104,7 +105,21 @@ export function isLexiconRecallFeatureEnabled(): boolean {
 }
 
 export function isLexiconRecallEnabled(job: { pipeline?: { use_lexicon?: boolean } }): boolean {
+  if (isFwDetectorEngineEnabled()) {
+    return false;
+  }
   return resolveJobUseLexicon(job) && isLexiconRecallFeatureEnabled();
+}
+
+export function isFwDetectorFeatureEnabled(): boolean {
+  if (getConfigLoadDiagnostics().runtimeFeatureDowngrade) {
+    return false;
+  }
+  const c = loadNodeConfig();
+  if (c.asr?.engine !== 'fw_detector_v1') {
+    return false;
+  }
+  return c.features?.fwDetector?.enabled === true;
 }
 
 /** 供 pipeline / 日志：说明 LEXICON_RECALL 被跳过的原因 */
@@ -193,15 +208,21 @@ function mergeFeatures(
 ): NodeConfig['features'] {
   const base = DEFAULT_CONFIG.features!;
   const p = parsed || {};
+  const fwDetector = { ...base.fwDetector, ...p.fwDetector };
+  const lexiconRecall = { ...base.lexiconRecall, ...p.lexiconRecall };
+  if (fwDetector.enabled === true && lexiconRecall.enabled === true) {
+    lexiconRecall.enabled = false;
+  }
   return {
     ...base,
     ...p,
     phoneticCorrection: { ...base.phoneticCorrection, ...p.phoneticCorrection },
     semanticRepair: { ...base.semanticRepair, ...p.semanticRepair },
     punctuationRestore: { ...base.punctuationRestore, ...p.punctuationRestore },
-    lexiconRecall: { ...base.lexiconRecall, ...p.lexiconRecall },
+    lexiconRecall,
     lexiconV2: { ...base.lexiconV2, ...p.lexiconV2, cpuWorker: { ...base.lexiconV2?.cpuWorker, ...p.lexiconV2?.cpuWorker } },
     sessionAffinity: { ...base.sessionAffinity, ...p.sessionAffinity },
+    fwDetector,
   };
 }
 
@@ -239,6 +260,10 @@ function mergeConfigFromParsed(parsed: Record<string, unknown>): NodeConfig {
         ...DEFAULT_CONFIG.metrics?.metrics,
         ...((parsed.metrics as NodeConfig['metrics'] | undefined)?.metrics || {}),
       },
+    },
+    asr: {
+      ...DEFAULT_CONFIG.asr,
+      ...(parsed.asr as NodeConfig['asr'] | undefined || {}),
     },
     features: mergeFeatures(parsed.features as NodeConfig['features']),
     gpuArbiter: (parsed.gpuArbiter as NodeConfig['gpuArbiter']) || DEFAULT_CONFIG.gpuArbiter,
@@ -344,6 +369,10 @@ export function saveNodeConfig(config: NodeConfig): void {
         ...DEFAULT_CONFIG.metrics?.metrics,
         ...(config.metrics?.metrics || {}),
       },
+    },
+    asr: {
+      ...DEFAULT_CONFIG.asr,
+      ...(config.asr || {}),
     },
     features: mergeFeatures(config.features),
     gpuArbiter: config.gpuArbiter || DEFAULT_CONFIG.gpuArbiter,

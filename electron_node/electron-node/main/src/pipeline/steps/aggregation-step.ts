@@ -9,14 +9,29 @@ import { ServicesBundle } from '../job-pipeline';
 import { AggregationStage } from '../../agent/postprocess/aggregation-stage';
 import { JobResult } from '../../inference/inference-service';
 import { completeAggregation } from '../complete-aggregation';
+import { isFwDetectorEngineEnabled } from '../../fw-detector/fw-mode';
 import logger from '../../logger';
+
+function postDetectorSegment(ctx: JobContext): string {
+  if (!isFwDetectorEngineEnabled()) {
+    return (ctx.asrText ?? '').trim();
+  }
+  return (
+    ctx.repairedText ??
+    ctx.segmentForJobResult ??
+    ctx.rawAsrText ??
+    ctx.asrText ??
+    ''
+  ).trim();
+}
 
 export async function runAggregationStep(
   job: JobAssignMessage,
   ctx: JobContext,
   services: ServicesBundle
 ): Promise<void> {
-  if (!ctx.asrText || ctx.asrText.trim().length === 0) {
+  const detectorSegment = postDetectorSegment(ctx);
+  if (!ctx.asrText?.trim() && !detectorSegment) {
     ctx.segmentForJobResult = '';
     ctx.repairedText = '';
     completeAggregation(job, ctx, {
@@ -28,7 +43,7 @@ export async function runAggregationStep(
   }
 
   if (!services.aggregatorManager) {
-    ctx.segmentForJobResult = ctx.asrText;
+    ctx.segmentForJobResult = detectorSegment || ctx.asrText || '';
     ctx.aggregationChanged = false;
     completeAggregation(job, ctx, {
       segmentReady: true,
@@ -41,8 +56,9 @@ export async function runAggregationStep(
   const isTurnFinalize = !!(job as any).is_manual_cut || (job as any).is_timeout_triggered;
 
   if (turnId && !isTurnFinalize) {
-    services.aggregatorManager.appendTurnSegment(job.session_id, turnId, ctx.asrText || '');
-    ctx.segmentForJobResult = ctx.asrText || '';
+    const turnSegment = detectorSegment || ctx.asrText || '';
+    services.aggregatorManager.appendTurnSegment(job.session_id, turnId, turnSegment);
+    ctx.segmentForJobResult = turnSegment;
     ctx.lastCommittedText = null;
     completeAggregation(job, ctx, {
       segmentReady: true,
@@ -57,7 +73,7 @@ export async function runAggregationStep(
   }
 
   const tempResult: JobResult = {
-    text_asr: ctx.asrText || '',
+    text_asr: detectorSegment || ctx.asrText || '',
     text_translated: '',
     tts_audio: '',
     extra: {
@@ -109,9 +125,12 @@ export async function runAggregationStep(
 
   if (turnId && isTurnFinalize) {
     const accumulated = services.aggregatorManager.getAndClearTurnAccumulator(job.session_id, turnId);
+    const segmentPart = (
+      aggregationResult.segmentForJobResult || detectorSegment || ctx.asrText || ''
+    ).trim();
     const fullTurnText = accumulated
-      ? `${accumulated} ${(aggregationResult.segmentForJobResult || ctx.asrText || '').trim()}`.trim()
-      : (aggregationResult.segmentForJobResult || ctx.asrText || '').trim();
+      ? `${accumulated} ${segmentPart}`.trim()
+      : segmentPart;
     ctx.segmentForJobResult = fullTurnText;
     completeAggregation(job, ctx, {
       segmentReady: fullTurnText.length > 0,

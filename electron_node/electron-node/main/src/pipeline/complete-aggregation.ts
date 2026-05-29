@@ -4,6 +4,7 @@
 
 import { JobAssignMessage } from '@shared/protocols/messages';
 import { syncAsrHypothesesToSegment } from '../asr/sync-asr-hypotheses-to-segment';
+import { isFwDetectorEngineEnabled } from '../fw-detector/fw-mode';
 import { JobContext } from './context/job-context';
 import {
   applyPostAggregationRouting,
@@ -16,5 +17,7 @@ export function completeAggregation(
   input: PostAggregationRoutingInput
 ): void {
   applyPostAggregationRouting(job, ctx, input);
-  syncAsrHypothesesToSegment(ctx, job.job_id);
+  if (!isFwDetectorEngineEnabled()) {
+    syncAsrHypothesesToSegment(ctx, job.job_id);
+  }
 }

@@ -12,12 +12,15 @@ import {
     isPunctuationRestoreEnabled,
     isSemanticRepairEnabled,
 } from '../node-config';
+import { applyFwDetectorPipelineMode } from '../fw-detector/pipeline-mode-fw';
+import { isFwDetectorPipelineActive } from '../fw-detector/fw-mode';
 
 /**
  * Pipeline 步骤类型
  */
 export type PipelineStepType =
     | 'ASR'
+    | 'FW_SPAN_DETECTOR'
     | 'AGGREGATION'
     | 'LEXICON_RECALL'
     | 'SENTENCE_REPAIR'
@@ -149,22 +152,22 @@ export function inferPipelineMode(job: JobAssignMessage): PipelineMode {
 
     // 个人特色语音转译：ASR + NMT + TTS + TONE（启用音色克隆）
     if (use_asr && use_nmt && use_tts && use_tone) {
-        return PIPELINE_MODES.PERSONAL_VOICE_TRANSLATION;
+        return finalizePipelineMode(PIPELINE_MODES.PERSONAL_VOICE_TRANSLATION);
     }
 
     // 通用语音转译：ASR + NMT + TTS
     if (use_asr && use_nmt && use_tts) {
-        return PIPELINE_MODES.GENERAL_VOICE_TRANSLATION;
+        return finalizePipelineMode(PIPELINE_MODES.GENERAL_VOICE_TRANSLATION);
     }
 
     // 字幕模式：ASR + NMT（无 TTS）
     if (use_asr && use_nmt && !use_tts) {
-        return PIPELINE_MODES.SUBTITLE_MODE;
+        return finalizePipelineMode(PIPELINE_MODES.SUBTITLE_MODE);
     }
 
     // 只执行 ASR：只有 ASR（无 NMT，无 TTS）
     if (use_asr && !use_nmt && !use_tts) {
-        return PIPELINE_MODES.ASR_ONLY;
+        return finalizePipelineMode(PIPELINE_MODES.ASR_ONLY);
     }
 
     // 文本翻译模式：只有 NMT（不需要 ASR）
@@ -174,7 +177,11 @@ export function inferPipelineMode(job: JobAssignMessage): PipelineMode {
 
     // 其他组合：动态构建模式
     // 例如：ASR + TTS（无 NMT）、NMT + TTS（无 ASR）等
-    return buildDynamicMode(job);
+    return applyFwDetectorPipelineMode(buildDynamicMode(job));
+}
+
+function finalizePipelineMode(mode: PipelineMode): PipelineMode {
+    return applyFwDetectorPipelineMode(mode);
 }
 
 /**
@@ -245,6 +252,8 @@ export function shouldExecuteStep(
         case 'AGGREGATION':
         case 'DEDUP':
             return use_asr !== false;
+        case 'FW_SPAN_DETECTOR':
+            return use_asr !== false && isFwDetectorPipelineActive(job, ctx ?? {});
         case 'LEXICON_RECALL':
         case 'SENTENCE_REPAIR':
             return (

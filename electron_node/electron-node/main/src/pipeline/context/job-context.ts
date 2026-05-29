@@ -17,6 +17,7 @@ import type { RestoreMetrics } from '../../asr-repair/restore-metrics';
 import type { SentenceRepairExtra } from '../../asr-repair/sentence-rerank/sentence-repair-observability';
 import type { RecoverLifecycle } from '../recover-contract-types';
 import type { SentenceCandidateTraceItem, V5Metrics } from '../v5-metrics';
+import type { FwDetectorResult, KenlmGateMode } from '../../fw-detector/types';
 
 export interface JobContext {
   // 音频相关
@@ -24,11 +25,15 @@ export interface JobContext {
   audioFormat?: 'pcm16' | 'opus';
 
   // ASR 相关
+  /** ASR 首段 freeze 原文（FW 写回基准，全程不可变） */
+  rawAsrText?: string;
   asrText?: string;
   asrSegments?: any[];
   asrResult?: ASRResult;
   /** 本 job 实际 ASR 服务 id（如 asr-sherpa-lm）。 */
   asrServiceId?: string;
+  /** P0：ASR / VAD / 音频前处理 diagnostics（含 node + FW 双层切分） */
+  asrDiagnostics?: Record<string, unknown>;
   /** ASR bad-segment 质量分（0–1），供聚合/语义修复/翻译门控。 */
   qualityScore?: number;
   /** CTC n-best from ASR HTTP (observability). */
@@ -73,11 +78,18 @@ export interface JobContext {
   /** 句级修复可观测性（result extra.sentence_repair）。 */
   sentenceRepairExtra?: SentenceRepairExtra;
   asrRepairApplied?: boolean;
+  fwDetectorResult?: FwDetectorResult;
   languageProbabilities?: Record<string, number>;
   /** 本 job 使用的 lexicon profile（turn 内固定） */
   activeProfilePrimary?: string;
   profileVersion?: string;
   domainBoostApplied?: number;
+  /** FW detector override: restrict enabledDomains for this job */
+  fwDetectorEnabledDomainsOverride?: string[];
+  /** FW detector override: disable/enable KenLM gate for this job */
+  fwDetectorEnableKenLMGateOverride?: boolean;
+  fwDetectorKenlmGateModeOverride?: KenlmGateMode;
+  fwDetectorKenlmVetoThresholdOverride?: number;
 
   // 聚合相关
   segmentForJobResult?: string;  // 本 job 的本段；语义修复只读此字段，产出 repairedText → text_asr / NMT

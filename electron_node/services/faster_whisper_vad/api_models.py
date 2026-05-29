@@ -33,7 +33,7 @@ class UtteranceRequest(BaseModel):
     beam_size: int = BEAM_SIZE  # 从配置文件读取，默认 5（与备份代码一致）
     condition_on_previous_text: bool = False  # 禁用条件生成，避免重复识别（当上下文文本和当前音频内容相同时，会导致重复输出）
     # 新增：提高准确度的参数
-    best_of: Optional[int] = 5  # 候选数量（用于非beam search模式，当前使用beam search，此参数不影响）
+    best_of: Optional[int] = None  # P0：禁用 secondary decode / n-best
     temperature: Optional[float] = TEMPERATURE  # 从配置文件读取，默认 0.0（更确定，减少随机性，提高准确度）
     patience: Optional[float] = PATIENCE  # 从配置文件读取，默认 1.0（Beam search耐心值）
     compression_ratio_threshold: Optional[float] = COMPRESSION_RATIO_THRESHOLD  # 从配置文件读取，默认 2.4（压缩比阈值）
@@ -64,6 +64,7 @@ class UtteranceResponse(BaseModel):
     language_probabilities: Optional[Dict[str, float]] = None  # 所有语言的概率信息（字典：语言代码 -> 概率）
     duration: float  # Audio duration in seconds
     vad_segments: List[Tuple[int, int]]  # VAD 检测到的语音段（样本索引）
+    diagnostics: Optional[Dict] = None  # P0：audio_format / audio_level / silence_trim / audio_segmentation
 
 
 class ResetRequest(BaseModel):

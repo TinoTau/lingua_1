@@ -1,5 +1,8 @@
 # Recover：ASR 后修复主链（V5）
 
+> **默认主链：** `asr.engine = fw_detector_v1` 时使用 [FW_DETECTOR.md](./FW_DETECTOR.md)，**不**走本文 Recover 步骤（`LEXICON_RECALL` / `SENTENCE_REPAIR` 已从 FW pipeline 移除）。  
+> 本文适用于 CTC + Recover V5 路径或显式启用 `features.lexiconRecall.enabled` 的场景。
+
 契约：`v5-scored-lexicon-topk`（`pipeline/recover-contract.ts`）。历史 `historical-restore-v1` 仅配置显式指定时生效。
 
 ## 1. 数据流
@@ -80,7 +83,7 @@ ASR + n-best
 | 扩展 | `asr-repair/sentence-expansion/` |
 | 重排 | `asr-repair/sentence-rerank/` |
 | 安全门控 | `recover-safety-gates.ts` |
-| 批测契约 | `tests/lib/recover-contract-assess.js` |
+| 契约单测 | `npm run test:contract`（`recover-contract.test.ts`） |
 
 ## 7. 开关与环境
 
@@ -90,6 +93,7 @@ ASR + n-best
 
 ## 相关
 
+- [FW_DETECTOR.md](./FW_DETECTOR.md) — FW span recall（`local-span-recall.ts`）
 - [LEXICON.md](./LEXICON.md)
 - [AGGREGATOR.md](./AGGREGATOR.md)
 - [ARCHITECTURE.md](./ARCHITECTURE.md)

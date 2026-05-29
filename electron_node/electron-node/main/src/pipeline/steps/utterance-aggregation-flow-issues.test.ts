@@ -19,6 +19,32 @@ import { runSemanticRepairStep } from './semantic-repair-step';
 import { TaskRouterSemanticRepairHandler } from '../../task-router/task-router-semantic-repair';
 import { SemanticRepairStageEN } from '../../agent/postprocess/semantic-repair-stage-en';
 
+jest.mock('../../fw-detector/fw-mode', () => ({
+  isFwDetectorEngineEnabled: jest.fn(() => false),
+  isFwDetectorPipelineActive: jest.fn(() => false),
+  getFwDetectorFeatureEnabled: jest.fn(() => false),
+  getAsrEngine: jest.fn(() => undefined),
+}));
+
+jest.mock('../../node-config', () => {
+  const actual = jest.requireActual('../../node-config') as typeof import('../../node-config');
+  return {
+    ...actual,
+    isSemanticRepairEnabled: jest.fn(() => true),
+    isSemanticRepairFeatureEnabled: jest.fn(() => true),
+  };
+});
+
+jest.mock('../enhancement-gate', () => {
+  const actual = jest.requireActual('../enhancement-gate') as typeof import('../enhancement-gate');
+  return {
+    ...actual,
+    checkEnhancementService: jest.fn((_serviceId: string, enabled: boolean) => ({
+      shouldRun: enabled,
+    })),
+  };
+});
+
 describe('Utterance聚合流程潜在问题验证', () => {
   let mockAggregatorManager: any;
   let mockTaskRouter: any;
@@ -93,12 +119,14 @@ describe('Utterance聚合流程潜在问题验证', () => {
       src_lang: 'zh',
       lang_a: 'zh',
       lang_b: 'en',
+      pipeline: { use_semantic: true },
     } as JobAssignMessage;
 
     // 创建测试context
     ctx = initJobContext(job);
     ctx.asrText = 'test asr text';
     ctx.segmentForJobResult = 'test aggregated text';
+    ctx.shouldRunSemanticRepairHttp = true;
   });
 
   describe('问题1: getLastCommittedText() 是否重复调用', () => {

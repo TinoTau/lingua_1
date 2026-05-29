@@ -41,6 +41,7 @@ type HotwordRow = {
   updated_at?: number | null;
   tags: string | null;
   enabled: number;
+  repair_target?: number | null;
 };
 
 function parsePinyinField(raw: string | null): string[] {
@@ -96,6 +97,7 @@ function mapHotwordRow(row: HotwordRow): HotwordEntry {
     updatedAt: row.updated_at ?? undefined,
     enabled: row.enabled === 1,
     tags: parseTagsField(row.tags),
+    repairTarget: row.repair_target === 1,
   };
 }
 
@@ -171,6 +173,7 @@ export class LexiconRuntime {
         colNames.has('aliases') ? 'aliases' : "NULL AS aliases",
         colNames.has('source') ? 'source' : 'NULL AS source',
         colNames.has('updated_at') ? 'updated_at' : 'NULL AS updated_at',
+        colNames.has('repair_target') ? 'repair_target' : '0 AS repair_target',
       ].join(', ');
       const domainCols = colNames.has('domains')
         ? 'domain, domains'

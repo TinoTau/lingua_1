@@ -10,5 +10,10 @@
     "cwd": "."
   },
   "version": "2.0.0",
-  "description": "ASR service using Faster Whisper with VAD (Voice Activity Detection)"
+  "description": "ASR service using Faster Whisper with VAD (Voice Activity Detection)",
+  "env": {
+    "ASR_MODEL": "medium",
+    "ASR_BEAM_SIZE": "1",
+    "ASR_COMPUTE_TYPE": "int8_float16"
+  }
 }

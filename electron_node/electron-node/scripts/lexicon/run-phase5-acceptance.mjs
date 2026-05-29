@@ -109,7 +109,12 @@ async function main() {
   ]);
 
   if (runE2e) {
-    run('dialog200', process.execPath, [path.join(electronNodeRoot, 'tests/run-dialog-200-batch.js')]);
+    run('dialog200', process.execPath, [
+      path.join(electronNodeRoot, 'tests/run-fw-detector-dialog-200-batch.js'),
+      path.join(repoRoot, 'test wav/dialog_200'),
+      '--limit',
+      '50',
+    ]);
     run('benchmark-post-e2e', process.execPath, [
       path.join(__dirname, 'run-phase5-benchmark-suite.mjs'),
       '--ladder',

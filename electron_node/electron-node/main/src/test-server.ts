@@ -2,7 +2,7 @@
  * 本地测试 HTTP 服务（独立模块，可整体移除）
  *
  * 功能：在本机 5020 端口监听 POST /run-pipeline-with-audio，请求体 { wavPath, srcLang?, tgtLang? }，
- * 调用 managers.inferenceService.runPipelineWithAudio 后返回结果，供 tests/run-dialog-200-batch.js 等批测使用。
+ * 调用 managers.inferenceService.runPipelineWithAudio 后返回结果，供 tests/run-fw-detector-*-batch.js 等批测使用。
  *
  * P3 runtime integration 验收仅使用 /run-pipeline-with-audio（真实 WAV + SEND pipeline）。
  */
@@ -86,6 +86,19 @@ export function startTestServer(managers: ServiceManagers): void {
           const parsed = JSON.parse(body || '{}');
           const asrText = typeof parsed.asrText === 'string' ? parsed.asrText : '';
           const srcLang = typeof parsed.srcLang === 'string' ? parsed.srcLang : 'zh';
+          const fwEnabledDomains = Array.isArray(parsed.enabledDomains)
+            ? parsed.enabledDomains.filter((d: unknown) => typeof d === 'string' && d.length > 0)
+            : undefined;
+          const profilePrimaryDomain =
+            typeof parsed.profilePrimaryDomain === 'string' ? parsed.profilePrimaryDomain : undefined;
+          const enableKenLMGate =
+            typeof parsed.enableKenLMGate === 'boolean' ? parsed.enableKenLMGate : undefined;
+          const kenlmGateMode =
+            parsed.kenlmGateMode === 'hard_gate' || parsed.kenlmGateMode === 'weak_veto'
+              ? parsed.kenlmGateMode
+              : undefined;
+          const kenlmVetoThreshold =
+            typeof parsed.kenlmVetoThreshold === 'number' ? parsed.kenlmVetoThreshold : undefined;
           const sessionId =
             typeof parsed.session_id === 'string' && parsed.session_id.trim()
               ? parsed.session_id.trim()
@@ -105,6 +118,11 @@ export function startTestServer(managers: ServiceManagers): void {
             sessionId,
             utteranceIndex,
             isManualCut,
+            fwEnabledDomains,
+            profilePrimaryDomain,
+            enableKenLMGate,
+            kenlmGateMode,
+            kenlmVetoThreshold,
           });
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(
@@ -156,8 +174,21 @@ export function startTestServer(managers: ServiceManagers): void {
         const parsed = JSON.parse(body || '{}');
         const pipelineStartMs = Date.now();
 
-        const { wavPath, srcLang, tgtLang, useLid, lidCandidates, room_id, use_lexicon, session_id, is_manual_cut, lexicon_v2_intent_enabled } =
-          parsed;
+        const {
+          wavPath,
+          srcLang,
+          tgtLang,
+          useLid,
+          lidCandidates,
+          room_id,
+          use_lexicon,
+          session_id,
+          is_manual_cut,
+          lexicon_v2_intent_enabled,
+          enableKenLMGate,
+          kenlmGateMode,
+          kenlmVetoThreshold,
+        } = parsed;
         if (!wavPath || typeof wavPath !== 'string') {
           safeSend(400, JSON.stringify({ error: 'Missing or invalid wavPath' }));
           return;
@@ -183,6 +214,13 @@ export function startTestServer(managers: ServiceManagers): void {
           sessionId,
           isManualCut: is_manual_cut !== false,
           lexiconV2IntentEnabled: lexicon_v2_intent_enabled !== false,
+          enableKenLMGate: typeof enableKenLMGate === 'boolean' ? enableKenLMGate : undefined,
+          kenlmGateMode:
+            kenlmGateMode === 'hard_gate' || kenlmGateMode === 'weak_veto'
+              ? kenlmGateMode
+              : undefined,
+          kenlmVetoThreshold:
+            typeof kenlmVetoThreshold === 'number' ? kenlmVetoThreshold : undefined,
         });
         const pipelineMs = Date.now() - pipelineStartMs;
         clearTimeout(timeoutId);

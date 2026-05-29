@@ -1,7 +1,10 @@
 /**
- * Recover V2：中文族 ASR 强制 CTC，避免 TaskRouter round-robin 落到 FW（top1-only）。
+ * ASR 服务偏好：FW-only 模式固定 faster-whisper-vad；否则 Recover CTC 路由。
  */
 
+import { isFwDetectorEngineEnabled } from '../fw-detector/fw-mode';
+
+const FW_SERVICE = 'faster-whisper-vad';
 const CTC_ZH_SERVICE = 'asr-sherpa-lm';
 const CTC_EN_SERVICE = 'asr-sherpa-en';
 
@@ -15,6 +18,10 @@ function langBase(lang: string): string {
 export function resolvePreferredAsrServiceId(
   effectiveSrcLang: string | undefined
 ): string | undefined {
+  if (isFwDetectorEngineEnabled()) {
+    return FW_SERVICE;
+  }
+
   if (!effectiveSrcLang?.trim()) {
     return CTC_ZH_SERVICE;
   }

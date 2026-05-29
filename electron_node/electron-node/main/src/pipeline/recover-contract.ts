@@ -8,6 +8,8 @@ import {
   getLexiconRecallSkipReason,
   isLexiconRecallEnabled,
   isLexiconRecallLanguage,
+  isFwDetectorFeatureEnabled,
+  resolveJobUseLexicon,
 } from '../node-config';
 import { ensureLexiconRuntimeLoaded } from '../lexicon/lexicon-runtime-holder';
 import { markLexiconDisabled } from '../lexicon/lexicon-runtime';
@@ -98,6 +100,25 @@ export function resolveLexiconRuntimeContract(
 
   const skipReason = getLexiconRecallSkipReason(job, ctx);
   if (skipReason) {
+    /**
+     * FW Detector 需要 lexicon runtime 作为 span recall 数据源，但它不等价于 LEXICON_RECALL(step)。
+     * 因此在 FW 模式下，即使 lexiconRecall feature 被关闭，也允许加载 sqlite runtime 并报告真实状态。
+     *
+     * 注意：这里不改变 recover lifecycle（仍保持 LEXICON_RECALL step 被跳过）。
+     */
+    const fwWantsRuntime =
+      skipReason === 'feature_lexicon_recall_disabled' &&
+      isFwDetectorFeatureEnabled() &&
+      resolveJobUseLexicon(job);
+    if (fwWantsRuntime) {
+      const runtimeState = ensureLexiconRuntimeLoaded();
+      return {
+        lexicon_runtime_status: runtimeState.status as LexiconRuntimeStatus,
+        lexicon_manifest_version: runtimeState.manifestVersion ?? null,
+        lexicon_disabled_reason: skipReason,
+        ...(runtimeState.errorMessage ? { lexicon_runtime_error: runtimeState.errorMessage } : {}),
+      };
+    }
     const disabled = markLexiconDisabled();
     return {
       lexicon_runtime_status: disabled.status,

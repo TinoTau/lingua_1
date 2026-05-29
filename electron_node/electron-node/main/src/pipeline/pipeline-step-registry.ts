@@ -9,6 +9,7 @@ import { ServicesBundle } from './job-pipeline';
 import { PipelineStepType } from './pipeline-mode-config';
 export type { PipelineStepType };
 import { runAsrStep } from './steps/asr-step';
+import { runFwDetectorStep } from './steps/fw-detector-step';
 import { runAggregationStep } from './steps/aggregation-step';
 import { runLexiconRecallStep } from './steps/lexicon-recall-step';
 import { runSentenceRepairStep } from './steps/sentence-repair-step';
@@ -39,6 +40,10 @@ export type StepExecutor = (
 export const STEP_REGISTRY: Record<PipelineStepType, StepExecutor> = {
   ASR: async (job, ctx, services, options) => {
     await runAsrStep(job, ctx, services, options);
+  },
+
+  FW_SPAN_DETECTOR: async (job, ctx) => {
+    await runFwDetectorStep(job, ctx);
   },
 
   AGGREGATION: async (job, ctx, services) => {

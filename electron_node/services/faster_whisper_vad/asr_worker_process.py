@@ -17,6 +17,8 @@ from config import (
     ASR_DEVICE,
     ASR_COMPUTE_TYPE,
     WHISPER_CACHE_DIR,
+    BEAM_SIZE,
+    TEMPERATURE,
 )
 from faster_whisper import WhisperModel
 
@@ -151,7 +153,7 @@ def asr_worker_process(task_queue: mp.Queue, result_queue: mp.Queue):
                 f"[{trace_id}] transcribe() 参数: "
                 f"language={task.get('language')}, "
                 f"task={task.get('task', 'transcribe')}, "
-                f"beam_size={task.get('beam_size', 5)}, "  # 默认值 5，与备份代码一致
+                f"beam_size={task.get('beam_size', BEAM_SIZE)}, "
                 f"vad_filter=False, "
                 f"has_initial_prompt={initial_prompt is not None and len(initial_prompt) > 0}, "
                 f"initial_prompt_length={len(initial_prompt) if initial_prompt else 0}, "
@@ -178,7 +180,8 @@ def asr_worker_process(task_queue: mp.Queue, result_queue: mp.Queue):
                 transcribe_kwargs = {
                     "language": task.get("language"),
                     "task": task.get("task", "transcribe"),
-                    "beam_size": task.get("beam_size", 5),  # 默认值 5，与备份代码一致
+                    "beam_size": task.get("beam_size", BEAM_SIZE),
+                    "temperature": task.get("temperature", TEMPERATURE),
                     "vad_filter": False,  # 已经用 Silero VAD 处理过了
                     "initial_prompt": initial_prompt,
                     "condition_on_previous_text": condition_on_previous_text,

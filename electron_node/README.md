@@ -4,8 +4,9 @@ Electron 节点客户端是 Lingua 系统的算力提供方，核心由 **Electr
 
 ## 从这里开始
 
-- **本模块文档**：`docs/README.md`（含架构、流程、集成测试说明）
-- **架构与设计**：`docs/architecture/`（节点处理流程、服务发现、语义修复、聚合等）
+- **模块文档索引**：`docs/README.md`
+- **节点应用（FW / Recover / Lexicon）**：`electron-node/docs/README.md`
+- **FW Detector 默认主链**：`electron-node/docs/FW_DETECTOR.md`
 - **Electron 应用工程**：`electron-node/README.md`
 
 > 说明：本 README 只做导航与总览；每个具体 service 的说明请直接看 `services/` 下对应目录（本文不展开）。

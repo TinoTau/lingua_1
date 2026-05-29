@@ -18,25 +18,48 @@ logger = logging.getLogger(__name__)
 # 模型路径：支持 HuggingFace 模型标识符或本地路径
 # 使用 base 模型：更轻量，推理更快，降低 GPU 占用；识别准确度略低于 large-v3
 # 注意：Faster Whisper 会自动下载并转换为 CTranslate2 格式
-_default_model_path = "Systran/faster-whisper-base"
-_local_model_path = os.path.join(os.path.dirname(__file__), "models", "asr", "whisper-base-ct2")
+_models_root = os.path.join(os.path.dirname(__file__), "models")
+_local_large_v3 = os.path.join(_models_root, "faster-whisper-large-v3")
+_local_medium = os.path.join(_models_root, "faster-whisper-medium")
+_default_hf_id = "Systran/faster-whisper-large-v3"
+_ASR_MODEL_PRESETS: dict[str, str] = {
+    "large-v3": _local_large_v3,
+    "medium": _local_medium,
+}
 
-# 模型路径：优先环境变量，其次本地缓存目录（用 HF 标识符 + 缓存路径），否则用 HuggingFace 标识符
-# 本地 whisper-base-ct2 使用 HuggingFace 缓存结构，需用 Systran/faster-whisper-base + WHISPER_CACHE_DIR 加载
+
+def _is_valid_local_model_dir(path: str) -> bool:
+    return os.path.isdir(path) and os.path.isfile(os.path.join(path, "model.bin"))
+
+
+def _resolve_local_model_dir() -> str | None:
+    preset = (os.getenv("ASR_MODEL") or "medium").strip().lower()
+    if preset in _ASR_MODEL_PRESETS and _is_valid_local_model_dir(_ASR_MODEL_PRESETS[preset]):
+        return _ASR_MODEL_PRESETS[preset]
+    if _is_valid_local_model_dir(_local_large_v3):
+        return _local_large_v3
+    if _is_valid_local_model_dir(_local_medium):
+        return _local_medium
+    return None
+
+
+# 模型路径：ASR_MODEL_PATH > ASR_MODEL(large-v3|medium) > 默认 large-v3 本地目录 > HuggingFace
 if os.getenv("ASR_MODEL_PATH"):
     ASR_MODEL_PATH = os.getenv("ASR_MODEL_PATH")
-    logger.info(f"Using ASR_MODEL_PATH from environment: {ASR_MODEL_PATH}")
-    _default_cache_dir = os.path.join(os.path.dirname(__file__), "models", "asr")
-    WHISPER_CACHE_DIR = os.getenv("WHISPER_CACHE_DIR", _default_cache_dir)
-elif os.path.exists(_local_model_path) and os.path.isdir(_local_model_path):
-    ASR_MODEL_PATH = _default_model_path  # Systran/faster-whisper-base
-    WHISPER_CACHE_DIR = os.path.abspath(_local_model_path)
-    logger.info(f"Using local CTranslate2 model cache: {WHISPER_CACHE_DIR}")
+    logger.info("Using ASR_MODEL_PATH from environment: %s", ASR_MODEL_PATH)
+    WHISPER_CACHE_DIR = os.getenv("WHISPER_CACHE_DIR", _models_root)
+elif (local_dir := _resolve_local_model_dir()):
+    ASR_MODEL_PATH = local_dir
+    WHISPER_CACHE_DIR = _models_root
+    logger.info(
+        "Using local CTranslate2 model (ASR_MODEL=%s): %s",
+        os.getenv("ASR_MODEL", "medium"),
+        ASR_MODEL_PATH,
+    )
 else:
-    ASR_MODEL_PATH = _default_model_path
-    logger.info(f"Using HuggingFace model identifier (will download if needed): {ASR_MODEL_PATH}")
-    _default_cache_dir = os.path.join(os.path.dirname(__file__), "models", "asr")
-    WHISPER_CACHE_DIR = os.getenv("WHISPER_CACHE_DIR", _default_cache_dir)
+    ASR_MODEL_PATH = _default_hf_id
+    WHISPER_CACHE_DIR = os.getenv("WHISPER_CACHE_DIR", _models_root)
+    logger.info("Using HuggingFace model identifier (will download if needed): %s", ASR_MODEL_PATH)
 # 注意：如果将来需要从 HuggingFace 下载模型，可以通过环境变量 HF_TOKEN 设置 token
 # 当前模型已下载到本地，无需 token
 
@@ -105,7 +128,9 @@ if os.getenv("ASR_COMPUTE_TYPE"):
 else:
     # CPU 模式下强制使用 float32（不支持 float16）
     # CUDA 模式下优先使用 float16，但如果 GPU 不支持会自动回退到 float32
-    ASR_COMPUTE_TYPE = "float16" if (ASR_DEVICE == "cuda" and _cuda_available) else "float32"
+    ASR_COMPUTE_TYPE = (
+        "int8_float16" if (ASR_DEVICE == "cuda" and _cuda_available) else "float32"
+    )
 
 # ---------------------
 # Silero VAD Configuration
@@ -114,7 +139,9 @@ VAD_MODEL_PATH = os.getenv("VAD_MODEL_PATH", "models/vad/silero/silero_vad_offic
 VAD_SAMPLE_RATE = 16000
 VAD_FRAME_SIZE = 512  # 32ms @ 16kHz
 VAD_SILENCE_THRESHOLD = 0.2
-VAD_MIN_SILENCE_DURATION_MS = 300
+VAD_MIN_SILENCE_DURATION_MS = int(os.getenv("VAD_MIN_SILENCE_DURATION_MS", "300"))
+VAD_MIN_SPEECH_DURATION_MS = int(os.getenv("VAD_MIN_SPEECH_DURATION_MS", "250"))
+VAD_SPEECH_PAD_MS = int(os.getenv("VAD_SPEECH_PAD_MS", "120"))
 VAD_BASE_THRESHOLD_MIN_MS = 200
 VAD_BASE_THRESHOLD_MAX_MS = 600
 VAD_FINAL_THRESHOLD_MIN_MS = 200
@@ -150,7 +177,7 @@ CONTEXT_MAX_SAMPLES = int(CONTEXT_DURATION_SEC * CONTEXT_SAMPLE_RATE)
 # ---------------------
 # ASR 参数配置：支持从环境变量读取
 # beam_size：Whisper beam 大会明显拖慢；不依赖 beam 时可设为 1～3 提速，默认 5 偏重准确度
-BEAM_SIZE = int(os.getenv("ASR_BEAM_SIZE", "5"))
+BEAM_SIZE = int(os.getenv("ASR_BEAM_SIZE", "1"))
 TEMPERATURE = float(os.getenv("ASR_TEMPERATURE", "0.0"))  # 采样温度，默认 0.0（更确定，减少随机性）
 PATIENCE = float(os.getenv("ASR_PATIENCE", "1.0"))  # Beam search 耐心值，默认 1.0
 COMPRESSION_RATIO_THRESHOLD = float(os.getenv("ASR_COMPRESSION_RATIO_THRESHOLD", "2.4"))  # 压缩比阈值，默认 2.4

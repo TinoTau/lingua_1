@@ -53,6 +53,16 @@
 
 契约版本：`v5-scored-lexicon-topk`（`recover-contract.ts` → `resolveRecoverContractVersion()`）。
 
+## 4b. FW Detector span recall（非 Recover 窗）
+
+当 `asr.engine = fw_detector_v1` 时，**不走** §3 的 n-best diff 窗；Candidate 层直接调用：
+
+- `lexicon/local-span-recall.ts` → `recallSpanTopK(spanText, topK, minPrior, enabledDomains)`
+- 门限：`features.fwDetector.recallMinPhoneticScore`（默认 0.5）
+- pick 过滤：`candidateRequireRepairTarget`（仅 `repair_target` 候选）
+
+详见 [FW_DETECTOR.md](./FW_DETECTOR.md)。
+
 ## 5. 词库构建与导入
 
 | 命令 | 作用 |
@@ -68,7 +78,7 @@
 
 Deploy seed：`data/lexicon/v3/lexicon_v3_5k_deploy.jsonl`。
 
-资产包（jsonl/benchmark）：`../../docs/lexicon-assets/`（仅数据，无历史报告）。
+资产包（jsonl/benchmark）：`../../docs/lexicon-assets/` — 说明见 [lexicon-assets/docs/README.md](../../lexicon-assets/docs/README.md)。
 
 ### Seed 约束（strict）
 
@@ -101,14 +111,15 @@ Deploy seed：`data/lexicon/v3/lexicon_v3_5k_deploy.jsonl`。
 
 ## 8. 批测入口
 
+FW 主链批测见 [FW_DETECTOR.md](./FW_DETECTOR.md)。需节点 test server `:5020` 与 `faster-whisper-vad :6007`：
+
 ```powershell
 cd electron_node/electron-node
 $env:PROJECT_ROOT = "D:\Programs\github\lingua_1"
 npm run build:main
-npx @electron/rebuild -f -w better-sqlite3
 npm start
 # 另开终端：
-node tests/run-dialog-200-batch.js "D:\Programs\github\lingua_1\test wav\dialog_200"
+node tests/run-fw-detector-dialog-200-batch.js "D:\Programs\github\lingua_1\test wav\dialog_200" --limit 50
 ```
 
 ## 相关

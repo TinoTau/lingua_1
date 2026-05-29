@@ -39,7 +39,7 @@ ASR 推理在独立子进程中执行，通过进程间队列通信：
 
 - `ASR_MODEL_PATH`: Faster Whisper 模型路径（默认：`Systran/faster-whisper-large-v3`）
 - `ASR_DEVICE`: 设备类型（`cpu` 或 `cuda`，自动检测）
-- `ASR_COMPUTE_TYPE`: 计算类型（`float32`、`float16`、`int8`；CUDA 下默认 `float16`，提速优先 float16）
+- `ASR_COMPUTE_TYPE`: 计算类型（`float32`、`float16`、`int8_float16` 等；**节点默认**：CUDA → `int8_float16`，CPU → `float32`，见 `electron-node/main/src/utils/python-service-config.ts`）
 - `ASR_BEAM_SIZE`: Beam search 宽度（默认：5；设为 1～3 可明显提速）
 - `ASR_TEMPERATURE`: 采样温度（默认：0.0）
 - `ASR_PATIENCE`: Beam search 耐心值（默认：1.0）
@@ -177,26 +177,37 @@ ASR 推理在独立子进程中执行，通过进程间队列通信：
 
 ## 安装和运行
 
-### 1. 安装依赖
+### 1. 安装依赖（推荐虚拟环境）
 
-```bash
+```powershell
 cd electron_node/services/faster_whisper_vad
+python -m venv .venv
+.\.venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 2. 下载模型（可选）
+节点端 `ServiceProcessRunner` 会自动使用本目录下的 `.venv\Scripts\python.exe`。
 
-如果使用本地模型：
+### 2. 下载 ASR 模型到 `models/`
 
-```bash
-python download_model.py
+```powershell
+.\.venv\Scripts\python.exe download_model.py --all
 ```
+
+将生成：
+
+- `models/faster-whisper-large-v3/`
+- `models/faster-whisper-medium/`
+
+也可单独下载：`download_model.py --model large-v3` 或 `--model medium`。
 
 ### 3. 运行服务
 
-```bash
-python faster_whisper_vad_service.py
+```powershell
+.\.venv\Scripts\python.exe faster_whisper_vad_service.py
 ```
+
+默认优先加载本地 `models/faster-whisper-large-v3`；可通过 `ASR_MODEL_PATH` 覆盖。
 
 服务将在 `http://localhost:6007` 启动。
 

@@ -24,6 +24,33 @@ jest.mock('./steps/punctuation-restore-step', () => ({
   runPunctuationRestoreStep: jest.fn().mockResolvedValue(undefined),
 }));
 
+jest.mock('../fw-detector/fw-mode', () => ({
+  isFwDetectorEngineEnabled: jest.fn(() => false),
+  isFwDetectorPipelineActive: jest.fn(() => false),
+  getFwDetectorFeatureEnabled: jest.fn(() => false),
+  getAsrEngine: jest.fn(() => undefined),
+}));
+
+jest.mock('../node-config', () => {
+  const actual = jest.requireActual('../node-config') as typeof import('../node-config');
+  return {
+    ...actual,
+    isSemanticRepairEnabled: jest.fn(() => true),
+    isSemanticRepairFeatureEnabled: jest.fn(() => true),
+    isLexiconRecallEnabled: jest.fn(() => false),
+  };
+});
+
+jest.mock('./enhancement-gate', () => {
+  const actual = jest.requireActual('./enhancement-gate') as typeof import('./enhancement-gate');
+  return {
+    ...actual,
+    checkEnhancementService: jest.fn((_serviceId: string, enabled: boolean) => ({
+      shouldRun: enabled,
+    })),
+  };
+});
+
 function createJob(overrides?: Partial<JobAssignMessage>): JobAssignMessage {
   return {
     job_id: 'job-flow-1',
@@ -33,7 +60,7 @@ function createJob(overrides?: Partial<JobAssignMessage>): JobAssignMessage {
     tgt_lang: 'en',
     lang_a: 'zh',
     lang_b: 'en',
-    pipeline: { use_asr: true, use_nmt: true, use_tts: false },
+    pipeline: { use_asr: true, use_nmt: true, use_tts: false, use_semantic: true },
     ...overrides,
   } as JobAssignMessage;
 }
@@ -136,7 +163,8 @@ describe('Pipeline Job 流程', () => {
       const job = createJob({ session_id: 'session-segment-only', job_id: 'job-segment-only' });
       const ctx = initJobContext(job);
       ctx.segmentForJobResult = '本段Only';
-      ctx.shouldSendToSemanticRepair = true;
+      ctx.shouldRunSemanticRepairHttp = true;
+      ctx.shouldAllowTranslation = true;
       ctx.repairedText = '修复后本段'; // 语义修复产出仅本段（由 segmentForJobResult 修得）
       ctx.shouldSend = true;
 
@@ -165,7 +193,8 @@ describe('Pipeline Job 流程', () => {
       const job = createJob({ job_id: 'job-own-text-1', utterance_index: 1 });
       const ctx = initJobContext(job);
       ctx.segmentForJobResult = '本段这一句。';
-      ctx.shouldSendToSemanticRepair = true;
+      ctx.shouldRunSemanticRepairHttp = true;
+      ctx.shouldAllowTranslation = true;
       ctx.lastCommittedText = '上一句内容。';
 
       mockSemanticRepairStage.process.mockResolvedValueOnce({

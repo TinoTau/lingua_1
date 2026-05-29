@@ -1,6 +1,7 @@
 fastapi>=0.104.0
 uvicorn>=0.24.0
 faster-whisper>=1.0.0
+huggingface_hub>=0.20.0
 # GPU 支持：已配置为使用 GPU 加速
 # 锁定版本以支持cuDNN 9.x（2026-01-20修复）
 onnxruntime-gpu==1.23.2

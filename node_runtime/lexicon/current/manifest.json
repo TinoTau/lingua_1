@@ -1,214 +1,210 @@
 {
   "schemaVersion": "final-v1",
-  "buildTime": 1779821750642,
+  "buildTime": 1779887160947,
   "version": "recover-final-v1-lexicon",
-  "checksum": "sha256:10b0d2bf3b9658b650b8ed61c457274cab5009eaadd6621c2a748a892762a1b9",
-  "createdAt": "2026-05-26T18:55:50.642Z",
+  "checksum": "sha256:6c4e1b8f011a9abada30eafac5d9c11bd4fdd477f0e319cad98e0bb0d79b1906",
+  "createdAt": "2026-05-27T13:06:00.947Z",
   "backend": "sqlite",
-  "bundle_tag": "v3-canonical-asset-5k-4962",
+  "bundle_tag": "v3-canonical-asset-1806",
   "prior_score_scale": "0-1",
-  "lexiconCount": 4962,
-  "enabledCount": 4962,
-  "pinyinIndexCount": 4911,
-  "exactIndexCount": 88,
-  "aliasIndexCount": 2922,
+  "lexiconCount": 2002,
+  "enabledCount": 2002,
+  "pinyinIndexCount": 955,
+  "exactIndexCount": 83,
+  "aliasIndexCount": 153,
   "domainDistribution": {
-    "restaurant": 1164,
-    "transport": 1181,
-    "tech_ai": 1287,
-    "travel": 1354
+    "travel": 503,
+    "transport": 509,
+    "restaurant": 502,
+    "tech_ai": 500
   },
   "priorScoreByDomain": {
-    "restaurant": {
-      "count": 1164,
-      "avgPriorScore": 0.6006494845360829,
-      "maxPriorScore": 0.9
+    "travel": {
+      "count": 503,
+      "avgPriorScore": 0.6695457256461236,
+      "maxPriorScore": 0.95
     },
     "transport": {
-      "count": 1181,
-      "avgPriorScore": 0.6046807790008469,
-      "maxPriorScore": 0.92
+      "count": 509,
+      "avgPriorScore": 0.6690322200392922,
+      "maxPriorScore": 0.95
+    },
+    "restaurant": {
+      "count": 502,
+      "avgPriorScore": 0.6740039840637448,
+      "maxPriorScore": 0.95
     },
     "tech_ai": {
-      "count": 1287,
-      "avgPriorScore": 0.5985804195804203,
-      "maxPriorScore": 0.98
-    },
-    "travel": {
-      "count": 1354,
-      "avgPriorScore": 0.5918892171344173,
-      "maxPriorScore": 0.92
+      "count": 500,
+      "avgPriorScore": 0.6674400000000007,
+      "maxPriorScore": 0.95
     }
   },
   "priorScoreDistribution": {
-    "min": 0.495,
-    "max": 0.98,
-    "avg": 0.5976172914147336,
-    "p50": 0.587,
-    "p95": 0.753
+    "min": 0.4,
+    "max": 0.95,
+    "avg": 0.6696403596403597,
+    "p50": 0.669,
+    "p95": 0.9059
   },
   "topPriorTerms": [
     {
-      "word": "GPU",
-      "priorScore": 0.98,
+      "word": "大杯",
+      "priorScore": 0.95,
       "domains": [
-        "tech_ai"
+        "restaurant"
       ]
     },
     {
-      "word": "CUDA",
-      "priorScore": 0.97,
+      "word": "中杯",
+      "priorScore": 0.95,
       "domains": [
-        "tech_ai"
+        "restaurant"
       ]
     },
     {
-      "word": "KLM",
+      "word": "测040",
+      "priorScore": 0.95,
+      "domains": [
+        "travel"
+      ]
+    },
+    {
+      "word": "测098",
+      "priorScore": 0.95,
+      "domains": [
+        "restaurant"
+      ]
+    },
+    {
+      "word": "测353",
+      "priorScore": 0.95,
+      "domains": [
+        "transport"
+      ]
+    },
+    {
+      "word": "测448",
+      "priorScore": 0.95,
+      "domains": [
+        "travel"
+      ]
+    },
+    {
+      "word": "测475",
       "priorScore": 0.95,
       "domains": [
         "tech_ai"
       ]
     },
     {
-      "word": "Wisp",
+      "word": "测745",
       "priorScore": 0.95,
       "domains": [
-        "tech_ai"
+        "transport"
       ]
     },
     {
-      "word": "ASR",
+      "word": "测784",
+      "priorScore": 0.95,
+      "domains": [
+        "travel"
+      ]
+    },
+    {
+      "word": "美式",
+      "priorScore": 0.95,
+      "domains": [
+        "restaurant"
+      ]
+    },
+    {
+      "word": "马芬",
+      "priorScore": 0.95,
+      "domains": [
+        "restaurant"
+      ]
+    },
+    {
+      "word": "测006",
+      "priorScore": 0.94,
+      "domains": [
+        "restaurant"
+      ]
+    },
+    {
+      "word": "测043",
       "priorScore": 0.94,
       "domains": [
         "tech_ai"
       ]
     },
     {
-      "word": "FW",
-      "priorScore": 0.93,
-      "domains": [
-        "tech_ai"
-      ]
-    },
-    {
-      "word": "CT2",
-      "priorScore": 0.92,
-      "domains": [
-        "tech_ai"
-      ]
-    },
-    {
-      "word": "check",
-      "priorScore": 0.92,
+      "word": "测376",
+      "priorScore": 0.94,
       "domains": [
         "travel"
       ]
     },
     {
-      "word": "Uber",
-      "priorScore": 0.92,
-      "domains": [
-        "transport"
-      ]
-    },
-    {
-      "word": "机场接送",
-      "priorScore": 0.92,
-      "domains": [
-        "travel",
-        "transport"
-      ]
-    },
-    {
-      "word": "机场接机",
-      "priorScore": 0.917,
-      "domains": [
-        "travel",
-        "transport"
-      ]
-    },
-    {
-      "word": "机场送机",
-      "priorScore": 0.914,
-      "domains": [
-        "travel",
-        "transport"
-      ]
-    },
-    {
-      "word": "航班",
-      "priorScore": 0.911,
-      "domains": [
-        "travel",
-        "transport"
-      ]
-    },
-    {
-      "word": "Qwen",
-      "priorScore": 0.91,
-      "domains": [
-        "tech_ai"
-      ]
-    },
-    {
-      "word": "登机口",
-      "priorScore": 0.908,
-      "domains": [
-        "travel"
-      ]
-    },
-    {
-      "word": "行李托运",
-      "priorScore": 0.905,
-      "domains": [
-        "travel"
-      ]
-    },
-    {
-      "word": "行李领取",
-      "priorScore": 0.902,
-      "domains": [
-        "travel"
-      ]
-    },
-    {
-      "word": "餐厅预订",
-      "priorScore": 0.9,
+      "word": "测438",
+      "priorScore": 0.94,
       "domains": [
         "restaurant"
       ]
     },
     {
-      "word": "Qw25",
-      "priorScore": 0.9,
+      "word": "测462",
+      "priorScore": 0.94,
       "domains": [
-        "tech_ai"
+        "restaurant"
       ]
     },
     {
-      "word": "出租车",
-      "priorScore": 0.9,
+      "word": "测670",
+      "priorScore": 0.94,
       "domains": [
-        "transport"
+        "restaurant"
+      ]
+    },
+    {
+      "word": "测788",
+      "priorScore": 0.94,
+      "domains": [
+        "travel"
+      ]
+    },
+    {
+      "word": "测832",
+      "priorScore": 0.94,
+      "domains": [
+        "travel"
+      ]
+    },
+    {
+      "word": "测880",
+      "priorScore": 0.94,
+      "domains": [
+        "travel"
       ]
     }
   ],
-  "hotword_count": 4962,
-  "seed_path": "electron_node\\electron-node\\data\\lexicon\\v3\\lexicon_v3_5k_deploy.jsonl",
+  "hotword_count": 2002,
+  "seed_path": "electron_node\\electron-node\\data\\lexicon\\10k\\lexicon_10k_canonical_merged.jsonl",
   "scored_lexicon_version": "final-v1",
-  "term_count": 4962,
-  "enabled_term_count": 4962,
-  "terms_with_prior_count": 4962,
+  "term_count": 2002,
+  "enabled_term_count": 2002,
+  "terms_with_prior_count": 2002,
   "terms_without_prior_count": 0,
-  "pinyin_index_count": 4911,
-  "indexed_term_count": 4962,
-  "mixed_token_count": 51,
+  "pinyin_index_count": 955,
+  "indexed_term_count": 2002,
+  "mixed_token_count": 46,
   "recallPreferredMax": 5,
   "aliasGroups": {
-    "termCountWithAliases": 1372
+    "termCountWithAliases": 72
   },
   "mixedLanguageSupport": {
     "enabled": true,
-    "termCount": 51
+    "termCount": 46
   }
 }

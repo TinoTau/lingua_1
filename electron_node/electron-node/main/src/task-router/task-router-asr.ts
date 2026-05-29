@@ -12,6 +12,7 @@ import { ASRRerunHandler } from './task-router-asr-rerun';
 import { ASRMetricsHandler } from './task-router-asr-metrics';
 import { executeCTCASR } from './ctc-asr-strategy';
 import { executeFasterWhisperASR } from './faster-whisper-asr-strategy';
+import { FW_ASR_SERVICE_ID, isFwDetectorEngineEnabled } from '../fw-detector/fw-mode';
 
 const SUPPORTED_ASR = ['faster-whisper-vad', 'asr-sherpa-lm', 'asr-sherpa-en'] as const;
 
@@ -47,13 +48,25 @@ export class TaskRouterASRHandler {
 
   /** 按指定端点执行 ASR（单模式一发 / 双模式主路或校验路） */
   async routeASRTaskWithEndpoint(endpoint: ServiceEndpoint, task: ASRTask): Promise<ASRResult> {
+    let resolvedEndpoint = endpoint;
+    if (
+      isFwDetectorEngineEnabled()
+      && (endpoint.serviceId === 'asr-sherpa-lm' || endpoint.serviceId === 'asr-sherpa-en')
+    ) {
+      const fwEndpoint = this.getASREndpointForService(FW_ASR_SERVICE_ID);
+      if (!fwEndpoint) {
+        throw new Error(`FW detector mode requires ${FW_ASR_SERVICE_ID} endpoint`);
+      }
+      resolvedEndpoint = fwEndpoint;
+    }
+
     const taskStartTime = Date.now();
-    if (!SUPPORTED_ASR.includes(endpoint.serviceId as any)) {
+    if (!SUPPORTED_ASR.includes(resolvedEndpoint.serviceId as any)) {
       throw new Error(`Unsupported ASR service: ${endpoint.serviceId}. Supported: ${SUPPORTED_ASR.join(', ')}.`);
     }
 
-    this.startGpuTrackingForService(endpoint.serviceId);
-    this.updateServiceConnections(endpoint.serviceId, 1);
+    this.startGpuTrackingForService(resolvedEndpoint.serviceId);
+    this.updateServiceConnections(resolvedEndpoint.serviceId, 1);
 
     const abortController = new AbortController();
     if (task.job_id) {
@@ -66,10 +79,10 @@ export class TaskRouterASRHandler {
     });
 
     try {
-      const audioQuality = checkAudioQuality(task, endpoint.serviceId);
+      const audioQuality = checkAudioQuality(task, resolvedEndpoint.serviceId);
       if (!audioQuality) {
         logger.warn(
-          { serviceId: endpoint.serviceId, jobId: task.job_id },
+          { serviceId: resolvedEndpoint.serviceId, jobId: task.job_id },
           'ASR task: Rejecting low quality audio, returning empty result'
         );
         return {
@@ -87,17 +100,17 @@ export class TaskRouterASRHandler {
         signal: abortController.signal,
       };
 
-      if (endpoint.serviceId === 'asr-sherpa-lm' || endpoint.serviceId === 'asr-sherpa-en') {
-        const result = await executeCTCASR(task, endpoint, strategyCtx);
-        result.routedServiceId = endpoint.serviceId;
+      if (resolvedEndpoint.serviceId === 'asr-sherpa-lm' || resolvedEndpoint.serviceId === 'asr-sherpa-en') {
+        const result = await executeCTCASR(task, resolvedEndpoint, strategyCtx);
+        result.routedServiceId = resolvedEndpoint.serviceId;
         return result;
       }
 
-      const result = await executeFasterWhisperASR(task, endpoint, {
+      const result = await executeFasterWhisperASR(task, resolvedEndpoint, {
         ...strategyCtx,
         rerunHandler: this.rerunHandler,
       });
-      result.routedServiceId = endpoint.serviceId;
+      result.routedServiceId = resolvedEndpoint.serviceId;
       return result;
     } catch (error: any) {
       logger.error(
@@ -113,7 +126,7 @@ export class TaskRouterASRHandler {
       if (task.job_id) {
         this.jobAbortControllers.delete(task.job_id);
       }
-      this.updateServiceConnections(endpoint.serviceId, -1);
+      this.updateServiceConnections(resolvedEndpoint.serviceId, -1);
     }
   }
 

@@ -1,163 +1,114 @@
 """
-下载 Faster Whisper 模型到本地
-使用 HuggingFace token 下载模型并转换为 CTranslate2 格式
+下载 Faster Whisper 模型到本地 models/ 目录（CTranslate2 格式）。
+
+用法:
+  .venv\\Scripts\\python.exe download_model.py
+  .venv\\Scripts\\python.exe download_model.py --model medium
+  .venv\\Scripts\\python.exe download_model.py --all
 """
+from __future__ import annotations
+
+import argparse
+import logging
 import os
 import sys
-import logging
 from pathlib import Path
 
-# 配置日志
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format="%(asctime)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
-def download_model(
-    model_name: str = "Systran/faster-whisper-large-v3",
-    output_dir: str = "models/asr/faster-whisper-large-v3",
-    device: str = "cpu",
-    compute_type: str = "float32",
-    hf_token: str = None
-):
-    """
-    下载 Faster Whisper 模型到本地
-    
-    Args:
-        model_name: HuggingFace 模型名称，如 "Systran/faster-whisper-large-v3"
-        output_dir: 本地输出目录
-        device: 设备类型 ("cpu" 或 "cuda")
-        compute_type: 计算类型 ("float32", "float16", "int8")
-        hf_token: HuggingFace token（如果模型需要认证）
-    """
+SERVICE_ROOT = Path(__file__).resolve().parent
+MODELS_ROOT = SERVICE_ROOT / "models"
+
+PRESETS: dict[str, dict[str, str]] = {
+    "large-v3": {
+        "repo": "Systran/faster-whisper-large-v3",
+        "dir": "faster-whisper-large-v3",
+    },
+    "medium": {
+        "repo": "Systran/faster-whisper-medium",
+        "dir": "faster-whisper-medium",
+    },
+}
+
+
+def download_one(repo_id: str, local_dir: Path, device: str = "cpu", compute_type: str = "int8") -> Path:
     try:
         from faster_whisper import WhisperModel
-    except ImportError:
-        logger.error("❌ faster-whisper 未安装，请先安装: pip install faster-whisper")
-        sys.exit(1)
-    
-    # 设置 HuggingFace token（如果提供）
-    if hf_token:
-        os.environ["HF_TOKEN"] = hf_token
-        logger.info("✅ HuggingFace token 已设置")
-    
-    # 创建输出目录
-    output_path = Path(output_dir)
-    output_path.mkdir(parents=True, exist_ok=True)
-    logger.info(f"📁 输出目录: {output_path.absolute()}")
-    
-    logger.info("=" * 80)
-    logger.info(f"🚀 开始下载模型: {model_name}")
-    logger.info(f"   设备: {device}")
-    logger.info(f"   计算类型: {compute_type}")
-    logger.info(f"   输出目录: {output_path.absolute()}")
-    logger.info("=" * 80)
-    
+    except ImportError as exc:
+        logger.error("请先安装依赖: pip install -r requirements.txt")
+        raise SystemExit(1) from exc
+
+    local_dir.mkdir(parents=True, exist_ok=True)
+    logger.info("下载 %s -> %s", repo_id, local_dir)
+
+    # 触发 HuggingFace 拉取并写入 local_dir（faster-whisper 使用 hub 缓存后复制到目标目录）
     try:
-        # 使用 faster-whisper 下载模型
-        # faster-whisper 会自动从 HuggingFace 下载并转换为 CTranslate2 格式
-        logger.info("📥 正在从 HuggingFace 下载模型（这可能需要一些时间）...")
-        
-        model = WhisperModel(
-            model_name,
+        from huggingface_hub import snapshot_download
+
+        snapshot_download(
+            repo_id=repo_id,
+            local_dir=str(local_dir),
+            local_dir_use_symlinks=False,
+        )
+        logger.info("snapshot_download 完成: %s", local_dir)
+    except ImportError:
+        logger.warning("未安装 huggingface_hub，改用 WhisperModel 预加载")
+        WhisperModel(
+            repo_id,
             device=device,
             compute_type=compute_type,
-            download_root=str(output_path.parent),  # 设置下载根目录
+            download_root=str(MODELS_ROOT),
         )
-        
-        logger.info("✅ 模型下载并转换成功！")
-        logger.info(f"📁 模型位置: {output_path.absolute()}")
-        
-        # 验证模型文件
-        model_files = list(output_path.glob("*"))
-        if model_files:
-            logger.info(f"📦 模型文件:")
-            for f in model_files:
-                size_mb = f.stat().st_size / (1024 * 1024)
-                logger.info(f"   - {f.name} ({size_mb:.2f} MB)")
-        else:
-            # 检查父目录（faster-whisper 可能将模型放在不同的位置）
-            parent_files = list(output_path.parent.glob("*"))
-            logger.info(f"📦 在父目录找到模型文件:")
-            for f in parent_files:
-                if f.is_dir():
-                    size_mb = sum(p.stat().st_size for p in f.rglob("*") if p.is_file()) / (1024 * 1024)
-                    logger.info(f"   - {f.name}/ ({size_mb:.2f} MB)")
-        
-        logger.info("=" * 80)
-        logger.info("✅ 模型下载完成！")
-        logger.info(f"   现在可以在配置中使用本地路径: {output_path.absolute()}")
-        logger.info("=" * 80)
-        
-        return str(output_path.absolute())
-        
-    except Exception as e:
-        logger.error(f"❌ 下载模型失败: {e}", exc_info=True)
-        sys.exit(1)
+        # WhisperModel 默认缓存到 models/models--Org--name；若需扁平目录可再整理
+        logger.info("已通过 WhisperModel 触发下载，请检查 %s", MODELS_ROOT)
+
+    # 校验 CT2 模型文件
+    has_bin = (local_dir / "model.bin").is_file() or any(local_dir.rglob("model.bin"))
+    if not has_bin:
+        logger.warning("目录中未找到 model.bin，可能仍在 HF 缓存结构中: %s", local_dir)
+    else:
+        logger.info("校验通过: 发现 model.bin")
+
+    return local_dir.resolve()
 
 
-def main():
-    """主函数"""
-    import argparse
-    
-    parser = argparse.ArgumentParser(description="下载 Faster Whisper 模型到本地")
+def main() -> None:
+    parser = argparse.ArgumentParser(description="下载 Faster Whisper 模型")
     parser.add_argument(
         "--model",
-        type=str,
-        default="Systran/faster-whisper-large-v3",
-        help="HuggingFace 模型名称（默认: Systran/faster-whisper-large-v3）"
+        choices=list(PRESETS.keys()),
+        help="预设: large-v3 | medium",
     )
-    parser.add_argument(
-        "--output",
-        type=str,
-        default="models/asr/faster-whisper-large-v3",
-        help="本地输出目录（默认: models/asr/faster-whisper-large-v3）"
-    )
-    parser.add_argument(
-        "--device",
-        type=str,
-        choices=["cpu", "cuda"],
-        default="cpu",
-        help="设备类型（默认: cpu）"
-    )
-    parser.add_argument(
-        "--compute-type",
-        type=str,
-        choices=["float32", "float16", "int8"],
-        default="float32",
-        help="计算类型（默认: float32）"
-    )
-    parser.add_argument(
-        "--token",
-        type=str,
-        default=None,
-        help="HuggingFace token（如果模型需要认证）"
-    )
-    
+    parser.add_argument("--all", action="store_true", help="下载全部预设模型")
+    parser.add_argument("--repo", help="自定义 HuggingFace repo，如 Systran/faster-whisper-large-v3")
+    parser.add_argument("--output", help="输出目录名（位于 models/ 下）或绝对路径")
+    parser.add_argument("--device", default="cpu", choices=["cpu", "cuda"])
+    parser.add_argument("--compute-type", default="int8", dest="compute_type")
     args = parser.parse_args()
-    
-    # 如果没有提供 token，尝试从环境变量或配置文件读取
-    if not args.token:
-        # 尝试从环境变量读取
-        args.token = os.getenv("HF_TOKEN")
-        # 如果环境变量也没有，尝试从配置文件读取
-        if not args.token:
-            try:
-                from config import HF_TOKEN
-                args.token = HF_TOKEN
-            except:
-                pass
-    
-    download_model(
-        model_name=args.model,
-        output_dir=args.output,
-        device=args.device,
-        compute_type=args.compute_type,
-        hf_token=args.token
-    )
+
+    if args.all:
+        targets = list(PRESETS.values())
+    elif args.model:
+        targets = [PRESETS[args.model]]
+    elif args.repo:
+        out_name = args.output or args.repo.split("/")[-1]
+        targets = [{"repo": args.repo, "dir": out_name}]
+    else:
+        targets = list(PRESETS.values())
+
+    for spec in targets:
+        out = Path(args.output) if args.output and Path(args.output).is_absolute() else MODELS_ROOT / spec["dir"]
+        download_one(spec["repo"], out, device=args.device, compute_type=args.compute_type)
+
+    logger.info("全部下载任务结束。使用示例:")
+    logger.info('  set ASR_MODEL_PATH=Systran/faster-whisper-large-v3')
+    logger.info('  set WHISPER_CACHE_DIR=%s', MODELS_ROOT)
+    logger.info("  或直接: ASR_MODEL_PATH=%s", MODELS_ROOT / "faster-whisper-large-v3")
 
 
 if __name__ == "__main__":
     main()
-

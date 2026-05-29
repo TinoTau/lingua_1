@@ -544,8 +544,8 @@
 {"type":"canonical_term","termId":"restaurant-0044","word":"冰水","pinyin":"","domains":["restaurant"],"priorScore":0.8337,"aliases":[],"source":"restaurant_seed_v1","enabled":true}
 {"type":"canonical_term","termId":"restaurant-0045","word":"热水","pinyin":"","domains":["restaurant"],"priorScore":0.8316,"aliases":[],"source":"restaurant_seed_v1","enabled":true}
 {"type":"canonical_term","termId":"restaurant-0046","word":"茶水","pinyin":"","domains":["restaurant"],"priorScore":0.8296,"aliases":[],"source":"restaurant_seed_v1","enabled":true}
-{"type":"canonical_term","termId":"restaurant-0047","word":"咖啡","pinyin":"","domains":["restaurant"],"priorScore":0.8276,"aliases":[],"source":"restaurant_seed_v1","enabled":true}
-{"type":"canonical_term","termId":"restaurant-0048","word":"拿铁","pinyin":"","domains":["restaurant"],"priorScore":0.8256,"aliases":["latte"],"source":"restaurant_seed_v1","enabled":true}
+{"type":"canonical_term","termId":"restaurant-0047","word":"咖啡","pinyin":"","domains":["restaurant"],"priorScore":0.8276,"aliases":[],"repairTarget":false,"source":"restaurant_seed_v1","enabled":true}
+{"type":"canonical_term","termId":"restaurant-0048","word":"拿铁","pinyin":"","domains":["restaurant"],"priorScore":0.8256,"aliases":["latte"],"repairTarget":false,"source":"restaurant_seed_v1","enabled":true}
 {"type":"canonical_term","termId":"restaurant-0049","word":"美式咖啡","pinyin":"","domains":["restaurant"],"priorScore":0.8236,"aliases":["americano"],"source":"restaurant_seed_v1","enabled":true}
 {"type":"canonical_term","termId":"restaurant-0050","word":"卡布奇诺","pinyin":"","domains":["restaurant"],"priorScore":0.8216,"aliases":["cappuccino"],"source":"restaurant_seed_v1","enabled":true}
 {"type":"canonical_term","termId":"restaurant-0051","word":"摩卡","pinyin":"","domains":["restaurant"],"priorScore":0.8196,"aliases":[],"source":"restaurant_seed_v1","enabled":true}
@@ -621,7 +621,7 @@
 {"type":"canonical_term","termId":"restaurant-0121","word":"很辣","pinyin":"","domains":["restaurant"],"priorScore":0.679,"aliases":[],"source":"restaurant_seed_v1","enabled":true}
 {"type":"canonical_term","termId":"restaurant-0122","word":"不辣","pinyin":"","domains":["restaurant"],"priorScore":0.677,"aliases":[],"source":"restaurant_seed_v1","enabled":true}
 {"type":"canonical_term","termId":"restaurant-0123","word":"少盐","pinyin":"","domains":["restaurant"],"priorScore":0.675,"aliases":[],"source":"restaurant_seed_v1","enabled":true}
-{"type":"canonical_term","termId":"restaurant-0124","word":"少糖","pinyin":"","domains":["restaurant"],"priorScore":0.673,"aliases":[],"source":"restaurant_seed_v1","enabled":true}
+{"type":"canonical_term","termId":"restaurant-0124","word":"少糖","pinyin":"","domains":["restaurant"],"priorScore":0.673,"aliases":[],"repairTarget":false,"source":"restaurant_seed_v1","enabled":true}
 {"type":"canonical_term","termId":"restaurant-0125","word":"无糖","pinyin":"","domains":["restaurant"],"priorScore":0.671,"aliases":["no sugar"],"source":"restaurant_seed_v1","enabled":true}
 {"type":"canonical_term","termId":"restaurant-0126","word":"少冰","pinyin":"","domains":["restaurant"],"priorScore":0.669,"aliases":["less ice"],"source":"restaurant_seed_v1","enabled":true}
 {"type":"canonical_term","termId":"restaurant-0127","word":"去冰","pinyin":"","domains":["restaurant"],"priorScore":0.667,"aliases":[],"source":"restaurant_seed_v1","enabled":true}
@@ -662,7 +662,7 @@
 {"type":"canonical_term","termId":"restaurant-0162","word":"辣椒油","pinyin":"","domains":["restaurant"],"priorScore":0.5967,"aliases":[],"source":"restaurant_seed_v1","enabled":true}
 {"type":"canonical_term","termId":"restaurant-0163","word":"芝麻酱","pinyin":"","domains":["restaurant"],"priorScore":0.5947,"aliases":[],"source":"restaurant_seed_v1","enabled":true}
 {"type":"canonical_term","termId":"restaurant-0164","word":"沙拉酱","pinyin":"","domains":["restaurant"],"priorScore":0.5927,"aliases":[],"source":"restaurant_seed_v1","enabled":true}
-{"type":"canonical_term","termId":"restaurant-0165","word":"蓝莓马芬","pinyin":"","domains":["restaurant"],"priorScore":0.5907,"aliases":["blueberry muffin"],"source":"restaurant_seed_v1","enabled":true}
+{"type":"canonical_term","termId":"restaurant-0165","word":"蓝莓马芬","pinyin":"","domains":["restaurant"],"priorScore":0.5907,"aliases":["blueberry muffin"],"repairTarget":true,"source":"restaurant_seed_v1","enabled":true}
 {"type":"canonical_term","termId":"restaurant-0166","word":"巧克力蛋糕","pinyin":"","domains":["restaurant"],"priorScore":0.5887,"aliases":[],"source":"restaurant_seed_v1","enabled":true}
 {"type":"canonical_term","termId":"restaurant-0167","word":"芝士蛋糕","pinyin":"","domains":["restaurant"],"priorScore":0.5867,"aliases":[],"source":"restaurant_seed_v1","enabled":true}
 {"type":"canonical_term","termId":"restaurant-0168","word":"冰淇淋","pinyin":"","domains":["restaurant"],"priorScore":0.5847,"aliases":[],"source":"restaurant_seed_v1","enabled":true}
@@ -1998,3 +1998,7 @@
 {"type":"canonical_term","termId":"restaurant_0998","word":"测998","normalized":"测998","pinyin":"ce shi","domains":["restaurant"],"priorScore":0.45,"aliases":[],"enabled":true,"source":"phase4_seed_v1"}
 {"type":"canonical_term","termId":"tech_ai_0999","word":"测999","normalized":"测999","pinyin":"ce shi","domains":["tech_ai"],"priorScore":0.52,"aliases":[],"enabled":true,"source":"phase4_seed_v1"}
 {"type":"canonical_term","termId":"travel_1000","word":"测000","normalized":"测000","pinyin":"ce shi","domains":["travel"],"priorScore":0.61,"aliases":[],"enabled":true,"source":"phase4_seed_v1"}
+{"type":"canonical_term","termId":"restaurant_fw_0001","word":"美式","normalized":"美式","pinyin":"mei shi","domains":["restaurant"],"priorScore":0.95,"aliases":["美食"],"repairTarget":true,"enabled":true,"source":"fw_p1_1_acceptance"}
+{"type":"canonical_term","termId":"restaurant_fw_0002","word":"大杯","normalized":"大杯","pinyin":"da bei","domains":["restaurant"],"priorScore":0.95,"aliases":["大背","大悲"],"repairTarget":true,"enabled":true,"source":"fw_p1_1_acceptance"}
+{"type":"canonical_term","termId":"restaurant_fw_0003","word":"中杯","normalized":"中杯","pinyin":"zhong bei","domains":["restaurant"],"priorScore":0.95,"aliases":["钟贝","中倍"],"repairTarget":true,"enabled":true,"source":"fw_p1_1_acceptance"}
+{"type":"canonical_term","termId":"restaurant_fw_0004","word":"马芬","normalized":"马芬","pinyin":"ma fen","domains":["restaurant"],"priorScore":0.95,"aliases":["码份"],"repairTarget":true,"enabled":true,"source":"fw_p1_1_acceptance"}

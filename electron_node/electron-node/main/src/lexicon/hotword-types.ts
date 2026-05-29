@@ -18,6 +18,8 @@ export type HotwordEntry = {
   domain?: string;
   domains?: string[];
   aliases?: string[];
+  /** P1.2c: allows span to participate as FW replacement candidate (default false). */
+  repairTarget?: boolean;
   source?: string;
   updatedAt?: number;
   enabled: boolean;

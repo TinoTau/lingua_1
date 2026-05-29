@@ -73,6 +73,8 @@ export interface ASRResult {
   kenlmMeta?: AsrKenlmMeta;
   /** 实际路由到的 ASR service_id（可观测）。 */
   routedServiceId?: string;
+  /** P0：FW 服务返回的 audio_format / audio_level / audio_segmentation 等 */
+  diagnostics?: Record<string, unknown>;
 }
 
 /**

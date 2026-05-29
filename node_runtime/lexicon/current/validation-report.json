@@ -1,11 +1,26 @@
 {
   "ok": true,
   "inputFiles": 1,
-  "totalRows": 1806,
-  "validRows": 1806,
+  "totalRows": 2004,
+  "validRows": 2004,
   "errorRows": 0,
-  "warningRows": 0,
+  "warningRows": 2,
   "errors": [],
-  "warnings": [],
-  "strict": true
+  "warnings": [
+    {
+      "file": "D:\\Programs\\github\\lingua_1\\electron_node\\electron-node\\data\\lexicon\\10k\\lexicon_10k_canonical_merged.jsonl",
+      "line": 630,
+      "field": "word",
+      "code": "duplicate_merge",
+      "message": "Duplicate word/domains will merge: 大杯"
+    },
+    {
+      "file": "D:\\Programs\\github\\lingua_1\\electron_node\\electron-node\\data\\lexicon\\10k\\lexicon_10k_canonical_merged.jsonl",
+      "line": 631,
+      "field": "word",
+      "code": "duplicate_merge",
+      "message": "Duplicate word/domains will merge: 中杯"
+    }
+  ],
+  "strict": false
 }

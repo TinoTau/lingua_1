@@ -195,7 +195,9 @@ export function getPythonServiceConfig(
 
     case 'faster_whisper_vad': {
       const servicePath = path.join(projectRoot, 'electron_node', 'services', 'faster_whisper_vad');
-      const venvPath = path.join(servicePath, 'venv');
+      const dotVenv = path.join(servicePath, '.venv');
+      const legacyVenv = path.join(servicePath, 'venv');
+      const venvPath = fs.existsSync(path.join(dotVenv, 'Scripts', 'python.exe')) ? dotVenv : legacyVenv;
       const venvScripts = path.join(venvPath, 'Scripts');
       const logDir = path.join(servicePath, 'logs');
       const logFile = path.join(logDir, 'faster-whisper-vad-service.log');
@@ -208,29 +210,24 @@ export function getPythonServiceConfig(
       const currentPath = baseEnv.PATH || '';
       const venvPathEnv = `${venvScripts};${currentPath}`;
 
-      // 模型路径
-      // Faster Whisper 模型：只在自己的服务目录下查找，找不到直接报错
+      const localLargeV3 = path.join(servicePath, 'models', 'faster-whisper-large-v3', 'model.bin');
+      const localMedium = path.join(servicePath, 'models', 'faster-whisper-medium', 'model.bin');
+      const asrModelChoice = (process.env.ASR_MODEL || 'medium').toLowerCase();
+
       let asrModelPath: string;
       if (process.env.ASR_MODEL_PATH) {
         asrModelPath = process.env.ASR_MODEL_PATH;
+      } else if (asrModelChoice === 'medium' && fs.existsSync(localMedium)) {
+        asrModelPath = path.join(servicePath, 'models', 'faster-whisper-medium');
+      } else if (fs.existsSync(localLargeV3)) {
+        asrModelPath = path.join(servicePath, 'models', 'faster-whisper-large-v3');
+      } else if (fs.existsSync(localMedium)) {
+        asrModelPath = path.join(servicePath, 'models', 'faster-whisper-medium');
       } else {
-        // 只检查服务目录下的本地 CTranslate2 模型
-        const localCt2ModelPath = path.join(servicePath, 'models', 'asr', 'whisper-base-ct2');
-        
-        if (fs.existsSync(localCt2ModelPath)) {
-          // 使用转换后的 CTranslate2 模型
-          // Faster Whisper 可以接受 HuggingFace 缓存目录，会自动查找模型
-          asrModelPath = 'Systran/faster-whisper-base';
-          // 设置缓存目录环境变量，让 Faster Whisper 使用本地缓存
-          baseEnv.WHISPER_CACHE_DIR = localCt2ModelPath;
-        } else {
-          // 模型不存在，直接报错
-          throw new Error(
-            `Faster Whisper model not found at ${localCt2ModelPath}. ` +
-            `Please ensure the model is converted and placed in the service directory. ` +
-            `You can convert the model using: python convert_model.py --model base --output models/asr/whisper-base-ct2`
-          );
-        }
+        throw new Error(
+          `Faster Whisper model not found under ${path.join(servicePath, 'models')}. ` +
+            'Run: .venv\\Scripts\\python.exe download_model.py --all'
+        );
       }
       
       // VAD 模型路径：只在自己的服务目录下查找，找不到直接报错
@@ -268,7 +265,7 @@ export function getPythonServiceConfig(
         asrComputeType = process.env.ASR_COMPUTE_TYPE;
       } else {
         // 根据设备自动选择：CUDA 使用 float16，CPU 使用 float32
-        asrComputeType = cudaAvailable ? 'float16' : 'float32';
+        asrComputeType = cudaAvailable ? 'int8_float16' : 'float32';
       }
       
       // 查找打包的 ffmpeg（优先使用打包版本）
@@ -297,10 +294,12 @@ export function getPythonServiceConfig(
         ...baseEnv,
         VIRTUAL_ENV: venvPath,
         PATH: venvPathEnv,
+        ASR_MODEL: asrModelChoice,
         ASR_MODEL_PATH: asrModelPath,
         VAD_MODEL_PATH: vadModelPath,
         ASR_DEVICE: asrDevice,
         ASR_COMPUTE_TYPE: asrComputeType,
+        ASR_BEAM_SIZE: process.env.ASR_BEAM_SIZE || '1',
         FASTER_WHISPER_VAD_PORT: '6007',
       };
       

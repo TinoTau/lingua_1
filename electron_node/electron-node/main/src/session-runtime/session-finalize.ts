@@ -55,7 +55,7 @@ function buildRollingTurn(
   turnId: string,
   activeProfileAtTurn: string
 ): RollingTurn {
-  const rawAsr = (ctx.segmentForJobResult ?? ctx.asrText ?? '').trim();
+  const rawAsr = (ctx.rawAsrText ?? ctx.segmentForJobResult ?? ctx.asrText ?? '').trim();
   const repaired = (ctx.repairedText ?? rawAsr).trim();
   const topkCount = ctx.v5Metrics?.lexicon_pinyin_topk_candidate_count ?? 0;
   const picked =

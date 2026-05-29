@@ -19,6 +19,7 @@ import { selectSrcLang } from '../../lid/router';
 import { LID_WINDOW_MS } from '../../lid/lid-constants';
 import { buildAsrHypotheses } from '../../asr/build-asr-hypotheses';
 import { resolvePreferredAsrServiceId } from '../../asr/resolve-preferred-asr-service';
+import { isFwDetectorEngineEnabled } from '../../fw-detector/fw-mode';
 import logger from '../../logger';
 
 export interface AsrStepOptions {
@@ -247,13 +248,18 @@ export async function runAsrStep(
       // 单一路径：所有 segment 结果写入当前 job 的 ctx，只跑一次后续步骤
       if (i === 0) {
         ctx.asrText = asrResult.text;
+        if (ctx.rawAsrText === undefined) {
+          ctx.rawAsrText = asrResult.text ?? '';
+        }
         ctx.asrResult = asrResult;
         ctx.asrServiceId = asrResult.routedServiceId;
-        ctx.asrNbest = asrResult.nbest;
-        const decoded = buildAsrHypotheses(asrResult.text ?? '', asrResult.nbest);
-        ctx.asrHypotheses = decoded.hypotheses;
-        ctx.nbestSynthetic = decoded.nbestSynthetic;
-        ctx.asrKenlmMeta = asrResult.kenlmMeta;
+        if (!isFwDetectorEngineEnabled()) {
+          ctx.asrNbest = asrResult.nbest;
+          const decoded = buildAsrHypotheses(asrResult.text ?? '', asrResult.nbest);
+          ctx.asrHypotheses = decoded.hypotheses;
+          ctx.nbestSynthetic = decoded.nbestSynthetic;
+          ctx.asrKenlmMeta = asrResult.kenlmMeta;
+        }
         ctx.asrSegments = asrResult.segments;
         ctx.languageProbabilities = asrResult.language_probabilities;
         ctx.qualityScore = asrResult.badSegmentDetection?.qualityScore;
@@ -344,6 +350,26 @@ export async function runAsrStep(
     }
   }
 
+  if (isFwDetectorEngineEnabled()) {
+    const baseline = (ctx.rawAsrText ?? ctx.asrText ?? '').trim();
+    ctx.repairedText = baseline;
+    ctx.segmentForJobResult = baseline;
+  }
+
+  const fwDiag = ctx.asrResult?.diagnostics as Record<string, unknown> | undefined;
+  const segDiag = (fwDiag?.audio_segmentation ?? {}) as Record<string, number | undefined>;
+  const sampleRate = job.sample_rate || 16000;
+  const nodeAudioMs = Math.round((ctx.audio?.length ?? 0) / 2 / sampleRate * 1000);
+  ctx.asrDiagnostics = {
+    ...fwDiag,
+    audio_segmentation: {
+      node_audio_segment_count: audioSegments.length,
+      fw_vad_segment_count: segDiag.fw_vad_segment_count,
+      audio_ms: segDiag.audio_ms ?? nodeAudioMs,
+      asr_latency_ms: segDiag.asr_latency_ms,
+    },
+  };
+
   logger.info(
     {
       jobId: job.job_id,
@@ -352,6 +378,7 @@ export async function runAsrStep(
       segmentCount: audioSegments.length,
       originalJobIdsCount: originalJobIds.length,
       asrTextLength: ctx.asrText?.length || 0,
+      rawAsrTextLength: ctx.rawAsrText?.length || 0,
       qualityScore: ctx.qualityScore,
     },
     'runAsrStep: ASR completed'

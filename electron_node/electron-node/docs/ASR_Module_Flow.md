@@ -2,6 +2,17 @@
 
 节点端 ASR 处理流程：入口、音频聚合、ASR 调用、结果发送。以当前代码为准。
 
+## 0. 引擎模式（2026-05 默认：FW-only）
+
+| 配置 | 行为 |
+|------|------|
+| `asr.engine = fw_detector_v1`（默认） | `faster-whisper-vad` medium；单 top1；无 CTC n-best；无 rerun |
+| 其它 / 历史 Recover | `asr-sherpa-lm` 等 CTC 路由 |
+
+FW 模式详见 [FW_DETECTOR.md](./FW_DETECTOR.md)。本节以下描述 **音频聚合 + runAsrStep 框架**（两种模式共用）。
+
+**FW 差异：** `resolve-preferred-asr-service.ts` + `task-router-asr.ts` → `faster-whisper-vad`；`rawAsrText` freeze；`disableAsrRerun`；模型 medium + CUDA `int8_float16`（`python-service-config.ts`）。
+
 ## 1. 核心组件
 
 1. **runAsrStep** (`pipeline/steps/asr-step.ts`) — ASR 步骤入口
@@ -41,6 +52,7 @@
 
 ## 5. 相关文档
 
+- [FW_DETECTOR.md](./FW_DETECTOR.md) — FW-only 主链（默认）
 - `AUDIO_AGGREGATOR_Data_Format.md` — 缓冲区与返回数据结构
 - `Long_Utterance_Job_Container_Policy.md` — 长语音 Job 容器策略
 - `main/src/pipeline-orchestrator/` — 源码

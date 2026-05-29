@@ -50,6 +50,14 @@ export class NodeAgent {
   private reconnectDelayMs = RECONNECT_INITIAL_MS;
   /** 重连定时器，stop 时清除 */
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+  /** stop() 主动关闭 WS 时抑制 close 回调里的自动重连 */
+  private suppressReconnectOnClose = false;
+  /** capability-state-changed 只注册一次，避免重连时重复挂载 */
+  private capabilityListenerAttached = false;
+  private readonly onCapabilityStateChanged = (): void => {
+    logger.debug({}, 'Model state changed, triggering immediate heartbeat');
+    this.heartbeatHandler.triggerImmediateHeartbeat();
+  };
 
   /** 已处理过的 job_id，每个 job_id 只处理一次，杜绝 DUP_SEND */
   private processedJobIds: Set<string> = new Set();
@@ -157,12 +165,26 @@ export class NodeAgent {
     // 注入 ServicesHandler，用于语义修复服务发现与 SemanticRepairInitializer 创建
     this.inferenceService.setServicesHandler(this.servicesHandler);
 
+    this.attachCapabilityStateListener();
+
     logger.info({ schedulerUrl: this.schedulerUrl }, '✅ NodeAgent initialized (Day 2 Refactor: snapshot-based)');
+  }
+
+  /** 模型能力变化时触发即时心跳（全局单例监听，不随 WS 重连重复注册） */
+  private attachCapabilityStateListener(): void {
+    if (this.capabilityListenerAttached) {
+      return;
+    }
+    if (this.modelManager && typeof this.modelManager.on === 'function') {
+      this.modelManager.on('capability-state-changed', this.onCapabilityStateChanged);
+      this.capabilityListenerAttached = true;
+      logger.debug({}, 'ModelManager capability-state-changed listener attached (once)');
+    }
   }
 
   async start(): Promise<void> {
     try {
-      // 如果已有连接，先关闭
+      // 如果已有连接，先关闭（抑制 close 触发的重连，避免与本次 start 叠加）
       if (this.ws) {
         this.stop();
       }
@@ -203,6 +225,12 @@ export class NodeAgent {
       });
 
       this.ws.on('close', (code, reason) => {
+        if (this.suppressReconnectOnClose) {
+          this.suppressReconnectOnClose = false;
+          logger.debug({ code, nodeId: this.nodeId }, 'WebSocket closed (intentional stop, skip reconnect)');
+          return;
+        }
+
         logger.warn(
           {
             code,
@@ -230,14 +258,6 @@ export class NodeAgent {
         }, delayMs);
       });
 
-      // 监听模型状态变化
-      if (this.modelManager && typeof this.modelManager.on === 'function') {
-        this.modelManager.on('capability-state-changed', () => {
-          logger.debug({}, 'Model state changed, triggering immediate heartbeat');
-          this.heartbeatHandler.triggerImmediateHeartbeat();
-        });
-      }
-
       // ✅ Day 2: 移除Python服务管理器监听
       // 服务状态变化现在通过ServiceRegistry的事件系统处理
       logger.debug({}, 'Service status monitoring via ServiceRegistry')
@@ -254,6 +274,7 @@ export class NodeAgent {
     }
     this.reconnectDelayMs = RECONNECT_INITIAL_MS;
     if (this.ws) {
+      this.suppressReconnectOnClose = true;
       this.ws.close();
       this.ws = null;
     }

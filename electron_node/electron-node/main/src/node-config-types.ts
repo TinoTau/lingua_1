@@ -39,6 +39,10 @@ export interface NodeConfig {
     decoderFile?: string;
   };
   metrics?: MetricsConfig;
+  asr?: {
+    /** `fw_detector_v1` — FW-only 主链（faster-whisper-vad + span detector） */
+    engine?: 'fw_detector_v1' | string;
+  };
   features?: {
     enablePostProcessTranslation?: boolean;
     enableS1PromptBias?: boolean;
@@ -116,6 +120,37 @@ export interface NodeConfig {
     sessionAffinity?: {
       enabled?: boolean;
       snapshotPath?: string;
+    };
+    fwDetector?: {
+      enabled?: boolean;
+      disableAsrRerun?: boolean;
+      maxSpans?: number;
+      spanDetectBudget?: number;
+      topK?: number;
+      minPrior?: number;
+      minRiskScore?: number;
+      enableKenLMGate?: boolean;
+      kenlmGateMode?: 'hard_gate' | 'weak_veto';
+      kenlmDeltaThreshold?: number;
+      kenlmVetoThreshold?: number;
+      finalScoreWeights?: {
+        pinyin?: number;
+        prior?: number;
+        domain?: number;
+        kenlm?: number;
+      };
+      enabledDomains?: string[];
+      domainAnchorPath?: string;
+      windowChars?: number;
+      minSpanChars?: number;
+      maxSpanChars?: number;
+      noSpeechProbThreshold?: number;
+      recallMinPhoneticScore?: number;
+      candidateRequireRepairTarget?: boolean;
+      repairTargetScoreBoost?: number;
+      /** @deprecated use candidateRequireRepairTarget */
+      enableRepairTargetFilter?: boolean;
+      signalWeights?: Partial<Record<string, number>>;
     };
   };
   gpuArbiter?: {
