@@ -318,8 +318,8 @@ export class AggregatorState {
   /**
    * 更新最后一个提交的文本（用于语义修复后更新）
    */
-  updateLastCommittedTextAfterRepair(utteranceIndex: number, originalText: string, repairedText: string): void {
-    this.contextManager.updateLastCommittedText(utteranceIndex, originalText, repairedText);
+  updateLastCommittedTextAfterRepair(utteranceIndex: number, originalText: string, committedText: string): void {
+    this.contextManager.updateLastCommittedText(utteranceIndex, originalText, committedText);
   }
 
   /**

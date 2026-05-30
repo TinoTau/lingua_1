@@ -78,8 +78,8 @@ export class AggregatorStateContextManager {
    * 更新最后一个提交的文本（用于语义修复后更新）
    * 根据utteranceIndex查找并更新对应的文本
    */
-  updateLastCommittedText(utteranceIndex: number, originalText: string, repairedText: string): void {
-    if (!repairedText || !repairedText.trim()) return;
+  updateLastCommittedText(utteranceIndex: number, originalText: string, committedText: string): void {
+    if (!committedText || !committedText.trim()) return;
     
     // 查找是否有相同utteranceIndex的文本
     const index = this.recentCommittedText.findIndex(
@@ -88,12 +88,12 @@ export class AggregatorStateContextManager {
     
     if (index !== -1) {
       // 如果找到，更新文本
-      this.recentCommittedText[index].text = repairedText.trim();
+      this.recentCommittedText[index].text = committedText.trim();
     } else {
       // 如果没找到，添加新条目
       this.recentCommittedText.push({
         utteranceIndex,
-        text: repairedText.trim(),
+        text: committedText.trim(),
       });
       
       // 保持最多MAX_RECENT_COMMITS条

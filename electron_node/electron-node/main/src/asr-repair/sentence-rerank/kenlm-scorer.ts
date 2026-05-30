@@ -1,5 +1,5 @@
 import { getLmScorer } from '../../phonetic-correction/lm-scorer';
-import type { KenLMScore, KenLMScorer, KenlmTimingStats } from './types';
+import type { KenLMScore, KenLMScorer, KenlmTimingStats } from '../kenlm-batch-types';
 
 function normalizeLmScore(score: number): number {
   return 1 / (1 + Math.exp(-score / 10));

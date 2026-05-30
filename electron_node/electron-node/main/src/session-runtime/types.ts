@@ -24,7 +24,7 @@ export type RollingTurn = {
   turnId: string;
   timestamp: number;
   rawAsrText: string;
-  repairedText: string;
+  finalText: string;
   sourceLang: string;
   targetLang: string;
   activeProfileAtTurn: string;

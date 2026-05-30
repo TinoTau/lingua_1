@@ -3,7 +3,7 @@
  * orchestrator 只负责 detect / runtime / apply，不得在此文件之外再做 topK 决策。
  */
 
-import type { KenLMScorer, KenlmTimingStats } from '../asr-repair/sentence-rerank/types';
+import type { KenLMScorer, KenlmTimingStats } from '../asr-repair/kenlm-batch-types';
 import {
   kenlmCandidateScoreToGateDiag,
   scoreSpanCandidateSentences,

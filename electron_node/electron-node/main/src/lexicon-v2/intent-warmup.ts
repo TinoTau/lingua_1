@@ -33,7 +33,7 @@ function buildWarmupPayload() {
       {
         turnId: 'warmup-1',
         rawAsrText: '你好',
-        repairedText: '你好',
+        finalText: '你好',
         activeProfileAtTurn: 'general',
         recoverStats: { noTopkCandidate: 0, domainBoostApplied: 0 },
       },

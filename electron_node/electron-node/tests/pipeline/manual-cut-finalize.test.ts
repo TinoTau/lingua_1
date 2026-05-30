@@ -20,7 +20,7 @@ jest.mock('../../main/src/node-config', () => {
 });
 
 describe('P0-Guard Gate 3: manual_cut finalize', () => {
-  it('is_manual_cut=true 时 completeAggregation 后应有 segment 与 repairedText', async () => {
+  it('is_manual_cut=true 时 completeAggregation 后 segmentForJobResult 有效', async () => {
     const job = {
       job_id: 'manual-cut-1',
       session_id: 's-manual',
@@ -35,7 +35,6 @@ describe('P0-Guard Gate 3: manual_cut finalize', () => {
     const ctx = initJobContext(job);
     ctx.asrText = '本段文本';
     ctx.rawAsrText = '本段文本';
-    ctx.repairedText = '本段文本';
     ctx.segmentForJobResult = '本段文本';
 
     const appendTurnSegment = jest.fn();

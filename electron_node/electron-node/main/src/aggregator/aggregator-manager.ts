@@ -284,13 +284,13 @@ export class AggregatorManager {
     sessionId: string,
     utteranceIndex: number,
     originalText: string,
-    repairedText: string
+    committedText: string
   ): void {
     const state = this.states.get(sessionId);
     if (!state) {
       return;
     }
-    (state as any).updateLastCommittedTextAfterRepair(utteranceIndex, originalText, repairedText);
+    (state as any).updateLastCommittedTextAfterRepair(utteranceIndex, originalText, committedText);
   }
 }
 

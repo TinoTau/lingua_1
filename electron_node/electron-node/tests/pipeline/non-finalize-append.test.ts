@@ -33,7 +33,6 @@ describe('P0-Guard: non-finalize append turn buffer', () => {
     const ctx = initJobContext(job);
     ctx.asrText = '片段一';
     ctx.rawAsrText = '片段一';
-    ctx.repairedText = '片段一';
     ctx.segmentForJobResult = '片段一';
 
     const appendTurnSegment = jest.fn();

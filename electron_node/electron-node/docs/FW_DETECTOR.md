@@ -1,6 +1,7 @@
 # FW Detector 主链（fw_detector_v1）
 
-**状态：** P1.2c-fix 合并冻结（2026-05）  
+**状态：** P0/P1 冻结清理完成（2026-05-30）  
+**规范 SSOT：** [ASR_FW_MAIN_CHAIN_FROZEN_FINAL.md](../docs/ASR_FW_MAIN_CHAIN_FROZEN_FINAL.md)
 **代码根：** `main/src/fw-detector/`、`pipeline/steps/fw-detector-step.ts`  
 **默认引擎：** `asr.engine = fw_detector_v1`（`node-config-defaults.ts`）
 
@@ -23,8 +24,8 @@ Audio → AudioAggregator
           → candidate-scorer + kenlm-span-gate (weak_veto)
           → pick-approved-replacements (D-greedy)
       → applyFwSpanReplacements
-  → AGGREGATION（不覆盖 repairedText）
-  → result-builder（text_asr ← repairedText；extra.raw_asr_text ← rawAsrText）
+  → AGGREGATION（读写 segmentForJobResult）
+  → result-builder（text_asr ← segmentForJobResult；extra.raw_asr_text ← rawAsrText）
 ```
 
 **Pipeline 顺序：** `ASR → FW_SPAN_DETECTOR → AGGREGATION → …`  
@@ -72,12 +73,28 @@ Audio → AudioAggregator
 
 | 字段 | 规则 |
 |------|------|
-| `ctx.rawAsrText` | 仅 `asr-step` 首段写入一次 |
-| `ctx.repairedText` | FW apply 或 baseline；`buildJobResult.text_asr` 来源 |
+| `ctx.rawAsrText` | 仅 `asr-step` 首段写入一次；immutable |
+| `ctx.segmentForJobResult` | SSOT：FW apply / 聚合 / 5015 / NMT / `text_asr` |
 | `extra.raw_asr_text` | 观测用，与 `text_asr` 分离 |
-| `asrRepairApplied` | apply 后 `true`；5015/5016 不得覆盖 |
+| `ctx.asrRepairApplied` | FW **有 approved replacement** 时 `true`；5015/5016/5017 写锁 |
+| `ctx.asrText` | diagnostics / debug；**禁止**作为 NMT / text_asr / Aggregation 输入 |
 
-**Aggregation：** `postDetectorSegment()` 优先 `repairedText`；`syncRepairedTextBaseline` 不覆盖非空 repaired。
+**业务文本：** `resolveBusinessAsrText(ctx)` = `(ctx.segmentForJobResult ?? '').trim()`；**无** `asrText` / `rawAsrText` / `repairedText` fallback。
+
+**Aggregation：** 读写 `segmentForJobResult`；`currentSegment` 只读 segment；segment 空 → `segmentReady=false`、defer/skip。
+
+**Session：** `RollingTurn.finalText` 为 turn 快照；Intent HTTP wire 键 **`finalText`**（与 Session 字段同名）。
+
+---
+
+## 2.4 双开关（engine vs feature）
+
+| 函数 | 条件 | 效果 |
+|------|------|------|
+| `isFwDetectorEngineEnabled()` | `asr.engine === fw_detector_v1` | 改 pipeline 步骤；ASR 不拉 nbest |
+| `isFwDetectorPipelineActive()` | 上项 + `features.fwDetector.enabled` + zh/yue | **才执行** `FW_SPAN_DETECTOR` |
+
+生产默认两者均为 `true`。feature 关、engine 开时 FW 步骤 skip；聚合仍只读 `segmentForJobResult`（segment 须由 ASR 步骤写入）。dialog_200 批测须 feature 开。
 
 ---
 
@@ -130,9 +147,9 @@ Audio → AudioAggregator
 
 ```ts
 // JobContext（FW 相关）
-rawAsrText?: string;           // ASR freeze，只写一次
-repairedText?: string;        // NMT / text_asr 来源
-segmentForJobResult?: string;
+rawAsrText?: string;           // ASR freeze，只写一次；Detector 输入
+segmentForJobResult?: string;   // SSOT：NMT / text_asr
+asrText?: string;              // diagnostics only
 asrRepairApplied?: boolean;
 fwDetectorResult?: FwDetectorResult;
 
@@ -175,7 +192,7 @@ fwDetectorResult?: FwDetectorResult;
 | `pipeline/steps/asr-step.ts` | raw freeze；FW 不写 n-best |
 | `pipeline/steps/fw-detector-step.ts` | 步骤入口 |
 | `pipeline/steps/aggregation-step.ts` | postDetectorSegment |
-| `pipeline/post-asr-routing.ts` | repaired 写锁 |
+| `pipeline/post-asr-routing.ts` | segment 写锁、resolveBusinessAsrText |
 | `pipeline/result-builder.ts` | text_asr / raw_asr_text |
 | `utils/python-service-config.ts` | medium + int8_float16 |
 
@@ -257,7 +274,7 @@ Mock 集：`lexicon-assets/tests/restaurant_homophone.jsonl`、`false_repair_gol
 
 ## 相关文档
 
-- [ASR_Module_Flow.md](./ASR_Module_Flow.md) — ASR 与 FW 路由  
+- [ASR_FW_MAIN_CHAIN_FROZEN_FINAL.md](../docs/ASR_FW_MAIN_CHAIN_FROZEN_FINAL.md) — **主链冻结规范（SSOT）**
 - [LEXICON.md](./LEXICON.md) — 词库运行时 + span recall  
 - [AGGREGATOR.md](./AGGREGATOR.md) — 聚合契约  
 - [RECOVER.md](./RECOVER.md) — Recover V5（非 FW 主链）  

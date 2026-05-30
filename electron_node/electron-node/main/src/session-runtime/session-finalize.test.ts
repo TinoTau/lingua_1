@@ -43,7 +43,7 @@ describe('session-finalize turn gating', () => {
 
   it('does not append rollingContext until turn ends', () => {
     const ctx = initJobContext(job());
-    ctx.repairedText = 'hello';
+    ctx.segmentForJobResult = 'hello';
     finalizeSessionTurn(job(), ctx, 'node-a');
     expect(getSession('s1')?.rollingContext.length ?? 0).toBe(0);
   });
@@ -51,14 +51,14 @@ describe('session-finalize turn gating', () => {
   it('appends rollingContext on finalized turn', () => {
     const finalized = job({ is_manual_cut: true });
     const ctx = initJobContext(finalized);
-    ctx.repairedText = 'final text';
+    ctx.segmentForJobResult = 'final text';
     beginSessionTurnProfile(finalized, ctx, 'node-a');
     finalizeSessionTurn(finalized, ctx, 'node-a');
     const session = getSession('s1');
     expect(session?.finalizedTurnCount).toBe(1);
     expect(session?.rollingContext.length).toBe(1);
     expect(session?.rollingContext[0].turnId).toBe('turn-1');
-    expect(session?.rollingContext[0].repairedText).toBe('final text');
+    expect(session?.rollingContext[0].finalText).toBe('final text');
   });
 
   it('binds profile once per turn across jobs', () => {
@@ -94,7 +94,7 @@ describe('session-finalize turn gating', () => {
 
     const turn1End = job({ turn_id: 'turn-1', is_manual_cut: true });
     const ctxEnd = initJobContext(turn1End);
-    ctxEnd.repairedText = 't1';
+    ctxEnd.segmentForJobResult = 't1';
     finalizeSessionTurn(turn1End, ctxEnd, 'node-a');
 
     const turn2 = job({ job_id: 'j2', turn_id: 'turn-2' });

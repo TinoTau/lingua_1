@@ -4,7 +4,7 @@
  */
 
 import { applySingleSpanReplacement } from '../lexicon/selector/applySpanReplacements';
-import type { KenLMScorer, KenlmTimingStats } from './sentence-rerank/types';
+import type { KenLMScorer, KenlmTimingStats } from './kenlm-batch-types';
 import type {
   FwKenlmGateDiag,
   FwKenlmGateReason,

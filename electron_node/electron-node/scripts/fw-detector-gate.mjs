@@ -116,6 +116,74 @@ if (fs.existsSync(defaultsPath)) {
   }
 }
 
+// V1.1 freeze: segment SSOT on main chain outputs
+const ssotFiles = [
+  ['pipeline/post-asr-routing.ts', ['resolveBusinessAsrText']],
+  ['pipeline/result-builder.ts', ['resolveBusinessAsrText']],
+  ['pipeline/context/job-context.ts', []],
+];
+
+for (const [rel, required] of ssotFiles) {
+  const full = path.join(srcRoot, rel);
+  if (!fs.existsSync(full)) {
+    fail(`missing SSOT file: ${rel}`);
+    continue;
+  }
+  const text = readRel(full);
+  if (text.includes('ctx.repairedText') || text.includes('syncRepairedTextBaseline')) {
+    fail(`${rel} must not reference repairedText or syncRepairedTextBaseline`);
+  }
+  for (const needle of required) {
+    if (!text.includes(needle)) {
+      fail(`${rel} missing freeze helper: ${needle}`);
+    }
+  }
+}
+
+const routingPath = path.join(srcRoot, 'pipeline/post-asr-routing.ts');
+if (fs.existsSync(routingPath)) {
+  const routingSrc = stripComments(readRel(routingPath));
+  if (routingSrc.includes('resolveBusinessAsrTextSource')) {
+    fail('post-asr-routing must not declare resolveBusinessAsrTextSource (no fallback chain)');
+  }
+  if (/return\s*['"]asrText['"]/.test(routingSrc)) {
+    fail('post-asr-routing must not fallback resolveBusinessAsrText to asrText');
+  }
+  if (/\bctx\.asrText\b/.test(routingSrc)) {
+    fail('post-asr-routing must not read ctx.asrText for business text');
+  }
+}
+
+const aggPath = path.join(srcRoot, 'pipeline/steps/aggregation-step.ts');
+if (fs.existsSync(aggPath)) {
+  const aggSrc = stripComments(readRel(aggPath));
+  if (/detectorSegment\s*\|\|\s*ctx\.asrText/.test(aggSrc) || /ctx\.asrText\s*\|\|/.test(aggSrc)) {
+    fail('aggregation-step must not fallback currentSegment to ctx.asrText');
+  }
+}
+
+const fwMainPaths = [
+  path.join(fwRoot),
+  stepPath,
+  path.join(srcRoot, 'pipeline/steps/asr-step.ts'),
+  path.join(srcRoot, 'pipeline/steps/aggregation-step.ts'),
+  path.join(srcRoot, 'pipeline/steps/fw-detector-step.ts'),
+  path.join(srcRoot, 'fw-detector/pipeline-mode-fw.ts'),
+];
+for (const dirOrFile of fwMainPaths) {
+  const files = fs.existsSync(dirOrFile) && fs.statSync(dirOrFile).isDirectory()
+    ? walkTsFiles(dirOrFile)
+    : fs.existsSync(dirOrFile)
+      ? [dirOrFile]
+      : [];
+  for (const full of files) {
+    const rel = path.relative(projectRoot, full);
+    if (readRel(full).includes('legacy/recover')) {
+      fail(`FW main chain must not import legacy/recover: ${rel}`);
+    }
+  }
+}
+
 if (failures.length) {
   process.exit(1);
 }

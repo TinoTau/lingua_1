@@ -10,7 +10,7 @@ export type LexiconPatchReason =
 export type LexiconPatchProposal = {
   caseId: string;
   rawAsr: string;
-  repairedText: string;
+  finalText: string;
   missingCandidate: string;
   suggestedDomain: string;
   reason: LexiconPatchReason;
@@ -20,7 +20,7 @@ export type LexiconPatchProposal = {
 export function buildPatchProposal(input: {
   caseId: string;
   rawAsr: string;
-  repairedText: string;
+  finalText: string;
   windowText: string;
   suggestedDomain: string;
   reason: LexiconPatchReason;
@@ -29,7 +29,7 @@ export function buildPatchProposal(input: {
   return {
     caseId: input.caseId,
     rawAsr: input.rawAsr,
-    repairedText: input.repairedText,
+    finalText: input.finalText,
     missingCandidate: input.windowText,
     suggestedDomain: input.suggestedDomain,
     reason: input.reason,

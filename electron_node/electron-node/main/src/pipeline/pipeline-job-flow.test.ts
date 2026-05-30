@@ -100,7 +100,7 @@ describe('Pipeline Job 流程', () => {
   });
 
   describe('全流程跑通（无聚合器，模拟文本跳过 ASR）', () => {
-    it('应完成 Aggregation → SemanticRepair → Dedup → Translation，result 使用 repairedText（本段）作 text_asr', async () => {
+    it('应完成 Aggregation → SemanticRepair → Dedup → Translation，text_asr 来自 segmentForJobResult', async () => {
       const job = createJob({ job_id: 'job-flow-1' });
       const ctx = initJobContext(job);
       ctx.asrText = '本段原文';
@@ -127,7 +127,7 @@ describe('Pipeline Job 流程', () => {
       expect(textToRepair).toBe('本段原文');
     });
 
-    it('去重步骤应只读 ctx.repairedText', async () => {
+    it('去重步骤应只读 ctx.segmentForJobResult', async () => {
       const job = createJob({ job_id: 'job-flow-3' });
       const ctx = initJobContext(job);
       ctx.asrText = '本段原文';
@@ -158,14 +158,12 @@ describe('Pipeline Job 流程', () => {
     });
   });
 
-  describe('result 只带本段（repairedText）', () => {
-    it('翻译与 result 应只带本段（repairedText=修复后本段）', async () => {
+  describe('result 使用 segmentForJobResult（SSOT）', () => {
+    it('翻译与 result 均来自 segmentForJobResult', async () => {
       const job = createJob({ session_id: 'session-segment-only', job_id: 'job-segment-only' });
       const ctx = initJobContext(job);
-      ctx.segmentForJobResult = '本段Only';
-      ctx.shouldRunSemanticRepairHttp = true;
+      ctx.segmentForJobResult = '修复后本段';
       ctx.shouldAllowTranslation = true;
-      ctx.repairedText = '修复后本段'; // 语义修复产出仅本段（由 segmentForJobResult 修得）
       ctx.shouldSend = true;
 
       mockTaskRouter.routeNMTTask.mockResolvedValueOnce({ text: 'translated segment only' } as NMTResult);
@@ -178,7 +176,7 @@ describe('Pipeline Job 流程', () => {
 
       expect(mockTaskRouter.routeNMTTask).toHaveBeenCalledTimes(1);
       const nmtTask = (mockTaskRouter.routeNMTTask as jest.Mock).mock.calls[0][0];
-      // 翻译与 result 只用 repairedText（本段），不能是整段 merged
+      // NMT 与 result 均读 segmentForJobResult
       expect(nmtTask.text).toBe('修复后本段');
       expect(result.text_asr).toBe('修复后本段');
       expect(result.text_translated).toBe('translated segment only');
@@ -230,7 +228,7 @@ describe('Pipeline Job 流程', () => {
       segments.forEach((segment, i) => {
         const job = createJob({ job_id: `job-${i}`, utterance_index: i });
         const ctx = initJobContext(job);
-        ctx.repairedText = segment;
+        ctx.segmentForJobResult = segment;
         ctx.translatedText = `Sentence ${i + 1}.`;
         const result = buildJobResult(job, ctx);
         expect(result.text_asr).toBe(segment);

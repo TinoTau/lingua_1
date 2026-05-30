@@ -23,7 +23,7 @@ function turn(id: string): RollingTurn {
     turnId: id,
     timestamp: Date.now(),
     rawAsrText: '去机场',
-    repairedText: '去机场',
+    finalText: '去机场',
     sourceLang: 'zh',
     targetLang: 'en',
     activeProfileAtTurn: 'general',

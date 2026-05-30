@@ -41,15 +41,15 @@ export class SemanticRepairValidator {
   /**
    * 验证修复后的文本
    */
-  validate(originalText: string, repairedText: string): ValidationResult {
+  validate(originalText: string, outputText: string): ValidationResult {
     const reasonCodes: string[] = [];
     const details: ValidationResult['details'] = {
       originalLength: originalText.length,
-      repairedLength: repairedText.length,
+      repairedLength: outputText.length,
     };
 
     // 1. 长度变化检查
-    const lengthChangeRatio = Math.abs(repairedText.length - originalText.length) / originalText.length;
+    const lengthChangeRatio = Math.abs(outputText.length - originalText.length) / originalText.length;
     details.lengthChangeRatio = lengthChangeRatio;
 
     if (lengthChangeRatio > this.config.maxLengthChangeRatio) {
@@ -57,7 +57,7 @@ export class SemanticRepairValidator {
       logger.warn(
         {
           originalLength: originalText.length,
-          repairedLength: repairedText.length,
+          repairedLength: outputText.length,
           lengthChangeRatio,
           maxRatio: this.config.maxLengthChangeRatio,
         },
@@ -68,7 +68,7 @@ export class SemanticRepairValidator {
     // 2. 数字保护检查
     if (this.config.strictNumberPreservation) {
       const originalNumbers = this.extractNumbers(originalText);
-      const repairedNumbers = this.extractNumbers(repairedText);
+      const repairedNumbers = this.extractNumbers(outputText);
 
       if (originalNumbers.length > 0) {
         if (repairedNumbers.length === 0) {
@@ -78,7 +78,7 @@ export class SemanticRepairValidator {
           logger.warn(
             {
               originalText: originalText.substring(0, 100),
-              repairedText: repairedText.substring(0, 100),
+              outputTextPreview: outputText.substring(0, 100),
               originalNumbers,
             },
             'SemanticRepairValidator: Numbers missing in repaired text'
@@ -100,7 +100,7 @@ export class SemanticRepairValidator {
     // 3. URL保护检查
     if (this.config.strictUrlPreservation) {
       const originalUrls = this.extractUrls(originalText);
-      const repairedUrls = this.extractUrls(repairedText);
+      const repairedUrls = this.extractUrls(outputText);
 
       if (originalUrls.length > 0 && repairedUrls.length === 0) {
         reasonCodes.push('URLS_MISSING');
@@ -108,7 +108,7 @@ export class SemanticRepairValidator {
         logger.warn(
           {
             originalText: originalText.substring(0, 100),
-            repairedText: repairedText.substring(0, 100),
+            outputTextPreview: outputText.substring(0, 100),
             originalUrls,
           },
           'SemanticRepairValidator: URLs missing in repaired text'
@@ -119,7 +119,7 @@ export class SemanticRepairValidator {
     // 4. 邮箱保护检查
     if (this.config.strictEmailPreservation) {
       const originalEmails = this.extractEmails(originalText);
-      const repairedEmails = this.extractEmails(repairedText);
+      const repairedEmails = this.extractEmails(outputText);
 
       if (originalEmails.length > 0 && repairedEmails.length === 0) {
         reasonCodes.push('EMAILS_MISSING');
@@ -127,7 +127,7 @@ export class SemanticRepairValidator {
         logger.warn(
           {
             originalText: originalText.substring(0, 100),
-            repairedText: repairedText.substring(0, 100),
+            outputTextPreview: outputText.substring(0, 100),
             originalEmails,
           },
           'SemanticRepairValidator: Emails missing in repaired text'

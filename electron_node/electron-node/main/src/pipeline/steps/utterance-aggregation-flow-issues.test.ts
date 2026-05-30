@@ -368,7 +368,7 @@ describe('Utterance聚合流程潜在问题验证', () => {
       expect(mockStageProcess).toHaveBeenCalledTimes(1);
     });
 
-    it('process 返回 REPAIR 时 step 会写回 ctx.repairedText', async () => {
+    it('process 返回 REPAIR 时 step 会写回 ctx.segmentForJobResult', async () => {
       const mockStageProcess = jest.fn().mockResolvedValue({
         decision: 'REPAIR',
         textOut: 'repaired text',
@@ -381,7 +381,7 @@ describe('Utterance聚合流程潜在问题验证', () => {
       await runSemanticRepairStep(job, ctx, services);
 
       expect(mockStageProcess).toHaveBeenCalledTimes(1);
-      expect(ctx.repairedText).toBe('repaired text');
+      expect(ctx.segmentForJobResult).toBe('repaired text');
     });
   });
 

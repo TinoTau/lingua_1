@@ -13,7 +13,7 @@ export type LexiconIntentRequestPayload = {
   turns: Array<{
     turnId: string;
     rawAsrText: string;
-    repairedText: string;
+    finalText: string;
     activeProfileAtTurn: string;
     recoverStats: RollingTurn['recoverStats'];
   }>;
@@ -32,7 +32,7 @@ export function buildLexiconIntentRequest(input: {
   const turns = input.turns.slice(-maxTurns).map((t) => ({
     turnId: t.turnId,
     rawAsrText: t.rawAsrText,
-    repairedText: t.repairedText,
+    finalText: t.finalText,
     activeProfileAtTurn: t.activeProfileAtTurn,
     recoverStats: t.recoverStats,
   }));

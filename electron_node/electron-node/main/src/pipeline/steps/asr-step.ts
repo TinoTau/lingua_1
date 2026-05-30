@@ -351,9 +351,7 @@ export async function runAsrStep(
   }
 
   if (isFwDetectorEngineEnabled()) {
-    const baseline = (ctx.rawAsrText ?? ctx.asrText ?? '').trim();
-    ctx.repairedText = baseline;
-    ctx.segmentForJobResult = baseline;
+    ctx.segmentForJobResult = (ctx.rawAsrText ?? ctx.asrText ?? '').trim();
   }
 
   const fwDiag = ctx.asrResult?.diagnostics as Record<string, unknown> | undefined;

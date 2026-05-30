@@ -8,15 +8,15 @@ import type { ASRHypothesis } from '../../asr/types';
 import type { LexiconManifestReadyInfo, LexiconRuntimeStatus } from '../../lexicon/lexicon-types';
 import type { WindowCandidate } from '../../lexicon/hotword-types';
 import type { WindowRecallDiagnostics } from '../../lexicon/window-recall-diagnostics';
-import type { SentenceCandidate } from '../../asr-repair/sentence-expansion/types';
-import type { ExpansionDiagnostics } from '../../asr-repair/sentence-expansion/expansion-diagnostics';
+import type { SentenceCandidate } from '../../legacy/recover/asr-repair/sentence-expansion/types';
+import type { ExpansionDiagnostics } from '../../legacy/recover/asr-repair/sentence-expansion/expansion-diagnostics';
 import type { SegmentAlignmentDiagnostics } from '../../asr/segment-alignment-diagnostics';
 import type { CrossBoundaryRiskReport } from '../../asr/cross-boundary-risk';
 import type { RecallCoverageDiagnostics } from '../../lexicon/recall-coverage-diagnostics';
-import type { RestoreMetrics } from '../../asr-repair/restore-metrics';
-import type { SentenceRepairExtra } from '../../asr-repair/sentence-rerank/sentence-repair-observability';
-import type { RecoverLifecycle } from '../recover-contract-types';
-import type { SentenceCandidateTraceItem, V5Metrics } from '../v5-metrics';
+import type { RestoreMetrics } from '../../legacy/recover/asr-repair/restore-metrics';
+import type { SentenceRepairExtra } from '../../legacy/recover/asr-repair/sentence-rerank/sentence-repair-observability';
+import type { RecoverLifecycle } from '../../legacy/recover/recover-contract-types';
+import type { SentenceCandidateTraceItem, V5Metrics } from '../../legacy/recover/v5-metrics';
 import type { FwDetectorResult, KenlmGateMode } from '../../fw-detector/types';
 
 export interface JobContext {
@@ -92,12 +92,10 @@ export interface JobContext {
   fwDetectorKenlmVetoThresholdOverride?: number;
 
   // 聚合相关
-  segmentForJobResult?: string;  // 本 job 的本段；语义修复只读此字段，产出 repairedText → text_asr / NMT
+  segmentForJobResult?: string;  // SSOT：FW / 聚合 / 5015 / NMT / text_asr
   aggregationAction?: 'MERGE' | 'NEW_STREAM' | 'COMMIT';
   aggregationChanged?: boolean;
   isLastInMergedGroup?: boolean;
-  /** @deprecated 请用 shouldRunSemanticRepairHttp；保留供旧测试/日志 */
-  shouldSendToSemanticRepair?: boolean;
   shouldDeferTranslation?: boolean;
   shouldAllowTranslation?: boolean;
   shouldRunPhoneticCorrection?: boolean;
@@ -107,10 +105,9 @@ export interface JobContext {
     dedupCount?: number;
     dedupCharsRemoved?: number;
   };
-  lastCommittedText?: string | null;  // 上一个已提交的文本（用于 Trim 操作，避免重复获取，null表示没有上一个已提交的文本）
+  lastCommittedText?: string | null;
 
   // 语义修复相关
-  repairedText?: string;
   semanticDecision?: 'PASS' | 'REPAIR' | 'REJECT';
   /** 仅当 5015 HTTP 修复成功时为 true */
   semanticRepairApplied?: boolean;

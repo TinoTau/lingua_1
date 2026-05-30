@@ -1,5 +1,5 @@
 import { describe, expect, it, jest } from '@jest/globals';
-import type { KenLMScorer } from '../asr-repair/sentence-rerank/types';
+import type { KenLMScorer } from '../asr-repair/kenlm-batch-types';
 import type { LexiconRuntime } from '../lexicon/lexicon-runtime';
 import { defaultGeneralProfile } from '../lexicon-v2/profile-registry';
 import { runFwTopKDecisionPipeline } from './fw-topk-decision-pipeline';

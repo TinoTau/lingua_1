@@ -71,7 +71,6 @@ export interface JobResult {
   semantic_repair_skip_reason?: string;
   semantic_repair_degraded?: boolean;
   en_normalize_applied?: boolean;
-  text_asr_repaired?: string;
   phonetic_correction_skipped?: boolean;
   phonetic_correction_skip_reason?: string;
   phonetic_correction_degraded?: boolean;

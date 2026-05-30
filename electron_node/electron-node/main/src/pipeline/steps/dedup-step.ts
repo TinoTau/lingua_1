@@ -1,6 +1,5 @@
 /**
  * runDedupStep - 去重步骤
- * 基于 job_id 进行去重检查
  */
 
 import { JobAssignMessage } from '@shared/protocols/messages';
@@ -14,24 +13,20 @@ export async function runDedupStep(
   ctx: JobContext,
   services: ServicesBundle
 ): Promise<void> {
-  // 去重只读 repairedText（由 sentence repair / 语义修复 写入，无 lexicon fallback）
-  const finalText = ctx.repairedText ?? '';
-  if (ctx.repairedText === undefined) {
+  const finalText = (ctx.segmentForJobResult ?? '').trim();
+  if (!finalText) {
     logger.warn(
       { jobId: job.job_id, sessionId: job.session_id },
-      'runDedupStep: ctx.repairedText undefined, aggregation or semantic repair step should have set it'
+      'runDedupStep: ctx.segmentForJobResult empty'
     );
   }
 
-  // 使用全局 DedupStage 实例（应该已经在 InferenceService 中初始化）
   if (!services.dedupStage) {
     services.dedupStage = new DedupStage();
   }
 
-  // 执行去重检查（翻译在去重之后执行，此处 translatedText 通常为空）
   const dedupResult = services.dedupStage.process(job, finalText, ctx.translatedText ?? '');
 
-  // 更新 JobContext
   ctx.shouldSend = dedupResult.shouldSend;
   ctx.dedupReason = dedupResult.reason;
 

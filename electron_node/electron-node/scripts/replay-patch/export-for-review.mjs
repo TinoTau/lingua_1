@@ -27,7 +27,7 @@ const proposals = lines.map((line, i) => {
     status: 'pending',
     caseId: row.caseId,
     rawAsr: row.rawAsr,
-    repairedText: row.repairedText,
+    finalText: row.finalText ?? row.repairedText ?? '',
     missingCandidate: row.missingCandidate,
     suggestedDomain: row.suggestedDomain,
     reason: row.reason,

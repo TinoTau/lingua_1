@@ -59,7 +59,7 @@ describe('semantic-repair-step 优化验证', () => {
     } as any;
   });
 
-  it('只读 segmentForJobResult，修后写入 repairedText', async () => {
+  it('只读 segmentForJobResult，修后写回 segmentForJobResult', async () => {
     const job = createJob();
     const ctx = initJobContext(job);
     ctx.segmentForJobResult = 'test text';
@@ -71,7 +71,7 @@ describe('semantic-repair-step 优化验证', () => {
     expect(mockAggregatorManager.getLastCommittedText).not.toHaveBeenCalled();
     expect(mockSemanticRepairStage.process).toHaveBeenCalledTimes(1);
     expect(mockSemanticRepairStage.process.mock.calls[0][1]).toBe('test text');
-    expect(ctx.repairedText).toBe('repaired text');
+    expect(ctx.segmentForJobResult).toBe('repaired text');
   });
 
   it('应正确处理 null 的 lastCommittedText', async () => {
@@ -83,7 +83,7 @@ describe('semantic-repair-step 优化验证', () => {
 
     await runSemanticRepairStep(job, ctx, mockServices);
 
-    expect(ctx.repairedText).toBe('repaired text');
+    expect(ctx.segmentForJobResult).toBe('repaired text');
   });
 
   it('segmentForJobResult 为空时跳过修复', async () => {
@@ -94,7 +94,7 @@ describe('semantic-repair-step 优化验证', () => {
     await runSemanticRepairStep(job, ctx, mockServices);
 
     expect(mockSemanticRepairStage.process).not.toHaveBeenCalled();
-    expect(ctx.repairedText).toBe('');
+    expect(ctx.segmentForJobResult).toBe('');
   });
 
   describe('语义修复不可用（热插拔 skip，保留原文继续主链）', () => {
@@ -106,7 +106,7 @@ describe('semantic-repair-step 优化验证', () => {
 
       await runSemanticRepairStep(job, ctx, servicesNoInit);
 
-      expect(ctx.repairedText).toBe('asr text');
+      expect(ctx.segmentForJobResult).toBe('asr text');
       expect(ctx.semanticRepairSkipped).toBe(true);
       expect(ctx.semanticRepairHttpApplied).toBe(false);
       expect(mockSemanticRepairStage.process).not.toHaveBeenCalled();
@@ -121,7 +121,7 @@ describe('semantic-repair-step 优化验证', () => {
 
       await runSemanticRepairStep(job, ctx, mockServices);
 
-      expect(ctx.repairedText).toBe('asr text');
+      expect(ctx.segmentForJobResult).toBe('asr text');
       expect(ctx.semanticRepairSkipped).toBe(true);
       expect(mockSemanticRepairStage.process).not.toHaveBeenCalled();
     });
@@ -134,7 +134,7 @@ describe('semantic-repair-step 优化验证', () => {
 
       await runSemanticRepairStep(job, ctx, mockServices);
 
-      expect(ctx.repairedText).toBe('asr text');
+      expect(ctx.segmentForJobResult).toBe('asr text');
       expect(ctx.semanticRepairSkipped).toBe(true);
       expect(mockSemanticRepairStage.process).not.toHaveBeenCalled();
     });

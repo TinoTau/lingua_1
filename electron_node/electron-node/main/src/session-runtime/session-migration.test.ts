@@ -32,7 +32,7 @@ function turn(sessionId: string): RollingTurn {
     turnId: 't1',
     timestamp: Date.now(),
     rawAsrText: 'hello',
-    repairedText: 'hello fixed',
+    finalText: 'hello fixed',
     sourceLang: 'zh',
     targetLang: 'en',
     activeProfileAtTurn: 'general',

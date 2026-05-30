@@ -21,7 +21,7 @@ function turn(noTopk: boolean): RollingTurn {
     turnId: 't',
     timestamp: Date.now(),
     rawAsrText: 'x',
-    repairedText: 'x',
+    finalText: 'x',
     sourceLang: 'zh',
     targetLang: 'en',
     activeProfileAtTurn: 'general',

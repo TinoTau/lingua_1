@@ -2,6 +2,7 @@
  * P0-Guard: finalize 路径调用 completeAggregation 门控。
  */
 import { completeAggregation } from '../../main/src/pipeline/complete-aggregation';
+import { getTextForTranslation } from '../../main/src/pipeline/post-asr-routing';
 import { initJobContext } from '../../main/src/pipeline/context/job-context';
 import { JobAssignMessage } from '@shared/protocols/messages';
 
@@ -32,10 +33,9 @@ describe('P0-Guard: completeAggregation', () => {
     pipeline: { use_asr: true },
   } as JobAssignMessage;
 
-  it('segmentReady 时写入 repairedText 基线并允许翻译', () => {
+  it('segmentReady 时允许翻译且 NMT 读 segmentForJobResult', () => {
     const ctx = initJobContext(job);
-    ctx.segmentForJobResult = '聚合段';
-    ctx.repairedText = '已有修复';
+    ctx.segmentForJobResult = '完整 turn 文本';
 
     completeAggregation(job, ctx, {
       segmentReady: true,
@@ -43,13 +43,12 @@ describe('P0-Guard: completeAggregation', () => {
     });
 
     expect(ctx.shouldAllowTranslation).toBe(true);
-    expect(ctx.repairedText).toBe('已有修复');
+    expect(getTextForTranslation(ctx)).toBe('完整 turn 文本');
   });
 
-  it('defer 时清空 repairedText', () => {
+  it('defer 时保留 segmentForJobResult', () => {
     const ctx = initJobContext(job);
-    ctx.segmentForJobResult = '聚合段';
-    ctx.repairedText = '已有修复';
+    ctx.segmentForJobResult = '已有 segment';
 
     completeAggregation(job, ctx, {
       segmentReady: true,
@@ -57,7 +56,7 @@ describe('P0-Guard: completeAggregation', () => {
       deferTranslation: true,
     });
 
-    expect(ctx.repairedText).toBe('');
+    expect(ctx.segmentForJobResult).toBe('已有 segment');
     expect(ctx.shouldDeferTranslation).toBe(true);
   });
 });

@@ -8,6 +8,7 @@ import { ServicesBundle } from '../job-pipeline';
 import logger from '../../logger';
 import { getPunctuationRestoreUrl, isPunctuationRestoreEnabled } from '../../node-config';
 import { withGpuLease } from '../../gpu-arbiter';
+import { isSegmentWriteLocked } from '../post-asr-routing';
 import {
   checkEnhancementService,
   ENHANCEMENT_SERVICE_IDS,
@@ -24,6 +25,11 @@ export async function runPunctuationRestoreStep(
 ): Promise<void> {
   const segment = (ctx.segmentForJobResult ?? '').trim();
   if (segment.length === 0) {
+    return;
+  }
+
+  if (isSegmentWriteLocked(ctx)) {
+    markPunctuationRestoreSkipped(ctx, 'SEGMENT_WRITE_LOCKED');
     return;
   }
 

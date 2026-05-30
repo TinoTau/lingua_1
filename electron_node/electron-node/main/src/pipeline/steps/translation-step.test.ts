@@ -21,7 +21,6 @@ describe('runTranslationStep', () => {
   it('shouldDeferTranslation 为 true 时跳过翻译', async () => {
     const ctx: JobContext = {
       segmentForJobResult: '有内容',
-      repairedText: '有内容',
       shouldDeferTranslation: true,
       shouldAllowTranslation: false,
     };
@@ -29,9 +28,9 @@ describe('runTranslationStep', () => {
     expect(ctx.translatedText).toBe('');
   });
 
-  it('shouldAllowTranslation 且有文本时尝试翻译（无 mock stage 则失败置空）', async () => {
+  it('shouldAllowTranslation 且有 segment 时尝试翻译（无 mock stage 则失败置空）', async () => {
     const ctx: JobContext = {
-      repairedText: '你好',
+      segmentForJobResult: '你好',
       shouldAllowTranslation: true,
       shouldDeferTranslation: false,
     };
@@ -39,9 +38,13 @@ describe('runTranslationStep', () => {
     expect(ctx.translatedText).toBe('');
   });
 
-  it('shouldSend 为 false 时直接 return', async () => {
-    const ctx: JobContext = { shouldSend: false };
+  it('segmentForJobResult 为空时不调用翻译', async () => {
+    const ctx: JobContext = {
+      asrText: '仅有 diagnostics',
+      shouldAllowTranslation: true,
+      shouldDeferTranslation: false,
+    };
     await runTranslationStep(job, ctx, services);
-    expect(ctx.shouldSend).toBe(false);
+    expect(ctx.translatedText).toBe('');
   });
 });

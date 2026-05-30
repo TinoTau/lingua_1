@@ -5,7 +5,7 @@
 
 import { runAggregationStep } from './aggregation-step';
 import { JobAssignMessage } from '@shared/protocols/messages';
-import { JobContext, initJobContext } from '../context/job-context';
+import { initJobContext } from '../context/job-context';
 import { ServicesBundle } from '../job-pipeline';
 
 describe('aggregation-step', () => {
@@ -22,26 +22,24 @@ describe('aggregation-step', () => {
     it('应设置 segment 与 shouldAllowTranslation，语义修复默认不开启', async () => {
       const job = createJob();
       const ctx = initJobContext(job);
-      ctx.asrText = '超市日治关节云'; // 模拟 ASR 原文
+      ctx.segmentForJobResult = '超市日治关节云';
 
       const services: ServicesBundle = {
         taskRouter: {},
-        // aggregatorManager 未提供
       } as any;
 
       await runAggregationStep(job, ctx, services);
 
       expect(ctx.segmentForJobResult).toBe('超市日治关节云');
       expect(ctx.aggregationChanged).toBe(false);
-      expect(ctx.shouldSendToSemanticRepair).toBe(false);
       expect(ctx.shouldRunSemanticRepairHttp).toBe(false);
       expect(ctx.shouldAllowTranslation).toBe(true);
     });
 
-    it('ASR 文本为空时应设置 segmentForJobResult、repairedText 均为空', async () => {
+    it('segment 为空时应设置 segmentForJobResult 为空并 defer', async () => {
       const job = createJob();
       const ctx = initJobContext(job);
-      ctx.asrText = '';
+      ctx.segmentForJobResult = '';
 
       const services: ServicesBundle = {
         taskRouter: {},
@@ -50,17 +48,33 @@ describe('aggregation-step', () => {
       await runAggregationStep(job, ctx, services);
 
       expect(ctx.segmentForJobResult).toBe('');
-      expect(ctx.repairedText).toBe('');
       expect(ctx.shouldDeferTranslation).toBe(true);
       expect(ctx.shouldRunSemanticRepairHttp).toBe(false);
+    });
+
+    it('segment 为空时不应 fallback 到 asrText', async () => {
+      const job = createJob();
+      const ctx = initJobContext(job);
+      ctx.asrText = '仅 diagnostics 有值';
+      ctx.segmentForJobResult = undefined;
+
+      const services: ServicesBundle = {
+        taskRouter: {},
+      } as any;
+
+      await runAggregationStep(job, ctx, services);
+
+      expect(ctx.segmentForJobResult).toBe('');
+      expect(ctx.shouldDeferTranslation).toBe(true);
+      expect(ctx.shouldAllowTranslation).toBe(false);
     });
   });
 
   describe('CTC 兼容：单次 final 与 utterance 聚合', () => {
-    it('单段 ASR 文本（如 CTC POST /utterance 单次返回）走聚合步骤与多段路径一致', async () => {
+    it('单段 segment 走聚合步骤与多段路径一致', async () => {
       const job = createJob();
       const ctx = initJobContext(job);
-      ctx.asrText = 'CTC 单次识别结果文本'; // 模拟 CTC 仅返回一次 final，无 partial
+      ctx.segmentForJobResult = 'CTC 单次识别结果文本';
 
       const services: ServicesBundle = {
         taskRouter: {},
@@ -69,7 +83,6 @@ describe('aggregation-step', () => {
       await runAggregationStep(job, ctx, services);
 
       expect(ctx.segmentForJobResult).toBe('CTC 单次识别结果文本');
-      expect(ctx.shouldSendToSemanticRepair).toBe(false);
       expect(ctx.shouldRunSemanticRepairHttp).toBe(false);
       expect(ctx.shouldAllowTranslation).toBe(true);
     });

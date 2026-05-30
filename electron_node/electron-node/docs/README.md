@@ -11,6 +11,7 @@
 | [CONFIGURATION.md](./CONFIGURATION.md) | 配置与环境变量 |
 | [SERVICES.md](./SERVICES.md) | 子服务启停 |
 | [ASR_Module_Flow.md](./ASR_Module_Flow.md) | ASR 调用链（含 FW 路由） |
+| [ASR前后处理链路审计报告_2026_05_27.md](./ASR前后处理链路审计报告_2026_05_27.md) | **只读审计**：ASR 前/后处理至 NMT 前全链路 |
 | [RECOVER.md](./RECOVER.md) | Recover V5（非 FW 默认主链） |
 | [LEXICON.md](./LEXICON.md) | 词库运行时 + FW span recall |
 | [SESSION_AFFINITY.md](./SESSION_AFFINITY.md) | Intent / Session 路由（V2） |

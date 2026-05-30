@@ -215,9 +215,7 @@ export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDete
     gateOptions,
   });
 
-  const repaired = applyFwSpanReplacements(rawText, decision.approved);
-  ctx.repairedText = repaired;
-  ctx.segmentForJobResult = repaired;
+  ctx.segmentForJobResult = applyFwSpanReplacements(rawText, decision.approved);
   if (decision.approved.length > 0) {
     ctx.asrRepairApplied = true;
   }

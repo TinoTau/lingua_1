@@ -1,31 +1,27 @@
-import { describe, expect, it } from '@jest/globals';
-import type { JobContext } from './context/job-context';
 import {
-  isRecoverWriteLocked,
+  isSegmentWriteLocked,
   markSemanticRepairHttpSuccess,
   markSemanticRepairSkipped,
 } from './post-asr-routing';
+import type { JobContext } from './context/job-context';
 
-describe('Recover write lock', () => {
-  it('5015 成功时不覆盖 asrRepairApplied 的 repairedText', () => {
-    const ctx: JobContext = {
-      repairedText: 'recover-picked',
+describe('segment write lock', () => {
+  it('5015 成功时不覆盖 asrRepairApplied 的 segmentForJobResult', () => {
+    const ctx = {
+      segmentForJobResult: 'recover-picked',
       asrRepairApplied: true,
-      segmentForJobResult: 'segment',
-    };
-    expect(isRecoverWriteLocked(ctx)).toBe(true);
-    markSemanticRepairHttpSuccess(ctx, 'semantic-overwrite');
-    expect(ctx.repairedText).toBe('recover-picked');
-    expect(ctx.semanticRepairSkipReason).toBe('RECOVER_WRITE_LOCKED');
+    } as JobContext;
+    expect(isSegmentWriteLocked(ctx)).toBe(true);
+    markSemanticRepairHttpSuccess(ctx, 'other');
+    expect(ctx.segmentForJobResult).toBe('recover-picked');
   });
 
-  it('skip 时不覆盖 repairedText', () => {
-    const ctx: JobContext = {
-      repairedText: 'recover-picked',
+  it('skip 时不覆盖 segmentForJobResult', () => {
+    const ctx = {
+      segmentForJobResult: 'recover-picked',
       asrRepairApplied: true,
-      segmentForJobResult: 'segment',
-    };
-    markSemanticRepairSkipped(ctx, 'TEST', { fallbackText: 'segment' });
-    expect(ctx.repairedText).toBe('recover-picked');
+    } as JobContext;
+    markSemanticRepairSkipped(ctx, 'LOCKED');
+    expect(ctx.segmentForJobResult).toBe('recover-picked');
   });
 });

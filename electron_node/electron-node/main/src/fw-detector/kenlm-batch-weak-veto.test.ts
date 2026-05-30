@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
-import type { KenLMScorer } from '../asr-repair/sentence-rerank/types';
+import type { KenLMScorer } from '../asr-repair/kenlm-batch-types';
 import { scoreSpanCandidateSentences } from '../asr-repair/kenlm-span-gate';
 
 describe('scoreSpanCandidateSentences (FW topK batch)', () => {

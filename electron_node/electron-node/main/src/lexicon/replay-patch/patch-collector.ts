@@ -25,7 +25,7 @@ export function collectReplayPatchProposal(job: JobAssignMessage, ctx: JobContex
     buildPatchProposal({
       caseId: job.job_id,
       rawAsr,
-      repairedText: (ctx.repairedText ?? rawAsr).trim(),
+      finalText: (ctx.segmentForJobResult ?? rawAsr).trim(),
       windowText: typeof windowText === 'string' ? windowText : rawAsr.slice(0, 8),
       suggestedDomain: profile,
       reason: 'no_topk_candidate',

@@ -10,7 +10,7 @@ import logger from '../logger';
 import { buildJobResult } from './result-builder';
 import { inferPipelineMode, shouldExecuteStep, PipelineMode } from './pipeline-mode-config';
 import { getLexiconRecallSkipReason } from '../node-config';
-import { stampRecoverPipelineSkip } from './recover-contract';
+import { stampRecoverPipelineSkip } from '../legacy/recover/recover-contract';
 import { executeStep, PipelineStepType } from './pipeline-step-registry';
 import { buildBufferKey } from '../pipeline-orchestrator/audio-aggregator-buffer-key';
 import { finalizeSessionTurn, beginSessionTurnProfile } from '../session-runtime/session-finalize';

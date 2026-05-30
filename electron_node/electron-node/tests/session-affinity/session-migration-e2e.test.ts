@@ -56,7 +56,7 @@ function ctxWithText(j: JobAssignMessage, text: string) {
   const ctx = initJobContext(j);
   ctx.asrText = text;
   ctx.segmentForJobResult = text;
-  ctx.repairedText = text;
+  ctx.segmentForJobResult = text;
   ctx.v5Metrics = { lexicon_pinyin_topk_candidate_count: 1 } as any;
   return ctx;
 }

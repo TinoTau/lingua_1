@@ -29,7 +29,7 @@ _last_inference_ms = 0
 class TurnInput(BaseModel):
     turnId: str
     rawAsrText: str = ""
-    repairedText: str = ""
+    finalText: str = ""
     activeProfileAtTurn: str = "general"
     recoverStats: dict[str, Any] = Field(default_factory=dict)
 

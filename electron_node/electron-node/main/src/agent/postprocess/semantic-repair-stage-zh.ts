@@ -181,7 +181,7 @@ export class SemanticRepairStageZH {
             jobId: job.job_id,
             validationReasonCodes: validationResult.reasonCodes,
             originalText: text.substring(0, 50),
-            repairedText: repairResult.text_out.substring(0, 50),
+            outputTextPreview: repairResult.text_out.substring(0, 50),
           },
           'SemanticRepairStageZH: Validation failed, reverting to PASS'
         );

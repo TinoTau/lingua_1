@@ -85,10 +85,65 @@ describe('P1.2c-fix merge freeze contract (V1.1)', () => {
     expect(asrStep).toContain('ctx.rawAsrText === undefined');
   });
 
-  it('result-builder text_asr 来自 repairedText', () => {
+  it('result-builder text_asr 来自 segmentForJobResult', () => {
     const rb = readSrc('pipeline/result-builder.ts');
     expect(rb).toMatch(/text_asr:\s*finalAsrText/);
-    expect(rb).toContain('ctx.repairedText');
+    expect(rb).toContain('resolveBusinessAsrText');
+    expect(rb).not.toContain('ctx.repairedText');
     expect(rb).toContain('raw_asr_text');
+  });
+
+  it('post-asr-routing 不含 syncRepairedTextBaseline', () => {
+    const routing = readSrc('pipeline/post-asr-routing.ts');
+    expect(routing).not.toContain('syncRepairedTextBaseline');
+    expect(routing).not.toContain('ctx.repairedText');
+  });
+
+  it('resolveBusinessAsrText 只读 segmentForJobResult，禁止 asr/raw/repaired fallback', () => {
+    const routing = stripComments(readSrc('pipeline/post-asr-routing.ts'));
+    expect(routing).toContain('resolveBusinessAsrText');
+    expect(routing).not.toContain('resolveBusinessAsrTextSource');
+    expect(routing).not.toMatch(/\bctx\.asrText\b/);
+    expect(routing).not.toMatch(/\bctx\.rawAsrText\b/);
+    expect(routing).not.toMatch(/\brepairedText\b/);
+    expect(routing).not.toMatch(/return\s*['"]asrText['"]/);
+  });
+
+  it('aggregation-step currentSegment 不 fallback asrText/rawAsrText', () => {
+    const agg = stripComments(readSrc('pipeline/steps/aggregation-step.ts'));
+    expect(agg).not.toMatch(/detectorSegment\s*\|\|\s*ctx\.asrText/);
+    expect(agg).not.toMatch(/ctx\.asrText\s*\|\|/);
+    expect(agg).not.toMatch(/\bctx\.rawAsrText\b/);
+  });
+
+  it('result-builder 使用 resolveBusinessAsrText', () => {
+    const rb = readSrc('pipeline/result-builder.ts');
+    expect(rb).toContain('resolveBusinessAsrText');
+  });
+
+  it('FW pipeline 含 DEDUP 且位于 TRANSLATION 前', () => {
+    const mode = applyFwDetectorPipelineMode(PIPELINE_MODES.GENERAL_VOICE_TRANSLATION);
+    const dedupIdx = mode.steps.indexOf('DEDUP');
+    const transIdx = mode.steps.indexOf('TRANSLATION');
+    expect(dedupIdx).toBeGreaterThanOrEqual(0);
+    expect(transIdx).toBeGreaterThan(dedupIdx);
+  });
+
+  it('JobContext 类型不含 repairedText', () => {
+    const jc = readSrc('pipeline/context/job-context.ts');
+    expect(jc).not.toMatch(/\brepairedText\b/);
+  });
+
+  it('FW 主链源文件不 import legacy/recover', () => {
+    const fwPaths = [
+      'fw-detector/pipeline-mode-fw.ts',
+      'pipeline/steps/fw-detector-step.ts',
+      'pipeline/steps/aggregation-step.ts',
+      'pipeline/steps/asr-step.ts',
+    ];
+    for (const rel of fwPaths) {
+      const src = readSrc(rel);
+      expect(src).not.toContain('legacy/recover');
+    }
   });
 });

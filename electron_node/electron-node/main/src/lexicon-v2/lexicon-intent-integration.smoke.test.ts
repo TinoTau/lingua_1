@@ -15,7 +15,7 @@ function travelTurn(): RollingTurn {
     turnId: 't1',
     timestamp: Date.now(),
     rawAsrText: '我想订机票去机场旁边的酒店',
-    repairedText: '我想订机票去机场旁边的酒店',
+    finalText: '我想订机票去机场旁边的酒店',
     sourceLang: 'zh',
     targetLang: 'en',
     activeProfileAtTurn: 'general',

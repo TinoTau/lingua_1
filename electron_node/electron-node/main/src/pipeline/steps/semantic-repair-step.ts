@@ -6,10 +6,9 @@ import { JobAssignMessage } from '@shared/protocols/messages';
 import { JobContext } from '../context/job-context';
 import { ServicesBundle } from '../job-pipeline';
 import {
-  isRecoverWriteLocked,
+  isSegmentWriteLocked,
   markSemanticRepairHttpSuccess,
   markSemanticRepairSkipped,
-  syncRepairedTextBaseline,
 } from '../post-asr-routing';
 import {
   checkEnhancementService,
@@ -25,7 +24,7 @@ export async function runSemanticRepairStep(
 ): Promise<void> {
   const textToRepair = (ctx.segmentForJobResult ?? '').trim();
   if (textToRepair.length === 0) {
-    ctx.repairedText = '';
+    ctx.segmentForJobResult = '';
     return;
   }
 
@@ -109,44 +108,42 @@ export async function runSemanticRepairStep(
         degraded: repairResult.degraded,
         fallbackText: textToRepair,
       });
-      syncRepairedTextBaseline(ctx);
       return;
     }
 
     if (repairResult.decision === 'REPAIR' || repairResult.decision === 'PASS') {
       if (repairResult.semanticRepairHttpApplied) {
         markSemanticRepairHttpSuccess(ctx, repairResult.textOut, repairResult.confidence);
-      } else if (!isRecoverWriteLocked(ctx)) {
-        ctx.repairedText = repairResult.textOut;
+      } else if (!isSegmentWriteLocked(ctx)) {
+        ctx.segmentForJobResult = repairResult.textOut;
         ctx.semanticRepairApplied = false;
         ctx.semanticRepairHttpApplied = false;
         ctx.semanticRepairHttpCalled = repairResult.semanticRepairHttpCalled === true;
         ctx.enNormalizeApplied = repairResult.enNormalizeApplied === true;
       } else {
         ctx.semanticRepairSkipped = true;
-        ctx.semanticRepairSkipReason = 'RECOVER_WRITE_LOCKED';
+        ctx.semanticRepairSkipReason = 'SEGMENT_WRITE_LOCKED';
         ctx.semanticRepairHttpCalled = repairResult.semanticRepairHttpCalled === true;
         ctx.semanticRepairHttpApplied = false;
         ctx.semanticRepairApplied = false;
       }
       ctx.semanticDecision = repairResult.decision;
 
-      if (services.aggregatorManager && ctx.repairedText && !isRecoverWriteLocked(ctx)) {
+      const segmentAfterRepair = (ctx.segmentForJobResult ?? '').trim();
+      if (services.aggregatorManager && segmentAfterRepair && !isSegmentWriteLocked(ctx)) {
         services.aggregatorManager.updateLastCommittedTextAfterRepair(
           job.session_id,
           job.utterance_index,
           textToRepair,
-          ctx.repairedText
+          segmentAfterRepair
         );
       }
     } else if (repairResult.decision === 'REJECT') {
-      if (!isRecoverWriteLocked(ctx)) {
-        ctx.repairedText = textToRepair;
+      if (!isSegmentWriteLocked(ctx)) {
+        ctx.segmentForJobResult = textToRepair;
       }
       ctx.semanticDecision = 'REJECT';
       ctx.semanticRepairApplied = false;
-    } else if (!isRecoverWriteLocked(ctx)) {
-      syncRepairedTextBaseline(ctx);
     }
   } catch (error: any) {
     markSemanticRepairSkipped(ctx, 'SERVICE_ERROR', {
