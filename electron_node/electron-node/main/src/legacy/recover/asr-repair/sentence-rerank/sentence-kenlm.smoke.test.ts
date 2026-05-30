@@ -1,7 +1,6 @@
-﻿import * as fs from 'fs';
+import * as fs from 'fs';
 import * as path from 'path';
 import type { SentenceCandidate } from '../sentence-expansion/types';
-import { createKenlmBatchScorer } from '../../../../asr-repair/sentence-rerank/kenlm-scorer';
 import { rerankSentenceCandidates } from './rerank';
 import { resetLmScorerForTests } from '../../../../phonetic-correction/lm-scorer';
 
@@ -14,15 +13,17 @@ const KENLM_SCORER_SRC = fs.readFileSync(
 function baseCandidate(text: string, phoneticScore: number): SentenceCandidate {
   return {
     text,
+    baseText: text,
     hypothesisIndex: 0,
     phoneticScore,
     hotwordPrior: 0,
     acousticScore: -1,
     replacements: [],
+    candidateSource: 'window_single',
   };
 }
 
-describe('sentence KenLM smoke', () => {
+describe('legacy recover only — sentence KenLM smoke (not used by FW frozen main chain)', () => {
   it('句级 rerank 源码不依赖 asrKenlmMeta', () => {
     expect(RERANK_SRC).not.toMatch(/asrKenlmMeta|asr_kenlm_meta/);
     expect(KENLM_SCORER_SRC).not.toMatch(/asrKenlmMeta|asr_kenlm_meta/);
@@ -39,13 +40,12 @@ describe('sentence KenLM smoke', () => {
     delete process.env.CHAR_LM_PATH;
     delete process.env.PROJECT_ROOT;
     resetLmScorerForTests();
-    expect(createKenlmBatchScorer()).toBeNull();
 
     const candidates = [
       baseCandidate('我们要做后选生城', 0.9),
       baseCandidate('我们要做候选生成', 0.7),
     ];
-    const result = await rerankSentenceCandidates(candidates);
+    const result = await rerankSentenceCandidates(candidates, undefined, null);
     expect(result.kenlmAvailable).toBe(false);
     expect(result.picked.text).toBeDefined();
     expect(result.candidates.every((c) => c.kenlmScore === undefined)).toBe(true);

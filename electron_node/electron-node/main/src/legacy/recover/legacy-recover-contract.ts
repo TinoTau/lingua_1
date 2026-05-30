@@ -1,5 +1,8 @@
-﻿/**
- * Recover — 契约说明见 electron_node/electron-node/docs/RECOVER.md。
+/**
+ * @deprecated Legacy Recover-only module.
+ * Not part of FW frozen main chain.
+ * Do not import from FW pipeline, FW Detector, Aggregation, Dedup, Translation, or Result Builder (FW path).
+ * See docs/RECOVER.md and legacy/recover/README.md.
  */
 
 import { JobAssignMessage } from '@shared/protocols/messages';
@@ -8,19 +11,18 @@ import {
   getLexiconRecallSkipReason,
   isLexiconRecallEnabled,
   isLexiconRecallLanguage,
-  isFwDetectorFeatureEnabled,
-  resolveJobUseLexicon,
 } from '../../node-config';
-import { ensureLexiconRuntimeLoaded } from '../../lexicon/lexicon-runtime-holder';
-import { markLexiconDisabled } from '../../lexicon/lexicon-runtime';
-import type { LexiconRuntimeStatus } from '../../lexicon/lexicon-types';
 import type { RestoreMetrics } from './asr-repair/restore-metrics';
 import type { SentenceRepairExtra } from './asr-repair/sentence-rerank/sentence-repair-observability';
 import { loadNodeConfig } from '../../node-config';
-import type { RecoverLifecycle } from './recover-contract-types';
-import type { V5Metrics } from './v5-metrics';
+import { markLexiconDisabled } from '../../lexicon/lexicon-runtime';
+import type { LexiconRuntimeStatus } from '../../lexicon/lexicon-types';
+import type { RecoverLifecycle } from './legacy-recover-contract-types';
+import type { V5Metrics } from './legacy-v5-metrics';
+import { resolveLexiconRuntimeContract } from '../../pipeline/lexicon-runtime-contract';
 
-export type { RecoverLifecycle } from './recover-contract-types';
+export type { RecoverLifecycle } from './legacy-recover-contract-types';
+export { resolveLexiconRuntimeContract };
 export const RECOVER_CONTRACT_VERSION = 'historical-restore-v1';
 export const RECOVER_CONTRACT_VERSION_V5 = 'v5-scored-lexicon-topk';
 
@@ -77,71 +79,6 @@ export function stampRecoverPipelineSkip(
     }
   }
   ctx.recoverLifecycle = buildRecoverLifecycleFromCtx(job, ctx, reason);
-}
-
-export function resolveLexiconRuntimeContract(
-  job: JobAssignMessage,
-  ctx: JobContext
-): Pick<
-  RecoverContractExtra,
-  | 'lexicon_runtime_status'
-  | 'lexicon_manifest_version'
-  | 'lexicon_runtime_error'
-  | 'lexicon_disabled_reason'
-> {
-  if (ctx.lexiconRuntimeStatus) {
-    return {
-      lexicon_runtime_status: ctx.lexiconRuntimeStatus,
-      lexicon_manifest_version: ctx.lexiconManifestVersion ?? null,
-      ...(ctx.lexiconRuntimeError ? { lexicon_runtime_error: ctx.lexiconRuntimeError } : {}),
-      ...(ctx.lexiconDisabledReason ? { lexicon_disabled_reason: ctx.lexiconDisabledReason } : {}),
-    };
-  }
-
-  const skipReason = getLexiconRecallSkipReason(job, ctx);
-  if (skipReason) {
-    /**
-     * FW Detector 需要 lexicon runtime 作为 span recall 数据源，但它不等价于 LEXICON_RECALL(step)。
-     * 因此在 FW 模式下，即使 lexiconRecall feature 被关闭，也允许加载 sqlite runtime 并报告真实状态。
-     *
-     * 注意：这里不改变 recover lifecycle（仍保持 LEXICON_RECALL step 被跳过）。
-     */
-    const fwWantsRuntime =
-      skipReason === 'feature_lexicon_recall_disabled' &&
-      isFwDetectorFeatureEnabled() &&
-      resolveJobUseLexicon(job);
-    if (fwWantsRuntime) {
-      const runtimeState = ensureLexiconRuntimeLoaded();
-      return {
-        lexicon_runtime_status: runtimeState.status as LexiconRuntimeStatus,
-        lexicon_manifest_version: runtimeState.manifestVersion ?? null,
-        lexicon_disabled_reason: skipReason,
-        ...(runtimeState.errorMessage ? { lexicon_runtime_error: runtimeState.errorMessage } : {}),
-      };
-    }
-    const disabled = markLexiconDisabled();
-    return {
-      lexicon_runtime_status: disabled.status,
-      lexicon_manifest_version: null,
-      lexicon_disabled_reason: skipReason,
-      ...(disabled.errorMessage ? { lexicon_runtime_error: disabled.errorMessage } : {}),
-    };
-  }
-
-  if (!isLexiconRecallLanguage(job, ctx)) {
-    return {
-      lexicon_runtime_status: 'disabled',
-      lexicon_manifest_version: null,
-      lexicon_disabled_reason: 'unsupported_source_language',
-    };
-  }
-
-  const runtimeState = ensureLexiconRuntimeLoaded();
-  return {
-    lexicon_runtime_status: runtimeState.status,
-    lexicon_manifest_version: runtimeState.manifestVersion ?? null,
-    ...(runtimeState.errorMessage ? { lexicon_runtime_error: runtimeState.errorMessage } : {}),
-  };
 }
 
 export function buildRecoverLifecycleFromCtx(
@@ -287,7 +224,8 @@ export function buildSentenceRepairContract(
   };
 }
 
-export function buildRecoverContractExtra(
+/** @deprecated Legacy Recover-only. Not used by FW frozen main chain. */
+export function buildLegacyRecoverContractExtra(
   job: JobAssignMessage,
   ctx: JobContext,
   pipelineSkipReason?: string

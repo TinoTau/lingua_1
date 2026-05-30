@@ -31,6 +31,13 @@ Audio → AudioAggregator
 **Pipeline 顺序：** `ASR → FW_SPAN_DETECTOR → AGGREGATION → …`  
 **移除步骤：** `LEXICON_RECALL`、`SENTENCE_REPAIR`（`pipeline-mode-fw.ts`）
 
+### Legacy Recover 边界
+
+- FW 主链 **不** import `legacy/recover`；FW Detector 的 span recall / decision / apply 与旧 Recover **sentence repair** 无关。
+- `lexicon/local-span-recall.ts`（FW span top-K）≠ 旧 `LEXICON_RECALL` pipeline 步骤。
+- **KenLM shared scorer is not legacy Recover：** `asr-repair/kenlm-batch-types.ts`、`sentence-rerank/kenlm-scorer.ts`、`kenlm-span-gate.ts` 供 FW `weak_veto` 共用。
+- Recover 归档：`main/src/legacy/recover/`（deprecated；见目录 README）。
+
 **ASR 路由：**
 
 - `resolve-preferred-asr-service.ts` → `faster-whisper-vad`

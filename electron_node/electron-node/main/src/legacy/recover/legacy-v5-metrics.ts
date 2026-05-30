@@ -1,5 +1,6 @@
-﻿/**
- * Recover V5 — job-level metrics for result.extra.v5_metrics
+/**
+ * @deprecated Legacy Recover-only module.
+ * Not part of FW frozen main chain.
  */
 
 import type { JobContext } from '../../pipeline/context/job-context';

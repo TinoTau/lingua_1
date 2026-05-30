@@ -1,5 +1,7 @@
-﻿/**
- * Window hotword recall — produces WindowCandidate[] only (no writeback).
+/**
+ * @deprecated Legacy Recover-only module.
+ * Not part of FW frozen main chain.
+ * Do not import from FW pipeline, FW Detector, Aggregation, Dedup, Translation, or Result Builder.
  */
 
 import { JobAssignMessage } from '@shared/protocols/messages';
@@ -22,12 +24,13 @@ import {
   evaluateLowCandidateScore,
   evaluateNoTopkCandidate,
 } from '../asr-repair/recover-safety-gates';
-import { buildV5Metrics } from '../v5-metrics';
+import { buildV5Metrics } from '../legacy-v5-metrics';
 import logger from '../../../logger';
 import { getProfileSnapshotFromContext } from '../../../session-runtime/turn-profile-binding';
 import { defaultGeneralProfile } from '../../../lexicon-v2/profile-registry';
 
-export async function runLexiconRecallStep(
+/** @deprecated Legacy Recover-only. Not used by FW frozen main chain. */
+export async function runLegacyLexiconRecallStep(
   job: JobAssignMessage,
   ctx: JobContext,
   _services: ServicesBundle,

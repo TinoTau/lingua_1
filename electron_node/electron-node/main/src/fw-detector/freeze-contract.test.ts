@@ -134,12 +134,36 @@ describe('P1.2c-fix merge freeze contract (V1.1)', () => {
     expect(jc).not.toMatch(/\brepairedText\b/);
   });
 
+  it('FW pipeline 不含 LEXICON_RECALL / SENTENCE_REPAIR', () => {
+    const mode = applyFwDetectorPipelineMode(PIPELINE_MODES.GENERAL_VOICE_TRANSLATION);
+    expect(mode.steps).not.toContain('LEXICON_RECALL');
+    expect(mode.steps).not.toContain('SENTENCE_REPAIR');
+  });
+
+  it('result-builder FW 路径不调用 buildLegacyRecoverContractExtra', () => {
+    const rb = readSrc('pipeline/result-builder.ts');
+    expect(rb).not.toContain('buildLegacyRecoverContractExtra');
+    expect(rb).not.toContain('legacy/recover');
+    expect(rb).toContain('isFwDetectorEngineEnabled');
+  });
+
+  it('fw-detector orchestrator 不引用 legacy/recover 或 sentence-repair', () => {
+    const orch = readSrc('fw-detector/fw-detector-orchestrator.ts');
+    expect(orch).not.toContain('legacy/recover');
+    expect(orch).not.toMatch(/sentence-repair|lexicon-recall-step|SENTENCE_REPAIR/);
+  });
+
   it('FW 主链源文件不 import legacy/recover', () => {
     const fwPaths = [
       'fw-detector/pipeline-mode-fw.ts',
+      'fw-detector/fw-detector-orchestrator.ts',
       'pipeline/steps/fw-detector-step.ts',
       'pipeline/steps/aggregation-step.ts',
       'pipeline/steps/asr-step.ts',
+      'pipeline/steps/dedup-step.ts',
+      'pipeline/steps/translation-step.ts',
+      'pipeline/post-asr-routing.ts',
+      'pipeline/result-builder.ts',
     ];
     for (const rel of fwPaths) {
       const src = readSrc(rel);

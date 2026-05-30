@@ -1,11 +1,11 @@
-﻿import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from '@jest/globals';
 import type { WindowCandidate } from '../../../lexicon/hotword-types';
 import { expandSentenceCandidates } from './sentence-expansion/sentence-expansion';
 import { rerankSentenceCandidates } from './sentence-rerank/rerank';
-import { applySentenceRepair } from './sentence-rerank/apply-sentence-repair';
+import { applyLegacySentenceRepair } from './sentence-rerank/legacy-apply-sentence-repair';
 import type { JobContext } from '../../../pipeline/context/job-context';
 
-describe('Recover CTC n-best rerank', () => {
+describe('legacy recover only — Recover CTC n-best rerank', () => {
   const replacement: WindowCandidate = {
     windowId: 'h0-aw-4-8-x',
     hypothesisIndex: 0,
@@ -65,7 +65,7 @@ describe('Recover CTC n-best rerank', () => {
       asrHypotheses: hypotheses,
       nbestSynthetic: false,
     };
-    applySentenceRepair(ctx, rerank.picked);
+    applyLegacySentenceRepair(ctx, rerank.picked);
     expect(ctx.segmentForJobResult).toBe('我们要做候选生成');
     expect(ctx.asrRepairApplied).toBe(true);
   });

@@ -1,7 +1,5 @@
 /**
- * JobContext - 流水线上唯一上下文结构
- * 存放所有中间结果
- */
+ * JobContext - æµæ°´çº¿ä¸å¯ä¸ä¸ä¸æç»æ? * å­æ¾ææä¸­é´ç»æ? */
 
 import { ASRResult, AsrKenlmMeta, AsrNBestItem } from '../../task-router/types';
 import type { ASRHypothesis } from '../../asr/types';
@@ -15,35 +13,35 @@ import type { CrossBoundaryRiskReport } from '../../asr/cross-boundary-risk';
 import type { RecallCoverageDiagnostics } from '../../lexicon/recall-coverage-diagnostics';
 import type { RestoreMetrics } from '../../legacy/recover/asr-repair/restore-metrics';
 import type { SentenceRepairExtra } from '../../legacy/recover/asr-repair/sentence-rerank/sentence-repair-observability';
-import type { RecoverLifecycle } from '../../legacy/recover/recover-contract-types';
-import type { SentenceCandidateTraceItem, V5Metrics } from '../../legacy/recover/v5-metrics';
+import type { RecoverLifecycle } from '../../legacy/recover/legacy-recover-contract-types';
+import type { SentenceCandidateTraceItem, V5Metrics } from '../../legacy/recover/legacy-v5-metrics';
 import type { FwDetectorResult, KenlmGateMode } from '../../fw-detector/types';
 
 export interface JobContext {
-  // 音频相关
+  // é³é¢ç¸å³
   audio?: Buffer;
   audioFormat?: 'pcm16' | 'opus';
 
-  // ASR 相关
-  /** ASR 首段 freeze 原文（FW 写回基准，全程不可变） */
+  // ASR ç¸å³
+  /** ASR é¦æ®µ freeze åæï¼FW åååºåï¼å¨ç¨ä¸å¯åï¼?*/
   rawAsrText?: string;
   asrText?: string;
   asrSegments?: any[];
   asrResult?: ASRResult;
-  /** 本 job 实际 ASR 服务 id（如 asr-sherpa-lm）。 */
+  /** æ?job å®é ASR æå¡ idï¼å¦ asr-sherpa-lmï¼ã?*/
   asrServiceId?: string;
-  /** P0：ASR / VAD / 音频前处理 diagnostics（含 node + FW 双层切分） */
+  /** P0ï¼ASR / VAD / é³é¢åå¤ç?diagnosticsï¼å« node + FW åå±ååï¼?*/
   asrDiagnostics?: Record<string, unknown>;
-  /** ASR bad-segment 质量分（0–1），供聚合/语义修复/翻译门控。 */
+  /** ASR bad-segment è´¨éåï¼0â?ï¼ï¼ä¾èå?è¯­ä¹ä¿®å¤/ç¿»è¯é¨æ§ã?*/
   qualityScore?: number;
   /** CTC n-best from ASR HTTP (observability). */
   asrNbest?: AsrNBestItem[];
   /** Recover main-chain ASR hypotheses (includes synthetic top1 when no n-best). */
   asrHypotheses?: ASRHypothesis[];
   nbestSynthetic?: boolean;
-  /** aggregation segment 与 CTC rank0 不一致时为 true（CTC n-best 仍可保留）。 */
+  /** aggregation segment ä¸?CTC rank0 ä¸ä¸è´æ¶ä¸?trueï¼CTC n-best ä»å¯ä¿çï¼ã?*/
   segmentSynthetic?: boolean;
-  /** aggregation 后仍保留 ctx.asrNbest 多假设证据。 */
+  /** aggregation åä»ä¿ç ctx.asrNbest å¤åè®¾è¯æ®ã?*/
   ctcNbestPreserved?: boolean;
   aggregationResyncReason?: string;
   /** Utterance-level KenLM meta when ASR HTTP provides it. */
@@ -55,9 +53,9 @@ export interface JobContext {
   lexiconDisabledReason?: string;
   lexiconRecallTruncated?: boolean;
   recoverLifecycle?: RecoverLifecycle;
-  /** sentence-repair-step 早退原因（未写 sentenceRepairExtra 时） */
+  /** sentence-repair-step æ©éåå ï¼æªå?sentenceRepairExtra æ¶ï¼ */
   recoverLifecycleSkipReason?: string;
-  /** V3：本轮句修复是否因无窗扩展而跳过写回 */
+  /** V3ï¼æ¬è½®å¥ä¿®å¤æ¯å¦å æ çªæ©å±èè·³è¿åå?*/
   recoverSkipped?: boolean;
   repairSkipReason?: string | null;
   restoreMetrics?: RestoreMetrics;
@@ -66,21 +64,21 @@ export interface JobContext {
   windowRecallDiagnostics?: WindowRecallDiagnostics;
   v5Metrics?: V5Metrics;
   segmentAlignmentDiagnostics?: SegmentAlignmentDiagnostics;
-  /** Q1.8-03：跨 chunk 边界 observed 风险（只报告） */
+  /** Q1.8-03ï¼è·¨ chunk è¾¹ç observed é£é©ï¼åªæ¥åï¼?*/
   crossBoundaryRiskReport?: CrossBoundaryRiskReport | null;
-  /** Q1.7：无 WindowCandidate 时的 recall coverage 诊断 */
+  /** Q1.7ï¼æ  WindowCandidate æ¶ç recall coverage è¯æ­ */
   recallCoverageDiagnostics?: RecallCoverageDiagnostics | null;
   expansionDiagnostics?: ExpansionDiagnostics;
   sentenceCandidates?: SentenceCandidate[];
   sentenceCandidateTrace?: SentenceCandidateTraceItem[];
   /** Recover v1 final sentence repair pick (observability + result extra). */
   sentenceRepairDecision?: SentenceCandidate;
-  /** 句级修复可观测性（result extra.sentence_repair）。 */
+  /** å¥çº§ä¿®å¤å¯è§æµæ§ï¼result extra.sentence_repairï¼ã?*/
   sentenceRepairExtra?: SentenceRepairExtra;
   asrRepairApplied?: boolean;
   fwDetectorResult?: FwDetectorResult;
   languageProbabilities?: Record<string, number>;
-  /** 本 job 使用的 lexicon profile（turn 内固定） */
+  /** æ?job ä½¿ç¨ç?lexicon profileï¼turn ååºå®ï¼ */
   activeProfilePrimary?: string;
   profileVersion?: string;
   domainBoostApplied?: number;
@@ -91,8 +89,8 @@ export interface JobContext {
   fwDetectorKenlmGateModeOverride?: KenlmGateMode;
   fwDetectorKenlmVetoThresholdOverride?: number;
 
-  // 聚合相关
-  segmentForJobResult?: string;  // SSOT：FW / 聚合 / 5015 / NMT / text_asr
+  // èåç¸å³
+  segmentForJobResult?: string;  // SSOTï¼FW / èå / 5015 / NMT / text_asr
   aggregationAction?: 'MERGE' | 'NEW_STREAM' | 'COMMIT';
   aggregationChanged?: boolean;
   isLastInMergedGroup?: boolean;
@@ -107,9 +105,9 @@ export interface JobContext {
   };
   lastCommittedText?: string | null;
 
-  // 语义修复相关
+  // è¯­ä¹ä¿®å¤ç¸å³
   semanticDecision?: 'PASS' | 'REPAIR' | 'REJECT';
-  /** 仅当 5015 HTTP 修复成功时为 true */
+  /** ä»å½ 5015 HTTP ä¿®å¤æåæ¶ä¸º true */
   semanticRepairApplied?: boolean;
   semanticRepairConfidence?: number;
   semanticRepairHttpCalled?: boolean;
@@ -119,7 +117,7 @@ export interface JobContext {
   semanticRepairDegraded?: boolean;
   enNormalizeApplied?: boolean;
 
-  // 同音纠错 5016
+  // åé³çº é 5016
   phoneticCorrectionSkipped?: boolean;
   phoneticCorrectionSkipReason?: string;
   phoneticCorrectionDegraded?: boolean;
@@ -128,7 +126,7 @@ export interface JobContext {
   phoneticCorrectionStepMs?: number;
   phoneticCorrectionHttpMs?: number;
 
-  // 断句 5017
+  // æ­å¥ 5017
   punctuationRestoreSkipped?: boolean;
   punctuationRestoreSkipReason?: string;
   punctuationRestoreDegraded?: boolean;
@@ -138,42 +136,42 @@ export interface JobContext {
   punctuationRestoreStepMs?: number;
   punctuationRestoreHttpMs?: number;
 
-  // 去重相关
+  // å»éç¸å³
   shouldSend?: boolean;
   dedupReason?: string;
 
-  // 翻译相关
+  // ç¿»è¯ç¸å³
   translatedText?: string;
-  /** 动态确定的目标语言（双向模式使用） */
+  /** å¨æç¡®å®çç®æ è¯­è¨ï¼ååæ¨¡å¼ä½¿ç¨ï¼ */
   detectedTargetLang?: string;
-  /** 动态检测到的源语言（双向模式使用） */
+  /** å¨ææ£æµå°çæºè¯­è¨ï¼ååæ¨¡å¼ä½¿ç¨ï¼ */
   detectedSourceLang?: string;
-  /** src_lang=auto 时的解析来源：'detected' | 'fallback_candidate_pair' */
+  /** src_lang=auto æ¶çè§£ææ¥æºï¼?detected' | 'fallback_candidate_pair' */
   sourceLangResolution?: string;
 
-  // TTS 相关
+  // TTS ç¸å³
   ttsAudio?: string; // base64
   ttsFormat?: string; // opus/wav
 
-  // TONE 相关
+  // TONE ç¸å³
   toneResult?: any;
   toneAudio?: string;
   toneFormat?: string;
 
-  // LID / Router（Face2Face 二选一）
+  // LID / Router
   lidMeta?: { lid_ms: number; p: number; lang_pred: string; strategy: string };
   routerMeta?: { selected_src_lang: string; current_src_lang: string; switched: boolean; reason: string };
 
-  // 其他
+  // å¶ä»
   rerunCount?: number;
 }
 
 /**
- * 初始化 JobContext
+ * åå§å?JobContext
  */
 export function initJobContext(job: any): JobContext {
   return {
-    // 从 job 中提取音频（如果需要）
+    // ä»?job ä¸­æåé³é¢ï¼å¦æéè¦ï¼
     audio: job.audio ? Buffer.from(job.audio, 'base64') : undefined,
     audioFormat: job.audio_format as 'pcm16' | 'opus',
   };

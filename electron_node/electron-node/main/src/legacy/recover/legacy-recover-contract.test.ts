@@ -1,5 +1,5 @@
-﻿/**
- * Recover historical-restore-v1 contract unit tests
+/**
+ * legacy recover only — not used by FW frozen main chain
  */
 
 import { JobAssignMessage } from '@shared/protocols/messages';
@@ -7,10 +7,10 @@ import { JobContext } from '../../pipeline/context/job-context';
 import { buildJobResult } from '../../pipeline/result-builder';
 import {
   RECOVER_CONTRACT_VERSION_V5,
-  buildRecoverContractExtra,
+  buildLegacyRecoverContractExtra,
   buildRecoverLifecycleFromCtx,
   buildCtcContract,
-} from './recover-contract';
+} from './legacy-recover-contract';
 
 jest.mock('../../lexicon/lexicon-runtime-holder', () => ({
   ensureLexiconRuntimeLoaded: jest.fn(() => ({
@@ -24,7 +24,7 @@ jest.mock('../../fw-detector/fw-mode', () => ({
   isFwDetectorFeatureEnabled: jest.fn(() => false),
 }));
 
-describe('recover-contract', () => {
+describe('legacy recover only — legacy-recover-contract', () => {
   const baseJob = {
     job_id: 'j1',
     session_id: 's1',
@@ -78,7 +78,7 @@ describe('recover-contract', () => {
       recoverLifecycle: { executed: true, gated: false, skipped: true, skipReason: 'no_window_expansion_candidate' },
       recoverLifecycleSkipReason: 'no_window_expansion_candidate',
     };
-    const contract = buildRecoverContractExtra(baseJob, ctx);
+    const contract = buildLegacyRecoverContractExtra(baseJob, ctx);
     expect(contract.sentence_repair.executed).toBe(true);
     expect(contract.sentence_repair.modified).toBe(false);
     expect(contract.sentence_repair.skipReason).toBe('no_window_expansion_candidate');

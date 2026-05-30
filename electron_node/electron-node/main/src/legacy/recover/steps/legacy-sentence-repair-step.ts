@@ -1,5 +1,6 @@
-﻿/**
- * Window expansion → KenLM rerank → applySentenceRepair (Recover V3 historical-restore).
+/**
+ * @deprecated Legacy Recover-only module.
+ * Not part of FW frozen main chain.
  */
 
 import { JobAssignMessage } from '@shared/protocols/messages';
@@ -14,14 +15,14 @@ import { filterRerankEligibleCandidates, isRerankEligible } from '../asr-repair/
 import { expandSentenceCandidates } from '../asr-repair/sentence-expansion/sentence-expansion';
 import type { SentenceCandidate } from '../asr-repair/sentence-expansion/types';
 import { computeRestoreMetrics } from '../asr-repair/restore-metrics';
-import { applySentenceRepair } from '../asr-repair/sentence-rerank/apply-sentence-repair';
+import { applyLegacySentenceRepair } from '../asr-repair/sentence-rerank/legacy-apply-sentence-repair';
 import { rerankSentenceCandidates } from '../asr-repair/sentence-rerank/rerank';
 import { buildSentenceRepairExtra } from '../asr-repair/sentence-rerank/sentence-repair-observability';
 import {
   evaluateKenlmBaselineGate,
   evaluateReplacementCountExceeded,
 } from '../asr-repair/recover-safety-gates';
-import { buildSentenceCandidateTrace, buildV5Metrics } from '../v5-metrics';
+import { buildSentenceCandidateTrace, buildV5Metrics } from '../legacy-v5-metrics';
 import { createKenlmBatchScorer } from '../../../asr-repair/sentence-rerank/kenlm-scorer';
 import logger from '../../../logger';
 
@@ -67,7 +68,8 @@ async function annotateKenlmBaselineDelta(
   return baselineNorm;
 }
 
-export async function runSentenceRepairStep(
+/** @deprecated Legacy Recover-only. Not used by FW frozen main chain. */
+export async function runLegacySentenceRepairStep(
   job: JobAssignMessage,
   ctx: JobContext,
   _services: ServicesBundle
@@ -150,7 +152,7 @@ export async function runSentenceRepairStep(
     return;
   }
 
-  applySentenceRepair(ctx, rerank.picked);
+  applyLegacySentenceRepair(ctx, rerank.picked);
   ctx.recoverSkipped = false;
   ctx.repairSkipReason = null;
   ctx.restoreMetrics = computeRestoreMetrics(expanded.candidates, rerank.picked);

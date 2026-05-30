@@ -3,7 +3,7 @@
 版本：FINAL V1.0  
 日期：2026-05-30  
 适用范围：`electron-node` — `ASR → FW_SPAN_DETECTOR → AGGREGATION → DEDUP → TRANSLATION`  
-状态：**冻结**（P0/P1 清理已完成；P2 Recover 物理隔离与 wire 改名待后续 PR）
+状态：**冻结**（P0/P1 清理已完成；P2 Recover 物理隔离与 legacy 命名补丁已完成）
 
 ---
 
@@ -240,6 +240,41 @@ node tests/run-fw-detector-dialog-200-batch.js "D:\Programs\github\lingua_1\test
 | `electron-node/docs/ASR前后处理链路审计报告_2026_05_27.md` | 已加废止头 |
 
 **保留（历史报告，非规范）：** `ASR_SSOT_V1_1_*`、`ASR_FW主链冻结补丁_*` 开发/测试报告
+
+---
+
+## 16. Legacy Recover Boundary
+
+### 16.1 目的
+
+`main/src/legacy/recover/` 存放已从默认 FW 主链物理隔离的 Recover 旧链路（CTC n-best、句级 expansion、KenLM rerank apply、`LEXICON_RECALL` / `SENTENCE_REPAIR` 步骤）。**它不是默认主链，不是 SSOT，不是新功能开发基线。**
+
+### 16.2 与冻结主链的关系
+
+| 项 | 规则 |
+|----|------|
+| 默认主链 | `ASR → FW_SPAN_DETECTOR → AGGREGATION → DEDUP → TRANSLATION` |
+| Recover 步骤 | 仅非 FW / legacy 模式；`applyFwDetectorPipelineMode` **必须**移除 `LEXICON_RECALL`、`SENTENCE_REPAIR` |
+| FW 主链 import | **禁止** import `legacy/recover`（gate + freeze-contract 静态断言） |
+| 业务 SSOT | 仍为 `ctx.segmentForJobResult`；Recover 的 `repairedText` 已退出 JobContext |
+| KenLM 共享 | `asr-repair/kenlm-*`、`sentence-rerank/kenlm-scorer.ts` 供 FW `weak_veto` 使用 — **不是 legacy Recover** |
+
+### 16.3 仍保留的原因
+
+- 历史测试与 Recover 对照基线
+- 非默认 pipeline 模式隔离执行
+- 删除前归档（见 `legacy/recover/README.md` Deletion Conditions）
+
+### 16.4 开发禁令
+
+- 新功能 **不得** 添加到 `legacy/recover`
+- 新修复 **不得** 基于 `legacy/recover`
+- FW Detector / Aggregation / Result Builder **不得** 直接依赖 Recover sentence repair / lexicon recall 逻辑
+- 主链发现 `legacy/recover` 依赖 → **冻结门禁失败**
+
+### 16.5 命名约定（P2.1 补丁）
+
+Recover 模块统一 `legacy-*` 前缀或 `@deprecated` 头；导出符号如 `buildLegacyRecoverContractExtra`、`runLegacyLexiconRecallStep` 等，避免与 FW 主链混淆。
 
 ---
 

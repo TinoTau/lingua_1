@@ -167,9 +167,28 @@ const fwMainPaths = [
   stepPath,
   path.join(srcRoot, 'pipeline/steps/asr-step.ts'),
   path.join(srcRoot, 'pipeline/steps/aggregation-step.ts'),
+  path.join(srcRoot, 'pipeline/steps/dedup-step.ts'),
+  path.join(srcRoot, 'pipeline/steps/translation-step.ts'),
   path.join(srcRoot, 'pipeline/steps/fw-detector-step.ts'),
+  path.join(srcRoot, 'pipeline/post-asr-routing.ts'),
+  path.join(srcRoot, 'pipeline/result-builder.ts'),
   path.join(srcRoot, 'fw-detector/pipeline-mode-fw.ts'),
+  path.join(srcRoot, 'fw-detector/fw-detector-orchestrator.ts'),
 ];
+
+const legacyForbiddenTokens = [
+  'buildLegacyRecoverContractExtra',
+  'applyLegacySentenceRepair',
+  'runLegacySentenceRepairStep',
+  'runLegacyLexiconRecallStep',
+];
+
+/** Files that may mention LEXICON_RECALL / SENTENCE_REPAIR for registry or FW mode filtering only. */
+const legacyStepNameAllowedFiles = new Set([
+  path.join(srcRoot, 'pipeline/pipeline-step-registry.ts'),
+  path.join(srcRoot, 'fw-detector/pipeline-mode-fw.ts'),
+]);
+
 for (const dirOrFile of fwMainPaths) {
   const files = fs.existsSync(dirOrFile) && fs.statSync(dirOrFile).isDirectory()
     ? walkTsFiles(dirOrFile)
@@ -178,9 +197,31 @@ for (const dirOrFile of fwMainPaths) {
       : [];
   for (const full of files) {
     const rel = path.relative(projectRoot, full);
-    if (readRel(full).includes('legacy/recover')) {
+    const text = stripComments(readRel(full));
+    if (text.includes('legacy/recover')) {
       fail(`FW main chain must not import legacy/recover: ${rel}`);
     }
+    for (const token of legacyForbiddenTokens) {
+      if (text.includes(token)) {
+        fail(`FW main chain must not reference legacy Recover symbol "${token}": ${rel}`);
+      }
+    }
+    if (!legacyStepNameAllowedFiles.has(full)) {
+      if (text.includes('SENTENCE_REPAIR') || text.includes('LEXICON_RECALL')) {
+        fail(`FW main chain must not reference legacy Recover step names: ${rel}`);
+      }
+    }
+  }
+}
+
+const registryPath = path.join(srcRoot, 'pipeline/pipeline-step-registry.ts');
+if (fs.existsSync(registryPath)) {
+  const registrySrc = readRel(registryPath);
+  if (!registrySrc.includes('Legacy Recover steps')) {
+    fail('pipeline-step-registry must document Legacy Recover steps (non-default)');
+  }
+  if (!registrySrc.includes('applyFwDetectorPipelineMode must remove LEXICON_RECALL')) {
+    fail('pipeline-step-registry must note FW mode removes LEXICON_RECALL/SENTENCE_REPAIR');
   }
 }
 

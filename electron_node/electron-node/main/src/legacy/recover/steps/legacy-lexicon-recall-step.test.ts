@@ -1,4 +1,4 @@
-﻿import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { JobAssignMessage } from '@shared/protocols/messages';
 import { JobContext } from '../../../pipeline/context/job-context';
 
@@ -22,9 +22,9 @@ jest.mock('../../../node-config', () => ({
   loadNodeConfig: () => ({}),
 }));
 
-import { runLexiconRecallStep } from './lexicon-recall-step';
+import { runLegacyLexiconRecallStep } from './legacy-lexicon-recall-step';
 
-describe('runLexiconRecallStep', () => {
+describe('legacy recover only — runLegacyLexiconRecallStep', () => {
   const job = {
     job_id: 'job-recall',
     session_id: 's1',
@@ -69,7 +69,7 @@ describe('runLexiconRecallStep', () => {
       asrHypotheses: [{ text: '我们要做后选生城', rank: 0 }],
     };
 
-    await runLexiconRecallStep(job, ctx, {} as any);
+    await runLegacyLexiconRecallStep(job, ctx, {} as any);
 
     expect(ctx.windowCandidates).toHaveLength(1);
     expect(ctx.windowCandidates![0].to).toBe('候选生成');
@@ -93,7 +93,7 @@ describe('runLexiconRecallStep', () => {
       asrHypotheses: [{ text: '聚合段B', rank: 0 }],
     };
 
-    await runLexiconRecallStep(job, ctx, {} as any);
+    await runLegacyLexiconRecallStep(job, ctx, {} as any);
     expect(mockRecall).toHaveBeenCalled();
   });
 
@@ -110,7 +110,7 @@ describe('runLexiconRecallStep', () => {
       asrHypotheses: [{ text: '我们继续测试', rank: 0 }],
     };
 
-    await runLexiconRecallStep(job, ctx, {} as any);
+    await runLegacyLexiconRecallStep(job, ctx, {} as any);
 
     expect(ctx.windowCandidates).toEqual([]);
   });

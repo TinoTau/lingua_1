@@ -1,0 +1,209 @@
+{
+  "quality": {
+    "avg_cer_raw": 0.3619,
+    "avg_cer_final": 0.3593,
+    "median_cer_raw": 0.2667,
+    "median_cer_final": 0.2667,
+    "p95_cer_raw": 0.88,
+    "p95_cer_final": 0.88,
+    "exact_match_raw": 22,
+    "exact_match_final": 22,
+    "fw_improved_cases": 9,
+    "fw_degraded_cases": 0,
+    "fw_unchanged_cer_cases": 191,
+    "worst_final_cer_top5": [
+      {
+        "id": "d045",
+        "scenario": "lexicon_homophone",
+        "cer": 0.96,
+        "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+        "hyp": "關於後,學生成為學生"
+      },
+      {
+        "id": "d090",
+        "scenario": "lexicon_homophone",
+        "cer": 0.96,
+        "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+        "hyp": "關於後,選生成立"
+      },
+      {
+        "id": "d135",
+        "scenario": "lexicon_homophone",
+        "cer": 0.96,
+        "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+        "hyp": "關於後,選生成"
+      },
+      {
+        "id": "d180",
+        "scenario": "lexicon_homophone",
+        "cer": 0.96,
+        "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+        "hyp": "關於後,選生成立"
+      },
+      {
+        "id": "d194",
+        "scenario": "shopping",
+        "cer": 0.9523809523809523,
+        "ref": "请问这双鞋有四十码吗？不合适三天内可以退换吧？",
+        "hyp": "請問 這雙鞋也有鞋子嗎?"
+      }
+    ],
+    "applied_cases_cer_delta_avg": 0.0583
+  },
+  "perf": {
+    "pipeline_ms": {
+      "count": 200,
+      "avg": 2471,
+      "p50": 2167,
+      "p95": 4065,
+      "min": 1497,
+      "max": 7356,
+      "total_sec": 494
+    },
+    "asr_latency_ms": {
+      "count": 200,
+      "avg": 874,
+      "p50": 864,
+      "p95": 1192,
+      "min": 351,
+      "max": 5560
+    },
+    "audio_ms": {
+      "count": 200,
+      "avg": 3638,
+      "p50": 3900,
+      "p95": 4940
+    },
+    "rtf_pipeline": 0.679,
+    "rtf_asr": 0.24
+  },
+  "contract": {
+    "total": 200,
+    "pass": 200,
+    "fail": 0,
+    "skip": 0,
+    "pipeline_ok_rate": 1,
+    "fw_triggered_count": 200,
+    "fw_applied_case_count": 9,
+    "fw_applied_total": 10,
+    "fw_candidate_total": 48,
+    "text_changed_count": 9,
+    "asr_service_id_distribution": {
+      "faster-whisper-vad": 200
+    },
+    "lexicon_runtime_ok_count": 200,
+    "kenlm_approved_total": 48,
+    "kenlm_vetoed_total": 0,
+    "picked_topk_win_total": 0,
+    "candidate_sentence_total": 48,
+    "kenlm_query_total": 96,
+    "false_repair_count": 9,
+    "by_scenario": {
+      "cafe": {
+        "pass": 15,
+        "fail": 0,
+        "skip": 0,
+        "applied_cases": 9,
+        "triggered_cases": 15
+      },
+      "meeting": {
+        "pass": 15,
+        "fail": 0,
+        "skip": 0,
+        "applied_cases": 0,
+        "triggered_cases": 15
+      },
+      "taxi": {
+        "pass": 15,
+        "fail": 0,
+        "skip": 0,
+        "applied_cases": 0,
+        "triggered_cases": 15
+      },
+      "hospital": {
+        "pass": 15,
+        "fail": 0,
+        "skip": 0,
+        "applied_cases": 0,
+        "triggered_cases": 15
+      },
+      "shopping": {
+        "pass": 15,
+        "fail": 0,
+        "skip": 0,
+        "applied_cases": 0,
+        "triggered_cases": 15
+      },
+      "friend": {
+        "pass": 15,
+        "fail": 0,
+        "skip": 0,
+        "applied_cases": 0,
+        "triggered_cases": 15
+      },
+      "tech_deploy": {
+        "pass": 14,
+        "fail": 0,
+        "skip": 0,
+        "applied_cases": 0,
+        "triggered_cases": 14
+      },
+      "customer_service": {
+        "pass": 12,
+        "fail": 0,
+        "skip": 0,
+        "applied_cases": 0,
+        "triggered_cases": 12
+      },
+      "interview": {
+        "pass": 12,
+        "fail": 0,
+        "skip": 0,
+        "applied_cases": 0,
+        "triggered_cases": 12
+      },
+      "classroom": {
+        "pass": 12,
+        "fail": 0,
+        "skip": 0,
+        "applied_cases": 0,
+        "triggered_cases": 12
+      },
+      "hotel": {
+        "pass": 12,
+        "fail": 0,
+        "skip": 0,
+        "applied_cases": 0,
+        "triggered_cases": 12
+      },
+      "bank": {
+        "pass": 12,
+        "fail": 0,
+        "skip": 0,
+        "applied_cases": 0,
+        "triggered_cases": 12
+      },
+      "restaurant": {
+        "pass": 12,
+        "fail": 0,
+        "skip": 0,
+        "applied_cases": 0,
+        "triggered_cases": 12
+      },
+      "gym": {
+        "pass": 12,
+        "fail": 0,
+        "skip": 0,
+        "applied_cases": 0,
+        "triggered_cases": 12
+      },
+      "lexicon_homophone": {
+        "pass": 12,
+        "fail": 0,
+        "skip": 0,
+        "applied_cases": 0,
+        "triggered_cases": 12
+      }
+    }
+  }
+}

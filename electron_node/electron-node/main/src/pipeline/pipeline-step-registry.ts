@@ -11,8 +11,8 @@ export type { PipelineStepType };
 import { runAsrStep } from './steps/asr-step';
 import { runFwDetectorStep } from './steps/fw-detector-step';
 import { runAggregationStep } from './steps/aggregation-step';
-import { runLexiconRecallStep } from '../legacy/recover/steps/lexicon-recall-step';
-import { runSentenceRepairStep } from '../legacy/recover/steps/sentence-repair-step';
+import { runLegacyLexiconRecallStep } from '../legacy/recover/steps/legacy-lexicon-recall-step';
+import { runLegacySentenceRepairStep } from '../legacy/recover/steps/legacy-sentence-repair-step';
 import { runPhoneticCorrectionStep } from './steps/phonetic-correction-step';
 import { runPunctuationRestoreStep } from './steps/punctuation-restore-step';
 import { runSemanticRepairStep } from './steps/semantic-repair-step';
@@ -37,6 +37,11 @@ export type StepExecutor = (
  * Pipeline 步骤注册表
  * 将步骤类型映射到执行函数
  */
+/**
+ * Legacy Recover steps.
+ * These are not included in fw_detector_v1 mode.
+ * applyFwDetectorPipelineMode must remove LEXICON_RECALL and SENTENCE_REPAIR.
+ */
 export const STEP_REGISTRY: Record<PipelineStepType, StepExecutor> = {
   ASR: async (job, ctx, services, options) => {
     await runAsrStep(job, ctx, services, options);
@@ -51,11 +56,11 @@ export const STEP_REGISTRY: Record<PipelineStepType, StepExecutor> = {
   },
 
   LEXICON_RECALL: async (job, ctx, services) => {
-    await runLexiconRecallStep(job, ctx, services, { nodeId: services.nodeId });
+    await runLegacyLexiconRecallStep(job, ctx, services, { nodeId: services.nodeId });
   },
 
   SENTENCE_REPAIR: async (job, ctx, services) => {
-    await runSentenceRepairStep(job, ctx, services);
+    await runLegacySentenceRepairStep(job, ctx, services);
   },
 
   PHONETIC_CORRECTION: async (job, ctx, services) => {
