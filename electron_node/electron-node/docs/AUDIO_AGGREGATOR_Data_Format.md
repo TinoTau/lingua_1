@@ -28,5 +28,5 @@ pendingTimeoutAudio / pendingPauseAudio 为**单条 Buffer**，非数组；超�
 
 ## 4. 相关文档
 
-- `ASR_Module_Flow.md` — ASR 流程
+- [PIPELINE.md](./PIPELINE.md) — ASR 流程
 - `main/src/pipeline-orchestrator/audio-aggregator*.ts` — 源码

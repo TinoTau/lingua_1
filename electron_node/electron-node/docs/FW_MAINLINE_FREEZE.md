@@ -1,7 +1,8 @@
 # FW Mainline Freeze — ASR → NMT
 
 **Status:** FROZEN (2026-05-27)  
-**Scope:** `asr.engine = fw_detector_v1` production path only.
+**Scope:** `asr.engine = fw_detector_v1` production path only.  
+**Operational detail:** [PIPELINE.md](./PIPELINE.md)
 
 ---
 
@@ -75,7 +76,7 @@ Runtime overrides: `%APPDATA%/lingua-electron-node/electron-node-config.json`.
 | P1.2b per-span topK + weak_veto | `useSentenceLevelRerank: false` |
 | KenLM span gate | `spanGateMode: kenlm_gate_filter`, `kenlmSpanGate.enabled: true` |
 | Legacy detector gate | `spanGateMode: legacy_detector` |
-| V1 lexicon recall | `useLexiconRuntimeV2Recall: false` (requires `lexiconRuntimeV2.enabled` for V2) |
+| V1 lexicon recall | `useLexiconRuntimeV2Recall: false` |
 | Disable FW entirely | `features.fwDetector.enabled: false` |
 
 ---
@@ -111,13 +112,8 @@ When `ctx.asrRepairApplied === true` (FW apply succeeded), `isSegmentWriteLocked
 
 ---
 
-## Related Documents
-
-- `ASR_FW_NMT_主链只读代码审计报告_2026_05_27.md`
-- `P1_P4_冻结前总验收报告_2026_05_27.md`
-- `tests/patch-p4-config.mjs` — batch test config mirror
-
 ## Verification
 
 - Static: `main/src/fw-detector/freeze-contract.test.ts`
-- Batch: `tests/run-lexicon-v2-p4-batch.js` + `tests/patch-p4-config.mjs`
+- Batch config mirror: `tests/patch-p4-config.mjs`
+- Batch run: `tests/run-lexicon-v2-p4-batch.js`

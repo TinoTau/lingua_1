@@ -53,15 +53,13 @@
 
 契约版本：`v5-scored-lexicon-topk`（`recover-contract.ts` → `resolveRecoverContractVersion()`）。
 
-## 4b. FW Detector span recall（非 Recover 窗）
+## 4b. FW 主链（非本文档 V3 Recover 路径）
 
-当 `asr.engine = fw_detector_v1` 时，**不走** §3 的 n-best diff 窗；Candidate 层直接调用：
+默认 `asr.engine = fw_detector_v1` 使用 **Lexicon Runtime V2**，不走 §3 n-best diff 窗：
 
-- `lexicon/local-span-recall.ts` → `recallSpanTopK(spanText, topK, minPrior, enabledDomains)`
-- 门限：`features.fwDetector.recallMinPhoneticScore`（默认 0.5）
-- pick 过滤：`candidateRequireRepairTarget`（仅 `repair_target` 候选）
-
-详见 [FW_DETECTOR.md](./FW_DETECTOR.md)。
+- Recall：`lexicon/local-span-recall.ts` → V2 SQLite（`useLexiconRuntimeV2Recall`）
+- 主链说明：[PIPELINE.md](./PIPELINE.md)
+- V2 构建：[../../docs/lexicon_v2/LEXICON_RUNTIME_V2.md](../../docs/lexicon_v2/LEXICON_RUNTIME_V2.md)
 
 ## 5. 词库构建与导入
 
@@ -111,7 +109,7 @@ Deploy seed：`data/lexicon/v3/lexicon_v3_5k_deploy.jsonl`。
 
 ## 8. 批测入口
 
-FW 主链批测见 [FW_DETECTOR.md](./FW_DETECTOR.md)。需节点 test server `:5020` 与 `faster-whisper-vad :6007`：
+FW 主链批测见 [PIPELINE.md](./PIPELINE.md)。需节点 test server `:5020` 与 `faster-whisper-vad :6007`：
 
 ```powershell
 cd electron_node/electron-node

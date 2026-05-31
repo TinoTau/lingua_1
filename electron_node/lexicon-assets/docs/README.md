@@ -33,10 +33,24 @@ npm run lexicon:rebuild-sqlite   # npm start 前
 npm run lexicon:v3-gate
 ```
 
+### V2 shadow（FW 默认 recall）
+
+```powershell
+cd electron_node\electron-node
+npm run lexicon:build:v2-shadow
+```
+
+Seed：`data/lexicon/10k/`、`confusions.jsonl`、`hotwords.jsonl`。详见 [../docs/lexicon_v2/LEXICON_RUNTIME_V2.md](../docs/lexicon_v2/LEXICON_RUNTIME_V2.md)。
+
+### P1.3 资产包（`docs/lexicon-assets/p1_3_*`）
+
+- `combined_entries.jsonl`：base + idiom + common5，domains 须为 FW 四域（禁止 `general`）
+- `domain_patch_zh_v2/`：可选行业 patch（如餐饮同音），不含于 combined 默认包
+
 ### Seed 约束（摘要）
 
 - `priorScore` ∈ (0, 1]；`domains` 须在 profile-registry
-- `repair_target` / `anchor` 标注影响 FW Detector（见 [FW_DETECTOR.md](../electron-node/docs/FW_DETECTOR.md)）
+- `repair_target` / `anchor` 标注影响 FW Detector（见 [PIPELINE.md](../electron-node/docs/PIPELINE.md)）
 - Production **canonical-only**；无 confusion 进候选链
 
 ## 相关

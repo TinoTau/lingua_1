@@ -69,8 +69,8 @@ pip install pandas matplotlib
 
 ## 相关文档
 
-- [性能基准报告](../../central_server/docs/scheduler/redis_architecture/Redis直查架构_性能基准报告_2026_01_22.md)
-- [测试报告](../../docs/testing/)
+- [调度器设计文档](../../central_server/scheduler/docs/design/README.md)
+- [节点端 PIPELINE](../../electron_node/electron-node/docs/PIPELINE.md)
 
 ---
 

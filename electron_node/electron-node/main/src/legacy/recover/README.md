@@ -2,7 +2,7 @@
 
 **Status:** Deprecated / Recover-only / **Not part of FW frozen main chain**
 
-规范 SSOT：`docs/ASR_FW_MAIN_CHAIN_FROZEN_FINAL.md`（Legacy Recover Boundary 章节）
+规范 SSOT：`electron-node/docs/FW_MAINLINE_FREEZE.md`（Legacy Recover Boundary 见 PIPELINE.md §3.5）
 
 ## Purpose
 
@@ -61,7 +61,7 @@
 
 - [ ] 无 production config 引用 Recover 模式（`lexiconRecall.enabled` 等）
 - [ ] `legacy-recover-contract` 等测试已归档或迁移
-- [ ] `ASR_FW_MAIN_CHAIN_FROZEN_FINAL.md` 与 `FW_DETECTOR.md` 已更新
+- [ ] `FW_MAINLINE_FREEZE.md` 与 `PIPELINE.md` 已更新
 - [ ] 全仓无 `legacy/recover` import（registry / bridge / job-context 除外或一并移除）
 - [ ] `fw-detector-gate.mjs` 与 `freeze-contract.test.ts` 仍 PASS
 
