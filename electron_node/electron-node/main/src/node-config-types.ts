@@ -119,7 +119,7 @@ export interface NodeConfig {
       /** finalized turn 后 flush patch proposals（jsonl） */
       patchProposalDir?: string;
     };
-    /** Phase 1：Lexicon Runtime V2 SQL 查询（默认 false，不接 FW recall） */
+    /** Phase 1：Lexicon Runtime V2 SQL 查询（默认 true，FW 主链 recall） */
     lexiconRuntimeV2?: {
       enabled?: boolean;
       bundlePath?: string;
@@ -140,6 +140,7 @@ export interface NodeConfig {
     fwDetector?: {
       enabled?: boolean;
       disableAsrRerun?: boolean;
+      /** @deprecated Span cap SSOT is fwMetadataSpanGate.maxSpans */
       maxSpans?: number;
       spanDetectBudget?: number;
       topK?: number;
@@ -183,14 +184,10 @@ export interface NodeConfig {
         maxSpanChars?: number;
         wordProbabilityThreshold?: number;
         segmentAvgLogprobThreshold?: number;
-        compressionRatioThreshold?: number;
-        noSpeechProbThreshold?: number;
         allowAliasExactHit?: boolean;
         allowSegmentFallbackScan?: boolean;
         fallbackLegacyMaxSpans?: number;
       };
-      /** @deprecated use candidateRequireRepairTarget */
-      enableRepairTargetFilter?: boolean;
       signalWeights?: Partial<Record<string, number>>;
       /** Phase 3: V2 tier recall (base + domain + idiom). Requires lexiconRuntimeV2.enabled. */
       useLexiconRuntimeV2Recall?: boolean;

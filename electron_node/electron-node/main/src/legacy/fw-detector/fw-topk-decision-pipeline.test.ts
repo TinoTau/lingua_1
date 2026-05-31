@@ -1,11 +1,11 @@
 import { describe, expect, it, jest } from '@jest/globals';
-import type { KenLMScorer } from '../asr-repair/kenlm-batch-types';
-import type { LexiconRuntime } from '../lexicon/lexicon-runtime';
-import { defaultGeneralProfile } from '../lexicon-v2/profile-registry';
+import type { KenLMScorer } from '../../asr-repair/kenlm-batch-types';
+import type { LexiconRuntime } from '../../lexicon/lexicon-runtime';
+import { defaultGeneralProfile } from '../../lexicon-v2/profile-registry';
 import { runFwTopKDecisionPipeline } from './fw-topk-decision-pipeline';
-import type { FwSpanDiagnostics } from './types';
+import type { FwSpanDiagnostics } from '../../fw-detector/types';
 
-jest.mock('../lexicon/local-span-recall', () => ({
+jest.mock('../../lexicon/local-span-recall', () => ({
   recallSpanTopK: jest.fn(() => ({
     hits: [
       {
@@ -97,7 +97,7 @@ describe('runFwTopKDecisionPipeline', () => {
       },
     ];
 
-    const { recallSpanTopK } = await import('../lexicon/local-span-recall');
+    const { recallSpanTopK } = await import('../../lexicon/local-span-recall');
     (recallSpanTopK as jest.Mock).mockImplementation((_rt, text: string) => ({
       hits: [
         {
@@ -150,7 +150,7 @@ describe('runFwTopKDecisionPipeline', () => {
       },
     ];
 
-    const { recallSpanTopK } = await import('../lexicon/local-span-recall');
+    const { recallSpanTopK } = await import('../../lexicon/local-span-recall');
     (recallSpanTopK as jest.Mock).mockImplementation(() => ({
       hits: [
         {

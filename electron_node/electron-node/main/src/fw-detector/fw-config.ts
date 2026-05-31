@@ -34,8 +34,6 @@ export type FwMetadataSpanGateRuntimeConfig = {
   maxSpanChars: number;
   wordProbabilityThreshold: number;
   segmentAvgLogprobThreshold: number;
-  compressionRatioThreshold: number;
-  noSpeechProbThreshold: number;
   allowAliasExactHit: boolean;
   allowSegmentFallbackScan: boolean;
   fallbackLegacyMaxSpans: number;
@@ -45,7 +43,9 @@ export type FwDetectorRuntimeConfig = {
   spanGateMode: FwSpanGateMode;
   kenlmSpanGate: KenlmSpanGateRuntimeConfig;
   fwMetadataSpanGate: FwMetadataSpanGateRuntimeConfig;
+  /** Legacy detector + metadata fallback; mirrors fwMetadataSpanGate.maxSpans at load. */
   maxSpans: number;
+  /** Legacy detector budget only; not used by metadata gate main path. */
   spanDetectBudget: number;
   topK: number;
   minPrior: number;
@@ -94,6 +94,8 @@ const DEFAULT_KENLM_SPAN_GATE: KenlmSpanGateRuntimeConfig = {
 };
 
 /** Fallback when node config omits fwMetadataSpanGate fields. Align with P4 freeze (node-config-defaults). */
+const DEFAULT_LEGACY_SPAN_DETECT_BUDGET = 12;
+
 const DEFAULT_FW_METADATA_SPAN_GATE: FwMetadataSpanGateRuntimeConfig = {
   enabled: true,
   maxSpans: 4,
@@ -101,8 +103,6 @@ const DEFAULT_FW_METADATA_SPAN_GATE: FwMetadataSpanGateRuntimeConfig = {
   maxSpanChars: 4,
   wordProbabilityThreshold: 0.65,
   segmentAvgLogprobThreshold: -1.0,
-  compressionRatioThreshold: 2.4,
-  noSpeechProbThreshold: 0.5,
   allowAliasExactHit: true,
   allowSegmentFallbackScan: true,
   fallbackLegacyMaxSpans: 1,
@@ -131,6 +131,23 @@ export function loadFwDetectorRuntimeConfig(): FwDetectorRuntimeConfig {
   const anchors = loadDomainAnchors(cfg.domainAnchorPath ?? 'data/lexicon/domain_anchor.json');
   const kenlmSpanGateRaw = cfg.kenlmSpanGate ?? {};
   const fwMetadataSpanGateRaw = cfg.fwMetadataSpanGate ?? {};
+  const fwMetadataSpanGate: FwMetadataSpanGateRuntimeConfig = {
+    enabled: fwMetadataSpanGateRaw.enabled !== false,
+    maxSpans: fwMetadataSpanGateRaw.maxSpans ?? DEFAULT_FW_METADATA_SPAN_GATE.maxSpans,
+    minSpanChars: fwMetadataSpanGateRaw.minSpanChars ?? DEFAULT_FW_METADATA_SPAN_GATE.minSpanChars,
+    maxSpanChars: fwMetadataSpanGateRaw.maxSpanChars ?? DEFAULT_FW_METADATA_SPAN_GATE.maxSpanChars,
+    wordProbabilityThreshold:
+      fwMetadataSpanGateRaw.wordProbabilityThreshold ??
+      DEFAULT_FW_METADATA_SPAN_GATE.wordProbabilityThreshold,
+    segmentAvgLogprobThreshold:
+      fwMetadataSpanGateRaw.segmentAvgLogprobThreshold ??
+      DEFAULT_FW_METADATA_SPAN_GATE.segmentAvgLogprobThreshold,
+    allowAliasExactHit: fwMetadataSpanGateRaw.allowAliasExactHit !== false,
+    allowSegmentFallbackScan: fwMetadataSpanGateRaw.allowSegmentFallbackScan !== false,
+    fallbackLegacyMaxSpans:
+      fwMetadataSpanGateRaw.fallbackLegacyMaxSpans ??
+      DEFAULT_FW_METADATA_SPAN_GATE.fallbackLegacyMaxSpans,
+  };
   return {
     spanGateMode: resolveSpanGateMode(cfg.spanGateMode),
     kenlmSpanGate: {
@@ -144,31 +161,11 @@ export function loadFwDetectorRuntimeConfig(): FwDetectorRuntimeConfig {
       preFilterMaxWindows:
         kenlmSpanGateRaw.preFilterMaxWindows ?? DEFAULT_KENLM_SPAN_GATE.preFilterMaxWindows,
     },
-    fwMetadataSpanGate: {
-      enabled: fwMetadataSpanGateRaw.enabled !== false,
-      maxSpans: fwMetadataSpanGateRaw.maxSpans ?? DEFAULT_FW_METADATA_SPAN_GATE.maxSpans,
-      minSpanChars: fwMetadataSpanGateRaw.minSpanChars ?? DEFAULT_FW_METADATA_SPAN_GATE.minSpanChars,
-      maxSpanChars: fwMetadataSpanGateRaw.maxSpanChars ?? DEFAULT_FW_METADATA_SPAN_GATE.maxSpanChars,
-      wordProbabilityThreshold:
-        fwMetadataSpanGateRaw.wordProbabilityThreshold ??
-        DEFAULT_FW_METADATA_SPAN_GATE.wordProbabilityThreshold,
-      segmentAvgLogprobThreshold:
-        fwMetadataSpanGateRaw.segmentAvgLogprobThreshold ??
-        DEFAULT_FW_METADATA_SPAN_GATE.segmentAvgLogprobThreshold,
-      compressionRatioThreshold:
-        fwMetadataSpanGateRaw.compressionRatioThreshold ??
-        DEFAULT_FW_METADATA_SPAN_GATE.compressionRatioThreshold,
-      noSpeechProbThreshold:
-        fwMetadataSpanGateRaw.noSpeechProbThreshold ??
-        DEFAULT_FW_METADATA_SPAN_GATE.noSpeechProbThreshold,
-      allowAliasExactHit: fwMetadataSpanGateRaw.allowAliasExactHit !== false,
-      allowSegmentFallbackScan: fwMetadataSpanGateRaw.allowSegmentFallbackScan !== false,
-      fallbackLegacyMaxSpans:
-        fwMetadataSpanGateRaw.fallbackLegacyMaxSpans ??
-        DEFAULT_FW_METADATA_SPAN_GATE.fallbackLegacyMaxSpans,
-    },
-    maxSpans: cfg.maxSpans ?? 4,
-    spanDetectBudget: cfg.spanDetectBudget ?? Math.max(12, (cfg.maxSpans ?? 2) * 4),
+    fwMetadataSpanGate,
+    maxSpans: fwMetadataSpanGate.maxSpans,
+    spanDetectBudget:
+      cfg.spanDetectBudget ??
+      Math.max(DEFAULT_LEGACY_SPAN_DETECT_BUDGET, fwMetadataSpanGate.maxSpans * 4),
     topK: cfg.topK ?? 3,
     minPrior: cfg.minPrior ?? 0.5,
     minRiskScore: cfg.minRiskScore ?? 2,
@@ -183,8 +180,7 @@ export function loadFwDetectorRuntimeConfig(): FwDetectorRuntimeConfig {
     maxSpanChars: cfg.maxSpanChars ?? 4,
     noSpeechProbThreshold: cfg.noSpeechProbThreshold ?? 0.5,
     recallMinPhoneticScore: cfg.recallMinPhoneticScore ?? 0.5,
-    candidateRequireRepairTarget:
-      cfg.candidateRequireRepairTarget !== false && cfg.enableRepairTargetFilter !== false,
+    candidateRequireRepairTarget: cfg.candidateRequireRepairTarget !== false,
     repairTargetScoreBoost: cfg.repairTargetScoreBoost ?? 0,
     useSentenceLevelRerank: cfg.useSentenceLevelRerank !== false,
     maxSentenceCandidates: cfg.maxSentenceCandidates ?? 16,

@@ -1,5 +1,5 @@
 /**
- * P1.2c-fix 合并冻结合约 — 静态断言（V1.1 代码对照版 §二、§十）
+ * P1~P4 冻结主链 — Freeze Simplification 冻结合约
  */
 import * as fs from 'fs';
 import * as path from 'path';
@@ -8,6 +8,7 @@ import { DEFAULT_CONFIG } from '../node-config-defaults';
 import { PIPELINE_MODES } from '../pipeline/pipeline-mode-config';
 import { applyFwDetectorPipelineMode } from './pipeline-mode-fw';
 import { loadFwDetectorRuntimeConfig } from './fw-config';
+import type { FwMetadataSpanGateRuntimeConfig } from './fw-config';
 import { FW_ASR_ENGINE, FW_ASR_SERVICE_ID } from './fw-mode';
 
 const SRC_ROOT = path.resolve(__dirname, '..');
@@ -20,8 +21,8 @@ function stripComments(src: string): string {
   return src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
 }
 
-describe('P1.2c-fix merge freeze contract (V1.1)', () => {
-  it('DEFAULT_CONFIG 对齐 V1.1 冻结默认', () => {
+describe('P1~P4 freeze simplification contract', () => {
+  it('DEFAULT_CONFIG 对齐冻结默认', () => {
     const fw = DEFAULT_CONFIG.features?.fwDetector;
     expect(DEFAULT_CONFIG.asr?.engine).toBe(FW_ASR_ENGINE);
     expect(fw?.enabled).toBe(true);
@@ -33,9 +34,11 @@ describe('P1.2c-fix merge freeze contract (V1.1)', () => {
     expect(fw?.enableKenLMGate).toBe(true);
     expect(DEFAULT_CONFIG.features?.lexiconRecall?.enabled).toBe(false);
     expect(fw?.finalScoreWeights?.prior).toBe(0.3);
+    expect(fw?.maxSpans).toBeUndefined();
+    expect(fw?.fwMetadataSpanGate?.maxSpans).toBe(4);
   });
 
-  it('loadFwDetectorRuntimeConfig 默认 weak_veto + candidateRequireRepairTarget', () => {
+  it('loadFwDetectorRuntimeConfig 冻结路径默认', () => {
     const cfg = loadFwDetectorRuntimeConfig();
     expect(cfg.kenlmGateMode).toBe('weak_veto');
     expect(cfg.candidateRequireRepairTarget).toBe(true);
@@ -43,18 +46,28 @@ describe('P1.2c-fix merge freeze contract (V1.1)', () => {
     expect(cfg.spanGateMode).toBe('fw_metadata_gate');
     expect(cfg.kenlmSpanGate.enabled).toBe(false);
     expect(cfg.fwMetadataSpanGate.enabled).toBe(true);
-  });
-
-  it('P4 defaults: sentence rerank + maxSpans=4', () => {
-    const cfg = loadFwDetectorRuntimeConfig();
     expect(cfg.useSentenceLevelRerank).toBe(true);
-    expect(cfg.maxSpans).toBe(4);
+    expect(cfg.enableKenLMGate).toBe(true);
+    expect(cfg.maxSpans).toBe(cfg.fwMetadataSpanGate.maxSpans);
+    expect(cfg.fwMetadataSpanGate.maxSpans).toBe(4);
     expect(cfg.maxSentenceCandidates).toBe(16);
     expect(cfg.minDeltaToReplace).toBe(0.03);
-    expect(cfg.fwMetadataSpanGate.maxSpans).toBe(4);
   });
 
-  it('P4 freeze defaults: Lexicon Runtime V2 recall enabled in DEFAULT_CONFIG', () => {
+  it('metadata gate runtime 不含死配置字段', () => {
+    const gate = loadFwDetectorRuntimeConfig().fwMetadataSpanGate as FwMetadataSpanGateRuntimeConfig &
+      Record<string, unknown>;
+    expect('compressionRatioThreshold' in gate).toBe(false);
+    expect('noSpeechProbThreshold' in gate).toBe(false);
+  });
+
+  it('metadata gate 源码不读取死配置', () => {
+    const gateSrc = readSrc('fw-detector/fw-metadata-span-gate.ts');
+    expect(gateSrc).not.toContain('compressionRatioThreshold');
+    expect(gateSrc).not.toContain('noSpeechProbThreshold');
+  });
+
+  it('V2 recall 双开关：DEFAULT_CONFIG 均为 true', () => {
     expect(DEFAULT_CONFIG.features?.lexiconRuntimeV2?.enabled).toBe(true);
     expect(DEFAULT_CONFIG.features?.fwDetector?.useLexiconRuntimeV2Recall).toBe(true);
   });
@@ -89,8 +102,10 @@ describe('P1.2c-fix merge freeze contract (V1.1)', () => {
     expect(orchSrc).not.toContain('span-replacement-eval');
     expect(orchSrc).toContain('createSpanDetectorHint');
     expect(orchSrc).toContain('runFwTopKDecisionPipeline');
+    expect(orchSrc).toContain('../legacy/fw-detector/fw-topk-decision-pipeline');
     expect(orchSrc).toContain('runFwSentenceRerankPipeline');
     expect(orchSrc).toContain('useSentenceLevelRerank');
+    expect(orchSrc).toContain('config.fwMetadataSpanGate.maxSpans');
   });
 
   it('pinyin-probe 已删除', () => {
@@ -102,6 +117,14 @@ describe('P1.2c-fix merge freeze contract (V1.1)', () => {
     const assignments = [...asrStep.matchAll(/ctx\.rawAsrText\s*(?<![=<>!])=(?!=)/g)];
     expect(assignments.length).toBe(1);
     expect(asrStep).toContain('ctx.rawAsrText === undefined');
+  });
+
+  it('segment 初始化不 fallback asrText', () => {
+    const asrStep = readSrc('pipeline/steps/asr-step.ts');
+    const fwStep = readSrc('pipeline/steps/fw-detector-step.ts');
+    expect(asrStep).toContain("ctx.segmentForJobResult = (ctx.rawAsrText ?? '').trim()");
+    expect(asrStep).not.toMatch(/segmentForJobResult\s*=\s*\([^)]*asrText/);
+    expect(fwStep).toContain("ctx.segmentForJobResult = (ctx.rawAsrText ?? '').trim()");
   });
 
   it('result-builder text_asr 来自 segmentForJobResult', () => {
@@ -187,6 +210,47 @@ describe('P1.2c-fix merge freeze contract (V1.1)', () => {
     for (const rel of fwPaths) {
       const src = readSrc(rel);
       expect(src).not.toContain('legacy/recover');
+    }
+  });
+
+  it('legacy/fw-detector 回滚链已归档', () => {
+    expect(fs.existsSync(path.join(SRC_ROOT, 'legacy/fw-detector/fw-topk-decision-pipeline.ts'))).toBe(true);
+    expect(fs.existsSync(path.join(SRC_ROOT, 'fw-detector/fw-topk-decision-pipeline.ts'))).toBe(false);
+    const orch = readSrc('fw-detector/fw-detector-orchestrator.ts');
+    expect(orch).toContain('../legacy/fw-detector/fw-topk-decision-pipeline');
+  });
+
+  it('JobContext 含 legacy 分区', () => {
+    const jc = readSrc('pipeline/context/job-context.ts');
+    expect(jc).toContain('legacy?: LegacyContext');
+    expect(fs.existsSync(path.join(SRC_ROOT, 'pipeline/context/legacy-context.ts'))).toBe(true);
+  });
+
+  it('buildFwResultExtra 路径不打包 Recover 观测字段', () => {
+    const rb = readSrc('pipeline/result-builder.ts');
+    const legacyExtra = readSrc('legacy/recover/legacy-recover-result-extra.ts');
+    expect(rb).toContain('buildFwResultExtra');
+    expect(rb).not.toMatch(/buildFwResultExtra[\s\S]*sentence_repair/);
+    expect(rb).not.toMatch(/buildFwResultExtra[\s\S]*asr_nbest/);
+    for (const key of ['sentence_repair', 'asr_nbest', 'recover_lifecycle', 'asr_hypotheses']) {
+      expect(legacyExtra).toContain(key);
+    }
+  });
+
+  it('segmentForJobResult 写点白名单（静态）', () => {
+    const allowed = [
+      'pipeline/steps/asr-step.ts',
+      'pipeline/steps/fw-detector-step.ts',
+      'fw-detector/fw-detector-orchestrator.ts',
+      'pipeline/steps/aggregation-step.ts',
+      'pipeline/steps/semantic-repair-step.ts',
+      'pipeline/steps/phonetic-correction-step.ts',
+      'pipeline/steps/punctuation-restore-step.ts',
+      'pipeline/post-asr-routing.ts',
+      'legacy/recover/asr-repair/sentence-rerank/legacy-apply-sentence-repair.ts',
+    ];
+    for (const rel of allowed) {
+      expect(fs.existsSync(path.join(SRC_ROOT, rel))).toBe(true);
     }
   });
 });

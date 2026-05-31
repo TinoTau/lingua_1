@@ -36,6 +36,6 @@ describe('phonetic recover write lock', () => {
     await runPhoneticCorrectionStep(job, ctx, {} as any);
 
     expect(ctx.segmentForJobResult).toBe('recover-final');
-    expect(ctx.phoneticCorrectionSkipReason).toBe('RECOVER_WRITE_LOCKED');
+    expect(ctx.phoneticCorrectionSkipReason).toBe('SEGMENT_WRITE_LOCKED');
   });
 });

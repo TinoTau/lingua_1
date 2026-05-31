@@ -1,10 +1,10 @@
-import { spansOverlap } from '../lexicon/selector/applySpanReplacements';
+import { spansOverlap } from '../../lexicon/selector/applySpanReplacements';
 import type {
   FwApprovedReplacement,
   FwDetectorSignal,
   FwSpanCandidateDiag,
   FwTextSpan,
-} from './types';
+} from '../../fw-detector/types';
 
 export type SpanPickCandidate = {
   span: FwTextSpan;

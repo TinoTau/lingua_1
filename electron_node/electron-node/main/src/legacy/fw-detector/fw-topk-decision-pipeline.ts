@@ -3,19 +3,19 @@
  * orchestrator 只负责 detect / runtime / apply，不得在此文件之外再做 topK 决策。
  */
 
-import type { KenLMScorer, KenlmTimingStats } from '../asr-repair/kenlm-batch-types';
+import type { KenLMScorer, KenlmTimingStats } from '../../asr-repair/kenlm-batch-types';
 import {
   kenlmCandidateScoreToGateDiag,
   scoreSpanCandidateSentences,
-} from '../asr-repair/kenlm-span-gate';
-import type { LexiconRuntime } from '../lexicon/lexicon-runtime';
-import { recallSpanTopK } from '../lexicon/local-span-recall';
-import type { LocalSpanRecallHit } from '../lexicon/local-span-recall';
-import { matchEnabledDomain } from '../lexicon/domain-filter';
-import type { ActiveLexiconProfileSnapshot } from '../session-runtime/types';
-import { buildCandidateSentencesForSpan } from './candidate-sentence-builder';
+} from '../../asr-repair/kenlm-span-gate';
+import type { LexiconRuntime } from '../../lexicon/lexicon-runtime';
+import { recallSpanTopK } from '../../lexicon/local-span-recall';
+import type { LocalSpanRecallHit } from '../../lexicon/local-span-recall';
+import { matchEnabledDomain } from '../../lexicon/domain-filter';
+import type { ActiveLexiconProfileSnapshot } from '../../session-runtime/types';
+import { buildCandidateSentencesForSpan } from '../../fw-detector/candidate-sentence-builder';
 import { computeCandidateFinalScore } from './candidate-scorer';
-import type { FinalScoreWeights, FwDetectorRuntimeConfig } from './fw-config';
+import type { FinalScoreWeights, FwDetectorRuntimeConfig } from '../../fw-detector/fw-config';
 import {
   markSelectedCandidates,
   pickApprovedReplacementsGreedy,
@@ -28,7 +28,7 @@ import type {
   FwSpanCandidateDiag,
   FwSpanDiagnostics,
   KenlmSpanGateOptions,
-} from './types';
+} from '../../fw-detector/types';
 
 export type FwTopKDecisionInput = {
   rawText: string;

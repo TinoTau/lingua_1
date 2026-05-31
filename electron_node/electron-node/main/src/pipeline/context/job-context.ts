@@ -16,6 +16,7 @@ import type { SentenceRepairExtra } from '../../legacy/recover/asr-repair/senten
 import type { RecoverLifecycle } from '../../legacy/recover/legacy-recover-contract-types';
 import type { SentenceCandidateTraceItem, V5Metrics } from '../../legacy/recover/legacy-v5-metrics';
 import type { FwDetectorResult, KenlmGateMode } from '../../fw-detector/types';
+import type { LegacyContext } from './legacy-context';
 
 export interface JobContext {
   // é³é¢ç¸å³
@@ -34,7 +35,7 @@ export interface JobContext {
   asrDiagnostics?: Record<string, unknown>;
   /** ASR bad-segment è´¨éåï¼0â?ï¼ï¼ä¾èå?è¯­ä¹ä¿®å¤/ç¿»è¯é¨æ§ã?*/
   qualityScore?: number;
-  /** CTC n-best from ASR HTTP (observability). */
+  /** CTC n-best from ASR HTTP (observability). @deprecated use legacy.ctc — top-level kept for compat */
   asrNbest?: AsrNBestItem[];
   /** Recover main-chain ASR hypotheses (includes synthetic top1 when no n-best). */
   asrHypotheses?: ASRHypothesis[];
@@ -89,6 +90,9 @@ export interface JobContext {
   fwDetectorEnableKenLMGateOverride?: boolean;
   fwDetectorKenlmGateModeOverride?: KenlmGateMode;
   fwDetectorKenlmVetoThresholdOverride?: number;
+
+  /** Legacy Recover / CTC / window recall partition. FW main chain must not read/write. */
+  legacy?: LegacyContext;
 
   // èåç¸å³
   segmentForJobResult?: string;  // SSOTï¼FW / èå / 5015 / NMT / text_asr

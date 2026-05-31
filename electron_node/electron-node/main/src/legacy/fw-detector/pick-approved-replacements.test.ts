@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
-import type { FwDetectorSignal, FwSpanCandidateDiag } from './types';
+import type { FwDetectorSignal, FwSpanCandidateDiag } from '../../fw-detector/types';
 import {
   pickApprovedReplacementsGreedy,
   pickBestCandidatePerSpan,

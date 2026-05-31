@@ -91,7 +91,7 @@ segment 空 → `segmentReady=false`，defer/skip Translation。
 
 - 主信号：alias exact hit、低词概率（word probability）
 - 输入：`rawAsrText`、ASR segments、V2 alias 索引
-- 上限：`fwMetadataSpanGate.maxSpans`（默认 4）
+- 上限：`fwMetadataSpanGate.maxSpans`（默认 4；**SSOT**，无根级 `fwDetector.maxSpans`）
 
 **Legacy fallback**（非主路径，仅 metadata 无候选且 segment 质量差时）：
 
@@ -124,7 +124,12 @@ Bundle：`node_runtime/lexicon/v2_shadow`（见 [../../docs/lexicon_v2/LEXICON_R
 ### 3.4 Apply
 
 **唯一写回：** `applyFwSpanReplacements`（`apply-span-replacements.ts`）  
-D-greedy 非重叠替换，上限 `maxSpans`（默认 4）。
+D-greedy 非重叠替换（P4 由句级 rerank 产出 approved 列表后一次性 apply）。
+
+### 3.4 enableKenLMGate（P4 必需）
+
+`enableKenLMGate: true` 创建 KenLM batch scorer。P4 句级 rerank 依赖 scorer；若为 false，`rerankFwSentences` 不会 pick 替换（非 weak_veto 可选开关）。  
+P1.2b 回滚路径才使用 `kenlmGateMode` / `kenlmVetoThreshold` / `kenlmDeltaThreshold`。
 
 ### 3.5 Legacy Recover 边界
 
@@ -154,15 +159,20 @@ D-greedy 非重叠替换，上限 `maxSpans`（默认 4）。
       "kenlmSpanGate": { "enabled": false },
       "useLexiconRuntimeV2Recall": true,
       "useSentenceLevelRerank": true,
-      "maxSpans": 4,
+      "enableKenLMGate": true,
       "maxSentenceCandidates": 16,
       "minDeltaToReplace": 0.03,
-      "topK": 3,
       "minPrior": 0.5,
       "recallMinPhoneticScore": 0.5,
       "candidateRequireRepairTarget": true,
       "enabledDomains": ["tech_ai", "travel", "transport", "restaurant"],
-      "domainAnchorPath": "data/lexicon/domain_anchor.json"
+      "fwMetadataSpanGate": {
+        "enabled": true,
+        "maxSpans": 4,
+        "allowAliasExactHit": true,
+        "allowSegmentFallbackScan": true,
+        "fallbackLegacyMaxSpans": 1
+      }
     }
   }
 }
@@ -223,6 +233,8 @@ node scripts/fw-detector-gate.mjs
 | 门禁 | 位置 |
 |------|------|
 | 冻结合约 | `main/src/fw-detector/freeze-contract.test.ts` |
+| SSOT 一致 | `main/src/fw-detector/freeze-config-ssot.test.ts` |
+| Freeze Guard | [FREEZE_GUARD.md](./FREEZE_GUARD.md) |
 | Aggregation 契约 | `tests/pipeline/asr-aggregation-contract.test.ts` |
 | segment 不被覆盖 | `tests/pipeline/repaired-text-not-overwritten.test.ts` |
 

@@ -9,7 +9,7 @@ import {
 import logger from '../../logger';
 
 function syncBaselineFromRaw(ctx: JobContext): void {
-  ctx.segmentForJobResult = (ctx.rawAsrText ?? ctx.asrText ?? '').trim();
+  ctx.segmentForJobResult = (ctx.rawAsrText ?? '').trim();
 }
 
 export async function runFwDetectorStep(

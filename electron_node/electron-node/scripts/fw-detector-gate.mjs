@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 /**
- * FW detector merge-freeze gate (P1.2c-fix V1.1).
- * Static checks: Recover isolation, Detector layering, deleted paths.
+ * P1~P4 freeze gate — static checks for FW mainline isolation and simplification contract.
  */
 import fs from 'fs';
 import path from 'path';
@@ -228,7 +227,43 @@ if (fs.existsSync(registryPath)) {
   }
 }
 
+// PostCleanup P1: legacy/fw-detector rollback chain archived
+const legacyFwRoot = path.join(srcRoot, 'legacy/fw-detector');
+const legacyFwFiles = [
+  'fw-topk-decision-pipeline.ts',
+  'candidate-scorer.ts',
+  'pick-approved-replacements.ts',
+  'span-replacement-eval.ts',
+];
+for (const name of legacyFwFiles) {
+  if (!fs.existsSync(path.join(legacyFwRoot, name))) {
+    fail(`missing legacy/fw-detector/${name}`);
+  }
+  if (fs.existsSync(path.join(fwRoot, name))) {
+    fail(`rollback file must not remain in fw-detector/: ${name}`);
+  }
+}
+if (fs.existsSync(orchPath)) {
+  const orchSrc = readRel(orchPath);
+  if (!orchSrc.includes('../legacy/fw-detector/fw-topk-decision-pipeline')) {
+    fail('orchestrator must import runFwTopKDecisionPipeline from legacy/fw-detector');
+  }
+}
+
+const jobContextPath = path.join(srcRoot, 'pipeline/context/job-context.ts');
+if (fs.existsSync(jobContextPath)) {
+  const jcSrc = readRel(jobContextPath);
+  if (!jcSrc.includes('legacy?: LegacyContext')) {
+    fail('JobContext must declare legacy?: LegacyContext partition');
+  }
+}
+
+const freezeGuardDoc = path.join(projectRoot, 'docs/FREEZE_GUARD.md');
+if (!fs.existsSync(freezeGuardDoc)) {
+  fail('docs/FREEZE_GUARD.md must exist (PostCleanup P1)');
+}
+
 if (failures.length) {
   process.exit(1);
 }
-console.log('[fw-gate] PASS — P1.2c-fix merge-freeze isolation checks OK');
+console.log('[fw-gate] PASS — P1~P4 PostCleanup freeze guard checks OK');

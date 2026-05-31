@@ -14,6 +14,7 @@ import {
   resolveRecoverContractVersion,
 } from './legacy-recover-contract';
 import { buildLexiconRecallTrace } from './legacy-v5-metrics';
+import { syncJobContextLegacyPartition } from '../../pipeline/context/job-context-legacy-sync';
 
 function hasKenlmMetaForExtra(meta: AsrKenlmMeta): boolean {
   return (
@@ -33,6 +34,7 @@ export function buildLegacyRecoverResultExtra(
   ctx: JobContext,
   coreExtra: Record<string, unknown>
 ): Record<string, unknown> {
+  syncJobContextLegacyPartition(ctx);
   const recoverContract = buildLegacyRecoverContractExtra(job, ctx);
   return {
     ...coreExtra,

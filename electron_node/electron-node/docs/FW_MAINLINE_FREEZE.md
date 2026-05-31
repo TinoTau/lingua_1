@@ -2,7 +2,7 @@
 
 **Status:** FROZEN (2026-05-27)  
 **Scope:** `asr.engine = fw_detector_v1` production path only.  
-**Operational detail:** [PIPELINE.md](./PIPELINE.md)
+**Operational detail:** [PIPELINE.md](./PIPELINE.md) · [FREEZE_GUARD.md](./FREEZE_GUARD.md)
 
 ---
 
@@ -52,13 +52,14 @@ Removed from FW path: `repairedText`, `LEXICON_RECALL`, `SENTENCE_REPAIR`, CTC n
 |-----|----------------|
 | `asr.engine` | `fw_detector_v1` |
 | `features.lexiconRuntimeV2.enabled` | `true` |
-| `features.fwDetector.useLexiconRuntimeV2Recall` | `true` |
+| `features.fwDetector.useLexiconRuntimeV2Recall` | `true`（**两者同时 true** 才走 V2 SQL recall） |
 | `features.fwDetector.spanGateMode` | `fw_metadata_gate` |
 | `features.fwDetector.kenlmSpanGate.enabled` | `false` |
 | `features.fwDetector.useSentenceLevelRerank` | `true` |
-| `features.fwDetector.maxSpans` | `4` |
+| `features.fwDetector.fwMetadataSpanGate.maxSpans` | `4` |
 | `features.fwDetector.maxSentenceCandidates` | `16` |
 | `features.fwDetector.minDeltaToReplace` | `0.03` |
+| `features.fwDetector.enableKenLMGate` | `true` (**P4 sentence rerank 必需**；false 则永不 apply) |
 | `features.fwDetector.useIndustryRouting` | `false` |
 | `features.semanticRepair.enabled` | `false` (5015) |
 | `features.phoneticCorrection.enabled` | `false` (5016) |
@@ -115,5 +116,6 @@ When `ctx.asrRepairApplied === true` (FW apply succeeded), `isSegmentWriteLocked
 ## Verification
 
 - Static: `main/src/fw-detector/freeze-contract.test.ts`
-- Batch config mirror: `tests/patch-p4-config.mjs`
+- Batch config SSOT: `tests/freeze-config-ssot.json` → `tests/patch-p4-config.mjs`
 - Batch run: `tests/run-lexicon-v2-p4-batch.js`
+- Rollback reference: `tests/freeze-rollback-config.json`

@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 import fs from 'fs';
 import path from 'path';
+import { loadFreezeConfigSsot } from './lib/freeze-config-ssot.mjs';
 
+const ssot = loadFreezeConfigSsot();
 const configPath = path.join(
   process.env.APPDATA || '',
   'lingua-electron-node',
@@ -14,32 +16,20 @@ if (!fs.existsSync(configPath)) {
 const cfg = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 cfg.features = cfg.features || {};
 cfg.features.lexiconRuntimeV2 = {
-  enabled: true,
-  bundlePath: 'node_runtime/lexicon/v2_shadow',
-  lruBucketCacheSize: 512,
-  maxBaseCandidates: 2,
-  maxDomainCandidates: 3,
-  maxIdiomCandidates: 0,
-  recallDiagnosticsEnabled: true,
+  ...ssot.lexiconRuntimeV2,
   ...cfg.features.lexiconRuntimeV2,
 };
 cfg.features.fwDetector = {
   ...cfg.features.fwDetector,
-  enabled: true,
-  spanGateMode: 'fw_metadata_gate',
-  maxSpans: 4,
-  useLexiconRuntimeV2Recall: true,
-  useIndustryRouting: false,
-  useSentenceLevelRerank: true,
-  maxSentenceCandidates: 16,
-  minDeltaToReplace: 0.03,
-  enableKenLMGate: true,
-  kenlmSpanGate: { ...(cfg.features.fwDetector?.kenlmSpanGate || {}), enabled: false },
+  ...ssot.fwDetector,
+  kenlmSpanGate: {
+    ...(cfg.features.fwDetector?.kenlmSpanGate || {}),
+    ...ssot.fwDetector.kenlmSpanGate,
+  },
   fwMetadataSpanGate: {
     ...(cfg.features.fwDetector?.fwMetadataSpanGate || {}),
-    enabled: true,
-    maxSpans: 4,
+    ...ssot.fwDetector.fwMetadataSpanGate,
   },
 };
 fs.writeFileSync(configPath, JSON.stringify(cfg, null, 2), 'utf8');
-console.log('Patched', configPath);
+console.log('Patched', configPath, 'from freeze-config-ssot.json');

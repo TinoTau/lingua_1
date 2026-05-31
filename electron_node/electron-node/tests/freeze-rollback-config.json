@@ -1,0 +1,31 @@
+{
+  "_comment": "Rollback-only reference. Not loaded by runtime. Apply manually to electron-node-config.json when unfreezing.",
+  "p1_2b_per_span_topk": {
+    "useSentenceLevelRerank": false,
+    "topK": 3,
+    "finalScoreWeights": { "pinyin": 0.4, "prior": 0.3, "domain": 0.2, "kenlm": 0.1 },
+    "kenlmGateMode": "weak_veto",
+    "kenlmVetoThreshold": -0.2,
+    "kenlmDeltaThreshold": 0.8,
+    "enableKenLMGate": true
+  },
+  "p3_2_kenlm_span_gate": {
+    "spanGateMode": "kenlm_gate_filter",
+    "kenlmSpanGate": {
+      "enabled": true,
+      "maxSpans": 2,
+      "minSpanChars": 2,
+      "maxSpanChars": 4,
+      "minLocalDelta": 0.05,
+      "stopwordFilterEnabled": true,
+      "preFilterMaxWindows": 20
+    }
+  },
+  "legacy_detector": {
+    "spanGateMode": "legacy_detector",
+    "spanDetectBudget": 12
+  },
+  "v1_recall": {
+    "useLexiconRuntimeV2Recall": false
+  }
+}

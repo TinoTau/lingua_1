@@ -40,7 +40,8 @@ export type StepExecutor = (
 /**
  * Pipeline step registry.
  *
- * FW mainline (fw_detector_v1): applyFwDetectorPipelineMode removes LEXICON_RECALL / SENTENCE_REPAIR.
+ * Legacy Recover steps (LEXICON_RECALL, SENTENCE_REPAIR): registered for non-FW engine only.
+ * FW mainline: applyFwDetectorPipelineMode must remove LEXICON_RECALL / SENTENCE_REPAIR.
  *
  * Enhancement steps (still registered, default OFF via node-config):
  * - PHONETIC_CORRECTION (5016), PUNCTUATION_RESTORE (5017), SEMANTIC_REPAIR (5015)

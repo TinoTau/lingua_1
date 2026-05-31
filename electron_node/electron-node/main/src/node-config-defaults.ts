@@ -85,7 +85,6 @@ export const DEFAULT_CONFIG: NodeConfig = {
     fwDetector: {
       enabled: true,
       disableAsrRerun: true,
-      maxSpans: 4,
       spanDetectBudget: 12,
       topK: 3,
       minPrior: 0.5,
@@ -121,8 +120,6 @@ export const DEFAULT_CONFIG: NodeConfig = {
         maxSpanChars: 4,
         wordProbabilityThreshold: 0.65,
         segmentAvgLogprobThreshold: -1.0,
-        compressionRatioThreshold: 2.4,
-        noSpeechProbThreshold: 0.5,
         allowAliasExactHit: true,
         allowSegmentFallbackScan: true,
         fallbackLegacyMaxSpans: 1,

@@ -351,7 +351,7 @@ export async function runAsrStep(
   }
 
   if (isFwDetectorEngineEnabled()) {
-    ctx.segmentForJobResult = (ctx.rawAsrText ?? ctx.asrText ?? '').trim();
+    ctx.segmentForJobResult = (ctx.rawAsrText ?? '').trim();
   }
 
   const fwDiag = ctx.asrResult?.diagnostics as Record<string, unknown> | undefined;

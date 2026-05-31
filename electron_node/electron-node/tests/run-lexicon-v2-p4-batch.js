@@ -5,6 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 const { assessFwDetectorContractPass } = require('./lib/fw-detector-contract-assess');
+const { buildFreezeBatchReportConfig } = require('./lib/freeze-config-ssot.cjs');
 
 const args = process.argv.slice(2);
 let limit = null;
@@ -130,18 +131,10 @@ async function main() {
   const report = {
     timestamp: new Date().toISOString(),
     testScope: 'P4 Sentence-Level Rerank + Tone Pinyin + V2 Recall',
-    config: {
-      spanGateMode: 'fw_metadata_gate',
-      useLexiconRuntimeV2Recall: true,
-      useIndustryRouting: false,
-      useSentenceLevelRerank: true,
-      maxSpans: 4,
-      maxSentenceCandidates: 16,
-      minDeltaToReplace: 0.03,
-      lexiconRuntimeV2_enabled: true,
+    config: buildFreezeBatchReportConfig({
       intent_drain_sec: 0,
       max_minutes: maxMinutes,
-    },
+    }),
     port,
     dialogDir: DIALOG_DIR,
     total: cases.length,

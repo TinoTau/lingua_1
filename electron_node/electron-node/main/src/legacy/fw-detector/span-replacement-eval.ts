@@ -3,7 +3,7 @@
  * Not used by Detector — diagnostics / unit tests only.
  */
 
-import type { LocalSpanRecallHit, LocalSpanRecallResult } from '../lexicon/local-span-recall';
+import type { LocalSpanRecallHit, LocalSpanRecallResult } from '../../lexicon/local-span-recall';
 
 export type SpanReplacementEval = {
   maxPhoneticScore: number;

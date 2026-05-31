@@ -7,6 +7,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const { assessFwDetectorContractPass } = require('./lib/fw-detector-contract-assess');
+const { buildFreezeBatchReportConfig } = require('./lib/freeze-config-ssot.cjs');
 
 const args = process.argv.slice(2);
 let limit = null;
@@ -215,16 +216,11 @@ async function main() {
   const report = {
     timestamp: new Date().toISOString(),
     testScope: `P1~P4 freeze acceptance dialog_200 profile=${profile}`,
-    config: {
-      spanGateMode: 'fw_metadata_gate',
-      useLexiconRuntimeV2Recall: true,
-      useIndustryRouting: false,
-      useSentenceLevelRerank: true,
-      maxSpans: 4,
+    config: buildFreezeBatchReportConfig({
       kenlmSpanGate_enabled: false,
       profilePrimaryDomain: profile === 'restaurant' ? 'restaurant' : 'general',
       session_id: BATCH_SESSION_ID,
-    },
+    }),
     port,
     total: cases.length,
     cases: [],

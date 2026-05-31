@@ -44,6 +44,7 @@ export function applyFwDetectorJobOverrides(job: JobAssignMessage, ctx: JobConte
   if (!o) {
     return;
   }
+  // Batch/freeze acceptance must not set enableKenLMGate:false (P4 rerank requires scorer).
   if (typeof o.enableKenLMGate === 'boolean') {
     ctx.fwDetectorEnableKenLMGateOverride = o.enableKenLMGate;
   }

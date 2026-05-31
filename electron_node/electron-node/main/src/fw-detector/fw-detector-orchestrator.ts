@@ -21,7 +21,7 @@ import { applyFwSpanReplacements } from './apply-span-replacements';
 import { selectFwMetadataSpans } from './fw-metadata-span-gate';
 import { isFwMetadataSpanGateActive, isKenlmSpanGateActive, loadFwDetectorRuntimeConfig } from './fw-config';
 import { mapFwMetadataSpanToFwSpan } from './map-fw-metadata-span';
-import { runFwTopKDecisionPipeline } from './fw-topk-decision-pipeline';
+import { runFwTopKDecisionPipeline } from '../legacy/fw-detector/fw-topk-decision-pipeline';
 import { runFwSentenceRerankPipeline } from './fw-sentence-rerank-pipeline';
 import { detectSuspiciousSpansV1 } from './suspicious-span-detector-v1';
 import { createSpanDetectorHint } from './span-detector-hint';
@@ -223,7 +223,7 @@ export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDete
     spanGateMode: config.spanGateMode,
     kenlmSpanGate: config.kenlmSpanGate,
     fwMetadataSpanGate: config.fwMetadataSpanGate,
-    maxSpans: config.maxSpans,
+    maxSpans: config.fwMetadataSpanGate.maxSpans,
     spanDetectBudget: config.spanDetectBudget,
     topK: config.topK,
     minPrior: config.minPrior,

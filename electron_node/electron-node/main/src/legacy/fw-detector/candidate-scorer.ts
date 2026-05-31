@@ -1,4 +1,4 @@
-import type { FinalScoreWeights } from './fw-config';
+import type { FinalScoreWeights } from '../../fw-detector/fw-config';
 
 export type CandidateScoreInput = {
   phoneticScore: number;

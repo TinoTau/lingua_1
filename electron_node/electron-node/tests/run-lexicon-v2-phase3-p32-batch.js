@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 /**
+ * @deprecated Non-frozen P3.2 KenLM span gate path. Use run-lexicon-v2-p4-batch.js or run-p4-freeze-batch.js.
  * P3.2 KenLM Span Gate batch — V2 Recall ON, Industry Routing OFF, kenlm_gate_filter.
  */
 const fs = require('fs');

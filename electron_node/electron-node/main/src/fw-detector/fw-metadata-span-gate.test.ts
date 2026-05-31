@@ -9,8 +9,6 @@ const baseConfig: FwMetadataSpanGateRuntimeConfig = {
   maxSpanChars: 4,
   wordProbabilityThreshold: 0.65,
   segmentAvgLogprobThreshold: -1.0,
-  compressionRatioThreshold: 2.4,
-  noSpeechProbThreshold: 0.5,
   allowAliasExactHit: true,
   allowSegmentFallbackScan: false,
   fallbackLegacyMaxSpans: 1,

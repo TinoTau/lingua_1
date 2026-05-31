@@ -34,7 +34,7 @@ export async function runPhoneticCorrectionStep(
   }
 
   if (isSegmentWriteLocked(ctx)) {
-    markPhoneticCorrectionSkipped(ctx, 'RECOVER_WRITE_LOCKED');
+    markPhoneticCorrectionSkipped(ctx, 'SEGMENT_WRITE_LOCKED');
     logger.info(
       { jobId: job.job_id },
       'Phonetic correction skipped: Recover write lock'
