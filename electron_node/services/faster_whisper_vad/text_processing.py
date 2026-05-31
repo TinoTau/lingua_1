@@ -174,24 +174,26 @@ def update_segments_after_deduplication(
         更新后的segments信息
     """
     if segments_info and deduplicated_text != full_text:
-        # 文本被去重修改了，需要重新生成 segments
-        # 简单处理：按空格分割，但保留第一个 segment 的时间戳（如果存在）
-        segment_texts_split = [s.strip() for s in deduplicated_text.split() if s.strip()]
-        if segment_texts_split:
-            # 尝试保留第一个 segment 的时间戳
-            first_seg_start = segments_info[0].start if segments_info else None
-            first_seg_end = segments_info[-1].end if segments_info else None
-            segments_info = [
-                SegmentInfo(
-                    text=text,
-                    start=first_seg_start if i == 0 else None,
-                    end=first_seg_end if i == len(segment_texts_split) - 1 else None,
-                    no_speech_prob=None,
-                )
-                for i, text in enumerate(segment_texts_split)
-            ]
-        else:
-            segments_info = [SegmentInfo(text=deduplicated_text, start=None, end=None, no_speech_prob=None)]
+        # Dedup changed text — keep segment-level metadata, drop word alignment.
+        first = segments_info[0]
+        last = segments_info[-1]
+        avg_vals = [s.avg_logprob for s in segments_info if s.avg_logprob is not None]
+        avg_logprob = sum(avg_vals) / len(avg_vals) if avg_vals else first.avg_logprob
+        compression_vals = [
+            s.compression_ratio for s in segments_info if s.compression_ratio is not None
+        ]
+        compression_ratio = compression_vals[0] if compression_vals else first.compression_ratio
+        segments_info = [
+            SegmentInfo(
+                text=deduplicated_text,
+                start=first.start,
+                end=last.end,
+                no_speech_prob=first.no_speech_prob,
+                avg_logprob=avg_logprob,
+                compression_ratio=compression_ratio,
+                words=None,
+            )
+        ]
     elif not segments_info and deduplicated_text:
         # 如果原始 segments 为空，从去重后的文本生成
         segment_texts_split = [s.strip() for s in deduplicated_text.split() if s.strip()]

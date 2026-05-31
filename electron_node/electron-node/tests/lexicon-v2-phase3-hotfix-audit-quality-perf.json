@@ -1,0 +1,178 @@
+{
+  "config": {
+    "useLexiconRuntimeV2Recall": true,
+    "useIndustryRouting": false,
+    "lexiconRuntimeV2_enabled": true,
+    "intent_drain_sec": 0
+  },
+  "contract": {
+    "total": 200,
+    "pass": 199,
+    "fail": 1,
+    "skip": 0,
+    "pipeline_ok_rate": 0.995,
+    "industry_routing_used_count": 0,
+    "fw_applied_total": 680,
+    "text_changed_count": 191,
+    "batch_elapsed_sec": 2854,
+    "avg_wall_sec_per_case": 14.27
+  },
+  "recall_chain": {
+    "path": "base_lexicon + domain_lexicon + idiom_lexicon → merge (cap 5) → KenLM weak_veto → pick",
+    "industry_routing_in_recall": false,
+    "industry_routing_lookup_count": 0,
+    "domain_resolver_used": false
+  },
+  "recall_tier": {
+    "span_recall_invocations": 2298,
+    "merge_after_merge": {
+      "count": 2298,
+      "avg": 1,
+      "p50": 1,
+      "p95": 2,
+      "p99": 2,
+      "min": 0,
+      "max": 2
+    },
+    "sent_to_kenlm": {
+      "count": 2298,
+      "avg": 1,
+      "p50": 1,
+      "p95": 2,
+      "p99": 2,
+      "min": 0,
+      "max": 2
+    },
+    "merge_cap_violations": 0,
+    "kenlm_query_count": {
+      "count": 199,
+      "avg": 13,
+      "p50": 13,
+      "p95": 24,
+      "p99": 25,
+      "min": 0,
+      "max": 25
+    }
+  },
+  "quality": {
+    "avg_cer_raw": 0.361,
+    "avg_cer_final": 0.5162,
+    "median_cer_raw": 0.2667,
+    "median_cer_final": 0.4706,
+    "p95_cer_raw": 0.88,
+    "p95_cer_final": 0.88,
+    "fw_improved_cases": 20,
+    "fw_degraded_cases": 162
+  },
+  "perf": {
+    "pipeline_total_ms": {
+      "count": 200,
+      "avg": 14267,
+      "p50": 14163,
+      "p95": 20672,
+      "p99": 21849,
+      "min": 4007,
+      "max": 22800
+    },
+    "fw_detector_total_ms": {
+      "count": 199,
+      "avg": 9483,
+      "p50": 9369,
+      "p95": 16758,
+      "p99": 17507,
+      "min": 8,
+      "max": 17973
+    },
+    "kenlm_ms": {
+      "count": 191,
+      "avg": 9810,
+      "p50": 9522,
+      "p95": 16690,
+      "p99": 17439,
+      "min": 2098,
+      "max": 17893
+    },
+    "v2_recall_ms": {
+      "count": 2298,
+      "avg": 1,
+      "p50": 1,
+      "p95": 3,
+      "p99": 4,
+      "min": 0,
+      "max": 6
+    },
+    "domain_lookup_ms": {
+      "count": 2298,
+      "avg": 0,
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "min": 0,
+      "max": 0
+    },
+    "idiom_lookup_ms": {
+      "count": 2298,
+      "avg": 0,
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "min": 0,
+      "max": 0
+    },
+    "merge_ms": {
+      "count": 2298,
+      "avg": 0,
+      "p50": 0,
+      "p95": 1,
+      "p99": 2,
+      "min": 0,
+      "max": 3
+    },
+    "batch_elapsed_sec": 2854,
+    "avg_wall_sec_per_case": 14.27
+  },
+  "v2_sql": {
+    "per_job_queries": {
+      "count": 199,
+      "avg": 5,
+      "p50": 4,
+      "p95": 12,
+      "p99": 12,
+      "min": 0,
+      "max": 12
+    },
+    "span_recall_invocations": 2298,
+    "cache_hit_rate": 0.5862,
+    "cache_hits_total": 1347,
+    "cache_misses_total": 951
+  },
+  "comparison": {
+    "phase2": {
+      "avg_wall_sec_per_case": 5.37,
+      "pipeline_ms_p95": 7458,
+      "fw_degraded": 0,
+      "avg_cer_final": 0.3593
+    },
+    "phase3_pre_hotfix": {
+      "avg_wall_sec_per_case": 13.81,
+      "pipeline_ms_p95": 20805,
+      "fw_applied_total": 684,
+      "avg_cer_final": 0.5157,
+      "fw_degraded": 158,
+      "kenlm_ms_avg": 11295
+    },
+    "phase3_plus4_partial": null,
+    "phase3_only": {
+      "completed": 200,
+      "avg_wall_sec_per_case": 14.27,
+      "pipeline_ms_p95": 20672,
+      "v2_recall_ms_p95": 3
+    },
+    "recall_p95_vs_phase2_delta": 13214
+  },
+  "bottleneck_notes": [
+    "Phase 3 Only 仍显著慢于 Phase 2，优先排查 V2 SQL/缓存/候选合并规模。",
+    "industry-routing-domain-resolver 未参与本轮 Recall（符合 Phase 3 Only）。"
+  ],
+  "recall_p95_within_phase2_plus_10pct": false
+}

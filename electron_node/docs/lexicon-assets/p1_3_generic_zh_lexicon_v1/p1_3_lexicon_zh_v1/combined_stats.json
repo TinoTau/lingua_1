@@ -1,0 +1,145 @@
+{
+  "version": "combined_zh_v1",
+  "language": "zh",
+  "generatedAt": "2026-05-30T10:21:05.376891+00:00",
+  "source": "jieba_dict_mit",
+  "entryCount": 73089,
+  "rejectedCount": 0,
+  "bucketCount": 59428,
+  "maxBucketSize": 20,
+  "avgBucketSize": 1.23,
+  "topBuckets": [
+    {
+      "pinyin": "shi shi",
+      "count": 20
+    },
+    {
+      "pinyin": "yi shi",
+      "count": 20
+    },
+    {
+      "pinyin": "shi ji",
+      "count": 19
+    },
+    {
+      "pinyin": "ji shi",
+      "count": 18
+    },
+    {
+      "pinyin": "yi zhi",
+      "count": 16
+    },
+    {
+      "pinyin": "qi shi",
+      "count": 16
+    },
+    {
+      "pinyin": "fu shi",
+      "count": 16
+    },
+    {
+      "pinyin": "chu shi",
+      "count": 16
+    },
+    {
+      "pinyin": "zhi shi",
+      "count": 15
+    },
+    {
+      "pinyin": "xian shi",
+      "count": 15
+    },
+    {
+      "pinyin": "shi li",
+      "count": 15
+    },
+    {
+      "pinyin": "shi yi",
+      "count": 14
+    },
+    {
+      "pinyin": "shi zhi",
+      "count": 14
+    },
+    {
+      "pinyin": "li shi",
+      "count": 13
+    },
+    {
+      "pinyin": "ji yu",
+      "count": 13
+    },
+    {
+      "pinyin": "yi qi",
+      "count": 13
+    },
+    {
+      "pinyin": "xing shi",
+      "count": 12
+    },
+    {
+      "pinyin": "tong zhi",
+      "count": 12
+    },
+    {
+      "pinyin": "xiao shi",
+      "count": 12
+    },
+    {
+      "pinyin": "shi wu",
+      "count": 11
+    }
+  ],
+  "lenDistribution": {
+    "2": 40514,
+    "3": 9486,
+    "4": 22192,
+    "5": 897
+  },
+  "posDistribution": {
+    "n": 29885,
+    "i": 22617,
+    "v": 11846,
+    "a": 1984,
+    "d": 1051,
+    "vn": 911,
+    "l": 843,
+    "t": 826,
+    "b": 516,
+    "z": 471,
+    "j": 468,
+    "r": 424,
+    "s": 362,
+    "f": 236,
+    "c": 213,
+    "nrfg": 123,
+    "o": 73,
+    "ad": 66,
+    "q": 63,
+    "p": 53,
+    "an": 28,
+    "u": 9,
+    "e": 8,
+    "y": 5,
+    "vd": 2,
+    "df": 1,
+    "rz": 1,
+    "rr": 1,
+    "vq": 1,
+    "vi": 1,
+    "h": 1
+  },
+  "rules": {
+    "layers": [
+      "base",
+      "idiom",
+      "common5"
+    ],
+    "maxBucketCandidates": "enforced per layer"
+  },
+  "notes": [
+    "Seed format is canonical_term JSONL for existing lexicon:build pipeline.",
+    "All generated entries use domains=[general]; current FW enabledDomains must include general or domain filter must be adjusted before runtime use.",
+    "repairTarget=true is set intentionally because current FW pick path requires repairTarget candidates."
+  ]
+}

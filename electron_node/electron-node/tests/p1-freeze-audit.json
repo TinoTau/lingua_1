@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "lexicon-v2-shadow-v2",
+  "seed_inputs": [
+    "electron_node\\docs\\lexicon-assets\\p1_3_generic_zh_lexicon_v2_fw_domains\\p1_3_lexicon_zh_v2\\base_zh_v2\\entries.jsonl",
+    "electron_node\\docs\\lexicon-assets\\p1_3_generic_zh_lexicon_v2_fw_domains\\p1_3_lexicon_zh_v2\\common5_zh_v2\\entries.jsonl",
+    "electron_node\\docs\\lexicon-assets\\p1_3_generic_zh_lexicon_v2_fw_domains\\p1_3_lexicon_zh_v2\\domain_patch_zh_v2\\entries.jsonl",
+    "electron_node\\docs\\lexicon-assets\\p1_3_generic_zh_lexicon_v2_fw_domains\\p1_3_lexicon_zh_v2\\idiom_zh_v2\\entries.jsonl"
+  ],
+  "domain_patch_in_seed_inputs": true,
+  "tables": {
+    "base_lexicon": 50000,
+    "idiom_lexicon": 22192,
+    "domain_lexicon": 25,
+    "industry_routing_lexicon": 9
+  },
+  "domain_id_distribution": [
+    {
+      "domain_id": "restaurant",
+      "count": 25
+    }
+  ],
+  "restaurant": {
+    "canonical": 9,
+    "alias": 16,
+    "total": 25
+  },
+  "tone_pinyin_key_coverage": {
+    "base_lexicon": {
+      "column": true,
+      "total": 50000,
+      "with_tone": 50000,
+      "coverage_pct": 100.0
+    },
+    "domain_lexicon": {
+      "column": true,
+      "total": 25,
+      "with_tone": 25,
+      "coverage_pct": 100.0
+    },
+    "has_tone_column": true
+  },
+  "repair_target_distribution": {
+    "base_lexicon": {
+      "1": 50000
+    },
+    "domain_lexicon": {
+      "1": 25
+    },
+    "idiom_lexicon": {
+      "1": 22192
+    }
+  },
+  "runtime_reads_jsonl": false,
+  "sqlite_path": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v2_shadow\\lexicon_v2.sqlite",
+  "manifest_createdAt": "2026-05-31T11:22:01.532Z"
+}

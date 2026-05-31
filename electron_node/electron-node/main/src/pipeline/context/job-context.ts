@@ -77,6 +77,7 @@ export interface JobContext {
   sentenceRepairExtra?: SentenceRepairExtra;
   asrRepairApplied?: boolean;
   fwDetectorResult?: FwDetectorResult;
+  fwDetectorStepMs?: number;
   languageProbabilities?: Record<string, number>;
   /** æ?job ä½¿ç¨ç?lexicon profileï¼turn ååºå®ï¼ */
   activeProfilePrimary?: string;

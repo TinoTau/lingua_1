@@ -53,6 +53,14 @@ export interface JobResult {
     start?: number;
     end?: number;
     no_speech_prob?: number;
+    avg_logprob?: number;
+    compression_ratio?: number;
+    words?: Array<{
+      word: string;
+      start?: number;
+      end?: number;
+      probability?: number;
+    }>;
   }>;
   /** 文本聚合相关字段 */
   aggregation_applied?: boolean;  // 是否应用了文本聚合

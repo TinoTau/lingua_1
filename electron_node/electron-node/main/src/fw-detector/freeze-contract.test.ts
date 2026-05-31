@@ -40,6 +40,23 @@ describe('P1.2c-fix merge freeze contract (V1.1)', () => {
     expect(cfg.kenlmGateMode).toBe('weak_veto');
     expect(cfg.candidateRequireRepairTarget).toBe(true);
     expect(cfg.spanDetectBudget).toBeGreaterThanOrEqual(12);
+    expect(cfg.spanGateMode).toBe('fw_metadata_gate');
+    expect(cfg.kenlmSpanGate.enabled).toBe(false);
+    expect(cfg.fwMetadataSpanGate.enabled).toBe(true);
+  });
+
+  it('P4 defaults: sentence rerank + maxSpans=4', () => {
+    const cfg = loadFwDetectorRuntimeConfig();
+    expect(cfg.useSentenceLevelRerank).toBe(true);
+    expect(cfg.maxSpans).toBe(4);
+    expect(cfg.maxSentenceCandidates).toBe(16);
+    expect(cfg.minDeltaToReplace).toBe(0.03);
+    expect(cfg.fwMetadataSpanGate.maxSpans).toBe(4);
+  });
+
+  it('P4 freeze defaults: Lexicon Runtime V2 recall enabled in DEFAULT_CONFIG', () => {
+    expect(DEFAULT_CONFIG.features?.lexiconRuntimeV2?.enabled).toBe(true);
+    expect(DEFAULT_CONFIG.features?.fwDetector?.useLexiconRuntimeV2Recall).toBe(true);
   });
 
   it('FW pipeline: ASR → FW_SPAN_DETECTOR → AGGREGATION，移除 Recover 步骤', () => {
@@ -67,11 +84,13 @@ describe('P1.2c-fix merge freeze contract (V1.1)', () => {
     expect(hintSrc).not.toMatch(/recallSpanTopK|local-span-recall|lexicon-runtime/);
   });
 
-  it('orchestrator 主链不接 span-replacement-eval', () => {
+  it('orchestrator 主链接 hint + topK/sentence rerank pipeline', () => {
     const orchSrc = readSrc('fw-detector/fw-detector-orchestrator.ts');
     expect(orchSrc).not.toContain('span-replacement-eval');
     expect(orchSrc).toContain('createSpanDetectorHint');
     expect(orchSrc).toContain('runFwTopKDecisionPipeline');
+    expect(orchSrc).toContain('runFwSentenceRerankPipeline');
+    expect(orchSrc).toContain('useSentenceLevelRerank');
   });
 
   it('pinyin-probe 已删除', () => {

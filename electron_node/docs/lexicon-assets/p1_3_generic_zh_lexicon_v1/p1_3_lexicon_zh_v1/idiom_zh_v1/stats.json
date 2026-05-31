@@ -1,0 +1,118 @@
+{
+  "version": "idiom_zh_v1",
+  "language": "zh",
+  "generatedAt": "2026-05-30T10:21:03.990369+00:00",
+  "source": "jieba_dict_pos_i_mit",
+  "entryCount": 22192,
+  "rejectedCount": 0,
+  "bucketCount": 21484,
+  "maxBucketSize": 5,
+  "avgBucketSize": 1.033,
+  "topBuckets": [
+    {
+      "pinyin": "ling hu chong shen",
+      "count": 5
+    },
+    {
+      "pinyin": "chu mu jing xin",
+      "count": 4
+    },
+    {
+      "pinyin": "fen shi ji su",
+      "count": 4
+    },
+    {
+      "pinyin": "fan pu gui zhen",
+      "count": 4
+    },
+    {
+      "pinyin": "shao an wu zao",
+      "count": 4
+    },
+    {
+      "pinyin": "xuan quan luo xiu",
+      "count": 4
+    },
+    {
+      "pinyin": "wei suo yu wei",
+      "count": 3
+    },
+    {
+      "pinyin": "jing huang shi cuo",
+      "count": 3
+    },
+    {
+      "pinyin": "gui gen jie di",
+      "count": 3
+    },
+    {
+      "pinyin": "fen bu gu shen",
+      "count": 3
+    },
+    {
+      "pinyin": "qi shi xiong xiong",
+      "count": 3
+    },
+    {
+      "pinyin": "yi xiang qing yuan",
+      "count": 3
+    },
+    {
+      "pinyin": "gu ku ling ding",
+      "count": 3
+    },
+    {
+      "pinyin": "shi guo jing qian",
+      "count": 3
+    },
+    {
+      "pinyin": "ping bai wu gu",
+      "count": 3
+    },
+    {
+      "pinyin": "yi lao mai lao",
+      "count": 3
+    },
+    {
+      "pinyin": "xu wu piao miao",
+      "count": 3
+    },
+    {
+      "pinyin": "jie ao bu xun",
+      "count": 3
+    },
+    {
+      "pinyin": "jiao she yin yi",
+      "count": 3
+    },
+    {
+      "pinyin": "fan fu wu chang",
+      "count": 3
+    }
+  ],
+  "lenDistribution": {
+    "4": 22192
+  },
+  "posDistribution": {
+    "i": 22192
+  },
+  "rules": {
+    "allowedLengths": [
+      4
+    ],
+    "allowedPosTags": [
+      "i"
+    ],
+    "maxBucketCandidates": 20,
+    "domains": [
+      "general"
+    ],
+    "repairTarget": true,
+    "note": "Four-character idiom/fixed idiom layer; ordinary four-character combinations are excluded from base."
+  },
+  "notes": [
+    "Seed format is canonical_term JSONL for existing lexicon:build pipeline.",
+    "All generated entries use domains=[general]; current FW enabledDomains must include general or domain filter must be adjusted before runtime use.",
+    "repairTarget=true is set intentionally because current FW pick path requires repairTarget candidates."
+  ]
+}

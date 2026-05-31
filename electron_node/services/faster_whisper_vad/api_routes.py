@@ -316,6 +316,19 @@ async def process_utterance(req: UtteranceRequest) -> UtteranceResponse:
                 start=seg.start,
                 end=seg.end,
                 no_speech_prob=seg.no_speech_prob,
+                avg_logprob=getattr(seg, "avg_logprob", None),
+                compression_ratio=getattr(seg, "compression_ratio", None),
+                words=[
+                    {
+                        "word": w.word,
+                        "start": w.start,
+                        "end": w.end,
+                        "probability": w.probability,
+                    }
+                    for w in (getattr(seg, "words", None) or [])
+                ]
+                if getattr(seg, "words", None)
+                else None,
             )
             for seg in segments_info
         ]

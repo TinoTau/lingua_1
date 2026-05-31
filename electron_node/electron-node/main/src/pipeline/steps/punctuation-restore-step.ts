@@ -1,5 +1,10 @@
 /**
- * 断句步骤（5017）：gate → GPU lease → HTTP；不可用则 skip
+ * Punctuation restore (5017).
+ *
+ * FW mainline freeze:
+ * - Default OFF (features.punctuationRestore.enabled=false).
+ * - Skipped when isSegmentWriteLocked (FW apply).
+ * - Optional enhancement; does not replace Metadata Gate / P4 rerank / applyFwSpanReplacements.
  */
 
 import { JobAssignMessage } from '@shared/protocols/messages';

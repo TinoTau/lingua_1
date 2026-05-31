@@ -1,0 +1,32 @@
+{
+  "version": "p1_3_generic_zh_v1",
+  "generatedAt": "2026-05-30T10:21:06.121927+00:00",
+  "sources": [
+    {
+      "name": "jieba dict.txt",
+      "repo": "fxsjy/jieba",
+      "license": "MIT",
+      "localFile": "lexicon_sources/jieba_dict.txt"
+    }
+  ],
+  "layers": {
+    "base": {
+      "count": 50000,
+      "path": "base_zh_v1/entries.jsonl"
+    },
+    "idiom": {
+      "count": 22192,
+      "path": "idiom_zh_v1/entries.jsonl"
+    },
+    "common5": {
+      "count": 897,
+      "path": "common5_zh_v1/entries.jsonl"
+    },
+    "combined": {
+      "count": 73089,
+      "path": "combined_entries.jsonl"
+    }
+  },
+  "format": "canonical_term_jsonl_seed",
+  "runtimeNote": "compile through existing lexicon:build to SQLite bundle before use"
+}

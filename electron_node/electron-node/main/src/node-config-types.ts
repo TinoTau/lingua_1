@@ -94,6 +94,8 @@ export interface NodeConfig {
     };
     lexiconV2?: {
       enabled?: boolean;
+      /** Phase 2：写入 session.lexiconSessionIntent（默认 false） */
+      sessionIntentWriteEnabled?: boolean;
       /** 是否调度 CPU LLM Intent（Recover 仍可用 lexiconV2.enabled） */
       intentEnabled?: boolean;
       /** Final Spec: only cpu_llm is supported */
@@ -116,6 +118,20 @@ export interface NodeConfig {
       };
       /** finalized turn 后 flush patch proposals（jsonl） */
       patchProposalDir?: string;
+    };
+    /** Phase 1：Lexicon Runtime V2 SQL 查询（默认 false，不接 FW recall） */
+    lexiconRuntimeV2?: {
+      enabled?: boolean;
+      bundlePath?: string;
+      lruBucketCacheSize?: number;
+      /** P3 hotfix: SQL LIMIT for base tier (default 2) */
+      maxBaseCandidates?: number;
+      /** P3 hotfix: SQL LIMIT per domain query; merge caps total domain rows (default 3) */
+      maxDomainCandidates?: number;
+      /** P3 hotfix: idiom tier SQL LIMIT; 0 = disabled (default 0) */
+      maxIdiomCandidates?: number;
+      /** Attach recall tier diagnostics to fw_detector result */
+      recallDiagnosticsEnabled?: boolean;
     };
     sessionAffinity?: {
       enabled?: boolean;
@@ -148,9 +164,42 @@ export interface NodeConfig {
       recallMinPhoneticScore?: number;
       candidateRequireRepairTarget?: boolean;
       repairTargetScoreBoost?: number;
+      /** P3.2: KenLM span gate mode — kenlm_gate_filter replaces legacy detector spans */
+      spanGateMode?: 'legacy_detector' | 'kenlm_gate_filter' | 'fw_metadata_gate';
+      kenlmSpanGate?: {
+        enabled?: boolean;
+        maxSpans?: number;
+        minSpanChars?: number;
+        maxSpanChars?: number;
+        minLocalDelta?: number;
+        stopwordFilterEnabled?: boolean;
+        preFilterMaxWindows?: number;
+      };
+      /** P3.3: FW ASR metadata span gate */
+      fwMetadataSpanGate?: {
+        enabled?: boolean;
+        maxSpans?: number;
+        minSpanChars?: number;
+        maxSpanChars?: number;
+        wordProbabilityThreshold?: number;
+        segmentAvgLogprobThreshold?: number;
+        compressionRatioThreshold?: number;
+        noSpeechProbThreshold?: number;
+        allowAliasExactHit?: boolean;
+        allowSegmentFallbackScan?: boolean;
+        fallbackLegacyMaxSpans?: number;
+      };
       /** @deprecated use candidateRequireRepairTarget */
       enableRepairTargetFilter?: boolean;
       signalWeights?: Partial<Record<string, number>>;
+      /** Phase 3: V2 tier recall (base + domain + idiom). Requires lexiconRuntimeV2.enabled. */
+      useLexiconRuntimeV2Recall?: boolean;
+      /** Phase 4: topicKeywords → industry_routing_lexicon domain resolution. Requires useLexiconRuntimeV2Recall. */
+      useIndustryRouting?: boolean;
+      /** P4: sentence-level KenLM rerank (false = P3.3 per-span topK rollback). */
+      useSentenceLevelRerank?: boolean;
+      maxSentenceCandidates?: number;
+      minDeltaToReplace?: number;
     };
   };
   gpuArbiter?: {

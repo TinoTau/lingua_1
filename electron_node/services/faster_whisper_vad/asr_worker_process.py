@@ -185,6 +185,7 @@ def asr_worker_process(task_queue: mp.Queue, result_queue: mp.Queue):
                     "vad_filter": False,  # 已经用 Silero VAD 处理过了
                     "initial_prompt": initial_prompt,
                     "condition_on_previous_text": condition_on_previous_text,
+                    "word_timestamps": True,
                 }
                 
                 # 添加可选参数（如果提供）
@@ -246,21 +247,37 @@ def asr_worker_process(task_queue: mp.Queue, result_queue: mp.Queue):
                     if hasattr(seg, 'text'):
                         text_parts.append(seg.text.strip())
                         # 提取 Segment 时间戳和元数据
+                        words_data = None
+                        if getattr(seg, "words", None):
+                            words_data = [
+                                {
+                                    "word": getattr(w, "word", str(w)),
+                                    "start": getattr(w, "start", None),
+                                    "end": getattr(w, "end", None),
+                                    "probability": getattr(w, "probability", None),
+                                }
+                                for w in seg.words
+                            ]
                         segment_info = {
                             "text": seg.text.strip(),
-                            "start": getattr(seg, 'start', None),  # 开始时间（秒）
-                            "end": getattr(seg, 'end', None),      # 结束时间（秒）
-                            "no_speech_prob": getattr(seg, 'no_speech_prob', None),  # 无语音概率（可选）
+                            "start": getattr(seg, 'start', None),
+                            "end": getattr(seg, 'end', None),
+                            "no_speech_prob": getattr(seg, 'no_speech_prob', None),
+                            "avg_logprob": getattr(seg, 'avg_logprob', None),
+                            "compression_ratio": getattr(seg, 'compression_ratio', None),
+                            "words": words_data,
                         }
                         segments_data.append(segment_info)
                     elif isinstance(seg, str):
                         text_parts.append(seg.strip())
-                        # 字符串格式的 segment，只保存文本
                         segments_data.append({
                             "text": seg.strip(),
                             "start": None,
                             "end": None,
                             "no_speech_prob": None,
+                            "avg_logprob": None,
+                            "compression_ratio": None,
+                            "words": None,
                         })
                 
                 full_text = " ".join(text_parts)

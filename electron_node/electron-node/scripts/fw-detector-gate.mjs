@@ -95,7 +95,10 @@ if (fs.existsSync(orchPath)) {
     fail('orchestrator must not import span-replacement-eval');
   }
   if (!orchSrc.includes('createSpanDetectorHint') || !orchSrc.includes('runFwTopKDecisionPipeline')) {
-    fail('orchestrator must use hint + topK pipeline (frozen main chain)');
+    fail('orchestrator must use hint + topK pipeline (frozen rollback path)');
+  }
+  if (!orchSrc.includes('runFwSentenceRerankPipeline') || !orchSrc.includes('useSentenceLevelRerank')) {
+    fail('orchestrator must wire P4 sentence rerank pipeline + flag');
   }
 }
 

@@ -1,5 +1,10 @@
 /**
- * 同音纠错步骤（5016）：gate → GPU lease → HTTP；不可用则 skip，不阻断主链
+ * Phonetic correction (5016).
+ *
+ * FW mainline freeze:
+ * - Default OFF (features.phoneticCorrection.enabled=false).
+ * - Skipped when isSegmentWriteLocked (FW apply) — must not override segmentForJobResult.
+ * - Optional enhancement after aggregation; not FW Lexicon recall/rerank.
  */
 
 import { JobAssignMessage } from '@shared/protocols/messages';

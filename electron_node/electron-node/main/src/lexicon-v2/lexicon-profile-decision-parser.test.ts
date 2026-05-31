@@ -18,12 +18,14 @@ describe('lexicon-profile-decision-parser', () => {
         shouldSwitch: true,
         reason: ['airport', 'hotel'],
         effectiveFromTurn: 6,
+        topicKeywords: ['机场', '酒店', 'airport'],
       },
       ctx
     );
     expect(decision?.primaryDomain).toBe('travel');
     expect(decision?.secondaryDomains).toEqual(['transport']);
     expect(decision?.shouldSwitch).toBe(true);
+    expect(decision?.topicKeywords).toEqual(['机场', '酒店']);
   });
 
   it('discards unknown domain', () => {

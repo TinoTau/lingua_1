@@ -7,6 +7,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import logger from '../logger';
 import { cloneProfile } from './active-lexicon-profile-manager';
+import { cloneLexiconSessionIntent } from '../lexicon-v2/lexicon-session-intent';
 import { createInitialIntentDiagnostics } from './session-intent-diagnostics';
 import {
   getSession,
@@ -77,6 +78,9 @@ export function buildSessionMigrationPayload(
     pendingProfile: session.pendingProfile ? cloneProfile(session.pendingProfile) : undefined,
     lexiconIntentSummary: session.lexiconIntentSummary
       ? { ...session.lexiconIntentSummary }
+      : undefined,
+    lexiconSessionIntent: session.lexiconSessionIntent
+      ? cloneLexiconSessionIntent(session.lexiconSessionIntent)
       : undefined,
     profileHistory: session.profileHistory.map((e) => ({
       ...e,
@@ -223,6 +227,9 @@ export function importSessionMigration(
     lexiconIntentSummary: parsed.lexiconIntentSummary
       ? { ...parsed.lexiconIntentSummary }
       : undefined,
+    lexiconSessionIntent: parsed.lexiconSessionIntent
+      ? cloneLexiconSessionIntent(parsed.lexiconSessionIntent)
+      : undefined,
     profileHistory: parsed.profileHistory.map((e) => ({
       ...e,
       reason: [...e.reason],
@@ -232,6 +239,7 @@ export function importSessionMigration(
     lastIntentAtMs: parsed.lastIntentAtMs,
     currentTurnId: undefined,
     turnProfileSnapshot: undefined,
+    turnLexiconSessionIntent: undefined,
     intentDiagnostics: parsed.intentDiagnostics
       ? {
           ...parsed.intentDiagnostics,

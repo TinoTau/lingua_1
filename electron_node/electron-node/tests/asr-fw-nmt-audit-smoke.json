@@ -1,0 +1,44 @@
+{
+  "timestamp": "2026-05-31T14:01:24.478Z",
+  "audit_scope": "ASR preprocess → faster-whisper-vad → FW metadata gate → Lexicon V2 recall → P4 sentence rerank → NMT input",
+  "freeze_verdict": "YES",
+  "cases": [
+    {
+      "label": "general",
+      "id": "d004",
+      "profile": "general",
+      "rawAsrText": "小陈客户反馈翻译引擎接口包错,我们能够",
+      "segmentForJobResult": "小陈客户反馈翻译引擎接口包错,我们能够",
+      "nmtInputField": "segmentForJobResult",
+      "fw_reason": "no_spans",
+      "spanGateMode": "fw_metadata_gate",
+      "useSentenceLevelRerank": true,
+      "domain_hits": 0,
+      "active_domain": "general",
+      "pickedIsRaw": null,
+      "contract_pass": true
+    },
+    {
+      "label": "restaurant",
+      "id": "d001",
+      "profile": "restaurant",
+      "rawAsrText": "你好,我想点一杯热拿铁钟贝少糖,深便温",
+      "segmentForJobResult": "你好,我想点一杯热拿铁钟贝少糖,深便温",
+      "nmtInputField": "segmentForJobResult",
+      "spanGateMode": "fw_metadata_gate",
+      "useSentenceLevelRerank": true,
+      "domain_hits": 4,
+      "active_domain": "restaurant",
+      "pickedIsRaw": true,
+      "contract_pass": true
+    }
+  ],
+  "d090_asr_empty_not_fw": {
+    "batch_fail_contract": ["empty_text_asr", "missing_raw_asr_text", "missing_fw_detector"],
+    "batch_fw_metadata_span_gate": null,
+    "batch_recall_v2_diagnostics": null,
+    "rerun_pass": true,
+    "rerun_fw_reason": "no_spans",
+    "conclusion": "ASR empty return; FW/Lexicon not entered"
+  }
+}

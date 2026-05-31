@@ -52,7 +52,10 @@ export function applyPostAggregationRouting(
     !defer && segmentReady && isSemanticRepairEnabled(job);
 }
 
-/** FW / 句级修复已写 segment 时，5015/5016 不得覆盖 */
+/**
+ * FW mainline freeze: when FW applyFwSpanReplacements succeeded, enhancement steps
+ * (5015 semantic / 5016 phonetic / 5017 punctuation) must not overwrite segmentForJobResult.
+ */
 export function isSegmentWriteLocked(ctx: JobContext): boolean {
   return ctx.asrRepairApplied === true;
 }

@@ -1,0 +1,15 @@
+{
+  "format": "canonical_term_jsonl_seed",
+  "expectedValidator": "scripts/lexicon/validate-lexicon-seed.mjs",
+  "genericCombined": "combined_entries.jsonl",
+  "optionalCombinedWithDomainPatch": "combined_with_domain_patch_entries.jsonl",
+  "generalDomainRemoved": true,
+  "domains": [
+    "travel",
+    "transport",
+    "restaurant",
+    "tech_ai"
+  ],
+  "baseRules": "2/3 chars only; no single-char; no ordinary 4-char; bucket cap inherited from v1 generation",
+  "domainPatchSeparated": true
+}

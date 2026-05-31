@@ -1,0 +1,46 @@
+{
+  "version": "base_zh_v2",
+  "language": "zh",
+  "layer": "base",
+  "entryCount": 50000,
+  "source": [
+    "jieba_dict_mit"
+  ],
+  "sourceAdjustment": "domains changed from general to FW enabled compatibility domains; content remains generic",
+  "domains": [
+    "travel",
+    "transport",
+    "restaurant",
+    "tech_ai"
+  ],
+  "rules": {
+    "baseLen": [
+      2,
+      3
+    ],
+    "idiomLen": null,
+    "common5Len": null,
+    "banSingleChar": true,
+    "banFreePhraseInBase": true,
+    "maxBucketCandidates": 20,
+    "noGeneralDomain": true
+  },
+  "generatedAt": "2026-05-30T00:00:00Z",
+  "stats": {
+    "entryCount": 50000,
+    "lengthDistribution": {
+      "2": 40514,
+      "3": 9486
+    },
+    "domainDistribution": {
+      "travel": 50000,
+      "transport": 50000,
+      "restaurant": 50000,
+      "tech_ai": 50000
+    },
+    "bucketCount": 37048,
+    "maxBucketSize": 20,
+    "avgBucketSize": 1.35,
+    "noGeneralDomain": true
+  }
+}

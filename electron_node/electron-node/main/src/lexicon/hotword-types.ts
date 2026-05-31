@@ -24,6 +24,10 @@ export type HotwordEntry = {
   updatedAt?: number;
   enabled: boolean;
   tags?: string[];
+  /** P4: materialized alias row from V2 sqlite. */
+  isAlias?: boolean;
+  /** P4: tone pinyin syllables with tone numbers, e.g. mei3|shi4 */
+  tonePinyinKey?: string;
 };
 
 export type HotwordRecallHit = {

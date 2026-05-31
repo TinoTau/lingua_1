@@ -1,0 +1,44 @@
+{
+  "version": "base_zh_v1",
+  "language": "zh",
+  "generatedAt": "2026-05-30T10:21:03.580158+00:00",
+  "entryCount": 50000,
+  "bucketCount": 37048,
+  "sources": [
+    "jieba_dict_mit"
+  ],
+  "format": "canonical_term_jsonl_seed",
+  "targetRuntime": "lexicon:build -> lexicon.sqlite + manifest.json + checksum.txt",
+  "rules": {
+    "allowedLengths": [
+      2,
+      3
+    ],
+    "banSingleChar": true,
+    "banFreePhrase": true,
+    "banCommonFourCharCombination": true,
+    "maxBucketCandidates": 20,
+    "selection": "top_frequency_after_filters",
+    "targetEntryCount": 50000,
+    "excludedPosTags": [
+      "eng",
+      "m",
+      "mq",
+      "nr",
+      "nrt",
+      "ns",
+      "nt",
+      "nz",
+      "x"
+    ],
+    "domains": [
+      "general"
+    ],
+    "repairTarget": true
+  },
+  "warnings": [
+    "Seed format is canonical_term JSONL for existing lexicon:build pipeline.",
+    "All generated entries use domains=[general]; current FW enabledDomains must include general or domain filter must be adjusted before runtime use.",
+    "repairTarget=true is set intentionally because current FW pick path requires repairTarget candidates."
+  ]
+}

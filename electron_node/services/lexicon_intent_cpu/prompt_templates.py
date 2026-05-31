@@ -25,10 +25,11 @@ class IntentPromptTemplate:
             "4. Do NOT rewrite, fix, or generate replacement text.\n"
             "5. summary must be <= 300 chars describing the session topic.\n"
             "6. shouldSwitch=true only if primaryDomain differs from currentPrimary.\n"
+            "7. topicKeywords: 0-8 short Chinese topic words (2-8 chars each), no pinyin.\n"
             "Allowed domains:\n"
             f"{domain_lines}\n"
             "Required JSON schema:\n"
-            '{"summary":"...","primaryDomain":"travel","secondaryDomains":[],"confidence":0.86,'
+            '{"summary":"...","topicKeywords":["咖啡","中杯"],"primaryDomain":"travel","secondaryDomains":[],"confidence":0.86,'
             '"shouldSwitch":true,"reason":["..."],"effectiveFromTurn":0}'
         )
 

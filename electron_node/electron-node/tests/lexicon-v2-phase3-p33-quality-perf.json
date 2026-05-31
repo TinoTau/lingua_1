@@ -1,0 +1,158 @@
+{
+  "config": {
+    "spanGateMode": "fw_metadata_gate",
+    "useLexiconRuntimeV2Recall": true,
+    "useIndustryRouting": false,
+    "lexiconRuntimeV2_enabled": true,
+    "intent_drain_sec": 0,
+    "max_minutes": 15
+  },
+  "contract": {
+    "total": 200,
+    "pass": 200,
+    "fail": 0,
+    "skip": 0,
+    "pipeline_ok_rate": 1,
+    "industry_routing_used_count": 0,
+    "fw_applied_total": 24,
+    "text_changed_count": 23,
+    "batch_elapsed_sec": 516,
+    "avg_wall_sec_per_case": 2.58
+  },
+  "recall_chain": {
+    "path": "FW Metadata Span Gate → V2 Recall (LIMIT 2/3/0) → KenLM weak_veto → pick"
+  },
+  "span_gate": {
+    "span_count_per_job": {
+      "count": 200,
+      "avg": 0,
+      "p50": 0,
+      "p95": 1,
+      "p99": 2,
+      "min": 0,
+      "max": 2
+    },
+    "fw_metadata_gate_ms": {
+      "count": 200,
+      "avg": 0,
+      "p50": 0,
+      "p95": 1,
+      "p99": 1,
+      "min": 0,
+      "max": 3
+    },
+    "kenlm_span_gate_query_count": {
+      "count": 0,
+      "avg": 0,
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "min": 0,
+      "max": 0
+    }
+  },
+  "recall_tier": {
+    "span_recall_invocations": 41,
+    "merge_after_merge": {
+      "count": 41,
+      "avg": 1,
+      "p50": 1,
+      "p95": 2,
+      "p99": 2,
+      "min": 0,
+      "max": 2
+    },
+    "sent_to_kenlm": {
+      "count": 41,
+      "avg": 1,
+      "p50": 1,
+      "p95": 2,
+      "p99": 2,
+      "min": 0,
+      "max": 2
+    },
+    "merge_cap_violations": 0,
+    "kenlm_veto_query_count": {
+      "count": 200,
+      "avg": 0,
+      "p50": 0,
+      "p95": 2,
+      "p99": 3,
+      "min": 0,
+      "max": 4
+    }
+  },
+  "quality": {
+    "avg_cer_raw": 0.3602,
+    "avg_cer_final": 0.3635,
+    "median_cer_raw": 0.2632,
+    "median_cer_final": 0.2667,
+    "p95_cer_raw": 0.88,
+    "p95_cer_final": 0.88,
+    "fw_improved_cases": 5,
+    "fw_degraded_cases": 14
+  },
+  "perf": {
+    "pipeline_total_ms": {
+      "count": 200,
+      "avg": 2576,
+      "p50": 2321,
+      "p95": 4096,
+      "p99": 5098,
+      "min": 1611,
+      "max": 12201
+    },
+    "fw_detector_total_ms": {
+      "count": 200,
+      "avg": 166,
+      "p50": 0,
+      "p95": 1289,
+      "p99": 2047,
+      "min": 0,
+      "max": 2483
+    },
+    "fw_metadata_gate_ms": {
+      "count": 200,
+      "avg": 0,
+      "p50": 0,
+      "p95": 1,
+      "p99": 1,
+      "min": 0,
+      "max": 3
+    },
+    "kenlm_veto_ms": {
+      "count": 200,
+      "avg": 164,
+      "p50": 0,
+      "p95": 1280,
+      "p99": 2035,
+      "min": 0,
+      "max": 2470
+    },
+    "v2_recall_ms": {
+      "count": 41,
+      "avg": 1,
+      "p50": 1,
+      "p95": 3,
+      "p99": 3,
+      "min": 0,
+      "max": 3
+    },
+    "batch_elapsed_sec": 516,
+    "avg_wall_sec_per_case": 2.58
+  },
+  "comparison": {
+    "phase2": {
+      "fw_applied_total": 10,
+      "avg_cer_final": 0.3593,
+      "pipeline_ms_p95": 7458,
+      "fw_degraded": 0
+    },
+    "phase3_p32": {
+      "fw_applied_total": 0,
+      "avg_cer_final": 0.3773,
+      "pipeline_ms_p95": 16060,
+      "kenlm_span_gate_ms_avg": 11906
+    }
+  }
+}

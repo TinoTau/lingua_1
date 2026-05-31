@@ -1,0 +1,21 @@
+{
+  "version": "domain_recall_verify_v1",
+  "description": "Domain Recall 验证 — profile.primaryDomain=restaurant，探针 span 含 patch 同音词",
+  "cases": [
+    { "id": "t01", "rawText": "我要一杯中杯美式", "probeSpans": ["钟贝", "中杯", "美式", "没事"] },
+    { "id": "t02", "rawText": "我要一个大杯拿铁", "probeSpans": ["大背", "大杯", "拿铁", "那铁"] },
+    { "id": "t03", "rawText": "来一杯热美式", "probeSpans": ["美式", "没事", "美是"] },
+    { "id": "t04", "rawText": "给我一杯冰拿铁", "probeSpans": ["拿铁", "那铁", "拿帖"] },
+    { "id": "t05", "rawText": "我要一个蓝莓马芬", "probeSpans": ["蓝莓马芬", "蓝莓麻烦", "兰梅马芬"] },
+    { "id": "t06", "rawText": "来一个摩卡", "probeSpans": ["摩卡", "磨卡"] },
+    { "id": "t07", "rawText": "我要双份浓缩", "probeSpans": ["浓缩"] },
+    { "id": "t08", "rawText": "帮我点一杯卡布奇诺", "probeSpans": ["卡布奇诺"] },
+    { "id": "t09", "rawText": "来杯小杯摩卡", "probeSpans": ["小杯", "小悲", "摩卡"] },
+    { "id": "t10", "rawText": "大杯美式各来一杯", "probeSpans": ["大杯", "大悲", "美式"] },
+    { "id": "t11", "rawText": "钟贝和拿铁都要", "probeSpans": ["钟贝", "拿铁"] },
+    { "id": "t12", "rawText": "麻烦来个马芬", "probeSpans": ["马芬", "麻烦"] },
+    { "id": "t13", "rawText": "蓝莓拿铁有吗", "probeSpans": ["蓝莓", "兰梅", "拿铁"] },
+    { "id": "t14", "rawText": "冰美是要中杯", "probeSpans": ["中杯", "终杯", "美式"] },
+    { "id": "t15", "rawText": "热拿铁大杯", "probeSpans": ["拿铁", "大杯", "那铁"] }
+  ]
+}

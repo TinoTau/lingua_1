@@ -1,0 +1,64 @@
+{
+  "timestamp": "2026-05-31T13:24:20.368Z",
+  "general_dialog200": {
+    "source": "lexicon-v2-p4-quality-perf.json (2026-05-31 prior run, general profile)",
+    "pass": 200,
+    "total": 200,
+    "avg_cer_raw": 36.19,
+    "avg_cer_final": 36.17,
+    "fw_degraded": 0,
+    "domain_hits": 0,
+    "pipeline_p95": 4337,
+    "metadata_gate_p95": 1,
+    "span_job_p95": 1,
+    "span_job_max": 2
+  },
+  "restaurant_dialog200": {
+    "pass": 199,
+    "fail": 1,
+    "fail_ids": [
+      {
+        "id": "d090",
+        "failures": [
+          "empty_text_asr",
+          "missing_raw_asr_text",
+          "missing_fw_detector"
+        ]
+      }
+    ],
+    "avg_cer_raw": 36.09,
+    "avg_cer_final": 36.07,
+    "fw_improved": 1,
+    "fw_degraded": 0,
+    "domain_hits_total": 16,
+    "domain_hits_gt0_jobs": 4,
+    "summary": {
+      "total": 200,
+      "pass": 199,
+      "fail": 1,
+      "pipeline_ok_rate": 0.995,
+      "fw_applied_total": 1,
+      "sentence_rerank_jobs": 35,
+      "picked_raw_count": 34,
+      "picked_candidate_count": 1,
+      "domain_hits_total": 0,
+      "domain_hits_gt0_jobs": 0,
+      "active_domain_distribution": {
+        "restaurant": 200
+      },
+      "span_job_p95": 1,
+      "span_job_max": 2,
+      "metadata_gate_ms_p95": 1,
+      "pipeline_ms_p95": 4163,
+      "fw_detector_step_ms_p95": 1887,
+      "kenlm_batch_p95": 5,
+      "combination_count_p95": 4,
+      "batch_elapsed_sec": 454
+    }
+  },
+  "p33_baseline": {
+    "avg_cer_final": 36.35,
+    "pipeline_p95": 4096,
+    "fw_degraded": 14
+  }
+}

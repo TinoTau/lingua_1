@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-05-30T14:02:39.047Z",
+  "testScope": "Lexicon V2 Phase 3/4 dialog_200 — PARTIAL (interrupted)",
+  "status": "interrupted",
+  "dialogDir": "D:\\Programs\\github\\lingua_1\\test wav\\dialog_200",
+  "completed_cases": 188,
+  "planned_cases": 200,
+  "missing_case_ids": ["d189", "d190", "d191", "d192", "d193", "d194", "d195", "d196", "d197", "d198", "d199", "d200"],
+  "contract": {
+    "pass": 188,
+    "fail": 0,
+    "error": 0,
+    "pipeline_ok_rate_completed": 1.0
+  },
+  "batch_elapsed_sec": 2717,
+  "avg_wall_sec_per_case": 14.45,
+  "intent_drain_executed": false,
+  "result_json_written": false,
+  "log_path": "tests/phase3-dialog200-run.log",
+  "flags": {
+    "lexiconRuntimeV2.enabled": true,
+    "fwDetector.useLexiconRuntimeV2Recall": true,
+    "fwDetector.useIndustryRouting": true,
+    "lexiconV2.sessionIntentWriteEnabled": true
+  }
+}

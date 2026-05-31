@@ -1,0 +1,66 @@
+{
+  "quality": {
+    "avg_cer_raw": 0.3619,
+    "avg_cer_final": 0.3593,
+    "median_cer_raw": 0.2667,
+    "median_cer_final": 0.2667,
+    "p95_cer_raw": 0.88,
+    "p95_cer_final": 0.88,
+    "fw_improved_cases": 9,
+    "fw_degraded_cases": 0
+  },
+  "perf": {
+    "pipeline_ms": {
+      "count": 200,
+      "avg": 4160,
+      "p50": 3530,
+      "p95": 7458,
+      "min": 2373,
+      "max": 11696,
+      "total_sec": 832
+    },
+    "asr_latency_ms": {
+      "count": 200,
+      "avg": 1493,
+      "p50": 1448,
+      "p95": 2084
+    },
+    "audio_ms": {
+      "avg": 3638,
+      "p50": 3900
+    },
+    "rtf_pipeline": 1.144,
+    "batch_elapsed_sec": 1074
+  },
+  "contract": {
+    "total": 200,
+    "pass": 200,
+    "fail": 0,
+    "skip": 0,
+    "pipeline_ok_rate": 1,
+    "fw_applied_total": 10,
+    "text_changed_count": 9,
+    "lexicon_runtime_ok_count": 200,
+    "batch_elapsed_sec": 1074
+  },
+  "intent": {
+    "session_count": 200,
+    "lexicon_session_intent_written": 100,
+    "with_topic_keywords": 100,
+    "with_pinyin_keys": 100,
+    "intent_outcomes": {
+      "profile_updated": 100,
+      "skipped_by_debounce": 81,
+      "unknown_domain": 19
+    },
+    "primary_domain_distribution": {
+      "restaurant": 21,
+      "meeting": 58,
+      "transport": 5,
+      "travel": 6,
+      "tech_ai": 3,
+      "medical": 7
+    },
+    "write_rate": 0.5
+  }
+}

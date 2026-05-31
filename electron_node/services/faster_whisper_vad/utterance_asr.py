@@ -11,7 +11,30 @@ import numpy as np
 
 from config import MAX_WAIT_SECONDS
 from asr_worker_manager import ASRWorkerManager
-from shared_types import SegmentInfo as SharedSegmentInfo
+from shared_types import SegmentInfo as SharedSegmentInfo, WordInfo as SharedWordInfo
+
+
+def _word_from_dict(raw: dict) -> SharedWordInfo:
+    return SharedWordInfo(
+        word=raw.get("word", ""),
+        start=raw.get("start"),
+        end=raw.get("end"),
+        probability=raw.get("probability"),
+    )
+
+
+def _segment_from_dict(raw: dict) -> SharedSegmentInfo:
+    words_raw = raw.get("words")
+    words = [_word_from_dict(w) for w in words_raw] if words_raw else None
+    return SharedSegmentInfo(
+        text=raw.get("text", ""),
+        start=raw.get("start"),
+        end=raw.get("end"),
+        no_speech_prob=raw.get("no_speech_prob"),
+        avg_logprob=raw.get("avg_logprob"),
+        compression_ratio=raw.get("compression_ratio"),
+        words=words,
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -125,12 +148,7 @@ async def perform_asr(
         segments_info: List[SharedSegmentInfo] = []
         if segments_info_raw:
             segments_info = [
-                SharedSegmentInfo(
-                    text=seg.text,
-                    start=seg.start,
-                    end=seg.end,
-                    no_speech_prob=seg.no_speech_prob,
-                )
+                _segment_from_dict(seg) if isinstance(seg, dict) else seg
                 for seg in segments_info_raw
             ]
 

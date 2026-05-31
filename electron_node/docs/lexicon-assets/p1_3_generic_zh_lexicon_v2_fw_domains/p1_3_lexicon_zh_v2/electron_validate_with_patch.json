@@ -1,0 +1,48 @@
+{
+  "ok": false,
+  "inputFiles": 1,
+  "totalRows": 73098,
+  "validRows": 73095,
+  "errorRows": 3,
+  "warningRows": 2,
+  "errors": [
+    {
+      "file": "D:\\Programs\\github\\lingua_1\\electron_node\\docs\\lexicon-assets\\p1_3_generic_zh_lexicon_v2_fw_domains\\p1_3_lexicon_zh_v2\\combined_with_domain_patch_entries.jsonl",
+      "line": 73091,
+      "field": "aliases",
+      "code": "invalid_alias",
+      "message": "Alias conflicts with canonical word: 大悲"
+    },
+    {
+      "file": "D:\\Programs\\github\\lingua_1\\electron_node\\docs\\lexicon-assets\\p1_3_generic_zh_lexicon_v2_fw_domains\\p1_3_lexicon_zh_v2\\combined_with_domain_patch_entries.jsonl",
+      "line": 73093,
+      "field": "aliases",
+      "code": "invalid_alias",
+      "message": "Alias conflicts with canonical word: 没事"
+    },
+    {
+      "file": "D:\\Programs\\github\\lingua_1\\electron_node\\docs\\lexicon-assets\\p1_3_generic_zh_lexicon_v2_fw_domains\\p1_3_lexicon_zh_v2\\combined_with_domain_patch_entries.jsonl",
+      "line": 73096,
+      "field": "aliases",
+      "code": "invalid_alias",
+      "message": "Alias conflicts with canonical word: 麻烦"
+    }
+  ],
+  "warnings": [
+    {
+      "file": "D:\\Programs\\github\\lingua_1\\electron_node\\docs\\lexicon-assets\\p1_3_generic_zh_lexicon_v2_fw_domains\\p1_3_lexicon_zh_v2\\combined_with_domain_patch_entries.jsonl",
+      "line": 23339,
+      "field": "word",
+      "code": "duplicate_merge",
+      "message": "Duplicate word/domains will merge: 美式"
+    },
+    {
+      "file": "D:\\Programs\\github\\lingua_1\\electron_node\\docs\\lexicon-assets\\p1_3_generic_zh_lexicon_v2_fw_domains\\p1_3_lexicon_zh_v2\\combined_with_domain_patch_entries.jsonl",
+      "line": 41093,
+      "field": "word",
+      "code": "duplicate_merge",
+      "message": "Duplicate word/domains will merge: 小杯"
+    }
+  ],
+  "strict": false
+}

@@ -17,6 +17,16 @@ export interface ServiceEndpoint {
 }
 
 /**
+ * Word-level ASR metadata (Faster-Whisper word_timestamps).
+ */
+export interface AsrWordInfo {
+  word: string;
+  start?: number;
+  end?: number;
+  probability?: number;
+}
+
+/**
  * Segment 信息（包含时间戳）
  */
 export interface SegmentInfo {
@@ -24,6 +34,9 @@ export interface SegmentInfo {
   start?: number;  // 开始时间（秒）
   end?: number;    // 结束时间（秒）
   no_speech_prob?: number;  // 无语音概率（可选）
+  avg_logprob?: number;
+  compression_ratio?: number;
+  words?: AsrWordInfo[];
 }
 
 /**

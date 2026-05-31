@@ -38,9 +38,13 @@ export type StepExecutor = (
  * 将步骤类型映射到执行函数
  */
 /**
- * Legacy Recover steps.
- * These are not included in fw_detector_v1 mode.
- * applyFwDetectorPipelineMode must remove LEXICON_RECALL and SENTENCE_REPAIR.
+ * Pipeline step registry.
+ *
+ * FW mainline (fw_detector_v1): applyFwDetectorPipelineMode removes LEXICON_RECALL / SENTENCE_REPAIR.
+ *
+ * Enhancement steps (still registered, default OFF via node-config):
+ * - PHONETIC_CORRECTION (5016), PUNCTUATION_RESTORE (5017), SEMANTIC_REPAIR (5015)
+ * - Gated by enhancement-gate + isSegmentWriteLocked when FW has applied span replacements.
  */
 export const STEP_REGISTRY: Record<PipelineStepType, StepExecutor> = {
   ASR: async (job, ctx, services, options) => {

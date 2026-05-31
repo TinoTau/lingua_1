@@ -5,6 +5,7 @@
 import type { LexiconProfileDecision } from '../session-runtime/types';
 import { filterValidLLMDomains, isValidLLMDomain } from './profile-registry';
 import { getLexiconV2CpuWorkerConfig } from './lexicon-v2-config';
+import { normalizeTopicKeywords } from './lexicon-session-intent';
 
 export type ParseContext = {
   currentPrimary: string;
@@ -69,6 +70,7 @@ export function parseLexiconProfileDecision(
   const reason = asStringArray(obj.reason);
   const effectiveFromTurn =
     asNumber(obj.effectiveFromTurn) ?? ctx.finalizedTurnCount + 1;
+  const topicKeywords = normalizeTopicKeywords(asStringArray(obj.topicKeywords));
 
   return {
     summary,
@@ -78,6 +80,7 @@ export function parseLexiconProfileDecision(
     shouldSwitch,
     reason,
     effectiveFromTurn,
+    topicKeywords,
   };
 }
 

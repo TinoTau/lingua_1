@@ -1,0 +1,135 @@
+{
+  "version": "common5_zh_v1",
+  "language": "zh",
+  "generatedAt": "2026-05-30T10:21:04.059618+00:00",
+  "source": "jieba_dict_mit",
+  "entryCount": 897,
+  "rejectedCount": 2666,
+  "bucketCount": 896,
+  "maxBucketSize": 2,
+  "avgBucketSize": 1.001,
+  "topBuckets": [
+    {
+      "pinyin": "liang yan yi mo hei",
+      "count": 2
+    },
+    {
+      "pinyin": "ben hang zheng qu yu",
+      "count": 1
+    },
+    {
+      "pinyin": "zi ran bao hu qu",
+      "count": 1
+    },
+    {
+      "pinyin": "ma ke si zhu yi",
+      "count": 1
+    },
+    {
+      "pinyin": "fa zhan zhong guo jia",
+      "count": 1
+    },
+    {
+      "pinyin": "min zhu ji zhong zhi",
+      "count": 1
+    },
+    {
+      "pinyin": "ji shu kai fa qu",
+      "count": 1
+    },
+    {
+      "pinyin": "zheng zhi jing ji xue",
+      "count": 1
+    },
+    {
+      "pinyin": "sheng yu jia zhi lv",
+      "count": 1
+    },
+    {
+      "pinyin": "lao dong sheng chan lv",
+      "count": 1
+    },
+    {
+      "pinyin": "gao su gong lu wang",
+      "count": 1
+    },
+    {
+      "pinyin": "nong lin mu yu ye",
+      "count": 1
+    },
+    {
+      "pinyin": "su sheng feng chan lin",
+      "count": 1
+    },
+    {
+      "pinyin": "huan jing bao hu bu",
+      "count": 1
+    },
+    {
+      "pinyin": "ji hua sheng yu lv",
+      "count": 1
+    },
+    {
+      "pinyin": "jiu shi qi shi dai",
+      "count": 1
+    },
+    {
+      "pinyin": "zhi min zhu yi zhe",
+      "count": 1
+    },
+    {
+      "pinyin": "wu zheng fu zhu yi",
+      "count": 1
+    },
+    {
+      "pinyin": "da lu xing qi hou",
+      "count": 1
+    },
+    {
+      "pinyin": "tan shui hua he wu",
+      "count": 1
+    }
+  ],
+  "lenDistribution": {
+    "5": 897
+  },
+  "posDistribution": {
+    "n": 451,
+    "l": 225,
+    "i": 202,
+    "j": 7,
+    "t": 4,
+    "z": 3,
+    "v": 3,
+    "nrfg": 1,
+    "b": 1
+  },
+  "rules": {
+    "allowedLengths": [
+      5
+    ],
+    "banBaseMerge": true,
+    "excludedPosTags": [
+      "eng",
+      "m",
+      "mq",
+      "nr",
+      "nrt",
+      "ns",
+      "nt",
+      "nz",
+      "x"
+    ],
+    "maxBucketCandidates": 20,
+    "domains": [
+      "general"
+    ],
+    "repairTarget": true,
+    "note": "Generic common five-character term layer; not merged into base."
+  },
+  "notes": [
+    "Seed format is canonical_term JSONL for existing lexicon:build pipeline.",
+    "All generated entries use domains=[general]; current FW enabledDomains must include general or domain filter must be adjusted before runtime use.",
+    "repairTarget=true is set intentionally because current FW pick path requires repairTarget candidates."
+  ]
+}

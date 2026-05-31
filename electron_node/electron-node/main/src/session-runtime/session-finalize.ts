@@ -14,7 +14,7 @@ import {
   cloneProfile,
   stagePendingProfile,
 } from './active-lexicon-profile-manager';
-import { bindProfileSnapshotToContext } from './turn-profile-binding';
+import { bindProfileSnapshotToContext, bindLexiconSessionIntentToContext } from './turn-profile-binding';
 import { ensureSession, getSession, updateSession } from './session-store';
 import { assertSessionAcceptedOnNode, SessionMovedError } from './session-moved';
 import { persistSessionMigrationSnapshot } from './session-migration';
@@ -25,6 +25,8 @@ import {
   getLexiconV2PatchProposalDir,
   isSessionIntentSchedulingEnabled,
 } from '../lexicon-v2/lexicon-v2-config';
+import { isLexiconV2SessionIntentWriteEnabled } from '../lexicon-v2/lexicon-runtime-v2-config';
+import { buildLexiconSessionIntentFromDecision, cloneLexiconSessionIntent } from '../lexicon-v2/lexicon-session-intent';
 import { flushPatchProposalsToFile } from '../lexicon/replay-patch/patch-collector';
 import { isFinalizedTurnJob, resolveTurnId } from './session-turn-lifecycle';
 import { checkIntentHealth } from '../lexicon-v2/intent-health-check';
@@ -47,6 +49,15 @@ function bindSnapshotToJobContext(ctx: JobContext, snapshot: ActiveLexiconProfil
   bindProfileSnapshotToContext(ctx, snapshot);
   ctx.activeProfilePrimary = snapshot.primaryDomain;
   ctx.profileVersion = snapshot.profileVersion;
+}
+
+function bindTurnIntentToJobContext(
+  ctx: JobContext,
+  intent: ReturnType<typeof cloneLexiconSessionIntent> | undefined
+): void {
+  if (intent) {
+    bindLexiconSessionIntentToContext(ctx, intent);
+  }
 }
 
 function buildRollingTurn(
@@ -119,6 +130,7 @@ export function beginSessionTurnProfile(
 
   if (session.currentTurnId === turnId && session.turnProfileSnapshot) {
     bindSnapshotToJobContext(ctx, session.turnProfileSnapshot);
+    bindTurnIntentToJobContext(ctx, session.turnLexiconSessionIntent);
     return;
   }
 
@@ -127,9 +139,13 @@ export function beginSessionTurnProfile(
   const snapshot = cloneProfile(session.activeLexiconProfile);
   session.currentTurnId = turnId;
   session.turnProfileSnapshot = snapshot;
+  session.turnLexiconSessionIntent = session.lexiconSessionIntent
+    ? cloneLexiconSessionIntent(session.lexiconSessionIntent)
+    : undefined;
   updateSession(session);
 
   bindSnapshotToJobContext(ctx, snapshot);
+  bindTurnIntentToJobContext(ctx, session.turnLexiconSessionIntent);
 
   if (isLexiconV2Enabled() && !session.intentDiagnostics.intentHealth) {
     void checkIntentHealth(true).then((health) => {
@@ -194,6 +210,9 @@ function scheduleIntentIfNeeded(session: NonNullable<ReturnType<typeof getSessio
 
     const decision = result.decision;
     s.lexiconIntentSummary = { summary: decision.summary, updatedAt: Date.now() };
+    if (isLexiconV2SessionIntentWriteEnabled()) {
+      s.lexiconSessionIntent = buildLexiconSessionIntentFromDecision(decision);
+    }
     s.lastIntentAtMs = Date.now();
 
     const { profile, historyEntry, applied } = applyProfileDecision(
@@ -270,6 +289,7 @@ export function finalizeSessionTurn(
   session.finalizedTurnCount += 1;
   session.currentTurnId = undefined;
   session.turnProfileSnapshot = undefined;
+  session.turnLexiconSessionIntent = undefined;
   updateSession(session);
 
   logger.info(

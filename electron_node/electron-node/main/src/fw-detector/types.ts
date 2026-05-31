@@ -1,11 +1,57 @@
 import type { WindowCandidateSource } from '../lexicon/window-candidate-source';
+import type { RecallJobV2Diagnostics } from '../lexicon-v2/recall-v2-diagnostics';
 
 export type FwDetectorSignal =
   | 'domain_anchor_nearby'
   | 'mixed_language_anomaly'
   | 'detector_pinyin_hint'
   | 'pinyin_proximity'
-  | 'low_no_speech_prob';
+  | 'low_no_speech_prob'
+  | 'kenlm_local_low_prob'
+  | 'alias_exact_hit'
+  | 'low_word_probability'
+  | 'low_segment_avg_logprob'
+  | 'high_compression_ratio';
+
+export type FwSpanGateMode = 'legacy_detector' | 'kenlm_gate_filter' | 'fw_metadata_gate';
+
+export type KenlmSpanGateSkippedReason =
+  | 'empty_text'
+  | 'kenlm_unavailable'
+  | 'no_low_prob_span';
+
+export type FwMetadataSpanGateSkippedReason =
+  | 'empty_text'
+  | 'disabled'
+  | 'no_metadata'
+  | 'all_signals_normal';
+
+export type FwMetadataSpanGateDiagnostics = {
+  enabled: true;
+  mode: 'fw_metadata_gate';
+  wordCount: number;
+  lowConfidenceWordCount: number;
+  aliasHitCount: number;
+  selectedCount: number;
+  alignmentFailures: number;
+  fwMetadataGateMs: number;
+  skippedReason?: FwMetadataSpanGateSkippedReason;
+  usedLegacyFallback?: boolean;
+};
+
+export type KenlmSpanGateDiagnostics = {
+  enabled: true;
+  mode: 'kenlm_gate_filter';
+  enumeratedCount: number;
+  preFilteredCount: number;
+  scoredCount: number;
+  selectedCount: number;
+  baselineScore: number;
+  baselineNorm: number;
+  kenlmSpanGateMs: number;
+  kenlmSpanGateQueryCount: number;
+  skippedReason?: KenlmSpanGateSkippedReason;
+};
 
 export type FwTextSpan = {
   text: string;
@@ -147,6 +193,21 @@ export type FwDetectorSummary = {
   kenlmQueryCount: number;
 };
 
+export type FwSentenceRerankDiagnostics = {
+  spanCount: number;
+  perSpanLimit: number;
+  combinationCount: number;
+  kenlmQueryCount: number;
+  pickedIsRaw: boolean;
+  maxDelta: number;
+  minDeltaToReplace: number;
+  topCandidates: Array<{ text: string; kenlmDelta: number; replacementCount: number }>;
+  kenlmTiming?: {
+    batchMs: number;
+    queryCount: number;
+  };
+};
+
 export type FwDetectorRuntimeDiag = {
   loaded: boolean;
   status: string;
@@ -194,6 +255,14 @@ export type FwDetectorResult = {
     batchMs: number;
     queryCount: number;
   };
+  kenlmSpanGate?: KenlmSpanGateDiagnostics;
+  fwMetadataSpanGate?: FwMetadataSpanGateDiagnostics;
+  kenlmVetoMs?: number;
+  kenlmVetoQueryCount?: number;
+  /** Test-only when LEXICON_RECALL_V2_DIAGNOSTICS=1 */
+  recallV2Diagnostics?: RecallJobV2Diagnostics;
+  /** P4: sentence-level rerank diagnostics */
+  sentenceRerank?: FwSentenceRerankDiagnostics;
 };
 
 export type FwApprovedReplacement = {

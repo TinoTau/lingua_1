@@ -73,6 +73,7 @@ export type SessionObject = {
   rollingContext: RollingTurn[];
   activeLexiconProfile: ActiveLexiconProfileSnapshot;
   lexiconIntentSummary?: LexiconIntentSummary;
+  lexiconSessionIntent?: LexiconSessionIntent;
   profileHistory: ProfileSwitchEvent[];
   status: SessionStatus;
   finalizedTurnCount: number;
@@ -82,6 +83,7 @@ export type SessionObject = {
   /** 当前 processing turn（turn 内 profile 固定） */
   currentTurnId?: string;
   turnProfileSnapshot?: ActiveLexiconProfileSnapshot;
+  turnLexiconSessionIntent?: LexiconSessionIntent;
   /** per-session Intent 调度开关（批测可禁用） */
   intentSchedulingEnabled?: boolean;
   /** Lexicon V2 Intent 可观测性 */
@@ -96,6 +98,22 @@ export type LexiconProfileDecision = {
   shouldSwitch: boolean;
   reason: string[];
   effectiveFromTurn: number;
+  topicKeywords: string[];
+};
+
+export type LexiconSessionIntentSource = 'cpu_llm' | 'manual' | 'fallback_anchor';
+
+export type LexiconSessionIntent = {
+  summary: string;
+  topicKeywords: string[];
+  topicKeywordPinyinKeys: string[];
+  primaryDomain: string;
+  secondaryDomains: string[];
+  confidence: number;
+  updatedAt: number;
+  effectiveFromTurn: number;
+  source: LexiconSessionIntentSource;
+  reason: string[];
 };
 
 export type SessionSnapshot = {
@@ -104,6 +122,7 @@ export type SessionSnapshot = {
   rollingContext: RollingTurn[];
   activeLexiconProfile: ActiveLexiconProfileSnapshot;
   lexiconIntentSummary?: LexiconIntentSummary;
+  lexiconSessionIntent?: LexiconSessionIntent;
   profileHistory: ProfileSwitchEvent[];
 };
 
@@ -122,6 +141,7 @@ export type SessionMigrationPayload = {
   activeLexiconProfile: ActiveLexiconProfileSnapshot;
   pendingProfile?: ActiveLexiconProfileSnapshot;
   lexiconIntentSummary?: LexiconIntentSummary;
+  lexiconSessionIntent?: LexiconSessionIntent;
   profileHistory: ProfileSwitchEvent[];
   finalizedTurnCount: number;
   lastIntentAtMs: number;

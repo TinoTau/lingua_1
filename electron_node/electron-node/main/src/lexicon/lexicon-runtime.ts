@@ -299,6 +299,13 @@ export class LexiconRuntime {
     return lookupAliasExact(this.aliasExactIndex, text.trim());
   }
 
+  listAliasExactKeys(): string[] {
+    if (this.state.status !== 'ok') {
+      return [];
+    }
+    return [...this.aliasExactIndex.keys()];
+  }
+
   lookupAliasPinyinMatches(key: string) {
     if (this.state.status !== 'ok') {
       return [];

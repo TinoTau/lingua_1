@@ -221,6 +221,7 @@ function mergeFeatures(
     punctuationRestore: { ...base.punctuationRestore, ...p.punctuationRestore },
     lexiconRecall,
     lexiconV2: { ...base.lexiconV2, ...p.lexiconV2, cpuWorker: { ...base.lexiconV2?.cpuWorker, ...p.lexiconV2?.cpuWorker } },
+    lexiconRuntimeV2: { ...base.lexiconRuntimeV2, ...p.lexiconRuntimeV2 },
     sessionAffinity: { ...base.sessionAffinity, ...p.sessionAffinity },
     fwDetector,
   };

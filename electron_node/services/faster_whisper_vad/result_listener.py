@@ -7,7 +7,30 @@ import logging
 import queue
 from typing import Optional, Dict
 
-from shared_types import ASRResult, SegmentInfo
+from shared_types import ASRResult, SegmentInfo, WordInfo
+
+
+def _word_from_dict(raw: dict) -> WordInfo:
+    return WordInfo(
+        word=raw.get("word", ""),
+        start=raw.get("start"),
+        end=raw.get("end"),
+        probability=raw.get("probability"),
+    )
+
+
+def _segment_from_dict(raw: dict) -> SegmentInfo:
+    words_raw = raw.get("words")
+    words = [_word_from_dict(w) for w in words_raw] if words_raw else None
+    return SegmentInfo(
+        text=raw.get("text", ""),
+        start=raw.get("start"),
+        end=raw.get("end"),
+        no_speech_prob=raw.get("no_speech_prob"),
+        avg_logprob=raw.get("avg_logprob"),
+        compression_ratio=raw.get("compression_ratio"),
+        words=words,
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -107,15 +130,7 @@ async def result_listener_loop(
                     segments_raw = result_data.get("segments")
                     segments_list = None
                     if segments_raw:
-                        segments_list = [
-                            SegmentInfo(
-                                text=seg.get("text", ""),
-                                start=seg.get("start"),
-                                end=seg.get("end"),
-                                no_speech_prob=seg.get("no_speech_prob"),
-                            )
-                            for seg in segments_raw
-                        ]
+                        segments_list = [_segment_from_dict(seg) for seg in segments_raw]
                     
                     result = ASRResult(
                         job_id=job_id,

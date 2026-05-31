@@ -24,6 +24,7 @@ function buildCoreResultExtra(job: JobAssignMessage, ctx: JobContext): Record<st
     ...(ctx.asrServiceId ? { asr_service_id: ctx.asrServiceId } : {}),
     ...(ctx.rawAsrText ? { raw_asr_text: ctx.rawAsrText } : {}),
     ...(ctx.asrDiagnostics ? { asr_diagnostics: ctx.asrDiagnostics } : {}),
+    ...(ctx.fwDetectorStepMs != null ? { fw_detector_step_ms: ctx.fwDetectorStepMs } : {}),
     ...(ctx.fwDetectorResult ? { fw_detector: ctx.fwDetectorResult } : {}),
     ...buildSessionResultExtra(job, ctx),
     ...(ctx.lexiconManifestReady ? { lexicon_manifest_ready: ctx.lexiconManifestReady } : {}),

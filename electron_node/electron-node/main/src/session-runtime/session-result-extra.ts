@@ -5,7 +5,7 @@
 import type { JobAssignMessage } from '@shared/protocols/messages';
 import type { JobContext } from '../pipeline/context/job-context';
 import { getSession } from './session-store';
-import { getProfileSnapshotFromContext } from './turn-profile-binding';
+import { getProfileSnapshotFromContext, getLexiconSessionIntentFromContext } from './turn-profile-binding';
 import { buildIntentDiagnosticsExtra } from './session-intent-diagnostics';
 import { buildRuntimeDiagnosticsExtra } from '../config-load-diagnostics';
 
@@ -21,6 +21,7 @@ export function buildSessionResultExtra(
 
   const session = getSession(sessionId);
   const profile = getProfileSnapshotFromContext(ctx);
+  const turnIntent = getLexiconSessionIntentFromContext(ctx);
   const lastHistory = session?.profileHistory[session.profileHistory.length - 1];
 
   return {
@@ -56,6 +57,29 @@ export function buildSessionResultExtra(
         }
       : undefined,
     lexiconIntentSummary: session?.lexiconIntentSummary?.summary,
+    lexiconSessionIntent: turnIntent
+      ? {
+          summary: turnIntent.summary,
+          topicKeywords: turnIntent.topicKeywords,
+          topicKeywordPinyinKeys: turnIntent.topicKeywordPinyinKeys,
+          primaryDomain: turnIntent.primaryDomain,
+          secondaryDomains: turnIntent.secondaryDomains,
+          confidence: turnIntent.confidence,
+          effectiveFromTurn: turnIntent.effectiveFromTurn,
+          source: turnIntent.source,
+        }
+      : session?.lexiconSessionIntent
+        ? {
+            summary: session.lexiconSessionIntent.summary,
+            topicKeywords: session.lexiconSessionIntent.topicKeywords,
+            topicKeywordPinyinKeys: session.lexiconSessionIntent.topicKeywordPinyinKeys,
+            primaryDomain: session.lexiconSessionIntent.primaryDomain,
+            secondaryDomains: session.lexiconSessionIntent.secondaryDomains,
+            confidence: session.lexiconSessionIntent.confidence,
+            effectiveFromTurn: session.lexiconSessionIntent.effectiveFromTurn,
+            source: session.lexiconSessionIntent.source,
+          }
+        : undefined,
     noTopkCandidate: ctx.v5Metrics?.lexicon_pinyin_topk_candidate_count === 0 ? 1 : 0,
   };
 }

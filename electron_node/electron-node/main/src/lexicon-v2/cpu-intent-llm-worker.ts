@@ -59,11 +59,12 @@ function runJob(job: PendingJob): void {
   runningJob = job;
   syncQueueMetrics();
   const maxSummary = getLexiconV2CpuWorkerConfig().maxSummaryChars ?? 300;
+  const workerTimeoutMs = (getLexiconV2CpuWorkerConfig().timeoutMs ?? 7500) + 1000;
 
   const timer = setTimeout(() => {
     logger.warn({ sessionId: job.sessionId }, '[LexiconIntentWorker] timeout, keep current profile');
     finishJob(job, intentInferenceResult('inference_timeout'));
-  }, WORKER_TIMEOUT_MS);
+  }, workerTimeoutMs);
 
   inferLexiconProfileDecision({
     sessionId: job.sessionId,

@@ -1,5 +1,11 @@
 /**
- * runSemanticRepairStep - 语义修复步骤（5015 热插拔：不可用则 skip，不阻断主链）
+ * runSemanticRepairStep — HTTP semantic repair (5015).
+ *
+ * FW mainline freeze:
+ * - Default OFF (features.semanticRepair.enabled=false).
+ * - Runs only when enhancement gate + shouldRunSemanticRepairHttp.
+ * - Must not overwrite FW apply: isSegmentWriteLocked (ctx.asrRepairApplied) blocks writes.
+ * - Not part of FW span repair; optional post-aggregation enhancement only.
  */
 
 import { JobAssignMessage } from '@shared/protocols/messages';

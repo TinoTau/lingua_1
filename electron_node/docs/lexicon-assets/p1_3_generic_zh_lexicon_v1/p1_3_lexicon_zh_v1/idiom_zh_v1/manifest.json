@@ -1,0 +1,31 @@
+{
+  "version": "idiom_zh_v1",
+  "language": "zh",
+  "generatedAt": "2026-05-30T10:21:03.990369+00:00",
+  "entryCount": 22192,
+  "bucketCount": 21484,
+  "sources": [
+    "jieba_dict_pos_i_mit"
+  ],
+  "format": "canonical_term_jsonl_seed",
+  "targetRuntime": "lexicon:build -> lexicon.sqlite + manifest.json + checksum.txt",
+  "rules": {
+    "allowedLengths": [
+      4
+    ],
+    "allowedPosTags": [
+      "i"
+    ],
+    "maxBucketCandidates": 20,
+    "domains": [
+      "general"
+    ],
+    "repairTarget": true,
+    "note": "Four-character idiom/fixed idiom layer; ordinary four-character combinations are excluded from base."
+  },
+  "warnings": [
+    "Seed format is canonical_term JSONL for existing lexicon:build pipeline.",
+    "All generated entries use domains=[general]; current FW enabledDomains must include general or domain filter must be adjusted before runtime use.",
+    "repairTarget=true is set intentionally because current FW pick path requires repairTarget candidates."
+  ]
+}
