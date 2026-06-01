@@ -44,7 +44,7 @@ ServiceDiscovery.scanServices() → ServiceRegistrySingleton → ServiceProcessR
 - 位于 **NodeAgent** 与 **JobResult** 发送之间：`InferenceService.processJob()` 产出结果后，经 **AggregatorMiddleware** 处理再发送
 - 功能：ASR 文本聚合、去重、边界重建（Text Incompleteness + Language Gate 等）
 - 实现：`main/src/agent/aggregator-middleware.ts`、`main/src/aggregator/`
-- 详细设计见同目录 `AGGREGATOR.md`
+- 详细设计见 [`main/src/aggregator/README.md`](../main/src/aggregator/README.md)
 
 ## 7. GPU 与推理服务
 

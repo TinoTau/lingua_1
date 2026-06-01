@@ -16,24 +16,24 @@
   },
   "contract": {
     "total": 200,
-    "pass": 108,
+    "pass": 200,
     "fail": 0,
     "skip": 0,
     "pipeline_ok_rate": 1,
     "fw_applied_total": 1,
     "text_changed_count": 1,
-    "sentence_rerank_jobs": 22,
-    "picked_raw_count": 21,
+    "sentence_rerank_jobs": 39,
+    "picked_raw_count": 38,
     "picked_candidate_count": 1,
-    "batch_elapsed_sec": 905,
-    "avg_wall_sec_per_case": 8.38
+    "batch_elapsed_sec": 503,
+    "avg_wall_sec_per_case": 2.52
   },
   "recall_chain": {
     "path": "Metadata Gate → V2 Recall (combined limit) → Sentence combinator → KenLM sentence rerank → Apply"
   },
   "span_gate": {
     "span_count_per_job": {
-      "count": 108,
+      "count": 200,
       "avg": 0,
       "p50": 0,
       "p95": 1,
@@ -42,21 +42,21 @@
       "max": 2
     },
     "fw_metadata_gate_ms": {
-      "count": 108,
+      "count": 200,
       "avg": 0,
       "p50": 0,
       "p95": 1,
       "p99": 1,
       "min": 0,
-      "max": 1
+      "max": 4
     }
   },
   "sentence_rerank": {
-    "jobs_with_diagnostics": 22,
-    "picked_raw": 21,
+    "jobs_with_diagnostics": 39,
+    "picked_raw": 38,
     "picked_candidate": 1,
     "combination_count": {
-      "count": 22,
+      "count": 39,
       "avg": 1,
       "p50": 1,
       "p95": 3,
@@ -65,7 +65,7 @@
       "max": 3
     },
     "kenlm_query_count": {
-      "count": 22,
+      "count": 39,
       "avg": 1,
       "p50": 2,
       "p95": 4,
@@ -74,16 +74,16 @@
       "max": 4
     },
     "max_delta": {
-      "count": 22,
-      "avg": 18,
+      "count": 39,
+      "avg": 10,
       "p50": 0,
       "p95": 97,
       "p99": 307,
-      "min": -11,
+      "min": -29,
       "max": 307
     },
     "per_span_limit": {
-      "count": 22,
+      "count": 39,
       "avg": 8,
       "p50": 8,
       "p95": 8,
@@ -93,11 +93,11 @@
     }
   },
   "quality": {
-    "evaluated_count": 108,
-    "avg_cer_raw": 37.29,
-    "avg_cer_final": 37.26,
-    "median_cer_raw": 27.27,
-    "median_cer_final": 27.27,
+    "evaluated_count": 200,
+    "avg_cer_raw": 36.19,
+    "avg_cer_final": 36.17,
+    "median_cer_raw": 26.67,
+    "median_cer_final": 26.67,
     "p95_cer_raw": 88,
     "p95_cer_final": 88,
     "fw_improved_cases": 1,
@@ -106,43 +106,43 @@
   },
   "perf": {
     "pipeline_total_ms": {
-      "count": 108,
-      "avg": 8374,
-      "p50": 7468,
-      "p95": 14791,
-      "p99": 25554,
-      "min": 4425,
-      "max": 31569
+      "count": 200,
+      "avg": 2512,
+      "p50": 2243,
+      "p95": 4195,
+      "p99": 5567,
+      "min": 1535,
+      "max": 11972
     },
     "fw_detector_total_ms": {
-      "count": 108,
-      "avg": 177,
+      "count": 200,
+      "avg": 168,
       "p50": 0,
-      "p95": 1192,
-      "p99": 3433,
+      "p95": 1285,
+      "p99": 2538,
       "min": 0,
-      "max": 3584
+      "max": 2890
     },
     "kenlm_sentence_rerank_ms": {
-      "count": 108,
-      "avg": 176,
+      "count": 200,
+      "avg": 167,
       "p50": 0,
-      "p95": 1186,
-      "p99": 3424,
+      "p95": 1280,
+      "p99": 2531,
       "min": 0,
-      "max": 3573
+      "max": 2881
     },
     "fw_metadata_gate_ms": {
-      "count": 108,
+      "count": 200,
       "avg": 0,
       "p50": 0,
       "p95": 1,
       "p99": 1,
       "min": 0,
-      "max": 1
+      "max": 4
     },
-    "batch_elapsed_sec": 905,
-    "avg_wall_sec_per_case": 8.38
+    "batch_elapsed_sec": 503,
+    "avg_wall_sec_per_case": 2.52
   },
   "comparison": {
     "p33": {

@@ -1,5 +1,5 @@
 /**
- * Legacy observability partition — Recover / CTC / window recall.
+ * Legacy observability partition — Legacy ASR repair / CTC / window recall.
  * FW frozen main chain must not read or write these buckets.
  */
 
@@ -10,18 +10,18 @@ import type { WindowRecallDiagnostics } from '../../lexicon/window-recall-diagno
 import type { RecallCoverageDiagnostics } from '../../lexicon/recall-coverage-diagnostics';
 import type { SegmentAlignmentDiagnostics } from '../../asr/segment-alignment-diagnostics';
 import type { CrossBoundaryRiskReport } from '../../asr/cross-boundary-risk';
-import type { RestoreMetrics } from '../../legacy/recover/asr-repair/restore-metrics';
-import type { SentenceCandidate } from '../../legacy/recover/asr-repair/sentence-expansion/types';
-import type { ExpansionDiagnostics } from '../../legacy/recover/asr-repair/sentence-expansion/expansion-diagnostics';
-import type { SentenceRepairExtra } from '../../legacy/recover/asr-repair/sentence-rerank/sentence-repair-observability';
-import type { RecoverLifecycle } from '../../legacy/recover/legacy-recover-contract-types';
-import type { SentenceCandidateTraceItem, V5Metrics } from '../../legacy/recover/legacy-v5-metrics';
+import type { RestoreMetrics } from '../../legacy/asr-repair/asr-repair/restore-metrics';
+import type { SentenceCandidate } from '../../legacy/asr-repair/asr-repair/sentence-expansion/types';
+import type { ExpansionDiagnostics } from '../../legacy/asr-repair/asr-repair/sentence-expansion/expansion-diagnostics';
+import type { SentenceRepairExtra } from '../../legacy/asr-repair/asr-repair/sentence-rerank/sentence-repair-observability';
+import type { AsrRepairLifecycle } from '../../legacy/asr-repair/legacy-asr-repair-contract-types';
+import type { SentenceCandidateTraceItem, V5Metrics } from '../../legacy/asr-repair/legacy-v5-metrics';
 
-/** Recover sentence-repair / lifecycle observability. */
-export interface LegacyRecoverContext {
-  recoverLifecycle?: RecoverLifecycle;
-  recoverLifecycleSkipReason?: string;
-  recoverSkipped?: boolean;
+/** Legacy ASR repair sentence-repair / lifecycle observability. */
+export interface LegacyAsrRepairContext {
+  asrRepairLifecycle?: AsrRepairLifecycle;
+  asrRepairLifecycleSkipReason?: string;
+  asrRepairSkipped?: boolean;
   repairSkipReason?: string | null;
   restoreMetrics?: RestoreMetrics;
   sentenceCandidates?: SentenceCandidate[];
@@ -53,7 +53,7 @@ export interface LegacyWindowRecallContext {
 }
 
 export interface LegacyContext {
-  recover?: LegacyRecoverContext;
+  asrRepair?: LegacyAsrRepairContext;
   ctc?: LegacyCtcContext;
   windowRecall?: LegacyWindowRecallContext;
 }

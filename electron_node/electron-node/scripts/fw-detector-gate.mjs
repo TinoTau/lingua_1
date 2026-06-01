@@ -121,7 +121,7 @@ if (fs.existsSync(defaultsPath)) {
 // V1.1 freeze: segment SSOT on main chain outputs
 const ssotFiles = [
   ['pipeline/post-asr-routing.ts', ['resolveBusinessAsrText']],
-  ['pipeline/result-builder.ts', ['resolveBusinessAsrText']],
+  ['pipeline/result-builder-core.ts', ['resolveBusinessAsrText']],
   ['pipeline/context/job-context.ts', []],
 ];
 
@@ -174,12 +174,13 @@ const fwMainPaths = [
   path.join(srcRoot, 'pipeline/steps/fw-detector-step.ts'),
   path.join(srcRoot, 'pipeline/post-asr-routing.ts'),
   path.join(srcRoot, 'pipeline/result-builder.ts'),
+  path.join(srcRoot, 'pipeline/result-builder-fw.ts'),
   path.join(srcRoot, 'fw-detector/pipeline-mode-fw.ts'),
   path.join(srcRoot, 'fw-detector/fw-detector-orchestrator.ts'),
 ];
 
 const legacyForbiddenTokens = [
-  'buildLegacyRecoverContractExtra',
+  'buildLegacyAsrRepairContractExtra',
   'applyLegacySentenceRepair',
   'runLegacySentenceRepairStep',
   'runLegacyLexiconRecallStep',
@@ -200,8 +201,8 @@ for (const dirOrFile of fwMainPaths) {
   for (const full of files) {
     const rel = path.relative(projectRoot, full);
     const text = stripComments(readRel(full));
-    if (text.includes('legacy/recover')) {
-      fail(`FW main chain must not import legacy/recover: ${rel}`);
+    if (text.includes('legacy/asr-repair')) {
+      fail(`FW main chain must not import legacy/asr-repair: ${rel}`);
     }
     for (const token of legacyForbiddenTokens) {
       if (text.includes(token)) {
@@ -219,11 +220,14 @@ for (const dirOrFile of fwMainPaths) {
 const registryPath = path.join(srcRoot, 'pipeline/pipeline-step-registry.ts');
 if (fs.existsSync(registryPath)) {
   const registrySrc = readRel(registryPath);
-  if (!registrySrc.includes('Legacy Recover steps')) {
-    fail('pipeline-step-registry must document Legacy Recover steps (non-default)');
+  if (!registrySrc.includes('Legacy ASR repair steps')) {
+    fail('pipeline-step-registry must document legacy ASR repair steps (non-default)');
   }
-  if (!registrySrc.includes('applyFwDetectorPipelineMode must remove LEXICON_RECALL')) {
-    fail('pipeline-step-registry must note FW mode removes LEXICON_RECALL/SENTENCE_REPAIR');
+  if (!registrySrc.includes('applyLegacyAsrRepairPipelineMode')) {
+    fail('pipeline-step-registry must note legacy ASR repair injection');
+  }
+  if (!registrySrc.includes('applyFwDetectorPipelineMode')) {
+    fail('pipeline-step-registry must note FW mode removes LEXICON_RECALL/SENTENCE_REPAIR from base');
   }
 }
 
@@ -258,12 +262,52 @@ if (fs.existsSync(jobContextPath)) {
   }
 }
 
-const freezeGuardDoc = path.join(projectRoot, 'docs/FREEZE_GUARD.md');
+const freezeGuardDoc = path.join(srcRoot, 'fw-detector/README.md');
 if (!fs.existsSync(freezeGuardDoc)) {
-  fail('docs/FREEZE_GUARD.md must exist (PostCleanup P1)');
+  fail('main/src/fw-detector/README.md must exist (freeze guard SSOT)');
+}
+if (!readRel(freezeGuardDoc).includes('segmentForJobResult 写点白名单')) {
+  fail('fw-detector/README.md must document segmentForJobResult write whitelist');
+}
+
+const enhancementRoot = path.join(srcRoot, 'pipeline/enhancement');
+for (const name of [
+  'phonetic-correction-step.ts',
+  'punctuation-restore-step.ts',
+  'semantic-repair-step.ts',
+]) {
+  if (!fs.existsSync(path.join(enhancementRoot, name))) {
+    fail(`missing pipeline/enhancement/${name}`);
+  }
+}
+
+const bridgePath = path.join(srcRoot, 'pipeline/recover-result-bridge.ts');
+if (fs.existsSync(bridgePath)) {
+  fail('recover-result-bridge.ts must be removed (P2)');
+}
+
+const legacyAsrRepairMode = path.join(srcRoot, 'pipeline/pipeline-mode-legacy-asr-repair.ts');
+if (!fs.existsSync(legacyAsrRepairMode)) {
+  fail('pipeline-mode-legacy-asr-repair.ts must exist (P2 template injection)');
+}
+
+const rbFwPath = path.join(srcRoot, 'pipeline/result-builder-fw.ts');
+if (fs.existsSync(rbFwPath)) {
+  const rbFwSrc = readRel(rbFwPath);
+  if (rbFwSrc.includes('legacy/asr-repair')) {
+    fail('result-builder-fw must not import legacy/asr-repair');
+  }
+}
+
+const rbPath = path.join(srcRoot, 'pipeline/result-builder.ts');
+if (fs.existsSync(rbPath)) {
+  const rbSrc = readRel(rbPath);
+  if (rbSrc.includes('recover-result-bridge') || rbSrc.includes("from '../legacy/asr-repair")) {
+    fail('result-builder dispatch must not statically import legacy ASR repair');
+  }
 }
 
 if (failures.length) {
   process.exit(1);
 }
-console.log('[fw-gate] PASS — P1~P4 PostCleanup freeze guard checks OK');
+console.log('[fw-gate] PASS — P1~P4 PostCleanup P2 freeze guard checks OK');

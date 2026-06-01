@@ -1,93 +1,65 @@
 # Aggregator 模块
 
-文本聚合与边界重建模块，用于解决 utterance 过碎、边界重复、语言抖动误切等问题。
+ASR 结果后的文本聚合、去重与边界决策。位于 **NodeAgent** 与 JobResult 发送之间。
 
-## 核心功能
+实现：`aggregator-*.ts`、`dedup.ts`、`tail-carry.ts`；中间件 `agent/aggregator-middleware.ts`。
 
-1. **Text Incompleteness Score**: 语言无关的文本未完成度评分
-2. **Language Stability Gate**: 语言稳定性门，防止夹杂词误切
-3. **Dedup**: 边界重叠裁剪，解决重复问题
-4. **Tail Carry**: 尾巴延迟归属，减少短尾单独输出
-5. **Commit 策略**: 时间/长度触发，降低等待时间
+Pipeline 内聚合步骤：`pipeline/steps/aggregation-step.ts` → `agent/postprocess/aggregation-stage.ts`。
 
-## 模块结构
+---
 
-- `aggregator-decision.ts`: 核心决策逻辑（merge/new_stream 决策）
-- `aggregator-state.ts`: 会话态管理（per session）
-- `aggregator-manager.ts`: 多会话管理器（TTL/LRU 回收）
-- `dedup.ts`: 边界去重算法
-- `tail-carry.ts`: 尾巴延迟归属机制
+## 1. 数据流
 
-## 使用方式
+Scheduler JobAssign → Pipeline（ASR/NMT/TTS）→ **AggregatorMiddleware.process()** → JobResult 上报。
 
-Aggregator 已集成到 `PipelineOrchestrator`，在 ASR 之后、NMT 之前自动处理。
+不改变 Pipeline 内部步骤，仅对结果做后处理。
 
-### 手动使用
+---
 
-```typescript
-import { AggregatorManager, Mode } from './aggregator';
+## 2. 核心组件
 
-const manager = new AggregatorManager({
-  ttlMs: 5 * 60 * 1000,  // 5 分钟 TTL
-  maxSessions: 1000,
-});
+| 组件 | 文件 | 说明 |
+|------|------|------|
+| 决策 | `aggregator-decision.ts` | Text Incompleteness、Language Gate、merge/new_stream |
+| 会话态 | `aggregator-state.ts` | per-session 状态、gap_ms |
+| 多会话 | `aggregator-manager.ts` | TTL/LRU 回收 |
+| 去重 | `dedup.ts` | 边界重叠裁剪 |
+| Tail Carry | `tail-carry.ts` | 尾巴延迟归属 |
+| 中间件 | `aggregator-middleware.ts` | 入口 |
 
-// 处理 utterance
-const result = manager.processUtterance(
-  sessionId,
-  text,
-  segments,
-  langProbs,
-  qualityScore,
-  isFinal,
-  isManualCut,
-  mode
-);
+---
 
-// 强制 flush（stop/leave 时）
-const flushed = manager.flush(sessionId);
+## 3. 决策要点
 
-// 清理 session
-manager.removeSession(sessionId);
-```
+- **Text Incompleteness**：短句、gap、句末标点、连接词尾 → 判断是否「未说完」
+- **Language Stability Gate**：语言置信与切换 → 稳定后再 commit
+- **merge / new_stream**：受手动断句、大 gap 等硬规则约束
 
-## 配置参数
+配置：`enabled`、`mode`（offline/room）、`ttlMs`、`maxSessions` 等。
 
-### 线下模式（Offline）
-- `hard_gap_ms`: 2000
-- `soft_gap_ms`: 1500
-- `strong_merge_ms`: 700
-- `commit_interval_ms`: 1200-1500
-- `tail_carry_tokens`: 1-3 token / CJK 2-6 字
+---
 
-### 会议室模式（Room）
-- `hard_gap_ms`: 1500
-- `soft_gap_ms`: 1000
-- `strong_merge_ms`: 600
-- `commit_interval_ms`: 800-1200
-- `tail_carry_tokens`: 2-4 token / CJK 4-8 字
+## 4. 模式参数（参考）
 
-## 指标监控
+| 模式 | hard_gap_ms | commit_interval_ms |
+|------|-------------|-------------------|
+| Offline | 2000 | 1200–1500 |
+| Room | 1500 | 800–1200 |
 
-Aggregator 提供以下指标：
-- `commitCount`: 提交次数
-- `mergeCount`: 合并次数
-- `newStreamCount`: 新流次数
-- `dedupCount`: 去重次数
-- `dedupCharsRemoved`: 去重裁剪字符数
-- `tailCarryUsage`: Tail carry 使用次数
-- `commitLatencyMs`: 首次输出延迟
+---
 
-## 注意事项
+## 5. 注意事项
 
-1. **P0 只处理 final 结果**：partial results 不参与聚合
-2. **时间戳推导**：从 ASR segments 推导 utterance 时间戳
-3. **会话管理**：自动清理过期会话（TTL 5 分钟）
-4. **Flush 机制**：stop/leave 时需调用 `flush()` 确保最后一句不丢失
+1. P0 只处理 final 结果；partial 不参与聚合
+2. stop/leave 时需 `flush()` 避免丢尾句
+3. 会话 TTL 默认约 5 分钟自动清理
 
-## 参考文档
+---
 
-- `AGGREGATOR_TEXT_INCOMPLETENESS_LANGUAGE_GATE_DESIGN.md`: 完整设计文档
-- `AGGREGATOR_P0_KICKOFF_CLEARANCE_NOTE.md`: P0 开工说明
-- `BLOCKER_RESOLUTION_ANALYSIS.md`: Blocker 解决路径分析
+## 相关
 
+| 文档 | 路径 |
+|------|------|
+| 音频聚合 | [`../pipeline-orchestrator/README.md`](../pipeline-orchestrator/README.md) |
+| Pipeline | [`../pipeline/README.md`](../pipeline/README.md) |
+| 架构 | [`../../../docs/ARCHITECTURE.md`](../../../docs/ARCHITECTURE.md) |

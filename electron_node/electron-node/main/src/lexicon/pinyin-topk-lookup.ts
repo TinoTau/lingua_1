@@ -10,7 +10,7 @@ import {
 } from './candidate-score';
 import { syllablesKey } from './pinyin-index';
 import { isMixedLatinToken } from './scored-lexicon';
-import { getRecoverQualityConfig } from '../recover-quality/quality-config';
+import { getAsrRepairQualityConfig } from '../asr-repair-quality/quality-config';
 import type { HotwordEntry } from './hotword-types';
 import { resolveWindowCandidateSource, type WindowCandidateSource } from './window-candidate-source';
 import type { LexiconRuntime } from './lexicon-runtime';
@@ -45,7 +45,7 @@ export type LookupTopKResult = {
 };
 
 function minCandidateScore(): number {
-  return getRecoverQualityConfig().minCandidateScore;
+  return getAsrRepairQualityConfig().minCandidateScore;
 }
 
 function collectScored(

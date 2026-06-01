@@ -6,12 +6,8 @@ export function applyFwDetectorPipelineMode(mode: PipelineMode): PipelineMode {
     return mode;
   }
 
-  const withoutRecover = mode.steps.filter(
-    (step) => step !== 'LEXICON_RECALL' && step !== 'SENTENCE_REPAIR'
-  );
-
   const steps: PipelineStepType[] = [];
-  for (const step of withoutRecover) {
+  for (const step of mode.steps) {
     steps.push(step);
     if (step === 'ASR' && !steps.includes('FW_SPAN_DETECTOR')) {
       steps.push('FW_SPAN_DETECTOR');

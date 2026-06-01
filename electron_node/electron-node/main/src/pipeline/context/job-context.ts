@@ -6,15 +6,15 @@ import type { ASRHypothesis } from '../../asr/types';
 import type { LexiconManifestReadyInfo, LexiconRuntimeStatus } from '../../lexicon/lexicon-types';
 import type { WindowCandidate } from '../../lexicon/hotword-types';
 import type { WindowRecallDiagnostics } from '../../lexicon/window-recall-diagnostics';
-import type { SentenceCandidate } from '../../legacy/recover/asr-repair/sentence-expansion/types';
-import type { ExpansionDiagnostics } from '../../legacy/recover/asr-repair/sentence-expansion/expansion-diagnostics';
+import type { SentenceCandidate } from '../../legacy/asr-repair/asr-repair/sentence-expansion/types';
+import type { ExpansionDiagnostics } from '../../legacy/asr-repair/asr-repair/sentence-expansion/expansion-diagnostics';
 import type { SegmentAlignmentDiagnostics } from '../../asr/segment-alignment-diagnostics';
 import type { CrossBoundaryRiskReport } from '../../asr/cross-boundary-risk';
 import type { RecallCoverageDiagnostics } from '../../lexicon/recall-coverage-diagnostics';
-import type { RestoreMetrics } from '../../legacy/recover/asr-repair/restore-metrics';
-import type { SentenceRepairExtra } from '../../legacy/recover/asr-repair/sentence-rerank/sentence-repair-observability';
-import type { RecoverLifecycle } from '../../legacy/recover/legacy-recover-contract-types';
-import type { SentenceCandidateTraceItem, V5Metrics } from '../../legacy/recover/legacy-v5-metrics';
+import type { RestoreMetrics } from '../../legacy/asr-repair/asr-repair/restore-metrics';
+import type { SentenceRepairExtra } from '../../legacy/asr-repair/asr-repair/sentence-rerank/sentence-repair-observability';
+import type { AsrRepairLifecycle } from '../../legacy/asr-repair/legacy-asr-repair-contract-types';
+import type { SentenceCandidateTraceItem, V5Metrics } from '../../legacy/asr-repair/legacy-v5-metrics';
 import type { FwDetectorResult, KenlmGateMode } from '../../fw-detector/types';
 import type { LegacyContext } from './legacy-context';
 
@@ -53,11 +53,11 @@ export interface JobContext {
   lexiconRuntimeError?: string;
   lexiconDisabledReason?: string;
   lexiconRecallTruncated?: boolean;
-  recoverLifecycle?: RecoverLifecycle;
+  asrRepairLifecycle?: AsrRepairLifecycle;
   /** sentence-repair-step æ©éåå ï¼æªå?sentenceRepairExtra æ¶ï¼ */
-  recoverLifecycleSkipReason?: string;
+  asrRepairLifecycleSkipReason?: string;
   /** V3ï¼æ¬è½®å¥ä¿®å¤æ¯å¦å æ çªæ©å±èè·³è¿åå?*/
-  recoverSkipped?: boolean;
+  asrRepairSkipped?: boolean;
   repairSkipReason?: string | null;
   restoreMetrics?: RestoreMetrics;
   windowCandidates?: WindowCandidate[];

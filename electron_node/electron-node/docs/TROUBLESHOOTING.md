@@ -36,3 +36,20 @@
 - 主进程：`logs/electron-main.log`（或启动时控制台输出的路径）。
 - Rust 推理：见主进程配置/脚本中写入的 node-inference 日志路径。
 - 各 Python 服务：见各服务目录下的日志配置。
+
+## Pipeline 无结果 / job 未返回
+
+节点对每个 `(session_id, utterance_index)` **只接受第一个 job**；同 slot 后续 job 会打 `Rejecting duplicate (session_id, utterance_index)` 并拒绝。
+
+**排查顺序（按 job_id）：**
+
+1. 搜 `Received job_assign` — 是否被接受
+2. 搜 `Rejecting duplicate` — 是否 slot 冲突
+3. 搜 `Pipeline mode inferred` — Pipeline 是否启动
+4. 搜 `runAsrStep: Audio buffered` — 是否仅缓冲未 ASR
+5. 搜 `Step X failed` / `Pipeline orchestration failed` — 是否中途失败
+6. 搜 `SEND_PLAN` / `SEND_ATTEMPT` — 是否发出结果
+
+Turn 累积：`runAggregationStep: Turn segment accumulated, waiting for finalize` 表示非 finalize job 仅累积、defer 翻译。
+
+FW 主链默认不走语义修复（5015 默认 OFF）；见 [`main/src/pipeline/README.md`](../main/src/pipeline/README.md)。

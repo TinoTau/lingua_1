@@ -1,4 +1,4 @@
-import { getRecoverQualityConfig } from '../recover-quality/quality-config';
+import { getAsrRepairQualityConfig } from '../asr-repair-quality/quality-config';
 import { lookupTopKByPinyin } from './pinyin-topk-lookup';
 import type { AsrWindow } from './lexicon-types';
 import type { HotwordEntry, HotwordRecallHit } from './hotword-types';
@@ -34,7 +34,7 @@ export function emptyHotwordRecallStats(): HotwordRecallStats {
 }
 
 function topKForTermLength(termLength: number): number {
-  const map = getRecoverQualityConfig().topKByTermLength;
+  const map = getAsrRepairQualityConfig().topKByTermLength;
   return map[String(termLength)] ?? 0;
 }
 
@@ -69,7 +69,7 @@ export function recallHotwordsForWindow(
   profile: ActiveLexiconProfileSnapshot = defaultGeneralProfile(),
   stats?: HotwordRecallStats
 ): HotwordRecallHit[] {
-  const cfg = getRecoverQualityConfig();
+  const cfg = getAsrRepairQualityConfig();
   const termLength = window.text.length;
   if (!cfg.allowedWindowLengths.includes(termLength)) {
     return [];

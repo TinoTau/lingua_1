@@ -10,10 +10,10 @@ export function syncJobContextLegacyPartition(ctx: JobContext): void {
     ctx.legacy = {};
   }
 
-  ctx.legacy.recover = {
-    recoverLifecycle: ctx.recoverLifecycle,
-    recoverLifecycleSkipReason: ctx.recoverLifecycleSkipReason,
-    recoverSkipped: ctx.recoverSkipped,
+  ctx.legacy.asrRepair = {
+    asrRepairLifecycle: ctx.asrRepairLifecycle,
+    asrRepairLifecycleSkipReason: ctx.asrRepairLifecycleSkipReason,
+    asrRepairSkipped: ctx.asrRepairSkipped,
     repairSkipReason: ctx.repairSkipReason,
     restoreMetrics: ctx.restoreMetrics,
     sentenceCandidates: ctx.sentenceCandidates,

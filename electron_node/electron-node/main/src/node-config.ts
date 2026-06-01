@@ -5,7 +5,7 @@ import * as path from 'path';
 import type { NodeConfig, ServicePreferences, MetricsConfig } from './node-config-types';
 import { isFwDetectorEngineEnabled } from './fw-detector/fw-mode';
 import { DEFAULT_CONFIG } from './node-config-defaults';
-import { getRecoverQualityConfig } from './recover-quality/quality-config';
+import { getAsrRepairQualityConfig } from './asr-repair-quality/quality-config';
 import {
   createMissingFileDiagnostics,
   createParseFailedDiagnostics,
@@ -158,7 +158,7 @@ export function getLexiconRecallSelectorConfig(): {
   maxReplacements: number;
   minPhoneticScore: number;
 } {
-  const q = getRecoverQualityConfig();
+  const q = getAsrRepairQualityConfig();
   return {
     maxReplacements: q.maxReplacements,
     minPhoneticScore: q.selectionMinPhoneticScore,

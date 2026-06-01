@@ -10,7 +10,7 @@ import logger from '../logger';
 import { buildJobResult } from './result-builder';
 import { inferPipelineMode, shouldExecuteStep } from './pipeline-mode-config';
 import { getLexiconRecallSkipReason } from '../node-config';
-import { stampRecoverPipelineSkip } from '../legacy/recover/legacy-recover-contract';
+import { stampAsrRepairPipelineSkip } from '../legacy/asr-repair/legacy-asr-repair-contract';
 import { executeStep } from './pipeline-step-registry';
 import { buildBufferKey } from '../pipeline-orchestrator/audio-aggregator-buffer-key';
 import { finalizeSessionTurn, beginSessionTurnProfile } from '../session-runtime/session-finalize';
@@ -94,7 +94,7 @@ export async function runJobPipeline(options: JobPipelineOptions): Promise<JobRe
       if (!shouldExecuteStep(step, mode, job, ctx)) {
         if (step === 'LEXICON_RECALL' || step === 'SENTENCE_REPAIR') {
           const reason = getLexiconRecallSkipReason(job, ctx) ?? 'condition_not_met';
-          stampRecoverPipelineSkip(job, ctx, reason);
+          stampAsrRepairPipelineSkip(job, ctx, reason);
           logger.info(
             { jobId: job.job_id, step, reason },
             `[${step}] skipped reason=${reason}`

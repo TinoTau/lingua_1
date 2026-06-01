@@ -16,11 +16,11 @@ jest.mock('../gpu-arbiter', () => ({
   withGpuLease: jest.fn((_serviceType: string, fn: () => Promise<any>) => fn()),
 }));
 
-jest.mock('./steps/phonetic-correction-step', () => ({
+jest.mock('./enhancement/phonetic-correction-step', () => ({
   runPhoneticCorrectionStep: jest.fn().mockResolvedValue(undefined),
 }));
 
-jest.mock('./steps/punctuation-restore-step', () => ({
+jest.mock('./enhancement/punctuation-restore-step', () => ({
   runPunctuationRestoreStep: jest.fn().mockResolvedValue(undefined),
 }));
 
@@ -65,6 +65,13 @@ function createJob(overrides?: Partial<JobAssignMessage>): JobAssignMessage {
   } as JobAssignMessage;
 }
 
+/** SSOT: pipeline reads segmentForJobResult / rawAsrText, not asrText alone. */
+function seedSegmentText(ctx: JobContext, text: string): void {
+  ctx.rawAsrText = text;
+  ctx.asrText = text;
+  ctx.segmentForJobResult = text;
+}
+
 describe('Pipeline Job 流程', () => {
   let mockTaskRouter: { routeNMTTask: jest.Mock };
   let mockSemanticRepairStage: { process: jest.Mock };
@@ -103,7 +110,7 @@ describe('Pipeline Job 流程', () => {
     it('应完成 Aggregation → SemanticRepair → Dedup → Translation，text_asr 来自 segmentForJobResult', async () => {
       const job = createJob({ job_id: 'job-flow-1' });
       const ctx = initJobContext(job);
-      ctx.asrText = '本段原文';
+      seedSegmentText(ctx, '本段原文');
 
       const result = await runJobPipeline({ job, services, ctx });
 
@@ -115,10 +122,10 @@ describe('Pipeline Job 流程', () => {
       expect(nmtTask.text).toBe('修复后原文');
     });
 
-    it('语义修复步骤只读 ctx.segmentForJobResult（无聚合器时=asrText）', async () => {
+    it('语义修复步骤只读 ctx.segmentForJobResult', async () => {
       const job = createJob({ job_id: 'job-flow-2' });
       const ctx = initJobContext(job);
-      ctx.asrText = '本段原文';
+      seedSegmentText(ctx, '本段原文');
 
       await runJobPipeline({ job, services, ctx });
 
@@ -130,7 +137,7 @@ describe('Pipeline Job 流程', () => {
     it('去重步骤应只读 ctx.segmentForJobResult', async () => {
       const job = createJob({ job_id: 'job-flow-3' });
       const ctx = initJobContext(job);
-      ctx.asrText = '本段原文';
+      seedSegmentText(ctx, '本段原文');
 
       const processSpy = jest.spyOn(services.dedupStage!, 'process');
       await runJobPipeline({ job, services, ctx });
@@ -147,7 +154,7 @@ describe('Pipeline Job 流程', () => {
     it('应设置空字符串且不送语义修复，result.text_asr 与 text_translated 为空', async () => {
       const job = createJob();
       const ctx = initJobContext(job);
-      ctx.asrText = '';
+      seedSegmentText(ctx, '');
 
       const result = await runJobPipeline({ job, services, ctx });
 
@@ -203,7 +210,7 @@ describe('Pipeline Job 流程', () => {
         semanticRepairApplied: true,
       });
 
-      const { runSemanticRepairStep } = await import('./steps/semantic-repair-step');
+      const { runSemanticRepairStep } = await import('./enhancement/semantic-repair-step');
       const { runTranslationStep } = await import('./steps/translation-step');
 
       await runSemanticRepairStep(job, ctx, services);

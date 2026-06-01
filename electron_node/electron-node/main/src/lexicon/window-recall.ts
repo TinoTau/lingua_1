@@ -9,7 +9,7 @@ import type { ASRHypothesis } from '../asr/types';
 import type { AsrWindow } from './lexicon-types';
 import type { WindowCandidate } from './hotword-types';
 import type { LexiconRuntime } from './lexicon-runtime';
-import { resolveRecoverQualityConfig } from '../recover-quality/quality-config';
+import { resolveAsrRepairQualityConfig } from '../asr-repair-quality/quality-config';
 import {
   emptyWindowRecallDiagnostics,
   type WindowRecallDiagnostics,
@@ -46,7 +46,7 @@ function buildV5DiffWindows(
     return { windows: [], noDiffSpan: true };
   }
 
-  const cfg = resolveRecoverQualityConfig();
+  const cfg = resolveAsrRepairQualityConfig();
   const built = buildDiffContextWindows(segmentText, diffSpans, {
     allowedWindowLengths: cfg.allowedWindowLengths,
     fineLengths: [2, 3],

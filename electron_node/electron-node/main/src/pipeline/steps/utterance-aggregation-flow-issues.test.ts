@@ -15,7 +15,7 @@ import { JobAssignMessage } from '@shared/protocols/messages';
 import { JobContext, initJobContext } from '../context/job-context';
 import { ServicesBundle } from '../job-pipeline';
 import { runAggregationStep } from './aggregation-step';
-import { runSemanticRepairStep } from './semantic-repair-step';
+import { runSemanticRepairStep } from '../enhancement/semantic-repair-step';
 import { TaskRouterSemanticRepairHandler } from '../../task-router/task-router-semantic-repair';
 import { SemanticRepairStageEN } from '../../agent/postprocess/semantic-repair-stage-en';
 

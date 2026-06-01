@@ -53,8 +53,9 @@
     "lexicon:import-v3-5k-assets": "node scripts/lexicon/import-v3-canonical-asset.mjs --ladder 5k --review-status approved",
     "test:lexicon": "jest --config jest.lexicon.config.js",
     "test:sentence-kenlm": "jest --testPathPattern=\"sentence-kenlm|lm-scorer|char-tokenize\"",
-    "test:contract": "npm run build:main && jest --testPathPattern=\"legacy-recover-contract|result-builder\"",
-    "test:recover": "jest --testPathPattern=\"legacy/recover|legacy-recover-contract\""
+    "test:contract": "npm run build:main && jest --testPathPattern=\"legacy-asr-repair-contract|result-builder\"",
+    "test:recover": "jest --testPathPattern=\"legacy/asr-repair|legacy-asr-repair-contract\"",
+    "test:asr-repair": "npm run test:recover"
   },
   "keywords": [
     "electron",

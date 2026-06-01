@@ -13,7 +13,8 @@ import {
     isSemanticRepairEnabled,
 } from '../node-config';
 import { applyFwDetectorPipelineMode } from '../fw-detector/pipeline-mode-fw';
-import { isFwDetectorPipelineActive } from '../fw-detector/fw-mode';
+import { isFwDetectorEngineEnabled, isFwDetectorPipelineActive } from '../fw-detector/fw-mode';
+import { applyLegacyAsrRepairPipelineMode } from './pipeline-mode-legacy-asr-repair';
 
 /**
  * Pipeline 步骤类型
@@ -60,12 +61,10 @@ export const PIPELINE_MODES: Record<string, PipelineMode> = {
      */
     PERSONAL_VOICE_TRANSLATION: {
         name: '个人特色语音转译',
-        steps: ['ASR', 'AGGREGATION', 'LEXICON_RECALL', 'SENTENCE_REPAIR', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP', 'TRANSLATION', 'YOURTTS'],
+        steps: ['ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP', 'TRANSLATION', 'YOURTTS'],
         dependencies: {
             AGGREGATION: ['ASR'],
-            LEXICON_RECALL: ['AGGREGATION'],
-            SENTENCE_REPAIR: ['LEXICON_RECALL'],
-            PHONETIC_CORRECTION: ['SENTENCE_REPAIR'],
+            PHONETIC_CORRECTION: ['AGGREGATION'],
             PUNCTUATION_RESTORE: ['PHONETIC_CORRECTION'],
             SEMANTIC_REPAIR: ['PUNCTUATION_RESTORE'],
             DEDUP: ['SEMANTIC_REPAIR'],
@@ -83,12 +82,10 @@ export const PIPELINE_MODES: Record<string, PipelineMode> = {
      */
     GENERAL_VOICE_TRANSLATION: {
         name: '通用语音转译',
-        steps: ['ASR', 'AGGREGATION', 'LEXICON_RECALL', 'SENTENCE_REPAIR', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP', 'TRANSLATION', 'TTS'],
+        steps: ['ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP', 'TRANSLATION', 'TTS'],
         dependencies: {
             AGGREGATION: ['ASR'],
-            LEXICON_RECALL: ['AGGREGATION'],
-            SENTENCE_REPAIR: ['LEXICON_RECALL'],
-            PHONETIC_CORRECTION: ['SENTENCE_REPAIR'],
+            PHONETIC_CORRECTION: ['AGGREGATION'],
             PUNCTUATION_RESTORE: ['PHONETIC_CORRECTION'],
             SEMANTIC_REPAIR: ['PUNCTUATION_RESTORE'],
             DEDUP: ['SEMANTIC_REPAIR'],
@@ -103,12 +100,10 @@ export const PIPELINE_MODES: Record<string, PipelineMode> = {
      */
     SUBTITLE_MODE: {
         name: '字幕模式',
-        steps: ['ASR', 'AGGREGATION', 'LEXICON_RECALL', 'SENTENCE_REPAIR', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP', 'TRANSLATION'],
+        steps: ['ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP', 'TRANSLATION'],
         dependencies: {
             AGGREGATION: ['ASR'],
-            LEXICON_RECALL: ['AGGREGATION'],
-            SENTENCE_REPAIR: ['LEXICON_RECALL'],
-            PHONETIC_CORRECTION: ['SENTENCE_REPAIR'],
+            PHONETIC_CORRECTION: ['AGGREGATION'],
             PUNCTUATION_RESTORE: ['PHONETIC_CORRECTION'],
             SEMANTIC_REPAIR: ['PUNCTUATION_RESTORE'],
             DEDUP: ['SEMANTIC_REPAIR'],
@@ -122,12 +117,10 @@ export const PIPELINE_MODES: Record<string, PipelineMode> = {
      */
     ASR_ONLY: {
         name: '只执行 ASR',
-        steps: ['ASR', 'AGGREGATION', 'LEXICON_RECALL', 'SENTENCE_REPAIR', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP'],
+        steps: ['ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP'],
         dependencies: {
             AGGREGATION: ['ASR'],
-            LEXICON_RECALL: ['AGGREGATION'],
-            SENTENCE_REPAIR: ['LEXICON_RECALL'],
-            PHONETIC_CORRECTION: ['SENTENCE_REPAIR'],
+            PHONETIC_CORRECTION: ['AGGREGATION'],
             PUNCTUATION_RESTORE: ['PHONETIC_CORRECTION'],
             SEMANTIC_REPAIR: ['PUNCTUATION_RESTORE'],
             DEDUP: ['SEMANTIC_REPAIR'],
@@ -181,7 +174,10 @@ export function inferPipelineMode(job: JobAssignMessage): PipelineMode {
 }
 
 function finalizePipelineMode(mode: PipelineMode): PipelineMode {
+  if (isFwDetectorEngineEnabled()) {
     return applyFwDetectorPipelineMode(mode);
+  }
+  return applyLegacyAsrRepairPipelineMode(mode);
 }
 
 /**
@@ -193,7 +189,7 @@ function buildDynamicMode(job: JobAssignMessage): PipelineMode {
 
     // ASR 相关步骤（如果启用 ASR）
     if (use_asr) {
-        steps.push('ASR', 'AGGREGATION', 'LEXICON_RECALL', 'SENTENCE_REPAIR', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP');
+        steps.push('ASR', 'AGGREGATION', 'PHONETIC_CORRECTION', 'PUNCTUATION_RESTORE', 'SEMANTIC_REPAIR', 'DEDUP');
     }
 
     // 翻译步骤（如果启用 NMT）

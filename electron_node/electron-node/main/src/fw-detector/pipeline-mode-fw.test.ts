@@ -8,7 +8,7 @@ import { PIPELINE_MODES } from '../pipeline/pipeline-mode-config';
 import { applyFwDetectorPipelineMode } from './pipeline-mode-fw';
 
 describe('applyFwDetectorPipelineMode', () => {
-  it('在 ASR 后插入 FW_SPAN_DETECTOR 并移除 Recover 步骤', () => {
+  it('在 ASR 后插入 FW_SPAN_DETECTOR，基础模板不含 legacy ASR repair 步骤', () => {
     const mode = applyFwDetectorPipelineMode(PIPELINE_MODES.GENERAL_VOICE_TRANSLATION);
     expect(mode.steps).toContain('FW_SPAN_DETECTOR');
     expect(mode.steps).not.toContain('LEXICON_RECALL');

@@ -72,7 +72,17 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(DEFAULT_CONFIG.features?.fwDetector?.useLexiconRuntimeV2Recall).toBe(true);
   });
 
-  it('FW pipeline: ASR → FW_SPAN_DETECTOR → AGGREGATION，移除 Recover 步骤', () => {
+  it('基础 PIPELINE 模板不含 LEXICON_RECALL / SENTENCE_REPAIR', () => {
+    for (const mode of Object.values(PIPELINE_MODES)) {
+      if (mode.name === '文本翻译模式') {
+        continue;
+      }
+      expect(mode.steps).not.toContain('LEXICON_RECALL');
+      expect(mode.steps).not.toContain('SENTENCE_REPAIR');
+    }
+  });
+
+  it('FW pipeline: ASR → FW_SPAN_DETECTOR → AGGREGATION，无 legacy ASR repair 步骤', () => {
     const mode = applyFwDetectorPipelineMode(PIPELINE_MODES.GENERAL_VOICE_TRANSLATION);
     expect(mode.steps).toEqual(
       expect.arrayContaining(['ASR', 'FW_SPAN_DETECTOR', 'AGGREGATION'])
@@ -128,11 +138,10 @@ describe('P1~P4 freeze simplification contract', () => {
   });
 
   it('result-builder text_asr 来自 segmentForJobResult', () => {
-    const rb = readSrc('pipeline/result-builder.ts');
-    expect(rb).toMatch(/text_asr:\s*finalAsrText/);
-    expect(rb).toContain('resolveBusinessAsrText');
-    expect(rb).not.toContain('ctx.repairedText');
-    expect(rb).toContain('raw_asr_text');
+    const core = readSrc('pipeline/result-builder-core.ts');
+    expect(core).toMatch(/text_asr:\s*finalAsrText/);
+    expect(core).toContain('resolveBusinessAsrText');
+    expect(core).not.toContain('ctx.repairedText');
   });
 
   it('post-asr-routing 不含 syncRepairedTextBaseline', () => {
@@ -159,8 +168,8 @@ describe('P1~P4 freeze simplification contract', () => {
   });
 
   it('result-builder 使用 resolveBusinessAsrText', () => {
-    const rb = readSrc('pipeline/result-builder.ts');
-    expect(rb).toContain('resolveBusinessAsrText');
+    const core = readSrc('pipeline/result-builder-core.ts');
+    expect(core).toContain('resolveBusinessAsrText');
   });
 
   it('FW pipeline 含 DEDUP 且位于 TRANSLATION 前', () => {
@@ -182,20 +191,23 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(mode.steps).not.toContain('SENTENCE_REPAIR');
   });
 
-  it('result-builder FW 路径不调用 buildLegacyRecoverContractExtra', () => {
+  it('result-builder FW 路径不静态 import legacy ASR repair', () => {
     const rb = readSrc('pipeline/result-builder.ts');
-    expect(rb).not.toContain('buildLegacyRecoverContractExtra');
-    expect(rb).not.toContain('legacy/recover');
-    expect(rb).toContain('isFwDetectorEngineEnabled');
+    const rbFw = readSrc('pipeline/result-builder-fw.ts');
+    expect(rb).not.toContain('recover-result-bridge');
+    expect(rb).not.toContain('legacy/asr-repair');
+    expect(rb).toContain('buildFwJobResult');
+    expect(rbFw).not.toContain('legacy/asr-repair');
+    expect(rbFw).toContain('buildFwResultExtra');
   });
 
-  it('fw-detector orchestrator 不引用 legacy/recover 或 sentence-repair', () => {
+  it('fw-detector orchestrator 不引用 legacy/asr-repair 或 sentence-repair', () => {
     const orch = readSrc('fw-detector/fw-detector-orchestrator.ts');
-    expect(orch).not.toContain('legacy/recover');
+    expect(orch).not.toContain('legacy/asr-repair');
     expect(orch).not.toMatch(/sentence-repair|lexicon-recall-step|SENTENCE_REPAIR/);
   });
 
-  it('FW 主链源文件不 import legacy/recover', () => {
+  it('FW 主链源文件不 import legacy/asr-repair', () => {
     const fwPaths = [
       'fw-detector/pipeline-mode-fw.ts',
       'fw-detector/fw-detector-orchestrator.ts',
@@ -206,10 +218,11 @@ describe('P1~P4 freeze simplification contract', () => {
       'pipeline/steps/translation-step.ts',
       'pipeline/post-asr-routing.ts',
       'pipeline/result-builder.ts',
+      'pipeline/result-builder-fw.ts',
     ];
     for (const rel of fwPaths) {
       const src = readSrc(rel);
-      expect(src).not.toContain('legacy/recover');
+      expect(src).not.toContain('legacy/asr-repair');
     }
   });
 
@@ -226,14 +239,27 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(fs.existsSync(path.join(SRC_ROOT, 'pipeline/context/legacy-context.ts'))).toBe(true);
   });
 
-  it('buildFwResultExtra 路径不打包 Recover 观测字段', () => {
-    const rb = readSrc('pipeline/result-builder.ts');
-    const legacyExtra = readSrc('legacy/recover/legacy-recover-result-extra.ts');
-    expect(rb).toContain('buildFwResultExtra');
-    expect(rb).not.toMatch(/buildFwResultExtra[\s\S]*sentence_repair/);
-    expect(rb).not.toMatch(/buildFwResultExtra[\s\S]*asr_nbest/);
-    for (const key of ['sentence_repair', 'asr_nbest', 'recover_lifecycle', 'asr_hypotheses']) {
+  it('buildFwResultExtra 路径不打包 legacy 观测字段', () => {
+    const rbFw = readSrc('pipeline/result-builder-fw.ts');
+    const legacyExtra = readSrc('legacy/asr-repair/legacy-asr-repair-result-extra.ts');
+    expect(rbFw).toContain('buildFwResultExtra');
+    expect(rbFw).not.toMatch(/buildFwResultExtra[\s\S]*sentence_repair/);
+    expect(rbFw).not.toMatch(/buildFwResultExtra[\s\S]*asr_nbest/);
+    for (const key of ['sentence_repair', 'asr_nbest', 'asr_repair_lifecycle', 'asr_hypotheses']) {
       expect(legacyExtra).toContain(key);
+    }
+    expect(legacyExtra).not.toContain('recover_lifecycle');
+    expect(legacyExtra).not.toContain('recover_contract_version');
+  });
+
+  it('enhancement 步骤位于 pipeline/enhancement/', () => {
+    for (const name of [
+      'phonetic-correction-step.ts',
+      'punctuation-restore-step.ts',
+      'semantic-repair-step.ts',
+    ]) {
+      expect(fs.existsSync(path.join(SRC_ROOT, 'pipeline/enhancement', name))).toBe(true);
+      expect(fs.existsSync(path.join(SRC_ROOT, 'pipeline/steps', name))).toBe(false);
     }
   });
 
@@ -243,11 +269,11 @@ describe('P1~P4 freeze simplification contract', () => {
       'pipeline/steps/fw-detector-step.ts',
       'fw-detector/fw-detector-orchestrator.ts',
       'pipeline/steps/aggregation-step.ts',
-      'pipeline/steps/semantic-repair-step.ts',
-      'pipeline/steps/phonetic-correction-step.ts',
-      'pipeline/steps/punctuation-restore-step.ts',
+      'pipeline/enhancement/semantic-repair-step.ts',
+      'pipeline/enhancement/phonetic-correction-step.ts',
+      'pipeline/enhancement/punctuation-restore-step.ts',
       'pipeline/post-asr-routing.ts',
-      'legacy/recover/asr-repair/sentence-rerank/legacy-apply-sentence-repair.ts',
+      'legacy/asr-repair/asr-repair/sentence-rerank/legacy-apply-sentence-repair.ts',
     ];
     for (const rel of allowed) {
       expect(fs.existsSync(path.join(SRC_ROOT, rel))).toBe(true);

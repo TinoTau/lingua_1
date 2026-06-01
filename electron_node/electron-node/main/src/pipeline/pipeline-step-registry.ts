@@ -11,11 +11,11 @@ export type { PipelineStepType };
 import { runAsrStep } from './steps/asr-step';
 import { runFwDetectorStep } from './steps/fw-detector-step';
 import { runAggregationStep } from './steps/aggregation-step';
-import { runLegacyLexiconRecallStep } from '../legacy/recover/steps/legacy-lexicon-recall-step';
-import { runLegacySentenceRepairStep } from '../legacy/recover/steps/legacy-sentence-repair-step';
-import { runPhoneticCorrectionStep } from './steps/phonetic-correction-step';
-import { runPunctuationRestoreStep } from './steps/punctuation-restore-step';
-import { runSemanticRepairStep } from './steps/semantic-repair-step';
+import { runLegacyLexiconRecallStep } from '../legacy/asr-repair/steps/legacy-lexicon-recall-step';
+import { runLegacySentenceRepairStep } from '../legacy/asr-repair/steps/legacy-sentence-repair-step';
+import { runPhoneticCorrectionStep } from './enhancement/phonetic-correction-step';
+import { runPunctuationRestoreStep } from './enhancement/punctuation-restore-step';
+import { runSemanticRepairStep } from './enhancement/semantic-repair-step';
 import { runDedupStep } from './steps/dedup-step';
 import { runTranslationStep } from './steps/translation-step';
 import { runTtsStep } from './steps/tts-step';
@@ -40,10 +40,10 @@ export type StepExecutor = (
 /**
  * Pipeline step registry.
  *
- * Legacy Recover steps (LEXICON_RECALL, SENTENCE_REPAIR): registered for non-FW engine only.
- * FW mainline: applyFwDetectorPipelineMode must remove LEXICON_RECALL / SENTENCE_REPAIR.
+ * Legacy ASR repair steps (LEXICON_RECALL, SENTENCE_REPAIR): injected only for non-FW engine
+ * via applyLegacyAsrRepairPipelineMode. FW mainline uses applyFwDetectorPipelineMode.
  *
- * Enhancement steps (still registered, default OFF via node-config):
+ * Enhancement steps (default OFF via node-config), physical dir pipeline/enhancement/:
  * - PHONETIC_CORRECTION (5016), PUNCTUATION_RESTORE (5017), SEMANTIC_REPAIR (5015)
  * - Gated by enhancement-gate + isSegmentWriteLocked when FW has applied span replacements.
  */

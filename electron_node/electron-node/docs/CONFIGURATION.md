@@ -34,3 +34,27 @@
 
 - 主进程模型目录默认在 userData 下（可由 `USER_DATA` 覆盖），ModelManager 使用该根路径。
 - 各子服务（NMT、TTS、语义修复等）的模型路径见其 `service.json` 或各自 README。
+
+## FW 主链默认（摘要）
+
+完整键表见 [`main/src/fw-detector/README.md`](../main/src/fw-detector/README.md)。
+
+| 键 | 默认 |
+|----|------|
+| `asr.engine` | `fw_detector_v1` |
+| `features.fwDetector.enabled` | `true` |
+| `features.lexiconRuntimeV2.enabled` | `true` |
+| `features.lexiconRecall.enabled` | `false` |
+| `features.semanticRepair.enabled` | `false` |
+
+运行时覆盖：`%APPDATA%/lingua-electron-node/electron-node-config.json`。  
+SSOT 测试：`tests/freeze-config-ssot.json`。
+
+## 环境变量（FW / 词库）
+
+| 变量 | 用途 |
+|------|------|
+| `PROJECT_ROOT` | 词库 bundle、domain_anchor（dist 必设） |
+| `ASR_MODEL` | 默认 `medium` |
+| `ASR_COMPUTE_TYPE` | CUDA 未设时 → `int8_float16` |
+| `LEXICON_BUNDLE_PATH` | 覆盖 V3 bundle 路径 |

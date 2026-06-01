@@ -1,16 +1,20 @@
-# Legacy FW Detector (Rollback Chain)
+# Legacy FW Detector（回滚链）
 
-P1.2b per-span topK + KenLM weak_veto decision pipeline.
+P1.2b per-span topK + KenLM weak_veto 决策链。
 
-**Not on frozen default path** when `useSentenceLevelRerank=true`.
+**非默认路径：** `useSentenceLevelRerank=true` 时使用 [`../../fw-detector/fw-sentence-rerank-pipeline.ts`](../../fw-detector/fw-sentence-rerank-pipeline.ts)。
 
-| File | Role |
+---
+
+## 文件
+
+| 文件 | 职责 |
 |------|------|
-| `fw-topk-decision-pipeline.ts` | Rollback decision chain |
-| `candidate-scorer.ts` | finalScore weights |
+| `fw-topk-decision-pipeline.ts` | 回滚决策链入口 |
+| `candidate-scorer.ts` | finalScore 权重 |
 | `pick-approved-replacements.ts` | D-greedy pick |
-| `span-replacement-eval.ts` | Diagnostics / unit tests only |
+| `span-replacement-eval.ts` | 诊断 / 单测 |
 
-Orchestrator imports `runFwTopKDecisionPipeline` from here when `useSentenceLevelRerank=false`.
+`fw-detector-orchestrator.ts` 在 `useSentenceLevelRerank=false` 时 import `runFwTopKDecisionPipeline`。
 
-See [FREEZE_GUARD.md](../../docs/FREEZE_GUARD.md).
+冻结说明：[`../../fw-detector/README.md`](../../fw-detector/README.md) §7 回滚开关。

@@ -34,4 +34,4 @@
 | `tests/lib/fw-detector-contract-assess.js` | FW dialog_200 契约判定 |
 | `scripts/fw-detector-gate.mjs` | FW 主链静态门禁 |
 
-Recover 历史批测脚本已移除；Recover 契约仍由 `npm run test:contract`（`main/src/pipeline/recover-contract*.ts`）覆盖。
+Legacy ASR repair 契约由 `npm run test:contract`（`legacy-asr-repair-contract*.ts`）覆盖。

@@ -8,7 +8,7 @@ import {
 } from '../lexicon/candidate-score';
 import { scorePinyinSimilarity } from '../lexicon/phonetic/pinyin';
 import { syllablesKey } from '../lexicon/pinyin-index';
-import { getRecoverQualityConfig } from '../recover-quality/quality-config';
+import { getAsrRepairQualityConfig } from '../asr-repair-quality/quality-config';
 import type { HotwordEntry } from '../lexicon/hotword-types';
 import { resolveWindowCandidateSource, type WindowCandidateSource } from '../lexicon/window-candidate-source';
 import type { ActiveLexiconProfileSnapshot } from '../session-runtime/types';
@@ -45,7 +45,7 @@ export type RecallSpanTopKV2Input = {
 };
 
 function minCandidateScore(): number {
-  return getRecoverQualityConfig().minCandidateScore;
+  return getAsrRepairQualityConfig().minCandidateScore;
 }
 
 function scoreHotword(
