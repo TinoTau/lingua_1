@@ -14,7 +14,7 @@ export type LexiconRuntimeV2Config = {
 
 const DEFAULTS: Required<LexiconRuntimeV2Config> = {
   enabled: true,
-  bundlePath: 'node_runtime/lexicon/v2_shadow',
+  bundlePath: 'node_runtime/lexicon/v3',
   lruBucketCacheSize: 512,
   maxBaseCandidates: 2,
   maxDomainCandidates: 3,

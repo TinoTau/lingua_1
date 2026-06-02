@@ -55,5 +55,7 @@ Seed：`data/lexicon/10k/`、`confusions.jsonl`、`hotwords.jsonl`。详见 [../
 
 ## 相关
 
-- [electron-node/docs/LEXICON.md](../electron-node/docs/LEXICON.md) — 运行时
-- [docs/lexicon-v3/](../../docs/lexicon-v3/README.md) — V3 冻结规范
+- [IMPORT_CONSTRAINTS.md](./IMPORT_CONSTRAINTS.md) — V1 import 约束
+- [V3_ACCEPTANCE_GATE.md](./V3_ACCEPTANCE_GATE.md) — V1 gate
+- [docs/lexicon-v3/Lexicon_V3_1_Final_SSOT.md](../../../docs/lexicon-v3/Lexicon_V3_1_Final_SSOT.md) — FW v3 + Patch SSOT
+- [electron-node/scripts/lexicon/README.md](../electron-node/scripts/lexicon/README.md) — 脚本命令

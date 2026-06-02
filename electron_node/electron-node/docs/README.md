@@ -13,7 +13,9 @@
 | Enhancement | [main/src/pipeline/enhancement/README.md](../main/src/pipeline/enhancement/README.md) | 5015/5016/5017 |
 | Legacy ASR Repair | [main/src/legacy/asr-repair/README.md](../main/src/legacy/asr-repair/README.md) | 非 FW CTC 修复链 |
 | Legacy FW 回滚 | [main/src/legacy/fw-detector/README.md](../main/src/legacy/fw-detector/README.md) | P1.2b topK |
-| Lexicon V3 | [main/src/lexicon/README.md](../main/src/lexicon/README.md) | Canonical bundle / 窗召回 |
+| Lexicon V3 | [main/src/lexicon/README.md](../main/src/lexicon/README.md) | Legacy Recover 窗召回 |
+| Lexicon V2 / FW Runtime | [main/src/lexicon-v2/README.md](../main/src/lexicon-v2/README.md) | FW span recall（v3 bundle） |
+| Lexicon Patch V3.1 | [main/src/lexicon-patch-v3/README.md](../main/src/lexicon-patch-v3/README.md) | SQLite Patch Service |
 | Session | [main/src/session-runtime/README.md](../main/src/session-runtime/README.md) | Intent / Affinity |
 | 音频聚合 | [main/src/pipeline-orchestrator/README.md](../main/src/pipeline-orchestrator/README.md) | AudioAggregator |
 | 文本聚合 | [main/src/aggregator/README.md](../main/src/aggregator/README.md) | AggregatorMiddleware |
@@ -40,8 +42,9 @@
 
 | 类型 | 路径 |
 |------|------|
-| Lexicon V2 | [../docs/lexicon_v2/LEXICON_RUNTIME_V2.md](../docs/lexicon_v2/LEXICON_RUNTIME_V2.md) |
-| Lexicon V3 规范 | [../../docs/lexicon-v3/](../../docs/lexicon-v3/) |
+| Lexicon V3.1 SSOT | [../../docs/lexicon-v3/Lexicon_V3_1_Final_SSOT.md](../../docs/lexicon-v3/Lexicon_V3_1_Final_SSOT.md) |
+| Lexicon V2 详述 | [../docs/lexicon_v2/LEXICON_RUNTIME_V2.md](../docs/lexicon_v2/LEXICON_RUNTIME_V2.md) |
+| 词库脚本 | [../scripts/lexicon/README.md](../scripts/lexicon/README.md) |
 | 词库资产 | [../lexicon-assets/docs/](../lexicon-assets/docs/README.md) |
 | 常用命令 | [../../docs/CODING/常用命令](../../docs/CODING/常用命令) |
 | 脚本 | [../scripts/README.md](../scripts/README.md) |

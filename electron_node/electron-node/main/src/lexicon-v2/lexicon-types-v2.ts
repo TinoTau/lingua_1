@@ -5,23 +5,32 @@
 export const LEXICON_V2_SHADOW_SCHEMA_V1 = 'lexicon-v2-shadow-v1';
 export const LEXICON_V2_SHADOW_SCHEMA_VERSION = 'lexicon-v2-shadow-v2';
 
+/** V3 runtime 单 manifest（lexicon-v3-four-table-v1） */
+export const LEXICON_V3_RUNTIME_SCHEMA_VERSION = 'lexicon-v3-four-table-v1';
+
 export const LEXICON_V2_SUPPORTED_SCHEMA_VERSIONS = [
   LEXICON_V2_SHADOW_SCHEMA_V1,
   LEXICON_V2_SHADOW_SCHEMA_VERSION,
+  LEXICON_V3_RUNTIME_SCHEMA_VERSION,
 ] as const;
 
 export type LexiconRuntimeV2Status = 'ok' | 'missing' | 'disabled' | 'error';
 
 export type LexiconManifestV2 = {
   schemaVersion: string;
-  buildTime?: number;
+  buildTime?: number | string;
   bundle_tag?: string;
+  bundleTag?: string;
+  bundleVersion?: number;
   checksum: string;
   createdAt?: string;
   backend?: string;
   seed_path?: string;
   seed_inputs?: string[];
+  seedInputs?: string[];
   tables?: Record<string, unknown>;
+  lastPatchId?: string | null;
+  lastAppliedAt?: string | null;
   rejectedCount?: number;
   rejectStats?: Record<string, number>;
 };

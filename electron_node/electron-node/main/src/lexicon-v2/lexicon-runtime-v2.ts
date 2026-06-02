@@ -9,6 +9,7 @@ import { getLexiconRuntimeV2Config } from './lexicon-runtime-v2-config';
 import { LruBucketCache } from './lru-bucket-cache';
 import {
   LEXICON_V2_SHADOW_SCHEMA_VERSION,
+  LEXICON_V3_RUNTIME_SCHEMA_VERSION,
   LEXICON_V2_SUPPORTED_SCHEMA_VERSIONS,
   type IndustryRouteHit,
   type LexiconManifestV2,
@@ -62,7 +63,7 @@ function mapTierRows(rows: TierRow[], domainId?: string): HotwordEntry[] {
 function readManifestV2(manifestPath: string): LexiconManifestV2 {
   const parsed = JSON.parse(fs.readFileSync(manifestPath, 'utf-8')) as LexiconManifestV2;
   if (!parsed.checksum || !parsed.schemaVersion) {
-    throw new Error(`Invalid manifest_v2: ${manifestPath}`);
+    throw new Error(`Invalid manifest.json: ${manifestPath}`);
   }
   return parsed;
 }
@@ -76,7 +77,7 @@ function verifyV2Checksum(sqlitePath: string, manifest: LexiconManifestV2, check
   if (checksumPath && fs.existsSync(checksumPath)) {
     const fromFile = normalizeManifestChecksum(fs.readFileSync(checksumPath, 'utf-8'));
     if (fromFile && fromFile !== expected) {
-      throw new Error('Lexicon V2 checksum.txt does not match manifest_v2');
+      throw new Error('Lexicon checksum.txt does not match manifest.json');
     }
   }
 }
@@ -125,14 +126,9 @@ export class LexiconRuntimeV2 {
   }
 
   load(): LexiconRuntimeV2State {
-    this.close();
-    this.bucketCache.clear();
-    this.tierSqlQueries = 0;
-    this.tierCacheHits = 0;
-    this.tierCacheMisses = 0;
-
     const bundleDir = resolveLexiconV2BundleDir();
     if (!bundleDir) {
+      this.close();
       this.state = {
         status: 'missing',
         errorMessage: 'Lexicon V2 bundle directory not found',
@@ -140,10 +136,20 @@ export class LexiconRuntimeV2 {
       };
       return this.getState();
     }
+    return this.loadFromBundleDir(bundleDir);
+  }
+
+  /** Load readonly runtime from an explicit bundle directory (Patch E2E / smoke). */
+  loadFromBundleDir(bundleDir: string): LexiconRuntimeV2State {
+    this.close();
+    this.bucketCache.clear();
+    this.tierSqlQueries = 0;
+    this.tierCacheHits = 0;
+    this.tierCacheMisses = 0;
 
     const { manifestPath, sqlitePath, checksumPath } = lexiconV2BundleFileNames(bundleDir);
     if (!fs.existsSync(manifestPath) || !fs.existsSync(sqlitePath)) {
-      this.state = { status: 'missing', bundleDir, errorMessage: 'manifest_v2 or lexicon_v2.sqlite missing' };
+      this.state = { status: 'missing', bundleDir, errorMessage: 'manifest.json or lexicon.sqlite missing' };
       return this.getState();
     }
 
@@ -159,7 +165,9 @@ export class LexiconRuntimeV2 {
       this.db = new Database(sqlitePath, { readonly: true });
       this.manifest = manifest;
 
-      const hasToneColumn = manifest.schemaVersion === LEXICON_V2_SHADOW_SCHEMA_VERSION;
+      const hasToneColumn =
+        manifest.schemaVersion === LEXICON_V2_SHADOW_SCHEMA_VERSION ||
+        manifest.schemaVersion === LEXICON_V3_RUNTIME_SCHEMA_VERSION;
       const toneSelect = hasToneColumn ? 'tone_pinyin_key,' : '';
 
       this.stmtBase = this.db.prepare(

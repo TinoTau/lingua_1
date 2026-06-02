@@ -71,7 +71,7 @@ Legacy ASR repair 与 FW 共用部分基础设施。以代码为准：`main/src/
 | `npm run test:lexicon` | 单测 |
 
 Deploy seed：`data/lexicon/v3/lexicon_v3_5k_deploy.jsonl`。  
-导入约束：仓库 `docs/lexicon-v3/IMPORT_CONSTRAINTS.md`。
+导入约束：[`electron_node/lexicon-assets/docs/IMPORT_CONSTRAINTS.md`](../../../../electron_node/lexicon-assets/docs/IMPORT_CONSTRAINTS.md)。
 
 ---
 

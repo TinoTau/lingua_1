@@ -10,7 +10,8 @@
 
 | 项 | 说明 |
 |----|------|
-| Bundle | `node_runtime/lexicon/v2_shadow/lexicon_v2.sqlite` |
+| Bundle | **`node_runtime/lexicon/v3`**（`manifest.json` + `lexicon.sqlite`） |
+| Bootstrap 原料 | `node_runtime/lexicon/v2_shadow`（`lexicon:build:v2-shadow` → `lexicon:prepare:v3-runtime`） |
 | 配置 | `features.lexiconRuntimeV2`（`node-config-defaults.ts`） |
 | 入口 | `getLexiconRuntime()` → V2 SQLite 只读 |
 | Recall | `recallSpanTopK(spanText, topK, minPrior, enabledDomains)` |
@@ -59,9 +60,9 @@ Intent CPU 服务（可选）：`features.lexiconV2.cpuWorker` → `:5018` Qwen 
 
 | 命令 | 作用 |
 |------|------|
-| `npm run lexicon:build:v2-shadow` | Electron ABI 下构建 V2 shadow bundle |
-| `npm run lexicon:build:v2-shadow:raw` | 原始 Node 构建（CI / 预检） |
-| `npm run lexicon:build` | V3 canonical bundle（Recover 路径，非 FW 默认） |
+| `npm run lexicon:build:v2-shadow` | 离线构建 `v2_shadow`（bootstrap 输入） |
+| `npm run lexicon:prepare:v3-runtime` | 复制 shadow → **v3** runtime |
+| `npm run lexicon:gate:v3-runtime` | FW v3 bundle 门禁 |
 
 **环境：** 构建前需 `PROJECT_ROOT` 指向仓库根；Electron 运行前 bundle 须与 `better-sqlite3` ABI 一致。
 
@@ -90,7 +91,7 @@ Domain patch 行格式示例：
   "features": {
     "lexiconRuntimeV2": {
       "enabled": true,
-      "bundlePath": "node_runtime/lexicon/v2_shadow",
+      "bundlePath": "node_runtime/lexicon/v3",
       "lruBucketCacheSize": 512,
       "maxBaseCandidates": 2,
       "maxDomainCandidates": 3,
@@ -115,12 +116,12 @@ Domain patch 行格式示例：
 
 | 路径 | 词库 | Pipeline |
 |------|------|----------|
-| FW 主链（默认） | V2 shadow SQLite | `FW_SPAN_DETECTOR` + V2 recall |
+| FW 主链（默认） | **v3** SQLite（单 manifest） | `FW_SPAN_DETECTOR` + V2 recall |
 | Recover V5 | V3 canonical (`node_runtime/lexicon/current`) | `LEXICON_RECALL` + window n-best |
 
 二者互斥于同一 job；切换靠 `asr.engine` 与 `applyFwDetectorPipelineMode`。
 
-V3 规范（仓库级）：[docs/lexicon-v3/](../../../docs/lexicon-v3/README.md)
+V3.1 SSOT：[docs/lexicon-v3/Lexicon_V3_1_Final_SSOT.md](../../../docs/lexicon-v3/Lexicon_V3_1_Final_SSOT.md)
 
 ---
 

@@ -2,6 +2,8 @@
 
 Frozen rules applied by `import-v3-canonical-asset.mjs` + `validate-seed --strict`.
 
+> **Scope:** V1 `node_runtime/lexicon/current` — **not** FW v3 runtime Patch path.
+
 ## Seed → deploy sanitize
 
 | Rule | Constraint |
@@ -25,7 +27,8 @@ Frozen rules applied by `import-v3-canonical-asset.mjs` + `validate-seed --stric
 
 ## Provenance (strict)
 
-Required on every row after sanitize: `license`, `importBatch`, `normalizedBy`, `reviewStatus`.
+Required on every row after sanitize: `license`, `importBatch`, `normalizedBy`, `reviewStatus`.  
+Schema detail: [SOURCE_PROVENANCE_SCHEMA.md](./SOURCE_PROVENANCE_SCHEMA.md).
 
 ## Post-import
 
@@ -39,4 +42,5 @@ Required on every row after sanitize: `license`, `importBatch`, `normalizedBy`, 
 cd electron_node/electron-node
 npm run lexicon:import-v3-5k-assets
 npm run lexicon:rebuild-sqlite
+npm run lexicon:v3-gate
 ```

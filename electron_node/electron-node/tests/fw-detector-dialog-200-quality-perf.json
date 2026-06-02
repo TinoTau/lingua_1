@@ -1,16 +1,16 @@
 {
   "quality": {
-    "avg_cer_raw": 0.3602,
-    "avg_cer_final": 0.3576,
-    "median_cer_raw": 0.2632,
-    "median_cer_final": 0.2632,
+    "avg_cer_raw": 0.3619,
+    "avg_cer_final": 0.3617,
+    "median_cer_raw": 0.2667,
+    "median_cer_final": 0.2667,
     "p95_cer_raw": 0.88,
     "p95_cer_final": 0.88,
     "exact_match_raw": 22,
     "exact_match_final": 22,
-    "fw_improved_cases": 9,
+    "fw_improved_cases": 1,
     "fw_degraded_cases": 0,
-    "fw_unchanged_cer_cases": 191,
+    "fw_unchanged_cer_cases": 199,
     "worst_final_cer_top5": [
       {
         "id": "d045",
@@ -48,162 +48,48 @@
         "hyp": "請問 這雙鞋也有鞋子嗎?"
       }
     ],
-    "applied_cases_cer_delta_avg": 0.0583
+    "applied_cases_cer_delta_avg": 0.04
   },
   "perf": {
     "pipeline_ms": {
       "count": 200,
-      "avg": 2519,
-      "p50": 2232,
-      "p95": 4106,
-      "min": 1530,
-      "max": 7710,
-      "total_sec": 504
+      "avg": 4121,
+      "p50": 2725,
+      "p95": 10457,
+      "min": 1547,
+      "max": 14880,
+      "total_sec": 824
     },
     "asr_latency_ms": {
       "count": 200,
-      "avg": 894,
-      "p50": 869,
-      "p95": 1179,
-      "min": 359,
-      "max": 5898
+      "avg": 2161,
+      "p50": 996,
+      "p95": 6326,
+      "min": 379,
+      "max": 9467
     },
     "audio_ms": {
       "count": 200,
-      "avg": 3655,
+      "avg": 3638,
       "p50": 3900,
-      "p95": 5240
+      "p95": 4940
     },
-    "rtf_pipeline": 0.689,
-    "rtf_asr": 0.245
+    "rtf_pipeline": 1.133,
+    "rtf_asr": 0.594
   },
   "contract": {
-    "total": 200,
+    "evaluated": 200,
     "pass": 200,
     "fail": 0,
     "skip": 0,
+    "wall_clock_sec": 825,
     "pipeline_ok_rate": 1,
-    "fw_triggered_count": 200,
-    "fw_applied_case_count": 9,
-    "fw_applied_total": 10,
-    "fw_candidate_total": 49,
-    "text_changed_count": 9,
+    "fw_triggered_count": 39,
+    "fw_applied_case_count": 1,
+    "text_changed_count": 1,
+    "lexicon_runtime_ok_count": 200,
     "asr_service_id_distribution": {
       "faster-whisper-vad": 200
-    },
-    "lexicon_runtime_ok_count": 200,
-    "kenlm_approved_total": 49,
-    "kenlm_vetoed_total": 0,
-    "picked_topk_win_total": 0,
-    "candidate_sentence_total": 49,
-    "kenlm_query_total": 98,
-    "false_repair_count": 9,
-    "by_scenario": {
-      "cafe": {
-        "pass": 15,
-        "fail": 0,
-        "skip": 0,
-        "applied_cases": 9,
-        "triggered_cases": 15
-      },
-      "meeting": {
-        "pass": 15,
-        "fail": 0,
-        "skip": 0,
-        "applied_cases": 0,
-        "triggered_cases": 15
-      },
-      "taxi": {
-        "pass": 15,
-        "fail": 0,
-        "skip": 0,
-        "applied_cases": 0,
-        "triggered_cases": 15
-      },
-      "hospital": {
-        "pass": 15,
-        "fail": 0,
-        "skip": 0,
-        "applied_cases": 0,
-        "triggered_cases": 15
-      },
-      "shopping": {
-        "pass": 15,
-        "fail": 0,
-        "skip": 0,
-        "applied_cases": 0,
-        "triggered_cases": 15
-      },
-      "friend": {
-        "pass": 15,
-        "fail": 0,
-        "skip": 0,
-        "applied_cases": 0,
-        "triggered_cases": 15
-      },
-      "tech_deploy": {
-        "pass": 14,
-        "fail": 0,
-        "skip": 0,
-        "applied_cases": 0,
-        "triggered_cases": 14
-      },
-      "customer_service": {
-        "pass": 12,
-        "fail": 0,
-        "skip": 0,
-        "applied_cases": 0,
-        "triggered_cases": 12
-      },
-      "interview": {
-        "pass": 12,
-        "fail": 0,
-        "skip": 0,
-        "applied_cases": 0,
-        "triggered_cases": 12
-      },
-      "classroom": {
-        "pass": 12,
-        "fail": 0,
-        "skip": 0,
-        "applied_cases": 0,
-        "triggered_cases": 12
-      },
-      "hotel": {
-        "pass": 12,
-        "fail": 0,
-        "skip": 0,
-        "applied_cases": 0,
-        "triggered_cases": 12
-      },
-      "bank": {
-        "pass": 12,
-        "fail": 0,
-        "skip": 0,
-        "applied_cases": 0,
-        "triggered_cases": 12
-      },
-      "restaurant": {
-        "pass": 12,
-        "fail": 0,
-        "skip": 0,
-        "applied_cases": 0,
-        "triggered_cases": 12
-      },
-      "gym": {
-        "pass": 12,
-        "fail": 0,
-        "skip": 0,
-        "applied_cases": 0,
-        "triggered_cases": 12
-      },
-      "lexicon_homophone": {
-        "pass": 12,
-        "fail": 0,
-        "skip": 0,
-        "applied_cases": 0,
-        "triggered_cases": 12
-      }
     }
   }
 }

@@ -13,6 +13,8 @@ import { getTestServerPort, getLidConfig } from './node-config';
 import logger from './logger';
 import { handleSessionMigrationHttp } from './session-runtime/session-migration-http';
 import { buildIntentRuntimeDiagnosticsReport } from './lexicon-v2/intent-runtime-metrics';
+import { handleLexiconApplyPatchHttp } from './lexicon-patch-v3/apply-patch-http';
+import type { LexiconPatchV3 } from './lexicon-patch-v3/patch-types';
 
 let testServerInstance: http.Server | null = null;
 
@@ -50,6 +52,9 @@ export function startTestServer(managers: ServiceManagers): void {
       }
       return;
     }
+    const isLexiconPatchApply =
+      req.method === 'POST' &&
+      (path === '/lexicon/apply-patch' || path === '/lexicon/apply-patch/');
     const isLexiconMock =
       req.method === 'POST' && (path === '/run-lexicon-mock' || path === '/run-lexicon-mock/');
     const isSessionMigration =
@@ -70,6 +75,23 @@ export function startTestServer(managers: ServiceManagers): void {
         }
         res.writeHead(handled.status, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(handled.body));
+      });
+      return;
+    }
+    if (isLexiconPatchApply) {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', async () => {
+        try {
+          const patch = JSON.parse(body || '{}') as LexiconPatchV3;
+          const { status, body: responseBody } = await handleLexiconApplyPatchHttp(patch);
+          res.writeHead(status, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify(responseBody));
+        } catch (err) {
+          const message = err instanceof Error ? err.message : String(err);
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: false, errorCode: 'internal_error', message }));
+        }
       });
       return;
     }
@@ -269,7 +291,7 @@ export function startTestServer(managers: ServiceManagers): void {
   server.listen(port, '127.0.0.1', () => {
     logger.info({ port }, 'Test server listening');
     console.log(
-      `\n✅ Test server 已启动: http://127.0.0.1:${port}\n   POST /run-pipeline-with-audio\n   POST /run-lexicon-mock (text repair, no ASR)\n`
+      `\n✅ Test server 已启动: http://127.0.0.1:${port}\n   POST /run-pipeline-with-audio\n   POST /run-lexicon-mock (text repair, no ASR)\n   POST /lexicon/apply-patch (Lexicon V3.1 patch)\n`
     );
   });
   testServerInstance = server;

@@ -55,7 +55,7 @@ ASR → Metadata Span Gate → Lexicon V2 Recall → P4 Sentence Rerank
 ### 3.2 Recall（Lexicon Runtime V2）
 
 `lexicon/local-span-recall.ts` → `recallSpanTopKViaRuntimeV2` when双开关 true。  
-Bundle：`node_runtime/lexicon/v2_shadow`。详见 [`../../../../docs/lexicon_v2/LEXICON_RUNTIME_V2.md`](../../../../docs/lexicon_v2/LEXICON_RUNTIME_V2.md)。
+Bundle：`node_runtime/lexicon/v3`（P1 阶段 A，加载器仍为 `LexiconRuntimeV2`）。详见 [`../../../../docs/lexicon-v3/README.md`](../../../../docs/lexicon-v3/README.md)。
 
 ### 3.3 P4 Sentence Rerank（默认）
 

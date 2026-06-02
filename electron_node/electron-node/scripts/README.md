@@ -28,9 +28,8 @@
 
 | 脚本 | 说明 |
 |------|------|
-| `tests/run-fw-detector-dialog-200-batch.js` | FW dialog_200 契约批测（需节点 + 5020 test server） |
-| `tests/run-fw-detector-homophone-acceptance.js` | homophone 期望验收 |
-| `tests/run-fw-detector-false-repair-acceptance.js` | false_repair 门禁 |
+| `scripts/lexicon/` | 见 [scripts/lexicon/README.md](./lexicon/README.md) |
+| `tests/run-dialog200-timed-batch.mjs` | dialog_200 契约批测（需节点 + 5020） |
 | `tests/lib/fw-detector-contract-assess.js` | FW dialog_200 契约判定 |
 | `scripts/fw-detector-gate.mjs` | FW 主链静态门禁 |
 
