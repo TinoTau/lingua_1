@@ -6,8 +6,8 @@
 
 | 模块 | 路径 |
 |------|------|
-| **节点应用**（主链、聚合、配置） | [electron-node/docs/](../electron-node/docs/README.md) |
-| **主链 PIPELINE** | [electron-node/docs/PIPELINE.md](../electron-node/docs/PIPELINE.md) |
+| **节点应用**（架构、配置、排错） | [electron-node/docs/](../electron-node/docs/README.md) |
+| **Pipeline / FW 主链** | [electron-node/main/src/pipeline/README.md](../electron-node/main/src/pipeline/README.md) |
 | **Lexicon V2**（FW recall） | [lexicon_v2/](./lexicon_v2/README.md) |
 | **Lexicon mock / 资产** | [lexicon-assets/docs/](../lexicon-assets/docs/README.md) |
 | **词库 V3 冻结规范** | [docs/lexicon-v3/](../../docs/lexicon-v3/README.md) |

@@ -135,6 +135,9 @@ describe('ASR Step - 单容器架构', () => {
     await runAsrStep(job, ctx, mockServices);
 
     expect(ctx.asrText).toBe('first second');
+    expect(ctx.rawAsrText).toBe('first second');
+    expect(ctx.segmentForJobResult).toBe('first second');
+    expect(ctx.asrMergeProbeText).toBe('first second');
     expect(mockResultSender.sendJobResult).not.toHaveBeenCalled();
   });
 

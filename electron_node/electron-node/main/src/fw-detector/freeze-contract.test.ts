@@ -122,11 +122,11 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(fs.existsSync(path.join(SRC_ROOT, 'fw-detector/pinyin-probe.ts'))).toBe(false);
   });
 
-  it('rawAsrText 写点仅 asr-step 首段（静态）', () => {
+  it('rawAsrText 写点仅 asr-step 合并结果（静态）', () => {
     const asrStep = readSrc('pipeline/steps/asr-step.ts');
     const assignments = [...asrStep.matchAll(/ctx\.rawAsrText\s*(?<![=<>!])=(?!=)/g)];
     expect(assignments.length).toBe(1);
-    expect(asrStep).toContain('ctx.rawAsrText === undefined');
+    expect(asrStep).toContain('ctx.rawAsrText = mergedAsrText;');
   });
 
   it('segment 初始化不 fallback asrText', () => {

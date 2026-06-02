@@ -120,5 +120,7 @@ npm run package:win
 
 ## 相关文档
 
-- `../docs/electron_node/README.md`（主文档）
-- `docs/PLATFORM_READY_IMPLEMENTATION_SUMMARY.md`
+- [docs/README.md](docs/README.md) — 文档索引
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — 架构与子服务
+- [docs/CONFIGURATION.md](docs/CONFIGURATION.md) — 配置与依赖
+- [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) — 故障排查

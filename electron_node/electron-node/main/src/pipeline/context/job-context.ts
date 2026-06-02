@@ -24,8 +24,10 @@ export interface JobContext {
   audioFormat?: 'pcm16' | 'opus';
 
   // ASR ç¸å³
-  /** ASR é¦æ®µ freeze åæï¼FW åååºåï¼å¨ç¨ä¸å¯åï¼?*/
+  /** Full raw ASR baseline for business chain (FW/Recall/KenLM/NMT). */
   rawAsrText?: string;
+  /** Diagnostics only: mirrors merged ASR text for multi-segment probe. */
+  asrMergeProbeText?: string;
   asrText?: string;
   asrSegments?: any[];
   asrResult?: ASRResult;

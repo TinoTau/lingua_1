@@ -162,8 +162,6 @@ npx jest --testPathPattern="freeze-contract|freeze-config-ssot"
 node scripts/fw-detector-gate.mjs
 ```
 
-**FINAL FREEZE 结论（2026-06-01 只读审计）：** Architecture / Config / Runtime / Legacy / Rename — **PASS**；**READY FOR LONG-TERM MAINTENANCE: YES**。
-
 ---
 
 ## 10. Legacy 边界

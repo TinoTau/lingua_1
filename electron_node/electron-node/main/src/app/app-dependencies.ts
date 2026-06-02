@@ -35,7 +35,7 @@ export function checkDependenciesAndShowDialog(mainWindow: BrowserWindow | null)
             return `${dep.name}:\n  ${dep.message}\n  ${installGuide}`;
           })
           .join('\n\n') +
-        '\n\n详细安装指南请查看：electron_node/electron-node/docs/DEPENDENCY_INSTALLATION.md';
+        '\n\n详细说明请查看：electron_node/electron-node/docs/CONFIGURATION.md';
 
       // 显示错误对话框
       if (mainWindow) {
@@ -50,7 +50,7 @@ export function checkDependenciesAndShowDialog(mainWindow: BrowserWindow | null)
         }).then((result) => {
           if (result.response === 1) {
             // 打开文档（如果存在）
-            const docPath = path.join(__dirname, '../../docs/DEPENDENCY_INSTALLATION.md');
+            const docPath = path.join(__dirname, '../../docs/CONFIGURATION.md');
             shell.openPath(docPath).catch(() => {
               // 如果文件不存在，打开包含文档的目录
               shell.openPath(path.dirname(docPath));

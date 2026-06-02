@@ -65,8 +65,10 @@ const audioMs = evaluated
 
 const rawCers = [];
 const finalCers = [];
+const probeCers = [];
 let exactRaw = 0;
 let exactFinal = 0;
+let exactProbe = 0;
 let improved = 0;
 let degraded = 0;
 const worstFinal = [];
@@ -75,12 +77,16 @@ for (const c of evaluated) {
   const ref = refById[c.id] || '';
   const raw = (c.extra?.raw_asr_text || c.raw_asr_preview || '').trim();
   const fin = (c.extra?.text_asr || c.text_asr_preview || '').trim();
+  const probe = (c.extra?.asr_merge_probe_text || c.asr_merge_probe_preview || '').trim();
   const rc = cer(ref, raw);
   const fc = cer(ref, fin);
+  const pc = cer(ref, probe);
   rawCers.push(rc);
   finalCers.push(fc);
+  probeCers.push(pc);
   if (norm(raw) === norm(ref)) exactRaw += 1;
   if (norm(fin) === norm(ref)) exactFinal += 1;
+  if (norm(probe) === norm(ref)) exactProbe += 1;
   if (fc < rc - 1e-9) improved += 1;
   if (fc > rc + 1e-9) degraded += 1;
   if (fc > 0.15) {
@@ -95,12 +101,16 @@ const out = {
   quality: {
     avg_cer_raw: Number(avg(rawCers).toFixed(4)),
     avg_cer_final: Number(avg(finalCers).toFixed(4)),
+    avg_cer_probe: Number(avg(probeCers).toFixed(4)),
     median_cer_raw: Number(pct(rawCers, 50).toFixed(4)),
     median_cer_final: Number(pct(finalCers, 50).toFixed(4)),
+    median_cer_probe: Number(pct(probeCers, 50).toFixed(4)),
     p95_cer_raw: Number(pct(rawCers, 95).toFixed(4)),
     p95_cer_final: Number(pct(finalCers, 95).toFixed(4)),
+    p95_cer_probe: Number(pct(probeCers, 95).toFixed(4)),
     exact_match_raw: exactRaw,
     exact_match_final: exactFinal,
+    exact_match_probe: exactProbe,
     fw_improved_cases: improved,
     fw_degraded_cases: degraded,
     fw_unchanged_cer_cases: evaluated.length - improved - degraded,

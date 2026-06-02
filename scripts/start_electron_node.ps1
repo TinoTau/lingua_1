@@ -53,8 +53,8 @@ try {
         }
     }
 
-    # Check if main process is built
-    $mainBuildPath = Join-Path (Join-Path $electronNodePath "main") "index.js"
+    # Check if main process is built (must match package.json "main", not main/index.js stub)
+    $mainBuildPath = Join-Path $electronNodePath "dist\main\electron-node\main\src\index.js"
     if (-not (Test-Path $mainBuildPath)) {
         Write-Host "Main process not compiled, compiling..." -ForegroundColor Yellow
         npm run build:main

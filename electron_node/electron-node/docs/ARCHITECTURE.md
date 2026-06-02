@@ -1,57 +1,107 @@
-# 节点端架构说明
+# 节点端架构
 
-本文档描述 `electron-node` 的架构要点，以当前代码为准。详细实现见 `main/src/` 对应模块。
+以 `main/src/` 当前实现为准。模块细节见各目录 `README.md`。
 
-## 1. 整体划分
+## 1. 进程划分
 
-- **主进程**：`main/src/` — 窗口、NodeAgent、服务/模型管理、IPC
-- **渲染进程**：`renderer/src/` — React UI，通过 `window.electronAPI` 调用主进程
-- **共享协议**：`shared/protocols/messages.ts` — JobAssign、JobResult 等消息类型
+| 部分 | 路径 | 职责 |
+|------|------|------|
+| 主进程 | `main/src/` | 窗口、NodeAgent、服务/模型管理、Pipeline、IPC |
+| 渲染进程 | `renderer/src/` | React UI，`window.electronAPI` |
+| 协议 | `shared/protocols/messages.ts` | JobAssign、JobResult 等 |
 
-## 2. 服务发现与单例（Single Source of Truth）
+开发模式：Vite Dev Server（默认 5173，`VITE_PORT` 可改）+ `npm start` 启动 Electron。
 
-- **ServiceDiscovery** 扫描 `services/` 目录，读取各服务下的 `service.json`，构建 **ServiceRegistry**（Map）
-- **ServiceRegistrySingleton** 持有唯一 Registry 实例；`setServiceRegistry()` / `getServiceRegistry()` 供全局使用
-- **ServiceProcessRunner**、NodeAgent、IPC handlers 均从同一 Registry 读写，无重复数据源、无补丁式状态
-
-数据流概览：
+## 2. 服务发现与注册表（SSOT）
 
 ```
-ServiceDiscovery.scanServices() → ServiceRegistrySingleton → ServiceProcessRunner / IPC / UI
+ServiceDiscovery.scanServices() → ServiceRegistrySingleton
+  → ServiceProcessRunner / IPC / UI
 ```
 
-## 3. 节点能力上报（与调度器对接）
+- 扫描 `SERVICES_DIR`（或开发时向上查找含 `installed.json` 的 `services/`）
+- 各包 `service.json` 定义端口、启动命令、类型（asr/nmt/tts/…）
+- **无**重复 Registry、无补丁式并行状态源
 
-- 能力以**有向语言对**上报：`asr_languages`、`tts_languages`、`semantic_languages`（Semantic 为必需）
-- 调度端按 `(src, tgt)` 池化节点；节点端在必需服务就绪后才上报，能力变化时重连
-- 实现见 `main/src/agent/node-agent-*.ts`、`language-capability/`
+## 3. 能力与调度器
 
-## 4. 生命周期与启动
+- 上报有向语言对：`asr_languages`、`tts_languages`、`semantic_languages`（当前实现为各**已运行服务**语言交集）
+- 必需服务就绪后才注册/心跳；能力变化时重连
+- 实现：`agent/node-agent-*.ts`、`language-capability/`
+- 连接与池分配排错见 [TROUBLESHOOTING.md](./TROUBLESHOOTING.md#调度器连接)
 
-- 应用就绪后：加载配置 → 初始化 ServiceRegistry（扫描 services）→ 注册 IPC → 启动 NodeAgent（连接 Scheduler）
-- 服务启停通过 **ServiceProcessRunner** 执行，状态写回 Registry，UI 与 IPC 仅消费 Registry
-- 开发模式：主进程依赖 Vite Dev Server（默认 5173），可通过 `VITE_PORT` 覆盖
+## 4. Job 处理主路径
 
-## 5. 配置与路径
+```
+Scheduler JobAssign
+  → InferenceService / Pipeline (runJobPipeline)
+  → [AggregatorMiddleware]（文本聚合，NodeAgent 侧）
+  → JobResult 上报
+```
 
-- **配置**：`electron-node-config.json`（userData）或环境变量；优先级：配置文件 > 环境变量 > 默认值
-- **服务目录**：`SERVICES_DIR` 或开发时向上查找含 `services/installed.json` 的 `services/`，生产默认 `userData/services`
-- **模型目录**：默认 `userData/models`，可由 `USER_DATA` 覆盖
-- **日志**：主进程 `logs/electron-main.log`（见 `main/src/logger.ts`）
+### 4.1 Pipeline（默认 FW）
 
-## 6. Aggregator（聚合中间件）
+```
+Audio → AudioAggregator → ASR (faster_whisper_vad)
+  → rawAsrText freeze → FW_SPAN_DETECTOR → AGGREGATION
+  → [5015/5016/5017 默认 OFF] → DEDUP → NMT → TTS
+  → buildJobResult (text_asr ← segmentForJobResult)
+```
 
-- 位于 **NodeAgent** 与 **JobResult** 发送之间：`InferenceService.processJob()` 产出结果后，经 **AggregatorMiddleware** 处理再发送
-- 功能：ASR 文本聚合、去重、边界重建（Text Incompleteness + Language Gate 等）
-- 实现：`main/src/agent/aggregator-middleware.ts`、`main/src/aggregator/`
-- 详细设计见 [`main/src/aggregator/README.md`](../main/src/aggregator/README.md)
+- 引擎默认：`asr.engine = fw_detector_v1`
+- 文本 SSOT：`ctx.segmentForJobResult`（见 `pipeline/README.md`）
+- HTTP 路由（ASR/TTS/NMT/增强）：`task-router/`
 
-## 7. GPU 与推理服务
+### 4.2 文本聚合（Aggregator）
 
-- **Rust 推理服务**（node-inference）：主进程通过子进程/HTTP 调用；端口、模型路径等见配置与 `main/src/inference/`
-- **GPU**：由 gpu-arbiter 等模块管理占用与分配；语义修复/TTS 等 Python 服务可单独配置 CUDA/workers
-- 各子服务（NMT、TTS、VAD、语义修复等）见 `electron_node/services/` 下各自文档
+- 位置：Pipeline 结果 → **AggregatorMiddleware** → 发送
+- 功能：去重、边界、Text Incompleteness、Language Gate
+- 实现：`aggregator/`、`agent/aggregator-middleware.ts`
+- Pipeline 内还有 `aggregation-step.ts`（turn 合并写 `segmentForJobResult`）
 
----
+## 5. GPU 仲裁
 
-*文档合并自原 `docs/architecture` 与 `docs/electron_node` 中与当前代码一致的部分；若与代码冲突以代码为准。*
+- **ASR / NMT / TTS**：经 `gpu-arbiter` 租约后调用（日志：`GPU lease acquired`）
+- **语义修复 5015**：独立 Python 服务内用 GPU，节点仅 HTTP，**不经**仲裁器
+- **同音纠错 5016**：KenLM CPU，无 GPU
+- 验证步骤见 [TROUBLESHOOTING.md](./TROUBLESHOOTING.md#gpu-使用验证)
+
+## 6. 本地子服务（`electron_node/services/`）
+
+端口以各目录 **`service.json`** 为准（勿硬编码旧文档端口）。
+
+| 服务 ID | 目录 | 类型 | 说明 |
+|---------|------|------|------|
+| faster-whisper-vad | `faster_whisper_vad/` | asr | 主链 ASR + VAD |
+| nmt_m2m100 | `nmt_m2m100/` | nmt | M2M100 翻译 |
+| piper_tts | `piper_tts/` | tts | Piper 合成 |
+| your_tts | `your_tts/` | tts | 零样本克隆（可选） |
+| semantic_repair_en_zh | `semantic_repair_en_zh/` | semantic | 5015 语义修复 |
+| phonetic_correction_zh | `phonetic_correction_zh/` | — | 5016 同音纠错 |
+| punctuation_restore | `punctuation_restore/` | — | 5017 标点 |
+| lexicon_intent_cpu | `lexicon_intent_cpu/` | — | 5018 Intent CPU |
+| speaker_embedding | `speaker_embedding/` | — | 说话人嵌入 |
+| node-inference | `node-inference/` | — | Rust 网关（可选，见 servicePreferences） |
+| asr_sherpa_en / asr_sherpa_lm | 各自目录 | asr | 备用 ASR，非 FW 默认链 |
+
+各服务 README、`docs/` 在**服务目录内**维护。
+
+## 7. 路径与日志
+
+| 项 | 默认 |
+|----|------|
+| 节点配置 | `%APPDATA%/lingua-electron-node/electron-node-config.json` |
+| 服务目录 | `SERVICES_DIR` 或 userData `services/` |
+| 模型 | userData `models/`（`USER_DATA` 可覆盖根） |
+| 主进程日志 | `<cwd>/logs/electron-main.log` |
+
+## 8. 源码导航
+
+| 区域 | 入口 |
+|------|------|
+| 应用启动 | `main/src/index.ts`、`app/` |
+| NodeAgent | `main/src/agent/node-agent.ts` |
+| Pipeline | `main/src/pipeline/job-pipeline.ts` |
+| FW | `main/src/fw-detector/fw-detector-orchestrator.ts` |
+| 配置默认值 | `main/src/node-config-defaults.ts` |
+| IPC | `main/src/index-ipc.ts`、`ipc-handlers/` |

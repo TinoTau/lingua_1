@@ -6,7 +6,7 @@ Electron 节点客户端是 Lingua 系统的算力提供方，核心由 **Electr
 
 - **模块文档索引**：`docs/README.md`
 - **节点应用（FW / Recover / Lexicon）**：`electron-node/docs/README.md`
-- **FW 默认主链**：`electron-node/docs/PIPELINE.md`
+- **FW 默认主链**：`electron-node/main/src/pipeline/README.md`
 - **Electron 应用工程**：`electron-node/README.md`
 
 > 说明：本 README 只做导航与总览；每个具体 service 的说明请直接看 `services/` 下对应目录（本文不展开）。

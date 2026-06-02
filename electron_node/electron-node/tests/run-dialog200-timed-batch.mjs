@@ -86,6 +86,7 @@ function contractRow(caseDef, data) {
   const fw = extra.fw_detector || {};
   const text = (data.text_asr || '').trim();
   const raw = (extra.raw_asr_text || '').trim();
+  const mergeProbe = (extra.asr_merge_probe_text || '').trim();
   const contract = assessFwDetectorContractPass(extra, data);
   const spans = fw.spans || [];
   const applied = spans.filter((s) => s.applied === true);
@@ -97,6 +98,7 @@ function contractRow(caseDef, data) {
     contract_failures: contract.failures,
     text_asr_preview: text.slice(0, 120),
     raw_asr_preview: raw.slice(0, 120),
+    asr_merge_probe_preview: mergeProbe.slice(0, 120),
     text_changed: raw.length > 0 && text !== raw,
     asr_service_id: extra.asr_service_id,
     fw_triggered: fw.triggered === true,

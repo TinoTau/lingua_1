@@ -19,6 +19,7 @@ export function buildCoreResultExtra(job: JobAssignMessage, ctx: JobContext): Re
     router: ctx.routerMeta || undefined,
     ...(ctx.asrServiceId ? { asr_service_id: ctx.asrServiceId } : {}),
     ...(ctx.rawAsrText ? { raw_asr_text: ctx.rawAsrText } : {}),
+    ...(ctx.asrMergeProbeText ? { asr_merge_probe_text: ctx.asrMergeProbeText } : {}),
     ...(ctx.asrDiagnostics ? { asr_diagnostics: ctx.asrDiagnostics } : {}),
     ...(ctx.fwDetectorStepMs != null ? { fw_detector_step_ms: ctx.fwDetectorStepMs } : {}),
     ...(ctx.fwDetectorResult ? { fw_detector: ctx.fwDetectorResult } : {}),

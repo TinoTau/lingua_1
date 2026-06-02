@@ -50,7 +50,7 @@ Seed：`data/lexicon/10k/`、`confusions.jsonl`、`hotwords.jsonl`。详见 [../
 ### Seed 约束（摘要）
 
 - `priorScore` ∈ (0, 1]；`domains` 须在 profile-registry
-- `repair_target` / `anchor` 标注影响 FW Detector（见 [PIPELINE.md](../electron-node/docs/PIPELINE.md)）
+- `repair_target` / `anchor` 标注影响 FW Detector（见 [pipeline/README.md](../electron-node/main/src/pipeline/README.md)）
 - Production **canonical-only**；无 confusion 进候选链
 
 ## 相关

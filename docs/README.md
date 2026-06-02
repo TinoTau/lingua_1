@@ -28,7 +28,7 @@
 
 ## 快速开始
 
-- **节点端主链：** [electron_node/electron-node/docs/PIPELINE.md](../electron_node/electron-node/docs/PIPELINE.md)
+- **节点端主链：** [electron_node/electron-node/main/src/pipeline/README.md](../electron_node/electron-node/main/src/pipeline/README.md)
 - **Web 客户端：** `webapp/docs/README.md`
 - **调度服务器：** `central_server/docs/README.md`
 
@@ -39,7 +39,7 @@ lingua_1/
 ├── central_server/docs/
 ├── electron_node/
 │   ├── docs/              # 模块级（lexicon_v2、lexicon-assets）
-│   └── electron-node/docs/  # 节点应用（PIPELINE、配置、聚合）
+│   └── electron-node/docs/  # 节点应用（架构、配置、排错）
 ├── webapp/docs/
 └── docs/                  # 本目录：规范、决策、环境、排查
 ```

@@ -248,9 +248,6 @@ export async function runAsrStep(
       // 单一路径：所有 segment 结果写入当前 job 的 ctx，只跑一次后续步骤
       if (i === 0) {
         ctx.asrText = asrResult.text;
-        if (ctx.rawAsrText === undefined) {
-          ctx.rawAsrText = asrResult.text ?? '';
-        }
         ctx.asrResult = asrResult;
         ctx.asrServiceId = asrResult.routedServiceId;
         if (!isFwDetectorEngineEnabled()) {
@@ -349,6 +346,13 @@ export async function runAsrStep(
       throw err;
     }
   }
+
+  const mergedAsrText = (ctx.asrText ?? '').trim();
+  ctx.asrText = mergedAsrText;
+  // Business raw baseline must be full merged ASR text.
+  ctx.rawAsrText = mergedAsrText;
+  // Diagnostics only, must not be used by business chain.
+  ctx.asrMergeProbeText = mergedAsrText;
 
   if (isFwDetectorEngineEnabled()) {
     ctx.segmentForJobResult = (ctx.rawAsrText ?? '').trim();

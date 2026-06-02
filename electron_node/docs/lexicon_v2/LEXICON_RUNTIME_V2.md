@@ -2,7 +2,7 @@
 
 **Scope:** FW 主链 span recall（`useLexiconRuntimeV2Recall`）。  
 **代码：** `electron-node/main/src/lexicon-v2/`、`lexicon/local-span-recall.ts`  
-**冻结：** 见 [../../electron-node/docs/FW_MAINLINE_FREEZE.md](../../electron-node/docs/FW_MAINLINE_FREEZE.md)
+**冻结：** 见 [../../electron-node/main/src/fw-detector/README.md](../../electron-node/main/src/fw-detector/README.md)
 
 ---
 

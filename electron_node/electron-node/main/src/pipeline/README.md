@@ -142,3 +142,4 @@ node scripts/fw-detector-gate.mjs
 | Legacy ASR repair | [`../legacy/asr-repair/README.md`](../legacy/asr-repair/README.md) |
 | 音频聚合 | [`../pipeline-orchestrator/README.md`](../pipeline-orchestrator/README.md) |
 | 节点配置 | [`../../../docs/CONFIGURATION.md`](../../../docs/CONFIGURATION.md) |
+| Task Router | [`../task-router/README.md`](../task-router/README.md) |

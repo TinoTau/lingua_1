@@ -20,6 +20,13 @@ node_runtime/lexicon/v3  →  lexicon.sqlite  →  manifest.json / stats.json / 
 | 主题 | 文档位置 |
 |------|----------|
 | **架构 SSOT** | 本目录 [Lexicon_V3_1_Final_SSOT.md](./Lexicon_V3_1_Final_SSOT.md) |
+| **FW/ASR 质量审计综合报告（入口）** | [FW_ASR_Quality_Audit_Report_2026_06_02.md](./FW_ASR_Quality_Audit_Report_2026_06_02.md) |
+| **FW 质量审计（文本链修复后基线，2026-06-02）** | [FW_Quality_Audit_Post_Chain_Fix_2026_06_02.md](./FW_Quality_Audit_Post_Chain_Fix_2026_06_02.md) |
+| **FW word 边界 / word_timestamps 审计（2026-06-02）** | [FW_Word_Boundary_Audit_2026_06_02.md](./FW_Word_Boundary_Audit_2026_06_02.md) |
+| **FW Decoder 内部信息 / 多候选能力审计（2026-06-02）** | [FW_Decoder_Capability_Audit_2026_06_02.md](./FW_Decoder_Capability_Audit_2026_06_02.md) |
+| FW 全链质量（只读） | [FW_Quality_Pipeline_Audit_2026_06_02.md](./FW_Quality_Pipeline_Audit_2026_06_02.md) |
+| FW Detector 漏检专项 | [FW_Detector_Metadata_Gate_Audit_2026_06_02.md](./FW_Detector_Metadata_Gate_Audit_2026_06_02.md) |
+| FW 截断问题专项 | [FW_Truncation_Pipeline_Audit_2026_06_02.md](./FW_Truncation_Pipeline_Audit_2026_06_02.md) |
 | FW Runtime 加载 / Recall | [electron_node/docs/lexicon_v2/LEXICON_RUNTIME_V2.md](../../electron_node/docs/lexicon_v2/LEXICON_RUNTIME_V2.md) |
 | Patch Service 实现 | [electron_node/electron-node/main/src/lexicon-patch-v3/README.md](../../electron_node/electron-node/main/src/lexicon-patch-v3/README.md) |
 | Legacy Recover 窗召回 | [electron_node/electron-node/main/src/lexicon/README.md](../../electron_node/electron-node/main/src/lexicon/README.md) |
