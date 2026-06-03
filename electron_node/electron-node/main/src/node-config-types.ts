@@ -198,6 +198,22 @@ export interface NodeConfig {
       maxSentenceCandidates?: number;
       minDeltaToReplace?: number;
     };
+    /** Pinyin IME V2 — span proposal (Phase 2+; orchestrator wired in Phase 3). */
+    pinyinImeV2?: {
+      enabled?: boolean;
+      topK?: number;
+      maxApprovedSpans?: number;
+      minSupportCount?: number;
+      minSpanChars?: number;
+      maxSpanChars?: number;
+      minSyllables?: number;
+      maxSyllables?: number;
+      /** Must remain false — IME never direct-repairs text. */
+      directRepair?: false;
+      replaceLegacyDetector?: boolean;
+      dictDir?: string;
+      enabledDomains?: string[];
+    };
   };
   gpuArbiter?: {
     enabled?: boolean;

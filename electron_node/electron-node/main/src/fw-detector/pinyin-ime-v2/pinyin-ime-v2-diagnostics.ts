@@ -1,0 +1,35 @@
+import type { PinyinImeV2ProposalDiagnostics } from './pinyin-ime-v2-types';
+
+export function emptyProposalDiagnostics(): PinyinImeV2ProposalDiagnostics {
+  return {
+    decode: {
+      singleCharUsedCount: 0,
+      functionSingleCharUsedCount: 0,
+      contentFallbackUsedCount: 0,
+      fallbackTriggeredCount: 0,
+      beamBreakRecoveredCount: 0,
+      decodeMs: 0,
+      tokenPathAvailableCount: 0,
+      candidateTokenCount: 0,
+      collapsedPathByTextCount: 0,
+    },
+    candidateCount: 0,
+    diffSpanCount: 0,
+    instabilityRegionCount: 0,
+    boundaryAdjustedCount: 0,
+    alignFailedCount: 0,
+    rawBoundaryCount: 0,
+    normalizedCharCount: 0,
+    traditionalCharCount: 0,
+    openccConvertedCount: 0,
+    boundaryAlignmentScores: [],
+    rawBoundaryMatchedTopKCount: 0,
+    boundaryCompatibilityScoreMax: 0,
+    boundaryCompatibilityScoreAvg: 0,
+    trustedTopKCount: 0,
+    boundaryCompatibleTopKSpanCount: 0,
+    diffZeroBoundaryPositive: 0,
+    tokenSourceConflictDiagnosticCount: 0,
+    normalizedTextDiffDiagnosticCount: 0,
+  };
+}

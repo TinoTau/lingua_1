@@ -8,31 +8,21 @@
     "maxIdiomCandidates": 0,
     "recallDiagnosticsEnabled": true
   },
+  "pinyinImeV2": {
+    "enabled": true,
+    "topK": 5,
+    "maxApprovedSpans": 4,
+    "minSupportCount": 2,
+    "directRepair": false,
+    "dictDir": "node_runtime/pinyin-ime-v2/dict"
+  },
   "fwDetector": {
     "enabled": true,
-    "spanGateMode": "fw_metadata_gate",
-    "useLexiconRuntimeV2Recall": true,
     "useIndustryRouting": false,
-    "useSentenceLevelRerank": true,
     "enableKenLMGate": true,
     "maxSentenceCandidates": 16,
     "minDeltaToReplace": 0.03,
     "minPrior": 0.5,
-    "recallMinPhoneticScore": 0.5,
-    "candidateRequireRepairTarget": true,
-    "kenlmSpanGate": {
-      "enabled": false
-    },
-    "fwMetadataSpanGate": {
-      "enabled": true,
-      "maxSpans": 4,
-      "minSpanChars": 2,
-      "maxSpanChars": 4,
-      "wordProbabilityThreshold": 0.65,
-      "segmentAvgLogprobThreshold": -1.0,
-      "allowAliasExactHit": true,
-      "allowSegmentFallbackScan": true,
-      "fallbackLegacyMaxSpans": 1
-    }
+    "candidateRequireRepairTarget": true
   }
 }

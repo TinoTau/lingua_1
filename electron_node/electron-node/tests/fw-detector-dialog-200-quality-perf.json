@@ -1,27 +1,27 @@
 {
   "quality": {
-    "avg_cer_raw": 0.2496,
-    "avg_cer_final": 0.2496,
-    "avg_cer_probe": 0.2496,
-    "median_cer_raw": 0.2143,
-    "median_cer_final": 0.2143,
-    "median_cer_probe": 0.2143,
-    "p95_cer_raw": 0.6,
-    "p95_cer_final": 0.6,
-    "p95_cer_probe": 0.6,
-    "exact_match_raw": 7,
-    "exact_match_final": 7,
-    "exact_match_probe": 7,
+    "avg_cer_raw": 0.2385,
+    "avg_cer_final": 0.2385,
+    "avg_cer_probe": 0.2385,
+    "median_cer_raw": 0.2105,
+    "median_cer_final": 0.2105,
+    "median_cer_probe": 0.2105,
+    "p95_cer_raw": 0.55,
+    "p95_cer_final": 0.55,
+    "p95_cer_probe": 0.55,
+    "exact_match_raw": 13,
+    "exact_match_final": 13,
+    "exact_match_probe": 13,
     "fw_improved_cases": 0,
     "fw_degraded_cases": 0,
-    "fw_unchanged_cer_cases": 69,
+    "fw_unchanged_cer_cases": 141,
     "worst_final_cer_top5": [
       {
-        "id": "d067",
-        "scenario": "customer_service",
-        "cer": 1,
-        "ref": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
-        "hyp": ""
+        "id": "d110",
+        "scenario": "tech_deploy",
+        "cer": 0.8333333333333334,
+        "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "hyp": "這次發布我們現對此發布的新聞 起商線計劃窗口後選生 乘魔快需要連掉別漏掉回歸"
       },
       {
         "id": "d045",
@@ -29,6 +29,13 @@
         "cer": 0.8,
         "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
         "hyp": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說"
+      },
+      {
+        "id": "d088",
+        "scenario": "lexicon_homophone",
+        "cer": 0.68,
+        "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "hyp": "我們下午討論後,選生成功 等方安縣把候選生陳的截口文當補齊"
       },
       {
         "id": "d065",
@@ -43,58 +50,50 @@
         "cer": 0.6,
         "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
         "hyp": "我們下午討論後 選生成方安線吧,後選生成的接口文當補期。"
-      },
-      {
-        "id": "d010",
-        "scenario": "hospital",
-        "cer": 0.55,
-        "ref": "医生您好，我这两天头痛，想开点药并做个血常规。",
-        "hyp": "醫生您好,我這兩天頭痛想開點,要並做個歇常規"
       }
     ],
     "applied_cases_cer_delta_avg": 0
   },
   "perf": {
     "pipeline_ms": {
-      "count": 68,
-      "avg": 12831,
-      "p50": 10523,
-      "p95": 18772,
-      "min": 5996,
-      "max": 32743,
-      "total_sec": 873
+      "count": 141,
+      "avg": 6406,
+      "p50": 5503,
+      "p95": 10689,
+      "min": 2148,
+      "max": 24328,
+      "total_sec": 903
     },
     "asr_latency_ms": {
-      "count": 68,
-      "avg": 6786,
-      "p50": 6555,
-      "p95": 8775,
-      "min": 3062,
-      "max": 21704
+      "count": 141,
+      "avg": 2847,
+      "p50": 2839,
+      "p95": 4150,
+      "min": 498,
+      "max": 18485
     },
     "audio_ms": {
-      "count": 68,
-      "avg": 3631,
-      "p50": 3880,
-      "p95": 4900
+      "count": 141,
+      "avg": 3520,
+      "p50": 3800,
+      "p95": 4860
     },
-    "rtf_pipeline": 3.534,
-    "rtf_asr": 1.869
+    "rtf_pipeline": 1.82,
+    "rtf_asr": 0.809
   },
   "contract": {
-    "evaluated": 69,
-    "pass": 68,
-    "fail": 1,
+    "evaluated": 141,
+    "pass": 141,
+    "fail": 0,
     "skip": 0,
-    "wall_clock_sec": 903,
-    "pipeline_ok_rate": 0.9855072463768116,
-    "fw_triggered_count": 17,
+    "wall_clock_sec": 904,
+    "pipeline_ok_rate": 1,
+    "fw_triggered_count": 7,
     "fw_applied_case_count": 0,
     "text_changed_count": 0,
-    "lexicon_runtime_ok_count": 68,
+    "lexicon_runtime_ok_count": 141,
     "asr_service_id_distribution": {
-      "faster-whisper-vad": 68,
-      "unknown": 1
+      "faster-whisper-vad": 141
     }
   }
 }

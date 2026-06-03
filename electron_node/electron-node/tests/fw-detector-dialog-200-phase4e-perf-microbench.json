@@ -1,0 +1,123 @@
+{
+  "dictRows": 72217,
+  "benchCases": 89,
+  "cjkDecodeCases": 89,
+  "stageTimingsMs": {
+    "normalizeForImeAlignment": {
+      "n": 89,
+      "avg": 0.151,
+      "p50": 0.031,
+      "p95": 0.087,
+      "p99": 9.054,
+      "max": 9.054
+    },
+    "openccOnly": {
+      "n": 89,
+      "avg": 0.022,
+      "p50": 0.015,
+      "p95": 0.074,
+      "p99": 0.1,
+      "max": 0.1
+    },
+    "extractRawCoarseBoundaries": {
+      "n": 89,
+      "avg": 0.163,
+      "p50": 0.096,
+      "p95": 0.32,
+      "p99": 3.022,
+      "max": 3.022
+    },
+    "textToPinyinStream": {
+      "n": 89,
+      "avg": 0.055,
+      "p50": 0.04,
+      "p95": 0.156,
+      "p99": 0.318,
+      "max": 0.318
+    },
+    "decodeRawTextTopK": {
+      "n": 89,
+      "avg": 6.037,
+      "p50": 4.957,
+      "p95": 12.359,
+      "p99": 29.101,
+      "max": 29.101
+    },
+    "boundaryAlignment": {
+      "n": 89,
+      "avg": 0.041,
+      "p50": 0.028,
+      "p95": 0.086,
+      "p99": 0.624,
+      "max": 0.624
+    },
+    "boundaryCompatibleTopKDiff": {
+      "n": 89,
+      "avg": 0.22,
+      "p50": 0.193,
+      "p95": 0.432,
+      "p99": 1.708,
+      "max": 1.708
+    },
+    "diffSpans": {
+      "n": 89,
+      "avg": 0.115,
+      "p50": 0.076,
+      "p95": 0.216,
+      "p99": 2.218,
+      "max": 2.218
+    },
+    "hintGatePrep": {
+      "n": 89,
+      "avg": 0.041,
+      "p50": 0.024,
+      "p95": 0.092,
+      "p99": 0.464,
+      "max": 0.464
+    },
+    "spanProposalTotal": {
+      "n": 89,
+      "avg": 6.213,
+      "p50": 5.262,
+      "p95": 14.518,
+      "p99": 28.367,
+      "max": 28.367
+    }
+  },
+  "imeStackEstimateMs": {
+    "sumAvgStages": 6.783,
+    "spanProposalTotalAvg": 6.213,
+    "decodeOnlyAvg": 6.037
+  },
+  "decoderComplexity": {
+    "avgSyllableCount": 22.42,
+    "p50SyllableCount": 21,
+    "maxSyllableCount": 38,
+    "avgTopK": 4.33,
+    "maxTopK": 5,
+    "avgTokenCount": 61.63,
+    "maxTokenCount": 120,
+    "beamWidthCap": 48,
+    "theoreticalBeamStatesPerStep": "<= 48",
+    "decodeComplexity": "O(S * B * D) S=syllables B<=48 D=byFirst[syllable]"
+  },
+  "boundaryComplexity": {
+    "avgRawBoundaryCount": 4.3,
+    "avgAlignmentScores": 4.33,
+    "avgBoundarySpans": 2.13,
+    "alignComplexity": "O(topK * (|rawSplits| + |tokenSplits|))",
+    "topkDiffComplexity": "O(|intervals| * trustedTopK) intervals<=unique token syllable ranges"
+  },
+  "memoryEstimate": {
+    "tokensPerRequestBytes": 4930,
+    "boundaryAlignmentScoresBytes": 240,
+    "diagnosticsOverheadBytes": 512,
+    "proposalTotalBytesEstimate": 5682
+  },
+  "scaleProjection": {
+    "note": "Dict lookup is byFirst syllable index; rows scale weakly if byFirst density constant",
+    "dict10x": "decode ~1.0-1.2x if byFirst lists grow proportionally; worst case ~10x if all syllables map huge lists",
+    "dict50x": "same structure; dominated by beam 48 cap not row count",
+    "dict100x": "load time + RAM for dict maps; per-request decode still O(S*B*D_first)"
+  }
+}

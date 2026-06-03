@@ -1,0 +1,286 @@
+{
+  "batch": {
+    "timestamp": "2026-06-03T10:58:30.969Z",
+    "evaluated": 110,
+    "stoppedReason": "deadline",
+    "wall_clock_sec": 901,
+    "scope": "Phase 4B.1 OpenCC alignment normalization"
+  },
+  "quality": {
+    "avg_cer_raw": 0.2457,
+    "avg_cer_final": 0.2457,
+    "median_cer_final": 0.2143,
+    "p95_cer_final": 0.5625,
+    "exact_match_final": 10,
+    "fw_improved_cases": 0,
+    "fw_degraded_cases": 0,
+    "worst_final_cer_top5": [
+      {
+        "id": "d110",
+        "scenario": "tech_deploy",
+        "cer": 0.8333333333333334,
+        "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "hyp": "這次發布我們現對此發布的新聞 起商線計劃窗口後選生 乘魔快需要連掉別漏掉回歸"
+      },
+      {
+        "id": "d045",
+        "scenario": "lexicon_homophone",
+        "cer": 0.8,
+        "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+        "hyp": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說"
+      },
+      {
+        "id": "d088",
+        "scenario": "lexicon_homophone",
+        "cer": 0.68,
+        "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "hyp": "我們下午討論後,選生成功 等方安縣把候選生陳的截口文當補齊"
+      },
+      {
+        "id": "d065",
+        "scenario": "tech_deploy",
+        "cer": 0.6666666666666666,
+        "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "hyp": "這次發布我們現對期 在其商線計劃窗口後選生 成模快需要連掉別漏掉回歸"
+      },
+      {
+        "id": "d043",
+        "scenario": "lexicon_homophone",
+        "cer": 0.6,
+        "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "hyp": "我們下午討論後 選生成方安線吧,後選生成的接口文當補期。"
+      }
+    ]
+  },
+  "perf": {
+    "pipeline_ms": {
+      "avg": 8187,
+      "p50": 7196,
+      "p95": 13071,
+      "min": 2733,
+      "max": 36682
+    },
+    "asr_latency_ms": {
+      "avg": 4240,
+      "p50": 4129,
+      "p95": 5887
+    },
+    "audio_ms": {
+      "avg": 3584,
+      "p50": 3920
+    },
+    "rtf_pipeline": 2.284,
+    "rtf_asr": 1.183
+  },
+  "contract": {
+    "evaluated": 110,
+    "pass": 110,
+    "fail": 0,
+    "skip": 0,
+    "wall_clock_sec": 901,
+    "pipeline_ok_rate": 1,
+    "fw_triggered_count": 5,
+    "fw_applied_case_count": 0,
+    "text_changed_count": 0,
+    "lexicon_runtime_ok_count": 110,
+    "asr_service_id_distribution": {
+      "faster-whisper-vad": 110
+    }
+  },
+  "opencc": {
+    "cases_with_conversion": 38,
+    "total_converted_chars": 262,
+    "avg_converted_per_case": 6.89
+  },
+  "ime": {
+    "cases_with_candidates": 93,
+    "cases_with_approved_spans": 5,
+    "candidate_but_diff_span_zero": 77,
+    "decode_ms": {
+      "avg": 7,
+      "p50": 6,
+      "p95": 17,
+      "max": 34
+    },
+    "fw_step_ms": {
+      "avg": 99,
+      "p50": 7,
+      "p95": 766,
+      "max": 2373
+    }
+  },
+  "runtime": {
+    "bundle_dir": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v3",
+    "manifest_version": "lexicon-v3-four-table-v1",
+    "lexicon_rows": 72217
+  },
+  "samples": {
+    "opencc_heavy": [
+      {
+        "id": "d045",
+        "scenario": "lexicon_homophone",
+        "traditionalCharCount": 16,
+        "openccConvertedCount": 16,
+        "diffSpanCount": 0,
+        "candidateCount": 0,
+        "hyp": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說"
+      },
+      {
+        "id": "d109",
+        "scenario": "tech_deploy",
+        "traditionalCharCount": 16,
+        "openccConvertedCount": 16,
+        "diffSpanCount": 0,
+        "candidateCount": 5,
+        "hyp": "今天,我们团队 學員要討論後選生成相關的後選生成流程和上限計劃安排請研發一起評估風險"
+      },
+      {
+        "id": "d110",
+        "scenario": "tech_deploy",
+        "traditionalCharCount": 15,
+        "openccConvertedCount": 15,
+        "diffSpanCount": 0,
+        "candidateCount": 5,
+        "hyp": "這次發布我們現對此發布的新聞 起商線計劃窗口後選生 乘魔快需要連掉別漏掉回歸"
+      },
+      {
+        "id": "d065",
+        "scenario": "tech_deploy",
+        "traditionalCharCount": 13,
+        "openccConvertedCount": 13,
+        "diffSpanCount": 0,
+        "candidateCount": 5,
+        "hyp": "這次發布我們現對期 在其商線計劃窗口後選生 成模快需要連掉別漏掉回歸"
+      },
+      {
+        "id": "d088",
+        "scenario": "lexicon_homophone",
+        "traditionalCharCount": 11,
+        "openccConvertedCount": 11,
+        "diffSpanCount": 0,
+        "candidateCount": 5,
+        "hyp": "我們下午討論後,選生成功 等方安縣把候選生陳的截口文當補齊"
+      }
+    ],
+    "ime_with_candidates": [
+      {
+        "id": "d001",
+        "scenario": "cafe",
+        "cer": 0.2593,
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "approvedSpanCount": 0,
+        "hyp": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?"
+      },
+      {
+        "id": "d002",
+        "scenario": "cafe",
+        "cer": 0.1765,
+        "candidateCount": 5,
+        "diffSpanCount": 15,
+        "approvedSpanCount": 0,
+        "hyp": "麻烦帮我做一杯美食带走大悲就行谢"
+      },
+      {
+        "id": "d003",
+        "scenario": "cafe",
+        "cer": 0.1053,
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "approvedSpanCount": 0,
+        "hyp": "请问,这款燕麦拿铁可以少病吗?我赶时间小背"
+      },
+      {
+        "id": "d005",
+        "scenario": "meeting",
+        "cer": 0.2857,
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "approvedSpanCount": 0,
+        "hyp": "今天,德湛会献过一下订单,中台,进都内存 我们占用高者快需要先留保护大家看一下风险"
+      },
+      {
+        "id": "d006",
+        "scenario": "meeting",
+        "cer": 0.2143,
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "approvedSpanCount": 0,
+        "hyp": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下"
+      },
+      {
+        "id": "d009",
+        "scenario": "taxi",
+        "cer": 0.381,
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "approvedSpanCount": 0,
+        "hyp": "去望金斯赫布走四环,可以吗?那边现在赌不赌?"
+      }
+    ],
+    "worst_cer": [
+      {
+        "id": "d110",
+        "scenario": "tech_deploy",
+        "cer": 0.8333333333333334,
+        "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "hyp": "這次發布我們現對此發布的新聞 起商線計劃窗口後選生 乘魔快需要連掉別漏掉回歸"
+      },
+      {
+        "id": "d045",
+        "scenario": "lexicon_homophone",
+        "cer": 0.8,
+        "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+        "hyp": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說"
+      },
+      {
+        "id": "d088",
+        "scenario": "lexicon_homophone",
+        "cer": 0.68,
+        "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "hyp": "我們下午討論後,選生成功 等方安縣把候選生陳的截口文當補齊"
+      },
+      {
+        "id": "d065",
+        "scenario": "tech_deploy",
+        "cer": 0.6666666666666666,
+        "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "hyp": "這次發布我們現對期 在其商線計劃窗口後選生 成模快需要連掉別漏掉回歸"
+      },
+      {
+        "id": "d043",
+        "scenario": "lexicon_homophone",
+        "cer": 0.6,
+        "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "hyp": "我們下午討論後 選生成方安線吧,後選生成的接口文當補期。"
+      }
+    ],
+    "exact_match": [
+      {
+        "id": "d018",
+        "scenario": "friend",
+        "hyp": "你最近忙不忙,想找你看下手机备份怎么设置"
+      },
+      {
+        "id": "d025",
+        "scenario": "interview",
+        "hyp": "请简单介绍一下你上一段项目里负责的核心模块和难点"
+      },
+      {
+        "id": "d035",
+        "scenario": "bank",
+        "hyp": "这笔转账显示处理中大概多久能到账"
+      },
+      {
+        "id": "d038",
+        "scenario": "restaurant",
+        "hyp": "这道菜大概要等多久 我们先点一份凉菜和一壶茶"
+      },
+      {
+        "id": "d057",
+        "scenario": "hospital",
+        "hyp": "这个检查报告什么时候能出 我咳嗽需要请假休息吗"
+      }
+    ]
+  }
+}

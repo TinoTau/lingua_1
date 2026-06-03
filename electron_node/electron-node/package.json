@@ -60,7 +60,11 @@
     "test:sentence-kenlm": "jest --testPathPattern=\"sentence-kenlm|lm-scorer|char-tokenize\"",
     "test:contract": "npm run build:main && jest --testPathPattern=\"legacy-asr-repair-contract|result-builder\"",
     "test:recover": "jest --testPathPattern=\"legacy/asr-repair|legacy-asr-repair-contract\"",
-    "test:asr-repair": "npm run test:recover"
+    "test:asr-repair": "npm run test:recover",
+    "pinyin-ime-v2:export:all": "node scripts/pinyin-ime-v2/export-ime-dict.mjs --layer all",
+    "pinyin-ime-v2:export:base": "node scripts/pinyin-ime-v2/export-ime-dict.mjs --layer base",
+    "pinyin-ime-v2:export:domain": "node scripts/pinyin-ime-v2/export-ime-dict.mjs --layer domain",
+    "pinyin-ime-v2:export:target": "node scripts/pinyin-ime-v2/export-ime-dict.mjs --layer target"
   },
   "keywords": [
     "electron",
@@ -95,6 +99,7 @@
     "fft.js": "^4.0.4",
     "lru-cache": "10.4.3",
     "module-alias": "^2.2.3",
+    "opencc-js": "^1.3.1",
     "opus-decoder": "^0.7.11",
     "pino": "^8.17.0",
     "pino-pretty": "^10.3.0",

@@ -21,7 +21,8 @@
 | [setup/](./setup/) | 环境与部署 |
 | [logging/](./logging/) | 日志规范 |
 | [troubleshooting/](./troubleshooting/) | 问题排查 |
-| [lexicon-v3/](./lexicon-v3/) | **Lexicon V3.1** — [Lexicon_V3_1_Final_SSOT.md](./lexicon-v3/Lexicon_V3_1_Final_SSOT.md) |
+| [lexicon-v3/](./lexicon-v3/) | **Lexicon V3.1（已冻结）** — [ARCHITECTURE.md](./lexicon-v3/ARCHITECTURE.md) |
+| [pinyin-v2/](./pinyin-v2/) | **Pinyin-IME-V2 V2.0（已冻结）** — [ARCHITECTURE.md](./pinyin-v2/ARCHITECTURE.md) |
 | [user/](./user/) | 用户与计费 PRD |
 | [reference/](./reference/) | 参考与状态对比 |
 | [train/](./train/)、[trainning/](./trainning/) | 训练相关 |

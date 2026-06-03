@@ -86,18 +86,32 @@ if (fs.existsSync(hintPath)) {
   }
 }
 
-// V1.1: orchestrator must not wire span-replacement-eval back
+// V1.1 cleanup: orchestrator V2-only mainline
 const orchPath = path.join(fwRoot, 'fw-detector-orchestrator.ts');
 if (fs.existsSync(orchPath)) {
   const orchSrc = readRel(orchPath);
   if (orchSrc.includes('span-replacement-eval')) {
     fail('orchestrator must not import span-replacement-eval');
   }
-  if (!orchSrc.includes('createSpanDetectorHint') || !orchSrc.includes('runFwTopKDecisionPipeline')) {
-    fail('orchestrator must use hint + topK pipeline (frozen rollback path)');
+  for (const forbidden of [
+    'ensureLexiconRuntimeLoaded',
+    "from '../lexicon/lexicon-runtime-holder'",
+    'runFwTopKDecisionPipeline',
+    'useSentenceLevelRerank',
+    'isLexiconRuntimeV2RecallEnabled',
+    'resolveLexiconBundleDir',
+  ]) {
+    if (orchSrc.includes(forbidden)) {
+      fail(`orchestrator must not reference "${forbidden}"`);
+    }
   }
-  if (!orchSrc.includes('runFwSentenceRerankPipeline') || !orchSrc.includes('useSentenceLevelRerank')) {
-    fail('orchestrator must wire P4 sentence rerank pipeline + flag');
+  if (/\bgetLexiconRuntime\b/.test(orchSrc)) {
+    fail('orchestrator must not reference getLexiconRuntime (V1 holder)');
+  }
+  for (const required of ['resolvePinyinImeV2Spans', 'runFwSentenceRerankPipeline', 'ensureLexiconRuntimeV2Loaded']) {
+    if (!orchSrc.includes(required)) {
+      fail(`orchestrator must reference "${required}"`);
+    }
   }
 }
 
@@ -108,7 +122,6 @@ if (fs.existsSync(defaultsPath)) {
   for (const needle of [
     "engine: 'fw_detector_v1'",
     'disableAsrRerun: true',
-    'spanDetectBudget: 12',
     'candidateRequireRepairTarget: true',
     "kenlmGateMode: 'weak_veto'",
   ]) {
@@ -249,8 +262,8 @@ for (const name of legacyFwFiles) {
 }
 if (fs.existsSync(orchPath)) {
   const orchSrc = readRel(orchPath);
-  if (!orchSrc.includes('../legacy/fw-detector/fw-topk-decision-pipeline')) {
-    fail('orchestrator must import runFwTopKDecisionPipeline from legacy/fw-detector');
+  if (orchSrc.includes('../legacy/fw-detector/fw-topk-decision-pipeline')) {
+    fail('orchestrator must not import legacy fw-topk-decision-pipeline');
   }
 }
 

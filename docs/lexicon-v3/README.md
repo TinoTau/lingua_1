@@ -1,63 +1,48 @@
-# Lexicon V3.1 文档入口
+# Lexicon V3.1 文档
 
-> **唯一 SSOT：** [Lexicon_V3_1_Final_SSOT.md](./Lexicon_V3_1_Final_SSOT.md)  
-> **状态：** V3.1 已冻结（节点 Patch Service + 单 Runtime）
+> **状态**：V3.1 **已冻结**（节点单 Runtime + Patch Service）  
+> **架构 SSOT**：[ARCHITECTURE.md](./ARCHITECTURE.md)
 
----
-
-## 架构（一句话）
+## 一句话
 
 ```text
-node_runtime/lexicon/v3  →  lexicon.sqlite  →  manifest.json / stats.json / checksum.txt
+node_runtime/lexicon/v3  →  lexicon.sqlite + manifest/stats/checksum
          ↑
-  lexicon-patch-v3（Patch）  →  FW / ASR（只读，冻结）
+  lexicon-patch-v3（事务 Patch + reload）
+         ↓
+  FW Recall（local-span-recall / LexiconRuntimeV2 加载 v3 bundle）
 ```
 
----
+## 代码位置（文档在模块内）
 
-## 文档分布（按模块）
-
-| 主题 | 文档位置 |
-|------|----------|
-| **架构 SSOT** | 本目录 [Lexicon_V3_1_Final_SSOT.md](./Lexicon_V3_1_Final_SSOT.md) |
-| **FW/ASR 质量审计综合报告（入口）** | [FW_ASR_Quality_Audit_Report_2026_06_02.md](./FW_ASR_Quality_Audit_Report_2026_06_02.md) |
-| **FW 质量审计（文本链修复后基线，2026-06-02）** | [FW_Quality_Audit_Post_Chain_Fix_2026_06_02.md](./FW_Quality_Audit_Post_Chain_Fix_2026_06_02.md) |
-| **FW word 边界 / word_timestamps 审计（2026-06-02）** | [FW_Word_Boundary_Audit_2026_06_02.md](./FW_Word_Boundary_Audit_2026_06_02.md) |
-| **FW Decoder 内部信息 / 多候选能力审计（2026-06-02）** | [FW_Decoder_Capability_Audit_2026_06_02.md](./FW_Decoder_Capability_Audit_2026_06_02.md) |
-| FW 全链质量（只读） | [FW_Quality_Pipeline_Audit_2026_06_02.md](./FW_Quality_Pipeline_Audit_2026_06_02.md) |
-| FW Detector 漏检专项 | [FW_Detector_Metadata_Gate_Audit_2026_06_02.md](./FW_Detector_Metadata_Gate_Audit_2026_06_02.md) |
-| FW 截断问题专项 | [FW_Truncation_Pipeline_Audit_2026_06_02.md](./FW_Truncation_Pipeline_Audit_2026_06_02.md) |
-| FW Runtime 加载 / Recall | [electron_node/docs/lexicon_v2/LEXICON_RUNTIME_V2.md](../../electron_node/docs/lexicon_v2/LEXICON_RUNTIME_V2.md) |
-| Patch Service 实现 | [electron_node/electron-node/main/src/lexicon-patch-v3/README.md](../../electron_node/electron-node/main/src/lexicon-patch-v3/README.md) |
-| Legacy Recover 窗召回 | [electron_node/electron-node/main/src/lexicon/README.md](../../electron_node/electron-node/main/src/lexicon/README.md) |
-| 词库脚本命令 | [electron_node/electron-node/scripts/lexicon/README.md](../../electron_node/electron-node/scripts/lexicon/README.md) |
-| V1 资产 import / gate | [electron_node/lexicon-assets/docs/](../../electron_node/lexicon-assets/docs/README.md) |
-| 节点文档索引 | [electron_node/electron-node/docs/README.md](../../electron_node/electron-node/docs/README.md) |
-
----
+| 模块 | 路径 |
+|------|------|
+| Runtime 加载 | `electron_node/electron-node/main/src/lexicon-v2/` |
+| Patch Service | `electron_node/electron-node/main/src/lexicon-patch-v3/` |
+| Recall | `electron_node/electron-node/main/src/lexicon/local-span-recall.ts` |
+| npm 脚本 | `electron_node/electron-node/scripts/lexicon/` |
+| V1 资产 import | `electron_node/lexicon-assets/docs/` |
+| FW 详述 | `electron_node/docs/lexicon_v2/LEXICON_RUNTIME_V2.md` |
 
 ## 常用命令
 
 ```powershell
 cd D:\Programs\github\lingua_1\electron_node\electron-node
 
-# FW v3 runtime 门禁
-npm run lexicon:gate:v3-runtime
-
-# 首次 / 灾备 bootstrap
-npm run lexicon:prepare:v3-runtime -- --force
-
-# Patch（开发 / E2E）
+npm run lexicon:gate:v3-runtime          # 门禁
+npm run lexicon:prepare:v3-runtime -- --force   # bootstrap
 npm run lexicon:patch:apply -- --bundle-dir <dir> patch.json
-
-# 验收
 npm run test:lexicon-patch-e2e
 npm run test:fw-detector
 ```
 
-启动节点前：`npm run build:renderer`；清除 `ELECTRON_RUN_AS_NODE`。
+启动节点前：`npm run build:main`；`$env:PROJECT_ROOT` 指向仓库根。
 
----
+## 与 FW / Pinyin-IME-V2 的关系
+
+- **Recall** 只读 v3 runtime，不改 SQLite 业务表结构。
+- **Span 发现** 已迁至 [Pinyin-IME-V2 V2.0](../pinyin-v2/ARCHITECTURE.md)（独立 IME 词典 `node_runtime/pinyin-ime-v2/dict/`）。
+- 本目录 **不包含** FW 质量审计、Dialog200 测试报告（已移除）。
 
 ## 下一阶段（未实现）
 
@@ -65,13 +50,7 @@ npm run test:fw-detector
 |------|------|
 | P1 | Node Agent → `applyLexiconPatchV3` |
 | P2 | Scheduler Patch 下发 |
-| P3 | 版本追踪 / 签名验签 |
+| P3 | 签名验签 |
 | P4 | 生产 rollout |
 
-详见 SSOT §12。
-
----
-
-## 已移除内容
-
-本目录曾含多份方案、审计与 **测试报告**；已合并入 SSOT 或迁入模块 README，**测试报告已全部删除**。勿再从 git 历史外的备份引用旧 Final/Rev.1/Migration 文档。
+详见 [ARCHITECTURE.md §12](./ARCHITECTURE.md#12-下一阶段).

@@ -3,7 +3,6 @@
  */
 
 import type { KenLMScorer } from '../asr-repair/kenlm-batch-types';
-import type { LexiconRuntime } from '../lexicon/lexicon-runtime';
 import { recallSpanTopK } from '../lexicon/local-span-recall';
 import { toneDistance, textToToneSyllables, toneSyllablesKey } from '../lexicon/phonetic/tone-pinyin';
 import type { ActiveLexiconProfileSnapshot } from '../session-runtime/types';
@@ -27,7 +26,6 @@ import type {
 export type FwSentenceRerankInput = {
   rawText: string;
   spans: FwSpanDiagnostics[];
-  runtime: LexiconRuntime;
   profile: ActiveLexiconProfileSnapshot;
   config: Pick<
     FwDetectorRuntimeConfig,
@@ -119,7 +117,6 @@ export async function runFwSentenceRerankPipeline(
   for (const span of input.spans) {
     const asrToneKey = toneSyllablesKey(textToToneSyllables(span.text));
     const recall = recallSpanTopK(
-      input.runtime,
       span.text,
       input.profile,
       perSpanLimit,

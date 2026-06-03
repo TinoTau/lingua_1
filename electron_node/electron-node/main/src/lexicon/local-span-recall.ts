@@ -1,15 +1,18 @@
 /**
- * FW detector — bounded span TopK recall (exact pinyin bucket, no window-recall).
+ * FW detector — bounded span TopK recall (LexiconRuntimeV2 only).
  */
 
-import { lookupTopKByPinyin } from './pinyin-topk-lookup';
-import type { LexiconRuntime } from './lexicon-runtime';
+import { isMixedLatinToken } from './scored-lexicon';
 import { textToSyllables } from './phonetic/pinyin';
 import type { ActiveLexiconProfileSnapshot } from '../session-runtime/types';
 import type { WindowCandidateSource } from './window-candidate-source';
 import { matchEnabledDomain } from './domain-filter';
-import { isLexiconRuntimeV2RecallEnabled } from '../lexicon-v2/lexicon-fw-recall-config';
-import { recallSpanTopKViaRuntimeV2 } from '../lexicon-v2/runtime-v2-recall-adapter';
+import { ensureLexiconRuntimeV2Loaded, getLexiconRuntimeV2 } from '../lexicon-v2/lexicon-runtime-v2-holder';
+import { resolveDomainIdsForRecall } from '../lexicon-v2/domain-recall-merge';
+import { isIndustryRoutingEnabled } from '../lexicon-v2/lexicon-fw-recall-config';
+import { getLexiconRecallContext } from '../lexicon-v2/lexicon-recall-context';
+import { resolveRecallDomains } from '../lexicon-v2/industry-routing-domain-resolver';
+import { recallSpanTopKV2 } from '../lexicon-v2/recall-span-topk-v2';
 
 export type LocalSpanRecallHit = {
   word: string;
@@ -30,7 +33,7 @@ export type LocalSpanRecallOptions = {
 export type LocalSpanRecallResult = {
   hits: LocalSpanRecallHit[];
   maxPhoneticScore: number;
-  skippedReason?: 'empty' | 'syllable_out_of_range';
+  skippedReason?: 'empty' | 'syllable_out_of_range' | 'v2_unavailable';
 };
 
 const MIN_SYLLABLES = 2;
@@ -43,42 +46,53 @@ function passesEnabledDomainFilter(hit: LocalSpanRecallHit, enabledDomains: stri
   return matchEnabledDomain(hit.domains, enabledDomains);
 }
 
-function recallSpanTopKV1(
-  runtime: LexiconRuntime,
-  trimmed: string,
-  syllables: string[],
+function mapHit(hit: {
+  hotword: {
+    word: string;
+    priorScore: number;
+    domains?: string[];
+    domain?: string;
+    repairTarget?: boolean;
+    tonePinyinKey?: string;
+  };
+  candidateScore: number;
+  phoneticScore: number;
+  source: LocalSpanRecallHit['source'];
+}): LocalSpanRecallHit {
+  const domains = hit.hotword.domains?.length
+    ? hit.hotword.domains
+    : hit.hotword.domain
+      ? [hit.hotword.domain]
+      : [];
+  return {
+    word: hit.hotword.word,
+    priorScore: hit.hotword.priorScore,
+    candidateScore: hit.candidateScore,
+    phoneticScore: hit.phoneticScore,
+    source: hit.source,
+    domains,
+    repairTarget: hit.hotword.repairTarget === true,
+    tonePinyinKey: hit.hotword.tonePinyinKey,
+  };
+}
+
+function resolveRecallDomainIds(
   profile: ActiveLexiconProfileSnapshot,
-  topK: number,
-  minPrior: number,
-  enabledDomains: string[]
-): LocalSpanRecallResult {
-  const { hits } = lookupTopKByPinyin(runtime, {
-    syllables,
-    windowText: trimmed,
-    termLength: trimmed.length,
-    topK,
-    profile,
-  });
-
-  const filtered = hits
-    .filter((h) => h.hotword.priorScore >= minPrior)
-    .filter((h) => matchEnabledDomain(h.hotword.domains, enabledDomains))
-    .map((h) => ({
-      word: h.hotword.word,
-      priorScore: h.hotword.priorScore,
-      candidateScore: h.candidateScore,
-      phoneticScore: h.phoneticScore,
-      source: h.source,
-      domains: h.hotword.domains?.length ? h.hotword.domains : h.hotword.domain ? [h.hotword.domain] : [],
-      repairTarget: h.hotword.repairTarget === true,
-    }));
-
-  const maxPhoneticScore = filtered.reduce((m, h) => Math.max(m, h.phoneticScore), 0);
-  return { hits: filtered, maxPhoneticScore };
+  enabledDomains: readonly string[]
+): string[] {
+  if (isIndustryRoutingEnabled()) {
+    const runtimeV2 = getLexiconRuntimeV2();
+    const sessionIntent = getLexiconRecallContext()?.sessionIntent;
+    return resolveRecallDomains({
+      sessionIntent,
+      enabledDomains,
+      runtimeV2,
+    }).domainIds;
+  }
+  return resolveDomainIdsForRecall(profile);
 }
 
 export function recallSpanTopK(
-  runtime: LexiconRuntime,
   spanText: string,
   profile: ActiveLexiconProfileSnapshot,
   topK: number,
@@ -96,23 +110,31 @@ export function recallSpanTopK(
     return { hits: [], maxPhoneticScore: 0, skippedReason: 'syllable_out_of_range' };
   }
 
-  if (!isLexiconRuntimeV2RecallEnabled()) {
-    return recallSpanTopKV1(runtime, trimmed, syllables, profile, topK, minPrior, enabledDomains);
+  if (isMixedLatinToken(trimmed)) {
+    return { hits: [], maxPhoneticScore: 0 };
+  }
+
+  const v2State = ensureLexiconRuntimeV2Loaded();
+  if (v2State.status !== 'ok') {
+    return { hits: [], maxPhoneticScore: 0, skippedReason: 'v2_unavailable' };
   }
 
   const effectiveTopK = options?.perSpanLimit ?? topK;
-  const v2Result = recallSpanTopKViaRuntimeV2(
-    runtime,
-    trimmed,
+  const runtimeV2 = getLexiconRuntimeV2();
+  const domainIds = resolveRecallDomainIds(profile, enabledDomains);
+  const { hits } = recallSpanTopKV2(runtimeV2, {
+    syllables,
+    windowText: trimmed,
+    termLength: trimmed.length,
+    topK: effectiveTopK,
     profile,
-    effectiveTopK,
-    enabledDomains,
-    options
-  );
-  const filtered = v2Result.hits
+    domainIds,
+    perSpanLimit: options?.perSpanLimit,
+  });
+  const mapped = hits.map(mapHit);
+  const filtered = mapped
     .filter((h) => h.priorScore >= minPrior)
     .filter((h) => passesEnabledDomainFilter(h, enabledDomains));
-
   const maxPhoneticScore = filtered.reduce((m, h) => Math.max(m, h.phoneticScore), 0);
   return { hits: filtered, maxPhoneticScore };
 }

@@ -1,0 +1,886 @@
+{
+  "scope": "Phase 4E Quality Validation (4D after)",
+  "batch": {
+    "timestamp": "2026-06-03T12:12:59.796Z",
+    "evaluated": 89,
+    "stoppedReason": "deadline",
+    "wall_clock_sec": 902
+  },
+  "baseline_4b1": {
+    "evaluated": 110,
+    "ime": {
+      "cases_with_candidates": 93,
+      "cases_with_approved_spans": 5,
+      "candidate_but_diff_span_zero": 77,
+      "decode_ms": {
+        "avg": 7,
+        "p50": 6,
+        "p95": 17,
+        "max": 34
+      },
+      "fw_step_ms": {
+        "avg": 99,
+        "p50": 7,
+        "p95": 766,
+        "max": 2373
+      }
+    },
+    "quality": {
+      "avg_cer_raw": 0.2457,
+      "avg_cer_final": 0.2457,
+      "median_cer_final": 0.2143,
+      "p95_cer_final": 0.5625,
+      "exact_match_final": 10,
+      "fw_improved_cases": 0,
+      "fw_degraded_cases": 0,
+      "worst_final_cer_top5": [
+        {
+          "id": "d110",
+          "scenario": "tech_deploy",
+          "cer": 0.8333333333333334,
+          "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+          "hyp": "這次發布我們現對此發布的新聞 起商線計劃窗口後選生 乘魔快需要連掉別漏掉回歸"
+        },
+        {
+          "id": "d045",
+          "scenario": "lexicon_homophone",
+          "cer": 0.8,
+          "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+          "hyp": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說"
+        },
+        {
+          "id": "d088",
+          "scenario": "lexicon_homophone",
+          "cer": 0.68,
+          "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+          "hyp": "我們下午討論後,選生成功 等方安縣把候選生陳的截口文當補齊"
+        },
+        {
+          "id": "d065",
+          "scenario": "tech_deploy",
+          "cer": 0.6666666666666666,
+          "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+          "hyp": "這次發布我們現對期 在其商線計劃窗口後選生 成模快需要連掉別漏掉回歸"
+        },
+        {
+          "id": "d043",
+          "scenario": "lexicon_homophone",
+          "cer": 0.6,
+          "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+          "hyp": "我們下午討論後 選生成方安線吧,後選生成的接口文當補期。"
+        }
+      ]
+    }
+  },
+  "metrics": {
+    "candidate_cases": 77,
+    "avg_candidateCount": 5,
+    "diffSpan_cases_nonzero": 16,
+    "avg_diffSpanCount": 2.449,
+    "boundaryCompatibleTopKSpan_cases_nonzero": 77,
+    "boundaryCompatibleTopKSpan_total": 190,
+    "diffZeroBoundaryPositive_cases": 61,
+    "approved_cases": 29,
+    "avg_approvedSpanCount": 1.69,
+    "candidate_but_diff_span_zero": 61,
+    "boundary_topk_diff_hint_span_count": 46,
+    "boundary_hint_pass_rate_vs_boundary_spans": 0.2421,
+    "approved_span_signal_dist": {
+      "ime_v2_diff": 0,
+      "ime_v2_instability": 3,
+      "ime_v2_boundary_topk_diff": 46,
+      "unknown": 0
+    },
+    "recall_hit_span_count": 0,
+    "kenlm_triggered_span_count": 0,
+    "kenlm_picked_candidate_count": 0,
+    "applied_span_count": 0,
+    "fw_triggered_cases": 29,
+    "fw_applied_cases": 0
+  },
+  "quality": {
+    "avg_cer_raw": 0.2379,
+    "avg_cer_final": 0.2379,
+    "median_cer_final": 0.2105,
+    "p95_cer_final": 0.5625,
+    "fw_improved_cases": 0,
+    "fw_degraded_cases": 0
+  },
+  "funnel": {
+    "boundaryCompatibleTopKSpan": 190,
+    "fw_spans_total": 49,
+    "fw_spans_boundary_hint": 46,
+    "fw_spans_diff_hint": 0,
+    "fw_spans_instability_hint": 3,
+    "recall_hit_spans": 0,
+    "kenlm_triggered": 0,
+    "kenlm_picked": 0,
+    "applied": 0,
+    "losses": {
+      "boundary_to_fw_span": 144,
+      "fw_span_to_recall": 49,
+      "recall_to_kenlm": 0,
+      "kenlm_to_applied": 0
+    }
+  },
+  "qa": {
+    "q1_boundary_fills_diff_zero_gap": {
+      "candidate_diff_zero": 61,
+      "with_boundary_positive": 61,
+      "fill_rate": 1
+    },
+    "q2_diffZeroBoundaryPositive": 61,
+    "q3_boundary_enter_hintgate_proxy": 46,
+    "q4_approved_cases": 29,
+    "q5_recall_hit_spans": 0,
+    "q6_kenlm_triggered": 0,
+    "q7_applied": 0,
+    "q8_cer_delta_vs_baseline": -0.0078
+  },
+  "samples": {
+    "diffZeroBoundaryPositive": [
+      {
+        "id": "d074",
+        "scenario": "classroom",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 3,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 3,
+        "raw": "作业是下周以下午叫吗?可以电子板提叫吗?"
+      },
+      {
+        "id": "d056",
+        "scenario": "hospital",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 0,
+        "raw": "挂号出请问,那刻还有号码,我低哨昨晚开始的"
+      },
+      {
+        "id": "d033",
+        "scenario": "hotel",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 0,
+        "raw": "房间空调不太至冷能派人上来看一下吗?"
+      },
+      {
+        "id": "d013",
+        "scenario": "shopping",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 3,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 0,
+        "raw": "这件外套能试穿吗?我串中码,买两件有没有折扣?"
+      },
+      {
+        "id": "d087",
+        "scenario": "gym",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 0,
+        "raw": "游泳刺卡本月月底到期续飞有优惠吗?"
+      },
+      {
+        "id": "d014",
+        "scenario": "shopping",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 3,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 2,
+        "raw": "请问,这双鞋是否有相似的? 不合是三天内可以推换吧"
+      },
+      {
+        "id": "d073",
+        "scenario": "classroom",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 2,
+        "raw": "老是這道題的解題步,周能不能解? 我没听懂第二点"
+      },
+      {
+        "id": "d082",
+        "scenario": "restaurant",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 0,
+        "raw": "两位烤创有微纸嘛 不要像蔡薇娜就行"
+      },
+      {
+        "id": "d039",
+        "scenario": "restaurant",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 7,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 1,
+        "raw": "可以打爆麻 顺便解一下张能扫马支付吗?"
+      },
+      {
+        "id": "d019",
+        "scenario": "tech_deploy",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 3,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 1,
+        "raw": "今天,我们团队 要讨论候选生成相关的候选生成流程和上限计划安排请研发一起评估风险"
+      },
+      {
+        "id": "d010",
+        "scenario": "hospital",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 0,
+        "raw": "醫生您好,我這兩天頭痛想開點,要並做個歇常規"
+      },
+      {
+        "id": "d071",
+        "scenario": "interview",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 0,
+        "raw": "你如何看待夸团队协作,遇到需求边更一般怎么处理?"
+      },
+      {
+        "id": "d021",
+        "scenario": "tech_deploy",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 0,
+        "raw": "会上提到候选生成炼鹿 要加剑口 空上限期画文 等我下午更新一版"
+      },
+      {
+        "id": "d029",
+        "scenario": "classroom",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 0,
+        "raw": "作業是下周一下午覺嗎?可以電子版提覺嗎?"
+      },
+      {
+        "id": "d006",
+        "scenario": "meeting",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 3,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 1,
+        "raw": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下"
+      },
+      {
+        "id": "d038",
+        "scenario": "restaurant",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 0,
+        "raw": "这道菜大概要等多久 我们先点一份凉菜和一壶茶"
+      },
+      {
+        "id": "d026",
+        "scenario": "interview",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 0,
+        "raw": "你如何看待夸团队写作,遇到需求边更一般怎么处理?"
+      },
+      {
+        "id": "d065",
+        "scenario": "tech_deploy",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 0,
+        "raw": "這次發布我們現對期 在其商線計劃窗口後選生 成模快需要連掉別漏掉回歸"
+      },
+      {
+        "id": "d009",
+        "scenario": "taxi",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 0,
+        "raw": "去望金斯赫布走四环,可以吗?那边现在赌不赌?"
+      },
+      {
+        "id": "d070",
+        "scenario": "interview",
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "trustedTopKCount": 5,
+        "approvedSpanCount": 0,
+        "raw": "请简单介绍一下 你上一段视频 项目里负责的核心模块和难点"
+      }
+    ],
+    "approvedSpan": [
+      {
+        "id": "d066",
+        "scenario": "tech_deploy",
+        "approvedSpanCount": 4,
+        "boundaryCompatibleTopKSpanCount": 4,
+        "diffSpanCount": 0,
+        "spans": [
+          {
+            "text": "生成",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 1,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          },
+          {
+            "text": "要加",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 2,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          },
+          {
+            "text": "上限",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 1,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          },
+          {
+            "text": "纹当",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 2,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      },
+      {
+        "id": "d003",
+        "scenario": "cafe",
+        "approvedSpanCount": 2,
+        "boundaryCompatibleTopKSpanCount": 3,
+        "diffSpanCount": 0,
+        "spans": [
+          {
+            "text": "少病",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 2,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          },
+          {
+            "text": "赶时",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 4,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      },
+      {
+        "id": "d027",
+        "scenario": "interview",
+        "approvedSpanCount": 1,
+        "boundaryCompatibleTopKSpanCount": 3,
+        "diffSpanCount": 0,
+        "spans": [
+          {
+            "text": "什么",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 1,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      },
+      {
+        "id": "d072",
+        "scenario": "interview",
+        "approvedSpanCount": 3,
+        "boundaryCompatibleTopKSpanCount": 3,
+        "diffSpanCount": 14,
+        "spans": [
+          {
+            "text": "新自",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 2,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          },
+          {
+            "text": "入职",
+            "signals": [
+              "ime_v2_instability_hint"
+            ],
+            "applied": false,
+            "candidateCount": 1,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          },
+          {
+            "text": "什么",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 1,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      },
+      {
+        "id": "d069",
+        "scenario": "customer_service",
+        "approvedSpanCount": 1,
+        "boundaryCompatibleTopKSpanCount": 3,
+        "diffSpanCount": 6,
+        "spans": [
+          {
+            "text": "开局",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 1,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      },
+      {
+        "id": "d060",
+        "scenario": "shopping",
+        "approvedSpanCount": 1,
+        "boundaryCompatibleTopKSpanCount": 3,
+        "diffSpanCount": 0,
+        "spans": [
+          {
+            "text": "订单",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 1,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      },
+      {
+        "id": "d048",
+        "scenario": "cafe",
+        "approvedSpanCount": 2,
+        "boundaryCompatibleTopKSpanCount": 3,
+        "diffSpanCount": 0,
+        "spans": [
+          {
+            "text": "少病",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 2,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          },
+          {
+            "text": "赶时",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 4,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      },
+      {
+        "id": "d051",
+        "scenario": "meeting",
+        "approvedSpanCount": 1,
+        "boundaryCompatibleTopKSpanCount": 3,
+        "diffSpanCount": 0,
+        "spans": [
+          {
+            "text": "评审",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 1,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      },
+      {
+        "id": "d057",
+        "scenario": "hospital",
+        "approvedSpanCount": 2,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "diffSpanCount": 0,
+        "spans": [
+          {
+            "text": "检查",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 2,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          },
+          {
+            "text": "请假",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 1,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      },
+      {
+        "id": "d005",
+        "scenario": "meeting",
+        "approvedSpanCount": 3,
+        "boundaryCompatibleTopKSpanCount": 3,
+        "diffSpanCount": 0,
+        "spans": [
+          {
+            "text": "订单",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 1,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          },
+          {
+            "text": "进都",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 2,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          },
+          {
+            "text": "风险",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 1,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      },
+      {
+        "id": "d079",
+        "scenario": "bank",
+        "approvedSpanCount": 1,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "diffSpanCount": 12,
+        "spans": [
+          {
+            "text": "想開",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 1,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      },
+      {
+        "id": "d062",
+        "scenario": "friend",
+        "approvedSpanCount": 2,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "diffSpanCount": 0,
+        "spans": [
+          {
+            "text": "一家",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 4,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          },
+          {
+            "text": "一起",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 4,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      },
+      {
+        "id": "d089",
+        "scenario": "lexicon_homophone",
+        "approvedSpanCount": 1,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "diffSpanCount": 0,
+        "spans": [
+          {
+            "text": "上午",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 3,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      },
+      {
+        "id": "d006",
+        "scenario": "meeting",
+        "approvedSpanCount": 1,
+        "boundaryCompatibleTopKSpanCount": 3,
+        "diffSpanCount": 0,
+        "spans": [
+          {
+            "text": "评审",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 1,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      },
+      {
+        "id": "d074",
+        "scenario": "classroom",
+        "approvedSpanCount": 3,
+        "boundaryCompatibleTopKSpanCount": 3,
+        "diffSpanCount": 0,
+        "spans": [
+          {
+            "text": "作业",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 1,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          },
+          {
+            "text": "周以",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 2,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          },
+          {
+            "text": "叫吗",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 2,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      },
+      {
+        "id": "d024",
+        "scenario": "customer_service",
+        "approvedSpanCount": 1,
+        "boundaryCompatibleTopKSpanCount": 3,
+        "diffSpanCount": 11,
+        "spans": [
+          {
+            "text": "开局",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 1,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      },
+      {
+        "id": "d039",
+        "scenario": "restaurant",
+        "approvedSpanCount": 1,
+        "boundaryCompatibleTopKSpanCount": 7,
+        "diffSpanCount": 0,
+        "spans": [
+          {
+            "text": "解一",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 4,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      },
+      {
+        "id": "d055",
+        "scenario": "hospital",
+        "approvedSpanCount": 1,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "diffSpanCount": 30,
+        "spans": [
+          {
+            "text": "醫生",
+            "signals": [
+              "ime_v2_instability_hint"
+            ],
+            "applied": false,
+            "candidateCount": 2,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": false
+      },
+      {
+        "id": "d028",
+        "scenario": "classroom",
+        "approvedSpanCount": 1,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "diffSpanCount": 0,
+        "spans": [
+          {
+            "text": "解题",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 4,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      },
+      {
+        "id": "d014",
+        "scenario": "shopping",
+        "approvedSpanCount": 2,
+        "boundaryCompatibleTopKSpanCount": 3,
+        "diffSpanCount": 0,
+        "spans": [
+          {
+            "text": "鞋是",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 3,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          },
+          {
+            "text": "似的",
+            "signals": [
+              "ime_v2_boundary_topk_diff_hint"
+            ],
+            "applied": false,
+            "candidateCount": 3,
+            "recallHits": 0,
+            "kenlmApproved": 0
+          }
+        ],
+        "from_boundary_topk": true
+      }
+    ]
+  }
+}

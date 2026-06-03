@@ -5,11 +5,11 @@
 import { JobAssignMessage } from '@shared/protocols/messages';
 import { JobResult } from '../inference/inference-service';
 import { JobContext } from './context/job-context';
-import { resolveLexiconRuntimeContract } from './lexicon-runtime-contract';
+import { resolveFwLexiconRuntimeContract } from './fw-lexicon-runtime-contract';
 import { assembleJobResult, buildCoreResultExtra } from './result-builder-core';
 
 function buildFwResultExtra(job: JobAssignMessage, ctx: JobContext): Record<string, unknown> {
-  const lexicon = resolveLexiconRuntimeContract(job, ctx);
+  const lexicon = resolveFwLexiconRuntimeContract();
   return {
     ...buildCoreResultExtra(job, ctx),
     lexicon_runtime_status: lexicon.lexicon_runtime_status,

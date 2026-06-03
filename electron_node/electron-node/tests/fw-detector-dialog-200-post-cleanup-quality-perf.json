@@ -1,0 +1,268 @@
+{
+  "ime": {
+    "cases_with_candidates": 119,
+    "cases_with_approved_spans": 7,
+    "skipped_reason_counts": {
+      "no_approved_spans": 112,
+      "no_cjk": 22
+    },
+    "decode_ms": {
+      "avg": 7,
+      "p50": 6,
+      "p95": 12,
+      "max": 35
+    },
+    "gate_dropped_no_neighbor_total": 17,
+    "gate_dropped_support_total": 1
+  },
+  "runtime": {
+    "bundle_dir": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v3",
+    "manifest_version": "lexicon-v3-four-table-v1",
+    "lexicon_rows": 72217,
+    "status_ok_rate": 1
+  },
+  "fw": {
+    "triggered_cases": 7,
+    "applied_cases": 0,
+    "fw_step_ms": {
+      "avg": 144,
+      "p50": 7,
+      "p95": 760,
+      "max": 3721
+    }
+  },
+  "samples": {
+    "fw_triggered": [
+      {
+        "id": "d036",
+        "scenario": "bank",
+        "cer": 0.125,
+        "span_count": 1,
+        "applied": 0,
+        "ime": {
+          "enabled": true,
+          "candidateCount": 5,
+          "diffSpanCount": 12,
+          "instabilityRegionCount": 2,
+          "approvedSpanCount": 1,
+          "normalizerDroppedCount": 0,
+          "gateDroppedNoNeighbor": 1,
+          "gateDroppedSupport": 0,
+          "decodeMs": 2
+        },
+        "ref": "请问理财产品的风险等级在哪里查看？",
+        "hyp": "请问立财产品的风险等急在哪里查看"
+      },
+      {
+        "id": "d044",
+        "scenario": "lexicon_homophone",
+        "cer": 0.125,
+        "span_count": 2,
+        "applied": 0,
+        "ime": {
+          "enabled": true,
+          "candidateCount": 5,
+          "diffSpanCount": 21,
+          "instabilityRegionCount": 5,
+          "approvedSpanCount": 2,
+          "normalizerDroppedCount": 3,
+          "gateDroppedNoNeighbor": 0,
+          "gateDroppedSupport": 0,
+          "decodeMs": 9
+        },
+        "ref": "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+        "hyp": "这周的上限计划已经确认上限计划评审安排在周四上午"
+      },
+      {
+        "id": "d055",
+        "scenario": "hospital",
+        "cer": 0.4762,
+        "span_count": 1,
+        "applied": 0,
+        "ime": {
+          "enabled": true,
+          "candidateCount": 5,
+          "diffSpanCount": 30,
+          "instabilityRegionCount": 6,
+          "approvedSpanCount": 1,
+          "normalizerDroppedCount": 1,
+          "gateDroppedNoNeighbor": 1,
+          "gateDroppedSupport": 0,
+          "decodeMs": 3
+        },
+        "ref": "医生您好，我这两天嗓子疼，想开点药并做个血常规。",
+        "hyp": "醫生您好我這兩天嗓子疼想開點要並做隔斜常規"
+      },
+      {
+        "id": "d072",
+        "scenario": "interview",
+        "cer": 0.087,
+        "span_count": 2,
+        "applied": 0,
+        "ime": {
+          "enabled": true,
+          "candidateCount": 5,
+          "diffSpanCount": 14,
+          "instabilityRegionCount": 4,
+          "approvedSpanCount": 2,
+          "normalizerDroppedCount": 2,
+          "gateDroppedNoNeighbor": 0,
+          "gateDroppedSupport": 0,
+          "decodeMs": 6
+        },
+        "ref": "期望薪资这块我们可以再沟通，你最快什么时候能入职？",
+        "hyp": "期望新自这块我们可以再沟通你最快什么时候能入职"
+      },
+      {
+        "id": "d079",
+        "scenario": "bank",
+        "cer": 0.2667,
+        "span_count": 1,
+        "applied": 0,
+        "ime": {
+          "enabled": true,
+          "candidateCount": 5,
+          "diffSpanCount": 12,
+          "instabilityRegionCount": 2,
+          "approvedSpanCount": 1,
+          "normalizerDroppedCount": 0,
+          "gateDroppedNoNeighbor": 1,
+          "gateDroppedSupport": 0,
+          "decodeMs": 2
+        },
+        "ref": "我想开通短信提醒，需要带什么证件？",
+        "hyp": "我想開通短信提醒需要帶什麼證件"
+      },
+      {
+        "id": "d117",
+        "scenario": "interview",
+        "cer": 0.087,
+        "span_count": 2,
+        "applied": 0,
+        "ime": {
+          "enabled": true,
+          "candidateCount": 5,
+          "diffSpanCount": 14,
+          "instabilityRegionCount": 4,
+          "approvedSpanCount": 2,
+          "normalizerDroppedCount": 2,
+          "gateDroppedNoNeighbor": 0,
+          "gateDroppedSupport": 0,
+          "decodeMs": 8
+        },
+        "ref": "期望薪资这块我们可以再沟通，你最快什么时候能入职？",
+        "hyp": "期望新自这块我们可以再沟通你最快什么时候能入职"
+      },
+      {
+        "id": "d137",
+        "scenario": "cafe",
+        "cer": 0.1111,
+        "span_count": 1,
+        "applied": 0,
+        "ime": {
+          "enabled": true,
+          "candidateCount": 5,
+          "diffSpanCount": 15,
+          "instabilityRegionCount": 3,
+          "approvedSpanCount": 1,
+          "normalizerDroppedCount": 0,
+          "gateDroppedNoNeighbor": 1,
+          "gateDroppedSupport": 0,
+          "decodeMs": 4
+        },
+        "ref": "麻烦帮我做一杯热拿铁带走，大杯就行，谢谢。",
+        "hyp": "麻烦帮我做一杯热拿铁带走搭杯就行谢"
+      }
+    ],
+    "worst_cer": [
+      {
+        "id": "d110",
+        "scenario": "tech_deploy",
+        "cer": 0.8333,
+        "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "hyp": "這次發布我們現對此發布的新聞 起商線計劃窗口後選生 乘魔快需要連掉別漏掉回歸"
+      },
+      {
+        "id": "d045",
+        "scenario": "lexicon_homophone",
+        "cer": 0.8,
+        "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+        "hyp": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說"
+      },
+      {
+        "id": "d088",
+        "scenario": "lexicon_homophone",
+        "cer": 0.68,
+        "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "hyp": "我們下午討論後,選生成功 等方安縣把候選生陳的截口文當補齊"
+      },
+      {
+        "id": "d065",
+        "scenario": "tech_deploy",
+        "cer": 0.6667,
+        "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "hyp": "這次發布我們現對期 在其商線計劃窗口後選生 成模快需要連掉別漏掉回歸"
+      },
+      {
+        "id": "d043",
+        "scenario": "lexicon_homophone",
+        "cer": 0.6,
+        "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "hyp": "我們下午討論後 選生成方安線吧,後選生成的接口文當補期。"
+      },
+      {
+        "id": "d082",
+        "scenario": "restaurant",
+        "cer": 0.5625,
+        "ref": "两位，靠窗有位置吗？不要香菜，微辣就行。",
+        "hyp": "两位烤创有微纸嘛 不要像蔡薇娜就行"
+      },
+      {
+        "id": "d010",
+        "scenario": "hospital",
+        "cer": 0.55,
+        "ref": "医生您好，我这两天头痛，想开点药并做个血常规。",
+        "hyp": "醫生您好,我這兩天頭痛想開點,要並做個歇常規"
+      },
+      {
+        "id": "d100",
+        "scenario": "hospital",
+        "cer": 0.55,
+        "ref": "医生您好，我这两天头痛，想开点药并做个血常规。",
+        "hyp": "醫生您好,我這兩天頭痛想開店,要病,做隔歇常規"
+      }
+    ],
+    "exact_match": [
+      {
+        "id": "d018",
+        "scenario": "friend",
+        "hyp": "你最近忙不忙,想找你看下手机备份怎么设置"
+      },
+      {
+        "id": "d025",
+        "scenario": "interview",
+        "hyp": "请简单介绍一下你上一段项目里负责的核心模块和难点"
+      },
+      {
+        "id": "d035",
+        "scenario": "bank",
+        "hyp": "这笔转账显示处理中大概多久能到账"
+      },
+      {
+        "id": "d038",
+        "scenario": "restaurant",
+        "hyp": "这道菜大概要等多久 我们先点一份凉菜和一壶茶"
+      },
+      {
+        "id": "d057",
+        "scenario": "hospital",
+        "hyp": "这个检查报告什么时候能出 我咳嗽需要请假休息吗"
+      },
+      {
+        "id": "d058",
+        "scenario": "shopping",
+        "hyp": "这件外套能试穿吗?我穿中码,买两件有没有折扣?"
+      }
+    ]
+  }
+}

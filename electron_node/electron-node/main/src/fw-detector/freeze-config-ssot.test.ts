@@ -17,18 +17,19 @@ describe('freeze-config-ssot parity', () => {
     const ssot = loadSsot();
     const fw = DEFAULT_CONFIG.features?.fwDetector;
     const v2 = DEFAULT_CONFIG.features?.lexiconRuntimeV2;
+    const ime = DEFAULT_CONFIG.features?.pinyinImeV2;
 
-    expect(ssot.fwDetector.spanGateMode).toBe(fw?.spanGateMode);
-    expect(ssot.fwDetector.useLexiconRuntimeV2Recall).toBe(fw?.useLexiconRuntimeV2Recall);
+    expect(ssot.pinyinImeV2.enabled).toBe(ime?.enabled);
+    expect(ssot.pinyinImeV2.topK).toBe(ime?.topK);
+    expect(ssot.pinyinImeV2.maxApprovedSpans).toBe(ime?.maxApprovedSpans);
+    expect(ssot.pinyinImeV2.directRepair).toBe(false);
+
     expect(ssot.fwDetector.useIndustryRouting).toBe(fw?.useIndustryRouting);
-    expect(ssot.fwDetector.useSentenceLevelRerank).toBe(fw?.useSentenceLevelRerank);
     expect(ssot.fwDetector.enableKenLMGate).toBe(fw?.enableKenLMGate);
     expect(ssot.fwDetector.maxSentenceCandidates).toBe(fw?.maxSentenceCandidates);
     expect(ssot.fwDetector.minDeltaToReplace).toBe(fw?.minDeltaToReplace);
     expect(ssot.fwDetector.minPrior).toBe(fw?.minPrior);
     expect(ssot.fwDetector.candidateRequireRepairTarget).toBe(fw?.candidateRequireRepairTarget);
-    expect(ssot.fwDetector.fwMetadataSpanGate.maxSpans).toBe(fw?.fwMetadataSpanGate?.maxSpans);
-    expect(ssot.fwDetector.kenlmSpanGate.enabled).toBe(fw?.kenlmSpanGate?.enabled);
 
     expect(ssot.lexiconRuntimeV2.enabled).toBe(v2?.enabled);
     expect(ssot.lexiconRuntimeV2.bundlePath).toBe(v2?.bundlePath);

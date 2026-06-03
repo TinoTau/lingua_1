@@ -1,0 +1,99 @@
+﻿{
+  "quality": {
+    "avg_cer_raw": 0.2385,
+    "avg_cer_final": 0.2385,
+    "avg_cer_probe": 0.2385,
+    "median_cer_raw": 0.2105,
+    "median_cer_final": 0.2105,
+    "median_cer_probe": 0.2105,
+    "p95_cer_raw": 0.55,
+    "p95_cer_final": 0.55,
+    "p95_cer_probe": 0.55,
+    "exact_match_raw": 13,
+    "exact_match_final": 13,
+    "exact_match_probe": 13,
+    "fw_improved_cases": 0,
+    "fw_degraded_cases": 0,
+    "fw_unchanged_cer_cases": 141,
+    "worst_final_cer_top5": [
+      {
+        "id": "d110",
+        "scenario": "tech_deploy",
+        "cer": 0.8333333333333334,
+        "ref": "杩欐鍙戝竷鎴戜滑鍏堝榻愪笂绾胯鍒掔獥鍙ｏ紝鍚庨€夌敓鍩庢ā鍧楅渶瑕佽仈璋冿紝鍒紡鎺夊洖褰掋€?,
+        "hyp": "閫欐鐧煎竷鎴戝€戠従灏嶆鐧煎竷鐨勬柊鑱?璧峰晢绶氳▓鍔冪獥鍙ｅ緦閬哥敓 涔橀瓟蹇渶瑕侀€ｆ帀鍒ユ紡鎺夊洖姝?
+      },
+      {
+        "id": "d045",
+        "scenario": "lexicon_homophone",
+        "cer": 0.8,
+        "ref": "鍏充簬鍚庨€夌敓鍩庡拰涓婄嚎璁″寲锛岃鎸変笂绾胯鍒掓墽琛岋紝鏈夐棶棰樼兢閲岃銆?,
+        "hyp": "闂滄柤寰?瀛哥敓鎴愮偤瀛哥敓 鍜屼笂闄愯▓鍔冭珛鎸変笂闄愯▓鍔冨煼琛屾湁鍟忛缇よ！瑾?
+      },
+      {
+        "id": "d088",
+        "scenario": "lexicon_homophone",
+        "cer": 0.68,
+        "ref": "鎴戜滑涓嬪崍璁ㄨ鍚庨€夊０鍩庢柟妗堬紝鍏堟妸鍊欓€夌敓鎴愮殑鎺ュ彛鏂囨。琛ラ綈銆?,
+        "hyp": "鎴戝€戜笅鍗堣◣璜栧緦,閬哥敓鎴愬姛 绛夋柟瀹夌福鎶婂€欓伕鐢熼櫝鐨勬埅鍙ｆ枃鐣惰榻?
+      },
+      {
+        "id": "d065",
+        "scenario": "tech_deploy",
+        "cer": 0.6666666666666666,
+        "ref": "杩欐鍙戝竷鎴戜滑鍏堝榻愪笂绾胯鍒掔獥鍙ｏ紝鍚庨€夌敓鍩庢ā鍧楅渶瑕佽仈璋冿紝鍒紡鎺夊洖褰掋€?,
+        "hyp": "閫欐鐧煎竷鎴戝€戠従灏嶆湡 鍦ㄥ叾鍟嗙窔瑷堝妰绐楀彛寰岄伕鐢?鎴愭ā蹇渶瑕侀€ｆ帀鍒ユ紡鎺夊洖姝?
+      },
+      {
+        "id": "d043",
+        "scenario": "lexicon_homophone",
+        "cer": 0.6,
+        "ref": "鎴戜滑涓嬪崍璁ㄨ鍚庨€夊０鍩庢柟妗堬紝鍏堟妸鍊欓€夌敓鎴愮殑鎺ュ彛鏂囨。琛ラ綈銆?,
+        "hyp": "鎴戝€戜笅鍗堣◣璜栧緦 閬哥敓鎴愭柟瀹夌窔鍚?寰岄伕鐢熸垚鐨勬帴鍙ｆ枃鐣惰鏈熴€?
+      }
+    ],
+    "applied_cases_cer_delta_avg": 0
+  },
+  "perf": {
+    "pipeline_ms": {
+      "count": 141,
+      "avg": 6406,
+      "p50": 5503,
+      "p95": 10689,
+      "min": 2148,
+      "max": 24328,
+      "total_sec": 903
+    },
+    "asr_latency_ms": {
+      "count": 141,
+      "avg": 2847,
+      "p50": 2839,
+      "p95": 4150,
+      "min": 498,
+      "max": 18485
+    },
+    "audio_ms": {
+      "count": 141,
+      "avg": 3520,
+      "p50": 3800,
+      "p95": 4860
+    },
+    "rtf_pipeline": 1.82,
+    "rtf_asr": 0.809
+  },
+  "contract": {
+    "evaluated": 141,
+    "pass": 141,
+    "fail": 0,
+    "skip": 0,
+    "wall_clock_sec": 904,
+    "pipeline_ok_rate": 1,
+    "fw_triggered_count": 7,
+    "fw_applied_case_count": 0,
+    "text_changed_count": 0,
+    "lexicon_runtime_ok_count": 141,
+    "asr_service_id_distribution": {
+      "faster-whisper-vad": 141
+    }
+  }
+}

@@ -3,7 +3,6 @@
  */
 
 import { getLexiconRuntimeV2Config } from './lexicon-runtime-v2-config';
-import { isLexiconRuntimeV2RecallEnabled } from './lexicon-fw-recall-config';
 
 export type RecallSpanV2Diagnostics = {
   base_hits: number;
@@ -44,9 +43,6 @@ export function isRecallV2DiagnosticsEnabled(): boolean {
   if (process.env.LEXICON_RECALL_V2_DIAGNOSTICS === '1') {
     return true;
   }
-  if (!isLexiconRuntimeV2RecallEnabled()) {
-    return false;
-  }
   return getLexiconRuntimeV2Config().recallDiagnosticsEnabled !== false;
 }
 
@@ -57,39 +53,38 @@ export function beginRecallJobDiagnostics(): void {
   activeStore = { spans: [], industryRoutingLookupCount: 0 };
 }
 
+export function recordRecallSpanDiagnostics(span: RecallSpanV2Diagnostics): void {
+  activeStore?.spans.push(span);
+}
+
+export function recordIndustryRoutingLookup(): void {
+  if (activeStore) {
+    activeStore.industryRoutingLookupCount += 1;
+  }
+}
+
 export function runWithRecallV2Diagnostics<T>(fn: () => T | Promise<T>): T | Promise<T> {
   beginRecallJobDiagnostics();
   return fn();
 }
 
-export function recordIndustryRoutingLookup(): void {
-  if (!activeStore) {
-    return;
-  }
-  activeStore.industryRoutingLookupCount += 1;
-}
-
-export function recordRecallSpanDiagnostics(entry: RecallSpanV2Diagnostics): void {
-  activeStore?.spans.push(entry);
-}
-
-export function flushRecallJobDiagnostics(input: {
+export function flushRecallJobDiagnostics(stats: {
   v2SqlQueryCount: number;
   v2CacheHits: number;
   v2CacheMisses: number;
   kenlmQueryCount: number;
-}): RecallJobV2Diagnostics | undefined {
+}): RecallJobV2Diagnostics | null {
   if (!activeStore) {
-    return undefined;
+    return null;
   }
-  const snapshot: RecallJobV2Diagnostics = {
-    spans: [...activeStore.spans],
+  const result: RecallJobV2Diagnostics = {
+    spans: activeStore.spans,
     industry_routing_lookup_count: activeStore.industryRoutingLookupCount,
-    v2_sql_query_count: input.v2SqlQueryCount,
-    v2_cache_hits: input.v2CacheHits,
-    v2_cache_misses: input.v2CacheMisses,
-    kenlm_query_count: input.kenlmQueryCount,
+    v2_sql_query_count: stats.v2SqlQueryCount,
+    v2_cache_hits: stats.v2CacheHits,
+    v2_cache_misses: stats.v2CacheMisses,
+    kenlm_query_count: stats.kenlmQueryCount,
   };
   activeStore = null;
-  return snapshot;
+  return result;
 }

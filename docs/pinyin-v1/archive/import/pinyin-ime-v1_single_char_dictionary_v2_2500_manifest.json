@@ -1,0 +1,52 @@
+{
+  "name": "pinyin-ime-v1_single_char_dictionary_v2_2500",
+  "version": "v2.0",
+  "generated_at": "2026-06-02T21:35:34.727275Z",
+  "unique_chars": 2510,
+  "target_unique_chars": 2500,
+  "source_files": {
+    "characters": "shengdoushi/common-standard-chinese-characters-table level-1.txt",
+    "pinyin": "mozillazg/pinyin-data pinyin.txt"
+  },
+  "schema": [
+    "dictionary_type",
+    "surface",
+    "canonical",
+    "pinyin",
+    "tone_pinyin",
+    "weight",
+    "target_boost",
+    "domain_id",
+    "is_alias",
+    "single_char_role",
+    "ime_layer",
+    "frequency_rank",
+    "source"
+  ],
+  "role_counts": {
+    "content_single_char": 698,
+    "service_content_single_char": 29,
+    "function_single_char": 79,
+    "time_single_char": 22,
+    "place_direction_single_char": 33,
+    "measure_single_char": 32,
+    "content_single_char_fallback": 1617
+  },
+  "weight_policy": {
+    "function_single_char": 0.3,
+    "time_single_char": 0.26,
+    "place_direction_single_char": 0.24,
+    "measure_single_char": 0.22,
+    "service_content_single_char": 0.14,
+    "content_single_char": 0.12,
+    "content_single_char_fallback": 0.08
+  },
+  "constraints": [
+    "Do not load all single characters with equal weight.",
+    "Function/time/place/measure single characters may participate in main beam with low weight.",
+    "Content single characters should be fallback-oriented and penalized.",
+    "Rare single characters are not included.",
+    "This file is a pinyin-ime-v1 import candidate, not a second runtime database."
+  ],
+  "missing_pinyin_count": 0
+}

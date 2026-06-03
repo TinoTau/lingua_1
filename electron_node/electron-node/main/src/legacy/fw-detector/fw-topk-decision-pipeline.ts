@@ -8,14 +8,13 @@ import {
   kenlmCandidateScoreToGateDiag,
   scoreSpanCandidateSentences,
 } from '../../asr-repair/kenlm-span-gate';
-import type { LexiconRuntime } from '../../lexicon/lexicon-runtime';
 import { recallSpanTopK } from '../../lexicon/local-span-recall';
 import type { LocalSpanRecallHit } from '../../lexicon/local-span-recall';
 import { matchEnabledDomain } from '../../lexicon/domain-filter';
 import type { ActiveLexiconProfileSnapshot } from '../../session-runtime/types';
 import { buildCandidateSentencesForSpan } from '../../fw-detector/candidate-sentence-builder';
 import { computeCandidateFinalScore } from './candidate-scorer';
-import type { FinalScoreWeights, FwDetectorRuntimeConfig } from '../../fw-detector/fw-config';
+import type { FinalScoreWeights } from '../../fw-detector/fw-config';
 import {
   markSelectedCandidates,
   pickApprovedReplacementsGreedy,
@@ -30,15 +29,19 @@ import type {
   KenlmSpanGateOptions,
 } from '../../fw-detector/types';
 
+export type LegacyTopKDecisionConfig = {
+  topK: number;
+  minPrior: number;
+  finalScoreWeights: FinalScoreWeights;
+  candidateRequireRepairTarget: boolean;
+  repairTargetScoreBoost: number;
+};
+
 export type FwTopKDecisionInput = {
   rawText: string;
   spans: FwSpanDiagnostics[];
-  runtime: LexiconRuntime;
   profile: ActiveLexiconProfileSnapshot;
-  config: Pick<
-    FwDetectorRuntimeConfig,
-    'topK' | 'minPrior' | 'finalScoreWeights' | 'candidateRequireRepairTarget' | 'repairTargetScoreBoost'
-  >;
+  config: LegacyTopKDecisionConfig;
   enabledDomains: string[];
   kenlmScorer: KenLMScorer | null;
   gateOptions: KenlmSpanGateOptions;
@@ -230,7 +233,6 @@ export async function runFwTopKDecisionPipeline(
 
   for (const span of input.spans) {
     const recall = recallSpanTopK(
-      input.runtime,
       span.text,
       input.profile,
       input.config.topK,

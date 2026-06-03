@@ -11,7 +11,10 @@ export type FwDetectorSignal =
   | 'alias_exact_hit'
   | 'low_word_probability'
   | 'low_segment_avg_logprob'
-  | 'high_compression_ratio';
+  | 'high_compression_ratio'
+  | 'ime_v2_diff_hint'
+  | 'ime_v2_instability_hint'
+  | 'ime_v2_boundary_topk_diff_hint';
 
 export type FwSpanGateMode = 'legacy_detector' | 'kenlm_gate_filter' | 'fw_metadata_gate';
 
@@ -215,9 +218,6 @@ export type FwDetectorRuntimeDiag = {
   sqlitePath: string | null;
   manifestVersion: string | null;
   lexiconRows: number | null;
-  scoredRows: number | null;
-  pinyinIndexSize: number | null;
-  exactIndexSize: number | null;
   profilePrimary: string | null;
   enabledDomains: string[];
 };
@@ -241,6 +241,33 @@ export type FwDetectorReplacementDiag = {
   };
 };
 
+export type PinyinImeV2ActiveDiagnostics = {
+  enabled: true;
+  candidateCount: number;
+  diffSpanCount: number;
+  instabilityRegionCount: number;
+  approvedSpanCount: number;
+  normalizerDroppedCount: number;
+  gateDroppedNoNeighbor: number;
+  gateDroppedSupport: number;
+  decodeMs: number;
+  /** Phase 4B.1 alignment-only OpenCC stats */
+  traditionalCharCount?: number;
+  openccConvertedCount?: number;
+  normalizedCharCount?: number;
+  rawBoundaryCount?: number;
+  /** Phase 4C boundary alignment diagnostics */
+  rawBoundaryMatchedTopKCount?: number;
+  boundaryCompatibilityScoreMax?: number;
+  boundaryCompatibilityScoreAvg?: number;
+  /** Phase 4D: trusted TopK + boundary-compatible diff spans */
+  trustedTopKCount?: number;
+  boundaryCompatibleTopKSpanCount?: number;
+  diffZeroBoundaryPositive?: number;
+  skippedReason?: 'ime_dict_unavailable' | 'no_cjk' | 'no_candidates' | 'no_approved_spans';
+  loadError?: string;
+};
+
 export type FwDetectorResult = {
   enabled: boolean;
   triggered: boolean;
@@ -250,13 +277,12 @@ export type FwDetectorResult = {
   runtime?: FwDetectorRuntimeDiag;
   replacements?: FwDetectorReplacementDiag[];
   spans: FwSpanDiagnostics[];
-  spanSelection?: FwSpanSelectionDiag;
   kenlmTiming?: {
     batchMs: number;
     queryCount: number;
   };
-  kenlmSpanGate?: KenlmSpanGateDiagnostics;
-  fwMetadataSpanGate?: FwMetadataSpanGateDiagnostics;
+  /** Pinyin IME V2 active-path span proposal diagnostics */
+  pinyinImeV2?: PinyinImeV2ActiveDiagnostics;
   kenlmVetoMs?: number;
   kenlmVetoQueryCount?: number;
   /** Test-only when LEXICON_RECALL_V2_DIAGNOSTICS=1 */
