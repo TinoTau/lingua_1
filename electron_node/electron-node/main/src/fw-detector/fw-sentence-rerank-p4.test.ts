@@ -3,7 +3,6 @@ import { buildSentenceCandidates } from './build-sentence-candidates';
 import { getPerSpanCandidateLimit } from './per-span-candidate-limit';
 import { rerankFwSentences } from './rerank-fw-sentences';
 import { mapSentenceToApprovedReplacements } from './map-sentence-to-approved';
-import { toneDistance } from '../lexicon/phonetic/tone-pinyin';
 import { mergeSpanCandidatesCombined } from '../lexicon-v2/merge-span-candidates';
 
 describe('P4 per-span limit', () => {
@@ -135,12 +134,5 @@ describe('P4 mapSentenceToApprovedReplacements', () => {
       true
     );
     expect(approved).toHaveLength(0);
-  });
-});
-
-describe('P4 toneDistance', () => {
-  it('counts syllable tone mismatches', () => {
-    expect(toneDistance('mei3|shi4', 'mei3|shi2')).toBe(1);
-    expect(toneDistance('mei3|shi2', 'mei2|shi4')).toBe(2);
   });
 });

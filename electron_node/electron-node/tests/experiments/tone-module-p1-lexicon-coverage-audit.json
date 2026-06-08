@@ -1,0 +1,112 @@
+{
+  "db": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v3\\lexicon.sqlite",
+  "coverage": [
+    {
+      "table": "base_lexicon",
+      "total": 50000,
+      "empty": 0,
+      "no_digit": 50000,
+      "with_digit": 0,
+      "tone_eq_pinyin": 50000,
+      "repair_target": 50000
+    },
+    {
+      "table": "domain_lexicon",
+      "total": 25,
+      "empty": 0,
+      "no_digit": 9,
+      "with_digit": 16,
+      "tone_eq_pinyin": 9,
+      "repair_target": 25
+    },
+    {
+      "table": "idiom_lexicon",
+      "total": 22192,
+      "empty": 0,
+      "no_digit": 22192,
+      "with_digit": 0,
+      "tone_eq_pinyin": 22192,
+      "repair_target": 22192
+    }
+  ],
+  "indexes": {
+    "base_lexicon": [
+      {
+        "name": "idx_base_pinyin_tone",
+        "unique": 0,
+        "columns": [
+          "pinyin_key",
+          "tone_pinyin_key"
+        ]
+      },
+      {
+        "name": "idx_base_pinyin",
+        "unique": 0,
+        "columns": [
+          "pinyin_key"
+        ]
+      },
+      {
+        "name": "sqlite_autoindex_base_lexicon_1",
+        "unique": 1,
+        "columns": [
+          "pinyin_key",
+          "word"
+        ]
+      }
+    ],
+    "domain_lexicon": [
+      {
+        "name": "idx_domain_pinyin_tone",
+        "unique": 0,
+        "columns": [
+          "domain_id",
+          "pinyin_key",
+          "tone_pinyin_key"
+        ]
+      },
+      {
+        "name": "idx_domain_pinyin",
+        "unique": 0,
+        "columns": [
+          "domain_id",
+          "pinyin_key"
+        ]
+      },
+      {
+        "name": "sqlite_autoindex_domain_lexicon_1",
+        "unique": 1,
+        "columns": [
+          "domain_id",
+          "word"
+        ]
+      }
+    ],
+    "idiom_lexicon": [
+      {
+        "name": "idx_idiom_pinyin_tone",
+        "unique": 0,
+        "columns": [
+          "pinyin_key",
+          "tone_pinyin_key"
+        ]
+      },
+      {
+        "name": "idx_idiom_pinyin",
+        "unique": 0,
+        "columns": [
+          "pinyin_key"
+        ]
+      },
+      {
+        "name": "sqlite_autoindex_idiom_lexicon_1",
+        "unique": 1,
+        "columns": [
+          "pinyin_key",
+          "word"
+        ]
+      }
+    ]
+  },
+  "note": "target_lexicon table does not exist; repair_target is a column"
+}

@@ -42,6 +42,7 @@ export async function executeFasterWhisperASR(
     enable_streaming_asr: task.enable_streaming || false,
     context_text: fwP0 ? undefined : task.context_text,
     beam_size: fwP0 ? 1 : (task.beam_size ?? 1),
+    ...(fwP0 ? { skip_text_dedup: true } : {}),
     ...(fwP0
       ? { temperature: 0 }
       : {
@@ -87,6 +88,7 @@ export async function executeFasterWhisperASR(
     segments: response.data.segments,
     is_final: true,
     ...(response.data.diagnostics ? { diagnostics: response.data.diagnostics } : {}),
+    ...(response.data.tone ? { tone: response.data.tone } : {}),
   };
 
   const audioDurationMs = response.data.duration

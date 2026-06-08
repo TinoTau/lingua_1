@@ -32,5 +32,6 @@ describe('runPinyinImeV2SpanProposal', () => {
     });
     expect(proposal.candidates).toEqual([]);
     expect(proposal.diffSpans).toEqual([]);
+    expect(proposal.diagnostics.localRawImeDiffActivated).toBe(0);
   });
 });

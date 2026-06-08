@@ -1,0 +1,426 @@
+{
+  "audit": "ToneModule P0.5 Runtime Validation",
+  "timestamp": "2026-06-06T19:56:30.241Z",
+  "projectRoot": "D:\\Programs\\github\\lingua_1",
+  "part1_pipelineTrace": [
+    {
+      "step": 1,
+      "component": "FW Audio",
+      "file": "api_routes.py",
+      "fn": "process_utterance"
+    },
+    {
+      "step": 2,
+      "component": "Tone CNN",
+      "file": "tone_module/inference.py",
+      "fn": "run_tone_inference"
+    },
+    {
+      "step": 3,
+      "component": "toneTokens",
+      "field": "UtteranceTonePayload.toneTokens"
+    },
+    {
+      "step": 4,
+      "component": "extractAcousticTonePattern",
+      "file": "fw-sentence-rerank-pipeline.ts"
+    },
+    {
+      "step": 5,
+      "component": "recallSpanTopK",
+      "file": "local-span-recall.ts",
+      "note": "acousticTonePattern option"
+    },
+    {
+      "step": 6,
+      "component": "tone-aware Recall",
+      "file": "recall-span-topk-v2.ts + tone-recall-sort.ts"
+    },
+    {
+      "step": 7,
+      "component": "Builder",
+      "file": "build-sentence-candidates.ts",
+      "note": "no tone"
+    },
+    {
+      "step": 8,
+      "component": "KenLM",
+      "file": "rerank-fw-sentences.ts",
+      "note": "no tone"
+    },
+    {
+      "step": 9,
+      "component": "Apply",
+      "file": "map-sentence-to-approved.ts",
+      "note": "no tone"
+    }
+  ],
+  "part12_freezeCheck": {
+    "no_wTone": {
+      "pass": true,
+      "hitCount": 0,
+      "hits": []
+    },
+    "no_toneMatchScore": {
+      "pass": true,
+      "hitCount": 0,
+      "hits": []
+    },
+    "no_candidateScore_tone": {
+      "pass": true,
+      "hitCount": 0,
+      "hits": []
+    },
+    "builder_no_tone": {
+      "pass": true,
+      "hitCount": 0,
+      "hits": []
+    },
+    "kenlm_no_tone": {
+      "pass": true,
+      "hitCount": 0,
+      "hits": []
+    },
+    "apply_no_tone": {
+      "pass": true,
+      "hitCount": 0,
+      "hits": []
+    },
+    "ime_no_acoustic_tone": {
+      "pass": true,
+      "hitCount": 0,
+      "hits": []
+    },
+    "fwToneConfigDeleted": {
+      "pass": true
+    },
+    "computeToneMatchScoreRemoved": {
+      "pass": true
+    }
+  },
+  "part2_ssot": {
+    "fwServiceUp": true,
+    "sampleCount": 50,
+    "alignmentMatchedCount": 50,
+    "alignmentMismatchCount": 0,
+    "pass": true,
+    "rows": [
+      {
+        "id": "d133",
+        "rawAsrText": "我们下午讨论后选生成方安线把后选生成的接口文当补齐",
+        "alignmentText": "我们下午讨论后选生成方安线把后选生成的接口文当补齐",
+        "alignmentMatched": true,
+        "toneEnabled": true
+      },
+      {
+        "id": "d160",
+        "rawAsrText": "请简单介绍一下你上一段项目里负责的核心模块和难点",
+        "alignmentText": "请简单介绍一下你上一段项目里负责的核心模块和难点",
+        "alignmentMatched": true,
+        "toneEnabled": true
+      },
+      {
+        "id": "d006",
+        "rawAsrText": "更会员系统相关的需求我整理了一版八点前请大家帮忙评审一下",
+        "alignmentText": "更会员系统相关的需求我整理了一版八点前请大家帮忙评审一下",
+        "alignmentMatched": true,
+        "toneEnabled": true
+      },
+      {
+        "id": "d038",
+        "rawAsrText": "这道菜大概要等多久 我们先点一份凉菜和一壶茶",
+        "alignmentText": "这道菜大概要等多久 我们先点一份凉菜和一壶茶",
+        "alignmentMatched": true,
+        "toneEnabled": true
+      },
+      {
+        "id": "d030",
+        "rawAsrText": "请问这门客期末是开卷还是闭卷? 终点会话吗?",
+        "alignmentText": "请问这门客期末是开卷还是闭卷? 终点会话吗?",
+        "alignmentMatched": true,
+        "toneEnabled": true
+      },
+      {
+        "id": "d193",
+        "rawAsrText": "这件外套能试穿吗? 我穿中码,买两件有没有折扣?",
+        "alignmentText": "这件外套能试穿吗? 我穿中码,买两件有没有折扣?",
+        "alignmentMatched": true,
+        "toneEnabled": true
+      },
+      {
+        "id": "d002",
+        "rawAsrText": "麻烦帮我做一杯美食带走大背就行谢",
+        "alignmentText": "麻烦帮我做一杯美食带走大背就行谢",
+        "alignmentMatched": true,
+        "toneEnabled": true
+      },
+      {
+        "id": "d147",
+        "rawAsrText": "这个检查报告什么时候能出?我咳嗽需要请假休息吗?",
+        "alignmentText": "这个检查报告什么时候能出?我咳嗽需要请假休息吗?",
+        "alignmentMatched": true,
+        "toneEnabled": true
+      },
+      {
+        "id": "d071",
+        "rawAsrText": "你如何看待夸团队协作?遇到需求边更一般怎么处理?",
+        "alignmentText": "你如何看待夸团队协作?遇到需求边更一般怎么处理?",
+        "alignmentMatched": true,
+        "toneEnabled": true
+      },
+      {
+        "id": "d056",
+        "rawAsrText": "挂号出请问 内刻还有号码 我低哨昨晚开始的",
+        "alignmentText": "挂号出请问 内刻还有号码 我低哨昨晚开始的",
+        "alignmentMatched": true,
+        "toneEnabled": true
+      }
+    ]
+  },
+  "part3_4_10_dialog200": {
+    "nodeServiceUp": true,
+    "port": 5020,
+    "toneEnabledCount": 47,
+    "toneDisabledCount": 153,
+    "extractSuccessCount": 47,
+    "extractFailCount": 153,
+    "failReasons": {
+      "noTonePayload": 0,
+      "alignmentMismatch": 18,
+      "nonZh": 0,
+      "emptyPattern": 0,
+      "fwNotTriggered": 135
+    },
+    "recallToneCompatibleCount": 0,
+    "recallToneFallbackCount": 263,
+    "e2e": {
+      "casesWithSpans": 65,
+      "recallTop1Change": 9,
+      "recallTop3Change": 15,
+      "recallTop5Change": 15,
+      "kenlmSelectedChange": 0,
+      "applyCountChange": 0
+    },
+    "samples": [
+      {
+        "id": "d001",
+        "rawAsrText": "你好 我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+        "toneModule": {},
+        "onApplied": 0,
+        "offApplied": 0
+      },
+      {
+        "id": "d002",
+        "rawAsrText": "麻烦帮我做一杯美食带走大悲就行谢谢",
+        "toneModule": {},
+        "onApplied": 0,
+        "offApplied": 0
+      },
+      {
+        "id": "d003",
+        "rawAsrText": "请问,这款燕麦拿铁可以少病吗?我赶时间小背",
+        "toneModule": {
+          "toneEnabled": true,
+          "alignmentTextMatched": true,
+          "acousticTonePattern": [
+            3,
+            3
+          ],
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 6
+        },
+        "onApplied": 0,
+        "offApplied": 0
+      },
+      {
+        "id": "d004",
+        "rawAsrText": "小陈客户反馈翻译引擎接口包错 我们能 不能加緩存下午3點前把結論發群裡",
+        "toneModule": {},
+        "onApplied": 0,
+        "offApplied": 0
+      },
+      {
+        "id": "d005",
+        "rawAsrText": "今天德站会现贵一下订单 中台进度内存占用高者快需要先留保护大家看一下风险",
+        "toneModule": {
+          "toneEnabled": true,
+          "alignmentTextMatched": true,
+          "acousticTonePattern": [
+            4,
+            2
+          ],
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 6
+        },
+        "onApplied": 0,
+        "offApplied": 0
+      },
+      {
+        "id": "d006",
+        "rawAsrText": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下",
+        "toneModule": {
+          "toneEnabled": false,
+          "alignmentTextMatched": false,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 2
+        },
+        "onApplied": 0,
+        "offApplied": 0
+      },
+      {
+        "id": "d007",
+        "rawAsrText": "市富曲仲觀村軟件遠走機場高速 我幹 9点半的回药师赌车 您提前跟我说",
+        "toneModule": {},
+        "onApplied": 0,
+        "offApplied": 0
+      },
+      {
+        "id": "d008",
+        "rawAsrText": "麻烦送我到国贸三七南门大概多久能到 我十点 10分有隔電話會",
+        "toneModule": {},
+        "onApplied": 0,
+        "offApplied": 0
+      }
+    ],
+    "totalCases": 200
+  },
+  "part5_8_offlineProbes": {
+    "shaoBing": {
+      "raw": "少病",
+      "acousticTonePattern": [
+        3,
+        1
+      ],
+      "ranked": [
+        {
+          "word": "少冰",
+          "candidateRank": 1,
+          "candidateTonePattern": "shao3|bing1",
+          "toneCompatible": true
+        },
+        {
+          "word": "烧饼",
+          "candidateRank": 2,
+          "candidateTonePattern": "shao1|bing3",
+          "toneCompatible": false
+        },
+        {
+          "word": "哨兵",
+          "candidateRank": 3,
+          "candidateTonePattern": "shao4|bing1",
+          "toneCompatible": false
+        }
+      ],
+      "top1": "少冰",
+      "recallToneCompatibleCount": 1
+    },
+    "pingShen": {
+      "raw": "评审",
+      "acousticTonePattern": [
+        2,
+        2
+      ],
+      "ranked": [
+        {
+          "word": "评审",
+          "candidateRank": 1,
+          "candidateTonePattern": "ping2|shen3",
+          "toneCompatible": false
+        },
+        {
+          "word": "平身",
+          "candidateRank": 2,
+          "candidateTonePattern": "ping2|shen1",
+          "toneCompatible": false
+        }
+      ],
+      "top1": "评审",
+      "recallToneCompatibleCount": 0
+    },
+    "jianCha": {
+      "raw": "检查",
+      "acousticTonePattern": [
+        3,
+        3
+      ],
+      "ranked": [
+        {
+          "word": "检查",
+          "candidateRank": 1,
+          "candidateTonePattern": "jian3|cha2",
+          "toneCompatible": false
+        },
+        {
+          "word": "检察",
+          "candidateRank": 2,
+          "candidateTonePattern": "jian3|cha2",
+          "toneCompatible": false
+        }
+      ],
+      "top1": "检查",
+      "recallToneCompatibleCount": 0
+    },
+    "shangXian": {
+      "raw": "上线",
+      "acousticTonePattern": [
+        4,
+        4
+      ],
+      "ranked": [
+        {
+          "word": "上线",
+          "candidateRank": 1,
+          "candidateTonePattern": "shang4|xian4",
+          "toneCompatible": true
+        },
+        {
+          "word": "上限",
+          "candidateRank": 2,
+          "candidateTonePattern": "shang4|xian4",
+          "toneCompatible": true
+        }
+      ],
+      "top1": "上线",
+      "recallToneCompatibleCount": 2
+    },
+    "failOpen": {
+      "noTone": {
+        "top1": "少冰",
+        "fallback": 2
+      },
+      "alignmentMismatch": {
+        "pattern": null,
+        "aligned": false
+      },
+      "nonZh": {
+        "note": "FW skippedReason non_zh — validated at FW layer"
+      }
+    }
+  },
+  "part11_performance": {
+    "fwServiceUp": true,
+    "utteranceCount": 200,
+    "percentiles": {
+      "p50": 9,
+      "p95": 16,
+      "p99": 20,
+      "max": 28,
+      "n": 200,
+      "mean": 9.54,
+      "targetMs": 20,
+      "passP95Le20": true
+    }
+  },
+  "offlineRecallPath": {
+    "shaoBingTop1": "少冰",
+    "shaoBingPass": true
+  },
+  "verdict": {
+    "toneEntersRecall": true,
+    "toneAffectsOrder": true,
+    "ssotFixed": true,
+    "failOpenOk": false,
+    "performanceOk": true,
+    "freezeChecksPass": true
+  }
+}

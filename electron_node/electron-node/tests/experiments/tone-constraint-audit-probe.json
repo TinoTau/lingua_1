@@ -1,0 +1,1435 @@
+{
+  "readonly": true,
+  "timestamp": "2026-06-05T09:43:35.280Z",
+  "sqlitePath": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v3\\lexicon.sqlite",
+  "manifestSchemaVersion": "lexicon-v3-four-table-v1",
+  "schema": {
+    "tables": {
+      "base_lexicon": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "pinyin_key",
+          "type": "TEXT",
+          "pk": 1
+        },
+        {
+          "name": "tone_pinyin_key",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "word",
+          "type": "TEXT",
+          "pk": 2
+        },
+        {
+          "name": "normalized",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "prior_score",
+          "type": "REAL",
+          "pk": 0
+        },
+        {
+          "name": "repair_target",
+          "type": "INTEGER",
+          "pk": 0
+        },
+        {
+          "name": "enabled",
+          "type": "INTEGER",
+          "pk": 0
+        },
+        {
+          "name": "aliases",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "source",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "canonical_word",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "is_alias",
+          "type": "INTEGER",
+          "pk": 0
+        }
+      ],
+      "domain_lexicon": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "domain_id",
+          "type": "TEXT",
+          "pk": 1
+        },
+        {
+          "name": "pinyin_key",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "tone_pinyin_key",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "word",
+          "type": "TEXT",
+          "pk": 2
+        },
+        {
+          "name": "normalized",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "prior_score",
+          "type": "REAL",
+          "pk": 0
+        },
+        {
+          "name": "repair_target",
+          "type": "INTEGER",
+          "pk": 0
+        },
+        {
+          "name": "enabled",
+          "type": "INTEGER",
+          "pk": 0
+        },
+        {
+          "name": "aliases",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "source",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "canonical_word",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "is_alias",
+          "type": "INTEGER",
+          "pk": 0
+        }
+      ],
+      "idiom_lexicon": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "pinyin_key",
+          "type": "TEXT",
+          "pk": 1
+        },
+        {
+          "name": "tone_pinyin_key",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "word",
+          "type": "TEXT",
+          "pk": 2
+        },
+        {
+          "name": "normalized",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "prior_score",
+          "type": "REAL",
+          "pk": 0
+        },
+        {
+          "name": "repair_target",
+          "type": "INTEGER",
+          "pk": 0
+        },
+        {
+          "name": "enabled",
+          "type": "INTEGER",
+          "pk": 0
+        },
+        {
+          "name": "aliases",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "source",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "canonical_word",
+          "type": "TEXT",
+          "pk": 0
+        },
+        {
+          "name": "is_alias",
+          "type": "INTEGER",
+          "pk": 0
+        }
+      ],
+      "industry_routing_lexicon": [
+        {
+          "name": "pinyin_key",
+          "type": "TEXT",
+          "pk": 1
+        },
+        {
+          "name": "keyword",
+          "type": "TEXT",
+          "pk": 2
+        },
+        {
+          "name": "domain_id",
+          "type": "TEXT",
+          "pk": 3
+        },
+        {
+          "name": "weight",
+          "type": "REAL",
+          "pk": 0
+        }
+      ]
+    },
+    "indexes": {
+      "base_lexicon": [
+        {
+          "name": "idx_base_pinyin_tone",
+          "unique": false,
+          "columns": [
+            "pinyin_key",
+            "tone_pinyin_key"
+          ]
+        },
+        {
+          "name": "idx_base_pinyin",
+          "unique": false,
+          "columns": [
+            "pinyin_key"
+          ]
+        },
+        {
+          "name": "sqlite_autoindex_base_lexicon_1",
+          "unique": true,
+          "columns": [
+            "pinyin_key",
+            "word"
+          ]
+        }
+      ],
+      "domain_lexicon": [
+        {
+          "name": "idx_domain_pinyin_tone",
+          "unique": false,
+          "columns": [
+            "domain_id",
+            "pinyin_key",
+            "tone_pinyin_key"
+          ]
+        },
+        {
+          "name": "idx_domain_pinyin",
+          "unique": false,
+          "columns": [
+            "domain_id",
+            "pinyin_key"
+          ]
+        },
+        {
+          "name": "sqlite_autoindex_domain_lexicon_1",
+          "unique": true,
+          "columns": [
+            "domain_id",
+            "word"
+          ]
+        }
+      ],
+      "idiom_lexicon": [
+        {
+          "name": "idx_idiom_pinyin_tone",
+          "unique": false,
+          "columns": [
+            "pinyin_key",
+            "tone_pinyin_key"
+          ]
+        },
+        {
+          "name": "idx_idiom_pinyin",
+          "unique": false,
+          "columns": [
+            "pinyin_key"
+          ]
+        },
+        {
+          "name": "sqlite_autoindex_idiom_lexicon_1",
+          "unique": true,
+          "columns": [
+            "pinyin_key",
+            "word"
+          ]
+        }
+      ],
+      "industry_routing_lexicon": [
+        {
+          "name": "sqlite_autoindex_industry_routing_lexicon_1",
+          "unique": true,
+          "columns": [
+            "pinyin_key",
+            "keyword",
+            "domain_id"
+          ]
+        }
+      ]
+    }
+  },
+  "wordRows": {
+    "少病": [],
+    "少冰": [],
+    "烧饼": [
+      {
+        "word": "烧饼",
+        "table": "base_lexicon",
+        "domain": null,
+        "pinyin_plain": "shao|bing",
+        "pinyin_tone": "shao|bing",
+        "tone_key": "shao|bing",
+        "priorScore": 0.7024,
+        "repairTarget": true,
+        "source": "jieba_dict_mit_highfreq_fw_domain_compat",
+        "enabled": true,
+        "is_alias": false
+      }
+    ],
+    "哨兵": [
+      {
+        "word": "哨兵",
+        "table": "base_lexicon",
+        "domain": null,
+        "pinyin_plain": "shao|bing",
+        "pinyin_tone": "shao|bing",
+        "tone_key": "shao|bing",
+        "priorScore": 0.6617,
+        "repairTarget": true,
+        "source": "jieba_dict_mit_highfreq_fw_domain_compat",
+        "enabled": true,
+        "is_alias": false
+      }
+    ],
+    "评审": [
+      {
+        "word": "评审",
+        "table": "base_lexicon",
+        "domain": null,
+        "pinyin_plain": "ping|shen",
+        "pinyin_tone": "ping|shen",
+        "tone_key": "ping|shen",
+        "priorScore": 0.7033,
+        "repairTarget": true,
+        "source": "jieba_dict_mit_highfreq_fw_domain_compat",
+        "enabled": true,
+        "is_alias": false
+      }
+    ],
+    "平身": [
+      {
+        "word": "平身",
+        "table": "base_lexicon",
+        "domain": null,
+        "pinyin_plain": "ping|shen",
+        "pinyin_tone": "ping|shen",
+        "tone_key": "ping|shen",
+        "priorScore": 0.5605,
+        "repairTarget": true,
+        "source": "jieba_dict_mit_highfreq_fw_domain_compat",
+        "enabled": true,
+        "is_alias": false
+      }
+    ],
+    "进度": [
+      {
+        "word": "进度",
+        "table": "base_lexicon",
+        "domain": null,
+        "pinyin_plain": "jin|du",
+        "pinyin_tone": "jin|du",
+        "tone_key": "jin|du",
+        "priorScore": 0.6797,
+        "repairTarget": true,
+        "source": "jieba_dict_mit_highfreq_fw_domain_compat",
+        "enabled": true,
+        "is_alias": false
+      }
+    ],
+    "筋斗": [
+      {
+        "word": "筋斗",
+        "table": "base_lexicon",
+        "domain": null,
+        "pinyin_plain": "jin|dou",
+        "pinyin_tone": "jin|dou",
+        "tone_key": "jin|dou",
+        "priorScore": 0.687,
+        "repairTarget": true,
+        "source": "jieba_dict_mit_highfreq_fw_domain_compat",
+        "enabled": true,
+        "is_alias": false
+      }
+    ],
+    "文档": [
+      {
+        "word": "文档",
+        "table": "base_lexicon",
+        "domain": null,
+        "pinyin_plain": "wen|dang",
+        "pinyin_tone": "wen|dang",
+        "tone_key": "wen|dang",
+        "priorScore": 0.6365,
+        "repairTarget": true,
+        "source": "jieba_dict_mit_highfreq_fw_domain_compat",
+        "enabled": true,
+        "is_alias": false
+      }
+    ],
+    "稳当": [
+      {
+        "word": "稳当",
+        "table": "base_lexicon",
+        "domain": null,
+        "pinyin_plain": "wen|dang",
+        "pinyin_tone": "wen|dang",
+        "tone_key": "wen|dang",
+        "priorScore": 0.5703,
+        "repairTarget": true,
+        "source": "jieba_dict_mit_highfreq_fw_domain_compat",
+        "enabled": true,
+        "is_alias": false
+      }
+    ],
+    "上线": [
+      {
+        "word": "上线",
+        "table": "base_lexicon",
+        "domain": null,
+        "pinyin_plain": "shang|xian",
+        "pinyin_tone": "shang|xian",
+        "tone_key": "shang|xian",
+        "priorScore": 0.7087,
+        "repairTarget": true,
+        "source": "jieba_dict_mit_highfreq_fw_domain_compat",
+        "enabled": true,
+        "is_alias": false
+      }
+    ],
+    "上限": [
+      {
+        "word": "上限",
+        "table": "base_lexicon",
+        "domain": null,
+        "pinyin_plain": "shang|xian",
+        "pinyin_tone": "shang|xian",
+        "tone_key": "shang|xian",
+        "priorScore": 0.6494,
+        "repairTarget": true,
+        "source": "jieba_dict_mit_highfreq_fw_domain_compat",
+        "enabled": true,
+        "is_alias": false
+      }
+    ]
+  },
+  "shaobingBucket": {
+    "key": "shao|bing",
+    "entries": [
+      {
+        "word": "烧饼",
+        "table": "base_lexicon",
+        "domain": null,
+        "pinyin_key": "shao|bing",
+        "tone_pinyin_key": "shao|bing",
+        "prior_score": 0.7024,
+        "repair_target": 1
+      },
+      {
+        "word": "哨兵",
+        "table": "base_lexicon",
+        "domain": null,
+        "pinyin_key": "shao|bing",
+        "tone_pinyin_key": "shao|bing",
+        "prior_score": 0.6617,
+        "repair_target": 1
+      }
+    ],
+    "hasShaobing": false
+  },
+  "spanAudits": {
+    "少病": {
+      "pinyin": {
+        "text": "少病",
+        "plainSyllables": [
+          "shao",
+          "bing"
+        ],
+        "toneSyllables": [
+          "shao3",
+          "bing4"
+        ],
+        "plainKey": "shao|bing",
+        "toneKey": "shao3|bing4",
+        "plainJoined": "shao bing",
+        "toneJoined": "shao3 bing4",
+        "pinyinProNone": [
+          "shao",
+          "bing"
+        ],
+        "pinyinProNum": [
+          "shao3",
+          "bing4"
+        ]
+      },
+      "recallLocalSpanTopK": [
+        {
+          "word": "烧饼",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.7024,
+          "candidateScore": 1.2024,
+          "tonePinyinKey": "shao|bing",
+          "repairTarget": true,
+          "domains": []
+        },
+        {
+          "word": "哨兵",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.6617,
+          "candidateScore": 1.1616999999999997,
+          "tonePinyinKey": "shao|bing",
+          "repairTarget": true,
+          "domains": []
+        }
+      ],
+      "recallV2Raw": [
+        {
+          "word": "烧饼",
+          "priorScore": 0.7024,
+          "candidateScore": 1.2024,
+          "tonePinyinKey": "shao|bing",
+          "pinyin": [
+            "shao",
+            "bing"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        },
+        {
+          "word": "哨兵",
+          "priorScore": 0.6617,
+          "candidateScore": 1.1616999999999997,
+          "tonePinyinKey": "shao|bing",
+          "pinyin": [
+            "shao",
+            "bing"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        }
+      ],
+      "sqlBucketCount": 2,
+      "sqlBucketTop10": [
+        "烧饼",
+        "哨兵"
+      ]
+    },
+    "赶时": {
+      "pinyin": {
+        "text": "赶时",
+        "plainSyllables": [
+          "gan",
+          "shi"
+        ],
+        "toneSyllables": [
+          "gan3",
+          "shi2"
+        ],
+        "plainKey": "gan|shi",
+        "toneKey": "gan3|shi2",
+        "plainJoined": "gan shi",
+        "toneJoined": "gan3 shi2",
+        "pinyinProNone": [
+          "gan",
+          "shi"
+        ],
+        "pinyinProNum": [
+          "gan3",
+          "shi2"
+        ]
+      },
+      "recallLocalSpanTopK": [
+        {
+          "word": "干事",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.6806,
+          "candidateScore": 1.1806,
+          "tonePinyinKey": "gan|shi",
+          "repairTarget": true,
+          "domains": []
+        },
+        {
+          "word": "干尸",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.6429,
+          "candidateScore": 1.1429,
+          "tonePinyinKey": "gan|shi",
+          "repairTarget": true,
+          "domains": []
+        },
+        {
+          "word": "干湿",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.6193,
+          "candidateScore": 1.1193,
+          "tonePinyinKey": "gan|shi",
+          "repairTarget": true,
+          "domains": []
+        },
+        {
+          "word": "矸石",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.5455,
+          "candidateScore": 1.0455,
+          "tonePinyinKey": "gan|shi",
+          "repairTarget": true,
+          "domains": []
+        },
+        {
+          "word": "杆式",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.5314,
+          "candidateScore": 1.0314,
+          "tonePinyinKey": "gan|shi",
+          "repairTarget": true,
+          "domains": []
+        },
+        {
+          "word": "干式",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.5204,
+          "candidateScore": 1.0204,
+          "tonePinyinKey": "gan|shi",
+          "repairTarget": true,
+          "domains": []
+        }
+      ],
+      "recallV2Raw": [
+        {
+          "word": "干事",
+          "priorScore": 0.6806,
+          "candidateScore": 1.1806,
+          "tonePinyinKey": "gan|shi",
+          "pinyin": [
+            "gan",
+            "shi"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        },
+        {
+          "word": "干尸",
+          "priorScore": 0.6429,
+          "candidateScore": 1.1429,
+          "tonePinyinKey": "gan|shi",
+          "pinyin": [
+            "gan",
+            "shi"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        },
+        {
+          "word": "干湿",
+          "priorScore": 0.6193,
+          "candidateScore": 1.1193,
+          "tonePinyinKey": "gan|shi",
+          "pinyin": [
+            "gan",
+            "shi"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        },
+        {
+          "word": "矸石",
+          "priorScore": 0.5455,
+          "candidateScore": 1.0455,
+          "tonePinyinKey": "gan|shi",
+          "pinyin": [
+            "gan",
+            "shi"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        },
+        {
+          "word": "杆式",
+          "priorScore": 0.5314,
+          "candidateScore": 1.0314,
+          "tonePinyinKey": "gan|shi",
+          "pinyin": [
+            "gan",
+            "shi"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        },
+        {
+          "word": "干式",
+          "priorScore": 0.5204,
+          "candidateScore": 1.0204,
+          "tonePinyinKey": "gan|shi",
+          "pinyin": [
+            "gan",
+            "shi"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        }
+      ],
+      "sqlBucketCount": 6,
+      "sqlBucketTop10": [
+        "干事",
+        "干尸",
+        "干湿",
+        "矸石",
+        "杆式",
+        "干式"
+      ]
+    },
+    "进都": {
+      "pinyin": {
+        "text": "进都",
+        "plainSyllables": [
+          "jin",
+          "dou"
+        ],
+        "toneSyllables": [
+          "jin4",
+          "dou1"
+        ],
+        "plainKey": "jin|dou",
+        "toneKey": "jin4|dou1",
+        "plainJoined": "jin dou",
+        "toneJoined": "jin4 dou1",
+        "pinyinProNone": [
+          "jin",
+          "dou"
+        ],
+        "pinyinProNum": [
+          "jin4",
+          "dou1"
+        ]
+      },
+      "recallLocalSpanTopK": [
+        {
+          "word": "筋斗",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.687,
+          "candidateScore": 1.1870000000000003,
+          "tonePinyinKey": "jin|dou",
+          "repairTarget": true,
+          "domains": []
+        },
+        {
+          "word": "斤斗",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.5514,
+          "candidateScore": 1.0514000000000001,
+          "tonePinyinKey": "jin|dou",
+          "repairTarget": true,
+          "domains": []
+        }
+      ],
+      "recallV2Raw": [
+        {
+          "word": "筋斗",
+          "priorScore": 0.687,
+          "candidateScore": 1.1870000000000003,
+          "tonePinyinKey": "jin|dou",
+          "pinyin": [
+            "jin",
+            "dou"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        },
+        {
+          "word": "斤斗",
+          "priorScore": 0.5514,
+          "candidateScore": 1.0514000000000001,
+          "tonePinyinKey": "jin|dou",
+          "pinyin": [
+            "jin",
+            "dou"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        }
+      ],
+      "sqlBucketCount": 2,
+      "sqlBucketTop10": [
+        "筋斗",
+        "斤斗"
+      ]
+    },
+    "评审": {
+      "pinyin": {
+        "text": "评审",
+        "plainSyllables": [
+          "ping",
+          "shen"
+        ],
+        "toneSyllables": [
+          "ping2",
+          "shen3"
+        ],
+        "plainKey": "ping|shen",
+        "toneKey": "ping2|shen3",
+        "plainJoined": "ping shen",
+        "toneJoined": "ping2 shen3",
+        "pinyinProNone": [
+          "ping",
+          "shen"
+        ],
+        "pinyinProNum": [
+          "ping2",
+          "shen3"
+        ]
+      },
+      "recallLocalSpanTopK": [
+        {
+          "word": "评审",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.7033,
+          "candidateScore": 2.2033,
+          "tonePinyinKey": "ping|shen",
+          "repairTarget": true,
+          "domains": []
+        },
+        {
+          "word": "平身",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.5605,
+          "candidateScore": 1.0605000000000002,
+          "tonePinyinKey": "ping|shen",
+          "repairTarget": true,
+          "domains": []
+        }
+      ],
+      "recallV2Raw": [
+        {
+          "word": "评审",
+          "priorScore": 0.7033,
+          "candidateScore": 2.2033,
+          "tonePinyinKey": "ping|shen",
+          "pinyin": [
+            "ping",
+            "shen"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        },
+        {
+          "word": "平身",
+          "priorScore": 0.5605,
+          "candidateScore": 1.0605000000000002,
+          "tonePinyinKey": "ping|shen",
+          "pinyin": [
+            "ping",
+            "shen"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        }
+      ],
+      "sqlBucketCount": 2,
+      "sqlBucketTop10": [
+        "评审",
+        "平身"
+      ]
+    },
+    "检查": {
+      "pinyin": {
+        "text": "检查",
+        "plainSyllables": [
+          "jian",
+          "cha"
+        ],
+        "toneSyllables": [
+          "jian3",
+          "cha2"
+        ],
+        "plainKey": "jian|cha",
+        "toneKey": "jian3|cha2",
+        "plainJoined": "jian cha",
+        "toneJoined": "jian3 cha2",
+        "pinyinProNone": [
+          "jian",
+          "cha"
+        ],
+        "pinyinProNum": [
+          "jian3",
+          "cha2"
+        ]
+      },
+      "recallLocalSpanTopK": [
+        {
+          "word": "检查",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.8275,
+          "candidateScore": 2.3275,
+          "tonePinyinKey": "jian|cha",
+          "repairTarget": true,
+          "domains": []
+        },
+        {
+          "word": "检察",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.7846,
+          "candidateScore": 1.7846000000000002,
+          "tonePinyinKey": "jian|cha",
+          "repairTarget": true,
+          "domains": []
+        },
+        {
+          "word": "监察",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.7486,
+          "candidateScore": 1.2486000000000002,
+          "tonePinyinKey": "jian|cha",
+          "repairTarget": true,
+          "domains": []
+        }
+      ],
+      "recallV2Raw": [
+        {
+          "word": "检查",
+          "priorScore": 0.8275,
+          "candidateScore": 2.3275,
+          "tonePinyinKey": "jian|cha",
+          "pinyin": [
+            "jian",
+            "cha"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        },
+        {
+          "word": "检察",
+          "priorScore": 0.7846,
+          "candidateScore": 1.7846000000000002,
+          "tonePinyinKey": "jian|cha",
+          "pinyin": [
+            "jian",
+            "cha"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        },
+        {
+          "word": "监察",
+          "priorScore": 0.7486,
+          "candidateScore": 1.2486000000000002,
+          "tonePinyinKey": "jian|cha",
+          "pinyin": [
+            "jian",
+            "cha"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        }
+      ],
+      "sqlBucketCount": 3,
+      "sqlBucketTop10": [
+        "检查",
+        "检察",
+        "监察"
+      ]
+    },
+    "叫吗": {
+      "pinyin": {
+        "text": "叫吗",
+        "plainSyllables": [
+          "jiao",
+          "ma"
+        ],
+        "toneSyllables": [
+          "jiao4",
+          "ma0"
+        ],
+        "plainKey": "jiao|ma",
+        "toneKey": "jiao4|ma0",
+        "plainJoined": "jiao ma",
+        "toneJoined": "jiao4 ma0",
+        "pinyinProNone": [
+          "jiao",
+          "ma"
+        ],
+        "pinyinProNum": [
+          "jiao4",
+          "ma0"
+        ]
+      },
+      "recallLocalSpanTopK": [
+        {
+          "word": "叫骂",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.618,
+          "candidateScore": 1.6179999999999999,
+          "tonePinyinKey": "jiao|ma",
+          "repairTarget": true,
+          "domains": []
+        },
+        {
+          "word": "角马",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.5153,
+          "candidateScore": 1.0152999999999999,
+          "tonePinyinKey": "jiao|ma",
+          "repairTarget": true,
+          "domains": []
+        },
+        {
+          "word": "蕉麻",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.5066,
+          "candidateScore": 1.0066000000000002,
+          "tonePinyinKey": "jiao|ma",
+          "repairTarget": true,
+          "domains": []
+        }
+      ],
+      "recallV2Raw": [
+        {
+          "word": "叫骂",
+          "priorScore": 0.618,
+          "candidateScore": 1.6179999999999999,
+          "tonePinyinKey": "jiao|ma",
+          "pinyin": [
+            "jiao",
+            "ma"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        },
+        {
+          "word": "角马",
+          "priorScore": 0.5153,
+          "candidateScore": 1.0152999999999999,
+          "tonePinyinKey": "jiao|ma",
+          "pinyin": [
+            "jiao",
+            "ma"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        },
+        {
+          "word": "蕉麻",
+          "priorScore": 0.5066,
+          "candidateScore": 1.0066000000000002,
+          "tonePinyinKey": "jiao|ma",
+          "pinyin": [
+            "jiao",
+            "ma"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        }
+      ],
+      "sqlBucketCount": 3,
+      "sqlBucketTop10": [
+        "叫骂",
+        "角马",
+        "蕉麻"
+      ]
+    },
+    "解一": {
+      "pinyin": {
+        "text": "解一",
+        "plainSyllables": [
+          "jie",
+          "yi"
+        ],
+        "toneSyllables": [
+          "jie3",
+          "yi1"
+        ],
+        "plainKey": "jie|yi",
+        "toneKey": "jie3|yi1",
+        "plainJoined": "jie yi",
+        "toneJoined": "jie3 yi1",
+        "pinyinProNone": [
+          "jie",
+          "yi"
+        ],
+        "pinyinProNum": [
+          "jie3",
+          "yi1"
+        ]
+      },
+      "recallLocalSpanTopK": [
+        {
+          "word": "借以",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.6995,
+          "candidateScore": 1.1995,
+          "tonePinyinKey": "jie|yi",
+          "repairTarget": true,
+          "domains": []
+        },
+        {
+          "word": "介意",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.6429,
+          "candidateScore": 1.1429,
+          "tonePinyinKey": "jie|yi",
+          "repairTarget": true,
+          "domains": []
+        },
+        {
+          "word": "结义",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.6245,
+          "candidateScore": 1.1245000000000003,
+          "tonePinyinKey": "jie|yi",
+          "repairTarget": true,
+          "domains": []
+        },
+        {
+          "word": "孑遗",
+          "source": "lexicon_pinyin_topk",
+          "priorScore": 0.5787,
+          "candidateScore": 1.0787,
+          "tonePinyinKey": "jie|yi",
+          "repairTarget": true,
+          "domains": []
+        }
+      ],
+      "recallV2Raw": [
+        {
+          "word": "借以",
+          "priorScore": 0.6995,
+          "candidateScore": 1.1995,
+          "tonePinyinKey": "jie|yi",
+          "pinyin": [
+            "jie",
+            "yi"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        },
+        {
+          "word": "介意",
+          "priorScore": 0.6429,
+          "candidateScore": 1.1429,
+          "tonePinyinKey": "jie|yi",
+          "pinyin": [
+            "jie",
+            "yi"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        },
+        {
+          "word": "结义",
+          "priorScore": 0.6245,
+          "candidateScore": 1.1245000000000003,
+          "tonePinyinKey": "jie|yi",
+          "pinyin": [
+            "jie",
+            "yi"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        },
+        {
+          "word": "孑遗",
+          "priorScore": 0.5787,
+          "candidateScore": 1.0787,
+          "tonePinyinKey": "jie|yi",
+          "pinyin": [
+            "jie",
+            "yi"
+          ],
+          "repairTarget": true,
+          "source": "lexicon_pinyin_topk"
+        }
+      ],
+      "sqlBucketCount": 4,
+      "sqlBucketTop10": [
+        "借以",
+        "介意",
+        "结义",
+        "孑遗"
+      ]
+    }
+  },
+  "pairScores": [
+    {
+      "span": "少病",
+      "candidate": "少冰",
+      "dbFound": false,
+      "tables": [],
+      "spanPlainKey": "shao|bing",
+      "spanToneKey": "shao3|bing4",
+      "spanPlain": "shao bing",
+      "spanTone": "shao3 bing4",
+      "candidatePlainKey": "shao|bing",
+      "candidateToneKey": "shao3|bing1",
+      "plainMatch": true,
+      "toneDistance": 1,
+      "phoneticScore": 1,
+      "priorScore": null,
+      "candidateScore": null,
+      "passesMinPrior": false,
+      "minCandidateScore": 0,
+      "passesMinCandidateScore": null,
+      "breakdown": null
+    },
+    {
+      "span": "少病",
+      "candidate": "烧饼",
+      "dbFound": true,
+      "tables": [
+        "base_lexicon"
+      ],
+      "spanPlainKey": "shao|bing",
+      "spanToneKey": "shao3|bing4",
+      "spanPlain": "shao bing",
+      "spanTone": "shao3 bing4",
+      "candidatePlainKey": "shao|bing",
+      "candidateToneKey": "shao|bing",
+      "plainMatch": true,
+      "toneDistance": 2,
+      "phoneticScore": 1,
+      "priorScore": 0.7024,
+      "candidateScore": 1.2024,
+      "passesMinPrior": true,
+      "minCandidateScore": 0,
+      "passesMinCandidateScore": true,
+      "breakdown": {
+        "priorScore": 0.7024,
+        "phoneticSimilarity": 1,
+        "exactLengthBonus": 0.5,
+        "domainBoost": 0,
+        "editDistancePenalty": 1
+      }
+    },
+    {
+      "span": "少病",
+      "candidate": "哨兵",
+      "dbFound": true,
+      "tables": [
+        "base_lexicon"
+      ],
+      "spanPlainKey": "shao|bing",
+      "spanToneKey": "shao3|bing4",
+      "spanPlain": "shao bing",
+      "spanTone": "shao3 bing4",
+      "candidatePlainKey": "shao|bing",
+      "candidateToneKey": "shao|bing",
+      "plainMatch": true,
+      "toneDistance": 2,
+      "phoneticScore": 1,
+      "priorScore": 0.6617,
+      "candidateScore": 1.1616999999999997,
+      "passesMinPrior": true,
+      "minCandidateScore": 0,
+      "passesMinCandidateScore": true,
+      "breakdown": {
+        "priorScore": 0.6617,
+        "phoneticSimilarity": 1,
+        "exactLengthBonus": 0.5,
+        "domainBoost": 0,
+        "editDistancePenalty": 1
+      }
+    },
+    {
+      "span": "进都",
+      "candidate": "进度",
+      "dbFound": true,
+      "tables": [
+        "base_lexicon"
+      ],
+      "spanPlainKey": "jin|dou",
+      "spanToneKey": "jin4|dou1",
+      "spanPlain": "jin dou",
+      "spanTone": "jin4 dou1",
+      "candidatePlainKey": "jin|du",
+      "candidateToneKey": "jin|du",
+      "plainMatch": false,
+      "toneDistance": 2,
+      "phoneticScore": 0.5,
+      "priorScore": 0.6797,
+      "candidateScore": 1.1797,
+      "passesMinPrior": true,
+      "minCandidateScore": 0,
+      "passesMinCandidateScore": true,
+      "breakdown": {
+        "priorScore": 0.6797,
+        "phoneticSimilarity": 0.5,
+        "exactLengthBonus": 0.5,
+        "domainBoost": 0,
+        "editDistancePenalty": 0.5
+      }
+    },
+    {
+      "span": "进都",
+      "candidate": "筋斗",
+      "dbFound": true,
+      "tables": [
+        "base_lexicon"
+      ],
+      "spanPlainKey": "jin|dou",
+      "spanToneKey": "jin4|dou1",
+      "spanPlain": "jin dou",
+      "spanTone": "jin4 dou1",
+      "candidatePlainKey": "jin|dou",
+      "candidateToneKey": "jin|dou",
+      "plainMatch": true,
+      "toneDistance": 2,
+      "phoneticScore": 1,
+      "priorScore": 0.687,
+      "candidateScore": 1.1870000000000003,
+      "passesMinPrior": true,
+      "minCandidateScore": 0,
+      "passesMinCandidateScore": true,
+      "breakdown": {
+        "priorScore": 0.687,
+        "phoneticSimilarity": 1,
+        "exactLengthBonus": 0.5,
+        "domainBoost": 0,
+        "editDistancePenalty": 1
+      }
+    },
+    {
+      "span": "评审",
+      "candidate": "平身",
+      "dbFound": true,
+      "tables": [
+        "base_lexicon"
+      ],
+      "spanPlainKey": "ping|shen",
+      "spanToneKey": "ping2|shen3",
+      "spanPlain": "ping shen",
+      "spanTone": "ping2 shen3",
+      "candidatePlainKey": "ping|shen",
+      "candidateToneKey": "ping|shen",
+      "plainMatch": true,
+      "toneDistance": 2,
+      "phoneticScore": 1,
+      "priorScore": 0.5605,
+      "candidateScore": 1.0605000000000002,
+      "passesMinPrior": true,
+      "minCandidateScore": 0,
+      "passesMinCandidateScore": true,
+      "breakdown": {
+        "priorScore": 0.5605,
+        "phoneticSimilarity": 1,
+        "exactLengthBonus": 0.5,
+        "domainBoost": 0,
+        "editDistancePenalty": 1
+      }
+    },
+    {
+      "span": "文档",
+      "candidate": "稳当",
+      "dbFound": true,
+      "tables": [
+        "base_lexicon"
+      ],
+      "spanPlainKey": "wen|dang",
+      "spanToneKey": "wen2|dang4",
+      "spanPlain": "wen dang",
+      "spanTone": "wen2 dang4",
+      "candidatePlainKey": "wen|dang",
+      "candidateToneKey": "wen|dang",
+      "plainMatch": true,
+      "toneDistance": 2,
+      "phoneticScore": 1,
+      "priorScore": 0.5703,
+      "candidateScore": 1.0703,
+      "passesMinPrior": true,
+      "minCandidateScore": 0,
+      "passesMinCandidateScore": true,
+      "breakdown": {
+        "priorScore": 0.5703,
+        "phoneticSimilarity": 1,
+        "exactLengthBonus": 0.5,
+        "domainBoost": 0,
+        "editDistancePenalty": 1
+      }
+    },
+    {
+      "span": "上线",
+      "candidate": "上限",
+      "dbFound": true,
+      "tables": [
+        "base_lexicon"
+      ],
+      "spanPlainKey": "shang|xian",
+      "spanToneKey": "shang4|xian4",
+      "spanPlain": "shang xian",
+      "spanTone": "shang4 xian4",
+      "candidatePlainKey": "shang|xian",
+      "candidateToneKey": "shang|xian",
+      "plainMatch": true,
+      "toneDistance": 2,
+      "phoneticScore": 1,
+      "priorScore": 0.6494,
+      "candidateScore": 1.6494,
+      "passesMinPrior": true,
+      "minCandidateScore": 0,
+      "passesMinCandidateScore": true,
+      "breakdown": {
+        "priorScore": 0.6494,
+        "phoneticSimilarity": 1,
+        "exactLengthBonus": 0.5,
+        "domainBoost": 0,
+        "editDistancePenalty": 0.5
+      }
+    }
+  ],
+  "sqlUsedByRuntime": {
+    "base": "SELECT id, pinyin_key, tone_pinyin_key, word, ... FROM base_lexicon WHERE pinyin_key = ? AND enabled = 1 AND length(word) = ? ORDER BY prior_score DESC LIMIT ?",
+    "domain": "SELECT ... FROM domain_lexicon WHERE domain_id = ? AND pinyin_key = ? AND enabled = 1 AND length(word) = ? ORDER BY prior_score DESC LIMIT ?",
+    "recallQueryField": "pinyin_key (plain, no tone)",
+    "toneUsedInSql": false,
+    "toneUsedInRecallV2Sort": false,
+    "toneUsedInPipelineSort": "fw-sentence-rerank-pipeline.ts after recallSpanTopK"
+  }
+}

@@ -93,6 +93,8 @@ export const DEFAULT_CONFIG: NodeConfig = {
       enabledDomains: ['tech_ai', 'travel', 'transport', 'restaurant'],
       candidateRequireRepairTarget: true,
       useIndustryRouting: false,
+      weakDomainRecallEnabled: false,
+      fuzzyPinyinRecallEnabled: false,
       maxSentenceCandidates: 16,
       minDeltaToReplace: 0.03,
     },

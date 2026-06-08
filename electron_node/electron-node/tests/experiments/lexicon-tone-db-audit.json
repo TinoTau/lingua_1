@@ -1,0 +1,95 @@
+{
+  "manifest": {
+    "buildTime": "2026-06-07T03:23:11.553Z",
+    "checksum": "sha256:84a1ed29c051b17397ac9be6c76738df837a9e320b030413c0e25d552d52f3a3",
+    "tables": {
+      "base": 50000,
+      "idiom": 22192,
+      "domain": 25,
+      "routing": 9
+    }
+  },
+  "tables": {
+    "base_lexicon": {
+      "total": 50000,
+      "has_tone_key": 50000,
+      "with_digit_tone": 50000,
+      "eq_plain_only": 0,
+      "digit_tone_rate": 1.0,
+      "pass_all_digit_tone": true
+    },
+    "idiom_lexicon": {
+      "total": 22192,
+      "has_tone_key": 22192,
+      "with_digit_tone": 22192,
+      "eq_plain_only": 0,
+      "digit_tone_rate": 1.0,
+      "pass_all_digit_tone": true
+    },
+    "domain_lexicon": {
+      "total": 25,
+      "has_tone_key": 25,
+      "with_digit_tone": 25,
+      "eq_plain_only": 0,
+      "digit_tone_rate": 1.0,
+      "pass_all_digit_tone": true
+    }
+  },
+  "spotChecks": [
+    {
+      "word": "中杯",
+      "row": [
+        "中杯",
+        "zhong|bei",
+        "zhong1|bei1",
+        "manual_domain_homophone_patch_example"
+      ]
+    },
+    {
+      "word": "大杯",
+      "row": [
+        "大杯",
+        "da|bei",
+        "da4|bei1",
+        "manual_domain_homophone_patch_example"
+      ]
+    },
+    {
+      "word": "美式",
+      "row": [
+        "美式",
+        "mei|shi",
+        "mei3|shi4",
+        "manual_domain_homophone_patch_example"
+      ]
+    },
+    {
+      "word": "拿铁",
+      "row": [
+        "拿铁",
+        "na|tie",
+        "na2|tie3",
+        "manual_domain_homophone_patch_example"
+      ]
+    },
+    {
+      "word": "我们",
+      "row": [
+        "我们",
+        "wo|men",
+        "wo3|men5",
+        "jieba_dict_mit_highfreq_fw_domain_compat"
+      ]
+    },
+    {
+      "word": "精神文明",
+      "row": [
+        "精神文明",
+        "jing|shen|wen|ming",
+        "jing1|shen2|wen2|ming2",
+        "jieba_dict_mit_highfreq_fw_domain_compat"
+      ]
+    }
+  ],
+  "all_tables_pass": true
+}

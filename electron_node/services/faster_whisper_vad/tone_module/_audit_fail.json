@@ -1,0 +1,32 @@
+{
+  "audit": "ToneModule P0 Runtime Acceptance (FW)",
+  "timestamp": "2026-06-07 04:12:26",
+  "fwPort": 6007,
+  "failOpen": {
+    "fwServiceUp": true,
+    "cases": [
+      {
+        "case": "non_zh",
+        "asrTextReturned": true,
+        "toneEnabled": null,
+        "skippedReason": null
+      },
+      {
+        "case": "no_timestamps_direct",
+        "toneEnabled": false,
+        "skippedReason": "no_timestamps",
+        "toneTokenCount": 0
+      },
+      {
+        "case": "no_audio_direct",
+        "toneEnabled": false,
+        "skippedReason": "no_audio"
+      },
+      {
+        "case": "model_error_note",
+        "note": "model_error only when classifier.ready=False; bundled npz present in repo",
+        "defaultModelExists": true
+      }
+    ]
+  }
+}

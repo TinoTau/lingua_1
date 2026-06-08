@@ -1,0 +1,1630 @@
+{
+  "stats": {
+    "total": 200,
+    "withLocalSpans": 169,
+    "withLocalPassNorm": 165,
+    "fwFalseWithLocalPass": 61,
+    "emptyNormBeforeWithLocalPass": 61,
+    "normGainPositive": 104,
+    "totalLocalSpans": 591,
+    "totalLocalMultiChar": 591,
+    "totalLocalSingleChar": 0,
+    "totalLocalDropped": 44,
+    "totalLocalPassNorm": 356,
+    "fwTriggered": 106
+  },
+  "d001": {
+    "raw": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+    "trustedCount": 5,
+    "localSpans": [
+      {
+        "rawSpan": "钟贝",
+        "start": 11,
+        "end": 13,
+        "syllableStart": 10,
+        "syllableEnd": 12,
+        "supportCount": 5,
+        "candidateRank": 1,
+        "imeWords": [
+          "中杯"
+        ],
+        "tokenSources": [
+          "target"
+        ],
+        "source": "local_raw_ime_diff"
+      },
+      {
+        "rawSpan": "深便",
+        "start": 16,
+        "end": 18,
+        "syllableStart": 14,
+        "syllableEnd": 16,
+        "supportCount": 5,
+        "candidateRank": 1,
+        "imeWords": [
+          "身边"
+        ],
+        "tokenSources": [
+          "target"
+        ],
+        "source": "local_raw_ime_diff"
+      },
+      {
+        "rawSpan": "有蓝",
+        "start": 24,
+        "end": 26,
+        "syllableStart": 21,
+        "syllableEnd": 23,
+        "supportCount": 5,
+        "candidateRank": 1,
+        "imeWords": [
+          "游览"
+        ],
+        "tokenSources": [
+          "target"
+        ],
+        "source": "local_raw_ime_diff"
+      },
+      {
+        "rawSpan": "马分",
+        "start": 27,
+        "end": 29,
+        "syllableStart": 24,
+        "syllableEnd": 26,
+        "supportCount": 5,
+        "candidateRank": 1,
+        "imeWords": [
+          "马芬"
+        ],
+        "tokenSources": [
+          "target"
+        ],
+        "source": "local_raw_ime_diff"
+      }
+    ],
+    "localPassNorm": [
+      {
+        "rawSpan": "钟贝",
+        "start": 11,
+        "end": 13,
+        "supportCount": 5,
+        "fromInstability": false,
+        "fromBoundaryTopKDiff": false
+      },
+      {
+        "rawSpan": "深便",
+        "start": 16,
+        "end": 18,
+        "supportCount": 5,
+        "fromInstability": false,
+        "fromBoundaryTopKDiff": false
+      },
+      {
+        "rawSpan": "有蓝美马分",
+        "start": 24,
+        "end": 29,
+        "supportCount": 5,
+        "fromInstability": false,
+        "fromBoundaryTopKDiff": false
+      }
+    ],
+    "normBefore": 0,
+    "normAfter": 3,
+    "targetTokenRows": [
+      {
+        "rank": 1,
+        "token": "中杯",
+        "syllableStart": 10,
+        "syllableEnd": 12,
+        "rawSlice": "钟贝",
+        "imeWord": "中杯",
+        "rawStart": 11,
+        "rawEnd": 13,
+        "normalizeEqual": false,
+        "shouldCreateSpan": true,
+        "tokenSource": "target"
+      },
+      {
+        "rank": 1,
+        "token": "游览",
+        "syllableStart": 21,
+        "syllableEnd": 23,
+        "rawSlice": "有蓝",
+        "imeWord": "游览",
+        "rawStart": 24,
+        "rawEnd": 26,
+        "normalizeEqual": false,
+        "shouldCreateSpan": true,
+        "tokenSource": "target"
+      },
+      {
+        "rank": 2,
+        "token": "中杯",
+        "syllableStart": 10,
+        "syllableEnd": 12,
+        "rawSlice": "钟贝",
+        "imeWord": "中杯",
+        "rawStart": 11,
+        "rawEnd": 13,
+        "normalizeEqual": false,
+        "shouldCreateSpan": true,
+        "tokenSource": "target"
+      },
+      {
+        "rank": 2,
+        "token": "游览",
+        "syllableStart": 21,
+        "syllableEnd": 23,
+        "rawSlice": "有蓝",
+        "imeWord": "游览",
+        "rawStart": 24,
+        "rawEnd": 26,
+        "normalizeEqual": false,
+        "shouldCreateSpan": true,
+        "tokenSource": "target"
+      },
+      {
+        "rank": 3,
+        "token": "中杯",
+        "syllableStart": 10,
+        "syllableEnd": 12,
+        "rawSlice": "钟贝",
+        "imeWord": "中杯",
+        "rawStart": 11,
+        "rawEnd": 13,
+        "normalizeEqual": false,
+        "shouldCreateSpan": true,
+        "tokenSource": "target"
+      },
+      {
+        "rank": 3,
+        "token": "游览",
+        "syllableStart": 21,
+        "syllableEnd": 23,
+        "rawSlice": "有蓝",
+        "imeWord": "游览",
+        "rawStart": 24,
+        "rawEnd": 26,
+        "normalizeEqual": false,
+        "shouldCreateSpan": true,
+        "tokenSource": "target"
+      },
+      {
+        "rank": 4,
+        "token": "中杯",
+        "syllableStart": 10,
+        "syllableEnd": 12,
+        "rawSlice": "钟贝",
+        "imeWord": "中杯",
+        "rawStart": 11,
+        "rawEnd": 13,
+        "normalizeEqual": false,
+        "shouldCreateSpan": true,
+        "tokenSource": "target"
+      },
+      {
+        "rank": 4,
+        "token": "游览",
+        "syllableStart": 21,
+        "syllableEnd": 23,
+        "rawSlice": "有蓝",
+        "imeWord": "游览",
+        "rawStart": 24,
+        "rawEnd": 26,
+        "normalizeEqual": false,
+        "shouldCreateSpan": true,
+        "tokenSource": "target"
+      },
+      {
+        "rank": 5,
+        "token": "中杯",
+        "syllableStart": 10,
+        "syllableEnd": 12,
+        "rawSlice": "钟贝",
+        "imeWord": "中杯",
+        "rawStart": 11,
+        "rawEnd": 13,
+        "normalizeEqual": false,
+        "shouldCreateSpan": true,
+        "tokenSource": "target"
+      },
+      {
+        "rank": 5,
+        "token": "游览",
+        "syllableStart": 21,
+        "syllableEnd": 23,
+        "rawSlice": "有蓝",
+        "imeWord": "游览",
+        "rawStart": 24,
+        "rawEnd": 26,
+        "normalizeEqual": false,
+        "shouldCreateSpan": true,
+        "tokenSource": "target"
+      }
+    ],
+    "keySpans": [
+      {
+        "rawSpan": "钟贝",
+        "start": 11,
+        "end": 13,
+        "syllableStart": 10,
+        "syllableEnd": 12,
+        "supportCount": 5,
+        "candidateRank": 1,
+        "imeWords": [
+          "中杯"
+        ],
+        "tokenSources": [
+          "target"
+        ],
+        "source": "local_raw_ime_diff"
+      }
+    ]
+  },
+  "d001TokenTraceSample": [
+    {
+      "rank": 1,
+      "token": "中杯",
+      "syllableStart": 10,
+      "syllableEnd": 12,
+      "rawSlice": "钟贝",
+      "imeWord": "中杯",
+      "rawStart": 11,
+      "rawEnd": 13,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 1,
+      "token": "身边",
+      "syllableStart": 14,
+      "syllableEnd": 16,
+      "rawSlice": "深便",
+      "imeWord": "身边",
+      "rawStart": 16,
+      "rawEnd": 18,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 1,
+      "token": "游览",
+      "syllableStart": 21,
+      "syllableEnd": 23,
+      "rawSlice": "有蓝",
+      "imeWord": "游览",
+      "rawStart": 24,
+      "rawEnd": 26,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 1,
+      "token": "马芬",
+      "syllableStart": 24,
+      "syllableEnd": 26,
+      "rawSlice": "马分",
+      "imeWord": "马芬",
+      "rawStart": 27,
+      "rawEnd": 29,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 2,
+      "token": "中杯",
+      "syllableStart": 10,
+      "syllableEnd": 12,
+      "rawSlice": "钟贝",
+      "imeWord": "中杯",
+      "rawStart": 11,
+      "rawEnd": 13,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 2,
+      "token": "身边",
+      "syllableStart": 14,
+      "syllableEnd": 16,
+      "rawSlice": "深便",
+      "imeWord": "身边",
+      "rawStart": 16,
+      "rawEnd": 18,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 2,
+      "token": "游览",
+      "syllableStart": 21,
+      "syllableEnd": 23,
+      "rawSlice": "有蓝",
+      "imeWord": "游览",
+      "rawStart": 24,
+      "rawEnd": 26,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 2,
+      "token": "马芬",
+      "syllableStart": 24,
+      "syllableEnd": 26,
+      "rawSlice": "马分",
+      "imeWord": "马芬",
+      "rawStart": 27,
+      "rawEnd": 29,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 3,
+      "token": "中杯",
+      "syllableStart": 10,
+      "syllableEnd": 12,
+      "rawSlice": "钟贝",
+      "imeWord": "中杯",
+      "rawStart": 11,
+      "rawEnd": 13,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 3,
+      "token": "身边",
+      "syllableStart": 14,
+      "syllableEnd": 16,
+      "rawSlice": "深便",
+      "imeWord": "身边",
+      "rawStart": 16,
+      "rawEnd": 18,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 3,
+      "token": "游览",
+      "syllableStart": 21,
+      "syllableEnd": 23,
+      "rawSlice": "有蓝",
+      "imeWord": "游览",
+      "rawStart": 24,
+      "rawEnd": 26,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 3,
+      "token": "马芬",
+      "syllableStart": 24,
+      "syllableEnd": 26,
+      "rawSlice": "马分",
+      "imeWord": "马芬",
+      "rawStart": 27,
+      "rawEnd": 29,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 4,
+      "token": "中杯",
+      "syllableStart": 10,
+      "syllableEnd": 12,
+      "rawSlice": "钟贝",
+      "imeWord": "中杯",
+      "rawStart": 11,
+      "rawEnd": 13,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 4,
+      "token": "身边",
+      "syllableStart": 14,
+      "syllableEnd": 16,
+      "rawSlice": "深便",
+      "imeWord": "身边",
+      "rawStart": 16,
+      "rawEnd": 18,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 4,
+      "token": "游览",
+      "syllableStart": 21,
+      "syllableEnd": 23,
+      "rawSlice": "有蓝",
+      "imeWord": "游览",
+      "rawStart": 24,
+      "rawEnd": 26,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 4,
+      "token": "马芬",
+      "syllableStart": 24,
+      "syllableEnd": 26,
+      "rawSlice": "马分",
+      "imeWord": "马芬",
+      "rawStart": 27,
+      "rawEnd": 29,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 5,
+      "token": "中杯",
+      "syllableStart": 10,
+      "syllableEnd": 12,
+      "rawSlice": "钟贝",
+      "imeWord": "中杯",
+      "rawStart": 11,
+      "rawEnd": 13,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 5,
+      "token": "身边",
+      "syllableStart": 14,
+      "syllableEnd": 16,
+      "rawSlice": "深便",
+      "imeWord": "身边",
+      "rawStart": 16,
+      "rawEnd": 18,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 5,
+      "token": "游览",
+      "syllableStart": 21,
+      "syllableEnd": 23,
+      "rawSlice": "有蓝",
+      "imeWord": "游览",
+      "rawStart": 24,
+      "rawEnd": 26,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    },
+    {
+      "rank": 5,
+      "token": "马芬",
+      "syllableStart": 24,
+      "syllableEnd": 26,
+      "rawSlice": "马分",
+      "imeWord": "马芬",
+      "rawStart": 27,
+      "rawEnd": 29,
+      "normalizeEqual": false,
+      "shouldCreateSpan": true,
+      "tokenSource": "target"
+    }
+  ],
+  "top20Gain": [
+    {
+      "id": "d185",
+      "scenario": "meeting",
+      "fw": true,
+      "selBefore": 4,
+      "localPassNorm": 5,
+      "normGain": 0,
+      "localSpans": [
+        {
+          "rawSpan": "站会",
+          "imeWords": [
+            "展会"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "现归",
+          "imeWords": [
+            "显贵"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "先留",
+          "imeWords": [
+            "腺瘤"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "一下",
+          "imeWords": [
+            "以下"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "进度",
+          "imeWords": [
+            "禁毒"
+          ],
+          "supportCount": 2
+        },
+        {
+          "rawSpan": "订单",
+          "imeWords": [
+            "定单"
+          ],
+          "supportCount": 2
+        },
+        {
+          "rawSpan": "风险",
+          "imeWords": [
+            "奉献"
+          ],
+          "supportCount": 1
+        }
+      ],
+      "rawPreview": "今天的站会现归以下订单中台进度内存占用高者快需要先留保护大家看一下风险"
+    },
+    {
+      "id": "d111",
+      "scenario": "tech_deploy",
+      "fw": false,
+      "selBefore": 0,
+      "localPassNorm": 4,
+      "normGain": 4,
+      "localSpans": [
+        {
+          "rawSpan": "生陳",
+          "imeWords": [
+            "生辰"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "姚嘉",
+          "imeWords": [
+            "药价"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "限期",
+          "imeWords": [
+            "掀起"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "劃文",
+          "imeWords": [
+            "花纹"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "一版",
+          "imeWords": [
+            "一般"
+          ],
+          "supportCount": 5
+        }
+      ],
+      "rawPreview": "會上提到候選生陳列祿 姚嘉健 通商限期劃文 当我下午更新一版"
+    },
+    {
+      "id": "d140",
+      "scenario": "meeting",
+      "fw": false,
+      "selBefore": 0,
+      "localPassNorm": 4,
+      "normGain": 4,
+      "localSpans": [
+        {
+          "rawSpan": "一下",
+          "imeWords": [
+            "以下"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "高折",
+          "imeWords": [
+            "高者"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "限流",
+          "imeWords": [
+            "腺瘤"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "一下",
+          "imeWords": [
+            "以下"
+          ],
+          "supportCount": 5
+        }
+      ],
+      "rawPreview": "今天的戰彙現過一下訂單 中台 京都內存 我们占用高折块需要限流保护大家看一下风险"
+    },
+    {
+      "id": "d181",
+      "scenario": "cafe",
+      "fw": false,
+      "selBefore": 0,
+      "localPassNorm": 4,
+      "normGain": 4,
+      "localSpans": [
+        {
+          "rawSpan": "一杯",
+          "imeWords": [
+            "以北"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "中貝",
+          "imeWords": [
+            "中杯"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "一下",
+          "imeWords": [
+            "以下"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "有蓝",
+          "imeWords": [
+            "游览"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "马分",
+          "imeWords": [
+            "马芬"
+          ],
+          "supportCount": 5
+        }
+      ],
+      "rawPreview": "你好,我想點一杯冰美式中貝少糖 順便溫習一下 以下今天有蓝没马分吗?"
+    },
+    {
+      "id": "d011",
+      "scenario": "hospital",
+      "fw": true,
+      "selBefore": 1,
+      "localPassNorm": 4,
+      "normGain": 3,
+      "localSpans": [
+        {
+          "rawSpan": "刮号",
+          "imeWords": [
+            "挂号"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "内刻",
+          "imeWords": [
+            "内科"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "微不",
+          "imeWords": [
+            "尾部"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "不舒",
+          "imeWords": [
+            "部署",
+            "部属"
+          ],
+          "supportCount": 3
+        },
+        {
+          "rawSpan": "服昨",
+          "imeWords": [
+            "辅佐"
+          ],
+          "supportCount": 3
+        },
+        {
+          "rawSpan": "舒服",
+          "imeWords": [
+            "束缚"
+          ],
+          "supportCount": 1
+        }
+      ],
+      "rawPreview": "刮号出请问 内刻还有号码 我微不 我感觉不舒服昨晚开始的"
+    },
+    {
+      "id": "d109",
+      "scenario": "tech_deploy",
+      "fw": true,
+      "selBefore": 1,
+      "localPassNorm": 4,
+      "normGain": 3,
+      "localSpans": [
+        {
+          "rawSpan": "學員",
+          "imeWords": [
+            "学院"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "後選",
+          "imeWords": [
+            "候选"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "後選",
+          "imeWords": [
+            "候选"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "上限",
+          "imeWords": [
+            "上线"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "請研",
+          "imeWords": [
+            "青烟"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "發一",
+          "imeWords": [
+            "法意",
+            "法医"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "起評",
+          "imeWords": [
+            "气瓶"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "估風",
+          "imeWords": [
+            "古风"
+          ],
+          "supportCount": 5
+        }
+      ],
+      "rawPreview": "今天,我们团队 學員要討論後選生成相關的後選生成流程和上限計劃安排請研發一起評估風險"
+    },
+    {
+      "id": "d136",
+      "scenario": "cafe",
+      "fw": true,
+      "selBefore": 1,
+      "localPassNorm": 4,
+      "normGain": 3,
+      "localSpans": [
+        {
+          "rawSpan": "克力",
+          "imeWords": [
+            "颗粒"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "問一",
+          "imeWords": [
+            "文艺"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "一下",
+          "imeWords": [
+            "以下"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "氣嗎",
+          "imeWords": [
+            "骑马",
+            "起码"
+          ],
+          "supportCount": 5
+        }
+      ],
+      "rawPreview": "你好,我想點一杯熱巧克力中杯班糖 順便問一下 問一下今天有趣氣嗎?"
+    },
+    {
+      "id": "d091",
+      "scenario": "cafe",
+      "fw": true,
+      "selBefore": 1,
+      "localPassNorm": 4,
+      "normGain": 2,
+      "localSpans": [
+        {
+          "rawSpan": "一杯",
+          "imeWords": [
+            "以北",
+            "以备"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "鹽麥",
+          "imeWords": [
+            "掩埋"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "中輩",
+          "imeWords": [
+            "中杯"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "問一",
+          "imeWords": [
+            "文艺"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "有被",
+          "imeWords": [
+            "有悖"
+          ],
+          "supportCount": 5
+        }
+      ],
+      "rawPreview": "你好,我想點一杯鹽麥拿鐵中輩無糖 順便問一下 今天有被裹嗎?"
+    },
+    {
+      "id": "d096",
+      "scenario": "meeting",
+      "fw": false,
+      "selBefore": 0,
+      "localPassNorm": 4,
+      "normGain": 2,
+      "localSpans": [
+        {
+          "rawSpan": "一版",
+          "imeWords": [
+            "一般"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "前請",
+          "imeWords": [
+            "前清"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "请上",
+          "imeWords": [
+            "轻伤"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "一下",
+          "imeWords": [
+            "以下"
+          ],
+          "supportCount": 5
+        }
+      ],
+      "rawPreview": "跟會員系統相關的需求 我整理了一版八點前請大家幫我 请上网评审一下"
+    },
+    {
+      "id": "d189",
+      "scenario": "taxi",
+      "fw": false,
+      "selBefore": 0,
+      "localPassNorm": 4,
+      "normGain": 2,
+      "localSpans": [
+        {
+          "rawSpan": "去望",
+          "imeWords": [
+            "去往"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "金斯",
+          "imeWords": [
+            "近似"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "走四",
+          "imeWords": [
+            "走私"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "那扁",
+          "imeWords": [
+            "那边"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "赌不",
+          "imeWords": [
+            "独步"
+          ],
+          "supportCount": 5
+        }
+      ],
+      "rawPreview": "去望金斯赫布走四环可以吗?那扁现在赌不赌?"
+    },
+    {
+      "id": "d050",
+      "scenario": "meeting",
+      "fw": true,
+      "selBefore": 3,
+      "localPassNorm": 4,
+      "normGain": 1,
+      "localSpans": [
+        {
+          "rawSpan": "站會",
+          "imeWords": [
+            "展会"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "獻過",
+          "imeWords": [
+            "鲜果"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "一下",
+          "imeWords": [
+            "以下"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "進都",
+          "imeWords": [
+            "筋斗",
+            "斤斗"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "高折",
+          "imeWords": [
+            "高者"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "限流",
+          "imeWords": [
+            "腺瘤"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "一下",
+          "imeWords": [
+            "以下"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "訂單",
+          "imeWords": [
+            "定单"
+          ],
+          "supportCount": 2
+        }
+      ],
+      "rawPreview": "今天的站會獻過一下訂單 中台進都內存 占用高折块需要限流保护 大家看一下风险"
+    },
+    {
+      "id": "d095",
+      "scenario": "meeting",
+      "fw": true,
+      "selBefore": 3,
+      "localPassNorm": 4,
+      "normGain": 1,
+      "localSpans": [
+        {
+          "rawSpan": "占会",
+          "imeWords": [
+            "展会"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "献过",
+          "imeWords": [
+            "鲜果"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "一下",
+          "imeWords": [
+            "以下"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "进都",
+          "imeWords": [
+            "筋斗",
+            "斤斗"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "高着",
+          "imeWords": [
+            "高者"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "先留",
+          "imeWords": [
+            "腺瘤"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "一下",
+          "imeWords": [
+            "以下"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "订单",
+          "imeWords": [
+            "定单"
+          ],
+          "supportCount": 2
+        }
+      ],
+      "rawPreview": "今天,德占会献过一下订单,中台进都内存占用高着快需要先留保护大家看一下风险"
+    },
+    {
+      "id": "d178",
+      "scenario": "lexicon_homophone",
+      "fw": true,
+      "selBefore": 1,
+      "localPassNorm": 4,
+      "normGain": 1,
+      "localSpans": [
+        {
+          "rawSpan": "方安",
+          "imeWords": [
+            "方案"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "后选",
+          "imeWords": [
+            "候选"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "接口",
+          "imeWords": [
+            "借口"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "补齐",
+          "imeWords": [
+            "不期"
+          ],
+          "supportCount": 5
+        }
+      ],
+      "rawPreview": "我們下午討論後 选生成方安线吧,后选生成的接口文档补齐。"
+    },
+    {
+      "id": "d001",
+      "scenario": "cafe",
+      "fw": false,
+      "selBefore": 0,
+      "localPassNorm": 3,
+      "normGain": 3,
+      "localSpans": [
+        {
+          "rawSpan": "钟贝",
+          "imeWords": [
+            "中杯"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "深便",
+          "imeWords": [
+            "身边"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "有蓝",
+          "imeWords": [
+            "游览"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "马分",
+          "imeWords": [
+            "马芬"
+          ],
+          "supportCount": 5
+        }
+      ],
+      "rawPreview": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?"
+    },
+    {
+      "id": "d012",
+      "scenario": "hospital",
+      "fw": false,
+      "selBefore": 0,
+      "localPassNorm": 3,
+      "normGain": 3,
+      "localSpans": [
+        {
+          "rawSpan": "麼時",
+          "imeWords": [
+            "模式"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "我過",
+          "imeWords": [
+            "我国"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "请家",
+          "imeWords": [
+            "请假"
+          ],
+          "supportCount": 5
+        }
+      ],
+      "rawPreview": "這個檢查報告什麼時候能出 我過敏 需要请家休息吗?"
+    },
+    {
+      "id": "d021",
+      "scenario": "tech_deploy",
+      "fw": false,
+      "selBefore": 0,
+      "localPassNorm": 3,
+      "normGain": 3,
+      "localSpans": [
+        {
+          "rawSpan": "炼鹿",
+          "imeWords": [
+            "链路"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "要加",
+          "imeWords": [
+            "药价"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "上限",
+          "imeWords": [
+            "上线"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "期画",
+          "imeWords": [
+            "气化"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "一版",
+          "imeWords": [
+            "一般"
+          ],
+          "supportCount": 5
+        }
+      ],
+      "rawPreview": "会上提到候选生成炼鹿 要加剑口 空上限期画文 等我下午更新一版"
+    },
+    {
+      "id": "d054",
+      "scenario": "taxi",
+      "fw": false,
+      "selBefore": 0,
+      "localPassNorm": 3,
+      "normGain": 3,
+      "localSpans": [
+        {
+          "rawSpan": "走三",
+          "imeWords": [
+            "走散"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "那扁",
+          "imeWords": [
+            "那边"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "賭不",
+          "imeWords": [
+            "独步"
+          ],
+          "supportCount": 5
+        }
+      ],
+      "rawPreview": "去杭州系系部走三環 可以嗎?那扁現在賭不賭?"
+    },
+    {
+      "id": "d110",
+      "scenario": "tech_deploy",
+      "fw": false,
+      "selBefore": 0,
+      "localPassNorm": 3,
+      "normGain": 3,
+      "localSpans": [
+        {
+          "rawSpan": "商線",
+          "imeWords": [
+            "上线"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "後選",
+          "imeWords": [
+            "候选"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "魔快",
+          "imeWords": [
+            "模块"
+          ],
+          "supportCount": 5
+        }
+      ],
+      "rawPreview": "這次發布我們現對此發布的新聞 起商線計劃窗口後選生 乘魔快需要連掉別漏掉回歸"
+    },
+    {
+      "id": "d134",
+      "scenario": "lexicon_homophone",
+      "fw": false,
+      "selBefore": 0,
+      "localPassNorm": 3,
+      "normGain": 3,
+      "localSpans": [
+        {
+          "rawSpan": "这周",
+          "imeWords": [
+            "褶皱"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "上限",
+          "imeWords": [
+            "上线"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "上限",
+          "imeWords": [
+            "上线"
+          ],
+          "supportCount": 5
+        }
+      ],
+      "rawPreview": "这周的商业节目 上限计划已经全任上限计划评审安排在周四上午"
+    },
+    {
+      "id": "d144",
+      "scenario": "taxi",
+      "fw": false,
+      "selBefore": 0,
+      "localPassNorm": 3,
+      "normGain": 3,
+      "localSpans": [
+        {
+          "rawSpan": "延安",
+          "imeWords": [
+            "沿岸"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "高架",
+          "imeWords": [
+            "高家"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "那便",
+          "imeWords": [
+            "那边"
+          ],
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "赌不",
+          "imeWords": [
+            "独步"
+          ],
+          "supportCount": 5
+        }
+      ],
+      "rawPreview": "去杭州系 系不走延安路高架可以吗 那便现在赌不赌"
+    }
+  ],
+  "regression": {
+    "d002": {
+      "id": "d002",
+      "scenario": "cafe",
+      "fw": true,
+      "selBefore": 2,
+      "alignFailed": 0,
+      "diffSpanCount": 15,
+      "boundaryCount": 2,
+      "trustedCount": 5,
+      "localSpanCount": 5,
+      "localMultiChar": 5,
+      "localSingleChar": 0,
+      "localPassNorm": 1,
+      "localDroppedNorm": 1,
+      "normBefore": 2,
+      "normAfter": 1,
+      "normGain": -1,
+      "localSpans": [
+        {
+          "rawSpan": "一杯",
+          "start": 5,
+          "end": 7,
+          "syllableStart": 5,
+          "syllableEnd": 7,
+          "supportCount": 5,
+          "candidateRank": 1,
+          "imeWords": [
+            "以北"
+          ],
+          "tokenSources": [
+            "target"
+          ],
+          "source": "local_raw_ime_diff"
+        },
+        {
+          "rawSpan": "美食",
+          "start": 7,
+          "end": 9,
+          "syllableStart": 7,
+          "syllableEnd": 9,
+          "supportCount": 5,
+          "candidateRank": 1,
+          "imeWords": [
+            "美式"
+          ],
+          "tokenSources": [
+            "target"
+          ],
+          "source": "local_raw_ime_diff"
+        },
+        {
+          "rawSpan": "大悲",
+          "start": 11,
+          "end": 13,
+          "syllableStart": 11,
+          "syllableEnd": 13,
+          "supportCount": 5,
+          "candidateRank": 1,
+          "imeWords": [
+            "大杯"
+          ],
+          "tokenSources": [
+            "target"
+          ],
+          "source": "local_raw_ime_diff"
+        },
+        {
+          "rawSpan": "就行",
+          "start": 13,
+          "end": 15,
+          "syllableStart": 13,
+          "syllableEnd": 15,
+          "supportCount": 5,
+          "candidateRank": 1,
+          "imeWords": [
+            "救星",
+            "九姓",
+            "酒醒"
+          ],
+          "tokenSources": [
+            "target"
+          ],
+          "source": "local_raw_ime_diff"
+        },
+        {
+          "rawSpan": "谢谢",
+          "start": 15,
+          "end": 17,
+          "syllableStart": 15,
+          "syllableEnd": 17,
+          "supportCount": 5,
+          "candidateRank": 1,
+          "imeWords": [
+            "歇歇"
+          ],
+          "tokenSources": [
+            "target"
+          ],
+          "source": "local_raw_ime_diff"
+        }
+      ]
+    },
+    "d003": {
+      "id": "d003",
+      "scenario": "cafe",
+      "fw": true,
+      "selBefore": 2,
+      "alignFailed": 5,
+      "diffSpanCount": 0,
+      "boundaryCount": 3,
+      "trustedCount": 5,
+      "localSpanCount": 4,
+      "localMultiChar": 4,
+      "localSingleChar": 0,
+      "localPassNorm": 3,
+      "localDroppedNorm": 0,
+      "normBefore": 2,
+      "normAfter": 3,
+      "normGain": 1,
+      "localSpans": [
+        {
+          "rawSpan": "燕麦",
+          "start": 5,
+          "end": 7,
+          "syllableStart": 4,
+          "syllableEnd": 6,
+          "supportCount": 5,
+          "candidateRank": 1,
+          "imeWords": [
+            "掩埋"
+          ],
+          "tokenSources": [
+            "target"
+          ],
+          "source": "local_raw_ime_diff"
+        },
+        {
+          "rawSpan": "少病",
+          "start": 11,
+          "end": 13,
+          "syllableStart": 10,
+          "syllableEnd": 12,
+          "supportCount": 5,
+          "candidateRank": 1,
+          "imeWords": [
+            "烧饼",
+            "哨兵"
+          ],
+          "tokenSources": [
+            "target"
+          ],
+          "source": "local_raw_ime_diff"
+        },
+        {
+          "rawSpan": "赶时",
+          "start": 16,
+          "end": 18,
+          "syllableStart": 14,
+          "syllableEnd": 16,
+          "supportCount": 5,
+          "candidateRank": 1,
+          "imeWords": [
+            "干事",
+            "干尸"
+          ],
+          "tokenSources": [
+            "target"
+          ],
+          "source": "local_raw_ime_diff"
+        },
+        {
+          "rawSpan": "间小",
+          "start": 18,
+          "end": 20,
+          "syllableStart": 16,
+          "syllableEnd": 18,
+          "supportCount": 5,
+          "candidateRank": 1,
+          "imeWords": [
+            "减小"
+          ],
+          "tokenSources": [
+            "target"
+          ],
+          "source": "local_raw_ime_diff"
+        }
+      ]
+    }
+  }
+}

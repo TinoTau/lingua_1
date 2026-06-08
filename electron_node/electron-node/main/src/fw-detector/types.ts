@@ -211,6 +211,15 @@ export type FwSentenceRerankDiagnostics = {
   };
 };
 
+/** P0.5 ToneModule diagnostics on FW rerank path. */
+export type FwToneModuleDiagnostics = {
+  toneEnabled: boolean;
+  alignmentTextMatched: boolean;
+  acousticTonePattern?: number[];
+  recallToneCompatibleCount: number;
+  recallToneFallbackCount: number;
+};
+
 export type FwDetectorRuntimeDiag = {
   loaded: boolean;
   status: string;
@@ -241,15 +250,23 @@ export type FwDetectorReplacementDiag = {
   };
 };
 
+export type PinyinImeV2SpanSelectionMode =
+  | 'all_passed'
+  | 'ranked_capped'
+  | 'empty_after_normalizer';
+
 export type PinyinImeV2ActiveDiagnostics = {
   enabled: true;
   candidateCount: number;
   diffSpanCount: number;
   instabilityRegionCount: number;
-  approvedSpanCount: number;
+  selectedSpanCount: number;
+  selectionMode?: PinyinImeV2SpanSelectionMode;
+  normalizedSpanCount?: number;
+  neighborHitCount?: number;
+  neighborMissCount?: number;
+  cappedByMaxSpansCount: number;
   normalizerDroppedCount: number;
-  gateDroppedNoNeighbor: number;
-  gateDroppedSupport: number;
   decodeMs: number;
   /** Phase 4B.1 alignment-only OpenCC stats */
   traditionalCharCount?: number;
@@ -264,7 +281,7 @@ export type PinyinImeV2ActiveDiagnostics = {
   trustedTopKCount?: number;
   boundaryCompatibleTopKSpanCount?: number;
   diffZeroBoundaryPositive?: number;
-  skippedReason?: 'ime_dict_unavailable' | 'no_cjk' | 'no_candidates' | 'no_approved_spans';
+  skippedReason?: 'ime_dict_unavailable' | 'no_cjk' | 'no_candidates' | 'no_selected_spans';
   loadError?: string;
 };
 
@@ -289,6 +306,8 @@ export type FwDetectorResult = {
   recallV2Diagnostics?: RecallJobV2Diagnostics;
   /** P4: sentence-level rerank diagnostics */
   sentenceRerank?: FwSentenceRerankDiagnostics;
+  /** P0 ToneModule diagnostics */
+  toneModule?: FwToneModuleDiagnostics;
 };
 
 export type FwApprovedReplacement = {

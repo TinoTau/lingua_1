@@ -188,3 +188,13 @@ logger.info(f"ASR Parameters: beam_size={BEAM_SIZE}, temperature={TEMPERATURE}, 
             f"compression_ratio_threshold={COMPRESSION_RATIO_THRESHOLD}, log_prob_threshold={LOG_PROB_THRESHOLD}, "
             f"no_speech_threshold={NO_SPEECH_THRESHOLD}")
 
+# ---------------------
+# ToneModule P0
+# ---------------------
+_DEFAULT_TONE_MODEL = os.path.join(
+    os.path.dirname(__file__), "tone_module", "models", "tone_cnn_p0.npz"
+)
+TONE_MODEL_PATH = os.getenv("TONE_MODEL_PATH", "").strip() or (
+    _DEFAULT_TONE_MODEL if os.path.isfile(_DEFAULT_TONE_MODEL) else None
+)
+

@@ -3,6 +3,7 @@ import {
   computeCandidateScore,
   computeEditDistancePenalty,
   computeCandidateScoreBreakdown,
+  recallKindFuzzyPenalty,
 } from './candidate-score';
 import type { HotwordEntry } from './hotword-types';
 
@@ -61,11 +62,19 @@ describe('computeCandidateScore', () => {
       b.phoneticSimilarity +
       b.exactLengthBonus +
       b.domainBoost -
-      b.editDistancePenalty;
+      b.editDistancePenalty -
+      b.fuzzyPenalty;
     expect(computeCandidateScore({
       hotword: hw,
       windowSyllables: ['hou', 'xuan', 'sheng', 'cheng'],
       windowText: '候选生成',
     })).toBeCloseTo(total, 5);
+  });
+
+  it('fuzzy penalty values match V1.2 freeze', () => {
+    expect(recallKindFuzzyPenalty('exact_base')).toBe(0);
+    expect(recallKindFuzzyPenalty('exact_domain_weak')).toBe(0.02);
+    expect(recallKindFuzzyPenalty('fuzzy_plain')).toBe(0.08);
+    expect(recallKindFuzzyPenalty('fuzzy_plain_domain')).toBe(0.1);
   });
 });

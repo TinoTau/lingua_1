@@ -1,0 +1,1912 @@
+{
+  "meta": {
+    "batch": "D:\\Programs\\github\\lingua_1\\electron_node\\electron-node\\tests\\lexicon-tone-dialog200-local-raw-ime-batch-result.json",
+    "timestamp": "2026-06-07T09:41:46.687Z",
+    "auditDate": "2026-06-07"
+  },
+  "summary": {
+    "total": 200,
+    "fw_triggered": 158,
+    "fw_selected_gt0": 158,
+    "apply_gt0": 0,
+    "fwSpanTotal": 316,
+    "fwCorrectSpans": 174,
+    "fwWrongBoundarySpans": 142,
+    "fwCorrectSpanRate": 0.5506329113924051,
+    "fwWrongBoundaryRate": 0.44936708860759494,
+    "fwRecallHitSpans": 35,
+    "fwRecallHitSpanRate": 0.20114942528735633,
+    "casesWithCorrectSpan": 111,
+    "casesWithRecallHit": 34,
+    "kenlmQueriedCases": 52,
+    "pickedIsRawCases": 158,
+    "pickedIsRawWithKenlm": 52
+  },
+  "recallStats": {
+    "recallHitTop1": 33,
+    "recallHitTop3": 35,
+    "recallHitTop5": 35,
+    "recallMiss": 45,
+    "recallEmpty": 94,
+    "totalCorrectableSpans": 174,
+    "wrongBoundarySpans": 142,
+    "totalSpans": 316
+  },
+  "scenarioRecall": {
+    "cafe": {
+      "totalCorrectableSpans": 24,
+      "recallHitTop1": 0,
+      "recallHitTop3": 0,
+      "recallHitTop5": 0,
+      "recallMiss": 9,
+      "recallEmpty": 15
+    },
+    "hospital": {
+      "totalCorrectableSpans": 22,
+      "recallHitTop1": 6,
+      "recallHitTop3": 7,
+      "recallHitTop5": 7,
+      "recallMiss": 6,
+      "recallEmpty": 9
+    },
+    "bank": {
+      "totalCorrectableSpans": 8,
+      "recallHitTop1": 1,
+      "recallHitTop3": 2,
+      "recallHitTop5": 2,
+      "recallMiss": 0,
+      "recallEmpty": 6
+    },
+    "tech": {
+      "totalCorrectableSpans": 33,
+      "recallHitTop1": 6,
+      "recallHitTop3": 6,
+      "recallHitTop5": 6,
+      "recallMiss": 15,
+      "recallEmpty": 12
+    }
+  },
+  "toneStats": {
+    "toneCorrectTop1": 33,
+    "toneCorrectTop3": 35,
+    "toneCorrectTop5": 35,
+    "totalRecallHitSpans": 35
+  },
+  "kenlm": {
+    "queriedCases": 52,
+    "recallHitQueriedCases": 16,
+    "pickedIsRaw": 16,
+    "pickedCandidate": 0,
+    "deltaBuckets": {
+      "0~0.01": 20,
+      "0.01~0.03": 0,
+      "0.03~0.05": 0,
+      ">0.05": 0,
+      "negative": 32
+    },
+    "samples": [
+      {
+        "id": "d026",
+        "raw": "你如何看待夸团队写作,遇到需求边更一般怎么处理?",
+        "pickedIsRaw": true,
+        "maxDelta": 0.001764043805338406,
+        "minDeltaToReplace": 0.03,
+        "topCandidate": "你如何看待夸团队写作,遇到需求变更一般怎么处理?",
+        "topDelta": 0.001764043805338406,
+        "combinationCount": 1
+      },
+      {
+        "id": "d065",
+        "raw": "這次發布我們現對期 在其商線計劃窗口後選生 成模快需要連掉別漏掉回歸",
+        "pickedIsRaw": true,
+        "maxDelta": 0.00003344110621175258,
+        "minDeltaToReplace": 0.03,
+        "topCandidate": "這次發布我們現對期 在其商線計劃窗口候选生 成模块需要連掉別漏掉回歸",
+        "topDelta": 0.00003344110621175258,
+        "combinationCount": 1
+      },
+      {
+        "id": "d071",
+        "raw": "你如何看待夸团队协作,遇到需求边更一般怎么处理?",
+        "pickedIsRaw": true,
+        "maxDelta": -0.0006017301975374603,
+        "minDeltaToReplace": 0.03,
+        "topCandidate": "你如何看待夸团队写作,遇到需求变更一般怎么处理?",
+        "topDelta": -0.0006017301975374603,
+        "combinationCount": 1
+      },
+      {
+        "id": "d072",
+        "raw": "期望新自这块我们可以再沟通你最快什么时候能入职",
+        "pickedIsRaw": true,
+        "maxDelta": -0.0019414961323420722,
+        "minDeltaToReplace": 0.03,
+        "topCandidate": "期望薪资这块我们可以再沟通你最快甚么时候能乳汁",
+        "topDelta": -0.0019414961323420722,
+        "combinationCount": 2
+      },
+      {
+        "id": "d074",
+        "raw": "作业是下周以下午叫吗?可以电子板提叫吗?",
+        "pickedIsRaw": true,
+        "maxDelta": 0.0014067813814590746,
+        "minDeltaToReplace": 0.03,
+        "topCandidate": "作业是下周以下午角马?可以电子板提交吗?",
+        "topDelta": 0.0014067813814590746,
+        "combinationCount": 6
+      },
+      {
+        "id": "d089",
+        "raw": "这周的事 上縣計劃已經確認上縣計劃評審安排在周四上午",
+        "pickedIsRaw": true,
+        "maxDelta": -0.000005271693263559458,
+        "minDeltaToReplace": 0.03,
+        "topCandidate": "这周的事 上縣計劃已經確認上线計劃評審安排在周四商务",
+        "topDelta": -0.000005271693263559458,
+        "combinationCount": 9
+      },
+      {
+        "id": "d116",
+        "raw": "你如何 看待夸团队写作,遇到需求边更一般怎么处理。",
+        "pickedIsRaw": true,
+        "maxDelta": 0.002005255706035684,
+        "minDeltaToReplace": 0.03,
+        "topCandidate": "你如何 看待夸团队写作,遇到需求变更一般怎么处理。",
+        "topDelta": 0.002005255706035684,
+        "combinationCount": 1
+      },
+      {
+        "id": "d117",
+        "raw": "期望新自这块我们可以再沟通你最快什么时候能入职",
+        "pickedIsRaw": true,
+        "maxDelta": -0.0019414961323420722,
+        "minDeltaToReplace": 0.03,
+        "topCandidate": "期望薪资这块我们可以再沟通你最快甚么时候能乳汁",
+        "topDelta": -0.0019414961323420722,
+        "combinationCount": 2
+      },
+      {
+        "id": "d119",
+        "raw": "作业是下周一下午叫码,可以电子版提叫码。",
+        "pickedIsRaw": true,
+        "maxDelta": 0.0014962356207090981,
+        "minDeltaToReplace": 0.03,
+        "topCandidate": "作业是下周一下午角马,可以电子版提交码。",
+        "topDelta": 0.0014962356207090981,
+        "combinationCount": 6
+      },
+      {
+        "id": "d143",
+        "raw": "麻烦送我到深圳南善科机园南门大概多久能到? 我十点时 十分有个电话会",
+        "pickedIsRaw": true,
+        "maxDelta": 0.000010527465683456792,
+        "minDeltaToReplace": 0.03,
+        "topCandidate": "麻烦送我到神针南善科技园南门大概多久能到? 我十点时 十分有个电话会",
+        "topDelta": 0.000010527465683456792,
+        "combinationCount": 4
+      },
+      {
+        "id": "d155",
+        "raw": "這次發布我們現對峽谷的發布會 在其商線計劃窗口後選生成模快需要連掉別漏掉回歸",
+        "pickedIsRaw": true,
+        "maxDelta": 0.000007061241207679182,
+        "minDeltaToReplace": 0.03,
+        "topCandidate": "這次發布我們現對峽谷的發布會 在其商線計劃窗口候选生成模块需要連掉別漏掉回歸",
+        "topDelta": 0.000007061241207679182,
+        "combinationCount": 1
+      },
+      {
+        "id": "d161",
+        "raw": "你如何看待夸团队写作,遇到需求边更一般怎么处理?",
+        "pickedIsRaw": true,
+        "maxDelta": 0.001764043805338406,
+        "minDeltaToReplace": 0.03,
+        "topCandidate": "你如何看待夸团队写作,遇到需求变更一般怎么处理?",
+        "topDelta": 0.001764043805338406,
+        "combinationCount": 1
+      },
+      {
+        "id": "d164",
+        "raw": "作业是下周以下午叫码,可以电子版题叫码",
+        "pickedIsRaw": true,
+        "maxDelta": 0.0009606947689409224,
+        "minDeltaToReplace": 0.03,
+        "topCandidate": "作业是下周以下午角马,可以电子版提交码",
+        "topDelta": 0.0009606947689409224,
+        "combinationCount": 6
+      },
+      {
+        "id": "d188",
+        "raw": "麻烦送我到国贸散弃南门大,该多久能到? 我是点声 十分有,隔电话会",
+        "pickedIsRaw": true,
+        "maxDelta": 0.00002051999481274013,
+        "minDeltaToReplace": 0.03,
+        "topCandidate": "麻烦送我到国贸三期南门大,该多久能到? 我是点声 十分有,隔电话会",
+        "topDelta": 0.00002051999481274013,
+        "combinationCount": 1
+      },
+      {
+        "id": "d189",
+        "raw": "去望金斯赫布走四环可以吗?那扁现在赌不赌?",
+        "pickedIsRaw": true,
+        "maxDelta": 0.0004064290476083717,
+        "minDeltaToReplace": 0.03,
+        "topCandidate": "去望金斯赫布走四环可以吗?那边现在独步赌?",
+        "topDelta": 0.0004064290476083717,
+        "combinationCount": 2
+      }
+    ]
+  },
+  "rootCauseCounts": {
+    "P1_recall_miss": 77,
+    "P0_no_correctable_span": 47,
+    "P3_recall_hit_tone_hit_kenlm_reject": 32,
+    "P2_recall_hit_tone_miss": 2
+  },
+  "sample30": [
+    {
+      "id": "d058",
+      "scenario": "shopping",
+      "sampleClass": "A4",
+      "raw": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+      "ref": "这件外套能试穿吗？我穿中码。买两件有没有折扣？",
+      "spans": [
+        {
+          "text": "穿中",
+          "correctWord": "这件",
+          "spanCorrect": false,
+          "recallTopK": [
+            "传中"
+          ],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.00007888474642386237,
+        "topCandidates": [
+          {
+            "text": "这件外套能试穿吗?我传中码,买两件有没有折扣?",
+            "kenlmDelta": 0.00007888474642386237,
+            "replacementCount": 1
+          }
+        ]
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          2,
+          2
+        ],
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 1
+      }
+    },
+    {
+      "id": "d179",
+      "scenario": "lexicon_homophone",
+      "sampleClass": "A4",
+      "raw": "这周的上限计划已经确认上限计划评审安排在周四上午",
+      "ref": "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+      "spans": [
+        {
+          "text": "这周",
+          "correctWord": "周的",
+          "spanCorrect": false,
+          "recallTopK": [
+            "褶皱"
+          ],
+          "correctRank": null
+        },
+        {
+          "text": "上午",
+          "correctWord": "这周",
+          "spanCorrect": false,
+          "recallTopK": [
+            "尚无",
+            "商务",
+            "晌午"
+          ],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": -0.0033984911740113544,
+        "topCandidates": [
+          {
+            "text": "褶皱的上限计划已经确认上限计划评审安排在周四商务",
+            "kenlmDelta": -0.0033984911740113544,
+            "replacementCount": 2
+          },
+          {
+            "text": "褶皱的上限计划已经确认上限计划评审安排在周四尚无",
+            "kenlmDelta": -0.0036001285814846813,
+            "replacementCount": 2
+          },
+          {
+            "text": "褶皱的上限计划已经确认上限计划评审安排在周四晌午",
+            "kenlmDelta": -0.004529729035867989,
+            "replacementCount": 2
+          }
+        ]
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          3,
+          4
+        ],
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 5
+      }
+    },
+    {
+      "id": "d009",
+      "scenario": "taxi",
+      "sampleClass": "A2",
+      "raw": "去望金斯赫布走四环,可以吗?那边现在赌不赌?",
+      "ref": "去望京SOHO，不走四环可以吗？那边现在堵不堵？",
+      "spans": [
+        {
+          "text": "赌不",
+          "correctWord": "堵不",
+          "spanCorrect": true,
+          "recallTopK": [
+            "独步"
+          ],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.000005489563269067471,
+        "topCandidates": [
+          {
+            "text": "去望金斯赫布走四环,可以吗?那边现在独步赌?",
+            "kenlmDelta": 0.000005489563269067471,
+            "replacementCount": 1
+          }
+        ]
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          1,
+          4
+        ],
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 1
+      }
+    },
+    {
+      "id": "d023",
+      "scenario": "customer_service",
+      "sampleClass": "A4",
+      "raw": "想改一下收货地址还来得及吗? 麻烦尽快处理谢谢",
+      "ref": "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。",
+      "spans": [
+        {
+          "text": "烦尽",
+          "correctWord": "想改",
+          "spanCorrect": false,
+          "recallTopK": [
+            "犯禁"
+          ],
+          "correctRank": null
+        },
+        {
+          "text": "谢谢",
+          "correctWord": "想改",
+          "spanCorrect": false,
+          "recallTopK": [
+            "写写",
+            "歇歇",
+            "泄泻"
+          ],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": -0.0028920464825029422,
+        "topCandidates": [
+          {
+            "text": "想改一下收货地址还来得及吗? 麻犯禁快处理写写",
+            "kenlmDelta": -0.0028920464825029422,
+            "replacementCount": 2
+          },
+          {
+            "text": "想改一下收货地址还来得及吗? 麻犯禁快处理歇歇",
+            "kenlmDelta": -0.00334421444790801,
+            "replacementCount": 2
+          },
+          {
+            "text": "想改一下收货地址还来得及吗? 麻犯禁快处理泄泻",
+            "kenlmDelta": -0.003360694454698338,
+            "replacementCount": 2
+          }
+        ]
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          3,
+          3
+        ],
+        "recallToneCompatibleCount": 1,
+        "recallToneFallbackCount": 3
+      }
+    },
+    {
+      "id": "d109",
+      "scenario": "tech_deploy",
+      "sampleClass": "A2",
+      "raw": "今天,我们团队 學員要討論後選生成相關的後選生成流程和上限計劃安排請研發一起評估風險",
+      "ref": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+      "spans": [
+        {
+          "text": "學員",
+          "correctWord": "今天",
+          "spanCorrect": false,
+          "recallTopK": [
+            "学院",
+            "学员"
+          ],
+          "correctRank": null
+        },
+        {
+          "text": "後選",
+          "correctWord": "后选",
+          "spanCorrect": true,
+          "recallTopK": [
+            "候选"
+          ],
+          "correctRank": null
+        },
+        {
+          "text": "後選",
+          "correctWord": "后选",
+          "spanCorrect": true,
+          "recallTopK": [
+            "候选"
+          ],
+          "correctRank": null
+        },
+        {
+          "text": "和上限",
+          "correctWord": "和上线",
+          "spanCorrect": true,
+          "recallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": false,
+        "alignmentTextMatched": false,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 4
+      }
+    },
+    {
+      "id": "d116",
+      "scenario": "interview",
+      "sampleClass": "A3",
+      "raw": "你如何 看待夸团队写作,遇到需求边更一般怎么处理。",
+      "ref": "你如何看待跨团队协作？遇到需求变更一般怎么处理？",
+      "spans": [
+        {
+          "text": "边更",
+          "correctWord": "变更",
+          "spanCorrect": true,
+          "recallTopK": [
+            "变更"
+          ],
+          "correctRank": 1
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.002005255706035684,
+        "topCandidates": [
+          {
+            "text": "你如何 看待夸团队写作,遇到需求变更一般怎么处理。",
+            "kenlmDelta": 0.002005255706035684,
+            "replacementCount": 1
+          }
+        ]
+      },
+      "toneModule": {
+        "toneEnabled": false,
+        "alignmentTextMatched": false,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 1
+      }
+    },
+    {
+      "id": "d038",
+      "scenario": "restaurant",
+      "sampleClass": "A4",
+      "raw": "这道菜大概要等多久 我们先点一份凉菜和一壶茶",
+      "ref": "这道菜大概要等多久？我们先点一份凉菜和一壶茶。",
+      "spans": [
+        {
+          "text": "先点一份",
+          "correctWord": "这道菜大",
+          "spanCorrect": false,
+          "recallTopK": [],
+          "correctRank": null
+        },
+        {
+          "text": "和一壶",
+          "correctWord": "这道菜",
+          "spanCorrect": false,
+          "recallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          3,
+          4,
+          4
+        ],
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 0
+      }
+    },
+    {
+      "id": "d067",
+      "scenario": "customer_service",
+      "sampleClass": "A2",
+      "raw": "您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您 但顯示已發貨 但物流三天沒更新能幫我查一下嗎",
+      "ref": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+      "spans": [
+        {
+          "text": "查一下嗎",
+          "correctWord": "查一下吗",
+          "spanCorrect": true,
+          "recallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": false,
+        "alignmentTextMatched": false,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 0
+      }
+    },
+    {
+      "id": "d013",
+      "scenario": "shopping",
+      "sampleClass": "A2",
+      "raw": "这件外套能试穿吗?我串中码,买两件有没有折扣?",
+      "ref": "这件外套能试穿吗？我穿中码。买两件有没有折扣？",
+      "spans": [
+        {
+          "text": "串中",
+          "correctWord": "穿中",
+          "spanCorrect": true,
+          "recallTopK": [
+            "传中"
+          ],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.00010149373283094808,
+        "topCandidates": [
+          {
+            "text": "这件外套能试穿吗?我传中码,买两件有没有折扣?",
+            "kenlmDelta": 0.00010149373283094808,
+            "replacementCount": 1
+          }
+        ]
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          2,
+          2
+        ],
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 1
+      }
+    },
+    {
+      "id": "d030",
+      "scenario": "classroom",
+      "sampleClass": "A2",
+      "raw": "请问这门客期末是开卷还是闭卷? 终点汇化吗?",
+      "ref": "请问这门课期末是开卷还是闭卷？重点会划吗？",
+      "spans": [
+        {
+          "text": "客期末是",
+          "correctWord": "课期末是",
+          "spanCorrect": true,
+          "recallTopK": [],
+          "correctRank": null
+        },
+        {
+          "text": "终点汇化",
+          "correctWord": "重点会划",
+          "spanCorrect": true,
+          "recallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          2,
+          3,
+          3,
+          3
+        ],
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 0
+      }
+    },
+    {
+      "id": "d011",
+      "scenario": "hospital",
+      "sampleClass": "A3",
+      "raw": "刮号出请问 内刻还有号码 我微不 我感觉不舒服昨晚开始的",
+      "ref": "挂号处请问内科还有号吗？我胃不舒服，昨晚开始的。",
+      "spans": [
+        {
+          "text": "刮号",
+          "correctWord": "挂号",
+          "spanCorrect": true,
+          "recallTopK": [
+            "挂号"
+          ],
+          "correctRank": 1
+        },
+        {
+          "text": "内刻",
+          "correctWord": "内科",
+          "spanCorrect": true,
+          "recallTopK": [
+            "内科"
+          ],
+          "correctRank": 1
+        },
+        {
+          "text": "微不",
+          "correctWord": "吗我",
+          "spanCorrect": true,
+          "recallTopK": [
+            "尾部",
+            "胃部"
+          ],
+          "correctRank": null
+        },
+        {
+          "text": "不舒服昨晚",
+          "correctWord": "挂号处请问",
+          "spanCorrect": false,
+          "recallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": false,
+        "alignmentTextMatched": false,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 4
+      }
+    },
+    {
+      "id": "d138",
+      "scenario": "cafe",
+      "sampleClass": "A2",
+      "raw": "请问,这款美式可以少病吗?我赶时间小杯",
+      "ref": "请问这款美式可以少冰吗？我赶时间，小杯。",
+      "spans": [
+        {
+          "text": "少病",
+          "correctWord": "少冰",
+          "spanCorrect": true,
+          "recallTopK": [
+            "烧饼",
+            "哨兵"
+          ],
+          "correctRank": null
+        },
+        {
+          "text": "赶时间小杯",
+          "correctWord": "请问这款美",
+          "spanCorrect": false,
+          "recallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          3,
+          3,
+          3,
+          2,
+          3
+        ],
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 2
+      }
+    },
+    {
+      "id": "d033",
+      "scenario": "hotel",
+      "sampleClass": "A2",
+      "raw": "房间空调不太至冷能派人上来看一下吗?",
+      "ref": "房间空调不太制冷，能派人上来看一下吗？",
+      "spans": [
+        {
+          "text": "至冷能派人",
+          "correctWord": "制冷能派人",
+          "spanCorrect": true,
+          "recallTopK": [],
+          "correctRank": null
+        },
+        {
+          "text": "一下",
+          "correctWord": "房间",
+          "spanCorrect": false,
+          "recallTopK": [
+            "以下"
+          ],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          3,
+          3
+        ],
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 1
+      }
+    },
+    {
+      "id": "d143",
+      "scenario": "taxi",
+      "sampleClass": "A3",
+      "raw": "麻烦送我到深圳南善科机园南门大概多久能到? 我十点时 十分有个电话会",
+      "ref": "麻烦送我到深圳南山科技园南门，大概多久能到？我十点十分有个电话会。",
+      "spans": [
+        {
+          "text": "深圳",
+          "correctWord": "麻烦",
+          "spanCorrect": false,
+          "recallTopK": [
+            "神针"
+          ],
+          "correctRank": null
+        },
+        {
+          "text": "科机",
+          "correctWord": "科技",
+          "spanCorrect": true,
+          "recallTopK": [
+            "科技",
+            "客机",
+            "科级",
+            "客籍"
+          ],
+          "correctRank": 1
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.000010527465683456792,
+        "topCandidates": [
+          {
+            "text": "麻烦送我到神针南善科技园南门大概多久能到? 我十点时 十分有个电话会",
+            "kenlmDelta": 0.000010527465683456792,
+            "replacementCount": 2
+          },
+          {
+            "text": "麻烦送我到神针南善客机园南门大概多久能到? 我十点时 十分有个电话会",
+            "kenlmDelta": -0.00002415546062576388,
+            "replacementCount": 2
+          },
+          {
+            "text": "麻烦送我到神针南善科级园南门大概多久能到? 我十点时 十分有个电话会",
+            "kenlmDelta": -0.000034273633537841466,
+            "replacementCount": 2
+          }
+        ]
+      },
+      "toneModule": {
+        "toneEnabled": false,
+        "alignmentTextMatched": false,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 5
+      }
+    },
+    {
+      "id": "d091",
+      "scenario": "cafe",
+      "sampleClass": "A2",
+      "raw": "你好,我想點一杯鹽麥拿鐵中輩無糖 順便問一下 今天有被裹嗎?",
+      "ref": "你好，我想点一杯燕麦拿铁，中杯，无糖。顺便问一下今天有贝果吗？",
+      "spans": [
+        {
+          "text": "中輩",
+          "correctWord": "中杯",
+          "spanCorrect": true,
+          "recallTopK": [],
+          "correctRank": null
+        },
+        {
+          "text": "問一",
+          "correctWord": "问一",
+          "spanCorrect": true,
+          "recallTopK": [
+            "文艺",
+            "瘟疫"
+          ],
+          "correctRank": null
+        },
+        {
+          "text": "有被",
+          "correctWord": "有贝",
+          "spanCorrect": true,
+          "recallTopK": [
+            "有悖"
+          ],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": false,
+        "alignmentTextMatched": false,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 3
+      }
+    },
+    {
+      "id": "d022",
+      "scenario": "customer_service",
+      "sampleClass": "A2",
+      "raw": "您好,我定,但顯示 但物流三天每更新能幫我查一下嗎?",
+      "ref": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+      "spans": [
+        {
+          "text": "查一下嗎",
+          "correctWord": "查一下吗",
+          "spanCorrect": true,
+          "recallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": false,
+        "alignmentTextMatched": false,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 0
+      }
+    },
+    {
+      "id": "d057",
+      "scenario": "hospital",
+      "sampleClass": "A4",
+      "raw": "这个检查报告什么时候能出 我咳嗽需要请假休息吗",
+      "ref": "这个检查报告什么时候能出？我咳嗽，需要请假休息吗？",
+      "spans": [
+        {
+          "text": "检查",
+          "correctWord": "这个",
+          "spanCorrect": false,
+          "recallTopK": [
+            "检察",
+            "监察"
+          ],
+          "correctRank": null
+        },
+        {
+          "text": "请假",
+          "correctWord": "这个",
+          "spanCorrect": false,
+          "recallTopK": [
+            "亲家"
+          ],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": -0.002363824087145096,
+        "topCandidates": [
+          {
+            "text": "这个检察报告什么时候能出 我咳嗽需要亲家休息吗",
+            "kenlmDelta": -0.002363824087145096,
+            "replacementCount": 2
+          },
+          {
+            "text": "这个监察报告什么时候能出 我咳嗽需要亲家休息吗",
+            "kenlmDelta": -0.0025793168138219654,
+            "replacementCount": 2
+          }
+        ]
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          3,
+          4
+        ],
+        "recallToneCompatibleCount": 1,
+        "recallToneFallbackCount": 4
+      }
+    },
+    {
+      "id": "d036",
+      "scenario": "bank",
+      "sampleClass": "A3",
+      "raw": "请问立财产品的风险等急在哪里查看",
+      "ref": "请问理财产品的风险等级在哪里查看？",
+      "spans": [
+        {
+          "text": "立财",
+          "correctWord": "理财",
+          "spanCorrect": true,
+          "recallTopK": [
+            "理睬",
+            "理财"
+          ],
+          "correctRank": 2
+        },
+        {
+          "text": "等急在哪",
+          "correctWord": "等级在哪",
+          "spanCorrect": true,
+          "recallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          1,
+          4,
+          3,
+          3
+        ],
+        "recallToneCompatibleCount": 1,
+        "recallToneFallbackCount": 1
+      }
+    },
+    {
+      "id": "d200",
+      "scenario": "tech_deploy",
+      "sampleClass": "A3",
+      "raw": "這次發布我們線,對其商線計劃窗口候選生,成模快需要連掉別漏掉回歸。",
+      "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+      "spans": [
+        {
+          "text": "線,對其商線",
+          "correctWord": "先对齐上线",
+          "spanCorrect": false,
+          "recallTopK": [],
+          "correctRank": null
+        },
+        {
+          "text": "模快",
+          "correctWord": "模块",
+          "spanCorrect": true,
+          "recallTopK": [
+            "模块"
+          ],
+          "correctRank": 1
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          1,
+          3
+        ],
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 1
+      }
+    },
+    {
+      "id": "d017",
+      "scenario": "friend",
+      "sampleClass": "A4",
+      "raw": "晚上一起吃饭嘛 我知道一家川菜 不错大概起点到",
+      "ref": "晚上一起吃饭吗？我知道一家川菜不错，大概七点到。",
+      "spans": [
+        {
+          "text": "一起",
+          "correctWord": "晚上",
+          "spanCorrect": false,
+          "recallTopK": [
+            "义气",
+            "一齐",
+            "仪器",
+            "一期"
+          ],
+          "correctRank": null
+        },
+        {
+          "text": "一家",
+          "correctWord": "晚上",
+          "spanCorrect": false,
+          "recallTopK": [
+            "意甲",
+            "溢价",
+            "医家",
+            "衣架"
+          ],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": -0.0015014999721840497,
+        "topCandidates": [
+          {
+            "text": "晚上一期吃饭嘛 我知道医家川菜 不错大概起点到",
+            "kenlmDelta": -0.0016017837040926226,
+            "replacementCount": 2
+          },
+          {
+            "text": "晚上一齐吃饭嘛 我知道溢价川菜 不错大概起点到",
+            "kenlmDelta": -0.0017903292790245275,
+            "replacementCount": 2
+          },
+          {
+            "text": "晚上一齐吃饭嘛 我知道医家川菜 不错大概起点到",
+            "kenlmDelta": -0.0018736732321626675,
+            "replacementCount": 2
+          }
+        ]
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          3,
+          4
+        ],
+        "recallToneCompatibleCount": 1,
+        "recallToneFallbackCount": 7
+      }
+    },
+    {
+      "id": "d196",
+      "scenario": "friend",
+      "sampleClass": "A2",
+      "raw": "周末要不要去降邊騎行 天氣預報 周日多云积的带水",
+      "ref": "周末要不要去江边骑行？天气预报说周日多云，记得带水。",
+      "spans": [
+        {
+          "text": "騎行",
+          "correctWord": "骑行",
+          "spanCorrect": true,
+          "recallTopK": [
+            "气性"
+          ],
+          "correctRank": null
+        },
+        {
+          "text": "云积的",
+          "correctWord": "云记得",
+          "spanCorrect": true,
+          "recallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": false,
+        "alignmentTextMatched": false,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 1
+      }
+    },
+    {
+      "id": "d169",
+      "scenario": "bank",
+      "sampleClass": "A4",
+      "raw": "我想开通短信提醒需要带什么证件",
+      "ref": "我想开通短信提醒，需要带什么证件？",
+      "spans": [
+        {
+          "text": "证件",
+          "correctWord": "我想",
+          "spanCorrect": false,
+          "recallTopK": [
+            "证见",
+            "政见",
+            "证监"
+          ],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": -0.0035175985723635145,
+        "topCandidates": [
+          {
+            "text": "我想开通短信提醒需要带什么政见",
+            "kenlmDelta": -0.0035175985723635145,
+            "replacementCount": 1
+          },
+          {
+            "text": "我想开通短信提醒需要带什么证监",
+            "kenlmDelta": -0.0037047882325416323,
+            "replacementCount": 1
+          },
+          {
+            "text": "我想开通短信提醒需要带什么证见",
+            "kenlmDelta": -0.004070892818138869,
+            "replacementCount": 1
+          }
+        ]
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          3,
+          2
+        ],
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 4
+      }
+    },
+    {
+      "id": "d190",
+      "scenario": "hospital",
+      "sampleClass": "A2",
+      "raw": "醫生您好 我這兩天頭痛想開點 要病 做個些常規",
+      "ref": "医生您好，我这两天头痛，想开点药并做个血常规。",
+      "spans": [
+        {
+          "text": "兩天",
+          "correctWord": "两天",
+          "spanCorrect": true,
+          "recallTopK": [
+            "良田",
+            "粮田"
+          ],
+          "correctRank": null
+        },
+        {
+          "text": "想開點",
+          "correctWord": "想开点",
+          "spanCorrect": true,
+          "recallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          2,
+          4,
+          4
+        ],
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 2
+      }
+    },
+    {
+      "id": "d041",
+      "scenario": "gym",
+      "sampleClass": "A3",
+      "raw": "更意識規則要是找不到了前台 能幫忙開一下嗎",
+      "ref": "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+      "spans": [
+        {
+          "text": "更意識",
+          "correctWord": "更衣室",
+          "spanCorrect": true,
+          "recallTopK": [
+            "更衣室"
+          ],
+          "correctRank": 1
+        },
+        {
+          "text": "開一下",
+          "correctWord": "开一下",
+          "spanCorrect": true,
+          "recallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          3,
+          3,
+          3
+        ],
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 1
+      }
+    },
+    {
+      "id": "d020",
+      "scenario": "tech_deploy",
+      "sampleClass": "A2",
+      "raw": "这次发布我们现对其商线计划窗口后选生成模块需要连掉别漏掉回归",
+      "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+      "spans": [
+        {
+          "text": "现对其商",
+          "correctWord": "先对齐上",
+          "spanCorrect": true,
+          "recallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          4,
+          4,
+          3,
+          2
+        ],
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 0
+      }
+    },
+    {
+      "id": "d051",
+      "scenario": "meeting",
+      "sampleClass": "A4",
+      "raw": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下",
+      "ref": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。",
+      "spans": [
+        {
+          "text": "评审一下",
+          "correctWord": "跟会员系",
+          "spanCorrect": false,
+          "recallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": false,
+        "alignmentTextMatched": false,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 0
+      }
+    },
+    {
+      "id": "d132",
+      "scenario": "gym",
+      "sampleClass": "A2",
+      "raw": "游泳字卡本月月底到期续飞有优惠吗?",
+      "ref": "游泳次卡本月月底到期，续费有优惠吗？",
+      "spans": [
+        {
+          "text": "游泳字",
+          "correctWord": "游泳次",
+          "spanCorrect": true,
+          "recallTopK": [],
+          "correctRank": null
+        },
+        {
+          "text": "期续飞有优",
+          "correctWord": "期续费有优",
+          "spanCorrect": true,
+          "recallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          4,
+          4,
+          3,
+          2,
+          3
+        ],
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 0
+      }
+    },
+    {
+      "id": "d054",
+      "scenario": "taxi",
+      "sampleClass": "A3",
+      "raw": "去杭州系系部走三環 可以嗎?那扁現在賭不賭?",
+      "ref": "去杭州西溪，不走三环可以吗？那边现在堵不堵？",
+      "spans": [
+        {
+          "text": "走三環",
+          "correctWord": "走三环",
+          "spanCorrect": true,
+          "recallTopK": [],
+          "correctRank": null
+        },
+        {
+          "text": "那扁",
+          "correctWord": "那边",
+          "spanCorrect": true,
+          "recallTopK": [
+            "那边",
+            "哪边"
+          ],
+          "correctRank": 1
+        },
+        {
+          "text": "賭不賭",
+          "correctWord": "堵不堵",
+          "spanCorrect": true,
+          "recallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          4,
+          4,
+          4
+        ],
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 2
+      }
+    },
+    {
+      "id": "d002",
+      "scenario": "cafe",
+      "sampleClass": "A2",
+      "raw": "麻烦帮我做一杯美食带走大悲就行谢谢",
+      "ref": "麻烦帮我做一杯美式带走，大杯就行，谢谢。",
+      "spans": [
+        {
+          "text": "做一杯美食",
+          "correctWord": "做一杯美式",
+          "spanCorrect": true,
+          "recallTopK": [],
+          "correctRank": null
+        },
+        {
+          "text": "悲就行谢谢",
+          "correctWord": "杯就行谢谢",
+          "spanCorrect": true,
+          "recallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          4,
+          4,
+          3,
+          3,
+          3
+        ],
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 0
+      }
+    },
+    {
+      "id": "d015",
+      "scenario": "shopping",
+      "sampleClass": "A3",
+      "raw": "我想对比一下,这两款定制器 在商丹中台的加个会员日能再减一点吗?",
+      "ref": "我想对比一下这两款订单中台的价格，会员日能再减一点吗？",
+      "spans": [
+        {
+          "text": "器 在",
+          "correctWord": "我想",
+          "spanCorrect": false,
+          "recallTopK": [],
+          "correctRank": null
+        },
+        {
+          "text": "加个",
+          "correctWord": "价格",
+          "spanCorrect": true,
+          "recallTopK": [
+            "价格"
+          ],
+          "correctRank": 1
+        },
+        {
+          "text": "再减一点",
+          "correctWord": "我想对比",
+          "spanCorrect": false,
+          "recallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "kenlm": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "topCandidates": []
+      },
+      "toneModule": {
+        "toneEnabled": false,
+        "alignmentTextMatched": false,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 1
+      }
+    }
+  ],
+  "sampleClassCounts": {
+    "A1": 0,
+    "A2": 14,
+    "A3": 8,
+    "A4": 8
+  },
+  "cafeDetail": [
+    {
+      "id": "d001",
+      "raw": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+      "ref": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "fw_triggered": true,
+      "spans": [
+        {
+          "span": "钟贝少",
+          "correctWord": "中杯少",
+          "spanCorrect": true,
+          "spanWrongBoundary": false,
+          "batchRecallTopK": [],
+          "correctRank": null
+        },
+        {
+          "span": "深便",
+          "correctWord": "顺便",
+          "spanCorrect": true,
+          "spanWrongBoundary": false,
+          "batchRecallTopK": [
+            "身边",
+            "申辩"
+          ],
+          "correctRank": null
+        },
+        {
+          "span": "有蓝美马分",
+          "correctWord": "有蓝莓马芬",
+          "spanCorrect": true,
+          "spanWrongBoundary": false,
+          "batchRecallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "batchKenlm": {
+        "spanCount": 3,
+        "perSpanLimit": 2,
+        "combinationCount": 0,
+        "kenlmQueryCount": 0,
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "minDeltaToReplace": 0.03,
+        "topCandidates": []
+      },
+      "batchTone": {
+        "toneEnabled": false,
+        "alignmentTextMatched": false,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 2
+      }
+    },
+    {
+      "id": "d002",
+      "raw": "麻烦帮我做一杯美食带走大悲就行谢谢",
+      "ref": "麻烦帮我做一杯美式带走，大杯就行，谢谢。",
+      "fw_triggered": true,
+      "spans": [
+        {
+          "span": "做一杯美食",
+          "correctWord": "做一杯美式",
+          "spanCorrect": true,
+          "spanWrongBoundary": false,
+          "batchRecallTopK": [],
+          "correctRank": null
+        },
+        {
+          "span": "悲就行谢谢",
+          "correctWord": "杯就行谢谢",
+          "spanCorrect": true,
+          "spanWrongBoundary": false,
+          "batchRecallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "batchKenlm": {
+        "spanCount": 2,
+        "perSpanLimit": 4,
+        "combinationCount": 0,
+        "kenlmQueryCount": 0,
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "minDeltaToReplace": 0.03,
+        "topCandidates": []
+      },
+      "batchTone": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          4,
+          4,
+          3,
+          3,
+          3
+        ],
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 0
+      }
+    },
+    {
+      "id": "d003",
+      "raw": "请问,这款燕麦拿铁可以少病吗?我赶时间小背",
+      "ref": "请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。",
+      "fw_triggered": true,
+      "spans": [
+        {
+          "span": "燕麦",
+          "correctWord": "请问",
+          "spanCorrect": false,
+          "spanWrongBoundary": true,
+          "batchRecallTopK": [
+            "掩埋"
+          ],
+          "correctRank": null
+        },
+        {
+          "span": "少病",
+          "correctWord": "少冰",
+          "spanCorrect": true,
+          "spanWrongBoundary": false,
+          "batchRecallTopK": [
+            "烧饼",
+            "哨兵"
+          ],
+          "correctRank": null
+        },
+        {
+          "span": "赶时间小背",
+          "correctWord": "赶时间小杯",
+          "spanCorrect": true,
+          "spanWrongBoundary": false,
+          "batchRecallTopK": [],
+          "correctRank": null
+        }
+      ],
+      "batchKenlm": {
+        "spanCount": 3,
+        "perSpanLimit": 2,
+        "combinationCount": 0,
+        "kenlmQueryCount": 0,
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "minDeltaToReplace": 0.03,
+        "topCandidates": []
+      },
+      "batchTone": {
+        "toneEnabled": true,
+        "alignmentTextMatched": true,
+        "acousticTonePattern": [
+          3,
+          3,
+          3,
+          2,
+          3
+        ],
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 3
+      }
+    }
+  ],
+  "cafeTargetSim": [
+    {
+      "id": "d001",
+      "span": "钟贝",
+      "target": "中杯",
+      "generalTop8": [
+        "中杯",
+        "钟贝",
+        "忠贝",
+        "终杯"
+      ],
+      "restaurantTop8": [
+        "中杯",
+        "钟贝",
+        "忠贝",
+        "终杯"
+      ],
+      "targetInDomainLexicon": true,
+      "targetInBaseLexicon": false,
+      "targetInGeneralRank": 1,
+      "targetInRestaurantRank": 1
+    },
+    {
+      "id": "d001",
+      "span": "蓝美马分",
+      "target": "蓝莓马芬",
+      "generalTop8": [
+        "蓝莓马芬",
+        "兰梅马芬"
+      ],
+      "restaurantTop8": [
+        "蓝莓马芬",
+        "兰梅马芬"
+      ],
+      "targetInDomainLexicon": true,
+      "targetInBaseLexicon": false,
+      "targetInGeneralRank": 1,
+      "targetInRestaurantRank": 1
+    },
+    {
+      "id": "d002",
+      "span": "美食",
+      "target": "美式",
+      "generalTop8": [
+        "美食",
+        "没事",
+        "美式",
+        "美事",
+        "美是"
+      ],
+      "restaurantTop8": [
+        "美式",
+        "美是",
+        "没事",
+        "美食",
+        "美事"
+      ],
+      "targetInDomainLexicon": true,
+      "targetInBaseLexicon": true,
+      "targetInGeneralRank": 3,
+      "targetInRestaurantRank": 1
+    },
+    {
+      "id": "d002",
+      "span": "大悲",
+      "target": "大杯",
+      "generalTop8": [
+        "大悲",
+        "大杯",
+        "达杯"
+      ],
+      "restaurantTop8": [
+        "大杯",
+        "大悲",
+        "达杯"
+      ],
+      "targetInDomainLexicon": true,
+      "targetInBaseLexicon": false,
+      "targetInGeneralRank": 2,
+      "targetInRestaurantRank": 1
+    },
+    {
+      "id": "d003",
+      "span": "少病",
+      "target": "少冰",
+      "generalTop8": [
+        "烧饼",
+        "哨兵"
+      ],
+      "restaurantTop8": [
+        "烧饼",
+        "哨兵"
+      ],
+      "targetInDomainLexicon": false,
+      "targetInBaseLexicon": false,
+      "targetInGeneralRank": null,
+      "targetInRestaurantRank": null
+    },
+    {
+      "id": "d003",
+      "span": "小背",
+      "target": "小杯",
+      "generalTop8": [
+        "小辈",
+        "小杯",
+        "小碑",
+        "小悲"
+      ],
+      "restaurantTop8": [
+        "小杯",
+        "小碑",
+        "小悲",
+        "小辈"
+      ],
+      "targetInDomainLexicon": true,
+      "targetInBaseLexicon": true,
+      "targetInGeneralRank": 2,
+      "targetInRestaurantRank": 1
+    }
+  ],
+  "restaurantSimSummary": {
+    "中杯": {
+      "span": "钟贝",
+      "inDomainLexicon": true,
+      "inBaseLexicon": false,
+      "generalRank": 1,
+      "restaurantRank": 1
+    },
+    "蓝莓马芬": {
+      "span": "蓝美马分",
+      "inDomainLexicon": true,
+      "inBaseLexicon": false,
+      "generalRank": 1,
+      "restaurantRank": 1
+    },
+    "美式": {
+      "span": "美食",
+      "inDomainLexicon": true,
+      "inBaseLexicon": true,
+      "generalRank": 3,
+      "restaurantRank": 1
+    },
+    "大杯": {
+      "span": "大悲",
+      "inDomainLexicon": true,
+      "inBaseLexicon": false,
+      "generalRank": 2,
+      "restaurantRank": 1
+    },
+    "少冰": {
+      "span": "少病",
+      "inDomainLexicon": false,
+      "inBaseLexicon": false,
+      "generalRank": null,
+      "restaurantRank": null
+    },
+    "小杯": {
+      "span": "小背",
+      "inDomainLexicon": true,
+      "inBaseLexicon": true,
+      "generalRank": 2,
+      "restaurantRank": 1
+    }
+  },
+  "perf": {
+    "proposal_decode": {
+      "avg": 6.575,
+      "p95": 13,
+      "n": 200
+    },
+    "recall_v2": {
+      "avg": 1.385,
+      "p95": 4,
+      "n": 200
+    },
+    "tone_inference": {
+      "avg": 7.115,
+      "p95": 11,
+      "n": 200
+    },
+    "kenlm_batch": {
+      "avg": 2842.423076923077,
+      "p95": 10766,
+      "n": 52
+    },
+    "fw_detector_step": {
+      "avg": 760.735,
+      "p95": 4161,
+      "n": 200
+    }
+  }
+}

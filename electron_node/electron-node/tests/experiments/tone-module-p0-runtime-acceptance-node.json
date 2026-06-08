@@ -1,0 +1,40 @@
+{
+  "audit": "ToneModule P0.5 Runtime Acceptance (Node)",
+  "timestamp": "2026-06-06T19:16:19.406Z",
+  "legacyToneCleanup": {
+    "fwDetectorUsesToneDistance": false,
+    "fwDetectorUsesTextToToneSyllablesSpan": false,
+    "fwDetectorUsesWTone": false,
+    "fwDetectorUsesToneMatchScore": false,
+    "hits": {
+      "textToToneSyllables(span": [],
+      "toneDistance in fw-detector": [],
+      "wTone in fw-detector": [],
+      "toneMatchScore in fw-detector": []
+    }
+  },
+  "shaoBingRecall": {
+    "rawText": "少病",
+    "pattern": [
+      3,
+      1
+    ],
+    "ranked": [
+      "少冰",
+      "烧饼",
+      "哨兵"
+    ]
+  },
+  "rankingImpact": {
+    "simulatedSpans": 50,
+    "toneAffectsSortCount": 0
+  },
+  "ssotProbe": {
+    "aligned": true,
+    "misaligned": false
+  },
+  "tonePinyinLibOnly": {
+    "textToToneSyllablesDefined": true,
+    "toneDistanceDefined": true
+  }
+}

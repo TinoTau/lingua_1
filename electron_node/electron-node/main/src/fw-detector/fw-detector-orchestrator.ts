@@ -226,6 +226,7 @@ export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDete
         },
         enabledDomains,
         kenlmScorer,
+        tone: ctx.asrResult?.tone,
       })
     )
   );
@@ -263,6 +264,7 @@ export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDete
       : undefined,
     ...(recallV2Diagnostics ? { recallV2Diagnostics } : {}),
     sentenceRerank: decision.sentenceRerank,
+    ...(decision.toneDiagnostics ? { toneModule: decision.toneDiagnostics } : {}),
   };
   ctx.fwDetectorResult = result;
   return result;

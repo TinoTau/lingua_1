@@ -1,11 +1,10 @@
 import type { FwSpanDiagnostics } from '../types';
-import type { PinyinImeV2ApprovedSpan } from './pinyin-ime-v2-types';
+import type { PinyinImeV2SelectedSpan } from './pinyin-ime-v2-types';
 
 /**
- * Map ApprovedSpan to FwSpanDiagnostics for downstream Recall / KenLM / Apply.
- * Downstream must not consume IME internal types directly.
+ * Map SelectedSpan to FwSpanDiagnostics for downstream Recall / KenLM / Apply.
  */
-export function mapApprovedSpanToFwSpan(span: PinyinImeV2ApprovedSpan): FwSpanDiagnostics {
+export function mapSelectedSpanToFwSpan(span: PinyinImeV2SelectedSpan): FwSpanDiagnostics {
   const signal =
     span.reason === 'ime_v2_boundary_topk_diff'
       ? 'ime_v2_boundary_topk_diff_hint'
@@ -25,6 +24,6 @@ export function mapApprovedSpanToFwSpan(span: PinyinImeV2ApprovedSpan): FwSpanDi
   };
 }
 
-export function mapApprovedSpansToFwSpans(spans: PinyinImeV2ApprovedSpan[]): FwSpanDiagnostics[] {
-  return spans.map(mapApprovedSpanToFwSpan);
+export function mapSelectedSpansToFwSpans(spans: PinyinImeV2SelectedSpan[]): FwSpanDiagnostics[] {
+  return spans.map(mapSelectedSpanToFwSpan);
 }

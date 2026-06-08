@@ -34,8 +34,30 @@ from text_processing import (
 )
 from text_filter import is_meaningless_transcript
 from context import get_text_context
+from tone_module.inference import run_tone_inference
+from api_models import UtteranceTonePayloadModel, ToneTokenModel, TonePosteriorModel
 
 logger = logging.getLogger(__name__)
+
+
+def _tone_payload_to_model(tone_payload) -> UtteranceTonePayloadModel:
+    return UtteranceTonePayloadModel(
+        toneEnabled=tone_payload.tone_enabled,
+        toneTokens=[
+            ToneTokenModel(
+                token=t.token,
+                start=t.start,
+                end=t.end,
+                tonePosterior=TonePosteriorModel(**t.tone_posterior.as_dict()),
+                confidence=t.confidence,
+            )
+            for t in tone_payload.tone_tokens
+        ],
+        toneTokenCount=tone_payload.tone_token_count,
+        toneConfidenceAvg=tone_payload.tone_confidence_avg,
+        skippedReason=tone_payload.skipped_reason,
+        alignmentText=tone_payload.alignment_text,
+    )
 
 
 # 全局 ASR Worker Manager
@@ -248,7 +270,24 @@ async def process_utterance(req: UtteranceRequest) -> UtteranceResponse:
                 "asr_latency_ms": asr_latency_ms,
             },
         }
-        
+
+        # P0 ToneModule: infer BEFORE dedup (word timestamps align with processed_audio)
+        tone_payload, tone_inference_ms = run_tone_inference(
+            processed_audio=processed_audio,
+            sample_rate=sr,
+            segments=segments_info,
+            language=detected_language,
+            src_lang=req.src_lang,
+            trace_id=trace_id,
+        )
+        p0_diagnostics["toneModule"] = {
+            "tone_inference_ms": tone_inference_ms,
+            "toneTokenCount": tone_payload.tone_token_count,
+            "toneEnabled": tone_payload.tone_enabled,
+            "toneConfidenceAvg": tone_payload.tone_confidence_avg,
+            "skippedReason": tone_payload.skipped_reason,
+        }
+
         # 计算检测到的语言的概率
         language_probability = None
         if language_probabilities and detected_language:
@@ -258,10 +297,10 @@ async def process_utterance(req: UtteranceRequest) -> UtteranceResponse:
                     f"[{trace_id}] ASR 语言检测概率: language={detected_language}, "
                     f"probability={language_probability:.4f}"
                 )
-        
+
         info_language = detected_language
         info_duration = duration_sec
-        
+
         logger.info(f"[{trace_id}] Step 9: Starting ASR result processing")
         
         # 9. ASR 识别完成，记录结果
@@ -269,8 +308,8 @@ async def process_utterance(req: UtteranceRequest) -> UtteranceResponse:
             full_text_trimmed = full_text.strip()
             logger.info(f"[{trace_id}] Step 9.1: Text trimmed, len={len(full_text_trimmed)}")
             
-            # 9.2. 去重处理
-            if full_text_trimmed:
+            # 9.2. 去重处理（FW Detector 路径跳过，保证 tone.alignmentText === response.text）
+            if full_text_trimmed and not req.skip_text_dedup:
                 full_text_trimmed = process_text_deduplication(full_text_trimmed, trace_id)
                 
                 # 9.3. 过滤上下文子串
@@ -395,6 +434,8 @@ async def process_utterance(req: UtteranceRequest) -> UtteranceResponse:
         
         # 13. 返回结果
         try:
+            if tone_payload.tone_enabled:
+                tone_payload.alignment_text = full_text_trimmed
             response = UtteranceResponse(
                 text=full_text_trimmed,
                 segments=segments_info,
@@ -404,6 +445,7 @@ async def process_utterance(req: UtteranceRequest) -> UtteranceResponse:
                 duration=info_duration,
                 vad_segments=vad_segments,
                 diagnostics=p0_diagnostics,
+                tone=_tone_payload_to_model(tone_payload),
             )
             logger.info(f"[{trace_id}] Step 13: Response constructed successfully, returning deduplicated text (len={len(full_text_trimmed)})")
             return response

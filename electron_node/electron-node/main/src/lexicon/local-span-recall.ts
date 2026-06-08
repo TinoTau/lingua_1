@@ -9,10 +9,15 @@ import type { WindowCandidateSource } from './window-candidate-source';
 import { matchEnabledDomain } from './domain-filter';
 import { ensureLexiconRuntimeV2Loaded, getLexiconRuntimeV2 } from '../lexicon-v2/lexicon-runtime-v2-holder';
 import { resolveDomainIdsForRecall } from '../lexicon-v2/domain-recall-merge';
-import { isIndustryRoutingEnabled } from '../lexicon-v2/lexicon-fw-recall-config';
+import {
+  isFuzzyPinyinRecallEnabled,
+  isWeakDomainRecallEnabled,
+  shouldUseIndustryRouting,
+} from '../lexicon-v2/lexicon-fw-recall-config';
 import { getLexiconRecallContext } from '../lexicon-v2/lexicon-recall-context';
 import { resolveRecallDomains } from '../lexicon-v2/industry-routing-domain-resolver';
 import { recallSpanTopKV2 } from '../lexicon-v2/recall-span-topk-v2';
+import { resolveWeakDomainRecallPlan } from '../lexicon-v2/weak-domain-recall-resolver';
 
 export type LocalSpanRecallHit = {
   word: string;
@@ -28,12 +33,16 @@ export type LocalSpanRecallHit = {
 export type LocalSpanRecallOptions = {
   /** P4: combined domain+alias+base cap (replaces tier叠加 merge). */
   perSpanLimit?: number;
+  /** P0.5: acoustic tone pattern from CNN (Recall sort only). */
+  acousticTonePattern?: number[];
 };
 
 export type LocalSpanRecallResult = {
   hits: LocalSpanRecallHit[];
   maxPhoneticScore: number;
   skippedReason?: 'empty' | 'syllable_out_of_range' | 'v2_unavailable';
+  recallToneCompatibleCount?: number;
+  recallToneFallbackCount?: number;
 };
 
 const MIN_SYLLABLES = 2;
@@ -78,9 +87,13 @@ function mapHit(hit: {
 
 function resolveRecallDomainIds(
   profile: ActiveLexiconProfileSnapshot,
-  enabledDomains: readonly string[]
+  enabledDomains: readonly string[],
+  weakEnabled: boolean
 ): string[] {
-  if (isIndustryRoutingEnabled()) {
+  if (weakEnabled) {
+    return [...resolveWeakDomainRecallPlan(profile, enabledDomains, true).queryDomainIds];
+  }
+  if (shouldUseIndustryRouting()) {
     const runtimeV2 = getLexiconRuntimeV2();
     const sessionIntent = getLexiconRecallContext()?.sessionIntent;
     return resolveRecallDomains({
@@ -119,10 +132,14 @@ export function recallSpanTopK(
     return { hits: [], maxPhoneticScore: 0, skippedReason: 'v2_unavailable' };
   }
 
+  const weakEnabled = isWeakDomainRecallEnabled();
+  const fuzzyEnabled = isFuzzyPinyinRecallEnabled();
+  const weakDomainPlan = resolveWeakDomainRecallPlan(profile, enabledDomains, weakEnabled);
+
   const effectiveTopK = options?.perSpanLimit ?? topK;
   const runtimeV2 = getLexiconRuntimeV2();
-  const domainIds = resolveRecallDomainIds(profile, enabledDomains);
-  const { hits } = recallSpanTopKV2(runtimeV2, {
+  const domainIds = resolveRecallDomainIds(profile, enabledDomains, weakEnabled);
+  const recallResult = recallSpanTopKV2(runtimeV2, {
     syllables,
     windowText: trimmed,
     termLength: trimmed.length,
@@ -130,11 +147,19 @@ export function recallSpanTopK(
     profile,
     domainIds,
     perSpanLimit: options?.perSpanLimit,
+    acousticTonePattern: options?.acousticTonePattern,
+    weakDomainPlan: weakEnabled ? weakDomainPlan : undefined,
+    fuzzyRecallEnabled: fuzzyEnabled,
   });
-  const mapped = hits.map(mapHit);
+  const mapped = recallResult.hits.map(mapHit);
   const filtered = mapped
     .filter((h) => h.priorScore >= minPrior)
     .filter((h) => passesEnabledDomainFilter(h, enabledDomains));
   const maxPhoneticScore = filtered.reduce((m, h) => Math.max(m, h.phoneticScore), 0);
-  return { hits: filtered, maxPhoneticScore };
+  return {
+    hits: filtered,
+    maxPhoneticScore,
+    recallToneCompatibleCount: recallResult.recallToneCompatibleCount,
+    recallToneFallbackCount: recallResult.recallToneFallbackCount,
+  };
 }

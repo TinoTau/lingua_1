@@ -1,0 +1,405 @@
+{
+  "enabledDomains": [
+    "tech_ai",
+    "travel",
+    "transport",
+    "restaurant"
+  ],
+  "cafeSimulation": {
+    "d001": [
+      {
+        "span": "钟贝少",
+        "target": "中杯",
+        "fuzzyVariants": [
+          "钟贝少",
+          "贝少",
+          "钟贝"
+        ],
+        "variantRows": [
+          {
+            "variant": "钟贝少",
+            "generalTop": [],
+            "weakDomainTop": [],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          },
+          {
+            "variant": "贝少",
+            "generalTop": [
+              "焙烧"
+            ],
+            "weakDomainTop": [
+              "焙烧"
+            ],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          },
+          {
+            "variant": "钟贝",
+            "generalTop": [],
+            "weakDomainTop": [
+              "中杯",
+              "终杯",
+              "钟贝",
+              "忠贝"
+            ],
+            "expectedHitWeak": true,
+            "expectedHitGeneral": false
+          }
+        ],
+        "expectedHitViaWeak": true,
+        "expectedHitViaGeneral": false
+      },
+      {
+        "span": "深便",
+        "target": "顺便",
+        "fuzzyVariants": [
+          "深便"
+        ],
+        "variantRows": [
+          {
+            "variant": "深便",
+            "generalTop": [
+              "身边",
+              "申辩"
+            ],
+            "weakDomainTop": [
+              "身边",
+              "申辩"
+            ],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          }
+        ],
+        "expectedHitViaWeak": false,
+        "expectedHitViaGeneral": false
+      },
+      {
+        "span": "有蓝美马分",
+        "target": "蓝莓马芬",
+        "fuzzyVariants": [
+          "有蓝美马分",
+          "蓝美马分",
+          "有蓝美马",
+          "蓝美马"
+        ],
+        "variantRows": [
+          {
+            "variant": "有蓝美马分",
+            "generalTop": [],
+            "weakDomainTop": [],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          },
+          {
+            "variant": "蓝美马分",
+            "generalTop": [],
+            "weakDomainTop": [
+              "蓝莓马芬",
+              "兰梅马芬"
+            ],
+            "expectedHitWeak": true,
+            "expectedHitGeneral": false
+          },
+          {
+            "variant": "有蓝美马",
+            "generalTop": [],
+            "weakDomainTop": [],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          },
+          {
+            "variant": "蓝美马",
+            "generalTop": [],
+            "weakDomainTop": [],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          }
+        ],
+        "expectedHitViaWeak": true,
+        "expectedHitViaGeneral": false
+      }
+    ],
+    "d002": [
+      {
+        "span": "做一杯美食",
+        "target": "美式",
+        "fuzzyVariants": [
+          "做一杯美食",
+          "一杯美食",
+          "做一杯美",
+          "一杯美"
+        ],
+        "variantRows": [
+          {
+            "variant": "做一杯美食",
+            "generalTop": [],
+            "weakDomainTop": [],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          },
+          {
+            "variant": "一杯美食",
+            "generalTop": [],
+            "weakDomainTop": [],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          },
+          {
+            "variant": "做一杯美",
+            "generalTop": [],
+            "weakDomainTop": [],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          },
+          {
+            "variant": "一杯美",
+            "generalTop": [],
+            "weakDomainTop": [],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          }
+        ],
+        "expectedHitViaWeak": false,
+        "expectedHitViaGeneral": false
+      },
+      {
+        "span": "悲就行谢谢",
+        "target": "大杯",
+        "fuzzyVariants": [
+          "悲就行谢谢",
+          "就行谢谢",
+          "悲就行谢",
+          "就行谢"
+        ],
+        "variantRows": [
+          {
+            "variant": "悲就行谢谢",
+            "generalTop": [],
+            "weakDomainTop": [],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          },
+          {
+            "variant": "就行谢谢",
+            "generalTop": [],
+            "weakDomainTop": [],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          },
+          {
+            "variant": "悲就行谢",
+            "generalTop": [],
+            "weakDomainTop": [],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          },
+          {
+            "variant": "就行谢",
+            "generalTop": [],
+            "weakDomainTop": [],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          }
+        ],
+        "expectedHitViaWeak": false,
+        "expectedHitViaGeneral": false
+      }
+    ],
+    "d003": [
+      {
+        "span": "燕麦",
+        "target": null,
+        "fuzzyVariants": [
+          "燕麦"
+        ],
+        "variantRows": [
+          {
+            "variant": "燕麦",
+            "generalTop": [
+              "掩埋"
+            ],
+            "weakDomainTop": [
+              "掩埋"
+            ],
+            "expectedHitWeak": null,
+            "expectedHitGeneral": false
+          }
+        ],
+        "expectedHitViaWeak": false,
+        "expectedHitViaGeneral": false
+      },
+      {
+        "span": "少病",
+        "target": "少冰",
+        "fuzzyVariants": [
+          "少病"
+        ],
+        "variantRows": [
+          {
+            "variant": "少病",
+            "generalTop": [
+              "烧饼",
+              "哨兵"
+            ],
+            "weakDomainTop": [
+              "烧饼",
+              "哨兵"
+            ],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          }
+        ],
+        "expectedHitViaWeak": false,
+        "expectedHitViaGeneral": false
+      },
+      {
+        "span": "赶时间小背",
+        "target": "小杯",
+        "fuzzyVariants": [
+          "赶时间小背",
+          "时间小背",
+          "赶时间小",
+          "时间小"
+        ],
+        "variantRows": [
+          {
+            "variant": "赶时间小背",
+            "generalTop": [],
+            "weakDomainTop": [],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          },
+          {
+            "variant": "时间小背",
+            "generalTop": [],
+            "weakDomainTop": [],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          },
+          {
+            "variant": "赶时间小",
+            "generalTop": [],
+            "weakDomainTop": [],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          },
+          {
+            "variant": "时间小",
+            "generalTop": [],
+            "weakDomainTop": [],
+            "expectedHitWeak": false,
+            "expectedHitGeneral": false
+          }
+        ],
+        "expectedHitViaWeak": false,
+        "expectedHitViaGeneral": false
+      }
+    ]
+  },
+  "crossScenarioRisk": [
+    {
+      "scenario": "hospital",
+      "span": "歇常規",
+      "note": "血常规",
+      "pollutionSamples": [],
+      "riskLevel": "low",
+      "kenlmLikelyReject": true
+    },
+    {
+      "scenario": "hospital",
+      "span": "请家休息",
+      "note": "请假休息",
+      "pollutionSamples": [],
+      "riskLevel": "low",
+      "kenlmLikelyReject": true
+    },
+    {
+      "scenario": "bank",
+      "span": "传中",
+      "note": "中码",
+      "pollutionSamples": [],
+      "riskLevel": "low",
+      "kenlmLikelyReject": true
+    },
+    {
+      "scenario": "tech_deploy",
+      "span": "后选生",
+      "note": "候选生",
+      "pollutionSamples": [],
+      "riskLevel": "low",
+      "kenlmLikelyReject": true
+    },
+    {
+      "scenario": "friend",
+      "span": "义气",
+      "note": "一起",
+      "pollutionSamples": [],
+      "riskLevel": "low",
+      "kenlmLikelyReject": true
+    },
+    {
+      "scenario": "cafe",
+      "span": "钟贝",
+      "note": "中杯",
+      "pollutionSamples": [],
+      "riskLevel": "low",
+      "kenlmLikelyReject": true
+    }
+  ],
+  "performanceEstimate": {
+    "current": {
+      "recall_avg_ms": 1.385,
+      "recall_p95_ms": 4,
+      "kenlm_queried_cases": 52,
+      "kenlm_combination_avg_when_queried": "1-16"
+    },
+    "estimated_with_weak_fuzzy": {
+      "recall_avg_ms": "2-4",
+      "recall_p95_ms": "8-12",
+      "sql_queries_per_span_multiplier": "1 + variants(<=4) * domains(4)",
+      "kenlm_combination_increase": "only if recall hit increases; cap maxSentenceCandidates=16 unchanged"
+    }
+  },
+  "aliasInDb": {
+    "domain_alias_rows": 16,
+    "canonical_with_aliases": [
+      [
+        "中杯",
+        "[\"钟贝\",\"忠贝\",\"终杯\"]"
+      ],
+      [
+        "大杯",
+        "[\"大悲\",\"达杯\"]"
+      ],
+      [
+        "小杯",
+        "[\"小碑\",\"小悲\"]"
+      ],
+      [
+        "美式",
+        "[\"美是\",\"没事\"]"
+      ],
+      [
+        "拿铁",
+        "[\"拿帖\",\"那铁\"]"
+      ],
+      [
+        "摩卡",
+        "[\"磨卡\"]"
+      ],
+      [
+        "马芬",
+        "[\"麻烦\"]"
+      ],
+      [
+        "蓝莓",
+        "[\"兰梅\"]"
+      ],
+      [
+        "蓝莓马芬",
+        "[\"蓝莓麻烦\",\"兰梅马芬\"]"
+      ]
+    ]
+  }
+}

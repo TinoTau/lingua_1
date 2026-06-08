@@ -31,7 +31,7 @@ describe('resolvePinyinImeV2Spans', () => {
       },
     });
     expect(result.spans).toEqual([]);
-    expect(result.pinyinImeV2.skippedReason).toBe('no_approved_spans');
+    expect(result.pinyinImeV2.skippedReason).toBe('no_selected_spans');
   });
 
   it('returns ime_dict_unavailable when dict dir missing', () => {

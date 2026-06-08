@@ -4,8 +4,11 @@
 
 import {
   computeCandidateScoreBreakdown,
+  hotwordDomains,
   type CandidateScoreBreakdown,
+  type RecallCandidateKind,
 } from '../lexicon/candidate-score';
+import type { DomainBoostContext } from '../lexicon/domain-boost-calculator';
 import { scorePinyinSimilarity } from '../lexicon/phonetic/pinyin';
 import { syllablesKey } from '../lexicon/pinyin-index';
 import { getAsrRepairQualityConfig } from '../asr-repair-quality/quality-config';
@@ -14,10 +17,18 @@ import { resolveWindowCandidateSource, type WindowCandidateSource } from '../lex
 import type { ActiveLexiconProfileSnapshot } from '../session-runtime/types';
 import { defaultGeneralProfile } from './profile-registry';
 import type { LexiconRuntimeV2 } from './lexicon-runtime-v2';
-import { recordRecallSpanDiagnostics } from './recall-v2-diagnostics';
+import { recordRecallSpanDiagnostics, type RecallSourceBreakdown } from './recall-v2-diagnostics';
 import { isIndustryRoutingEnabled } from './lexicon-fw-recall-config';
 import { getLexiconRuntimeV2Config } from './lexicon-runtime-v2-config';
+import { sortRecallHitsByToneCompatibility } from '../lexicon/tone-recall-sort';
 import { mergeSpanCandidatesCombined, type TierHotwordRow } from './merge-span-candidates';
+import {
+  alignVariantWindowText,
+  buildFuzzyPinyinVariants,
+  exactFuzzyPinyinVariant,
+  type FuzzyPinyinVariant,
+} from './fuzzy-pinyin-key-builder';
+import type { WeakDomainRecallPlan } from './weak-domain-recall-resolver';
 
 export type RecallSpanTopKV2Hit = {
   hotword: HotwordEntry;
@@ -26,11 +37,14 @@ export type RecallSpanTopKV2Hit = {
   candidateScoreBreakdown: CandidateScoreBreakdown;
   source: WindowCandidateSource;
   matchedAlias?: string;
+  acousticTonePattern?: number[];
 };
 
 export type RecallSpanTopKV2Result = {
   hits: RecallSpanTopKV2Hit[];
   maxDomainBoostApplied: number;
+  recallToneCompatibleCount: number;
+  recallToneFallbackCount: number;
 };
 
 export type RecallSpanTopKV2Input = {
@@ -42,31 +56,107 @@ export type RecallSpanTopKV2Input = {
   domainIds: readonly string[];
   /** P4: combined limit merge (domain>alias>base). */
   perSpanLimit?: number;
+  /** P0.5: acoustic tone pattern from CNN toneTokens only. */
+  acousticTonePattern?: number[];
+  weakDomainPlan?: WeakDomainRecallPlan;
+  fuzzyRecallEnabled?: boolean;
+  /** Fuzzy path SQL cap per variant (default 2). */
+  perVariantLimit?: number;
 };
+
+const DEFAULT_PER_VARIANT_LIMIT = 2;
 
 function minCandidateScore(): number {
   return getAsrRepairQualityConfig().minCandidateScore;
 }
 
+function domainBoostContextFromPlan(plan?: WeakDomainRecallPlan): DomainBoostContext | undefined {
+  if (!plan?.enabled) {
+    return undefined;
+  }
+  return {
+    strongDomainIds: plan.strongDomainIds,
+    weakDomainIds: plan.weakDomainIds,
+  };
+}
+
+function isDomainHotword(hotword: HotwordEntry): boolean {
+  return Boolean(hotword.domain || hotword.domains?.length);
+}
+
+function classifyRecallCandidateKind(
+  hotword: HotwordEntry,
+  variant: FuzzyPinyinVariant,
+  plan?: WeakDomainRecallPlan
+): RecallCandidateKind {
+  const domains = hotwordDomains(hotword);
+  const domainId = domains[0] ?? 'general';
+  const domainHit = isDomainHotword(hotword);
+
+  if (variant.isFuzzy) {
+    return domainHit && domainId !== 'general' ? 'fuzzy_plain_domain' : 'fuzzy_plain';
+  }
+
+  if (!domainHit) {
+    return 'exact_base';
+  }
+
+  if (plan?.enabled) {
+    if (plan.strongDomainIds.includes(domainId)) {
+      return 'exact_domain_strong';
+    }
+    if (plan.weakDomainIds.includes(domainId)) {
+      return 'exact_domain_weak';
+    }
+  }
+
+  return 'exact_domain_strong';
+}
+
+function bumpSourceBreakdown(
+  breakdown: RecallSourceBreakdown,
+  kind: RecallCandidateKind
+): void {
+  switch (kind) {
+    case 'exact_base':
+      breakdown.exactBase += 1;
+      break;
+    case 'exact_domain_strong':
+      breakdown.exactDomainStrong += 1;
+      break;
+    case 'exact_domain_weak':
+      breakdown.exactDomainWeak += 1;
+      break;
+    case 'fuzzy_plain':
+      breakdown.fuzzyPlain += 1;
+      break;
+    case 'fuzzy_plain_domain':
+      breakdown.fuzzyPlainDomain += 1;
+      break;
+  }
+}
+
 function scoreHotword(
   hotword: HotwordEntry,
-  syllables: string[],
+  variant: FuzzyPinyinVariant,
   windowText: string,
   profile: ActiveLexiconProfileSnapshot,
-  seen: Set<string>,
-  scored: RecallSpanTopKV2Hit[],
-  matchedAlias?: string
+  boostContext: DomainBoostContext | undefined,
+  plan: WeakDomainRecallPlan | undefined,
+  acousticTonePattern: number[] | undefined,
+  bestById: Map<string, RecallSpanTopKV2Hit>,
+  sourceBreakdown: RecallSourceBreakdown,
+  weakDomainCandidateCount: { value: number }
 ): void {
+  const syllables = variant.syllables;
   if (!hotword.enabled || hotword.word.length !== syllables.length) {
     return;
   }
   if (!Number.isFinite(hotword.priorScore) || hotword.priorScore <= 0) {
     return;
   }
-  if (seen.has(hotword.id)) {
-    return;
-  }
 
+  const recallCandidateKind = classifyRecallCandidateKind(hotword, variant, plan);
   const phoneticScore = scorePinyinSimilarity(syllables, hotword.pinyin);
   const candidateScoreBreakdown = computeCandidateScoreBreakdown({
     hotword,
@@ -74,25 +164,44 @@ function scoreHotword(
     windowText,
     phoneticScore,
     profile,
+    recallCandidateKind,
+    domainBoostContext: boostContext,
   });
   const candidateScore =
     candidateScoreBreakdown.priorScore +
     candidateScoreBreakdown.phoneticSimilarity +
     candidateScoreBreakdown.exactLengthBonus +
     candidateScoreBreakdown.domainBoost -
-    candidateScoreBreakdown.editDistancePenalty;
+    candidateScoreBreakdown.editDistancePenalty -
+    candidateScoreBreakdown.fuzzyPenalty;
   if (candidateScore < minCandidateScore()) {
     return;
   }
 
-  seen.add(hotword.id);
-  scored.push({
+  const existing = bestById.get(hotword.id);
+  if (existing && existing.candidateScore >= candidateScore) {
+    return;
+  }
+
+  bumpSourceBreakdown(sourceBreakdown, recallCandidateKind);
+  if (plan?.enabled) {
+    const domains = hotwordDomains(hotword);
+    if (domains.some((d) => plan.weakDomainIds.includes(d))) {
+      weakDomainCandidateCount.value += 1;
+    }
+  }
+
+  const tonePattern = acousticTonePattern?.length
+    ? acousticTonePattern.slice(0, syllables.length)
+    : undefined;
+
+  bestById.set(hotword.id, {
     hotword,
     phoneticScore,
     candidateScore,
     candidateScoreBreakdown,
-    source: resolveWindowCandidateSource({ matchedAlias, viaPinyin: true }),
-    matchedAlias,
+    source: resolveWindowCandidateSource({ viaPinyin: true }),
+    acousticTonePattern: tonePattern,
   });
 }
 
@@ -182,64 +291,181 @@ function collectTierCandidates(
   return { entries, baseHits, domainHits, idiomHits, baseLookupMs, domainLookupMs, idiomLookupMs };
 }
 
+function resolveVariants(
+  syllables: string[],
+  fuzzyRecallEnabled: boolean
+): FuzzyPinyinVariant[] {
+  if (!fuzzyRecallEnabled) {
+    return [exactFuzzyPinyinVariant(syllables)];
+  }
+  const built = buildFuzzyPinyinVariants(syllables);
+  return built.length ? built : [exactFuzzyPinyinVariant(syllables)];
+}
+
 export function recallSpanTopKV2(
   runtimeV2: LexiconRuntimeV2,
   input: RecallSpanTopKV2Input
 ): RecallSpanTopKV2Result {
-  const { syllables, windowText, termLength, topK, domainIds, perSpanLimit } = input;
+  const {
+    syllables,
+    windowText,
+    topK,
+    domainIds,
+    perSpanLimit,
+    acousticTonePattern,
+    weakDomainPlan,
+  } = input;
   const profile = input.profile ?? defaultGeneralProfile();
   const cfg = getLexiconRuntimeV2Config();
   const recallStart = Date.now();
+  const fuzzyRecallEnabled = input.fuzzyRecallEnabled === true;
+  const boostContext = domainBoostContextFromPlan(weakDomainPlan);
 
-  if (topK <= 0 || termLength < 2 || termLength > 5 || !syllables.length) {
-    return { hits: [], maxDomainBoostApplied: 0 };
+  if (topK <= 0 || syllables.length < 2 || syllables.length > 5 || !syllables.length) {
+    return {
+      hits: [],
+      maxDomainBoostApplied: 0,
+      recallToneCompatibleCount: 0,
+      recallToneFallbackCount: 0,
+    };
   }
 
-  const key = syllablesKey(syllables);
-  const tier = collectTierCandidates(runtimeV2, key, termLength, domainIds, perSpanLimit);
-  const candidateCountAfterMerge = tier.entries.length;
+  const variants = resolveVariants(syllables, fuzzyRecallEnabled);
+  const perVariantLimit = fuzzyRecallEnabled
+    ? Math.min(DEFAULT_PER_VARIANT_LIMIT, input.perVariantLimit ?? DEFAULT_PER_VARIANT_LIMIT)
+    : perSpanLimit;
+
+  let baseHitsTotal = 0;
+  let domainHitsTotal = 0;
+  let idiomHitsTotal = 0;
+  let baseLookupMs = 0;
+  let domainLookupMs = 0;
+  let idiomLookupMs = 0;
+  let candidateCountBeforeMerge = 0;
+
+  const legacyDomainIds =
+    profile.primaryDomain && profile.primaryDomain !== 'general' ? domainIds : [];
+  const domainHitsBeforeWeak = weakDomainPlan?.enabled
+    ? collectTierCandidates(
+        runtimeV2,
+        syllablesKey(syllables),
+        syllables.length,
+        [...legacyDomainIds],
+        perSpanLimit
+      ).domainHits.length
+    : undefined;
+
+  const bestById = new Map<string, RecallSpanTopKV2Hit>();
+  const sourceBreakdown: RecallSourceBreakdown = {
+    exactBase: 0,
+    exactDomainStrong: 0,
+    exactDomainWeak: 0,
+    fuzzyPlain: 0,
+    fuzzyPlainDomain: 0,
+  };
+  const weakDomainCandidateCount = { value: 0 };
+  let exactScoredCount = 0;
 
   const mergeStart = Date.now();
-  const seen = new Set<string>();
-  const scored: RecallSpanTopKV2Hit[] = [];
-  for (const hotword of tier.entries) {
-    scoreHotword(hotword, syllables, windowText, profile, seen, scored);
+  for (const variant of variants) {
+    const variantKey = syllablesKey(variant.syllables);
+    const variantTermLength = variant.syllables.length;
+    const variantWindowText = alignVariantWindowText(windowText, variant);
+    const tier = collectTierCandidates(
+      runtimeV2,
+      variantKey,
+      variantTermLength,
+      domainIds,
+      perVariantLimit
+    );
+
+    baseHitsTotal += tier.baseHits.length;
+    domainHitsTotal += tier.domainHits.length;
+    idiomHitsTotal += tier.idiomHits.length;
+    baseLookupMs += tier.baseLookupMs;
+    domainLookupMs += tier.domainLookupMs;
+    idiomLookupMs += tier.idiomLookupMs;
+    candidateCountBeforeMerge += tier.entries.length;
+
+    for (const hotword of tier.entries) {
+      scoreHotword(
+        hotword,
+        variant,
+        variantWindowText,
+        profile,
+        boostContext,
+        weakDomainPlan,
+        acousticTonePattern,
+        bestById,
+        sourceBreakdown,
+        weakDomainCandidateCount
+      );
+    }
+    if (!variant.isFuzzy) {
+      exactScoredCount = bestById.size;
+    }
   }
 
+  const scored = Array.from(bestById.values());
   scored.sort((a, b) => b.candidateScore - a.candidateScore);
+  const toneSorted = sortRecallHitsByToneCompatibility(scored, acousticTonePattern);
   const effectiveLimit = perSpanLimit != null && perSpanLimit > 0 ? perSpanLimit : topK;
-  const hits = scored.slice(0, effectiveLimit);
+  const hits = toneSorted.hits.slice(0, effectiveLimit);
   const mergeMs = Date.now() - mergeStart;
   const v2RecallMs = Date.now() - recallStart;
 
+  const fuzzyVariantExamples = fuzzyRecallEnabled
+    ? variants.filter((v) => v.isFuzzy).map((v) => v.syllables.join('|'))
+    : undefined;
+
   recordRecallSpanDiagnostics({
-    base_hits: tier.baseHits.length,
-    domain_hits: tier.domainHits.length,
-    idiom_hits: tier.idiomHits.length,
-    base_after_limit: perSpanLimit != null ? tier.baseHits.length : Math.min(tier.baseHits.length, cfg.maxBaseCandidates),
+    base_hits: baseHitsTotal,
+    domain_hits: domainHitsTotal,
+    idiom_hits: idiomHitsTotal,
+    base_after_limit: perSpanLimit != null ? baseHitsTotal : Math.min(baseHitsTotal, cfg.maxBaseCandidates),
     domain_after_limit:
-      perSpanLimit != null ? tier.domainHits.length : Math.min(tier.domainHits.length, cfg.maxDomainCandidates),
+      perSpanLimit != null ? domainHitsTotal : Math.min(domainHitsTotal, cfg.maxDomainCandidates),
     idiom_after_limit:
       cfg.maxIdiomCandidates > 0
         ? perSpanLimit != null
-          ? tier.idiomHits.length
-          : Math.min(tier.idiomHits.length, cfg.maxIdiomCandidates)
+          ? idiomHitsTotal
+          : Math.min(idiomHitsTotal, cfg.maxIdiomCandidates)
         : 0,
-    candidate_count_before_merge: candidateCountAfterMerge,
-    candidate_count_after_merge: candidateCountAfterMerge,
+    candidate_count_before_merge: candidateCountBeforeMerge,
+    candidate_count_after_merge: scored.length,
     sent_to_kenlm: hits.length,
     active_domain: domainIds.length ? domainIds.join('|') : 'base_only',
     industry_routing_used: isIndustryRoutingEnabled(),
     v2_recall_ms: v2RecallMs,
-    base_lookup_ms: tier.baseLookupMs,
-    domain_lookup_ms: tier.domainLookupMs,
-    idiom_lookup_ms: tier.idiomLookupMs,
+    base_lookup_ms: baseLookupMs,
+    domain_lookup_ms: domainLookupMs,
+    idiom_lookup_ms: idiomLookupMs,
     merge_ms: mergeMs,
+    weakDomainEnabled: weakDomainPlan?.enabled,
+    weakDomainIds: weakDomainPlan?.enabled ? weakDomainPlan.weakDomainIds.join('|') : undefined,
+    weakDomainCandidateCount: weakDomainPlan?.enabled ? weakDomainCandidateCount.value : undefined,
+    fuzzyRecallEnabled,
+    fuzzyVariantCount: fuzzyRecallEnabled ? variants.length : undefined,
+    fuzzyCandidateCount:
+      fuzzyRecallEnabled
+        ? sourceBreakdown.fuzzyPlain + sourceBreakdown.fuzzyPlainDomain
+        : undefined,
+    candidateSourceBreakdown: weakDomainPlan?.enabled || fuzzyRecallEnabled ? sourceBreakdown : undefined,
+    recallEmptyBeforeFuzzy: fuzzyRecallEnabled ? exactScoredCount === 0 : undefined,
+    recallEmptyAfterFuzzy: fuzzyRecallEnabled ? scored.length === 0 : undefined,
+    domainHitsBeforeWeak,
+    domainHitsAfterWeak: weakDomainPlan?.enabled ? domainHitsTotal : undefined,
+    fuzzyVariantExamples,
   });
 
   const maxDomainBoostApplied = hits.reduce(
     (max, hit) => Math.max(max, hit.candidateScoreBreakdown.domainBoost),
     0
   );
-  return { hits, maxDomainBoostApplied };
+  return {
+    hits,
+    maxDomainBoostApplied,
+    recallToneCompatibleCount: toneSorted.recallToneCompatibleCount,
+    recallToneFallbackCount: toneSorted.recallToneFallbackCount,
+  };
 }

@@ -1,0 +1,405 @@
+﻿{
+    "text_asr":  "è¯·é®,è¿æ¬¾çéº¦æ¿éå¯ä»¥å°ç\u0085å?æèµ¶æ¶é´å°è",
+    "text_translated":  "",
+    "tts_audio_length":  0,
+    "tts_format":  "opus",
+    "extra":  {
+                  "language_probability":  null,
+                  "language_probabilities":  null,
+                  "audioBuffered":  false,
+                  "asr_service_id":  "faster-whisper-vad",
+                  "raw_asr_text":  "è¯·é®,è¿æ¬¾çéº¦æ¿éå¯ä»¥å°ç\u0085å?æèµ¶æ¶é´å°è",
+                  "asr_merge_probe_text":  "è¯·é®,è¿æ¬¾çéº¦æ¿éå¯ä»¥å°ç\u0085å?æèµ¶æ¶é´å°è",
+                  "asr_diagnostics":  {
+                                          "audio_format":  {
+                                                               "sample_rate":  16000,
+                                                               "channels":  1,
+                                                               "dtype":  "float32"
+                                                           },
+                                          "audio_level":  {
+                                                              "peak_before":  0,
+                                                              "peak_after":  -3,
+                                                              "rms_before":  -16.6,
+                                                              "rms_after":  -19.6,
+                                                              "clipped":  false
+                                                          },
+                                          "silence_trim":  {
+                                                               "leading_ms":  0,
+                                                               "trailing_ms":  160
+                                                           },
+                                          "audio_segmentation":  {
+                                                                     "node_audio_segment_count":  1,
+                                                                     "fw_vad_segment_count":  1,
+                                                                     "audio_ms":  4140,
+                                                                     "asr_latency_ms":  1211
+                                                                 },
+                                          "toneModule":  {
+                                                             "tone_inference_ms":  7,
+                                                             "toneTokenCount":  17,
+                                                             "toneEnabled":  true,
+                                                             "toneConfidenceAvg":  0.7684541309581083,
+                                                             "skippedReason":  null
+                                                         }
+                                      },
+                  "fw_detector_step_ms":  5964,
+                  "fw_detector":  {
+                                      "enabled":  true,
+                                      "triggered":  true,
+                                      "configSnapshot":  {
+                                                             "pinyinImeV2":  {
+                                                                                 "enabled":  true,
+                                                                                 "topK":  5,
+                                                                                 "maxApprovedSpans":  4
+                                                                             },
+                                                             "minPrior":  0.5,
+                                                             "enableKenLMGate":  true,
+                                                             "kenlmGateMode":  "weak_veto",
+                                                             "kenlmDeltaThreshold":  0.8,
+                                                             "kenlmVetoThreshold":  -0.2,
+                                                             "enabledDomains":  [
+                                                                                    "tech_ai",
+                                                                                    "travel",
+                                                                                    "transport",
+                                                                                    "restaurant"
+                                                                                ],
+                                                             "candidateRequireRepairTarget":  true,
+                                                             "maxSentenceCandidates":  16,
+                                                             "minDeltaToReplace":  0.03
+                                                         },
+                                      "summary":  {
+                                                      "spanCount":  2,
+                                                      "candidateCount":  6,
+                                                      "candidateSentenceCount":  6,
+                                                      "appliedCount":  0,
+                                                      "kenlmApprovedCount":  0,
+                                                      "kenlmVetoedCount":  0,
+                                                      "pickedTopKWinCount":  0,
+                                                      "kenlmQueryCount":  9
+                                                  },
+                                      "runtime":  {
+                                                      "loaded":  true,
+                                                      "status":  "ok",
+                                                      "bundleDir":  "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v3",
+                                                      "sqlitePath":  "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v3\\lexicon.sqlite",
+                                                      "manifestVersion":  "lexicon-v3-four-table-v1",
+                                                      "lexiconRows":  72217,
+                                                      "profilePrimary":  "general",
+                                                      "enabledDomains":  [
+                                                                             "tech_ai",
+                                                                             "travel",
+                                                                             "transport",
+                                                                             "restaurant"
+                                                                         ]
+                                                  },
+                                      "replacements":  [
+
+                                                       ],
+                                      "spans":  [
+                                                    {
+                                                        "text":  "å°ç\u0085",
+                                                        "start":  11,
+                                                        "end":  13,
+                                                        "domain":  "general",
+                                                        "riskScore":  0.55,
+                                                        "signals":  [
+                                                                        "ime_v2_boundary_topk_diff_hint"
+                                                                    ],
+                                                        "candidates":  [
+                                                                           {
+                                                                               "candidateIndex":  0,
+                                                                               "word":  "ç§é¥¼",
+                                                                               "priorScore":  0.7024,
+                                                                               "candidateScore":  1.2024,
+                                                                               "phoneticScore":  1.2024,
+                                                                               "source":  "lexicon_pinyin_topk",
+                                                                               "candidateSentence":  "è¯·é®,è¿æ¬¾çéº¦æ¿éå¯ä»¥ç§é¥¼å?æèµ¶æ¶é´å°è",
+                                                                               "domains":  [
+
+                                                                                           ],
+                                                                               "domainMatched":  false,
+                                                                               "domainScore":  0,
+                                                                               "kenlmDelta":  0,
+                                                                               "repairTarget":  true,
+                                                                               "finalScore":  1.2024,
+                                                                               "vetoed":  false,
+                                                                               "selected":  false
+                                                                           },
+                                                                           {
+                                                                               "candidateIndex":  1,
+                                                                               "word":  "å¨å\u0085µ",
+                                                                               "priorScore":  0.6617,
+                                                                               "candidateScore":  1.1616999999999997,
+                                                                               "phoneticScore":  1.1616999999999997,
+                                                                               "source":  "lexicon_pinyin_topk",
+                                                                               "candidateSentence":  "è¯·é®,è¿æ¬¾çéº¦æ¿éå¯ä»¥å¨å\u0085µå?æèµ¶æ¶é´å°è",
+                                                                               "domains":  [
+
+                                                                                           ],
+                                                                               "domainMatched":  false,
+                                                                               "domainScore":  0,
+                                                                               "kenlmDelta":  0,
+                                                                               "repairTarget":  true,
+                                                                               "finalScore":  1.1616999999999997,
+                                                                               "vetoed":  false,
+                                                                               "selected":  false
+                                                                           }
+                                                                       ],
+                                                        "applied":  false
+                                                    },
+                                                    {
+                                                        "text":  "èµ¶æ¶",
+                                                        "start":  16,
+                                                        "end":  18,
+                                                        "domain":  "general",
+                                                        "riskScore":  0.55,
+                                                        "signals":  [
+                                                                        "ime_v2_boundary_topk_diff_hint"
+                                                                    ],
+                                                        "candidates":  [
+                                                                           {
+                                                                               "candidateIndex":  0,
+                                                                               "word":  "å¹²äº",
+                                                                               "priorScore":  0.6806,
+                                                                               "candidateScore":  1.1806,
+                                                                               "phoneticScore":  1.1806,
+                                                                               "source":  "lexicon_pinyin_topk",
+                                                                               "candidateSentence":  "è¯·é®,è¿æ¬¾çéº¦æ¿éå¯ä»¥å°ç\u0085å?æå¹²äºé´å°è",
+                                                                               "domains":  [
+
+                                                                                           ],
+                                                                               "domainMatched":  false,
+                                                                               "domainScore":  0,
+                                                                               "kenlmDelta":  0,
+                                                                               "repairTarget":  true,
+                                                                               "finalScore":  1.1806,
+                                                                               "vetoed":  false,
+                                                                               "selected":  false
+                                                                           },
+                                                                           {
+                                                                               "candidateIndex":  1,
+                                                                               "word":  "å¹²å°¸",
+                                                                               "priorScore":  0.6429,
+                                                                               "candidateScore":  1.1429,
+                                                                               "phoneticScore":  1.1429,
+                                                                               "source":  "lexicon_pinyin_topk",
+                                                                               "candidateSentence":  "è¯·é®,è¿æ¬¾çéº¦æ¿éå¯ä»¥å°ç\u0085å?æå¹²å°¸é´å°è",
+                                                                               "domains":  [
+
+                                                                                           ],
+                                                                               "domainMatched":  false,
+                                                                               "domainScore":  0,
+                                                                               "kenlmDelta":  0,
+                                                                               "repairTarget":  true,
+                                                                               "finalScore":  1.1429,
+                                                                               "vetoed":  false,
+                                                                               "selected":  false
+                                                                           },
+                                                                           {
+                                                                               "candidateIndex":  2,
+                                                                               "word":  "å¹²æ¹¿",
+                                                                               "priorScore":  0.6193,
+                                                                               "candidateScore":  1.1193,
+                                                                               "phoneticScore":  1.1193,
+                                                                               "source":  "lexicon_pinyin_topk",
+                                                                               "candidateSentence":  "è¯·é®,è¿æ¬¾çéº¦æ¿éå¯ä»¥å°ç\u0085å?æå¹²æ¹¿é´å°è",
+                                                                               "domains":  [
+
+                                                                                           ],
+                                                                               "domainMatched":  false,
+                                                                               "domainScore":  0,
+                                                                               "kenlmDelta":  0,
+                                                                               "repairTarget":  true,
+                                                                               "finalScore":  1.1193,
+                                                                               "vetoed":  false,
+                                                                               "selected":  false
+                                                                           },
+                                                                           {
+                                                                               "candidateIndex":  3,
+                                                                               "word":  "ç¸ç³",
+                                                                               "priorScore":  0.5455,
+                                                                               "candidateScore":  1.0455,
+                                                                               "phoneticScore":  1.0455,
+                                                                               "source":  "lexicon_pinyin_topk",
+                                                                               "candidateSentence":  "è¯·é®,è¿æ¬¾çéº¦æ¿éå¯ä»¥å°ç\u0085å?æç¸ç³é´å°è",
+                                                                               "domains":  [
+
+                                                                                           ],
+                                                                               "domainMatched":  false,
+                                                                               "domainScore":  0,
+                                                                               "kenlmDelta":  0,
+                                                                               "repairTarget":  true,
+                                                                               "finalScore":  1.0455,
+                                                                               "vetoed":  false,
+                                                                               "selected":  false
+                                                                           }
+                                                                       ],
+                                                        "applied":  false
+                                                    }
+                                                ],
+                                      "pinyinImeV2":  {
+                                                          "enabled":  true,
+                                                          "candidateCount":  5,
+                                                          "diffSpanCount":  0,
+                                                          "instabilityRegionCount":  0,
+                                                          "approvedSpanCount":  2,
+                                                          "normalizerDroppedCount":  1,
+                                                          "gateDroppedNoNeighbor":  0,
+                                                          "gateDroppedSupport":  0,
+                                                          "decodeMs":  5,
+                                                          "traditionalCharCount":  0,
+                                                          "openccConvertedCount":  0,
+                                                          "normalizedCharCount":  19,
+                                                          "rawBoundaryCount":  5,
+                                                          "rawBoundaryMatchedTopKCount":  5,
+                                                          "boundaryCompatibilityScoreMax":  1,
+                                                          "boundaryCompatibilityScoreAvg":  1,
+                                                          "trustedTopKCount":  5,
+                                                          "boundaryCompatibleTopKSpanCount":  3,
+                                                          "diffZeroBoundaryPositive":  1
+                                                      },
+                                      "kenlmVetoMs":  5939,
+                                      "kenlmVetoQueryCount":  9,
+                                      "kenlmTiming":  {
+                                                          "batchMs":  5939,
+                                                          "queryCount":  9
+                                                      },
+                                      "recallV2Diagnostics":  {
+                                                                  "spans":  [
+                                                                                {
+                                                                                    "base_hits":  2,
+                                                                                    "domain_hits":  0,
+                                                                                    "idiom_hits":  0,
+                                                                                    "base_after_limit":  2,
+                                                                                    "domain_after_limit":  0,
+                                                                                    "idiom_after_limit":  0,
+                                                                                    "candidate_count_before_merge":  2,
+                                                                                    "candidate_count_after_merge":  2,
+                                                                                    "sent_to_kenlm":  2,
+                                                                                    "active_domain":  "base_only",
+                                                                                    "industry_routing_used":  false,
+                                                                                    "v2_recall_ms":  2,
+                                                                                    "base_lookup_ms":  0,
+                                                                                    "domain_lookup_ms":  0,
+                                                                                    "idiom_lookup_ms":  0,
+                                                                                    "merge_ms":  1
+                                                                                },
+                                                                                {
+                                                                                    "base_hits":  6,
+                                                                                    "domain_hits":  0,
+                                                                                    "idiom_hits":  0,
+                                                                                    "base_after_limit":  6,
+                                                                                    "domain_after_limit":  0,
+                                                                                    "idiom_after_limit":  0,
+                                                                                    "candidate_count_before_merge":  4,
+                                                                                    "candidate_count_after_merge":  4,
+                                                                                    "sent_to_kenlm":  4,
+                                                                                    "active_domain":  "base_only",
+                                                                                    "industry_routing_used":  false,
+                                                                                    "v2_recall_ms":  3,
+                                                                                    "base_lookup_ms":  0,
+                                                                                    "domain_lookup_ms":  0,
+                                                                                    "idiom_lookup_ms":  0,
+                                                                                    "merge_ms":  2
+                                                                                }
+                                                                            ],
+                                                                  "industry_routing_lookup_count":  0,
+                                                                  "v2_sql_query_count":  0,
+                                                                  "v2_cache_hits":  4,
+                                                                  "v2_cache_misses":  0,
+                                                                  "kenlm_query_count":  9
+                                                              },
+                                      "sentenceRerank":  {
+                                                             "spanCount":  2,
+                                                             "perSpanLimit":  4,
+                                                             "combinationCount":  8,
+                                                             "kenlmQueryCount":  9,
+                                                             "pickedIsRaw":  true,
+                                                             "maxDelta":  0.000004206833982948761,
+                                                             "minDeltaToReplace":  0.03,
+                                                             "topCandidates":  [
+                                                                                   {
+                                                                                       "text":  "è¯·é®,è¿æ¬¾çéº¦æ¿éå¯ä»¥ç§é¥¼å?æå¹²äºé´å°è",
+                                                                                       "kenlmDelta":  0.000004206833982948761,
+                                                                                       "replacementCount":  2
+                                                                                   },
+                                                                                   {
+                                                                                       "text":  "è¯·é®,è¿æ¬¾çéº¦æ¿éå¯ä»¥ç§é¥¼å?æå¹²æ¹¿é´å°è",
+                                                                                       "kenlmDelta":  -0.00031611384241724255,
+                                                                                       "replacementCount":  2
+                                                                                   },
+                                                                                   {
+                                                                                       "text":  "è¯·é®,è¿æ¬¾çéº¦æ¿éå¯ä»¥ç§é¥¼å?æå¹²å°¸é´å°è",
+                                                                                       "kenlmDelta":  -0.0007433263842979111,
+                                                                                       "replacementCount":  2
+                                                                                   },
+                                                                                   {
+                                                                                       "text":  "è¯·é®,è¿æ¬¾çéº¦æ¿éå¯ä»¥å¨å\u0085µå?æå¹²äºé´å°è",
+                                                                                       "kenlmDelta":  -0.0009243860881435338,
+                                                                                       "replacementCount":  2
+                                                                                   },
+                                                                                   {
+                                                                                       "text":  "è¯·é®,è¿æ¬¾çéº¦æ¿éå¯ä»¥å¨å\u0085µå?æå¹²å°¸é´å°è",
+                                                                                       "kenlmDelta":  -0.0014679681143594334,
+                                                                                       "replacementCount":  2
+                                                                                   }
+                                                                               ],
+                                                             "kenlmTiming":  {
+                                                                                 "batchMs":  5939,
+                                                                                 "queryCount":  9,
+                                                                                 "avgMs":  659.8888888888889,
+                                                                                 "p50Ms":  664,
+                                                                                 "p95Ms":  694,
+                                                                                 "maxMs":  694
+                                                                             }
+                                                         },
+                                      "toneModule":  {
+                                                         "toneEnabled":  true,
+                                                         "toneTokenCount":  17,
+                                                         "toneConfidenceAvg":  0.7684541309581083,
+                                                         "skippedReason":  null,
+                                                         "wTone":  1,
+                                                         "toneScoreAppliedCount":  0
+                                                     }
+                                  },
+                  "configLoadSucceeded":  true,
+                  "configParseError":  null,
+                  "configFileExists":  true,
+                  "configHadUtf8Bom":  false,
+                  "runtimeFeatureDowngrade":  false,
+                  "downgradeReason":  null,
+                  "downgradedFeatures":  [
+
+                                         ],
+                  "sessionId":  "probe-d003",
+                  "lexiconV2Enabled":  false,
+                  "lexiconV2Configured":  false,
+                  "lexiconV2IntentEnabled":  false,
+                  "intentServiceReachable":  false,
+                  "intentModelLoaded":  false,
+                  "intentInferenceAttempted":  false,
+                  "intentInferenceSucceeded":  false,
+                  "intentLastOutcome":  "disabled",
+                  "rollingContextLength":  1,
+                  "activeLexiconProfile":  {
+                                               "primaryDomain":  "general",
+                                               "secondaryDomains":  [
+
+                                                                    ],
+                                               "profileVersion":  "general-v1",
+                                               "confidence":  1,
+                                               "effectiveFromTurn":  0
+                                           },
+                  "effectiveFromTurn":  0,
+                  "domainBoostApplied":  0,
+                  "activeProfile":  {
+                                        "primaryDomain":  "general",
+                                        "profileVersion":  "general-v1"
+                                    },
+                  "profileVersion":  "general-v1",
+                  "noTopkCandidate":  0,
+                  "lexicon_runtime_status":  "ok",
+                  "lexicon_manifest_version":  "lexicon-v3-four-table-v1",
+                  "pipeline_ms":  7784,
+                  "session_id":  "probe-d003"
+              }
+}

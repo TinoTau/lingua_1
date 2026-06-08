@@ -4,8 +4,8 @@ import type { FwSpanDiagnostics, PinyinImeV2ActiveDiagnostics } from '../types';
 import { loadPinyinImeV2Dictionaries } from './pinyin-ime-v2-dict-load';
 import type { PinyinImeV2Dict, PinyinImeV2RuntimeConfig } from './pinyin-ime-v2-types';
 import { loadPinyinImeV2RuntimeConfig } from './pinyin-ime-v2-config';
-import { mapApprovedSpansToFwSpans } from './map-approved-span-to-fw';
-import { runPinyinImeV2HintGate } from './pinyin-ime-v2-hint-gate';
+import { mapSelectedSpansToFwSpans } from './map-selected-span-to-fw';
+import { selectPinyinImeV2Spans } from './pinyin-ime-v2-span-selector';
 import { runPinyinImeV2SpanProposal } from './run-pinyin-ime-v2-span-proposal';
 
 export type { PinyinImeV2ActiveDiagnostics } from '../types';
@@ -52,7 +52,7 @@ export type ResolvePinyinImeV2SpansInput = {
 };
 
 /**
- * Active-path span discovery: IME proposal → HintGate → FwSpanDiagnostics.
+ * Active-path span discovery: IME proposal → SpanSelector → FwSpanDiagnostics.
  */
 export function resolvePinyinImeV2Spans(input: ResolvePinyinImeV2SpansInput): PinyinImeV2SpanResolution {
   const imeConfig = input.imeConfig ?? loadPinyinImeV2RuntimeConfig();
@@ -61,10 +61,9 @@ export function resolvePinyinImeV2Spans(input: ResolvePinyinImeV2SpansInput): Pi
     candidateCount: 0,
     diffSpanCount: 0,
     instabilityRegionCount: 0,
-    approvedSpanCount: 0,
+    selectedSpanCount: 0,
     normalizerDroppedCount: 0,
-    gateDroppedNoNeighbor: 0,
-    gateDroppedSupport: 0,
+    cappedByMaxSpansCount: 0,
     decodeMs: 0,
     ...overrides,
   });
@@ -72,7 +71,7 @@ export function resolvePinyinImeV2Spans(input: ResolvePinyinImeV2SpansInput): Pi
   if (!imeConfig.enabled) {
     return {
       spans: [],
-      pinyinImeV2: emptyDiag({ skippedReason: 'no_approved_spans' }),
+      pinyinImeV2: emptyDiag({ skippedReason: 'no_selected_spans' }),
     };
   }
 
@@ -106,7 +105,7 @@ export function resolvePinyinImeV2Spans(input: ResolvePinyinImeV2SpansInput): Pi
     };
   }
 
-  const hintGate = runPinyinImeV2HintGate({
+  const selection = selectPinyinImeV2Spans({
     rawAsrText: input.rawText,
     diffSpans: proposal.diffSpans,
     instabilityRegions: proposal.instabilityRegions,
@@ -119,7 +118,9 @@ export function resolvePinyinImeV2Spans(input: ResolvePinyinImeV2SpansInput): Pi
     ),
   });
 
-  const spans = mapApprovedSpansToFwSpans(hintGate.approved);
+  const spans = mapSelectedSpansToFwSpans(selection.selected);
+  const selDiag = selection.diagnostics;
+  const noSpans = spans.length === 0;
 
   return {
     spans,
@@ -128,10 +129,13 @@ export function resolvePinyinImeV2Spans(input: ResolvePinyinImeV2SpansInput): Pi
       candidateCount: proposal.diagnostics.candidateCount,
       diffSpanCount: proposal.diagnostics.diffSpanCount,
       instabilityRegionCount: proposal.diagnostics.instabilityRegionCount,
-      approvedSpanCount: hintGate.diagnostics.approvedSpanCount,
-      normalizerDroppedCount: hintGate.diagnostics.normalizerDroppedCount,
-      gateDroppedNoNeighbor: hintGate.diagnostics.gateDroppedNoNeighbor,
-      gateDroppedSupport: hintGate.diagnostics.gateDroppedSupport,
+      selectedSpanCount: selDiag.selectedSpanCount,
+      selectionMode: selDiag.selectionMode,
+      normalizedSpanCount: selDiag.normalizedSpanCount,
+      neighborHitCount: selDiag.neighborHitCount,
+      neighborMissCount: selDiag.neighborMissCount,
+      normalizerDroppedCount: selDiag.normalizerDroppedCount,
+      cappedByMaxSpansCount: selDiag.cappedByMaxSpansCount,
       decodeMs: proposal.diagnostics.decode.decodeMs,
       traditionalCharCount: proposal.diagnostics.traditionalCharCount,
       openccConvertedCount: proposal.diagnostics.openccConvertedCount,
@@ -143,7 +147,7 @@ export function resolvePinyinImeV2Spans(input: ResolvePinyinImeV2SpansInput): Pi
       trustedTopKCount: proposal.diagnostics.trustedTopKCount,
       boundaryCompatibleTopKSpanCount: proposal.diagnostics.boundaryCompatibleTopKSpanCount,
       diffZeroBoundaryPositive: proposal.diagnostics.diffZeroBoundaryPositive,
-      skippedReason: spans.length === 0 ? 'no_approved_spans' : undefined,
+      skippedReason: noSpans ? 'no_selected_spans' : undefined,
     },
   };
 }

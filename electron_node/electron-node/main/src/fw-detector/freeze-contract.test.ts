@@ -105,7 +105,7 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(orchSrc).not.toContain('detectSuspiciousSpansV1');
   });
 
-  it('HintGate 不依赖 LexiconRuntime V1', () => {
+  it('SpanSelector 不依赖 LexiconRuntime V1', () => {
     const imeSrc = readSrc('fw-detector/pinyin-ime-v2/resolve-pinyin-ime-v2-spans.ts');
     expect(imeSrc).not.toContain('LexiconRuntime');
     expect(imeSrc).not.toMatch(/runtime\s*:/);

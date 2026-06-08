@@ -1,0 +1,4709 @@
+{
+  "d001Raw": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+  "d001Proposal": {
+    "diffSpans": [],
+    "instabilityRegions": [],
+    "boundaryCompatibleTopKSpans": [
+      {
+        "rawSpan": "想",
+        "start": 4,
+        "end": 5,
+        "syllableStart": 3,
+        "syllableEnd": 4,
+        "supportCount": 2,
+        "confidence": 0.4,
+        "variants": [
+          "向",
+          "想"
+        ],
+        "contributingRanks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "rawSpan": "少",
+        "start": 13,
+        "end": 14,
+        "syllableStart": 12,
+        "syllableEnd": 13,
+        "supportCount": 3,
+        "confidence": 0.6,
+        "variants": [
+          "勺",
+          "少",
+          "绍"
+        ],
+        "contributingRanks": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    ],
+    "diagnostics": {
+      "decode": {
+        "singleCharUsedCount": 972,
+        "functionSingleCharUsedCount": 290,
+        "contentFallbackUsedCount": 348,
+        "fallbackTriggeredCount": 2,
+        "beamBreakRecoveredCount": 348,
+        "decodeMs": 22,
+        "tokenPathAvailableCount": 5,
+        "candidateTokenCount": 95,
+        "collapsedPathByTextCount": 0
+      },
+      "candidateCount": 5,
+      "diffSpanCount": 0,
+      "instabilityRegionCount": 0,
+      "boundaryAdjustedCount": 0,
+      "alignFailedCount": 5,
+      "rawBoundaryCount": 8,
+      "normalizedCharCount": 27,
+      "traditionalCharCount": 0,
+      "openccConvertedCount": 0,
+      "boundaryAlignmentScores": [
+        {
+          "candidateRank": 1,
+          "matchedBoundaryCount": 3,
+          "conflictedBoundaryCount": 0,
+          "compatibilityScore": 1
+        },
+        {
+          "candidateRank": 2,
+          "matchedBoundaryCount": 3,
+          "conflictedBoundaryCount": 0,
+          "compatibilityScore": 1
+        },
+        {
+          "candidateRank": 3,
+          "matchedBoundaryCount": 3,
+          "conflictedBoundaryCount": 0,
+          "compatibilityScore": 1
+        },
+        {
+          "candidateRank": 4,
+          "matchedBoundaryCount": 3,
+          "conflictedBoundaryCount": 0,
+          "compatibilityScore": 1
+        },
+        {
+          "candidateRank": 5,
+          "matchedBoundaryCount": 3,
+          "conflictedBoundaryCount": 0,
+          "compatibilityScore": 1
+        }
+      ],
+      "rawBoundaryMatchedTopKCount": 5,
+      "boundaryCompatibilityScoreMax": 1,
+      "boundaryCompatibilityScoreAvg": 1,
+      "trustedTopKCount": 5,
+      "boundaryCompatibleTopKSpanCount": 2,
+      "diffZeroBoundaryPositive": 1,
+      "tokenSourceConflictDiagnosticCount": 5,
+      "normalizedTextDiffDiagnosticCount": 5
+    },
+    "candidates": [
+      {
+        "rank": 1,
+        "text": "你好我向点以被热拿铁中杯勺趟身边文艺下今天游览每马芬吗",
+        "score": 13.290125
+      },
+      {
+        "rank": 2,
+        "text": "你好我向点以被热拿铁中杯少趟身边文艺下今天游览每马芬吗",
+        "score": 13.290125
+      },
+      {
+        "rank": 3,
+        "text": "你好我想点以被热拿铁中杯勺趟身边文艺下今天游览每马芬吗",
+        "score": 13.290125
+      },
+      {
+        "rank": 4,
+        "text": "你好我想点以被热拿铁中杯少趟身边文艺下今天游览每马芬吗",
+        "score": 13.290125
+      },
+      {
+        "rank": 5,
+        "text": "你好我向点以被热拿铁中杯绍趟身边文艺下今天游览每马芬吗",
+        "score": 13.287725
+      }
+    ]
+  },
+  "d001Normalizer": {
+    "dropped": [
+      {
+        "rawSpan": "想",
+        "start": 4,
+        "end": 5,
+        "source": "boundaryTopK",
+        "reason": "single_char",
+        "charLen": 1
+      },
+      {
+        "rawSpan": "少",
+        "start": 13,
+        "end": 14,
+        "source": "boundaryTopK",
+        "reason": "single_char",
+        "charLen": 1
+      }
+    ],
+    "kept": [],
+    "mergedIntervalCount": 2
+  },
+  "d001NoMergePerSpan": {
+    "proposal": {
+      "rawAsrText": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+      "candidates": [
+        {
+          "text": "你好我向点以被热拿铁中杯勺趟身边文艺下今天游览每马芬吗",
+          "score": 13.290125,
+          "rank": 1,
+          "tokens": [
+            {
+              "word": "你好",
+              "syllableStart": 0,
+              "syllableEnd": 2,
+              "source": "target"
+            },
+            {
+              "word": "我",
+              "syllableStart": 2,
+              "syllableEnd": 3,
+              "source": "single_char"
+            },
+            {
+              "word": "向",
+              "syllableStart": 3,
+              "syllableEnd": 4,
+              "source": "single_char"
+            },
+            {
+              "word": "点",
+              "syllableStart": 4,
+              "syllableEnd": 5,
+              "source": "single_char"
+            },
+            {
+              "word": "以",
+              "syllableStart": 5,
+              "syllableEnd": 6,
+              "source": "single_char"
+            },
+            {
+              "word": "被",
+              "syllableStart": 6,
+              "syllableEnd": 7,
+              "source": "single_char"
+            },
+            {
+              "word": "热",
+              "syllableStart": 7,
+              "syllableEnd": 8,
+              "source": "fallback"
+            },
+            {
+              "word": "拿铁",
+              "syllableStart": 8,
+              "syllableEnd": 10,
+              "source": "target"
+            },
+            {
+              "word": "中杯",
+              "syllableStart": 10,
+              "syllableEnd": 12,
+              "source": "target"
+            },
+            {
+              "word": "勺",
+              "syllableStart": 12,
+              "syllableEnd": 13,
+              "source": "fallback"
+            },
+            {
+              "word": "趟",
+              "syllableStart": 13,
+              "syllableEnd": 14,
+              "source": "single_char"
+            },
+            {
+              "word": "身边",
+              "syllableStart": 14,
+              "syllableEnd": 16,
+              "source": "target"
+            },
+            {
+              "word": "文艺",
+              "syllableStart": 16,
+              "syllableEnd": 18,
+              "source": "target"
+            },
+            {
+              "word": "下",
+              "syllableStart": 18,
+              "syllableEnd": 19,
+              "source": "single_char"
+            },
+            {
+              "word": "今天",
+              "syllableStart": 19,
+              "syllableEnd": 21,
+              "source": "target"
+            },
+            {
+              "word": "游览",
+              "syllableStart": 21,
+              "syllableEnd": 23,
+              "source": "target"
+            },
+            {
+              "word": "每",
+              "syllableStart": 23,
+              "syllableEnd": 24,
+              "source": "single_char"
+            },
+            {
+              "word": "马芬",
+              "syllableStart": 24,
+              "syllableEnd": 26,
+              "source": "target"
+            },
+            {
+              "word": "吗",
+              "syllableStart": 26,
+              "syllableEnd": 27,
+              "source": "single_char"
+            }
+          ]
+        },
+        {
+          "text": "你好我向点以被热拿铁中杯少趟身边文艺下今天游览每马芬吗",
+          "score": 13.290125,
+          "rank": 2,
+          "tokens": [
+            {
+              "word": "你好",
+              "syllableStart": 0,
+              "syllableEnd": 2,
+              "source": "target"
+            },
+            {
+              "word": "我",
+              "syllableStart": 2,
+              "syllableEnd": 3,
+              "source": "single_char"
+            },
+            {
+              "word": "向",
+              "syllableStart": 3,
+              "syllableEnd": 4,
+              "source": "single_char"
+            },
+            {
+              "word": "点",
+              "syllableStart": 4,
+              "syllableEnd": 5,
+              "source": "single_char"
+            },
+            {
+              "word": "以",
+              "syllableStart": 5,
+              "syllableEnd": 6,
+              "source": "single_char"
+            },
+            {
+              "word": "被",
+              "syllableStart": 6,
+              "syllableEnd": 7,
+              "source": "single_char"
+            },
+            {
+              "word": "热",
+              "syllableStart": 7,
+              "syllableEnd": 8,
+              "source": "fallback"
+            },
+            {
+              "word": "拿铁",
+              "syllableStart": 8,
+              "syllableEnd": 10,
+              "source": "target"
+            },
+            {
+              "word": "中杯",
+              "syllableStart": 10,
+              "syllableEnd": 12,
+              "source": "target"
+            },
+            {
+              "word": "少",
+              "syllableStart": 12,
+              "syllableEnd": 13,
+              "source": "fallback"
+            },
+            {
+              "word": "趟",
+              "syllableStart": 13,
+              "syllableEnd": 14,
+              "source": "single_char"
+            },
+            {
+              "word": "身边",
+              "syllableStart": 14,
+              "syllableEnd": 16,
+              "source": "target"
+            },
+            {
+              "word": "文艺",
+              "syllableStart": 16,
+              "syllableEnd": 18,
+              "source": "target"
+            },
+            {
+              "word": "下",
+              "syllableStart": 18,
+              "syllableEnd": 19,
+              "source": "single_char"
+            },
+            {
+              "word": "今天",
+              "syllableStart": 19,
+              "syllableEnd": 21,
+              "source": "target"
+            },
+            {
+              "word": "游览",
+              "syllableStart": 21,
+              "syllableEnd": 23,
+              "source": "target"
+            },
+            {
+              "word": "每",
+              "syllableStart": 23,
+              "syllableEnd": 24,
+              "source": "single_char"
+            },
+            {
+              "word": "马芬",
+              "syllableStart": 24,
+              "syllableEnd": 26,
+              "source": "target"
+            },
+            {
+              "word": "吗",
+              "syllableStart": 26,
+              "syllableEnd": 27,
+              "source": "single_char"
+            }
+          ]
+        },
+        {
+          "text": "你好我想点以被热拿铁中杯勺趟身边文艺下今天游览每马芬吗",
+          "score": 13.290125,
+          "rank": 3,
+          "tokens": [
+            {
+              "word": "你好",
+              "syllableStart": 0,
+              "syllableEnd": 2,
+              "source": "target"
+            },
+            {
+              "word": "我",
+              "syllableStart": 2,
+              "syllableEnd": 3,
+              "source": "single_char"
+            },
+            {
+              "word": "想",
+              "syllableStart": 3,
+              "syllableEnd": 4,
+              "source": "single_char"
+            },
+            {
+              "word": "点",
+              "syllableStart": 4,
+              "syllableEnd": 5,
+              "source": "single_char"
+            },
+            {
+              "word": "以",
+              "syllableStart": 5,
+              "syllableEnd": 6,
+              "source": "single_char"
+            },
+            {
+              "word": "被",
+              "syllableStart": 6,
+              "syllableEnd": 7,
+              "source": "single_char"
+            },
+            {
+              "word": "热",
+              "syllableStart": 7,
+              "syllableEnd": 8,
+              "source": "fallback"
+            },
+            {
+              "word": "拿铁",
+              "syllableStart": 8,
+              "syllableEnd": 10,
+              "source": "target"
+            },
+            {
+              "word": "中杯",
+              "syllableStart": 10,
+              "syllableEnd": 12,
+              "source": "target"
+            },
+            {
+              "word": "勺",
+              "syllableStart": 12,
+              "syllableEnd": 13,
+              "source": "fallback"
+            },
+            {
+              "word": "趟",
+              "syllableStart": 13,
+              "syllableEnd": 14,
+              "source": "single_char"
+            },
+            {
+              "word": "身边",
+              "syllableStart": 14,
+              "syllableEnd": 16,
+              "source": "target"
+            },
+            {
+              "word": "文艺",
+              "syllableStart": 16,
+              "syllableEnd": 18,
+              "source": "target"
+            },
+            {
+              "word": "下",
+              "syllableStart": 18,
+              "syllableEnd": 19,
+              "source": "single_char"
+            },
+            {
+              "word": "今天",
+              "syllableStart": 19,
+              "syllableEnd": 21,
+              "source": "target"
+            },
+            {
+              "word": "游览",
+              "syllableStart": 21,
+              "syllableEnd": 23,
+              "source": "target"
+            },
+            {
+              "word": "每",
+              "syllableStart": 23,
+              "syllableEnd": 24,
+              "source": "single_char"
+            },
+            {
+              "word": "马芬",
+              "syllableStart": 24,
+              "syllableEnd": 26,
+              "source": "target"
+            },
+            {
+              "word": "吗",
+              "syllableStart": 26,
+              "syllableEnd": 27,
+              "source": "single_char"
+            }
+          ]
+        },
+        {
+          "text": "你好我想点以被热拿铁中杯少趟身边文艺下今天游览每马芬吗",
+          "score": 13.290125,
+          "rank": 4,
+          "tokens": [
+            {
+              "word": "你好",
+              "syllableStart": 0,
+              "syllableEnd": 2,
+              "source": "target"
+            },
+            {
+              "word": "我",
+              "syllableStart": 2,
+              "syllableEnd": 3,
+              "source": "single_char"
+            },
+            {
+              "word": "想",
+              "syllableStart": 3,
+              "syllableEnd": 4,
+              "source": "single_char"
+            },
+            {
+              "word": "点",
+              "syllableStart": 4,
+              "syllableEnd": 5,
+              "source": "single_char"
+            },
+            {
+              "word": "以",
+              "syllableStart": 5,
+              "syllableEnd": 6,
+              "source": "single_char"
+            },
+            {
+              "word": "被",
+              "syllableStart": 6,
+              "syllableEnd": 7,
+              "source": "single_char"
+            },
+            {
+              "word": "热",
+              "syllableStart": 7,
+              "syllableEnd": 8,
+              "source": "fallback"
+            },
+            {
+              "word": "拿铁",
+              "syllableStart": 8,
+              "syllableEnd": 10,
+              "source": "target"
+            },
+            {
+              "word": "中杯",
+              "syllableStart": 10,
+              "syllableEnd": 12,
+              "source": "target"
+            },
+            {
+              "word": "少",
+              "syllableStart": 12,
+              "syllableEnd": 13,
+              "source": "fallback"
+            },
+            {
+              "word": "趟",
+              "syllableStart": 13,
+              "syllableEnd": 14,
+              "source": "single_char"
+            },
+            {
+              "word": "身边",
+              "syllableStart": 14,
+              "syllableEnd": 16,
+              "source": "target"
+            },
+            {
+              "word": "文艺",
+              "syllableStart": 16,
+              "syllableEnd": 18,
+              "source": "target"
+            },
+            {
+              "word": "下",
+              "syllableStart": 18,
+              "syllableEnd": 19,
+              "source": "single_char"
+            },
+            {
+              "word": "今天",
+              "syllableStart": 19,
+              "syllableEnd": 21,
+              "source": "target"
+            },
+            {
+              "word": "游览",
+              "syllableStart": 21,
+              "syllableEnd": 23,
+              "source": "target"
+            },
+            {
+              "word": "每",
+              "syllableStart": 23,
+              "syllableEnd": 24,
+              "source": "single_char"
+            },
+            {
+              "word": "马芬",
+              "syllableStart": 24,
+              "syllableEnd": 26,
+              "source": "target"
+            },
+            {
+              "word": "吗",
+              "syllableStart": 26,
+              "syllableEnd": 27,
+              "source": "single_char"
+            }
+          ]
+        },
+        {
+          "text": "你好我向点以被热拿铁中杯绍趟身边文艺下今天游览每马芬吗",
+          "score": 13.287725,
+          "rank": 5,
+          "tokens": [
+            {
+              "word": "你好",
+              "syllableStart": 0,
+              "syllableEnd": 2,
+              "source": "target"
+            },
+            {
+              "word": "我",
+              "syllableStart": 2,
+              "syllableEnd": 3,
+              "source": "single_char"
+            },
+            {
+              "word": "向",
+              "syllableStart": 3,
+              "syllableEnd": 4,
+              "source": "single_char"
+            },
+            {
+              "word": "点",
+              "syllableStart": 4,
+              "syllableEnd": 5,
+              "source": "single_char"
+            },
+            {
+              "word": "以",
+              "syllableStart": 5,
+              "syllableEnd": 6,
+              "source": "single_char"
+            },
+            {
+              "word": "被",
+              "syllableStart": 6,
+              "syllableEnd": 7,
+              "source": "single_char"
+            },
+            {
+              "word": "热",
+              "syllableStart": 7,
+              "syllableEnd": 8,
+              "source": "fallback"
+            },
+            {
+              "word": "拿铁",
+              "syllableStart": 8,
+              "syllableEnd": 10,
+              "source": "target"
+            },
+            {
+              "word": "中杯",
+              "syllableStart": 10,
+              "syllableEnd": 12,
+              "source": "target"
+            },
+            {
+              "word": "绍",
+              "syllableStart": 12,
+              "syllableEnd": 13,
+              "source": "fallback"
+            },
+            {
+              "word": "趟",
+              "syllableStart": 13,
+              "syllableEnd": 14,
+              "source": "single_char"
+            },
+            {
+              "word": "身边",
+              "syllableStart": 14,
+              "syllableEnd": 16,
+              "source": "target"
+            },
+            {
+              "word": "文艺",
+              "syllableStart": 16,
+              "syllableEnd": 18,
+              "source": "target"
+            },
+            {
+              "word": "下",
+              "syllableStart": 18,
+              "syllableEnd": 19,
+              "source": "single_char"
+            },
+            {
+              "word": "今天",
+              "syllableStart": 19,
+              "syllableEnd": 21,
+              "source": "target"
+            },
+            {
+              "word": "游览",
+              "syllableStart": 21,
+              "syllableEnd": 23,
+              "source": "target"
+            },
+            {
+              "word": "每",
+              "syllableStart": 23,
+              "syllableEnd": 24,
+              "source": "single_char"
+            },
+            {
+              "word": "马芬",
+              "syllableStart": 24,
+              "syllableEnd": 26,
+              "source": "target"
+            },
+            {
+              "word": "吗",
+              "syllableStart": 26,
+              "syllableEnd": 27,
+              "source": "single_char"
+            }
+          ]
+        }
+      ],
+      "diffSpans": [],
+      "instabilityRegions": [],
+      "boundaryCompatibleTopKSpans": [
+        {
+          "rawSpan": "想",
+          "start": 4,
+          "end": 5,
+          "syllableStart": 3,
+          "syllableEnd": 4,
+          "supportCount": 2,
+          "confidence": 0.4,
+          "variants": [
+            "向",
+            "想"
+          ],
+          "contributingRanks": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "rawSpan": "少",
+          "start": 13,
+          "end": 14,
+          "syllableStart": 12,
+          "syllableEnd": 13,
+          "supportCount": 3,
+          "confidence": 0.6,
+          "variants": [
+            "勺",
+            "少",
+            "绍"
+          ],
+          "contributingRanks": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      ],
+      "diagnostics": {
+        "decode": {
+          "singleCharUsedCount": 972,
+          "functionSingleCharUsedCount": 290,
+          "contentFallbackUsedCount": 348,
+          "fallbackTriggeredCount": 2,
+          "beamBreakRecoveredCount": 348,
+          "decodeMs": 7,
+          "tokenPathAvailableCount": 5,
+          "candidateTokenCount": 95,
+          "collapsedPathByTextCount": 0
+        },
+        "candidateCount": 5,
+        "diffSpanCount": 0,
+        "instabilityRegionCount": 0,
+        "boundaryAdjustedCount": 0,
+        "alignFailedCount": 5,
+        "rawBoundaryCount": 8,
+        "normalizedCharCount": 27,
+        "traditionalCharCount": 0,
+        "openccConvertedCount": 0,
+        "boundaryAlignmentScores": [
+          {
+            "candidateRank": 1,
+            "matchedBoundaryCount": 3,
+            "conflictedBoundaryCount": 0,
+            "compatibilityScore": 1
+          },
+          {
+            "candidateRank": 2,
+            "matchedBoundaryCount": 3,
+            "conflictedBoundaryCount": 0,
+            "compatibilityScore": 1
+          },
+          {
+            "candidateRank": 3,
+            "matchedBoundaryCount": 3,
+            "conflictedBoundaryCount": 0,
+            "compatibilityScore": 1
+          },
+          {
+            "candidateRank": 4,
+            "matchedBoundaryCount": 3,
+            "conflictedBoundaryCount": 0,
+            "compatibilityScore": 1
+          },
+          {
+            "candidateRank": 5,
+            "matchedBoundaryCount": 3,
+            "conflictedBoundaryCount": 0,
+            "compatibilityScore": 1
+          }
+        ],
+        "rawBoundaryMatchedTopKCount": 5,
+        "boundaryCompatibilityScoreMax": 1,
+        "boundaryCompatibilityScoreAvg": 1,
+        "trustedTopKCount": 5,
+        "boundaryCompatibleTopKSpanCount": 2,
+        "diffZeroBoundaryPositive": 1,
+        "tokenSourceConflictDiagnosticCount": 5,
+        "normalizedTextDiffDiagnosticCount": 5
+      },
+      "alignmentNormalizedLength": 27,
+      "rawBoundaryCount": 8
+    },
+    "results": [
+      {
+        "input": {
+          "rawSpan": "想",
+          "start": 4,
+          "end": 5,
+          "syllableStart": 3,
+          "syllableEnd": 4,
+          "supportCount": 2,
+          "confidence": 0.4,
+          "variants": [
+            "向",
+            "想"
+          ],
+          "contributingRanks": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "src": "boundaryTopK"
+        },
+        "kept": [],
+        "dropped": [
+          {
+            "span": {
+              "rawSpan": "想",
+              "start": 4,
+              "end": 5,
+              "supportCount": 2,
+              "fromInstability": false,
+              "fromBoundaryTopKDiff": true
+            },
+            "reason": "single_char"
+          }
+        ]
+      },
+      {
+        "input": {
+          "rawSpan": "少",
+          "start": 13,
+          "end": 14,
+          "syllableStart": 12,
+          "syllableEnd": 13,
+          "supportCount": 3,
+          "confidence": 0.6,
+          "variants": [
+            "勺",
+            "少",
+            "绍"
+          ],
+          "contributingRanks": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "src": "boundaryTopK"
+        },
+        "kept": [],
+        "dropped": [
+          {
+            "span": {
+              "rawSpan": "少",
+              "start": 13,
+              "end": 14,
+              "supportCount": 3,
+              "fromInstability": false,
+              "fromBoundaryTopKDiff": true
+            },
+            "reason": "single_char"
+          }
+        ]
+      }
+    ]
+  },
+  "relaxSimulations": {
+    "baseline": {
+      "kept": [],
+      "merged": [
+        {
+          "start": 4,
+          "end": 5,
+          "supportCount": 2,
+          "fromInstability": false,
+          "fromBoundaryTopKDiff": true,
+          "variants": [
+            "向",
+            "想"
+          ]
+        },
+        {
+          "start": 13,
+          "end": 14,
+          "supportCount": 3,
+          "fromInstability": false,
+          "fromBoundaryTopKDiff": true,
+          "variants": [
+            "勺",
+            "少",
+            "绍"
+          ]
+        }
+      ],
+      "proposal": {
+        "rawAsrText": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+        "candidates": [
+          {
+            "text": "你好我向点以被热拿铁中杯勺趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 1,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "向",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "勺",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我向点以被热拿铁中杯少趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 2,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "向",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "少",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我想点以被热拿铁中杯勺趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 3,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "想",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "勺",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我想点以被热拿铁中杯少趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 4,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "想",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "少",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我向点以被热拿铁中杯绍趟身边文艺下今天游览每马芬吗",
+            "score": 13.287725,
+            "rank": 5,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "向",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "绍",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          }
+        ],
+        "diffSpans": [],
+        "instabilityRegions": [],
+        "boundaryCompatibleTopKSpans": [
+          {
+            "rawSpan": "想",
+            "start": 4,
+            "end": 5,
+            "syllableStart": 3,
+            "syllableEnd": 4,
+            "supportCount": 2,
+            "confidence": 0.4,
+            "variants": [
+              "向",
+              "想"
+            ],
+            "contributingRanks": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          {
+            "rawSpan": "少",
+            "start": 13,
+            "end": 14,
+            "syllableStart": 12,
+            "syllableEnd": 13,
+            "supportCount": 3,
+            "confidence": 0.6,
+            "variants": [
+              "勺",
+              "少",
+              "绍"
+            ],
+            "contributingRanks": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        ],
+        "diagnostics": {
+          "decode": {
+            "singleCharUsedCount": 972,
+            "functionSingleCharUsedCount": 290,
+            "contentFallbackUsedCount": 348,
+            "fallbackTriggeredCount": 2,
+            "beamBreakRecoveredCount": 348,
+            "decodeMs": 7,
+            "tokenPathAvailableCount": 5,
+            "candidateTokenCount": 95,
+            "collapsedPathByTextCount": 0
+          },
+          "candidateCount": 5,
+          "diffSpanCount": 0,
+          "instabilityRegionCount": 0,
+          "boundaryAdjustedCount": 0,
+          "alignFailedCount": 5,
+          "rawBoundaryCount": 8,
+          "normalizedCharCount": 27,
+          "traditionalCharCount": 0,
+          "openccConvertedCount": 0,
+          "boundaryAlignmentScores": [
+            {
+              "candidateRank": 1,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 2,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 3,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 4,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 5,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            }
+          ],
+          "rawBoundaryMatchedTopKCount": 5,
+          "boundaryCompatibilityScoreMax": 1,
+          "boundaryCompatibilityScoreAvg": 1,
+          "trustedTopKCount": 5,
+          "boundaryCompatibleTopKSpanCount": 2,
+          "diffZeroBoundaryPositive": 1,
+          "tokenSourceConflictDiagnosticCount": 5,
+          "normalizedTextDiffDiagnosticCount": 5
+        },
+        "alignmentNormalizedLength": 27,
+        "rawBoundaryCount": 8
+      }
+    },
+    "skip_syllable_gate": {
+      "kept": [],
+      "merged": [
+        {
+          "start": 4,
+          "end": 5,
+          "supportCount": 2,
+          "fromInstability": false,
+          "fromBoundaryTopKDiff": true,
+          "variants": [
+            "向",
+            "想"
+          ]
+        },
+        {
+          "start": 13,
+          "end": 14,
+          "supportCount": 3,
+          "fromInstability": false,
+          "fromBoundaryTopKDiff": true,
+          "variants": [
+            "勺",
+            "少",
+            "绍"
+          ]
+        }
+      ],
+      "proposal": {
+        "rawAsrText": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+        "candidates": [
+          {
+            "text": "你好我向点以被热拿铁中杯勺趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 1,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "向",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "勺",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我向点以被热拿铁中杯少趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 2,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "向",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "少",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我想点以被热拿铁中杯勺趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 3,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "想",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "勺",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我想点以被热拿铁中杯少趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 4,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "想",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "少",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我向点以被热拿铁中杯绍趟身边文艺下今天游览每马芬吗",
+            "score": 13.287725,
+            "rank": 5,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "向",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "绍",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          }
+        ],
+        "diffSpans": [],
+        "instabilityRegions": [],
+        "boundaryCompatibleTopKSpans": [
+          {
+            "rawSpan": "想",
+            "start": 4,
+            "end": 5,
+            "syllableStart": 3,
+            "syllableEnd": 4,
+            "supportCount": 2,
+            "confidence": 0.4,
+            "variants": [
+              "向",
+              "想"
+            ],
+            "contributingRanks": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          {
+            "rawSpan": "少",
+            "start": 13,
+            "end": 14,
+            "syllableStart": 12,
+            "syllableEnd": 13,
+            "supportCount": 3,
+            "confidence": 0.6,
+            "variants": [
+              "勺",
+              "少",
+              "绍"
+            ],
+            "contributingRanks": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        ],
+        "diagnostics": {
+          "decode": {
+            "singleCharUsedCount": 972,
+            "functionSingleCharUsedCount": 290,
+            "contentFallbackUsedCount": 348,
+            "fallbackTriggeredCount": 2,
+            "beamBreakRecoveredCount": 348,
+            "decodeMs": 7,
+            "tokenPathAvailableCount": 5,
+            "candidateTokenCount": 95,
+            "collapsedPathByTextCount": 0
+          },
+          "candidateCount": 5,
+          "diffSpanCount": 0,
+          "instabilityRegionCount": 0,
+          "boundaryAdjustedCount": 0,
+          "alignFailedCount": 5,
+          "rawBoundaryCount": 8,
+          "normalizedCharCount": 27,
+          "traditionalCharCount": 0,
+          "openccConvertedCount": 0,
+          "boundaryAlignmentScores": [
+            {
+              "candidateRank": 1,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 2,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 3,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 4,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 5,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            }
+          ],
+          "rawBoundaryMatchedTopKCount": 5,
+          "boundaryCompatibilityScoreMax": 1,
+          "boundaryCompatibilityScoreAvg": 1,
+          "trustedTopKCount": 5,
+          "boundaryCompatibleTopKSpanCount": 2,
+          "diffZeroBoundaryPositive": 1,
+          "tokenSourceConflictDiagnosticCount": 5,
+          "normalizedTextDiffDiagnosticCount": 5
+        },
+        "alignmentNormalizedLength": 27,
+        "rawBoundaryCount": 8
+      }
+    },
+    "skip_merge": {
+      "kept": [],
+      "merged": [
+        {
+          "start": 4,
+          "end": 5,
+          "supportCount": 2,
+          "fromInstability": false,
+          "fromBoundaryTopKDiff": true,
+          "variants": [
+            "向",
+            "想"
+          ]
+        },
+        {
+          "start": 13,
+          "end": 14,
+          "supportCount": 3,
+          "fromInstability": false,
+          "fromBoundaryTopKDiff": true,
+          "variants": [
+            "勺",
+            "少",
+            "绍"
+          ]
+        }
+      ],
+      "proposal": {
+        "rawAsrText": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+        "candidates": [
+          {
+            "text": "你好我向点以被热拿铁中杯勺趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 1,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "向",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "勺",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我向点以被热拿铁中杯少趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 2,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "向",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "少",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我想点以被热拿铁中杯勺趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 3,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "想",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "勺",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我想点以被热拿铁中杯少趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 4,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "想",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "少",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我向点以被热拿铁中杯绍趟身边文艺下今天游览每马芬吗",
+            "score": 13.287725,
+            "rank": 5,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "向",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "绍",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          }
+        ],
+        "diffSpans": [],
+        "instabilityRegions": [],
+        "boundaryCompatibleTopKSpans": [
+          {
+            "rawSpan": "想",
+            "start": 4,
+            "end": 5,
+            "syllableStart": 3,
+            "syllableEnd": 4,
+            "supportCount": 2,
+            "confidence": 0.4,
+            "variants": [
+              "向",
+              "想"
+            ],
+            "contributingRanks": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          {
+            "rawSpan": "少",
+            "start": 13,
+            "end": 14,
+            "syllableStart": 12,
+            "syllableEnd": 13,
+            "supportCount": 3,
+            "confidence": 0.6,
+            "variants": [
+              "勺",
+              "少",
+              "绍"
+            ],
+            "contributingRanks": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        ],
+        "diagnostics": {
+          "decode": {
+            "singleCharUsedCount": 972,
+            "functionSingleCharUsedCount": 290,
+            "contentFallbackUsedCount": 348,
+            "fallbackTriggeredCount": 2,
+            "beamBreakRecoveredCount": 348,
+            "decodeMs": 7,
+            "tokenPathAvailableCount": 5,
+            "candidateTokenCount": 95,
+            "collapsedPathByTextCount": 0
+          },
+          "candidateCount": 5,
+          "diffSpanCount": 0,
+          "instabilityRegionCount": 0,
+          "boundaryAdjustedCount": 0,
+          "alignFailedCount": 5,
+          "rawBoundaryCount": 8,
+          "normalizedCharCount": 27,
+          "traditionalCharCount": 0,
+          "openccConvertedCount": 0,
+          "boundaryAlignmentScores": [
+            {
+              "candidateRank": 1,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 2,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 3,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 4,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 5,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            }
+          ],
+          "rawBoundaryMatchedTopKCount": 5,
+          "boundaryCompatibilityScoreMax": 1,
+          "boundaryCompatibilityScoreAvg": 1,
+          "trustedTopKCount": 5,
+          "boundaryCompatibleTopKSpanCount": 2,
+          "diffZeroBoundaryPositive": 1,
+          "tokenSourceConflictDiagnosticCount": 5,
+          "normalizedTextDiffDiagnosticCount": 5
+        },
+        "alignmentNormalizedLength": 27,
+        "rawBoundaryCount": 8
+      }
+    },
+    "skip_maxSpanChars": {
+      "kept": [],
+      "merged": [
+        {
+          "start": 4,
+          "end": 5,
+          "supportCount": 2,
+          "fromInstability": false,
+          "fromBoundaryTopKDiff": true,
+          "variants": [
+            "向",
+            "想"
+          ]
+        },
+        {
+          "start": 13,
+          "end": 14,
+          "supportCount": 3,
+          "fromInstability": false,
+          "fromBoundaryTopKDiff": true,
+          "variants": [
+            "勺",
+            "少",
+            "绍"
+          ]
+        }
+      ],
+      "proposal": {
+        "rawAsrText": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+        "candidates": [
+          {
+            "text": "你好我向点以被热拿铁中杯勺趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 1,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "向",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "勺",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我向点以被热拿铁中杯少趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 2,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "向",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "少",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我想点以被热拿铁中杯勺趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 3,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "想",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "勺",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我想点以被热拿铁中杯少趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 4,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "想",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "少",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我向点以被热拿铁中杯绍趟身边文艺下今天游览每马芬吗",
+            "score": 13.287725,
+            "rank": 5,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "向",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "绍",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          }
+        ],
+        "diffSpans": [],
+        "instabilityRegions": [],
+        "boundaryCompatibleTopKSpans": [
+          {
+            "rawSpan": "想",
+            "start": 4,
+            "end": 5,
+            "syllableStart": 3,
+            "syllableEnd": 4,
+            "supportCount": 2,
+            "confidence": 0.4,
+            "variants": [
+              "向",
+              "想"
+            ],
+            "contributingRanks": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          {
+            "rawSpan": "少",
+            "start": 13,
+            "end": 14,
+            "syllableStart": 12,
+            "syllableEnd": 13,
+            "supportCount": 3,
+            "confidence": 0.6,
+            "variants": [
+              "勺",
+              "少",
+              "绍"
+            ],
+            "contributingRanks": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        ],
+        "diagnostics": {
+          "decode": {
+            "singleCharUsedCount": 972,
+            "functionSingleCharUsedCount": 290,
+            "contentFallbackUsedCount": 348,
+            "fallbackTriggeredCount": 2,
+            "beamBreakRecoveredCount": 348,
+            "decodeMs": 7,
+            "tokenPathAvailableCount": 5,
+            "candidateTokenCount": 95,
+            "collapsedPathByTextCount": 0
+          },
+          "candidateCount": 5,
+          "diffSpanCount": 0,
+          "instabilityRegionCount": 0,
+          "boundaryAdjustedCount": 0,
+          "alignFailedCount": 5,
+          "rawBoundaryCount": 8,
+          "normalizedCharCount": 27,
+          "traditionalCharCount": 0,
+          "openccConvertedCount": 0,
+          "boundaryAlignmentScores": [
+            {
+              "candidateRank": 1,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 2,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 3,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 4,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 5,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            }
+          ],
+          "rawBoundaryMatchedTopKCount": 5,
+          "boundaryCompatibilityScoreMax": 1,
+          "boundaryCompatibilityScoreAvg": 1,
+          "trustedTopKCount": 5,
+          "boundaryCompatibleTopKSpanCount": 2,
+          "diffZeroBoundaryPositive": 1,
+          "tokenSourceConflictDiagnosticCount": 5,
+          "normalizedTextDiffDiagnosticCount": 5
+        },
+        "alignmentNormalizedLength": 27,
+        "rawBoundaryCount": 8
+      }
+    },
+    "skip_single_char": {
+      "kept": [],
+      "merged": [
+        {
+          "start": 4,
+          "end": 5,
+          "supportCount": 2,
+          "fromInstability": false,
+          "fromBoundaryTopKDiff": true,
+          "variants": [
+            "向",
+            "想"
+          ]
+        },
+        {
+          "start": 13,
+          "end": 14,
+          "supportCount": 3,
+          "fromInstability": false,
+          "fromBoundaryTopKDiff": true,
+          "variants": [
+            "勺",
+            "少",
+            "绍"
+          ]
+        }
+      ],
+      "proposal": {
+        "rawAsrText": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+        "candidates": [
+          {
+            "text": "你好我向点以被热拿铁中杯勺趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 1,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "向",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "勺",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我向点以被热拿铁中杯少趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 2,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "向",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "少",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我想点以被热拿铁中杯勺趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 3,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "想",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "勺",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我想点以被热拿铁中杯少趟身边文艺下今天游览每马芬吗",
+            "score": 13.290125,
+            "rank": 4,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "想",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "少",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          },
+          {
+            "text": "你好我向点以被热拿铁中杯绍趟身边文艺下今天游览每马芬吗",
+            "score": 13.287725,
+            "rank": 5,
+            "tokens": [
+              {
+                "word": "你好",
+                "syllableStart": 0,
+                "syllableEnd": 2,
+                "source": "target"
+              },
+              {
+                "word": "我",
+                "syllableStart": 2,
+                "syllableEnd": 3,
+                "source": "single_char"
+              },
+              {
+                "word": "向",
+                "syllableStart": 3,
+                "syllableEnd": 4,
+                "source": "single_char"
+              },
+              {
+                "word": "点",
+                "syllableStart": 4,
+                "syllableEnd": 5,
+                "source": "single_char"
+              },
+              {
+                "word": "以",
+                "syllableStart": 5,
+                "syllableEnd": 6,
+                "source": "single_char"
+              },
+              {
+                "word": "被",
+                "syllableStart": 6,
+                "syllableEnd": 7,
+                "source": "single_char"
+              },
+              {
+                "word": "热",
+                "syllableStart": 7,
+                "syllableEnd": 8,
+                "source": "fallback"
+              },
+              {
+                "word": "拿铁",
+                "syllableStart": 8,
+                "syllableEnd": 10,
+                "source": "target"
+              },
+              {
+                "word": "中杯",
+                "syllableStart": 10,
+                "syllableEnd": 12,
+                "source": "target"
+              },
+              {
+                "word": "绍",
+                "syllableStart": 12,
+                "syllableEnd": 13,
+                "source": "fallback"
+              },
+              {
+                "word": "趟",
+                "syllableStart": 13,
+                "syllableEnd": 14,
+                "source": "single_char"
+              },
+              {
+                "word": "身边",
+                "syllableStart": 14,
+                "syllableEnd": 16,
+                "source": "target"
+              },
+              {
+                "word": "文艺",
+                "syllableStart": 16,
+                "syllableEnd": 18,
+                "source": "target"
+              },
+              {
+                "word": "下",
+                "syllableStart": 18,
+                "syllableEnd": 19,
+                "source": "single_char"
+              },
+              {
+                "word": "今天",
+                "syllableStart": 19,
+                "syllableEnd": 21,
+                "source": "target"
+              },
+              {
+                "word": "游览",
+                "syllableStart": 21,
+                "syllableEnd": 23,
+                "source": "target"
+              },
+              {
+                "word": "每",
+                "syllableStart": 23,
+                "syllableEnd": 24,
+                "source": "single_char"
+              },
+              {
+                "word": "马芬",
+                "syllableStart": 24,
+                "syllableEnd": 26,
+                "source": "target"
+              },
+              {
+                "word": "吗",
+                "syllableStart": 26,
+                "syllableEnd": 27,
+                "source": "single_char"
+              }
+            ]
+          }
+        ],
+        "diffSpans": [],
+        "instabilityRegions": [],
+        "boundaryCompatibleTopKSpans": [
+          {
+            "rawSpan": "想",
+            "start": 4,
+            "end": 5,
+            "syllableStart": 3,
+            "syllableEnd": 4,
+            "supportCount": 2,
+            "confidence": 0.4,
+            "variants": [
+              "向",
+              "想"
+            ],
+            "contributingRanks": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          {
+            "rawSpan": "少",
+            "start": 13,
+            "end": 14,
+            "syllableStart": 12,
+            "syllableEnd": 13,
+            "supportCount": 3,
+            "confidence": 0.6,
+            "variants": [
+              "勺",
+              "少",
+              "绍"
+            ],
+            "contributingRanks": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        ],
+        "diagnostics": {
+          "decode": {
+            "singleCharUsedCount": 972,
+            "functionSingleCharUsedCount": 290,
+            "contentFallbackUsedCount": 348,
+            "fallbackTriggeredCount": 2,
+            "beamBreakRecoveredCount": 348,
+            "decodeMs": 6,
+            "tokenPathAvailableCount": 5,
+            "candidateTokenCount": 95,
+            "collapsedPathByTextCount": 0
+          },
+          "candidateCount": 5,
+          "diffSpanCount": 0,
+          "instabilityRegionCount": 0,
+          "boundaryAdjustedCount": 0,
+          "alignFailedCount": 5,
+          "rawBoundaryCount": 8,
+          "normalizedCharCount": 27,
+          "traditionalCharCount": 0,
+          "openccConvertedCount": 0,
+          "boundaryAlignmentScores": [
+            {
+              "candidateRank": 1,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 2,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 3,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 4,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            },
+            {
+              "candidateRank": 5,
+              "matchedBoundaryCount": 3,
+              "conflictedBoundaryCount": 0,
+              "compatibilityScore": 1
+            }
+          ],
+          "rawBoundaryMatchedTopKCount": 5,
+          "boundaryCompatibilityScoreMax": 1,
+          "boundaryCompatibilityScoreAvg": 1,
+          "trustedTopKCount": 5,
+          "boundaryCompatibleTopKSpanCount": 2,
+          "diffZeroBoundaryPositive": 1,
+          "tokenSourceConflictDiagnosticCount": 5,
+          "normalizedTextDiffDiagnosticCount": 5
+        },
+        "alignmentNormalizedLength": 27,
+        "rawBoundaryCount": 8
+      }
+    }
+  },
+  "dialog200RuleCounts": {
+    "single_char": 164,
+    "too_long": 8,
+    "syllable_out_of_range": 3,
+    "intervalMerge": 597,
+    "kept": 174
+  },
+  "casesWithDrops": 107,
+  "inputSpanCounts": {
+    "diff": 434,
+    "instability": 98,
+    "boundaryTopK": 414
+  }
+}

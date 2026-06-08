@@ -4,6 +4,10 @@ import { buildBoundaryCompatibleTopKDiff } from './pinyin-ime-v2-boundary-compat
 import { decodeRawTextTopK } from './pinyin-ime-v2-decoder';
 import { collectDiffSpansFromCandidates } from './pinyin-ime-v2-diff-spans';
 import { emptyProposalDiagnostics } from './pinyin-ime-v2-diagnostics';
+import {
+  buildLocalRawImeDiffSpans,
+  shouldActivateLocalRawImeDiffFallback,
+} from './pinyin-ime-v2-local-raw-ime-diff';
 import { extractRawCoarseBoundaries } from './extract-raw-coarse-boundaries';
 import { normalizeForImeAlignment } from './normalize-for-ime-alignment';
 import type { PinyinImeV2Dict, PinyinImeV2RuntimeConfig, PinyinImeV2SpanProposal } from './pinyin-ime-v2-types';
@@ -72,12 +76,34 @@ export function runPinyinImeV2SpanProposal(input: RunPinyinImeV2SpanProposalInpu
   diagnostics.boundaryCompatibilityScoreMax = boundaryAlign.boundaryCompatibilityScoreMax;
   diagnostics.boundaryCompatibilityScoreAvg = boundaryAlign.boundaryCompatibilityScoreAvg;
 
-  const { diffSpans: rawDiffSpans, alignFailedCount } = collectDiffSpansFromCandidates(
+  const { diffSpans: sentenceDiffSpans, alignFailedCount } = collectDiffSpansFromCandidates(
     rawAsrText,
     candidates,
     input.config.topK
   );
   diagnostics.alignFailedCount = alignFailedCount;
+
+  const localBuild = buildLocalRawImeDiffSpans({
+    rawAsrText,
+    candidates,
+    alignmentScores: boundaryAlign.scores,
+  });
+  diagnostics.localRawImeDiffSpanCount = localBuild.diagnostics.localRawImeDiffSpanCount;
+  diagnostics.localRawImeDiffCandidateCount = localBuild.diagnostics.localRawImeDiffCandidateCount;
+  diagnostics.localRawImeDiffTrustedCandidateCount =
+    localBuild.diagnostics.localRawImeDiffTrustedCandidateCount;
+  diagnostics.localRawImeDiffDroppedCount = localBuild.diagnostics.localRawImeDiffDroppedCount;
+  diagnostics.localRawImeDiffSingleCharCount = localBuild.diagnostics.localRawImeDiffSingleCharCount;
+  diagnostics.localRawImeDiffExampleSpans = localBuild.diagnostics.localRawImeDiffExampleSpans;
+
+  const localActivated = shouldActivateLocalRawImeDiffFallback(
+    alignFailedCount,
+    candidates.length,
+    input.config.topK
+  );
+  diagnostics.localRawImeDiffActivated = localActivated ? 1 : 0;
+
+  const rawDiffSpans = localActivated ? localBuild.spans : sentenceDiffSpans;
 
   const diffSpans = aggregateDiffSpanSupport(rawDiffSpans);
   diagnostics.diffSpanCount = diffSpans.length;

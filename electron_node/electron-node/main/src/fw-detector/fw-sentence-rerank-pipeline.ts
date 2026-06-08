@@ -4,8 +4,8 @@
 
 import type { KenLMScorer } from '../asr-repair/kenlm-batch-types';
 import { recallSpanTopK } from '../lexicon/local-span-recall';
-import { toneDistance, textToToneSyllables, toneSyllablesKey } from '../lexicon/phonetic/tone-pinyin';
 import type { ActiveLexiconProfileSnapshot } from '../session-runtime/types';
+import type { UtteranceTonePayload } from '../task-router/types';
 import {
   buildSentenceCandidates,
   type SpanReplacementPick,
@@ -15,12 +15,17 @@ import { mapSentenceToApprovedReplacements } from './map-sentence-to-approved';
 import { getPerSpanCandidateLimit } from './per-span-candidate-limit';
 import { rerankFwSentences } from './rerank-fw-sentences';
 import { buildCandidateSentence } from './candidate-sentence-builder';
+import {
+  extractAcousticTonePattern,
+  isToneAlignmentValid,
+} from './tone-match-score';
 import type {
   FwApprovedReplacement,
   FwDetectorReplacementDiag,
   FwSentenceRerankDiagnostics,
   FwSpanCandidateDiag,
   FwSpanDiagnostics,
+  FwToneModuleDiagnostics,
 } from './types';
 
 export type FwSentenceRerankInput = {
@@ -36,6 +41,7 @@ export type FwSentenceRerankInput = {
   >;
   enabledDomains: string[];
   kenlmScorer: KenLMScorer | null;
+  tone?: UtteranceTonePayload | null;
 };
 
 export type FwSentenceRerankResult = {
@@ -46,6 +52,7 @@ export type FwSentenceRerankResult = {
   kenlmQueryCount: number;
   kenlmTiming?: FwSentenceRerankDiagnostics['kenlmTiming'];
   pickedTopKWinCount: number;
+  toneDiagnostics?: FwToneModuleDiagnostics;
 };
 
 function hitToSpanCandidate(
@@ -113,17 +120,29 @@ export async function runFwSentenceRerankPipeline(
   const perSpanLimit = getPerSpanCandidateLimit(input.spans.length);
   const spanSets: SpanReplacementPick[][] = [];
   const updatedSpans: FwSpanDiagnostics[] = [];
+  const alignmentTextMatched = isToneAlignmentValid(input.rawText, input.tone);
+  let recallToneCompatibleCount = 0;
+  let recallToneFallbackCount = 0;
+  let lastAcousticPattern: number[] | null = null;
 
   for (const span of input.spans) {
-    const asrToneKey = toneSyllablesKey(textToToneSyllables(span.text));
+    const acousticTonePattern =
+      extractAcousticTonePattern(input.rawText, span.start, span.end, input.tone) ?? undefined;
+    if (acousticTonePattern?.length) {
+      lastAcousticPattern = acousticTonePattern;
+    }
+
     const recall = recallSpanTopK(
       span.text,
       input.profile,
       perSpanLimit,
       input.config.minPrior,
       input.enabledDomains,
-      { perSpanLimit }
+      { perSpanLimit, acousticTonePattern }
     );
+
+    recallToneCompatibleCount += recall.recallToneCompatibleCount ?? 0;
+    recallToneFallbackCount += recall.recallToneFallbackCount ?? 0;
 
     const picks: SpanReplacementPick[] = recall.hits
       .filter((h) => h.word !== span.text)
@@ -134,20 +153,7 @@ export async function runFwSentenceRerankPipeline(
         priorScore: hit.priorScore,
         repairTarget: hit.repairTarget,
         candidateScore: hit.candidateScore,
-        toneDistance: hit.tonePinyinKey
-          ? toneDistance(asrToneKey, hit.tonePinyinKey)
-          : Number.MAX_SAFE_INTEGER,
-      }))
-      .sort((a, b) => {
-        if (a.toneDistance !== b.toneDistance) {
-          return a.toneDistance - b.toneDistance;
-        }
-        if (a.priorScore !== b.priorScore) {
-          return b.priorScore - a.priorScore;
-        }
-        return b.candidateScore - a.candidateScore;
-      })
-      .map(({ toneDistance: _toneDistance, ...pick }) => pick);
+      }));
 
     spanSets.push(picks);
 
@@ -204,6 +210,14 @@ export async function runFwSentenceRerankPipeline(
     kenlmTiming: rerank.kenlmTiming,
   };
 
+  const toneDiagnostics: FwToneModuleDiagnostics = {
+    toneEnabled: input.tone?.toneEnabled === true && alignmentTextMatched,
+    alignmentTextMatched,
+    acousticTonePattern: lastAcousticPattern ?? undefined,
+    recallToneCompatibleCount,
+    recallToneFallbackCount,
+  };
+
   return {
     spans: updatedSpans,
     approved,
@@ -212,5 +226,6 @@ export async function runFwSentenceRerankPipeline(
     kenlmQueryCount: rerank.kenlmQueryCount,
     kenlmTiming: rerank.kenlmTiming,
     pickedTopKWinCount: approved.length,
+    toneDiagnostics,
   };
 }

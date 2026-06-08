@@ -1,0 +1,114 @@
+{
+  "funnel": {
+    "boundaryCompatibleTopKSpan": 190,
+    "fw_spans_total": 49,
+    "fw_spans_boundary_hint": 46,
+    "fw_spans_diff_hint": 0,
+    "fw_spans_instability_hint": 3,
+    "recall_hit_spans": 0,
+    "kenlm_triggered": 0,
+    "kenlm_picked": 0,
+    "applied": 0,
+    "losses": {
+      "boundary_to_fw_span": 144,
+      "fw_span_to_recall": 49,
+      "recall_to_kenlm": 0,
+      "kenlm_to_applied": 0
+    }
+  },
+  "metrics": {
+    "totalSpans": 7,
+    "totalCand": 16,
+    "byCount": {
+      "1": 2,
+      "2": 2,
+      "3": 2,
+      "4": 1
+    },
+    "truncCases": 0,
+    "replayed": 4,
+    "avgPreCap": 4.5
+  },
+  "oracle": {
+    "refReachableHeuristic": 4,
+    "refInTop16IfNotTruncated": 4
+  },
+  "samples": [
+    {
+      "id": "d006",
+      "scenario": "meeting",
+      "raw": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下",
+      "ref": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。",
+      "spans": [
+        {
+          "text": "评审",
+          "cand": 1
+        }
+      ],
+      "preCap": 1,
+      "truncated": false,
+      "rawCer": 0.2143,
+      "refReachableHeuristic": true
+    },
+    {
+      "id": "d074",
+      "scenario": "classroom",
+      "raw": "作业是下周以下午叫吗?可以电子板提叫吗?",
+      "ref": "作业是下周一下午交吗？可以电子版提交吗？",
+      "spans": [
+        {
+          "text": "作业",
+          "cand": 1
+        },
+        {
+          "text": "周以",
+          "cand": 2
+        },
+        {
+          "text": "叫吗",
+          "cand": 2
+        }
+      ],
+      "preCap": 4,
+      "truncated": false,
+      "rawCer": 0.2222,
+      "refReachableHeuristic": true
+    },
+    {
+      "id": "d039",
+      "scenario": "restaurant",
+      "raw": "可以打爆麻 顺便解一下张能扫马支付吗?",
+      "ref": "可以打包吗？顺便结一下账，能扫码支付吗？",
+      "spans": [
+        {
+          "text": "解一",
+          "cand": 4
+        }
+      ],
+      "preCap": 4,
+      "truncated": false,
+      "rawCer": 0.2941,
+      "refReachableHeuristic": true
+    },
+    {
+      "id": "d014",
+      "scenario": "shopping",
+      "raw": "请问,这双鞋是否有相似的? 不合是三天内可以推换吧",
+      "ref": "请问这双鞋有四十码吗？不合适三天内可以退换吧？",
+      "spans": [
+        {
+          "text": "鞋是",
+          "cand": 3
+        },
+        {
+          "text": "似的",
+          "cand": 3
+        }
+      ],
+      "preCap": 9,
+      "truncated": false,
+      "rawCer": 0.381,
+      "refReachableHeuristic": true
+    }
+  ]
+}

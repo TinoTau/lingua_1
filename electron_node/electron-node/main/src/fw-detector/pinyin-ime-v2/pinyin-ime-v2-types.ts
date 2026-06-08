@@ -39,17 +39,17 @@ export type PinyinImeV2InstabilityRegion = {
   supportCount: number;
 };
 
-export type PinyinImeV2ApprovedSpanReason =
+export type PinyinImeV2SelectedSpanReason =
   | 'ime_v2_diff'
   | 'ime_v2_instability'
   | 'ime_v2_boundary_topk_diff';
 
-export type PinyinImeV2ApprovedSpan = {
+export type PinyinImeV2SelectedSpan = {
   rawSpan: string;
   start: number;
   end: number;
   confidence: number;
-  reason: PinyinImeV2ApprovedSpanReason;
+  reason: PinyinImeV2SelectedSpanReason;
 };
 
 export type PinyinImeV2SingleCharRole =
@@ -102,6 +102,26 @@ export type PinyinImeV2DecodeDiagnostics = {
   collapsedPathByTextCount: number;
 };
 
+/** Proposal diagnostics only — imeWord must not enter Recall/Tone/KenLM/Apply. */
+export type LocalRawImeDiffExampleSpan = {
+  rawSlice: string;
+  imeWord: string;
+  syllableStart: number;
+  syllableEnd: number;
+  rawStart: number;
+  rawEnd: number;
+  source: 'local_raw_ime_diff';
+};
+
+export type LocalRawImeDiffBuildDiagnostics = {
+  localRawImeDiffSpanCount: number;
+  localRawImeDiffCandidateCount: number;
+  localRawImeDiffTrustedCandidateCount: number;
+  localRawImeDiffDroppedCount: number;
+  localRawImeDiffSingleCharCount: number;
+  localRawImeDiffExampleSpans: LocalRawImeDiffExampleSpan[];
+};
+
 export type PinyinImeV2ProposalDiagnostics = {
   decode: PinyinImeV2DecodeDiagnostics;
   candidateCount: number;
@@ -122,17 +142,31 @@ export type PinyinImeV2ProposalDiagnostics = {
   diffZeroBoundaryPositive: number;
   tokenSourceConflictDiagnosticCount: number;
   normalizedTextDiffDiagnosticCount: number;
+  localRawImeDiffActivated: number;
+  localRawImeDiffSpanCount: number;
+  localRawImeDiffCandidateCount: number;
+  localRawImeDiffTrustedCandidateCount: number;
+  localRawImeDiffDroppedCount: number;
+  localRawImeDiffSingleCharCount: number;
+  localRawImeDiffExampleSpans: LocalRawImeDiffExampleSpan[];
 };
 
-export type PinyinImeV2HintGateDiagnostics = {
+export type PinyinImeV2SpanSelectionMode =
+  | 'all_passed'
+  | 'ranked_capped'
+  | 'empty_after_normalizer';
+
+export type PinyinImeV2SpanSelectorDiagnostics = {
   inputSpanCount: number;
   normalizerDroppedCount: number;
   normalizerDroppedSingleChar: number;
   normalizerDroppedSyllableRange: number;
-  gateDroppedSupport: number;
-  gateDroppedNoNeighbor: number;
-  gateDroppedMaxSpans: number;
-  approvedSpanCount: number;
+  normalizedSpanCount: number;
+  selectedSpanCount: number;
+  selectionMode: PinyinImeV2SpanSelectionMode;
+  neighborHitCount: number;
+  neighborMissCount: number;
+  cappedByMaxSpansCount: number;
 };
 
 export type PinyinImeV2RuntimeConfig = {
@@ -165,7 +199,7 @@ export type PinyinImeV2SpanProposal = {
 
 export type LexiconNearNeighborProbe = (rawSpan: string) => boolean;
 
-export type PinyinImeV2HintGateInput = {
+export type PinyinImeV2SpanSelectorInput = {
   rawAsrText: string;
   diffSpans: PinyinImeV2DiffSpan[];
   instabilityRegions: PinyinImeV2InstabilityRegion[];
@@ -174,9 +208,9 @@ export type PinyinImeV2HintGateInput = {
   lexiconNearNeighbor: LexiconNearNeighborProbe;
 };
 
-export type PinyinImeV2HintGateResult = {
-  approved: PinyinImeV2ApprovedSpan[];
-  diagnostics: PinyinImeV2HintGateDiagnostics;
+export type PinyinImeV2SpanSelectorResult = {
+  selected: PinyinImeV2SelectedSpan[];
+  diagnostics: PinyinImeV2SpanSelectorDiagnostics;
 };
 
 export type PinyinImeV2FwSpan = FwSpanDiagnostics;

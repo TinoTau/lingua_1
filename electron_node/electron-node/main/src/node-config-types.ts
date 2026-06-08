@@ -193,6 +193,10 @@ export interface NodeConfig {
       useLexiconRuntimeV2Recall?: boolean;
       /** Phase 4: topicKeywords → industry_routing_lexicon domain resolution. Requires useLexiconRuntimeV2Recall. */
       useIndustryRouting?: boolean;
+      /** P0: weak domain recall (general → all enabled domains weak). Mutually exclusive with useIndustryRouting. */
+      weakDomainRecallEnabled?: boolean;
+      /** P0: plain pinyin variant recall (trim / function syllable strip). */
+      fuzzyPinyinRecallEnabled?: boolean;
       /** P4: sentence-level KenLM rerank (false = P3.3 per-span topK rollback). */
       useSentenceLevelRerank?: boolean;
       maxSentenceCandidates?: number;

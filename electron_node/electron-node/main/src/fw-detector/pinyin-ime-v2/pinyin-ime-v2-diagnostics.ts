@@ -31,5 +31,12 @@ export function emptyProposalDiagnostics(): PinyinImeV2ProposalDiagnostics {
     diffZeroBoundaryPositive: 0,
     tokenSourceConflictDiagnosticCount: 0,
     normalizedTextDiffDiagnosticCount: 0,
+    localRawImeDiffActivated: 0,
+    localRawImeDiffSpanCount: 0,
+    localRawImeDiffCandidateCount: 0,
+    localRawImeDiffTrustedCandidateCount: 0,
+    localRawImeDiffDroppedCount: 0,
+    localRawImeDiffSingleCharCount: 0,
+    localRawImeDiffExampleSpans: [],
   };
 }

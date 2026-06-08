@@ -1,0 +1,971 @@
+{
+  "d001Raw": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+  "d001TopK": [
+    {
+      "rank": 1,
+      "text": "你好我向点以被热拿铁中杯勺趟身边文艺下今天游览每马芬吗",
+      "score": 13.290125,
+      "editDistance": 19,
+      "threshold": 18.6,
+      "alignSuccess": false,
+      "alignFailedReason": "editDistance_gt_0.6_maxLen",
+      "diffSpanCount": 0,
+      "diffSpans": []
+    },
+    {
+      "rank": 2,
+      "text": "你好我向点以被热拿铁中杯少趟身边文艺下今天游览每马芬吗",
+      "score": 13.290125,
+      "editDistance": 18,
+      "threshold": 18.6,
+      "alignSuccess": false,
+      "alignFailedReason": "backtrace_has_ins_or_del",
+      "diffSpanCount": 0,
+      "diffSpans": []
+    },
+    {
+      "rank": 3,
+      "text": "你好我想点以被热拿铁中杯勺趟身边文艺下今天游览每马芬吗",
+      "score": 13.290125,
+      "editDistance": 18,
+      "threshold": 18.6,
+      "alignSuccess": false,
+      "alignFailedReason": "backtrace_has_ins_or_del",
+      "diffSpanCount": 0,
+      "diffSpans": []
+    },
+    {
+      "rank": 4,
+      "text": "你好我想点以被热拿铁中杯少趟身边文艺下今天游览每马芬吗",
+      "score": 13.290125,
+      "editDistance": 17,
+      "threshold": 18.6,
+      "alignSuccess": false,
+      "alignFailedReason": "backtrace_has_ins_or_del",
+      "diffSpanCount": 0,
+      "diffSpans": []
+    },
+    {
+      "rank": 5,
+      "text": "你好我向点以被热拿铁中杯绍趟身边文艺下今天游览每马芬吗",
+      "score": 13.287725,
+      "editDistance": 19,
+      "threshold": 18.6,
+      "alignSuccess": false,
+      "alignFailedReason": "editDistance_gt_0.6_maxLen",
+      "diffSpanCount": 0,
+      "diffSpans": []
+    }
+  ],
+  "zhongbei": {
+    "substring": "钟贝",
+    "charStart": 11,
+    "charEnd": 13,
+    "syllableStart": 10,
+    "syllableEnd": 12,
+    "syllables": [
+      "zhong",
+      "bei"
+    ],
+    "mappedRaw": {
+      "start": 11,
+      "end": 13
+    }
+  },
+  "lanmei": {
+    "substring": "蓝美马分",
+    "charStart": 25,
+    "charEnd": 29,
+    "syllableStart": 22,
+    "syllableEnd": 26,
+    "syllables": [
+      "lan",
+      "mei",
+      "ma",
+      "fen"
+    ],
+    "mappedRaw": {
+      "start": 25,
+      "end": 29
+    }
+  },
+  "boundaryOutput": [
+    {
+      "rawSpan": "想",
+      "start": 4,
+      "end": 5,
+      "syllableStart": 3,
+      "syllableEnd": 4,
+      "supportCount": 2,
+      "confidence": 0.4,
+      "variants": [
+        "向",
+        "想"
+      ],
+      "contributingRanks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "rawSpan": "少",
+      "start": 13,
+      "end": 14,
+      "syllableStart": 12,
+      "syllableEnd": 13,
+      "supportCount": 3,
+      "confidence": 0.6,
+      "variants": [
+        "勺",
+        "少",
+        "绍"
+      ],
+      "contributingRanks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "allVariantIntervals": [
+    {
+      "syllableStart": 3,
+      "syllableEnd": 4,
+      "variants": [
+        "向",
+        "想"
+      ],
+      "rawPos": {
+        "start": 4,
+        "end": 5
+      },
+      "rawSpan": "想",
+      "isOutputSpan": true
+    },
+    {
+      "syllableStart": 12,
+      "syllableEnd": 13,
+      "variants": [
+        "勺",
+        "少",
+        "绍"
+      ],
+      "rawPos": {
+        "start": 13,
+        "end": 14
+      },
+      "rawSpan": "少",
+      "isOutputSpan": true
+    }
+  ],
+  "charSyllableRanges": [
+    {
+      "charStart": 0,
+      "charEnd": 2,
+      "syllableStart": 0,
+      "syllableEnd": 2
+    },
+    {
+      "charStart": 3,
+      "charEnd": 15,
+      "syllableStart": 2,
+      "syllableEnd": 14
+    },
+    {
+      "charStart": 16,
+      "charEnd": 19,
+      "syllableStart": 14,
+      "syllableEnd": 17
+    },
+    {
+      "charStart": 20,
+      "charEnd": 30,
+      "syllableStart": 17,
+      "syllableEnd": 27
+    }
+  ],
+  "dialog200": {
+    "total": 200,
+    "alignFailedCountGt0": 142,
+    "diffSpanCount0": 170,
+    "diff0BoundaryPositive": 141,
+    "alignFailedAll5Diff0": 170,
+    "alignFailedAll5NoFw": 88,
+    "alignFailedAll5NoSelected": 88
+  },
+  "top20": [
+    {
+      "id": "d001",
+      "scenario": "cafe",
+      "alignFailedCount": 5,
+      "boundaryTopK": 2,
+      "diffZeroBoundaryPositive": 1,
+      "selectedSpanCount": 0,
+      "fw_triggered": false,
+      "rawPreview": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?"
+    },
+    {
+      "id": "d003",
+      "scenario": "cafe",
+      "alignFailedCount": 5,
+      "boundaryTopK": 3,
+      "diffZeroBoundaryPositive": 1,
+      "selectedSpanCount": 2,
+      "fw_triggered": true,
+      "rawPreview": "请问,这款燕麦拿铁可以少病吗?我赶时间小背"
+    },
+    {
+      "id": "d004",
+      "scenario": "meeting",
+      "alignFailedCount": 0,
+      "boundaryTopK": 0,
+      "diffZeroBoundaryPositive": 0,
+      "selectedSpanCount": 0,
+      "fw_triggered": false,
+      "rawPreview": "小陈客户反馈翻译引擎接口包错 我们能 不能加緩存下午3點前把結論發群裡"
+    },
+    {
+      "id": "d005",
+      "scenario": "meeting",
+      "alignFailedCount": 5,
+      "boundaryTopK": 3,
+      "diffZeroBoundaryPositive": 1,
+      "selectedSpanCount": 3,
+      "fw_triggered": true,
+      "rawPreview": "今天,德湛会献过一下订单,中台,进都内存 我们占用高者快需要先留保护大家看一下风险"
+    },
+    {
+      "id": "d006",
+      "scenario": "meeting",
+      "alignFailedCount": 5,
+      "boundaryTopK": 3,
+      "diffZeroBoundaryPositive": 1,
+      "selectedSpanCount": 2,
+      "fw_triggered": true,
+      "rawPreview": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下"
+    },
+    {
+      "id": "d007",
+      "scenario": "taxi",
+      "alignFailedCount": 0,
+      "boundaryTopK": 0,
+      "diffZeroBoundaryPositive": 0,
+      "selectedSpanCount": 0,
+      "fw_triggered": false,
+      "rawPreview": "市富曲仲觀村軟件遠走機場告訴我幹 9点半的回药师赌车 您提前跟我说"
+    },
+    {
+      "id": "d008",
+      "scenario": "taxi",
+      "alignFailedCount": 0,
+      "boundaryTopK": 0,
+      "diffZeroBoundaryPositive": 0,
+      "selectedSpanCount": 0,
+      "fw_triggered": false,
+      "rawPreview": "麻烦送我到国贸三七南门大盖多久能到 我十点 10分有隔電話會"
+    },
+    {
+      "id": "d009",
+      "scenario": "taxi",
+      "alignFailedCount": 5,
+      "boundaryTopK": 2,
+      "diffZeroBoundaryPositive": 1,
+      "selectedSpanCount": 0,
+      "fw_triggered": false,
+      "rawPreview": "去望金斯赫布走四环,可以吗?那边现在赌不赌?"
+    },
+    {
+      "id": "d010",
+      "scenario": "hospital",
+      "alignFailedCount": 5,
+      "boundaryTopK": 2,
+      "diffZeroBoundaryPositive": 1,
+      "selectedSpanCount": 0,
+      "fw_triggered": false,
+      "rawPreview": "醫生您好,我這兩天頭痛想開點,要並做個歇常規"
+    },
+    {
+      "id": "d011",
+      "scenario": "hospital",
+      "alignFailedCount": 5,
+      "boundaryTopK": 6,
+      "diffZeroBoundaryPositive": 1,
+      "selectedSpanCount": 1,
+      "fw_triggered": true,
+      "rawPreview": "刮号出请问 内刻还有号码 我微不 我感觉不舒服昨晚开始的"
+    },
+    {
+      "id": "d012",
+      "scenario": "hospital",
+      "alignFailedCount": 5,
+      "boundaryTopK": 2,
+      "diffZeroBoundaryPositive": 1,
+      "selectedSpanCount": 0,
+      "fw_triggered": false,
+      "rawPreview": "這個檢查報告什麼時候能出 我過敏 需要请家休息吗?"
+    },
+    {
+      "id": "d013",
+      "scenario": "shopping",
+      "alignFailedCount": 5,
+      "boundaryTopK": 3,
+      "diffZeroBoundaryPositive": 1,
+      "selectedSpanCount": 1,
+      "fw_triggered": true,
+      "rawPreview": "这件外套能试穿吗?我串中码,买两件有没有折扣?"
+    },
+    {
+      "id": "d014",
+      "scenario": "shopping",
+      "alignFailedCount": 5,
+      "boundaryTopK": 3,
+      "diffZeroBoundaryPositive": 1,
+      "selectedSpanCount": 2,
+      "fw_triggered": true,
+      "rawPreview": "请问,这双鞋是否有相似的? 不合是三天内可以推换吧"
+    },
+    {
+      "id": "d015",
+      "scenario": "shopping",
+      "alignFailedCount": 5,
+      "boundaryTopK": 2,
+      "diffZeroBoundaryPositive": 1,
+      "selectedSpanCount": 1,
+      "fw_triggered": true,
+      "rawPreview": "我想对比一下,这两款定制器 在商丹中台的加个会员日能再减一点吗?"
+    },
+    {
+      "id": "d016",
+      "scenario": "friend",
+      "alignFailedCount": 5,
+      "boundaryTopK": 1,
+      "diffZeroBoundaryPositive": 1,
+      "selectedSpanCount": 0,
+      "fw_triggered": false,
+      "rawPreview": "周末要上班了 不要去江边骑行 天气预报说 周日多云记得带水"
+    },
+    {
+      "id": "d017",
+      "scenario": "friend",
+      "alignFailedCount": 5,
+      "boundaryTopK": 2,
+      "diffZeroBoundaryPositive": 1,
+      "selectedSpanCount": 2,
+      "fw_triggered": true,
+      "rawPreview": "晚上一起吃饭嘛 我知道一家川菜 不错大概起点到"
+    },
+    {
+      "id": "d018",
+      "scenario": "friend",
+      "alignFailedCount": 5,
+      "boundaryTopK": 3,
+      "diffZeroBoundaryPositive": 1,
+      "selectedSpanCount": 1,
+      "fw_triggered": true,
+      "rawPreview": "你最近忙不忙,想找你看下手机备份怎么设置"
+    },
+    {
+      "id": "d019",
+      "scenario": "tech_deploy",
+      "alignFailedCount": 5,
+      "boundaryTopK": 3,
+      "diffZeroBoundaryPositive": 1,
+      "selectedSpanCount": 1,
+      "fw_triggered": true,
+      "rawPreview": "今天,我们团队 要讨论候选生成相关的候选生成流程和上限计划安排请研发一起评估风险"
+    },
+    {
+      "id": "d021",
+      "scenario": "tech_deploy",
+      "alignFailedCount": 5,
+      "boundaryTopK": 2,
+      "diffZeroBoundaryPositive": 1,
+      "selectedSpanCount": 0,
+      "fw_triggered": false,
+      "rawPreview": "会上提到候选生成炼鹿 要加剑口 空上限期画文 等我下午更新一版"
+    },
+    {
+      "id": "d022",
+      "scenario": "customer_service",
+      "alignFailedCount": 5,
+      "boundaryTopK": 2,
+      "diffZeroBoundaryPositive": 1,
+      "selectedSpanCount": 2,
+      "fw_triggered": true,
+      "rawPreview": "您好,我定,但顯示 但物流三天每更新能幫我查一下嗎?"
+    }
+  ],
+  "cafeCases": [
+    {
+      "id": "d001",
+      "targets": [
+        "钟贝",
+        "蓝美马分"
+      ],
+      "alignFailedCount": 5,
+      "boundaryCount": 2,
+      "foundInDiff": [],
+      "foundInBoundary": [],
+      "boundarySpans": [
+        {
+          "rawSpan": "想",
+          "start": 4,
+          "end": 5,
+          "variants": [
+            "向",
+            "想"
+          ]
+        },
+        {
+          "rawSpan": "少",
+          "start": 13,
+          "end": 14,
+          "variants": [
+            "勺",
+            "少",
+            "绍"
+          ]
+        }
+      ],
+      "diffSpans": [],
+      "fw": false,
+      "selected": 0
+    },
+    {
+      "id": "d002",
+      "targets": [
+        "美食",
+        "大悲"
+      ],
+      "alignFailedCount": 0,
+      "boundaryCount": 2,
+      "foundInDiff": [
+        {
+          "rawSpan": "食",
+          "start": 8,
+          "end": 9,
+          "candidateRank": 1,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "食",
+          "start": 8,
+          "end": 9,
+          "candidateRank": 2,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "食",
+          "start": 8,
+          "end": 9,
+          "candidateRank": 3,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "食",
+          "start": 8,
+          "end": 9,
+          "candidateRank": 4,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "食",
+          "start": 8,
+          "end": 9,
+          "candidateRank": 5,
+          "supportCount": 5
+        }
+      ],
+      "foundInBoundary": [],
+      "boundarySpans": [
+        {
+          "rawSpan": "做",
+          "start": 4,
+          "end": 5,
+          "variants": [
+            "做",
+            "昨",
+            "左"
+          ]
+        },
+        {
+          "rawSpan": "就行",
+          "start": 13,
+          "end": 15,
+          "variants": [
+            "救星",
+            "九姓",
+            "酒醒"
+          ]
+        }
+      ],
+      "diffSpans": [
+        {
+          "rawSpan": "一杯",
+          "start": 5,
+          "end": 7,
+          "candidateRank": 1,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "食",
+          "start": 8,
+          "end": 9,
+          "candidateRank": 1,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "悲就行谢谢",
+          "start": 12,
+          "end": 17,
+          "candidateRank": 1,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "做一杯",
+          "start": 4,
+          "end": 7,
+          "candidateRank": 2,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "食",
+          "start": 8,
+          "end": 9,
+          "candidateRank": 2,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "悲就行谢谢",
+          "start": 12,
+          "end": 17,
+          "candidateRank": 2,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "一杯",
+          "start": 5,
+          "end": 7,
+          "candidateRank": 3,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "食",
+          "start": 8,
+          "end": 9,
+          "candidateRank": 3,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "悲就行谢谢",
+          "start": 12,
+          "end": 17,
+          "candidateRank": 3,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "一杯",
+          "start": 5,
+          "end": 7,
+          "candidateRank": 4,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "食",
+          "start": 8,
+          "end": 9,
+          "candidateRank": 4,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "悲就行谢谢",
+          "start": 12,
+          "end": 17,
+          "candidateRank": 4,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "做一杯",
+          "start": 4,
+          "end": 7,
+          "candidateRank": 5,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "食",
+          "start": 8,
+          "end": 9,
+          "candidateRank": 5,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "悲就行谢谢",
+          "start": 12,
+          "end": 17,
+          "candidateRank": 5,
+          "supportCount": 5
+        }
+      ],
+      "fw": true,
+      "selected": 2
+    },
+    {
+      "id": "d003",
+      "targets": [
+        "少病",
+        "小背"
+      ],
+      "alignFailedCount": 5,
+      "boundaryCount": 3,
+      "foundInDiff": [],
+      "foundInBoundary": [
+        {
+          "rawSpan": "少病",
+          "start": 11,
+          "end": 13,
+          "syllableStart": 10,
+          "syllableEnd": 12,
+          "supportCount": 2,
+          "confidence": 0.4,
+          "variants": [
+            "烧饼",
+            "哨兵"
+          ],
+          "contributingRanks": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "rawSpan": "背",
+          "start": 20,
+          "end": 21,
+          "syllableStart": 18,
+          "syllableEnd": 19,
+          "supportCount": 3,
+          "confidence": 0.6,
+          "variants": [
+            "被",
+            "北",
+            "杯"
+          ],
+          "contributingRanks": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      ],
+      "boundarySpans": [
+        {
+          "rawSpan": "少病",
+          "start": 11,
+          "end": 13,
+          "variants": [
+            "烧饼",
+            "哨兵"
+          ]
+        },
+        {
+          "rawSpan": "赶时",
+          "start": 16,
+          "end": 18,
+          "variants": [
+            "干事",
+            "干尸"
+          ]
+        },
+        {
+          "rawSpan": "背",
+          "start": 20,
+          "end": 21,
+          "variants": [
+            "被",
+            "北",
+            "杯"
+          ]
+        }
+      ],
+      "diffSpans": [],
+      "fw": true,
+      "selected": 2
+    },
+    {
+      "id": "d046",
+      "targets": [
+        "中貝",
+        "知识蛋糕"
+      ],
+      "alignFailedCount": 5,
+      "boundaryCount": 3,
+      "foundInDiff": [],
+      "foundInBoundary": [],
+      "boundarySpans": [
+        {
+          "rawSpan": "想",
+          "start": 4,
+          "end": 5,
+          "variants": [
+            "向",
+            "想"
+          ]
+        },
+        {
+          "rawSpan": "諾",
+          "start": 11,
+          "end": 12,
+          "variants": [
+            "挪",
+            "诺"
+          ]
+        },
+        {
+          "rawSpan": "長",
+          "start": 15,
+          "end": 16,
+          "variants": [
+            "厂",
+            "场"
+          ]
+        }
+      ],
+      "diffSpans": [],
+      "fw": false,
+      "selected": 0
+    },
+    {
+      "id": "d047",
+      "targets": [
+        "大背"
+      ],
+      "alignFailedCount": 0,
+      "boundaryCount": 2,
+      "foundInDiff": [],
+      "foundInBoundary": [],
+      "boundarySpans": [
+        {
+          "rawSpan": "红",
+          "start": 7,
+          "end": 8,
+          "variants": [
+            "弘",
+            "红",
+            "宏"
+          ]
+        },
+        {
+          "rawSpan": "茶",
+          "start": 8,
+          "end": 9,
+          "variants": [
+            "茶",
+            "叉"
+          ]
+        }
+      ],
+      "diffSpans": [
+        {
+          "rawSpan": "一杯红",
+          "start": 5,
+          "end": 8,
+          "candidateRank": 1,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "背就行谢谢",
+          "start": 12,
+          "end": 17,
+          "candidateRank": 1,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "一杯",
+          "start": 5,
+          "end": 7,
+          "candidateRank": 2,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "背就行谢谢",
+          "start": 12,
+          "end": 17,
+          "candidateRank": 2,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "一杯红茶",
+          "start": 5,
+          "end": 9,
+          "candidateRank": 3,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "背就行谢谢",
+          "start": 12,
+          "end": 17,
+          "candidateRank": 3,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "一杯",
+          "start": 5,
+          "end": 7,
+          "candidateRank": 4,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "茶",
+          "start": 8,
+          "end": 9,
+          "candidateRank": 4,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "背就行谢谢",
+          "start": 12,
+          "end": 17,
+          "candidateRank": 4,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "一杯红",
+          "start": 5,
+          "end": 8,
+          "candidateRank": 5,
+          "supportCount": 5
+        },
+        {
+          "rawSpan": "背就行谢谢",
+          "start": 12,
+          "end": 17,
+          "candidateRank": 5,
+          "supportCount": 5
+        }
+      ],
+      "fw": true,
+      "selected": 2
+    },
+    {
+      "id": "d091",
+      "targets": [
+        "中辈",
+        "被裹"
+      ],
+      "alignFailedCount": 5,
+      "boundaryCount": 3,
+      "foundInDiff": [],
+      "foundInBoundary": [],
+      "boundarySpans": [
+        {
+          "rawSpan": "想",
+          "start": 4,
+          "end": 5,
+          "variants": [
+            "向",
+            "想"
+          ]
+        },
+        {
+          "rawSpan": "點",
+          "start": 5,
+          "end": 6,
+          "variants": [
+            "点",
+            "店"
+          ]
+        },
+        {
+          "rawSpan": "一杯",
+          "start": 6,
+          "end": 8,
+          "variants": [
+            "以北",
+            "以备"
+          ]
+        }
+      ],
+      "diffSpans": [],
+      "fw": true,
+      "selected": 1
+    },
+    {
+      "id": "d092",
+      "targets": [
+        "大背"
+      ],
+      "alignFailedCount": 5,
+      "boundaryCount": 2,
+      "foundInDiff": [],
+      "foundInBoundary": [],
+      "boundarySpans": [
+        {
+          "rawSpan": "抹",
+          "start": 7,
+          "end": 8,
+          "variants": [
+            "末",
+            "抹"
+          ]
+        },
+        {
+          "rawSpan": "铁",
+          "start": 10,
+          "end": 11,
+          "variants": [
+            "帖",
+            "贴",
+            "铁"
+          ]
+        }
+      ],
+      "diffSpans": [],
+      "fw": false,
+      "selected": 0
+    },
+    {
+      "id": "d181",
+      "targets": [
+        "中贝",
+        "蓝没马分"
+      ],
+      "alignFailedCount": 5,
+      "boundaryCount": 2,
+      "foundInDiff": [],
+      "foundInBoundary": [],
+      "boundarySpans": [
+        {
+          "rawSpan": "想",
+          "start": 4,
+          "end": 5,
+          "variants": [
+            "向",
+            "想"
+          ]
+        },
+        {
+          "rawSpan": "少",
+          "start": 13,
+          "end": 14,
+          "variants": [
+            "勺",
+            "少",
+            "绍"
+          ]
+        }
+      ],
+      "diffSpans": [],
+      "fw": false,
+      "selected": 0
+    }
+  ]
+}

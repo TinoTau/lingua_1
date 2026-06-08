@@ -1,0 +1,1271 @@
+{
+  "summary": {
+    "total": 200,
+    "fw_triggered": 66,
+    "no_spans": 134,
+    "apply_gt0": 0,
+    "profile_general": 200,
+    "tone_compat_cases": 11,
+    "tone_compat_total": 11,
+    "ime_no_approved": 105,
+    "picked_is_raw_true": 66
+  },
+  "cafe": [
+    {
+      "id": "d001",
+      "scenario": "cafe",
+      "rawAsr": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+      "expected": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "fw_triggered": false,
+      "reason": "no_spans",
+      "span_count": 0,
+      "candidate_count": 0,
+      "apply_count": 0,
+      "profile": "general",
+      "ime_skipped": "no_approved_spans",
+      "ime_approved": 0,
+      "ime_diff": 0,
+      "ime_gate_no_neighbor": 0,
+      "ime_normalizer_drop": 2,
+      "recall_tone_compat": 0,
+      "recall_tone_fallback": 0,
+      "min_delta": 0.03
+    },
+    {
+      "id": "d002",
+      "scenario": "cafe",
+      "rawAsr": "麻烦帮我做一杯美食带走大悲就行谢谢",
+      "expected": "麻烦帮我做一杯美式带走，大杯就行，谢谢。",
+      "fw_triggered": false,
+      "reason": "no_spans",
+      "span_count": 0,
+      "candidate_count": 0,
+      "apply_count": 0,
+      "profile": "general",
+      "ime_skipped": "no_approved_spans",
+      "ime_approved": 0,
+      "ime_diff": 15,
+      "ime_gate_no_neighbor": 2,
+      "ime_normalizer_drop": 0,
+      "recall_tone_compat": 0,
+      "recall_tone_fallback": 0,
+      "min_delta": 0.03
+    },
+    {
+      "id": "d003",
+      "scenario": "cafe",
+      "rawAsr": "请问,这款燕麦拿铁可以少病吗?我赶时间小背",
+      "expected": "请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。",
+      "fw_triggered": true,
+      "span_count": 2,
+      "candidate_count": 6,
+      "apply_count": 0,
+      "profile": "general",
+      "ime_approved": 2,
+      "ime_diff": 0,
+      "ime_gate_no_neighbor": 0,
+      "ime_normalizer_drop": 1,
+      "recall_tone_compat": 0,
+      "recall_tone_fallback": 6,
+      "picked_is_raw": true,
+      "max_delta": 0.000004206833982948761,
+      "min_delta": 0.03
+    }
+  ],
+  "toneCompatCases": [
+    {
+      "id": "d017",
+      "scenario": "friend",
+      "recallToneCompatibleCount": 1,
+      "spans": [
+        {
+          "text": "一家",
+          "applied": false,
+          "candidates": [
+            {
+              "word": "意甲",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一起吃饭嘛 我知道意甲川菜 不错大概起点到"
+            },
+            {
+              "word": "溢价",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一起吃饭嘛 我知道溢价川菜 不错大概起点到"
+            },
+            {
+              "word": "医家",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一起吃饭嘛 我知道医家川菜 不错大概起点到"
+            },
+            {
+              "word": "衣架",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一起吃饭嘛 我知道衣架川菜 不错大概起点到"
+            }
+          ]
+        },
+        {
+          "text": "一起",
+          "applied": false,
+          "candidates": [
+            {
+              "word": "义气",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上义气吃饭嘛 我知道一家川菜 不错大概起点到"
+            },
+            {
+              "word": "一齐",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一齐吃饭嘛 我知道一家川菜 不错大概起点到"
+            },
+            {
+              "word": "仪器",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上仪器吃饭嘛 我知道一家川菜 不错大概起点到"
+            },
+            {
+              "word": "一期",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一期吃饭嘛 我知道一家川菜 不错大概起点到"
+            }
+          ]
+        }
+      ],
+      "sentenceRerank": {
+        "spanCount": 2,
+        "perSpanLimit": 4,
+        "combinationCount": 16,
+        "kenlmQueryCount": 17,
+        "pickedIsRaw": true,
+        "maxDelta": -0.0015014999721840497,
+        "minDeltaToReplace": 0.03,
+        "topCandidates": [
+          {
+            "text": "晚上一期吃饭嘛 我知道医家川菜 不错大概起点到",
+            "kenlmDelta": -0.0016017837040926226,
+            "replacementCount": 2
+          },
+          {
+            "text": "晚上一齐吃饭嘛 我知道溢价川菜 不错大概起点到",
+            "kenlmDelta": -0.0017903292790245275,
+            "replacementCount": 2
+          },
+          {
+            "text": "晚上一齐吃饭嘛 我知道医家川菜 不错大概起点到",
+            "kenlmDelta": -0.0018736732321626675,
+            "replacementCount": 2
+          },
+          {
+            "text": "晚上一齐吃饭嘛 我知道意甲川菜 不错大概起点到",
+            "kenlmDelta": -0.001989772646099473,
+            "replacementCount": 2
+          },
+          {
+            "text": "晚上一齐吃饭嘛 我知道衣架川菜 不错大概起点到",
+            "kenlmDelta": -0.002052946885203711,
+            "replacementCount": 2
+          }
+        ],
+        "kenlmTiming": {
+          "batchMs": 10642,
+          "queryCount": 17,
+          "avgMs": 626,
+          "p50Ms": 628,
+          "p95Ms": 659,
+          "maxMs": 659
+        }
+      },
+      "replacements": []
+    },
+    {
+      "id": "d028",
+      "scenario": "classroom",
+      "recallToneCompatibleCount": 1,
+      "spans": [
+        {
+          "text": "解题",
+          "applied": false,
+          "candidates": [
+            {
+              "word": "接替",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "老师这道题的接替不,周能不能再讲一遍? 我没听过"
+            },
+            {
+              "word": "阶梯",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "老师这道题的阶梯不,周能不能再讲一遍? 我没听过"
+            },
+            {
+              "word": "解体",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "老师这道题的解体不,周能不能再讲一遍? 我没听过"
+            },
+            {
+              "word": "结体",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "老师这道题的结体不,周能不能再讲一遍? 我没听过"
+            }
+          ]
+        }
+      ],
+      "sentenceRerank": {
+        "spanCount": 1,
+        "perSpanLimit": 8,
+        "combinationCount": 4,
+        "kenlmQueryCount": 5,
+        "pickedIsRaw": true,
+        "maxDelta": -0.0005991360443145053,
+        "minDeltaToReplace": 0.03,
+        "topCandidates": [
+          {
+            "text": "老师这道题的接替不,周能不能再讲一遍? 我没听过",
+            "kenlmDelta": -0.0005991360443145053,
+            "replacementCount": 1
+          },
+          {
+            "text": "老师这道题的解体不,周能不能再讲一遍? 我没听过",
+            "kenlmDelta": -0.0008027081323455504,
+            "replacementCount": 1
+          },
+          {
+            "text": "老师这道题的阶梯不,周能不能再讲一遍? 我没听过",
+            "kenlmDelta": -0.0011487089188706033,
+            "replacementCount": 1
+          },
+          {
+            "text": "老师这道题的结体不,周能不能再讲一遍? 我没听过",
+            "kenlmDelta": -0.001615404046589834,
+            "replacementCount": 1
+          }
+        ],
+        "kenlmTiming": {
+          "batchMs": 3058,
+          "queryCount": 5,
+          "avgMs": 611.6,
+          "p50Ms": 615,
+          "p95Ms": 624,
+          "maxMs": 624
+        }
+      },
+      "replacements": []
+    },
+    {
+      "id": "d036",
+      "scenario": "bank",
+      "recallToneCompatibleCount": 1,
+      "spans": [
+        {
+          "text": "立财",
+          "applied": false,
+          "candidates": [
+            {
+              "word": "理睬",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "请问理睬产品的风险等急在哪里查看"
+            },
+            {
+              "word": "理财",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "请问理财产品的风险等急在哪里查看"
+            }
+          ]
+        }
+      ],
+      "sentenceRerank": {
+        "spanCount": 1,
+        "perSpanLimit": 8,
+        "combinationCount": 2,
+        "kenlmQueryCount": 3,
+        "pickedIsRaw": true,
+        "maxDelta": 0.006865428066988425,
+        "minDeltaToReplace": 0.03,
+        "topCandidates": [
+          {
+            "text": "请问理财产品的风险等急在哪里查看",
+            "kenlmDelta": 0.006865428066988425,
+            "replacementCount": 1
+          },
+          {
+            "text": "请问理睬产品的风险等急在哪里查看",
+            "kenlmDelta": -0.00497069310611804,
+            "replacementCount": 1
+          }
+        ],
+        "kenlmTiming": {
+          "batchMs": 1847,
+          "queryCount": 3,
+          "avgMs": 615.6666666666666,
+          "p50Ms": 617,
+          "p95Ms": 627,
+          "maxMs": 627
+        }
+      },
+      "replacements": []
+    },
+    {
+      "id": "d057",
+      "scenario": "hospital",
+      "recallToneCompatibleCount": 1,
+      "spans": [
+        {
+          "text": "检查",
+          "applied": false,
+          "candidates": [
+            {
+              "word": "检察",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "这个检察报告什么时候能出 我咳嗽需要请假休息吗"
+            },
+            {
+              "word": "监察",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "这个监察报告什么时候能出 我咳嗽需要请假休息吗"
+            }
+          ]
+        },
+        {
+          "text": "请假",
+          "applied": false,
+          "candidates": [
+            {
+              "word": "亲家",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "这个检查报告什么时候能出 我咳嗽需要亲家休息吗"
+            }
+          ]
+        }
+      ],
+      "sentenceRerank": {
+        "spanCount": 2,
+        "perSpanLimit": 4,
+        "combinationCount": 2,
+        "kenlmQueryCount": 3,
+        "pickedIsRaw": true,
+        "maxDelta": -0.002363824087145096,
+        "minDeltaToReplace": 0.03,
+        "topCandidates": [
+          {
+            "text": "这个检察报告什么时候能出 我咳嗽需要亲家休息吗",
+            "kenlmDelta": -0.002363824087145096,
+            "replacementCount": 2
+          },
+          {
+            "text": "这个监察报告什么时候能出 我咳嗽需要亲家休息吗",
+            "kenlmDelta": -0.0025793168138219654,
+            "replacementCount": 2
+          }
+        ],
+        "kenlmTiming": {
+          "batchMs": 1841,
+          "queryCount": 3,
+          "avgMs": 613.6666666666666,
+          "p50Ms": 613,
+          "p95Ms": 617,
+          "maxMs": 617
+        }
+      },
+      "replacements": []
+    },
+    {
+      "id": "d062",
+      "scenario": "friend",
+      "recallToneCompatibleCount": 1,
+      "spans": [
+        {
+          "text": "一家",
+          "applied": false,
+          "candidates": [
+            {
+              "word": "意甲",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一起吃饭吧 我知道意甲川菜 不错大概气点到"
+            },
+            {
+              "word": "溢价",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一起吃饭吧 我知道溢价川菜 不错大概气点到"
+            },
+            {
+              "word": "医家",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一起吃饭吧 我知道医家川菜 不错大概气点到"
+            },
+            {
+              "word": "衣架",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一起吃饭吧 我知道衣架川菜 不错大概气点到"
+            }
+          ]
+        },
+        {
+          "text": "一起",
+          "applied": false,
+          "candidates": [
+            {
+              "word": "义气",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上义气吃饭吧 我知道一家川菜 不错大概气点到"
+            },
+            {
+              "word": "一齐",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一齐吃饭吧 我知道一家川菜 不错大概气点到"
+            },
+            {
+              "word": "仪器",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上仪器吃饭吧 我知道一家川菜 不错大概气点到"
+            },
+            {
+              "word": "一期",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一期吃饭吧 我知道一家川菜 不错大概气点到"
+            }
+          ]
+        }
+      ],
+      "sentenceRerank": {
+        "spanCount": 2,
+        "perSpanLimit": 4,
+        "combinationCount": 16,
+        "kenlmQueryCount": 17,
+        "pickedIsRaw": true,
+        "maxDelta": -0.0015381944762197712,
+        "minDeltaToReplace": 0.03,
+        "topCandidates": [
+          {
+            "text": "晚上一期吃饭吧 我知道医家川菜 不错大概气点到",
+            "kenlmDelta": -0.0016409324155999589,
+            "replacementCount": 2
+          },
+          {
+            "text": "晚上一齐吃饭吧 我知道溢价川菜 不错大概气点到",
+            "kenlmDelta": -0.0018340946985964052,
+            "replacementCount": 2
+          },
+          {
+            "text": "晚上一齐吃饭吧 我知道医家川菜 不错大概气点到",
+            "kenlmDelta": -0.0019194797642872819,
+            "replacementCount": 2
+          },
+          {
+            "text": "晚上一齐吃饭吧 我知道意甲川菜 不错大概气点到",
+            "kenlmDelta": -0.0020384226404998192,
+            "replacementCount": 2
+          },
+          {
+            "text": "晚上一齐吃饭吧 我知道衣架川菜 不错大概气点到",
+            "kenlmDelta": -0.0021031453671263613,
+            "replacementCount": 2
+          }
+        ],
+        "kenlmTiming": {
+          "batchMs": 10484,
+          "queryCount": 17,
+          "avgMs": 616.7058823529412,
+          "p50Ms": 611,
+          "p95Ms": 662,
+          "maxMs": 662
+        }
+      },
+      "replacements": []
+    },
+    {
+      "id": "d064",
+      "scenario": "tech_deploy",
+      "recallToneCompatibleCount": 1,
+      "spans": [
+        {
+          "text": "发一",
+          "applied": false,
+          "candidates": [
+            {
+              "word": "法意",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "今天,我们团队要讨论候选生成相关的候选生成流程和上线计划安排请严法意起评估风险"
+            },
+            {
+              "word": "法医",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "今天,我们团队要讨论候选生成相关的候选生成流程和上线计划安排请严法医起评估风险"
+            }
+          ]
+        }
+      ],
+      "sentenceRerank": {
+        "spanCount": 1,
+        "perSpanLimit": 8,
+        "combinationCount": 2,
+        "kenlmQueryCount": 3,
+        "pickedIsRaw": true,
+        "maxDelta": -0.00006133023473099474,
+        "minDeltaToReplace": 0.03,
+        "topCandidates": [
+          {
+            "text": "今天,我们团队要讨论候选生成相关的候选生成流程和上线计划安排请严法意起评估风险",
+            "kenlmDelta": -0.00006133023473099474,
+            "replacementCount": 1
+          },
+          {
+            "text": "今天,我们团队要讨论候选生成相关的候选生成流程和上线计划安排请严法医起评估风险",
+            "kenlmDelta": -0.00007064260693646424,
+            "replacementCount": 1
+          }
+        ],
+        "kenlmTiming": {
+          "batchMs": 1789,
+          "queryCount": 3,
+          "avgMs": 596.3333333333334,
+          "p50Ms": 594,
+          "p95Ms": 603,
+          "maxMs": 603
+        }
+      },
+      "replacements": []
+    },
+    {
+      "id": "d107",
+      "scenario": "friend",
+      "recallToneCompatibleCount": 1,
+      "spans": [
+        {
+          "text": "一家",
+          "applied": false,
+          "candidates": [
+            {
+              "word": "意甲",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一起吃饭嘛 我知道意甲川菜 不错大概起点到"
+            },
+            {
+              "word": "溢价",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一起吃饭嘛 我知道溢价川菜 不错大概起点到"
+            },
+            {
+              "word": "医家",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一起吃饭嘛 我知道医家川菜 不错大概起点到"
+            },
+            {
+              "word": "衣架",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一起吃饭嘛 我知道衣架川菜 不错大概起点到"
+            }
+          ]
+        },
+        {
+          "text": "一起",
+          "applied": false,
+          "candidates": [
+            {
+              "word": "义气",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上义气吃饭嘛 我知道一家川菜 不错大概起点到"
+            },
+            {
+              "word": "一齐",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一齐吃饭嘛 我知道一家川菜 不错大概起点到"
+            },
+            {
+              "word": "仪器",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上仪器吃饭嘛 我知道一家川菜 不错大概起点到"
+            },
+            {
+              "word": "一期",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一期吃饭嘛 我知道一家川菜 不错大概起点到"
+            }
+          ]
+        }
+      ],
+      "sentenceRerank": {
+        "spanCount": 2,
+        "perSpanLimit": 4,
+        "combinationCount": 16,
+        "kenlmQueryCount": 17,
+        "pickedIsRaw": true,
+        "maxDelta": -0.0015014999721840497,
+        "minDeltaToReplace": 0.03,
+        "topCandidates": [
+          {
+            "text": "晚上一期吃饭嘛 我知道医家川菜 不错大概起点到",
+            "kenlmDelta": -0.0016017837040926226,
+            "replacementCount": 2
+          },
+          {
+            "text": "晚上一齐吃饭嘛 我知道溢价川菜 不错大概起点到",
+            "kenlmDelta": -0.0017903292790245275,
+            "replacementCount": 2
+          },
+          {
+            "text": "晚上一齐吃饭嘛 我知道医家川菜 不错大概起点到",
+            "kenlmDelta": -0.0018736732321626675,
+            "replacementCount": 2
+          },
+          {
+            "text": "晚上一齐吃饭嘛 我知道意甲川菜 不错大概起点到",
+            "kenlmDelta": -0.001989772646099473,
+            "replacementCount": 2
+          },
+          {
+            "text": "晚上一齐吃饭嘛 我知道衣架川菜 不错大概起点到",
+            "kenlmDelta": -0.002052946885203711,
+            "replacementCount": 2
+          }
+        ],
+        "kenlmTiming": {
+          "batchMs": 10484,
+          "queryCount": 17,
+          "avgMs": 616.7058823529412,
+          "p50Ms": 612,
+          "p95Ms": 664,
+          "maxMs": 664
+        }
+      },
+      "replacements": []
+    },
+    {
+      "id": "d126",
+      "scenario": "bank",
+      "recallToneCompatibleCount": 1,
+      "spans": [
+        {
+          "text": "理财",
+          "applied": false,
+          "candidates": [
+            {
+              "word": "理睬",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "请问理睬产品的风险等急在哪里查看"
+            }
+          ]
+        }
+      ],
+      "sentenceRerank": {
+        "spanCount": 1,
+        "perSpanLimit": 8,
+        "combinationCount": 1,
+        "kenlmQueryCount": 2,
+        "pickedIsRaw": true,
+        "maxDelta": -0.011836121173106465,
+        "minDeltaToReplace": 0.03,
+        "topCandidates": [
+          {
+            "text": "请问理睬产品的风险等急在哪里查看",
+            "kenlmDelta": -0.011836121173106465,
+            "replacementCount": 1
+          }
+        ],
+        "kenlmTiming": {
+          "batchMs": 1191,
+          "queryCount": 2,
+          "avgMs": 595.5,
+          "p50Ms": 586,
+          "p95Ms": 605,
+          "maxMs": 605
+        }
+      },
+      "replacements": []
+    },
+    {
+      "id": "d154",
+      "scenario": "tech_deploy",
+      "recallToneCompatibleCount": 1,
+      "spans": [
+        {
+          "text": "发一",
+          "applied": false,
+          "candidates": [
+            {
+              "word": "法意",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "今天,我们团队要讨论候选生成相关的候选生成流程和上限计划安排请研法意起评估风险"
+            },
+            {
+              "word": "法医",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "今天,我们团队要讨论候选生成相关的候选生成流程和上限计划安排请研法医起评估风险"
+            }
+          ]
+        }
+      ],
+      "sentenceRerank": {
+        "spanCount": 1,
+        "perSpanLimit": 8,
+        "combinationCount": 2,
+        "kenlmQueryCount": 3,
+        "pickedIsRaw": true,
+        "maxDelta": -0.00015052995730900084,
+        "minDeltaToReplace": 0.03,
+        "topCandidates": [
+          {
+            "text": "今天,我们团队要讨论候选生成相关的候选生成流程和上限计划安排请研法意起评估风险",
+            "kenlmDelta": -0.00015052995730900084,
+            "replacementCount": 1
+          },
+          {
+            "text": "今天,我们团队要讨论候选生成相关的候选生成流程和上限计划安排请研法医起评估风险",
+            "kenlmDelta": -0.00015888223972126473,
+            "replacementCount": 1
+          }
+        ],
+        "kenlmTiming": {
+          "batchMs": 1828,
+          "queryCount": 3,
+          "avgMs": 609.3333333333334,
+          "p50Ms": 610,
+          "p95Ms": 621,
+          "maxMs": 621
+        }
+      },
+      "replacements": []
+    },
+    {
+      "id": "d171",
+      "scenario": "bank",
+      "recallToneCompatibleCount": 1,
+      "spans": [
+        {
+          "text": "理财",
+          "applied": false,
+          "candidates": [
+            {
+              "word": "理睬",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "请问理睬产品的风险等急在哪里查看"
+            }
+          ]
+        }
+      ],
+      "sentenceRerank": {
+        "spanCount": 1,
+        "perSpanLimit": 8,
+        "combinationCount": 1,
+        "kenlmQueryCount": 2,
+        "pickedIsRaw": true,
+        "maxDelta": -0.011836121173106465,
+        "minDeltaToReplace": 0.03,
+        "topCandidates": [
+          {
+            "text": "请问理睬产品的风险等急在哪里查看",
+            "kenlmDelta": -0.011836121173106465,
+            "replacementCount": 1
+          }
+        ],
+        "kenlmTiming": {
+          "batchMs": 1174,
+          "queryCount": 2,
+          "avgMs": 587,
+          "p50Ms": 577,
+          "p95Ms": 597,
+          "maxMs": 597
+        }
+      },
+      "replacements": []
+    },
+    {
+      "id": "d197",
+      "scenario": "friend",
+      "recallToneCompatibleCount": 1,
+      "spans": [
+        {
+          "text": "一家",
+          "applied": false,
+          "candidates": [
+            {
+              "word": "意甲",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一起吃饭嘛 我知道意甲川菜 不错大概起点到"
+            },
+            {
+              "word": "溢价",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一起吃饭嘛 我知道溢价川菜 不错大概起点到"
+            },
+            {
+              "word": "医家",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一起吃饭嘛 我知道医家川菜 不错大概起点到"
+            },
+            {
+              "word": "衣架",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一起吃饭嘛 我知道衣架川菜 不错大概起点到"
+            }
+          ]
+        },
+        {
+          "text": "一起",
+          "applied": false,
+          "candidates": [
+            {
+              "word": "义气",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上义气吃饭嘛 我知道一家川菜 不错大概起点到"
+            },
+            {
+              "word": "一齐",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一齐吃饭嘛 我知道一家川菜 不错大概起点到"
+            },
+            {
+              "word": "仪器",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上仪器吃饭嘛 我知道一家川菜 不错大概起点到"
+            },
+            {
+              "word": "一期",
+              "selected": false,
+              "kenlmDelta": 0,
+              "vetoed": false,
+              "candidateSentence": "晚上一期吃饭嘛 我知道一家川菜 不错大概起点到"
+            }
+          ]
+        }
+      ],
+      "sentenceRerank": {
+        "spanCount": 2,
+        "perSpanLimit": 4,
+        "combinationCount": 16,
+        "kenlmQueryCount": 17,
+        "pickedIsRaw": true,
+        "maxDelta": -0.0015014999721840497,
+        "minDeltaToReplace": 0.03,
+        "topCandidates": [
+          {
+            "text": "晚上一期吃饭嘛 我知道医家川菜 不错大概起点到",
+            "kenlmDelta": -0.0016017837040926226,
+            "replacementCount": 2
+          },
+          {
+            "text": "晚上一齐吃饭嘛 我知道溢价川菜 不错大概起点到",
+            "kenlmDelta": -0.0017903292790245275,
+            "replacementCount": 2
+          },
+          {
+            "text": "晚上一齐吃饭嘛 我知道医家川菜 不错大概起点到",
+            "kenlmDelta": -0.0018736732321626675,
+            "replacementCount": 2
+          },
+          {
+            "text": "晚上一齐吃饭嘛 我知道意甲川菜 不错大概起点到",
+            "kenlmDelta": -0.001989772646099473,
+            "replacementCount": 2
+          },
+          {
+            "text": "晚上一齐吃饭嘛 我知道衣架川菜 不错大概起点到",
+            "kenlmDelta": -0.002052946885203711,
+            "replacementCount": 2
+          }
+        ],
+        "kenlmTiming": {
+          "batchMs": 10685,
+          "queryCount": 17,
+          "avgMs": 628.5294117647059,
+          "p50Ms": 630,
+          "p95Ms": 652,
+          "maxMs": 652
+        }
+      },
+      "replacements": []
+    }
+  ],
+  "cafeRows": [
+    {
+      "id": "d001",
+      "scenario": "cafe",
+      "rawAsr": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+      "expected": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "fw_triggered": false,
+      "reason": "no_spans",
+      "span_count": 0,
+      "candidate_count": 0,
+      "apply_count": 0,
+      "profile": "general",
+      "ime_skipped": "no_approved_spans",
+      "ime_approved": 0,
+      "ime_diff": 0,
+      "ime_gate_no_neighbor": 0,
+      "ime_normalizer_drop": 2,
+      "recall_tone_compat": 0,
+      "recall_tone_fallback": 0,
+      "min_delta": 0.03
+    },
+    {
+      "id": "d002",
+      "scenario": "cafe",
+      "rawAsr": "麻烦帮我做一杯美食带走大悲就行谢谢",
+      "expected": "麻烦帮我做一杯美式带走，大杯就行，谢谢。",
+      "fw_triggered": false,
+      "reason": "no_spans",
+      "span_count": 0,
+      "candidate_count": 0,
+      "apply_count": 0,
+      "profile": "general",
+      "ime_skipped": "no_approved_spans",
+      "ime_approved": 0,
+      "ime_diff": 15,
+      "ime_gate_no_neighbor": 2,
+      "ime_normalizer_drop": 0,
+      "recall_tone_compat": 0,
+      "recall_tone_fallback": 0,
+      "min_delta": 0.03
+    },
+    {
+      "id": "d003",
+      "scenario": "cafe",
+      "rawAsr": "请问,这款燕麦拿铁可以少病吗?我赶时间小背",
+      "expected": "请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。",
+      "fw_triggered": true,
+      "span_count": 2,
+      "candidate_count": 6,
+      "apply_count": 0,
+      "profile": "general",
+      "ime_approved": 2,
+      "ime_diff": 0,
+      "ime_gate_no_neighbor": 0,
+      "ime_normalizer_drop": 1,
+      "recall_tone_compat": 0,
+      "recall_tone_fallback": 6,
+      "picked_is_raw": true,
+      "max_delta": 0.000004206833982948761,
+      "min_delta": 0.03
+    },
+    {
+      "id": "d046",
+      "scenario": "cafe",
+      "rawAsr": "你好,我想點一杯卡布奇諾中貝珍長糖,順便溫習一下 今天有知识蛋糕吗?",
+      "expected": "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？",
+      "fw_triggered": false,
+      "reason": "no_spans",
+      "span_count": 0,
+      "candidate_count": 0,
+      "apply_count": 0,
+      "profile": "general",
+      "ime_skipped": "no_approved_spans",
+      "ime_approved": 0,
+      "ime_diff": 0,
+      "ime_gate_no_neighbor": 0,
+      "ime_normalizer_drop": 3,
+      "recall_tone_compat": 0,
+      "recall_tone_fallback": 0,
+      "min_delta": 0.03
+    },
+    {
+      "id": "d047",
+      "scenario": "cafe",
+      "rawAsr": "麻烦帮我做一杯红茶带走大背就行谢谢",
+      "expected": "麻烦帮我做一杯红茶带走，大杯就行，谢谢。",
+      "fw_triggered": false,
+      "reason": "no_spans",
+      "span_count": 0,
+      "candidate_count": 0,
+      "apply_count": 0,
+      "profile": "general",
+      "ime_skipped": "no_approved_spans",
+      "ime_approved": 0,
+      "ime_diff": 11,
+      "ime_gate_no_neighbor": 2,
+      "ime_normalizer_drop": 0,
+      "recall_tone_compat": 0,
+      "recall_tone_fallback": 0,
+      "min_delta": 0.03
+    },
+    {
+      "id": "d048",
+      "scenario": "cafe",
+      "rawAsr": "请问,这款热巧克力可以少病吗? 我赶时间小背",
+      "expected": "请问这款热巧克力可以少冰吗？我赶时间，小杯。",
+      "fw_triggered": true,
+      "span_count": 2,
+      "candidate_count": 6,
+      "apply_count": 0,
+      "profile": "general",
+      "ime_approved": 2,
+      "ime_diff": 0,
+      "ime_gate_no_neighbor": 0,
+      "ime_normalizer_drop": 1,
+      "recall_tone_compat": 0,
+      "recall_tone_fallback": 6,
+      "picked_is_raw": true,
+      "max_delta": 0.000006478468092823049,
+      "min_delta": 0.03
+    },
+    {
+      "id": "d091",
+      "scenario": "cafe",
+      "rawAsr": "你好,我想點一杯鹽麥拿鐵中輩無糖 順便問一下 今天有被裹嗎?",
+      "expected": "你好，我想点一杯燕麦拿铁，中杯，无糖。顺便问一下今天有贝果吗？",
+      "fw_triggered": false,
+      "reason": "no_spans",
+      "span_count": 0,
+      "candidate_count": 0,
+      "apply_count": 0,
+      "profile": "general",
+      "ime_skipped": "no_approved_spans",
+      "ime_approved": 0,
+      "ime_diff": 0,
+      "ime_gate_no_neighbor": 1,
+      "ime_normalizer_drop": 0,
+      "recall_tone_compat": 0,
+      "recall_tone_fallback": 0,
+      "min_delta": 0.03
+    },
+    {
+      "id": "d092",
+      "scenario": "cafe",
+      "rawAsr": "麻烦帮我做一杯抹茶拿铁带走大 备就行谢谢",
+      "expected": "麻烦帮我做一杯抹茶拿铁带走，大杯就行，谢谢。",
+      "fw_triggered": false,
+      "reason": "no_spans",
+      "span_count": 0,
+      "candidate_count": 0,
+      "apply_count": 0,
+      "profile": "general",
+      "ime_skipped": "no_approved_spans",
+      "ime_approved": 0,
+      "ime_diff": 0,
+      "ime_gate_no_neighbor": 0,
+      "ime_normalizer_drop": 2,
+      "recall_tone_compat": 0,
+      "recall_tone_fallback": 0,
+      "min_delta": 0.03
+    },
+    {
+      "id": "d093",
+      "scenario": "cafe",
+      "rawAsr": "请问,这款病美是可以少病吗?我赶时间小悲。",
+      "expected": "请问这款冰美式可以少冰吗？我赶时间，小杯。",
+      "fw_triggered": true,
+      "span_count": 2,
+      "candidate_count": 6,
+      "apply_count": 0,
+      "profile": "general",
+      "ime_approved": 2,
+      "ime_diff": 0,
+      "ime_gate_no_neighbor": 0,
+      "ime_normalizer_drop": 1,
+      "recall_tone_compat": 0,
+      "recall_tone_fallback": 6,
+      "picked_is_raw": true,
+      "max_delta": 0.000006078007525780853,
+      "min_delta": 0.03
+    },
+    {
+      "id": "d136",
+      "scenario": "cafe",
+      "rawAsr": "你好,我想點一杯熱巧克力中杯班糖 順便問一下 問一下今天有趣氣嗎?",
+      "expected": "你好，我想点一杯热巧克力，中杯，半糖。顺便问一下今天有曲奇吗？",
+      "fw_triggered": true,
+      "span_count": 1,
+      "candidate_count": 2,
+      "apply_count": 0,
+      "profile": "general",
+      "ime_approved": 1,
+      "ime_diff": 0,
+      "ime_gate_no_neighbor": 0,
+      "ime_normalizer_drop": 2,
+      "recall_tone_compat": 0,
+      "recall_tone_fallback": 2,
+      "picked_is_raw": true,
+      "max_delta": 0.000020127266289508448,
+      "min_delta": 0.03
+    },
+    {
+      "id": "d137",
+      "scenario": "cafe",
+      "rawAsr": "麻烦帮我做一杯热拿铁带走搭杯就行谢谢",
+      "expected": "麻烦帮我做一杯热拿铁带走，大杯就行，谢谢。",
+      "fw_triggered": false,
+      "reason": "no_spans",
+      "span_count": 0,
+      "candidate_count": 0,
+      "apply_count": 0,
+      "profile": "general",
+      "ime_skipped": "no_approved_spans",
+      "ime_approved": 0,
+      "ime_diff": 15,
+      "ime_gate_no_neighbor": 1,
+      "ime_normalizer_drop": 1,
+      "recall_tone_compat": 0,
+      "recall_tone_fallback": 0,
+      "min_delta": 0.03
+    },
+    {
+      "id": "d138",
+      "scenario": "cafe",
+      "rawAsr": "请问,这款美式可以少病吗?我赶时间小杯",
+      "expected": "请问这款美式可以少冰吗？我赶时间，小杯。",
+      "fw_triggered": true,
+      "span_count": 2,
+      "candidate_count": 6,
+      "apply_count": 0,
+      "profile": "general",
+      "ime_approved": 2,
+      "ime_diff": 0,
+      "ime_gate_no_neighbor": 0,
+      "ime_normalizer_drop": 1,
+      "recall_tone_compat": 0,
+      "recall_tone_fallback": 6,
+      "picked_is_raw": true,
+      "max_delta": 0.00001090858882004872,
+      "min_delta": 0.03
+    },
+    {
+      "id": "d181",
+      "scenario": "cafe",
+      "rawAsr": "你好,我想點一杯冰美式中貝少糖 順便溫習一下 以下今天有蓝没马分吗?",
+      "expected": "你好，我想点一杯冰美式，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "fw_triggered": false,
+      "reason": "no_spans",
+      "span_count": 0,
+      "candidate_count": 0,
+      "apply_count": 0,
+      "profile": "general",
+      "ime_skipped": "no_approved_spans",
+      "ime_approved": 0,
+      "ime_diff": 0,
+      "ime_gate_no_neighbor": 0,
+      "ime_normalizer_drop": 2,
+      "recall_tone_compat": 0,
+      "recall_tone_fallback": 0,
+      "min_delta": 0.03
+    },
+    {
+      "id": "d182",
+      "scenario": "cafe",
+      "rawAsr": "麻烦帮我做一杯卡布奇诺带走大背就行谢谢",
+      "expected": "麻烦帮我做一杯卡布奇诺带走，大杯就行，谢谢。",
+      "fw_triggered": false,
+      "reason": "no_spans",
+      "span_count": 0,
+      "candidate_count": 0,
+      "apply_count": 0,
+      "profile": "general",
+      "ime_skipped": "no_approved_spans",
+      "ime_approved": 0,
+      "ime_diff": 13,
+      "ime_gate_no_neighbor": 1,
+      "ime_normalizer_drop": 1,
+      "recall_tone_compat": 0,
+      "recall_tone_fallback": 0,
+      "min_delta": 0.03
+    },
+    {
+      "id": "d183",
+      "scenario": "cafe",
+      "rawAsr": "请问,这款红茶可以少病吗?我赶时间小呗",
+      "expected": "请问这款红茶可以少冰吗？我赶时间，小杯。",
+      "fw_triggered": false,
+      "reason": "no_spans",
+      "span_count": 0,
+      "candidate_count": 0,
+      "apply_count": 0,
+      "profile": "general",
+      "ime_skipped": "no_approved_spans",
+      "ime_approved": 0,
+      "ime_diff": 0,
+      "ime_gate_no_neighbor": 0,
+      "ime_normalizer_drop": 1,
+      "recall_tone_compat": 0,
+      "recall_tone_fallback": 0,
+      "min_delta": 0.03
+    }
+  ]
+}

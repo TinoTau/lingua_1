@@ -1,0 +1,2684 @@
+{
+  "experimentOnly": true,
+  "timestamp": "2026-06-04T16:20:57.953Z",
+  "fixtureCount": 4,
+  "note": "4E approvedSpan sample replay; not full 89-case batch",
+  "rounds": [
+    {
+      "tag": "round1_cap16",
+      "maxSentenceCandidates": 16,
+      "groups": {
+        "A_baseline": {
+          "summary": {
+            "experimentOnly": true,
+            "group": "A_baseline",
+            "label": "Group A baseline",
+            "limits": {
+              "label": "Group A baseline",
+              "one": 8,
+              "two": 4,
+              "many": 2
+            },
+            "maxSentenceCandidates": 16,
+            "caseCount": 4,
+            "approvedSpanCount": 7,
+            "recallCandidateCount": 16,
+            "avgCandidatesPerSpan": 2.2857142857142856,
+            "sentenceCandidatePreCapTotal": 18,
+            "sentenceCandidatePostCapTotal": 18,
+            "preCapGtPostCapCases": 0,
+            "kenlmQueryCount": 22,
+            "maxDelta": {
+              "min": -0.0012945966077107687,
+              "p50": -0.0005454870717701652,
+              "p95": 0.0016426005608112743,
+              "max": 0.0016426005608112743,
+              "ge003": 0
+            },
+            "pickedIsRawCount": 4,
+            "kenlmApprovedCount": 0,
+            "applyCount": 0,
+            "avgRawCer": 0.27789449112978526,
+            "avgFinalCer": 0.27789449112978526,
+            "cerImprovedCount": 0,
+            "cerWorsenedCount": 0,
+            "avgRecallMs": 5.25,
+            "avgKenlmMs": 3926,
+            "refExactInTop16Cases": 0,
+            "localBetterTop16Cases": 0
+          },
+          "rankStats": {
+            "spansAnalyzed": 7,
+            "spansWithRefCorrectInRecall": 1,
+            "inTop1": 1,
+            "inTop2": 1,
+            "inTop4": 1,
+            "inTop8": 1,
+            "notFound": 6
+          },
+          "cases": [
+            {
+              "id": "d006",
+              "approvedSpanCount": 1,
+              "recallCandidateCount": 1,
+              "perSpanLimit": 8,
+              "preCap": 1,
+              "postCap": 1,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 2,
+              "maxDelta": -0.00004200024974782555,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.21428571428571427,
+              "finalCer": 0.21428571428571427,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 9,
+              "kenlmMs": 2061,
+              "topCandidates": [
+                {
+                  "text": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙平身一下",
+                  "kenlmDelta": -0.00004200024974782555,
+                  "replacementCount": 1
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙平身一下",
+                  "score": 1.0605000000000002,
+                  "cer": 0.2857142857142857
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "评审",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "平身",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            },
+            {
+              "id": "d074",
+              "approvedSpanCount": 3,
+              "recallCandidateCount": 5,
+              "perSpanLimit": 2,
+              "preCap": 4,
+              "postCap": 4,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 5,
+              "maxDelta": 0.0016426005608112743,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.2222222222222222,
+              "finalCer": 0.2222222222222222,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 6,
+              "kenlmMs": 3984,
+              "topCandidates": [
+                {
+                  "text": "昨夜是下周一下午角马?可以电子板提叫吗?",
+                  "kenlmDelta": 0.0016426005608112743,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周一下午叫骂?可以电子板提叫吗?",
+                  "kenlmDelta": 0.0013632180459631008,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周易下午角马?可以电子板提叫吗?",
+                  "kenlmDelta": -0.0006145727520511447,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周易下午叫骂?可以电子板提叫吗?",
+                  "kenlmDelta": -0.0007907946915016316,
+                  "replacementCount": 3
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "昨夜是下周一下午叫骂?可以电子板提叫吗?",
+                  "score": 4.4862,
+                  "cer": 0.3333333333333333
+                },
+                {
+                  "text": "昨夜是下周易下午叫骂?可以电子板提叫吗?",
+                  "score": 4.456099999999999,
+                  "cer": 0.3888888888888889
+                },
+                {
+                  "text": "昨夜是下周一下午角马?可以电子板提叫吗?",
+                  "score": 3.8834999999999997,
+                  "cer": 0.3333333333333333
+                },
+                {
+                  "text": "昨夜是下周易下午角马?可以电子板提叫吗?",
+                  "score": 3.8533999999999997,
+                  "cer": 0.3888888888888889
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "作业",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "昨夜",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                },
+                {
+                  "spanText": "周以",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "周一",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "周易",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": 1,
+                  "refCorrectWords": [
+                    "周一"
+                  ]
+                },
+                {
+                  "spanText": "叫吗",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "叫骂",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "角马",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            },
+            {
+              "id": "d039",
+              "approvedSpanCount": 1,
+              "recallCandidateCount": 4,
+              "perSpanLimit": 8,
+              "preCap": 4,
+              "postCap": 4,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 5,
+              "maxDelta": -0.0005454870717701652,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.29411764705882354,
+              "finalCer": 0.29411764705882354,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 2,
+              "kenlmMs": 3083,
+              "topCandidates": [
+                {
+                  "text": "可以打爆麻 顺便借以下张能扫马支付吗?",
+                  "kenlmDelta": -0.0005454870717701652,
+                  "replacementCount": 1
+                },
+                {
+                  "text": "可以打爆麻 顺便介意下张能扫马支付吗?",
+                  "kenlmDelta": -0.001385414648125585,
+                  "replacementCount": 1
+                },
+                {
+                  "text": "可以打爆麻 顺便结义下张能扫马支付吗?",
+                  "kenlmDelta": -0.001975070599588967,
+                  "replacementCount": 1
+                },
+                {
+                  "text": "可以打爆麻 顺便孑遗下张能扫马支付吗?",
+                  "kenlmDelta": -0.0031419368987135807,
+                  "replacementCount": 1
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "可以打爆麻 顺便借以下张能扫马支付吗?",
+                  "score": 1.1995,
+                  "cer": 0.35294117647058826
+                },
+                {
+                  "text": "可以打爆麻 顺便介意下张能扫马支付吗?",
+                  "score": 1.1429,
+                  "cer": 0.35294117647058826
+                },
+                {
+                  "text": "可以打爆麻 顺便结义下张能扫马支付吗?",
+                  "score": 1.1245000000000003,
+                  "cer": 0.29411764705882354
+                },
+                {
+                  "text": "可以打爆麻 顺便孑遗下张能扫马支付吗?",
+                  "score": 1.0787,
+                  "cer": 0.35294117647058826
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "解一",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "借以",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "介意",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "结义",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 4,
+                      "word": "孑遗",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            },
+            {
+              "id": "d014",
+              "approvedSpanCount": 2,
+              "recallCandidateCount": 6,
+              "perSpanLimit": 4,
+              "preCap": 9,
+              "postCap": 9,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 10,
+              "maxDelta": -0.0012945966077107687,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.38095238095238093,
+              "finalCer": 0.38095238095238093,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 4,
+              "kenlmMs": 6576,
+              "topCandidates": [
+                {
+                  "text": "请问,这双写诗否有相使得? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0012945966077107687,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双写实否有相使得? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0013021779191807106,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双写诗否有相实德? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0014454352315263642,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双写实否有相实德? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0014518913843564168,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双斜视否有相使得? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0014676076187542593,
+                  "replacementCount": 2
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "请问,这双写实否有相使得? 不合是三天内可以推换吧",
+                  "score": 2.4387,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双写诗否有相使得? 不合是三天内可以推换吧",
+                  "score": 2.4259,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双斜视否有相使得? 不合是三天内可以推换吧",
+                  "score": 2.3715,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双写实否有相实德? 不合是三天内可以推换吧",
+                  "score": 2.2981999999999996,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双写诗否有相实德? 不合是三天内可以推换吧",
+                  "score": 2.2853999999999997,
+                  "cer": 0.42857142857142855
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "鞋是",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "写实",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "写诗",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "斜视",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                },
+                {
+                  "spanText": "似的",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "使得",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "实德",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "始得",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            }
+          ]
+        },
+        "B_medium": {
+          "summary": {
+            "experimentOnly": true,
+            "group": "B_medium",
+            "label": "Group B medium",
+            "limits": {
+              "label": "Group B medium",
+              "one": 12,
+              "two": 6,
+              "many": 3
+            },
+            "maxSentenceCandidates": 16,
+            "caseCount": 4,
+            "approvedSpanCount": 7,
+            "recallCandidateCount": 17,
+            "avgCandidatesPerSpan": 2.4285714285714284,
+            "sentenceCandidatePreCapTotal": 20,
+            "sentenceCandidatePostCapTotal": 20,
+            "preCapGtPostCapCases": 0,
+            "kenlmQueryCount": 24,
+            "maxDelta": {
+              "min": -0.0012945966077107687,
+              "p50": -0.0005454870717701652,
+              "p95": 0.0016426005608112743,
+              "max": 0.0016426005608112743,
+              "ge003": 0
+            },
+            "pickedIsRawCount": 4,
+            "kenlmApprovedCount": 0,
+            "applyCount": 0,
+            "avgRawCer": 0.27789449112978526,
+            "avgFinalCer": 0.27789449112978526,
+            "cerImprovedCount": 0,
+            "cerWorsenedCount": 0,
+            "avgRecallMs": 1.75,
+            "avgKenlmMs": 3675.25,
+            "refExactInTop16Cases": 0,
+            "localBetterTop16Cases": 0
+          },
+          "rankStats": {
+            "spansAnalyzed": 7,
+            "spansWithRefCorrectInRecall": 1,
+            "inTop1": 1,
+            "inTop2": 1,
+            "inTop4": 1,
+            "inTop8": 1,
+            "notFound": 6
+          },
+          "cases": [
+            {
+              "id": "d006",
+              "approvedSpanCount": 1,
+              "recallCandidateCount": 1,
+              "perSpanLimit": 12,
+              "preCap": 1,
+              "postCap": 1,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 2,
+              "maxDelta": -0.00004200024974782555,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.21428571428571427,
+              "finalCer": 0.21428571428571427,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 1,
+              "kenlmMs": 1202,
+              "topCandidates": [
+                {
+                  "text": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙平身一下",
+                  "kenlmDelta": -0.00004200024974782555,
+                  "replacementCount": 1
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙平身一下",
+                  "score": 1.0605000000000002,
+                  "cer": 0.2857142857142857
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "评审",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "平身",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            },
+            {
+              "id": "d074",
+              "approvedSpanCount": 3,
+              "recallCandidateCount": 6,
+              "perSpanLimit": 3,
+              "preCap": 6,
+              "postCap": 6,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 7,
+              "maxDelta": 0.0016426005608112743,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.2222222222222222,
+              "finalCer": 0.2222222222222222,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 2,
+              "kenlmMs": 4263,
+              "topCandidates": [
+                {
+                  "text": "昨夜是下周一下午角马?可以电子板提叫吗?",
+                  "kenlmDelta": 0.0016426005608112743,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周一下午叫骂?可以电子板提叫吗?",
+                  "kenlmDelta": 0.0013632180459631008,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周一下午蕉麻?可以电子板提叫吗?",
+                  "kenlmDelta": 0.00023007610264526128,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周易下午角马?可以电子板提叫吗?",
+                  "kenlmDelta": -0.0006145727520511447,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周易下午叫骂?可以电子板提叫吗?",
+                  "kenlmDelta": -0.0007907946915016316,
+                  "replacementCount": 3
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "昨夜是下周一下午叫骂?可以电子板提叫吗?",
+                  "score": 4.4862,
+                  "cer": 0.3333333333333333
+                },
+                {
+                  "text": "昨夜是下周易下午叫骂?可以电子板提叫吗?",
+                  "score": 4.456099999999999,
+                  "cer": 0.3888888888888889
+                },
+                {
+                  "text": "昨夜是下周一下午角马?可以电子板提叫吗?",
+                  "score": 3.8834999999999997,
+                  "cer": 0.3333333333333333
+                },
+                {
+                  "text": "昨夜是下周一下午蕉麻?可以电子板提叫吗?",
+                  "score": 3.8748,
+                  "cer": 0.3333333333333333
+                },
+                {
+                  "text": "昨夜是下周易下午角马?可以电子板提叫吗?",
+                  "score": 3.8533999999999997,
+                  "cer": 0.3888888888888889
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "作业",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "昨夜",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                },
+                {
+                  "spanText": "周以",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "周一",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "周易",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": 1,
+                  "refCorrectWords": [
+                    "周一"
+                  ]
+                },
+                {
+                  "spanText": "叫吗",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "叫骂",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "角马",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "蕉麻",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            },
+            {
+              "id": "d039",
+              "approvedSpanCount": 1,
+              "recallCandidateCount": 4,
+              "perSpanLimit": 12,
+              "preCap": 4,
+              "postCap": 4,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 5,
+              "maxDelta": -0.0005454870717701652,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.29411764705882354,
+              "finalCer": 0.29411764705882354,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 2,
+              "kenlmMs": 3098,
+              "topCandidates": [
+                {
+                  "text": "可以打爆麻 顺便借以下张能扫马支付吗?",
+                  "kenlmDelta": -0.0005454870717701652,
+                  "replacementCount": 1
+                },
+                {
+                  "text": "可以打爆麻 顺便介意下张能扫马支付吗?",
+                  "kenlmDelta": -0.001385414648125585,
+                  "replacementCount": 1
+                },
+                {
+                  "text": "可以打爆麻 顺便结义下张能扫马支付吗?",
+                  "kenlmDelta": -0.001975070599588967,
+                  "replacementCount": 1
+                },
+                {
+                  "text": "可以打爆麻 顺便孑遗下张能扫马支付吗?",
+                  "kenlmDelta": -0.0031419368987135807,
+                  "replacementCount": 1
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "可以打爆麻 顺便借以下张能扫马支付吗?",
+                  "score": 1.1995,
+                  "cer": 0.35294117647058826
+                },
+                {
+                  "text": "可以打爆麻 顺便介意下张能扫马支付吗?",
+                  "score": 1.1429,
+                  "cer": 0.35294117647058826
+                },
+                {
+                  "text": "可以打爆麻 顺便结义下张能扫马支付吗?",
+                  "score": 1.1245000000000003,
+                  "cer": 0.29411764705882354
+                },
+                {
+                  "text": "可以打爆麻 顺便孑遗下张能扫马支付吗?",
+                  "score": 1.0787,
+                  "cer": 0.35294117647058826
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "解一",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "借以",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "介意",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "结义",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 4,
+                      "word": "孑遗",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            },
+            {
+              "id": "d014",
+              "approvedSpanCount": 2,
+              "recallCandidateCount": 6,
+              "perSpanLimit": 6,
+              "preCap": 9,
+              "postCap": 9,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 10,
+              "maxDelta": -0.0012945966077107687,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.38095238095238093,
+              "finalCer": 0.38095238095238093,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 2,
+              "kenlmMs": 6138,
+              "topCandidates": [
+                {
+                  "text": "请问,这双写诗否有相使得? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0012945966077107687,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双写实否有相使得? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0013021779191807106,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双写诗否有相实德? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0014454352315263642,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双写实否有相实德? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0014518913843564168,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双斜视否有相使得? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0014676076187542593,
+                  "replacementCount": 2
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "请问,这双写实否有相使得? 不合是三天内可以推换吧",
+                  "score": 2.4387,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双写诗否有相使得? 不合是三天内可以推换吧",
+                  "score": 2.4259,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双斜视否有相使得? 不合是三天内可以推换吧",
+                  "score": 2.3715,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双写实否有相实德? 不合是三天内可以推换吧",
+                  "score": 2.2981999999999996,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双写诗否有相实德? 不合是三天内可以推换吧",
+                  "score": 2.2853999999999997,
+                  "cer": 0.42857142857142855
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "鞋是",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "写实",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "写诗",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "斜视",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                },
+                {
+                  "spanText": "似的",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "使得",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "实德",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "始得",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            }
+          ]
+        },
+        "C_wide": {
+          "summary": {
+            "experimentOnly": true,
+            "group": "C_wide",
+            "label": "Group C wide",
+            "limits": {
+              "label": "Group C wide",
+              "one": 16,
+              "two": 8,
+              "many": 4
+            },
+            "maxSentenceCandidates": 16,
+            "caseCount": 4,
+            "approvedSpanCount": 7,
+            "recallCandidateCount": 17,
+            "avgCandidatesPerSpan": 2.4285714285714284,
+            "sentenceCandidatePreCapTotal": 20,
+            "sentenceCandidatePostCapTotal": 20,
+            "preCapGtPostCapCases": 0,
+            "kenlmQueryCount": 24,
+            "maxDelta": {
+              "min": -0.0012945966077107687,
+              "p50": -0.0005454870717701652,
+              "p95": 0.0016426005608112743,
+              "max": 0.0016426005608112743,
+              "ge003": 0
+            },
+            "pickedIsRawCount": 4,
+            "kenlmApprovedCount": 0,
+            "applyCount": 0,
+            "avgRawCer": 0.27789449112978526,
+            "avgFinalCer": 0.27789449112978526,
+            "cerImprovedCount": 0,
+            "cerWorsenedCount": 0,
+            "avgRecallMs": 1.5,
+            "avgKenlmMs": 3616.25,
+            "refExactInTop16Cases": 0,
+            "localBetterTop16Cases": 0
+          },
+          "rankStats": {
+            "spansAnalyzed": 7,
+            "spansWithRefCorrectInRecall": 1,
+            "inTop1": 1,
+            "inTop2": 1,
+            "inTop4": 1,
+            "inTop8": 1,
+            "notFound": 6
+          },
+          "cases": [
+            {
+              "id": "d006",
+              "approvedSpanCount": 1,
+              "recallCandidateCount": 1,
+              "perSpanLimit": 16,
+              "preCap": 1,
+              "postCap": 1,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 2,
+              "maxDelta": -0.00004200024974782555,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.21428571428571427,
+              "finalCer": 0.21428571428571427,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 1,
+              "kenlmMs": 1303,
+              "topCandidates": [
+                {
+                  "text": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙平身一下",
+                  "kenlmDelta": -0.00004200024974782555,
+                  "replacementCount": 1
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙平身一下",
+                  "score": 1.0605000000000002,
+                  "cer": 0.2857142857142857
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "评审",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "平身",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            },
+            {
+              "id": "d074",
+              "approvedSpanCount": 3,
+              "recallCandidateCount": 6,
+              "perSpanLimit": 4,
+              "preCap": 6,
+              "postCap": 6,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 7,
+              "maxDelta": 0.0016426005608112743,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.2222222222222222,
+              "finalCer": 0.2222222222222222,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 3,
+              "kenlmMs": 4165,
+              "topCandidates": [
+                {
+                  "text": "昨夜是下周一下午角马?可以电子板提叫吗?",
+                  "kenlmDelta": 0.0016426005608112743,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周一下午叫骂?可以电子板提叫吗?",
+                  "kenlmDelta": 0.0013632180459631008,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周一下午蕉麻?可以电子板提叫吗?",
+                  "kenlmDelta": 0.00023007610264526128,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周易下午角马?可以电子板提叫吗?",
+                  "kenlmDelta": -0.0006145727520511447,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周易下午叫骂?可以电子板提叫吗?",
+                  "kenlmDelta": -0.0007907946915016316,
+                  "replacementCount": 3
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "昨夜是下周一下午叫骂?可以电子板提叫吗?",
+                  "score": 4.4862,
+                  "cer": 0.3333333333333333
+                },
+                {
+                  "text": "昨夜是下周易下午叫骂?可以电子板提叫吗?",
+                  "score": 4.456099999999999,
+                  "cer": 0.3888888888888889
+                },
+                {
+                  "text": "昨夜是下周一下午角马?可以电子板提叫吗?",
+                  "score": 3.8834999999999997,
+                  "cer": 0.3333333333333333
+                },
+                {
+                  "text": "昨夜是下周一下午蕉麻?可以电子板提叫吗?",
+                  "score": 3.8748,
+                  "cer": 0.3333333333333333
+                },
+                {
+                  "text": "昨夜是下周易下午角马?可以电子板提叫吗?",
+                  "score": 3.8533999999999997,
+                  "cer": 0.3888888888888889
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "作业",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "昨夜",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                },
+                {
+                  "spanText": "周以",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "周一",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "周易",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": 1,
+                  "refCorrectWords": [
+                    "周一"
+                  ]
+                },
+                {
+                  "spanText": "叫吗",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "叫骂",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "角马",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "蕉麻",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            },
+            {
+              "id": "d039",
+              "approvedSpanCount": 1,
+              "recallCandidateCount": 4,
+              "perSpanLimit": 16,
+              "preCap": 4,
+              "postCap": 4,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 5,
+              "maxDelta": -0.0005454870717701652,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.29411764705882354,
+              "finalCer": 0.29411764705882354,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 1,
+              "kenlmMs": 2965,
+              "topCandidates": [
+                {
+                  "text": "可以打爆麻 顺便借以下张能扫马支付吗?",
+                  "kenlmDelta": -0.0005454870717701652,
+                  "replacementCount": 1
+                },
+                {
+                  "text": "可以打爆麻 顺便介意下张能扫马支付吗?",
+                  "kenlmDelta": -0.001385414648125585,
+                  "replacementCount": 1
+                },
+                {
+                  "text": "可以打爆麻 顺便结义下张能扫马支付吗?",
+                  "kenlmDelta": -0.001975070599588967,
+                  "replacementCount": 1
+                },
+                {
+                  "text": "可以打爆麻 顺便孑遗下张能扫马支付吗?",
+                  "kenlmDelta": -0.0031419368987135807,
+                  "replacementCount": 1
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "可以打爆麻 顺便借以下张能扫马支付吗?",
+                  "score": 1.1995,
+                  "cer": 0.35294117647058826
+                },
+                {
+                  "text": "可以打爆麻 顺便介意下张能扫马支付吗?",
+                  "score": 1.1429,
+                  "cer": 0.35294117647058826
+                },
+                {
+                  "text": "可以打爆麻 顺便结义下张能扫马支付吗?",
+                  "score": 1.1245000000000003,
+                  "cer": 0.29411764705882354
+                },
+                {
+                  "text": "可以打爆麻 顺便孑遗下张能扫马支付吗?",
+                  "score": 1.0787,
+                  "cer": 0.35294117647058826
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "解一",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "借以",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "介意",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "结义",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 4,
+                      "word": "孑遗",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            },
+            {
+              "id": "d014",
+              "approvedSpanCount": 2,
+              "recallCandidateCount": 6,
+              "perSpanLimit": 8,
+              "preCap": 9,
+              "postCap": 9,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 10,
+              "maxDelta": -0.0012945966077107687,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.38095238095238093,
+              "finalCer": 0.38095238095238093,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 1,
+              "kenlmMs": 6032,
+              "topCandidates": [
+                {
+                  "text": "请问,这双写诗否有相使得? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0012945966077107687,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双写实否有相使得? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0013021779191807106,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双写诗否有相实德? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0014454352315263642,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双写实否有相实德? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0014518913843564168,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双斜视否有相使得? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0014676076187542593,
+                  "replacementCount": 2
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "请问,这双写实否有相使得? 不合是三天内可以推换吧",
+                  "score": 2.4387,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双写诗否有相使得? 不合是三天内可以推换吧",
+                  "score": 2.4259,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双斜视否有相使得? 不合是三天内可以推换吧",
+                  "score": 2.3715,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双写实否有相实德? 不合是三天内可以推换吧",
+                  "score": 2.2981999999999996,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双写诗否有相实德? 不合是三天内可以推换吧",
+                  "score": 2.2853999999999997,
+                  "cer": 0.42857142857142855
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "鞋是",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "写实",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "写诗",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "斜视",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                },
+                {
+                  "spanText": "似的",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "使得",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "实德",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "始得",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            }
+          ]
+        },
+        "D_very_wide": {
+          "summary": {
+            "experimentOnly": true,
+            "group": "D_very_wide",
+            "label": "Group D very wide",
+            "limits": {
+              "label": "Group D very wide",
+              "one": 24,
+              "two": 12,
+              "many": 6
+            },
+            "maxSentenceCandidates": 16,
+            "caseCount": 4,
+            "approvedSpanCount": 7,
+            "recallCandidateCount": 17,
+            "avgCandidatesPerSpan": 2.4285714285714284,
+            "sentenceCandidatePreCapTotal": 20,
+            "sentenceCandidatePostCapTotal": 20,
+            "preCapGtPostCapCases": 0,
+            "kenlmQueryCount": 24,
+            "maxDelta": {
+              "min": -0.0012945966077107687,
+              "p50": -0.0005454870717701652,
+              "p95": 0.0016426005608112743,
+              "max": 0.0016426005608112743,
+              "ge003": 0
+            },
+            "pickedIsRawCount": 4,
+            "kenlmApprovedCount": 0,
+            "applyCount": 0,
+            "avgRawCer": 0.27789449112978526,
+            "avgFinalCer": 0.27789449112978526,
+            "cerImprovedCount": 0,
+            "cerWorsenedCount": 0,
+            "avgRecallMs": 1.25,
+            "avgKenlmMs": 3816,
+            "refExactInTop16Cases": 0,
+            "localBetterTop16Cases": 0
+          },
+          "rankStats": {
+            "spansAnalyzed": 7,
+            "spansWithRefCorrectInRecall": 1,
+            "inTop1": 1,
+            "inTop2": 1,
+            "inTop4": 1,
+            "inTop8": 1,
+            "notFound": 6
+          },
+          "cases": [
+            {
+              "id": "d006",
+              "approvedSpanCount": 1,
+              "recallCandidateCount": 1,
+              "perSpanLimit": 24,
+              "preCap": 1,
+              "postCap": 1,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 2,
+              "maxDelta": -0.00004200024974782555,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.21428571428571427,
+              "finalCer": 0.21428571428571427,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 0,
+              "kenlmMs": 1200,
+              "topCandidates": [
+                {
+                  "text": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙平身一下",
+                  "kenlmDelta": -0.00004200024974782555,
+                  "replacementCount": 1
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙平身一下",
+                  "score": 1.0605000000000002,
+                  "cer": 0.2857142857142857
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "评审",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "平身",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            },
+            {
+              "id": "d074",
+              "approvedSpanCount": 3,
+              "recallCandidateCount": 6,
+              "perSpanLimit": 6,
+              "preCap": 6,
+              "postCap": 6,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 7,
+              "maxDelta": 0.0016426005608112743,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.2222222222222222,
+              "finalCer": 0.2222222222222222,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 2,
+              "kenlmMs": 4266,
+              "topCandidates": [
+                {
+                  "text": "昨夜是下周一下午角马?可以电子板提叫吗?",
+                  "kenlmDelta": 0.0016426005608112743,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周一下午叫骂?可以电子板提叫吗?",
+                  "kenlmDelta": 0.0013632180459631008,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周一下午蕉麻?可以电子板提叫吗?",
+                  "kenlmDelta": 0.00023007610264526128,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周易下午角马?可以电子板提叫吗?",
+                  "kenlmDelta": -0.0006145727520511447,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周易下午叫骂?可以电子板提叫吗?",
+                  "kenlmDelta": -0.0007907946915016316,
+                  "replacementCount": 3
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "昨夜是下周一下午叫骂?可以电子板提叫吗?",
+                  "score": 4.4862,
+                  "cer": 0.3333333333333333
+                },
+                {
+                  "text": "昨夜是下周易下午叫骂?可以电子板提叫吗?",
+                  "score": 4.456099999999999,
+                  "cer": 0.3888888888888889
+                },
+                {
+                  "text": "昨夜是下周一下午角马?可以电子板提叫吗?",
+                  "score": 3.8834999999999997,
+                  "cer": 0.3333333333333333
+                },
+                {
+                  "text": "昨夜是下周一下午蕉麻?可以电子板提叫吗?",
+                  "score": 3.8748,
+                  "cer": 0.3333333333333333
+                },
+                {
+                  "text": "昨夜是下周易下午角马?可以电子板提叫吗?",
+                  "score": 3.8533999999999997,
+                  "cer": 0.3888888888888889
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "作业",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "昨夜",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                },
+                {
+                  "spanText": "周以",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "周一",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "周易",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": 1,
+                  "refCorrectWords": [
+                    "周一"
+                  ]
+                },
+                {
+                  "spanText": "叫吗",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "叫骂",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "角马",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "蕉麻",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            },
+            {
+              "id": "d039",
+              "approvedSpanCount": 1,
+              "recallCandidateCount": 4,
+              "perSpanLimit": 24,
+              "preCap": 4,
+              "postCap": 4,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 5,
+              "maxDelta": -0.0005454870717701652,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.29411764705882354,
+              "finalCer": 0.29411764705882354,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 1,
+              "kenlmMs": 3041,
+              "topCandidates": [
+                {
+                  "text": "可以打爆麻 顺便借以下张能扫马支付吗?",
+                  "kenlmDelta": -0.0005454870717701652,
+                  "replacementCount": 1
+                },
+                {
+                  "text": "可以打爆麻 顺便介意下张能扫马支付吗?",
+                  "kenlmDelta": -0.001385414648125585,
+                  "replacementCount": 1
+                },
+                {
+                  "text": "可以打爆麻 顺便结义下张能扫马支付吗?",
+                  "kenlmDelta": -0.001975070599588967,
+                  "replacementCount": 1
+                },
+                {
+                  "text": "可以打爆麻 顺便孑遗下张能扫马支付吗?",
+                  "kenlmDelta": -0.0031419368987135807,
+                  "replacementCount": 1
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "可以打爆麻 顺便借以下张能扫马支付吗?",
+                  "score": 1.1995,
+                  "cer": 0.35294117647058826
+                },
+                {
+                  "text": "可以打爆麻 顺便介意下张能扫马支付吗?",
+                  "score": 1.1429,
+                  "cer": 0.35294117647058826
+                },
+                {
+                  "text": "可以打爆麻 顺便结义下张能扫马支付吗?",
+                  "score": 1.1245000000000003,
+                  "cer": 0.29411764705882354
+                },
+                {
+                  "text": "可以打爆麻 顺便孑遗下张能扫马支付吗?",
+                  "score": 1.0787,
+                  "cer": 0.35294117647058826
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "解一",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "借以",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "介意",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "结义",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 4,
+                      "word": "孑遗",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            },
+            {
+              "id": "d014",
+              "approvedSpanCount": 2,
+              "recallCandidateCount": 6,
+              "perSpanLimit": 12,
+              "preCap": 9,
+              "postCap": 9,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 10,
+              "maxDelta": -0.0012945966077107687,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.38095238095238093,
+              "finalCer": 0.38095238095238093,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 2,
+              "kenlmMs": 6757,
+              "topCandidates": [
+                {
+                  "text": "请问,这双写诗否有相使得? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0012945966077107687,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双写实否有相使得? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0013021779191807106,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双写诗否有相实德? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0014454352315263642,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双写实否有相实德? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0014518913843564168,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双斜视否有相使得? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0014676076187542593,
+                  "replacementCount": 2
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "请问,这双写实否有相使得? 不合是三天内可以推换吧",
+                  "score": 2.4387,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双写诗否有相使得? 不合是三天内可以推换吧",
+                  "score": 2.4259,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双斜视否有相使得? 不合是三天内可以推换吧",
+                  "score": 2.3715,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双写实否有相实德? 不合是三天内可以推换吧",
+                  "score": 2.2981999999999996,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双写诗否有相实德? 不合是三天内可以推换吧",
+                  "score": 2.2853999999999997,
+                  "cer": 0.42857142857142855
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "鞋是",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "写实",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "写诗",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "斜视",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                },
+                {
+                  "spanText": "似的",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "使得",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "实德",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "始得",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "tag": "round2_cap32",
+      "maxSentenceCandidates": 32,
+      "groups": {
+        "A_baseline": {
+          "summary": {
+            "experimentOnly": true,
+            "group": "A_baseline",
+            "label": "Group A baseline",
+            "limits": {
+              "label": "Group A baseline",
+              "one": 8,
+              "two": 4,
+              "many": 2
+            },
+            "maxSentenceCandidates": 32,
+            "caseCount": 4,
+            "approvedSpanCount": 7,
+            "recallCandidateCount": 16,
+            "avgCandidatesPerSpan": 2.2857142857142856,
+            "sentenceCandidatePreCapTotal": 18,
+            "sentenceCandidatePostCapTotal": 18,
+            "preCapGtPostCapCases": 0,
+            "kenlmQueryCount": 22,
+            "maxDelta": {
+              "min": -0.0012945966077107687,
+              "p50": -0.0005454870717701652,
+              "p95": 0.0016426005608112743,
+              "max": 0.0016426005608112743,
+              "ge003": 0
+            },
+            "pickedIsRawCount": 4,
+            "kenlmApprovedCount": 0,
+            "applyCount": 0,
+            "avgRawCer": 0.27789449112978526,
+            "avgFinalCer": 0.27789449112978526,
+            "cerImprovedCount": 0,
+            "cerWorsenedCount": 0,
+            "avgRecallMs": 1.5,
+            "avgKenlmMs": 2721,
+            "refExactInTop16Cases": 0,
+            "localBetterTop16Cases": 0
+          },
+          "rankStats": {
+            "spansAnalyzed": 7,
+            "spansWithRefCorrectInRecall": 1,
+            "inTop1": 1,
+            "inTop2": 1,
+            "inTop4": 1,
+            "inTop8": 1,
+            "notFound": 6
+          },
+          "cases": [
+            {
+              "id": "d006",
+              "approvedSpanCount": 1,
+              "recallCandidateCount": 1,
+              "perSpanLimit": 8,
+              "preCap": 1,
+              "postCap": 1,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 2,
+              "maxDelta": -0.00004200024974782555,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.21428571428571427,
+              "finalCer": 0.21428571428571427,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 1,
+              "kenlmMs": 1073,
+              "topCandidates": [
+                {
+                  "text": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙平身一下",
+                  "kenlmDelta": -0.00004200024974782555,
+                  "replacementCount": 1
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙平身一下",
+                  "score": 1.0605000000000002,
+                  "cer": 0.2857142857142857
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "评审",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "平身",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            },
+            {
+              "id": "d074",
+              "approvedSpanCount": 3,
+              "recallCandidateCount": 5,
+              "perSpanLimit": 2,
+              "preCap": 4,
+              "postCap": 4,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 5,
+              "maxDelta": 0.0016426005608112743,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.2222222222222222,
+              "finalCer": 0.2222222222222222,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 2,
+              "kenlmMs": 2623,
+              "topCandidates": [
+                {
+                  "text": "昨夜是下周一下午角马?可以电子板提叫吗?",
+                  "kenlmDelta": 0.0016426005608112743,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周一下午叫骂?可以电子板提叫吗?",
+                  "kenlmDelta": 0.0013632180459631008,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周易下午角马?可以电子板提叫吗?",
+                  "kenlmDelta": -0.0006145727520511447,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周易下午叫骂?可以电子板提叫吗?",
+                  "kenlmDelta": -0.0007907946915016316,
+                  "replacementCount": 3
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "昨夜是下周一下午叫骂?可以电子板提叫吗?",
+                  "score": 4.4862,
+                  "cer": 0.3333333333333333
+                },
+                {
+                  "text": "昨夜是下周易下午叫骂?可以电子板提叫吗?",
+                  "score": 4.456099999999999,
+                  "cer": 0.3888888888888889
+                },
+                {
+                  "text": "昨夜是下周一下午角马?可以电子板提叫吗?",
+                  "score": 3.8834999999999997,
+                  "cer": 0.3333333333333333
+                },
+                {
+                  "text": "昨夜是下周易下午角马?可以电子板提叫吗?",
+                  "score": 3.8533999999999997,
+                  "cer": 0.3888888888888889
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "作业",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "昨夜",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                },
+                {
+                  "spanText": "周以",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "周一",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "周易",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": 1,
+                  "refCorrectWords": [
+                    "周一"
+                  ]
+                },
+                {
+                  "spanText": "叫吗",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "叫骂",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "角马",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            },
+            {
+              "id": "d039",
+              "approvedSpanCount": 1,
+              "recallCandidateCount": 4,
+              "perSpanLimit": 8,
+              "preCap": 4,
+              "postCap": 4,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 5,
+              "maxDelta": -0.0005454870717701652,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.29411764705882354,
+              "finalCer": 0.29411764705882354,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 1,
+              "kenlmMs": 2368,
+              "topCandidates": [
+                {
+                  "text": "可以打爆麻 顺便借以下张能扫马支付吗?",
+                  "kenlmDelta": -0.0005454870717701652,
+                  "replacementCount": 1
+                },
+                {
+                  "text": "可以打爆麻 顺便介意下张能扫马支付吗?",
+                  "kenlmDelta": -0.001385414648125585,
+                  "replacementCount": 1
+                },
+                {
+                  "text": "可以打爆麻 顺便结义下张能扫马支付吗?",
+                  "kenlmDelta": -0.001975070599588967,
+                  "replacementCount": 1
+                },
+                {
+                  "text": "可以打爆麻 顺便孑遗下张能扫马支付吗?",
+                  "kenlmDelta": -0.0031419368987135807,
+                  "replacementCount": 1
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "可以打爆麻 顺便借以下张能扫马支付吗?",
+                  "score": 1.1995,
+                  "cer": 0.35294117647058826
+                },
+                {
+                  "text": "可以打爆麻 顺便介意下张能扫马支付吗?",
+                  "score": 1.1429,
+                  "cer": 0.35294117647058826
+                },
+                {
+                  "text": "可以打爆麻 顺便结义下张能扫马支付吗?",
+                  "score": 1.1245000000000003,
+                  "cer": 0.29411764705882354
+                },
+                {
+                  "text": "可以打爆麻 顺便孑遗下张能扫马支付吗?",
+                  "score": 1.0787,
+                  "cer": 0.35294117647058826
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "解一",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "借以",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "介意",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "结义",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 4,
+                      "word": "孑遗",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            },
+            {
+              "id": "d014",
+              "approvedSpanCount": 2,
+              "recallCandidateCount": 6,
+              "perSpanLimit": 4,
+              "preCap": 9,
+              "postCap": 9,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 10,
+              "maxDelta": -0.0012945966077107687,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.38095238095238093,
+              "finalCer": 0.38095238095238093,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 2,
+              "kenlmMs": 4820,
+              "topCandidates": [
+                {
+                  "text": "请问,这双写诗否有相使得? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0012945966077107687,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双写实否有相使得? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0013021779191807106,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双写诗否有相实德? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0014454352315263642,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双写实否有相实德? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0014518913843564168,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双斜视否有相使得? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0014676076187542593,
+                  "replacementCount": 2
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "请问,这双写实否有相使得? 不合是三天内可以推换吧",
+                  "score": 2.4387,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双写诗否有相使得? 不合是三天内可以推换吧",
+                  "score": 2.4259,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双斜视否有相使得? 不合是三天内可以推换吧",
+                  "score": 2.3715,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双写实否有相实德? 不合是三天内可以推换吧",
+                  "score": 2.2981999999999996,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双写诗否有相实德? 不合是三天内可以推换吧",
+                  "score": 2.2853999999999997,
+                  "cer": 0.42857142857142855
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "鞋是",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "写实",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "写诗",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "斜视",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                },
+                {
+                  "spanText": "似的",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "使得",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "实德",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "始得",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            }
+          ]
+        },
+        "C_wide": {
+          "summary": {
+            "experimentOnly": true,
+            "group": "C_wide",
+            "label": "Group C wide",
+            "limits": {
+              "label": "Group C wide",
+              "one": 16,
+              "two": 8,
+              "many": 4
+            },
+            "maxSentenceCandidates": 32,
+            "caseCount": 4,
+            "approvedSpanCount": 7,
+            "recallCandidateCount": 17,
+            "avgCandidatesPerSpan": 2.4285714285714284,
+            "sentenceCandidatePreCapTotal": 20,
+            "sentenceCandidatePostCapTotal": 20,
+            "preCapGtPostCapCases": 0,
+            "kenlmQueryCount": 24,
+            "maxDelta": {
+              "min": -0.0012945966077107687,
+              "p50": -0.0005454870717701652,
+              "p95": 0.0016426005608112743,
+              "max": 0.0016426005608112743,
+              "ge003": 0
+            },
+            "pickedIsRawCount": 4,
+            "kenlmApprovedCount": 0,
+            "applyCount": 0,
+            "avgRawCer": 0.27789449112978526,
+            "avgFinalCer": 0.27789449112978526,
+            "cerImprovedCount": 0,
+            "cerWorsenedCount": 0,
+            "avgRecallMs": 1,
+            "avgKenlmMs": 2943.5,
+            "refExactInTop16Cases": 0,
+            "localBetterTop16Cases": 0
+          },
+          "rankStats": {
+            "spansAnalyzed": 7,
+            "spansWithRefCorrectInRecall": 1,
+            "inTop1": 1,
+            "inTop2": 1,
+            "inTop4": 1,
+            "inTop8": 1,
+            "notFound": 6
+          },
+          "cases": [
+            {
+              "id": "d006",
+              "approvedSpanCount": 1,
+              "recallCandidateCount": 1,
+              "perSpanLimit": 16,
+              "preCap": 1,
+              "postCap": 1,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 2,
+              "maxDelta": -0.00004200024974782555,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.21428571428571427,
+              "finalCer": 0.21428571428571427,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 1,
+              "kenlmMs": 984,
+              "topCandidates": [
+                {
+                  "text": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙平身一下",
+                  "kenlmDelta": -0.00004200024974782555,
+                  "replacementCount": 1
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙平身一下",
+                  "score": 1.0605000000000002,
+                  "cer": 0.2857142857142857
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "评审",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "平身",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            },
+            {
+              "id": "d074",
+              "approvedSpanCount": 3,
+              "recallCandidateCount": 6,
+              "perSpanLimit": 4,
+              "preCap": 6,
+              "postCap": 6,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 7,
+              "maxDelta": 0.0016426005608112743,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.2222222222222222,
+              "finalCer": 0.2222222222222222,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 2,
+              "kenlmMs": 3431,
+              "topCandidates": [
+                {
+                  "text": "昨夜是下周一下午角马?可以电子板提叫吗?",
+                  "kenlmDelta": 0.0016426005608112743,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周一下午叫骂?可以电子板提叫吗?",
+                  "kenlmDelta": 0.0013632180459631008,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周一下午蕉麻?可以电子板提叫吗?",
+                  "kenlmDelta": 0.00023007610264526128,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周易下午角马?可以电子板提叫吗?",
+                  "kenlmDelta": -0.0006145727520511447,
+                  "replacementCount": 3
+                },
+                {
+                  "text": "昨夜是下周易下午叫骂?可以电子板提叫吗?",
+                  "kenlmDelta": -0.0007907946915016316,
+                  "replacementCount": 3
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "昨夜是下周一下午叫骂?可以电子板提叫吗?",
+                  "score": 4.4862,
+                  "cer": 0.3333333333333333
+                },
+                {
+                  "text": "昨夜是下周易下午叫骂?可以电子板提叫吗?",
+                  "score": 4.456099999999999,
+                  "cer": 0.3888888888888889
+                },
+                {
+                  "text": "昨夜是下周一下午角马?可以电子板提叫吗?",
+                  "score": 3.8834999999999997,
+                  "cer": 0.3333333333333333
+                },
+                {
+                  "text": "昨夜是下周一下午蕉麻?可以电子板提叫吗?",
+                  "score": 3.8748,
+                  "cer": 0.3333333333333333
+                },
+                {
+                  "text": "昨夜是下周易下午角马?可以电子板提叫吗?",
+                  "score": 3.8533999999999997,
+                  "cer": 0.3888888888888889
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "作业",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "昨夜",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                },
+                {
+                  "spanText": "周以",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "周一",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "周易",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": 1,
+                  "refCorrectWords": [
+                    "周一"
+                  ]
+                },
+                {
+                  "spanText": "叫吗",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "叫骂",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "角马",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "蕉麻",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            },
+            {
+              "id": "d039",
+              "approvedSpanCount": 1,
+              "recallCandidateCount": 4,
+              "perSpanLimit": 16,
+              "preCap": 4,
+              "postCap": 4,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 5,
+              "maxDelta": -0.0005454870717701652,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.29411764705882354,
+              "finalCer": 0.29411764705882354,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 0,
+              "kenlmMs": 2422,
+              "topCandidates": [
+                {
+                  "text": "可以打爆麻 顺便借以下张能扫马支付吗?",
+                  "kenlmDelta": -0.0005454870717701652,
+                  "replacementCount": 1
+                },
+                {
+                  "text": "可以打爆麻 顺便介意下张能扫马支付吗?",
+                  "kenlmDelta": -0.001385414648125585,
+                  "replacementCount": 1
+                },
+                {
+                  "text": "可以打爆麻 顺便结义下张能扫马支付吗?",
+                  "kenlmDelta": -0.001975070599588967,
+                  "replacementCount": 1
+                },
+                {
+                  "text": "可以打爆麻 顺便孑遗下张能扫马支付吗?",
+                  "kenlmDelta": -0.0031419368987135807,
+                  "replacementCount": 1
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "可以打爆麻 顺便借以下张能扫马支付吗?",
+                  "score": 1.1995,
+                  "cer": 0.35294117647058826
+                },
+                {
+                  "text": "可以打爆麻 顺便介意下张能扫马支付吗?",
+                  "score": 1.1429,
+                  "cer": 0.35294117647058826
+                },
+                {
+                  "text": "可以打爆麻 顺便结义下张能扫马支付吗?",
+                  "score": 1.1245000000000003,
+                  "cer": 0.29411764705882354
+                },
+                {
+                  "text": "可以打爆麻 顺便孑遗下张能扫马支付吗?",
+                  "score": 1.0787,
+                  "cer": 0.35294117647058826
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "解一",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "借以",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "介意",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "结义",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 4,
+                      "word": "孑遗",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            },
+            {
+              "id": "d014",
+              "approvedSpanCount": 2,
+              "recallCandidateCount": 6,
+              "perSpanLimit": 8,
+              "preCap": 9,
+              "postCap": 9,
+              "truncatedPreCap": false,
+              "kenlmQueryCount": 10,
+              "maxDelta": -0.0012945966077107687,
+              "pickedIsRaw": true,
+              "kenlmApproved": 0,
+              "applyCount": 0,
+              "rawCer": 0.38095238095238093,
+              "finalCer": 0.38095238095238093,
+              "cerImproved": false,
+              "cerWorsened": false,
+              "recallMs": 1,
+              "kenlmMs": 4937,
+              "topCandidates": [
+                {
+                  "text": "请问,这双写诗否有相使得? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0012945966077107687,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双写实否有相使得? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0013021779191807106,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双写诗否有相实德? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0014454352315263642,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双写实否有相实德? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0014518913843564168,
+                  "replacementCount": 2
+                },
+                {
+                  "text": "请问,这双斜视否有相使得? 不合是三天内可以推换吧",
+                  "kenlmDelta": -0.0014676076187542593,
+                  "replacementCount": 2
+                }
+              ],
+              "top16Preview": [
+                {
+                  "text": "请问,这双写实否有相使得? 不合是三天内可以推换吧",
+                  "score": 2.4387,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双写诗否有相使得? 不合是三天内可以推换吧",
+                  "score": 2.4259,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双斜视否有相使得? 不合是三天内可以推换吧",
+                  "score": 2.3715,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双写实否有相实德? 不合是三天内可以推换吧",
+                  "score": 2.2981999999999996,
+                  "cer": 0.42857142857142855
+                },
+                {
+                  "text": "请问,这双写诗否有相实德? 不合是三天内可以推换吧",
+                  "score": 2.2853999999999997,
+                  "cer": 0.42857142857142855
+                }
+              ],
+              "spanRankRows": [
+                {
+                  "spanText": "鞋是",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "写实",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "写诗",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "斜视",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                },
+                {
+                  "spanText": "似的",
+                  "candidates": [
+                    {
+                      "rank": 1,
+                      "word": "使得",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 2,
+                      "word": "实德",
+                      "source": "lexicon_pinyin_topk"
+                    },
+                    {
+                      "rank": 3,
+                      "word": "始得",
+                      "source": "lexicon_pinyin_topk"
+                    }
+                  ],
+                  "refCorrectRank": null,
+                  "refCorrectWords": []
+                }
+              ],
+              "hasLocalBetter": false,
+              "refExactInTop16": false
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

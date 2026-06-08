@@ -1,0 +1,353 @@
+{
+  "timestamp": "2026-06-07T04:18:56.029Z",
+  "dbAudit": {
+    "all_tables_pass": true,
+    "tables": {
+      "base_lexicon": {
+        "total": 50000,
+        "has_tone_key": 50000,
+        "with_digit_tone": 50000,
+        "eq_plain_only": 0,
+        "digit_tone_rate": 1,
+        "pass_all_digit_tone": true
+      },
+      "idiom_lexicon": {
+        "total": 22192,
+        "has_tone_key": 22192,
+        "with_digit_tone": 22192,
+        "eq_plain_only": 0,
+        "digit_tone_rate": 1,
+        "pass_all_digit_tone": true
+      },
+      "domain_lexicon": {
+        "total": 25,
+        "has_tone_key": 25,
+        "with_digit_tone": 25,
+        "eq_plain_only": 0,
+        "digit_tone_rate": 1,
+        "pass_all_digit_tone": true
+      }
+    },
+    "manifest": {
+      "buildTime": "2026-06-07T03:23:11.553Z",
+      "checksum": "sha256:84a1ed29c051b17397ac9be6c76738df837a9e320b030413c0e25d552d52f3a3",
+      "tables": {
+        "base": 50000,
+        "idiom": 22192,
+        "domain": 25,
+        "routing": 9
+      }
+    }
+  },
+  "contract": {
+    "evaluated": 200,
+    "pass": 200,
+    "fail": 0,
+    "skip": 0,
+    "wall_clock_sec": 748,
+    "pipeline_ok_rate": 1,
+    "fw_triggered_count": 66,
+    "fw_applied_case_count": 0,
+    "text_changed_count": 0,
+    "lexicon_runtime_ok_count": 200,
+    "asr_service_id_distribution": {
+      "faster-whisper-vad": 200
+    }
+  },
+  "quality": {
+    "evaluated": 200,
+    "avg_cer_final": 0.2501,
+    "median_cer_final": 0.2,
+    "p95_cer_final": 0.6,
+    "exact_match_final": 25,
+    "exact_match_rate": 0.125,
+    "cafe_avg_cer": 0.182,
+    "cafe_count": 15
+  },
+  "perf": {
+    "wall_clock_sec": 748,
+    "pipeline_ms": {
+      "avg": 3733,
+      "p50": 2917,
+      "p95": 8918,
+      "min": 1597,
+      "max": 13971
+    },
+    "asr_latency_ms": {
+      "avg": 1009,
+      "p50": 887,
+      "p95": 1422
+    },
+    "tone_inference_ms": {
+      "avg": 7,
+      "p50": 7,
+      "p95": 11
+    },
+    "audio_ms_avg": 3638,
+    "rtf_pipeline": 1.026
+  },
+  "toneRuntime": {
+    "toneEnabledCases": 200,
+    "toneEnabledRate": 1,
+    "fw_triggered_cases": 66,
+    "recallToneCompatibleTotal": 11,
+    "recallToneFallbackTotal": 272,
+    "cases_with_recall_tone_compatible": 11,
+    "spans_with_acoustic_tone_pattern": 45
+  },
+  "samples": {
+    "cafe_d001": {
+      "id": "d001",
+      "scenario": "cafe",
+      "cer": 0.2593,
+      "pipeline_ms": 12092,
+      "fw_triggered": false,
+      "fw_applied_count": 0,
+      "recallToneCompatibleCount": null,
+      "recallToneFallbackCount": null,
+      "toneEnabled": true,
+      "ref": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "hyp": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?"
+    },
+    "cafe_d002": {
+      "id": "d002",
+      "scenario": "cafe",
+      "cer": 0.1176,
+      "pipeline_ms": 3245,
+      "fw_triggered": false,
+      "fw_applied_count": 0,
+      "recallToneCompatibleCount": null,
+      "recallToneFallbackCount": null,
+      "toneEnabled": true,
+      "ref": "麻烦帮我做一杯美式带走，大杯就行，谢谢。",
+      "hyp": "麻烦帮我做一杯美食带走大悲就行谢谢"
+    },
+    "cafe_d003": {
+      "id": "d003",
+      "scenario": "cafe",
+      "cer": 0.1053,
+      "pipeline_ms": 8726,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "recallToneCompatibleCount": 0,
+      "recallToneFallbackCount": 6,
+      "toneEnabled": true,
+      "ref": "请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。",
+      "hyp": "请问,这款燕麦拿铁可以少病吗?我赶时间小背"
+    },
+    "best_cer": [
+      {
+        "id": "d018",
+        "scenario": "friend",
+        "cer": 0,
+        "pipeline_ms": 2186,
+        "fw_triggered": false,
+        "fw_applied_count": 0,
+        "recallToneCompatibleCount": null,
+        "recallToneFallbackCount": null,
+        "toneEnabled": true,
+        "ref": "你最近忙不忙？想找你看下手机备份怎么设置。",
+        "hyp": "你最近忙不忙,想找你看下手机备份怎么设置"
+      },
+      {
+        "id": "d023",
+        "scenario": "customer_service",
+        "cer": 0,
+        "pipeline_ms": 2099,
+        "fw_triggered": false,
+        "fw_applied_count": 0,
+        "recallToneCompatibleCount": null,
+        "recallToneFallbackCount": null,
+        "toneEnabled": true,
+        "ref": "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。",
+        "hyp": "想改一下收货地址还来得及吗? 麻烦尽快处理谢谢"
+      },
+      {
+        "id": "d025",
+        "scenario": "interview",
+        "cer": 0,
+        "pipeline_ms": 2352,
+        "fw_triggered": false,
+        "fw_applied_count": 0,
+        "recallToneCompatibleCount": null,
+        "recallToneFallbackCount": null,
+        "toneEnabled": true,
+        "ref": "请简单介绍一下你上一段项目里负责的核心模块和难点。",
+        "hyp": "请简单介绍一下你上一段项目里负责的核心模块和难点"
+      }
+    ],
+    "worst_cer": [
+      {
+        "id": "d067",
+        "scenario": "customer_service",
+        "cer": 3.04,
+        "pipeline_ms": 13971,
+        "fw_triggered": false,
+        "fw_applied_count": 0,
+        "recallToneCompatibleCount": null,
+        "recallToneFallbackCount": null,
+        "toneEnabled": true,
+        "ref": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+        "hyp": "您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,"
+      },
+      {
+        "id": "d110",
+        "scenario": "tech_deploy",
+        "cer": 0.8333,
+        "pipeline_ms": 3412,
+        "fw_triggered": false,
+        "fw_applied_count": 0,
+        "recallToneCompatibleCount": null,
+        "recallToneFallbackCount": null,
+        "toneEnabled": true,
+        "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "hyp": "這次發布我們現對此發布的新聞 起商線計劃窗口後選生 乘魔快需要連掉別漏掉回歸"
+      },
+      {
+        "id": "d155",
+        "scenario": "tech_deploy",
+        "cer": 0.8333,
+        "pipeline_ms": 3524,
+        "fw_triggered": false,
+        "fw_applied_count": 0,
+        "recallToneCompatibleCount": null,
+        "recallToneFallbackCount": null,
+        "toneEnabled": true,
+        "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "hyp": "這次發布我們現對峽谷的發布會 在其商線計劃窗口後選生成模快需要連掉別漏掉回歸"
+      },
+      {
+        "id": "d045",
+        "scenario": "lexicon_homophone",
+        "cer": 0.8,
+        "pipeline_ms": 2968,
+        "fw_triggered": false,
+        "fw_applied_count": 0,
+        "recallToneCompatibleCount": null,
+        "recallToneFallbackCount": null,
+        "toneEnabled": true,
+        "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+        "hyp": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說"
+      },
+      {
+        "id": "d088",
+        "scenario": "lexicon_homophone",
+        "cer": 0.68,
+        "pipeline_ms": 3155,
+        "fw_triggered": false,
+        "fw_applied_count": 0,
+        "recallToneCompatibleCount": null,
+        "recallToneFallbackCount": null,
+        "toneEnabled": true,
+        "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "hyp": "我們下午討論後,選生成功 等方安縣把候選生陳的截口文當補齊"
+      },
+      {
+        "id": "d180",
+        "scenario": "lexicon_homophone",
+        "cer": 0.68,
+        "pipeline_ms": 3198,
+        "fw_triggered": false,
+        "fw_applied_count": 0,
+        "recallToneCompatibleCount": null,
+        "recallToneFallbackCount": null,
+        "toneEnabled": true,
+        "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+        "hyp": "關於後,選生成立 和上限計劃請按上限計劃執行有問題 群里說"
+      },
+      {
+        "id": "d065",
+        "scenario": "tech_deploy",
+        "cer": 0.6667,
+        "pipeline_ms": 3224,
+        "fw_triggered": false,
+        "fw_applied_count": 0,
+        "recallToneCompatibleCount": null,
+        "recallToneFallbackCount": null,
+        "toneEnabled": true,
+        "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "hyp": "這次發布我們現對期 在其商線計劃窗口後選生 成模快需要連掉別漏掉回歸"
+      },
+      {
+        "id": "d194",
+        "scenario": "shopping",
+        "cer": 0.6667,
+        "pipeline_ms": 2689,
+        "fw_triggered": false,
+        "fw_applied_count": 0,
+        "recallToneCompatibleCount": null,
+        "recallToneFallbackCount": null,
+        "toneEnabled": true,
+        "ref": "请问这双鞋有四十码吗？不合适三天内可以退换吧？",
+        "hyp": "請問 這雙鞋也有鞋子嗎? 有40码码不合是3天内可以退换吧"
+      }
+    ],
+    "fw_triggered_sample": [
+      {
+        "id": "d003",
+        "scenario": "cafe",
+        "cer": 0.1053,
+        "pipeline_ms": 8726,
+        "fw_triggered": true,
+        "fw_applied_count": 0,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 6,
+        "toneEnabled": true,
+        "ref": "请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。",
+        "hyp": "请问,这款燕麦拿铁可以少病吗?我赶时间小背"
+      },
+      {
+        "id": "d005",
+        "scenario": "meeting",
+        "cer": 0.2857,
+        "pipeline_ms": 8132,
+        "fw_triggered": true,
+        "fw_applied_count": 0,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 6,
+        "toneEnabled": true,
+        "ref": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+        "hyp": "今天,德湛会献过一下订单,中台,进都内存 我们占用高者快需要先留保护大家看一下风险"
+      },
+      {
+        "id": "d006",
+        "scenario": "meeting",
+        "cer": 0.2143,
+        "pipeline_ms": 6607,
+        "fw_triggered": true,
+        "fw_applied_count": 0,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 2,
+        "toneEnabled": true,
+        "ref": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。",
+        "hyp": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下"
+      },
+      {
+        "id": "d014",
+        "scenario": "shopping",
+        "cer": 0.381,
+        "pipeline_ms": 9612,
+        "fw_triggered": true,
+        "fw_applied_count": 0,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 7,
+        "toneEnabled": true,
+        "ref": "请问这双鞋有四十码吗？不合适三天内可以退换吧？",
+        "hyp": "请问,这双鞋是否有相似的? 不合是三天内可以推换吧"
+      },
+      {
+        "id": "d017",
+        "scenario": "friend",
+        "cer": 0.0952,
+        "pipeline_ms": 12979,
+        "fw_triggered": true,
+        "fw_applied_count": 0,
+        "recallToneCompatibleCount": 1,
+        "recallToneFallbackCount": 7,
+        "toneEnabled": true,
+        "ref": "晚上一起吃饭吗？我知道一家川菜不错，大概七点到。",
+        "hyp": "晚上一起吃饭嘛 我知道一家川菜 不错大概起点到"
+      }
+    ]
+  }
+}

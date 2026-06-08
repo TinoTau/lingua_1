@@ -77,23 +77,34 @@ describe('pinyin-ime-v2 freeze boundaries', () => {
     expect(align).toContain('BoundaryAlignmentScore');
     expect(align).not.toMatch(/candidates\s*=\s*candidates\.filter/);
     expect(align).not.toMatch(/segmentForJobResult\s*=/);
-    expect(align).not.toContain('runPinyinImeV2HintGate');
+    expect(align).not.toContain('selectPinyinImeV2Spans');
   });
 
   it('boundary topk diff is sole V2.0 boundary span source (Phase 4D)', () => {
     const diff = readV2('pinyin-ime-v2-boundary-compatible-topk-diff.ts');
     const proposal = readV2('run-pinyin-ime-v2-span-proposal.ts');
-    const gate = readV2('pinyin-ime-v2-hint-gate.ts');
+    const selector = readV2('pinyin-ime-v2-span-selector.ts');
     expect(diff).toContain('buildBoundaryCompatibleTopKDiff');
     expect(proposal).toContain('buildBoundaryCompatibleTopKDiff');
     expect(proposal).toContain('boundaryCompatibleTopKSpans');
-    expect(gate).toContain('ime_v2_boundary_topk_diff');
-    expect(gate).not.toMatch(/candidates\s*=\s*candidates\.filter/);
+    expect(selector).toContain('ime_v2_boundary_topk_diff');
+    expect(selector).not.toMatch(/candidates\s*=\s*candidates\.filter/);
   });
 
-  it('hint gate does not output replacement candidate text fields', () => {
-    const gate = readV2('pinyin-ime-v2-hint-gate.ts');
-    expect(gate).not.toContain('candidateText');
-    expect(gate).not.toMatch(/replacementText|FwApprovedReplacement/);
+  it('span selector does not output replacement candidate text fields', () => {
+    const selector = readV2('pinyin-ime-v2-span-selector.ts');
+    expect(selector).not.toContain('candidateText');
+    expect(selector).not.toMatch(/replacementText|FwApprovedReplacement/);
+  });
+
+  it('local raw-ime diff stays in proposal layer only (T8)', () => {
+    const local = readV2('pinyin-ime-v2-local-raw-ime-diff.ts');
+    const proposal = readV2('run-pinyin-ime-v2-span-proposal.ts');
+    const mapper = readV2('map-selected-span-to-fw.ts');
+    expect(local).toContain('buildLocalRawImeDiffSpans');
+    expect(proposal).toContain('shouldActivateLocalRawImeDiffFallback');
+    expect(proposal).toContain('localBuild.spans');
+    expect(local).not.toMatch(/segmentForJobResult\s*=/);
+    expect(mapper).not.toContain('imeWord');
   });
 });

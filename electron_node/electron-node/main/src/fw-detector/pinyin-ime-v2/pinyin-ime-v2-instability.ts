@@ -60,7 +60,7 @@ export function buildInstabilityRegions(diffSpans: PinyinImeV2DiffSpan[]): Pinyi
 }
 
 /**
- * Recompute supportCount on diff spans after union merge (for HintGate input).
+ * Recompute supportCount on diff spans after union merge (for SpanSelector input).
  */
 export function aggregateDiffSpanSupport(diffSpans: PinyinImeV2DiffSpan[]): PinyinImeV2DiffSpan[] {
   const regions = buildInstabilityRegions(diffSpans);

@@ -1,0 +1,19 @@
+{
+  "audit": "ToneModule P0 Runtime Acceptance (FW)",
+  "timestamp": "2026-06-07 04:14:16",
+  "fwPort": 6007,
+  "performanceDialog200": {
+    "fwServiceUp": true,
+    "utteranceCount": 200,
+    "percentiles": {
+      "p50": 9.0,
+      "p95": 16.0,
+      "p99": 20.0,
+      "max": 28.0,
+      "n": 200,
+      "mean": 9.54,
+      "targetMs": 20,
+      "passP95Le20": true
+    }
+  }
+}

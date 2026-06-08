@@ -1,0 +1,56 @@
+{
+  "audit": "ToneModule P0.5 Clean Correction",
+  "timestamp": "2026-06-06T19:52:39.442Z",
+  "shaoBingRecall": {
+    "acousticTonePattern": [
+      3,
+      1
+    ],
+    "top1": "少冰",
+    "recallToneCompatibleCount": 1,
+    "candidates": [
+      {
+        "word": "少冰",
+        "key": "shao3|bing1",
+        "compatible": true
+      },
+      {
+        "word": "烧饼",
+        "key": "shao1|bing3",
+        "compatible": false
+      },
+      {
+        "word": "哨兵",
+        "key": "shao4|bing1",
+        "compatible": false
+      }
+    ]
+  },
+  "ssot": {
+    "aligned": true,
+    "misaligned": false,
+    "patternWhenAligned": [
+      3,
+      1
+    ],
+    "patternWhenMisaligned": null
+  },
+  "noToneFallback": {
+    "top1": "烧饼",
+    "fallbackCount": 2
+  },
+  "legacyRemoved": {
+    "fwToneConfigExists": false,
+    "computeToneMatchScoreExported": false
+  },
+  "performance": {
+    "p50": 9,
+    "p95": 16,
+    "p99": 20,
+    "max": 28,
+    "n": 200,
+    "mean": 9.54,
+    "targetMs": 20,
+    "passP95Le20": true
+  }
+}

@@ -4,6 +4,14 @@
 
 import { getLexiconRuntimeV2Config } from './lexicon-runtime-v2-config';
 
+export type RecallSourceBreakdown = {
+  exactBase: number;
+  exactDomainStrong: number;
+  exactDomainWeak: number;
+  fuzzyPlain: number;
+  fuzzyPlainDomain: number;
+};
+
 export type RecallSpanV2Diagnostics = {
   base_hits: number;
   domain_hits: number;
@@ -21,6 +29,18 @@ export type RecallSpanV2Diagnostics = {
   domain_lookup_ms: number;
   idiom_lookup_ms: number;
   merge_ms: number;
+  weakDomainEnabled?: boolean;
+  weakDomainIds?: string;
+  weakDomainCandidateCount?: number;
+  fuzzyRecallEnabled?: boolean;
+  fuzzyVariantCount?: number;
+  fuzzyCandidateCount?: number;
+  candidateSourceBreakdown?: RecallSourceBreakdown;
+  recallEmptyBeforeFuzzy?: boolean;
+  recallEmptyAfterFuzzy?: boolean;
+  domainHitsBeforeWeak?: number;
+  domainHitsAfterWeak?: number;
+  fuzzyVariantExamples?: string[];
 };
 
 export type RecallJobV2Diagnostics = {

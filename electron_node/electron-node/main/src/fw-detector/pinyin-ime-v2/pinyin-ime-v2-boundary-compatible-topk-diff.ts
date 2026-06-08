@@ -6,7 +6,7 @@ import {
   type CharSyllableRange,
 } from './pinyin-ime-v2-pinyin-stream';
 
-/** V2.0 §十一 — sole span source for HintGate (raw offsets only). */
+/** V2.0 §十一 — sole span source for SpanSelector (raw offsets only). */
 export type BoundaryCompatibleTopKSpan = {
   rawSpan: string;
   start: number;

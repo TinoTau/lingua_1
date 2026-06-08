@@ -1,0 +1,96 @@
+{
+  "recall_stats": {
+    "spans": 7,
+    "candidates": 0,
+    "by_bucket": {
+      "base": 0,
+      "domain": 0,
+      "target": 0
+    },
+    "by_count": {
+      "0": 7
+    }
+  },
+  "builder_stats": {
+    "cases": 4,
+    "pre_cap_total": 4,
+    "post_cap_total": 0,
+    "truncated_cases": 0
+  },
+  "coverage": {
+    "triggered": 4,
+    "ref_in_top16": 0,
+    "ref_in_pre_cap": 0,
+    "ref_better_in_top16": 0
+  },
+  "quality": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "span_total": 0
+  },
+  "kenlm_input": {
+    "total": 4,
+    "semantic_ok": 0,
+    "noise": 0,
+    "has_fix": 0
+  },
+  "samples": [
+    {
+      "id": "d006",
+      "scenario": "meeting",
+      "raw": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下",
+      "ref": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。",
+      "span_count": 1,
+      "pre_cap": 1,
+      "truncated": false,
+      "ref_in_top16": false,
+      "ref_in_pre_cap": false,
+      "raw_cer": 0.2143,
+      "best_top16_cer": 0.2143,
+      "top16": []
+    },
+    {
+      "id": "d074",
+      "scenario": "classroom",
+      "raw": "作业是下周以下午叫吗?可以电子板提叫吗?",
+      "ref": "作业是下周一下午交吗？可以电子版提交吗？",
+      "span_count": 3,
+      "pre_cap": 1,
+      "truncated": false,
+      "ref_in_top16": false,
+      "ref_in_pre_cap": false,
+      "raw_cer": 0.2222,
+      "best_top16_cer": 0.2222,
+      "top16": []
+    },
+    {
+      "id": "d039",
+      "scenario": "restaurant",
+      "raw": "可以打爆麻 顺便解一下张能扫马支付吗?",
+      "ref": "可以打包吗？顺便结一下账，能扫码支付吗？",
+      "span_count": 1,
+      "pre_cap": 1,
+      "truncated": false,
+      "ref_in_top16": false,
+      "ref_in_pre_cap": false,
+      "raw_cer": 0.2941,
+      "best_top16_cer": 0.2941,
+      "top16": []
+    },
+    {
+      "id": "d014",
+      "scenario": "shopping",
+      "raw": "请问,这双鞋是否有相似的? 不合是三天内可以推换吧",
+      "ref": "请问这双鞋有四十码吗？不合适三天内可以退换吧？",
+      "span_count": 2,
+      "pre_cap": 1,
+      "truncated": false,
+      "ref_in_top16": false,
+      "ref_in_pre_cap": false,
+      "raw_cer": 0.381,
+      "best_top16_cer": 0.381,
+      "top16": []
+    }
+  ]
+}

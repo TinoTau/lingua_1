@@ -1,0 +1,57 @@
+{
+  "experimentOnly": true,
+  "groups": {
+    "A_baseline": {
+      "spanCount": 34,
+      "recallCandidateCount": 68,
+      "avgPerSpan": 2,
+      "rankStats": {
+        "top1": 7,
+        "top2": 8,
+        "top4": 8,
+        "top8": 8,
+        "notFound": 26,
+        "analyzed": 34
+      }
+    },
+    "B_medium": {
+      "spanCount": 34,
+      "recallCandidateCount": 82,
+      "avgPerSpan": 2.411764705882353,
+      "rankStats": {
+        "top1": 7,
+        "top2": 8,
+        "top4": 8,
+        "top8": 8,
+        "notFound": 26,
+        "analyzed": 34
+      }
+    },
+    "C_wide": {
+      "spanCount": 34,
+      "recallCandidateCount": 85,
+      "avgPerSpan": 2.5,
+      "rankStats": {
+        "top1": 7,
+        "top2": 8,
+        "top4": 8,
+        "top8": 8,
+        "notFound": 26,
+        "analyzed": 34
+      }
+    },
+    "D_very_wide": {
+      "spanCount": 34,
+      "recallCandidateCount": 89,
+      "avgPerSpan": 2.6176470588235294,
+      "rankStats": {
+        "top1": 7,
+        "top2": 8,
+        "top4": 8,
+        "top8": 8,
+        "notFound": 26,
+        "analyzed": 34
+      }
+    }
+  }
+}
