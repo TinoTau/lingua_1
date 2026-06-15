@@ -43,10 +43,6 @@ try {
     distRoot,
     'pinyin-ime-v2-dict-load.js'
   ));
-  const { resetPinyinImeV2DictCacheForTest, resolvePinyinImeV2Spans } = require(path.join(
-    distRoot,
-    'resolve-pinyin-ime-v2-spans.js'
-  ));
   const { runPinyinImeV2SpanProposal } = require(path.join(
     distRoot,
     'run-pinyin-ime-v2-span-proposal.js'
@@ -54,7 +50,6 @@ try {
 
   const resolvedDir = resolvePinyinImeV2DictDir('node_runtime/pinyin-ime-v2/dict');
   const t0 = Date.now();
-  resetPinyinImeV2DictCacheForTest();
   const dict = loadPinyinImeV2Dictionaries(resolvedDir);
   const loadMs = Date.now() - t0;
 
@@ -86,7 +81,6 @@ try {
     singleCharInDictDir: fs.existsSync(singleCharInDictDir),
   };
 
-  resetPinyinImeV2DictCacheForTest();
   const proposal = runPinyinImeV2SpanProposal({
     rawAsrText: '你号世界',
     dict,
@@ -100,47 +94,12 @@ try {
     decodeMs: proposal.diagnostics.decode.decodeMs,
   };
 
-  try {
-    resetPinyinImeV2DictCacheForTest();
-    const spanProbe = resolvePinyinImeV2Spans({
-      rawText: '你好世界',
-      runtime: {},
-      profile: { primaryDomain: 'general' },
-      enabledDomains: [],
-      minPrior: 0,
-      imeConfig: {
-        enabled: true,
-        topK: 5,
-        maxApprovedSpans: 4,
-        minSupportCount: 1,
-        minSpanChars: 2,
-        maxSpanChars: 6,
-        minSyllables: 2,
-        maxSyllables: 5,
-        directRepair: false,
-        replaceLegacyDetector: true,
-        dictDir: resolvedDir,
-        enabledDomains: [],
-      },
-    });
-    spanResult = {
-      skippedReason: spanProbe.pinyinImeV2.skippedReason,
-      loadError: spanProbe.pinyinImeV2.loadError,
-      candidateCount: spanProbe.pinyinImeV2.candidateCount,
-      approvedSpanCount: spanProbe.pinyinImeV2.approvedSpanCount,
-      spanCount: spanProbe.spans.length,
-      decodeMs: spanProbe.pinyinImeV2.decodeMs,
-      ime_dict_unavailable: spanProbe.pinyinImeV2.skippedReason === 'ime_dict_unavailable',
-    };
-  } catch (spanErr) {
-    spanResult = {
-      skippedReason: null,
-      ime_dict_unavailable: false,
-      candidateCount: loadResult.proposalSample?.candidateCount ?? 0,
-      spanResolutionError: spanErr instanceof Error ? spanErr.message : String(spanErr),
-      note: 'Dict load/decode OK; full resolvePinyinImeV2Spans requires LexiconRuntime for near-neighbor probe',
-    };
-  }
+  spanResult = {
+    candidateCount: proposal.diagnostics.candidateCount,
+    top1: proposal.candidates[0]?.text ?? null,
+    decodeMs: proposal.diagnostics.decode.decodeMs,
+    note: 'V4 mainline uses span proposal / coarse boundaries; resolvePinyinImeV2Spans retired',
+  };
 } catch (err) {
   loadError = err instanceof Error ? err.message : String(err);
 }

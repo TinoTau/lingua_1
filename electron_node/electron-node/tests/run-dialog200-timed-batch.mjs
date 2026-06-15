@@ -10,6 +10,7 @@ import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);
 const { assessFwDetectorContractPass } = require('./lib/fw-detector-contract-assess.js');
+import { getTestServerPort, waitTestServerHealth, waitAsrReady } from './lib/wait-asr-ready.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);
@@ -35,30 +36,7 @@ const DIALOG_DIR = dirArg
 const MANIFEST_PATH = path.join(DIALOG_DIR, 'cases.manifest.json');
 
 function getPort() {
-  const cfgPath = path.join(
-    process.env.APPDATA || '',
-    'lingua-electron-node',
-    'electron-node-config.json'
-  );
-  if (fs.existsSync(cfgPath)) {
-    try {
-      const cfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
-      if (cfg.testServer?.port) return cfg.testServer.port;
-    } catch (_) {}
-  }
-  return 5020;
-}
-
-async function waitHealth(port, maxWaitMs = 180000) {
-  const start = Date.now();
-  while (Date.now() - start < maxWaitMs) {
-    try {
-      const res = await fetch(`http://127.0.0.1:${port}/health`, { signal: AbortSignal.timeout(3000) });
-      if (res.ok) return true;
-    } catch (_) {}
-    await new Promise((r) => setTimeout(r, 2000));
-  }
-  return false;
+  return getTestServerPort();
 }
 
 async function runWav(port, wavPath, sessionId) {
@@ -121,10 +99,23 @@ const batchStart = Date.now();
 const deadline = batchStart + maxMs;
 
 console.log('[dialog200-timed] waiting for test server on', port);
-if (!(await waitHealth(port))) {
+if (!(await waitTestServerHealth(port))) {
   console.error('[dialog200-timed] test server not ready');
   process.exit(1);
 }
+
+const warmupWav = path.join(DIALOG_DIR, cases[0]?.file || 'dialog_d001.wav');
+console.log('[dialog200-timed] waiting for Faster-Whisper ASR ready via warmup:', warmupWav);
+const asrReady = await waitAsrReady(port, {
+  warmupWavPath: warmupWav,
+  maxWaitMs: 300000,
+  label: 'dialog200-asr-warmup',
+});
+if (!asrReady.ready) {
+  console.error('[dialog200-timed] ASR not ready after warmup:', asrReady.lastError);
+  process.exit(1);
+}
+console.log('[dialog200-timed] ASR ready after', asrReady.attempt, 'attempt(s)', asrReady.elapsedMs, 'ms');
 
 const report = {
   timestamp: new Date().toISOString(),
@@ -134,6 +125,7 @@ const report = {
   testScope: 'Lexicon V3.1 single-manifest + patch runtime dialog_200 timed batch',
   maxMinutes: maxMs / 60000,
   totalManifestCases: cases.length,
+  asrWarmup: asrReady,
   cases: [],
   summary: {},
   stoppedReason: null,

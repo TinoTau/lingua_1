@@ -1,8 +1,11 @@
 # Legacy FW Detector（回滚链）
 
+> **⚠ Historical Snapshot** — Current production: **FW Detector V4-only**.  
+> This document describes archived P1.2b rollback chains. **Not used by orchestrator.**
+
 P1.2b per-span topK + KenLM weak_veto 决策链。
 
-**非默认路径：** `useSentenceLevelRerank=true` 时使用 [`../../fw-detector/fw-sentence-rerank-pipeline.ts`](../../fw-detector/fw-sentence-rerank-pipeline.ts)。
+**非默认路径：** V2 sentence-level rerank pipeline（removed during V2/V3 Retirement）。`useSentenceLevelRerank` — orchestrator **不再读取**。
 
 ---
 
@@ -15,6 +18,6 @@ P1.2b per-span topK + KenLM weak_veto 决策链。
 | `pick-approved-replacements.ts` | D-greedy pick |
 | `span-replacement-eval.ts` | 诊断 / 单测 |
 
-`fw-detector-orchestrator.ts` 在 `useSentenceLevelRerank=false` 时 import `runFwTopKDecisionPipeline`。
+默认 orchestrator 不再分支至 legacy；手动集成须自行 wiring。
 
-冻结说明：[`../../fw-detector/README.md`](../../fw-detector/README.md) §7 回滚开关。
+冻结说明：[`../../fw-detector/README.md`](../../fw-detector/README.md) §7。

@@ -157,7 +157,7 @@ def audit_tone_token_samples(manifest: List[Dict], n: int = 20, seed: int = 42) 
             "manifestText": item["utterance"],
             "rawAsrText": None,
             "toneEnabled": False,
-            "toneTokenCount": 0,
+            "toneSliceCount": 0,
             "toneConfidenceAvg": None,
             "skippedReason": None,
             "httpOk": False,
@@ -173,7 +173,7 @@ def audit_tone_token_samples(manifest: List[Dict], n: int = 20, seed: int = 42) 
             row["rawAsrText"] = resp.get("text", "")
             tone = resp.get("tone") or {}
             row["toneEnabled"] = tone.get("toneEnabled", False)
-            row["toneTokenCount"] = tone.get("toneTokenCount", 0)
+            row["toneSliceCount"] = tone.get("sliceCount", 0)
             row["toneConfidenceAvg"] = tone.get("toneConfidenceAvg")
             row["skippedReason"] = tone.get("skippedReason")
             diag = (resp.get("diagnostics") or {}).get("toneModule") or {}
@@ -191,7 +191,7 @@ def audit_tone_token_samples(manifest: List[Dict], n: int = 20, seed: int = 42) 
 
 
 def audit_dedup_decoupling(manifest: List[Dict], seed: int = 7) -> Dict[str, Any]:
-    """Verify toneTokens generated from pre-dedup words; dedup clears segment words but tone unchanged."""
+    """Verify acoustic slices generated from pre-dedup words; dedup clears segment words but tone unchanged."""
     rng = random.Random(seed)
     items = [x for x in manifest if (DIALOG_DIR / x["file"]).is_file()]
     samples = []
@@ -231,17 +231,17 @@ def audit_dedup_decoupling(manifest: List[Dict], seed: int = 7) -> Dict[str, Any
             segs_pre = _char_word_segments(raw_text, duration)
         tone_pre, _ = run_tone_inference(pcm, sr, segs_pre, "zh", "zh", trace_id="dedup-pre")
         tone_post, _ = run_tone_inference(pcm, sr, [], "zh", "zh", trace_id="dedup-post-empty")
-        http_tone_count = (resp.get("tone") or {}).get("toneTokenCount", 0)
+        http_slice_count = (resp.get("tone") or {}).get("sliceCount", 0)
         samples.append(
             {
                 "id": item["id"],
                 "rawTextBeforeDedup": raw_text,
                 "textAfterDedup": deduped,
                 "dedupChanged": True,
-                "httpToneTokenCount": http_tone_count,
-                "localPreDedupToneTokenCount": tone_pre.tone_token_count,
-                "postDedupWordsEmptyToneTokenCount": tone_post.tone_token_count,
-                "toneStableDespiteDedupWordsNull": tone_pre.tone_token_count == http_tone_count,
+                "httpToneSliceCount": http_slice_count,
+                "localPreDedupToneSliceCount": tone_pre.slice_count,
+                "postDedupWordsEmptyToneSliceCount": tone_post.slice_count,
+                "toneStableDespiteDedupWordsNull": tone_pre.slice_count == http_slice_count,
             }
         )
         if len(samples) >= 5:
@@ -300,7 +300,7 @@ def audit_fail_open() -> Dict[str, Any]:
             "case": "no_timestamps_direct",
             "toneEnabled": payload.tone_enabled,
             "skippedReason": payload.skipped_reason,
-            "toneTokenCount": payload.tone_token_count,
+            "toneSliceCount": payload.slice_count,
         }
     )
 

@@ -1,8 +1,16 @@
-# pinyin-v1（已归档）
+# Pinyin-IME-V1 文档（已归档）
 
-pinyin-ime-v1 Spike 与相关审计文档已迁移至 [`archive/`](./archive/)。
+> **状态**：**已退役** — 由 [Pinyin-IME-V2](../pinyin-v2/README.md) 取代  
+> **代码**：无活动主链引用；历史见 `docs/pinyin-v1/archive/`
 
-**当前 active 主链：** [Pinyin-IME-V2](../pinyin-v2/Pinyin-IME-V2%20唯一主链实施方案.md)
+## 说明
 
-- 实现：`electron_node/electron-node/main/src/fw-detector/pinyin-ime-v2/`
-- IME 词典 export：`npm run pinyin-ime-v2:export:all`（见 `scripts/pinyin-ime-v2/`）
+V1 为早期 decoder spike 与三层词典试验，**不参与**当前 `fw_detector_v1` / V4 主链。
+
+## 归档内容
+
+`archive/ARCHIVE.md` 简述 V1 历史；`archive/import/` 保留词典导入数据。**测试/开发/审计报告与冻结长文已删除。**
+
+## 当前 IME
+
+见 [../pinyin-v2/README.md](../pinyin-v2/README.md)。

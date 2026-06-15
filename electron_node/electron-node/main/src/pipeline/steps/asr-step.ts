@@ -20,6 +20,10 @@ import { LID_WINDOW_MS } from '../../lid/lid-constants';
 import { buildAsrHypotheses } from '../../asr/build-asr-hypotheses';
 import { resolvePreferredAsrServiceId } from '../../asr/resolve-preferred-asr-service';
 import { isFwDetectorEngineEnabled } from '../../fw-detector/fw-mode';
+import {
+  normalizeAcousticSlices,
+  offsetAcousticSlices,
+} from '../../fw-detector/tone-time-align';
 import logger from '../../logger';
 
 export interface AsrStepOptions {
@@ -143,7 +147,13 @@ export async function runAsrStep(
 
   // 处理每个ASR批次
   const asrStartTime = Date.now();
-  
+  ctx.acousticToneSlices = [];
+  ctx.asrSegmentNodeBatchIndices = [];
+  ctx.segmentTimeOffsetsSec = [];
+  ctx.segmentCharOffsets = [];
+  let cumulativeTimeSec = 0;
+  let cumulativeCharOffset = 0;
+
   for (let i = 0; i < audioSegments.length; i++) {
     const audioSegment = audioSegments[i];
     
@@ -166,7 +176,11 @@ export async function runAsrStep(
       // 调用ASR服务
       const audioSegmentBuffer = Buffer.from(audioSegment, 'base64');
       const audioSegmentDurationMs = (audioSegmentBuffer.length / 2 / (job.sample_rate || 16000)) * 1000;
-      
+      const segmentOffsetSec = cumulativeTimeSec;
+      const segmentCharOffset = cumulativeCharOffset;
+      ctx.segmentTimeOffsetsSec.push(segmentOffsetSec);
+      ctx.segmentCharOffsets.push(segmentCharOffset);
+
       logger.info(
         {
           jobId: job.job_id,
@@ -245,6 +259,17 @@ export async function runAsrStep(
         `runAsrStep: [ASRService] ASR batch ${i + 1}/${audioSegments.length} completed`
       );
 
+      const batchSlices = offsetAcousticSlices(
+        normalizeAcousticSlices(asrResult.tone?.acousticToneSlices),
+        segmentOffsetSec
+      );
+      ctx.acousticToneSlices.push(...batchSlices);
+
+      const batchSegmentCount = asrResult.segments?.length ?? 0;
+      for (let segIdx = 0; segIdx < batchSegmentCount; segIdx += 1) {
+        ctx.asrSegmentNodeBatchIndices.push(i);
+      }
+
       // 单一路径：所有 segment 结果写入当前 job 的 ctx，只跑一次后续步骤
       if (i === 0) {
         ctx.asrText = asrResult.text;
@@ -265,6 +290,13 @@ export async function runAsrStep(
         ctx.asrText = (ctx.asrText || '') + ' ' + (asrResult.text || '');
         ctx.asrSegments = [...(ctx.asrSegments || []), ...(asrResult.segments || [])];
       }
+
+      const batchText = asrResult.text ?? '';
+      if (i > 0) {
+        cumulativeCharOffset += 1;
+      }
+      cumulativeCharOffset += batchText.length;
+      cumulativeTimeSec += audioSegmentDurationMs / 1000;
 
       // Gate-A：仅对第一个批次检查
       if (i === 0 && (asrResult as any).shouldResetContext && services.sessionContextManager) {

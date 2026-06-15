@@ -3,7 +3,9 @@
 **Status:** FROZEN  
 **Scope:** `asr.engine = fw_detector_v1` 生产路径
 
-FW 误写检测与 Lexicon 修正主链：Metadata Span Gate → V2 Recall → P4 Sentence Rerank → Apply。
+**文档 SSOT：** [`docs/fw-detector/README.md`](../../../../../../docs/fw-detector/README.md) · [`ARCHITECTURE.md`](../../../../../../docs/fw-detector/ARCHITECTURE.md) · [`CONFIG.md`](../../../../../../docs/fw-detector/CONFIG.md)
+
+FW 误写检测与 Lexicon 修正主链：**V4 Boundary-Aware Global Window**（单 Pipeline）。
 
 Pipeline 集成见 [`../pipeline/README.md`](../pipeline/README.md)。
 
@@ -12,8 +14,10 @@ Pipeline 集成见 [`../pipeline/README.md`](../pipeline/README.md)。
 ## 1. 冻结主链
 
 ```text
-ASR → Metadata Span Gate → Lexicon V2 Recall → P4 Sentence Rerank
-→ applyFwSpanReplacements → segmentForJobResult → Aggregation → NMT
+ASR → runFwDetectorOrchestrator → runFwDetectorV4Path
+→ Global Window → Recall → Tone Score → Compatibility
+→ Graph → Beam → KenLM → applyFwSpanReplacements
+→ segmentForJobResult → Aggregation → NMT
 ```
 
 ---
@@ -22,16 +26,18 @@ ASR → Metadata Span Gate → Lexicon V2 Recall → P4 Sentence Rerank
 
 | 角色 | 实现 |
 |------|------|
-| Span | `selectFwMetadataSpans`（`fw-metadata-span-gate.ts`） |
-| Recall | `recallSpanTopK` → V2（`useLexiconRuntimeV2Recall` + `lexiconRuntimeV2.enabled`） |
-| 决策 | `runFwSentenceRerankPipeline`（`useSentenceLevelRerank: true`） |
-| Apply | `applyFwSpanReplacements`（`fw-detector-orchestrator.ts`） |
+| 入口 | `runFwDetectorOrchestrator` → `runFwDetectorV4Path` |
+| 粗边界 | `extractRawCoarseBoundaries`（`pinyin-ime-v2/`） |
+| 共享组装 | `span-assembly-shared/`（Graph / Path / Beam 基础模块） |
+| V4 编排 | `span-assembly-v4/span-assembly-v4-orchestrator.ts` |
+| Recall | `recallTopKForWindows` → `recallSpanTopKV3`（内部复用 `recallSpanTopKV2` 作 exact SQL helper） |
+| KenLM | `fw-detector/kenlm/run-fw-sentence-rerank-from-prefilled.ts` |
+| Apply | `applyFwSpanReplacements`（`apply-span-replacements.ts`） |
 | NMT 输入 | `ctx.segmentForJobResult`（`resolveBusinessAsrText`） |
 
-**文档化例外（仍为冻结路径）：**
+**冻结标识：** `pipelinePath = 'v4'`（唯一合法值）。
 
-- Metadata Gate **legacy fallback**（`fallbackLegacyMaxSpans=1`）→ `suspicious-span-detector-v1.ts`
-- 配置回滚：`useSentenceLevelRerank=false` → [`../legacy/fw-detector/`](../legacy/fw-detector/)
+**已退役（不得再作为主链）：** V2 sentence-level rerank pipeline（removed during V2/V3 Retirement）、V3 `span-assembly-v3/`、legacy IME span resolver。
 
 ---
 
@@ -39,30 +45,26 @@ ASR → Metadata Span Gate → Lexicon V2 Recall → P4 Sentence Rerank
 
 入口：`pipeline/steps/fw-detector-step.ts` → `runFwDetectorOrchestrator`
 
-1. **Span：** `resolveFwSpans` — 默认 `fw_metadata_gate`；回滚 `kenlm_span_gate` / `legacy_detector`
-2. **Recall：** `runWithLexiconRecallContext` + `recallSpanTopK`（V2 或 V1）
-3. **Rerank：** `useSentenceLevelRerank` ? `runFwSentenceRerankPipeline` : `runFwTopKDecisionPipeline`
-4. **Apply：** `ctx.segmentForJobResult = applyFwSpanReplacements(...)`；有 apply 时 `ctx.asrRepairApplied = true`
+1. **Lexicon V2：** `ensureLexiconRuntimeV2Loaded`
+2. **V4 Path：** `runFwDetectorV4Path`（Global Window → Tone → Graph → Beam → KenLM）
+3. **Apply：** `ctx.segmentForJobResult = applyFwSpanReplacements(...)`；有 apply 时 `ctx.asrRepairApplied = true`
 
-### 3.1 Metadata Span Gate
+### 3.1 Recall（Lexicon Runtime V2 · Window SQL）
 
-- 主信号：alias exact hit、低词概率（word probability）
-- 输入：`rawAsrText`、ASR segments、V2 alias 索引
-- 上限：`fwMetadataSpanGate.maxSpans`（默认 **4**，SSOT）
+V4 窗口 Recall：`span-assembly-v4/recall-topk-for-windows.ts` → `lexicon-v2/recall-span-topkv3.ts`。
 
-**Legacy fallback**（非主路径）：`allowSegmentFallbackScan` + 低 segment avg_logprob → 最多 `fallbackLegacyMaxSpans`（默认 1）个 suspicious span。
+- **Exact 层：** `recallSpanTopKV3` 内部调用 `recallSpanTopKV2` + tone sort（`recallSpanTopKV2` 仅作 exact SQL helper，非主链 Recall）
+- **Parent fragment 层：** `lookupParentFragments` + tone penalty
+- **非主链：** `lexicon/local-span-recall.ts` 仅 legacy 回滚链（`legacy/fw-detector/`）
 
-### 3.2 Recall（Lexicon Runtime V2）
+Bundle：`node_runtime/lexicon/v3`（加载器 `LexiconRuntimeV2`）。
 
-`lexicon/local-span-recall.ts` → `recallSpanTopKViaRuntimeV2` when双开关 true。  
-Bundle：`node_runtime/lexicon/v3`（P1 阶段 A，加载器仍为 `LexiconRuntimeV2`）。详见 [`../../../../docs/lexicon-v3/README.md`](../../../../docs/lexicon-v3/README.md)。
-
-### 3.3 P4 Sentence Rerank（默认）
+### 3.2 KenLM
 
 - `maxSentenceCandidates: 16`，`minDeltaToReplace: 0.03`
 - `enableKenLMGate: true` **必需**（否则 rerank 不 pick 替换）
 
-### 3.4 Apply
+### 3.3 Apply
 
 唯一 FW 写回：`apply-span-replacements.ts`（D-greedy 右向左替换）。
 
@@ -72,12 +74,12 @@ Bundle：`node_runtime/lexicon/v3`（P1 阶段 A，加载器仍为 `LexiconRunti
 
 | 类别 | 禁止 |
 |------|------|
-| Span 来源 | Metadata Gate 以外进入默认路径 |
-| Recall | V2 以外进入默认路径 |
-| 决策链 | Sentence Rerank 以外进入默认路径 |
+| Pipeline 版本 | V2/V3 分支、`pipelineVersion` / `spanAssemblyVersion` |
+| 决策链 | V2 rerank pipeline 作为主链 |
 | Apply | `applyFwSpanReplacements` 以外 FW 写回 |
 | NMT 输入 | `segmentForJobResult` 以外 |
 | 写点 | 白名单以外 `segmentForJobResult` 赋值 |
+| 目录 | 禁止保留 / 新增 `span-assembly-v3/` |
 
 FW 主链源文件 **禁止** `import ... legacy/asr-repair`（`fw-detector-gate.mjs` 断言）。
 
@@ -89,7 +91,8 @@ FW 主链源文件 **禁止** `import ... legacy/asr-repair`（`fw-detector-gate
 |------|------|
 | `pipeline/steps/asr-step.ts` | init from `rawAsrText` |
 | `pipeline/steps/fw-detector-step.ts` | skip/disabled sync |
-| `fw-detector/fw-detector-orchestrator.ts` | no_spans / **apply** |
+| `fw-detector/fw-detector-orchestrator.ts` | empty / lexicon unavailable |
+| `fw-detector/fw-detector-v4-path.ts` | no_spans / **apply** |
 | `pipeline/steps/aggregation-step.ts` | turn 合并 |
 | `pipeline/enhancement/*` | 5015/5016/5017（write-lock） |
 | `pipeline/post-asr-routing.ts` | 5015 helper |
@@ -107,30 +110,25 @@ FW apply 后 `isSegmentWriteLocked` 阻止 5015/5016/5017。
 |----|----------|
 | `asr.engine` | `fw_detector_v1` |
 | `features.lexiconRuntimeV2.enabled` | `true` |
-| `features.fwDetector.useLexiconRuntimeV2Recall` | `true` |
-| `features.fwDetector.spanGateMode` | `fw_metadata_gate` |
-| `features.fwDetector.kenlmSpanGate.enabled` | `false` |
-| `features.fwDetector.useSentenceLevelRerank` | `true` |
+| `features.fwDetector.spanAssemblyV4Enabled` | `true` |
+| `features.fwDetector.toneTimestampOnlyEnabled` | `true` |
 | `features.fwDetector.enableKenLMGate` | `true` |
-| `features.fwDetector.fwMetadataSpanGate.maxSpans` | `4` |
 | `features.fwDetector.maxSentenceCandidates` | `16` |
-| `features.fwDetector.minDeltaToReplace` | `0.03` |
+| `features.fwDetector.minDeltaToReplace` | `0.03`（**V4 Apply pick 阈值**） |
 | `features.fwDetector.candidateRequireRepairTarget` | `true` |
 | `features.lexiconRecall.enabled` | `false` |
 
+**Deprecated：** `spanAssemblyV4Enabled=false` 仅 warn，仍运行 V4；`v3ToneTimestampOnlyEnabled` 迁移至 `toneTimestampOnlyEnabled`；`kenlmDeltaThreshold` 仅配置兼容读取，V4 rerank **不使用**（Apply 阈值见 `minDeltaToReplace`）。
+
 ---
 
-## 7. 回滚开关（仅 config，不改源码）
+## 7. 回滚开关（historical only）
 
 | 目标 | 配置 |
 |------|------|
-| P1.2b per-span topK | `useSentenceLevelRerank: false` |
-| KenLM span gate | `spanGateMode: kenlm_gate_filter`, `kenlmSpanGate.enabled: true` |
-| Legacy detector | `spanGateMode: legacy_detector` |
-| V1 lexicon recall | `useLexiconRuntimeV2Recall: false` |
 | 关闭 FW | `features.fwDetector.enabled: false` |
-
-解冻流程：改 `tests/freeze-rollback-config.json` → merge 到 userData config → 回归验证。
+| V1 lexicon recall | `useLexiconRuntimeV2Recall: false`（legacy） |
+| P1.2b per-span topK | `useSentenceLevelRerank` — **orchestrator 不再读取**；归档链见 [`../legacy/fw-detector/`](../legacy/fw-detector/)（手动 wiring） |
 
 ---
 
@@ -141,11 +139,12 @@ FW apply 后 `isSegmentWriteLocked` 阻止 5015/5016/5017。
 | `fw-mode.ts` | 引擎开关、语言判定 |
 | `pipeline-mode-fw.ts` | Pipeline 注入 FW 步骤 |
 | `fw-config.ts` | 运行时配置加载 |
-| `fw-metadata-span-gate.ts` | Metadata span 选择 |
-| `fw-detector-orchestrator.ts` | gate → recall → rerank → apply |
-| `fw-sentence-rerank-pipeline.ts` | P4 句级 KenLM |
+| `fw-detector-orchestrator.ts` | Lexicon V2 gate → V4 path |
+| `fw-detector-v4-path.ts` | V4 主链入口 |
+| `span-assembly-v4/` | V4 Global Window 编排 |
+| `span-assembly-shared/` | V4 共享 Graph/Path/Beam 模块 |
+| `kenlm/` | KenLM sentence rerank |
 | `apply-span-replacements.ts` | 局部替换 |
-| `suspicious-span-detector-v1.ts` | metadata fallback |
 | `freeze-contract.test.ts` | 冻结合约 |
 | `freeze-config-ssot.test.ts` | SSOT parity |
 
@@ -160,6 +159,7 @@ cd electron_node/electron-node
 npm run build:main
 npx jest --testPathPattern="freeze-contract|freeze-config-ssot"
 node scripts/fw-detector-gate.mjs
+npm run test:fw-detector
 ```
 
 ---
@@ -168,6 +168,6 @@ node scripts/fw-detector-gate.mjs
 
 | 路径 | 说明 |
 |------|------|
-| `main/src/fw-detector/` | 冻结主链 + metadata fallback |
+| `main/src/fw-detector/` | 冻结 V4 主链 |
 | `main/src/legacy/fw-detector/` | P1.2b 回滚链 |
 | `main/src/legacy/asr-repair/` | Legacy ASR repair（非 FW 默认 step） |

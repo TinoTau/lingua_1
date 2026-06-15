@@ -51,7 +51,7 @@ const DOMAINS = ['tech_ai', 'travel', 'transport', 'restaurant'];
 const PERF_PATH = path.join(__dirname, '../fw-detector-dialog-200-phase4e-quality-perf.json');
 const MANIFEST_PATH = path.join(PROJECT_ROOT, 'test wav/dialog_200/cases.manifest.json');
 const JSON_OUT = path.join(__dirname, 'recall-candidate-dump-audit-data.json');
-const MD_OUT = path.join(PROJECT_ROOT, 'docs/pinyin-v2/Recall_Candidate_Dump_Audit_2026_06_03.md');
+const MD_OUT = path.join(__dirname, 'recall-candidate-dump-audit-report.md');
 
 function norm(s) {
   return (s || '').replace(/[\s,，。！？、；：.!?;:'"()（）\[\]【】\-—…]/g, '').toLowerCase();

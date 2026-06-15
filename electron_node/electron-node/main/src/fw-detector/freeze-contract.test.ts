@@ -38,6 +38,10 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(ime?.maxApprovedSpans).toBe(4);
     expect(fw?.maxSentenceCandidates).toBe(16);
     expect(fw?.minDeltaToReplace).toBe(0.03);
+    expect(fw?.spanAssemblyV4Enabled).toBe(true);
+    expect(fw?.spanAssemblyV4DiagnosticsEnabled).toBe(false);
+    expect(fw?.spanAssemblyV4DiagnosticsLevel).toBe('summary');
+    expect(fw?.toneTimestampOnlyEnabled).toBe(true);
   });
 
   it('loadFwDetectorRuntimeConfig 冻结路径默认', () => {
@@ -49,6 +53,9 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(cfg.enableKenLMGate).toBe(true);
     expect(cfg.maxSentenceCandidates).toBe(16);
     expect(cfg.minDeltaToReplace).toBe(0.03);
+    expect(cfg.spanAssemblyV4Enabled).toBe(true);
+    expect(cfg.spanAssemblyV4DiagnosticsEnabled).toBe(false);
+    expect(cfg.toneTimestampOnlyEnabled).toBe(true);
   });
 
   it('local-span-recall V2-only', () => {
@@ -87,7 +94,7 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(FW_ASR_SERVICE_ID).toBe('faster-whisper-vad');
   });
 
-  it('orchestrator V2-only 主链', () => {
+  it('orchestrator V4-only：无 V2/V3 分支', () => {
     const orchSrc = readSrc('fw-detector/fw-detector-orchestrator.ts');
     expect(orchSrc).not.toContain('span-replacement-eval');
     expect(orchSrc).not.toContain('ensureLexiconRuntimeLoaded');
@@ -97,18 +104,21 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(orchSrc).not.toContain('useSentenceLevelRerank');
     expect(orchSrc).not.toContain('isLexiconRuntimeV2RecallEnabled');
     expect(orchSrc).not.toContain('resolveLexiconBundleDir');
-    expect(orchSrc).toContain('resolvePinyinImeV2Spans');
-    expect(orchSrc).toContain('runFwSentenceRerankPipeline');
+    expect(orchSrc).not.toContain('spanAssemblyV3Enabled');
+    expect(orchSrc).not.toContain('runFwDetectorV3Path');
+    expect(orchSrc).not.toContain('resolvePinyinImeV2Spans');
+    expect(orchSrc).not.toContain('runFwSentenceRerankPipeline');
+    expect(orchSrc).toContain('runFwDetectorV4Path');
+    expect(orchSrc).toContain("pipelinePath: 'v4'");
     expect(orchSrc).toContain('ensureLexiconRuntimeV2Loaded');
     expect(orchSrc).not.toContain('resolveFwSpans');
     expect(orchSrc).not.toContain('selectFwMetadataSpans');
     expect(orchSrc).not.toContain('detectSuspiciousSpansV1');
+    expect(orchSrc).not.toContain('if (config.spanAssemblyV4Enabled)');
   });
 
-  it('SpanSelector 不依赖 LexiconRuntime V1', () => {
-    const imeSrc = readSrc('fw-detector/pinyin-ime-v2/resolve-pinyin-ime-v2-spans.ts');
-    expect(imeSrc).not.toContain('LexiconRuntime');
-    expect(imeSrc).not.toMatch(/runtime\s*:/);
+  it('span-assembly-v3 目录已移除', () => {
+    expect(fs.existsSync(path.join(SRC_ROOT, 'fw-detector/span-assembly-v3'))).toBe(false);
   });
 
   it('pinyin-probe 已删除', () => {
@@ -262,6 +272,44 @@ describe('P1~P4 freeze simplification contract', () => {
       expect(fs.existsSync(path.join(SRC_ROOT, 'pipeline/enhancement', name))).toBe(true);
       expect(fs.existsSync(path.join(SRC_ROOT, 'pipeline/steps', name))).toBe(false);
     }
+  });
+
+  it('assemble-parent-term-span-candidates-v4 使用 Greedy Longest 选择', () => {
+    const assemblySrc = readSrc('fw-detector/span-assembly-v4/assemble-parent-term-span-candidates-v4.ts');
+    expect(assemblySrc).toContain('selectGreedyLongestParentSpanCandidate');
+    expect(assemblySrc).toContain('parentSpanCandidateEmittedCount');
+    expect(assemblySrc).toContain('parentSpanCandidateSelectedCount');
+  });
+
+  it('run-coarse-sentence-beam-v4 使用 findOwningCoarseSpanIndexV4', () => {
+    const beamSrc = readSrc('fw-detector/span-assembly-v4/run-coarse-sentence-beam-v4.ts');
+    expect(beamSrc).toContain('findOwningCoarseSpanIndexV4');
+    expect(beamSrc).not.toMatch(/rawStart === pick\.span\.start/);
+  });
+
+  it('coarse-path-assembly 优先用 GraphEdge.coarseSpanId 归属', () => {
+    const pathSrc = readSrc('fw-detector/span-assembly-shared/coarse-path-assembly.ts');
+    expect(pathSrc).toContain('edgeBelongsToSpan');
+    expect(pathSrc).toContain('edge.coarseSpanId === span.id');
+    expect(pathSrc).not.toContain('findOwningCoarseSpanIndex');
+  });
+
+  it('parent_span_candidate GraphEdge 贯通 coarseSpanId', () => {
+    const typesSrc = readSrc('fw-detector/span-assembly-shared/types.ts');
+    const assemblySrc = readSrc('fw-detector/span-assembly-v4/assemble-parent-term-span-candidates-v4.ts');
+    const graphSrc = readSrc('fw-detector/span-assembly-shared/coarse-candidate-graph.ts');
+    expect(typesSrc).toContain('coarseSpanId?: string');
+    expect(assemblySrc).toContain('coarseSpanId: candidate.coarseSpanId');
+    expect(graphSrc).toContain('coarseSpanId: a.coarseSpanId ?? b.coarseSpanId');
+    expect(graphSrc).toMatch(/a\.coarseSpanId !== b\.coarseSpanId/);
+  });
+
+  it('recallSpanTopKV2 冻结合约：不得引用 term_pinyin_ngrams / parent_fragment', () => {
+    const v2Src = readSrc('lexicon-v2/recall-span-topk-v2.ts');
+    expect(v2Src).not.toContain('term_pinyin_ngrams');
+    expect(v2Src).not.toContain('parent_fragment');
+    expect(v2Src).not.toContain('recallSpanTopKV3');
+    expect(v2Src).not.toContain('lookupParentFragments');
   });
 
   it('segmentForJobResult 写点白名单（静态）', () => {

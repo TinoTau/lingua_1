@@ -30,6 +30,10 @@ describe('freeze-config-ssot parity', () => {
     expect(ssot.fwDetector.minDeltaToReplace).toBe(fw?.minDeltaToReplace);
     expect(ssot.fwDetector.minPrior).toBe(fw?.minPrior);
     expect(ssot.fwDetector.candidateRequireRepairTarget).toBe(fw?.candidateRequireRepairTarget);
+    expect(ssot.fwDetector.spanAssemblyV4Enabled).toBe(fw?.spanAssemblyV4Enabled);
+    expect(ssot.fwDetector.spanAssemblyV4DiagnosticsEnabled).toBe(fw?.spanAssemblyV4DiagnosticsEnabled);
+    expect(ssot.fwDetector.spanAssemblyV4DiagnosticsLevel).toBe(fw?.spanAssemblyV4DiagnosticsLevel);
+    expect(ssot.fwDetector.toneTimestampOnlyEnabled).toBe(fw?.toneTimestampOnlyEnabled);
 
     expect(ssot.lexiconRuntimeV2.enabled).toBe(v2?.enabled);
     expect(ssot.lexiconRuntimeV2.bundlePath).toBe(v2?.bundlePath);

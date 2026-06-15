@@ -1,31 +1,12 @@
-import { createKenlmBatchScorer } from '../asr-repair/sentence-rerank/kenlm-scorer';
 import { ensureLexiconRuntimeV2Loaded } from '../lexicon-v2/lexicon-runtime-v2-holder';
 import { defaultGeneralProfile } from '../lexicon-v2/profile-registry';
-import {
-  getLexiconSessionIntentFromContext,
-  getProfileSnapshotFromContext,
-} from '../session-runtime/turn-profile-binding';
-import { runWithLexiconRecallContext } from '../lexicon-v2/lexicon-recall-context';
-import {
-  flushRecallJobDiagnostics,
-  runWithRecallV2Diagnostics,
-} from '../lexicon-v2/recall-v2-diagnostics';
-import { getLexiconRuntimeV2 } from '../lexicon-v2/lexicon-runtime-v2-holder';
+import { getProfileSnapshotFromContext } from '../session-runtime/turn-profile-binding';
 import type { JobContext } from '../pipeline/context/job-context';
-import { applyFwSpanReplacements } from './apply-span-replacements';
 import { loadFwDetectorRuntimeConfig } from './fw-config';
-import { runFwSentenceRerankPipeline } from './fw-sentence-rerank-pipeline';
+import { runFwDetectorV4Path } from './fw-detector-v4-path';
 import { buildFwRuntimeDiag } from './fw-runtime-diag';
 import { loadPinyinImeV2RuntimeConfig } from './pinyin-ime-v2/pinyin-ime-v2-config';
-import { resolvePinyinImeV2Spans } from './pinyin-ime-v2/resolve-pinyin-ime-v2-spans';
-import type {
-  FwDetectorResult,
-  FwDetectorRuntimeDiag,
-  FwDetectorSummary,
-  FwSpanDiagnostics,
-  KenlmGateMode,
-  PinyinImeV2ActiveDiagnostics,
-} from './types';
+import type { FwDetectorResult, FwDetectorSummary, KenlmGateMode } from './types';
 
 function emptySummary(): FwDetectorSummary {
   return {
@@ -40,59 +21,6 @@ function emptySummary(): FwDetectorSummary {
   };
 }
 
-function buildSummary(spans: FwSpanDiagnostics[], decision: {
-  kenlmQueryCount: number;
-  pickedTopKWinCount: number;
-}): FwDetectorSummary {
-  const candidateCount = spans.reduce((n, s) => n + s.candidates.length, 0);
-  const candidateSentenceCount = spans.reduce(
-    (n, s) => n + s.candidates.filter((c) => c.candidateSentence.length > 0).length,
-    0
-  );
-  let kenlmApprovedCount = 0;
-  let kenlmVetoedCount = 0;
-  for (const span of spans) {
-    for (const c of span.candidates) {
-      if (c.kenlm?.approved) {
-        kenlmApprovedCount += 1;
-      }
-      if (c.kenlm?.vetoed) {
-        kenlmVetoedCount += 1;
-      }
-    }
-  }
-  return {
-    spanCount: spans.length,
-    candidateCount,
-    candidateSentenceCount,
-    appliedCount: spans.filter((s) => s.applied).length,
-    kenlmApprovedCount,
-    kenlmVetoedCount,
-    pickedTopKWinCount: decision.pickedTopKWinCount,
-    kenlmQueryCount: decision.kenlmQueryCount,
-  };
-}
-
-function resolveResultReason(
-  spans: FwSpanDiagnostics[],
-  appliedCount: number
-): string | undefined {
-  if (appliedCount > 0) {
-    return 'applied';
-  }
-  if (spans.length === 0) {
-    return 'no_spans';
-  }
-  const candidateCount = spans.reduce((n, s) => n + s.candidates.length, 0);
-  if (candidateCount === 0) {
-    return 'no_candidates';
-  }
-  if (spans.some((s) => s.candidates.some((c) => c.vetoReason === 'kenlm_unavailable'))) {
-    return 'kenlm_unavailable';
-  }
-  return undefined;
-}
-
 function resolveKenlmRuntime(ctx: JobContext, config: ReturnType<typeof loadFwDetectorRuntimeConfig>) {
   const enableKenLMGate =
     typeof ctx.fwDetectorEnableKenLMGateOverride === 'boolean'
@@ -104,39 +32,20 @@ function resolveKenlmRuntime(ctx: JobContext, config: ReturnType<typeof loadFwDe
     typeof ctx.fwDetectorKenlmVetoThresholdOverride === 'number'
       ? ctx.fwDetectorKenlmVetoThresholdOverride
       : config.kenlmVetoThreshold;
-
   return { enableKenLMGate, kenlmGateMode, kenlmVetoThreshold };
 }
 
-function buildEarlyExitResult(
-  configSnapshot: Record<string, unknown>,
-  runtimeDiagBase: FwDetectorRuntimeDiag,
-  pinyinImeV2: PinyinImeV2ActiveDiagnostics
-): FwDetectorResult {
+function buildConfigSnapshot(
+  config: ReturnType<typeof loadFwDetectorRuntimeConfig>,
+  imeConfig: ReturnType<typeof loadPinyinImeV2RuntimeConfig>,
+  enabledDomains: string[],
+  enableKenLMGate: boolean,
+  kenlmGateMode: KenlmGateMode,
+  kenlmVetoThreshold: number
+): Record<string, unknown> {
   return {
-    enabled: true,
-    triggered: false,
-    reason: 'no_spans',
-    configSnapshot,
-    summary: emptySummary(),
-    runtime: runtimeDiagBase,
-    spans: [],
-    pinyinImeV2,
-    kenlmVetoMs: 0,
-    kenlmVetoQueryCount: 0,
-  };
-}
-
-export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDetectorResult> {
-  const config = loadFwDetectorRuntimeConfig();
-  const imeConfig = loadPinyinImeV2RuntimeConfig();
-  const enabledDomains =
-    Array.isArray(ctx.fwDetectorEnabledDomainsOverride) && ctx.fwDetectorEnabledDomainsOverride.length > 0
-      ? ctx.fwDetectorEnabledDomainsOverride
-      : config.enabledDomains;
-  const { enableKenLMGate, kenlmGateMode, kenlmVetoThreshold } = resolveKenlmRuntime(ctx, config);
-  const rawText = (ctx.rawAsrText ?? '').trim();
-  const configSnapshot: Record<string, unknown> = {
+    pipelinePath: 'v4' as const,
+    spanAssemblyV4Enabled: true,
     pinyinImeV2: {
       enabled: imeConfig.enabled,
       topK: imeConfig.topK,
@@ -151,13 +60,34 @@ export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDete
     candidateRequireRepairTarget: config.candidateRequireRepairTarget,
     maxSentenceCandidates: config.maxSentenceCandidates,
     minDeltaToReplace: config.minDeltaToReplace,
+    toneTimestampOnlyEnabled: config.toneTimestampOnlyEnabled,
   };
+}
+
+export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDetectorResult> {
+  const config = loadFwDetectorRuntimeConfig();
+  const imeConfig = loadPinyinImeV2RuntimeConfig();
+  const enabledDomains =
+    Array.isArray(ctx.fwDetectorEnabledDomainsOverride) && ctx.fwDetectorEnabledDomainsOverride.length > 0
+      ? ctx.fwDetectorEnabledDomainsOverride
+      : config.enabledDomains;
+  const { enableKenLMGate, kenlmGateMode, kenlmVetoThreshold } = resolveKenlmRuntime(ctx, config);
+  const rawText = (ctx.rawAsrText ?? '').trim();
+  const configSnapshot = buildConfigSnapshot(
+    config,
+    imeConfig,
+    enabledDomains,
+    enableKenLMGate,
+    kenlmGateMode,
+    kenlmVetoThreshold
+  );
 
   if (!rawText) {
     return {
       enabled: true,
       triggered: false,
       reason: 'empty_raw',
+      pipelinePath: 'v4',
       configSnapshot,
       summary: emptySummary(),
       runtime: {
@@ -183,6 +113,7 @@ export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDete
       enabled: true,
       triggered: false,
       reason: 'lexicon_v2_unavailable',
+      pipelinePath: 'v4',
       configSnapshot,
       summary: emptySummary(),
       runtime: runtimeDiagBase,
@@ -190,82 +121,14 @@ export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDete
     };
   }
 
-  const kenlmScorer = enableKenLMGate ? createKenlmBatchScorer() : null;
-  const fwStartMs = Date.now();
-
-  const spanResolution = resolvePinyinImeV2Spans({
+  return runFwDetectorV4Path({
+    ctx,
     rawText,
+    config,
+    configSnapshot,
+    runtimeDiagBase,
     profile,
     enabledDomains,
-    minPrior: config.minPrior,
-    imeConfig,
+    enableKenLMGate,
   });
-  const spanDiagnostics = spanResolution.spans;
-  const pinyinImeV2 = spanResolution.pinyinImeV2;
-
-  if (spanDiagnostics.length === 0) {
-    ctx.segmentForJobResult = rawText;
-    ctx.fwDetectorStepMs = Date.now() - fwStartMs;
-    const result = buildEarlyExitResult(configSnapshot, runtimeDiagBase, pinyinImeV2);
-    ctx.fwDetectorResult = result;
-    return result;
-  }
-
-  const sessionIntent = getLexiconSessionIntentFromContext(ctx);
-  const decision = await runWithLexiconRecallContext({ sessionIntent }, () =>
-    runWithRecallV2Diagnostics(async () =>
-      runFwSentenceRerankPipeline({
-        rawText,
-        spans: spanDiagnostics,
-        profile,
-        config: {
-          minPrior: config.minPrior,
-          maxSentenceCandidates: config.maxSentenceCandidates,
-          minDeltaToReplace: config.minDeltaToReplace,
-          candidateRequireRepairTarget: config.candidateRequireRepairTarget,
-        },
-        enabledDomains,
-        kenlmScorer,
-        tone: ctx.asrResult?.tone,
-      })
-    )
-  );
-  ctx.fwDetectorStepMs = Date.now() - fwStartMs;
-
-  ctx.segmentForJobResult = applyFwSpanReplacements(rawText, decision.approved);
-  if (decision.approved.length > 0) {
-    ctx.asrRepairApplied = true;
-  }
-
-  const summary = buildSummary(decision.spans, decision);
-  const v2QueryStats = getLexiconRuntimeV2().getAndResetTierQueryStats();
-  const recallV2Diagnostics = flushRecallJobDiagnostics({
-    v2SqlQueryCount: v2QueryStats?.sqlQueries ?? 0,
-    v2CacheHits: v2QueryStats?.cacheHits ?? 0,
-    v2CacheMisses: v2QueryStats?.cacheMisses ?? 0,
-    kenlmQueryCount: summary.kenlmQueryCount,
-  });
-  const kenlmVetoMs = decision.kenlmTiming?.batchMs ?? 0;
-  const kenlmVetoQueryCount = decision.kenlmQueryCount;
-  const result: FwDetectorResult = {
-    enabled: true,
-    triggered: summary.spanCount > 0,
-    reason: resolveResultReason(decision.spans, summary.appliedCount),
-    configSnapshot,
-    summary,
-    runtime: runtimeDiagBase,
-    replacements: decision.replacements,
-    spans: decision.spans,
-    pinyinImeV2,
-    kenlmVetoMs,
-    kenlmVetoQueryCount,
-    kenlmTiming: decision.kenlmTiming
-      ? { batchMs: kenlmVetoMs, queryCount: kenlmVetoQueryCount }
-      : undefined,
-    ...(recallV2Diagnostics ? { recallV2Diagnostics } : {}),
-    sentenceRerank: decision.sentenceRerank,
-    ...(decision.toneDiagnostics ? { toneModule: decision.toneDiagnostics } : {}),
-  };
-  ctx.fwDetectorResult = result;
-  return result;
 }

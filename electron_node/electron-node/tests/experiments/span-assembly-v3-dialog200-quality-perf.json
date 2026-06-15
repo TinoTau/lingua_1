@@ -1,0 +1,962 @@
+{
+  "meta": {
+    "timestamp": "2026-06-08T19:50:01.652Z",
+    "config": {
+      "spanAssemblyV3Enabled": true,
+      "pipelinePath": "v3",
+      "toneStrictFilter": true
+    },
+    "evaluated": 67,
+    "valid_cases": 67,
+    "asr_not_ready_cases": 0,
+    "wall_clock_sec": 915,
+    "asrWarmup": {
+      "ready": true,
+      "attempt": 1,
+      "elapsedMs": 15819,
+      "warmup": {
+        "raw_asr_text": "你好 我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+        "asr_service_id": "faster-whisper-vad",
+        "pipeline_ms": 15808
+      }
+    }
+  },
+  "quality": {
+    "avg_cer_raw": 0.3287,
+    "avg_cer_final": 0.2828,
+    "avg_cer_probe": 0.3287,
+    "median_cer_raw": 0.2222,
+    "median_cer_final": 0.2222,
+    "p95_cer_raw": 0.6,
+    "p95_cer_final": 0.6,
+    "exact_match_raw": 8,
+    "exact_match_final": 8,
+    "exact_match_probe": 8,
+    "fw_improved_cases": 1,
+    "fw_degraded_cases": 0,
+    "fw_unchanged_cer_cases": 66,
+    "worst_final_cer_top10": [
+      {
+        "id": "d067",
+        "scenario": "customer_service",
+        "cer": 3.04,
+        "ref": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+        "hyp": "您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好"
+      },
+      {
+        "id": "d045",
+        "scenario": "lexicon_homophone",
+        "cer": 0.8,
+        "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+        "hyp": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說"
+      },
+      {
+        "id": "d065",
+        "scenario": "tech_deploy",
+        "cer": 0.6667,
+        "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "hyp": "這次發布我們現對期 在其商線計劃窗口後選生 成模快需要連掉別漏掉回歸"
+      },
+      {
+        "id": "d043",
+        "scenario": "lexicon_homophone",
+        "cer": 0.6,
+        "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "hyp": "我們下午討論後 選生成方安線吧,後選生成的接口文當補期。"
+      },
+      {
+        "id": "d010",
+        "scenario": "hospital",
+        "cer": 0.55,
+        "ref": "医生您好，我这两天头痛，想开点药并做个血常规。",
+        "hyp": "醫生您好,我這兩天頭痛想開點,要並做個歇常規"
+      },
+      {
+        "id": "d007",
+        "scenario": "taxi",
+        "cer": 0.5484,
+        "ref": "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+        "hyp": "市富曲仲觀村軟件遠走機場告訴我幹 9点半的回药师赌车 您提前跟我说"
+      },
+      {
+        "id": "d055",
+        "scenario": "hospital",
+        "cer": 0.4762,
+        "ref": "医生您好，我这两天嗓子疼，想开点药并做个血常规。",
+        "hyp": "醫生您好我這兩天嗓子疼想開點要並做隔斜常規"
+      },
+      {
+        "id": "d054",
+        "scenario": "taxi",
+        "cer": 0.4737,
+        "ref": "去杭州西溪，不走三环可以吗？那边现在堵不堵？",
+        "hyp": "去杭州系系部走三環 可以嗎?那扁現在賭不賭?"
+      },
+      {
+        "id": "d041",
+        "scenario": "gym",
+        "cer": 0.45,
+        "ref": "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+        "hyp": "更意識規則要是找不到了前台 能幫忙開一下嗎"
+      },
+      {
+        "id": "d037",
+        "scenario": "restaurant",
+        "cer": 0.4375,
+        "ref": "两位，靠窗有位置吗？不要香菜，微辣就行。",
+        "hyp": "两位烤创有位置嘛 不要像蔡薇拉就行"
+      }
+    ]
+  },
+  "perf": {
+    "pipeline_ms": {
+      "avg": 13410,
+      "p50": 10898,
+      "p95": 20709,
+      "min": 7736,
+      "max": 43912
+    },
+    "fw_detector_step_ms": {
+      "avg": 1772,
+      "p50": 1736,
+      "p95": 2163
+    },
+    "asr_latency_ms": {
+      "avg": 6309,
+      "p50": 5767,
+      "p95": 7406
+    },
+    "audio_ms": {
+      "avg": 3574,
+      "p50": 3880,
+      "p95": 4900
+    },
+    "rtf_pipeline": 3.752,
+    "rtf_asr": 1.765
+  },
+  "contract": {
+    "evaluated": 67,
+    "pass": 67,
+    "fail": 0,
+    "skip": 0,
+    "wall_clock_sec": 915,
+    "pipeline_ok_rate": 1,
+    "fw_triggered_count": 67,
+    "fw_applied_case_count": 0,
+    "text_changed_count": 0,
+    "lexicon_runtime_ok_count": 67,
+    "asr_service_id_distribution": {
+      "faster-whisper-vad": 67
+    },
+    "d001_pass": true,
+    "d001_error": null
+  },
+  "boundaryImport": {
+    "v3_case_count": 67,
+    "coverage_ok_count": 65,
+    "coverage_ok_rate": 0.9701,
+    "avg_trustedTopKCount": 4.33,
+    "avg_finalCoarseSpanCount": 4.4,
+    "avg_imeBoundaryCount": 13.73,
+    "avg_proposalBoundaryCount": 2.75,
+    "punct_fallback_cases": 9,
+    "span_source_totals": {
+      "ime_token_boundary": 144,
+      "raw_ime_aligned_boundary": 2,
+      "proposal_active_boundary": 121,
+      "asr_word_boundary": 2,
+      "punctuation_fallback": 26
+    },
+    "fallback_reasons": {
+      "no_trusted_topk": 9
+    }
+  },
+  "tone": {
+    "acceptance_source": "spanAssemblyV3.tone",
+    "v3_case_count": 67,
+    "tonePayloadAvailable_count": 67,
+    "windowTimeHit_total": 3879,
+    "windowTimeAttempt_total": 3879,
+    "windowTimeHit_rate": 1,
+    "toneOverlapHit_total": 3149,
+    "toneOverlapSyllableMismatch_total": 730,
+    "alignmentTextUsedCount_total": 0,
+    "tokenTextUsedForAlignmentCount_total": 0,
+    "charScanFallbackCount_total": 0,
+    "compliance_ok": true,
+    "ngramPatternHit_cases": 67,
+    "avg_ngramTonePatternAttemptCount": 57.9,
+    "avg_ngramTonePatternHitCount": 47,
+    "avg_ngramTonePatternMissCount": 10.9,
+    "total_recallToneCompatibleCount": 168,
+    "total_recallToneIncompatibleCount": 3279,
+    "toneSkippedReasons": {},
+    "deprecated_rerank_toneModule_cases": 67,
+    "deprecated_rerank_alignmentMatched": 0
+  },
+  "d001": {
+    "reference": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+    "raw_asr": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+    "cer_raw": 0.2593,
+    "cer_final": 1,
+    "spanAssemblyV3": {
+      "enabled": true,
+      "stub": false,
+      "coarseSpanCount": 8,
+      "ngramQueryCount": 50,
+      "candidateEdgeCount": 6,
+      "overlapMergeCount": 3,
+      "residualSpanCount": 3,
+      "utteranceDomain": "general",
+      "domainVoteMs": 0,
+      "coarsePathAssemblyMs": 0,
+      "sentenceBeamMs": 0,
+      "assemblyMs": 172,
+      "boundaryImport": {
+        "rawSyllableCount": 27,
+        "imeCandidateCount": 5,
+        "trustedTopKCount": 5,
+        "imeBoundaryCount": 18,
+        "rawBoundaryCount": 8,
+        "alignedBoundaryCount": 3,
+        "proposalBoundaryCount": 6,
+        "asrWordBoundaryCount": 23,
+        "punctuationFallbackBoundaryCount": 0,
+        "finalCoarseSpanCount": 8,
+        "coverageOk": true,
+        "boundarySourceBreakdown": {
+          "ime_token_boundary": 4,
+          "raw_ime_aligned_boundary": 0,
+          "proposal_active_boundary": 4,
+          "asr_word_boundary": 0,
+          "punctuation_fallback": 0
+        }
+      },
+      "tone": {
+        "tonePayloadAvailable": true,
+        "toneEnabled": true,
+        "toneSliceCount": 24,
+        "wordTimeSpanCount": 24,
+        "windowTimeAttemptCount": 50,
+        "windowTimeHitCount": 50,
+        "toneOverlapHitCount": 39,
+        "toneOverlapMissCount": 0,
+        "toneOverlapSyllableMismatchCount": 11,
+        "alignmentTextUsedCount": 0,
+        "tokenTextUsedForAlignmentCount": 0,
+        "charScanFallbackCount": 0,
+        "ngramTonePatternAttemptCount": 50,
+        "ngramTonePatternHitCount": 39,
+        "ngramTonePatternMissCount": 11,
+        "recallToneCompatibleCount": 2,
+        "recallToneIncompatibleCount": 30,
+        "recallToneFallbackCount": 30,
+        "exampleToneWindows": [
+          {
+            "text": "你好",
+            "pinyinKey": "ni|hao",
+            "windowTimeRange": {
+              "start": 0,
+              "end": 0.46
+            }
+          },
+          {
+            "text": "好",
+            "pinyinKey": "hao|wo",
+            "windowTimeRange": {
+              "start": 0,
+              "end": 0.46
+            },
+            "acousticTonePattern": [
+              3
+            ]
+          },
+          {
+            "text": "我想",
+            "pinyinKey": "wo|xiang",
+            "windowTimeRange": {
+              "start": 0.76,
+              "end": 0.98
+            }
+          },
+          {
+            "text": "想点",
+            "pinyinKey": "xiang|dian",
+            "windowTimeRange": {
+              "start": 0.76,
+              "end": 1.2
+            },
+            "acousticTonePattern": [
+              2,
+              3
+            ]
+          },
+          {
+            "text": "点一",
+            "pinyinKey": "dian|yi",
+            "windowTimeRange": {
+              "start": 0.98,
+              "end": 1.4
+            },
+            "acousticTonePattern": [
+              3,
+              4
+            ]
+          },
+          {
+            "text": "一杯",
+            "pinyinKey": "yi|bei",
+            "windowTimeRange": {
+              "start": 1.2,
+              "end": 1.48
+            },
+            "acousticTonePattern": [
+              4,
+              4
+            ]
+          },
+          {
+            "text": "杯热",
+            "pinyinKey": "bei|re",
+            "windowTimeRange": {
+              "start": 1.4,
+              "end": 1.66
+            },
+            "acousticTonePattern": [
+              4,
+              3
+            ]
+          },
+          {
+            "text": "热拿",
+            "pinyinKey": "re|na",
+            "windowTimeRange": {
+              "start": 1.48,
+              "end": 1.84
+            },
+            "acousticTonePattern": [
+              3,
+              3
+            ]
+          }
+        ]
+      }
+    },
+    "toneModule": {
+      "toneEnabled": false,
+      "alignmentTextMatched": false,
+      "recallToneCompatibleCount": 0,
+      "recallToneFallbackCount": 0
+    }
+  },
+  "samples": [
+    {
+      "id": "d001",
+      "scenario": "cafe",
+      "reference": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "hyp": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+      "raw_asr": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+      "cer_raw": 0.2593,
+      "cer_final": 0.2593,
+      "pipeline_ms": 13674,
+      "fw_step_ms": 1774,
+      "pipelinePath": "v3",
+      "fw_applied": 0,
+      "coarseSpanCount": 8,
+      "boundaryImport": {
+        "rawSyllableCount": 27,
+        "imeCandidateCount": 5,
+        "trustedTopKCount": 5,
+        "imeBoundaryCount": 18,
+        "rawBoundaryCount": 8,
+        "alignedBoundaryCount": 3,
+        "proposalBoundaryCount": 6,
+        "asrWordBoundaryCount": 23,
+        "punctuationFallbackBoundaryCount": 0,
+        "finalCoarseSpanCount": 8,
+        "coverageOk": true,
+        "boundarySourceBreakdown": {
+          "ime_token_boundary": 4,
+          "raw_ime_aligned_boundary": 0,
+          "proposal_active_boundary": 4,
+          "asr_word_boundary": 0,
+          "punctuation_fallback": 0
+        }
+      },
+      "tone": {
+        "tonePayloadAvailable": true,
+        "toneEnabled": true,
+        "toneSliceCount": 24,
+        "wordTimeSpanCount": 24,
+        "windowTimeAttemptCount": 50,
+        "windowTimeHitCount": 50,
+        "toneOverlapHitCount": 39,
+        "toneOverlapMissCount": 0,
+        "toneOverlapSyllableMismatchCount": 11,
+        "alignmentTextUsedCount": 0,
+        "tokenTextUsedForAlignmentCount": 0,
+        "charScanFallbackCount": 0,
+        "ngramTonePatternAttemptCount": 50,
+        "ngramTonePatternHitCount": 39,
+        "ngramTonePatternMissCount": 11,
+        "recallToneCompatibleCount": 2,
+        "recallToneIncompatibleCount": 30,
+        "recallToneFallbackCount": 30,
+        "exampleToneWindows": [
+          {
+            "text": "你好",
+            "pinyinKey": "ni|hao",
+            "windowTimeRange": {
+              "start": 0,
+              "end": 0.46
+            }
+          },
+          {
+            "text": "好",
+            "pinyinKey": "hao|wo",
+            "windowTimeRange": {
+              "start": 0,
+              "end": 0.46
+            },
+            "acousticTonePattern": [
+              3
+            ]
+          },
+          {
+            "text": "我想",
+            "pinyinKey": "wo|xiang",
+            "windowTimeRange": {
+              "start": 0.76,
+              "end": 0.98
+            }
+          },
+          {
+            "text": "想点",
+            "pinyinKey": "xiang|dian",
+            "windowTimeRange": {
+              "start": 0.76,
+              "end": 1.2
+            },
+            "acousticTonePattern": [
+              2,
+              3
+            ]
+          },
+          {
+            "text": "点一",
+            "pinyinKey": "dian|yi",
+            "windowTimeRange": {
+              "start": 0.98,
+              "end": 1.4
+            },
+            "acousticTonePattern": [
+              3,
+              4
+            ]
+          },
+          {
+            "text": "一杯",
+            "pinyinKey": "yi|bei",
+            "windowTimeRange": {
+              "start": 1.2,
+              "end": 1.48
+            },
+            "acousticTonePattern": [
+              4,
+              4
+            ]
+          },
+          {
+            "text": "杯热",
+            "pinyinKey": "bei|re",
+            "windowTimeRange": {
+              "start": 1.4,
+              "end": 1.66
+            },
+            "acousticTonePattern": [
+              4,
+              3
+            ]
+          },
+          {
+            "text": "热拿",
+            "pinyinKey": "re|na",
+            "windowTimeRange": {
+              "start": 1.48,
+              "end": 1.84
+            },
+            "acousticTonePattern": [
+              3,
+              3
+            ]
+          }
+        ]
+      },
+      "toneModule": {
+        "toneEnabled": false,
+        "alignmentTextMatched": false,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 0
+      }
+    },
+    {
+      "id": "d004",
+      "scenario": "meeting",
+      "reference": "小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+      "hyp": "小城客户反馈翻译引擎接口包错 我们能 不能加緩存下午3點前把結論發群裡",
+      "raw_asr": "小城客户反馈翻译引擎接口包错 我们能 不能加緩存下午3點前把結論發群裡",
+      "cer_raw": 0.2727,
+      "cer_final": 0.2727,
+      "pipeline_ms": 16244,
+      "fw_step_ms": 1870,
+      "pipelinePath": "v3",
+      "fw_applied": 0,
+      "coarseSpanCount": 3,
+      "boundaryImport": {
+        "rawSyllableCount": 33,
+        "imeCandidateCount": 0,
+        "trustedTopKCount": 0,
+        "imeBoundaryCount": 0,
+        "rawBoundaryCount": 6,
+        "alignedBoundaryCount": 0,
+        "proposalBoundaryCount": 0,
+        "asrWordBoundaryCount": 0,
+        "punctuationFallbackBoundaryCount": 3,
+        "finalCoarseSpanCount": 3,
+        "coverageOk": true,
+        "boundarySourceBreakdown": {
+          "ime_token_boundary": 0,
+          "raw_ime_aligned_boundary": 0,
+          "proposal_active_boundary": 0,
+          "asr_word_boundary": 0,
+          "punctuation_fallback": 3
+        },
+        "fallbackReason": "no_trusted_topk"
+      },
+      "tone": {
+        "tonePayloadAvailable": true,
+        "toneEnabled": true,
+        "toneSliceCount": 31,
+        "wordTimeSpanCount": 31,
+        "windowTimeAttemptCount": 103,
+        "windowTimeHitCount": 103,
+        "toneOverlapHitCount": 97,
+        "toneOverlapMissCount": 0,
+        "toneOverlapSyllableMismatchCount": 6,
+        "alignmentTextUsedCount": 0,
+        "tokenTextUsedForAlignmentCount": 0,
+        "charScanFallbackCount": 0,
+        "ngramTonePatternAttemptCount": 103,
+        "ngramTonePatternHitCount": 97,
+        "ngramTonePatternMissCount": 6,
+        "recallToneCompatibleCount": 6,
+        "recallToneIncompatibleCount": 68,
+        "recallToneFallbackCount": 68,
+        "exampleToneWindows": [
+          {
+            "text": "小城",
+            "pinyinKey": "xiao|cheng",
+            "windowTimeRange": {
+              "start": 0,
+              "end": 0.52
+            },
+            "acousticTonePattern": [
+              3,
+              3
+            ]
+          },
+          {
+            "text": "城客",
+            "pinyinKey": "cheng|ke",
+            "windowTimeRange": {
+              "start": 0.34,
+              "end": 0.66
+            },
+            "acousticTonePattern": [
+              3,
+              2
+            ]
+          },
+          {
+            "text": "客户",
+            "pinyinKey": "ke|hu",
+            "windowTimeRange": {
+              "start": 0.52,
+              "end": 0.9
+            },
+            "acousticTonePattern": [
+              2,
+              2
+            ]
+          },
+          {
+            "text": "户反",
+            "pinyinKey": "hu|fan",
+            "windowTimeRange": {
+              "start": 0.66,
+              "end": 0.98
+            },
+            "acousticTonePattern": [
+              2,
+              4
+            ]
+          },
+          {
+            "text": "反馈",
+            "pinyinKey": "fan|kui",
+            "windowTimeRange": {
+              "start": 0.9,
+              "end": 1.2
+            },
+            "acousticTonePattern": [
+              4,
+              4
+            ]
+          },
+          {
+            "text": "馈翻",
+            "pinyinKey": "kui|fan",
+            "windowTimeRange": {
+              "start": 0.98,
+              "end": 1.36
+            },
+            "acousticTonePattern": [
+              4,
+              3
+            ]
+          },
+          {
+            "text": "翻译",
+            "pinyinKey": "fan|yi",
+            "windowTimeRange": {
+              "start": 1.2,
+              "end": 1.52
+            },
+            "acousticTonePattern": [
+              3,
+              3
+            ]
+          },
+          {
+            "text": "译引",
+            "pinyinKey": "yi|yin",
+            "windowTimeRange": {
+              "start": 1.36,
+              "end": 1.72
+            },
+            "acousticTonePattern": [
+              3,
+              2
+            ]
+          }
+        ]
+      },
+      "toneModule": {
+        "toneEnabled": false,
+        "alignmentTextMatched": false,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 0
+      }
+    },
+    {
+      "id": "d010",
+      "scenario": "hospital",
+      "reference": "医生您好，我这两天头痛，想开点药并做个血常规。",
+      "hyp": "醫生您好,我這兩天頭痛想開點,要並做個歇常規",
+      "raw_asr": "醫生您好,我這兩天頭痛想開點,要並做個歇常規",
+      "cer_raw": 0.55,
+      "cer_final": 0.55,
+      "pipeline_ms": 9905,
+      "fw_step_ms": 1748,
+      "pipelinePath": "v3",
+      "fw_applied": 0,
+      "coarseSpanCount": 4,
+      "boundaryImport": {
+        "rawSyllableCount": 20,
+        "imeCandidateCount": 5,
+        "trustedTopKCount": 5,
+        "imeBoundaryCount": 13,
+        "rawBoundaryCount": 5,
+        "alignedBoundaryCount": 2,
+        "proposalBoundaryCount": 4,
+        "asrWordBoundaryCount": 19,
+        "punctuationFallbackBoundaryCount": 0,
+        "finalCoarseSpanCount": 4,
+        "coverageOk": true,
+        "boundarySourceBreakdown": {
+          "ime_token_boundary": 2,
+          "raw_ime_aligned_boundary": 0,
+          "proposal_active_boundary": 2,
+          "asr_word_boundary": 0,
+          "punctuation_fallback": 0
+        }
+      },
+      "tone": {
+        "tonePayloadAvailable": true,
+        "toneEnabled": true,
+        "toneSliceCount": 20,
+        "wordTimeSpanCount": 20,
+        "windowTimeAttemptCount": 49,
+        "windowTimeHitCount": 49,
+        "toneOverlapHitCount": 49,
+        "toneOverlapMissCount": 0,
+        "toneOverlapSyllableMismatchCount": 0,
+        "alignmentTextUsedCount": 0,
+        "tokenTextUsedForAlignmentCount": 0,
+        "charScanFallbackCount": 0,
+        "ngramTonePatternAttemptCount": 49,
+        "ngramTonePatternHitCount": 49,
+        "ngramTonePatternMissCount": 0,
+        "recallToneCompatibleCount": 2,
+        "recallToneIncompatibleCount": 22,
+        "recallToneFallbackCount": 22,
+        "exampleToneWindows": [
+          {
+            "text": "醫生",
+            "pinyinKey": "yi|sheng",
+            "windowTimeRange": {
+              "start": 0,
+              "end": 0.44
+            },
+            "acousticTonePattern": [
+              4,
+              2
+            ]
+          },
+          {
+            "text": "生您",
+            "pinyinKey": "sheng|nin",
+            "windowTimeRange": {
+              "start": 0.3,
+              "end": 0.72
+            },
+            "acousticTonePattern": [
+              2,
+              3
+            ]
+          },
+          {
+            "text": "您好",
+            "pinyinKey": "nin|hao",
+            "windowTimeRange": {
+              "start": 0.44,
+              "end": 0.96
+            },
+            "acousticTonePattern": [
+              3,
+              2
+            ]
+          },
+          {
+            "text": "好",
+            "pinyinKey": "hao|wo",
+            "windowTimeRange": {
+              "start": 0.72,
+              "end": 0.96
+            },
+            "acousticTonePattern": [
+              2
+            ]
+          },
+          {
+            "text": "我這",
+            "pinyinKey": "wo|zhe",
+            "windowTimeRange": {
+              "start": 1.14,
+              "end": 1.36
+            },
+            "acousticTonePattern": [
+              3,
+              3
+            ]
+          },
+          {
+            "text": "這兩",
+            "pinyinKey": "zhe|liang",
+            "windowTimeRange": {
+              "start": 1.24,
+              "end": 1.54
+            },
+            "acousticTonePattern": [
+              3,
+              4
+            ]
+          },
+          {
+            "text": "兩天",
+            "pinyinKey": "liang|tian",
+            "windowTimeRange": {
+              "start": 1.36,
+              "end": 1.66
+            },
+            "acousticTonePattern": [
+              4,
+              2
+            ]
+          },
+          {
+            "text": "醫生您",
+            "pinyinKey": "yi|sheng|nin",
+            "windowTimeRange": {
+              "start": 0,
+              "end": 0.72
+            },
+            "acousticTonePattern": [
+              4,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      "toneModule": {
+        "toneEnabled": false,
+        "alignmentTextMatched": false,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 0
+      }
+    },
+    {
+      "id": "d050",
+      "scenario": "meeting",
+      "reference": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+      "hyp": "今天的站會獻過一下訂單 中台進都內存 占用高折块需要限流保护 大家看一下风险",
+      "raw_asr": "今天的站會獻過一下訂單 中台進都內存 占用高折块需要限流保护 大家看一下风险",
+      "cer_raw": 0.2571,
+      "cer_final": 0.2571,
+      "pipeline_ms": 19822,
+      "fw_step_ms": 1736,
+      "pipelinePath": "v3",
+      "fw_applied": 0,
+      "coarseSpanCount": 12,
+      "boundaryImport": {
+        "rawSyllableCount": 35,
+        "imeCandidateCount": 5,
+        "trustedTopKCount": 5,
+        "imeBoundaryCount": 19,
+        "rawBoundaryCount": 7,
+        "alignedBoundaryCount": 3,
+        "proposalBoundaryCount": 7,
+        "asrWordBoundaryCount": 27,
+        "punctuationFallbackBoundaryCount": 0,
+        "finalCoarseSpanCount": 12,
+        "coverageOk": true,
+        "boundarySourceBreakdown": {
+          "ime_token_boundary": 6,
+          "raw_ime_aligned_boundary": 0,
+          "proposal_active_boundary": 6,
+          "asr_word_boundary": 0,
+          "punctuation_fallback": 0
+        }
+      },
+      "tone": {
+        "tonePayloadAvailable": true,
+        "toneEnabled": true,
+        "toneSliceCount": 28,
+        "wordTimeSpanCount": 28,
+        "windowTimeAttemptCount": 53,
+        "windowTimeHitCount": 53,
+        "toneOverlapHitCount": 37,
+        "toneOverlapMissCount": 0,
+        "toneOverlapSyllableMismatchCount": 16,
+        "alignmentTextUsedCount": 0,
+        "tokenTextUsedForAlignmentCount": 0,
+        "charScanFallbackCount": 0,
+        "ngramTonePatternAttemptCount": 53,
+        "ngramTonePatternHitCount": 37,
+        "ngramTonePatternMissCount": 16,
+        "recallToneCompatibleCount": 0,
+        "recallToneIncompatibleCount": 41,
+        "recallToneFallbackCount": 41,
+        "exampleToneWindows": [
+          {
+            "text": "今天",
+            "pinyinKey": "jin|tian",
+            "windowTimeRange": {
+              "start": 0,
+              "end": 0.68
+            }
+          },
+          {
+            "text": "天的",
+            "pinyinKey": "tian|de",
+            "windowTimeRange": {
+              "start": 0,
+              "end": 0.68
+            }
+          },
+          {
+            "text": "的站",
+            "pinyinKey": "de|zhan",
+            "windowTimeRange": {
+              "start": 0,
+              "end": 0.96
+            },
+            "acousticTonePattern": [
+              2,
+              4
+            ]
+          },
+          {
+            "text": "站會",
+            "pinyinKey": "zhan|hui",
+            "windowTimeRange": {
+              "start": 0.68,
+              "end": 1.16
+            },
+            "acousticTonePattern": [
+              4,
+              3
+            ]
+          },
+          {
+            "text": "會獻",
+            "pinyinKey": "hui|xian",
+            "windowTimeRange": {
+              "start": 0.96,
+              "end": 1.36
+            },
+            "acousticTonePattern": [
+              3,
+              3
+            ]
+          },
+          {
+            "text": "獻過",
+            "pinyinKey": "xian|guo",
+            "windowTimeRange": {
+              "start": 1.16,
+              "end": 1.58
+            },
+            "acousticTonePattern": [
+              3,
+              3
+            ]
+          },
+          {
+            "text": "今天的",
+            "pinyinKey": "jin|tian|de",
+            "windowTimeRange": {
+              "start": 0,
+              "end": 0.68
+            }
+          },
+          {
+            "text": "天的站",
+            "pinyinKey": "tian|de|zhan",
+            "windowTimeRange": {
+              "start": 0,
+              "end": 0.96
+            }
+          }
+        ]
+      },
+      "toneModule": {
+        "toneEnabled": false,
+        "alignmentTextMatched": false,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 0
+      }
+    }
+  ]
+}

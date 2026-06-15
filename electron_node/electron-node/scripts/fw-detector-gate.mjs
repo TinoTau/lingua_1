@@ -86,7 +86,7 @@ if (fs.existsSync(hintPath)) {
   }
 }
 
-// V1.1 cleanup: orchestrator V2-only mainline
+// V1.2: orchestrator V4-only mainline
 const orchPath = path.join(fwRoot, 'fw-detector-orchestrator.ts');
 if (fs.existsSync(orchPath)) {
   const orchSrc = readRel(orchPath);
@@ -100,6 +100,11 @@ if (fs.existsSync(orchPath)) {
     'useSentenceLevelRerank',
     'isLexiconRuntimeV2RecallEnabled',
     'resolveLexiconBundleDir',
+    'resolvePinyinImeV2Spans',
+    'runFwSentenceRerankPipeline',
+    'runFwDetectorV3Path',
+    'spanAssemblyV3Enabled',
+    'if (config.spanAssemblyV4Enabled)',
   ]) {
     if (orchSrc.includes(forbidden)) {
       fail(`orchestrator must not reference "${forbidden}"`);
@@ -108,11 +113,21 @@ if (fs.existsSync(orchPath)) {
   if (/\bgetLexiconRuntime\b/.test(orchSrc)) {
     fail('orchestrator must not reference getLexiconRuntime (V1 holder)');
   }
-  for (const required of ['resolvePinyinImeV2Spans', 'runFwSentenceRerankPipeline', 'ensureLexiconRuntimeV2Loaded']) {
+  for (const required of ['runFwDetectorV4Path', "pipelinePath: 'v4'", 'ensureLexiconRuntimeV2Loaded']) {
     if (!orchSrc.includes(required)) {
       fail(`orchestrator must reference "${required}"`);
     }
   }
+}
+
+const spanAssemblyV3Dir = path.join(fwRoot, 'span-assembly-v3');
+if (fs.existsSync(spanAssemblyV3Dir)) {
+  fail('span-assembly-v3/ must be removed (V1.2 shared library migration)');
+}
+
+const kenlmRerankShared = path.join(fwRoot, 'span-assembly-shared/run-fw-sentence-rerank-from-prefilled.ts');
+if (fs.existsSync(kenlmRerankShared)) {
+  fail('run-fw-sentence-rerank-from-prefilled.ts must live under fw-detector/kenlm/ only');
 }
 
 // V1.1: default config freeze keys
@@ -281,6 +296,25 @@ if (!fs.existsSync(freezeGuardDoc)) {
 }
 if (!readRel(freezeGuardDoc).includes('segmentForJobResult 写点白名单')) {
   fail('fw-detector/README.md must document segmentForJobResult write whitelist');
+}
+const readmeSrc = readRel(freezeGuardDoc);
+for (const forbidden of ['runFwSentenceRerankPipeline', 'resolvePinyinImeV2Spans']) {
+  if (readmeSrc.includes(forbidden)) {
+    fail(`fw-detector/README.md must not list "${forbidden}" as mainline`);
+  }
+}
+if (!readmeSrc.includes('runFwDetectorV4Path')) {
+  fail('fw-detector/README.md must document runFwDetectorV4Path mainline');
+}
+for (const required of ['recallTopKForWindows', 'recallSpanTopKV3']) {
+  if (!readmeSrc.includes(required)) {
+    fail(`fw-detector/README.md must document V4 recall mainline: ${required}`);
+  }
+}
+
+const distSpanAssemblyV3 = path.join(projectRoot, 'dist/main/electron-node/main/src/fw-detector/span-assembly-v3');
+if (fs.existsSync(distSpanAssemblyV3)) {
+  fail('dist must not contain span-assembly-v3/ (run npm run build:main with clean:main)');
 }
 
 const enhancementRoot = path.join(srcRoot, 'pipeline/enhancement');

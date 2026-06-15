@@ -24,6 +24,7 @@ export function buildCoreResultExtra(job: JobAssignMessage, ctx: JobContext): Re
     ...(ctx.fwDetectorStepMs != null ? { fw_detector_step_ms: ctx.fwDetectorStepMs } : {}),
     ...(ctx.fwDetectorResult ? { fw_detector: ctx.fwDetectorResult } : {}),
     ...buildSessionResultExtra(job, ctx),
+    ...(ctx.asrResult?.tone ? { utterance_tone: ctx.asrResult.tone } : {}),
     ...(ctx.lexiconManifestReady ? { lexicon_manifest_ready: ctx.lexiconManifestReady } : {}),
   };
 }

@@ -1,14 +1,18 @@
 import { describe, expect, it } from '@jest/globals';
 import {
+  computeToneScoreResult,
   extractAcousticTonePattern,
   extractToneNumbersFromKey,
   isCandidateToneCompatible,
   isToneAlignmentValid,
   mapSpanToToneTokens,
+  TONE_MATCH_PENALTY,
+  TONE_MISMATCH_PENALTY,
+  type V2LegacyToneToken,
+  type V2LegacyUtteranceTonePayload,
 } from './tone-match-score';
-import type { ToneToken, UtteranceTonePayload } from '../task-router/types';
 
-function makeToken(token: string, toneNum: 1 | 2 | 3 | 4 | 5, start: number): ToneToken {
+function makeToken(token: string, toneNum: 1 | 2 | 3 | 4 | 5, start: number): V2LegacyToneToken {
   const posterior = { t1: 0.02, t2: 0.02, t3: 0.02, t4: 0.02, t5: 0.02 };
   posterior[`t${toneNum}` as keyof typeof posterior] = 0.9;
   return {
@@ -20,7 +24,7 @@ function makeToken(token: string, toneNum: 1 | 2 | 3 | 4 | 5, start: number): To
   };
 }
 
-function makeTone(rawText: string, pattern: number[]): UtteranceTonePayload {
+function makeTone(rawText: string, pattern: number[]): V2LegacyUtteranceTonePayload {
   const chars = [...rawText].filter((c) => /[\u4e00-\u9fff]/.test(c));
   return {
     toneEnabled: true,
@@ -54,7 +58,7 @@ describe('tone acoustic pattern P0.5', () => {
 
   it('returns null when alignmentText missing', () => {
     const raw = '少病';
-    const tone: UtteranceTonePayload = {
+    const tone: V2LegacyUtteranceTonePayload = {
       toneEnabled: true,
       toneTokens: makeTone(raw, [3, 1]).toneTokens,
       toneTokenCount: 2,
@@ -66,5 +70,32 @@ describe('tone acoustic pattern P0.5', () => {
     expect(isCandidateToneCompatible([3, 1], 'shao3|bing1')).toBe(true);
     expect(isCandidateToneCompatible([3, 1], 'shao1|bing3')).toBe(false);
     expect(isCandidateToneCompatible([3, 1], 'shao4|bing1')).toBe(false);
+  });
+
+  it('computeToneScoreResult: match', () => {
+    const result = computeToneScoreResult([3, 1], 'shao3|bing1');
+    expect(result).toEqual({
+      toneCompatible: true,
+      tonePenalty: TONE_MATCH_PENALTY,
+      toneReason: 'match',
+    });
+  });
+
+  it('computeToneScoreResult: mismatch', () => {
+    const result = computeToneScoreResult([3, 1], 'shao1|bing3');
+    expect(result).toEqual({
+      toneCompatible: false,
+      tonePenalty: TONE_MISMATCH_PENALTY,
+      toneReason: 'mismatch',
+    });
+  });
+
+  it('computeToneScoreResult: no_pattern', () => {
+    const result = computeToneScoreResult(undefined, 'shao3|bing1');
+    expect(result).toEqual({
+      toneCompatible: true,
+      tonePenalty: TONE_MATCH_PENALTY,
+      toneReason: 'no_pattern',
+    });
   });
 });

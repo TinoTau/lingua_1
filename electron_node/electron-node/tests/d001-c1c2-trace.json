@@ -1,0 +1,282 @@
+﻿[Logger] Log file: D:\Programs\github\lingua_1\electron_node\electron-node\logs\electron-main.log
+{
+  "coarseSpans": [
+    {
+      "id": "c0",
+      "text": "浣犲ソ,鎴戞兂榛炰竴鏉啽鎷块惖",
+      "rawStart": 0,
+      "rawEnd": 11,
+      "syllable": [
+        0,
+        10
+      ]
+    },
+    {
+      "id": "c1",
+      "text": "閻?,
+      "rawStart": 11,
+      "rawEnd": 12,
+      "syllable": [
+        10,
+        11
+      ]
+    },
+    {
+      "id": "c2",
+      "text": "璨濆皯绯?,
+      "rawStart": 12,
+      "rawEnd": 15,
+      "syllable": [
+        11,
+        14
+      ]
+    },
+    {
+      "id": "c3",
+      "text": "娣?,
+      "rawStart": 16,
+      "rawEnd": 17,
+      "syllable": [
+        14,
+        15
+      ]
+    },
+    {
+      "id": "c4",
+      "text": "渚挎韩",
+      "rawStart": 17,
+      "rawEnd": 19,
+      "syllable": [
+        15,
+        17
+      ]
+    },
+    {
+      "id": "c5",
+      "text": "浠ヤ笅浠婂ぉ",
+      "rawStart": 20,
+      "rawEnd": 24,
+      "syllable": [
+        17,
+        21
+      ]
+    },
+    {
+      "id": "c6",
+      "text": "鏈?,
+      "rawStart": 24,
+      "rawEnd": 25,
+      "syllable": [
+        21,
+        22
+      ]
+    },
+    {
+      "id": "c7",
+      "text": "钃濈編椹垎鍚?,
+      "rawStart": 25,
+      "rawEnd": 30,
+      "syllable": [
+        22,
+        27
+      ]
+    }
+  ],
+  "syllables10to14": [
+    "zhong",
+    "bei",
+    "shao",
+    "tang"
+  ],
+  "c1Windows": [],
+  "c2Windows": [
+    {
+      "coarseSpanId": "c2",
+      "windowText": "璨濆皯",
+      "windowPinyinKey": "bei|shao",
+      "rawRange": [
+        12,
+        14
+      ]
+    },
+    {
+      "coarseSpanId": "c2",
+      "windowText": "灏戠硸",
+      "windowPinyinKey": "shao|tang",
+      "rawRange": [
+        13,
+        15
+      ]
+    },
+    {
+      "coarseSpanId": "c2",
+      "windowText": "璨濆皯绯?,
+      "windowPinyinKey": "bei|shao|tang",
+      "rawRange": [
+        12,
+        15
+      ]
+    }
+  ],
+  "zhongBeiIsolatedNoTone": [
+    {
+      "candidate": "涓澂",
+      "hitKind": "exact_term",
+      "score": null,
+      "tonePinyinKey": "zhong1|bei1"
+    },
+    {
+      "candidate": "缁堟澂",
+      "hitKind": "exact_term",
+      "score": null,
+      "tonePinyinKey": "zhong1|bei1"
+    },
+    {
+      "candidate": "涓澂",
+      "hitKind": "parent_fragment",
+      "score": null,
+      "tonePinyinKey": "zhong1|bei1",
+      "parentTerm": "涓澂"
+    },
+    {
+      "candidate": "涓寳",
+      "hitKind": "parent_fragment",
+      "score": null,
+      "tonePinyinKey": "zhong1|bei3",
+      "parentTerm": "涓寳閮?
+    }
+  ],
+  "shaoTangIsolatedNoTone": [],
+  "beiShaoIsolatedNoTone": [
+    {
+      "candidate": "鐒欑儳",
+      "hitKind": "exact_term",
+      "score": null,
+      "tonePinyinKey": "bei4|shao1"
+    },
+    {
+      "candidate": "鐒欑儳",
+      "hitKind": "parent_fragment",
+      "score": null,
+      "tonePinyinKey": "bei4|shao1",
+      "parentTerm": "鐒欑儳"
+    }
+  ],
+  "sqliteZhongBei": [
+    {
+      "fragment": "涓澂",
+      "domain": "restaurant"
+    },
+    {
+      "fragment": "涓寳"
+    }
+  ],
+  "sqliteShaoTang": [],
+  "sqliteBeiShao": [
+    {
+      "fragment": "鐒欑儳"
+    }
+  ],
+  "parentEvidenceC2": [
+    {
+      "parentTerm": "鐒欑儳",
+      "windowPinyinKey": "bei|shao",
+      "windowText": "璨濆皯",
+      "raw": [
+        12,
+        14
+      ],
+      "score": 1.0568,
+      "matched": [
+        0,
+        2
+      ]
+    }
+  ],
+  "zhongbeiInFullRecall": [],
+  "shaotangInFullRecall": [],
+  "beishaoInFullRecall": [
+    {
+      "coarseSpanId": "c2",
+      "parentTermId": "base-zh-v2-033897",
+      "parentTerm": "鐒欑儳",
+      "parentPinyinKey": "bei|shao",
+      "parentTermSyllableCount": 2,
+      "score": 1.0568,
+      "repairTarget": true,
+      "matchedTermStart": 0,
+      "matchedTermEnd": 2,
+      "rawStart": 12,
+      "rawEnd": 14,
+      "windowSyllableStart": 11,
+      "windowSyllableEnd": 13,
+      "fragmentTonePinyinKey": "bei4|shao1",
+      "source": "base_term"
+    }
+  ],
+  "selectedC2": {
+    "coarseSpanId": "c2",
+    "syllableStart": 11,
+    "syllableEnd": 13,
+    "rawStart": 12,
+    "rawEnd": 14,
+    "replacement": "鐒欑儳",
+    "source": "base_term",
+    "score": 1.3068,
+    "ngramKey": "bei|shao",
+    "recallSource": "canonical_exact",
+    "repairTarget": true,
+    "hitKind": "parent_span_candidate",
+    "parentTerm": "鐒欑儳",
+    "parentTermId": "base-zh-v2-033897",
+    "domainEvidenceTerm": "鐒欑儳"
+  },
+  "allSelected": [
+    {
+      "id": "c0",
+      "replacement": "浣犲ソ",
+      "parentTerm": "浣犲ソ",
+      "raw": [
+        0,
+        2
+      ],
+      "score": 2.4642
+    },
+    {
+      "id": "c2",
+      "replacement": "鐒欑儳",
+      "parentTerm": "鐒欑儳",
+      "raw": [
+        12,
+        14
+      ],
+      "score": 1.3068
+    },
+    {
+      "id": "c5",
+      "replacement": "浠婂ぉ",
+      "parentTerm": "浠婂ぉ",
+      "raw": [
+        22,
+        24
+      ],
+      "score": 2.6377
+    },
+    {
+      "id": "c7",
+      "replacement": "钃濊帗椹姮",
+      "parentTerm": "钃濊帗椹姮",
+      "raw": [
+        25,
+        29
+      ],
+      "score": 2.3782666666666668
+    }
+  ],
+  "asmStats": {
+    "emitted": 10,
+    "selected": 4,
+    "dominated": 6,
+    "ruleBRejected": 2
+  }
+}

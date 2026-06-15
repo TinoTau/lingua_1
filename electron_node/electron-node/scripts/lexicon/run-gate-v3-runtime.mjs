@@ -75,6 +75,9 @@ if (failures.length === 0) {
   if (stats.baseCount !== t.base) {
     fail(`stats.baseCount ${stats.baseCount} != manifest.tables.base ${t.base}`);
   }
+  if (stats.ngramsCount != null && stats.ngramsCount !== t.ngrams) {
+    fail(`stats.ngramsCount ${stats.ngramsCount} != manifest.tables.ngrams ${t.ngrams}`);
+  }
 }
 
 if (failures.length) {

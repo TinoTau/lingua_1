@@ -1,0 +1,205 @@
+{
+  "batchFile": "D:\\Programs\\github\\lingua_1\\electron_node\\electron-node\\tests\\p1-residue-cleanup-dialog200-batch-result.json",
+  "timestamp": "2026-06-15T11:04:01.743Z",
+  "stoppedReason": "deadline",
+  "evaluated": 103,
+  "contractPass": 103,
+  "contractFail": 0,
+  "wallClockSec": 906,
+  "pipelinePathV4Count": 103,
+  "pipelinePathV4Rate": 1,
+  "quality": {
+    "raw_cer_avg": 0.2981,
+    "final_cer_avg": 0.2682,
+    "raw_cer_p50": 0.2143,
+    "final_cer_p50": 0.2143,
+    "raw_cer_p95": 0.5625,
+    "final_cer_p95": 0.5625,
+    "exact_raw_count": 12,
+    "exact_final_count": 12,
+    "improved_count": 1,
+    "degraded_count": 0
+  },
+  "performance": {
+    "pipeline_ms_avg": 8570,
+    "pipeline_ms_p50": 7675,
+    "pipeline_ms_p95": 12782,
+    "fw_detector_step_ms_avg": 2730,
+    "fw_detector_step_ms_p50": 2401,
+    "fw_detector_step_ms_p95": 4556,
+    "assembly_ms_avg": 316,
+    "assembly_ms_p50": 299,
+    "assembly_ms_p95": 502
+  },
+  "fw": {
+    "triggered_count": 103,
+    "applied_case_count": 0,
+    "text_changed_count": 0,
+    "diagnostics_trace_cases": 1,
+    "avg_global_windows": 87,
+    "avg_boundary_windows": 10.52,
+    "avg_blocked_windows": 15,
+    "avg_ngram_queries": 65.72,
+    "avg_pool_size": 16.9,
+    "avg_dropped": 65.8,
+    "total_dropped": 6777
+  },
+  "d001": {
+    "pipelinePath": "v4",
+    "fw_applied_count": 0,
+    "boundaryWindowCount": 17,
+    "windowCandidatePoolCount": 19,
+    "ngramQueryCount": 63,
+    "raw": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+    "final": "",
+    "has_zhong_bei_window": true,
+    "has_zhongbei_text": false,
+    "traceTargetMatched": true,
+    "traceLevel": "trace",
+    "recallHitsPreFilterCount": 85,
+    "recallHitsCount": 81,
+    "candidateLifecycleCount": 46,
+    "boundaryWindowsCount": 27,
+    "allCombinationsCount": 1,
+    "zhongBeiLifecycle": {
+      "candidateText": "中杯",
+      "firstSeenLayer": "recall",
+      "firstDroppedLayer": "compatibility",
+      "dropReason": "lower_score"
+    }
+  },
+  "samples": {
+    "cafe": [
+      {
+        "id": "d001",
+        "scenario": "cafe",
+        "pipelinePath": "v4",
+        "raw_cer": 0.3704,
+        "final_cer": 1,
+        "text_changed": true,
+        "fw_applied_count": 0,
+        "fw_triggered": true,
+        "pipeline_ms": 15693,
+        "fw_detector_step_ms": 2634,
+        "assemblyMs": 311,
+        "boundaryWindowCount": 17,
+        "windowCandidatePoolCount": 19,
+        "ngramQueryCount": 63,
+        "droppedCandidateCount": 62,
+        "ref": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+        "raw": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+        "final": ""
+      },
+      {
+        "id": "d002",
+        "scenario": "cafe",
+        "pipelinePath": "v4",
+        "raw_cer": 0.1176,
+        "final_cer": 1,
+        "text_changed": true,
+        "fw_applied_count": 0,
+        "fw_triggered": true,
+        "pipeline_ms": 6961,
+        "fw_detector_step_ms": 2497,
+        "assemblyMs": 351,
+        "boundaryWindowCount": 15,
+        "windowCandidatePoolCount": 12,
+        "ngramQueryCount": 52,
+        "droppedCandidateCount": 71,
+        "ref": "麻烦帮我做一杯美式带走，大杯就行，谢谢。",
+        "raw": "麻烦帮我做一杯美食带走大悲就行谢谢",
+        "final": ""
+      },
+      {
+        "id": "d003",
+        "scenario": "cafe",
+        "pipelinePath": "v4",
+        "raw_cer": 0.1579,
+        "final_cer": 1,
+        "text_changed": true,
+        "fw_applied_count": 0,
+        "fw_triggered": true,
+        "pipeline_ms": 7258,
+        "fw_detector_step_ms": 2245,
+        "assemblyMs": 251,
+        "boundaryWindowCount": 11,
+        "windowCandidatePoolCount": 16,
+        "ngramQueryCount": 38,
+        "droppedCandidateCount": 43,
+        "ref": "请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。",
+        "raw": "请问,这款燕麦拿铁可以烧病吗?我赶时间小背",
+        "final": ""
+      }
+    ],
+    "meeting": [
+      {
+        "id": "d004",
+        "scenario": "meeting",
+        "pipelinePath": "v4",
+        "raw_cer": 0.2424,
+        "final_cer": 1,
+        "text_changed": true,
+        "fw_applied_count": 0,
+        "fw_triggered": true,
+        "pipeline_ms": 11111,
+        "fw_detector_step_ms": 2600,
+        "assemblyMs": 585,
+        "boundaryWindowCount": 0,
+        "windowCandidatePoolCount": 22,
+        "ngramQueryCount": 103,
+        "droppedCandidateCount": 83,
+        "ref": "小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+        "raw": "小陈客户反馈翻译引擎接口包错 我们能 不能加緩存下午3點前把結論發群裡",
+        "final": ""
+      },
+      {
+        "id": "d005",
+        "scenario": "meeting",
+        "pipelinePath": "v4",
+        "raw_cer": 0.1714,
+        "final_cer": 1,
+        "text_changed": true,
+        "fw_applied_count": 0,
+        "fw_triggered": true,
+        "pipeline_ms": 10103,
+        "fw_detector_step_ms": 2772,
+        "assemblyMs": 684,
+        "boundaryWindowCount": 40,
+        "windowCandidatePoolCount": 28,
+        "ngramQueryCount": 104,
+        "droppedCandidateCount": 83,
+        "ref": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+        "raw": "今天德站会献过一下订单 中台进度内存占用高者快 需要先留保护大家看一下风险",
+        "final": ""
+      }
+    ],
+    "applied": [],
+    "worst_cer": [
+      {
+        "id": "d001",
+        "cer": 1,
+        "final": ""
+      },
+      {
+        "id": "d002",
+        "cer": 1,
+        "final": ""
+      },
+      {
+        "id": "d003",
+        "cer": 1,
+        "final": ""
+      },
+      {
+        "id": "d004",
+        "cer": 1,
+        "final": ""
+      },
+      {
+        "id": "d005",
+        "cer": 1,
+        "final": ""
+      }
+    ]
+  }
+}

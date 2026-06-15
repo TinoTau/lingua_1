@@ -9,11 +9,13 @@ import { getLexiconRuntimeV2Config } from './lexicon-runtime-v2-config';
 import { LruBucketCache } from './lru-bucket-cache';
 import {
   LEXICON_V2_SHADOW_SCHEMA_VERSION,
+  LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION,
   LEXICON_V3_RUNTIME_SCHEMA_VERSION,
   LEXICON_V2_SUPPORTED_SCHEMA_VERSIONS,
   type IndustryRouteHit,
   type LexiconManifestV2,
   type LexiconRuntimeV2State,
+  type ParentTermNgramRow,
 } from './lexicon-types-v2';
 
 type TierRow = {
@@ -95,6 +97,10 @@ export class LexiconRuntimeV2 {
   private stmtIdiom: Database.Statement | null = null;
   private stmtDomain: Database.Statement | null = null;
   private stmtRouting: Database.Statement | null = null;
+  private stmtNgram: Database.Statement | null = null;
+  private ngramSqlQueries = 0;
+  private ngramCacheHits = 0;
+  private ngramCacheMisses = 0;
 
   constructor() {
     const cfg = getLexiconRuntimeV2Config();
@@ -167,7 +173,8 @@ export class LexiconRuntimeV2 {
 
       const hasToneColumn =
         manifest.schemaVersion === LEXICON_V2_SHADOW_SCHEMA_VERSION ||
-        manifest.schemaVersion === LEXICON_V3_RUNTIME_SCHEMA_VERSION;
+        manifest.schemaVersion === LEXICON_V3_RUNTIME_SCHEMA_VERSION ||
+        manifest.schemaVersion === LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION;
       const toneSelect = hasToneColumn ? 'tone_pinyin_key,' : '';
 
       this.stmtBase = this.db.prepare(
@@ -196,6 +203,18 @@ export class LexiconRuntimeV2 {
          FROM industry_routing_lexicon WHERE pinyin_key = ?`
       );
 
+      if (manifest.schemaVersion === LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION) {
+        this.stmtNgram = this.db.prepare(
+          `SELECT id, parent_term_id, parent_word, parent_pinyin_key, parent_tone_pinyin_key,
+                  ngram_pinyin_key, ngram_tone_pinyin_key, ngram_start, ngram_end, fragment_text,
+                  tier, domain_id, repair_target, prior, source, enabled
+           FROM term_pinyin_ngrams
+           WHERE ngram_pinyin_key = ? AND enabled = 1
+           ORDER BY prior DESC
+           LIMIT ?`
+        );
+      }
+
       const countBase =
         (this.db.prepare('SELECT COUNT(*) AS c FROM base_lexicon').get() as { c: number }).c ?? 0;
       const countIdiom =
@@ -205,6 +224,10 @@ export class LexiconRuntimeV2 {
       const countRouting =
         (this.db.prepare('SELECT COUNT(*) AS c FROM industry_routing_lexicon').get() as { c: number })
           .c ?? 0;
+      const countNgrams =
+        manifest.schemaVersion === LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION
+          ? ((this.db.prepare('SELECT COUNT(*) AS c FROM term_pinyin_ngrams').get() as { c: number }).c ?? 0)
+          : undefined;
 
       this.state = {
         status: 'ok',
@@ -215,6 +238,7 @@ export class LexiconRuntimeV2 {
           idiom: countIdiom,
           domain: countDomain,
           routing: countRouting,
+          ngrams: countNgrams,
         },
       };
 
@@ -271,6 +295,80 @@ export class LexiconRuntimeV2 {
       const rows = (this.stmtDomain?.all(domain, key, termLength, limit) ?? []) as TierRow[];
       return mapTierRows(rows, domain);
     });
+  }
+
+  lookupParentFragmentsByNgramKey(ngramKey: string, sqlLimit: number): ParentTermNgramRow[] {
+    if (
+      this.state.status !== 'ok' ||
+      !this.stmtNgram ||
+      !ngramKey.trim() ||
+      sqlLimit <= 0 ||
+      this.manifest?.schemaVersion !== LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION
+    ) {
+      return [];
+    }
+
+    const cacheKey = `ngram:${ngramKey}:${sqlLimit}`;
+    const cached = this.bucketCache.get(cacheKey) as ParentTermNgramRow[] | undefined;
+    if (cached) {
+      this.ngramCacheHits += 1;
+      return cached;
+    }
+
+    this.ngramCacheMisses += 1;
+    this.ngramSqlQueries += 1;
+    const rows = this.stmtNgram.all(ngramKey, sqlLimit) as Array<{
+      id: number;
+      parent_term_id: string;
+      parent_word: string;
+      parent_pinyin_key: string;
+      parent_tone_pinyin_key: string | null;
+      ngram_pinyin_key: string;
+      ngram_tone_pinyin_key: string | null;
+      ngram_start: number;
+      ngram_end: number;
+      fragment_text: string;
+      tier: string;
+      domain_id: string | null;
+      repair_target: number;
+      prior: number;
+      source: string | null;
+      enabled: number;
+    }>;
+
+    const mapped: ParentTermNgramRow[] = rows.map((row) => ({
+      id: row.id,
+      parentTermId: row.parent_term_id,
+      parentWord: row.parent_word,
+      parentPinyinKey: row.parent_pinyin_key,
+      parentTonePinyinKey: row.parent_tone_pinyin_key?.trim() || undefined,
+      ngramPinyinKey: row.ngram_pinyin_key,
+      ngramTonePinyinKey: row.ngram_tone_pinyin_key?.trim() || undefined,
+      ngramStart: row.ngram_start,
+      ngramEnd: row.ngram_end,
+      fragmentText: row.fragment_text,
+      tier: row.tier as ParentTermNgramRow['tier'],
+      domainId: row.domain_id?.trim() || undefined,
+      repairTarget: row.repair_target === 1,
+      prior: row.prior,
+      source: row.source?.trim() || undefined,
+      enabled: row.enabled === 1,
+    }));
+
+    this.bucketCache.set(cacheKey, mapped as unknown as HotwordEntry[]);
+    return mapped;
+  }
+
+  getAndResetNgramQueryStats(): { sqlQueries: number; cacheHits: number; cacheMisses: number } {
+    const stats = {
+      sqlQueries: this.ngramSqlQueries,
+      cacheHits: this.ngramCacheHits,
+      cacheMisses: this.ngramCacheMisses,
+    };
+    this.ngramSqlQueries = 0;
+    this.ngramCacheHits = 0;
+    this.ngramCacheMisses = 0;
+    return stats;
   }
 
   lookupIndustryRoutes(pinyinKeys: readonly string[]): IndustryRouteHit[] {
@@ -342,6 +440,7 @@ export class LexiconRuntimeV2 {
     this.stmtIdiom = null;
     this.stmtDomain = null;
     this.stmtRouting = null;
+    this.stmtNgram = null;
     if (this.db) {
       this.db.close();
       this.db = null;

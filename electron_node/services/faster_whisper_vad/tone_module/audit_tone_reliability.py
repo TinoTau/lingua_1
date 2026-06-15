@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sample toneTokens from FW HTTP for reliability audit."""
+"""Sample acousticToneSlices from FW HTTP for reliability audit."""
 from __future__ import annotations
 
 import base64
@@ -75,15 +75,16 @@ def main():
         tone = resp.get("tone") or {}
         if not tone.get("toneEnabled"):
             continue
-        for tok in tone.get("toneTokens") or []:
-            pred, conf = argmax_tone(tok.get("tonePosterior") or {})
+        for sl in tone.get("acousticToneSlices") or []:
+            pred, conf = argmax_tone(sl.get("tonePosterior") or {})
             tokens.append(
                 {
                     "caseId": item["id"],
-                    "token": tok.get("token"),
+                    "start": sl.get("start"),
+                    "end": sl.get("end"),
                     "predictedTone": pred,
-                    "confidence": tok.get("confidence"),
-                    "tonePosterior": tok.get("tonePosterior"),
+                    "confidence": sl.get("confidence"),
+                    "tonePosterior": sl.get("tonePosterior"),
                 }
             )
             if len(tokens) >= n:

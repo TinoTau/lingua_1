@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { loadNodeConfig } from '../node-config';
+import logger from '../logger';
 import type { KenlmGateMode } from './types';
 
 /** @deprecated Legacy topK pipeline only */
@@ -22,16 +23,32 @@ export type FwDetectorRuntimeConfig = {
   minPrior: number;
   enableKenLMGate: boolean;
   kenlmGateMode: KenlmGateMode;
+  /** @deprecated V4 rerank does not use this field; Apply threshold uses minDeltaToReplace */
   kenlmDeltaThreshold: number;
   kenlmVetoThreshold: number;
   enabledDomains: string[];
   candidateRequireRepairTarget: boolean;
   maxSentenceCandidates: number;
   minDeltaToReplace: number;
+  spanAssemblyV4Enabled: boolean;
+  spanAssemblyV4DiagnosticsEnabled: boolean;
+  spanAssemblyV4DiagnosticsLevel: 'summary' | 'trace';
+  spanAssemblyV4DiagnosticsTargetIds: string[];
+  toneTimestampOnlyEnabled: boolean;
 };
 
 export function loadFwDetectorRuntimeConfig(): FwDetectorRuntimeConfig {
   const cfg = loadNodeConfig().features?.fwDetector ?? {};
+  const legacyV4False = cfg.spanAssemblyV4Enabled === false;
+  if (legacyV4False) {
+    logger.warn(
+      '[fw-detector] spanAssemblyV4Enabled=false is deprecated; FW Repair runs V4 only'
+    );
+  }
+  const toneTimestampOnlyEnabled =
+    cfg.toneTimestampOnlyEnabled ??
+    (cfg as { v3ToneTimestampOnlyEnabled?: boolean }).v3ToneTimestampOnlyEnabled ??
+    true;
   return {
     minPrior: cfg.minPrior ?? 0.5,
     enableKenLMGate: cfg.enableKenLMGate !== false,
@@ -42,6 +59,14 @@ export function loadFwDetectorRuntimeConfig(): FwDetectorRuntimeConfig {
     candidateRequireRepairTarget: cfg.candidateRequireRepairTarget !== false,
     maxSentenceCandidates: cfg.maxSentenceCandidates ?? 16,
     minDeltaToReplace: cfg.minDeltaToReplace ?? 0.03,
+    spanAssemblyV4Enabled: true,
+    spanAssemblyV4DiagnosticsEnabled: cfg.spanAssemblyV4DiagnosticsEnabled === true,
+    spanAssemblyV4DiagnosticsLevel:
+      cfg.spanAssemblyV4DiagnosticsLevel === 'trace' ? 'trace' : 'summary',
+    spanAssemblyV4DiagnosticsTargetIds: Array.isArray(cfg.spanAssemblyV4DiagnosticsTargetIds)
+      ? cfg.spanAssemblyV4DiagnosticsTargetIds.filter((id): id is string => typeof id === 'string')
+      : [],
+    toneTimestampOnlyEnabled: toneTimestampOnlyEnabled !== false,
   };
 }
 

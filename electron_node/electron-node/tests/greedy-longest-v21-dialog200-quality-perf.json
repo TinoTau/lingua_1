@@ -1,0 +1,387 @@
+{
+  "meta": {
+    "timestamp": "2026-06-10T05:37:06.528Z",
+    "evaluated": 103,
+    "valid_cases": 102,
+    "fail_cases": 1,
+    "stoppedReason": "deadline",
+    "wall_clock_sec": 904,
+    "v3_cases": 102,
+    "lexicon_schema": "lexicon-v3-five-table-v1",
+    "spanAssemblyV3Enabled": true,
+    "feature": "greedy-longest-parent-term-assembly-v2.1"
+  },
+  "quality": {
+    "avg_cer_raw": 0.2984,
+    "avg_cer_final": 0.2682,
+    "median_cer_raw": 0.2143,
+    "median_cer_final": 0.2143,
+    "p95_cer_raw": 0.5625,
+    "p95_cer_final": 0.5625,
+    "exact_match_raw": 12,
+    "exact_match_final": 12,
+    "fw_improved_cases": 1,
+    "fw_degraded_cases": 0,
+    "fw_unchanged_cases": 101,
+    "fw_applied_cases": 0,
+    "worst_final_cer_top5": [
+      {
+        "id": "d067",
+        "cer": 3.04,
+        "ref": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+        "hyp": "您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我"
+      },
+      {
+        "id": "d045",
+        "cer": 0.8,
+        "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+        "hyp": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說"
+      },
+      {
+        "id": "d088",
+        "cer": 0.68,
+        "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "hyp": "我們下午討論後,選生成功 等方安縣把候選生陳的截口文當補齊"
+      },
+      {
+        "id": "d065",
+        "cer": 0.6667,
+        "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "hyp": "這次發布我們現對期 在其商線計劃窗口後選生 成模快需要連掉別漏掉回歸"
+      },
+      {
+        "id": "d043",
+        "cer": 0.6,
+        "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "hyp": "我們下午討論後 選生成方安線吧,後選生成的接口文當補期。"
+      }
+    ]
+  },
+  "perf": {
+    "pipeline_ms": {
+      "avg": 8375,
+      "p50": 7650,
+      "p95": 13512,
+      "min": 3454,
+      "max": 23526
+    },
+    "fw_detector_step_ms": {
+      "avg": 3640,
+      "p50": 3170,
+      "p95": 5719
+    },
+    "asr_latency_ms": {
+      "avg": 2309,
+      "p50": 1432,
+      "p95": 4818
+    },
+    "audio_ms": {
+      "avg": 3674,
+      "p50": 3940
+    },
+    "rtf_pipeline": 2.28,
+    "rtf_asr": 0.628
+  },
+  "spanLevelParentTerm": {
+    "cases_with_fragment_hits": 99,
+    "cases_with_span_candidates": 95,
+    "total_parentFragmentHitCount": 737,
+    "total_parentSpanCandidateEmittedCount": 440,
+    "total_parentSpanCandidateSelectedCount": 194,
+    "total_dominatedPrunedCount": 246,
+    "total_ruleBRejectedByHoleCount": 77,
+    "total_parentTermVoteCount": 618,
+    "avg_parentFragmentHitCount": 7.23,
+    "avg_parentSpanCandidateEmittedCount": 4.31,
+    "avg_parentSpanCandidateSelectedCount": 1.9,
+    "avg_dominatedPrunedCount": 2.41,
+    "avg_ruleBRejectedByHoleCount": 0.75,
+    "avg_parentSpanCoverageAvg": 1
+  },
+  "contract": {
+    "evaluated": 103,
+    "pass": 102,
+    "fail": 1,
+    "skip": 0,
+    "wall_clock_sec": 904,
+    "pipeline_ok_rate": 0.9902912621359223,
+    "fw_triggered_count": 102,
+    "fw_applied_case_count": 0,
+    "text_changed_count": 0,
+    "lexicon_runtime_ok_count": 102,
+    "asr_service_id_distribution": {
+      "faster-whisper-vad": 102,
+      "unknown": 1
+    }
+  },
+  "d001": {
+    "reference": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+    "raw_asr": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+    "final_asr": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+    "cer_raw": 0.3704,
+    "cer_final": 0.3704,
+    "spanAssemblyV3": {
+      "enabled": true,
+      "stub": false,
+      "coarseSpanCount": 8,
+      "ngramQueryCount": 50,
+      "candidateEdgeCount": 6,
+      "overlapMergeCount": 5,
+      "residualSpanCount": 3,
+      "utteranceDomain": "general",
+      "domainVoteMs": 0,
+      "coarsePathAssemblyMs": 0,
+      "sentenceBeamMs": 0,
+      "assemblyMs": 239,
+      "parentFragmentHitCount": 5,
+      "parentSpanCandidateEmittedCount": 2,
+      "parentSpanCandidateSelectedCount": 2,
+      "dominatedPrunedCount": 0,
+      "ruleBRejectedByHoleCount": 0,
+      "parentSpanCoverageAvg": 1,
+      "parentTermVoteCount": 3,
+      "boundaryImport": {
+        "rawSyllableCount": 27,
+        "imeCandidateCount": 5,
+        "trustedTopKCount": 5,
+        "imeBoundaryCount": 18,
+        "rawBoundaryCount": 8,
+        "alignedBoundaryCount": 3,
+        "proposalBoundaryCount": 6,
+        "asrWordBoundaryCount": 23,
+        "punctuationFallbackBoundaryCount": 0,
+        "finalCoarseSpanCount": 8,
+        "coverageOk": true,
+        "boundarySourceBreakdown": {
+          "ime_token_boundary": 4,
+          "raw_ime_aligned_boundary": 0,
+          "proposal_active_boundary": 4,
+          "asr_word_boundary": 0,
+          "punctuation_fallback": 0
+        }
+      },
+      "tone": {
+        "tonePayloadAvailable": true,
+        "toneEnabled": true,
+        "toneSliceCount": 24,
+        "wordTimeSpanCount": 24,
+        "windowTimeAttemptCount": 50,
+        "windowTimeHitCount": 50,
+        "toneOverlapHitCount": 39,
+        "toneOverlapMissCount": 0,
+        "toneOverlapSyllableMismatchCount": 11,
+        "alignmentTextUsedCount": 0,
+        "tokenTextUsedForAlignmentCount": 0,
+        "charScanFallbackCount": 0,
+        "ngramTonePatternAttemptCount": 50,
+        "ngramTonePatternHitCount": 39,
+        "ngramTonePatternMissCount": 11,
+        "recallToneCompatibleCount": 2,
+        "recallToneIncompatibleCount": 30,
+        "recallToneFallbackCount": 30,
+        "exampleToneWindows": [
+          {
+            "text": "你好",
+            "pinyinKey": "ni|hao",
+            "windowTimeRange": {
+              "start": 0,
+              "end": 0.46
+            }
+          },
+          {
+            "text": "好",
+            "pinyinKey": "hao|wo",
+            "windowTimeRange": {
+              "start": 0,
+              "end": 0.46
+            },
+            "acousticTonePattern": [
+              3
+            ]
+          },
+          {
+            "text": "我想",
+            "pinyinKey": "wo|xiang",
+            "windowTimeRange": {
+              "start": 0.76,
+              "end": 0.98
+            }
+          },
+          {
+            "text": "想點",
+            "pinyinKey": "xiang|dian",
+            "windowTimeRange": {
+              "start": 0.76,
+              "end": 1.2
+            },
+            "acousticTonePattern": [
+              2,
+              3
+            ]
+          },
+          {
+            "text": "點一",
+            "pinyinKey": "dian|yi",
+            "windowTimeRange": {
+              "start": 0.98,
+              "end": 1.4
+            },
+            "acousticTonePattern": [
+              3,
+              4
+            ]
+          },
+          {
+            "text": "一杯",
+            "pinyinKey": "yi|bei",
+            "windowTimeRange": {
+              "start": 1.2,
+              "end": 1.48
+            },
+            "acousticTonePattern": [
+              4,
+              4
+            ]
+          },
+          {
+            "text": "杯熱",
+            "pinyinKey": "bei|re",
+            "windowTimeRange": {
+              "start": 1.4,
+              "end": 1.66
+            },
+            "acousticTonePattern": [
+              4,
+              3
+            ]
+          },
+          {
+            "text": "熱拿",
+            "pinyinKey": "re|na",
+            "windowTimeRange": {
+              "start": 1.48,
+              "end": 1.84
+            },
+            "acousticTonePattern": [
+              3,
+              3
+            ]
+          }
+        ]
+      }
+    },
+    "fw_applied": 0,
+    "contains_lanmeimafen": true,
+    "contains_lanmeimafin": false
+  },
+  "samples": [
+    {
+      "id": "d001",
+      "scenario": "cafe",
+      "reference": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "raw_asr": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "hyp": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "cer_raw": 0.3704,
+      "cer_final": 0.3704,
+      "pipeline_ms": 9191,
+      "parentFragmentHitCount": 5,
+      "parentSpanCandidateEmittedCount": 2,
+      "parentSpanCandidateSelectedCount": 2,
+      "dominatedPrunedCount": 0,
+      "ruleBRejectedByHoleCount": 0,
+      "parentSpanCoverageAvg": 1,
+      "utteranceDomain": "general",
+      "fw_applied": 0
+    },
+    {
+      "id": "d004",
+      "scenario": "meeting",
+      "reference": "小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+      "raw_asr": "小陈客户反馈翻译引擎接口包错 我们能 不能加緩存下午3點前把結論發群裡",
+      "hyp": "小陈客户反馈翻译引擎接口包错 我们能 不能加緩存下午3點前把結論發群裡",
+      "cer_raw": 0.2424,
+      "cer_final": 0.2424,
+      "pipeline_ms": 23526,
+      "parentFragmentHitCount": 5,
+      "parentSpanCandidateEmittedCount": 3,
+      "parentSpanCandidateSelectedCount": 2,
+      "dominatedPrunedCount": 1,
+      "ruleBRejectedByHoleCount": 1,
+      "parentSpanCoverageAvg": 1,
+      "utteranceDomain": "general",
+      "fw_applied": 0
+    },
+    {
+      "id": "d010",
+      "scenario": "hospital",
+      "reference": "医生您好，我这两天头痛，想开点药并做个血常规。",
+      "raw_asr": "醫生您好,我這兩天頭痛想開點,要並做個歇常規",
+      "hyp": "醫生您好,我這兩天頭痛想開點,要並做個歇常規",
+      "cer_raw": 0.55,
+      "cer_final": 0.55,
+      "pipeline_ms": 5605,
+      "parentFragmentHitCount": 3,
+      "parentSpanCandidateEmittedCount": 0,
+      "parentSpanCandidateSelectedCount": 0,
+      "dominatedPrunedCount": 0,
+      "ruleBRejectedByHoleCount": 0,
+      "parentSpanCoverageAvg": 0,
+      "utteranceDomain": "general",
+      "fw_applied": 0
+    },
+    {
+      "id": "d046",
+      "scenario": "cafe",
+      "reference": "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？",
+      "raw_asr": "你好,我想點一杯卡布奇諾中貝珍長糖,順便溫習一下 今天有知识蛋糕吗?",
+      "hyp": "你好,我想點一杯卡布奇諾中貝珍長糖,順便溫習一下 今天有知识蛋糕吗?",
+      "cer_raw": 0.3448,
+      "cer_final": 0.3448,
+      "pipeline_ms": 13512,
+      "parentFragmentHitCount": 13,
+      "parentSpanCandidateEmittedCount": 6,
+      "parentSpanCandidateSelectedCount": 4,
+      "dominatedPrunedCount": 2,
+      "ruleBRejectedByHoleCount": 3,
+      "parentSpanCoverageAvg": 1,
+      "utteranceDomain": "general",
+      "fw_applied": 0
+    },
+    {
+      "id": "d050",
+      "scenario": "meeting",
+      "reference": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+      "raw_asr": "今天的站會獻過一下訂單 中台進都內存 占用高折块需要限流保护 大家看一下风险",
+      "hyp": "今天的站會獻過一下訂單 中台進都內存 占用高折块需要限流保护 大家看一下风险",
+      "cer_raw": 0.2571,
+      "cer_final": 0.2571,
+      "pipeline_ms": 12569,
+      "parentFragmentHitCount": 17,
+      "parentSpanCandidateEmittedCount": 8,
+      "parentSpanCandidateSelectedCount": 5,
+      "dominatedPrunedCount": 3,
+      "ruleBRejectedByHoleCount": 3,
+      "parentSpanCoverageAvg": 1,
+      "utteranceDomain": "general",
+      "fw_applied": 0
+    },
+    {
+      "id": "d060",
+      "scenario": "shopping",
+      "reference": "我想对比一下这两款订单中台的价格，会员日能再减一点吗？",
+      "raw_asr": "我想对比 这两款订单中抬的价格会员日能再减一点吗?",
+      "hyp": "我想对比 这两款订单中抬的价格会员日能再减一点吗?",
+      "cer_raw": 0.12,
+      "cer_final": 0.12,
+      "pipeline_ms": 8521,
+      "parentFragmentHitCount": 5,
+      "parentSpanCandidateEmittedCount": 2,
+      "parentSpanCandidateSelectedCount": 1,
+      "dominatedPrunedCount": 1,
+      "ruleBRejectedByHoleCount": 1,
+      "parentSpanCoverageAvg": 1,
+      "utteranceDomain": "general",
+      "fw_applied": 0
+    }
+  ]
+}

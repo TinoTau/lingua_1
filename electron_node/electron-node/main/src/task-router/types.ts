@@ -26,7 +26,7 @@ export interface AsrWordInfo {
   probability?: number;
 }
 
-/** ToneModule P0 — acoustic tone posterior (5-class Mandarin). */
+/** ToneModule — acoustic tone posterior (5-class Mandarin). */
 export interface TonePosterior {
   t1: number;
   t2: number;
@@ -35,24 +35,21 @@ export interface TonePosterior {
   t5: number;
 }
 
-/** ToneModule P0 — one word-level acoustic tone token from FW Worker. */
-export interface ToneToken {
-  token: string;
+/** Phase3 — time-bounded acoustic tone slice from FW word timestamps. */
+export interface AcousticToneSlice {
   start: number;
   end: number;
   tonePosterior: TonePosterior;
   confidence: number;
 }
 
-/** ToneModule P0.5 — utterance-level acoustic tone payload (alignmentText === ASRResult.text). */
-export interface UtteranceTonePayload {
+/** Phase3 — utterance-level acoustic tone payload (timestamp-only, no token/alignmentText). */
+export interface UtteranceAcousticTonePayload {
   toneEnabled: boolean;
-  toneTokens: ToneToken[];
-  toneTokenCount: number;
+  acousticToneSlices: AcousticToneSlice[];
+  sliceCount: number;
   toneConfidenceAvg?: number;
   skippedReason?: 'no_audio' | 'no_timestamps' | 'non_zh' | 'model_error';
-  /** Must equal ASRResult.text when tone is used for Recall. */
-  alignmentText?: string;
 }
 
 /**
@@ -117,8 +114,8 @@ export interface ASRResult {
   routedServiceId?: string;
   /** P0：FW 服务返回的 audio_format / audio_level / audio_segmentation 等 */
   diagnostics?: Record<string, unknown>;
-  /** P0 ToneModule — acoustic tone from FW Worker (independent of deduped words). */
-  tone?: UtteranceTonePayload;
+  /** Phase3 ToneModule — acoustic tone slices from FW Worker. */
+  tone?: UtteranceAcousticTonePayload;
 }
 
 /**

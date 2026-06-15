@@ -148,6 +148,7 @@ export interface NodeConfig {
       minRiskScore?: number;
       enableKenLMGate?: boolean;
       kenlmGateMode?: 'hard_gate' | 'weak_veto';
+      /** @deprecated V4 rerank does not use; Apply threshold is minDeltaToReplace */
       kenlmDeltaThreshold?: number;
       kenlmVetoThreshold?: number;
       finalScoreWeights?: {
@@ -197,6 +198,16 @@ export interface NodeConfig {
       weakDomainRecallEnabled?: boolean;
       /** P0: plain pinyin variant recall (trim / function syllable strip). */
       fuzzyPinyinRecallEnabled?: boolean;
+      /** FW Repair V4: global window + compatibility graph (default on). */
+      spanAssemblyV4Enabled?: boolean;
+      /** FW Repair V4 diagnostics — off by default. */
+      spanAssemblyV4DiagnosticsEnabled?: boolean;
+      spanAssemblyV4DiagnosticsLevel?: 'summary' | 'trace';
+      spanAssemblyV4DiagnosticsTargetIds?: string[];
+      /** Timestamp-only acoustic tone alignment for recall ranking. */
+      toneTimestampOnlyEnabled?: boolean;
+      /** @deprecated use toneTimestampOnlyEnabled */
+      v3ToneTimestampOnlyEnabled?: boolean;
       /** P4: sentence-level KenLM rerank (false = P3.3 per-span topK rollback). */
       useSentenceLevelRerank?: boolean;
       maxSentenceCandidates?: number;

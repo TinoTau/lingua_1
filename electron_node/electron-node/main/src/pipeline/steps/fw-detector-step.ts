@@ -12,6 +12,16 @@ function syncBaselineFromRaw(ctx: JobContext): void {
   ctx.segmentForJobResult = (ctx.rawAsrText ?? '').trim();
 }
 
+function resolveFwDetectorTraceCaseId(job: JobAssignMessage): string | undefined {
+  const sid = job.session_id ?? '';
+  const batchMatch = sid.match(/v31-d200-(d\d+)-/i);
+  if (batchMatch) {
+    return batchMatch[1];
+  }
+  const generic = sid.match(/\b(d\d{3})\b/i);
+  return generic?.[1];
+}
+
 export async function runFwDetectorStep(
   job: JobAssignMessage,
   ctx: JobContext
@@ -42,6 +52,7 @@ export async function runFwDetectorStep(
   }
 
   applyFwDetectorJobOverrides(job, ctx);
+  ctx.fwDetectorTraceCaseId = resolveFwDetectorTraceCaseId(job);
   const result = await runFwDetectorOrchestrator(ctx);
   logger.info(
     {

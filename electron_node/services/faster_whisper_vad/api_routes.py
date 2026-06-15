@@ -35,28 +35,26 @@ from text_processing import (
 from text_filter import is_meaningless_transcript
 from context import get_text_context
 from tone_module.inference import run_tone_inference
-from api_models import UtteranceTonePayloadModel, ToneTokenModel, TonePosteriorModel
+from api_models import UtteranceAcousticTonePayloadModel, AcousticToneSliceModel, TonePosteriorModel
 
 logger = logging.getLogger(__name__)
 
 
-def _tone_payload_to_model(tone_payload) -> UtteranceTonePayloadModel:
-    return UtteranceTonePayloadModel(
+def _tone_payload_to_model(tone_payload) -> UtteranceAcousticTonePayloadModel:
+    return UtteranceAcousticTonePayloadModel(
         toneEnabled=tone_payload.tone_enabled,
-        toneTokens=[
-            ToneTokenModel(
-                token=t.token,
-                start=t.start,
-                end=t.end,
-                tonePosterior=TonePosteriorModel(**t.tone_posterior.as_dict()),
-                confidence=t.confidence,
+        acousticToneSlices=[
+            AcousticToneSliceModel(
+                start=s.start,
+                end=s.end,
+                tonePosterior=TonePosteriorModel(**s.tone_posterior.as_dict()),
+                confidence=s.confidence,
             )
-            for t in tone_payload.tone_tokens
+            for s in tone_payload.acoustic_tone_slices
         ],
-        toneTokenCount=tone_payload.tone_token_count,
+        sliceCount=tone_payload.slice_count,
         toneConfidenceAvg=tone_payload.tone_confidence_avg,
         skippedReason=tone_payload.skipped_reason,
-        alignmentText=tone_payload.alignment_text,
     )
 
 
@@ -282,7 +280,7 @@ async def process_utterance(req: UtteranceRequest) -> UtteranceResponse:
         )
         p0_diagnostics["toneModule"] = {
             "tone_inference_ms": tone_inference_ms,
-            "toneTokenCount": tone_payload.tone_token_count,
+            "toneSliceCount": tone_payload.slice_count,
             "toneEnabled": tone_payload.tone_enabled,
             "toneConfidenceAvg": tone_payload.tone_confidence_avg,
             "skippedReason": tone_payload.skipped_reason,
@@ -308,7 +306,7 @@ async def process_utterance(req: UtteranceRequest) -> UtteranceResponse:
             full_text_trimmed = full_text.strip()
             logger.info(f"[{trace_id}] Step 9.1: Text trimmed, len={len(full_text_trimmed)}")
             
-            # 9.2. 去重处理（FW Detector 路径跳过，保证 tone.alignmentText === response.text）
+            # 9.2. 去重处理（FW Detector 路径跳过 dedup）
             if full_text_trimmed and not req.skip_text_dedup:
                 full_text_trimmed = process_text_deduplication(full_text_trimmed, trace_id)
                 
@@ -434,8 +432,6 @@ async def process_utterance(req: UtteranceRequest) -> UtteranceResponse:
         
         # 13. 返回结果
         try:
-            if tone_payload.tone_enabled:
-                tone_payload.alignment_text = full_text_trimmed
             response = UtteranceResponse(
                 text=full_text_trimmed,
                 segments=segments_info,

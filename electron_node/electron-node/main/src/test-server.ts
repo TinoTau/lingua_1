@@ -254,6 +254,7 @@ export function startTestServer(managers: ServiceManagers): void {
             text_translated: result.text_translated,
             tts_audio_length: result.tts_audio?.length ?? 0,
             tts_format: result.tts_format,
+            segments: result.segments,
             extra: { ...result.extra, pipeline_ms: pipelineMs, session_id: sessionId },
           })
         );

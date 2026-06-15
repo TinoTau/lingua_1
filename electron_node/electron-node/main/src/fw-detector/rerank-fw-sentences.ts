@@ -8,6 +8,7 @@ export type SentenceRerankPick = {
   kenlmQueryCount: number;
   kenlmTiming?: KenlmTimingStats;
   topCandidates: Array<{ text: string; kenlmDelta: number; replacementCount: number }>;
+  allCombinationDeltas?: number[];
 };
 
 export async function rerankFwSentences(
@@ -74,6 +75,7 @@ export async function rerankFwSentences(
       kenlmQueryCount: batch.timing?.queryCount ?? sentences.length,
       kenlmTiming: batch.timing,
       topCandidates,
+      allCombinationDeltas: deltas,
     };
   }
 
@@ -84,5 +86,6 @@ export async function rerankFwSentences(
     kenlmQueryCount: batch.timing?.queryCount ?? sentences.length,
     kenlmTiming: batch.timing,
     topCandidates,
+    allCombinationDeltas: deltas,
   };
 }

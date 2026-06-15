@@ -33,7 +33,7 @@ export type LocalSpanRecallHit = {
 export type LocalSpanRecallOptions = {
   /** P4: combined domain+alias+base cap (replaces tier叠加 merge). */
   perSpanLimit?: number;
-  /** P0.5: acoustic tone pattern from CNN (Recall sort only). */
+  /** P0.5: acoustic tone pattern from CNN (Recall strict filter). */
   acousticTonePattern?: number[];
 };
 

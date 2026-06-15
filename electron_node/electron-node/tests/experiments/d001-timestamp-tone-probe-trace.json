@@ -1,0 +1,889 @@
+{
+  "timestamp": "2026-06-08T19:49:12.848Z",
+  "reference": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+  "raw_asr": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+  "asr_service_id": "faster-whisper-vad",
+  "pipeline_ms": 25350,
+  "segments": [
+    {
+      "text": "你好,我想點一杯熱拿鐵鐘貝少糖",
+      "start": 0,
+      "end": 2.96,
+      "words": [
+        {
+          "word": "你好,",
+          "start": 0,
+          "end": 0.46,
+          "probability": 0.810546875
+        },
+        {
+          "word": "我想",
+          "start": 0.76,
+          "end": 0.98,
+          "probability": 0.96630859375
+        },
+        {
+          "word": "點",
+          "start": 0.98,
+          "end": 1.2,
+          "probability": 0.5205078125
+        },
+        {
+          "word": "一",
+          "start": 1.2,
+          "end": 1.4,
+          "probability": 0.99072265625
+        },
+        {
+          "word": "杯",
+          "start": 1.4,
+          "end": 1.48,
+          "probability": 0.99658203125
+        },
+        {
+          "word": "熱",
+          "start": 1.48,
+          "end": 1.66,
+          "probability": 0.93603515625
+        },
+        {
+          "word": "拿",
+          "start": 1.66,
+          "end": 1.84,
+          "probability": 0.90673828125
+        },
+        {
+          "word": "鐵",
+          "start": 1.84,
+          "end": 2.02,
+          "probability": 0.995849609375
+        },
+        {
+          "word": "鐘",
+          "start": 2.02,
+          "end": 2.2,
+          "probability": 0.3896484375
+        },
+        {
+          "word": "貝",
+          "start": 2.2,
+          "end": 2.38,
+          "probability": 0.958984375
+        },
+        {
+          "word": "少",
+          "start": 2.38,
+          "end": 2.54,
+          "probability": 0.78125
+        },
+        {
+          "word": "糖",
+          "start": 2.54,
+          "end": 2.96,
+          "probability": 0.95849609375
+        }
+      ]
+    },
+    {
+      "text": "深便溫",
+      "start": 2.96,
+      "end": 3.58,
+      "words": [
+        {
+          "word": "深",
+          "start": 2.96,
+          "end": 3.24,
+          "probability": 0.19921875
+        },
+        {
+          "word": "便",
+          "start": 3.24,
+          "end": 3.44,
+          "probability": 0.61181640625
+        },
+        {
+          "word": "溫",
+          "start": 3.44,
+          "end": 3.58,
+          "probability": 0.996337890625
+        }
+      ]
+    },
+    {
+      "text": "以下今天有蓝美马分吗?",
+      "start": 0,
+      "end": 2.14,
+      "words": [
+        {
+          "word": "以",
+          "start": 0,
+          "end": 0.4,
+          "probability": 0.359130859375
+        },
+        {
+          "word": "下",
+          "start": 0.4,
+          "end": 0.6,
+          "probability": 0.99462890625
+        },
+        {
+          "word": "今天",
+          "start": 0.6,
+          "end": 0.92,
+          "probability": 0.97021484375
+        },
+        {
+          "word": "有",
+          "start": 0.92,
+          "end": 1.22,
+          "probability": 0.9931640625
+        },
+        {
+          "word": "蓝",
+          "start": 1.22,
+          "end": 1.38,
+          "probability": 0.892333984375
+        },
+        {
+          "word": "美",
+          "start": 1.38,
+          "end": 1.52,
+          "probability": 0.6865234375
+        },
+        {
+          "word": "马",
+          "start": 1.52,
+          "end": 1.72,
+          "probability": 0.97265625
+        },
+        {
+          "word": "分",
+          "start": 1.72,
+          "end": 1.86,
+          "probability": 0.5791015625
+        },
+        {
+          "word": "吗?",
+          "start": 1.86,
+          "end": 2.14,
+          "probability": 0.9375
+        }
+      ]
+    }
+  ],
+  "utterance_tone": {
+    "toneEnabled": true,
+    "sliceCount": 15,
+    "toneConfidenceAvg": 0.7127467215061187,
+    "acousticToneSlices": [
+      {
+        "start": 0,
+        "end": 0.46,
+        "argmax": 3,
+        "confidence": 0.8488444685935974
+      },
+      {
+        "start": 0.76,
+        "end": 0.98,
+        "argmax": 2,
+        "confidence": 0.7528491616249084
+      },
+      {
+        "start": 0.98,
+        "end": 1.2,
+        "argmax": 3,
+        "confidence": 0.938959002494812
+      },
+      {
+        "start": 1.2,
+        "end": 1.4,
+        "argmax": 4,
+        "confidence": 0.5672308206558228
+      },
+      {
+        "start": 1.4,
+        "end": 1.48,
+        "argmax": 4,
+        "confidence": 0.6545001268386841
+      },
+      {
+        "start": 1.48,
+        "end": 1.66,
+        "argmax": 3,
+        "confidence": 0.7112739682197571
+      },
+      {
+        "start": 1.66,
+        "end": 1.84,
+        "argmax": 3,
+        "confidence": 0.509717583656311
+      },
+      {
+        "start": 1.84,
+        "end": 2.02,
+        "argmax": 3,
+        "confidence": 0.5724221467971802
+      },
+      {
+        "start": 2.02,
+        "end": 2.2,
+        "argmax": 3,
+        "confidence": 0.5516316294670105
+      },
+      {
+        "start": 2.2,
+        "end": 2.38,
+        "argmax": 3,
+        "confidence": 0.8283039927482605
+      },
+      {
+        "start": 2.38,
+        "end": 2.54,
+        "argmax": 2,
+        "confidence": 0.8398080468177795
+      },
+      {
+        "start": 2.54,
+        "end": 2.96,
+        "argmax": 4,
+        "confidence": 0.4633958637714386
+      },
+      {
+        "start": 2.96,
+        "end": 3.24,
+        "argmax": 1,
+        "confidence": 0.594025731086731
+      },
+      {
+        "start": 3.24,
+        "end": 3.44,
+        "argmax": 3,
+        "confidence": 0.931235671043396
+      },
+      {
+        "start": 3.44,
+        "end": 3.58,
+        "argmax": 3,
+        "confidence": 0.9270026087760925
+      }
+    ]
+  },
+  "acousticToneSlices": [
+    {
+      "start": 0,
+      "end": 0.46,
+      "argmax": 3,
+      "confidence": 0.8488444685935974
+    },
+    {
+      "start": 0.76,
+      "end": 0.98,
+      "argmax": 2,
+      "confidence": 0.7528491616249084
+    },
+    {
+      "start": 0.98,
+      "end": 1.2,
+      "argmax": 3,
+      "confidence": 0.938959002494812
+    },
+    {
+      "start": 1.2,
+      "end": 1.4,
+      "argmax": 4,
+      "confidence": 0.5672308206558228
+    },
+    {
+      "start": 1.4,
+      "end": 1.48,
+      "argmax": 4,
+      "confidence": 0.6545001268386841
+    },
+    {
+      "start": 1.48,
+      "end": 1.66,
+      "argmax": 3,
+      "confidence": 0.7112739682197571
+    },
+    {
+      "start": 1.66,
+      "end": 1.84,
+      "argmax": 3,
+      "confidence": 0.509717583656311
+    },
+    {
+      "start": 1.84,
+      "end": 2.02,
+      "argmax": 3,
+      "confidence": 0.5724221467971802
+    },
+    {
+      "start": 2.02,
+      "end": 2.2,
+      "argmax": 3,
+      "confidence": 0.5516316294670105
+    },
+    {
+      "start": 2.2,
+      "end": 2.38,
+      "argmax": 3,
+      "confidence": 0.8283039927482605
+    },
+    {
+      "start": 2.38,
+      "end": 2.54,
+      "argmax": 2,
+      "confidence": 0.8398080468177795
+    },
+    {
+      "start": 2.54,
+      "end": 2.96,
+      "argmax": 4,
+      "confidence": 0.4633958637714386
+    },
+    {
+      "start": 2.96,
+      "end": 3.24,
+      "argmax": 1,
+      "confidence": 0.594025731086731
+    },
+    {
+      "start": 3.24,
+      "end": 3.44,
+      "argmax": 3,
+      "confidence": 0.931235671043396
+    },
+    {
+      "start": 3.44,
+      "end": 3.58,
+      "argmax": 3,
+      "confidence": 0.9270026087760925
+    }
+  ],
+  "wordTimeSpans": [
+    {
+      "word": "你好,",
+      "rawStart": 0,
+      "rawEnd": 3,
+      "start": 0,
+      "end": 0.46,
+      "segmentIndex": 0,
+      "probability": 0.810546875
+    },
+    {
+      "word": "我想",
+      "rawStart": 3,
+      "rawEnd": 5,
+      "start": 0.76,
+      "end": 0.98,
+      "segmentIndex": 0,
+      "probability": 0.96630859375
+    },
+    {
+      "word": "點",
+      "rawStart": 5,
+      "rawEnd": 6,
+      "start": 0.98,
+      "end": 1.2,
+      "segmentIndex": 0,
+      "probability": 0.5205078125
+    },
+    {
+      "word": "一",
+      "rawStart": 6,
+      "rawEnd": 7,
+      "start": 1.2,
+      "end": 1.4,
+      "segmentIndex": 0,
+      "probability": 0.99072265625
+    },
+    {
+      "word": "杯",
+      "rawStart": 7,
+      "rawEnd": 8,
+      "start": 1.4,
+      "end": 1.48,
+      "segmentIndex": 0,
+      "probability": 0.99658203125
+    },
+    {
+      "word": "熱",
+      "rawStart": 8,
+      "rawEnd": 9,
+      "start": 1.48,
+      "end": 1.66,
+      "segmentIndex": 0,
+      "probability": 0.93603515625
+    },
+    {
+      "word": "拿",
+      "rawStart": 9,
+      "rawEnd": 10,
+      "start": 1.66,
+      "end": 1.84,
+      "segmentIndex": 0,
+      "probability": 0.90673828125
+    },
+    {
+      "word": "鐵",
+      "rawStart": 10,
+      "rawEnd": 11,
+      "start": 1.84,
+      "end": 2.02,
+      "segmentIndex": 0,
+      "probability": 0.995849609375
+    },
+    {
+      "word": "鐘",
+      "rawStart": 11,
+      "rawEnd": 12,
+      "start": 2.02,
+      "end": 2.2,
+      "segmentIndex": 0,
+      "probability": 0.3896484375
+    },
+    {
+      "word": "貝",
+      "rawStart": 12,
+      "rawEnd": 13,
+      "start": 2.2,
+      "end": 2.38,
+      "segmentIndex": 0,
+      "probability": 0.958984375
+    },
+    {
+      "word": "少",
+      "rawStart": 13,
+      "rawEnd": 14,
+      "start": 2.38,
+      "end": 2.54,
+      "segmentIndex": 0,
+      "probability": 0.78125
+    },
+    {
+      "word": "糖",
+      "rawStart": 14,
+      "rawEnd": 15,
+      "start": 2.54,
+      "end": 2.96,
+      "segmentIndex": 0,
+      "probability": 0.95849609375
+    },
+    {
+      "word": "深",
+      "rawStart": 16,
+      "rawEnd": 17,
+      "start": 2.96,
+      "end": 3.24,
+      "segmentIndex": 1,
+      "probability": 0.19921875
+    },
+    {
+      "word": "便",
+      "rawStart": 17,
+      "rawEnd": 18,
+      "start": 3.24,
+      "end": 3.44,
+      "segmentIndex": 1,
+      "probability": 0.61181640625
+    },
+    {
+      "word": "溫",
+      "rawStart": 18,
+      "rawEnd": 19,
+      "start": 3.44,
+      "end": 3.58,
+      "segmentIndex": 1,
+      "probability": 0.996337890625
+    },
+    {
+      "word": "以",
+      "rawStart": 20,
+      "rawEnd": 21,
+      "start": 0,
+      "end": 0.4,
+      "segmentIndex": 2,
+      "probability": 0.359130859375
+    },
+    {
+      "word": "下",
+      "rawStart": 21,
+      "rawEnd": 22,
+      "start": 0.4,
+      "end": 0.6,
+      "segmentIndex": 2,
+      "probability": 0.99462890625
+    },
+    {
+      "word": "今天",
+      "rawStart": 22,
+      "rawEnd": 24,
+      "start": 0.6,
+      "end": 0.92,
+      "segmentIndex": 2,
+      "probability": 0.97021484375
+    },
+    {
+      "word": "有",
+      "rawStart": 24,
+      "rawEnd": 25,
+      "start": 0.92,
+      "end": 1.22,
+      "segmentIndex": 2,
+      "probability": 0.9931640625
+    },
+    {
+      "word": "蓝",
+      "rawStart": 25,
+      "rawEnd": 26,
+      "start": 1.22,
+      "end": 1.38,
+      "segmentIndex": 2,
+      "probability": 0.892333984375
+    },
+    {
+      "word": "美",
+      "rawStart": 26,
+      "rawEnd": 27,
+      "start": 1.38,
+      "end": 1.52,
+      "segmentIndex": 2,
+      "probability": 0.6865234375
+    },
+    {
+      "word": "马",
+      "rawStart": 27,
+      "rawEnd": 28,
+      "start": 1.52,
+      "end": 1.72,
+      "segmentIndex": 2,
+      "probability": 0.97265625
+    },
+    {
+      "word": "分",
+      "rawStart": 28,
+      "rawEnd": 29,
+      "start": 1.72,
+      "end": 1.86,
+      "segmentIndex": 2,
+      "probability": 0.5791015625
+    },
+    {
+      "word": "吗?",
+      "rawStart": 29,
+      "rawEnd": 31,
+      "start": 1.86,
+      "end": 2.14,
+      "segmentIndex": 2,
+      "probability": 0.9375
+    }
+  ],
+  "spanAssemblyV3_tone": {
+    "tonePayloadAvailable": true,
+    "toneEnabled": true,
+    "toneSliceCount": 24,
+    "wordTimeSpanCount": 24,
+    "windowTimeAttemptCount": 50,
+    "windowTimeHitCount": 50,
+    "toneOverlapHitCount": 39,
+    "toneOverlapMissCount": 0,
+    "toneOverlapSyllableMismatchCount": 11,
+    "alignmentTextUsedCount": 0,
+    "tokenTextUsedForAlignmentCount": 0,
+    "charScanFallbackCount": 0,
+    "ngramTonePatternAttemptCount": 50,
+    "ngramTonePatternHitCount": 39,
+    "ngramTonePatternMissCount": 11,
+    "recallToneCompatibleCount": 2,
+    "recallToneIncompatibleCount": 30,
+    "recallToneFallbackCount": 30,
+    "exampleToneWindows": [
+      {
+        "text": "你好",
+        "pinyinKey": "ni|hao",
+        "windowTimeRange": {
+          "start": 0,
+          "end": 0.46
+        }
+      },
+      {
+        "text": "好",
+        "pinyinKey": "hao|wo",
+        "windowTimeRange": {
+          "start": 0,
+          "end": 0.46
+        },
+        "acousticTonePattern": [
+          3
+        ]
+      },
+      {
+        "text": "我想",
+        "pinyinKey": "wo|xiang",
+        "windowTimeRange": {
+          "start": 0.76,
+          "end": 0.98
+        }
+      },
+      {
+        "text": "想點",
+        "pinyinKey": "xiang|dian",
+        "windowTimeRange": {
+          "start": 0.76,
+          "end": 1.2
+        },
+        "acousticTonePattern": [
+          2,
+          3
+        ]
+      },
+      {
+        "text": "點一",
+        "pinyinKey": "dian|yi",
+        "windowTimeRange": {
+          "start": 0.98,
+          "end": 1.4
+        },
+        "acousticTonePattern": [
+          3,
+          4
+        ]
+      },
+      {
+        "text": "一杯",
+        "pinyinKey": "yi|bei",
+        "windowTimeRange": {
+          "start": 1.2,
+          "end": 1.48
+        },
+        "acousticTonePattern": [
+          4,
+          4
+        ]
+      },
+      {
+        "text": "杯熱",
+        "pinyinKey": "bei|re",
+        "windowTimeRange": {
+          "start": 1.4,
+          "end": 1.66
+        },
+        "acousticTonePattern": [
+          4,
+          3
+        ]
+      },
+      {
+        "text": "熱拿",
+        "pinyinKey": "re|na",
+        "windowTimeRange": {
+          "start": 1.48,
+          "end": 1.84
+        },
+        "acousticTonePattern": [
+          3,
+          3
+        ]
+      }
+    ]
+  },
+  "target_windows": [
+    {
+      "label": "钟贝",
+      "pinyinKey": "zhong|bei",
+      "found": false,
+      "window": null
+    },
+    {
+      "label": "贝少",
+      "pinyinKey": "bei|shao",
+      "found": false,
+      "window": null
+    },
+    {
+      "label": "少糖",
+      "pinyinKey": "shao|tang",
+      "found": false,
+      "window": null
+    },
+    {
+      "label": "钟贝少",
+      "pinyinKey": "zhong|bei|shao",
+      "found": false,
+      "window": null
+    },
+    {
+      "label": "贝少糖",
+      "pinyinKey": "bei|shao|tang",
+      "found": false,
+      "window": null
+    }
+  ],
+  "local_target_analysis": [
+    {
+      "pinyinKey": "zhong|bei",
+      "rawStart": 0,
+      "rawEnd": 2,
+      "text": "你好",
+      "pattern": null,
+      "windowTimeRange": {
+        "rawStart": 0,
+        "rawEnd": 2,
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "start": 0,
+        "end": 0.46
+      }
+    },
+    {
+      "pinyinKey": "bei|shao",
+      "rawStart": 0,
+      "rawEnd": 2,
+      "text": "你好",
+      "pattern": null,
+      "windowTimeRange": {
+        "rawStart": 0,
+        "rawEnd": 2,
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "start": 0,
+        "end": 0.46
+      }
+    },
+    {
+      "pinyinKey": "shao|tang",
+      "rawStart": 0,
+      "rawEnd": 2,
+      "text": "你好",
+      "pattern": null,
+      "windowTimeRange": {
+        "rawStart": 0,
+        "rawEnd": 2,
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "start": 0,
+        "end": 0.46
+      }
+    },
+    {
+      "pinyinKey": "zhong|bei|shao",
+      "rawStart": 0,
+      "rawEnd": 3,
+      "text": "你好,",
+      "pattern": null,
+      "windowTimeRange": {
+        "rawStart": 0,
+        "rawEnd": 3,
+        "syllableStart": 0,
+        "syllableEnd": 3,
+        "start": 0,
+        "end": 0.46
+      }
+    },
+    {
+      "pinyinKey": "bei|shao|tang",
+      "rawStart": 0,
+      "rawEnd": 3,
+      "text": "你好,",
+      "pattern": null,
+      "windowTimeRange": {
+        "rawStart": 0,
+        "rawEnd": 3,
+        "syllableStart": 0,
+        "syllableEnd": 3,
+        "start": 0,
+        "end": 0.46
+      }
+    }
+  ],
+  "graph_span_candidates": [
+    {
+      "spanText": "你好,我想點一杯熱拿鐵",
+      "word": "你好,我想點一杯熱拿鐵",
+      "candidateSentence": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "source": "canonical_exact",
+      "repairTarget": false,
+      "kenlmDelta": 0
+    },
+    {
+      "spanText": "鐘",
+      "word": "鐘",
+      "candidateSentence": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "source": "canonical_exact",
+      "repairTarget": false,
+      "kenlmDelta": 0
+    },
+    {
+      "spanText": "貝少糖",
+      "word": "貝少糖",
+      "candidateSentence": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "source": "canonical_exact",
+      "repairTarget": false,
+      "kenlmDelta": 0
+    },
+    {
+      "spanText": "深",
+      "word": "深",
+      "candidateSentence": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "source": "canonical_exact",
+      "repairTarget": false,
+      "kenlmDelta": 0
+    },
+    {
+      "spanText": "便溫",
+      "word": "便溫",
+      "candidateSentence": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "source": "canonical_exact",
+      "repairTarget": false,
+      "kenlmDelta": 0
+    },
+    {
+      "spanText": "以下今天",
+      "word": "以下今天",
+      "candidateSentence": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "source": "canonical_exact",
+      "repairTarget": false,
+      "kenlmDelta": 0
+    },
+    {
+      "spanText": "有",
+      "word": "有",
+      "candidateSentence": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "source": "canonical_exact",
+      "repairTarget": false,
+      "kenlmDelta": 0
+    },
+    {
+      "spanText": "蓝美马分吗",
+      "word": "蓝美马分吗",
+      "candidateSentence": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "source": "canonical_exact",
+      "repairTarget": false,
+      "kenlmDelta": 0
+    }
+  ],
+  "sentence_candidates": [
+    "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?"
+  ],
+  "beiShao_scan": [],
+  "fw_toneModule_rerank": {
+    "toneEnabled": false,
+    "alignmentTextMatched": false,
+    "recallToneCompatibleCount": 0,
+    "recallToneFallbackCount": 0
+  },
+  "answers": {
+    "beiShao_hasWindowTimeRange": true,
+    "beiShao_hasAcousticTonePattern": false,
+    "beiShao_pattern": null,
+    "peishao_in_span_candidates": [],
+    "zhongBeiShao_sentence_candidates": [],
+    "recallToneIncompatibleCount": 30,
+    "recallToneCompatibleCount": 2,
+    "compliance": {
+      "alignmentTextUsedCount": 0,
+      "tokenTextUsedForAlignmentCount": 0,
+      "charScanFallbackCount": 0
+    }
+  }
+}

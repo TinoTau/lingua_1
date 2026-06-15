@@ -1,5 +1,8 @@
 import type { WindowCandidateSource } from '../lexicon/window-candidate-source';
 import type { RecallJobV2Diagnostics } from '../lexicon-v2/recall-v2-diagnostics';
+import type { SpanAssemblyV4TraceDiagnostics, CombinationTrace } from './span-assembly-v4/v4-diagnostics-types';
+import type { CoarseBoundaryImportDiagnostics } from './span-assembly-shared/coarse-boundary-import';
+import type { CoarseAssemblyToneDiagnostics } from './span-assembly-shared/types';
 
 export type FwDetectorSignal =
   | 'domain_anchor_nearby'
@@ -14,7 +17,9 @@ export type FwDetectorSignal =
   | 'high_compression_ratio'
   | 'ime_v2_diff_hint'
   | 'ime_v2_instability_hint'
-  | 'ime_v2_boundary_topk_diff_hint';
+  | 'ime_v2_boundary_topk_diff_hint'
+  | 'span_assembly_v3'
+  | 'span_assembly_v4';
 
 export type FwSpanGateMode = 'legacy_detector' | 'kenlm_gate_filter' | 'fw_metadata_gate';
 
@@ -205,6 +210,9 @@ export type FwSentenceRerankDiagnostics = {
   maxDelta: number;
   minDeltaToReplace: number;
   topCandidates: Array<{ text: string; kenlmDelta: number; replacementCount: number }>;
+  allCombinations?: CombinationTrace[];
+  allCombinationDeltas?: number[];
+  picked?: import('./build-sentence-candidates').SentenceCombination | null;
   kenlmTiming?: {
     batchMs: number;
     queryCount: number;
@@ -285,6 +293,44 @@ export type PinyinImeV2ActiveDiagnostics = {
   loadError?: string;
 };
 
+/** FW Repair V4 — global window + compatibility graph diagnostics. */
+export type SpanAssemblyV4Diagnostics = {
+  enabled: true;
+  stub: boolean;
+  coarseSpanCount: number;
+  globalWindowGeneratedCount: number;
+  blockedWindowCount: number;
+  truncatedWindowCount: number;
+  ngramQueryCount: number;
+  windowCandidatePoolCount: number;
+  compatibilityEdgeCount: number;
+  droppedCandidateCount: number;
+  parentEvidenceCount: number;
+  exactEdgeCount: number;
+  candidateEdgeCount: number;
+  overlapMergeCount: number;
+  residualSpanCount: number;
+  utteranceDomain: string;
+  domainVoteMs: number;
+  coarsePathAssemblyMs: number;
+  sentenceBeamMs: number;
+  assemblyMs: number;
+  parentFragmentHitCount?: number;
+  parentSpanCandidateEmittedCount?: number;
+  parentSpanCandidateSelectedCount?: number;
+  dominatedPrunedCount?: number;
+  ruleBRejectedByHoleCount?: number;
+  parentSpanCoverageAvg?: number;
+  parentTermVoteCount?: number;
+  inSpanWindowCount: number;
+  boundaryWindowCount: number;
+  boundaryImport?: CoarseBoundaryImportDiagnostics;
+  tone?: CoarseAssemblyToneDiagnostics;
+  skippedReason?: 'no_cjk' | 'no_coarse_spans';
+} & SpanAssemblyV4TraceDiagnostics;
+
+export type FwPipelinePath = 'v4';
+
 export type FwDetectorResult = {
   enabled: boolean;
   triggered: boolean;
@@ -294,12 +340,13 @@ export type FwDetectorResult = {
   runtime?: FwDetectorRuntimeDiag;
   replacements?: FwDetectorReplacementDiag[];
   spans: FwSpanDiagnostics[];
+  pipelinePath?: FwPipelinePath;
   kenlmTiming?: {
     batchMs: number;
     queryCount: number;
   };
-  /** Pinyin IME V2 active-path span proposal diagnostics */
-  pinyinImeV2?: PinyinImeV2ActiveDiagnostics;
+  /** FW Repair V4 span assembly diagnostics. */
+  spanAssemblyV4?: SpanAssemblyV4Diagnostics;
   kenlmVetoMs?: number;
   kenlmVetoQueryCount?: number;
   /** Test-only when LEXICON_RECALL_V2_DIAGNOSTICS=1 */

@@ -1,0 +1,1061 @@
+{
+  "batchOnlinePartition": {
+    "mode": "batch8_no_tone",
+    "meta": {
+      "rawText": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "enabledDomains": [
+        "tech_ai",
+        "travel",
+        "transport",
+        "restaurant"
+      ],
+      "utteranceDomain": "restaurant",
+      "parentFragmentHitCount": 24,
+      "parentSpanCandidateEmittedCount": 10,
+      "parentSpanCandidateSelectedCount": 4,
+      "parentSpanCoverageAvg": 1,
+      "dominatedPrunedCount": 6,
+      "ruleBRejectedByHoleCount": 2,
+      "candidateEdgeCount": 17,
+      "tone": {
+        "tonePayloadAvailable": false,
+        "toneEnabled": false,
+        "toneSkippedReason": "no_acoustic_slices",
+        "toneSliceCount": 0,
+        "wordTimeSpanCount": 0,
+        "windowTimeAttemptCount": 0,
+        "windowTimeHitCount": 0,
+        "toneOverlapHitCount": 0,
+        "toneOverlapMissCount": 0,
+        "toneOverlapSyllableMismatchCount": 0,
+        "alignmentTextUsedCount": 0,
+        "tokenTextUsedForAlignmentCount": 0,
+        "charScanFallbackCount": 0,
+        "ngramTonePatternAttemptCount": 0,
+        "ngramTonePatternHitCount": 0,
+        "ngramTonePatternMissCount": 0,
+        "recallToneCompatibleCount": 0,
+        "recallToneIncompatibleCount": 32,
+        "recallToneFallbackCount": 32,
+        "exampleToneWindows": [
+          {
+            "text": "你好",
+            "pinyinKey": "ni|hao"
+          },
+          {
+            "text": "好",
+            "pinyinKey": "hao|wo"
+          },
+          {
+            "text": "我想",
+            "pinyinKey": "wo|xiang"
+          },
+          {
+            "text": "想點",
+            "pinyinKey": "xiang|dian"
+          },
+          {
+            "text": "點一",
+            "pinyinKey": "dian|yi"
+          },
+          {
+            "text": "一杯",
+            "pinyinKey": "yi|bei"
+          },
+          {
+            "text": "杯熱",
+            "pinyinKey": "bei|re"
+          },
+          {
+            "text": "熱拿",
+            "pinyinKey": "re|na"
+          }
+        ]
+      }
+    },
+    "coarseSpans": [
+      {
+        "idx": 0,
+        "id": "c0",
+        "text": "你好,我想點一杯熱拿鐵",
+        "raw": [
+          0,
+          11
+        ],
+        "syllable": [
+          0,
+          10
+        ]
+      },
+      {
+        "idx": 1,
+        "id": "c1",
+        "text": "鐘",
+        "raw": [
+          11,
+          12
+        ],
+        "syllable": [
+          10,
+          11
+        ]
+      },
+      {
+        "idx": 2,
+        "id": "c2",
+        "text": "貝少糖",
+        "raw": [
+          12,
+          15
+        ],
+        "syllable": [
+          11,
+          14
+        ]
+      },
+      {
+        "idx": 3,
+        "id": "c3",
+        "text": "深",
+        "raw": [
+          16,
+          17
+        ],
+        "syllable": [
+          14,
+          15
+        ]
+      },
+      {
+        "idx": 4,
+        "id": "c4",
+        "text": "便溫",
+        "raw": [
+          17,
+          19
+        ],
+        "syllable": [
+          15,
+          17
+        ]
+      },
+      {
+        "idx": 5,
+        "id": "c5",
+        "text": "以下今天",
+        "raw": [
+          20,
+          24
+        ],
+        "syllable": [
+          17,
+          21
+        ]
+      },
+      {
+        "idx": 6,
+        "id": "c6",
+        "text": "有",
+        "raw": [
+          24,
+          25
+        ],
+        "syllable": [
+          21,
+          22
+        ]
+      },
+      {
+        "idx": 7,
+        "id": "c7",
+        "text": "蓝美马分吗",
+        "raw": [
+          25,
+          30
+        ],
+        "syllable": [
+          22,
+          27
+        ]
+      }
+    ],
+    "selectedParentEdges": [
+      {
+        "coarseSpanId": "c0",
+        "coarseSpanText": "你好,我想點一杯熱拿鐵",
+        "replacement": "你好",
+        "parentTerm": "你好",
+        "parentTermId": "base-zh-v2-005728",
+        "rawStart": 0,
+        "rawEnd": 2,
+        "rawText": "你好",
+        "syllableStart": 0,
+        "syllableEnd": 2,
+        "repairTarget": true,
+        "score": 2.4642,
+        "hitKind": "parent_span_candidate"
+      },
+      {
+        "coarseSpanId": "c2",
+        "coarseSpanText": "貝少糖",
+        "replacement": "焙烧",
+        "parentTerm": "焙烧",
+        "parentTermId": "base-zh-v2-033897",
+        "rawStart": 12,
+        "rawEnd": 14,
+        "rawText": "貝少",
+        "syllableStart": 11,
+        "syllableEnd": 13,
+        "repairTarget": true,
+        "score": 1.3068,
+        "hitKind": "parent_span_candidate"
+      },
+      {
+        "coarseSpanId": "c5",
+        "coarseSpanText": "以下今天",
+        "replacement": "今天",
+        "parentTerm": "今天",
+        "parentTermId": "base-zh-v2-000204",
+        "rawStart": 22,
+        "rawEnd": 24,
+        "rawText": "今天",
+        "syllableStart": 19,
+        "syllableEnd": 21,
+        "repairTarget": true,
+        "score": 2.6377,
+        "hitKind": "parent_span_candidate"
+      },
+      {
+        "coarseSpanId": "c7",
+        "coarseSpanText": "蓝美马分吗",
+        "replacement": "蓝莓马芬",
+        "parentTerm": "蓝莓马芬",
+        "parentTermId": "domain-patch-zh-v2-000009",
+        "rawStart": 25,
+        "rawEnd": 29,
+        "rawText": "蓝美马分",
+        "syllableStart": 22,
+        "syllableEnd": 26,
+        "repairTarget": true,
+        "score": 2.3782666666666668,
+        "hitKind": "parent_span_candidate"
+      }
+    ],
+    "allParentEvidenceOnSpan7": [
+      {
+        "coarseSpanId": "c7",
+        "coarseSpanText": "蓝美马分吗",
+        "windowText": "蓝美",
+        "windowPinyinKey": "lan|mei",
+        "parentTerm": "蓝莓",
+        "parentTermId": "domain-patch-zh-v2-000008",
+        "replacement": "蓝莓",
+        "matchedTermStart": 0,
+        "matchedTermEnd": 2,
+        "rawStart": 25,
+        "rawEnd": 27,
+        "rawText": "蓝美",
+        "windowSyllableStart": 22,
+        "windowSyllableEnd": 24,
+        "repairTarget": true,
+        "domainId": "restaurant",
+        "score": 1.9706000000000001
+      },
+      {
+        "coarseSpanId": "c7",
+        "coarseSpanText": "蓝美马分吗",
+        "windowText": "蓝美",
+        "windowPinyinKey": "lan|mei|ma|fen",
+        "parentTerm": "蓝莓马芬",
+        "parentTermId": "domain-patch-zh-v2-000009",
+        "replacement": "蓝莓马芬",
+        "matchedTermStart": 0,
+        "matchedTermEnd": 2,
+        "rawStart": 25,
+        "rawEnd": 27,
+        "rawText": "蓝美",
+        "windowSyllableStart": 22,
+        "windowSyllableEnd": 24,
+        "repairTarget": true,
+        "domainId": "restaurant",
+        "score": 1.9616000000000002
+      },
+      {
+        "coarseSpanId": "c7",
+        "coarseSpanText": "蓝美马分吗",
+        "windowText": "美马",
+        "windowPinyinKey": "lan|mei|ma|fen",
+        "parentTerm": "蓝莓马芬",
+        "parentTermId": "domain-patch-zh-v2-000009",
+        "replacement": "蓝莓马芬",
+        "matchedTermStart": 1,
+        "matchedTermEnd": 3,
+        "rawStart": 26,
+        "rawEnd": 28,
+        "rawText": "美马",
+        "windowSyllableStart": 23,
+        "windowSyllableEnd": 25,
+        "repairTarget": true,
+        "domainId": "restaurant",
+        "score": 1.9616000000000002
+      },
+      {
+        "coarseSpanId": "c7",
+        "coarseSpanText": "蓝美马分吗",
+        "windowText": "马分",
+        "windowPinyinKey": "ma|fen",
+        "parentTerm": "马芬",
+        "parentTermId": "domain-patch-zh-v2-000007",
+        "replacement": "马芬",
+        "matchedTermStart": 0,
+        "matchedTermEnd": 2,
+        "rawStart": 27,
+        "rawEnd": 29,
+        "rawText": "马分",
+        "windowSyllableStart": 24,
+        "windowSyllableEnd": 26,
+        "repairTarget": true,
+        "domainId": "restaurant",
+        "score": 1.9724
+      },
+      {
+        "coarseSpanId": "c7",
+        "coarseSpanText": "蓝美马分吗",
+        "windowText": "马分",
+        "windowPinyinKey": "lan|mei|ma|fen",
+        "parentTerm": "蓝莓马芬",
+        "parentTermId": "domain-patch-zh-v2-000009",
+        "replacement": "蓝莓马芬",
+        "matchedTermStart": 2,
+        "matchedTermEnd": 4,
+        "rawStart": 27,
+        "rawEnd": 29,
+        "rawText": "马分",
+        "windowSyllableStart": 24,
+        "windowSyllableEnd": 26,
+        "repairTarget": true,
+        "domainId": "restaurant",
+        "score": 1.9616000000000002
+      },
+      {
+        "coarseSpanId": "c7",
+        "coarseSpanText": "蓝美马分吗",
+        "windowText": "马分",
+        "windowPinyinKey": "wu|ma|fen|shi",
+        "parentTerm": "五马分尸",
+        "parentTermId": "idiom-zh-v2-002984",
+        "replacement": "五马分尸",
+        "matchedTermStart": 1,
+        "matchedTermEnd": 3,
+        "rawStart": 27,
+        "rawEnd": 29,
+        "rawText": "马分",
+        "windowSyllableStart": 24,
+        "windowSyllableEnd": 26,
+        "repairTarget": true,
+        "score": 2.1006
+      },
+      {
+        "coarseSpanId": "c7",
+        "coarseSpanText": "蓝美马分吗",
+        "windowText": "蓝美马",
+        "windowPinyinKey": "lan|mei|ma|fen",
+        "parentTerm": "蓝莓马芬",
+        "parentTermId": "domain-patch-zh-v2-000009",
+        "replacement": "蓝莓马芬",
+        "matchedTermStart": 0,
+        "matchedTermEnd": 3,
+        "rawStart": 25,
+        "rawEnd": 28,
+        "rawText": "蓝美马",
+        "windowSyllableStart": 22,
+        "windowSyllableEnd": 25,
+        "repairTarget": true,
+        "domainId": "restaurant",
+        "score": 2.1282666666666668
+      },
+      {
+        "coarseSpanId": "c7",
+        "coarseSpanText": "蓝美马分吗",
+        "windowText": "美马分",
+        "windowPinyinKey": "lan|mei|ma|fen",
+        "parentTerm": "蓝莓马芬",
+        "parentTermId": "domain-patch-zh-v2-000009",
+        "replacement": "蓝莓马芬",
+        "matchedTermStart": 1,
+        "matchedTermEnd": 4,
+        "rawStart": 26,
+        "rawEnd": 29,
+        "rawText": "美马分",
+        "windowSyllableStart": 23,
+        "windowSyllableEnd": 26,
+        "repairTarget": true,
+        "domainId": "restaurant",
+        "score": 1.7949333333333337
+      },
+      {
+        "coarseSpanId": "c7",
+        "coarseSpanText": "蓝美马分吗",
+        "windowText": "蓝美马分",
+        "windowPinyinKey": "lan|mei|ma|fen",
+        "parentTerm": "蓝莓马芬",
+        "parentTermId": "domain-patch-zh-v2-000009",
+        "replacement": "蓝莓马芬",
+        "matchedTermStart": 0,
+        "matchedTermEnd": 4,
+        "rawStart": 25,
+        "rawEnd": 29,
+        "rawText": "蓝美马分",
+        "windowSyllableStart": 22,
+        "windowSyllableEnd": 26,
+        "repairTarget": true,
+        "domainId": "restaurant",
+        "score": 1.9616000000000002
+      }
+    ],
+    "span7EvidenceBlueberry": [
+      {
+        "coarseSpanId": "c7",
+        "coarseSpanText": "蓝美马分吗",
+        "windowText": "蓝美",
+        "windowPinyinKey": "lan|mei",
+        "parentTerm": "蓝莓",
+        "parentTermId": "domain-patch-zh-v2-000008",
+        "replacement": "蓝莓",
+        "matchedTermStart": 0,
+        "matchedTermEnd": 2,
+        "rawStart": 25,
+        "rawEnd": 27,
+        "rawText": "蓝美",
+        "windowSyllableStart": 22,
+        "windowSyllableEnd": 24,
+        "repairTarget": true,
+        "domainId": "restaurant",
+        "score": 1.9706000000000001
+      },
+      {
+        "coarseSpanId": "c7",
+        "coarseSpanText": "蓝美马分吗",
+        "windowText": "蓝美",
+        "windowPinyinKey": "lan|mei|ma|fen",
+        "parentTerm": "蓝莓马芬",
+        "parentTermId": "domain-patch-zh-v2-000009",
+        "replacement": "蓝莓马芬",
+        "matchedTermStart": 0,
+        "matchedTermEnd": 2,
+        "rawStart": 25,
+        "rawEnd": 27,
+        "rawText": "蓝美",
+        "windowSyllableStart": 22,
+        "windowSyllableEnd": 24,
+        "repairTarget": true,
+        "domainId": "restaurant",
+        "score": 1.9616000000000002
+      },
+      {
+        "coarseSpanId": "c7",
+        "coarseSpanText": "蓝美马分吗",
+        "windowText": "美马",
+        "windowPinyinKey": "lan|mei|ma|fen",
+        "parentTerm": "蓝莓马芬",
+        "parentTermId": "domain-patch-zh-v2-000009",
+        "replacement": "蓝莓马芬",
+        "matchedTermStart": 1,
+        "matchedTermEnd": 3,
+        "rawStart": 26,
+        "rawEnd": 28,
+        "rawText": "美马",
+        "windowSyllableStart": 23,
+        "windowSyllableEnd": 25,
+        "repairTarget": true,
+        "domainId": "restaurant",
+        "score": 1.9616000000000002
+      },
+      {
+        "coarseSpanId": "c7",
+        "coarseSpanText": "蓝美马分吗",
+        "windowText": "马分",
+        "windowPinyinKey": "lan|mei|ma|fen",
+        "parentTerm": "蓝莓马芬",
+        "parentTermId": "domain-patch-zh-v2-000009",
+        "replacement": "蓝莓马芬",
+        "matchedTermStart": 2,
+        "matchedTermEnd": 4,
+        "rawStart": 27,
+        "rawEnd": 29,
+        "rawText": "马分",
+        "windowSyllableStart": 24,
+        "windowSyllableEnd": 26,
+        "repairTarget": true,
+        "domainId": "restaurant",
+        "score": 1.9616000000000002
+      },
+      {
+        "coarseSpanId": "c7",
+        "coarseSpanText": "蓝美马分吗",
+        "windowText": "蓝美马",
+        "windowPinyinKey": "lan|mei|ma|fen",
+        "parentTerm": "蓝莓马芬",
+        "parentTermId": "domain-patch-zh-v2-000009",
+        "replacement": "蓝莓马芬",
+        "matchedTermStart": 0,
+        "matchedTermEnd": 3,
+        "rawStart": 25,
+        "rawEnd": 28,
+        "rawText": "蓝美马",
+        "windowSyllableStart": 22,
+        "windowSyllableEnd": 25,
+        "repairTarget": true,
+        "domainId": "restaurant",
+        "score": 2.1282666666666668
+      },
+      {
+        "coarseSpanId": "c7",
+        "coarseSpanText": "蓝美马分吗",
+        "windowText": "美马分",
+        "windowPinyinKey": "lan|mei|ma|fen",
+        "parentTerm": "蓝莓马芬",
+        "parentTermId": "domain-patch-zh-v2-000009",
+        "replacement": "蓝莓马芬",
+        "matchedTermStart": 1,
+        "matchedTermEnd": 4,
+        "rawStart": 26,
+        "rawEnd": 29,
+        "rawText": "美马分",
+        "windowSyllableStart": 23,
+        "windowSyllableEnd": 26,
+        "repairTarget": true,
+        "domainId": "restaurant",
+        "score": 1.7949333333333337
+      },
+      {
+        "coarseSpanId": "c7",
+        "coarseSpanText": "蓝美马分吗",
+        "windowText": "蓝美马分",
+        "windowPinyinKey": "lan|mei|ma|fen",
+        "parentTerm": "蓝莓马芬",
+        "parentTermId": "domain-patch-zh-v2-000009",
+        "replacement": "蓝莓马芬",
+        "matchedTermStart": 0,
+        "matchedTermEnd": 4,
+        "rawStart": 25,
+        "rawEnd": 29,
+        "rawText": "蓝美马分",
+        "windowSyllableStart": 22,
+        "windowSyllableEnd": 26,
+        "repairTarget": true,
+        "domainId": "restaurant",
+        "score": 1.9616000000000002
+      }
+    ],
+    "graphParentEdges": [
+      {
+        "replacement": "今天",
+        "coarseSpanId": "c5",
+        "rawStart": 21,
+        "rawEnd": 24,
+        "rawText": "下今天",
+        "syllableStart": 18,
+        "syllableEnd": 21,
+        "hitKind": "parent_span_candidate",
+        "repairTarget": true,
+        "score": 2.6377
+      },
+      {
+        "replacement": "你好",
+        "coarseSpanId": "c0",
+        "rawStart": 0,
+        "rawEnd": 2,
+        "rawText": "你好",
+        "syllableStart": 0,
+        "syllableEnd": 3,
+        "hitKind": "parent_span_candidate",
+        "repairTarget": true,
+        "score": 2.4642
+      },
+      {
+        "replacement": "蓝莓马芬",
+        "coarseSpanId": "c7",
+        "rawStart": 25,
+        "rawEnd": 30,
+        "rawText": "蓝美马分吗",
+        "syllableStart": 22,
+        "syllableEnd": 27,
+        "hitKind": "parent_span_candidate",
+        "repairTarget": true,
+        "score": 2.3782666666666668
+      },
+      {
+        "replacement": "焙烧",
+        "coarseSpanId": "c2",
+        "rawStart": 12,
+        "rawEnd": 15,
+        "rawText": "貝少糖",
+        "syllableStart": 11,
+        "syllableEnd": 14,
+        "hitKind": "parent_span_candidate",
+        "repairTarget": true,
+        "score": 1.3068
+      }
+    ],
+    "graphEdges": [
+      {
+        "replacement": "今天",
+        "coarseSpanId": "c5",
+        "rawStart": 21,
+        "rawEnd": 24,
+        "rawText": "下今天",
+        "syllableStart": 18,
+        "syllableEnd": 21,
+        "hitKind": "parent_span_candidate",
+        "repairTarget": true,
+        "score": 2.6377
+      },
+      {
+        "replacement": "你好",
+        "coarseSpanId": "c0",
+        "rawStart": 0,
+        "rawEnd": 2,
+        "rawText": "你好",
+        "syllableStart": 0,
+        "syllableEnd": 3,
+        "hitKind": "parent_span_candidate",
+        "repairTarget": true,
+        "score": 2.4642
+      },
+      {
+        "replacement": "蓝莓马芬",
+        "coarseSpanId": "c7",
+        "rawStart": 25,
+        "rawEnd": 30,
+        "rawText": "蓝美马分吗",
+        "syllableStart": 22,
+        "syllableEnd": 27,
+        "hitKind": "parent_span_candidate",
+        "repairTarget": true,
+        "score": 2.3782666666666668
+      },
+      {
+        "replacement": "以下",
+        "rawStart": 20,
+        "rawEnd": 23,
+        "rawText": "以下今",
+        "syllableStart": 17,
+        "syllableEnd": 20,
+        "hitKind": "exact_term",
+        "repairTarget": true,
+        "score": 2.3461
+      },
+      {
+        "replacement": "拿铁",
+        "rawStart": 8,
+        "rawEnd": 11,
+        "rawText": "熱拿鐵",
+        "syllableStart": 7,
+        "syllableEnd": 10,
+        "hitKind": "exact_term",
+        "repairTarget": true,
+        "score": 1.9832
+      },
+      {
+        "replacement": "拿帖",
+        "rawStart": 8,
+        "rawEnd": 11,
+        "rawText": "熱拿鐵",
+        "syllableStart": 7,
+        "syllableEnd": 10,
+        "hitKind": "exact_term",
+        "repairTarget": true,
+        "score": 1.9832
+      },
+      {
+        "replacement": "马芬",
+        "rawStart": 26,
+        "rawEnd": 30,
+        "rawText": "美马分吗",
+        "syllableStart": 23,
+        "syllableEnd": 27,
+        "hitKind": "exact_term",
+        "repairTarget": true,
+        "score": 1.9724
+      },
+      {
+        "replacement": "蓝莓",
+        "rawStart": 25,
+        "rawEnd": 28,
+        "rawText": "蓝美马",
+        "syllableStart": 22,
+        "syllableEnd": 25,
+        "hitKind": "exact_term",
+        "repairTarget": true,
+        "score": 1.9706000000000001
+      },
+      {
+        "replacement": "兰梅马芬",
+        "rawStart": 25,
+        "rawEnd": 30,
+        "rawText": "蓝美马分吗",
+        "syllableStart": 22,
+        "syllableEnd": 27,
+        "hitKind": "exact_term",
+        "repairTarget": true,
+        "score": 1.7116000000000002
+      },
+      {
+        "replacement": "兰梅",
+        "rawStart": 25,
+        "rawEnd": 28,
+        "rawText": "蓝美马",
+        "syllableStart": 22,
+        "syllableEnd": 25,
+        "hitKind": "exact_term",
+        "repairTarget": true,
+        "score": 1.4706000000000001
+      },
+      {
+        "replacement": "焙烧",
+        "coarseSpanId": "c2",
+        "rawStart": 12,
+        "rawEnd": 15,
+        "rawText": "貝少糖",
+        "syllableStart": 11,
+        "syllableEnd": 14,
+        "hitKind": "parent_span_candidate",
+        "repairTarget": true,
+        "score": 1.3068
+      },
+      {
+        "replacement": "以北",
+        "rawStart": 5,
+        "rawEnd": 9,
+        "rawText": "點一杯熱",
+        "syllableStart": 4,
+        "syllableEnd": 8,
+        "hitKind": "exact_term",
+        "repairTarget": true,
+        "score": 1.2738
+      },
+      {
+        "replacement": "以备",
+        "rawStart": 5,
+        "rawEnd": 9,
+        "rawText": "點一杯熱",
+        "syllableStart": 4,
+        "syllableEnd": 8,
+        "hitKind": "exact_term",
+        "repairTarget": true,
+        "score": 1.1608999999999998
+      },
+      {
+        "replacement": "想點一杯",
+        "rawStart": 4,
+        "rawEnd": 8,
+        "rawText": "想點一杯",
+        "syllableStart": 3,
+        "syllableEnd": 7,
+        "repairTarget": false,
+        "score": 0.05
+      },
+      {
+        "replacement": "鐘",
+        "rawStart": 11,
+        "rawEnd": 12,
+        "rawText": "鐘",
+        "syllableStart": 10,
+        "syllableEnd": 11,
+        "repairTarget": false,
+        "score": 0.05
+      },
+      {
+        "replacement": "深便溫",
+        "rawStart": 16,
+        "rawEnd": 19,
+        "rawText": "深便溫",
+        "syllableStart": 14,
+        "syllableEnd": 18,
+        "repairTarget": false,
+        "score": 0.05
+      },
+      {
+        "replacement": "有",
+        "rawStart": 24,
+        "rawEnd": 25,
+        "rawText": "有",
+        "syllableStart": 21,
+        "syllableEnd": 22,
+        "repairTarget": false,
+        "score": 0.15
+      }
+    ],
+    "span7EdgesInCoarseSpan": [
+      {
+        "replacement": "蓝莓马芬",
+        "coarseSpanId": "c7",
+        "rawStart": 25,
+        "rawEnd": 30,
+        "rawText": "蓝美马分吗",
+        "syllableStart": 22,
+        "syllableEnd": 27,
+        "hitKind": "parent_span_candidate",
+        "repairTarget": true,
+        "score": 2.3782666666666668
+      },
+      {
+        "replacement": "马芬",
+        "rawStart": 26,
+        "rawEnd": 30,
+        "rawText": "美马分吗",
+        "syllableStart": 23,
+        "syllableEnd": 27,
+        "hitKind": "exact_term",
+        "repairTarget": true,
+        "score": 1.9724
+      },
+      {
+        "replacement": "蓝莓",
+        "rawStart": 25,
+        "rawEnd": 28,
+        "rawText": "蓝美马",
+        "syllableStart": 22,
+        "syllableEnd": 25,
+        "hitKind": "exact_term",
+        "repairTarget": true,
+        "score": 1.9706000000000001
+      },
+      {
+        "replacement": "兰梅马芬",
+        "rawStart": 25,
+        "rawEnd": 30,
+        "rawText": "蓝美马分吗",
+        "syllableStart": 22,
+        "syllableEnd": 27,
+        "hitKind": "exact_term",
+        "repairTarget": true,
+        "score": 1.7116000000000002
+      },
+      {
+        "replacement": "兰梅",
+        "rawStart": 25,
+        "rawEnd": 28,
+        "rawText": "蓝美马",
+        "syllableStart": 22,
+        "syllableEnd": 25,
+        "hitKind": "exact_term",
+        "repairTarget": true,
+        "score": 1.4706000000000001
+      }
+    ],
+    "span7CoarsePaths": [
+      {
+        "pathIdx": 0,
+        "score": 2.978266666666667,
+        "edges": [
+          {
+            "replacement": "蓝莓马芬",
+            "coarseSpanId": "c7",
+            "rawStart": 25,
+            "rawEnd": 30,
+            "rawText": "蓝美马分吗",
+            "syllableStart": 22,
+            "syllableEnd": 27,
+            "hitKind": "parent_span_candidate",
+            "repairTarget": true,
+            "score": 2.3782666666666668
+          }
+        ]
+      },
+      {
+        "pathIdx": 1,
+        "score": 2.1524,
+        "edges": [
+          {
+            "replacement": "马芬",
+            "rawStart": 26,
+            "rawEnd": 30,
+            "rawText": "美马分吗",
+            "syllableStart": 23,
+            "syllableEnd": 27,
+            "hitKind": "exact_term",
+            "repairTarget": true,
+            "score": 1.9724
+          }
+        ]
+      },
+      {
+        "pathIdx": 2,
+        "score": 2.0806,
+        "edges": [
+          {
+            "replacement": "蓝莓",
+            "rawStart": 25,
+            "rawEnd": 28,
+            "rawText": "蓝美马",
+            "syllableStart": 22,
+            "syllableEnd": 25,
+            "hitKind": "exact_term",
+            "repairTarget": true,
+            "score": 1.9706000000000001
+          }
+        ]
+      }
+    ],
+    "span7PathReplacePicks": [
+      {
+        "pathIdx": 0,
+        "pathPicks": [
+          {
+            "word": "蓝莓马芬",
+            "span": {
+              "text": "蓝美马分吗",
+              "start": 25,
+              "end": 30
+            },
+            "repairTarget": true
+          }
+        ],
+        "replacePicks": [
+          {
+            "word": "蓝莓马芬",
+            "span": {
+              "text": "蓝美马分吗",
+              "start": 25,
+              "end": 30
+            },
+            "repairTarget": true
+          }
+        ]
+      },
+      {
+        "pathIdx": 1,
+        "pathPicks": [
+          {
+            "word": "马芬",
+            "span": {
+              "text": "美马分吗",
+              "start": 26,
+              "end": 30
+            },
+            "repairTarget": true
+          }
+        ],
+        "replacePicks": [
+          {
+            "word": "马芬",
+            "span": {
+              "text": "美马分吗",
+              "start": 26,
+              "end": 30
+            },
+            "repairTarget": true
+          }
+        ]
+      },
+      {
+        "pathIdx": 2,
+        "pathPicks": [
+          {
+            "word": "蓝莓",
+            "span": {
+              "text": "蓝美马",
+              "start": 25,
+              "end": 28
+            },
+            "repairTarget": true
+          }
+        ],
+        "replacePicks": [
+          {
+            "word": "蓝莓",
+            "span": {
+              "text": "蓝美马",
+              "start": 25,
+              "end": 28
+            },
+            "repairTarget": true
+          }
+        ]
+      }
+    ],
+    "spanSets7": [
+      {
+        "span": {
+          "text": "蓝美马分吗",
+          "start": 25,
+          "end": 30
+        },
+        "word": "蓝莓马芬",
+        "source": "canonical_exact",
+        "priorScore": 2.3782666666666668,
+        "repairTarget": true,
+        "candidateScore": 2.3782666666666668
+      },
+      {
+        "span": {
+          "text": "美马分吗",
+          "start": 26,
+          "end": 30
+        },
+        "word": "马芬",
+        "source": "lexicon_pinyin_topk",
+        "priorScore": 1.9724,
+        "repairTarget": true,
+        "candidateScore": 1.9724
+      },
+      {
+        "span": {
+          "text": "蓝美马",
+          "start": 25,
+          "end": 28
+        },
+        "word": "蓝莓",
+        "source": "lexicon_pinyin_topk",
+        "priorScore": 1.9706000000000001,
+        "repairTarget": true,
+        "candidateScore": 1.9706000000000001
+      }
+    ],
+    "sentenceCandidates": [
+      {
+        "text": "你好,我想點一杯拿铁鐘焙烧 深便溫 以今天有蓝莓马芬?",
+        "hasBlueberry": true
+      },
+      {
+        "text": "你好,我想點一杯拿铁鐘焙烧 深便溫 以下天有蓝莓马芬?",
+        "hasBlueberry": true
+      },
+      {
+        "text": "你好,我想點一杯拿铁鐘焙烧 深便溫 以今天有蓝马芬?",
+        "hasBlueberry": false
+      },
+      {
+        "text": "你好,我想點一杯拿铁鐘焙烧 深便溫 以今天有蓝莓分吗?",
+        "hasBlueberry": false
+      },
+      {
+        "text": "你好,我想點一杯拿铁鐘焙烧 深便溫 以下天有蓝马芬?",
+        "hasBlueberry": false
+      },
+      {
+        "text": "你好,我想點一杯拿铁鐘焙烧 深便溫 以下天有蓝莓分吗?",
+        "hasBlueberry": false
+      }
+    ],
+    "flags": {
+      "hasBlueberryInSelected": true,
+      "hasBlueberryInGraph": true,
+      "hasBlueberryInSpan7Path": true,
+      "hasBlueberryInSpanSets7": true,
+      "hasBlueberryInSentenceCandidates": true
+    }
+  },
+  "batchOnlineMetricsMatch": {
+    "expectedSelectedCount": 2,
+    "actualSelectedCount": 4,
+    "expectedEmittedCount": 2,
+    "actualEmittedCount": 10,
+    "expectedFragmentHits": 5,
+    "actualFragmentHits": 24,
+    "metricsAlign": false
+  },
+  "note": "Tone slices from audio not replayed in jest; online tone stats in batch JSON"
+}

@@ -15,6 +15,7 @@ import type { RestoreMetrics } from '../../legacy/asr-repair/asr-repair/restore-
 import type { SentenceRepairExtra } from '../../legacy/asr-repair/asr-repair/sentence-rerank/sentence-repair-observability';
 import type { AsrRepairLifecycle } from '../../legacy/asr-repair/legacy-asr-repair-contract-types';
 import type { SentenceCandidateTraceItem, V5Metrics } from '../../legacy/asr-repair/legacy-v5-metrics';
+import type { AcousticToneSlice } from '../../task-router/types';
 import type { FwDetectorResult, KenlmGateMode } from '../../fw-detector/types';
 import type { LegacyContext } from './legacy-context';
 
@@ -30,6 +31,11 @@ export interface JobContext {
   asrMergeProbeText?: string;
   asrText?: string;
   asrSegments?: any[];
+  /** Merged utterance-level acoustic tone slices (global time axis, seconds). */
+  acousticToneSlices?: AcousticToneSlice[];
+  asrSegmentNodeBatchIndices?: number[];
+  segmentTimeOffsetsSec?: number[];
+  segmentCharOffsets?: number[];
   asrResult?: ASRResult;
   /** æ?job å®é ASR æå¡ idï¼å¦ asr-sherpa-lmï¼ã?*/
   asrServiceId?: string;
@@ -79,6 +85,8 @@ export interface JobContext {
   /** å¥çº§ä¿®å¤å¯è§æµæ§ï¼result extra.sentence_repairï¼ã?*/
   sentenceRepairExtra?: SentenceRepairExtra;
   asrRepairApplied?: boolean;
+  /** Optional batch case id (e.g. d001) for V4 diagnostics targetIds. */
+  fwDetectorTraceCaseId?: string;
   fwDetectorResult?: FwDetectorResult;
   fwDetectorStepMs?: number;
   languageProbabilities?: Record<string, number>;

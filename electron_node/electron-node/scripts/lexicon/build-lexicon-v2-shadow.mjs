@@ -24,7 +24,7 @@ function defaultV2ShadowDir() {
 }
 
 const args = parseCliArgs(process.argv);
-const input = args.input ?? defaultSeedPath();
+const input = args.input ?? defaultV2ShadowSeedPath();
 const registryPath = args.registry ?? defaultRegistryPath();
 const bundleDir = args.output ?? defaultV2ShadowDir();
 const bundleTag = process.env.V2_BUNDLE_TAG?.trim() || 'v2-shadow';

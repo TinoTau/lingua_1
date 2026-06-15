@@ -1,12 +1,43 @@
 /**
- * ToneModule P0.5 — acoustic tone pattern extraction (Recall query only).
- * ASR tone from CNN toneTokens only; candidate tone from tone_pinyin_key or pinyin-pro on candidate.word.
+ * ToneModule — acoustic tone pattern + Recall ranking signal (Tone Score).
+ * V2 legacy char-alignment helpers live here for unit tests only.
+ * V3 active path uses timestamp-only tone-time-align.ts.
  */
 
-import { resolveTonePinyinKey } from '../lexicon-patch-v3/pinyin-resolve';
-import type { UtteranceTonePayload, TonePosterior, ToneToken } from '../task-router/types';
+export const TONE_MATCH_PENALTY = 1.0;
+export const TONE_MISMATCH_PENALTY = 0.8;
 
-export type { UtteranceTonePayload, ToneToken, TonePosterior };
+export type ToneReason = 'match' | 'mismatch' | 'no_pattern';
+
+export interface ToneScoreResult {
+  toneCompatible: boolean;
+  tonePenalty: number;
+  toneReason: ToneReason;
+}
+
+import { resolveTonePinyinKey } from '../lexicon-patch-v3/pinyin-resolve';
+import type { TonePosterior } from '../task-router/types';
+
+export type { TonePosterior };
+
+/** @deprecated V2-only unit test fixture — not emitted by Phase3 HTTP API. */
+export interface V2LegacyToneToken {
+  token: string;
+  start: number;
+  end: number;
+  tonePosterior: TonePosterior;
+  confidence: number;
+}
+
+/** @deprecated V2-only unit test fixture — not emitted by Phase3 HTTP API. */
+export interface V2LegacyUtteranceTonePayload {
+  toneEnabled: boolean;
+  toneTokens: V2LegacyToneToken[];
+  toneTokenCount: number;
+  toneConfidenceAvg?: number;
+  skippedReason?: 'no_audio' | 'no_timestamps' | 'non_zh' | 'model_error';
+  alignmentText?: string;
+}
 
 const TONE_KEYS: (keyof TonePosterior)[] = ['t1', 't2', 't3', 't4', 't5'];
 
@@ -39,9 +70,9 @@ export function argmaxToneFromPosterior(posterior: TonePosterior): number {
 /** Map toneTokens to rawText character indices (supports multi-char FW word tokens). */
 export function alignToneTokensToChars(
   rawText: string,
-  toneTokens: ToneToken[]
-): Map<number, ToneToken> {
-  const map = new Map<number, ToneToken>();
+  toneTokens: V2LegacyToneToken[]
+): Map<number, V2LegacyToneToken> {
+  const map = new Map<number, V2LegacyToneToken>();
   const sorted = [...toneTokens].sort((a, b) => a.start - b.start);
   let charIdx = 0;
 
@@ -64,10 +95,10 @@ export function mapSpanToToneTokens(
   rawText: string,
   spanStart: number,
   spanEnd: number,
-  toneTokens: ToneToken[]
-): ToneToken[] {
+  toneTokens: V2LegacyToneToken[]
+): V2LegacyToneToken[] {
   const charMap = alignToneTokensToChars(rawText, toneTokens);
-  const result: ToneToken[] = [];
+  const result: V2LegacyToneToken[] = [];
   for (let i = spanStart; i < spanEnd; i += 1) {
     const tok = charMap.get(i);
     if (tok) {
@@ -81,12 +112,15 @@ export function resolveCandidateToneKey(word: string, tonePinyinKey?: string): s
   return resolveTonePinyinKey(word, { tonePinyinKey });
 }
 
-export function isAcousticToneEnabled(tone?: UtteranceTonePayload | null): boolean {
+export function isAcousticToneEnabled(tone?: V2LegacyUtteranceTonePayload | null): boolean {
   return tone?.toneEnabled === true && (tone.toneTokens?.length ?? 0) > 0;
 }
 
-/** P0.5 SSOT: tone only applies when alignmentText matches rawAsrText. */
-export function isToneAlignmentValid(rawText: string, tone?: UtteranceTonePayload | null): boolean {
+/** @deprecated V2-only — Phase3 API no longer provides alignmentText. */
+export function isToneAlignmentValid(
+  rawText: string,
+  tone?: V2LegacyUtteranceTonePayload | null
+): boolean {
   if (!isAcousticToneEnabled(tone)) {
     return false;
   }
@@ -105,7 +139,7 @@ export function extractAcousticTonePattern(
   rawText: string,
   spanStart: number,
   spanEnd: number,
-  tone?: UtteranceTonePayload | null
+  tone?: V2LegacyUtteranceTonePayload | null
 ): number[] | null {
   if (!isToneAlignmentValid(rawText, tone)) {
     return null;
@@ -138,4 +172,32 @@ export function isCandidateToneCompatible(
     }
   }
   return true;
+}
+
+/** Recall-layer tone score — ranking signal only; never drops candidates. */
+export function computeToneScoreResult(
+  acousticPattern: number[] | undefined,
+  candidateToneKey: string,
+  candidateWord?: string
+): ToneScoreResult {
+  if (!acousticPattern?.length) {
+    return {
+      toneCompatible: true,
+      tonePenalty: TONE_MATCH_PENALTY,
+      toneReason: 'no_pattern',
+    };
+  }
+  const compatible = isCandidateToneCompatible(acousticPattern, candidateToneKey, candidateWord);
+  if (compatible) {
+    return {
+      toneCompatible: true,
+      tonePenalty: TONE_MATCH_PENALTY,
+      toneReason: 'match',
+    };
+  }
+  return {
+    toneCompatible: false,
+    tonePenalty: TONE_MISMATCH_PENALTY,
+    toneReason: 'mismatch',
+  };
 }

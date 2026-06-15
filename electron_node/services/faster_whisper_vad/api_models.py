@@ -24,21 +24,23 @@ class TonePosteriorModel(BaseModel):
     t5: float
 
 
-class ToneTokenModel(BaseModel):
-    token: str
+class AcousticToneSliceModel(BaseModel):
     start: float
     end: float
     tonePosterior: TonePosteriorModel
     confidence: float
 
 
-class UtteranceTonePayloadModel(BaseModel):
+class UtteranceAcousticTonePayloadModel(BaseModel):
     toneEnabled: bool
-    toneTokens: List[ToneTokenModel] = []
-    toneTokenCount: int = 0
+    acousticToneSlices: List[AcousticToneSliceModel] = []
+    sliceCount: int = 0
     toneConfidenceAvg: Optional[float] = None
     skippedReason: Optional[str] = None
-    alignmentText: Optional[str] = None
+
+
+# Backward-compatible alias for route imports during migration
+UtteranceTonePayloadModel = UtteranceAcousticTonePayloadModel
 
 
 class UtteranceRequest(BaseModel):
@@ -78,7 +80,7 @@ class UtteranceRequest(BaseModel):
     context_text: Optional[str] = None  # 上下文文本（用于 NMT，ASR 服务不使用）
     # EDGE-4: Padding 配置
     padding_ms: Optional[int] = None  # 尾部静音 padding（毫秒），None 表示不添加 padding
-    skip_text_dedup: bool = False  # P0.5: FW Detector path — keep response.text aligned with toneTokens
+    skip_text_dedup: bool = False  # P0.5: FW Detector path — keep response.text stable for ASR merge
 
 
 class UtteranceResponse(BaseModel):
@@ -91,7 +93,7 @@ class UtteranceResponse(BaseModel):
     duration: float  # Audio duration in seconds
     vad_segments: List[Tuple[int, int]]  # VAD 检测到的语音段（样本索引）
     diagnostics: Optional[Dict] = None  # P0：audio_format / audio_level / silence_trim / audio_segmentation
-    tone: Optional[UtteranceTonePayloadModel] = None  # P0.5 ToneModule acoustic tone (alignmentText === text)
+    tone: Optional[UtteranceAcousticTonePayloadModel] = None  # Phase3 acoustic tone slices
 
 
 class ResetRequest(BaseModel):

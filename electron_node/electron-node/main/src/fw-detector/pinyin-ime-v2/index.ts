@@ -63,5 +63,3 @@ export { normalizePinyinImeV2Spans } from './pinyin-ime-v2-span-normalizer';
 export { selectPinyinImeV2Spans } from './pinyin-ime-v2-span-selector';
 export { mapSelectedSpanToFwSpan, mapSelectedSpansToFwSpans } from './map-selected-span-to-fw';
 export { runPinyinImeV2SpanProposal } from './run-pinyin-ime-v2-span-proposal';
-export { resolvePinyinImeV2Spans, resetPinyinImeV2DictCacheForTest } from './resolve-pinyin-ime-v2-spans';
-export type { PinyinImeV2SpanResolution } from './resolve-pinyin-ime-v2-spans';

@@ -1,4 +1,4 @@
-"""ToneModule P0 — frozen payload types."""
+"""ToneModule — Phase3 acoustic slice payload types."""
 from dataclasses import dataclass, field
 from typing import List, Literal, Optional
 
@@ -24,8 +24,7 @@ class TonePosterior:
 
 
 @dataclass
-class ToneToken:
-    token: str
+class AcousticToneSlice:
     start: float
     end: float
     tone_posterior: TonePosterior
@@ -33,7 +32,6 @@ class ToneToken:
 
     def as_dict(self) -> dict:
         return {
-            "token": self.token,
             "start": self.start,
             "end": self.end,
             "tonePosterior": self.tone_posterior.as_dict(),
@@ -42,24 +40,25 @@ class ToneToken:
 
 
 @dataclass
-class UtteranceTonePayload:
+class UtteranceAcousticTonePayload:
     tone_enabled: bool
-    tone_tokens: List[ToneToken] = field(default_factory=list)
-    tone_token_count: int = 0
+    acoustic_tone_slices: List[AcousticToneSlice] = field(default_factory=list)
+    slice_count: int = 0
     tone_confidence_avg: Optional[float] = None
     skipped_reason: Optional[ToneSkippedReason] = None
-    alignment_text: Optional[str] = None
 
     def as_dict(self) -> dict:
         out = {
             "toneEnabled": self.tone_enabled,
-            "toneTokens": [t.as_dict() for t in self.tone_tokens],
-            "toneTokenCount": self.tone_token_count,
+            "acousticToneSlices": [s.as_dict() for s in self.acoustic_tone_slices],
+            "sliceCount": self.slice_count,
         }
         if self.tone_confidence_avg is not None:
             out["toneConfidenceAvg"] = self.tone_confidence_avg
         if self.skipped_reason is not None:
             out["skippedReason"] = self.skipped_reason
-        if self.alignment_text is not None:
-            out["alignmentText"] = self.alignment_text
         return out
+
+
+# Backward-compatible alias for internal imports during migration
+UtteranceTonePayload = UtteranceAcousticTonePayload

@@ -1,8 +1,13 @@
 /**
- * P0.5 — tone-aware recall sort (inside Recall only; no candidateScore delta).
+ * Tone-aware recall ranking (inside Recall only).
+ * Applies tone penalty to candidateScore; never removes candidates.
  */
 
-import { extractToneNumbersFromKey, isCandidateToneCompatible } from '../fw-detector/tone-match-score';
+import {
+  computeToneScoreResult,
+  extractToneNumbersFromKey,
+  type ToneReason,
+} from '../fw-detector/tone-match-score';
 
 export type ToneRecallSortableHit = {
   hotword: {
@@ -13,50 +18,80 @@ export type ToneRecallSortableHit = {
   candidateScore: number;
   /** Per-hit tone pattern override (variant-sliced acoustic pattern). */
   acousticTonePattern?: number[];
+  toneCompatible?: boolean;
+  tonePenalty?: number;
+  toneReason?: ToneReason;
 };
 
 export type ToneRecallSortResult<T extends ToneRecallSortableHit> = {
   hits: T[];
   recallToneCompatibleCount: number;
+  /** Count of hits with tonePenalty < 1.0 (excludes no_pattern). */
   recallToneFallbackCount: number;
+};
+
+function applyToneScoreToHit<T extends ToneRecallSortableHit>(
+  hit: T,
+  defaultAcousticTonePattern?: number[]
+): ToneScoreResultCounts {
+  const pattern = hit.acousticTonePattern ?? defaultAcousticTonePattern;
+  const toneResult = computeToneScoreResult(
+    pattern,
+    hit.hotword.tonePinyinKey ?? '',
+    hit.hotword.word
+  );
+  hit.toneCompatible = toneResult.toneCompatible;
+  hit.tonePenalty = toneResult.tonePenalty;
+  hit.toneReason = toneResult.toneReason;
+  hit.candidateScore *= toneResult.tonePenalty;
+  return {
+    matchCount: toneResult.toneReason === 'match' ? 1 : 0,
+    penalizedCount: toneResult.tonePenalty < 1 ? 1 : 0,
+  };
+}
+
+type ToneScoreResultCounts = {
+  matchCount: number;
+  penalizedCount: number;
 };
 
 export function sortRecallHitsByToneCompatibility<T extends ToneRecallSortableHit>(
   hits: T[],
   defaultAcousticTonePattern?: number[]
 ): ToneRecallSortResult<T> {
-  if (!defaultAcousticTonePattern?.length && !hits.some((h) => h.acousticTonePattern?.length)) {
+  const hasTonePattern =
+    (defaultAcousticTonePattern?.length ?? 0) > 0 ||
+    hits.some((h) => (h.acousticTonePattern?.length ?? 0) > 0);
+
+  if (!hasTonePattern) {
+    for (const hit of hits) {
+      const toneResult = computeToneScoreResult(undefined, hit.hotword.tonePinyinKey ?? '', hit.hotword.word);
+      hit.toneCompatible = toneResult.toneCompatible;
+      hit.tonePenalty = toneResult.tonePenalty;
+      hit.toneReason = toneResult.toneReason;
+    }
     return {
       hits,
       recallToneCompatibleCount: 0,
-      recallToneFallbackCount: hits.length,
+      recallToneFallbackCount: 0,
     };
   }
 
-  const decorated = hits.map((hit) => {
-    const pattern = hit.acousticTonePattern ?? defaultAcousticTonePattern;
-    const compatible =
-      pattern?.length &&
-      isCandidateToneCompatible(pattern, hit.hotword.tonePinyinKey ?? '', hit.hotword.word);
-    return { hit, compatible: compatible ? 1 : 0 };
-  });
+  let recallToneCompatibleCount = 0;
+  let recallToneFallbackCount = 0;
 
-  decorated.sort((a, b) => {
-    if (b.compatible !== a.compatible) {
-      return b.compatible - a.compatible;
-    }
-    if (b.hit.hotword.priorScore !== a.hit.hotword.priorScore) {
-      return b.hit.hotword.priorScore - a.hit.hotword.priorScore;
-    }
-    return b.hit.candidateScore - a.hit.candidateScore;
-  });
+  for (const hit of hits) {
+    const counts = applyToneScoreToHit(hit, defaultAcousticTonePattern);
+    recallToneCompatibleCount += counts.matchCount;
+    recallToneFallbackCount += counts.penalizedCount;
+  }
 
-  const sorted = decorated.map((d) => d.hit);
-  const recallToneCompatibleCount = decorated.filter((d) => d.compatible === 1).length;
+  hits.sort((a, b) => b.candidateScore - a.candidateScore);
+
   return {
-    hits: sorted,
+    hits,
     recallToneCompatibleCount,
-    recallToneFallbackCount: sorted.length - recallToneCompatibleCount,
+    recallToneFallbackCount,
   };
 }
 
