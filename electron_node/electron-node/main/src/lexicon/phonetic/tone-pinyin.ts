@@ -49,6 +49,29 @@ export function toneSyllablesKey(syllables: string[]): string {
   return syllables.filter(Boolean).join('|');
 }
 
+/** Build tone_pinyin_key from plain syllables + acoustic tone digits (e.g. shao|bing + [3,1] → shao3|bing1). */
+export function buildTonePinyinKeyFromSyllablesAndPattern(
+  syllables: string[],
+  tonePattern: number[] | null | undefined
+): string | null {
+  if (!syllables.length || !tonePattern?.length) {
+    return null;
+  }
+  if (syllables.length !== tonePattern.length) {
+    return null;
+  }
+  const parts: string[] = [];
+  for (let i = 0; i < syllables.length; i++) {
+    const syl = normalizeSyllable(syllables[i] ?? '');
+    const tone = tonePattern[i];
+    if (!syl || tone == null || !Number.isInteger(tone) || tone < 1 || tone > 5) {
+      return null;
+    }
+    parts.push(`${syl}${tone}`);
+  }
+  return parts.join('|');
+}
+
 export function toneDistance(asrToneKey: string, candidateToneKey: string): number {
   if (!asrToneKey || !candidateToneKey) {
     return Number.MAX_SAFE_INTEGER;

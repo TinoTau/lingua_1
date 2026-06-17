@@ -28,6 +28,10 @@ export type CoarseAssemblyToneDiagnostics = {
   /** @deprecated alias of recallToneFallbackCount */
   recallToneIncompatibleCount: number;
   recallToneFallbackCount: number;
+  /** SQL tone_exact stage hit count (utterance aggregate). */
+  toneExactHitCount: number;
+  /** SQL plain_fallback stage hit count (utterance aggregate; excludes plain_only_no_pattern). */
+  plainFallbackHitCount: number;
   exampleToneWindows?: CoarseAssemblyToneExampleWindow[];
 };
 

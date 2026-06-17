@@ -5,6 +5,7 @@ import {
   matchOralParticle,
   ORAL_SOURCE_WEIGHT,
 } from './oral-lexicon-frozen';
+import type { ConflictRelation } from '../span-assembly-v4/v4-types';
 import type { CoarseSpan, GraphEdge } from './types';
 import { CoarseAssemblyLimits } from './limits';
 
@@ -12,6 +13,7 @@ export type GraphBuildResult = {
   edges: GraphEdge[];
   overlapMergeCount: number;
   residualSpanCount: number;
+  conflictRelations?: ConflictRelation[];
 };
 
 function edgesOverlap(a: GraphEdge, b: GraphEdge): boolean {
@@ -170,7 +172,8 @@ export function buildCandidateGraph(
   rawText: string,
   globalSyllables: string[],
   coarseSpans: CoarseSpan[],
-  recallEdges: GraphEdge[]
+  recallEdges: GraphEdge[],
+  conflictRelations?: ConflictRelation[]
 ): GraphBuildResult {
   const { edges: merged, mergeCount } = mergeOverlappingEdges(recallEdges);
 
@@ -210,5 +213,6 @@ export function buildCandidateGraph(
     edges: allEdges,
     overlapMergeCount: mergeCount,
     residualSpanCount: residual.residualSpanCount,
+    conflictRelations,
   };
 }

@@ -1,0 +1,160 @@
+{
+  "batchFile": "D:\\Programs\\github\\lingua_1\\electron_node\\electron-node\\tests\\stage-b-trace-batch-result.json",
+  "feature": "Tone-First Recall V1.0.1 + Diagnostics Trace V1.0.2",
+  "timestamp": "2026-06-16T23:53:12.988Z",
+  "stoppedReason": "completed",
+  "evaluated": 2,
+  "totalManifest": 2,
+  "contract": {
+    "pass": 2,
+    "fail": 0,
+    "skip": 0,
+    "pipeline_ok_rate": 1
+  },
+  "quality": {
+    "raw_cer_avg": 0.1823,
+    "final_cer_avg": 0.1823,
+    "raw_cer_p50": 0.1053,
+    "final_cer_p50": 0.1053,
+    "raw_cer_p95": 0.2593,
+    "final_cer_p95": 0.2593,
+    "exact_raw_count": 0,
+    "exact_final_count": 0,
+    "improved_count": 0,
+    "degraded_count": 0,
+    "unchanged_count": 2
+  },
+  "performance": {
+    "pipeline_ms_avg": 16991,
+    "pipeline_ms_p50": 15376,
+    "pipeline_ms_p95": 18605,
+    "fw_detector_step_ms_avg": 0,
+    "fw_detector_step_ms_p50": 0,
+    "fw_detector_step_ms_p95": 0
+  },
+  "fw": {
+    "triggered_count": 0,
+    "applied_case_count": 0,
+    "text_changed_count": 0,
+    "lexicon_runtime_ok": 0
+  },
+  "tone_recall": {
+    "cases_with_tone_payload": 2,
+    "cases_with_tone_overlap_hits": 2,
+    "recall_tone_compatible_total": 0,
+    "recall_tone_fallback_total": 84,
+    "avg_recall_tone_compatible": 0,
+    "avg_recall_tone_fallback": 42,
+    "avg_tone_overlap_hit": 41.5,
+    "cases_with_tone_fallback_penalty": 2,
+    "tone_exact_hit_total": 0,
+    "plain_fallback_hit_total": 30,
+    "avg_tone_exact_hit": 0,
+    "avg_plain_fallback_hit": 15,
+    "v2_span_non_empty_cases": 2,
+    "prefilter_stage_distribution": {
+      "tone_exact": 0,
+      "plain_fallback": 30,
+      "plain_only_no_pattern": 6,
+      "parent_fragment_omit": 65
+    }
+  },
+  "diagnostics_trace_audit": {
+    "d001": {
+      "pass": false,
+      "zhongBei": null,
+      "lanMei": null,
+      "traceTruncated": false,
+      "v2SpanCount": 63
+    },
+    "d048": {
+      "pass": true,
+      "fragmentOnly": false,
+      "evidence": {
+        "toneLookupStage": "plain_fallback",
+        "toneReason": "mismatch",
+        "toneCompatible": false,
+        "windowPinyinKey": "shao|bing",
+        "queryTonePinyinKey": "shao2|bing4"
+      },
+      "traceTruncated": false,
+      "v2SpanCount": 47
+    }
+  },
+  "samples": {
+    "d001": {
+      "id": "d001",
+      "scenario": "cafe",
+      "ref": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "raw": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+      "final": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+      "raw_cer": 0.2593,
+      "final_cer": 0.2593,
+      "text_changed": false,
+      "fw_applied": 0,
+      "fw_triggered": true,
+      "pipeline_ms": 18605,
+      "recallToneCompatibleCount": 0,
+      "recallToneFallbackCount": 46,
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 17,
+      "toneOverlapHitCount": 49,
+      "v2SpanCount": 63
+    },
+    "d003": null,
+    "d048": {
+      "id": "d048",
+      "scenario": "cafe",
+      "ref": "请问这款热巧克力可以少冰吗？我赶时间，小杯。",
+      "raw": "请问,这款热巧克力可以少病吗? 我赶时间小背",
+      "final": "请问,这款热巧克力可以少病吗? 我赶时间小背",
+      "raw_cer": 0.1053,
+      "final_cer": 0.1053,
+      "text_changed": false,
+      "fw_applied": 0,
+      "fw_triggered": true,
+      "pipeline_ms": 15376,
+      "recallToneCompatibleCount": 0,
+      "recallToneFallbackCount": 38,
+      "toneExactHitCount": 0,
+      "plainFallbackHitCount": 13,
+      "toneOverlapHitCount": 34,
+      "v2SpanCount": 47
+    },
+    "cafe": [
+      {
+        "id": "d001",
+        "scenario": "cafe",
+        "ref": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+        "raw": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+        "final": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+        "raw_cer": 0.2593,
+        "final_cer": 0.2593,
+        "text_changed": false,
+        "fw_applied": 0,
+        "fw_triggered": true,
+        "pipeline_ms": 18605,
+        "recallToneCompatibleCount": 0,
+        "recallToneFallbackCount": 46,
+        "toneExactHitCount": 0,
+        "plainFallbackHitCount": 17,
+        "toneOverlapHitCount": 49,
+        "v2SpanCount": 63
+      }
+    ],
+    "applied": [],
+    "improved": [],
+    "worst_cer": [
+      {
+        "id": "d001",
+        "final_cer": 0.2593,
+        "final": "你好,我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?"
+      },
+      {
+        "id": "d048",
+        "final_cer": 0.1053,
+        "final": "请问,这款热巧克力可以少病吗? 我赶时间小背"
+      }
+    ]
+  }
+}

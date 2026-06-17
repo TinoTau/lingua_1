@@ -15,10 +15,12 @@ Pipeline 集成见 [`../pipeline/README.md`](../pipeline/README.md)。
 
 ```text
 ASR → runFwDetectorOrchestrator → runFwDetectorV4Path
-→ Global Window → Recall → Tone Score → Compatibility
-→ Graph → Beam → KenLM → applyFwSpanReplacements
+→ Global Window → Recall (Tone-First) → Tone Score → Compatibility
+→ Domain Assembly → SentenceCandidate → KenLM → applyFwSpanReplacements
 → segmentForJobResult → Aggregation → NMT
 ```
+
+Shadow（仅 diagnostics）：`Emit → Graph → Beam`（不进入 KenLM/Apply）。
 
 ---
 
@@ -46,7 +48,7 @@ ASR → runFwDetectorOrchestrator → runFwDetectorV4Path
 入口：`pipeline/steps/fw-detector-step.ts` → `runFwDetectorOrchestrator`
 
 1. **Lexicon V2：** `ensureLexiconRuntimeV2Loaded`
-2. **V4 Path：** `runFwDetectorV4Path`（Global Window → Tone → Graph → Beam → KenLM）
+2. **V4 Path：** `runFwDetectorV4Path`（Global Window → Recall → Compatibility → Domain Assembly → KenLM）
 3. **Apply：** `ctx.segmentForJobResult = applyFwSpanReplacements(...)`；有 apply 时 `ctx.asrRepairApplied = true`
 
 ### 3.1 Recall（Lexicon Runtime V2 · Window SQL）

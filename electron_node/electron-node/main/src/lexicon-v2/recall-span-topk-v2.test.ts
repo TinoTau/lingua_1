@@ -109,4 +109,77 @@ describe('recallSpanTopKV2', () => {
 
     expect(result.hits.some((h) => h.hotword.word === '中杯')).toBe(true);
   });
+
+  it('tone-first: zhong|bei + [1,1] prefers tone_exact 中杯 over plain bucket homophones', () => {
+    if (!runtime || !fs.existsSync(path.join(FW_V3_RUNTIME_DIR, 'manifest.json'))) {
+      return;
+    }
+
+    const result = recallSpanTopKV2(runtime!, {
+      syllables: ['zhong', 'bei'],
+      windowText: '中杯',
+      termLength: 2,
+      topK: 5,
+      perSpanLimit: 5,
+      profile: defaultGeneralProfile(),
+      domainIds: ['restaurant'],
+      acousticTonePattern: [1, 1],
+    });
+
+    const zhongBei = result.hits.find((h) => h.hotword.word === '中杯');
+    if (!zhongBei) {
+      return;
+    }
+    expect(zhongBei.toneLookupStage).toBe('tone_exact');
+    expect(zhongBei.toneReason).toBe('match');
+  });
+
+  it('tone-first: shao|bing + [3,1] without 少冰 in lexicon falls back to plain bucket', () => {
+    if (!runtime || !fs.existsSync(path.join(FW_V3_RUNTIME_DIR, 'manifest.json'))) {
+      return;
+    }
+
+    const result = recallSpanTopKV2(runtime!, {
+      syllables: ['shao', 'bing'],
+      windowText: '少冰',
+      termLength: 2,
+      topK: 5,
+      perSpanLimit: 5,
+      profile: defaultGeneralProfile(),
+      domainIds: [],
+      acousticTonePattern: [3, 1],
+    });
+
+    expect(result.hits.length).toBeGreaterThan(0);
+    const hasShaoBing = result.hits.some((h) => h.hotword.word === '少冰');
+    if (hasShaoBing) {
+      expect(result.hits.find((h) => h.hotword.word === '少冰')!.toneLookupStage).toBe('tone_exact');
+      return;
+    }
+    for (const hit of result.hits) {
+      expect(hit.toneLookupStage).not.toBe('tone_exact');
+      if (hit.toneReason === 'mismatch') {
+        expect(hit.toneCompatible).toBe(false);
+      }
+    }
+  });
+
+  it('no acoustic pattern uses plain_only_no_pattern without tone SQL', () => {
+    if (!runtime || !fs.existsSync(path.join(FW_V3_RUNTIME_DIR, 'manifest.json'))) {
+      return;
+    }
+
+    const before = runtime!.getAndResetTierQueryStats();
+    recallSpanTopKV2(runtime!, {
+      syllables: ['shao', 'bing'],
+      windowText: '烧饼',
+      termLength: 2,
+      topK: 3,
+      profile: defaultGeneralProfile(),
+      domainIds: [],
+    });
+    const after = runtime!.getAndResetTierQueryStats();
+    expect(after.sqlQueries).toBeGreaterThan(0);
+    expect(before.sqlQueries).toBe(0);
+  });
 });

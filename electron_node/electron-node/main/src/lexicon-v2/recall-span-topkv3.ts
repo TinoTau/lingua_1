@@ -26,6 +26,7 @@ import {
   type RecallSpanTopKV2Input,
   type RecallSpanTopKV2Result,
 } from './recall-span-topk-v2';
+import type { ToneLookupStage } from './tone-first-tier-collector';
 
 export type RecallHitKind = 'exact_term' | 'parent_fragment';
 
@@ -48,6 +49,7 @@ export type RecallSpanTopKV3Hit = {
   toneCompatible?: boolean;
   tonePenalty?: number;
   toneReason?: ToneReason;
+  toneLookupStage?: ToneLookupStage;
 };
 
 export type RecallSpanTopKV3Result = RecallSpanTopKV2Result & {
@@ -134,11 +136,6 @@ function ngramRowToHotword(row: ParentTermNgramRow): HotwordEntry {
 }
 
 function mapV2Hit(hit: RecallSpanTopKV2Hit): RecallSpanTopKV3Hit {
-  const toneFields = hit as RecallSpanTopKV2Hit & {
-    toneCompatible?: boolean;
-    tonePenalty?: number;
-    toneReason?: ToneReason;
-  };
   return {
     hitKind: 'exact_term',
     hotword: hit.hotword,
@@ -147,9 +144,10 @@ function mapV2Hit(hit: RecallSpanTopKV2Hit): RecallSpanTopKV3Hit {
     candidateScoreBreakdown: hit.candidateScoreBreakdown,
     source: hit.source,
     acousticTonePattern: hit.acousticTonePattern,
-    toneCompatible: toneFields.toneCompatible,
-    tonePenalty: toneFields.tonePenalty,
-    toneReason: toneFields.toneReason,
+    toneCompatible: hit.toneCompatible,
+    tonePenalty: hit.tonePenalty,
+    toneReason: hit.toneReason,
+    toneLookupStage: hit.toneLookupStage,
   };
 }
 
@@ -364,5 +362,8 @@ export function recallSpanTopKV3(
     recallToneFallbackCount:
       v2Result.recallToneFallbackCount + fragmentLookup.penalizedCount,
     parentFragmentHitCount: fragmentHits.length,
+    queryTonePinyinKey: v2Result.queryTonePinyinKey,
+    toneExactHitCount: v2Result.toneExactHitCount,
+    plainFallbackHitCount: v2Result.plainFallbackHitCount,
   };
 }

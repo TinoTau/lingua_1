@@ -3,7 +3,7 @@ import { truncateWindows } from './blocked-window-filter';
 import type { GlobalWindowDescriptor } from './v4-types';
 import { V4TraceCollector } from './v4-diagnostics-trace';
 import { resolveV4DiagnosticsConfig } from './v4-diagnostics-config';
-import { dropIncompatibleCandidates } from './candidate-compatibility-graph';
+import { resolveCompatibilityRelations } from './candidate-compatibility-graph';
 import type { WindowCandidate } from './v4-types';
 import { buildCombinationTraces } from './v4-diagnostics-mappers';
 
@@ -67,14 +67,20 @@ describe('span-assembly-v4 diagnostics', () => {
       minPriorPassed: true,
       filterStage: 'tone_penalized',
       sqlReturned: true,
+      toneLookupStage: 'tone_exact',
+      queryTonePinyinKey: 'zhong1|bei1',
     });
     const out = trace.toDiagnostics();
+    const pre = out.recallHitsPreFilter?.[0];
+    expect(pre?.toneLookupStage).toBe('tone_exact');
+    expect(pre?.queryTonePinyinKey).toBe('zhong1|bei1');
     const life = out.candidateLifecycle?.find((c) => c.candidateText === '中杯');
+    expect(life?.candidateId).toBe('中杯');
     expect(life?.firstSeenLayer).toBe('recall');
     expect(life?.firstDroppedLayer).toBeUndefined();
   });
 
-  it('dropIncompatibleCandidates trace records pool before/after', () => {
+  it('resolveCompatibilityRelations trace records pool before/after without dropping', () => {
     const trace = new V4TraceCollector(true);
     const base: Omit<WindowCandidate, 'candidateId'> = {
       windowId: 'w1',
@@ -104,10 +110,12 @@ describe('span-assembly-v4 diagnostics', () => {
       syllableStart: 0,
       syllableEnd: 2,
     };
-    const { survivors } = dropIncompatibleCandidates([a, b], trace);
-    expect(survivors.length).toBe(1);
+    const result = resolveCompatibilityRelations([a, b], trace);
+    expect(result.activeCandidates.length).toBe(2);
+    expect(result.metrics.hardDropCount).toBe(0);
+    expect(result.metrics.conflictRelationCount).toBeGreaterThan(0);
     expect(trace.toDiagnostics().poolBeforeDrop?.length).toBe(2);
-    expect(trace.toDiagnostics().poolAfterDrop?.length).toBe(1);
+    expect(trace.toDiagnostics().poolAfterDrop?.length).toBe(2);
   });
 
   it('buildCombinationTraces marks picked_raw when delta below threshold', () => {

@@ -62,6 +62,9 @@ export function toCandidatePoolTrace(candidate: WindowCandidate): CandidatePoolT
     rawEnd: candidate.rawEnd,
     syllableStart: candidate.syllableStart,
     syllableEnd: candidate.syllableEnd,
+    isCovered: candidate.isCovered,
+    coveredBy: candidate.coveredBy,
+    toneLookupStage: candidate.toneLookupStage,
   };
 }
 
@@ -167,17 +170,33 @@ export function toBeamSpanSetTrace(
   };
 }
 
-export function resolveCompatReason(a: WindowCandidate, b: WindowCandidate, compatible: boolean): string {
+export function resolveCompatReason(
+  a: WindowCandidate,
+  b: WindowCandidate,
+  relation: 'COMPATIBLE' | 'COVERAGE' | 'CONFLICT'
+): string {
   if (a.candidateId === b.candidateId) {
     return 'same_candidate';
   }
+  if (relation === 'COVERAGE') {
+    return 'coverage_parent_child';
+  }
+  if (relation === 'COMPATIBLE') {
+    if (a.parentTermId && b.parentTermId && a.parentTermId === b.parentTermId) {
+      return 'same_parent_term_overlap_match';
+    }
+    if (a.rawStart < b.rawEnd && b.rawStart < a.rawEnd) {
+      return 'different_parent_replacement_overlap_match';
+    }
+    return 'adjacent_no_conflict';
+  }
   if (a.parentTermId && b.parentTermId && a.parentTermId === b.parentTermId) {
-    return compatible ? 'same_parent_term_overlap_match' : 'same_parent_term_overlap_mismatch';
+    return 'same_parent_term_overlap_mismatch';
   }
   if (a.rawStart < b.rawEnd && b.rawStart < a.rawEnd) {
-    return compatible ? 'different_parent_replacement_overlap_match' : 'different_parent_replacement_overlap_mismatch';
+    return 'different_parent_replacement_overlap_mismatch';
   }
-  return compatible ? 'adjacent_no_conflict' : 'syllable_overlap_mismatch';
+  return 'syllable_overlap_mismatch';
 }
 
 export function buildCombinationTraces(input: {

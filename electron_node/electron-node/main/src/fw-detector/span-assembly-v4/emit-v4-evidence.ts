@@ -11,6 +11,10 @@ export function emitParentEvidenceAndExactEdges(candidates: WindowCandidate[]): 
   const exactEdges: GraphEdge[] = [];
 
   for (const candidate of candidates) {
+    if (candidate.isCovered) {
+      continue;
+    }
+
     if (candidate.hitKind === 'parent_fragment') {
       if (
         candidate.parentTermId &&

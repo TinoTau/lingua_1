@@ -21,7 +21,11 @@ import { recordRecallSpanDiagnostics, type RecallSourceBreakdown } from './recal
 import { isIndustryRoutingEnabled } from './lexicon-fw-recall-config';
 import { getLexiconRuntimeV2Config } from './lexicon-runtime-v2-config';
 import { sortRecallHitsByToneCompatibility } from '../lexicon/tone-recall-sort';
-import { mergeSpanCandidatesCombined, type TierHotwordRow } from './merge-span-candidates';
+import type { ToneReason } from '../fw-detector/tone-match-score';
+import {
+  collectTierCandidatesToneFirst,
+  type ToneLookupStage,
+} from './tone-first-tier-collector';
 import {
   alignVariantWindowText,
   buildFuzzyPinyinVariants,
@@ -38,6 +42,10 @@ export type RecallSpanTopKV2Hit = {
   source: WindowCandidateSource;
   matchedAlias?: string;
   acousticTonePattern?: number[];
+  toneLookupStage?: ToneLookupStage;
+  toneCompatible?: boolean;
+  tonePenalty?: number;
+  toneReason?: ToneReason;
 };
 
 export type RecallSpanTopKV2Result = {
@@ -45,6 +53,9 @@ export type RecallSpanTopKV2Result = {
   maxDomainBoostApplied: number;
   recallToneCompatibleCount: number;
   recallToneFallbackCount: number;
+  queryTonePinyinKey?: string;
+  toneExactHitCount?: number;
+  plainFallbackHitCount?: number;
 };
 
 export type RecallSpanTopKV2Input = {
@@ -144,6 +155,7 @@ function scoreHotword(
   boostContext: DomainBoostContext | undefined,
   plan: WeakDomainRecallPlan | undefined,
   acousticTonePattern: number[] | undefined,
+  toneLookupStage: ToneLookupStage | undefined,
   bestById: Map<string, RecallSpanTopKV2Hit>,
   sourceBreakdown: RecallSourceBreakdown,
   weakDomainCandidateCount: { value: number }
@@ -179,8 +191,13 @@ function scoreHotword(
   }
 
   const existing = bestById.get(hotword.id);
-  if (existing && existing.candidateScore >= candidateScore) {
-    return;
+  if (existing) {
+    if (existing.toneLookupStage === 'tone_exact' && toneLookupStage !== 'tone_exact') {
+      return;
+    }
+    if (existing.candidateScore >= candidateScore) {
+      return;
+    }
   }
 
   bumpSourceBreakdown(sourceBreakdown, recallCandidateKind);
@@ -202,44 +219,11 @@ function scoreHotword(
     candidateScoreBreakdown,
     source: resolveWindowCandidateSource({ viaPinyin: true }),
     acousticTonePattern: tonePattern,
+    toneLookupStage,
+    ...(toneLookupStage === 'tone_exact'
+      ? { toneCompatible: true, tonePenalty: 1.0, toneReason: 'match' as const }
+      : {}),
   });
-}
-
-function hotwordToTierRow(hotword: HotwordEntry, tier: TierHotwordRow['tier']): TierHotwordRow {
-  return {
-    ...hotword,
-    isAlias: hotword.isAlias === true,
-    tier,
-  };
-}
-
-function mergeTierCandidates(
-  baseHits: HotwordEntry[],
-  domainHits: HotwordEntry[],
-  idiomHits: HotwordEntry[],
-  cfg: ReturnType<typeof getLexiconRuntimeV2Config>,
-  perSpanLimit?: number,
-  domainIds?: readonly string[]
-): HotwordEntry[] {
-  if (perSpanLimit != null && perSpanLimit > 0) {
-    const rows: TierHotwordRow[] = [
-      ...domainHits.map((h) => hotwordToTierRow(h, 'domain')),
-      ...baseHits.map((h) => hotwordToTierRow(h, 'base')),
-      ...idiomHits.map((h) => hotwordToTierRow(h, 'idiom')),
-    ];
-    const hasActiveDomain = (domainIds?.length ?? 0) > 0;
-    return mergeSpanCandidatesCombined(rows, perSpanLimit, hasActiveDomain);
-  }
-
-  const base = baseHits.slice(0, cfg.maxBaseCandidates);
-  const domain = [...domainHits]
-    .sort((a, b) => b.priorScore - a.priorScore)
-    .slice(0, cfg.maxDomainCandidates);
-  const idiom =
-    cfg.maxIdiomCandidates > 0
-      ? idiomHits.slice(0, cfg.maxIdiomCandidates)
-      : [];
-  return [...base, ...domain, ...idiom];
 }
 
 function collectTierCandidates(
@@ -247,48 +231,19 @@ function collectTierCandidates(
   key: string,
   termLength: number,
   domainIds: readonly string[],
-  perSpanLimit?: number
-): {
-  entries: HotwordEntry[];
-  baseHits: HotwordEntry[];
-  domainHits: HotwordEntry[];
-  idiomHits: HotwordEntry[];
-  baseLookupMs: number;
-  domainLookupMs: number;
-  idiomLookupMs: number;
-} {
-  const cfg = getLexiconRuntimeV2Config();
-  const sqlLimit = perSpanLimit != null ? Math.max(perSpanLimit, 8) : undefined;
-
-  const t0 = Date.now();
-  const baseHits = runtimeV2.lookupBaseByPinyinKey(key, termLength, sqlLimit);
-  const baseLookupMs = Date.now() - t0;
-
-  const domainHits: HotwordEntry[] = [];
-  let domainLookupMs = 0;
-  for (const domainId of domainIds) {
-    const td = Date.now();
-    domainHits.push(...runtimeV2.lookupDomainByPinyinKey(domainId, key, termLength, sqlLimit));
-    domainLookupMs += Date.now() - td;
-  }
-
-  let idiomHits: HotwordEntry[] = [];
-  let idiomLookupMs = 0;
-  if (termLength === 4 && cfg.maxIdiomCandidates > 0) {
-    const ti = Date.now();
-    idiomHits = runtimeV2.lookupIdiomByPinyinKey(key, termLength, sqlLimit);
-    idiomLookupMs = Date.now() - ti;
-  }
-
-  const entries = mergeTierCandidates(
-    baseHits,
-    domainHits,
-    idiomHits,
-    cfg,
+  perSpanLimit: number | undefined,
+  variantSyllables: string[],
+  acousticTonePattern?: number[]
+) {
+  return collectTierCandidatesToneFirst(
+    runtimeV2,
+    key,
+    termLength,
+    domainIds,
     perSpanLimit,
-    domainIds
+    variantSyllables,
+    acousticTonePattern
   );
-  return { entries, baseHits, domainHits, idiomHits, baseLookupMs, domainLookupMs, idiomLookupMs };
 }
 
 function resolveVariants(
@@ -342,6 +297,10 @@ export function recallSpanTopKV2(
   let domainLookupMs = 0;
   let idiomLookupMs = 0;
   let candidateCountBeforeMerge = 0;
+  let toneExactHitCount = 0;
+  let plainFallbackHitCount = 0;
+  let toneSqlCount = 0;
+  let queryTonePinyinKey: string | undefined;
 
   const legacyDomainIds =
     profile.primaryDomain && profile.primaryDomain !== 'general' ? domainIds : [];
@@ -351,7 +310,9 @@ export function recallSpanTopKV2(
         syllablesKey(syllables),
         syllables.length,
         [...legacyDomainIds],
-        perSpanLimit
+        perSpanLimit,
+        syllables,
+        acousticTonePattern
       ).domainHits.length
     : undefined;
 
@@ -376,8 +337,17 @@ export function recallSpanTopKV2(
       variantKey,
       variantTermLength,
       domainIds,
-      perVariantLimit
+      perVariantLimit,
+      variant.syllables,
+      acousticTonePattern
     );
+
+    toneExactHitCount += tier.toneExactHitCount;
+    plainFallbackHitCount += tier.plainFallbackHitCount;
+    toneSqlCount += tier.toneSqlCount;
+    if (tier.queryTonePinyinKey) {
+      queryTonePinyinKey = tier.queryTonePinyinKey;
+    }
 
     baseHitsTotal += tier.baseHits.length;
     domainHitsTotal += tier.domainHits.length;
@@ -396,6 +366,7 @@ export function recallSpanTopKV2(
         boostContext,
         weakDomainPlan,
         acousticTonePattern,
+        tier.entryStages.get(hotword.id),
         bestById,
         sourceBreakdown,
         weakDomainCandidateCount
@@ -456,6 +427,10 @@ export function recallSpanTopKV2(
     domainHitsBeforeWeak,
     domainHitsAfterWeak: weakDomainPlan?.enabled ? domainHitsTotal : undefined,
     fuzzyVariantExamples,
+    tone_exact_hits: toneSqlCount > 0 || toneExactHitCount > 0 ? toneExactHitCount : undefined,
+    plain_fallback_hits: plainFallbackHitCount > 0 ? plainFallbackHitCount : undefined,
+    tone_sql_count: toneSqlCount > 0 ? toneSqlCount : undefined,
+    query_tone_pinyin_key: queryTonePinyinKey,
   });
 
   const maxDomainBoostApplied = hits.reduce(
@@ -467,5 +442,8 @@ export function recallSpanTopKV2(
     maxDomainBoostApplied,
     recallToneCompatibleCount: toneSorted.recallToneCompatibleCount,
     recallToneFallbackCount: toneSorted.recallToneFallbackCount,
+    queryTonePinyinKey,
+    toneExactHitCount: toneExactHitCount > 0 ? toneExactHitCount : undefined,
+    plainFallbackHitCount: plainFallbackHitCount > 0 ? plainFallbackHitCount : undefined,
   };
 }

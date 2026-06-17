@@ -294,6 +294,22 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(pathSrc).not.toContain('findOwningCoarseSpanIndex');
   });
 
+  it('span-assembly-v4-orchestrator 主链 domain assembly，spanSets 不直接来自 beam', () => {
+    const orchSrc = readSrc('fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts');
+    expect(orchSrc).toContain('runDomainAwareAssembly');
+    expect(orchSrc).toContain('shadowBeamSpanSets: beam.spanSets');
+    expect(orchSrc).toContain('spanSets: domainAwareSpanSets');
+    expect(orchSrc).not.toMatch(/spanSets:\s*beam\.spanSets/);
+    expect(orchSrc).toContain('voteUtteranceDomain({');
+  });
+
+  it('utterance-domain-vote 提供 Main/Shadow 双入口', () => {
+    const voteSrc = readSrc('fw-detector/span-assembly-shared/utterance-domain-vote.ts');
+    expect(voteSrc).toContain('voteUtteranceDomainFromPool');
+    expect(voteSrc).toContain('voteUtteranceDomain(');
+    expect(voteSrc).not.toContain('vote-utterance-domain');
+  });
+
   it('parent_span_candidate GraphEdge 贯通 coarseSpanId', () => {
     const typesSrc = readSrc('fw-detector/span-assembly-shared/types.ts');
     const assemblySrc = readSrc('fw-detector/span-assembly-v4/assemble-parent-term-span-candidates-v4.ts');
@@ -310,6 +326,13 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(v2Src).not.toContain('parent_fragment');
     expect(v2Src).not.toContain('recallSpanTopKV3');
     expect(v2Src).not.toContain('lookupParentFragments');
+  });
+
+  it('tone-first recall 禁止单列 tone_pinyin_key SQL', () => {
+    const runtimeSrc = readSrc('lexicon-v2/lexicon-runtime-v2.ts');
+    const stripped = stripComments(runtimeSrc);
+    expect(stripped).not.toMatch(/WHERE\s+tone_pinyin_key\s*=\s*\?/i);
+    expect(stripped).toMatch(/pinyin_key\s*=\s*\?\s+AND\s+tone_pinyin_key\s*=\s*\?/i);
   });
 
   it('segmentForJobResult 写点白名单（静态）', () => {

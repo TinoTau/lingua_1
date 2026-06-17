@@ -1,8 +1,9 @@
 # FW Detector — V4 架构（已冻结）
 
 **版本**：FW Repair **V4-only**（V2/V3 Pipeline 已退役，2026-06-06）  
+**冻结模块**：SameDomain Assembly V1.2 · Coverage V1.2 · Compatibility Authority V1.1 · Tone-First Recall V1.0.1 · Diagnostics V1.0.2（2026-06-17）  
 **代码根**：`main/src/fw-detector/`  
-**冻结日期**：2026-06-15（P1 Residue Cleanup 后文档对齐）
+**最终裁决**：[freeze/FINAL_FREEZE_2026_06_17.md](./freeze/FINAL_FREEZE_2026_06_17.md)
 
 ---
 
@@ -11,9 +12,11 @@
 | 项 | 结论 |
 |----|------|
 | 唯一 Pipeline | `runFwDetectorV4Path`，`pipelinePath = 'v4'` |
-| 粗边界 | `pinyin-ime-v2/extractRawCoarseBoundaries`（非旧 IME span resolve 主链） |
-| Recall | `recallTopKForWindows` → `recallSpanTopKV3`（内部 `recallSpanTopKV2` SQL helper） |
-| Tone | **Tone Score** 排序信号（非 Hard Gate）；声学 payload 见 [tone-module](../tone-module/ARCHITECTURE.md) |
+| 粗边界 | `pinyin-ime-v2/extractRawCoarseBoundaries` |
+| Recall | `recallTopKForWindows` → `recallSpanTopKV3`（Tone-First composite SQL + plain fallback） |
+| Tone | **Tone Score** 排序信号（非 Hard Gate）；声学见 [tone-module](../tone-module/ARCHITECTURE.md) |
+| Compatibility | `classifyOverlapRelation` → `resolveCompatibilityRelations` → `activeCandidates` |
+| Assembly | Domain Assembly（Pool→Vote→Filter→Select→Assemble）→ `domainAwareSpanSets` |
 | KenLM | `kenlm/run-fw-sentence-rerank-from-prefilled.ts`；Apply 阈值 `minDeltaToReplace=0.03` |
 | 写回 | 唯一 `applyFwSpanReplacements` → `ctx.segmentForJobResult` |
 
@@ -26,11 +29,14 @@ fw-detector-step.ts
   → runFwDetectorOrchestrator
       → ensureLexiconRuntimeV2Loaded
       → runFwDetectorV4Path
-          → extractRawCoarseBoundaries (pinyin-ime-v2)
-          → generateGlobalWindows / recallTopKForWindows
-          → candidateCompatibilityGraph
-          → coarsePathAssembly + runCoarseSentenceBeamV4
-          → runFwSentenceRerankFromPrefilled (kenlm/)
+          → runWithRecallV2Diagnostics (diagnostics 开启时)
+              → extractRawCoarseBoundaries
+              → generateGlobalWindows / recallTopKForWindows
+              → resolveCompatibilityRelations → activeCandidates
+              → runDomainAwareAssembly
+              → buildSentenceCandidates(domainAwareSpanSets)
+              → runFwSentenceRerankFromPrefilled
+          → flushRecallV2Diagnostics (所有路径)
           → applyFwSpanReplacements
 ```
 
@@ -40,12 +46,16 @@ flowchart LR
   IME --> GW[Global Windows]
   GW --> RC[Recall TopK]
   RC --> TS[Tone Score]
-  TS --> CC[Compatibility Graph]
-  CC --> BM[Beam]
-  BM --> KL[KenLM]
+  TS --> CC[Compatibility]
+  CC --> DA[Domain Assembly]
+  DA --> SC[SentenceCandidate]
+  SC --> KL[KenLM]
   KL --> AP[Apply]
   AP --> OUT[segmentForJobResult]
+  CC -. Shadow .-> BM[Beam]
 ```
+
+**Shadow**：`Emit → ParentSpanAssembly → Graph → Beam → shadowBeamSpanSets`（仅 diagnostics/trace）。
 
 ---
 
@@ -54,81 +64,85 @@ flowchart LR
 | 目录/文件 | 职责 |
 |-----------|------|
 | `fw-detector-orchestrator.ts` | Lexicon gate → **仅** V4 path |
-| `fw-detector-v4-path.ts` | V4 入口、apply 写回 |
-| `span-assembly-v4/` | Global Window 编排、`recall-topk-for-windows.ts` |
-| `span-assembly-shared/` | Graph、Path、Beam、Tone diagnostics 类型 |
+| `fw-detector-v4-path.ts` | V4 入口、diagnostics flush wrapper、apply 写回 |
+| `span-assembly-v4/` | Global Window、Domain Assembly、Compatibility、Recall |
+| `span-assembly-shared/` | Graph、Path、Beam（Shadow）、Tone diagnostics、Vote |
 | `kenlm/` | 句级 rerank（prefilled candidates） |
 | `apply-span-replacements.ts` | D-greedy 局部替换 |
-| `tone-time-align.ts` / `tone-match-score.ts` | 声调时间对齐与打分 |
 | `pinyin-ime-v2/` | 粗边界（见 [pinyin-v2](../pinyin-v2/ARCHITECTURE.md)） |
 | `legacy/fw-detector/` | P1.2b 归档回滚链（非默认） |
 
-**已删除（不得恢复）**：`span-assembly-v3/`、`fw-detector-v3-path.ts`、`fw-sentence-rerank-pipeline.ts`、`resolve-pinyin-ime-v2-spans.ts`。
+**已删除（不得恢复）**：`span-assembly-v3/`、`fw-detector-v3-path.ts`、`fw-sentence-rerank-pipeline.ts`。
 
 ---
 
-## 4. V4 Global Window
+## 4. Global Window 与 Domain Assembly
 
 入口：`span-assembly-v4-orchestrator.ts`
 
-1. 从粗边界生成 **global windows**（含 boundary-aware 扩展）
-2. 按 window 调用 `recallTopKForWindows`
-3. 构建 **compatibility graph**（候选冲突/共存）
-4. **beam** 组装句级路径
-5. KenLM rerank → pick → apply
+1. 从粗边界生成 global windows（含 boundary-aware 扩展）
+2. `recallTopKForWindows`（Tone-First V2/V3）
+3. `resolveCompatibilityRelations` → `activeCandidates`
+4. **Main — Domain Assembly**（`runDomainAwareAssembly`）
+5. `buildSentenceCandidates(domainAwareSpanSets)` → KenLM → apply
 
-关键限制见 `span-assembly-v4/v4-limits.ts` 与 shared 内 `CoarseAssemblyLimits`。
+详约：[assembly/FROZEN_V1_2.md](./assembly/FROZEN_V1_2.md)
 
 ---
 
-## 5. Recall
+## 5. Recall（Tone-First V1.0.1）
 
 ```text
 recallTopKForWindows
-  → recallSpanTopKV3 (lexicon-v2/recall-span-topkv3.ts)
-      → recallSpanTopKV2 (exact SQL)
-      → lookupParentFragments (parent fragment + tone penalty)
+  → recallSpanTopKV3
+      → recallSpanTopKV2 (tone-first tier collector)
+      → lookupParentFragments (parentFragmentTopK=3)
+      → mergeExactAndFragmentHits (exactTopK=2)
       → sortRecallHitsByToneCompatibility
 ```
 
-- Bundle：`node_runtime/lexicon/v3`（`LexiconRuntimeV2`）
-- `lexicon/local-span-recall.ts` **不在** V4 默认路径（仅 legacy）
+| 要点 | 说明 |
+|------|------|
+| Strategy | 三 tier composite tone 查询 → merge → 不足再 unified plain fallback |
+| Limit | V4 exact 路径 effectiveLimit = **2**（非 Assembly perSpanLimit 4/8） |
+| Stage | `tone_exact` / `plain_fallback` / `plain_only_no_pattern` |
+| 原则 | Tone 影响 score/penalty，**不** hard drop |
+
+详约：[recall/TONE_FIRST_RECALL_FROZEN_V1_0_1.md](./recall/TONE_FIRST_RECALL_FROZEN_V1_0_1.md)
 
 ---
 
-## 6. Tone Score（非 Hard Gate）
+## 6. Tone Score
 
 | 阶段 | 行为 |
 |------|------|
-| 声学 | Faster-Whisper ASR 侧 `tone_module` → `UtteranceAcousticTonePayload` |
-| 对齐 | `tone-time-align.ts`（timestamp-only，`toneTimestampOnlyEnabled`） |
-| 打分 | `tone-match-score.ts` → `computeToneScoreResult` |
-| Recall | `tonePenalty` 乘 `candidateScore`，**不** hard drop |
-| 诊断 | `recallToneFallbackCount` = penalized；`recallToneIncompatibleCount` 为 deprecated alias |
-
-默认：`features.fwDetector.toneTimestampOnlyEnabled: true`。
+| 声学 | Faster-Whisper `tone_module` → `UtteranceAcousticTonePayload` |
+| 对齐 | `tone-time-align.ts`（`toneTimestampOnlyEnabled`） |
+| 打分 | `computeToneScoreResult` → `tonePenalty` 乘 `candidateScore` |
+| 诊断 | `recallToneFallbackCount` = penalized 次数 |
 
 ---
 
-## 7. Compatibility / Graph / Beam
+## 7. Compatibility
 
-| 模块 | 文件 |
-|------|------|
-| Compatibility | `candidate-compatibility-graph.ts` |
-| Graph | `span-assembly-shared/coarse-candidate-graph.ts` |
-| Path | `span-assembly-shared/coarse-path-assembly.ts` |
-| Beam | `run-coarse-sentence-beam-v4.ts` |
+| 模块 | 主/影 | 文件 |
+|------|-------|------|
+| classify + resolve | **Main** | `classify-overlap-relation.ts` · `candidate-compatibility-graph.ts` |
+| Domain Assembly | **Main** | `assemble-domain-aware-span-sets.ts` |
+| Graph / Beam | Shadow | `span-assembly-shared/` · `run-coarse-sentence-beam-v4.ts` |
 
-职责：在 Recall 候选上剪枝冲突组合，beam 产出句级 `SpanReplacementPick` 供 KenLM。
+详约：[compatibility/COVERAGE_MERGE_FROZEN_V1_2.md](./compatibility/COVERAGE_MERGE_FROZEN_V1_2.md) · [compatibility/AUTHORITY_REDUCTION_FROZEN_V1_1.md](./compatibility/AUTHORITY_REDUCTION_FROZEN_V1_1.md)
+
+**禁止**：`beam.spanSets` → KenLM / Apply。
 
 ---
 
 ## 8. KenLM 与 Apply
 
-**KenLM**：`rerank-fw-sentences.ts` 使用 `minDeltaToReplace`（默认 **0.03**）决定是否 pick。  
-`kenlmDeltaThreshold`（0.8）**已 deprecated**，不参与 V4 逻辑。
+**KenLM**：`minDeltaToReplace`（默认 **0.03**）决定是否 pick。  
+`kenlmDeltaThreshold`（0.8）**已 deprecated**。
 
-**Apply**：`applyFwSpanReplacements` 为唯一 FW 写回；成功后 `ctx.asrRepairApplied = true`，segment 写锁阻止 5015/5016/5017。
+**Apply**：唯一 FW 写回；成功后 `ctx.asrRepairApplied = true`。
 
 ---
 
@@ -139,68 +153,60 @@ recallTopKForWindows
 | `asr-step.ts` | init from rawAsrText |
 | `fw-detector-step.ts` | skip/disabled |
 | `fw-detector-orchestrator.ts` | empty / lexicon unavailable |
-| `fw-detector-v4-path.ts` | no_spans / **apply** |
+| `fw-detector-v4-path.ts` | no_spans / apply / diagnostics flush |
 | `aggregation-step.ts` | turn 合并 |
-| `pipeline/enhancement/*` | 5015/5016/5017（write-lock） |
-
-主链 **禁止** `import legacy/asr-repair`（`fw-detector-gate.mjs`）。
 
 ---
 
-## 10. Diagnostics（V4）
+## 10. Diagnostics（V1.0.2）
 
 启用：`spanAssemblyV4DiagnosticsEnabled=true`，级别 `summary` | `trace`。
 
 | 字段族 | 含义 |
 |--------|------|
-| `globalWindowGeneratedCount` / `boundaryWindowCount` | 窗口规模 |
-| `windowCandidatePoolCount` / `droppedCandidateCount` | 池与剪枝 |
-| `recallToneCompatibleCount` / `recallToneFallbackCount` | Tone 诊断 |
-| `candidateLifecycle` | trace 级候选生命周期 |
+| 窗口/池 | `globalWindowGeneratedCount` · `windowCandidatePoolCount` · `droppedCandidateCount` |
+| Tone（既有） | `recallToneCompatibleCount` · `recallToneFallbackCount` |
+| Tone（V1.0.2） | `toneExactHitCount` · `plainFallbackHitCount` |
+| Domain Assembly | `domainCandidateCount` · `sameDomainCandidateCount` · `mainDomainAwareSpanSetsTotal` |
+| Shadow | `shadowBeamSpanSetsTotal` |
+| Trace | `candidateLifecycle` · PreFilter/RecallHit/Pool tone 字段 |
 
-批测分析：`tests/experiments/analyze-span-assembly-v4-dialog200.mjs`。
+Flush：方案 A，`runWithRecallV2Diagnostics` 包裹 Assembly+KenLM，全路径 flush。  
+详约：[diagnostics/TRACE_FROZEN_V1_0_2.md](./diagnostics/TRACE_FROZEN_V1_0_2.md)
 
 ---
 
 ## 11. 构建与门禁
 
 ```powershell
-npm run build:main          # 含 clean:main，清除 dist 内已删 V3 产物
+npm run build:main
 node scripts/fw-detector-gate.mjs
 npm run test:fw-detector
 npx jest --testPathPattern="freeze-contract|freeze-config-ssot"
 ```
 
-Gate 要点：源码无 `span-assembly-v3/`；README 含 `recallTopKForWindows`；dist 无 v3 目录。
-
 ---
 
-## 12. 退役说明（简史）
-
-| 代际 | 状态 |
-|------|------|
-| V2 sentence-level rerank pipeline | **已删除** |
-| V3 `span-assembly-v3/` orchestrator | **已删除**（共享模块迁入 `span-assembly-shared/`） |
-| `resolvePinyinImeV2Spans` 编排入口 | **已删除**（IME 仅粗边界） |
-| P1.2b `legacy/fw-detector/` | 归档，手动 wiring |
-
----
-
-## 13. 已知限制（运维）
+## 12. 已知限制
 
 | 现象 | 说明 |
 |------|------|
-| FW Apply 常为 0 | KenLM delta 未达 `minDeltaToReplace` 或 compatibility 丢弃；**独立议题** |
-| 词库 ABI | Electron 启动前需 `npm run lexicon:rebuild-sqlite`（`better-sqlite3`） |
-| CER 基线 | 批测以 Raw ASR CER 为主；Apply=0 时 final 常为空 |
+| FW Apply 常为 0 | KenLM `maxDelta` 未达 0.03；下一阶段 KenLM 审计 |
+| 词库 ABI | 启动前 `npm run lexicon:rebuild-sqlite` |
+| d001 tone trace | 可能为 `plain_fallback`，KenLM 仍可命中 |
 
 ---
 
-## 14. 相关文档
+## 13. 模块文档索引
 
-| 文档 | 路径 |
+| 模块 | 文档 |
 |------|------|
 | 配置 | [CONFIG.md](./CONFIG.md) |
+| Assembly V1.2 | [assembly/FROZEN_V1_2.md](./assembly/FROZEN_V1_2.md) |
+| Recall V1.0.1 | [recall/TONE_FIRST_RECALL_FROZEN_V1_0_1.md](./recall/TONE_FIRST_RECALL_FROZEN_V1_0_1.md) |
+| Diagnostics V1.0.2 | [diagnostics/TRACE_FROZEN_V1_0_2.md](./diagnostics/TRACE_FROZEN_V1_0_2.md) |
+| Coverage V1.2 | [compatibility/COVERAGE_MERGE_FROZEN_V1_2.md](./compatibility/COVERAGE_MERGE_FROZEN_V1_2.md) |
+| Authority V1.1 | [compatibility/AUTHORITY_REDUCTION_FROZEN_V1_1.md](./compatibility/AUTHORITY_REDUCTION_FROZEN_V1_1.md) |
+| 最终冻结 | [freeze/FINAL_FREEZE_2026_06_17.md](./freeze/FINAL_FREEZE_2026_06_17.md) |
 | Pinyin IME | [../pinyin-v2/ARCHITECTURE.md](../pinyin-v2/ARCHITECTURE.md) |
 | Tone Module | [../tone-module/ARCHITECTURE.md](../tone-module/ARCHITECTURE.md) |
-| 代码 README | `main/src/fw-detector/README.md` |

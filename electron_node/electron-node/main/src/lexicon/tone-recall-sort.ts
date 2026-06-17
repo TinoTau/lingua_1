@@ -18,10 +18,24 @@ export type ToneRecallSortableHit = {
   candidateScore: number;
   /** Per-hit tone pattern override (variant-sliced acoustic pattern). */
   acousticTonePattern?: number[];
+  toneLookupStage?: 'tone_exact' | 'plain_fallback' | 'plain_only_no_pattern';
   toneCompatible?: boolean;
   tonePenalty?: number;
   toneReason?: ToneReason;
 };
+
+const TONE_LOOKUP_STAGE_PRIORITY: Record<
+  NonNullable<ToneRecallSortableHit['toneLookupStage']>,
+  number
+> = {
+  tone_exact: 3,
+  plain_fallback: 2,
+  plain_only_no_pattern: 1,
+};
+
+function stagePriority(hit: ToneRecallSortableHit): number {
+  return hit.toneLookupStage ? TONE_LOOKUP_STAGE_PRIORITY[hit.toneLookupStage] : 0;
+}
 
 export type ToneRecallSortResult<T extends ToneRecallSortableHit> = {
   hits: T[];
@@ -34,6 +48,12 @@ function applyToneScoreToHit<T extends ToneRecallSortableHit>(
   hit: T,
   defaultAcousticTonePattern?: number[]
 ): ToneScoreResultCounts {
+  if (hit.toneReason !== undefined) {
+    return {
+      matchCount: hit.toneReason === 'match' ? 1 : 0,
+      penalizedCount: (hit.tonePenalty ?? 1) < 1 ? 1 : 0,
+    };
+  }
   const pattern = hit.acousticTonePattern ?? defaultAcousticTonePattern;
   const toneResult = computeToneScoreResult(
     pattern,
@@ -86,7 +106,13 @@ export function sortRecallHitsByToneCompatibility<T extends ToneRecallSortableHi
     recallToneFallbackCount += counts.penalizedCount;
   }
 
-  hits.sort((a, b) => b.candidateScore - a.candidateScore);
+  hits.sort((a, b) => {
+    const stageDiff = stagePriority(b) - stagePriority(a);
+    if (stageDiff !== 0) {
+      return stageDiff;
+    }
+    return b.candidateScore - a.candidateScore;
+  });
 
   return {
     hits,

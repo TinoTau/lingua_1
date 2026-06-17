@@ -32,6 +32,25 @@ describe('tone-aware recall ranking', () => {
     expect(ranked[1]!.candidateScore).toBeCloseTo(1.2 * TONE_MISMATCH_PENALTY);
   });
 
+  it('ranks tone_exact stage before plain_fallback at equal score', () => {
+    const hits = [
+      {
+        ...mkHit('烧饼', 'shao1|bing3', 0.7, 1.2),
+        toneLookupStage: 'plain_fallback' as const,
+      },
+      {
+        ...mkHit('少冰', 'shao3|bing1', 0.65, 1.2),
+        toneLookupStage: 'tone_exact' as const,
+        toneReason: 'match' as const,
+        toneCompatible: true,
+        tonePenalty: 1.0,
+      },
+    ];
+    const { hits: ranked } = sortRecallHitsByToneCompatibility(hits, [3, 1]);
+    expect(ranked[0]!.hotword.word).toBe('少冰');
+    expect(ranked[0]!.toneLookupStage).toBe('tone_exact');
+  });
+
   it('without acoustic pattern applies no_pattern and zero penalized count', () => {
     const hits = [
       mkHit('烧饼', 'shao1|bing3', 0.7, 1.2),

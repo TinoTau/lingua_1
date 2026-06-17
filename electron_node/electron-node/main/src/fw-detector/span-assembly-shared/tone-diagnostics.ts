@@ -30,5 +30,7 @@ export function createEmptyToneDiagnostics(
     recallToneCompatibleCount: 0,
     recallToneIncompatibleCount: 0,
     recallToneFallbackCount: 0,
+    toneExactHitCount: 0,
+    plainFallbackHitCount: 0,
   };
 }

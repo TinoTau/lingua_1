@@ -35,6 +35,7 @@ type TraceBucket =
   | 'graphEdgesAfterMerge'
   | 'coarsePaths'
   | 'beamSpanSets'
+  | 'shadowBeamSpanSets'
   | 'sentenceCandidates';
 
 const BUCKET_LIMITS: Record<TraceBucket, number> = {
@@ -53,6 +54,7 @@ const BUCKET_LIMITS: Record<TraceBucket, number> = {
   graphEdgesAfterMerge: V4_TRACE_LIMITS.maxTraceEdges,
   coarsePaths: V4_TRACE_LIMITS.maxTracePaths,
   beamSpanSets: V4_TRACE_LIMITS.maxTraceBeamSpans,
+  shadowBeamSpanSets: V4_TRACE_LIMITS.maxTraceBeamSpans,
   sentenceCandidates: V4_TRACE_LIMITS.maxTraceSentenceCandidates,
 };
 
@@ -103,76 +105,70 @@ export class V4TraceCollector {
   }
 
   pushRecallHitPreFilter(hit: RecallHitPreFilterTrace): void {
-    this.lifecycle.see(hit.replacement, 'recall');
+    this.lifecycle.see(hit.replacement, hit.replacement, 'recall');
     if (hit.filterStage === 'min_prior_rejected') {
-      this.lifecycle.drop(hit.replacement, 'min_prior', 'below_min_prior');
+      this.lifecycle.drop(hit.replacement, hit.replacement, 'min_prior', 'below_min_prior');
     }
     this.pushItem('recallHitsPreFilter', hit);
   }
 
   pushRecallHit(hit: RecallHitTrace): void {
-    this.lifecycle.see(hit.replacement, 'recall');
+    this.lifecycle.see(hit.candidateId, hit.replacement, 'recall');
     this.pushItem('recallHits', hit);
   }
 
   pushPoolBeforeDrop(candidate: CandidatePoolTrace): void {
-    this.lifecycle.see(candidate.replacement, 'pool');
+    this.lifecycle.see(candidate.candidateId, candidate.replacement, 'pool');
     this.pushItem('poolBeforeDrop', candidate);
   }
 
   pushPoolAfterDrop(candidate: CandidatePoolTrace): void {
-    this.lifecycle.see(candidate.replacement, 'pool');
+    this.lifecycle.see(candidate.candidateId, candidate.replacement, 'pool');
     this.pushItem('poolAfterDrop', candidate);
   }
 
   pushCompatibilityEdge(edge: CompatibilityEdgeTrace): void {
     this.pushItem('compatibilityEdges', edge);
-    if (edge.droppedCandidateId && edge.dropReason) {
-      const dropped =
-        edge.sourceCandidateId === edge.droppedCandidateId
-          ? edge.sourceReplacement
-          : edge.targetReplacement;
-      this.lifecycle.drop(dropped, 'compatibility', edge.dropReason);
-    }
   }
 
   pushEmittedParentEvidence(edge: EmittedEdgeTrace): void {
-    this.lifecycle.see(edge.replacement, 'emit');
+    this.lifecycle.see(edge.replacement, edge.replacement, 'emit');
     this.pushItem('emittedParentEvidence', edge);
   }
 
   pushEmittedEdge(edge: EmittedEdgeTrace): void {
-    this.lifecycle.see(edge.replacement, 'emit');
+    this.lifecycle.see(edge.replacement, edge.replacement, 'emit');
     this.pushItem('emittedEdges', edge);
   }
 
   pushEmittedParentSpanCandidate(candidate: ParentSpanCandidateTrace): void {
-    this.lifecycle.see(candidate.candidateText, 'assembly');
+    this.lifecycle.see(candidate.candidateText, candidate.candidateText, 'assembly');
     this.pushItem('emittedParentSpanCandidates', candidate);
   }
 
   pushGraphEdge(edge: GraphEdgeTrace): void {
-    this.lifecycle.see(edge.replacement, 'graph');
+    this.lifecycle.see(edge.replacement, edge.replacement, 'graph');
     this.pushItem('graphEdgesAfterMerge', edge);
   }
 
   pushCoarsePath(path: CoarsePathTrace): void {
     for (const edge of path.edges) {
-      this.lifecycle.see(edge.replacement, 'graph');
+      this.lifecycle.see(edge.replacement, edge.replacement, 'graph');
     }
     this.pushItem('coarsePaths', path);
   }
 
   pushBeamSpanSet(spanSet: BeamSpanSetTrace): void {
     for (const pick of spanSet.picks) {
-      this.lifecycle.see(pick.replacement, 'beam');
+      this.lifecycle.see(pick.replacement, pick.replacement, 'beam');
     }
     this.pushItem('beamSpanSets', spanSet);
+    this.pushItem('shadowBeamSpanSets', spanSet);
   }
 
   pushSentenceCandidate(candidate: SentenceCandidateTrace): void {
     for (const repl of candidate.replacements) {
-      this.lifecycle.see(repl, 'kenlm');
+      this.lifecycle.see(repl, repl, 'kenlm');
     }
     this.pushItem('sentenceCandidates', candidate);
   }
@@ -185,7 +181,7 @@ export class V4TraceCollector {
     }
     for (const token of combination.sentence.match(/[\u4e00-\u9fff]+/g) ?? []) {
       if (token.length >= 2) {
-        this.lifecycle.see(token, 'kenlm');
+        this.lifecycle.see(token, token, 'kenlm');
       }
     }
     this.combinations.push(combination);

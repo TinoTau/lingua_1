@@ -1,0 +1,171 @@
+{
+  "db": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v3\\lexicon.sqlite",
+  "samples": {
+    "中杯": {
+      "base_lexicon": [],
+      "domain_lexicon": [
+        {
+          "word": "中杯",
+          "pinyin_key": "zhong|bei",
+          "tone_pinyin_key": "zhong1|bei1",
+          "repair_target": 1,
+          "source": "manual_domain_homophone_patch_example"
+        }
+      ],
+      "idiom_lexicon": []
+    },
+    "少糖": {
+      "base_lexicon": [],
+      "domain_lexicon": [],
+      "idiom_lexicon": []
+    },
+    "少冰": {
+      "base_lexicon": [],
+      "domain_lexicon": [],
+      "idiom_lexicon": []
+    },
+    "烧饼": {
+      "base_lexicon": [
+        {
+          "word": "烧饼",
+          "pinyin_key": "shao|bing",
+          "tone_pinyin_key": "shao1|bing3",
+          "repair_target": 1,
+          "source": "jieba_dict_mit_highfreq_fw_domain_compat"
+        }
+      ],
+      "domain_lexicon": [],
+      "idiom_lexicon": []
+    },
+    "哨兵": {
+      "base_lexicon": [
+        {
+          "word": "哨兵",
+          "pinyin_key": "shao|bing",
+          "tone_pinyin_key": "shao4|bing1",
+          "repair_target": 1,
+          "source": "jieba_dict_mit_highfreq_fw_domain_compat"
+        }
+      ],
+      "domain_lexicon": [],
+      "idiom_lexicon": []
+    },
+    "蓝莓马芬": {
+      "base_lexicon": [],
+      "domain_lexicon": [
+        {
+          "word": "蓝莓马芬",
+          "pinyin_key": "lan|mei|ma|fen",
+          "tone_pinyin_key": "lan2|mei2|ma3|fen1",
+          "repair_target": 1,
+          "source": "manual_domain_homophone_patch_example"
+        }
+      ],
+      "idiom_lexicon": []
+    },
+    "拿铁": {
+      "base_lexicon": [],
+      "domain_lexicon": [
+        {
+          "word": "拿铁",
+          "pinyin_key": "na|tie",
+          "tone_pinyin_key": "na2|tie3",
+          "repair_target": 1,
+          "source": "manual_domain_homophone_patch_example"
+        }
+      ],
+      "idiom_lexicon": []
+    },
+    "热美式": {
+      "base_lexicon": [],
+      "domain_lexicon": [],
+      "idiom_lexicon": []
+    }
+  },
+  "ngram": {
+    "shaobing": [
+      {
+        "fragment_text": "烧饼",
+        "ngram_pinyin_key": "shao|bing",
+        "ngram_tone_pinyin_key": "shao1|bing3",
+        "prior": 0.7024,
+        "tier": "base",
+        "domain_id": null
+      },
+      {
+        "fragment_text": "哨兵",
+        "ngram_pinyin_key": "shao|bing",
+        "ngram_tone_pinyin_key": "shao4|bing1",
+        "prior": 0.6617,
+        "tier": "base",
+        "domain_id": null
+      }
+    ]
+  },
+  "explain": {
+    "plain": [
+      [
+        4,
+        0,
+        0,
+        "SEARCH base_lexicon USING INDEX idx_base_pinyin (pinyin_key=?)"
+      ]
+    ],
+    "tone": [
+      [
+        3,
+        0,
+        0,
+        "SCAN base_lexicon"
+      ]
+    ]
+  },
+  "indexes": {
+    "base_lexicon": [
+      {
+        "name": "idx_base_pinyin_tone",
+        "unique": 0
+      },
+      {
+        "name": "idx_base_pinyin",
+        "unique": 0
+      },
+      {
+        "name": "sqlite_autoindex_base_lexicon_1",
+        "unique": 1
+      }
+    ],
+    "domain_lexicon": [
+      {
+        "name": "idx_domain_pinyin_tone",
+        "unique": 0
+      },
+      {
+        "name": "idx_domain_pinyin",
+        "unique": 0
+      },
+      {
+        "name": "sqlite_autoindex_domain_lexicon_1",
+        "unique": 1
+      }
+    ],
+    "term_pinyin_ngrams": [
+      {
+        "name": "idx_term_ngram_parent_range",
+        "unique": 0
+      },
+      {
+        "name": "idx_term_ngram_parent",
+        "unique": 0
+      },
+      {
+        "name": "idx_term_ngram_domain",
+        "unique": 0
+      },
+      {
+        "name": "idx_term_ngram_key",
+        "unique": 0
+      }
+    ]
+  }
+}

@@ -196,13 +196,18 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
 
     tone.recallToneCompatibleCount += recall.recallToneCompatibleCount ?? 0;
     tone.recallToneFallbackCount += recall.recallToneFallbackCount ?? 0;
+    tone.toneExactHitCount += recall.toneExactHitCount ?? 0;
+    tone.plainFallbackHitCount += recall.plainFallbackHitCount ?? 0;
 
+    const windowQueryTonePinyinKey = recall.queryTonePinyinKey;
     let rank = 0;
     const v3Hits = recall.hits as RecallSpanTopKV3Hit[];
 
     for (const hit of v3Hits) {
       const minPriorPassed = hit.hotword.priorScore >= input.minPrior;
       const toneFields = recallHitToneFields(hit, acousticTonePattern);
+      const hitToneLookupStage =
+        hit.hitKind === 'exact_term' ? hit.toneLookupStage : undefined;
 
       if (input.trace) {
         input.trace.pushRecallHitPreFilter({
@@ -216,6 +221,8 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
           minPriorPassed,
           filterStage: resolvePreFilterStage(minPriorPassed, toneFields.tonePenalty),
           sqlReturned: true,
+          toneLookupStage: hitToneLookupStage,
+          queryTonePinyinKey: windowQueryTonePinyinKey,
         });
       }
 
@@ -262,6 +269,7 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
         toneCompatible: toneFields.toneCompatible,
         tonePenalty: toneFields.tonePenalty,
         toneReason: toneFields.toneReason,
+        toneLookupStage: hitToneLookupStage,
       });
 
       if (input.trace) {
@@ -277,6 +285,8 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
           candidateId: `${window.windowId}:${candidateSeq}`,
           tonePenalty: toneFields.tonePenalty,
           toneReason: toneFields.toneReason,
+          toneLookupStage: hitToneLookupStage,
+          queryTonePinyinKey: windowQueryTonePinyinKey,
         });
       }
     }

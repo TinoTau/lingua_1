@@ -1,5 +1,7 @@
 ﻿/** FW Repair V4 diagnostics trace types (P0 Supplement Freeze). */
 
+import type { ToneLookupStage } from '../../lexicon-v2/tone-first-tier-collector';
+
 export type V4DiagnosticsLevel = 'summary' | 'trace';
 
 export type CoarseSpanTrace = {
@@ -51,6 +53,8 @@ export type RecallHitPreFilterTrace = {
   minPriorPassed: boolean;
   filterStage: 'tone_penalized' | 'min_prior_rejected' | 'accepted';
   sqlReturned: boolean;
+  toneLookupStage?: ToneLookupStage;
+  queryTonePinyinKey?: string;
 };
 
 export type RecallHitTrace = {
@@ -65,6 +69,8 @@ export type RecallHitTrace = {
   candidateId: string;
   tonePenalty?: number;
   toneReason?: 'match' | 'mismatch' | 'no_pattern';
+  toneLookupStage?: ToneLookupStage;
+  queryTonePinyinKey?: string;
 };
 
 export type CandidatePoolTrace = {
@@ -86,6 +92,9 @@ export type CandidatePoolTrace = {
   dropped?: boolean;
   droppedReason?: string;
   droppedByCandidateId?: string;
+  isCovered?: boolean;
+  coveredBy?: string;
+  toneLookupStage?: ToneLookupStage;
 };
 
 export type CompatibilityEdgeTrace = {
@@ -94,6 +103,7 @@ export type CompatibilityEdgeTrace = {
   sourceReplacement: string;
   targetReplacement: string;
   compatible: boolean;
+  overlapRelationType?: 'COMPATIBLE' | 'COVERAGE' | 'CONFLICT';
   reason: string;
   droppedCandidateId?: string;
   dropReason?: string;
@@ -181,10 +191,13 @@ export type CandidateLifecycleLayer =
   | 'kenlm';
 
 export type CandidateLifecycle = {
+  candidateId: string;
   candidateText: string;
   firstSeenLayer: CandidateLifecycleLayer;
   firstDroppedLayer?: string;
   dropReason?: string;
+  coverageParentId?: string;
+  lifecycleState?: 'covered_by_parent' | 'revived_after_parent_drop' | 'conflict_relation_created';
 };
 
 export type SpanAssemblyV4TraceDiagnostics = {
@@ -207,6 +220,7 @@ export type SpanAssemblyV4TraceDiagnostics = {
   graphEdgesAfterMerge?: GraphEdgeTrace[];
   coarsePaths?: CoarsePathTrace[];
   beamSpanSets?: BeamSpanSetTrace[];
+  shadowBeamSpanSets?: BeamSpanSetTrace[];
   sentenceCandidates?: SentenceCandidateTrace[];
   candidateLifecycle?: CandidateLifecycle[];
 };

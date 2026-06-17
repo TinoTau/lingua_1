@@ -1,0 +1,66 @@
+{
+  "batchFile": "D:\\Programs\\github\\lingua_1\\electron_node\\electron-node\\tests\\compat-auth-reduction-dialog200-batch-result.json",
+  "timestamp": "2026-06-16T10:14:32.681Z",
+  "stoppedReason": "deadline",
+  "evaluated": 116,
+  "contractPass": 116,
+  "wallClockSec": 904,
+  "quality": {
+    "raw_cer_avg": 0.2887,
+    "final_cer_avg": 0.2621,
+    "raw_cer_p50": 0.2,
+    "final_cer_p50": 0.2,
+    "raw_cer_p95": 0.6,
+    "final_cer_p95": 0.6,
+    "exact_raw_count": 14,
+    "exact_final_count": 14,
+    "text_changed_count": 116,
+    "fw_applied_case_count": 0
+  },
+  "performance": {
+    "pipeline_ms_avg": 7702,
+    "pipeline_ms_p50": 6412,
+    "pipeline_ms_p95": 15886,
+    "fw_detector_step_ms_avg": 4785,
+    "fw_detector_step_ms_p50": 3433,
+    "fw_detector_step_ms_p95": 12333,
+    "assembly_ms_avg": 265,
+    "assembly_ms_p50": 244,
+    "assembly_ms_p95": 425,
+    "asr_warmup_ms": 9502,
+    "throughput_cases_per_sec": 0.128
+  },
+  "compatibilityAuthorityReduction": {
+    "total_conflict_relations": 14697,
+    "avg_conflict_relations": 126.7,
+    "total_hard_drops": 0,
+    "avg_hard_drops": 0,
+    "avg_active_candidates": 47.32,
+    "avg_dropped_candidates": 0,
+    "cases_with_conflict_relations": 115,
+    "max_active_candidates": 101,
+    "min_active_candidates": 0
+  },
+  "coverageMetrics": {
+    "total_coverage_pairs": 132,
+    "avg_coverage_pairs": 1.14,
+    "cases_with_coverage": 26
+  },
+  "d001Acceptance": {
+    "activeCandidateCount": 49,
+    "conflictRelationCount": 78,
+    "hardDropCount": 0,
+    "coverageCount": 14,
+    "zhongbeiCandidates": [],
+    "mafenCandidates": [],
+    "graphEdgeCount": 0,
+    "mafenGraphEdges": [],
+    "zhongBeiDropped": false,
+    "contractPass": true,
+    "contractChecks": {
+      "hardDropCountZero": true,
+      "activeCandidateCountGt24": true,
+      "conflictRelationCountGt0": true
+    }
+  }
+}

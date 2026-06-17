@@ -96,6 +96,10 @@ export class LexiconRuntimeV2 {
   private stmtBase: Database.Statement | null = null;
   private stmtIdiom: Database.Statement | null = null;
   private stmtDomain: Database.Statement | null = null;
+  private stmtBaseToneComposite: Database.Statement | null = null;
+  private stmtIdiomToneComposite: Database.Statement | null = null;
+  private stmtDomainToneComposite: Database.Statement | null = null;
+  private hasToneColumn = false;
   private stmtRouting: Database.Statement | null = null;
   private stmtNgram: Database.Statement | null = null;
   private ngramSqlQueries = 0;
@@ -175,6 +179,7 @@ export class LexiconRuntimeV2 {
         manifest.schemaVersion === LEXICON_V2_SHADOW_SCHEMA_VERSION ||
         manifest.schemaVersion === LEXICON_V3_RUNTIME_SCHEMA_VERSION ||
         manifest.schemaVersion === LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION;
+      this.hasToneColumn = hasToneColumn;
       const toneSelect = hasToneColumn ? 'tone_pinyin_key,' : '';
 
       this.stmtBase = this.db.prepare(
@@ -202,6 +207,30 @@ export class LexiconRuntimeV2 {
         `SELECT pinyin_key, keyword, domain_id, weight
          FROM industry_routing_lexicon WHERE pinyin_key = ?`
       );
+
+      if (hasToneColumn) {
+        this.stmtBaseToneComposite = this.db.prepare(
+          `SELECT id, pinyin_key, tone_pinyin_key, word, normalized, prior_score, repair_target, enabled, aliases, source, canonical_word, is_alias
+           FROM base_lexicon
+           WHERE pinyin_key = ? AND tone_pinyin_key = ? AND enabled = 1 AND length(word) = ?
+           ORDER BY prior_score DESC
+           LIMIT ?`
+        );
+        this.stmtIdiomToneComposite = this.db.prepare(
+          `SELECT id, pinyin_key, tone_pinyin_key, word, normalized, prior_score, repair_target, enabled, aliases, source, canonical_word, is_alias
+           FROM idiom_lexicon
+           WHERE pinyin_key = ? AND tone_pinyin_key = ? AND enabled = 1 AND length(word) = ?
+           ORDER BY prior_score DESC
+           LIMIT ?`
+        );
+        this.stmtDomainToneComposite = this.db.prepare(
+          `SELECT id, domain_id, pinyin_key, tone_pinyin_key, word, normalized, prior_score, repair_target, enabled, aliases, source, canonical_word, is_alias
+           FROM domain_lexicon
+           WHERE domain_id = ? AND pinyin_key = ? AND tone_pinyin_key = ? AND enabled = 1 AND length(word) = ?
+           ORDER BY prior_score DESC
+           LIMIT ?`
+        );
+      }
 
       if (manifest.schemaVersion === LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION) {
         this.stmtNgram = this.db.prepare(
@@ -260,10 +289,36 @@ export class LexiconRuntimeV2 {
     }
   }
 
+  supportsToneFirstRecall(): boolean {
+    return this.hasToneColumn && this.stmtBaseToneComposite != null;
+  }
+
   lookupBaseByPinyinKey(key: string, termLength: number, sqlLimit?: number): HotwordEntry[] {
     const limit = sqlLimit ?? getLexiconRuntimeV2Config().maxBaseCandidates;
     return this.lookupTier('base', key, termLength, limit, () => {
       const rows = (this.stmtBase?.all(key, termLength, limit) ?? []) as TierRow[];
+      return mapTierRows(rows);
+    });
+  }
+
+  lookupBaseByPinyinAndToneKey(
+    pinyinKey: string,
+    tonePinyinKey: string,
+    termLength: number,
+    sqlLimit?: number
+  ): HotwordEntry[] {
+    if (!this.stmtBaseToneComposite || !tonePinyinKey.trim()) {
+      return [];
+    }
+    const limit = sqlLimit ?? getLexiconRuntimeV2Config().maxBaseCandidates;
+    const cacheKey = `base:tone:${pinyinKey}:${tonePinyinKey}:${termLength}:${limit}`;
+    return this.lookupTier(cacheKey, pinyinKey, termLength, limit, () => {
+      const rows = (this.stmtBaseToneComposite!.all(
+        pinyinKey,
+        tonePinyinKey,
+        termLength,
+        limit
+      ) ?? []) as TierRow[];
       return mapTierRows(rows);
     });
   }
@@ -276,6 +331,31 @@ export class LexiconRuntimeV2 {
     }
     return this.lookupTier('idiom', key, termLength, limit, () => {
       const rows = (this.stmtIdiom?.all(key, termLength, limit) ?? []) as TierRow[];
+      return mapTierRows(rows);
+    });
+  }
+
+  lookupIdiomByPinyinAndToneKey(
+    pinyinKey: string,
+    tonePinyinKey: string,
+    termLength: number,
+    sqlLimit?: number
+  ): HotwordEntry[] {
+    if (!this.stmtIdiomToneComposite || !tonePinyinKey.trim()) {
+      return [];
+    }
+    const cfgLimit = sqlLimit ?? getLexiconRuntimeV2Config().maxIdiomCandidates;
+    if (cfgLimit <= 0) {
+      return [];
+    }
+    const cacheKey = `idiom:tone:${pinyinKey}:${tonePinyinKey}:${termLength}:${cfgLimit}`;
+    return this.lookupTier(cacheKey, pinyinKey, termLength, cfgLimit, () => {
+      const rows = (this.stmtIdiomToneComposite!.all(
+        pinyinKey,
+        tonePinyinKey,
+        termLength,
+        cfgLimit
+      ) ?? []) as TierRow[];
       return mapTierRows(rows);
     });
   }
@@ -293,6 +373,31 @@ export class LexiconRuntimeV2 {
     const limit = sqlLimit ?? getLexiconRuntimeV2Config().maxDomainCandidates;
     return this.lookupTier(`domain:${domain}`, key, termLength, limit, () => {
       const rows = (this.stmtDomain?.all(domain, key, termLength, limit) ?? []) as TierRow[];
+      return mapTierRows(rows, domain);
+    });
+  }
+
+  lookupDomainByPinyinAndToneKey(
+    domainId: string,
+    pinyinKey: string,
+    tonePinyinKey: string,
+    termLength: number,
+    sqlLimit?: number
+  ): HotwordEntry[] {
+    const domain = domainId.trim();
+    if (!domain || domain === 'general' || !this.stmtDomainToneComposite || !tonePinyinKey.trim()) {
+      return [];
+    }
+    const limit = sqlLimit ?? getLexiconRuntimeV2Config().maxDomainCandidates;
+    const cacheKey = `domain:${domain}:tone:${pinyinKey}:${tonePinyinKey}:${termLength}:${limit}`;
+    return this.lookupTier(cacheKey, pinyinKey, termLength, limit, () => {
+      const rows = (this.stmtDomainToneComposite!.all(
+        domain,
+        pinyinKey,
+        tonePinyinKey,
+        termLength,
+        limit
+      ) ?? []) as TierRow[];
       return mapTierRows(rows, domain);
     });
   }
@@ -415,7 +520,7 @@ export class LexiconRuntimeV2 {
     if (this.state.status !== 'ok' || limit <= 0 || !key.trim() || termLength < 2) {
       return [];
     }
-    const cacheKey = `${tier}:${key}:${termLength}:${limit}`;
+    const cacheKey = `${tier}:plain:${key}:${termLength}:${limit}`;
     const cached = this.bucketCache.get(cacheKey);
     if (cached) {
       this.tierCacheHits += 1;
@@ -439,6 +544,10 @@ export class LexiconRuntimeV2 {
     this.stmtBase = null;
     this.stmtIdiom = null;
     this.stmtDomain = null;
+    this.stmtBaseToneComposite = null;
+    this.stmtIdiomToneComposite = null;
+    this.stmtDomainToneComposite = null;
+    this.hasToneColumn = false;
     this.stmtRouting = null;
     this.stmtNgram = null;
     if (this.db) {

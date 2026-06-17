@@ -6,7 +6,8 @@ import { buildCandidateSentence } from '../candidate-sentence-builder';
 export function buildFwSpansFromCoarseAssemblyV4(
   rawText: string,
   coarseSpans: CoarseSpan[],
-  spanSets: SpanReplacementPick[][]
+  spanSets: SpanReplacementPick[][],
+  utteranceDomain: string
 ): FwSpanDiagnostics[] {
   return coarseSpans.map((span, idx) => {
     const picks = spanSets[idx] ?? [];
@@ -32,7 +33,7 @@ export function buildFwSpansFromCoarseAssemblyV4(
       text: span.text,
       start: span.rawStart,
       end: span.rawEnd,
-      domain: 'general',
+      domain: utteranceDomain,
       riskScore: 0,
       signals: ['span_assembly_v4'],
       candidates,

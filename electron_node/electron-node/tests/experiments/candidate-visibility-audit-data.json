@@ -1,0 +1,344 @@
+{
+  "summary": {
+    "n": 116,
+    "recall_avg": 47.32,
+    "compatibility_avg": 47.32,
+    "emit_parent_avg": 28.71,
+    "emit_exact_avg": 17.51,
+    "emit_approx_avg": 46.22,
+    "parent_span_emitted_avg": 20.47,
+    "parent_span_selected_avg": 3.58,
+    "graph_edges_avg": 21.23,
+    "beam_span_sets_total_avg": 6.54,
+    "beam_span_sets_max_avg": 2.47,
+    "sentence_combinations_avg": 4.9,
+    "kenlm_queries_avg": 5.9,
+    "recall_to_graph_retention": 45.5,
+    "recall_to_kenlm_retention": 12.5,
+    "emit_loss_avg": 1.1,
+    "graph_loss_from_emit_avg": 24.98
+  },
+  "d001": {
+    "metrics": {
+      "recall": 49,
+      "emitParent": 23,
+      "emitExact": 16,
+      "graphEdges": 22,
+      "dominatedPruned": 10,
+      "ruleBRejected": 2,
+      "combinationCount": 2,
+      "kenlmQueryCount": 3,
+      "perSpanLimit": 2,
+      "spanCandidateCounts": [
+        {
+          "text": "你好,我想點一杯熱拿鐵",
+          "n": 2,
+          "words": [
+            "拿铁",
+            "以北"
+          ]
+        },
+        {
+          "text": "鐘",
+          "n": 1,
+          "words": [
+            "鐘"
+          ]
+        },
+        {
+          "text": "貝少糖",
+          "n": 1,
+          "words": [
+            "中杯"
+          ]
+        },
+        {
+          "text": "深",
+          "n": 1,
+          "words": [
+            "深"
+          ]
+        },
+        {
+          "text": "便溫",
+          "n": 1,
+          "words": [
+            "身边"
+          ]
+        },
+        {
+          "text": "以下今天",
+          "n": 1,
+          "words": [
+            "以下今天"
+          ]
+        },
+        {
+          "text": "有",
+          "n": 1,
+          "words": [
+            "有"
+          ]
+        },
+        {
+          "text": "蓝美马分吗",
+          "n": 1,
+          "words": [
+            "蓝莓马芬"
+          ]
+        }
+      ]
+    },
+    "words": {
+      "中杯": {
+        "Beam_span_words": [
+          {
+            "span": "貝少糖",
+            "words": [
+              "中杯"
+            ]
+          }
+        ],
+        "KenLM_top": [
+          "你好,我想點一杯熱拿铁中杯少糖 身边溫 以下今天有蓝莓马芬吗?",
+          "你好,我想點以北熱拿鐵中杯少糖 身边溫 以下今天有蓝莓马芬吗?"
+        ],
+        "in_span_candidate_word": true,
+        "in_kenlm_top": true
+      },
+      "终杯": {
+        "Beam_span_words": [],
+        "KenLM_top": [],
+        "in_span_candidate_word": false,
+        "in_kenlm_top": false
+      },
+      "忠辈": {
+        "Beam_span_words": [],
+        "KenLM_top": [],
+        "in_span_candidate_word": false,
+        "in_kenlm_top": false
+      },
+      "钟焙": {
+        "Beam_span_words": [],
+        "KenLM_top": [],
+        "in_span_candidate_word": false,
+        "in_kenlm_top": false
+      },
+      "钟贝": {
+        "Beam_span_words": [],
+        "KenLM_top": [],
+        "in_span_candidate_word": false,
+        "in_kenlm_top": false
+      },
+      "蓝莓马芬": {
+        "Beam_span_words": [
+          {
+            "span": "蓝美马分吗",
+            "words": [
+              "蓝莓马芬"
+            ]
+          }
+        ],
+        "KenLM_top": [
+          "你好,我想點一杯熱拿铁中杯少糖 身边溫 以下今天有蓝莓马芬吗?",
+          "你好,我想點以北熱拿鐵中杯少糖 身边溫 以下今天有蓝莓马芬吗?"
+        ],
+        "in_span_candidate_word": true,
+        "in_kenlm_top": true
+      },
+      "蓝莓馬芬": {
+        "Beam_span_words": [],
+        "KenLM_top": [],
+        "in_span_candidate_word": false,
+        "in_kenlm_top": false
+      },
+      "兰梅马芬": {
+        "Beam_span_words": [],
+        "KenLM_top": [],
+        "in_span_candidate_word": false,
+        "in_kenlm_top": false
+      },
+      "兰梅馬芬": {
+        "Beam_span_words": [],
+        "KenLM_top": [],
+        "in_span_candidate_word": false,
+        "in_kenlm_top": false
+      },
+      "蓝美马分": {
+        "Beam_span_words": [
+          {
+            "span": "你好,我想點一杯熱拿鐵",
+            "words": [
+              "拿铁",
+              "以北"
+            ]
+          },
+          {
+            "span": "鐘",
+            "words": [
+              "鐘"
+            ]
+          },
+          {
+            "span": "貝少糖",
+            "words": [
+              "中杯"
+            ]
+          },
+          {
+            "span": "深",
+            "words": [
+              "深"
+            ]
+          },
+          {
+            "span": "便溫",
+            "words": [
+              "身边"
+            ]
+          },
+          {
+            "span": "以下今天",
+            "words": [
+              "以下今天"
+            ]
+          },
+          {
+            "span": "有",
+            "words": [
+              "有"
+            ]
+          }
+        ],
+        "KenLM_top": [],
+        "in_span_candidate_word": false,
+        "in_kenlm_top": false
+      },
+      "拿铁": {
+        "Beam_span_words": [
+          {
+            "span": "你好,我想點一杯熱拿鐵",
+            "words": [
+              "拿铁",
+              "以北"
+            ]
+          }
+        ],
+        "KenLM_top": [
+          "你好,我想點一杯熱拿铁中杯少糖 身边溫 以下今天有蓝莓马芬吗?"
+        ],
+        "in_span_candidate_word": true,
+        "in_kenlm_top": true
+      },
+      "拿帖": {
+        "Beam_span_words": [],
+        "KenLM_top": [],
+        "in_span_candidate_word": false,
+        "in_kenlm_top": false
+      },
+      "熱拿鐵": {
+        "Beam_span_words": [
+          {
+            "span": "你好,我想點一杯熱拿鐵",
+            "words": [
+              "拿铁",
+              "以北"
+            ]
+          },
+          {
+            "span": "鐘",
+            "words": [
+              "鐘"
+            ]
+          },
+          {
+            "span": "貝少糖",
+            "words": [
+              "中杯"
+            ]
+          },
+          {
+            "span": "深",
+            "words": [
+              "深"
+            ]
+          },
+          {
+            "span": "便溫",
+            "words": [
+              "身边"
+            ]
+          },
+          {
+            "span": "以下今天",
+            "words": [
+              "以下今天"
+            ]
+          },
+          {
+            "span": "有",
+            "words": [
+              "有"
+            ]
+          },
+          {
+            "span": "蓝美马分吗",
+            "words": [
+              "蓝莓马芬"
+            ]
+          }
+        ],
+        "KenLM_top": [
+          "你好,我想點以北熱拿鐵中杯少糖 身边溫 以下今天有蓝莓马芬吗?"
+        ],
+        "in_span_candidate_word": false,
+        "in_kenlm_top": true
+      },
+      "热拿铁": {
+        "Beam_span_words": [],
+        "KenLM_top": [],
+        "in_span_candidate_word": false,
+        "in_kenlm_top": false
+      }
+    },
+    "topCandidates": [
+      {
+        "text": "你好,我想點一杯熱拿铁中杯少糖 身边溫 以下今天有蓝莓马芬吗?",
+        "delta": 0.0001132558893910545
+      },
+      {
+        "text": "你好,我想點以北熱拿鐵中杯少糖 身边溫 以下今天有蓝莓马芬吗?",
+        "delta": 0.00006309748501142032
+      }
+    ]
+  },
+  "sample_d001_chain": {
+    "id": "d001",
+    "recall": 49,
+    "compatibility": 49,
+    "emitParent": 23,
+    "emitExact": 16,
+    "emitApprox": 39,
+    "parentSpanEmitted": 15,
+    "parentSpanSelected": 5,
+    "graphEdges": 22,
+    "overlapMerge": 5,
+    "residualSpans": 6,
+    "beamSpanSets": [
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "beamSpanSetsTotal": 9,
+    "beamSpanSetsMax": 2,
+    "sentenceCombinations": 2,
+    "kenlmQueries": 3,
+    "perSpanLimit": 2,
+    "coarseSpanCount": 8
+  }
+}

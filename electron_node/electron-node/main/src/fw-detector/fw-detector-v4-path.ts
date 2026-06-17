@@ -112,8 +112,14 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
         truncatedWindowCount: 0,
         ngramQueryCount: 0,
         windowCandidatePoolCount: 0,
+        activeCandidateCount: 0,
         compatibilityEdgeCount: 0,
         droppedCandidateCount: 0,
+        coverageCount: 0,
+        conflictCount: 0,
+        conflictRelationCount: 0,
+        hardDropCount: 0,
+        compatibleCount: 0,
         parentEvidenceCount: 0,
         exactEdgeCount: 0,
         candidateEdgeCount: 0,
@@ -126,6 +132,14 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
         assemblyMs: 0,
         inSpanWindowCount: 0,
         boundaryWindowCount: 0,
+        domainCandidateCount: 0,
+        baseCandidateCount: 0,
+        sameDomainCandidateCount: 0,
+        domainFilteredSpanCount: 0,
+        selectedCandidatesPerSpanAvg: 0,
+        domainAssemblyMs: 0,
+        mainDomainAwareSpanSetsTotal: 0,
+        shadowBeamSpanSetsTotal: 0,
         boundaryImport: {
           rawSyllableCount: 0,
           imeCandidateCount: 0,
@@ -156,26 +170,62 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
     return result;
   }
 
-  const assembly = runSpanAssemblyV4Orchestrator({
-    rawText,
-    runtime,
-    profile,
-    enabledDomains,
-    minPrior: config.minPrior,
-    imeConfig,
-    dict,
-    asrSegments: ctx.asrSegments,
-    tonePayload: ctx.asrResult?.tone,
-    acousticSlices: ctx.acousticToneSlices,
-    asrSegmentNodeBatchIndices: ctx.asrSegmentNodeBatchIndices,
-    segmentTimeOffsetsSec: ctx.segmentTimeOffsetsSec,
-    segmentCharOffsets: ctx.segmentCharOffsets,
-    traceCaseId: ctx.fwDetectorTraceCaseId,
-  });
+  const kenlmScorer = enableKenLMGate ? createKenlmBatchScorer() : null;
+  const sessionIntent = getLexiconSessionIntentFromContext(ctx);
 
-  if (!assembly.fwSpans.length) {
+  const wrapped = await runWithLexiconRecallContext({ sessionIntent }, () =>
+    runWithRecallV2Diagnostics(async () => {
+      const assemblyResult = runSpanAssemblyV4Orchestrator({
+        rawText,
+        runtime,
+        profile,
+        enabledDomains,
+        minPrior: config.minPrior,
+        imeConfig,
+        dict,
+        asrSegments: ctx.asrSegments,
+        tonePayload: ctx.asrResult?.tone,
+        acousticSlices: ctx.acousticToneSlices,
+        asrSegmentNodeBatchIndices: ctx.asrSegmentNodeBatchIndices,
+        segmentTimeOffsetsSec: ctx.segmentTimeOffsetsSec,
+        segmentCharOffsets: ctx.segmentCharOffsets,
+        traceCaseId: ctx.fwDetectorTraceCaseId,
+      });
+      if (!assemblyResult.fwSpans.length) {
+        return { assembly: assemblyResult, decision: null };
+      }
+      const rerankDecision = await runFwSentenceRerankFromPrefilled({
+        rawText,
+        spans: assemblyResult.fwSpans,
+        spanSets: assemblyResult.spanSets,
+        config: {
+          minPrior: config.minPrior,
+          maxSentenceCandidates: config.maxSentenceCandidates,
+          minDeltaToReplace: config.minDeltaToReplace,
+          candidateRequireRepairTarget: config.candidateRequireRepairTarget,
+        },
+        kenlmScorer,
+        tone: ctx.asrResult?.tone,
+      });
+      return { assembly: assemblyResult, decision: rerankDecision };
+    })
+  );
+
+  const { assembly, decision } = wrapped;
+  ctx.fwDetectorStepMs = Date.now() - fwStartMs;
+
+  const v2QueryStats = runtime.getAndResetTierQueryStats();
+  const kenlmQueryCount = decision?.kenlmQueryCount ?? 0;
+  const recallV2Diagnostics = flushRecallJobDiagnostics({
+    v2SqlQueryCount: v2QueryStats?.sqlQueries ?? 0,
+    v2CacheHits: v2QueryStats?.cacheHits ?? 0,
+    v2CacheMisses: v2QueryStats?.cacheMisses ?? 0,
+    kenlmQueryCount,
+  });
+  const diagnosticsConfig = resolveV4DiagnosticsConfig(ctx.fwDetectorTraceCaseId);
+
+  if (!decision) {
     ctx.segmentForJobResult = rawText;
-    ctx.fwDetectorStepMs = Date.now() - fwStartMs;
     const result: FwDetectorResult = {
       enabled: true,
       triggered: false,
@@ -191,53 +241,26 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
         ...assembly.metrics,
         boundaryImport: assembly.boundaryImport,
         tone: assembly.tone,
+        traceLevel: diagnosticsConfig.level,
+        ...(assembly.trace ?? {}),
         skippedReason: assembly.metrics.coarseSpanCount === 0 ? 'no_coarse_spans' : 'no_cjk',
       },
       kenlmVetoMs: 0,
       kenlmVetoQueryCount: 0,
+      ...(recallV2Diagnostics ? { recallV2Diagnostics } : {}),
     };
     ctx.fwDetectorResult = result;
     return result;
   }
 
-  const kenlmScorer = enableKenLMGate ? createKenlmBatchScorer() : null;
-  const sessionIntent = getLexiconSessionIntentFromContext(ctx);
-
-  const decision = await runWithLexiconRecallContext({ sessionIntent }, () =>
-    runWithRecallV2Diagnostics(async () =>
-      runFwSentenceRerankFromPrefilled({
-        rawText,
-        spans: assembly.fwSpans,
-        spanSets: assembly.spanSets,
-        config: {
-          minPrior: config.minPrior,
-          maxSentenceCandidates: config.maxSentenceCandidates,
-          minDeltaToReplace: config.minDeltaToReplace,
-          candidateRequireRepairTarget: config.candidateRequireRepairTarget,
-        },
-        kenlmScorer,
-        tone: ctx.asrResult?.tone,
-      })
-    )
-  );
-
-  ctx.fwDetectorStepMs = Date.now() - fwStartMs;
   ctx.segmentForJobResult = applyFwSpanReplacements(rawText, decision.approved);
   if (decision.approved.length > 0) {
     ctx.asrRepairApplied = true;
   }
 
   const summary = buildSummary(decision.spans, decision);
-  const v2QueryStats = runtime.getAndResetTierQueryStats();
-  const recallV2Diagnostics = flushRecallJobDiagnostics({
-    v2SqlQueryCount: v2QueryStats?.sqlQueries ?? 0,
-    v2CacheHits: v2QueryStats?.cacheHits ?? 0,
-    v2CacheMisses: v2QueryStats?.cacheMisses ?? 0,
-    kenlmQueryCount: summary.kenlmQueryCount,
-  });
   const kenlmVetoMs = decision.kenlmTiming?.batchMs ?? 0;
   const kenlmVetoQueryCount = decision.kenlmQueryCount;
-  const diagnosticsConfig = resolveV4DiagnosticsConfig(ctx.fwDetectorTraceCaseId);
   const allCombinations =
     diagnosticsConfig.traceActive && assembly.kenlmSentenceCandidates
       ? buildCombinationTraces({

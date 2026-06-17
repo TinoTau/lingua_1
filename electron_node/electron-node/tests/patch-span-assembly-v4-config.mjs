@@ -28,7 +28,7 @@ const diagnostics = process.argv[3];
 if (diagnostics === 'trace') {
   config.features.fwDetector.spanAssemblyV4DiagnosticsEnabled = true;
   config.features.fwDetector.spanAssemblyV4DiagnosticsLevel = 'trace';
-  config.features.fwDetector.spanAssemblyV4DiagnosticsTargetIds = ['d001'];
+  config.features.fwDetector.spanAssemblyV4DiagnosticsTargetIds = ['d001', 'd048'];
 }
 fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
 console.log(
@@ -37,5 +37,5 @@ console.log(
   'pipelinePath=v4 (implicit)',
   'toneTimestampOnlyEnabled =',
   enabled,
-  diagnostics === 'trace' ? 'diagnostics=trace d001' : ''
+  diagnostics === 'trace' ? 'diagnostics=trace d001+d048' : ''
 );

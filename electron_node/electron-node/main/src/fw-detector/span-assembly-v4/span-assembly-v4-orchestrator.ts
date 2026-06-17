@@ -18,9 +18,10 @@ import { createEmptyToneDiagnostics } from '../span-assembly-shared/tone-diagnos
 import type { CoarseBoundaryImportDiagnostics } from '../span-assembly-shared/coarse-boundary-import';
 import type { CoarseAssemblyInternalResult, CoarseAssemblyToneDiagnostics } from '../span-assembly-shared/types';
 import { applyDomainVoteToEdges, voteUtteranceDomain } from '../span-assembly-shared/utterance-domain-vote';
+import { runDomainAwareAssembly } from './assemble-domain-aware-span-sets';
 import { assembleParentTermSpanCandidatesV4 } from './assemble-parent-term-span-candidates-v4';
 import { blockedFilter, truncateWindows } from './blocked-window-filter';
-import { buildCandidateCompatibilityGraph, dropIncompatibleCandidates } from './candidate-compatibility-graph';
+import { buildCandidateCompatibilityGraph, resolveCompatibilityRelations } from './candidate-compatibility-graph';
 import { emitParentEvidenceAndExactEdges } from './emit-v4-evidence';
 import { generateGlobalWindows } from './generate-global-windows';
 import { recallTopKForWindows } from './recall-topk-for-windows';
@@ -62,7 +63,9 @@ export type SpanAssemblyV4OrchestratorInput = {
 
 export type SpanAssemblyV4OrchestratorResult = {
   internal: CoarseAssemblyInternalResult;
-  spanSets: ReturnType<typeof runCoarseSentenceBeamV4>['spanSets'];
+  spanSets: ReturnType<typeof runDomainAwareAssembly>['spanSets'];
+  shadowBeamSpanSets: ReturnType<typeof runCoarseSentenceBeamV4>['spanSets'];
+  shadowBeamSentenceTexts: ReturnType<typeof runCoarseSentenceBeamV4>['sentenceTexts'];
   fwSpans: ReturnType<typeof buildFwSpansFromCoarseAssemblyV4>;
   boundaryImport: CoarseBoundaryImportDiagnostics;
   tone: CoarseAssemblyToneDiagnostics;
@@ -170,20 +173,27 @@ export function runSpanAssemblyV4Orchestrator(
 
   const { edges: compatibilityEdges, edgeCount: compatibilityEdgeCount } =
     buildCandidateCompatibilityGraph(recall.candidates);
-  const { survivors, droppedCount } = dropIncompatibleCandidates(recall.candidates, trace);
+  const compatibility = resolveCompatibilityRelations(recall.candidates, trace);
+  const activeCandidates = compatibility.activeCandidates;
 
-  const emitted = emitParentEvidenceAndExactEdges(survivors);
+  const domainAssembly = runDomainAwareAssembly(activeCandidates, coarseSpans, input.rawText);
+  const domainAwareSpanSets = domainAssembly.spanSets;
+
+  const emitted = emitParentEvidenceAndExactEdges(activeCandidates);
   if (trace) {
     for (const evidence of emitted.parentEvidence) {
       trace.pushEmittedParentEvidence(toEmittedEdgeFromParentEvidence(evidence));
     }
-    for (const candidate of survivors) {
+    for (const candidate of activeCandidates) {
+      if (candidate.isCovered) {
+        continue;
+      }
       if (candidate.hitKind === 'exact_term') {
         trace.pushEmittedEdge(toEmittedEdgeFromCandidate(candidate, 'exact_term'));
       }
     }
   }
-  const vote = voteUtteranceDomain({
+  const shadowVote = voteUtteranceDomain({
     parentEvidence: emitted.parentEvidence,
     exactEdges: emitted.exactEdges,
   });
@@ -191,19 +201,19 @@ export function runSpanAssemblyV4Orchestrator(
     coarseSpans,
     emitted.parentEvidence,
     input.rawText,
-    vote.utteranceDomain
+    shadowVote.utteranceDomain
   );
   if (trace) {
     for (const edge of parentSpanAssembly.edges) {
       trace.pushEmittedParentSpanCandidate(toParentSpanCandidateTraceFromGraphEdge(edge));
     }
   }
-  const votedExact = applyDomainVoteToEdges(emitted.exactEdges, vote);
-  const votedParent = applyDomainVoteToEdges(parentSpanAssembly.edges, vote);
+  const votedExact = applyDomainVoteToEdges(emitted.exactEdges, shadowVote);
+  const votedParent = applyDomainVoteToEdges(parentSpanAssembly.edges, shadowVote);
   const graph = buildCandidateGraph(input.rawText, syllables, coarseSpans, [
     ...votedParent,
     ...votedExact,
-  ]);
+  ], compatibility.conflictRelations);
   const adjustedEdges = graph.edges;
 
   const pathStart = Date.now();
@@ -211,7 +221,12 @@ export function runSpanAssemblyV4Orchestrator(
   const coarsePathAssemblyMs = Date.now() - pathStart;
 
   const beam = runCoarseSentenceBeamV4(input.rawText, coarseSpans, coarsePaths);
-  const fwSpans = buildFwSpansFromCoarseAssemblyV4(input.rawText, coarseSpans, beam.spanSets);
+  const fwSpans = buildFwSpansFromCoarseAssemblyV4(
+    input.rawText,
+    coarseSpans,
+    domainAwareSpanSets,
+    domainAssembly.vote.utteranceDomain
+  );
 
   if (trace) {
     adjustedEdges.forEach((edge, idx) => {
@@ -230,7 +245,7 @@ export function runSpanAssemblyV4Orchestrator(
 
   const kenlmSentenceCandidates = buildSentenceCandidates(
     input.rawText,
-    beam.spanSets,
+    domainAwareSpanSets,
     loadFwDetectorRuntimeConfig().maxSentenceCandidates
   );
   if (trace) {
@@ -246,17 +261,20 @@ export function runSpanAssemblyV4Orchestrator(
   const internal: CoarseAssemblyInternalResult = {
     coarseSpans,
     graphEdges: adjustedEdges,
-    utteranceDomain: vote.utteranceDomain,
+    utteranceDomain: domainAssembly.vote.utteranceDomain,
     coarsePaths,
-    sentenceCandidates: beam.sentenceTexts,
+    sentenceCandidates: kenlmSentenceCandidates.map((c) => c.text),
   };
 
   const inSpanWindowCount = truncated.filter((w) => w.windowSource === 'in_span_window').length;
   const boundaryWindowCount = truncated.filter((w) => w.windowSource === 'boundary_window').length;
+  const shadowBeamSpanSetsTotal = beam.spanSets.reduce((sum, set) => sum + set.length, 0);
 
   return {
     internal,
-    spanSets: beam.spanSets,
+    spanSets: domainAwareSpanSets,
+    shadowBeamSpanSets: beam.spanSets,
+    shadowBeamSentenceTexts: beam.sentenceTexts,
     fwSpans,
     boundaryImport: partition.diagnostics,
     tone: recall.tone,
@@ -266,16 +284,22 @@ export function runSpanAssemblyV4Orchestrator(
       blockedWindowCount,
       truncatedWindowCount: truncatedCount,
       ngramQueryCount: recall.ngramQueryCount,
-      windowCandidatePoolCount: survivors.length,
+      windowCandidatePoolCount: compatibility.metrics.activeCandidateCount,
+      activeCandidateCount: compatibility.metrics.activeCandidateCount,
       compatibilityEdgeCount,
-      droppedCandidateCount: droppedCount,
+      droppedCandidateCount: compatibility.metrics.hardDropCount,
+      coverageCount: compatibility.metrics.coverageCount,
+      conflictCount: 0,
+      conflictRelationCount: compatibility.metrics.conflictRelationCount,
+      hardDropCount: compatibility.metrics.hardDropCount,
+      compatibleCount: compatibility.metrics.compatibleCount,
       parentEvidenceCount: emitted.parentEvidence.length,
       exactEdgeCount: emitted.exactEdges.length,
       candidateEdgeCount: adjustedEdges.length,
       overlapMergeCount: graph.overlapMergeCount,
       residualSpanCount: graph.residualSpanCount,
-      utteranceDomain: vote.utteranceDomain,
-      domainVoteMs: vote.domainVoteMs,
+      utteranceDomain: domainAssembly.vote.utteranceDomain,
+      domainVoteMs: domainAssembly.vote.domainVoteMs,
       coarsePathAssemblyMs,
       sentenceBeamMs: beam.sentenceBeamMs,
       assemblyMs: Date.now() - assemblyStart,
@@ -285,9 +309,17 @@ export function runSpanAssemblyV4Orchestrator(
       dominatedPrunedCount: parentSpanAssembly.dominatedPrunedCount,
       ruleBRejectedByHoleCount: parentSpanAssembly.ruleBRejectedByHoleCount,
       parentSpanCoverageAvg: parentSpanAssembly.parentSpanCoverageAvg,
-      parentTermVoteCount: vote.parentTermVoteCount,
+      parentTermVoteCount: domainAssembly.vote.parentTermVoteCount,
       inSpanWindowCount,
       boundaryWindowCount,
+      domainCandidateCount: domainAssembly.metrics.domainCandidateCount,
+      baseCandidateCount: domainAssembly.metrics.baseCandidateCount,
+      sameDomainCandidateCount: domainAssembly.metrics.sameDomainCandidateCount,
+      domainFilteredSpanCount: domainAssembly.metrics.domainFilteredSpanCount,
+      selectedCandidatesPerSpanAvg: domainAssembly.metrics.selectedCandidatesPerSpanAvg,
+      domainAssemblyMs: domainAssembly.metrics.domainAssemblyMs,
+      mainDomainAwareSpanSetsTotal: domainAssembly.metrics.mainDomainAwareSpanSetsTotal,
+      shadowBeamSpanSetsTotal,
     },
     trace: trace?.toDiagnostics(),
     kenlmSentenceCandidates,
@@ -332,6 +364,8 @@ function emptyResult(
       sentenceCandidates: [],
     },
     spanSets: [],
+    shadowBeamSpanSets: [],
+    shadowBeamSentenceTexts: [],
     fwSpans: [],
     boundaryImport: diagnostics,
     tone: createEmptyToneDiagnostics(acousticSlices, [], toneTimestampOnlyEnabled),
@@ -342,8 +376,14 @@ function emptyResult(
       truncatedWindowCount: 0,
       ngramQueryCount: 0,
       windowCandidatePoolCount: 0,
+      activeCandidateCount: 0,
       compatibilityEdgeCount: 0,
       droppedCandidateCount: 0,
+      coverageCount: 0,
+      conflictCount: 0,
+      conflictRelationCount: 0,
+      hardDropCount: 0,
+      compatibleCount: 0,
       parentEvidenceCount: 0,
       exactEdgeCount: 0,
       candidateEdgeCount: 0,
@@ -363,6 +403,14 @@ function emptyResult(
       parentTermVoteCount: 0,
       inSpanWindowCount: 0,
       boundaryWindowCount: 0,
+      domainCandidateCount: 0,
+      baseCandidateCount: 0,
+      sameDomainCandidateCount: 0,
+      domainFilteredSpanCount: 0,
+      selectedCandidatesPerSpanAvg: 0,
+      domainAssemblyMs: 0,
+      mainDomainAwareSpanSetsTotal: 0,
+      shadowBeamSpanSetsTotal: 0,
     },
     trace: trace?.toDiagnostics(),
   };

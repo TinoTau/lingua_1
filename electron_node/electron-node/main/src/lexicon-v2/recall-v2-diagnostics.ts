@@ -41,6 +41,10 @@ export type RecallSpanV2Diagnostics = {
   domainHitsBeforeWeak?: number;
   domainHitsAfterWeak?: number;
   fuzzyVariantExamples?: string[];
+  tone_exact_hits?: number;
+  plain_fallback_hits?: number;
+  tone_sql_count?: number;
+  query_tone_pinyin_key?: string;
 };
 
 export type RecallJobV2Diagnostics = {

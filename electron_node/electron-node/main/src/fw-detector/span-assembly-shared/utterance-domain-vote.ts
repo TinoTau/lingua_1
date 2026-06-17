@@ -25,6 +25,58 @@ export type UtteranceDomainVoteInput = {
   exactEdges: GraphEdge[];
 };
 
+/** Minimal pool shape for main-chain domain vote (no span-assembly-v4 import). */
+export type PoolVoteCandidate = {
+  hitKind: 'exact_term' | 'parent_fragment';
+  source: GraphEdgeSource;
+  score: number;
+  domainId?: string;
+  syllableStart: number;
+  syllableEnd: number;
+  parentTermId?: string;
+  matchedTermStart?: number;
+  matchedTermEnd?: number;
+  isCovered?: boolean;
+};
+
+export type FineSpanPoolForVote = {
+  candidates: PoolVoteCandidate[];
+};
+
+function finalizeDomainVote(
+  start: number,
+  domainScores: Record<string, number>,
+  parentTermVoteCount: number
+): UtteranceDomainVoteResult {
+  const totalEvidence = Object.values(domainScores).reduce((s, v) => s + v, 0);
+  if (totalEvidence < MIN_EVIDENCE_SCORE) {
+    return {
+      utteranceDomain: 'general',
+      domainVoteMs: Date.now() - start,
+      insufficientEvidence: true,
+      domainScores,
+      parentTermVoteCount,
+    };
+  }
+
+  let bestDomain = 'general';
+  let bestScore = 0;
+  for (const [domain, score] of Object.entries(domainScores)) {
+    if (score > bestScore) {
+      bestScore = score;
+      bestDomain = domain;
+    }
+  }
+
+  return {
+    utteranceDomain: bestDomain,
+    domainVoteMs: Date.now() - start,
+    insufficientEvidence: false,
+    domainScores,
+    parentTermVoteCount,
+  };
+}
+
 function addDomainScore(
   domainScores: Record<string, number>,
   domainId: string | undefined,
@@ -60,6 +112,38 @@ export function voteUtteranceDomainFromEvidence(
   return { domainScores, parentTermVoteCount };
 }
 
+export function voteUtteranceDomainFromPool(pool: FineSpanPoolForVote[]): UtteranceDomainVoteResult {
+  const start = Date.now();
+  const domainScores: Record<string, number> = {};
+  const votedParentTermIds = new Set<string>();
+  let parentTermVoteCount = 0;
+
+  for (const spanPool of pool) {
+    for (const candidate of spanPool.candidates) {
+      if (candidate.isCovered) {
+        continue;
+      }
+      if (candidate.hitKind === 'parent_fragment' && candidate.parentTermId) {
+        const coverage =
+          (candidate.matchedTermEnd ?? candidate.syllableEnd) -
+          (candidate.matchedTermStart ?? candidate.syllableStart);
+        addDomainScore(domainScores, candidate.domainId, candidate.source, candidate.score, coverage);
+        if (!votedParentTermIds.has(candidate.parentTermId)) {
+          votedParentTermIds.add(candidate.parentTermId);
+          parentTermVoteCount += 1;
+        }
+        continue;
+      }
+      if (candidate.hitKind === 'exact_term') {
+        const coverage = candidate.syllableEnd - candidate.syllableStart;
+        addDomainScore(domainScores, candidate.domainId, candidate.source, candidate.score, coverage);
+      }
+    }
+  }
+
+  return finalizeDomainVote(start, domainScores, parentTermVoteCount);
+}
+
 export function voteUtteranceDomain(input: UtteranceDomainVoteInput): UtteranceDomainVoteResult {
   const start = Date.now();
   const evidenceVote = voteUtteranceDomainFromEvidence(input.parentEvidence);
@@ -70,33 +154,7 @@ export function voteUtteranceDomain(input: UtteranceDomainVoteInput): UtteranceD
     addDomainScore(domainScores, edge.domainId, edge.source, edge.score, coverage);
   }
 
-  const totalEvidence = Object.values(domainScores).reduce((s, v) => s + v, 0);
-  if (totalEvidence < MIN_EVIDENCE_SCORE) {
-    return {
-      utteranceDomain: 'general',
-      domainVoteMs: Date.now() - start,
-      insufficientEvidence: true,
-      domainScores,
-      parentTermVoteCount: evidenceVote.parentTermVoteCount,
-    };
-  }
-
-  let bestDomain = 'general';
-  let bestScore = 0;
-  for (const [domain, score] of Object.entries(domainScores)) {
-    if (score > bestScore) {
-      bestScore = score;
-      bestDomain = domain;
-    }
-  }
-
-  return {
-    utteranceDomain: bestDomain,
-    domainVoteMs: Date.now() - start,
-    insufficientEvidence: false,
-    domainScores,
-    parentTermVoteCount: evidenceVote.parentTermVoteCount,
-  };
+  return finalizeDomainVote(start, domainScores, evidenceVote.parentTermVoteCount);
 }
 
 export function applyDomainVoteToEdges(

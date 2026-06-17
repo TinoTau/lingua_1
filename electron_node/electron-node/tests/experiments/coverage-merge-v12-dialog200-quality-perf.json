@@ -1,0 +1,234 @@
+{
+  "batchFile": "D:\\Programs\\github\\lingua_1\\electron_node\\electron-node\\tests\\compat-auth-reduction-dialog200-batch-result.json",
+  "timestamp": "2026-06-16T10:14:32.681Z",
+  "stoppedReason": "deadline",
+  "evaluated": 116,
+  "totalManifestCases": 200,
+  "contractPass": 116,
+  "contractFail": 0,
+  "contractPassRate": 1,
+  "wallClockSec": 904,
+  "quality": {
+    "raw_cer_avg": 0.2887,
+    "final_cer_avg": 0.2621,
+    "raw_cer_p50": 0.2,
+    "final_cer_p50": 0.2,
+    "raw_cer_p95": 0.6,
+    "final_cer_p95": 0.6,
+    "exact_raw_count": 14,
+    "exact_final_count": 14,
+    "text_changed_count": 0,
+    "fw_applied_case_count": 0
+  },
+  "performance": {
+    "pipeline_ms_avg": 7702,
+    "pipeline_ms_p50": 6412,
+    "pipeline_ms_p95": 15886,
+    "fw_detector_step_ms_avg": 4785,
+    "fw_detector_step_ms_p50": 3433,
+    "fw_detector_step_ms_p95": 12333,
+    "assembly_ms_avg": 265,
+    "assembly_ms_p50": 244,
+    "assembly_ms_p95": 425,
+    "asr_warmup_ms": 9502
+  },
+  "coverageMetrics": {
+    "total_coverage_pairs": 132,
+    "avg_coverage_pairs": 1.14,
+    "max_coverage_pairs": 14,
+    "cases_with_coverage": 26,
+    "total_conflict_relations": 14697,
+    "avg_conflict_relations": 126.7,
+    "total_hard_drops": 0,
+    "avg_active_candidates": 47.32
+  },
+  "d001Acceptance": {
+    "coverageCount": 14,
+    "conflictRelationCount": 78,
+    "hardDropCount": 0,
+    "activeCandidateCount": 49,
+    "poolAfterDropCount": 0,
+    "mafenInPoolCount": 0,
+    "mafenInPool": [],
+    "mafenGraphEdgeCount": 0,
+    "mafenGraphEdges": [],
+    "zhongBeiConflictEdges": 0,
+    "zhongBeiDropped": false,
+    "contractPass": true
+  },
+  "samples": {
+    "cafe": [
+      {
+        "id": "d001",
+        "scenario": "cafe",
+        "raw_cer": 0.3704,
+        "final_cer": 0.3704,
+        "text_changed": false,
+        "fw_applied_count": 0,
+        "pipeline_ms": 6583,
+        "fw_detector_step_ms": 2887,
+        "assemblyMs": 238,
+        "coverageCount": 14,
+        "conflictCount": 0,
+        "conflictRelationCount": 78,
+        "hardDropCount": 0,
+        "activeCandidateCount": 49,
+        "compatibleCount": 131,
+        "droppedCandidateCount": 0,
+        "windowCandidatePoolCount": 49,
+        "ref": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+        "raw": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+        "final": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?"
+      },
+      {
+        "id": "d002",
+        "scenario": "cafe",
+        "raw_cer": 0.1176,
+        "final_cer": 0.1176,
+        "text_changed": false,
+        "fw_applied_count": 0,
+        "pipeline_ms": 9676,
+        "fw_detector_step_ms": 7634,
+        "assemblyMs": 273,
+        "coverageCount": 0,
+        "conflictCount": 0,
+        "conflictRelationCount": 148,
+        "hardDropCount": 0,
+        "activeCandidateCount": 47,
+        "compatibleCount": 132,
+        "droppedCandidateCount": 0,
+        "windowCandidatePoolCount": 47,
+        "ref": "麻烦帮我做一杯美式带走，大杯就行，谢谢。",
+        "raw": "麻烦帮我做一杯美食带走大悲就行谢谢",
+        "final": "麻烦帮我做一杯美食带走大悲就行谢谢"
+      },
+      {
+        "id": "d003",
+        "scenario": "cafe",
+        "raw_cer": 0.1579,
+        "final_cer": 0.1579,
+        "text_changed": false,
+        "fw_applied_count": 0,
+        "pipeline_ms": 5238,
+        "fw_detector_step_ms": 2859,
+        "assemblyMs": 209,
+        "coverageCount": 0,
+        "conflictCount": 0,
+        "conflictRelationCount": 108,
+        "hardDropCount": 0,
+        "activeCandidateCount": 37,
+        "compatibleCount": 121,
+        "droppedCandidateCount": 0,
+        "windowCandidatePoolCount": 37,
+        "ref": "请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。",
+        "raw": "请问,这款燕麦拿铁可以烧病吗?我赶时间小背",
+        "final": "请问,这款燕麦拿铁可以烧病吗?我赶时间小背"
+      }
+    ],
+    "meeting": [
+      {
+        "id": "d004",
+        "scenario": "meeting",
+        "raw_cer": 0.2424,
+        "final_cer": 0.2424,
+        "text_changed": false,
+        "fw_applied_count": 0,
+        "pipeline_ms": 7004,
+        "fw_detector_step_ms": 2976,
+        "assemblyMs": 471,
+        "coverageCount": 0,
+        "conflictCount": 0,
+        "conflictRelationCount": 135,
+        "hardDropCount": 0,
+        "activeCandidateCount": 58,
+        "compatibleCount": 173,
+        "droppedCandidateCount": 0,
+        "windowCandidatePoolCount": 58,
+        "ref": "小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+        "raw": "小陈客户反馈翻译引擎接口包错 我们能 不能加緩存下午3點前把結論發群裡",
+        "final": "小陈客户反馈翻译引擎接口包错 我们能 不能加緩存下午3點前把結論發群裡"
+      },
+      {
+        "id": "d005",
+        "scenario": "meeting",
+        "raw_cer": 0.1714,
+        "final_cer": 0.1714,
+        "text_changed": false,
+        "fw_applied_count": 0,
+        "pipeline_ms": 6507,
+        "fw_detector_step_ms": 2986,
+        "assemblyMs": 470,
+        "coverageCount": 0,
+        "conflictCount": 0,
+        "conflictRelationCount": 99,
+        "hardDropCount": 0,
+        "activeCandidateCount": 63,
+        "compatibleCount": 173,
+        "droppedCandidateCount": 0,
+        "windowCandidatePoolCount": 63,
+        "ref": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+        "raw": "今天德站会献过一下订单 中台进度内存占用高者快 需要先留保护大家看一下风险",
+        "final": "今天德站会献过一下订单 中台进度内存占用高者快 需要先留保护大家看一下风险"
+      }
+    ],
+    "topCoverage": [
+      {
+        "id": "d001",
+        "coverageCount": 14
+      },
+      {
+        "id": "d029",
+        "coverageCount": 10
+      },
+      {
+        "id": "d074",
+        "coverageCount": 10
+      },
+      {
+        "id": "d053",
+        "coverageCount": 7
+      },
+      {
+        "id": "d007",
+        "coverageCount": 5
+      }
+    ],
+    "worstCer": [
+      {
+        "id": "d067",
+        "raw_cer": 6.12,
+        "final_cer": 3.04,
+        "raw": "您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好",
+        "final": "您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好"
+      },
+      {
+        "id": "d110",
+        "raw_cer": 0.8333,
+        "final_cer": 0.8333,
+        "raw": "這次發布我們現對此發布的新聞 起商線計劃窗口後選生 乘魔快需要連掉別漏掉回歸",
+        "final": "這次發布我們現對此發布的新聞 起商線計劃窗口後選生 乘魔快需要連掉別漏掉回歸"
+      },
+      {
+        "id": "d045",
+        "raw_cer": 0.8,
+        "final_cer": 0.8,
+        "raw": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說",
+        "final": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說"
+      },
+      {
+        "id": "d088",
+        "raw_cer": 0.68,
+        "final_cer": 0.68,
+        "raw": "我們下午討論後,選生成功 等方安縣把候選生陳的截口文當補齊",
+        "final": "我們下午討論後,選生成功 等方安縣把候選生陳的截口文當補齊"
+      },
+      {
+        "id": "d065",
+        "raw_cer": 0.6667,
+        "final_cer": 0.6667,
+        "raw": "這次發布我們現對期 在其商線計劃窗口後選生 成模快需要連掉別漏掉回歸",
+        "final": "這次發布我們現對期 在其商線計劃窗口後選生 成模快需要連掉別漏掉回歸"
+      }
+    ]
+  }
+}

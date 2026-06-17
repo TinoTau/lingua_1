@@ -1,0 +1,305 @@
+{
+  "part2": {
+    "n": 81,
+    "domainCandidateCount": {
+      "avg": 0.321,
+      "p50": 0,
+      "p95": 2,
+      "zero_cases": 71
+    },
+    "baseCandidateCount": {
+      "avg": 16.951,
+      "p50": 16,
+      "p95": 27
+    },
+    "activeCandidateCount": {
+      "avg": 46.65,
+      "p50": 44
+    },
+    "utteranceDomain_dist": {
+      "restaurant": 10,
+      "general": 71,
+      "other": 0
+    },
+    "zero_domain_pct": 87.7
+  },
+  "part3": {
+    "maxDelta": {
+      "avg": 0.000176,
+      "p50": 0,
+      "p95": 0.002773,
+      "max": 0.007483,
+      "min": -0.004247,
+      "n": 81
+    },
+    "threshold_003_apply": 0,
+    "threshold_002_apply": 0,
+    "threshold_001_apply": 0,
+    "minDeltaToReplace": 0.03
+  },
+  "d001": {
+    "raw": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+    "final": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+    "v4_metrics": {
+      "activeCandidateCount": 49,
+      "domainCandidateCount": 6,
+      "baseCandidateCount": 10,
+      "sameDomainCandidateCount": 6,
+      "utteranceDomain": "restaurant",
+      "mainDomainAwareSpanSetsTotal": 13,
+      "shadowBeamSpanSetsTotal": 9,
+      "perSpanLimit": 2
+    },
+    "spans": [
+      {
+        "text": "你好,我想點一杯熱拿鐵",
+        "candidates": [
+          {
+            "word": "拿铁",
+            "source": "lexicon_pinyin_topk",
+            "repairTarget": true,
+            "kenlmDelta": 0,
+            "selected": false
+          },
+          {
+            "word": "拿帖",
+            "source": "lexicon_pinyin_topk",
+            "repairTarget": true,
+            "kenlmDelta": 0,
+            "selected": false
+          }
+        ]
+      },
+      {
+        "text": "鐘",
+        "candidates": [
+          {
+            "word": "鐘",
+            "source": "canonical_exact",
+            "repairTarget": false,
+            "kenlmDelta": 0,
+            "selected": false
+          }
+        ]
+      },
+      {
+        "text": "貝少糖",
+        "candidates": [
+          {
+            "word": "中杯",
+            "source": "lexicon_pinyin_topk",
+            "repairTarget": true,
+            "kenlmDelta": 0,
+            "selected": false
+          },
+          {
+            "word": "终杯",
+            "source": "lexicon_pinyin_topk",
+            "repairTarget": true,
+            "kenlmDelta": 0,
+            "selected": false
+          }
+        ]
+      },
+      {
+        "text": "深",
+        "candidates": [
+          {
+            "word": "深",
+            "source": "canonical_exact",
+            "repairTarget": false,
+            "kenlmDelta": 0,
+            "selected": false
+          }
+        ]
+      },
+      {
+        "text": "便溫",
+        "candidates": [
+          {
+            "word": "身边",
+            "source": "lexicon_pinyin_topk",
+            "repairTarget": true,
+            "kenlmDelta": 0,
+            "selected": false
+          },
+          {
+            "word": "申辩",
+            "source": "lexicon_pinyin_topk",
+            "repairTarget": true,
+            "kenlmDelta": 0,
+            "selected": false
+          }
+        ]
+      },
+      {
+        "text": "以下今天",
+        "candidates": [
+          {
+            "word": "今天",
+            "source": "lexicon_pinyin_topk",
+            "repairTarget": true,
+            "kenlmDelta": 0,
+            "selected": false
+          },
+          {
+            "word": "以下",
+            "source": "lexicon_pinyin_topk",
+            "repairTarget": true,
+            "kenlmDelta": 0,
+            "selected": false
+          }
+        ]
+      },
+      {
+        "text": "有",
+        "candidates": [
+          {
+            "word": "有",
+            "source": "canonical_exact",
+            "repairTarget": false,
+            "kenlmDelta": 0,
+            "selected": false
+          }
+        ]
+      },
+      {
+        "text": "蓝美马分吗",
+        "candidates": [
+          {
+            "word": "蓝莓马芬",
+            "source": "lexicon_pinyin_topk",
+            "repairTarget": true,
+            "kenlmDelta": 0,
+            "selected": false
+          },
+          {
+            "word": "兰梅马芬",
+            "source": "lexicon_pinyin_topk",
+            "repairTarget": true,
+            "kenlmDelta": 0,
+            "selected": false
+          }
+        ]
+      }
+    ],
+    "wordInSpans": {
+      "中杯": [
+        {
+          "span": "貝少糖",
+          "words": [
+            "中杯",
+            "终杯"
+          ]
+        }
+      ],
+      "蓝莓马芬": [
+        {
+          "span": "蓝美马分吗",
+          "words": [
+            "蓝莓马芬",
+            "兰梅马芬"
+          ]
+        }
+      ],
+      "少糖": [],
+      "问一下": [],
+      "顺便": [],
+      "钟贝": [],
+      "蓝美马分": [],
+      "深便溫": [
+        {
+          "span": "深",
+          "words": [
+            "深"
+          ]
+        }
+      ],
+      "身边": [
+        {
+          "span": "便溫",
+          "words": [
+            "身边",
+            "申辩"
+          ]
+        }
+      ],
+      "申辩": [
+        {
+          "span": "便溫",
+          "words": [
+            "身边",
+            "申辩"
+          ]
+        }
+      ]
+    },
+    "sentenceRerank": {
+      "combinationCount": 16,
+      "kenlmQueryCount": 17,
+      "pickedIsRaw": true,
+      "maxDelta": 0.0001132558893910545,
+      "topCandidates": [
+        {
+          "text": "你好,我想點一杯熱拿铁中杯少糖 身边溫 以下今天有蓝莓马芬吗?",
+          "kenlmDelta": 0.0001132558893910545,
+          "replacementCount": 8
+        },
+        {
+          "text": "你好,我想點一杯熱拿铁中杯少糖 申辩溫 以下今天有蓝莓马芬吗?",
+          "kenlmDelta": 0.0001024983693527241,
+          "replacementCount": 8
+        },
+        {
+          "text": "你好,我想點一杯熱拿铁终杯少糖 身边溫 以下今天有蓝莓马芬吗?",
+          "kenlmDelta": 0.00009843441959173581,
+          "replacementCount": 8
+        },
+        {
+          "text": "你好,我想點一杯熱拿帖中杯少糖 身边溫 以下今天有蓝莓马芬吗?",
+          "kenlmDelta": 0.00008155250515640578,
+          "replacementCount": 8
+        },
+        {
+          "text": "你好,我想點一杯熱拿帖终杯少糖 身边溫 以下今天有蓝莓马芬吗?",
+          "kenlmDelta": 0.00006132390227368422,
+          "replacementCount": 8
+        }
+      ],
+      "allCombinationDeltas": [
+        0.0001132558893910545,
+        0.00009843441959173581,
+        0.00008155250515640578,
+        0.00006132390227368422,
+        0.0001024983693527241,
+        0.00008861543458338998,
+        0.00007280250803151663,
+        0.00005385490235640953,
+        0.00007156174947424429,
+        0.000060377910550402996,
+        0.00004763948328190613,
+        0.000032375929891860704,
+        0.00006344436011103706,
+        0.000052968829892496485,
+        0.000041037127923168,
+        0.00002674026177404329
+      ]
+    },
+    "sentences_containing": {
+      "中杯": [
+        "你好,我想點一杯熱拿铁中杯少糖 身边溫 以下今天有蓝莓马芬吗?",
+        "你好,我想點一杯熱拿铁中杯少糖 申辩溫 以下今天有蓝莓马芬吗?",
+        "你好,我想點一杯熱拿帖中杯少糖 身边溫 以下今天有蓝莓马芬吗?"
+      ],
+      "蓝莓马芬": [
+        "你好,我想點一杯熱拿铁中杯少糖 身边溫 以下今天有蓝莓马芬吗?",
+        "你好,我想點一杯熱拿铁中杯少糖 申辩溫 以下今天有蓝莓马芬吗?",
+        "你好,我想點一杯熱拿铁终杯少糖 身边溫 以下今天有蓝莓马芬吗?",
+        "你好,我想點一杯熱拿帖中杯少糖 身边溫 以下今天有蓝莓马芬吗?",
+        "你好,我想點一杯熱拿帖终杯少糖 身边溫 以下今天有蓝莓马芬吗?"
+      ],
+      "顺便": [],
+      "问一下": []
+    }
+  }
+}

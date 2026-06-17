@@ -303,8 +303,16 @@ export type SpanAssemblyV4Diagnostics = {
   truncatedWindowCount: number;
   ngramQueryCount: number;
   windowCandidatePoolCount: number;
+  activeCandidateCount: number;
   compatibilityEdgeCount: number;
+  /** @deprecated Authority Reduction: always 0 */
   droppedCandidateCount: number;
+  coverageCount: number;
+  /** @deprecated Authority Reduction: use conflictRelationCount */
+  conflictCount: number;
+  conflictRelationCount: number;
+  hardDropCount: number;
+  compatibleCount: number;
   parentEvidenceCount: number;
   exactEdgeCount: number;
   candidateEdgeCount: number;
@@ -324,6 +332,14 @@ export type SpanAssemblyV4Diagnostics = {
   parentTermVoteCount?: number;
   inSpanWindowCount: number;
   boundaryWindowCount: number;
+  domainCandidateCount: number;
+  baseCandidateCount: number;
+  sameDomainCandidateCount: number;
+  domainFilteredSpanCount: number;
+  selectedCandidatesPerSpanAvg: number;
+  domainAssemblyMs: number;
+  mainDomainAwareSpanSetsTotal: number;
+  shadowBeamSpanSetsTotal: number;
   boundaryImport?: CoarseBoundaryImportDiagnostics;
   tone?: CoarseAssemblyToneDiagnostics;
   skippedReason?: 'no_cjk' | 'no_coarse_spans';
