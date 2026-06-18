@@ -170,6 +170,13 @@ export async function runFwSentenceRerankFromPrefilled(
     kenlmTiming: rerank.kenlmTiming,
     allCombinationDeltas: rerank.allCombinationDeltas,
     picked: rerank.picked,
+    ...(rerank.kenlmRuntime
+      ? {
+          kenlmSubprocessMs: rerank.kenlmRuntime.kenlmSubprocessMs,
+          kenlmSubprocessCount: rerank.kenlmRuntime.kenlmSubprocessCount,
+          kenlmSubprocessErrorReason: rerank.kenlmRuntime.kenlmSubprocessErrorReason,
+        }
+      : {}),
   };
 
   const toneDiagnostics: FwToneModuleDiagnostics = {

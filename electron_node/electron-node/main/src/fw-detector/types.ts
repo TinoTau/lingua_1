@@ -217,6 +217,9 @@ export type FwSentenceRerankDiagnostics = {
     batchMs: number;
     queryCount: number;
   };
+  kenlmSubprocessMs?: number;
+  kenlmSubprocessCount?: number;
+  kenlmSubprocessErrorReason?: string;
 };
 
 /** P0.5 ToneModule diagnostics on FW rerank path. */

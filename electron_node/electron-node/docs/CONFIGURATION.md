@@ -60,6 +60,10 @@ SSOT 测试：`tests/freeze-config-ssot.json`。
 | `features.semanticRepair.enabled` | `false` |
 | `features.phoneticCorrection.enabled` | `false` |
 | `features.punctuationRestore.enabled` | `false` |
+| `features.fwDetector.kenlmSubprocessTimeoutMs` | `5000` |
+| `features.fwDetector.kenlmSubprocessMaxLines` | `17` |
+
+KenLM sentence rerank 为 **batch-only subprocess**（无 serial / fallback）。详见 [`docs/fw-detector/CONFIG.md`](../../../docs/fw-detector/CONFIG.md) · [`docs/fw-detector/kenlm/KENLM_RUNTIME.md`](../../../docs/fw-detector/kenlm/KENLM_RUNTIME.md)。
 
 运行时覆盖：userData 中 `electron-node-config.json`。
 

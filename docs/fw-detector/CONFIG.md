@@ -31,6 +31,12 @@
 | `features.fwDetector.maxSentenceCandidates` | `16` | |
 | `features.fwDetector.minDeltaToReplace` | `0.03` | **V4 Apply pick 阈值** |
 | `features.fwDetector.kenlmDeltaThreshold` | `0.8` | **@deprecated**，仅兼容读取，不参与 V4 rerank |
+| `features.fwDetector.kenlmSubprocessTimeoutMs` | `5000` | KenLM batch subprocess 单次 spawn 超时（ms） |
+| `features.fwDetector.kenlmSubprocessMaxLines` | `17` | 单次 batch 最大非空句数；超出则 chunk 串行 spawn |
+
+KenLM runtime 为 **batch-only**（无 serial fallback）。Diagnostics：`kenlmQueryCount`、`kenlmSubprocessMs`、`kenlmSubprocessCount`、`kenlmSubprocessErrorReason`。
+
+**兼容读取（旧键，勿在新配置中使用）：** `kenlmBatchSubprocessTimeoutMs` → `kenlmSubprocessTimeoutMs`；`kenlmBatchSubprocessMaxSentences` → `kenlmSubprocessMaxLines`。已删除：`kenlmBatchSubprocessEnabled`、`kenlmBatchSubprocessFallbackToSerial`。
 
 ## Pinyin IME V2
 

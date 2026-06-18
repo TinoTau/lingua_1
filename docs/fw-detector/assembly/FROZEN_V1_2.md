@@ -169,7 +169,6 @@ Main 的 `spanSets` **唯一**来自 `assembleDomainAwareSpanSets` 产出。
 
 | 模块 | 状态 |
 |------|------|
-| Assembly | **STOP** |
-| Domain Vote | **STOP** |
-| Beam（主链） | **STOP** |
-| KenLM | **允许审计**（见 `docs/KenLM Audit/`） |
+| Assembly / Vote / Beam 主链 | **STOP** |
+| Compatibility / Recall | **STOP** |
+| KenLM runtime | **FROZEN**（batch-only，见 [kenlm/KENLM_RUNTIME.md](../kenlm/KENLM_RUNTIME.md)） |

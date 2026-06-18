@@ -6,7 +6,7 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
-import { spawn } from 'child_process';
+import { spawn, type ChildProcess } from 'child_process';
 import { tokenizeForLm } from './char-tokenize';
 
 export interface LmScoreResult {
@@ -17,6 +17,10 @@ export interface LmScoreResult {
 export interface CharLmScorer {
   score(text: string): Promise<LmScoreResult>;
 }
+
+export type KenlmQueryBatchResult =
+  | { ok: true; results: LmScoreResult[]; wallMs: number }
+  | { ok: false; reason: string };
 
 const DEFAULT_MODEL_NAME = 'zh_char_3gram.trie.bin';
 
@@ -45,6 +49,13 @@ export type SentenceKenlmRuntimeStatus = {
   reason?: string;
   failOpen: boolean;
 };
+
+type KenlmSpawnPlan = {
+  cmd: string;
+  args: string[];
+};
+
+let subprocessLock: Promise<void> = Promise.resolve();
 
 function resolveProjectRoot(): string | null {
   const fromEnv = process.env.PROJECT_ROOT?.trim();
@@ -158,6 +169,41 @@ function shouldRunKenlmQueryViaWsl(queryPath: string): boolean {
   return !fs.existsSync(queryPath);
 }
 
+function planKenlmSpawn(modelPath: string, queryPath: string): KenlmSpawnPlan | null {
+  const projectRoot = resolveProjectRoot();
+  const useWsl = shouldRunKenlmQueryViaWsl(queryPath);
+  const wslQuery = useWsl ? resolveWslKenlmQueryBin(projectRoot) : null;
+
+  if (useWsl && !wslQuery) {
+    return null;
+  }
+
+  const args = useWsl
+    ? ['--', windowsPathToWsl(wslQuery!), windowsPathToWsl(modelPath)]
+    : [modelPath];
+  const cmd = useWsl ? 'wsl.exe' : queryPath;
+  return { cmd, args };
+}
+
+/** WSL / native query 子进程是否可启动。 */
+export function isKenlmSubprocessRunnable(modelPath: string, queryPath: string): boolean {
+  return planKenlmSpawn(modelPath, queryPath) !== null;
+}
+
+function withKenlmSubprocessMutex<T>(fn: () => Promise<T>): Promise<T> {
+  const prev = subprocessLock;
+  let release!: () => void;
+  subprocessLock = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  return prev.then(fn).finally(() => release());
+}
+
+/** 仅测试：重置 subprocess 互斥队列 */
+export function resetKenlmSubprocessMutexForTests(): void {
+  subprocessLock = Promise.resolve();
+}
+
 /** 解析 KenLM query 输出行：Total: <score> OOV: <n> */
 function parseQueryLine(line: string): LmScoreResult {
   let score = 0;
@@ -169,34 +215,123 @@ function parseQueryLine(line: string): LmScoreResult {
   return { score: Number.isNaN(score) ? 0 : score, oovCount };
 }
 
-function runKenlmQuery(modelPath: string, queryPath: string, tokenized: string): Promise<LmScoreResult> {
-  const projectRoot = resolveProjectRoot();
-  const useWsl = shouldRunKenlmQueryViaWsl(queryPath);
-  const wslQuery = useWsl ? resolveWslKenlmQueryBin(projectRoot) : null;
+/** 从 stdout 按序提取全部 Total: 行（忽略 Perplexity footer）。 */
+export function parseQueryLines(stdout: string): LmScoreResult[] {
+  const lines = stdout.trim().split('\n');
+  return lines.filter((l) => /Total:\s*[-\d.e]+/i.test(l)).map((l) => parseQueryLine(l));
+}
 
-  if (useWsl && !wslQuery) {
-    return Promise.resolve({ score: 0, oovCount: 0 });
+export function parseQueryLinesStrict(
+  stdout: string,
+  expectedCount: number
+): { ok: true; results: LmScoreResult[] } | { ok: false; actual: number } {
+  const results = parseQueryLines(stdout);
+  if (results.length !== expectedCount) {
+    return { ok: false, actual: results.length };
   }
+  return { ok: true, results };
+}
 
-  const args = useWsl
-    ? ['--', windowsPathToWsl(wslQuery!), windowsPathToWsl(modelPath)]
-    : [modelPath];
-  const cmd = useWsl ? 'wsl.exe' : queryPath;
+function killKenlmProcess(proc: ChildProcess): void {
+  proc.kill();
+}
 
+function spawnKenlmWithStdin(
+  plan: KenlmSpawnPlan,
+  stdinLines: string[],
+  timeoutMs: number
+): Promise<{ ok: true; stdout: string; wallMs: number } | { ok: false; reason: string }> {
+  const t0 = Date.now();
   return new Promise((resolve) => {
-    const proc = spawn(cmd, args, { stdio: ['pipe', 'pipe', 'ignore'] });
+    let settled = false;
+    const finish = (
+      result: { ok: true; stdout: string; wallMs: number } | { ok: false; reason: string }
+    ) => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      clearTimeout(timer);
+      resolve(result);
+    };
+
+    const proc = spawn(plan.cmd, plan.args, { stdio: ['pipe', 'pipe', 'ignore'] });
     let out = '';
     proc.stdout.setEncoding('utf-8');
     proc.stdout.on('data', (chunk: string) => {
       out += chunk;
     });
+    proc.on('error', () => finish({ ok: false, reason: 'spawn_error' }));
     proc.stdout.on('end', () => {
-      const lines = out.trim().split('\n');
-      const totalLine = lines.find((l) => /Total:/i.test(l)) ?? lines[0] ?? '';
-      resolve(parseQueryLine(totalLine));
+      finish({ ok: true, stdout: out, wallMs: Date.now() - t0 });
     });
-    proc.on('error', () => resolve({ score: 0, oovCount: 0 }));
-    proc.stdin.write(tokenized + '\n', 'utf-8', () => proc.stdin.end());
+
+    const timer =
+      timeoutMs > 0
+        ? setTimeout(() => {
+            killKenlmProcess(proc);
+            finish({ ok: false, reason: 'timeout' });
+          }, timeoutMs)
+        : (undefined as unknown as NodeJS.Timeout);
+
+    for (const line of stdinLines) {
+      proc.stdin.write(line + '\n', 'utf-8');
+    }
+    proc.stdin.end();
+  });
+}
+
+export function runKenlmQuery(
+  modelPath: string,
+  queryPath: string,
+  tokenized: string,
+  timeoutMs = 0
+): Promise<LmScoreResult> {
+  const plan = planKenlmSpawn(modelPath, queryPath);
+  if (!plan) {
+    return Promise.resolve({ score: 0, oovCount: 0 });
+  }
+
+  return withKenlmSubprocessMutex(async () => {
+    const spawnResult = await spawnKenlmWithStdin(plan, [tokenized], timeoutMs);
+    if (!spawnResult.ok) {
+      return { score: 0, oovCount: 0 };
+    }
+    const lines = spawnResult.stdout.trim().split('\n');
+    const totalLine = lines.find((l) => /Total:/i.test(l)) ?? lines[0] ?? '';
+    return parseQueryLine(totalLine);
+  });
+}
+
+/** 一次 subprocess 对多行 tokenized 输入打分。 */
+export async function runKenlmQueryBatch(
+  modelPath: string,
+  queryPath: string,
+  tokenizedLines: string[],
+  timeoutMs: number
+): Promise<KenlmQueryBatchResult> {
+  if (tokenizedLines.length === 0) {
+    return { ok: true, results: [], wallMs: 0 };
+  }
+
+  const plan = planKenlmSpawn(modelPath, queryPath);
+  if (!plan) {
+    return { ok: false, reason: 'wsl_query_missing' };
+  }
+
+  return withKenlmSubprocessMutex(async () => {
+    const spawnResult = await spawnKenlmWithStdin(plan, tokenizedLines, timeoutMs);
+    if (!spawnResult.ok) {
+      return { ok: false, reason: spawnResult.reason };
+    }
+    const parsed = parseQueryLinesStrict(spawnResult.stdout, tokenizedLines.length);
+    if (!parsed.ok) {
+      return {
+        ok: false,
+        reason: `parse_mismatch: expected ${tokenizedLines.length} got ${parsed.actual}`,
+      };
+    }
+    return { ok: true, results: parsed.results, wallMs: spawnResult.wallMs };
   });
 }
 

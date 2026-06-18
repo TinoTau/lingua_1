@@ -34,6 +34,8 @@ describe('freeze-config-ssot parity', () => {
     expect(ssot.fwDetector.spanAssemblyV4DiagnosticsEnabled).toBe(fw?.spanAssemblyV4DiagnosticsEnabled);
     expect(ssot.fwDetector.spanAssemblyV4DiagnosticsLevel).toBe(fw?.spanAssemblyV4DiagnosticsLevel);
     expect(ssot.fwDetector.toneTimestampOnlyEnabled).toBe(fw?.toneTimestampOnlyEnabled);
+    expect(ssot.fwDetector.kenlmSubprocessTimeoutMs).toBe(fw?.kenlmSubprocessTimeoutMs);
+    expect(ssot.fwDetector.kenlmSubprocessMaxLines).toBe(fw?.kenlmSubprocessMaxLines);
 
     expect(ssot.lexiconRuntimeV2.enabled).toBe(v2?.enabled);
     expect(ssot.lexiconRuntimeV2.bundlePath).toBe(v2?.bundlePath);

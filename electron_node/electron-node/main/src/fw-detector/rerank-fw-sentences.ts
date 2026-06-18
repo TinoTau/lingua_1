@@ -1,4 +1,4 @@
-import type { KenLMScorer, KenlmTimingStats } from '../asr-repair/kenlm-batch-types';
+import type { KenLMScorer, KenlmSubprocessRuntimeDiag, KenlmTimingStats } from '../asr-repair/kenlm-batch-types';
 import type { SentenceCombination } from './build-sentence-candidates';
 
 export type SentenceRerankPick = {
@@ -7,6 +7,7 @@ export type SentenceRerankPick = {
   maxDelta: number;
   kenlmQueryCount: number;
   kenlmTiming?: KenlmTimingStats;
+  kenlmRuntime?: KenlmSubprocessRuntimeDiag;
   topCandidates: Array<{ text: string; kenlmDelta: number; replacementCount: number }>;
   allCombinationDeltas?: number[];
 };
@@ -43,6 +44,7 @@ export async function rerankFwSentences(
 
   const sentences = [rawText, ...candidates.map((c) => c.text)];
   const batch = await scorer.scoreBatch(sentences);
+  const kenlmRuntime = batch.runtime;
   const baselineNorm = batch.scores[0]?.normalizedScore ?? 0;
 
   let bestIndex = -1;
@@ -74,6 +76,7 @@ export async function rerankFwSentences(
       maxDelta: bestDelta > Number.NEGATIVE_INFINITY ? bestDelta : 0,
       kenlmQueryCount: batch.timing?.queryCount ?? sentences.length,
       kenlmTiming: batch.timing,
+      kenlmRuntime,
       topCandidates,
       allCombinationDeltas: deltas,
     };
@@ -85,6 +88,7 @@ export async function rerankFwSentences(
     maxDelta: bestDelta,
     kenlmQueryCount: batch.timing?.queryCount ?? sentences.length,
     kenlmTiming: batch.timing,
+    kenlmRuntime,
     topCandidates,
     allCombinationDeltas: deltas,
   };

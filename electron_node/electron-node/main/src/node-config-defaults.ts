@@ -103,6 +103,8 @@ export const DEFAULT_CONFIG: NodeConfig = {
       toneTimestampOnlyEnabled: true,
       maxSentenceCandidates: 16,
       minDeltaToReplace: 0.03,
+      kenlmSubprocessTimeoutMs: 5000,
+      kenlmSubprocessMaxLines: 17,
     },
     pinyinImeV2: {
       enabled: true,

@@ -212,6 +212,18 @@ export interface NodeConfig {
       useSentenceLevelRerank?: boolean;
       maxSentenceCandidates?: number;
       minDeltaToReplace?: number;
+      /** KenLM subprocess spawn timeout (ms per chunk). */
+      kenlmSubprocessTimeoutMs?: number;
+      /** Max non-empty tokenized stdin lines per subprocess chunk. */
+      kenlmSubprocessMaxLines?: number;
+      /** @deprecated ignored — batch-only runtime */
+      kenlmBatchSubprocessEnabled?: boolean;
+      /** @deprecated ignored — batch-only runtime */
+      kenlmBatchSubprocessFallbackToSerial?: boolean;
+      /** @deprecated use kenlmSubprocessTimeoutMs */
+      kenlmBatchSubprocessTimeoutMs?: number;
+      /** @deprecated use kenlmSubprocessMaxLines */
+      kenlmBatchSubprocessMaxSentences?: number;
     };
     /** Pinyin IME V2 — span proposal (Phase 2+; orchestrator wired in Phase 3). */
     pinyinImeV2?: {

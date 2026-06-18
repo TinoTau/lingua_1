@@ -259,7 +259,8 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
   }
 
   const summary = buildSummary(decision.spans, decision);
-  const kenlmVetoMs = decision.kenlmTiming?.batchMs ?? 0;
+  const kenlmVetoMs =
+    decision.sentenceRerank.kenlmSubprocessMs ?? decision.kenlmTiming?.batchMs ?? 0;
   const kenlmVetoQueryCount = decision.kenlmQueryCount;
   const allCombinations =
     diagnosticsConfig.traceActive && assembly.kenlmSentenceCandidates

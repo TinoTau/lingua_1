@@ -3,7 +3,7 @@
 **Status:** FROZEN  
 **Scope:** `asr.engine = fw_detector_v1` 生产路径
 
-**文档 SSOT：** [`docs/fw-detector/README.md`](../../../../../../docs/fw-detector/README.md) · [`ARCHITECTURE.md`](../../../../../../docs/fw-detector/ARCHITECTURE.md) · [`CONFIG.md`](../../../../../../docs/fw-detector/CONFIG.md)
+**文档 SSOT：** [`docs/fw-detector/README.md`](../../../../../../docs/fw-detector/README.md) · [`ARCHITECTURE.md`](../../../../../../docs/fw-detector/ARCHITECTURE.md) · [`CONFIG.md`](../../../../../../docs/fw-detector/CONFIG.md) · [`kenlm/KENLM_RUNTIME.md`](../../../../../../docs/fw-detector/kenlm/KENLM_RUNTIME.md)
 
 FW 误写检测与 Lexicon 修正主链：**V4 Boundary-Aware Global Window**（单 Pipeline）。
 
@@ -65,6 +65,7 @@ Bundle：`node_runtime/lexicon/v3`（加载器 `LexiconRuntimeV2`）。
 
 - `maxSentenceCandidates: 16`，`minDeltaToReplace: 0.03`
 - `enableKenLMGate: true` **必需**（否则 rerank 不 pick 替换）
+- Runtime：**batch-only subprocess**（`kenlm-scorer.ts` → `runKenlmQueryBatch`）；`kenlmSubprocessTimeoutMs` / `kenlmSubprocessMaxLines`；失败 fail-open（scoreAllZero）；无 serial fallback
 
 ### 3.3 Apply
 
@@ -119,6 +120,8 @@ FW apply 后 `isSegmentWriteLocked` 阻止 5015/5016/5017。
 | `features.fwDetector.minDeltaToReplace` | `0.03`（**V4 Apply pick 阈值**） |
 | `features.fwDetector.candidateRequireRepairTarget` | `true` |
 | `features.lexiconRecall.enabled` | `false` |
+| `features.fwDetector.kenlmSubprocessTimeoutMs` | `5000` |
+| `features.fwDetector.kenlmSubprocessMaxLines` | `17` |
 
 **Deprecated：** `spanAssemblyV4Enabled=false` 仅 warn，仍运行 V4；`v3ToneTimestampOnlyEnabled` 迁移至 `toneTimestampOnlyEnabled`；`kenlmDeltaThreshold` 仅配置兼容读取，V4 rerank **不使用**（Apply 阈值见 `minDeltaToReplace`）。
 

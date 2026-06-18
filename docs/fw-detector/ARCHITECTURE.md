@@ -131,7 +131,7 @@ recallTopKForWindows
 | Domain Assembly | **Main** | `assemble-domain-aware-span-sets.ts` |
 | Graph / Beam | Shadow | `span-assembly-shared/` · `run-coarse-sentence-beam-v4.ts` |
 
-详约：[compatibility/COVERAGE_MERGE_FROZEN_V1_2.md](./compatibility/COVERAGE_MERGE_FROZEN_V1_2.md) · [compatibility/AUTHORITY_REDUCTION_FROZEN_V1_1.md](./compatibility/AUTHORITY_REDUCTION_FROZEN_V1_1.md)
+详约：[compatibility/FROZEN.md](./compatibility/FROZEN.md)
 
 **禁止**：`beam.spanSets` → KenLM / Apply。
 
@@ -139,10 +139,12 @@ recallTopKForWindows
 
 ## 8. KenLM 与 Apply
 
-**KenLM**：`minDeltaToReplace`（默认 **0.03**）决定是否 pick。  
-`kenlmDeltaThreshold`（0.8）**已 deprecated**。
+**KenLM**：batch-only subprocess，见 [kenlm/KENLM_RUNTIME.md](./kenlm/KENLM_RUNTIME.md)。  
+`minDeltaToReplace`（默认 **0.03**）决定是否 pick；`kenlmDeltaThreshold`（0.8）**已 deprecated**。
 
-**Apply**：唯一 FW 写回；成功后 `ctx.asrRepairApplied = true`。
+典型：17 句（1 raw + 16 candidates）→ 1 spawn，`kenlmVetoMs` P95 目标 &lt; 2000ms。
+
+**Apply**：唯一 FW 写回 `applyFwSpanReplacements`；成功后 `ctx.asrRepairApplied = true`。
 
 ---
 
@@ -191,7 +193,7 @@ npx jest --testPathPattern="freeze-contract|freeze-config-ssot"
 
 | 现象 | 说明 |
 |------|------|
-| FW Apply 常为 0 | KenLM `maxDelta` 未达 0.03；下一阶段 KenLM 审计 |
+| FW Apply 常为 0 | KenLM `maxDelta` 未达 `minDeltaToReplace`（0.03） |
 | 词库 ABI | 启动前 `npm run lexicon:rebuild-sqlite` |
 | d001 tone trace | 可能为 `plain_fallback`，KenLM 仍可命中 |
 
@@ -205,8 +207,8 @@ npx jest --testPathPattern="freeze-contract|freeze-config-ssot"
 | Assembly V1.2 | [assembly/FROZEN_V1_2.md](./assembly/FROZEN_V1_2.md) |
 | Recall V1.0.1 | [recall/TONE_FIRST_RECALL_FROZEN_V1_0_1.md](./recall/TONE_FIRST_RECALL_FROZEN_V1_0_1.md) |
 | Diagnostics V1.0.2 | [diagnostics/TRACE_FROZEN_V1_0_2.md](./diagnostics/TRACE_FROZEN_V1_0_2.md) |
-| Coverage V1.2 | [compatibility/COVERAGE_MERGE_FROZEN_V1_2.md](./compatibility/COVERAGE_MERGE_FROZEN_V1_2.md) |
-| Authority V1.1 | [compatibility/AUTHORITY_REDUCTION_FROZEN_V1_1.md](./compatibility/AUTHORITY_REDUCTION_FROZEN_V1_1.md) |
+| Coverage + Authority | [compatibility/FROZEN.md](./compatibility/FROZEN.md) |
+| KenLM Batch-Only | [kenlm/KENLM_RUNTIME.md](./kenlm/KENLM_RUNTIME.md) |
 | 最终冻结 | [freeze/FINAL_FREEZE_2026_06_17.md](./freeze/FINAL_FREEZE_2026_06_17.md) |
 | Pinyin IME | [../pinyin-v2/ARCHITECTURE.md](../pinyin-v2/ARCHITECTURE.md) |
 | Tone Module | [../tone-module/ARCHITECTURE.md](../tone-module/ARCHITECTURE.md) |

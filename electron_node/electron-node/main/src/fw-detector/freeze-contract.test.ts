@@ -42,6 +42,8 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(fw?.spanAssemblyV4DiagnosticsEnabled).toBe(false);
     expect(fw?.spanAssemblyV4DiagnosticsLevel).toBe('summary');
     expect(fw?.toneTimestampOnlyEnabled).toBe(true);
+    expect(fw?.kenlmSubprocessTimeoutMs).toBe(5000);
+    expect(fw?.kenlmSubprocessMaxLines).toBe(17);
   });
 
   it('loadFwDetectorRuntimeConfig 冻结路径默认', () => {
@@ -56,6 +58,23 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(cfg.spanAssemblyV4Enabled).toBe(true);
     expect(cfg.spanAssemblyV4DiagnosticsEnabled).toBe(false);
     expect(cfg.toneTimestampOnlyEnabled).toBe(true);
+    expect(cfg.kenlmSubprocessTimeoutMs).toBe(5000);
+    expect(cfg.kenlmSubprocessMaxLines).toBe(17);
+  });
+
+  it('GATE-1: kenlm-scorer batch-only — no serial runtime symbols', () => {
+    const src = readSrc('asr-repair/sentence-rerank/kenlm-scorer.ts');
+    for (const sym of [
+      'scoreBatchSerial',
+      'buildSerialKenlmTiming',
+      'shouldUseBatchSubprocess',
+      'runKenlmQuery(',
+      'kenlmBatchSubprocessEnabled',
+      'fallbackToSerial',
+      'kenlmRuntimeMode',
+    ]) {
+      expect(src).not.toContain(sym);
+    }
   });
 
   it('local-span-recall V2-only', () => {

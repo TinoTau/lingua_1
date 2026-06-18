@@ -15,9 +15,17 @@ export type KenlmTimingStats = {
   maxMs: number;
 };
 
+export type KenlmSubprocessRuntimeDiag = {
+  kenlmQueryCount: number;
+  kenlmSubprocessMs: number;
+  kenlmSubprocessCount: number;
+  kenlmSubprocessErrorReason?: string;
+};
+
 export type KenlmBatchScoreResult = {
   scores: KenLMScore[];
   timing: KenlmTimingStats;
+  runtime?: KenlmSubprocessRuntimeDiag;
 };
 
 export interface KenLMScorer {

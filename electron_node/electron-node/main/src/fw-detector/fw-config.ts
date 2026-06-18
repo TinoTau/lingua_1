@@ -35,7 +35,29 @@ export type FwDetectorRuntimeConfig = {
   spanAssemblyV4DiagnosticsLevel: 'summary' | 'trace';
   spanAssemblyV4DiagnosticsTargetIds: string[];
   toneTimestampOnlyEnabled: boolean;
+  kenlmSubprocessTimeoutMs: number;
+  kenlmSubprocessMaxLines: number;
 };
+
+function resolveKenlmSubprocessTimeoutMs(
+  cfg: NonNullable<ReturnType<typeof loadNodeConfig>['features']>['fwDetector']
+): number {
+  return (
+    cfg?.kenlmSubprocessTimeoutMs ??
+    cfg?.kenlmBatchSubprocessTimeoutMs ??
+    5000
+  );
+}
+
+function resolveKenlmSubprocessMaxLines(
+  cfg: NonNullable<ReturnType<typeof loadNodeConfig>['features']>['fwDetector']
+): number {
+  return (
+    cfg?.kenlmSubprocessMaxLines ??
+    cfg?.kenlmBatchSubprocessMaxSentences ??
+    17
+  );
+}
 
 export function loadFwDetectorRuntimeConfig(): FwDetectorRuntimeConfig {
   const cfg = loadNodeConfig().features?.fwDetector ?? {};
@@ -67,6 +89,8 @@ export function loadFwDetectorRuntimeConfig(): FwDetectorRuntimeConfig {
       ? cfg.spanAssemblyV4DiagnosticsTargetIds.filter((id): id is string => typeof id === 'string')
       : [],
     toneTimestampOnlyEnabled: toneTimestampOnlyEnabled !== false,
+    kenlmSubprocessTimeoutMs: resolveKenlmSubprocessTimeoutMs(cfg),
+    kenlmSubprocessMaxLines: resolveKenlmSubprocessMaxLines(cfg),
   };
 }
 
