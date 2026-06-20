@@ -60,6 +60,7 @@ function buildConfigSnapshot(
     candidateRequireRepairTarget: config.candidateRequireRepairTarget,
     maxSentenceCandidates: config.maxSentenceCandidates,
     minDeltaToReplace: config.minDeltaToReplace,
+    scoreMode: 'raw_log_delta' as const,
     toneTimestampOnlyEnabled: config.toneTimestampOnlyEnabled,
   };
 }

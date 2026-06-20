@@ -211,6 +211,7 @@ export interface NodeConfig {
       /** P4: sentence-level KenLM rerank (false = P3.3 per-span topK rollback). */
       useSentenceLevelRerank?: boolean;
       maxSentenceCandidates?: number;
+      /** V4 Apply pick threshold in KenLM raw log delta units (default 3.0). */
       minDeltaToReplace?: number;
       /** KenLM subprocess spawn timeout (ms per chunk). */
       kenlmSubprocessTimeoutMs?: number;

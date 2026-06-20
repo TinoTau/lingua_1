@@ -1,0 +1,2241 @@
+{
+  "timestamp": "2026-06-19T21:29:20.566Z",
+  "batchFile": "D:\\Programs\\github\\lingua_1\\electron_node\\electron-node\\tests\\raw-log-delta-gate3-dialog200-batch-result.json",
+  "lexiconTermCount": 72471,
+  "sqlitePath": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v3\\lexicon.sqlite",
+  "summary": {
+    "evaluated": 200,
+    "improved": 30,
+    "degraded": 5,
+    "unchanged": 165,
+    "netCer": 25
+  },
+  "improvedCases": [
+    {
+      "id": "d001",
+      "scenario": "cafe",
+      "raw_cer": 0.3704,
+      "final_cer": 0.2222,
+      "raw": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "final": "你好,我想點一杯熱拿铁中杯少糖 身边溫 以下今天有蓝莓马芬吗?",
+      "ref": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "repairs": [
+        {
+          "spanText": "拿鐵",
+          "before": "拿鐵",
+          "after": "拿铁",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "鐘貝",
+          "before": "鐘貝",
+          "after": "中杯",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "深便",
+          "before": "深便",
+          "after": "身边",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "蓝美马分",
+          "before": "蓝美马分",
+          "after": "蓝莓马芬",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 10.99011999999999,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d003",
+      "scenario": "cafe",
+      "raw_cer": 0.1579,
+      "final_cer": 0.1053,
+      "raw": "请问,这款燕麦拿铁可以烧病吗?我赶时间小背",
+      "final": "请问,这款燕麦拿铁可以烧饼吗?我赶时间小杯",
+      "ref": "请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。",
+      "repairs": [
+        {
+          "spanText": "烧病",
+          "before": "烧病",
+          "after": "烧饼",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "小背",
+          "before": "小背",
+          "after": "小杯",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 6.008292000000004,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d011",
+      "scenario": "hospital",
+      "raw_cer": 0.4286,
+      "final_cer": 0.381,
+      "raw": "刮号出请问 内刻还有号码 我微不 我感觉不舒服昨晚开始的",
+      "final": "挂号出请问 内科还有号码 我微不 我感觉不舒服昨晚开似的",
+      "ref": "挂号处请问内科还有号吗？我胃不舒服，昨晚开始的。",
+      "repairs": [
+        {
+          "spanText": "刮号",
+          "before": "刮号",
+          "after": "挂号",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "内刻",
+          "before": "内刻",
+          "after": "内科",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "始的",
+          "before": "始的",
+          "after": "似的",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 5.514964000000006,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d012",
+      "scenario": "hospital",
+      "raw_cer": 0.4167,
+      "final_cer": 0.3333,
+      "raw": "這個檢查報告什麼時候能出 我過敏 需要请家休息吗?",
+      "final": "这个檢查報告什麼时候能出 我国民 需邀请假休息吗?",
+      "ref": "这个检查报告什么时候能出？我过敏发痒，需要请假休息吗？",
+      "repairs": [
+        {
+          "spanText": "這個",
+          "before": "這個",
+          "after": "这个",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "時候",
+          "before": "時候",
+          "after": "时候",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "過敏",
+          "before": "過敏",
+          "after": "国民",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "要请",
+          "before": "要请",
+          "after": "邀请",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "请家",
+          "before": "请家",
+          "after": "请假",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 8.109314000000005,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d029",
+      "scenario": "classroom",
+      "raw_cer": 0.3333,
+      "final_cer": 0.2222,
+      "raw": "作業是下周一下午覺嗎?可以電子版提覺嗎?",
+      "final": "作业是下周一下午覺嗎?可以电子版提覺嗎?",
+      "ref": "作业是下周一下午交吗？可以电子版提交吗？",
+      "repairs": [
+        {
+          "spanText": "作業",
+          "before": "作業",
+          "after": "作业",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "電子版",
+          "before": "電子版",
+          "after": "电子版",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 6.428122999999999,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d043",
+      "scenario": "lexicon_homophone",
+      "raw_cer": 0.6,
+      "final_cer": 0.56,
+      "raw": "我們下午討論後 選生成方安線吧,後選生成的接口文當補期。",
+      "final": "我们下午討論後 選生成方安線吧,後選生成的接口文當補期。",
+      "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+      "repairs": [
+        {
+          "spanText": "我們",
+          "before": "我們",
+          "after": "我们",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 3.6292900000000117,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d053",
+      "scenario": "taxi",
+      "raw_cer": 0.2667,
+      "final_cer": 0.1667,
+      "raw": "麻煩送我到深圳南善科技園南門大概多久能到? 我是點心 十分有隔电话会",
+      "final": "麻烦送我到深圳南善科技园南門大概多久能到? 我是点心 十分有隔电话会",
+      "ref": "麻烦送我到深圳南山科技园南门，大概多久能到？我十点十分有个电话会。",
+      "repairs": [
+        {
+          "spanText": "麻煩",
+          "before": "麻煩",
+          "after": "麻烦",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "科技園",
+          "before": "科技園",
+          "after": "科技园",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "點心",
+          "before": "點心",
+          "after": "点心",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 7.885811000000004,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d055",
+      "scenario": "hospital",
+      "raw_cer": 0.4762,
+      "final_cer": 0.381,
+      "raw": "醫生您好我這兩天嗓子疼想開點要並做隔斜常規",
+      "final": "医生您好我這兩天嗓子疼想開點要並做隔斜常规",
+      "ref": "医生您好，我这两天嗓子疼，想开点药并做个血常规。",
+      "repairs": [
+        {
+          "spanText": "醫生",
+          "before": "醫生",
+          "after": "医生",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "常規",
+          "before": "常規",
+          "after": "常规",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 3.4708300000000065,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d065",
+      "scenario": "tech_deploy",
+      "raw_cer": 0.6667,
+      "final_cer": 0.5667,
+      "raw": "這次發布我們現對期 在其商線計劃窗口後選生 成模快需要連掉別漏掉回歸",
+      "final": "這次發布我們現對期 在其商線計劃窗口候选生 成模块需要連掉別漏掉回归",
+      "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+      "repairs": [
+        {
+          "spanText": "後選",
+          "before": "後選",
+          "after": "候选",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "模快",
+          "before": "模快",
+          "after": "模块",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "回歸",
+          "before": "回歸",
+          "after": "回归",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 12.212410000000006,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d074",
+      "scenario": "classroom",
+      "raw_cer": 0.2222,
+      "final_cer": 0.1667,
+      "raw": "作业是下周以下午叫吗?可以电子板提叫吗?",
+      "final": "作业是下周以下午叫吗?可以电子板提交吗?",
+      "ref": "作业是下周一下午交吗？可以电子版提交吗？",
+      "repairs": [
+        {
+          "spanText": "提叫",
+          "before": "提叫",
+          "after": "提交",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 3.791333999999999,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d079",
+      "scenario": "bank",
+      "raw_cer": 0.2667,
+      "final_cer": 0.2,
+      "raw": "我想開通短信提醒需要帶什麼證件",
+      "final": "我想開通短信提醒需腰带什麼证件",
+      "ref": "我想开通短信提醒，需要带什么证件？",
+      "repairs": [
+        {
+          "spanText": "要帶",
+          "before": "要帶",
+          "after": "腰带",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "證件",
+          "before": "證件",
+          "after": "证件",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 7.276833999999994,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d081",
+      "scenario": "bank",
+      "raw_cer": 0.5,
+      "final_cer": 0.4375,
+      "raw": "請問理財產品的風險等急在哪裡查看",
+      "final": "請問理財產品的風險等级在那里查看",
+      "ref": "请问理财产品的风险等级在哪里查看？",
+      "repairs": [
+        {
+          "spanText": "等急",
+          "before": "等急",
+          "after": "等级",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "哪裡",
+          "before": "哪裡",
+          "after": "那里",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 8.502921999999998,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d088",
+      "scenario": "lexicon_homophone",
+      "raw_cer": 0.68,
+      "final_cer": 0.64,
+      "raw": "我們下午討論後,選生成功 等方安縣把候選生陳的截口文當補齊",
+      "final": "我们下午討論後,選生成功 等方安縣把候選生陳的借口文當補齊",
+      "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+      "repairs": [
+        {
+          "spanText": "我們",
+          "before": "我們",
+          "after": "我们",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "截口",
+          "before": "截口",
+          "after": "借口",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 7.314139999999995,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d089",
+      "scenario": "lexicon_homophone",
+      "raw_cer": 0.5,
+      "final_cer": 0.4167,
+      "raw": "这周的事 上縣計劃已經確認上縣計劃評審安排在周四上午",
+      "final": "这周的事 上线計劃已經確認上线計劃評審安排在周四上午",
+      "ref": "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+      "repairs": [
+        {
+          "spanText": "上縣",
+          "before": "上縣",
+          "after": "上线",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "上縣",
+          "before": "上縣",
+          "after": "上线",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 5.8140360000000015,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d091",
+      "scenario": "cafe",
+      "raw_cer": 0.4231,
+      "final_cer": 0.3462,
+      "raw": "你好,我想點一杯鹽麥拿鐵中輩無糖 順便問一下 今天有被裹嗎?",
+      "final": "你好,我想點一杯鹽麥拿铁中杯無糖 顺便問以下 今天有悖裹嗎?",
+      "ref": "你好，我想点一杯燕麦拿铁，中杯，无糖。顺便问一下今天有贝果吗？",
+      "repairs": [
+        {
+          "spanText": "拿鐵",
+          "before": "拿鐵",
+          "after": "拿铁",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "中輩",
+          "before": "中輩",
+          "after": "中杯",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "順便",
+          "before": "順便",
+          "after": "顺便",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "一下",
+          "before": "一下",
+          "after": "以下",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "有被",
+          "before": "有被",
+          "after": "有悖",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 7.527990000000003,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d100",
+      "scenario": "hospital",
+      "raw_cer": 0.55,
+      "final_cer": 0.45,
+      "raw": "醫生您好,我這兩天頭痛想開店,要病,做隔歇常規",
+      "final": "医生您好,我這兩甜头痛想开店,要病,做隔歇常規",
+      "ref": "医生您好，我这两天头痛，想开点药并做个血常规。",
+      "repairs": [
+        {
+          "spanText": "醫生",
+          "before": "醫生",
+          "after": "医生",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "天頭",
+          "before": "天頭",
+          "after": "甜头",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "開店",
+          "before": "開店",
+          "after": "开店",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 7.785350000000008,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d102",
+      "scenario": "hospital",
+      "raw_cer": 0.2917,
+      "final_cer": 0.2083,
+      "raw": "這個檢查報告什麼時候能出 我過敏 发痒需要请假休息吗?",
+      "final": "这个檢查報告什麼时候能出 我国民 发痒需要请假休息吗?",
+      "ref": "这个检查报告什么时候能出？我过敏发痒，需要请假休息吗？",
+      "repairs": [
+        {
+          "spanText": "這個",
+          "before": "這個",
+          "after": "这个",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "時候",
+          "before": "時候",
+          "after": "时候",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "我過",
+          "before": "我過",
+          "after": "我国",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "過敏",
+          "before": "過敏",
+          "after": "国民",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 5.452843000000001,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d105",
+      "scenario": "shopping",
+      "raw_cer": 0.16,
+      "final_cer": 0.12,
+      "raw": "我想对比 这两款订单中抬的加格会员日,能再减一点吗?",
+      "final": "我想对比 这两款订单中抬的价格会员日,能再减一点吗?",
+      "ref": "我想对比一下这两款订单中台的价格，会员日能再减一点吗？",
+      "repairs": [
+        {
+          "spanText": "加格",
+          "before": "加格",
+          "after": "价格",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 5.0353079999999935,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d109",
+      "scenario": "tech_deploy",
+      "raw_cer": 0.5,
+      "final_cer": 0.4737,
+      "raw": "今天,我们团队 學員要討論後選生成相關的後選生成流程和上限計劃安排請研發一起評估風險",
+      "final": "今天,我们团队 学院要討論候选生成相關的後選生成流程和上县级劃安排請研發一起評估風險",
+      "ref": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+      "repairs": [
+        {
+          "spanText": "學員",
+          "before": "學員",
+          "after": "学院",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "後選",
+          "before": "後選",
+          "after": "候选",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "限計",
+          "before": "限計",
+          "after": "县级",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 6.852553999999998,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d110",
+      "scenario": "tech_deploy",
+      "raw_cer": 0.8333,
+      "final_cer": 0.7,
+      "raw": "這次發布我們現對此發布的新聞 起商線計劃窗口後選生 乘魔快需要連掉別漏掉回歸",
+      "final": "這次發布我們現對此发布的新闻 起商線計劃窗口候选生 乘模块需要連掉別漏掉回归",
+      "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+      "repairs": [
+        {
+          "spanText": "新聞",
+          "before": "新聞",
+          "after": "新闻",
+          "source": "lexicon_pinyin_topk",
+          "domains": [],
+          "repairTarget": true
+        },
+        {
+          "spanText": "新聞",
+          "before": "新聞",
+          "after": "新闻",
+          "source": "lexicon_pinyin_topk",
+          "applied": true
+        },
+        {
+          "spanText": "發布",
+          "before": "發布",
+          "after": "发布",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "新聞",
+          "before": "新聞",
+          "after": "新闻",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "後選",
+          "before": "後選",
+          "after": "候选",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "魔快",
+          "before": "魔快",
+          "after": "模块",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "回歸",
+          "before": "回歸",
+          "after": "回归",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 15.164296000000007,
+      "fw_applied_count": 1
+    },
+    {
+      "id": "d111",
+      "scenario": "tech_deploy",
+      "raw_cer": 0.5185,
+      "final_cer": 0.4815,
+      "raw": "會上提到候選生陳列祿 姚嘉健 通商限期劃文 当我下午更新一版",
+      "final": "会上提到候選生陳列祿 药价健 通商先期劃文 当我下午更新一版",
+      "ref": "会上提到候选生成链路要加监控，上线计划文档我下午更新一版。",
+      "repairs": [
+        {
+          "spanText": "會上",
+          "before": "會上",
+          "after": "会上",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "姚嘉",
+          "before": "姚嘉",
+          "after": "药价",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "限期",
+          "before": "限期",
+          "after": "先期",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 4.622749999999996,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d128",
+      "scenario": "restaurant",
+      "raw_cer": 0.2381,
+      "final_cer": 0.1905,
+      "raw": "這道菜大概要等多久? 我們先點一份涼菜和一壺茶",
+      "final": "這道菜大概要等多久? 我们先點一份凉菜和医护茶",
+      "ref": "这道菜大概要等多久？我们先点一份凉菜和一壶茶。",
+      "repairs": [
+        {
+          "spanText": "我們",
+          "before": "我們",
+          "after": "我们",
+          "source": "lexicon_pinyin_topk",
+          "domains": [],
+          "repairTarget": true
+        },
+        {
+          "spanText": "我們",
+          "before": "我們",
+          "after": "我们",
+          "source": "lexicon_pinyin_topk",
+          "applied": true
+        },
+        {
+          "spanText": "我們",
+          "before": "我們",
+          "after": "我们",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "涼菜",
+          "before": "涼菜",
+          "after": "凉菜",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "一壺",
+          "before": "一壺",
+          "after": "医护",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 10.157023000000002,
+      "fw_applied_count": 1
+    },
+    {
+      "id": "d137",
+      "scenario": "cafe",
+      "raw_cer": 0.0556,
+      "final_cer": 0,
+      "raw": "麻烦帮我做一杯热拿铁带走搭杯就行谢谢",
+      "final": "麻烦帮我做一杯热拿铁带走大杯就行谢谢",
+      "ref": "麻烦帮我做一杯热拿铁带走，大杯就行，谢谢。",
+      "repairs": [
+        {
+          "spanText": "搭杯",
+          "before": "搭杯",
+          "after": "大杯",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 3.3653329999999997,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d142",
+      "scenario": "taxi",
+      "raw_cer": 0.5556,
+      "final_cer": 0.5185,
+      "raw": "市府去浦東張江走三環 我幹 9點半的回藥師杜澄寧提前跟我說",
+      "final": "师父去浦東張江走三環 我幹 9點半的回藥药师澄寧提前跟我說",
+      "ref": "师傅，去浦东张江，走三环。我赶九点半的会，要是堵车您提前跟我说。",
+      "repairs": [
+        {
+          "spanText": "市府",
+          "before": "市府",
+          "after": "师父",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "師杜",
+          "before": "師杜",
+          "after": "药师",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 5.302799999999991,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d145",
+      "scenario": "hospital",
+      "raw_cer": 0.4762,
+      "final_cer": 0.381,
+      "raw": "醫生您好我這兩天嗓子疼想開點要並做個些常規",
+      "final": "医生您好我這兩天嗓子疼想開點要並做個些常规",
+      "ref": "医生您好，我这两天嗓子疼，想开点药并做个血常规。",
+      "repairs": [
+        {
+          "spanText": "醫生",
+          "before": "醫生",
+          "after": "医生",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "常規",
+          "before": "常規",
+          "after": "常规",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 5.11751000000001,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d146",
+      "scenario": "hospital",
+      "raw_cer": 0.6316,
+      "final_cer": 0.5263,
+      "raw": "括號出請問,那刻還有號碼? 我低哨昨晚開始的",
+      "final": "括好处請問,那刻患有好碼? 我低哨昨晚开始的",
+      "ref": "挂号处请问内科还有号吗？我低烧，昨晚开始的。",
+      "repairs": [
+        {
+          "spanText": "還有",
+          "before": "還有",
+          "after": "患有",
+          "source": "lexicon_pinyin_topk",
+          "domains": [],
+          "repairTarget": true
+        },
+        {
+          "spanText": "還有",
+          "before": "還有",
+          "after": "患有",
+          "source": "lexicon_pinyin_topk",
+          "applied": true
+        },
+        {
+          "spanText": "號出",
+          "before": "號出",
+          "after": "好处",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "還有",
+          "before": "還有",
+          "after": "患有",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "有號",
+          "before": "有號",
+          "after": "友好",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "開始",
+          "before": "開始",
+          "after": "开始",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 5.805870000000013,
+      "fw_applied_count": 1
+    },
+    {
+      "id": "d155",
+      "scenario": "tech_deploy",
+      "raw_cer": 0.8333,
+      "final_cer": 0.7333,
+      "raw": "這次發布我們現對峽谷的發布會 在其商線計劃窗口後選生成模快需要連掉別漏掉回歸",
+      "final": "这次發布我們現對峽谷的發布會 在其商線計劃窗口候选生成模快需要連掉別漏掉回归",
+      "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+      "repairs": [
+        {
+          "spanText": "這次",
+          "before": "這次",
+          "after": "这次",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "後選",
+          "before": "後選",
+          "after": "候选",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "回歸",
+          "before": "回歸",
+          "after": "回归",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 9.090765000000005,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d157",
+      "scenario": "customer_service",
+      "raw_cer": 0.32,
+      "final_cer": 0.2,
+      "raw": "您好我定,但顯示已發貨,但物流三天沒更新能幫我查一下嗎?",
+      "final": "您好我定,但显示已发货,但物流三天沒更新能幫我查一下嗎?",
+      "ref": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+      "repairs": [
+        {
+          "spanText": "顯示",
+          "before": "顯示",
+          "after": "显示",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "發貨",
+          "before": "發貨",
+          "after": "发货",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 8.089545000000001,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d181",
+      "scenario": "cafe",
+      "raw_cer": 0.3333,
+      "final_cer": 0.2963,
+      "raw": "你好,我想點一杯冰美式中貝少糖 順便溫習一下 以下今天有蓝没马分吗?",
+      "final": "你好,我想點一杯冰美适中杯少糖 順便溫洗衣下 以下今天有蓝莓马芬吗?",
+      "ref": "你好，我想点一杯冰美式，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "repairs": [
+        {
+          "spanText": "式中",
+          "before": "式中",
+          "after": "适中",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "中貝",
+          "before": "中貝",
+          "after": "中杯",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "習一",
+          "before": "習一",
+          "after": "洗衣",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "蓝没马分",
+          "before": "蓝没马分",
+          "after": "蓝莓马芬",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 4.369555000000005,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d200",
+      "scenario": "tech_deploy",
+      "raw_cer": 0.6,
+      "final_cer": 0.5667,
+      "raw": "這次發布我們線,對其商線計劃窗口候選生,成模快需要連掉別漏掉回歸。",
+      "final": "这次發布我們線,對其商線計劃窗口候选生,成膜快需要連掉別漏掉回歸。",
+      "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+      "repairs": [
+        {
+          "spanText": "這次",
+          "before": "這次",
+          "after": "这次",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "候選",
+          "before": "候選",
+          "after": "候选",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "成模",
+          "before": "成模",
+          "after": "成膜",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "pickedIsRaw": false,
+      "maxDelta": 6.6943509999999975,
+      "fw_applied_count": 0
+    }
+  ],
+  "degradedCases": [
+    {
+      "id": "d054",
+      "scenario": "taxi",
+      "raw_cer": 0.4737,
+      "final_cer": 0.5789,
+      "raw": "去杭州系系部走三環 可以嗎?那扁現在賭不賭?",
+      "final": "去杭州系系部走散環 可以嗎?那边线再度步賭?",
+      "ref": "去杭州西溪，不走三环可以吗？那边现在堵不堵？",
+      "repairs": [
+        {
+          "spanText": "走三",
+          "before": "走三",
+          "after": "走散",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "扁現",
+          "before": "扁現",
+          "after": "边线",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "在賭",
+          "before": "在賭",
+          "after": "再度",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "賭不",
+          "before": "賭不",
+          "after": "独步",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "rootCause": "B_candidate_quality",
+      "pickedIsRaw": false,
+      "maxDelta": 6.869319999999988,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d097",
+      "scenario": "taxi",
+      "raw_cer": 0.4483,
+      "final_cer": 0.4828,
+      "raw": "是付去中官村软件远走私环 我敢就 5點半的回要是賭徹您提前跟我說",
+      "final": "是付去中官村软件远走私环 我敢就 5點半的回要要是徹您提前跟我說",
+      "ref": "师傅，去中关村软件园，走四环。我赶九点半的会，要是堵车您提前跟我说。",
+      "repairs": [
+        {
+          "spanText": "是賭",
+          "before": "是賭",
+          "after": "要是",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "rootCause": "B_candidate_quality",
+      "pickedIsRaw": false,
+      "maxDelta": 3.926079999999999,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d141",
+      "scenario": "meeting",
+      "raw_cer": 0.25,
+      "final_cer": 0.2857,
+      "raw": "跟會員系統相關的需求,我整理了 在1版8点前请大家帮忙评审一下",
+      "final": "跟會員系统相關的需求,我整理了 在1版8点前请大家帮忙评审评审",
+      "ref": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。",
+      "repairs": [
+        {
+          "spanText": "系統",
+          "before": "系統",
+          "after": "系统",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "一下",
+          "before": "一下",
+          "after": "评审",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "rootCause": "B_candidate_quality",
+      "pickedIsRaw": false,
+      "maxDelta": 3.890180000000001,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d143",
+      "scenario": "taxi",
+      "raw_cer": 0.1,
+      "final_cer": 0.1667,
+      "raw": "麻烦送我到深圳南善科机园南门大概多久能到? 我十点时 十分有个电话会",
+      "final": "麻烦送我到深圳南善客机园南门大概多久能到? 我试点时 十分有个电话会",
+      "ref": "麻烦送我到深圳南山科技园南门，大概多久能到？我十点十分有个电话会。",
+      "repairs": [
+        {
+          "spanText": "科机",
+          "before": "科机",
+          "after": "客机",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "科机园",
+          "before": "科机园",
+          "after": "科技园",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "十点",
+          "before": "十点",
+          "after": "试点",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "rootCause": "B_candidate_quality",
+      "pickedIsRaw": false,
+      "maxDelta": 6.584734999999995,
+      "fw_applied_count": 0
+    },
+    {
+      "id": "d189",
+      "scenario": "taxi",
+      "raw_cer": 0.4286,
+      "final_cer": 0.5238,
+      "raw": "去望金斯赫布走四环可以吗?那扁现在赌不赌?",
+      "final": "去望金斯赫布走四环可以吗?那变现再度步赌?",
+      "ref": "去望京SOHO，不走四环可以吗？那边现在堵不堵？",
+      "repairs": [
+        {
+          "spanText": "扁现",
+          "before": "扁现",
+          "after": "变现",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "在赌",
+          "before": "在赌",
+          "after": "再度",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        },
+        {
+          "spanText": "赌不",
+          "before": "赌不",
+          "after": "独步",
+          "source": "lexicon_pinyin_topk",
+          "fromSentencePick": true
+        }
+      ],
+      "rootCause": "B_candidate_quality",
+      "pickedIsRaw": false,
+      "maxDelta": 3.9028140000000064,
+      "fw_applied_count": 0
+    }
+  ],
+  "topImprovedTerms": [
+    {
+      "term": "我们",
+      "count": 5,
+      "inLexicon": true
+    },
+    {
+      "term": "中杯",
+      "count": 3,
+      "inLexicon": true
+    },
+    {
+      "term": "医生",
+      "count": 3,
+      "inLexicon": true
+    },
+    {
+      "term": "回归",
+      "count": 3,
+      "inLexicon": true
+    },
+    {
+      "term": "拿铁",
+      "count": 2,
+      "inLexicon": true
+    },
+    {
+      "term": "蓝莓马芬",
+      "count": 2,
+      "inLexicon": true
+    },
+    {
+      "term": "这个",
+      "count": 2,
+      "inLexicon": true
+    },
+    {
+      "term": "时候",
+      "count": 2,
+      "inLexicon": true
+    },
+    {
+      "term": "常规",
+      "count": 2,
+      "inLexicon": true
+    },
+    {
+      "term": "模块",
+      "count": 2,
+      "inLexicon": true
+    },
+    {
+      "term": "上线",
+      "count": 2,
+      "inLexicon": true
+    },
+    {
+      "term": "这次",
+      "count": 2,
+      "inLexicon": true
+    },
+    {
+      "term": "小杯",
+      "count": 1,
+      "inLexicon": true
+    },
+    {
+      "term": "挂号",
+      "count": 1,
+      "inLexicon": true
+    },
+    {
+      "term": "内科",
+      "count": 1,
+      "inLexicon": true
+    },
+    {
+      "term": "请假",
+      "count": 1,
+      "inLexicon": true
+    },
+    {
+      "term": "作业",
+      "count": 1,
+      "inLexicon": true
+    },
+    {
+      "term": "电子版",
+      "count": 1,
+      "inLexicon": true
+    },
+    {
+      "term": "麻烦",
+      "count": 1,
+      "inLexicon": true
+    },
+    {
+      "term": "科技园",
+      "count": 1,
+      "inLexicon": true
+    },
+    {
+      "term": "提交",
+      "count": 1,
+      "inLexicon": true
+    },
+    {
+      "term": "证件",
+      "count": 1,
+      "inLexicon": true
+    },
+    {
+      "term": "等级",
+      "count": 1,
+      "inLexicon": true
+    },
+    {
+      "term": "顺便",
+      "count": 1,
+      "inLexicon": true
+    },
+    {
+      "term": "价格",
+      "count": 1,
+      "inLexicon": true
+    },
+    {
+      "term": "发布",
+      "count": 1,
+      "inLexicon": true
+    },
+    {
+      "term": "会上",
+      "count": 1,
+      "inLexicon": true
+    },
+    {
+      "term": "凉菜",
+      "count": 1,
+      "inLexicon": true
+    },
+    {
+      "term": "大杯",
+      "count": 1,
+      "inLexicon": true
+    },
+    {
+      "term": "开始",
+      "count": 1,
+      "inLexicon": true
+    }
+  ],
+  "topMissingRefTerms": [
+    {
+      "term": "吗？",
+      "refCount": 105,
+      "inLexicon": false
+    },
+    {
+      "term": "一下",
+      "refCount": 53,
+      "inLexicon": false
+    },
+    {
+      "term": "？我",
+      "refCount": 38,
+      "inLexicon": false
+    },
+    {
+      "term": "线计",
+      "refCount": 30,
+      "inLexicon": false
+    },
+    {
+      "term": "上线计",
+      "refCount": 30,
+      "inLexicon": false
+    },
+    {
+      "term": "选生",
+      "refCount": 27,
+      "inLexicon": false
+    },
+    {
+      "term": "，大",
+      "refCount": 24,
+      "inLexicon": false
+    },
+    {
+      "term": "后选",
+      "refCount": 23,
+      "inLexicon": false
+    },
+    {
+      "term": "吗？我",
+      "refCount": 20,
+      "inLexicon": false
+    },
+    {
+      "term": "，能",
+      "refCount": 20,
+      "inLexicon": false
+    },
+    {
+      "term": "，我",
+      "refCount": 19,
+      "inLexicon": false
+    },
+    {
+      "term": "生城",
+      "refCount": 19,
+      "inLexicon": false
+    },
+    {
+      "term": "后选生",
+      "refCount": 19,
+      "inLexicon": false
+    },
+    {
+      "term": "选生城",
+      "refCount": 19,
+      "inLexicon": false
+    },
+    {
+      "term": "线计划",
+      "refCount": 17,
+      "inLexicon": false
+    },
+    {
+      "term": "好，",
+      "refCount": 14,
+      "inLexicon": false
+    },
+    {
+      "term": "我想",
+      "refCount": 14,
+      "inLexicon": false
+    },
+    {
+      "term": "好，我",
+      "refCount": 14,
+      "inLexicon": false
+    },
+    {
+      "term": "问这",
+      "refCount": 14,
+      "inLexicon": false
+    },
+    {
+      "term": "请问这",
+      "refCount": 14,
+      "inLexicon": false
+    },
+    {
+      "term": "，大概",
+      "refCount": 14,
+      "inLexicon": false
+    },
+    {
+      "term": "帮我",
+      "refCount": 13,
+      "inLexicon": false
+    },
+    {
+      "term": "多久",
+      "refCount": 13,
+      "inLexicon": false
+    },
+    {
+      "term": "点吗",
+      "refCount": 13,
+      "inLexicon": false
+    },
+    {
+      "term": "点吗？",
+      "refCount": 13,
+      "inLexicon": false
+    },
+    {
+      "term": "能帮",
+      "refCount": 12,
+      "inLexicon": false
+    },
+    {
+      "term": "下吗",
+      "refCount": 12,
+      "inLexicon": false
+    },
+    {
+      "term": "一下吗",
+      "refCount": 12,
+      "inLexicon": false
+    },
+    {
+      "term": "下吗？",
+      "refCount": 12,
+      "inLexicon": false
+    },
+    {
+      "term": "一下吗？",
+      "refCount": 12,
+      "inLexicon": false
+    },
+    {
+      "term": "一杯",
+      "refCount": 10,
+      "inLexicon": false
+    },
+    {
+      "term": "我赶",
+      "refCount": 10,
+      "inLexicon": false
+    },
+    {
+      "term": "错，",
+      "refCount": 10,
+      "inLexicon": false
+    },
+    {
+      "term": "点前",
+      "refCount": 10,
+      "inLexicon": false
+    },
+    {
+      "term": "单中",
+      "refCount": 10,
+      "inLexicon": false
+    },
+    {
+      "term": "中台",
+      "refCount": 10,
+      "inLexicon": false
+    },
+    {
+      "term": "块需",
+      "refCount": 10,
+      "inLexicon": false
+    },
+    {
+      "term": "险。",
+      "refCount": 10,
+      "inLexicon": false
+    },
+    {
+      "term": "订单中",
+      "refCount": 10,
+      "inLexicon": false
+    },
+    {
+      "term": "单中台",
+      "refCount": 10,
+      "inLexicon": false
+    },
+    {
+      "term": "块需要",
+      "refCount": 10,
+      "inLexicon": false
+    },
+    {
+      "term": "风险。",
+      "refCount": 10,
+      "inLexicon": false
+    },
+    {
+      "term": "订单中台",
+      "refCount": 10,
+      "inLexicon": false
+    },
+    {
+      "term": "关的",
+      "refCount": 10,
+      "inLexicon": false
+    },
+    {
+      "term": "相关的",
+      "refCount": 10,
+      "inLexicon": false
+    },
+    {
+      "term": "这两",
+      "refCount": 10,
+      "inLexicon": false
+    },
+    {
+      "term": "一起",
+      "refCount": 10,
+      "inLexicon": false
+    },
+    {
+      "term": "点一",
+      "refCount": 9,
+      "inLexicon": false
+    },
+    {
+      "term": "就行",
+      "refCount": 9,
+      "inLexicon": false
+    },
+    {
+      "term": "行，",
+      "refCount": 9,
+      "inLexicon": false
+    }
+  ],
+  "badCandidates": [
+    {
+      "word": "以下",
+      "topK": 48,
+      "top1": 34,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 8
+    },
+    {
+      "word": "生成",
+      "topK": 13,
+      "top1": 3,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 6
+    },
+    {
+      "word": "候选",
+      "topK": 6,
+      "top1": 4,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 5
+    },
+    {
+      "word": "计划",
+      "topK": 10,
+      "top1": 5,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 4
+    },
+    {
+      "word": "终点",
+      "topK": 4,
+      "top1": 4,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 4
+    },
+    {
+      "word": "预定",
+      "topK": 4,
+      "top1": 4,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 4
+    },
+    {
+      "word": "上限",
+      "topK": 6,
+      "top1": 2,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 4
+    },
+    {
+      "word": "要是",
+      "topK": 7,
+      "top1": 1,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 3
+    },
+    {
+      "word": "甜头",
+      "topK": 3,
+      "top1": 3,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 3
+    },
+    {
+      "word": "号码",
+      "topK": 3,
+      "top1": 1,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 3
+    },
+    {
+      "word": "通向",
+      "topK": 2,
+      "top1": 0,
+      "picked": 2,
+      "apply": 0,
+      "inFinal": 2
+    },
+    {
+      "word": "烧饼",
+      "topK": 5,
+      "top1": 4,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 2
+    },
+    {
+      "word": "再度",
+      "topK": 5,
+      "top1": 0,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 2
+    },
+    {
+      "word": "我国",
+      "topK": 3,
+      "top1": 3,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 2
+    },
+    {
+      "word": "国民",
+      "topK": 2,
+      "top1": 1,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 2
+    },
+    {
+      "word": "开局",
+      "topK": 3,
+      "top1": 1,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 2
+    },
+    {
+      "word": "借口",
+      "topK": 3,
+      "top1": 0,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 2
+    },
+    {
+      "word": "成方",
+      "topK": 2,
+      "top1": 0,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 2
+    },
+    {
+      "word": "洗衣",
+      "topK": 2,
+      "top1": 0,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 2
+    },
+    {
+      "word": "成立",
+      "topK": 2,
+      "top1": 2,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 2
+    },
+    {
+      "word": "药师",
+      "topK": 3,
+      "top1": 3,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 2
+    },
+    {
+      "word": "我们",
+      "topK": 25,
+      "top1": 23,
+      "picked": 1,
+      "apply": 0,
+      "inFinal": 1
+    },
+    {
+      "word": "新闻",
+      "topK": 1,
+      "top1": 1,
+      "picked": 1,
+      "apply": 0,
+      "inFinal": 1
+    },
+    {
+      "word": "患有",
+      "topK": 1,
+      "top1": 1,
+      "picked": 1,
+      "apply": 0,
+      "inFinal": 1
+    },
+    {
+      "word": "身边",
+      "topK": 1,
+      "top1": 1,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 1
+    },
+    {
+      "word": "美是",
+      "topK": 3,
+      "top1": 1,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 1
+    },
+    {
+      "word": "试点",
+      "topK": 2,
+      "top1": 1,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 1
+    },
+    {
+      "word": "边线",
+      "topK": 3,
+      "top1": 0,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 1
+    },
+    {
+      "word": "好处",
+      "topK": 2,
+      "top1": 0,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 1
+    },
+    {
+      "word": "感觉",
+      "topK": 1,
+      "top1": 1,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 1
+    },
+    {
+      "word": "似的",
+      "topK": 3,
+      "top1": 1,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 1
+    },
+    {
+      "word": "邀请",
+      "topK": 3,
+      "top1": 3,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 1
+    },
+    {
+      "word": "是否",
+      "topK": 1,
+      "top1": 0,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 1
+    },
+    {
+      "word": "可疑",
+      "topK": 13,
+      "top1": 0,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 1
+    },
+    {
+      "word": "定制",
+      "topK": 1,
+      "top1": 1,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 1
+    },
+    {
+      "word": "上班",
+      "topK": 1,
+      "top1": 0,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 1
+    },
+    {
+      "word": "气性",
+      "topK": 4,
+      "top1": 4,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 1
+    },
+    {
+      "word": "那里",
+      "topK": 4,
+      "top1": 0,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 1
+    },
+    {
+      "word": "医护",
+      "topK": 4,
+      "top1": 0,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 1
+    },
+    {
+      "word": "沿岸",
+      "topK": 1,
+      "top1": 1,
+      "picked": 0,
+      "apply": 0,
+      "inFinal": 1
+    }
+  ],
+  "noChangeHighCer": 137,
+  "noChangeReasons": {
+    "A": 3,
+    "B": 0,
+    "C": 162,
+    "D": 0,
+    "E": 0,
+    "other": 0
+  },
+  "noChangeSample": [
+    {
+      "id": "d002",
+      "scenario": "cafe",
+      "raw_cer": 0.1176,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": -0.4430280000000053,
+      "spanCount": 4,
+      "candidateCount": 8
+    },
+    {
+      "id": "d004",
+      "scenario": "meeting",
+      "raw_cer": 0.2424,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "spanCount": 3,
+      "candidateCount": 5
+    },
+    {
+      "id": "d005",
+      "scenario": "meeting",
+      "raw_cer": 0.1714,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": -3.183080000000004,
+      "spanCount": 10,
+      "candidateCount": 16
+    },
+    {
+      "id": "d006",
+      "scenario": "meeting",
+      "raw_cer": 0.2143,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": -0.221966000000009,
+      "spanCount": 3,
+      "candidateCount": 5
+    },
+    {
+      "id": "d007",
+      "scenario": "taxi",
+      "raw_cer": 0.5484,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": -3.644193999999999,
+      "spanCount": 3,
+      "candidateCount": 5
+    },
+    {
+      "id": "d008",
+      "scenario": "taxi",
+      "raw_cer": 0.2963,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": -3.140039999999999,
+      "spanCount": 3,
+      "candidateCount": 6
+    },
+    {
+      "id": "d009",
+      "scenario": "taxi",
+      "raw_cer": 0.381,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": 0.5716060000000027,
+      "spanCount": 4,
+      "candidateCount": 7
+    },
+    {
+      "id": "d013",
+      "scenario": "shopping",
+      "raw_cer": 0.05,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "spanCount": 3,
+      "candidateCount": 5
+    },
+    {
+      "id": "d014",
+      "scenario": "shopping",
+      "raw_cer": 0.381,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": 1.0895089999999996,
+      "spanCount": 1,
+      "candidateCount": 8
+    },
+    {
+      "id": "d015",
+      "scenario": "shopping",
+      "raw_cer": 0.32,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": 1.504103999999998,
+      "spanCount": 7,
+      "candidateCount": 10
+    },
+    {
+      "id": "d016",
+      "scenario": "friend",
+      "raw_cer": 0.1304,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": -1.8506179999999972,
+      "spanCount": 4,
+      "candidateCount": 6
+    },
+    {
+      "id": "d017",
+      "scenario": "friend",
+      "raw_cer": 0.0952,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": -9.036262,
+      "spanCount": 7,
+      "candidateCount": 12
+    },
+    {
+      "id": "d019",
+      "scenario": "tech_deploy",
+      "raw_cer": 0.1579,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "spanCount": 4,
+      "candidateCount": 6
+    },
+    {
+      "id": "d020",
+      "scenario": "tech_deploy",
+      "raw_cer": 0.2,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": 0,
+      "spanCount": 4,
+      "candidateCount": 7
+    },
+    {
+      "id": "d021",
+      "scenario": "tech_deploy",
+      "raw_cer": 0.3333,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": -1.021259999999998,
+      "spanCount": 6,
+      "candidateCount": 10
+    },
+    {
+      "id": "d022",
+      "scenario": "customer_service",
+      "raw_cer": 0.36,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": 2.8795089999999988,
+      "spanCount": 1,
+      "candidateCount": 8
+    },
+    {
+      "id": "d024",
+      "scenario": "customer_service",
+      "raw_cer": 0.1176,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": 1.6413939999999982,
+      "spanCount": 5,
+      "candidateCount": 8
+    },
+    {
+      "id": "d026",
+      "scenario": "interview",
+      "raw_cer": 0.1364,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": -3.0197789999999998,
+      "spanCount": 3,
+      "candidateCount": 5
+    },
+    {
+      "id": "d027",
+      "scenario": "interview",
+      "raw_cer": 0.087,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": -2.6032140000000012,
+      "spanCount": 5,
+      "candidateCount": 9
+    },
+    {
+      "id": "d028",
+      "scenario": "classroom",
+      "raw_cer": 0.25,
+      "reason": "C_kenlm_rejected",
+      "pickedIsRaw": true,
+      "maxDelta": -5.266117000000001,
+      "spanCount": 5,
+      "candidateCount": 6
+    }
+  ],
+  "domainCoverage": [
+    {
+      "domain": "coffee_tea",
+      "total": 15,
+      "improvedRate": 0.333,
+      "degradedRate": 0,
+      "improved": 5,
+      "degraded": 0
+    },
+    {
+      "domain": "tech_ai",
+      "total": 29,
+      "improvedRate": 0.207,
+      "degradedRate": 0.034,
+      "improved": 6,
+      "degraded": 1
+    },
+    {
+      "domain": "transport",
+      "total": 15,
+      "improvedRate": 0.133,
+      "degradedRate": 0.267,
+      "improved": 2,
+      "degraded": 4
+    },
+    {
+      "domain": "general",
+      "total": 66,
+      "improvedRate": 0.152,
+      "degradedRate": 0,
+      "improved": 10,
+      "degraded": 0
+    },
+    {
+      "domain": "friend",
+      "total": 15,
+      "improvedRate": 0,
+      "degradedRate": 0,
+      "improved": 0,
+      "degraded": 0
+    },
+    {
+      "domain": "customer_service",
+      "total": 12,
+      "improvedRate": 0.083,
+      "degradedRate": 0,
+      "improved": 1,
+      "degraded": 0
+    },
+    {
+      "domain": "classroom",
+      "total": 12,
+      "improvedRate": 0.167,
+      "degradedRate": 0,
+      "improved": 2,
+      "degraded": 0
+    },
+    {
+      "domain": "travel",
+      "total": 12,
+      "improvedRate": 0,
+      "degradedRate": 0,
+      "improved": 0,
+      "degraded": 0
+    },
+    {
+      "domain": "restaurant",
+      "total": 12,
+      "improvedRate": 0.083,
+      "degradedRate": 0,
+      "improved": 1,
+      "degraded": 0
+    },
+    {
+      "domain": "lexicon_homophone",
+      "total": 12,
+      "improvedRate": 0.25,
+      "degradedRate": 0,
+      "improved": 3,
+      "degraded": 0
+    }
+  ]
+}

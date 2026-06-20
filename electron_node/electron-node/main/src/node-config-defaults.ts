@@ -102,7 +102,7 @@ export const DEFAULT_CONFIG: NodeConfig = {
       spanAssemblyV4DiagnosticsTargetIds: [],
       toneTimestampOnlyEnabled: true,
       maxSentenceCandidates: 16,
-      minDeltaToReplace: 0.03,
+      minDeltaToReplace: 3.0,
       kenlmSubprocessTimeoutMs: 5000,
       kenlmSubprocessMaxLines: 17,
     },

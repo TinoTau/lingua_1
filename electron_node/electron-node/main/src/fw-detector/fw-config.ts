@@ -71,6 +71,13 @@ export function loadFwDetectorRuntimeConfig(): FwDetectorRuntimeConfig {
     cfg.toneTimestampOnlyEnabled ??
     (cfg as { v3ToneTimestampOnlyEnabled?: boolean }).v3ToneTimestampOnlyEnabled ??
     true;
+  const minDeltaToReplace = cfg.minDeltaToReplace ?? 3.0;
+  if (typeof cfg.minDeltaToReplace === 'number' && cfg.minDeltaToReplace < 1.0) {
+    logger.warn(
+      '[fw-detector] minDeltaToReplace < 1.0 looks like legacy normalized delta config; raw log delta gate uses values such as 3.0'
+    );
+  }
+
   return {
     minPrior: cfg.minPrior ?? 0.5,
     enableKenLMGate: cfg.enableKenLMGate !== false,
@@ -80,7 +87,7 @@ export function loadFwDetectorRuntimeConfig(): FwDetectorRuntimeConfig {
     enabledDomains: cfg.enabledDomains ?? ['tech_ai', 'travel', 'transport', 'restaurant'],
     candidateRequireRepairTarget: cfg.candidateRequireRepairTarget !== false,
     maxSentenceCandidates: cfg.maxSentenceCandidates ?? 16,
-    minDeltaToReplace: cfg.minDeltaToReplace ?? 0.03,
+    minDeltaToReplace,
     spanAssemblyV4Enabled: true,
     spanAssemblyV4DiagnosticsEnabled: cfg.spanAssemblyV4DiagnosticsEnabled === true,
     spanAssemblyV4DiagnosticsLevel:

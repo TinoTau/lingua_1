@@ -37,7 +37,7 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(DEFAULT_CONFIG.features?.lexiconRuntimeV2?.enabled).toBe(true);
     expect(ime?.maxApprovedSpans).toBe(4);
     expect(fw?.maxSentenceCandidates).toBe(16);
-    expect(fw?.minDeltaToReplace).toBe(0.03);
+    expect(fw?.minDeltaToReplace).toBe(3.0);
     expect(fw?.spanAssemblyV4Enabled).toBe(true);
     expect(fw?.spanAssemblyV4DiagnosticsEnabled).toBe(false);
     expect(fw?.spanAssemblyV4DiagnosticsLevel).toBe('summary');
@@ -54,7 +54,7 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(ime.enabled).toBe(true);
     expect(cfg.enableKenLMGate).toBe(true);
     expect(cfg.maxSentenceCandidates).toBe(16);
-    expect(cfg.minDeltaToReplace).toBe(0.03);
+    expect(cfg.minDeltaToReplace).toBe(3.0);
     expect(cfg.spanAssemblyV4Enabled).toBe(true);
     expect(cfg.spanAssemblyV4DiagnosticsEnabled).toBe(false);
     expect(cfg.toneTimestampOnlyEnabled).toBe(true);
@@ -75,6 +75,14 @@ describe('P1~P4 freeze simplification contract', () => {
     ]) {
       expect(src).not.toContain(sym);
     }
+  });
+
+  it('GATE-2: rerank-fw-sentences pick uses raw score delta only', () => {
+    const src = stripComments(readSrc('fw-detector/rerank-fw-sentences.ts'));
+    expect(src).toContain('FW_RERANK_SCORE_MODE');
+    expect(src).not.toMatch(/bestRawDelta\s*=.*normalizedScore/);
+    expect(src).not.toMatch(/rawDelta\s*=.*normalizedScore/);
+    expect(src).not.toMatch(/bestRawDelta\s*<\s*minDeltaToReplace[\s\S]{0,200}normalizedScore/);
   });
 
   it('local-span-recall V2-only', () => {

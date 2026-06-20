@@ -201,6 +201,8 @@ export type FwDetectorSummary = {
   kenlmQueryCount: number;
 };
 
+export type FwRerankScoreMode = 'raw_log_delta';
+
 export type FwSentenceRerankDiagnostics = {
   spanCount: number;
   perSpanLimit: number;
@@ -209,6 +211,10 @@ export type FwSentenceRerankDiagnostics = {
   pickedIsRaw: boolean;
   maxDelta: number;
   minDeltaToReplace: number;
+  scoreMode?: FwRerankScoreMode;
+  baselineRawScore?: number;
+  pickedRawScore?: number;
+  maxNormalizedDelta?: number;
   topCandidates: Array<{ text: string; kenlmDelta: number; replacementCount: number }>;
   allCombinations?: CombinationTrace[];
   allCombinationDeltas?: number[];

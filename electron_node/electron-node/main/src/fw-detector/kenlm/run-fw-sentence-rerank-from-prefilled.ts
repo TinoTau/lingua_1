@@ -170,6 +170,10 @@ export async function runFwSentenceRerankFromPrefilled(
     kenlmTiming: rerank.kenlmTiming,
     allCombinationDeltas: rerank.allCombinationDeltas,
     picked: rerank.picked,
+    ...(rerank.scoreMode ? { scoreMode: rerank.scoreMode } : {}),
+    ...(rerank.baselineRawScore !== undefined ? { baselineRawScore: rerank.baselineRawScore } : {}),
+    ...(rerank.pickedRawScore !== undefined ? { pickedRawScore: rerank.pickedRawScore } : {}),
+    ...(rerank.maxNormalizedDelta !== undefined ? { maxNormalizedDelta: rerank.maxNormalizedDelta } : {}),
     ...(rerank.kenlmRuntime
       ? {
           kenlmSubprocessMs: rerank.kenlmRuntime.kenlmSubprocessMs,

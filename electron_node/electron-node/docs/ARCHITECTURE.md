@@ -103,5 +103,6 @@ Audio → AudioAggregator → ASR (faster_whisper_vad)
 | NodeAgent | `main/src/agent/node-agent.ts` |
 | Pipeline | `main/src/pipeline/job-pipeline.ts` |
 | FW | `main/src/fw-detector/fw-detector-orchestrator.ts` |
+| FW 文档（冻结 SSOT） | `docs/fw-detector/ARCHITECTURE.md` · [Framework Freeze Declaration](../../../docs/fw-detector/FRAMEWORK_FREEZE_DECLARATION.md) |
 | 配置默认值 | `main/src/node-config-defaults.ts` |
 | IPC | `main/src/index-ipc.ts`、`ipc-handlers/` |

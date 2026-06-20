@@ -128,7 +128,7 @@ describe('span-assembly-v4 diagnostics', () => {
         },
       ],
       deltas: [0.001],
-      minDeltaToReplace: 0.03,
+      minDeltaToReplace: 3.0,
       pickedIsRaw: true,
       candidateRequireRepairTarget: true,
       picked: null,

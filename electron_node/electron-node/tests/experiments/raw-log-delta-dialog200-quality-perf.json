@@ -1,0 +1,140 @@
+{
+  "evaluated": 165,
+  "stoppedReason": "deadline",
+  "wallClockSec": 901,
+  "contractPass": 165,
+  "scoreModeCount": 165,
+  "pickedNotRaw": 73,
+  "pickedIsRaw": 92,
+  "appliedCases": 9,
+  "appliedIds": [
+    "d010",
+    "d015",
+    "d041",
+    "d110",
+    "d118",
+    "d128",
+    "d131",
+    "d140",
+    "d146"
+  ],
+  "gateDist": {
+    "0.03": 165
+  },
+  "configSnapshot": {
+    "pipelinePath": "v4",
+    "spanAssemblyV4Enabled": true,
+    "pinyinImeV2": {
+      "enabled": true,
+      "topK": 5,
+      "maxApprovedSpans": 4
+    },
+    "minPrior": 0.5,
+    "enableKenLMGate": true,
+    "kenlmGateMode": "weak_veto",
+    "kenlmDeltaThreshold": 0.8,
+    "kenlmVetoThreshold": -0.2,
+    "enabledDomains": [
+      "tech_ai",
+      "travel",
+      "transport",
+      "restaurant"
+    ],
+    "candidateRequireRepairTarget": true,
+    "maxSentenceCandidates": 16,
+    "minDeltaToReplace": 0.03,
+    "scoreMode": "raw_log_delta",
+    "toneTimestampOnlyEnabled": true
+  },
+  "cer": {
+    "improved": 37,
+    "degraded": 25,
+    "net": 12
+  },
+  "riskReview": [
+    {
+      "id": "d048",
+      "scenario": "cafe",
+      "pickedIsRaw": false,
+      "maxDelta": 4.471587999999997,
+      "maxNormalizedDelta": 0.0029269677355881884,
+      "minDeltaToReplace": 0.03,
+      "fw_applied_count": 0,
+      "raw_cer": 0.1053,
+      "final_cer": 0.1053,
+      "ref": "请问这款热巧克力可以少冰吗？我赶时间，小杯。",
+      "raw": "请问,这款热巧克力可以少病吗? 我赶时间小背",
+      "final": "请问,这款热巧克力可以烧饼吗? 我赶时间小杯"
+    },
+    {
+      "id": "d093",
+      "scenario": "cafe",
+      "pickedIsRaw": false,
+      "maxDelta": 2.587793000000005,
+      "maxNormalizedDelta": 0.0014405151290478035,
+      "minDeltaToReplace": 0.03,
+      "fw_applied_count": 0,
+      "raw_cer": 0.2222,
+      "final_cer": 0.2778,
+      "ref": "请问这款冰美式可以少冰吗？我赶时间，小杯。",
+      "raw": "请问,这款病美是可以少病吗?我赶时间小悲。",
+      "final": "请问,这款病美是可以烧饼吗?我赶时间小悲。"
+    },
+    {
+      "id": "d138",
+      "scenario": "cafe",
+      "pickedIsRaw": false,
+      "maxDelta": 2.5878000000000014,
+      "maxNormalizedDelta": 0.002582200205597523,
+      "minDeltaToReplace": 0.03,
+      "fw_applied_count": 0,
+      "raw_cer": 0.0588,
+      "final_cer": 0.1176,
+      "ref": "请问这款美式可以少冰吗？我赶时间，小杯。",
+      "raw": "请问,这款美式可以少病吗?我赶时间小杯",
+      "final": "请问,这款美式可以烧饼吗?我赶时间小杯"
+    },
+    {
+      "id": "d003",
+      "scenario": "cafe",
+      "pickedIsRaw": false,
+      "maxDelta": 6.008292000000004,
+      "maxNormalizedDelta": 0.002384789687827595,
+      "minDeltaToReplace": 0.03,
+      "fw_applied_count": 0,
+      "raw_cer": 0.1579,
+      "final_cer": 0.1053,
+      "ref": "请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。",
+      "raw": "请问,这款燕麦拿铁可以烧病吗?我赶时间小背",
+      "final": "请问,这款燕麦拿铁可以烧饼吗?我赶时间小杯"
+    },
+    {
+      "id": "d001",
+      "scenario": "cafe",
+      "pickedIsRaw": false,
+      "maxDelta": 10.99011999999999,
+      "maxNormalizedDelta": 0.0001132558893910545,
+      "minDeltaToReplace": 0.03,
+      "fw_applied_count": 0,
+      "raw_cer": 0.3704,
+      "final_cer": 0.2222,
+      "ref": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "raw": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "final": "你好,我想點一杯熱拿铁中杯少糖 身边溫 以下今天有蓝莓马芬吗?"
+    },
+    {
+      "id": "d079",
+      "scenario": "bank",
+      "pickedIsRaw": false,
+      "maxDelta": 7.276833999999994,
+      "maxNormalizedDelta": 0.007483081769188933,
+      "minDeltaToReplace": 0.03,
+      "fw_applied_count": 0,
+      "raw_cer": 0.2667,
+      "final_cer": 0.2,
+      "ref": "我想开通短信提醒，需要带什么证件？",
+      "raw": "我想開通短信提醒需要帶什麼證件",
+      "final": "我想開通短信提醒需腰带什麼证件"
+    }
+  ]
+}

@@ -1,77 +1,111 @@
-# FW Detector — 配置 SSOT
+# FW Repair V4 — Configuration SSOT
 
-来源：`node-config-defaults.ts` + `tests/freeze-config-ssot.json`（parity 测试）。
+**状态：** Framework Frozen · 2026-06-19  
+**SSOT 源：** `node-config-defaults.ts` · `tests/freeze-config-ssot.json` · `fw-config.ts`  
+**Parity 测试：** `freeze-config-ssot.test.ts`
 
-## 引擎与 Pipeline
+---
 
-| 键 | 默认 | 说明 |
-|----|------|------|
-| `asr.engine` | `fw_detector_v1` | 启用 FW 主链 |
-| `features.fwDetector.enabled` | `true` | FW 步骤开关 |
-| `features.fwDetector.spanAssemblyV4Enabled` | `true` | **恒 V4**；`false` 仅 warn |
-| `features.fwDetector.toneTimestampOnlyEnabled` | `true` | 声学声调时间戳对齐；**无**独立 `toneFirstRecallEnabled` |
+## 1. Framework Config（禁止未经新合约修改）
 
-## Recall / 候选
+以下键定义 **FW Repair V4 框架行为**。变更须 bump Framework 合约版本并通过 `freeze-contract.test.ts`。
 
-| 键 | 默认 |
-|----|------|
-| `features.lexiconRuntimeV2.enabled` | `true` |
-| `features.fwDetector.minPrior` | `0.5` |
-| `features.fwDetector.candidateRequireRepairTarget` | `true` |
-| `features.lexiconRecall.enabled` | `false` |
-| `features.lexiconRuntimeV2.maxDomainCandidates` | `3` |
-| `features.lexiconRuntimeV2.maxIdiomCandidates` | `0` |
+| 键 | 默认 | 语义 | 修改规则 |
+|----|------|------|----------|
+| `features.fwDetector.enableKenLMGate` | `true` | 关闭则永不 pick | ❌ 冻结 |
+| `features.fwDetector.kenlmGateMode` | `weak_veto` | span 级 KenLM 模式 | ❌ 冻结 |
+| `features.fwDetector.minDeltaToReplace` | **`3.0`** | Raw Log Delta pick 阈值 | ❌ 冻结 |
+| `scoreMode`（代码常量） | **`raw_log_delta`** | pick 单位；写入 configSnapshot | ❌ 冻结 |
+| `features.fwDetector.toneTimestampOnlyEnabled` | `true` | Tone-First Recall 开关（无独立 enableToneRecall） | ❌ 冻结 |
+| `features.fwDetector.candidateRequireRepairTarget` | `true` | span apply 需 repairTarget | ❌ 冻结 |
+| `features.fwDetector.spanAssemblyV4Enabled` | `true` | 恒 V4；`false` 仅 warn | ❌ 冻结 |
+| `features.fwDetector.maxSentenceCandidates` | `16` | 句组合上限 | ❌ 冻结 |
+| `features.fwDetector.kenlmSubprocessTimeoutMs` | `5000` | batch spawn 超时 | ❌ 冻结 |
+| `features.fwDetector.kenlmSubprocessMaxLines` | `17` | 单次 batch 最大非空句数 | ❌ 冻结 |
+| `features.pinyinImeV2.directRepair` | `false` | IME 不得 bypass FW | ❌ 冻结 |
+| `features.lexiconRecall.enabled` | `false` | Legacy recall 路径断开 | ❌ 冻结 |
+| `asr.engine` | `fw_detector_v1` | FW 主链 ASR 路由 | ❌ 冻结 |
 
-## KenLM / Apply
+**已废止（不得在新配置中使用）：**
 
-| 键 | 默认 | 说明 |
-|----|------|------|
-| `features.fwDetector.enableKenLMGate` | `true` | **必需**，否则不 pick |
-| `features.fwDetector.kenlmGateMode` | `weak_veto` | |
-| `features.fwDetector.maxSentenceCandidates` | `16` | |
-| `features.fwDetector.minDeltaToReplace` | `0.03` | **V4 Apply pick 阈值** |
-| `features.fwDetector.kenlmDeltaThreshold` | `0.8` | **@deprecated**，仅兼容读取，不参与 V4 rerank |
-| `features.fwDetector.kenlmSubprocessTimeoutMs` | `5000` | KenLM batch subprocess 单次 spawn 超时（ms） |
-| `features.fwDetector.kenlmSubprocessMaxLines` | `17` | 单次 batch 最大非空句数；超出则 chunk 串行 spawn |
+- `minDeltaToReplace = 0.03`（normalized 域，已移除）
+- `kenlmBatchSubprocessEnabled` · `kenlmBatchSubprocessFallbackToSerial` · `kenlmRuntimeMode`
+- `spanAssemblyV3Enabled` · `useSentenceLevelRerank`
 
-KenLM runtime 为 **batch-only**（无 serial fallback）。Diagnostics：`kenlmQueryCount`、`kenlmSubprocessMs`、`kenlmSubprocessCount`、`kenlmSubprocessErrorReason`。
+**兼容只读（旧键映射，不参与 V4 pick）：**
 
-**兼容读取（旧键，勿在新配置中使用）：** `kenlmBatchSubprocessTimeoutMs` → `kenlmSubprocessTimeoutMs`；`kenlmBatchSubprocessMaxSentences` → `kenlmSubprocessMaxLines`。已删除：`kenlmBatchSubprocessEnabled`、`kenlmBatchSubprocessFallbackToSerial`。
+- `kenlmDeltaThreshold` → `@deprecated`
+- `kenlmBatchSubprocessTimeoutMs` → `kenlmSubprocessTimeoutMs`
+- `kenlmBatchSubprocessMaxSentences` → `kenlmSubprocessMaxLines`
 
-## Pinyin IME V2
+---
+
+## 2. Lexicon Operations Config（允许运营调整）
+
+以下键/数据 **不改变框架算法**，仅影响词库覆盖与候选池内容。
+
+| 键 / 数据 | 默认 | 用途 | 修改规则 |
+|-----------|------|------|----------|
+| `features.fwDetector.minPrior` | `0.5` | 候选 prior 下限 | ✅ 运营 |
+| `features.fwDetector.enabledDomains` | profile 驱动 | domain recall 范围 | ✅ 运营 |
+| `features.lexiconRuntimeV2.bundlePath` | `node_runtime/lexicon/v3` | runtime bundle | ✅ deploy |
+| `features.lexiconRuntimeV2.maxBaseCandidates` | `2` | base TopK 上限 | ✅ 运营 |
+| `features.lexiconRuntimeV2.maxDomainCandidates` | `3` | domain TopK 上限 | ✅ 运营 |
+| sqlite `repair_target` |  per row | span apply 资格 | ✅ Patch |
+| sqlite `domain_id` / word rows | per row | domain recall | ✅ Patch |
+| confusion seed jsonl | 资产 | ASR 混淆簇 | ✅ import |
+| Patch Service | HTTP/CLI | 在线增词 + reload | ✅ 运营 |
+
+**扩词不需要新增 Framework 配置键。**
+
+---
+
+## 3. Diagnostics Config（观测，不改 pick 逻辑）
+
+| 键 | 生产默认 | 说明 |
+|----|----------|------|
+| `spanAssemblyV4DiagnosticsEnabled` | `false` | 开 summary/trace |
+| `spanAssemblyV4DiagnosticsLevel` | `summary` | `summary` \| `trace` |
+| `spanAssemblyV4DiagnosticsTargetIds` | `[]` | trace case 过滤 |
+| `lexiconRuntimeV2.recallDiagnosticsEnabled` | `true` | V2 recall job diagnostics |
+
+---
+
+## 4. Pinyin IME V2（Framework 边界内）
 
 | 键 | 默认 |
 |----|------|
 | `features.pinyinImeV2.enabled` | `true` |
 | `features.pinyinImeV2.topK` | `5` |
 | `features.pinyinImeV2.maxApprovedSpans` | `4` |
-| `features.pinyinImeV2.directRepair` | `false` |
 
-## Diagnostics（V4）
+---
 
-| 键 | 生产默认 | 说明 |
-|----|----------|------|
-| `features.fwDetector.spanAssemblyV4DiagnosticsEnabled` | `false` | 开启 summary/trace |
-| `features.fwDetector.spanAssemblyV4DiagnosticsLevel` | `summary` | `summary` \| `trace` |
-| `features.fwDetector.spanAssemblyV4DiagnosticsTargetIds` | `[]` | trace 级 case 过滤；批测 patch 设为 `['d001','d048']` |
+## 5. configSnapshot（运行时观测）
 
-### V2 Recall Diagnostics（trace 批测）
+`runFwDetectorOrchestrator` 写入 Job diagnostics，须包含：
 
-Lexicon recall diagnostics 由 `recallDiagnosticsEnabled` 控制（非 fwDetector 键）。  
-Trace 批测须 **同时** 开启 V2 recall diagnostics + V4 diagnostics trace，见 [diagnostics/TRACE_FROZEN_V1_0_2.md](./diagnostics/TRACE_FROZEN_V1_0_2.md)。
+`pipelinePath: 'v4'` · `minDeltaToReplace` · `scoreMode: 'raw_log_delta'` · `toneTimestampOnlyEnabled` · `enableKenLMGate`
 
-Patch 脚本（不改 SSOT 默认文件）：`tests/patch-span-assembly-v4-config.mjs`
+**不得再写入：** `spanAssemblyV3Enabled` · `useSentenceLevelRerank`
 
-## configSnapshot（运行时观测）
+---
 
-orchestrator 写入：`pipelinePath: 'v4'`、`minDeltaToReplace`、`toneTimestampOnlyEnabled` 等。  
-**不再写入** `spanAssemblyV3Enabled`、`useSentenceLevelRerank`。
+## 6. 配置修改决策树
 
-## Historical / 无效开关
+```text
+是否改变 pick / recall / assembly / KenLM / apply 算法？
+  ├─ 是 → 禁止（需新 Framework 合约）
+  └─ 否 → 是否仅改变词库内容或 prior/domain 阈值？
+           ├─ 是 → Lexicon Operations（Patch / import / reload）
+           └─ 否 → 是否仅改变 diagnostics 粒度？
+                    └─ 是 → 允许（不改 SSOT 默认亦可 patch 批测脚本）
+```
 
-| 键 | 状态 |
-|----|------|
-| `useSentenceLevelRerank` | orchestrator **不读取** |
-| `spanAssemblyV3Enabled` | **已删除** |
-| `v3ToneTimestampOnlyEnabled` | 迁移至 `toneTimestampOnlyEnabled` |
-| `toneFirstRecallEnabled` | **不存在**；Tone-First 随 `toneTimestampOnlyEnabled` 生效 |
+---
+
+## 7. 相关文档
+
+- [ARCHITECTURE.md](./ARCHITECTURE.md)
+- [LEXICON_OPERATIONS.md](./LEXICON_OPERATIONS.md)
+- [kenlm/KENLM_RUNTIME.md](./kenlm/KENLM_RUNTIME.md)

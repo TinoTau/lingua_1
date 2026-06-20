@@ -63,7 +63,7 @@ Bundle：`node_runtime/lexicon/v3`（加载器 `LexiconRuntimeV2`）。
 
 ### 3.2 KenLM
 
-- `maxSentenceCandidates: 16`，`minDeltaToReplace: 0.03`
+- `maxSentenceCandidates: 16`，`minDeltaToReplace: 3.0`（Raw Log Delta）
 - `enableKenLMGate: true` **必需**（否则 rerank 不 pick 替换）
 - Runtime：**batch-only subprocess**（`kenlm-scorer.ts` → `runKenlmQueryBatch`）；`kenlmSubprocessTimeoutMs` / `kenlmSubprocessMaxLines`；失败 fail-open（scoreAllZero）；无 serial fallback
 
@@ -117,7 +117,7 @@ FW apply 后 `isSegmentWriteLocked` 阻止 5015/5016/5017。
 | `features.fwDetector.toneTimestampOnlyEnabled` | `true` |
 | `features.fwDetector.enableKenLMGate` | `true` |
 | `features.fwDetector.maxSentenceCandidates` | `16` |
-| `features.fwDetector.minDeltaToReplace` | `0.03`（**V4 Apply pick 阈值**） |
+| `features.fwDetector.minDeltaToReplace` | `3.0`（**V4 Apply pick 阈值**，Raw Log Delta 单位） |
 | `features.fwDetector.candidateRequireRepairTarget` | `true` |
 | `features.lexiconRecall.enabled` | `false` |
 | `features.fwDetector.kenlmSubprocessTimeoutMs` | `5000` |

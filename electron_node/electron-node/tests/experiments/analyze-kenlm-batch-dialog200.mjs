@@ -94,6 +94,16 @@ for (const c of evaluated) {
   if ((sr.kenlmSubprocessCount ?? 0) >= 1) batchSubprocessSuccessCount += 1;
 }
 
+function resolveScoreContract(sr) {
+  if (sr.scoreMode === 'raw_log_delta') {
+    return { unit: 'raw_log_delta', legacy: false };
+  }
+  if (!sr.scoreMode && typeof sr.maxDelta === 'number' && sr.maxDelta < 0.01) {
+    return { unit: 'legacy_normalized_delta', legacy: true };
+  }
+  return { unit: 'unknown', legacy: false };
+}
+
 function pickSample(id) {
   const c = evaluated.find((x) => x.id === id);
   if (!c) return null;
@@ -102,6 +112,7 @@ function pickSample(id) {
   const fin = (c.extra?.text_asr || '').trim();
   const fw = c.extra?.fw_detector || {};
   const sr = fw.sentenceRerank || {};
+  const scoreContract = resolveScoreContract(sr);
   return {
     id,
     scenario: c.scenario,
@@ -116,7 +127,12 @@ function pickSample(id) {
     kenlmSubprocessErrorReason: sr.kenlmSubprocessErrorReason,
     combinationCount: sr.combinationCount,
     pickedIsRaw: sr.pickedIsRaw,
+    scoreMode: sr.scoreMode,
+    deltaUnit: scoreContract.unit,
+    legacyNormalizedDelta: scoreContract.legacy,
     maxDelta: sr.maxDelta,
+    maxNormalizedDelta: sr.maxNormalizedDelta,
+    minDeltaToReplace: sr.minDeltaToReplace,
     fw_applied_count: fw.summary?.appliedCount ?? 0,
     ref: ref.slice(0, 80),
     raw: raw.slice(0, 80),
@@ -139,6 +155,7 @@ const output = {
   contractFail: evaluated.filter((c) => !c.pass).length,
   wallClockSec: report.summary?.wall_clock_sec,
   kenlmRuntime: 'batch-only',
+  scoreContract: 'raw_log_delta_v1',
   quality: {
     raw_cer_avg: Number(avg(rawCers).toFixed(4)),
     final_cer_avg: Number(avg(finalCers).toFixed(4)),

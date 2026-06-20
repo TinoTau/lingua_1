@@ -1,59 +1,50 @@
 # FW Detector 文档
 
-> **状态**：V4-only · Assembly V1.2 · Coverage V1.2 · Compatibility V1.1 · Recall V1.0.1 · Diagnostics V1.0.2 · **KenLM Batch-Only**（2026-06-17）  
-> **代码**：`electron_node/electron-node/main/src/fw-detector/`
+> **状态：** FW Repair V4 Framework **Frozen** · 2026-06-19  
+> **代码：** `electron_node/electron-node/main/src/fw-detector/`
 
 ## 生产主链
 
 ```text
-ASR → runFwDetectorOrchestrator → runFwDetectorV4Path
-→ Global Window → Recall (tone-first) → Tone Score
-→ Compatibility → Domain Assembly (Pool→Vote→Filter→Select→Assemble)
-→ SentenceCandidate → KenLM (batch-only) → applyFwSpanReplacements → segmentForJobResult
+ASR → IME V2 → Raw Boundary → Fine Span Recall → Tone-First Recall
+→ Domain Vote → Sentence Assembly V4 → KenLM Batch → Raw Log Delta Pick → Apply
 ```
 
-Shadow（仅 diagnostics）：`Emit → ParentSpan → Graph → Beam`（不进入 KenLM/Apply）。
-
-`pipelinePath = 'v4'` 为唯一合法值。Assembly / Recall / Compatibility / KenLM runtime **已冻结**，禁止 Silent Change。
-
-## 文档索引
+## 文档索引（SSOT）
 
 | 文档 | 说明 |
 |------|------|
-| [ARCHITECTURE.md](./ARCHITECTURE.md) | V4 主链总览与目录结构 |
-| [CONFIG.md](./CONFIG.md) | 配置 SSOT（含 KenLM subprocess） |
-| [assembly/FROZEN_V1_2.md](./assembly/FROZEN_V1_2.md) | SameDomain + Base Per-Span Assembly |
-| [recall/TONE_FIRST_RECALL_FROZEN_V1_0_1.md](./recall/TONE_FIRST_RECALL_FROZEN_V1_0_1.md) | Tone-First Recall |
-| [compatibility/FROZEN.md](./compatibility/FROZEN.md) | Coverage 分类 + Merge + Authority |
-| [kenlm/KENLM_RUNTIME.md](./kenlm/KENLM_RUNTIME.md) | KenLM batch-only subprocess |
-| [diagnostics/TRACE_FROZEN_V1_0_2.md](./diagnostics/TRACE_FROZEN_V1_0_2.md) | Diagnostics Summary + Trace |
-| [freeze/FINAL_FREEZE_2026_06_17.md](./freeze/FINAL_FREEZE_2026_06_17.md) | 2026-06-17 冻结裁决 |
+| [FRAMEWORK_FREEZE_DECLARATION.md](./FRAMEWORK_FREEZE_DECLARATION.md) | **入口** — 冻结声明与验证 |
+| [ARCHITECTURE.md](./ARCHITECTURE.md) | 主链 · Module Ownership · Freeze Boundary |
+| [CONFIG.md](./CONFIG.md) | Framework vs Lexicon 配置 |
+| [kenlm/KENLM_RUNTIME.md](./kenlm/KENLM_RUNTIME.md) | KenLM batch-only |
+| [kenlm/SCORE_CONTRACT.md](./kenlm/SCORE_CONTRACT.md) | Raw Log Delta · Gate 3.0 |
+| [INTERFACE_FREEZE.md](./INTERFACE_FREEZE.md) | 接口冻结 |
+| [DIAGNOSTICS_CONTRACT.md](./DIAGNOSTICS_CONTRACT.md) | Diagnostics + JSON samples |
+| [LEXICON_OPERATIONS.md](./LEXICON_OPERATIONS.md) | 词库迭代 · 质量基线 · P0 词表 |
 
-## 关联模块
+### 子模块冻结合约
 
 | 模块 | 文档 |
 |------|------|
-| 粗边界 / IME | [../pinyin-v2/README.md](../pinyin-v2/README.md) |
-| 声学声调 | [../tone-module/README.md](../tone-module/README.md) |
-| Lexicon Runtime | [../lexicon-v3/ARCHITECTURE.md](../lexicon-v3/ARCHITECTURE.md) |
-| Legacy 回滚链 | `main/src/legacy/fw-detector/README.md` |
+| Assembly V1.2 | [assembly/FROZEN_V1_2.md](./assembly/FROZEN_V1_2.md) |
+| Recall V1.0.1 | [recall/TONE_FIRST_RECALL_FROZEN_V1_0_1.md](./recall/TONE_FIRST_RECALL_FROZEN_V1_0_1.md) |
+| Compatibility V1.1 | [compatibility/FROZEN.md](./compatibility/FROZEN.md) |
+| Diagnostics V1.0.2 | [diagnostics/TRACE_FROZEN_V1_0_2.md](./diagnostics/TRACE_FROZEN_V1_0_2.md) |
 
-## 常用命令
+## 关联
 
-```powershell
-cd D:\Programs\github\lingua_1\electron_node\electron-node
-$env:PROJECT_ROOT = "D:\Programs\github\lingua_1"
-npm run build:main
-npm run test:fw-detector
-node scripts/fw-detector-gate.mjs
-npx jest --testPathPattern="freeze-contract|freeze-config-ssot|kenlm-scorer"
-```
+| 模块 | 文档 |
+|------|------|
+| Pinyin IME V2 | [../pinyin-v2/README.md](../pinyin-v2/README.md) |
+| Tone Module | [../tone-module/README.md](../tone-module/README.md) |
+| Lexicon V3 | [../lexicon-v3/ARCHITECTURE.md](../lexicon-v3/ARCHITECTURE.md) |
 
-dialog200 批测（需节点 + Test Server :5020）：
+## 验证
 
 ```powershell
-node tests/run-dialog200-timed-batch.mjs "D:\Programs\github\lingua_1\test wav\dialog_200" --max-minutes 18 --out kenlm-batch-subprocess-dialog200-batch-result.json
-node tests/experiments/analyze-kenlm-batch-dialog200.mjs
+cd electron_node/electron-node
+npx jest --testPathPattern="freeze-contract|freeze-config-ssot"
 ```
 
-KenLM 性能门槛：`kenlmVetoMs` P95 &lt; 2000ms，`fw_detector_step_ms` P95 &lt; 4000ms。
+期望 **50/50 PASS**
