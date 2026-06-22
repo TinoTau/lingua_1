@@ -97,8 +97,7 @@ function isDomainHotword(hotword: HotwordEntry): boolean {
 
 function classifyRecallCandidateKind(
   hotword: HotwordEntry,
-  variant: FuzzyPinyinVariant,
-  plan?: WeakDomainRecallPlan
+  variant: FuzzyPinyinVariant
 ): RecallCandidateKind {
   const domains = hotwordDomains(hotword);
   const domainId = domains[0] ?? 'general';
@@ -110,15 +109,6 @@ function classifyRecallCandidateKind(
 
   if (!domainHit) {
     return 'exact_base';
-  }
-
-  if (plan?.enabled) {
-    if (plan.strongDomainIds.includes(domainId)) {
-      return 'exact_domain_strong';
-    }
-    if (plan.weakDomainIds.includes(domainId)) {
-      return 'exact_domain_weak';
-    }
   }
 
   return 'exact_domain_strong';
@@ -168,7 +158,7 @@ function scoreHotword(
     return;
   }
 
-  const recallCandidateKind = classifyRecallCandidateKind(hotword, variant, plan);
+  const recallCandidateKind = classifyRecallCandidateKind(hotword, variant);
   const phoneticScore = scorePinyinSimilarity(syllables, hotword.pinyin);
   const candidateScoreBreakdown = computeCandidateScoreBreakdown({
     hotword,
@@ -177,7 +167,7 @@ function scoreHotword(
     phoneticScore,
     profile,
     recallCandidateKind,
-    domainBoostContext: boostContext,
+    domainBoostContext: undefined,
   });
   const candidateScore =
     candidateScoreBreakdown.priorScore +
@@ -201,12 +191,6 @@ function scoreHotword(
   }
 
   bumpSourceBreakdown(sourceBreakdown, recallCandidateKind);
-  if (plan?.enabled) {
-    const domains = hotwordDomains(hotword);
-    if (domains.some((d) => plan.weakDomainIds.includes(d))) {
-      weakDomainCandidateCount.value += 1;
-    }
-  }
 
   const tonePattern = acousticTonePattern?.length
     ? acousticTonePattern.slice(0, syllables.length)
@@ -268,13 +252,11 @@ export function recallSpanTopKV2(
     domainIds,
     perSpanLimit,
     acousticTonePattern,
-    weakDomainPlan,
   } = input;
   const profile = input.profile ?? defaultGeneralProfile();
   const cfg = getLexiconRuntimeV2Config();
   const recallStart = Date.now();
   const fuzzyRecallEnabled = input.fuzzyRecallEnabled === true;
-  const boostContext = domainBoostContextFromPlan(weakDomainPlan);
 
   if (topK <= 0 || syllables.length < 2 || syllables.length > 5 || !syllables.length) {
     return {
@@ -302,20 +284,6 @@ export function recallSpanTopKV2(
   let toneSqlCount = 0;
   let queryTonePinyinKey: string | undefined;
 
-  const legacyDomainIds =
-    profile.primaryDomain && profile.primaryDomain !== 'general' ? domainIds : [];
-  const domainHitsBeforeWeak = weakDomainPlan?.enabled
-    ? collectTierCandidates(
-        runtimeV2,
-        syllablesKey(syllables),
-        syllables.length,
-        [...legacyDomainIds],
-        perSpanLimit,
-        syllables,
-        acousticTonePattern
-      ).domainHits.length
-    : undefined;
-
   const bestById = new Map<string, RecallSpanTopKV2Hit>();
   const sourceBreakdown: RecallSourceBreakdown = {
     exactBase: 0,
@@ -324,7 +292,6 @@ export function recallSpanTopKV2(
     fuzzyPlain: 0,
     fuzzyPlainDomain: 0,
   };
-  const weakDomainCandidateCount = { value: 0 };
   let exactScoredCount = 0;
 
   const mergeStart = Date.now();
@@ -363,13 +330,13 @@ export function recallSpanTopKV2(
         variant,
         variantWindowText,
         profile,
-        boostContext,
-        weakDomainPlan,
+        undefined,
+        undefined,
         acousticTonePattern,
         tier.entryStages.get(hotword.id),
         bestById,
         sourceBreakdown,
-        weakDomainCandidateCount
+        { value: 0 }
       );
     }
     if (!variant.isFuzzy) {
@@ -412,20 +379,20 @@ export function recallSpanTopKV2(
     domain_lookup_ms: domainLookupMs,
     idiom_lookup_ms: idiomLookupMs,
     merge_ms: mergeMs,
-    weakDomainEnabled: weakDomainPlan?.enabled,
-    weakDomainIds: weakDomainPlan?.enabled ? weakDomainPlan.weakDomainIds.join('|') : undefined,
-    weakDomainCandidateCount: weakDomainPlan?.enabled ? weakDomainCandidateCount.value : undefined,
+    weakDomainEnabled: undefined,
+    weakDomainIds: undefined,
+    weakDomainCandidateCount: undefined,
     fuzzyRecallEnabled,
     fuzzyVariantCount: fuzzyRecallEnabled ? variants.length : undefined,
     fuzzyCandidateCount:
       fuzzyRecallEnabled
         ? sourceBreakdown.fuzzyPlain + sourceBreakdown.fuzzyPlainDomain
         : undefined,
-    candidateSourceBreakdown: weakDomainPlan?.enabled || fuzzyRecallEnabled ? sourceBreakdown : undefined,
+    candidateSourceBreakdown: fuzzyRecallEnabled ? sourceBreakdown : undefined,
     recallEmptyBeforeFuzzy: fuzzyRecallEnabled ? exactScoredCount === 0 : undefined,
     recallEmptyAfterFuzzy: fuzzyRecallEnabled ? scored.length === 0 : undefined,
-    domainHitsBeforeWeak,
-    domainHitsAfterWeak: weakDomainPlan?.enabled ? domainHitsTotal : undefined,
+    domainHitsBeforeWeak: undefined,
+    domainHitsAfterWeak: undefined,
     fuzzyVariantExamples,
     tone_exact_hits: toneSqlCount > 0 || toneExactHitCount > 0 ? toneExactHitCount : undefined,
     plain_fallback_hits: plainFallbackHitCount > 0 ? plainFallbackHitCount : undefined,

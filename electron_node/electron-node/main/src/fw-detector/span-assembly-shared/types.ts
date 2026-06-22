@@ -18,15 +18,10 @@ export type CoarseAssemblyToneDiagnostics = {
   toneOverlapHitCount: number;
   toneOverlapMissCount: number;
   toneOverlapSyllableMismatchCount: number;
-  alignmentTextUsedCount: number;
-  tokenTextUsedForAlignmentCount: number;
-  charScanFallbackCount: number;
   ngramTonePatternAttemptCount: number;
   ngramTonePatternHitCount: number;
   ngramTonePatternMissCount: number;
   recallToneCompatibleCount: number;
-  /** @deprecated alias of recallToneFallbackCount */
-  recallToneIncompatibleCount: number;
   recallToneFallbackCount: number;
   /** SQL tone_exact stage hit count (utterance aggregate). */
   toneExactHitCount: number;

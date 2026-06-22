@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import type { LexiconRuntimeV2 } from './lexicon-runtime-v2';
-import { LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION } from './lexicon-types-v2';
+import { LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION } from './lexicon-types-v2';
 import { recallSpanTopKV3 } from './recall-span-topkv3';
 
 jest.mock('./recall-span-topk-v2', () => ({
@@ -13,7 +13,7 @@ const mockedRecallSpanTopKV2 = recallSpanTopKV2 as jest.MockedFunction<typeof re
 
 function mockRuntime(): LexiconRuntimeV2 {
   return {
-    getManifestVersion: () => LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION,
+    getManifestVersion: () => LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION,
     lookupParentFragmentsByNgramKey: () => [],
   } as unknown as LexiconRuntimeV2;
 }

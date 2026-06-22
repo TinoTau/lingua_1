@@ -1,0 +1,153 @@
+{
+  "timestamp": "2026-06-22T13:52:29.170Z",
+  "batchPath": "D:\\Programs\\github\\lingua_1\\electron_node\\electron-node\\tests\\storm-repro-pipeline-batch-result.json",
+  "evaluated": 200,
+  "pass": 200,
+  "fail": 0,
+  "stoppedReason": "completed_all",
+  "wall_clock_sec": 577,
+  "asr_warmup_ms": 10927,
+  "infra_errors": {
+    "503": 0,
+    "504": 0,
+    "other": 0
+  },
+  "quality": {
+    "pass_with_text": 200,
+    "raw_cer_mean": 0.2657,
+    "final_cer_mean": 0.2371,
+    "raw_cer_p50": 0.1905,
+    "final_cer_p50": 0.1905,
+    "fw_improved": 1,
+    "fw_degraded": 0,
+    "fw_unchanged": 199
+  },
+  "performance": {
+    "pipeline_ms_mean": 2828,
+    "pipeline_ms_p50": 2540,
+    "pipeline_ms_p95": 3886,
+    "pipeline_ms_max": 10049
+  },
+  "samples": [
+    {
+      "id": "d001",
+      "scenario": "cafe",
+      "ref": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "raw": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "final": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "raw_cer": 0.3704,
+      "final_cer": 0.3704,
+      "pipeline_ms": 8635
+    },
+    {
+      "id": "d002",
+      "scenario": "cafe",
+      "ref": "麻烦帮我做一杯美式带走，大杯就行，谢谢。",
+      "raw": "麻烦帮我做一杯美食带走大悲就行谢谢",
+      "final": "麻烦帮我做一杯美食带走大悲就行谢谢",
+      "raw_cer": 0.1176,
+      "final_cer": 0.1176,
+      "pipeline_ms": 2319
+    },
+    {
+      "id": "d003",
+      "scenario": "cafe",
+      "ref": "请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。",
+      "raw": "请问,这款燕麦拿铁可以烧病吗?我赶时间小背",
+      "final": "请问,这款燕麦拿铁可以烧病吗?我赶时间小背",
+      "raw_cer": 0.1579,
+      "final_cer": 0.1579,
+      "pipeline_ms": 2464
+    },
+    {
+      "id": "d004",
+      "scenario": "meeting",
+      "ref": "小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+      "raw": "小陈客户反馈翻译引擎接口包错 我们能 不能加緩存下午3點前把結論發群裡",
+      "final": "小陈客户反馈翻译引擎接口包错 我们能 不能加緩存下午3點前把結論發群裡",
+      "raw_cer": 0.2424,
+      "final_cer": 0.2424,
+      "pipeline_ms": 3776
+    },
+    {
+      "id": "d005",
+      "scenario": "meeting",
+      "ref": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+      "raw": "今天德站会献过一下订单 中台进度内存占用高者快 需要先留保护大家看一下风险",
+      "final": "今天德站会献过一下订单 中台进度内存占用高者快 需要先留保护大家看一下风险",
+      "raw_cer": 0.1714,
+      "final_cer": 0.1714,
+      "pipeline_ms": 3585
+    },
+    {
+      "id": "d006",
+      "scenario": "meeting",
+      "ref": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。",
+      "raw": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下",
+      "final": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下",
+      "raw_cer": 0.2143,
+      "final_cer": 0.2143,
+      "pipeline_ms": 3384
+    },
+    {
+      "id": "d007",
+      "scenario": "taxi",
+      "ref": "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+      "raw": "市富曲仲觀村軟件遠走機場告訴我幹 9点半的回药师赌车 您提前跟我说",
+      "final": "市富曲仲觀村軟件遠走機場告訴我幹 9点半的回药师赌车 您提前跟我说",
+      "raw_cer": 0.5484,
+      "final_cer": 0.5484,
+      "pipeline_ms": 3712
+    },
+    {
+      "id": "d008",
+      "scenario": "taxi",
+      "ref": "麻烦送我到国贸三期南门，大概多久能到？我十点十分有个电话会。",
+      "raw": "麻烦送我到国贸三七南门大盖多久能到? 我十点十 10分有隔電話會",
+      "final": "麻烦送我到国贸三七南门大盖多久能到? 我十点十 10分有隔電話會",
+      "raw_cer": 0.2963,
+      "final_cer": 0.2963,
+      "pipeline_ms": 3368
+    },
+    {
+      "id": "d009",
+      "scenario": "taxi",
+      "ref": "去望京SOHO，不走四环可以吗？那边现在堵不堵？",
+      "raw": "去望金丝和不走丝环,可以吗? 那边现在赌不赌?",
+      "final": "去望金丝和不走丝环,可以吗? 那边现在赌不赌?",
+      "raw_cer": 0.381,
+      "final_cer": 0.381,
+      "pipeline_ms": 2480
+    },
+    {
+      "id": "d010",
+      "scenario": "hospital",
+      "ref": "医生您好，我这两天头痛，想开点药并做个血常规。",
+      "raw": "醫生您好,我這兩天頭痛想開點,要並做個歇常規",
+      "final": "醫生您好,我這兩天頭痛想開點,要並做個歇常規",
+      "raw_cer": 0.55,
+      "final_cer": 0.55,
+      "pipeline_ms": 2513
+    },
+    {
+      "id": "d011",
+      "scenario": "hospital",
+      "ref": "挂号处请问内科还有号吗？我胃不舒服，昨晚开始的。",
+      "raw": "刮号出请问 内刻还有号码 我微不 我感觉不舒服昨晚开始的",
+      "final": "刮号出请问 内刻还有号码 我微不 我感觉不舒服昨晚开始的",
+      "raw_cer": 0.4286,
+      "final_cer": 0.4286,
+      "pipeline_ms": 2986
+    },
+    {
+      "id": "d012",
+      "scenario": "hospital",
+      "ref": "这个检查报告什么时候能出？我过敏发痒，需要请假休息吗？",
+      "raw": "這個檢查報告什麼時候能出 我過敏 需要请家休息吗?",
+      "final": "這個檢查報告什麼時候能出 我過敏 需要请家休息吗?",
+      "raw_cer": 0.4167,
+      "final_cer": 0.4167,
+      "pipeline_ms": 2664
+    }
+  ]
+}

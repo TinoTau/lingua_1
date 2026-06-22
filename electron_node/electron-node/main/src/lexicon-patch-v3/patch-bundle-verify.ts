@@ -9,6 +9,7 @@ import {
   LEXICON_RUNTIME_STATS,
 } from '../lexicon-v2/lexicon-v2-bundle-path';
 import type { LexiconV3BundleFiles } from './bundle-io';
+import type { PatchBundleTableCounts } from './patch-types';
 
 export function readManifestBundleVersion(manifestPath: string): number {
   const m = JSON.parse(fs.readFileSync(manifestPath, 'utf-8')) as { bundleVersion?: number };
@@ -36,23 +37,24 @@ export function verifyChecksumAligned(files: LexiconV3BundleFiles): boolean {
   return fromManifest === fromSqlite && fromSqlite === fromFile;
 }
 
-export function readTableCountsFromStats(statsPath: string): {
-  base: number;
-  idiom: number;
-  domain: number;
-  routing: number;
-} {
+export function readTableCountsFromStats(statsPath: string): PatchBundleTableCounts {
   const stats = JSON.parse(fs.readFileSync(statsPath, 'utf-8')) as {
     baseCount?: number;
     idiomCount?: number;
     domainCount?: number;
     routingCount?: number;
+    ngramsCount?: number;
+    termCount?: number;
+    termDomainTagsCount?: number;
   };
   return {
     base: stats.baseCount ?? 0,
     idiom: stats.idiomCount ?? 0,
     domain: stats.domainCount ?? 0,
     routing: stats.routingCount ?? 0,
+    ngrams: stats.ngramsCount ?? 0,
+    term: stats.termCount ?? 0,
+    termDomainTags: stats.termDomainTagsCount ?? 0,
   };
 }
 

@@ -1,23 +1,29 @@
-import type { LexiconPatchV3, PatchOperation } from './patch-types';
+import type { PatchBundleTableCounts, PatchOperation } from './patch-types';
 import { computePatchHash } from './patch-hash';
 
 export const PATCH_WORDS = {
   base: '测试热词甲',
-  domain: '皇后镇测试点',
-  domainAlias: '皇后城测试点',
+  term: '皇后镇测试点',
+  termAlias: '皇后城测试点',
 } as const;
 
 export const PATCH_KEYS = {
   basePinyin: 'ce|shi|re|ci|jia',
-  domainPinyin: 'huang|hou|zhen|ce|shi|dian',
+  termPinyin: 'huang|hou|zhen|ce|shi|dian',
 } as const;
+
+export const PATCH_TERM_ID = 'patch-e2e-term-travel';
+export const PATCH_MULTI_TERM_ID = 'patch-e2e-term-multi';
+
+export const PATCH_MULTI_WORD = '多维测试词';
+export const PATCH_MULTI_PINYIN = 'duo|wei|ce|shi|ci';
 
 function withHash(
   patchId: string,
   baseVersion: number,
   operations: PatchOperation[]
-): LexiconPatchV3 {
-  const patch: LexiconPatchV3 = {
+): import('./patch-types').LexiconPatchV3 {
+  const patch = {
     patchId,
     baseVersion,
     nextVersion: baseVersion + 1,
@@ -28,7 +34,7 @@ function withHash(
   return patch;
 }
 
-export function buildPatchA(baseVersion: number): LexiconPatchV3 {
+export function buildPatchA(baseVersion: number) {
   return withHash('patch-e2e-a-base-add', baseVersion, [
     {
       op: 'add',
@@ -47,20 +53,21 @@ export function buildPatchA(baseVersion: number): LexiconPatchV3 {
   ]);
 }
 
-export function buildPatchB(baseVersion: number): LexiconPatchV3 {
-  return withHash('patch-e2e-b-domain-add', baseVersion, [
+export function buildPatchB(baseVersion: number) {
+  return withHash('patch-e2e-b-term-add', baseVersion, [
     {
       op: 'add',
-      table: 'domain',
-      word: PATCH_WORDS.domain,
+      table: 'term',
+      word: PATCH_WORDS.term,
       entry: {
-        id: 'patch-e2e-domain-1',
-        word: PATCH_WORDS.domain,
-        pinyinKey: PATCH_KEYS.domainPinyin,
+        termId: PATCH_TERM_ID,
+        word: PATCH_WORDS.term,
+        pinyinKey: PATCH_KEYS.termPinyin,
         tonePinyinKey: 'huang2|hou4|zhen4|ce4|shi4|dian3',
         priorScore: 0.96,
-        domainId: 'travel',
-        aliases: [PATCH_WORDS.domainAlias],
+        domainTags: ['travel'],
+        domainWeights: { travel: 1.0 },
+        aliases: [PATCH_WORDS.termAlias],
         repairTarget: true,
         enabled: true,
       },
@@ -68,30 +75,99 @@ export function buildPatchB(baseVersion: number): LexiconPatchV3 {
   ]);
 }
 
-export function buildPatchC(baseVersion: number): LexiconPatchV3 {
-  return withHash('patch-e2e-c-domain-update', baseVersion, [
+export function buildPatchC(baseVersion: number) {
+  return withHash('patch-e2e-c-term-update', baseVersion, [
     {
       op: 'update',
-      table: 'domain',
-      word: PATCH_WORDS.domain,
-      domainId: 'travel',
+      table: 'term',
+      word: PATCH_WORDS.term,
+      termId: PATCH_TERM_ID,
       fields: { priorScore: 0.98 },
     },
   ]);
 }
 
-export function buildPatchD(baseVersion: number): LexiconPatchV3 {
-  return withHash('patch-e2e-d-domain-disable', baseVersion, [
+export function buildPatchIMultiDomain(baseVersion: number) {
+  return withHash('patch-e2e-i-multidomain-add', baseVersion, [
     {
-      op: 'disable',
-      table: 'domain',
-      word: PATCH_WORDS.domain,
-      domainId: 'travel',
+      op: 'add',
+      table: 'term',
+      word: PATCH_MULTI_WORD,
+      entry: {
+        termId: PATCH_MULTI_TERM_ID,
+        word: PATCH_MULTI_WORD,
+        pinyinKey: PATCH_MULTI_PINYIN,
+        tonePinyinKey: 'duo1|wei2|ce4|shi4|ci2',
+        priorScore: 0.91,
+        domainTags: ['travel', 'restaurant'],
+        domainWeights: { travel: 0.8, restaurant: 0.6 },
+        repairTarget: true,
+        enabled: true,
+      },
     },
   ]);
 }
 
-export function buildPatchE(baseVersion: number): LexiconPatchV3 {
+export function buildPatchJUpdateDomainWeights(baseVersion: number) {
+  return withHash('patch-e2e-j-update-domain-weights', baseVersion, [
+    {
+      op: 'update',
+      table: 'term',
+      word: PATCH_MULTI_WORD,
+      termId: PATCH_MULTI_TERM_ID,
+      fields: {
+        domainWeights: { travel: 0.5, restaurant: 1.0 },
+      },
+    },
+  ]);
+}
+
+export function buildPatchKDeleteSingleTag(baseVersion: number) {
+  return withHash('patch-e2e-k-delete-tag', baseVersion, [
+    {
+      op: 'delete',
+      table: 'term',
+      word: PATCH_MULTI_WORD,
+      termId: PATCH_MULTI_TERM_ID,
+      domainId: 'restaurant',
+    },
+  ]);
+}
+
+export function buildPatchLDeleteFullTerm(baseVersion: number) {
+  return withHash('patch-e2e-l-delete-term', baseVersion, [
+    {
+      op: 'delete',
+      table: 'term',
+      word: PATCH_MULTI_WORD,
+      termId: PATCH_MULTI_TERM_ID,
+    },
+  ]);
+}
+
+export function buildPatchMEnableTerm(baseVersion: number) {
+  return withHash('patch-e2e-m-term-enable', baseVersion, [
+    {
+      op: 'enable',
+      table: 'term',
+      word: PATCH_WORDS.term,
+      termId: PATCH_TERM_ID,
+    },
+  ]);
+}
+
+export function buildPatchD(baseVersion: number) {
+  return withHash('patch-e2e-d-term-disable', baseVersion, [
+    {
+      op: 'disable',
+      table: 'term',
+      word: PATCH_WORDS.term,
+      termId: PATCH_TERM_ID,
+    },
+  ]);
+}
+
+export function buildPatchE(baseVersion: number) {
   return withHash('patch-e2e-e-base-delete', baseVersion, [
     {
       op: 'delete',
@@ -102,11 +178,11 @@ export function buildPatchE(baseVersion: number): LexiconPatchV3 {
   ]);
 }
 
-export function buildPatchFDuplicate(patchA: LexiconPatchV3): LexiconPatchV3 {
+export function buildPatchFDuplicate(patchA: import('./patch-types').LexiconPatchV3) {
   return { ...patchA, baseVersion: patchA.nextVersion, nextVersion: patchA.nextVersion + 1 };
 }
 
-export function buildPatchGWrongVersion(currentVersion: number): LexiconPatchV3 {
+export function buildPatchGWrongVersion(currentVersion: number) {
   return withHash('patch-e2e-g-wrong-version', currentVersion + 99, [
     {
       op: 'add',
@@ -122,25 +198,24 @@ export function buildPatchGWrongVersion(currentVersion: number): LexiconPatchV3 
   ]);
 }
 
-export function buildPatchHInvalidDomain(baseVersion: number): LexiconPatchV3 {
+export function buildPatchHInvalidDomain(baseVersion: number) {
   return withHash('patch-e2e-h-invalid-domain', baseVersion, [
     {
       op: 'add',
-      table: 'domain',
+      table: 'term',
       word: '非法域词',
       entry: {
-        id: 'patch-e2e-h',
+        termId: 'patch-e2e-h',
         word: '非法域词',
         pinyinKey: 'fei|fa|yu|ci',
         priorScore: 0.9,
-        domainId: 'not_a_real_domain_xyz',
+        domainTags: ['not_a_real_domain_xyz'],
       },
     },
   ]);
 }
 
-/** Valid ops only — gate failure is injected in rollback E2E test. */
-export function buildPatchRollbackProbe(baseVersion: number): LexiconPatchV3 {
+export function buildPatchRollbackProbe(baseVersion: number) {
   return withHash('patch-e2e-rollback-probe', baseVersion, [
     {
       op: 'add',

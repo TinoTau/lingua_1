@@ -17,8 +17,35 @@ export type RecallSmokeRow = {
   termLength: number;
   expectHit: boolean;
   passed: boolean;
-  hits: Array<{ word: string; priorScore: number; isAlias: boolean; domain?: string }>;
+  hits: Array<{
+    word: string;
+    priorScore: number;
+    isAlias: boolean;
+    domain?: string;
+    domainWeights?: Record<string, number>;
+  }>;
 };
+
+export function runRecallSmokeMultiDomain(
+  bundleDir: string,
+  domainIds: string[],
+  pinyinKey: string,
+  termLength: number,
+  expectWord: string
+): { passed: boolean; domainWeights?: Record<string, number> } {
+  const runtime = new LexiconRuntimeV2();
+  const state = runtime.loadFromBundleDir(bundleDir);
+  if (state.status !== 'ok') {
+    throw new Error(`recall smoke multi: runtime load failed: ${state.errorMessage ?? state.status}`);
+  }
+  const hits = runtime.lookupDomainsByPinyinKeyMulti(domainIds, pinyinKey, termLength, 5);
+  const hit = hits.find((h) => h.word === expectWord);
+  runtime.close();
+  return {
+    passed: hit != null,
+    domainWeights: hit?.domainWeights,
+  };
+}
 
 export function runRecallSmoke(bundleDir: string, cases: RecallSmokeCase[]): RecallSmokeRow[] {
   const runtime = new LexiconRuntimeV2();
@@ -40,6 +67,7 @@ export function runRecallSmoke(bundleDir: string, cases: RecallSmokeCase[]): Rec
       priorScore: h.priorScore,
       isAlias: h.isAlias === true,
       domain: h.domain,
+      domainWeights: h.domainWeights,
     }));
     let passed: boolean;
     if (c.expectHit) {

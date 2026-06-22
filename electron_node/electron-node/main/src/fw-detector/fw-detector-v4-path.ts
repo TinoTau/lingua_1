@@ -114,11 +114,8 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
         windowCandidatePoolCount: 0,
         activeCandidateCount: 0,
         compatibilityEdgeCount: 0,
-        droppedCandidateCount: 0,
         coverageCount: 0,
-        conflictCount: 0,
         conflictRelationCount: 0,
-        hardDropCount: 0,
         compatibleCount: 0,
         parentEvidenceCount: 0,
         exactEdgeCount: 0,
@@ -140,6 +137,8 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
         domainAssemblyMs: 0,
         mainDomainAwareSpanSetsTotal: 0,
         shadowBeamSpanSetsTotal: 0,
+        intervalAssemblyCandidateCount: 0,
+        intervalRejectedOverlapCount: 0,
         boundaryImport: {
           rawSyllableCount: 0,
           imeCandidateCount: 0,
@@ -265,7 +264,7 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
   const allCombinations =
     diagnosticsConfig.traceActive && assembly.kenlmSentenceCandidates
       ? buildCombinationTraces({
-          combinations: assembly.kenlmSentenceCandidates,
+          combinations: assembly.kenlmSentenceCandidates.combinations,
           deltas: decision.sentenceRerank.allCombinationDeltas,
           minDeltaToReplace: config.minDeltaToReplace,
           pickedIsRaw: decision.sentenceRerank.pickedIsRaw,
@@ -303,7 +302,6 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
       ...decision.sentenceRerank,
       ...(allCombinations ? { allCombinations } : {}),
     },
-    ...(decision.toneDiagnostics ? { toneModule: decision.toneDiagnostics } : {}),
   };
   ctx.fwDetectorResult = result;
   return result;

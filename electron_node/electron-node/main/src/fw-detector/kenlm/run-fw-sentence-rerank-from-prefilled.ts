@@ -6,8 +6,10 @@ import type { KenLMScorer } from '../../asr-repair/kenlm-batch-types';
 import type { UtteranceAcousticTonePayload } from '../../task-router/types';
 import {
   buildSentenceCandidates,
+  type CoarseSpanRange,
   type SpanReplacementPick,
 } from '../build-sentence-candidates';
+import { rawOverlap } from '../span-assembly-v4/classify-overlap-relation';
 import type { FwDetectorRuntimeConfig } from '../fw-config';
 import { mapSentenceToApprovedReplacements } from '../map-sentence-to-approved';
 import { getPerSpanCandidateLimit } from '../per-span-candidate-limit';
@@ -19,7 +21,6 @@ import type {
   FwSentenceRerankDiagnostics,
   FwSpanCandidateDiag,
   FwSpanDiagnostics,
-  FwToneModuleDiagnostics,
 } from '../types';
 
 export type FwSentenceRerankFromPrefilledInput = {
@@ -45,7 +46,6 @@ export type FwSentenceRerankFromPrefilledResult = {
   kenlmQueryCount: number;
   kenlmTiming?: FwSentenceRerankDiagnostics['kenlmTiming'];
   pickedTopKWinCount: number;
-  toneDiagnostics?: FwToneModuleDiagnostics;
 };
 
 function pickToSpanCandidate(
@@ -70,6 +70,34 @@ function pickToSpanCandidate(
     vetoed: false,
     selected: false,
   };
+}
+
+function spanIntervalOverlapsCoarseSpan(
+  pick: SpanReplacementPick,
+  coarseStart: number,
+  coarseEnd: number
+): boolean {
+  return rawOverlap(pick.span.start, pick.span.end, coarseStart, coarseEnd);
+}
+
+function findPickForCoarseSpan(
+  replacements: SpanReplacementPick[],
+  coarseStart: number,
+  coarseEnd: number
+): SpanReplacementPick | undefined {
+  return replacements.find(
+    (r) =>
+      r.repairTarget &&
+      spanIntervalOverlapsCoarseSpan(r, coarseStart, coarseEnd)
+  );
+}
+
+function coarseSpanHasApprovedOverlap(
+  coarseStart: number,
+  coarseEnd: number,
+  approved: FwApprovedReplacement[]
+): boolean {
+  return approved.some((r) => rawOverlap(r.start, r.end, coarseStart, coarseEnd));
 }
 
 function buildReplacementDiags(
@@ -112,8 +140,6 @@ export async function runFwSentenceRerankFromPrefilled(
 ): Promise<FwSentenceRerankFromPrefilledResult> {
   const perSpanLimit = getPerSpanCandidateLimit(input.spans.length);
   const updatedSpans: FwSpanDiagnostics[] = [];
-  let recallToneCompatibleCount = 0;
-  let recallToneFallbackCount = 0;
 
   for (let i = 0; i < input.spans.length; i++) {
     const span = input.spans[i];
@@ -123,11 +149,18 @@ export async function runFwSentenceRerankFromPrefilled(
     updatedSpans.push({ ...span, candidates });
   }
 
-  const combinations = buildSentenceCandidates(
+  const coarseRanges: CoarseSpanRange[] = input.spans.map((span) => ({
+    start: span.start,
+    end: span.end,
+  }));
+
+  const assembly = buildSentenceCandidates(
     input.rawText,
     input.spanSets,
-    input.config.maxSentenceCandidates
+    input.config.maxSentenceCandidates,
+    coarseRanges
   );
+  const combinations = assembly.combinations;
 
   const rerank = await rerankFwSentences(
     input.rawText,
@@ -142,19 +175,20 @@ export async function runFwSentenceRerankFromPrefilled(
       : mapSentenceToApprovedReplacements(rerank.picked, input.config.candidateRequireRepairTarget);
 
   if (rerank.picked && !rerank.pickedIsRaw) {
-    const approvedKeys = new Set(approved.map((r) => `${r.start}:${r.end}`));
     for (const span of updatedSpans) {
-      const pick = rerank.picked.replacements.find(
-        (r) => r.span.start === span.start && r.span.end === span.end
+      const pick = findPickForCoarseSpan(
+        rerank.picked.replacements,
+        span.start,
+        span.end
       );
       if (pick) {
-        const idx = span.candidates.findIndex((c) => c.word === pick.word);
-        if (idx >= 0) {
-          span.candidates[idx].selected = true;
-          span.selectedCandidateIndex = idx;
+        const byWord = span.candidates.findIndex((c) => c.word === pick.word);
+        if (byWord >= 0) {
+          span.candidates[byWord]!.selected = true;
+          span.selectedCandidateIndex = byWord;
         }
       }
-      span.applied = approvedKeys.has(`${span.start}:${span.end}`);
+      span.applied = coarseSpanHasApprovedOverlap(span.start, span.end, approved);
     }
   }
 
@@ -183,13 +217,6 @@ export async function runFwSentenceRerankFromPrefilled(
       : {}),
   };
 
-  const toneDiagnostics: FwToneModuleDiagnostics = {
-    toneEnabled: false,
-    alignmentTextMatched: false,
-    recallToneCompatibleCount,
-    recallToneFallbackCount,
-  };
-
   return {
     spans: updatedSpans,
     approved,
@@ -198,6 +225,5 @@ export async function runFwSentenceRerankFromPrefilled(
     kenlmQueryCount: rerank.kenlmQueryCount,
     kenlmTiming: rerank.kenlmTiming,
     pickedTopKWinCount: approved.length,
-    toneDiagnostics,
   };
 }

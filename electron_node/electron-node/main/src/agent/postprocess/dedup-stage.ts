@@ -1,6 +1,6 @@
 /**
  * DedupStage - 去重阶段
- * 职责：基于最终文本决定是否发送，维护 lastSentText
+ * 职责：基于 job_id 决定是否发送（30s TTL），不基于文本内容
  */
 
 import { JobAssignMessage } from '@shared/protocols/messages';

@@ -1,7 +1,7 @@
-import type { LexiconEntryV3, LexiconTierTable } from './patch-types';
+import type { TierPatchEntry, LexiconTierTable } from './patch-types';
 import { pinyinKeyFromCjkText, resolvePinyinKey, resolveTonePinyinKey } from './pinyin-resolve';
 
-export type CanonicalSqlRow = {
+export type TierSqlRow = {
   id: string;
   pinyin_key: string;
   tone_pinyin_key: string;
@@ -14,14 +14,6 @@ export type CanonicalSqlRow = {
   source: string;
   canonical_word: string | null;
   is_alias: number;
-  domain_id?: string | null;
-};
-
-export type RoutingSqlRow = {
-  pinyin_key: string;
-  keyword: string;
-  domain_id: string;
-  weight: number;
 };
 
 function hasCjk(text: string): boolean {
@@ -32,14 +24,14 @@ function slugId(prefix: string, text: string): string {
   return `${prefix}-${Buffer.from(text, 'utf8').toString('hex').slice(0, 12)}`;
 }
 
-export function entryToCanonicalRow(entry: LexiconEntryV3, table: LexiconTierTable): CanonicalSqlRow {
+export function entryToTierRow(entry: TierPatchEntry, tier: LexiconTierTable): TierSqlRow {
   const word = entry.word.trim();
   const pinyinKey = resolvePinyinKey(word, entry.pinyinKey);
   const tonePinyinKey = resolveTonePinyinKey(word, { tonePinyinKey: entry.tonePinyinKey });
   const aliases = entry.aliases?.length ? entry.aliases : [word];
   const enabled = entry.enabled === false ? 0 : 1;
 
-  const row: CanonicalSqlRow = {
+  return {
     id: entry.id?.trim() || slugId('v3', word),
     pinyin_key: pinyinKey,
     tone_pinyin_key: tonePinyinKey,
@@ -53,21 +45,15 @@ export function entryToCanonicalRow(entry: LexiconEntryV3, table: LexiconTierTab
     canonical_word: null,
     is_alias: 0,
   };
-
-  if (table === 'domain') {
-    row.domain_id = entry.domainId?.trim() || null;
-  }
-
-  return row;
 }
 
-export function materializeAliasRows(
-  table: LexiconTierTable,
-  entry: LexiconEntryV3,
-  canonical: CanonicalSqlRow
-): CanonicalSqlRow[] {
+export function materializeTierAliasRows(
+  tier: LexiconTierTable,
+  entry: TierPatchEntry,
+  canonical: TierSqlRow
+): TierSqlRow[] {
   const aliases = entry.aliases?.length ? entry.aliases : [];
-  const out: CanonicalSqlRow[] = [];
+  const out: TierSqlRow[] = [];
   const canonicalWord = canonical.word;
 
   for (const alias of aliases) {
@@ -91,31 +77,15 @@ export function materializeAliasRows(
       aliases: '[]',
       canonical_word: canonicalWord,
       is_alias: 1,
-      domain_id: canonical.domain_id ?? null,
     });
   }
 
   return out;
 }
 
-export function buildIndustryRouteFromCanonical(record: CanonicalSqlRow): RoutingSqlRow | null {
-  if (record.is_alias === 1 || !record.domain_id) {
-    return null;
-  }
-  return {
-    pinyin_key: record.pinyin_key,
-    keyword: record.word,
-    domain_id: record.domain_id,
-    weight: record.prior_score,
-  };
-}
-
-export function sqlTableName(tier: LexiconTierTable): string {
+export function sqlTierTableName(tier: Exclude<LexiconTierTable, 'term'>): string {
   if (tier === 'base') {
     return 'base_lexicon';
   }
-  if (tier === 'idiom') {
-    return 'idiom_lexicon';
-  }
-  return 'domain_lexicon';
+  return 'idiom_lexicon';
 }

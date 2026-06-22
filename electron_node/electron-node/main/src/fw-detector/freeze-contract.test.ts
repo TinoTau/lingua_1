@@ -12,9 +12,14 @@ import { loadPinyinImeV2RuntimeConfig } from './pinyin-ime-v2/pinyin-ime-v2-conf
 import { FW_ASR_ENGINE, FW_ASR_SERVICE_ID } from './fw-mode';
 
 const SRC_ROOT = path.resolve(__dirname, '..');
+const SCRIPTS_ROOT = path.resolve(__dirname, '../../../scripts');
 
 function readSrc(relativePath: string): string {
   return fs.readFileSync(path.join(SRC_ROOT, relativePath), 'utf8');
+}
+
+function readScript(relativePath: string): string {
+  return fs.readFileSync(path.join(SCRIPTS_ROOT, relativePath), 'utf8');
 }
 
 function stripComments(src: string): string {
@@ -362,12 +367,109 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(stripped).toMatch(/pinyin_key\s*=\s*\?\s+AND\s+tone_pinyin_key\s*=\s*\?/i);
   });
 
+  it('GATE-INT-1: buildSentenceCandidates uses rawOverlap interval assembly', () => {
+    const assemblySrc = readSrc('fw-detector/build-sentence-candidates.ts');
+    expect(assemblySrc).toContain("from './span-assembly-v4/classify-overlap-relation'");
+    expect(assemblySrc).toContain('rawOverlap');
+    expect(assemblySrc).toContain('intervalAssemblyCandidateCount');
+    expect(assemblySrc).not.toMatch(/spanSets\.map\([\s\S]*?\)\.reduce/);
+  });
+
+  it('GATE-INT-2: SpanReplacementPick metadata propagation frozen', () => {
+    const pickSrc = readSrc('fw-detector/build-sentence-candidates.ts');
+    const windowPickSrc = readSrc('fw-detector/span-assembly-v4/window-candidate-to-pick.ts');
+    expect(pickSrc).toContain('windowSource?');
+    expect(pickSrc).toContain('coveredCoarseSpanIds?');
+    expect(windowPickSrc).toContain('windowSource: pick.windowSource');
+    expect(windowPickSrc).toContain('coveredCoarseSpanIds: pick.coveredCoarseSpanIds');
+  });
+
+  it('GATE-INT-3: rerank prefilled matches coarse span via rawOverlap', () => {
+    const rerankSrc = readSrc('fw-detector/kenlm/run-fw-sentence-rerank-from-prefilled.ts');
+    expect(rerankSrc).toContain('rawOverlap');
+    expect(rerankSrc).toContain('findPickForCoarseSpan');
+    expect(rerankSrc).not.toMatch(
+      /r\.span\.start\s*===\s*span\.start[\s\S]{0,80}r\.span\.end\s*===\s*span\.end/
+    );
+  });
+
+  it('GATE-INT-4: interval metrics H3 synced across types and orchestrator', () => {
+    for (const rel of [
+      'fw-detector/types.ts',
+      'fw-detector/span-assembly-v4/v4-types.ts',
+      'fw-detector/fw-detector-v4-path.ts',
+      'fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts',
+    ]) {
+      const src = readSrc(rel);
+      expect(src).toContain('intervalAssemblyCandidateCount');
+      expect(src).toContain('intervalRejectedOverlapCount');
+    }
+    const limitsSrc = readSrc('fw-detector/span-assembly-v4/v4-limits.ts');
+    expect(limitsSrc).toContain('maxIntervalEnumNodes');
+    expect(limitsSrc).toContain('maxIntervalRepairPicksPerPath');
+  });
+
+  it('GATE-SV2-1: v3 runtime gate accepts only five-table-v2 schema', () => {
+    const gateSrc = readScript('lexicon/run-gate-v3-runtime.mjs');
+    expect(gateSrc).toContain('V3_SCHEMA_VERSION_V2');
+    expect(gateSrc).toMatch(/schemaVersion\s*!==\s*V3_SCHEMA_VERSION_V2/);
+    expect(gateSrc).not.toMatch(/schemaVersion\s*===\s*V3_SCHEMA_VERSION[^_]/);
+    expect(gateSrc).not.toMatch(/four-table-v1/);
+  });
+
+  it('GATE-SV2-2: patch manifest writer emits five-table-v2 only', () => {
+    const writerSrc = readSrc('lexicon-patch-v3/manifest-writer.ts');
+    expect(writerSrc).toContain('LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION');
+    expect(writerSrc).not.toContain('four-table-v1');
+    expect(writerSrc).not.toContain('LEXICON_V3_RUNTIME_SCHEMA_VERSION');
+  });
+
+  it('GATE-SV2-3: patch applier is term-centric — no direct domain_lexicon insert', () => {
+    const applierSrc = stripComments(readSrc('lexicon-patch-v3/sqlite-patch-applier.ts'));
+    expect(applierSrc).toContain('INSERT INTO term');
+    expect(applierSrc).toContain('rematerializeTermInDb');
+    expect(applierSrc).not.toMatch(/INSERT\s+INTO\s+domain_lexicon/i);
+  });
+
+  it('GATE-SV2-4: mergeDomainTierRows rejects missing tag_weight — no prior_score fallback', () => {
+    const runtimeSrc = stripComments(readSrc('lexicon-v2/lexicon-runtime-v2.ts'));
+    const fnBlock = runtimeSrc.match(/function mergeDomainTierRows[\s\S]*?^}/m)?.[0] ?? '';
+    expect(fnBlock).toContain('tag_weight');
+    expect(fnBlock).not.toMatch(/prior_score\s*[|?]/);
+    expect(fnBlock).not.toMatch(/prior_score\s*\?\?/);
+  });
+
+  it('GATE-SV2-5: lookupParentFragmentsByNgramKey requires v2 manifest — no v1-only silent []', () => {
+    const runtimeSrc = readSrc('lexicon-v2/lexicon-runtime-v2.ts');
+    expect(runtimeSrc).toContain('lookupParentFragmentsByNgramKey');
+    expect(runtimeSrc).toContain('isLexiconV3FiveTableV2Manifest');
+    expect(runtimeSrc).not.toMatch(/FIVE_TABLE_RUNTIME_SCHEMA_VERSION/);
+    expect(runtimeSrc).not.toMatch(/five-table-v1[\s\S]{0,120}return\s*\[\s*\]/);
+  });
+
+  it('GATE-SV2-6: legacy build-for-electron fails fast', () => {
+    const buildSrc = readScript('lexicon/build-for-electron.mjs');
+    const blockSrc = readScript('lexicon/lib/legacy-build-block.mjs');
+    expect(buildSrc).toContain('failLegacyLexiconBuild');
+    expect(blockSrc).toContain('process.exit(1)');
+  });
+
+  it('GATE-SV2-7: domain patch SSOT is term table — applier writes term before materialize', () => {
+    const applierSrc = readSrc('lexicon-patch-v3/sqlite-patch-applier.ts');
+    expect(applierSrc).toContain("op.table === 'term'");
+    expect(applierSrc).toContain('upsertTerm');
+    expect(applierSrc).toContain('replaceTermTags');
+    expect(applierSrc).not.toMatch(/table:\s*['"]domain['"]/);
+  });
+
   it('segmentForJobResult 写点白名单（静态）', () => {
     const allowed = [
       'pipeline/steps/asr-step.ts',
       'pipeline/steps/fw-detector-step.ts',
       'fw-detector/fw-detector-orchestrator.ts',
+      'fw-detector/fw-detector-v4-path.ts',
       'pipeline/steps/aggregation-step.ts',
+      'pipeline/steps/dedup-step.ts',
       'pipeline/enhancement/semantic-repair-step.ts',
       'pipeline/enhancement/phonetic-correction-step.ts',
       'pipeline/enhancement/punctuation-restore-step.ts',
@@ -377,5 +479,45 @@ describe('P1~P4 freeze simplification contract', () => {
     for (const rel of allowed) {
       expect(fs.existsSync(path.join(SRC_ROOT, rel))).toBe(true);
     }
+  });
+
+  it('dedup-step 经 duplicate sanitize 写 segmentForJobResult', () => {
+    const dedupStep = readSrc('pipeline/steps/dedup-step.ts');
+    expect(dedupStep).toContain('sanitizeSegmentForOutput');
+    expect(dedupStep).toContain('ctx.segmentForJobResult = sanitizedText');
+  });
+
+  it('CLEANUP-1: no toneModule on FW v4 result path', () => {
+    const v4Path = readSrc('fw-detector/fw-detector-v4-path.ts');
+    expect(v4Path).not.toContain('toneModule');
+    const rerank = readSrc('fw-detector/kenlm/run-fw-sentence-rerank-from-prefilled.ts');
+    expect(rerank).not.toContain('FwToneModuleDiagnostics');
+    expect(rerank).not.toContain('toneDiagnostics');
+  });
+
+  it('CLEANUP-2: no hardDropCount in compatibility metrics', () => {
+    const compat = readSrc('fw-detector/span-assembly-v4/candidate-compatibility-graph.ts');
+    expect(compat).not.toContain('hardDropCount');
+    const v4Types = readSrc('fw-detector/span-assembly-v4/v4-types.ts');
+    expect(v4Types).not.toContain('hardDropCount');
+    expect(v4Types).not.toContain('droppedCandidateCount');
+  });
+
+  it('CLEANUP-3: no intervalPaths trace field', () => {
+    const diagTypes = readSrc('fw-detector/span-assembly-v4/v4-diagnostics-types.ts');
+    expect(diagTypes).not.toContain('intervalPaths');
+    expect(diagTypes).not.toContain('IntervalPathTrace');
+  });
+
+  it('CLEANUP-4: dynamic pipeline uses finalizePipelineMode', () => {
+    const modeCfg = readSrc('pipeline/pipeline-mode-config.ts');
+    expect(modeCfg).toContain('return finalizePipelineMode(buildDynamicMode(job))');
+  });
+
+  it('CLEANUP-5: spanAssemblyV4Enabled=false fails fast', () => {
+    const fwCfg = readSrc('fw-detector/fw-config.ts');
+    expect(fwCfg).toContain('spanAssemblyV4Enabled === false');
+    expect(fwCfg).toContain('throw new Error');
+    expect(fwCfg).not.toContain('spanAssemblyV4Enabled=false is deprecated');
   });
 });

@@ -3,7 +3,7 @@
 **Status:** FROZEN  
 **Scope:** `asr.engine = fw_detector_v1` 生产路径
 
-**文档 SSOT：** [`docs/fw-detector/README.md`](../../../../../../docs/fw-detector/README.md) · [`ARCHITECTURE.md`](../../../../../../docs/fw-detector/ARCHITECTURE.md) · [`CONFIG.md`](../../../../../../docs/fw-detector/CONFIG.md) · [`kenlm/KENLM_RUNTIME.md`](../../../../../../docs/fw-detector/kenlm/KENLM_RUNTIME.md)
+**文档 SSOT：** [`docs/fw-detector/README.md`](../../../../../../docs/fw-detector/README.md) · [`ARCHITECTURE.md`](../../../../../../docs/fw-detector/ARCHITECTURE.md) · [`CONFIG.md`](../../../../../../docs/fw-detector/CONFIG.md) · [`assembly/INTERVAL_ASSEMBLY.md`](../../../../../../docs/fw-detector/assembly/INTERVAL_ASSEMBLY.md) · [`recall/DOMAIN_RECALL.md`](../../../../../../docs/fw-detector/recall/DOMAIN_RECALL.md) · [`kenlm/KENLM_RUNTIME.md`](../../../../../../docs/fw-detector/kenlm/KENLM_RUNTIME.md)
 
 FW 误写检测与 Lexicon 修正主链：**V4 Boundary-Aware Global Window**（单 Pipeline）。
 
@@ -97,6 +97,7 @@ FW 主链源文件 **禁止** `import ... legacy/asr-repair`（`fw-detector-gate
 | `fw-detector/fw-detector-orchestrator.ts` | empty / lexicon unavailable |
 | `fw-detector/fw-detector-v4-path.ts` | no_spans / **apply** |
 | `pipeline/steps/aggregation-step.ts` | turn 合并 |
+| `pipeline/steps/dedup-step.ts` | Duplicate Sanitize（Enhancement 之后） |
 | `pipeline/enhancement/*` | 5015/5016/5017（write-lock） |
 | `pipeline/post-asr-routing.ts` | 5015 helper |
 | `legacy/asr-repair/.../legacy-apply-sentence-repair.ts` | legacy only |
@@ -123,7 +124,7 @@ FW apply 后 `isSegmentWriteLocked` 阻止 5015/5016/5017。
 | `features.fwDetector.kenlmSubprocessTimeoutMs` | `5000` |
 | `features.fwDetector.kenlmSubprocessMaxLines` | `17` |
 
-**Deprecated：** `spanAssemblyV4Enabled=false` 仅 warn，仍运行 V4；`v3ToneTimestampOnlyEnabled` 迁移至 `toneTimestampOnlyEnabled`；`kenlmDeltaThreshold` 仅配置兼容读取，V4 rerank **不使用**（Apply 阈值见 `minDeltaToReplace`）。
+**非法配置：** `spanAssemblyV4Enabled=false` 将 **fail-fast**（FW Repair 仅 V4）。Tone diagnostics SSOT：`spanAssemblyV4.tone`（已删除 `toneModule`）。`kenlmDeltaThreshold` 仅配置兼容读取，V4 rerank **不使用**（Apply 阈值见 `minDeltaToReplace`）。
 
 ---
 

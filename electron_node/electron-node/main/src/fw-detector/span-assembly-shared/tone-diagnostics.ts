@@ -1,5 +1,4 @@
 ﻿import type { AcousticToneSlice, WordTimeSpan } from '../tone-time-align';
-import { createTimestampToneCompliance } from '../tone-time-align';
 import type { CoarseAssemblyToneDiagnostics } from './types';
 import { resolveTimestampToneState } from './tone-recall';
 
@@ -9,7 +8,6 @@ export function createEmptyToneDiagnostics(
   toneTimestampOnlyEnabled = true
 ): CoarseAssemblyToneDiagnostics {
   const toneState = resolveTimestampToneState(acousticSlices, toneTimestampOnlyEnabled);
-  const compliance = createTimestampToneCompliance();
   return {
     tonePayloadAvailable: toneState.tonePayloadAvailable,
     toneEnabled: toneState.toneEnabled,
@@ -21,14 +19,10 @@ export function createEmptyToneDiagnostics(
     toneOverlapHitCount: 0,
     toneOverlapMissCount: 0,
     toneOverlapSyllableMismatchCount: 0,
-    alignmentTextUsedCount: compliance.alignmentTextUsedCount,
-    tokenTextUsedForAlignmentCount: compliance.tokenTextUsedForAlignmentCount,
-    charScanFallbackCount: compliance.charScanFallbackCount,
     ngramTonePatternAttemptCount: 0,
     ngramTonePatternHitCount: 0,
     ngramTonePatternMissCount: 0,
     recallToneCompatibleCount: 0,
-    recallToneIncompatibleCount: 0,
     recallToneFallbackCount: 0,
     toneExactHitCount: 0,
     plainFallbackHitCount: 0,

@@ -170,7 +170,7 @@ export function inferPipelineMode(job: JobAssignMessage): PipelineMode {
 
     // 其他组合：动态构建模式
     // 例如：ASR + TTS（无 NMT）、NMT + TTS（无 ASR）等
-    return applyFwDetectorPipelineMode(buildDynamicMode(job));
+    return finalizePipelineMode(buildDynamicMode(job));
 }
 
 function finalizePipelineMode(mode: PipelineMode): PipelineMode {

@@ -17,6 +17,7 @@ const args = process.argv.slice(2);
 let maxMs = 15 * 60 * 1000;
 let dirArg = null;
 let outName = 'fw-detector-dialog-200-batch-result.json';
+let offset = 0;
 for (let i = 0; i < args.length; i++) {
   const a = args[i];
   if (a === '--max-minutes' && args[i + 1]) {
@@ -24,6 +25,9 @@ for (let i = 0; i < args.length; i++) {
     i += 1;
   } else if (a === '--out' && args[i + 1]) {
     outName = args[i + 1];
+    i += 1;
+  } else if (a === '--offset' && args[i + 1]) {
+    offset = parseInt(args[i + 1], 10) || 0;
     i += 1;
   } else if (!a.startsWith('--')) {
     dirArg = a;
@@ -93,7 +97,8 @@ function contractRow(caseDef, data) {
   };
 }
 
-const cases = JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf8'));
+const casesAll = JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf8'));
+const cases = offset > 0 ? casesAll.slice(offset) : casesAll;
 const port = getPort();
 const batchStart = Date.now();
 const deadline = batchStart + maxMs;
@@ -122,9 +127,10 @@ const report = {
   port,
   dialogDir: DIALOG_DIR,
   projectRoot: process.env.PROJECT_ROOT || null,
-  testScope: 'Lexicon V3.1 single-manifest + patch runtime dialog_200 timed batch',
+  testScope: 'Schema V2 Only dialog_200 timed batch',
+  offset,
   maxMinutes: maxMs / 60000,
-  totalManifestCases: cases.length,
+  totalManifestCases: casesAll.length,
   asrWarmup: asrReady,
   cases: [],
   summary: {},
@@ -173,7 +179,7 @@ for (const caseDef of cases) {
     console.log(`[${caseDef.id}] ERROR`, e.message);
   }
   const elapsed = Date.now() - batchStart;
-  console.log(`[dialog200-timed] progress ${report.cases.length}/${cases.length} elapsed ${Math.round(elapsed / 1000)}s`);
+  console.log(`[dialog200-timed] progress ${report.cases.length}/${cases.length} (offset ${offset}, total ${casesAll.length}) elapsed ${Math.round(elapsed / 1000)}s`);
 }
 
 if (!report.stoppedReason) {

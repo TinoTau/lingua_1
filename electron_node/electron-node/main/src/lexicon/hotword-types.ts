@@ -28,6 +28,8 @@ export type HotwordEntry = {
   isAlias?: boolean;
   /** P4: tone pinyin syllables with tone numbers, e.g. mei3|shi4 */
   tonePinyinKey?: string;
+  /** Per-tag weights from term_domain_tags or merged domain rows. */
+  domainWeights?: Record<string, number>;
 };
 
 export type HotwordRecallHit = {

@@ -1,0 +1,248 @@
+{
+  "summary": {
+    "evaluated": 200,
+    "pass": 200,
+    "fail": 0,
+    "wall_clock_sec": 858,
+    "asr_503_504": 0
+  },
+  "cer": {
+    "raw_mean": 0.2657,
+    "final_mean": 0.2331,
+    "raw_p50": 0.1905,
+    "final_p50": 0.1714,
+    "raw_p95": 0.6,
+    "final_p95": 0.56,
+    "improved": 45,
+    "degraded": 4,
+    "unchanged": 151
+  },
+  "perf": {
+    "pipeline_mean": 4246,
+    "pipeline_p50": 3909,
+    "pipeline_p95": 5529,
+    "pipeline_max": 17686,
+    "asr_latency_mean": 1067,
+    "asr_latency_p50": 998,
+    "warmup_ms": 6973
+  },
+  "fw": {
+    "triggered": 200,
+    "applied_cases": 58,
+    "text_changed": 58
+  },
+  "byScenario": {
+    "cafe": {
+      "n": 15,
+      "raw_mean": 0.1929,
+      "final_mean": 0.1455
+    },
+    "meeting": {
+      "n": 15,
+      "raw_mean": 0.239,
+      "final_mean": 0.2421
+    },
+    "taxi": {
+      "n": 15,
+      "raw_mean": 0.3734,
+      "final_mean": 0.3755
+    },
+    "hospital": {
+      "n": 15,
+      "raw_mean": 0.3575,
+      "final_mean": 0.2851
+    },
+    "shopping": {
+      "n": 15,
+      "raw_mean": 0.183,
+      "final_mean": 0.1739
+    },
+    "friend": {
+      "n": 15,
+      "raw_mean": 0.1472,
+      "final_mean": 0.1472
+    },
+    "tech_deploy": {
+      "n": 14,
+      "raw_mean": 0.4131,
+      "final_mean": 0.3744
+    },
+    "customer_service": {
+      "n": 12,
+      "raw_mean": 0.6029,
+      "final_mean": 0.3363
+    },
+    "interview": {
+      "n": 12,
+      "raw_mean": 0.0776,
+      "final_mean": 0.0776
+    },
+    "classroom": {
+      "n": 12,
+      "raw_mean": 0.285,
+      "final_mean": 0.2642
+    },
+    "hotel": {
+      "n": 12,
+      "raw_mean": 0.0642,
+      "final_mean": 0.0642
+    },
+    "bank": {
+      "n": 12,
+      "raw_mean": 0.1069,
+      "final_mean": 0.091
+    },
+    "restaurant": {
+      "n": 12,
+      "raw_mean": 0.2781,
+      "final_mean": 0.2545
+    },
+    "gym": {
+      "n": 12,
+      "raw_mean": 0.2122,
+      "final_mean": 0.2122
+    },
+    "lexicon_homophone": {
+      "n": 12,
+      "raw_mean": 0.4538,
+      "final_mean": 0.4368
+    }
+  },
+  "focusCases": [
+    {
+      "id": "d049",
+      "scenario": "meeting",
+      "pipeline_ms": 5409,
+      "raw_cer": 0.0909,
+      "final_cer": 0.0909,
+      "fw_applied_count": 0,
+      "ref": "李工，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+      "raw": "立功科户反馈翻译引擎接口报错 我们能不能加缓存下午三点前 把结论发群里",
+      "final": "立功科户反馈翻译引擎接口报错 我们能不能加缓存下午三点前 把结论发群里"
+    },
+    {
+      "id": "d050",
+      "scenario": "meeting",
+      "pipeline_ms": 5497,
+      "raw_cer": 0.2571,
+      "final_cer": 0.2571,
+      "fw_applied_count": 0,
+      "ref": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+      "raw": "今天的站會獻過一下訂單 中台進都內存 占用高折块需要限流保护 大家看一下风险",
+      "final": "今天的站會獻過一下訂單 中台進都內存 占用高折块需要限流保护 大家看一下风险"
+    },
+    {
+      "id": "d051",
+      "scenario": "meeting",
+      "pipeline_ms": 4591,
+      "raw_cer": 0.2143,
+      "final_cer": 0.2143,
+      "fw_applied_count": 0,
+      "ref": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。",
+      "raw": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下",
+      "final": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下"
+    },
+    {
+      "id": "d052",
+      "scenario": "taxi",
+      "pipeline_ms": 5631,
+      "raw_cer": 0.4333,
+      "final_cer": 0.4333,
+      "fw_applied_count": 0,
+      "ref": "师傅，去浦东张江，走延安路高架。我赶九点半的会，要是堵车您提前跟我说。",
+      "raw": "市府去浦東張江走沿岸路高架 下午4点半的回邀试赌车 您提前跟我说",
+      "final": "市府去浦東張江走沿岸路高架 下午4点半的回邀试赌车 您提前跟我说"
+    },
+    {
+      "id": "d053",
+      "scenario": "taxi",
+      "pipeline_ms": 5034,
+      "raw_cer": 0.2667,
+      "final_cer": 0.2,
+      "fw_applied_count": 2,
+      "ref": "麻烦送我到深圳南山科技园南门，大概多久能到？我十点十分有个电话会。",
+      "raw": "麻煩送我到深圳南善科技園南門大概多久能到? 我是點心 十分有隔电话会",
+      "final": "麻煩送我到深圳南善科技园南門大概多久能到? 我是点心 十分有隔电话会"
+    },
+    {
+      "id": "d054",
+      "scenario": "taxi",
+      "pipeline_ms": 3566,
+      "raw_cer": 0.4737,
+      "final_cer": 0.5263,
+      "fw_applied_count": 4,
+      "ref": "去杭州西溪，不走三环可以吗？那边现在堵不堵？",
+      "raw": "去杭州系系部走三環 可以嗎?那扁現在賭不賭?",
+      "final": "去杭州系细部走散環 可以嗎?那边线再度不賭?"
+    },
+    {
+      "id": "d055",
+      "scenario": "hospital",
+      "pipeline_ms": 3995,
+      "raw_cer": 0.4762,
+      "final_cer": 0.381,
+      "fw_applied_count": 2,
+      "ref": "医生您好，我这两天嗓子疼，想开点药并做个血常规。",
+      "raw": "醫生您好我這兩天嗓子疼想開點要並做隔斜常規",
+      "final": "医生您好我這兩天嗓子疼想開點要並做隔斜常规"
+    }
+  ],
+  "worstFinal": [
+    {
+      "id": "d067",
+      "scenario": "customer_service",
+      "final_cer": 3.04,
+      "ref": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+      "final": "您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,"
+    },
+    {
+      "id": "d045",
+      "scenario": "lexicon_homophone",
+      "final_cer": 0.8,
+      "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+      "final": "關於後,學生成为学生 和上限計劃請按上限計劃執行有問題群裡說"
+    },
+    {
+      "id": "d155",
+      "scenario": "tech_deploy",
+      "final_cer": 0.7333333333333333,
+      "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+      "final": "这次發布我們現對峽谷的發布會 在其商線計劃窗口候选生成模快需要連掉別漏掉回归"
+    },
+    {
+      "id": "d110",
+      "scenario": "tech_deploy",
+      "final_cer": 0.7,
+      "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+      "final": "這次發布我們現對此發布的新闻 起商線計劃窗口候选生 乘模块需要連掉別漏掉回归"
+    },
+    {
+      "id": "d180",
+      "scenario": "lexicon_homophone",
+      "final_cer": 0.68,
+      "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+      "final": "關於後,選生成立 和上限計劃請按上限計劃執行有問題 群里說"
+    },
+    {
+      "id": "d187",
+      "scenario": "taxi",
+      "final_cer": 0.6129032258064516,
+      "ref": "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+      "final": "市副局仲官村軟件遠走機場告訴 我敢救人 9点半的回药师赌车 您提前跟我说"
+    },
+    {
+      "id": "d088",
+      "scenario": "lexicon_homophone",
+      "final_cer": 0.6,
+      "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+      "final": "我们下午討論後,選生成功 等方安縣把候选生陳的借口文當補齊"
+    },
+    {
+      "id": "d194",
+      "scenario": "shopping",
+      "final_cer": 0.5714285714285714,
+      "ref": "请问这双鞋有四十码吗？不合适三天内可以退换吧？",
+      "final": "请问 這雙鞋也有些子嗎? 有40码码不合是3天内可以退换吧"
+    }
+  ]
+}

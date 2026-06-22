@@ -1,0 +1,68 @@
+{
+  "ok": true,
+  "generatedAt": "2026-06-09T03:52:48.844Z",
+  "seed_root": "",
+  "seed_inputs": [],
+  "tables": {
+    "base_lexicon": {
+      "rowCount": 50000,
+      "canonicalCount": 50000,
+      "aliasCount": 0,
+      "pinyinKeyCount": 37048,
+      "maxBucketSize": 20,
+      "maxBucketKey": "shi|shi"
+    },
+    "idiom_lexicon": {
+      "rowCount": 22192,
+      "canonicalCount": 22192,
+      "aliasCount": 0,
+      "pinyinKeyCount": 21484,
+      "maxBucketSize": 5,
+      "maxBucketKey": "ling|hu|chong|shen"
+    },
+    "domain_lexicon": {
+      "rowCount": 25,
+      "canonicalCount": 9,
+      "aliasCount": 16,
+      "byDomain": {
+        "restaurant": 9
+      },
+      "pinyinKeyCount": 11,
+      "maxBucketSize": 4,
+      "maxBucketKey": "zhong|bei"
+    },
+    "industry_routing_lexicon": {
+      "rowCount": 9,
+      "pinyinKeyCount": 9,
+      "maxBucketSize": 1,
+      "maxBucketKey": "zhong|bei"
+    },
+    "term_pinyin_ngrams": {
+      "rowCount": 202138,
+      "pinyinKeyCount": 112215,
+      "maxBucketSize": 164,
+      "maxBucketKey": "bu|ke"
+    }
+  },
+  "rejectedCount": 897,
+  "rejectStats": {
+    "invalid_json": 0,
+    "confusion_row": 0,
+    "disabled": 0,
+    "empty_word": 0,
+    "latin_deferred_v1": 0,
+    "non_cjk": 0,
+    "unknown_domain": 0,
+    "missing_pinyin_key": 0,
+    "common5_deferred": 897,
+    "base_len_invalid": 0,
+    "idiom_len_invalid": 0,
+    "domain_missing_id": 0,
+    "domain_len_invalid": 0,
+    "one_char": 0,
+    "phrase_too_long": 0,
+    "four_char_non_idiom": 0,
+    "unclassified": 0,
+    "invalid_prior": 0
+  }
+}

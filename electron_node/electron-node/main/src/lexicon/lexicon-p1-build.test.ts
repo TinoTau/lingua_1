@@ -10,20 +10,15 @@ const patchScript = path.resolve(__dirname, '../../../scripts/lexicon/patch-merg
 const registryPath = path.resolve(__dirname, '../../../data/lexicon/profile-registry.json');
 
 describe('lexicon P1 build CLI', () => {
-  it('builds pilot seed with domains merge, exact/alias index, priorScoreByDomain', () => {
+  it('legacy build-lexicon-bundle is disabled under Schema V2 Only', () => {
     const bundleDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lexicon-p1-'));
     const result = spawnSync(
       process.execPath,
       [buildScript, '--input', pilotSeed, '--output', bundleDir, '--registry', registryPath],
       { encoding: 'utf-8' }
     );
-    expect(result.status).toBe(0);
-    const manifest = JSON.parse(fs.readFileSync(path.join(bundleDir, 'manifest.json'), 'utf-8'));
-    expect(manifest.aliasIndexCount).toBeGreaterThan(0);
-    expect(manifest.exactIndexCount).toBeGreaterThan(0);
-    expect(manifest.priorScoreByDomain?.tech_ai?.count).toBe(1);
-    expect(manifest.domainDistribution?.transport).toBe(1);
-    expect(manifest.domainDistribution?.travel).toBe(1);
+    expect(result.status).not.toBe(0);
+    expect(result.stderr).toContain('Legacy lexicon build is disabled');
     fs.rmSync(bundleDir, { recursive: true, force: true });
   });
 

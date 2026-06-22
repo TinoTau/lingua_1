@@ -2,14 +2,20 @@ import * as crypto from 'crypto';
 import type { LexiconPatchV3, PatchOperation } from './patch-types';
 
 function operationSortKey(op: PatchOperation): string {
+  const entryKey =
+    op.entry && 'id' in op.entry
+      ? op.entry.id
+      : op.entry && 'termId' in op.entry
+        ? op.entry.termId ?? ''
+        : '';
   return [
     op.op,
     op.table,
     op.domainId ?? '',
     op.word,
     op.pinyinKey ?? '',
-    op.id ?? '',
-    op.entry?.id ?? '',
+    op.termId ?? '',
+    entryKey,
   ].join('\t');
 }
 

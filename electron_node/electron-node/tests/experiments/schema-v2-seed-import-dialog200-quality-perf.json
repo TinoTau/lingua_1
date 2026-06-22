@@ -1,0 +1,481 @@
+{
+  "batchFile": "D:\\Programs\\github\\lingua_1\\electron_node\\electron-node\\tests\\schema-v2-seed-import-dialog200-batch-result.json",
+  "timestamp": "2026-06-21T04:46:10.937Z",
+  "stoppedReason": "deadline",
+  "evaluated": 65,
+  "wallClockSec": 913,
+  "manifestV2Count": 65,
+  "domainVote": {
+    "utteranceDomainDist": {
+      "coffee": 5,
+      "general": 49,
+      "food_order": 6,
+      "tourism_transport": 1,
+      "tourism_hotel": 3,
+      "milk_tea": 1
+    },
+    "winningFineDomainDist": {
+      "coffee": 5,
+      "general": 49,
+      "food_order": 6,
+      "tourism_transport": 1,
+      "tourism_hotel": 3,
+      "milk_tea": 1
+    },
+    "insufficientEvidenceCount": 49,
+    "nonGeneralCount": 16,
+    "nonGeneralRate": 0.2462,
+    "recallEnabledFineDomainsPresent": 65,
+    "domainScoresPresent": 16,
+    "winningFineDomainPresent": 65,
+    "totalHardDropCount": 0,
+    "avgNgramQueries": 67.43
+  },
+  "byScenario": {
+    "cafe": {
+      "count": 6,
+      "general": 0,
+      "fine": 6,
+      "insufficient": 0
+    },
+    "meeting": {
+      "count": 6,
+      "general": 4,
+      "fine": 2,
+      "insufficient": 4
+    },
+    "taxi": {
+      "count": 6,
+      "general": 5,
+      "fine": 1,
+      "insufficient": 5
+    },
+    "hospital": {
+      "count": 6,
+      "general": 6,
+      "fine": 0,
+      "insufficient": 6
+    },
+    "shopping": {
+      "count": 6,
+      "general": 4,
+      "fine": 2,
+      "insufficient": 4
+    },
+    "friend": {
+      "count": 6,
+      "general": 6,
+      "fine": 0,
+      "insufficient": 6
+    },
+    "tech_deploy": {
+      "count": 5,
+      "general": 5,
+      "fine": 0,
+      "insufficient": 5
+    },
+    "customer_service": {
+      "count": 3,
+      "general": 2,
+      "fine": 1,
+      "insufficient": 2
+    },
+    "interview": {
+      "count": 3,
+      "general": 3,
+      "fine": 0,
+      "insufficient": 3
+    },
+    "classroom": {
+      "count": 3,
+      "general": 3,
+      "fine": 0,
+      "insufficient": 3
+    },
+    "hotel": {
+      "count": 3,
+      "general": 1,
+      "fine": 2,
+      "insufficient": 1
+    },
+    "bank": {
+      "count": 3,
+      "general": 3,
+      "fine": 0,
+      "insufficient": 3
+    },
+    "restaurant": {
+      "count": 3,
+      "general": 2,
+      "fine": 1,
+      "insufficient": 2
+    },
+    "gym": {
+      "count": 3,
+      "general": 2,
+      "fine": 1,
+      "insufficient": 2
+    },
+    "lexicon_homophone": {
+      "count": 3,
+      "general": 3,
+      "fine": 0,
+      "insufficient": 3
+    }
+  },
+  "cafeFineDomainRate": 1,
+  "quality": {
+    "raw_cer_avg": 0.2416,
+    "final_cer_avg": 0.2342,
+    "raw_cer_p50": 0.2143,
+    "final_cer_p50": 0.2143,
+    "raw_cer_p95": 0.55,
+    "final_cer_p95": 0.56,
+    "exact_raw": 8,
+    "exact_final": 8,
+    "improved": 8,
+    "degraded": 2
+  },
+  "performance": {
+    "pipeline_ms_avg": 13660,
+    "pipeline_ms_p50": 12088,
+    "pipeline_ms_p95": 19556,
+    "fw_step_ms_avg": 1470,
+    "assembly_ms_avg": 291
+  },
+  "fw": {
+    "triggered": 65,
+    "applied_cases": 1,
+    "text_changed": 13
+  },
+  "samples": {
+    "cafe": [
+      {
+        "id": "d001",
+        "scenario": "cafe",
+        "ref": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+        "raw": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+        "final": "你好,我想點一杯热拿铁鐘貝少糖 身边溫 以下今天有蓝莓马芬吗?",
+        "raw_cer": 0.3704,
+        "final_cer": 0.2593,
+        "utteranceDomain": "coffee",
+        "winningFineDomain": "coffee",
+        "insufficientEvidence": false,
+        "domainScores": {
+          "coffee": 2.3150000000000004,
+          "food_order": 1.1192000000000002,
+          "milk_tea": 1.399,
+          "bakery": 1.4800000000000002
+        },
+        "recallEnabledFineDomains": [
+          "bakery",
+          "coffee",
+          "food_order",
+          "milk_tea",
+          "tech_ai",
+          "tourism_hotel",
+          "tourism_pickup",
+          "tourism_route",
+          "tourism_transport",
+          "transport"
+        ],
+        "fw_applied": 0,
+        "pipeline_ms": 19048,
+        "assemblyMs": 256,
+        "hardDropCount": 0
+      },
+      {
+        "id": "d002",
+        "scenario": "cafe",
+        "ref": "麻烦帮我做一杯美式带走，大杯就行，谢谢。",
+        "raw": "麻烦帮我做一杯美食带走大悲就行谢谢",
+        "final": "麻烦帮我做一杯美食带走大悲就行谢谢",
+        "raw_cer": 0.1176,
+        "final_cer": 0.1176,
+        "utteranceDomain": "coffee",
+        "winningFineDomain": "coffee",
+        "insufficientEvidence": false,
+        "domainScores": {
+          "coffee": 2.3841,
+          "food_order": 1.8535,
+          "milk_tea": 1.4591000000000003,
+          "bakery": 0.6392000000000001
+        },
+        "recallEnabledFineDomains": [
+          "bakery",
+          "coffee",
+          "food_order",
+          "milk_tea",
+          "tech_ai",
+          "tourism_hotel",
+          "tourism_pickup",
+          "tourism_route",
+          "tourism_transport",
+          "transport"
+        ],
+        "fw_applied": 0,
+        "pipeline_ms": 9997,
+        "assemblyMs": 243,
+        "hardDropCount": 0
+      },
+      {
+        "id": "d046",
+        "scenario": "cafe",
+        "ref": "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？",
+        "raw": "你好,我想點一杯卡布奇諾中貝珍長糖,順便溫習一下 今天有知识蛋糕吗?",
+        "final": "你好,我想點一杯卡布奇诺中貝珍長糖,順便溫洗衣下 今天有只是蛋糕吗?",
+        "raw_cer": 0.3448,
+        "final_cer": 0.3448,
+        "utteranceDomain": "coffee",
+        "winningFineDomain": "coffee",
+        "insufficientEvidence": false,
+        "domainScores": {
+          "coffee": 2.4200000000000004,
+          "food_order": 0.5920000000000001,
+          "milk_tea": 0.7400000000000001,
+          "bakery": 1.4800000000000002
+        },
+        "recallEnabledFineDomains": [
+          "bakery",
+          "coffee",
+          "food_order",
+          "milk_tea",
+          "tech_ai",
+          "tourism_hotel",
+          "tourism_pickup",
+          "tourism_route",
+          "tourism_transport",
+          "transport"
+        ],
+        "fw_applied": 0,
+        "pipeline_ms": 17229,
+        "assemblyMs": 450,
+        "hardDropCount": 0
+      },
+      {
+        "id": "d047",
+        "scenario": "cafe",
+        "ref": "麻烦帮我做一杯红茶带走，大杯就行，谢谢。",
+        "raw": "麻烦帮我做一杯红茶带走大背就行谢谢",
+        "final": "麻烦帮我做一杯红茶带走大背就行谢谢",
+        "raw_cer": 0.0588,
+        "final_cer": 0.0588,
+        "utteranceDomain": "coffee",
+        "winningFineDomain": "coffee",
+        "insufficientEvidence": false,
+        "domainScores": {
+          "coffee": 1.4591000000000003,
+          "food_order": 1.391,
+          "milk_tea": 1.4591000000000003,
+          "bakery": 0.6392000000000001
+        },
+        "recallEnabledFineDomains": [
+          "bakery",
+          "coffee",
+          "food_order",
+          "milk_tea",
+          "tech_ai",
+          "tourism_hotel",
+          "tourism_pickup",
+          "tourism_route",
+          "tourism_transport",
+          "transport"
+        ],
+        "fw_applied": 0,
+        "pipeline_ms": 9426,
+        "assemblyMs": 230,
+        "hardDropCount": 0
+      }
+    ],
+    "tourism": [
+      {
+        "id": "d007",
+        "scenario": "taxi",
+        "ref": "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+        "raw": "市富曲仲觀村軟件遠走機場告訴我幹 9点半的回药师赌车 您提前跟我说",
+        "final": "市富曲仲觀村軟件遠走機場告訴我幹 9点半的回药师赌车 您提前跟我说",
+        "raw_cer": 0.5484,
+        "final_cer": 0.5484,
+        "utteranceDomain": "tourism_transport",
+        "winningFineDomain": "tourism_transport",
+        "insufficientEvidence": false,
+        "domainScores": {
+          "tourism_pickup": 0.43200000000000005,
+          "tourism_transport": 0.54
+        },
+        "recallEnabledFineDomains": [
+          "bakery",
+          "coffee",
+          "food_order",
+          "milk_tea",
+          "tech_ai",
+          "tourism_hotel",
+          "tourism_pickup",
+          "tourism_route",
+          "tourism_transport",
+          "transport"
+        ],
+        "fw_applied": 0,
+        "pipeline_ms": 19599,
+        "assemblyMs": 462,
+        "hardDropCount": 0
+      },
+      {
+        "id": "d031",
+        "scenario": "hotel",
+        "ref": "我预订的是大床房，能安排安静一点的楼层吗？",
+        "raw": "我预定的是搭床房能安排安静一点的楼层吗",
+        "final": "我预定的是搭床房能安排安静一点的楼层吗",
+        "raw_cer": 0.1053,
+        "final_cer": 0.1053,
+        "utteranceDomain": "tourism_hotel",
+        "winningFineDomain": "tourism_hotel",
+        "insufficientEvidence": false,
+        "domainScores": {
+          "food_order": 1.008,
+          "tourism_hotel": 1.5120000000000002,
+          "tourism_route": 1.3440000000000003
+        },
+        "recallEnabledFineDomains": [
+          "bakery",
+          "coffee",
+          "food_order",
+          "milk_tea",
+          "tech_ai",
+          "tourism_hotel",
+          "tourism_pickup",
+          "tourism_route",
+          "tourism_transport",
+          "transport"
+        ],
+        "fw_applied": 0,
+        "pipeline_ms": 11560,
+        "assemblyMs": 217,
+        "hardDropCount": 0
+      },
+      {
+        "id": "d032",
+        "scenario": "hotel",
+        "ref": "早餐几点开始？退房可以延迟到下午两点吗？",
+        "raw": "早餐几点开始 退房可以延迟到下午2点吗",
+        "final": "早餐几点开始 退房可以延迟到下午2点吗",
+        "raw_cer": 0.0556,
+        "final_cer": 0.0556,
+        "utteranceDomain": "tourism_hotel",
+        "winningFineDomain": "tourism_hotel",
+        "insufficientEvidence": false,
+        "domainScores": {
+          "food_order": 0.7520000000000001,
+          "tourism_hotel": 1.6920000000000002
+        },
+        "recallEnabledFineDomains": [
+          "bakery",
+          "coffee",
+          "food_order",
+          "milk_tea",
+          "tech_ai",
+          "tourism_hotel",
+          "tourism_pickup",
+          "tourism_route",
+          "tourism_transport",
+          "transport"
+        ],
+        "fw_applied": 0,
+        "pipeline_ms": 12083,
+        "assemblyMs": 208,
+        "hardDropCount": 0
+      }
+    ],
+    "meeting": [
+      {
+        "id": "d004",
+        "scenario": "meeting",
+        "ref": "小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+        "raw": "小陈客户反馈翻译引擎接口包错 我们能 不能加緩存下午3點前把結論發群裡",
+        "final": "小陈客户反馈翻译引擎接口包错 我们能 不能加緩存下午3點前把結論發群裡",
+        "raw_cer": 0.2424,
+        "final_cer": 0.2424,
+        "utteranceDomain": "general",
+        "winningFineDomain": "general",
+        "insufficientEvidence": true,
+        "domainScores": {},
+        "recallEnabledFineDomains": [
+          "bakery",
+          "coffee",
+          "food_order",
+          "milk_tea",
+          "tech_ai",
+          "tourism_hotel",
+          "tourism_pickup",
+          "tourism_route",
+          "tourism_transport",
+          "transport"
+        ],
+        "fw_applied": 0,
+        "pipeline_ms": 19556,
+        "assemblyMs": 470,
+        "hardDropCount": 0
+      },
+      {
+        "id": "d005",
+        "scenario": "meeting",
+        "ref": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+        "raw": "今天德站会献过一下订单 中台进度内存占用高者快 需要先留保护大家看一下风险",
+        "final": "今天德站会献过一下订单 中台进度内存占用高者快 需要先留保护大家看一下风险",
+        "raw_cer": 0.1714,
+        "final_cer": 0.1714,
+        "utteranceDomain": "general",
+        "winningFineDomain": "general",
+        "insufficientEvidence": true,
+        "domainScores": {},
+        "recallEnabledFineDomains": [
+          "bakery",
+          "coffee",
+          "food_order",
+          "milk_tea",
+          "tech_ai",
+          "tourism_hotel",
+          "tourism_pickup",
+          "tourism_route",
+          "tourism_transport",
+          "transport"
+        ],
+        "fw_applied": 0,
+        "pipeline_ms": 14757,
+        "assemblyMs": 517,
+        "hardDropCount": 0
+      }
+    ],
+    "applied": [
+      {
+        "id": "d010",
+        "scenario": "hospital",
+        "ref": "医生您好，我这两天头痛，想开点药并做个血常规。",
+        "raw": "醫生您好,我這兩天頭痛想開點,要並做個歇常規",
+        "final": "医生您好,我這兩甜头通向开點,要並做個歇常規",
+        "raw_cer": 0.55,
+        "final_cer": 0.55,
+        "utteranceDomain": "general",
+        "winningFineDomain": "general",
+        "insufficientEvidence": true,
+        "domainScores": {},
+        "recallEnabledFineDomains": [
+          "bakery",
+          "coffee",
+          "food_order",
+          "milk_tea",
+          "tech_ai",
+          "tourism_hotel",
+          "tourism_pickup",
+          "tourism_route",
+          "tourism_transport",
+          "transport"
+        ],
+        "fw_applied": 1,
+        "pipeline_ms": 11376,
+        "assemblyMs": 246,
+        "hardDropCount": 0
+      }
+    ]
+  }
+}

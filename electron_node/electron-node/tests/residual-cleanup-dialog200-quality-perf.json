@@ -1,0 +1,322 @@
+{
+  "source_batch": "D:\\Programs\\github\\lingua_1\\electron_node\\electron-node\\tests\\residual-cleanup-dialog200-batch-result.json",
+  "timestamp": "2026-06-22T09:41:20.161Z",
+  "testScope": "Residual Chain Cleanup V1.2 dialog_200",
+  "batch_summary": {
+    "evaluated": 105,
+    "pass": 37,
+    "fail": 68,
+    "skip": 0,
+    "wall_clock_sec": 900,
+    "pipeline_ok_rate": 0.3523809523809524,
+    "fw_triggered_count": 37,
+    "fw_applied_case_count": 8,
+    "text_changed_count": 8,
+    "lexicon_runtime_ok_count": 37,
+    "asr_service_id_distribution": {
+      "faster-whisper-vad": 37,
+      "unknown": 68
+    }
+  },
+  "stoppedReason": "deadline",
+  "evaluated_pass": 37,
+  "evaluated_total": 37,
+  "quality": {
+    "raw_cer_mean": 0.2043,
+    "raw_cer_p50": 0.1579,
+    "raw_cer_p95": 0.5484,
+    "final_cer_mean": 0.1879,
+    "final_cer_p50": 0.1579,
+    "final_cer_p95": 0.5484,
+    "cer_improved_count": 7,
+    "cer_degraded_count": 0,
+    "cer_unchanged_count": 30,
+    "worst_final_cer_top5": [
+      {
+        "id": "d043",
+        "scenario": "lexicon_homophone",
+        "cer": 0.56,
+        "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "hyp": "我们下午討論後 選生成方案線吧,後選生成的借口文當補期。"
+      },
+      {
+        "id": "d007",
+        "scenario": "taxi",
+        "cer": 0.5484,
+        "ref": "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+        "hyp": "市富曲仲觀村軟件遠走機場告訴我幹 9点半的回药师赌车 您提前跟我说"
+      },
+      {
+        "id": "d041",
+        "scenario": "gym",
+        "cer": 0.45,
+        "ref": "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+        "hyp": "更意識規則要是找不到了前台 能幫忙開一下马"
+      },
+      {
+        "id": "d037",
+        "scenario": "restaurant",
+        "cer": 0.4375,
+        "ref": "两位，靠窗有位置吗？不要香菜，微辣就行。",
+        "hyp": "两位烤创有位置嘛 不要像蔡薇拉就行"
+      },
+      {
+        "id": "d042",
+        "scenario": "gym",
+        "cer": 0.375,
+        "ref": "游泳次卡本月月底到期，续费有优惠吗？",
+        "hyp": "游泳自卡,本月月底到70非有優惠嗎?"
+      }
+    ]
+  },
+  "performance": {
+    "pipeline_ms_mean": 11835.5,
+    "pipeline_ms_p50": 7971,
+    "pipeline_ms_p95": 35493,
+    "fw_detector_step_ms_mean": 1915.7,
+    "assembly_ms_mean": 424.9,
+    "wall_clock_sec": 900,
+    "throughput_cases_per_sec": 0.117
+  },
+  "cleanup_diagnostics": {
+    "toneModule_leak_count": 0,
+    "hardDrop_field_leak_count": 0,
+    "intervalPaths_leak_count": 0,
+    "total_conflict_relations": 4713,
+    "avg_conflict_relations": 127.38,
+    "tone_enabled_case_count": 37,
+    "duplicate_sanitize_rule_counts": {
+      "none": 37
+    }
+  },
+  "samples": [
+    {
+      "id": "d001",
+      "scenario": "cafe",
+      "pass": true,
+      "pipeline_ms": 8563,
+      "raw_cer": 0.3704,
+      "final_cer": 0.1852,
+      "fw_applied": 6,
+      "conflictRelationCount": 67,
+      "toneEnabled": true,
+      "duplicate_sanitize": {
+        "applied": false,
+        "rule": "none",
+        "beforeLength": 31,
+        "afterLength": 31
+      },
+      "has_toneModule": false,
+      "text_preview": "你好,我想點一杯热拿铁中杯少糖 身边溫 以下今天有蓝莓马芬吗?"
+    },
+    {
+      "id": "d002",
+      "scenario": "cafe",
+      "pass": true,
+      "pipeline_ms": 5418,
+      "raw_cer": 0.1176,
+      "final_cer": 0,
+      "fw_applied": 2,
+      "conflictRelationCount": 132,
+      "toneEnabled": true,
+      "duplicate_sanitize": {
+        "applied": false,
+        "rule": "none",
+        "beforeLength": 17,
+        "afterLength": 17
+      },
+      "has_toneModule": false,
+      "text_preview": "麻烦帮我做一杯美式带走大杯就行谢谢"
+    },
+    {
+      "id": "d003",
+      "scenario": "cafe",
+      "pass": true,
+      "pipeline_ms": 5510,
+      "raw_cer": 0.1579,
+      "final_cer": 0.1053,
+      "fw_applied": 3,
+      "conflictRelationCount": 105,
+      "toneEnabled": true,
+      "duplicate_sanitize": {
+        "applied": false,
+        "rule": "none",
+        "beforeLength": 21,
+        "afterLength": 21
+      },
+      "has_toneModule": false,
+      "text_preview": "请问,这款燕麦拿铁可以烧饼吗?我赶时间小杯"
+    },
+    {
+      "id": "d004",
+      "scenario": "meeting",
+      "pass": true,
+      "pipeline_ms": 9328,
+      "raw_cer": 0.2424,
+      "final_cer": 0.2424,
+      "fw_applied": 0,
+      "conflictRelationCount": 135,
+      "toneEnabled": true,
+      "duplicate_sanitize": {
+        "applied": false,
+        "rule": "none",
+        "beforeLength": 35,
+        "afterLength": 35
+      },
+      "has_toneModule": false,
+      "text_preview": "小陈客户反馈翻译引擎接口包错 我们能 不能加緩存下午3點前把結論發群裡"
+    },
+    {
+      "id": "d005",
+      "scenario": "meeting",
+      "pass": true,
+      "pipeline_ms": 7103,
+      "raw_cer": 0.1714,
+      "final_cer": 0.1714,
+      "fw_applied": 0,
+      "conflictRelationCount": 99,
+      "toneEnabled": true,
+      "duplicate_sanitize": {
+        "applied": false,
+        "rule": "none",
+        "beforeLength": 37,
+        "afterLength": 37
+      },
+      "has_toneModule": false,
+      "text_preview": "今天德站会献过一下订单 中台进度内存占用高者快 需要先留保护大家看一下风险"
+    },
+    {
+      "id": "d006",
+      "scenario": "meeting",
+      "pass": true,
+      "pipeline_ms": 7783,
+      "raw_cer": 0.2143,
+      "final_cer": 0.2143,
+      "fw_applied": 0,
+      "conflictRelationCount": 169,
+      "toneEnabled": true,
+      "duplicate_sanitize": {
+        "applied": false,
+        "rule": "none",
+        "beforeLength": 29,
+        "afterLength": 29
+      },
+      "has_toneModule": false,
+      "text_preview": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下"
+    },
+    {
+      "id": "d007",
+      "scenario": "taxi",
+      "pass": true,
+      "pipeline_ms": 14653,
+      "raw_cer": 0.5484,
+      "final_cer": 0.5484,
+      "fw_applied": 0,
+      "conflictRelationCount": 103,
+      "toneEnabled": true,
+      "duplicate_sanitize": {
+        "applied": false,
+        "rule": "none",
+        "beforeLength": 33,
+        "afterLength": 33
+      },
+      "has_toneModule": false,
+      "text_preview": "市富曲仲觀村軟件遠走機場告訴我幹 9点半的回药师赌车 您提前跟我说"
+    },
+    {
+      "id": "d015",
+      "scenario": "shopping",
+      "pass": true,
+      "pipeline_ms": 8166,
+      "raw_cer": 0.32,
+      "final_cer": 0.28,
+      "fw_applied": 2,
+      "conflictRelationCount": 163,
+      "toneEnabled": true,
+      "duplicate_sanitize": {
+        "applied": false,
+        "rule": "none",
+        "beforeLength": 32,
+        "afterLength": 32
+      },
+      "has_toneModule": false,
+      "text_preview": "我想对比一下,这两款定制器 在商丹中台的价格会员日能再见一点吗?"
+    },
+    {
+      "id": "d016",
+      "scenario": "friend",
+      "pass": true,
+      "pipeline_ms": 6321,
+      "raw_cer": 0.1304,
+      "final_cer": 0.1304,
+      "fw_applied": 0,
+      "conflictRelationCount": 125,
+      "toneEnabled": true,
+      "duplicate_sanitize": {
+        "applied": false,
+        "rule": "none",
+        "beforeLength": 29,
+        "afterLength": 29
+      },
+      "has_toneModule": false,
+      "text_preview": "周末要上班了 不要去江边骑行 天气预报说 周日多云记得带水"
+    },
+    {
+      "id": "d017",
+      "scenario": "friend",
+      "pass": true,
+      "pipeline_ms": 4826,
+      "raw_cer": 0.0952,
+      "final_cer": 0.0952,
+      "fw_applied": 0,
+      "conflictRelationCount": 175,
+      "toneEnabled": true,
+      "duplicate_sanitize": {
+        "applied": false,
+        "rule": "none",
+        "beforeLength": 23,
+        "afterLength": 23
+      },
+      "has_toneModule": false,
+      "text_preview": "晚上一起吃饭嘛 我知道一家川菜 不错大概起点到"
+    },
+    {
+      "id": "d018",
+      "scenario": "friend",
+      "pass": true,
+      "pipeline_ms": 4473,
+      "raw_cer": 0,
+      "final_cer": 0,
+      "fw_applied": 0,
+      "conflictRelationCount": 68,
+      "toneEnabled": true,
+      "duplicate_sanitize": {
+        "applied": false,
+        "rule": "none",
+        "beforeLength": 20,
+        "afterLength": 20
+      },
+      "has_toneModule": false,
+      "text_preview": "你最近忙不忙,想找你看下手机备份怎么设置"
+    },
+    {
+      "id": "d019",
+      "scenario": "tech_deploy",
+      "pass": true,
+      "pipeline_ms": 11287,
+      "raw_cer": 0.1579,
+      "final_cer": 0.1579,
+      "fw_applied": 0,
+      "conflictRelationCount": 286,
+      "toneEnabled": true,
+      "duplicate_sanitize": {
+        "applied": false,
+        "rule": "none",
+        "beforeLength": 40,
+        "afterLength": 40
+      },
+      "has_toneModule": false,
+      "text_preview": "今天,我们团队 要讨论候选生成相关的候选生成流程和上限计划安排请研发一起评估风险"
+    }
+  ]
+}

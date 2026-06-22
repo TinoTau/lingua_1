@@ -41,4 +41,18 @@ describe('loadFwDetectorRuntimeConfig kenlm subprocess', () => {
     expect(cfg.kenlmSubprocessTimeoutMs).toBe(4000);
     expect(cfg.kenlmSubprocessMaxLines).toBe(12);
   });
+
+  it('throws when spanAssemblyV4Enabled is false', () => {
+    mockedLoadNodeConfig.mockReturnValue({
+      features: {
+        fwDetector: {
+          spanAssemblyV4Enabled: false,
+        },
+      },
+    });
+
+    expect(() => loadFwDetectorRuntimeConfig()).toThrow(
+      'spanAssemblyV4Enabled=false is not supported'
+    );
+  });
 });

@@ -13,6 +13,7 @@ function appendUnique(out: string[], domainId: string, primary: string): void {
   out.push(id);
 }
 
+/** @deprecated legacy-only — V4 main chain uses resolveRecallEnabledFineDomains(). */
 export function resolveDomainIdsForRecall(profile: ActiveLexiconProfileSnapshot): string[] {
   const primary = profile.primaryDomain?.trim();
   if (!primary || primary === 'general' || !isValidLLMDomain(primary)) {

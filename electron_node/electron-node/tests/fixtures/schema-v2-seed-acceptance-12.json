@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "lexicon-v3-five-table-v2",
+  "cases": [
+    {
+      "id": "s01",
+      "label": "热拿铁中杯少糖",
+      "asrText": "热拿铁鐘貝少糖",
+      "expectedWinningFineDomains": ["coffee"]
+    },
+    {
+      "id": "s02",
+      "label": "冰美式大杯去冰",
+      "asrText": "冰美式大悲去冰",
+      "expectedWinningFineDomains": ["coffee"]
+    },
+    {
+      "id": "s03",
+      "label": "蓝莓马芬",
+      "asrText": "蓝美马分",
+      "expectedWinningFineDomains": ["bakery"]
+    },
+    {
+      "id": "s04",
+      "label": "有蓝莓马芬",
+      "asrText": "有蓝美马分吗",
+      "expectedWinningFineDomains": ["bakery"]
+    },
+    {
+      "id": "s05",
+      "label": "接机",
+      "asrText": "我需要接机服务",
+      "expectedWinningFineDomains": ["tourism_pickup"]
+    },
+    {
+      "id": "s06",
+      "label": "送机",
+      "asrText": "麻烦安排送机",
+      "expectedWinningFineDomains": ["tourism_pickup"]
+    },
+    {
+      "id": "s07",
+      "label": "酒店入住",
+      "asrText": "我想办理酒店入住",
+      "expectedWinningFineDomains": ["tourism_hotel"]
+    },
+    {
+      "id": "s08",
+      "label": "路线",
+      "asrText": "请问推荐旅游路线",
+      "expectedWinningFineDomains": ["tourism_route"]
+    },
+    {
+      "id": "s09",
+      "label": "机场行李",
+      "asrText": "机场行李托运怎么办理",
+      "expectedWinningFineDomains": ["tourism_pickup", "tourism_transport"]
+    },
+    {
+      "id": "s10",
+      "label": "门票预约",
+      "asrText": "门票预约怎么操作",
+      "expectedWinningFineDomains": ["tourism_route"]
+    },
+    {
+      "id": "s11",
+      "label": "中杯少糖",
+      "asrText": "中杯少糖",
+      "expectedWinningFineDomains": ["milk_tea", "coffee"]
+    },
+    {
+      "id": "s12",
+      "label": "美式大杯",
+      "asrText": "美式大杯",
+      "expectedWinningFineDomains": ["coffee"]
+    }
+  ]
+}

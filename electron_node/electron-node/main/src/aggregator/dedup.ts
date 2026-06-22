@@ -228,82 +228,203 @@ export function dedupMergePrecise(
   return { text: currHead, deduped: false, overlapChars: 0 };
 }
 
-/**
- * 检测文本内部重复（如 "要大量的语音别丢弃要大量的语音别丢弃" 或 "再提高了一点速度 再提高了一点速度"）
- * 修复：改进检测逻辑，支持检测末尾重复（叠字叠词）
- */
-export function detectInternalRepetition(text: string): string {
-  if (!text || text.length < 4) return text;
-  
+// --- Duplicate Guard (final output sanitize) ---
+
+export type DuplicateRule =
+  | 'prefix_repeat'
+  | 'half_duplicate'
+  | 'tail_duplicate'
+  | 'partial_duplicate'
+  | 'none';
+
+export interface DuplicateSanitizeTrace {
+  applied: boolean;
+  rule: DuplicateRule;
+  repeatUnit?: string;
+  repeatCount?: number;
+  beforeLength: number;
+  afterLength: number;
+}
+
+export interface SanitizeSegmentResult {
+  text: string;
+  trace: DuplicateSanitizeTrace;
+}
+
+const PREFIX_MIN_REPEAT = 3;
+const PREFIX_MIN_UNIT_LEN = 2;
+const PREFIX_MAX_UNIT_LEN = 16;
+
+interface PrefixRepeatHit {
+  unit: string;
+  count: number;
+  suffix: string;
+}
+
+function countLeadingRepeats(text: string, unitLen: number): { count: number; suffix: string } {
+  const unit = text.slice(0, unitLen);
+  if (unit.length < unitLen) {
+    return { count: 0, suffix: text };
+  }
+  let count = 0;
+  let pos = 0;
+  while (text.slice(pos, pos + unitLen) === unit) {
+    count += 1;
+    pos += unitLen;
+  }
+  return { count, suffix: text.slice(pos) };
+}
+
+function findPrefixRepeatHit(text: string): PrefixRepeatHit | null {
+  let best: (PrefixRepeatHit & { unitLen: number }) | null = null;
+
+  for (let unitLen = PREFIX_MIN_UNIT_LEN; unitLen <= PREFIX_MAX_UNIT_LEN && unitLen <= text.length; unitLen += 1) {
+    const { count, suffix } = countLeadingRepeats(text, unitLen);
+    if (count < PREFIX_MIN_REPEAT) {
+      continue;
+    }
+    const unit = text.slice(0, unitLen);
+    if (
+      !best
+      || count > best.count
+      || (count === best.count && unitLen < best.unitLen)
+    ) {
+      best = { unit, count, suffix, unitLen };
+    }
+  }
+
+  return best ? { unit: best.unit, count: best.count, suffix: best.suffix } : null;
+}
+
+function collapsePrefixRepeat(text: string): { text: string; unit: string; count: number } | null {
+  const hit = findPrefixRepeatHit(text);
+  if (!hit) {
+    return null;
+  }
+  const output = hit.suffix.length > 0 ? hit.suffix.trim() : hit.unit;
+  return { text: output, unit: hit.unit, count: hit.count };
+}
+
+/** Migrated from legacy detectInternalRepetition — half / tail / partial only. */
+function collapseHalfTailPartialDuplicate(text: string): { text: string; rule: DuplicateRule } | null {
+  if (!text || text.length < 4) {
+    return null;
+  }
+
   const trimmedText = text.trim();
-  
-  // 方法1：检测完全重复（50% 重复）
+
   const mid = Math.floor(trimmedText.length / 2);
   const firstHalf = trimmedText.substring(0, mid);
   const secondHalf = trimmedText.substring(mid);
-
-  // 检查后半部分是否以前半部分开头（允许少量差异，如空格）
   const firstHalfNormalized = firstHalf.trim().replace(/\s+/g, ' ');
   const secondHalfNormalized = secondHalf.trim().replace(/\s+/g, ' ');
+
   if (secondHalfNormalized.startsWith(firstHalfNormalized) && firstHalfNormalized.length >= 3) {
-    // 完全重复，只保留前半部分
-    return firstHalf.trim();
+    return { text: firstHalf.trim(), rule: 'half_duplicate' };
   }
-  
-  // 方法1.5：检测近似重复（允许少量字符差异）
-  // 例如："这个语音阶段正常来我们就可以使用" vs "这个语音阶段正常来我们可以使用"
-  // 差异："可以" vs "可以"（完全相同，但可能因为空格等原因导致不完全匹配）
+
   if (firstHalfNormalized.length >= 3 && secondHalfNormalized.length >= 3) {
-    // 计算相似度：检查后半部分的前N个字符是否与前半部分高度相似
     const compareLen = Math.min(firstHalfNormalized.length, secondHalfNormalized.length);
     let matchCount = 0;
-    for (let i = 0; i < compareLen; i++) {
+    for (let i = 0; i < compareLen; i += 1) {
       if (firstHalfNormalized[i] === secondHalfNormalized[i]) {
-        matchCount++;
+        matchCount += 1;
       }
     }
     const similarity = matchCount / compareLen;
-    // 如果相似度 >= 0.9（90%），认为是重复
     if (similarity >= 0.9 && compareLen >= 3) {
-      return firstHalf.trim();
+      return { text: firstHalf.trim(), rule: 'half_duplicate' };
     }
   }
-  
-  // 方法2：检测末尾重复（如 "再提高了一点速度 再提高了一点速度"）
-  // 从文本末尾开始，检测是否有重复的短语
+
   const words = trimmedText.split(/\s+/);
   if (words.length >= 4) {
-    // 检测末尾是否有重复的词或短语
-    // 从末尾开始，尝试匹配前面的内容
-    for (let repeatLen = 2; repeatLen <= Math.min(words.length / 2, 10); repeatLen++) {
+    for (let repeatLen = 2; repeatLen <= Math.min(words.length / 2, 10); repeatLen += 1) {
       const lastWords = words.slice(-repeatLen).join(' ');
       const beforeLastWords = words.slice(-repeatLen * 2, -repeatLen).join(' ');
       if (lastWords === beforeLastWords && lastWords.length >= 3) {
-        // 发现末尾重复，只保留前面的部分
-        return words.slice(0, words.length - repeatLen).join(' ').trim();
+        return { text: words.slice(0, words.length - repeatLen).join(' ').trim(), rule: 'tail_duplicate' };
       }
     }
   }
-  
-  // 方法3：检测部分重复（60%-90% 重复）
+
   for (let ratio = 0.6; ratio <= 0.9; ratio += 0.1) {
     const splitPoint = Math.floor(trimmedText.length * ratio);
-    if (splitPoint < 2) continue;
-    
+    if (splitPoint < 2) {
+      continue;
+    }
     const part1 = trimmedText.substring(0, splitPoint);
     const part2 = trimmedText.substring(splitPoint);
-    
-    // 标准化空格后检查
     const part1Normalized = part1.trim().replace(/\s+/g, ' ');
     const part2Normalized = part2.trim().replace(/\s+/g, ' ');
-    
-    // 检查 part2 是否以 part1 开头（至少 3 个字符）
-    if (part2Normalized.length >= 3 && part2Normalized.startsWith(part1Normalized.substring(0, Math.min(part1Normalized.length, part2Normalized.length)))) {
-      // 发现重复，只保留 part1
-      return part1.trim();
+    if (
+      part2Normalized.length >= 3
+      && part2Normalized.startsWith(
+        part1Normalized.substring(0, Math.min(part1Normalized.length, part2Normalized.length))
+      )
+    ) {
+      return { text: part1.trim(), rule: 'partial_duplicate' };
     }
   }
-  
-  return text;
+
+  return null;
+}
+
+function noneTrace(beforeLength: number, afterLength: number): DuplicateSanitizeTrace {
+  return { applied: false, rule: 'none', beforeLength, afterLength };
+}
+
+/** Final-output duplicate sanitize — single entry (Implementation Contract V1.0). */
+export function sanitizeSegmentForOutput(text: string): SanitizeSegmentResult {
+  const beforeLength = text.length;
+
+  if (!text || text.trim().length === 0) {
+    return { text: '', trace: noneTrace(beforeLength, 0) };
+  }
+
+  let working = text;
+  let prefixHit: ReturnType<typeof collapsePrefixRepeat> = null;
+  let phase2Hit: ReturnType<typeof collapseHalfTailPartialDuplicate> = null;
+
+  prefixHit = collapsePrefixRepeat(working);
+  if (prefixHit) {
+    working = prefixHit.text;
+  }
+
+  phase2Hit = collapseHalfTailPartialDuplicate(working);
+  if (phase2Hit) {
+    working = phase2Hit.text;
+  }
+
+  working = working.trim();
+  const afterLength = working.length;
+
+  if (prefixHit) {
+    return {
+      text: working,
+      trace: {
+        applied: true,
+        rule: 'prefix_repeat',
+        repeatUnit: prefixHit.unit,
+        repeatCount: prefixHit.count,
+        beforeLength,
+        afterLength,
+      },
+    };
+  }
+
+  if (phase2Hit) {
+    return {
+      text: working,
+      trace: {
+        applied: true,
+        rule: phase2Hit.rule,
+        beforeLength,
+        afterLength,
+      },
+    };
+  }
+
+  return { text: working, trace: noneTrace(beforeLength, afterLength) };
 }
 

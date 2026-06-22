@@ -1,0 +1,422 @@
+{
+  "evaluated": 82,
+  "manifest_v2_rate": 1,
+  "applied_count": 23,
+  "improved": 17,
+  "degraded": 1,
+  "scenarioStats": {
+    "cafe": {
+      "count": 6,
+      "raw_cer_avg": 0.1925,
+      "final_cer_avg": 0.1234,
+      "pipeline_ms_avg": 9920
+    },
+    "meeting": {
+      "count": 6,
+      "raw_cer_avg": 0.1984,
+      "final_cer_avg": 0.1984,
+      "pipeline_ms_avg": 12337
+    },
+    "taxi": {
+      "count": 6,
+      "raw_cer_avg": 0.3999,
+      "final_cer_avg": 0.3975,
+      "pipeline_ms_avg": 12344
+    },
+    "hospital": {
+      "count": 6,
+      "raw_cer_avg": 0.3558,
+      "final_cer_avg": 0.2861,
+      "pipeline_ms_avg": 10083
+    },
+    "shopping": {
+      "count": 6,
+      "raw_cer_avg": 0.2087,
+      "final_cer_avg": 0.202,
+      "pipeline_ms_avg": 13111
+    },
+    "friend": {
+      "count": 6,
+      "raw_cer_avg": 0.1259,
+      "final_cer_avg": 0.1259,
+      "pipeline_ms_avg": 11715
+    },
+    "tech_deploy": {
+      "count": 6,
+      "raw_cer_avg": 0.302,
+      "final_cer_avg": 0.2853,
+      "pipeline_ms_avg": 14701
+    },
+    "customer_service": {
+      "count": 6,
+      "raw_cer_avg": 0.5961,
+      "final_cer_avg": 0.5961,
+      "pipeline_ms_avg": 15335
+    },
+    "interview": {
+      "count": 6,
+      "raw_cer_avg": 0.0808,
+      "final_cer_avg": 0.0808,
+      "pipeline_ms_avg": 8436
+    },
+    "classroom": {
+      "count": 6,
+      "raw_cer_avg": 0.2582,
+      "final_cer_avg": 0.2304,
+      "pipeline_ms_avg": 8966
+    },
+    "hotel": {
+      "count": 6,
+      "raw_cer_avg": 0.0732,
+      "final_cer_avg": 0.0732,
+      "pipeline_ms_avg": 7536
+    },
+    "bank": {
+      "count": 6,
+      "raw_cer_avg": 0.1931,
+      "final_cer_avg": 0.1611,
+      "pipeline_ms_avg": 7244
+    },
+    "restaurant": {
+      "count": 4,
+      "raw_cer_avg": 0.3235,
+      "final_cer_avg": 0.3088,
+      "pipeline_ms_avg": 7695
+    },
+    "gym": {
+      "count": 3,
+      "raw_cer_avg": 0.312,
+      "final_cer_avg": 0.312,
+      "pipeline_ms_avg": 7824
+    },
+    "lexicon_homophone": {
+      "count": 3,
+      "raw_cer_avg": 0.5083,
+      "final_cer_avg": 0.495,
+      "pipeline_ms_avg": 11427
+    }
+  },
+  "best_final": [
+    {
+      "id": "d002",
+      "scenario": "cafe",
+      "ref": "麻烦帮我做一杯美式带走，大杯就行，谢谢。",
+      "raw": "麻烦帮我做一杯美食带走大悲就行谢谢",
+      "final": "麻烦帮我做一杯美式带走大杯就行谢谢",
+      "raw_cer": 0.11764705882352941,
+      "final_cer": 0,
+      "applied": 2,
+      "pipeline_ms": 6665,
+      "fw_step_ms": 1534,
+      "assembly_ms": 294,
+      "ngram_queries": 52,
+      "lexicon": "lexicon-v3-five-table-v2"
+    },
+    {
+      "id": "d018",
+      "scenario": "friend",
+      "ref": "你最近忙不忙？想找你看下手机备份怎么设置。",
+      "raw": "你最近忙不忙,想找你看下手机备份怎么设置",
+      "final": "你最近忙不忙,想找你看下手机备份怎么设置",
+      "raw_cer": 0,
+      "final_cer": 0,
+      "applied": 0,
+      "pipeline_ms": 9062,
+      "fw_step_ms": 1521,
+      "assembly_ms": 252,
+      "ngram_queries": 52,
+      "lexicon": "lexicon-v3-five-table-v2"
+    },
+    {
+      "id": "d023",
+      "scenario": "customer_service",
+      "ref": "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。",
+      "raw": "想改一下收货地址还来得及吗? 麻烦尽快处理谢谢",
+      "final": "想改一下收货地址还来得及吗? 麻烦尽快处理谢谢",
+      "raw_cer": 0,
+      "final_cer": 0,
+      "applied": 0,
+      "pipeline_ms": 7229,
+      "fw_step_ms": 1533,
+      "assembly_ms": 271,
+      "ngram_queries": 55,
+      "lexicon": "lexicon-v3-five-table-v2"
+    },
+    {
+      "id": "d025",
+      "scenario": "interview",
+      "ref": "请简单介绍一下你上一段项目里负责的核心模块和难点。",
+      "raw": "请简单介绍一下你上一段项目里负责的核心模块和难点",
+      "final": "请简单介绍一下你上一段项目里负责的核心模块和难点",
+      "raw_cer": 0,
+      "final_cer": 0,
+      "applied": 0,
+      "pipeline_ms": 8107,
+      "fw_step_ms": 1522,
+      "assembly_ms": 397,
+      "ngram_queries": 86,
+      "lexicon": "lexicon-v3-five-table-v2"
+    },
+    {
+      "id": "d035",
+      "scenario": "bank",
+      "ref": "这笔转账显示处理中，大概多久能到账？",
+      "raw": "这笔转账显示处理中大概多久能到账",
+      "final": "这笔转账显示处理中大概多久能到账",
+      "raw_cer": 0,
+      "final_cer": 0,
+      "applied": 0,
+      "pipeline_ms": 7004,
+      "fw_step_ms": 1295,
+      "assembly_ms": 237,
+      "ngram_queries": 54,
+      "lexicon": "lexicon-v3-five-table-v2"
+    }
+  ],
+  "fw_improved": [
+    {
+      "id": "d001",
+      "scenario": "cafe",
+      "ref": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "raw": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "final": "你好,我想點一杯热拿铁中杯少糖 身边溫 以下今天有蓝莓马芬吗?",
+      "raw_cer": 0.37037037037037035,
+      "final_cer": 0.18518518518518517,
+      "applied": 6,
+      "pipeline_ms": 18588,
+      "fw_step_ms": 2071,
+      "assembly_ms": 355,
+      "ngram_queries": 63,
+      "lexicon": "lexicon-v3-five-table-v2"
+    },
+    {
+      "id": "d010",
+      "scenario": "hospital",
+      "ref": "医生您好，我这两天头痛，想开点药并做个血常规。",
+      "raw": "醫生您好,我這兩天頭痛想開點,要並做個歇常規",
+      "final": "医生您好,我這兩甜头痛想开點,要並做個歇常规",
+      "raw_cer": 0.55,
+      "final_cer": 0.4,
+      "applied": 4,
+      "pipeline_ms": 9063,
+      "fw_step_ms": 1521,
+      "assembly_ms": 288,
+      "ngram_queries": 62,
+      "lexicon": "lexicon-v3-five-table-v2"
+    },
+    {
+      "id": "d012",
+      "scenario": "hospital",
+      "ref": "这个检查报告什么时候能出？我过敏发痒，需要请假休息吗？",
+      "raw": "這個檢查報告什麼時候能出 我過敏 需要请家休息吗?",
+      "final": "这个檢查报告什麼時候能出 我国民 需要请假休息吗?",
+      "raw_cer": 0.4166666666666667,
+      "final_cer": 0.2916666666666667,
+      "applied": 4,
+      "pipeline_ms": 12903,
+      "fw_step_ms": 1386,
+      "assembly_ms": 265,
+      "ngram_queries": 52,
+      "lexicon": "lexicon-v3-five-table-v2"
+    },
+    {
+      "id": "d081",
+      "scenario": "bank",
+      "ref": "请问理财产品的风险等级在哪里查看？",
+      "raw": "請問理財產品的風險等急在哪裡查看",
+      "final": "請問理睬产品的風險等级在那里查看",
+      "raw_cer": 0.5,
+      "final_cer": 0.375,
+      "applied": 2,
+      "pipeline_ms": 7507,
+      "fw_step_ms": 1516,
+      "assembly_ms": 252,
+      "ngram_queries": 54,
+      "lexicon": "lexicon-v3-five-table-v2"
+    },
+    {
+      "id": "d002",
+      "scenario": "cafe",
+      "ref": "麻烦帮我做一杯美式带走，大杯就行，谢谢。",
+      "raw": "麻烦帮我做一杯美食带走大悲就行谢谢",
+      "final": "麻烦帮我做一杯美式带走大杯就行谢谢",
+      "raw_cer": 0.11764705882352941,
+      "final_cer": 0,
+      "applied": 2,
+      "pipeline_ms": 6665,
+      "fw_step_ms": 1534,
+      "assembly_ms": 294,
+      "ngram_queries": 52,
+      "lexicon": "lexicon-v3-five-table-v2"
+    }
+  ],
+  "applied_samples": [
+    {
+      "id": "d001",
+      "scenario": "cafe",
+      "ref": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "raw": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "final": "你好,我想點一杯热拿铁中杯少糖 身边溫 以下今天有蓝莓马芬吗?",
+      "raw_cer": 0.37037037037037035,
+      "final_cer": 0.18518518518518517,
+      "applied": 6,
+      "pipeline_ms": 18588,
+      "fw_step_ms": 2071,
+      "assembly_ms": 355,
+      "ngram_queries": 63,
+      "lexicon": "lexicon-v3-five-table-v2"
+    },
+    {
+      "id": "d002",
+      "scenario": "cafe",
+      "ref": "麻烦帮我做一杯美式带走，大杯就行，谢谢。",
+      "raw": "麻烦帮我做一杯美食带走大悲就行谢谢",
+      "final": "麻烦帮我做一杯美式带走大杯就行谢谢",
+      "raw_cer": 0.11764705882352941,
+      "final_cer": 0,
+      "applied": 2,
+      "pipeline_ms": 6665,
+      "fw_step_ms": 1534,
+      "assembly_ms": 294,
+      "ngram_queries": 52,
+      "lexicon": "lexicon-v3-five-table-v2"
+    },
+    {
+      "id": "d003",
+      "scenario": "cafe",
+      "ref": "请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。",
+      "raw": "请问,这款燕麦拿铁可以烧病吗?我赶时间小背",
+      "final": "请问,这款燕麦拿铁可以烧饼吗?我赶时间小杯",
+      "raw_cer": 0.15789473684210525,
+      "final_cer": 0.10526315789473684,
+      "applied": 3,
+      "pipeline_ms": 6392,
+      "fw_step_ms": 1431,
+      "assembly_ms": 233,
+      "ngram_queries": 38,
+      "lexicon": "lexicon-v3-five-table-v2"
+    },
+    {
+      "id": "d008",
+      "scenario": "taxi",
+      "ref": "麻烦送我到国贸三期南门，大概多久能到？我十点十分有个电话会。",
+      "raw": "麻烦送我到国贸三七南门大盖多久能到? 我十点十 10分有隔電話會",
+      "final": "麻烦送我到国贸三七南门大概多久能到? 我试点十 10分有隔電話會",
+      "raw_cer": 0.2962962962962963,
+      "final_cer": 0.2962962962962963,
+      "applied": 2,
+      "pipeline_ms": 15861,
+      "fw_step_ms": 1716,
+      "assembly_ms": 432,
+      "ngram_queries": 81,
+      "lexicon": "lexicon-v3-five-table-v2"
+    },
+    {
+      "id": "d010",
+      "scenario": "hospital",
+      "ref": "医生您好，我这两天头痛，想开点药并做个血常规。",
+      "raw": "醫生您好,我這兩天頭痛想開點,要並做個歇常規",
+      "final": "医生您好,我這兩甜头痛想开點,要並做個歇常规",
+      "raw_cer": 0.55,
+      "final_cer": 0.4,
+      "applied": 4,
+      "pipeline_ms": 9063,
+      "fw_step_ms": 1521,
+      "assembly_ms": 288,
+      "ngram_queries": 62,
+      "lexicon": "lexicon-v3-five-table-v2"
+    },
+    {
+      "id": "d011",
+      "scenario": "hospital",
+      "ref": "挂号处请问内科还有号吗？我胃不舒服，昨晚开始的。",
+      "raw": "刮号出请问 内刻还有号码 我微不 我感觉不舒服昨晚开始的",
+      "final": "刮号出请问 内科还有号码 我尾部 我感觉不舒服昨晚开始的",
+      "raw_cer": 0.42857142857142855,
+      "final_cer": 0.38095238095238093,
+      "applied": 2,
+      "pipeline_ms": 14075,
+      "fw_step_ms": 1656,
+      "assembly_ms": 367,
+      "ngram_queries": 75,
+      "lexicon": "lexicon-v3-five-table-v2"
+    }
+  ],
+  "worst_final": [
+    {
+      "id": "d067",
+      "scenario": "customer_service",
+      "ref": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+      "raw": "您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,",
+      "final": "您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,",
+      "raw_cer": 3.04,
+      "final_cer": 3.04,
+      "applied": 0,
+      "pipeline_ms": 45993,
+      "fw_step_ms": 1544,
+      "assembly_ms": 393,
+      "ngram_queries": 120,
+      "lexicon": "lexicon-v3-five-table-v2"
+    },
+    {
+      "id": "d045",
+      "scenario": "lexicon_homophone",
+      "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+      "raw": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說",
+      "final": "關於後,學生成为学生 和上限計劃請按上限計劃執行有問題群裡說",
+      "raw_cer": 0.8,
+      "final_cer": 0.8,
+      "applied": 1,
+      "pipeline_ms": 13312,
+      "fw_step_ms": 1550,
+      "assembly_ms": 377,
+      "ngram_queries": 83,
+      "lexicon": "lexicon-v3-five-table-v2"
+    },
+    {
+      "id": "d065",
+      "scenario": "tech_deploy",
+      "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+      "raw": "這次發布我們現對期 在其商線計劃窗口後選生 成模快需要連掉別漏掉回歸",
+      "final": "這次發布我們現對期 在其商線計劃窗口候选生 成模块需要連掉別漏掉回归",
+      "raw_cer": 0.6666666666666666,
+      "final_cer": 0.5666666666666667,
+      "applied": 4,
+      "pipeline_ms": 16291,
+      "fw_step_ms": 1657,
+      "assembly_ms": 448,
+      "ngram_queries": 100,
+      "lexicon": "lexicon-v3-five-table-v2"
+    },
+    {
+      "id": "d082",
+      "scenario": "restaurant",
+      "ref": "两位，靠窗有位置吗？不要香菜，微辣就行。",
+      "raw": "两位烤创有微纸嘛 不要像蔡薇娜就行",
+      "final": "两位烤创有微纸嘛 不要像蔡薇娜就行",
+      "raw_cer": 0.5625,
+      "final_cer": 0.5625,
+      "applied": 0,
+      "pipeline_ms": 8026,
+      "fw_step_ms": 1404,
+      "assembly_ms": 239,
+      "ngram_queries": 44,
+      "lexicon": "lexicon-v3-five-table-v2"
+    },
+    {
+      "id": "d043",
+      "scenario": "lexicon_homophone",
+      "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+      "raw": "我們下午討論後 選生成方安線吧,後選生成的接口文當補期。",
+      "final": "我们下午討論後 選生成方案線吧,後選生成的借口文當補期。",
+      "raw_cer": 0.6,
+      "final_cer": 0.56,
+      "applied": 1,
+      "pipeline_ms": 12217,
+      "fw_step_ms": 1384,
+      "assembly_ms": 351,
+      "ngram_queries": 86,
+      "lexicon": "lexicon-v3-five-table-v2"
+    }
+  ]
+}

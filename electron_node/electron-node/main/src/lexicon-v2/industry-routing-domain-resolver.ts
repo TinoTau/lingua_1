@@ -83,6 +83,7 @@ function resolveFromDomainAnchors(
     .map(([domainId]) => domainId);
 }
 
+/** @deprecated legacy-only — V4 main chain uses resolveRecallEnabledFineDomains(). */
 export function resolveRecallDomains(input: {
   sessionIntent?: LexiconSessionIntent;
   enabledDomains: readonly string[];

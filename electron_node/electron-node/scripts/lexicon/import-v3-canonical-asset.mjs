@@ -13,7 +13,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { spawnSync } from 'child_process';
 import { parseCliArgs } from './lib/cli-args.mjs';
-import { electronNodeRoot, repoRoot, defaultRegistryPath, defaultBundleDir } from './lib/paths.mjs';
+import { electronNodeRoot, repoRoot, defaultRegistryPath, v3RuntimeDir } from './lib/paths.mjs';
+import { runV2RuntimeBuildPipeline } from './lib/run-v2-runtime-build-pipeline.mjs';
 import { phase5PackageDir, phase5BenchmarkDir } from './lib/phase5-paths.mjs';
 import { validateSeedFiles } from './lib/validate-seed.mjs';
 import { sanitizeV3CanonicalSeed } from './lib/v3-import-sanitize.mjs';
@@ -179,19 +180,22 @@ if (args.skipBuild) {
   process.exit(0);
 }
 
-process.env.BUNDLE_TAG = `${artifact.bundleTagPrefix}-${out.length}`;
-run('lexicon:build', process.execPath, [
-  path.join(__dirname, 'build-lexicon-bundle.mjs'),
-  '--input',
-  deploySeed,
-  '--strict',
-  '--report',
-  path.join(deployDir, `${path.basename(deploySeed, '.jsonl')}_build-validation-report.json`),
-]);
+const deploySeedRel = path.relative(electronNodeRoot(), deploySeed);
+const buildReportRel = path.join(
+  'data/lexicon/v3',
+  `${path.basename(deploySeed, '.jsonl')}_build-validation-report.json`
+);
+
+runV2RuntimeBuildPipeline({
+  input: deploySeedRel,
+  registry,
+  bundleTag: `${artifact.bundleTagPrefix}-${out.length}`,
+  validateReport: buildReportRel,
+  skipValidate: true,
+});
 
 const gateScript = path.join(__dirname, 'check-phase5-manifest-gate.mjs');
 run('phase5-gate', process.execPath, [gateScript, '--ladder', artifact.gateLadder]);
-run('v3-gate', process.execPath, [path.join(__dirname, 'run-v3-runtime-gate.mjs')]);
 
 console.log('[import-v3] Tip: npm run lexicon:rebuild-sqlite && restart node');
-console.log('[import-v3] DONE — bundle at', defaultBundleDir());
+console.log('[import-v3] DONE — v3 runtime bundle at', v3RuntimeDir());

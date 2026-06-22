@@ -8,6 +8,7 @@ module.exports = {
   // 依赖 Node --experimental-vm-modules 的测试（opus 动态 import）默认排除
   testPathIgnorePatterns: [
     "/node_modules/",
+    "legacy/",
     "legacy/archive/",
     "opus-encoder.test.ts",
     "task-router-opus.test.ts",

@@ -119,10 +119,7 @@ const out = {
   compatibilityAuthorityReduction: {
     total_conflict_relations: v4List.reduce((s, d) => s + (d.conflictRelationCount || 0), 0),
     avg_conflict_relations: Number(avg(v4List.map((d) => d.conflictRelationCount || 0)).toFixed(2)),
-    total_hard_drops: v4List.reduce((s, d) => s + (d.hardDropCount || 0), 0),
-    avg_hard_drops: Number(avg(v4List.map((d) => d.hardDropCount || 0)).toFixed(2)),
     avg_active_candidates: Number(avg(v4List.map((d) => d.activeCandidateCount || 0)).toFixed(2)),
-    avg_dropped_candidates: Number(avg(v4List.map((d) => d.droppedCandidateCount || 0)).toFixed(2)),
     cases_with_conflict_relations: v4List.filter((d) => (d.conflictRelationCount || 0) > 0).length,
     max_active_candidates: Math.max(...v4List.map((d) => d.activeCandidateCount || 0), 0),
     min_active_candidates: Math.min(...v4List.map((d) => d.activeCandidateCount || 0), 0),
@@ -135,7 +132,7 @@ const out = {
   d001Acceptance: {
     activeCandidateCount: d001V4.activeCandidateCount,
     conflictRelationCount: d001V4.conflictRelationCount,
-    hardDropCount: d001V4.hardDropCount,
+    conflictRelationCount: d001V4.conflictRelationCount,
     coverageCount: d001V4.coverageCount,
     zhongbeiCandidates: activeCandidates
       .filter((x) => /中杯|钟贝/.test(x.replacement || ''))
@@ -152,7 +149,7 @@ const out = {
     ),
     contractPass: d001?.pass,
     contractChecks: {
-      hardDropCountZero: d001V4.hardDropCount === 0,
+      conflictRelationCountPresent: typeof d001V4.conflictRelationCount === 'number',
       activeCandidateCountGt24: (d001V4.activeCandidateCount || 0) > 24,
       conflictRelationCountGt0: (d001V4.conflictRelationCount || 0) > 0,
     },

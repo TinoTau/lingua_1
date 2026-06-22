@@ -16,9 +16,10 @@ const env = {
   ELECTRON_RUN_AS_NODE: '1',
 };
 
-const r = spawnSync(
-  'npx',
-  ['electron', './node_modules/jest/bin/jest.js', '--testPathPattern=lexicon-patch-v3/patch-e2e', '--runInBand'],
-  { cwd: root, env, stdio: 'inherit', shell: true }
-);
+const r = spawnSync('npx', ['electron', './scripts/lexicon/run-patch-e2e-runner.mjs'], {
+  cwd: root,
+  env,
+  stdio: 'inherit',
+  shell: true,
+});
 process.exit(r.status === 0 ? 0 : 1);

@@ -1,73 +1,48 @@
 #!/usr/bin/env node
 /**
- * Phase 3 — lexicon 1k pilot acceptance (validate → build → report → gate).
+ * Phase 3 — lexicon 1k pilot acceptance (validate → v2-shadow → prepare → gate).
  */
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { spawnSync } from 'child_process';
+import { runV2RuntimeBuildPipeline } from './lib/run-v2-runtime-build-pipeline.mjs';
+import { v3RuntimeDir } from './lib/lexicon-v3-runtime.mjs';
+import { V3_SCHEMA_VERSION_V2 } from './lib/lexicon-v3-runtime.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const electronNodeRoot = path.resolve(__dirname, '../..');
-const repoRoot = path.resolve(electronNodeRoot, '../..');
 
 const seedRel = 'data/lexicon/pilot/lexicon_1k_pilot_v1.jsonl';
 const seedPath = path.join(electronNodeRoot, seedRel);
-const bundleDir = path.join(repoRoot, 'node_runtime', 'lexicon', 'current');
-const gatePath = path.join(
-  repoRoot,
-  'electron_node/docs/lexicon-assets/Lexicon_1k_Pilot_Phase3_Package/lexicon_1k_expected_manifest_gate.json'
-);
+const bundleDir = v3RuntimeDir();
 
 function run(label, cmd, args) {
   const result = spawnSync(cmd, args, { cwd: electronNodeRoot, encoding: 'utf-8' });
   if (result.status !== 0) {
     console.error(`[1k-pilot] FAIL ${label}`);
-    if (result.stdout) {
-      console.error(result.stdout);
-    }
-    if (result.stderr) {
-      console.error(result.stderr);
-    }
+    if (result.stdout) console.error(result.stdout);
+    if (result.stderr) console.error(result.stderr);
     process.exit(result.status ?? 1);
   }
   console.log(`[1k-pilot] PASS ${label}`);
 }
 
-function checkGate(manifest) {
-  const gate = JSON.parse(fs.readFileSync(gatePath, 'utf-8'));
-  const enabled = manifest.enabledCount ?? manifest.enabled_term_count ?? 0;
-  const [min, max] = gate.expectedEnabledRange;
-
-  if (manifest.schemaVersion !== gate.schemaVersion) {
-    throw new Error(`schemaVersion expected ${gate.schemaVersion}`);
+function checkV2Manifest(manifest) {
+  if (manifest.schemaVersion !== V3_SCHEMA_VERSION_V2) {
+    throw new Error(`schemaVersion must be ${V3_SCHEMA_VERSION_V2}, got ${manifest.schemaVersion}`);
   }
-  if (enabled < min || enabled > max) {
-    throw new Error(`enabledCount ${enabled} outside [${min}, ${max}]`);
+  if (!manifest.checksum) {
+    throw new Error('manifest.checksum missing');
   }
-  for (const domain of ['travel', 'transport', 'restaurant', 'tech_ai']) {
-    const count = manifest.domainDistribution?.[domain] ?? 0;
-    const expected = gate.expectedDomainDistribution?.[domain];
-    if (count <= 0) {
-      throw new Error(`domainDistribution.${domain} must be > 0`);
-    }
-    if (expected && Math.abs(count - expected) > 30) {
-      console.warn(`[1k-pilot] warn domain ${domain}: built=${count} expected~${expected}`);
-    }
+  const tables = manifest.tables ?? {};
+  if ((tables.term ?? 0) <= 0) {
+    throw new Error('manifest.tables.term must be > 0');
   }
-  if ((manifest.pinyinIndexCount ?? 0) <= 0) {
-    throw new Error('pinyinIndexCount must be > 0');
+  if ((tables.term_domain_tags ?? 0) <= 0) {
+    throw new Error('manifest.tables.term_domain_tags must be > 0');
   }
-  if ((manifest.exactIndexCount ?? 0) <= 0) {
-    throw new Error('exactIndexCount must be > 0');
-  }
-  if ((manifest.aliasIndexCount ?? 0) <= 0) {
-    throw new Error('aliasIndexCount must be > 0');
-  }
-  if ((manifest.domainDistribution?.asr ?? 0) > 0) {
-    throw new Error('domainDistribution.asr must be 0');
-  }
-  console.log('[1k-pilot] PASS manifest gate');
+  console.log('[1k-pilot] PASS v2 runtime manifest');
 }
 
 if (!fs.existsSync(seedPath)) {
@@ -77,26 +52,24 @@ if (!fs.existsSync(seedPath)) {
 }
 
 run('sanitize', process.execPath, [path.join(__dirname, 'sanitize-1k-pilot-seed.mjs')]);
-run('validate', process.execPath, [
-  path.join(__dirname, 'validate-lexicon-seed.mjs'),
-  '--input',
-  seedRel,
-  '--strict',
-  '--report',
-  'data/lexicon/pilot/lexicon_1k_validation-report.json',
-]);
-run('build', process.execPath, [path.join(__dirname, 'build-for-electron.mjs'), '--input', seedRel]);
-run('report', process.execPath, [path.join(__dirname, 'report.mjs')]);
+runV2RuntimeBuildPipeline({
+  input: seedRel,
+  bundleTag: 'pilot-1k',
+  validateReport: 'data/lexicon/pilot/lexicon_1k_validation-report.json',
+});
 
 const manifest = JSON.parse(fs.readFileSync(path.join(bundleDir, 'manifest.json'), 'utf-8'));
-checkGate(manifest);
-console.log(JSON.stringify({
-  ok: true,
-  lexiconCount: manifest.lexiconCount,
-  enabledCount: manifest.enabledCount,
-  pinyinIndexCount: manifest.pinyinIndexCount,
-  exactIndexCount: manifest.exactIndexCount,
-  aliasIndexCount: manifest.aliasIndexCount,
-  domainDistribution: manifest.domainDistribution,
-  checksum: manifest.checksum,
-}, null, 2));
+checkV2Manifest(manifest);
+console.log(
+  JSON.stringify(
+    {
+      ok: true,
+      schemaVersion: manifest.schemaVersion,
+      tables: manifest.tables,
+      checksum: manifest.checksum,
+      bundleDir,
+    },
+    null,
+    2
+  )
+);

@@ -1,0 +1,186 @@
+{
+  "batch_file": "duplicate-guard-dialog200-batch-result.json",
+  "timestamp": "2026-06-22T06:01:06.586Z",
+  "stoppedReason": "deadline",
+  "evaluated": 191,
+  "contract": {
+    "evaluated": 192,
+    "pass": 191,
+    "fail": 1,
+    "skip": 0,
+    "wall_clock_sec": 901,
+    "pipeline_ok_rate": 0.9947916666666666,
+    "fw_triggered_count": 191,
+    "fw_applied_case_count": 56,
+    "text_changed_count": 57,
+    "lexicon_runtime_ok_count": 191,
+    "asr_service_id_distribution": {
+      "faster-whisper-vad": 191,
+      "unknown": 1
+    }
+  },
+  "duplicate_guard": {
+    "trace_present_count": 191,
+    "applied_count": 1,
+    "rule_distribution": {
+      "prefix_repeat": 1
+    },
+    "d067": {
+      "pass": true,
+      "raw_cer": 6.12,
+      "final_cer": 1,
+      "max_consecutive_unit": 0,
+      "duplicate_sanitize": {
+        "applied": true,
+        "rule": "prefix_repeat",
+        "repeatUnit": "您好,我定,",
+        "repeatCount": 37,
+        "beforeLength": 246,
+        "afterLength": 24
+      },
+      "raw_len": 246,
+      "final_len": 0,
+      "final_preview": ""
+    },
+    "applied_cases": [
+      {
+        "id": "d067",
+        "rule": "prefix_repeat",
+        "repeatCount": 37,
+        "beforeLength": 246,
+        "afterLength": 24,
+        "raw_preview": "您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好",
+        "final_preview": "您 但顯示已發貨 但物流三天沒更新能幫我查一下嗎"
+      }
+    ]
+  },
+  "quality": {
+    "avg_cer_raw": 0.2658,
+    "avg_cer_final": 0.2187,
+    "median_cer_raw": 0.2,
+    "median_cer_final": 0.1852,
+    "p95_cer_raw": 0.6,
+    "p95_cer_final": 0.5484,
+    "fw_improved_cases": 43,
+    "fw_degraded_cases": 4,
+    "worst_final_cer_top5": [
+      {
+        "id": "d045",
+        "scenario": "lexicon_homophone",
+        "cer": 0.8,
+        "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+        "hyp": "關於後,學生成为学生 和上限計劃請按上限計劃執行有問題群裡說"
+      },
+      {
+        "id": "d155",
+        "scenario": "tech_deploy",
+        "cer": 0.7333333333333333,
+        "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "hyp": "这次發布我們現對峽谷的發布會 在其商線計劃窗口候选生成模快需要連掉別漏掉回归"
+      },
+      {
+        "id": "d110",
+        "scenario": "tech_deploy",
+        "cer": 0.7,
+        "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "hyp": "這次發布我們現對此發布的新闻 起商線計劃窗口候选生 乘模块需要連掉別漏掉回归"
+      },
+      {
+        "id": "d180",
+        "scenario": "lexicon_homophone",
+        "cer": 0.68,
+        "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+        "hyp": "關於後,選生成立 和上限計劃請按上限計劃執行有問題 群里說"
+      },
+      {
+        "id": "d187",
+        "scenario": "taxi",
+        "cer": 0.6129032258064516,
+        "ref": "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+        "hyp": "市副局仲官村軟件遠走機場告訴 我敢救人 9点半的回药师赌车 您提前跟我说"
+      }
+    ]
+  },
+  "perf": {
+    "pipeline_ms": {
+      "count": 191,
+      "avg": 4454,
+      "p50": 4194,
+      "p95": 5929,
+      "max": 17260
+    },
+    "wall_clock_sec": 901
+  },
+  "samples": [
+    {
+      "id": "d001",
+      "pass": true,
+      "scenario": "cafe",
+      "ref": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "raw": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "final": "你好,我想點一杯热拿铁中杯少糖 身边溫 以下今天有蓝莓马芬吗?",
+      "raw_cer": 0.3704,
+      "final_cer": 0.1852,
+      "duplicate_sanitize": {
+        "applied": false,
+        "rule": "none",
+        "beforeLength": 31,
+        "afterLength": 31
+      },
+      "pipeline_ms": 5498
+    },
+    {
+      "id": "d045",
+      "pass": true,
+      "scenario": "lexicon_homophone",
+      "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+      "raw": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說",
+      "final": "關於後,學生成为学生 和上限計劃請按上限計劃執行有問題群裡說",
+      "raw_cer": 0.8,
+      "final_cer": 0.8,
+      "duplicate_sanitize": {
+        "applied": false,
+        "rule": "none",
+        "beforeLength": 30,
+        "afterLength": 30
+      },
+      "pipeline_ms": 4932
+    },
+    {
+      "id": "d051",
+      "pass": true,
+      "scenario": "meeting",
+      "ref": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。",
+      "raw": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下",
+      "final": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下",
+      "raw_cer": 0.2143,
+      "final_cer": 0.2143,
+      "duplicate_sanitize": {
+        "applied": false,
+        "rule": "none",
+        "beforeLength": 29,
+        "afterLength": 29
+      },
+      "pipeline_ms": 4649
+    },
+    {
+      "id": "d067",
+      "pass": true,
+      "scenario": "customer_service",
+      "ref": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+      "raw": "您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好",
+      "final": "您 但顯示已發貨 但物流三天沒更新能幫我查一下嗎",
+      "raw_cer": 6.12,
+      "final_cer": 0.4,
+      "duplicate_sanitize": {
+        "applied": true,
+        "rule": "prefix_repeat",
+        "repeatUnit": "您好,我定,",
+        "repeatCount": 37,
+        "beforeLength": 246,
+        "afterLength": 24
+      },
+      "pipeline_ms": 16542
+    }
+  ]
+}

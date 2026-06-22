@@ -1,22 +1,22 @@
 /**
- * Lexicon Runtime V2 — types (shadow bundle + SQL query runtime).
+ * Schema V2 runtime — lexicon-v3-five-table-v2 only.
  */
 
-export const LEXICON_V2_SHADOW_SCHEMA_V1 = 'lexicon-v2-shadow-v1';
 export const LEXICON_V2_SHADOW_SCHEMA_VERSION = 'lexicon-v2-shadow-v2';
 
-/** V3 runtime 单 manifest（lexicon-v3-four-table-v1，已废弃） */
-export const LEXICON_V3_RUNTIME_SCHEMA_VERSION = 'lexicon-v3-four-table-v1';
-
-/** V3 runtime 五表 manifest（term_pinyin_ngrams） */
-export const LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION = 'lexicon-v3-five-table-v1';
+export const LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION = 'lexicon-v3-five-table-v2';
 
 export const LEXICON_V2_SUPPORTED_SCHEMA_VERSIONS = [
-  LEXICON_V2_SHADOW_SCHEMA_V1,
-  LEXICON_V2_SHADOW_SCHEMA_VERSION,
-  LEXICON_V3_RUNTIME_SCHEMA_VERSION,
-  LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION,
+  LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION,
 ] as const;
+
+export function isLexiconV3FiveTableManifest(version: string | undefined): boolean {
+  return version === LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION;
+}
+
+export function isLexiconV3FiveTableV2Manifest(version: string | undefined): boolean {
+  return version === LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION;
+}
 
 export type LexiconRuntimeV2Status = 'ok' | 'missing' | 'disabled' | 'error';
 
@@ -50,6 +50,8 @@ export type LexiconRuntimeV2State = {
     domain: number;
     routing: number;
     ngrams?: number;
+    term?: number;
+    termDomainTags?: number;
   };
 };
 

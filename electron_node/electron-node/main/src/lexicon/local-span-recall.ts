@@ -1,5 +1,6 @@
 /**
  * FW detector — bounded span TopK recall (LexiconRuntimeV2 only).
+ * @deprecated legacy-only — V4 span assembly uses recall-topk-for-windows + resolveRecallEnabledFineDomains().
  */
 
 import { isMixedLatinToken } from './scored-lexicon';

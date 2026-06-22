@@ -83,10 +83,10 @@ function lookupPlainTiers(
 
   const domainHits: HotwordEntry[] = [];
   let domainLookupMs = 0;
-  for (const domainId of domainIds) {
+  if (domainIds.length > 0) {
     const td = Date.now();
-    domainHits.push(...runtimeV2.lookupDomainByPinyinKey(domainId, key, termLength, sqlLimit));
-    domainLookupMs += Date.now() - td;
+    domainHits.push(...runtimeV2.lookupDomainsByPinyinKeyMulti(domainIds, key, termLength, sqlLimit));
+    domainLookupMs = Date.now() - td;
   }
 
   let idiomHits: HotwordEntry[] = [];
@@ -119,12 +119,18 @@ function lookupToneTiers(
 
   const domainHits: HotwordEntry[] = [];
   let domainLookupMs = 0;
-  for (const domainId of domainIds) {
+  if (domainIds.length > 0) {
     const td = Date.now();
     domainHits.push(
-      ...runtimeV2.lookupDomainByPinyinAndToneKey(domainId, key, tonePinyinKey, termLength, sqlLimit)
+      ...runtimeV2.lookupDomainsByPinyinAndToneKeyMulti(
+        domainIds,
+        key,
+        tonePinyinKey,
+        termLength,
+        sqlLimit
+      )
     );
-    domainLookupMs += Date.now() - td;
+    domainLookupMs = Date.now() - td;
   }
 
   let idiomHits: HotwordEntry[] = [];
@@ -166,7 +172,9 @@ function dedupeByIdPreferToneExact(
 function countToneSqlQueries(domainIds: readonly string[], termLength: number): number {
   const cfg = getLexiconRuntimeV2Config();
   let count = 1; // base
-  count += domainIds.length;
+  if (domainIds.length > 0) {
+    count += 1; // domain multi lookup
+  }
   if (termLength === 4 && cfg.maxIdiomCandidates > 0) {
     count += 1;
   }

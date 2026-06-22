@@ -19,8 +19,16 @@ import { parseConfigJson } from './config-file-reader';
 export type { NodeConfig, ServicePreferences, ServiceLastRuntimeState, MetricsConfig } from './node-config-types';
 
 export function getConfigPath(): string {
-  const userData = app.getPath('userData');
-  return path.join(userData, 'electron-node-config.json');
+  const fromEnv = process.env.ELECTRON_NODE_CONFIG_PATH?.trim();
+  if (fromEnv) {
+    return fromEnv;
+  }
+  try {
+    const userData = app.getPath('userData');
+    return path.join(userData, 'electron-node-config.json');
+  } catch {
+    return path.join(process.cwd(), 'electron-node-config.json');
+  }
 }
 
 /** 本机服务 base URL（从配置读），用于 ASR/NMT/TTS/语义修复等端点拼接及健康检查。 */

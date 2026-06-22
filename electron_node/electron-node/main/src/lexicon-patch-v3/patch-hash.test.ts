@@ -4,15 +4,15 @@ import type { LexiconPatchV3 } from './patch-types';
 function samplePatch(operationsOrder: 'ab' | 'ba'): LexiconPatchV3 {
   const opA = {
     op: 'disable' as const,
-    table: 'domain' as const,
+    table: 'term' as const,
     word: '测试词',
-    domainId: 'travel',
+    termId: 'term-test-1',
   };
   const opB = {
     op: 'enable' as const,
-    table: 'domain' as const,
+    table: 'term' as const,
     word: '测试词',
-    domainId: 'travel',
+    termId: 'term-test-1',
   };
   const operations = operationsOrder === 'ab' ? [opA, opB] : [opB, opA];
   const patch: LexiconPatchV3 = {

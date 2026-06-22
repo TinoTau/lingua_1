@@ -6,6 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { spawnSync } from 'child_process';
+import { runV2RuntimeBuildPipeline } from './lib/run-v2-runtime-build-pipeline.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const electronNodeRoot = path.resolve(__dirname, '../..');
@@ -84,13 +85,10 @@ async function main() {
     process.exit(1);
   }
 
-  run('validate', process.execPath, [
-    path.join(__dirname, 'validate-lexicon-seed.mjs'),
-    '--input',
-    seedRel,
-    '--strict',
-  ]);
-  run('build', process.execPath, [path.join(__dirname, 'build-for-electron.mjs'), '--input', seedRel]);
+  runV2RuntimeBuildPipeline({
+    input: seedRel,
+    bundleTag: `phase5-${ladder}`,
+  });
 
   const gateScript =
     ladder === '5k'

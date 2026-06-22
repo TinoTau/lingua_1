@@ -7,7 +7,6 @@ import {
   type CandidateScoreBreakdown,
   type RecallCandidateKind,
 } from '../lexicon/candidate-score';
-import type { DomainBoostContext } from '../lexicon/domain-boost-calculator';
 import { scorePinyinSimilarity } from '../lexicon/phonetic/pinyin';
 import { syllablesKey } from '../lexicon/pinyin-index';
 import { getAsrRepairQualityConfig } from '../asr-repair-quality/quality-config';
@@ -16,10 +15,9 @@ import { resolveWindowCandidateSource, type WindowCandidateSource } from '../lex
 import type { ActiveLexiconProfileSnapshot } from '../session-runtime/types';
 import { defaultGeneralProfile } from './profile-registry';
 import type { LexiconRuntimeV2 } from './lexicon-runtime-v2';
-import { LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION } from './lexicon-types-v2';
+import { isLexiconV3FiveTableManifest } from './lexicon-types-v2';
 import type { ParentTermNgramRow } from './lexicon-types-v2';
 import { computeToneScoreResult, type ToneReason } from '../fw-detector/tone-match-score';
-import type { WeakDomainRecallPlan } from './weak-domain-recall-resolver';
 import {
   recallSpanTopKV2,
   type RecallSpanTopKV2Hit,
@@ -75,44 +73,16 @@ function minCandidateScore(): number {
   return getAsrRepairQualityConfig().minCandidateScore;
 }
 
-function domainBoostContextFromPlan(plan?: WeakDomainRecallPlan): DomainBoostContext | undefined {
-  if (!plan?.enabled) {
-    return undefined;
-  }
-  return {
-    strongDomainIds: plan.strongDomainIds,
-    weakDomainIds: plan.weakDomainIds,
-  };
-}
-
-function classifyFragmentKind(row: ParentTermNgramRow, plan?: WeakDomainRecallPlan): RecallCandidateKind {
+function classifyFragmentKind(row: ParentTermNgramRow): RecallCandidateKind {
   if (row.tier === 'domain' && row.domainId) {
-    if (plan?.enabled) {
-      if (plan.strongDomainIds.includes(row.domainId)) {
-        return 'exact_domain_strong';
-      }
-      if (plan.weakDomainIds.includes(row.domainId)) {
-        return 'exact_domain_weak';
-      }
-    }
     return 'exact_domain_strong';
   }
   return 'exact_base';
 }
 
-function fragmentRowAllowed(
-  row: ParentTermNgramRow,
-  domainIds: readonly string[],
-  plan?: WeakDomainRecallPlan
-): boolean {
+function fragmentRowAllowed(row: ParentTermNgramRow, domainIds: readonly string[]): boolean {
   if (row.tier === 'domain' && row.domainId) {
-    if (domainIds.includes(row.domainId)) {
-      return true;
-    }
-    if (plan?.enabled && plan.weakDomainIds.includes(row.domainId)) {
-      return true;
-    }
-    return false;
+    return domainIds.includes(row.domainId);
   }
   return true;
 }
@@ -156,13 +126,11 @@ function scoreFragmentHit(
   syllables: string[],
   windowText: string,
   profile: ActiveLexiconProfileSnapshot,
-  boostContext: DomainBoostContext | undefined,
-  plan: WeakDomainRecallPlan | undefined,
   acousticTonePattern: number[] | undefined
 ): RecallSpanTopKV3Hit | null {
   const hotword = ngramRowToHotword(row);
   const phoneticScore = scorePinyinSimilarity(syllables, hotword.pinyin);
-  const recallCandidateKind = classifyFragmentKind(row, plan);
+  const recallCandidateKind = classifyFragmentKind(row);
   const candidateScoreBreakdown = computeCandidateScoreBreakdown({
     hotword,
     windowSyllables: syllables,
@@ -170,7 +138,7 @@ function scoreFragmentHit(
     phoneticScore,
     profile,
     recallCandidateKind,
-    domainBoostContext: boostContext,
+    domainBoostContext: undefined,
   });
   const candidateScore =
     candidateScoreBreakdown.priorScore +
@@ -240,7 +208,7 @@ function lookupParentFragments(
   runtimeV2: LexiconRuntimeV2,
   input: RecallSpanTopKV3Input
 ): { hits: RecallSpanTopKV3Hit[]; penalizedCount: number; compatibleCount: number } {
-  if (runtimeV2.getManifestVersion() !== LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION) {
+  if (!isLexiconV3FiveTableManifest(runtimeV2.getManifestVersion())) {
     return { hits: [], penalizedCount: 0, compatibleCount: 0 };
   }
 
@@ -249,7 +217,6 @@ function lookupParentFragments(
     windowText,
     domainIds,
     acousticTonePattern,
-    weakDomainPlan,
     parentFragmentTopK = DEFAULT_PARENT_FRAGMENT_TOP_K,
     perParentTermPerWindow = DEFAULT_PER_PARENT_TERM_PER_WINDOW,
     ngramSqlLimit = DEFAULT_NGRAM_SQL_LIMIT,
@@ -260,7 +227,6 @@ function lookupParentFragments(
   }
 
   const profile = input.profile ?? defaultGeneralProfile();
-  const boostContext = domainBoostContextFromPlan(weakDomainPlan);
   const key = syllablesKey(syllables);
   const rows = runtimeV2.lookupParentFragmentsByNgramKey(key, ngramSqlLimit);
 
@@ -268,7 +234,7 @@ function lookupParentFragments(
   const hits: RecallSpanTopKV3Hit[] = [];
 
   for (const row of rows) {
-    if (!fragmentRowAllowed(row, domainIds, weakDomainPlan)) {
+    if (!fragmentRowAllowed(row, domainIds)) {
       continue;
     }
 
@@ -278,15 +244,7 @@ function lookupParentFragments(
       continue;
     }
 
-    const hit = scoreFragmentHit(
-      row,
-      syllables,
-      windowText,
-      profile,
-      boostContext,
-      weakDomainPlan,
-      acousticTonePattern
-    );
+    const hit = scoreFragmentHit(row, syllables, windowText, profile, acousticTonePattern);
     if (!hit) {
       continue;
     }

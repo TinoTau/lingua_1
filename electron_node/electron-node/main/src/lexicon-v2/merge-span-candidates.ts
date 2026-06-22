@@ -5,14 +5,16 @@ export type TierHotwordRow = HotwordEntry & {
   tier: 'domain' | 'base' | 'idiom';
 };
 
-function dedupeByWord(rows: TierHotwordRow[]): TierHotwordRow[] {
+function dedupeByWordAndPinyin(rows: TierHotwordRow[]): TierHotwordRow[] {
   const seen = new Set<string>();
   const out: TierHotwordRow[] = [];
   for (const row of rows) {
-    if (seen.has(row.word)) {
+    const pinyinKey = row.pinyin.join('|');
+    const key = `${row.word}|${pinyinKey}`;
+    if (seen.has(key)) {
       continue;
     }
-    seen.add(row.word);
+    seen.add(key);
     out.push(row);
   }
   return out;
@@ -31,8 +33,8 @@ export function mergeSpanCandidatesCombined(
   const baseCanonical = rows.filter((r) => (r.tier === 'base' || r.tier === 'idiom') && !r.isAlias);
 
   const ordered = hasActiveDomain
-    ? dedupeByWord([...domainCanonical, ...aliases, ...baseCanonical])
-    : dedupeByWord([...baseCanonical, ...aliases]);
+    ? dedupeByWordAndPinyin([...domainCanonical, ...aliases, ...baseCanonical])
+    : dedupeByWordAndPinyin([...baseCanonical, ...aliases]);
 
   return ordered.slice(0, Math.max(0, limit));
 }

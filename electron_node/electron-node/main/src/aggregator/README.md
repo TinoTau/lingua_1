@@ -56,10 +56,25 @@ Scheduler JobAssign → Pipeline（ASR/NMT/TTS）→ **AggregatorMiddleware.proc
 
 ---
 
+## 6. Duplicate Guard（冻结）
+
+Pipeline `dedup-step.ts` 在 Enhancement 之后、DedupStage 之前调用 `sanitizeSegmentForOutput`，裁剪单段内重复片段（前缀循环 ×N 等）。
+
+| 机制 | 函数 | 职责 |
+|------|------|------|
+| Duplicate Guard | `sanitizeSegmentForOutput` | 段内重复裁剪 |
+| 边界 Dedup | `dedupMerge` / `dedupMergePrecise` | 跨 utterance 重叠 |
+| Job Dedup | `DedupStage` | 同 job_id TTL |
+
+冻结合约：[`DEDUP.md`](./DEDUP.md)
+
+---
+
 ## 相关
 
 | 文档 | 路径 |
 |------|------|
+| Duplicate Guard | [`DEDUP.md`](./DEDUP.md) |
 | 音频聚合 | [`../pipeline-orchestrator/README.md`](../pipeline-orchestrator/README.md) |
 | Pipeline | [`../pipeline/README.md`](../pipeline/README.md) |
 | 架构 | [`../../../docs/ARCHITECTURE.md`](../../../docs/ARCHITECTURE.md) |

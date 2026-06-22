@@ -17,6 +17,7 @@ import type { AsrRepairLifecycle } from '../../legacy/asr-repair/legacy-asr-repa
 import type { SentenceCandidateTraceItem, V5Metrics } from '../../legacy/asr-repair/legacy-v5-metrics';
 import type { AcousticToneSlice } from '../../task-router/types';
 import type { FwDetectorResult, KenlmGateMode } from '../../fw-detector/types';
+import type { DuplicateSanitizeTrace } from '../../aggregator/dedup';
 import type { LegacyContext } from './legacy-context';
 
 export interface JobContext {
@@ -151,9 +152,11 @@ export interface JobContext {
   punctuationRestoreStepMs?: number;
   punctuationRestoreHttpMs?: number;
 
-  // å»éç¸å³
+  // 去重相关
   shouldSend?: boolean;
   dedupReason?: string;
+  duplicateSanitizeApplied?: boolean;
+  duplicateSanitizeTrace?: DuplicateSanitizeTrace;
 
   // ç¿»è¯ç¸å³
   translatedText?: string;

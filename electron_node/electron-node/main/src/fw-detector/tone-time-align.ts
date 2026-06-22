@@ -22,20 +22,6 @@ export interface WindowTimeRange {
   end: number;
 }
 
-export type TimestampToneCompliance = {
-  alignmentTextUsedCount: number;
-  tokenTextUsedForAlignmentCount: number;
-  charScanFallbackCount: number;
-};
-
-export function createTimestampToneCompliance(): TimestampToneCompliance {
-  return {
-    alignmentTextUsedCount: 0,
-    tokenTextUsedForAlignmentCount: 0,
-    charScanFallbackCount: 0,
-  };
-}
-
 export function normalizeAcousticSlices(
   slices: AcousticToneSlice[] | undefined | null
 ): AcousticToneSlice[] {

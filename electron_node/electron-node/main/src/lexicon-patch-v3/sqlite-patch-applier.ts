@@ -1,134 +1,283 @@
 import type Database from 'better-sqlite3';
-import type { LexiconPatchV3, LexiconTierTable, PatchOperation } from './patch-types';
-import { LEXICON_PATCH_HISTORY_TABLE } from './patch-types';
+import type {
+  LexiconPatchV3,
+  LexiconTierTable,
+  PatchOperation,
+  TermPatchEntry,
+  TierPatchEntry,
+} from './patch-types';
+import { LEXICON_PATCH_HISTORY_TABLE, isTermPatchEntry } from './patch-types';
 import {
-  buildIndustryRouteFromCanonical,
-  entryToCanonicalRow,
-  materializeAliasRows,
-  sqlTableName,
-  type CanonicalSqlRow,
+  entryToTierRow,
+  materializeTierAliasRows,
+  sqlTierTableName,
 } from './row-materialize';
 import { assertTableThresholds } from './sqlite-gate';
 import { ensurePatchHistoryTable } from './sqlite-schema';
+import {
+  deleteMaterializedTermInDb,
+  preloadTermMaterializeModule,
+  rematerializeTermInDb,
+  slugTermIdForPatch,
+} from './term-materialize-bridge';
+import { resolvePinyinKey } from './pinyin-resolve';
 
-type TierStatements = {
-  insert: Database.Statement;
-  updateEnabled: Database.Statement;
-  deleteCanonical: Database.Statement;
-  deleteAliases: Database.Statement;
-};
-
-function prepareTierStatements(db: Database.Database, table: string, tier: LexiconTierTable): TierStatements {
-  if (tier === 'domain') {
-    return {
-      insert: db.prepare(`
-        INSERT OR REPLACE INTO ${table}
-          (id, domain_id, pinyin_key, tone_pinyin_key, word, normalized, prior_score, repair_target, enabled, aliases, source, canonical_word, is_alias)
-        VALUES
-          (@id, @domain_id, @pinyin_key, @tone_pinyin_key, @word, @normalized, @prior_score, @repair_target, @enabled, @aliases, @source, @canonical_word, @is_alias)
-      `),
-      updateEnabled: db.prepare(
-        `UPDATE ${table} SET enabled = @enabled WHERE domain_id = @domain_id AND word = @word`
-      ),
-      deleteCanonical: db.prepare(
-        `DELETE FROM ${table} WHERE domain_id = @domain_id AND word = @word`
-      ),
-      deleteAliases: db.prepare(
-        `DELETE FROM ${table} WHERE domain_id = @domain_id AND canonical_word = @word`
-      ),
-    };
+function normalizeTagWeights(tags: string[], raw: Record<string, number> | undefined): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const tag of tags) {
+    const value = raw?.[tag];
+    out[tag] = value != null && value > 0 ? value : 1.0;
   }
-
-  return {
-    insert: db.prepare(`
-      INSERT OR REPLACE INTO ${table}
-        (id, pinyin_key, tone_pinyin_key, word, normalized, prior_score, repair_target, enabled, aliases, source, canonical_word, is_alias)
-      VALUES
-        (@id, @pinyin_key, @tone_pinyin_key, @word, @normalized, @prior_score, @repair_target, @enabled, @aliases, @source, @canonical_word, @is_alias)
-    `),
-    updateEnabled: db.prepare(
-      `UPDATE ${table} SET enabled = @enabled WHERE pinyin_key = @pinyin_key AND word = @word`
-    ),
-    deleteCanonical: db.prepare(`DELETE FROM ${table} WHERE pinyin_key = @pinyin_key AND word = @word`),
-    deleteAliases: db.prepare(`DELETE FROM ${table} WHERE canonical_word = @word`),
-  };
+  return out;
 }
 
-export function applyLexiconPatchToSqlite(db: Database.Database, patch: LexiconPatchV3): void {
+function resolveTermId(entry: TermPatchEntry): string {
+  const pinyinKey = resolvePinyinKey(entry.word, entry.pinyinKey)!;
+  return entry.termId?.trim() || slugTermIdForPatch(entry.word, pinyinKey);
+}
+
+function upsertTerm(db: Database.Database, entry: TermPatchEntry): string {
+  const pinyinKey = resolvePinyinKey(entry.word, entry.pinyinKey)!;
+  const termId = resolveTermId(entry);
+  db.prepare(
+    `INSERT INTO term (id, word, pinyin_key, tone_pinyin_key, prior_score, repair_target, enabled, source, tier)
+     VALUES (@id, @word, @pinyin_key, @tone_pinyin_key, @prior_score, @repair_target, @enabled, @source, 'domain')
+     ON CONFLICT(id) DO UPDATE SET
+       word=excluded.word,
+       pinyin_key=excluded.pinyin_key,
+       tone_pinyin_key=excluded.tone_pinyin_key,
+       prior_score=excluded.prior_score,
+       repair_target=excluded.repair_target,
+       enabled=excluded.enabled,
+       source=excluded.source`
+  ).run({
+    id: termId,
+    word: entry.word.trim(),
+    pinyin_key: pinyinKey,
+    tone_pinyin_key: entry.tonePinyinKey?.trim() ?? '',
+    prior_score: entry.priorScore,
+    repair_target: entry.repairTarget === true ? 1 : 0,
+    enabled: entry.enabled === false ? 0 : 1,
+    source: entry.source?.trim() || 'patch-v3',
+  });
+  return termId;
+}
+
+function replaceTermTags(
+  db: Database.Database,
+  termId: string,
+  tags: string[],
+  weights: Record<string, number>
+): void {
+  db.prepare('DELETE FROM term_domain_tags WHERE term_id = ?').run(termId);
+  const insert = db.prepare(
+    `INSERT INTO term_domain_tags (term_id, domain_id, weight) VALUES (@term_id, @domain_id, @weight)`
+  );
+  for (const domainId of tags) {
+    insert.run({ term_id: termId, domain_id: domainId, weight: weights[domainId] ?? 1.0 });
+  }
+}
+
+function applyTermAdd(db: Database.Database, entry: TermPatchEntry): void {
+  const tags = entry.domainTags.map((t) => t.trim()).filter(Boolean);
+  if (!tags.length) {
+    throw new Error('term add requires non-empty domainTags');
+  }
+  const weights = normalizeTagWeights(tags, entry.domainWeights);
+  const termId = upsertTerm(db, entry);
+  replaceTermTags(db, termId, tags, weights);
+  rematerializeTermInDb(db, termId, { aliases: entry.aliases });
+}
+
+function applyTermUpdate(db: Database.Database, op: PatchOperation): void {
+  const termId = op.termId?.trim();
+  if (!termId) {
+    throw new Error('term update requires termId');
+  }
+  const fields = (op.fields ?? {}) as Partial<TermPatchEntry>;
+  const sets: string[] = [];
+  const params: Record<string, unknown> = { id: termId };
+
+  if (fields.priorScore !== undefined) {
+    sets.push('prior_score = @prior_score');
+    params.prior_score = fields.priorScore;
+  }
+  if (fields.repairTarget !== undefined) {
+    sets.push('repair_target = @repair_target');
+    params.repair_target = fields.repairTarget ? 1 : 0;
+  }
+  if (fields.enabled !== undefined) {
+    sets.push('enabled = @enabled');
+    params.enabled = fields.enabled === false ? 0 : 1;
+  }
+  if (fields.tonePinyinKey !== undefined) {
+    sets.push('tone_pinyin_key = @tone_pinyin_key');
+    params.tone_pinyin_key = fields.tonePinyinKey;
+  }
+
+  if (sets.length) {
+    db.prepare(`UPDATE term SET ${sets.join(', ')} WHERE id = @id`).run(params);
+  }
+
+  if (fields.domainTags?.length) {
+    const tags = fields.domainTags.map((t) => t.trim()).filter(Boolean);
+    const weights = normalizeTagWeights(tags, fields.domainWeights);
+    replaceTermTags(db, termId, tags, weights);
+  } else if (fields.domainWeights) {
+    const existing = db
+      .prepare('SELECT domain_id FROM term_domain_tags WHERE term_id = ?')
+      .all(termId) as Array<{ domain_id: string }>;
+    const tags = existing.map((r) => r.domain_id);
+    const weights = normalizeTagWeights(tags, fields.domainWeights);
+    replaceTermTags(db, termId, tags, weights);
+  }
+
+  rematerializeTermInDb(db, termId);
+}
+
+function applyTermDelete(db: Database.Database, op: PatchOperation): void {
+  const termId = op.termId?.trim();
+  if (!termId) {
+    throw new Error('term delete requires termId');
+  }
+  if (op.domainId?.trim()) {
+    const domainId = op.domainId.trim();
+    const remaining = db
+      .prepare('SELECT COUNT(*) AS c FROM term_domain_tags WHERE term_id = ? AND domain_id != ?')
+      .get(termId, domainId) as { c: number };
+    if ((remaining.c ?? 0) === 0) {
+      throw new Error(`term delete-tag rejected: last tag for term_id=${termId}`);
+    }
+    db.prepare('DELETE FROM term_domain_tags WHERE term_id = ? AND domain_id = ?').run(termId, domainId);
+    rematerializeTermInDb(db, termId);
+    return;
+  }
+
+  deleteMaterializedTermInDb(db, termId);
+  db.prepare('DELETE FROM term_domain_tags WHERE term_id = ?').run(termId);
+  db.prepare('DELETE FROM term WHERE id = ?').run(termId);
+}
+
+function applyTermEnableDisable(db: Database.Database, op: PatchOperation, enabled: number): void {
+  const termId = op.termId?.trim();
+  if (!termId) {
+    throw new Error('term enable/disable requires termId');
+  }
+  db.prepare('UPDATE term SET enabled = ? WHERE id = ?').run(enabled, termId);
+  rematerializeTermInDb(db, termId);
+}
+
+function applyTierOp(db: Database.Database, tier: Exclude<LexiconTierTable, 'term'>, op: PatchOperation): void {
+  const table = sqlTierTableName(tier);
+  const insert = db.prepare(`
+    INSERT OR REPLACE INTO ${table}
+      (id, pinyin_key, tone_pinyin_key, word, normalized, prior_score, repair_target, enabled, aliases, source, canonical_word, is_alias)
+    VALUES
+      (@id, @pinyin_key, @tone_pinyin_key, @word, @normalized, @prior_score, @repair_target, @enabled, @aliases, @source, @canonical_word, @is_alias)
+  `);
+  const updateEnabled = db.prepare(
+    `UPDATE ${table} SET enabled = @enabled WHERE pinyin_key = @pinyin_key AND word = @word`
+  );
+  const deleteCanonical = db.prepare(
+    `DELETE FROM ${table} WHERE pinyin_key = @pinyin_key AND word = @word`
+  );
+  const deleteAliases = db.prepare(`DELETE FROM ${table} WHERE canonical_word = @word`);
+
+  if (op.op === 'add') {
+    const entry = op.entry as TierPatchEntry;
+    if (!entry) {
+      throw new Error(`${tier} add missing entry`);
+    }
+    const canonical = entryToTierRow(entry, tier);
+    insert.run(canonical);
+    for (const aliasRow of materializeTierAliasRows(tier, entry, canonical)) {
+      insert.run(aliasRow);
+    }
+    return;
+  }
+
+  if (op.op === 'delete') {
+    deleteAliases.run({ word: op.word });
+    deleteCanonical.run({ pinyin_key: op.pinyinKey, word: op.word });
+    return;
+  }
+
+  if (op.op === 'enable' || op.op === 'disable') {
+    updateEnabled.run({
+      enabled: op.op === 'enable' ? 1 : 0,
+      pinyin_key: op.pinyinKey,
+      word: op.word,
+    });
+    return;
+  }
+
+  if (op.op === 'update') {
+    const fields = (op.fields ?? {}) as Partial<TierPatchEntry>;
+    const sets: string[] = [];
+    const params: Record<string, unknown> = {
+      word: op.word,
+      pinyin_key: op.pinyinKey,
+    };
+    if (fields.priorScore !== undefined) {
+      sets.push('prior_score = @prior_score');
+      params.prior_score = fields.priorScore;
+    }
+    if (fields.repairTarget !== undefined) {
+      sets.push('repair_target = @repair_target');
+      params.repair_target = fields.repairTarget ? 1 : 0;
+    }
+    if (fields.enabled !== undefined) {
+      sets.push('enabled = @enabled');
+      params.enabled = fields.enabled === false ? 0 : 1;
+    }
+    if (fields.aliases !== undefined) {
+      sets.push('aliases = @aliases');
+      params.aliases = JSON.stringify(fields.aliases.length ? fields.aliases : [op.word]);
+    }
+    if (fields.tonePinyinKey !== undefined) {
+      sets.push('tone_pinyin_key = @tone_pinyin_key');
+      params.tone_pinyin_key = fields.tonePinyinKey;
+    }
+    if (!sets.length) {
+      return;
+    }
+    db.prepare(
+      `UPDATE ${table} SET ${sets.join(', ')} WHERE pinyin_key = @pinyin_key AND word = @word AND is_alias = 0`
+    ).run(params);
+  }
+}
+
+export async function applyLexiconPatchToSqlite(db: Database.Database, patch: LexiconPatchV3): Promise<void> {
+  if (patch.operations.some((op) => op.table === 'term')) {
+    await preloadTermMaterializeModule();
+  }
   ensurePatchHistoryTable(db);
 
-  const routingInsert = db.prepare(`
-    INSERT OR REPLACE INTO industry_routing_lexicon (pinyin_key, keyword, domain_id, weight)
-    VALUES (@pinyin_key, @keyword, @domain_id, @weight)
-  `);
-  const routingDeleteDomain = db.prepare(`
-    DELETE FROM industry_routing_lexicon WHERE domain_id = @domain_id AND keyword = @keyword
-  `);
-
-  const stmts: Record<LexiconTierTable, TierStatements> = {
-    base: prepareTierStatements(db, 'base_lexicon', 'base'),
-    domain: prepareTierStatements(db, 'domain_lexicon', 'domain'),
-    idiom: prepareTierStatements(db, 'idiom_lexicon', 'idiom'),
-  };
-
   const applyOne = (op: PatchOperation): void => {
-    const tier = op.table;
-    const table = sqlTableName(tier);
-    const tierStmt = stmts[tier];
-
-    if (op.op === 'add') {
-      if (!op.entry) {
-        throw new Error(`add missing entry for word=${op.word}`);
-      }
-      const canonical = entryToCanonicalRow(op.entry, tier);
-      tierStmt.insert.run(canonical);
-      const aliasRows = materializeAliasRows(tier, op.entry, canonical);
-      for (const aliasRow of aliasRows) {
-        tierStmt.insert.run(aliasRow);
-      }
-      if (tier === 'domain') {
-        syncRoutingForRows(routingInsert, canonical);
-      }
-      return;
-    }
-
-    if (op.op === 'delete') {
-      deleteTierEntry(tier, tierStmt, routingDeleteDomain, op);
-      return;
-    }
-
-    if (op.op === 'enable' || op.op === 'disable') {
-      const enabled = op.op === 'enable' ? 1 : 0;
-      if (tier === 'domain') {
-        disableOrEnableDomainRows(db, op.domainId!, op.word, enabled);
-        if (enabled === 0) {
-          deleteDomainRoutingForCanonical(db, routingDeleteDomain, op.domainId!, op.word);
-        } else {
-          const row = db
-            .prepare(
-              `SELECT * FROM domain_lexicon WHERE domain_id = ? AND word = ? AND is_alias = 0`
-            )
-            .get(op.domainId, op.word) as CanonicalSqlRow | undefined;
-          if (row) {
-            const route = buildIndustryRouteFromCanonical(row);
-            if (route) {
-              routingInsert.run(route);
-            }
-          }
+    if (op.table === 'term') {
+      if (op.op === 'add') {
+        const entry = op.entry;
+        if (!entry || !isTermPatchEntry(entry)) {
+          throw new Error('term add requires TermPatchEntry with domainTags');
         }
-      } else {
-        tierStmt.updateEnabled.run({
-          enabled,
-          pinyin_key: op.pinyinKey,
-          word: op.word,
-        });
+        applyTermAdd(db, entry);
+        return;
+      }
+      if (op.op === 'update') {
+        applyTermUpdate(db, op);
+        return;
+      }
+      if (op.op === 'delete') {
+        applyTermDelete(db, op);
+        return;
+      }
+      if (op.op === 'enable' || op.op === 'disable') {
+        applyTermEnableDisable(db, op, op.op === 'enable' ? 1 : 0);
       }
       return;
     }
 
-    if (op.op === 'update') {
-      applyUpdate(db, tier, table, op);
-    }
+    applyTierOp(db, op.table, op);
   };
 
   const run = db.transaction(() => {
@@ -149,108 +298,4 @@ export function applyLexiconPatchToSqlite(db: Database.Database, patch: LexiconP
   });
 
   run();
-}
-
-function syncRoutingForRows(
-  routingInsert: Database.Statement,
-  canonical: CanonicalSqlRow
-): void {
-  const route = buildIndustryRouteFromCanonical(canonical);
-  if (route) {
-    routingInsert.run(route);
-  }
-}
-
-function deleteTierEntry(
-  tier: LexiconTierTable,
-  tierStmt: TierStatements,
-  routingDeleteDomain: Database.Statement,
-  op: PatchOperation
-): void {
-  tierStmt.deleteAliases.run(
-    tier === 'domain' ? { domain_id: op.domainId, word: op.word } : { word: op.word }
-  );
-  tierStmt.deleteCanonical.run(
-    tier === 'domain'
-      ? { domain_id: op.domainId, word: op.word }
-      : { pinyin_key: op.pinyinKey, word: op.word }
-  );
-  if (tier === 'domain') {
-    routingDeleteDomain.run({ domain_id: op.domainId, keyword: op.word });
-  }
-}
-
-function applyUpdate(
-  db: Database.Database,
-  tier: LexiconTierTable,
-  table: string,
-  op: PatchOperation
-): void {
-  const fields = op.fields ?? {};
-  const sets: string[] = [];
-  const params: Record<string, unknown> = {
-    word: op.word,
-    pinyin_key: op.pinyinKey,
-    domain_id: op.domainId,
-  };
-
-  if (fields.priorScore !== undefined) {
-    sets.push('prior_score = @prior_score');
-    params.prior_score = fields.priorScore;
-  }
-  if (fields.repairTarget !== undefined) {
-    sets.push('repair_target = @repair_target');
-    params.repair_target = fields.repairTarget ? 1 : 0;
-  }
-  if (fields.enabled !== undefined) {
-    sets.push('enabled = @enabled');
-    params.enabled = fields.enabled === false ? 0 : 1;
-  }
-  if (fields.aliases !== undefined) {
-    sets.push('aliases = @aliases');
-    params.aliases = JSON.stringify(fields.aliases.length ? fields.aliases : [op.word]);
-  }
-  if (fields.tonePinyinKey !== undefined) {
-    sets.push('tone_pinyin_key = @tone_pinyin_key');
-    params.tone_pinyin_key = fields.tonePinyinKey;
-  }
-
-  if (sets.length === 0) {
-    return;
-  }
-
-  const where =
-    tier === 'domain'
-      ? 'domain_id = @domain_id AND word = @word AND is_alias = 0'
-      : 'pinyin_key = @pinyin_key AND word = @word AND is_alias = 0';
-
-  db.prepare(`UPDATE ${table} SET ${sets.join(', ')} WHERE ${where}`).run(params);
-}
-
-function disableOrEnableDomainRows(
-  db: Database.Database,
-  domainId: string,
-  canonicalWord: string,
-  enabled: number
-): void {
-  db.prepare(
-    `UPDATE domain_lexicon SET enabled = ? WHERE domain_id = ? AND (word = ? OR canonical_word = ?)`
-  ).run(enabled, domainId, canonicalWord, canonicalWord);
-}
-
-function deleteDomainRoutingForCanonical(
-  db: Database.Database,
-  routingDeleteDomain: Database.Statement,
-  domainId: string,
-  canonicalWord: string
-): void {
-  const keywords = db
-    .prepare(
-      `SELECT DISTINCT word FROM domain_lexicon WHERE domain_id = ? AND (word = ? OR canonical_word = ?)`
-    )
-    .all(domainId, canonicalWord, canonicalWord) as Array<{ word: string }>;
-  for (const { word } of keywords) {
-    routingDeleteDomain.run({ domain_id: domainId, keyword: word });
-  }
-  routingDeleteDomain.run({ domain_id: domainId, keyword: canonicalWord });
 }

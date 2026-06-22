@@ -14,6 +14,9 @@ export type BundleTableStats = {
   idiom_lexicon: TierTableStats;
   domain_lexicon: TierTableStats;
   industry_routing_lexicon: { rowCount: number };
+  term: { rowCount: number };
+  term_domain_tags: { rowCount: number };
+  term_pinyin_ngrams: { rowCount: number };
 };
 
 function tierStats(db: Database.Database, table: string): TierTableStats {
@@ -46,16 +49,20 @@ function tierStats(db: Database.Database, table: string): TierTableStats {
   };
 }
 
-export function collectBundleTableStats(db: Database.Database): BundleTableStats {
-  const routingCount =
-    (
-      db.prepare('SELECT COUNT(*) AS c FROM industry_routing_lexicon').get() as { c: number }
-    ).c ?? 0;
+function simpleCount(db: Database.Database, table: string): { rowCount: number } {
+  return {
+    rowCount: (db.prepare(`SELECT COUNT(*) AS c FROM ${table}`).get() as { c: number }).c ?? 0,
+  };
+}
 
+export function collectBundleTableStats(db: Database.Database): BundleTableStats {
   return {
     base_lexicon: tierStats(db, 'base_lexicon'),
     idiom_lexicon: tierStats(db, 'idiom_lexicon'),
     domain_lexicon: tierStats(db, 'domain_lexicon'),
-    industry_routing_lexicon: { rowCount: routingCount },
+    industry_routing_lexicon: simpleCount(db, 'industry_routing_lexicon'),
+    term: simpleCount(db, 'term'),
+    term_domain_tags: simpleCount(db, 'term_domain_tags'),
+    term_pinyin_ngrams: simpleCount(db, 'term_pinyin_ngrams'),
   };
 }

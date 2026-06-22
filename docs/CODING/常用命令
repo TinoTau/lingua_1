@@ -156,14 +156,14 @@ cargo test --lib
 # 编译检查
 cargo check --lib
 
-# Lexicon World 数据工程（Phase A）
-# lexicon:build = 建 bundle + 自动 electron-rebuild（节点 runtime 可直接 npm start）
-# 验收用 dialog_200，不必跑依赖 sqlite 的 Jest（见 test:lexicon）
+# Lexicon Schema V2 Only 冻结路径（勿用 lexicon:build — 已 fail-fast）
 cd D:\Programs\github\lingua_1\electron_node\electron-node
 npm run lexicon:validate -- --input data/lexicon/zh_asr_confusions_seed_high_quality.jsonl
-npm run lexicon:build
-npm run lexicon:report
-npm run test:lexicon
-# 若词库 load 报 NODE_MODULE_VERSION，仅修复 Electron 侧：
+npm run lexicon:build:v2-shadow
+npm run lexicon:prepare:v3-runtime -- --force
+npm run lexicon:gate:v3-runtime
 npm run lexicon:rebuild-sqlite
+# 验收：dialog_200 / 12句专项 / test:lexicon-patch-e2e（需节点 :5020）
+npm run test:schema-v2-seed-acceptance-12
+npm run test:fw-detector
 

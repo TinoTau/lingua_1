@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generatedAt": "2026-06-09T03:52:48.844Z",
+  "generatedAt": "2026-06-21T04:25:58.342Z",
   "seed_root": "",
   "seed_inputs": [],
   "tables": {
@@ -21,27 +21,41 @@
       "maxBucketKey": "ling|hu|chong|shen"
     },
     "domain_lexicon": {
-      "rowCount": 25,
-      "canonicalCount": 9,
-      "aliasCount": 16,
+      "rowCount": 190,
+      "canonicalCount": 190,
+      "aliasCount": 0,
       "byDomain": {
-        "restaurant": 9
+        "coffee": 44,
+        "milk_tea": 38,
+        "food_order": 34,
+        "bakery": 22,
+        "tourism_hotel": 12,
+        "tourism_pickup": 13,
+        "tourism_transport": 15,
+        "tourism_route": 12
       },
-      "pinyinKeyCount": 11,
-      "maxBucketSize": 4,
+      "pinyinKeyCount": 92,
+      "maxBucketSize": 12,
       "maxBucketKey": "zhong|bei"
     },
     "industry_routing_lexicon": {
-      "rowCount": 9,
-      "pinyinKeyCount": 9,
-      "maxBucketSize": 1,
+      "rowCount": 190,
+      "pinyinKeyCount": 92,
+      "maxBucketSize": 12,
       "maxBucketKey": "zhong|bei"
     },
     "term_pinyin_ngrams": {
-      "rowCount": 202138,
-      "pinyinKeyCount": 112215,
+      "rowCount": 202392,
+      "pinyinKeyCount": 112266,
       "maxBucketSize": 164,
       "maxBucketKey": "bu|ke"
+    },
+    "term": {
+      "rowCount": 107,
+      "canonicalCount": 107
+    },
+    "term_domain_tags": {
+      "rowCount": 190
     }
   },
   "rejectedCount": 897,

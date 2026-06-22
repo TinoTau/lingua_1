@@ -44,7 +44,6 @@ export type FwMetadataSpanGateDiagnostics = {
   alignmentFailures: number;
   fwMetadataGateMs: number;
   skippedReason?: FwMetadataSpanGateSkippedReason;
-  usedLegacyFallback?: boolean;
 };
 
 export type KenlmSpanGateDiagnostics = {
@@ -162,8 +161,7 @@ export type FwSpanDiagnostics = {
 export type FwSpanDropReason =
   | 'below_min_risk'
   | 'overlap_lower_priority'
-  | 'maxSpans'
-  | 'repair_target_false';
+  | 'maxSpans';
 
 export type FwSpanDroppedDiag = {
   text: string;
@@ -226,15 +224,6 @@ export type FwSentenceRerankDiagnostics = {
   kenlmSubprocessMs?: number;
   kenlmSubprocessCount?: number;
   kenlmSubprocessErrorReason?: string;
-};
-
-/** P0.5 ToneModule diagnostics on FW rerank path. */
-export type FwToneModuleDiagnostics = {
-  toneEnabled: boolean;
-  alignmentTextMatched: boolean;
-  acousticTonePattern?: number[];
-  recallToneCompatibleCount: number;
-  recallToneFallbackCount: number;
 };
 
 export type FwDetectorRuntimeDiag = {
@@ -314,13 +303,8 @@ export type SpanAssemblyV4Diagnostics = {
   windowCandidatePoolCount: number;
   activeCandidateCount: number;
   compatibilityEdgeCount: number;
-  /** @deprecated Authority Reduction: always 0 */
-  droppedCandidateCount: number;
   coverageCount: number;
-  /** @deprecated Authority Reduction: use conflictRelationCount */
-  conflictCount: number;
   conflictRelationCount: number;
-  hardDropCount: number;
   compatibleCount: number;
   parentEvidenceCount: number;
   exactEdgeCount: number;
@@ -349,6 +333,12 @@ export type SpanAssemblyV4Diagnostics = {
   domainAssemblyMs: number;
   mainDomainAwareSpanSetsTotal: number;
   shadowBeamSpanSetsTotal: number;
+  intervalAssemblyCandidateCount: number;
+  intervalRejectedOverlapCount: number;
+  recallEnabledFineDomains?: string[];
+  domainScores?: Record<string, number>;
+  winningFineDomain?: string;
+  insufficientEvidence?: boolean;
   boundaryImport?: CoarseBoundaryImportDiagnostics;
   tone?: CoarseAssemblyToneDiagnostics;
   skippedReason?: 'no_cjk' | 'no_coarse_spans';
@@ -378,8 +368,6 @@ export type FwDetectorResult = {
   recallV2Diagnostics?: RecallJobV2Diagnostics;
   /** P4: sentence-level rerank diagnostics */
   sentenceRerank?: FwSentenceRerankDiagnostics;
-  /** P0 ToneModule diagnostics */
-  toneModule?: FwToneModuleDiagnostics;
 };
 
 export type FwApprovedReplacement = {

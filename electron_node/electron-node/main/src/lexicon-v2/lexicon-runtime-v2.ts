@@ -8,10 +8,9 @@ import { lexiconV2BundleFileNames, resolveLexiconV2BundleDir } from './lexicon-v
 import { getLexiconRuntimeV2Config } from './lexicon-runtime-v2-config';
 import { LruBucketCache } from './lru-bucket-cache';
 import {
-  LEXICON_V2_SHADOW_SCHEMA_VERSION,
-  LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION,
-  LEXICON_V3_RUNTIME_SCHEMA_VERSION,
+  LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION,
   LEXICON_V2_SUPPORTED_SCHEMA_VERSIONS,
+  isLexiconV3FiveTableV2Manifest,
   type IndustryRouteHit,
   type LexiconManifestV2,
   type LexiconRuntimeV2State,
@@ -32,6 +31,7 @@ type TierRow = {
   is_alias: number;
   tone_pinyin_key?: string | null;
   domain_id?: string | null;
+  tag_weight?: number | null;
 };
 
 function parsePinyinKeyToSyllables(pinyinKey: string): string[] {
@@ -60,6 +60,47 @@ function mapTierRowToHotword(row: TierRow, domainId?: string): HotwordEntry {
 
 function mapTierRows(rows: TierRow[], domainId?: string): HotwordEntry[] {
   return rows.map((row) => mapTierRowToHotword(row, domainId));
+}
+
+function mergeDomainTierRows(rows: TierRow[]): HotwordEntry[] {
+  const byTermKey = new Map<string, HotwordEntry>();
+  for (const row of rows) {
+    const domainId = row.domain_id?.trim();
+    if (!domainId) {
+      continue;
+    }
+    if (row.tag_weight == null || row.tag_weight <= 0) {
+      throw new Error(
+        `Schema V2 violation: missing term_domain_tags.weight for ${row.word}|${row.pinyin_key} domain=${domainId}`
+      );
+    }
+    const termKey = `${row.word}|${row.pinyin_key}`;
+    const weight = row.tag_weight;
+    const mapped = mapTierRowToHotword(row, domainId);
+    mapped.domainWeights = { [domainId]: weight };
+    const existing = byTermKey.get(termKey);
+    if (!existing) {
+      mapped.domains = [domainId];
+      mapped.domain = domainId;
+      byTermKey.set(termKey, mapped);
+      continue;
+    }
+    const domains = new Set(existing.domains ?? []);
+    domains.add(domainId);
+    existing.domains = [...domains];
+    existing.domainWeights = {
+      ...(existing.domainWeights ?? {}),
+      [domainId]: weight,
+    };
+    if (row.prior_score > existing.priorScore) {
+      existing.priorScore = row.prior_score;
+    }
+  }
+  return [...byTermKey.values()].sort((a, b) => b.priorScore - a.priorScore);
+}
+
+function hashSortedDomainIds(domainIds: readonly string[]): string {
+  return [...domainIds].sort().join(',');
 }
 
 function readManifestV2(manifestPath: string): LexiconManifestV2 {
@@ -175,12 +216,8 @@ export class LexiconRuntimeV2 {
       this.db = new Database(sqlitePath, { readonly: true });
       this.manifest = manifest;
 
-      const hasToneColumn =
-        manifest.schemaVersion === LEXICON_V2_SHADOW_SCHEMA_VERSION ||
-        manifest.schemaVersion === LEXICON_V3_RUNTIME_SCHEMA_VERSION ||
-        manifest.schemaVersion === LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION;
-      this.hasToneColumn = hasToneColumn;
-      const toneSelect = hasToneColumn ? 'tone_pinyin_key,' : '';
+      this.hasToneColumn = true;
+      const toneSelect = 'tone_pinyin_key,';
 
       this.stmtBase = this.db.prepare(
         `SELECT id, pinyin_key, ${toneSelect} word, normalized, prior_score, repair_target, enabled, aliases, source, canonical_word, is_alias
@@ -208,7 +245,7 @@ export class LexiconRuntimeV2 {
          FROM industry_routing_lexicon WHERE pinyin_key = ?`
       );
 
-      if (hasToneColumn) {
+      if (isLexiconV3FiveTableV2Manifest(manifest.schemaVersion)) {
         this.stmtBaseToneComposite = this.db.prepare(
           `SELECT id, pinyin_key, tone_pinyin_key, word, normalized, prior_score, repair_target, enabled, aliases, source, canonical_word, is_alias
            FROM base_lexicon
@@ -232,7 +269,7 @@ export class LexiconRuntimeV2 {
         );
       }
 
-      if (manifest.schemaVersion === LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION) {
+      if (isLexiconV3FiveTableV2Manifest(manifest.schemaVersion)) {
         this.stmtNgram = this.db.prepare(
           `SELECT id, parent_term_id, parent_word, parent_pinyin_key, parent_tone_pinyin_key,
                   ngram_pinyin_key, ngram_tone_pinyin_key, ngram_start, ngram_end, fragment_text,
@@ -244,6 +281,13 @@ export class LexiconRuntimeV2 {
         );
       }
 
+      const countTerm = isLexiconV3FiveTableV2Manifest(manifest.schemaVersion)
+        ? ((this.db.prepare('SELECT COUNT(*) AS c FROM term').get() as { c: number }).c ?? 0)
+        : undefined;
+      const countTags = isLexiconV3FiveTableV2Manifest(manifest.schemaVersion)
+        ? ((this.db.prepare('SELECT COUNT(*) AS c FROM term_domain_tags').get() as { c: number }).c ?? 0)
+        : undefined;
+
       const countBase =
         (this.db.prepare('SELECT COUNT(*) AS c FROM base_lexicon').get() as { c: number }).c ?? 0;
       const countIdiom =
@@ -254,7 +298,7 @@ export class LexiconRuntimeV2 {
         (this.db.prepare('SELECT COUNT(*) AS c FROM industry_routing_lexicon').get() as { c: number })
           .c ?? 0;
       const countNgrams =
-        manifest.schemaVersion === LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION
+        isLexiconV3FiveTableV2Manifest(manifest.schemaVersion)
           ? ((this.db.prepare('SELECT COUNT(*) AS c FROM term_pinyin_ngrams').get() as { c: number }).c ?? 0)
           : undefined;
 
@@ -268,6 +312,8 @@ export class LexiconRuntimeV2 {
           domain: countDomain,
           routing: countRouting,
           ngrams: countNgrams,
+          ...(countTerm != null ? { term: countTerm } : {}),
+          ...(countTags != null ? { termDomainTags: countTags } : {}),
         },
       };
 
@@ -370,11 +416,7 @@ export class LexiconRuntimeV2 {
     if (!domain || domain === 'general') {
       return [];
     }
-    const limit = sqlLimit ?? getLexiconRuntimeV2Config().maxDomainCandidates;
-    return this.lookupTier(`domain:${domain}`, key, termLength, limit, () => {
-      const rows = (this.stmtDomain?.all(domain, key, termLength, limit) ?? []) as TierRow[];
-      return mapTierRows(rows, domain);
-    });
+    return this.lookupDomainsByPinyinKeyMulti([domain], key, termLength, sqlLimit);
   }
 
   lookupDomainByPinyinAndToneKey(
@@ -385,21 +427,100 @@ export class LexiconRuntimeV2 {
     sqlLimit?: number
   ): HotwordEntry[] {
     const domain = domainId.trim();
-    if (!domain || domain === 'general' || !this.stmtDomainToneComposite || !tonePinyinKey.trim()) {
+    if (!domain || domain === 'general' || !tonePinyinKey.trim()) {
+      return [];
+    }
+    return this.lookupDomainsByPinyinAndToneKeyMulti(
+      [domain],
+      pinyinKey,
+      tonePinyinKey,
+      termLength,
+      sqlLimit
+    );
+  }
+
+  lookupDomainsByPinyinKeyMulti(
+    domainIds: readonly string[],
+    key: string,
+    termLength: number,
+    sqlLimit?: number
+  ): HotwordEntry[] {
+    if (!this.db || !this.stmtDomain || !domainIds.length) {
       return [];
     }
     const limit = sqlLimit ?? getLexiconRuntimeV2Config().maxDomainCandidates;
-    const cacheKey = `domain:${domain}:tone:${pinyinKey}:${tonePinyinKey}:${termLength}:${limit}`;
-    return this.lookupTier(cacheKey, pinyinKey, termLength, limit, () => {
-      const rows = (this.stmtDomainToneComposite!.all(
-        domain,
+    const sortedIds = [...domainIds].sort();
+    const domainHash = hashSortedDomainIds(sortedIds);
+    const cacheKey = `domainmulti:${domainHash}:${key}:${termLength}:${limit}`;
+    const cached = this.bucketCache.get(cacheKey);
+    if (cached) {
+      this.tierCacheHits += 1;
+      return cached;
+    }
+    this.tierCacheMisses += 1;
+    this.tierSqlQueries += 1;
+    const placeholders = sortedIds.map(() => '?').join(', ');
+    const sql = `SELECT d.id, d.domain_id, d.pinyin_key, d.tone_pinyin_key, d.word, d.normalized, d.prior_score, d.repair_target, d.enabled, d.aliases, d.source, d.canonical_word, d.is_alias, tdt.weight AS tag_weight
+      FROM domain_lexicon d
+      INNER JOIN term t ON t.id = d.id
+      INNER JOIN term_domain_tags tdt ON tdt.term_id = t.id AND tdt.domain_id = d.domain_id
+      WHERE d.domain_id IN (${placeholders}) AND d.pinyin_key = ? AND d.enabled = 1 AND length(d.word) = ?
+      ORDER BY tdt.weight DESC, d.prior_score DESC
+      LIMIT ?`;
+    const rows = this.db
+      .prepare(sql)
+      .all(...sortedIds, key, termLength, Math.max(limit, limit * sortedIds.length)) as TierRow[];
+    const merged = mergeDomainTierRows(rows).slice(0, limit);
+    this.bucketCache.set(cacheKey, merged);
+    return merged;
+  }
+
+  lookupDomainsByPinyinAndToneKeyMulti(
+    domainIds: readonly string[],
+    pinyinKey: string,
+    tonePinyinKey: string,
+    termLength: number,
+    sqlLimit?: number
+  ): HotwordEntry[] {
+    if (
+      !this.db ||
+      !this.stmtDomainToneComposite ||
+      !domainIds.length ||
+      !tonePinyinKey.trim()
+    ) {
+      return [];
+    }
+    const limit = sqlLimit ?? getLexiconRuntimeV2Config().maxDomainCandidates;
+    const sortedIds = [...domainIds].sort();
+    const domainHash = hashSortedDomainIds(sortedIds);
+    const cacheKey = `domainmulti:${domainHash}:tone:${pinyinKey}:${tonePinyinKey}:${termLength}:${limit}`;
+    const cached = this.bucketCache.get(cacheKey);
+    if (cached) {
+      this.tierCacheHits += 1;
+      return cached;
+    }
+    this.tierCacheMisses += 1;
+    this.tierSqlQueries += 1;
+    const placeholders = sortedIds.map(() => '?').join(', ');
+    const v2Sql = `SELECT d.id, d.domain_id, d.pinyin_key, d.tone_pinyin_key, d.word, d.normalized, d.prior_score, d.repair_target, d.enabled, d.aliases, d.source, d.canonical_word, d.is_alias, tdt.weight AS tag_weight
+      FROM domain_lexicon d
+      INNER JOIN term t ON t.id = d.id
+      INNER JOIN term_domain_tags tdt ON tdt.term_id = t.id AND tdt.domain_id = d.domain_id
+      WHERE d.domain_id IN (${placeholders}) AND d.pinyin_key = ? AND d.tone_pinyin_key = ? AND d.enabled = 1 AND length(d.word) = ?
+      ORDER BY tdt.weight DESC, d.prior_score DESC
+      LIMIT ?`;
+    const rows = this.db
+      .prepare(v2Sql)
+      .all(
+        ...sortedIds,
         pinyinKey,
         tonePinyinKey,
         termLength,
-        limit
-      ) ?? []) as TierRow[];
-      return mapTierRows(rows, domain);
-    });
+        Math.max(limit, limit * sortedIds.length)
+      ) as TierRow[];
+    const merged = mergeDomainTierRows(rows).slice(0, limit);
+    this.bucketCache.set(cacheKey, merged);
+    return merged;
   }
 
   lookupParentFragmentsByNgramKey(ngramKey: string, sqlLimit: number): ParentTermNgramRow[] {
@@ -407,10 +528,14 @@ export class LexiconRuntimeV2 {
       this.state.status !== 'ok' ||
       !this.stmtNgram ||
       !ngramKey.trim() ||
-      sqlLimit <= 0 ||
-      this.manifest?.schemaVersion !== LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION
+      sqlLimit <= 0
     ) {
       return [];
+    }
+    if (!isLexiconV3FiveTableV2Manifest(this.manifest?.schemaVersion)) {
+      throw new Error(
+        `[LEXICON_RUNTIME_V2] parent ngram requires ${LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION}, got ${this.manifest?.schemaVersion ?? 'unknown'}`
+      );
     }
 
     const cacheKey = `ngram:${ngramKey}:${sqlLimit}`;

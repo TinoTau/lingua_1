@@ -26,6 +26,7 @@ export function buildCoreResultExtra(job: JobAssignMessage, ctx: JobContext): Re
     ...buildSessionResultExtra(job, ctx),
     ...(ctx.asrResult?.tone ? { utterance_tone: ctx.asrResult.tone } : {}),
     ...(ctx.lexiconManifestReady ? { lexicon_manifest_ready: ctx.lexiconManifestReady } : {}),
+    ...(ctx.duplicateSanitizeTrace ? { duplicate_sanitize: ctx.duplicateSanitizeTrace } : {}),
   };
 }
 

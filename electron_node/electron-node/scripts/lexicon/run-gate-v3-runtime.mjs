@@ -8,7 +8,7 @@ import {
   RUNTIME_MANIFEST,
   RUNTIME_SQLITE,
   RUNTIME_STATS,
-  V3_SCHEMA_VERSION,
+  V3_SCHEMA_VERSION_V2,
   assertTableThresholds,
   normalizeChecksum,
   sha256File,
@@ -52,8 +52,10 @@ if (!fs.existsSync(files.statsPath)) {
 
 if (failures.length === 0) {
   const manifest = JSON.parse(fs.readFileSync(files.manifestPath, 'utf-8'));
-  if (manifest.schemaVersion !== V3_SCHEMA_VERSION) {
-    fail(`schemaVersion must be ${V3_SCHEMA_VERSION}, got ${manifest.schemaVersion}`);
+  if (manifest.schemaVersion !== V3_SCHEMA_VERSION_V2) {
+    fail(
+      `schemaVersion must be ${V3_SCHEMA_VERSION_V2}, got ${manifest.schemaVersion ?? 'unknown'}`
+    );
   }
   if (!manifest.checksum) {
     fail('manifest.checksum missing');
@@ -61,7 +63,7 @@ if (failures.length === 0) {
   if (!manifest.tables) {
     fail('manifest.tables missing');
   } else {
-    assertTableThresholds(manifest.tables, fail);
+    assertTableThresholds(manifest.tables, fail, manifest.schemaVersion);
   }
 
   const expected = normalizeChecksum(manifest.checksum);

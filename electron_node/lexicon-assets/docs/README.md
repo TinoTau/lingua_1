@@ -46,6 +46,7 @@ Seed：`data/lexicon/10k/`、`confusions.jsonl`、`hotwords.jsonl`。详见 [../
 
 - `combined_entries.jsonl`：base + idiom + common5，domains 须为 FW 四域（禁止 `general`）
 - `domain_patch_zh_v2/`：可选行业 patch（如餐饮同音），不含于 combined 默认包
+- `domain_patch_multidomain_v1/`：多细域 seed（coffee / milk_tea / tourism_* 等），见 [SCHEMA_V2.md](./SCHEMA_V2.md)
 
 ### Seed 约束（摘要）
 
@@ -55,6 +56,7 @@ Seed：`data/lexicon/10k/`、`confusions.jsonl`、`hotwords.jsonl`。详见 [../
 
 ## 相关
 
+- [SCHEMA_V2.md](./SCHEMA_V2.md) — FW 默认 Lexicon Runtime V2（five-table-v2）
 - [IMPORT_CONSTRAINTS.md](./IMPORT_CONSTRAINTS.md) — V1 import 约束
 - [V3_ACCEPTANCE_GATE.md](./V3_ACCEPTANCE_GATE.md) — V1 gate
 - [docs/lexicon-v3/Lexicon_V3_1_Final_SSOT.md](../../../docs/lexicon-v3/Lexicon_V3_1_Final_SSOT.md) — FW v3 + Patch SSOT

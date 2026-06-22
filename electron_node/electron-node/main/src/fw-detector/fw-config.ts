@@ -61,16 +61,12 @@ function resolveKenlmSubprocessMaxLines(
 
 export function loadFwDetectorRuntimeConfig(): FwDetectorRuntimeConfig {
   const cfg = loadNodeConfig().features?.fwDetector ?? {};
-  const legacyV4False = cfg.spanAssemblyV4Enabled === false;
-  if (legacyV4False) {
-    logger.warn(
-      '[fw-detector] spanAssemblyV4Enabled=false is deprecated; FW Repair runs V4 only'
+  if (cfg.spanAssemblyV4Enabled === false) {
+    throw new Error(
+      '[fw-detector] spanAssemblyV4Enabled=false is not supported; FW Repair runs V4 only'
     );
   }
-  const toneTimestampOnlyEnabled =
-    cfg.toneTimestampOnlyEnabled ??
-    (cfg as { v3ToneTimestampOnlyEnabled?: boolean }).v3ToneTimestampOnlyEnabled ??
-    true;
+  const toneTimestampOnlyEnabled = cfg.toneTimestampOnlyEnabled ?? true;
   const minDeltaToReplace = cfg.minDeltaToReplace ?? 3.0;
   if (typeof cfg.minDeltaToReplace === 'number' && cfg.minDeltaToReplace < 1.0) {
     logger.warn(

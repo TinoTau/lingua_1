@@ -4,7 +4,6 @@
  */
 
 import { UtteranceInfo } from './aggregator-decision';
-import { detectInternalRepetition } from './dedup';
 import { SegmentInfo } from '../task-router/types';
 import { AggregatorStateUtils } from './aggregator-state-utils';
 
@@ -35,9 +34,7 @@ export class AggregatorStateUtteranceProcessor {
     sessionStartTimeMs: number,
     lastUtteranceEndTimeMs: number
   ): UtteranceProcessResult {
-    // 先检测并移除完全重复和内部重复
-    const processedText = detectInternalRepetition(text);
-    
+    const processedText = text;
     // 计算 utterance 的时间戳（从 segments 推导）
     const utteranceTime = AggregatorStateUtils.calculateUtteranceTime(
       segments,

@@ -6,6 +6,7 @@ import type { ApplyLexiconPatchV3Result, LexiconPatchV3 } from './patch-types';
 import { resolveLexiconV3BundleFiles } from './bundle-io';
 import { withLexiconPatchLock } from './patch-lock';
 import { validateLexiconPatchV3 } from './patch-validator';
+import { assertBundleSchemaV2 } from './patch-schema-guard';
 import { writeBundleManifestsAfterPatch } from './manifest-writer';
 import { applyLexiconPatchToSqlite } from './sqlite-patch-applier';
 import { isPatchAlreadyApplied, ensurePatchHistoryTable } from './sqlite-schema';
@@ -63,11 +64,13 @@ export async function applyLexiconPatchV3(
         return failResult(patch, 'patch_already_applied', 'patch already applied');
       }
 
-      applyLexiconPatchToSqlite(db, patch);
+      assertBundleSchemaV2(db, files.manifestPath);
+      await applyLexiconPatchToSqlite(db, patch);
       writeBundleManifestsAfterPatch(db, files, patch);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
-      return failResult(patch, 'apply_transaction_failed', message);
+      const code = message.startsWith('schema_not_v2') ? 'schema_not_v2' : 'apply_transaction_failed';
+      return failResult(patch, code, message);
     } finally {
       db.close();
     }
