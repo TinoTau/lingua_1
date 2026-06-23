@@ -1,9 +1,9 @@
 {
   "schemaVersion": "lexicon-v2-shadow-v2-term",
-  "buildTime": 1782015958449,
+  "buildTime": 1782187219876,
   "bundle_tag": "v2-shadow",
-  "checksum": "sha256:79278e332b662da895c0fb081f0ae9e0e4cd4048426629cb06fb0f7156a5b23f",
-  "createdAt": "2026-06-21T04:25:58.449Z",
+  "checksum": "sha256:3c5633be894f50d12b265429ba8579f93e56d79bb7796a4738e84422cf6e18b1",
+  "createdAt": "2026-06-23T04:00:19.876Z",
   "backend": "sqlite",
   "seed_path": "electron_node\\docs\\lexicon-assets\\p1_3_generic_zh_lexicon_v2_fw_domains\\p1_3_lexicon_zh_v2",
   "seed_inputs": [
@@ -66,8 +66,22 @@
     },
     "term_domain_tags": {
       "rowCount": 190
+    },
+    "domain_hierarchy": {
+      "rowCount": 8
     }
   },
+  "domainAvailability": {
+    "coffee": 44,
+    "milk_tea": 38,
+    "food_order": 34,
+    "bakery": 22,
+    "tourism_hotel": 12,
+    "tourism_pickup": 13,
+    "tourism_transport": 15,
+    "tourism_route": 12
+  },
+  "domainHierarchyVersion": "sha256:4a7df52261a45aa1fadd462d118fbd829605e2f2eb1a9f61cdf8e487d4471c09",
   "rejectedCount": 897,
   "rejectStats": {
     "invalid_json": 0,

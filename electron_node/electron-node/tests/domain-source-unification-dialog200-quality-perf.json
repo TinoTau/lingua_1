@@ -1,0 +1,295 @@
+{
+  "batch_meta": {
+    "timestamp": "2026-06-23T04:08:20.351Z",
+    "evaluated": 200,
+    "wall_clock_sec": 784,
+    "stoppedReason": "completed_all"
+  },
+  "contract": {
+    "evaluated": 200,
+    "pass": 200,
+    "fail": 0,
+    "skip": 0,
+    "wall_clock_sec": 784,
+    "pipeline_ok_rate": 1,
+    "fw_triggered_count": 200,
+    "fw_applied_case_count": 57,
+    "text_changed_count": 58,
+    "lexicon_runtime_ok_count": 200,
+    "asr_service_id_distribution": {
+      "faster-whisper-vad": 200
+    }
+  },
+  "quality": {
+    "avg_cer_raw": 0.2647,
+    "avg_cer_final": 0.2195,
+    "median_cer_final": 0.1667,
+    "p95_cer_final": 0.5484,
+    "exact_match_final": 28,
+    "fw_improved_cases": 44,
+    "fw_degraded_cases": 4
+  },
+  "perf": {
+    "pipeline_ms": {
+      "avg": 3685,
+      "p50": 3409,
+      "p95": 4788,
+      "max": 12653
+    },
+    "asr_warmup_ms": 45986
+  },
+  "domain_unification": {
+    "recallScopeSource_dist": {
+      "policy": 200
+    },
+    "utteranceDomain_dist": {
+      "coffee": 25,
+      "general": 149,
+      "tourism_transport": 4,
+      "bakery": 1,
+      "food_order": 8,
+      "tourism_hotel": 12,
+      "milk_tea": 1
+    },
+    "domainHierarchyVersions": [
+      "sha256:4a7df52261a45aa1fadd462d118fbd829605e2f2eb1a9f61cdf8e487d4471c09"
+    ],
+    "lexicon_runtime_ok": 200,
+    "fw_triggered": 200,
+    "fw_applied_cases": 57
+  },
+  "samples": [
+    {
+      "id": "d001",
+      "scenario": "cafe",
+      "ref": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "raw_asr": "你好 我想点一杯热拿铁钟贝少糖 深便温 以下今天有蓝美马分吗?",
+      "final_asr": "你好 我想点一杯热拿铁中杯少糖 身边温 以下今天有蓝莓马芬吗?",
+      "cer_final": 0.1481,
+      "utteranceDomain": "coffee",
+      "recallScopeSource": "policy",
+      "recallFineDomains": [
+        "bakery",
+        "coffee",
+        "food_order",
+        "milk_tea",
+        "tourism_hotel",
+        "tourism_pickup",
+        "tourism_route",
+        "tourism_transport"
+      ],
+      "availableFineDomains": 8,
+      "llmAllowedDomains": [
+        "restaurant",
+        "travel"
+      ],
+      "domainHierarchyVersion": "sha256:4a7df52261a45aa1fadd462d118fbd829605e2f2eb1a9f61cdf8e487d4471c09",
+      "fw_applied_count": 5,
+      "pipeline_ms": 6236,
+      "text_changed": true
+    },
+    {
+      "id": "d004",
+      "scenario": "meeting",
+      "ref": "小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+      "raw_asr": "小陈客户反馈翻译引擎接口包错,我们能够 不能加緩存下午3點前把結論發群裡",
+      "final_asr": "小陈客户反馈翻译引擎接口包错,我们能够 不能加緩存下午3點前把結論發群裡",
+      "cer_final": 0.2727,
+      "utteranceDomain": "general",
+      "recallScopeSource": "policy",
+      "recallFineDomains": [
+        "bakery",
+        "coffee",
+        "food_order",
+        "milk_tea",
+        "tourism_hotel",
+        "tourism_pickup",
+        "tourism_route",
+        "tourism_transport"
+      ],
+      "availableFineDomains": 8,
+      "llmAllowedDomains": [
+        "restaurant",
+        "travel"
+      ],
+      "domainHierarchyVersion": "sha256:4a7df52261a45aa1fadd462d118fbd829605e2f2eb1a9f61cdf8e487d4471c09",
+      "fw_applied_count": 0,
+      "pipeline_ms": 5770,
+      "text_changed": false
+    },
+    {
+      "id": "d031",
+      "scenario": "hotel",
+      "ref": "我预订的是大床房，能安排安静一点的楼层吗？",
+      "raw_asr": "我预定的是搭床房能安排安静一点的楼层吗",
+      "final_asr": "我预定的是搭床房能安排安静一点的楼层吗",
+      "cer_final": 0.1053,
+      "utteranceDomain": "tourism_hotel",
+      "recallScopeSource": "policy",
+      "recallFineDomains": [
+        "bakery",
+        "coffee",
+        "food_order",
+        "milk_tea",
+        "tourism_hotel",
+        "tourism_pickup",
+        "tourism_route",
+        "tourism_transport"
+      ],
+      "availableFineDomains": 8,
+      "llmAllowedDomains": [
+        "restaurant",
+        "travel"
+      ],
+      "domainHierarchyVersion": "sha256:4a7df52261a45aa1fadd462d118fbd829605e2f2eb1a9f61cdf8e487d4471c09",
+      "fw_applied_count": 0,
+      "pipeline_ms": 3274,
+      "text_changed": false
+    },
+    {
+      "id": "d046",
+      "scenario": "cafe",
+      "ref": "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？",
+      "raw_asr": "你好,我想點一杯卡布奇諾中貝珍長糖,順便溫習一下 今天有知识蛋糕吗?",
+      "final_asr": "你好,我想點一杯卡布奇诺中貝珍長糖,順便溫洗衣下 今天有知识蛋糕吗?",
+      "cer_final": 0.3448,
+      "utteranceDomain": "coffee",
+      "recallScopeSource": "policy",
+      "recallFineDomains": [
+        "bakery",
+        "coffee",
+        "food_order",
+        "milk_tea",
+        "tourism_hotel",
+        "tourism_pickup",
+        "tourism_route",
+        "tourism_transport"
+      ],
+      "availableFineDomains": 8,
+      "llmAllowedDomains": [
+        "restaurant",
+        "travel"
+      ],
+      "domainHierarchyVersion": "sha256:4a7df52261a45aa1fadd462d118fbd829605e2f2eb1a9f61cdf8e487d4471c09",
+      "fw_applied_count": 2,
+      "pipeline_ms": 4500,
+      "text_changed": true
+    },
+    {
+      "id": "d052",
+      "scenario": "taxi",
+      "ref": "师傅，去浦东张江，走延安路高架。我赶九点半的会，要是堵车您提前跟我说。",
+      "raw_asr": "市府去浦東張江走沿岸路高架 下午4点半的回邀试赌车 您提前跟我说",
+      "final_asr": "市府去浦東張江走沿岸路高架 下午4点半的回邀试赌车 您提前跟我说",
+      "cer_final": 0.4333,
+      "utteranceDomain": "general",
+      "recallScopeSource": "policy",
+      "recallFineDomains": [
+        "bakery",
+        "coffee",
+        "food_order",
+        "milk_tea",
+        "tourism_hotel",
+        "tourism_pickup",
+        "tourism_route",
+        "tourism_transport"
+      ],
+      "availableFineDomains": 8,
+      "llmAllowedDomains": [
+        "restaurant",
+        "travel"
+      ],
+      "domainHierarchyVersion": "sha256:4a7df52261a45aa1fadd462d118fbd829605e2f2eb1a9f61cdf8e487d4471c09",
+      "fw_applied_count": 0,
+      "pipeline_ms": 4675,
+      "text_changed": false
+    },
+    {
+      "id": "d067",
+      "scenario": "customer_service",
+      "ref": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+      "raw_asr": "您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好,我定,您好",
+      "final_asr": "您 但顯示已發貨 但物流三天沒更新能幫我查一下嗎",
+      "cer_final": 0.4,
+      "utteranceDomain": "general",
+      "recallScopeSource": "policy",
+      "recallFineDomains": [
+        "bakery",
+        "coffee",
+        "food_order",
+        "milk_tea",
+        "tourism_hotel",
+        "tourism_pickup",
+        "tourism_route",
+        "tourism_transport"
+      ],
+      "availableFineDomains": 8,
+      "llmAllowedDomains": [
+        "restaurant",
+        "travel"
+      ],
+      "domainHierarchyVersion": "sha256:4a7df52261a45aa1fadd462d118fbd829605e2f2eb1a9f61cdf8e487d4471c09",
+      "fw_applied_count": 0,
+      "pipeline_ms": 12653,
+      "text_changed": true
+    },
+    {
+      "id": "d136",
+      "scenario": "cafe",
+      "ref": "你好，我想点一杯热巧克力，中杯，半糖。顺便问一下今天有曲奇吗？",
+      "raw_asr": "你好,我想點一杯熱巧克力中杯班糖 順便問一下 問一下今天有趣氣嗎?",
+      "final_asr": "你好,我想點一杯熱巧克力中杯半糖 顺便問以下 文艺下今天有娶妻嗎?",
+      "cer_final": 0.3846,
+      "utteranceDomain": "milk_tea",
+      "recallScopeSource": "policy",
+      "recallFineDomains": [
+        "bakery",
+        "coffee",
+        "food_order",
+        "milk_tea",
+        "tourism_hotel",
+        "tourism_pickup",
+        "tourism_route",
+        "tourism_transport"
+      ],
+      "availableFineDomains": 8,
+      "llmAllowedDomains": [
+        "restaurant",
+        "travel"
+      ],
+      "domainHierarchyVersion": "sha256:4a7df52261a45aa1fadd462d118fbd829605e2f2eb1a9f61cdf8e487d4471c09",
+      "fw_applied_count": 4,
+      "pipeline_ms": 4411,
+      "text_changed": true
+    },
+    {
+      "id": "d181",
+      "scenario": "cafe",
+      "ref": "你好，我想点一杯冰美式，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "raw_asr": "你好,我想點一杯冰美式中貝少糖 順便溫習一下 以下今天有蓝没马分吗?",
+      "final_asr": "你好,我想點一杯冰美式中貝少糖 顺便溫洗衣下 以下今天有蓝莓马芬吗?",
+      "cer_final": 0.2593,
+      "utteranceDomain": "coffee",
+      "recallScopeSource": "policy",
+      "recallFineDomains": [
+        "bakery",
+        "coffee",
+        "food_order",
+        "milk_tea",
+        "tourism_hotel",
+        "tourism_pickup",
+        "tourism_route",
+        "tourism_transport"
+      ],
+      "availableFineDomains": 8,
+      "llmAllowedDomains": [
+        "restaurant",
+        "travel"
+      ],
+      "domainHierarchyVersion": "sha256:4a7df52261a45aa1fadd462d118fbd829605e2f2eb1a9f61cdf8e487d4471c09",
+      "fw_applied_count": 3,
+      "pipeline_ms": 4590,
+      "text_changed": true
+    }
+  ]
+}

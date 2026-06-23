@@ -52,7 +52,7 @@
     "lexicon:v3-gate": "node scripts/lexicon/run-v3-runtime-gate.mjs",
     "lexicon:prepare:v3-runtime": "node scripts/lexicon/prepare-lexicon-v3-runtime-from-shadow.mjs",
     "lexicon:migrate:v3-runtime": "node scripts/lexicon/migrate-lexicon-v3-runtime-single-manifest.mjs",
-    "lexicon:gate:v3-runtime": "node scripts/lexicon/run-gate-v3-runtime.mjs",
+    "lexicon:gate:v3-runtime": "node scripts/lexicon/run-gate-v3-runtime-for-electron.mjs",
     "lexicon:patch:apply": "node scripts/lexicon/apply-lexicon-patch-v3.mjs",
     "test:lexicon-patch-e2e": "npm run build:main && node scripts/lexicon/run-patch-e2e.mjs",
     "test:schema-v2-seed-acceptance-12": "node tests/run-schema-v2-seed-acceptance-12.mjs",

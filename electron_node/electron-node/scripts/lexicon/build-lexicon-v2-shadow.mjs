@@ -61,6 +61,7 @@ console.log('[lexicon:build:v2-shadow] output:', resolvedBundle);
 const result = buildV2ShadowBundle({
   rows,
   registry,
+  registryPath,
   bundleDir: resolvedBundle,
   seedRootRel,
   seedInputRels,

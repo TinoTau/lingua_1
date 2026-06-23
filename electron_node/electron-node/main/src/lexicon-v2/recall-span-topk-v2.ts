@@ -8,14 +8,12 @@ import {
   type CandidateScoreBreakdown,
   type RecallCandidateKind,
 } from '../lexicon/candidate-score';
-import type { DomainBoostContext } from '../lexicon/domain-boost-calculator';
 import { scorePinyinSimilarity } from '../lexicon/phonetic/pinyin';
 import { syllablesKey } from '../lexicon/pinyin-index';
 import { getAsrRepairQualityConfig } from '../asr-repair-quality/quality-config';
 import type { HotwordEntry } from '../lexicon/hotword-types';
 import { resolveWindowCandidateSource, type WindowCandidateSource } from '../lexicon/window-candidate-source';
 import type { ActiveLexiconProfileSnapshot } from '../session-runtime/types';
-import { defaultGeneralProfile } from './profile-registry';
 import type { LexiconRuntimeV2 } from './lexicon-runtime-v2';
 import { recordRecallSpanDiagnostics, type RecallSourceBreakdown } from './recall-v2-diagnostics';
 import { isIndustryRoutingEnabled } from './lexicon-fw-recall-config';
@@ -81,16 +79,6 @@ function minCandidateScore(): number {
   return getAsrRepairQualityConfig().minCandidateScore;
 }
 
-function domainBoostContextFromPlan(plan?: WeakDomainRecallPlan): DomainBoostContext | undefined {
-  if (!plan?.enabled) {
-    return undefined;
-  }
-  return {
-    strongDomainIds: plan.strongDomainIds,
-    weakDomainIds: plan.weakDomainIds,
-  };
-}
-
 function isDomainHotword(hotword: HotwordEntry): boolean {
   return Boolean(hotword.domain || hotword.domains?.length);
 }
@@ -141,14 +129,10 @@ function scoreHotword(
   hotword: HotwordEntry,
   variant: FuzzyPinyinVariant,
   windowText: string,
-  profile: ActiveLexiconProfileSnapshot,
-  boostContext: DomainBoostContext | undefined,
-  plan: WeakDomainRecallPlan | undefined,
   acousticTonePattern: number[] | undefined,
   toneLookupStage: ToneLookupStage | undefined,
   bestById: Map<string, RecallSpanTopKV2Hit>,
-  sourceBreakdown: RecallSourceBreakdown,
-  weakDomainCandidateCount: { value: number }
+  sourceBreakdown: RecallSourceBreakdown
 ): void {
   const syllables = variant.syllables;
   if (!hotword.enabled || hotword.word.length !== syllables.length) {
@@ -165,9 +149,7 @@ function scoreHotword(
     windowSyllables: syllables,
     windowText,
     phoneticScore,
-    profile,
     recallCandidateKind,
-    domainBoostContext: undefined,
   });
   const candidateScore =
     candidateScoreBreakdown.priorScore +
@@ -253,7 +235,6 @@ export function recallSpanTopKV2(
     perSpanLimit,
     acousticTonePattern,
   } = input;
-  const profile = input.profile ?? defaultGeneralProfile();
   const cfg = getLexiconRuntimeV2Config();
   const recallStart = Date.now();
   const fuzzyRecallEnabled = input.fuzzyRecallEnabled === true;
@@ -329,14 +310,10 @@ export function recallSpanTopKV2(
         hotword,
         variant,
         variantWindowText,
-        profile,
-        undefined,
-        undefined,
         acousticTonePattern,
         tier.entryStages.get(hotword.id),
         bestById,
-        sourceBreakdown,
-        { value: 0 }
+        sourceBreakdown
       );
     }
     if (!variant.isFuzzy) {

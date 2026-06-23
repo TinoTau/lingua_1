@@ -6,7 +6,7 @@ from typing import Any
 
 
 class IntentPromptTemplate:
-    PROMPT_PACK_VERSION = "v1"
+    PROMPT_PACK_VERSION = "v2"
 
     @staticmethod
     def build_system_message(allowed_domains: list[dict[str, Any]]) -> str:
@@ -20,8 +20,8 @@ class IntentPromptTemplate:
             "Analyze recent finalized conversation turns and infer the active lexicon domain.\n"
             "Rules:\n"
             "1. Output ONLY valid JSON matching the required schema.\n"
-            "2. primaryDomain MUST be one of the allowed domains below.\n"
-            "3. secondaryDomains MUST be a subset of allowed domains (max 2).\n"
+            "2. primaryDomain MUST be one of the allowed coarse domains below (not fine domains like coffee).\n"
+            "3. secondaryDomains MUST be a subset of allowed coarse domains (max 2).\n"
             "4. Do NOT rewrite, fix, or generate replacement text.\n"
             "5. summary must be <= 300 chars describing the session topic.\n"
             "6. shouldSwitch=true only if primaryDomain differs from currentPrimary.\n"

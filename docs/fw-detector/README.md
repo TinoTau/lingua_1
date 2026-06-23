@@ -10,6 +10,26 @@ ASR → IME V2 → Raw Boundary → Fine Span Recall → Tone-First Recall
 → Domain Vote → Sentence Assembly V4 → KenLM Batch → Raw Log Delta Pick → Apply
 ```
 
+## Domain Source Unification（Frozen · 2026-06-23）
+
+**权威：** [DOMAIN_SOURCE_UNIFICATION.md](./DOMAIN_SOURCE_UNIFICATION.md) — Registry · RS-03A · PAR-01 · Runtime Diagnostics
+
+与 `DOMAIN_RECALL.md` · `LEXICON_RUNTIME_V2.md` · `CONFIG.md` 冲突时 **DSU 优先**。
+
+---
+
+## Context Prior / Soft Demotion（Frozen · 2026-06-23）
+
+**权威：** [CONTEXT_PRIOR.md](./CONTEXT_PRIOR.md) — Domain ReRank Layer · Scheme A · Depends On DSU
+
+```text
+Recall → Vote → Domain ReRank → Context Prior → KenLM
+```
+
+Context Prior **不是** Recall / Vote / KenLM 控制器；仅 bounded soft multiplier。
+
+---
+
 ## 文档索引（SSOT）
 
 | 文档 | 说明 |
@@ -32,6 +52,8 @@ ASR → IME V2 → Raw Boundary → Fine Span Recall → Tone-First Recall
 | Interval Assembly V1.1 | [assembly/INTERVAL_ASSEMBLY.md](./assembly/INTERVAL_ASSEMBLY.md) |
 | Recall V1.0.1 | [recall/TONE_FIRST_RECALL_FROZEN_V1_0_1.md](./recall/TONE_FIRST_RECALL_FROZEN_V1_0_1.md) |
 | Domain Recall V1.2 | [recall/DOMAIN_RECALL.md](./recall/DOMAIN_RECALL.md) |
+| Domain Source Unification | [DOMAIN_SOURCE_UNIFICATION.md](./DOMAIN_SOURCE_UNIFICATION.md) |
+| Context Prior / Soft Demotion | [CONTEXT_PRIOR.md](./CONTEXT_PRIOR.md) |
 | Compatibility V1.1 | [compatibility/FROZEN.md](./compatibility/FROZEN.md) |
 | Diagnostics V1.0.2 | [diagnostics/TRACE_FROZEN_V1_0_2.md](./diagnostics/TRACE_FROZEN_V1_0_2.md) |
 

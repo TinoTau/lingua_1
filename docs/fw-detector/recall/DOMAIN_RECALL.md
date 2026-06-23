@@ -1,6 +1,34 @@
 # Domain Recall & ReRank — 冻结合约 V1.2
 
-**状态：** FINAL FROZEN（2026-06-20）  
+> ## ⚠️ SUPERSEDED（Domain Source Unification · 2026-06-23）
+>
+> 本文件 **部分内容** 已被 **FW Repair V4 Domain Source Unification Freeze Package** 取代。
+>
+> **权威入口：** [`DOMAIN_SOURCE_UNIFICATION.md`](../DOMAIN_SOURCE_UNIFICATION.md)
+>
+> **已被取代的章节主题（请读 DSU 包，勿以本文为准）：**
+>
+> | 主题 | DSU 合约 |
+> |------|----------|
+> | Recall Domain Set SSOT | **RS-03A** — `expandPolicyToFineDomains` → ∩ `availableFineDomains` |
+> | Registry / profile 驱动 recall | **`RuntimeDomainRegistry`** — `term_domain_tags` DISTINCT |
+> | 粗域静态展开表 | **`coarseToFineMap`** from `domain_hierarchy` ∩ available |
+> | `enabledDomains` 默认语义 | **CFG-01** — 默认 `[]` → 全量 available |
+> | Runtime Diagnostics 域字段 | **DSU Runtime Diagnostics** — 见 `DIAGNOSTICS_CONTRACT.md` |
+>
+> **仍有效：** §4 Vote 公式 · §5 ReRank 系数 · §6–§11 性能 / Patch / Legacy 边界（算法常量未变）
+>
+> ## Context Prior 边界（Frozen · 2026-06-23）
+>
+> **Context Prior 不属于 Recall。**
+>
+> - Recall Scope 仍由 **DSU / RS-03A**（`resolveRecallEnabledFineDomains` → `availableFineDomains`）控制
+> - Context Prior **不得**改变 Recall SQL · Recall Scope · Candidate Recall
+> - Context Prior 仅属 **Domain ReRank Layer**，在 Vote 之后对 eligible 候选施加 soft multiplier
+>
+> **权威：** [CONTEXT_PRIOR.md](../CONTEXT_PRIOR.md)
+
+**状态：** FINAL FROZEN（2026-06-20）· Domain SSOT 层 superseded by DSU（2026-06-23）  
 **代码根：** `electron_node/electron-node/main/src/lexicon-v2/` · `fw-detector/span-assembly-shared/`
 
 ---

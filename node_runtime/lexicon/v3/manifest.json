@@ -2,8 +2,8 @@
   "schemaVersion": "lexicon-v3-five-table-v2",
   "bundleVersion": 1,
   "bundleTag": "v3-runtime",
-  "buildTime": "2026-06-21T04:25:58.449Z",
-  "checksum": "sha256:79278e332b662da895c0fb081f0ae9e0e4cd4048426629cb06fb0f7156a5b23f",
+  "buildTime": "2026-06-23T04:00:19.876Z",
+  "checksum": "sha256:3c5633be894f50d12b265429ba8579f93e56d79bb7796a4738e84422cf6e18b1",
   "tables": {
     "base": 50000,
     "idiom": 22192,
@@ -11,7 +11,8 @@
     "routing": 190,
     "ngrams": 202392,
     "term": 107,
-    "term_domain_tags": 190
+    "term_domain_tags": 190,
+    "domain_hierarchy": 8
   },
   "seedInputs": [
     "electron_node\\docs\\lexicon-assets\\p1_3_generic_zh_lexicon_v2_fw_domains\\p1_3_lexicon_zh_v2\\base_zh_v2\\entries.jsonl",
@@ -22,5 +23,16 @@
   ],
   "overlayInputs": [],
   "lastPatchId": null,
-  "lastAppliedAt": null
+  "lastAppliedAt": null,
+  "domainAvailability": {
+    "coffee": 44,
+    "milk_tea": 38,
+    "food_order": 34,
+    "bakery": 22,
+    "tourism_hotel": 12,
+    "tourism_pickup": 13,
+    "tourism_transport": 15,
+    "tourism_route": 12
+  },
+  "domainHierarchyVersion": "sha256:4a7df52261a45aa1fadd462d118fbd829605e2f2eb1a9f61cdf8e487d4471c09"
 }

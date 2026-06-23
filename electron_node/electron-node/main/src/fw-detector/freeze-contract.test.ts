@@ -462,6 +462,69 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(applierSrc).not.toMatch(/table:\s*['"]domain['"]/);
   });
 
+  it('GATE-DSU-1: domain rerank uses runtime-domain-registry — not profile-registry', () => {
+    const rerankSrc = readSrc('fw-detector/span-assembly-shared/domain-rerank.ts');
+    expect(rerankSrc).toContain('runtime-domain-registry');
+    expect(rerankSrc).not.toContain('profile-registry');
+    const recallSrc = readSrc('lexicon-v2/resolve-recall-enabled-fine-domains.ts');
+    expect(recallSrc).toContain('runtime-domain-registry');
+    expect(recallSrc).not.toContain('profile-registry');
+  });
+
+  it('GATE-DSU-2: CFG-01 enabledDomains defaults empty', () => {
+    expect(DEFAULT_CONFIG.features?.fwDetector?.enabledDomains).toEqual([]);
+    const fwCfg = loadFwDetectorRuntimeConfig();
+    expect(fwCfg.enabledDomains).toEqual([]);
+  });
+
+  it('GATE-DSU-3: LLM parser rejects fine primary via runtime registry', () => {
+    const parserSrc = readSrc('lexicon-v2/lexicon-profile-decision-parser.ts');
+    expect(parserSrc).toContain('isFinePrimaryDomainRejected');
+    expect(parserSrc).toContain('isCoarseDomainEligibleForLlm');
+    expect(parserSrc).not.toContain('isValidLLMDomain');
+  });
+
+  it('GATE-DSU-4: v3 gate enforces domain_hierarchy threshold and domainAvailability', () => {
+    const gateSrc = readScript('lexicon/run-gate-v3-runtime.mjs');
+    expect(gateSrc).toContain('assertTableThresholds');
+    expect(gateSrc).toContain('domainAvailability');
+    expect(gateSrc).toContain('BG-02');
+    expect(gateSrc).toContain('BG-03');
+    const thresholdsSrc = readScript('lexicon/lib/lexicon-v3-runtime.mjs');
+    expect(thresholdsSrc).toContain('domain_hierarchy: 8');
+  });
+
+  it('GATE-DSU-5: runtime hierarchy is sqlite-only — no profile-registry fallback', () => {
+    const registrySrc = readSrc('lexicon-v2/runtime-domain-registry.ts');
+    expect(registrySrc).toContain('domain_hierarchy table missing');
+    expect(registrySrc).not.toContain('hierarchyFromRegistryJson');
+    expect(registrySrc).not.toMatch(/dev fallback/i);
+  });
+
+  it('GATE-CP-01: domain-rerank must not import profile-registry', () => {
+    const rerankSrc = readSrc('fw-detector/span-assembly-shared/domain-rerank.ts');
+    expect(rerankSrc).not.toContain('profile-registry');
+    expect(rerankSrc).toContain('computeContextPriorMultiplier');
+  });
+
+  it('GATE-CP-02: utterance-domain-vote must not import context prior', () => {
+    const voteSrc = readSrc('fw-detector/span-assembly-shared/utterance-domain-vote.ts');
+    expect(voteSrc).not.toContain('computeContextPriorMultiplier');
+    expect(voteSrc).not.toContain('contextPrior');
+  });
+
+  it('GATE-CP-03: recall scope module must not read profile or context prior', () => {
+    const recallSrc = readSrc('lexicon-v2/resolve-recall-enabled-fine-domains.ts');
+    expect(recallSrc).not.toContain('primaryDomain');
+    expect(recallSrc).not.toContain('contextPrior');
+    expect(recallSrc).not.toContain('profile');
+  });
+
+  it('GATE-CP-04: domain-rerank must not mutate RuntimeDomainRegistry', () => {
+    const rerankSrc = readSrc('fw-detector/span-assembly-shared/domain-rerank.ts');
+    expect(rerankSrc).not.toContain('setRuntimeDomainRegistry');
+  });
+
   it('segmentForJobResult 写点白名单（静态）', () => {
     const allowed = [
       'pipeline/steps/asr-step.ts',

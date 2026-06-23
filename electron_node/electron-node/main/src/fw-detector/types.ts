@@ -235,6 +235,15 @@ export type FwDetectorRuntimeDiag = {
   lexiconRows: number | null;
   profilePrimary: string | null;
   enabledDomains: string[];
+  recallDomainScope?: string[];
+  recallScopeSource?: 'available' | 'policy' | 'job_override';
+  availableFineDomains?: string[];
+  availableCoarseDomains?: string[];
+  llmAllowedDomains?: string[];
+  domainHierarchyVersion?: string | null;
+  contextPriorDomain?: string | null;
+  contextPriorApplied?: boolean;
+  contextPriorSkippedReason?: string;
 };
 
 export type FwDetectorReplacementDiag = {
@@ -339,6 +348,8 @@ export type SpanAssemblyV4Diagnostics = {
   domainScores?: Record<string, number>;
   winningFineDomain?: string;
   insufficientEvidence?: boolean;
+  contextPriorMultiplierMin?: number;
+  contextPriorMultiplierMax?: number;
   boundaryImport?: CoarseBoundaryImportDiagnostics;
   tone?: CoarseAssemblyToneDiagnostics;
   skippedReason?: 'no_cjk' | 'no_coarse_spans';

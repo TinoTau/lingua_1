@@ -1,5 +1,21 @@
 # Lexicon Runtime V2
 
+> ## DSU Freeze Notice（2026-06-23）
+>
+> **Session Profile 不再是 Runtime Domain SSOT。**
+>
+> | 层 | SSOT |
+> |----|------|
+> | Runtime 细域可用性 | **`term_domain_tags`**（sqlite DISTINCT → `availableFineDomains`） |
+> | Runtime 层级映射 | **`domain_hierarchy`**（sqlite；build 物化自 `profile-registry.json`） |
+> | Runtime 域决策入口 | **`RuntimeDomainRegistry`** |
+> | Recall scope | **RS-03A** — policy `enabledDomains` → expand → ∩ available；默认 `[]` = 全量 available |
+> | Session `primaryDomain` | 会话标签 / LLM 输出；**不**拥有 recall SQL scope |
+>
+> 权威文档：[DOMAIN_SOURCE_UNIFICATION.md](../../../docs/fw-detector/DOMAIN_SOURCE_UNIFICATION.md)
+>
+> 下文 §2–§3 中 profile / `domain_lexicon` 主轨描述为 **Pre-DSU 历史**；冲突时以 DSU 为准。
+
 **Scope:** FW 主链 span recall（`useLexiconRuntimeV2Recall`）。  
 **代码：** `electron-node/main/src/lexicon-v2/`、`lexicon/local-span-recall.ts`  
 **冻结：** 见 [../../electron-node/main/src/fw-detector/README.md](../../electron-node/main/src/fw-detector/README.md)

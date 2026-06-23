@@ -91,7 +91,7 @@ export const DEFAULT_CONFIG: NodeConfig = {
       /** @deprecated V4 rerank unused; kept for userData JSON compatibility */
       kenlmDeltaThreshold: 0.8,
       kenlmVetoThreshold: -0.2,
-      enabledDomains: ['tech_ai', 'travel', 'transport', 'restaurant'],
+      enabledDomains: [],
       candidateRequireRepairTarget: true,
       useIndustryRouting: false,
       weakDomainRecallEnabled: false,

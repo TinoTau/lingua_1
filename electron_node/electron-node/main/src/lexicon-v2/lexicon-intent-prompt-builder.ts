@@ -3,8 +3,8 @@
  */
 
 import type { RollingTurn } from '../session-runtime/types';
-import { loadLexiconProfileRegistry } from './profile-registry';
 import { getLexiconV2CpuWorkerConfig } from './lexicon-v2-config';
+import { buildLlmAllowedDomainPayload } from './runtime-domain-registry';
 
 export type LexiconIntentRequestPayload = {
   sessionId: string;
@@ -17,7 +17,7 @@ export type LexiconIntentRequestPayload = {
     activeProfileAtTurn: string;
     recoverStats: RollingTurn['recoverStats'];
   }>;
-  allowedDomains: ReturnType<typeof loadLexiconProfileRegistry>;
+  allowedDomains: ReturnType<typeof buildLlmAllowedDomainPayload>;
   promptPackVersion: string;
 };
 
@@ -42,7 +42,7 @@ export function buildLexiconIntentRequest(input: {
     currentPrimary: input.currentPrimary,
     finalizedTurnCount: input.finalizedTurnCount,
     turns,
-    allowedDomains: loadLexiconProfileRegistry(),
-    promptPackVersion: cfg.promptPackVersion ?? 'v1',
+    allowedDomains: buildLlmAllowedDomainPayload(),
+    promptPackVersion: cfg.promptPackVersion ?? 'v2',
   };
 }

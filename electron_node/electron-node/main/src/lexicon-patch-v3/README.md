@@ -58,6 +58,34 @@ interface LexiconPatchV3 {
 
 ---
 
+## Patch Lifecycle（DSU · Frozen 2026-06-23）
+
+```text
+Patch (term operations)
+    ↓
+term_domain_tags  （SSOT 变更面）
+    ↓
+materialize       （domain_lexicon / ngrams 物化层）
+    ↓
+reload            （forceReloadLexiconRuntimeV3）
+    ↓
+RuntimeDomainRegistry rebuild   （installRuntimeDomainRegistry on load）
+```
+
+| 阶段 | 说明 |
+|------|------|
+| Patch 输入 | term add/update/disable · `domain_tags[]` on term |
+| SSOT 写入 | `term` + `term_domain_tags` 事务内更新 |
+| materialize | 物化 `domain_lexicon` 等；**非** Runtime domain SSOT |
+| reload | `patch-service.ts` → `forceReloadLexiconRuntimeV3()` |
+| Registry | `LexiconRuntimeV2.load()` → `buildRuntimeDomainRegistry` |
+
+**Patch 不更新 `domain_hierarchy`（BG-06 / AV-02）：** hierarchy 仅 **full build**（`lexicon:build:v2-shadow`）从 `profile-registry.json` 物化。Patch 后 `availableFineDomains` 重算；parent/child 映射不变直至下次 full build。
+
+权威文档：[DOMAIN_SOURCE_UNIFICATION.md](../../../../../docs/fw-detector/DOMAIN_SOURCE_UNIFICATION.md)
+
+---
+
 ## 验证
 
 ```bash

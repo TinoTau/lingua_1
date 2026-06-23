@@ -6,6 +6,7 @@ import { loadFwDetectorRuntimeConfig } from './fw-config';
 import { runFwDetectorV4Path } from './fw-detector-v4-path';
 import { buildFwRuntimeDiag } from './fw-runtime-diag';
 import { loadPinyinImeV2RuntimeConfig } from './pinyin-ime-v2/pinyin-ime-v2-config';
+import { resolveRecallScope } from '../lexicon-v2/resolve-recall-enabled-fine-domains';
 import type { FwDetectorResult, FwDetectorSummary, KenlmGateMode } from './types';
 
 function emptySummary(): FwDetectorSummary {
@@ -107,7 +108,19 @@ export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDete
 
   const v2State = ensureLexiconRuntimeV2Loaded();
   const profile = getProfileSnapshotFromContext(ctx) ?? defaultGeneralProfile();
-  const runtimeDiagBase = buildFwRuntimeDiag(v2State, profile.primaryDomain ?? null, enabledDomains);
+  const recallScope =
+    v2State.status === 'ok'
+      ? resolveRecallScope({
+          jobOverride: ctx.fwDetectorEnabledDomainsOverride,
+          configEnabledDomains: enabledDomains,
+        })
+      : undefined;
+  const runtimeDiagBase = buildFwRuntimeDiag(
+    v2State,
+    profile.primaryDomain ?? null,
+    enabledDomains,
+    recallScope
+  );
 
   if (v2State.status !== 'ok') {
     return {

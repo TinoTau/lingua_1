@@ -3,9 +3,12 @@
  */
 
 import type { LexiconProfileDecision } from '../session-runtime/types';
-import { filterValidLLMDomains, isValidLLMDomain } from './profile-registry';
 import { getLexiconV2CpuWorkerConfig } from './lexicon-v2-config';
 import { normalizeTopicKeywords } from './lexicon-session-intent';
+import {
+  isCoarseDomainEligibleForLlm,
+  isFinePrimaryDomainRejected,
+} from './runtime-domain-registry';
 
 export type ParseContext = {
   currentPrimary: string;
@@ -34,6 +37,20 @@ function asStringArray(value: unknown): string[] {
   return value.map((v) => asString(v)).filter(Boolean);
 }
 
+function isAllowedLlmPrimary(primary: string): boolean {
+  if (!primary || primary === 'general') {
+    return false;
+  }
+  if (isFinePrimaryDomainRejected(primary)) {
+    return false;
+  }
+  return isCoarseDomainEligibleForLlm(primary);
+}
+
+function filterAllowedLlmSecondaries(domainIds: string[]): string[] {
+  return domainIds.filter(isCoarseDomainEligibleForLlm);
+}
+
 export function parseLexiconProfileDecision(
   raw: unknown,
   ctx: ParseContext
@@ -44,12 +61,12 @@ export function parseLexiconProfileDecision(
 
   const obj = raw as Record<string, unknown>;
   const primaryRaw = asString(obj.primaryDomain);
-  if (!isValidLLMDomain(primaryRaw) || primaryRaw === 'general') {
+  if (!isAllowedLlmPrimary(primaryRaw)) {
     return null;
   }
   const primary = primaryRaw;
 
-  const secondary = filterValidLLMDomains(asStringArray(obj.secondaryDomains)).filter(
+  const secondary = filterAllowedLlmSecondaries(asStringArray(obj.secondaryDomains)).filter(
     (d) => d !== primary
   );
 
@@ -99,7 +116,10 @@ export function classifyLexiconIntentParseFailure(
   }
   if (raw) {
     const primary = typeof raw.primaryDomain === 'string' ? raw.primaryDomain.trim() : '';
-    if (primary && !isValidLLMDomain(primary)) {
+    if (primary && isFinePrimaryDomainRejected(primary)) {
+      return 'schema_invalid';
+    }
+    if (primary && !isCoarseDomainEligibleForLlm(primary)) {
       return 'unknown_domain';
     }
   }

@@ -125,7 +125,6 @@ function scoreFragmentHit(
   row: ParentTermNgramRow,
   syllables: string[],
   windowText: string,
-  profile: ActiveLexiconProfileSnapshot,
   acousticTonePattern: number[] | undefined
 ): RecallSpanTopKV3Hit | null {
   const hotword = ngramRowToHotword(row);
@@ -136,9 +135,7 @@ function scoreFragmentHit(
     windowSyllables: syllables,
     windowText,
     phoneticScore,
-    profile,
     recallCandidateKind,
-    domainBoostContext: undefined,
   });
   const candidateScore =
     candidateScoreBreakdown.priorScore +
@@ -244,7 +241,7 @@ function lookupParentFragments(
       continue;
     }
 
-    const hit = scoreFragmentHit(row, syllables, windowText, profile, acousticTonePattern);
+    const hit = scoreFragmentHit(row, syllables, windowText, acousticTonePattern);
     if (!hit) {
       continue;
     }

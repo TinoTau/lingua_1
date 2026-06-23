@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import type Database from 'better-sqlite3';
 import { LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION } from '../lexicon-v2/lexicon-types-v2';
 
-const SSOT_TABLES = ['term', 'term_domain_tags'] as const;
+const SSOT_TABLES = ['term', 'term_domain_tags', 'domain_hierarchy'] as const;
 
 export function assertBundleSchemaV2(db: Database.Database, manifestPath: string): void {
   if (!fs.existsSync(manifestPath)) {

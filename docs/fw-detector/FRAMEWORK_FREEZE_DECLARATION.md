@@ -36,15 +36,23 @@ ASR → IME V2 → Raw Boundary → Fine Span Recall → Tone-First Recall
 
 ## 3. Frozen Components
 
-| 组件 | 冻结内容 |
-|------|----------|
-| Tone | timestamp-only · score penalty · 非 hard gate |
-| Recall | Tone-First tier · TopK limits |
-| Domain Vote / Assembly | Compatibility V1.1 · SameDomain V1.2 |
-| KenLM | batch-only subprocess |
-| Score Contract | rawDelta pick · Gate **3.0** |
-| Apply | repairTarget + overlap |
-| Diagnostics | V1.0.2 核心字段语义 |
+| 组件 | 冻结内容 | 日期 |
+|------|----------|------|
+| Tone | timestamp-only · score penalty · 非 hard gate | 2026-06-19 |
+| Recall | Tone-First tier · TopK limits | 2026-06-19 |
+| Domain Vote / Assembly | Compatibility V1.1 · SameDomain V1.2 | 2026-06-19 |
+| KenLM | batch-only subprocess | 2026-06-19 |
+| Score Contract | rawDelta pick · Gate **3.0** | 2026-06-19 |
+| Apply | repairTarget + overlap | 2026-06-19 |
+| Diagnostics | V1.0.2 核心字段语义 | 2026-06-19 |
+| **Domain Source Unification** | `RuntimeDomainRegistry` · RS-03A · PAR-01 coarse LLM · `term_domain_tags` + `domain_hierarchy` SSOT | **2026-06-23 · Frozen** |
+| **Context Prior / Soft Demotion** | Domain ReRank Layer · Scheme A multiplier · `profile.primaryDomain` only | **2026-06-23 · Frozen** |
+
+**DSU 权威文档：** [DOMAIN_SOURCE_UNIFICATION.md](./DOMAIN_SOURCE_UNIFICATION.md)
+
+**Context Prior 权威文档：** [CONTEXT_PRIOR.md](./CONTEXT_PRIOR.md) · Depends On: **Domain Source Unification**
+
+**冲突优先级：** DSU **>** Context Prior **>** 本节下列运维文档中的 Domain 相关描述（`DOMAIN_RECALL.md` · `CONFIG.md` · `ARCHITECTURE.md` · `LEXICON_RUNTIME_V2.md` · `DIAGNOSTICS_CONTRACT.md`）
 
 ---
 
@@ -94,6 +102,9 @@ npx jest --testPathPattern="freeze-contract|freeze-config-ssot"
 | Score Contract | [kenlm/SCORE_CONTRACT.md](./kenlm/SCORE_CONTRACT.md) |
 | Interface Freeze | [INTERFACE_FREEZE.md](./INTERFACE_FREEZE.md) |
 | Diagnostics | [DIAGNOSTICS_CONTRACT.md](./DIAGNOSTICS_CONTRACT.md) |
+| Domain Source Unification | [DOMAIN_SOURCE_UNIFICATION.md](./DOMAIN_SOURCE_UNIFICATION.md) |
+| Context Prior / Soft Demotion | [CONTEXT_PRIOR.md](./CONTEXT_PRIOR.md) |
+| Lexicon Schema V2 | [../../electron_node/lexicon-assets/docs/SCHEMA_V2.md](../../electron_node/lexicon-assets/docs/SCHEMA_V2.md) |
 | Lexicon Ops | [LEXICON_OPERATIONS.md](./LEXICON_OPERATIONS.md) |
 | Assembly / Recall / Compatibility / Trace | 各子目录 `FROZEN*.md` |
 

@@ -37,6 +37,8 @@ export type LexiconManifestV2 = {
   lastAppliedAt?: string | null;
   rejectedCount?: number;
   rejectStats?: Record<string, number>;
+  domainAvailability?: Record<string, number>;
+  domainHierarchyVersion?: string;
 };
 
 export type LexiconRuntimeV2State = {
@@ -53,6 +55,8 @@ export type LexiconRuntimeV2State = {
     term?: number;
     termDomainTags?: number;
   };
+  domainAvailability?: Record<string, number>;
+  domainHierarchyVersion?: string;
 };
 
 export type ParentTermNgramRow = {

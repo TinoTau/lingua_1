@@ -80,7 +80,7 @@ export function loadFwDetectorRuntimeConfig(): FwDetectorRuntimeConfig {
     kenlmGateMode: resolveKenlmGateMode(cfg.kenlmGateMode),
     kenlmDeltaThreshold: cfg.kenlmDeltaThreshold ?? 0.8,
     kenlmVetoThreshold: cfg.kenlmVetoThreshold ?? -0.2,
-    enabledDomains: cfg.enabledDomains ?? ['tech_ai', 'travel', 'transport', 'restaurant'],
+    enabledDomains: cfg.enabledDomains ?? [],
     candidateRequireRepairTarget: cfg.candidateRequireRepairTarget !== false,
     maxSentenceCandidates: cfg.maxSentenceCandidates ?? 16,
     minDeltaToReplace,

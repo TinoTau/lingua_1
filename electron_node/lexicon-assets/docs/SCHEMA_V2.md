@@ -30,10 +30,14 @@
 
 | 列 | 说明 |
 |----|------|
-| `term_id` | PK |
+| `id` | PK（DDL 列名；逻辑 term_id） |
 | `word` | 词面 |
 | `pinyin_key` | 无声调拼音键 |
 | `tone_pinyin_key` | 带声调拼音键 |
+| `prior_score` | homophone prior |
+| `repair_target` | 0/1 |
+| `enabled` | 0/1 |
+| `tier` | 如 `domain` / `base` |
 
 ### term_domain_tags
 
@@ -44,6 +48,27 @@
 | `domain_weight` | 域权重（Vote / routing 来源，**非** prior_score） |
 
 索引：`(domain_id, pinyin_key)`、`(term_id)`、`(word, pinyin_key)`
+
+### domain_hierarchy（DSU · build 物化 · runtime 只读）
+
+| 列 | 说明 |
+|----|------|
+| `parent_domain_id` | 粗域 ID |
+| `child_domain_id` | 细域 ID |
+
+```sql
+CREATE TABLE domain_hierarchy (
+    parent_domain_id TEXT NOT NULL,
+    child_domain_id  TEXT NOT NULL,
+    PRIMARY KEY (parent_domain_id, child_domain_id)
+);
+CREATE INDEX idx_domain_hierarchy_child ON domain_hierarchy(child_domain_id);
+```
+
+- **编辑面：** `profile-registry.json` parent 字段 → **仅 build** 写入 sqlite
+- **Runtime：** 只读；缺失或空 → fail-fast（REG-05 配套）
+- **Patch：** **不修改** 本表（BG-06）
+- **Gate：** `manifest.tables.domain_hierarchy >= 8`（BG-01，边数 = 当前 registry parent-child 数）
 
 ---
 
@@ -143,6 +168,16 @@ Phase 1 前须 snapshot `node_runtime/lexicon/v3/`。
 
 须同时支持 v1 / v2 bundle 部署顺序（v1 → v2 不中断）
 
+### Manifest 域字段（DSU · Frozen 2026-06-23）
+
+| 字段 | 说明 |
+|------|------|
+| `tables.domain_hierarchy` | hierarchy 行数；gate threshold **8**（BG-01） |
+| `domainAvailability` | `{ [domain_id]: tag_count }` · 与 sqlite `term_domain_tags` GROUP BY 一致（BG-02/03） |
+| `domainHierarchyVersion` | hierarchy 版本指纹；优先 manifest；供 REG-04 / diagnostics |
+
+`stats.json` 须镜像 `domainAvailability`（gate BG-02）。域运行时合约见 [docs/fw-detector/DOMAIN_SOURCE_UNIFICATION.md](../../../docs/fw-detector/DOMAIN_SOURCE_UNIFICATION.md)。
+
 ---
 
 ## 7. 常用命令
@@ -171,7 +206,8 @@ npx jest --testPathPattern="ddl-schema-v2|bundle-schema-v2|freeze-contract"
 - `term >= 107`，`term_domain_tags >= 200`  
 - manifest `schemaVersion = lexicon-v3-five-table-v2`  
 - gate pass · orchestrator 加载 v2 成功  
-- Diagnostics 六字段齐全（见 [`docs/fw-detector/recall/DOMAIN_RECALL.md`](../../../../docs/fw-detector/recall/DOMAIN_RECALL.md) §12）  
+- DSU Runtime Diagnostics 七字段齐全（见 [`docs/fw-detector/DIAGNOSTICS_CONTRACT.md`](../../../../docs/fw-detector/DIAGNOSTICS_CONTRACT.md) DSU 节）  
+- `domain_hierarchy` gate ≥ 8 · `domainAvailability` 对齐 sqlite  
 - `hardDropCount = 0` · freeze-contract pass
 
 ---

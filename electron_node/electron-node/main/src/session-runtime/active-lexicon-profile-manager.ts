@@ -10,6 +10,7 @@ import type {
 } from '../session-runtime/types';
 import { MAX_PROFILE_HISTORY } from '../session-runtime/types';
 import { assertRegistryDomain, defaultGeneralProfile } from '../lexicon-v2/profile-registry';
+import { isCoarseDomainEligibleForLlm } from '../lexicon-v2/runtime-domain-registry';
 
 const MIN_CONFIDENCE = 0.75;
 const MIN_LEAD = 0.15;
@@ -45,13 +46,13 @@ export function applyProfileDecision(
   applied: boolean;
 } {
   const primary = assertRegistryDomain(decision.primaryDomain);
-  if (!primary || primary === 'general') {
+  if (!primary || primary === 'general' || !isCoarseDomainEligibleForLlm(primary)) {
     return { profile: current, applied: false };
   }
 
   const secondary = decision.secondaryDomains
     .map(assertRegistryDomain)
-    .filter((d): d is string => Boolean(d && d !== primary));
+    .filter((d): d is string => Boolean(d && d !== primary && isCoarseDomainEligibleForLlm(d)));
 
   const domainChanged = primary !== current.primaryDomain;
   if (!decision.shouldSwitch && !domainChanged) {

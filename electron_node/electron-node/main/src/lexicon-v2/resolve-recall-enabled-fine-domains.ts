@@ -1,93 +1,119 @@
 /**
- * Recall Domain Set SSOT — Implementation Contract V1.2 §1.
+ * Recall Domain Set SSOT — RS-03A (Frozen Addendum v1.1).
  */
 
+import logger from '../logger';
 import { loadFwDetectorRuntimeConfig } from '../fw-detector/fw-config';
 import {
-  getRegistryEntry,
-  isValidLLMDomain,
-  loadLexiconProfileRegistry,
-} from './profile-registry';
+  getRuntimeDomainRegistry,
+  type RuntimeDomainRegistry,
+} from './runtime-domain-registry';
 
 export const RECOMMENDED_MAX_ENABLED_FINE_DOMAINS = 12;
+
+export type RecallScopeSource = 'available' | 'policy' | 'job_override';
 
 export type ResolveRecallEnabledFineDomainsInput = {
   jobOverride?: readonly string[] | null;
   configEnabledDomains?: readonly string[] | null;
 };
 
-function registryEnabledFineDomainIds(): string[] {
-  return loadLexiconProfileRegistry()
-    .filter((entry) => entry.enabled && entry.allowLLMSelect && entry.id !== 'general')
-    .map((entry) => entry.id);
+export type RecallScopeResolution = {
+  domainIds: string[];
+  source: RecallScopeSource;
+  policyDomains: string[];
+};
+
+function capFineDomains(domainIds: string[]): string[] {
+  const sorted = [...domainIds].sort();
+  if (sorted.length <= RECOMMENDED_MAX_ENABLED_FINE_DOMAINS) {
+    return sorted;
+  }
+  return sorted.slice(0, RECOMMENDED_MAX_ENABLED_FINE_DOMAINS);
 }
 
-function expandToFineDomains(domainId: string): string[] {
-  const trimmed = domainId.trim();
-  if (!trimmed || trimmed === 'general') {
-    return [];
-  }
-
-  const children = loadLexiconProfileRegistry()
-    .filter((entry) => entry.parent === trimmed && entry.enabled && entry.allowLLMSelect)
-    .map((entry) => entry.id);
-
-  if (children.length > 0) {
-    return children;
-  }
-
-  return isValidLLMDomain(trimmed) ? [trimmed] : [];
-}
-
-function resolveRawDomainIds(input: ResolveRecallEnabledFineDomainsInput): string[] {
-  if (input.jobOverride?.length) {
-    return [...input.jobOverride];
-  }
-  if (input.configEnabledDomains?.length) {
-    return [...input.configEnabledDomains];
-  }
-  return registryEnabledFineDomainIds();
-}
-
-/** Single entry: Job Override → fw-config.enabledDomains → registry enabled fine domains. */
-export function resolveRecallEnabledFineDomains(
-  input: ResolveRecallEnabledFineDomainsInput = {}
+/** RS-03A: coarse/fine policy → expand → intersect availableFineDomains. */
+export function expandPolicyToFineDomains(
+  policy: readonly string[],
+  registry: RuntimeDomainRegistry
 ): string[] {
-  const configDomains =
-    input.configEnabledDomains ?? loadFwDetectorRuntimeConfig().enabledDomains;
-  const raw = resolveRawDomainIds({
-    jobOverride: input.jobOverride,
-    configEnabledDomains: configDomains,
-  });
-
+  const available = new Set(registry.availableFineDomains);
   const fine = new Set<string>();
-  for (const domainId of raw) {
-    for (const expanded of expandToFineDomains(domainId)) {
-      fine.add(expanded);
+
+  for (const raw of policy) {
+    const domainId = raw.trim();
+    if (!domainId || domainId === 'general') {
+      continue;
+    }
+    const children = registry.coarseToFineMap[domainId];
+    if (children?.length) {
+      for (const child of children) {
+        if (available.has(child)) {
+          fine.add(child);
+        }
+      }
+      continue;
+    }
+    if (available.has(domainId)) {
+      fine.add(domainId);
     }
   }
 
   return [...fine].sort();
 }
 
-export function getParentDomainId(domainId: string): string | null {
-  const entry = getRegistryEntry(domainId);
-  const parent = entry?.parent?.trim();
-  return parent && parent !== 'general' ? parent : null;
+export function resolveRecallScope(
+  input: ResolveRecallEnabledFineDomainsInput = {}
+): RecallScopeResolution {
+  const registry = getRuntimeDomainRegistry();
+  const configDomains =
+    input.configEnabledDomains ?? loadFwDetectorRuntimeConfig().enabledDomains;
+
+  if (input.jobOverride?.length) {
+    const domainIds = capFineDomains(expandPolicyToFineDomains(input.jobOverride, registry));
+    return {
+      domainIds,
+      source: 'job_override',
+      policyDomains: [...input.jobOverride],
+    };
+  }
+
+  if (configDomains.length > 0) {
+    const expanded = expandPolicyToFineDomains(configDomains, registry);
+    if (expanded.length === 0) {
+      logger.warn(
+        { policy: [...configDomains], availableFine: [...registry.availableFineDomains] },
+        '[RecallScope] policy expanded to empty — CFG-02 warn+truncate'
+      );
+    }
+    return {
+      domainIds: capFineDomains(expanded),
+      source: 'policy',
+      policyDomains: [...configDomains],
+    };
+  }
+
+  return {
+    domainIds: capFineDomains([...registry.availableFineDomains]),
+    source: 'available',
+    policyDomains: [],
+  };
 }
 
+/** Single entry: Job Override → fw-config.enabledDomains → availableFineDomains. */
+export function resolveRecallEnabledFineDomains(
+  input: ResolveRecallEnabledFineDomainsInput = {}
+): string[] {
+  return resolveRecallScope(input).domainIds;
+}
+
+export {
+  getParentDomainId,
+  isFineDomainEligibleForWinning,
+} from './runtime-domain-registry';
+
+/** @deprecated use RuntimeDomainRegistry.coarseToFineMap */
 export function isExpandableCoarseDomain(domainId: string): boolean {
-  return loadLexiconProfileRegistry().some(
-    (entry) => entry.parent === domainId && entry.enabled
-  );
-}
-
-export function isFineDomainEligibleForWinning(domainId: string): boolean {
-  if (!domainId || domainId === 'general') {
-    return false;
-  }
-  if (!isValidLLMDomain(domainId)) {
-    return false;
-  }
-  return !isExpandableCoarseDomain(domainId);
+  const registry = getRuntimeDomainRegistry();
+  return (registry.coarseToFineMap[domainId]?.length ?? 0) > 0;
 }

@@ -1,12 +1,10 @@
 /**
- * Recover V5 — window-level TopK score + DomainBoost (Final Freeze Spec §3).
+ * Recover V5 — window-level TopK score (Context Prior moved to Vote-after ReRank).
  */
 
 import { scorePinyinSimilarity } from './phonetic/pinyin';
 import type { HotwordEntry } from './hotword-types';
-import { computeDomainBoost, type DomainBoostContext } from './domain-boost-calculator';
 import type { ActiveLexiconProfileSnapshot } from '../session-runtime/types';
-import { defaultGeneralProfile } from '../lexicon-v2/profile-registry';
 
 export type RecallCandidateKind =
   | 'exact_base'
@@ -22,7 +20,6 @@ export type CandidateScoreInput = {
   phoneticScore?: number;
   profile?: ActiveLexiconProfileSnapshot;
   recallCandidateKind?: RecallCandidateKind;
-  domainBoostContext?: DomainBoostContext;
 };
 
 export type CandidateScoreBreakdown = {
@@ -100,16 +97,11 @@ export function hotwordDomains(entry: HotwordEntry): string[] {
 
 export function computeCandidateScoreBreakdown(input: CandidateScoreInput): CandidateScoreBreakdown {
   const { hotword, windowSyllables, windowText } = input;
-  const profile = input.profile ?? defaultGeneralProfile();
   const phoneticSimilarity =
     input.phoneticScore ?? scorePinyinSimilarity(windowSyllables, hotword.pinyin);
   const exactLengthBonus =
     windowText.length === hotword.word.length && windowText.length > 0 ? EXACT_LENGTH_BONUS : 0;
-  const domainBoost = computeDomainBoost(
-    profile,
-    hotwordDomains(hotword),
-    input.domainBoostContext
-  );
+  const domainBoost = 0;
   const editDistancePenalty = computeEditDistancePenalty(windowText, hotword.word);
   const recallCandidateKind = input.recallCandidateKind;
   const fuzzyPenalty = recallCandidateKind ? recallKindFuzzyPenalty(recallCandidateKind) : 0;

@@ -16,6 +16,10 @@ import {
   type LexiconRuntimeV2State,
   type ParentTermNgramRow,
 } from './lexicon-types-v2';
+import {
+  installRuntimeDomainRegistry,
+  resetRuntimeDomainRegistryForTest,
+} from './runtime-domain-registry';
 
 type TierRow = {
   id: string;
@@ -315,7 +319,13 @@ export class LexiconRuntimeV2 {
           ...(countTerm != null ? { term: countTerm } : {}),
           ...(countTags != null ? { termDomainTags: countTags } : {}),
         },
+        domainAvailability: manifest.domainAvailability,
+        domainHierarchyVersion: manifest.domainHierarchyVersion,
       };
+
+      if (isLexiconV3FiveTableV2Manifest(manifest.schemaVersion) && this.db) {
+        installRuntimeDomainRegistry(this.db, manifest);
+      }
 
       logger.info(
         {
@@ -663,6 +673,7 @@ export class LexiconRuntimeV2 {
     this.bucketCache.clear();
     this.manifest = null;
     this.state = { status: 'missing' };
+    resetRuntimeDomainRegistryForTest();
   }
 
   private closeDbOnly(): void {

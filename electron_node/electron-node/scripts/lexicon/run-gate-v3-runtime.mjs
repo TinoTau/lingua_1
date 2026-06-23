@@ -4,6 +4,7 @@
  */
 import fs from 'fs';
 import path from 'path';
+import Database from 'better-sqlite3';
 import {
   RUNTIME_MANIFEST,
   RUNTIME_SQLITE,
@@ -23,6 +24,36 @@ const failures = [];
 function fail(msg) {
   failures.push(msg);
   console.error('[lexicon:gate:v3-runtime] FAIL:', msg);
+}
+
+function readDomainAvailabilityFromSqlite(sqlitePath) {
+  const db = new Database(sqlitePath, { readonly: true });
+  const rows = db
+    .prepare('SELECT domain_id, COUNT(*) AS c FROM term_domain_tags GROUP BY domain_id ORDER BY domain_id')
+    .all();
+  db.close();
+  const out = {};
+  for (const row of rows) {
+    out[row.domain_id] = row.c;
+  }
+  return out;
+}
+
+function domainAvailabilityEqual(a, b) {
+  const keysA = Object.keys(a ?? {}).sort();
+  const keysB = Object.keys(b ?? {}).sort();
+  if (keysA.length !== keysB.length) {
+    return false;
+  }
+  for (let i = 0; i < keysA.length; i += 1) {
+    if (keysA[i] !== keysB[i]) {
+      return false;
+    }
+    if (a[keysA[i]] !== b[keysB[i]]) {
+      return false;
+    }
+  }
+  return true;
 }
 
 const forbidden = [
@@ -79,6 +110,21 @@ if (failures.length === 0) {
   }
   if (stats.ngramsCount != null && stats.ngramsCount !== t.ngrams) {
     fail(`stats.ngramsCount ${stats.ngramsCount} != manifest.tables.ngrams ${t.ngrams}`);
+  }
+
+  if (!stats.domainAvailability || typeof stats.domainAvailability !== 'object') {
+    fail('stats.domainAvailability missing (BG-02)');
+  }
+  if (!manifest.domainAvailability || typeof manifest.domainAvailability !== 'object') {
+    fail('manifest.domainAvailability missing (BG-03)');
+  }
+
+  const sqliteAvailability = readDomainAvailabilityFromSqlite(files.sqlitePath);
+  if (!domainAvailabilityEqual(manifest.domainAvailability, sqliteAvailability)) {
+    fail('manifest.domainAvailability != sqlite term_domain_tags (BG-03)');
+  }
+  if (!domainAvailabilityEqual(stats.domainAvailability, sqliteAvailability)) {
+    fail('stats.domainAvailability != sqlite term_domain_tags (BG-03)');
   }
 }
 

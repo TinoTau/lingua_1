@@ -1,0 +1,186 @@
+{
+  "batch_meta": {
+    "timestamp": "2026-06-23T12:52:47.178Z",
+    "evaluated": 109,
+    "wall_clock_sec": 906,
+    "stoppedReason": "deadline"
+  },
+  "contract": {
+    "evaluated": 109,
+    "pass": 108,
+    "fail": 1,
+    "skip": 0,
+    "wall_clock_sec": 906,
+    "pipeline_ok_rate": 0.9908256880733946,
+    "fw_triggered_count": 108,
+    "fw_applied_case_count": 19,
+    "text_changed_count": 19,
+    "lexicon_runtime_ok_count": 108,
+    "asr_service_id_distribution": {
+      "faster-whisper-vad": 108,
+      "unknown": 1
+    }
+  },
+  "quality": {
+    "avg_cer_raw": 0.2442,
+    "avg_cer_final": 0.2349,
+    "median_cer_final": 0.2,
+    "p95_cer_final": 0.56,
+    "exact_match_final": 14,
+    "fw_improved_cases": 13,
+    "fw_degraded_cases": 1
+  },
+  "perf": {
+    "pipeline_ms": {
+      "avg": 7969,
+      "p50": 6777,
+      "p95": 12867,
+      "max": 23940
+    },
+    "asr_warmup_ms": 14959,
+    "domainAssemblyMs": {
+      "avg": 0.407,
+      "p50": 0,
+      "p95": 1,
+      "max": 24
+    }
+  },
+  "context_prior": {
+    "contextPriorAppliedRate": 0,
+    "contextPriorAppliedCount": 0,
+    "contextPriorDomain_dist": {},
+    "skippedReasonCounts": {
+      "general_or_null_prior": 30,
+      "insufficient_evidence": 78
+    },
+    "multiplierMin": null,
+    "multiplierMax": null,
+    "multiplierMinAvg": 0,
+    "multiplierMaxAvg": 0,
+    "utteranceDomain_dist": {
+      "coffee": 16,
+      "general": 79,
+      "tourism_transport": 3,
+      "bakery": 1,
+      "food_order": 4,
+      "tourism_hotel": 6
+    },
+    "recallScopeSource_dist": {
+      "available": 108
+    }
+  },
+  "samples": [
+    {
+      "id": "d001",
+      "scenario": "cafe",
+      "ref": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "raw_asr": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "final_asr": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "cer_final": 0.3704,
+      "utteranceDomain": "coffee",
+      "contextPriorDomain": null,
+      "contextPriorApplied": false,
+      "contextPriorSkippedReason": "general_or_null_prior",
+      "contextPriorMultiplierMin": null,
+      "contextPriorMultiplierMax": null,
+      "domainAssemblyMs": 1,
+      "recallScopeSource": "available",
+      "fw_applied_count": 0,
+      "pipeline_ms": 13691,
+      "text_changed": false
+    },
+    {
+      "id": "d004",
+      "scenario": "meeting",
+      "ref": "小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+      "raw_asr": "小陈客户反馈翻译引擎接口包错 我们能 不能加緩存下午3點前把結論發群裡",
+      "final_asr": "小陈客户反馈翻译引擎接口包错 我们能 不能加緩存下午3點前把結論發群裡",
+      "cer_final": 0.2424,
+      "utteranceDomain": "general",
+      "contextPriorDomain": null,
+      "contextPriorApplied": false,
+      "contextPriorSkippedReason": "insufficient_evidence",
+      "contextPriorMultiplierMin": null,
+      "contextPriorMultiplierMax": null,
+      "domainAssemblyMs": 0,
+      "recallScopeSource": "available",
+      "fw_applied_count": 0,
+      "pipeline_ms": 10220,
+      "text_changed": false
+    },
+    {
+      "id": "d031",
+      "scenario": "hotel",
+      "ref": "我预订的是大床房，能安排安静一点的楼层吗？",
+      "raw_asr": "我预定的是搭床房能安排安静一点的楼层吗",
+      "final_asr": "我预定的是搭床房能安排安静一点的楼层吗",
+      "cer_final": 0.1053,
+      "utteranceDomain": "tourism_hotel",
+      "contextPriorDomain": null,
+      "contextPriorApplied": false,
+      "contextPriorSkippedReason": "general_or_null_prior",
+      "contextPriorMultiplierMin": null,
+      "contextPriorMultiplierMax": null,
+      "domainAssemblyMs": 1,
+      "recallScopeSource": "available",
+      "fw_applied_count": 0,
+      "pipeline_ms": 4678,
+      "text_changed": false
+    },
+    {
+      "id": "d046",
+      "scenario": "cafe",
+      "ref": "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？",
+      "raw_asr": "你好,我想點一杯卡布奇諾中貝珍長糖,順便溫習一下 今天有知识蛋糕吗?",
+      "final_asr": "你好,我想點一杯卡布奇诺中貝珍長糖,順便溫洗衣下 今天有知识蛋糕吗?",
+      "cer_final": 0.3448,
+      "utteranceDomain": "coffee",
+      "contextPriorDomain": null,
+      "contextPriorApplied": false,
+      "contextPriorSkippedReason": "general_or_null_prior",
+      "contextPriorMultiplierMin": null,
+      "contextPriorMultiplierMax": null,
+      "domainAssemblyMs": 0,
+      "recallScopeSource": "available",
+      "fw_applied_count": 2,
+      "pipeline_ms": 9994,
+      "text_changed": true
+    },
+    {
+      "id": "d052",
+      "scenario": "taxi",
+      "ref": "师傅，去浦东张江，走延安路高架。我赶九点半的会，要是堵车您提前跟我说。",
+      "raw_asr": "市府去浦東張江走沿岸路高架 下午4点半的回邀试赌车 您提前跟我说",
+      "final_asr": "市府去浦東張江走沿岸路高架 下午4点半的回邀试赌车 您提前跟我说",
+      "cer_final": 0.4333,
+      "utteranceDomain": "general",
+      "contextPriorDomain": null,
+      "contextPriorApplied": false,
+      "contextPriorSkippedReason": "insufficient_evidence",
+      "contextPriorMultiplierMin": null,
+      "contextPriorMultiplierMax": null,
+      "domainAssemblyMs": 0,
+      "recallScopeSource": "available",
+      "fw_applied_count": 0,
+      "pipeline_ms": 12867,
+      "text_changed": false
+    },
+    {
+      "id": "d067",
+      "scenario": "customer_service",
+      "ref": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+      "raw_asr": "",
+      "final_asr": "",
+      "cer_final": 1,
+      "utteranceDomain": "general",
+      "contextPriorDomain": null,
+      "contextPriorApplied": false,
+      "contextPriorSkippedReason": null,
+      "contextPriorMultiplierMin": null,
+      "contextPriorMultiplierMax": null,
+      "domainAssemblyMs": null,
+      "recallScopeSource": null,
+      "fw_applied_count": 0
+    }
+  ]
+}

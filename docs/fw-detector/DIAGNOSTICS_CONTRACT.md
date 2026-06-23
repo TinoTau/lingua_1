@@ -23,6 +23,51 @@
 
 ---
 
+## DSU Runtime Diagnostics（Domain Source Unification · Frozen 2026-06-23）
+
+**代码：** `fw-detector/fw-runtime-diag.ts` · `fw-detector/types.ts`（`FwDetectorRuntimeDiag`）  
+**权威：** [DOMAIN_SOURCE_UNIFICATION.md](./DOMAIN_SOURCE_UNIFICATION.md)
+
+Job extra / runtime diag 中与 Domain SSOT 相关的字段（2026-06-23 冻结）：
+
+| 字段 | 类型 | 语义 |
+|------|------|------|
+| `enabledDomains` | `string[]` | CFG-01 policy 输入（`fw-config.enabledDomains`）；默认 `[]` |
+| `availableFineDomains` | `string[]?` | REG-01 · `DISTINCT term_domain_tags.domain_id` |
+| `availableCoarseDomains` | `string[]?` | REG-02 · Registry 派生粗域集 |
+| `llmAllowedDomains` | `string[]?` | REG-03 · LLM 可输出粗域（及允许叶域策略） |
+| `recallDomainScope` | `string[]?` | RS-03A 解析后的 fine recall SQL scope |
+| `recallScopeSource` | `'available' \| 'policy' \| 'job_override'?` | scope 来源：`[]` policy → `available` |
+| `domainHierarchyVersion` | `string \| null?` | REG-04 · manifest `domainHierarchyVersion` |
+
+**说明：** 上表字段 **仅观测**；不得用于反向驱动 pick / vote / rerank 逻辑变更。旧名 `recallEnabledFineDomains` 见 `DOMAIN_RECALL.md` §12（已 supersede，等价于 `recallDomainScope`）。
+
+---
+
+## Context Prior Diagnostics（Frozen · 2026-06-23）
+
+**代码：** `fw-detector/fw-runtime-diag.ts` · `fw-detector/types.ts` · `span-assembly-v4-orchestrator.ts`  
+**权威：** [CONTEXT_PRIOR.md](./CONTEXT_PRIOR.md)
+
+### Runtime（`FwDetectorRuntimeDiag`）
+
+| 字段 | 类型 | 语义 |
+|------|------|------|
+| `contextPriorDomain` | `string \| null?` | 生效 coarse prior；`general`/空 → `null` |
+| `contextPriorApplied` | `boolean?` | 本句是否施加 Context Prior |
+| `contextPriorSkippedReason` | `string?` | skip 原因（applied 时为 undefined） |
+
+### SpanAssemblyV4（`SpanAssemblyV4Diagnostics`）
+
+| 字段 | 类型 | 语义 |
+|------|------|------|
+| `contextPriorMultiplierMin` | `number?` | 句内 eligible 候选乘子最小值 |
+| `contextPriorMultiplierMax` | `number?` | 句内 eligible 候选乘子最大值 |
+
+**说明：** 标准 Dialog200 若未注入 `profilePrimaryDomain`，`contextPriorApplied` 可为 **0**，属于正常 skip（`general_or_null_prior` 或 `insufficient_evidence`）。完整 CP 激活验收见 Activation Test Report。
+
+---
+
 ## 2. 是否足够定位问题
 
 | 问题类型 | 所需字段 | 覆盖 |

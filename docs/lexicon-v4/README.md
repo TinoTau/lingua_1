@@ -24,6 +24,7 @@
 | 文档 | 路径 |
 |------|------|
 | Schema V2 合约 | [`electron_node/lexicon-assets/docs/SCHEMA_V2.md`](../../electron_node/lexicon-assets/docs/SCHEMA_V2.md) |
+| 导入与门禁 | [`electron_node/lexicon-assets/docs/IMPORT_AND_GATE.md`](../../electron_node/lexicon-assets/docs/IMPORT_AND_GATE.md) |
 | 资产 README | [`electron_node/lexicon-assets/docs/README.md`](../../electron_node/lexicon-assets/docs/README.md) |
 | Multidomain seed | `electron_node/docs/lexicon-assets/.../domain_patch_multidomain_v1/entries.jsonl` |
 

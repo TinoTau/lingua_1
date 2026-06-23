@@ -3,7 +3,7 @@
  */
 
 import logger from '../logger';
-import { loadLexiconProfileRegistry } from './profile-registry';
+import { buildLlmAllowedDomainPayload } from './runtime-domain-registry';
 import { getLexiconV2CpuWorkerConfig, isLexiconV2Enabled } from './lexicon-v2-config';
 import { recordWarmupResult } from './intent-runtime-metrics';
 import { setSkipFirstRunHealthCheck } from './cpu-llm-model-runner';
@@ -24,7 +24,7 @@ export function resetIntentWarmupForTest(): void {
 
 function buildWarmupPayload() {
   const cfg = getLexiconV2CpuWorkerConfig();
-  const allowedDomains = loadLexiconProfileRegistry().filter((d) => d.enabled && d.allowLLMSelect);
+  const allowedDomains = buildLlmAllowedDomainPayload();
   return {
     sessionId: WARMUP_SESSION_ID,
     currentPrimary: 'general',

@@ -9,6 +9,7 @@ import { getLexiconSessionIntentFromContext } from '../session-runtime/turn-prof
 import type { JobContext } from '../pipeline/context/job-context';
 import { applyFwSpanReplacements } from './apply-span-replacements';
 import type { FwDetectorRuntimeConfig } from './fw-config';
+import { mergeContextPriorIntoRuntimeDiag } from './fw-runtime-diag';
 import type { FwDetectorRuntimeDiag, FwDetectorResult, FwSpanDiagnostics } from './types';
 import { loadPinyinImeV2Dictionaries, resolvePinyinImeV2DictDir } from './pinyin-ime-v2/pinyin-ime-v2-dict-load';
 import { loadPinyinImeV2RuntimeConfig } from './pinyin-ime-v2/pinyin-ime-v2-config';
@@ -280,7 +281,11 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
     pipelinePath: 'v4',
     configSnapshot,
     summary,
-    runtime: runtimeDiagBase,
+    runtime: mergeContextPriorIntoRuntimeDiag(
+      runtimeDiagBase,
+      profile.primaryDomain,
+      assembly.contextPriorStats
+    ),
     replacements: decision.replacements,
     spans: decision.spans,
     spanAssemblyV4: {
