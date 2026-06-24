@@ -125,6 +125,30 @@ E2E 使用 `--bundle-dir` 临时目录；生产默认写 v3 路径。
 - `recall-span-topk-v2.ts`、四表 schema、KenLM gate 语义
 - `fw-detector/` 主链拓扑（IME 见 [pinyin-v2/ARCHITECTURE.md](../pinyin-v2/ARCHITECTURE.md)）
 
+### 6.1 Alias Ownership Contract V1.0.0（2026-06-24 冻结）
+
+**SSOT：** [ALIAS_OWNERSHIP_CONTRACT_FROZEN_V1_0_0.md](./ALIAS_OWNERSHIP_CONTRACT_FROZEN_V1_0_0.md)
+
+| 层 | 职责 |
+|----|------|
+| **Alias** (`is_alias=1`) | 实体规范化：简繁 · 中英 · 品牌 · 实体写法 · 缩写 |
+| **Pinyin Recall** | 同音字恢复（后选→候选、像蔡→香菜、告诉→高速） |
+| **Tone Recall** | 声调恢复（少病→少冰、大悲→大杯） |
+| **KenLM** | 句级选择 |
+
+**禁止：** ASR 同音/近音混淆、tone 错字、无 `alias_type` 的裸 `aliases[]`。
+
+**Patch Build Gate：**
+
+```text
+scan-patch-granularity → scan-alias-legality → apply → lexicon:gate:v3-runtime
+```
+
+```powershell
+npm run lexicon:patch-build-gate -- scripts/lexicon/expansion-v1_1/patches/<patch>.json
+npm run lexicon:scan-alias-legality:test
+```
+
 ---
 
 ## 7. 职责划分
@@ -202,3 +226,4 @@ npm run test:fw-detector
 |------|------|
 | 2026-06-01 | V3.1 SSOT 初版 |
 | 2026-06-03 | 合并审计/测试报告入 ARCHITECTURE；删除过期 FW 专项审计文档 |
+| 2026-06-24 | Alias Ownership Contract V1.0.0 冻结；`scan-alias-legality` Patch Build Gate |

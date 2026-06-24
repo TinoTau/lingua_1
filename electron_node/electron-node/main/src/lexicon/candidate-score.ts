@@ -1,5 +1,6 @@
 /**
  * Recover V5 — window-level TopK score (Context Prior moved to Vote-after ReRank).
+ * Primary score excludes edit distance (tie-breaker only per V1.2).
  */
 
 import { scorePinyinSimilarity } from './phonetic/pinyin';
@@ -116,6 +117,7 @@ export function computeCandidateScoreBreakdown(input: CandidateScoreInput): Cand
   };
 }
 
+/** Primary recall score — edit distance excluded (tie-breaker only per V1.2). */
 export function computeCandidateScore(input: CandidateScoreInput): number {
   const b = computeCandidateScoreBreakdown(input);
   return (
@@ -123,7 +125,32 @@ export function computeCandidateScore(input: CandidateScoreInput): number {
     b.phoneticSimilarity +
     b.exactLengthBonus +
     b.domainBoost -
-    b.editDistancePenalty -
     b.fuzzyPenalty
   );
+}
+
+export function isEditDistanceTieBreakEligible(kind?: RecallCandidateKind): boolean {
+  return kind !== 'fuzzy_plain' && kind !== 'fuzzy_plain_domain';
+}
+
+export type RecallScoreTieBreakable = {
+  candidateScore: number;
+  candidateScoreBreakdown: CandidateScoreBreakdown;
+  recallCandidateKind?: RecallCandidateKind;
+};
+
+/** Same pinyin_key bucket: score desc, then editDistance asc (non-fuzzy only). */
+export function compareRecallHitsPrimaryScore(a: RecallScoreTieBreakable, b: RecallScoreTieBreakable): number {
+  if (b.candidateScore !== a.candidateScore) {
+    return b.candidateScore - a.candidateScore;
+  }
+  const kindA = a.recallCandidateKind ?? a.candidateScoreBreakdown.recallCandidateKind;
+  const kindB = b.recallCandidateKind ?? b.candidateScoreBreakdown.recallCandidateKind;
+  const edA = isEditDistanceTieBreakEligible(kindA)
+    ? a.candidateScoreBreakdown.editDistancePenalty
+    : Number.POSITIVE_INFINITY;
+  const edB = isEditDistanceTieBreakEligible(kindB)
+    ? b.candidateScoreBreakdown.editDistancePenalty
+    : Number.POSITIVE_INFINITY;
+  return edA - edB;
 }

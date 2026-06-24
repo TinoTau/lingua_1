@@ -3,7 +3,7 @@ const base = require('./jest.config.js');
 /** Lexicon 单测（不含 better-sqlite3 / Electron runtime 用例；节点验收用 dialog_200） */
 module.exports = {
   ...base,
-  testMatch: ['**/main/src/lexicon/**/*.test.ts'],
+  testMatch: ['**/main/src/lexicon/**/*.test.ts', '**/main/src/lexicon-patch-v4/**/*.test.ts'],
   testPathIgnorePatterns: [
     ...(base.testPathIgnorePatterns || []),
     'lexicon-runtime.test.ts',

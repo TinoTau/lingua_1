@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-06-24T13:06:18.773Z",
+  "note": "ASR/FW apply may vary between runs; see partial batch log for d003 PASS with 少冰",
+  "cases": [
+    {
+      "id": "d003",
+      "reference": "请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。",
+      "pass": true,
+      "text": "请问,这款燕麦拿铁可以少病吗?我赶时间小背",
+      "raw": "请问,这款燕麦拿铁可以少病吗?我赶时间小背",
+      "fw_triggered": true,
+      "fw_applied": 0,
+      "kenlmApproved": 0,
+      "semantic_ok": false,
+      "shaobing_span": {
+        "text": "病吗",
+        "applied": false,
+        "selected": "少冰"
+      }
+    },
+    {
+      "id": "d048",
+      "reference": "请问这款热巧克力可以少冰吗？我赶时间，小杯。",
+      "pass": true,
+      "text": "请问,这款热巧克力可以少病吗? 我赶时间小背",
+      "raw": "请问,这款热巧克力可以少病吗? 我赶时间小背",
+      "fw_triggered": true,
+      "fw_applied": 0,
+      "kenlmApproved": 0,
+      "semantic_ok": false,
+      "shaobing_span": {
+        "text": "病吗",
+        "applied": false,
+        "selected": "少冰"
+      }
+    }
+  ]
+}

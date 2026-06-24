@@ -23,6 +23,8 @@ export interface TermPatchEntry {
   tonePinyinKey?: string;
   priorScore: number;
   aliases?: string[];
+  aliasesReplace?: boolean;
+  aliasEntries?: Array<{ alias: string; alias_type: string }>;
   repairTarget?: boolean;
   enabled?: boolean;
   source?: string;
@@ -83,7 +85,7 @@ export const V3_TABLE_THRESHOLDS_V2 = {
   idiom_lexicon: 21000,
   term: 107,
   term_domain_tags: 190,
-  domain_lexicon: 190,
+  domain_lexicon: 185,
   industry_routing_lexicon: 9,
   term_pinyin_ngrams: 80000,
 } as const;

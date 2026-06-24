@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-06-24T05:31:15.766Z",
+  "batch_timestamp": "2026-06-24T05:14:05.501Z",
+  "evaluated": 200,
+  "quality": {
+    "avg_cer_raw": 0.2657,
+    "avg_cer_final": 0.2197,
+    "exact_match_final": 28,
+    "fw_improved_cases": 44,
+    "fw_degraded_cases": 4
+  },
+  "contract": {
+    "evaluated": 200,
+    "pass": 200,
+    "fail": 0,
+    "skip": 0,
+    "wall_clock_sec": 1001,
+    "pipeline_ok_rate": 1,
+    "fw_triggered_count": 200,
+    "fw_applied_case_count": 55,
+    "text_changed_count": 56,
+    "lexicon_runtime_ok_count": 200,
+    "asr_service_id_distribution": {
+      "faster-whisper-vad": 200
+    }
+  },
+  "stoppedReason": "completed_all"
+}

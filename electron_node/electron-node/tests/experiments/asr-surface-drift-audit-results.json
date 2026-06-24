@@ -1,0 +1,2382 @@
+{
+  "meta": {
+    "timestamp": "2026-06-24T03:34:21.386Z",
+    "batch": "D:\\Programs\\github\\lingua_1\\electron_node\\electron-node\\tests\\lexicon-expansion-v1_1-dialog200-batch-result.json",
+    "failureDefinition": "improved=false AND finalCer>0"
+  },
+  "summary": {
+    "total": 200,
+    "exact": 29,
+    "improved": 45,
+    "failures": 130,
+    "aliasReachableInFailures": 21,
+    "aliasUnreachableInFailures": 3,
+    "noKnownAliasTarget": 106,
+    "rootCauseCounts": {
+      "D": 109,
+      "E": 21
+    },
+    "driftTypeCounts": {
+      "D2": 90,
+      "D1": 14,
+      "D5": 16,
+      "D3": 9,
+      "D4": 1
+    },
+    "asrSurfaceDominated": 109,
+    "asrSurfacePct": 83.8,
+    "expansionRoi": {
+      "total_failures": 130,
+      "alias_recoverable_surface": 21,
+      "recall_already_has_canonical": 6,
+      "lexicon_recoverable": 21,
+      "asr_blocked": 109,
+      "theoretical_lexicon_ceiling": 15
+    },
+    "spanRecoverability": {
+      "true": 1,
+      "partial": 9,
+      "false": 120
+    }
+  },
+  "failures": [
+    {
+      "id": "d004",
+      "scenario": "meeting",
+      "ref": "小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+      "raw": "小陈客户反馈翻译引擎接口包错 我们能 不能加緩存下午3點前把結論發群裡",
+      "final": "小陈客户反馈翻译引擎接口包错 我们能 不能加緩存下午3點前把結論發群裡",
+      "finalCer": 0.2424,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d005",
+      "scenario": "meeting",
+      "ref": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+      "raw": "今天德站会献过一下订单 中台进度内存占用高者快 需要先留保护大家看一下风险",
+      "final": "今天德站会献过一下订单 中台进度内存占用高者快 需要先留保护大家看一下风险",
+      "finalCer": 0.1714,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d006",
+      "scenario": "meeting",
+      "ref": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。",
+      "raw": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下",
+      "final": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下",
+      "finalCer": 0.2143,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d007",
+      "scenario": "taxi",
+      "ref": "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+      "raw": "市富曲仲觀村軟件遠走機場告訴我幹 9点半的回药师赌车 您提前跟我说",
+      "final": "市富曲仲觀村軟件遠走機場告訴我幹 9点半的回药师赌车 您提前跟我说",
+      "finalCer": 0.5484,
+      "drift": {
+        "type": "D1",
+        "source": "homophone:高速→告诉",
+        "severity": "Medium"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d008",
+      "scenario": "taxi",
+      "ref": "麻烦送我到国贸三期南门，大概多久能到？我十点十分有个电话会。",
+      "raw": "麻烦送我到国贸三七南门大盖多久能到? 我十点十 10分有隔電話會",
+      "final": "麻烦送我到国贸三七南门大概多久能到? 我试点十 10分有隔電話會",
+      "finalCer": 0.2963,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d009",
+      "scenario": "taxi",
+      "ref": "去望京SOHO，不走四环可以吗？那边现在堵不堵？",
+      "raw": "去望金丝和不走丝环,可以吗? 那边现在赌不赌?",
+      "final": "去望金丝和不走丝环,可以吗? 那边现在赌不赌?",
+      "finalCer": 0.381,
+      "drift": {
+        "type": "D5",
+        "source": "structural",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d013",
+      "scenario": "shopping",
+      "ref": "这件外套能试穿吗？我穿中码。买两件有没有折扣？",
+      "raw": "这件外套能试穿吗?我串中码,买两件有没有折扣?",
+      "final": "这件外套能试穿吗?我串中码,买两件有没有折扣?",
+      "finalCer": 0.05,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d014",
+      "scenario": "shopping",
+      "ref": "请问这双鞋有四十码吗？不合适三天内可以退换吧？",
+      "raw": "请问,这双鞋是否有相似的? 不合是三天内可以推换吧",
+      "final": "请问,这双鞋是否有相似的? 不合是三天内可以推换吧",
+      "finalCer": 0.381,
+      "drift": {
+        "type": "D5",
+        "source": "structural",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d016",
+      "scenario": "friend",
+      "ref": "周末要不要去江边骑行？天气预报说周日多云，记得带水。",
+      "raw": "周末要上班了 不要去江边骑行 天气预报说 周日多云记得带水",
+      "final": "周末要上班了 不要去江边骑行 天气预报说 周日多云记得带水",
+      "finalCer": 0.1304,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d017",
+      "scenario": "friend",
+      "ref": "晚上一起吃饭吗？我知道一家川菜不错，大概七点到。",
+      "raw": "晚上一起吃饭嘛 我知道一家川菜 不错大概起点到",
+      "final": "晚上一起吃饭嘛 我知道一家川菜 不错大概起点到",
+      "finalCer": 0.0952,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d019",
+      "scenario": "tech_deploy",
+      "ref": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+      "raw": "今天,我们团队 要讨论候选生成相关的候选生成流程和上限计划安排请研发一起评估风险",
+      "final": "今天,我们团队 要讨论候选生成相关的候选生成流程和上限计划安排请研发一起评估风险",
+      "finalCer": 0.1579,
+      "drift": {
+        "type": "D1",
+        "source": "homophone:后选→候選",
+        "severity": "Medium"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d020",
+      "scenario": "tech_deploy",
+      "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+      "raw": "这次发布我们现对其商线计划窗口后选生成模块需要连掉别漏掉回归",
+      "final": "这次发布我们现对其商线计划窗口后选生成模块需要连掉别漏掉回归",
+      "finalCer": 0.2,
+      "drift": {
+        "type": "D3",
+        "source": "word_drift:上线计划",
+        "severity": "High"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d021",
+      "scenario": "tech_deploy",
+      "ref": "会上提到候选生成链路要加监控，上线计划文档我下午更新一版。",
+      "raw": "会上提到候选生成炼鹿 要加剑口 空上限期画文 等我下午更新一版",
+      "final": "会上提到候选生成炼鹿 要加剑口 空上限期画文 等我下午更新一版",
+      "finalCer": 0.3333,
+      "drift": {
+        "type": "D3",
+        "source": "word_drift:上线计划",
+        "severity": "High"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d022",
+      "scenario": "customer_service",
+      "ref": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+      "raw": "您好,我定,但顯示 但物流三天每更新能幫我查一下嗎?",
+      "final": "您好,我定,但顯示 但物流三天每更新能幫我查一下嗎?",
+      "finalCer": 0.36,
+      "drift": {
+        "type": "D5",
+        "source": "structural",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d024",
+      "scenario": "customer_service",
+      "ref": "发票抬头开错了，能重新开具电子发票吗？",
+      "raw": "发票台头开错了能重新开局电子发票吗",
+      "final": "发票台头开错了能重新开局电子发票吗",
+      "finalCer": 0.1176,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d026",
+      "scenario": "interview",
+      "ref": "你如何看待跨团队协作？遇到需求变更一般怎么处理？",
+      "raw": "你如何看待夸团队写作,遇到需求边更一般怎么处理?",
+      "final": "你如何看待夸团队写作,遇到需求边更一般怎么处理?",
+      "finalCer": 0.1364,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d027",
+      "scenario": "interview",
+      "ref": "期望薪资这块我们可以再沟通，你最快什么时候能入职？",
+      "raw": "期望星,自这块我们可以再沟通你最快什么时候能入职",
+      "final": "期望星,自这块我们可以再沟通你最快什么时候能入职",
+      "finalCer": 0.087,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d028",
+      "scenario": "classroom",
+      "ref": "老师，这道题的解题步骤能不能再讲一遍？我没听懂第二点。",
+      "raw": "老师这道题的解题不,周能不能再讲一遍? 我没听过",
+      "final": "老师这道题的解题不,周能不能再讲一遍? 我没听过",
+      "finalCer": 0.25,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d030",
+      "scenario": "classroom",
+      "ref": "请问这门课期末是开卷还是闭卷？重点会划吗？",
+      "raw": "请问这门客期末是开卷还是闭卷? 终点汇化吗?",
+      "final": "请问这门客期末是开卷还是闭卷? 终点汇化吗?",
+      "finalCer": 0.2105,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d031",
+      "scenario": "hotel",
+      "ref": "我预订的是大床房，能安排安静一点的楼层吗？",
+      "raw": "我预定的是搭床房能安排安静一点的楼层吗",
+      "final": "我预定的是搭床房能安排安静一点的楼层吗",
+      "finalCer": 0.1053,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d032",
+      "scenario": "hotel",
+      "ref": "早餐几点开始？退房可以延迟到下午两点吗？",
+      "raw": "早餐几点开始 退房可以延迟到下午2点吗",
+      "final": "早餐几点开始 退房可以延迟到下午2点吗",
+      "finalCer": 0.0556,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d033",
+      "scenario": "hotel",
+      "ref": "房间空调不太制冷，能派人上来看一下吗？",
+      "raw": "房间空调不太至冷能派人上来看一下吗?",
+      "final": "房间空调不太至冷能派人上来看一下吗?",
+      "finalCer": 0.0588,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d034",
+      "scenario": "bank",
+      "ref": "我想开通短信提醒，需要带什么证件？",
+      "raw": "我想,開通短信提醒需要帶什麼證件",
+      "final": "我想,開通短信提醒需要帶什麼證件",
+      "finalCer": 0.2667,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d036",
+      "scenario": "bank",
+      "ref": "请问理财产品的风险等级在哪里查看？",
+      "raw": "请问立财产品的风险等急在哪里查看",
+      "final": "请问立财产品的风险等急在哪里查看",
+      "finalCer": 0.125,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d037",
+      "scenario": "restaurant",
+      "ref": "两位，靠窗有位置吗？不要香菜，微辣就行。",
+      "raw": "两位烤创有位置嘛 不要像蔡薇拉就行",
+      "final": "两位烤创有位置嘛 不要像蔡薇拉就行",
+      "finalCer": 0.4375,
+      "drift": {
+        "type": "D1",
+        "source": "homophone:香菜→像蔡",
+        "severity": "Medium"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d040",
+      "scenario": "gym",
+      "ref": "私教课还剩几次？能帮我约明天晚上七点吗？",
+      "raw": "自教课还剩几次 能帮我约明天晚上7点吗?",
+      "final": "自教课还剩几次 能帮我约明天晚上7点吗?",
+      "finalCer": 0.1111,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d041",
+      "scenario": "gym",
+      "ref": "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+      "raw": "更意識規則要是找不到了前台 能幫忙開一下嗎",
+      "final": "更意識規則要是找不到了前台 能幫忙開一下马",
+      "finalCer": 0.45,
+      "drift": {
+        "type": "D5",
+        "source": "structural",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d042",
+      "scenario": "gym",
+      "ref": "游泳次卡本月月底到期，续费有优惠吗？",
+      "raw": "游泳自卡,本月月底到70非有優惠嗎?",
+      "final": "游泳自卡,本月月底到70非有優惠嗎?",
+      "finalCer": 0.375,
+      "drift": {
+        "type": "D5",
+        "source": "structural",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d044",
+      "scenario": "lexicon_homophone",
+      "ref": "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+      "raw": "这周的上限计划已经确认上限计划评审安排在周四上午",
+      "final": "这周的上限计划已经确认上限计划评审安排在周四上午",
+      "finalCer": 0.125,
+      "drift": {
+        "type": "D1",
+        "source": "homophone:上线计划→上限计划",
+        "severity": "Medium"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d045",
+      "scenario": "lexicon_homophone",
+      "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+      "raw": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說",
+      "final": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說",
+      "finalCer": 0.8,
+      "drift": {
+        "type": "D3",
+        "source": "word_drift:后选",
+        "severity": "High"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d046",
+      "scenario": "cafe",
+      "ref": "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？",
+      "raw": "你好,我想點一杯卡布奇諾中貝珍長糖,順便溫習一下 今天有知识蛋糕吗?",
+      "final": "你好,我想點一杯卡布奇诺中貝珍長糖,順便溫洗衣下 今天有知识蛋糕吗?",
+      "finalCer": 0.3448,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d048",
+      "scenario": "cafe",
+      "ref": "请问这款热巧克力可以少冰吗？我赶时间，小杯。",
+      "raw": "请问,这款热巧克力可以少病吗? 我赶时间小背",
+      "final": "请问,这款热巧克力可以少病吗? 我赶时间小背",
+      "finalCer": 0.1053,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d049",
+      "scenario": "meeting",
+      "ref": "李工，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+      "raw": "立功科户反馈翻译引擎接口报错 我们能不能加缓存下午三点前 把结论发群里",
+      "final": "立功科户反馈翻译引擎接口报错 我们能不能加缓存下午三点前 把结论发群里",
+      "finalCer": 0.0909,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d050",
+      "scenario": "meeting",
+      "ref": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+      "raw": "今天的站會獻過一下訂單 中台進都內存 占用高折块需要限流保护 大家看一下风险",
+      "final": "今天的站會獻過一下訂單 中台進都內存 占用高折块需要限流保护 大家看一下风险",
+      "finalCer": 0.2571,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d051",
+      "scenario": "meeting",
+      "ref": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。",
+      "raw": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下",
+      "final": "跟會員系統相關的訊息 我整理了一版八点前请大家帮忙评审一下",
+      "finalCer": 0.2143,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d054",
+      "scenario": "taxi",
+      "ref": "去杭州西溪，不走三环可以吗？那边现在堵不堵？",
+      "raw": "去杭州系系部走三環 可以嗎?那扁現在賭不賭?",
+      "final": "去杭州系细部走散環 可以嗎?那边线再度不賭?",
+      "finalCer": 0.5263,
+      "drift": {
+        "type": "D5",
+        "source": "structural",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d056",
+      "scenario": "hospital",
+      "ref": "挂号处请问内科还有号吗？我低烧，昨晚开始的。",
+      "raw": "挂号出请问,那刻还有号码,我低哨昨晚开始的",
+      "final": "挂号出请问,那刻还有号码,我低哨昨晚开始的",
+      "finalCer": 0.2632,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d059",
+      "scenario": "shopping",
+      "ref": "请问这双鞋有四十码吗？不合适三天内可以退换吧？",
+      "raw": "请问,这双鞋有40码吗? 不合适的,请问 13天内可以推换吧",
+      "final": "请问,这双鞋有40码吗? 不合适的,请问 13天内可以推换吧",
+      "finalCer": 0.381,
+      "drift": {
+        "type": "D5",
+        "source": "structural",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d060",
+      "scenario": "shopping",
+      "ref": "我想对比一下这两款订单中台的价格，会员日能再减一点吗？",
+      "raw": "我想对比 这两款订单中抬的价格会员日能再减一点吗?",
+      "final": "我想对比 这两款订单中抬的价格会员日能再减一点吗?",
+      "finalCer": 0.12,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d061",
+      "scenario": "friend",
+      "ref": "周末要不要去江边骑行？天气预报说周日多云，记得带水。",
+      "raw": "周末 也不要去江邊騎行 天氣預報說 周日多雲記得帶水",
+      "final": "周末 也不要去江邊騎行 天氣預報說 周日多雲記得帶水",
+      "finalCer": 0.4348,
+      "drift": {
+        "type": "D5",
+        "source": "structural",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d062",
+      "scenario": "friend",
+      "ref": "晚上一起吃饭吗？我知道一家川菜不错，大概七点到。",
+      "raw": "晚上一起吃饭吧 我知道一家川菜 不错大概气点到",
+      "final": "晚上一起吃饭吧 我知道一家川菜 不错大概气点到",
+      "finalCer": 0.0952,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d064",
+      "scenario": "tech_deploy",
+      "ref": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+      "raw": "今天,我们团队要讨论候选生成相关的候选生成流程和上线计划安排请严发一起评估风险",
+      "final": "今天,我们团队要讨论候选生成相关的候选生成流程和上线计划安排请严发一起评估风险",
+      "finalCer": 0.1579,
+      "drift": {
+        "type": "D1",
+        "source": "homophone:后选→候選",
+        "severity": "Medium"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d066",
+      "scenario": "tech_deploy",
+      "ref": "会上提到候选生成链路要加监控，上线计划文档我下午更新一版。",
+      "raw": "会上提到候选生成链路,要加健康 用上限集花纹当我下午更新一版",
+      "final": "会上提到候选生成链路,要加健康 用上限集花纹当我下午更新一版",
+      "finalCer": 0.2963,
+      "drift": {
+        "type": "D3",
+        "source": "word_drift:上线计划",
+        "severity": "High"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d069",
+      "scenario": "customer_service",
+      "ref": "发票抬头开错了，能重新开具电子发票吗？",
+      "raw": "发票抬头开错了能重新开局电子发票吗",
+      "final": "发票抬头开错了能重新开局电子发票吗",
+      "finalCer": 0.0588,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d070",
+      "scenario": "interview",
+      "ref": "请简单介绍一下你上一段项目里负责的核心模块和难点。",
+      "raw": "请简单介绍一下 你上一段视频 项目里负责的核心模块和难点",
+      "final": "请简单介绍一下 你上一段视频 项目里负责的核心模块和难点",
+      "finalCer": 0.0833,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d071",
+      "scenario": "interview",
+      "ref": "你如何看待跨团队协作？遇到需求变更一般怎么处理？",
+      "raw": "你如何看待夸团队协作,遇到需求边更一般怎么处理?",
+      "final": "你如何看待夸团队协作,遇到需求边更一般怎么处理?",
+      "finalCer": 0.0909,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d072",
+      "scenario": "interview",
+      "ref": "期望薪资这块我们可以再沟通，你最快什么时候能入职？",
+      "raw": "期望新自这块我们可以再沟通你最快什么时候能入职",
+      "final": "期望新自这块我们可以再沟通你最快什么时候能入职",
+      "finalCer": 0.087,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d073",
+      "scenario": "classroom",
+      "ref": "老师，这道题的解题步骤能不能再讲一遍？我没听懂第二点。",
+      "raw": "老是這道題的解題步,周能不能解? 我没听懂第二点",
+      "final": "老是這道題的解題步,周能不能解? 我没听懂第二点",
+      "finalCer": 0.375,
+      "drift": {
+        "type": "D5",
+        "source": "structural",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d075",
+      "scenario": "classroom",
+      "ref": "请问这门课期末是开卷还是闭卷？重点会划吗？",
+      "raw": "请问这门客期末是开卷还是闭卷? 终点会话吗?",
+      "final": "请问这门客期末是开卷还是闭卷? 终点会话吗?",
+      "finalCer": 0.1579,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d076",
+      "scenario": "hotel",
+      "ref": "我预订的是大床房，能安排安静一点的楼层吗？",
+      "raw": "我预定的是搭床房能安排安静一点的楼层吗",
+      "final": "我预定的是搭床房能安排安静一点的楼层吗",
+      "finalCer": 0.1053,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d077",
+      "scenario": "hotel",
+      "ref": "早餐几点开始？退房可以延迟到下午两点吗？",
+      "raw": "早餐几点开始?退房可以延迟到下午2点吗?",
+      "final": "早餐几点开始?退房可以延迟到下午2点吗?",
+      "finalCer": 0.0556,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d078",
+      "scenario": "hotel",
+      "ref": "房间空调不太制冷，能派人上来看一下吗？",
+      "raw": "房间空调不太知冷能派人上来看一下吗?",
+      "final": "房间空调不太知冷能派人上来看一下吗?",
+      "finalCer": 0.0588,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d082",
+      "scenario": "restaurant",
+      "ref": "两位，靠窗有位置吗？不要香菜，微辣就行。",
+      "raw": "两位烤创有微纸嘛 不要像蔡薇娜就行",
+      "final": "两位烤创有微纸嘛 不要像蔡薇娜就行",
+      "finalCer": 0.5625,
+      "drift": {
+        "type": "D1",
+        "source": "homophone:香菜→像蔡",
+        "severity": "Medium"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d085",
+      "scenario": "gym",
+      "ref": "私教课还剩几次？能帮我约明天晚上七点吗？",
+      "raw": "私教课还剩几次,能帮我约明天晚上7点吗?",
+      "final": "私教课还剩几次,能帮我约明天晚上7点吗?",
+      "finalCer": 0.0556,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d086",
+      "scenario": "gym",
+      "ref": "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+      "raw": "更易是龟仔钥匙找不到了前台,能帮忙开一下吗?",
+      "final": "更易是龟仔钥匙找不到了前台,能帮忙开一下吗?",
+      "finalCer": 0.2,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d087",
+      "scenario": "gym",
+      "ref": "游泳次卡本月月底到期，续费有优惠吗？",
+      "raw": "游泳刺卡本月月底到期续飞有优惠吗?",
+      "final": "游泳刺卡本月月底到期续飞有优惠吗?",
+      "finalCer": 0.125,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d090",
+      "scenario": "lexicon_homophone",
+      "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+      "raw": "關於後,選生成立 请按上线计划执行有问题群里说",
+      "final": "關於後,選生成立 请按上线计划执行有问题群里说",
+      "finalCer": 0.4,
+      "drift": {
+        "type": "D3",
+        "source": "word_drift:后选",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d092",
+      "scenario": "cafe",
+      "ref": "麻烦帮我做一杯抹茶拿铁带走，大杯就行，谢谢。",
+      "raw": "麻烦帮我做一杯抹茶拿铁带走大 备就行谢谢",
+      "final": "麻烦帮我做一杯抹茶拿铁带走大 备就行谢谢",
+      "finalCer": 0.0526,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d093",
+      "scenario": "cafe",
+      "ref": "请问这款冰美式可以少冰吗？我赶时间，小杯。",
+      "raw": "请问,这款病美是可以少病吗?我赶时间小悲。",
+      "final": "请问,这款病美是可以少病吗?我赶时间小悲。",
+      "finalCer": 0.2222,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d094",
+      "scenario": "meeting",
+      "ref": "小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+      "raw": "小乘客互反馈翻译引擎接口报错 我们能 不能加还存下午3点前把结论发群里",
+      "final": "小乘客互反馈翻译引擎接口报错 我们能 不能加还存下午3点前把结论发群里",
+      "finalCer": 0.1212,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d095",
+      "scenario": "meeting",
+      "ref": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+      "raw": "今天,德占会献过一下订单,中台进都内存占用高着快需要先留保护大家看一下风险",
+      "final": "今天,德占会献过一下订单,中台进都内存占用高着快需要先留保护大家看一下风险",
+      "finalCer": 0.2286,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d096",
+      "scenario": "meeting",
+      "ref": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。",
+      "raw": "跟會員系統相關的需求 我整理了一版八點前請大家幫我 请上网评审一下",
+      "final": "跟會員系統相關的需求 我整理了一版八點前請大家幫我 请上网评审一下",
+      "finalCer": 0.3929,
+      "drift": {
+        "type": "D5",
+        "source": "structural",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d097",
+      "scenario": "taxi",
+      "ref": "师傅，去中关村软件园，走四环。我赶九点半的会，要是堵车您提前跟我说。",
+      "raw": "是付去中官村软件远走私环 我敢就 5點半的回要是賭徹您提前跟我說",
+      "final": "是付去中官村软件远走私环 我敢就 5點半的回要药师堵车提前跟我說",
+      "finalCer": 0.4828,
+      "drift": {
+        "type": "D4",
+        "source": "phrase_partial:中关村",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d098",
+      "scenario": "taxi",
+      "ref": "麻烦送我到国贸三期南门，大概多久能到？我十点十分有个电话会。",
+      "raw": "麻烦送我到国贸三七南门大概多久能到 我10点 十分有隔電話會",
+      "final": "麻烦送我到国贸三七南门大概多久能到 我10点 十分有隔電話會",
+      "finalCer": 0.2593,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d099",
+      "scenario": "taxi",
+      "ref": "去望京SOHO，不走机场高速可以吗？那边现在堵不堵？",
+      "raw": "去望金斯厄布走机场高速可以吗?那边现在赌不赌?",
+      "final": "去望金斯厄布走机场高速可以吗?那边现在赌不赌?",
+      "finalCer": 0.3478,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d101",
+      "scenario": "hospital",
+      "ref": "挂号处请问内科还有号吗？我胃不舒服，昨晚开始的。",
+      "raw": "挂号出请问 内客还有号码 我微不舒服昨晚开始的",
+      "final": "挂号出请问 内客还有号码 我微不舒服昨晚开始的",
+      "finalCer": 0.1905,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d104",
+      "scenario": "shopping",
+      "ref": "请问这双鞋有四十码吗？不合适三天内可以退换吧？",
+      "raw": "请问,这双鞋有40码吗?不合适三天内可以推换吧?",
+      "final": "请问,这双鞋有40码吗?不合适三天内可以推换吧?",
+      "finalCer": 0.1429,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d105",
+      "scenario": "shopping",
+      "ref": "我想对比一下这两款订单中台的价格，会员日能再减一点吗？",
+      "raw": "我想对比 这两款订单中抬的加格会员日,能再减一点吗?",
+      "final": "我想对比 这两款订单中抬的价格会员日,能再见一点吗?",
+      "finalCer": 0.16,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d106",
+      "scenario": "friend",
+      "ref": "周末要不要去江边骑行？天气预报说周日多云，记得带水。",
+      "raw": "周末一 也不要去江边骑行 天气预报说 周日多云记得带水",
+      "final": "周末一 也不要去江边骑行 天气预报说 周日多云记得带水",
+      "finalCer": 0.087,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d107",
+      "scenario": "friend",
+      "ref": "晚上一起吃饭吗？我知道一家川菜不错，大概七点到。",
+      "raw": "晚上一起吃饭嘛 我知道一家川菜 不错大概起点到",
+      "final": "晚上一起吃饭嘛 我知道一家川菜 不错大概起点到",
+      "finalCer": 0.0952,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d108",
+      "scenario": "friend",
+      "ref": "你最近忙不忙？想找你看下手机备份怎么设置。",
+      "raw": "你最近忙不忙,想找你看下手机备分怎么设置",
+      "final": "你最近忙不忙,想找你看下手机备分怎么设置",
+      "finalCer": 0.0526,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d111",
+      "scenario": "tech_deploy",
+      "ref": "会上提到候选生成链路要加监控，上线计划文档我下午更新一版。",
+      "raw": "會上提到候選生陳列祿 姚嘉健 通商限期劃文 当我下午更新一版",
+      "final": "會上提到候選生陳列祿 姚嘉健 通商限期劃文 当我下午更新一版",
+      "finalCer": 0.5185,
+      "drift": {
+        "type": "D3",
+        "source": "word_drift:生成",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d112",
+      "scenario": "customer_service",
+      "ref": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+      "raw": "您好,我定单写示意。 但物流三天没更新能帮我查一下吗?",
+      "final": "您好,我定单写示意。 但物流三天没更新能帮我查一下吗?",
+      "finalCer": 0.2,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d114",
+      "scenario": "customer_service",
+      "ref": "发票抬头开错了，能重新开具电子发票吗？",
+      "raw": "发票台头开错了能重新开具电子发票吗",
+      "final": "发票台头开错了能重新开具电子发票吗",
+      "finalCer": 0.0588,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d116",
+      "scenario": "interview",
+      "ref": "你如何看待跨团队协作？遇到需求变更一般怎么处理？",
+      "raw": "你如何 看待夸团队写作,遇到需求边更一般怎么处理。",
+      "final": "你如何 看待夸团队写作,遇到需求边更一般怎么处理。",
+      "finalCer": 0.1364,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d117",
+      "scenario": "interview",
+      "ref": "期望薪资这块我们可以再沟通，你最快什么时候能入职？",
+      "raw": "期望新自这块我们可以再沟通你最快什么时候能入职",
+      "final": "期望新自这块我们可以再沟通你最快什么时候能入职",
+      "finalCer": 0.087,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d119",
+      "scenario": "classroom",
+      "ref": "作业是下周一下午交吗？可以电子版提交吗？",
+      "raw": "作业是下周一下午叫码,可以电子版提叫码。",
+      "final": "作业是下周一下午叫码,可以电子版提叫码。",
+      "finalCer": 0.2222,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d120",
+      "scenario": "classroom",
+      "ref": "请问这门课期末是开卷还是闭卷？重点会划吗？",
+      "raw": "请问这门客期末是开卷还是闭卷? 终点会话吗?",
+      "final": "请问这门客期末是开卷还是闭卷? 终点会话吗?",
+      "finalCer": 0.1579,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d121",
+      "scenario": "hotel",
+      "ref": "我预订的是大床房，能安排安静一点的楼层吗？",
+      "raw": "我预定的是搭床房能安排安静一点的楼层吗?",
+      "final": "我预定的是搭床房能安排安静一点的楼层吗?",
+      "finalCer": 0.1053,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d122",
+      "scenario": "hotel",
+      "ref": "早餐几点开始？退房可以延迟到下午两点吗？",
+      "raw": "早餐几点开始? 退房可以延迟到下午2点吗?",
+      "final": "早餐几点开始? 退房可以延迟到下午2点吗?",
+      "finalCer": 0.0556,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d123",
+      "scenario": "hotel",
+      "ref": "房间空调不太制冷，能派人上来看一下吗？",
+      "raw": "房间空调不太知冷能派人上来看一下吗?",
+      "final": "房间空调不太知冷能派人上来看一下吗?",
+      "finalCer": 0.0588,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d126",
+      "scenario": "bank",
+      "ref": "请问理财产品的风险等级在哪里查看？",
+      "raw": "请问理财产品的风险等急在哪里查看",
+      "final": "请问理财产品的风险等急在哪里查看",
+      "finalCer": 0.0625,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d127",
+      "scenario": "restaurant",
+      "ref": "两位，靠窗有位置吗？不要香菜，微辣就行。",
+      "raw": "兩位靠窗有位置嗎? 不要像蔡薇拉就行",
+      "final": "兩位靠窗有位置嗎? 不要像蔡薇拉就行",
+      "finalCer": 0.375,
+      "drift": {
+        "type": "D1",
+        "source": "homophone:香菜→像蔡",
+        "severity": "Medium"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d130",
+      "scenario": "gym",
+      "ref": "私教课还剩几次？能帮我约明天晚上七点吗？",
+      "raw": "私教课还剩几次,能帮我约明天晚上7点吗?",
+      "final": "私教课还剩几次,能帮我约明天晚上7点吗?",
+      "finalCer": 0.0556,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d131",
+      "scenario": "gym",
+      "ref": "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+      "raw": "更意識規載要是找不到了前台 能幫忙開一下嗎",
+      "final": "更意識規載要是找不到了前台 能幫忙開一下马",
+      "finalCer": 0.45,
+      "drift": {
+        "type": "D5",
+        "source": "structural",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d132",
+      "scenario": "gym",
+      "ref": "游泳次卡本月月底到期，续费有优惠吗？",
+      "raw": "游泳字卡本月月底到期续飞有优惠吗?",
+      "final": "游泳字卡本月月底到期续飞有优惠吗?",
+      "finalCer": 0.125,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d133",
+      "scenario": "lexicon_homophone",
+      "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+      "raw": "我们下午讨论后 選生成方安線吧,後選生成的接口文當補齊。",
+      "final": "我们下午讨论后 選生成方安線吧,後選生成的接口文當補齊。",
+      "finalCer": 0.44,
+      "drift": {
+        "type": "D1",
+        "source": "homophone:后选→后选",
+        "severity": "Medium"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d134",
+      "scenario": "lexicon_homophone",
+      "ref": "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+      "raw": "这周的商业节目 上限计划已经全任上限计划评审安排在周四上午",
+      "final": "这周的商业节目 上限计划已经全任上限计划评审安排在周四上午",
+      "finalCer": 0.375,
+      "drift": {
+        "type": "D1",
+        "source": "homophone:上线计划→上限计划",
+        "severity": "Medium"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d135",
+      "scenario": "lexicon_homophone",
+      "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+      "raw": "關於後,選生成 和上限计划请按上限计划执行有问题群里说",
+      "final": "關於後,選生成 和上限计划请按上限计划执行有问题群里说",
+      "finalCer": 0.32,
+      "drift": {
+        "type": "D3",
+        "source": "word_drift:后选",
+        "severity": "High"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d137",
+      "scenario": "cafe",
+      "ref": "麻烦帮我做一杯热拿铁带走，大杯就行，谢谢。",
+      "raw": "麻烦帮我做一杯热拿铁带走搭杯就行谢谢",
+      "final": "麻烦帮我做一杯热拿铁带走搭杯就行谢谢",
+      "finalCer": 0.0556,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d138",
+      "scenario": "cafe",
+      "ref": "请问这款美式可以少冰吗？我赶时间，小杯。",
+      "raw": "请问,这款美式可以少病吗?我赶时间小杯",
+      "final": "请问,这款美式可以少病吗?我赶时间小杯",
+      "finalCer": 0.0588,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d140",
+      "scenario": "meeting",
+      "ref": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+      "raw": "今天的戰彙現過一下訂單 中台 京都內存 我们占用高折块需要限流保护大家看一下风险",
+      "final": "今天的戰彙現過一下訂單 中台 京都內存 我们占用高折块需要限流保护大家看一下风险",
+      "finalCer": 0.3429,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d141",
+      "scenario": "meeting",
+      "ref": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。",
+      "raw": "跟會員系統相關的需求,我整理了 在1版8点前请大家帮忙评审一下",
+      "final": "跟會員系统相關的需求,我整理了 在1版8点前请大家大家评审评审",
+      "finalCer": 0.3571,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d143",
+      "scenario": "taxi",
+      "ref": "麻烦送我到深圳南山科技园南门，大概多久能到？我十点十分有个电话会。",
+      "raw": "麻烦送我到深圳南善科机园南门大概多久能到? 我十点时 十分有个电话会",
+      "final": "麻烦送我到深圳南善科技园南门大概多久能到? 我试点时 十分有个电话会",
+      "finalCer": 0.1,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d144",
+      "scenario": "taxi",
+      "ref": "去杭州西溪，不走延安路高架可以吗？那边现在堵不堵？",
+      "raw": "去杭州系 系不走延安路高架可以吗 那便现在赌不赌",
+      "final": "去杭州系 系不走延安路高架可以吗 那便现在赌不赌",
+      "finalCer": 0.2273,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d147",
+      "scenario": "hospital",
+      "ref": "这个检查报告什么时候能出？我咳嗽，需要请假休息吗？",
+      "raw": "这个检查报告什么时候能出 我可所需要请假休息吗",
+      "final": "这个检查报告什么时候能出 我可所需要请假休息吗",
+      "finalCer": 0.0909,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d149",
+      "scenario": "shopping",
+      "ref": "请问这双鞋有四十码吗？不合适三天内可以退换吧？",
+      "raw": "请问,这双鞋有40码吗?不合适三天内可以推换吧?",
+      "final": "请问,这双鞋有40码吗?不合适三天内可以推换吧?",
+      "finalCer": 0.1429,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d150",
+      "scenario": "shopping",
+      "ref": "我想对比一下这两款订单中台的价格，会员日能再减一点吗？",
+      "raw": "我想对比 这两款订单中台的价格会员日能再减一点吗?",
+      "final": "我想对比 这两款订单中台的价格会员日能再减一点吗?",
+      "finalCer": 0.08,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d151",
+      "scenario": "friend",
+      "ref": "周末要不要去江边骑行？天气预报说周日多云，记得带水。",
+      "raw": "周末要不要去降邊騎行 天氣預報說 周日多雲記得帶水",
+      "final": "周末要不要去降邊气性 天氣預報說 周日多雲记得帶水",
+      "finalCer": 0.4348,
+      "drift": {
+        "type": "D5",
+        "source": "structural",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d152",
+      "scenario": "friend",
+      "ref": "晚上一起吃饭吗？我知道一家川菜不错，大概七点到。",
+      "raw": "晚上一起吃饭嘛 我知道一家川菜 不错大概 開啟點到",
+      "final": "晚上一起吃饭嘛 我知道一家川菜 不错大概 開啟點到",
+      "finalCer": 0.1905,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d154",
+      "scenario": "tech_deploy",
+      "ref": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+      "raw": "今天,我们团队要讨论候选生成相关的候选生成流程和上限计划安排请研发一起评估风险",
+      "final": "今天,我们团队要讨论候选生成相关的候选生成流程和上限计划安排请研发一起评估风险",
+      "finalCer": 0.1579,
+      "drift": {
+        "type": "D1",
+        "source": "homophone:后选→候選",
+        "severity": "Medium"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d156",
+      "scenario": "tech_deploy",
+      "ref": "会上提到候选生成链路要加监控，上线计划文档我下午更新一版。",
+      "raw": "會上提到候選生成列入,要加監控 通上限期画文当我下午更新一版",
+      "final": "會上提到候選生成列入,要加監控 通上限期画文当我下午更新一版",
+      "finalCer": 0.3704,
+      "drift": {
+        "type": "D3",
+        "source": "word_drift:上线计划",
+        "severity": "High"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d161",
+      "scenario": "interview",
+      "ref": "你如何看待跨团队协作？遇到需求变更一般怎么处理？",
+      "raw": "你如何看待夸团队写作,遇到需求边更一般怎么处理?",
+      "final": "你如何看待夸团队写作,遇到需求边更一般怎么处理?",
+      "finalCer": 0.1364,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d162",
+      "scenario": "interview",
+      "ref": "期望薪资这块我们可以再沟通，你最快什么时候能入职？",
+      "raw": "期望新,自这块我们可以再沟通你最快什么时候能入职",
+      "final": "期望新,自这块我们可以再沟通你最快什么时候能入职",
+      "finalCer": 0.087,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d163",
+      "scenario": "classroom",
+      "ref": "老师，这道题的解题步骤能不能再讲一遍？我没听懂第二点。",
+      "raw": "老是這道題的解題部 周能不能 我沒聽懂第二點",
+      "final": "老是這道題的解題部 周能不能 我沒聽懂第二點",
+      "finalCer": 0.5417,
+      "drift": {
+        "type": "D5",
+        "source": "structural",
+        "severity": "Extreme"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d164",
+      "scenario": "classroom",
+      "ref": "作业是下周一下午交吗？可以电子版提交吗？",
+      "raw": "作业是下周以下午叫码,可以电子版题叫码",
+      "final": "作业是下周以下午叫码,可以电子版题叫码",
+      "finalCer": 0.3333,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d165",
+      "scenario": "classroom",
+      "ref": "请问这门课期末是开卷还是闭卷？重点会划吗？",
+      "raw": "请问这门客期末是开卷还是闭卷? 终点会话吗?",
+      "final": "请问这门客期末是开卷还是闭卷? 终点会话吗?",
+      "finalCer": 0.1579,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d166",
+      "scenario": "hotel",
+      "ref": "我预订的是大床房，能安排安静一点的楼层吗？",
+      "raw": "我预定的是大床房能安排安静一点的楼层吗?",
+      "final": "我预定的是大床房能安排安静一点的楼层吗?",
+      "finalCer": 0.0526,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d168",
+      "scenario": "hotel",
+      "ref": "房间空调不太制冷，能派人上来看一下吗？",
+      "raw": "房间空调不太知冷能派人上来看一下吗?",
+      "final": "房间空调不太知冷能派人上来看一下吗?",
+      "finalCer": 0.0588,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d171",
+      "scenario": "bank",
+      "ref": "请问理财产品的风险等级在哪里查看？",
+      "raw": "请问理财产品的风险等急在哪里查看",
+      "final": "请问理财产品的风险等急在哪里查看",
+      "finalCer": 0.0625,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d172",
+      "scenario": "restaurant",
+      "ref": "两位，靠窗有位置吗？不要香菜，微辣就行。",
+      "raw": "两位靠窗有位置嘛 不要像蔡薇娜就行",
+      "final": "两位靠窗有位置嘛 不要像蔡薇娜就行",
+      "finalCer": 0.3125,
+      "drift": {
+        "type": "D1",
+        "source": "homophone:香菜→像蔡",
+        "severity": "Medium"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d175",
+      "scenario": "gym",
+      "ref": "私教课还剩几次？能帮我约明天晚上七点吗？",
+      "raw": "自教课还剩几次,能帮我约明天晚上7点吗?",
+      "final": "自教课还剩几次,能帮我约明天晚上7点吗?",
+      "finalCer": 0.1111,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d176",
+      "scenario": "gym",
+      "ref": "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+      "raw": "更易是龟仔要是找不到了前台 能帮忙开一下吗",
+      "final": "更易是龟仔要是找不到了前台 能帮忙开一下吗",
+      "finalCer": 0.3,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d177",
+      "scenario": "gym",
+      "ref": "游泳次卡本月月底到期，续费有优惠吗？",
+      "raw": "游泳自卡本月月底到期续飞游优惠吗?",
+      "final": "游泳自卡本月月底到期续飞游优惠吗?",
+      "finalCer": 0.1875,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d178",
+      "scenario": "lexicon_homophone",
+      "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+      "raw": "我們下午討論後 选生成方安线吧,后选生成的接口文档补齐。",
+      "final": "我们下午討論後 选生成方安线吧,后选生成的借口文档补齐。",
+      "finalCer": 0.4,
+      "drift": {
+        "type": "D1",
+        "source": "homophone:后选→后选",
+        "severity": "Medium"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d179",
+      "scenario": "lexicon_homophone",
+      "ref": "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+      "raw": "这周的上限计划已经确认上限计划评审安排在周四上午",
+      "final": "这周的上限计划已经确认上限计划评审安排在周四上午",
+      "finalCer": 0.125,
+      "drift": {
+        "type": "D1",
+        "source": "homophone:上线计划→上限计划",
+        "severity": "Medium"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d180",
+      "scenario": "lexicon_homophone",
+      "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+      "raw": "關於後,選生成立 和上限計劃請按上限計劃執行有問題 群里說",
+      "final": "關於後,選生成立 和上限計劃請按上限計劃執行有問題 群里說",
+      "finalCer": 0.68,
+      "drift": {
+        "type": "D3",
+        "source": "word_drift:后选",
+        "severity": "High"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    },
+    {
+      "id": "d183",
+      "scenario": "cafe",
+      "ref": "请问这款红茶可以少冰吗？我赶时间，小杯。",
+      "raw": "请问,这款红茶可以少病吗?我赶时间小呗",
+      "final": "请问,这款红茶可以少病吗?我赶时间小呗",
+      "finalCer": 0.1176,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d184",
+      "scenario": "meeting",
+      "ref": "小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+      "raw": "小乘客互反馈翻译引擎接口包错,我们能不再是 不能加緩存下午3點前把結論發群裡",
+      "final": "小乘客互反馈翻译引擎接口包错,我们能不再是 不能加緩存下午3點前把結論發群裡",
+      "finalCer": 0.3939,
+      "drift": {
+        "type": "D5",
+        "source": "structural",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d185",
+      "scenario": "meeting",
+      "ref": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+      "raw": "今天的站会现归以下订单中台进度内存占用高者快需要先留保护大家看一下风险",
+      "final": "今天的站会现归以下订单中台进度内存占用高者快需要先留保护大家看一下风险",
+      "finalCer": 0.2,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d186",
+      "scenario": "meeting",
+      "ref": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。",
+      "raw": "跟会员系统相关的需求 我整理了一板八点钱请大家帮忙评审一下",
+      "final": "跟会员系统相关的需求 我整理了一板八点钱请大家帮忙评审一下",
+      "finalCer": 0.0714,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d188",
+      "scenario": "taxi",
+      "ref": "麻烦送我到国贸三期南门，大概多久能到？我十点十分有个电话会。",
+      "raw": "麻烦送我到国贸散弃南门大,该多久能到? 我是点声 十分有,隔电话会",
+      "final": "麻烦送我到国贸散弃南门大,该多久能到? 我是点声 十分有,隔电话会",
+      "finalCer": 0.2222,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d189",
+      "scenario": "taxi",
+      "ref": "去望京SOHO，不走四环可以吗？那边现在堵不堵？",
+      "raw": "去望金斯赫布走四环可以吗?那扁现在赌不赌?",
+      "final": "去望金斯赫布走四环可以吗?那变现再度不赌?",
+      "finalCer": 0.4762,
+      "drift": {
+        "type": "D5",
+        "source": "structural",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d191",
+      "scenario": "hospital",
+      "ref": "挂号处请问内科还有号吗？我胃不舒服，昨晚开始的。",
+      "raw": "挂号出请问,那刻还有号码,我微不舒服昨晚开始的",
+      "final": "挂号出请问,那刻还有号码,我微不舒服昨晚开始的",
+      "finalCer": 0.2381,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d193",
+      "scenario": "shopping",
+      "ref": "这件外套能试穿吗？我穿中码。买两件有没有折扣？",
+      "raw": "这件外套能试穿吗?我穿中了 买两间有没有折扣",
+      "final": "这件外套能试穿吗?我穿中了 买两间有没有折扣",
+      "finalCer": 0.1,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d195",
+      "scenario": "shopping",
+      "ref": "我想对比一下这两款订单中台的价格，会员日能再减一点吗？",
+      "raw": "我想对比一下,这两款电脑 硬蛋中台的加格会员日能再减一点吗?",
+      "final": "我想对比一下,这两款电脑 硬蛋中台的加格会员日能再减一点吗?",
+      "finalCer": 0.2,
+      "drift": {
+        "type": "D2",
+        "source": "general_substitution",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d196",
+      "scenario": "friend",
+      "ref": "周末要不要去江边骑行？天气预报说周日多云，记得带水。",
+      "raw": "周末要不要去降邊騎行 天氣預報 周日多云积的带水",
+      "final": "周末要不要去降邊騎行 天氣預報 周日多云积的带水",
+      "finalCer": 0.3913,
+      "drift": {
+        "type": "D5",
+        "source": "structural",
+        "severity": "High"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d197",
+      "scenario": "friend",
+      "ref": "晚上一起吃饭吗？我知道一家川菜不错，大概七点到。",
+      "raw": "晚上一起吃饭嘛 我知道一家川菜 不错大概起点到",
+      "final": "晚上一起吃饭嘛 我知道一家川菜 不错大概起点到",
+      "finalCer": 0.0952,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Low"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d198",
+      "scenario": "friend",
+      "ref": "你最近忙不忙？想找你看下手机备份怎么设置。",
+      "raw": "你最近忙不忙,想照你看下手机备分怎么设置",
+      "final": "你最近忙不忙,想照你看下手机备分怎么设置",
+      "finalCer": 0.1053,
+      "drift": {
+        "type": "D2",
+        "source": "near_phone",
+        "severity": "Medium"
+      },
+      "aliasReachable": false,
+      "rootCause": "D"
+    },
+    {
+      "id": "d199",
+      "scenario": "tech_deploy",
+      "ref": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+      "raw": "今天,我们团队 要讨论候选生成相关的候选生成流程和上限计划安排请研发一起评估风险",
+      "final": "今天,我们团队 要讨论候选生成相关的候选生成流程和上限计划安排请研发一起评估风险",
+      "finalCer": 0.1579,
+      "drift": {
+        "type": "D1",
+        "source": "homophone:后选→候選",
+        "severity": "Medium"
+      },
+      "aliasReachable": true,
+      "rootCause": "E"
+    }
+  ],
+  "focus": {
+    "d045": {
+      "id": "d045",
+      "scenario": "lexicon_homophone",
+      "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+      "raw": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說",
+      "final": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說",
+      "rawCer": 0.8,
+      "finalCer": 0.8,
+      "improved": false,
+      "exact": false,
+      "applied": 0,
+      "aliasHits": [
+        {
+          "canonical": "后选",
+          "asrSurface": null,
+          "aliasReachable": false,
+          "canonInRaw": false
+        },
+        {
+          "canonical": "上线计划",
+          "asrSurface": "上限计划",
+          "aliasReachable": true,
+          "canonInRaw": false
+        }
+      ],
+      "drift": {
+        "type": "D3",
+        "source": "word_drift:后选",
+        "severity": "High"
+      },
+      "editDistance": 20,
+      "driftSeverity": "Extreme",
+      "aliasReachable": true,
+      "aliasUnreachable": false,
+      "spanRec": {
+        "recoverable": false,
+        "reason": "alias_surface_missing:后选;recall_miss:上线计划"
+      },
+      "recallRec": {
+        "recoverable_by_alias": false,
+        "recoverable_by_lexicon": true,
+        "recoverable_by_recall": true,
+        "asr_blocks": false,
+        "combinationCount": 16
+      },
+      "rootCause": "E",
+      "maxDelta": 0.36296399999999096,
+      "pickedIsRaw": true
+    },
+    "d180": {
+      "id": "d180",
+      "scenario": "lexicon_homophone",
+      "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+      "raw": "關於後,選生成立 和上限計劃請按上限計劃執行有問題 群里說",
+      "final": "關於後,選生成立 和上限計劃請按上限計劃執行有問題 群里說",
+      "rawCer": 0.68,
+      "finalCer": 0.68,
+      "improved": false,
+      "exact": false,
+      "applied": 0,
+      "aliasHits": [
+        {
+          "canonical": "后选",
+          "asrSurface": null,
+          "aliasReachable": false,
+          "canonInRaw": false
+        },
+        {
+          "canonical": "上线计划",
+          "asrSurface": "上限计划",
+          "aliasReachable": true,
+          "canonInRaw": false
+        }
+      ],
+      "drift": {
+        "type": "D3",
+        "source": "word_drift:后选",
+        "severity": "High"
+      },
+      "editDistance": 17,
+      "driftSeverity": "Extreme",
+      "aliasReachable": true,
+      "aliasUnreachable": false,
+      "spanRec": {
+        "recoverable": false,
+        "reason": "alias_surface_missing:后选;recall_miss:上线计划"
+      },
+      "recallRec": {
+        "recoverable_by_alias": false,
+        "recoverable_by_lexicon": true,
+        "recoverable_by_recall": true,
+        "asr_blocks": false,
+        "combinationCount": 12
+      },
+      "rootCause": "E",
+      "maxDelta": 0.36296000000000106,
+      "pickedIsRaw": true
+    },
+    "d082": {
+      "id": "d082",
+      "scenario": "restaurant",
+      "ref": "两位，靠窗有位置吗？不要香菜，微辣就行。",
+      "raw": "两位烤创有微纸嘛 不要像蔡薇娜就行",
+      "final": "两位烤创有微纸嘛 不要像蔡薇娜就行",
+      "rawCer": 0.5625,
+      "finalCer": 0.5625,
+      "improved": false,
+      "exact": false,
+      "applied": 0,
+      "aliasHits": [
+        {
+          "canonical": "香菜",
+          "asrSurface": "像蔡",
+          "aliasReachable": true,
+          "canonInRaw": false
+        }
+      ],
+      "drift": {
+        "type": "D1",
+        "source": "homophone:香菜→像蔡",
+        "severity": "Medium"
+      },
+      "editDistance": 9,
+      "driftSeverity": "Extreme",
+      "aliasReachable": true,
+      "aliasUnreachable": false,
+      "spanRec": {
+        "recoverable": "partial",
+        "reason": "recall_ok_kenlm_blocked"
+      },
+      "recallRec": {
+        "recoverable_by_alias": true,
+        "recoverable_by_lexicon": true,
+        "recoverable_by_recall": true,
+        "asr_blocks": false,
+        "combinationCount": 16
+      },
+      "rootCause": "E",
+      "maxDelta": 1.0095899999999958,
+      "pickedIsRaw": true
+    },
+    "d007": {
+      "id": "d007",
+      "scenario": "taxi",
+      "ref": "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+      "raw": "市富曲仲觀村軟件遠走機場告訴我幹 9点半的回药师赌车 您提前跟我说",
+      "final": "市富曲仲觀村軟件遠走機場告訴我幹 9点半的回药师赌车 您提前跟我说",
+      "rawCer": 0.5484,
+      "finalCer": 0.5484,
+      "improved": false,
+      "exact": false,
+      "applied": 0,
+      "aliasHits": [
+        {
+          "canonical": "高速",
+          "asrSurface": "告诉",
+          "aliasReachable": true,
+          "canonInRaw": false
+        }
+      ],
+      "drift": {
+        "type": "D1",
+        "source": "homophone:高速→告诉",
+        "severity": "Medium"
+      },
+      "editDistance": 17,
+      "driftSeverity": "Extreme",
+      "aliasReachable": true,
+      "aliasUnreachable": false,
+      "spanRec": {
+        "recoverable": false,
+        "reason": "recall_miss:高速"
+      },
+      "recallRec": {
+        "recoverable_by_alias": true,
+        "recoverable_by_lexicon": true,
+        "recoverable_by_recall": true,
+        "asr_blocks": false,
+        "combinationCount": 16
+      },
+      "rootCause": "E",
+      "maxDelta": 0.8059700000000021,
+      "pickedIsRaw": true
+    },
+    "d187": {
+      "id": "d187",
+      "scenario": "taxi",
+      "ref": "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+      "raw": "市副局仲官村軟件遠走機場告訴 我敢救人 9点半的回药师赌车 您提前跟我说",
+      "final": "市副局中关村軟件遠走機場高速 我敢就任 9点半的回药要是车 您提前跟我说",
+      "rawCer": 0.6129,
+      "finalCer": 0.4516,
+      "improved": true,
+      "exact": false,
+      "applied": 3,
+      "aliasHits": [
+        {
+          "canonical": "高速",
+          "asrSurface": "告诉",
+          "aliasReachable": true,
+          "canonInRaw": false
+        }
+      ],
+      "drift": {
+        "type": "D1",
+        "source": "homophone:高速→告诉",
+        "severity": "Medium"
+      },
+      "editDistance": 19,
+      "driftSeverity": "Extreme",
+      "aliasReachable": true,
+      "aliasUnreachable": false,
+      "spanRec": {
+        "recoverable": false,
+        "reason": "recall_miss:高速"
+      },
+      "recallRec": {
+        "recoverable_by_alias": true,
+        "recoverable_by_lexicon": true,
+        "recoverable_by_recall": true,
+        "asr_blocks": false,
+        "combinationCount": 16
+      },
+      "rootCause": "Resolved",
+      "maxDelta": 5.657039999999995,
+      "pickedIsRaw": false
+    },
+    "d021": {
+      "id": "d021",
+      "scenario": "tech_deploy",
+      "ref": "会上提到候选生成链路要加监控，上线计划文档我下午更新一版。",
+      "raw": "会上提到候选生成炼鹿 要加剑口 空上限期画文 等我下午更新一版",
+      "final": "会上提到候选生成炼鹿 要加剑口 空上限期画文 等我下午更新一版",
+      "rawCer": 0.3333,
+      "finalCer": 0.3333,
+      "improved": false,
+      "exact": false,
+      "applied": 0,
+      "aliasHits": [
+        {
+          "canonical": "生成",
+          "asrSurface": "生成",
+          "aliasReachable": false,
+          "canonInRaw": true
+        },
+        {
+          "canonical": "上线计划",
+          "asrSurface": null,
+          "aliasReachable": false,
+          "canonInRaw": false
+        },
+        {
+          "canonical": "候选生成",
+          "asrSurface": "候選生成",
+          "aliasReachable": true,
+          "canonInRaw": true
+        }
+      ],
+      "drift": {
+        "type": "D3",
+        "source": "word_drift:上线计划",
+        "severity": "High"
+      },
+      "editDistance": 9,
+      "driftSeverity": "High",
+      "aliasReachable": true,
+      "aliasUnreachable": false,
+      "spanRec": {
+        "recoverable": false,
+        "reason": "alias_surface_missing:生成;alias_surface_missing:上线计划;recall_miss:候选生成"
+      },
+      "recallRec": {
+        "recoverable_by_alias": false,
+        "recoverable_by_lexicon": true,
+        "recoverable_by_recall": true,
+        "asr_blocks": false,
+        "combinationCount": 5
+      },
+      "rootCause": "E",
+      "maxDelta": 1.4324299999999965,
+      "pickedIsRaw": true
+    },
+    "d065": {
+      "id": "d065",
+      "scenario": "tech_deploy",
+      "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+      "raw": "這次發布我們現對期 在其商線計劃窗口後選生 成模快需要連掉別漏掉回歸",
+      "final": "這次發布我們現對期 在其商線計劃窗口候选生 成模块需要联掉別漏掉回歸",
+      "rawCer": 0.6667,
+      "finalCer": 0.5667,
+      "improved": true,
+      "exact": false,
+      "applied": 4,
+      "aliasHits": [
+        {
+          "canonical": "后选",
+          "asrSurface": "后选",
+          "aliasReachable": true,
+          "canonInRaw": false
+        },
+        {
+          "canonical": "上线计划",
+          "asrSurface": null,
+          "aliasReachable": false,
+          "canonInRaw": false
+        }
+      ],
+      "drift": {
+        "type": "D3",
+        "source": "word_drift:上线计划",
+        "severity": "High"
+      },
+      "editDistance": 20,
+      "driftSeverity": "Extreme",
+      "aliasReachable": true,
+      "aliasUnreachable": false,
+      "spanRec": {
+        "recoverable": false,
+        "reason": "recall_miss:后选;alias_surface_missing:上线计划"
+      },
+      "recallRec": {
+        "recoverable_by_alias": false,
+        "recoverable_by_lexicon": true,
+        "recoverable_by_recall": true,
+        "asr_blocks": false,
+        "combinationCount": 16
+      },
+      "rootCause": "Resolved",
+      "maxDelta": 11.203873999999999,
+      "pickedIsRaw": false
+    },
+    "d133": {
+      "id": "d133",
+      "scenario": "lexicon_homophone",
+      "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+      "raw": "我们下午讨论后 選生成方安線吧,後選生成的接口文當補齊。",
+      "final": "我们下午讨论后 選生成方安線吧,後選生成的接口文當補齊。",
+      "rawCer": 0.44,
+      "finalCer": 0.44,
+      "improved": false,
+      "exact": false,
+      "applied": 0,
+      "aliasHits": [
+        {
+          "canonical": "后选",
+          "asrSurface": "后选",
+          "aliasReachable": true,
+          "canonInRaw": false
+        },
+        {
+          "canonical": "生成",
+          "asrSurface": "生成",
+          "aliasReachable": false,
+          "canonInRaw": true
+        },
+        {
+          "canonical": "候选生成",
+          "asrSurface": "后选生成",
+          "aliasReachable": true,
+          "canonInRaw": false
+        }
+      ],
+      "drift": {
+        "type": "D1",
+        "source": "homophone:后选→后选",
+        "severity": "Medium"
+      },
+      "editDistance": 11,
+      "driftSeverity": "High",
+      "aliasReachable": true,
+      "aliasUnreachable": false,
+      "spanRec": {
+        "recoverable": false,
+        "reason": "recall_miss:后选;alias_surface_missing:生成;recall_miss:候选生成"
+      },
+      "recallRec": {
+        "recoverable_by_alias": false,
+        "recoverable_by_lexicon": true,
+        "recoverable_by_recall": true,
+        "asr_blocks": false,
+        "combinationCount": 2
+      },
+      "rootCause": "E",
+      "maxDelta": 2.850679999999997,
+      "pickedIsRaw": true
+    }
+  }
+}

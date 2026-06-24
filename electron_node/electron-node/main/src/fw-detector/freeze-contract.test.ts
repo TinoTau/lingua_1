@@ -525,6 +525,29 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(rerankSrc).not.toContain('setRuntimeDomainRegistry');
   });
 
+  it('GATE-RANK-01: filterDomainCandidatesPerSpan exists and buckets base_term', () => {
+    const filterSrc = readSrc('fw-detector/span-assembly-v4/filter-domain-candidates-per-span.ts');
+    expect(filterSrc).toContain('export function filterDomainCandidatesPerSpan');
+    expect(filterSrc).toContain("return 'base'");
+    expect(filterSrc).toContain('baseCandidates');
+  });
+
+  it('GATE-RANK-02: selectPerSpanCandidates prefers sameDomain bucket', () => {
+    const assemblySrc = readSrc('fw-detector/span-assembly-v4/assemble-domain-aware-span-sets.ts');
+    expect(assemblySrc).toContain('pickTopKFromBuckets');
+    expect(assemblySrc).toContain('sameDomainCandidates');
+    expect(assemblySrc).toContain("bucket: 'sameDomain'");
+  });
+
+  it('GATE-RANK-03: computeCandidateScore excludes editDistancePenalty', () => {
+    const scoreSrc = readSrc('lexicon/candidate-score.ts');
+    const fnMatch = scoreSrc.match(
+      /\/\*\* Primary recall score[\s\S]*?export function computeCandidateScore[\s\S]*?\n}/
+    );
+    expect(fnMatch?.[0]).toBeTruthy();
+    expect(fnMatch?.[0]).not.toContain('editDistancePenalty');
+  });
+
   it('segmentForJobResult 写点白名单（静态）', () => {
     const allowed = [
       'pipeline/steps/asr-step.ts',

@@ -1,0 +1,1170 @@
+{
+  "meta": {
+    "audit": "FW_Repair_V4_KenLM_Threshold_Shadow_Replay_Audit",
+    "timestamp": "2026-06-24T03:15:18.422Z",
+    "batchPath": "D:\\Programs\\github\\lingua_1\\electron_node\\electron-node\\tests\\lexicon-expansion-v1_1-dialog200-batch-result.json",
+    "batchTimestamp": "2026-06-23T23:37:49.240Z",
+    "datasetChecksumSha256_16": "1761545c98eef5af",
+    "manifestCount": 200,
+    "rebuildValidation": {
+      "ok": 199,
+      "fail": 1,
+      "rate": 0.995
+    }
+  },
+  "environment": {
+    "scoreMode": "raw_log_delta",
+    "productionThreshold": 3,
+    "batchConfig": {
+      "pipelinePath": "v4",
+      "spanAssemblyV4Enabled": true,
+      "pinyinImeV2": {
+        "enabled": true,
+        "topK": 5,
+        "maxApprovedSpans": 4
+      },
+      "minPrior": 0.5,
+      "enableKenLMGate": true,
+      "kenlmGateMode": "weak_veto",
+      "kenlmDeltaThreshold": 0.8,
+      "kenlmVetoThreshold": -0.2,
+      "enabledDomains": [],
+      "candidateRequireRepairTarget": true,
+      "maxSentenceCandidates": 16,
+      "minDeltaToReplace": 3,
+      "scoreMode": "raw_log_delta",
+      "toneTimestampOnlyEnabled": true
+    },
+    "lexiconBundle": "D:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v3"
+  },
+  "frozenBaseline": {
+    "fromQualityPerf": {
+      "avg_cer_raw": 0.2657,
+      "avg_cer_final": 0.2177,
+      "avg_cer_probe": 0.2657,
+      "median_cer_raw": 0.1905,
+      "median_cer_final": 0.1852,
+      "median_cer_probe": 0.1905,
+      "p95_cer_raw": 0.6,
+      "p95_cer_final": 0.5263,
+      "p95_cer_probe": 0.6,
+      "exact_match_raw": 25,
+      "exact_match_final": 29,
+      "exact_match_probe": 25,
+      "fw_improved_cases": 45,
+      "fw_degraded_cases": 4,
+      "fw_unchanged_cer_cases": 151,
+      "applied_cases_cer_delta_avg": 0.0694
+    },
+    "fromShadowT3": {
+      "avg_cer_final": 0.2309,
+      "exact_match": 29,
+      "improved": 44,
+      "degraded": 4,
+      "apply_cases": 56
+    }
+  },
+  "sweep": [
+    {
+      "threshold": 3,
+      "apply_cases": 56,
+      "improved": 44,
+      "degraded": 4,
+      "avg_cer_final": 0.2309,
+      "exact_match": 29,
+      "vs_t3": {
+        "apply_delta": 0,
+        "improved_delta": 0,
+        "degraded_delta": 0,
+        "cer_delta": 0,
+        "exact_delta": 0
+      }
+    },
+    {
+      "threshold": 2,
+      "apply_cases": 71,
+      "improved": 44,
+      "degraded": 19,
+      "avg_cer_final": 0.2624,
+      "exact_match": 29,
+      "vs_t3": {
+        "apply_delta": 15,
+        "improved_delta": 0,
+        "degraded_delta": 15,
+        "cer_delta": 0.0315,
+        "exact_delta": 0
+      }
+    },
+    {
+      "threshold": 1,
+      "apply_cases": 86,
+      "improved": 44,
+      "degraded": 34,
+      "avg_cer_final": 0.2912,
+      "exact_match": 29,
+      "vs_t3": {
+        "apply_delta": 30,
+        "improved_delta": 0,
+        "degraded_delta": 30,
+        "cer_delta": 0.0603,
+        "exact_delta": 0
+      }
+    }
+  ],
+  "newApply": {
+    "t2": [
+      {
+        "id": "d009",
+        "threshold": 2,
+        "maxDelta": 2.5797999999999988,
+        "raw": "去望金丝和不走丝环,可以吗? 那边现在赌不赌?",
+        "final": "可以现在赌独步?",
+        "repairCount": 2
+      },
+      {
+        "id": "d034",
+        "threshold": 2,
+        "maxDelta": 2.8465029999999985,
+        "raw": "我想,開通短信提醒需要帶什麼證件",
+        "final": "需要什证件",
+        "repairCount": 2
+      },
+      {
+        "id": "d036",
+        "threshold": 2,
+        "maxDelta": 2.7269000000000005,
+        "raw": "请问立财产品的风险等急在哪里查看",
+        "final": "请问财产产品哪里查看",
+        "repairCount": 3
+      },
+      {
+        "id": "d061",
+        "threshold": 2,
+        "maxDelta": 2.8943649999999934,
+        "raw": "周末 也不要去江邊騎行 天氣預報說 周日多雲記得帶水",
+        "final": "不要 天周日",
+        "repairCount": 2
+      },
+      {
+        "id": "d072",
+        "threshold": 2,
+        "maxDelta": 2.9992739999999998,
+        "raw": "期望新自这块我们可以再沟通你最快什么时候能入职",
+        "final": "期望新薪资我们可以什么时候乳汁",
+        "repairCount": 4
+      },
+      {
+        "id": "d093",
+        "threshold": 2,
+        "maxDelta": 2.580163000000006,
+        "raw": "请问,这款病美是可以少病吗?我赶时间小悲。",
+        "final": "请问可以少少冰?赶时间。",
+        "repairCount": 3
+      },
+      {
+        "id": "d104",
+        "threshold": 2,
+        "maxDelta": 2.437604999999998,
+        "raw": "请问,这双鞋有40码吗?不合适三天内可以推换吧?",
+        "final": "请问,这双鞋有40码吗?合适?",
+        "repairCount": 1
+      },
+      {
+        "id": "d111",
+        "threshold": 2,
+        "maxDelta": 2.629809999999992,
+        "raw": "會上提到候選生陳列祿 姚嘉健 通商限期劃文 当我下午更新一版",
+        "final": "提到祿 姚要价 通商我下午",
+        "repairCount": 4
+      },
+      {
+        "id": "d114",
+        "threshold": 2,
+        "maxDelta": 2.2662949999999995,
+        "raw": "发票台头开错了能重新开具电子发票吗",
+        "final": "发票重新开开局发票",
+        "repairCount": 4
+      },
+      {
+        "id": "d117",
+        "threshold": 2,
+        "maxDelta": 2.9992739999999998,
+        "raw": "期望新自这块我们可以再沟通你最快什么时候能入职",
+        "final": "期望新薪资我们可以什么时候乳汁",
+        "repairCount": 4
+      },
+      {
+        "id": "d119",
+        "threshold": 2,
+        "maxDelta": 2.172912999999994,
+        "raw": "作业是下周一下午叫码,可以电子版提叫码。",
+        "final": "下午,可以电子版码。",
+        "repairCount": 2
+      },
+      {
+        "id": "d133",
+        "threshold": 2,
+        "maxDelta": 2.850679999999997,
+        "raw": "我们下午讨论后 選生成方安線吧,後選生成的接口文當補齊。",
+        "final": "我们。",
+        "repairCount": 1
+      },
+      {
+        "id": "d149",
+        "threshold": 2,
+        "maxDelta": 2.437604999999998,
+        "raw": "请问,这双鞋有40码吗?不合适三天内可以推换吧?",
+        "final": "请问,这双鞋有40码吗?合适?",
+        "repairCount": 1
+      },
+      {
+        "id": "d186",
+        "threshold": 2,
+        "maxDelta": 2.6395299999999935,
+        "raw": "跟会员系统相关的需求 我整理了一板八点钱请大家帮忙评审一下",
+        "final": "一般评以下",
+        "repairCount": 2
+      },
+      {
+        "id": "d196",
+        "threshold": 2,
+        "maxDelta": 2.569599999999994,
+        "raw": "周末要不要去降邊騎行 天氣預報 周日多云积的带水",
+        "final": "周末騎气性周日带水",
+        "repairCount": 3
+      }
+    ],
+    "t1": [
+      {
+        "id": "d009",
+        "threshold": 1,
+        "maxDelta": 2.5797999999999988,
+        "raw": "去望金丝和不走丝环,可以吗? 那边现在赌不赌?",
+        "final": "可以现在赌独步?",
+        "repairCount": 2
+      },
+      {
+        "id": "d014",
+        "threshold": 1,
+        "maxDelta": 1.0895089999999996,
+        "raw": "请问,这双鞋是否有相似的? 不合是三天内可以推换吧",
+        "final": "像是",
+        "repairCount": 1
+      },
+      {
+        "id": "d021",
+        "threshold": 1,
+        "maxDelta": 1.4324299999999965,
+        "raw": "会上提到候选生成炼鹿 要加剑口 空上限期画文 等我下午更新一版",
+        "final": "候选口 空下午新意一般",
+        "repairCount": 4
+      },
+      {
+        "id": "d024",
+        "threshold": 1,
+        "maxDelta": 1.6413939999999982,
+        "raw": "发票台头开错了能重新开局电子发票吗",
+        "final": "发票重新开开局发票",
+        "repairCount": 4
+      },
+      {
+        "id": "d034",
+        "threshold": 1,
+        "maxDelta": 2.8465029999999985,
+        "raw": "我想,開通短信提醒需要帶什麼證件",
+        "final": "需要什证件",
+        "repairCount": 2
+      },
+      {
+        "id": "d036",
+        "threshold": 1,
+        "maxDelta": 2.7269000000000005,
+        "raw": "请问立财产品的风险等急在哪里查看",
+        "final": "请问财产产品哪里查看",
+        "repairCount": 3
+      },
+      {
+        "id": "d037",
+        "threshold": 1,
+        "maxDelta": 1.083039999999997,
+        "raw": "两位烤创有位置嘛 不要像蔡薇拉就行",
+        "final": "有味 不要香菜",
+        "repairCount": 2
+      },
+      {
+        "id": "d042",
+        "threshold": 1,
+        "maxDelta": 1.8010170000000016,
+        "raw": "游泳自卡,本月月底到70非有優惠嗎?",
+        "final": "用字,月底70非有優惠嗎?",
+        "repairCount": 2
+      },
+      {
+        "id": "d048",
+        "threshold": 1,
+        "maxDelta": 1.8837890000000002,
+        "raw": "请问,这款热巧克力可以少病吗? 我赶时间小背",
+        "final": "巧克力可以少少病? 赶时间",
+        "repairCount": 3
+      },
+      {
+        "id": "d050",
+        "threshold": 1,
+        "maxDelta": 1.9830299999999994,
+        "raw": "今天的站會獻過一下訂單 中台進都內存 占用高折块需要限流保护 大家看一下风险",
+        "final": "今天的站會獻過一下訂單 中台進都內存 占用高折这块须要药线腺瘤大家以下风险",
+        "repairCount": 6
+      },
+      {
+        "id": "d061",
+        "threshold": 1,
+        "maxDelta": 2.8943649999999934,
+        "raw": "周末 也不要去江邊騎行 天氣預報說 周日多雲記得帶水",
+        "final": "不要 天周日",
+        "repairCount": 2
+      },
+      {
+        "id": "d072",
+        "threshold": 1,
+        "maxDelta": 2.9992739999999998,
+        "raw": "期望新自这块我们可以再沟通你最快什么时候能入职",
+        "final": "期望新薪资我们可以什么时候乳汁",
+        "repairCount": 4
+      },
+      {
+        "id": "d082",
+        "threshold": 1,
+        "maxDelta": 1.0095899999999958,
+        "raw": "两位烤创有微纸嘛 不要像蔡薇娜就行",
+        "final": "有味 补药救星",
+        "repairCount": 3
+      },
+      {
+        "id": "d093",
+        "threshold": 1,
+        "maxDelta": 2.580163000000006,
+        "raw": "请问,这款病美是可以少病吗?我赶时间小悲。",
+        "final": "请问可以少少冰?赶时间。",
+        "repairCount": 3
+      },
+      {
+        "id": "d095",
+        "threshold": 1,
+        "maxDelta": 1.1711250000000035,
+        "raw": "今天,德占会献过一下订单,中台进都内存占用高着快需要先留保护大家看一下风险",
+        "final": "今天,德占会献过一下订单,中台进都内占用快需要药线留保大家以下奉献",
+        "repairCount": 5
+      },
+      {
+        "id": "d104",
+        "threshold": 1,
+        "maxDelta": 2.437604999999998,
+        "raw": "请问,这双鞋有40码吗?不合适三天内可以推换吧?",
+        "final": "请问,这双鞋有40码吗?合适?",
+        "repairCount": 1
+      },
+      {
+        "id": "d108",
+        "threshold": 1,
+        "maxDelta": 1.056910000000002,
+        "raw": "你最近忙不忙,想找你看下手机备分怎么设置",
+        "final": "最近忙下手手迹备份怎么",
+        "repairCount": 5
+      },
+      {
+        "id": "d111",
+        "threshold": 1,
+        "maxDelta": 2.629809999999992,
+        "raw": "會上提到候選生陳列祿 姚嘉健 通商限期劃文 当我下午更新一版",
+        "final": "提到祿 姚要价 通商我下午",
+        "repairCount": 4
+      },
+      {
+        "id": "d114",
+        "threshold": 1,
+        "maxDelta": 2.2662949999999995,
+        "raw": "发票台头开错了能重新开具电子发票吗",
+        "final": "发票重新开开局发票",
+        "repairCount": 4
+      },
+      {
+        "id": "d117",
+        "threshold": 1,
+        "maxDelta": 2.9992739999999998,
+        "raw": "期望新自这块我们可以再沟通你最快什么时候能入职",
+        "final": "期望新薪资我们可以什么时候乳汁",
+        "repairCount": 4
+      },
+      {
+        "id": "d119",
+        "threshold": 1,
+        "maxDelta": 2.172912999999994,
+        "raw": "作业是下周一下午叫码,可以电子版提叫码。",
+        "final": "下午,可以电子版码。",
+        "repairCount": 2
+      },
+      {
+        "id": "d127",
+        "threshold": 1,
+        "maxDelta": 1.083040000000004,
+        "raw": "兩位靠窗有位置嗎? 不要像蔡薇拉就行",
+        "final": "位置? 不要香菜",
+        "repairCount": 2
+      },
+      {
+        "id": "d133",
+        "threshold": 1,
+        "maxDelta": 2.850679999999997,
+        "raw": "我们下午讨论后 選生成方安線吧,後選生成的接口文當補齊。",
+        "final": "我们。",
+        "repairCount": 1
+      },
+      {
+        "id": "d140",
+        "threshold": 1,
+        "maxDelta": 1.9830299999999994,
+        "raw": "今天的戰彙現過一下訂單 中台 京都內存 我们占用高折块需要限流保护大家看一下风险",
+        "final": "今天的戰彙現過一下訂我们高折块需要限流保大家以下风险",
+        "repairCount": 3
+      },
+      {
+        "id": "d144",
+        "threshold": 1,
+        "maxDelta": 1.083680000000001,
+        "raw": "去杭州系 系不走延安路高架可以吗 那便现在赌不赌",
+        "final": "高价可疑可以吗现在在读独步",
+        "repairCount": 5
+      },
+      {
+        "id": "d149",
+        "threshold": 1,
+        "maxDelta": 2.437604999999998,
+        "raw": "请问,这双鞋有40码吗?不合适三天内可以推换吧?",
+        "final": "请问,这双鞋有40码吗?合适?",
+        "repairCount": 1
+      },
+      {
+        "id": "d172",
+        "threshold": 1,
+        "maxDelta": 1.083038000000002,
+        "raw": "两位靠窗有位置嘛 不要像蔡薇娜就行",
+        "final": "有味 不要香菜",
+        "repairCount": 2
+      },
+      {
+        "id": "d186",
+        "threshold": 1,
+        "maxDelta": 2.6395299999999935,
+        "raw": "跟会员系统相关的需求 我整理了一板八点钱请大家帮忙评审一下",
+        "final": "一般评以下",
+        "repairCount": 2
+      },
+      {
+        "id": "d196",
+        "threshold": 1,
+        "maxDelta": 2.569599999999994,
+        "raw": "周末要不要去降邊騎行 天氣預報 周日多云积的带水",
+        "final": "周末騎气性周日带水",
+        "repairCount": 3
+      },
+      {
+        "id": "d198",
+        "threshold": 1,
+        "maxDelta": 1.056911999999997,
+        "raw": "你最近忙不忙,想照你看下手机备分怎么设置",
+        "final": "最近忙下手手机备份怎么",
+        "repairCount": 5
+      }
+    ]
+  },
+  "newDegraded": {
+    "t2": [
+      {
+        "id": "d009",
+        "threshold": 2,
+        "rawCer": 0.38095238095238093,
+        "finalCer": 0.8095238095238095,
+        "cerChange": 0.4285714285714286,
+        "raw": "去望金丝和不走丝环,可以吗? 那边现在赌不赌?",
+        "final": "可以现在赌独步?"
+      },
+      {
+        "id": "d034",
+        "threshold": 2,
+        "rawCer": 0.26666666666666666,
+        "finalCer": 0.6666666666666666,
+        "cerChange": 0.39999999999999997,
+        "raw": "我想,開通短信提醒需要帶什麼證件",
+        "final": "需要什证件"
+      },
+      {
+        "id": "d036",
+        "threshold": 2,
+        "rawCer": 0.125,
+        "finalCer": 0.5,
+        "cerChange": 0.375,
+        "raw": "请问立财产品的风险等急在哪里查看",
+        "final": "请问财产产品哪里查看"
+      },
+      {
+        "id": "d061",
+        "threshold": 2,
+        "rawCer": 0.43478260869565216,
+        "finalCer": 0.782608695652174,
+        "cerChange": 0.3478260869565218,
+        "raw": "周末 也不要去江邊騎行 天氣預報說 周日多雲記得帶水",
+        "final": "不要 天周日"
+      },
+      {
+        "id": "d072",
+        "threshold": 2,
+        "rawCer": 0.08695652173913043,
+        "finalCer": 0.5217391304347826,
+        "cerChange": 0.43478260869565216,
+        "raw": "期望新自这块我们可以再沟通你最快什么时候能入职",
+        "final": "期望新薪资我们可以什么时候乳汁"
+      },
+      {
+        "id": "d093",
+        "threshold": 2,
+        "rawCer": 0.2222222222222222,
+        "finalCer": 0.5555555555555556,
+        "cerChange": 0.33333333333333337,
+        "raw": "请问,这款病美是可以少病吗?我赶时间小悲。",
+        "final": "请问可以少少冰?赶时间。"
+      },
+      {
+        "id": "d104",
+        "threshold": 2,
+        "rawCer": 0.14285714285714285,
+        "finalCer": 0.5238095238095238,
+        "cerChange": 0.380952380952381,
+        "raw": "请问,这双鞋有40码吗?不合适三天内可以推换吧?",
+        "final": "请问,这双鞋有40码吗?合适?"
+      },
+      {
+        "id": "d111",
+        "threshold": 2,
+        "rawCer": 0.5185185185185185,
+        "finalCer": 0.7777777777777778,
+        "cerChange": 0.2592592592592593,
+        "raw": "會上提到候選生陳列祿 姚嘉健 通商限期劃文 当我下午更新一版",
+        "final": "提到祿 姚要价 通商我下午"
+      },
+      {
+        "id": "d114",
+        "threshold": 2,
+        "rawCer": 0.058823529411764705,
+        "finalCer": 0.5882352941176471,
+        "cerChange": 0.5294117647058824,
+        "raw": "发票台头开错了能重新开具电子发票吗",
+        "final": "发票重新开开局发票"
+      },
+      {
+        "id": "d117",
+        "threshold": 2,
+        "rawCer": 0.08695652173913043,
+        "finalCer": 0.5217391304347826,
+        "cerChange": 0.43478260869565216,
+        "raw": "期望新自这块我们可以再沟通你最快什么时候能入职",
+        "final": "期望新薪资我们可以什么时候乳汁"
+      },
+      {
+        "id": "d119",
+        "threshold": 2,
+        "rawCer": 0.2222222222222222,
+        "finalCer": 0.6111111111111112,
+        "cerChange": 0.38888888888888895,
+        "raw": "作业是下周一下午叫码,可以电子版提叫码。",
+        "final": "下午,可以电子版码。"
+      },
+      {
+        "id": "d133",
+        "threshold": 2,
+        "rawCer": 0.44,
+        "finalCer": 0.92,
+        "cerChange": 0.48000000000000004,
+        "raw": "我们下午讨论后 選生成方安線吧,後選生成的接口文當補齊。",
+        "final": "我们。"
+      },
+      {
+        "id": "d149",
+        "threshold": 2,
+        "rawCer": 0.14285714285714285,
+        "finalCer": 0.5238095238095238,
+        "cerChange": 0.380952380952381,
+        "raw": "请问,这双鞋有40码吗?不合适三天内可以推换吧?",
+        "final": "请问,这双鞋有40码吗?合适?"
+      },
+      {
+        "id": "d186",
+        "threshold": 2,
+        "rawCer": 0.07142857142857142,
+        "finalCer": 0.8928571428571429,
+        "cerChange": 0.8214285714285715,
+        "raw": "跟会员系统相关的需求 我整理了一板八点钱请大家帮忙评审一下",
+        "final": "一般评以下"
+      },
+      {
+        "id": "d196",
+        "threshold": 2,
+        "rawCer": 0.391304347826087,
+        "finalCer": 0.6956521739130435,
+        "cerChange": 0.3043478260869565,
+        "raw": "周末要不要去降邊騎行 天氣預報 周日多云积的带水",
+        "final": "周末騎气性周日带水"
+      }
+    ],
+    "t1": [
+      {
+        "id": "d009",
+        "threshold": 1,
+        "rawCer": 0.38095238095238093,
+        "finalCer": 0.8095238095238095,
+        "cerChange": 0.4285714285714286,
+        "raw": "去望金丝和不走丝环,可以吗? 那边现在赌不赌?",
+        "final": "可以现在赌独步?"
+      },
+      {
+        "id": "d014",
+        "threshold": 1,
+        "rawCer": 0.38095238095238093,
+        "finalCer": 1,
+        "cerChange": 0.6190476190476191,
+        "raw": "请问,这双鞋是否有相似的? 不合是三天内可以推换吧",
+        "final": "像是"
+      },
+      {
+        "id": "d021",
+        "threshold": 1,
+        "rawCer": 0.3333333333333333,
+        "finalCer": 0.8148148148148148,
+        "cerChange": 0.48148148148148145,
+        "raw": "会上提到候选生成炼鹿 要加剑口 空上限期画文 等我下午更新一版",
+        "final": "候选口 空下午新意一般"
+      },
+      {
+        "id": "d024",
+        "threshold": 1,
+        "rawCer": 0.11764705882352941,
+        "finalCer": 0.5882352941176471,
+        "cerChange": 0.47058823529411764,
+        "raw": "发票台头开错了能重新开局电子发票吗",
+        "final": "发票重新开开局发票"
+      },
+      {
+        "id": "d034",
+        "threshold": 1,
+        "rawCer": 0.26666666666666666,
+        "finalCer": 0.6666666666666666,
+        "cerChange": 0.39999999999999997,
+        "raw": "我想,開通短信提醒需要帶什麼證件",
+        "final": "需要什证件"
+      },
+      {
+        "id": "d036",
+        "threshold": 1,
+        "rawCer": 0.125,
+        "finalCer": 0.5,
+        "cerChange": 0.375,
+        "raw": "请问立财产品的风险等急在哪里查看",
+        "final": "请问财产产品哪里查看"
+      },
+      {
+        "id": "d037",
+        "threshold": 1,
+        "rawCer": 0.4375,
+        "finalCer": 0.6875,
+        "cerChange": 0.25,
+        "raw": "两位烤创有位置嘛 不要像蔡薇拉就行",
+        "final": "有味 不要香菜"
+      },
+      {
+        "id": "d042",
+        "threshold": 1,
+        "rawCer": 0.375,
+        "finalCer": 0.75,
+        "cerChange": 0.375,
+        "raw": "游泳自卡,本月月底到70非有優惠嗎?",
+        "final": "用字,月底70非有優惠嗎?"
+      },
+      {
+        "id": "d048",
+        "threshold": 1,
+        "rawCer": 0.10526315789473684,
+        "finalCer": 0.5263157894736842,
+        "cerChange": 0.42105263157894735,
+        "raw": "请问,这款热巧克力可以少病吗? 我赶时间小背",
+        "final": "巧克力可以少少病? 赶时间"
+      },
+      {
+        "id": "d050",
+        "threshold": 1,
+        "rawCer": 0.2571428571428571,
+        "finalCer": 0.45714285714285713,
+        "cerChange": 0.2,
+        "raw": "今天的站會獻過一下訂單 中台進都內存 占用高折块需要限流保护 大家看一下风险",
+        "final": "今天的站會獻過一下訂單 中台進都內存 占用高折这块须要药线腺瘤大家以下风险"
+      },
+      {
+        "id": "d061",
+        "threshold": 1,
+        "rawCer": 0.43478260869565216,
+        "finalCer": 0.782608695652174,
+        "cerChange": 0.3478260869565218,
+        "raw": "周末 也不要去江邊騎行 天氣預報說 周日多雲記得帶水",
+        "final": "不要 天周日"
+      },
+      {
+        "id": "d072",
+        "threshold": 1,
+        "rawCer": 0.08695652173913043,
+        "finalCer": 0.5217391304347826,
+        "cerChange": 0.43478260869565216,
+        "raw": "期望新自这块我们可以再沟通你最快什么时候能入职",
+        "final": "期望新薪资我们可以什么时候乳汁"
+      },
+      {
+        "id": "d082",
+        "threshold": 1,
+        "rawCer": 0.5625,
+        "finalCer": 0.9375,
+        "cerChange": 0.375,
+        "raw": "两位烤创有微纸嘛 不要像蔡薇娜就行",
+        "final": "有味 补药救星"
+      },
+      {
+        "id": "d093",
+        "threshold": 1,
+        "rawCer": 0.2222222222222222,
+        "finalCer": 0.5555555555555556,
+        "cerChange": 0.33333333333333337,
+        "raw": "请问,这款病美是可以少病吗?我赶时间小悲。",
+        "final": "请问可以少少冰?赶时间。"
+      },
+      {
+        "id": "d095",
+        "threshold": 1,
+        "rawCer": 0.22857142857142856,
+        "finalCer": 0.45714285714285713,
+        "cerChange": 0.22857142857142856,
+        "raw": "今天,德占会献过一下订单,中台进都内存占用高着快需要先留保护大家看一下风险",
+        "final": "今天,德占会献过一下订单,中台进都内占用快需要药线留保大家以下奉献"
+      },
+      {
+        "id": "d104",
+        "threshold": 1,
+        "rawCer": 0.14285714285714285,
+        "finalCer": 0.5238095238095238,
+        "cerChange": 0.380952380952381,
+        "raw": "请问,这双鞋有40码吗?不合适三天内可以推换吧?",
+        "final": "请问,这双鞋有40码吗?合适?"
+      },
+      {
+        "id": "d108",
+        "threshold": 1,
+        "rawCer": 0.05263157894736842,
+        "finalCer": 0.5789473684210527,
+        "cerChange": 0.5263157894736843,
+        "raw": "你最近忙不忙,想找你看下手机备分怎么设置",
+        "final": "最近忙下手手迹备份怎么"
+      },
+      {
+        "id": "d111",
+        "threshold": 1,
+        "rawCer": 0.5185185185185185,
+        "finalCer": 0.7777777777777778,
+        "cerChange": 0.2592592592592593,
+        "raw": "會上提到候選生陳列祿 姚嘉健 通商限期劃文 当我下午更新一版",
+        "final": "提到祿 姚要价 通商我下午"
+      },
+      {
+        "id": "d114",
+        "threshold": 1,
+        "rawCer": 0.058823529411764705,
+        "finalCer": 0.5882352941176471,
+        "cerChange": 0.5294117647058824,
+        "raw": "发票台头开错了能重新开具电子发票吗",
+        "final": "发票重新开开局发票"
+      },
+      {
+        "id": "d117",
+        "threshold": 1,
+        "rawCer": 0.08695652173913043,
+        "finalCer": 0.5217391304347826,
+        "cerChange": 0.43478260869565216,
+        "raw": "期望新自这块我们可以再沟通你最快什么时候能入职",
+        "final": "期望新薪资我们可以什么时候乳汁"
+      },
+      {
+        "id": "d119",
+        "threshold": 1,
+        "rawCer": 0.2222222222222222,
+        "finalCer": 0.6111111111111112,
+        "cerChange": 0.38888888888888895,
+        "raw": "作业是下周一下午叫码,可以电子版提叫码。",
+        "final": "下午,可以电子版码。"
+      },
+      {
+        "id": "d127",
+        "threshold": 1,
+        "rawCer": 0.375,
+        "finalCer": 0.625,
+        "cerChange": 0.25,
+        "raw": "兩位靠窗有位置嗎? 不要像蔡薇拉就行",
+        "final": "位置? 不要香菜"
+      },
+      {
+        "id": "d133",
+        "threshold": 1,
+        "rawCer": 0.44,
+        "finalCer": 0.92,
+        "cerChange": 0.48000000000000004,
+        "raw": "我们下午讨论后 選生成方安線吧,後選生成的接口文當補齊。",
+        "final": "我们。"
+      },
+      {
+        "id": "d140",
+        "threshold": 1,
+        "rawCer": 0.34285714285714286,
+        "finalCer": 0.5142857142857142,
+        "cerChange": 0.17142857142857137,
+        "raw": "今天的戰彙現過一下訂單 中台 京都內存 我们占用高折块需要限流保护大家看一下风险",
+        "final": "今天的戰彙現過一下訂我们高折块需要限流保大家以下风险"
+      },
+      {
+        "id": "d144",
+        "threshold": 1,
+        "rawCer": 0.22727272727272727,
+        "finalCer": 0.8181818181818182,
+        "cerChange": 0.5909090909090909,
+        "raw": "去杭州系 系不走延安路高架可以吗 那便现在赌不赌",
+        "final": "高价可疑可以吗现在在读独步"
+      },
+      {
+        "id": "d149",
+        "threshold": 1,
+        "rawCer": 0.14285714285714285,
+        "finalCer": 0.5238095238095238,
+        "cerChange": 0.380952380952381,
+        "raw": "请问,这双鞋有40码吗?不合适三天内可以推换吧?",
+        "final": "请问,这双鞋有40码吗?合适?"
+      },
+      {
+        "id": "d172",
+        "threshold": 1,
+        "rawCer": 0.3125,
+        "finalCer": 0.6875,
+        "cerChange": 0.375,
+        "raw": "两位靠窗有位置嘛 不要像蔡薇娜就行",
+        "final": "有味 不要香菜"
+      },
+      {
+        "id": "d186",
+        "threshold": 1,
+        "rawCer": 0.07142857142857142,
+        "finalCer": 0.8928571428571429,
+        "cerChange": 0.8214285714285715,
+        "raw": "跟会员系统相关的需求 我整理了一板八点钱请大家帮忙评审一下",
+        "final": "一般评以下"
+      },
+      {
+        "id": "d196",
+        "threshold": 1,
+        "rawCer": 0.391304347826087,
+        "finalCer": 0.6956521739130435,
+        "cerChange": 0.3043478260869565,
+        "raw": "周末要不要去降邊騎行 天氣預報 周日多云积的带水",
+        "final": "周末騎气性周日带水"
+      },
+      {
+        "id": "d198",
+        "threshold": 1,
+        "rawCer": 0.10526315789473684,
+        "finalCer": 0.5263157894736842,
+        "cerChange": 0.42105263157894735,
+        "raw": "你最近忙不忙,想照你看下手机备分怎么设置",
+        "final": "最近忙下手手机备份怎么"
+      }
+    ]
+  },
+  "newImproved": {
+    "t2_count": 0,
+    "t1_count": 0,
+    "t2_ids": [],
+    "t1_ids": []
+  },
+  "sensitivity": [
+    {
+      "threshold": 2,
+      "new_apply": 15,
+      "new_improved": 0,
+      "new_degraded": 15,
+      "gain_risk_ratio": 0
+    },
+    {
+      "threshold": 1,
+      "new_apply": 30,
+      "new_improved": 0,
+      "new_degraded": 30,
+      "gain_risk_ratio": 0
+    }
+  ],
+  "focusCases": {
+    "d082": {
+      "1": {
+        "id": "d082",
+        "scenario": "restaurant",
+        "threshold": 1,
+        "maxDelta": 1.0095899999999958,
+        "picked": true,
+        "appliedCount": 3,
+        "repairCount": 3,
+        "rawCer": 0.5625,
+        "finalCer": 0.9375,
+        "cerDelta": 0.375,
+        "raw": "两位烤创有微纸嘛 不要像蔡薇娜就行",
+        "final": "有味 补药救星",
+        "reason": "shadow_rebuilt",
+        "comboText": "有味 补药救星",
+        "productionApplied": 0
+      },
+      "2": {
+        "id": "d082",
+        "scenario": "restaurant",
+        "threshold": 2,
+        "maxDelta": 1.0095899999999958,
+        "picked": false,
+        "appliedCount": 0,
+        "repairCount": 0,
+        "rawCer": 0.5625,
+        "finalCer": 0.5625,
+        "cerDelta": 0,
+        "raw": "两位烤创有微纸嘛 不要像蔡薇娜就行",
+        "final": "两位烤创有微纸嘛 不要像蔡薇娜就行",
+        "reason": "below_threshold",
+        "productionApplied": 0
+      },
+      "3": {
+        "id": "d082",
+        "scenario": "restaurant",
+        "threshold": 3,
+        "maxDelta": 1.0095899999999958,
+        "picked": false,
+        "appliedCount": 0,
+        "repairCount": 0,
+        "rawCer": 0.5625,
+        "finalCer": 0.5625,
+        "cerDelta": 0,
+        "raw": "两位烤创有微纸嘛 不要像蔡薇娜就行",
+        "final": "两位烤创有微纸嘛 不要像蔡薇娜就行",
+        "reason": "below_threshold",
+        "productionApplied": 0
+      }
+    },
+    "d007": {
+      "1": {
+        "id": "d007",
+        "scenario": "taxi",
+        "threshold": 1,
+        "maxDelta": 0.8059700000000021,
+        "picked": false,
+        "appliedCount": 0,
+        "repairCount": 0,
+        "rawCer": 0.5483870967741935,
+        "finalCer": 0.5483870967741935,
+        "cerDelta": 0,
+        "raw": "市富曲仲觀村軟件遠走機場告訴我幹 9点半的回药师赌车 您提前跟我说",
+        "final": "市富曲仲觀村軟件遠走機場告訴我幹 9点半的回药师赌车 您提前跟我说",
+        "reason": "below_threshold",
+        "productionApplied": 0
+      },
+      "2": {
+        "id": "d007",
+        "scenario": "taxi",
+        "threshold": 2,
+        "maxDelta": 0.8059700000000021,
+        "picked": false,
+        "appliedCount": 0,
+        "repairCount": 0,
+        "rawCer": 0.5483870967741935,
+        "finalCer": 0.5483870967741935,
+        "cerDelta": 0,
+        "raw": "市富曲仲觀村軟件遠走機場告訴我幹 9点半的回药师赌车 您提前跟我说",
+        "final": "市富曲仲觀村軟件遠走機場告訴我幹 9点半的回药师赌车 您提前跟我说",
+        "reason": "below_threshold",
+        "productionApplied": 0
+      },
+      "3": {
+        "id": "d007",
+        "scenario": "taxi",
+        "threshold": 3,
+        "maxDelta": 0.8059700000000021,
+        "picked": false,
+        "appliedCount": 0,
+        "repairCount": 0,
+        "rawCer": 0.5483870967741935,
+        "finalCer": 0.5483870967741935,
+        "cerDelta": 0,
+        "raw": "市富曲仲觀村軟件遠走機場告訴我幹 9点半的回药师赌车 您提前跟我说",
+        "final": "市富曲仲觀村軟件遠走機場告訴我幹 9点半的回药师赌车 您提前跟我说",
+        "reason": "below_threshold",
+        "productionApplied": 0
+      }
+    },
+    "d045": {
+      "1": {
+        "id": "d045",
+        "scenario": "lexicon_homophone",
+        "threshold": 1,
+        "maxDelta": 0.36296399999999096,
+        "picked": false,
+        "appliedCount": 0,
+        "repairCount": 0,
+        "rawCer": 0.8,
+        "finalCer": 0.8,
+        "cerDelta": 0,
+        "raw": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說",
+        "final": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說",
+        "reason": "below_threshold",
+        "productionApplied": 0
+      },
+      "2": {
+        "id": "d045",
+        "scenario": "lexicon_homophone",
+        "threshold": 2,
+        "maxDelta": 0.36296399999999096,
+        "picked": false,
+        "appliedCount": 0,
+        "repairCount": 0,
+        "rawCer": 0.8,
+        "finalCer": 0.8,
+        "cerDelta": 0,
+        "raw": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說",
+        "final": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說",
+        "reason": "below_threshold",
+        "productionApplied": 0
+      },
+      "3": {
+        "id": "d045",
+        "scenario": "lexicon_homophone",
+        "threshold": 3,
+        "maxDelta": 0.36296399999999096,
+        "picked": false,
+        "appliedCount": 0,
+        "repairCount": 0,
+        "rawCer": 0.8,
+        "finalCer": 0.8,
+        "cerDelta": 0,
+        "raw": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說",
+        "final": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說",
+        "reason": "below_threshold",
+        "productionApplied": 0
+      }
+    },
+    "d180": {
+      "1": {
+        "id": "d180",
+        "scenario": "lexicon_homophone",
+        "threshold": 1,
+        "maxDelta": 0.36296000000000106,
+        "picked": false,
+        "appliedCount": 0,
+        "repairCount": 0,
+        "rawCer": 0.68,
+        "finalCer": 0.68,
+        "cerDelta": 0,
+        "raw": "關於後,選生成立 和上限計劃請按上限計劃執行有問題 群里說",
+        "final": "關於後,選生成立 和上限計劃請按上限計劃執行有問題 群里說",
+        "reason": "below_threshold",
+        "productionApplied": 0
+      },
+      "2": {
+        "id": "d180",
+        "scenario": "lexicon_homophone",
+        "threshold": 2,
+        "maxDelta": 0.36296000000000106,
+        "picked": false,
+        "appliedCount": 0,
+        "repairCount": 0,
+        "rawCer": 0.68,
+        "finalCer": 0.68,
+        "cerDelta": 0,
+        "raw": "關於後,選生成立 和上限計劃請按上限計劃執行有問題 群里說",
+        "final": "關於後,選生成立 和上限計劃請按上限計劃執行有問題 群里說",
+        "reason": "below_threshold",
+        "productionApplied": 0
+      },
+      "3": {
+        "id": "d180",
+        "scenario": "lexicon_homophone",
+        "threshold": 3,
+        "maxDelta": 0.36296000000000106,
+        "picked": false,
+        "appliedCount": 0,
+        "repairCount": 0,
+        "rawCer": 0.68,
+        "finalCer": 0.68,
+        "cerDelta": 0,
+        "raw": "關於後,選生成立 和上限計劃請按上限計劃執行有問題 群里說",
+        "final": "關於後,選生成立 和上限計劃請按上限計劃執行有問題 群里說",
+        "reason": "below_threshold",
+        "productionApplied": 0
+      }
+    },
+    "d187": {
+      "1": {
+        "id": "d187",
+        "scenario": "taxi",
+        "threshold": 1,
+        "maxDelta": 5.657039999999995,
+        "picked": true,
+        "appliedCount": 3,
+        "repairCount": 3,
+        "rawCer": 0.6129032258064516,
+        "finalCer": 0.45161290322580644,
+        "cerDelta": -0.16129032258064518,
+        "raw": "市副局仲官村軟件遠走機場告訴 我敢救人 9点半的回药师赌车 您提前跟我说",
+        "final": "市副局中关村軟件遠走機場高速 我敢就任 9点半的回药要是车 您提前跟我说",
+        "reason": "production_applied",
+        "productionApplied": 3
+      },
+      "2": {
+        "id": "d187",
+        "scenario": "taxi",
+        "threshold": 2,
+        "maxDelta": 5.657039999999995,
+        "picked": true,
+        "appliedCount": 3,
+        "repairCount": 3,
+        "rawCer": 0.6129032258064516,
+        "finalCer": 0.45161290322580644,
+        "cerDelta": -0.16129032258064518,
+        "raw": "市副局仲官村軟件遠走機場告訴 我敢救人 9点半的回药师赌车 您提前跟我说",
+        "final": "市副局中关村軟件遠走機場高速 我敢就任 9点半的回药要是车 您提前跟我说",
+        "reason": "production_applied",
+        "productionApplied": 3
+      },
+      "3": {
+        "id": "d187",
+        "scenario": "taxi",
+        "threshold": 3,
+        "maxDelta": 5.657039999999995,
+        "picked": true,
+        "appliedCount": 3,
+        "repairCount": 3,
+        "rawCer": 0.6129032258064516,
+        "finalCer": 0.45161290322580644,
+        "cerDelta": -0.16129032258064518,
+        "raw": "市副局仲官村軟件遠走機場告訴 我敢救人 9点半的回药师赌车 您提前跟我说",
+        "final": "市副局中关村軟件遠走機場高速 我敢就任 9点半的回药要是车 您提前跟我说",
+        "reason": "production_applied",
+        "productionApplied": 3
+      }
+    }
+  },
+  "singleSpanT1": 12,
+  "multiSpanT1": 74,
+  "singleSpanT3": 8,
+  "multiSpanT3": 48
+}

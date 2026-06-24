@@ -1,0 +1,361 @@
+{
+  "meta": {
+    "timestamp": "2026-06-24T04:05:50.864Z",
+    "sqlite": "D:\\Programs\\github\\node_runtime\\lexicon\\v3\\lexicon.sqlite",
+    "sqliteReadable": false
+  },
+  "inventory": {
+    "expansionAliasPairs": 37,
+    "domainHomophoneVariantRows": 0,
+    "legacyConfusionSeedRows": 0,
+    "confusionSeedActive": false
+  },
+  "expansion": {
+    "total": 37,
+    "illegal": 28,
+    "legal": 8,
+    "ambiguous": 1,
+    "illegalList": [
+      {
+        "alias": "后选",
+        "canonical": "候选",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "生城",
+        "canonical": "生成",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "声城",
+        "canonical": "生成",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "生陈",
+        "canonical": "生成",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "ASR 错字",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "上限",
+        "canonical": "上线",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "商线",
+        "canonical": "上线",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "计化",
+        "canonical": "计划",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "借口",
+        "canonical": "接口",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "截口",
+        "canonical": "接口",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "文當",
+        "canonical": "文档",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "文当",
+        "canonical": "文档",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "机厂",
+        "canonical": "机场",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "机常",
+        "canonical": "机场",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "告诉",
+        "canonical": "高速",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "高路",
+        "canonical": "高速",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "高诉",
+        "canonical": "高速",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "身边",
+        "canonical": "顺便",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "深便",
+        "canonical": "顺便",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "钟贝",
+        "canonical": "中杯",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "少病",
+        "canonical": "少冰",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "大悲",
+        "canonical": "大杯",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "小悲",
+        "canonical": "小杯",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "蓝美马分",
+        "canonical": "蓝莓马芬",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "像蔡",
+        "canonical": "香菜",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "ILLEGAL_ASR_CONFUSION",
+        "reason": "P0 denylist ASR surface",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "连调",
+        "canonical": "联调",
+        "source": "terms-manifest.cjs/P1",
+        "patchId": "exp-v1_1-p1-terms",
+        "legality": "ILLEGAL_NEAR_PHONE",
+        "reason": "近音 ASR 错词",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "联掉",
+        "canonical": "联调",
+        "source": "terms-manifest.cjs/P1",
+        "patchId": "exp-v1_1-p1-terms",
+        "legality": "ILLEGAL_NEAR_PHONE",
+        "reason": "近音 ASR 错词",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "巧可力",
+        "canonical": "巧克力",
+        "source": "terms-manifest.cjs/P1",
+        "patchId": "exp-v1_1-p1-terms",
+        "legality": "ILLEGAL_NEAR_PHONE",
+        "reason": "近音 ASR 错词",
+        "action": "REMOVE"
+      },
+      {
+        "alias": "巧克莉",
+        "canonical": "巧克力",
+        "source": "terms-manifest.cjs/P1",
+        "patchId": "exp-v1_1-p1-terms",
+        "legality": "ILLEGAL_NEAR_PHONE",
+        "reason": "近音 ASR 错词",
+        "action": "REMOVE"
+      }
+    ],
+    "legalList": [
+      {
+        "alias": "候選",
+        "canonical": "候选",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "LEGAL_TRAD_SIMPLIFIED",
+        "reason": "简繁映射",
+        "action": "KEEP"
+      },
+      {
+        "alias": "上線",
+        "canonical": "上线",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "LEGAL_TRAD_SIMPLIFIED",
+        "reason": "简繁映射",
+        "action": "KEEP"
+      },
+      {
+        "alias": "計畫",
+        "canonical": "计划",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "LEGAL_TRAD_SIMPLIFIED",
+        "reason": "简繁映射",
+        "action": "KEEP"
+      },
+      {
+        "alias": "計劃",
+        "canonical": "计划",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "LEGAL_TRAD_SIMPLIFIED",
+        "reason": "简繁映射",
+        "action": "KEEP"
+      },
+      {
+        "alias": "機場",
+        "canonical": "机场",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "LEGAL_TRAD_SIMPLIFIED",
+        "reason": "简繁映射",
+        "action": "KEEP"
+      },
+      {
+        "alias": "鐘貝",
+        "canonical": "中杯",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "LEGAL_TRAD_SIMPLIFIED",
+        "reason": "简繁映射",
+        "action": "KEEP"
+      },
+      {
+        "alias": "预定",
+        "canonical": "预订",
+        "source": "terms-manifest.cjs/P1.5",
+        "patchId": "exp-v1_1-p1_5-alias",
+        "legality": "LEGAL_ENTITY_ALIAS",
+        "reason": "同一实体简繁/异体字",
+        "action": "KEEP"
+      },
+      {
+        "alias": "連調",
+        "canonical": "联调",
+        "source": "terms-manifest.cjs/P1",
+        "patchId": "exp-v1_1-p1-terms",
+        "legality": "LEGAL_TRAD_SIMPLIFIED",
+        "reason": "简繁",
+        "action": "KEEP"
+      }
+    ]
+  },
+  "domainPatchVariants": [],
+  "runtime": {
+    "ok": false,
+    "error": "The module '\\\\?\\D:\\Programs\\github\\lingua_1\\electron_node\\electron-node\\node_modules\\better-sqlite3\\build\\Release\\better_sqlite3.node'\nwas compiled against a different Node.js version using\nNODE_MODULE_VERSION 119. This version of Node.js requires\nNODE_MODULE_VERSION 137. Please try re-compiling or re-installing\nthe module (for instance, using `npm rebuild` or `npm install`).",
+    "illegalSampleCount": 0,
+    "legalSampleCount": 0,
+    "illegalSamples": []
+  },
+  "guardrails": {
+    "validateSeedRejectsConfusion": true,
+    "scanPatchGranularity": "DENY_LIST only — no ASR alias legality",
+    "termsManifestDenyList": true,
+    "scanAliasLegality": false
+  }
+}

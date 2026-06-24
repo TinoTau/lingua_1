@@ -5,16 +5,28 @@ import { LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION } from '../lexicon-v2/l
 import type { LexiconPatchV3 } from './patch-types';
 import type { LexiconV3BundleFiles } from './bundle-io';
 import { collectBundleTableStats } from './sqlite-table-stats';
+import {
+  readDomainAvailabilityFromDb,
+  readDomainHierarchyCountFromDb,
+} from './manifest-domain-stats-bridge';
+
+type ExistingManifestFields = {
+  seedInputs: string[];
+  domainHierarchyVersion: string | null;
+};
 
 export function writeBundleManifestsAfterPatch(
   db: Database.Database,
   files: LexiconV3BundleFiles,
   patch: LexiconPatchV3
-): void {
+): { domainAvailabilityRebuilt: true } {
   const tables = collectBundleTableStats(db);
   const checksumHex = sha256File(files.sqlitePath);
   const checksum = `sha256:${checksumHex}`;
   const appliedAt = new Date().toISOString();
+  const existing = readExistingManifestFields(files.manifestPath);
+  const domainAvailability = readDomainAvailabilityFromDb(db);
+  const domainHierarchyCount = readDomainHierarchyCountFromDb(db);
 
   const manifest = {
     schemaVersion: LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION,
@@ -30,11 +42,14 @@ export function writeBundleManifestsAfterPatch(
       ngrams: tables.term_pinyin_ngrams.rowCount,
       term: tables.term.rowCount,
       term_domain_tags: tables.term_domain_tags.rowCount,
+      domain_hierarchy: domainHierarchyCount,
     },
-    seedInputs: readExistingSeedInputs(files.manifestPath),
+    seedInputs: existing.seedInputs,
     overlayInputs: [],
     lastPatchId: patch.patchId,
     lastAppliedAt: appliedAt,
+    domainAvailability,
+    domainHierarchyVersion: existing.domainHierarchyVersion,
   };
 
   const stats = {
@@ -45,6 +60,8 @@ export function writeBundleManifestsAfterPatch(
     ngramsCount: manifest.tables.ngrams,
     termCount: manifest.tables.term,
     termDomainTagsCount: manifest.tables.term_domain_tags,
+    domainAvailability,
+    domainHierarchyVersion: existing.domainHierarchyVersion,
     generatedAt: appliedAt,
     bundleVersion: patch.nextVersion,
     checksum,
@@ -53,15 +70,21 @@ export function writeBundleManifestsAfterPatch(
   fs.writeFileSync(files.manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf-8');
   fs.writeFileSync(files.statsPath, `${JSON.stringify(stats, null, 2)}\n`, 'utf-8');
   fs.writeFileSync(files.checksumPath, `${normalizeManifestChecksum(checksum)}\n`, 'utf-8');
+
+  return { domainAvailabilityRebuilt: true };
 }
 
-function readExistingSeedInputs(manifestPath: string): string[] {
+function readExistingManifestFields(manifestPath: string): ExistingManifestFields {
   if (!fs.existsSync(manifestPath)) {
-    return [];
+    return { seedInputs: [], domainHierarchyVersion: null };
   }
   const parsed = JSON.parse(fs.readFileSync(manifestPath, 'utf-8')) as {
     seedInputs?: string[];
     seed_inputs?: string[];
+    domainHierarchyVersion?: string | null;
   };
-  return parsed.seedInputs ?? parsed.seed_inputs ?? [];
+  return {
+    seedInputs: parsed.seedInputs ?? parsed.seed_inputs ?? [],
+    domainHierarchyVersion: parsed.domainHierarchyVersion ?? null,
+  };
 }

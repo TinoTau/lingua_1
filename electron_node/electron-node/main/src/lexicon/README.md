@@ -1,8 +1,7 @@
 # Lexicon 运行时（V3 Canonical）
 
-Legacy ASR repair 与 FW 共用部分基础设施。以代码为准：`main/src/lexicon/`、`scripts/lexicon/`。
-
-**FW 默认主链** 使用 **Lexicon Runtime V2**（`main/src/lexicon-v2/`），不走本文 §3 n-best diff 窗路径。
+> **FW 主链** 使用 `node_runtime/lexicon/v3` + `LexiconRuntimeV2`（schema `lexicon-v3-five-table-v2`）。  
+> 下文 §1–§3 为 **Legacy Recover** 路径（`current/`），见 `node_runtime/lexicon/current/README.md`。
 
 ---
 

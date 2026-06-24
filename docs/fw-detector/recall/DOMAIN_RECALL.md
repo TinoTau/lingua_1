@@ -14,7 +14,7 @@
 > | Registry / profile 驱动 recall | **`RuntimeDomainRegistry`** — `term_domain_tags` DISTINCT |
 > | 粗域静态展开表 | **`coarseToFineMap`** from `domain_hierarchy` ∩ available |
 > | `enabledDomains` 默认语义 | **CFG-01** — 默认 `[]` → 全量 available |
-> | Runtime Diagnostics 域字段 | **DSU Runtime Diagnostics** — 见 `DIAGNOSTICS_CONTRACT.md` |
+> | Runtime Diagnostics 域字段 | **DSU** — 见 [diagnostics/FROZEN.md](../diagnostics/FROZEN.md) |
 >
 > **仍有效：** §4 Vote 公式 · §5 ReRank 系数 · §6–§11 性能 / Patch / Legacy 边界（算法常量未变）
 >

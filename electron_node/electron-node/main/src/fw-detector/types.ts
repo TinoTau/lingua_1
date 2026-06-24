@@ -344,6 +344,10 @@ export type SpanAssemblyV4Diagnostics = {
   shadowBeamSpanSetsTotal: number;
   intervalAssemblyCandidateCount: number;
   intervalRejectedOverlapCount: number;
+  fallbackCandidateCount?: number;
+  kenlmPoolCandidateCount?: number;
+  preFilterCombinationCount?: number;
+  toneGuardBlockedCount?: number;
   recallEnabledFineDomains?: string[];
   domainScores?: Record<string, number>;
   winningFineDomain?: string;

@@ -3,7 +3,9 @@
  */
 
 import {
+  computeCandidateScore,
   computeCandidateScoreBreakdown,
+  compareRecallHitsPrimaryScore,
   type CandidateScoreBreakdown,
   type RecallCandidateKind,
 } from '../lexicon/candidate-score';
@@ -34,6 +36,7 @@ export type RecallSpanTopKV3Hit = {
   phoneticScore: number;
   candidateScore: number;
   candidateScoreBreakdown: CandidateScoreBreakdown;
+  recallCandidateKind?: RecallCandidateKind;
   source: WindowCandidateSource;
   acousticTonePattern?: number[];
   parentTerm?: string;
@@ -112,6 +115,7 @@ function mapV2Hit(hit: RecallSpanTopKV2Hit): RecallSpanTopKV3Hit {
     phoneticScore: hit.phoneticScore,
     candidateScore: hit.candidateScore,
     candidateScoreBreakdown: hit.candidateScoreBreakdown,
+    recallCandidateKind: hit.recallCandidateKind,
     source: hit.source,
     acousticTonePattern: hit.acousticTonePattern,
     toneCompatible: hit.toneCompatible,
@@ -137,13 +141,13 @@ function scoreFragmentHit(
     phoneticScore,
     recallCandidateKind,
   });
-  const candidateScore =
-    candidateScoreBreakdown.priorScore +
-    candidateScoreBreakdown.phoneticSimilarity +
-    candidateScoreBreakdown.exactLengthBonus +
-    candidateScoreBreakdown.domainBoost -
-    candidateScoreBreakdown.editDistancePenalty -
-    candidateScoreBreakdown.fuzzyPenalty;
+  const candidateScore = computeCandidateScore({
+    hotword,
+    windowSyllables: syllables,
+    windowText,
+    phoneticScore,
+    recallCandidateKind,
+  });
 
   if (candidateScore < minCandidateScore()) {
     return null;
@@ -159,6 +163,7 @@ function scoreFragmentHit(
     phoneticScore,
     candidateScore,
     candidateScoreBreakdown,
+    recallCandidateKind,
     source: resolveWindowCandidateSource({ viaPinyin: true }),
     acousticTonePattern: tonePattern,
     parentTerm: row.parentWord,
@@ -197,7 +202,7 @@ function applyToneScoreToFragmentHits(
     }
   }
 
-  hits.sort((a, b) => b.candidateScore - a.candidateScore);
+  hits.sort(compareRecallHitsPrimaryScore);
   return { penalizedCount, compatibleCount };
 }
 

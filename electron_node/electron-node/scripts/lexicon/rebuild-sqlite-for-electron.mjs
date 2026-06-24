@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * 将 better-sqlite3 编译为 Electron 可用 ABI（节点 runtime / npm start）。
- * 在 lexicon:build 之后若未走 build-for-electron，或怀疑词库 load 报 NODE_MODULE_VERSION 时执行。
+ * Rebuild better-sqlite3 native module for Electron ABI.
+ * This does NOT rebuild lexicon.sqlite (the lexicon database file).
  */
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -14,4 +14,6 @@ runCmd('npx', ['@electron/rebuild', '-f', '-w', 'better-sqlite3'], {
   label: 'electron-rebuild better-sqlite3',
 });
 
-console.log('[lexicon] Electron sqlite ready — restart node (npm start) if already running');
+console.log('[lexicon] native rebuild complete (better-sqlite3 for Electron)');
+console.log('[lexicon] NOT a lexicon DB rebuild — for DB use: lexicon:build:v2-shadow → prepare:v3-runtime');
+console.log('[lexicon] restart node (npm start) if already running');

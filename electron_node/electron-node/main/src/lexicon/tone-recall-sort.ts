@@ -8,14 +8,14 @@ import {
   extractToneNumbersFromKey,
   type ToneReason,
 } from '../fw-detector/tone-match-score';
+import { compareRecallHitsPrimaryScore, type RecallScoreTieBreakable } from './candidate-score';
 
-export type ToneRecallSortableHit = {
+export type ToneRecallSortableHit = RecallScoreTieBreakable & {
   hotword: {
     word: string;
     priorScore: number;
     tonePinyinKey?: string;
   };
-  candidateScore: number;
   /** Per-hit tone pattern override (variant-sliced acoustic pattern). */
   acousticTonePattern?: number[];
   toneLookupStage?: 'tone_exact' | 'plain_fallback' | 'plain_only_no_pattern';
@@ -111,7 +111,7 @@ export function sortRecallHitsByToneCompatibility<T extends ToneRecallSortableHi
     if (stageDiff !== 0) {
       return stageDiff;
     }
-    return b.candidateScore - a.candidateScore;
+    return compareRecallHitsPrimaryScore(a, b);
   });
 
   return {

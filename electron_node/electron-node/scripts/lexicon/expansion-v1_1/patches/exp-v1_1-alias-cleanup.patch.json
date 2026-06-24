@@ -1,0 +1,423 @@
+{
+  "patchId": "exp-v1_1-alias-cleanup",
+  "baseVersion": 3,
+  "nextVersion": 4,
+  "hash": "sha256:ef8a2ec780f959e2c6ac88ebc4d35be0a36a01f1a7c950562b699d980950f43c",
+  "operations": [
+    {
+      "op": "update",
+      "table": "term",
+      "word": "联调",
+      "termId": "exp-v1_1-liantiao",
+      "fields": {
+        "priorScore": 0.9,
+        "repairTarget": true,
+        "enabled": true,
+        "domainTags": [
+          "tech_ai"
+        ],
+        "domainWeights": {
+          "tech_ai": 1
+        },
+        "aliasesReplace": true,
+        "aliases": [
+          "連調"
+        ],
+        "aliasEntries": [
+          {
+            "alias": "連調",
+            "alias_type": "TRAD_SIMPLIFIED"
+          }
+        ]
+      }
+    },
+    {
+      "op": "update",
+      "table": "term",
+      "word": "巧克力",
+      "termId": "exp-v1_1-qiaokeli",
+      "fields": {
+        "priorScore": 0.88,
+        "repairTarget": true,
+        "enabled": true,
+        "domainTags": [
+          "coffee"
+        ],
+        "domainWeights": {
+          "coffee": 1
+        },
+        "aliasesReplace": true,
+        "aliases": []
+      }
+    },
+    {
+      "op": "update",
+      "table": "term",
+      "word": "候选",
+      "termId": "exp-v1_1-alias-houxuan",
+      "fields": {
+        "priorScore": 0.92,
+        "repairTarget": true,
+        "enabled": true,
+        "domainTags": [
+          "tech_ai"
+        ],
+        "domainWeights": {
+          "tech_ai": 1
+        },
+        "aliasesReplace": true,
+        "aliases": [
+          "候選"
+        ],
+        "aliasEntries": [
+          {
+            "alias": "候選",
+            "alias_type": "TRAD_SIMPLIFIED"
+          }
+        ]
+      }
+    },
+    {
+      "op": "update",
+      "table": "term",
+      "word": "生成",
+      "termId": "exp-v1_1-alias-shengcheng",
+      "fields": {
+        "priorScore": 0.92,
+        "repairTarget": true,
+        "enabled": true,
+        "domainTags": [
+          "tech_ai"
+        ],
+        "domainWeights": {
+          "tech_ai": 1
+        },
+        "aliasesReplace": true,
+        "aliases": []
+      }
+    },
+    {
+      "op": "update",
+      "table": "term",
+      "word": "上线",
+      "termId": "exp-v1_1-alias-shangxian",
+      "fields": {
+        "priorScore": 0.92,
+        "repairTarget": true,
+        "enabled": true,
+        "domainTags": [
+          "tech_ai"
+        ],
+        "domainWeights": {
+          "tech_ai": 1
+        },
+        "aliasesReplace": true,
+        "aliases": [
+          "上線"
+        ],
+        "aliasEntries": [
+          {
+            "alias": "上線",
+            "alias_type": "TRAD_SIMPLIFIED"
+          }
+        ]
+      }
+    },
+    {
+      "op": "update",
+      "table": "term",
+      "word": "计划",
+      "termId": "exp-v1_1-alias-jihua",
+      "fields": {
+        "priorScore": 0.92,
+        "repairTarget": true,
+        "enabled": true,
+        "domainTags": [
+          "tech_ai"
+        ],
+        "domainWeights": {
+          "tech_ai": 1
+        },
+        "aliasesReplace": true,
+        "aliases": [
+          "計畫",
+          "計劃"
+        ],
+        "aliasEntries": [
+          {
+            "alias": "計畫",
+            "alias_type": "TRAD_SIMPLIFIED"
+          },
+          {
+            "alias": "計劃",
+            "alias_type": "TRAD_SIMPLIFIED"
+          }
+        ]
+      }
+    },
+    {
+      "op": "update",
+      "table": "term",
+      "word": "接口",
+      "termId": "exp-v1_1-alias-jiekou",
+      "fields": {
+        "priorScore": 0.92,
+        "repairTarget": true,
+        "enabled": true,
+        "domainTags": [
+          "tech_ai"
+        ],
+        "domainWeights": {
+          "tech_ai": 1
+        },
+        "aliasesReplace": true,
+        "aliases": []
+      }
+    },
+    {
+      "op": "update",
+      "table": "term",
+      "word": "文档",
+      "termId": "exp-v1_1-alias-wendang",
+      "fields": {
+        "priorScore": 0.92,
+        "repairTarget": true,
+        "enabled": true,
+        "domainTags": [
+          "tech_ai"
+        ],
+        "domainWeights": {
+          "tech_ai": 1
+        },
+        "aliasesReplace": true,
+        "aliases": []
+      }
+    },
+    {
+      "op": "update",
+      "table": "term",
+      "word": "机场",
+      "termId": "term-e69cbae59cba7c6a",
+      "fields": {
+        "priorScore": 0.9,
+        "repairTarget": true,
+        "enabled": true,
+        "domainTags": [
+          "tourism_transport"
+        ],
+        "domainWeights": {
+          "tourism_transport": 1
+        },
+        "aliasesReplace": true,
+        "aliases": [
+          "機場"
+        ],
+        "aliasEntries": [
+          {
+            "alias": "機場",
+            "alias_type": "TRAD_SIMPLIFIED"
+          }
+        ]
+      }
+    },
+    {
+      "op": "update",
+      "table": "term",
+      "word": "高速",
+      "termId": "exp-v1_1-alias-gaosu",
+      "fields": {
+        "priorScore": 0.9,
+        "repairTarget": true,
+        "enabled": true,
+        "domainTags": [
+          "tourism_transport"
+        ],
+        "domainWeights": {
+          "tourism_transport": 1
+        },
+        "aliasesReplace": true,
+        "aliases": []
+      }
+    },
+    {
+      "op": "update",
+      "table": "term",
+      "word": "顺便",
+      "termId": "exp-v1_1-alias-shunbian",
+      "fields": {
+        "priorScore": 0.85,
+        "repairTarget": true,
+        "enabled": true,
+        "domainTags": [
+          "general"
+        ],
+        "domainWeights": {
+          "general": 1
+        },
+        "aliasesReplace": true,
+        "aliases": []
+      }
+    },
+    {
+      "op": "update",
+      "table": "term",
+      "word": "中杯",
+      "termId": "term-e4b8ade69daf7c7a",
+      "fields": {
+        "priorScore": 0.9,
+        "repairTarget": true,
+        "enabled": true,
+        "domainTags": [
+          "coffee",
+          "milk_tea",
+          "food_order"
+        ],
+        "domainWeights": {
+          "coffee": 1,
+          "milk_tea": 1,
+          "food_order": 1
+        },
+        "aliasesReplace": true,
+        "aliases": []
+      }
+    },
+    {
+      "op": "update",
+      "table": "term",
+      "word": "少冰",
+      "termId": "term-e5b091e586b07c73",
+      "fields": {
+        "priorScore": 0.88,
+        "repairTarget": true,
+        "enabled": true,
+        "domainTags": [
+          "coffee",
+          "milk_tea",
+          "food_order"
+        ],
+        "domainWeights": {
+          "coffee": 1,
+          "milk_tea": 1,
+          "food_order": 1
+        },
+        "aliasesReplace": true,
+        "aliases": []
+      }
+    },
+    {
+      "op": "update",
+      "table": "term",
+      "word": "大杯",
+      "termId": "term-e5a4a7e69daf7c64",
+      "fields": {
+        "priorScore": 0.88,
+        "repairTarget": true,
+        "enabled": true,
+        "domainTags": [
+          "coffee",
+          "milk_tea",
+          "food_order"
+        ],
+        "domainWeights": {
+          "coffee": 1,
+          "milk_tea": 1,
+          "food_order": 1
+        },
+        "aliasesReplace": true,
+        "aliases": []
+      }
+    },
+    {
+      "op": "update",
+      "table": "term",
+      "word": "小杯",
+      "termId": "term-e5b08fe69daf7c78",
+      "fields": {
+        "priorScore": 0.88,
+        "repairTarget": true,
+        "enabled": true,
+        "domainTags": [
+          "coffee",
+          "milk_tea",
+          "food_order"
+        ],
+        "domainWeights": {
+          "coffee": 1,
+          "milk_tea": 1,
+          "food_order": 1
+        },
+        "aliasesReplace": true,
+        "aliases": []
+      }
+    },
+    {
+      "op": "update",
+      "table": "term",
+      "word": "蓝莓马芬",
+      "termId": "term-e8939de88e93e9a9",
+      "fields": {
+        "priorScore": 0.9,
+        "repairTarget": true,
+        "enabled": true,
+        "domainTags": [
+          "bakery"
+        ],
+        "domainWeights": {
+          "bakery": 1
+        },
+        "aliasesReplace": true,
+        "aliases": []
+      }
+    },
+    {
+      "op": "update",
+      "table": "term",
+      "word": "香菜",
+      "termId": "exp-v1_1-alias-xiangcai",
+      "fields": {
+        "priorScore": 0.85,
+        "repairTarget": true,
+        "enabled": true,
+        "domainTags": [
+          "general"
+        ],
+        "domainWeights": {
+          "general": 1
+        },
+        "aliasesReplace": true,
+        "aliases": []
+      }
+    },
+    {
+      "op": "update",
+      "table": "term",
+      "word": "预订",
+      "termId": "term-e9a284e8aea27c79",
+      "fields": {
+        "priorScore": 0.88,
+        "repairTarget": true,
+        "enabled": true,
+        "domainTags": [
+          "tourism_hotel",
+          "tourism_route",
+          "food_order"
+        ],
+        "domainWeights": {
+          "tourism_hotel": 1,
+          "tourism_route": 1,
+          "food_order": 1
+        },
+        "aliasesReplace": true,
+        "aliases": [
+          "预定"
+        ],
+        "aliasEntries": [
+          {
+            "alias": "预定",
+            "alias_type": "ENTITY_WRITING"
+          }
+        ]
+      }
+    }
+  ]
+}

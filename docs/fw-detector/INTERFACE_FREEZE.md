@@ -177,7 +177,7 @@ type SentenceRerankPick = {
 
 1. 框架接口语义变更 → 新合约版本 + `freeze-contract.test.ts` + 文档 bump  
 2. 仅 diagnostics 追加 → V1.0.2 patch 级别，optional 字段，向后兼容  
-3. 词库字段变更 → [LEXICON_OPERATIONS.md](./LEXICON_OPERATIONS.md)，**不** bump 框架版本
+3. 词库字段变更 → [lexicon-v3/LEXICON_OPERATIONS.md](../lexicon-v3/LEXICON_OPERATIONS.md)，**不** bump 框架版本
 
 ---
 

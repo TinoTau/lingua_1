@@ -89,6 +89,40 @@ function applyTermAdd(db: Database.Database, entry: TermPatchEntry): void {
   rematerializeTermInDb(db, termId, { aliases: entry.aliases });
 }
 
+function parseAliasesJson(raw: string | undefined, fallbackWord: string): string[] {
+  if (typeof raw === 'string' && raw.trim()) {
+    try {
+      const parsed = JSON.parse(raw) as unknown;
+      if (Array.isArray(parsed) && parsed.length) {
+        return parsed.map((a) => String(a).trim()).filter(Boolean);
+      }
+    } catch {
+      /* fall through */
+    }
+  }
+  return [fallbackWord];
+}
+
+function mergeAliasFields(
+  db: Database.Database,
+  termId: string,
+  canonicalWord: string,
+  incoming?: string[],
+  replace = false
+): string[] | undefined {
+  if (incoming === undefined) {
+    return undefined;
+  }
+  if (replace) {
+    return [...new Set(incoming)].filter((a) => a !== canonicalWord);
+  }
+  const row = db
+    .prepare(`SELECT aliases FROM domain_lexicon WHERE id = ? AND is_alias = 0 LIMIT 1`)
+    .get(termId) as { aliases?: string } | undefined;
+  const existing = parseAliasesJson(row?.aliases, canonicalWord);
+  return [...new Set([...existing, ...incoming])].filter((a) => a !== canonicalWord);
+}
+
 function applyTermUpdate(db: Database.Database, op: PatchOperation): void {
   const termId = op.termId?.trim();
   if (!termId) {
@@ -130,6 +164,18 @@ function applyTermUpdate(db: Database.Database, op: PatchOperation): void {
     const tags = existing.map((r) => r.domain_id);
     const weights = normalizeTagWeights(tags, fields.domainWeights);
     replaceTermTags(db, termId, tags, weights);
+  }
+
+  const mergedAliases = mergeAliasFields(
+    db,
+    termId,
+    op.word.trim(),
+    fields.aliases,
+    fields.aliasesReplace === true
+  );
+  if (mergedAliases) {
+    rematerializeTermInDb(db, termId, { aliases: mergedAliases });
+    return;
   }
 
   rematerializeTermInDb(db, termId);

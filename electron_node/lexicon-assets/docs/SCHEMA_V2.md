@@ -206,7 +206,7 @@ npx jest --testPathPattern="ddl-schema-v2|bundle-schema-v2|freeze-contract"
 - `term >= 107`，`term_domain_tags >= 200`  
 - manifest `schemaVersion = lexicon-v3-five-table-v2`  
 - gate pass · orchestrator 加载 v2 成功  
-- DSU Runtime Diagnostics 七字段齐全（见 [`docs/fw-detector/DIAGNOSTICS_CONTRACT.md`](../../../../docs/fw-detector/DIAGNOSTICS_CONTRACT.md) DSU 节）  
+- DSU Runtime Diagnostics 七字段齐全（见 [`docs/fw-detector/diagnostics/FROZEN.md`](../../../../docs/fw-detector/diagnostics/FROZEN.md)）  
 - `domain_hierarchy` gate ≥ 8 · `domainAvailability` 对齐 sqlite  
 - `hardDropCount = 0` · freeze-contract pass
 
@@ -224,4 +224,4 @@ npx jest --testPathPattern="ddl-schema-v2|bundle-schema-v2|freeze-contract"
 |------|------|
 | Domain Recall 合约 | `docs/fw-detector/recall/DOMAIN_RECALL.md` |
 | Lexicon 资产 README | [`README.md`](./README.md) |
-| FW Lexicon 运维 | `docs/fw-detector/LEXICON_OPERATIONS.md` |
+| FW Lexicon 运维 | `docs/lexicon-v3/LEXICON_OPERATIONS.md` |

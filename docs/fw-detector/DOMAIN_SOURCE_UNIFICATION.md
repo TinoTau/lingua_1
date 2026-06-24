@@ -99,7 +99,7 @@ Job extra / `FwDetectorRuntimeDiag` 域字段（仅观测）：
 | `recallScopeSource` | `available` \| `policy` \| `job_override` |
 | `domainHierarchyVersion` | REG-04 |
 
-详见 [DIAGNOSTICS_CONTRACT.md](./DIAGNOSTICS_CONTRACT.md)。
+详见 [diagnostics/FROZEN.md](./diagnostics/FROZEN.md)。
 
 ---
 

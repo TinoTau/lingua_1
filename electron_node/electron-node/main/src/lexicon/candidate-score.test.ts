@@ -49,7 +49,7 @@ describe('computeCandidateScore', () => {
     expect(p).toBeLessThanOrEqual(1);
   });
 
-  it('breakdown includes editDistancePenalty and lowers total score', () => {
+  it('breakdown retains editDistancePenalty but primary score excludes it (GATE-RANK-03)', () => {
     const b = computeCandidateScoreBreakdown({
       hotword: hw,
       windowSyllables: ['hou', 'xuan', 'sheng', 'cheng'],
@@ -57,18 +57,24 @@ describe('computeCandidateScore', () => {
     });
     expect(b.editDistancePenalty).toBeGreaterThanOrEqual(0);
     expect(b.editDistancePenalty).toBeLessThanOrEqual(1);
-    const total =
+    const primary =
       b.priorScore +
       b.phoneticSimilarity +
       b.exactLengthBonus +
       b.domainBoost -
-      b.editDistancePenalty -
       b.fuzzyPenalty;
     expect(computeCandidateScore({
       hotword: hw,
       windowSyllables: ['hou', 'xuan', 'sheng', 'cheng'],
       windowText: '候选生成',
-    })).toBeCloseTo(total, 5);
+    })).toBeCloseTo(primary, 5);
+    expect(computeCandidateScore({
+      hotword: hw,
+      windowSyllables: ['hou', 'xuan', 'sheng', 'cheng'],
+      windowText: '候选生成',
+    })).toBeGreaterThanOrEqual(
+      primary - b.editDistancePenalty
+    );
   });
 
   it('fuzzy penalty values match V1.2 freeze', () => {

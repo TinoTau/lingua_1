@@ -1,0 +1,51 @@
+{
+  "timestamp": "2026-06-24T13:28:47.929Z",
+  "counterfactuals": [
+    {
+      "id": "CF-01-frozen-pipeline",
+      "feature": "filter + toneGuard + select(sameDomain>base)",
+      "input": "coffee vote; 烧饼 base 1.2 mismatch; 少冰 domain 0.9 match",
+      "output_words": [
+        "少冰"
+      ],
+      "tone_guard_blocked": 1,
+      "exists": true,
+      "effective": true,
+      "decision_position": "selectPerSpanCandidates after applyToneAssemblyGuard",
+      "downstream": "spanSets → KenLM pool"
+    },
+    {
+      "id": "CF-02-global-score-bypass",
+      "feature": "反事实：绕过桶优先级，仅按 recall score 降序",
+      "input": "同上",
+      "output_words": [
+        "烧饼",
+        "少冰"
+      ],
+      "degraded": true,
+      "explanation": "漂移行为：高分 base 烧饼覆盖 domain 少冰 — 即修复前 Contract Drift 根因",
+      "effective_proof": "禁用桶+guard 后首选词从少冰退化为烧饼"
+    },
+    {
+      "id": "CF-03-ed-tie-breaker",
+      "feature": "compareRecallHitsPrimaryScore — ED asc on tie",
+      "input": "同分 1.0；烧饼 ED=0.5；少冰 ED=0.25",
+      "output": "少冰优先",
+      "degraded_if_removed": "同分时错误候选排前",
+      "effective": true,
+      "decision_position": "Recall sort within pinyin_key bucket"
+    },
+    {
+      "id": "CF-04-bucket-partition",
+      "feature": "filterDomainCandidatesPerSpan (GATE-RANK-01)",
+      "sameDomain": [
+        "少冰"
+      ],
+      "base": [
+        "烧饼"
+      ],
+      "effective": true
+    }
+  ],
+  "verdict": "PASS — 反事实验证：绕过冻结链路出现可解释退化（烧饼优先）"
+}

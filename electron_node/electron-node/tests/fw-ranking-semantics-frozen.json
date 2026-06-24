@@ -1,0 +1,24 @@
+[
+  {
+    "id": "d003",
+    "scenario": "cafe",
+    "description": "烧病 -> 少冰 (not 烧饼)",
+    "rawContains": "烧病",
+    "finalMustContain": "少冰",
+    "finalMustNotContain": "烧饼"
+  },
+  {
+    "id": "d048",
+    "scenario": "cafe",
+    "description": "少病 -> 少冰 (not 烧饼)",
+    "rawContains": "少病",
+    "finalMustContain": "少冰",
+    "finalMustNotContain": "烧饼"
+  },
+  {
+    "id": "shao_bing_synthetic",
+    "scenario": "cafe",
+    "description": "shao|bing bucket with coffee vote",
+    "note": "covered by unit tests ranking-repair + assemble"
+  }
+]

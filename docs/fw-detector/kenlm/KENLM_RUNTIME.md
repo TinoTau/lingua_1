@@ -125,5 +125,5 @@ runFwDetectorV4Path
 
 - [SCORE_CONTRACT.md](./SCORE_CONTRACT.md) — Raw Log Delta pick · Gate 3.0
 - [CONFIG.md](../CONFIG.md)
-- [DIAGNOSTICS_CONTRACT.md](../DIAGNOSTICS_CONTRACT.md)
-- [FRAMEWORK_FREEZE_DECLARATION.md](../FRAMEWORK_FREEZE_DECLARATION.md)
+- [kenlm/SCORE_CONTRACT.md](./kenlm/SCORE_CONTRACT.md)
+- [freeze/FROZEN.md](./freeze/FROZEN.md)

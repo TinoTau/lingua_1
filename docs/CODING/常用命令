@@ -6,24 +6,24 @@ cd D:\Programs\github\lingua_1
 .\scripts\clear_code_cache_comprehensive.ps1
 .\scripts\maintenance\clear_logs_simple.ps1
 
-# 1. 节点端（日常启动 — 与以前相同，多一行 sqlite 可选/推荐）
+# 1. 节点端（日常启动）
 cd D:\Programs\github\lingua_1\electron_node\electron-node
 npm run clear-cache
 npm run build
-# 保证 Electron 能 load 词库（跑过 lexicon:build / npm rebuild 后必做；纯改 TS 可跳过）
-npm run lexicon:rebuild-sqlite
+# Native rebuild（better-sqlite3 for Electron）— 不是 lexicon DB rebuild
+npm run lexicon:rebuild-native
 cd D:\Programs\github\lingua_1
 .\scripts\start_electron_node.ps1
 # 启动后确认：日志里 lexicon_runtime_status: ok；config 里 lexiconRecall.enabled=true
 
-0. 请按照这个方向（不要偏离已经冻结的架构）给我一段提示词，用于开发前的代码审计（需要生成审计报告文档）
-1. 这是审计结果，请把具体开发方案整理成文档，包括架构，接口，代码逻辑和数据结构，Diagnostics/Trace的样例，target list和check list，给我下载md格式文档
-2.《》，请阅读之后结合实际代码，看一下有没有需要补充的信息和约束，给我一份清单，整理成文档
-3.《》，这是需要补充的内容清单，请帮我补充，生成单独的下载版md格式的文档
-4.《》，这是补充的信息，请遵循D:\Programs\github\lingua_1\docs\CODING\vibe coding代码规范进行开发
+0. 请按照这个方向（不要偏离已经冻结的架构）给我一段提示词，用于开发前的代码审计（需要生成审计报告文档）。除功能、接口、数据结构和流程审计外，必须同时进行 Frozen Architecture Verification 和 Architecture Drift Audit，核对冻结设计、决策链路、接口契约、数据契约和运行链路是否仍然成立；不仅要确认功能是否存在，还要确认功能是否真正参与最终决策、是否进入主链路、是否被后续模块覆盖、绕过或降级；检查是否存在历史遗留逻辑、兼容逻辑、旁路逻辑、失效逻辑、重复实现、隐藏门控、死代码、权重失效、上下文失效或架构漂移；输出审计报告时必须区分“功能存在”和“功能生效”，列出 Expected、Actual、Impact、Severity，并输出 Drift Matrix、Ownership Matrix、Decision Path Matrix、Dead Feature Matrix 和 Required Repair Matrix，明确哪些逻辑属于 KEEP、MODIFY、RESTORE、DELETE。
+1. 这是审计结果，请结合冻结设计、历史审计结论、开发方案和实际代码实现进行分析，不仅评估功能是否正确，还要评估是否存在架构漂移、责任边界漂移、决策链路漂移、权重失效、门控失效、上下文失效、功能被覆盖、功能存在但不生效等情况；请把具体开发方案整理成文档，包括设计约束、架构、接口、代码逻辑、数据结构、Diagnostics/Trace 样例、Target List、Check List、Regression List、Acceptance Criteria 和 Architecture Compliance Criteria；对于每个开发项明确其目的、责任边界、输入输出、最终决策位置以及与冻结架构的对应关系；必须区分 KEEP、MODIFY、RESTORE、DELETE，明确哪些逻辑应保留、哪些逻辑应恢复、哪些逻辑应删除，并增加 Frozen Architecture Verification、Semantic Acceptance、Contract Verification 和 Regression Gate，确保开发完成后验证的不仅是功能正确，而且是冻结架构仍然真实参与最终决策；最终生成可直接进入开发阶段的完整 md 文档正文。
+2.《》，请阅读之后结合实际代码进行审计，看一下是否存在需要补充的信息、约束、边界条件、隐含前提、验收条件、测试要求或实现细节，并核对当前代码与冻结设计是否一致；不要只检查文档缺失项，还要检查实际代码中是否存在历史遗留逻辑、兼容逻辑、旁路逻辑、失效逻辑、重复实现、隐藏门控、决策覆盖、死代码或架构漂移；对于每一项补充内容，必须说明来源（设计缺失、代码实现、测试发现或架构漂移），并明确其影响范围；如发现“功能存在但不生效”“功能实现但未进入主链路”“功能结果被后续覆盖”等情况，必须列入补充清单；最终整理为独立文档，输出补充项清单、风险等级、影响分析以及建议处理方式（KEEP、MODIFY、RESTORE、DELETE）。
+3.《》，这是需要补充的内容清单，请结合冻结设计、历史审计结论、开发方案和当前补充项进行分析，重点检查是否仍存在架构漂移风险、实现歧义、责任边界不清、验收缺口、测试盲区或未来可能再次偏离设计的隐患；不要新增与冻结架构无关的功能，不要改变既定设计目标，只补充实现约束、数据契约、接口契约、决策链路约束、验收标准和回归要求；对于每个补充项，明确其必要性、影响范围以及与冻结设计的关系，区分 KEEP、MODIFY、RESTORE、DELETE；最终生成独立 md 文档正文，确保开发完成后既能验证功能正确，也能验证冻结架构仍然真正参与最终决策，而不是仅存在于代码中。
+4.《》，这是补充的信息，核心逻辑、决策链路、接口契约、数据契约和架构约束不允许凭空创造、推测、简化、替换或重新解释，必须严格以已冻结设计、审计结论和开发方案为唯一依据进行开发；开发前必须先核对当前代码是否存在历史遗留逻辑、兼容逻辑、旁路逻辑、失效逻辑、重复实现或架构漂移，不得因为代码已经存在而默认其正确；凡涉及核心决策链路的修改，必须验证相关功能不仅存在于代码中，而且真实参与最终决策，不允许出现“功能存在但不生效”“功能生效但被后续覆盖”“功能实现但未进入主链路”等情况；禁止新增未在设计中明确说明的规则、权重、门控、兜底、特判、兼容层或隐式行为；禁止保留与冻结架构冲突但未被本轮开发显式使用的历史逻辑；如发现当前代码与冻结设计不一致，必须在开发报告中明确标注 Expected、Actual、Impact 和处理方式（KEEP、MODIFY、RESTORE、DELETE），不得自行决定保留；开发时必须遵循 D:\Programs\github\lingua_1\docs\CODING\vibe coding代码规范，并进行 Frozen Architecture Verification，确认最终运行链路与冻结设计一致，而不仅仅是功能测试通过。
 
-5. 请清理进程以后启动节点端，使用D:\Programs\github\lingua_1\test wav\dialog_200的音频文件对本轮开发进行测试（最多15分钟，能测几条是几条），出具开发报告和测试报告，需要包括识别质量和性能的数据，以及测试结果抽样
-
+5. 请清理进程以后启动节点端，使用 D:\Programs\github\lingua_1\test wav\dialog_200 的音频文件对本轮开发进行测试（最多15分钟，能测几条是几条），出具开发报告和测试报告，需要包括确认核心逻辑是否符合设计，前后调整内容，识别质量和性能的数据，以及测试结果抽样；除功能测试外，必须进行 Frozen Architecture Verification，核对本轮开发涉及的冻结架构、接口契约、数据契约和决策链路是否仍然成立，确认新增逻辑是否真正参与最终决策而非仅存在于代码中，确认是否存在功能失效、决策被覆盖、门控失效、死代码、重复实现、隐藏降级、旁路执行或架构漂移现象；对于每个核心功能必须同时验证“功能存在”和“功能生效”，说明其输入、输出、决策位置、最终影响路径以及是否被后续模块覆盖；如果本轮功能声称参与核心决策，必须提供反事实验证：禁用、绕过或移除该功能后，相关语义样例应出现可解释退化，否则不能证明该功能真实生效。如发现与冻结设计不一致的情况，必须列出 Expected、Actual、Impact、Severity 以及 KEEP、MODIFY、RESTORE、DELETE 建议，并在结论部分给出 Architecture Compliance 评估，明确本轮开发是否真正符合冻结架构，而不仅仅是通过功能测试。
+6. 这是本轮最终验收通过的开发报告、测试报告、反事实验证报告和相关文档，请结合实际代码进行 Frozen Architecture Update 和 Documentation Alignment Audit，确认本轮开发已经真实参与最终决策且不存在架构漂移、责任边界漂移、决策链路漂移、功能失效、功能被覆盖、隐藏降级、旁路执行、死代码或重复实现；核对冻结架构、接口契约、数据契约、Ownership Matrix、Diagnostics、Trace、Regression Gate、Semantic Acceptance、Counterfactual Test 与实际运行链路是否一致；如发现设计、代码、测试和文档之间存在差异，必须明确指出并给出 KEEP、MODIFY、RESTORE、DELETE 建议；对于本轮确认有效的设计、决策链路、接口、数据结构、Diagnostics、Trace、测试基线和回归样例，必须同步更新相关架构文档、Contract 文档、Diagnostics 文档、Regression 文档和 Freeze 文档，清理或归档已废弃的设计、字段、流程、门控、阈值和历史文档，确保项目始终只有一个有效的 SSOT（Single Source of Truth）；最终出具冻结更新报告、文档更新报告和文档清理报告，并明确本轮开发后哪些内容进入冻结架构、哪些内容属于历史遗留、哪些内容已经废弃，以及未来修改这些内容时必须重新执行冻结流程。
 
 # 2. 调度服务器（在新窗口）
 cd d:\Programs\github\lingua_1\electron_node\scripts

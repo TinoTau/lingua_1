@@ -1,0 +1,311 @@
+{
+  "patchId": "exp-v1_1-p1-terms",
+  "baseVersion": 4,
+  "nextVersion": 5,
+  "hash": "sha256:f2a240658fad0074b0248ecec1b803eea37000240e344a539e6828af39517e9d",
+  "operations": [
+    {
+      "op": "add",
+      "table": "term",
+      "word": "中关村",
+      "entry": {
+        "termId": "exp-v1_1-zhongguancun",
+        "word": "中关村",
+        "pinyinKey": "zhong|guan|cun",
+        "tonePinyinKey": "zhong1|guan1|cun1",
+        "priorScore": 0.88,
+        "repairTarget": true,
+        "enabled": true,
+        "source": "expansion_v1_1",
+        "domainTags": [
+          "tourism_transport"
+        ],
+        "domainWeights": {
+          "tourism_transport": 1
+        }
+      }
+    },
+    {
+      "op": "add",
+      "table": "term",
+      "word": "望京",
+      "entry": {
+        "termId": "exp-v1_1-wangjing",
+        "word": "望京",
+        "pinyinKey": "wang|jing",
+        "tonePinyinKey": "wang4|jing1",
+        "priorScore": 0.88,
+        "repairTarget": true,
+        "enabled": true,
+        "source": "expansion_v1_1",
+        "domainTags": [
+          "tourism_transport"
+        ],
+        "domainWeights": {
+          "tourism_transport": 1
+        }
+      }
+    },
+    {
+      "op": "add",
+      "table": "term",
+      "word": "浦东",
+      "entry": {
+        "termId": "exp-v1_1-pudong",
+        "word": "浦东",
+        "pinyinKey": "pu|dong",
+        "tonePinyinKey": "pu3|dong1",
+        "priorScore": 0.86,
+        "repairTarget": true,
+        "enabled": true,
+        "source": "expansion_v1_1",
+        "domainTags": [
+          "tourism_transport"
+        ],
+        "domainWeights": {
+          "tourism_transport": 1
+        }
+      }
+    },
+    {
+      "op": "add",
+      "table": "term",
+      "word": "张江",
+      "entry": {
+        "termId": "exp-v1_1-zhangjiang",
+        "word": "张江",
+        "pinyinKey": "zhang|jiang",
+        "tonePinyinKey": "zhang1|jiang1",
+        "priorScore": 0.86,
+        "repairTarget": true,
+        "enabled": true,
+        "source": "expansion_v1_1",
+        "domainTags": [
+          "tourism_transport"
+        ],
+        "domainWeights": {
+          "tourism_transport": 1
+        }
+      }
+    },
+    {
+      "op": "add",
+      "table": "term",
+      "word": "西溪",
+      "entry": {
+        "termId": "exp-v1_1-xixi",
+        "word": "西溪",
+        "pinyinKey": "xi|xi",
+        "tonePinyinKey": "xi1|xi1",
+        "priorScore": 0.85,
+        "repairTarget": true,
+        "enabled": true,
+        "source": "expansion_v1_1",
+        "domainTags": [
+          "tourism_transport"
+        ],
+        "domainWeights": {
+          "tourism_transport": 1
+        }
+      }
+    },
+    {
+      "op": "add",
+      "table": "term",
+      "word": "四环",
+      "entry": {
+        "termId": "exp-v1_1-sihuan",
+        "word": "四环",
+        "pinyinKey": "si|huan",
+        "tonePinyinKey": "si4|huan2",
+        "priorScore": 0.84,
+        "repairTarget": true,
+        "enabled": true,
+        "source": "expansion_v1_1",
+        "domainTags": [
+          "tourism_transport"
+        ],
+        "domainWeights": {
+          "tourism_transport": 1
+        }
+      }
+    },
+    {
+      "op": "add",
+      "table": "term",
+      "word": "三环",
+      "entry": {
+        "termId": "exp-v1_1-sanhuan",
+        "word": "三环",
+        "pinyinKey": "san|huan",
+        "tonePinyinKey": "san1|huan2",
+        "priorScore": 0.84,
+        "repairTarget": true,
+        "enabled": true,
+        "source": "expansion_v1_1",
+        "domainTags": [
+          "tourism_transport"
+        ],
+        "domainWeights": {
+          "tourism_transport": 1
+        }
+      }
+    },
+    {
+      "op": "add",
+      "table": "term",
+      "word": "联调",
+      "entry": {
+        "termId": "exp-v1_1-liantiao",
+        "word": "联调",
+        "pinyinKey": "lian|tiao",
+        "tonePinyinKey": "lian2|tiao2",
+        "priorScore": 0.9,
+        "repairTarget": true,
+        "enabled": true,
+        "source": "expansion_v1_1",
+        "domainTags": [
+          "tech_ai"
+        ],
+        "domainWeights": {
+          "tech_ai": 1
+        },
+        "aliasEntries": [
+          {
+            "alias": "連調",
+            "alias_type": "TRAD_SIMPLIFIED"
+          }
+        ],
+        "aliases": [
+          "連調"
+        ]
+      }
+    },
+    {
+      "op": "add",
+      "table": "term",
+      "word": "巧克力",
+      "entry": {
+        "termId": "exp-v1_1-qiaokeli",
+        "word": "巧克力",
+        "pinyinKey": "qiao|ke|li",
+        "tonePinyinKey": "qiao3|ke4|li4",
+        "priorScore": 0.88,
+        "repairTarget": true,
+        "enabled": true,
+        "source": "expansion_v1_1",
+        "domainTags": [
+          "coffee"
+        ],
+        "domainWeights": {
+          "coffee": 1
+        }
+      }
+    },
+    {
+      "op": "add",
+      "table": "term",
+      "word": "问一下",
+      "entry": {
+        "termId": "exp-v1_1-wenyixia",
+        "word": "问一下",
+        "pinyinKey": "wen|yi|xia",
+        "tonePinyinKey": "wen4|yi2|xia4",
+        "priorScore": 0.82,
+        "repairTarget": true,
+        "enabled": true,
+        "source": "expansion_v1_1",
+        "domainTags": [
+          "general"
+        ],
+        "domainWeights": {
+          "general": 1
+        }
+      }
+    },
+    {
+      "op": "add",
+      "table": "term",
+      "word": "可以吗",
+      "entry": {
+        "termId": "exp-v1_1-keyima",
+        "word": "可以吗",
+        "pinyinKey": "ke|yi|ma",
+        "tonePinyinKey": "ke3|yi3|ma0",
+        "priorScore": 0.82,
+        "repairTarget": true,
+        "enabled": true,
+        "source": "expansion_v1_1",
+        "domainTags": [
+          "general"
+        ],
+        "domainWeights": {
+          "general": 1
+        }
+      }
+    },
+    {
+      "op": "add",
+      "table": "term",
+      "word": "赶时间",
+      "entry": {
+        "termId": "exp-v1_1-ganshijian",
+        "word": "赶时间",
+        "pinyinKey": "gan|shi|jian",
+        "tonePinyinKey": "gan3|shi2|jian1",
+        "priorScore": 0.82,
+        "repairTarget": true,
+        "enabled": true,
+        "source": "expansion_v1_1",
+        "domainTags": [
+          "general"
+        ],
+        "domainWeights": {
+          "general": 1
+        }
+      }
+    },
+    {
+      "op": "add",
+      "table": "term",
+      "word": "挂号处",
+      "entry": {
+        "termId": "exp-v1_1-guahaochu",
+        "word": "挂号处",
+        "pinyinKey": "gua|hao|chu",
+        "tonePinyinKey": "gua4|hao4|chu4",
+        "priorScore": 0.85,
+        "repairTarget": true,
+        "enabled": true,
+        "source": "expansion_v1_1",
+        "domainTags": [
+          "general"
+        ],
+        "domainWeights": {
+          "general": 1
+        }
+      }
+    },
+    {
+      "op": "add",
+      "table": "term",
+      "word": "四十码",
+      "entry": {
+        "termId": "exp-v1_1-sishima",
+        "word": "四十码",
+        "pinyinKey": "si|shi|ma",
+        "tonePinyinKey": "si4|shi2|ma3",
+        "priorScore": 0.8,
+        "repairTarget": true,
+        "enabled": true,
+        "source": "expansion_v1_1",
+        "domainTags": [
+          "general"
+        ],
+        "domainWeights": {
+          "general": 1
+        }
+      }
+    }
+  ]
+}

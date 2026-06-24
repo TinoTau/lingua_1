@@ -48,6 +48,7 @@ export async function applyLexiconPatchV3(
   const files = resolveLexiconV3BundleFiles(options.bundleDir);
 
   return withLexiconPatchLock(async () => {
+    let manifestDomainStats: { domainAvailabilityRebuilt: true } | null = null;
     const validationError = validateLexiconPatchV3(patch, files.manifestPath);
     if (validationError) {
       return failResult(patch, validationError.code, validationError.message);
@@ -66,7 +67,8 @@ export async function applyLexiconPatchV3(
 
       assertBundleSchemaV2(db, files.manifestPath);
       await applyLexiconPatchToSqlite(db, patch);
-      writeBundleManifestsAfterPatch(db, files, patch);
+      const manifestWrite = writeBundleManifestsAfterPatch(db, files, patch);
+      manifestDomainStats = manifestWrite;
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       const code = message.startsWith('schema_not_v2') ? 'schema_not_v2' : 'apply_transaction_failed';
@@ -94,7 +96,15 @@ export async function applyLexiconPatchV3(
       }
     }
 
-    logger.info({ patchId: patch.patchId, nextVersion: patch.nextVersion }, 'Lexicon V3 patch applied');
+    logger.info(
+      {
+        patchId: patch.patchId,
+        nextVersion: patch.nextVersion,
+        checksumAligned: true,
+        domainAvailabilityRebuilt: manifestDomainStats?.domainAvailabilityRebuilt === true,
+      },
+      'Lexicon V3 patch applied'
+    );
 
     return {
       ok: true,

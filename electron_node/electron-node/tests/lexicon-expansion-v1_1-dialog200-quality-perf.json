@@ -1,0 +1,252 @@
+{
+  "timestamp": "2026-06-24T04:47:43.673Z",
+  "batch_timestamp": "2026-06-23T23:37:49.240Z",
+  "evaluated": 200,
+  "quality": {
+    "avg_cer_raw": 0.2657,
+    "avg_cer_final": 0.2177,
+    "avg_cer_probe": 0.2657,
+    "median_cer_raw": 0.1905,
+    "median_cer_final": 0.1852,
+    "median_cer_probe": 0.1905,
+    "p95_cer_raw": 0.6,
+    "p95_cer_final": 0.5263,
+    "p95_cer_probe": 0.6,
+    "exact_match_raw": 25,
+    "exact_match_final": 29,
+    "exact_match_probe": 25,
+    "fw_improved_cases": 45,
+    "fw_degraded_cases": 4,
+    "fw_unchanged_cer_cases": 151,
+    "applied_cases_cer_delta_avg": 0.0694
+  },
+  "perf": {
+    "pipeline_ms": {
+      "count": 200,
+      "avg": 3903,
+      "p50": 3569,
+      "p95": 5370,
+      "min": 2813,
+      "max": 13531,
+      "total_sec": 781
+    },
+    "asr_latency_ms": {
+      "count": 200,
+      "avg": 1007,
+      "p50": 972,
+      "p95": 1299
+    },
+    "audio_ms": {
+      "count": 200,
+      "avg": 3655,
+      "p50": 3900
+    },
+    "rtf_pipeline": 1.068,
+    "wall_clock_sec": 793
+  },
+  "contract": {
+    "evaluated": 200,
+    "pass": 200,
+    "fail": 0,
+    "skip": 0,
+    "wall_clock_sec": 793,
+    "pipeline_ok_rate": 1,
+    "fw_triggered_count": 200,
+    "fw_applied_case_count": 56,
+    "text_changed_count": 57,
+    "lexicon_runtime_ok_count": 200,
+    "asr_service_id_distribution": {
+      "faster-whisper-vad": 200
+    }
+  },
+  "stoppedReason": "completed_all",
+  "samples": {
+    "exact": [
+      {
+        "id": "d002",
+        "scenario": "cafe",
+        "cer_raw": 0.1176,
+        "cer_final": 0,
+        "ref": "麻烦帮我做一杯美式带走，大杯就行，谢谢。",
+        "hyp": "麻烦帮我做一杯美式带走大杯就行谢谢",
+        "raw": "麻烦帮我做一杯美食带走大悲就行谢谢",
+        "fw_applied": 2
+      },
+      {
+        "id": "d003",
+        "scenario": "cafe",
+        "cer_raw": 0.1579,
+        "cer_final": 0,
+        "ref": "请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。",
+        "hyp": "请问,这款燕麦拿铁可以少冰吗?我赶时间小杯",
+        "raw": "请问,这款燕麦拿铁可以烧病吗?我赶时间小背",
+        "fw_applied": 3
+      },
+      {
+        "id": "d018",
+        "scenario": "friend",
+        "cer_raw": 0,
+        "cer_final": 0,
+        "ref": "你最近忙不忙？想找你看下手机备份怎么设置。",
+        "hyp": "你最近忙不忙,想找你看下手机备份怎么设置",
+        "raw": "你最近忙不忙,想找你看下手机备份怎么设置",
+        "fw_applied": 0
+      },
+      {
+        "id": "d023",
+        "scenario": "customer_service",
+        "cer_raw": 0,
+        "cer_final": 0,
+        "ref": "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。",
+        "hyp": "想改一下收货地址还来得及吗? 麻烦尽快处理谢谢",
+        "raw": "想改一下收货地址还来得及吗? 麻烦尽快处理谢谢",
+        "fw_applied": 0
+      },
+      {
+        "id": "d025",
+        "scenario": "interview",
+        "cer_raw": 0,
+        "cer_final": 0,
+        "ref": "请简单介绍一下你上一段项目里负责的核心模块和难点。",
+        "hyp": "请简单介绍一下你上一段项目里负责的核心模块和难点",
+        "raw": "请简单介绍一下你上一段项目里负责的核心模块和难点",
+        "fw_applied": 0
+      }
+    ],
+    "fwApplied": [
+      {
+        "id": "d001",
+        "scenario": "cafe",
+        "cer_raw": 0.3704,
+        "cer_final": 0.1852,
+        "ref": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+        "hyp": "你好,我想點一杯热拿铁中杯少糖 身边溫 以下今天有蓝莓马芬吗?",
+        "raw": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+        "fw_applied": 6
+      },
+      {
+        "id": "d002",
+        "scenario": "cafe",
+        "cer_raw": 0.1176,
+        "cer_final": 0,
+        "ref": "麻烦帮我做一杯美式带走，大杯就行，谢谢。",
+        "hyp": "麻烦帮我做一杯美式带走大杯就行谢谢",
+        "raw": "麻烦帮我做一杯美食带走大悲就行谢谢",
+        "fw_applied": 2
+      },
+      {
+        "id": "d003",
+        "scenario": "cafe",
+        "cer_raw": 0.1579,
+        "cer_final": 0,
+        "ref": "请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。",
+        "hyp": "请问,这款燕麦拿铁可以少冰吗?我赶时间小杯",
+        "raw": "请问,这款燕麦拿铁可以烧病吗?我赶时间小背",
+        "fw_applied": 3
+      },
+      {
+        "id": "d008",
+        "scenario": "taxi",
+        "cer_raw": 0.2963,
+        "cer_final": 0.2963,
+        "ref": "麻烦送我到国贸三期南门，大概多久能到？我十点十分有个电话会。",
+        "hyp": "麻烦送我到国贸三七南门大概多久能到? 我试点十 10分有隔電話會",
+        "raw": "麻烦送我到国贸三七南门大盖多久能到? 我十点十 10分有隔電話會",
+        "fw_applied": 2
+      },
+      {
+        "id": "d010",
+        "scenario": "hospital",
+        "cer_raw": 0.55,
+        "cer_final": 0.4,
+        "ref": "医生您好，我这两天头痛，想开点药并做个血常规。",
+        "hyp": "医生您好,我這兩甜头痛想开點,要並做個歇常规",
+        "raw": "醫生您好,我這兩天頭痛想開點,要並做個歇常規",
+        "fw_applied": 4
+      }
+    ],
+    "expansionHits": [],
+    "worst": [
+      {
+        "id": "d045",
+        "scenario": "lexicon_homophone",
+        "cer_raw": 0.8,
+        "cer_final": 0.8,
+        "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+        "hyp": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說",
+        "raw": "關於後,學生成為學生 和上限計劃請按上限計劃執行有問題群裡說",
+        "fw_applied": 0
+      },
+      {
+        "id": "d155",
+        "scenario": "tech_deploy",
+        "cer_raw": 0.8333,
+        "cer_final": 0.7333,
+        "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "hyp": "这次發布我們現對峽谷的發布會 在其商線計劃窗口候选生成模快需要联掉別漏掉回歸",
+        "raw": "這次發布我們現對峽谷的發布會 在其商線計劃窗口後選生成模快需要連掉別漏掉回歸",
+        "fw_applied": 4
+      },
+      {
+        "id": "d110",
+        "scenario": "tech_deploy",
+        "cer_raw": 0.8333,
+        "cer_final": 0.7,
+        "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "hyp": "這次發布我們現對此發布的新闻 起商線計劃窗口候选生 乘模块需要联掉別漏掉回歸",
+        "raw": "這次發布我們現對此發布的新聞 起商線計劃窗口後選生 乘魔快需要連掉別漏掉回歸",
+        "fw_applied": 5
+      },
+      {
+        "id": "d180",
+        "scenario": "lexicon_homophone",
+        "cer_raw": 0.68,
+        "cer_final": 0.68,
+        "ref": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+        "hyp": "關於後,選生成立 和上限計劃請按上限計劃執行有問題 群里說",
+        "raw": "關於後,選生成立 和上限計劃請按上限計劃執行有問題 群里說",
+        "fw_applied": 0
+      },
+      {
+        "id": "d088",
+        "scenario": "lexicon_homophone",
+        "cer_raw": 0.68,
+        "cer_final": 0.6,
+        "ref": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+        "hyp": "我们下午討論後,選生成功 等方安縣把候选生陈的截口文當補齊",
+        "raw": "我們下午討論後,選生成功 等方安縣把候選生陳的截口文當補齊",
+        "fw_applied": 2
+      },
+      {
+        "id": "d194",
+        "scenario": "shopping",
+        "cer_raw": 0.6667,
+        "cer_final": 0.5714,
+        "ref": "请问这双鞋有四十码吗？不合适三天内可以退换吧？",
+        "hyp": "请问 這雙鞋也有些子嗎? 有40码码不合是3天内可以退换吧",
+        "raw": "請問 這雙鞋也有鞋子嗎? 有40码码不合是3天内可以退换吧",
+        "fw_applied": 2
+      },
+      {
+        "id": "d065",
+        "scenario": "tech_deploy",
+        "cer_raw": 0.6667,
+        "cer_final": 0.5667,
+        "ref": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+        "hyp": "這次發布我們現對期 在其商線計劃窗口候选生 成模块需要联掉別漏掉回歸",
+        "raw": "這次發布我們現對期 在其商線計劃窗口後選生 成模快需要連掉別漏掉回歸",
+        "fw_applied": 4
+      },
+      {
+        "id": "d082",
+        "scenario": "restaurant",
+        "cer_raw": 0.5625,
+        "cer_final": 0.5625,
+        "ref": "两位，靠窗有位置吗？不要香菜，微辣就行。",
+        "hyp": "两位烤创有微纸嘛 不要像蔡薇娜就行",
+        "raw": "两位烤创有微纸嘛 不要像蔡薇娜就行",
+        "fw_applied": 0
+      }
+    ]
+  }
+}

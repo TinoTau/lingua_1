@@ -97,13 +97,25 @@ SSOT：`tests/freeze-config-ssot.json` · `node-config-defaults.ts`
 | span apply | 6 / 200 |
 | kenlmVetoMs P95 | 933 ms |
 
-**说明：** Shadow 句级 proxy Improved≈30、Net≈+27；span apply 低于 shadow **属预期**（repairTarget + overlap 口径）。
-
-**Known risk（词库层，非合约缺陷）：** d003/d048「少冰→烧饼」类 candidate quality — 见 [LEXICON_OPERATIONS.md](../LEXICON_OPERATIONS.md)
+**说明：** Shadow 句级 proxy Improved≈30；span apply 低于 shadow 属预期。Ranking V1.2 后烧饼由 **Tone Guard** 阻断。
 
 ---
 
-## 6. 禁止项
+## 6. Apply Gate（衔接）
+
+| 项 | 值 |
+|----|-----|
+| 决策链 | `rerankFwSentences` → `pickedIsRaw` → `mapSentenceToApproved` → `applyFwSpanReplacements` |
+| Delta Gate | `bestRawDelta < 3.0` → `pickedIsRaw=true` · `approved=[]` |
+| Assembly 豁免 | **无** — 句级统一裁决 |
+| d003 | Δ≈3.68 → apply |
+| d048 | Δ≈1.88 → 不 apply（合法） |
+
+`enableKenLMGate=false` → scorer=null → 恒 `pickedIsRaw`。
+
+---
+
+## 7. 禁止项
 
 - 用 normalized delta 做 pick Gate
 - 恢复 Gate 0.03 作为 SSOT 默认值
@@ -112,9 +124,9 @@ SSOT：`tests/freeze-config-ssot.json` · `node-config-defaults.ts`
 
 ---
 
-## 7. 相关文档
+## 8. 相关文档
 
-- [KENLM_RUNTIME.md](./KENLM_RUNTIME.md) — batch subprocess
-- [DIAGNOSTICS_CONTRACT.md](../DIAGNOSTICS_CONTRACT.md) — 字段 samples
-- [CONFIG.md](../CONFIG.md) — 配置分界
-- [INTERFACE_FREEZE.md](../INTERFACE_FREEZE.md) — SentenceRerankPick
+- [KENLM_RUNTIME.md](./KENLM_RUNTIME.md)
+- [diagnostics/FROZEN.md](../diagnostics/FROZEN.md)
+- [CONFIG.md](../CONFIG.md)
+- [freeze/FROZEN.md](../freeze/FROZEN.md)

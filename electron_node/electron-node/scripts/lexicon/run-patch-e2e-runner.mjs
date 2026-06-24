@@ -7,6 +7,10 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
+import {
+  domainAvailabilityEqual,
+  readDomainAvailabilityFromSqlitePath,
+} from './lib/manifest-domain-stats.cjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
@@ -80,6 +84,10 @@ async function main() {
 
   const tempDir = copyV3BundleToTemp(v3Source);
   let version = readManifestBundleVersion(resolveLexiconV3BundleFiles(tempDir).manifestPath);
+  const initialManifest = JSON.parse(
+    fs.readFileSync(resolveLexiconV3BundleFiles(tempDir).manifestPath, 'utf-8')
+  );
+  const hierarchyVersionBefore = initialManifest.domainHierarchyVersion ?? null;
   const opts = () => ({ bundleDir: tempDir, reload: false });
 
   console.log('[patch-e2e] running against', tempDir);
@@ -184,6 +192,12 @@ async function main() {
     assert(multiRecall.passed, 'multidomain recall hit');
     assert(multiRecall.domainWeights?.travel === 0.8, 'runtime travel weight');
     assert(multiRecall.domainWeights?.restaurant === 0.6, 'runtime restaurant weight');
+    const ngramCount = queryRow(
+      files.sqlitePath,
+      `SELECT COUNT(*) AS c FROM term_pinyin_ngrams WHERE parent_term_id = ?`,
+      [PATCH_MULTI_TERM_ID]
+    );
+    assert((ngramCount?.c ?? 0) > 0, 'term_pinyin_ngrams materialized for multidomain term');
   });
 
   await test('Patch J: update domainWeights', async () => {
@@ -443,14 +457,23 @@ async function main() {
     assert(!multiRecall.passed, 'recall miss after term delete');
   });
 
-  await test('manifest/stats/checksum updated after apply', async () => {
+  await test('manifest/stats/checksum/domainAvailability after apply', async () => {
     const files = resolveLexiconV3BundleFiles(tempDir);
     const manifest = JSON.parse(fs.readFileSync(files.manifestPath, 'utf-8'));
+    const stats = JSON.parse(fs.readFileSync(files.statsPath, 'utf-8'));
+    const sqliteAvailability = readDomainAvailabilityFromSqlitePath(files.sqlitePath);
+
     assert(manifest.schemaVersion === 'lexicon-v3-five-table-v2', 'schemaVersion v2');
     assert(manifest.lastPatchId, 'lastPatchId');
     assert(manifest.lastAppliedAt, 'lastAppliedAt');
     assert(manifest.bundleVersion === version, 'bundleVersion');
     assert(verifyChecksumAligned(files), 'checksum aligned');
+    assert(manifest.domainAvailability, 'manifest.domainAvailability');
+    assert(stats.domainAvailability, 'stats.domainAvailability');
+    assert(domainAvailabilityEqual(manifest.domainAvailability, sqliteAvailability), 'manifest BG-03');
+    assert(domainAvailabilityEqual(stats.domainAvailability, sqliteAvailability), 'stats BG-03');
+    assert(manifest.domainHierarchyVersion === hierarchyVersionBefore, 'domainHierarchyVersion preserved');
+    assert(manifest.tables?.domain_hierarchy === 8, 'tables.domain_hierarchy');
   });
 
   await test('HTTP handler uses PatchService', async () => {

@@ -1,0 +1,176 @@
+{
+  "timestamp": "2026-06-24T13:26:24.818Z",
+  "testScope": "Ranking Repair V1.2 dialog_200",
+  "batchSummary": {
+    "evaluated": 200,
+    "pass": 200,
+    "fail": 0,
+    "skip": 0,
+    "wall_clock_sec": 852,
+    "pipeline_ok_rate": 1,
+    "fw_triggered_count": 200,
+    "fw_applied_case_count": 63,
+    "text_changed_count": 64,
+    "lexicon_runtime_ok_count": 200,
+    "asr_service_id_distribution": {
+      "faster-whisper-vad": 200
+    }
+  },
+  "quality": {
+    "evaluated": 200,
+    "avg_cer_raw": 0.2657,
+    "avg_cer_final": 0.2143,
+    "avg_cer_improvement": 0.0514,
+    "exact_match": 30,
+    "improved": 50,
+    "degraded": 7,
+    "unchanged": 143,
+    "total_fw_applied": 169
+  },
+  "perf": {
+    "wall_clock_sec": 852,
+    "avg_pipeline_ms": 4199,
+    "p50_pipeline_ms": 3887,
+    "p95_pipeline_ms": 5689,
+    "max_pipeline_ms": 20392
+  },
+  "keyCases": [
+    {
+      "id": "d003",
+      "reference": "请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。",
+      "raw_preview": "请问,这款燕麦拿铁可以烧病吗?我赶时间小背",
+      "text_preview": "请问,这款燕麦拿铁可以少冰吗?我赶时间小杯",
+      "semantic": {
+        "has_shaobing": true,
+        "has_shaobing_wrong": false,
+        "has_xiaobei": true,
+        "has_xiaobei_wrong": false
+      },
+      "fw_applied": 3,
+      "tone_guard_blocked": null,
+      "shaobing_span_selected": "少冰",
+      "scenario": "cafe",
+      "cer_raw": 0.1579,
+      "cer_final": 0,
+      "cer_delta": 0.1579,
+      "applied": 3,
+      "fw_triggered": true,
+      "text_changed": true,
+      "pipeline_ms": 3615
+    },
+    {
+      "id": "d048",
+      "reference": "请问这款热巧克力可以少冰吗？我赶时间，小杯。",
+      "raw_preview": "请问,这款热巧克力可以少病吗? 我赶时间小背",
+      "text_preview": "请问,这款热巧克力可以少病吗? 我赶时间小背",
+      "semantic": {
+        "has_shaobing": false,
+        "has_shaobing_wrong": false,
+        "has_xiaobei": false,
+        "has_xiaobei_wrong": true
+      },
+      "fw_applied": 0,
+      "tone_guard_blocked": null,
+      "shaobing_span_selected": "少冰",
+      "scenario": "cafe",
+      "cer_raw": 0.1053,
+      "cer_final": 0.1053,
+      "cer_delta": 0,
+      "applied": 0,
+      "fw_triggered": true,
+      "text_changed": false,
+      "pipeline_ms": 3554
+    },
+    {
+      "id": "d138",
+      "reference": "请问这款美式可以少冰吗？我赶时间，小杯。",
+      "raw_preview": "请问,这款美式可以少病吗?我赶时间小杯",
+      "text_preview": "请问,这款美式可以少病吗?我赶时间小杯",
+      "semantic": {
+        "has_shaobing": false,
+        "has_shaobing_wrong": false,
+        "has_xiaobei": true,
+        "has_xiaobei_wrong": false
+      },
+      "fw_applied": 0,
+      "tone_guard_blocked": null,
+      "shaobing_span_selected": "少冰",
+      "scenario": "cafe",
+      "cer_raw": 0.0588,
+      "cer_final": 0.0588,
+      "cer_delta": 0,
+      "applied": 0,
+      "fw_triggered": true,
+      "text_changed": false,
+      "pipeline_ms": 3179
+    },
+    {
+      "id": "d001",
+      "reference": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "raw_preview": "你好,我想點一杯熱拿鐵鐘貝少糖 深便溫 以下今天有蓝美马分吗?",
+      "text_preview": "你好,我想點一杯热拿铁中杯少糖 身边溫 以下今天有蓝莓马芬吗?",
+      "semantic": {
+        "has_shaobing": false,
+        "has_shaobing_wrong": false,
+        "has_xiaobei": false,
+        "has_xiaobei_wrong": false
+      },
+      "fw_applied": 6,
+      "tone_guard_blocked": null,
+      "scenario": "cafe",
+      "cer_raw": 0.3704,
+      "cer_final": 0.1852,
+      "cer_delta": 0.1852,
+      "applied": 6,
+      "fw_triggered": true,
+      "text_changed": true,
+      "pipeline_ms": 5892
+    },
+    {
+      "id": "d082",
+      "reference": "两位，靠窗有位置吗？不要香菜，微辣就行。",
+      "raw_preview": "两位烤创有微纸嘛 不要像蔡薇娜就行",
+      "text_preview": "两位烤创有微芝麻 不要香菜薇娜就行",
+      "semantic": {
+        "has_shaobing": false,
+        "has_shaobing_wrong": false,
+        "has_xiaobei": false,
+        "has_xiaobei_wrong": false
+      },
+      "fw_applied": 2,
+      "tone_guard_blocked": null,
+      "scenario": "restaurant",
+      "cer_raw": 0.5625,
+      "cer_final": 0.4375,
+      "cer_delta": 0.125,
+      "applied": 2,
+      "fw_triggered": true,
+      "text_changed": true,
+      "pipeline_ms": 3747
+    },
+    {
+      "id": "d187",
+      "reference": "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+      "raw_preview": "市副局仲官村軟件遠走機場告訴 我敢救人 9点半的回药师赌车 您提前跟我说",
+      "text_preview": "市副局仲官村軟件遠走機場告訴 我敢救人 9点半的回药师赌车 您提前跟我说",
+      "semantic": {
+        "has_shaobing": false,
+        "has_shaobing_wrong": false,
+        "has_xiaobei": false,
+        "has_xiaobei_wrong": false
+      },
+      "fw_applied": 0,
+      "tone_guard_blocked": null,
+      "scenario": "taxi",
+      "cer_raw": 0.6129,
+      "cer_final": 0.6129,
+      "cer_delta": 0,
+      "applied": 0,
+      "fw_triggered": true,
+      "text_changed": false,
+      "pipeline_ms": 5446
+    }
+  ],
+  "regressions_vs_post_cleanup_baseline": [],
+  "regression_count": 0
+}

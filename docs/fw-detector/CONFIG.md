@@ -107,5 +107,5 @@
 ## 7. 相关文档
 
 - [ARCHITECTURE.md](./ARCHITECTURE.md)
-- [LEXICON_OPERATIONS.md](./LEXICON_OPERATIONS.md)
+- [lexicon-v3/LEXICON_OPERATIONS.md](../lexicon-v3/LEXICON_OPERATIONS.md)
 - [kenlm/KENLM_RUNTIME.md](./kenlm/KENLM_RUNTIME.md)

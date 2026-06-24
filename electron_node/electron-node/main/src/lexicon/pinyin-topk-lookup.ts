@@ -4,6 +4,7 @@
 
 import { scorePinyinSimilarity } from './phonetic/pinyin';
 import {
+  compareRecallHitsPrimaryScore,
   computeCandidateScore,
   computeCandidateScoreBreakdown,
   type CandidateScoreBreakdown,
@@ -80,12 +81,13 @@ function collectScored(
     phoneticScore,
     profile,
   });
-  const candidateScore =
-    candidateScoreBreakdown.priorScore +
-    candidateScoreBreakdown.phoneticSimilarity +
-    candidateScoreBreakdown.exactLengthBonus +
-    candidateScoreBreakdown.domainBoost -
-    candidateScoreBreakdown.editDistancePenalty;
+  const candidateScore = computeCandidateScore({
+    hotword,
+    windowSyllables: syllables,
+    windowText,
+    phoneticScore,
+    profile,
+  });
   if (candidateScore < minCandidateScore()) {
     return;
   }
@@ -250,7 +252,7 @@ export function lookupTopKByPinyin(
     );
   }
 
-  scored.sort((a, b) => b.candidateScore - a.candidateScore);
+  scored.sort(compareRecallHitsPrimaryScore);
   const hits = scored.slice(0, topK).map((s, i) => ({
     hotword: s.hotword,
     phoneticScore: s.phoneticScore,

@@ -3,6 +3,8 @@
  */
 
 import {
+  compareRecallHitsPrimaryScore,
+  computeCandidateScore,
   computeCandidateScoreBreakdown,
   hotwordDomains,
   type CandidateScoreBreakdown,
@@ -37,6 +39,7 @@ export type RecallSpanTopKV2Hit = {
   phoneticScore: number;
   candidateScore: number;
   candidateScoreBreakdown: CandidateScoreBreakdown;
+  recallCandidateKind?: RecallCandidateKind;
   source: WindowCandidateSource;
   matchedAlias?: string;
   acousticTonePattern?: number[];
@@ -151,13 +154,13 @@ function scoreHotword(
     phoneticScore,
     recallCandidateKind,
   });
-  const candidateScore =
-    candidateScoreBreakdown.priorScore +
-    candidateScoreBreakdown.phoneticSimilarity +
-    candidateScoreBreakdown.exactLengthBonus +
-    candidateScoreBreakdown.domainBoost -
-    candidateScoreBreakdown.editDistancePenalty -
-    candidateScoreBreakdown.fuzzyPenalty;
+  const candidateScore = computeCandidateScore({
+    hotword,
+    windowSyllables: syllables,
+    windowText,
+    phoneticScore,
+    recallCandidateKind,
+  });
   if (candidateScore < minCandidateScore()) {
     return;
   }
@@ -167,7 +170,17 @@ function scoreHotword(
     if (existing.toneLookupStage === 'tone_exact' && toneLookupStage !== 'tone_exact') {
       return;
     }
-    if (existing.candidateScore >= candidateScore) {
+    const candidateHit: RecallSpanTopKV2Hit = {
+      hotword,
+      phoneticScore,
+      candidateScore,
+      candidateScoreBreakdown,
+      recallCandidateKind,
+      source: resolveWindowCandidateSource({ viaPinyin: true }),
+      acousticTonePattern: undefined,
+      toneLookupStage,
+    };
+    if (compareRecallHitsPrimaryScore(existing, candidateHit) <= 0) {
       return;
     }
   }
@@ -183,6 +196,7 @@ function scoreHotword(
     phoneticScore,
     candidateScore,
     candidateScoreBreakdown,
+    recallCandidateKind,
     source: resolveWindowCandidateSource({ viaPinyin: true }),
     acousticTonePattern: tonePattern,
     toneLookupStage,
@@ -322,7 +336,7 @@ export function recallSpanTopKV2(
   }
 
   const scored = Array.from(bestById.values());
-  scored.sort((a, b) => b.candidateScore - a.candidateScore);
+  scored.sort(compareRecallHitsPrimaryScore);
   const toneSorted = sortRecallHitsByToneCompatibility(scored, acousticTonePattern);
   const effectiveLimit = perSpanLimit != null && perSpanLimit > 0 ? perSpanLimit : topK;
   const hits = toneSorted.hits.slice(0, effectiveLimit);

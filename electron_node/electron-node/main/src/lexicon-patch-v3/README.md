@@ -21,7 +21,8 @@
 | `patch-service.ts` | 统一 `applyLexiconPatchV3()` |
 | `patch-validator.ts` | version / hash / domain / term SSOT |
 | `sqlite-patch-applier.ts` | term-centric 事务 apply + rematerialize |
-| `manifest-writer.ts` | v2 manifest / stats 写入 |
+| `manifest-writer.ts` | patch 后 manifest / stats（**重算** domainAvailability） |
+| `manifest-domain-stats-bridge.ts` | 加载 `scripts/lexicon/lib/manifest-domain-stats.cjs` |
 | `reload.ts` | Runtime close + reload |
 | `apply-patch-http.ts` | test-server HTTP 封装 |
 | `run-patch-e2e-runner.mjs` | Patch A–M + rollback E2E（Electron ABI） |
@@ -33,7 +34,14 @@
 | 通道 | 用法 |
 |------|------|
 | HTTP | `POST http://127.0.0.1:5020/lexicon/apply-patch` |
-| CLI | `npm run lexicon:patch:apply -- [--bundle-dir <dir>] patch.json` |
+| CLI（推荐） | `npm run lexicon:patch:apply:electron -- patch.json` |
+| CLI | `npm run lexicon:patch:apply -- patch.json` |
+
+**JSONL SSOT：** Patch 是 runtime 交付机制；每个新词仍须同步更新 `entries.jsonl`（否则下次 full build 丢失）。
+
+**生产：** 单节点单进程 patch；不支持多进程并发 patch。Apply 会 close → patch → reload runtime（短暂不可用）。
+
+**domainTags：** 必须来自 `profile-registry.json`（经 `assertRegistryDomain`）；禁止虚构 domain_id。
 
 ---
 
