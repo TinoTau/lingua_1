@@ -195,7 +195,7 @@ lingua_1/
 
 - **项目迁移总览**: `PROJECT_MIGRATION.md`
 - **Web 客户端迁移**: `../webapp/docs/MIGRATION.md`
-- **中央服务器迁移**: `../central_server/docs/MIGRATION.md`
+- **中央服务器**：`central_server/docs/README.md`
 - **Electron 节点客户端迁移**: `../electron_node/docs/MIGRATION.md`
 
 ## 相关文档

@@ -1,0 +1,15 @@
+{
+  "packageId": "industry_pack_v1",
+  "version": "1.0.0-pilot",
+  "description": "FW Repair V4 Industry Expansion Pack V1 JSONL SSOT (Patch-First)",
+  "denyListSource": "electron_node/electron-node/main/src/lexicon-patch-v4/patch-types-v4.ts EXPANSION_DENY_LIST",
+  "entriesFile": "entries.jsonl",
+  "waves": {
+    "wave1": ["tech_ai", "tourism_pickup", "tourism_hotel", "tourism_route", "tourism_transport"],
+    "wave2": ["medical", "transport", "meeting"],
+    "wave3": ["coffee", "milk_tea", "food_order", "bakery"],
+    "wave4": ["cross_domain_append", "long_tail"]
+  },
+  "importCommand": "npm run lexicon:patch:import:electron -- <patch.json> --source-jsonl entries.jsonl",
+  "builder": "npm run lexicon:industry-pack-v1:build -- --patch-id <id> [--wave wave1]"
+}

@@ -76,6 +76,6 @@ Patch 运行时：`main/src/lexicon-patch-v3/`（term-centric，不修改 `domai
 | 模块 | 文档 |
 |------|------|
 | Lexicon V3 SSOT | [docs/lexicon-v3/Lexicon_V3_1_Final_SSOT.md](../../../docs/lexicon-v3/Lexicon_V3_1_Final_SSOT.md) |
-| Lexicon Runtime V2 | [docs/lexicon_v2/LEXICON_RUNTIME_V2.md](../../docs/lexicon_v2/LEXICON_RUNTIME_V2.md) |
+| Lexicon Runtime V2 | [electron-node/main/src/lexicon-v2/README.md](../../electron-node/main/src/lexicon-v2/README.md) |
 | 脚本命令 | [electron-node/scripts/lexicon/README.md](../electron-node/scripts/lexicon/README.md) |
 | FW Lexicon 运维 | [docs/lexicon-v3/LEXICON_OPERATIONS.md](../../../docs/lexicon-v3/LEXICON_OPERATIONS.md) |

@@ -55,7 +55,7 @@
 
 - Span 级：`local-span-recall.ts` → `recallSpanTopK` → V2 SQLite
 - 开关：`lexiconRuntimeV2.enabled` + `useLexiconRuntimeV2Recall`
-- 文档：[`../fw-detector/README.md`](../fw-detector/README.md)、[`../../../../docs/lexicon_v2/LEXICON_RUNTIME_V2.md`](../../../../docs/lexicon_v2/LEXICON_RUNTIME_V2.md)
+- 文档：[`../fw-detector/README.md`](../fw-detector/README.md)、[`../lexicon-v2/README.md`](../lexicon-v2/README.md)
 
 ---
 
@@ -93,6 +93,6 @@ FW 路径不输出上述 legacy 字段。
 
 | 文档 | 路径 |
 |------|------|
-| Lexicon V2 | [`../../../../docs/lexicon_v2/LEXICON_RUNTIME_V2.md`](../../../../docs/lexicon_v2/LEXICON_RUNTIME_V2.md) |
+| Lexicon V2 | [`../lexicon-v2/README.md`](../lexicon-v2/README.md) |
 | Legacy ASR repair | [`../legacy/asr-repair/README.md`](../legacy/asr-repair/README.md) |
 | Session Intent | [`../session-runtime/README.md`](../session-runtime/README.md) |

@@ -36,7 +36,7 @@ npm run lexicon:gate:v3-runtime
 
 `patch-build-gate` = `scan-patch-granularity` + `scan-alias-legality`（[Alias Ownership Contract V1.0.0](../../../../docs/lexicon-v3/ALIAS_OWNERSHIP_CONTRACT_FROZEN_V1_0_0.md)）。
 
-> **注意：** 当前 Expansion P1/P1.5 patch 含历史非法 ASR alias，**将在 alias gate FAIL**，直至 [Illegal Alias Cleanup](../../../../docs/Lexicon_Expansion/FW_Repair_V4_Illegal_Alias_Cleanup_Development_Audit_2026_06_24.md) 完成。
+> **注意：** 历史 P1/P1.5 patch 若含非法 ASR alias，将在 alias gate FAIL；须按 [Alias Ownership Contract](../../../../docs/lexicon-v3/ALIAS_OWNERSHIP_CONTRACT_FROZEN_V1_0_0.md) 清理后再 apply。
 
 After Patch A only, regenerate Patch B against current manifest:
 

@@ -69,7 +69,7 @@ pip install pandas matplotlib
 
 ## 相关文档
 
-- [调度器设计文档](../../central_server/scheduler/docs/design/README.md)
+- [调度器文档](../../central_server/scheduler/docs/README.md)
 - [节点端 Pipeline](../../electron_node/electron-node/main/src/pipeline/README.md)
 
 ---

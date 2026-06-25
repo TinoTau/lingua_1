@@ -1,0 +1,2394 @@
+{
+  "patchId": "industry-pack-v1-capacity-validation",
+  "patchPath": "D:\\Programs\\github\\lingua_1\\electron_node\\docs\\lexicon-assets\\industry_pack_v1\\patches\\industry-pack-v1-capacity-validation.patch.json",
+  "baseVersion": 4,
+  "nextVersion": 5,
+  "operationCount": 395,
+  "tableThresholds": {
+    "base_lexicon": 50000,
+    "idiom_lexicon": 22192,
+    "term": 517,
+    "term_domain_tags": 606,
+    "domain_lexicon": 581,
+    "industry_routing_lexicon": 573,
+    "term_pinyin_ngrams": 203099
+  },
+  "deltas": {
+    "newTerms": 387,
+    "appendedDomains": 8,
+    "newAliases": 0
+  },
+  "rows": [
+    {
+      "lineNo": 1,
+      "word": "智能体",
+      "op": "addTerm",
+      "pinyin_key": "zhi|neng|ti"
+    },
+    {
+      "lineNo": 2,
+      "word": "大模型",
+      "op": "addTerm",
+      "pinyin_key": "da|mo|xing"
+    },
+    {
+      "lineNo": 3,
+      "word": "微调",
+      "op": "addTerm",
+      "pinyin_key": "wei|tiao"
+    },
+    {
+      "lineNo": 4,
+      "word": "推理",
+      "op": "addTerm",
+      "pinyin_key": "tui|li"
+    },
+    {
+      "lineNo": 5,
+      "word": "算力",
+      "op": "addTerm",
+      "pinyin_key": "suan|li"
+    },
+    {
+      "lineNo": 6,
+      "word": "向量",
+      "op": "addTerm",
+      "pinyin_key": "xiang|liang"
+    },
+    {
+      "lineNo": 7,
+      "word": "嵌入",
+      "op": "addTerm",
+      "pinyin_key": "qian|ru"
+    },
+    {
+      "lineNo": 8,
+      "word": "编码",
+      "op": "addTerm",
+      "pinyin_key": "bian|ma"
+    },
+    {
+      "lineNo": 9,
+      "word": "解码",
+      "op": "addTerm",
+      "pinyin_key": "jie|ma"
+    },
+    {
+      "lineNo": 10,
+      "word": "标注",
+      "op": "addTerm",
+      "pinyin_key": "biao|zhu"
+    },
+    {
+      "lineNo": 11,
+      "word": "语料",
+      "op": "addTerm",
+      "pinyin_key": "yu|liao"
+    },
+    {
+      "lineNo": 12,
+      "word": "蒸馏",
+      "op": "addTerm",
+      "pinyin_key": "zheng|liu"
+    },
+    {
+      "lineNo": 13,
+      "word": "量化",
+      "op": "addTerm",
+      "pinyin_key": "liang|hua"
+    },
+    {
+      "lineNo": 14,
+      "word": "剪枝",
+      "op": "addTerm",
+      "pinyin_key": "jian|zhi"
+    },
+    {
+      "lineNo": 15,
+      "word": "对齐",
+      "op": "addTerm",
+      "pinyin_key": "dui|qi"
+    },
+    {
+      "lineNo": 16,
+      "word": "提示",
+      "op": "addTerm",
+      "pinyin_key": "ti|shi"
+    },
+    {
+      "lineNo": 17,
+      "word": "上下文",
+      "op": "addTerm",
+      "pinyin_key": "shang|xia|wen"
+    },
+    {
+      "lineNo": 18,
+      "word": "令牌",
+      "op": "addTerm",
+      "pinyin_key": "ling|pai"
+    },
+    {
+      "lineNo": 19,
+      "word": "分词",
+      "op": "addTerm",
+      "pinyin_key": "fen|ci"
+    },
+    {
+      "lineNo": 20,
+      "word": "词表",
+      "op": "addTerm",
+      "pinyin_key": "ci|biao"
+    },
+    {
+      "lineNo": 21,
+      "word": "召回",
+      "op": "addTerm",
+      "pinyin_key": "zhao|hui"
+    },
+    {
+      "lineNo": 22,
+      "word": "重排",
+      "op": "addTerm",
+      "pinyin_key": "zhong|pai"
+    },
+    {
+      "lineNo": 23,
+      "word": "评测",
+      "op": "addTerm",
+      "pinyin_key": "ping|ce"
+    },
+    {
+      "lineNo": 24,
+      "word": "基准",
+      "op": "addTerm",
+      "pinyin_key": "ji|zhun"
+    },
+    {
+      "lineNo": 25,
+      "word": "消融",
+      "op": "addTerm",
+      "pinyin_key": "xiao|rong"
+    },
+    {
+      "lineNo": 26,
+      "word": "过拟合",
+      "op": "addTerm",
+      "pinyin_key": "guo|ni|he"
+    },
+    {
+      "lineNo": 27,
+      "word": "欠拟合",
+      "op": "addTerm",
+      "pinyin_key": "qian|ni|he"
+    },
+    {
+      "lineNo": 28,
+      "word": "正则",
+      "op": "addTerm",
+      "pinyin_key": "zheng|ze"
+    },
+    {
+      "lineNo": 29,
+      "word": "梯度",
+      "op": "addTerm",
+      "pinyin_key": "ti|du"
+    },
+    {
+      "lineNo": 30,
+      "word": "优化器",
+      "op": "addTerm",
+      "pinyin_key": "you|hua|qi"
+    },
+    {
+      "lineNo": 31,
+      "word": "学习率",
+      "op": "addTerm",
+      "pinyin_key": "xue|xi|lü"
+    },
+    {
+      "lineNo": 32,
+      "word": "批次",
+      "op": "addTerm",
+      "pinyin_key": "pi|ci"
+    },
+    {
+      "lineNo": 33,
+      "word": "轮次",
+      "op": "addTerm",
+      "pinyin_key": "lun|ci"
+    },
+    {
+      "lineNo": 34,
+      "word": "检查点",
+      "op": "addTerm",
+      "pinyin_key": "jian|cha|dian"
+    },
+    {
+      "lineNo": 35,
+      "word": "权重",
+      "op": "addTerm",
+      "pinyin_key": "quan|zhong"
+    },
+    {
+      "lineNo": 36,
+      "word": "偏置",
+      "op": "addTerm",
+      "pinyin_key": "pian|zhi"
+    },
+    {
+      "lineNo": 37,
+      "word": "激活",
+      "op": "addTerm",
+      "pinyin_key": "ji|huo"
+    },
+    {
+      "lineNo": 38,
+      "word": "损失",
+      "op": "addTerm",
+      "pinyin_key": "sun|shi"
+    },
+    {
+      "lineNo": 39,
+      "word": "准确率",
+      "op": "addTerm",
+      "pinyin_key": "zhun|que|lü"
+    },
+    {
+      "lineNo": 40,
+      "word": "召回率",
+      "op": "addTerm",
+      "pinyin_key": "zhao|hui|lü"
+    },
+    {
+      "lineNo": 41,
+      "word": "网约车",
+      "op": "addTerm",
+      "pinyin_key": "wang|yue|che"
+    },
+    {
+      "lineNo": 42,
+      "word": "顺风车",
+      "op": "addTerm",
+      "pinyin_key": "shun|feng|che"
+    },
+    {
+      "lineNo": 43,
+      "word": "出租车",
+      "op": "addTerm",
+      "pinyin_key": "chu|zu|che"
+    },
+    {
+      "lineNo": 44,
+      "word": "专车",
+      "op": "addTerm",
+      "pinyin_key": "zhuan|che"
+    },
+    {
+      "lineNo": 45,
+      "word": "快车",
+      "op": "addTerm",
+      "pinyin_key": "kuai|che"
+    },
+    {
+      "lineNo": 46,
+      "word": "拼车",
+      "op": "addTerm",
+      "pinyin_key": "pin|che"
+    },
+    {
+      "lineNo": 47,
+      "word": "里程",
+      "op": "addTerm",
+      "pinyin_key": "li|cheng"
+    },
+    {
+      "lineNo": 48,
+      "word": "路费",
+      "op": "addTerm",
+      "pinyin_key": "lu|fei"
+    },
+    {
+      "lineNo": 49,
+      "word": "匝道",
+      "op": "addTerm",
+      "pinyin_key": "za|dao"
+    },
+    {
+      "lineNo": 50,
+      "word": "限行",
+      "op": "addTerm",
+      "pinyin_key": "xian|xing"
+    },
+    {
+      "lineNo": 51,
+      "word": "拥堵",
+      "op": "addTerm",
+      "pinyin_key": "yong|du"
+    },
+    {
+      "lineNo": 52,
+      "word": "绕行",
+      "op": "addTerm",
+      "pinyin_key": "rao|xing"
+    },
+    {
+      "lineNo": 53,
+      "word": "导航",
+      "op": "addTerm",
+      "pinyin_key": "dao|hang"
+    },
+    {
+      "lineNo": 54,
+      "word": "定位",
+      "op": "addTerm",
+      "pinyin_key": "ding|wei"
+    },
+    {
+      "lineNo": 55,
+      "word": "轨迹",
+      "op": "addTerm",
+      "pinyin_key": "gui|ji"
+    },
+    {
+      "lineNo": 56,
+      "word": "站点",
+      "op": "addTerm",
+      "pinyin_key": "zhan|dian"
+    },
+    {
+      "lineNo": 57,
+      "word": "枢纽",
+      "op": "addTerm",
+      "pinyin_key": "shu|niu"
+    },
+    {
+      "lineNo": 58,
+      "word": "换乘",
+      "op": "addTerm",
+      "pinyin_key": "huan|cheng"
+    },
+    {
+      "lineNo": 59,
+      "word": "候车",
+      "op": "addTerm",
+      "pinyin_key": "hou|che"
+    },
+    {
+      "lineNo": 60,
+      "word": "站台",
+      "op": "addTerm",
+      "pinyin_key": "zhan|tai"
+    },
+    {
+      "lineNo": 61,
+      "word": "班次",
+      "op": "addTerm",
+      "pinyin_key": "ban|ci"
+    },
+    {
+      "lineNo": 62,
+      "word": "发车",
+      "op": "addTerm",
+      "pinyin_key": "fa|che"
+    },
+    {
+      "lineNo": 63,
+      "word": "到站",
+      "op": "addTerm",
+      "pinyin_key": "dao|zhan"
+    },
+    {
+      "lineNo": 64,
+      "word": "离站",
+      "op": "addTerm",
+      "pinyin_key": "li|zhan"
+    },
+    {
+      "lineNo": 65,
+      "word": "检票",
+      "op": "addTerm",
+      "pinyin_key": "jian|piao"
+    },
+    {
+      "lineNo": 66,
+      "word": "出站",
+      "op": "addTerm",
+      "pinyin_key": "chu|zhan"
+    },
+    {
+      "lineNo": 67,
+      "word": "进站",
+      "op": "addTerm",
+      "pinyin_key": "jin|zhan"
+    },
+    {
+      "lineNo": 68,
+      "word": "候车厅",
+      "op": "addTerm",
+      "pinyin_key": "hou|che|ting"
+    },
+    {
+      "lineNo": 69,
+      "word": "售票",
+      "op": "addTerm",
+      "pinyin_key": "shou|piao"
+    },
+    {
+      "lineNo": 70,
+      "word": "接站",
+      "op": "addTerm",
+      "pinyin_key": "jie|zhan"
+    },
+    {
+      "lineNo": 71,
+      "word": "送站",
+      "op": "addTerm",
+      "pinyin_key": "song|zhan"
+    },
+    {
+      "lineNo": 72,
+      "word": "举牌",
+      "op": "addTerm",
+      "pinyin_key": "ju|pai"
+    },
+    {
+      "lineNo": 73,
+      "word": "等候",
+      "op": "addTerm",
+      "pinyin_key": "deng|hou"
+    },
+    {
+      "lineNo": 74,
+      "word": "转盘",
+      "op": "addTerm",
+      "pinyin_key": "zhuan|pan"
+    },
+    {
+      "lineNo": 75,
+      "word": "到达口",
+      "op": "addTerm",
+      "pinyin_key": "dao|da|kou"
+    },
+    {
+      "lineNo": 76,
+      "word": "出发层",
+      "op": "addTerm",
+      "pinyin_key": "chu|fa|ceng"
+    },
+    {
+      "lineNo": 77,
+      "word": "停车楼",
+      "op": "addTerm",
+      "pinyin_key": "ting|che|lou"
+    },
+    {
+      "lineNo": 78,
+      "word": "落客区",
+      "op": "addTerm",
+      "pinyin_key": "luo|ke|qu"
+    },
+    {
+      "lineNo": 79,
+      "word": "改签",
+      "op": "addTerm",
+      "pinyin_key": "gai|qian"
+    },
+    {
+      "lineNo": 80,
+      "word": "延误",
+      "op": "addTerm",
+      "pinyin_key": "yan|wu"
+    },
+    {
+      "lineNo": 81,
+      "word": "备降",
+      "op": "addTerm",
+      "pinyin_key": "bei|jiang"
+    },
+    {
+      "lineNo": 82,
+      "word": "摆渡车",
+      "op": "addTerm",
+      "pinyin_key": "bai|du|che"
+    },
+    {
+      "lineNo": 83,
+      "word": "贵宾厅",
+      "op": "addTerm",
+      "pinyin_key": "gui|bin|ting"
+    },
+    {
+      "lineNo": 84,
+      "word": "休息室",
+      "op": "addTerm",
+      "pinyin_key": "xiu|xi|shi"
+    },
+    {
+      "lineNo": 85,
+      "word": "登机口",
+      "op": "addTerm",
+      "pinyin_key": "deng|ji|kou"
+    },
+    {
+      "lineNo": 86,
+      "word": "安检口",
+      "op": "addTerm",
+      "pinyin_key": "an|jian|kou"
+    },
+    {
+      "lineNo": 87,
+      "word": "值机台",
+      "op": "addTerm",
+      "pinyin_key": "zhi|ji|tai"
+    },
+    {
+      "lineNo": 88,
+      "word": "客房",
+      "op": "addTerm",
+      "pinyin_key": "ke|fang"
+    },
+    {
+      "lineNo": 89,
+      "word": "续住",
+      "op": "addTerm",
+      "pinyin_key": "xu|zhu"
+    },
+    {
+      "lineNo": 90,
+      "word": "加床",
+      "op": "addTerm",
+      "pinyin_key": "jia|chuang"
+    },
+    {
+      "lineNo": 91,
+      "word": "无烟",
+      "op": "addTerm",
+      "pinyin_key": "wu|yan"
+    },
+    {
+      "lineNo": 92,
+      "word": "海景",
+      "op": "addTerm",
+      "pinyin_key": "hai|jing"
+    },
+    {
+      "lineNo": 93,
+      "word": "城景",
+      "op": "addTerm",
+      "pinyin_key": "cheng|jing"
+    },
+    {
+      "lineNo": 94,
+      "word": "套房",
+      "op": "addTerm",
+      "pinyin_key": "tao|fang"
+    },
+    {
+      "lineNo": 95,
+      "word": "标间",
+      "op": "addTerm",
+      "pinyin_key": "biao|jian"
+    },
+    {
+      "lineNo": 96,
+      "word": "大床",
+      "op": "addTerm",
+      "pinyin_key": "da|chuang"
+    },
+    {
+      "lineNo": 97,
+      "word": "双床",
+      "op": "addTerm",
+      "pinyin_key": "shuang|chuang"
+    },
+    {
+      "lineNo": 98,
+      "word": "钟点房",
+      "op": "addTerm",
+      "pinyin_key": "zhong|dian|fang"
+    },
+    {
+      "lineNo": 99,
+      "word": "寄存",
+      "op": "addTerm",
+      "pinyin_key": "ji|cun"
+    },
+    {
+      "lineNo": 100,
+      "word": "叫醒",
+      "op": "addTerm",
+      "pinyin_key": "jiao|xing"
+    },
+    {
+      "lineNo": 101,
+      "word": "打扫",
+      "op": "addTerm",
+      "pinyin_key": "da|sao"
+    },
+    {
+      "lineNo": 102,
+      "word": "备品",
+      "op": "addTerm",
+      "pinyin_key": "bei|pin"
+    },
+    {
+      "lineNo": 103,
+      "word": "拖鞋",
+      "op": "addTerm",
+      "pinyin_key": "tuo|xie"
+    },
+    {
+      "lineNo": 104,
+      "word": "浴巾",
+      "op": "addTerm",
+      "pinyin_key": "yu|jin"
+    },
+    {
+      "lineNo": 105,
+      "word": "枕头",
+      "op": "addTerm",
+      "pinyin_key": "zhen|tou"
+    },
+    {
+      "lineNo": 106,
+      "word": "空调",
+      "op": "addTerm",
+      "pinyin_key": "kong|tiao"
+    },
+    {
+      "lineNo": 107,
+      "word": "暖气",
+      "op": "addTerm",
+      "pinyin_key": "nuan|qi"
+    },
+    {
+      "lineNo": 108,
+      "word": "迷你吧",
+      "op": "addTerm",
+      "pinyin_key": "mi|ni|ba"
+    },
+    {
+      "lineNo": 109,
+      "word": "客房服",
+      "op": "addTerm",
+      "pinyin_key": "ke|fang|fu"
+    },
+    {
+      "lineNo": 110,
+      "word": "礼宾",
+      "op": "addTerm",
+      "pinyin_key": "li|bin"
+    },
+    {
+      "lineNo": 111,
+      "word": "导览",
+      "op": "addTerm",
+      "pinyin_key": "dao|lan"
+    },
+    {
+      "lineNo": 112,
+      "word": "讲解",
+      "op": "addTerm",
+      "pinyin_key": "jiang|jie"
+    },
+    {
+      "lineNo": 113,
+      "word": "散团",
+      "op": "addTerm",
+      "pinyin_key": "san|tuan"
+    },
+    {
+      "lineNo": 114,
+      "word": "包车",
+      "op": "addTerm",
+      "pinyin_key": "bao|che"
+    },
+    {
+      "lineNo": 115,
+      "word": "徒步",
+      "op": "addTerm",
+      "pinyin_key": "tu|bu"
+    },
+    {
+      "lineNo": 116,
+      "word": "索道",
+      "op": "addTerm",
+      "pinyin_key": "suo|dao"
+    },
+    {
+      "lineNo": 117,
+      "word": "缆车",
+      "op": "addTerm",
+      "pinyin_key": "lan|che"
+    },
+    {
+      "lineNo": 118,
+      "word": "栈道",
+      "op": "addTerm",
+      "pinyin_key": "zhan|dao"
+    },
+    {
+      "lineNo": 119,
+      "word": "观景台",
+      "op": "addTerm",
+      "pinyin_key": "guan|jing|tai"
+    },
+    {
+      "lineNo": 120,
+      "word": "纪念馆",
+      "op": "addTerm",
+      "pinyin_key": "ji|nian|guan"
+    },
+    {
+      "lineNo": 121,
+      "word": "博物馆",
+      "op": "addTerm",
+      "pinyin_key": "bo|wu|guan"
+    },
+    {
+      "lineNo": 122,
+      "word": "古镇",
+      "op": "addTerm",
+      "pinyin_key": "gu|zhen"
+    },
+    {
+      "lineNo": 123,
+      "word": "街区",
+      "op": "addTerm",
+      "pinyin_key": "jie|qu"
+    },
+    {
+      "lineNo": 124,
+      "word": "步行街",
+      "op": "addTerm",
+      "pinyin_key": "bu|xing|jie"
+    },
+    {
+      "lineNo": 125,
+      "word": "夜市",
+      "op": "addTerm",
+      "pinyin_key": "ye|shi"
+    },
+    {
+      "lineNo": 126,
+      "word": "特产",
+      "op": "addTerm",
+      "pinyin_key": "te|chan"
+    },
+    {
+      "lineNo": 127,
+      "word": "纪念品",
+      "op": "addTerm",
+      "pinyin_key": "ji|nian|pin"
+    },
+    {
+      "lineNo": 128,
+      "word": "拍照",
+      "op": "addTerm",
+      "pinyin_key": "pai|zhao"
+    },
+    {
+      "lineNo": 129,
+      "word": "打卡",
+      "op": "addTerm",
+      "pinyin_key": "da|ka"
+    },
+    {
+      "lineNo": 130,
+      "word": "攻略",
+      "op": "addTerm",
+      "pinyin_key": "gong|lüe"
+    },
+    {
+      "lineNo": 131,
+      "word": "限流",
+      "op": "addTerm",
+      "pinyin_key": "xian|liu"
+    },
+    {
+      "lineNo": 132,
+      "word": "闭园",
+      "op": "addTerm",
+      "pinyin_key": "bi|yuan"
+    },
+    {
+      "lineNo": 133,
+      "word": "开放",
+      "op": "addTerm",
+      "pinyin_key": "kai|fang"
+    },
+    {
+      "lineNo": 134,
+      "word": "旺季",
+      "op": "addTerm",
+      "pinyin_key": "wang|ji"
+    },
+    {
+      "lineNo": 135,
+      "word": "挂号",
+      "op": "addTerm",
+      "pinyin_key": "gua|hao"
+    },
+    {
+      "lineNo": 136,
+      "word": "诊室",
+      "op": "addTerm",
+      "pinyin_key": "zhen|shi"
+    },
+    {
+      "lineNo": 137,
+      "word": "门诊",
+      "op": "addTerm",
+      "pinyin_key": "men|zhen"
+    },
+    {
+      "lineNo": 138,
+      "word": "住院",
+      "op": "addTerm",
+      "pinyin_key": "zhu|yuan"
+    },
+    {
+      "lineNo": 139,
+      "word": "出院",
+      "op": "addTerm",
+      "pinyin_key": "chu|yuan"
+    },
+    {
+      "lineNo": 140,
+      "word": "病历",
+      "op": "addTerm",
+      "pinyin_key": "bing|li"
+    },
+    {
+      "lineNo": 141,
+      "word": "处方",
+      "op": "addTerm",
+      "pinyin_key": "chu|fang"
+    },
+    {
+      "lineNo": 142,
+      "word": "药房",
+      "op": "addTerm",
+      "pinyin_key": "yao|fang"
+    },
+    {
+      "lineNo": 143,
+      "word": "取药",
+      "op": "addTerm",
+      "pinyin_key": "qu|yao"
+    },
+    {
+      "lineNo": 144,
+      "word": "输液",
+      "op": "addTerm",
+      "pinyin_key": "shu|ye"
+    },
+    {
+      "lineNo": 145,
+      "word": "注射",
+      "op": "addTerm",
+      "pinyin_key": "zhu|she"
+    },
+    {
+      "lineNo": 146,
+      "word": "化验",
+      "op": "addTerm",
+      "pinyin_key": "hua|yan"
+    },
+    {
+      "lineNo": 147,
+      "word": "影像",
+      "op": "addTerm",
+      "pinyin_key": "ying|xiang"
+    },
+    {
+      "lineNo": 148,
+      "word": "超声",
+      "op": "addTerm",
+      "pinyin_key": "chao|sheng"
+    },
+    {
+      "lineNo": 149,
+      "word": "心电图",
+      "op": "addTerm",
+      "pinyin_key": "xin|dian|tu"
+    },
+    {
+      "lineNo": 150,
+      "word": "麻醉",
+      "op": "addTerm",
+      "pinyin_key": "ma|zui"
+    },
+    {
+      "lineNo": 151,
+      "word": "手术",
+      "op": "addTerm",
+      "pinyin_key": "shou|shu"
+    },
+    {
+      "lineNo": 152,
+      "word": "复查",
+      "op": "addTerm",
+      "pinyin_key": "fu|cha"
+    },
+    {
+      "lineNo": 153,
+      "word": "复诊",
+      "op": "addTerm",
+      "pinyin_key": "fu|zhen"
+    },
+    {
+      "lineNo": 154,
+      "word": "转诊",
+      "op": "addTerm",
+      "pinyin_key": "zhuan|zhen"
+    },
+    {
+      "lineNo": 155,
+      "word": "医保",
+      "op": "addTerm",
+      "pinyin_key": "yi|bao"
+    },
+    {
+      "lineNo": 156,
+      "word": "自费",
+      "op": "addTerm",
+      "pinyin_key": "zi|fei"
+    },
+    {
+      "lineNo": 157,
+      "word": "陪护",
+      "op": "addTerm",
+      "pinyin_key": "pei|hu"
+    },
+    {
+      "lineNo": 158,
+      "word": "病床",
+      "op": "addTerm",
+      "pinyin_key": "bing|chuang"
+    },
+    {
+      "lineNo": 159,
+      "word": "护士",
+      "op": "addTerm",
+      "pinyin_key": "hu|shi"
+    },
+    {
+      "lineNo": 160,
+      "word": "主任",
+      "op": "addTerm",
+      "pinyin_key": "zhu|ren"
+    },
+    {
+      "lineNo": 161,
+      "word": "专家",
+      "op": "addTerm",
+      "pinyin_key": "zhuan|jia"
+    },
+    {
+      "lineNo": 162,
+      "word": "急诊",
+      "op": "addTerm",
+      "pinyin_key": "ji|zhen"
+    },
+    {
+      "lineNo": 163,
+      "word": "发热",
+      "op": "addTerm",
+      "pinyin_key": "fa|re"
+    },
+    {
+      "lineNo": 164,
+      "word": "核酸",
+      "op": "addTerm",
+      "pinyin_key": "he|suan"
+    },
+    {
+      "lineNo": 165,
+      "word": "抗原",
+      "op": "addTerm",
+      "pinyin_key": "kang|yuan"
+    },
+    {
+      "lineNo": 166,
+      "word": "疫苗",
+      "op": "addTerm",
+      "pinyin_key": "yi|miao"
+    },
+    {
+      "lineNo": 167,
+      "word": "康复",
+      "op": "addTerm",
+      "pinyin_key": "kang|fu"
+    },
+    {
+      "lineNo": 168,
+      "word": "理疗",
+      "op": "addTerm",
+      "pinyin_key": "li|liao"
+    },
+    {
+      "lineNo": 169,
+      "word": "针灸",
+      "op": "addTerm",
+      "pinyin_key": "zhen|jiu"
+    },
+    {
+      "lineNo": 170,
+      "word": "拔罐",
+      "op": "addTerm",
+      "pinyin_key": "ba|guan"
+    },
+    {
+      "lineNo": 171,
+      "word": "会议",
+      "op": "addTerm",
+      "pinyin_key": "hui|yi"
+    },
+    {
+      "lineNo": 172,
+      "word": "议程",
+      "op": "addTerm",
+      "pinyin_key": "yi|cheng"
+    },
+    {
+      "lineNo": 173,
+      "word": "纪要",
+      "op": "addTerm",
+      "pinyin_key": "ji|yao"
+    },
+    {
+      "lineNo": 174,
+      "word": "主持",
+      "op": "addTerm",
+      "pinyin_key": "zhu|chi"
+    },
+    {
+      "lineNo": 175,
+      "word": "发言",
+      "op": "addTerm",
+      "pinyin_key": "fa|yan"
+    },
+    {
+      "lineNo": 176,
+      "word": "讨论",
+      "op": "addTerm",
+      "pinyin_key": "tao|lun"
+    },
+    {
+      "lineNo": 177,
+      "word": "表决",
+      "op": "addTerm",
+      "pinyin_key": "biao|jue"
+    },
+    {
+      "lineNo": 178,
+      "word": "决议",
+      "op": "addTerm",
+      "pinyin_key": "jue|yi"
+    },
+    {
+      "lineNo": 179,
+      "word": "旁听",
+      "op": "addTerm",
+      "pinyin_key": "pang|ting"
+    },
+    {
+      "lineNo": 180,
+      "word": "签到",
+      "op": "addTerm",
+      "pinyin_key": "qian|dao"
+    },
+    {
+      "lineNo": 181,
+      "word": "投影",
+      "op": "addTerm",
+      "pinyin_key": "tou|ying"
+    },
+    {
+      "lineNo": 182,
+      "word": "话筒",
+      "op": "addTerm",
+      "pinyin_key": "hua|tong"
+    },
+    {
+      "lineNo": 183,
+      "word": "同声",
+      "op": "addTerm",
+      "pinyin_key": "tong|sheng"
+    },
+    {
+      "lineNo": 184,
+      "word": "传译",
+      "op": "addTerm",
+      "pinyin_key": "chuan|yi"
+    },
+    {
+      "lineNo": 185,
+      "word": "展位",
+      "op": "addTerm",
+      "pinyin_key": "zhan|wei"
+    },
+    {
+      "lineNo": 186,
+      "word": "展台",
+      "op": "addTerm",
+      "pinyin_key": "zhan|tai"
+    },
+    {
+      "lineNo": 187,
+      "word": "主题",
+      "op": "addTerm",
+      "pinyin_key": "zhu|ti"
+    },
+    {
+      "lineNo": 188,
+      "word": "分会场",
+      "op": "addTerm",
+      "pinyin_key": "fen|hui|chang"
+    },
+    {
+      "lineNo": 189,
+      "word": "主会场",
+      "op": "addTerm",
+      "pinyin_key": "zhu|hui|chang"
+    },
+    {
+      "lineNo": 190,
+      "word": "开幕式",
+      "op": "addTerm",
+      "pinyin_key": "kai|mu|shi"
+    },
+    {
+      "lineNo": 191,
+      "word": "闭幕式",
+      "op": "addTerm",
+      "pinyin_key": "bi|mu|shi"
+    },
+    {
+      "lineNo": 192,
+      "word": "晚宴",
+      "op": "addTerm",
+      "pinyin_key": "wan|yan"
+    },
+    {
+      "lineNo": 193,
+      "word": "招待",
+      "op": "addTerm",
+      "pinyin_key": "zhao|dai"
+    },
+    {
+      "lineNo": 194,
+      "word": "接待",
+      "op": "addTerm",
+      "pinyin_key": "jie|dai"
+    },
+    {
+      "lineNo": 195,
+      "word": "证件",
+      "op": "addTerm",
+      "pinyin_key": "zheng|jian"
+    },
+    {
+      "lineNo": 196,
+      "word": "胸牌",
+      "op": "addTerm",
+      "pinyin_key": "xiong|pai"
+    },
+    {
+      "lineNo": 197,
+      "word": "资料",
+      "op": "addTerm",
+      "pinyin_key": "zi|liao"
+    },
+    {
+      "lineNo": 198,
+      "word": "手册",
+      "op": "addTerm",
+      "pinyin_key": "shou|ce"
+    },
+    {
+      "lineNo": 199,
+      "word": "展区",
+      "op": "addTerm",
+      "pinyin_key": "zhan|qu"
+    },
+    {
+      "lineNo": 200,
+      "word": "路演",
+      "op": "addTerm",
+      "pinyin_key": "lu|yan"
+    },
+    {
+      "lineNo": 201,
+      "word": "卡布",
+      "op": "addTerm",
+      "pinyin_key": "ka|bu"
+    },
+    {
+      "lineNo": 202,
+      "word": "澳白",
+      "op": "addTerm",
+      "pinyin_key": "ao|bai"
+    },
+    {
+      "lineNo": 203,
+      "word": "冷萃",
+      "op": "addTerm",
+      "pinyin_key": "leng|cui"
+    },
+    {
+      "lineNo": 204,
+      "word": "手冲",
+      "op": "addTerm",
+      "pinyin_key": "shou|chong"
+    },
+    {
+      "lineNo": 205,
+      "word": "意式",
+      "op": "addTerm",
+      "pinyin_key": "yi|shi"
+    },
+    {
+      "lineNo": 206,
+      "word": "单品",
+      "op": "addTerm",
+      "pinyin_key": "dan|pin"
+    },
+    {
+      "lineNo": 207,
+      "word": "拼配",
+      "op": "addTerm",
+      "pinyin_key": "pin|pei"
+    },
+    {
+      "lineNo": 208,
+      "word": "研磨",
+      "op": "addTerm",
+      "pinyin_key": "yan|mo"
+    },
+    {
+      "lineNo": 209,
+      "word": "萃取",
+      "op": "addTerm",
+      "pinyin_key": "cui|qu"
+    },
+    {
+      "lineNo": 210,
+      "word": "奶泡",
+      "op": "addTerm",
+      "pinyin_key": "nai|pao"
+    },
+    {
+      "lineNo": 211,
+      "word": "拉花",
+      "op": "addTerm",
+      "pinyin_key": "la|hua"
+    },
+    {
+      "lineNo": 212,
+      "word": "焦糖",
+      "op": "addTerm",
+      "pinyin_key": "jiao|tang"
+    },
+    {
+      "lineNo": 213,
+      "word": "香草",
+      "op": "addTerm",
+      "pinyin_key": "xiang|cao"
+    },
+    {
+      "lineNo": 214,
+      "word": "榛果",
+      "op": "addTerm",
+      "pinyin_key": "zhen|guo"
+    },
+    {
+      "lineNo": 215,
+      "word": "豆奶",
+      "op": "addTerm",
+      "pinyin_key": "dou|nai"
+    },
+    {
+      "lineNo": 216,
+      "word": "外带",
+      "op": "addTerm",
+      "pinyin_key": "wai|dai"
+    },
+    {
+      "lineNo": 217,
+      "word": "杯型",
+      "op": "addTerm",
+      "pinyin_key": "bei|xing"
+    },
+    {
+      "lineNo": 218,
+      "word": "热饮",
+      "op": "addTerm",
+      "pinyin_key": "re|yin"
+    },
+    {
+      "lineNo": 219,
+      "word": "冰饮",
+      "op": "addTerm",
+      "pinyin_key": "bing|yin"
+    },
+    {
+      "lineNo": 220,
+      "word": "多糖",
+      "op": "addTerm",
+      "pinyin_key": "duo|tang"
+    },
+    {
+      "lineNo": 221,
+      "word": "参数",
+      "op": "addTerm",
+      "pinyin_key": "can|shu"
+    },
+    {
+      "lineNo": 222,
+      "word": "部署",
+      "op": "addTerm",
+      "pinyin_key": "bu|shu"
+    },
+    {
+      "lineNo": 223,
+      "word": "版本",
+      "op": "addTerm",
+      "pinyin_key": "ban|ben"
+    },
+    {
+      "lineNo": 224,
+      "word": "缓存",
+      "op": "addTerm",
+      "pinyin_key": "huan|cun"
+    },
+    {
+      "lineNo": 225,
+      "word": "并发",
+      "op": "addTerm",
+      "pinyin_key": "bing|fa"
+    },
+    {
+      "lineNo": 226,
+      "word": "分布式",
+      "op": "addTerm",
+      "pinyin_key": "fen|bu|shi"
+    },
+    {
+      "lineNo": 227,
+      "word": "副本",
+      "op": "addTerm",
+      "pinyin_key": "fu|ben"
+    },
+    {
+      "lineNo": 228,
+      "word": "故障",
+      "op": "addTerm",
+      "pinyin_key": "gu|zhang"
+    },
+    {
+      "lineNo": 229,
+      "word": "容错",
+      "op": "addTerm",
+      "pinyin_key": "rong|cuo"
+    },
+    {
+      "lineNo": 230,
+      "word": "灰度",
+      "op": "addTerm",
+      "pinyin_key": "hui|du"
+    },
+    {
+      "lineNo": 231,
+      "word": "回滚",
+      "op": "addTerm",
+      "pinyin_key": "hui|gun"
+    },
+    {
+      "lineNo": 232,
+      "word": "集群",
+      "op": "addTerm",
+      "pinyin_key": "ji|qun"
+    },
+    {
+      "lineNo": 233,
+      "word": "节点",
+      "op": "addTerm",
+      "pinyin_key": "jie|dian"
+    },
+    {
+      "lineNo": 234,
+      "word": "容器",
+      "op": "addTerm",
+      "pinyin_key": "rong|qi"
+    },
+    {
+      "lineNo": 235,
+      "word": "镜像",
+      "op": "addTerm",
+      "pinyin_key": "jing|xiang"
+    },
+    {
+      "lineNo": 236,
+      "word": "日志",
+      "op": "addTerm",
+      "pinyin_key": "ri|zhi"
+    },
+    {
+      "lineNo": 237,
+      "word": "监控",
+      "op": "addTerm",
+      "pinyin_key": "jian|kong"
+    },
+    {
+      "lineNo": 238,
+      "word": "告警",
+      "op": "addTerm",
+      "pinyin_key": "gao|jing"
+    },
+    {
+      "lineNo": 239,
+      "word": "链路",
+      "op": "addTerm",
+      "pinyin_key": "lian|lu"
+    },
+    {
+      "lineNo": 240,
+      "word": "延迟",
+      "op": "addTerm",
+      "pinyin_key": "yan|chi"
+    },
+    {
+      "lineNo": 241,
+      "word": "吞吐",
+      "op": "addTerm",
+      "pinyin_key": "tun|tu"
+    },
+    {
+      "lineNo": 242,
+      "word": "配额",
+      "op": "addTerm",
+      "pinyin_key": "pei|e"
+    },
+    {
+      "lineNo": 243,
+      "word": "熔断",
+      "op": "addTerm",
+      "pinyin_key": "rong|duan"
+    },
+    {
+      "lineNo": 244,
+      "word": "降级",
+      "op": "addTerm",
+      "pinyin_key": "jiang|ji"
+    },
+    {
+      "lineNo": 245,
+      "word": "沙箱",
+      "op": "addTerm",
+      "pinyin_key": "sha|xiang"
+    },
+    {
+      "lineNo": 246,
+      "word": "特征",
+      "op": "addTerm",
+      "pinyin_key": "te|zheng"
+    },
+    {
+      "lineNo": 247,
+      "word": "样本",
+      "op": "addTerm",
+      "pinyin_key": "yang|ben"
+    },
+    {
+      "lineNo": 248,
+      "word": "标注员",
+      "op": "addTerm",
+      "pinyin_key": "biao|zhu|yuan"
+    },
+    {
+      "lineNo": 249,
+      "word": "质检",
+      "op": "addTerm",
+      "pinyin_key": "zhi|jian"
+    },
+    {
+      "lineNo": 250,
+      "word": "辅路",
+      "op": "addTerm",
+      "pinyin_key": "fu|lu"
+    },
+    {
+      "lineNo": 251,
+      "word": "主路",
+      "op": "addTerm",
+      "pinyin_key": "zhu|lu"
+    },
+    {
+      "lineNo": 252,
+      "word": "环岛",
+      "op": "addTerm",
+      "pinyin_key": "huan|dao"
+    },
+    {
+      "lineNo": 253,
+      "word": "掉头",
+      "op": "addTerm",
+      "pinyin_key": "diao|tou"
+    },
+    {
+      "lineNo": 254,
+      "word": "左转",
+      "op": "addTerm",
+      "pinyin_key": "zuo|zhuan"
+    },
+    {
+      "lineNo": 255,
+      "word": "右转",
+      "op": "addTerm",
+      "pinyin_key": "you|zhuan"
+    },
+    {
+      "lineNo": 256,
+      "word": "直行",
+      "op": "addTerm",
+      "pinyin_key": "zhi|xing"
+    },
+    {
+      "lineNo": 257,
+      "word": "掉头口",
+      "op": "addTerm",
+      "pinyin_key": "diao|tou|kou"
+    },
+    {
+      "lineNo": 258,
+      "word": "收费站",
+      "op": "addTerm",
+      "pinyin_key": "shou|fei|zhan"
+    },
+    {
+      "lineNo": 259,
+      "word": "服务区",
+      "op": "addTerm",
+      "pinyin_key": "fu|wu|qu"
+    },
+    {
+      "lineNo": 260,
+      "word": "加油站",
+      "op": "addTerm",
+      "pinyin_key": "jia|you|zhan"
+    },
+    {
+      "lineNo": 261,
+      "word": "充电桩",
+      "op": "addTerm",
+      "pinyin_key": "chong|dian|zhuang"
+    },
+    {
+      "lineNo": 262,
+      "word": "停车场",
+      "op": "addTerm",
+      "pinyin_key": "ting|che|chang"
+    },
+    {
+      "lineNo": 263,
+      "word": "停车位",
+      "op": "addTerm",
+      "pinyin_key": "ting|che|wei"
+    },
+    {
+      "lineNo": 264,
+      "word": "违章",
+      "op": "addTerm",
+      "pinyin_key": "wei|zhang"
+    },
+    {
+      "lineNo": 265,
+      "word": "罚单",
+      "op": "addTerm",
+      "pinyin_key": "fa|dan"
+    },
+    {
+      "lineNo": 266,
+      "word": "驾照",
+      "op": "addTerm",
+      "pinyin_key": "jia|zhao"
+    },
+    {
+      "lineNo": 267,
+      "word": "行驶证",
+      "op": "addTerm",
+      "pinyin_key": "xing|shi|zheng"
+    },
+    {
+      "lineNo": 268,
+      "word": "年检",
+      "op": "addTerm",
+      "pinyin_key": "nian|jian"
+    },
+    {
+      "lineNo": 269,
+      "word": "保险",
+      "op": "addTerm",
+      "pinyin_key": "bao|xian"
+    },
+    {
+      "lineNo": 270,
+      "word": "接机员",
+      "op": "addTerm",
+      "pinyin_key": "jie|ji|yuan"
+    },
+    {
+      "lineNo": 271,
+      "word": "送机员",
+      "op": "addTerm",
+      "pinyin_key": "song|ji|yuan"
+    },
+    {
+      "lineNo": 272,
+      "word": "接站员",
+      "op": "addTerm",
+      "pinyin_key": "jie|zhan|yuan"
+    },
+    {
+      "lineNo": 273,
+      "word": "送站员",
+      "op": "addTerm",
+      "pinyin_key": "song|zhan|yuan"
+    },
+    {
+      "lineNo": 274,
+      "word": "航班号",
+      "op": "addTerm",
+      "pinyin_key": "hang|ban|hao"
+    },
+    {
+      "lineNo": 275,
+      "word": "车次",
+      "op": "addTerm",
+      "pinyin_key": "che|ci"
+    },
+    {
+      "lineNo": 276,
+      "word": "站台号",
+      "op": "addTerm",
+      "pinyin_key": "zhan|tai|hao"
+    },
+    {
+      "lineNo": 277,
+      "word": "候车区",
+      "op": "addTerm",
+      "pinyin_key": "hou|che|qu"
+    },
+    {
+      "lineNo": 278,
+      "word": "贵宾通道",
+      "op": "addTerm",
+      "pinyin_key": "gui|bin|tong|dao"
+    },
+    {
+      "lineNo": 279,
+      "word": "快速通道",
+      "op": "addTerm",
+      "pinyin_key": "kuai|su|tong|dao"
+    },
+    {
+      "lineNo": 280,
+      "word": "行李车",
+      "op": "addTerm",
+      "pinyin_key": "xing|li|che"
+    },
+    {
+      "lineNo": 281,
+      "word": "行李额",
+      "op": "addTerm",
+      "pinyin_key": "xing|li|e"
+    },
+    {
+      "lineNo": 282,
+      "word": "超重费",
+      "op": "addTerm",
+      "pinyin_key": "chao|zhong|fei"
+    },
+    {
+      "lineNo": 283,
+      "word": "延误险",
+      "op": "addTerm",
+      "pinyin_key": "yan|wu|xian"
+    },
+    {
+      "lineNo": 284,
+      "word": "改签费",
+      "op": "addTerm",
+      "pinyin_key": "gai|qian|fei"
+    },
+    {
+      "lineNo": 285,
+      "word": "退票费",
+      "op": "addTerm",
+      "pinyin_key": "tui|piao|fei"
+    },
+    {
+      "lineNo": 286,
+      "word": "登机牌",
+      "op": "addTerm",
+      "pinyin_key": "deng|ji|pai"
+    },
+    {
+      "lineNo": 287,
+      "word": "安检员",
+      "op": "addTerm",
+      "pinyin_key": "an|jian|yuan"
+    },
+    {
+      "lineNo": 288,
+      "word": "值机员",
+      "op": "addTerm",
+      "pinyin_key": "zhi|ji|yuan"
+    },
+    {
+      "lineNo": 289,
+      "word": "候机楼",
+      "op": "addTerm",
+      "pinyin_key": "hou|ji|lou"
+    },
+    {
+      "lineNo": 290,
+      "word": "客房部",
+      "op": "addTerm",
+      "pinyin_key": "ke|fang|bu"
+    },
+    {
+      "lineNo": 291,
+      "word": "礼宾部",
+      "op": "addTerm",
+      "pinyin_key": "li|bin|bu"
+    },
+    {
+      "lineNo": 292,
+      "word": "房态",
+      "op": "addTerm",
+      "pinyin_key": "fang|tai"
+    },
+    {
+      "lineNo": 293,
+      "word": "满房",
+      "op": "addTerm",
+      "pinyin_key": "man|fang"
+    },
+    {
+      "lineNo": 294,
+      "word": "空房",
+      "op": "addTerm",
+      "pinyin_key": "kong|fang"
+    },
+    {
+      "lineNo": 295,
+      "word": "续住费",
+      "op": "addTerm",
+      "pinyin_key": "xu|zhu|fei"
+    },
+    {
+      "lineNo": 296,
+      "word": "加床费",
+      "op": "addTerm",
+      "pinyin_key": "jia|chuang|fei"
+    },
+    {
+      "lineNo": 297,
+      "word": "押金单",
+      "op": "addTerm",
+      "pinyin_key": "ya|jin|dan"
+    },
+    {
+      "lineNo": 298,
+      "word": "水单",
+      "op": "addTerm",
+      "pinyin_key": "shui|dan"
+    },
+    {
+      "lineNo": 299,
+      "word": "入住单",
+      "op": "addTerm",
+      "pinyin_key": "ru|zhu|dan"
+    },
+    {
+      "lineNo": 300,
+      "word": "退房单",
+      "op": "addTerm",
+      "pinyin_key": "tui|fang|dan"
+    },
+    {
+      "lineNo": 301,
+      "word": "房号",
+      "op": "addTerm",
+      "pinyin_key": "fang|hao"
+    },
+    {
+      "lineNo": 302,
+      "word": "楼层",
+      "op": "addTerm",
+      "pinyin_key": "lou|ceng"
+    },
+    {
+      "lineNo": 303,
+      "word": "电梯",
+      "op": "addTerm",
+      "pinyin_key": "dian|ti"
+    },
+    {
+      "lineNo": 304,
+      "word": "走廊",
+      "op": "addTerm",
+      "pinyin_key": "zou|lang"
+    },
+    {
+      "lineNo": 305,
+      "word": "阳台",
+      "op": "addTerm",
+      "pinyin_key": "yang|tai"
+    },
+    {
+      "lineNo": 306,
+      "word": "窗户",
+      "op": "addTerm",
+      "pinyin_key": "chuang|hu"
+    },
+    {
+      "lineNo": 307,
+      "word": "窗帘",
+      "op": "addTerm",
+      "pinyin_key": "chuang|lian"
+    },
+    {
+      "lineNo": 308,
+      "word": "床垫",
+      "op": "addTerm",
+      "pinyin_key": "chuang|dian"
+    },
+    {
+      "lineNo": 309,
+      "word": "导览图",
+      "op": "addTerm",
+      "pinyin_key": "dao|lan|tu"
+    },
+    {
+      "lineNo": 310,
+      "word": "游览车",
+      "op": "addTerm",
+      "pinyin_key": "you|lan|che"
+    },
+    {
+      "lineNo": 311,
+      "word": "观光车",
+      "op": "addTerm",
+      "pinyin_key": "guan|guang|che"
+    },
+    {
+      "lineNo": 312,
+      "word": "讲解器",
+      "op": "addTerm",
+      "pinyin_key": "jiang|jie|qi"
+    },
+    {
+      "lineNo": 313,
+      "word": "耳机",
+      "op": "addTerm",
+      "pinyin_key": "er|ji"
+    },
+    {
+      "lineNo": 314,
+      "word": "排队",
+      "op": "addTerm",
+      "pinyin_key": "pai|dui"
+    },
+    {
+      "lineNo": 315,
+      "word": "入园",
+      "op": "addTerm",
+      "pinyin_key": "ru|yuan"
+    },
+    {
+      "lineNo": 316,
+      "word": "出园",
+      "op": "addTerm",
+      "pinyin_key": "chu|yuan"
+    },
+    {
+      "lineNo": 317,
+      "word": "闭馆",
+      "op": "addTerm",
+      "pinyin_key": "bi|guan"
+    },
+    {
+      "lineNo": 318,
+      "word": "开馆",
+      "op": "addTerm",
+      "pinyin_key": "kai|guan"
+    },
+    {
+      "lineNo": 319,
+      "word": "淡旺季",
+      "op": "addTerm",
+      "pinyin_key": "dan|wang|ji"
+    },
+    {
+      "lineNo": 320,
+      "word": "旺季票",
+      "op": "addTerm",
+      "pinyin_key": "wang|ji|piao"
+    },
+    {
+      "lineNo": 321,
+      "word": "淡季票",
+      "op": "addTerm",
+      "pinyin_key": "dan|ji|piao"
+    },
+    {
+      "lineNo": 322,
+      "word": "团体票",
+      "op": "addTerm",
+      "pinyin_key": "tuan|ti|piao"
+    },
+    {
+      "lineNo": 323,
+      "word": "学生票",
+      "op": "addTerm",
+      "pinyin_key": "xue|sheng|piao"
+    },
+    {
+      "lineNo": 324,
+      "word": "老人票",
+      "op": "addTerm",
+      "pinyin_key": "lao|ren|piao"
+    },
+    {
+      "lineNo": 325,
+      "word": "儿童票",
+      "op": "addTerm",
+      "pinyin_key": "er|tong|piao"
+    },
+    {
+      "lineNo": 326,
+      "word": "免票",
+      "op": "addTerm",
+      "pinyin_key": "mian|piao"
+    },
+    {
+      "lineNo": 327,
+      "word": "半价",
+      "op": "addTerm",
+      "pinyin_key": "ban|jia"
+    },
+    {
+      "lineNo": 328,
+      "word": "预约票",
+      "op": "addTerm",
+      "pinyin_key": "yu|yue|piao"
+    },
+    {
+      "lineNo": 329,
+      "word": "挂号费",
+      "op": "addTerm",
+      "pinyin_key": "gua|hao|fei"
+    },
+    {
+      "lineNo": 330,
+      "word": "诊疗费",
+      "op": "addTerm",
+      "pinyin_key": "zhen|liao|fei"
+    },
+    {
+      "lineNo": 331,
+      "word": "床位费",
+      "op": "addTerm",
+      "pinyin_key": "chuang|wei|fei"
+    },
+    {
+      "lineNo": 332,
+      "word": "护理费",
+      "op": "addTerm",
+      "pinyin_key": "hu|li|fei"
+    },
+    {
+      "lineNo": 333,
+      "word": "手术费",
+      "op": "addTerm",
+      "pinyin_key": "shou|shu|fei"
+    },
+    {
+      "lineNo": 334,
+      "word": "麻醉费",
+      "op": "addTerm",
+      "pinyin_key": "ma|zui|fei"
+    },
+    {
+      "lineNo": 335,
+      "word": "化验单",
+      "op": "addTerm",
+      "pinyin_key": "hua|yan|dan"
+    },
+    {
+      "lineNo": 336,
+      "word": "检查单",
+      "op": "addTerm",
+      "pinyin_key": "jian|cha|dan"
+    },
+    {
+      "lineNo": 337,
+      "word": "影像科",
+      "op": "addTerm",
+      "pinyin_key": "ying|xiang|ke"
+    },
+    {
+      "lineNo": 338,
+      "word": "放射科",
+      "op": "addTerm",
+      "pinyin_key": "fang|she|ke"
+    },
+    {
+      "lineNo": 339,
+      "word": "内科",
+      "op": "addTerm",
+      "pinyin_key": "nei|ke"
+    },
+    {
+      "lineNo": 340,
+      "word": "外科",
+      "op": "addTerm",
+      "pinyin_key": "wai|ke"
+    },
+    {
+      "lineNo": 341,
+      "word": "儿科",
+      "op": "addTerm",
+      "pinyin_key": "er|ke"
+    },
+    {
+      "lineNo": 342,
+      "word": "妇科",
+      "op": "addTerm",
+      "pinyin_key": "fu|ke"
+    },
+    {
+      "lineNo": 343,
+      "word": "骨科",
+      "op": "addTerm",
+      "pinyin_key": "gu|ke"
+    },
+    {
+      "lineNo": 344,
+      "word": "眼科",
+      "op": "addTerm",
+      "pinyin_key": "yan|ke"
+    },
+    {
+      "lineNo": 345,
+      "word": "耳鼻喉",
+      "op": "addTerm",
+      "pinyin_key": "er|bi|hou"
+    },
+    {
+      "lineNo": 346,
+      "word": "皮肤科",
+      "op": "addTerm",
+      "pinyin_key": "pi|fu|ke"
+    },
+    {
+      "lineNo": 347,
+      "word": "口腔科",
+      "op": "addTerm",
+      "pinyin_key": "kou|qiang|ke"
+    },
+    {
+      "lineNo": 348,
+      "word": "急诊科",
+      "op": "addTerm",
+      "pinyin_key": "ji|zhen|ke"
+    },
+    {
+      "lineNo": 349,
+      "word": "会务组",
+      "op": "addTerm",
+      "pinyin_key": "hui|wu|zu"
+    },
+    {
+      "lineNo": 350,
+      "word": "主办方",
+      "op": "addTerm",
+      "pinyin_key": "zhu|ban|fang"
+    },
+    {
+      "lineNo": 351,
+      "word": "承办方",
+      "op": "addTerm",
+      "pinyin_key": "cheng|ban|fang"
+    },
+    {
+      "lineNo": 352,
+      "word": "赞助商",
+      "op": "addTerm",
+      "pinyin_key": "zan|zhu|shang"
+    },
+    {
+      "lineNo": 353,
+      "word": "参展商",
+      "op": "addTerm",
+      "pinyin_key": "can|zhan|shang"
+    },
+    {
+      "lineNo": 354,
+      "word": "观众证",
+      "op": "addTerm",
+      "pinyin_key": "guan|zhong|zheng"
+    },
+    {
+      "lineNo": 355,
+      "word": "工作证",
+      "op": "addTerm",
+      "pinyin_key": "gong|zuo|zheng"
+    },
+    {
+      "lineNo": 356,
+      "word": "媒体证",
+      "op": "addTerm",
+      "pinyin_key": "mei|ti|zheng"
+    },
+    {
+      "lineNo": 357,
+      "word": "贵宾证",
+      "op": "addTerm",
+      "pinyin_key": "gui|bin|zheng"
+    },
+    {
+      "lineNo": 358,
+      "word": "邀请函",
+      "op": "addTerm",
+      "pinyin_key": "yao|qing|han"
+    },
+    {
+      "lineNo": 359,
+      "word": "日程表",
+      "op": "addTerm",
+      "pinyin_key": "ri|cheng|biao"
+    },
+    {
+      "lineNo": 360,
+      "word": "议题",
+      "op": "addTerm",
+      "pinyin_key": "yi|ti"
+    },
+    {
+      "lineNo": 361,
+      "word": "圆桌",
+      "op": "addTerm",
+      "pinyin_key": "yuan|zhuo"
+    },
+    {
+      "lineNo": 362,
+      "word": "论坛",
+      "op": "addTerm",
+      "pinyin_key": "lun|tan"
+    },
+    {
+      "lineNo": 363,
+      "word": "峰会",
+      "op": "addTerm",
+      "pinyin_key": "feng|hui"
+    },
+    {
+      "lineNo": 364,
+      "word": "发布会",
+      "op": "addTerm",
+      "pinyin_key": "fa|bu|hui"
+    },
+    {
+      "lineNo": 365,
+      "word": "签约仪式",
+      "op": "addTerm",
+      "pinyin_key": "qian|yue|yi|shi"
+    },
+    {
+      "lineNo": 366,
+      "word": "剪彩",
+      "op": "addTerm",
+      "pinyin_key": "jian|cai"
+    },
+    {
+      "lineNo": 367,
+      "word": "合影",
+      "op": "addTerm",
+      "pinyin_key": "he|ying"
+    },
+    {
+      "lineNo": 368,
+      "word": "茶歇",
+      "op": "addTerm",
+      "pinyin_key": "cha|xie"
+    },
+    {
+      "lineNo": 369,
+      "word": "咖啡粉",
+      "op": "addTerm",
+      "pinyin_key": "ka|fei|fen"
+    },
+    {
+      "lineNo": 370,
+      "word": "咖啡机",
+      "op": "addTerm",
+      "pinyin_key": "ka|fei|ji"
+    },
+    {
+      "lineNo": 371,
+      "word": "磨豆机",
+      "op": "addTerm",
+      "pinyin_key": "mo|dou|ji"
+    },
+    {
+      "lineNo": 372,
+      "word": "压粉器",
+      "op": "addTerm",
+      "pinyin_key": "ya|fen|qi"
+    },
+    {
+      "lineNo": 373,
+      "word": "蒸汽棒",
+      "op": "addTerm",
+      "pinyin_key": "zheng|qi|bang"
+    },
+    {
+      "lineNo": 374,
+      "word": "滤纸",
+      "op": "addTerm",
+      "pinyin_key": "lü|zhi"
+    },
+    {
+      "lineNo": 375,
+      "word": "滤杯",
+      "op": "addTerm",
+      "pinyin_key": "lü|bei"
+    },
+    {
+      "lineNo": 376,
+      "word": "手冲壶",
+      "op": "addTerm",
+      "pinyin_key": "shou|chong|hu"
+    },
+    {
+      "lineNo": 377,
+      "word": "温度计",
+      "op": "addTerm",
+      "pinyin_key": "wen|du|ji"
+    },
+    {
+      "lineNo": 378,
+      "word": "风味轮",
+      "op": "addTerm",
+      "pinyin_key": "feng|wei|lun"
+    },
+    {
+      "lineNo": 379,
+      "word": "酸度",
+      "op": "addTerm",
+      "pinyin_key": "suan|du"
+    },
+    {
+      "lineNo": 380,
+      "word": "苦度",
+      "op": "addTerm",
+      "pinyin_key": "ku|du"
+    },
+    {
+      "lineNo": 381,
+      "word": "醇厚度",
+      "op": "addTerm",
+      "pinyin_key": "chun|hou|du"
+    },
+    {
+      "lineNo": 382,
+      "word": "余韵",
+      "op": "addTerm",
+      "pinyin_key": "yu|yun"
+    },
+    {
+      "lineNo": 383,
+      "word": "产区",
+      "op": "addTerm",
+      "pinyin_key": "chan|qu"
+    },
+    {
+      "lineNo": 384,
+      "word": "海拔",
+      "op": "addTerm",
+      "pinyin_key": "hai|ba"
+    },
+    {
+      "lineNo": 385,
+      "word": "日晒",
+      "op": "addTerm",
+      "pinyin_key": "ri|shai"
+    },
+    {
+      "lineNo": 386,
+      "word": "水洗",
+      "op": "addTerm",
+      "pinyin_key": "shui|xi"
+    },
+    {
+      "lineNo": 387,
+      "word": "蜜处理",
+      "op": "addTerm",
+      "pinyin_key": "mi|chu|li"
+    },
+    {
+      "lineNo": 388,
+      "word": "机场",
+      "op": "appendDomainTags",
+      "term_id": "term-e69cbae59cba7c6a"
+    },
+    {
+      "lineNo": 389,
+      "word": "预订",
+      "op": "appendDomainTags",
+      "term_id": "term-e9a284e8aea27c79"
+    },
+    {
+      "lineNo": 390,
+      "word": "预订",
+      "op": "appendDomainTags",
+      "term_id": "term-e9a284e8aea27c79"
+    },
+    {
+      "lineNo": 391,
+      "word": "中杯",
+      "op": "appendDomainTags",
+      "term_id": "term-e4b8ade69daf7c7a"
+    },
+    {
+      "lineNo": 392,
+      "word": "大杯",
+      "op": "appendDomainTags",
+      "term_id": "term-e5a4a7e69daf7c64"
+    },
+    {
+      "lineNo": 393,
+      "word": "小杯",
+      "op": "appendDomainTags",
+      "term_id": "term-e5b08fe69daf7c78"
+    },
+    {
+      "lineNo": 394,
+      "word": "少冰",
+      "op": "appendDomainTags",
+      "term_id": "term-e5b091e586b07c73"
+    },
+    {
+      "lineNo": 395,
+      "word": "蓝莓马芬",
+      "op": "appendDomainTags",
+      "term_id": "term-e8939de88e93e9a9"
+    }
+  ],
+  "generatedAt": "2026-06-24T19:13:42.361Z"
+}

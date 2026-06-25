@@ -1,0 +1,179 @@
+{
+  "patchId": "industry-pack-v1-wave1-pilot",
+  "patchSchemaVersion": "lexicon-patch-v4",
+  "baseVersion": 4,
+  "nextVersion": 5,
+  "hash": "sha256:f8fc92cb5aba0960b66918826970edce66816a712c2a8e9028489f28f4a2be3c",
+  "operations": [
+    {
+      "op": "addTerm",
+      "word": "智能体",
+      "pinyin": "zhi neng ti",
+      "tone_pinyin": "zhi4 neng2 ti3",
+      "tone_pinyin_key": "zhi4|neng2|ti3",
+      "domain_tags": [
+        "tech_ai"
+      ],
+      "domain_weights": {
+        "tech_ai": 1
+      },
+      "prior_score": 0.9,
+      "repair_target": true,
+      "enabled": true,
+      "source": "industry_pack_v1"
+    },
+    {
+      "op": "addTerm",
+      "word": "大模型",
+      "pinyin": "da mo xing",
+      "tone_pinyin": "da4 mo2 xing2",
+      "tone_pinyin_key": "da4|mo2|xing2",
+      "domain_tags": [
+        "tech_ai"
+      ],
+      "domain_weights": {
+        "tech_ai": 1
+      },
+      "prior_score": 0.9,
+      "repair_target": true,
+      "enabled": true,
+      "source": "industry_pack_v1"
+    },
+    {
+      "op": "addTerm",
+      "word": "微调",
+      "pinyin": "wei tiao",
+      "tone_pinyin": "wei1 tiao2",
+      "tone_pinyin_key": "wei1|tiao2",
+      "domain_tags": [
+        "tech_ai"
+      ],
+      "domain_weights": {
+        "tech_ai": 1
+      },
+      "prior_score": 0.88,
+      "repair_target": true,
+      "enabled": true,
+      "source": "industry_pack_v1"
+    },
+    {
+      "op": "addTerm",
+      "word": "推理",
+      "pinyin": "tui li",
+      "tone_pinyin": "tui1 li3",
+      "tone_pinyin_key": "tui1|li3",
+      "domain_tags": [
+        "tech_ai"
+      ],
+      "domain_weights": {
+        "tech_ai": 1
+      },
+      "prior_score": 0.88,
+      "repair_target": true,
+      "enabled": true,
+      "source": "industry_pack_v1"
+    },
+    {
+      "op": "addTerm",
+      "word": "算力",
+      "pinyin": "suan li",
+      "tone_pinyin": "suan4 li4",
+      "tone_pinyin_key": "suan4|li4",
+      "domain_tags": [
+        "tech_ai"
+      ],
+      "domain_weights": {
+        "tech_ai": 1
+      },
+      "prior_score": 0.87,
+      "repair_target": true,
+      "enabled": true,
+      "source": "industry_pack_v1"
+    },
+    {
+      "op": "addTerm",
+      "word": "向量",
+      "pinyin": "xiang liang",
+      "tone_pinyin": "xiang4 liang4",
+      "tone_pinyin_key": "xiang4|liang4",
+      "domain_tags": [
+        "tech_ai"
+      ],
+      "domain_weights": {
+        "tech_ai": 1
+      },
+      "prior_score": 0.86,
+      "repair_target": true,
+      "enabled": true,
+      "source": "industry_pack_v1"
+    },
+    {
+      "op": "addTerm",
+      "word": "网约车",
+      "pinyin": "wang yue che",
+      "tone_pinyin": "wang3 yue1 che1",
+      "tone_pinyin_key": "wang3|yue1|che1",
+      "domain_tags": [
+        "tourism_transport"
+      ],
+      "domain_weights": {
+        "tourism_transport": 1
+      },
+      "prior_score": 0.88,
+      "repair_target": true,
+      "enabled": true,
+      "source": "industry_pack_v1"
+    },
+    {
+      "op": "addTerm",
+      "word": "接机",
+      "pinyin": "jie ji",
+      "tone_pinyin": "jie1 ji1",
+      "tone_pinyin_key": "jie1|ji1",
+      "domain_tags": [
+        "tourism_pickup"
+      ],
+      "domain_weights": {
+        "tourism_pickup": 1
+      },
+      "prior_score": 0.87,
+      "repair_target": true,
+      "enabled": true,
+      "source": "industry_pack_v1"
+    },
+    {
+      "op": "addTerm",
+      "word": "行程",
+      "pinyin": "xing cheng",
+      "tone_pinyin": "xing2 cheng2",
+      "tone_pinyin_key": "xing2|cheng2",
+      "domain_tags": [
+        "tourism_route"
+      ],
+      "domain_weights": {
+        "tourism_route": 1
+      },
+      "prior_score": 0.86,
+      "repair_target": true,
+      "enabled": true,
+      "source": "industry_pack_v1"
+    },
+    {
+      "op": "addTerm",
+      "word": "客房",
+      "pinyin": "ke fang",
+      "tone_pinyin": "ke4 fang2",
+      "tone_pinyin_key": "ke4|fang2",
+      "domain_tags": [
+        "tourism_hotel"
+      ],
+      "domain_weights": {
+        "tourism_hotel": 1
+      },
+      "prior_score": 0.86,
+      "repair_target": true,
+      "enabled": true,
+      "source": "industry_pack_v1"
+    }
+  ]
+}

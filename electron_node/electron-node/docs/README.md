@@ -21,7 +21,7 @@
 | Legacy ASR Repair | [main/src/legacy/asr-repair/README.md](../main/src/legacy/asr-repair/README.md) |
 | Legacy FW 回滚 | [main/src/legacy/fw-detector/README.md](../main/src/legacy/fw-detector/README.md) |
 | Lexicon V3 | [main/src/lexicon/README.md](../main/src/lexicon/README.md) |
-| Lexicon V2 / FW Runtime | [main/src/lexicon-v2/README.md](../main/src/lexicon-v2/README.md) |
+| Lexicon Runtime V2 | [main/src/lexicon-v2/README.md](../main/src/lexicon-v2/README.md) |
 | Lexicon Patch V3.1 | [main/src/lexicon-patch-v3/README.md](../main/src/lexicon-patch-v3/README.md) |
 | Session | [main/src/session-runtime/README.md](../main/src/session-runtime/README.md) |
 | 音频聚合 | [main/src/pipeline-orchestrator/README.md](../main/src/pipeline-orchestrator/README.md) |
@@ -32,7 +32,6 @@
 | 类型 | 路径 |
 |------|------|
 | Lexicon V3 SSOT | [../../docs/lexicon-v3/README.md](../../docs/lexicon-v3/README.md) |
-| Lexicon V2 详述 | [../docs/lexicon_v2/LEXICON_RUNTIME_V2.md](../docs/lexicon_v2/LEXICON_RUNTIME_V2.md) |
 | 词库脚本 | [../scripts/lexicon/README.md](../scripts/lexicon/README.md) |
 | 词库资产 | [../lexicon-assets/docs/README.md](../lexicon-assets/docs/README.md) |
 | 常用命令 | [../../docs/CODING/常用命令](../../docs/CODING/常用命令) |

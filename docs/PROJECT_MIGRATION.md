@@ -53,7 +53,7 @@ lingua_1/
 - **文档**: `expired/docs/scheduler/` → `central_server/docs/scheduler/`
 - **状态**: ✅ 迁移完成，测试通过（106+ 个测试通过）
 
-详细迁移内容请参考 `central_server/docs/MIGRATION.md`。
+中央服务器组件位于 `central_server/`。索引见 `central_server/docs/README.md`。
 
 ### Electron 节点客户端 (electron_node)
 
@@ -164,7 +164,7 @@ lingua_1/
 
 - **项目重组指南**: `../PROJECT_REORGANIZATION_GUIDE.md`
 - **Web 客户端迁移**: `../webapp/docs/MIGRATION.md`
-- **中央服务器迁移**: `../central_server/docs/MIGRATION.md`
+- **中央服务器**：`central_server/docs/README.md`
 - **Electron 节点客户端迁移**: `../electron_node/docs/MIGRATION.md`
 - **Web 客户端文档**: `../webapp/docs/README.md`
 - **中央服务器文档**: `../central_server/docs/README.md`

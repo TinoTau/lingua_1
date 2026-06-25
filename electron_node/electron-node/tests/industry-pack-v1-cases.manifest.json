@@ -1,0 +1,51 @@
+[
+  {
+    "id": "industry_v1_001",
+    "domainScope": ["tech_ai"],
+    "raw": "我们这次要上线智能体服务",
+    "expectedRecallTerms": ["智能体"],
+    "expectedDomain": "tech_ai",
+    "expectedBehavior": "recall_hit"
+  },
+  {
+    "id": "industry_v1_002",
+    "domainScope": ["tech_ai"],
+    "raw": "大模型推理需要更多算力",
+    "expectedRecallTerms": ["大模型", "推理", "算力"],
+    "expectedDomain": "tech_ai",
+    "expectedBehavior": "recall_hit"
+  },
+  {
+    "id": "industry_v1_003",
+    "domainScope": ["tourism_transport"],
+    "raw": "帮我叫一辆网约车去机场",
+    "expectedRecallTerms": ["网约车"],
+    "expectedDomain": "tourism_transport",
+    "expectedBehavior": "recall_hit"
+  },
+  {
+    "id": "industry_v1_004",
+    "domainScope": ["tourism_pickup"],
+    "raw": "明天早上安排接机",
+    "expectedRecallTerms": ["接机"],
+    "expectedDomain": "tourism_pickup",
+    "expectedBehavior": "recall_hit"
+  },
+  {
+    "id": "industry_v1_005",
+    "domainScope": ["medical"],
+    "raw": "请问挂号处在哪",
+    "expectedRecallTerms": ["挂号"],
+    "expectedDomain": "medical",
+    "expectedBehavior": "recall_hit"
+  },
+  {
+    "id": "industry_v1_cf_repair_target",
+    "domainScope": ["tech_ai"],
+    "raw": "智能体",
+    "expectedRecallTerms": ["智能体"],
+    "expectedDomain": "tech_ai",
+    "expectedBehavior": "apply_not_required",
+    "counterfactual": "repair_target_false_must_not_apply"
+  }
+]

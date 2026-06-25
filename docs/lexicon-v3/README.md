@@ -24,6 +24,9 @@ node_runtime/lexicon/v3  →  lexicon.sqlite + manifest/stats/checksum
 | [ILLEGAL_ALIAS_CLEANUP.md](./ILLEGAL_ALIAS_CLEANUP.md) | 非法 alias 清理 |
 | [LEXICON_EXPANSION_PACKAGE.md](./LEXICON_EXPANSION_PACKAGE.md) | Expansion 词条包 |
 | [LEXICON_OPERATIONS.md](./LEXICON_OPERATIONS.md) | FW 质量运营 |
+| [FW_Repair_V4_Lexicon_Expansion_Framework_Audit_2026_06_25.md](./FW_Repair_V4_Lexicon_Expansion_Framework_Audit_2026_06_25.md) | Expansion 前框架审计 |
+| [FW_Repair_V4_Tech_AI_Lexicon_Package_Audit_2026_06_25.md](./FW_Repair_V4_Tech_AI_Lexicon_Package_Audit_2026_06_25.md) | Tech_AI 词包审计 |
+| [FW_Repair_V4_Industry_Expansion_Pack_V1_PreDev_Audit_2026_06_25.md](./FW_Repair_V4_Industry_Expansion_Pack_V1_PreDev_Audit_2026_06_25.md) | Industry Pack V1 开发前审计 |
 
 ## 代码位置
 
