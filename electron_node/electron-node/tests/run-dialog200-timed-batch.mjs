@@ -11,6 +11,7 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { assessFwDetectorContractPass } = require('./lib/fw-detector-contract-assess.js');
 import { getTestServerPort, waitTestServerHealth, waitAsrReady } from './lib/wait-asr-ready.mjs';
+import { loadDialog200Manifest, resolveDialog200AudioFile } from './lib/load-dialog200-manifest.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);
@@ -97,7 +98,7 @@ function contractRow(caseDef, data) {
   };
 }
 
-const casesAll = JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf8'));
+const { cases: casesAll } = loadDialog200Manifest(MANIFEST_PATH);
 const cases = offset > 0 ? casesAll.slice(offset) : casesAll;
 const port = getPort();
 const batchStart = Date.now();
@@ -109,7 +110,7 @@ if (!(await waitTestServerHealth(port))) {
   process.exit(1);
 }
 
-const warmupWav = path.join(DIALOG_DIR, cases[0]?.file || 'dialog_d001.wav');
+const warmupWav = path.join(DIALOG_DIR, resolveDialog200AudioFile(cases[0]) || 'dialog_d001.wav');
 console.log('[dialog200-timed] waiting for Faster-Whisper ASR ready via warmup:', warmupWav);
 const asrReady = await waitAsrReady(port, {
   warmupWavPath: warmupWav,
@@ -149,7 +150,7 @@ for (const caseDef of cases) {
     break;
   }
   index += 1;
-  const wavPath = path.join(DIALOG_DIR, caseDef.file);
+  const wavPath = path.join(DIALOG_DIR, resolveDialog200AudioFile(caseDef) || caseDef.file);
   if (!fs.existsSync(wavPath)) {
     report.cases.push({ id: caseDef.id, pass: false, skip: true, error: 'missing wav' });
     skip += 1;

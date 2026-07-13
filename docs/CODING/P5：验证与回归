@@ -1,21 +1,41 @@
-Phase 5：验证与回归
+请启动节点端，
 
-请做全链路验证。
-
-重点确认：
-1. 主链是否真正调用新模块
-2. translation 是否真正使用 repairedText
-3. result-builder 是否真正输出字段
-4. enhancement disable 时是否 fail-open
-5. 是否新增 hidden rewrite path
-6. 是否出现 duplicate rewrite
-7. 是否影响 ASR/NMT/TTS latency
+使用指定测试集完成验证。
 
 输出：
-# Validation & Regression Report
-## 主链调用确认
-## 输出字段确认
-## latency
-## fail-open
-## regression risk
-## 是否真正生效
+
+Development Report
+
+Test Report
+
+Regression Report
+
+Architecture Verification
+
+Performance Report
+
+Counterfactual Report
+
+必须验证：
+
+- 功能存在；
+- 功能真实参与最终决策；
+- Frozen Architecture 仍然成立；
+- Interface Contract 未漂移；
+- Data Contract 未漂移；
+- Decision Path 未漂移；
+- Regression 全部通过。
+
+对于所有核心功能：
+
+必须完成 Counterfactual Test，
+
+证明禁用后结果出现可解释退化，
+
+否则不得认定功能真实生效。
+
+最后输出：
+
+Architecture Compliance
+
+PASS / CONDITIONAL PASS / FAIL

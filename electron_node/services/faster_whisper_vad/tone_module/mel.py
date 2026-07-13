@@ -4,12 +4,21 @@ from __future__ import annotations
 import numpy as np
 from scipy.signal import stft
 
-SAMPLE_RATE = 16000
-N_FFT = 512
-HOP_LENGTH = 160
-N_MELS = 80
-FMIN = 50.0
-FMAX = 7600.0
+from tone_module.contract import (
+    P0_FMAX,
+    P0_FMIN,
+    P0_HOP_LENGTH,
+    P0_N_FFT,
+    P0_N_MELS,
+    P0_SAMPLE_RATE,
+)
+
+SAMPLE_RATE = P0_SAMPLE_RATE
+N_FFT = P0_N_FFT
+HOP_LENGTH = P0_HOP_LENGTH
+N_MELS = P0_N_MELS
+FMIN = P0_FMIN
+FMAX = P0_FMAX
 
 
 def _hz_to_mel(hz: np.ndarray) -> np.ndarray:

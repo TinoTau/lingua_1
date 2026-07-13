@@ -1,0 +1,39 @@
+{
+  "source": "Tone_V2_Phase1_5_Production_Baseline_Business_Validation_Report_2026_07_12.md",
+  "runId": "run_20260712_rerun",
+  "artifactPath": "electron_node/services/faster_whisper_vad/tone_module/models/production/tone_cnn_p1_v1_production_20260712.npz",
+  "trainingVersion": "production_baseline_20260712",
+  "modelArchitecture": "conv1d_global_pool_v1",
+  "dialog200": {
+    "successRate": 1.0,
+    "successCount": 200,
+    "caseCount": 200,
+    "toneEnabledRate": 1.0,
+    "toneExactHitCaseRate": 0.895,
+    "toneExactHitTotal": 566,
+    "tonePatternHitTotal": 10515,
+    "candidateRerankRate": 0.245,
+    "exactMatchRate": 0.14,
+    "meanCer": 0.219,
+    "modelErrorCount": 0,
+    "meanPipelineMs": 4837,
+    "p50PipelineMs": 4340,
+    "p95PipelineMs": 7230,
+    "meanFwDetectorMs": 1325,
+    "lowMarginPosteriorRate": 0.167,
+    "toneInferenceMsPerSliceSmoke": 3.8
+  },
+  "abCounterfactual": {
+    "fixtureCount": 27,
+    "posteriorPresentRate": 1.0,
+    "kenlmTopChangedRate": 0.704,
+    "finalCandidateChangedRate": 0.444,
+    "noEffectRate": 0.556,
+    "improvementCount": 5,
+    "improvementRate": 0.185,
+    "regressionCount": 4,
+    "regressionRate": 0.148,
+    "lateralChangeCount": 3,
+    "noEffectCount": 15
+  }
+}

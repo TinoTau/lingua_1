@@ -1,35 +1,54 @@
-P0：方向冻结
+请按照当前已冻结的架构，对本轮需求进行开发前代码审计，并生成完整审计报告。
 
-请不要直接开发。
+本轮属于 Proposal Audit，不进行开发。
 
-先根据当前项目架构和历史方向，分析：
+请依据：
+- 已冻结架构（Architecture SSOT）
+- 历史审计结论
+- 历史开发方案
+- 当前实际代码
 
-这个功能在整个 pipeline 中属于哪一层？
+完成：
 
-是：
-- evidence layer
-- candidate layer
-- selector layer
-- legality layer
-- rewrite layer
-- observability layer
-- scheduler layer
+1. 功能、接口、数据结构、流程审计；
+2. Frozen Architecture Verification；
+3. Architecture Drift Audit；
+4. Contract Verification（Interface / Data Contract）；
+5. Decision Path Audit；
+6. Ownership Audit。
 
-请说明：
-1. 它应该放在哪个阶段
-2. 它不应该做什么
-3. 它与已有模块（ASR/n-best/lexicon/phonetic/NMT/TTS/semantic repair）的边界
-4. 是否符合当前 frozen architecture
-5. 是否会引入新的 rewrite authority
-6. 是否应该新增 pipeline step
-7. 是否应该是 local helper 而不是 service
-8. 当前阶段最小目标是什么
+重点确认：
+
+- 功能不仅存在，而且真实参与最终决策；
+- 是否进入最终主链；
+- 是否被后续模块覆盖、绕过或降级；
+- 是否存在 Architecture Drift、Decision Drift、Ownership Drift、Contract Drift；
+- 是否存在 Compatibility Logic、Shadow Logic、Bypass、Dead Feature、Dead Code、Duplicate Implementation、Hidden Gate。
 
 输出：
-# Direction Freeze Report
-## 正确层级
-## 必须边界
-## Non-goals
-## 推荐阶段
-## 风险
-## 是否值得开发
+
+- Executive Summary
+- Architecture Audit
+- Decision Path Audit
+- Drift Matrix
+- Ownership Matrix
+- Dead Feature Matrix
+- Required Repair Matrix
+
+所有问题必须标注：
+
+Expected
+Actual
+Impact
+Severity
+
+并明确：
+
+KEEP
+MODIFY
+RESTORE
+DELETE
+
+最终输出：
+
+《XXX_PreDev_Audit_Report.md》

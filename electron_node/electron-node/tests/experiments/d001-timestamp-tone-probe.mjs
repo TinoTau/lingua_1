@@ -7,6 +7,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
 import { getTestServerPort, waitTestServerHealth, waitAsrReady, runPipelineWarmup } from '../lib/wait-asr-ready.mjs';
+import { loadDialog200Manifest } from '../lib/load-dialog200-manifest.mjs';
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -14,7 +15,7 @@ const DIST = path.resolve(__dirname, '../../dist/main/electron-node/main/src');
 
 const DIALOG_DIR = path.resolve(__dirname, '../../../../test wav/dialog_200');
 const D001_WAV = path.join(DIALOG_DIR, 'dialog_d001.wav');
-const MANIFEST = JSON.parse(fs.readFileSync(path.join(DIALOG_DIR, 'cases.manifest.json'), 'utf8'));
+const { cases: MANIFEST } = loadDialog200Manifest(path.join(DIALOG_DIR, 'cases.manifest.json'));
 const D001_REF = MANIFEST.find((c) => c.id === 'd001')?.utterance || '';
 
 const TARGET_PINYIN = ['zhong|bei', 'bei|shao', 'shao|tang', 'zhong|bei|shao', 'bei|shao|tang'];

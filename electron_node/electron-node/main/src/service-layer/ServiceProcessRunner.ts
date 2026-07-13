@@ -106,16 +106,20 @@ export class ServiceProcessRunner {
       '🚀 Starting service process'
     );
 
-    // 6. 环境变量：继承进程 env + CUDA 环境（与其它 GPU 服务一致），再合并 service.json 的 env
+    // 6. 环境变量：继承进程 env + CUDA；剥离通用 PORT，按服务注入专用端口变量
     const serviceEnv: Record<string, string> = {
       ...process.env as Record<string, string>,
       ...setupCudaEnvironment(),
       PYTHONIOENCODING: 'utf-8',
     };
+    delete serviceEnv.PORT;
     if (entry.def.env && typeof entry.def.env === 'object') {
       for (const [k, v] of Object.entries(entry.def.env)) {
         if (v !== undefined && v !== null) serviceEnv[k] = String(v);
       }
+    }
+    if (serviceId === 'faster-whisper-vad' && port) {
+      serviceEnv.FASTER_WHISPER_VAD_PORT = String(port);
     }
 
     if (serviceId === 'lexicon-intent-cpu') {
@@ -127,6 +131,8 @@ export class ServiceProcessRunner {
         model.resolvedPath ??
           path.resolve(process.cwd(), 'models', 'lexicon-intent')
       );
+      serviceEnv.LEXICON_INTENT_PORT = String(port ?? 5018);
+      delete serviceEnv.FASTER_WHISPER_VAD_PORT;
     }
 
     // Windows PATH 归一

@@ -11,7 +11,13 @@ import numpy as np
 
 from config import MAX_WAIT_SECONDS
 from asr_worker_manager import ASRWorkerManager
-from shared_types import SegmentInfo as SharedSegmentInfo, WordInfo as SharedWordInfo
+from shared_types import WorkerState, SegmentInfo as SharedSegmentInfo, WordInfo as SharedWordInfo
+from asr_errors import (
+    queue_full_error,
+    worker_not_ready_error,
+    worker_restarting_error,
+    timeout_recovery_error,
+)
 
 
 def _word_from_dict(raw: dict) -> SharedWordInfo:
@@ -39,6 +45,24 @@ def _segment_from_dict(raw: dict) -> SharedSegmentInfo:
 logger = logging.getLogger(__name__)
 
 
+def _raise_asr_unavailable(manager: ASRWorkerManager, trace_id: str) -> None:
+    state = manager.state
+    if state in (WorkerState.RESTARTING, WorkerState.STARTING):
+        logger.warning(
+            f"[{trace_id}] ASR worker restarting, returning 503. worker_state={state.value}"
+        )
+        raise worker_restarting_error()
+    if manager.is_queue_full():
+        stats = manager.get_stats()
+        logger.warning(
+            f"[{trace_id}] ASR queue is full, returning 503 Service Busy. "
+            f"queue_depth={stats['queue_depth']} queue_max={stats.get('queue_max')}"
+        )
+        raise queue_full_error()
+    logger.error(f"[{trace_id}] ASR worker not ready, worker_state={state.value}")
+    raise worker_not_ready_error()
+
+
 async def perform_asr(
     processed_audio: np.ndarray,
     sample_rate: int,
@@ -64,17 +88,11 @@ async def perform_asr(
     """
     asr_start_time = time.time()
 
-    if manager.is_queue_full():
-        stats = manager.get_stats()
-        logger.warning(
-            f"[{trace_id}] ASR queue is full, returning 503 Service Busy. "
-            f"queue_depth={stats['queue_depth']}"
-        )
-        raise HTTPException(
-            status_code=503,
-            detail="ASR service is busy, please retry later",
-            headers={"Retry-After": "1"}
-        )
+    if manager.state in (WorkerState.RESTARTING, WorkerState.STARTING):
+        if not await manager.wait_until_accepting(max_wait=10.0):
+            _raise_asr_unavailable(manager, trace_id)
+    elif not manager.get_readiness().get("utterance_ready"):
+        _raise_asr_unavailable(manager, trace_id)
 
     stats = manager.get_stats()
     logger.info(f"[{trace_id}] ========== ASR 识别请求开始 ==========")
@@ -179,26 +197,26 @@ async def perform_asr(
     except asyncio.TimeoutError:
         stats = manager.get_stats()
         logger.error(
-            f"[{trace_id}] ASR task timeout after {MAX_WAIT_SECONDS}s, "
-            f"queue_depth={stats['queue_depth']}"
+            f"[{trace_id}] ASR task timeout after {MAX_WAIT_SECONDS}s (recovery attempted), "
+            f"queue_depth={stats['queue_depth']} toneReached=false"
         )
-        raise HTTPException(
-            status_code=504,
-            detail=f"ASR processing timeout after {MAX_WAIT_SECONDS}s"
-        )
+        raise timeout_recovery_error(MAX_WAIT_SECONDS)
+    except HTTPException:
+        raise
     except RuntimeError as e:
+        err = str(e)
         logger.error(
-            f"[{trace_id}] ASR Worker process not available: {e}",
-            exc_info=True
+            f"[{trace_id}] ASR Worker unavailable: {e} toneReached=false",
+            exc_info=True,
         )
-        raise HTTPException(
-            status_code=503,
-            detail="ASR service is temporarily unavailable, please retry later",
-            headers={"Retry-After": "2"}
-        )
+        if "restarting" in err.lower():
+            raise worker_restarting_error()
+        if "queue is full" in err.lower():
+            raise queue_full_error()
+        raise worker_not_ready_error()
     except Exception as e:
         logger.error(
-            f"[{trace_id}] ASR Worker exception: {e}",
+            f"[{trace_id}] ASR Worker exception: {e} toneReached=false",
             exc_info=True
         )
         raise HTTPException(

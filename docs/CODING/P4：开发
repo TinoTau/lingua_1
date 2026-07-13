@@ -1,21 +1,44 @@
-Phase 4：开发
+《开发方案》
+《Supplement》
 
-请严格按以下 frozen plan 开发。
+以上文档作为本轮唯一开发依据。
 
-禁止重新设计。
+请严格遵循：
 
-要求：
-1. 不新增 plan 未定义 pipeline step
-2. 不新增第二 rewrite authority
-3. 不新增 undocumented ctx field
-4. 不新增 hidden fallback
-5. fail-open
-6. 保持 deterministic
+- Lingua Project Constitution
+- Frozen Architecture
+- 已批准开发方案
+- Supplement
 
-开发完成后输出：
-# Development Report
-## 修改文件
-## 实现功能
-## 测试结果
-## 与 frozen contract 一致性
-## 未实现部分
+开始开发。
+
+开发前必须完成一致性检查。
+
+开发过程中：
+
+- 不允许偏离冻结设计；
+- 不允许新增未批准规则；
+- 不允许新增兼容层、Shadow、Bypass、Registry、Hidden Gate；
+- 不允许保留与冻结架构冲突的历史逻辑。
+
+如发现设计与代码不一致，
+
+必须在开发报告中说明：
+
+Expected
+
+Actual
+
+Impact
+
+KEEP
+
+MODIFY
+
+RESTORE
+
+DELETE
+
+开发完成后生成：
+
+《Development Report》

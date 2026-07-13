@@ -1,35 +1,53 @@
-P2:缺口与契约
+《开发方案》
 
-请审查当前开发方案。
+请结合：
 
-不要开发。
+- 当前实际代码
+- Proposal Audit
+- Development Plan
 
-目标：
-找出：
-- integration conflict
-- ctx ownership conflict
-- rewrite authority conflict
-- pipeline ordering issue
-- state duplication
-- inconsistent examples
-- hidden blockers
-- missing contracts
+进行 Supplement Review。
 
 重点检查：
-1. repairedText ownership
-2. translation input ownership
-3. 是否新增第二写回入口
-4. 是否新增 pipeline complexity
-5. 是否与历史 frozen direction 冲突
-6. examples 是否与真实代码一致
-7. top1/source order 是否一致
-8. start/end 规则是否一致
 
-输出：
-# Pre-Development Gap Report
-## 必须修正
-## 推荐补充
-## Integration Contract
-## Blockers
-## Non-blockers
-## 是否能进入开发
+- 是否仍存在设计缺失；
+- 是否存在实现歧义；
+- 是否存在责任边界不清；
+- 是否存在隐藏前提；
+- 是否存在接口约束缺失；
+- 是否存在数据契约缺失；
+- 是否存在测试盲区；
+- 是否存在验收缺口；
+- 是否存在未来容易再次偏离冻结设计的风险。
+
+禁止改变冻结设计。
+
+仅允许补充：
+
+- Design Constraint
+- Interface Contract
+- Data Contract
+- Decision Constraint
+- Regression
+- Acceptance
+
+所有补充项必须说明来源：
+
+- Design Gap
+- Code Implementation
+- Test Finding
+- Architecture Drift
+
+并输出：
+
+KEEP
+
+MODIFY
+
+RESTORE
+
+DELETE
+
+最终生成：
+
+《XXX_Supplement.md》

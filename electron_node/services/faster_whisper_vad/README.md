@@ -32,6 +32,25 @@ ASR 推理在独立子进程中执行，通过进程间队列通信：
 - 结果队列管理
 - 自动重启机制
 - 健康检查和超时处理
+- **Readiness 诊断**：`GET /health` 返回 optional `readiness` 字段（`utterance_ready` / `queue_full` 等）
+- **Timeout 恢复**：ASR 任务超时后自动重启 Worker 子进程并重建 task queue，避免单槽队列永久 stuck
+
+### Readiness 与 503 语义
+
+`GET /health` 保留原有字段，并新增 optional `readiness`：
+
+| 字段 | 含义 |
+|------|------|
+| `utterance_ready` | 是否可接受新的 `/utterance` |
+| `queue_full` | task queue 是否已满 |
+| `worker_accepting_tasks` | Worker 运行中且队列未满 |
+| `last_error` | 最近一次 recovery / 失败原因 |
+
+当 `queue_depth >= queue_max` 时：`utterance_ready=false`，即使 `status=ok`。
+
+`POST /utterance` 503/504 响应 `detail` 为对象：`{"message": "...", "reason": "queue_full|worker_not_ready|worker_restarting|timeout_recovery"}`。
+
+**运维：** batch audit 前确认 `readiness.utterance_ready=true`；若遇 stuck，重启 FW Worker 或等待 timeout recovery 完成。
 
 ## 环境变量
 

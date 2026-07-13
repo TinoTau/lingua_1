@@ -15,5 +15,7 @@ pyogg>=0.6.12a1
 # Windows: 下载 ffmpeg 并添加到 PATH
 # Linux: sudo apt-get install ffmpeg
 # macOS: brew install ffmpeg
-# pyogg 用于直接解码原始 Opus 帧（优先使用）
+# Tone V2 GPU training (training domain only — not imported by Runtime)
+# pip install torch --index-url https://download.pytorch.org/whl/cu124
+# torch>=2.2.0
 

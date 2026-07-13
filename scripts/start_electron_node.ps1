@@ -116,9 +116,18 @@ try {
     Write-Host "Using built renderer from: $rendererDistPath" -ForegroundColor Gray
 
     # Start Electron application
-    # Note: npm start will start Electron, output will go to stdout/stderr
+    # npm may write config warnings to stderr; do not treat as terminating errors.
     Write-Host "Starting Electron application..." -ForegroundColor Green
-    npm start 2>&1 | Tee-Object -FilePath $logFileWithTimestamp
+    $prevEap = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        npm start 2>&1 | Tee-Object -FilePath $logFileWithTimestamp
+        if ($LASTEXITCODE -ne 0) {
+            throw "npm start exited with code $LASTEXITCODE"
+        }
+    } finally {
+        $ErrorActionPreference = $prevEap
+    }
 
 }
 catch {

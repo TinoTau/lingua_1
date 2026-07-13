@@ -1,6 +1,6 @@
 /**
- * TONEStage - TONE 音色配音阶段
- * 职责：根据 TTS 音频生成音色配音
+ * TONEStage — TTS 后音色克隆（YourTTS / use_tone）。
+ * 与 FW 声学 Tone Module（faster_whisper_vad/tone_module → acousticToneSlices → Recall）无关。
  */
 
 import { JobAssignMessage } from '@shared/protocols/messages';

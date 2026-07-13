@@ -1,0 +1,332 @@
+﻿{
+  "audit": "ToneModule P0 Runtime Acceptance (FW)",
+  "timestamp": "2026-06-29 08:31:19",
+  "fwPort": 6007,
+  "pipelineTrace": [
+    {
+      "step": 1,
+      "component": "FW Worker",
+      "file": "api_routes.py",
+      "fn": "process_utterance",
+      "note": "perform_asr 鈫?run_tone_inference (pre-dedup)"
+    },
+    {
+      "step": 2,
+      "component": "ToneModule",
+      "file": "tone_module/inference.py",
+      "fn": "run_tone_inference",
+      "note": "processed_audio + word timestamps"
+    },
+    {
+      "step": 3,
+      "component": "HTTP Response",
+      "file": "api_models.py",
+      "field": "UtteranceResponse.tone"
+    },
+    {
+      "step": 4,
+      "component": "Node ASR",
+      "file": "faster-whisper-asr-strategy.ts",
+      "field": "ASRResult.tone"
+    },
+    {
+      "step": 5,
+      "component": "Orchestrator",
+      "file": "fw-detector-orchestrator.ts",
+      "field": "ctx.asrResult?.tone"
+    },
+    {
+      "step": 6,
+      "component": "Rerank Pipeline",
+      "file": "fw-sentence-rerank-pipeline.ts",
+      "fn": "computeToneMatchScore 鈫?candidateScore"
+    }
+  ],
+  "fwHealth": true,
+  "toneTokenSample20": {
+    "fwServiceUp": true,
+    "sampleCount": 20,
+    "toneEnabledCount": 0,
+    "rows": [
+      {
+        "id": "d164",
+        "manifestText": "浣滀笟鏄笅鍛ㄤ竴涓嬪崍浜ゅ悧锛熷彲浠ョ數瀛愮増鎻愪氦鍚楋紵",
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d029",
+        "manifestText": "浣滀笟鏄笅鍛ㄤ竴涓嬪崍浜ゅ悧锛熷彲浠ョ數瀛愮増鎻愪氦鍚楋紵",
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d007",
+        "manifestText": "甯堝倕锛屽幓涓叧鏉戣蒋浠跺洯锛岃蛋鏈哄満楂橀€熴€傛垜璧朵節鐐瑰崐鐨勪細锛岃鏄牭杞︽偍鎻愬墠璺熸垜璇淬€?,
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d190",
+        "manifestText": "鍖荤敓鎮ㄥソ锛屾垜杩欎袱澶╁ご鐥涳紝鎯冲紑鐐硅嵂骞跺仛涓甯歌銆?,
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d071",
+        "manifestText": "浣犲浣曠湅寰呰法鍥㈤槦鍗忎綔锛熼亣鍒伴渶姹傚彉鏇翠竴鑸€庝箞澶勭悊锛?,
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d063",
+        "manifestText": "浣犳渶杩戝繖涓嶅繖锛熸兂鎵句綘鐪嬩笅鎵嬫満澶囦唤鎬庝箞璁剧疆銆?,
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d058",
+        "manifestText": "杩欎欢澶栧鑳借瘯绌垮悧锛熸垜绌夸腑鐮併€備拱涓や欢鏈夋病鏈夋姌鎵ｏ紵",
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d036",
+        "manifestText": "璇烽棶鐞嗚储浜у搧鐨勯闄╃瓑绾у湪鍝噷鏌ョ湅锛?,
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d189",
+        "manifestText": "鍘绘湜浜琒OHO锛屼笉璧板洓鐜彲浠ュ悧锛熼偅杈圭幇鍦ㄥ牭涓嶅牭锛?,
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d027",
+        "manifestText": "鏈熸湜钖祫杩欏潡鎴戜滑鍙互鍐嶆矡閫氾紝浣犳渶蹇粈涔堟椂鍊欒兘鍏ヨ亴锛?,
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d174",
+        "manifestText": "鍙互鎵撳寘鍚楋紵椤轰究缁撲竴涓嬭处锛岃兘鎵爜鏀粯鍚楋紵",
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d140",
+        "manifestText": "浠婂ぉ鐨勭珯浼氬厛杩囦竴涓嬭鍗曚腑鍙拌繘搴︼紝鍐呭瓨鍗犵敤楂樿繖鍧楅渶瑕侀檺娴佷繚鎶わ紝澶у鐪嬩竴涓嬮闄┿€?,
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d023",
+        "manifestText": "鎯虫敼涓€涓嬫敹璐у湴鍧€锛岃繕鏉ュ緱鍙婂悧锛熼夯鐑﹀敖蹇鐞嗭紝璋㈣阿銆?,
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d152",
+        "manifestText": "鏅氫笂涓€璧峰悆楗悧锛熸垜鐭ラ亾涓€瀹跺窛鑿滀笉閿欙紝澶ф涓冪偣鍒般€?,
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d109",
+        "manifestText": "浠婂ぉ鎴戜滑鍥㈤槦瑕佽璁哄悗閫夌敓鍩庣浉鍏崇殑鍚庨€夌敓鍩庢祦绋嬪拰涓婄嚎璁″寲瀹夋帓锛岃鐮斿彂涓€璧疯瘎浼伴闄┿€?,
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d009",
+        "manifestText": "鍘绘湜浜琒OHO锛屼笉璧板洓鐜彲浠ュ悧锛熼偅杈圭幇鍦ㄥ牭涓嶅牭锛?,
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d008",
+        "manifestText": "楹荤儲閫佹垜鍒板浗璐镐笁鏈熷崡闂紝澶ф澶氫箙鑳藉埌锛熸垜鍗佺偣鍗佸垎鏈変釜鐢佃瘽浼氥€?,
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d024",
+        "manifestText": "鍙戠エ鎶ご寮€閿欎簡锛岃兘閲嶆柊寮€鍏风數瀛愬彂绁ㄥ悧锛?,
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d056",
+        "manifestText": "鎸傚彿澶勮闂唴绉戣繕鏈夊彿鍚楋紵鎴戜綆鐑э紝鏄ㄦ櫄寮€濮嬬殑銆?,
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      },
+      {
+        "id": "d060",
+        "manifestText": "鎴戞兂瀵规瘮涓€涓嬭繖涓ゆ璁㈠崟涓彴鐨勪环鏍硷紝浼氬憳鏃ヨ兘鍐嶅噺涓€鐐瑰悧锛?,
+        "rawAsrText": null,
+        "toneEnabled": false,
+        "toneSliceCount": 0,
+        "toneConfidenceAvg": null,
+        "skippedReason": null,
+        "httpOk": false,
+        "error": "HTTP Error 503: Service Unavailable"
+      }
+    ]
+  },
+  "dedupValidation": {
+    "dedupSamples": [],
+    "found": 0
+  },
+  "performanceDialog200": {
+    "fwServiceUp": true,
+    "utteranceCount": 0,
+    "percentiles": {
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 0,
+      "n": 0,
+      "targetMs": 20,
+      "passP95Le20": true
+    }
+  },
+  "failOpen": {
+    "fwServiceUp": true,
+    "cases": [
+      {
+        "case": "non_zh",
+        "asrTextReturned": true,
+        "toneEnabled": null,
+        "skippedReason": null
+      },
+      {
+        "case": "no_timestamps_direct",
+        "toneEnabled": false,
+        "skippedReason": "no_timestamps",
+        "toneSliceCount": 0
+      },
+      {
+        "case": "no_audio_direct",
+        "toneEnabled": false,
+        "skippedReason": "no_audio"
+      },
+      {
+        "case": "model_error_missing",
+        "ready": false,
+        "loadError": "model_not_found"
+      },
+      {
+        "case": "model_error_corrupt",
+        "ready": false,
+        "loadErrorPresent": true
+      },
+      {
+        "case": "model_error_invalid_format",
+        "ready": false,
+        "loadError": "missing required weight key: w1"
+      },
+      {
+        "case": "model_valid_default",
+        "ready": true,
+        "loadError": null
+      }
+    ]
+  }
+}

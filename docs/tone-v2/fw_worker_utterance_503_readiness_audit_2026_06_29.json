@@ -1,0 +1,231 @@
+{
+  "audit": "FW Worker Utterance 503 Readiness Audit",
+  "runId": "fw_ready_audit_20260629_085823",
+  "timestamp": "2026-06-29T09:10:00+08:00",
+  "verdict": "CONDITIONAL PASS",
+  "executiveSummary": {
+    "healthEqualsUtteranceReady": false,
+    "rootCause": "ASR worker queue saturated/stuck (QUEUE_MAX=1) after prior audit run left a hung in-flight task; /health still returns status=ok",
+    "toneV2Related": false,
+    "mainChainChangeRequired": false,
+    "canRerunAuditRuntimeAcceptance": true,
+    "canRerunDialog200Batch": true,
+    "canContinueToneV2Phase1": true,
+    "conditions": [
+      "Restart FW Worker before batch audit",
+      "Run audit_runtime_acceptance serially (no concurrent /utterance while ASR in flight)",
+      "Do not treat GET /health=200 as utterance ready"
+    ]
+  },
+  "serviceStartupMatrix": {
+    "cwd": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\faster_whisper_vad",
+    "pythonExecutable": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\faster_whisper_vad\\.venv\\Scripts\\python.exe",
+    "venvPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\faster_whisper_vad\\.venv",
+    "command": ".venv\\Scripts\\python.exe faster_whisper_vad_service.py",
+    "port": 6007,
+    "mainProcessPidPreRestart": 43676,
+    "mainProcessPidPostRestart": 47440,
+    "workerPidPostRestart": 42636,
+    "cudaAvailable": true,
+    "cudaPath": "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.4",
+    "venvProbe": {
+      "onnxruntimeProviders": ["TensorrtExecutionProvider", "CUDAExecutionProvider", "CPUExecutionProvider"],
+      "ct2CudaTypes": ["int8_float16", "int8", "bfloat16", "float32", "float16", "int8_float32", "int8_bfloat16"],
+      "torchInVenv": false
+    },
+    "systemPythonProbe": {
+      "path": "D:\\Python\\Python310\\python.EXE",
+      "onnxruntimeProviders": ["AzureExecutionProvider", "CPUExecutionProvider"],
+      "note": "System Python lacks CUDA EP stack suitable for FW Worker; must use .venv"
+    },
+    "asrModelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\faster_whisper_vad\\models\\faster-whisper-medium",
+    "vadModelPath": "models/vad/silero/silero_vad_official.onnx",
+    "toneModelPath": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\faster_whisper_vad\\tone_module\\models\\tone_cnn_p0.npz",
+    "env": {
+      "PYTHONUTF8": "1",
+      "FASTER_WHISPER_VAD_PORT": "6007",
+      "TONE_MODEL_PATH": null,
+      "ASR_MODEL_PATH": null,
+      "ASR_DEVICE": null,
+      "ASR_COMPUTE_TYPE": null
+    },
+    "config": {
+      "ASR_DEVICE": "cuda",
+      "ASR_COMPUTE_TYPE": "int8_float16",
+      "MAX_WAIT_SECONDS": 30.0,
+      "QUEUE_MAX": 1
+    }
+  },
+  "healthEndpointAnalysis": {
+    "url": "http://127.0.0.1:6007/health",
+    "preRestart": {
+      "httpStatus": 200,
+      "status": "ok",
+      "asr_model_loaded": true,
+      "vad_model_loaded": true,
+      "asr_worker": {
+        "is_running": true,
+        "worker_state": "running",
+        "worker_pid": 16040,
+        "queue_depth": 1,
+        "pending_results": 0,
+        "total_tasks": 26,
+        "completed_tasks": 21
+      }
+    },
+    "postRestart": {
+      "httpStatus": 200,
+      "status": "ok",
+      "asr_worker": {
+        "queue_depth": 0,
+        "total_tasks": 5,
+        "completed_tasks": 5,
+        "pending_results": 0
+      }
+    },
+    "healthContractGap": {
+      "present": true,
+      "gaps": [
+        "asr_model_loaded is worker_pid != null, not Whisper load confirmation",
+        "No queue_full / utterance_ready / worker_accepting_tasks field",
+        "status=ok even when queue_depth=1 and QUEUE_MAX=1 blocks all new /utterance",
+        "No last_error or stuck_task_age exposed",
+        "vad_model_loaded hardcoded true without runtime probe"
+      ]
+    }
+  },
+  "utteranceEndpointAnalysis": {
+    "url": "http://127.0.0.1:6007/utterance",
+    "requestFormat": "JSON UtteranceRequest (pcm16 base64), not raw audio/wav upload",
+    "preRestartProbes": [
+      {"id": "d001", "httpStatus": 503, "latencyMs": 5359, "detail": "ASR service is busy, please retry later", "timeout": false, "toneReached": false},
+      {"id": "d025", "httpStatus": 503, "latencyMs": 4317, "detail": "ASR service is busy, please retry later", "timeout": false, "toneReached": false},
+      {"id": "d141", "httpStatus": 503, "latencyMs": 5396, "detail": "ASR service is busy, please retry later", "timeout": false, "toneReached": false},
+      {"id": "d040", "httpStatus": 503, "latencyMs": 3484, "detail": "ASR service is busy, please retry later", "timeout": false, "toneReached": false},
+      {"id": "d126", "httpStatus": 503, "latencyMs": 3023, "detail": "ASR service is busy, please retry later", "timeout": false, "toneReached": false}
+    ],
+    "postRestartProbes": [
+      {"id": "d001", "httpStatus": 200, "latencyMs": 9643, "textPreview": "你好,我想點一杯熱拿鐵中貝少糖 身邊問以下今天有藍沒馬芬嗎?", "toneReached": true, "toneEnabled": true, "sliceCount": 16},
+      {"id": "d025", "httpStatus": 200, "latencyMs": 7374, "textPreview": "请简单介绍一下,你上一段项目里负责的核心模块和难点", "toneReached": true},
+      {"id": "d141", "httpStatus": 200, "latencyMs": 6933, "textPreview": "跟会员系统相关的需求 我整理了一板八点钱请大家帮忙评审一下", "toneReached": true},
+      {"id": "d040", "httpStatus": 200, "latencyMs": 5294, "textPreview": "自教课还剩几次 能帮我约明天晚上7点吗?", "toneReached": true},
+      {"id": "d126", "httpStatus": 200, "latencyMs": 4419, "textPreview": "请问理财产品的风险等急在哪里查看", "toneReached": true, "toneEnabled": true, "sliceCount": 16}
+    ],
+    "failureClassification": "worker queue unavailable (is_queue_full) — not ASR model missing, not VAD, not CUDA, not audio format, not Tone"
+  },
+  "logEvidence": {
+    "logPath": "electron_node/services/faster_whisper_vad/logs/faster-whisper-vad-service.log",
+    "queueFullCountInLog": 512,
+    "triggerSequence": [
+      {
+        "time": "2026-06-29 08:14:29",
+        "traceId": "tone-audit-d190",
+        "event": "Worker received task; transcribe() returned generator in 17ms"
+      },
+      {
+        "time": "2026-06-29 08:14:57",
+        "traceId": "tone-audit-d190",
+        "event": "ASR task timeout after 30.0s, queue_depth=0 — segments generator never fully consumed in main future window"
+      },
+      {
+        "time": "2026-06-29 08:15:30",
+        "traceId": "tone-audit-d071",
+        "event": "ASR task timeout after 30.0s, queue_depth=1 — queue slot occupied"
+      },
+      {
+        "time": "2026-06-29 08:15:34",
+        "traceId": "tone-audit-d063",
+        "event": "ASR queue is full, returning 503 Service Busy. queue_depth=1"
+      },
+      {
+        "time": "2026-06-29 08:59:17",
+        "traceId": "fw_ready_audit_20260629_085823-d001",
+        "event": "VAD+validation OK → ASR queue is full 503 (persistent stuck state)"
+      },
+      {
+        "time": "2026-06-29 09:07:11",
+        "traceId": "fw_ready_audit_20260629_085823-post_restart-d126",
+        "event": "ASR completed → ToneModule Phase3 slices=16 inference_ms=8"
+      }
+    ],
+    "failingComponent": "ASRWorkerManager / utterance_asr.perform_asr",
+    "failingFunction": "manager.is_queue_full() → HTTPException 503",
+    "exceptionType": "HTTPException (503), not unhandled stack"
+  },
+  "configAnalysis": {
+    "queueMax": 1,
+    "maxWaitSeconds": 30.0,
+    "fwWorkerDisabled": false,
+    "portCorrect": true,
+    "modelsPresent": true,
+    "deviceMatch": "cuda + int8_float16",
+    "contributingFactors": [
+      "Single-slot mp.Queue (QUEUE_MAX=1)",
+      "audit_runtime_acceptance fires next request while prior ASR+VAD still in flight",
+      "Concurrent Node audio-test-* requests during audit window",
+      "Worker hang on segment generator conversion left queue permanently full until restart"
+    ],
+    "notRootCause": [
+      "dialog_200 audio format",
+      "Tone model",
+      "Lexicon/Gateway/Scheduler",
+      "Wrong utterance JSON schema when using audit script"
+    ]
+  },
+  "audioAssetValidation": {
+    "corpus": "test wav/dialog_200",
+    "manifestVersion": "restored_full_v1",
+    "caseCount": 200,
+    "allWavCount": 200,
+    "sampleChecks": [
+      {"id": "d001", "exists": true, "channels": 1, "sample_rate": 16000, "duration_sec": 6.095, "file_size_bytes": 195092},
+      {"id": "d046", "exists": true, "channels": 1, "sample_rate": 16000, "duration_sec": 6.641},
+      {"id": "d007", "exists": true, "channels": 1, "sample_rate": 16000, "duration_sec": 6.711},
+      {"id": "d128", "exists": true, "channels": 1, "sample_rate": 16000, "duration_sec": 4.4},
+      {"id": "d194", "exists": true, "channels": 1, "sample_rate": 16000, "duration_sec": 4.957}
+    ],
+    "verdict": "Audio assets valid; not cause of 503"
+  },
+  "toneVsAsrBoundary": {
+    "503Cases": "Tone not reached — rejected at perform_asr before run_tone_inference",
+    "200PostRestartCases": "ASR success → run_tone_inference executed (log: ToneModule Phase3 slices=16)",
+    "toneV2ArchitectureIssue": false,
+    "note": "Prior _audit_full_corpus.json 20/20 503 is consistent with stuck queue, not Tone regression"
+  },
+  "priorAuditRun": {
+    "file": "docs/tone-v2/_audit_full_corpus.json",
+    "timestamp": "2026-06-29 08:31:19",
+    "utteranceCount": 0,
+    "sample503Count": 20,
+    "note": "Same stuck-queue window as log evidence; not mixed with post-restart PASS in this run"
+  },
+  "findings": [
+    {"id": "F01", "expected": "/health reflects utterance readiness", "actual": "status=ok while queue_depth=1 blocks /utterance", "impact": "False green health; batch audits fail silently", "severity": "HIGH", "owner": "FW Worker", "requiredAction": "Document Health Contract Gap; optional future health fields (audit-only note, no change this round)"},
+    {"id": "F02", "expected": "503 only when service down", "actual": "503 ASR service is busy from is_queue_full()", "impact": "All audit samples 503 despite worker running", "severity": "HIGH", "owner": "FW Worker", "requiredAction": "Restart FW; run audits serially"},
+    {"id": "F03", "expected": "QUEUE_MAX=1 serializes safely", "actual": "Timeout on d190 left queue slot stuck until process restart", "impact": "Permanent 503 until restart", "severity": "HIGH", "owner": "ASR model", "requiredAction": "Restart after stuck state; investigate worker segment generator hang separately"},
+    {"id": "F04", "expected": "asr_model_loaded means model ready", "actual": "Derived from worker_pid only", "impact": "Misleading health field", "severity": "MEDIUM", "owner": "FW Worker", "requiredAction": "KEEP gap documented"},
+    {"id": "F05", "expected": "dialog_200 wav readable", "actual": "200/200 present, 16kHz mono", "impact": "None", "severity": "INFO", "owner": "Test Corpus", "requiredAction": "KEEP"},
+    {"id": "F06", "expected": "503 unrelated to Tone V2", "actual": "VAD passes; ASR queue rejects before tone", "impact": "Tone V2 falsely suspected", "severity": "INFO", "owner": "Tone Module", "requiredAction": "No Tone V2 change"}
+  ],
+  "repairMatrix": {
+    "KEEP": [
+      "FW Worker architecture (process-isolated ASR)",
+      "Utterance JSON contract",
+      "dialog_200 restored_full_v1 corpus",
+      "Tone inference post-ASR ordering",
+      "Health endpoint (no interface change this audit)"
+    ],
+    "MODIFY": [],
+    "RESTORE": [
+      "FW Worker clean process state (restart before batch audit)"
+    ],
+    "DELETE": []
+  },
+  "repairSteps": [
+    "Stop process on port 6007",
+    "Start: cd electron_node/services/faster_whisper_vad && .venv\\Scripts\\python.exe faster_whisper_vad_service.py",
+    "Wait until GET /health shows queue_depth=0 and worker_state=running",
+    "Run audit_runtime_acceptance --part all with serial /utterance (script already sequential; ensure Node not flooding concurrent requests)",
+    "Re-check health queue_depth before 200-case batch"
+  ]
+}

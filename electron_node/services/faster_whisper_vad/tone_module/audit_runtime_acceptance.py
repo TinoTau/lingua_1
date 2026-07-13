@@ -39,6 +39,20 @@ FW_PORT = int(os.getenv("FASTER_WHISPER_VAD_PORT", "6007"))
 FW_URL = f"http://127.0.0.1:{FW_PORT}/utterance"
 
 
+def _load_dialog200_cases(manifest: Any) -> List[Dict[str, Any]]:
+    if isinstance(manifest, list):
+        return manifest
+    if isinstance(manifest, dict):
+        cases = manifest.get("cases")
+        if isinstance(cases, list):
+            return cases
+    return []
+
+
+def _resolve_case_file(entry: Dict[str, Any]) -> str:
+    return str(entry.get("file") or entry.get("audio") or "")
+
+
 def _read_wav_pcm16(path: Path) -> Tuple[np.ndarray, int]:
     with wave.open(str(path), "rb") as wf:
         sr = wf.getframerate()
@@ -146,12 +160,12 @@ def _pipeline_trace() -> List[Dict[str, str]]:
 
 def audit_tone_token_samples(manifest: List[Dict], n: int = 20, seed: int = 42) -> Dict[str, Any]:
     rng = random.Random(seed)
-    items = [x for x in manifest if (DIALOG_DIR / x["file"]).is_file()]
+    items = [x for x in manifest if (DIALOG_DIR / _resolve_case_file(x)).is_file()]
     sample = rng.sample(items, min(n, len(items)))
     rows = []
     fw_up = _wait_health(timeout_sec=10)
     for item in sample:
-        wav = DIALOG_DIR / item["file"]
+        wav = DIALOG_DIR / _resolve_case_file(item)
         row: Dict[str, Any] = {
             "id": item["id"],
             "manifestText": item["utterance"],
@@ -193,10 +207,10 @@ def audit_tone_token_samples(manifest: List[Dict], n: int = 20, seed: int = 42) 
 def audit_dedup_decoupling(manifest: List[Dict], seed: int = 7) -> Dict[str, Any]:
     """Verify acoustic slices generated from pre-dedup words; dedup clears segment words but tone unchanged."""
     rng = random.Random(seed)
-    items = [x for x in manifest if (DIALOG_DIR / x["file"]).is_file()]
+    items = [x for x in manifest if (DIALOG_DIR / _resolve_case_file(x)).is_file()]
     samples = []
     for item in rng.sample(items, min(30, len(items))):
-        wav = DIALOG_DIR / item["file"]
+        wav = DIALOG_DIR / _resolve_case_file(item)
         pcm, sr = _read_wav_pcm16(wav)
         duration = len(pcm) / sr
         if not _wait_health(timeout_sec=5):
@@ -251,14 +265,14 @@ def audit_dedup_decoupling(manifest: List[Dict], seed: int = 7) -> Dict[str, Any
 
 def audit_performance(manifest: List[Dict], n: int = 200, seed: int = 99) -> Dict[str, Any]:
     rng = random.Random(seed)
-    items = [x for x in manifest if (DIALOG_DIR / x["file"]).is_file()]
+    items = [x for x in manifest if (DIALOG_DIR / _resolve_case_file(x)).is_file()]
     pick = items if n >= len(items) else rng.sample(items, n)
     ms_list: List[float] = []
     fw_up = _wait_health(timeout_sec=10)
     if not fw_up:
         return {"fwServiceUp": False, "percentiles": _percentiles([])}
     for item in pick:
-        wav = DIALOG_DIR / item["file"]
+        wav = DIALOG_DIR / _resolve_case_file(item)
         try:
             pcm, sr = _read_wav_pcm16(wav)
             resp = _http_post_utterance(_pcm_to_b64(pcm, sr), sample_rate=sr, trace_id=f"perf-{item['id']}")
@@ -274,24 +288,24 @@ def audit_performance(manifest: List[Dict], n: int = 200, seed: int = 99) -> Dic
 
 
 def audit_fail_open() -> Dict[str, Any]:
-    cases = []
-    if not _wait_health(timeout_sec=10):
-        return {"fwServiceUp": False, "cases": []}
+    cases: List[Dict[str, Any]] = []
+    fw_up = _wait_health(timeout_sec=10)
 
-    # non_zh
-    try:
-        pcm = np.zeros(16000, dtype=np.float32)
-        resp = _http_post_utterance(_pcm_to_b64(pcm, 16000), src_lang="en", trace_id="fail-en")
-        cases.append(
-            {
-                "case": "non_zh",
-                "asrTextReturned": resp.get("text") is not None,
-                "toneEnabled": (resp.get("tone") or {}).get("toneEnabled"),
-                "skippedReason": (resp.get("tone") or {}).get("skippedReason"),
-            }
-        )
-    except Exception as exc:
-        cases.append({"case": "non_zh", "error": str(exc)})
+    if fw_up:
+        # non_zh (HTTP — requires FW service)
+        try:
+            pcm = np.zeros(16000, dtype=np.float32)
+            resp = _http_post_utterance(_pcm_to_b64(pcm, 16000), src_lang="en", trace_id="fail-en")
+            cases.append(
+                {
+                    "case": "non_zh",
+                    "asrTextReturned": resp.get("text") is not None,
+                    "toneEnabled": (resp.get("tone") or {}).get("toneEnabled"),
+                    "skippedReason": (resp.get("tone") or {}).get("skippedReason"),
+                }
+            )
+        except Exception as exc:
+            cases.append({"case": "non_zh", "error": str(exc)})
 
     # no_timestamps: direct inference empty words
     payload, _ = run_tone_inference(np.zeros(16000, dtype=np.float32), 16000, [], "zh", "zh")
@@ -314,15 +328,93 @@ def audit_fail_open() -> Dict[str, Any]:
         }
     )
 
-    # model_error simulation: temporarily break path not allowed; document classifier bootstrap fallback
+    # model_error: classifier fail-closed when model missing / corrupt / invalid
+    from tone_module.classifier import ToneClassifier
+
+    missing = ToneClassifier(model_path=str(_SERVICE_ROOT / "tone_module" / "models" / "__missing__.npz"))
     cases.append(
         {
-            "case": "model_error_note",
-            "note": "model_error only when classifier.ready=False; bundled npz present in repo",
-            "defaultModelExists": (_SERVICE_ROOT / "tone_module" / "models" / "tone_cnn_p0.npz").is_file(),
+            "case": "model_error_missing",
+            "ready": missing.ready,
+            "loadError": missing.load_error,
         }
     )
-    return {"fwServiceUp": True, "cases": cases}
+
+    import tempfile
+
+    with tempfile.NamedTemporaryFile(suffix=".npz", delete=False) as corrupt_tmp:
+        corrupt_tmp.write(b"not-npz")
+        corrupt_path = corrupt_tmp.name
+    corrupt = ToneClassifier(model_path=corrupt_path)
+    os.unlink(corrupt_path)
+    cases.append(
+        {
+            "case": "model_error_corrupt",
+            "ready": corrupt.ready,
+            "loadErrorPresent": bool(corrupt.load_error),
+        }
+    )
+
+    with tempfile.NamedTemporaryFile(suffix=".npz", delete=False) as invalid_tmp:
+        np.savez(invalid_tmp.name, foo=np.zeros(1))
+        invalid_path = invalid_tmp.name
+    invalid = ToneClassifier(model_path=invalid_path)
+    os.unlink(invalid_path)
+    cases.append(
+        {
+            "case": "model_error_invalid_format",
+            "ready": invalid.ready,
+            "loadError": invalid.load_error,
+        }
+    )
+
+    default_model = _SERVICE_ROOT / "tone_module" / "models" / contract.P1_RUNTIME_ARTIFACT_NAME
+    if default_model.is_file():
+        valid = ToneClassifier(model_path=str(default_model))
+        cases.append(
+            {
+                "case": "model_valid_default",
+                "ready": valid.ready,
+                "loadError": valid.load_error,
+            }
+        )
+    else:
+        cases.append(
+            {
+                "case": "model_valid_default",
+                "skipped": True,
+                "note": f"{contract.P1_RUNTIME_ARTIFACT_NAME} not present in repo; deploy via TONE_MODEL_PATH",
+                "defaultModelExists": False,
+            }
+        )
+
+    not_ready_payload, _ = run_tone_inference(
+        np.zeros(16000, dtype=np.float32),
+        16000,
+        [
+            SegmentInfo(
+                text="测",
+                start=0.0,
+                end=0.5,
+                words=[WordInfo(word="测", start=0.0, end=0.5)],
+            )
+        ],
+        "zh",
+        "zh",
+        trace_id="model-error-inference",
+    )
+    from tone_module.classifier import get_tone_classifier
+
+    singleton = get_tone_classifier()
+    if not singleton.ready:
+        cases.append(
+            {
+                "case": "model_error_inference_skipped",
+                "toneEnabled": not_ready_payload.tone_enabled,
+                "skippedReason": not_ready_payload.skipped_reason,
+            }
+        )
+    return {"fwServiceUp": fw_up, "cases": cases}
 
 
 def main() -> None:
@@ -331,7 +423,11 @@ def main() -> None:
     parser.add_argument("--part", default="all", choices=["all", "trace", "tokens", "dedup", "perf", "fail"])
     args = parser.parse_args()
 
-    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest_raw: Optional[Any] = None
+    manifest_cases: Optional[List[Dict[str, Any]]] = None
+    if args.part in ("all", "tokens", "dedup", "perf"):
+        manifest_raw = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+        manifest_cases = _load_dialog200_cases(manifest_raw)
     report: Dict[str, Any] = {
         "audit": "ToneModule P0 Runtime Acceptance (FW)",
         "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -343,13 +439,13 @@ def main() -> None:
         report["fwHealth"] = _wait_health(timeout_sec=15)
 
     if args.part in ("all", "tokens"):
-        report["toneTokenSample20"] = audit_tone_token_samples(manifest, n=20)
+        report["toneTokenSample20"] = audit_tone_token_samples(manifest_cases, n=20)
 
     if args.part in ("all", "dedup"):
-        report["dedupValidation"] = audit_dedup_decoupling(manifest)
+        report["dedupValidation"] = audit_dedup_decoupling(manifest_cases)
 
     if args.part in ("all", "perf"):
-        report["performanceDialog200"] = audit_performance(manifest, n=200)
+        report["performanceDialog200"] = audit_performance(manifest_cases, n=200)
 
     if args.part in ("all", "fail"):
         report["failOpen"] = audit_fail_open()

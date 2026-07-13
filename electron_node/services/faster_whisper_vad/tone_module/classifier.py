@@ -1,93 +1,55 @@
-"""Small CPU tone CNN (P0): mel(80) -> hidden -> 5-class softmax."""
+"""P1 Full Runtime tone CNN: feature_v2 (64, 83) -> numpy_p1 -> 5-class softmax."""
 from __future__ import annotations
 
 import logging
-import os
-from typing import Optional, Tuple
+from typing import Any, Dict, Optional
 
 import numpy as np
 
-from config import TONE_MODEL_PATH
+from tone_module.backends.numpy_p1 import infer_batch
+from tone_module.contract import P0_N_CLASSES, P1_FEATURE_SHAPE
+from tone_module.loader_v1 import ToneModelLoaderV1, get_tone_loader_v1, reset_tone_loader_v1_singleton
 
 logger = logging.getLogger(__name__)
 
-N_CLASSES = 5
-HIDDEN = 32
-_DEFAULT_MODEL_PATH = os.path.join(os.path.dirname(__file__), "models", "tone_cnn_p0.npz")
-
-
-def _softmax(logits: np.ndarray) -> np.ndarray:
-    shifted = logits - np.max(logits, axis=-1, keepdims=True)
-    exp = np.exp(shifted)
-    return exp / np.maximum(exp.sum(axis=-1, keepdims=True), 1e-12)
-
-
-def _bootstrap_weights(seed: int = 42) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    rng = np.random.default_rng(seed)
-    w1 = rng.normal(0, 0.05, size=(80, HIDDEN)).astype(np.float32)
-    b1 = np.zeros(HIDDEN, dtype=np.float32)
-    w2 = rng.normal(0, 0.05, size=(HIDDEN, N_CLASSES)).astype(np.float32)
-    b2 = np.zeros(N_CLASSES, dtype=np.float32)
-    return w1, b1, w2, b2
+N_CLASSES = P0_N_CLASSES
+FEATURE_SHAPE = P1_FEATURE_SHAPE
 
 
 class ToneClassifier:
-    def __init__(self) -> None:
-        self._w1: Optional[np.ndarray] = None
-        self._b1: Optional[np.ndarray] = None
-        self._w2: Optional[np.ndarray] = None
-        self._b2: Optional[np.ndarray] = None
-        self._mel_mean: Optional[np.ndarray] = None
-        self._mel_std: Optional[np.ndarray] = None
-        self._load_error: Optional[str] = None
-        self._load()
+    def __init__(self, model_path: Optional[str] = None, loader: Optional[ToneModelLoaderV1] = None) -> None:
+        self._loader = loader or ToneModelLoaderV1()
+        self._load(model_path)
 
     @property
     def ready(self) -> bool:
-        return self._w1 is not None
+        return self._loader.ready
 
     @property
     def load_error(self) -> Optional[str]:
-        return self._load_error
+        return self._loader.load_error
 
-    def _load(self) -> None:
-        path = TONE_MODEL_PATH or (_DEFAULT_MODEL_PATH if os.path.isfile(_DEFAULT_MODEL_PATH) else None)
-        if path and os.path.isfile(path):
-            try:
-                data = np.load(path, allow_pickle=True)
-                self._w1 = data["w1"].astype(np.float32)
-                self._b1 = data["b1"].astype(np.float32)
-                self._w2 = data["w2"].astype(np.float32)
-                self._b2 = data["b2"].astype(np.float32)
-                if "mel_mean" in data and "mel_std" in data:
-                    self._mel_mean = data["mel_mean"].astype(np.float32)
-                    self._mel_std = data["mel_std"].astype(np.float32)
-                    self._mel_std[self._mel_std < 1e-6] = 1.0
-                metrics = data["metrics"].item() if "metrics" in data else None
-                logger.info(
-                    "ToneModule loaded weights from %s%s",
-                    path,
-                    f" (val_acc={metrics.get('val_acc'):.3f})" if isinstance(metrics, dict) and "val_acc" in metrics else "",
-                )
-                return
-            except Exception as exc:
-                self._load_error = str(exc)
-                logger.warning("ToneModule failed to load %s: %s", path, exc)
-                return
-        # P0 bundled bootstrap weights (deterministic); replace via TONE_MODEL_PATH in production.
-        self._w1, self._b1, self._w2, self._b2 = _bootstrap_weights()
-        logger.info("ToneModule using bundled P0 bootstrap weights")
+    @property
+    def metadata(self):
+        return self._loader.metadata
 
-    def predict_batch(self, mel_batch: np.ndarray) -> np.ndarray:
-        """Return (N, 5) posterior probabilities."""
-        if not self.ready or mel_batch.size == 0:
+    def metadata_as_diagnostics(self) -> Dict[str, Any]:
+        meta = self._loader.metadata
+        return meta.as_diagnostics_dict() if meta else {}
+
+    def _load(self, model_path: Optional[str] = None) -> None:
+        if model_path is None and self._loader.ready:
+            return
+        self._loader.load(model_path)
+
+    def predict_batch(self, feature_batch: np.ndarray) -> np.ndarray:
+        """Return (N, 5) posterior probabilities from (N, 64, 83) feature batch."""
+        if not self.ready or feature_batch.size == 0:
             return np.zeros((0, N_CLASSES), dtype=np.float32)
-        x = mel_batch.astype(np.float32)
-        if self._mel_mean is not None and self._mel_std is not None:
-            x = (x - self._mel_mean) / self._mel_std
-        h = np.maximum(x @ self._w1 + self._b1, 0.0)
-        logits = h @ self._w2 + self._b2
-        return _softmax(logits)
+        weights = self._loader.weights
+        if weights is None:
+            return np.zeros((0, N_CLASSES), dtype=np.float32)
+        return infer_batch(feature_batch, weights)
 
 
 _classifier: Optional[ToneClassifier] = None
@@ -96,5 +58,13 @@ _classifier: Optional[ToneClassifier] = None
 def get_tone_classifier() -> ToneClassifier:
     global _classifier
     if _classifier is None:
-        _classifier = ToneClassifier()
+        loader = get_tone_loader_v1()
+        _classifier = ToneClassifier(loader=loader)
     return _classifier
+
+
+def reset_tone_classifier_singleton() -> None:
+    """Test-only: clear process singleton. Must not be called from production runtime."""
+    global _classifier
+    _classifier = None
+    reset_tone_loader_v1_singleton()

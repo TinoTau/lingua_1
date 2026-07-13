@@ -106,7 +106,6 @@ function caseDetail(id) {
       has_xiaobei_wrong: fin.includes('小背'),
     },
     fw_applied: fw.summary?.appliedCount ?? row?.fw_applied_count,
-    tone_guard_blocked: fw.spanAssemblyV4?.metrics?.toneGuardBlockedCount ?? null,
     shaobing_span_selected: shaobingSpan?.candidates?.[shaobingSpan.selectedCandidateIndex ?? 0]?.word,
     ...p,
   };

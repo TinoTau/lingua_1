@@ -22,11 +22,11 @@ Fine Span (IME V2 · Raw Boundary · Coarse Spans)
     ↓
 Pinyin Recall (recallSpanTopKV3 · domainBoost=0)
     ↓
-Tone First (tone tier SQL · tone score penalty)
+Tone First (tone tier SQL · tone score penalty)  ← Tone Effective（Recall）
     ↓
 Candidate Ranking (candidate-score · ED tie-break only)
     ↓
-Domain Vote → Domain Filter → Tone Guard → Select
+Domain Vote → Domain Filter → Select
     ↓
 Assembly (domainAwareSpanSets → buildSentenceCandidates)
     ↓
@@ -53,7 +53,7 @@ Writeback (applyFwSpanReplacements → segmentForJobResult)
 | Tone | `tone-recall-sort.ts` · `lexicon/tone-recall-sort.ts` |
 | Ranking | `lexicon/candidate-score.ts` |
 | Vote | `span-assembly-shared/utterance-domain-vote.ts` |
-| Filter / Tone Guard / Select | `filter-domain-candidates-per-span.ts` · `apply-tone-assembly-guard.ts` · `assemble-domain-aware-span-sets.ts` |
+| Filter / Select | `assemble-domain-aware-span-sets.ts`（`filterDomainCandidatesPerSpan` · `selectPerSpanCandidates` 内联） |
 | Orchestrator | `span-assembly-v4-orchestrator.ts` |
 | 句组合 | `build-sentence-candidates.ts` |
 | Compatibility | `candidate-compatibility-graph.ts` |
@@ -70,7 +70,7 @@ Writeback (applyFwSpanReplacements → segmentForJobResult)
 | Tone | timestamp-only · score penalty | V1.0.1 |
 | Recall | TopK · domainBoost=0 | V1.0.1 + V1.2 |
 | Ranking | ED tie-break | **V1.2** |
-| Domain Vote / Filter / Guard / Select | 域推断 · 分桶 · block · 优先级 | **V1.2** |
+| Domain Vote / Filter / Select | 域推断 · 分桶 · 优先级（**无** Tone Guard） | **V1.2** |
 | Assembly | spanSets · 句组合 | V1.2 |
 | KenLM | batch-only · raw_log_delta | V1.0.0 |
 | Apply / Writeback | Gate 3.0 · span 替换 | V1.0.0 |
@@ -146,6 +146,7 @@ npm run test:fw-detector
 | 模块 | 文档 |
 |------|------|
 | 冻结 / 回归 | [freeze/FROZEN.md](./freeze/FROZEN.md) |
+| Tone V2 Phase 1 | [../tone-v2/TONE_V2_CONTRACT_FREEZE.md](../tone-v2/TONE_V2_CONTRACT_FREEZE.md) |
 | Assembly | [assembly/FROZEN_V1_2.md](./assembly/FROZEN_V1_2.md) · [assembly/RANKING_V1_2.md](./assembly/RANKING_V1_2.md) |
 | Interval | [assembly/INTERVAL_ASSEMBLY.md](./assembly/INTERVAL_ASSEMBLY.md) |
 | Recall | [recall/](./recall/) |

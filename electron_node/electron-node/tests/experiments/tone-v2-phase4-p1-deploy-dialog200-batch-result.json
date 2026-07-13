@@ -1,0 +1,5282 @@
+{
+  "timestamp": "2026-06-29T10:52:54.933Z",
+  "testScope": "Tone V2 Phase 4 tone_cnn_p1.npz deployment dialog_200 smoke (15min cap)",
+  "sessionId": "tone-v2-phase4-p1-d200-v1",
+  "port": 5020,
+  "fwPort": 6007,
+  "maxMinutes": 15,
+  "deploymentConfig": {
+    "TONE_MODEL_PATH": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\faster_whisper_vad\\tone_module\\models\\tone_cnn_p1.npz",
+    "artifact": {
+      "path": "D:\\Programs\\github\\lingua_1\\electron_node\\services\\faster_whisper_vad\\tone_module\\models\\tone_cnn_p1.npz",
+      "exists": true,
+      "sizeBytes": 15760,
+      "mtime": "2026-06-29T10:32:34.189Z"
+    },
+    "envInheritedByFwWorker": true
+  },
+  "fwHealthAtStart": {
+    "ok": true,
+    "status": "ok",
+    "utterance_ready": true,
+    "worker_alive": true,
+    "worker_state": "running",
+    "worker_pid": 31436,
+    "queue_depth": 0,
+    "readiness": {
+      "process_alive": true,
+      "worker_running": true,
+      "worker_accepting_tasks": true,
+      "queue_depth": 0,
+      "queue_max": 1,
+      "queue_full": false,
+      "utterance_ready": true,
+      "worker_restarting": false,
+      "last_error": null
+    }
+  },
+  "cases": [
+    {
+      "id": "d001",
+      "scenario": "cafe",
+      "utterance_index": 0,
+      "durationSec": 6.095,
+      "expected_preview": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "text_asr": "你好,我想點一杯熱拿鐵鐘貝少糖 今天有蓝没马分吗?",
+      "raw_asr_text": "你好,我想點一杯熱拿鐵鐘貝少糖 今天有蓝没马分吗?",
+      "text_changed": false,
+      "cer": 0.4444444444444444,
+      "exact_match": false,
+      "pipeline_ms": 24765,
+      "fw_detector_step_ms": 6029,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 12
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 12,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 19,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 20,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 5,
+          "ngramTonePatternHitCount": 52
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 24774
+    },
+    {
+      "id": "d002",
+      "scenario": "cafe",
+      "utterance_index": 1,
+      "durationSec": 3.483,
+      "expected_preview": "麻烦帮我做一杯美式带走，大杯就行，谢谢。",
+      "text_asr": "麻烦帮我做一杯美式带走大背就行谢谢",
+      "raw_asr_text": "麻烦帮我做一杯美式带走大背就行谢谢",
+      "text_changed": false,
+      "cer": 0.058823529411764705,
+      "exact_match": false,
+      "pipeline_ms": 12625,
+      "fw_detector_step_ms": 5842,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 16,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 16,
+          "recallToneCompatibleCount": 5,
+          "recallToneFallbackCount": 34,
+          "toneExactHitCount": 3,
+          "plainFallbackHitCount": 12,
+          "ngramTonePatternHitCount": 48
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 12634
+    },
+    {
+      "id": "d003",
+      "scenario": "cafe",
+      "utterance_index": 2,
+      "durationSec": 4.435,
+      "expected_preview": "请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。",
+      "text_asr": "请问,这款掩埋拿铁可以烧饼吗? 我赶时间小呗",
+      "raw_asr_text": "请问,这款烟麦拿铁可以烧病吗? 我赶时间小呗",
+      "text_changed": true,
+      "cer": 0.2631578947368421,
+      "exact_match": false,
+      "pipeline_ms": 7514,
+      "fw_detector_step_ms": 1287,
+      "fw_triggered": true,
+      "fw_applied_count": 3,
+      "span_count": 6,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 6.216949,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 17,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 17,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 23,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 7,
+          "ngramTonePatternHitCount": 29
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7521
+    },
+    {
+      "id": "d004",
+      "scenario": "meeting",
+      "utterance_index": 3,
+      "durationSec": 7.152,
+      "expected_preview": "小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+      "text_asr": "小城客户反馈翻译引擎接口报错 我们能不能加缓存下午三点前 把結論發群裡",
+      "raw_asr_text": "小城客户反馈翻译引擎接口报错 我们能不能加缓存下午三点前 把結論發群裡",
+      "text_changed": false,
+      "cer": 0.15151515151515152,
+      "exact_match": false,
+      "pipeline_ms": 13433,
+      "fw_detector_step_ms": 1648,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 1.2047999999999917,
+        "combinationCount": 3
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 25,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 31,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 64,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 18,
+          "ngramTonePatternHitCount": 89
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 13441
+    },
+    {
+      "id": "d005",
+      "scenario": "meeting",
+      "utterance_index": 4,
+      "durationSec": 7.105,
+      "expected_preview": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+      "text_asr": "今天德湛会现贵一下定,但中台 进度内存占用高折块需要先留保护大家看一下风险",
+      "raw_asr_text": "今天德湛会现贵一下定,但中台 进度内存占用高折块需要先留保护大家看一下风险",
+      "text_changed": false,
+      "cer": 0.2571428571428571,
+      "exact_match": false,
+      "pipeline_ms": 12685,
+      "fw_detector_step_ms": 1555,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 12,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": -2.755200000000002,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 11,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 29,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 52,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 15,
+          "ngramTonePatternHitCount": 64
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 12691
+    },
+    {
+      "id": "d006",
+      "scenario": "meeting",
+      "utterance_index": 5,
+      "durationSec": 5.956,
+      "expected_preview": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。",
+      "text_asr": "跟会员系统相关的需求我整理了一板八点钱请大家帮忙评审一下",
+      "raw_asr_text": "跟会员系统相关的需求我整理了一板八点钱请大家帮忙评审一下",
+      "text_changed": false,
+      "cer": 0.07142857142857142,
+      "exact_match": false,
+      "pipeline_ms": 8100,
+      "fw_detector_step_ms": 1411,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 2.6395299999999935,
+        "combinationCount": 12
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 26,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 26,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 51,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 18,
+          "ngramTonePatternHitCount": 88
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 8107
+    },
+    {
+      "id": "d007",
+      "scenario": "taxi",
+      "utterance_index": 6,
+      "durationSec": 6.711,
+      "expected_preview": "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+      "text_asr": "市副局仲觀村軟件遠走機場告訴 我幹 9点半的回药师赌车宁提前跟我说",
+      "raw_asr_text": "市副局仲觀村軟件遠走機場告訴 我幹 9点半的回药师赌车宁提前跟我说",
+      "text_changed": false,
+      "cer": 0.5806451612903226,
+      "exact_match": false,
+      "pipeline_ms": 12767,
+      "fw_detector_step_ms": 1561,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 2.0398349999999965,
+        "combinationCount": 12
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 15,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 29,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 54,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 19,
+          "ngramTonePatternHitCount": 84
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 12773
+    },
+    {
+      "id": "d008",
+      "scenario": "taxi",
+      "utterance_index": 7,
+      "durationSec": 5.689,
+      "expected_preview": "麻烦送我到国贸三期南门，大概多久能到？我十点十分有个电话会。",
+      "text_asr": "麻烦送我到国贸散清南门大概多久能到 我是点声 十分有隔电话会",
+      "raw_asr_text": "麻烦送我到国贸散清南门大概多久能到 我是点声 十分有隔电话会",
+      "text_changed": false,
+      "cer": 0.18518518518518517,
+      "exact_match": false,
+      "pipeline_ms": 11647,
+      "fw_detector_step_ms": 1407,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.41438999999999737,
+        "combinationCount": 12
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 18,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 25,
+          "recallToneCompatibleCount": 4,
+          "recallToneFallbackCount": 38,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 13,
+          "ngramTonePatternHitCount": 62
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 11653
+    },
+    {
+      "id": "d009",
+      "scenario": "taxi",
+      "utterance_index": 8,
+      "durationSec": 3.982,
+      "expected_preview": "去望京SOHO，不走四环可以吗？那边现在堵不堵？",
+      "text_asr": "去往金色和不走私环可以吗?那边线再度不赌?",
+      "raw_asr_text": "去望金色和不走私环可以吗?那贬现在赌不赌?",
+      "text_changed": true,
+      "cer": 0.5238095238095238,
+      "exact_match": false,
+      "pipeline_ms": 6972,
+      "fw_detector_step_ms": 1223,
+      "fw_triggered": true,
+      "fw_applied_count": 3,
+      "span_count": 6,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 5.749470000000002,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 17,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 17,
+          "recallToneCompatibleCount": 8,
+          "recallToneFallbackCount": 28,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 9,
+          "ngramTonePatternHitCount": 33
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6976
+    },
+    {
+      "id": "d010",
+      "scenario": "hospital",
+      "utterance_index": 9,
+      "durationSec": 4.795,
+      "expected_preview": "医生您好，我这两天头痛，想开点药并做个血常规。",
+      "text_asr": "医生您好,我這兩甜头通向开店,要並做個些常规",
+      "raw_asr_text": "醫生您好,我這兩天頭痛想開點,要並做個些常規",
+      "text_changed": true,
+      "cer": 0.5,
+      "exact_match": false,
+      "pipeline_ms": 6523,
+      "fw_detector_step_ms": 1377,
+      "fw_triggered": true,
+      "fw_applied_count": 4,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 12.884783999999996,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 20,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 20,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 42,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 15,
+          "ngramTonePatternHitCount": 62
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6529
+    },
+    {
+      "id": "d011",
+      "scenario": "hospital",
+      "utterance_index": 10,
+      "durationSec": 4.934,
+      "expected_preview": "挂号处请问内科还有号吗？我胃不舒服，昨晚开始的。",
+      "text_asr": "挂号出请问 内客还有号码 我微不舒服昨晚开始的",
+      "raw_asr_text": "挂号出请问 内客还有号码 我微不舒服昨晚开始的",
+      "text_changed": false,
+      "cer": 0.19047619047619047,
+      "exact_match": false,
+      "pipeline_ms": 7083,
+      "fw_detector_step_ms": 1293,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": -3.370344000000003,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 19,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 19,
+          "recallToneCompatibleCount": 6,
+          "recallToneFallbackCount": 43,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 16,
+          "ngramTonePatternHitCount": 53
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7090
+    },
+    {
+      "id": "d012",
+      "scenario": "hospital",
+      "utterance_index": 11,
+      "durationSec": 5.481,
+      "expected_preview": "这个检查报告什么时候能出？我过敏发痒，需要请假休息吗？",
+      "text_asr": "这个检查报告什么时候能出 我过敏 发痒需要请假休息吗?",
+      "raw_asr_text": "这个检查报告什么时候能出 我过敏 发痒需要请假休息吗?",
+      "text_changed": false,
+      "cer": 0,
+      "exact_match": true,
+      "pipeline_ms": 10286,
+      "fw_detector_step_ms": 1375,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 10,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 1.4182050000000004,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 12,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 20,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 41,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 14,
+          "ngramTonePatternHitCount": 37
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 10291
+    },
+    {
+      "id": "d013",
+      "scenario": "shopping",
+      "utterance_index": 12,
+      "durationSec": 4.923,
+      "expected_preview": "这件外套能试穿吗？我穿中码。买两件有没有折扣？",
+      "text_asr": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+      "raw_asr_text": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+      "text_changed": false,
+      "cer": 0,
+      "exact_match": true,
+      "pipeline_ms": 7249,
+      "fw_detector_step_ms": 1240,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 4
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 19,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 19,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 37,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 14,
+          "ngramTonePatternHitCount": 32
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7255
+    },
+    {
+      "id": "d014",
+      "scenario": "shopping",
+      "utterance_index": 13,
+      "durationSec": 5.143,
+      "expected_preview": "请问这双鞋有四十码吗？不合适三天内可以退换吧？",
+      "text_asr": "请问这双鞋有司时码吗? 不合适司时码 三天内可以退换吧",
+      "raw_asr_text": "请问这双鞋有司时码吗? 不合适司时码 三天内可以退换吧",
+      "text_changed": false,
+      "cer": 0.23809523809523808,
+      "exact_match": false,
+      "pipeline_ms": 12178,
+      "fw_detector_step_ms": 1284,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.7466840000000019,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 13,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 20,
+          "recallToneCompatibleCount": 2,
+          "recallToneFallbackCount": 41,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 10,
+          "ngramTonePatternHitCount": 41
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 12183
+    },
+    {
+      "id": "d015",
+      "scenario": "shopping",
+      "utterance_index": 14,
+      "durationSec": 5.236,
+      "expected_preview": "我想对比一下这两款订单中台的价格，会员日能再减一点吗？",
+      "text_asr": "我想对比 这两款订单中台的价格会员日,能再减一点吗?",
+      "raw_asr_text": "我想对比 这两款订单中台的价格会员日,能再减一点吗?",
+      "text_changed": false,
+      "cer": 0.08,
+      "exact_match": false,
+      "pipeline_ms": 12102,
+      "fw_detector_step_ms": 1320,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.4491960000000006,
+        "combinationCount": 6
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 3,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 21,
+          "recallToneCompatibleCount": 5,
+          "recallToneFallbackCount": 32,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 9,
+          "ngramTonePatternHitCount": 64
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 12106
+    },
+    {
+      "id": "d016",
+      "scenario": "friend",
+      "utterance_index": 15,
+      "durationSec": 5.224,
+      "expected_preview": "周末要不要去江边骑行？天气预报说周日多云，记得带水。",
+      "text_asr": "周末要不要去江边骑行? 天气预报说,周日多云 记得带水",
+      "raw_asr_text": "周末要不要去江边骑行? 天气预报说,周日多云 记得带水",
+      "text_changed": false,
+      "cer": 0,
+      "exact_match": true,
+      "pipeline_ms": 12772,
+      "fw_detector_step_ms": 1266,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 4
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 18,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 22,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 42,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 11,
+          "ngramTonePatternHitCount": 58
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 12776
+    },
+    {
+      "id": "d017",
+      "scenario": "friend",
+      "utterance_index": 16,
+      "durationSec": 4.992,
+      "expected_preview": "晚上一起吃饭吗？我知道一家川菜不错，大概七点到。",
+      "text_asr": "晚上一起吃饭嘛 我知道一家川菜 不错大概起点到",
+      "raw_asr_text": "晚上一起吃饭嘛 我知道一家川菜 不错大概起点到",
+      "text_changed": false,
+      "cer": 0.09523809523809523,
+      "exact_match": false,
+      "pipeline_ms": 7941,
+      "fw_detector_step_ms": 1275,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 7,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": -6.224068000000003,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 16,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 16,
+          "recallToneCompatibleCount": 1,
+          "recallToneFallbackCount": 49,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 15,
+          "ngramTonePatternHitCount": 38
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7948
+    },
+    {
+      "id": "d018",
+      "scenario": "friend",
+      "utterance_index": 17,
+      "durationSec": 4.11,
+      "expected_preview": "你最近忙不忙？想找你看下手机备份怎么设置。",
+      "text_asr": "你最近忙不忙,想找你看下手机备分怎么设置?",
+      "raw_asr_text": "你最近忙不忙,想找你看下手机备分怎么设置?",
+      "text_changed": false,
+      "cer": 0.05263157894736842,
+      "exact_match": false,
+      "pipeline_ms": 7892,
+      "fw_detector_step_ms": 1226,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 6,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 1.056911999999997,
+        "combinationCount": 12
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 16,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 16,
+          "recallToneCompatibleCount": 5,
+          "recallToneFallbackCount": 22,
+          "toneExactHitCount": 4,
+          "plainFallbackHitCount": 3,
+          "ngramTonePatternHitCount": 29
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7897
+    },
+    {
+      "id": "d019",
+      "scenario": "tech_deploy",
+      "utterance_index": 18,
+      "durationSec": 8.034,
+      "expected_preview": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+      "text_asr": "今天,我們團結 对要讨论后选生成相关的后选生成流程和上限计划安排请研发一起评估风险",
+      "raw_asr_text": "今天,我們團結 对要讨论后选生成相关的后选生成流程和上限计划安排请研发一起评估风险",
+      "text_changed": false,
+      "cer": 0.21052631578947367,
+      "exact_match": false,
+      "pipeline_ms": 13824,
+      "fw_detector_step_ms": 1524,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 9,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.8936300000000017,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 3,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 35,
+          "recallToneCompatibleCount": 8,
+          "recallToneFallbackCount": 88,
+          "toneExactHitCount": 3,
+          "plainFallbackHitCount": 28,
+          "ngramTonePatternHitCount": 93
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 13829
+    },
+    {
+      "id": "d020",
+      "scenario": "tech_deploy",
+      "utterance_index": 19,
+      "durationSec": 5.84,
+      "expected_preview": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+      "text_asr": "这次发布我们线,对其商线计划窗口后选生成模块需要连掉别漏掉回归",
+      "raw_asr_text": "这次发布我们线,对其商线计划窗口后选生成模块需要连掉别漏掉回归",
+      "text_changed": false,
+      "cer": 0.2,
+      "exact_match": false,
+      "pipeline_ms": 8469,
+      "fw_detector_step_ms": 1335,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 6,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 1.8413699999999977,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 28,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 28,
+          "recallToneCompatibleCount": 4,
+          "recallToneFallbackCount": 71,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 22,
+          "ngramTonePatternHitCount": 75
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 8475
+    },
+    {
+      "id": "d021",
+      "scenario": "tech_deploy",
+      "utterance_index": 20,
+      "durationSec": 6.049,
+      "expected_preview": "会上提到候选生成链路要加监控，上线计划文档我下午更新一版。",
+      "text_asr": "會上提到候選生成連路 要加監控 通上限期画文当我下午更新一版",
+      "raw_asr_text": "會上提到候選生成連路 要加監控 通上限期画文当我下午更新一版",
+      "text_changed": false,
+      "cer": 0.3333333333333333,
+      "exact_match": false,
+      "pipeline_ms": 11663,
+      "fw_detector_step_ms": 1368,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 1.8636199999999974,
+        "combinationCount": 4
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 13,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 27,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 83,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 29,
+          "ngramTonePatternHitCount": 88
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 11668
+    },
+    {
+      "id": "d022",
+      "scenario": "customer_service",
+      "utterance_index": 21,
+      "durationSec": 5.306,
+      "expected_preview": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+      "text_asr": "您好我定,但显示已发货,但物流三天。 今天美更新能幫我差异下嗎?",
+      "raw_asr_text": "您好我定,但顯示已發貨,但務留三天。 今天美更新能幫我查一下嗎?",
+      "text_changed": true,
+      "cer": 0.36,
+      "exact_match": false,
+      "pipeline_ms": 12245,
+      "fw_detector_step_ms": 1382,
+      "fw_triggered": true,
+      "fw_applied_count": 5,
+      "span_count": 7,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 10.04173999999999,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 14,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 24,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 54,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 18,
+          "ngramTonePatternHitCount": 59
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 12250
+    },
+    {
+      "id": "d023",
+      "scenario": "customer_service",
+      "utterance_index": 22,
+      "durationSec": 4.83,
+      "expected_preview": "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。",
+      "text_asr": "想改一下收货地址还来得及吗? 麻烦尽快处理谢谢",
+      "raw_asr_text": "想改一下收货地址还来得及吗? 麻烦尽快处理谢谢",
+      "text_changed": false,
+      "cer": 0,
+      "exact_match": true,
+      "pipeline_ms": 6715,
+      "fw_detector_step_ms": 1232,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 12
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 19,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 19,
+          "recallToneCompatibleCount": 5,
+          "recallToneFallbackCount": 34,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 12,
+          "ngramTonePatternHitCount": 42
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6721
+    },
+    {
+      "id": "d024",
+      "scenario": "customer_service",
+      "utterance_index": 23,
+      "durationSec": 3.924,
+      "expected_preview": "发票抬头开错了，能重新开具电子发票吗？",
+      "text_asr": "发票抬头开错了能重新开具电子发票码",
+      "raw_asr_text": "发票抬头开错了能重新开具电子发票码",
+      "text_changed": false,
+      "cer": 0.058823529411764705,
+      "exact_match": false,
+      "pipeline_ms": 6580,
+      "fw_detector_step_ms": 1300,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.6249070000000003,
+        "combinationCount": 6
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 17,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 17,
+          "recallToneCompatibleCount": 1,
+          "recallToneFallbackCount": 31,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 11,
+          "ngramTonePatternHitCount": 46
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6584
+    },
+    {
+      "id": "d025",
+      "scenario": "interview",
+      "utterance_index": 24,
+      "durationSec": 5.039,
+      "expected_preview": "请简单介绍一下你上一段项目里负责的核心模块和难点。",
+      "text_asr": "请简单介绍一下 你上一段视频 項目裡負責的核心模塊和難點",
+      "raw_asr_text": "请简单介绍一下 你上一段视频 項目裡負責的核心模塊和難點",
+      "text_changed": false,
+      "cer": 0.375,
+      "exact_match": false,
+      "pipeline_ms": 10621,
+      "fw_detector_step_ms": 1324,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 2.4343449999999933,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 9,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 22,
+          "recallToneCompatibleCount": 2,
+          "recallToneFallbackCount": 50,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 15,
+          "ngramTonePatternHitCount": 59
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 10625
+    },
+    {
+      "id": "d026",
+      "scenario": "interview",
+      "utterance_index": 25,
+      "durationSec": 4.853,
+      "expected_preview": "你如何看待跨团队协作？遇到需求变更一般怎么处理？",
+      "text_asr": "你如何看待夸团队协作,遇到需求边更一般怎么处理?",
+      "raw_asr_text": "你如何看待夸团队协作,遇到需求边更一般怎么处理?",
+      "text_changed": false,
+      "cer": 0.09090909090909091,
+      "exact_match": false,
+      "pipeline_ms": 6448,
+      "fw_detector_step_ms": 1221,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 2.2701080000000005,
+        "combinationCount": 6
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 20,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 20,
+          "recallToneCompatibleCount": 1,
+          "recallToneFallbackCount": 35,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 12,
+          "ngramTonePatternHitCount": 45
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6453
+    },
+    {
+      "id": "d027",
+      "scenario": "interview",
+      "utterance_index": 26,
+      "durationSec": 4.853,
+      "expected_preview": "期望薪资这块我们可以再沟通，你最快什么时候能入职？",
+      "text_asr": "期望星字这块我们可以再沟通你最快什么时候能入职",
+      "raw_asr_text": "期望星字这块我们可以再沟通你最快什么时候能入职",
+      "text_changed": false,
+      "cer": 0.08695652173913043,
+      "exact_match": false,
+      "pipeline_ms": 7133,
+      "fw_detector_step_ms": 1312,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 7,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.4180980000000005,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 19,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 19,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 41,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 14,
+          "ngramTonePatternHitCount": 45
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7137
+    },
+    {
+      "id": "d028",
+      "scenario": "classroom",
+      "utterance_index": 27,
+      "durationSec": 5.41,
+      "expected_preview": "老师，这道题的解题步骤能不能再讲一遍？我没听懂第二点。",
+      "text_asr": "老师這道題的阶梯步,中能不能解解? 我没听懂第二点",
+      "raw_asr_text": "老師這道題的解題步,中能不能解解? 我没听懂第二点",
+      "text_changed": true,
+      "cer": 0.375,
+      "exact_match": false,
+      "pipeline_ms": 12760,
+      "fw_detector_step_ms": 1209,
+      "fw_triggered": true,
+      "fw_applied_count": 2,
+      "span_count": 8,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 4.745379999999997,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 11,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 17,
+          "recallToneCompatibleCount": 2,
+          "recallToneFallbackCount": 31,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 7,
+          "ngramTonePatternHitCount": 41
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 12764
+    },
+    {
+      "id": "d029",
+      "scenario": "classroom",
+      "utterance_index": 28,
+      "durationSec": 3.924,
+      "expected_preview": "作业是下周一下午交吗？可以电子版提交吗？",
+      "text_asr": "作业是狭州以下五叫码,可以电子板提交码。",
+      "raw_asr_text": "作业是狭州以下五叫码,可以电子板提叫码。",
+      "text_changed": true,
+      "cer": 0.4444444444444444,
+      "exact_match": false,
+      "pipeline_ms": 7296,
+      "fw_detector_step_ms": 1275,
+      "fw_triggered": true,
+      "fw_applied_count": 2,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 3.7913329999999945,
+        "combinationCount": 6
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 17,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 17,
+          "recallToneCompatibleCount": 6,
+          "recallToneFallbackCount": 59,
+          "toneExactHitCount": 3,
+          "plainFallbackHitCount": 20,
+          "ngramTonePatternHitCount": 51
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7302
+    },
+    {
+      "id": "d030",
+      "scenario": "classroom",
+      "utterance_index": 29,
+      "durationSec": 4.389,
+      "expected_preview": "请问这门课期末是开卷还是闭卷？重点会划吗？",
+      "text_asr": "请问这门客气模式开卷还是闭卷? 终点绘画吗?",
+      "raw_asr_text": "请问这门客期末是开卷还是闭卷? 终点汇化吗?",
+      "text_changed": true,
+      "cer": 0.3684210526315789,
+      "exact_match": false,
+      "pipeline_ms": 7239,
+      "fw_detector_step_ms": 1202,
+      "fw_triggered": true,
+      "fw_applied_count": 2,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 3.9549999999999983,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 18,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 18,
+          "recallToneCompatibleCount": 1,
+          "recallToneFallbackCount": 42,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 15,
+          "ngramTonePatternHitCount": 36
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7244
+    },
+    {
+      "id": "d031",
+      "scenario": "hotel",
+      "utterance_index": 30,
+      "durationSec": 3.82,
+      "expected_preview": "我预订的是大床房，能安排安静一点的楼层吗？",
+      "text_asr": "我预定的十大床房能安排安静一点的楼层吗?",
+      "raw_asr_text": "我预定的十大床房能安排安静一点的楼层吗?",
+      "text_changed": false,
+      "cer": 0.10526315789473684,
+      "exact_match": false,
+      "pipeline_ms": 7402,
+      "fw_detector_step_ms": 1205,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 3
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 18,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 18,
+          "recallToneCompatibleCount": 2,
+          "recallToneFallbackCount": 31,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 11,
+          "ngramTonePatternHitCount": 52
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7406
+    },
+    {
+      "id": "d032",
+      "scenario": "hotel",
+      "utterance_index": 31,
+      "durationSec": 4.249,
+      "expected_preview": "早餐几点开始？退房可以延迟到下午两点吗？",
+      "text_asr": "早餐祭典开始 退房可以延迟到下午两点吗?",
+      "raw_asr_text": "早餐祭典开始 退房可以延迟到下午两点吗?",
+      "text_changed": false,
+      "cer": 0.1111111111111111,
+      "exact_match": false,
+      "pipeline_ms": 7870,
+      "fw_detector_step_ms": 1291,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 5
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 16,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 16,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 49,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 19,
+          "ngramTonePatternHitCount": 36
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7874
+    },
+    {
+      "id": "d033",
+      "scenario": "hotel",
+      "utterance_index": 32,
+      "durationSec": 3.228,
+      "expected_preview": "房间空调不太制冷，能派人上来看一下吗？",
+      "text_asr": "房间空调不太知冷能派人上来看一下吗?",
+      "raw_asr_text": "房间空调不太知冷能派人上来看一下吗?",
+      "text_changed": false,
+      "cer": 0.058823529411764705,
+      "exact_match": false,
+      "pipeline_ms": 5893,
+      "fw_detector_step_ms": 1252,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 4
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 15,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 15,
+          "recallToneCompatibleCount": 5,
+          "recallToneFallbackCount": 21,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 8,
+          "ngramTonePatternHitCount": 41
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 5897
+    },
+    {
+      "id": "d034",
+      "scenario": "bank",
+      "utterance_index": 33,
+      "durationSec": 3.413,
+      "expected_preview": "我想开通短信提醒，需要带什么证件？",
+      "text_asr": "我想,開通短信提醒需要帶什麼證件",
+      "raw_asr_text": "我想,開通短信提醒需要帶什麼證件",
+      "text_changed": false,
+      "cer": 0.26666666666666666,
+      "exact_match": false,
+      "pipeline_ms": 7089,
+      "fw_detector_step_ms": 1225,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 2.9718349999999987,
+        "combinationCount": 6
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 12,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 12,
+          "recallToneCompatibleCount": 4,
+          "recallToneFallbackCount": 21,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 6,
+          "ngramTonePatternHitCount": 28
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7094
+    },
+    {
+      "id": "d035",
+      "scenario": "bank",
+      "utterance_index": 34,
+      "durationSec": 3.483,
+      "expected_preview": "这笔转账显示处理中，大概多久能到账？",
+      "text_asr": "这笔转账顯示處理中大概多久能道长",
+      "raw_asr_text": "這筆轉帳顯示處理中大概多久能到帳",
+      "text_changed": true,
+      "cer": 0.25,
+      "exact_match": false,
+      "pipeline_ms": 6908,
+      "fw_detector_step_ms": 1235,
+      "fw_triggered": true,
+      "fw_applied_count": 3,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 8.197251000000001,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 15,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 15,
+          "recallToneCompatibleCount": 2,
+          "recallToneFallbackCount": 33,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 12,
+          "ngramTonePatternHitCount": 36
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6913
+    },
+    {
+      "id": "d036",
+      "scenario": "bank",
+      "utterance_index": 35,
+      "durationSec": 3.959,
+      "expected_preview": "请问理财产品的风险等级在哪里查看？",
+      "text_asr": "請問理财产品的風險等记载那里查看",
+      "raw_asr_text": "請問理財產品的風險等急在哪裡查看",
+      "text_changed": true,
+      "cer": 0.4375,
+      "exact_match": false,
+      "pipeline_ms": 6863,
+      "fw_detector_step_ms": 1272,
+      "fw_triggered": true,
+      "fw_applied_count": 2,
+      "span_count": 2,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 10.793031999999997,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 15,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 15,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 49,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 17,
+          "ngramTonePatternHitCount": 45
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6869
+    },
+    {
+      "id": "d037",
+      "scenario": "restaurant",
+      "utterance_index": 36,
+      "durationSec": 3.506,
+      "expected_preview": "两位，靠窗有位置吗？不要香菜，微辣就行。",
+      "text_asr": "两位靠窗有位直麻 不要像蔡薇拉就行",
+      "raw_asr_text": "两位靠窗有位直麻 不要像蔡薇拉就行",
+      "text_changed": false,
+      "cer": 0.375,
+      "exact_match": false,
+      "pipeline_ms": 6153,
+      "fw_detector_step_ms": 1269,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 1.2623589999999965,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 15,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 15,
+          "recallToneCompatibleCount": 2,
+          "recallToneFallbackCount": 31,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 12,
+          "ngramTonePatternHitCount": 40
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6158
+    },
+    {
+      "id": "d038",
+      "scenario": "restaurant",
+      "utterance_index": 37,
+      "durationSec": 4.621,
+      "expected_preview": "这道菜大概要等多久？我们先点一份凉菜和一壶茶。",
+      "text_asr": "这道菜大概要等多久 我们先点一份凉菜和一壶茶",
+      "raw_asr_text": "这道菜大概要等多久 我们先点一份凉菜和一壶茶",
+      "text_changed": false,
+      "cer": 0,
+      "exact_match": true,
+      "pipeline_ms": 6167,
+      "fw_detector_step_ms": 1211,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 6,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.586907999999994,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 19,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 19,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 35,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 12,
+          "ngramTonePatternHitCount": 41
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6172
+    },
+    {
+      "id": "d039",
+      "scenario": "restaurant",
+      "utterance_index": 38,
+      "durationSec": 4.098,
+      "expected_preview": "可以打包吗？顺便结一下账，能扫码支付吗？",
+      "text_asr": "可以打爆嗎? 順便解一下張能掃馬支付嗎?",
+      "raw_asr_text": "可以打爆嗎? 順便解一下張能掃馬支付嗎?",
+      "text_changed": false,
+      "cer": 0.47058823529411764,
+      "exact_match": false,
+      "pipeline_ms": 6131,
+      "fw_detector_step_ms": 1167,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.14978599999999886,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 15,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 15,
+          "recallToneCompatibleCount": 4,
+          "recallToneFallbackCount": 28,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 11,
+          "ngramTonePatternHitCount": 20
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6135
+    },
+    {
+      "id": "d040",
+      "scenario": "gym",
+      "utterance_index": 39,
+      "durationSec": 4.133,
+      "expected_preview": "私教课还剩几次？能帮我约明天晚上七点吗？",
+      "text_asr": "自教课还剩几次 能帮我约明天晚上7点吗?",
+      "raw_asr_text": "自教课还剩几次 能帮我约明天晚上7点吗?",
+      "text_changed": false,
+      "cer": 0.1111111111111111,
+      "exact_match": false,
+      "pipeline_ms": 6017,
+      "fw_detector_step_ms": 1196,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 2,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 12
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 17,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 17,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 32,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 10,
+          "ngramTonePatternHitCount": 39
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6021
+    },
+    {
+      "id": "d041",
+      "scenario": "gym",
+      "utterance_index": 40,
+      "durationSec": 3.994,
+      "expected_preview": "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+      "text_asr": "更易是龟仔钥匙找不到了前台 能帮忙开一下吗",
+      "raw_asr_text": "更易是龟仔钥匙找不到了前台 能帮忙开一下吗",
+      "text_changed": false,
+      "cer": 0.2,
+      "exact_match": false,
+      "pipeline_ms": 6088,
+      "fw_detector_step_ms": 1305,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.2894550000000038,
+        "combinationCount": 6
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 18,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 18,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 45,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 15,
+          "ngramTonePatternHitCount": 53
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6093
+    },
+    {
+      "id": "d042",
+      "scenario": "gym",
+      "utterance_index": 41,
+      "durationSec": 3.738,
+      "expected_preview": "游泳次卡本月月底到期，续费有优惠吗？",
+      "text_asr": "有用自卡本月月底到期是非有优惠嗎?",
+      "raw_asr_text": "游泳自卡本月月底到期是非有優惠嗎?",
+      "text_changed": true,
+      "cer": 0.375,
+      "exact_match": false,
+      "pipeline_ms": 6355,
+      "fw_detector_step_ms": 1120,
+      "fw_triggered": true,
+      "fw_applied_count": 2,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 6.254072999999998,
+        "combinationCount": 12
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 16,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 16,
+          "recallToneCompatibleCount": 6,
+          "recallToneFallbackCount": 38,
+          "toneExactHitCount": 4,
+          "plainFallbackHitCount": 13,
+          "ngramTonePatternHitCount": 45
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6359
+    },
+    {
+      "id": "d043",
+      "scenario": "lexicon_homophone",
+      "utterance_index": 42,
+      "durationSec": 5.817,
+      "expected_preview": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+      "text_asr": "我们下午讨论后,选生呈方安线吧。 成的借口文章不齐",
+      "raw_asr_text": "我们下午讨论后,选生呈方安线吧。 成的借口文章補齊",
+      "text_changed": true,
+      "cer": 0.44,
+      "exact_match": false,
+      "pipeline_ms": 9849,
+      "fw_detector_step_ms": 1219,
+      "fw_triggered": true,
+      "fw_applied_count": 2,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 6.528130000000004,
+        "combinationCount": 7
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 13,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 21,
+          "recallToneCompatibleCount": 6,
+          "recallToneFallbackCount": 53,
+          "toneExactHitCount": 3,
+          "plainFallbackHitCount": 16,
+          "ngramTonePatternHitCount": 57
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 9855
+    },
+    {
+      "id": "d044",
+      "scenario": "lexicon_homophone",
+      "utterance_index": 43,
+      "durationSec": 4.934,
+      "expected_preview": "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+      "text_asr": "这周的上线计划已经全任上线计划评审安排在周四上午",
+      "raw_asr_text": "这周的上线计划已经全任上线计划评审安排在周四上午",
+      "text_changed": false,
+      "cer": 0.125,
+      "exact_match": false,
+      "pipeline_ms": 6505,
+      "fw_detector_step_ms": 1298,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 4
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 23,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 23,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 77,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 27,
+          "ngramTonePatternHitCount": 70
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6510
+    },
+    {
+      "id": "d045",
+      "scenario": "lexicon_homophone",
+      "utterance_index": 44,
+      "durationSec": 5.282,
+      "expected_preview": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+      "text_asr": "關於後,選生成为一位大学生。 和上限计划请按上限计划执行有问题群里说",
+      "raw_asr_text": "關於後,選生成為一位大學生。 和上限计划请按上限计划执行有问题群里说",
+      "text_changed": true,
+      "cer": 0.56,
+      "exact_match": false,
+      "pipeline_ms": 9838,
+      "fw_detector_step_ms": 1412,
+      "fw_triggered": true,
+      "fw_applied_count": 1,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 4.526210000000006,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 6,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 24,
+          "recallToneCompatibleCount": 2,
+          "recallToneFallbackCount": 67,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 23,
+          "ngramTonePatternHitCount": 62
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 9842
+    },
+    {
+      "id": "d046",
+      "scenario": "cafe",
+      "utterance_index": 45,
+      "durationSec": 6.641,
+      "expected_preview": "你好，我想点一杯卡布奇诺，中杯，正常糖。顺便问一下今天有芝士蛋糕吗？",
+      "text_asr": "你好 我想点一杯卡布奇诺中倍珍长糖 顺便问一下 今天有知识蛋糕吗?",
+      "raw_asr_text": "你好 我想点一杯卡布奇诺中倍珍长糖 顺便问一下 今天有知识蛋糕吗?",
+      "text_changed": false,
+      "cer": 0.1724137931034483,
+      "exact_match": false,
+      "pipeline_ms": 9894,
+      "fw_detector_step_ms": 1325,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 6,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": -0.4492800000000017,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 18,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 25,
+          "recallToneCompatibleCount": 5,
+          "recallToneFallbackCount": 29,
+          "toneExactHitCount": 4,
+          "plainFallbackHitCount": 7,
+          "ngramTonePatternHitCount": 73
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 9899
+    },
+    {
+      "id": "d047",
+      "scenario": "cafe",
+      "utterance_index": 46,
+      "durationSec": 3.506,
+      "expected_preview": "麻烦帮我做一杯红茶带走，大杯就行，谢谢。",
+      "text_asr": "麻烦帮我做一杯红茶带走大背就行谢谢",
+      "raw_asr_text": "麻烦帮我做一杯红茶带走大背就行谢谢",
+      "text_changed": false,
+      "cer": 0.058823529411764705,
+      "exact_match": false,
+      "pipeline_ms": 5548,
+      "fw_detector_step_ms": 1152,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": -0.7465089999999961,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 16,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 16,
+          "recallToneCompatibleCount": 1,
+          "recallToneFallbackCount": 28,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 11,
+          "ngramTonePatternHitCount": 48
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 5553
+    },
+    {
+      "id": "d048",
+      "scenario": "cafe",
+      "utterance_index": 47,
+      "durationSec": 4.214,
+      "expected_preview": "请问这款热巧克力可以少冰吗？我赶时间，小杯。",
+      "text_asr": "请问,这款热巧克力可以少病吗?我赶时间小杯",
+      "raw_asr_text": "请问,这款热巧克力可以少病吗?我赶时间小杯",
+      "text_changed": false,
+      "cer": 0.05263157894736842,
+      "exact_match": false,
+      "pipeline_ms": 6005,
+      "fw_detector_step_ms": 1192,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 2.587798999999997,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 17,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 17,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 33,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 13,
+          "ngramTonePatternHitCount": 32
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6010
+    },
+    {
+      "id": "d049",
+      "scenario": "meeting",
+      "utterance_index": 48,
+      "durationSec": 7.697,
+      "expected_preview": "李工，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+      "text_asr": "理工科互反馈翻译引擎接口包错 我们能够 不能加缓存下午3点前把结论发群里",
+      "raw_asr_text": "理工科互反馈翻译引擎接口包错 我们能够 不能加缓存下午3点前把结论发群里",
+      "text_changed": false,
+      "cer": 0.18181818181818182,
+      "exact_match": false,
+      "pipeline_ms": 11068,
+      "fw_detector_step_ms": 1368,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 2.906320000000008,
+        "combinationCount": 2
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 16,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 31,
+          "recallToneCompatibleCount": 1,
+          "recallToneFallbackCount": 66,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 21,
+          "ngramTonePatternHitCount": 97
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 11073
+    },
+    {
+      "id": "d050",
+      "scenario": "meeting",
+      "utterance_index": 49,
+      "durationSec": 7.094,
+      "expected_preview": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+      "text_asr": "今天的站会献过一下订单 中台 进度内存占用高着快 需要先留保护大家看一下风险",
+      "raw_asr_text": "今天的站会献过一下订单 中台 进度内存占用高着快 需要先留保护大家看一下风险",
+      "text_changed": false,
+      "cer": 0.14285714285714285,
+      "exact_match": false,
+      "pipeline_ms": 7478,
+      "fw_detector_step_ms": 1332,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 12,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": -0.9740299999999991,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 28,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 28,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 44,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 15,
+          "ngramTonePatternHitCount": 59
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7499
+    },
+    {
+      "id": "d051",
+      "scenario": "meeting",
+      "utterance_index": 50,
+      "durationSec": 5.782,
+      "expected_preview": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。",
+      "text_asr": "跟会员系统相关的讯息 我整理了一般8点前请大家帮忙评审审议",
+      "raw_asr_text": "跟會員系統相關的訊息 我整理了一版8点前请大家帮忙评审一下",
+      "text_changed": true,
+      "cer": 0.21428571428571427,
+      "exact_match": false,
+      "pipeline_ms": 9688,
+      "fw_detector_step_ms": 1281,
+      "fw_triggered": true,
+      "fw_applied_count": 2,
+      "span_count": 2,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 11.341120000000004,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 9,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 25,
+          "recallToneCompatibleCount": 1,
+          "recallToneFallbackCount": 51,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 18,
+          "ngramTonePatternHitCount": 71
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 9694
+    },
+    {
+      "id": "d052",
+      "scenario": "taxi",
+      "utterance_index": 51,
+      "durationSec": 6.223,
+      "expected_preview": "师傅，去浦东张江，走延安路高架。我赶九点半的会，要是堵车您提前跟我说。",
+      "text_asr": "市府区浦东张江走沿岸路高架 涡干 9点半的回药师赌车宁提前跟我说",
+      "raw_asr_text": "市府区浦东张江走沿岸路高架 涡干 9点半的回药师赌车宁提前跟我说",
+      "text_changed": false,
+      "cer": 0.43333333333333335,
+      "exact_match": false,
+      "pipeline_ms": 9697,
+      "fw_detector_step_ms": 1344,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 2.8421100000000052,
+        "combinationCount": 6
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 15,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 29,
+          "recallToneCompatibleCount": 4,
+          "recallToneFallbackCount": 41,
+          "toneExactHitCount": 3,
+          "plainFallbackHitCount": 11,
+          "ngramTonePatternHitCount": 84
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 9701
+    },
+    {
+      "id": "d053",
+      "scenario": "taxi",
+      "utterance_index": 52,
+      "durationSec": 6.711,
+      "expected_preview": "麻烦送我到深圳南山科技园南门，大概多久能到？我十点十分有个电话会。",
+      "text_asr": "麻烦送我到深圳南山科技园南门大概多久能到 我十点十分有隔电话会",
+      "raw_asr_text": "麻烦送我到深圳南山科技园南门大概多久能到 我十点十分有隔电话会",
+      "text_changed": false,
+      "cer": 0.03333333333333333,
+      "exact_match": false,
+      "pipeline_ms": 6812,
+      "fw_detector_step_ms": 1409,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 4
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 29,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 29,
+          "recallToneCompatibleCount": 8,
+          "recallToneFallbackCount": 55,
+          "toneExactHitCount": 4,
+          "plainFallbackHitCount": 19,
+          "ngramTonePatternHitCount": 94
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6818
+    },
+    {
+      "id": "d054",
+      "scenario": "taxi",
+      "utterance_index": 53,
+      "durationSec": 4.447,
+      "expected_preview": "去杭州西溪，不走三环可以吗？那边现在堵不堵？",
+      "text_asr": "去杭州细细不走三环 可以吗 那边现在独步赌",
+      "raw_asr_text": "去杭州戏戏不走三环 可以吗 那贬现在赌不赌",
+      "text_changed": true,
+      "cer": 0.2631578947368421,
+      "exact_match": false,
+      "pipeline_ms": 5556,
+      "fw_detector_step_ms": 1137,
+      "fw_triggered": true,
+      "fw_applied_count": 4,
+      "span_count": 6,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 5.775465999999994,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 17,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 17,
+          "recallToneCompatibleCount": 10,
+          "recallToneFallbackCount": 31,
+          "toneExactHitCount": 4,
+          "plainFallbackHitCount": 11,
+          "ngramTonePatternHitCount": 40
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 5562
+    },
+    {
+      "id": "d055",
+      "scenario": "hospital",
+      "utterance_index": 54,
+      "durationSec": 4.957,
+      "expected_preview": "医生您好，我这两天嗓子疼，想开点药并做个血常规。",
+      "text_asr": "一生您好我这两天嗓子疼想开店要并做各些常规",
+      "raw_asr_text": "一生您好我这两天嗓子疼想开店要并做各些常规",
+      "text_changed": false,
+      "cer": 0.23809523809523808,
+      "exact_match": false,
+      "pipeline_ms": 5855,
+      "fw_detector_step_ms": 1211,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 6
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 21,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 21,
+          "recallToneCompatibleCount": 4,
+          "recallToneFallbackCount": 33,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 10,
+          "ngramTonePatternHitCount": 68
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 5860
+    },
+    {
+      "id": "d056",
+      "scenario": "hospital",
+      "utterance_index": 55,
+      "durationSec": 4.319,
+      "expected_preview": "挂号处请问内科还有号吗？我低烧，昨晚开始的。",
+      "text_asr": "挂号出请问 内刻还有号码 我低哨昨晚开始的",
+      "raw_asr_text": "挂号出请问 内刻还有号码 我低哨昨晚开始的",
+      "text_changed": false,
+      "cer": 0.21052631578947367,
+      "exact_match": false,
+      "pipeline_ms": 5583,
+      "fw_detector_step_ms": 1103,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 2,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.8244979999999984,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 17,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 17,
+          "recallToneCompatibleCount": 8,
+          "recallToneFallbackCount": 23,
+          "toneExactHitCount": 3,
+          "plainFallbackHitCount": 8,
+          "ngramTonePatternHitCount": 50
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 5588
+    },
+    {
+      "id": "d057",
+      "scenario": "hospital",
+      "utterance_index": 56,
+      "durationSec": 4.644,
+      "expected_preview": "这个检查报告什么时候能出？我咳嗽，需要请假休息吗？",
+      "text_asr": "这个检查报告什么时候能出 我咳嗽需要请假休息吗",
+      "raw_asr_text": "这个检查报告什么时候能出 我咳嗽需要请假休息吗",
+      "text_changed": false,
+      "cer": 0,
+      "exact_match": true,
+      "pipeline_ms": 5831,
+      "fw_detector_step_ms": 1202,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 9,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 18,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 18,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 29,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 11,
+          "ngramTonePatternHitCount": 37
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 5837
+    },
+    {
+      "id": "d058",
+      "scenario": "shopping",
+      "utterance_index": 57,
+      "durationSec": 4.586,
+      "expected_preview": "这件外套能试穿吗？我穿中码。买两件有没有折扣？",
+      "text_asr": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+      "raw_asr_text": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+      "text_changed": false,
+      "cer": 0,
+      "exact_match": true,
+      "pipeline_ms": 6097,
+      "fw_detector_step_ms": 1146,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 4
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 19,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 19,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 37,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 14,
+          "ngramTonePatternHitCount": 32
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6102
+    },
+    {
+      "id": "d059",
+      "scenario": "shopping",
+      "utterance_index": 58,
+      "durationSec": 5.05,
+      "expected_preview": "请问这双鞋有四十码吗？不合适三天内可以退换吧？",
+      "text_asr": "请问,这双鞋有40码码,不合适在哪里? 三天内可以推换吧",
+      "raw_asr_text": "请问,这双鞋有40码码,不合适在哪里? 三天内可以推换吧",
+      "text_changed": false,
+      "cer": 0.3333333333333333,
+      "exact_match": false,
+      "pipeline_ms": 9006,
+      "fw_detector_step_ms": 1173,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 1.879800000000003,
+        "combinationCount": 9
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 12,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 19,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 37,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 10,
+          "ngramTonePatternHitCount": 37
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 9011
+    },
+    {
+      "id": "d060",
+      "scenario": "shopping",
+      "utterance_index": 59,
+      "durationSec": 5.492,
+      "expected_preview": "我想对比一下这两款订单中台的价格，会员日能再减一点吗？",
+      "text_asr": "我想对比一下,这两款定制的 在訂單中台的加格會員日能再減一點嗎?",
+      "raw_asr_text": "我想对比一下,这两款定制的 在訂單中台的加格會員日能再減一點嗎?",
+      "text_changed": false,
+      "cer": 0.48,
+      "exact_match": false,
+      "pipeline_ms": 9202,
+      "fw_detector_step_ms": 1325,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 1.7555600000000027,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 8,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 23,
+          "recallToneCompatibleCount": 1,
+          "recallToneFallbackCount": 39,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 11,
+          "ngramTonePatternHitCount": 56
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 9208
+    },
+    {
+      "id": "d061",
+      "scenario": "friend",
+      "utterance_index": 60,
+      "durationSec": 5.155,
+      "expected_preview": "周末要不要去江边骑行？天气预报说周日多云，记得带水。",
+      "text_asr": "众莫要不要去降边骑行 天气预报 周日多云积的带水",
+      "raw_asr_text": "众莫要不要去降边骑行 天气预报 周日多云积的带水",
+      "text_changed": false,
+      "cer": 0.2608695652173913,
+      "exact_match": false,
+      "pipeline_ms": 9220,
+      "fw_detector_step_ms": 1270,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 6,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 1.4507600000000025,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 13,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 21,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 49,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 12,
+          "ngramTonePatternHitCount": 57
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 9226
+    },
+    {
+      "id": "d062",
+      "scenario": "friend",
+      "utterance_index": 61,
+      "durationSec": 5.004,
+      "expected_preview": "晚上一起吃饭吗？我知道一家川菜不错，大概七点到。",
+      "text_asr": "晚上 一起吃饭嘛,我知道一家川菜,不错大概起点到",
+      "raw_asr_text": "晚上 一起吃饭嘛,我知道一家川菜,不错大概起点到",
+      "text_changed": false,
+      "cer": 0.09523809523809523,
+      "exact_match": false,
+      "pipeline_ms": 8685,
+      "fw_detector_step_ms": 1233,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 7,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": -6.495802999999995,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 1,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 16,
+          "recallToneCompatibleCount": 5,
+          "recallToneFallbackCount": 40,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 12,
+          "ngramTonePatternHitCount": 37
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 8689
+    },
+    {
+      "id": "d063",
+      "scenario": "friend",
+      "utterance_index": 62,
+      "durationSec": 4.098,
+      "expected_preview": "你最近忙不忙？想找你看下手机备份怎么设置。",
+      "text_asr": "你最近忙不忙,想找你看下手机备分怎么设置",
+      "raw_asr_text": "你最近忙不忙,想找你看下手机备分怎么设置",
+      "text_changed": false,
+      "cer": 0.05263157894736842,
+      "exact_match": false,
+      "pipeline_ms": 5619,
+      "fw_detector_step_ms": 1147,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 6,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 1.056910000000002,
+        "combinationCount": 9
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 16,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 16,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 29,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 7,
+          "ngramTonePatternHitCount": 31
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 5624
+    },
+    {
+      "id": "d064",
+      "scenario": "tech_deploy",
+      "utterance_index": 63,
+      "durationSec": 7.616,
+      "expected_preview": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+      "text_asr": "今天,我们团队要讨论候选生成相关的候选生成流程和商线计划安排请研发一起评估风险",
+      "raw_asr_text": "今天,我们团队要讨论候选生成相关的候选生成流程和商线计划安排请研发一起评估风险",
+      "text_changed": false,
+      "cer": 0.15789473684210525,
+      "exact_match": false,
+      "pipeline_ms": 8425,
+      "fw_detector_step_ms": 1496,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 3
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 35,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 35,
+          "recallToneCompatibleCount": 2,
+          "recallToneFallbackCount": 86,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 29,
+          "ngramTonePatternHitCount": 105
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 8430
+    },
+    {
+      "id": "d065",
+      "scenario": "tech_deploy",
+      "utterance_index": 64,
+      "durationSec": 6.304,
+      "expected_preview": "这次发布我们先对齐上线计划窗口，后选生城模块需要联调，别漏掉回归。",
+      "text_asr": "這次發布我们線對其上述 上限计划窗口后学生,成模块需要连掉别漏掉回归",
+      "raw_asr_text": "這次發布我們線對其上述 上限激化窗口后学生,成模块需要连掉别漏掉回归",
+      "text_changed": true,
+      "cer": 0.4,
+      "exact_match": false,
+      "pipeline_ms": 11466,
+      "fw_detector_step_ms": 1467,
+      "fw_triggered": true,
+      "fw_applied_count": 2,
+      "span_count": 8,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 3.4942000000000064,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 9,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 29,
+          "recallToneCompatibleCount": 2,
+          "recallToneFallbackCount": 69,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 20,
+          "ngramTonePatternHitCount": 70
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 11472
+    },
+    {
+      "id": "d066",
+      "scenario": "tech_deploy",
+      "utterance_index": 65,
+      "durationSec": 5.805,
+      "expected_preview": "会上提到候选生成链路要加监控，上线计划文档我下午更新一版。",
+      "text_asr": "会上提到 候选生陈列露,要加监控上线级画文当我下午更新一般",
+      "raw_asr_text": "会上提到 候选生陈列露,要加件空上线级画文当我下午更新一版",
+      "text_changed": true,
+      "cer": 0.25925925925925924,
+      "exact_match": false,
+      "pipeline_ms": 12649,
+      "fw_detector_step_ms": 1319,
+      "fw_triggered": true,
+      "fw_applied_count": 3,
+      "span_count": 8,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 3.155689999999993,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 4,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 27,
+          "recallToneCompatibleCount": 1,
+          "recallToneFallbackCount": 75,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 26,
+          "ngramTonePatternHitCount": 79
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 12654
+    },
+    {
+      "id": "d067",
+      "scenario": "customer_service",
+      "utterance_index": 66,
+      "durationSec": 5.689,
+      "expected_preview": "您好，我订单显示已发货但物流三天没更新，能帮我查一下吗？",
+      "text_asr": "您好我弟 但显示依法貨 但物流三甜美更新能幫我查一下嗎?",
+      "raw_asr_text": "您好我弟 但顯示已發貨 但物流三天沒更新能幫我查一下嗎?",
+      "text_changed": true,
+      "cer": 0.36,
+      "exact_match": false,
+      "pipeline_ms": 10999,
+      "fw_detector_step_ms": 1288,
+      "fw_triggered": true,
+      "fw_applied_count": 1,
+      "span_count": 1,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 4.982460000000003,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 4,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 24,
+          "recallToneCompatibleCount": 5,
+          "recallToneFallbackCount": 50,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 17,
+          "ngramTonePatternHitCount": 82
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 11003
+    },
+    {
+      "id": "d068",
+      "scenario": "customer_service",
+      "utterance_index": 67,
+      "durationSec": 4.621,
+      "expected_preview": "想改一下收货地址，还来得及吗？麻烦尽快处理，谢谢。",
+      "text_asr": "想改一下收货地址还来得及吗? 麻烦尽快处理,谢谢!",
+      "raw_asr_text": "想改一下收货地址还来得及吗? 麻烦尽快处理,谢谢!",
+      "text_changed": false,
+      "cer": 0,
+      "exact_match": true,
+      "pipeline_ms": 11474,
+      "fw_detector_step_ms": 1286,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 8
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 19,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 19,
+          "recallToneCompatibleCount": 2,
+          "recallToneFallbackCount": 37,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 13,
+          "ngramTonePatternHitCount": 45
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 11478
+    },
+    {
+      "id": "d069",
+      "scenario": "customer_service",
+      "utterance_index": 68,
+      "durationSec": 3.553,
+      "expected_preview": "发票抬头开错了，能重新开具电子发票吗？",
+      "text_asr": "发票抬头开错了能重新开具电子发票吗",
+      "raw_asr_text": "发票抬头开错了能重新开具电子发票吗",
+      "text_changed": false,
+      "cer": 0,
+      "exact_match": true,
+      "pipeline_ms": 6780,
+      "fw_detector_step_ms": 1206,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.6249070000000003,
+        "combinationCount": 6
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 17,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 17,
+          "recallToneCompatibleCount": 1,
+          "recallToneFallbackCount": 31,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 11,
+          "ngramTonePatternHitCount": 46
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6784
+    },
+    {
+      "id": "d070",
+      "scenario": "interview",
+      "utterance_index": 69,
+      "durationSec": 4.969,
+      "expected_preview": "请简单介绍一下你上一段项目里负责的核心模块和难点。",
+      "text_asr": "请简单介绍一下,你上一段项目里负责的核心模块和难点。",
+      "raw_asr_text": "请简单介绍一下,你上一段项目里负责的核心模块和难点。",
+      "text_changed": false,
+      "cer": 0,
+      "exact_match": true,
+      "pipeline_ms": 7053,
+      "fw_detector_step_ms": 1245,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 8
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 23,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 23,
+          "recallToneCompatibleCount": 4,
+          "recallToneFallbackCount": 54,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 15,
+          "ngramTonePatternHitCount": 68
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7058
+    },
+    {
+      "id": "d071",
+      "scenario": "interview",
+      "utterance_index": 70,
+      "durationSec": 4.865,
+      "expected_preview": "你如何看待跨团队协作？遇到需求变更一般怎么处理？",
+      "text_asr": "你如何看待夸团队写作,遇到需求边更一般怎么处理?",
+      "raw_asr_text": "你如何看待夸团队写作,遇到需求边更一般怎么处理?",
+      "text_changed": false,
+      "cer": 0.13636363636363635,
+      "exact_match": false,
+      "pipeline_ms": 7055,
+      "fw_detector_step_ms": 1256,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 2
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 20,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 20,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 39,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 12,
+          "ngramTonePatternHitCount": 55
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7059
+    },
+    {
+      "id": "d072",
+      "scenario": "interview",
+      "utterance_index": 71,
+      "durationSec": 4.981,
+      "expected_preview": "期望薪资这块我们可以再沟通，你最快什么时候能入职？",
+      "text_asr": "期望星,自这块我们可以再沟通你最快什么时候能入职",
+      "raw_asr_text": "期望星,自这块我们可以再沟通你最快什么时候能入职",
+      "text_changed": false,
+      "cer": 0.08695652173913043,
+      "exact_match": false,
+      "pipeline_ms": 7084,
+      "fw_detector_step_ms": 1265,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 19,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 19,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 41,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 12,
+          "ngramTonePatternHitCount": 48
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7088
+    },
+    {
+      "id": "d073",
+      "scenario": "classroom",
+      "utterance_index": 72,
+      "durationSec": 5.468,
+      "expected_preview": "老师，这道题的解题步骤能不能再讲一遍？我没听懂第二点。",
+      "text_asr": "老是這道題的解題步,周能不能解解? 我没听懂第二点",
+      "raw_asr_text": "老是這道題的解題步,周能不能解解? 我没听懂第二点",
+      "text_changed": false,
+      "cer": 0.375,
+      "exact_match": false,
+      "pipeline_ms": 11426,
+      "fw_detector_step_ms": 1168,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 6
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 12,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 18,
+          "recallToneCompatibleCount": 5,
+          "recallToneFallbackCount": 31,
+          "toneExactHitCount": 3,
+          "plainFallbackHitCount": 7,
+          "ngramTonePatternHitCount": 50
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 11431
+    },
+    {
+      "id": "d074",
+      "scenario": "classroom",
+      "utterance_index": 73,
+      "durationSec": 3.924,
+      "expected_preview": "作业是下周一下午交吗？可以电子版提交吗？",
+      "text_asr": "作业是下周一下午较码,可以电子版提较码。",
+      "raw_asr_text": "作业是下周一下午较码,可以电子版提较码。",
+      "text_changed": false,
+      "cer": 0.2222222222222222,
+      "exact_match": false,
+      "pipeline_ms": 6992,
+      "fw_detector_step_ms": 1168,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.7943399999999983,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 16,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 16,
+          "recallToneCompatibleCount": 4,
+          "recallToneFallbackCount": 56,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 20,
+          "ngramTonePatternHitCount": 34
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6998
+    },
+    {
+      "id": "d075",
+      "scenario": "classroom",
+      "utterance_index": 74,
+      "durationSec": 4.156,
+      "expected_preview": "请问这门课期末是开卷还是闭卷？重点会划吗？",
+      "text_asr": "请问这门客期末是开卷还是闭卷? 终点会话吗?",
+      "raw_asr_text": "请问这门客期末是开卷还是闭卷? 终点会话吗?",
+      "text_changed": false,
+      "cer": 0.15789473684210525,
+      "exact_match": false,
+      "pipeline_ms": 8208,
+      "fw_detector_step_ms": 1313,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 2.084159999999997,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 18,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 18,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 43,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 15,
+          "ngramTonePatternHitCount": 36
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 8214
+    },
+    {
+      "id": "d076",
+      "scenario": "hotel",
+      "utterance_index": 75,
+      "durationSec": 3.657,
+      "expected_preview": "我预订的是大床房，能安排安静一点的楼层吗？",
+      "text_asr": "我预定的是搭床房能安排安静一点的楼层吗",
+      "raw_asr_text": "我预定的是搭床房能安排安静一点的楼层吗",
+      "text_changed": false,
+      "cer": 0.10526315789473684,
+      "exact_match": false,
+      "pipeline_ms": 6368,
+      "fw_detector_step_ms": 1136,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 12
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 17,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 17,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 28,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 9,
+          "ngramTonePatternHitCount": 40
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6373
+    },
+    {
+      "id": "d077",
+      "scenario": "hotel",
+      "utterance_index": 76,
+      "durationSec": 4.493,
+      "expected_preview": "早餐几点开始？退房可以延迟到下午两点吗？",
+      "text_asr": "早餐几点开始?退房可以延迟到下午2点吗?",
+      "raw_asr_text": "早餐几点开始?退房可以延迟到下午2点吗?",
+      "text_changed": false,
+      "cer": 0.05555555555555555,
+      "exact_match": false,
+      "pipeline_ms": 6239,
+      "fw_detector_step_ms": 1091,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 2,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 16,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 16,
+          "recallToneCompatibleCount": 5,
+          "recallToneFallbackCount": 33,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 13,
+          "ngramTonePatternHitCount": 34
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6245
+    },
+    {
+      "id": "d078",
+      "scenario": "hotel",
+      "utterance_index": 77,
+      "durationSec": 3.564,
+      "expected_preview": "房间空调不太制冷，能派人上来看一下吗？",
+      "text_asr": "房间空调不太知冷能派人上来看一下嘛",
+      "raw_asr_text": "房间空调不太知冷能派人上来看一下嘛",
+      "text_changed": false,
+      "cer": 0.11764705882352941,
+      "exact_match": false,
+      "pipeline_ms": 5704,
+      "fw_detector_step_ms": 1090,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 12
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 15,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 15,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 27,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 9,
+          "ngramTonePatternHitCount": 35
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 5709
+    },
+    {
+      "id": "d079",
+      "scenario": "bank",
+      "utterance_index": 78,
+      "durationSec": 3.506,
+      "expected_preview": "我想开通短信提醒，需要带什么证件？",
+      "text_asr": "我想开通短信提醒需要带什么证件",
+      "raw_asr_text": "我想开通短信提醒需要带什么证件",
+      "text_changed": false,
+      "cer": 0,
+      "exact_match": true,
+      "pipeline_ms": 5679,
+      "fw_detector_step_ms": 1088,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 8
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 12,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 12,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 22,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 8,
+          "ngramTonePatternHitCount": 27
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 5683
+    },
+    {
+      "id": "d080",
+      "scenario": "bank",
+      "utterance_index": 79,
+      "durationSec": 3.704,
+      "expected_preview": "这笔转账显示处理中，大概多久能到账？",
+      "text_asr": "这笔转账顯示處理中大概多久能道长",
+      "raw_asr_text": "這筆轉帳顯示處理中大概多久能到帳",
+      "text_changed": true,
+      "cer": 0.25,
+      "exact_match": false,
+      "pipeline_ms": 6149,
+      "fw_detector_step_ms": 1252,
+      "fw_triggered": true,
+      "fw_applied_count": 3,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 8.197251000000001,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 15,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 15,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 32,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 12,
+          "ngramTonePatternHitCount": 36
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6154
+    },
+    {
+      "id": "d081",
+      "scenario": "bank",
+      "utterance_index": 80,
+      "durationSec": 3.587,
+      "expected_preview": "请问理财产品的风险等级在哪里查看？",
+      "text_asr": "請問理睬产品的風險等急在那里查看",
+      "raw_asr_text": "請問理財產品的風險等急在哪裡查看",
+      "text_changed": true,
+      "cer": 0.4375,
+      "exact_match": false,
+      "pipeline_ms": 5895,
+      "fw_detector_step_ms": 1151,
+      "fw_triggered": true,
+      "fw_applied_count": 2,
+      "span_count": 2,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 6.579892000000001,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 15,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 15,
+          "recallToneCompatibleCount": 5,
+          "recallToneFallbackCount": 47,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 16,
+          "ngramTonePatternHitCount": 45
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 5900
+    },
+    {
+      "id": "d082",
+      "scenario": "restaurant",
+      "utterance_index": 81,
+      "durationSec": 3.611,
+      "expected_preview": "两位，靠窗有位置吗？不要香菜，微辣就行。",
+      "text_asr": "两位靠窗有位置吗? 不要像蔡薇娜就行",
+      "raw_asr_text": "两位靠窗有位置吗? 不要像蔡薇娜就行",
+      "text_changed": false,
+      "cer": 0.25,
+      "exact_match": false,
+      "pipeline_ms": 6235,
+      "fw_detector_step_ms": 1116,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 15,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 15,
+          "recallToneCompatibleCount": 2,
+          "recallToneFallbackCount": 27,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 10,
+          "ngramTonePatternHitCount": 36
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6239
+    },
+    {
+      "id": "d083",
+      "scenario": "restaurant",
+      "utterance_index": 82,
+      "durationSec": 4.876,
+      "expected_preview": "这道菜大概要等多久？我们先点一份凉菜和一壶茶。",
+      "text_asr": "這道菜大概要等多久 我们先點一份量菜和医护茶",
+      "raw_asr_text": "這道菜大概要等多久 我們先點一份涼菜和一壺茶",
+      "text_changed": true,
+      "cer": 0.23809523809523808,
+      "exact_match": false,
+      "pipeline_ms": 6706,
+      "fw_detector_step_ms": 1172,
+      "fw_triggered": true,
+      "fw_applied_count": 3,
+      "span_count": 6,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 8.812463999999991,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 19,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 19,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 35,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 12,
+          "ngramTonePatternHitCount": 41
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6710
+    },
+    {
+      "id": "d084",
+      "scenario": "restaurant",
+      "utterance_index": 83,
+      "durationSec": 4.145,
+      "expected_preview": "可以打包吗？顺便结一下账，能扫码支付吗？",
+      "text_asr": "可以打爆麻 顺便结一下张能扫马支付吗?",
+      "raw_asr_text": "可以打爆麻 顺便结一下张能扫马支付吗?",
+      "text_changed": false,
+      "cer": 0.23529411764705882,
+      "exact_match": false,
+      "pipeline_ms": 6120,
+      "fw_detector_step_ms": 1097,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 14
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 15,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 15,
+          "recallToneCompatibleCount": 5,
+          "recallToneFallbackCount": 27,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 11,
+          "ngramTonePatternHitCount": 32
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6124
+    },
+    {
+      "id": "d085",
+      "scenario": "gym",
+      "utterance_index": 84,
+      "durationSec": 4.098,
+      "expected_preview": "私教课还剩几次？能帮我约明天晚上七点吗？",
+      "text_asr": "自教课还剩几次 能帮我约明天晚上7点吗?",
+      "raw_asr_text": "自教课还剩几次 能帮我约明天晚上7点吗?",
+      "text_changed": false,
+      "cer": 0.1111111111111111,
+      "exact_match": false,
+      "pipeline_ms": 6565,
+      "fw_detector_step_ms": 1290,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 2,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 12
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 17,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 17,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 32,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 10,
+          "ngramTonePatternHitCount": 39
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6568
+    },
+    {
+      "id": "d086",
+      "scenario": "gym",
+      "utterance_index": 85,
+      "durationSec": 3.959,
+      "expected_preview": "更衣室柜子钥匙找不到了，前台能帮忙开一下吗？",
+      "text_asr": "更易是龟仔钥匙找不到了前台 能帮忙开一下吗",
+      "raw_asr_text": "更易是龟仔钥匙找不到了前台 能帮忙开一下吗",
+      "text_changed": false,
+      "cer": 0.2,
+      "exact_match": false,
+      "pipeline_ms": 6793,
+      "fw_detector_step_ms": 1193,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.2894550000000038,
+        "combinationCount": 6
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 18,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 18,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 45,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 15,
+          "ngramTonePatternHitCount": 53
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6798
+    },
+    {
+      "id": "d087",
+      "scenario": "gym",
+      "utterance_index": 86,
+      "durationSec": 3.682,
+      "expected_preview": "游泳次卡本月月底到期，续费有优惠吗？",
+      "text_asr": "有用自卡本月月底到期續飛遊,优惠嗎?",
+      "raw_asr_text": "游泳自卡本月月底到期續飛遊,又會嗎?",
+      "text_changed": true,
+      "cer": 0.4375,
+      "exact_match": false,
+      "pipeline_ms": 6132,
+      "fw_detector_step_ms": 1139,
+      "fw_triggered": true,
+      "fw_applied_count": 2,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 4.614564999999999,
+        "combinationCount": 6
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 16,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 16,
+          "recallToneCompatibleCount": 2,
+          "recallToneFallbackCount": 38,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 11,
+          "ngramTonePatternHitCount": 46
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6136
+    },
+    {
+      "id": "d088",
+      "scenario": "lexicon_homophone",
+      "utterance_index": 87,
+      "durationSec": 5.735,
+      "expected_preview": "我们下午讨论后选声城方案，先把候选生成的接口文档补齐。",
+      "text_asr": "我们下午讨论后,选生成福 方安线把候选生成的借口文当补齐",
+      "raw_asr_text": "我们下午讨论后,选生成福 方安线把候选生成的借口文当补齐",
+      "text_changed": false,
+      "cer": 0.28,
+      "exact_match": false,
+      "pipeline_ms": 10967,
+      "fw_detector_step_ms": 1371,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.9955500000000086,
+        "combinationCount": 4
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 9,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 24,
+          "recallToneCompatibleCount": 8,
+          "recallToneFallbackCount": 60,
+          "toneExactHitCount": 3,
+          "plainFallbackHitCount": 17,
+          "ngramTonePatternHitCount": 74
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 10973
+    },
+    {
+      "id": "d089",
+      "scenario": "lexicon_homophone",
+      "utterance_index": 88,
+      "durationSec": 4.69,
+      "expected_preview": "这周的上线计花已经确认，上线计划评审安排在周四上午。",
+      "text_asr": "这周的上限计划已经确认上限计划评审安排在周四上午",
+      "raw_asr_text": "这周的上限计划已经确认上限计划评审安排在周四上午",
+      "text_changed": false,
+      "cer": 0.125,
+      "exact_match": false,
+      "pipeline_ms": 7251,
+      "fw_detector_step_ms": 1369,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 23,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 23,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 77,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 28,
+          "ngramTonePatternHitCount": 73
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7255
+    },
+    {
+      "id": "d090",
+      "scenario": "lexicon_homophone",
+      "utterance_index": 89,
+      "durationSec": 5.375,
+      "expected_preview": "关于后选生城和上线计化，请按上线计划执行，有问题群里说。",
+      "text_asr": "關於後,選生成為 和上限计划请按上限计划执行有问题 群里说",
+      "raw_asr_text": "關於後,選生成為 和上限计划请按上限计划执行有问题 群里说",
+      "text_changed": false,
+      "cer": 0.36,
+      "exact_match": false,
+      "pipeline_ms": 10837,
+      "fw_detector_step_ms": 1192,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 1.3988640000000032,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 6,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 24,
+          "recallToneCompatibleCount": 2,
+          "recallToneFallbackCount": 67,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 23,
+          "ngramTonePatternHitCount": 59
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 10843
+    },
+    {
+      "id": "d091",
+      "scenario": "cafe",
+      "utterance_index": 90,
+      "durationSec": 6.269,
+      "expected_preview": "你好，我想点一杯燕麦拿铁，中杯，无糖。顺便问一下今天有贝果吗？",
+      "text_asr": "你好,我想点一杯烟麦拿铁中备无糖 参变温宜 今天有被裹嗎?",
+      "raw_asr_text": "你好,我想点一杯烟麦拿铁中备无糖 参变温宜 今天有被裹嗎?",
+      "text_changed": false,
+      "cer": 0.38461538461538464,
+      "exact_match": false,
+      "pipeline_ms": 10754,
+      "fw_detector_step_ms": 1168,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 8,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.735280000000003,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 16,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 21,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 23,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 6,
+          "ngramTonePatternHitCount": 51
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 10759
+    },
+    {
+      "id": "d092",
+      "scenario": "cafe",
+      "utterance_index": 91,
+      "durationSec": 4.321,
+      "expected_preview": "麻烦帮我做一杯抹茶拿铁带走，大杯就行，谢谢。",
+      "text_asr": "麻烦幫我做一杯抹茶拿鐵带走大 北周行泄泻",
+      "raw_asr_text": "麻煩幫我做一杯抹茶拿鐵帶走大 北洲行謝謝",
+      "text_changed": true,
+      "cer": 0.3157894736842105,
+      "exact_match": false,
+      "pipeline_ms": 6270,
+      "fw_detector_step_ms": 1386,
+      "fw_triggered": true,
+      "fw_applied_count": 3,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 9.019885000000002,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 18,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 18,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 28,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 9,
+          "ngramTonePatternHitCount": 56
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6275
+    },
+    {
+      "id": "d093",
+      "scenario": "cafe",
+      "utterance_index": 92,
+      "durationSec": 4.122,
+      "expected_preview": "请问这款冰美式可以少冰吗？我赶时间，小杯。",
+      "text_asr": "请问,这款病美是可以少病吗?我赶时间小呗!",
+      "raw_asr_text": "请问,这款病美是可以少病吗?我赶时间小呗!",
+      "text_changed": false,
+      "cer": 0.2222222222222222,
+      "exact_match": false,
+      "pipeline_ms": 5797,
+      "fw_detector_step_ms": 1173,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 2.5877900000000054,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 16,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 16,
+          "recallToneCompatibleCount": 6,
+          "recallToneFallbackCount": 25,
+          "toneExactHitCount": 3,
+          "plainFallbackHitCount": 8,
+          "ngramTonePatternHitCount": 26
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 5802
+    },
+    {
+      "id": "d094",
+      "scenario": "meeting",
+      "utterance_index": 93,
+      "durationSec": 7.407,
+      "expected_preview": "小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+      "text_asr": "小成客户反馈翻译引擎接口报错 我们能 不能加緩存下午3點前把結論發群裡",
+      "raw_asr_text": "小成科互反馈翻译引擎接口报错 我们能 不能加緩存下午3點前把結論發群裡",
+      "text_changed": true,
+      "cer": 0.24242424242424243,
+      "exact_match": false,
+      "pipeline_ms": 10125,
+      "fw_detector_step_ms": 1317,
+      "fw_triggered": true,
+      "fw_applied_count": 1,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 5.977890000000002,
+        "combinationCount": 2
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 16,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 31,
+          "recallToneCompatibleCount": 5,
+          "recallToneFallbackCount": 56,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 17,
+          "ngramTonePatternHitCount": 97
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 10130
+    },
+    {
+      "id": "d095",
+      "scenario": "meeting",
+      "utterance_index": 94,
+      "durationSec": 7.384,
+      "expected_preview": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+      "text_asr": "今天,德湛會獻過一下訂單 中台,進都內 占用高折块需要先留保护大家看一下风险",
+      "raw_asr_text": "今天,德湛會獻過一下訂單 中台,進都內 占用高折块需要先留保护大家看一下风险",
+      "text_changed": false,
+      "cer": 0.4,
+      "exact_match": false,
+      "pipeline_ms": 9684,
+      "fw_detector_step_ms": 1321,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 8,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.4430399999999963,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 14,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 28,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 56,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 17,
+          "ngramTonePatternHitCount": 77
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 9691
+    },
+    {
+      "id": "d096",
+      "scenario": "meeting",
+      "utterance_index": 95,
+      "durationSec": 5.735,
+      "expected_preview": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。",
+      "text_asr": "跟会员系统相关的需求 我整理了一版八点前请大家帮忙评审一下",
+      "raw_asr_text": "跟会员系统相关的需求 我整理了一版八点前请大家帮忙评审一下",
+      "text_changed": false,
+      "cer": 0,
+      "exact_match": true,
+      "pipeline_ms": 6159,
+      "fw_detector_step_ms": 1262,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 6
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 26,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 26,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 51,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 18,
+          "ngramTonePatternHitCount": 83
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6164
+    },
+    {
+      "id": "d097",
+      "scenario": "taxi",
+      "utterance_index": 96,
+      "durationSec": 6.44,
+      "expected_preview": "师傅，去中关村软件园，走四环。我赶九点半的会，要是堵车您提前跟我说。",
+      "text_asr": "是付去中官村軟件遠走私環 我幹 9点半的会要是堵车 您提前跟我说",
+      "raw_asr_text": "是付去中官村軟件遠走私環 我幹 9点半的会要是堵车 您提前跟我说",
+      "text_changed": false,
+      "cer": 0.3103448275862069,
+      "exact_match": false,
+      "pipeline_ms": 9241,
+      "fw_detector_step_ms": 1275,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 2.5236499999999893,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 14,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 28,
+          "recallToneCompatibleCount": 6,
+          "recallToneFallbackCount": 48,
+          "toneExactHitCount": 3,
+          "plainFallbackHitCount": 15,
+          "ngramTonePatternHitCount": 70
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 9246
+    },
+    {
+      "id": "d098",
+      "scenario": "taxi",
+      "utterance_index": 97,
+      "durationSec": 5.851,
+      "expected_preview": "麻烦送我到国贸三期南门，大概多久能到？我十点十分有个电话会。",
+      "text_asr": "麻烦送我到国贸三庆南门大概多久能到 我是点 十分有隔電話會",
+      "raw_asr_text": "麻烦送我到国贸三庆南门大概多久能到 我是点 十分有隔電話會",
+      "text_changed": false,
+      "cer": 0.2222222222222222,
+      "exact_match": false,
+      "pipeline_ms": 8739,
+      "fw_detector_step_ms": 1199,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 8,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": -6.452610000000007,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 18,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 25,
+          "recallToneCompatibleCount": 4,
+          "recallToneFallbackCount": 38,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 13,
+          "ngramTonePatternHitCount": 56
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 8743
+    },
+    {
+      "id": "d099",
+      "scenario": "taxi",
+      "utterance_index": 98,
+      "durationSec": 4.598,
+      "expected_preview": "去望京SOHO，不走机场高速可以吗？那边现在堵不堵？",
+      "text_asr": "去望京苏和步走机场高速可以吗?那变现在赌不赌?",
+      "raw_asr_text": "去望京苏和步走机场高速可以吗?那变现在赌不赌?",
+      "text_changed": false,
+      "cer": 0.34782608695652173,
+      "exact_match": false,
+      "pipeline_ms": 5560,
+      "fw_detector_step_ms": 1171,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 9,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 2.3006449999999887,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 19,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 19,
+          "recallToneCompatibleCount": 7,
+          "recallToneFallbackCount": 28,
+          "toneExactHitCount": 3,
+          "plainFallbackHitCount": 10,
+          "ngramTonePatternHitCount": 33
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 5566
+    },
+    {
+      "id": "d100",
+      "scenario": "hospital",
+      "utterance_index": 99,
+      "durationSec": 4.505,
+      "expected_preview": "医生您好，我这两天头痛，想开点药并做个血常规。",
+      "text_asr": "醫生您好,我這兩甜头通向开店,要病做隔斜常规",
+      "raw_asr_text": "醫生您好,我這兩天頭痛想開點,要病做隔斜常規",
+      "text_changed": true,
+      "cer": 0.55,
+      "exact_match": false,
+      "pipeline_ms": 5680,
+      "fw_detector_step_ms": 1183,
+      "fw_triggered": true,
+      "fw_applied_count": 4,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 9.695120000000003,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 20,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 20,
+          "recallToneCompatibleCount": 7,
+          "recallToneFallbackCount": 38,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 13,
+          "ngramTonePatternHitCount": 62
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 5685
+    },
+    {
+      "id": "d101",
+      "scenario": "hospital",
+      "utterance_index": 100,
+      "durationSec": 5.016,
+      "expected_preview": "挂号处请问内科还有号吗？我胃不舒服，昨晚开始的。",
+      "text_asr": "刮號出請問,內課還要再加一段時間嗎? 还有号码,我微不舒服昨晚开始的",
+      "raw_asr_text": "刮號出請問,內課還要再加一段時間嗎? 还有号码,我微不舒服昨晚开始的",
+      "text_changed": false,
+      "cer": 0.8571428571428571,
+      "exact_match": false,
+      "pipeline_ms": 8655,
+      "fw_detector_step_ms": 1282,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 6,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": -2.8145260000000007,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 8,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 20,
+          "recallToneCompatibleCount": 8,
+          "recallToneFallbackCount": 43,
+          "toneExactHitCount": 3,
+          "plainFallbackHitCount": 16,
+          "ngramTonePatternHitCount": 52
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 8662
+    },
+    {
+      "id": "d102",
+      "scenario": "hospital",
+      "utterance_index": 101,
+      "durationSec": 5.457,
+      "expected_preview": "这个检查报告什么时候能出？我过敏发痒，需要请假休息吗？",
+      "text_asr": "这个檢查报告什麼时候能出? 我国民 需要请假休息吗?",
+      "raw_asr_text": "這個檢查報告什麼時候能出? 我過敏 需要请假休息吗?",
+      "text_changed": true,
+      "cer": 0.25,
+      "exact_match": false,
+      "pipeline_ms": 8806,
+      "fw_detector_step_ms": 1177,
+      "fw_triggered": true,
+      "fw_applied_count": 3,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 4.236405000000005,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 12,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 18,
+          "recallToneCompatibleCount": 5,
+          "recallToneFallbackCount": 33,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 12,
+          "ngramTonePatternHitCount": 29
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 8811
+    },
+    {
+      "id": "d103",
+      "scenario": "shopping",
+      "utterance_index": 102,
+      "durationSec": 4.783,
+      "expected_preview": "这件外套能试穿吗？我穿中码。买两件有没有折扣？",
+      "text_asr": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+      "raw_asr_text": "这件外套能试穿吗?我穿中码,买两件有没有折扣?",
+      "text_changed": false,
+      "cer": 0,
+      "exact_match": true,
+      "pipeline_ms": 5639,
+      "fw_detector_step_ms": 1112,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 4
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 19,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 19,
+          "recallToneCompatibleCount": 4,
+          "recallToneFallbackCount": 36,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 14,
+          "ngramTonePatternHitCount": 32
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 5645
+    },
+    {
+      "id": "d104",
+      "scenario": "shopping",
+      "utterance_index": 103,
+      "durationSec": 4.969,
+      "expected_preview": "请问这双鞋有四十码吗？不合适三天内可以退换吧？",
+      "text_asr": "请问,这双鞋有40码吗?不合适三天内可以退换吧?",
+      "raw_asr_text": "请问,这双鞋有40码吗?不合适三天内可以退换吧?",
+      "text_changed": false,
+      "cer": 0.09523809523809523,
+      "exact_match": false,
+      "pipeline_ms": 5759,
+      "fw_detector_step_ms": 1250,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.6639849999999967,
+        "combinationCount": 4
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 19,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 19,
+          "recallToneCompatibleCount": 2,
+          "recallToneFallbackCount": 32,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 9,
+          "ngramTonePatternHitCount": 31
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 5763
+    },
+    {
+      "id": "d105",
+      "scenario": "shopping",
+      "utterance_index": 104,
+      "durationSec": 5.399,
+      "expected_preview": "我想对比一下这两款订单中台的价格，会员日能再减一点吗？",
+      "text_asr": "我想对比一下这两款 在名单中台的加格会员日能再减一点吗?",
+      "raw_asr_text": "我想对比一下这两款 在名单中台的加格会员日能再减一点吗?",
+      "text_changed": false,
+      "cer": 0.12,
+      "exact_match": false,
+      "pipeline_ms": 8051,
+      "fw_detector_step_ms": 1248,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 9
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 7,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 22,
+          "recallToneCompatibleCount": 2,
+          "recallToneFallbackCount": 39,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 11,
+          "ngramTonePatternHitCount": 62
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 8055
+    },
+    {
+      "id": "d106",
+      "scenario": "friend",
+      "utterance_index": 105,
+      "durationSec": 5.12,
+      "expected_preview": "周末要不要去江边骑行？天气预报说周日多云，记得带水。",
+      "text_asr": "众默亚 就不要去降边骑行 天气预报说 周日多云记得带水",
+      "raw_asr_text": "众默亚 就不要去降边骑行 天气预报说 周日多云记得带水",
+      "text_changed": false,
+      "cer": 0.21739130434782608,
+      "exact_match": false,
+      "pipeline_ms": 9340,
+      "fw_detector_step_ms": 1242,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 6,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 1.0864100000000008,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 3,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 23,
+          "recallToneCompatibleCount": 1,
+          "recallToneFallbackCount": 51,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 13,
+          "ngramTonePatternHitCount": 69
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 9344
+    },
+    {
+      "id": "d107",
+      "scenario": "friend",
+      "utterance_index": 106,
+      "durationSec": 4.772,
+      "expected_preview": "晚上一起吃饭吗？我知道一家川菜不错，大概七点到。",
+      "text_asr": "晚上一起吃饭嘛 我知道一家串菜 不错大概期点到",
+      "raw_asr_text": "晚上一起吃饭嘛 我知道一家串菜 不错大概期点到",
+      "text_changed": false,
+      "cer": 0.14285714285714285,
+      "exact_match": false,
+      "pipeline_ms": 5363,
+      "fw_detector_step_ms": 1159,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 9,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": -2.3510899999999992,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 16,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 16,
+          "recallToneCompatibleCount": 1,
+          "recallToneFallbackCount": 49,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 15,
+          "ngramTonePatternHitCount": 38
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 5367
+    },
+    {
+      "id": "d108",
+      "scenario": "friend",
+      "utterance_index": 107,
+      "durationSec": 4.319,
+      "expected_preview": "你最近忙不忙？想找你看下手机备份怎么设置。",
+      "text_asr": "你最近忙不忙,想找你看,下手机备分怎么设置?",
+      "raw_asr_text": "你最近忙不忙,想找你看,下手机备分怎么设置?",
+      "text_changed": false,
+      "cer": 0.05263157894736842,
+      "exact_match": false,
+      "pipeline_ms": 5642,
+      "fw_detector_step_ms": 1173,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 6,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 1.056911999999997,
+        "combinationCount": 12
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 16,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 16,
+          "recallToneCompatibleCount": 2,
+          "recallToneFallbackCount": 25,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 5,
+          "ngramTonePatternHitCount": 29
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 5646
+    },
+    {
+      "id": "d109",
+      "scenario": "tech_deploy",
+      "utterance_index": 108,
+      "durationSec": 7.558,
+      "expected_preview": "今天我们团队要讨论后选生城相关的后选生城流程和上线计化安排，请研发一起评估风险。",
+      "text_asr": "今天,我们团队要讨论候选生成相关的候选生成流程和上线计划安排,请研发一起评估风险。",
+      "raw_asr_text": "今天,我们团队要讨论候选生成相关的候选生成流程和上线计划安排,请研发一起评估风险。",
+      "text_changed": false,
+      "cer": 0.13157894736842105,
+      "exact_match": false,
+      "pipeline_ms": 7592,
+      "fw_detector_step_ms": 1403,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 2,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 1
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 35,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 35,
+          "recallToneCompatibleCount": 5,
+          "recallToneFallbackCount": 74,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 24,
+          "ngramTonePatternHitCount": 110
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7597
+    }
+  ],
+  "summary": {
+    "exact_match_rate": 0.11926605504587157,
+    "mean_cer": 0.21950698979748906,
+    "p50_cer": 0.21052631578947367,
+    "p95_cer": 0.5,
+    "fw_triggered_rate": 1,
+    "fw_applied_total": 64,
+    "tone_enabled_cases": 109,
+    "tone_recall_active": 109,
+    "recall_tone_compatible_total": 312,
+    "recall_tone_fallback_total": 4618,
+    "tone_effective_chain_cases": 109,
+    "model_error_cases": 0,
+    "assembly_guard_absent_all": true,
+    "pipeline_ms": {
+      "p50": 7249,
+      "p95": 12760,
+      "mean": 8289.963302752294
+    },
+    "fw_step_ms": {
+      "p50": 1256,
+      "p95": 1524
+    },
+    "case_ms": {
+      "p50": 7255,
+      "p95": 12764,
+      "mean": 8295.220183486239
+    }
+  },
+  "time_limit_reached": true,
+  "batch_elapsed_sec": 904,
+  "evaluated_count": 109,
+  "effective_chain_count": 109,
+  "model_error_count": 0,
+  "toneEnabled_count": 109,
+  "recall_tone_active_count": 109,
+  "assembly_guard_absent": true,
+  "samples": [
+    {
+      "id": "d001",
+      "scenario": "cafe",
+      "utterance_index": 0,
+      "durationSec": 6.095,
+      "expected_preview": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+      "text_asr": "你好,我想點一杯熱拿鐵鐘貝少糖 今天有蓝没马分吗?",
+      "raw_asr_text": "你好,我想點一杯熱拿鐵鐘貝少糖 今天有蓝没马分吗?",
+      "text_changed": false,
+      "cer": 0.4444444444444444,
+      "exact_match": false,
+      "pipeline_ms": 24765,
+      "fw_detector_step_ms": 6029,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 12
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 12,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 19,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 20,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 5,
+          "ngramTonePatternHitCount": 52
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 24774
+    },
+    {
+      "id": "d002",
+      "scenario": "cafe",
+      "utterance_index": 1,
+      "durationSec": 3.483,
+      "expected_preview": "麻烦帮我做一杯美式带走，大杯就行，谢谢。",
+      "text_asr": "麻烦帮我做一杯美式带走大背就行谢谢",
+      "raw_asr_text": "麻烦帮我做一杯美式带走大背就行谢谢",
+      "text_changed": false,
+      "cer": 0.058823529411764705,
+      "exact_match": false,
+      "pipeline_ms": 12625,
+      "fw_detector_step_ms": 5842,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 16,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 16,
+          "recallToneCompatibleCount": 5,
+          "recallToneFallbackCount": 34,
+          "toneExactHitCount": 3,
+          "plainFallbackHitCount": 12,
+          "ngramTonePatternHitCount": 48
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 12634
+    },
+    {
+      "id": "d003",
+      "scenario": "cafe",
+      "utterance_index": 2,
+      "durationSec": 4.435,
+      "expected_preview": "请问这款燕麦拿铁可以少冰吗？我赶时间，小杯。",
+      "text_asr": "请问,这款掩埋拿铁可以烧饼吗? 我赶时间小呗",
+      "raw_asr_text": "请问,这款烟麦拿铁可以烧病吗? 我赶时间小呗",
+      "text_changed": true,
+      "cer": 0.2631578947368421,
+      "exact_match": false,
+      "pipeline_ms": 7514,
+      "fw_detector_step_ms": 1287,
+      "fw_triggered": true,
+      "fw_applied_count": 3,
+      "span_count": 6,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 6.216949,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 17,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 17,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 23,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 7,
+          "ngramTonePatternHitCount": 29
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7521
+    },
+    {
+      "id": "d004",
+      "scenario": "meeting",
+      "utterance_index": 3,
+      "durationSec": 7.152,
+      "expected_preview": "小陈，客户反馈翻译引擎接口报错，我们能不能加缓存，下午三点前把结论发群里？",
+      "text_asr": "小城客户反馈翻译引擎接口报错 我们能不能加缓存下午三点前 把結論發群裡",
+      "raw_asr_text": "小城客户反馈翻译引擎接口报错 我们能不能加缓存下午三点前 把結論發群裡",
+      "text_changed": false,
+      "cer": 0.15151515151515152,
+      "exact_match": false,
+      "pipeline_ms": 13433,
+      "fw_detector_step_ms": 1648,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 1.2047999999999917,
+        "combinationCount": 3
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 25,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 31,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 64,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 18,
+          "ngramTonePatternHitCount": 89
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 13441
+    },
+    {
+      "id": "d005",
+      "scenario": "meeting",
+      "utterance_index": 4,
+      "durationSec": 7.105,
+      "expected_preview": "今天的站会先过一下订单中台进度，内存占用高这块需要限流保护，大家看一下风险。",
+      "text_asr": "今天德湛会现贵一下定,但中台 进度内存占用高折块需要先留保护大家看一下风险",
+      "raw_asr_text": "今天德湛会现贵一下定,但中台 进度内存占用高折块需要先留保护大家看一下风险",
+      "text_changed": false,
+      "cer": 0.2571428571428571,
+      "exact_match": false,
+      "pipeline_ms": 12685,
+      "fw_detector_step_ms": 1555,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 12,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": -2.755200000000002,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 11,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 29,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 52,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 15,
+          "ngramTonePatternHitCount": 64
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 12691
+    },
+    {
+      "id": "d006",
+      "scenario": "meeting",
+      "utterance_index": 5,
+      "durationSec": 5.956,
+      "expected_preview": "跟会员系统相关的需求我整理了一版，八点前请大家帮忙评审一下。",
+      "text_asr": "跟会员系统相关的需求我整理了一板八点钱请大家帮忙评审一下",
+      "raw_asr_text": "跟会员系统相关的需求我整理了一板八点钱请大家帮忙评审一下",
+      "text_changed": false,
+      "cer": 0.07142857142857142,
+      "exact_match": false,
+      "pipeline_ms": 8100,
+      "fw_detector_step_ms": 1411,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 2.6395299999999935,
+        "combinationCount": 12
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 26,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 26,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 51,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 18,
+          "ngramTonePatternHitCount": 88
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 8107
+    },
+    {
+      "id": "d007",
+      "scenario": "taxi",
+      "utterance_index": 6,
+      "durationSec": 6.711,
+      "expected_preview": "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+      "text_asr": "市副局仲觀村軟件遠走機場告訴 我幹 9点半的回药师赌车宁提前跟我说",
+      "raw_asr_text": "市副局仲觀村軟件遠走機場告訴 我幹 9点半的回药师赌车宁提前跟我说",
+      "text_changed": false,
+      "cer": 0.5806451612903226,
+      "exact_match": false,
+      "pipeline_ms": 12767,
+      "fw_detector_step_ms": 1561,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 3,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 2.0398349999999965,
+        "combinationCount": 12
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 15,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 29,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 54,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 19,
+          "ngramTonePatternHitCount": 84
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 12773
+    },
+    {
+      "id": "d008",
+      "scenario": "taxi",
+      "utterance_index": 7,
+      "durationSec": 5.689,
+      "expected_preview": "麻烦送我到国贸三期南门，大概多久能到？我十点十分有个电话会。",
+      "text_asr": "麻烦送我到国贸散清南门大概多久能到 我是点声 十分有隔电话会",
+      "raw_asr_text": "麻烦送我到国贸散清南门大概多久能到 我是点声 十分有隔电话会",
+      "text_changed": false,
+      "cer": 0.18518518518518517,
+      "exact_match": false,
+      "pipeline_ms": 11647,
+      "fw_detector_step_ms": 1407,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 0.41438999999999737,
+        "combinationCount": 12
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 18,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 25,
+          "recallToneCompatibleCount": 4,
+          "recallToneFallbackCount": 38,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 13,
+          "ngramTonePatternHitCount": 62
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 11653
+    },
+    {
+      "id": "d009",
+      "scenario": "taxi",
+      "utterance_index": 8,
+      "durationSec": 3.982,
+      "expected_preview": "去望京SOHO，不走四环可以吗？那边现在堵不堵？",
+      "text_asr": "去往金色和不走私环可以吗?那边线再度不赌?",
+      "raw_asr_text": "去望金色和不走私环可以吗?那贬现在赌不赌?",
+      "text_changed": true,
+      "cer": 0.5238095238095238,
+      "exact_match": false,
+      "pipeline_ms": 6972,
+      "fw_detector_step_ms": 1223,
+      "fw_triggered": true,
+      "fw_applied_count": 3,
+      "span_count": 6,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 5.749470000000002,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 17,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 17,
+          "recallToneCompatibleCount": 8,
+          "recallToneFallbackCount": 28,
+          "toneExactHitCount": 2,
+          "plainFallbackHitCount": 9,
+          "ngramTonePatternHitCount": 33
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6976
+    },
+    {
+      "id": "d010",
+      "scenario": "hospital",
+      "utterance_index": 9,
+      "durationSec": 4.795,
+      "expected_preview": "医生您好，我这两天头痛，想开点药并做个血常规。",
+      "text_asr": "医生您好,我這兩甜头通向开店,要並做個些常规",
+      "raw_asr_text": "醫生您好,我這兩天頭痛想開點,要並做個些常規",
+      "text_changed": true,
+      "cer": 0.5,
+      "exact_match": false,
+      "pipeline_ms": 6523,
+      "fw_detector_step_ms": 1377,
+      "fw_triggered": true,
+      "fw_applied_count": 4,
+      "span_count": 4,
+      "sentence_rerank": {
+        "pickedIsRaw": false,
+        "maxDelta": 12.884783999999996,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 20,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 20,
+          "recallToneCompatibleCount": 3,
+          "recallToneFallbackCount": 42,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 15,
+          "ngramTonePatternHitCount": 62
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 6529
+    },
+    {
+      "id": "d011",
+      "scenario": "hospital",
+      "utterance_index": 10,
+      "durationSec": 4.934,
+      "expected_preview": "挂号处请问内科还有号吗？我胃不舒服，昨晚开始的。",
+      "text_asr": "挂号出请问 内客还有号码 我微不舒服昨晚开始的",
+      "raw_asr_text": "挂号出请问 内客还有号码 我微不舒服昨晚开始的",
+      "text_changed": false,
+      "cer": 0.19047619047619047,
+      "exact_match": false,
+      "pipeline_ms": 7083,
+      "fw_detector_step_ms": 1293,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 5,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": -3.370344000000003,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 19,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 19,
+          "recallToneCompatibleCount": 6,
+          "recallToneFallbackCount": 43,
+          "toneExactHitCount": 1,
+          "plainFallbackHitCount": 16,
+          "ngramTonePatternHitCount": 53
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 7090
+    },
+    {
+      "id": "d012",
+      "scenario": "hospital",
+      "utterance_index": 11,
+      "durationSec": 5.481,
+      "expected_preview": "这个检查报告什么时候能出？我过敏发痒，需要请假休息吗？",
+      "text_asr": "这个检查报告什么时候能出 我过敏 发痒需要请假休息吗?",
+      "raw_asr_text": "这个检查报告什么时候能出 我过敏 发痒需要请假休息吗?",
+      "text_changed": false,
+      "cer": 0,
+      "exact_match": true,
+      "pipeline_ms": 10286,
+      "fw_detector_step_ms": 1375,
+      "fw_triggered": true,
+      "fw_applied_count": 0,
+      "span_count": 10,
+      "sentence_rerank": {
+        "pickedIsRaw": true,
+        "maxDelta": 1.4182050000000004,
+        "combinationCount": 16
+      },
+      "tone": {
+        "asr_payload": {
+          "toneEnabled": true,
+          "sliceCount": 12,
+          "skippedReason": null,
+          "model_error": false
+        },
+        "recall": {
+          "toneEnabled": true,
+          "toneSliceCount": 20,
+          "recallToneCompatibleCount": 0,
+          "recallToneFallbackCount": 41,
+          "toneExactHitCount": 0,
+          "plainFallbackHitCount": 14,
+          "ngramTonePatternHitCount": 37
+        },
+        "assembly_guard_absent": true,
+        "effective_chain": true
+      },
+      "spanAssemblyV4_metrics": null,
+      "case_elapsed_ms": 10291
+    }
+  ]
+}

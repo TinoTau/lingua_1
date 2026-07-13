@@ -1,0 +1,46 @@
+{
+  "audit": "ToneModule P0 Runtime Acceptance (FW)",
+  "timestamp": "2026-06-29 12:53:18",
+  "fwPort": 6007,
+  "pipelineTrace": [
+    {
+      "step": 1,
+      "component": "FW Worker",
+      "file": "api_routes.py",
+      "fn": "process_utterance",
+      "note": "perform_asr → run_tone_inference (pre-dedup)"
+    },
+    {
+      "step": 2,
+      "component": "ToneModule",
+      "file": "tone_module/inference.py",
+      "fn": "run_tone_inference",
+      "note": "processed_audio + word timestamps"
+    },
+    {
+      "step": 3,
+      "component": "HTTP Response",
+      "file": "api_models.py",
+      "field": "UtteranceResponse.tone"
+    },
+    {
+      "step": 4,
+      "component": "Node ASR",
+      "file": "faster-whisper-asr-strategy.ts",
+      "field": "ASRResult.tone"
+    },
+    {
+      "step": 5,
+      "component": "Orchestrator",
+      "file": "fw-detector-orchestrator.ts",
+      "field": "ctx.asrResult?.tone"
+    },
+    {
+      "step": 6,
+      "component": "Rerank Pipeline",
+      "file": "fw-sentence-rerank-pipeline.ts",
+      "fn": "computeToneMatchScore → candidateScore"
+    }
+  ],
+  "fwHealth": true
+}

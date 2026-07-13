@@ -1,21 +1,97 @@
-P3：补充冻结
+《Development Plan》
+《Supplement Review》
 
-请根据以下 gap report：
+以上文档已经完成。
 
-- 冻结 integration contract
-- 补充历史决策
-- 明确 write authority
-- 明确 ctx ownership
-- 明确 translation ownership
-- 明确 fail-open/fail-close
-- 明确 selector boundary
-- 明确 Non-goals
+请结合：
 
-生成：
-- target list
-- check list
-- mandatory contract
-- forbidden paths
-- test contract
+- 已冻结架构（Architecture SSOT）
+- 历史审计结论
+- 历史开发方案
+- 历史冻结原则
+- 当前实际代码
+- Supplement Review
 
-输出完整 md 文档。
+重新分析本轮开发。
+
+重点不是重复开发方案，
+
+而是补充：
+
+当前文档中仍然缺失的：
+
+- 实现约束（Implementation Constraint）
+- 架构约束（Architecture Constraint）
+- 决策链路约束（Decision Constraint）
+- Responsibility Boundary
+- Interface Contract
+- Data Contract
+- Ownership Constraint
+- Diagnostics
+- Trace
+- Regression Requirement
+- Acceptance Requirement
+- Counterfactual Requirement
+- Architecture Compliance Requirement
+
+重点检查：
+
+- 是否仍存在实现歧义；
+- 是否仍存在历史设计没有写出来但实际已经形成的原则；
+- 是否仍存在容易再次发生架构漂移的位置；
+- 是否仍存在容易产生 Shadow Logic、Compatibility Logic、Hidden Gate、Bypass、Dead Feature 的位置；
+- 是否仍存在未来容易误开发的位置；
+- 是否仍存在文档已经说明但约束不足的位置；
+- 是否仍存在 Contract 不够严格的位置。
+
+禁止：
+
+- 新增冻结设计之外的新功能；
+- 改变冻结架构；
+- 改变核心决策链路；
+- 修改已批准开发方案。
+
+仅允许补充：
+
+- Constraint
+- Contract
+- Boundary
+- Regression
+- Acceptance
+- Diagnostics
+- Trace
+
+对于每一项补充必须说明：
+
+来源：
+
+- Historical Decision
+- Frozen Principle
+- Previous Audit
+- Previous Development
+- Current Code
+- Current Supplement
+
+并说明：
+
+必要性；
+
+影响范围；
+
+未来风险。
+
+最后输出：
+
+KEEP
+
+MODIFY
+
+RESTORE
+
+DELETE
+
+以及：
+
+《XXX_Constraint_Addendum.md》
+
+该文档作为本轮开发最终约束，与 Development Plan 共同组成唯一开发依据。

@@ -11,7 +11,8 @@ DEFAULT_MODEL_FILE = "qwen2.5-3b-instruct-q4_k_m.gguf"
 class Config:
     def __init__(self) -> None:
         self.host = os.environ.get("HOST", "127.0.0.1")
-        self.port = int(os.environ.get("PORT", "5018"))
+        # Never use generic PORT — avoids inheriting FW shell PORT=6007/6008.
+        self.port = int(os.environ.get("LEXICON_INTENT_PORT", "5018"))
         self.service_dir = os.path.dirname(os.path.abspath(__file__))
         self.n_ctx = int(os.environ.get("N_CTX", "2048"))
         self.n_gpu_layers = int(os.environ.get("N_GPU_LAYERS", "0"))

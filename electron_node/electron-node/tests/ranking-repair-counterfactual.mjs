@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
  * Counterfactual verification — isolated assembly modules (no lexicon runtime).
+ * Phase 1: Assembly Tone Guard removed; bucket priority via selectPerSpanCandidates only.
  */
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -9,14 +10,6 @@ import fs from 'fs';
 
 const require = createRequire(import.meta.url);
 const DIST = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../dist/main/electron-node/main/src');
-const { filterDomainCandidatesPerSpan } = require(path.join(
-  DIST,
-  'fw-detector/span-assembly-v4/filter-domain-candidates-per-span.js'
-));
-const { applyToneAssemblyGuard } = require(path.join(
-  DIST,
-  'fw-detector/span-assembly-v4/apply-tone-assembly-guard.js'
-));
 const { selectPerSpanCandidates } = require(path.join(
   DIST,
   'fw-detector/span-assembly-v4/assemble-domain-aware-span-sets.js'
@@ -48,41 +41,30 @@ function pick(word, graphSource, toneReason, score = 1, edPenalty = 0) {
   };
 }
 
-const vote = {
-  utteranceDomain: 'coffee',
-  insufficientEvidence: false,
-  domainScores: { coffee: 2 },
-  domainVoteMs: 0,
-  parentTermVoteCount: 0,
-};
-
 const coarseSpans = [{ id: 'c1', text: '烧病', rawStart: 2, rawEnd: 4, syllableStart: 2, syllableEnd: 4 }];
 
 function wordsFromPipeline(filteredSets) {
-  const { sets } = selectPerSpanCandidates(filteredSets, 1, coarseSpans, vote.utteranceDomain);
-  return sets[0]?.selectedCandidates.map((p) => p.word) ?? [];
+  const selected = selectPerSpanCandidates(filteredSets, 1, coarseSpans);
+  return selected[0]?.selectedCandidates.map((p) => p.word) ?? [];
 }
 
-// --- CF-A: Tone Guard + bucket priority (GATE-RANK-04) ---
-const rankedA = [
+const filteredA = [
   {
     coarseSpanId: 'c1',
     rawRange: [2, 4],
     syllableRange: [2, 4],
-    rankedCandidates: [
-      pick('烧饼', 'base_term', 'mismatch', 1.2),
-      pick('少冰', 'domain_term', 'match', 0.9),
-    ],
+    sameDomainCandidates: [pick('少冰', 'domain_term', 'match', 0.9)],
+    baseCandidates: [pick('烧饼', 'base_term', 'mismatch', 1.2)],
+    fallbackCandidates: [],
+    selectedCandidates: [],
   },
 ];
-const filteredA = filterDomainCandidatesPerSpan(rankedA, vote);
-const guardedA = applyToneAssemblyGuard(filteredA);
-const wordsFrozen = wordsFromPipeline(guardedA.filteredSets);
-const wordsGlobalScore = [...rankedA[0].rankedCandidates]
+
+const wordsFrozen = wordsFromPipeline(filteredA);
+const wordsGlobalScore = [pick('烧饼', 'base_term', 'mismatch', 1.2), pick('少冰', 'domain_term', 'match', 0.9)]
   .sort((a, b) => b.score - a.score)
   .map((p) => p.word);
 
-// --- CF-B: ED tie-breaker (GATE-RANK-03) ---
 const tieA = {
   candidateScore: 1.0,
   recallCandidateKind: 'exact_base',
@@ -102,13 +84,12 @@ const report = {
   counterfactuals: [
     {
       id: 'CF-01-frozen-pipeline',
-      feature: 'filter + toneGuard + select(sameDomain>base)',
+      feature: 'select(sameDomain>base) — no Assembly Tone Guard',
       input: 'coffee vote; 烧饼 base 1.2 mismatch; 少冰 domain 0.9 match',
       output_words: wordsFrozen,
-      tone_guard_blocked: guardedA.blockedCount,
       exists: true,
       effective: wordsFrozen.includes('少冰') && !wordsFrozen.includes('烧饼'),
-      decision_position: 'selectPerSpanCandidates after applyToneAssemblyGuard',
+      decision_position: 'selectPerSpanCandidates bucket priority',
       downstream: 'spanSets → KenLM pool',
     },
     {
@@ -118,7 +99,7 @@ const report = {
       output_words: wordsGlobalScore,
       degraded: wordsGlobalScore[0] === '烧饼' && wordsFrozen[0] === '少冰',
       explanation: '漂移行为：高分 base 烧饼覆盖 domain 少冰 — 即修复前 Contract Drift 根因',
-      effective_proof: '禁用桶+guard 后首选词从少冰退化为烧饼',
+      effective_proof: '禁用桶优先级后首选词从少冰退化为烧饼',
     },
     {
       id: 'CF-03-ed-tie-breaker',
@@ -131,7 +112,7 @@ const report = {
     },
     {
       id: 'CF-04-bucket-partition',
-      feature: 'filterDomainCandidatesPerSpan (GATE-RANK-01)',
+      feature: 'DomainFilteredSpanSet buckets (GATE-RANK-01)',
       sameDomain: filteredA[0]?.sameDomainCandidates.map((p) => p.word),
       base: filteredA[0]?.baseCandidates.map((p) => p.word),
       effective: filteredA[0]?.baseCandidates[0]?.word === '烧饼',
@@ -141,7 +122,6 @@ const report = {
     wordsFrozen.includes('少冰') &&
     !wordsFrozen.includes('烧饼') &&
     wordsGlobalScore[0] === '烧饼' &&
-    guardedA.blockedCount >= 1 &&
     edOrder < 0
       ? 'PASS — 反事实验证：绕过冻结链路出现可解释退化（烧饼优先）'
       : 'PARTIAL',

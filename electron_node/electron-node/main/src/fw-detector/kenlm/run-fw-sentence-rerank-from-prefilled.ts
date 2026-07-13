@@ -3,7 +3,6 @@
  */
 
 import type { KenLMScorer } from '../../asr-repair/kenlm-batch-types';
-import type { UtteranceAcousticTonePayload } from '../../task-router/types';
 import {
   buildSentenceCandidates,
   type CoarseSpanRange,
@@ -35,7 +34,6 @@ export type FwSentenceRerankFromPrefilledInput = {
     | 'candidateRequireRepairTarget'
   >;
   kenlmScorer: KenLMScorer | null;
-  tone?: UtteranceAcousticTonePayload | null;
 };
 
 export type FwSentenceRerankFromPrefilledResult = {

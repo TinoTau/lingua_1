@@ -17,6 +17,7 @@ from worker_watchdog import watchdog_loop
 from result_listener import result_listener_loop
 from config import MAX_WAIT_SECONDS
 from asr_worker_process import asr_worker_process
+from asr_readiness import build_readiness_snapshot
 
 logger = logging.getLogger(__name__)
 
@@ -74,6 +75,9 @@ class ASRWorkerManager:
         
         # 待处理的结果（job_id -> Future）
         self.pending_results: Dict[str, asyncio.Future] = {}
+
+        self.last_error: Optional[Dict[str, Any]] = None
+        self._recovery_lock = asyncio.Lock()
         
         # 结果监听任务
         self.result_listener_task: Optional[asyncio.Task] = None
@@ -201,20 +205,22 @@ class ASRWorkerManager:
             self._state = WorkerState.CRASHED
             raise
     
-    async def _stop_worker(self):
+    async def _stop_worker(self, *, discard_task_queue: bool = False):
         """停止 Worker 子进程"""
         if not self.worker_process:
             return
         
         logger.info("Stopping ASR Worker process...")
-        self._state = WorkerState.STOPPED
+        if not discard_task_queue:
+            self._state = WorkerState.STOPPED
         
-        # 发送退出信号
-        try:
-            if self.task_queue:
-                self.task_queue.put(None)  # None 表示退出信号
-        except Exception as e:
-            logger.warning(f"Failed to send shutdown signal to worker: {e}")
+        # 发送退出信号（recovery 丢弃队列时不写入，避免阻塞）
+        if not discard_task_queue:
+            try:
+                if self.task_queue:
+                    self.task_queue.put(None)  # None 表示退出信号
+            except Exception as e:
+                logger.warning(f"Failed to send shutdown signal to worker: {e}")
         
         # 等待进程退出（最多 5 秒）
         try:
@@ -232,6 +238,98 @@ class ASRWorkerManager:
         
         self.worker_process = None
         logger.info("ASR Worker process stopped")
+
+    def _record_last_error(self, reason: str, trace_id: str = "", **extra: Any) -> None:
+        self.last_error = {
+            "reason": reason,
+            "trace_id": trace_id,
+            "timestamp": time.time(),
+            **extra,
+        }
+
+    def _fail_pending_results(self, message: str) -> None:
+        for job_id, future in list(self.pending_results.items()):
+            if not future.done():
+                future.set_exception(RuntimeError(message))
+        self.pending_results.clear()
+
+    async def _recover_worker(self, reason: str, trace_id: str = "") -> None:
+        """Timeout / stuck recovery: kill worker, recreate task queue, restart worker."""
+        async with self._recovery_lock:
+            if self._state == WorkerState.RESTARTING:
+                return
+
+            self._record_last_error(reason, trace_id)
+            self._state = WorkerState.RESTARTING
+            logger.error(
+                "[%s] ASR worker recovery triggered: reason=%s queue_depth=%s pending=%s",
+                trace_id or "-",
+                reason,
+                self._read_queue_depth(),
+                len(self.pending_results),
+            )
+
+            self._fail_pending_results(f"Worker recovery: {reason}")
+
+            await self._stop_worker(discard_task_queue=True)
+
+            self.task_queue = mp.Queue(maxsize=self.queue_max)
+            self.stats["worker_restarts"] = self.stats.get("worker_restarts", 0) + 1
+
+            try:
+                await self._start_worker()
+                logger.info(
+                    "[%s] ASR worker recovery complete (restarts=%s queue_depth=%s)",
+                    trace_id or "-",
+                    self.stats["worker_restarts"],
+                    self._read_queue_depth(),
+                )
+            except Exception as e:
+                self._record_last_error("worker_restart_failed", trace_id, error=str(e))
+                self._state = WorkerState.CRASHED
+                logger.error("ASR worker recovery failed: %s", e, exc_info=True)
+                raise
+
+    async def wait_until_accepting(self, max_wait: float = 10.0) -> bool:
+        """Wait briefly while worker is restarting (serial batch friendly)."""
+        deadline = time.time() + max_wait
+        while time.time() < deadline:
+            if self._state == WorkerState.RUNNING and not self.is_queue_full():
+                return True
+            if self._state in (WorkerState.RESTARTING, WorkerState.STARTING):
+                await asyncio.sleep(0.2)
+                continue
+            break
+        return self._state == WorkerState.RUNNING and not self.is_queue_full()
+
+    def _read_queue_depth(self) -> int:
+        if not self.task_queue:
+            return 0
+        try:
+            return self.task_queue.qsize()
+        except Exception:
+            return 0
+
+    def _read_queue_full(self) -> bool:
+        if not self.task_queue:
+            return True
+        try:
+            return self.task_queue.full()
+        except Exception:
+            return True
+
+    def get_readiness(self) -> Dict[str, Any]:
+        queue_depth = self._read_queue_depth()
+        worker_alive = bool(self.worker_process and self.worker_process.is_alive())
+        return build_readiness_snapshot(
+            manager_running=self.is_running,
+            worker_state=self._state,
+            worker_process_alive=worker_alive,
+            queue_depth=queue_depth,
+            queue_max=self.queue_max,
+            queue_full_flag=self._read_queue_full(),
+            last_error=self.last_error,
+        )
     
     
     async def submit_task(
@@ -263,12 +361,16 @@ class ASRWorkerManager:
             asyncio.TimeoutError: 等待超时
             RuntimeError: Worker 进程不可用
         """
+        if self._state in (WorkerState.RESTARTING, WorkerState.STARTING):
+            if not await self.wait_until_accepting(max_wait=10.0):
+                raise RuntimeError("ASR Worker is restarting")
+
         # 检查 Worker 状态
         if self._state != WorkerState.RUNNING or not self.worker_process or not self.worker_process.is_alive():
             raise RuntimeError("ASR Worker process is not available")
         
         # 检查队列是否已满
-        if self.task_queue.full():
+        if self.is_queue_full():
             raise RuntimeError("ASR queue is full")
         
         # 生成 job_id
@@ -362,12 +464,19 @@ class ASRWorkerManager:
             return result
             
         except asyncio.TimeoutError:
-            # 超时：清理 Future
             self.pending_results.pop(job_id, None)
+            self.stats["failed_tasks"] = self.stats.get("failed_tasks", 0) + 1
             logger.warning(
                 f"[{trace_id}] ASR task timeout after {max_wait}s, "
-                f"queue_depth={self.task_queue.qsize()}"
+                f"queue_depth={self._read_queue_depth()}"
             )
+            try:
+                await self._recover_worker("task_timeout", trace_id)
+            except Exception as recovery_err:
+                logger.error(
+                    f"[{trace_id}] ASR worker recovery after timeout failed: {recovery_err}",
+                    exc_info=True,
+                )
             raise
         except Exception as e:
             # 其他异常：清理 Future
@@ -376,28 +485,24 @@ class ASRWorkerManager:
     
     def get_stats(self) -> Dict[str, Any]:
         """获取 Worker Manager 统计信息"""
-        queue_depth = 0
-        if self.task_queue:
-            try:
-                queue_depth = self.task_queue.qsize()
-            except Exception:
-                pass
+        queue_depth = self._read_queue_depth()
+        readiness = self.get_readiness()
         
         return {
             **self.stats,
             "queue_depth": queue_depth,
+            "queue_max": self.queue_max,
             "is_running": self.is_running,
             "worker_state": self._state.value,
             "worker_pid": self.worker_process.pid if (self.worker_process and self.worker_process.is_alive()) else None,
             "pending_results": len(self.pending_results),
+            "queue_full": readiness["queue_full"],
+            "utterance_ready": readiness["utterance_ready"],
+            "worker_accepting_tasks": readiness["worker_accepting_tasks"],
+            "last_error": self.last_error,
         }
     
     def is_queue_full(self) -> bool:
         """检查队列是否已满"""
-        if not self.task_queue:
-            return True
-        try:
-            return self.task_queue.full()
-        except Exception:
-            return True
+        return self._read_queue_full()
 

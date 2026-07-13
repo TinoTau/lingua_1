@@ -1,4 +1,4 @@
-"""ToneModule — batch inference on processed_audio + word timestamps."""
+"""ToneModule — P1 Full Runtime inference on processed_audio + FW WordInfo."""
 from __future__ import annotations
 
 import logging
@@ -9,12 +9,13 @@ import numpy as np
 
 from shared_types import SegmentInfo, WordInfo
 from tone_module.classifier import get_tone_classifier
-from tone_module.mel import extract_mel_features
+from tone_module.contract import P1_MIN_SLICE_SEC
+from tone_module.feature_v2 import extract_feature
 from tone_module.tone_types import AcousticToneSlice, TonePosterior, UtteranceAcousticTonePayload
 
 logger = logging.getLogger(__name__)
 
-MIN_SLICE_SEC = 0.02
+MIN_SLICE_SEC = P1_MIN_SLICE_SEC
 
 
 def _is_zh_language(language: Optional[str], src_lang: Optional[str]) -> bool:
@@ -30,13 +31,6 @@ def _iter_words(segments: Sequence[SegmentInfo]) -> Iterable[WordInfo]:
         for w in words:
             if w.word and w.start is not None and w.end is not None:
                 yield w
-
-
-def _slice_audio(audio: np.ndarray, sample_rate: int, start: float, end: float) -> np.ndarray:
-    s = max(0, int(start * sample_rate))
-    e = max(s + 1, int(end * sample_rate))
-    e = min(e, len(audio))
-    return audio[s:e]
 
 
 def _posterior_from_probs(probs: np.ndarray) -> TonePosterior:
@@ -60,6 +54,8 @@ def run_tone_inference(
     """
     Generate acousticToneSlices from processed_audio + FW word timestamps.
 
+    Feature contract: feature_v2.extract_feature(processed_audio, sample_rate, word_info).
+
     Returns (payload, tone_inference_ms).
     """
     started = time.perf_counter()
@@ -82,21 +78,24 @@ def run_tone_inference(
         ms = int((time.perf_counter() - started) * 1000)
         return UtteranceAcousticTonePayload(tone_enabled=False, skipped_reason="model_error"), ms
 
-    slices_audio: List[np.ndarray] = []
+    feature_rows: List[np.ndarray] = []
     valid_words: List[WordInfo] = []
     for w in words:
         dur = float(w.end) - float(w.start)
         if dur < MIN_SLICE_SEC:
             continue
-        slices_audio.append(_slice_audio(processed_audio, sample_rate, float(w.start), float(w.end)))
+        try:
+            feature_rows.append(extract_feature(processed_audio, sample_rate, w))
+        except ValueError:
+            continue
         valid_words.append(w)
 
-    if not slices_audio:
+    if not feature_rows:
         ms = int((time.perf_counter() - started) * 1000)
         return UtteranceAcousticTonePayload(tone_enabled=False, skipped_reason="no_timestamps"), ms
 
-    mel_batch = np.stack([extract_mel_features(s, sample_rate) for s in slices_audio], axis=0)
-    posteriors = classifier.predict_batch(mel_batch)
+    feature_batch = np.stack(feature_rows, axis=0)
+    posteriors = classifier.predict_batch(feature_batch)
 
     acoustic_slices: List[AcousticToneSlice] = []
     confidences: List[float] = []
@@ -123,7 +122,7 @@ def run_tone_inference(
         tone_confidence_avg=avg_conf,
     )
     logger.info(
-        "[%s] ToneModule Phase3: slices=%d inference_ms=%d avg_conf=%.3f",
+        "[%s] ToneModule P1: slices=%d inference_ms=%d avg_conf=%.3f",
         trace_id,
         len(acoustic_slices),
         ms,

@@ -526,17 +526,30 @@ describe('P1~P4 freeze simplification contract', () => {
   });
 
   it('GATE-RANK-01: filterDomainCandidatesPerSpan exists and buckets base_term', () => {
-    const filterSrc = readSrc('fw-detector/span-assembly-v4/filter-domain-candidates-per-span.ts');
+    const filterSrc = readSrc('fw-detector/span-assembly-v4/assemble-domain-aware-span-sets.ts');
     expect(filterSrc).toContain('export function filterDomainCandidatesPerSpan');
-    expect(filterSrc).toContain("return 'base'");
+    expect(filterSrc).toContain("candidate.graphSource === 'base_term'");
     expect(filterSrc).toContain('baseCandidates');
   });
 
   it('GATE-RANK-02: selectPerSpanCandidates prefers sameDomain bucket', () => {
     const assemblySrc = readSrc('fw-detector/span-assembly-v4/assemble-domain-aware-span-sets.ts');
-    expect(assemblySrc).toContain('pickTopKFromBuckets');
+    expect(assemblySrc).toContain('export function selectPerSpanCandidates');
+    expect(assemblySrc).toContain('stableSortPicks');
     expect(assemblySrc).toContain('sameDomainCandidates');
-    expect(assemblySrc).toContain("bucket: 'sameDomain'");
+    expect(assemblySrc).not.toContain('pickTopKFromBuckets');
+  });
+
+  it('GATE-RANK-04: Assembly Tone Guard must not exist on production path', () => {
+    expect(fs.existsSync(path.join(SRC_ROOT, 'fw-detector/span-assembly-v4/apply-tone-assembly-guard.ts'))).toBe(
+      false
+    );
+    const orchSrc = readSrc('fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts');
+    const assemblySrc = readSrc('fw-detector/span-assembly-v4/assemble-domain-aware-span-sets.ts');
+    expect(orchSrc).not.toContain('applyToneAssemblyGuard');
+    expect(assemblySrc).not.toContain('applyToneAssemblyGuard');
+    const typesSrc = readSrc('fw-detector/types.ts');
+    expect(typesSrc).not.toContain('toneGuardBlockedCount');
   });
 
   it('GATE-RANK-03: computeCandidateScore excludes editDistancePenalty', () => {
@@ -605,5 +618,61 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(fwCfg).toContain('spanAssemblyV4Enabled === false');
     expect(fwCfg).toContain('throw new Error');
     expect(fwCfg).not.toContain('spanAssemblyV4Enabled=false is deprecated');
+  });
+
+  it('TONE-PRE-V2-1: no dead tonePayload on span-assembly-v4 orchestrator', () => {
+    const orchSrc = readSrc('fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts');
+    const v4Path = readSrc('fw-detector/fw-detector-v4-path.ts');
+    expect(orchSrc).not.toContain('tonePayload');
+    expect(v4Path).not.toContain('tonePayload');
+  });
+
+  it('TONE-PRE-V2-2: KenLM prefilled rerank does not accept acoustic tone param', () => {
+    const rerankSrc = readSrc('fw-detector/kenlm/run-fw-sentence-rerank-from-prefilled.ts');
+    const v4Path = readSrc('fw-detector/fw-detector-v4-path.ts');
+    expect(rerankSrc).not.toMatch(/\btone\s*\??\s*:/);
+    expect(rerankSrc).not.toContain('UtteranceAcousticTonePayload');
+    expect(v4Path).not.toMatch(/tone:\s*ctx\.asrResult/);
+  });
+
+  it('TONE-PRE-V2-3: Exists vs Effective — acousticToneSlices wired to Recall', () => {
+    const asrStep = readSrc('pipeline/steps/asr-step.ts');
+    const v4Path = readSrc('fw-detector/fw-detector-v4-path.ts');
+    const recall = readSrc('fw-detector/span-assembly-v4/recall-topk-for-windows.ts');
+    expect(asrStep).toContain('ctx.acousticToneSlices');
+    expect(asrStep).toContain('normalizeAcousticSlices');
+    expect(v4Path).toContain('acousticSlices: ctx.acousticToneSlices');
+    expect(recall).toContain('extractAcousticTonePatternForRecall');
+    expect(recall).toContain('computeToneScoreResult');
+  });
+
+  it('TONE-PRE-V2-4: no historical drift script paths in electron-node src', () => {
+    const driftMarkers = [
+      'scripts/tone-v2',
+      'tone_module/v2',
+      'gateway-scheduler-benchmark',
+      'node-runtime-benchmark-contract',
+      'offline-manifest',
+    ];
+    const walk = (dir: string): string[] => {
+      const out: string[] = [];
+      for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+        const full = path.join(dir, ent.name);
+        if (ent.isDirectory() && ent.name !== 'node_modules' && ent.name !== 'dist') {
+          out.push(...walk(full));
+        } else if (ent.isFile() && (ent.name.endsWith('.ts') || ent.name.endsWith('.mjs'))) {
+          out.push(full);
+        }
+      }
+      return out;
+    };
+    for (const file of walk(SRC_ROOT)) {
+      const rel = path.relative(SRC_ROOT, file).replace(/\\/g, '/');
+      if (rel.includes('tests/experiments') || rel.endsWith('freeze-contract.test.ts')) continue;
+      const content = fs.readFileSync(file, 'utf8');
+      for (const marker of driftMarkers) {
+        expect(content).not.toContain(marker);
+      }
+    }
   });
 });

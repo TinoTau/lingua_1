@@ -1,4 +1,4 @@
-"""ToneModule P0 — FW Worker acoustic tone inference."""
+"""ToneModule P1 Full Runtime — FW Worker acoustic tone inference."""
 
 __all__ = ["run_tone_inference"]
 

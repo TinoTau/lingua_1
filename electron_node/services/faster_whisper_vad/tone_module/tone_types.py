@@ -58,7 +58,3 @@ class UtteranceAcousticTonePayload:
         if self.skipped_reason is not None:
             out["skippedReason"] = self.skipped_reason
         return out
-
-
-# Backward-compatible alias for internal imports during migration
-UtteranceTonePayload = UtteranceAcousticTonePayload

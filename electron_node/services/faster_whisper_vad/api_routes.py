@@ -6,7 +6,7 @@ import logging
 import os
 import time
 from fastapi import HTTPException
-from typing import Optional
+from typing import Dict, Optional
 
 from config import PORT, ASR_DEVICE, ASR_COMPUTE_TYPE, ASR_MODEL_PATH
 from vad import vad_state
@@ -35,6 +35,7 @@ from text_processing import (
 from text_filter import is_meaningless_transcript
 from context import get_text_context
 from tone_module.inference import run_tone_inference
+from tone_module.classifier import get_tone_classifier
 from api_models import UtteranceAcousticTonePayloadModel, AcousticToneSliceModel, TonePosteriorModel
 
 logger = logging.getLogger(__name__)
@@ -74,6 +75,7 @@ async def health_check():
     """健康检查端点，包含ASR Worker状态与运行设备（便于确认是否使用 GPU）"""
     manager = get_asr_worker_manager()
     stats = manager.get_stats()
+    readiness = manager.get_readiness()
     return {
         "status": "ok",
         "device": ASR_DEVICE,
@@ -92,7 +94,8 @@ async def health_check():
             "worker_restarts": stats["worker_restarts"],
             "avg_wait_ms": round(stats["avg_wait_ms"], 2),
             "pending_results": stats["pending_results"],
-        }
+        },
+        "readiness": readiness,
     }
 
 
@@ -242,23 +245,30 @@ async def process_utterance(req: UtteranceRequest) -> UtteranceResponse:
         manager = get_asr_worker_manager()
         
         asr_started = time.time()
-        full_text, detected_language, language_probabilities, segments_info, duration_sec = await perform_asr(
-            processed_audio=processed_audio,
-            sample_rate=sr,
-            asr_language=asr_language,
-            task=req.task,
-            beam_size=req.beam_size,
-            text_context=text_context if text_context else None,
-            condition_on_previous_text=req.condition_on_previous_text,
-            trace_id=trace_id,
-            manager=manager,
-            best_of=req.best_of,
-            temperature=req.temperature,
-            patience=req.patience,
-            compression_ratio_threshold=req.compression_ratio_threshold,
-            log_prob_threshold=req.log_prob_threshold,
-            no_speech_threshold=req.no_speech_threshold,
-        )
+        try:
+            full_text, detected_language, language_probabilities, segments_info, duration_sec = await perform_asr(
+                processed_audio=processed_audio,
+                sample_rate=sr,
+                asr_language=asr_language,
+                task=req.task,
+                beam_size=req.beam_size,
+                text_context=text_context if text_context else None,
+                condition_on_previous_text=req.condition_on_previous_text,
+                trace_id=trace_id,
+                manager=manager,
+                best_of=req.best_of,
+                temperature=req.temperature,
+                patience=req.patience,
+                compression_ratio_threshold=req.compression_ratio_threshold,
+                log_prob_threshold=req.log_prob_threshold,
+                no_speech_threshold=req.no_speech_threshold,
+            )
+        except HTTPException as asr_exc:
+            logger.warning(
+                f"[{trace_id}] ASR stage failed toneReached=false "
+                f"status={asr_exc.status_code} detail={asr_exc.detail}"
+            )
+            raise
         asr_latency_ms = int((time.time() - asr_started) * 1000)
         p0_diagnostics = {
             **(pre_diag or {}),
@@ -269,7 +279,7 @@ async def process_utterance(req: UtteranceRequest) -> UtteranceResponse:
             },
         }
 
-        # P0 ToneModule: infer BEFORE dedup (word timestamps align with processed_audio)
+        # P1 ToneModule: infer BEFORE dedup (word timestamps align with processed_audio)
         tone_payload, tone_inference_ms = run_tone_inference(
             processed_audio=processed_audio,
             sample_rate=sr,
@@ -278,13 +288,18 @@ async def process_utterance(req: UtteranceRequest) -> UtteranceResponse:
             src_lang=req.src_lang,
             trace_id=trace_id,
         )
-        p0_diagnostics["toneModule"] = {
+        tone_classifier = get_tone_classifier()
+        tone_module_diag: Dict[str, object] = {
             "tone_inference_ms": tone_inference_ms,
             "toneSliceCount": tone_payload.slice_count,
             "toneEnabled": tone_payload.tone_enabled,
             "toneConfidenceAvg": tone_payload.tone_confidence_avg,
             "skippedReason": tone_payload.skipped_reason,
         }
+        if tone_classifier.load_error:
+            tone_module_diag["loadError"] = tone_classifier.load_error
+        tone_module_diag.update(tone_classifier.metadata_as_diagnostics())
+        p0_diagnostics["toneModule"] = tone_module_diag
 
         # 计算检测到的语言的概率
         language_probability = None

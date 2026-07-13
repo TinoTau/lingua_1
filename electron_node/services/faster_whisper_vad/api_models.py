@@ -39,10 +39,6 @@ class UtteranceAcousticTonePayloadModel(BaseModel):
     skippedReason: Optional[str] = None
 
 
-# Backward-compatible alias for route imports during migration
-UtteranceTonePayloadModel = UtteranceAcousticTonePayloadModel
-
-
 class UtteranceRequest(BaseModel):
     """
     Utterance 任务请求

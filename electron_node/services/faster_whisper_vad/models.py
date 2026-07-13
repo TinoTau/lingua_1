@@ -86,6 +86,14 @@ def find_cudnn_path():
     cuda_path = os.getenv("CUDA_PATH")
     if not cuda_path:
         return None
+
+    # Test-only: P10 E2E may prefer CUDA bin cudnn 9 (newer) over CUDNN/v9.6/bin/12.6.
+    if os.getenv("TONE_P10_PREFER_CUDA_BIN_CUDNN") == "1":
+        cuda_bin = os.path.join(cuda_path, "bin")
+        for dll_name in ("cudnn_graph64_9.dll", "cudnn_ops64_9.dll", "cudnn64_9.dll"):
+            if os.path.exists(os.path.join(cuda_bin, dll_name)):
+                logger.info(f"P10 test: prefer CUDA bin cuDNN: {cuda_bin} ({dll_name})")
+                return cuda_bin
     
     # 优先检查 cuDNN 9.x（用于 CUDA 12.x），然后检查其他版本
     # 注意：cudnn_graph64_9.dll 是 ONNX Runtime CUDA 最需要的
@@ -154,58 +162,67 @@ try:
                 os.environ["PATH"] = new_path
                 logger.info(f"Added cuDNN path to PATH: {cudnn_path}")
         
-        # 尝试使用 CUDA 加载 VAD 模型
-        # GPU 模式下只使用 CUDAExecutionProvider，不允许回退到 CPU
-        try:
-            logger.info("Attempting to load VAD model with CUDA support (GPU mode required, no CPU fallback)...")
+        # P10 E2E test-only: allow Silero VAD on CPU when cuDNN/CUDA EP is broken locally.
+        if os.getenv("TONE_P10_VAD_CPU") == "1":
+            logger.warning("P10 test: loading Silero VAD on CPUExecutionProvider (TONE_P10_VAD_CPU=1)")
             vad_session = ort.InferenceSession(
                 VAD_MODEL_PATH,
-                providers=['CUDAExecutionProvider']  # 只使用 CUDA，不允许回退到 CPU
+                providers=["CPUExecutionProvider"],
             )
-            # 验证实际使用的 provider（应该是 CUDA）
-            actual_provider = vad_session.get_providers()[0]
-            if actual_provider == 'CUDAExecutionProvider':
-                logger.info("✅ Silero VAD model loaded with CUDA support")
-            else:
-                # GPU 模式要求使用 GPU，如果实际使用的是其他 provider，则失败
-                logger.error(f"❌ GPU mode required but VAD model using {actual_provider}. Service will exit.")
-                raise RuntimeError(f"GPU mode required but VAD model loaded with {actual_provider}")
-        except RuntimeError as e:
-            # 检查是否是内存不足导致的错误
-            error_msg = str(e)
-            if '1455' in error_msg or '页面文件' in error_msg or 'page file' in error_msg.lower():
-                logger.error("❌ Failed to load CUDA provider due to insufficient virtual memory (Error 1455)")
-                logger.error("This is a system-level issue. Please:")
-                logger.error("1. Increase Windows page file size")
-                logger.error("2. Close other applications to free up memory")
-                logger.error("3. Restart your computer")
-                logger.error("4. Consider stopping other services (like NMT) if they are using too much memory")
-                raise RuntimeError(
-                    f"Failed to load CUDA provider due to insufficient virtual memory (Error 1455). "
-                    f"Please increase Windows page file size or free up system memory. "
-                    f"Original error: {e}"
-                ) from e
-            # 重新抛出其他 RuntimeError
-            raise
-        except Exception as e:
-            error_str = str(e).lower()
-            # 检查是否是内存不足导致的错误
-            if '1455' in error_str or '页面文件' in error_str or 'page file' in error_str:
-                logger.error("❌ Failed to load CUDA provider due to insufficient virtual memory (Error 1455)")
-                logger.error("This is a system-level issue. Please:")
-                logger.error("1. Increase Windows page file size")
-                logger.error("2. Close other applications to free up memory")
-                logger.error("3. Restart your computer")
-                logger.error("4. Consider stopping other services (like NMT) if they are using too much memory")
-                raise RuntimeError(
-                    f"Failed to load CUDA provider due to insufficient virtual memory (Error 1455). "
-                    f"Please increase Windows page file size or free up system memory. "
-                    f"Original error: {e}"
-                ) from e
-            logger.error(f"❌ Failed to load VAD model on GPU: {e}")
-            logger.error("GPU mode is required but VAD model loading failed. Service will exit.")
-            logger.error("Please ensure CUDA and cuDNN are properly installed and accessible.")
-            raise RuntimeError(f"GPU mode required but VAD model loading failed: {e}") from e
+            logger.info("✅ Silero VAD model loaded on CPU (P10 test mode)")
+        else:
+            # 尝试使用 CUDA 加载 VAD 模型
+            # GPU 模式下只使用 CUDAExecutionProvider，不允许回退到 CPU
+            try:
+                logger.info("Attempting to load VAD model with CUDA support (GPU mode required, no CPU fallback)...")
+                vad_session = ort.InferenceSession(
+                    VAD_MODEL_PATH,
+                    providers=['CUDAExecutionProvider']  # 只使用 CUDA，不允许回退到 CPU
+                )
+                # 验证实际使用的 provider（应该是 CUDA）
+                actual_provider = vad_session.get_providers()[0]
+                if actual_provider == 'CUDAExecutionProvider':
+                    logger.info("✅ Silero VAD model loaded with CUDA support")
+                else:
+                    # GPU 模式要求使用 GPU，如果实际使用的是其他 provider，则失败
+                    logger.error(f"❌ GPU mode required but VAD model using {actual_provider}. Service will exit.")
+                    raise RuntimeError(f"GPU mode required but VAD model loaded with {actual_provider}")
+            except RuntimeError as e:
+                # 检查是否是内存不足导致的错误
+                error_msg = str(e)
+                if '1455' in error_msg or '页面文件' in error_msg or 'page file' in error_msg.lower():
+                    logger.error("❌ Failed to load CUDA provider due to insufficient virtual memory (Error 1455)")
+                    logger.error("This is a system-level issue. Please:")
+                    logger.error("1. Increase Windows page file size")
+                    logger.error("2. Close other applications to free up memory")
+                    logger.error("3. Restart your computer")
+                    logger.error("4. Consider stopping other services (like NMT) if they are using too much memory")
+                    raise RuntimeError(
+                        f"Failed to load CUDA provider due to insufficient virtual memory (Error 1455). "
+                        f"Please increase Windows page file size or free up system memory. "
+                        f"Original error: {e}"
+                    ) from e
+                # 重新抛出其他 RuntimeError
+                raise
+            except Exception as e:
+                error_str = str(e).lower()
+                # 检查是否是内存不足导致的错误
+                if '1455' in error_str or '页面文件' in error_str or 'page file' in error_str:
+                    logger.error("❌ Failed to load CUDA provider due to insufficient virtual memory (Error 1455)")
+                    logger.error("This is a system-level issue. Please:")
+                    logger.error("1. Increase Windows page file size")
+                    logger.error("2. Close other applications to free up memory")
+                    logger.error("3. Restart your computer")
+                    logger.error("4. Consider stopping other services (like NMT) if they are using too much memory")
+                    raise RuntimeError(
+                        f"Failed to load CUDA provider due to insufficient virtual memory (Error 1455). "
+                        f"Please increase Windows page file size or free up system memory. "
+                        f"Original error: {e}"
+                    ) from e
+                logger.error(f"❌ Failed to load VAD model on GPU: {e}")
+                logger.error("GPU mode is required but VAD model loading failed. Service will exit.")
+                logger.error("Please ensure CUDA and cuDNN are properly installed and accessible.")
+                raise RuntimeError(f"GPU mode required but VAD model loading failed: {e}") from e
     else:
         # CPU模式不允许：如果ASR_DEVICE不是cuda，说明配置错误
         error_msg = (

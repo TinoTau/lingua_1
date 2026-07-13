@@ -184,7 +184,6 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
         imeConfig,
         dict,
         asrSegments: ctx.asrSegments,
-        tonePayload: ctx.asrResult?.tone,
         acousticSlices: ctx.acousticToneSlices,
         asrSegmentNodeBatchIndices: ctx.asrSegmentNodeBatchIndices,
         segmentTimeOffsetsSec: ctx.segmentTimeOffsetsSec,
@@ -205,7 +204,6 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
           candidateRequireRepairTarget: config.candidateRequireRepairTarget,
         },
         kenlmScorer,
-        tone: ctx.asrResult?.tone,
       });
       return { assembly: assemblyResult, decision: rerankDecision };
     })
@@ -281,11 +279,9 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
     pipelinePath: 'v4',
     configSnapshot,
     summary,
-    runtime: mergeContextPriorIntoRuntimeDiag(
-      runtimeDiagBase,
-      profile.primaryDomain,
-      assembly.contextPriorStats
-    ),
+    runtime: mergeContextPriorIntoRuntimeDiag(runtimeDiagBase, profile.primaryDomain, {
+      applied: false,
+    }),
     replacements: decision.replacements,
     spans: decision.spans,
     spanAssemblyV4: {

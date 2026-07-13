@@ -28,7 +28,7 @@ assemblySelected=少冰  ≠  fw_applied>0  ≠  finalText含少冰
 
 ### Assembly（`spanAssemblyV4`）
 
-`domainCandidateCount` · `baseCandidateCount` · `sameDomainCandidateCount` · `toneGuardBlockedCount` · `mainDomainAwareSpanSetsTotal` · `assemblySelectionTraces` · `toneGuardBlockTraces` · Context Prior min/max multiplier
+`domainCandidateCount` · `baseCandidateCount` · `sameDomainCandidateCount` · `mainDomainAwareSpanSetsTotal` · `assemblySelectionTraces` · Context Prior min/max multiplier
 
 ### KenLM（`sentenceRerank`）
 
@@ -56,7 +56,7 @@ assemblySelected=少冰  ≠  fw_applied>0  ≠  finalText含少冰
 
 | 症状 | 先看 | 再看 |
 |------|------|------|
-| 烧饼在 final | `toneGuardBlockedCount` | Ranking 回归 |
+| 烧饼在 final | Recall `toneReason` / `tonePenalty` | Ranking 分数排序 |
 | Assembly 少冰无写回 | `maxDelta` vs 3.0 | `pickedIsRaw` |
 | fw_applied=0 全批 | `combinationCount` | ASR 表面 |
 
@@ -125,7 +125,6 @@ runWithRecallV2Diagnostics
   "spanAssemblyV4": {
     "domainCandidateCount": 6,
     "baseCandidateCount": 12,
-    "toneGuardBlockedCount": 1,
     "mainDomainAwareSpanSetsTotal": 4,
     "toneExactHitCount": 5,
     "plainFallbackHitCount": 2
@@ -162,4 +161,22 @@ runWithRecallV2Diagnostics
 
 ---
 
-*Diagnostics FROZEN V1.0.2 · FW Detector 子模块*
+## 9. HTTP `diagnostics.toneModule`（Tone V2 Phase 1 冻结）
+
+**挂载点：** FW `/utterance` response `diagnostics.toneModule` — **仅观测**，不进 Recall/Ranking Decision。
+
+| 字段 | 语义 |
+|------|------|
+| `backend` · `modelVersion` · `featureVersion` · `modelHash` · `formatVersion` | Loader metadata |
+| `loadError` | Load 失败原因（`ready=false` 时） |
+| `metadataWarning` | 如 `featureVersion_missing` · `featureVersion_legacy_*` |
+| `tone_inference_ms` · `toneSliceCount` | 性能 / 切片计数 |
+| `toneEnabled` · `skippedReason` · `toneConfidenceAvg` | Utterance 级 tone 状态 |
+
+**SSOT：** [../../tone-v2/TONE_V2_CONTRACT_FREEZE.md](../../tone-v2/TONE_V2_CONTRACT_FREEZE.md) §4–§5
+
+**禁止：** 用 `diagnostics.toneModule` 驱动 pick · 恢复 `toneGuardBlockedCount`
+
+---
+
+*Diagnostics FROZEN V1.0.2 · FW Detector 子模块 · Tone V2 Phase 1 同步 2026-06-29*

@@ -152,6 +152,7 @@ VAD_ADAPTIVE_ENABLED = True
 # ---------------------
 # Service Configuration
 # ---------------------
+# SSOT: FASTER_WHISPER_VAD_PORT only (default 6007). Do not use generic PORT.
 PORT = int(os.getenv("FASTER_WHISPER_VAD_PORT", "6007"))
 
 # Audio length limits (to prevent GPU memory overflow and stack buffer overrun)
@@ -189,10 +190,10 @@ logger.info(f"ASR Parameters: beam_size={BEAM_SIZE}, temperature={TEMPERATURE}, 
             f"no_speech_threshold={NO_SPEECH_THRESHOLD}")
 
 # ---------------------
-# ToneModule P0
+# ToneModule P1 Full Runtime (P10 Direct Replacement)
 # ---------------------
 _DEFAULT_TONE_MODEL = os.path.join(
-    os.path.dirname(__file__), "tone_module", "models", "tone_cnn_p0.npz"
+    os.path.dirname(__file__), "tone_module", "models", "tone_cnn_p1_v1_full.npz"
 )
 TONE_MODEL_PATH = os.getenv("TONE_MODEL_PATH", "").strip() or (
     _DEFAULT_TONE_MODEL if os.path.isfile(_DEFAULT_TONE_MODEL) else None

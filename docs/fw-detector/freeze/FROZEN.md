@@ -15,7 +15,7 @@ Framework Frozen · Lexicon Continues
 | 子合约 | 版本 |
 |--------|------|
 | Tone-First Recall | V1.0.1 |
-| Ranking / Assembly | **V1.2**（rank→filter→toneGuard→select） |
+| Ranking / Assembly | **V1.2**（rank→filter→select；Tone Effective 在 Recall） |
 | Diagnostics / Trace | V1.0.2 |
 | KenLM Runtime | Batch-Only V1.0.0 |
 | Raw Log Delta / Apply Gate | V1.0.0 · Gate **3.0** |
@@ -30,9 +30,11 @@ Framework Frozen · Lexicon Continues
 
 ```text
 FW Top1 → Fine Span → Pinyin Recall → Tone First → Candidate Ranking
-→ Domain Vote → Domain Filter → Tone Guard → Select → Assembly
+→ Domain Vote → Domain Filter → Select → Assembly
 → KenLM → Apply Gate (≥3.0) → Writeback → Final Text
 ```
+
+**Tone V2 Phase 1（2026-06-29 关闭）：** Tone Decision **仅** Recall/Ranking；无 Assembly Tone Guard。SSOT：[../../tone-v2/TONE_V2_CONTRACT_FREEZE.md](../../tone-v2/TONE_V2_CONTRACT_FREEZE.md)
 
 **已移除：** V3 assembly · legacy ASR repair 主链 · serial KenLM · normalized delta Gate (0.03) · Recall domainBoost 主分 · Beam→KenLM/Apply
 
@@ -47,7 +49,8 @@ FW Top1 → Fine Span → Pinyin Recall → Tone First → Candidate Ranking
 | Tone | timestamp-only · score penalty · 非 hard drop | [recall/TONE_FIRST_RECALL_FROZEN_V1_0_1.md](../recall/TONE_FIRST_RECALL_FROZEN_V1_0_1.md) |
 | Recall | Tone-First · TopK · **domainBoost=0** | [recall/DOMAIN_RECALL.md](../recall/DOMAIN_RECALL.md) |
 | Ranking | ED 仅 tie-break · 全路径一套评分 | [assembly/RANKING_V1_2.md](../assembly/RANKING_V1_2.md) |
-| Assembly | rank→filter→toneGuard→select | [assembly/FROZEN_V1_2.md](../assembly/FROZEN_V1_2.md) |
+| Assembly | rank→filter→select | [assembly/FROZEN_V1_2.md](../assembly/FROZEN_V1_2.md) |
+| Tone V2 Runtime | FW→Recall hop · Loader · fail-closed | [../../tone-v2/TONE_V2_CONTRACT_FREEZE.md](../../tone-v2/TONE_V2_CONTRACT_FREEZE.md) |
 | Domain | RuntimeDomainRegistry · RS-03A | [DOMAIN_SOURCE_UNIFICATION.md](../DOMAIN_SOURCE_UNIFICATION.md) |
 | KenLM Runtime | batch-only subprocess | [kenlm/KENLM_RUNTIME.md](../kenlm/KENLM_RUNTIME.md) |
 | KenLM Score / Apply | rawDelta pick · Gate 3.0 | [kenlm/SCORE_CONTRACT.md](../kenlm/SCORE_CONTRACT.md) |
@@ -66,7 +69,7 @@ FW Top1 → Fine Span → Pinyin Recall → Tone First → Candidate Ranking
 | Recall | TopK · pinyin/tone SQL | 域硬约束 · 句级 apply |
 | Ranking | 主分 · ED tie-break | domain boost |
 | Domain Vote | utterance domain | per-span 选词 |
-| Filter / Tone Guard / Select | 分桶 · block · 桶优先级 | 句级写回 |
+| Filter / Select | 分桶 · 桶优先级 | 句级写回 · **Tone Decision** |
 | Assembly | spanSets · 句组合 | Apply 裁决 |
 | KenLM | fluent score · rawDelta | 域分桶 |
 | Apply Gate | pick iff Δ≥3.0 | per-span 独立写回 |
@@ -75,7 +78,7 @@ FW Top1 → Fine Span → Pinyin Recall → Tone First → Candidate Ranking
 | 决策 | 唯一 Owner |
 |------|------------|
 | per-span 桶归属 | Domain Filter |
-| 烧饼是否进 select | Tone Guard + Select |
+| Tone penalty / `toneReason` | **Recall**（非 Assembly） |
 | 句级是否替换 | **Apply Gate** |
 | final text | **Writeback** |
 
@@ -98,7 +101,7 @@ FW Top1 → Fine Span → Pinyin Recall → Tone First → Candidate Ranking
 |------|------|
 | GATE-1 | batch-only KenLM |
 | GATE-2 | raw delta pick |
-| GATE-RANK-01~04 | 分桶 · select · ED · Tone Guard |
+| GATE-RANK-01~04 | 分桶 · select · ED · **无** Assembly Tone Guard |
 
 语义 manifest：`tests/fw-ranking-semantics-frozen.json` · `node tests/run-fw-ranking-semantics-test.mjs`
 
