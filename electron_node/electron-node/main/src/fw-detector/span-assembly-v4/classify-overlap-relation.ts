@@ -8,15 +8,19 @@ export function syllableAdjacent(a: WindowCandidate, b: WindowCandidate): boolea
   return a.syllableEnd === b.syllableStart || b.syllableEnd === a.syllableStart;
 }
 
-function rawOverlap(a: WindowCandidate, b: WindowCandidate): boolean {
-  return a.rawStart < b.rawEnd && b.rawStart < a.rawEnd;
+export function rawOverlap(aStart: number, aEnd: number, bStart: number, bEnd: number): boolean {
+  return aStart < bEnd && bStart < aEnd;
+}
+
+function candidateRawOverlap(a: WindowCandidate, b: WindowCandidate): boolean {
+  return rawOverlap(a.rawStart, a.rawEnd, b.rawStart, b.rawEnd);
 }
 
 function overlapReplacementSlices(
   a: WindowCandidate,
   b: WindowCandidate
 ): { sliceA: string; sliceB: string } | null {
-  if (!rawOverlap(a, b)) {
+  if (!candidateRawOverlap(a, b)) {
     return null;
   }
   const overlapStart = Math.max(a.rawStart, b.rawStart);
@@ -132,7 +136,7 @@ export function classifyOverlapRelation(
   }
 
   const hasSyllableOverlap = syllableOverlap(a, b);
-  const hasRawOverlap = rawOverlap(a, b);
+  const hasRawOverlap = candidateRawOverlap(a, b);
 
   if (!hasSyllableOverlap && !hasRawOverlap) {
     return 'COMPATIBLE';

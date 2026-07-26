@@ -1,6 +1,7 @@
 import type { JobAssignMessage } from '@shared/protocols/messages';
 import type { JobContext } from '../pipeline/context/job-context';
 import type { KenlmGateMode } from './types';
+import { sanitizeDomainPriors } from './domain-context-contract';
 
 export type FwDetectorJobOverrides = {
   enableKenLMGate?: boolean;
@@ -39,7 +40,14 @@ export function buildFwDetectorJobPayload(options: {
   return Object.keys(payload).length > 0 ? payload : undefined;
 }
 
+/** Bind soft priors from JobAssign.domainPriors — never into enabledDomains. */
+export function applyDomainPriorsFromJob(job: JobAssignMessage, ctx: JobContext): void {
+  const raw = (job as JobAssignMessage & { domainPriors?: unknown }).domainPriors;
+  ctx.domainPriors = sanitizeDomainPriors(raw);
+}
+
 export function applyFwDetectorJobOverrides(job: JobAssignMessage, ctx: JobContext): void {
+  applyDomainPriorsFromJob(job, ctx);
   const o = readFwDetectorJobOverrides(job);
   if (!o) {
     return;

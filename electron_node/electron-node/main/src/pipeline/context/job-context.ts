@@ -95,6 +95,8 @@ export interface JobContext {
   activeProfilePrimary?: string;
   profileVersion?: string;
   domainBoostApplied?: number;
+  /** Soft session domain priors from Web (never written into enabledDomains). */
+  domainPriors?: import('../../fw-detector/domain-context-contract').DomainPrior[];
   /** FW detector override: restrict enabledDomains for this job */
   fwDetectorEnabledDomainsOverride?: string[];
   /** FW detector override: disable/enable KenLM gate for this job */

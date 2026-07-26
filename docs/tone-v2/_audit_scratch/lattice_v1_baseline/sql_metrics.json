@@ -1,0 +1,45 @@
+{
+  "physicalSqlPerCase": {
+    "min": 28,
+    "p50": 79,
+    "p90": 125,
+    "p95": 148,
+    "p99": 180,
+    "max": 180,
+    "mean": 87.15,
+    "n": 200
+  },
+  "totalPhysicalSql": 17430,
+  "recallRequestPerCase": {
+    "min": 8,
+    "p50": 25,
+    "p90": 41,
+    "p95": 49,
+    "p99": 58,
+    "max": 58,
+    "mean": 27.755,
+    "n": 200
+  },
+  "utteranceCacheHitPerCase": {
+    "min": 0,
+    "p50": 0,
+    "p90": 0,
+    "p95": 1,
+    "p99": 2,
+    "max": 2,
+    "mean": 0.11,
+    "n": 200
+  },
+  "utteranceCacheMissPerCase": {
+    "min": 8,
+    "p50": 25,
+    "p90": 41,
+    "p95": 48,
+    "p99": 57,
+    "max": 57,
+    "mean": 27.645,
+    "n": 200
+  },
+  "parentNgramSqlDeltaTotal": 5517,
+  "note": "lookupTermDomainTagsInScope increments tierSqlQueries but has no dedicated counter; parentNgramSqlDelta is parent ngram SQL only. Dedicated parent-tag call count = NOT AVAILABLE without production instrumentation (forbidden in Phase 0.5)."
+}

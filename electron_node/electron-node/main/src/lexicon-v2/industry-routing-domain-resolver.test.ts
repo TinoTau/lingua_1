@@ -15,6 +15,7 @@ function makeIntent(partial: Partial<LexiconSessionIntent>): LexiconSessionInten
     effectiveFromTurn: 0,
     source: 'cpu_llm',
     reason: [],
+    topicShift: false,
     ...partial,
   };
 }

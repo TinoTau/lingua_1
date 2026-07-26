@@ -1,0 +1,7 @@
+﻿# Phase 0.5 baseline seal commands (2026-07-26)
+cd electron_node/electron-node
+npm run build:main
+$env:ELECTRON_RUN_AS_NODE=1
+.\node_modules\electron\dist\electron.exe ..\..\docs\tone-v2\_audit_scratch\lattice_v1_baseline\seal-baseline-probe.mjs
+
+# Expected artifacts under docs/tone-v2/_audit_scratch/lattice_v1_baseline/

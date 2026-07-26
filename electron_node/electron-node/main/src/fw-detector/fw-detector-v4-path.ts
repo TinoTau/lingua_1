@@ -75,12 +75,13 @@ export type RunFwDetectorV4PathInput = {
   configSnapshot: Record<string, unknown>;
   runtimeDiagBase: FwDetectorRuntimeDiag;
   profile: import('../session-runtime/types').ActiveLexiconProfileSnapshot;
-  enabledDomains: string[];
+  /** Unique Recall domain SSOT (CFG-01 resolved). */
+  recallDomainScope: string[];
   enableKenLMGate: boolean;
 };
 
 export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Promise<FwDetectorResult> {
-  const { ctx, rawText, config, configSnapshot, runtimeDiagBase, profile, enabledDomains, enableKenLMGate } =
+  const { ctx, rawText, config, configSnapshot, runtimeDiagBase, profile, recallDomainScope, enableKenLMGate } =
     input;
   const fwStartMs = Date.now();
   const runtime = getLexiconRuntimeV2();
@@ -118,15 +119,8 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
         coverageCount: 0,
         conflictRelationCount: 0,
         compatibleCount: 0,
-        parentEvidenceCount: 0,
-        exactEdgeCount: 0,
-        candidateEdgeCount: 0,
-        overlapMergeCount: 0,
-        residualSpanCount: 0,
         utteranceDomain: 'general',
         domainVoteMs: 0,
-        coarsePathAssemblyMs: 0,
-        sentenceBeamMs: 0,
         assemblyMs: 0,
         inSpanWindowCount: 0,
         boundaryWindowCount: 0,
@@ -137,7 +131,7 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
         selectedCandidatesPerSpanAvg: 0,
         domainAssemblyMs: 0,
         mainDomainAwareSpanSetsTotal: 0,
-        shadowBeamSpanSetsTotal: 0,
+        retainedBucketCount: 0,
         intervalAssemblyCandidateCount: 0,
         intervalRejectedOverlapCount: 0,
         boundaryImport: {
@@ -179,7 +173,7 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
         rawText,
         runtime,
         profile,
-        enabledDomains,
+        recallDomainScope,
         minPrior: config.minPrior,
         imeConfig,
         dict,
@@ -189,6 +183,7 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
         segmentTimeOffsetsSec: ctx.segmentTimeOffsetsSec,
         segmentCharOffsets: ctx.segmentCharOffsets,
         traceCaseId: ctx.fwDetectorTraceCaseId,
+        domainPriors: ctx.domainPriors ?? [],
       });
       if (!assemblyResult.fwSpans.length) {
         return { assembly: assemblyResult, decision: null };
@@ -204,6 +199,7 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
           candidateRequireRepairTarget: config.candidateRequireRepairTarget,
         },
         kenlmScorer,
+        prefilledCombinations: assemblyResult.kenlmSentenceCandidates?.combinations ?? [],
       });
       return { assembly: assemblyResult, decision: rerankDecision };
     })
@@ -272,6 +268,31 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
         })
       : undefined;
 
+  const kenlmPool = assembly.kenlmSentenceCandidates;
+  const candidateCapProbe =
+    diagnosticsConfig.enabled && kenlmPool
+      ? {
+          perBucketAfterLocalCap: (kenlmPool.perBucketGenerated ?? []).map((list) =>
+            list.map((c) => c.text)
+          ),
+          mergedAfterDedupBeforeCap: (kenlmPool.mergedBeforeCap ?? []).map((c) => c.text),
+          finalAfterCap16: (kenlmPool.combinations ?? []).map((c) => c.text),
+          dedupReplacedCount: kenlmPool.dedupReplacedCount ?? 0,
+          maxSentenceCandidates: config.maxSentenceCandidates,
+        }
+      : undefined;
+
+  const voteLifecycleProbe = diagnosticsConfig.enabled
+    ? {
+        domainScores: { ...(assembly.metrics.domainScores ?? {}) },
+        retainedDomains: [...(assembly.metrics.retainedDomains ?? [])],
+        retentionRatio: 0.75,
+        insufficientEvidence: assembly.metrics.insufficientEvidence === true,
+        activeCandidates: assembly.diagActiveCandidates ?? [],
+        bucketDomains: [...(assembly.metrics.retainedDomains ?? [])],
+      }
+    : undefined;
+
   const result: FwDetectorResult = {
     enabled: true,
     triggered: summary.spanCount > 0,
@@ -292,6 +313,8 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
       tone: assembly.tone,
       traceLevel: diagnosticsConfig.level,
       ...(assembly.trace ?? {}),
+      ...(candidateCapProbe ? { candidateCapProbe } : {}),
+      ...(voteLifecycleProbe ? { voteLifecycleProbe } : {}),
     },
     kenlmVetoMs,
     kenlmVetoQueryCount,

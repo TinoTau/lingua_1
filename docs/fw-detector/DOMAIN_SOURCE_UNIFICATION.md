@@ -1,15 +1,24 @@
 # Domain Source Unification（DSU）
 
-**Status:** Frozen · **2026-06-23**  
-**代码：** `lexicon-v2/runtime-domain-registry.ts` · `resolve-recall-enabled-fine-domains.ts` · `fw-detector/span-assembly-shared/domain-rerank.ts`
+**Status:** Frozen · **2026-07-20** (role converged)  
+**Runtime Domain Presence Vote:** **ACCEPTED AND FROZEN** (authority: [`Runtime_SSOT_Contract_Freeze.md`](../tone-v2/Runtime_SSOT_Contract_Freeze.md); acceptance: [`Runtime_Domain_Presence_Vote_Final_Acceptance_Report.md`](../tone-v2/Runtime_Domain_Presence_Vote_Final_Acceptance_Report.md))  
+**代码：** `lexicon-v2/runtime-domain-registry.ts` · `resolve-recall-enabled-fine-domains.ts`
 
-统一 Runtime 域可用性、层级映射、Recall scope、LLM 选域准入与 ReRank 关系判定之单一来源；消除 runtime 对 `profile-registry.json` 作为 domain 决策第二 SSOT 的依赖。
+```text
+This document does not define Runtime Domain Vote,
+retainedDomains, Assembly or KenLM decisions.
+Those contracts are owned by Runtime_SSOT_Contract_Freeze.md.
+```
 
-**冲突优先级：** 本文 **>** `DOMAIN_RECALL.md` · `LEXICON_RUNTIME_V2.md` · `CONFIG.md` · `ARCHITECTURE.md` 中 Domain SSOT 相关章节。
+**Sole Runtime Authority:** [`Runtime_SSOT_Contract_Freeze.md`](../tone-v2/Runtime_SSOT_Contract_Freeze.md)  
+**Lexicon fact SSOT:** [`Lexicon_Domain_Contract_Freeze_V1.md`](../tone-v2/Lexicon_Domain_Contract_Freeze_V1.md)  
+**Index:** [`RUNTIME_DOMAIN_DOCUMENT_INDEX.md`](../tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md)
+
+本文件只定义：domain 数据来源、Registry、Recall scope，以及 Hotword / WindowCandidate 的 domains[] 来源边界。
 
 ---
 
-## Runtime SSOT
+## 1. Domain 数据来源
 
 | 层 | SSOT | 说明 |
 |----|------|------|
@@ -20,11 +29,21 @@
 ```text
 profile-registry.json  →  build-time only
 domain_hierarchy       →  runtime 只读（缺失/空 → fail-fast）
+term_domain_tags       →  runtime domain fact 唯一来源
 ```
 
 ---
 
-## RuntimeDomainRegistry API
+## 2. term_domain_tags 职责
+
+- 词条细域标签事实表。
+- Registry `availableFineDomains` 由此派生。
+- Lexicon 合同细节见 Lexicon Domain Contract Freeze V1。
+- Runtime Vote / Assembly **不**在本文件定义。
+
+---
+
+## 3. availableDomains Registry
 
 | API / 字段 | 语义 |
 |------------|------|
@@ -39,55 +58,65 @@ domain_hierarchy       →  runtime 只读（缺失/空 → fail-fast）
 
 ---
 
-## Recall（RS-03A）
+## 4. Hotword.domains[] 来源
 
-**Owner：** `resolve-recall-enabled-fine-domains.ts`
+- Hotword 携带来自 `term_domain_tags` 的完整细域列表。
+- 禁止用 `domainId` / `domains[0]` 作决策投影（决策归属 Runtime SSOT）。
+
+---
+
+## 5. WindowCandidate.domains[] 传播
+
+- Recall 将 Hotword.domains[] **完整**复制到 WindowCandidate.domains[]。
+- CandidateScore 不得改写 domains[]。
+- 传播细节见 [DOMAIN_RECALL.md](./recall/DOMAIN_RECALL.md)。
+
+---
+
+## 6. 粗域与细域事实边界
+
+| 名称 | 角色 |
+|------|------|
+| fine domains | Runtime Vote / Assembly membership 使用的领域标签 |
+| coarse domains | LLM / hierarchy 辅助；不替代 fine presence vote |
+| `enabledDomains` | 原始配置输入（可为空） |
+| `recallDomainScope` | CFG-01 + Registry 解析后的唯一 Recall SQL scope |
 
 ```text
-policy (fw-config.enabledDomains / job override)
-  → expandPolicyToFineDomains
-  → ∩ availableFineDomains
-  → Recall Domain Scope
+configuredEnabledDomains (fw-config / job override)
+  → resolveRecallScope
+  → recallDomainScope
+  → recallTopKForWindows({ domainIds: recallDomainScope })
 ```
 
 | 规则 | 说明 |
 |------|------|
-| CFG-01 | `enabledDomains` 默认 `[]` → 全量 available（`recallScopeSource=available`） |
-| 非空 policy | `recallScopeSource=policy` |
-| 禁止 | `profile-registry.json` 作为 recall scope owner |
+| CFG-01 | `enabledDomains` 默认 `[]` → **打开**全量 `availableFineDomains` |
+| 非空 policy | `recallScopeSource=policy`；经 Registry expand ∩ available |
+| 空 `recallDomainScope` | **fail-fast**；禁止静默 Base-only |
+| 禁止 | orchestrator 再解释原始 `enabledDomains`；`profile-registry.json` 作 recall scope owner |
 
 ---
 
-## LLM（PAR-01）
+## 7. LLM（PAR-01）准入
 
 **coarse only** — `primaryDomain` / `secondaryDomains` 须为 `llmAllowedDomains` 中的粗域。
 
-- 细域（`coffee` · `milk_tea` · `tourism_hotel` 等）**不得**作为 `primaryDomain` 输出 → `schema_invalid`
-- Prompt：`services/lexicon_intent_cpu/prompt_templates.py` · `PROMPT_PACK_VERSION=v2`
+细域不得作为 `primaryDomain` 输出 → `schema_invalid`。
 
 ---
 
-## Vote
+## 8. Runtime Vote / Assembly / KenLM
 
-证据来源 **不变**：`candidate.domainTags` · `candidate.domainWeights`（来自 Lexicon）。
+引用 Sole Runtime Authority：
 
-Recall 仅约束 SQL 可见候选池；**不**改变 Vote 公式。`isFineDomainEligibleForWinning` 数据源为 Registry。
+[`Runtime_SSOT_Contract_Freeze.md`](../tone-v2/Runtime_SSOT_Contract_Freeze.md)
 
----
-
-## ReRank
-
-`classifyDomainRerankRelation` / parent-sibling 判定读 Registry `fineToCoarseMap`。
-
-**禁止** `domain-rerank.ts` import `profile-registry` 作关系 SSOT。
-
-Context Prior 见 [CONTEXT_PRIOR.md](./CONTEXT_PRIOR.md)（Depends On DSU）。
+本文件 **不**定义：Fine-Span Presence Vote、domainScores、retainedDomains、Multi-Bucket Assembly、cross-bucket dedup、KenLM pick。
 
 ---
 
-## Runtime Diagnostics
-
-Job extra / `FwDetectorRuntimeDiag` 域字段（仅观测）：
+## 9. Runtime Diagnostics（观测）
 
 | 字段 | 语义 |
 |------|------|
@@ -103,43 +132,32 @@ Job extra / `FwDetectorRuntimeDiag` 域字段（仅观测）：
 
 ---
 
-## Superseded（运维文档章节）
+## 10. Superseded（本文件内旧职责）
 
-| 源文档 | 被取代主题 |
-|--------|------------|
-| `DOMAIN_RECALL.md` §1 | 静态粗→细表 · registry enabled recall |
-| `LEXICON_RUNTIME_V2.md` §2–3 | profile 过滤 recall · domain_lexicon 主轨 |
-| `CONFIG.md` §2 | `enabledDomains`「profile 驱动」语义 |
-| `ARCHITECTURE.md` §3 | profile/session 为 domain mapping 主源 |
+以下主题 **不再**由本文件定义（已删除或迁出）：
 
-**仍有效：** `DOMAIN_RECALL.md` §4 Vote · §5 ReRank 系数 · §6–§11 性能/Patch。
+| 主题 | 状态 |
+|------|------|
+| `domain-rerank.ts` / `classifyDomainRerankRelation` | REMOVED / SUPERSEDED |
+| Domain Rerank 公式 | REMOVED |
+| `candidate.domainTags` 旧字段合同 | SUPERSEDED → `domains[]` |
+| `domainWeights` Vote 决策 | SUPERSEDED |
+| `isFineDomainEligibleForWinning` 生产决策 | SUPERSEDED |
+| 旧 VoteMass / winner 逻辑 | SUPERSEDED → Runtime SSOT |
+| Assembly / KenLM 规则 | Owned by Runtime SSOT + KENLM_RUNTIME |
+
+Context Prior 边界见 [CONTEXT_PRIOR.md](./CONTEXT_PRIOR.md)（`applied:false`，diagnostics-only）。
 
 ---
 
-## Validation
+## 11. Validation
 
 ```powershell
 cd electron_node/electron-node
-npx jest --testPathPattern="runtime-domain-registry|resolve-recall-enabled|lexicon-profile-decision-parser|domain-rerank|freeze-contract"
+npx jest --testPathPattern="runtime-domain-registry|resolve-recall-enabled|freeze-contract"
 npm run lexicon:gate:v3-runtime
 ```
 
-| Gate | 内容 |
-|------|------|
-| GATE-DSU-1 ~ 5 | `freeze-contract.test.ts` |
-
 ---
 
-## Known Technical Debt
-
-| ID | 摘要 |
-|----|------|
-| TD-01 | `domain-boost-calculator.ts` legacy，V4 recall 已断开 |
-| TD-02 | legacy routing `isValidLLMDomain` 非 V4 主链 |
-| TD-03 | `assertRegistryDomain` on profile apply |
-| TD-04 | `loadLexiconProfileRegistry` unused import |
-| TD-05 | `domain_aliases` 未统一 |
-
----
-
-*DSU Frozen 2026-06-23*
+*DSU role converged 2026-07-20 · Registry / source only*

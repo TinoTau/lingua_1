@@ -1,0 +1,499 @@
+[
+  {
+    "caseId": "d009",
+    "rawText": "去望京SOHO，不走四环可以吗？那边现在堵不堵？",
+    "rawTextLength": 24,
+    "syllableCount": 21,
+    "hasCjk": true,
+    "syllables": [
+      "qu",
+      "wang",
+      "jing",
+      "s",
+      "o",
+      "h",
+      "o",
+      "bu",
+      "zou",
+      "si",
+      "huan",
+      "ke",
+      "yi",
+      "ma",
+      "na",
+      "bian",
+      "xian",
+      "zai",
+      "du",
+      "bu",
+      "du"
+    ],
+    "failCursor": 18,
+    "syllableAtFailCursor": "du",
+    "coveringRangesAtCursor": [],
+    "ranges": [
+      {
+        "charStart": 0,
+        "charEnd": 3,
+        "syllableStart": 0,
+        "syllableEnd": 3
+      },
+      {
+        "charStart": 8,
+        "charEnd": 15,
+        "syllableStart": 3,
+        "syllableEnd": 10
+      },
+      {
+        "charStart": 16,
+        "charEnd": 23,
+        "syllableStart": 10,
+        "syllableEnd": 17
+      }
+    ],
+    "coarseSpans": [
+      {
+        "id": "c0",
+        "text": "去望京",
+        "syl": [
+          0,
+          3
+        ],
+        "raw": [
+          0,
+          3
+        ],
+        "source": "punctuation_fallback"
+      },
+      {
+        "id": "c1",
+        "text": "不走四环可以吗",
+        "syl": [
+          3,
+          10
+        ],
+        "raw": [
+          8,
+          15
+        ],
+        "source": "punctuation_fallback"
+      },
+      {
+        "id": "c2",
+        "text": "那边现在堵不堵",
+        "syl": [
+          10,
+          17
+        ],
+        "raw": [
+          16,
+          23
+        ],
+        "source": "punctuation_fallback"
+      }
+    ],
+    "coverageCheck": {
+      "uncoveredSyllableIndices": [
+        17,
+        18,
+        19,
+        20
+      ],
+      "allCovered": false
+    },
+    "sohoCharMapping": [
+      {
+        "char": {
+          "i": 3,
+          "ch": "S",
+          "code": "53"
+        },
+        "range": null
+      },
+      {
+        "char": {
+          "i": 4,
+          "ch": "O",
+          "code": "4f"
+        },
+        "range": null
+      },
+      {
+        "char": {
+          "i": 5,
+          "ch": "H",
+          "code": "48"
+        },
+        "range": null
+      },
+      {
+        "char": {
+          "i": 6,
+          "ch": "O",
+          "code": "4f"
+        },
+        "range": null
+      }
+    ],
+    "whyBuildWindowAt": [
+      {
+        "len": 1,
+        "reason": "no_coarse_span_ids",
+        "spanIds": []
+      },
+      {
+        "len": 2,
+        "reason": "no_coarse_span_ids",
+        "spanIds": []
+      },
+      {
+        "len": 3,
+        "reason": "no_coarse_span_ids",
+        "spanIds": []
+      },
+      {
+        "len": 4,
+        "reason": "beyond_syllable_count"
+      },
+      {
+        "len": 5,
+        "reason": "beyond_syllable_count"
+      }
+    ],
+    "optionsAtFailCursor": [],
+    "ltrError": "[LTR_FINE_SPAN] unable to build fallback option at cursor=18",
+    "formalCount": null
+  },
+  {
+    "caseId": "d099",
+    "rawText": "去望京SOHO，不走机场高速可以吗？那边现在堵不堵？",
+    "rawTextLength": 26,
+    "syllableCount": 23,
+    "hasCjk": true,
+    "syllables": [
+      "qu",
+      "wang",
+      "jing",
+      "s",
+      "o",
+      "h",
+      "o",
+      "bu",
+      "zou",
+      "ji",
+      "chang",
+      "gao",
+      "su",
+      "ke",
+      "yi",
+      "ma",
+      "na",
+      "bian",
+      "xian",
+      "zai",
+      "du",
+      "bu",
+      "du"
+    ],
+    "failCursor": 20,
+    "syllableAtFailCursor": "du",
+    "coveringRangesAtCursor": [],
+    "ranges": [
+      {
+        "charStart": 0,
+        "charEnd": 3,
+        "syllableStart": 0,
+        "syllableEnd": 3
+      },
+      {
+        "charStart": 8,
+        "charEnd": 17,
+        "syllableStart": 3,
+        "syllableEnd": 12
+      },
+      {
+        "charStart": 18,
+        "charEnd": 25,
+        "syllableStart": 12,
+        "syllableEnd": 19
+      }
+    ],
+    "coarseSpans": [
+      {
+        "id": "c0",
+        "text": "去望京",
+        "syl": [
+          0,
+          3
+        ],
+        "raw": [
+          0,
+          3
+        ],
+        "source": "punctuation_fallback"
+      },
+      {
+        "id": "c1",
+        "text": "不走机场高速可以吗",
+        "syl": [
+          3,
+          12
+        ],
+        "raw": [
+          8,
+          17
+        ],
+        "source": "punctuation_fallback"
+      },
+      {
+        "id": "c2",
+        "text": "那边现在堵不堵",
+        "syl": [
+          12,
+          19
+        ],
+        "raw": [
+          18,
+          25
+        ],
+        "source": "punctuation_fallback"
+      }
+    ],
+    "coverageCheck": {
+      "uncoveredSyllableIndices": [
+        19,
+        20,
+        21,
+        22
+      ],
+      "allCovered": false
+    },
+    "sohoCharMapping": [
+      {
+        "char": {
+          "i": 3,
+          "ch": "S",
+          "code": "53"
+        },
+        "range": null
+      },
+      {
+        "char": {
+          "i": 4,
+          "ch": "O",
+          "code": "4f"
+        },
+        "range": null
+      },
+      {
+        "char": {
+          "i": 5,
+          "ch": "H",
+          "code": "48"
+        },
+        "range": null
+      },
+      {
+        "char": {
+          "i": 6,
+          "ch": "O",
+          "code": "4f"
+        },
+        "range": null
+      }
+    ],
+    "whyBuildWindowAt": [
+      {
+        "len": 1,
+        "reason": "no_coarse_span_ids",
+        "spanIds": []
+      },
+      {
+        "len": 2,
+        "reason": "no_coarse_span_ids",
+        "spanIds": []
+      },
+      {
+        "len": 3,
+        "reason": "no_coarse_span_ids",
+        "spanIds": []
+      },
+      {
+        "len": 4,
+        "reason": "beyond_syllable_count"
+      },
+      {
+        "len": 5,
+        "reason": "beyond_syllable_count"
+      }
+    ],
+    "optionsAtFailCursor": [],
+    "ltrError": "[LTR_FINE_SPAN] unable to build fallback option at cursor=20",
+    "formalCount": null
+  },
+  {
+    "caseId": "d189",
+    "rawText": "去望京SOHO，不走四环可以吗？那边现在堵不堵？",
+    "rawTextLength": 24,
+    "syllableCount": 21,
+    "hasCjk": true,
+    "syllables": [
+      "qu",
+      "wang",
+      "jing",
+      "s",
+      "o",
+      "h",
+      "o",
+      "bu",
+      "zou",
+      "si",
+      "huan",
+      "ke",
+      "yi",
+      "ma",
+      "na",
+      "bian",
+      "xian",
+      "zai",
+      "du",
+      "bu",
+      "du"
+    ],
+    "failCursor": 18,
+    "syllableAtFailCursor": "du",
+    "coveringRangesAtCursor": [],
+    "ranges": [
+      {
+        "charStart": 0,
+        "charEnd": 3,
+        "syllableStart": 0,
+        "syllableEnd": 3
+      },
+      {
+        "charStart": 8,
+        "charEnd": 15,
+        "syllableStart": 3,
+        "syllableEnd": 10
+      },
+      {
+        "charStart": 16,
+        "charEnd": 23,
+        "syllableStart": 10,
+        "syllableEnd": 17
+      }
+    ],
+    "coarseSpans": [
+      {
+        "id": "c0",
+        "text": "去望京",
+        "syl": [
+          0,
+          3
+        ],
+        "raw": [
+          0,
+          3
+        ],
+        "source": "punctuation_fallback"
+      },
+      {
+        "id": "c1",
+        "text": "不走四环可以吗",
+        "syl": [
+          3,
+          10
+        ],
+        "raw": [
+          8,
+          15
+        ],
+        "source": "punctuation_fallback"
+      },
+      {
+        "id": "c2",
+        "text": "那边现在堵不堵",
+        "syl": [
+          10,
+          17
+        ],
+        "raw": [
+          16,
+          23
+        ],
+        "source": "punctuation_fallback"
+      }
+    ],
+    "coverageCheck": {
+      "uncoveredSyllableIndices": [
+        17,
+        18,
+        19,
+        20
+      ],
+      "allCovered": false
+    },
+    "sohoCharMapping": [
+      {
+        "char": {
+          "i": 3,
+          "ch": "S",
+          "code": "53"
+        },
+        "range": null
+      },
+      {
+        "char": {
+          "i": 4,
+          "ch": "O",
+          "code": "4f"
+        },
+        "range": null
+      },
+      {
+        "char": {
+          "i": 5,
+          "ch": "H",
+          "code": "48"
+        },
+        "range": null
+      },
+      {
+        "char": {
+          "i": 6,
+          "ch": "O",
+          "code": "4f"
+        },
+        "range": null
+      }
+    ],
+    "whyBuildWindowAt": [
+      {
+        "len": 1,
+        "reason": "no_coarse_span_ids",
+        "spanIds": []
+      },
+      {
+        "len": 2,
+        "reason": "no_coarse_span_ids",
+        "spanIds": []
+      },
+      {
+        "len": 3,
+        "reason": "no_coarse_span_ids",
+        "spanIds": []
+      },
+      {
+        "len": 4,
+        "reason": "beyond_syllable_count"
+      },
+      {
+        "len": 5,
+        "reason": "beyond_syllable_count"
+      }
+    ],
+    "optionsAtFailCursor": [],
+    "ltrError": "[LTR_FINE_SPAN] unable to build fallback option at cursor=18",
+    "formalCount": null
+  }
+]

@@ -10,8 +10,7 @@ import { syllableRangeToRawCharRange } from '../pinyin-ime-v2/pinyin-ime-v2-boun
 import { decodeRawTextTopK } from '../pinyin-ime-v2/pinyin-ime-v2-decoder';
 import { normalizePinyinImeV2Spans } from '../pinyin-ime-v2/pinyin-ime-v2-span-normalizer';
 import {
-  buildCharSyllableRanges,
-  textToPinyinStream,
+  buildUtteranceSyllableCoordinate,
   type CharSyllableRange,
 } from '../pinyin-ime-v2/pinyin-ime-v2-pinyin-stream';
 import { runPinyinImeV2SpanProposal } from '../pinyin-ime-v2/run-pinyin-ime-v2-span-proposal';
@@ -446,7 +445,8 @@ export function buildCoarseSpansFromRawImeBoundary(
   input: BuildCoarseSpansFromRawImeBoundaryInput
 ): BuildCoarseSpansFromRawImeBoundaryResult {
   const rawText = (input.rawText ?? '').trim();
-  const { syllables, hasCjk } = textToPinyinStream(rawText);
+  const coordinate = buildUtteranceSyllableCoordinate(rawText);
+  const { syllables, hasCjk } = coordinate;
   const totalSyllables = syllables.length;
 
   const baseDiagnostics: CoarseBoundaryImportDiagnostics = {
@@ -468,7 +468,7 @@ export function buildCoarseSpansFromRawImeBoundary(
     return { coarseSpans: [], diagnostics: { ...baseDiagnostics, fallbackReason: 'no_cjk' } };
   }
 
-  const charRanges = buildCharSyllableRanges(rawText);
+  const charRanges = coordinate.ranges.map((r) => ({ ...r }));
   const rawBoundaries = extractRawCoarseBoundaries(rawText);
   baseDiagnostics.rawBoundaryCount = rawBoundaries.length;
 

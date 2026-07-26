@@ -15,7 +15,7 @@ export type HotwordEntry = {
   pinyin: string[];
   priorScore: number;
   frequency: number;
-  domain?: string;
+  /** Lexicon fact: fine domains from term_domain_tags (empty = Base). */
   domains?: string[];
   aliases?: string[];
   /** P1.2c: allows span to participate as FW replacement candidate (default false). */

@@ -84,6 +84,9 @@ export function parseLexiconProfileDecision(
       ? obj.shouldSwitch
       : primary !== ctx.currentPrimary;
 
+  // Prefer explicit topicShift; default false — never silent-equate shouldSwitch (Supplement §4.3.1).
+  const topicShift = obj.topicShift === true;
+
   const reason = asStringArray(obj.reason);
   const effectiveFromTurn =
     asNumber(obj.effectiveFromTurn) ?? ctx.finalizedTurnCount + 1;
@@ -95,6 +98,7 @@ export function parseLexiconProfileDecision(
     secondaryDomains: secondary.slice(0, 2),
     confidence,
     shouldSwitch,
+    topicShift,
     reason,
     effectiveFromTurn,
     topicKeywords,

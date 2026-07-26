@@ -87,13 +87,12 @@ export function computeEditDistancePenalty(windowText: string, word: string): nu
 }
 
 export function hotwordDomains(entry: HotwordEntry): string[] {
-  if (entry.domains?.length) {
-    return entry.domains;
+  if (!entry.domains?.length) {
+    return [];
   }
-  if (entry.domain) {
-    return [entry.domain];
-  }
-  return ['general'];
+  return [...new Set(entry.domains.filter((d) => d.trim().length > 0 && d !== 'general'))].sort(
+    (a, b) => a.localeCompare(b)
+  );
 }
 
 export function computeCandidateScoreBreakdown(input: CandidateScoreInput): CandidateScoreBreakdown {

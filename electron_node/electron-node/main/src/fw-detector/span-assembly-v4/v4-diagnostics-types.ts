@@ -123,49 +123,6 @@ export type EmittedEdgeTrace = {
   repairTarget: boolean;
 };
 
-export type ParentSpanCandidateTrace = {
-  candidateText: string;
-  score: number;
-  coarseSpanId: string;
-  parentTermId?: string;
-};
-
-export type GraphEdgeTrace = {
-  edgeId: string;
-  replacement: string;
-  coarseSpanId?: string;
-  rawStart: number;
-  rawEnd: number;
-  syllableStart: number;
-  syllableEnd: number;
-  score: number;
-  repairTarget: boolean;
-  hitKind: string;
-  isResidual: boolean;
-  mergedFrom?: string[];
-};
-
-export type CoarsePathTrace = {
-  coarseSpanId: string;
-  pathRank: number;
-  pathScore: number;
-  edges: GraphEdgeTrace[];
-  replacementText: string;
-};
-
-export type BeamSpanSetTrace = {
-  spanIndex: number;
-  coarseSpanId: string;
-  picks: Array<{
-    replacement: string;
-    rawStart: number;
-    rawEnd: number;
-    anchorSpanId?: string;
-    repairTarget: boolean;
-    score: number;
-  }>;
-};
-
 export type SentenceCandidateTrace = {
   sentence: string;
   replacements: string[];
@@ -214,13 +171,7 @@ export type SpanAssemblyV4TraceDiagnostics = {
   poolBeforeDrop?: CandidatePoolTrace[];
   poolAfterDrop?: CandidatePoolTrace[];
   compatibilityEdges?: CompatibilityEdgeTrace[];
-  emittedParentEvidence?: EmittedEdgeTrace[];
   emittedEdges?: EmittedEdgeTrace[];
-  emittedParentSpanCandidates?: ParentSpanCandidateTrace[];
-  graphEdgesAfterMerge?: GraphEdgeTrace[];
-  coarsePaths?: CoarsePathTrace[];
-  beamSpanSets?: BeamSpanSetTrace[];
-  shadowBeamSpanSets?: BeamSpanSetTrace[];
   sentenceCandidates?: SentenceCandidateTrace[];
   candidateLifecycle?: CandidateLifecycle[];
 };

@@ -3,6 +3,8 @@ import type { CoarseSpan } from '../span-assembly-shared/types';
 import {
   assembleDomainAwareSpanSets,
   buildFineSpanCandidatePool,
+  buildFineSpanCandidatePoolFromCoarseSpansForTests,
+  coarseSpansAsFormalFineSpansForTests,
   filterDomainCandidatesPerSpan,
   runDomainAwareAssembly,
   selectPerSpanCandidates,
@@ -47,12 +49,12 @@ function makeCandidate(
   };
 }
 
-describe('assemble-domain-aware-span-sets', () => {
+describe('assemble-domain-aware-span-sets (presence vote + multi-bucket)', () => {
   const rawText = '我要中杯';
   const coarseSpans = [makeCoarseSpan('c0', '我要', 0), makeCoarseSpan('c1', '中杯', 2)];
 
-  it('buildFineSpanCandidatePool groups by anchorCoarseSpanId', () => {
-    const pool = buildFineSpanCandidatePool(
+  it('buildFineSpanCandidatePoolFromCoarseSpansForTests groups by anchorCoarseSpanId', () => {
+    const pool = buildFineSpanCandidatePoolFromCoarseSpansForTests(
       [
         makeCandidate({ candidateId: 'a', replacement: '我要', anchorCoarseSpanId: 'c0', rawStart: 0, rawEnd: 2 }),
         makeCandidate({
@@ -72,15 +74,19 @@ describe('assemble-domain-aware-span-sets', () => {
     expect(pool[1]?.candidates).toHaveLength(1);
   });
 
-  it('voteUtteranceDomainFromPool counts parent_fragment once per parentTermId', () => {
-    const pool = buildFineSpanCandidatePool(
+  it('production buildFineSpanCandidatePool hard-fails without FormalFineSpan', () => {
+    expect(() => buildFineSpanCandidatePool([], coarseSpans, [])).toThrow(/FORMAL_POOL/);
+  });
+
+  it('voteUtteranceDomainFromPool counts parent_fragment once per parentTermId and once per span domain', () => {
+    const pool = buildFineSpanCandidatePoolFromCoarseSpansForTests(
       [
         makeCandidate({
           candidateId: 'p1',
           replacement: '中',
           hitKind: 'parent_fragment',
           parentTermId: 'pt1',
-          domainId: 'restaurant',
+          domains: ['restaurant'],
           source: 'domain_term',
           matchedTermStart: 0,
           matchedTermEnd: 1,
@@ -90,7 +96,7 @@ describe('assemble-domain-aware-span-sets', () => {
           replacement: '杯',
           hitKind: 'parent_fragment',
           parentTermId: 'pt1',
-          domainId: 'restaurant',
+          domains: ['restaurant'],
           source: 'domain_term',
           matchedTermStart: 1,
           matchedTermEnd: 2,
@@ -100,15 +106,32 @@ describe('assemble-domain-aware-span-sets', () => {
     );
     const vote = voteUtteranceDomainFromPool(pool);
     expect(vote.parentTermVoteCount).toBe(1);
+    expect(vote.domainScores.restaurant).toBe(1);
+    expect(vote.retainedDomains).toEqual(['restaurant']);
     expect(vote.utteranceDomain).toBe('restaurant');
   });
 
   it('selectPerSpanCandidates fills canonical ASR when no candidates', () => {
-    const vote = { utteranceDomain: 'general', insufficientEvidence: true, domainScores: {}, domainVoteMs: 0, parentTermVoteCount: 0 };
+    const vote = {
+      utteranceDomain: 'general',
+      insufficientEvidence: true,
+      domainScores: {},
+      domainVoteMs: 0,
+      parentTermVoteCount: 0,
+      winnerScore: 0,
+      runnerUpDomain: 'general',
+      runnerUpScore: 0,
+      voteMargin: 0,
+      retainedDomains: [] as const,
+      maxCount: 0,
+      runnerUpCount: 0,
+      isTie: false,
+    };
     const filtered = filterDomainCandidatesPerSpan(
-      buildFineSpanCandidatePool([], coarseSpans),
+      buildFineSpanCandidatePoolFromCoarseSpansForTests([], coarseSpans),
       vote,
-      rawText
+      rawText,
+      null
     );
     const selected = selectPerSpanCandidates(filtered, coarseSpans.length, coarseSpans);
     const spanSets = assembleDomainAwareSpanSets(selected);
@@ -141,7 +164,7 @@ describe('assemble-domain-aware-span-sets', () => {
           syllableStart: 2,
           syllableEnd: 4,
           source: 'domain_term',
-          domainId: 'restaurant',
+          domains: ['restaurant'],
           score: 0.8,
         }),
         makeCandidate({
@@ -151,20 +174,22 @@ describe('assemble-domain-aware-span-sets', () => {
           rawStart: 0,
           rawEnd: 2,
           source: 'domain_term',
-          domainId: 'restaurant',
+          domains: ['restaurant'],
           score: 2,
         }),
       ],
       coarseSpans,
-      rawText
+      rawText,
+      coarseSpansAsFormalFineSpansForTests(coarseSpans)
     );
     const c1Picks = result.spanSets[1] ?? [];
     expect(c1Picks[0]?.word).toBe('大杯');
     expect(result.metrics.domainCandidateCount).toBeGreaterThan(0);
     expect(result.metrics.baseCandidateCount).toBeGreaterThan(0);
+    expect(result.vote.retainedDomains).toEqual(['restaurant']);
   });
 
-  it('SpanReplacementPick.source comes from recallSource not graphSource', () => {
+  it('SpanReplacementPick.source comes from recallSource not graphSource and has no domains', () => {
     const result = runDomainAwareAssembly(
       [
         makeCandidate({
@@ -176,7 +201,7 @@ describe('assemble-domain-aware-span-sets', () => {
           syllableStart: 2,
           syllableEnd: 4,
           source: 'domain_term',
-          domainId: 'restaurant',
+          domains: ['restaurant'],
           recallSource: 'lexicon_pinyin_topk',
           score: 2,
         }),
@@ -185,14 +210,17 @@ describe('assemble-domain-aware-span-sets', () => {
           replacement: '点餐',
           anchorCoarseSpanId: 'c0',
           source: 'domain_term',
-          domainId: 'restaurant',
+          domains: ['restaurant'],
           score: 2,
         }),
       ],
       coarseSpans,
-      rawText
+      rawText,
+      coarseSpansAsFormalFineSpansForTests(coarseSpans)
     );
     const domainPick = result.spanSets[1]?.find((p) => p.word === '大杯');
     expect(domainPick?.source).toBe('lexicon_pinyin_topk');
+    expect(domainPick).not.toHaveProperty('domains');
+    expect(domainPick).not.toHaveProperty('domainId');
   });
 });

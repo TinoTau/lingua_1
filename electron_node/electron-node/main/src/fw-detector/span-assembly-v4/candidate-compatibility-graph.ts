@@ -327,40 +327,5 @@ export function resolveCompatibilityRelations(
   };
 }
 
-/** @deprecated use resolveCompatibilityRelations */
-export function dropIncompatibleCandidates(
-  candidates: WindowCandidate[],
-  trace?: V4TraceCollector | null
-): {
-  survivors: WindowCandidate[];
-  droppedCount: number;
-  coverageCount: number;
-  conflictCount: number;
-  compatibleCount: number;
-  coverageRelations: CoverageRelation[];
-} {
-  const result = resolveCompatibilityRelations(candidates, trace);
-  return {
-    survivors: result.activeCandidates,
-    droppedCount: result.metrics.hardDropCount,
-    coverageCount: result.metrics.coverageCount,
-    conflictCount: result.metrics.conflictRelationCount,
-    compatibleCount: result.metrics.compatibleCount,
-    coverageRelations: result.coverageRelations,
-  };
-}
-
-/** @deprecated use findConflictPairs via resolveCompatibilityRelations */
-export function findIncompatiblePairs(
-  candidates: WindowCandidate[],
-  edges: Array<{ fromId: string; toId: string; compatible: boolean; overlapRelationType?: OverlapRelationType }>
-): Array<[WindowCandidate, WindowCandidate]> {
-  const normalized: CompatibilityGraphEdge[] = edges.map((edge) => ({
-    ...edge,
-    overlapRelationType: edge.overlapRelationType ?? (edge.compatible ? 'COMPATIBLE' : 'CONFLICT'),
-  }));
-  return findConflictPairs(candidates, normalized);
-}
-
 /** @internal test-only export for narrow hardDrop stub */
 export const __testOnly = { pickDropCandidate };

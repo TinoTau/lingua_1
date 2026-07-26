@@ -8,7 +8,7 @@ import {
   type RuntimeDomainRegistry,
 } from '../lexicon-v2/runtime-domain-registry';
 import type { LexiconRuntimeV2State } from '../lexicon-v2/lexicon-types-v2';
-import type { ContextPriorStats } from './span-assembly-shared/domain-rerank';
+import type { ContextPriorStats } from './span-assembly-shared/context-prior';
 import type { FwDetectorRuntimeDiag } from './types';
 
 function readRuntimeDomainRegistry(): RuntimeDomainRegistry | null {

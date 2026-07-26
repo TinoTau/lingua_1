@@ -51,7 +51,6 @@ function mapTierRowToHotword(row: TierRow, domainId?: string): HotwordEntry {
     pinyin: parsePinyinKeyToSyllables(row.pinyin_key),
     priorScore: row.prior_score,
     frequency: 1,
-    domain: domainId,
     domains,
     aliases: parseAliasesField(row.aliases),
     source: row.source?.trim() || undefined,
@@ -84,14 +83,13 @@ function mergeDomainTierRows(rows: TierRow[]): HotwordEntry[] {
     mapped.domainWeights = { [domainId]: weight };
     const existing = byTermKey.get(termKey);
     if (!existing) {
-      mapped.domains = [domainId];
-      mapped.domain = domainId;
+      mapped.domains = [domainId].sort((a, b) => a.localeCompare(b));
       byTermKey.set(termKey, mapped);
       continue;
     }
     const domains = new Set(existing.domains ?? []);
     domains.add(domainId);
-    existing.domains = [...domains];
+    existing.domains = [...domains].sort((a, b) => a.localeCompare(b));
     existing.domainWeights = {
       ...(existing.domainWeights ?? {}),
       [domainId]: weight,
@@ -105,6 +103,55 @@ function mergeDomainTierRows(rows: TierRow[]): HotwordEntry[] {
 
 function hashSortedDomainIds(domainIds: readonly string[]): string {
   return [...domainIds].sort().join(',');
+}
+
+/**
+ * Domain multi-lookup with term-domain atomicity:
+ * LIMIT selects terms, then all in-scope domain tags for those terms are loaded.
+ * Never returns a term with only a partial subset of its in-scope tags.
+ */
+export function queryDomainMultiRowsAtomic(
+  db: Database.Database,
+  domainIds: readonly string[],
+  pinyinKey: string,
+  termLength: number,
+  limit: number,
+  tonePinyinKey?: string
+): { termIds: string[]; rows: TierRow[]; statementCount: number } {
+  if (!domainIds.length || limit <= 0) {
+    return { termIds: [], rows: [], statementCount: 0 };
+  }
+  const sortedIds = [...domainIds].sort();
+  const placeholders = sortedIds.map(() => '?').join(', ');
+  const toneClause = tonePinyinKey ? ' AND d.tone_pinyin_key = ?' : '';
+  const idSql = `SELECT d.id AS id, MAX(tdt.weight) AS max_weight, MAX(d.prior_score) AS max_prior
+      FROM domain_lexicon d
+      INNER JOIN term t ON t.id = d.id
+      INNER JOIN term_domain_tags tdt ON tdt.term_id = t.id AND tdt.domain_id = d.domain_id
+      WHERE d.domain_id IN (${placeholders}) AND d.pinyin_key = ?${toneClause}
+        AND d.enabled = 1 AND length(d.word) = ?
+      GROUP BY d.id
+      ORDER BY max_weight DESC, max_prior DESC
+      LIMIT ?`;
+  const idParams: unknown[] = tonePinyinKey
+    ? [...sortedIds, pinyinKey, tonePinyinKey, termLength, limit]
+    : [...sortedIds, pinyinKey, termLength, limit];
+  const idRows = db.prepare(idSql).all(...idParams) as Array<{ id: string }>;
+  if (!idRows.length) {
+    return { termIds: [], rows: [], statementCount: 1 };
+  }
+  const termIds = idRows.map((r) => r.id);
+  const idPlaceholders = termIds.map(() => '?').join(', ');
+  const rowSql = `SELECT d.id, d.domain_id, d.pinyin_key, d.tone_pinyin_key, d.word, d.normalized,
+        d.prior_score, d.repair_target, d.enabled, d.aliases, d.source, d.canonical_word, d.is_alias,
+        tdt.weight AS tag_weight
+      FROM domain_lexicon d
+      INNER JOIN term t ON t.id = d.id
+      INNER JOIN term_domain_tags tdt ON tdt.term_id = t.id AND tdt.domain_id = d.domain_id
+      WHERE d.id IN (${idPlaceholders}) AND d.domain_id IN (${placeholders}) AND d.enabled = 1
+      ORDER BY tdt.weight DESC, d.prior_score DESC`;
+  const rows = db.prepare(rowSql).all(...termIds, ...sortedIds) as TierRow[];
+  return { termIds, rows, statementCount: 2 };
 }
 
 function readManifestV2(manifestPath: string): LexiconManifestV2 {
@@ -168,16 +215,60 @@ export class LexiconRuntimeV2 {
     return this.bucketCache.stats();
   }
 
+  /**
+   * Clear Global LRU + tier counters. Harness/counterfactual only —
+   * production utterance path must not call this mid-job.
+   */
+  clearLookupCaches(): void {
+    this.bucketCache.clear();
+    this.tierSqlQueries = 0;
+    this.tierCacheHits = 0;
+    this.tierCacheMisses = 0;
+    this.ngramSqlQueries = 0;
+    this.ngramCacheHits = 0;
+    this.ngramCacheMisses = 0;
+  }
+
   getAndResetTierQueryStats(): { sqlQueries: number; cacheHits: number; cacheMisses: number } {
-    const stats = {
-      sqlQueries: this.tierSqlQueries,
-      cacheHits: this.tierCacheHits,
-      cacheMisses: this.tierCacheMisses,
-    };
+    const stats = this.getTierQueryStats();
     this.tierSqlQueries = 0;
     this.tierCacheHits = 0;
     this.tierCacheMisses = 0;
     return stats;
+  }
+
+  /** Non-destructive peek for utterance-level physical SQL accounting. */
+  getTierQueryStats(): { sqlQueries: number; cacheHits: number; cacheMisses: number } {
+    return {
+      sqlQueries: this.tierSqlQueries,
+      cacheHits: this.tierCacheHits,
+      cacheMisses: this.tierCacheMisses,
+    };
+  }
+
+  /** Non-destructive peek for parent-ngram statement accounting. */
+  getNgramQueryStats(): { sqlQueries: number; cacheHits: number; cacheMisses: number } {
+    return {
+      sqlQueries: this.ngramSqlQueries,
+      cacheHits: this.ngramCacheHits,
+      cacheMisses: this.ngramCacheMisses,
+    };
+  }
+
+  /**
+   * True physical statement executions observed by Runtime counters
+   * (tier lookups + parent ngram). Domain atomic multi counts both statements.
+   */
+  getPhysicalStatementStats(): {
+    tierSqlQueries: number;
+    ngramSqlQueries: number;
+    total: number;
+  } {
+    return {
+      tierSqlQueries: this.tierSqlQueries,
+      ngramSqlQueries: this.ngramSqlQueries,
+      total: this.tierSqlQueries + this.ngramSqlQueries,
+    };
   }
 
   load(): LexiconRuntimeV2State {
@@ -468,19 +559,19 @@ export class LexiconRuntimeV2 {
       return cached;
     }
     this.tierCacheMisses += 1;
-    this.tierSqlQueries += 1;
-    const placeholders = sortedIds.map(() => '?').join(', ');
-    const sql = `SELECT d.id, d.domain_id, d.pinyin_key, d.tone_pinyin_key, d.word, d.normalized, d.prior_score, d.repair_target, d.enabled, d.aliases, d.source, d.canonical_word, d.is_alias, tdt.weight AS tag_weight
-      FROM domain_lexicon d
-      INNER JOIN term t ON t.id = d.id
-      INNER JOIN term_domain_tags tdt ON tdt.term_id = t.id AND tdt.domain_id = d.domain_id
-      WHERE d.domain_id IN (${placeholders}) AND d.pinyin_key = ? AND d.enabled = 1 AND length(d.word) = ?
-      ORDER BY tdt.weight DESC, d.prior_score DESC
-      LIMIT ?`;
-    const rows = this.db
-      .prepare(sql)
-      .all(...sortedIds, key, termLength, Math.max(limit, limit * sortedIds.length)) as TierRow[];
-    const merged = mergeDomainTierRows(rows).slice(0, limit);
+    const { termIds, rows, statementCount } = queryDomainMultiRowsAtomic(
+      this.db,
+      sortedIds,
+      key,
+      termLength,
+      limit
+    );
+    this.tierSqlQueries += statementCount;
+    const mergedById = new Map(mergeDomainTierRows(rows).map((h) => [h.id, h]));
+    const merged = termIds
+      .map((id) => mergedById.get(id))
+      .filter((h): h is HotwordEntry => Boolean(h))
+      .slice(0, limit);
     this.bucketCache.set(cacheKey, merged);
     return merged;
   }
@@ -510,27 +601,43 @@ export class LexiconRuntimeV2 {
       return cached;
     }
     this.tierCacheMisses += 1;
-    this.tierSqlQueries += 1;
-    const placeholders = sortedIds.map(() => '?').join(', ');
-    const v2Sql = `SELECT d.id, d.domain_id, d.pinyin_key, d.tone_pinyin_key, d.word, d.normalized, d.prior_score, d.repair_target, d.enabled, d.aliases, d.source, d.canonical_word, d.is_alias, tdt.weight AS tag_weight
-      FROM domain_lexicon d
-      INNER JOIN term t ON t.id = d.id
-      INNER JOIN term_domain_tags tdt ON tdt.term_id = t.id AND tdt.domain_id = d.domain_id
-      WHERE d.domain_id IN (${placeholders}) AND d.pinyin_key = ? AND d.tone_pinyin_key = ? AND d.enabled = 1 AND length(d.word) = ?
-      ORDER BY tdt.weight DESC, d.prior_score DESC
-      LIMIT ?`;
-    const rows = this.db
-      .prepare(v2Sql)
-      .all(
-        ...sortedIds,
-        pinyinKey,
-        tonePinyinKey,
-        termLength,
-        Math.max(limit, limit * sortedIds.length)
-      ) as TierRow[];
-    const merged = mergeDomainTierRows(rows).slice(0, limit);
+    const { termIds, rows, statementCount } = queryDomainMultiRowsAtomic(
+      this.db,
+      sortedIds,
+      pinyinKey,
+      termLength,
+      limit,
+      tonePinyinKey
+    );
+    this.tierSqlQueries += statementCount;
+    const mergedById = new Map(mergeDomainTierRows(rows).map((h) => [h.id, h]));
+    const merged = termIds
+      .map((id) => mergedById.get(id))
+      .filter((h): h is HotwordEntry => Boolean(h))
+      .slice(0, limit);
     this.bucketCache.set(cacheKey, merged);
     return merged;
+  }
+
+  /** In-scope term_domain_tags for a term (parent fragment domain enrichment). */
+  lookupTermDomainTagsInScope(
+    termId: string,
+    domainIds: readonly string[]
+  ): string[] {
+    if (!this.db || !termId.trim() || !domainIds.length) {
+      return [];
+    }
+    const sortedIds = [...domainIds].sort();
+    const placeholders = sortedIds.map(() => '?').join(', ');
+    this.tierSqlQueries += 1;
+    const rows = this.db
+      .prepare(
+        `SELECT domain_id FROM term_domain_tags
+         WHERE term_id = ? AND domain_id IN (${placeholders})
+         ORDER BY domain_id`
+      )
+      .all(termId, ...sortedIds) as Array<{ domain_id: string }>;
+    return rows.map((r) => r.domain_id.trim()).filter(Boolean);
   }
 
   lookupParentFragmentsByNgramKey(ngramKey: string, sqlLimit: number): ParentTermNgramRow[] {

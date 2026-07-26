@@ -1,36 +1,37 @@
-﻿import type { GraphEdge, GraphEdgeSource, ParentTermEvidence } from './types';
-
-const SOURCE_WEIGHT: Record<GraphEdgeSource, number> = {
-  domain_term: 1.0,
-  passive_domain_weak: 0.2,
-  base_term: 0.5,
-  oral_function: 0.15,
-  oral_particle: 0.1,
-  unknown: 0.05,
-  noise: 0.05,
-};
-
-const MIN_EVIDENCE_SCORE = 0.3;
+﻿/**
+ * Fine-span domain presence Vote (SSOT).
+ * domainScores[domain] = distinct fine-span count (presence), not weighted score mass.
+ * One span contributes at most one vote per domain via FineSpanDomainSet union.
+ */
+export const DOMAIN_BUCKET_RETENTION_RATIO = 0.75;
 
 export type UtteranceDomainVoteResult = {
+  /** Diagnostic primary = retainedDomains[0] or 'general'. Does not drive Assembly alone. */
   utteranceDomain: string;
   domainVoteMs: number;
   insufficientEvidence: boolean;
+  /** Distinct fine-span presence counts. */
   domainScores: Record<string, number>;
   parentTermVoteCount: number;
-};
-
-export type UtteranceDomainVoteInput = {
-  parentEvidence: ParentTermEvidence[];
-  exactEdges: GraphEdge[];
+  /** Alias of maxCount for metrics compatibility */
+  winnerScore: number;
+  runnerUpDomain: string;
+  /** Alias of runnerUpCount */
+  runnerUpScore: number;
+  voteMargin: number;
+  retainedDomains: readonly string[];
+  maxCount: number;
+  runnerUpCount: number;
+  isTie: boolean;
 };
 
 /** Minimal pool shape for main-chain domain vote (no span-assembly-v4 import). */
 export type PoolVoteCandidate = {
+  candidateId?: string;
   hitKind: 'exact_term' | 'parent_fragment';
-  source: GraphEdgeSource;
+  source: string;
   score: number;
-  domainId?: string;
+  domains?: readonly string[];
   syllableStart: number;
   syllableEnd: number;
   parentTermId?: string;
@@ -43,134 +44,188 @@ export type FineSpanPoolForVote = {
   candidates: PoolVoteCandidate[];
 };
 
-function finalizeDomainVote(
+function isVoteDomainLabel(domain: string | undefined): domain is string {
+  return Boolean(domain) && domain !== 'general' && domain !== 'base_term';
+}
+
+function isDomainVoteSource(source: string): boolean {
+  return source === 'domain_term' || source === 'passive_domain_weak';
+}
+
+function addDomainsToSet(target: Set<string>, domains: readonly string[] | undefined): void {
+  for (const domain of domains ?? []) {
+    if (isVoteDomainLabel(domain)) {
+      target.add(domain);
+    }
+  }
+}
+
+function rankDomainCounts(domainScores: Record<string, number>): Array<[string, number]> {
+  return Object.entries(domainScores)
+    .filter(([, count]) => count > 0)
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+}
+
+function selectRetainedDomains(domainScores: Record<string, number>): {
+  retainedDomains: string[];
+  maxCount: number;
+  runnerUpCount: number;
+  isTie: boolean;
+  insufficientEvidence: boolean;
+  utteranceDomain: string;
+  runnerUpDomain: string;
+} {
+  const ranked = rankDomainCounts(domainScores);
+  if (!ranked.length) {
+    return {
+      retainedDomains: [],
+      maxCount: 0,
+      runnerUpCount: 0,
+      isTie: false,
+      insufficientEvidence: true,
+      utteranceDomain: 'general',
+      runnerUpDomain: 'general',
+    };
+  }
+
+  const maxCount = ranked[0][1];
+  const atMax = ranked.filter(([, count]) => count === maxCount).map(([domain]) => domain);
+  const runnerUpEntry = ranked.find(([, count]) => count < maxCount);
+  const runnerUpCount = runnerUpEntry?.[1] ?? 0;
+  const runnerUpDomain = runnerUpEntry?.[0] ?? 'general';
+  const isTie = atMax.length > 1;
+
+  let retained: string[];
+  if (isTie) {
+    retained = [...atMax];
+  } else {
+    const threshold = maxCount * DOMAIN_BUCKET_RETENTION_RATIO;
+    retained = ranked
+      .filter(([, count]) => count > 0 && count >= threshold)
+      .map(([domain]) => domain);
+  }
+
+  retained.sort((a, b) => (domainScores[b] ?? 0) - (domainScores[a] ?? 0) || a.localeCompare(b));
+
+  return {
+    retainedDomains: retained,
+    maxCount,
+    runnerUpCount,
+    isTie,
+    insufficientEvidence: false,
+    utteranceDomain: retained[0] ?? 'general',
+    runnerUpDomain,
+  };
+}
+
+function finalizePresenceVote(
   start: number,
   domainScores: Record<string, number>,
   parentTermVoteCount: number
 ): UtteranceDomainVoteResult {
-  const totalEvidence = Object.values(domainScores).reduce((s, v) => s + v, 0);
-  if (totalEvidence < MIN_EVIDENCE_SCORE) {
-    return {
-      utteranceDomain: 'general',
-      domainVoteMs: Date.now() - start,
-      insufficientEvidence: true,
-      domainScores,
-      parentTermVoteCount,
-    };
-  }
-
-  let bestDomain = 'general';
-  let bestScore = 0;
-  for (const [domain, score] of Object.entries(domainScores)) {
-    if (score > bestScore) {
-      bestScore = score;
-      bestDomain = domain;
-    }
-  }
-
+  const selected = selectRetainedDomains(domainScores);
   return {
-    utteranceDomain: bestDomain,
+    utteranceDomain: selected.utteranceDomain,
     domainVoteMs: Date.now() - start,
-    insufficientEvidence: false,
+    insufficientEvidence: selected.insufficientEvidence,
     domainScores,
     parentTermVoteCount,
+    winnerScore: selected.maxCount,
+    runnerUpDomain: selected.runnerUpDomain,
+    runnerUpScore: selected.runnerUpCount,
+    voteMargin: selected.maxCount - selected.runnerUpCount,
+    retainedDomains: selected.retainedDomains,
+    maxCount: selected.maxCount,
+    runnerUpCount: selected.runnerUpCount,
+    isTie: selected.isTie,
   };
 }
 
-function addDomainScore(
-  domainScores: Record<string, number>,
-  domainId: string | undefined,
-  source: GraphEdgeSource,
-  score: number,
-  coverageSyllables: number
-): void {
-  if (!domainId || domainId === 'general') {
-    return;
+function accumulateSpanDomainSets(
+  spanDomainSets: Iterable<ReadonlySet<string>>
+): Record<string, number> {
+  const domainScores: Record<string, number> = {};
+  for (const domainSet of spanDomainSets) {
+    for (const domain of domainSet) {
+      domainScores[domain] = (domainScores[domain] ?? 0) + 1;
+    }
   }
-  const weight = SOURCE_WEIGHT[source] ?? 0.05;
-  const coverageWeight = Math.min(1, coverageSyllables / 4);
-  domainScores[domainId] = (domainScores[domainId] ?? 0) + score * weight * coverageWeight;
+  return domainScores;
 }
 
-export function voteUtteranceDomainFromEvidence(
-  parentEvidence: ParentTermEvidence[]
-): Pick<UtteranceDomainVoteResult, 'domainScores' | 'parentTermVoteCount'> {
-  const domainScores: Record<string, number> = {};
-  const votedParentTermIds = new Set<string>();
-  let parentTermVoteCount = 0;
+/**
+ * Build FineSpanDomainSet for one fine span: union of domains from vote-eligible candidates.
+ * Same domain from multiple candidates in one span → one presence in the set (one vote).
+ */
+export function buildFineSpanDomainSet(candidates: PoolVoteCandidate[]): Set<string> {
+  const domainSet = new Set<string>();
+  const seenKeys = new Set<string>();
 
-  for (const evidence of parentEvidence) {
-    if (votedParentTermIds.has(evidence.parentTermId)) {
+  for (const candidate of candidates) {
+    if (candidate.isCovered) {
       continue;
     }
-    votedParentTermIds.add(evidence.parentTermId);
-    parentTermVoteCount += 1;
-    const coverage = evidence.matchedTermEnd - evidence.matchedTermStart;
-    addDomainScore(domainScores, evidence.domainId, evidence.source, evidence.score, coverage);
+    if (!isDomainVoteSource(candidate.source)) {
+      continue;
+    }
+
+    const structuralKey =
+      candidate.hitKind === 'parent_fragment' && candidate.parentTermId
+        ? `parent:${candidate.parentTermId}`
+        : candidate.candidateId
+          ? `id:${candidate.candidateId}`
+          : `exact:${candidate.syllableStart}:${candidate.syllableEnd}:${candidate.score}`;
+
+    if (seenKeys.has(structuralKey)) {
+      continue;
+    }
+    seenKeys.add(structuralKey);
+    addDomainsToSet(domainSet, candidate.domains);
   }
 
-  return { domainScores, parentTermVoteCount };
+  return domainSet;
 }
 
 export function voteUtteranceDomainFromPool(pool: FineSpanPoolForVote[]): UtteranceDomainVoteResult {
   const start = Date.now();
-  const domainScores: Record<string, number> = {};
+  const spanDomainSets: Set<string>[] = [];
   const votedParentTermIds = new Set<string>();
   let parentTermVoteCount = 0;
 
   for (const spanPool of pool) {
     for (const candidate of spanPool.candidates) {
-      if (candidate.isCovered) {
-        continue;
-      }
-      if (candidate.hitKind === 'parent_fragment' && candidate.parentTermId) {
-        const coverage =
-          (candidate.matchedTermEnd ?? candidate.syllableEnd) -
-          (candidate.matchedTermStart ?? candidate.syllableStart);
-        addDomainScore(domainScores, candidate.domainId, candidate.source, candidate.score, coverage);
-        if (!votedParentTermIds.has(candidate.parentTermId)) {
-          votedParentTermIds.add(candidate.parentTermId);
-          parentTermVoteCount += 1;
-        }
-        continue;
-      }
-      if (candidate.hitKind === 'exact_term') {
-        const coverage = candidate.syllableEnd - candidate.syllableStart;
-        addDomainScore(domainScores, candidate.domainId, candidate.source, candidate.score, coverage);
+      if (
+        candidate.hitKind === 'parent_fragment' &&
+        candidate.parentTermId &&
+        !candidate.isCovered &&
+        isDomainVoteSource(candidate.source) &&
+        !votedParentTermIds.has(candidate.parentTermId)
+      ) {
+        votedParentTermIds.add(candidate.parentTermId);
+        parentTermVoteCount += 1;
       }
     }
+    spanDomainSets.push(buildFineSpanDomainSet(spanPool.candidates));
   }
 
-  return finalizeDomainVote(start, domainScores, parentTermVoteCount);
+  return finalizePresenceVote(
+    start,
+    accumulateSpanDomainSets(spanDomainSets),
+    parentTermVoteCount
+  );
 }
 
-export function voteUtteranceDomain(input: UtteranceDomainVoteInput): UtteranceDomainVoteResult {
-  const start = Date.now();
-  const evidenceVote = voteUtteranceDomainFromEvidence(input.parentEvidence);
-  const domainScores = { ...evidenceVote.domainScores };
-
-  for (const edge of input.exactEdges) {
-    const coverage = edge.syllableEnd - edge.syllableStart;
-    addDomainScore(domainScores, edge.domainId, edge.source, edge.score, coverage);
+/** Allocate per-bucket sentence budget. Throws if retained buckets cannot each get ≥1 slot. */
+export function allocateDomainBucketSentenceBudget(
+  retainedDomainCount: number,
+  maxSentenceCandidates: number
+): number {
+  const bucketCount = Math.max(1, retainedDomainCount);
+  const perBucket = Math.floor(maxSentenceCandidates / bucketCount);
+  if (perBucket < 1) {
+    throw new Error(
+      'FINE-SPAN DOMAIN PRESENCE VOTE REPAIR BLOCKED — retained domain buckets exceed sentence candidate budget'
+    );
   }
-
-  return finalizeDomainVote(start, domainScores, evidenceVote.parentTermVoteCount);
-}
-
-export function applyDomainVoteToEdges(
-  edges: GraphEdge[],
-  vote: UtteranceDomainVoteResult
-): GraphEdge[] {
-  if (vote.insufficientEvidence || vote.utteranceDomain === 'general') {
-    return edges;
-  }
-  return edges.map((edge) => {
-    if (edge.source !== 'domain_term' && edge.source !== 'passive_domain_weak') {
-      return edge;
-    }
-    if (edge.domainId === vote.utteranceDomain) {
-      return edge;
-    }
-    return { ...edge, score: edge.score * 0.3 };
-  });
+  return perBucket;
 }

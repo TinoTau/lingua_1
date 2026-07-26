@@ -10,7 +10,15 @@ export type SentenceRerankPick = {
   kenlmQueryCount: number;
   kenlmTiming?: KenlmTimingStats;
   kenlmRuntime?: KenlmSubprocessRuntimeDiag;
-  topCandidates: Array<{ text: string; kenlmDelta: number; replacementCount: number }>;
+  topCandidates: Array<{
+    rank: number;
+    candidateId: string;
+    text: string;
+    kenlmScore: number;
+    deltaVsRaw: number;
+    isRaw: boolean;
+    replacementCount: number;
+  }>;
   allCombinationDeltas?: number[];
   scoreMode?: typeof FW_RERANK_SCORE_MODE;
   baselineRawScore?: number;
@@ -24,10 +32,6 @@ export async function rerankFwSentences(
   scorer: KenLMScorer | null,
   minDeltaToReplace: number
 ): Promise<SentenceRerankPick> {
-  const topCandidates: SentenceRerankPick['topCandidates'] = candidates
-    .slice(0, 5)
-    .map((c) => ({ text: c.text, kenlmDelta: 0, replacementCount: c.replacements.length }));
-
   if (!candidates.length) {
     return {
       pickedIsRaw: true,
@@ -44,7 +48,7 @@ export async function rerankFwSentences(
       picked: null,
       maxDelta: 0,
       kenlmQueryCount: 0,
-      topCandidates,
+      topCandidates: [],
     };
   }
 
@@ -74,13 +78,29 @@ export async function rerankFwSentences(
     }
   }
 
-  for (let i = 0; i < topCandidates.length; i++) {
-    if (i < rawDeltas.length) {
-      topCandidates[i].kenlmDelta = rawDeltas[i];
-    }
-  }
-
-  topCandidates.sort((a, b) => b.kenlmDelta - a.kenlmDelta);
+  const topCandidates: SentenceRerankPick['topCandidates'] = [
+    {
+      rank: 0,
+      candidateId: 'raw',
+      text: rawText,
+      kenlmScore: baselineRawScore,
+      deltaVsRaw: 0,
+      isRaw: true,
+      replacementCount: 0,
+    },
+    ...candidates.map((c, i) => ({
+      rank: 0,
+      candidateId: `candidate:${i}`,
+      text: c.text,
+      kenlmScore: batch.scores[i + 1]?.score ?? baselineRawScore,
+      deltaVsRaw: rawDeltas[i] ?? 0,
+      isRaw: false,
+      replacementCount: c.replacements.length,
+    })),
+  ]
+    .sort((a, b) => b.kenlmScore - a.kenlmScore || b.deltaVsRaw - a.deltaVsRaw)
+    .slice(0, 3)
+    .map((row, idx) => ({ ...row, rank: idx + 1 }));
 
   const maxDelta = bestRawDelta > Number.NEGATIVE_INFINITY ? bestRawDelta : 0;
   const scoreDiagnostics = {

@@ -7,8 +7,28 @@ import { JobResult } from '../inference/inference-service';
 import { JobContext } from './context/job-context';
 import { buildSessionResultExtra } from '../session-runtime/session-result-extra';
 import { resolveBusinessAsrText } from './post-asr-routing';
+import { projectCurrentTurnDomains } from '../fw-detector/domain-context-contract';
+import type { LlmDomainCalibration } from '../fw-detector/domain-context-contract';
 
 export function buildCoreResultExtra(job: JobAssignMessage, ctx: JobContext): Record<string, unknown> {
+  const spanV4 = ctx.fwDetectorResult?.spanAssemblyV4 as
+    | {
+        retainedDomains?: readonly string[];
+        domainScores?: Record<string, number>;
+        winnerScore?: number;
+      }
+    | undefined;
+  const projected = spanV4
+    ? projectCurrentTurnDomains({
+        retainedDomains: spanV4.retainedDomains ?? [],
+        domainScores: spanV4.domainScores ?? {},
+        maxCount: spanV4.winnerScore,
+      })
+    : { domains: [] as const, truncated: false };
+
+  const sessionExtra = buildSessionResultExtra(job, ctx);
+  const llmCalibration = projectLlmCalibrationFromSessionExtra(sessionExtra);
+
   return {
     language_probability: ctx.asrResult?.language_probability || null,
     language_probabilities: ctx.languageProbabilities || null,
@@ -17,16 +37,56 @@ export function buildCoreResultExtra(job: JobAssignMessage, ctx: JobContext): Re
     pendingEmptyJobs: (ctx as any).pendingEmptyJobs || undefined,
     lid: ctx.lidMeta || undefined,
     router: ctx.routerMeta || undefined,
+    domainContextVersion: 'v1',
+    domainPriorsBound: ctx.domainPriors ?? [],
+    domainPriorsFieldPresentOnJob: Object.prototype.hasOwnProperty.call(job, 'domainPriors'),
+    ...(projected.domains.length ? { currentTurnDomains: projected.domains } : {}),
+    ...(llmCalibration ? { llmCalibration } : {}),
     ...(ctx.asrServiceId ? { asr_service_id: ctx.asrServiceId } : {}),
     ...(ctx.rawAsrText ? { raw_asr_text: ctx.rawAsrText } : {}),
     ...(ctx.asrMergeProbeText ? { asr_merge_probe_text: ctx.asrMergeProbeText } : {}),
     ...(ctx.asrDiagnostics ? { asr_diagnostics: ctx.asrDiagnostics } : {}),
     ...(ctx.fwDetectorStepMs != null ? { fw_detector_step_ms: ctx.fwDetectorStepMs } : {}),
-    ...(ctx.fwDetectorResult ? { fw_detector: ctx.fwDetectorResult } : {}),
-    ...buildSessionResultExtra(job, ctx),
+    ...(ctx.fwDetectorResult
+      ? {
+          fw_detector: {
+            ...ctx.fwDetectorResult,
+            ...(projected.truncated ? { currentTurnDomainsTruncated: true } : {}),
+          },
+        }
+      : {}),
+    ...sessionExtra,
     ...(ctx.asrResult?.tone ? { utterance_tone: ctx.asrResult.tone } : {}),
     ...(ctx.lexiconManifestReady ? { lexicon_manifest_ready: ctx.lexiconManifestReady } : {}),
     ...(ctx.duplicateSanitizeTrace ? { duplicate_sanitize: ctx.duplicateSanitizeTrace } : {}),
+  };
+}
+
+function projectLlmCalibrationFromSessionExtra(
+  sessionExtra: Record<string, unknown>
+): LlmDomainCalibration | undefined {
+  const intent = sessionExtra.lexiconSessionIntent as
+    | {
+        primaryDomain?: string;
+        secondaryDomains?: string[];
+        confidence?: number;
+        source?: string;
+        topicShift?: boolean;
+      }
+    | undefined;
+  if (!intent?.primaryDomain || typeof intent.confidence !== 'number') {
+    return undefined;
+  }
+  return {
+    primaryDomain: intent.primaryDomain,
+    secondaryDomains: Array.isArray(intent.secondaryDomains)
+      ? intent.secondaryDomains.slice(0, 2)
+      : [],
+    confidence: intent.confidence,
+    // topicShift must be explicit; never silent-equate shouldSwitch
+    topicShift: intent.topicShift === true,
+    summaryVersion: intent.source === 'cpu_llm' ? 'intent-v1' : 'intent-fallback',
+    updatedAt: Date.now(),
   };
 }
 

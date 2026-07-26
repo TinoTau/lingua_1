@@ -1,15 +1,11 @@
 ﻿import { CandidateLifecycleTracker } from './v4-diagnostics-lifecycle';
 import type {
-  BeamSpanSetTrace,
   BoundaryWindowTrace,
   CandidatePoolTrace,
-  CoarsePathTrace,
   CoarseSpanTrace,
   CombinationTrace,
   CompatibilityEdgeTrace,
   EmittedEdgeTrace,
-  GraphEdgeTrace,
-  ParentSpanCandidateTrace,
   RecallHitPreFilterTrace,
   RecallHitTrace,
   SentenceCandidateTrace,
@@ -29,13 +25,7 @@ type TraceBucket =
   | 'poolBeforeDrop'
   | 'poolAfterDrop'
   | 'compatibilityEdges'
-  | 'emittedParentEvidence'
   | 'emittedEdges'
-  | 'emittedParentSpanCandidates'
-  | 'graphEdgesAfterMerge'
-  | 'coarsePaths'
-  | 'beamSpanSets'
-  | 'shadowBeamSpanSets'
   | 'sentenceCandidates';
 
 const BUCKET_LIMITS: Record<TraceBucket, number> = {
@@ -48,13 +38,7 @@ const BUCKET_LIMITS: Record<TraceBucket, number> = {
   poolBeforeDrop: V4_TRACE_LIMITS.maxTraceCandidates,
   poolAfterDrop: V4_TRACE_LIMITS.maxTraceCandidates,
   compatibilityEdges: V4_TRACE_LIMITS.maxTraceEdges,
-  emittedParentEvidence: V4_TRACE_LIMITS.maxTraceEdges,
   emittedEdges: V4_TRACE_LIMITS.maxTraceEdges,
-  emittedParentSpanCandidates: V4_TRACE_LIMITS.maxTraceCandidates,
-  graphEdgesAfterMerge: V4_TRACE_LIMITS.maxTraceEdges,
-  coarsePaths: V4_TRACE_LIMITS.maxTracePaths,
-  beamSpanSets: V4_TRACE_LIMITS.maxTraceBeamSpans,
-  shadowBeamSpanSets: V4_TRACE_LIMITS.maxTraceBeamSpans,
   sentenceCandidates: V4_TRACE_LIMITS.maxTraceSentenceCandidates,
 };
 
@@ -131,39 +115,9 @@ export class V4TraceCollector {
     this.pushItem('compatibilityEdges', edge);
   }
 
-  pushEmittedParentEvidence(edge: EmittedEdgeTrace): void {
-    this.lifecycle.see(edge.replacement, edge.replacement, 'emit');
-    this.pushItem('emittedParentEvidence', edge);
-  }
-
   pushEmittedEdge(edge: EmittedEdgeTrace): void {
     this.lifecycle.see(edge.replacement, edge.replacement, 'emit');
     this.pushItem('emittedEdges', edge);
-  }
-
-  pushEmittedParentSpanCandidate(candidate: ParentSpanCandidateTrace): void {
-    this.lifecycle.see(candidate.candidateText, candidate.candidateText, 'assembly');
-    this.pushItem('emittedParentSpanCandidates', candidate);
-  }
-
-  pushGraphEdge(edge: GraphEdgeTrace): void {
-    this.lifecycle.see(edge.replacement, edge.replacement, 'graph');
-    this.pushItem('graphEdgesAfterMerge', edge);
-  }
-
-  pushCoarsePath(path: CoarsePathTrace): void {
-    for (const edge of path.edges) {
-      this.lifecycle.see(edge.replacement, edge.replacement, 'graph');
-    }
-    this.pushItem('coarsePaths', path);
-  }
-
-  pushBeamSpanSet(spanSet: BeamSpanSetTrace): void {
-    for (const pick of spanSet.picks) {
-      this.lifecycle.see(pick.replacement, pick.replacement, 'beam');
-    }
-    this.pushItem('beamSpanSets', spanSet);
-    this.pushItem('shadowBeamSpanSets', spanSet);
   }
 
   pushSentenceCandidate(candidate: SentenceCandidateTrace): void {

@@ -83,7 +83,7 @@ function minCandidateScore(): number {
 }
 
 function isDomainHotword(hotword: HotwordEntry): boolean {
-  return Boolean(hotword.domain || hotword.domains?.length);
+  return Boolean(hotword.domains?.length);
 }
 
 function classifyRecallCandidateKind(
@@ -91,11 +91,10 @@ function classifyRecallCandidateKind(
   variant: FuzzyPinyinVariant
 ): RecallCandidateKind {
   const domains = hotwordDomains(hotword);
-  const domainId = domains[0] ?? 'general';
   const domainHit = isDomainHotword(hotword);
 
   if (variant.isFuzzy) {
-    return domainHit && domainId !== 'general' ? 'fuzzy_plain_domain' : 'fuzzy_plain';
+    return domainHit ? 'fuzzy_plain_domain' : 'fuzzy_plain';
   }
 
   if (!domainHit) {

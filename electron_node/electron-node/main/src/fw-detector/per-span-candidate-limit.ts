@@ -4,7 +4,7 @@ export function getPerSpanCandidateLimit(spanCount: number): number {
     return 8;
   }
   if (spanCount === 2) {
-    return 4;
+    return 6;
   }
-  return 2;
+  return 4;
 }

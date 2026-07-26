@@ -91,7 +91,7 @@ function fragmentRowAllowed(row: ParentTermNgramRow, domainIds: readonly string[
 }
 
 function ngramRowToHotword(row: ParentTermNgramRow): HotwordEntry {
-  const domains = row.domainId ? [row.domainId] : [];
+  const domains = row.domainId ? [row.domainId].sort((a, b) => a.localeCompare(b)) : [];
   return {
     id: `ngram:${row.id}`,
     word: row.fragmentText,
@@ -99,7 +99,6 @@ function ngramRowToHotword(row: ParentTermNgramRow): HotwordEntry {
     pinyin: row.ngramPinyinKey.split('|').filter(Boolean),
     priorScore: row.prior,
     frequency: 1,
-    domain: row.domainId,
     domains,
     enabled: row.enabled,
     repairTarget: row.repairTarget,
@@ -129,9 +128,13 @@ function scoreFragmentHit(
   row: ParentTermNgramRow,
   syllables: string[],
   windowText: string,
-  acousticTonePattern: number[] | undefined
+  acousticTonePattern: number[] | undefined,
+  scopeDomains?: readonly string[]
 ): RecallSpanTopKV3Hit | null {
   const hotword = ngramRowToHotword(row);
+  if (scopeDomains && scopeDomains.length > 0) {
+    hotword.domains = [...scopeDomains].sort((a, b) => a.localeCompare(b));
+  }
   const phoneticScore = scorePinyinSimilarity(syllables, hotword.pinyin);
   const recallCandidateKind = classifyFragmentKind(row);
   const candidateScoreBreakdown = computeCandidateScoreBreakdown({
@@ -246,7 +249,21 @@ function lookupParentFragments(
       continue;
     }
 
-    const hit = scoreFragmentHit(row, syllables, windowText, acousticTonePattern);
+    const parentScopeDomains = runtimeV2.lookupTermDomainTagsInScope(
+      row.parentTermId,
+      domainIds
+    );
+    const hit = scoreFragmentHit(
+      row,
+      syllables,
+      windowText,
+      acousticTonePattern,
+      parentScopeDomains.length > 0
+        ? parentScopeDomains
+        : row.domainId
+          ? [row.domainId]
+          : undefined
+    );
     if (!hit) {
       continue;
     }

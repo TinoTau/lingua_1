@@ -1,18 +1,13 @@
-﻿import type { CoarseSpan, GraphEdge, ParentTermEvidence } from '../span-assembly-shared/types';
-import type { CoarseSpanPath } from '../span-assembly-shared/types';
+﻿import type { CoarseSpan } from '../span-assembly-shared/types';
 import type { GlobalWindowDescriptor, WindowCandidate } from './v4-types';
 import type {
-  BeamSpanSetTrace,
   BoundaryWindowTrace,
   CandidatePoolTrace,
-  CoarsePathTrace,
   CoarseSpanTrace,
   CombinationTrace,
   EmittedEdgeTrace,
-  GraphEdgeTrace,
-  ParentSpanCandidateTrace,
 } from './v4-diagnostics-types';
-import type { SpanReplacementPick, SentenceCombination } from '../build-sentence-candidates';
+import type { SentenceCombination } from '../build-sentence-candidates';
 import { mapSentenceToApprovedReplacements } from '../map-sentence-to-approved';
 
 export function toCoarseSpanTrace(span: CoarseSpan): CoarseSpanTrace {
@@ -84,89 +79,6 @@ export function toEmittedEdgeFromCandidate(
     syllableEnd: candidate.syllableEnd,
     score: candidate.score,
     repairTarget: candidate.repairTarget,
-  };
-}
-
-export function toEmittedEdgeFromParentEvidence(evidence: ParentTermEvidence): EmittedEdgeTrace {
-  return {
-    replacement: evidence.parentTerm,
-    hitKind: 'parent_fragment',
-    coarseSpanId: evidence.coarseSpanId,
-    windowId: evidence.windowId,
-    windowSource: evidence.windowSource,
-    rawStart: evidence.rawStart,
-    rawEnd: evidence.rawEnd,
-    syllableStart: evidence.windowSyllableStart,
-    syllableEnd: evidence.windowSyllableEnd,
-    score: evidence.score,
-    repairTarget: evidence.repairTarget,
-  };
-}
-
-export function toParentSpanCandidateTraceFromGraphEdge(edge: {
-  replacement: string;
-  score: number;
-  coarseSpanId?: string;
-  parentTermId?: string;
-}): ParentSpanCandidateTrace {
-  return {
-    candidateText: edge.replacement,
-    score: edge.score,
-    coarseSpanId: edge.coarseSpanId ?? '',
-    parentTermId: edge.parentTermId,
-  };
-}
-
-export function toGraphEdgeTrace(edge: GraphEdge, edgeId: string): GraphEdgeTrace {
-  const isResidual =
-    edge.source === 'noise' ||
-    edge.source === 'unknown' ||
-    edge.recallSource === undefined;
-  return {
-    edgeId,
-    replacement: edge.replacement,
-    coarseSpanId: edge.coarseSpanId,
-    rawStart: edge.rawStart,
-    rawEnd: edge.rawEnd,
-    syllableStart: edge.syllableStart,
-    syllableEnd: edge.syllableEnd,
-    score: edge.score,
-    repairTarget: edge.repairTarget,
-    hitKind: edge.hitKind ?? 'unknown',
-    isResidual,
-  };
-}
-
-export function toCoarsePathTrace(path: CoarseSpanPath, pathRank: number, rawText: string): CoarsePathTrace {
-  const edges = path.edges.map((edge, idx) => toGraphEdgeTrace(edge, `${path.coarseSpanId}:${pathRank}:${idx}`));
-  const replacementText = path.edges.length
-    ? path.edges.map((e) => e.replacement).join('|')
-    : '';
-  return {
-    coarseSpanId: path.coarseSpanId,
-    pathRank,
-    pathScore: path.score,
-    edges,
-    replacementText,
-  };
-}
-
-export function toBeamSpanSetTrace(
-  spanIndex: number,
-  coarseSpanId: string,
-  picks: Array<SpanReplacementPick & { anchorSpanId?: string }>
-): BeamSpanSetTrace {
-  return {
-    spanIndex,
-    coarseSpanId,
-    picks: picks.map((pick) => ({
-      replacement: pick.word,
-      rawStart: pick.span.start,
-      rawEnd: pick.span.end,
-      anchorSpanId: pick.anchorSpanId,
-      repairTarget: pick.repairTarget,
-      score: pick.candidateScore,
-    })),
   };
 }
 

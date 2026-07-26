@@ -69,11 +69,7 @@ function mapHit(hit: {
   phoneticScore: number;
   source: LocalSpanRecallHit['source'];
 }): LocalSpanRecallHit {
-  const domains = hit.hotword.domains?.length
-    ? hit.hotword.domains
-    : hit.hotword.domain
-      ? [hit.hotword.domain]
-      : [];
+  const domains = hit.hotword.domains?.length ? [...hit.hotword.domains] : [];
   return {
     word: hit.hotword.word,
     priorScore: hit.hotword.priorScore,

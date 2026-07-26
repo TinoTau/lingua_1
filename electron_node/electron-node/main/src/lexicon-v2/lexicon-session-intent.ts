@@ -67,6 +67,7 @@ export function cloneLexiconSessionIntent(intent: LexiconSessionIntent): Lexicon
     topicKeywordPinyinKeys: [...intent.topicKeywordPinyinKeys],
     secondaryDomains: [...intent.secondaryDomains],
     reason: [...intent.reason],
+    topicShift: intent.topicShift === true,
   };
 }
 
@@ -86,5 +87,7 @@ export function buildLexiconSessionIntentFromDecision(
     effectiveFromTurn: decision.effectiveFromTurn,
     source,
     reason: [...decision.reason],
+    // Explicit only; missing/illegal already normalized to false by parser.
+    topicShift: decision.topicShift === true,
   };
 }

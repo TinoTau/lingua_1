@@ -43,7 +43,9 @@ describe('rerankFwSentences raw log delta', () => {
     expect(result.scoreMode).toBe(FW_RERANK_SCORE_MODE);
     expect(result.baselineRawScore).toBe(-100);
     expect(result.pickedRawScore).toBeUndefined();
-    expect(result.topCandidates[0]?.kenlmDelta).toBeCloseTo(2);
+    expect(result.topCandidates[0]?.isRaw).toBe(false);
+    expect(result.topCandidates[0]?.deltaVsRaw).toBeCloseTo(2);
+    expect(result.topCandidates[1]?.isRaw).toBe(true);
     expect(result.allCombinationDeltas).toEqual([2]);
   });
 
@@ -61,6 +63,9 @@ describe('rerankFwSentences raw log delta', () => {
     expect(result.maxDelta).toBeCloseTo(10);
     expect(result.pickedRawScore).toBe(-90);
     expect(result.maxNormalizedDelta).toBeCloseTo(0.1);
+    expect(result.topCandidates).toHaveLength(3);
+    expect(result.topCandidates[0]?.text).toBe('candidate-b');
+    expect(result.topCandidates[0]?.rank).toBe(1);
   });
 
   it('normalized delta no longer gates pick', async () => {

@@ -39,7 +39,8 @@ function resolveKenlmRuntime(ctx: JobContext, config: ReturnType<typeof loadFwDe
 function buildConfigSnapshot(
   config: ReturnType<typeof loadFwDetectorRuntimeConfig>,
   imeConfig: ReturnType<typeof loadPinyinImeV2RuntimeConfig>,
-  enabledDomains: string[],
+  configuredEnabledDomains: string[],
+  recallDomainScope: string[],
   enableKenLMGate: boolean,
   kenlmGateMode: KenlmGateMode,
   kenlmVetoThreshold: number
@@ -57,7 +58,8 @@ function buildConfigSnapshot(
     kenlmGateMode,
     kenlmDeltaThreshold: config.kenlmDeltaThreshold,
     kenlmVetoThreshold,
-    enabledDomains,
+    enabledDomains: configuredEnabledDomains,
+    recallDomainScope,
     candidateRequireRepairTarget: config.candidateRequireRepairTarget,
     maxSentenceCandidates: config.maxSentenceCandidates,
     minDeltaToReplace: config.minDeltaToReplace,
@@ -69,20 +71,12 @@ function buildConfigSnapshot(
 export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDetectorResult> {
   const config = loadFwDetectorRuntimeConfig();
   const imeConfig = loadPinyinImeV2RuntimeConfig();
-  const enabledDomains =
+  const configuredEnabledDomains =
     Array.isArray(ctx.fwDetectorEnabledDomainsOverride) && ctx.fwDetectorEnabledDomainsOverride.length > 0
       ? ctx.fwDetectorEnabledDomainsOverride
       : config.enabledDomains;
   const { enableKenLMGate, kenlmGateMode, kenlmVetoThreshold } = resolveKenlmRuntime(ctx, config);
   const rawText = (ctx.rawAsrText ?? '').trim();
-  const configSnapshot = buildConfigSnapshot(
-    config,
-    imeConfig,
-    enabledDomains,
-    enableKenLMGate,
-    kenlmGateMode,
-    kenlmVetoThreshold
-  );
 
   if (!rawText) {
     return {
@@ -90,7 +84,15 @@ export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDete
       triggered: false,
       reason: 'empty_raw',
       pipelinePath: 'v4',
-      configSnapshot,
+      configSnapshot: buildConfigSnapshot(
+        config,
+        imeConfig,
+        configuredEnabledDomains,
+        [],
+        enableKenLMGate,
+        kenlmGateMode,
+        kenlmVetoThreshold
+      ),
       summary: emptySummary(),
       runtime: {
         loaded: false,
@@ -100,7 +102,7 @@ export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDete
         manifestVersion: null,
         lexiconRows: null,
         profilePrimary: null,
-        enabledDomains,
+        enabledDomains: configuredEnabledDomains,
       },
       spans: [],
     };
@@ -112,14 +114,24 @@ export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDete
     v2State.status === 'ok'
       ? resolveRecallScope({
           jobOverride: ctx.fwDetectorEnabledDomainsOverride,
-          configEnabledDomains: enabledDomains,
+          configEnabledDomains: configuredEnabledDomains,
         })
       : undefined;
+  const recallDomainScope = recallScope?.domainIds ?? [];
   const runtimeDiagBase = buildFwRuntimeDiag(
     v2State,
     profile.primaryDomain ?? null,
-    enabledDomains,
+    configuredEnabledDomains,
     recallScope
+  );
+  const configSnapshot = buildConfigSnapshot(
+    config,
+    imeConfig,
+    configuredEnabledDomains,
+    recallDomainScope,
+    enableKenLMGate,
+    kenlmGateMode,
+    kenlmVetoThreshold
   );
 
   if (v2State.status !== 'ok') {
@@ -135,6 +147,19 @@ export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDete
     };
   }
 
+  if (!recallDomainScope.length) {
+    return {
+      enabled: true,
+      triggered: false,
+      reason: 'recall_domain_scope_empty',
+      pipelinePath: 'v4',
+      configSnapshot,
+      summary: emptySummary(),
+      runtime: runtimeDiagBase,
+      spans: [],
+    };
+  }
+
   return runFwDetectorV4Path({
     ctx,
     rawText,
@@ -142,7 +167,7 @@ export async function runFwDetectorOrchestrator(ctx: JobContext): Promise<FwDete
     configSnapshot,
     runtimeDiagBase,
     profile,
-    enabledDomains,
+    recallDomainScope,
     enableKenLMGate,
   });
 }

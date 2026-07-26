@@ -87,14 +87,23 @@ function wordForInterval(candidate: PinyinImeV2Candidate, interval: SyllableInte
   return normalizeTraditionalChinese(parts.join(''));
 }
 
+/**
+ * Map FineSpan syllable [start,end) to raw char range.
+ * When the syllable span covers multiple CJK runs (Latin/punct gaps in between),
+ * returns the union from the first run's mapped start to the last run's mapped end
+ * so blockedFilter can reject non-CJK interior via existing non_cjk / gap rules.
+ */
 export function syllableRangeToRawCharRange(
-  ranges: CharSyllableRange[],
+  ranges: readonly CharSyllableRange[],
   syllableStart: number,
   syllableEnd: number
 ): { start: number; end: number } | null {
   if (syllableEnd <= syllableStart) {
     return null;
   }
+  let unionStart: number | null = null;
+  let unionEnd: number | null = null;
+
   for (const range of ranges) {
     if (syllableEnd <= range.syllableStart || syllableStart >= range.syllableEnd) {
       continue;
@@ -111,12 +120,20 @@ export function syllableRangeToRawCharRange(
     const charsPerSyllable = runLen / syllableCount;
     const start = range.charStart + Math.floor(relSylStart * charsPerSyllable);
     const end = range.charStart + Math.ceil(relSylEnd * charsPerSyllable);
-    return {
-      start: Math.max(range.charStart, start),
-      end: Math.min(range.charEnd, Math.max(start + 1, end)),
-    };
+    const clampedStart = Math.max(range.charStart, start);
+    const clampedEnd = Math.min(range.charEnd, Math.max(start + 1, end));
+    if (unionStart == null || clampedStart < unionStart) {
+      unionStart = clampedStart;
+    }
+    if (unionEnd == null || clampedEnd > unionEnd) {
+      unionEnd = clampedEnd;
+    }
   }
-  return null;
+
+  if (unionStart == null || unionEnd == null || unionEnd <= unionStart) {
+    return null;
+  }
+  return { start: unionStart, end: unionEnd };
 }
 
 export type BuildBoundaryCompatibleTopKDiffInput = {

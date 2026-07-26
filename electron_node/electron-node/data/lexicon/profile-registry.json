@@ -10,8 +10,11 @@
   { "id": "milk_tea", "displayName": "Milk Tea", "enabled": true, "allowLLMSelect": true, "priority": 22, "parent": "restaurant" },
   { "id": "bakery", "displayName": "Bakery", "enabled": true, "allowLLMSelect": true, "priority": 23, "parent": "restaurant" },
   { "id": "food_order", "displayName": "Food Order", "enabled": true, "allowLLMSelect": true, "priority": 24, "parent": "restaurant" },
-  { "id": "tech_ai", "displayName": "Tech & AI", "enabled": true, "allowLLMSelect": true, "priority": 30, "parent": null },
-  { "id": "medical", "displayName": "Medical", "enabled": true, "allowLLMSelect": true, "priority": 40, "parent": null },
-  { "id": "meeting", "displayName": "Meeting", "enabled": true, "allowLLMSelect": true, "priority": 50, "parent": null },
-  { "id": "transport", "displayName": "Transport", "enabled": true, "allowLLMSelect": true, "priority": 60, "parent": null }
+  { "id": "workplace", "displayName": "Workplace", "enabled": true, "allowLLMSelect": true, "priority": 30, "parent": null },
+  { "id": "tech_ai", "displayName": "Tech & AI", "enabled": true, "allowLLMSelect": true, "priority": 31, "parent": "workplace" },
+  { "id": "meeting", "displayName": "Meeting", "enabled": true, "allowLLMSelect": true, "priority": 32, "parent": "workplace" },
+  { "id": "healthcare", "displayName": "Healthcare", "enabled": true, "allowLLMSelect": true, "priority": 40, "parent": null },
+  { "id": "medical", "displayName": "Medical", "enabled": true, "allowLLMSelect": true, "priority": 41, "parent": "healthcare" },
+  { "id": "transportation", "displayName": "Transportation", "enabled": true, "allowLLMSelect": true, "priority": 60, "parent": null },
+  { "id": "transport", "displayName": "Transport", "enabled": true, "allowLLMSelect": true, "priority": 61, "parent": "transportation" }
 ]

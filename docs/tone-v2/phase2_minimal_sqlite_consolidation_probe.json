@@ -1,0 +1,468 @@
+{
+  "physicalSqlMetrics": {
+    "accurate": true,
+    "priorPhase1CountInaccurateReason": [
+      "domain atomic counted 1 but executes 1–2 statements",
+      "lookupTermDomainTagsInScope uncounted + dynamic prepare each call",
+      "parent ngram used ngramSqlQueries separate from tier peek used by Phase1 physicalSql"
+    ],
+    "untrackedExecutionSites": [
+      "load-time COUNT(*) prepares (startup only)",
+      "RuntimeDomainRegistry install (startup only)",
+      "lookupIndustryRoutes (not on FW V4 LTR recall path)",
+      "stmtDomain / stmtDomainToneComposite prepared at load but multi-path uses dynamic SQL"
+    ],
+    "baselineStatementCount": null,
+    "metricsFixedThisRound": true,
+    "fixedBehaviors": [
+      "queryDomainMultiRowsAtomic returns statementCount 1|2",
+      "lookupTermDomainTagsInScope increments tierSqlQueries",
+      "recallTopK uses getPhysicalStatementStats (tier+ngram)"
+    ],
+    "sampleColdPhysicalDelta_jichang": 7,
+    "sampleWarmPhysicalDelta_jichang": 3,
+    "sampleColdPhysicalDelta_zhongbei": 5
+  },
+  "perRequestBreakdown": {
+    "plainNoToneTypical": {
+      "note": "maxIdiomCandidates default 0; offline GT has no acoustic tone → plain path",
+      "helpers": {
+        "basePlain": "1 stmt (prepared stmtBase.all) if LRU miss",
+        "domainMulti": "1–2 stmts via dynamic prepare (id + optional rows)",
+        "parentNgram": "1 stmt (prepared stmtNgram.all) if LRU miss",
+        "termDomainTags": "0..parentFragmentTopK dynamic prepares (per accepted fragment parent)"
+      },
+      "coldSample": {
+        "hits": 4,
+        "parentFragmentHitCount": 3,
+        "ms": 4.70770001411438,
+        "physicalDelta": 7,
+        "tierDelta": 6,
+        "ngramDelta": 1,
+        "tagEstimate": 5
+      },
+      "warmSample": {
+        "hits": 4,
+        "parentFragmentHitCount": 3,
+        "ms": 1.9466999769210815,
+        "physicalDelta": 3,
+        "tierDelta": 3,
+        "ngramDelta": 0,
+        "tagEstimate": 3
+      },
+      "parentHeavyColdSample": {
+        "hits": 3,
+        "parentFragmentHitCount": 1,
+        "ms": 3.275499939918518,
+        "physicalDelta": 5,
+        "tierDelta": 4,
+        "ngramDelta": 1,
+        "tagEstimate": 3
+      }
+    },
+    "samples": [
+      {
+        "key": "ji|chang",
+        "cold": {
+          "hits": 4,
+          "parentFragmentHitCount": 3,
+          "ms": 27.41409993171692,
+          "physicalDelta": 7,
+          "tierDelta": 6,
+          "ngramDelta": 1,
+          "tagEstimate": 5
+        },
+        "warm": {
+          "hits": 4,
+          "parentFragmentHitCount": 3,
+          "ms": 2.403599977493286,
+          "physicalDelta": 3,
+          "tierDelta": 3,
+          "ngramDelta": 0,
+          "tagEstimate": 3
+        }
+      },
+      {
+        "key": "jiu|dian",
+        "cold": {
+          "hits": 4,
+          "parentFragmentHitCount": 3,
+          "ms": 4.320299983024597,
+          "physicalDelta": 7,
+          "tierDelta": 6,
+          "ngramDelta": 1,
+          "tagEstimate": 5
+        },
+        "warm": {
+          "hits": 4,
+          "parentFragmentHitCount": 3,
+          "ms": 1.993499994277954,
+          "physicalDelta": 3,
+          "tierDelta": 3,
+          "ngramDelta": 0,
+          "tagEstimate": 3
+        }
+      },
+      {
+        "key": "wang|jing",
+        "cold": {
+          "hits": 1,
+          "parentFragmentHitCount": 0,
+          "ms": 1.8062999248504639,
+          "physicalDelta": 3,
+          "tierDelta": 2,
+          "ngramDelta": 1,
+          "tagEstimate": 1
+        },
+        "warm": {
+          "hits": 1,
+          "parentFragmentHitCount": 0,
+          "ms": 0.9532999992370605,
+          "physicalDelta": 0,
+          "tierDelta": 0,
+          "ngramDelta": 0,
+          "tagEstimate": 0
+        }
+      },
+      {
+        "key": "yu|ding",
+        "cold": {
+          "hits": 3,
+          "parentFragmentHitCount": 1,
+          "ms": 3.901300072669983,
+          "physicalDelta": 5,
+          "tierDelta": 4,
+          "ngramDelta": 1,
+          "tagEstimate": 3
+        },
+        "warm": {
+          "hits": 3,
+          "parentFragmentHitCount": 1,
+          "ms": 1.9697999954223633,
+          "physicalDelta": 1,
+          "tierDelta": 1,
+          "ngramDelta": 0,
+          "tagEstimate": 1
+        }
+      },
+      {
+        "key": "gao|su",
+        "cold": {
+          "hits": 4,
+          "parentFragmentHitCount": 2,
+          "ms": 3.0224000215530396,
+          "physicalDelta": 6,
+          "tierDelta": 5,
+          "ngramDelta": 1,
+          "tagEstimate": 4
+        },
+        "warm": {
+          "hits": 4,
+          "parentFragmentHitCount": 2,
+          "ms": 1.9018999338150024,
+          "physicalDelta": 2,
+          "tierDelta": 2,
+          "ngramDelta": 0,
+          "tagEstimate": 2
+        }
+      },
+      {
+        "key": "zhong|bei",
+        "cold": {
+          "hits": 3,
+          "parentFragmentHitCount": 1,
+          "ms": 3.131200075149536,
+          "physicalDelta": 5,
+          "tierDelta": 4,
+          "ngramDelta": 1,
+          "tagEstimate": 3
+        },
+        "warm": {
+          "hits": 3,
+          "parentFragmentHitCount": 1,
+          "ms": 1.2533999681472778,
+          "physicalDelta": 1,
+          "tierDelta": 1,
+          "ngramDelta": 0,
+          "tagEstimate": 1
+        }
+      },
+      {
+        "key": "shao|bing",
+        "cold": {
+          "hits": 4,
+          "parentFragmentHitCount": 2,
+          "ms": 3.164900064468384,
+          "physicalDelta": 6,
+          "tierDelta": 5,
+          "ngramDelta": 1,
+          "tagEstimate": 4
+        },
+        "warm": {
+          "hits": 4,
+          "parentFragmentHitCount": 2,
+          "ms": 1.6783000230789185,
+          "physicalDelta": 2,
+          "tierDelta": 2,
+          "ngramDelta": 0,
+          "tagEstimate": 2
+        }
+      },
+      {
+        "key": "lan|mei|ma|fen",
+        "cold": {
+          "hits": 4,
+          "parentFragmentHitCount": 2,
+          "ms": 2.9703999757766724,
+          "physicalDelta": 6,
+          "tierDelta": 5,
+          "ngramDelta": 1,
+          "tagEstimate": 4
+        },
+        "warm": {
+          "hits": 4,
+          "parentFragmentHitCount": 2,
+          "ms": 1.461300015449524,
+          "physicalDelta": 2,
+          "tierDelta": 2,
+          "ngramDelta": 0,
+          "tagEstimate": 2
+        }
+      }
+    ],
+    "keyDiversityUpperBound": {
+      "utterancesSampled": 40,
+      "totalWindows": 4045,
+      "totalDistinctKeys": 3147,
+      "maxDistinctKeysInUtterance": 136,
+      "windowsPerCursorMean": 3.550056242969629,
+      "note": "Upper-bound scan of all 2..5 windows at every cursor (not LTR commit path); shows many distinct keys — exact IN-batch across keys is high complexity"
+    }
+  },
+  "candidates": {
+    "termDomainTags": {
+      "tested": true,
+      "rowEquivalent": true,
+      "orderEquivalent": true,
+      "statementBefore": 51,
+      "statementAfter": 12,
+      "statementReductionRatio": 0.7647058823529411,
+      "warmMsOneByOne": {
+        "min": 0.21750009059906006,
+        "p50": 0.3842000961303711,
+        "p90": 0.5065999031066895,
+        "p95": 0.5938999652862549,
+        "p99": 0.6835999488830566,
+        "max": 0.6835999488830566,
+        "mean": 0.3781025654230362,
+        "n": 39
+      },
+      "warmMsMulti": {
+        "min": 0.08080005645751953,
+        "p50": 0.13200008869171143,
+        "p90": 0.232200026512146,
+        "p95": 0.24500000476837158,
+        "p99": 0.25290000438690186,
+        "max": 0.25290000438690186,
+        "mean": 0.1402307718228071,
+        "n": 39
+      },
+      "coldFirstMsOne": 0.44760000705718994,
+      "coldFirstMsMulti": 0.3052999973297119,
+      "complexityDelta": {
+        "productionFunctionsAdded": 1,
+        "exportedTypesAdded": 0,
+        "configAdded": 0,
+        "runtimeBranchesAdded": 1,
+        "estimatedLoc": 40,
+        "semanticRisk": "low_if_grouped_by_term_id_preserving_multirow_tags"
+      },
+      "cases": [
+        {
+          "termCount": 0,
+          "uniqueTerms": 0,
+          "domainCount": 0,
+          "rowEquivalent": true,
+          "statementsOne": 0,
+          "statementsMulti": 0
+        },
+        {
+          "termCount": 1,
+          "uniqueTerms": 1,
+          "domainCount": 0,
+          "rowEquivalent": true,
+          "statementsOne": 0,
+          "statementsMulti": 0
+        },
+        {
+          "termCount": 3,
+          "uniqueTerms": 3,
+          "domainCount": 0,
+          "rowEquivalent": true,
+          "statementsOne": 0,
+          "statementsMulti": 0
+        },
+        {
+          "termCount": 8,
+          "uniqueTerms": 8,
+          "domainCount": 0,
+          "rowEquivalent": true,
+          "statementsOne": 0,
+          "statementsMulti": 0
+        },
+        {
+          "termCount": 5,
+          "uniqueTerms": 3,
+          "domainCount": 0,
+          "rowEquivalent": true,
+          "statementsOne": 0,
+          "statementsMulti": 0
+        },
+        {
+          "termCount": 0,
+          "uniqueTerms": 0,
+          "domainCount": 1,
+          "rowEquivalent": true,
+          "statementsOne": 0,
+          "statementsMulti": 0
+        },
+        {
+          "termCount": 1,
+          "uniqueTerms": 1,
+          "domainCount": 1,
+          "rowEquivalent": true,
+          "statementsOne": 1,
+          "statementsMulti": 1
+        },
+        {
+          "termCount": 3,
+          "uniqueTerms": 3,
+          "domainCount": 1,
+          "rowEquivalent": true,
+          "statementsOne": 3,
+          "statementsMulti": 1
+        },
+        {
+          "termCount": 8,
+          "uniqueTerms": 8,
+          "domainCount": 1,
+          "rowEquivalent": true,
+          "statementsOne": 8,
+          "statementsMulti": 1
+        },
+        {
+          "termCount": 5,
+          "uniqueTerms": 3,
+          "domainCount": 1,
+          "rowEquivalent": true,
+          "statementsOne": 5,
+          "statementsMulti": 1
+        },
+        {
+          "termCount": 0,
+          "uniqueTerms": 0,
+          "domainCount": 3,
+          "rowEquivalent": true,
+          "statementsOne": 0,
+          "statementsMulti": 0
+        },
+        {
+          "termCount": 1,
+          "uniqueTerms": 1,
+          "domainCount": 3,
+          "rowEquivalent": true,
+          "statementsOne": 1,
+          "statementsMulti": 1
+        }
+      ],
+      "verdict": "PROCEED MINIMAL CONSOLIDATION"
+    },
+    "domainIdReuse": {
+      "tested": true,
+      "ssotSafe": true,
+      "registryAvailableFineCount": 12,
+      "recallScopeCount": 12,
+      "perRequestDomainIdSqlInRecallPath": false,
+      "note": "RuntimeDomainRegistry built once from term_domain_tags DISTINCT + domain_hierarchy at load; recall passes domainIds from resolveRecallScope — no per-request domain-id SQL",
+      "statementBefore": 0,
+      "statementAfter": 0,
+      "complexityDelta": 0,
+      "verdict": "KEEP CURRENT"
+    },
+    "exactLookupConsolidation": {
+      "tested": true,
+      "rowEquivalent": true,
+      "orderEquivalent": true,
+      "statementBefore": 4,
+      "statementAfter": 1,
+      "sharedLimitPatternForbidden": true,
+      "sharedLimitSafe": false,
+      "warmMsOne": {
+        "min": 0.17100000381469727,
+        "p50": 0.3034999370574951,
+        "p90": 0.5522000789642334,
+        "p95": 0.7238999605178833,
+        "p99": 1.2218999862670898,
+        "max": 1.2218999862670898,
+        "mean": 0.34400000243351375,
+        "n": 29
+      },
+      "warmMsMulti": {
+        "min": 0.07229995727539062,
+        "p50": 0.125,
+        "p90": 0.37579989433288574,
+        "p95": 0.5286999940872192,
+        "p99": 0.6751999855041504,
+        "max": 0.6751999855041504,
+        "mean": 0.18293791392753864,
+        "n": 29
+      },
+      "complexityDelta": {
+        "productionFunctionsAdded": 2,
+        "exportedTypesAdded": 0,
+        "configAdded": 0,
+        "runtimeBranchesAdded": 3,
+        "estimatedLoc": 120,
+        "semanticRisk": "medium_per_key_topk_grouping_and_tone_plain_paths",
+        "note": "Per LTR cursor multiple windows exist but each already distinct key; Global LRU absorbs repeats; batch needs per-key TopK + tone/plain dual paths"
+      },
+      "verdict": "REJECT — COMPLEXITY INCREASE"
+    }
+  },
+  "explainQueryPlan": {
+    "termDomainTagsSingle": [
+      "SEARCH term_domain_tags USING COVERING INDEX sqlite_autoindex_term_domain_tags_1 (term_id=? AND domain_id=?)"
+    ],
+    "termDomainTagsMulti": [
+      "SEARCH term_domain_tags USING COVERING INDEX sqlite_autoindex_term_domain_tags_1 (term_id=? AND domain_id=?)"
+    ],
+    "domainAtomicId": [
+      "SEARCH d USING INDEX idx_domain_pinyin_tone (domain_id=? AND pinyin_key=?)",
+      "SEARCH t USING COVERING INDEX sqlite_autoindex_term_1 (id=?)",
+      "SEARCH tdt USING INDEX sqlite_autoindex_term_domain_tags_1 (term_id=? AND domain_id=?)",
+      "USE TEMP B-TREE FOR GROUP BY",
+      "USE TEMP B-TREE FOR ORDER BY"
+    ],
+    "parentNgram": [
+      "SEARCH term_pinyin_ngrams USING INDEX idx_term_ngram_key (ngram_pinyin_key=? AND enabled=?)",
+      "USE TEMP B-TREE FOR ORDER BY"
+    ]
+  },
+  "architecture": {
+    "newBatchLayer": false,
+    "newExportedDto": false,
+    "newConfig": false,
+    "newRecallPath": false,
+    "redis": false,
+    "concurrency": false
+  },
+  "phase1CacheAssessment": {
+    "hitRate": 0.004,
+    "semanticEquivalent": true,
+    "requiredForPhase2": false,
+    "recommendation": "KEEP",
+    "rationale": "SQL consolidation lives inside LexiconRuntimeV2; utterance cache remains correctness-neutral observability with low hit rate — remove later only if proven dead weight, not this round"
+  },
+  "recommendation": "PROCEED ONE MINIMAL RUNTIME CONSOLIDATION",
+  "recommendedChange": "LexiconRuntimeV2 private lookupTermDomainTagsInScopeMulti(termIds, domainIds) used by parent fragment path; delete N× dynamic single-term prepares"
+}

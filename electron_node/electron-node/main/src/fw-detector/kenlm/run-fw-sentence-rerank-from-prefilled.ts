@@ -4,8 +4,7 @@
 
 import type { KenLMScorer } from '../../asr-repair/kenlm-batch-types';
 import {
-  buildSentenceCandidates,
-  type CoarseSpanRange,
+  type SentenceCombination,
   type SpanReplacementPick,
 } from '../build-sentence-candidates';
 import { rawOverlap } from '../span-assembly-v4/classify-overlap-relation';
@@ -34,6 +33,11 @@ export type FwSentenceRerankFromPrefilledInput = {
     | 'candidateRequireRepairTarget'
   >;
   kenlmScorer: KenLMScorer | null;
+  /**
+   * Required: cross-bucket merged sentence pool from span-assembly-v4 orchestrator.
+   * Empty array [] means no candidates → KenLM fail-open raw (no primary spanSets rebuild).
+   */
+  prefilledCombinations: SentenceCombination[];
 };
 
 export type FwSentenceRerankFromPrefilledResult = {
@@ -147,18 +151,10 @@ export async function runFwSentenceRerankFromPrefilled(
     updatedSpans.push({ ...span, candidates });
   }
 
-  const coarseRanges: CoarseSpanRange[] = input.spans.map((span) => ({
-    start: span.start,
-    end: span.end,
-  }));
-
-  const assembly = buildSentenceCandidates(
-    input.rawText,
-    input.spanSets,
-    input.config.maxSentenceCandidates,
-    coarseRanges
+  const combinations = input.prefilledCombinations.slice(
+    0,
+    input.config.maxSentenceCandidates
   );
-  const combinations = assembly.combinations;
 
   const rerank = await rerankFwSentences(
     input.rawText,
@@ -205,7 +201,9 @@ export async function runFwSentenceRerankFromPrefilled(
     ...(rerank.scoreMode ? { scoreMode: rerank.scoreMode } : {}),
     ...(rerank.baselineRawScore !== undefined ? { baselineRawScore: rerank.baselineRawScore } : {}),
     ...(rerank.pickedRawScore !== undefined ? { pickedRawScore: rerank.pickedRawScore } : {}),
-    ...(rerank.maxNormalizedDelta !== undefined ? { maxNormalizedDelta: rerank.maxNormalizedDelta } : {}),
+    ...(rerank.maxNormalizedDelta !== undefined
+      ? { maxNormalizedDelta: rerank.maxNormalizedDelta }
+      : {}),
     ...(rerank.kenlmRuntime
       ? {
           kenlmSubprocessMs: rerank.kenlmRuntime.kenlmSubprocessMs,

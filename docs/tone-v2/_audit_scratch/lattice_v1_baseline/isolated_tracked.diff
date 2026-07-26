@@ -1,0 +1,1432 @@
+﻿diff --git a/central_server/scheduler/src/core/dispatcher/job.rs b/central_server/scheduler/src/core/dispatcher/job.rs
+index cfb53d1..920bb84 100644
+--- a/central_server/scheduler/src/core/dispatcher/job.rs
++++ b/central_server/scheduler/src/core/dispatcher/job.rs
+@@ -1,4 +1,4 @@
+-use crate::messages::{FeatureFlags, PipelineConfig};
++use crate::messages::{FeatureFlags, PipelineConfig, DomainPrior};
+ use serde::{Deserialize, Serialize};
+ 
+ #[derive(Debug, Clone, Serialize, Deserialize)]
+@@ -82,6 +82,9 @@ pub struct Job {
+     /// 棰勮澶勭悊鏃堕暱锛堟绉掞級锛岀敤浜庡姩鎬佽绠?timeout
+     #[serde(skip_serializing_if = "Option::is_none")]
+     pub expected_duration_ms: Option<u64>,
++    /// FW Repair V4锛歐eb 浼氳瘽棰嗗煙鍏堥獙锛圫cheduler 鏍￠獙娓呮礂鍚庡浐鍖栧埌 Job锛屾墍鏈?retry 浣跨敤鍚屼竴浠斤紝淇濊瘉鍙洖鏀撅級
++    #[serde(skip_serializing_if = "Option::is_none")]
++    pub domain_priors: Option<Vec<DomainPrior>>,
+ }
+ 
+ #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+diff --git a/central_server/scheduler/src/core/pending_job_dispatches.rs b/central_server/scheduler/src/core/pending_job_dispatches.rs
+index 4095354..ed6f543 100644
+--- a/central_server/scheduler/src/core/pending_job_dispatches.rs
++++ b/central_server/scheduler/src/core/pending_job_dispatches.rs
+@@ -96,6 +96,7 @@ mod tests {
+             is_max_duration_triggered: false,
+             turn_id: None,
+             expected_duration_ms: None,
++            domain_priors: None,
+         }
+     }
+ 
+diff --git a/central_server/scheduler/src/messages/common.rs b/central_server/scheduler/src/messages/common.rs
+index 1faefc3..8efdfce 100644
+--- a/central_server/scheduler/src/messages/common.rs
++++ b/central_server/scheduler/src/messages/common.rs
+@@ -278,6 +278,49 @@ pub struct ExtraResult {
+     /// 绌哄鍣ㄦ牳閿€鍘熷洜锛堝 "NO_TEXT_ASSIGNED"锛?     #[serde(skip_serializing_if = "Option::is_none")]
+     pub reason: Option<String>,
++    /// FW Repair V4锛氬綋鍓嶅彞 Domain Vote 鎶曞奖锛圱op3锛屾潵鑷?Node JobResult assembly锛孲cheduler 鍙€忎紶涓嶅悎骞讹級
++    #[serde(rename = "currentTurnDomains", skip_serializing_if = "Option::is_none")]
++    pub current_turn_domains: Option<Vec<CurrentTurnDomain>>,
++    /// FW Repair V4锛歀LM 棰嗗煙鏍″噯锛坅dvisory锛屾槸鍚﹀簲鐢ㄧ敱 Web merger 鍐冲畾锛孲cheduler 鍙€忎紶锛?+    #[serde(rename = "llmCalibration", skip_serializing_if = "Option::is_none")]
++    pub llm_calibration: Option<LlmDomainCalibration>,
++}
++
++// ===== FW Repair V4锛氫細璇濋鍩熷厛楠?/ 褰撳墠鍙ラ鍩熸姇褰?/ LLM 棰嗗煙鏍″噯 =====
++// 瀛楁鍚嶅喕缁擄紝绂佹鏂板鍚屼箟瀛楁锛汼cheduler 浠呭仛 schema 鏍￠獙鍜岄€忎紶锛屼笉鍋氶鍩熸帹鐞?鍚堝苟銆?+// 璇﹁ docs/tone-v2/FW_Repair_V4_FineSpan_*_2026_07_22.md
++
++/// Web 浼氳瘽棰嗗煙鍏堥獙锛圵eb 涓哄敮涓€ owner锛汼cheduler 鍙牎楠岄€忎紶锛孨ode 浠呬綔 soft 鎺掑簭/閰嶉杈撳叆锛?+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
++pub struct DomainPrior {
++    pub domain: String,
++    pub weight: f64,
++}
++
++/// 褰撳墠鍙?Domain Vote 鎶曞奖锛圢ode 褰撳墠鍙ヨ瘉鎹紝Top3锛屼緵 Web 浼氳瘽鑱氬悎娑堣垂锛屼笉鍏峰浼氳瘽鍐崇瓥鏉冿級
++#[derive(Debug, Clone, Serialize, Deserialize)]
++pub struct CurrentTurnDomain {
++    pub domain: String,
++    #[serde(rename = "voteCount")]
++    pub vote_count: u32,
++    #[serde(rename = "normalizedScore", skip_serializing_if = "Option::is_none")]
++    pub normalized_score: Option<f64>,
++}
++
++/// LLM 棰嗗煙鏍″噯锛坅dvisory only锛屼笉鍏峰鐩存帴鍐崇瓥鏉冿紝鏄惁搴旂敤鐢?Web merger 鍐冲畾锛?+#[derive(Debug, Clone, Serialize, Deserialize)]
++pub struct LlmDomainCalibration {
++    #[serde(rename = "primaryDomain", skip_serializing_if = "Option::is_none")]
++    pub primary_domain: Option<String>,
++    #[serde(rename = "secondaryDomains", skip_serializing_if = "Option::is_none")]
++    pub secondary_domains: Option<Vec<String>>,
++    pub confidence: f64,
++    #[serde(rename = "topicShift")]
++    pub topic_shift: bool,
++    #[serde(rename = "summaryVersion")]
++    pub summary_version: String,
++    #[serde(rename = "updatedAt")]
++    pub updated_at: i64,
+ }
+ 
+ /// OBS-2: Segments 鍏冩暟鎹?diff --git a/central_server/scheduler/src/messages/mod.rs b/central_server/scheduler/src/messages/mod.rs
+index 02e54c9..19cbec4 100644
+--- a/central_server/scheduler/src/messages/mod.rs
++++ b/central_server/scheduler/src/messages/mod.rs
+@@ -2,6 +2,7 @@
+ 
+ // 瀛愭ā鍧? pub mod common;
++pub mod domain_prior_validate;
+ pub mod error;
+ pub mod ui_event;
+ pub mod session;
+@@ -13,7 +14,10 @@ pub mod node;
+ pub use common::{
+     FeatureFlags, PipelineConfig, InstalledModel, InstalledService, CapabilityByType, ServiceType, DeviceType, ServiceStatus,
+     HardwareInfo, NodeStatus, GpuInfo, ResourceUsage, ServiceTimings, NetworkTimings,
++    DomainPrior, CurrentTurnDomain, LlmDomainCalibration,
+ };
++#[allow(unused_imports)]
++pub use domain_prior_validate::validate_domain_priors;
+ pub use error::{ErrorCode, get_error_hint};
+ pub use ui_event::{UiEventType, UiEventStatus};
+ pub use session::SessionMessage;
+diff --git a/central_server/scheduler/src/messages/node.rs b/central_server/scheduler/src/messages/node.rs
+index 31b90dd..cf17dd2 100644
+--- a/central_server/scheduler/src/messages/node.rs
++++ b/central_server/scheduler/src/messages/node.rs
+@@ -1,7 +1,7 @@
+ // 鑺傜偣 鈫?璋冨害鏈嶅姟鍣ㄦ秷鎭? 
+ use serde::{Deserialize, Serialize};
+-use super::common::{FeatureFlags, PipelineConfig, InstalledModel, InstalledService, CapabilityByType, ResourceUsage, ExtraResult, HardwareInfo, RerunMetrics, ASRMetrics, ProcessingMetrics, NodeLanguageCapabilities};
++use super::common::{FeatureFlags, PipelineConfig, InstalledModel, InstalledService, CapabilityByType, ResourceUsage, ExtraResult, HardwareInfo, RerunMetrics, ASRMetrics, ProcessingMetrics, NodeLanguageCapabilities, DomainPrior};
+ 
+ #[derive(Debug, Clone, Serialize, Deserialize)]
+ #[serde(tag = "type")]
+@@ -131,6 +131,12 @@ pub enum NodeMessage {
+         /// 褰撳墠 turn 鐨?ID锛涜妭鐐圭鐢ㄥ仛 bufferKey锛屽悓涓€ turn 鍐呭 job 鍏辩敤鍚屼竴 buffer
+         #[serde(skip_serializing_if = "Option::is_none")]
+         turn_id: Option<String>,
++        /// FW Repair V4锛氶鍩熶笂涓嬫枃鍗忚鐗堟湰锛堝浐瀹?"v1"锛岀己澶辩瓑鍚屼笉甯︾増鏈紝浠呯敤浜庤В鏋愬吋瀹癸級
++        #[serde(rename = "domainContextVersion", skip_serializing_if = "Option::is_none")]
++        domain_context_version: Option<String>,
++        /// FW Repair V4锛歐eb 浼氳瘽棰嗗煙鍏堥獙锛圱op3锛宻oft prior锛孲cheduler 鏍￠獙鍚庡浐鍖栧埌 job payload锛宺etry 淇濇寔涓€鑷达級
++        #[serde(rename = "domainPriors", skip_serializing_if = "Option::is_none")]
++        domain_priors: Option<Vec<DomainPrior>>,
+     },
+     /// Scheduler -> Node锛氬彇娑堜竴涓鍦ㄥ鐞?鎺掗槦鐨?job锛坆est-effort锛?     #[serde(rename = "job_cancel")]
+diff --git a/central_server/scheduler/src/messages/session.rs b/central_server/scheduler/src/messages/session.rs
+index 725f46f..3883905 100644
+--- a/central_server/scheduler/src/messages/session.rs
++++ b/central_server/scheduler/src/messages/session.rs
+@@ -2,7 +2,7 @@
+ 
+ use serde::{Deserialize, Serialize};
+ use crate::managers::room_manager;
+-use super::common::{FeatureFlags, ExtraResult};
++use super::common::{FeatureFlags, ExtraResult, DomainPrior};
+ use super::error::ErrorCode;
+ use super::ui_event::{UiEventType, UiEventStatus};
+ 
+@@ -112,6 +112,12 @@ pub enum SessionMessage {
+         /// Pipeline 閰嶇疆锛堝彲閫夛紝濡傛灉鏈彁渚涘垯浣跨敤榛樿鍊硷級
+         #[serde(skip_serializing_if = "Option::is_none")]
+         pipeline: Option<super::common::PipelineConfig>,
++        /// FW Repair V4锛氶鍩熶笂涓嬫枃鍗忚鐗堟湰锛堝浐瀹?"v1"锛岀己澶辩瓑鍚屼笉甯︾増鏈紝浠呯敤浜庤В鏋愬吋瀹癸級
++        #[serde(rename = "domainContextVersion", skip_serializing_if = "Option::is_none")]
++        domain_context_version: Option<String>,
++        /// FW Repair V4锛歐eb 浼氳瘽棰嗗煙鍏堥獙锛圱op3锛宻oft prior锛岀敱 Web 鐢熸垚锛孲cheduler 鍙牎楠岄€忎紶锛?+        #[serde(rename = "domainPriors", skip_serializing_if = "Option::is_none")]
++        domain_priors: Option<Vec<DomainPrior>>,
+     },
+     #[serde(rename = "audio_chunk")]
+     AudioChunk {
+@@ -123,6 +129,11 @@ pub enum SessionMessage {
+         /// 瀹㈡埛绔彂閫佹椂闂存埑锛堟绉掞紝UTC鏃跺尯锛?         #[serde(skip_serializing_if = "Option::is_none")]
+         client_timestamp_ms: Option<i64>,
++        /// FW Repair V4锛氫粎棣栧寘鍙惡甯?utterance-start domainPriors 蹇収锛涘悗缁?chunk 蹇界暐
++        #[serde(rename = "domainContextVersion", skip_serializing_if = "Option::is_none")]
++        domain_context_version: Option<String>,
++        #[serde(rename = "domainPriors", skip_serializing_if = "Option::is_none")]
++        domain_priors: Option<Vec<DomainPrior>>,
+     },
+     #[serde(rename = "translation_result")]
+     TranslationResult {
+diff --git a/central_server/scheduler/src/websocket/job_creator.rs b/central_server/scheduler/src/websocket/job_creator.rs
+index 9726cc8..08087b6 100644
+--- a/central_server/scheduler/src/websocket/job_creator.rs
++++ b/central_server/scheduler/src/websocket/job_creator.rs
+@@ -4,7 +4,7 @@ use base64::{engine::general_purpose, Engine as _};
+ use crate::core::AppState;
+ use crate::core::job_idempotency::{make_job_key, JobType};
+ use crate::core::dispatcher::{Job, JobStatus};
+-use crate::messages::FeatureFlags;
++use crate::messages::{FeatureFlags, DomainPrior};
+ use tracing::info;
+ 
+ /// 妫€鏌?Job 鏄惁宸插瓨鍦紙骞傜瓑鎬ф鏌ワ級
+@@ -68,6 +68,7 @@ pub(crate) async fn create_translation_jobs(
+     is_manual_cut: bool, // 鏄惁鐢辩敤鎴锋墜鍔ㄥ彂閫?     is_timeout_triggered: bool, // 鏄惁鐢?Timeout锛堣秴鏃讹級瑙﹀彂锛岃妭鐐圭缂撳瓨鍒?pendingTimeoutAudio
+     is_max_duration_triggered: bool, // 鏄惁鐢?MaxDuration锛堟寔缁璇濊秴闀匡級瑙﹀彂锛岃妭鐐圭鍒囩墖澶勭悊
++    domain_priors: Option<Vec<DomainPrior>>, // FW Repair V4锛氬凡鐢?handle_utterance 鏍￠獙娓呮礂锛屽浐鍖栧埌 Job锛宺etry 淇濇寔涓€鑷? ) -> Result<Vec<crate::core::dispatcher::Job>, anyhow::Error> {
+     // 妫€鏌ユ槸鍚﹀湪鎴块棿涓?     if let Some(room_code) = state.room_manager.find_room_by_session(session_id).await {
+@@ -124,6 +125,7 @@ pub(crate) async fn create_translation_jobs(
+                 is_manual_cut,
+                 is_timeout_triggered,
+                 is_max_duration_triggered,
++                domain_priors.clone(),
+             ).await?;
+             
+             let job_key = make_job_key(
+@@ -193,6 +195,7 @@ pub(crate) async fn create_translation_jobs(
+                 is_manual_cut,
+                 is_timeout_triggered,
+                 is_max_duration_triggered,
++                domain_priors.clone(),
+             ).await?;
+             
+             let job_key = make_job_key(
+@@ -265,6 +268,7 @@ pub(crate) async fn create_translation_jobs(
+             is_manual_cut,
+             is_timeout_triggered,
+             is_max_duration_triggered,
++            domain_priors,
+         ).await?;
+         
+         // 娉ㄥ唽 job_key 鍒?job_id 鐨勬槧灏?@@ -321,6 +325,7 @@ async fn create_job_with_minimal_scheduler(
+     is_manual_cut: bool,
+     is_timeout_triggered: bool,
+     is_max_duration_triggered: bool,
++    domain_priors: Option<Vec<DomainPrior>>, // FW Repair V4锛氬凡娓呮礂锛屽浐鍖栧埌 Job
+ ) -> Result<Job, anyhow::Error> {
+     let job_id = format!("job-{}", uuid::Uuid::new_v4());
+     let job_id_for_binding = if should_bind_job_to_node(is_manual_cut, is_max_duration_triggered) {
+@@ -468,6 +473,7 @@ async fn create_job_with_minimal_scheduler(
+         is_max_duration_triggered,
+         turn_id: turn_id.map(String::from),
+         expected_duration_ms: None, // 榛樿涓嶈缃璁℃椂闀?+        domain_priors,
+     };
+ 
+     // 淇濆瓨 Job 鍒?Redis锛圫SOT锛?diff --git a/central_server/scheduler/src/websocket/mod.rs b/central_server/scheduler/src/websocket/mod.rs
+index baf9e97..23396d6 100644
+--- a/central_server/scheduler/src/websocket/mod.rs
++++ b/central_server/scheduler/src/websocket/mod.rs
+@@ -91,6 +91,9 @@ pub(crate) async fn create_job_assign_message(
+         is_timeout_triggered: job.is_timeout_triggered,
+         is_max_duration_triggered: job.is_max_duration_triggered,
+         turn_id: job.turn_id.clone(),
++        // FW Repair V4锛歞omainPriors 宸插湪 Job 鍒涘缓鏃舵牎楠屾竻娲楀苟鍥哄寲锛屾澶勫彧閫忎紶锛屼笉閲嶆柊鎺ㄧ悊
++        domain_context_version: job.domain_priors.as_ref().map(|_| "v1".to_string()),
++        domain_priors: job.domain_priors.clone(),
+     })
+ }
+ 
+diff --git a/central_server/scheduler/src/websocket/session_actor/actor/actor_event_handling.rs b/central_server/scheduler/src/websocket/session_actor/actor/actor_event_handling.rs
+index 7f18111..f2efd8f 100644
+--- a/central_server/scheduler/src/websocket/session_actor/actor/actor_event_handling.rs
++++ b/central_server/scheduler/src/websocket/session_actor/actor/actor_event_handling.rs
+@@ -6,8 +6,21 @@ impl SessionActor {
+     /// 澶勭悊浜嬩欢
+     pub(crate) async fn handle_event(&mut self, event: SessionEvent) -> Result<(), anyhow::Error> {
+         match event {
+-            SessionEvent::AudioChunkReceived { chunk, is_final, timestamp_ms, client_timestamp_ms } => {
+-                self.handle_audio_chunk(chunk, is_final, timestamp_ms, client_timestamp_ms).await?;
++            SessionEvent::AudioChunkReceived {
++                chunk,
++                is_final,
++                timestamp_ms,
++                client_timestamp_ms,
++                domain_priors,
++            } => {
++                self.handle_audio_chunk(
++                    chunk,
++                    is_final,
++                    timestamp_ms,
++                    client_timestamp_ms,
++                    domain_priors,
++                )
++                .await?;
+             }
+             SessionEvent::TimeoutFired { generation, timestamp_ms } => {
+                 self.handle_timeout_fired(generation, timestamp_ms).await?;
+@@ -31,13 +44,23 @@ impl SessionActor {
+         is_final: bool,
+         timestamp_ms: i64,
+         client_timestamp_ms: Option<i64>,
++        domain_priors: Option<Vec<crate::messages::common::DomainPrior>>,
+     ) -> Result<(), anyhow::Error> {
+         // 濡傛灉姝ｅ湪 finalize锛屾柊鐨?chunk 杩涘叆涓嬩竴涓?utterance_index 鐨勭紦鍐插尯
++        let for_next_utterance = self.internal_state.finalize_inflight.is_some();
+         let utterance_index = if let Some(finalizing_index) = self.internal_state.finalize_inflight {
+             finalizing_index + 1
+         } else {
+             self.internal_state.current_utterance_index
+         };
++
++        // Freeze only when domainPriors field is explicitly present (Some).
++        // Missing (None) must not freeze and must not fabricate [].
++        // Explicit Some([]) / Some(non-empty) first-write freezes; later messages ignored.
++        if let Some(cleaned) = domain_priors {
++            self.internal_state
++                .freeze_domain_priors_snapshot(cleaned, for_next_utterance);
++        }
+         
+         // 鑾峰彇 session 閰嶇疆浠ョ‘瀹?audio_format 鍜?sample_rate
+         let session = match self.state.session_manager.get_session(&self.session_id).await {
+@@ -68,7 +91,7 @@ impl SessionActor {
+ 
+         // 鏇存柊鐘舵€?         self.internal_state.last_chunk_timestamp_ms = Some(timestamp_ms);
+-        if self.internal_state.first_chunk_client_timestamp_ms.is_none() {
++        if !for_next_utterance && self.internal_state.first_chunk_client_timestamp_ms.is_none() {
+             self.internal_state.first_chunk_client_timestamp_ms = client_timestamp_ms;
+         }
+         self.internal_state.enter_collecting();
+diff --git a/central_server/scheduler/src/websocket/session_actor/actor/actor_finalize.rs b/central_server/scheduler/src/websocket/session_actor/actor/actor_finalize.rs
+index 8f8e3c6..33a3c21 100644
+--- a/central_server/scheduler/src/websocket/session_actor/actor/actor_finalize.rs
++++ b/central_server/scheduler/src/websocket/session_actor/actor/actor_finalize.rs
+@@ -211,6 +211,12 @@ impl SessionActor {
+             is_manual_cut,
+             is_timeout_triggered,
+             is_max_duration_triggered,
++            // FW Repair V4锛氫娇鐢?utterance-start 鍐荤粨鐨?domainPriors 蹇収锛堥鍖呭啓鍏ワ紝绂佹涓€旇鐩栵級銆?+            // 绌哄揩鐓?/ 鏈檮鐫€ 鈫?None锛堢瓑浠?IFC-03 no-op锛夛紱retry 璇诲彇 Job 鍥哄寲鍊硷紝涓嶅洖鏌?Web銆?+            self.internal_state
++                .domain_priors_for_current_utterance
++                .clone()
++                .filter(|p| !p.is_empty()),
+         )
+         .await {
+             Ok(jobs) => {
+diff --git a/central_server/scheduler/src/websocket/session_actor/events.rs b/central_server/scheduler/src/websocket/session_actor/events.rs
+index 2d4de59..24a7d4f 100644
+--- a/central_server/scheduler/src/websocket/session_actor/events.rs
++++ b/central_server/scheduler/src/websocket/session_actor/events.rs
+@@ -12,6 +12,8 @@ pub enum SessionEvent {
+         is_final: bool,
+         timestamp_ms: i64, // 璋冨害鏈嶅姟鍣ㄦ帴鏀舵椂闂存埑
+         client_timestamp_ms: Option<i64>, // 瀹㈡埛绔彂閫佹椂闂存埑
++        /// FW Repair V4锛氫粎棣栧寘鎼哄甫锛涘凡鍦?handler 渚?schema-validate
++        domain_priors: Option<Vec<crate::messages::common::DomainPrior>>,
+     },
+     /// 瓒呮椂瑙﹀彂锛堝甫 generation 鐢ㄤ簬杩囨湡妫€娴嬶級
+     TimeoutFired {
+diff --git a/central_server/scheduler/src/websocket/session_actor/state.rs b/central_server/scheduler/src/websocket/session_actor/state.rs
+index 485228b..6ab8e59 100644
+--- a/central_server/scheduler/src/websocket/session_actor/state.rs
++++ b/central_server/scheduler/src/websocket/session_actor/state.rs
+@@ -39,6 +39,13 @@ pub struct SessionActorInternalState {
+     /// 褰撳墠 utterance 鐨勭疮绉煶棰戞椂闀匡紙姣锛?     /// 鐢ㄤ簬璺熻釜褰撳墠 utterance 鐨勬€绘椂闀匡紝瓒呰繃 max_duration_ms 鍚庤嚜鍔ㄨЕ鍙?finalize
+     pub accumulated_audio_duration_ms: u64,
++    /// FW Repair V4锛歶tterance-start domainPriors 蹇収锛堥鍖呭啓鍏ワ紝finalize 娑堣垂锛岀姝腑閫旇鐩栵級
++    pub domain_priors_for_current_utterance: Option<Vec<crate::messages::common::DomainPrior>>,
++    /// 褰撳墠 utterance 鐨?prior 蹇収鏄惁宸插喕缁擄紙绌烘暟缁勪篃绠楀凡鍐荤粨锛?+    pub domain_priors_snapshot_frozen: bool,
++    /// finalize 杩涜涓椂锛屼笅涓€ utterance 棣栧寘 prior锛坈omplete_finalize 鏃舵彁鍗囷級
++    pub pending_next_domain_priors: Option<Vec<crate::messages::common::DomainPrior>>,
++    pub pending_next_domain_priors_frozen: bool,
+ }
+ 
+ impl SessionActorInternalState {
+@@ -53,6 +60,10 @@ impl SessionActorInternalState {
+             pending_short_audio: false,
+             accumulated_short_audio_duration_ms: 0,
+             accumulated_audio_duration_ms: 0,
++            domain_priors_for_current_utterance: None,
++            domain_priors_snapshot_frozen: false,
++            pending_next_domain_priors: None,
++            pending_next_domain_priors_frozen: false,
+         }
+     }
+ 
+@@ -89,6 +100,66 @@ impl SessionActorInternalState {
+             self.current_utterance_index += 1;
+             self.state = SessionActorState::Idle;
+             self.finalize_inflight = None;
++            // Clear utterance-scoped snapshots so they cannot leak into the next turn.
++            self.first_chunk_client_timestamp_ms = None;
++            // Promote next-utterance prior snapshot if chunks arrived during finalize_inflight.
++            self.domain_priors_for_current_utterance = self.pending_next_domain_priors.take();
++            self.domain_priors_snapshot_frozen = self.pending_next_domain_priors_frozen;
++            self.pending_next_domain_priors_frozen = false;
++            self.accumulated_audio_duration_ms = 0;
++        }
++    }
++
++    /// Freeze utterance-start domainPriors once (schema-cleaned). Never overwrite.
++    pub fn freeze_domain_priors_snapshot(
++        &mut self,
++        cleaned: Vec<crate::messages::common::DomainPrior>,
++        for_next_utterance: bool,
++    ) {
++        if for_next_utterance {
++            if !self.pending_next_domain_priors_frozen {
++                self.pending_next_domain_priors = Some(cleaned);
++                self.pending_next_domain_priors_frozen = true;
++            }
++        } else if !self.domain_priors_snapshot_frozen {
++            self.domain_priors_for_current_utterance = Some(cleaned);
++            self.domain_priors_snapshot_frozen = true;
++        }
++    }
++
++    /// Diagnostics / tests: unset | explicit_empty | non_empty
++    pub fn domain_priors_snapshot_state(&self) -> &'static str {
++        if !self.domain_priors_snapshot_frozen {
++            "unset"
++        } else if self
++            .domain_priors_for_current_utterance
++            .as_ref()
++            .map(|p| p.is_empty())
++            .unwrap_or(true)
++        {
++            "explicit_empty"
++        } else {
++            "non_empty"
++        }
++    }
++
++    /// Job.domain_priors projection: empty freeze 鈫?None (IFC-03 no-op on wire to Node).
++    pub fn job_domain_priors_from_snapshot(
++        &self,
++    ) -> Option<Vec<crate::messages::common::DomainPrior>> {
++        self.domain_priors_for_current_utterance
++            .clone()
++            .filter(|p| !p.is_empty())
++    }
++
++    /// Apply AudioChunk prior event (mirror of actor_event_handling conditional freeze).
++    pub fn apply_audio_chunk_domain_priors_event(
++        &mut self,
++        domain_priors: Option<Vec<crate::messages::common::DomainPrior>>,
++        for_next_utterance: bool,
++    ) {
++        if let Some(cleaned) = domain_priors {
++            self.freeze_domain_priors_snapshot(cleaned, for_next_utterance);
+         }
+     }
+ 
+@@ -112,3 +183,159 @@ impl SessionActorInternalState {
+ 
+ }
+ 
++#[cfg(test)]
++mod tests {
++    use super::*;
++    use crate::messages::common::DomainPrior;
++    use crate::messages::domain_prior_validate::sanitize_domain_priors_preserving_presence;
++
++    fn prior(domain: &str) -> DomainPrior {
++        DomainPrior {
++            domain: domain.into(),
++            weight: 1.0,
++        }
++    }
++
++    #[test]
++    fn freezes_domain_priors_once_and_promotes_pending_on_complete() {
++        let mut state = SessionActorInternalState::new(0);
++        state.freeze_domain_priors_snapshot(vec![prior("coffee")], false);
++        state.freeze_domain_priors_snapshot(vec![prior("milk_tea")], false);
++        assert_eq!(
++            state.domain_priors_for_current_utterance.as_ref().unwrap()[0].domain,
++            "coffee"
++        );
++
++        state.enter_finalizing(0);
++        state.freeze_domain_priors_snapshot(vec![prior("tourism_transport")], true);
++        state.complete_finalize();
++        assert_eq!(state.current_utterance_index, 1);
++        assert_eq!(
++            state.domain_priors_for_current_utterance.as_ref().unwrap()[0].domain,
++            "tourism_transport"
++        );
++    }
++
++    #[test]
++    fn missing_does_not_freeze() {
++        let mut state = SessionActorInternalState::new(0);
++        state.apply_audio_chunk_domain_priors_event(None, false);
++        assert!(!state.domain_priors_snapshot_frozen);
++        assert_eq!(state.domain_priors_snapshot_state(), "unset");
++        assert!(state.job_domain_priors_from_snapshot().is_none());
++    }
++
++    #[test]
++    fn explicit_empty_freezes() {
++        let mut state = SessionActorInternalState::new(0);
++        state.apply_audio_chunk_domain_priors_event(Some(vec![]), false);
++        assert!(state.domain_priors_snapshot_frozen);
++        assert_eq!(state.domain_priors_snapshot_state(), "explicit_empty");
++        assert!(state.job_domain_priors_from_snapshot().is_none());
++    }
++
++    #[test]
++    fn non_empty_freezes() {
++        let mut state = SessionActorInternalState::new(0);
++        state.apply_audio_chunk_domain_priors_event(Some(vec![prior("coffee")]), false);
++        assert!(state.domain_priors_snapshot_frozen);
++        assert_eq!(state.domain_priors_snapshot_state(), "non_empty");
++        assert_eq!(
++            state.job_domain_priors_from_snapshot().unwrap()[0].domain,
++            "coffee"
++        );
++    }
++
++    #[test]
++    fn missing_then_valid_freezes_valid() {
++        let mut state = SessionActorInternalState::new(0);
++        state.apply_audio_chunk_domain_priors_event(None, false);
++        state.apply_audio_chunk_domain_priors_event(Some(vec![prior("coffee")]), false);
++        assert_eq!(state.domain_priors_snapshot_state(), "non_empty");
++        assert_eq!(
++            state.domain_priors_for_current_utterance.as_ref().unwrap()[0].domain,
++            "coffee"
++        );
++    }
++
++    #[test]
++    fn empty_then_valid_keeps_empty() {
++        let mut state = SessionActorInternalState::new(0);
++        state.apply_audio_chunk_domain_priors_event(Some(vec![]), false);
++        state.apply_audio_chunk_domain_priors_event(Some(vec![prior("coffee")]), false);
++        assert_eq!(state.domain_priors_snapshot_state(), "explicit_empty");
++        assert!(state.job_domain_priors_from_snapshot().is_none());
++    }
++
++    #[test]
++    fn invalid_explicit_then_valid_keeps_cleaned_empty() {
++        let mut state = SessionActorInternalState::new(0);
++        let cleaned = sanitize_domain_priors_preserving_presence(Some(vec![DomainPrior {
++            domain: "".into(),
++            weight: 0.0,
++        }]));
++        assert_eq!(cleaned, Some(vec![]));
++        state.apply_audio_chunk_domain_priors_event(cleaned, false);
++        state.apply_audio_chunk_domain_priors_event(Some(vec![prior("coffee")]), false);
++        assert_eq!(state.domain_priors_snapshot_state(), "explicit_empty");
++    }
++
++    #[test]
++    fn pending_next_missing_does_not_freeze() {
++        let mut state = SessionActorInternalState::new(0);
++        state.enter_finalizing(0);
++        state.apply_audio_chunk_domain_priors_event(None, true);
++        assert!(!state.pending_next_domain_priors_frozen);
++        state.apply_audio_chunk_domain_priors_event(Some(vec![prior("coffee")]), true);
++        assert!(state.pending_next_domain_priors_frozen);
++        assert_eq!(
++            state.pending_next_domain_priors.as_ref().unwrap()[0].domain,
++            "coffee"
++        );
++    }
++
++    #[test]
++    fn pending_next_empty_then_valid_keeps_empty() {
++        let mut state = SessionActorInternalState::new(0);
++        state.enter_finalizing(0);
++        state.apply_audio_chunk_domain_priors_event(Some(vec![]), true);
++        state.apply_audio_chunk_domain_priors_event(Some(vec![prior("coffee")]), true);
++        assert!(state.pending_next_domain_priors_frozen);
++        assert_eq!(state.pending_next_domain_priors.as_ref().unwrap().len(), 0);
++    }
++
++    #[test]
++    fn production_like_concurrent_reorder_same_snapshot_to_job() {
++        // Mirrors: chunk2 arrives first with snapshot A, then chunk1 with same A, then finalize.
++        let snapshot_a = vec![prior("coffee")];
++        let wire_chunk2 = sanitize_domain_priors_preserving_presence(Some(snapshot_a.clone()));
++        let wire_chunk1 = sanitize_domain_priors_preserving_presence(Some(snapshot_a.clone()));
++        assert_eq!(wire_chunk2, wire_chunk1);
++
++        let mut state = SessionActorInternalState::new(0);
++        state.apply_audio_chunk_domain_priors_event(wire_chunk2, false);
++        state.apply_audio_chunk_domain_priors_event(wire_chunk1, false);
++        assert_eq!(state.domain_priors_snapshot_state(), "non_empty");
++        let job_priors = state.job_domain_priors_from_snapshot();
++        assert_eq!(job_priors.as_ref().unwrap()[0].domain, "coffee");
++    }
++
++    #[test]
++    fn finalize_without_carrier_job_none() {
++        let state = SessionActorInternalState::new(0);
++        assert_eq!(state.domain_priors_snapshot_state(), "unset");
++        assert!(state.job_domain_priors_from_snapshot().is_none());
++    }
++
++    #[test]
++    fn retry_uses_frozen_job_priors_not_web_reread() {
++        let mut state = SessionActorInternalState::new(0);
++        state.apply_audio_chunk_domain_priors_event(Some(vec![prior("coffee")]), false);
++        let job1 = state.job_domain_priors_from_snapshot();
++        // Simulate "Web store changed" 鈥?Actor must not re-read; Job snapshot stays.
++        let job2 = state.job_domain_priors_from_snapshot();
++        assert_eq!(job1, job2);
++        assert_eq!(job2.unwrap()[0].domain, "coffee");
++    }
++}
++
+diff --git a/central_server/scheduler/src/websocket/session_message_handler/audio.rs b/central_server/scheduler/src/websocket/session_message_handler/audio.rs
+index 7742e48..571e6b8 100644
+--- a/central_server/scheduler/src/websocket/session_message_handler/audio.rs
++++ b/central_server/scheduler/src/websocket/session_message_handler/audio.rs
+@@ -1,9 +1,11 @@
+ use base64::{engine::general_purpose, Engine as _};
+ use crate::core::AppState;
++use crate::messages::common::DomainPrior;
++use crate::messages::domain_prior_validate::sanitize_domain_priors_preserving_presence;
+ use crate::websocket::session_actor::SessionEvent;
+ use axum::extract::ws::Message;
+ use tokio::sync::mpsc;
+-use tracing::debug;
++use tracing::{debug, info};
+ 
+ 
+ pub(super) async fn handle_audio_chunk(
+@@ -13,6 +15,7 @@ pub(super) async fn handle_audio_chunk(
+     is_final: bool,
+     payload: Option<String>,
+     client_timestamp_ms: Option<i64>,
++    domain_priors: Option<Vec<DomainPrior>>,
+ ) -> Result<(), anyhow::Error> {
+     // 楠岃瘉浼氳瘽
+     let _session = state
+@@ -39,6 +42,21 @@ pub(super) async fn handle_audio_chunk(
+ 
+     let now_ms = chrono::Utc::now().timestamp_millis();
+ 
++    // Preserve Option presence: missing 鈮?explicit empty.
++    // None 鈫?event None (do not freeze). Some(raw) 鈫?Some(cleaned) (may be []).
++    let before_len = domain_priors.as_ref().map(Vec::len);
++    let event_domain_priors = sanitize_domain_priors_preserving_presence(domain_priors);
++    if let (Some(before), Some(cleaned)) = (before_len, event_domain_priors.as_ref()) {
++        if before != cleaned.len() {
++            info!(
++                session_id = %sess_id,
++                before,
++                after = cleaned.len(),
++                "AudioChunk domainPriors sanitized (schema-only)"
++            );
++        }
++    }
++
+     // 鍙戦€侀煶棰戝潡浜嬩欢鍒?Actor
+     // 濡傛灉 channel 宸插叧闂紙session 宸叉柇寮€锛夛紝浼橀泤澶勭悊鑰屼笉鏄姤閿?     if let Err(_) = actor_handle.send(SessionEvent::AudioChunkReceived {
+@@ -46,6 +64,7 @@ pub(super) async fn handle_audio_chunk(
+         is_final,
+         timestamp_ms: now_ms,
+         client_timestamp_ms,
++        domain_priors: event_domain_priors,
+     }) {
+         // Session Actor channel 宸插叧闂紝璇存槑 session 宸叉柇寮€
+         // 杩欐槸姝ｅ父鎯呭喌锛屼笉闇€瑕佹姤閿?@@ -60,4 +79,3 @@ pub(super) async fn handle_audio_chunk(
+ 
+     Ok(())
+ }
+-
+diff --git a/central_server/scheduler/src/websocket/session_message_handler/mod.rs b/central_server/scheduler/src/websocket/session_message_handler/mod.rs
+index b1d5115..74f14e6 100644
+--- a/central_server/scheduler/src/websocket/session_message_handler/mod.rs
++++ b/central_server/scheduler/src/websocket/session_message_handler/mod.rs
+@@ -64,8 +64,19 @@ pub(crate) async fn handle_session_message(
+             is_final,
+             payload,
+             client_timestamp_ms,
++            domain_context_version: _,
++            domain_priors,
+         } => {
+-            audio::handle_audio_chunk(state, tx, sess_id, is_final, payload, client_timestamp_ms).await?;
++            audio::handle_audio_chunk(
++                state,
++                tx,
++                sess_id,
++                is_final,
++                payload,
++                client_timestamp_ms,
++                domain_priors,
++            )
++            .await?;
+         }
+ 
+         SessionMessage::Utterance {
+@@ -87,6 +98,8 @@ pub(crate) async fn handle_session_message(
+             partial_update_interval_ms: _,
+             trace_id: utterance_trace_id,
+             pipeline,
++            domain_context_version: _,
++            domain_priors,
+         } => {
+             utterance::handle_utterance(
+                 state,
+@@ -103,6 +116,7 @@ pub(crate) async fn handle_session_message(
+                 sample_rate,
+                 utterance_trace_id,
+                 pipeline,
++                domain_priors,
+             )
+             .await?;
+         }
+diff --git a/central_server/scheduler/src/websocket/session_message_handler/utterance.rs b/central_server/scheduler/src/websocket/session_message_handler/utterance.rs
+index 57e57e3..d960567 100644
+--- a/central_server/scheduler/src/websocket/session_message_handler/utterance.rs
++++ b/central_server/scheduler/src/websocket/session_message_handler/utterance.rs
+@@ -1,6 +1,7 @@
+ use base64::{engine::general_purpose, Engine as _};
+ use crate::core::AppState;
+-use crate::messages::{ErrorCode, UiEventStatus, UiEventType};
++use crate::messages::{ErrorCode, UiEventStatus, UiEventType, DomainPrior};
++use crate::messages::domain_prior_validate::validate_domain_priors;
+ use crate::websocket::{create_job_assign_message, send_ui_event};
+ use crate::websocket::job_creator::create_translation_jobs;
+ use axum::extract::ws::Message;
+@@ -22,6 +23,7 @@ pub(super) async fn handle_utterance(
+     sample_rate: u32,
+     utterance_trace_id: Option<String>,
+     pipeline: Option<crate::messages::PipelineConfig>,
++    domain_priors: Option<Vec<DomainPrior>>,
+ ) -> Result<(), anyhow::Error> {
+     // 楠岃瘉浼氳瘽
+     let session = state
+@@ -53,6 +55,24 @@ pub(super) async fn handle_utterance(
+     let enable_streaming_asr = Some(true); // 榛樿鍚敤娴佸紡 ASR
+     let partial_update_interval_ms = Some(1000u64); // 榛樿 1 绉掓洿鏂伴棿闅? 
++    // FW Repair V4锛歋cheduler 鍙仛 schema 鏍￠獙/娓呮礂锛屼笉鍋氶鍩熸帹鐞嗐€佷笉鍔犺浇璇嶅簱 registry
++    let domain_priors_before = domain_priors.as_ref().map(Vec::len).unwrap_or(0);
++    let cleaned_domain_priors = validate_domain_priors(domain_priors);
++    if domain_priors_before != cleaned_domain_priors.len() {
++        info!(
++            session_id = %sess_id,
++            utterance_index = utterance_index,
++            before = domain_priors_before,
++            after = cleaned_domain_priors.len(),
++            "銆怳tterance銆慸omainPriors 娓呮礂锛堜涪寮冮潪娉?瓒呴檺椤癸級"
++        );
++    }
++    let final_domain_priors = if cleaned_domain_priors.is_empty() {
++        None
++    } else {
++        Some(cleaned_domain_priors)
++    };
++
+     info!(
+         session_id = %sess_id,
+         utterance_index = utterance_index,
+@@ -93,6 +113,7 @@ pub(super) async fn handle_utterance(
+         manual_cut,
+         false,
+         false,
++        final_domain_priors,
+     )
+     .await?;
+ 
+diff --git a/central_server/shared/protocols/messages.ts b/central_server/shared/protocols/messages.ts
+index 707ae96..baa0d13 100644
+--- a/central_server/shared/protocols/messages.ts
++++ b/central_server/shared/protocols/messages.ts
+@@ -78,6 +78,35 @@ export interface CapabilityByType {
+   ready_impl_ids?: string[];
+ }
+ 
++// ===== FW Repair V4锛氫細璇濋鍩熷厛楠?/ 褰撳墠鍙ラ鍩熸姇褰?/ LLM 棰嗗煙鏍″噯 =====
++// 瀛楁鍚嶅喕缁擄紝绂佹鏂板鍚屼箟瀛楁锛岃瑙?docs/tone-v2/FW_Repair_V4_FineSpan_*_2026_07_22.md
++
++/** 棰嗗煙涓婁笅鏂囧崗璁増鏈紱浠呯敤浜庤В鏋愬吋瀹癸紝涓嶉€夋嫨涓嶅悓涓氬姟绠楁硶 */
++export type DomainContextVersion = 'v1';
++
++/** Web 浼氳瘽棰嗗煙鍏堥獙锛圵eb 涓哄敮涓€ owner锛汼cheduler 鍙牎楠岄€忎紶锛孨ode 浠呬綔 soft 鎺掑簭/閰嶉杈撳叆锛?*/
++export interface DomainPrior {
++  domain: string;
++  weight: number;
++}
++
++/** 褰撳墠鍙?Domain Vote 鎶曞奖锛圢ode 褰撳墠鍙ヨ瘉鎹紝Top3锛屼緵 Web 浼氳瘽鑱氬悎娑堣垂锛屼笉鍏峰浼氳瘽鍐崇瓥鏉冿級 */
++export interface CurrentTurnDomain {
++  domain: string;
++  voteCount: number;
++  normalizedScore?: number;
++}
++
++/** LLM 棰嗗煙鏍″噯锛坅dvisory only锛屼笉鍏峰鐩存帴鍐崇瓥鏉冿紝鏄惁搴旂敤鐢?Web merger 鍐冲畾锛?*/
++export interface LlmDomainCalibration {
++  primaryDomain?: string;
++  secondaryDomains?: string[];
++  confidence: number;
++  topicShift: boolean;
++  summaryVersion: string;
++  updatedAt: number;
++}
++
+ // ===== 绉诲姩绔?鈫?璋冨害鏈嶅姟鍣?=====
+ 
+ export interface SessionInitMessage {
+@@ -136,6 +165,10 @@ export interface UtteranceMessage {
+     use_tts?: boolean;
+     use_tone?: boolean; // 鏄惁浣跨敤 TONE 鏈嶅姟锛堥煶鑹插厠闅嗭級
+   };
++  /** FW Repair V4锛氶鍩熶笂涓嬫枃鍗忚鐗堟湰锛堝浐瀹?"v1"锛岀己澶辩瓑鍚屼笉甯︾増鏈紝浠呯敤浜庤В鏋愬吋瀹癸級 */
++  domainContextVersion?: DomainContextVersion;
++  /** FW Repair V4锛歐eb 浼氳瘽棰嗗煙鍏堥獙锛圱op3锛宻oft prior锛岀敱 Web 鐢熸垚锛孲cheduler 鍙牎楠岄€忎紶锛?*/
++  domainPriors?: DomainPrior[];
+ }
+ 
+ export interface ServiceTimings {
+@@ -163,6 +196,10 @@ export interface TranslationResultMessage {
+     speech_rate?: number | null;
+     voice_style?: string | null;
+     service_timings?: ServiceTimings;
++    /** FW Repair V4锛氬綋鍓嶅彞 Domain Vote 鎶曞奖锛圱op3锛屾潵鑷?Node JobResult assembly锛?*/
++    currentTurnDomains?: CurrentTurnDomain[];
++    /** FW Repair V4锛歀LM 棰嗗煙鏍″噯锛坅dvisory锛屾槸鍚﹀簲鐢ㄧ敱 Web merger 鍐冲畾锛?*/
++    llmCalibration?: LlmDomainCalibration;
+     [key: string]: unknown;
+   };
+   /** 杩借釜 ID锛堝繀闇€锛岀敤浜庡叏閾捐矾杩借釜锛?*/
+@@ -372,6 +409,10 @@ export interface JobAssignMessage {
+   trace_id: string;
+   /** EDGE-4: Padding 閰嶇疆锛堟绉掞級锛岀敤浜庡湪闊抽鏈熬娣诲姞闈欓煶 */
+   padding_ms?: number;
++  /** FW Repair V4锛氶鍩熶笂涓嬫枃鍗忚鐗堟湰锛堝浐瀹?"v1"锛岀己澶辩瓑鍚屼笉甯︾増鏈紝浠呯敤浜庤В鏋愬吋瀹癸級 */
++  domainContextVersion?: DomainContextVersion;
++  /** FW Repair V4锛歐eb 浼氳瘽棰嗗煙鍏堥獙锛圱op3锛宻oft prior锛孲cheduler 鏍￠獙鍚庡浐鍖栧埌 job payload锛宺etry 淇濇寔涓€鑷达級 */
++  domainPriors?: DomainPrior[];
+ }
+ 
+ export interface JobCancelMessage {
+@@ -400,6 +441,10 @@ export interface JobResultMessage {
+     emotion?: string | null;
+     speech_rate?: number | null;
+     voice_style?: string | null;
++    /** FW Repair V4锛氬綋鍓嶅彞 Domain Vote 鎶曞奖锛圱op3锛屾潵鑷?Node JobResult assembly锛?*/
++    currentTurnDomains?: CurrentTurnDomain[];
++    /** FW Repair V4锛歀LM 棰嗗煙鏍″噯锛坅dvisory锛屾槸鍚﹀簲鐢ㄧ敱 Web merger 鍐冲畾锛?*/
++    llmCalibration?: LlmDomainCalibration;
+     [key: string]: unknown;
+   };
+   processing_time_ms?: number;
+diff --git a/electron_node/services/faster_whisper_vad/service.json b/electron_node/services/faster_whisper_vad/service.json
+index 25ace83..ab1c38b 100644
+--- a/electron_node/services/faster_whisper_vad/service.json
++++ b/electron_node/services/faster_whisper_vad/service.json
+@@ -14,6 +14,8 @@
+   "env": {
+     "ASR_MODEL": "medium",
+     "ASR_BEAM_SIZE": "1",
+-    "ASR_COMPUTE_TYPE": "int8_float16"
++    "ASR_COMPUTE_TYPE": "int8_float16",
++    "TONE_P10_VAD_CPU": "1",
++    "FASTER_WHISPER_VAD_PORT": "6007"
+   }
+ }
+diff --git a/electron_node/services/faster_whisper_vad/tone_module/backends/numpy_p1.py b/electron_node/services/faster_whisper_vad/tone_module/backends/numpy_p1.py
+index 3e79a5f..b81fae9 100644
+--- a/electron_node/services/faster_whisper_vad/tone_module/backends/numpy_p1.py
++++ b/electron_node/services/faster_whisper_vad/tone_module/backends/numpy_p1.py
+@@ -29,7 +29,11 @@ def infer_batch(feature_batch: np.ndarray, weights) -> np.ndarray:
+         return predict_posteriors_v2(feature_batch, weights)
+     if isinstance(weights, contract.ToneModelWeightsV1):
+         return predict_posteriors_v1(feature_batch, weights)
++    if isinstance(weights, contract.ToneModelWeightsV3):
++        raise ValueError("ToneModelWeightsV3 requires numpy_crnn_v1 backend; refusing numpy_p1")
+     arch = getattr(weights, "architecture", None)
++    if arch == contract.P3_MODEL_ARCHITECTURE:
++        raise ValueError("conv1d_bigru_v1 requires numpy_crnn_v1 backend; refusing numpy_p1")
+     if arch == contract.P2_MODEL_ARCHITECTURE:
+         return predict_posteriors_v2(feature_batch, weights)
+     return predict_posteriors_v1(feature_batch, weights)
+diff --git a/electron_node/services/faster_whisper_vad/tone_module/classifier.py b/electron_node/services/faster_whisper_vad/tone_module/classifier.py
+index 6ecf310..0f4de12 100644
+--- a/electron_node/services/faster_whisper_vad/tone_module/classifier.py
++++ b/electron_node/services/faster_whisper_vad/tone_module/classifier.py
+@@ -6,8 +6,9 @@ from typing import Any, Dict, Optional
+ 
+ import numpy as np
+ 
+-from tone_module.backends.numpy_p1 import infer_batch
+-from tone_module.contract import P0_N_CLASSES, P1_FEATURE_SHAPE
++from tone_module.backends.numpy_crnn_v1 import infer_batch as infer_batch_crnn
++from tone_module.backends.numpy_p1 import infer_batch as infer_batch_cnn
++from tone_module.contract import P0_N_CLASSES, P1_FEATURE_SHAPE, P3_BACKEND, ToneModelWeightsV3
+ from tone_module.loader_v1 import ToneModelLoaderV1, get_tone_loader_v1, reset_tone_loader_v1_singleton
+ 
+ logger = logging.getLogger(__name__)
+@@ -49,7 +50,12 @@ class ToneClassifier:
+         weights = self._loader.weights
+         if weights is None:
+             return np.zeros((0, N_CLASSES), dtype=np.float32)
+-        return infer_batch(feature_batch, weights)
++        meta = self._loader.metadata
++        if isinstance(weights, ToneModelWeightsV3):
++            return infer_batch_crnn(feature_batch, weights)
++        if meta and meta.backend == P3_BACKEND:
++            raise RuntimeError("CRNN backend metadata without ToneModelWeightsV3 weights")
++        return infer_batch_cnn(feature_batch, weights)
+ 
+ 
+ _classifier: Optional[ToneClassifier] = None
+diff --git a/electron_node/services/faster_whisper_vad/tone_module/contract.py b/electron_node/services/faster_whisper_vad/tone_module/contract.py
+index 9dde5b0..b1a1cc4 100644
+--- a/electron_node/services/faster_whisper_vad/tone_module/contract.py
++++ b/electron_node/services/faster_whisper_vad/tone_module/contract.py
+@@ -293,3 +293,87 @@ class ToneModelWeightsV2:
+     @property
+     def architecture(self) -> str:
+         return P2_MODEL_ARCHITECTURE
++
++
++# --- Tone Model V3 CRNN Pilot (conv1d_bigru_v1) 鈥?numpy_crnn_v1 backend ---
++
++P3_MODEL_ARCHITECTURE = "conv1d_bigru_v1"
++P3_DEFAULT_MODEL_VERSION = "tone_crnn_v3"
++P3_BACKEND = "numpy_crnn_v1"
++P3_CNN_CONV1_OUT = 96
++P3_CNN_CONV2_OUT = 128
++P3_CNN_KERNEL5 = 5
++P3_CNN_KERNEL3 = 3
++P3_CNN_CONV5_PAD = 2
++P3_CNN_CONV3_PAD = 1
++P3_GRU_HIDDEN = 96
++P3_GRU_NUM_LAYERS = 1
++P3_GRU_BIDIRECTIONAL = True
++P3_FC1_OUT = 96
++P3_BN_EPS = 1e-5
++P3_GRU_GATE_ORDER = "rzn"  # PyTorch GRU: reset, update, new
++
++P3_REQUIRED_WEIGHT_KEYS = (
++    "conv1_w",
++    "conv1_b",
++    "bn1_gamma",
++    "bn1_beta",
++    "bn1_running_mean",
++    "bn1_running_var",
++    "conv2_w",
++    "conv2_b",
++    "bn2_gamma",
++    "bn2_beta",
++    "bn2_running_mean",
++    "bn2_running_var",
++    "gru_fwd_weight_ih",
++    "gru_fwd_weight_hh",
++    "gru_fwd_bias_ih",
++    "gru_fwd_bias_hh",
++    "gru_bwd_weight_ih",
++    "gru_bwd_weight_hh",
++    "gru_bwd_bias_ih",
++    "gru_bwd_bias_hh",
++    "fc1_w",
++    "fc1_b",
++    "fc_w",
++    "fc_b",
++    "feature_mean",
++    "feature_std",
++)
++
++
++@dataclass
++class ToneModelWeightsV3:
++    """CRNN V3 weights for numpy_crnn_v1 inference."""
++
++    conv1_w: Any
++    conv1_b: Any
++    bn1_gamma: Any
++    bn1_beta: Any
++    bn1_running_mean: Any
++    bn1_running_var: Any
++    conv2_w: Any
++    conv2_b: Any
++    bn2_gamma: Any
++    bn2_beta: Any
++    bn2_running_mean: Any
++    bn2_running_var: Any
++    gru_fwd_weight_ih: Any
++    gru_fwd_weight_hh: Any
++    gru_fwd_bias_ih: Any
++    gru_fwd_bias_hh: Any
++    gru_bwd_weight_ih: Any
++    gru_bwd_weight_hh: Any
++    gru_bwd_bias_ih: Any
++    gru_bwd_bias_hh: Any
++    fc1_w: Any
++    fc1_b: Any
++    fc_w: Any
++    fc_b: Any
++    feature_mean: Any
++    feature_std: Any
++
++    @property
++    def architecture(self) -> str:
++        return P3_MODEL_ARCHITECTURE
+diff --git a/electron_node/services/lexicon_intent_cpu/prompt_templates.py b/electron_node/services/lexicon_intent_cpu/prompt_templates.py
+index 288f558..3628b2c 100644
+--- a/electron_node/services/lexicon_intent_cpu/prompt_templates.py
++++ b/electron_node/services/lexicon_intent_cpu/prompt_templates.py
+@@ -25,12 +25,14 @@ class IntentPromptTemplate:
+             "4. Do NOT rewrite, fix, or generate replacement text.\n"
+             "5. summary must be <= 300 chars describing the session topic.\n"
+             "6. shouldSwitch=true only if primaryDomain differs from currentPrimary.\n"
+-            "7. topicKeywords: 0-8 short Chinese topic words (2-8 chars each), no pinyin.\n"
++            "7. topicShift=true only if the conversation topic clearly changed; "
++            "it is NOT whether to switch the active profile, and NOT whether a secondary domain exists.\n"
++            "8. topicKeywords: 0-8 short Chinese topic words (2-8 chars each), no pinyin.\n"
+             "Allowed domains:\n"
+             f"{domain_lines}\n"
+             "Required JSON schema:\n"
+             '{"summary":"...","topicKeywords":["鍜栧暋","涓澂"],"primaryDomain":"travel","secondaryDomains":[],"confidence":0.86,'
+-            '"shouldSwitch":true,"reason":["..."],"effectiveFromTurn":0}'
++            '"shouldSwitch":true,"topicShift":false,"reason":["..."],"effectiveFromTurn":0}'
+         )
+ 
+     @staticmethod
+diff --git a/electron_node/shared/protocols/messages.ts b/electron_node/shared/protocols/messages.ts
+index 80e56ab..d2a3716 100644
+--- a/electron_node/shared/protocols/messages.ts
++++ b/electron_node/shared/protocols/messages.ts
+@@ -99,6 +99,35 @@ export interface NodeLanguageCapabilities {
+   semantic_core_ready?: boolean;
+ }
+ 
++// ===== FW Repair V4锛氫細璇濋鍩熷厛楠?/ 褰撳墠鍙ラ鍩熸姇褰?/ LLM 棰嗗煙鏍″噯 =====
++// 瀛楁鍚嶅喕缁擄紝绂佹鏂板鍚屼箟瀛楁锛岃瑙?docs/tone-v2/FW_Repair_V4_FineSpan_*_2026_07_22.md
++
++/** 棰嗗煙涓婁笅鏂囧崗璁増鏈紱浠呯敤浜庤В鏋愬吋瀹癸紝涓嶉€夋嫨涓嶅悓涓氬姟绠楁硶 */
++export type DomainContextVersion = 'v1';
++
++/** Web 浼氳瘽棰嗗煙鍏堥獙锛圵eb 涓哄敮涓€ owner锛汼cheduler 鍙牎楠岄€忎紶锛孨ode 浠呬綔 soft 鎺掑簭/閰嶉杈撳叆锛?*/
++export interface DomainPrior {
++  domain: string;
++  weight: number;
++}
++
++/** 褰撳墠鍙?Domain Vote 鎶曞奖锛圢ode 褰撳墠鍙ヨ瘉鎹紝Top3锛屼緵 Web 浼氳瘽鑱氬悎娑堣垂锛屼笉鍏峰浼氳瘽鍐崇瓥鏉冿級 */
++export interface CurrentTurnDomain {
++  domain: string;
++  voteCount: number;
++  normalizedScore?: number;
++}
++
++/** LLM 棰嗗煙鏍″噯锛坅dvisory only锛屼笉鍏峰鐩存帴鍐崇瓥鏉冿紝鏄惁搴旂敤鐢?Web merger 鍐冲畾锛?*/
++export interface LlmDomainCalibration {
++  primaryDomain?: string;
++  secondaryDomains?: string[];
++  confidence: number;
++  topicShift: boolean;
++  summaryVersion: string;
++  updatedAt: number;
++}
++
+ // ===== 绉诲姩绔?鈫?璋冨害鏈嶅姟鍣?=====
+ 
+ export interface SessionInitMessage {
+@@ -150,6 +179,10 @@ export interface UtteranceMessage {
+   partial_update_interval_ms?: number;
+   /** 杩借釜 ID锛堝彲閫夛紝瀹㈡埛绔彁渚涙垨浠?Session 涓幏鍙栵級 */
+   trace_id?: string;
++  /** FW Repair V4锛氶鍩熶笂涓嬫枃鍗忚鐗堟湰锛堝浐瀹?"v1"锛岀己澶辩瓑鍚屼笉甯︾増鏈紝浠呯敤浜庤В鏋愬吋瀹癸級 */
++  domainContextVersion?: DomainContextVersion;
++  /** FW Repair V4锛歐eb 浼氳瘽棰嗗煙鍏堥獙锛圱op3锛宻oft prior锛岀敱 Web 鐢熸垚锛孲cheduler 鍙牎楠岄€忎紶锛?*/
++  domainPriors?: DomainPrior[];
+ }
+ 
+ export interface ServiceTimings {
+@@ -177,6 +210,10 @@ export interface TranslationResultMessage {
+     speech_rate?: number | null;
+     voice_style?: string | null;
+     service_timings?: ServiceTimings;
++    /** FW Repair V4锛氬綋鍓嶅彞 Domain Vote 鎶曞奖锛圱op3锛屾潵鑷?Node JobResult assembly锛?*/
++    currentTurnDomains?: CurrentTurnDomain[];
++    /** FW Repair V4锛歀LM 棰嗗煙鏍″噯锛坅dvisory锛屾槸鍚﹀簲鐢ㄧ敱 Web merger 鍐冲畾锛?*/
++    llmCalibration?: LlmDomainCalibration;
+     [key: string]: unknown;
+   };
+   /** 杩借釜 ID锛堝繀闇€锛岀敤浜庡叏閾捐矾杩借釜锛?*/
+@@ -429,6 +466,10 @@ export interface JobAssignMessage {
+   lid?: { candidates: [string, string] };
+   /** 闈㈠闈㈡ā寮忥細鎴块棿 ID锛岀敤浜?Router 鐘舵€佹寜鎴块棿缁存姢 */
+   room_id?: string;
++  /** FW Repair V4锛氶鍩熶笂涓嬫枃鍗忚鐗堟湰锛堝浐瀹?"v1"锛岀己澶辩瓑鍚屼笉甯︾増鏈紝浠呯敤浜庤В鏋愬吋瀹癸級 */
++  domainContextVersion?: DomainContextVersion;
++  /** FW Repair V4锛歐eb 浼氳瘽棰嗗煙鍏堥獙锛圱op3锛宻oft prior锛孲cheduler 鏍￠獙鍚庡浐鍖栧埌 job payload锛宺etry 淇濇寔涓€鑷达級 */
++  domainPriors?: DomainPrior[];
+ }
+ 
+ export interface JobCancelMessage {
+@@ -457,6 +498,10 @@ export interface JobResultMessage {
+     emotion?: string | null;
+     speech_rate?: number | null;
+     voice_style?: string | null;
++    /** FW Repair V4锛氬綋鍓嶅彞 Domain Vote 鎶曞奖锛圱op3锛屾潵鑷?Node JobResult assembly锛?*/
++    currentTurnDomains?: CurrentTurnDomain[];
++    /** FW Repair V4锛歀LM 棰嗗煙鏍″噯锛坅dvisory锛屾槸鍚﹀簲鐢ㄧ敱 Web merger 鍐冲畾锛?*/
++    llmCalibration?: LlmDomainCalibration;
+     [key: string]: unknown;
+   };
+   processing_time_ms?: number;
+diff --git a/webapp/shared/protocols/messages.ts b/webapp/shared/protocols/messages.ts
+index ac0901d..6229339 100644
+--- a/webapp/shared/protocols/messages.ts
++++ b/webapp/shared/protocols/messages.ts
+@@ -75,6 +75,35 @@ export interface CapabilityByType {
+   ready_impl_ids?: string[];
+ }
+ 
++// ===== FW Repair V4锛氫細璇濋鍩熷厛楠?/ 褰撳墠鍙ラ鍩熸姇褰?/ LLM 棰嗗煙鏍″噯 =====
++// 瀛楁鍚嶅喕缁擄紝绂佹鏂板鍚屼箟瀛楁锛岃瑙?docs/tone-v2/FW_Repair_V4_FineSpan_*_2026_07_22.md
++
++/** 棰嗗煙涓婁笅鏂囧崗璁増鏈紱浠呯敤浜庤В鏋愬吋瀹癸紝涓嶉€夋嫨涓嶅悓涓氬姟绠楁硶 */
++export type DomainContextVersion = 'v1';
++
++/** Web 浼氳瘽棰嗗煙鍏堥獙锛圵eb 涓哄敮涓€ owner锛汼cheduler 鍙牎楠岄€忎紶锛孨ode 浠呬綔 soft 鎺掑簭/閰嶉杈撳叆锛?*/
++export interface DomainPrior {
++  domain: string;
++  weight: number;
++}
++
++/** 褰撳墠鍙?Domain Vote 鎶曞奖锛圢ode 褰撳墠鍙ヨ瘉鎹紝Top3锛屼緵 Web 浼氳瘽鑱氬悎娑堣垂锛屼笉鍏峰浼氳瘽鍐崇瓥鏉冿級 */
++export interface CurrentTurnDomain {
++  domain: string;
++  voteCount: number;
++  normalizedScore?: number;
++}
++
++/** LLM 棰嗗煙鏍″噯锛坅dvisory only锛屼笉鍏峰鐩存帴鍐崇瓥鏉冿紝鏄惁搴旂敤鐢?Web merger 鍐冲畾锛?*/
++export interface LlmDomainCalibration {
++  primaryDomain?: string;
++  secondaryDomains?: string[];
++  confidence: number;
++  topicShift: boolean;
++  summaryVersion: string;
++  updatedAt: number;
++}
++
+ // ===== 绉诲姩绔?鈫?璋冨害鏈嶅姟鍣?=====
+ 
+ export interface SessionInitMessage {
+@@ -136,6 +165,10 @@ export interface UtteranceMessage {
+     use_phonetic?: boolean; // 鏄惁浣跨敤鍚岄煶绾犻敊 5016锛堣妭鐐圭己鐪?false锛屼笖闇€ features.phoneticCorrection.enabled锛?     use_lexicon?: boolean; // SQLite 璇嶅簱 recall preview锛堣妭鐐圭己鐪?false锛?   };
++  /** FW Repair V4锛氶鍩熶笂涓嬫枃鍗忚鐗堟湰锛堝浐瀹?"v1"锛岀己澶辩瓑鍚屼笉甯︾増鏈紝浠呯敤浜庤В鏋愬吋瀹癸級 */
++  domainContextVersion?: DomainContextVersion;
++  /** FW Repair V4锛歐eb 浼氳瘽棰嗗煙鍏堥獙锛圱op3锛宻oft prior锛岀敱 Web 鐢熸垚锛孲cheduler 鍙牎楠岄€忎紶锛?*/
++  domainPriors?: DomainPrior[];
+ }
+ 
+ export interface ServiceTimings {
+@@ -174,6 +207,10 @@ export interface TranslationResultMessage {
+     speech_rate?: number | null;
+     voice_style?: string | null;
+     service_timings?: ServiceTimings;
++    /** FW Repair V4锛氬綋鍓嶅彞 Domain Vote 鎶曞奖锛圱op3锛屾潵鑷?Node JobResult assembly锛?*/
++    currentTurnDomains?: CurrentTurnDomain[];
++    /** FW Repair V4锛歀LM 棰嗗煙鏍″噯锛坅dvisory锛屾槸鍚﹀簲鐢ㄧ敱 Web merger 鍐冲畾锛?*/
++    llmCalibration?: LlmDomainCalibration;
+     [key: string]: unknown;
+   };
+   /** 杩借釜 ID锛堝繀闇€锛岀敤浜庡叏閾捐矾杩借釜锛?*/
+@@ -379,6 +416,10 @@ export interface JobAssignMessage {
+   trace_id: string;
+   /** EDGE-4: Padding 閰嶇疆锛堟绉掞級锛岀敤浜庡湪闊抽鏈熬娣诲姞闈欓煶 */
+   padding_ms?: number;
++  /** FW Repair V4锛氶鍩熶笂涓嬫枃鍗忚鐗堟湰锛堝浐瀹?"v1"锛岀己澶辩瓑鍚屼笉甯︾増鏈紝浠呯敤浜庤В鏋愬吋瀹癸級 */
++  domainContextVersion?: DomainContextVersion;
++  /** FW Repair V4锛歐eb 浼氳瘽棰嗗煙鍏堥獙锛圱op3锛宻oft prior锛孲cheduler 鏍￠獙鍚庡浐鍖栧埌 job payload锛宺etry 淇濇寔涓€鑷达級 */
++  domainPriors?: DomainPrior[];
+ }
+ 
+ export interface JobCancelMessage {
+@@ -407,6 +448,10 @@ export interface JobResultMessage {
+     emotion?: string | null;
+     speech_rate?: number | null;
+     voice_style?: string | null;
++    /** FW Repair V4锛氬綋鍓嶅彞 Domain Vote 鎶曞奖锛圱op3锛屾潵鑷?Node JobResult assembly锛?*/
++    currentTurnDomains?: CurrentTurnDomain[];
++    /** FW Repair V4锛歀LM 棰嗗煙鏍″噯锛坅dvisory锛屾槸鍚﹀簲鐢ㄧ敱 Web merger 鍐冲畾锛?*/
++    llmCalibration?: LlmDomainCalibration;
+     [key: string]: unknown;
+   };
+   processing_time_ms?: number;
+diff --git a/webapp/web-client/src/app/message_handler.ts b/webapp/web-client/src/app/message_handler.ts
+index 2d3d015..2e277ec 100644
+--- a/webapp/web-client/src/app/message_handler.ts
++++ b/webapp/web-client/src/app/message_handler.ts
+@@ -189,6 +189,19 @@ export async function handleServerMessage(
+         });
+         logger.info('App.MessageHandler', '缈昏瘧缁撴灉宸蹭繚瀛樺埌 Map', { utterance_index: message.utterance_index, has_audio: hasAudio });
+ 
++        try {
++          const { mergeConversationDomainState } = await import('../domain/conversation-domain-state');
++          const extra = (message as { extra?: Record<string, unknown> }).extra;
++          mergeConversationDomainState({
++            sessionId: message.session_id,
++            utteranceId: `${message.session_id}:${message.utterance_index}`,
++            currentTurnDomains: (extra?.currentTurnDomains as any) ?? [],
++            llmCalibration: (extra?.llmCalibration as any) ?? null,
++          });
++        } catch (err) {
++          logger.warn('App.MessageHandler', 'ConversationDomainState merge skipped', { error: err });
++        }
++
+         if (ctx.translationDisplay.isDisplayed(message.utterance_index)) {
+           logger.info('App.MessageHandler', '缈昏瘧缁撴灉宸叉樉绀鸿繃锛岃烦杩囬噸澶嶆樉绀?, { utterance_index: message.utterance_index });
+         } else {
+diff --git a/webapp/web-client/src/types.ts b/webapp/web-client/src/types.ts
+index b81f331..8b9f58b 100644
+--- a/webapp/web-client/src/types.ts
++++ b/webapp/web-client/src/types.ts
+@@ -129,6 +129,9 @@ export interface AudioChunkMessage {
+   seq: number;
+   is_final: boolean;
+   payload?: string; // base64 encoded PCM16
++  /** FW Repair V4锛歶tterance-start domainPriors snapshot锛堜粎棣栧寘锛?*/
++  domainContextVersion?: 'v1';
++  domainPriors?: Array<{ domain: string; weight: number }>;
+ }
+ 
+ export interface AsrPartialMessage {
+diff --git a/webapp/web-client/src/websocket/audio_sender.ts b/webapp/web-client/src/websocket/audio_sender.ts
+index 8ee6384..d414b0e 100644
+--- a/webapp/web-client/src/websocket/audio_sender.ts
++++ b/webapp/web-client/src/websocket/audio_sender.ts
+@@ -5,8 +5,24 @@
+ 
+ import { AudioEncoder, AudioCodecConfig } from '../audio_codec';
+ import { encodeAudioChunkFrame, encodeFinalFrame, BinaryFrameType, AudioChunkBinaryFrame, FinalBinaryFrame } from '../binary_protocol';
+-import { BackpressureManager, BackpressureState } from './backpressure_manager';
++import { BackpressureManager } from './backpressure_manager';
+ import { logger } from '../logger';
++import { getDomainPriorsForSession } from '../domain/conversation-domain-state';
++import type { DomainPrior } from '../domain/domain-context-contract';
++
++/** Value-copy utterance prior snapshot (no shared mutable refs with ConversationDomainState). */
++export function copyDomainPriorsSnapshot(priors: readonly DomainPrior[]): DomainPrior[] {
++  return priors.map((p) => ({ domain: p.domain, weight: p.weight }));
++}
++
++/** Attach frozen snapshot onto a JSON AudioChunk (always include domainPriors, including []). */
++export function attachDomainPriorsSnapshotToMessage(
++  message: Record<string, unknown>,
++  snapshot: readonly DomainPrior[]
++): void {
++  message.domainContextVersion = 'v1';
++  message.domainPriors = copyDomainPriorsSnapshot(snapshot);
++}
+ 
+ /**
+  * 闊抽鍙戦€佸櫒
+@@ -20,6 +36,17 @@ export class AudioSender {
+   private backpressureManager: BackpressureManager;
+   private sendCallback: (data: string | ArrayBuffer) => void;
+   private sessionId: string | null = null;
++  /**
++   * Utterance-start domainPriors snapshot (OWN-01).
++   * Created once at first sendAudioChunkInternal / sendFinal entry before any await/encode.
++   * null = not yet frozen for this utterance.
++   */
++  private domainPriorsSnapshotAtUtteranceStart: DomainPrior[] | null = null;
++  /**
++   * Quarantine-only: binary frames cannot carry priors; at most one JSON carrier per utterance.
++   * Not attach-once for production JSON AudioChunk (deleted).
++   */
++  private binaryJsonPriorCarrierSent = false;
+ 
+   constructor(
+     backpressureManager: BackpressureManager,
+@@ -34,6 +61,49 @@ export class AudioSender {
+    */
+   setSessionId(sessionId: string | null): void {
+     this.sessionId = sessionId;
++    this.resetUtterancePriorSnapshot();
++  }
++
++  /** Clear utterance-scoped prior snapshot after finalize / session change. */
++  private resetUtterancePriorSnapshot(): void {
++    this.domainPriorsSnapshotAtUtteranceStart = null;
++    this.binaryJsonPriorCarrierSent = false;
++  }
++
++  /**
++   * Ensure immutable utterance snapshot exists; return it.
++   * MUST be called at sendAudioChunkInternal / sendFinal entry before any await/encode.
++   */
++  private ensureUtteranceDomainPriorsSnapshot(): DomainPrior[] {
++    if (!this.sessionId) {
++      return [];
++    }
++    if (this.domainPriorsSnapshotAtUtteranceStart === null) {
++      this.domainPriorsSnapshotAtUtteranceStart = copyDomainPriorsSnapshot(
++        getDomainPriorsForSession(this.sessionId)
++      );
++    }
++    return this.domainPriorsSnapshotAtUtteranceStart;
++  }
++
++  /**
++   * Binary quarantine: emit one JSON AudioChunk carrier with the captured snapshot.
++   * Production nego keeps use_binary_frame=false; do not expand into a main transport.
++   */
++  private ensureBinaryPriorSnapshotCarrier(snapshotForThisChunk: readonly DomainPrior[]): void {
++    if (!this.sessionId || this.binaryJsonPriorCarrierSent) {
++      return;
++    }
++    const message: Record<string, unknown> = {
++      type: 'audio_chunk',
++      session_id: this.sessionId,
++      seq: this.sequence++,
++      is_final: false,
++      payload: '',
++    };
++    attachDomainPriorsSnapshotToMessage(message, snapshotForThisChunk);
++    this.binaryJsonPriorCarrierSent = true;
++    this.sendCallback(JSON.stringify(message));
+   }
+ 
+   /**
+@@ -105,9 +175,13 @@ export class AudioSender {
+    * 鍐呴儴鍙戦€佹柟娉?    */
+   private async sendAudioChunkInternal(audioData: Float32Array, isFinal: boolean): Promise<void> {
++    // P0-1 Ordering Contract: freeze + capture BEFORE any await/encode.
++    const snapshotForThisChunk = this.ensureUtteranceDomainPriorsSnapshot();
++
+     try {
+       if (this.useBinaryFrame && this.audioEncoder && this.sessionId) {
+-        // Binary Frame 妯″紡
++        // Binary Frame 妯″紡 鈥?quarantine carrier uses entry-captured snapshot
++        this.ensureBinaryPriorSnapshotCarrier(snapshotForThisChunk);
+         // Opus 蹇呴』浣跨敤 Plan A 鏍煎紡锛坧acket 鏍煎紡锛夛紝涓?JSON 妯″紡淇濇寔涓€鑷?         let encodedAudio: Uint8Array;
+         
+@@ -180,6 +254,9 @@ export class AudioSender {
+           ? binaryFrame.buffer.slice(binaryFrame.byteOffset, binaryFrame.byteOffset + binaryFrame.byteLength)
+           : binaryFrame.buffer.slice(binaryFrame.byteOffset, binaryFrame.byteOffset + binaryFrame.byteLength);
+         this.sendCallback(arrayBuffer as ArrayBuffer);
++        if (isFinal) {
++          this.resetUtterancePriorSnapshot();
++        }
+       } else {
+         // JSON 妯″紡
+         let base64: string;
+@@ -237,14 +314,19 @@ export class AudioSender {
+           base64 = this.arrayBufferToBase64(new Uint8Array(int16Array.buffer));
+         }
+ 
+-        const message = {
++        const message: Record<string, unknown> = {
+           type: 'audio_chunk',
+           session_id: this.sessionId,
+           seq: this.sequence++,
+           is_final: isFinal,
+           payload: base64,
+         };
++        // Use entry-captured snapshot (not this.* after possible sendFinal reset during await).
++        attachDomainPriorsSnapshotToMessage(message, snapshotForThisChunk);
+         this.sendCallback(JSON.stringify(message));
++        if (isFinal) {
++          this.resetUtterancePriorSnapshot();
++        }
+       }
+     } catch (error) {
+       logger.error('AudioSender', 'Failed to send audio chunk', { error });
+@@ -261,9 +343,12 @@ export class AudioSender {
+       return;
+     }
+ 
++    // Capture before any send/reset so this final packet uses the utterance snapshot.
++    const snapshotForThisChunk = this.ensureUtteranceDomainPriorsSnapshot();
++
+     try {
+       if (this.useBinaryFrame && this.sessionId) {
+-        // Binary Frame 妯″紡锛氬彂閫?FINAL 甯?+        // Binary Frame 妯″紡锛氬彂閫?FINAL 甯э紙priors already on quarantine JSON carrier if any锛?         const sendFinalTimestamp = Date.now();
+         const frame: FinalBinaryFrame = {
+           frameType: BinaryFrameType.FINAL,
+@@ -283,16 +368,18 @@ export class AudioSender {
+           ? new Uint8Array(binaryFrame).buffer
+           : binaryFrame.buffer.slice(binaryFrame.byteOffset, binaryFrame.byteOffset + binaryFrame.byteLength);
+         this.sendCallback(arrayBuffer as ArrayBuffer);
++        this.resetUtterancePriorSnapshot();
+       } else {
+         // JSON 妯″紡锛氬彂閫佷竴涓┖鐨?audio_chunk 娑堟伅锛宨s_final=true
+         // 鏈嶅姟鍣ㄤ細鏍规嵁 is_final=true 瑙﹀彂 finalize
+-        const message = {
++        const message: Record<string, unknown> = {
+           type: 'audio_chunk',
+           session_id: this.sessionId,
+           seq: this.sequence++,
+           is_final: true,
+           payload: '', // 绌?payload锛屽彧鐢ㄤ簬瑙﹀彂 finalize
+         };
++        attachDomainPriorsSnapshotToMessage(message, snapshotForThisChunk);
+         const sendFinalTimestamp = Date.now();
+         logger.info('AudioSender', '馃摛 鍙戦€?finalize 淇″彿锛坕s_final=true 鐨?audio_chunk锛?, {
+           timestamp: sendFinalTimestamp,
+@@ -300,8 +387,10 @@ export class AudioSender {
+           sessionId: this.sessionId,
+           seq: message.seq,
+           is_final: true,
++          domainPriorsSize: snapshotForThisChunk.length,
+         });
+         this.sendCallback(JSON.stringify(message));
++        this.resetUtterancePriorSnapshot();
+       }
+     } catch (error) {
+       logger.error('AudioSender', 'Failed to send final', { error });
+@@ -437,8 +526,14 @@ export class AudioSender {
+         audio_format: audioFormat,
+         sample_rate: 16000,
+         trace_id: traceId,
++        domainContextVersion: 'v1',
+       };
+ 
++      const priors = getDomainPriorsForSession(this.sessionId);
++      if (priors.length) {
++        message.domainPriors = priors;
++      }
++
+       // 濡傛灉鎻愪緵浜?pipeline 閰嶇疆锛屾坊鍔犲埌娑堟伅涓?       if (pipeline) {
+         message.pipeline = pipeline;
+diff --git a/webapp/web-client/src/websocket/connect_handlers.ts b/webapp/web-client/src/websocket/connect_handlers.ts
+index d8aa40b..50d4673 100644
+--- a/webapp/web-client/src/websocket/connect_handlers.ts
++++ b/webapp/web-client/src/websocket/connect_handlers.ts
+@@ -9,6 +9,7 @@ import type { MessageHandler } from './message_handler';
+ import type { BackpressureManager } from './backpressure_manager';
+ import type { AudioSender } from './audio_sender';
+ import { logger } from '../logger';
++import { resetConversationDomainState } from '../domain/conversation-domain-state';
+ 
+ export type PendingConnectParams = {
+   srcLang?: string;
+@@ -140,6 +141,10 @@ export function createOnCloseCallback(
+   backpressureManager: BackpressureManager
+ ): () => void {
+   return () => {
++    const sessionId = messageHandler.getSessionId();
++    if (sessionId) {
++      resetConversationDomainState(sessionId);
++    }
+     messageHandler.reset();
+     audioSender.setSessionId(null);
+     backpressureManager.clearSendQueue();
+diff --git a/webapp/web-client/src/websocket_client.ts b/webapp/web-client/src/websocket_client.ts
+index 51c19ec..03737ce 100644
+--- a/webapp/web-client/src/websocket_client.ts
++++ b/webapp/web-client/src/websocket_client.ts
+@@ -22,6 +22,7 @@ import { MessageHandler } from './websocket/message_handler';
+ import { BackpressureManager, BackpressureState, BackpressureStateCallback } from './websocket/backpressure_manager';
+ import { AudioSender } from './websocket/audio_sender';
+ import { createOnOpenCallback, createOnMessageCallback, createOnCloseCallback } from './websocket/connect_handlers';
++import { resetConversationDomainState } from './domain/conversation-domain-state';
+ 
+ export type MessageCallback = (message: ServerMessage) => void;
+ export type ReconnectCallback = () => void;
+@@ -255,6 +256,10 @@ export class WebSocketClient {
+    * 鏂紑杩炴帴
+    */
+   disconnect(): void {
++    const sessionId = this.messageHandler.getSessionId();
++    if (sessionId) {
++      resetConversationDomainState(sessionId);
++    }
+     this.connectionManager.disconnect();
+     this.messageHandler.reset();
+     this.audioSender.setSessionId(null);

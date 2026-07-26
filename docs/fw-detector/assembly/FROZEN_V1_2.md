@@ -1,41 +1,54 @@
-# SameDomain + Base Per-Span Assembly — 冻结合约 V1.2
+# SameDomain + Base Per-Span Assembly — Internal Detail Contract V1.2
 
-**状态**：FINAL FROZEN（2026-06-17）  
+**状态**：CURRENT（Assembly Internal Detail · 2026-07-20）  
+**Runtime Domain Presence Vote:** **ACCEPTED AND FROZEN** — authority [`Runtime_SSOT_Contract_Freeze.md`](../../tone-v2/Runtime_SSOT_Contract_Freeze.md); acceptance [`Runtime_Domain_Presence_Vote_Final_Acceptance_Report.md`](../../tone-v2/Runtime_Domain_Presence_Vote_Final_Acceptance_Report.md)  
 **代码根**：`electron_node/electron-node/main/src/fw-detector/`
 
+```text
+Runtime main-chain authority:
+Runtime_SSOT_Contract_Freeze.md
+
+This document only defines Assembly internal details.
+```
+
+**Sole Runtime Authority:** [`Runtime_SSOT_Contract_Freeze.md`](../../tone-v2/Runtime_SSOT_Contract_Freeze.md)  
+**Index:** [`RUNTIME_DOMAIN_DOCUMENT_INDEX.md`](../../tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md)
+
+本文件 **不是**完整 Runtime 主链合同。Presence Vote / retainedDomains / KenLM pick 公式以 Runtime SSOT 为准；此处不完整复制。
+
 ---
 
-## 1. 冻结结论
+## 1. 定位
 
-- Main Chain 已接线：`domainAwareSpanSets` → `buildSentenceCandidates` → KenLM → Apply
-- Shadow Chain 独立：Beam 仅 diagnostics/trace，**禁止**进入 KenLM/Apply
-- **停止 Assembly / Domain Vote / Beam 主链开发**；变更须新 Contract，禁止 Silent Change
+Assembly Internal Detail Contract：
+
+- Span assembly 输入与 per-span 选择
+- Base + domain candidate 组装
+- Sentence candidate construction
+- candidateScore 在 Assembly 内的作用
+- 每桶 bounded generation
+- Cross-bucket text dedup
+- Global candidate cap
+- Assembly diagnostics
 
 ---
 
-## 2. 主链 vs 影子链
-
-### Main Chain
+## 2. Assembly 输入与流程（内部）
 
 ```text
 activeCandidates
   → buildFineSpanCandidatePool
-  → voteUtteranceDomainFromPool
-  → filterDomainCandidatesPerSpan
+  → voteUtteranceDomainFromPool   (owned by Runtime SSOT)
+  → per retainedDomain: same-domain (domains.includes) + Base
   → selectPerSpanCandidates
   → assembleDomainAwareSpanSets
-  → domainAwareSpanSets
-  → buildSentenceCandidates
-  → KenLM → Apply
+  → per-bucket buildSentenceCandidates (cap = MAX_SENTENCE_CANDIDATES)
+  → mergeCrossBucketSentenceCandidates
+  → global slice <=16
+  → kenlmSentenceCandidates / prefilledCombinations
 ```
 
-### Shadow Chain
-
-```text
-Emit → ParentSpanAssembly → Graph → Beam → shadowBeamSpanSets
-```
-
-用途：Diagnostics · Trace · Comparison。**禁止**进入 Main Chain。
+Shadow Beam / Graph Domain Vote / Domain Rerank / Parent Domain Vote：**REMOVED**，不得恢复为正式路径。
 
 ---
 
@@ -44,12 +57,17 @@ Emit → ParentSpanAssembly → Graph → Beam → shadowBeamSpanSets
 | 函数 | 输入 | 输出 |
 |------|------|------|
 | `buildFineSpanCandidatePool` | `WindowCandidate[]` | `FineSpanCandidatePool[]` |
-| `voteUtteranceDomainFromPool` | pools | `UtteranceDomainVoteResult` |
-| `filterDomainCandidatesPerSpan` | vote + pools | `DomainFilteredSpanSet[]` |
+| `voteUtteranceDomainFromPool` | pools | `UtteranceDomainVoteResult`（规则见 Runtime SSOT） |
+| `filterDomainCandidatesPerSpan`（内联） | vote + pools | sameDomain + Base |
 | `selectPerSpanCandidates` | filtered sets | 按优先级选 per-span |
 | `assembleDomainAwareSpanSets` | selections | `SpanReplacementPick[][]` |
+| `buildSentenceCandidates` | spanSets + cap | sentence candidates |
+| `mergeCrossBucketSentenceCandidates` | per-bucket lists | text-deduped pool |
+| `runSpanAssemblyV4Orchestrator` | `recallDomainScope` + raw/runtime/… | metrics + spanSets + kenlm pool |
 
 **Per-span 选择优先级**：`sameDomain > base > fallback > canonical`
+
+**Recall Domain SSOT：** orchestrator **只**接收 `recallDomainScope`（DSU）。
 
 ---
 
@@ -63,73 +81,68 @@ Emit → ParentSpanAssembly → Graph → Beam → shadowBeamSpanSets
 { sameDomainCandidates, baseCandidates, fallbackCandidates, selectedCandidates }
 
 // DomainAwareSpanReplacementPick
-{ word, span, score, recallSource, repairTarget }
+{ word, span, score, recallSource, repairTarget, domains? }
 ```
+
+KenLM / `SpanReplacementPick` 路径不得携带 domains 元数据。
 
 ---
 
-## 5. Orchestrator 合约（H1–H8）
+## 5. candidateScore（Assembly 内）
 
-### H1 — Result 语义
-
-```ts
-interface SpanAssemblyV4OrchestratorResult {
-  spanSets: SpanReplacementPick[][];           // 必须 = domainAwareSpanSets
-  shadowBeamSpanSets?: SpanReplacementPick[][];
-  shadowBeamSentenceTexts?: string[];
-  diagnostics: SpanAssemblyV4Diagnostics;
-}
-```
-
-**禁止**：`spanSets = beam.spanSets`
-
-### H2 — emptyResult
-
-所有 metrics 字段须显式初始化为 `0`，禁止仅在成功路径赋值。
-
-### H3 — 类型同步
-
-新增 diagnostics 字段须同时出现在 `v4-types.ts`、`types.ts`、`fw-detector-v4-path.ts`。
-
-### H4 — Trace 兼容
-
-新增 `shadowBeamSpanSets`；保留 `beamSpanSets` 一个版本（Option A）。
-
-### H5 — Vote 唯一入口
-
-| 链 | 唯一 Vote 函数 | 用途 |
-|----|----------------|------|
-| Main | `voteUtteranceDomainFromPool` | 生产决策 |
-| Shadow | `voteUtteranceDomain` | Diagnostics only |
-
-### H6 — SpanSets 唯一来源
-
-Main 的 `spanSets` **唯一**来自 `assembleDomainAwareSpanSets` 产出。
-
-### H7 — Beam 退休（主链）
-
-`runCoarseSentenceBeamV4` 产出仅写入 `shadowBeamSpanSets`。
-
-### H8 — buildSentenceCandidates 输入
-
-**禁止**传入 beam spanSets；仅接受 `domainAwareSpanSets`。
+- 用于 per-span 选择排序与跨桶 text dedup 时保留更高分候选。
+- **不得**决定 domainScores / Vote 票数。
 
 ---
 
-## 6. 行为合约（B01–B06）
+## 6. Per-Bucket Bounded Generation
+
+- 每桶 `buildSentenceCandidates(cap = MAX_SENTENCE_CANDIDATES)`。
+- 不得用 `floor(16 / bucketCount)` 作为最终配额再合并。
+- `retainedDomains.length > 16` 时 `allocateDomainBucketSentenceBudget` 须显式失败。
+
+---
+
+## 7. Cross-Bucket Dedup + Global Cap
+
+```text
+mergeCrossBucketSentenceCandidates
+  → identical text keeps higher candidateScore
+  → global Sentence Candidates <=16
+```
+
+权威上限与 KenLM 边界：Runtime SSOT。
+
+---
+
+## 8. Orchestrator 合约（精简）
+
+| ID | 约束 |
+|----|------|
+| H1 | `spanSets` 必须来自 domain-aware assembly |
+| H2 | emptyResult metrics 显式初始化为 0 |
+| H3 | diagnostics 字段类型同步 |
+| H5 | 生产 Vote 唯一入口：`voteUtteranceDomainFromPool` |
+| H8 | `buildSentenceCandidates` 仅接受 domainAware spanSets |
+
+**禁止：** `shadowBeamSpanSets`、Beam→KenLM、双 Vote。
+
+---
+
+## 9. 行为合约（B01–B06）
 
 | ID | 约束 |
 |----|------|
 | B01 | Pool 按 coarseSpanId 分组，不跨 span 混排 |
-| B02 | Vote 基于 pool 内 candidate domain 统计，非 beam |
-| B03 | Filter 保留 sameDomain/base/fallback 三桶 |
+| B02 | Vote 基于 pool 内 domain presence（见 Runtime SSOT） |
+| B03 | Filter 保留 sameDomain + Base（+ fallback 诊断） |
 | B04 | Select 同 span 内按 priority + score 排序 |
 | B05 | Assemble 输出与 coarse span 顺序对齐 |
 | B06 | 空 pool / 无 vote 时返回合法 empty spanSets + 完整 metrics |
 
 ---
 
-## 7. Metrics 冻结字段
+## 10. Metrics（有效字段）
 
 | 字段 | 含义 |
 |------|------|
@@ -140,35 +153,35 @@ Main 的 `spanSets` **唯一**来自 `assembleDomainAwareSpanSets` 产出。
 | `selectedCandidatesPerSpanAvg` | 每 span 选中候选均值 |
 | `domainAssemblyMs` | assembly 耗时 |
 | `mainDomainAwareSpanSetsTotal` | Main span 条目总数 |
-| `shadowBeamSpanSetsTotal` | Shadow beam 条目总数 |
+
+`shadowBeamSpanSetsTotal`：**REMOVED**（禁止恢复为生产路径字段）。
 
 ---
 
-## 8. SSOT 文件
+## 11. SSOT 文件
 
 | 类别 | 路径 |
 |------|------|
 | Assembly | `assemble-domain-aware-span-sets.ts` · `domain-assembly-types.ts` · `window-candidate-to-pick.ts` |
-| Vote | `utterance-domain-vote.ts` |
+| Merge | `build-sentence-candidates.ts`（`mergeCrossBucketSentenceCandidates`） |
+| Vote | `utterance-domain-vote.ts`（规则 owner = Runtime SSOT） |
 | Orchestrator | `span-assembly-v4-orchestrator.ts` |
-| Types | `v4-types.ts` · `types.ts` |
 | Tests | `freeze-contract.test.ts` · `assemble-domain-aware-span-sets.test.ts` |
 
 ---
 
-## 9. 禁止项（冻结内）
+## 12. 禁止项
 
-- 修改 Main/Shadow 隔离边界
+- 恢复 Shadow Beam / Graph Domain Vote / Domain Rerank / Parent Domain Vote
 - 将 Beam spanSets 接入 KenLM / Apply
-- 新增 Vote 入口或替换 `voteUtteranceDomainFromPool`
+- 在本文件重新定义完整 Presence Vote / retainedDomains 公式
 - 静默修改 per-span priority 顺序
+- 单领域 Assembly fallback 作为正式路径
 
 ---
 
-## 10. 后续阶段
+## 13. 相关文档
 
-| 模块 | 状态 |
-|------|------|
-| Assembly / Vote / Beam 主链 | **STOP** |
-| Compatibility / Recall | **STOP** |
-| KenLM runtime | **FROZEN**（batch-only，见 [kenlm/KENLM_RUNTIME.md](../kenlm/KENLM_RUNTIME.md)） |
+- Runtime SSOT：[`Runtime_SSOT_Contract_Freeze.md`](../../tone-v2/Runtime_SSOT_Contract_Freeze.md)
+- KenLM：[`kenlm/KENLM_RUNTIME.md`](../kenlm/KENLM_RUNTIME.md)
+- Ranking：[`RANKING_V1_2.md`](./RANKING_V1_2.md)

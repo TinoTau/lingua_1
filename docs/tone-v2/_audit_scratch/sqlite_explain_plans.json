@@ -1,0 +1,133 @@
+{
+  "sqlitePath": "d:\\Programs\\github\\lingua_1\\node_runtime\\lexicon\\v3\\lexicon.sqlite",
+  "plans": {
+    "base_plain": [
+      {
+        "id": 7,
+        "parent": 0,
+        "notused": 61,
+        "detail": "SEARCH base_lexicon USING INDEX idx_base_pinyin (pinyin_key=?)"
+      },
+      {
+        "id": 32,
+        "parent": 0,
+        "notused": 0,
+        "detail": "USE TEMP B-TREE FOR ORDER BY"
+      }
+    ],
+    "base_tone": [
+      {
+        "id": 7,
+        "parent": 0,
+        "notused": 61,
+        "detail": "SEARCH base_lexicon USING INDEX idx_base_pinyin_tone (pinyin_key=? AND tone_pinyin_key=?)"
+      },
+      {
+        "id": 32,
+        "parent": 0,
+        "notused": 0,
+        "detail": "USE TEMP B-TREE FOR ORDER BY"
+      }
+    ],
+    "domain_tone": [
+      {
+        "id": 7,
+        "parent": 0,
+        "notused": 60,
+        "detail": "SEARCH domain_lexicon USING INDEX idx_domain_pinyin_tone (domain_id=? AND pinyin_key=? AND tone_pinyin_key=?)"
+      },
+      {
+        "id": 34,
+        "parent": 0,
+        "notused": 0,
+        "detail": "USE TEMP B-TREE FOR ORDER BY"
+      }
+    ],
+    "ngram": [
+      {
+        "id": 7,
+        "parent": 0,
+        "notused": 61,
+        "detail": "SEARCH term_pinyin_ngrams USING INDEX idx_term_ngram_key (ngram_pinyin_key=? AND enabled=?)"
+      },
+      {
+        "id": 26,
+        "parent": 0,
+        "notused": 0,
+        "detail": "USE TEMP B-TREE FOR ORDER BY"
+      }
+    ]
+  },
+  "indexes": [
+    {
+      "name": "idx_base_pinyin",
+      "tbl_name": "base_lexicon",
+      "sql": "CREATE INDEX idx_base_pinyin ON base_lexicon(pinyin_key)"
+    },
+    {
+      "name": "idx_base_pinyin_tone",
+      "tbl_name": "base_lexicon",
+      "sql": "CREATE INDEX idx_base_pinyin_tone ON base_lexicon(pinyin_key, tone_pinyin_key)"
+    },
+    {
+      "name": "sqlite_autoindex_base_lexicon_1",
+      "tbl_name": "base_lexicon",
+      "sql": null
+    },
+    {
+      "name": "idx_domain_pinyin",
+      "tbl_name": "domain_lexicon",
+      "sql": "CREATE INDEX idx_domain_pinyin ON domain_lexicon(domain_id, pinyin_key)"
+    },
+    {
+      "name": "idx_domain_pinyin_tone",
+      "tbl_name": "domain_lexicon",
+      "sql": "CREATE INDEX idx_domain_pinyin_tone ON domain_lexicon(domain_id, pinyin_key, tone_pinyin_key)"
+    },
+    {
+      "name": "sqlite_autoindex_domain_lexicon_1",
+      "tbl_name": "domain_lexicon",
+      "sql": null
+    },
+    {
+      "name": "idx_idiom_pinyin",
+      "tbl_name": "idiom_lexicon",
+      "sql": "CREATE INDEX idx_idiom_pinyin ON idiom_lexicon(pinyin_key)"
+    },
+    {
+      "name": "idx_idiom_pinyin_tone",
+      "tbl_name": "idiom_lexicon",
+      "sql": "CREATE INDEX idx_idiom_pinyin_tone ON idiom_lexicon(pinyin_key, tone_pinyin_key)"
+    },
+    {
+      "name": "sqlite_autoindex_idiom_lexicon_1",
+      "tbl_name": "idiom_lexicon",
+      "sql": null
+    },
+    {
+      "name": "idx_term_ngram_domain",
+      "tbl_name": "term_pinyin_ngrams",
+      "sql": "CREATE INDEX idx_term_ngram_domain ON term_pinyin_ngrams(ngram_pinyin_key, domain_id, enabled)"
+    },
+    {
+      "name": "idx_term_ngram_key",
+      "tbl_name": "term_pinyin_ngrams",
+      "sql": "CREATE INDEX idx_term_ngram_key ON term_pinyin_ngrams(ngram_pinyin_key, enabled)"
+    },
+    {
+      "name": "idx_term_ngram_parent",
+      "tbl_name": "term_pinyin_ngrams",
+      "sql": "CREATE INDEX idx_term_ngram_parent ON term_pinyin_ngrams(parent_term_id)"
+    },
+    {
+      "name": "idx_term_ngram_parent_range",
+      "tbl_name": "term_pinyin_ngrams",
+      "sql": "CREATE INDEX idx_term_ngram_parent_range ON term_pinyin_ngrams(parent_term_id, ngram_start, ngram_end)"
+    }
+  ],
+  "pragma": {
+    "journal_mode": "wal",
+    "synchronous": 1,
+    "cache_size": -16000
+  }
+}

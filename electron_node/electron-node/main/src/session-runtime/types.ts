@@ -96,6 +96,11 @@ export type LexiconProfileDecision = {
   secondaryDomains: string[];
   confidence: number;
   shouldSwitch: boolean;
+  /**
+   * Explicit topic-shift signal for Web Condition B.
+   * Must NOT be silently equated to shouldSwitch when absent.
+   */
+  topicShift?: boolean;
   reason: string[];
   effectiveFromTurn: number;
   topicKeywords: string[];
@@ -114,6 +119,11 @@ export type LexiconSessionIntent = {
   effectiveFromTurn: number;
   source: LexiconSessionIntentSource;
   reason: string[];
+  /**
+   * Explicit topic-shift signal for Web Condition B.
+   * Must be copied from LexiconProfileDecision.topicShift; never equated to shouldSwitch.
+   */
+  topicShift: boolean;
 };
 
 export type SessionSnapshot = {

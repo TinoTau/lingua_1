@@ -210,6 +210,7 @@ export function startTestServer(managers: ServiceManagers): void {
           enableKenLMGate,
           kenlmGateMode,
           kenlmVetoThreshold,
+          domainPriors,
         } = parsed;
         if (!wavPath || typeof wavPath !== 'string') {
           safeSend(400, JSON.stringify({ error: 'Missing or invalid wavPath' }));
@@ -220,7 +221,15 @@ export function startTestServer(managers: ServiceManagers): void {
             ? session_id.trim()
             : `p3-runtime-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
         logger.info(
-          { wavPath, useLid, use_lexicon, sessionId, is_manual_cut },
+          {
+            wavPath,
+            useLid,
+            use_lexicon,
+            sessionId,
+            is_manual_cut,
+            domainPriorsFieldPresent: Object.prototype.hasOwnProperty.call(parsed, 'domainPriors'),
+            domainPriorsCount: Array.isArray(domainPriors) ? domainPriors.length : 0,
+          },
           'Test server: runPipelineWithAudio start'
         );
         const result = await managers.inferenceService.runPipelineWithAudio(wavPath, {
@@ -243,6 +252,11 @@ export function startTestServer(managers: ServiceManagers): void {
               : undefined,
           kenlmVetoThreshold:
             typeof kenlmVetoThreshold === 'number' ? kenlmVetoThreshold : undefined,
+          domainPriors: Object.prototype.hasOwnProperty.call(parsed, 'domainPriors')
+            ? Array.isArray(domainPriors)
+              ? domainPriors
+              : []
+            : undefined,
         });
         const pipelineMs = Date.now() - pipelineStartMs;
         clearTimeout(timeoutId);

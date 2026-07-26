@@ -26,7 +26,7 @@ export function windowCandidateToDomainAwarePick(
     },
     word: candidate.replacement,
     candidateId: candidate.candidateId,
-    domainId: candidate.domainId,
+    domains: candidate.domains,
     graphSource: candidate.source,
     hitKind: candidate.hitKind,
     score: candidate.score,

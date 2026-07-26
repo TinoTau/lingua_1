@@ -145,7 +145,7 @@ function lookupToneTiers(
 }
 
 function inferHotwordTier(hotword: HotwordEntry): TierHotwordRow['tier'] {
-  if (hotword.domain || hotword.domains?.length) {
+  if (hotword.domains?.length) {
     return 'domain';
   }
   return 'base';

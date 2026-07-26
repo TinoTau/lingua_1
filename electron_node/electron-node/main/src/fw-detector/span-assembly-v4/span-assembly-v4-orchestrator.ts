@@ -1,94 +1,130 @@
-﻿import type { SegmentInfo, UtteranceAcousticTonePayload } from '../../task-router/types';
+﻿import type { SegmentInfo } from '../../task-router/types';
 import { loadFwDetectorRuntimeConfig } from '../fw-config';
 import { buildWordTimeSpans, type AcousticToneSlice } from '../tone-time-align';
 import type { LexiconRuntimeV2 } from '../../lexicon-v2/lexicon-runtime-v2';
-import { LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION } from '../../lexicon-v2/lexicon-types-v2';
+import { LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION } from '../../lexicon-v2/lexicon-types-v2';
 import {
   isFuzzyPinyinRecallEnabled,
-  isWeakDomainRecallEnabled,
 } from '../../lexicon-v2/lexicon-fw-recall-config';
-import { resolveWeakDomainRecallPlan } from '../../lexicon-v2/weak-domain-recall-resolver';
 import type { ActiveLexiconProfileSnapshot } from '../../session-runtime/types';
+import type { DomainPrior } from '../domain-context-contract';
 import type { PinyinImeV2Dict, PinyinImeV2RuntimeConfig } from '../pinyin-ime-v2/pinyin-ime-v2-types';
-import { textToPinyinStream } from '../pinyin-ime-v2/pinyin-ime-v2-pinyin-stream';
-import { assembleCoarsePaths } from '../span-assembly-shared/coarse-path-assembly';
-import { buildCandidateGraph } from '../span-assembly-shared/coarse-candidate-graph';
+import { buildUtteranceSyllableCoordinate } from '../pinyin-ime-v2/pinyin-ime-v2-pinyin-stream';
 import { partitionCoarseSpans } from '../span-assembly-shared/coarse-span-partition';
 import { createEmptyToneDiagnostics } from '../span-assembly-shared/tone-diagnostics';
 import type { CoarseBoundaryImportDiagnostics } from '../span-assembly-shared/coarse-boundary-import';
 import type { CoarseAssemblyInternalResult, CoarseAssemblyToneDiagnostics } from '../span-assembly-shared/types';
-import { applyDomainVoteToEdges, voteUtteranceDomain } from '../span-assembly-shared/utterance-domain-vote';
+import { allocateDomainBucketSentenceBudget } from '../span-assembly-shared/utterance-domain-vote';
 import { runDomainAwareAssembly } from './assemble-domain-aware-span-sets';
-import { assembleParentTermSpanCandidatesV4 } from './assemble-parent-term-span-candidates-v4';
-import { blockedFilter, truncateWindows } from './blocked-window-filter';
+import { blockedFilter } from './blocked-window-filter';
 import { buildCandidateCompatibilityGraph, resolveCompatibilityRelations } from './candidate-compatibility-graph';
-import { emitParentEvidenceAndExactEdges } from './emit-v4-evidence';
-import { generateGlobalWindows } from './generate-global-windows';
+import { runLtrFineSpanGeneration } from './ltr-fine-span-generator';
 import { recallTopKForWindows } from './recall-topk-for-windows';
-import { buildFwSpansFromCoarseAssemblyV4 } from './build-fw-spans-from-coarse-assembly-v4';
-import { runCoarseSentenceBeamV4 } from './run-coarse-sentence-beam-v4';
+import { rebindToneAfterFormalCommit } from './tone-commit-rebind';
+import { buildFwSpansFromFormalFineSpans } from './build-fw-spans-from-coarse-assembly-v4';
 import type { SpanAssemblyV4Metrics } from './v4-types';
 import type { V4TraceCollector } from './v4-diagnostics-trace';
 import { createV4TraceCollector } from './v4-diagnostics-trace';
 import { resolveV4DiagnosticsConfig } from './v4-diagnostics-config';
 import {
-  toBeamSpanSetTrace,
   toBoundaryWindowTrace,
-  toCoarsePathTrace,
   toCoarseSpanTrace,
   toEmittedEdgeFromCandidate,
-  toEmittedEdgeFromParentEvidence,
-  toGraphEdgeTrace,
-  toParentSpanCandidateTraceFromGraphEdge,
 } from './v4-diagnostics-mappers';
-import { buildSentenceCandidates } from '../build-sentence-candidates';
+import {
+  buildSentenceCandidates,
+  mergeCrossBucketSentenceCandidates,
+  type SentenceCombination,
+} from '../build-sentence-candidates';
+import {
+  createUtteranceRecallContext,
+  releaseUtteranceRecallContext,
+} from './utterance-recall-cache';
 
 export type SpanAssemblyV4OrchestratorInput = {
   rawText: string;
   runtime: LexiconRuntimeV2;
   profile: ActiveLexiconProfileSnapshot;
-  enabledDomains: string[];
+  /**
+   * Unique Recall domain SSOT after CFG-01 / Registry resolution.
+   * Must be non-empty; empty means fail-fast (not Base-only).
+   */
+  recallDomainScope: string[];
   minPrior: number;
   imeConfig: PinyinImeV2RuntimeConfig;
   dict: PinyinImeV2Dict;
   asrSegments?: SegmentInfo[];
-  tonePayload?: UtteranceAcousticTonePayload | null;
   acousticSlices?: AcousticToneSlice[];
   asrSegmentNodeBatchIndices?: number[];
   segmentTimeOffsetsSec?: number[];
   segmentCharOffsets?: number[];
   /** Batch/probe case id for diagnostics targetIds matching (e.g. d001). */
   traceCaseId?: string;
+  /** Soft prior only — never written into recallDomainScope / enabledDomains. */
+  domainPriors?: readonly DomainPrior[];
+  /**
+   * Test/harness only: when false, skip utterance Fact cache (Baseline A).
+   * Production default is true. Not a long-lived dual recall chain.
+   */
+  enableUtteranceRecallCache?: boolean;
 };
 
 export type SpanAssemblyV4OrchestratorResult = {
   internal: CoarseAssemblyInternalResult;
   spanSets: ReturnType<typeof runDomainAwareAssembly>['spanSets'];
-  shadowBeamSpanSets: ReturnType<typeof runCoarseSentenceBeamV4>['spanSets'];
-  shadowBeamSentenceTexts: ReturnType<typeof runCoarseSentenceBeamV4>['sentenceTexts'];
-  fwSpans: ReturnType<typeof buildFwSpansFromCoarseAssemblyV4>;
+  bucketSpanSets: ReturnType<typeof runDomainAwareAssembly>['bucketSpanSets'];
+  fwSpans: ReturnType<typeof buildFwSpansFromFormalFineSpans>;
   boundaryImport: CoarseBoundaryImportDiagnostics;
   tone: CoarseAssemblyToneDiagnostics;
   metrics: SpanAssemblyV4Metrics;
   trace?: ReturnType<V4TraceCollector['toDiagnostics']>;
-  kenlmSentenceCandidates?: ReturnType<typeof buildSentenceCandidates>;
+  kenlmSentenceCandidates?: {
+    combinations: SentenceCombination[];
+    intervalAssemblyCandidateCount: number;
+    intervalRejectedOverlapCount: number;
+    perBucketGenerated: SentenceCombination[][];
+    mergedBeforeCap: SentenceCombination[];
+    dedupReplacedCount: number;
+  };
+  /** Diagnostics-only active candidate snapshot (no formal path use). */
+  diagActiveCandidates?: Array<{
+    candidateId: string;
+    text: string;
+    domains: readonly string[];
+    source: string;
+    isCovered: boolean;
+    hitKind: string;
+  }>;
 };
 
 export function runSpanAssemblyV4Orchestrator(
   input: SpanAssemblyV4OrchestratorInput
 ): SpanAssemblyV4OrchestratorResult {
+  if (!input.recallDomainScope.length) {
+    throw new Error(
+      '[SPAN_ASSEMBLY_V4] recallDomainScope is empty — Domain Recall must not silently degrade to Base-only'
+    );
+  }
+
   const assemblyStart = Date.now();
   const diagnosticsConfig = resolveV4DiagnosticsConfig(input.traceCaseId);
   const trace = createV4TraceCollector(diagnosticsConfig.traceActive);
-  const { syllables, hasCjk } = textToPinyinStream(input.rawText);
+  const syllableCoordinate = buildUtteranceSyllableCoordinate(input.rawText);
+  const { syllables, hasCjk, ranges: charSyllableRanges } = syllableCoordinate;
 
   if (!hasCjk || !syllables.length) {
     return emptyResult(assemblyStart, { fallbackReason: 'no_cjk' }, input.acousticSlices, trace);
   }
 
-  if (input.runtime.getManifestVersion() !== LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION) {
+  if (!syllableCoordinate.coverage.coverageOk) {
     throw new Error(
-      `[SPAN_ASSEMBLY_V4] requires ${LEXICON_V3_FIVE_TABLE_RUNTIME_SCHEMA_VERSION}, got ${input.runtime.getManifestVersion() ?? 'unknown'}`
+      `[SPAN_ASSEMBLY_V4] FineSpan syllable coverage invariant failed (covered=${syllableCoordinate.coverage.coveredCount}/${syllableCoordinate.coverage.syllableCount})`
+    );
+  }
+
+  if (input.runtime.getManifestVersion() !== LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION) {
+    throw new Error(
+      `[SPAN_ASSEMBLY_V4] requires ${LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION}, got ${input.runtime.getManifestVersion() ?? 'unknown'}`
     );
   }
 
@@ -102,6 +138,11 @@ export function runSpanAssemblyV4Orchestrator(
   if (!coarseSpans.length) {
     return emptyResult(assemblyStart, partition.diagnostics, input.acousticSlices, trace);
   }
+  if (partition.diagnostics.coverageOk === false) {
+    throw new Error(
+      `[SPAN_ASSEMBLY_V4] CoarseSpan coverageOk=false after FineSpan coordinate SSOT (fallbackReason=${partition.diagnostics.fallbackReason ?? 'unknown'})`
+    );
+  }
 
   if (trace) {
     for (const span of coarseSpans) {
@@ -109,13 +150,16 @@ export function runSpanAssemblyV4Orchestrator(
     }
   }
 
-  const weakEnabled = isWeakDomainRecallEnabled();
+  const recallDomainIds = [...input.recallDomainScope];
+  if (!recallDomainIds.length) {
+    throw new Error(
+      '[SPAN_ASSEMBLY_V4] resolved recall domainIds is empty — Domain Recall must not silently degrade to Base-only'
+    );
+  }
+
+  // Profile/weak-domain must not act as a second FineSpan soft prior (OWN/DCN).
   const fuzzyEnabled = isFuzzyPinyinRecallEnabled();
-  const weakDomainPlan = resolveWeakDomainRecallPlan(
-    input.profile,
-    input.enabledDomains,
-    weakEnabled
-  );
+  const domainPriors = input.domainPriors ?? [];
 
   const toneTimestampOnlyEnabled = loadFwDetectorRuntimeConfig().toneTimestampOnlyEnabled;
   const wordTimeSpans = buildWordTimeSpans(
@@ -126,64 +170,154 @@ export function runSpanAssemblyV4Orchestrator(
     input.asrSegmentNodeBatchIndices ?? []
   );
 
-  const generated = generateGlobalWindows({
+  let toneFromRecall = createEmptyToneDiagnostics(
+    input.acousticSlices,
+    wordTimeSpans,
+    toneTimestampOnlyEnabled
+  );
+  let ngramQueryCount = 0;
+  let parentFragmentHitCount = 0;
+  let physicalSqlStatementCountAccum = 0;
+
+  const utteranceRecall =
+    input.enableUtteranceRecallCache === false
+      ? null
+      : createUtteranceRecallContext(input.runtime.getManifestVersion() ?? 'unknown');
+
+  const ltr = runLtrFineSpanGeneration({
     rawText: input.rawText,
     globalSyllables: syllables,
     coarseSpans,
-  });
-  const blocked = blockedFilter({
-    windows: generated,
-    rawText: input.rawText,
-    coarseSpans,
-    wordTimeSpans,
-  });
-  const blockedWindowCount = blocked.filter((w) => w.blocked).length;
-  const { windows: truncated, truncatedCount, truncatedWindows } = truncateWindows(blocked);
+    domainPriors,
+    charSyllableRanges,
+    recallForWindows: (windows) => {
+      const filtered = blockedFilter({
+        windows,
+        rawText: input.rawText,
+        coarseSpans,
+        wordTimeSpans,
+      }).filter((w) => !w.blocked);
+      if (!filtered.length) {
+        return [];
+      }
+      const recall = recallTopKForWindows({
+        rawText: input.rawText,
+        globalSyllables: syllables,
+        windows: filtered,
+        runtime: input.runtime,
+        profile: input.profile,
+        domainIds: recallDomainIds,
+        minPrior: input.minPrior,
+        weakDomainPlan: undefined,
+        fuzzyRecallEnabled: fuzzyEnabled,
+        acousticSlices: input.acousticSlices,
+        wordTimeSpans,
+        toneTimestampOnlyEnabled,
+        trace,
+        utteranceRecall,
+      });
+        toneFromRecall = recall.tone;
+        ngramQueryCount += recall.ngramQueryCount;
+        parentFragmentHitCount += recall.parentFragmentHitCount;
+        physicalSqlStatementCountAccum += recall.physicalSqlStatementCount;
+        return recall.candidates;
+      },
+    });
+
+  const utteranceRecallStats = utteranceRecall
+    ? { ...utteranceRecall.stats }
+    : {
+        requestCount: 0,
+        uniqueKeyCount: 0,
+        duplicateKeyCount: 0,
+        hitCount: 0,
+        missCount: 0,
+        exactQueryCount: 0,
+        parentQueryCount: 0,
+        physicalSqlStatementCount: 0,
+        recallRequestBuildMs: 0,
+        utteranceCacheLookupMs: 0,
+        lexiconFactLookupMs: 0,
+        windowBindingMs: 0,
+        lexiconRecallTotalMs: 0,
+      };
+  const cacheHitRatio =
+    utteranceRecallStats.requestCount > 0
+      ? utteranceRecallStats.hitCount / utteranceRecallStats.requestCount
+      : 0;
+  if (utteranceRecall) {
+    releaseUtteranceRecallContext(utteranceRecall);
+  }
+
+  const physicalSqlStatementCount = physicalSqlStatementCountAccum;
+  if (utteranceRecall) {
+    // Keep stats SSOT aligned with observed deltas.
+    utteranceRecallStats.physicalSqlStatementCount = physicalSqlStatementCountAccum;
+  }
+
+  // BLOCK-3: Formal commit 后按 Formal range 重绑定 Tone（切片/缓存读取，非二次模型推理）
+  const toneCommitTraces = ltr.formalSpans.map((span) =>
+    rebindToneAfterFormalCommit(span, input.acousticSlices, wordTimeSpans, toneTimestampOnlyEnabled)
+  );
+
+  const generatedCount = ltr.trace.steps.reduce((sum, step) => sum + step.options.length, 0);
+  const blockedWindowCount = 0;
+  const truncatedCount = 0;
+  const architectureCompliance = {
+    generatorMode: 'ltr_soft_boundary' as const,
+    formalOverlapCount: ltr.trace.formalOverlapCount,
+    beamEnabled: false as const,
+    globalWindowProductionPath: false as const,
+    fineSpanPriorSource: (domainPriors.length ? 'domainPriors' : 'none') as 'domainPriors' | 'none',
+    contextPriorDecisionApplied: false as const,
+    priorWrittenToEnabledDomains: false as const,
+    profileAffectedRecall: false as const,
+    votePoolSource: 'formal_fine_span' as const,
+    sessionPriorTransport: 'audio_chunk_session_snapshot' as const,
+    topicShiftContractComplete: true as const,
+    schedulerDomainInference: false as const,
+    toneRecomputedAfterCommit: toneCommitTraces.every((t) => t.recomputedAfterCommit),
+  };
 
   if (trace) {
-    for (const window of blocked) {
-      if (window.boundaryCrossCount === 1) {
-        trace.pushBoundaryWindow(toBoundaryWindowTrace(window));
+    for (const span of ltr.formalSpans) {
+      if (span.boundaryCrossCount === 1) {
+        trace.pushBoundaryWindow(
+          toBoundaryWindowTrace({
+            windowId: `${span.syllableStart}:${span.syllableEnd}`,
+            syllableStart: span.syllableStart,
+            syllableEnd: span.syllableEnd,
+            rawStart: span.rawStart,
+            rawEnd: span.rawEnd,
+            windowText: input.rawText.slice(span.rawStart, span.rawEnd),
+            windowPinyinKey: '',
+            spanIds: [...span.coarseSpanIds],
+            boundaryCrossCount: span.boundaryCrossCount,
+            windowSource: 'boundary_window',
+            anchorCoarseSpanId: span.coarseSpanIds[0] ?? span.spanId,
+            blocked: false,
+          })
+        );
       }
-    }
-    for (const window of truncatedWindows) {
-      trace.pushTruncatedWindow({
-        windowId: window.windowId,
-        reason: 'budget_truncated',
-        windowPinyinKey: window.windowPinyinKey,
-      });
     }
   }
 
-  const recall = recallTopKForWindows({
-    rawText: input.rawText,
-    globalSyllables: syllables,
-    windows: truncated,
-    runtime: input.runtime,
-    profile: input.profile,
-    domainIds: weakEnabled ? weakDomainPlan.queryDomainIds : input.enabledDomains,
-    minPrior: input.minPrior,
-    weakDomainPlan: weakEnabled ? weakDomainPlan : undefined,
-    fuzzyRecallEnabled: fuzzyEnabled,
-    acousticSlices: input.acousticSlices,
-    wordTimeSpans,
-    toneTimestampOnlyEnabled,
-    trace,
-  });
-
-  const { edges: compatibilityEdges, edgeCount: compatibilityEdgeCount } =
-    buildCandidateCompatibilityGraph(recall.candidates);
-  const compatibility = resolveCompatibilityRelations(recall.candidates, trace);
+  const allCandidates = ltr.formalSpans.flatMap((s) => s.candidates);
+  const { edgeCount: compatibilityEdgeCount } = buildCandidateCompatibilityGraph(allCandidates);
+  const compatibility = resolveCompatibilityRelations(allCandidates, trace);
   const activeCandidates = compatibility.activeCandidates;
+  const domainRecallHitCount = activeCandidates.filter(
+    (c) =>
+      !c.isCovered &&
+      (c.source === 'domain_term' || c.source === 'passive_domain_weak')
+  ).length;
+  const voteEligibleDomainCandidateCount = activeCandidates.filter(
+    (c) =>
+      !c.isCovered &&
+      Boolean(c.domains?.some((d) => d && d !== 'general' && d !== 'base_term'))
+  ).length;
 
-  const domainAssembly = runDomainAwareAssembly(activeCandidates, coarseSpans, input.rawText);
-  const domainAwareSpanSets = domainAssembly.spanSets;
-
-  const emitted = emitParentEvidenceAndExactEdges(activeCandidates);
   if (trace) {
-    for (const evidence of emitted.parentEvidence) {
-      trace.pushEmittedParentEvidence(toEmittedEdgeFromParentEvidence(evidence));
-    }
     for (const candidate of activeCandidates) {
       if (candidate.isCovered) {
         continue;
@@ -193,63 +327,52 @@ export function runSpanAssemblyV4Orchestrator(
       }
     }
   }
-  const shadowVote = voteUtteranceDomain({
-    parentEvidence: emitted.parentEvidence,
-    exactEdges: emitted.exactEdges,
-  });
-  const parentSpanAssembly = assembleParentTermSpanCandidatesV4(
+
+  const domainAssembly = runDomainAwareAssembly(
+    activeCandidates,
     coarseSpans,
-    emitted.parentEvidence,
     input.rawText,
-    shadowVote.utteranceDomain
+    ltr.formalSpans,
+    domainPriors
   );
-  if (trace) {
-    for (const edge of parentSpanAssembly.edges) {
-      trace.pushEmittedParentSpanCandidate(toParentSpanCandidateTraceFromGraphEdge(edge));
-    }
-  }
-  const votedExact = applyDomainVoteToEdges(emitted.exactEdges, shadowVote);
-  const votedParent = applyDomainVoteToEdges(parentSpanAssembly.edges, shadowVote);
-  const graph = buildCandidateGraph(input.rawText, syllables, coarseSpans, [
-    ...votedParent,
-    ...votedExact,
-  ], compatibility.conflictRelations);
-  const adjustedEdges = graph.edges;
+  const domainAwareSpanSets = domainAssembly.spanSets;
+  const primaryDomain =
+    domainAssembly.vote.retainedDomains[0] ?? domainAssembly.vote.utteranceDomain;
 
-  const pathStart = Date.now();
-  const coarsePaths = assembleCoarsePaths(coarseSpans, adjustedEdges);
-  const coarsePathAssemblyMs = Date.now() - pathStart;
-
-  const beam = runCoarseSentenceBeamV4(input.rawText, coarseSpans, coarsePaths);
-  const fwSpans = buildFwSpansFromCoarseAssemblyV4(
+  // Zip by committed Formal FineSpan — domainAwareSpanSets is pool-ordered by formal span,
+  // not by coarseSpans partition (their counts can legitimately differ; AC-02).
+  const fwSpans = buildFwSpansFromFormalFineSpans(
     input.rawText,
-    coarseSpans,
+    ltr.formalSpans,
     domainAwareSpanSets,
-    domainAssembly.vote.utteranceDomain
+    primaryDomain
   );
 
-  if (trace) {
-    adjustedEdges.forEach((edge, idx) => {
-      trace.pushGraphEdge(toGraphEdgeTrace(edge, `ge:${idx}`));
-    });
-    const pathsBySpan = new Map<string, number>();
-    for (const path of coarsePaths) {
-      const rank = pathsBySpan.get(path.coarseSpanId) ?? 0;
-      trace.pushCoarsePath(toCoarsePathTrace(path, rank, input.rawText));
-      pathsBySpan.set(path.coarseSpanId, rank + 1);
-    }
-    for (let i = 0; i < coarseSpans.length; i += 1) {
-      trace.pushBeamSpanSet(toBeamSpanSetTrace(i, coarseSpans[i].id, beam.spanSets[i] ?? []));
-    }
+  const kenlmCap = loadFwDetectorRuntimeConfig().maxSentenceCandidates;
+  // Guard only: retained buckets must each be able to receive ≥1 final slot if needed.
+  // Per-bucket generation uses the same MAX (16), then cross-bucket dedup, then global cap.
+  allocateDomainBucketSentenceBudget(domainAssembly.bucketSpanSets.length, kenlmCap);
+  const perBucketGenerateCap = kenlmCap;
+  const perBucketGenerated: SentenceCombination[][] = [];
+  let intervalAssemblyCandidateCount = 0;
+  let intervalRejectedOverlapCount = 0;
+  for (const bucketSets of domainAssembly.bucketSpanSets) {
+    const bucketResult = buildSentenceCandidates(input.rawText, bucketSets, perBucketGenerateCap);
+    intervalAssemblyCandidateCount += bucketResult.intervalAssemblyCandidateCount;
+    intervalRejectedOverlapCount += bucketResult.intervalRejectedOverlapCount;
+    perBucketGenerated.push(bucketResult.combinations);
   }
-
-  const kenlmSentenceCandidates = buildSentenceCandidates(
-    input.rawText,
-    domainAwareSpanSets,
-    loadFwDetectorRuntimeConfig().maxSentenceCandidates
-  );
+  const merged = mergeCrossBucketSentenceCandidates(perBucketGenerated, kenlmCap);
+  const kenlmSentenceCandidates = {
+    combinations: merged.combinations,
+    intervalAssemblyCandidateCount,
+    intervalRejectedOverlapCount,
+    perBucketGenerated,
+    mergedBeforeCap: merged.mergedBeforeCap,
+    dedupReplacedCount: merged.dedupReplacedCount,
+  };
   if (trace) {
-    for (const combo of kenlmSentenceCandidates) {
+    for (const combo of kenlmSentenceCandidates.combinations) {
       trace.pushSentenceCandidate({
         sentence: combo.text,
         replacements: combo.replacements.map((r) => r.word),
@@ -260,30 +383,24 @@ export function runSpanAssemblyV4Orchestrator(
 
   const internal: CoarseAssemblyInternalResult = {
     coarseSpans,
-    graphEdges: adjustedEdges,
-    utteranceDomain: domainAssembly.vote.utteranceDomain,
-    coarsePaths,
-    sentenceCandidates: kenlmSentenceCandidates.map((c) => c.text),
+    retainedDomains: [...domainAssembly.vote.retainedDomains],
+    utteranceDomain: primaryDomain,
+    sentenceCandidates: kenlmSentenceCandidates.combinations.map((c) => c.text),
   };
-
-  const inSpanWindowCount = truncated.filter((w) => w.windowSource === 'in_span_window').length;
-  const boundaryWindowCount = truncated.filter((w) => w.windowSource === 'boundary_window').length;
-  const shadowBeamSpanSetsTotal = beam.spanSets.reduce((sum, set) => sum + set.length, 0);
 
   return {
     internal,
     spanSets: domainAwareSpanSets,
-    shadowBeamSpanSets: beam.spanSets,
-    shadowBeamSentenceTexts: beam.sentenceTexts,
+    bucketSpanSets: domainAssembly.bucketSpanSets,
     fwSpans,
     boundaryImport: partition.diagnostics,
-    tone: recall.tone,
+    tone: toneFromRecall,
     metrics: {
       coarseSpanCount: coarseSpans.length,
-      globalWindowGeneratedCount: generated.length,
+      globalWindowGeneratedCount: generatedCount,
       blockedWindowCount,
       truncatedWindowCount: truncatedCount,
-      ngramQueryCount: recall.ngramQueryCount,
+      ngramQueryCount,
       windowCandidatePoolCount: compatibility.metrics.activeCandidateCount,
       activeCandidateCount: compatibility.metrics.activeCandidateCount,
       compatibilityEdgeCount,
@@ -293,25 +410,17 @@ export function runSpanAssemblyV4Orchestrator(
       conflictRelationCount: compatibility.metrics.conflictRelationCount,
       hardDropCount: compatibility.metrics.hardDropCount,
       compatibleCount: compatibility.metrics.compatibleCount,
-      parentEvidenceCount: emitted.parentEvidence.length,
-      exactEdgeCount: emitted.exactEdges.length,
-      candidateEdgeCount: adjustedEdges.length,
-      overlapMergeCount: graph.overlapMergeCount,
-      residualSpanCount: graph.residualSpanCount,
-      utteranceDomain: domainAssembly.vote.utteranceDomain,
+      utteranceDomain: primaryDomain,
       domainVoteMs: domainAssembly.vote.domainVoteMs,
-      coarsePathAssemblyMs,
-      sentenceBeamMs: beam.sentenceBeamMs,
+      winnerScore: domainAssembly.vote.maxCount,
+      runnerUpDomain: domainAssembly.vote.runnerUpDomain,
+      runnerUpScore: domainAssembly.vote.runnerUpCount,
+      voteMargin: domainAssembly.vote.voteMargin,
       assemblyMs: Date.now() - assemblyStart,
-      parentFragmentHitCount: recall.parentFragmentHitCount,
-      parentSpanCandidateEmittedCount: parentSpanAssembly.parentSpanCandidateEmittedCount,
-      parentSpanCandidateSelectedCount: parentSpanAssembly.parentSpanCandidateSelectedCount,
-      dominatedPrunedCount: parentSpanAssembly.dominatedPrunedCount,
-      ruleBRejectedByHoleCount: parentSpanAssembly.ruleBRejectedByHoleCount,
-      parentSpanCoverageAvg: parentSpanAssembly.parentSpanCoverageAvg,
+      parentFragmentHitCount,
       parentTermVoteCount: domainAssembly.vote.parentTermVoteCount,
-      inSpanWindowCount,
-      boundaryWindowCount,
+      inSpanWindowCount: ltr.formalSpans.filter((s) => s.windowSource === 'in_span_window').length,
+      boundaryWindowCount: ltr.formalSpans.filter((s) => s.windowSource === 'boundary_window').length,
       domainCandidateCount: domainAssembly.metrics.domainCandidateCount,
       baseCandidateCount: domainAssembly.metrics.baseCandidateCount,
       sameDomainCandidateCount: domainAssembly.metrics.sameDomainCandidateCount,
@@ -319,10 +428,55 @@ export function runSpanAssemblyV4Orchestrator(
       selectedCandidatesPerSpanAvg: domainAssembly.metrics.selectedCandidatesPerSpanAvg,
       domainAssemblyMs: domainAssembly.metrics.domainAssemblyMs,
       mainDomainAwareSpanSetsTotal: domainAssembly.metrics.mainDomainAwareSpanSetsTotal,
-      shadowBeamSpanSetsTotal,
+      retainedBucketCount: domainAssembly.metrics.retainedBucketCount,
+      intervalAssemblyCandidateCount: kenlmSentenceCandidates.intervalAssemblyCandidateCount,
+      intervalRejectedOverlapCount: kenlmSentenceCandidates.intervalRejectedOverlapCount,
+      fallbackCandidateCount: domainAssembly.filteredSets.reduce(
+        (sum, set) => sum + set.fallbackCandidates.length,
+        0
+      ),
+      kenlmPoolCandidateCount: kenlmSentenceCandidates.combinations.length,
+      preFilterCombinationCount: kenlmSentenceCandidates.intervalAssemblyCandidateCount,
+      domainScores: domainAssembly.vote.domainScores,
+      retainedDomains: domainAssembly.vote.retainedDomains,
+      winningFineDomain: primaryDomain,
+      insufficientEvidence: domainAssembly.vote.insufficientEvidence,
+      domainLookupExecuted: true,
+      domainLookupDomainCount: recallDomainIds.length,
+      domainRecallHitCount,
+      voteEligibleDomainCandidateCount,
+      resolvedRecallDomainScope: [...input.recallDomainScope],
+      architectureCompliance,
+      recallRequestCount: utteranceRecallStats.requestCount,
+      uniqueRecallKeyCount: utteranceRecallStats.uniqueKeyCount,
+      duplicateRecallKeyCount: utteranceRecallStats.duplicateKeyCount,
+      utteranceCacheHitCount: utteranceRecallStats.hitCount,
+      utteranceCacheMissCount: utteranceRecallStats.missCount,
+      cacheHitRatio,
+      logicalQueryCount: utteranceRecallStats.requestCount,
+      physicalSqlStatementCount,
+      exactQueryCount: utteranceRecallStats.exactQueryCount,
+      parentQueryCount: utteranceRecallStats.parentQueryCount,
+      lexiconRecallTotalMs: utteranceRecallStats.lexiconRecallTotalMs,
+      recallRequestBuildMs: utteranceRecallStats.recallRequestBuildMs,
+      utteranceCacheLookupMs: utteranceRecallStats.utteranceCacheLookupMs,
+      lexiconFactLookupMs: utteranceRecallStats.lexiconFactLookupMs,
+      windowBindingMs: utteranceRecallStats.windowBindingMs,
     },
     trace: trace?.toDiagnostics(),
     kenlmSentenceCandidates,
+    ...(diagnosticsConfig.enabled
+      ? {
+          diagActiveCandidates: activeCandidates.map((c) => ({
+            candidateId: c.candidateId,
+            text: c.replacement,
+            domains: c.domains ?? [],
+            source: c.source,
+            isCovered: c.isCovered === true,
+            hitKind: c.hitKind,
+          })),
+        }
+      : {}),
   };
 }
 
@@ -358,14 +512,12 @@ function emptyResult(
   return {
     internal: {
       coarseSpans: [],
-      graphEdges: [],
+      retainedDomains: [],
       utteranceDomain: 'general',
-      coarsePaths: [],
       sentenceCandidates: [],
     },
     spanSets: [],
-    shadowBeamSpanSets: [],
-    shadowBeamSentenceTexts: [],
+    bucketSpanSets: [],
     fwSpans: [],
     boundaryImport: diagnostics,
     tone: createEmptyToneDiagnostics(acousticSlices, [], toneTimestampOnlyEnabled),
@@ -384,22 +536,14 @@ function emptyResult(
       conflictRelationCount: 0,
       hardDropCount: 0,
       compatibleCount: 0,
-      parentEvidenceCount: 0,
-      exactEdgeCount: 0,
-      candidateEdgeCount: 0,
-      overlapMergeCount: 0,
-      residualSpanCount: 0,
       utteranceDomain: 'general',
       domainVoteMs: 0,
-      coarsePathAssemblyMs: 0,
-      sentenceBeamMs: 0,
+      winnerScore: 0,
+      runnerUpDomain: 'general',
+      runnerUpScore: 0,
+      voteMargin: 0,
       assemblyMs: Date.now() - assemblyStart,
       parentFragmentHitCount: 0,
-      parentSpanCandidateEmittedCount: 0,
-      parentSpanCandidateSelectedCount: 0,
-      dominatedPrunedCount: 0,
-      ruleBRejectedByHoleCount: 0,
-      parentSpanCoverageAvg: 0,
       parentTermVoteCount: 0,
       inSpanWindowCount: 0,
       boundaryWindowCount: 0,
@@ -410,7 +554,21 @@ function emptyResult(
       selectedCandidatesPerSpanAvg: 0,
       domainAssemblyMs: 0,
       mainDomainAwareSpanSetsTotal: 0,
-      shadowBeamSpanSetsTotal: 0,
+      retainedBucketCount: 0,
+      intervalAssemblyCandidateCount: 0,
+      intervalRejectedOverlapCount: 0,
+      fallbackCandidateCount: 0,
+      kenlmPoolCandidateCount: 0,
+      preFilterCombinationCount: 0,
+      domainScores: {},
+      retainedDomains: [],
+      winningFineDomain: 'general',
+      insufficientEvidence: true,
+      domainLookupExecuted: false,
+      domainLookupDomainCount: 0,
+      domainRecallHitCount: 0,
+      voteEligibleDomainCandidateCount: 0,
+      resolvedRecallDomainScope: [],
     },
     trace: trace?.toDiagnostics(),
   };

@@ -52,6 +52,14 @@ export async function runFwDetectorStep(
   }
 
   applyFwDetectorJobOverrides(job, ctx);
+  logger.info(
+    {
+      jobId: job.job_id,
+      domainPriorsFieldPresent: Object.prototype.hasOwnProperty.call(job, 'domainPriors'),
+      domainPriorsBound: ctx.domainPriors ?? [],
+    },
+    '[DOMAIN_PRIOR] JobAssign → ctx bound'
+  );
   ctx.fwDetectorTraceCaseId = resolveFwDetectorTraceCaseId(job);
   const result = await runFwDetectorOrchestrator(ctx);
   logger.info(

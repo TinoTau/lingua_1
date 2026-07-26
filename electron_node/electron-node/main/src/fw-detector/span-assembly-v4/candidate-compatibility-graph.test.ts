@@ -1,10 +1,8 @@
 import { describe, expect, it } from '@jest/globals';
 import {
   __testOnly,
-  dropIncompatibleCandidates,
   resolveCompatibilityRelations,
 } from './candidate-compatibility-graph';
-import { emitParentEvidenceAndExactEdges } from './emit-v4-evidence';
 import type { WindowCandidate } from './v4-types';
 import { V4TraceCollector } from './v4-diagnostics-trace';
 
@@ -63,7 +61,7 @@ describe('candidate-compatibility-graph coverage merge', () => {
     expect(result.activeCandidates.find((c) => c.candidateId === 'child')?.coveredBy).toBe('parent');
   });
 
-  it('emits parent edge but skips covered child', () => {
+  it('emits only uncovered exact_term candidates after coverage merge', () => {
     const child = makeCandidate({
       candidateId: 'child',
       replacement: '蓝莓',
@@ -81,9 +79,11 @@ describe('candidate-compatibility-graph coverage merge', () => {
       rawEnd: 4,
     });
     const { activeCandidates } = resolveCompatibilityRelations([child, parent]);
-    const emitted = emitParentEvidenceAndExactEdges(activeCandidates);
-    expect(emitted.exactEdges).toHaveLength(1);
-    expect(emitted.exactEdges[0]?.replacement).toBe('蓝莓马芬');
+    const uncoveredExact = activeCandidates.filter(
+      (c) => !c.isCovered && c.hitKind === 'exact_term'
+    );
+    expect(uncoveredExact).toHaveLength(1);
+    expect(uncoveredExact[0]?.replacement).toBe('蓝莓马芬');
   });
 
   it('records ConflictRelation for 中杯 vs 焙烧 without dropping either', () => {
@@ -163,14 +163,6 @@ describe('candidate-compatibility-graph coverage merge', () => {
     const result = resolveCompatibilityRelations([a, b]);
     expect(result.metrics.activeCandidateCount).toBe(2);
     expect(result.metrics.hardDropCount).toBe(0);
-  });
-
-  it('deprecated dropIncompatibleCandidates maps to resolveCompatibilityRelations', () => {
-    const a = makeCandidate({ candidateId: 'a', replacement: '中杯', score: 1 });
-    const b = makeCandidate({ candidateId: 'b', replacement: '焙烧', score: 0.5 });
-    const legacy = dropIncompatibleCandidates([a, b]);
-    expect(legacy.droppedCount).toBe(0);
-    expect(legacy.survivors).toHaveLength(2);
   });
 
   it('pickDropCandidate remains available for narrow hardDrop stub tests only', () => {

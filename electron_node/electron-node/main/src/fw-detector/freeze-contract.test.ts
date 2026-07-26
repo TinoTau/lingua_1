@@ -306,50 +306,196 @@ describe('P1~P4 freeze simplification contract', () => {
     }
   });
 
-  it('assemble-parent-term-span-candidates-v4 使用 Greedy Longest 选择', () => {
-    const assemblySrc = readSrc('fw-detector/span-assembly-v4/assemble-parent-term-span-candidates-v4.ts');
-    expect(assemblySrc).toContain('selectGreedyLongestParentSpanCandidate');
-    expect(assemblySrc).toContain('parentSpanCandidateEmittedCount');
-    expect(assemblySrc).toContain('parentSpanCandidateSelectedCount');
+  it('Shadow Beam / parent graph assembly modules are deleted', () => {
+    expect(fs.existsSync(path.join(SRC_ROOT, 'fw-detector/span-assembly-v4/run-coarse-sentence-beam-v4.ts'))).toBe(
+      false
+    );
+    expect(
+      fs.existsSync(path.join(SRC_ROOT, 'fw-detector/span-assembly-v4/assemble-parent-term-span-candidates-v4.ts'))
+    ).toBe(false);
+    expect(fs.existsSync(path.join(SRC_ROOT, 'fw-detector/span-assembly-shared/coarse-path-assembly.ts'))).toBe(
+      false
+    );
+    expect(fs.existsSync(path.join(SRC_ROOT, 'fw-detector/span-assembly-shared/coarse-candidate-graph.ts'))).toBe(
+      false
+    );
+    expect(fs.existsSync(path.join(SRC_ROOT, 'fw-detector/span-assembly-shared/domain-rerank.ts'))).toBe(false);
   });
 
-  it('run-coarse-sentence-beam-v4 使用 findOwningCoarseSpanIndexV4', () => {
-    const beamSrc = readSrc('fw-detector/span-assembly-v4/run-coarse-sentence-beam-v4.ts');
-    expect(beamSrc).toContain('findOwningCoarseSpanIndexV4');
-    expect(beamSrc).not.toMatch(/rawStart === pick\.span\.start/);
-  });
-
-  it('coarse-path-assembly 优先用 GraphEdge.coarseSpanId 归属', () => {
-    const pathSrc = readSrc('fw-detector/span-assembly-shared/coarse-path-assembly.ts');
-    expect(pathSrc).toContain('edgeBelongsToSpan');
-    expect(pathSrc).toContain('edge.coarseSpanId === span.id');
-    expect(pathSrc).not.toContain('findOwningCoarseSpanIndex');
-  });
-
-  it('span-assembly-v4-orchestrator 主链 domain assembly，spanSets 不直接来自 beam', () => {
+  it('span-assembly-v4-orchestrator main chain is presence vote + multi-bucket (no shadow)', () => {
     const orchSrc = readSrc('fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts');
     expect(orchSrc).toContain('runDomainAwareAssembly');
-    expect(orchSrc).toContain('shadowBeamSpanSets: beam.spanSets');
     expect(orchSrc).toContain('spanSets: domainAwareSpanSets');
-    expect(orchSrc).not.toMatch(/spanSets:\s*beam\.spanSets/);
-    expect(orchSrc).toContain('voteUtteranceDomain({');
+    expect(orchSrc).toContain('bucketSpanSets');
+    expect(orchSrc).toContain('allocateDomainBucketSentenceBudget');
+    expect(orchSrc).toContain('mergeCrossBucketSentenceCandidates');
+    expect(orchSrc).toContain('perBucketGenerateCap');
+    expect(orchSrc).not.toContain('shadowBeamSpanSets');
+    expect(orchSrc).not.toContain('runCoarseSentenceBeamV4');
+    expect(orchSrc).not.toContain('applyDomainVoteToEdges');
+    expect(orchSrc).not.toContain('voteUtteranceDomain({');
   });
 
-  it('utterance-domain-vote 提供 Main/Shadow 双入口', () => {
+  it('KenLM prefilled path consumes cross-bucket merged combinations', () => {
+    const v4Src = readSrc('fw-detector/fw-detector-v4-path.ts');
+    const rerankSrc = readSrc('fw-detector/kenlm/run-fw-sentence-rerank-from-prefilled.ts');
+    expect(v4Src).toMatch(
+      /prefilledCombinations:\s*assemblyResult\.kenlmSentenceCandidates\?\.combinations(?:\s*\?\?\s*\[\])?/
+    );
+    expect(rerankSrc).toContain('prefilledCombinations');
+    expect(rerankSrc).toContain('input.prefilledCombinations');
+    expect(rerankSrc).toContain('prefilledCombinations: SentenceCombination[]');
+    expect(rerankSrc).not.toContain('prefilledCombinations?:');
+    expect(rerankSrc).not.toContain('buildSentenceCandidates(');
+    expect(rerankSrc).not.toContain('input.prefilledCombinations !== undefined');
+  });
+
+  it('GATE-FREEZE-PRESENCE: accepted Presence Vote contract static gates', () => {
+    const voteSrc = readSrc('fw-detector/span-assembly-shared/utterance-domain-vote.ts');
+    const assemblySrc = readSrc('fw-detector/span-assembly-v4/assemble-domain-aware-span-sets.ts');
+    const orchSrc = readSrc('fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts');
+    const v4Src = readSrc('fw-detector/fw-detector-v4-path.ts');
+    const recallSrc = readSrc('lexicon-v2/recall-span-topkv3.ts');
+    expect(voteSrc).toMatch(/DOMAIN_BUCKET_RETENTION_RATIO\s*=\s*0\.75/);
+    expect(voteSrc).toContain('buildFineSpanDomainSet');
+    expect(voteSrc).not.toMatch(/domainScores\[[^\]]+\]\s*\+=\s*[^;\n]*candidate\.score/);
+    expect(voteSrc).not.toContain('VoteMass');
+    expect(voteSrc).not.toContain('SOURCE_WEIGHT');
+    expect(voteSrc).not.toContain('coverageWeight');
+    expect(assemblySrc).toContain('voteUtteranceDomainFromPool');
+    expect(assemblySrc).toContain('for (const bucketDomain of bucketDomains)');
+    expect(assemblySrc).toContain('isBaseCandidate');
+    expect(assemblySrc).toContain('domains?.includes(bucketDomain)');
+    expect(orchSrc).toContain('mergeCrossBucketSentenceCandidates');
+    expect(orchSrc).toContain('allocateDomainBucketSentenceBudget');
+    expect(v4Src).toContain('applied: false');
+    expect(recallSrc).toContain('lookupTermDomainTagsInScope');
+    expect(fs.existsSync(path.join(SRC_ROOT, 'fw-detector/span-assembly-shared/domain-rerank.ts'))).toBe(
+      false
+    );
+    expect(orchSrc).not.toContain('shadowBeamSpanSets');
+    expect(orchSrc).not.toContain('runCoarseSentenceBeamV4');
+  });
+
+  it('GATE-DOC-DOMAIN-ATOMIC: domain multi lookup uses term-then-tags atomic query', () => {
+    const runtimeSrc = readSrc('lexicon-v2/lexicon-runtime-v2.ts');
+    expect(runtimeSrc).toContain('queryDomainMultiRowsAtomic');
+    expect(runtimeSrc).toContain('GROUP BY d.id');
+    expect(runtimeSrc).toContain('lookupTermDomainTagsInScope');
+    expect(runtimeSrc).not.toMatch(
+      /LIMIT \?`;\s*const rows = this\.db\s*\.prepare\(sql\)\s*\.all\([\s\S]*?Math\.max\(limit,\s*limit \* sortedIds\.length\)/
+    );
+  });
+
+  it('GATE-DOC-SSOT: Runtime_SSOT_Contract_Freeze.md UTF-8 integrity and required contract strings', () => {
+    const docsRoot = path.resolve(SRC_ROOT, '../../../../docs/tone-v2');
+    const fwDocsRoot = path.resolve(SRC_ROOT, '../../../../docs/fw-detector');
+    const freezePath = path.join(docsRoot, 'Runtime_SSOT_Contract_Freeze.md');
+    expect(fs.existsSync(freezePath)).toBe(true);
+    const buf = fs.readFileSync(freezePath);
+    expect(() => new TextDecoder('utf-8', { fatal: true }).decode(buf)).not.toThrow();
+    const text = buf.toString('utf8');
+    expect(text.includes('\uFFFD')).toBe(false);
+    expect(/\?{3,}/.test(text)).toBe(false);
+
+    // C0 control characters forbidden (allow only LF/CR; ban TAB and other C0).
+    const controlChars = [...text].filter((ch) => {
+      const code = ch.charCodeAt(0);
+      return code < 32 && code !== 10 && code !== 13;
+    });
+    expect(controlChars).toEqual([]);
+
+    // Markdown fences must pair (simple count; no full parser).
+    const fenceCount = (text.match(/```/g) || []).length;
+    expect(fenceCount % 2).toBe(0);
+    expect(text).not.toMatch(/`\text/);
+    expect(text).not.toMatch(/```\t/);
+
+    for (const name of fs.readdirSync(docsRoot)) {
+      if (/Runtime_SSOT_Contract_Freeze/i.test(name) && name !== 'Runtime_SSOT_Contract_Freeze.md') {
+        throw new Error(`duplicate freeze file not allowed: ${name}`);
+      }
+      if (/Runtime_SSOT.*(Copy|Final|Latest|V2|\(2\)|\(3\))/i.test(name)) {
+        throw new Error(`parallel freeze naming forbidden: ${name}`);
+      }
+    }
+
+    const required = [
+      'term_domain_tags',
+      'Hotword.domains[]',
+      'WindowCandidate.domains[]',
+      'FineSpanDomainSet',
+      'DOMAIN_BUCKET_RETENTION_RATIO = 0.75',
+      'mergeCrossBucketSentenceCandidates',
+      'allocateDomainBucketSentenceBudget',
+      'fw-detector-v4-path',
+      'prefilledCombinations',
+      'prefilledCombinations: required',
+      'runFwSentenceRerankFromPrefilled',
+      'rerankFwSentences',
+      'applied:false',
+      'ACCEPTED AND FROZEN',
+      'KENLM INTEGRATION ACCEPTANCE',
+      'KENLM QUALITY STATUS',
+    ];
+    for (const needle of required) {
+      expect(text).toContain(needle);
+    }
+    expect(text).toMatch(/Fine-Span(?: Domain)? Presence Vote/i);
+    expect(text).toMatch(/One Span One Vote Per Domain/i);
+    expect(text).toMatch(/Shadow Beam[\s\S]{0,120}REMOVED/i);
+    expect(text).toMatch(/Domain Rerank[\s\S]{0,120}REMOVED/i);
+    expect(text).toMatch(/Multi-Bucket Assembly/i);
+    expect(text).toMatch(/KenLM Cross-Bucket (Ranking|Integration)|跨桶统一评分/i);
+    expect(text).toMatch(/Sentence Candidates\s*[≤<=]\s*16|<=16/i);
+
+    // Forbid sole REAL KENLM ACCEPTANCE: PASS without Integration/Quality split.
+    if (/REAL KENLM ACCEPTANCE:\s*PASS/i.test(text)) {
+      expect(text).toMatch(/KENLM INTEGRATION ACCEPTANCE/i);
+      expect(text).toMatch(/KENLM QUALITY STATUS/i);
+      expect(text).toMatch(/Known Risks/i);
+      throw new Error(
+        'REAL KENLM ACCEPTANCE: PASS is forbidden; use KENLM INTEGRATION ACCEPTANCE + KENLM QUALITY STATUS'
+      );
+    }
+
+    // Sibling current docs: ban obvious active legacy claims (exclude SUPERSEDED banners).
+    const siblingPaths = [
+      path.join(fwDocsRoot, 'DOMAIN_SOURCE_UNIFICATION.md'),
+      path.join(fwDocsRoot, 'recall', 'DOMAIN_RECALL.md'),
+      path.join(fwDocsRoot, 'assembly', 'FROZEN_V1_2.md'),
+      path.join(fwDocsRoot, 'ARCHITECTURE.md'),
+      path.join(fwDocsRoot, 'kenlm', 'KENLM_RUNTIME.md'),
+      path.join(fwDocsRoot, 'CONTEXT_PRIOR.md'),
+    ];
+    for (const p of siblingPaths) {
+      if (!fs.existsSync(p)) continue;
+      const body = fs.readFileSync(p, 'utf8');
+      if (/STATUS:\s*SUPERSEDED|SUPERSEDED\s*\/\s*HISTORICAL/i.test(body.slice(0, 800))) continue;
+      expect(body).not.toMatch(/domain-rerank\.ts[^\n]{0,80}(is active|正式|active main)/i);
+      expect(body).not.toMatch(/Shadow Beam[^\n]{0,80}(formal main chain|正式主链)/i);
+      expect(body).not.toMatch(/Context Prior[^\n]{0,80}multiplier[^\n]{0,40}applied(?!\s*:\s*false)/i);
+      expect(body).not.toMatch(/shadowBeamSpanSets[^\n]{0,60}(正式输入|formal input)/i);
+    }
+  });
+
+  it('dead legacy production domain types removed from span-assembly-shared/types.ts', () => {
+    const typesSrc = readSrc('fw-detector/span-assembly-shared/types.ts');
+    expect(typesSrc).not.toContain('export type ParentTermEvidence');
+    expect(typesSrc).not.toContain('export type ParentSpanCandidate');
+    expect(typesSrc).not.toContain('export type GraphEdge =');
+    expect(typesSrc).not.toContain('export type CoarseSpanPath');
+  });
+
+  it('utterance-domain-vote is FineSpan presence only (no graph shadow vote)', () => {
     const voteSrc = readSrc('fw-detector/span-assembly-shared/utterance-domain-vote.ts');
     expect(voteSrc).toContain('voteUtteranceDomainFromPool');
-    expect(voteSrc).toContain('voteUtteranceDomain(');
-    expect(voteSrc).not.toContain('vote-utterance-domain');
-  });
-
-  it('parent_span_candidate GraphEdge 贯通 coarseSpanId', () => {
-    const typesSrc = readSrc('fw-detector/span-assembly-shared/types.ts');
-    const assemblySrc = readSrc('fw-detector/span-assembly-v4/assemble-parent-term-span-candidates-v4.ts');
-    const graphSrc = readSrc('fw-detector/span-assembly-shared/coarse-candidate-graph.ts');
-    expect(typesSrc).toContain('coarseSpanId?: string');
-    expect(assemblySrc).toContain('coarseSpanId: candidate.coarseSpanId');
-    expect(graphSrc).toContain('coarseSpanId: a.coarseSpanId ?? b.coarseSpanId');
-    expect(graphSrc).toMatch(/a\.coarseSpanId !== b\.coarseSpanId/);
+    expect(voteSrc).toContain('DOMAIN_BUCKET_RETENTION_RATIO');
+    expect(voteSrc).toContain('buildFineSpanDomainSet');
+    expect(voteSrc).not.toContain('applyDomainVoteToEdges');
+    expect(voteSrc).not.toMatch(/export function voteUtteranceDomain\(/);
+    expect(voteSrc).not.toContain('SOURCE_WEIGHT');
+    expect(voteSrc).not.toContain('VoteMass');
   });
 
   it('recallSpanTopKV2 冻结合约：不得引用 term_pinyin_ngrams / parent_fragment', () => {
@@ -375,13 +521,27 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(assemblySrc).not.toMatch(/spanSets\.map\([\s\S]*?\)\.reduce/);
   });
 
-  it('GATE-INT-2: SpanReplacementPick metadata propagation frozen', () => {
+  it('GATE-INT-2: SpanReplacementPick optional window slots (CFG Integration; not FROZEN_V1_2 required propagation)', () => {
+    // Classification: B — CFG / Integration gate (not Runtime Domain SSOT).
+    // DomainAware intermediate may hold domains[] for sameDomain membership.
+    // SpanReplacementPick / KenLM path must not receive domains / domainId / selectedDomain.
     const pickSrc = readSrc('fw-detector/build-sentence-candidates.ts');
     const windowPickSrc = readSrc('fw-detector/span-assembly-v4/window-candidate-to-pick.ts');
     expect(pickSrc).toContain('windowSource?');
     expect(pickSrc).toContain('coveredCoarseSpanIds?');
-    expect(windowPickSrc).toContain('windowSource: pick.windowSource');
-    expect(windowPickSrc).toContain('coveredCoarseSpanIds: pick.coveredCoarseSpanIds');
+    expect(windowPickSrc).not.toContain('selectedDomain');
+    expect(windowPickSrc).toContain('domains: candidate.domains');
+    expect(windowPickSrc).toMatch(
+      /domainAwarePickToSpanReplacementPick[\s\S]*?return \{[\s\S]*?candidateScore: pick\.score,\s*\};/
+    );
+    expect(windowPickSrc).not.toMatch(
+      /domainAwarePickToSpanReplacementPick[\s\S]*?return \{[\s\S]*?\bdomains\s*:/
+    );
+    expect(windowPickSrc).not.toMatch(
+      /domainAwarePickToSpanReplacementPick[\s\S]*?return \{[\s\S]*?\bdomainId\s*:/
+    );
+    expect(pickSrc).not.toMatch(/export type SpanReplacementPick = \{[\s\S]*?\bdomains\??\s*:/);
+    expect(windowPickSrc).toContain('domainAwarePickToSpanReplacementPick');
   });
 
   it('GATE-INT-3: rerank prefilled matches coarse span via rawOverlap', () => {
@@ -462,10 +622,10 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(applierSrc).not.toMatch(/table:\s*['"]domain['"]/);
   });
 
-  it('GATE-DSU-1: domain rerank uses runtime-domain-registry — not profile-registry', () => {
-    const rerankSrc = readSrc('fw-detector/span-assembly-shared/domain-rerank.ts');
-    expect(rerankSrc).toContain('runtime-domain-registry');
-    expect(rerankSrc).not.toContain('profile-registry');
+  it('GATE-DSU-1: domain-rerank deleted; recall uses runtime-domain-registry', () => {
+    expect(fs.existsSync(path.join(SRC_ROOT, 'fw-detector/span-assembly-shared/domain-rerank.ts'))).toBe(
+      false
+    );
     const recallSrc = readSrc('lexicon-v2/resolve-recall-enabled-fine-domains.ts');
     expect(recallSrc).toContain('runtime-domain-registry');
     expect(recallSrc).not.toContain('profile-registry');
@@ -475,6 +635,20 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(DEFAULT_CONFIG.features?.fwDetector?.enabledDomains).toEqual([]);
     const fwCfg = loadFwDetectorRuntimeConfig();
     expect(fwCfg.enabledDomains).toEqual([]);
+  });
+
+  it('GATE-DSU-2b: recallDomainScope is unique orchestrator Recall SSOT (not raw enabledDomains)', () => {
+    const orchSrc = readSrc('fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts');
+    expect(orchSrc).toContain('recallDomainScope');
+    expect(orchSrc).toContain('domainIds: recallDomainIds');
+    expect(orchSrc).not.toMatch(/domainIds:\s*weakEnabled\s*\?\s*weakDomainPlan\.queryDomainIds\s*:\s*input\.enabledDomains/);
+    expect(orchSrc).toContain('recallDomainScope is empty');
+    const v4Src = readSrc('fw-detector/fw-detector-v4-path.ts');
+    expect(v4Src).toContain('recallDomainScope');
+    expect(v4Src).not.toMatch(/enabledDomains,\s*\n\s*minPrior/);
+    const topSrc = readSrc('fw-detector/fw-detector-orchestrator.ts');
+    expect(topSrc).toContain('resolveRecallScope');
+    expect(topSrc).toContain('recall_domain_scope_empty');
   });
 
   it('GATE-DSU-3: LLM parser rejects fine primary via runtime registry', () => {
@@ -491,7 +665,7 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(gateSrc).toContain('BG-02');
     expect(gateSrc).toContain('BG-03');
     const thresholdsSrc = readScript('lexicon/lib/lexicon-v3-runtime.mjs');
-    expect(thresholdsSrc).toContain('domain_hierarchy: 8');
+    expect(thresholdsSrc).toContain('domain_hierarchy: 12');
   });
 
   it('GATE-DSU-5: runtime hierarchy is sqlite-only — no profile-registry fallback', () => {
@@ -501,10 +675,14 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(registrySrc).not.toMatch(/dev fallback/i);
   });
 
-  it('GATE-CP-01: domain-rerank must not import profile-registry', () => {
-    const rerankSrc = readSrc('fw-detector/span-assembly-shared/domain-rerank.ts');
-    expect(rerankSrc).not.toContain('profile-registry');
-    expect(rerankSrc).toContain('computeContextPriorMultiplier');
+  it('GATE-CP-01: domain-rerank deleted; context-prior is diagnostics-only stub', () => {
+    expect(fs.existsSync(path.join(SRC_ROOT, 'fw-detector/span-assembly-shared/domain-rerank.ts'))).toBe(
+      false
+    );
+    const cpSrc = readSrc('fw-detector/span-assembly-shared/context-prior.ts');
+    expect(cpSrc).toContain('ContextPriorStats');
+    expect(cpSrc).not.toContain('DOMAIN_RERANK_PENALTY');
+    expect(cpSrc).not.toContain('computeDomainRerankPenalty');
   });
 
   it('GATE-CP-02: utterance-domain-vote must not import context prior', () => {
@@ -520,9 +698,10 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(recallSrc).not.toContain('profile');
   });
 
-  it('GATE-CP-04: domain-rerank must not mutate RuntimeDomainRegistry', () => {
-    const rerankSrc = readSrc('fw-detector/span-assembly-shared/domain-rerank.ts');
-    expect(rerankSrc).not.toContain('setRuntimeDomainRegistry');
+  it('GATE-CP-04: context-prior stub has no registry mutation', () => {
+    const cpSrc = readSrc('fw-detector/span-assembly-shared/context-prior.ts');
+    expect(cpSrc).not.toContain('setRuntimeDomainRegistry');
+    expect(cpSrc).not.toContain('profile-registry');
   });
 
   it('GATE-RANK-01: filterDomainCandidatesPerSpan exists and buckets base_term', () => {
@@ -594,12 +773,15 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(rerank).not.toContain('toneDiagnostics');
   });
 
-  it('CLEANUP-2: no hardDropCount in compatibility metrics', () => {
+  it('CLEANUP-2: hardDropCount remains zero-path stub (compatibility FROZEN)', () => {
+    // Classification: C — Cleanup aligned to docs/fw-detector/compatibility/FROZEN.md
+    // Hard drop main path is zero; metrics field hardDropCount is retained as stub (=0).
+    // Do not require string absence — that contradicted the frozen Compatibility metrics table.
     const compat = readSrc('fw-detector/span-assembly-v4/candidate-compatibility-graph.ts');
-    expect(compat).not.toContain('hardDropCount');
+    expect(compat).toContain('hardDropCount: 0');
     const v4Types = readSrc('fw-detector/span-assembly-v4/v4-types.ts');
-    expect(v4Types).not.toContain('hardDropCount');
-    expect(v4Types).not.toContain('droppedCandidateCount');
+    expect(v4Types).toContain('hardDropCount');
+    expect(v4Types).toContain('droppedCandidateCount');
   });
 
   it('CLEANUP-3: no intervalPaths trace field', () => {

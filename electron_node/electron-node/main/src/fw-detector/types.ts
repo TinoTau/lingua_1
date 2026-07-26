@@ -19,7 +19,8 @@ export type FwDetectorSignal =
   | 'ime_v2_instability_hint'
   | 'ime_v2_boundary_topk_diff_hint'
   | 'span_assembly_v3'
-  | 'span_assembly_v4';
+  | 'span_assembly_v4'
+  | 'ltr_fine_span';
 
 export type FwSpanGateMode = 'legacy_detector' | 'kenlm_gate_filter' | 'fw_metadata_gate';
 
@@ -213,7 +214,15 @@ export type FwSentenceRerankDiagnostics = {
   baselineRawScore?: number;
   pickedRawScore?: number;
   maxNormalizedDelta?: number;
-  topCandidates: Array<{ text: string; kenlmDelta: number; replacementCount: number }>;
+  topCandidates: Array<{
+    rank: number;
+    candidateId: string;
+    text: string;
+    kenlmScore: number;
+    deltaVsRaw: number;
+    isRaw: boolean;
+    replacementCount: number;
+  }>;
   allCombinations?: CombinationTrace[];
   allCombinationDeltas?: number[];
   picked?: import('./build-sentence-candidates').SentenceCombination | null;
@@ -315,22 +324,14 @@ export type SpanAssemblyV4Diagnostics = {
   coverageCount: number;
   conflictRelationCount: number;
   compatibleCount: number;
-  parentEvidenceCount: number;
-  exactEdgeCount: number;
-  candidateEdgeCount: number;
-  overlapMergeCount: number;
-  residualSpanCount: number;
   utteranceDomain: string;
   domainVoteMs: number;
-  coarsePathAssemblyMs: number;
-  sentenceBeamMs: number;
+  winnerScore?: number;
+  runnerUpDomain?: string;
+  runnerUpScore?: number;
+  voteMargin?: number;
   assemblyMs: number;
   parentFragmentHitCount?: number;
-  parentSpanCandidateEmittedCount?: number;
-  parentSpanCandidateSelectedCount?: number;
-  dominatedPrunedCount?: number;
-  ruleBRejectedByHoleCount?: number;
-  parentSpanCoverageAvg?: number;
   parentTermVoteCount?: number;
   inSpanWindowCount: number;
   boundaryWindowCount: number;
@@ -341,7 +342,7 @@ export type SpanAssemblyV4Diagnostics = {
   selectedCandidatesPerSpanAvg: number;
   domainAssemblyMs: number;
   mainDomainAwareSpanSetsTotal: number;
-  shadowBeamSpanSetsTotal: number;
+  retainedBucketCount?: number;
   intervalAssemblyCandidateCount: number;
   intervalRejectedOverlapCount: number;
   fallbackCandidateCount?: number;
@@ -349,13 +350,49 @@ export type SpanAssemblyV4Diagnostics = {
   preFilterCombinationCount?: number;
   recallEnabledFineDomains?: string[];
   domainScores?: Record<string, number>;
+  retainedDomains?: readonly string[];
   winningFineDomain?: string;
   insufficientEvidence?: boolean;
-  contextPriorMultiplierMin?: number;
-  contextPriorMultiplierMax?: number;
+  domainLookupExecuted?: boolean;
+  domainLookupDomainCount?: number;
+  domainRecallHitCount?: number;
+  voteEligibleDomainCandidateCount?: number;
+  resolvedRecallDomainScope?: string[];
   boundaryImport?: CoarseBoundaryImportDiagnostics;
   tone?: CoarseAssemblyToneDiagnostics;
   skippedReason?: 'no_cjk' | 'no_coarse_spans';
+  dominatedPrunedCount?: number;
+  ruleBRejectedByHoleCount?: number;
+  parentSpanCoverageAvg?: number;
+  /**
+   * Diagnostics-only candidate cap boundary snapshots (enabled when
+   * spanAssemblyV4DiagnosticsEnabled). Does not affect formal KenLM input.
+   */
+  candidateCapProbe?: {
+    perBucketAfterLocalCap: string[][];
+    mergedAfterDedupBeforeCap: string[];
+    finalAfterCap16: string[];
+    dedupReplacedCount: number;
+    maxSentenceCandidates: number;
+  };
+  /**
+   * Diagnostics-only vote / bucket membership snapshot for first-loss audit.
+   */
+  voteLifecycleProbe?: {
+    domainScores: Record<string, number>;
+    retainedDomains: readonly string[];
+    retentionRatio: number;
+    insufficientEvidence: boolean;
+    activeCandidates: Array<{
+      candidateId: string;
+      text: string;
+      domains: readonly string[];
+      source: string;
+      isCovered: boolean;
+      hitKind: string;
+    }>;
+    bucketDomains: Array<string | null>;
+  };
 } & SpanAssemblyV4TraceDiagnostics;
 
 export type FwPipelinePath = 'v4';

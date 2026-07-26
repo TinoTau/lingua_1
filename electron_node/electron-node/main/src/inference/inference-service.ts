@@ -416,6 +416,8 @@ export class InferenceService {
       enableKenLMGate?: boolean;
       kenlmGateMode?: 'hard_gate' | 'weak_veto';
       kenlmVetoThreshold?: number;
+      /** Soft session priors (JobAssign.domainPriors) — Node main-chain acceptance. */
+      domainPriors?: Array<{ domain: string; weight: number }>;
     }
   ): Promise<JobResult> {
     const tgtLang = options?.tgtLang ?? 'en';
@@ -454,6 +456,10 @@ export class InferenceService {
     if (options?.lexiconV2IntentEnabled === false) {
       (job as any).lexicon_v2_intent_enabled = false;
     }
+    if (options?.domainPriors !== undefined) {
+      (job as JobAssignMessage & { domainPriors?: Array<{ domain: string; weight: number }> }).domainPriors =
+        options.domainPriors;
+    }
     const fwOverrides = buildFwDetectorJobPayload({
       enableKenLMGate: options?.enableKenLMGate,
       kenlmGateMode: options?.kenlmGateMode,
@@ -473,7 +479,17 @@ export class InferenceService {
       (job as any).lang_b = candidates[1];
     }
     logger.info(
-      { wavPath, jobId, sampleRate, srcLang: useLid ? 'auto(lid)' : srcLang, tgtLang, useLid, opusBytes: opusBuffer.length },
+      {
+        wavPath,
+        jobId,
+        sampleRate,
+        srcLang: useLid ? 'auto(lid)' : srcLang,
+        tgtLang,
+        useLid,
+        opusBytes: opusBuffer.length,
+        domainPriorsCount: options?.domainPriors?.length ?? 0,
+        domainPriorsFieldPresent: options?.domainPriors !== undefined,
+      },
       'runPipelineWithAudio: running full pipeline'
     );
     return this.processJob(job);

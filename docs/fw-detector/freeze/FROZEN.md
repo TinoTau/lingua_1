@@ -147,6 +147,7 @@ node tests/run-fw-ranking-semantics-test.mjs
 | Diagnostics | `diagnostics/` |
 | Compatibility | `compatibility/` |
 | 接口类型 | [INTERFACE_FREEZE.md](../INTERFACE_FREEZE.md) |
+| Runtime 演进 | [../../tone-v2/Lingua_Runtime_Evolution_Rule.md](../../tone-v2/Lingua_Runtime_Evolution_Rule.md) |
 | 配置 | [CONFIG.md](../CONFIG.md) |
 
 *Supersede 2026-06-17 模块级冻结摘要与历史 FINAL_FREEZE 审计稿。*

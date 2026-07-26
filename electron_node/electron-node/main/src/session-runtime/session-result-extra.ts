@@ -67,6 +67,7 @@ export function buildSessionResultExtra(
           confidence: turnIntent.confidence,
           effectiveFromTurn: turnIntent.effectiveFromTurn,
           source: turnIntent.source,
+          topicShift: turnIntent.topicShift === true,
         }
       : session?.lexiconSessionIntent
         ? {
@@ -78,6 +79,7 @@ export function buildSessionResultExtra(
             confidence: session.lexiconSessionIntent.confidence,
             effectiveFromTurn: session.lexiconSessionIntent.effectiveFromTurn,
             source: session.lexiconSessionIntent.source,
+            topicShift: session.lexiconSessionIntent.topicShift === true,
           }
         : undefined,
     noTopkCandidate: ctx.v5Metrics?.lexicon_pinyin_topk_candidate_count === 0 ? 1 : 0,

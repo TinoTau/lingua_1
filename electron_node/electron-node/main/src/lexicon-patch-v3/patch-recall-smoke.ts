@@ -21,7 +21,7 @@ export type RecallSmokeRow = {
     word: string;
     priorScore: number;
     isAlias: boolean;
-    domain?: string;
+    domains?: string[];
     domainWeights?: Record<string, number>;
   }>;
 };
@@ -66,7 +66,7 @@ export function runRecallSmoke(bundleDir: string, cases: RecallSmokeCase[]): Rec
       word: h.word,
       priorScore: h.priorScore,
       isAlias: h.isAlias === true,
-      domain: h.domain,
+      domains: h.domains ?? [],
       domainWeights: h.domainWeights,
     }));
     let passed: boolean;

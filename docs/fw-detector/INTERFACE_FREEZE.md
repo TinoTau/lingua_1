@@ -162,8 +162,11 @@ type SentenceRerankPick = {
 | `scoreMode` | `raw_log_delta` |
 | `baselineRawScore` · `pickedRawScore` | raw score 分解 |
 | `maxNormalizedDelta` | 对照观测 |
-| `topCandidates` | Top-N 句级候选 |
-| `allCombinationDeltas` · `allCombinations` | 组合级 trace |
+| `topCandidates` | **Dump** Top-N 句级候选（display subset；默认 N=5） |
+| `allCombinationDeltas` · `allCombinations` | **Generated** 组合级（全量 deltas；`allCombinations` 需 Trace） |
+
+> Metrics SSOT：禁止把 `topCandidates` 当作 Generated 真值；禁止把 `pickedIsRaw` 改名为「KenLM Success」。  
+> 见 `docs/tone-v2/Lingua_Metrics_Layer_SSOT_Constraint_Addendum.md`。
 | `kenlmSubprocessMs` · `kenlmSubprocessCount` · `kenlmSubprocessErrorReason` | batch runtime |
 
 | 允许 | 禁止 |
@@ -175,8 +178,10 @@ type SentenceRerankPick = {
 
 ## 8. 变更流程
 
+**永久约束：** [../tone-v2/Lingua_Runtime_Evolution_Rule.md](../tone-v2/Lingua_Runtime_Evolution_Rule.md) — `Runtime → Freeze → Mapping Catalog → Metrics → Report`
+
 1. 框架接口语义变更 → 新合约版本 + `freeze-contract.test.ts` + 文档 bump  
-2. 仅 diagnostics 追加 → V1.0.2 patch 级别，optional 字段，向后兼容  
+2. 仅 diagnostics 追加 → V1.0.2 patch 级别，optional 字段，向后兼容 → **须**登记 [Mapping Catalog](../tone-v2/Lingua_Metrics_Layer_SSOT_Mapping.md) 后方可被 Metrics 消费  
 3. 词库字段变更 → [lexicon-v3/LEXICON_OPERATIONS.md](../lexicon-v3/LEXICON_OPERATIONS.md)，**不** bump 框架版本
 
 ---

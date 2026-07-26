@@ -10,17 +10,23 @@ export type DomainAwareGraphSource = Extract<
 >;
 
 export type FineSpanCandidatePool = {
+  /** Formal FineSpan id (LTR commit). Primary pool key. */
+  fineSpanId: string;
+  /** @deprecated coarse metadata only — not pool identity */
   coarseSpanId: string;
+  coarseSpanIds?: readonly string[];
   rawRange: [number, number];
   syllableRange: [number, number];
   candidates: WindowCandidate[];
+  windowSource?: string;
 };
 
 export type DomainAwareSpanReplacementPick = {
   span: { text: string; start: number; end: number };
   word: string;
   candidateId: string;
-  domainId?: string;
+  /** Membership for sameDomain filter only — stripped before SpanReplacementPick. */
+  domains?: readonly string[];
   graphSource: DomainAwareGraphSource;
   hitKind: WindowCandidateHitKind;
   score: number;
@@ -29,6 +35,7 @@ export type DomainAwareSpanReplacementPick = {
 };
 
 export type DomainFilteredSpanSet = {
+  fineSpanId?: string;
   coarseSpanId: string;
   rawRange: [number, number];
   syllableRange: [number, number];
@@ -36,6 +43,7 @@ export type DomainFilteredSpanSet = {
   baseCandidates: DomainAwareSpanReplacementPick[];
   fallbackCandidates: DomainAwareSpanReplacementPick[];
   selectedCandidates: DomainAwareSpanReplacementPick[];
+  bucketDomain?: string | null;
 };
 
 export type DomainAwareAssemblyMetrics = {
@@ -46,11 +54,15 @@ export type DomainAwareAssemblyMetrics = {
   selectedCandidatesPerSpanAvg: number;
   domainAssemblyMs: number;
   mainDomainAwareSpanSetsTotal: number;
+  retainedBucketCount: number;
 };
 
 export type DomainAwareAssemblyResult = {
   vote: UtteranceDomainVoteResult;
   filteredSets: DomainFilteredSpanSet[];
+  /** Primary / first retained bucket span sets (fwSpans / diagnostics). */
   spanSets: SpanReplacementPick[][];
+  /** One span-set grid per retained domain bucket (or single base-only grid). */
+  bucketSpanSets: SpanReplacementPick[][][];
   metrics: DomainAwareAssemblyMetrics;
 };

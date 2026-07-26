@@ -1,0 +1,789 @@
+﻿
+===== A_latte_coffee =====
+{
+  "rawText": "鎷块搧鍜栧暋",
+  "syllables": [
+    "na",
+    "tie",
+    "ka",
+    "fei"
+  ],
+  "coarseSpans": [
+    {
+      "id": "c0",
+      "text": "鎷块搧",
+      "rawStart": 0,
+      "rawEnd": 2,
+      "syllableStart": 0,
+      "syllableEnd": 2,
+      "source": "asr_word_boundary",
+      "boundaryConfidence": 0.5
+    },
+    {
+      "id": "c1",
+      "text": "鍜栧暋",
+      "rawStart": 2,
+      "rawEnd": 4,
+      "syllableStart": 2,
+      "syllableEnd": 4,
+      "source": "asr_word_boundary",
+      "boundaryConfidence": 0.5
+    }
+  ]
+}
+cursor=0 options: [
+  {
+    "windowId": "0:2",
+    "text": "鎷块搧",
+    "len": 2,
+    "cross": 0,
+    "source": "in_span_window",
+    "blocked": false,
+    "spanIds": [
+      "c0"
+    ]
+  },
+  {
+    "windowId": "0:3",
+    "text": "鎷块搧鍜?,
+    "len": 3,
+    "cross": 1,
+    "source": "boundary_window",
+    "blocked": false,
+    "spanIds": [
+      "c0",
+      "c1"
+    ]
+  },
+  {
+    "windowId": "0:4",
+    "text": "鎷块搧鍜栧暋",
+    "len": 4,
+    "cross": 1,
+    "source": "boundary_window",
+    "blocked": false,
+    "spanIds": [
+      "c0",
+      "c1"
+    ]
+  }
+]
+formalSpans: [
+  {
+    "spanId": "fine:0:2",
+    "text": "鎷块搧",
+    "syllable": [
+      0,
+      2
+    ],
+    "cross": 0,
+    "reason": "complete_in_span",
+    "source": "in_span_window",
+    "candidates": [
+      "鎷块搧"
+    ]
+  },
+  {
+    "spanId": "fine:2:4",
+    "text": "鍜栧暋",
+    "syllable": [
+      2,
+      4
+    ],
+    "cross": 0,
+    "reason": "complete_in_span",
+    "source": "in_span_window",
+    "candidates": [
+      "鍜栧暋"
+    ]
+  }
+]
+steps: [
+  {
+    "cursor": 0,
+    "selected": {
+      "start": 0,
+      "end": 2,
+      "reason": "complete_in_span",
+      "spanId": "fine:0:2"
+    },
+    "options": [
+      {
+        "windowId": "0:3",
+        "decision": "rejected",
+        "lex": "none",
+        "rejectedReason": "rejected_partial",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "0:4",
+        "decision": "rejected",
+        "lex": "complete_single_term",
+        "candidateCount": 1
+      },
+      {
+        "windowId": "0:1",
+        "decision": "rejected",
+        "lex": "none",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "0:2",
+        "decision": "selected",
+        "lex": "complete_single_term",
+        "candidateCount": 1
+      }
+    ]
+  },
+  {
+    "cursor": 2,
+    "selected": {
+      "start": 2,
+      "end": 4,
+      "reason": "complete_in_span",
+      "spanId": "fine:2:4"
+    },
+    "options": [
+      {
+        "windowId": "2:3",
+        "decision": "rejected",
+        "lex": "none",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "2:4",
+        "decision": "selected",
+        "lex": "complete_single_term",
+        "candidateCount": 1
+      }
+    ]
+  }
+]
+
+===== B_booking_hotel =====
+{
+  "rawText": "鎴戞兂棰勮閰掑簵",
+  "syllables": [
+    "wo",
+    "xiang",
+    "yu",
+    "ding",
+    "jiu",
+    "dian"
+  ],
+  "coarseSpans": [
+    {
+      "id": "c0",
+      "text": "鎴戞兂棰?,
+      "rawStart": 0,
+      "rawEnd": 3,
+      "syllableStart": 0,
+      "syllableEnd": 3,
+      "source": "asr_word_boundary",
+      "boundaryConfidence": 0.5
+    },
+    {
+      "id": "c1",
+      "text": "璁㈤厭搴?,
+      "rawStart": 3,
+      "rawEnd": 6,
+      "syllableStart": 3,
+      "syllableEnd": 6,
+      "source": "asr_word_boundary",
+      "boundaryConfidence": 0.5
+    }
+  ]
+}
+cursor=0 options: [
+  {
+    "windowId": "0:2",
+    "text": "鎴戞兂",
+    "len": 2,
+    "cross": 0,
+    "source": "in_span_window",
+    "blocked": false,
+    "spanIds": [
+      "c0"
+    ]
+  },
+  {
+    "windowId": "0:3",
+    "text": "鎴戞兂棰?,
+    "len": 3,
+    "cross": 0,
+    "source": "in_span_window",
+    "blocked": false,
+    "spanIds": [
+      "c0"
+    ]
+  },
+  {
+    "windowId": "0:4",
+    "text": "鎴戞兂棰勮",
+    "len": 4,
+    "cross": 1,
+    "source": "boundary_window",
+    "blocked": false,
+    "spanIds": [
+      "c0",
+      "c1"
+    ]
+  },
+  {
+    "windowId": "0:5",
+    "text": "鎴戞兂棰勮閰?,
+    "len": 5,
+    "cross": 1,
+    "source": "boundary_window",
+    "blocked": false,
+    "spanIds": [
+      "c0",
+      "c1"
+    ]
+  }
+]
+formalSpans: [
+  {
+    "spanId": "fine:0:2",
+    "text": "鎴戞兂",
+    "syllable": [
+      0,
+      2
+    ],
+    "cross": 0,
+    "reason": "shorter_exact_tiebreak",
+    "source": "fallback",
+    "candidates": []
+  },
+  {
+    "spanId": "fine:2:4",
+    "text": "棰勮",
+    "syllable": [
+      2,
+      4
+    ],
+    "cross": 1,
+    "reason": "shorter_exact_tiebreak",
+    "source": "boundary_window",
+    "candidates": [
+      "棰勮"
+    ]
+  },
+  {
+    "spanId": "fine:4:6",
+    "text": "閰掑簵",
+    "syllable": [
+      4,
+      6
+    ],
+    "cross": 0,
+    "reason": "complete_in_span",
+    "source": "in_span_window",
+    "candidates": [
+      "閰掑簵"
+    ]
+  }
+]
+steps: [
+  {
+    "cursor": 0,
+    "selected": {
+      "start": 0,
+      "end": 2,
+      "reason": "shorter_exact_tiebreak",
+      "spanId": "fine:0:2"
+    },
+    "options": [
+      {
+        "windowId": "0:4",
+        "decision": "rejected",
+        "lex": "none",
+        "rejectedReason": "rejected_partial",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "0:5",
+        "decision": "rejected",
+        "lex": "none",
+        "rejectedReason": "rejected_partial",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "0:3",
+        "decision": "rejected",
+        "lex": "none",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "0:1",
+        "decision": "rejected",
+        "lex": "none",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "0:2",
+        "decision": "selected",
+        "lex": "none",
+        "candidateCount": 0
+      }
+    ]
+  },
+  {
+    "cursor": 2,
+    "selected": {
+      "start": 2,
+      "end": 4,
+      "reason": "shorter_exact_tiebreak",
+      "spanId": "fine:2:4"
+    },
+    "options": [
+      {
+        "windowId": "2:5",
+        "decision": "rejected",
+        "lex": "none",
+        "rejectedReason": "rejected_partial",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "2:6",
+        "decision": "rejected",
+        "lex": "complete_single_term",
+        "candidateCount": 1
+      },
+      {
+        "windowId": "2:3",
+        "decision": "rejected",
+        "lex": "none",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "2:4",
+        "decision": "selected",
+        "lex": "complete_single_term",
+        "candidateCount": 1
+      }
+    ]
+  },
+  {
+    "cursor": 4,
+    "selected": {
+      "start": 4,
+      "end": 6,
+      "reason": "complete_in_span",
+      "spanId": "fine:4:6"
+    },
+    "options": [
+      {
+        "windowId": "4:5",
+        "decision": "rejected",
+        "lex": "none",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "4:6",
+        "decision": "selected",
+        "lex": "complete_single_term",
+        "candidateCount": 1
+      }
+    ]
+  }
+]
+
+===== C_queenstown_airport =====
+{
+  "rawText": "鍘荤殗鍚庨晣鏈哄満",
+  "syllables": [
+    "qu",
+    "huang",
+    "hou",
+    "zhen",
+    "ji",
+    "chang"
+  ],
+  "coarseSpans": [
+    {
+      "id": "c0",
+      "text": "鍘荤殗鍚?,
+      "rawStart": 0,
+      "rawEnd": 3,
+      "syllableStart": 0,
+      "syllableEnd": 3,
+      "source": "asr_word_boundary",
+      "boundaryConfidence": 0.5
+    },
+    {
+      "id": "c1",
+      "text": "闀囨満鍦?,
+      "rawStart": 3,
+      "rawEnd": 6,
+      "syllableStart": 3,
+      "syllableEnd": 6,
+      "source": "asr_word_boundary",
+      "boundaryConfidence": 0.5
+    }
+  ]
+}
+cursor=0 options: [
+  {
+    "windowId": "0:2",
+    "text": "鍘荤殗",
+    "len": 2,
+    "cross": 0,
+    "source": "in_span_window",
+    "blocked": false,
+    "spanIds": [
+      "c0"
+    ]
+  },
+  {
+    "windowId": "0:3",
+    "text": "鍘荤殗鍚?,
+    "len": 3,
+    "cross": 0,
+    "source": "in_span_window",
+    "blocked": false,
+    "spanIds": [
+      "c0"
+    ]
+  },
+  {
+    "windowId": "0:4",
+    "text": "鍘荤殗鍚庨晣",
+    "len": 4,
+    "cross": 1,
+    "source": "boundary_window",
+    "blocked": false,
+    "spanIds": [
+      "c0",
+      "c1"
+    ]
+  },
+  {
+    "windowId": "0:5",
+    "text": "鍘荤殗鍚庨晣鏈?,
+    "len": 5,
+    "cross": 1,
+    "source": "boundary_window",
+    "blocked": false,
+    "spanIds": [
+      "c0",
+      "c1"
+    ]
+  }
+]
+formalSpans: [
+  {
+    "spanId": "fine:0:2",
+    "text": "鍘荤殗",
+    "syllable": [
+      0,
+      2
+    ],
+    "cross": 0,
+    "reason": "shorter_exact_tiebreak",
+    "source": "fallback",
+    "candidates": []
+  },
+  {
+    "spanId": "fine:2:3",
+    "text": "鍚?,
+    "syllable": [
+      2,
+      3
+    ],
+    "cross": 0,
+    "reason": "fallback_single_step",
+    "source": "fallback",
+    "candidates": []
+  },
+  {
+    "spanId": "fine:3:5",
+    "text": "闀囨満",
+    "syllable": [
+      3,
+      5
+    ],
+    "cross": 0,
+    "reason": "shorter_exact_tiebreak",
+    "source": "fallback",
+    "candidates": []
+  },
+  {
+    "spanId": "fine:5:6",
+    "text": "鍦?,
+    "syllable": [
+      5,
+      6
+    ],
+    "cross": 0,
+    "reason": "fallback_single_step",
+    "source": "fallback",
+    "candidates": []
+  }
+]
+steps: [
+  {
+    "cursor": 0,
+    "selected": {
+      "start": 0,
+      "end": 2,
+      "reason": "shorter_exact_tiebreak",
+      "spanId": "fine:0:2"
+    },
+    "options": [
+      {
+        "windowId": "0:4",
+        "decision": "rejected",
+        "lex": "none",
+        "rejectedReason": "rejected_partial",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "0:5",
+        "decision": "rejected",
+        "lex": "none",
+        "rejectedReason": "rejected_partial",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "0:3",
+        "decision": "rejected",
+        "lex": "none",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "0:1",
+        "decision": "rejected",
+        "lex": "none",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "0:2",
+        "decision": "selected",
+        "lex": "none",
+        "candidateCount": 0
+      }
+    ]
+  },
+  {
+    "cursor": 2,
+    "selected": {
+      "start": 2,
+      "end": 3,
+      "reason": "fallback_single_step",
+      "spanId": "fine:2:3"
+    },
+    "options": [
+      {
+        "windowId": "2:4",
+        "decision": "rejected",
+        "lex": "none",
+        "rejectedReason": "rejected_partial",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "2:5",
+        "decision": "rejected",
+        "lex": "none",
+        "rejectedReason": "rejected_partial",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "2:6",
+        "decision": "rejected",
+        "lex": "none",
+        "rejectedReason": "rejected_partial",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "2:3",
+        "decision": "selected",
+        "lex": "none",
+        "candidateCount": 0
+      }
+    ]
+  },
+  {
+    "cursor": 3,
+    "selected": {
+      "start": 3,
+      "end": 5,
+      "reason": "shorter_exact_tiebreak",
+      "spanId": "fine:3:5"
+    },
+    "options": [
+      {
+        "windowId": "3:6",
+        "decision": "rejected",
+        "lex": "none",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "3:4",
+        "decision": "rejected",
+        "lex": "none",
+        "candidateCount": 0
+      },
+      {
+        "windowId": "3:5",
+        "decision": "selected",
+        "lex": "none",
+        "candidateCount": 0
+      }
+    ]
+  },
+  {
+    "cursor": 5,
+    "selected": {
+      "start": 5,
+      "end": 6,
+      "reason": "fallback_single_step",
+      "spanId": "fine:5:6"
+    },
+    "options": [
+      {
+        "windowId": "5:6",
+        "decision": "selected",
+        "lex": "none",
+        "candidateCount": 0
+      }
+    ]
+  }
+]
+
+===== D_overlap_booking =====
+{
+  "syllables": [
+    "yu",
+    "ding",
+    "jiu",
+    "dian"
+  ],
+  "options": [
+    {
+      "windowId": "0:2",
+      "text": "棰勮",
+      "len": 2,
+      "cross": 0,
+      "source": "in_span_window",
+      "blocked": false,
+      "spanIds": [
+        "c0"
+      ]
+    },
+    {
+      "windowId": "0:3",
+      "text": "棰勮閰?,
+      "len": 3,
+      "cross": 0,
+      "source": "in_span_window",
+      "blocked": false,
+      "spanIds": [
+        "c0"
+      ]
+    },
+    {
+      "windowId": "0:4",
+      "text": "棰勮閰掑簵",
+      "len": 4,
+      "cross": 0,
+      "source": "in_span_window",
+      "blocked": false,
+      "spanIds": [
+        "c0"
+      ]
+    }
+  ]
+}
+{
+  "formal": [
+    {
+      "id": "fine:0:2",
+      "text": "棰勮",
+      "reason": "shorter_exact_tiebreak"
+    },
+    {
+      "id": "fine:2:4",
+      "text": "閰掑簵",
+      "reason": "complete_in_span"
+    }
+  ],
+  "step0": {
+    "cursor": 0,
+    "options": [
+      {
+        "windowId": "0:3",
+        "start": 0,
+        "end": 3,
+        "boundaryCrossCount": 0,
+        "source": "in_span_window",
+        "lexicalCompleteness": "complete_single_term",
+        "candidateCount": 1,
+        "priorMatchedDomains": [],
+        "decision": "rejected"
+      },
+      {
+        "windowId": "0:4",
+        "start": 0,
+        "end": 4,
+        "boundaryCrossCount": 0,
+        "source": "in_span_window",
+        "lexicalCompleteness": "complete_single_term",
+        "candidateCount": 1,
+        "priorMatchedDomains": [],
+        "decision": "rejected"
+      },
+      {
+        "windowId": "0:1",
+        "start": 0,
+        "end": 1,
+        "boundaryCrossCount": 0,
+        "source": "in_span_window",
+        "lexicalCompleteness": "none",
+        "candidateCount": 0,
+        "priorMatchedDomains": [],
+        "decision": "rejected"
+      },
+      {
+        "windowId": "0:2",
+        "start": 0,
+        "end": 2,
+        "boundaryCrossCount": 0,
+        "source": "in_span_window",
+        "lexicalCompleteness": "complete_single_term",
+        "candidateCount": 1,
+        "priorMatchedDomains": [],
+        "decision": "selected"
+      }
+    ],
+    "selectedSpan": {
+      "start": 0,
+      "end": 2,
+      "reason": "shorter_exact_tiebreak",
+      "spanId": "fine:0:2"
+    },
+    "rankingBeforePrior": [
+      "0:2",
+      "0:3",
+      "0:4",
+      "0:1"
+    ],
+    "rankingAfterPrior": [
+      "0:2",
+      "0:3",
+      "0:4",
+      "0:1"
+    ],
+    "priorChangedWinner": false
+  }
+}
+
+===== E_dialog_d001_counts =====
+{ charLen: 32, syllableCount: 27 }
+{
+  formalSpanCount: 14,
+  steps: 14,
+  rawOptionsSeenByRecall: 50,
+  meanOptionsPerStep: 3.8461538461538463,
+  note: 'empty-recall forces 1-syl fallback; upper-bound options 鈮?steps脳min(4, remaining)'
+}

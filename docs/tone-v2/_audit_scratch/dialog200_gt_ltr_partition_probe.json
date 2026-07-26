@@ -1,0 +1,1680 @@
+[
+  {
+    "caseId": "d001",
+    "note": "normal cafe single-domain GT",
+    "asrText": "你好，我想点一杯热拿铁，中杯，少糖。顺便问一下今天有蓝莓马芬吗？",
+    "syllableCount": 27,
+    "coarseSpans": [
+      {
+        "id": "c0",
+        "text": "你好",
+        "charRange": [
+          0,
+          2
+        ],
+        "syllableRange": [
+          0,
+          2
+        ],
+        "source": "punctuation_fallback",
+        "boundaryConfidence": 0.3
+      },
+      {
+        "id": "c1",
+        "text": "我想点一杯热拿铁",
+        "charRange": [
+          3,
+          11
+        ],
+        "syllableRange": [
+          2,
+          10
+        ],
+        "source": "punctuation_fallback",
+        "boundaryConfidence": 0.3
+      },
+      {
+        "id": "c2",
+        "text": "中杯",
+        "charRange": [
+          12,
+          14
+        ],
+        "syllableRange": [
+          10,
+          12
+        ],
+        "source": "punctuation_fallback",
+        "boundaryConfidence": 0.3
+      },
+      {
+        "id": "c3",
+        "text": "少糖",
+        "charRange": [
+          15,
+          17
+        ],
+        "syllableRange": [
+          12,
+          14
+        ],
+        "source": "punctuation_fallback",
+        "boundaryConfidence": 0.3
+      },
+      {
+        "id": "c4",
+        "text": "顺便问一下今天有蓝莓马芬吗",
+        "charRange": [
+          18,
+          31
+        ],
+        "syllableRange": [
+          14,
+          27
+        ],
+        "source": "punctuation_fallback",
+        "boundaryConfidence": 0.3
+      }
+    ],
+    "boundaryImport": {
+      "rawSyllableCount": 27,
+      "imeCandidateCount": 0,
+      "trustedTopKCount": 0,
+      "imeBoundaryCount": 0,
+      "rawBoundaryCount": 10,
+      "alignedBoundaryCount": 0,
+      "proposalBoundaryCount": 0,
+      "asrWordBoundaryCount": 0,
+      "punctuationFallbackBoundaryCount": 5,
+      "finalCoarseSpanCount": 5,
+      "coverageOk": true,
+      "boundarySourceBreakdown": {
+        "ime_token_boundary": 0,
+        "raw_ime_aligned_boundary": 0,
+        "proposal_active_boundary": 0,
+        "asr_word_boundary": 0,
+        "punctuation_fallback": 5
+      },
+      "fallbackReason": "no_trusted_topk"
+    },
+    "cursor0Options": [
+      {
+        "windowId": "0:2",
+        "text": "你好",
+        "cross": 0,
+        "source": "in_span_window",
+        "blocked": false,
+        "spanIds": [
+          "c0"
+        ]
+      },
+      {
+        "windowId": "0:3",
+        "text": "你好",
+        "cross": 1,
+        "source": "boundary_window",
+        "blocked": false,
+        "spanIds": [
+          "c0",
+          "c1"
+        ]
+      },
+      {
+        "windowId": "0:4",
+        "text": "你好",
+        "cross": 1,
+        "source": "boundary_window",
+        "blocked": false,
+        "spanIds": [
+          "c0",
+          "c1"
+        ]
+      },
+      {
+        "windowId": "0:5",
+        "text": "你好",
+        "cross": 1,
+        "source": "boundary_window",
+        "blocked": false,
+        "spanIds": [
+          "c0",
+          "c1"
+        ]
+      }
+    ],
+    "counts": {
+      "formalFineSpanCount": 14,
+      "ltrSteps": 14,
+      "rawOptionsPassedToRecallHook": 48,
+      "blockedAfterBlockedFilter": 18,
+      "recallableAfterBlockedFilter": 30,
+      "note": "empty lexicon recall → mandatory 1-syl fallback commits; counts are generation-side not hit-side"
+    },
+    "formalSpans": [
+      {
+        "spanId": "fine:0:2",
+        "text": "你好",
+        "syllableRange": [
+          0,
+          2
+        ],
+        "coarseSpanIds": [
+          "c0"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "fallback_single_step",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:2:4",
+        "text": "我想",
+        "syllableRange": [
+          2,
+          4
+        ],
+        "coarseSpanIds": [
+          "c1"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:4:6",
+        "text": "点一",
+        "syllableRange": [
+          4,
+          6
+        ],
+        "coarseSpanIds": [
+          "c1"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:6:8",
+        "text": "杯热",
+        "syllableRange": [
+          6,
+          8
+        ],
+        "coarseSpanIds": [
+          "c1"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:8:10",
+        "text": "拿铁",
+        "syllableRange": [
+          8,
+          10
+        ],
+        "coarseSpanIds": [
+          "c1"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "fallback_single_step",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:10:12",
+        "text": "中杯",
+        "syllableRange": [
+          10,
+          12
+        ],
+        "coarseSpanIds": [
+          "c2"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "fallback_single_step",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:12:14",
+        "text": "少糖",
+        "syllableRange": [
+          12,
+          14
+        ],
+        "coarseSpanIds": [
+          "c3"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "fallback_single_step",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:14:16",
+        "text": "顺便",
+        "syllableRange": [
+          14,
+          16
+        ],
+        "coarseSpanIds": [
+          "c4"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:16:18",
+        "text": "问一",
+        "syllableRange": [
+          16,
+          18
+        ],
+        "coarseSpanIds": [
+          "c4"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:18:20",
+        "text": "下今",
+        "syllableRange": [
+          18,
+          20
+        ],
+        "coarseSpanIds": [
+          "c4"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:20:22",
+        "text": "天有",
+        "syllableRange": [
+          20,
+          22
+        ],
+        "coarseSpanIds": [
+          "c4"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:22:24",
+        "text": "蓝莓",
+        "syllableRange": [
+          22,
+          24
+        ],
+        "coarseSpanIds": [
+          "c4"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:24:26",
+        "text": "马芬",
+        "syllableRange": [
+          24,
+          26
+        ],
+        "coarseSpanIds": [
+          "c4"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:26:27",
+        "text": "吗",
+        "syllableRange": [
+          26,
+          27
+        ],
+        "coarseSpanIds": [
+          "c4"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "fallback_single_step",
+        "candidateCount": 0
+      }
+    ],
+    "stepsCompact": [
+      {
+        "cursor": 0,
+        "selected": {
+          "start": 0,
+          "end": 2,
+          "reason": "fallback_single_step",
+          "spanId": "fine:0:2"
+        },
+        "optionDecisions": [
+          "0:3:rejected/rejected_partial",
+          "0:4:rejected/rejected_partial",
+          "0:5:rejected/rejected_partial",
+          "0:1:rejected",
+          "0:2:selected"
+        ]
+      },
+      {
+        "cursor": 2,
+        "selected": {
+          "start": 2,
+          "end": 4,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:2:4"
+        },
+        "optionDecisions": [
+          "2:5:rejected",
+          "2:6:rejected",
+          "2:7:rejected",
+          "2:3:rejected",
+          "2:4:selected"
+        ]
+      },
+      {
+        "cursor": 4,
+        "selected": {
+          "start": 4,
+          "end": 6,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:4:6"
+        },
+        "optionDecisions": [
+          "4:7:rejected",
+          "4:8:rejected",
+          "4:9:rejected",
+          "4:5:rejected",
+          "4:6:selected"
+        ]
+      },
+      {
+        "cursor": 6,
+        "selected": {
+          "start": 6,
+          "end": 8,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:6:8"
+        },
+        "optionDecisions": [
+          "6:11:rejected/rejected_partial",
+          "6:9:rejected",
+          "6:10:rejected",
+          "6:7:rejected",
+          "6:8:selected"
+        ]
+      },
+      {
+        "cursor": 8,
+        "selected": {
+          "start": 8,
+          "end": 10,
+          "reason": "fallback_single_step",
+          "spanId": "fine:8:10"
+        },
+        "optionDecisions": [
+          "8:11:rejected/rejected_partial",
+          "8:12:rejected/rejected_partial",
+          "8:13:rejected/rejected_cross_gt_1",
+          "8:9:rejected",
+          "8:10:selected"
+        ]
+      },
+      {
+        "cursor": 10,
+        "selected": {
+          "start": 10,
+          "end": 12,
+          "reason": "fallback_single_step",
+          "spanId": "fine:10:12"
+        },
+        "optionDecisions": [
+          "10:13:rejected/rejected_partial",
+          "10:14:rejected/rejected_partial",
+          "10:15:rejected/rejected_cross_gt_1",
+          "10:11:rejected",
+          "10:12:selected"
+        ]
+      },
+      {
+        "cursor": 12,
+        "selected": {
+          "start": 12,
+          "end": 14,
+          "reason": "fallback_single_step",
+          "spanId": "fine:12:14"
+        },
+        "optionDecisions": [
+          "12:15:rejected/rejected_partial",
+          "12:16:rejected/rejected_partial",
+          "12:17:rejected/rejected_partial",
+          "12:13:rejected",
+          "12:14:selected"
+        ]
+      },
+      {
+        "cursor": 14,
+        "selected": {
+          "start": 14,
+          "end": 16,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:14:16"
+        },
+        "optionDecisions": [
+          "14:17:rejected",
+          "14:18:rejected",
+          "14:19:rejected",
+          "14:15:rejected",
+          "14:16:selected"
+        ]
+      },
+      {
+        "cursor": 16,
+        "selected": {
+          "start": 16,
+          "end": 18,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:16:18"
+        },
+        "optionDecisions": [
+          "16:19:rejected",
+          "16:20:rejected",
+          "16:21:rejected",
+          "16:17:rejected",
+          "16:18:selected"
+        ]
+      },
+      {
+        "cursor": 18,
+        "selected": {
+          "start": 18,
+          "end": 20,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:18:20"
+        },
+        "optionDecisions": [
+          "18:21:rejected",
+          "18:22:rejected",
+          "18:23:rejected",
+          "18:19:rejected",
+          "18:20:selected"
+        ]
+      },
+      {
+        "cursor": 20,
+        "selected": {
+          "start": 20,
+          "end": 22,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:20:22"
+        },
+        "optionDecisions": [
+          "20:23:rejected",
+          "20:24:rejected",
+          "20:25:rejected",
+          "20:21:rejected",
+          "20:22:selected"
+        ]
+      },
+      {
+        "cursor": 22,
+        "selected": {
+          "start": 22,
+          "end": 24,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:22:24"
+        },
+        "optionDecisions": [
+          "22:25:rejected",
+          "22:26:rejected",
+          "22:27:rejected",
+          "22:23:rejected",
+          "22:24:selected"
+        ]
+      },
+      {
+        "cursor": 24,
+        "selected": {
+          "start": 24,
+          "end": 26,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:24:26"
+        },
+        "optionDecisions": [
+          "24:27:rejected",
+          "24:25:rejected",
+          "24:26:selected"
+        ]
+      },
+      {
+        "cursor": 26,
+        "selected": {
+          "start": 26,
+          "end": 27,
+          "reason": "fallback_single_step",
+          "spanId": "fine:26:27"
+        },
+        "optionDecisions": [
+          "26:27:selected"
+        ]
+      }
+    ]
+  },
+  {
+    "caseId": "d007",
+    "note": "taxi / 机场高速 overlap risk",
+    "asrText": "师傅，去中关村软件园，走机场高速。我赶九点半的会，要是堵车您提前跟我说。",
+    "syllableCount": 31,
+    "coarseSpans": [
+      {
+        "id": "c0",
+        "text": "师傅",
+        "charRange": [
+          0,
+          2
+        ],
+        "syllableRange": [
+          0,
+          2
+        ],
+        "source": "punctuation_fallback",
+        "boundaryConfidence": 0.3
+      },
+      {
+        "id": "c1",
+        "text": "去中关村软件园",
+        "charRange": [
+          3,
+          10
+        ],
+        "syllableRange": [
+          2,
+          9
+        ],
+        "source": "punctuation_fallback",
+        "boundaryConfidence": 0.3
+      },
+      {
+        "id": "c2",
+        "text": "走机场高速",
+        "charRange": [
+          11,
+          16
+        ],
+        "syllableRange": [
+          9,
+          14
+        ],
+        "source": "punctuation_fallback",
+        "boundaryConfidence": 0.3
+      },
+      {
+        "id": "c3",
+        "text": "我赶九点半的会",
+        "charRange": [
+          17,
+          24
+        ],
+        "syllableRange": [
+          14,
+          21
+        ],
+        "source": "punctuation_fallback",
+        "boundaryConfidence": 0.3
+      },
+      {
+        "id": "c4",
+        "text": "要是堵车您提前跟我说",
+        "charRange": [
+          25,
+          35
+        ],
+        "syllableRange": [
+          21,
+          31
+        ],
+        "source": "punctuation_fallback",
+        "boundaryConfidence": 0.3
+      }
+    ],
+    "boundaryImport": {
+      "rawSyllableCount": 31,
+      "imeCandidateCount": 0,
+      "trustedTopKCount": 0,
+      "imeBoundaryCount": 0,
+      "rawBoundaryCount": 10,
+      "alignedBoundaryCount": 0,
+      "proposalBoundaryCount": 0,
+      "asrWordBoundaryCount": 0,
+      "punctuationFallbackBoundaryCount": 5,
+      "finalCoarseSpanCount": 5,
+      "coverageOk": true,
+      "boundarySourceBreakdown": {
+        "ime_token_boundary": 0,
+        "raw_ime_aligned_boundary": 0,
+        "proposal_active_boundary": 0,
+        "asr_word_boundary": 0,
+        "punctuation_fallback": 5
+      },
+      "fallbackReason": "no_trusted_topk"
+    },
+    "cursor0Options": [
+      {
+        "windowId": "0:2",
+        "text": "师傅",
+        "cross": 0,
+        "source": "in_span_window",
+        "blocked": false,
+        "spanIds": [
+          "c0"
+        ]
+      },
+      {
+        "windowId": "0:3",
+        "text": "师傅",
+        "cross": 1,
+        "source": "boundary_window",
+        "blocked": false,
+        "spanIds": [
+          "c0",
+          "c1"
+        ]
+      },
+      {
+        "windowId": "0:4",
+        "text": "师傅",
+        "cross": 1,
+        "source": "boundary_window",
+        "blocked": false,
+        "spanIds": [
+          "c0",
+          "c1"
+        ]
+      },
+      {
+        "windowId": "0:5",
+        "text": "师傅",
+        "cross": 1,
+        "source": "boundary_window",
+        "blocked": false,
+        "spanIds": [
+          "c0",
+          "c1"
+        ]
+      }
+    ],
+    "counts": {
+      "formalFineSpanCount": 17,
+      "ltrSteps": 17,
+      "rawOptionsPassedToRecallHook": 64,
+      "blockedAfterBlockedFilter": 29,
+      "recallableAfterBlockedFilter": 35,
+      "note": "empty lexicon recall → mandatory 1-syl fallback commits; counts are generation-side not hit-side"
+    },
+    "formalSpans": [
+      {
+        "spanId": "fine:0:2",
+        "text": "师傅",
+        "syllableRange": [
+          0,
+          2
+        ],
+        "coarseSpanIds": [
+          "c0"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "fallback_single_step",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:2:4",
+        "text": "去中",
+        "syllableRange": [
+          2,
+          4
+        ],
+        "coarseSpanIds": [
+          "c1"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:4:6",
+        "text": "关村",
+        "syllableRange": [
+          4,
+          6
+        ],
+        "coarseSpanIds": [
+          "c1"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:6:8",
+        "text": "软件",
+        "syllableRange": [
+          6,
+          8
+        ],
+        "coarseSpanIds": [
+          "c1"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:8:9",
+        "text": "园",
+        "syllableRange": [
+          8,
+          9
+        ],
+        "coarseSpanIds": [
+          "c1"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "fallback_single_step",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:9:11",
+        "text": "走机",
+        "syllableRange": [
+          9,
+          11
+        ],
+        "coarseSpanIds": [
+          "c2"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:11:13",
+        "text": "场高",
+        "syllableRange": [
+          11,
+          13
+        ],
+        "coarseSpanIds": [
+          "c2"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:13:14",
+        "text": "速",
+        "syllableRange": [
+          13,
+          14
+        ],
+        "coarseSpanIds": [
+          "c2"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "fallback_single_step",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:14:16",
+        "text": "我赶",
+        "syllableRange": [
+          14,
+          16
+        ],
+        "coarseSpanIds": [
+          "c3"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:16:18",
+        "text": "九点",
+        "syllableRange": [
+          16,
+          18
+        ],
+        "coarseSpanIds": [
+          "c3"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:18:20",
+        "text": "半的",
+        "syllableRange": [
+          18,
+          20
+        ],
+        "coarseSpanIds": [
+          "c3"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:20:21",
+        "text": "会",
+        "syllableRange": [
+          20,
+          21
+        ],
+        "coarseSpanIds": [
+          "c3"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "fallback_single_step",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:21:23",
+        "text": "要是",
+        "syllableRange": [
+          21,
+          23
+        ],
+        "coarseSpanIds": [
+          "c4"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:23:25",
+        "text": "堵车",
+        "syllableRange": [
+          23,
+          25
+        ],
+        "coarseSpanIds": [
+          "c4"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:25:27",
+        "text": "您提",
+        "syllableRange": [
+          25,
+          27
+        ],
+        "coarseSpanIds": [
+          "c4"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:27:29",
+        "text": "前跟",
+        "syllableRange": [
+          27,
+          29
+        ],
+        "coarseSpanIds": [
+          "c4"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:29:31",
+        "text": "我说",
+        "syllableRange": [
+          29,
+          31
+        ],
+        "coarseSpanIds": [
+          "c4"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "fallback_single_step",
+        "candidateCount": 0
+      }
+    ],
+    "stepsCompact": [
+      {
+        "cursor": 0,
+        "selected": {
+          "start": 0,
+          "end": 2,
+          "reason": "fallback_single_step",
+          "spanId": "fine:0:2"
+        },
+        "optionDecisions": [
+          "0:3:rejected/rejected_partial",
+          "0:4:rejected/rejected_partial",
+          "0:5:rejected/rejected_partial",
+          "0:1:rejected",
+          "0:2:selected"
+        ]
+      },
+      {
+        "cursor": 2,
+        "selected": {
+          "start": 2,
+          "end": 4,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:2:4"
+        },
+        "optionDecisions": [
+          "2:5:rejected",
+          "2:6:rejected",
+          "2:7:rejected",
+          "2:3:rejected",
+          "2:4:selected"
+        ]
+      },
+      {
+        "cursor": 4,
+        "selected": {
+          "start": 4,
+          "end": 6,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:4:6"
+        },
+        "optionDecisions": [
+          "4:7:rejected",
+          "4:8:rejected",
+          "4:9:rejected",
+          "4:5:rejected",
+          "4:6:selected"
+        ]
+      },
+      {
+        "cursor": 6,
+        "selected": {
+          "start": 6,
+          "end": 8,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:6:8"
+        },
+        "optionDecisions": [
+          "6:10:rejected/rejected_partial",
+          "6:11:rejected/rejected_partial",
+          "6:9:rejected",
+          "6:7:rejected",
+          "6:8:selected"
+        ]
+      },
+      {
+        "cursor": 8,
+        "selected": {
+          "start": 8,
+          "end": 9,
+          "reason": "fallback_single_step",
+          "spanId": "fine:8:9"
+        },
+        "optionDecisions": [
+          "8:10:rejected/rejected_partial",
+          "8:11:rejected/rejected_partial",
+          "8:12:rejected/rejected_partial",
+          "8:13:rejected/rejected_partial",
+          "8:9:selected"
+        ]
+      },
+      {
+        "cursor": 9,
+        "selected": {
+          "start": 9,
+          "end": 11,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:9:11"
+        },
+        "optionDecisions": [
+          "9:12:rejected",
+          "9:13:rejected",
+          "9:14:rejected",
+          "9:10:rejected",
+          "9:11:selected"
+        ]
+      },
+      {
+        "cursor": 11,
+        "selected": {
+          "start": 11,
+          "end": 13,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:11:13"
+        },
+        "optionDecisions": [
+          "11:15:rejected/rejected_partial",
+          "11:16:rejected/rejected_partial",
+          "11:14:rejected",
+          "11:12:rejected",
+          "11:13:selected"
+        ]
+      },
+      {
+        "cursor": 13,
+        "selected": {
+          "start": 13,
+          "end": 14,
+          "reason": "fallback_single_step",
+          "spanId": "fine:13:14"
+        },
+        "optionDecisions": [
+          "13:15:rejected/rejected_partial",
+          "13:16:rejected/rejected_partial",
+          "13:17:rejected/rejected_partial",
+          "13:18:rejected/rejected_partial",
+          "13:14:selected"
+        ]
+      },
+      {
+        "cursor": 14,
+        "selected": {
+          "start": 14,
+          "end": 16,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:14:16"
+        },
+        "optionDecisions": [
+          "14:17:rejected",
+          "14:18:rejected",
+          "14:19:rejected",
+          "14:15:rejected",
+          "14:16:selected"
+        ]
+      },
+      {
+        "cursor": 16,
+        "selected": {
+          "start": 16,
+          "end": 18,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:16:18"
+        },
+        "optionDecisions": [
+          "16:19:rejected",
+          "16:20:rejected",
+          "16:21:rejected",
+          "16:17:rejected",
+          "16:18:selected"
+        ]
+      },
+      {
+        "cursor": 18,
+        "selected": {
+          "start": 18,
+          "end": 20,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:18:20"
+        },
+        "optionDecisions": [
+          "18:22:rejected/rejected_partial",
+          "18:23:rejected/rejected_partial",
+          "18:21:rejected",
+          "18:19:rejected",
+          "18:20:selected"
+        ]
+      },
+      {
+        "cursor": 20,
+        "selected": {
+          "start": 20,
+          "end": 21,
+          "reason": "fallback_single_step",
+          "spanId": "fine:20:21"
+        },
+        "optionDecisions": [
+          "20:22:rejected/rejected_partial",
+          "20:23:rejected/rejected_partial",
+          "20:24:rejected/rejected_partial",
+          "20:25:rejected/rejected_partial",
+          "20:21:selected"
+        ]
+      },
+      {
+        "cursor": 21,
+        "selected": {
+          "start": 21,
+          "end": 23,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:21:23"
+        },
+        "optionDecisions": [
+          "21:24:rejected",
+          "21:25:rejected",
+          "21:26:rejected",
+          "21:22:rejected",
+          "21:23:selected"
+        ]
+      },
+      {
+        "cursor": 23,
+        "selected": {
+          "start": 23,
+          "end": 25,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:23:25"
+        },
+        "optionDecisions": [
+          "23:26:rejected",
+          "23:27:rejected",
+          "23:28:rejected",
+          "23:24:rejected",
+          "23:25:selected"
+        ]
+      },
+      {
+        "cursor": 25,
+        "selected": {
+          "start": 25,
+          "end": 27,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:25:27"
+        },
+        "optionDecisions": [
+          "25:28:rejected",
+          "25:29:rejected",
+          "25:30:rejected",
+          "25:26:rejected",
+          "25:27:selected"
+        ]
+      },
+      {
+        "cursor": 27,
+        "selected": {
+          "start": 27,
+          "end": 29,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:27:29"
+        },
+        "optionDecisions": [
+          "27:30:rejected",
+          "27:31:rejected",
+          "27:28:rejected",
+          "27:29:selected"
+        ]
+      },
+      {
+        "cursor": 29,
+        "selected": {
+          "start": 29,
+          "end": 31,
+          "reason": "fallback_single_step",
+          "spanId": "fine:29:31"
+        },
+        "optionDecisions": [
+          "29:30:rejected",
+          "29:31:selected"
+        ]
+      }
+    ]
+  },
+  {
+    "caseId": "d031",
+    "note": "hotel 预订 / overlap ambiguity",
+    "asrText": "我预订的是大床房，能安排安静一点的楼层吗？",
+    "syllableCount": 19,
+    "coarseSpans": [
+      {
+        "id": "c0",
+        "text": "我预订的是大床房",
+        "charRange": [
+          0,
+          8
+        ],
+        "syllableRange": [
+          0,
+          8
+        ],
+        "source": "punctuation_fallback",
+        "boundaryConfidence": 0.3
+      },
+      {
+        "id": "c1",
+        "text": "能安排安静一点的楼层吗",
+        "charRange": [
+          9,
+          20
+        ],
+        "syllableRange": [
+          8,
+          19
+        ],
+        "source": "punctuation_fallback",
+        "boundaryConfidence": 0.3
+      }
+    ],
+    "boundaryImport": {
+      "rawSyllableCount": 19,
+      "imeCandidateCount": 0,
+      "trustedTopKCount": 0,
+      "imeBoundaryCount": 0,
+      "rawBoundaryCount": 4,
+      "alignedBoundaryCount": 0,
+      "proposalBoundaryCount": 0,
+      "asrWordBoundaryCount": 0,
+      "punctuationFallbackBoundaryCount": 2,
+      "finalCoarseSpanCount": 2,
+      "coverageOk": true,
+      "boundarySourceBreakdown": {
+        "ime_token_boundary": 0,
+        "raw_ime_aligned_boundary": 0,
+        "proposal_active_boundary": 0,
+        "asr_word_boundary": 0,
+        "punctuation_fallback": 2
+      },
+      "fallbackReason": "no_trusted_topk"
+    },
+    "cursor0Options": [
+      {
+        "windowId": "0:2",
+        "text": "我预",
+        "cross": 0,
+        "source": "in_span_window",
+        "blocked": false,
+        "spanIds": [
+          "c0"
+        ]
+      },
+      {
+        "windowId": "0:3",
+        "text": "我预订",
+        "cross": 0,
+        "source": "in_span_window",
+        "blocked": false,
+        "spanIds": [
+          "c0"
+        ]
+      },
+      {
+        "windowId": "0:4",
+        "text": "我预订的",
+        "cross": 0,
+        "source": "in_span_window",
+        "blocked": false,
+        "spanIds": [
+          "c0"
+        ]
+      },
+      {
+        "windowId": "0:5",
+        "text": "我预订的是",
+        "cross": 0,
+        "source": "in_span_window",
+        "blocked": false,
+        "spanIds": [
+          "c0"
+        ]
+      }
+    ],
+    "counts": {
+      "formalFineSpanCount": 10,
+      "ltrSteps": 10,
+      "rawOptionsPassedToRecallHook": 34,
+      "blockedAfterBlockedFilter": 6,
+      "recallableAfterBlockedFilter": 28,
+      "note": "empty lexicon recall → mandatory 1-syl fallback commits; counts are generation-side not hit-side"
+    },
+    "formalSpans": [
+      {
+        "spanId": "fine:0:2",
+        "text": "我预",
+        "syllableRange": [
+          0,
+          2
+        ],
+        "coarseSpanIds": [
+          "c0"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:2:4",
+        "text": "订的",
+        "syllableRange": [
+          2,
+          4
+        ],
+        "coarseSpanIds": [
+          "c0"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:4:6",
+        "text": "是大",
+        "syllableRange": [
+          4,
+          6
+        ],
+        "coarseSpanIds": [
+          "c0"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:6:8",
+        "text": "床房",
+        "syllableRange": [
+          6,
+          8
+        ],
+        "coarseSpanIds": [
+          "c0"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "fallback_single_step",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:8:10",
+        "text": "能安",
+        "syllableRange": [
+          8,
+          10
+        ],
+        "coarseSpanIds": [
+          "c1"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:10:12",
+        "text": "排安",
+        "syllableRange": [
+          10,
+          12
+        ],
+        "coarseSpanIds": [
+          "c1"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:12:14",
+        "text": "静一",
+        "syllableRange": [
+          12,
+          14
+        ],
+        "coarseSpanIds": [
+          "c1"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:14:16",
+        "text": "点的",
+        "syllableRange": [
+          14,
+          16
+        ],
+        "coarseSpanIds": [
+          "c1"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:16:18",
+        "text": "楼层",
+        "syllableRange": [
+          16,
+          18
+        ],
+        "coarseSpanIds": [
+          "c1"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "shorter_exact_tiebreak",
+        "candidateCount": 0
+      },
+      {
+        "spanId": "fine:18:19",
+        "text": "吗",
+        "syllableRange": [
+          18,
+          19
+        ],
+        "coarseSpanIds": [
+          "c1"
+        ],
+        "boundaryCrossCount": 0,
+        "windowSource": "fallback",
+        "selectionReason": "fallback_single_step",
+        "candidateCount": 0
+      }
+    ],
+    "stepsCompact": [
+      {
+        "cursor": 0,
+        "selected": {
+          "start": 0,
+          "end": 2,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:0:2"
+        },
+        "optionDecisions": [
+          "0:3:rejected",
+          "0:4:rejected",
+          "0:5:rejected",
+          "0:1:rejected",
+          "0:2:selected"
+        ]
+      },
+      {
+        "cursor": 2,
+        "selected": {
+          "start": 2,
+          "end": 4,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:2:4"
+        },
+        "optionDecisions": [
+          "2:5:rejected",
+          "2:6:rejected",
+          "2:7:rejected",
+          "2:3:rejected",
+          "2:4:selected"
+        ]
+      },
+      {
+        "cursor": 4,
+        "selected": {
+          "start": 4,
+          "end": 6,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:4:6"
+        },
+        "optionDecisions": [
+          "4:9:rejected/rejected_partial",
+          "4:7:rejected",
+          "4:8:rejected",
+          "4:5:rejected",
+          "4:6:selected"
+        ]
+      },
+      {
+        "cursor": 6,
+        "selected": {
+          "start": 6,
+          "end": 8,
+          "reason": "fallback_single_step",
+          "spanId": "fine:6:8"
+        },
+        "optionDecisions": [
+          "6:9:rejected/rejected_partial",
+          "6:10:rejected/rejected_partial",
+          "6:11:rejected/rejected_partial",
+          "6:7:rejected",
+          "6:8:selected"
+        ]
+      },
+      {
+        "cursor": 8,
+        "selected": {
+          "start": 8,
+          "end": 10,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:8:10"
+        },
+        "optionDecisions": [
+          "8:11:rejected",
+          "8:12:rejected",
+          "8:13:rejected",
+          "8:9:rejected",
+          "8:10:selected"
+        ]
+      },
+      {
+        "cursor": 10,
+        "selected": {
+          "start": 10,
+          "end": 12,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:10:12"
+        },
+        "optionDecisions": [
+          "10:13:rejected",
+          "10:14:rejected",
+          "10:15:rejected",
+          "10:11:rejected",
+          "10:12:selected"
+        ]
+      },
+      {
+        "cursor": 12,
+        "selected": {
+          "start": 12,
+          "end": 14,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:12:14"
+        },
+        "optionDecisions": [
+          "12:15:rejected",
+          "12:16:rejected",
+          "12:17:rejected",
+          "12:13:rejected",
+          "12:14:selected"
+        ]
+      },
+      {
+        "cursor": 14,
+        "selected": {
+          "start": 14,
+          "end": 16,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:14:16"
+        },
+        "optionDecisions": [
+          "14:17:rejected",
+          "14:18:rejected",
+          "14:19:rejected",
+          "14:15:rejected",
+          "14:16:selected"
+        ]
+      },
+      {
+        "cursor": 16,
+        "selected": {
+          "start": 16,
+          "end": 18,
+          "reason": "shorter_exact_tiebreak",
+          "spanId": "fine:16:18"
+        },
+        "optionDecisions": [
+          "16:19:rejected",
+          "16:17:rejected",
+          "16:18:selected"
+        ]
+      },
+      {
+        "cursor": 18,
+        "selected": {
+          "start": 18,
+          "end": 19,
+          "reason": "fallback_single_step",
+          "spanId": "fine:18:19"
+        },
+        "optionDecisions": [
+          "18:19:selected"
+        ]
+      }
+    ]
+  }
+]

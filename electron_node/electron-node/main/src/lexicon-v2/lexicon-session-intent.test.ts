@@ -16,7 +16,7 @@ describe('lexicon-session-intent', () => {
     expect(computeTopicKeywordPinyinKeys(['候选'])).toEqual(['hou|xuan']);
   });
 
-  it('builds LexiconSessionIntent from profile decision', () => {
+  it('builds LexiconSessionIntent from profile decision including topicShift', () => {
     const intent = buildLexiconSessionIntentFromDecision({
       summary: '点咖啡',
       topicKeywords: ['咖啡', '中杯'],
@@ -24,6 +24,7 @@ describe('lexicon-session-intent', () => {
       secondaryDomains: [],
       confidence: 0.88,
       shouldSwitch: true,
+      topicShift: true,
       reason: ['coffee order'],
       effectiveFromTurn: 3,
     });
@@ -32,5 +33,20 @@ describe('lexicon-session-intent', () => {
     expect(intent.topicKeywordPinyinKeys.length).toBe(2);
     expect(intent.primaryDomain).toBe('restaurant');
     expect(intent.source).toBe('cpu_llm');
+    expect(intent.topicShift).toBe(true);
+  });
+
+  it('topicShift missing on decision normalizes to false (never equals shouldSwitch)', () => {
+    const intent = buildLexiconSessionIntentFromDecision({
+      summary: 'x',
+      topicKeywords: [],
+      primaryDomain: 'travel',
+      secondaryDomains: [],
+      confidence: 0.5,
+      shouldSwitch: true,
+      reason: [],
+      effectiveFromTurn: 1,
+    });
+    expect(intent.topicShift).toBe(false);
   });
 });

@@ -47,7 +47,8 @@
 | 键 / 数据 | 默认 | 用途 | 修改规则 |
 |-----------|------|------|----------|
 | `features.fwDetector.minPrior` | `0.5` | 候选 prior 下限 | ✅ 运营 |
-| `features.fwDetector.enabledDomains` | profile 驱动 | domain recall 范围 | ✅ 运营 |
+| `features.fwDetector.enabledDomains` | `[]`（CFG-01） | **原始配置输入**；空 = 全量 `availableFineDomains`，不是关闭 Domain Recall。Runtime Recall 唯一输入为解析后的 `recallDomainScope` | ✅ 运营 |
+
 | `features.lexiconRuntimeV2.bundlePath` | `node_runtime/lexicon/v3` | runtime bundle | ✅ deploy |
 | `features.lexiconRuntimeV2.maxBaseCandidates` | `2` | base TopK 上限 | ✅ 运营 |
 | `features.lexiconRuntimeV2.maxDomainCandidates` | `3` | domain TopK 上限 | ✅ 运营 |

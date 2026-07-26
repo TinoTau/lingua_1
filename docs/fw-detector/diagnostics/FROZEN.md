@@ -44,7 +44,9 @@ assemblySelected=少冰  ≠  fw_applied>0  ≠  finalText含少冰
 
 ### DSU Runtime（`FwDetectorRuntimeDiag`）
 
-`enabledDomains` · `availableFineDomains` · `recallDomainScope` · `recallScopeSource` · `domainHierarchyVersion` — **仅观测**
+`enabledDomains`（配置输入）· `availableFineDomains` · `recallDomainScope`（**唯一 Recall Domain SSOT**）· `recallScopeSource` · `domainHierarchyVersion` — **仅观测**
+
+Assembly metrics（追加观测，不改业务 ABI）：`domainLookupExecuted` · `domainLookupDomainCount` · `domainRecallHitCount` · `voteEligibleDomainCandidateCount` · `resolvedRecallDomainScope`
 
 ### Context Prior
 
@@ -179,4 +181,29 @@ runWithRecallV2Diagnostics
 
 ---
 
-*Diagnostics FROZEN V1.0.2 · FW Detector 子模块 · Tone V2 Phase 1 同步 2026-06-29*
+---
+
+## 10. Metrics Layer Consumer（SSOT Alignment · 2026-07-14）
+
+**原则不变：** Diagnostics 可观测 only — Metrics **不得**改变 Recall/Assembly/KenLM/Apply。
+
+| 约束 | 说明 |
+|------|------|
+| Runtime = 唯一 SSOT | Metrics = Read→Map→Report |
+| Generated vs Dump | `combinationCount` / `allCombinations` ≠ `topCandidates` |
+| Trace Required | `allCombinations` · recallHits 全文依赖 `diagnosticsLevel=trace` |
+| Unavailable ≠ Failure | 缺字段报 Unavailable，禁止推断 Failure |
+| Consumer Reports | Success Funnel / Recall Funnel / E2E 摘要 **不是** Architecture |
+
+**Binding：**  
+`docs/tone-v2/Lingua_Runtime_Evolution_Rule.md`（**Permanent · Runtime 演进管线**） ·  
+`docs/tone-v2/Lingua_Metrics_Layer_SSOT_Constraint_Addendum.md` ·  
+`docs/tone-v2/Lingua_Metrics_Layer_SSOT_Alignment_Supplement_2026_07_14.md` ·  
+`docs/tone-v2/Lingua_Metrics_Layer_SSOT_Mapping.md`（Catalog 登记）
+
+**实现入口（只读消费）：**  
+`electron_node/electron-node/tests/experiments/analyze-metrics-ssot.mjs`
+
+---
+
+*Diagnostics FROZEN V1.0.2 · FW Detector 子模块 · Tone V2 Phase 1 同步 2026-06-29 · Metrics Consumer 附录 2026-07-14*

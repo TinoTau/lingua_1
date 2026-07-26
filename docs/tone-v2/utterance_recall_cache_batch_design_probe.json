@@ -1,0 +1,99 @@
+{
+  "fallbackFailures": [
+    {
+      "caseId": "d009",
+      "rawText": "去望京SOHO，不走四环可以吗？那边现在堵不堵？",
+      "cursor": 18,
+      "syllableCount": 21,
+      "syllableAtCursor": "du",
+      "uncoveredSyllableIndices": [17, 18, 19, 20],
+      "buildWindowAtFailureReason": "no_coarse_span_ids",
+      "rootCause": "textToPinyinStream_includes_latin_letter_syllables_but_buildCharSyllableRanges_and_coarseSpans_only_map_CJK_runs_causing_coordinate_desync_and_tail_uncovered",
+      "latinToken": "SOHO",
+      "latinSyllablesInStream": ["s", "o", "h", "o"],
+      "productionReachable": true,
+      "classification": "BLOCKING_CORRECTNESS_BUG",
+      "exceptionPropagatesTo": "utterance_fw_abort",
+      "proposedFix": "unify_syllable_coordinate_SSOT_CJK_runs_only_shared_by_textToPinyinStream_and_buildCharSyllableRanges_fail_fast_if_coverageOk_false"
+    },
+    {
+      "caseId": "d099",
+      "rawText": "去望京SOHO，不走机场高速可以吗？那边现在堵不堵？",
+      "cursor": 20,
+      "syllableCount": 23,
+      "syllableAtCursor": "du",
+      "uncoveredSyllableIndices": [19, 20, 21, 22],
+      "buildWindowAtFailureReason": "no_coarse_span_ids",
+      "rootCause": "textToPinyinStream_includes_latin_letter_syllables_but_buildCharSyllableRanges_and_coarseSpans_only_map_CJK_runs_causing_coordinate_desync_and_tail_uncovered",
+      "latinToken": "SOHO",
+      "latinSyllablesInStream": ["s", "o", "h", "o"],
+      "productionReachable": true,
+      "classification": "BLOCKING_CORRECTNESS_BUG",
+      "exceptionPropagatesTo": "utterance_fw_abort",
+      "proposedFix": "unify_syllable_coordinate_SSOT_CJK_runs_only_shared_by_textToPinyinStream_and_buildCharSyllableRanges_fail_fast_if_coverageOk_false"
+    },
+    {
+      "caseId": "d189",
+      "rawText": "去望京SOHO，不走四环可以吗？那边现在堵不堵？",
+      "cursor": 18,
+      "syllableCount": 21,
+      "syllableAtCursor": "du",
+      "uncoveredSyllableIndices": [17, 18, 19, 20],
+      "buildWindowAtFailureReason": "no_coarse_span_ids",
+      "rootCause": "same_as_d009_duplicate_manifest_utterance",
+      "latinToken": "SOHO",
+      "latinSyllablesInStream": ["s", "o", "h", "o"],
+      "productionReachable": true,
+      "classification": "BLOCKING_CORRECTNESS_BUG",
+      "exceptionPropagatesTo": "utterance_fw_abort",
+      "proposedFix": "unify_syllable_coordinate_SSOT_CJK_runs_only_shared_by_textToPinyinStream_and_buildCharSyllableRanges_fail_fast_if_coverageOk_false"
+    }
+  ],
+  "currentRecall": {
+    "requestCount": null,
+    "uniqueKeyCount": null,
+    "duplicateKeyCount": null,
+    "physicalSqlStatementCount": null,
+    "note": "unique/duplicate/physical counts not instrumented yet; offline probe ngramQueryCount is window-attempt proxy only"
+  },
+  "offlineProbeReference": {
+    "file": "docs/tone-v2/dialog200_ltr_performance_probe.json",
+    "okCount": 197,
+    "errorCount": 3,
+    "sqlQueryCountIsWindowAttempt": true
+  },
+  "proposedArchitecture": {
+    "utteranceCache": true,
+    "localBatch": true,
+    "concurrency": false,
+    "redis": false,
+    "parentFragmentDefault": "keep_always_P1",
+    "sqlBudgetGateChange": false,
+    "addPhysicalSqlMetrics": true
+  },
+  "batchBoundary": "one_ltr_cursor_step",
+  "semanticChanges": false,
+  "recallQueryKey": {
+    "serialization": "v1|{kind}|{pinyinKey}|{toneNorm}|{domainScopeCsv}|{topK}|{lexiconVersion}",
+    "includesWindowId": false,
+    "includesPrior": false,
+    "includesMinPrior": false,
+    "domainScopeSorted": true
+  },
+  "sqlite": {
+    "version": "3.49.2",
+    "windowFunctionsSupported": true,
+    "journal_mode": "wal"
+  },
+  "verdicts": {
+    "fallbackCorrectness": "BLOCKING",
+    "utteranceCache": "READY",
+    "localSqliteBatch": "NEEDS_SQL_PROTOTYPE",
+    "developmentRecommendation": "PROCEED_PHASE_0_PLUS_PHASE_1"
+  },
+  "phaseGates": {
+    "phase0": "offline_dialog200_200_of_200_and_latin_mixed_unit_tests",
+    "phase1": "semantic_equivalence_100pct_plus_observable_cache_stats",
+    "phase2": "after_phase0_phase1_and_batch_sql_prototype_diff_pass"
+  }
+}
