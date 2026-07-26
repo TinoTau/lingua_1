@@ -1,4 +1,4 @@
-﻿# FW Repair V4 鈥?Multi-Path Lexical Lattice V1 路 Phase 0.5 Baseline Seal Report
+# FW Repair V4 鈥?Multi-Path Lexical Lattice V1 路 Phase 0.5 Baseline Seal Report
 
 | Field | Value |
 |-------|-------|
@@ -70,6 +70,16 @@ git stash apply stash@{0}
 ```
 
 ### 2.4 Baseline commit / tag
+
+```text
+baseline branch: feature/fw-v4-multi-path-lexical-lattice-v1
+content seal:    852a8d3ac5fa9fd7edda1fbbb2c6943325bad074
+baseline tip:    fb589fe1fe3bf4a53ff5687d658a3177c47a116a
+baseline tag:    fw-v4-pre-lattice-baseline-2026-07-26
+parent:          262b3d32717db97807fa48103aa44f1ea518361a
+merge-base:      262b3d32717db97807fa48103aa44f1ea518361a
+stash isolate:   stash@{0} phase05-isolated-non-baseline-2026-07-26
+```
 
 锛堟彁浜ゅ畬鎴愬悗鍥炲～锛涜鍚岀洰褰?`baseline_identity.json` 鐨?`gitSha` / tag 瀛楁锛?
 ```text
