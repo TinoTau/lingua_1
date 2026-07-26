@@ -1,7 +1,7 @@
-﻿{
+{
     "capturedAt":  "2026-07-26T10:32:50.632Z",
-    "gitBranch":  null,
-    "gitSha":  null,
+    "gitBranch":  "feature/fw-v4-multi-path-lexical-lattice-v1",
+    "gitSha":  "852a8d3ac5fa9fd7edda1fbbb2c6943325bad074",
     "lexicon":  {
                     "schemaVersion":  "lexicon-v3-five-table-v2",
                     "bundleVersion":  10,
@@ -22,12 +22,16 @@
                   "loadError":  null
               },
     "runtimeConfigSha256":  null,
+    "kenlmModelPathsFound":  [
+
+                             ],
+    "baselineTag":  "fw-v4-pre-lattice-baseline-2026-07-26",
+    "parentCommit":  "262b3d32717db97807fa48103aa44f1ea518361a",
     "versions":  {
+                     "sqlite":  "3.49.2",
                      "betterSqlite3":  "11.10.0",
                      "electron":  "28.3.3",
                      "systemNode":  "v24.15.0"
                  },
-    "kenlmModelPathsFound":  [
-
-                             ]
+    "kenlmModelPath":  "kenLM/model/zh_char_3gram.trie.bin"
 }
