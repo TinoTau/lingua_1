@@ -1,0 +1,8 @@
+caseId,noiseSurface,correctSurface,evidenceSource,assemblyFinalContainsNoise,correctInKenlmTopK,notes
+nn-train-01,我闷蒸在,我们正在,FW_Repair_V4_Domain_Vote_Atomicity_Audit_2026_08_02.md,true,true,KenLM Top3 contains both; Final picked noise
+nn-train-01b,闷蒸,正在,sentence_runtime_regression / domain_vote_atomicity.json,true,true,coffee domain noise via 闷蒸
+center-01,忠心,中心,_audit_scratch prior traces / dialog200 family,unknown,unknown,pair reserved from readiness list; confirm in next KenLM capability run
+snack-01,消失,小食,FW_Repair_V4_Domain_Semantic_Atomicity_Reconciliation_Audit_2026_08_02.md,true,unknown,客房迷你吧…消失 Final identical WITH/WITHOUT
+sync-01,已精通步,已经同步,FW_Repair_V4_Domain_Semantic_Atomicity_Reconciliation_Audit_2026_08_02.md,true,unknown,回归测试报告已精通步…
+trigger-01,出发,触发,FW_Repair_V4_Domain_Semantic_Atomicity_Reconciliation_Audit_2026_08_02.md,true,unknown,调用下游超时后会出发熔断策略保护
+threshold-01,阈之一,阈值,FW_Repair_V4_Domain_Semantic_Atomicity_Reconciliation_Audit_2026_08_02.md,true,unknown,熔断策略阈之一按错误率重新校准

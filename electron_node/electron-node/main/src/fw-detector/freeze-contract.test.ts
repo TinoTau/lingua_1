@@ -322,21 +322,90 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(fs.existsSync(path.join(SRC_ROOT, 'fw-detector/span-assembly-shared/domain-rerank.ts'))).toBe(false);
   });
 
-  it('span-assembly-v4-orchestrator main chain is presence vote + multi-bucket (no shadow)', () => {
+  it('GATE-STEP5-LATTICE-TRACE: production ownership, compliance, and legacy bans', () => {
+    const orchSrc = readSrc('fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts');
+    const latticeSrc = readSrc('fw-detector/span-assembly-v4/lattice-fine-span-runtime.ts');
+    const mergeSrc = readSrc('fw-detector/span-assembly-v4/merge-cross-path-sentence-candidates.ts');
+    const pathTypes = readSrc('fw-detector/span-assembly-v4/path-fine-span-types.ts');
+    const rebindSrc = readSrc('fw-detector/span-assembly-v4/tone-fine-span-rebind.ts');
+    const assembleSrc = readSrc('fw-detector/span-assembly-v4/assemble-domain-aware-span-sets.ts');
+    const v4Src = readSrc('fw-detector/fw-detector-v4-path.ts');
+    const rerankSrc = readSrc('fw-detector/kenlm/run-fw-sentence-rerank-from-prefilled.ts');
+    const buildSentSrc = readSrc('fw-detector/build-sentence-candidates.ts');
+    const ban = (...parts: string[]) => parts.join('');
+
+    expect(orchSrc).toContain('runLatticeFineSpanGeneration');
+    expect(orchSrc).not.toContain(ban('runL', 'trFineSpanGeneration'));
+    expect(orchSrc).toContain("generatorMode: 'multi_path_lattice'");
+    expect(orchSrc).toContain("voteScope: 'per_path'");
+    expect(orchSrc).toContain("assemblyScope: 'per_path'");
+    expect(orchSrc).toContain("candidateCapScope: 'global'");
+    expect(orchSrc).toContain('candidateCap: kenlmCap');
+    expect(orchSrc).toContain('dedupBeforeCap: true');
+    expect(orchSrc).toContain("dedupRetention: 'first_wins'");
+    expect(orchSrc).toContain("crossPathMergeOwner: 'mergeCrossPathSentenceCandidates'");
+    expect(orchSrc).toContain("kenlmInputOwner: 'cross_path_merge'");
+    expect(orchSrc).toContain('prefilledCombinationsRequired: true');
+    expect(orchSrc).toContain("toneEvidenceOwner: 'acoustic_tone_slices'");
+    expect(orchSrc).toContain('toneRecomputedAfterRebind');
+    expect(orchSrc).not.toContain('toneRecomputedAfterCommit');
+    expect(orchSrc).not.toContain('temporaryPreStep4Collection');
+    expect(orchSrc).not.toContain('STEP3_TEMPORARY');
+    expect(orchSrc).not.toContain(ban('fallbackTo', 'Ltr'));
+    expect(orchSrc).not.toContain('FormalFineSpan');
+    expect(orchSrc).not.toContain('toneCommitTrace');
+    expect(orchSrc).not.toContain(ban('ltr', 'RuntimeEnabled'));
+    expect(fs.existsSync(path.join(SRC_ROOT, 'fw-detector/span-assembly-v4', ban('ltr', '-fine-span-generator.ts')))).toBe(
+      false
+    );
+
+    expect(latticeSrc).toContain('coverageStatus');
+    expect(latticeSrc).toContain('pathCapEvents');
+    expect(latticeSrc).toContain('edgeCountAfterFallback');
+    expect(latticeSrc).not.toContain('coverageComplete');
+    expect(latticeSrc).not.toMatch(/\bcapEvents:/);
+
+    expect(mergeSrc).toContain("dedupKey: 'exact_text'");
+    expect(mergeSrc).toContain("duplicateRetention: 'first_wins'");
+    expect(mergeSrc).toContain("collectionOrder: 'path_bucket_candidate'");
+
+    expect(pathTypes).toContain('PathFineSpan');
+    expect(pathTypes).not.toContain('FormalFineSpan');
+    expect(pathTypes).toContain('pathRawStart');
+    expect(pathTypes).toContain('recomputedAfterRebind');
+    expect(pathTypes).not.toContain('formalRawStart');
+    expect(pathTypes).not.toContain('recomputedAfterCommit');
+
+    expect(rebindSrc).toContain('recomputedAfterRebind');
+    expect(rebindSrc).not.toContain('recomputedAfterCommit');
+    expect(assembleSrc).toContain('pathFineSpans');
+    expect(assembleSrc).not.toContain('formalSpans');
+    expect(assembleSrc).toContain('PATH_FINE_SPAN_POOL');
+
+    expect(v4Src).toMatch(/prefilledCombinations:\s*assemblyResult\.kenlmSentenceCandidates/);
+    expect(rerankSrc).toContain('prefilledCombinations: SentenceCombination[]');
+    expect(rerankSrc).not.toContain('prefilledCombinations?:');
+    expect(rerankSrc).not.toContain('buildSentenceCandidates(');
+
+    expect(buildSentSrc).not.toContain(ban('mergeCrossBucket', 'SentenceCandidates'));
+    expect(orchSrc).not.toContain(ban('mergeCrossBucket', 'SentenceCandidates'));
+  });
+
+  it('span-assembly-v4-orchestrator main chain is presence vote + multi-bucket + cross-path merge (no shadow)', () => {
     const orchSrc = readSrc('fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts');
     expect(orchSrc).toContain('runDomainAwareAssembly');
-    expect(orchSrc).toContain('spanSets: domainAwareSpanSets');
     expect(orchSrc).toContain('bucketSpanSets');
     expect(orchSrc).toContain('allocateDomainBucketSentenceBudget');
-    expect(orchSrc).toContain('mergeCrossBucketSentenceCandidates');
-    expect(orchSrc).toContain('perBucketGenerateCap');
+    expect(orchSrc).toContain('mergeCrossPathSentenceCandidates');
+    expect(orchSrc).not.toContain('STEP3_TEMPORARY_PRE_STEP4_COLLECTION');
+    expect(orchSrc).not.toContain('temporaryPreStep4Collection');
     expect(orchSrc).not.toContain('shadowBeamSpanSets');
     expect(orchSrc).not.toContain('runCoarseSentenceBeamV4');
     expect(orchSrc).not.toContain('applyDomainVoteToEdges');
     expect(orchSrc).not.toContain('voteUtteranceDomain({');
   });
 
-  it('KenLM prefilled path consumes cross-bucket merged combinations', () => {
+  it('KenLM prefilled path consumes cross-path merged combinations', () => {
     const v4Src = readSrc('fw-detector/fw-detector-v4-path.ts');
     const rerankSrc = readSrc('fw-detector/kenlm/run-fw-sentence-rerank-from-prefilled.ts');
     expect(v4Src).toMatch(
@@ -355,7 +424,7 @@ describe('P1~P4 freeze simplification contract', () => {
     const assemblySrc = readSrc('fw-detector/span-assembly-v4/assemble-domain-aware-span-sets.ts');
     const orchSrc = readSrc('fw-detector/span-assembly-v4/span-assembly-v4-orchestrator.ts');
     const v4Src = readSrc('fw-detector/fw-detector-v4-path.ts');
-    const recallSrc = readSrc('lexicon-v2/recall-span-topkv3.ts');
+    const recallSrc = readSrc('fw-detector/span-assembly-v4/recall-topk-for-windows.ts');
     expect(voteSrc).toMatch(/DOMAIN_BUCKET_RETENTION_RATIO\s*=\s*0\.75/);
     expect(voteSrc).toContain('buildFineSpanDomainSet');
     expect(voteSrc).not.toMatch(/domainScores\[[^\]]+\]\s*\+=\s*[^;\n]*candidate\.score/);
@@ -366,10 +435,12 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(assemblySrc).toContain('for (const bucketDomain of bucketDomains)');
     expect(assemblySrc).toContain('isBaseCandidate');
     expect(assemblySrc).toContain('domains?.includes(bucketDomain)');
-    expect(orchSrc).toContain('mergeCrossBucketSentenceCandidates');
+    expect(orchSrc).toContain('mergeCrossPathSentenceCandidates');
     expect(orchSrc).toContain('allocateDomainBucketSentenceBudget');
     expect(v4Src).toContain('applied: false');
-    expect(recallSrc).toContain('lookupTermDomainTagsInScope');
+    // Phase 1: exact SSOT is V2; domain tag enrichment lives in runtime / V2 tiers (not PF path).
+    expect(recallSrc).toContain('recallSpanTopKV2');
+    expect(recallSrc).not.toContain('lookupParentFragments');
     expect(fs.existsSync(path.join(SRC_ROOT, 'fw-detector/span-assembly-shared/domain-rerank.ts'))).toBe(
       false
     );
@@ -426,7 +497,7 @@ describe('P1~P4 freeze simplification contract', () => {
       'WindowCandidate.domains[]',
       'FineSpanDomainSet',
       'DOMAIN_BUCKET_RETENTION_RATIO = 0.75',
-      'mergeCrossBucketSentenceCandidates',
+      'mergeCrossPathSentenceCandidates',
       'allocateDomainBucketSentenceBudget',
       'fw-detector-v4-path',
       'prefilledCombinations',
@@ -506,6 +577,25 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(v2Src).not.toContain('lookupParentFragments');
   });
 
+  it('Phase2/3 PF full retirement: production Recall/Runtime 不得查询 fragment / ngram', () => {
+    const runtimeSrc = stripComments(readSrc('lexicon-v2/lexicon-runtime-v2.ts'));
+    const winSrc = stripComments(readSrc('fw-detector/span-assembly-v4/recall-topk-for-windows.ts'));
+    const cacheSrc = stripComments(readSrc('fw-detector/span-assembly-v4/utterance-recall-cache.ts'));
+    for (const src of [runtimeSrc, winSrc]) {
+      expect(src).not.toContain('lookupParentFragments');
+      expect(src).not.toContain('lookupParentFragmentsByNgramKey');
+      expect(src).not.toContain('ngramRowToHotword');
+      expect(src).not.toContain('term_pinyin_ngrams');
+      expect(src).not.toContain('scoreFragmentHit');
+      expect(src).not.toContain('mergeExactAndFragmentHits');
+      expect(src).not.toContain('stmtNgram');
+    }
+    expect(fs.existsSync(path.join(SRC_ROOT, 'lexicon-v2/recall-span-topkv3.ts'))).toBe(false);
+    expect(cacheSrc).not.toContain('parentFragmentTopK');
+    expect(winSrc).not.toContain('parentFragmentTopK');
+    expect(winSrc).not.toContain('perParentTermPerWindow');
+  });
+
   it('tone-first recall 禁止单列 tone_pinyin_key SQL', () => {
     const runtimeSrc = readSrc('lexicon-v2/lexicon-runtime-v2.ts');
     const stripped = stripComments(runtimeSrc);
@@ -569,19 +659,21 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(limitsSrc).toContain('maxIntervalRepairPicksPerPath');
   });
 
-  it('GATE-SV2-1: v3 runtime gate accepts only five-table-v2 schema', () => {
+  it('GATE-SV2-1: v3 runtime gate accepts only lexicon-v3-runtime-v3 schema (PF retirement)', () => {
     const gateSrc = readScript('lexicon/run-gate-v3-runtime.mjs');
-    expect(gateSrc).toContain('V3_SCHEMA_VERSION_V2');
-    expect(gateSrc).toMatch(/schemaVersion\s*!==\s*V3_SCHEMA_VERSION_V2/);
-    expect(gateSrc).not.toMatch(/schemaVersion\s*===\s*V3_SCHEMA_VERSION[^_]/);
+    expect(gateSrc).toContain('V3_SCHEMA_VERSION_V3');
+    expect(gateSrc).toMatch(/schemaVersion\s*!==\s*V3_SCHEMA_VERSION_V3/);
+    expect(gateSrc).not.toContain('V3_SCHEMA_VERSION_V2');
     expect(gateSrc).not.toMatch(/four-table-v1/);
+    expect(gateSrc).toContain('term_pinyin_ngrams');
+    expect(gateSrc).toMatch(/term_pinyin_ngrams.*must not exist/);
   });
 
-  it('GATE-SV2-2: patch manifest writer emits five-table-v2 only', () => {
+  it('GATE-SV2-2: patch manifest writer emits lexicon-v3-runtime-v3 only (PF retirement)', () => {
     const writerSrc = readSrc('lexicon-patch-v3/manifest-writer.ts');
-    expect(writerSrc).toContain('LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION');
+    expect(writerSrc).toContain('LEXICON_V3_RUNTIME_V3_SCHEMA_VERSION');
     expect(writerSrc).not.toContain('four-table-v1');
-    expect(writerSrc).not.toContain('LEXICON_V3_RUNTIME_SCHEMA_VERSION');
+    expect(writerSrc).not.toContain('LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION');
   });
 
   it('GATE-SV2-3: patch applier is term-centric — no direct domain_lexicon insert', () => {
@@ -599,12 +691,15 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(fnBlock).not.toMatch(/prior_score\s*\?\?/);
   });
 
-  it('GATE-SV2-5: lookupParentFragmentsByNgramKey requires v2 manifest — no v1-only silent []', () => {
+  it('GATE-SV2-5: parent-fragment ngram lookup API fully retired from runtime (Phase 2/3)', () => {
     const runtimeSrc = readSrc('lexicon-v2/lexicon-runtime-v2.ts');
-    expect(runtimeSrc).toContain('lookupParentFragmentsByNgramKey');
-    expect(runtimeSrc).toContain('isLexiconV3FiveTableV2Manifest');
+    expect(runtimeSrc).not.toContain('lookupParentFragmentsByNgramKey');
+    expect(runtimeSrc).not.toContain('isLexiconV3FiveTableV2Manifest');
+    expect(runtimeSrc).not.toContain('getNgramQueryStats');
+    expect(runtimeSrc).not.toContain('getAndResetNgramQueryStats');
+    expect(runtimeSrc).not.toContain('stmtNgram');
+    expect(runtimeSrc).toContain('isLexiconV3RuntimeV3Manifest');
     expect(runtimeSrc).not.toMatch(/FIVE_TABLE_RUNTIME_SCHEMA_VERSION/);
-    expect(runtimeSrc).not.toMatch(/five-table-v1[\s\S]{0,120}return\s*\[\s*\]/);
   });
 
   it('GATE-SV2-6: legacy build-for-electron fails fast', () => {
@@ -620,6 +715,38 @@ describe('P1~P4 freeze simplification contract', () => {
     expect(applierSrc).toContain('upsertTerm');
     expect(applierSrc).toContain('replaceTermTags');
     expect(applierSrc).not.toMatch(/table:\s*['"]domain['"]/);
+  });
+
+  it('GATE-ATOMICITY-1: unified Atomicity Validator owns all formal term write paths', () => {
+    const core = readScript('lexicon/lib/atomicity-validator.cjs');
+    const rebuild = readScript('lexicon/lib/full-rebuild-from-csv.mjs');
+    const patchV3 = readSrc('lexicon-patch-v3/patch-validator.ts');
+    const patchV4 = readSrc('lexicon-patch-v4/patch-validator-v4.ts');
+    const industry = readScript('lexicon/industry_pack_v1/lib/validate-entry.mjs');
+    const recall = readSrc('lexicon-v2/lexicon-runtime-v2.ts');
+
+    expect(core).toContain('validateAtomicity');
+    expect(core).toContain('applyAtomicityMode');
+    expect(core).not.toContain("surface === '上线计划'");
+    expect(core).not.toContain("surface === '接口文档'");
+    expect(core).not.toContain('bad_compounds');
+
+    expect(rebuild).toContain("require('./atomicity-validator.cjs')");
+    expect(rebuild).toContain('validateAtomicity');
+    expect(rebuild).toContain("atomicityModeRaw === 'audit'");
+    expect(rebuild).toContain("|| 'enforce'");
+
+    expect(patchV3).toContain("from '../lexicon-atomicity/atomicity-validator'");
+    expect(patchV3).toContain('validateAtomicityForTermAdd');
+    expect(patchV4).toContain("from '../lexicon-atomicity/atomicity-validator'");
+    expect(patchV4).toContain('validateAtomicityForOp');
+    expect(industry).toContain('atomicity-validator.cjs');
+    expect(industry).toContain('atomicity_rejected');
+
+    // Runtime Recall must not filter by atomicity
+    expect(recall).not.toContain('validateAtomicity');
+    expect(recall).not.toContain('REJECT_COMPOSITE');
+    expect(recall).not.toContain('atomicityMode');
   });
 
   it('GATE-DSU-1: domain-rerank deleted; recall uses runtime-domain-registry', () => {

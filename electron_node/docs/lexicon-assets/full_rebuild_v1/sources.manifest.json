@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "lexicon-full-rebuild-sources-v1",
+  "rebuildMode": "FULL_REBUILD",
+  "contentBundleVersion": 12,
+  "loadOrder": [
+    "lexicon_full_corrected_review.csv",
+    "terms_to_remove_or_rebuild.csv",
+    "supplemental_terms.csv",
+    "term_domain_tags_corrected.csv",
+    "idiom_zh_v2/entries.jsonl",
+    "profile-registry.json"
+  ],
+  "termSources": [
+    {
+      "file": "lexicon_full_corrected_review.csv",
+      "relativePath": "electron_node/docs/lexicon-assets/full_rebuild_v1/lexicon_full_corrected_review.csv",
+      "sha256": "sha256:6f651073432e9850f16a93450a1e81c2993fb5b0031b629faf12d53d8c7433df",
+      "recordCount": 9223,
+      "matchesTmpExtract": false
+    },
+    {
+      "file": "term_domain_tags_corrected.csv",
+      "relativePath": "electron_node/docs/lexicon-assets/full_rebuild_v1/term_domain_tags_corrected.csv",
+      "sha256": "sha256:ed1549d5f0c3a3b3356fbb36dd4b9aa20187e6e9a078def67233887a6be405de",
+      "recordCount": 620,
+      "matchesTmpExtract": false
+    },
+    {
+      "file": "supplemental_terms.csv",
+      "relativePath": "electron_node/docs/lexicon-assets/full_rebuild_v1/supplemental_terms.csv",
+      "sha256": "sha256:6625b4d00fad25f7f504bb7b970629087d6d60a04d778c1b57961aa26739ee90",
+      "recordCount": 45,
+      "matchesTmpExtract": false
+    },
+    {
+      "file": "terms_to_remove_or_rebuild.csv",
+      "relativePath": "electron_node/docs/lexicon-assets/full_rebuild_v1/terms_to_remove_or_rebuild.csv",
+      "sha256": "sha256:5911d4ac8a00dba7ecd3a7e319af5a489df2356bd1b38496e29db4583bbc13e1",
+      "recordCount": 12,
+      "matchesTmpExtract": false
+    }
+  ],
+  "idiomSource": {
+    "relativePath": "electron_node/docs/lexicon-assets/p1_3_generic_zh_lexicon_v2_fw_domains/p1_3_lexicon_zh_v2/idiom_zh_v2/entries.jsonl",
+    "sha256": "sha256:017f68a5aa52db8425250ae3a3dd3a8e7a4a09c068781efb7531349c385f8668",
+    "recordCount": 22192,
+    "purpose": "idiom_lexicon SSOT (4-char idioms)"
+  },
+  "hierarchySource": {
+    "relativePath": "electron_node/electron-node/data/lexicon/profile-registry.json",
+    "sha256": "sha256:6f60976766f78e45f296bc10bd2be98f5c7d7e505658264bb4b0119b8010789b",
+    "purpose": "domain_hierarchy edges from profile-registry parent links"
+  },
+  "columns": {
+    "lexicon_full_corrected_review": [
+      "term_id",
+      "word",
+      "pinyin_key",
+      "tone_pinyin_key",
+      "source",
+      "prior_score",
+      "before_tags",
+      "corrected_tags",
+      "tag_count",
+      "term_status",
+      "confidence",
+      "shape_flags",
+      "notes",
+      "term_type?",
+      "exception_reason?"
+    ],
+    "term_domain_tags_corrected": [
+      "term_id",
+      "word",
+      "domain_id",
+      "weight",
+      "source",
+      "confidence"
+    ],
+    "supplemental_terms": [
+      "word",
+      "domain_id",
+      "weight",
+      "source",
+      "reason",
+      "term_type?",
+      "exception_reason?"
+    ],
+    "terms_to_remove_or_rebuild": "same as review; excluded from import; no termType required"
+  },
+  "optionalAtomicityColumns": {
+    "term_type": "optional on review + supplemental only; tags/remove list do not need it",
+    "exception_reason": "required together with term_type for ACCEPT_EXCEPTION",
+    "missingFields": "absent columns parse as undefined; Validator audit reports UNRESOLVED/REJECT without deleting rows"
+  },
+  "notes": [
+    "ATOMICITY CONTENT CLEANUP EXECUTED 2026-08-02.",
+    "Deleted DELETE_CONFIRMED / DELETE_DOMAIN_SAFE / all UNRESOLVED_NEEDS_EXCEPTION without proven exception.",
+    "KEEP domain_atomic exceptions: 神经网络/单元测试/回归测试/测试数据/特征工程/配置文件/集成测试/迷你吧.",
+    "Full Rebuild defaults to atomicityMode=enforce."
+  ]
+}

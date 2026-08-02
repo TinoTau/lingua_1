@@ -15,6 +15,9 @@ downloads/
 eggs/
 .eggs/
 lib/
+# Lexicon Full Rebuild scripts live under scripts/lexicon/lib/ (must be versioned).
+!electron_node/electron-node/scripts/lexicon/lib/
+!electron_node/electron-node/scripts/lexicon/lib/**
 lib64/
 parts/
 sdist/
