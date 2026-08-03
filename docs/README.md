@@ -1,7 +1,16 @@
 # Lingua 项目文档
 
+> **统一入口（Start Here）：** [`INDEX.md`](./INDEX.md)  
+> **Documentation Governance：** [`current/DOCUMENTATION_GOVERNANCE.md`](./current/DOCUMENTATION_GOVERNANCE.md)  
+> **CURRENT SSOT：** [`current/INDEX.md`](./current/INDEX.md)
+
 版本：v2.2.0  
 **各平台文档在对应代码目录下**；本目录保留项目级决策、环境、排查与规范。
+
+| Field | Value |
+|-------|-------|
+| Status | OPERATING_GUIDE（导览） |
+| Baseline | FW_V4_FREEZE_2026_08_03 |
 
 ## 文档位置（按模块）
 

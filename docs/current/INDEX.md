@@ -1,9 +1,19 @@
+---
+title: CURRENT SSOT Index — ASR Post-Processing
+status: CURRENT_SSOT
+authority: CURRENT_INDEX
+baseline: FW_V4_FREEZE_2026_08_03
+reviewed_at: 2026-08-03
+---
+
 # CURRENT SSOT — ASR Post-Processing
 
 | Field | Value |
 |-------|-------|
 | Status | **CURRENT** |
 | Recovery Baseline | [`FW_V4_FREEZE_2026_08_03`](../framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md) |
+| Unified Docs Entry | [`../INDEX.md`](../INDEX.md) |
+| Documentation Governance | [`DOCUMENTATION_GOVERNANCE.md`](./DOCUMENTATION_GOVERNANCE.md) |
 | Rule | 唯一 CURRENT 入口目录；禁止 `CURRENT_V2` / `LATEST` / `FINAL` / `NEW` 平行权威 |
 
 ---
@@ -11,11 +21,12 @@
 ## Future Reading Order
 
 ```text
-1. Framework Snapshot (FW_V4_FREEZE_2026_08_03)
-2. CURRENT (this index → Sole Authorities)
-3. Supporting (docs/supporting/)
-4. Acceptance (docs/acceptance/) — evidence only
-5. Archive (docs/archive/) — as needed
+1. Documentation Governance
+2. Framework Snapshot (FW_V4_FREEZE_2026_08_03)
+3. CURRENT (this index → Sole Authorities)
+4. Supporting (docs/supporting/)
+5. Acceptance (docs/acceptance/) — evidence only
+6. Archive (docs/archive/) — as needed
 ```
 
 禁止从历史 Development / Audit / Test 报告重新设计已冻结 Framework。
@@ -28,6 +39,7 @@
 
 | 主题 | 文档 |
 |------|------|
+| Documentation Governance | [`DOCUMENTATION_GOVERNANCE.md`](./DOCUMENTATION_GOVERNANCE.md) |
 | Document Index | [`../tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md`](../tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md) |
 | Framework Snapshot Entry | [`../framework_snapshots/FRAMEWORK_FREEZE_SUMMARY.md`](../framework_snapshots/FRAMEWORK_FREEZE_SUMMARY.md) |
 | Lattice Architecture | [`../tone-v2/FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md`](../tone-v2/FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md) |

@@ -22,6 +22,7 @@
     "test:stage3.1:watch": "jest --config tests/stage3.1/jest.config.js --watch",
     "test:pipeline": "jest --config tests/pipeline/jest.config.js",
     "test:fw-detector": "jest --testPathPattern=\"fw-detector|span-assembly-shared|span-assembly-v4|pipeline-mode-fw|pipeline-mode-config.dynamic|freeze-contract|kenlm-span-gate|domain-filter|apply-span-replacements\"",
+    "docs:check": "node ../../scripts/docs/check-documentation-governance.mjs",
     "accept:runtime-ssot": "node scripts/runtime-ssot-acceptance.cjs",
     "accept:domain-multibucket-kenlm": "node scripts/run-domain-multibucket-kenlm-acceptance-wrapper.cjs",
     "test:aggregator": "npm run build:main && node tests/run-aggregator-test.js",
