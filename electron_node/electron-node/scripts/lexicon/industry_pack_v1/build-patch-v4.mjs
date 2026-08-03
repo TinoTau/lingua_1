@@ -32,6 +32,20 @@ import { electronNodeRoot, repoRoot, defaultRegistryPath, v3RuntimeDir } from '.
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
+const { buildAtomicSurfaceSet } = require('../lib/atomicity-validator.cjs');
+
+function loadAtomicSurfacesFromSqlite(sqlitePath) {
+  if (!sqlitePath || !fs.existsSync(sqlitePath)) return new Set();
+  try {
+    const Database = require('better-sqlite3');
+    const db = new Database(sqlitePath, { readonly: true });
+    const rows = db.prepare(`SELECT word FROM term WHERE enabled = 1`).all();
+    db.close();
+    return buildAtomicSurfaceSet(rows.map((r) => r.word));
+  } catch {
+    return new Set();
+  }
+}
 
 const DEFAULT_ENTRIES = path.join(
   repoRoot(),
@@ -102,7 +116,7 @@ function loadEntries(entriesPath, waveFilter) {
   return entries;
 }
 
-function buildOperations(entries, registeredDomains, termIndex) {
+function buildOperations(entries, registeredDomains, termIndex, atomicSurfaces) {
   const operations = [];
   const report = {
     addTerm: 0,
@@ -113,7 +127,10 @@ function buildOperations(entries, registeredDomains, termIndex) {
   };
 
   for (const { row, lineNo } of entries) {
-    const valid = validateIndustryEntry(row, registeredDomains, lineNo);
+    const valid = validateIndustryEntry(row, registeredDomains, lineNo, {
+      atomicSurfaces,
+      atomicityMode: 'enforce',
+    });
     if (!valid.ok) {
       if (valid.code === 'deprecated') {
         continue;
@@ -273,7 +290,13 @@ async function main() {
   }
 
   const parsed = loadEntries(args.entries, args.wave || '');
-  const { operations, report } = buildOperations(parsed, registeredDomains, termIndex);
+  const atomicSurfaces = loadAtomicSurfacesFromSqlite(args.sqlite);
+  const { operations, report } = buildOperations(
+    parsed,
+    registeredDomains,
+    termIndex,
+    atomicSurfaces
+  );
 
   if (report.rejected.length) {
     console.error('[industry-pack-v1] validation FAIL');

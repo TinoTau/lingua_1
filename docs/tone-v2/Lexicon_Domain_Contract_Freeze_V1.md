@@ -174,3 +174,24 @@ Domain Vote → Winner → sameDomain / base / fallback
 空 tags = Base；有区分力才打 tags；tags 是唯一 Domain SSOT；
 禁止第二套状态、全领域、自动打标、按数量自动删标。
 ```
+
+---
+
+## 8. Unified Formal-Term Atomicity Gate（2026-08-02）
+
+**Owner:** `scripts/lexicon/lib/atomicity-validator.cjs`（唯一 Atomicity SSOT）  
+**Freeze test:** `GATE-ATOMICITY-1` in `freeze-contract.test.ts`
+
+| ID | 合同 |
+|----|------|
+| A-01 | 所有正式 term 写入入口（Full Rebuild / Patch V3 / Patch V4 / Industry Import / Supplemental）必须调用 Unified Atomicity Validator |
+| A-02 | Runtime Recall **禁止** Atomicity 过滤 |
+| A-03 | **禁止** 具体字符串黑名单 / `bad_compounds` 作为 Atomicity Owner |
+| A-04 | **禁止** Source 绕过 Validator |
+| A-05 | **禁止** Industry / Patch 自持第二套 Atomicity 规则 |
+| A-06 | `atomicityMode=audit` 不得静默删除词；仅记录决策 |
+| A-07 | `atomicityMode=enforce` 必须对 REJECT/UNRESOLVED 失败关闭并保留证据 |
+| A-08 | 合法例外必须同时具备 `termType` + `exceptionReason` |
+| A-09 | 生产 Full Rebuild 最终目标为 **enforce**；当前过渡默认 **audit** |
+
+配套报告：`FW_Repair_V4_Unified_Atomicity_Gate_*_2026_08_02.md`

@@ -37,6 +37,7 @@ export type FineSpanSelectionReason =
   | 'complete_in_span'
   | 'complete_cross_boundary'
   | 'fallback_single_step'
+  | 'lattice_path_edge'
   | 'prior_tiebreak'
   | 'shorter_exact_tiebreak'
   | 'stable_tiebreak'

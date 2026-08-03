@@ -1,7 +1,7 @@
 ﻿import type { SpanReplacementPick } from '../build-sentence-candidates';
 import type { FwSpanDiagnostics } from '../types';
 import type { CoarseSpan } from '../span-assembly-shared/types';
-import type { FormalFineSpan } from './ltr-fine-span-generator';
+import type { PathFineSpan } from './path-fine-span-types';
 import { buildCandidateSentence } from '../candidate-sentence-builder';
 
 function toCandidateDiagnostics(
@@ -27,7 +27,7 @@ function toCandidateDiagnostics(
   }));
 }
 
-/** @deprecated production entry now uses buildFwSpansFromFormalFineSpans (formal FineSpan is the assembly unit). */
+/** @deprecated production entry now uses buildFwSpansFromPathFineSpans (PathFineSpan is the assembly unit). */
 export function buildFwSpansFromCoarseAssemblyV4(
   rawText: string,
   coarseSpans: CoarseSpan[],
@@ -47,23 +47,24 @@ export function buildFwSpansFromCoarseAssemblyV4(
 }
 
 /**
- * Production entry: zip by committed Formal FineSpan (not coarse span) — spanSets/pool are now
- * keyed one-per-formal-span, so index alignment with the coarse partition would silently
- * mis-zip whenever formal span count differs from coarse span count (AC-02).
+ * Production entry: zip by PathFineSpan (not coarse span) — spanSets/pool are keyed
+ * one-per-path-fine-span, so index alignment with the coarse partition would silently
+ * mis-zip whenever path fine span count differs from coarse span count (AC-02).
  */
-export function buildFwSpansFromFormalFineSpans(
+export function buildFwSpansFromPathFineSpans(
   rawText: string,
-  formalSpans: readonly FormalFineSpan[],
+  pathFineSpans: readonly PathFineSpan[],
   spanSets: SpanReplacementPick[][],
   utteranceDomain: string
 ): FwSpanDiagnostics[] {
-  return formalSpans.map((span, idx) => ({
+  return pathFineSpans.map((span, idx) => ({
     text: rawText.slice(span.rawStart, span.rawEnd),
     start: span.rawStart,
     end: span.rawEnd,
     domain: utteranceDomain,
     riskScore: 0,
-    signals: ['span_assembly_v4', 'ltr_fine_span'],
+    // Production Fine Span owner is SegmentationPath / Lattice (Step 3 cutover).
+    signals: ['span_assembly_v4', 'path_fine_span'],
     candidates: toCandidateDiagnostics(rawText, spanSets[idx] ?? []),
     applied: false,
   }));

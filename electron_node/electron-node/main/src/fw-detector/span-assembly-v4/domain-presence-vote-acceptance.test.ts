@@ -9,11 +9,12 @@ import {
 } from '../span-assembly-shared/utterance-domain-vote';
 import {
   buildFineSpanCandidatePoolFromCoarseSpansForTests,
-  coarseSpansAsFormalFineSpansForTests,
+  coarseSpansAsPathFineSpansForTests,
   filterDomainCandidatesPerSpan,
   runDomainAwareAssembly,
 } from './assemble-domain-aware-span-sets';
-import { buildSentenceCandidates, mergeCrossBucketSentenceCandidates } from '../build-sentence-candidates';
+import { buildSentenceCandidates } from '../build-sentence-candidates';
+import { mergeCrossPathSentenceCandidates } from './merge-cross-path-sentence-candidates';
 import { runFwSentenceRerankFromPrefilled } from '../kenlm/run-fw-sentence-rerank-from-prefilled';
 import { queryDomainMultiRowsAtomic } from '../../lexicon-v2/lexicon-runtime-v2';
 import type { CoarseSpan } from '../span-assembly-shared/types';
@@ -28,7 +29,6 @@ function cand(partial: Partial<PoolVoteCandidate> & Pick<PoolVoteCandidate, 'sou
     syllableStart: partial.syllableStart ?? 0,
     syllableEnd: partial.syllableEnd ?? 2,
     domains: partial.domains,
-    parentTermId: partial.parentTermId,
     isCovered: partial.isCovered,
     source: partial.source,
   };
@@ -50,13 +50,16 @@ function makeSpan(id: string, text: string, start: number): CoarseSpan {
 function wc(
   overrides: Partial<WindowCandidate> & Pick<WindowCandidate, 'candidateId' | 'replacement' | 'anchorCoarseSpanId'>
 ): WindowCandidate {
+  const replacement = overrides.replacement;
+  const inferredEnd =
+    typeof replacement === 'string' && replacement.length > 0 ? replacement.length : 2;
   return {
     windowId: 'w0',
     windowSource: 'in_span_window',
     syllableStart: 0,
-    syllableEnd: 2,
+    syllableEnd: inferredEnd,
     rawStart: 0,
-    rawEnd: 2,
+    rawEnd: inferredEnd,
     windowPinyinKey: 'x|y',
     candidateScore: 1,
     score: 1,
@@ -66,6 +69,7 @@ function wc(
     source: 'domain_term',
     recallSource: 'lexicon_pinyin_topk',
     repairTarget: true,
+    termId: overrides.termId ?? overrides.candidateId,
     ...overrides,
   };
 }
@@ -119,7 +123,7 @@ describe('T1 passive_domain_weak Presence Vote', () => {
 
 describe('T2 Base enters every retained bucket', () => {
   it('base in each bucket; pure other-domain excluded; base not in domainScores', () => {
-    const spans = [makeSpan('c0', '词', 0)];
+    const spans = [makeSpan('c0', '词语', 0)];
     const candidates = [
       wc({
         candidateId: 'base',
@@ -127,7 +131,11 @@ describe('T2 Base enters every retained bucket', () => {
         anchorCoarseSpanId: 'c0',
         source: 'base_term',
         domains: undefined,
-        recallSource: 'lexicon_base',
+        recallSource: 'lexicon_pinyin_topk',
+        rawStart: 0,
+        rawEnd: 2,
+        syllableStart: 0,
+        syllableEnd: 2,
       }),
       wc({
         candidateId: 'da',
@@ -135,6 +143,10 @@ describe('T2 Base enters every retained bucket', () => {
         anchorCoarseSpanId: 'c0',
         domains: ['coffee'],
         source: 'domain_term',
+        rawStart: 0,
+        rawEnd: 2,
+        syllableStart: 0,
+        syllableEnd: 2,
       }),
       wc({
         candidateId: 'db',
@@ -142,6 +154,10 @@ describe('T2 Base enters every retained bucket', () => {
         anchorCoarseSpanId: 'c0',
         domains: ['milk_tea'],
         source: 'domain_term',
+        rawStart: 0,
+        rawEnd: 2,
+        syllableStart: 0,
+        syllableEnd: 2,
       }),
     ];
     const pool = buildFineSpanCandidatePoolFromCoarseSpansForTests(candidates, spans);
@@ -152,8 +168,8 @@ describe('T2 Base enters every retained bucket', () => {
     expect(vote.domainScores).not.toHaveProperty('base_term');
     expect(vote.retainedDomains.sort()).toEqual(['coffee', 'milk_tea']);
 
-    const bucketA = filterDomainCandidatesPerSpan(pool, vote, '词', 'coffee');
-    const bucketB = filterDomainCandidatesPerSpan(pool, vote, '词', 'milk_tea');
+    const bucketA = filterDomainCandidatesPerSpan(pool, vote, '词语', 'coffee');
+    const bucketB = filterDomainCandidatesPerSpan(pool, vote, '词语', 'milk_tea');
     expect(bucketA[0]?.sameDomainCandidates.some((p) => p.word === '咖啡')).toBe(true);
     expect(bucketA[0]?.baseCandidates.some((p) => p.word === '你好')).toBe(true);
     expect(bucketA[0]?.sameDomainCandidates.some((p) => p.word === '奶茶')).toBe(false);
@@ -210,7 +226,7 @@ describe('T3–T4 same-term multi-domain preservation into Vote', () => {
       ],
       spans,
       '菜单',
-      coarseSpansAsFormalFineSpansForTests(spans)
+      coarseSpansAsPathFineSpansForTests(spans)
     );
     expect(Object.keys(result.vote.domainScores).sort()).toEqual(full.sort());
   });
@@ -368,15 +384,14 @@ describe('T6 Recall Scope completeness (Hotword contract)', () => {
   });
 });
 
-describe('T7 Parent fragment Vote semantics', () => {
-  it('parent_fragment with full scope domains[] contributes all domains once per span', () => {
+describe('T7 Parent fragment retirement — parentTermVoteCount is always 0 (JOBRESULT_ADAPTER_DEBT)', () => {
+  it('exact_term with full scope domains[] contributes all domains once per span; parentTermVoteCount stays 0', () => {
     const pool: FineSpanPoolForVote[] = [
       {
         candidates: [
           cand({
-            candidateId: 'frag',
-            hitKind: 'parent_fragment',
-            parentTermId: 'parent-1',
+            candidateId: 'exact1',
+            hitKind: 'exact_term',
             source: 'domain_term',
             domains: ['coffee', 'milk_tea', 'food_order'],
           }),
@@ -387,56 +402,33 @@ describe('T7 Parent fragment Vote semantics', () => {
     expect(vote.domainScores.coffee).toBe(1);
     expect(vote.domainScores.milk_tea).toBe(1);
     expect(vote.domainScores.food_order).toBe(1);
-    expect(vote.parentTermVoteCount).toBe(1);
+    // JOBRESULT_ADAPTER_DEBT — parent-term structural vote retired (Phase 2/3); always 0.
+    expect(vote.parentTermVoteCount).toBe(0);
   });
 
-  it('second fragment same parentTermId does not double-count', () => {
+  it('second exact_term hit sharing candidateId does not double-count (structural key dedup)', () => {
     const pool: FineSpanPoolForVote[] = [
       {
         candidates: [
           cand({
-            candidateId: 'f1',
-            hitKind: 'parent_fragment',
-            parentTermId: 'parent-1',
-            source: 'domain_term',
-            domains: ['coffee'],
-          }),
-          cand({
-            candidateId: 'f2',
-            hitKind: 'parent_fragment',
-            parentTermId: 'parent-1',
-            source: 'domain_term',
-            domains: ['milk_tea'],
-          }),
-        ],
-      },
-    ];
-    // First fragment wins structural key; enrichment path must put full domains on first hit.
-    // With only coffee on first, milk_tea is lost — enrichment fix puts full set on each hit.
-    // After enrichment, both candidates carry full domains; first key still one Set union.
-    const enriched: FineSpanPoolForVote[] = [
-      {
-        candidates: [
-          cand({
-            candidateId: 'f1',
-            hitKind: 'parent_fragment',
-            parentTermId: 'parent-1',
+            candidateId: 'shared',
+            hitKind: 'exact_term',
             source: 'domain_term',
             domains: ['coffee', 'milk_tea'],
           }),
           cand({
-            candidateId: 'f2',
-            hitKind: 'parent_fragment',
-            parentTermId: 'parent-1',
+            candidateId: 'shared',
+            hitKind: 'exact_term',
             source: 'domain_term',
             domains: ['coffee', 'milk_tea'],
           }),
         ],
       },
     ];
-    const vote = voteUtteranceDomainFromPool(enriched);
+    const vote = voteUtteranceDomainFromPool(pool);
     expect(vote.domainScores.coffee).toBe(1);
     expect(vote.domainScores.milk_tea).toBe(1);
+    expect(vote.parentTermVoteCount).toBe(0);
   });
 });
 
@@ -465,7 +457,7 @@ describe('T8 Production Vote call count', () => {
       ],
       spans,
       '少糖中杯',
-      coarseSpansAsFormalFineSpansForTests(spans)
+      coarseSpansAsPathFineSpansForTests(spans)
     );
     expect(spy).toHaveBeenCalledTimes(1);
     spy.mockRestore();
@@ -508,7 +500,13 @@ describe('T9–T10 Multi-Bucket KenLM prefilled boundary', () => {
       replacements: [],
       candidateScore: 1,
     };
-    const merged = mergeCrossBucketSentenceCandidates([[comboA], [comboB]], 16);
+    const merged = mergeCrossPathSentenceCandidates(
+      [
+        { pathId: 'p0', boundaryKey: 'bk0', perBucketGenerated: [[comboA]] },
+        { pathId: 'p1', boundaryKey: 'bk1', perBucketGenerated: [[comboB]] },
+      ],
+      16
+    );
     expect(merged.combinations.map((c) => c.text).sort()).toEqual(['句子A', '句子B']);
     for (const c of merged.combinations) {
       expect(c).not.toHaveProperty('domainScores');
@@ -598,14 +596,25 @@ describe('T11 Deterministic ordering', () => {
     expect(DOMAIN_BUCKET_RETENTION_RATIO).toBe(0.75);
 
     const lists = [
-      [
-        { text: 'B', replacements: [], candidateScore: 2 },
-        { text: 'A', replacements: [], candidateScore: 3 },
-      ],
-      [{ text: 'A', replacements: [], candidateScore: 1 }],
+      {
+        pathId: 'p0',
+        boundaryKey: 'bk0',
+        perBucketGenerated: [
+          [
+            { text: 'B', replacements: [], candidateScore: 2 },
+            { text: 'A', replacements: [], candidateScore: 3 },
+          ],
+        ],
+      },
+      {
+        pathId: 'p1',
+        boundaryKey: 'bk1',
+        perBucketGenerated: [[{ text: 'A', replacements: [], candidateScore: 1 }]],
+      },
     ];
-    const m1 = mergeCrossBucketSentenceCandidates(lists, 16);
-    const m2 = mergeCrossBucketSentenceCandidates(lists, 16);
+    const m1 = mergeCrossPathSentenceCandidates(lists, 16);
+    const m2 = mergeCrossPathSentenceCandidates(lists, 16);
     expect(m1.combinations.map((c) => c.text)).toEqual(m2.combinations.map((c) => c.text));
+    expect(m1.combinations.map((c) => c.text)).toEqual(['B', 'A']);
   });
 });

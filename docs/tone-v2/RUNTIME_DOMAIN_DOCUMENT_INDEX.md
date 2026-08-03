@@ -2,14 +2,15 @@
 
 | 字段 | 值 |
 |------|-----|
-| Status | **CURRENT / FROZEN** · Atomicity Closure + KenLM Readiness 2026-08-02 |
-| Date | 2026-08-02 |
+| Status | **CURRENT / FROZEN** · Recovery Baseline **FW_V4_FREEZE_2026_08_03** |
+| Date | 2026-08-03 |
+| Recovery Baseline | **CURRENT** — [`../framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md`](../framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md) · [`../framework_snapshots/FRAMEWORK_FREEZE_SUMMARY.md`](../framework_snapshots/FRAMEWORK_FREEZE_SUMMARY.md) |
 | Fine Span / Path | **FROZEN FOR IMPLEMENTATION** — [`FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md`](./FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md) |
 | Presence Vote formula | **ACCEPTED AND FROZEN** — cite [`Runtime_Domain_Presence_Vote_Final_Acceptance_Report.md`](./Runtime_Domain_Presence_Vote_Final_Acceptance_Report.md); authority [`Runtime_SSOT_Contract_Freeze.md`](./Runtime_SSOT_Contract_Freeze.md) **V1.2** (Path-scoped caller) |
 | Tone Evidence / Mapping | **FROZEN** — [`FW_Repair_V4_ToneEvidence_Mapping_Final_Freeze_Report_2026_07_29.md`](./FW_Repair_V4_ToneEvidence_Mapping_Final_Freeze_Report_2026_07_29.md) · Runtime SSOT §0A |
 | Fine Span production | **MULTI_PATH_LEXICAL_LATTICE** — [`FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md`](./FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md) |
 | Atomicity / Lexicon rebuild | **FROZEN** — [`FW_Repair_V4_Atomicity_Closure_SSOT_Freeze_2026_08_02.md`](./FW_Repair_V4_Atomicity_Closure_SSOT_Freeze_2026_08_02.md) |
-| KenLM readiness | **READY** — [`FW_Repair_V4_KenLM_Validation_Readiness_Audit_2026_08_02.md`](./FW_Repair_V4_KenLM_Validation_Readiness_Audit_2026_08_02.md)（非质量 PASS） |
+| KenLM readiness | **READY** — [`FW_Repair_V4_KenLM_Validation_Readiness_Audit_2026_08_02.md`](./FW_Repair_V4_KenLM_Validation_Readiness_Audit_2026_08_02.md)（非质量 PASS · CAPABILITY_VALIDATION_PENDING） |
 | LTR vs Lattice necessity (historical) | **SUPERSEDED / HISTORICAL** — [`FW_Repair_V4_LTR_vs_MultiPath_Lattice_Necessity_Audit_2026_07_29.md`](./FW_Repair_V4_LTR_vs_MultiPath_Lattice_Necessity_Audit_2026_07_29.md)（NOT RUNTIME AUTHORITY） |
 | Mainchain Audit (Recall→Vote→Assembly) | [`FW_Repair_V4_Recall_DomainVote_SentenceAssembly_Mainchain_Audit_2026_07_29.md`](./FW_Repair_V4_Recall_DomainVote_SentenceAssembly_Mainchain_Audit_2026_07_29.md) |
 | Supersession | [`FW_Repair_V4_Multi_Path_Lexical_Lattice_V1_Document_Supersession_Index_2026_07_26.md`](./FW_Repair_V4_Multi_Path_Lexical_Lattice_V1_Document_Supersession_Index_2026_07_26.md) |

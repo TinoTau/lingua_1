@@ -5,7 +5,7 @@
 
 import { describe, expect, it } from '@jest/globals';
 import {
-  coarseSpansAsFormalFineSpansForTests,
+  coarseSpansAsPathFineSpansForTests,
   runDomainAwareAssembly,
 } from './assemble-domain-aware-span-sets';
 import type { CoarseSpan } from '../span-assembly-shared/types';
@@ -77,7 +77,7 @@ describe('P5 prior / vote isolation counterfactual', () => {
         score: 0.5,
       }),
     ];
-    const formal = coarseSpansAsFormalFineSpansForTests(spans);
+    const formal = coarseSpansAsPathFineSpansForTests(spans);
     const noPrior = runDomainAwareAssembly(candidates, spans, '中杯奶茶', formal, []);
     const withPrior = runDomainAwareAssembly(candidates, spans, '中杯奶茶', formal, [
       { domain: 'coffee', weight: 1 },

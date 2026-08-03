@@ -45,28 +45,6 @@ function overlapReplacementSlices(
   return { sliceA, sliceB };
 }
 
-function sameParentTermOverlapCompatible(a: WindowCandidate, b: WindowCandidate): boolean {
-  if (!a.parentTermId || !b.parentTermId || a.parentTermId !== b.parentTermId) {
-    return false;
-  }
-  if (a.matchedTermStart == null || a.matchedTermEnd == null) {
-    return false;
-  }
-  if (b.matchedTermStart == null || b.matchedTermEnd == null) {
-    return false;
-  }
-  const matchedOverlap =
-    a.matchedTermStart < b.matchedTermEnd && b.matchedTermStart < a.matchedTermEnd;
-  if (!matchedOverlap) {
-    return true;
-  }
-  const start = Math.max(a.matchedTermStart, b.matchedTermStart);
-  const end = Math.min(a.matchedTermEnd, b.matchedTermEnd);
-  const fragA = a.parentTerm?.slice(start, end) ?? '';
-  const fragB = b.parentTerm?.slice(start, end) ?? '';
-  return fragA === fragB;
-}
-
 function replacementContains(parentReplacement: string, childReplacement: string): boolean {
   if (childReplacement.length >= parentReplacement.length) {
     return false;
@@ -78,16 +56,6 @@ function syllableContains(parent: WindowCandidate, child: WindowCandidate): bool
   return parent.syllableStart <= child.syllableStart && parent.syllableEnd >= child.syllableEnd;
 }
 
-function parentTermCompletenessScore(candidate: WindowCandidate): number {
-  if (candidate.hitKind === 'exact_term') {
-    return 2;
-  }
-  if (candidate.parentTerm && candidate.replacement === candidate.parentTerm) {
-    return 2;
-  }
-  return 1;
-}
-
 export function pickCoverageParent(a: WindowCandidate, b: WindowCandidate): WindowCandidate {
   const spanA = a.syllableEnd - a.syllableStart;
   const spanB = b.syllableEnd - b.syllableStart;
@@ -96,11 +64,6 @@ export function pickCoverageParent(a: WindowCandidate, b: WindowCandidate): Wind
   }
   if (a.replacement.length !== b.replacement.length) {
     return a.replacement.length > b.replacement.length ? a : b;
-  }
-  const completenessA = parentTermCompletenessScore(a);
-  const completenessB = parentTermCompletenessScore(b);
-  if (completenessA !== completenessB) {
-    return completenessA > completenessB ? a : b;
   }
   return a.candidateId <= b.candidateId ? a : b;
 }
@@ -149,12 +112,6 @@ export function classifyOverlapRelation(
 
   if (resolveCoverageParentChild(a, b)) {
     return 'COVERAGE';
-  }
-
-  if (a.parentTermId && b.parentTermId && a.parentTermId === b.parentTermId) {
-    if (sameParentTermOverlapCompatible(a, b)) {
-      return 'COMPATIBLE';
-    }
   }
 
   if (hasSyllableOverlap || hasRawOverlap) {

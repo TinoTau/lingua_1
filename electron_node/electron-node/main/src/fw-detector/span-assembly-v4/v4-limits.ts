@@ -5,14 +5,15 @@ export const V4_LIMITS = {
   maxBoundaryCrossCount: 1,
   maxGlobalWindowCount: 120,
   maxBoundaryWindowCount: 40,
-  maxSqlPerUtterance: 150,
   boundaryPenalty: 0.85,
   asrWordGapMs: 400,
   anchorStrategy: 'right_preferred' as const,
   incompatibleAction: 'drop' as const,
   exactTopK: 2,
-  parentFragmentTopK: 3,
-  perParentTermPerWindow: 1,
+  // PROBE VALUE — Phase 2 caps; NOT final frozen values.
+  maxActivePathsPerPosition: 8,
+  // PROBE VALUE — Phase 2 caps; NOT final frozen values.
+  maxCompleteSegmentationPaths: 8,
   maxIntervalEnumNodes: 1024,
   maxIntervalRepairPicksPerPath: 16,
 } as const;

@@ -1,4 +1,5 @@
 ﻿import type { WindowCandidateSource } from '../../lexicon/window-candidate-source';
+import type { RecallCandidateKind } from '../../lexicon/candidate-score';
 import type { ToneLookupStage } from '../../lexicon-v2/tone-first-tier-collector';
 import type { GraphEdgeSource } from '../span-assembly-shared/types';
 
@@ -29,7 +30,7 @@ export type GlobalWindowDescriptor = {
   blockedBoundaryReason?: BlockedBoundaryReason;
 };
 
-export type WindowCandidateHitKind = 'exact_term' | 'parent_fragment';
+export type WindowCandidateHitKind = 'exact_term';
 
 export type WindowCandidate = {
   candidateId: string;
@@ -47,18 +48,15 @@ export type WindowCandidate = {
   candidateRank: number;
   hitKind: WindowCandidateHitKind;
   replacement: string;
+  /** Lexicon term identity from hit.hotword.id — thin pass-through; never guessed from text. */
+  termId?: string;
+  /** Thin pass-through from Recall Hit — used for Edge hasFuzzy evidence only. */
+  recallCandidateKind?: RecallCandidateKind;
   /** Full Hotword.domains[] membership copy — never domains[0] projection. */
   domains?: readonly string[];
   source: GraphEdgeSource;
   recallSource: WindowCandidateSource;
   repairTarget: boolean;
-  parentTermId?: string;
-  parentTerm?: string;
-  parentPinyinKey?: string;
-  parentTermSyllableCount?: number;
-  matchedTermStart?: number;
-  matchedTermEnd?: number;
-  fragmentTonePinyinKey?: string;
   toneCompatible?: boolean;
   tonePenalty?: number;
   toneReason?: string;
@@ -113,7 +111,8 @@ export type SpanAssemblyV4Metrics = {
   globalWindowGeneratedCount: number;
   blockedWindowCount: number;
   truncatedWindowCount: number;
-  ngramQueryCount: number;
+  /** Windows recalled this utterance (sum of per-call logicalWindowRecallCount). */
+  logicalWindowRecallCount: number;
   windowCandidatePoolCount: number;
   activeCandidateCount: number;
   compatibilityEdgeCount: number;
@@ -134,7 +133,9 @@ export type SpanAssemblyV4Metrics = {
   runnerUpScore?: number;
   voteMargin?: number;
   assemblyMs: number;
+  /** JOBRESULT_ADAPTER_DEBT — parent-fragment recall retired (Phase 2/3); always 0. Kept for JobResult contract stability. */
   parentFragmentHitCount: number;
+  /** JOBRESULT_ADAPTER_DEBT — parent-term structural vote retired (Phase 2/3); always 0. Kept for JobResult contract stability. */
   parentTermVoteCount: number;
   inSpanWindowCount: number;
   boundaryWindowCount: number;
@@ -161,20 +162,39 @@ export type SpanAssemblyV4Metrics = {
   voteEligibleDomainCandidateCount?: number;
   resolvedRecallDomainScope?: string[];
   architectureCompliance?: {
-    generatorMode: 'ltr_soft_boundary';
-    formalOverlapCount: number;
+    generatorMode: 'multi_path_lattice';
+    fineSpanOwner: 'segmentation_path';
+    voteScope: 'per_path';
+    assemblyScope: 'per_path';
+    retainedCompletePathCount: number;
     beamEnabled: false;
     globalWindowProductionPath: false;
     fineSpanPriorSource: 'domainPriors' | 'none';
     contextPriorDecisionApplied: false;
     priorWrittenToEnabledDomains: false;
     profileAffectedRecall: false;
-    votePoolSource: 'formal_fine_span';
+    votePoolSource: 'path_fine_span';
     sessionPriorTransport: 'audio_chunk_session_snapshot';
     topicShiftContractComplete: true;
     schedulerDomainInference: false;
-    toneRecomputedAfterCommit: boolean;
+    toneRecomputedAfterRebind: boolean;
+    crossPathMergeOwner: 'mergeCrossPathSentenceCandidates';
+    candidateCapScope: 'global';
+    candidateCap: number;
+    dedupBeforeCap: true;
+    dedupRetention: 'first_wins';
+    kenlmInputOwner: 'cross_path_merge';
+    prefilledCombinationsRequired: true;
+    toneEvidenceOwner: 'acoustic_tone_slices';
   };
+  /** Step 4 Cross-Path Merge diagnostics (KenLM input pool). */
+  crossPathInputCandidateCount?: number;
+  crossPathDuplicateCount?: number;
+  crossPathUniqueCandidateCount?: number;
+  crossPathOutputCandidateCount?: number;
+  crossPathTruncatedCount?: number;
+  globalCandidateCap?: number;
+  kenlmInputSource?: 'cross_path_merge';
   /** Phase 1 utterance recall cache / Canonical RecallQueryKey metrics (Level 1). */
   recallRequestCount?: number;
   uniqueRecallKeyCount?: number;
@@ -185,7 +205,6 @@ export type SpanAssemblyV4Metrics = {
   logicalQueryCount?: number;
   physicalSqlStatementCount?: number;
   exactQueryCount?: number;
-  parentQueryCount?: number;
   lexiconRecallTotalMs?: number;
   recallRequestBuildMs?: number;
   utteranceCacheLookupMs?: number;

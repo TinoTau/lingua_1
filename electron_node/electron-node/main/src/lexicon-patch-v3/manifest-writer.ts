@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import type Database from 'better-sqlite3';
 import { sha256File, normalizeManifestChecksum } from '../lexicon/lexicon-manifest';
-import { LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION } from '../lexicon-v2/lexicon-types-v2';
+import { LEXICON_V3_RUNTIME_V3_SCHEMA_VERSION } from '../lexicon-v2/lexicon-types-v2';
 import type { LexiconPatchV3 } from './patch-types';
 import type { LexiconV3BundleFiles } from './bundle-io';
 import { collectBundleTableStats } from './sqlite-table-stats';
@@ -29,7 +29,7 @@ export function writeBundleManifestsAfterPatch(
   const domainHierarchyCount = readDomainHierarchyCountFromDb(db);
 
   const manifest = {
-    schemaVersion: LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION,
+    schemaVersion: LEXICON_V3_RUNTIME_V3_SCHEMA_VERSION,
     bundleVersion: patch.nextVersion,
     bundleTag: 'v3-runtime',
     buildTime: appliedAt,
@@ -39,7 +39,6 @@ export function writeBundleManifestsAfterPatch(
       idiom: tables.idiom_lexicon.rowCount,
       domain: tables.domain_lexicon.rowCount,
       routing: tables.industry_routing_lexicon.rowCount,
-      ngrams: tables.term_pinyin_ngrams.rowCount,
       term: tables.term.rowCount,
       term_domain_tags: tables.term_domain_tags.rowCount,
       domain_hierarchy: domainHierarchyCount,
@@ -57,7 +56,6 @@ export function writeBundleManifestsAfterPatch(
     idiomCount: manifest.tables.idiom,
     domainCount: manifest.tables.domain,
     routingCount: manifest.tables.routing,
-    ngramsCount: manifest.tables.ngrams,
     termCount: manifest.tables.term,
     termDomainTagsCount: manifest.tables.term_domain_tags,
     domainAvailability,

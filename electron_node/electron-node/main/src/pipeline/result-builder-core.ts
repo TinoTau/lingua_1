@@ -9,6 +9,7 @@ import { buildSessionResultExtra } from '../session-runtime/session-result-extra
 import { resolveBusinessAsrText } from './post-asr-routing';
 import { projectCurrentTurnDomains } from '../fw-detector/domain-context-contract';
 import type { LlmDomainCalibration } from '../fw-detector/domain-context-contract';
+import { buildUtteranceToneFromSsot } from './utterance-tone-ssot';
 
 export function buildCoreResultExtra(job: JobAssignMessage, ctx: JobContext): Record<string, unknown> {
   const spanV4 = ctx.fwDetectorResult?.spanAssemblyV4 as
@@ -28,6 +29,7 @@ export function buildCoreResultExtra(job: JobAssignMessage, ctx: JobContext): Re
 
   const sessionExtra = buildSessionResultExtra(job, ctx);
   const llmCalibration = projectLlmCalibrationFromSessionExtra(sessionExtra);
+  const utteranceTone = buildUtteranceToneFromSsot(ctx);
 
   return {
     language_probability: ctx.asrResult?.language_probability || null,
@@ -56,7 +58,7 @@ export function buildCoreResultExtra(job: JobAssignMessage, ctx: JobContext): Re
         }
       : {}),
     ...sessionExtra,
-    ...(ctx.asrResult?.tone ? { utterance_tone: ctx.asrResult.tone } : {}),
+    ...(utteranceTone ? { utterance_tone: utteranceTone } : {}),
     ...(ctx.lexiconManifestReady ? { lexicon_manifest_ready: ctx.lexiconManifestReady } : {}),
     ...(ctx.duplicateSanitizeTrace ? { duplicate_sanitize: ctx.duplicateSanitizeTrace } : {}),
   };

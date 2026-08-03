@@ -192,12 +192,6 @@ async function main() {
     assert(multiRecall.passed, 'multidomain recall hit');
     assert(multiRecall.domainWeights?.travel === 0.8, 'runtime travel weight');
     assert(multiRecall.domainWeights?.restaurant === 0.6, 'runtime restaurant weight');
-    const ngramCount = queryRow(
-      files.sqlitePath,
-      `SELECT COUNT(*) AS c FROM term_pinyin_ngrams WHERE parent_term_id = ?`,
-      [PATCH_MULTI_TERM_ID]
-    );
-    assert((ngramCount?.c ?? 0) > 0, 'term_pinyin_ngrams materialized for multidomain term');
   });
 
   await test('Patch J: update domainWeights', async () => {
@@ -463,7 +457,7 @@ async function main() {
     const stats = JSON.parse(fs.readFileSync(files.statsPath, 'utf-8'));
     const sqliteAvailability = readDomainAvailabilityFromSqlitePath(files.sqlitePath);
 
-    assert(manifest.schemaVersion === 'lexicon-v3-five-table-v2', 'schemaVersion v2');
+    assert(manifest.schemaVersion === 'lexicon-v3-runtime-v3', 'schemaVersion v3');
     assert(manifest.lastPatchId, 'lastPatchId');
     assert(manifest.lastAppliedAt, 'lastAppliedAt');
     assert(manifest.bundleVersion === version, 'bundleVersion');

@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * V2 shadow build via Electron Node ABI (better-sqlite3 matches lexicon:rebuild-sqlite).
+ *
+ * NOT PRODUCTION FULL REBUILD — seed/fixture path only.
+ * Production: `npm run lexicon:full-rebuild`.
  */
 import path from 'path';
 import { fileURLToPath } from 'url';

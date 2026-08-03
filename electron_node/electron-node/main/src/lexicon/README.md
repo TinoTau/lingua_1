@@ -1,6 +1,6 @@
 # Lexicon 运行时（V3 Canonical）
 
-> **FW 主链** 使用 `node_runtime/lexicon/v3` + `LexiconRuntimeV2`（schema `lexicon-v3-five-table-v2`）。  
+> **FW 主链** 使用 `node_runtime/lexicon/v3` + `LexiconRuntimeV2`（schema `lexicon-v3-runtime-v3`；Formal Term Exact / Full-Pinyin Recall Only）。  
 > 下文 §1–§3 为 **Legacy Recover** 路径（`current/`），见 `node_runtime/lexicon/current/README.md`。
 
 ---

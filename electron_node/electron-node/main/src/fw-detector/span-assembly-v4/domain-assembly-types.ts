@@ -10,7 +10,7 @@ export type DomainAwareGraphSource = Extract<
 >;
 
 export type FineSpanCandidatePool = {
-  /** Formal FineSpan id (LTR commit). Primary pool key. */
+  /** PathFineSpan id. Primary pool key. */
   fineSpanId: string;
   /** @deprecated coarse metadata only — not pool identity */
   coarseSpanId: string;
@@ -34,6 +34,17 @@ export type DomainAwareSpanReplacementPick = {
   recallSource: WindowCandidateSource;
 };
 
+export type DomainAssemblyDropTrace = {
+  candidateId: string;
+  replacement: string;
+  hitKind?: string;
+  source?: string;
+  domains?: readonly string[];
+  dropReason: string;
+  fineSpanId?: string;
+  bucketDomain?: string | null;
+};
+
 export type DomainFilteredSpanSet = {
   fineSpanId?: string;
   coarseSpanId: string;
@@ -42,8 +53,14 @@ export type DomainFilteredSpanSet = {
   sameDomainCandidates: DomainAwareSpanReplacementPick[];
   baseCandidates: DomainAwareSpanReplacementPick[];
   fallbackCandidates: DomainAwareSpanReplacementPick[];
+  /**
+   * Budgeted multi-candidate set for Assembly (not a per-span final winner).
+   * Produced by selectPerSpanCandidates / budgetPerSpanCandidates.
+   */
   selectedCandidates: DomainAwareSpanReplacementPick[];
   bucketDomain?: string | null;
+  /** Eligibility drops for this span within the current bucket filter. */
+  assemblyDropTraces?: DomainAssemblyDropTrace[];
 };
 
 export type DomainAwareAssemblyMetrics = {

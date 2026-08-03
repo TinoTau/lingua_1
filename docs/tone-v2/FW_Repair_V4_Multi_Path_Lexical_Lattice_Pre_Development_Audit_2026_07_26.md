@@ -1,3 +1,7 @@
+> **HISTORICAL / SUPERSEDED (Fine Span architecture)** — 2026-07-26  
+> LTR-only / unique FormalFineSpan / cursor-commit / windows 2..5-as-SSOT claims in this document are **not** current Architecture SSOT.  
+> Current authority: `FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md`  
+> Original text retained as historical evidence. Do not treat as active freeze.
 # FW Repair V4 — Multi-Path Lexical Lattice Pre-Development Audit
 
 | Field | Value |

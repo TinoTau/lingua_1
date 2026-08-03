@@ -36,12 +36,6 @@ export type TruncatedWindowTrace = {
   windowPinyinKey: string;
 };
 
-export type SkippedRecallWindowTrace = {
-  windowId: string;
-  reason: 'sql_budget_exhausted';
-  windowPinyinKey: string;
-};
-
 export type RecallHitPreFilterTrace = {
   windowId: string;
   windowPinyinKey?: string;
@@ -62,7 +56,7 @@ export type RecallHitTrace = {
   windowPinyinKey: string;
   windowSource: 'in_span_window' | 'boundary_window';
   replacement: string;
-  hitKind: 'exact_term' | 'parent_fragment';
+  hitKind: 'exact_term';
   candidateScore: number;
   score: number;
   repairTarget: boolean;
@@ -79,7 +73,7 @@ export type CandidatePoolTrace = {
   windowPinyinKey: string;
   windowSource: 'in_span_window' | 'boundary_window';
   replacement: string;
-  hitKind: 'exact_term' | 'parent_fragment';
+  hitKind: 'exact_term';
   candidateRank: number;
   candidateScore: number;
   score: number;
@@ -111,7 +105,7 @@ export type CompatibilityEdgeTrace = {
 
 export type EmittedEdgeTrace = {
   replacement: string;
-  hitKind: 'exact_term' | 'parent_fragment' | 'parent_span_candidate';
+  hitKind: 'exact_term';
   coarseSpanId: string;
   windowId?: string;
   windowSource?: 'in_span_window' | 'boundary_window';
@@ -165,7 +159,6 @@ export type SpanAssemblyV4TraceDiagnostics = {
   coarseSpans?: CoarseSpanTrace[];
   boundaryWindows?: BoundaryWindowTrace[];
   truncatedWindows?: TruncatedWindowTrace[];
-  skippedRecallWindows?: SkippedRecallWindowTrace[];
   recallHitsPreFilter?: RecallHitPreFilterTrace[];
   recallHits?: RecallHitTrace[];
   poolBeforeDrop?: CandidatePoolTrace[];
@@ -174,4 +167,41 @@ export type SpanAssemblyV4TraceDiagnostics = {
   emittedEdges?: EmittedEdgeTrace[];
   sentenceCandidates?: SentenceCandidateTrace[];
   candidateLifecycle?: CandidateLifecycle[];
+  /**
+   * Phase 2 Path Enumeration facts — OPTIONAL fact-only fields.
+   * These MUST NOT influence decisions; current production trace collector doesn't push them.
+   */
+  pathEnumerationFacts?: {
+    sentenceId?: string;
+    syllableCount: number;
+    lexicalEdgeCount: number;
+    fallbackEdgeCount: number;
+    completePathCountBeforePrune: number;
+    retainedCompletePathCount: number;
+    prunedPathCount: number;
+    boundaryKeys: string[];
+    prunedBoundaryKeys: string[];
+    pruneReasons: string[];
+    fallbackInjectionCount: number;
+    fallbackInjectionRanges: Array<{ start: number; end: number }>;
+  };
+  pathCapEvents?: Array<{
+    pruneStage: 'per_position_cap' | 'complete_path_cap';
+    position?: number;
+    beforeCount: number;
+    afterCount: number;
+    prunedBoundaryPrefixes: string[];
+    reason: string;
+  }>;
+  pathFacts?: Array<{
+    pathId: string;
+    boundaryKey: string;
+    edgeRanges: Array<{ start: number; end: number }>;
+    lexicalEdgeCount: number;
+    fallbackEdgeCount: number;
+    exactEdgeCount: number;
+    toneRelaxedEdgeCount: number;
+    fuzzyEdgeCount: number;
+    pathFineSpanCount: number;
+  }>;
 };

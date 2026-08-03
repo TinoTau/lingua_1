@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 import { spawnSync } from 'child_process';
 import { runV2RuntimeBuildPipeline } from './lib/run-v2-runtime-build-pipeline.mjs';
 import { v3RuntimeDir } from './lib/lexicon-v3-runtime.mjs';
-import { V3_SCHEMA_VERSION_V2 } from './lib/lexicon-v3-runtime.mjs';
+import { V3_SCHEMA_VERSION_V3 } from './lib/lexicon-v3-runtime.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const electronNodeRoot = path.resolve(__dirname, '../..');
@@ -29,8 +29,8 @@ function run(label, cmd, args) {
 }
 
 function checkV2Manifest(manifest) {
-  if (manifest.schemaVersion !== V3_SCHEMA_VERSION_V2) {
-    throw new Error(`schemaVersion must be ${V3_SCHEMA_VERSION_V2}, got ${manifest.schemaVersion}`);
+  if (manifest.schemaVersion !== V3_SCHEMA_VERSION_V3) {
+    throw new Error(`schemaVersion must be ${V3_SCHEMA_VERSION_V3}, got ${manifest.schemaVersion}`);
   }
   if (!manifest.checksum) {
     throw new Error('manifest.checksum missing');

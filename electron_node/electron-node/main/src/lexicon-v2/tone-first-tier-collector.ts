@@ -1,14 +1,19 @@
 /**
- * Tone-first tier recall: composite SQL on all tiers, unified plain fallback when under limit.
+ * Tone-first tier recall (Batch 1.1C Mandatory Tone Recall — Fail Closed).
+ * No Plain-only path; no underfill Plain fill.
  */
 
 import type { HotwordEntry } from '../lexicon/hotword-types';
-import { buildTonePinyinKeyFromSyllablesAndPattern } from '../lexicon/phonetic/tone-pinyin';
 import type { LexiconRuntimeV2 } from './lexicon-runtime-v2';
 import { getLexiconRuntimeV2Config } from './lexicon-runtime-v2-config';
 import { mergeSpanCandidatesCombined, type TierHotwordRow } from './merge-span-candidates';
+import {
+  resolveToneRecallReadiness,
+  type ToneRecallReadiness,
+} from './tone-recall-readiness';
 
-export type ToneLookupStage = 'tone_exact' | 'plain_fallback' | 'plain_only_no_pattern';
+/** Production assignment: only tone_exact. Legacy plain_* stages removed (1.1C). */
+export type ToneLookupStage = 'tone_exact';
 
 export type TierCandidateStage = {
   hotword: HotwordEntry;
@@ -25,9 +30,11 @@ export type CollectTierCandidatesResult = {
   domainLookupMs: number;
   idiomLookupMs: number;
   toneExactHitCount: number;
+  /** Always 0 after Batch 1.1C (Plain fill removed). */
   plainFallbackHitCount: number;
   toneSqlCount: number;
   queryTonePinyinKey?: string;
+  toneRecallReadiness: ToneRecallReadiness;
 };
 
 function hotwordToTierRow(hotword: HotwordEntry, tier: TierHotwordRow['tier']): TierHotwordRow {
@@ -63,41 +70,6 @@ function mergeTierCandidates(
   const idiom =
     cfg.maxIdiomCandidates > 0 ? idiomHits.slice(0, cfg.maxIdiomCandidates) : [];
   return [...base, ...domain, ...idiom];
-}
-
-function lookupPlainTiers(
-  runtimeV2: LexiconRuntimeV2,
-  key: string,
-  termLength: number,
-  domainIds: readonly string[],
-  sqlLimit: number | undefined
-): Pick<
-  CollectTierCandidatesResult,
-  'baseHits' | 'domainHits' | 'idiomHits' | 'baseLookupMs' | 'domainLookupMs' | 'idiomLookupMs'
-> {
-  const cfg = getLexiconRuntimeV2Config();
-
-  const t0 = Date.now();
-  const baseHits = runtimeV2.lookupBaseByPinyinKey(key, termLength, sqlLimit);
-  const baseLookupMs = Date.now() - t0;
-
-  const domainHits: HotwordEntry[] = [];
-  let domainLookupMs = 0;
-  if (domainIds.length > 0) {
-    const td = Date.now();
-    domainHits.push(...runtimeV2.lookupDomainsByPinyinKeyMulti(domainIds, key, termLength, sqlLimit));
-    domainLookupMs = Date.now() - td;
-  }
-
-  let idiomHits: HotwordEntry[] = [];
-  let idiomLookupMs = 0;
-  if (termLength === 4 && cfg.maxIdiomCandidates > 0) {
-    const ti = Date.now();
-    idiomHits = runtimeV2.lookupIdiomByPinyinKey(key, termLength, sqlLimit);
-    idiomLookupMs = Date.now() - ti;
-  }
-
-  return { baseHits, domainHits, idiomHits, baseLookupMs, domainLookupMs, idiomLookupMs };
 }
 
 function lookupToneTiers(
@@ -144,31 +116,6 @@ function lookupToneTiers(
   return { baseHits, domainHits, idiomHits, baseLookupMs, domainLookupMs, idiomLookupMs };
 }
 
-function inferHotwordTier(hotword: HotwordEntry): TierHotwordRow['tier'] {
-  if (hotword.domains?.length) {
-    return 'domain';
-  }
-  return 'base';
-}
-
-function dedupeByIdPreferToneExact(
-  toneEntries: HotwordEntry[],
-  plainEntries: HotwordEntry[]
-): TierCandidateStage[] {
-  const byId = new Map<string, TierCandidateStage>();
-
-  for (const hotword of toneEntries) {
-    byId.set(hotword.id, { hotword, stage: 'tone_exact' });
-  }
-  for (const hotword of plainEntries) {
-    if (!byId.has(hotword.id)) {
-      byId.set(hotword.id, { hotword, stage: 'plain_fallback' });
-    }
-  }
-
-  return Array.from(byId.values());
-}
-
 function countToneSqlQueries(domainIds: readonly string[], termLength: number): number {
   const cfg = getLexiconRuntimeV2Config();
   let count = 1; // base
@@ -181,6 +128,25 @@ function countToneSqlQueries(domainIds: readonly string[], termLength: number): 
   return count;
 }
 
+function emptySkipResult(
+  readiness: ToneRecallReadiness
+): CollectTierCandidatesResult {
+  return {
+    entries: [],
+    entryStages: new Map(),
+    baseHits: [],
+    domainHits: [],
+    idiomHits: [],
+    baseLookupMs: 0,
+    domainLookupMs: 0,
+    idiomLookupMs: 0,
+    toneExactHitCount: 0,
+    plainFallbackHitCount: 0,
+    toneSqlCount: 0,
+    toneRecallReadiness: readiness,
+  };
+}
+
 export function collectTierCandidatesToneFirst(
   runtimeV2: LexiconRuntimeV2,
   key: string,
@@ -188,43 +154,25 @@ export function collectTierCandidatesToneFirst(
   domainIds: readonly string[],
   perSpanLimit: number | undefined,
   variantSyllables: string[],
-  acousticTonePattern?: number[]
+  acousticTonePattern?: number[],
+  toneCallerEnabled?: boolean
 ): CollectTierCandidatesResult {
   const cfg = getLexiconRuntimeV2Config();
   const sqlLimit = perSpanLimit != null ? Math.max(perSpanLimit, 8) : undefined;
   const effectiveLimit = perSpanLimit != null && perSpanLimit > 0 ? perSpanLimit : undefined;
 
-  const patternSlice = acousticTonePattern?.length
-    ? acousticTonePattern.slice(0, variantSyllables.length)
-    : undefined;
-  const tonePinyinKey = buildTonePinyinKeyFromSyllablesAndPattern(variantSyllables, patternSlice);
-  const toneActive =
-    tonePinyinKey != null && runtimeV2.supportsToneFirstRecall();
+  const readiness = resolveToneRecallReadiness({
+    syllables: variantSyllables,
+    runtimeSupportsTone: runtimeV2.supportsToneFirstRecall(),
+    acousticTonePattern,
+    toneCallerEnabled,
+  });
 
-  if (!toneActive) {
-    const plain = lookupPlainTiers(runtimeV2, key, termLength, domainIds, sqlLimit);
-    const entries = mergeTierCandidates(
-      plain.baseHits,
-      plain.domainHits,
-      plain.idiomHits,
-      cfg,
-      effectiveLimit,
-      domainIds
-    );
-    const entryStages = new Map<string, ToneLookupStage>();
-    for (const hotword of entries) {
-      entryStages.set(hotword.id, 'plain_only_no_pattern');
-    }
-    return {
-      entries,
-      entryStages,
-      ...plain,
-      toneExactHitCount: 0,
-      plainFallbackHitCount: 0,
-      toneSqlCount: 0,
-    };
+  if (readiness.state !== 'ready') {
+    return emptySkipResult(readiness);
   }
 
+  const tonePinyinKey = readiness.tonePinyinKey;
   const toneSqlCount = countToneSqlQueries(domainIds, termLength);
   const tone = lookupToneTiers(runtimeV2, key, tonePinyinKey, termLength, domainIds, sqlLimit);
   const toneMerged = mergeTierCandidates(
@@ -236,71 +184,24 @@ export function collectTierCandidatesToneFirst(
     domainIds
   );
 
-  const needPlainFallback =
-    effectiveLimit == null || toneMerged.length < effectiveLimit;
-
-  if (!needPlainFallback) {
-    const entryStages = new Map<string, ToneLookupStage>();
-    for (const hotword of toneMerged) {
-      entryStages.set(hotword.id, 'tone_exact');
-    }
-    return {
-      entries: toneMerged,
-      entryStages,
-      baseHits: tone.baseHits,
-      domainHits: tone.domainHits,
-      idiomHits: tone.idiomHits,
-      baseLookupMs: tone.baseLookupMs,
-      domainLookupMs: tone.domainLookupMs,
-      idiomLookupMs: tone.idiomLookupMs,
-      toneExactHitCount: toneMerged.length,
-      plainFallbackHitCount: 0,
-      toneSqlCount,
-      queryTonePinyinKey: tonePinyinKey,
-    };
-  }
-
-  const plain = lookupPlainTiers(runtimeV2, key, termLength, domainIds, sqlLimit);
-  const plainMerged = mergeTierCandidates(
-    plain.baseHits,
-    plain.domainHits,
-    plain.idiomHits,
-    cfg,
-    effectiveLimit,
-    domainIds
-  );
-
-  const staged = dedupeByIdPreferToneExact(toneMerged, plainMerged);
-  const tierRows: TierHotwordRow[] = staged.map(({ hotword }) => ({
-    ...hotword,
-    isAlias: hotword.isAlias === true,
-    tier: inferHotwordTier(hotword),
-  }));
-  const entries =
-    effectiveLimit != null && effectiveLimit > 0
-      ? mergeSpanCandidatesCombined(tierRows, effectiveLimit, domainIds.length > 0)
-      : staged.map((s) => s.hotword);
   const entryStages = new Map<string, ToneLookupStage>();
-  for (const item of staged) {
-    if (entries.some((e) => e.id === item.hotword.id)) {
-      entryStages.set(item.hotword.id, item.stage);
-    }
+  for (const hotword of toneMerged) {
+    entryStages.set(hotword.id, 'tone_exact');
   }
-
-  const plainFallbackHitCount = staged.filter((s) => s.stage === 'plain_fallback').length;
 
   return {
-    entries,
+    entries: toneMerged,
     entryStages,
-    baseHits: [...tone.baseHits, ...plain.baseHits],
-    domainHits: [...tone.domainHits, ...plain.domainHits],
-    idiomHits: [...tone.idiomHits, ...plain.idiomHits],
-    baseLookupMs: tone.baseLookupMs + plain.baseLookupMs,
-    domainLookupMs: tone.domainLookupMs + plain.domainLookupMs,
-    idiomLookupMs: tone.idiomLookupMs + plain.idiomLookupMs,
+    baseHits: tone.baseHits,
+    domainHits: tone.domainHits,
+    idiomHits: tone.idiomHits,
+    baseLookupMs: tone.baseLookupMs,
+    domainLookupMs: tone.domainLookupMs,
+    idiomLookupMs: tone.idiomLookupMs,
     toneExactHitCount: toneMerged.length,
-    plainFallbackHitCount,
+    plainFallbackHitCount: 0,
     toneSqlCount,
     queryTonePinyinKey: tonePinyinKey,
+    toneRecallReadiness: readiness,
   };
 }

@@ -20,7 +20,7 @@ export type FwDetectorSignal =
   | 'ime_v2_boundary_topk_diff_hint'
   | 'span_assembly_v3'
   | 'span_assembly_v4'
-  | 'ltr_fine_span';
+  | 'path_fine_span';
 
 export type FwSpanGateMode = 'legacy_detector' | 'kenlm_gate_filter' | 'fw_metadata_gate';
 
@@ -317,7 +317,7 @@ export type SpanAssemblyV4Diagnostics = {
   globalWindowGeneratedCount: number;
   blockedWindowCount: number;
   truncatedWindowCount: number;
-  ngramQueryCount: number;
+  logicalWindowRecallCount: number;
   windowCandidatePoolCount: number;
   activeCandidateCount: number;
   compatibilityEdgeCount: number;

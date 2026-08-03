@@ -8,13 +8,11 @@ import { lexiconV2BundleFileNames, resolveLexiconV2BundleDir } from './lexicon-v
 import { getLexiconRuntimeV2Config } from './lexicon-runtime-v2-config';
 import { LruBucketCache } from './lru-bucket-cache';
 import {
-  LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION,
   LEXICON_V2_SUPPORTED_SCHEMA_VERSIONS,
-  isLexiconV3FiveTableV2Manifest,
+  isLexiconV3RuntimeV3Manifest,
   type IndustryRouteHit,
   type LexiconManifestV2,
   type LexiconRuntimeV2State,
-  type ParentTermNgramRow,
 } from './lexicon-types-v2';
 import {
   installRuntimeDomainRegistry,
@@ -191,12 +189,11 @@ export class LexiconRuntimeV2 {
   private stmtBaseToneComposite: Database.Statement | null = null;
   private stmtIdiomToneComposite: Database.Statement | null = null;
   private stmtDomainToneComposite: Database.Statement | null = null;
+  /** Batch 1.1B — mechanical exact-surface point lookup (LIMIT 2 fixed). */
+  private stmtBaseExactSurface: Database.Statement | null = null;
+  private stmtBaseExactSurfaceTone: Database.Statement | null = null;
   private hasToneColumn = false;
   private stmtRouting: Database.Statement | null = null;
-  private stmtNgram: Database.Statement | null = null;
-  private ngramSqlQueries = 0;
-  private ngramCacheHits = 0;
-  private ngramCacheMisses = 0;
 
   constructor() {
     const cfg = getLexiconRuntimeV2Config();
@@ -224,9 +221,6 @@ export class LexiconRuntimeV2 {
     this.tierSqlQueries = 0;
     this.tierCacheHits = 0;
     this.tierCacheMisses = 0;
-    this.ngramSqlQueries = 0;
-    this.ngramCacheHits = 0;
-    this.ngramCacheMisses = 0;
   }
 
   getAndResetTierQueryStats(): { sqlQueries: number; cacheHits: number; cacheMisses: number } {
@@ -246,28 +240,17 @@ export class LexiconRuntimeV2 {
     };
   }
 
-  /** Non-destructive peek for parent-ngram statement accounting. */
-  getNgramQueryStats(): { sqlQueries: number; cacheHits: number; cacheMisses: number } {
-    return {
-      sqlQueries: this.ngramSqlQueries,
-      cacheHits: this.ngramCacheHits,
-      cacheMisses: this.ngramCacheMisses,
-    };
-  }
-
   /**
-   * True physical statement executions observed by Runtime counters
-   * (tier lookups + parent ngram). Domain atomic multi counts both statements.
+   * True physical statement executions observed by Runtime counters (tier lookups only).
+   * Domain atomic multi counts both statements.
    */
   getPhysicalStatementStats(): {
     tierSqlQueries: number;
-    ngramSqlQueries: number;
     total: number;
   } {
     return {
       tierSqlQueries: this.tierSqlQueries,
-      ngramSqlQueries: this.ngramSqlQueries,
-      total: this.tierSqlQueries + this.ngramSqlQueries,
+      total: this.tierSqlQueries,
     };
   }
 
@@ -321,6 +304,13 @@ export class LexiconRuntimeV2 {
          ORDER BY prior_score DESC
          LIMIT ?`
       );
+      // Exact-surface point lookup (Batch 1.1B). Fixed LIMIT bound applied by caller (2).
+      this.stmtBaseExactSurface = this.db.prepare(
+        `SELECT id, pinyin_key, ${toneSelect} word, normalized, prior_score, repair_target, enabled, aliases, source, canonical_word, is_alias
+         FROM base_lexicon
+         WHERE pinyin_key = ? AND word = ? AND enabled = 1 AND length(word) = ?
+         LIMIT ?`
+      );
       this.stmtIdiom = this.db.prepare(
         `SELECT id, pinyin_key, ${toneSelect} word, normalized, prior_score, repair_target, enabled, aliases, source, canonical_word, is_alias
          FROM idiom_lexicon
@@ -340,12 +330,18 @@ export class LexiconRuntimeV2 {
          FROM industry_routing_lexicon WHERE pinyin_key = ?`
       );
 
-      if (isLexiconV3FiveTableV2Manifest(manifest.schemaVersion)) {
+      if (isLexiconV3RuntimeV3Manifest(manifest.schemaVersion)) {
         this.stmtBaseToneComposite = this.db.prepare(
           `SELECT id, pinyin_key, tone_pinyin_key, word, normalized, prior_score, repair_target, enabled, aliases, source, canonical_word, is_alias
            FROM base_lexicon
            WHERE pinyin_key = ? AND tone_pinyin_key = ? AND enabled = 1 AND length(word) = ?
            ORDER BY prior_score DESC
+           LIMIT ?`
+        );
+        this.stmtBaseExactSurfaceTone = this.db.prepare(
+          `SELECT id, pinyin_key, tone_pinyin_key, word, normalized, prior_score, repair_target, enabled, aliases, source, canonical_word, is_alias
+           FROM base_lexicon
+           WHERE pinyin_key = ? AND tone_pinyin_key = ? AND word = ? AND enabled = 1 AND length(word) = ?
            LIMIT ?`
         );
         this.stmtIdiomToneComposite = this.db.prepare(
@@ -364,22 +360,10 @@ export class LexiconRuntimeV2 {
         );
       }
 
-      if (isLexiconV3FiveTableV2Manifest(manifest.schemaVersion)) {
-        this.stmtNgram = this.db.prepare(
-          `SELECT id, parent_term_id, parent_word, parent_pinyin_key, parent_tone_pinyin_key,
-                  ngram_pinyin_key, ngram_tone_pinyin_key, ngram_start, ngram_end, fragment_text,
-                  tier, domain_id, repair_target, prior, source, enabled
-           FROM term_pinyin_ngrams
-           WHERE ngram_pinyin_key = ? AND enabled = 1
-           ORDER BY prior DESC
-           LIMIT ?`
-        );
-      }
-
-      const countTerm = isLexiconV3FiveTableV2Manifest(manifest.schemaVersion)
+      const countTerm = isLexiconV3RuntimeV3Manifest(manifest.schemaVersion)
         ? ((this.db.prepare('SELECT COUNT(*) AS c FROM term').get() as { c: number }).c ?? 0)
         : undefined;
-      const countTags = isLexiconV3FiveTableV2Manifest(manifest.schemaVersion)
+      const countTags = isLexiconV3RuntimeV3Manifest(manifest.schemaVersion)
         ? ((this.db.prepare('SELECT COUNT(*) AS c FROM term_domain_tags').get() as { c: number }).c ?? 0)
         : undefined;
 
@@ -392,10 +376,6 @@ export class LexiconRuntimeV2 {
       const countRouting =
         (this.db.prepare('SELECT COUNT(*) AS c FROM industry_routing_lexicon').get() as { c: number })
           .c ?? 0;
-      const countNgrams =
-        isLexiconV3FiveTableV2Manifest(manifest.schemaVersion)
-          ? ((this.db.prepare('SELECT COUNT(*) AS c FROM term_pinyin_ngrams').get() as { c: number }).c ?? 0)
-          : undefined;
 
       this.state = {
         status: 'ok',
@@ -406,7 +386,6 @@ export class LexiconRuntimeV2 {
           idiom: countIdiom,
           domain: countDomain,
           routing: countRouting,
-          ngrams: countNgrams,
           ...(countTerm != null ? { term: countTerm } : {}),
           ...(countTags != null ? { termDomainTags: countTags } : {}),
         },
@@ -414,7 +393,7 @@ export class LexiconRuntimeV2 {
         domainHierarchyVersion: manifest.domainHierarchyVersion,
       };
 
-      if (isLexiconV3FiveTableV2Manifest(manifest.schemaVersion) && this.db) {
+      if (isLexiconV3RuntimeV3Manifest(manifest.schemaVersion) && this.db) {
         installRuntimeDomainRegistry(this.db, manifest);
       }
 
@@ -442,10 +421,11 @@ export class LexiconRuntimeV2 {
 
   lookupBaseByPinyinKey(key: string, termLength: number, sqlLimit?: number): HotwordEntry[] {
     const limit = sqlLimit ?? getLexiconRuntimeV2Config().maxBaseCandidates;
+    // Base exact: termLength 1–5 (Batch 1.0C). Other tiers keep min=2 via their callers.
     return this.lookupTier('base', key, termLength, limit, () => {
       const rows = (this.stmtBase?.all(key, termLength, limit) ?? []) as TierRow[];
       return mapTierRows(rows);
-    });
+    }, 1);
   }
 
   lookupBaseByPinyinAndToneKey(
@@ -459,6 +439,7 @@ export class LexiconRuntimeV2 {
     }
     const limit = sqlLimit ?? getLexiconRuntimeV2Config().maxBaseCandidates;
     const cacheKey = `base:tone:${pinyinKey}:${tonePinyinKey}:${termLength}:${limit}`;
+    // Base tone exact: termLength 1–5 (Batch 1.0C).
     return this.lookupTier(cacheKey, pinyinKey, termLength, limit, () => {
       const rows = (this.stmtBaseToneComposite!.all(
         pinyinKey,
@@ -467,7 +448,68 @@ export class LexiconRuntimeV2 {
         limit
       ) ?? []) as TierRow[];
       return mapTierRows(rows);
-    });
+    }, 1);
+  }
+
+  /**
+   * Mechanical exact-surface point lookup (Batch 1.1B).
+   * Returns rows only — does not decide uniqueness or Candidate.
+   * Internal LIMIT is fixed at 2 (0 / 1 / ≥2 detection). No open sqlLimit.
+   */
+  lookupBaseByExactSurfaceAndPinyin(
+    pinyinKey: string,
+    word: string,
+    termLength: number = 1
+  ): HotwordEntry[] {
+    const key = pinyinKey.trim();
+    const surface = word.trim();
+    const limit = 2;
+    if (!this.stmtBaseExactSurface || !key || !surface || termLength < 1) {
+      return [];
+    }
+    const cacheTier = `base:exact_surface:${surface}`;
+    return this.lookupTier(cacheTier, key, termLength, limit, () => {
+      const rows = (this.stmtBaseExactSurface!.all(key, surface, termLength, limit) ??
+        []) as TierRow[];
+      return mapTierRows(rows);
+    }, 1);
+  }
+
+  /**
+   * Mechanical exact-surface + tone point lookup (Batch 1.1B).
+   * Returns rows only — does not decide uniqueness or Candidate.
+   * Internal LIMIT is fixed at 2. No open sqlLimit.
+   */
+  lookupBaseByExactSurfacePinyinAndTone(
+    pinyinKey: string,
+    tonePinyinKey: string,
+    word: string,
+    termLength: number = 1
+  ): HotwordEntry[] {
+    const key = pinyinKey.trim();
+    const toneKey = tonePinyinKey.trim();
+    const surface = word.trim();
+    const limit = 2;
+    if (
+      !this.stmtBaseExactSurfaceTone ||
+      !key ||
+      !toneKey ||
+      !surface ||
+      termLength < 1
+    ) {
+      return [];
+    }
+    const cacheTier = `base:exact_surface:tone:${toneKey}:${surface}`;
+    return this.lookupTier(cacheTier, key, termLength, limit, () => {
+      const rows = (this.stmtBaseExactSurfaceTone!.all(
+        key,
+        toneKey,
+        surface,
+        termLength,
+        limit
+      ) ?? []) as TierRow[];
+      return mapTierRows(rows);
+    }, 1);
   }
 
   lookupIdiomByPinyinKey(key: string, termLength: number, sqlLimit?: number): HotwordEntry[] {
@@ -479,7 +521,7 @@ export class LexiconRuntimeV2 {
     return this.lookupTier('idiom', key, termLength, limit, () => {
       const rows = (this.stmtIdiom?.all(key, termLength, limit) ?? []) as TierRow[];
       return mapTierRows(rows);
-    });
+    }, 2);
   }
 
   lookupIdiomByPinyinAndToneKey(
@@ -504,7 +546,7 @@ export class LexiconRuntimeV2 {
         cfgLimit
       ) ?? []) as TierRow[];
       return mapTierRows(rows);
-    });
+    }, 2);
   }
 
   lookupDomainByPinyinKey(
@@ -546,7 +588,8 @@ export class LexiconRuntimeV2 {
     termLength: number,
     sqlLimit?: number
   ): HotwordEntry[] {
-    if (!this.db || !this.stmtDomain || !domainIds.length) {
+    // Domain exact remains frozen at termLength 2–5 (does not use lookupTier).
+    if (!this.db || !this.stmtDomain || !domainIds.length || termLength < 2) {
       return [];
     }
     const limit = sqlLimit ?? getLexiconRuntimeV2Config().maxDomainCandidates;
@@ -583,11 +626,13 @@ export class LexiconRuntimeV2 {
     termLength: number,
     sqlLimit?: number
   ): HotwordEntry[] {
+    // Domain tone exact remains frozen at termLength 2–5 (does not use lookupTier).
     if (
       !this.db ||
       !this.stmtDomainToneComposite ||
       !domainIds.length ||
-      !tonePinyinKey.trim()
+      !tonePinyinKey.trim() ||
+      termLength < 2
     ) {
       return [];
     }
@@ -619,7 +664,7 @@ export class LexiconRuntimeV2 {
     return merged;
   }
 
-  /** In-scope term_domain_tags for a term (parent fragment domain enrichment). */
+  /** In-scope term_domain_tags for a term (exact-term domain enrichment). */
   lookupTermDomainTagsInScope(
     termId: string,
     domainIds: readonly string[]
@@ -638,84 +683,6 @@ export class LexiconRuntimeV2 {
       )
       .all(termId, ...sortedIds) as Array<{ domain_id: string }>;
     return rows.map((r) => r.domain_id.trim()).filter(Boolean);
-  }
-
-  lookupParentFragmentsByNgramKey(ngramKey: string, sqlLimit: number): ParentTermNgramRow[] {
-    if (
-      this.state.status !== 'ok' ||
-      !this.stmtNgram ||
-      !ngramKey.trim() ||
-      sqlLimit <= 0
-    ) {
-      return [];
-    }
-    if (!isLexiconV3FiveTableV2Manifest(this.manifest?.schemaVersion)) {
-      throw new Error(
-        `[LEXICON_RUNTIME_V2] parent ngram requires ${LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION}, got ${this.manifest?.schemaVersion ?? 'unknown'}`
-      );
-    }
-
-    const cacheKey = `ngram:${ngramKey}:${sqlLimit}`;
-    const cached = this.bucketCache.get(cacheKey) as ParentTermNgramRow[] | undefined;
-    if (cached) {
-      this.ngramCacheHits += 1;
-      return cached;
-    }
-
-    this.ngramCacheMisses += 1;
-    this.ngramSqlQueries += 1;
-    const rows = this.stmtNgram.all(ngramKey, sqlLimit) as Array<{
-      id: number;
-      parent_term_id: string;
-      parent_word: string;
-      parent_pinyin_key: string;
-      parent_tone_pinyin_key: string | null;
-      ngram_pinyin_key: string;
-      ngram_tone_pinyin_key: string | null;
-      ngram_start: number;
-      ngram_end: number;
-      fragment_text: string;
-      tier: string;
-      domain_id: string | null;
-      repair_target: number;
-      prior: number;
-      source: string | null;
-      enabled: number;
-    }>;
-
-    const mapped: ParentTermNgramRow[] = rows.map((row) => ({
-      id: row.id,
-      parentTermId: row.parent_term_id,
-      parentWord: row.parent_word,
-      parentPinyinKey: row.parent_pinyin_key,
-      parentTonePinyinKey: row.parent_tone_pinyin_key?.trim() || undefined,
-      ngramPinyinKey: row.ngram_pinyin_key,
-      ngramTonePinyinKey: row.ngram_tone_pinyin_key?.trim() || undefined,
-      ngramStart: row.ngram_start,
-      ngramEnd: row.ngram_end,
-      fragmentText: row.fragment_text,
-      tier: row.tier as ParentTermNgramRow['tier'],
-      domainId: row.domain_id?.trim() || undefined,
-      repairTarget: row.repair_target === 1,
-      prior: row.prior,
-      source: row.source?.trim() || undefined,
-      enabled: row.enabled === 1,
-    }));
-
-    this.bucketCache.set(cacheKey, mapped as unknown as HotwordEntry[]);
-    return mapped;
-  }
-
-  getAndResetNgramQueryStats(): { sqlQueries: number; cacheHits: number; cacheMisses: number } {
-    const stats = {
-      sqlQueries: this.ngramSqlQueries,
-      cacheHits: this.ngramCacheHits,
-      cacheMisses: this.ngramCacheMisses,
-    };
-    this.ngramSqlQueries = 0;
-    this.ngramCacheHits = 0;
-    this.ngramCacheMisses = 0;
-    return stats;
   }
 
   lookupIndustryRoutes(pinyinKeys: readonly string[]): IndustryRouteHit[] {
@@ -752,14 +719,24 @@ export class LexiconRuntimeV2 {
     return hits.sort((a, b) => b.weight - a.weight);
   }
 
+  /**
+   * Shared cache/SQL wrapper for base + idiom tier lookups.
+   * Callers pass an explicit minTermLength (base=1, idiom=2). Do not default-open all tiers.
+   */
   private lookupTier(
     tier: string,
     key: string,
     termLength: number,
     limit: number,
-    queryFn: () => HotwordEntry[]
+    queryFn: () => HotwordEntry[],
+    minTermLength: number
   ): HotwordEntry[] {
-    if (this.state.status !== 'ok' || limit <= 0 || !key.trim() || termLength < 2) {
+    if (
+      this.state.status !== 'ok' ||
+      limit <= 0 ||
+      !key.trim() ||
+      termLength < minTermLength
+    ) {
       return [];
     }
     const cacheKey = `${tier}:plain:${key}:${termLength}:${limit}`;
@@ -790,9 +767,10 @@ export class LexiconRuntimeV2 {
     this.stmtBaseToneComposite = null;
     this.stmtIdiomToneComposite = null;
     this.stmtDomainToneComposite = null;
+    this.stmtBaseExactSurface = null;
+    this.stmtBaseExactSurfaceTone = null;
     this.hasToneColumn = false;
     this.stmtRouting = null;
-    this.stmtNgram = null;
     if (this.db) {
       this.db.close();
       this.db = null;

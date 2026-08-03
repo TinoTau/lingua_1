@@ -8,10 +8,11 @@ import {
   type PoolVoteCandidate,
 } from '../span-assembly-shared/utterance-domain-vote';
 import {
-  coarseSpansAsFormalFineSpansForTests,
+  coarseSpansAsPathFineSpansForTests,
   runDomainAwareAssembly,
 } from './assemble-domain-aware-span-sets';
-import { buildSentenceCandidates, mergeCrossBucketSentenceCandidates } from '../build-sentence-candidates';
+import { buildSentenceCandidates } from '../build-sentence-candidates';
+import { mergeCrossPathSentenceCandidates } from './merge-cross-path-sentence-candidates';
 import type { CoarseSpan } from '../span-assembly-shared/types';
 import type { WindowCandidate } from './v4-types';
 
@@ -23,7 +24,6 @@ function cand(partial: Partial<PoolVoteCandidate> & Pick<PoolVoteCandidate, 'sou
     syllableStart: partial.syllableStart ?? 0,
     syllableEnd: partial.syllableEnd ?? 2,
     domains: partial.domains,
-    parentTermId: partial.parentTermId,
     isCovered: partial.isCovered,
     source: partial.source,
   };
@@ -272,7 +272,7 @@ describe('Multi-bucket assembly + KenLM budget', () => {
       ],
       spans,
       '少糖中杯奶茶',
-      coarseSpansAsFormalFineSpansForTests(spans)
+      coarseSpansAsPathFineSpansForTests(spans)
     );
     expect(result.vote.retainedDomains).toEqual(['milk_tea']);
     expect(result.bucketSpanSets).toHaveLength(1);
@@ -303,7 +303,7 @@ describe('Multi-bucket assembly + KenLM budget', () => {
       ],
       spans,
       '接送机场',
-      coarseSpansAsFormalFineSpansForTests(spans)
+      coarseSpansAsPathFineSpansForTests(spans)
     );
     expect(result.vote.isTie).toBe(true);
     expect(result.bucketSpanSets.length).toBe(2);
@@ -311,11 +311,14 @@ describe('Multi-bucket assembly + KenLM budget', () => {
     const perBucketGenerated = result.bucketSpanSets.map((sets) =>
       buildSentenceCandidates('接送机场', sets, 16).combinations
     );
-    const merged = mergeCrossBucketSentenceCandidates(perBucketGenerated, 16);
+    const merged = mergeCrossPathSentenceCandidates(
+      [{ pathId: 'p0', boundaryKey: 'bk0', perBucketGenerated }],
+      16
+    );
     expect(merged.combinations.length).toBeLessThanOrEqual(16);
   });
 
-  it('cross-bucket dedup before final cap: duplicate texts do not waste other buckets', () => {
+  it('cross-path dedup before final cap: duplicate texts do not waste slots (first-wins)', () => {
     const shared = {
       text: '共享句',
       replacements: [] as import('../build-sentence-candidates').SpanReplacementPick[],
@@ -323,38 +326,62 @@ describe('Multi-bucket assembly + KenLM budget', () => {
     };
     const uniqueHigh = { text: '正确句', replacements: [], candidateScore: 5 };
     const uniqueNoise = { text: '噪声句', replacements: [], candidateScore: 0.1 };
-    // Bucket A: shared (high) + low noise; Bucket B: shared (lower) + correct (mid-high)
-    // After dedup, shared keeps score 10; global cap=2 keeps 共享句 + 正确句
-    const merged = mergeCrossBucketSentenceCandidates(
+    // Path A bucket0: shared + noise; Path B bucket0: shared + correct
+    // first-wins keeps first shared; global cap=2 keeps 共享句 + 噪声句 (noise before path B)
+    // Better fixture: single path with two buckets — first-wins then cap
+    const merged = mergeCrossPathSentenceCandidates(
       [
-        [
-          { ...shared, candidateScore: 10 },
-          uniqueNoise,
-        ],
-        [
-          { ...shared, candidateScore: 2 },
-          uniqueHigh,
-        ],
+        {
+          pathId: 'A',
+          boundaryKey: 'a',
+          perBucketGenerated: [
+            [
+              { ...shared, candidateScore: 10 },
+              uniqueNoise,
+            ],
+          ],
+        },
+        {
+          pathId: 'B',
+          boundaryKey: 'b',
+          perBucketGenerated: [
+            [
+              { ...shared, candidateScore: 2 },
+              uniqueHigh,
+            ],
+          ],
+        },
       ],
       2
     );
     const texts = merged.combinations.map((c) => c.text);
-    expect(texts).toContain('正确句');
     expect(texts).toContain('共享句');
-    expect(texts).not.toContain('噪声句');
-    expect(merged.combinations).toHaveLength(2);
-    expect(merged.mergedBeforeCap.find((c) => c.text === '共享句')?.candidateScore).toBe(10);
+    expect(texts).toHaveLength(2);
+    // first-wins: Path A order → 共享句 then 噪声句 fill cap=2; 正确句 truncated
+    expect(texts).toEqual(['共享句', '噪声句']);
+    expect(merged.uniqueBeforeCap.find((c) => c.text === '共享句')?.candidateScore).toBe(10);
   });
 
-  it('merge order does not change final text set', () => {
+  it('merge order is deterministic for identical path/bucket inputs', () => {
     const a = { text: 'A', replacements: [], candidateScore: 3 };
     const b = { text: 'B', replacements: [], candidateScore: 2 };
     const c = { text: 'C', replacements: [], candidateScore: 1 };
-    const forward = mergeCrossBucketSentenceCandidates([[a, b], [c, a]], 16);
-    const reverse = mergeCrossBucketSentenceCandidates([[c, a], [a, b]], 16);
-    expect(forward.combinations.map((x) => x.text).sort()).toEqual(
-      reverse.combinations.map((x) => x.text).sort()
+    const forward = mergeCrossPathSentenceCandidates(
+      [
+        { pathId: 'p0', boundaryKey: 'x', perBucketGenerated: [[a, b]] },
+        { pathId: 'p1', boundaryKey: 'y', perBucketGenerated: [[c, a]] },
+      ],
+      16
     );
+    const again = mergeCrossPathSentenceCandidates(
+      [
+        { pathId: 'p0', boundaryKey: 'x', perBucketGenerated: [[a, b]] },
+        { pathId: 'p1', boundaryKey: 'y', perBucketGenerated: [[c, a]] },
+      ],
+      16
+    );
+    expect(forward.combinations.map((x) => x.text)).toEqual(again.combinations.map((x) => x.text));
+    expect(forward.combinations.map((x) => x.text)).toEqual(['A', 'B', 'C']);
   });
 
   it('base-only assembly when no domain evidence', () => {
@@ -371,7 +398,7 @@ describe('Multi-bucket assembly + KenLM budget', () => {
       ],
       spans,
       '你好',
-      coarseSpansAsFormalFineSpansForTests(spans)
+      coarseSpansAsPathFineSpansForTests(spans)
     );
     expect(result.vote.insufficientEvidence).toBe(true);
     expect(result.bucketSpanSets).toHaveLength(1);
@@ -389,7 +416,7 @@ describe('Multi-bucket assembly + KenLM budget', () => {
       [multi],
       spans,
       '少糖',
-      coarseSpansAsFormalFineSpansForTests(spans)
+      coarseSpansAsPathFineSpansForTests(spans)
     );
     expect(result.bucketSpanSets).toHaveLength(3);
     for (const sets of result.bucketSpanSets) {

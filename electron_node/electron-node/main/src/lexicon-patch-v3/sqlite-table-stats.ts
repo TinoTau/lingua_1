@@ -16,7 +16,6 @@ export type BundleTableStats = {
   industry_routing_lexicon: { rowCount: number };
   term: { rowCount: number };
   term_domain_tags: { rowCount: number };
-  term_pinyin_ngrams: { rowCount: number };
 };
 
 function tierStats(db: Database.Database, table: string): TierTableStats {
@@ -63,6 +62,5 @@ export function collectBundleTableStats(db: Database.Database): BundleTableStats
     industry_routing_lexicon: simpleCount(db, 'industry_routing_lexicon'),
     term: simpleCount(db, 'term'),
     term_domain_tags: simpleCount(db, 'term_domain_tags'),
-    term_pinyin_ngrams: simpleCount(db, 'term_pinyin_ngrams'),
   };
 }

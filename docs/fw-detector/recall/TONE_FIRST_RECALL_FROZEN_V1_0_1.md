@@ -1,6 +1,11 @@
 # Tone-First Recall — 冻结合约 V1.0.1
 
-**状态**：Mechanism FROZEN（2026-06-17）  
+> **UPDATE_CURRENT / PARTIAL SUPERSESSION (2026-08-02)**  
+> Parent Fragment / `term_pinyin_ngrams` 已 Full Retirement。  
+> 生产唯一入口：`recallTopKForWindows` → **`recallSpanTopKV2`**（Formal Term Exact / Full-Pinyin Recall Only）。  
+> 下文中 `recallSpanTopKV3`、`lookupParentFragments`、`parentFragmentTopK`、`exact + fragment` 混排描述均为 **HISTORICAL_ONLY**，不得再作为 CURRENT SSOT。
+
+**状态**：Tone-first exact 机制仍 FROZEN；parent-fragment 分支 **RETIRED**（2026-08-02）  
 **原则**：`Tone is recall priority, not absolute hard gate.`  
 **代码根**：`electron_node/electron-node/main/src/lexicon-v2/` · `span-assembly-v4/recall-topk-for-windows.ts`
 
@@ -14,17 +19,19 @@ Tone 影响 **候选排序与 penalty**，**不** hard drop。Assembly 仅按 `s
 
 ---
 
-## 2. 调用链
+## 2. 调用链（CURRENT — 2026-08-02）
 
 ```text
 recallTopKForWindows
-  → recallSpanTopKV3
-      → recallSpanTopKV2 (tone-first tier collector + plain fallback)
-      → lookupParentFragments (plain ngram, parentFragmentTopK=3)
-      → mergeExactAndFragmentHits (exactTopK=2)
-      → sortRecallHitsByToneCompatibility
-  → recallHitToneFields / minPrior filter
+  → recallSpanTopKV2 (tone-first exact formal terms)
+  → bindLexiconHitsToWindow (hitKind=exact_term only)
   → WindowCandidate pool
+```
+
+### HISTORICAL_ONLY（已删除）
+
+```text
+recallSpanTopKV3 → lookupParentFragments → mergeExactAndFragmentHits
 ```
 
 ---

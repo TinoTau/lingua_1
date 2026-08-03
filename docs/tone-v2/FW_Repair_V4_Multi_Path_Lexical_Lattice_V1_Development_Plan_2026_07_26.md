@@ -3,9 +3,10 @@
 **文档性质**：开发实施方案  
 **目标版本**：Multi-Path Lexical Lattice V1  
 **日期**：2026-07-26  
+**架构冻结**：[`FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md`](./FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md) · **FROZEN FOR IMPLEMENTATION**  
 **适用范围**：FW 整句结果进入 ASR 后处理后，至 KenLM 候选评分之前  
 **架构原则**：唯一主链、单一事实来源、完全替换旧实现、无兼容双链路  
-**前置审计**：`FW_Repair_V4_Multi_Path_Lexical_Lattice_Pre_Development_Audit_2026_07_26.md`
+**前置审计**：`FW_Repair_V4_Multi_Path_Lexical_Lattice_Pre_Development_Audit_2026_07_26.md`（HISTORICAL）
 
 ---
 
@@ -276,17 +277,20 @@ runFwDetectorOrchestrator
 Normative Contract:
   docs/tone-v2/FW_Repair_V4_Multi_Path_Lexical_Lattice_V1_Implementation_Contract_V1.0.0_2026_07_26.md
 
+Architecture SSOT:
+  docs/tone-v2/FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md
+  Status: FROZEN FOR IMPLEMENTATION
+  SHA256: sha256:52580965d834f19a57fd7d0eab871250ee7a7b03d4fc0a886720222a078dcc30
+
 Version:
   1.0.0
 
-Status:
-  APPROVED FOR IMPLEMENTATION
-
-SHA256:
+SHA256 (Implementation Contract):
   sha256:9aab5652d2ae4d5834ea68f912e45d22904985288ca8a03499a93813ac0bf64e
 
 Precedence:
-  如本 Plan 与 Implementation Contract V1.0.0 冲突，以 Implementation Contract V1.0.0 为准。
+  Fine Span / Path topics: Architecture V1.0.0 + Implementation Contract.
+  如 Plan 与上述冲突，以 Architecture / Contract 为准（不以 Plan 漂移）。
 ```
 
 禁止以“聊天原文 / 用户原稿 / 此前讨论”作为规范来源。DTO、fallback 注入、Path 裁剪、coarse 权限、Trace 字段以 Contract V1.0.0 正文为准。

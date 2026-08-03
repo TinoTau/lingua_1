@@ -49,6 +49,10 @@ export function recallKindFuzzyPenalty(kind: RecallCandidateKind): number {
   }
 }
 
+export function isFuzzyRecallCandidateKind(kind?: RecallCandidateKind): boolean {
+  return kind === 'fuzzy_plain' || kind === 'fuzzy_plain_domain';
+}
+
 function charEditDistance(a: string, b: string): number {
   const n = a.length;
   const m = b.length;

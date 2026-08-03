@@ -43,6 +43,25 @@ export interface AcousticToneSlice {
   confidence: number;
 }
 
+export type ToneEvidenceProductionStatus =
+  | 'slice_created'
+  | 'short_duration_skipped'
+  | 'feature_extraction_failed'
+  | 'inference_output_missing'
+  | 'invalid_word_time';
+
+/** Diagnostic only — why a Word did/didn't produce a real AcousticToneSlice. */
+export interface ToneEvidenceProductionDiagnostic {
+  word: string;
+  startSec: number;
+  endSec: number;
+  durationSec: number;
+  segmentIndex: number;
+  batchIndex?: number;
+  status: ToneEvidenceProductionStatus;
+  errorCode?: string;
+}
+
 /** Phase3 — utterance-level acoustic tone payload (timestamp-only, no token/alignmentText). */
 export interface UtteranceAcousticTonePayload {
   toneEnabled: boolean;
@@ -50,6 +69,10 @@ export interface UtteranceAcousticTonePayload {
   sliceCount: number;
   toneConfidenceAvg?: number;
   skippedReason?: 'no_audio' | 'no_timestamps' | 'non_zh' | 'model_error';
+  /** Per-word Evidence production statuses (not Tone Evidence itself). */
+  evidenceProduction?: ToneEvidenceProductionDiagnostic[];
+  model?: string;
+  version?: string;
 }
 
 /**

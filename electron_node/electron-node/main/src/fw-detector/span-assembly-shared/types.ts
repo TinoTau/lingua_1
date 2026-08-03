@@ -3,7 +3,24 @@
   pinyinKey: string;
   windowTimeRange?: { start: number; end: number };
   acousticTonePattern?: number[];
+  mappingMissReason?: string;
+  mappingMissAttribution?: string;
 };
+
+export type TonePatternMappingMissReason =
+  | 'no_word_timespan_for_slot'
+  | 'no_slice_overlap_word_time'
+  | 'empty_posterior'
+  | 'invalid_posterior';
+
+export type ToneMappingMissAttribution =
+  | 'short_duration_skipped'
+  | 'feature_extraction_failed'
+  | 'inference_output_missing'
+  | 'invalid_word_time'
+  | 'slice_exists_but_no_overlap'
+  | 'word_timespan_mapping_failure'
+  | 'unknown';
 
 export type CoarseAssemblyToneDiagnostics = {
   tonePayloadAvailable: boolean;
@@ -15,7 +32,11 @@ export type CoarseAssemblyToneDiagnostics = {
   windowTimeHitCount: number;
   toneOverlapHitCount: number;
   toneOverlapMissCount: number;
-  toneOverlapSyllableMismatchCount: number;
+  /** windowTimeRange found but mapToneEvidenceForRecall returned no pattern. */
+  tonePatternMappingMissCount: number;
+  mappingMissReasonCounts?: Partial<Record<TonePatternMappingMissReason, number>>;
+  mappingMissAttributionCounts?: Partial<Record<ToneMappingMissAttribution, number>>;
+  evidenceProductionStatusCounts?: Partial<Record<string, number>>;
   ngramTonePatternAttemptCount: number;
   ngramTonePatternHitCount: number;
   ngramTonePatternMissCount: number;
@@ -29,7 +50,7 @@ export type CoarseAssemblyToneDiagnostics = {
   recallToneIncompatibleCount?: number;
   /** SQL tone_exact stage hit count (utterance aggregate). */
   toneExactHitCount: number;
-  /** SQL plain_fallback stage hit count (utterance aggregate; excludes plain_only_no_pattern). */
+  /** SQL plain_fallback stage hit count — always 0 after Batch 1.1C Mandatory Tone Recall. */
   plainFallbackHitCount: number;
   exampleToneWindows?: CoarseAssemblyToneExampleWindow[];
 };

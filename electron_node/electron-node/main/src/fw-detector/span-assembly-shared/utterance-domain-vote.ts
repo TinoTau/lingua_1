@@ -28,15 +28,12 @@ export type UtteranceDomainVoteResult = {
 /** Minimal pool shape for main-chain domain vote (no span-assembly-v4 import). */
 export type PoolVoteCandidate = {
   candidateId?: string;
-  hitKind: 'exact_term' | 'parent_fragment';
+  hitKind: 'exact_term';
   source: string;
   score: number;
   domains?: readonly string[];
   syllableStart: number;
   syllableEnd: number;
-  parentTermId?: string;
-  matchedTermStart?: number;
-  matchedTermEnd?: number;
   isCovered?: boolean;
 };
 
@@ -169,12 +166,9 @@ export function buildFineSpanDomainSet(candidates: PoolVoteCandidate[]): Set<str
       continue;
     }
 
-    const structuralKey =
-      candidate.hitKind === 'parent_fragment' && candidate.parentTermId
-        ? `parent:${candidate.parentTermId}`
-        : candidate.candidateId
-          ? `id:${candidate.candidateId}`
-          : `exact:${candidate.syllableStart}:${candidate.syllableEnd}:${candidate.score}`;
+    const structuralKey = candidate.candidateId
+      ? `id:${candidate.candidateId}`
+      : `exact:${candidate.syllableStart}:${candidate.syllableEnd}:${candidate.score}`;
 
     if (seenKeys.has(structuralKey)) {
       continue;
@@ -189,30 +183,13 @@ export function buildFineSpanDomainSet(candidates: PoolVoteCandidate[]): Set<str
 export function voteUtteranceDomainFromPool(pool: FineSpanPoolForVote[]): UtteranceDomainVoteResult {
   const start = Date.now();
   const spanDomainSets: Set<string>[] = [];
-  const votedParentTermIds = new Set<string>();
-  let parentTermVoteCount = 0;
 
   for (const spanPool of pool) {
-    for (const candidate of spanPool.candidates) {
-      if (
-        candidate.hitKind === 'parent_fragment' &&
-        candidate.parentTermId &&
-        !candidate.isCovered &&
-        isDomainVoteSource(candidate.source) &&
-        !votedParentTermIds.has(candidate.parentTermId)
-      ) {
-        votedParentTermIds.add(candidate.parentTermId);
-        parentTermVoteCount += 1;
-      }
-    }
     spanDomainSets.push(buildFineSpanDomainSet(spanPool.candidates));
   }
 
-  return finalizePresenceVote(
-    start,
-    accumulateSpanDomainSets(spanDomainSets),
-    parentTermVoteCount
-  );
+  // JOBRESULT_ADAPTER_DEBT — parent-term structural vote retired (Phase 2/3); always 0.
+  return finalizePresenceVote(start, accumulateSpanDomainSets(spanDomainSets), 0);
 }
 
 /** Allocate per-bucket sentence budget. Throws if retained buckets cannot each get ≥1 slot. */

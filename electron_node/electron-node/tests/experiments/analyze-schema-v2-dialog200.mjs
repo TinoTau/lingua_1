@@ -2,6 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { requireLogicalWindowRecallCount } from './require-logical-window-recall-count.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const batchPath = path.resolve(
@@ -161,8 +162,14 @@ const out = {
     domainScoresPresent: hasScores,
     winningFineDomainPresent: hasWinning,
     totalHardDropCount: hardDrop,
-    avgNgramQueries: Number(
-      avg(cases.map((c) => c.extra?.fw_detector?.spanAssemblyV4?.ngramQueryCount || 0)).toFixed(2)
+    avgLogicalWindowRecallCount: Number(
+      avg(
+        cases
+          .filter((c) => c.extra?.fw_detector?.spanAssemblyV4)
+          .map((c) =>
+            requireLogicalWindowRecallCount(c.extra.fw_detector.spanAssemblyV4, c.id)
+          )
+      ).toFixed(2)
     ),
   },
   byScenario,
@@ -201,7 +208,7 @@ const out = {
   },
 };
 
-const outPath = path.join(__dirname, 'schema-v2-seed-import-dialog200-quality-perf.json');
+const outPath = path.join(__dirname, 'schema-v2-seed-import-dialog200-quality-perf.active.json');
 fs.writeFileSync(outPath, JSON.stringify(out, null, 2));
 console.log(JSON.stringify(out, null, 2));
 console.log('[analyze-schema-v2] wrote', outPath);

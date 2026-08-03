@@ -24,6 +24,7 @@ import {
   normalizeAcousticSlices,
   offsetAcousticSlices,
 } from '../../fw-detector/tone-time-align';
+import { normalizeToneEvidenceProduction } from '../utterance-tone-ssot';
 import logger from '../../logger';
 
 export interface AsrStepOptions {
@@ -148,6 +149,7 @@ export async function runAsrStep(
   // 处理每个ASR批次
   const asrStartTime = Date.now();
   ctx.acousticToneSlices = [];
+  ctx.toneEvidenceProduction = [];
   ctx.asrSegmentNodeBatchIndices = [];
   ctx.segmentTimeOffsetsSec = [];
   ctx.segmentCharOffsets = [];
@@ -264,6 +266,13 @@ export async function runAsrStep(
         segmentOffsetSec
       );
       ctx.acousticToneSlices.push(...batchSlices);
+
+      const batchEvidence = normalizeToneEvidenceProduction(
+        asrResult.tone?.evidenceProduction,
+        segmentOffsetSec,
+        i
+      );
+      ctx.toneEvidenceProduction!.push(...batchEvidence);
 
       const batchSegmentCount = asrResult.segments?.length ?? 0;
       for (let segIdx = 0; segIdx < batchSegmentCount; segIdx += 1) {

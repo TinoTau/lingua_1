@@ -34,9 +34,9 @@ export type FwSentenceRerankFromPrefilledInput = {
   >;
   kenlmScorer: KenLMScorer | null;
   /**
-   * Required: cross-bucket merged sentence pool from span-assembly-v4 orchestrator.
-   * Empty array [] means no candidates → KenLM fail-open raw (no primary spanSets rebuild).
-   */
+ * Required: Cross-Path Merge (mergeCrossPathSentenceCandidates) pool from span-assembly-v4 orchestrator.
+ * Empty array [] means no candidates → KenLM fail-open raw (no primary spanSets rebuild).
+ */
   prefilledCombinations: SentenceCombination[];
 };
 

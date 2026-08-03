@@ -2,19 +2,19 @@
  * Phase 1 — Canonical RecallQueryKey + Utterance Fact Cache unit tests.
  */
 import { describe, expect, it } from '@jest/globals';
-import type { RecallSpanTopKV3Hit } from '../../lexicon-v2/recall-span-topkv3';
+import type { RecallSpanTopKV2Hit } from '../../lexicon-v2/recall-span-topk-v2';
 import type { HotwordEntry } from '../../lexicon/hotword-types';
 import {
   buildSpanV3CanonicalQuery,
   createUtteranceRecallContext,
-  lexiconFactsFromV3Hits,
+  exactHitsFromLexiconFacts,
+  lexiconFactsFromExactHits,
   normalizeDomainScope,
   normalizeToneNorm,
   releaseUtteranceRecallContext,
   serializeCanonicalRecallQueryKey,
   utteranceCacheGet,
   utteranceCacheSet,
-  v3HitsFromLexiconFacts,
 } from './utterance-recall-cache';
 
 function fakeHotword(word: string, id = `hw-${word}`): HotwordEntry {
@@ -28,30 +28,28 @@ function fakeHotword(word: string, id = `hw-${word}`): HotwordEntry {
   } as HotwordEntry;
 }
 
-function fakeV3Hit(word: string): RecallSpanTopKV3Hit {
+function fakeExactHit(word: string): RecallSpanTopKV2Hit {
   return {
-    hitKind: 'exact_term',
     hotword: fakeHotword(word),
     phoneticScore: 1,
     candidateScore: 0.9,
-    candidateScoreBreakdown: {} as RecallSpanTopKV3Hit['candidateScoreBreakdown'],
+    candidateScoreBreakdown: {} as RecallSpanTopKV2Hit['candidateScoreBreakdown'],
     source: 'exact',
   };
 }
 
 describe('Canonical RecallQueryKey', () => {
-  it('serializes stable v1 key with sorted domains', () => {
+  it('serializes stable v2 key with sorted domains (no parentFragmentTopK)', () => {
     const q = buildSpanV3CanonicalQuery({
       pinyinKey: 'ji|chang',
       toneNorm: '',
       domainIds: ['hotel', 'airport'],
       exactTopK: 2,
-      parentFragmentTopK: 3,
       lexiconVersion: 'v3.5-table-v2',
       surfaceText: '机场',
     });
     expect(serializeCanonicalRecallQueryKey(q)).toBe(
-      'v1|span_v3_bundle|ji|chang||airport,hotel|2|3|v3.5-table-v2|机场'
+      'v2|span_v3_bundle|ji|chang||airport,hotel|2|v3.5-table-v2|机场'
     );
   });
 
@@ -62,7 +60,6 @@ describe('Canonical RecallQueryKey', () => {
         toneNorm: normalizeToneNorm(undefined),
         domainIds: undefined as unknown as string[],
         exactTopK: 2,
-        parentFragmentTopK: 3,
         lexiconVersion: 'v',
         surfaceText: '',
       })
@@ -73,7 +70,6 @@ describe('Canonical RecallQueryKey', () => {
         toneNorm: '',
         domainIds: [],
         exactTopK: 2,
-        parentFragmentTopK: 3,
         lexiconVersion: 'v',
         surfaceText: '',
       })
@@ -88,7 +84,6 @@ describe('Canonical RecallQueryKey', () => {
       toneNorm: '',
       domainIds: ['hotel'] as string[],
       exactTopK: 2,
-      parentFragmentTopK: 3,
       lexiconVersion: 'v',
       surfaceText: '酒店',
     };
@@ -115,20 +110,19 @@ describe('Canonical RecallQueryKey', () => {
         toneNorm: '',
         domainIds: [],
         exactTopK: 2,
-        parentFragmentTopK: 3,
         lexiconVersion: 'v',
         surfaceText: '字',
       })
     );
     expect(key.includes('window')).toBe(false);
-    expect(key.startsWith('v1|')).toBe(true);
+    expect(key.startsWith('v2|')).toBe(true);
   });
 });
 
 describe('UtteranceRecallContext Fact cache', () => {
   it('same key hits cache; empty results are cacheable', () => {
     const ctx = createUtteranceRecallContext('v-test');
-    const key = 'v1|span_v3_bundle|a|b|||2|3|v-test|';
+    const key = 'v2|span_v3_bundle|a|b|||2|v-test|';
     expect(utteranceCacheGet(ctx, key)).toBeUndefined();
     expect(ctx.stats.missCount).toBe(1);
     expect(ctx.stats.uniqueKeyCount).toBe(1);
@@ -146,14 +140,14 @@ describe('UtteranceRecallContext Fact cache', () => {
   it('window mutation does not pollute Fact cache', () => {
     const ctx = createUtteranceRecallContext('v-test');
     const key = 'k1';
-    const facts = lexiconFactsFromV3Hits([fakeV3Hit('测试')]);
+    const facts = lexiconFactsFromExactHits([fakeExactHit('测试')]);
     utteranceCacheSet(ctx, key, facts);
 
-    const rebound = v3HitsFromLexiconFacts(utteranceCacheGet(ctx, key)!);
+    const rebound = exactHitsFromLexiconFacts(utteranceCacheGet(ctx, key)!);
     rebound[0].candidateScore = 0.1;
     rebound[0].hotword.word = '污染';
 
-    const again = v3HitsFromLexiconFacts(utteranceCacheGet(ctx, key)!);
+    const again = exactHitsFromLexiconFacts(utteranceCacheGet(ctx, key)!);
     expect(again[0].candidateScore).toBe(0.9);
     expect(again[0].hotword.word).toBe('测试');
     expect(facts[0].word).toBe('测试');
@@ -171,7 +165,7 @@ describe('UtteranceRecallContext Fact cache', () => {
     const ctx = createUtteranceRecallContext('v-test');
     const key = 'dup';
     utteranceCacheGet(ctx, key);
-    utteranceCacheSet(ctx, key, lexiconFactsFromV3Hits([fakeV3Hit('a')]));
+    utteranceCacheSet(ctx, key, lexiconFactsFromExactHits([fakeExactHit('a')]));
     utteranceCacheGet(ctx, key);
     utteranceCacheGet(ctx, key);
     expect(ctx.stats.uniqueKeyCount).toBe(1);

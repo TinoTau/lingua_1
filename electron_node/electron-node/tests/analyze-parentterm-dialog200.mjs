@@ -186,6 +186,6 @@ const out = {
   }).filter(Boolean),
 };
 
-const outPath = path.join(__dirname, 'parentterm-fragmentedge-dialog200-quality-perf.json');
+const outPath = path.join(__dirname, 'parentterm-fragmentedge-dialog200-quality-perf.active.json');
 fs.writeFileSync(outPath, JSON.stringify(out, null, 2), 'utf8');
 console.log(JSON.stringify(out, null, 2));

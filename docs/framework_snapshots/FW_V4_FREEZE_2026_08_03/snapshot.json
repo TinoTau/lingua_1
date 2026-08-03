@@ -1,0 +1,87 @@
+{
+  "snapshotName": "FW_V4_FREEZE_2026_08_03",
+  "status": "CURRENT_RECOVERY_BASELINE",
+  "createdAt": "2026-08-03",
+  "createdTime": "2026-08-03T00:00:00.000Z",
+  "scope": "ASR post-processing through KenLM runtime boundary",
+  "nature": "Date-based recoverable checkpoint, not permanent architecture freeze",
+  "verdict": "PENDING_GIT_FREEZE_COMMIT",
+  "architecture": {
+    "fineSpan": "Multi-Path Lexical Lattice V1.0.0",
+    "runtimeContract": "Runtime SSOT Contract V1.2",
+    "atomicity": "Surface + Domain-Semantic Atomicity",
+    "domainVote": "Presence Vote"
+  },
+  "productionChain": [
+    "ASR Raw",
+    "FineSpan / Lattice",
+    "Formal Exact Recall",
+    "Domain Vote",
+    "SameDomain Bucket",
+    "Sentence Assembly",
+    "CrossPath",
+    "KenLM Input Boundary"
+  ],
+  "lexicon": {
+    "bundlePath": "node_runtime/lexicon/v3",
+    "schemaVersion": "lexicon-v3-runtime-v3",
+    "bundleVersion": 12,
+    "checksum": "ab78bf3599911711fc18ce59c62ab93c8f50c5410a1a6254e01125a244ce1f76",
+    "sqliteChecksum": "ab78bf3599911711fc18ce59c62ab93c8f50c5410a1a6254e01125a244ce1f76",
+    "termCount": 9256,
+    "domainTagCount": 655,
+    "atomicityMode": "enforce",
+    "atomicitySummary": {
+      "ACCEPT": 9248,
+      "ACCEPT_EXCEPTION": 8,
+      "REJECT_COMPOSITE": 0,
+      "UNRESOLVED": 0
+    },
+    "sourceDir": "electron_node/docs/lexicon-assets/full_rebuild_v1"
+  },
+  "acceptance": {
+    "dialog200Completed": 200,
+    "dialog200Failed": 0,
+    "latticeUncovered": 0,
+    "kenlmInputCount": 200,
+    "preKenlmP50Ms": 56,
+    "preKenlmP95Ms": 100,
+    "preKenlmMaxMs": 165,
+    "preKenlmNote": "freeze re-verify 2026-08-03; prior Atomicity Closure baseline was 41/70/111",
+    "lexiconV3GateScript": "FAIL_STALE_THRESHOLDS_post_atomicity_cleanup",
+    "lexiconIdentityAuthority": "checksum + atomicity enforce 0/0"
+  },
+  "kenlm": {
+    "status": "CAPABILITY_VALIDATION_PENDING",
+    "scoreMode": "raw_log_delta",
+    "validationInterface": "READY",
+    "quality": "NOT_YET_PASSED",
+    "nextStage": "KenLM capability validation"
+  },
+  "git": {
+    "commit": "<FILL_AFTER_FREEZE_COMMIT>",
+    "tag": "FW_V4_FREEZE_2026_08_03"
+  },
+  "currentSsotDocs": [
+    "docs/tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md",
+    "docs/tone-v2/FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md",
+    "docs/tone-v2/Runtime_SSOT_Contract_Freeze.md",
+    "docs/tone-v2/FW_Repair_V4_Atomicity_Closure_SSOT_Freeze_2026_08_02.md",
+    "docs/tone-v2/FW_Repair_V4_ToneEvidence_Mapping_Final_Freeze_Report_2026_07_29.md",
+    "docs/fw-detector/freeze/FROZEN.md",
+    "docs/fw-detector/kenlm/KENLM_RUNTIME.md",
+    "docs/framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md"
+  ],
+  "legacyPathScan": {
+    "LTR": "NOT_FOUND",
+    "Beam": "NOT_FOUND",
+    "ParentFragment": "NOT_FOUND",
+    "term_pinyin_ngrams": "NOT_FOUND",
+    "substringRecall": "NOT_FOUND",
+    "phoneticGroups": "NOT_FOUND",
+    "phraseCandidates": "NOT_FOUND",
+    "parallelLegacyShadowRecall": "NOT_FOUND"
+  },
+  "freezeBlockers": [],
+  "packDir": "docs/framework_snapshots/FW_V4_FREEZE_2026_08_03"
+}

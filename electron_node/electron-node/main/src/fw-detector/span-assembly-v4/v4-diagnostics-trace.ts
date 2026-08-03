@@ -9,7 +9,6 @@ import type {
   RecallHitPreFilterTrace,
   RecallHitTrace,
   SentenceCandidateTrace,
-  SkippedRecallWindowTrace,
   SpanAssemblyV4TraceDiagnostics,
   TruncatedWindowTrace,
 } from './v4-diagnostics-types';
@@ -19,7 +18,6 @@ type TraceBucket =
   | 'coarseSpans'
   | 'boundaryWindows'
   | 'truncatedWindows'
-  | 'skippedRecallWindows'
   | 'recallHitsPreFilter'
   | 'recallHits'
   | 'poolBeforeDrop'
@@ -32,7 +30,6 @@ const BUCKET_LIMITS: Record<TraceBucket, number> = {
   coarseSpans: V4_TRACE_LIMITS.maxTraceCoarseSpans,
   boundaryWindows: V4_TRACE_LIMITS.maxTraceWindows,
   truncatedWindows: V4_TRACE_LIMITS.maxTraceWindows,
-  skippedRecallWindows: V4_TRACE_LIMITS.maxTraceWindows,
   recallHitsPreFilter: V4_TRACE_LIMITS.maxTraceRecallHits,
   recallHits: V4_TRACE_LIMITS.maxTraceRecallHits,
   poolBeforeDrop: V4_TRACE_LIMITS.maxTraceCandidates,
@@ -82,10 +79,6 @@ export class V4TraceCollector {
 
   pushTruncatedWindow(window: TruncatedWindowTrace): void {
     this.pushItem('truncatedWindows', window);
-  }
-
-  pushSkippedRecallWindow(window: SkippedRecallWindowTrace): void {
-    this.pushItem('skippedRecallWindows', window);
   }
 
   pushRecallHitPreFilter(hit: RecallHitPreFilterTrace): void {
@@ -139,6 +132,27 @@ export class V4TraceCollector {
       }
     }
     this.combinations.push(combination);
+  }
+
+  /** Phase 2 Path Enumeration OPTIONAL fact-only payloads. */
+  pushPathEnumerationFacts(
+    facts: NonNullable<SpanAssemblyV4TraceDiagnostics['pathEnumerationFacts']>
+  ): void {
+    this.data.pathEnumerationFacts = facts;
+  }
+
+  /** Phase 2 Path Enumeration OPTIONAL cap events. */
+  pushPathCapEvents(
+    events: NonNullable<SpanAssemblyV4TraceDiagnostics['pathCapEvents']>
+  ): void {
+    this.data.pathCapEvents = events;
+  }
+
+  /** Phase 2 Path Enumeration OPTIONAL per-path facts. */
+  pushPathFacts(
+    facts: NonNullable<SpanAssemblyV4TraceDiagnostics['pathFacts']>
+  ): void {
+    this.data.pathFacts = facts;
   }
 
   toDiagnostics(): SpanAssemblyV4TraceDiagnostics {

@@ -112,7 +112,7 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
         globalWindowGeneratedCount: 0,
         blockedWindowCount: 0,
         truncatedWindowCount: 0,
-        ngramQueryCount: 0,
+        logicalWindowRecallCount: 0,
         windowCandidatePoolCount: 0,
         activeCandidateCount: 0,
         compatibilityEdgeCount: 0,
@@ -179,6 +179,7 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
         dict,
         asrSegments: ctx.asrSegments,
         acousticSlices: ctx.acousticToneSlices,
+        toneEvidenceProduction: ctx.toneEvidenceProduction,
         asrSegmentNodeBatchIndices: ctx.asrSegmentNodeBatchIndices,
         segmentTimeOffsetsSec: ctx.segmentTimeOffsetsSec,
         segmentCharOffsets: ctx.segmentCharOffsets,
@@ -275,9 +276,9 @@ export async function runFwDetectorV4Path(input: RunFwDetectorV4PathInput): Prom
           perBucketAfterLocalCap: (kenlmPool.perBucketGenerated ?? []).map((list) =>
             list.map((c) => c.text)
           ),
-          mergedAfterDedupBeforeCap: (kenlmPool.mergedBeforeCap ?? []).map((c) => c.text),
+          mergedAfterDedupBeforeCap: (kenlmPool.uniqueBeforeCap ?? []).map((c) => c.text),
           finalAfterCap16: (kenlmPool.combinations ?? []).map((c) => c.text),
-          dedupReplacedCount: kenlmPool.dedupReplacedCount ?? 0,
+          dedupReplacedCount: kenlmPool.crossPathMerge?.crossPathDuplicateCount ?? 0,
           maxSentenceCandidates: config.maxSentenceCandidates,
         }
       : undefined;

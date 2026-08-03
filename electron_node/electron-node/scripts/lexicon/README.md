@@ -67,7 +67,7 @@ npm run lexicon:rebuild-native
 | `lexicon:validate` | seed 校验 |
 | `lexicon:build:v2-shadow` | 生成 `node_runtime/lexicon/v2_shadow` |
 | `lexicon:prepare:v3-runtime` | v2_shadow → `node_runtime/lexicon/v3` |
-| `lexicon:gate:v3-runtime` | FW v3 runtime gate（仅 `lexicon-v3-five-table-v2`） |
+| `lexicon:gate:v3-runtime` | FW v3 runtime gate（仅 `lexicon-v3-runtime-v3`；Parent Fragment Full Retirement，无 `term_pinyin_ngrams`） |
 | `lexicon:rebuild-native` | better-sqlite3 Electron ABI 对齐（**非 DB rebuild**） |
 | `lexicon:rebuild-sqlite` | 同上（alias） |
 | `lexicon:patch-merge` | 离线 seed 合并（≠ PatchV3） |

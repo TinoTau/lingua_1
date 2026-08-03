@@ -5,7 +5,7 @@
 | Document | Implementation Contract |
 | Version | **1.0.0** |
 | Date | 2026-07-26 |
-| Status | **APPROVED FOR IMPLEMENTATION** |
+| Status | **APPROVED FOR IMPLEMENTATION** · Architecture peer **FROZEN FOR IMPLEMENTATION** ([Architecture V1.0.0](./FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md)) |
 | Scope | Lattice V1 Phase 1–6 development constraints |
 | Not | Final runtime acceptance freeze (that is Phase 6) |
 | Plan | `FW_Repair_V4_Multi_Path_Lexical_Lattice_V1_Development_Plan_2026_07_26.md` |
@@ -19,6 +19,14 @@
 | Version | Date | Change | Author |
 |---------|------|--------|--------|
 | 1.0.0 | 2026-07-26 | Initial APPROVED FOR IMPLEMENTATION: DTOs, fallback injection, path prune, coarse authority, Trace | Phase 0.5 |
+| 1.0.1 | 2026-07-27 | Phase boundary clarification: Phase 2 is allowed to implement and acceptance-test Path modules (harness/offline only). Production ownership cutover from LTR to SegmentationPath must be atomic with the first Path-aware downstream consumer introduced in Phase 3; before that atomic switch, lattice Path modules are production-ready but MUST NOT become the invoked production fine-span implementation. No shadow execution / feature flag / dual chain in between. | Phase 2 Pre-Dev + Dev Plan |
+| 1.0.2 | 2026-07-27 | **Lattice Recall length 1–5 (controlled single-char).** (1) Lattice Recall may query length=1 with **base-only** routing (`base_lexicon`); exact-first; no domain / fuzzy / alias / homophone_variant; Candidate cap=1; `source=base_term`; `repair_target=false`; does not vote. (2) Length 2–5 Recall behavior unchanged (base+domain, existing TopK, fuzzy min=2, parent fragment min=2). (3) LTR Window remains 2–5; legacy `local-span-recall` MIN_SYLLABLES=2 unchanged. (4) Lattice Hard-block: adjacency to sentence-boundary punctuation is **allowed**; block only when the window **slice contains** a sentence boundary or other existing gap/punct rules fire. Does **not** authorize formal single-char lexicon import (Batch 2+) or Production Lattice cutover. | Connectivity Batch 1 |
+| 1.0.3 | 2026-07-28 | **LexiconRuntimeV2 base length-1 gate alignment (Batch 1.0C).** (1) `lookupBaseByPinyinKey` / `lookupBaseByPinyinAndToneKey` allow `termLength` **1–5** via explicit `lookupTier(..., minTermLength=1)`. (2) Idiom via `lookupTier` keeps `minTermLength=2`. (3) Domain multi/tone lookups keep Runtime gate `termLength < 2 → []` (not opened to length=1). (4) Fuzzy builder / alias expansion / parent fragment remain min=2; not broadened by this CR. (5) Does **not** change LIMIT=8 ambiguity policy, tone-unsupported fallback, Hard-block, Vote/Edge/Path algorithms, or authorize Batch 2 lexicon write / Production cutover. | Connectivity Batch 1.0C |
+| 1.0.4 | 2026-07-28 | **Length-1 ambiguity truncation-aware uniqueness (Batch 1.1A).** (1) Runtime SQL `LIMIT` is a bounded fetch only; `returnedCount == requestedLimit` means the result **may be truncated**. (2) Under truncation risk, a residual eligible singleton **must not** be treated as semantic unique. (3) True unique holds only when the fetch is not full-LIMIT (complete visible page for that key under the requested bound) and eligibility yields exactly one. (4) Does **not** authorize independent surface-exact probe / rank9 reachability (Batch 1.1B). (5) Does **not** change tone-unsupported policy, Hard-block ellipsis, Candidate cap=1, or length 2–5 Recall. | Connectivity Batch 1.1A |
+| 1.0.5 | 2026-07-28 | **Documentation-only clarification (Batch 1.1A Stage 5 Gate).** Does **not** change runtime behavior. (1) `returnedCount < requestedLimit` is evidence that the **bounded query under the current SQL predicate** was not truncated — not a `COUNT(*)` proof over other predicates. (2) Current base length-1 SQL predicate is `pinyin_key[=tone] AND enabled=1 AND length(word)=?`; **`is_alias` is not excluded in SQL** and therefore **consumes LIMIT slots**; alias eligibility filtering occurs afterward in Recall (`filterEligibleBaseSingleChar`). (3) If alias filtering ownership or the SQL predicate changes, the length-1 truncation-aware uniqueness contract **MUST be re-audited**. (4) Exact-limit residual-singleton reject remains an intentional conservative policy (宁可漏修，不可误修). (5) Runtime does not own uniqueness decisions. (6) Still does **not** authorize independent surface-exact probe, tone-unsupported policy change, or Hard-block ellipsis work. | Connectivity Batch 1.1A Gate |
+| 1.0.6 | 2026-07-28 | **Length-1 independent surface-exact reachability (Batch 1.1B).** Does **not** change Batch 1.1A truncation / exact-limit / LIMIT=8 ambiguity fetch. (1) Ambiguity path runs first; if it already yields a legal Candidate, that Candidate is kept (no surface overwrite). (2) Only when ambiguity yields **no** Candidate may Recall call Runtime mechanical exact-surface lookup. (3) Runtime APIs `lookupBaseByExactSurfaceAndPinyin` / `lookupBaseByExactSurfacePinyinAndTone` return rows only (fixed internal `LIMIT 2`); they do **not** decide uniqueness/Candidate. (4) Exact SQL is a point lookup on existing `PRIMARY KEY (pinyin_key, word)` autoindex — **no new SQLite indexes**. (5) Recall reuses `filterEligibleBaseSingleChar` + `scoreLength1BaseHit`; Candidate kind remains `exact_base`. (6) Explicit surface identity verification may accept under truncation risk when a unique legal identity row exists — this is **not** inferred uniqueness from the ambiguity page. (7) Does **not** change tone-unsupported policy, Hard-block, Edge/Path/Vote, or length 2–5 Recall. | Connectivity Batch 1.1B |
+| 1.0.7 | 2026-07-28 | **Documentation-only clarification (Batch 1.1B Stage 5 Final Gate).** Does **not** change runtime behavior. (1) Batch 1.1B Surface Exact Reachability is **CLOSED** after Stages 1–5 PASS. (2) `lookupTier` cache keys always embed the literal segment `:plain:` even for tone exact tiers — this is **naming debt / behavior-safe**; tone exact keys remain distinct via `base:exact_surface:tone:${toneKey}:${surface}:…` and must not be “fixed” by opportunistic rename in later batches without a dedicated cache-contract audit. (3) Deferred unchanged: tone-unsupported fallback → Batch 1.1C; HB ellipsis → Batch 1.1D; Unicode NFC/NFKC → future batch. (4) Still does **not** authorize Batch 2 lexicon write, Production Lattice cutover, LIMIT enlarge, or new SQLite indexes. | Connectivity Batch 1.1B Gate |
+| 1.0.8 | 2026-07-28 | **Mandatory Tone Recall (Batch 1.1C) — Fail Closed.** (1) Tone is a **mandatory** precondition for this Lattice Recall chain: only complete, legal, Runtime-executable Acoustic Tone may produce Recall Candidates. (2) Single SSOT readiness resolver `resolveToneRecallReadiness` (order: `caller_disabled` → `runtime_unsupported` → `no_pattern` → `invalid_pattern` → `ready`). (3) Non-ready → Empty Candidate set; **Plain SQL call count from Tone Recall production path = 0**. (4) Tone underfill / Tone SQL empty / Tone exact miss → return existing Tone Candidates only or Empty — **no Plain fill / Plain-only / Plain exact**. (5) `ToneLookupStage` production assignment is **`tone_exact` only**; `plain_fallback` / `plain_only_no_pattern` deleted from Recall production. (6) LIMIT=8 / LIMIT=2 remain **Tone-query only**. (7) Does **not** change 1.1A truncation, 1.1B exact identity semantics, Runtime rows-only ownership, Candidate Kind, SQLite schema/indexes, Edge/Path/Vote/Assembly/KenLM business algorithms. (8) Does **not** enter Batch 1.1D / Batch 2. | Connectivity Batch 1.1C |
 
 ---
 
@@ -130,7 +138,25 @@ interface LexicalEdge {
 }
 ```
 
-Invariant: one Edge per `(syllableStart, syllableEnd)`; candidate merge key prefers `termId`.
+Invariant: one Edge per `(syllableStart, syllableEnd)`; candidate merge key prefers `termId`, else `candidateId`.
+
+**Evidence SSOT (Phase 1 · B2 — CURRENT):**
+
+```text
+recallEvidence = OR over ALL input Candidates on the boundary
+OR aggregation runs BEFORE identity first-wins keep
+Evidence does not participate in Candidate identity
+hasFuzzy ← recallCandidateKind (isFuzzyRecallCandidateKind); not surface string inference
+```
+
+**Recall traversal diagnostics (Phase 1 · B1 — CURRENT):**
+
+```text
+logicalWindowRecallCount = windows actually recalled (= input recallable length)
+physicalSqlStatementCount = true SQLite statement delta (independent)
+FORBIDDEN: maxSqlPerUtterance attempt gate; ngramQueryCount as live metric;
+           skip/truncate legal recallable Windows for resource policy
+```
 
 ### 4.3 SegmentationPath (Fine Span SSOT after Phase 2)
 
@@ -431,6 +457,8 @@ No full lexicon dumps in logs.
 | Phase | Allowed | Forbidden |
 |-------|---------|-----------|
 | 1 | windows, recall dedupe, LexicalEdge via harness | production orchestrator cutover; Vote; Assembly; KenLM; dual chain |
+
+**Phase 1 status (2026-07-27):** **CLOSED** — see Phase 1 Final Closure Report. Next gate: Phase 2 Pre-Development Audit only.
 | 2 | Path enum; remove LTR production ownership | feature flag dual chain |
 | 3 | Path Vote/Assembly; Compatibility KEEP/DELETE | cross-Path edges |
 | 4 | global ≤16; KenLM metadata bind | raising KenLM input >16 |

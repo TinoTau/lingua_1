@@ -306,7 +306,7 @@ for (const forbidden of ['runFwSentenceRerankPipeline', 'resolvePinyinImeV2Spans
 if (!readmeSrc.includes('runFwDetectorV4Path')) {
   fail('fw-detector/README.md must document runFwDetectorV4Path mainline');
 }
-for (const required of ['recallTopKForWindows', 'recallSpanTopKV3']) {
+for (const required of ['recallTopKForWindows', 'recallSpanTopKV2']) {
   if (!readmeSrc.includes(required)) {
     fail(`fw-detector/README.md must document V4 recall mainline: ${required}`);
   }

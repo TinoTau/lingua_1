@@ -1,6 +1,6 @@
 # Domain Recall — 行为合同
 
-**状态：** CURRENT（2026-07-20 · Recall-only role）  
+**状态：** CURRENT（2026-07-27 · Recall-only role · B1/B2 SSOT sync）  
 **Runtime Domain Presence Vote:** **ACCEPTED AND FROZEN** — cite [`Runtime_SSOT_Contract_Freeze.md`](../../tone-v2/Runtime_SSOT_Contract_Freeze.md) / [`Runtime_Domain_Presence_Vote_Final_Acceptance_Report.md`](../../tone-v2/Runtime_Domain_Presence_Vote_Final_Acceptance_Report.md)  
 **代码根：** `electron_node/electron-node/main/src/lexicon-v2/` · `fw-detector/span-assembly-v4/recall-topk-for-windows.ts`
 
@@ -93,16 +93,56 @@ Recall 宽进：允许全部候选进入后续过滤；Apply 侧保持窄出（`
 
 ---
 
-## 6. Recall TopK
+## 6. Recall TopK and Window traversal SSOT
 
 | 参数 | 值 |
 |------|-----|
 | `exactTopK` | 2 |
-| `maxGlobalWindowCount` | 120 |
-| `maxSqlPerUtterance` | 150 |
+| `maxGlobalWindowCount` | 120（LTR / 生产窗生成上限；Lattice harness 全句 1..5 不受此 attempt 闸门约束） |
 | per-span limit | 1 span=8, 2 span=4, 3+ span=2 |
 
 `maxSentenceCandidates = 16` 属于 Assembly / KenLM 全局帽；权威见 Runtime SSOT。
+
+### 6.1 Recall Core 完整性（B1 · 现行）
+
+```text
+Recall Core MUST fully traverse every legal recallable Window in the input list.
+Resource cost is recorded in diagnostics only.
+Performance optimization MUST NOT delete, skip, or truncate legal Windows.
+```
+
+| 诊断字段 | 语义 |
+|----------|------|
+| `logicalWindowRecallCount` | 本调用实际遍历的逻辑 Window 数（= 输入 recallable 窗数） |
+| `physicalSqlStatementCount` | 真实 SQLite statement 执行增量（与逻辑窗计数独立） |
+
+**已删除 / 禁止作为现行设计：**
+
+- `maxSqlPerUtterance` Window-attempt gate（含历史值 150）
+- `ngramQueryCount`（已废弃；不得作现行指标）
+- `sql_budget_exhausted` / `SkippedRecallWindow` / 因预算跳过剩余 recallable Window
+- 通过「提高 Recall budget」解决完整性
+
+### 6.2 LexicalEdge Evidence（B2 · 现行 · Edge Builder）
+
+Recall 产出的 `WindowCandidate` 进入 `buildLexicalEdges` 时：
+
+```text
+Edge Evidence = OR over all input Candidates on the same boundary
+Evidence aggregation happens BEFORE Candidate identity first-wins
+Candidate identity: termId preferred; else candidateId
+Evidence does NOT participate in Candidate identity
+```
+
+| Evidence flag | 来源 |
+|---------------|------|
+| `hasExact` / `hasParent` | `hitKind` |
+| `hasToneExact` / `hasToneRelaxed` | `toneLookupStage` |
+| `hasFuzzy` | `recallCandidateKind` via `isFuzzyRecallCandidateKind`（既有分类；**非** surface 字符串推断；**非** Edge 侧新建 fuzzy 分类） |
+
+透传：`WindowCandidate.recallCandidateKind` ← Recall Hit（薄透传）。
+
+权威实现：`span-assembly-v4/build-lexical-edges.ts` · Code Verification PASS 2026-07-27。
 
 ---
 
@@ -167,4 +207,4 @@ npx jest --testPathPattern="resolve-recall|freeze-contract|recall-topk"
 
 ---
 
-*Recall-only role 2026-07-20*
+*Recall-only role · B1/B2 residual sync 2026-07-27*

@@ -1,5 +1,5 @@
 /**
- * P5 Blocking Repair — topicShift contract continuity + Formal pool + Tone commit rebind.
+ * P5 Blocking Repair — topicShift contract continuity + PathFineSpan pool + Tone fine-span rebind.
  */
 
 import { describe, expect, it } from '@jest/globals';
@@ -9,10 +9,10 @@ import {
 } from '../../lexicon-v2/lexicon-session-intent';
 import {
   buildFineSpanCandidatePool,
-  coarseSpansAsFormalFineSpansForTests,
+  coarseSpansAsPathFineSpansForTests,
 } from './assemble-domain-aware-span-sets';
-import { rebindToneAfterFormalCommit } from './tone-commit-rebind';
-import type { FormalFineSpan } from './ltr-fine-span-generator';
+import { rebindToneForFineSpan } from './tone-fine-span-rebind';
+import type { PathFineSpan } from './path-fine-span-types';
 import type { WindowCandidate } from './v4-types';
 import type { CoarseSpan } from '../span-assembly-shared/types';
 
@@ -48,24 +48,11 @@ describe('P5 topicShift contract continuity', () => {
       effectiveFromTurn: 1,
     });
     expect(intent.topicShift).toBe(false);
-  });
-
-  it('missing topicShift normalizes to false; shouldSwitch does not impersonate', () => {
-    const intent = buildLexiconSessionIntentFromDecision({
-      summary: 'x',
-      topicKeywords: [],
-      primaryDomain: 'travel',
-      secondaryDomains: [],
-      confidence: 0.9,
-      shouldSwitch: true,
-      reason: [],
-      effectiveFromTurn: 1,
-    });
-    expect(intent.topicShift).toBe(false);
+    expect(cloneLexiconSessionIntent(intent).topicShift).toBe(false);
   });
 });
 
-describe('P5 Formal pool API hardening', () => {
+describe('P5 Formal pool API (PathFineSpan)', () => {
   const coarse: CoarseSpan[] = [
     {
       id: 'c0',
@@ -79,21 +66,21 @@ describe('P5 Formal pool API hardening', () => {
     },
   ];
 
-  it('missing FormalFineSpan[] hard-fails (no coarse silent fallback)', () => {
-    expect(() => buildFineSpanCandidatePool([], coarse, [])).toThrow(/FORMAL_POOL/);
+  it('missing PathFineSpan[] hard-fails (no coarse silent fallback)', () => {
+    expect(() => buildFineSpanCandidatePool([], coarse, [])).toThrow(/PATH_FINE_SPAN_POOL/);
   });
 
-  it('accepts FormalFineSpan pool', () => {
-    const formal = coarseSpansAsFormalFineSpansForTests(coarse);
+  it('accepts PathFineSpan pool', () => {
+    const formal = coarseSpansAsPathFineSpansForTests(coarse);
     const pool = buildFineSpanCandidatePool([], coarse, formal);
     expect(pool).toHaveLength(1);
     expect(pool[0]?.fineSpanId).toMatch(/^fine:/);
   });
 });
 
-describe('P5 Tone commit rebind', () => {
-  it('final tone range equals Formal FineSpan range; recomputedAfterCommit=true', () => {
-    const span: FormalFineSpan = {
+describe('P5 Tone fine-span rebind', () => {
+  it('final tone range equals PathFineSpan range; recomputedAfterRebind=true', () => {
+    const span: PathFineSpan = {
       spanId: 'fine:0:2',
       rawStart: 0,
       rawEnd: 2,
@@ -131,14 +118,14 @@ describe('P5 Tone commit rebind', () => {
     span.candidates[0]!.rawStart = loserOptionRaw.rawStart;
     span.candidates[0]!.rawEnd = loserOptionRaw.rawEnd;
 
-    const trace = rebindToneAfterFormalCommit(span, undefined, [], false);
-    expect(trace.recomputedAfterCommit).toBe(true);
-    expect(trace.formalRawStart).toBe(0);
-    expect(trace.formalRawEnd).toBe(2);
+    const trace = rebindToneForFineSpan(span, undefined, [], false);
+    expect(trace.recomputedAfterRebind).toBe(true);
+    expect(trace.pathRawStart).toBe(0);
+    expect(trace.pathRawEnd).toBe(2);
     expect(trace.finalToneRawStart).toBe(0);
     expect(trace.finalToneRawEnd).toBe(2);
     expect(span.candidates[0]!.rawStart).toBe(0);
     expect(span.candidates[0]!.rawEnd).toBe(2);
-    expect(span.toneCommitTrace?.recomputedAfterCommit).toBe(true);
+    expect(span.toneRebindTrace?.recomputedAfterRebind).toBe(true);
   });
 });

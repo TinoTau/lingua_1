@@ -1,8 +1,11 @@
 # Diagnostics — 冻结合约 V1.0.2
 
-**状态：** FROZEN · 2026-06-25  
+**状态：** FROZEN · 2026-06-25 · Path-aware Trace **pointer 2026-07-26**  
 **代码：** `types.ts` · `v4-diagnostics-*` · `fw-detector-v4-path.ts` · `recall-topk-for-windows.ts`  
-**原则：** 可观测层 only — **禁止**用 diagnostics 改变 Recall/Assembly/KenLM/Apply 行为
+**原则：** 可观测层 only — **禁止**用 diagnostics 改变 Recall/Path/Assembly/KenLM/Apply 行为  
+**Path-aware Trace SSOT：** [`FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md`](../../tone-v2/FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md) §16–§17
+
+必选 Path Trace 字段（归档完整；控制台可截断）见 Lattice Architecture：`boundaryKeys`、`prunedPathCount`、`finalPathId` / `finalBoundaryKey`、per-Path vote/assembly/KenLM 绑定等。
 
 ---
 
@@ -29,6 +32,15 @@ assemblySelected=少冰  ≠  fw_applied>0  ≠  finalText含少冰
 ### Assembly（`spanAssemblyV4`）
 
 `domainCandidateCount` · `baseCandidateCount` · `sameDomainCandidateCount` · `mainDomainAwareSpanSetsTotal` · `assemblySelectionTraces` · Context Prior min/max multiplier
+
+### Recall traversal diagnostics（B1 · 现行）
+
+| 字段 | 语义 | 可否 gate Recall？ |
+|------|------|-------------------|
+| `logicalWindowRecallCount` | 实际遍历的逻辑 Window 数 | **否** — 仅观测 |
+| `physicalSqlStatementCount` | 真实 SQLite statement 增量 | **否** — 仅观测 |
+
+**废弃（不得作现行指标）：** `ngramQueryCount` · `maxSqlPerUtterance` attempt gate · `sql_budget_exhausted`
 
 ### KenLM（`sentenceRerank`）
 

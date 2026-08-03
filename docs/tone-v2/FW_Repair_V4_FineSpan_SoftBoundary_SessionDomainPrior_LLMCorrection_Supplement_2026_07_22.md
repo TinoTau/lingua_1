@@ -1,3 +1,8 @@
+﻿> **HISTORICAL / SUPERSEDED BY MULTI-PATH LEXICAL LATTICE / NOT RUNTIME AUTHORITY** (Step 6, 2026-07-30). SoftBoundary LTR Fine Span is deleted from runtime; see Runtime SSOT V1.2 + Lattice Architecture V1.0.0.
+> **HISTORICAL / SUPERSEDED (Fine Span architecture)** — 2026-07-26  
+> LTR-only / unique FormalFineSpan / cursor-commit / windows 2..5-as-SSOT claims in this document are **not** current Architecture SSOT.  
+> Current authority: `FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md`  
+> Original text retained as historical evidence. Do not treat as active freeze.
 # FW Repair V4
 # FineSpan Soft Boundary + Session Domain Prior + LLM Correction
 ## Supplement Review（缺口与契约补充）
@@ -718,3 +723,4 @@ Scheduler 领域推理
 ```
 
 均视为 **架构不合规**，不得进入冻结版本。
+

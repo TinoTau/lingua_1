@@ -32,7 +32,7 @@ Shadow（仅 diagnostics）：`Emit → Graph → Beam`（不进入 KenLM/Apply�
 | 粗边界 | `extractRawCoarseBoundaries`（`pinyin-ime-v2/`） |
 | 共享组装 | `span-assembly-shared/`（Graph / Path / Beam 基础模块） |
 | V4 编排 | `span-assembly-v4/span-assembly-v4-orchestrator.ts` |
-| Recall | `recallTopKForWindows` → `recallSpanTopKV3`（内部复用 `recallSpanTopKV2` 作 exact SQL helper） |
+| Recall | `recallTopKForWindows` → `recallSpanTopKV2`（Formal Term Exact Recall only；Parent Fragment Full Retirement Phase 2/3） |
 | KenLM | `fw-detector/kenlm/run-fw-sentence-rerank-from-prefilled.ts` |
 | Apply | `applyFwSpanReplacements`（`apply-span-replacements.ts`） |
 | NMT 输入 | `ctx.segmentForJobResult`（`resolveBusinessAsrText`） |
@@ -53,10 +53,12 @@ Shadow（仅 diagnostics）：`Emit → Graph → Beam`（不进入 KenLM/Apply�
 
 ### 3.1 Recall（Lexicon Runtime V2 · Window SQL）
 
-V4 窗口 Recall：`span-assembly-v4/recall-topk-for-windows.ts` → `lexicon-v2/recall-span-topkv3.ts`。
+V4 窗口 Recall：`span-assembly-v4/recall-topk-for-windows.ts` → `lexicon-v2/recall-span-topk-v2.ts`。
 
-- **Exact 层：** `recallSpanTopKV3` 内部调用 `recallSpanTopKV2` + tone sort（`recallSpanTopKV2` 仅作 exact SQL helper，非主链 Recall）
-- **Parent fragment 层：** `lookupParentFragments` + tone penalty
+- **Exact 层（唯一 Recall 层）：** `recallSpanTopKV2` + tone sort — Formal Term Exact Recall only
+- **Parent fragment 层：** 已完全退役（Phase 2/3 Full Retirement）。`term_pinyin_ngrams` 表、
+  `lookupParentFragmentsByNgramKey`、`recallSpanTopKV3` 包装层均已从生产代码删除；
+  `SpanAssemblyV4Metrics.parentFragmentHitCount` / `parentTermVoteCount` 仅作 JobResult 契约稳定性保留字段，恒为 0。
 - **非主链：** `lexicon/local-span-recall.ts` 仅 legacy 回滚链（`legacy/fw-detector/`）
 
 Bundle：`node_runtime/lexicon/v3`（加载器 `LexiconRuntimeV2`）。

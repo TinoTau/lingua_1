@@ -4,11 +4,12 @@
  */
 import fs from 'fs';
 import path from 'path';
+import { createRequire } from 'module';
 import {
   RUNTIME_MANIFEST,
   RUNTIME_SQLITE,
   RUNTIME_STATS,
-  V3_SCHEMA_VERSION_V2,
+  V3_SCHEMA_VERSION_V3,
   assertTableThresholds,
   normalizeChecksum,
   sha256File,
@@ -20,6 +21,7 @@ import {
   readDomainAvailabilityFromSqlitePath,
 } from './lib/manifest-domain-stats.cjs';
 
+const require = createRequire(import.meta.url);
 const bundleDir = process.env.LEXICON_V3_BUNDLE_DIR?.trim() || v3RuntimeDir();
 const files = v3BundleFiles(bundleDir);
 const failures = [];
@@ -56,9 +58,9 @@ if (!fs.existsSync(files.statsPath)) {
 
 if (failures.length === 0) {
   const manifest = JSON.parse(fs.readFileSync(files.manifestPath, 'utf-8'));
-  if (manifest.schemaVersion !== V3_SCHEMA_VERSION_V2) {
+  if (manifest.schemaVersion !== V3_SCHEMA_VERSION_V3) {
     fail(
-      `schemaVersion must be ${V3_SCHEMA_VERSION_V2}, got ${manifest.schemaVersion ?? 'unknown'}`
+      `schemaVersion must be ${V3_SCHEMA_VERSION_V3}, got ${manifest.schemaVersion ?? 'unknown'}`
     );
   }
   if (!manifest.checksum) {
@@ -81,9 +83,6 @@ if (failures.length === 0) {
   if (stats.baseCount !== t.base) {
     fail(`stats.baseCount ${stats.baseCount} != manifest.tables.base ${t.base}`);
   }
-  if (stats.ngramsCount != null && stats.ngramsCount !== t.ngrams) {
-    fail(`stats.ngramsCount ${stats.ngramsCount} != manifest.tables.ngrams ${t.ngrams}`);
-  }
 
   if (!stats.domainAvailability || typeof stats.domainAvailability !== 'object') {
     fail('stats.domainAvailability missing (BG-02)');
@@ -98,6 +97,19 @@ if (failures.length === 0) {
   }
   if (!domainAvailabilityEqual(stats.domainAvailability, sqliteAvailability)) {
     fail('stats.domainAvailability != sqlite term_domain_tags (BG-03)');
+  }
+
+  // Parent Fragment Full Retirement (Phase 2/3): term_pinyin_ngrams must not exist.
+  const gateDb = require('better-sqlite3')(files.sqlitePath, { readonly: true });
+  try {
+    const ngramTable = gateDb
+      .prepare(`SELECT COUNT(*) AS c FROM sqlite_master WHERE type='table' AND name='term_pinyin_ngrams'`)
+      .get();
+    if (ngramTable.c > 0) {
+      fail('term_pinyin_ngrams table must not exist (Parent Fragment Full Retirement)');
+    }
+  } finally {
+    gateDb.close();
   }
 }
 

@@ -32,11 +32,13 @@ describe('tone-aware recall ranking', () => {
     expect(ranked[1]!.candidateScore).toBeCloseTo(1.2 * TONE_MISMATCH_PENALTY);
   });
 
-  it('ranks tone_exact stage before plain_fallback at equal score', () => {
+  it('ranks tone_exact stage ahead of unstaged hits at equal score', () => {
     const hits = [
       {
         ...mkHit('烧饼', 'shao1|bing3', 0.7, 1.2),
-        toneLookupStage: 'plain_fallback' as const,
+        toneReason: 'match' as const,
+        toneCompatible: true,
+        tonePenalty: 1.0,
       },
       {
         ...mkHit('少冰', 'shao3|bing1', 0.65, 1.2),

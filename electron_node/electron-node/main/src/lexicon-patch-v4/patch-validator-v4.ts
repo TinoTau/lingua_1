@@ -1,3 +1,6 @@
+import fs from 'fs';
+import path from 'path';
+import { createRequire } from 'module';
 import type { LexiconPatchV4, PatchOperationV4, PatchValidationErrorV4 } from './patch-types-v4';
 import {
   EXPANSION_DENY_LIST,
@@ -8,6 +11,39 @@ import { assertRegistryDomain } from '../lexicon-v2/profile-registry';
 import { readBundleVersion } from '../lexicon-patch-v3/bundle-io';
 import { computePatchHashV4, verifyPatchHashV4 } from './patch-hash-v4';
 import { resolvePinyinKeyForOp } from './term-ref-v4';
+import {
+  applyAtomicityMode,
+  buildAtomicSurfaceSet,
+  resolveAtomicityMode,
+  validateAtomicity,
+  type AtomicityMode,
+} from '../lexicon-atomicity/atomicity-validator';
+
+const nodeRequire = createRequire(__filename);
+
+export type PatchAtomicityOptionsV4 = {
+  atomicSurfaces?: Set<string>;
+  atomicityMode?: AtomicityMode;
+};
+
+function loadAtomicSurfacesNearManifest(manifestPath: string): Set<string> {
+  try {
+    const sqlitePath = path.join(path.dirname(manifestPath), 'lexicon.sqlite');
+    if (!fs.existsSync(sqlitePath)) return new Set();
+    const Database = nodeRequire('better-sqlite3');
+    const db = new Database(sqlitePath, { readonly: true });
+    const rows = db.prepare(`SELECT word FROM term WHERE enabled = 1`).all() as Array<{ word: string }>;
+    db.close();
+    return buildAtomicSurfaceSet(rows.map((r) => r.word));
+  } catch {
+    return new Set();
+  }
+}
+
+/** Ops that introduce a new formal surface — must pass Unified Atomicity Validator. */
+function opIntroducesFormalSurface(op: PatchOperationV4): boolean {
+  return op.op === 'addTerm';
+}
 
 const VALID_OPS = new Set<PatchOperationV4['op']>([
   'addTerm',
@@ -58,7 +94,7 @@ function validateWeightKeys(
   return null;
 }
 
-function validateGranularity(op: PatchOperationV4, index: number): PatchValidationErrorV4 | null {
+function validateLengthAndDeny(op: PatchOperationV4, index: number): PatchValidationErrorV4 | null {
   const word = op.word?.trim();
   if (!word) {
     return { code: 'missing_word', message: `operations[${index}]: word required` };
@@ -72,12 +108,53 @@ function validateGranularity(op: PatchOperationV4, index: number): PatchValidati
   return null;
 }
 
-function validateOperation(op: PatchOperationV4, index: number): PatchValidationErrorV4 | null {
+function validateAtomicityForOp(
+  op: PatchOperationV4,
+  index: number,
+  atomicSurfaces: Set<string>,
+  mode: AtomicityMode
+): PatchValidationErrorV4 | null {
+  if (!opIntroducesFormalSurface(op)) return null;
+  const word = op.word?.trim();
+  if (!word) return null;
+  const draft = {
+    termId: op.term_id,
+    surface: word,
+    normalizedSurface: word,
+    pinyin: resolvePinyinKeyForOp(op) || undefined,
+    source: 'patch-v4',
+    domains: op.domain_tags || [],
+    termType: (op as { term_type?: string; termType?: string }).term_type ||
+      (op as { termType?: string }).termType,
+    exceptionReason:
+      (op as { exception_reason?: string; exceptionReason?: string }).exception_reason ||
+      (op as { exceptionReason?: string }).exceptionReason,
+    sourceLabel: 'patch-v4',
+  };
+  const result = validateAtomicity(draft, { atomicSurfaces, mode });
+  const gate = applyAtomicityMode(result, mode);
+  if (gate.blocked) {
+    return {
+      code: 'atomicity_rejected',
+      message: `operations[${index}]: atomicity ${result.decision}/${result.reasonCode} for ${word}${
+        result.segments?.length ? ` segments=[${result.segments.join('+')}]` : ''
+      }`,
+    };
+  }
+  return null;
+}
+
+function validateOperation(
+  op: PatchOperationV4,
+  index: number,
+  atomicSurfaces: Set<string>,
+  mode: AtomicityMode
+): PatchValidationErrorV4 | null {
   if (!VALID_OPS.has(op.op)) {
     return { code: 'invalid_op', message: `operations[${index}]: unknown op ${op.op}` };
   }
 
-  const gran = validateGranularity(op, index);
+  const gran = validateLengthAndDeny(op, index);
   if (gran) {
     return gran;
   }
@@ -98,7 +175,7 @@ function validateOperation(op: PatchOperationV4, index: number): PatchValidation
       if (op.prior_score !== undefined && !(op.prior_score > 0)) {
         return { code: 'invalid_prior', message: `operations[${index}]: prior_score must be > 0` };
       }
-      return null;
+      return validateAtomicityForOp(op, index, atomicSurfaces, mode);
     }
     case 'appendDomainTags': {
       const tagErr = validateDomainTags(op.domain_tags, index);
@@ -178,7 +255,8 @@ function validateOperation(op: PatchOperationV4, index: number): PatchValidation
 
 export function validateLexiconPatchV4(
   patch: LexiconPatchV4,
-  manifestPath: string
+  manifestPath: string,
+  options?: PatchAtomicityOptionsV4
 ): PatchValidationErrorV4 | null {
   if (patch.patchSchemaVersion !== PATCH_SCHEMA_VERSION_V4) {
     return {
@@ -220,8 +298,18 @@ export function validateLexiconPatchV4(
     };
   }
 
+  // Domain-tag-only patches skip atomicity; addTerm cannot bypass Unified Validator.
+  const mode = resolveAtomicityMode(options?.atomicityMode, 'enforce');
+  const atomicSurfaces =
+    options?.atomicSurfaces ?? loadAtomicSurfacesNearManifest(manifestPath);
+  for (const op of patch.operations) {
+    if (op.op === 'addTerm' && op.word?.trim() && cjkCount(op.word) <= 3) {
+      atomicSurfaces.add(op.word.trim());
+    }
+  }
+
   for (let i = 0; i < patch.operations.length; i++) {
-    const err = validateOperation(patch.operations[i], i);
+    const err = validateOperation(patch.operations[i], i, atomicSurfaces, mode);
     if (err) {
       return err;
     }

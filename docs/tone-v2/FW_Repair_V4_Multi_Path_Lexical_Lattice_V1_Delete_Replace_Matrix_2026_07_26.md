@@ -6,7 +6,7 @@
 | Phase | **0.5** — refined for implementation |
 | Plan | `FW_Repair_V4_Multi_Path_Lexical_Lattice_V1_Development_Plan_2026_07_26.md` |
 | Contract | `FW_Repair_V4_Multi_Path_Lexical_Lattice_V1_Implementation_Contract_V1.0.0_2026_07_26.md` |
-| Status | **ACTIVE** — items remain PENDING until listed Phase completes |
+| Status | **ACTIVE** — Architecture V1.0.0 **FROZEN FOR IMPLEMENTATION** (2026-07-26); code symbols remain PENDING until listed Phase |
 
 Final disposition vocabulary (only):
 

@@ -1,11 +1,18 @@
-﻿import type { SegmentInfo } from '../../task-router/types';
+﻿/**
+ * FW Repair V4 — Span Assembly Orchestrator (Lattice Fine Span production entry).
+ *
+ * Fine Span: runLatticeFineSpanGeneration.
+ * Path-local: Tone → Vote → SameDomain Bucket → Assembly per PathFineSpanView.
+ * Cross-Path: mergeCrossPathSentenceCandidates → unique KenLM input (≤16, dedup-before-cap).
+ */
+
+import type { SegmentInfo } from '../../task-router/types';
 import { loadFwDetectorRuntimeConfig } from '../fw-config';
 import { buildWordTimeSpans, type AcousticToneSlice } from '../tone-time-align';
+import type { ToneEvidenceProductionDiagnostic } from '../../task-router/types';
 import type { LexiconRuntimeV2 } from '../../lexicon-v2/lexicon-runtime-v2';
-import { LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION } from '../../lexicon-v2/lexicon-types-v2';
-import {
-  isFuzzyPinyinRecallEnabled,
-} from '../../lexicon-v2/lexicon-fw-recall-config';
+import { LEXICON_V3_RUNTIME_V3_SCHEMA_VERSION } from '../../lexicon-v2/lexicon-types-v2';
+import { isFuzzyPinyinRecallEnabled } from '../../lexicon-v2/lexicon-fw-recall-config';
 import type { ActiveLexiconProfileSnapshot } from '../../session-runtime/types';
 import type { DomainPrior } from '../domain-context-contract';
 import type { PinyinImeV2Dict, PinyinImeV2RuntimeConfig } from '../pinyin-ime-v2/pinyin-ime-v2-types';
@@ -16,13 +23,16 @@ import type { CoarseBoundaryImportDiagnostics } from '../span-assembly-shared/co
 import type { CoarseAssemblyInternalResult, CoarseAssemblyToneDiagnostics } from '../span-assembly-shared/types';
 import { allocateDomainBucketSentenceBudget } from '../span-assembly-shared/utterance-domain-vote';
 import { runDomainAwareAssembly } from './assemble-domain-aware-span-sets';
-import { blockedFilter } from './blocked-window-filter';
+import type { DomainAwareAssemblyResult } from './domain-assembly-types';
 import { buildCandidateCompatibilityGraph, resolveCompatibilityRelations } from './candidate-compatibility-graph';
-import { runLtrFineSpanGeneration } from './ltr-fine-span-generator';
-import { recallTopKForWindows } from './recall-topk-for-windows';
-import { rebindToneAfterFormalCommit } from './tone-commit-rebind';
-import { buildFwSpansFromFormalFineSpans } from './build-fw-spans-from-coarse-assembly-v4';
-import type { SpanAssemblyV4Metrics } from './v4-types';
+import {
+  runLatticeFineSpanGeneration,
+  type LatticeFineSpanTrace,
+} from './lattice-fine-span-runtime';
+import { rebindToneForFineSpan } from './tone-fine-span-rebind';
+import { buildFwSpansFromPathFineSpans } from './build-fw-spans-from-coarse-assembly-v4';
+import type { PathFineSpan } from './path-fine-span-types';
+import type { SpanAssemblyV4Metrics, WindowCandidate } from './v4-types';
 import type { V4TraceCollector } from './v4-diagnostics-trace';
 import { createV4TraceCollector } from './v4-diagnostics-trace';
 import { resolveV4DiagnosticsConfig } from './v4-diagnostics-config';
@@ -33,13 +43,11 @@ import {
 } from './v4-diagnostics-mappers';
 import {
   buildSentenceCandidates,
-  mergeCrossBucketSentenceCandidates,
   type SentenceCombination,
 } from '../build-sentence-candidates';
-import {
-  createUtteranceRecallContext,
-  releaseUtteranceRecallContext,
-} from './utterance-recall-cache';
+import type { FwSpanDiagnostics } from '../types';
+import { mergeCrossPathSentenceCandidates } from './merge-cross-path-sentence-candidates';
+import type { CrossPathMergeTrace } from './merge-cross-path-sentence-candidates';
 
 export type SpanAssemblyV4OrchestratorInput = {
   rawText: string;
@@ -55,6 +63,7 @@ export type SpanAssemblyV4OrchestratorInput = {
   dict: PinyinImeV2Dict;
   asrSegments?: SegmentInfo[];
   acousticSlices?: AcousticToneSlice[];
+  toneEvidenceProduction?: ToneEvidenceProductionDiagnostic[];
   asrSegmentNodeBatchIndices?: number[];
   segmentTimeOffsetsSec?: number[];
   segmentCharOffsets?: number[];
@@ -69,11 +78,37 @@ export type SpanAssemblyV4OrchestratorInput = {
   enableUtteranceRecallCache?: boolean;
 };
 
+/** Path ownership wrapper — does not duplicate Vote/Bucket/Sentence DTOs. */
+export type PathAssemblyResult = {
+  pathId: string;
+  boundaryKey: string;
+  pathFineSpans: readonly PathFineSpan[];
+  assemblyResult: DomainAwareAssemblyResult;
+  fwSpans: FwSpanDiagnostics[];
+  perBucketGenerated: SentenceCombination[][];
+  sentenceCandidateCount: number;
+};
+
+export type PathAssemblyTrace = {
+  pathId: string;
+  boundaryKey: string;
+  pathFineSpanCount: number;
+  fallbackSpanCount: number;
+  toneEvidenceAvailableCount: number;
+  toneEvidenceUnavailableCount: number;
+  domainScores: Record<string, number>;
+  retainedDomains: readonly string[];
+  bucketCount: number;
+  bucketCandidateCounts: readonly number[];
+  assemblyCandidateCount: number;
+  toneRebindOk: boolean;
+};
+
 export type SpanAssemblyV4OrchestratorResult = {
   internal: CoarseAssemblyInternalResult;
   spanSets: ReturnType<typeof runDomainAwareAssembly>['spanSets'];
   bucketSpanSets: ReturnType<typeof runDomainAwareAssembly>['bucketSpanSets'];
-  fwSpans: ReturnType<typeof buildFwSpansFromFormalFineSpans>;
+  fwSpans: ReturnType<typeof buildFwSpansFromPathFineSpans>;
   boundaryImport: CoarseBoundaryImportDiagnostics;
   tone: CoarseAssemblyToneDiagnostics;
   metrics: SpanAssemblyV4Metrics;
@@ -83,9 +118,14 @@ export type SpanAssemblyV4OrchestratorResult = {
     intervalAssemblyCandidateCount: number;
     intervalRejectedOverlapCount: number;
     perBucketGenerated: SentenceCombination[][];
-    mergedBeforeCap: SentenceCombination[];
-    dedupReplacedCount: number;
+    uniqueBeforeCap: SentenceCombination[];
+    crossPathMerge: CrossPathMergeTrace;
   };
+  /** Per-path Vote → Bucket → Assembly ownership. */
+  pathAssemblyResults: readonly PathAssemblyResult[];
+  latticeTrace?: LatticeFineSpanTrace;
+  pathAssemblyTraces?: readonly PathAssemblyTrace[];
+  crossPathMergeTrace?: CrossPathMergeTrace;
   /** Diagnostics-only active candidate snapshot (no formal path use). */
   diagActiveCandidates?: Array<{
     candidateId: string;
@@ -96,6 +136,14 @@ export type SpanAssemblyV4OrchestratorResult = {
     hitKind: string;
   }>;
 };
+
+function clonePathFineSpansForTone(spans: readonly PathFineSpan[]): PathFineSpan[] {
+  return spans.map((span) => ({
+    ...span,
+    coarseSpanIds: [...span.coarseSpanIds],
+    candidates: span.candidates.map((c) => ({ ...c, domains: c.domains ? [...c.domains] : c.domains })),
+  }));
+}
 
 export function runSpanAssemblyV4Orchestrator(
   input: SpanAssemblyV4OrchestratorInput
@@ -110,7 +158,7 @@ export function runSpanAssemblyV4Orchestrator(
   const diagnosticsConfig = resolveV4DiagnosticsConfig(input.traceCaseId);
   const trace = createV4TraceCollector(diagnosticsConfig.traceActive);
   const syllableCoordinate = buildUtteranceSyllableCoordinate(input.rawText);
-  const { syllables, hasCjk, ranges: charSyllableRanges } = syllableCoordinate;
+  const { syllables, hasCjk } = syllableCoordinate;
 
   if (!hasCjk || !syllables.length) {
     return emptyResult(assemblyStart, { fallbackReason: 'no_cjk' }, input.acousticSlices, trace);
@@ -122,9 +170,9 @@ export function runSpanAssemblyV4Orchestrator(
     );
   }
 
-  if (input.runtime.getManifestVersion() !== LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION) {
+  if (input.runtime.getManifestVersion() !== LEXICON_V3_RUNTIME_V3_SCHEMA_VERSION) {
     throw new Error(
-      `[SPAN_ASSEMBLY_V4] requires ${LEXICON_V3_FIVE_TABLE_V2_RUNTIME_SCHEMA_VERSION}, got ${input.runtime.getManifestVersion() ?? 'unknown'}`
+      `[SPAN_ASSEMBLY_V4] requires ${LEXICON_V3_RUNTIME_V3_SCHEMA_VERSION}, got ${input.runtime.getManifestVersion() ?? 'unknown'}`
     );
   }
 
@@ -151,16 +199,8 @@ export function runSpanAssemblyV4Orchestrator(
   }
 
   const recallDomainIds = [...input.recallDomainScope];
-  if (!recallDomainIds.length) {
-    throw new Error(
-      '[SPAN_ASSEMBLY_V4] resolved recall domainIds is empty — Domain Recall must not silently degrade to Base-only'
-    );
-  }
-
-  // Profile/weak-domain must not act as a second FineSpan soft prior (OWN/DCN).
   const fuzzyEnabled = isFuzzyPinyinRecallEnabled();
   const domainPriors = input.domainPriors ?? [];
-
   const toneTimestampOnlyEnabled = loadFwDetectorRuntimeConfig().toneTimestampOnlyEnabled;
   const wordTimeSpans = buildWordTimeSpans(
     input.rawText,
@@ -170,206 +210,181 @@ export function runSpanAssemblyV4Orchestrator(
     input.asrSegmentNodeBatchIndices ?? []
   );
 
-  let toneFromRecall = createEmptyToneDiagnostics(
-    input.acousticSlices,
-    wordTimeSpans,
-    toneTimestampOnlyEnabled
-  );
-  let ngramQueryCount = 0;
-  let parentFragmentHitCount = 0;
-  let physicalSqlStatementCountAccum = 0;
-
-  const utteranceRecall =
-    input.enableUtteranceRecallCache === false
-      ? null
-      : createUtteranceRecallContext(input.runtime.getManifestVersion() ?? 'unknown');
-
-  const ltr = runLtrFineSpanGeneration({
+  const lattice = runLatticeFineSpanGeneration({
     rawText: input.rawText,
-    globalSyllables: syllables,
+    runtime: input.runtime,
+    profile: input.profile,
+    domainIds: recallDomainIds,
+    minPrior: input.minPrior,
+    imeConfig: input.imeConfig,
+    dict: input.dict,
     coarseSpans,
-    domainPriors,
-    charSyllableRanges,
-    recallForWindows: (windows) => {
-      const filtered = blockedFilter({
-        windows,
-        rawText: input.rawText,
-        coarseSpans,
-        wordTimeSpans,
-      }).filter((w) => !w.blocked);
-      if (!filtered.length) {
-        return [];
-      }
-      const recall = recallTopKForWindows({
-        rawText: input.rawText,
-        globalSyllables: syllables,
-        windows: filtered,
-        runtime: input.runtime,
-        profile: input.profile,
-        domainIds: recallDomainIds,
-        minPrior: input.minPrior,
-        weakDomainPlan: undefined,
-        fuzzyRecallEnabled: fuzzyEnabled,
-        acousticSlices: input.acousticSlices,
-        wordTimeSpans,
-        toneTimestampOnlyEnabled,
-        trace,
-        utteranceRecall,
-      });
-        toneFromRecall = recall.tone;
-        ngramQueryCount += recall.ngramQueryCount;
-        parentFragmentHitCount += recall.parentFragmentHitCount;
-        physicalSqlStatementCountAccum += recall.physicalSqlStatementCount;
-        return recall.candidates;
-      },
-    });
+    wordTimeSpans,
+    acousticSlices: input.acousticSlices,
+    toneEvidenceProduction: input.toneEvidenceProduction,
+    fuzzyRecallEnabled: fuzzyEnabled,
+    toneTimestampOnlyEnabled,
+    enableUtteranceRecallCache: input.enableUtteranceRecallCache,
+    trace,
+  });
 
-  const utteranceRecallStats = utteranceRecall
-    ? { ...utteranceRecall.stats }
-    : {
-        requestCount: 0,
-        uniqueKeyCount: 0,
-        duplicateKeyCount: 0,
-        hitCount: 0,
-        missCount: 0,
-        exactQueryCount: 0,
-        parentQueryCount: 0,
-        physicalSqlStatementCount: 0,
-        recallRequestBuildMs: 0,
-        utteranceCacheLookupMs: 0,
-        lexiconFactLookupMs: 0,
-        windowBindingMs: 0,
-        lexiconRecallTotalMs: 0,
-      };
+  if (!lattice.ok) {
+    // Structured Lattice failure — never fall back to a legacy Fine Span generator.
+    throw new Error(`[SPAN_ASSEMBLY_V4][LATTICE_${lattice.code}] ${lattice.message}`);
+  }
+
+  const utteranceRecallStats = lattice.utteranceRecallStats;
   const cacheHitRatio =
     utteranceRecallStats.requestCount > 0
       ? utteranceRecallStats.hitCount / utteranceRecallStats.requestCount
       : 0;
-  if (utteranceRecall) {
-    releaseUtteranceRecallContext(utteranceRecall);
-  }
 
-  const physicalSqlStatementCount = physicalSqlStatementCountAccum;
-  if (utteranceRecall) {
-    // Keep stats SSOT aligned with observed deltas.
-    utteranceRecallStats.physicalSqlStatementCount = physicalSqlStatementCountAccum;
-  }
-
-  // BLOCK-3: Formal commit 后按 Formal range 重绑定 Tone（切片/缓存读取，非二次模型推理）
-  const toneCommitTraces = ltr.formalSpans.map((span) =>
-    rebindToneAfterFormalCommit(span, input.acousticSlices, wordTimeSpans, toneTimestampOnlyEnabled)
-  );
-
-  const generatedCount = ltr.trace.steps.reduce((sum, step) => sum + step.options.length, 0);
-  const blockedWindowCount = 0;
-  const truncatedCount = 0;
-  const architectureCompliance = {
-    generatorMode: 'ltr_soft_boundary' as const,
-    formalOverlapCount: ltr.trace.formalOverlapCount,
-    beamEnabled: false as const,
-    globalWindowProductionPath: false as const,
-    fineSpanPriorSource: (domainPriors.length ? 'domainPriors' : 'none') as 'domainPriors' | 'none',
-    contextPriorDecisionApplied: false as const,
-    priorWrittenToEnabledDomains: false as const,
-    profileAffectedRecall: false as const,
-    votePoolSource: 'formal_fine_span' as const,
-    sessionPriorTransport: 'audio_chunk_session_snapshot' as const,
-    topicShiftContractComplete: true as const,
-    schedulerDomainInference: false as const,
-    toneRecomputedAfterCommit: toneCommitTraces.every((t) => t.recomputedAfterCommit),
-  };
-
-  if (trace) {
-    for (const span of ltr.formalSpans) {
-      if (span.boundaryCrossCount === 1) {
-        trace.pushBoundaryWindow(
-          toBoundaryWindowTrace({
-            windowId: `${span.syllableStart}:${span.syllableEnd}`,
-            syllableStart: span.syllableStart,
-            syllableEnd: span.syllableEnd,
-            rawStart: span.rawStart,
-            rawEnd: span.rawEnd,
-            windowText: input.rawText.slice(span.rawStart, span.rawEnd),
-            windowPinyinKey: '',
-            spanIds: [...span.coarseSpanIds],
-            boundaryCrossCount: span.boundaryCrossCount,
-            windowSource: 'boundary_window',
-            anchorCoarseSpanId: span.coarseSpanIds[0] ?? span.spanId,
-            blocked: false,
-          })
-        );
-      }
-    }
-  }
-
-  const allCandidates = ltr.formalSpans.flatMap((s) => s.candidates);
-  const { edgeCount: compatibilityEdgeCount } = buildCandidateCompatibilityGraph(allCandidates);
-  const compatibility = resolveCompatibilityRelations(allCandidates, trace);
-  const activeCandidates = compatibility.activeCandidates;
-  const domainRecallHitCount = activeCandidates.filter(
-    (c) =>
-      !c.isCovered &&
-      (c.source === 'domain_term' || c.source === 'passive_domain_weak')
-  ).length;
-  const voteEligibleDomainCandidateCount = activeCandidates.filter(
-    (c) =>
-      !c.isCovered &&
-      Boolean(c.domains?.some((d) => d && d !== 'general' && d !== 'base_term'))
-  ).length;
-
-  if (trace) {
-    for (const candidate of activeCandidates) {
-      if (candidate.isCovered) {
-        continue;
-      }
-      if (candidate.hitKind === 'exact_term') {
-        trace.pushEmittedEdge(toEmittedEdgeFromCandidate(candidate, 'exact_term'));
-      }
-    }
-  }
-
-  const domainAssembly = runDomainAwareAssembly(
-    activeCandidates,
-    coarseSpans,
-    input.rawText,
-    ltr.formalSpans,
-    domainPriors
-  );
-  const domainAwareSpanSets = domainAssembly.spanSets;
-  const primaryDomain =
-    domainAssembly.vote.retainedDomains[0] ?? domainAssembly.vote.utteranceDomain;
-
-  // Zip by committed Formal FineSpan — domainAwareSpanSets is pool-ordered by formal span,
-  // not by coarseSpans partition (their counts can legitimately differ; AC-02).
-  const fwSpans = buildFwSpansFromFormalFineSpans(
-    input.rawText,
-    ltr.formalSpans,
-    domainAwareSpanSets,
-    primaryDomain
-  );
-
-  const kenlmCap = loadFwDetectorRuntimeConfig().maxSentenceCandidates;
-  // Guard only: retained buckets must each be able to receive ≥1 final slot if needed.
-  // Per-bucket generation uses the same MAX (16), then cross-bucket dedup, then global cap.
-  allocateDomainBucketSentenceBudget(domainAssembly.bucketSpanSets.length, kenlmCap);
-  const perBucketGenerateCap = kenlmCap;
-  const perBucketGenerated: SentenceCombination[][] = [];
+  const pathAssemblyResults: PathAssemblyResult[] = [];
+  const pathAssemblyTraces: PathAssemblyTrace[] = [];
+  const allToneOk: boolean[] = [];
   let intervalAssemblyCandidateCount = 0;
   let intervalRejectedOverlapCount = 0;
-  for (const bucketSets of domainAssembly.bucketSpanSets) {
-    const bucketResult = buildSentenceCandidates(input.rawText, bucketSets, perBucketGenerateCap);
-    intervalAssemblyCandidateCount += bucketResult.intervalAssemblyCandidateCount;
-    intervalRejectedOverlapCount += bucketResult.intervalRejectedOverlapCount;
-    perBucketGenerated.push(bucketResult.combinations);
+  let compatibilityEdgeCountTotal = 0;
+  let activeCandidateCountTotal = 0;
+  let hardDropCountTotal = 0;
+  let coverageCountTotal = 0;
+  let conflictRelationCountTotal = 0;
+  let compatibleCountTotal = 0;
+  let domainRecallHitCount = 0;
+  let voteEligibleDomainCandidateCount = 0;
+  const diagActive: WindowCandidate[] = [];
+
+  for (const view of lattice.pathFineSpanViews) {
+    const pathFineSpans = clonePathFineSpansForTone(view.pathFineSpans);
+    const toneTraces = pathFineSpans.map((span) =>
+      rebindToneForFineSpan(span, input.acousticSlices, wordTimeSpans, toneTimestampOnlyEnabled)
+    );
+    const toneRebindOk = toneTraces.every((t) => t.recomputedAfterRebind);
+    allToneOk.push(toneRebindOk);
+    const toneEvidenceAvailableCount = toneTraces.filter((t) => t.acousticTonePattern != null).length;
+    const toneEvidenceUnavailableCount = toneTraces.length - toneEvidenceAvailableCount;
+
+    if (trace) {
+      for (const span of pathFineSpans) {
+        if (span.boundaryCrossCount === 1) {
+          trace.pushBoundaryWindow(
+            toBoundaryWindowTrace({
+              windowId: `${span.syllableStart}:${span.syllableEnd}`,
+              syllableStart: span.syllableStart,
+              syllableEnd: span.syllableEnd,
+              rawStart: span.rawStart,
+              rawEnd: span.rawEnd,
+              windowText: input.rawText.slice(span.rawStart, span.rawEnd),
+              windowPinyinKey: '',
+              spanIds: [...span.coarseSpanIds],
+              boundaryCrossCount: span.boundaryCrossCount,
+              windowSource: 'boundary_window',
+              anchorCoarseSpanId: span.coarseSpanIds[0] ?? span.spanId,
+              blocked: false,
+            })
+          );
+        }
+      }
+    }
+
+    const pathCandidates = pathFineSpans.flatMap((s) => s.candidates);
+    const { edgeCount } = buildCandidateCompatibilityGraph(pathCandidates);
+    const compatibility = resolveCompatibilityRelations(pathCandidates, trace);
+    compatibilityEdgeCountTotal += edgeCount;
+    activeCandidateCountTotal += compatibility.metrics.activeCandidateCount;
+    hardDropCountTotal += compatibility.metrics.hardDropCount;
+    coverageCountTotal += compatibility.metrics.coverageCount;
+    conflictRelationCountTotal += compatibility.metrics.conflictRelationCount;
+    compatibleCountTotal += compatibility.metrics.compatibleCount;
+
+    const activeCandidates = compatibility.activeCandidates;
+    domainRecallHitCount += activeCandidates.filter(
+      (c) =>
+        !c.isCovered &&
+        (c.source === 'domain_term' || c.source === 'passive_domain_weak')
+    ).length;
+    voteEligibleDomainCandidateCount += activeCandidates.filter(
+      (c) =>
+        !c.isCovered &&
+        Boolean(c.domains?.some((d) => d && d !== 'general' && d !== 'base_term'))
+    ).length;
+    diagActive.push(...activeCandidates.filter((c) => !c.isCovered));
+
+    if (trace) {
+      for (const candidate of activeCandidates) {
+        if (candidate.isCovered) continue;
+        if (candidate.hitKind === 'exact_term') {
+          trace.pushEmittedEdge(toEmittedEdgeFromCandidate(candidate, 'exact_term'));
+        }
+      }
+    }
+
+    // Path-local Vote → Bucket → Assembly (never mix Path A/B candidates first).
+    const assemblyResult = runDomainAwareAssembly(
+      activeCandidates,
+      coarseSpans,
+      input.rawText,
+      pathFineSpans,
+      domainPriors
+    );
+    const primaryDomain =
+      assemblyResult.vote.retainedDomains[0] ?? assemblyResult.vote.utteranceDomain;
+    const fwSpans = buildFwSpansFromPathFineSpans(
+      input.rawText,
+      pathFineSpans,
+      assemblyResult.spanSets,
+      primaryDomain
+    );
+
+    const kenlmCap = loadFwDetectorRuntimeConfig().maxSentenceCandidates;
+    allocateDomainBucketSentenceBudget(assemblyResult.bucketSpanSets.length, kenlmCap);
+    const perBucketGenerated: SentenceCombination[][] = [];
+    let pathSentenceCount = 0;
+    for (const bucketSets of assemblyResult.bucketSpanSets) {
+      // Path-local generation budget (existing Assembly contract) — not the global KenLM cap.
+      const bucketResult = buildSentenceCandidates(input.rawText, bucketSets, kenlmCap);
+      intervalAssemblyCandidateCount += bucketResult.intervalAssemblyCandidateCount;
+      intervalRejectedOverlapCount += bucketResult.intervalRejectedOverlapCount;
+      perBucketGenerated.push(bucketResult.combinations);
+      pathSentenceCount += bucketResult.combinations.length;
+    }
+
+    pathAssemblyResults.push({
+      pathId: view.pathId,
+      boundaryKey: view.boundaryKey,
+      pathFineSpans,
+      assemblyResult,
+      fwSpans,
+      perBucketGenerated,
+      sentenceCandidateCount: pathSentenceCount,
+    });
+    pathAssemblyTraces.push({
+      pathId: view.pathId,
+      boundaryKey: view.boundaryKey,
+      pathFineSpanCount: pathFineSpans.length,
+      fallbackSpanCount: pathFineSpans.filter((s) => s.windowSource === 'fallback').length,
+      toneEvidenceAvailableCount,
+      toneEvidenceUnavailableCount,
+      domainScores: { ...assemblyResult.vote.domainScores },
+      retainedDomains: [...assemblyResult.vote.retainedDomains],
+      bucketCount: assemblyResult.bucketSpanSets.length,
+      bucketCandidateCounts: perBucketGenerated.map((list) => list.length),
+      assemblyCandidateCount: pathSentenceCount,
+      toneRebindOk,
+    });
   }
-  const merged = mergeCrossBucketSentenceCandidates(perBucketGenerated, kenlmCap);
+
+  const kenlmCap = loadFwDetectorRuntimeConfig().maxSentenceCandidates;
+  // Formal Cross-Path Merge: collect all Path/Bucket candidates → dedup(text, first-wins) → global ≤16.
+  const crossPathMerged = mergeCrossPathSentenceCandidates(pathAssemblyResults, kenlmCap);
+  const flatPerBucketGenerated = pathAssemblyResults.flatMap((p) => [...p.perBucketGenerated]);
   const kenlmSentenceCandidates = {
-    combinations: merged.combinations,
+    combinations: crossPathMerged.combinations,
     intervalAssemblyCandidateCount,
     intervalRejectedOverlapCount,
-    perBucketGenerated,
-    mergedBeforeCap: merged.mergedBeforeCap,
-    dedupReplacedCount: merged.dedupReplacedCount,
+    perBucketGenerated: flatPerBucketGenerated,
+    uniqueBeforeCap: crossPathMerged.uniqueBeforeCap,
+    crossPathMerge: crossPathMerged.trace,
   };
   if (trace) {
     for (const combo of kenlmSentenceCandidates.combinations) {
@@ -381,72 +396,150 @@ export function runSpanAssemblyV4Orchestrator(
     }
   }
 
+  const primary = pathAssemblyResults[0]!;
+  const primaryAssembly = primary.assemblyResult;
+  const primaryDomain =
+    primaryAssembly.vote.retainedDomains[0] ?? primaryAssembly.vote.utteranceDomain;
+
+  // Aggregate assembly metrics across paths (primary vote fields for utterance summary).
+  const aggregatedAssemblyMetrics = pathAssemblyResults.reduce(
+    (acc, p) => {
+      const m = p.assemblyResult.metrics;
+      return {
+        domainCandidateCount: acc.domainCandidateCount + m.domainCandidateCount,
+        baseCandidateCount: acc.baseCandidateCount + m.baseCandidateCount,
+        sameDomainCandidateCount: acc.sameDomainCandidateCount + m.sameDomainCandidateCount,
+        domainFilteredSpanCount: acc.domainFilteredSpanCount + m.domainFilteredSpanCount,
+        selectedCandidatesPerSpanAvg: acc.selectedCandidatesPerSpanAvg + m.selectedCandidatesPerSpanAvg,
+        domainAssemblyMs: acc.domainAssemblyMs + m.domainAssemblyMs,
+        mainDomainAwareSpanSetsTotal: acc.mainDomainAwareSpanSetsTotal + m.mainDomainAwareSpanSetsTotal,
+        retainedBucketCount: acc.retainedBucketCount + m.retainedBucketCount,
+      };
+    },
+    {
+      domainCandidateCount: 0,
+      baseCandidateCount: 0,
+      sameDomainCandidateCount: 0,
+      domainFilteredSpanCount: 0,
+      selectedCandidatesPerSpanAvg: 0,
+      domainAssemblyMs: 0,
+      mainDomainAwareSpanSetsTotal: 0,
+      retainedBucketCount: 0,
+    }
+  );
+  if (pathAssemblyResults.length > 0) {
+    aggregatedAssemblyMetrics.selectedCandidatesPerSpanAvg /= pathAssemblyResults.length;
+  }
+
+  const allPathSpans = pathAssemblyResults.flatMap((p) => p.pathFineSpans);
+  const architectureCompliance = {
+    generatorMode: 'multi_path_lattice' as const,
+    fineSpanOwner: 'segmentation_path' as const,
+    voteScope: 'per_path' as const,
+    assemblyScope: 'per_path' as const,
+    retainedCompletePathCount: lattice.trace.retainedCompletePathCount,
+    beamEnabled: false as const,
+    globalWindowProductionPath: false as const,
+    fineSpanPriorSource: (domainPriors.length ? 'domainPriors' : 'none') as 'domainPriors' | 'none',
+    contextPriorDecisionApplied: false as const,
+    priorWrittenToEnabledDomains: false as const,
+    profileAffectedRecall: false as const,
+    votePoolSource: 'path_fine_span' as const,
+    sessionPriorTransport: 'audio_chunk_session_snapshot' as const,
+    topicShiftContractComplete: true as const,
+    schedulerDomainInference: false as const,
+    toneRecomputedAfterRebind: allToneOk.every(Boolean),
+    crossPathMergeOwner: 'mergeCrossPathSentenceCandidates' as const,
+    candidateCapScope: 'global' as const,
+    candidateCap: kenlmCap,
+    dedupBeforeCap: true as const,
+    dedupRetention: 'first_wins' as const,
+    kenlmInputOwner: 'cross_path_merge' as const,
+    prefilledCombinationsRequired: true as const,
+    toneEvidenceOwner: 'acoustic_tone_slices' as const,
+  };
+
   const internal: CoarseAssemblyInternalResult = {
     coarseSpans,
-    retainedDomains: [...domainAssembly.vote.retainedDomains],
+    retainedDomains: [...primaryAssembly.vote.retainedDomains],
     utteranceDomain: primaryDomain,
     sentenceCandidates: kenlmSentenceCandidates.combinations.map((c) => c.text),
   };
 
   return {
     internal,
-    spanSets: domainAwareSpanSets,
-    bucketSpanSets: domainAssembly.bucketSpanSets,
-    fwSpans,
+    spanSets: primary.assemblyResult.spanSets,
+    bucketSpanSets: primary.assemblyResult.bucketSpanSets,
+    fwSpans: primary.fwSpans,
     boundaryImport: partition.diagnostics,
-    tone: toneFromRecall,
+    tone: lattice.tone,
+    pathAssemblyResults,
+    latticeTrace: lattice.trace,
+    pathAssemblyTraces,
+    crossPathMergeTrace: crossPathMerged.trace,
     metrics: {
       coarseSpanCount: coarseSpans.length,
-      globalWindowGeneratedCount: generatedCount,
-      blockedWindowCount,
-      truncatedWindowCount: truncatedCount,
-      ngramQueryCount,
-      windowCandidatePoolCount: compatibility.metrics.activeCandidateCount,
-      activeCandidateCount: compatibility.metrics.activeCandidateCount,
-      compatibilityEdgeCount,
-      droppedCandidateCount: compatibility.metrics.hardDropCount,
-      coverageCount: compatibility.metrics.coverageCount,
+      globalWindowGeneratedCount: lattice.trace.windowCount,
+      blockedWindowCount: lattice.trace.blockedWindowCount,
+      truncatedWindowCount: 0,
+      logicalWindowRecallCount: lattice.trace.logicalWindowRecallCount,
+      windowCandidatePoolCount: activeCandidateCountTotal,
+      activeCandidateCount: activeCandidateCountTotal,
+      compatibilityEdgeCount: compatibilityEdgeCountTotal,
+      droppedCandidateCount: hardDropCountTotal,
+      coverageCount: coverageCountTotal,
       conflictCount: 0,
-      conflictRelationCount: compatibility.metrics.conflictRelationCount,
-      hardDropCount: compatibility.metrics.hardDropCount,
-      compatibleCount: compatibility.metrics.compatibleCount,
+      conflictRelationCount: conflictRelationCountTotal,
+      hardDropCount: hardDropCountTotal,
+      compatibleCount: compatibleCountTotal,
       utteranceDomain: primaryDomain,
-      domainVoteMs: domainAssembly.vote.domainVoteMs,
-      winnerScore: domainAssembly.vote.maxCount,
-      runnerUpDomain: domainAssembly.vote.runnerUpDomain,
-      runnerUpScore: domainAssembly.vote.runnerUpCount,
-      voteMargin: domainAssembly.vote.voteMargin,
+      domainVoteMs: primaryAssembly.vote.domainVoteMs,
+      winnerScore: primaryAssembly.vote.maxCount,
+      runnerUpDomain: primaryAssembly.vote.runnerUpDomain,
+      runnerUpScore: primaryAssembly.vote.runnerUpCount,
+      voteMargin: primaryAssembly.vote.voteMargin,
       assemblyMs: Date.now() - assemblyStart,
-      parentFragmentHitCount,
-      parentTermVoteCount: domainAssembly.vote.parentTermVoteCount,
-      inSpanWindowCount: ltr.formalSpans.filter((s) => s.windowSource === 'in_span_window').length,
-      boundaryWindowCount: ltr.formalSpans.filter((s) => s.windowSource === 'boundary_window').length,
-      domainCandidateCount: domainAssembly.metrics.domainCandidateCount,
-      baseCandidateCount: domainAssembly.metrics.baseCandidateCount,
-      sameDomainCandidateCount: domainAssembly.metrics.sameDomainCandidateCount,
-      domainFilteredSpanCount: domainAssembly.metrics.domainFilteredSpanCount,
-      selectedCandidatesPerSpanAvg: domainAssembly.metrics.selectedCandidatesPerSpanAvg,
-      domainAssemblyMs: domainAssembly.metrics.domainAssemblyMs,
-      mainDomainAwareSpanSetsTotal: domainAssembly.metrics.mainDomainAwareSpanSetsTotal,
-      retainedBucketCount: domainAssembly.metrics.retainedBucketCount,
+      // JOBRESULT_ADAPTER_DEBT: parent-fragment recall retired (Phase 2/3); always 0.
+      // Field retained on SpanAssemblyV4Metrics only for JobResult contract stability.
+      parentFragmentHitCount: lattice.parentFragmentHitCount,
+      // JOBRESULT_ADAPTER_DEBT: parent-term structural vote retired (Phase 2/3); always 0.
+      parentTermVoteCount: primaryAssembly.vote.parentTermVoteCount,
+      inSpanWindowCount: allPathSpans.filter((s) => s.windowSource === 'in_span_window').length,
+      boundaryWindowCount: allPathSpans.filter((s) => s.windowSource === 'boundary_window').length,
+      domainCandidateCount: aggregatedAssemblyMetrics.domainCandidateCount,
+      baseCandidateCount: aggregatedAssemblyMetrics.baseCandidateCount,
+      sameDomainCandidateCount: aggregatedAssemblyMetrics.sameDomainCandidateCount,
+      domainFilteredSpanCount: aggregatedAssemblyMetrics.domainFilteredSpanCount,
+      selectedCandidatesPerSpanAvg: aggregatedAssemblyMetrics.selectedCandidatesPerSpanAvg,
+      domainAssemblyMs: aggregatedAssemblyMetrics.domainAssemblyMs,
+      mainDomainAwareSpanSetsTotal: aggregatedAssemblyMetrics.mainDomainAwareSpanSetsTotal,
+      retainedBucketCount: aggregatedAssemblyMetrics.retainedBucketCount,
       intervalAssemblyCandidateCount: kenlmSentenceCandidates.intervalAssemblyCandidateCount,
       intervalRejectedOverlapCount: kenlmSentenceCandidates.intervalRejectedOverlapCount,
-      fallbackCandidateCount: domainAssembly.filteredSets.reduce(
-        (sum, set) => sum + set.fallbackCandidates.length,
+      fallbackCandidateCount: pathAssemblyResults.reduce(
+        (sum, p) =>
+          sum + p.assemblyResult.filteredSets.reduce((s, set) => s + set.fallbackCandidates.length, 0),
         0
       ),
       kenlmPoolCandidateCount: kenlmSentenceCandidates.combinations.length,
       preFilterCombinationCount: kenlmSentenceCandidates.intervalAssemblyCandidateCount,
-      domainScores: domainAssembly.vote.domainScores,
-      retainedDomains: domainAssembly.vote.retainedDomains,
+      domainScores: primaryAssembly.vote.domainScores,
+      retainedDomains: primaryAssembly.vote.retainedDomains,
       winningFineDomain: primaryDomain,
-      insufficientEvidence: domainAssembly.vote.insufficientEvidence,
+      insufficientEvidence: primaryAssembly.vote.insufficientEvidence,
       domainLookupExecuted: true,
       domainLookupDomainCount: recallDomainIds.length,
       domainRecallHitCount,
       voteEligibleDomainCandidateCount,
       resolvedRecallDomainScope: [...input.recallDomainScope],
       architectureCompliance,
+      crossPathInputCandidateCount: crossPathMerged.trace.crossPathInputCandidateCount,
+      crossPathDuplicateCount: crossPathMerged.trace.crossPathDuplicateCount,
+      crossPathUniqueCandidateCount: crossPathMerged.trace.crossPathUniqueCandidateCount,
+      crossPathOutputCandidateCount: crossPathMerged.trace.crossPathOutputCandidateCount,
+      crossPathTruncatedCount: crossPathMerged.trace.crossPathTruncatedCount,
+      globalCandidateCap: crossPathMerged.trace.globalCandidateCap,
+      kenlmInputSource: crossPathMerged.trace.kenlmInputSource,
       recallRequestCount: utteranceRecallStats.requestCount,
       uniqueRecallKeyCount: utteranceRecallStats.uniqueKeyCount,
       duplicateRecallKeyCount: utteranceRecallStats.duplicateKeyCount,
@@ -454,9 +547,8 @@ export function runSpanAssemblyV4Orchestrator(
       utteranceCacheMissCount: utteranceRecallStats.missCount,
       cacheHitRatio,
       logicalQueryCount: utteranceRecallStats.requestCount,
-      physicalSqlStatementCount,
+      physicalSqlStatementCount: utteranceRecallStats.physicalSqlStatementCount,
       exactQueryCount: utteranceRecallStats.exactQueryCount,
-      parentQueryCount: utteranceRecallStats.parentQueryCount,
       lexiconRecallTotalMs: utteranceRecallStats.lexiconRecallTotalMs,
       recallRequestBuildMs: utteranceRecallStats.recallRequestBuildMs,
       utteranceCacheLookupMs: utteranceRecallStats.utteranceCacheLookupMs,
@@ -467,7 +559,7 @@ export function runSpanAssemblyV4Orchestrator(
     kenlmSentenceCandidates,
     ...(diagnosticsConfig.enabled
       ? {
-          diagActiveCandidates: activeCandidates.map((c) => ({
+          diagActiveCandidates: diagActive.map((c) => ({
             candidateId: c.candidateId,
             text: c.replacement,
             domains: c.domains ?? [],
@@ -521,12 +613,13 @@ function emptyResult(
     fwSpans: [],
     boundaryImport: diagnostics,
     tone: createEmptyToneDiagnostics(acousticSlices, [], toneTimestampOnlyEnabled),
+    pathAssemblyResults: [],
     metrics: {
       coarseSpanCount: 0,
       globalWindowGeneratedCount: 0,
       blockedWindowCount: 0,
       truncatedWindowCount: 0,
-      ngramQueryCount: 0,
+      logicalWindowRecallCount: 0,
       windowCandidatePoolCount: 0,
       activeCandidateCount: 0,
       compatibilityEdgeCount: 0,

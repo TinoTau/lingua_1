@@ -1,20 +1,22 @@
 # SameDomain + Base Per-Span Assembly — Internal Detail Contract V1.2
 
-**状态**：CURRENT（Assembly Internal Detail · 2026-07-20）  
-**Runtime Domain Presence Vote:** **ACCEPTED AND FROZEN** — authority [`Runtime_SSOT_Contract_Freeze.md`](../../tone-v2/Runtime_SSOT_Contract_Freeze.md); acceptance [`Runtime_Domain_Presence_Vote_Final_Acceptance_Report.md`](../../tone-v2/Runtime_Domain_Presence_Vote_Final_Acceptance_Report.md)  
+**状态**：CURRENT（Assembly Internal Detail · 2026-07-26 Path-scoped）  
+**Runtime Domain Presence Vote formula:** **ACCEPTED AND FROZEN** — [`Runtime_SSOT_Contract_Freeze.md`](../../tone-v2/Runtime_SSOT_Contract_Freeze.md)  
+**Fine Span / Path SSOT:** [`FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md`](../../tone-v2/FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md)  
 **代码根**：`electron_node/electron-node/main/src/fw-detector/`
 
 ```text
-Runtime main-chain authority:
-Runtime_SSOT_Contract_Freeze.md
+Fine Span SSOT: SegmentationPath[] (Lattice Architecture V1.0.0)
+Vote formula authority: Runtime_SSOT_Contract_Freeze.md
+Assembly caller: one SameDomain assembly per SegmentationPath
 
 This document only defines Assembly internal details.
 ```
 
-**Sole Runtime Authority:** [`Runtime_SSOT_Contract_Freeze.md`](../../tone-v2/Runtime_SSOT_Contract_Freeze.md)  
+**Sole Runtime Authority (formula):** [`Runtime_SSOT_Contract_Freeze.md`](../../tone-v2/Runtime_SSOT_Contract_Freeze.md)  
 **Index:** [`RUNTIME_DOMAIN_DOCUMENT_INDEX.md`](../../tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md)
 
-本文件 **不是**完整 Runtime 主链合同。Presence Vote / retainedDomains / KenLM pick 公式以 Runtime SSOT 为准；此处不完整复制。
+本文件 **不是**完整 Runtime 主链合同，也 **不是** Fine Span 分界 SSOT。
 
 ---
 
@@ -22,33 +24,38 @@ This document only defines Assembly internal details.
 
 Assembly Internal Detail Contract：
 
-- Span assembly 输入与 per-span 选择
-- Base + domain candidate 组装
+- Path-local Span assembly 输入与 per-span 选择
+- Base + domain candidate 组装（Path 内）
 - Sentence candidate construction
 - candidateScore 在 Assembly 内的作用
 - 每桶 bounded generation
-- Cross-bucket text dedup
-- Global candidate cap
-- Assembly diagnostics
+- Cross-bucket text dedup（Path 内）后进入 Global Allocator
+- Global candidate cap **≤16**（跨 Path）
+- Assembly diagnostics（含 pathId / boundaryKey）
 
 ---
 
-## 2. Assembly 输入与流程（内部）
+## 2. Assembly 输入与流程（内部 · Path-scoped）
 
 ```text
-activeCandidates
+for each SegmentationPath:
+  materializeFormalFineSpans(path)   // ephemeral adapter only
   → buildFineSpanCandidatePool
-  → voteUtteranceDomainFromPool   (owned by Runtime SSOT)
-  → per retainedDomain: same-domain (domains.includes) + Base
+  → voteUtteranceDomainFromPool      (formula owned by Runtime SSOT; pool = this Path only)
+  → per retainedDomain: same-domain + Base
   → selectPerSpanCandidates
   → assembleDomainAwareSpanSets
-  → per-bucket buildSentenceCandidates (cap = MAX_SENTENCE_CANDIDATES)
-  → mergeCrossBucketSentenceCandidates
-  → global slice <=16
-  → kenlmSentenceCandidates / prefilledCombinations
+  → per-bucket buildSentenceCandidates
+→ mergeCrossPathSentenceCandidates
+→ global slice <=16 (retain multi-source Trace on identical text)
+→ kenlmSentenceCandidates / prefilledCombinations
 ```
 
+**Forbidden:** Path A prefix + Path B suffix; shared ReplacementPick across Paths; FormalFineSpan as utterance SSOT.
+
 Shadow Beam / Graph Domain Vote / Domain Rerank / Parent Domain Vote：**REMOVED**，不得恢复为正式路径。
+
+语义 Beam / KenLM Beam：**禁止**；有限完整 SegmentationPath 并行保留 **允许**（Lattice Architecture）。
 
 ---
 

@@ -1,17 +1,21 @@
 ﻿import type { LexiconRuntimeV2 } from '../../lexicon-v2/lexicon-runtime-v2';
-import { recallSpanTopKV3, type RecallSpanTopKV3Hit } from '../../lexicon-v2/recall-span-topkv3';
+import { recallSpanTopKV2, type RecallSpanTopKV2Hit } from '../../lexicon-v2/recall-span-topk-v2';
 import type { WeakDomainRecallPlan } from '../../lexicon-v2/weak-domain-recall-resolver';
 import { syllablesKey } from '../../lexicon/pinyin-index';
 import type { ActiveLexiconProfileSnapshot } from '../../session-runtime/types';
 import type { AcousticToneSlice, WordTimeSpan } from '../tone-time-align';
+import type { ToneEvidenceProductionDiagnostic } from '../../task-router/types';
 import type {
   GraphEdgeSource,
   CoarseAssemblyToneDiagnostics,
   CoarseAssemblyToneExampleWindow,
 } from '../span-assembly-shared/types';
-import { parentTermSyllableCount } from '../span-assembly-shared/parent-term-slice';
 import { createEmptyToneDiagnostics } from '../span-assembly-shared/tone-diagnostics';
 import { extractAcousticTonePatternForRecall, resolveTimestampToneState } from '../span-assembly-shared/tone-recall';
+import {
+  attributeMappingMiss,
+  bumpCount,
+} from '../span-assembly-shared/tone-miss-attribution';
 import {
   computeToneScoreResult,
   TONE_MATCH_PENALTY,
@@ -23,12 +27,12 @@ import { V4_LIMITS } from './v4-limits';
 import type { GlobalWindowDescriptor, WindowCandidate } from './v4-types';
 import {
   buildSpanV3CanonicalQuery,
-  lexiconFactsFromV3Hits,
+  exactHitsFromLexiconFacts,
+  lexiconFactsFromExactHits,
   normalizeToneNorm,
   serializeCanonicalRecallQueryKey,
   utteranceCacheGet,
   utteranceCacheSet,
-  v3HitsFromLexiconFacts,
   type UtteranceRecallContext,
 } from './utterance-recall-cache';
 
@@ -53,7 +57,7 @@ function resolveGraphSource(
 }
 
 function recallHitToneFields(
-  hit: RecallSpanTopKV3Hit,
+  hit: RecallSpanTopKV2Hit,
   acousticTonePattern: number[] | undefined
 ): { toneCompatible: boolean; tonePenalty: number; toneReason: ToneReason } {
   if (hit.toneReason !== undefined) {
@@ -64,10 +68,7 @@ function recallHitToneFields(
     };
   }
   const pattern = hit.acousticTonePattern ?? acousticTonePattern;
-  const toneKey =
-    hit.hitKind === 'parent_fragment'
-      ? hit.fragmentTonePinyinKey ?? hit.hotword.tonePinyinKey ?? ''
-      : hit.hotword.tonePinyinKey ?? '';
+  const toneKey = hit.hotword.tonePinyinKey ?? '';
   return computeToneScoreResult(pattern, toneKey, hit.hotword.word);
 }
 
@@ -96,6 +97,7 @@ export type RecallTopKInput = {
   fuzzyRecallEnabled: boolean;
   acousticSlices?: AcousticToneSlice[];
   wordTimeSpans?: WordTimeSpan[];
+  toneEvidenceProduction?: ToneEvidenceProductionDiagnostic[];
   toneTimestampOnlyEnabled: boolean;
   trace?: V4TraceCollector | null;
   /** Per-utterance Fact cache; omit for baseline (no cache) counterfactual. */
@@ -104,7 +106,9 @@ export type RecallTopKInput = {
 
 export type RecallTopKResult = {
   candidates: WindowCandidate[];
-  ngramQueryCount: number;
+  /** Windows actually recalled in this call — equals input.windows.length (full traversal). */
+  logicalWindowRecallCount: number;
+  /** JOBRESULT_ADAPTER_DEBT — parent-fragment recall retired (Phase 2/3); always 0. */
   parentFragmentHitCount: number;
   tone: CoarseAssemblyToneDiagnostics;
   /** True SQLite statement executions observed via LexiconRuntimeV2 tier counters. */
@@ -113,10 +117,11 @@ export type RecallTopKResult = {
 
 /**
  * Bind cached lexicon Fact hits onto a window — always allocates fresh WindowCandidate objects.
+ * Exact formal-term hits only (parent-fragment write-path removed in Phase 1/2/3).
  */
 export function bindLexiconHitsToWindow(input: {
   window: GlobalWindowDescriptor;
-  hits: readonly RecallSpanTopKV3Hit[];
+  hits: readonly RecallSpanTopKV2Hit[];
   minPrior: number;
   weakDomainPlan?: WeakDomainRecallPlan;
   boundaryPenalty: number;
@@ -128,16 +133,11 @@ export function bindLexiconHitsToWindow(input: {
   const candidates: WindowCandidate[] = [];
   let candidateSeq = input.candidateSeqStart;
   let rank = 0;
-  let parentFragmentHitCount = 0;
 
   for (const hit of input.hits) {
-    if (hit.hitKind === 'parent_fragment') {
-      parentFragmentHitCount += 1;
-    }
     const minPriorPassed = hit.hotword.priorScore >= input.minPrior;
     const toneFields = recallHitToneFields(hit, input.acousticTonePattern);
-    const hitToneLookupStage =
-      hit.hitKind === 'exact_term' ? hit.toneLookupStage : undefined;
+    const hitToneLookupStage = hit.toneLookupStage;
 
     if (input.trace) {
       input.trace.pushRecallHitPreFilter({
@@ -171,6 +171,10 @@ export function bindLexiconHitsToWindow(input: {
     candidateSeq += 1;
 
     const candidateId = `${input.window.windowId}:${candidateSeq}`;
+    const termId =
+      hit.hotword?.id != null && String(hit.hotword.id).length > 0
+        ? String(hit.hotword.id)
+        : undefined;
     candidates.push({
       candidateId,
       windowId: input.window.windowId,
@@ -185,21 +189,14 @@ export function bindLexiconHitsToWindow(input: {
       score,
       boundaryPenalty: input.boundaryPenalty,
       candidateRank: rank,
-      hitKind: hit.hitKind === 'parent_fragment' ? 'parent_fragment' : 'exact_term',
+      hitKind: 'exact_term',
       replacement: hit.hotword.word,
+      termId,
+      recallCandidateKind: hit.recallCandidateKind,
       domains,
       source: graphSource,
       recallSource: hit.source,
       repairTarget: hit.hotword.repairTarget === true,
-      parentTermId: hit.parentTermId,
-      parentTerm: hit.parentTerm,
-      parentPinyinKey: hit.parentPinyinKey,
-      parentTermSyllableCount: hit.parentPinyinKey
-        ? parentTermSyllableCount(hit.parentPinyinKey)
-        : undefined,
-      matchedTermStart: hit.matchedTermStart,
-      matchedTermEnd: hit.matchedTermEnd,
-      fragmentTonePinyinKey: hit.fragmentTonePinyinKey,
       toneCompatible: toneFields.toneCompatible,
       tonePenalty: toneFields.tonePenalty,
       toneReason: toneFields.toneReason,
@@ -212,7 +209,7 @@ export function bindLexiconHitsToWindow(input: {
         windowPinyinKey: input.window.windowPinyinKey,
         windowSource: input.window.windowSource as 'in_span_window' | 'boundary_window',
         replacement: hit.hotword.word,
-        hitKind: hit.hitKind === 'parent_fragment' ? 'parent_fragment' : 'exact_term',
+        hitKind: 'exact_term',
         candidateScore,
         score,
         repairTarget: hit.hotword.repairTarget === true,
@@ -225,7 +222,7 @@ export function bindLexiconHitsToWindow(input: {
     }
   }
 
-  return { candidates, candidateSeq, parentFragmentHitCount };
+  return { candidates, candidateSeq, parentFragmentHitCount: 0 };
 }
 
 export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
@@ -248,30 +245,26 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
     wordTimeSpanCount: wordTimeSpans.length,
   };
 
+  const evidenceProduction = input.toneEvidenceProduction ?? [];
+  for (const row of evidenceProduction) {
+    tone.evidenceProductionStatusCounts = bumpCount(
+      tone.evidenceProductionStatusCounts,
+      row.status
+    );
+  }
+
   const exampleWindows: CoarseAssemblyToneExampleWindow[] = [];
   const candidates: WindowCandidate[] = [];
-  let ngramQueryCount = 0;
-  let parentFragmentHitCount = 0;
+  let logicalWindowRecallCount = 0;
   let candidateSeq = 0;
   let physicalSqlStatementCount = 0;
   const toneActive = toneState.toneEnabled && acousticSlices.length > 0 && wordTimeSpans.length > 0;
+  /** Batch 1.1C: explicit caller gate for Mandatory Tone Recall readiness. */
+  const toneCallerEnabled = toneState.toneEnabled;
 
+  // Frozen rule: every input recallable window is recalled — no attempt/resource gate.
   for (let wi = 0; wi < input.windows.length; wi += 1) {
     const window = input.windows[wi];
-    if (ngramQueryCount >= V4_LIMITS.maxSqlPerUtterance) {
-      // Budget skipped — do NOT write utterance cache.
-      if (input.trace) {
-        for (let skip = wi; skip < input.windows.length; skip += 1) {
-          const skipped = input.windows[skip];
-          input.trace.pushSkippedRecallWindow({
-            windowId: skipped.windowId,
-            reason: 'sql_budget_exhausted',
-            windowPinyinKey: skipped.windowPinyinKey,
-          });
-        }
-      }
-      break;
-    }
 
     const buildStart = Date.now();
     const syllables = input.globalSyllables.slice(window.syllableStart, window.syllableEnd);
@@ -280,6 +273,8 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
 
     let acousticTonePattern: number[] | undefined;
     let windowTimeRange: { start: number; end: number } | undefined;
+    let mappingMissReason: string | undefined;
+    let mappingMissAttribution: string | undefined;
 
     if (toneActive) {
       tone.ngramTonePatternAttemptCount += 1;
@@ -304,8 +299,25 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
         tone.toneOverlapHitCount += 1;
         acousticTonePattern = extracted.pattern;
       } else if (extracted.windowTimeRange) {
-        tone.toneOverlapSyllableMismatchCount += 1;
+        tone.tonePatternMappingMissCount += 1;
         tone.ngramTonePatternMissCount += 1;
+        if (extracted.missReason) {
+          mappingMissReason = extracted.missReason;
+          tone.mappingMissReasonCounts = bumpCount(
+            tone.mappingMissReasonCounts,
+            extracted.missReason
+          );
+        }
+        const attribution = attributeMappingMiss({
+          missReason: extracted.missReason,
+          failedWordSpan: extracted.failedWordSpan,
+          evidenceProduction,
+        });
+        mappingMissAttribution = attribution;
+        tone.mappingMissAttributionCounts = bumpCount(
+          tone.mappingMissAttributionCounts,
+          attribution
+        );
       } else {
         tone.toneOverlapMissCount += 1;
         tone.ngramTonePatternMissCount += 1;
@@ -318,16 +330,20 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
         pinyinKey: window.windowPinyinKey,
         windowTimeRange,
         acousticTonePattern,
+        mappingMissReason,
+        mappingMissAttribution,
       });
     }
 
     const pinyinKey = window.windowPinyinKey || syllablesKey(syllables);
+    const isSingleChar = syllables.length === 1;
+    const windowExactTopK = isSingleChar ? 1 : V4_LIMITS.exactTopK;
+    const windowDomainIds = isSingleChar ? [] : input.domainIds;
     const canonical = buildSpanV3CanonicalQuery({
       pinyinKey,
       toneNorm: normalizeToneNorm(acousticTonePattern),
-      domainIds: input.domainIds,
-      exactTopK: V4_LIMITS.exactTopK,
-      parentFragmentTopK: V4_LIMITS.parentFragmentTopK,
+      domainIds: windowDomainIds,
+      exactTopK: windowExactTopK,
       lexiconVersion,
       surfaceText: window.windowText,
     });
@@ -335,10 +351,9 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
     if (utteranceRecall) {
       utteranceRecall.stats.recallRequestBuildMs += Date.now() - buildStart;
       utteranceRecall.stats.exactQueryCount += 1;
-      utteranceRecall.stats.parentQueryCount += 1;
     }
 
-    let v3Hits: RecallSpanTopKV3Hit[];
+    let exactHits: RecallSpanTopKV2Hit[];
     let windowQueryTonePinyinKey: string | undefined;
     let recallToneCompatibleCount = 0;
     let recallToneFallbackCount = 0;
@@ -351,27 +366,25 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
       utteranceRecall.stats.utteranceCacheLookupMs += Date.now() - lookupStart;
       if (cached) {
         const bindStart = Date.now();
-        v3Hits = v3HitsFromLexiconFacts(cached);
+        exactHits = exactHitsFromLexiconFacts(cached);
         utteranceRecall.stats.windowBindingMs += Date.now() - bindStart;
       } else {
         const factStart = Date.now();
         const sqlBefore = input.runtime.getPhysicalStatementStats().total;
         let recall;
         try {
-          recall = recallSpanTopKV3(input.runtime, {
+          recall = recallSpanTopKV2(input.runtime, {
             syllables,
             windowText: window.windowText,
             termLength: syllables.length,
-            topK: V4_LIMITS.exactTopK,
+            topK: windowExactTopK,
             profile: input.profile,
-            domainIds: input.domainIds,
-            perSpanLimit: V4_LIMITS.exactTopK,
-            exactTopK: V4_LIMITS.exactTopK,
-            parentFragmentTopK: V4_LIMITS.parentFragmentTopK,
-            perParentTermPerWindow: V4_LIMITS.perParentTermPerWindow,
-            weakDomainPlan: input.weakDomainPlan,
-            fuzzyRecallEnabled: input.fuzzyRecallEnabled,
+            domainIds: windowDomainIds,
+            perSpanLimit: windowExactTopK,
+            weakDomainPlan: isSingleChar ? undefined : input.weakDomainPlan,
+            fuzzyRecallEnabled: isSingleChar ? false : input.fuzzyRecallEnabled,
             acousticTonePattern,
+            toneCallerEnabled,
           });
         } catch (err) {
           // SQL / recall throw — do NOT cache.
@@ -384,36 +397,34 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
         utteranceRecall.stats.physicalSqlStatementCount += sqlDelta;
         utteranceRecall.stats.lexiconFactLookupMs += Date.now() - factStart;
 
-        v3Hits = recall.hits as RecallSpanTopKV3Hit[];
+        exactHits = recall.hits;
         windowQueryTonePinyinKey = recall.queryTonePinyinKey;
         recallToneCompatibleCount = recall.recallToneCompatibleCount ?? 0;
         recallToneFallbackCount = recall.recallToneFallbackCount ?? 0;
         toneExactHitCount = recall.toneExactHitCount ?? 0;
         plainFallbackHitCount = recall.plainFallbackHitCount ?? 0;
 
-        const facts = lexiconFactsFromV3Hits(v3Hits);
+        const facts = lexiconFactsFromExactHits(exactHits);
         utteranceCacheSet(utteranceRecall, canonicalKey, facts);
       }
     } else {
       const sqlBefore = input.runtime.getPhysicalStatementStats().total;
-      const recall = recallSpanTopKV3(input.runtime, {
+      const recall = recallSpanTopKV2(input.runtime, {
         syllables,
         windowText: window.windowText,
         termLength: syllables.length,
-        topK: V4_LIMITS.exactTopK,
+        topK: windowExactTopK,
         profile: input.profile,
-        domainIds: input.domainIds,
-        perSpanLimit: V4_LIMITS.exactTopK,
-        exactTopK: V4_LIMITS.exactTopK,
-        parentFragmentTopK: V4_LIMITS.parentFragmentTopK,
-        perParentTermPerWindow: V4_LIMITS.perParentTermPerWindow,
-        weakDomainPlan: input.weakDomainPlan,
-        fuzzyRecallEnabled: input.fuzzyRecallEnabled,
+        domainIds: windowDomainIds,
+        perSpanLimit: windowExactTopK,
+        weakDomainPlan: isSingleChar ? undefined : input.weakDomainPlan,
+        fuzzyRecallEnabled: isSingleChar ? false : input.fuzzyRecallEnabled,
         acousticTonePattern,
+        toneCallerEnabled,
       });
       const sqlAfter = input.runtime.getPhysicalStatementStats().total;
       physicalSqlStatementCount += Math.max(0, sqlAfter - sqlBefore);
-      v3Hits = recall.hits as RecallSpanTopKV3Hit[];
+      exactHits = recall.hits;
       windowQueryTonePinyinKey = recall.queryTonePinyinKey;
       recallToneCompatibleCount = recall.recallToneCompatibleCount ?? 0;
       recallToneFallbackCount = recall.recallToneFallbackCount ?? 0;
@@ -421,8 +432,7 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
       plainFallbackHitCount = recall.plainFallbackHitCount ?? 0;
     }
 
-    // Logical window recall attempt (SQL budget gate) — unchanged semantics.
-    ngramQueryCount += 1;
+    logicalWindowRecallCount += 1;
 
     tone.recallToneCompatibleCount += recallToneCompatibleCount;
     tone.recallToneFallbackCount += recallToneFallbackCount;
@@ -432,7 +442,7 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
     const bindStart = Date.now();
     const bound = bindLexiconHitsToWindow({
       window,
-      hits: v3Hits,
+      hits: exactHits,
       minPrior: input.minPrior,
       weakDomainPlan: input.weakDomainPlan,
       boundaryPenalty,
@@ -446,7 +456,6 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
     }
     candidateSeq = bound.candidateSeq;
     candidates.push(...bound.candidates);
-    parentFragmentHitCount += v3Hits.filter((h) => h.hitKind === 'parent_fragment').length;
   }
 
   if (utteranceRecall) {
@@ -456,5 +465,12 @@ export function recallTopKForWindows(input: RecallTopKInput): RecallTopKResult {
   tone.exampleToneWindows = exampleWindows.length ? exampleWindows : undefined;
   // Legacy alias for experiment/trace consumers (see CoarseAssemblyToneDiagnostics).
   tone.recallToneIncompatibleCount = tone.recallToneFallbackCount;
-  return { candidates, ngramQueryCount, parentFragmentHitCount, tone, physicalSqlStatementCount };
+  return {
+    candidates,
+    logicalWindowRecallCount,
+    // JOBRESULT_ADAPTER_DEBT — parent-fragment recall retired (Phase 2/3); always 0.
+    parentFragmentHitCount: 0,
+    tone,
+    physicalSqlStatementCount,
+  };
 }

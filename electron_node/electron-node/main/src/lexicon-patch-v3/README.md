@@ -73,7 +73,7 @@ Patch (term operations)
     ↓
 term_domain_tags  （SSOT 变更面）
     ↓
-materialize       （domain_lexicon / ngrams 物化层）
+materialize       （domain_lexicon 物化层；term_pinyin_ngrams 已随 Parent Fragment Full Retirement 删除）
     ↓
 reload            （forceReloadLexiconRuntimeV3）
     ↓

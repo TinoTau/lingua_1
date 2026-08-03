@@ -1,9 +1,10 @@
 /**
  * Phase 1 — Utterance-level Recall Cache + Canonical RecallQueryKey.
- * Cache stores lexicon Fact hits only; window binding creates fresh WindowCandidate objects.
+ * Phase 2/3 (Parent Fragment Full Retirement): cache stores exact-term Fact hits only
+ * (RecallSpanTopKV2Hit); window binding creates fresh WindowCandidate objects.
  */
 
-import type { RecallSpanTopKV3Hit } from '../../lexicon-v2/recall-span-topkv3';
+import type { RecallSpanTopKV2Hit } from '../../lexicon-v2/recall-span-topk-v2';
 
 export type RecallQueryKind = 'span_v3_bundle';
 
@@ -14,10 +15,9 @@ export type CanonicalRecallQuery = {
   toneNorm: string;
   domainScope: readonly string[];
   exactTopK: number;
-  parentFragmentTopK: number;
   lexiconVersion: string;
   /**
-   * Surface text enters key because V2/V3 candidateScore uses windowText
+   * Surface text enters key because V2 candidateScore uses windowText
    * (WINDOW scoring input that must not be shared across different surfaces).
    */
   surfaceText: string;
@@ -30,7 +30,6 @@ export type UtteranceRecallCacheStats = {
   hitCount: number;
   missCount: number;
   exactQueryCount: number;
-  parentQueryCount: number;
   physicalSqlStatementCount: number;
   recallRequestBuildMs: number;
   utteranceCacheLookupMs: number;
@@ -40,7 +39,7 @@ export type UtteranceRecallCacheStats = {
 };
 
 export type LexiconFactHit = Readonly<{
-  hitKind: 'exact_term' | 'parent_fragment';
+  hitKind: 'exact_term';
   word: string;
   hotwordId: string;
   domains: readonly string[];
@@ -52,15 +51,9 @@ export type LexiconFactHit = Readonly<{
   toneCompatible?: boolean;
   tonePenalty?: number;
   toneReason?: string;
-  parentTermId?: string;
-  parentTerm?: string;
-  parentPinyinKey?: string;
-  matchedTermStart?: number;
-  matchedTermEnd?: number;
-  fragmentTonePinyinKey?: string;
   acousticTonePattern?: readonly number[];
-  /** Frozen snapshot of underlying V3 hit for lossless rebind. */
-  v3Hit: RecallSpanTopKV3Hit;
+  /** Frozen snapshot of underlying exact Recall hit for lossless rebind. */
+  exactHit: RecallSpanTopKV2Hit;
 }>;
 
 export type UtteranceRecallContext = {
@@ -82,7 +75,6 @@ export function createUtteranceRecallContext(lexiconVersion: string): UtteranceR
       hitCount: 0,
       missCount: 0,
       exactQueryCount: 0,
-      parentQueryCount: 0,
       physicalSqlStatementCount: 0,
       recallRequestBuildMs: 0,
       utteranceCacheLookupMs: 0,
@@ -112,14 +104,14 @@ export function serializeCanonicalRecallQueryKey(q: CanonicalRecallQuery): strin
   const domains = normalizeDomainScope(q.domainScope).join(',');
   const tone = q.toneNorm ?? '';
   const surface = q.surfaceText ?? '';
+  // v2: parentFragmentTopK removed from production cache contract (Phase 1 PF retirement).
   return [
-    'v1',
+    'v2',
     q.kind,
     q.pinyinKey,
     tone,
     domains,
     String(q.exactTopK),
-    String(q.parentFragmentTopK),
     q.lexiconVersion,
     surface,
   ].join('|');
@@ -130,7 +122,6 @@ export function buildSpanV3CanonicalQuery(input: {
   toneNorm: string;
   domainIds: readonly string[];
   exactTopK: number;
-  parentFragmentTopK: number;
   lexiconVersion: string;
   surfaceText: string;
 }): CanonicalRecallQuery {
@@ -140,7 +131,6 @@ export function buildSpanV3CanonicalQuery(input: {
     toneNorm: input.toneNorm ?? '',
     domainScope: normalizeDomainScope(input.domainIds),
     exactTopK: input.exactTopK,
-    parentFragmentTopK: input.parentFragmentTopK,
     lexiconVersion: input.lexiconVersion,
     surfaceText: input.surfaceText,
   };
@@ -153,21 +143,21 @@ function freezeFact(hit: LexiconFactHit): LexiconFactHit {
     acousticTonePattern: hit.acousticTonePattern
       ? Object.freeze([...hit.acousticTonePattern])
       : undefined,
-    v3Hit: hit.v3Hit,
+    exactHit: hit.exactHit,
   });
 }
 
-function cloneFrozenV3Hit(hit: RecallSpanTopKV3Hit): RecallSpanTopKV3Hit {
+function cloneFrozenExactHit(hit: RecallSpanTopKV2Hit): RecallSpanTopKV2Hit {
   const domains = hit.hotword.domains?.length ? Object.freeze([...hit.hotword.domains]) : hit.hotword.domains;
   const hotword = Object.freeze({ ...hit.hotword, domains });
   return Object.freeze({
     ...hit,
     hotword,
     acousticTonePattern: hit.acousticTonePattern ? Object.freeze([...hit.acousticTonePattern]) : undefined,
-  }) as RecallSpanTopKV3Hit;
+  }) as RecallSpanTopKV2Hit;
 }
 
-export function lexiconFactsFromV3Hits(hits: readonly RecallSpanTopKV3Hit[]): readonly LexiconFactHit[] {
+export function lexiconFactsFromExactHits(hits: readonly RecallSpanTopKV2Hit[]): readonly LexiconFactHit[] {
   const out: LexiconFactHit[] = [];
   for (const hit of hits) {
     const domains =
@@ -176,7 +166,7 @@ export function lexiconFactsFromV3Hits(hits: readonly RecallSpanTopKV3Hit[]): re
         : [];
     out.push(
       freezeFact({
-        hitKind: hit.hitKind === 'parent_fragment' ? 'parent_fragment' : 'exact_term',
+        hitKind: 'exact_term',
         word: hit.hotword.word,
         hotwordId: hit.hotword.id,
         domains,
@@ -188,14 +178,8 @@ export function lexiconFactsFromV3Hits(hits: readonly RecallSpanTopKV3Hit[]): re
         toneCompatible: hit.toneCompatible,
         tonePenalty: hit.tonePenalty,
         toneReason: hit.toneReason,
-        parentTermId: hit.parentTermId,
-        parentTerm: hit.parentTerm,
-        parentPinyinKey: hit.parentPinyinKey,
-        matchedTermStart: hit.matchedTermStart,
-        matchedTermEnd: hit.matchedTermEnd,
-        fragmentTonePinyinKey: hit.fragmentTonePinyinKey,
         acousticTonePattern: hit.acousticTonePattern,
-        v3Hit: cloneFrozenV3Hit(hit),
+        exactHit: cloneFrozenExactHit(hit),
       })
     );
   }
@@ -235,7 +219,7 @@ export function utteranceCacheSet(
   ctx.cache.set(key, facts);
 }
 
-export function v3HitsFromLexiconFacts(facts: readonly LexiconFactHit[]): RecallSpanTopKV3Hit[] {
-  // Return shallow copies of frozen V3 hits so downstream may attach window fields safely.
-  return facts.map((f) => ({ ...f.v3Hit, hotword: { ...f.v3Hit.hotword } }));
+export function exactHitsFromLexiconFacts(facts: readonly LexiconFactHit[]): RecallSpanTopKV2Hit[] {
+  // Return shallow copies of frozen exact hits so downstream may attach window fields safely.
+  return facts.map((f) => ({ ...f.exactHit, hotword: { ...f.exactHit.hotword } }));
 }

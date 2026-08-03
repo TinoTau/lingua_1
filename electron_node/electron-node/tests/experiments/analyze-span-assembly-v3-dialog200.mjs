@@ -253,8 +253,8 @@ const out = {
       ? Number((windowTimeHitTotal / windowTimeAttemptTotal).toFixed(4))
       : 0,
     toneOverlapHit_total: toneOverlapHitTotal,
-    toneOverlapSyllableMismatch_total: toneList.reduce(
-      (s, t) => s + (t.toneOverlapSyllableMismatchCount || 0),
+    tonePatternMappingMiss_total: toneList.reduce(
+      (s, t) => s + (t.tonePatternMappingMissCount || 0),
       0
     ),
     alignmentTextUsedCount_total: alignmentTextUsedTotal,
@@ -288,6 +288,6 @@ const out = {
   samples,
 };
 
-const outPath = path.join(__dirname, 'span-assembly-v3-dialog200-quality-perf.json');
+const outPath = path.join(__dirname, 'span-assembly-v3-dialog200-quality-perf.active.json');
 fs.writeFileSync(outPath, JSON.stringify(out, null, 2), 'utf8');
 console.log(JSON.stringify(out, null, 2));

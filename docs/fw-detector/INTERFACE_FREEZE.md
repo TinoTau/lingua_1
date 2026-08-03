@@ -1,7 +1,18 @@
 # FW Repair V4 — Interface Freeze Contract
 
-**状态：** Framework Frozen · 2026-06-19  
-**原则：** 核心 pick/apply 语义不可变；Diagnostics **仅允许追加 optional 字段**
+**状态：** Framework Frozen · Lattice DTO catalog **2026-07-26**  
+**原则：** 核心 pick/apply 语义不可变；Diagnostics **仅允许追加 optional 字段**  
+**Lattice Interface / Data SSOT：** [`FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md`](../tone-v2/FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md) §14 · Implementation Contract V1.0.0
+
+新增 / 权威 DTO（完整 invariant 见 Lattice Architecture，勿在本文件复制漂移）：
+
+```text
+LexicalWindowQuery · LexicalEdge · SegmentationPath · PathFineSpanView
+PathDomainVoteResult · PathSentenceCandidate · GlobalSentenceCandidate
+PrunedSegmentationPathTrace · Path-aware KenLM metadata mapping
+```
+
+`FormalFineSpan[]` **不是** Fine Span SSOT；仅为 Path 临时投影。
 
 ---
 
@@ -18,7 +29,7 @@
 | `recallToneCompatibleCount` | number | tone 兼容命中次数 |
 | `recallToneFallbackCount` | number | tone penalty 应用次数 |
 | `toneExactHitCount` | number | SQL tone_exact 阶段命中 |
-| `plainFallbackHitCount` | number | plain_fallback 命中 |
+| `plainFallbackHitCount` | number | **Batch 1.1C:** always **0** on Mandatory Tone Recall path (Plain fill deleted; field retained for aggregate compatibility only) |
 
 | 允许 | 禁止 |
 |------|------|

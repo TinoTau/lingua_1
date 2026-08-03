@@ -37,7 +37,7 @@ async function main() {
     dist,
     'lexicon-v2/lexicon-runtime-v2-holder.js'
   ));
-  const { recallSpanTopKV3 } = require(path.join(dist, 'lexicon-v2/recall-span-topkv3.js'));
+  const { recallSpanTopKV2 } = require(path.join(dist, 'lexicon-v2/recall-span-topk-v2.js'));
   const Database = require('better-sqlite3');
   const db = new Database(path.join(repoRoot(), 'node_runtime/lexicon/v3/lexicon.sqlite'), {
     readonly: true,
@@ -77,7 +77,7 @@ async function main() {
     const syllables = pinyin(s.word, { toneType: 'none', type: 'array' }).map((x) =>
       String(x).toLowerCase()
     );
-    const recall = recallSpanTopKV3(runtimeV2, {
+    const recall = recallSpanTopKV2(runtimeV2, {
       syllables,
       windowText: s.word,
       termLength: [...s.word].length,

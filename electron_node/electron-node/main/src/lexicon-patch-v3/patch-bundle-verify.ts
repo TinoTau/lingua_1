@@ -43,7 +43,6 @@ export function readTableCountsFromStats(statsPath: string): PatchBundleTableCou
     idiomCount?: number;
     domainCount?: number;
     routingCount?: number;
-    ngramsCount?: number;
     termCount?: number;
     termDomainTagsCount?: number;
   };
@@ -52,7 +51,6 @@ export function readTableCountsFromStats(statsPath: string): PatchBundleTableCou
     idiom: stats.idiomCount ?? 0,
     domain: stats.domainCount ?? 0,
     routing: stats.routingCount ?? 0,
-    ngrams: stats.ngramsCount ?? 0,
     term: stats.termCount ?? 0,
     termDomainTags: stats.termDomainTagsCount ?? 0,
   };

@@ -65,7 +65,7 @@ export function toCandidatePoolTrace(candidate: WindowCandidate): CandidatePoolT
 
 export function toEmittedEdgeFromCandidate(
   candidate: WindowCandidate,
-  hitKind: 'exact_term' | 'parent_fragment'
+  hitKind: 'exact_term'
 ): EmittedEdgeTrace {
   return {
     replacement: candidate.replacement,
@@ -94,16 +94,10 @@ export function resolveCompatReason(
     return 'coverage_parent_child';
   }
   if (relation === 'COMPATIBLE') {
-    if (a.parentTermId && b.parentTermId && a.parentTermId === b.parentTermId) {
-      return 'same_parent_term_overlap_match';
-    }
     if (a.rawStart < b.rawEnd && b.rawStart < a.rawEnd) {
       return 'different_parent_replacement_overlap_match';
     }
     return 'adjacent_no_conflict';
-  }
-  if (a.parentTermId && b.parentTermId && a.parentTermId === b.parentTermId) {
-    return 'same_parent_term_overlap_mismatch';
   }
   if (a.rawStart < b.rawEnd && b.rawStart < a.rawEnd) {
     return 'different_parent_replacement_overlap_mismatch';

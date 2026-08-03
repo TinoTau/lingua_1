@@ -1,3 +1,4 @@
+import { extractToneNumbersFromKey } from '../fw-detector/tone-match-score';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -64,6 +65,14 @@ describe('recallSpanTopKV2', () => {
       return;
     }
     const sample = baseHits[0]!;
+    const toneKey = sample.tonePinyinKey;
+    if (!toneKey) {
+      return;
+    }
+    const pattern = extractToneNumbersFromKey(toneKey);
+    if (pattern.length !== sample.pinyin.length) {
+      return;
+    }
 
     const result = recallSpanTopKV2(runtime!, {
       syllables: sample.pinyin,
@@ -72,6 +81,7 @@ describe('recallSpanTopKV2', () => {
       topK: 3,
       profile: defaultGeneralProfile(),
       domainIds: [],
+      acousticTonePattern: pattern,
     });
     expect(result.hits.length).toBeGreaterThan(0);
     expect(result.hits.some((h) => h.hotword.word === sample.word)).toBe(true);
@@ -105,6 +115,7 @@ describe('recallSpanTopKV2', () => {
       domainIds: [...weakPlan.queryDomainIds],
       weakDomainPlan: weakPlan,
       fuzzyRecallEnabled: true,
+      acousticTonePattern: [1, 1, 3],
     });
 
     expect(result.hits.some((h) => h.hotword.word === '中杯')).toBe(true);
@@ -134,11 +145,12 @@ describe('recallSpanTopKV2', () => {
     expect(zhongBei.toneReason).toBe('match');
   });
 
-  it('tone-first: shao|bing + [3,1] without 少冰 in lexicon falls back to plain bucket', () => {
+  it('tone-first: shao|bing + [3,1] underfill returns Tone-only (no Plain fill)', () => {
     if (!runtime || !fs.existsSync(path.join(FW_V3_RUNTIME_DIR, 'manifest.json'))) {
       return;
     }
 
+    const spyPlain = jest.spyOn(runtime!, 'lookupBaseByPinyinKey');
     const result = recallSpanTopKV2(runtime!, {
       syllables: ['shao', 'bing'],
       windowText: '少冰',
@@ -150,27 +162,21 @@ describe('recallSpanTopKV2', () => {
       acousticTonePattern: [3, 1],
     });
 
-    expect(result.hits.length).toBeGreaterThan(0);
-    const hasShaoBing = result.hits.some((h) => h.hotword.word === '少冰');
-    if (hasShaoBing) {
-      expect(result.hits.find((h) => h.hotword.word === '少冰')!.toneLookupStage).toBe('tone_exact');
-      return;
-    }
+    expect(spyPlain).not.toHaveBeenCalled();
+    spyPlain.mockRestore();
     for (const hit of result.hits) {
-      expect(hit.toneLookupStage).not.toBe('tone_exact');
-      if (hit.toneReason === 'mismatch') {
-        expect(hit.toneCompatible).toBe(false);
-      }
+      expect(hit.toneLookupStage).toBe('tone_exact');
     }
   });
 
-  it('no acoustic pattern uses plain_only_no_pattern without tone SQL', () => {
+  it('no acoustic pattern → Empty; Plain SQL zero (Mandatory Tone Recall)', () => {
     if (!runtime || !fs.existsSync(path.join(FW_V3_RUNTIME_DIR, 'manifest.json'))) {
       return;
     }
 
-    const before = runtime!.getAndResetTierQueryStats();
-    recallSpanTopKV2(runtime!, {
+    const spyPlain = jest.spyOn(runtime!, 'lookupBaseByPinyinKey');
+    const spyPlainExact = jest.spyOn(runtime!, 'lookupBaseByExactSurfaceAndPinyin');
+    const result = recallSpanTopKV2(runtime!, {
       syllables: ['shao', 'bing'],
       windowText: '烧饼',
       termLength: 2,
@@ -178,8 +184,11 @@ describe('recallSpanTopKV2', () => {
       profile: defaultGeneralProfile(),
       domainIds: [],
     });
-    const after = runtime!.getAndResetTierQueryStats();
-    expect(after.sqlQueries).toBeGreaterThan(0);
-    expect(before.sqlQueries).toBe(0);
+    expect(result.hits).toHaveLength(0);
+    expect(result.toneRecallReadiness?.state).toBe('no_pattern');
+    expect(spyPlain).not.toHaveBeenCalled();
+    expect(spyPlainExact).not.toHaveBeenCalled();
+    spyPlain.mockRestore();
+    spyPlainExact.mockRestore();
   });
 });

@@ -5,9 +5,10 @@ import { voteUtteranceDomainFromPool } from '../span-assembly-shared/utterance-d
 import type { DomainPrior } from '../domain-context-contract';
 import { applyDomainPriorQuota } from './apply-domain-prior-quota';
 import { findOwningCoarseSpanIndexV4 } from './find-owning-coarse-span-v4';
-import type { FormalFineSpan } from './ltr-fine-span-generator';
-import { assertFormalFineSpansNonOverlapping } from './ltr-fine-span-generator';
+import type { PathFineSpan } from './path-fine-span-types';
+import { assertPathFineSpansNonOverlapping } from './path-fine-span-types';
 import type {
+  DomainAssemblyDropTrace,
   DomainAwareAssemblyMetrics,
   DomainAwareAssemblyResult,
   DomainAwareSpanReplacementPick,
@@ -17,8 +18,10 @@ import type {
 import type { WindowCandidate } from './v4-types';
 import {
   canonicalSpanReplacementPick,
+  domainAwareCanonicalFromCoarseSpan,
+  domainAwareCanonicalFromPathFineSpan,
   domainAwarePickToSpanReplacementPick,
-  windowCandidateToDomainAwarePick,
+  windowCandidateToDomainAwarePickResult,
 } from './window-candidate-to-pick';
 
 function isSameDomainCandidate(
@@ -39,7 +42,7 @@ function stableSortPicks(picks: DomainAwareSpanReplacementPick[]): DomainAwareSp
   return [...picks].sort((a, b) => b.score - a.score || a.candidateId.localeCompare(b.candidateId));
 }
 
-function dedupePicks(picks: DomainAwareSpanReplacementPick[]): DomainAwareSpanReplacementPick[] {
+function dedupePicksByIdentity(picks: DomainAwareSpanReplacementPick[]): DomainAwareSpanReplacementPick[] {
   const byKey = new Map<string, DomainAwareSpanReplacementPick>();
   for (const pick of stableSortPicks(picks)) {
     const key = pick.candidateId || `${pick.span.start}:${pick.span.end}:${pick.word}`;
@@ -50,19 +53,30 @@ function dedupePicks(picks: DomainAwareSpanReplacementPick[]): DomainAwareSpanRe
   return [...byKey.values()];
 }
 
-/** Pool by committed Formal FineSpan (not coarse span). Production API — FormalFineSpan[] required. */
+/** Surface-text dedupe for Assembly Grid (first wins after stable sort). */
+function dedupePicksBySurface(picks: DomainAwareSpanReplacementPick[]): DomainAwareSpanReplacementPick[] {
+  const bySurface = new Map<string, DomainAwareSpanReplacementPick>();
+  for (const pick of stableSortPicks(picks)) {
+    if (!bySurface.has(pick.word)) {
+      bySurface.set(pick.word, pick);
+    }
+  }
+  return [...bySurface.values()];
+}
+
+/** Pool by PathFineSpan (not coarse span). Production API — PathFineSpan[] required. */
 export function buildFineSpanCandidatePool(
   activeCandidates: WindowCandidate[],
   _coarseSpans: CoarseSpan[],
-  formalSpans: readonly FormalFineSpan[]
+  pathFineSpans: readonly PathFineSpan[]
 ): FineSpanCandidatePool[] {
-  if (!formalSpans.length) {
+  if (!pathFineSpans.length) {
     throw new Error(
-      '[FORMAL_POOL] production API requires FormalFineSpan[]; silent coarse fallback is forbidden'
+      '[PATH_FINE_SPAN_POOL] production API requires PathFineSpan[]; silent coarse fallback is forbidden'
     );
   }
-  assertFormalFineSpansNonOverlapping(formalSpans);
-  const pools: FineSpanCandidatePool[] = formalSpans.map((span) => ({
+  assertPathFineSpansNonOverlapping(pathFineSpans);
+  const pools: FineSpanCandidatePool[] = pathFineSpans.map((span) => ({
     fineSpanId: span.spanId,
     coarseSpanId: span.coarseSpanIds[0] ?? span.spanId,
     coarseSpanIds: span.coarseSpanIds,
@@ -117,10 +131,8 @@ export function buildFineSpanCandidatePoolFromCoarseSpansForTests(
   return pools;
 }
 
-/** Map coarse partition spans to FormalFineSpan stubs for unit tests that lack an LTR run. */
-export function coarseSpansAsFormalFineSpansForTests(
-  coarseSpans: CoarseSpan[]
-): FormalFineSpan[] {
+/** Map coarse partition spans to PathFineSpan stubs for unit tests that lack a Path/LTR run. */
+export function coarseSpansAsPathFineSpansForTests(coarseSpans: CoarseSpan[]): PathFineSpan[] {
   return coarseSpans.map((span) => ({
     spanId: `fine:${span.syllableStart}:${span.syllableEnd}`,
     rawStart: span.rawStart,
@@ -153,15 +165,31 @@ export function filterDomainCandidatesPerSpan(
     const sameDomainCandidates: DomainAwareSpanReplacementPick[] = [];
     const baseCandidates: DomainAwareSpanReplacementPick[] = [];
     const fallbackCandidates: DomainAwareSpanReplacementPick[] = [];
+    const assemblyDropTraces: DomainAssemblyDropTrace[] = [];
+    const fineSpanRange = {
+      fineSpanId: spanPool.fineSpanId,
+      rawStart: spanPool.rawRange[0],
+      rawEnd: spanPool.rawRange[1],
+      syllableStart: spanPool.syllableRange[0],
+      syllableEnd: spanPool.syllableRange[1],
+    };
 
     for (const candidate of spanPool.candidates) {
-      if (candidate.isCovered) {
+      const converted = windowCandidateToDomainAwarePickResult(candidate, rawText, fineSpanRange);
+      if (!converted.ok) {
+        assemblyDropTraces.push({
+          candidateId: candidate.candidateId,
+          replacement: candidate.replacement,
+          hitKind: candidate.hitKind,
+          source: candidate.source,
+          domains: candidate.domains,
+          dropReason: converted.dropReason,
+          fineSpanId: spanPool.fineSpanId,
+          bucketDomain: isBaseOnly ? null : bucketDomain,
+        });
         continue;
       }
-      const pick = windowCandidateToDomainAwarePick(candidate, rawText);
-      if (!pick) {
-        continue;
-      }
+      const pick = converted.pick;
 
       if (!isBaseOnly && bucketDomain && isSameDomainCandidate(pick, bucketDomain)) {
         sameDomainCandidates.push(pick);
@@ -170,6 +198,7 @@ export function filterDomainCandidatesPerSpan(
       } else if (isBaseOnly) {
         fallbackCandidates.push(pick);
       }
+      // Cross-domain domain_term for this bucket: intentionally excluded (not a drop of eligibility).
     }
 
     return {
@@ -177,84 +206,88 @@ export function filterDomainCandidatesPerSpan(
       coarseSpanId: spanPool.coarseSpanId,
       rawRange: spanPool.rawRange,
       syllableRange: spanPool.syllableRange,
-      sameDomainCandidates: dedupePicks(sameDomainCandidates),
-      baseCandidates: dedupePicks(baseCandidates),
-      fallbackCandidates: dedupePicks(fallbackCandidates),
+      sameDomainCandidates: dedupePicksByIdentity(sameDomainCandidates),
+      baseCandidates: dedupePicksByIdentity(baseCandidates),
+      fallbackCandidates: dedupePicksByIdentity(fallbackCandidates),
       selectedCandidates: [],
       bucketDomain: isBaseOnly ? null : bucketDomain,
+      assemblyDropTraces,
     };
   });
 }
 
+/**
+ * Per-span candidate budget for Assembly (multi-candidate set).
+ * Not per-span final winner selection.
+ *
+ * Always includes canonical/raw as a preservation candidate when a FineSpan/CoarseSpan
+ * is available; surface-dedupes before applying per-span cap.
+ */
 export function selectPerSpanCandidates(
   filteredSets: DomainFilteredSpanSet[],
   spanSlotCount: number,
   coarseSpans: CoarseSpan[],
-  formalSpans?: readonly FormalFineSpan[],
+  pathFineSpans?: readonly PathFineSpan[],
+  rawText = '',
+  domainPriors: readonly DomainPrior[] = []
+): DomainFilteredSpanSet[] {
+  return budgetPerSpanCandidates(
+    filteredSets,
+    spanSlotCount,
+    coarseSpans,
+    pathFineSpans,
+    rawText,
+    domainPriors
+  );
+}
+
+/** Preferred name: per-span budget, not winner selection. */
+export function budgetPerSpanCandidates(
+  filteredSets: DomainFilteredSpanSet[],
+  spanSlotCount: number,
+  coarseSpans: CoarseSpan[],
+  pathFineSpans?: readonly PathFineSpan[],
   rawText = '',
   domainPriors: readonly DomainPrior[] = []
 ): DomainFilteredSpanSet[] {
   const perSpanLimit = getPerSpanCandidateLimit(spanSlotCount);
   const spanById = new Map(coarseSpans.map((span) => [span.id, span]));
-  const formalById = new Map((formalSpans ?? []).map((s) => [s.spanId, s]));
+  const pathFineSpanById = new Map((pathFineSpans ?? []).map((s) => [s.spanId, s]));
 
   return filteredSets.map((set) => {
+    const pathSpan = set.fineSpanId ? pathFineSpanById.get(set.fineSpanId) : undefined;
+    const coarseSpan = spanById.get(set.coarseSpanId);
+    const canonical: DomainAwareSpanReplacementPick | null = pathSpan
+      ? domainAwareCanonicalFromPathFineSpan(pathSpan, rawText)
+      : coarseSpan
+        ? domainAwareCanonicalFromCoarseSpan(coarseSpan)
+        : null;
+
     const ordered = [
       ...stableSortPicks(set.sameDomainCandidates),
       ...stableSortPicks(set.baseCandidates),
       ...stableSortPicks(set.fallbackCandidates),
     ];
 
-    // Soft prior reorder is opt-in only (domainPriors present); Vote/bucket ordering above is
-    // otherwise untouched, so behavior without priors is byte-for-byte identical to before.
-    let selected = domainPriors.length
-      ? applyDomainPriorQuota(ordered, domainPriors, perSpanLimit)
-      : ordered.slice(0, perSpanLimit);
-    if (!selected.length) {
-      const formal = set.fineSpanId ? formalById.get(set.fineSpanId) : undefined;
-      if (formal) {
-        selected = [domainAwarePickFromFormal(formal, rawText)];
-      } else {
-        const span = spanById.get(set.coarseSpanId);
-        if (span) {
-          selected = [domainAwarePickFromCanonical(span)];
-        }
-      }
-    }
+    // Canonical/raw is always a preservation candidate (coexists with Recall), not an empty-only mask.
+    const withCanonical =
+      canonical != null ? dedupePicksByIdentity([...ordered, canonical]) : ordered;
+    const surfaceDeduped = dedupePicksBySurface(withCanonical);
+
+    const budgeted = domainPriors.length
+      ? applyDomainPriorQuota(surfaceDeduped, domainPriors, perSpanLimit)
+      : surfaceDeduped.slice(0, perSpanLimit);
+
+    // Guarantee at least canonical/raw so Assembly always has a legal slot.
+    const selected =
+      budgeted.length > 0
+        ? budgeted
+        : canonical != null
+          ? [canonical]
+          : [];
 
     return { ...set, selectedCandidates: selected };
   });
-}
-
-function domainAwarePickFromFormal(span: FormalFineSpan, rawText: string): DomainAwareSpanReplacementPick {
-  const text = rawText.slice(span.rawStart, span.rawEnd);
-  return {
-    span: {
-      text,
-      start: span.rawStart,
-      end: span.rawEnd,
-    },
-    word: text,
-    candidateId: `canonical:${span.spanId}`,
-    graphSource: 'base_term',
-    hitKind: 'exact_term',
-    score: 0,
-    repairTarget: false,
-    recallSource: 'canonical_exact',
-  };
-}
-
-function domainAwarePickFromCanonical(span: CoarseSpan): DomainAwareSpanReplacementPick {
-  return {
-    span: { text: span.text, start: span.rawStart, end: span.rawEnd },
-    word: span.text,
-    candidateId: `canonical:${span.id}`,
-    graphSource: 'base_term',
-    hitKind: 'exact_term',
-    score: 0,
-    repairTarget: false,
-    recallSource: 'canonical_exact',
-  };
 }
 
 export function assembleDomainAwareSpanSets(
@@ -296,17 +329,17 @@ export function runDomainAwareAssembly(
   activeCandidates: WindowCandidate[],
   coarseSpans: CoarseSpan[],
   rawText: string,
-  formalSpans: readonly FormalFineSpan[],
+  pathFineSpans: readonly PathFineSpan[],
   domainPriors: readonly DomainPrior[] = []
 ): DomainAwareAssemblyResult {
   const start = Date.now();
-  if (!formalSpans.length) {
+  if (!pathFineSpans.length) {
     throw new Error(
-      '[FORMAL_POOL] runDomainAwareAssembly requires FormalFineSpan[]; coarse fallback is forbidden'
+      '[PATH_FINE_SPAN_POOL] runDomainAwareAssembly requires PathFineSpan[]; coarse fallback is forbidden'
     );
   }
-  assertFormalFineSpansNonOverlapping(formalSpans);
-  const pool = buildFineSpanCandidatePool(activeCandidates, coarseSpans, formalSpans);
+  assertPathFineSpansNonOverlapping(pathFineSpans);
+  const pool = buildFineSpanCandidatePool(activeCandidates, coarseSpans, pathFineSpans);
   const vote = voteUtteranceDomainFromPool(pool);
 
   const bucketDomains: Array<string | null> =
@@ -318,15 +351,15 @@ export function runDomainAwareAssembly(
   let primaryFiltered: DomainFilteredSpanSet[] = [];
   let aggregateSameDomain = 0;
   let aggregateBase = 0;
-  const slotCount = formalSpans.length;
+  const slotCount = pathFineSpans.length;
 
   for (const bucketDomain of bucketDomains) {
     const filtered = filterDomainCandidatesPerSpan(pool, vote, rawText, bucketDomain);
-    const selected = selectPerSpanCandidates(
+    const selected = budgetPerSpanCandidates(
       filtered,
       slotCount,
       coarseSpans,
-      formalSpans,
+      pathFineSpans,
       rawText,
       domainPriors
     );

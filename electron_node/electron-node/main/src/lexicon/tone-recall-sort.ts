@@ -1,6 +1,7 @@
 /**
  * Tone-aware recall ranking (inside Recall only).
  * Applies tone penalty to candidateScore; never removes candidates.
+ * Batch 1.1C: only tone_exact stage exists on Mandatory Tone Recall path.
  */
 
 import {
@@ -18,7 +19,7 @@ export type ToneRecallSortableHit = RecallScoreTieBreakable & {
   };
   /** Per-hit tone pattern override (variant-sliced acoustic pattern). */
   acousticTonePattern?: number[];
-  toneLookupStage?: 'tone_exact' | 'plain_fallback' | 'plain_only_no_pattern';
+  toneLookupStage?: 'tone_exact';
   toneCompatible?: boolean;
   tonePenalty?: number;
   toneReason?: ToneReason;
@@ -29,8 +30,6 @@ const TONE_LOOKUP_STAGE_PRIORITY: Record<
   number
 > = {
   tone_exact: 3,
-  plain_fallback: 2,
-  plain_only_no_pattern: 1,
 };
 
 function stagePriority(hit: ToneRecallSortableHit): number {

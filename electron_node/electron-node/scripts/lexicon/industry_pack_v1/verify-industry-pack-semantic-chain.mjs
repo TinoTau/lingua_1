@@ -25,7 +25,7 @@ async function main() {
     dist,
     'lexicon-v2/lexicon-runtime-v2-holder.js'
   ));
-  const { recallSpanTopKV3 } = require(path.join(dist, 'lexicon-v2/recall-span-topkv3.js'));
+  const { recallSpanTopKV2 } = require(path.join(dist, 'lexicon-v2/recall-span-topk-v2.js'));
   const { runFwDetectorOrchestrator } = require(path.join(
     dist,
     'fw-detector/fw-detector-orchestrator.js'
@@ -44,7 +44,7 @@ async function main() {
     const recallHits = [];
     for (const term of c.terms) {
       const syllables = pinyin(term, { toneType: 'none', type: 'array' }).map((s) => String(s).toLowerCase());
-      const recall = recallSpanTopKV3(runtimeV2, {
+      const recall = recallSpanTopKV2(runtimeV2, {
         syllables,
         windowText: term,
         termLength: [...term].length,

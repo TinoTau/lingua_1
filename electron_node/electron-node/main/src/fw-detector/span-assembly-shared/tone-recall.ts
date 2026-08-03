@@ -1,5 +1,5 @@
 ﻿import type { AcousticToneSlice, WordTimeSpan } from '../tone-time-align';
-import { extractAcousticTonePatternByTime } from '../tone-time-align';
+import { mapToneEvidenceForRecall } from '../tone-time-align';
 
 export type TimestampToneState = {
   tonePayloadAvailable: boolean;
@@ -32,6 +32,10 @@ export function resolveTimestampToneState(
   };
 }
 
+/**
+ * Recall-side entry: consume real Tone Evidence via Participation Mapping.
+ * Does not invent tones — mapToneEvidenceForRecall only reads real slice posteriors.
+ */
 export function extractAcousticTonePatternForRecall(
   rawStart: number,
   rawEnd: number,
@@ -40,7 +44,7 @@ export function extractAcousticTonePatternForRecall(
   acousticSlices: AcousticToneSlice[],
   wordTimeSpans: WordTimeSpan[]
 ) {
-  return extractAcousticTonePatternByTime(
+  return mapToneEvidenceForRecall(
     rawStart,
     rawEnd,
     syllableStart,

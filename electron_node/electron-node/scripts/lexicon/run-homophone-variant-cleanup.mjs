@@ -33,8 +33,6 @@ function main() {
     const domainRows = db
       .prepare(`SELECT word, pinyin_key, domain_id FROM domain_lexicon WHERE word IN (${placeholders})`)
       .all(...words);
-    db.prepare(`DELETE FROM term_pinyin_ngrams WHERE fragment_text IN (${placeholders})`).run(...words);
-    db.prepare(`DELETE FROM term_pinyin_ngrams WHERE parent_word IN (${placeholders})`).run(...words);
     const delRoute = db.prepare(
       `DELETE FROM industry_routing_lexicon WHERE keyword = ? AND pinyin_key = ? AND domain_id = ?`
     );

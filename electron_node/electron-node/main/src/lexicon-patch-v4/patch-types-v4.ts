@@ -68,7 +68,6 @@ export type TableThresholdsV4 = Partial<{
   term_domain_tags: number;
   domain_lexicon: number;
   industry_routing_lexicon: number;
-  term_pinyin_ngrams: number;
 }>;
 
 export type LexiconPatchV4 = {

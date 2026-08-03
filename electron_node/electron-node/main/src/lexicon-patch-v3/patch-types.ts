@@ -60,7 +60,6 @@ export type PatchBundleTableCounts = {
   routing: number;
   term: number;
   termDomainTags: number;
-  ngrams: number;
 };
 
 export type ApplyLexiconPatchV3Result = {
@@ -80,15 +79,17 @@ export type ApplyLexiconPatchV3Result = {
 
 export const LEXICON_PATCH_HISTORY_TABLE = 'lexicon_patch_history';
 
-export const V3_TABLE_THRESHOLDS_V2 = {
-  base_lexicon: 47500,
+/** Post Full Rebuild + PF retirement — base ≈ term SSOT rematerialization. */
+export const V3_TABLE_THRESHOLDS_V3 = {
+  base_lexicon: 10000,
   idiom_lexicon: 21000,
-  term: 107,
-  term_domain_tags: 190,
-  domain_lexicon: 185,
-  industry_routing_lexicon: 9,
-  term_pinyin_ngrams: 80000,
+  term: 10000,
+  term_domain_tags: 900,
+  domain_lexicon: 900,
+  industry_routing_lexicon: 900,
 } as const;
+/** @deprecated alias — use V3_TABLE_THRESHOLDS_V3 */
+export const V3_TABLE_THRESHOLDS_V2 = V3_TABLE_THRESHOLDS_V3;
 
 export function isTermPatchEntry(entry: TierPatchEntry | TermPatchEntry): entry is TermPatchEntry {
   return Array.isArray((entry as TermPatchEntry).domainTags);

@@ -2,6 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { requireLogicalWindowRecallCount } from './require-logical-window-recall-count.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const batch = JSON.parse(fs.readFileSync(path.join(__dirname, '../schema-v2-dialog200-batch-result.json'), 'utf8'));
@@ -51,7 +52,9 @@ const rows = cases.map((c) => {
     pipeline_ms: c.pipeline_ms,
     fw_step_ms: c.extra?.fw_detector_step_ms,
     assembly_ms: c.extra?.fw_detector?.spanAssemblyV4?.assemblyMs,
-    ngram_queries: c.extra?.fw_detector?.spanAssemblyV4?.ngramQueryCount,
+    logical_window_recall_count: c.extra?.fw_detector?.spanAssemblyV4
+      ? requireLogicalWindowRecallCount(c.extra.fw_detector.spanAssemblyV4, c.id)
+      : null,
     lexicon: c.extra?.lexicon_manifest_version,
   };
 });
@@ -94,6 +97,7 @@ const out = {
   worst_final: [...rows].sort((a, b) => b.final_cer - a.final_cer).slice(0, 5),
 };
 
-const outPath = path.join(__dirname, 'schema-v2-dialog200-summary.json');
+// Do not overwrite historical schema-v2-dialog200-summary.json if present
+const outPath = path.join(__dirname, 'schema-v2-dialog200-summary.active.json');
 fs.writeFileSync(outPath, JSON.stringify(out, null, 2));
 console.log(JSON.stringify(out, null, 2));

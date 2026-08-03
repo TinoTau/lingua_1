@@ -1,12 +1,11 @@
 # KenLM Sentence Rerank — Batch-Only Runtime
 
-**状态：** FROZEN · KenLM Runtime Batch-Only **V1.0.0** · Raw Log Delta **V1.0.0** · Domain wiring update **2026-07-20**  
-**Runtime Domain Presence Vote:** **ACCEPTED AND FROZEN** — [`Runtime_SSOT_Contract_Freeze.md`](../../tone-v2/Runtime_SSOT_Contract_Freeze.md)  
+**状态：** FROZEN · KenLM Runtime Batch-Only **V1.0.0** · Raw Log Delta **V1.0.0** · Lattice cross-Path note **2026-07-26**  
+**Runtime Domain Presence Vote formula:** [`Runtime_SSOT_Contract_Freeze.md`](../../tone-v2/Runtime_SSOT_Contract_Freeze.md)  
+**Fine Span / Path SSOT:** [`FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md`](../../tone-v2/FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md)  
 **唯一合法实现：** subprocess `scoreBatch` + raw log delta pick + Gate **3.0**
 
 **代码：** `main/src/asr-repair/sentence-rerank/kenlm-scorer.ts` · `main/src/fw-detector/rerank-fw-sentences.ts` · `main/src/fw-detector/kenlm/run-fw-sentence-rerank-from-prefilled.ts`
-
-**Runtime Domain Authority:** [`Runtime_SSOT_Contract_Freeze.md`](../../tone-v2/Runtime_SSOT_Contract_Freeze.md)
 
 ---
 
@@ -18,8 +17,9 @@
 | Pick 公式 | `rawDelta = candidate.score − baselineRawScore` |
 | Gate | `minDeltaToReplace = **3.0**`（raw log 单位） |
 | scoreMode | `raw_log_delta` |
-| 典型 batch | 1 raw + 16 candidates = **17 行 → 1 spawn** |
+| 典型 batch | 1 raw + ≤16 candidates |
 | fail-open | subprocess 失败 → score 全 0，不阻断 pipeline |
+| Cross-Path | KenLM 对**全局**合并后的 ≤16 句统一评分；**不**参与 Path 枚举/裁剪 |
 
 **禁止作为 pick 依据：** normalized delta · serial runtime · legacy pick loop
 
@@ -27,12 +27,13 @@
 
 ---
 
-## 2. 正式调用链（跨桶池）
+## 2. 正式调用链（跨 Path / 跨桶池）
 
 ```text
 span-assembly-v4-orchestrator
-→ mergeCrossBucketSentenceCandidates
-→ kenlmSentenceCandidates
+→ Path-local assemblies
+→ mergeCrossPathSentenceCandidates
+→ kenlmSentenceCandidates (<=16, multi-source Trace retained)
 → fw-detector-v4-path
 → prefilledCombinations (required)
 → runFwSentenceRerankFromPrefilled
@@ -46,6 +47,8 @@ span-assembly-v4-orchestrator
 undefined 不允许（无 legacy primary spanSets rebuild）
 ```
 
+若 scorer 仅接收 `string[]`，外层必须保留 `text → GlobalSentenceCandidate.sources[]`，评分后回绑 pathId / boundaryKey / domainBucket / sourceEdges / sourceTermIds。
+
 ---
 
 ## 3. Domain / 候选池边界
@@ -54,10 +57,12 @@ undefined 不允许（无 legacy primary spanSets rebuild）
 2. KenLM **不接收** `domainScores`。  
 3. KenLM **不接收** `retainedDomains`。  
 4. KenLM **不接收** `bucketDomain`。  
-5. KenLM 输入只包含 **raw** 与 **candidate text**。  
-6. Candidate pool 已在 Runtime Domain 层完成跨桶 text dedup。  
-7. 最终候选数量 **<=16**。  
-8. `scoreMode = raw_log_delta`。  
+5. KenLM **不**生成 Window / Recall / LexicalEdge / Path / Vote / SameDomain。  
+6. KenLM **不**做 Path 资源裁剪。  
+7. KenLM 输入只包含 **raw** 与 **candidate text**。  
+8. Candidate pool 已在 Lattice/Runtime Domain 层完成跨 Path 合并与 text dedup（来源 Trace 保留）。  
+9. 最终候选数量 **<=16**。  
+10. `scoreMode = raw_log_delta`。  
 9. `minDeltaToReplace` 不在本轮修改。  
 10. WSL cold-start timeout 是**运行风险**（预热后可运行）。  
 11. **Integration PASS ≠ Quality PASS**。

@@ -1,9 +1,11 @@
 # Lingua Runtime Evolution Rule
 
 **Document Type:** Permanent Architecture Constraint  
-**Status:** Frozen · Effective 2026-07-15  
+**Status:** Frozen · Effective 2026-07-15 · Lattice Architecture cite **2026-07-26**  
 **Scope:** FW Repair V4 Runtime · Diagnostics · Metrics Consumer · Reports  
-**Authority:** 与 [ARCHITECTURE.md](../fw-detector/ARCHITECTURE.md) · [freeze/FROZEN.md](../fw-detector/freeze/FROZEN.md) · [INTERFACE_FREEZE.md](../fw-detector/INTERFACE_FREEZE.md) · [diagnostics/FROZEN.md](../fw-detector/diagnostics/FROZEN.md) 同级；**不得绕过**。
+**Authority：** 与 [ARCHITECTURE.md](../fw-detector/ARCHITECTURE.md) · [freeze/FROZEN.md](../fw-detector/freeze/FROZEN.md) · [INTERFACE_FREEZE.md](../fw-detector/INTERFACE_FREEZE.md) · [diagnostics/FROZEN.md](../fw-detector/diagnostics/FROZEN.md) · [Lattice Architecture V1.0.0](./FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md) 同级；**不得绕过**。
+
+**Lattice Fine Span / Path / Trace 字段：** 新增 pathId、boundaryKey、prunedPath* 等必须先写入 Lattice Architecture / INTERFACE_FREEZE / diagnostics，再进 Mapping Catalog，禁止 Metrics 捷径消费。
 
 **Companion（既有约束，本文件为其演进专章）：**
 

@@ -85,7 +85,7 @@ describe('runtime-domain-registry', () => {
     const registry = buildRuntimeDomainRegistry(db, {
       domainHierarchyVersion: 'test-v1',
       checksum: 'x',
-      schemaVersion: 'lexicon-v3-five-table-v2',
+      schemaVersion: 'lexicon-v3-runtime-v3',
     });
     setRuntimeDomainRegistry(registry);
     expect(expandCoarseToAvailableFine('restaurant')).toEqual([
@@ -106,7 +106,7 @@ describe('runtime-domain-registry', () => {
     const registry = buildRuntimeDomainRegistry(db, {
       domainHierarchyVersion: 'test-v1',
       checksum: 'x',
-      schemaVersion: 'lexicon-v3-five-table-v2',
+      schemaVersion: 'lexicon-v3-runtime-v3',
     });
     setRuntimeDomainRegistry(registry);
     const expanded = expandPolicyToFineDomains(['restaurant'], registry);

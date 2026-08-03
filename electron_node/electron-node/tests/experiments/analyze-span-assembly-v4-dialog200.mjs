@@ -2,6 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { requireLogicalWindowRecallCount } from './require-logical-window-recall-count.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const batchArg = process.argv[2];
@@ -113,7 +114,7 @@ function pickSamples(ids) {
         assemblyMs: v4.assemblyMs,
         boundaryWindowCount: v4.boundaryWindowCount,
         windowCandidatePoolCount: v4.windowCandidatePoolCount,
-        ngramQueryCount: v4.ngramQueryCount,
+        logicalWindowRecallCount: requireLogicalWindowRecallCount(v4, c.id),
         droppedCandidateCount: v4.droppedCandidateCount,
         ref: ref.slice(0, 60),
         raw: raw.slice(0, 60),
@@ -163,7 +164,13 @@ const out = {
     avg_global_windows: Math.round(avg(v4DiagList.map((d) => d.globalWindowGeneratedCount || 0))),
     avg_boundary_windows: Number(avg(v4DiagList.map((d) => d.boundaryWindowCount || 0)).toFixed(2)),
     avg_blocked_windows: Number(avg(v4DiagList.map((d) => d.blockedWindowCount || 0)).toFixed(2)),
-    avg_ngram_queries: Number(avg(v4DiagList.map((d) => d.ngramQueryCount || 0)).toFixed(2)),
+    avg_logical_window_recall_count: Number(
+      avg(
+        v4DiagList.map((d, i) =>
+          requireLogicalWindowRecallCount(d, v4Cases[i]?.id ?? `v4Diag[${i}]`)
+        )
+      ).toFixed(2)
+    ),
     avg_pool_size: Number(avg(v4DiagList.map((d) => d.windowCandidatePoolCount || 0)).toFixed(2)),
     avg_dropped: Number(avg(v4DiagList.map((d) => d.droppedCandidateCount || 0)).toFixed(2)),
     total_dropped: v4DiagList.reduce((s, d) => s + (d.droppedCandidateCount || 0), 0),
@@ -175,7 +182,7 @@ const out = {
         fw_applied_count: d001Fw?.summary?.appliedCount,
         boundaryWindowCount: d001V4?.boundaryWindowCount,
         windowCandidatePoolCount: d001V4?.windowCandidatePoolCount,
-        ngramQueryCount: d001V4?.ngramQueryCount,
+        logicalWindowRecallCount: requireLogicalWindowRecallCount(d001V4, 'd001'),
         raw: (d001.extra?.raw_asr_text || '').slice(0, 80),
         final: (d001.extra?.text_asr || '').slice(0, 80),
         has_zhong_bei_window: JSON.stringify(d001.extra).includes('zhong|bei'),
@@ -209,7 +216,8 @@ const out = {
   },
 };
 
-const outPath = path.join(__dirname, 'span-assembly-v4-dialog200-quality-perf.json');
+// Do not overwrite historical span-assembly-v4-dialog200-quality-perf.json
+const outPath = path.join(__dirname, 'span-assembly-v4-dialog200-quality-perf.active.json');
 fs.writeFileSync(outPath, JSON.stringify(out, null, 2), 'utf8');
 console.log('[analyze-v4] wrote', outPath);
 console.log(JSON.stringify(out, null, 2));

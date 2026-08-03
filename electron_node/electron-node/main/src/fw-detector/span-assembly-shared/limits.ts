@@ -2,10 +2,7 @@
 export const CoarseAssemblyLimits = {
   ngramTopK: 2,
   exactTopK: 2,
-  parentFragmentTopK: 3,
-  perParentTermPerWindow: 1,
   maxGraphEdgesPerSpan: 20,
-  maxSqlPerUtterance: 150,
   maxCoarsePathsPerSpan: 3,
   maxSentenceBeam: 16,
   minNgramSyllables: 2,

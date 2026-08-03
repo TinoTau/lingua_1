@@ -40,7 +40,7 @@ function main() {
     dist,
     'lexicon-v2/lexicon-runtime-v2-holder.js'
   ));
-  const { recallSpanTopKV3 } = require(path.join(dist, 'lexicon-v2/recall-span-topkv3.js'));
+  const { recallSpanTopKV2 } = require(path.join(dist, 'lexicon-v2/recall-span-topk-v2.js'));
 
   const manifest = JSON.parse(fs.readFileSync(MANIFEST, 'utf8'));
   const stats = JSON.parse(fs.readFileSync(STATS, 'utf8'));
@@ -86,7 +86,7 @@ function main() {
     const runtimeV2 = getLexiconRuntimeV2();
     for (const { word, domain } of SAMPLE_WORDS) {
       const syllables = pinyin(word, { toneType: 'none', type: 'array' }).map((s) => String(s).toLowerCase());
-      const recall = recallSpanTopKV3(runtimeV2, {
+      const recall = recallSpanTopKV2(runtimeV2, {
         syllables,
         windowText: word,
         termLength: [...word].length,
