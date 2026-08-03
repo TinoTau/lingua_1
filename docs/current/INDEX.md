@@ -52,6 +52,17 @@
 | Validator / Interface Freeze | [`../fw-detector/INTERFACE_FREEZE.md`](../fw-detector/INTERFACE_FREEZE.md) |
 | Diagnostics | [`../fw-detector/diagnostics/FROZEN.md`](../fw-detector/diagnostics/FROZEN.md) |
 
+### Recall Subsystem（日期节点冻结 · Supporting）
+
+| 主题 | 文档 |
+|------|------|
+| Recall Subsystem Frozen Contract | [`../supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md`](../supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md) |
+| Documentation Freeze Registration | [`../acceptance/Freeze/2026-08-03_Recall_Subsystem_Documentation_Freeze/`](../acceptance/Freeze/2026-08-03_Recall_Subsystem_Documentation_Freeze/) |
+
+```text
+Recall Subsystem Status: FROZEN_AT_2026_08_03
+```
+
 冲突优先级：
 
 ```text
@@ -61,7 +72,6 @@ Lattice Architecture V1.0.0
 > Acceptance Records
 > Archive
 ```
-
 ---
 
 ## 非 CURRENT

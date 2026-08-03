@@ -12,10 +12,39 @@
 
 | KenLM MAY | KenLM MUST NOT |
 |-----------|----------------|
-| Score | Recall |
+| Score | Recall / Window / Tone fix |
 | Rank | Domain Vote |
 | Pick (`raw_log_delta` + gate) | Sentence Assembly |
-| | Generate candidates |
+| | Generate missing words |
+| | Redo pinyin recall |
+| | Supplement Lexicon |
+| | Invent candidates that CrossPath did not produce |
+
+---
+
+## Input / Responsibility
+
+```text
+KenLM Input  = CrossPath 已生成的句子候选（含 Raw）
+KenLM 职责   = Score · Rank · Pick
+```
+
+Candidate generation ends **before** KenLM. Missing repair candidates are **upstream** (Recall / Tone / Lexicon), not KenLM defects.
+
+---
+
+## Competition requirement
+
+```text
+Only cases with candidateCount >= 2 (real competition)
+have KenLM ranking evaluation value.
+
+Raw-only cases:
+MUST NOT be used to judge KenLM ranking capability.
+```
+
+Do **not** require “all Tone-error cases must recover first” before starting KenLM capability work.  
+Next stage uses dialog_200 / real Runtime Trace cases that **naturally** contain Raw + non-Raw candidates.
 
 ---
 
@@ -41,4 +70,4 @@ candidate-level validation export 仍需下一阶段完善
 **Do not read readiness as quality acceptance.**
 
 Authority: `docs/fw-detector/kenlm/KENLM_RUNTIME.md` ·  
-`docs/tone-v2/FW_Repair_V4_KenLM_Validation_Readiness_Audit_2026_08_02.md`
+Supporting Recall freeze: `docs/supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md`

@@ -78,6 +78,19 @@ Lattice Architecture V1.0.0 (Fine Span / Path / Window / Edge)
 | Interface Freeze | [`../fw-detector/INTERFACE_FREEZE.md`](../fw-detector/INTERFACE_FREEZE.md) |
 | Diagnostics | [`../fw-detector/diagnostics/FROZEN.md`](../fw-detector/diagnostics/FROZEN.md) |
 
+### Recall Subsystem（Supporting · 日期节点）
+
+| 文档 | 路径 |
+|------|------|
+| Recall Subsystem Frozen Contract | [`../supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md`](../supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md) |
+| Doc Freeze Registration | [`../acceptance/Freeze/2026-08-03_Recall_Subsystem_Documentation_Freeze/`](../acceptance/Freeze/2026-08-03_Recall_Subsystem_Documentation_Freeze/) |
+
+```text
+Recall Subsystem Status: FROZEN_AT_2026_08_03
+```
+
+禁止并列第二个 Fine Span SSOT、第二个 Vote 公式合同、或第二个 Tone Evidence SSOT。
+
 ---
 
 ## Supporting Contracts
@@ -88,12 +101,20 @@ Lattice Architecture V1.0.0 (Fine Span / Path / Window / Edge)
 |------|------|
 | Context Prior | [`../fw-detector/CONTEXT_PRIOR.md`](../fw-detector/CONTEXT_PRIOR.md) |
 | Recovery Guide | [`../framework_snapshots/FW_V4_FREEZE_2026_08_03/13_Recovery_Guide.md`](../framework_snapshots/FW_V4_FREEZE_2026_08_03/13_Recovery_Guide.md) |
+| Recall Subsystem Frozen Contract | [`../supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md`](../supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md) |
 
 ---
 
 ## Acceptance Records（Evidence）
 
 统一目录：[`../acceptance/`](../acceptance/)
+
+正式产物规范（自 2026-08-03）：
+
+```text
+docs/acceptance/Freeze/YYYY-MM-DD_<TaskName>/
+  README.md · report.md · summary.json · *.csv · *.md
+```
 
 | Bucket | 路径 |
 |--------|------|
@@ -104,15 +125,19 @@ Lattice Architecture V1.0.0 (Fine Span / Path / Window / Edge)
 
 常用证据（非 CURRENT）：
 
-| 主题 | 路径 |
-|------|------|
-| Presence Vote acceptance | [`../acceptance/Regression/Runtime_Domain_Presence_Vote_Final_Acceptance_Report.md`](../acceptance/Regression/Runtime_Domain_Presence_Vote_Final_Acceptance_Report.md) |
-| Step 7 Lattice freeze acceptance | [`../acceptance/Regression/FW_Repair_V4_Step7_Final_Lattice_Freeze_and_Full_Acceptance_Report_2026_07_30.md`](../acceptance/Regression/FW_Repair_V4_Step7_Final_Lattice_Freeze_and_Full_Acceptance_Report_2026_07_30.md) |
-| Code + Doc Freeze report | [`../acceptance/Freeze/FW_V4_FREEZE_2026_08_03_Code_and_Documentation_Freeze_Report.md`](../acceptance/Freeze/FW_V4_FREEZE_2026_08_03_Code_and_Documentation_Freeze_Report.md) |
-| Doc consolidation report | [`../acceptance/Freeze/FW_V4_Documentation_Consolidation_Report_2026_08_03.md`](../acceptance/Freeze/FW_V4_Documentation_Consolidation_Report_2026_08_03.md) |
+| 主题 | 路径 | 证明 |
+|------|------|------|
+| Window Boundary Audit | [`../acceptance/Freeze/2026-08-03_Window_Boundary_Audit/`](../acceptance/Freeze/2026-08-03_Window_Boundary_Audit/) | Syllable/Window 全量生成且未错误剪枝 |
+| Recall Query Builder Audit | [`../acceptance/Freeze/2026-08-03_Recall_Query_Builder_Audit/`](../acceptance/Freeze/2026-08-03_Recall_Query_Builder_Audit/) | Tone 进入 Mode C 复合 SQL；无 Plain Fallback |
+| Recall Candidate Enumeration Audit | [`../acceptance/Freeze/2026-08-03_Recall_Candidate_Enumeration_Audit/`](../acceptance/Freeze/2026-08-03_Recall_Candidate_Enumeration_Audit/) | SQLite→Candidate 无隐藏删除 |
+| Recall Candidate Recovery Development | [`../acceptance/Freeze/2026-08-03_Recall_Candidate_Recovery_Development/`](../acceptance/Freeze/2026-08-03_Recall_Candidate_Recovery_Development/) | 正式词库修复与真实候选链样例 |
+| Recall Subsystem Doc Freeze | [`../acceptance/Freeze/2026-08-03_Recall_Subsystem_Documentation_Freeze/`](../acceptance/Freeze/2026-08-03_Recall_Subsystem_Documentation_Freeze/) | 本轮文档冻结登记 |
+| Presence Vote acceptance | [`../acceptance/Regression/Runtime_Domain_Presence_Vote_Final_Acceptance_Report.md`](../acceptance/Regression/Runtime_Domain_Presence_Vote_Final_Acceptance_Report.md) | Vote 公式 |
+| Step 7 Lattice freeze acceptance | [`../acceptance/Regression/FW_Repair_V4_Step7_Final_Lattice_Freeze_and_Full_Acceptance_Report_2026_07_30.md`](../acceptance/Regression/FW_Repair_V4_Step7_Final_Lattice_Freeze_and_Full_Acceptance_Report_2026_07_30.md) | Lattice baseline |
+| Code + Doc Freeze report | [`../acceptance/Freeze/FW_V4_FREEZE_2026_08_03_Code_and_Documentation_Freeze_Report.md`](../acceptance/Freeze/FW_V4_FREEZE_2026_08_03_Code_and_Documentation_Freeze_Report.md) | Framework freeze tip |
+| Doc consolidation report | [`../acceptance/Freeze/FW_V4_Documentation_Consolidation_Report_2026_08_03.md`](../acceptance/Freeze/FW_V4_Documentation_Consolidation_Report_2026_08_03.md) | Doc hierarchy |
 
 旧 `docs/tone-v2/*.md` 同名文件若为 `# MOVED` stub，请跟随新路径。
-
 ---
 
 ## Historical Archive

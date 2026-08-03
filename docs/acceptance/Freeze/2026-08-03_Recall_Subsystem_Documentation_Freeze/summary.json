@@ -1,0 +1,31 @@
+{
+  "baseline": "FW_V4_FREEZE_2026_08_03",
+  "task": "RECALL_SUBSYSTEM_DOCUMENTATION_FREEZE",
+  "codeChanged": false,
+  "lexiconChanged": false,
+  "sqliteChanged": false,
+  "configChanged": false,
+  "toneModelChanged": false,
+  "recallCodeChanged": false,
+  "kenlmChanged": false,
+  "oldFreezeTagMoved": false,
+  "recallSubsystemStatus": "FROZEN_AT_2026_08_03",
+  "windowAlignment": "VERIFIED",
+  "queryBuilder": "VERIFIED",
+  "toneQueryMode": "PLAIN_AND_TONE_COMPOSITE_SQL",
+  "plainFallback": false,
+  "enumerator": "VERIFIED",
+  "mandatoryTonePurpose": "PROTOCOL_INTEGRITY",
+  "tonePredictionError": "ACCEPTED_MODEL_LIMITATION",
+  "rawOnly": "VALID_FALLBACK",
+  "kenlmResponsibility": "SCORE_RANK_PICK_EXISTING_CANDIDATES",
+  "nextStage": "KENLM_REAL_COMPETITION_BASELINE",
+  "supportingContract": "docs/supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md",
+  "formalPack": "docs/acceptance/Freeze/2026-08-03_Recall_Subsystem_Documentation_Freeze/",
+  "lexiconPostRecoveryNote": {
+    "bundleVersion": 13,
+    "termCount": 9259,
+    "checksum": "sha256:b3cc9477227900d726b769a6135a81d09dfdd5a862b37c6e1e92c04e12a81d58"
+  },
+  "finalVerdict": "RECALL_SUBSYSTEM_DOCUMENTATION_FROZEN"
+}

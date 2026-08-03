@@ -1,0 +1,215 @@
+{
+  "freeze": "FW_V4_FREEZE_2026_08_03",
+  "nature": "READ_ONLY_RECALL_CANDIDATE_ENUMERATION_AUDIT",
+  "verdict": "ENUMERATOR_CORRECT",
+  "verdictDetail": "SQLite Result → merge → score → tone-rank → TopK slice → minPrior bind is fully traced. Correct repair terms are absent from SQLite Result under noise query keys (Tone WHERE), not dropped by a hidden enumerator filter.",
+  "callChain": [
+    "lookupBaseByPinyinAndToneKey / lookupDomainsByPinyinAndToneKeyMulti",
+    "collectTierCandidatesToneFirst → mergeSpanCandidatesCombined",
+    "scoreHotword (bestById)",
+    "sortRecallHitsByToneCompatibility (no drop)",
+    "hits.slice(0, perSpanLimit)",
+    "bindLexiconHitsToWindow (minPrior)"
+  ],
+  "topKLocations": {
+    "sqlLIMIT": "max(perSpanLimit, 8) inside lookup*",
+    "mergeLimit": "mergeSpanCandidatesCombined(..., perSpanLimit)",
+    "finalSlice": "recallSpanTopKV2 hits.slice(0, perSpanLimit|topK)",
+    "windowExactTopK": 2
+  },
+  "domainOrder": "Domain SQL parallel with Base → merge prefers domain>alias>base when active domains; not Domain-filter-after-TopK",
+  "toneAfterSql": "Tone already constrained by SQL WHERE. sortRecallHitsByToneCompatibility only re-ranks / multiplies score — never removes.",
+  "hiddenFilters": {
+    "sql_where": [
+      "enabled=1",
+      "length(word)=?",
+      "pinyin_key=?",
+      "tone_pinyin_key=?",
+      "ORDER BY prior_score DESC",
+      "LIMIT"
+    ],
+    "after_sql": [
+      "mergeSpanCandidatesCombined (domain>alias>base, dedupe, slice perSpanLimit)",
+      "scoreHotword: enabled/length/priorScore>0/minCandidateScore/bestById dedupe",
+      "sortRecallHitsByToneCompatibility: RANK/PENALTY only — no drop",
+      "hits.slice(0, perSpanLimit|topK)",
+      "bindLexiconHitsToWindow: minPrior gate"
+    ],
+    "not_present": [
+      "No post-SQL domain-only reject of base hits (domain is parallel fetch + merge priority)",
+      "No tone DROP after SQL (tone already in WHERE; sort does not remove)"
+    ]
+  },
+  "anyDropAfterSqlWithMultiple": false,
+  "correctNeverInSql": [
+    {
+      "caseId": "nn-train-01",
+      "window": "我闷",
+      "correct": "我们",
+      "queryTone": "wo1|men1"
+    },
+    {
+      "caseId": "nn-train-01",
+      "window": "蒸在",
+      "correct": "正在",
+      "queryTone": "zheng1|zai1"
+    },
+    {
+      "caseId": "nn-train-01b",
+      "window": "蒸在",
+      "correct": "正在",
+      "queryTone": "zheng1|zai1"
+    },
+    {
+      "caseId": "snack-01",
+      "window": "消失",
+      "correct": "小食",
+      "queryTone": "xiao1|shi1"
+    },
+    {
+      "caseId": "sync-01",
+      "window": "已精",
+      "correct": "已经",
+      "queryTone": "yi1|jing1"
+    },
+    {
+      "caseId": "sync-01",
+      "window": "通步",
+      "correct": "同步",
+      "queryTone": "tong1|bu1"
+    },
+    {
+      "caseId": "trigger-01",
+      "window": "出发",
+      "correct": "触发",
+      "queryTone": "chu1|fa1"
+    },
+    {
+      "caseId": "threshold-01",
+      "window": "阈之",
+      "correct": "阈值",
+      "queryTone": "yu1|zhi1"
+    }
+  ],
+  "correctInSqlButDropped": [],
+  "caseMeta": [
+    {
+      "caseId": "nn-train-01",
+      "windowText": "我闷",
+      "plain": "wo|men",
+      "queryTone": "wo1|men1",
+      "correct": "我们",
+      "correctMissReason": "TONE_KEY_MISMATCH_NOT_IN_SQL",
+      "sqliteSurfaces": [],
+      "recallSurfaces": []
+    },
+    {
+      "caseId": "nn-train-01",
+      "windowText": "蒸在",
+      "plain": "zheng|zai",
+      "queryTone": "zheng1|zai1",
+      "correct": "正在",
+      "correctMissReason": "TONE_KEY_MISMATCH_NOT_IN_SQL",
+      "sqliteSurfaces": [],
+      "recallSurfaces": []
+    },
+    {
+      "caseId": "nn-train-01b",
+      "windowText": "闷蒸",
+      "plain": "men|zheng",
+      "queryTone": "men1|zheng1",
+      "correct": "正在",
+      "correctMissReason": "PLAIN_KEY_MISMATCH_NOT_IN_SQL",
+      "sqliteSurfaces": [
+        "闷蒸"
+      ],
+      "recallSurfaces": [
+        "闷蒸"
+      ]
+    },
+    {
+      "caseId": "nn-train-01b",
+      "windowText": "蒸在",
+      "plain": "zheng|zai",
+      "queryTone": "zheng1|zai1",
+      "correct": "正在",
+      "correctMissReason": "TONE_KEY_MISMATCH_NOT_IN_SQL",
+      "sqliteSurfaces": [],
+      "recallSurfaces": []
+    },
+    {
+      "caseId": "snack-01",
+      "windowText": "消失",
+      "plain": "xiao|shi",
+      "queryTone": "xiao1|shi1",
+      "correct": "小食",
+      "correctMissReason": "TONE_KEY_MISMATCH_NOT_IN_SQL",
+      "sqliteSurfaces": [
+        "消失"
+      ],
+      "recallSurfaces": [
+        "消失"
+      ]
+    },
+    {
+      "caseId": "sync-01",
+      "windowText": "已精",
+      "plain": "yi|jing",
+      "queryTone": "yi1|jing1",
+      "correct": "已经",
+      "correctMissReason": "TONE_KEY_MISMATCH_NOT_IN_SQL",
+      "sqliteSurfaces": [],
+      "recallSurfaces": []
+    },
+    {
+      "caseId": "sync-01",
+      "windowText": "通步",
+      "plain": "tong|bu",
+      "queryTone": "tong1|bu1",
+      "correct": "同步",
+      "correctMissReason": "TONE_KEY_MISMATCH_NOT_IN_SQL",
+      "sqliteSurfaces": [],
+      "recallSurfaces": []
+    },
+    {
+      "caseId": "trigger-01",
+      "windowText": "出发",
+      "plain": "chu|fa",
+      "queryTone": "chu1|fa1",
+      "correct": "触发",
+      "correctMissReason": "TONE_KEY_MISMATCH_NOT_IN_SQL",
+      "sqliteSurfaces": [
+        "出发"
+      ],
+      "recallSurfaces": [
+        "出发"
+      ]
+    },
+    {
+      "caseId": "threshold-01",
+      "windowText": "阈之",
+      "plain": "yu|zhi",
+      "queryTone": "yu1|zhi1",
+      "correct": "阈值",
+      "correctMissReason": "TONE_KEY_MISMATCH_NOT_IN_SQL",
+      "sqliteSurfaces": [],
+      "recallSurfaces": []
+    },
+    {
+      "caseId": "threshold-01",
+      "windowText": "阈之一",
+      "plain": "yu|zhi|yi",
+      "queryTone": "yu1|zhi1|yi1",
+      "correct": "阈值",
+      "correctMissReason": "PLAIN_KEY_MISMATCH_NOT_IN_SQL",
+      "sqliteSurfaces": [],
+      "recallSurfaces": []
+    }
+  ],
+  "limits": {
+    "exactTopK": 2,
+    "minCandidateScore": 0,
+    "minPrior": 0.5,
+    "sqlLimitFloor": 8
+  }
+}

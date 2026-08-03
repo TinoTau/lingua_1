@@ -13,19 +13,21 @@
 docs/acceptance/
   Development/   — Development Report
   Test/          — Test Report
-  Freeze/        — Freeze / Consolidation Report
+  Freeze/        — Freeze / Consolidation / dated task packs
   Regression/    — Acceptance / Regression / Quality gates
 ```
 
-## Counts（2026-08-03 consolidation）
+### Dated Freeze packs（自 2026-08-03）
 
-| Bucket | Count |
-|--------|------:|
-| Development | 32 |
-| Test | 16 |
-| Freeze | 2 |
-| Regression | 20 |
+```text
+docs/acceptance/Freeze/YYYY-MM-DD_<TaskName>/
+  README.md
+  report.md
+  summary.json
+  *.csv
+  *.md
+```
 
-旧路径 `docs/tone-v2/<name>.md` 保留 stub → 本目录。
+Evidence only — **不得**覆盖 CURRENT SSOT。
 
 入口：[`../current/INDEX.md`](../current/INDEX.md)

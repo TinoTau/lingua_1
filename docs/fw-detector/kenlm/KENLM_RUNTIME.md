@@ -71,6 +71,24 @@ undefined 不允许（无 legacy primary spanSets rebuild）
 
 ---
 
+## 3A. Ranking evaluation scope（2026-08-03）
+
+```text
+KenLM Input  = CrossPath 已生成句子候选
+KenLM 职责   = Score · Rank · Pick
+KenLM 不负责 = 生成缺失词 · 修复 Tone · 重做 Window/Recall · 补词库 · 发明 Candidate
+```
+
+```text
+Only candidateCount >= 2 competition cases evaluate KenLM ranking.
+Raw-only cases MUST NOT be used to judge KenLM ranking capability.
+Do not require all Tone-error cases to recover before KenLM capability work.
+```
+
+Supporting: [`../../supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md`](../../supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md)
+
+---
+
 ## 4. Batch 行为
 
 | 场景 | 行为 |

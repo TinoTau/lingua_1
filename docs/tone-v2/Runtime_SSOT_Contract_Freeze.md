@@ -540,3 +540,27 @@ Legacy prefilled rebuild — REMOVED
 KENLM INTEGRATION ACCEPTANCE — PASS
 KENLM QUALITY STATUS — NOT FROZEN / OUT OF SCOPE
 ```
+
+---
+
+## 31. Recall Subsystem Date-Node Freeze（2026-08-03）
+
+Supporting contract（非第二 Sole Authority）：
+
+[`../supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md`](../supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md)
+
+```text
+Recall Subsystem Status: FROZEN_AT_2026_08_03
+```
+
+### Allowed Runtime Failure Modes（摘要）
+
+| Mode | Code |
+|------|------|
+| Valid Tone Evidence but wrong predicted digits | `ACCEPTED_MODEL_LIMITATION` |
+| Pronunciation / ASR syllable deformation | `ACCEPTED_INPUT_AMBIGUITY` |
+| No reliable repair candidate → Raw-only pool | `VALID_RAW_FALLBACK` |
+| Clarify via later conversation | Allowed |
+
+Mandatory Tone Gate purpose = **protocol integrity** (Fail Closed on missing/invalid Tone), **not** 100% Tone model accuracy.  
+Mode C Plain∧Tone SQL · No Plain Fallback · Enumerator does not hard-drop on Tone after SQL.

@@ -1,0 +1,8 @@
+recordId,path,kind,proves,verdict
+A1,docs/acceptance/Freeze/2026-08-03_Window_Boundary_Audit/,ACCEPTANCE_RECORD,Syllable/Window vs ASR Raw; critical plain-key windows exist; blocked=0,WINDOW_ALIGNMENT_CORRECT
+A2,docs/acceptance/Freeze/2026-08-03_Recall_Query_Builder_Audit/,ACCEPTANCE_RECORD,Tone enters Mode C composite SQL; no Plain Fallback,QUERY_BUILDER_CORRECT
+A3,docs/acceptance/Freeze/2026-08-03_Recall_Candidate_Enumeration_Audit/,ACCEPTANCE_RECORD,SQLite Result to Candidate enumeration; no hidden drop of in-SQL correct terms,ENUMERATOR_CORRECT
+A4,docs/acceptance/Freeze/2026-08-03_Recall_Candidate_Recovery_Development/,ACCEPTANCE_RECORD,Formal Source repairs + Full Rebuild; sample Raw+Correct CrossPath (center-01),DEVELOPMENT_PARTIAL
+A5,docs/acceptance/Freeze/2026-08-03_Recall_Subsystem_Documentation_Freeze/,ACCEPTANCE_RECORD,CURRENT/Snapshot documentation freeze registration,RECALL_SUBSYSTEM_DOCUMENTATION_FROZEN
+A6,docs/acceptance/Freeze/FW_Repair_V4_Recall_Query_Builder_Audit_2026_08_03.md,ACCEPTANCE_RECORD,Named report alias for Query Builder audit,QUERY_BUILDER_CORRECT
+A7,docs/acceptance/Freeze/FW_Repair_V4_Recall_Candidate_Recovery_Development_Report_2026_08_03.md,ACCEPTANCE_RECORD,Named report alias for Recovery Development,DEVELOPMENT_PARTIAL

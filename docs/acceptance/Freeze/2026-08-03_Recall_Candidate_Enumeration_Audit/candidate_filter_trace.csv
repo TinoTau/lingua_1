@@ -1,0 +1,20 @@
+caseId,queryId,windowText,queryPlain,queryTone,correctSurface,stage,termId,surface,decision,reason
+nn-train-01b,nn-train-01b|闷蒸|men|zheng|men1|zheng1,闷蒸,men|zheng,men1|zheng1,正在,sqlite_base,base-rebuild-term-e997b7e892b87c6d,闷蒸,SQL_RETURNED,prior=0.86
+nn-train-01b,nn-train-01b|闷蒸|men|zheng|men1|zheng1,闷蒸,men|zheng,men1|zheng1,正在,sqlite_domain,term-e997b7e892b87c6d,闷蒸,SQL_RETURNED,domain=coffee prior=0.86
+nn-train-01b,nn-train-01b|闷蒸|men|zheng|men1|zheng1,闷蒸,men|zheng,men1|zheng1,正在,mergeSpanCandidatesCombined,term-e997b7e892b87c6d,闷蒸,KEEP_MERGE,in merged entries (1)
+nn-train-01b,nn-train-01b|闷蒸|men|zheng|men1|zheng1,闷蒸,men|zheng,men1|zheng1,正在,scoreHotword,term-e997b7e892b87c6d,闷蒸,KEEP_SCORE,candidateScore=2.36 >= min=0
+nn-train-01b,nn-train-01b|闷蒸|men|zheng|men1|zheng1,闷蒸,men|zheng,men1|zheng1,正在,sortRecallHitsByToneCompatibility,term-e997b7e892b87c6d,闷蒸,KEEP_TONE_RANK,tone does not drop; penalty=1 score=2.36
+nn-train-01b,nn-train-01b|闷蒸|men|zheng|men1|zheng1,闷蒸,men|zheng,men1|zheng1,正在,final_slice_perSpanLimit,term-e997b7e892b87c6d,闷蒸,KEEP_TOPK,perSpanLimit/exactTopK=2
+nn-train-01b,nn-train-01b|闷蒸|men|zheng|men1|zheng1,闷蒸,men|zheng,men1|zheng1,正在,bindLexiconHitsToWindow,term-e997b7e892b87c6d,闷蒸,KEEP_RECALL_CANDIDATE,rank ok prior=0.86 >= minPrior=0.5
+snack-01,snack-01|消失|xiao|shi|xiao1|shi1,消失,xiao|shi,xiao1|shi1,小食,sqlite_base,base-rebuild-term-e6b688e5a4b17c78,消失,SQL_RETURNED,prior=0.85
+snack-01,snack-01|消失|xiao|shi|xiao1|shi1,消失,xiao|shi,xiao1|shi1,小食,mergeSpanCandidatesCombined,base-rebuild-term-e6b688e5a4b17c78,消失,KEEP_MERGE,in merged entries (1)
+snack-01,snack-01|消失|xiao|shi|xiao1|shi1,消失,xiao|shi,xiao1|shi1,小食,scoreHotword,base-rebuild-term-e6b688e5a4b17c78,消失,KEEP_SCORE,candidateScore=2.35 >= min=0
+snack-01,snack-01|消失|xiao|shi|xiao1|shi1,消失,xiao|shi,xiao1|shi1,小食,sortRecallHitsByToneCompatibility,base-rebuild-term-e6b688e5a4b17c78,消失,KEEP_TONE_RANK,tone does not drop; penalty=1 score=2.35
+snack-01,snack-01|消失|xiao|shi|xiao1|shi1,消失,xiao|shi,xiao1|shi1,小食,final_slice_perSpanLimit,base-rebuild-term-e6b688e5a4b17c78,消失,KEEP_TOPK,perSpanLimit/exactTopK=2
+snack-01,snack-01|消失|xiao|shi|xiao1|shi1,消失,xiao|shi,xiao1|shi1,小食,bindLexiconHitsToWindow,base-rebuild-term-e6b688e5a4b17c78,消失,KEEP_RECALL_CANDIDATE,rank ok prior=0.85 >= minPrior=0.5
+trigger-01,trigger-01|出发|chu|fa|chu1|fa1,出发,chu|fa,chu1|fa1,触发,sqlite_base,base-rebuild-term-e587bae58f917c63,出发,SQL_RETURNED,prior=0.86
+trigger-01,trigger-01|出发|chu|fa|chu1|fa1,出发,chu|fa,chu1|fa1,触发,mergeSpanCandidatesCombined,base-rebuild-term-e587bae58f917c63,出发,KEEP_MERGE,in merged entries (1)
+trigger-01,trigger-01|出发|chu|fa|chu1|fa1,出发,chu|fa,chu1|fa1,触发,scoreHotword,base-rebuild-term-e587bae58f917c63,出发,KEEP_SCORE,candidateScore=2.36 >= min=0
+trigger-01,trigger-01|出发|chu|fa|chu1|fa1,出发,chu|fa,chu1|fa1,触发,sortRecallHitsByToneCompatibility,base-rebuild-term-e587bae58f917c63,出发,KEEP_TONE_RANK,tone does not drop; penalty=1 score=2.36
+trigger-01,trigger-01|出发|chu|fa|chu1|fa1,出发,chu|fa,chu1|fa1,触发,final_slice_perSpanLimit,base-rebuild-term-e587bae58f917c63,出发,KEEP_TOPK,perSpanLimit/exactTopK=2
+trigger-01,trigger-01|出发|chu|fa|chu1|fa1,出发,chu|fa,chu1|fa1,触发,bindLexiconHitsToWindow,base-rebuild-term-e587bae58f917c63,出发,KEEP_RECALL_CANDIDATE,rank ok prior=0.86 >= minPrior=0.5

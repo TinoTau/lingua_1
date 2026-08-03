@@ -1,0 +1,14 @@
+contractId,topic,status,mode,authority,evidence
+RS-01,Syllable Alignment,FROZEN_AT_2026_08_03,ASR_RAW_SSOT,Lattice Architecture + Supporting Recall Contract,2026-08-03_Window_Boundary_Audit
+RS-02,Lattice Window 1-5,FROZEN_AT_2026_08_03,FULL_SLIDING,Lattice Architecture,2026-08-03_Window_Boundary_Audit
+RS-03,Window Hard Block,FROZEN_AT_2026_08_03,LATTICE_HARD_BLOCK,latticeHardBlockFilter,2026-08-03_Window_Boundary_Audit
+RS-04,Mandatory Tone Gate,FROZEN_AT_2026_08_03,PROTOCOL_INTEGRITY,Tone Evidence + tone-recall-readiness,2026-08-03_Recall_Query_Builder_Audit
+RS-05,Protocol vs Model Error,FROZEN_AT_2026_08_03,FAIL_CLOSED_VS_ACCEPTED_LIMITATION,Supporting Recall Contract,Runtime_SSOT §31
+RS-06,Query Mode C,FROZEN_AT_2026_08_03,PLAIN_AND_TONE_COMPOSITE_SQL,lexicon-runtime-v2 stmtToneComposite,2026-08-03_Recall_Query_Builder_Audit
+RS-07,Plain Fallback,FROZEN_AT_2026_08_03,DISABLED_ON_MANDATORY_PATH,tone-first-tier-collector,QUERY_BUILDER_CORRECT
+RS-08,Candidate Enumerator,FROZEN_AT_2026_08_03,MERGE_SCORE_TONE_RANK_TOPK_MINPRIOR,recall-span-topk-v2,2026-08-03_Recall_Candidate_Enumeration_Audit
+RS-09,Domain Merge Order,FROZEN_AT_2026_08_03,DOMAIN_PREFERRED_THEN_SCORE_TOPK,mergeSpanCandidatesCombined,ENUMERATOR_CORRECT
+RS-10,Tone Sort After SQL,FROZEN_AT_2026_08_03,RANK_ONLY_NO_HARD_DROP,sortRecallHitsByToneCompatibility,ENUMERATOR_CORRECT
+RS-11,Raw-Only Fallback,FROZEN_AT_2026_08_03,VALID_RAW_FALLBACK,Runtime SSOT + Supporting,Known Limitations
+RS-12,KenLM Boundary,FROZEN_AT_2026_08_03,SCORE_RANK_PICK_ONLY,KENLM_RUNTIME.md,Snapshot 11
+RS-13,Change Policy,FROZEN_AT_2026_08_03,IMPACT_AUDIT_REQUIRED,FRAMEWORK_FREEZE_SUMMARY,This pack

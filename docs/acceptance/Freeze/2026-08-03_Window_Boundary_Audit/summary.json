@@ -1,0 +1,74 @@
+{
+  "freeze": "FW_V4_FREEZE_2026_08_03",
+  "nature": "READ_ONLY_SYLLABLE_ALIGNMENT_WINDOW_BOUNDARY_AUDIT",
+  "verdict": "WINDOW_ALIGNMENT_CORRECT",
+  "verdictRationale": [
+    "All 6 cases: generatedWindowCount === theoreticalWindowCount (full 1..5 lattice emit).",
+    "blockedWindowCount === 0 for all fail cases — no hard-block pruning of critical windows.",
+    "Critical repair atoms have plain-key windows that exist and are recallable (e.g. 小食←消失 xiao|shi, 触发←出发 chu|fa, 阈值←阈之 yu|zhi, 我们←我闷 wo|men).",
+    "windowText===correctSurface generally absent because ASR Raw glyphs differ — expected, not a Window Builder bug.",
+    "Probe CSV charPinyinMatchesStream=false on polyphones (调 tiao vs diao) is isolated-vs-contextual comparison false positive; stream uses run-level textToSyllables.",
+    "Side note (non-blocking for these cases): normalizeSyllable strips ü so 率→l; still 1:1 char/syllable index."
+  ],
+  "q1_syllable_cut_correct_vs_raw": true,
+  "q1_detail": "ASR Raw → buildUtteranceSyllableCoordinate → textToSyllables(CJK run). Fail-case critical spans are 1 char : 1 syllable. Syllables are NOT derived from expectedText.",
+  "q2_correct_window_text": "Glyph windows (windowText===正确词) generally DO NOT exist (Raw≠Expected glyphs). Homophone plain-key windows DO exist for all critical atoms.",
+  "q3_pruned": "No windows hard-blocked in these 6 cases (blocked=0). Lattice filter reasons exist in contract but did not fire. No TopK/Beam at window generation.",
+  "q4_window_or_tone": "FAILURE IS NOT MISSING WINDOW. Critical plain-key windows exist. Prior Query Builder audit shows Mode C tone key mismatch (e.g. xiao1|shi1 vs xiao3|shi2).",
+  "q5_fits_freeze": true,
+  "owners": {
+    "windowText_rawStart_rawEnd": "buildWindowDescriptorForRange (window-construction-core.ts)",
+    "syllableStart_syllableEnd": "buildLexicalWindowQueries nested loops",
+    "plainPinyin_windowPinyinKey": "globalSyllables.slice(start,end).join(\"|\")",
+    "globalSyllables": "buildUtteranceSyllableCoordinate → textToSyllables"
+  },
+  "limits": {
+    "latticeMin": 1,
+    "latticeMax": 5,
+    "v4LtrMin": 2,
+    "v4LtrMax": 5,
+    "maxGlobalWindowCount": 120,
+    "maxBoundaryCrossCount": 1,
+    "asrWordGapMs": 400
+  },
+  "caseQuick": {
+    "nn-train-01": {
+      "rawSyllables": "wo|men|zheng|zai|...",
+      "gen": 75,
+      "blocked": 0,
+      "criticalPlainWindows": ["0:2:我闷→wo|men", "2:4:蒸在→zheng|zai"]
+    },
+    "nn-train-01b": {
+      "gen": 50,
+      "blocked": 0,
+      "criticalPlainWindows": ["2:4:蒸在→zheng|zai", "1:3:闷蒸→men|zheng"]
+    },
+    "snack-01": {
+      "gen": 60,
+      "blocked": 0,
+      "criticalPlainWindows": ["12:14:消失→xiao|shi"]
+    },
+    "sync-01": {
+      "gen": 75,
+      "blocked": 0,
+      "criticalPlainWindows": ["6:8:已精→yi|jing", "8:10:通步→tong|bu"]
+    },
+    "trigger-01": {
+      "gen": 70,
+      "blocked": 0,
+      "criticalPlainWindows": ["8:10:出发→chu|fa"]
+    },
+    "threshold-01": {
+      "gen": 65,
+      "blocked": 0,
+      "criticalPlainWindows": ["4:6:阈之→yu|zhi", "4:7:阈之一→yu|zhi|yi"]
+    }
+  },
+  "sideNotes": {
+    "normalizeSyllableUmlaut": "率 → stream syllable 'l' because normalizeSyllable strips non [a-z0-9] (ü). Index still 1:1. Not the miss cause for 阈值 (yu|zhi window exists at 阈之).",
+    "polyphoneFalsePositiveInCsv": "syllable_alignment.csv charPinyinMatchesStream=false for 调/重/校 when isolated pinyin ≠ contextual run pinyin."
+  },
+  "generatedMatchesTheoretical": true,
+  "plainKeyGaps": [],
+  "probe": "docs/tone-v2/_audit_scratch/window-boundary-audit.mjs"
+}

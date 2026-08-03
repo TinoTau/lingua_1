@@ -1,0 +1,11 @@
+caseId,queryId,windowText,queryPlain,queryTone,readiness,sqlLimit,baseMatchCountTotal,sqliteBaseReturned,sqliteDomainReturned,sqliteSurfaces,recallHitCount,recallSurfaces,correctSurface,correctLexiconTone,correctInSqliteResult,correctMissReason,exactTopK,minCandidateScore,minPrior,sqlCaptureCalls
+nn-train-01,nn-train-01|我闷|wo|men|wo1|men1,我闷,wo|men,wo1|men1,ready,8,0,0,0,,0,,我们,wo3|men5,false,TONE_KEY_MISMATCH_NOT_IN_SQL,2,0,0.5,4
+nn-train-01,nn-train-01|蒸在|zheng|zai|zheng1|zai1,蒸在,zheng|zai,zheng1|zai1,ready,8,0,0,0,,0,,正在,zheng4|zai4,false,TONE_KEY_MISMATCH_NOT_IN_SQL,2,0,0.5,4
+nn-train-01b,nn-train-01b|闷蒸|men|zheng|men1|zheng1,闷蒸,men|zheng,men1|zheng1,ready,8,1,1,1,闷蒸,1,闷蒸,正在,zheng4|zai4,false,PLAIN_KEY_MISMATCH_NOT_IN_SQL,2,0,0.5,4
+nn-train-01b,nn-train-01b|蒸在|zheng|zai|zheng1|zai1,蒸在,zheng|zai,zheng1|zai1,ready,8,0,0,0,,0,,正在,zheng4|zai4,false,TONE_KEY_MISMATCH_NOT_IN_SQL,2,0,0.5,4
+snack-01,snack-01|消失|xiao|shi|xiao1|shi1,消失,xiao|shi,xiao1|shi1,ready,8,1,1,0,消失,1,消失,小食,xiao3|shi2,false,TONE_KEY_MISMATCH_NOT_IN_SQL,2,0,0.5,4
+sync-01,sync-01|已精|yi|jing|yi1|jing1,已精,yi|jing,yi1|jing1,ready,8,0,0,0,,0,,已经,yi3|jing1,false,TONE_KEY_MISMATCH_NOT_IN_SQL,2,0,0.5,4
+sync-01,sync-01|通步|tong|bu|tong1|bu1,通步,tong|bu,tong1|bu1,ready,8,0,0,0,,0,,同步,tong2|bu4,false,TONE_KEY_MISMATCH_NOT_IN_SQL,2,0,0.5,4
+trigger-01,trigger-01|出发|chu|fa|chu1|fa1,出发,chu|fa,chu1|fa1,ready,8,1,1,0,出发,1,出发,触发,chu4|fa1,false,TONE_KEY_MISMATCH_NOT_IN_SQL,2,0,0.5,4
+threshold-01,threshold-01|阈之|yu|zhi|yu1|zhi1,阈之,yu|zhi,yu1|zhi1,ready,8,0,0,0,,0,,阈值,yu4|zhi2,false,TONE_KEY_MISMATCH_NOT_IN_SQL,2,0,0.5,4
+threshold-01,threshold-01|阈之一|yu|zhi|yi|yu1|zhi1|yi1,阈之一,yu|zhi|yi,yu1|zhi1|yi1,ready,8,0,0,0,,0,,阈值,yu4|zhi2,false,PLAIN_KEY_MISMATCH_NOT_IN_SQL,2,0,0.5,4

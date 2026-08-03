@@ -1,0 +1,178 @@
+{
+  "bundleVersion": 13,
+  "checksum": "b3cc9477227900d726b769a6135a81d09dfdd5a862b37c6e1e92c04e12a81d58",
+  "contentHash": null,
+  "termCount": 9259,
+  "domainTagCount": 655,
+  "baseCount": 9259,
+  "schemaVersion": "lexicon-v3-runtime-v3",
+  "selfRecallOk": {
+    "我们": true,
+    "正在": true,
+    "中心": true,
+    "小食": true,
+    "已经": true,
+    "同步": true,
+    "触发": true,
+    "阈值": true
+  },
+  "casesWithRepair": 1,
+  "casesWithCorrect": 1,
+  "anyCorrectInCrossPath": true,
+  "firstFailures": [
+    {
+      "caseId": "nn-train-01",
+      "firstFailure": "RecallCandidate"
+    },
+    {
+      "caseId": "nn-train-01b",
+      "firstFailure": "RecallCandidate"
+    },
+    {
+      "caseId": "snack-01",
+      "firstFailure": "RecallCandidate"
+    },
+    {
+      "caseId": "sync-01",
+      "firstFailure": "RecallCandidate"
+    },
+    {
+      "caseId": "trigger-01",
+      "firstFailure": "RecallCandidate"
+    },
+    {
+      "caseId": "threshold-01",
+      "firstFailure": "RecallCandidate"
+    }
+  ],
+  "caseResults": [
+    {
+      "caseId": "nn-train-01",
+      "noiseSurface": "我闷蒸在",
+      "correctSurface": "我们正在",
+      "rawText": "我闷蒸在升级公司内部的专家系统平台。",
+      "expectedText": "我们正在升级公司内部的专家系统平台。",
+      "recallCandidateCount": 3,
+      "edgeCount": 3,
+      "crossPathCount": 1,
+      "distinctTexts": [
+        "我闷蒸在升级公司内部的专家系统平台。"
+      ],
+      "hasNonRaw": false,
+      "hasCorrectExact": false,
+      "hasCorrectOrAtoms": false,
+      "firstFailure": "RecallCandidate",
+      "kenlmEligible": false
+    },
+    {
+      "caseId": "nn-train-01b",
+      "noiseSurface": "闷蒸",
+      "correctSurface": "正在",
+      "rawText": "我闷蒸在训练神经网络模型。",
+      "expectedText": "我们正在训练神经网络模型。",
+      "recallCandidateCount": 1,
+      "edgeCount": 1,
+      "crossPathCount": 1,
+      "distinctTexts": [
+        "我闷蒸在训练神经网络模型。"
+      ],
+      "hasNonRaw": false,
+      "hasCorrectExact": false,
+      "hasCorrectOrAtoms": false,
+      "firstFailure": "RecallCandidate",
+      "kenlmEligible": false
+    },
+    {
+      "caseId": "center-01",
+      "noiseSurface": "忠心",
+      "correctSurface": "中心",
+      "rawText": "微服务会定时向注册忠心上报健康状态。",
+      "expectedText": "微服务会定时向注册中心上报健康状态。",
+      "recallCandidateCount": 2,
+      "edgeCount": 1,
+      "crossPathCount": 2,
+      "distinctTexts": [
+        "微服务会定时向注册忠心上报健康状态。",
+        "微服务会定时向注册中心上报健康状态。"
+      ],
+      "hasNonRaw": true,
+      "hasCorrectExact": true,
+      "hasCorrectOrAtoms": true,
+      "firstFailure": null,
+      "kenlmEligible": true
+    },
+    {
+      "caseId": "snack-01",
+      "noiseSurface": "消失",
+      "correctSurface": "小食",
+      "rawText": "客房里的迷你吧提供饮料和消失。",
+      "expectedText": "客房里的迷你吧提供饮料和小食。",
+      "recallCandidateCount": 1,
+      "edgeCount": 1,
+      "crossPathCount": 1,
+      "distinctTexts": [
+        "客房里的迷你吧提供饮料和消失。"
+      ],
+      "hasNonRaw": false,
+      "hasCorrectExact": false,
+      "hasCorrectOrAtoms": false,
+      "firstFailure": "RecallCandidate",
+      "kenlmEligible": false
+    },
+    {
+      "caseId": "sync-01",
+      "noiseSurface": "已精通步",
+      "correctSurface": "已经同步",
+      "rawText": "回归测试报告已精通步给质量保障团队。",
+      "expectedText": "回归测试报告已经同步给质量保障团队。",
+      "recallCandidateCount": 1,
+      "edgeCount": 1,
+      "crossPathCount": 1,
+      "distinctTexts": [
+        "回归测试报告已精通步给质量保障团队。"
+      ],
+      "hasNonRaw": false,
+      "hasCorrectExact": false,
+      "hasCorrectOrAtoms": false,
+      "firstFailure": "RecallCandidate",
+      "kenlmEligible": false
+    },
+    {
+      "caseId": "trigger-01",
+      "noiseSurface": "出发",
+      "correctSurface": "触发",
+      "rawText": "调用下游超时后会出发熔断策略保护。",
+      "expectedText": "调用下游超时后会触发熔断策略保护。",
+      "recallCandidateCount": 1,
+      "edgeCount": 1,
+      "crossPathCount": 1,
+      "distinctTexts": [
+        "调用下游超时后会出发熔断策略保护。"
+      ],
+      "hasNonRaw": false,
+      "hasCorrectExact": false,
+      "hasCorrectOrAtoms": false,
+      "firstFailure": "RecallCandidate",
+      "kenlmEligible": false
+    },
+    {
+      "caseId": "threshold-01",
+      "noiseSurface": "阈之一",
+      "correctSurface": "阈值",
+      "rawText": "熔断策略阈之一按错误率重新校准。",
+      "expectedText": "熔断策略阈值已按错误率重新校准。",
+      "recallCandidateCount": 1,
+      "edgeCount": 1,
+      "crossPathCount": 1,
+      "distinctTexts": [
+        "熔断策略阈之一按错误率重新校准。"
+      ],
+      "hasNonRaw": false,
+      "hasCorrectExact": false,
+      "hasCorrectOrAtoms": false,
+      "firstFailure": "RecallCandidate",
+      "kenlmEligible": false
+    }
+  ],
+  "verdict": "DEVELOPMENT_PARTIAL"
+}

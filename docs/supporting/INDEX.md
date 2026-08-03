@@ -27,5 +27,6 @@
 | Evolution Rule | [`../tone-v2/Lingua_Runtime_Evolution_Rule.md`](../tone-v2/Lingua_Runtime_Evolution_Rule.md) | 演进规则 |
 | Recovery Guide | [`../framework_snapshots/FW_V4_FREEZE_2026_08_03/13_Recovery_Guide.md`](../framework_snapshots/FW_V4_FREEZE_2026_08_03/13_Recovery_Guide.md) | 恢复步骤 + 文档阅读顺序 |
 | Snapshot Summary | [`../framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md`](../framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md) | Freeze 包摘要 |
+| Recall Subsystem Frozen Contract | [`Recall_Subsystem_Frozen_Contract_2026_08_03.md`](./Recall_Subsystem_Frozen_Contract_2026_08_03.md) | Window/Tone Gate/Mode C/Enumerator/Allowed failures · `FROZEN_AT_2026_08_03` |
 
 Ownership / Decision / Performance / Known Limitations / Acceptance Criteria 等细节以 Snapshot 包内 `01`–`13` 与 Runtime SSOT 为准；本目录不新增平行 SSOT。

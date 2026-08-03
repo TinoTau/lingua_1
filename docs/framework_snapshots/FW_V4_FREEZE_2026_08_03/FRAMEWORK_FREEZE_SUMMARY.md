@@ -19,10 +19,61 @@
 | FineSpan / Path | Multi-Path Lexical Lattice Architecture V1.0.0 |
 | Runtime Vote / Bucket / ≤16 / KenLM boundary | Runtime SSOT Contract V1.2 |
 | Tone Evidence / Mapping | ToneEvidence Mapping Final Freeze 2026-07-29 |
+| **Recall Subsystem** | **FROZEN_AT_2026_08_03** · Supporting: `docs/supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md` |
 | Atomicity | Surface + Domain-Semantic · Unified Validator · enforce |
 | Domain tags | `term_domain_tags` SSOT |
 | KenLM Runtime | Batch-only · `raw_log_delta` · Gate boundary · ownership freeze |
 | Lexicon rebuild | Full Rebuild from `full_rebuild_v1` |
+
+### Recall Subsystem Status
+
+```text
+FROZEN_AT_2026_08_03
+```
+
+Frozen (verified recovery node — **not** permanent immutability):
+
+```text
+Syllable alignment (ASR Raw SSOT)
+Lattice Window generation 1–5 + hard-block contract
+Tone evidence readiness + Mandatory Tone Fail Closed
+Plain + Tone composite SQL (Mode C)
+No Plain Fallback on Mandatory path
+SQLite → Candidate enumeration
+Recall Candidate ownership through LexicalEdge boundary
+```
+
+Not in this freeze quality scope: Assembly/CrossPath optimization · KenLM ranking capability · Tone model accuracy uplift · open-domain lexicon coverage.
+
+---
+
+## Recall Subsystem Change Policy
+
+Do **not** implement without Framework Impact Audit + regression + **new** Snapshot (never rewrite this Snapshot):
+
+```text
+- Restore Plain Fallback
+- Move Tone from SQL WHERE to post-SQL filter
+- Plain OR Tone / Tone-only Query
+- Relax Tone readiness Fail Closed
+- Change Window length / generation range
+- Change Window Hard Block rules
+- Change exactTopK
+- Change merge priority / Candidate scoring / minPrior
+- Change Domain merge order
+```
+
+Required process if change is necessary:
+
+```text
+1. Framework Impact Audit
+2. Reason + alternatives
+3. Candidate volume / performance / misrepair risk
+4. Update CURRENT SSOT
+5. dialog_200 + real candidate regression
+6. Create new Framework Snapshot
+7. Do not modify old Snapshot contents as if they were “corrected”
+```
 
 ---
 
@@ -41,6 +92,13 @@ ASR Raw
 
 Candidate generation **ends at CrossPath**. KenLM only **scores / ranks / picks**.
 
+Recall detail chain (frozen at this date node):
+
+```text
+ASR Raw → Syllable Coordinate → Lexical Window → Hard Block
+→ Tone Evidence Mapping → Tone Readiness → Mode C SQL
+→ SQLite Result → Merge/Score/TopK → WindowCandidate → LexicalEdge
+```
 ---
 
 ## Runtime Entry Points
@@ -68,7 +126,8 @@ Candidate generation **ends at CrossPath**. KenLM only **scores / ranks / picks*
 5. `docs/tone-v2/FW_Repair_V4_ToneEvidence_Mapping_Final_Freeze_Report_2026_07_29.md`
 6. `docs/fw-detector/freeze/FROZEN.md`
 7. `docs/fw-detector/kenlm/KENLM_RUNTIME.md`
-8. This pack: `docs/framework_snapshots/FW_V4_FREEZE_2026_08_03/`
+8. `docs/supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md` (Supporting)
+9. This pack: `docs/framework_snapshots/FW_V4_FREEZE_2026_08_03/`
 
 Snapshot **binds** Sole Authorities; it does **not** replace them.
 
@@ -78,13 +137,14 @@ Snapshot **binds** Sole Authorities; it does **not** replace them.
 
 | Field | Value |
 |-------|-------|
-| bundleVersion | 12 |
-| term count | 9256 |
-| domain tag count | 655 |
+| bundleVersion (Git freeze tag tip) | 12 |
+| checksum (Git freeze tag tip) | `ab78bf3599911711fc18ce59c62ab93c8f50c5410a1a6254e01125a244ce1f76` |
+| Post-recovery Runtime (Source→Full Rebuild; same calendar day) | **bundleVersion=13** · termCount=**9259** · tags=655 · checksum `sha256:b3cc9477227900d726b769a6135a81d09dfdd5a862b37c6e1e92c04e12a81d58` |
 | atomicityMode | enforce |
-| checksum | `ab78bf3599911711fc18ce59c62ab93c8f50c5410a1a6254e01125a244ce1f76` |
 | Source | `electron_node/docs/lexicon-assets/full_rebuild_v1/` |
 | Rebuild | `npm run lexicon:full-rebuild` |
+
+Git tag `FW_V4_FREEZE_2026_08_03` is **not** moved by this documentation registration.
 
 ---
 
@@ -97,18 +157,20 @@ Snapshot **binds** Sole Authorities; it does **not** replace them.
 | latticeUncovered | 0 |
 | kenlmInputCount | 200 |
 | Pre-KenLM p50/p95/max | 41 / 70 / 111 ms |
-| Atomicity ACCEPT / EXCEPTION / REJECT / UNRESOLVED | 9248 / 8 / 0 / 0 |
+| Atomicity (v12 tip) | ACCEPT=9248 / EXCEPTION=8 / REJECT=0 / UNRESOLVED=0 |
+| Atomicity (v13 post-recovery) | ACCEPT=9251 / EXCEPTION=8 / REJECT=0 / UNRESOLVED=0 |
+| Recall subsystem audits 2026-08-03 | Window · Query Builder · Enumerator · Recovery Development |
 
 ---
 
 ## Known Limitations (summary)
 
-- Lexicon ~9256 terms — not open-domain complete  
-- KenLM **capability validation pending** (readiness ≠ quality PASS)  
+- Lexicon ~9259 terms (post-recovery) — not open-domain complete  
+- Tone model not 100% — prediction errors = **ACCEPTED_MODEL_LIMITATION**  
+- KenLM capability validation pending; only **candidateCount≥2** cases evaluate ranking  
+- Raw-only pools = **VALID_RAW_FALLBACK**  
 - dialog_200 = stage regression, not open-domain accuracy proof  
-- KenLM export provenance (`candidate:i`) incomplete  
-- Near-homophone noise may enter candidate pool  
-- Future Lexicon Expansion must pass Unified Atomicity Validator  
+- `normalizeSyllable` ü strip = **KNOWN_DATA_NORMALIZATION_DEBT** (non-blocking)  
 - Snapshot is a **date node**, not permanent immutable architecture  
 
 Full list: `12_Known_Limitations.md`

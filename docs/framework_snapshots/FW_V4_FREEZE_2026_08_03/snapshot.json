@@ -64,6 +64,21 @@
     "tag": "FW_V4_FREEZE_2026_08_03",
     "metadataFinalizationOf": "8603408097d0e4ce03651ec8d2d24afb44d70389"
   },
+  "recallSubsystem": {
+    "status": "FROZEN_AT_2026_08_03",
+    "supportingContract": "docs/supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md",
+    "documentationFreezePack": "docs/acceptance/Freeze/2026-08-03_Recall_Subsystem_Documentation_Freeze/",
+    "toneQueryMode": "PLAIN_AND_TONE_COMPOSITE_SQL",
+    "plainFallback": false,
+    "mandatoryTonePurpose": "PROTOCOL_INTEGRITY",
+    "nextStage": "KENLM_REAL_COMPETITION_BASELINE"
+  },
+  "lexiconPostRecoveryNote": {
+    "bundleVersion": 13,
+    "termCount": 9259,
+    "checksum": "sha256:b3cc9477227900d726b769a6135a81d09dfdd5a862b37c6e1e92c04e12a81d58",
+    "note": "Same-day Recall Candidate Recovery Source→Full Rebuild; Git tag FW_V4_FREEZE_2026_08_03 not moved"
+  },
   "currentSsotDocs": [
     "docs/tone-v2/RUNTIME_DOMAIN_DOCUMENT_INDEX.md",
     "docs/tone-v2/FW_Repair_V4_Multi_Path_Lexical_Lattice_Architecture_V1.0.0_FROZEN.md",
@@ -72,6 +87,7 @@
     "docs/tone-v2/FW_Repair_V4_ToneEvidence_Mapping_Final_Freeze_Report_2026_07_29.md",
     "docs/fw-detector/freeze/FROZEN.md",
     "docs/fw-detector/kenlm/KENLM_RUNTIME.md",
+    "docs/supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md",
     "docs/framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md"
   ],
   "legacyPathScan": {

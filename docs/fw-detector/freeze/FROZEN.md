@@ -66,7 +66,7 @@ FW 整句结果
 
 **Step 7 Baseline Closure（2026-07-30）：** 唯一生产架构 = Lattice V1.0.0；唯一 Runtime Vote/Assembly/KenLM = Runtime SSOT V1.2；唯一 Tone = Tone Evidence/Mapping V1.0；Acceptance = `accept:runtime-ssot` + `accept:domain-multibucket-kenlm`。
 
-**FW_V4_FREEZE_2026_08_03（CURRENT RECOVERY BASELINE）：** 日期节点恢复基线（非永久冻结）。权威入口 [`../../framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md`](../../framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md)。绑定 Lattice + Runtime SSOT + Atomicity Closure + Lexicon bundle v12 + dialog_200 硬门；KenLM 仅 Runtime Boundary READY（质量未验收）。Snapshot **不取代**本节 Sole Authorities。
+**FW_V4_FREEZE_2026_08_03（CURRENT RECOVERY BASELINE）：** 日期节点恢复基线（非永久冻结）。权威入口 [`../../framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md`](../../framework_snapshots/FW_V4_FREEZE_2026_08_03/FRAMEWORK_FREEZE_SUMMARY.md)。绑定 Lattice + Runtime SSOT + Atomicity Closure + Lexicon（freeze tip v12；同日 Recovery 后正式 Runtime v13）+ dialog_200 硬门；**Recall Subsystem `FROZEN_AT_2026_08_03`**（Supporting：[`../../supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md`](../../supporting/Recall_Subsystem_Frozen_Contract_2026_08_03.md)）。KenLM 仅 Runtime Boundary READY（质量未验收）。Snapshot **不取代**本节 Sole Authorities。
 ---
 
 ## 3. 冻结合约矩阵
